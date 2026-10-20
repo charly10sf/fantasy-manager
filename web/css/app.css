@@ -229,6 +229,8 @@ main { padding: 16px 16px 120px; }
 .pill.mal { background: var(--baja-s); color: var(--baja); }
 .pill.bien, .pill.chollo { background: var(--sube-s); color: var(--sube); }
 .pill.plan { background: var(--rojo); color: #fff; }
+.pill.vende { background: var(--oro-s); color: var(--oro); }
+.pill.libre { background: var(--azul-s); color: var(--azul); }
 .grupo { font: 700 12.5px 'Barlow'; letter-spacing: 1.2px; text-transform: uppercase; color: var(--apagado); margin: 20px 0 2px; display: flex; justify-content: space-between; }
 .barra { display: inline-block; width: 46px; height: 5px; border-radius: 3px; background: var(--plano3); vertical-align: middle; overflow: hidden; }
 .barra i { display: block; height: 100%; width: calc(var(--n) * 1%); background: var(--rojo); border-radius: 3px; }

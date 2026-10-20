@@ -273,7 +273,16 @@ export function analizar(D, H, c, extra = {}) {
   M.clausulas.sort((a, b) => b.interes - a.interes);
 
   /* ---------- mercado ---------- */
-  M.mercado = (D.mercado || []).map((m) => {
+  M.mercado = (D.mercado || []).map((m0) => {
+    // si el jugador tiene dueño en la liga, lo está vendiendo ese manager aunque la API no lo diga claro
+    const dueno0 = M.dueno[m0.pid];
+    const m = dueno0 && m0.tipo !== 'manager' ? { ...m0, tipo: 'manager', vendedorTeamId: dueno0 } : { ...m0 };
+    if (m.tipo === 'manager') {
+      const tid = m.vendedorTeamId || dueno0 || (m.vendedorManagerId && M.teamDeUsuario(m.vendedorManagerId, m.vendedor));
+      const e = tid && M.equipo[tid];
+      if (tid) m.vendedorTeamId = tid;
+      if (!m.vendedor && e) m.vendedor = e.manager || e.nombre;
+    }
     const j = J(m.pid), t = M.tend(m.pid);
     const i = M.interes(j, m.precio, t);
     const sobre = j.valor ? m.precio / j.valor - 1 : 0;

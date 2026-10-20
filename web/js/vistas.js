@@ -328,12 +328,12 @@ export function mercado(S) {
     const liga = M.mercado.filter((m) => m.tipo === 'liga'), man = M.mercado.filter((m) => m.tipo === 'manager' && !M.enVenta.has(m.pid));
     if (M.misVentas.length) h += `<div class="grupo"><span>Los tuyos en venta</span><span>${M.misVentas.length}</span></div>${M.misVentas.map(ventaHTML).join('')}`;
     const fila = (m) => filaJugador(m, {
-      sub: `${m.tipo === 'manager' ? `de ${esc(m.vendedor || 'un rival')} · ` : ''}${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
-      extra: `${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${estadoPill(m.j)}${m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
+      sub: `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
+      extra: `${m.tipo === 'manager' ? `<span class="pill vende">${icono('usuario')}Lo vende ${esc(m.vendedor || 'un manager')}</span>` : '<span class="pill libre">Libre</span>'}${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${estadoPill(m.j)}${m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertas ? `<span class="pill">${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}</span>` : ''}${m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
       derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div><div class="d">${barra(m.interes)}</div>`, op: S.opPorPid[m.pid],
     });
-    h += liga.length ? `<div class="grupo"><span>De la liga</span><span>${liga.length}</span></div>${liga.map(fila).join('')}` : nada('El mercado de la liga está vacío ahora.');
-    if (man.length) h += `<div class="grupo"><span>Los venden tus rivales</span><span>${man.length}</span></div>${man.map(fila).join('')}`;
+    h += liga.length ? `<div class="grupo"><span>Libres de la liga · subasta a ciegas</span><span>${liga.length}</span></div>${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
+    if (man.length) h += `<div class="grupo"><span>Con dueño · los vende otro manager</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos: el precio lo pone él y solo son tuyos si acepta tu oferta.</p>${man.map(fila).join('')}`;
   } else if (seg === 'especular') {
     const v = M.ventanaEsp;
     if (!v || v.ciclos < 1) h += nada(M.enJuego ? 'Con la jornada en juego no se especula: espera a que acabe.' : 'No da tiempo a comprar y vender antes de la jornada.');

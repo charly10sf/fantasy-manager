@@ -1,13 +1,20 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.1.1';
+export const VERSION = '0.1.2';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.1.2', f: '2026-10-20', h: '21:34', t: 'Libre o con dueño',
+    cosas: [
+      { tipo: 'arreglo', d: 'oferta', t: 'Libre o con dueño, nunca mezclados', x: 'Un jugador en el mercado puede ser libre de la liga (subasta a ciegas, se lo lleva la puja más alta) o de otro manager que lo ha puesto a la venta (sigue siendo suyo y solo es tuyo si acepta tu oferta). La IA ya los distingue y no te dirá que compres más barato en el mercado lo que vende un amigo.' },
+      { tipo: 'mejora', d: 'cara', t: 'Se ve a primera vista', x: 'En Mercado, separados en «Libres de la liga» y «Con dueño», con la pastilla «Libre» o «Lo vende …». En la ficha, quién lo vende, cuánto pide y cuánto es sobre su valor.', ir: { v: 'mercado', seg: 'mercado:venta' } },
+    ],
+  },
   {
     v: '0.1.1', f: '2026-10-20', h: '21:23', t: 'Tu equipo, al detalle',
     cosas: [

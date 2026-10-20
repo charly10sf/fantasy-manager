@@ -123,16 +123,21 @@ export function fichaJugador(S, pid) {
 
   if (mia) {
     h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}, ${mia.abierta ? '<b>abierta</b>: te lo pueden quitar ya' : `protegido hasta ${cuando(mia.protegidoHasta)} (${dura(mia.abreEn)})`}. ${mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`}.${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : ''}</div></div>`;
-  } else if (suya) {
-    if (suya.abierta && suya.meLlega) h += `<div class="aviso-ficha verde">${icono('diana')}<div><b>Puedes clausularlo ya</b> a ${esc(suya.rival.manager || suya.rival.nombre)} por ${eur(suya.clausula)}. Te quedarías con ${eur(suya.teQueda)}${suya.teQueda < 0 ? ' (en negativo: vende algo antes de que empiece la jornada)' : ''}.</div></div>`;
-    else if (suya.abierta) h += `<div class="aviso-ficha">${icono('candado')}<div>Su cláusula está abierta (${eur(suya.clausula)}, de ${esc(suya.rival.manager || suya.rival.nombre)}), pero te faltan <b>${eur(suya.clausula - M.pujaMax)}</b>.</div></div>`;
-    else h += `<div class="aviso-ficha oro">${icono('reloj')}<div>Es de <b>${esc(suya.rival.manager || suya.rival.nombre)}</b>. Su cláusula (${eur(suya.clausula)}) se abre <b>${cuando(suya.protegidoHasta)}</b>, en ${dura(suya.abreEn)}.${suya.meLlega ? ' Te llega el dinero.' : ` Te faltan ${eur(suya.clausula - M.pujaMax)}.`}</div></div>`;
-  } else if (enMercado) {
-    h += `<div class="aviso-ficha azul">${icono('mercado')}<div><b>En el mercado</b> a ${eur(enMercado.precio)}${enMercado.vendedor ? ` (lo vende ${esc(enMercado.vendedor)})` : ''}. ${enMercado.cierra ? `Cierra ${cuando(enMercado.cierra)}.` : ''} ${enMercado.pujas ? `${enMercado.pujas} puja${enMercado.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}${enMercado.miPuja ? ` Tu puja: ${eur(enMercado.miPuja)}.` : enMercado.tipo === 'liga' ? ` Yo pujaría ${eur(enMercado.puja)}.` : ''}</div></div>`;
   } else {
-    h += `<div class="aviso-ficha azul">${icono('info')}<div>No es de nadie en tu liga: puede salir en el mercado.</div></div>`;
+    // en el mercado: libre de la liga (subasta a ciegas) o puesto a la venta por su dueño, otro manager
+    if (enMercado) {
+      const m = enMercado;
+      if (m.tipo === 'manager') h += `<div class="aviso-ficha oro">${icono('usuario')}<div><b>Lo vende ${esc(m.vendedor || 'otro manager')}</b>, que lo ha puesto en el mercado y pide ${eur(m.precio)} (${pct((m.sobre || 0) * 100)} sobre su valor). Sigue siendo suyo: solo es tuyo si acepta tu oferta, no es un jugador libre de la liga.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}.` : ''}${m.miPuja ? ` Tu oferta: ${eur(m.miPuja)}.` : ''}</div></div>`;
+      else h += `<div class="aviso-ficha azul">${icono('mercado')}<div><b>Libre en el mercado de la liga</b> desde ${eur(m.precio)}. Subasta a ciegas${m.cierra ? ` hasta ${cuando(m.cierra)}` : ''}: se lo lleva la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}${m.miPuja ? ` Tu puja: ${eur(m.miPuja)}.` : ` Yo pujaría ${eur(m.puja)}.`}</div></div>`;
+    }
+    if (suya) {
+      if (suya.abierta && suya.meLlega) h += `<div class="aviso-ficha verde">${icono('diana')}<div><b>Puedes clausularlo ya</b> a ${esc(suya.rival.manager || suya.rival.nombre)} por ${eur(suya.clausula)}. Te quedarías con ${eur(suya.teQueda)}${suya.teQueda < 0 ? ' (en negativo: vende algo antes de que empiece la jornada)' : ''}.</div></div>`;
+      else if (suya.abierta) h += `<div class="aviso-ficha">${icono('candado')}<div>Su cláusula está abierta (${eur(suya.clausula)}, de ${esc(suya.rival.manager || suya.rival.nombre)}), pero te faltan <b>${eur(suya.clausula - M.pujaMax)}</b>.</div></div>`;
+      else h += `<div class="aviso-ficha oro">${icono('reloj')}<div>Es de <b>${esc(suya.rival.manager || suya.rival.nombre)}</b>. Su cláusula (${eur(suya.clausula)}) se abre <b>${cuando(suya.protegidoHasta)}</b>, en ${dura(suya.abreEn)}.${suya.meLlega ? ' Te llega el dinero.' : ` Te faltan ${eur(suya.clausula - M.pujaMax)}.`}</div></div>`;
+    } else if (!enMercado) {
+      h += `<div class="aviso-ficha azul">${icono('info')}<div>No es de nadie en tu liga: puede salir en el mercado.</div></div>`;
+    }
   }
-
   if (mia) h += `<button class="btn chico sec" data-accion="reventa" data-pid="${esc(pid)}" style="margin:2px 0 6px">${icono('cambio')}${M.reventa[pid] ? 'Quitar de «para revender»' : 'Lo tengo para revender'}</button>`;
   const venta = M.misVentas.find((v) => v.pid === pid);
   if (venta) h += `<div class="sec"><h2>En venta</h2></div>${ventaHTML(venta)}`;

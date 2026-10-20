@@ -304,7 +304,10 @@ function lineaCompleta(D, M, j) {
   const serie = t.serie || [];
   const hace = (d) => { const x = [...serie].reverse().find(([ts]) => ts <= Date.now() - d * DIA); return x ? x[1] : null; };
   const v7 = hace(7), v30 = hace(30);
-  return `${lineaJ(M, j, { tend: t })} | ${de}${cl ? ` | cláusula ${eur(cl.clausula)} ${cl.abierta ? 'ABIERTA' : `se abre ${cuando(cl.protegidoHasta)}`}` : ''}${mk ? ` | EN EL MERCADO a ${eur(mk.precio)}` : ''}${v7 ? ` | hace 7 días valía ${eur(v7)}` : ''}${v30 ? `, hace 30 días ${eur(v30)}` : ''} | ${mejoraTxt(M, j)}`;
+  const mkTxt = !mk ? '' : mk.tipo === 'manager'
+    ? ` | SU DUEÑO (${mk.vendedor || 'un manager'}) LO HA PUESTO A LA VENTA y pide ${eur(mk.precio)}: sigue siendo suyo y solo es mío si acepta mi oferta (no es un jugador libre de la liga)`
+    : ` | LIBRE EN EL MERCADO DE LA LIGA: subasta a ciegas, puja mínima ${eur(mk.precio)}`;
+  return `${lineaJ(M, j, { tend: t })} | ${de}${cl ? ` | cláusula ${eur(cl.clausula)} ${cl.abierta ? 'ABIERTA' : `se abre ${cuando(cl.protegidoHasta)}`}` : ''}${mkTxt}${v7 ? ` | hace 7 días valía ${eur(v7)}` : ''}${v30 ? `, hace 30 días ${eur(v30)}` : ''} | ${mejoraTxt(M, j)}`;
 }
 
 /** lo que el manager le ha contado, para meterlo en el contexto */
@@ -360,9 +363,15 @@ export function contexto(D, M, c, { corto = false } = {}) {
   const cl = M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, corto ? 16 : 30);
   L.push('\nCLÁUSULAS DE RIVALES (abiertas o que se abren en 3 días; de más a menos interesantes según la app):');
   for (const x of cl) L.push(`- ${lineaJ(M, x.j, x)} | de ${x.rival.nombre} | CLÁUSULA ${eur(x.clausula)} ${x.abierta ? 'ABIERTA YA' : `se abre ${cuando(x.protegidoHasta)}`} | ${x.meLlega ? 'me llega' : 'NO me llega'} | interés ${x.interes}/100 | ${mejoraTxt(M, x.j)}`);
-  if (M.mercado.length) {
-    L.push(`\nMERCADO DE HOY:`);
-    for (const m of M.mercado.slice(0, 26)) L.push(`- ${lineaJ(M, m.j, m)} | PRECIO ${eur(m.precio)}${m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : ' (de la liga)'} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100 | ${mejoraTxt(M, m.j)}`);
+  const libres = M.mercado.filter((m) => m.tipo === 'liga');
+  const deOtros = M.mercado.filter((m) => m.tipo === 'manager' && m.vendedorTeamId !== D.yo.teamId && !(M.enVenta && M.enVenta.has(m.pid)));
+  if (libres.length) {
+    L.push(`\nMERCADO DE LA LIGA: JUGADORES LIBRES (no son de nadie; subasta a ciegas que se resuelve ${M.cierreMercado ? cuando(M.cierreMercado) : 'al cambiar el mercado'}; la puja mínima es el precio y se lo lleva la más alta):`);
+    for (const m of libres.slice(0, 20)) L.push(`- ${lineaJ(M, m.j, m)} | LIBRE, puja mínima ${eur(m.precio)} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100 | ${mejoraTxt(M, m.j)}`);
+  }
+  if (deOtros.length) {
+    L.push(`\nEN EL MERCADO PERO CON DUEÑO: LOS PONEN A LA VENTA OTROS MANAGERS DE MI LIGA (siguen siendo suyos; el precio lo pone el dueño; solo son míos si el dueño acepta mi oferta; no se pueden conseguir más baratos «en el mercado»):`);
+    for (const m of deOtros.slice(0, 14)) L.push(`- ${lineaJ(M, m.j, m)} | LO VENDE ${m.vendedor || 'un manager'} y pide ${eur(m.precio)} (${pct((m.sobre || 0) * 100)} sobre su valor)${m.ofertas ? ` | ${m.ofertas} ofertas` : ''}${m.miPuja ? ` | MI OFERTA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100 | ${mejoraTxt(M, m.j)}`);
   }
   if (!corto) {
     L.push('\nLOS QUE MÁS SUBEN HOY EN TODA LALIGA:');
@@ -392,7 +401,7 @@ export function contexto(D, M, c, { corto = false } = {}) {
 }
 
 const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España, directo, como un colega que sabe mucho del juego.
-Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). El mercado cambia cada día; se puja a ciegas y gana la puja más alta. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
+Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). En el mercado hay DOS cosas muy distintas que no debes mezclar: (1) jugadores LIBRES de LaLiga, que no son de nadie: el mercado cambia cada día, se puja a ciegas desde su precio y se los lleva la puja más alta; (2) jugadores que OTRO MANAGER de la liga ha puesto a la venta: siguen siendo suyos, el precio lo pone él y solo pasan a ser del manager si el dueño acepta su oferta, así que no se pueden conseguir «más baratos en el mercado». Si el dueño es un amigo que se lo deja a un precio, es un trato entre los dos: valóralo por su valor, lo que sube al día, lo que le da a su once y si le llega el dinero, no comparándolo con el mercado de la liga. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
 Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador (de futbolfantasy) y titulares de prensa recientes: úsalos. Además, busca en Google lo último de las webs y cuentas especializadas en LaLiga Fantasy (Futbol Fantasy, Jornada Perfecta, Comuniate, Analítica Fantasy…) y lo que publican en X/Twitter los periodistas de cada club sobre lesiones, convocatorias y onces. Busca también: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa.
 El rival importa tanto como ser titular: no es lo mismo jugar contra el Barça o el Madrid que contra el colista, ni en casa que fuera. Te paso el próximo rival de cada jugador con su puesto en LaLiga y si es difícil, medio o fácil; los porteros y defensas puntúan más contra equipos que marcan poco, y los medios y delanteros contra los que encajan mucho. Tenlo en cuenta en el once, en a quién fichar y en cuándo vender (vender antes de una racha de rivales difíciles, comprar antes de una de fáciles).

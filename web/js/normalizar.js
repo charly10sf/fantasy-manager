@@ -141,19 +141,22 @@ export function mercado(r, equipos) {
   for (const it of lista(r)) {
     const j = jugador(it.playerMaster || it.player || it, equipos);
     if (!j) continue;
-    const vend = it.sellerTeam || {};
+    // ¿lo vende un manager de la liga o es un jugador libre de LaLiga? (marketPlayerTeam frente a marketPlayerLeague)
+    const pt = it.playerTeam && typeof it.playerTeam === 'object' ? it.playerTeam : null;
+    const vend = it.sellerTeam || it.seller || it.team || (pt && (pt.team || (pt.manager ? { manager: pt.manager } : null))) || {};
+    const deManager = /team|manager|user/i.test(String(it.discr || '')) || !!(vend.id || (vend.manager && vend.manager.id) || (pt && (pt.manager || pt.managerId)));
     const bid = it.bid && typeof it.bid === 'object' ? it.bid : null;
     out.push({
       id: id(it.id),
       pid: j.id,
-      tipo: it.discr === 'marketPlayerTeam' || vend.id ? 'manager' : 'liga',
+      tipo: deManager && !/league/i.test(String(it.discr || '')) ? 'manager' : 'liga',
       precio: num(primero(it.salePrice, it.price, j.valor)),
       cierra: ms(primero(it.expirationDate, it.endDate)),
       pujas: num(primero(it.numberOfBids, it.bids && it.bids.length)),
       ofertas: num(it.numberOfOffers),
       vendedorTeamId: id(vend.id),
-      vendedorManagerId: id(vend.manager && vend.manager.id),
-      vendedor: (vend.manager && vend.manager.managerName) || vend.name || '',
+      vendedorManagerId: id(primero(vend.manager && vend.manager.id, pt && pt.managerId)),
+      vendedor: (vend.manager && (vend.manager.managerName || vend.manager.name)) || vend.managerName || vend.name || '',
       miPuja: bid ? num(primero(bid.money, bid.amount)) : (typeof it.bid === 'number' ? it.bid : null),
       clausula: it.playerTeam ? num(it.playerTeam.buyoutClause) : null,
       ptId: id(it.playerTeam ? primero(it.playerTeam.playerTeamId, it.playerTeam.id) : it.playerTeamId),
