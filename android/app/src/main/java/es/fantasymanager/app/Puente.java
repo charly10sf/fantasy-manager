@@ -373,6 +373,12 @@ public class Puente {
         enPantalla(() -> act.getWindow().getDecorView().performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP));
     }
 
+    /** preguntar con la voz (el dictado de Google); el texto llega a la web con vozTexto() */
+    @JavascriptInterface
+    public void voz() {
+        enPantalla(() -> act.escuchar());
+    }
+
     /* ---------------- la IA en segundo plano ---------------- */
 
     /**

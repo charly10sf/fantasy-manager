@@ -2,9 +2,9 @@
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub } from './comunes.js';
 import { linea, barra } from './graficos.js';
-import { hayClave, nombreModelo, conversacion } from './ia.js';
+import { hayClave, nombreModelo, conversacion, notasVigentes } from './ia.js';
 import { md } from './texto.js';
-import { enApp } from './puente.js';
+import { enApp, nativo } from './puente.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -93,6 +93,10 @@ function planHTML(S) {
   h += `<div class="plan"><div class="plan-cab"><div><div class="eti">Plan de hoy</div>
     ${P ? `<span class="ia">${icono(esIA ? 'ia' : 'lista')}${esIA ? `${esc(nombreModelo(P.modelo))}${P.web ? ' + Google' : ''} · ${rel(P.t)}` : 'Automático, sin IA'}</span>` : ''}</div>
     ${hayClave() && !E.cargando ? `<button class="btn chico sec der" data-accion="plan">${icono('refrescar')}${esIA ? 'Rehacer' : 'Con IA'}</button>` : ''}</div>`;
+  if (hayClave() && !E.cargando) {
+    const ns = notasVigentes();
+    h += `<div class="plan-voz"><button class="btn chico sec" data-accion="voz">${icono('micro')}Cuéntale algo</button>${ns.length ? `<button class="t2 peq" data-ir="ia">${icono('nota')}${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</button>` : ''}</div>`;
+  }
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te aviso cuando esté.</div>' : ''}</div>`;
   if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (!P) return h + '</div>';
@@ -367,10 +371,13 @@ export function ia(S) {
   }
   const msgs = conversacion();
   let h = `<div class="chat"><div class="eti">Pregunta</div><div class="titulo">Tu director deportivo</div>`;
-  if (!msgs.length) h += `<p class="entradilla">Sabe todo lo de tu liga ahora mismo y busca noticias en Google antes de contestar.</p><div class="sugerencias">${SUGERENCIAS.map((s) => `<button data-sugerencia="${esc(s)}">${icono('ia')}${esc(s)}</button>`).join('')}</div>`;
+  const ns = notasVigentes();
+  if (ns.length) h += `<details class="notas"><summary>${icono('nota')}Tiene en cuenta ${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</summary>${ns.map((n) => `<div class="nota"><span>${esc(n.texto)}<small>${cuando(n.t)}${n.caduca ? ` · hasta ${cuando(n.caduca, { hora: false })}` : ''}</small></span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Olvidar">${icono('cerrar')}</button></div>`).join('')}</details>`;
+  if (!msgs.length) h += `<p class="entradilla">Sabe todo lo de tu liga ahora mismo y busca noticias en Google antes de contestar. Cuéntale también lo que no sale en la app (un amigo te ofrece un jugador, a quién no quieres vender): lo apunta y lo tiene en cuenta en el plan. Puedes hablarle con el micro.</p><div class="sugerencias">${SUGERENCIAS.map((s) => `<button data-sugerencia="${esc(s)}">${icono('ia')}${esc(s)}</button>`).join('')}</div>`;
   else h += `<div style="text-align:right"><button class="btn chico sec" data-accion="borrarChat">Empezar de nuevo</button></div>`;
-  h += msgs.map((m) => (m.r === 'yo' ? `<div class="msg yo">${esc(m.t)}</div>` : `<div class="msg ia"><div class="quien-ia">${esc(nombreModelo(m.modelo) || 'IA')}</div>${md(m.t)}${m.fuentes && m.fuentes.length ? `<div class="fuentes">${m.fuentes.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}</div>`)).join('');
+  const ultimaIA = [...msgs].reverse().find((m) => m.r === 'ia');
+  h += msgs.map((m) => (m.r === 'yo' ? `<div class="msg yo">${esc(m.t)}</div>` : `<div class="msg ia"><div class="quien-ia">${esc(nombreModelo(m.modelo) || 'IA')}</div>${md(m.t)}${m.fuentes && m.fuentes.length ? `<div class="fuentes">${m.fuentes.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
   if (S.charlando) h += `<div class="msg ia" id="respuesta"><div class="quien-ia">Pensando…</div>${S.parcial ? md(S.parcial) : `<span class="pensando"><i></i><i></i><i></i></span> <span class="t2 peq" id="paso-chat">${esc(S.pasoChat || '')}</span>`}</div>`;
-  h += `</div><div class="escribe"><div class="escribe-in"><textarea id="pregunta" rows="1" placeholder="Pregunta lo que quieras de tu liga"></textarea><button data-accion="enviar" aria-label="Enviar">${icono('enviar')}</button></div></div>`;
+  h += `</div><div class="escribe"><div class="escribe-in"><textarea id="pregunta" rows="1" placeholder="Pregunta o cuéntale algo"></textarea>${nativo.hayVoz() ? `<button class="micro" data-accion="voz" aria-label="Hablar">${icono('micro')}</button>` : ''}<button data-accion="enviar" aria-label="Enviar">${icono('enviar')}</button></div></div>`;
   return h;
 }

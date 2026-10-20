@@ -4,7 +4,7 @@
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp } from './puente.js';
-import { LS, eur, pct, cuando, dura, POS, DIA, diaDe, norm } from './util.js';
+import { LS, eur, pct, cuando, dura, POS, DIA, diaDe, norm, num } from './util.js';
 import { K } from './datos.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
@@ -258,6 +258,68 @@ const rivalTxt = (M, j) => {
   return `próximo: ${fr.p.casa ? 'en casa vs' : 'fuera en'} ${fr.p.rival}${fr.r ? ` (${fr.r.pos}º de LaLiga, rival ${fr.nivel})` : ''} ${cuando(fr.p.fecha)}${luego.length ? `; después ${luego.map((x) => `${x.casa ? 'vs' : 'en'} ${x.rival}${x.nivel ? ` (${x.nivel})` : ''}`).join(', ')}` : ''}`;
 };
 
+/* ---------------- lo que le cuentas a la IA ---------------- */
+// Cosas que no salen en la API (un amigo te ofrece un jugador, lo que piensas hacer, a quién no quieres vender):
+// las apunta la IA desde el chat y cuentan en el plan, en el chat y en segundo plano hasta que caducan.
+export const notas = () => LS.get(K('notas'), []);
+const guardarNotas = (l) => { LS.set(K('notas'), l.slice(-40)); LS.set(K('notas-t'), Date.now()); };
+export const notasVigentes = () => notas().filter((n) => !n.caduca || n.caduca > Date.now());
+export const borrarNota = (id) => guardarNotas(notas().filter((n) => n.id !== id));
+export const notasDe = (pid) => notasVigentes().filter((n) => n.pid === pid);
+
+/** el jugador con ese nombre (exacto, o el único que lo contiene) */
+export function pidDe(nombre, D) {
+  const k = norm(nombre);
+  if (!k) return null;
+  const todos = Object.values(D.maestro || {});
+  const exacto = todos.find((j) => norm(j.nombre) === k);
+  if (exacto) return exacto.id;
+  const parecidos = todos.filter((j) => norm(j.nombre).includes(k) || (k.length >= 5 && k.includes(norm(j.nombre)) && norm(j.nombre).length >= 4));
+  return parecidos.length === 1 ? parecidos[0].id : null;
+}
+
+/** los jugadores que salen en un texto (por su nombre entero o por un apellido que solo tiene uno) */
+export function jugadoresEn(texto, D) {
+  const t = ` ${norm(texto)} `;
+  const out = [];
+  const porApellido = {};
+  for (const j of Object.values(D.maestro || {})) {
+    const n = norm(j.nombre);
+    if (n.length >= 4 && t.includes(` ${n} `)) { out.push(j); continue; }
+    const ult = n.split(' ').pop();
+    if (ult.length >= 5) (porApellido[ult] ||= []).push(j);
+  }
+  for (const [ap, js] of Object.entries(porApellido)) if (js.length === 1 && t.includes(` ${ap} `) && !out.includes(js[0])) out.push(js[0]);
+  return out.slice(0, 6);
+}
+
+/** todo lo que se sabe de un jugador: lo de siempre más de quién es, su cláusula o si está en el mercado */
+function lineaCompleta(D, M, j) {
+  const t = M.tend(j.id);
+  const tid = M.dueno[j.id];
+  const e = tid && M.equipo[tid];
+  const de = !tid ? 'libre (no es de nadie de la liga)' : tid === D.yo.teamId ? 'ES MÍO' : `es de ${(e && (e.manager || e.nombre)) || 'un rival'}`;
+  const cl = M.clausulas.find((x) => x.pid === j.id);
+  const mk = M.mercado.find((m) => m.pid === j.id);
+  const serie = t.serie || [];
+  const hace = (d) => { const x = [...serie].reverse().find(([ts]) => ts <= Date.now() - d * DIA); return x ? x[1] : null; };
+  const v7 = hace(7), v30 = hace(30);
+  return `${lineaJ(M, j, { tend: t })} | ${de}${cl ? ` | cláusula ${eur(cl.clausula)} ${cl.abierta ? 'ABIERTA' : `se abre ${cuando(cl.protegidoHasta)}`}` : ''}${mk ? ` | EN EL MERCADO a ${eur(mk.precio)}` : ''}${v7 ? ` | hace 7 días valía ${eur(v7)}` : ''}${v30 ? `, hace 30 días ${eur(v30)}` : ''} | ${mejoraTxt(M, j)}`;
+}
+
+/** lo que el manager le ha contado, para meterlo en el contexto */
+function notasTxt(D, M) {
+  const ns = notasVigentes();
+  if (!ns.length) return '';
+  const L = ['\nLO QUE ME HAS CONTADO TÚ (no sale en los datos de LaLiga; cuenta para todas las recomendaciones, sobre todo los tratos y ofertas con otros managers):'];
+  for (const n of ns) {
+    L.push(`- [${n.id}] ${cuando(n.t)}: ${n.texto}${n.caduca ? ` (vale hasta ${cuando(n.caduca, { hora: false })})` : ''}`);
+    const j = n.pid && M.J(n.pid);
+    if (j) L.push(`  datos de ${j.nombre}: ${lineaCompleta(D, M, j)}`);
+  }
+  return L.join('\n');
+}
+
 export function contexto(D, M, c, { corto = false } = {}) {
   const L = [];
   const ahora = new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -276,6 +338,8 @@ export function contexto(D, M, c, { corto = false } = {}) {
     L.push(`MI MEJOR ONCE AHORA: ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}, unos ${String(Math.round(M.once.total * 10) / 10).replace('.', ',')} pts esperados: ${M.once.lineas.map((l) => l.map((j) => j.nombre).join(', ')).filter(Boolean).join(' | ')}${M.once.entrenador ? ` · entrenador ${M.once.entrenador.nombre}` : ''}.`);
     M._tit = tit;
   }
+  const nt = notasTxt(D, M);
+  if (nt) L.push(nt);
   L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | forma) + titular o suplente, cláusula, protección, riesgo, próximo partido y lo que pagué:');
   for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
   if (M.misVentas && M.misVentas.length) {
@@ -332,6 +396,7 @@ Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acab
 Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador (de futbolfantasy) y titulares de prensa recientes: úsalos. Además, busca en Google lo último de las webs y cuentas especializadas en LaLiga Fantasy (Futbol Fantasy, Jornada Perfecta, Comuniate, Analítica Fantasy…) y lo que publican en X/Twitter los periodistas de cada club sobre lesiones, convocatorias y onces. Busca también: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa.
 El rival importa tanto como ser titular: no es lo mismo jugar contra el Barça o el Madrid que contra el colista, ni en casa que fuera. Te paso el próximo rival de cada jugador con su puesto en LaLiga y si es difícil, medio o fácil; los porteros y defensas puntúan más contra equipos que marcan poco, y los medios y delanteros contra los que encajan mucho. Tenlo en cuenta en el once, en a quién fichar y en cuándo vender (vender antes de una racha de rivales difíciles, comprar antes de una de fáciles).
+El manager te cuenta cosas que no salen en los datos (tratos con amigos de la liga, ofertas que le hacen por privado, lo que ya ha hecho o piensa hacer, jugadores que no quiere vender): cuentan tanto como los datos. Si otro manager le ofrece venderle un jugador por un precio, se cierra haciéndole una oferta directa por ese importe desde la ficha del jugador; si conviene, ponlo como operación (accion "pujar", donde "oferta directa a <manager>") y calcula si le compensa con su valor, lo que sube al día, si entra en su once y si le llega el dinero.
 Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;
 
 /* ---------------- el plan del día ---------------- */
@@ -383,6 +448,7 @@ export function planViejo(M) {
   const p = ultimoPlan();
   if (!p) return true;
   if (p.dia !== diaDe()) return true;
+  if (LS.get(K('notas-t'), 0) > p.t) return true;
   if (M && M.cierreMercado && p.mercado && Math.abs(M.cierreMercado - p.mercado) > 3600e3) return true;
   return Date.now() - p.t > 10 * 3600e3;
 }
@@ -452,16 +518,55 @@ export const conversacion = () => LS.get(K('chat'), []);
 export const borrarConversacion = () => LS.set(K('chat'), []);
 
 /** pregunta en el chat; alTexto(texto) se llama según va llegando la respuesta */
+const NOTAS_CHAT = `Si en su último mensaje el manager te cuenta algo que tiene que contar a partir de ahora (una oferta o un trato con otro manager, algo que ya ha hecho, lo que piensa hacer, un jugador que no quiere vender, una preferencia), apúntalo para no olvidarlo. Al final de tu respuesta, y solo entonces, añade este bloque (no lo menciones en el texto):
+\`\`\`notas
+{"apuntar": [{"texto": "frase corta en tercera persona con nombres y cifras", "jugador": "nombre exacto del jugador o null", "tipo": "trato|hecho|intencion|preferencia|otro", "importe": número en euros o null, "dias": días que sigue valiendo (1 a 30) o null si no caduca}], "olvidar": ["id entre corchetes de una nota que ya no vale"]}
+\`\`\`
+Si no hay nada nuevo que apuntar ni que olvidar, no pongas el bloque. Si te cuenta una oferta o un trato, contesta además si le conviene, con cifras (precio frente a valor, lo que sube o baja al día, en cuántos días lo recupera, si entra en su once, si le llega el dinero y qué tendría que vender).`;
+
+/** saca el bloque de notas de la respuesta y lo aplica: lo que hay que apuntar y lo que hay que olvidar */
+function aplicarNotas(texto, D) {
+  const m = String(texto || '').match(/```notas\s*([\s\S]*?)(```|$)/);
+  if (!m) return { texto, apuntadas: [], olvidadas: 0 };
+  const limpio = texto.replace(m[0], '').trim();
+  let j = null;
+  try { j = JSON.parse(m[1]); } catch (e) { j = sacarJSON(m[1]); }
+  if (!j) return { texto: limpio, apuntadas: [], olvidadas: 0 };
+  let lista = notas();
+  const antes = lista.length;
+  const fuera = new Set((j.olvidar || []).map(String));
+  lista = lista.filter((n) => !fuera.has(n.id));
+  const olvidadas = antes - lista.length;
+  const apuntadas = [];
+  for (const a of j.apuntar || []) {
+    if (!a || !a.texto) continue;
+    const dias = num(a.dias);
+    const tipo = String(a.tipo || 'otro');
+    apuntadas.push({
+      id: `n${Date.now().toString(36)}${apuntadas.length}`, t: Date.now(), texto: String(a.texto).slice(0, 300),
+      jugador: a.jugador || null, pid: a.jugador ? pidDe(a.jugador, D) : null, tipo, importe: num(a.importe) || null,
+      caduca: dias > 0 ? Date.now() + Math.min(60, dias) * DIA : tipo === 'trato' ? Date.now() + 7 * DIA : null,
+    });
+  }
+  if (apuntadas.length || olvidadas) guardarNotas([...lista, ...apuntadas]);
+  return { texto: limpio, apuntadas, olvidadas };
+}
+
 export async function charlar(pregunta, D, M, c, alTexto, signal) {
   const hist = conversacion();
   hist.push({ r: 'yo', t: pregunta, ts: Date.now() });
   LS.set(K('chat'), hist.slice(-40));
   const contents = hist.slice(-14).map((m) => ({ role: m.r === 'yo' ? 'user' : 'model', parts: [{ text: m.t }] }));
   const p = ultimoPlan();
-  const sistema = `${SISTEMA}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { corto: true })}${p ? `\n\nEL PLAN DE HOY QUE LE DISTE (${cuando(p.t)}): ${p.titular} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador}`).join('; ')}` : ''}`;
-  const r = await preguntar({ sistema, contents }, { stream: true, alTexto, signal });
+  // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
+  const nombrados = jugadoresEn(pregunta, D);
+  const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}` : '';
+  const sistema = `${SISTEMA}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\n${NOTAS_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { corto: true })}${extra}${p ? `\n\nEL PLAN DE HOY QUE LE DISTE (${cuando(p.t)}): ${p.titular} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador}`).join('; ')}` : ''}`;
+  const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();
+  const r = await preguntar({ sistema, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal });
+  const n = aplicarNotas(r.texto, D);
   const h2 = conversacion();
-  h2.push({ r: 'ia', t: r.texto, ts: Date.now(), fuentes: r.fuentes.slice(0, 8), modelo: r.modelo });
+  h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: r.fuentes.slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => x.texto), olvidadas: n.olvidadas });
   LS.set(K('chat'), h2.slice(-40));
-  return r;
+  return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas };
 }

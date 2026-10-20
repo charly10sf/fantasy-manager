@@ -94,5 +94,8 @@ export const nativo = {
   // la IA en segundo plano: encenderla o apagarla y decir cuándo cambia el mercado; avisar de que ha terminado
   programarFondo: (on, prox = 0) => llamar('programarFondo', !!on, Math.max(0, +prox || 0)),
   fondoTerminado: () => llamar('fondoTerminado'),
+  // preguntar con la voz: en la app, el dictado de Google; en el navegador, el reconocimiento de voz de Chrome si lo hay
+  voz: () => llamar('voz'),
+  hayVoz: () => !!N || 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window,
   estadoFondo: () => { try { return JSON.parse(llamar('estadoFondo') || 'null'); } catch (e) { return null; } },
 };

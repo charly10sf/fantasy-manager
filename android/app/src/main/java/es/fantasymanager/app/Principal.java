@@ -32,6 +32,7 @@ public class Principal extends Activity {
     static final String INICIO = "https://" + HOST + "/assets/index.html";
     private static final int PERMISO_INSTALAR = 8;
     private static final int PERMISO_AVISOS = 10;
+    private static final int VOZ = 12;
     private WebView web;
     private File pendiente;
     private boolean cargada;
@@ -179,6 +180,22 @@ public class Principal extends Activity {
         }
     }
 
+    /**
+     * Preguntar con la voz: el dictado de Google (el mismo del teclado) escucha y devuelve el texto a la web con
+     * vozTexto(texto). No necesita permiso de micrófono: lo pide la app de Google.
+     */
+    void escuchar() {
+        Intent i = new Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL, android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE, "es-ES")
+                .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, "Cuéntale a tu director deportivo");
+        try {
+            startActivityForResult(i, VOZ);
+        } catch (Exception e) {
+            js("window.vozTexto && vozTexto(null, 'Este móvil no tiene dictado por voz (instala la app de Google)')");
+        }
+    }
+
     /** Android 13 o más: el permiso de notificaciones, solo cuando activas los avisos */
     void pedirPermisoAvisos() {
         if (android.os.Build.VERSION.SDK_INT >= 33) {
@@ -211,6 +228,12 @@ public class Principal extends Activity {
 
     @Override
     protected void onActivityResult(int pedido, int resultado, Intent datos) {
+        if (pedido == VOZ) {
+            java.util.ArrayList<String> r = datos == null ? null : datos.getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS);
+            String t = r != null && !r.isEmpty() ? r.get(0) : null;
+            js("window.vozTexto && vozTexto(" + (t == null ? "null" : JSONObject.quote(t)) + ")");
+            return;
+        }
         if (pedido == PERMISO_INSTALAR) {
             File f = pendiente;
             pendiente = null;

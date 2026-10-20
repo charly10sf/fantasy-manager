@@ -7,7 +7,7 @@ import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
-import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA } from './ia.js';
+import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA, borrarNota } from './ia.js';
 import { ultimaVersion, api } from './api.js';
 import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -377,6 +377,27 @@ async function enviarPregunta(texto) {
   if (S.vista === 'ia') pintar();
 }
 
+/* ---------------- preguntar con la voz ---------------- */
+function escuchar() {
+  if (!hayClave()) { ir('ia'); tostada('Primero activa la IA con tu clave de Google'); return; }
+  if (S.charlando) return;
+  if (enApp) { nativo.voz(); return; }
+  const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!R) { tostada('Este navegador no entiende la voz'); return; }
+  const r = new R();
+  r.lang = 'es-ES'; r.interimResults = false; r.maxAlternatives = 1;
+  r.onresult = (e) => window.vozTexto(e.results[0][0].transcript);
+  r.onerror = (e) => window.vozTexto(null, e.error === 'not-allowed' ? 'Sin permiso para el micrófono' : 'No te he entendido');
+  tostada('Te escucho…', 6000);
+  r.start();
+}
+/** lo que ha entendido el dictado: se pregunta tal cual */
+window.vozTexto = (texto, error) => {
+  const t = String(texto || '').trim();
+  if (!t) { if (error) tostada(error, 5000); return; }
+  enviarPregunta(t);
+};
+
 /* ---------------- versión nueva y permisos ---------------- */
 async function buscarVersion(avisar = false) {
   if (!enApp) return;
@@ -441,6 +462,9 @@ document.addEventListener('click', async (ev) => {
     case 'copiarDiag': nativo.copiar(Hj.textoDiagnostico(S)); tostada('Copiado'); break;
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
+    case 'planYa': cerrarHoja(); ir('hoy'); S.planEstado = {}; generarPlan(); break;
+    case 'voz': escuchar(); break;
+    case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
     case 'hecho': {
       const P = S.plan; if (!P) break;

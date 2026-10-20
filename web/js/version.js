@@ -1,9 +1,18 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // 0.x mientras esté en pruebas: el número del medio sube con cada tanda de mejoras y el último con los arreglos.
-export const VERSION = '0.8.0';
+export const VERSION = '0.9.0';
 
 // Lo nuevo de cada versión (lo enseña la app la primera vez que se abre una versión nueva)
 export const NOVEDADES = [
+  {
+    v: '0.9.0',
+    cosas: [
+      'Pregúntale a la IA hablando: botón del micro en Pregunta y «Cuéntale algo» en el plan de hoy (usa el dictado de Google)',
+      'Lo que le cuentas cuenta: si te ofrecen un jugador, piensas vender a alguien o no quieres soltar a otro, lo apunta y lo tiene en cuenta en el plan, en el chat y cuando trabaja con la app cerrada',
+      'Cuando nombras a un jugador, la IA recibe todos sus datos (valor, lo que sube, de quién es, su cláusula, su once y sus rivales) y te dice con cifras si te compensa',
+      'Lo apuntado sale arriba en Pregunta (y en la ficha del jugador); puedes borrarlo cuando ya no valga. Al apuntar algo, el plan se rehace',
+    ],
+  },
   {
     v: '0.8.0',
     cosas: [
