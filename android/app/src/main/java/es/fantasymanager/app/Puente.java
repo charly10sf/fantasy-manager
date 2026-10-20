@@ -115,6 +115,12 @@ public class Puente {
                 r.put("b", texto);
                 String tipo = con.getContentType();
                 if (tipo != null) r.put("t", tipo);
+            } catch (java.net.UnknownHostException e) {
+                // el DNS del móvil o de la red no encuentra la dirección (un bloqueador, el DNS privado…):
+                // se repite preguntando la dirección a Cloudflare y a Google por https
+                if (con != null) con.disconnect();
+                con = null;
+                r = Red.pedir(metodo, url, cabeceras, cuerpo, MAX);
             } catch (Exception e) {
                 try {
                     r.put("s", 0);

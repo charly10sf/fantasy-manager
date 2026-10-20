@@ -65,4 +65,7 @@ dependencies {
     implementation 'androidx.browser:browser:1.8.0'
     // sirve la web de los assets con https, para que funcionen el cifrado y el almacenamiento del navegador
     implementation 'androidx.webkit:webkit:1.12.1'
+    // si el DNS del móvil no encuentra una dirección (bloqueadores, DNS privado), se pregunta por https a Cloudflare o Google
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:okhttp-dnsoverhttps:4.12.0'
 }
