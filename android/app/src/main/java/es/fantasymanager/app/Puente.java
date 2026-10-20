@@ -125,6 +125,52 @@ public class Puente {
         });
     }
 
+    /**
+     * Baja una imagen (la foto de un jugador) y la devuelve en base64, para que la web pueda mirar dónde está la
+     * cara y encuadrarla. Cualquier dirección https, pero solo si lo que llega es una imagen y pesa menos de 3 MB.
+     */
+    @JavascriptInterface
+    public void imagen(String id, String url) {
+        HILOS.execute(() -> {
+            JSONObject r = new JSONObject();
+            HttpURLConnection con = null;
+            try {
+                URL u = new URL(url);
+                if (!"https".equals(u.getProtocol())) throw new Exception("sin https");
+                con = (HttpURLConnection) u.openConnection();
+                con.setConnectTimeout(10000);
+                con.setReadTimeout(15000);
+                con.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36");
+                int estado = con.getResponseCode();
+                String tipo = con.getContentType();
+                if (estado != 200 || tipo == null || !tipo.startsWith("image/")) throw new Exception("no es una imagen (" + estado + ")");
+                try (InputStream in = con.getInputStream(); ByteArrayOutputStream buf = new ByteArrayOutputStream()) {
+                    byte[] b = new byte[32768];
+                    int n, total = 0;
+                    while ((n = in.read(b)) > 0) {
+                        total += n;
+                        if (total > 3 * 1024 * 1024) throw new Exception("imagen demasiado grande");
+                        buf.write(b, 0, n);
+                    }
+                    r.put("s", estado);
+                    r.put("t", tipo);
+                    r.put("b", android.util.Base64.encodeToString(buf.toByteArray(), android.util.Base64.NO_WRAP));
+                }
+            } catch (Exception e) {
+                try {
+                    r.put("s", 0);
+                    r.put("e", e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());
+                } catch (Exception ignorada) {
+                    // no puede fallar
+                }
+            } finally {
+                if (con != null) con.disconnect();
+            }
+            respuestas.put(id, r.toString());
+            act.js("window.__http && window.__http(" + JSONObject.quote(id) + ")");
+        });
+    }
+
     /** La respuesta de una petición ya terminada (y se olvida) */
     @JavascriptInterface
     public String respuesta(String id) {

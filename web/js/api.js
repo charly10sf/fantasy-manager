@@ -67,6 +67,7 @@ export const api = {
   equipo: (liga, eq) => pedir(`${CMP}/leagues/${liga}/teams/${eq}`),
   dinero: (eq) => pedir(`${CMP}/teams/${eq}/money`),
   mercado: (liga) => pedir(`${CMP}/league/${liga}/market`),
+  ofertas: (liga, ptId) => pedir(`${CMP}/league/${liga}/playerTeam/${ptId}/offer`),
   jugadores: () => pedir(`${CMP}/players`),
   jugador: (id, liga) => pedir(`${CMP}/player/${id}/league/${liga}`),
   semana: () => pedir(`${CMP}/week/current`),

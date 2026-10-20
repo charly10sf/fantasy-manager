@@ -36,6 +36,25 @@ export function http(metodo, url, { cabeceras = {}, cuerpo = null, tiempo = 4500
   });
 }
 
+/** una imagen como data:… (para mirar sus píxeles). En la app, por el puente; fuera, con fetch (si el sitio deja) */
+export async function imagenDatos(url) {
+  if (N && typeof N.imagen === 'function') {
+    const id = `i${Date.now().toString(36)}${(seq++).toString(36)}`;
+    const r = await new Promise((resolver) => {
+      const reloj = setTimeout(() => { if (pendientes.delete(id)) resolver({ s: 0, e: 'tiempo agotado' }); }, 20000);
+      pendientes.set(id, (x) => { clearTimeout(reloj); resolver(x); });
+      try { N.imagen(id, url); } catch (e) { pendientes.delete(id); clearTimeout(reloj); resolver({ s: 0, e: String(e) }); }
+    });
+    if (!r.b) throw new Error(r.e || 'sin imagen');
+    return `data:${r.t || 'image/png'};base64,${r.b}`;
+  }
+  if (N) throw new Error('esta versión de la app no puede mirar imágenes');
+  const res = await fetch(url, { mode: 'cors' });
+  if (!res.ok) throw new Error(`imagen ${res.status}`);
+  const blob = await res.blob();
+  return await new Promise((ok, mal) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = mal; fr.readAsDataURL(blob); });
+}
+
 /* almacenamiento privado de la app (la sesión de LaLiga, la clave de Gemini). Fuera de la app, localStorage */
 export function guardar(clave, valor) {
   const v = valor == null ? null : typeof valor === 'string' ? valor : JSON.stringify(valor);

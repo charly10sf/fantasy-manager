@@ -154,10 +154,35 @@ export function mercado(r, equipos) {
       vendedor: (vend.manager && vend.manager.managerName) || vend.name || '',
       miPuja: bid ? num(primero(bid.money, bid.amount)) : (typeof it.bid === 'number' ? it.bid : null),
       clausula: it.playerTeam ? num(it.playerTeam.buyoutClause) : null,
+      ptId: id(it.playerTeam ? primero(it.playerTeam.playerTeamId, it.playerTeam.id) : it.playerTeamId),
+      // a veces las ofertas ya vienen dentro del mercado
+      ofertasLista: Array.isArray(it.offers) ? ofertas(it.offers) : null,
       jugador: j,
     });
   }
   return out;
+}
+
+/* ---------- las ofertas por un jugador tuyo en venta (de LaLiga y de otros managers) ---------- */
+export function ofertas(r) {
+  const out = [];
+  for (const o of lista(r).length ? lista(r) : Array.isArray(r) ? r : []) {
+    if (!o || typeof o !== 'object') continue;
+    const importe = num(primero(o.money, o.amount, o.offerMoney, o.price, o.value));
+    if (!importe) continue;
+    const eq = o.team || o.buyerTeam || o.fromTeam || o.originTeam || null;
+    const us = o.user || o.manager || o.buyer || o.from || (eq && eq.manager) || null;
+    const nombre = primero(o.managerName, o.userName, o.buyerName, us && (us.managerName || us.name || us.username), eq && eq.name);
+    const deLiga = !nombre && !eq && !us || /liga|league|system|market/i.test(String(primero(o.origin, o.type, o.discr, o.source, '')));
+    out.push({
+      id: id(o.id), importe,
+      estado: String(o.status || o.state || 'pending').toLowerCase(),
+      caduca: ms(primero(o.expirationDate, o.expiresAt, o.endDate)),
+      de: deLiga ? 'LaLiga' : nombre || 'Un manager',
+      deLiga, deTeamId: id(eq && eq.id), deUserId: id(us && us.id),
+    });
+  }
+  return out.sort((a, b) => b.importe - a.importe);
 }
 
 /* ---------- jornada y partidos ---------- */

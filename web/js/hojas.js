@@ -2,7 +2,7 @@
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, num, horaDe, LS } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada } from './comunes.js';
 import { linea, barra, barras } from './graficos.js';
-import { filaActividad, PELIGRO } from './vistas.js';
+import { filaActividad, PELIGRO, ventaHTML } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
 import { nativo, enApp } from './puente.js';
@@ -43,6 +43,8 @@ export function fichaJugador(S, pid) {
     h += `<div class="aviso-ficha azul">${icono('info')}<div>No es de nadie en tu liga: puede salir en el mercado.</div></div>`;
   }
 
+  const venta = M.misVentas.find((v) => v.pid === pid);
+  if (venta) h += `<div class="sec"><h2>En venta</h2></div>${ventaHTML(venta)}`;
   const f = mia || suya;
   h += `<div class="rejilla" style="margin-top:14px">
     <div class="dato"><div class="et">Puntos</div><div class="v">${num(j.puntos)}<small>${j.media ? String(j.media).replace('.', ',') + ' de media' : ''}</small></div></div>

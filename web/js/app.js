@@ -13,6 +13,7 @@ import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
 import { ponerEquipos } from './comunes.js';
+import { encuadrar } from './caras.js';
 import { VERSION, NOVEDADES } from './version.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null };
@@ -86,6 +87,7 @@ function pintar({ arriba = false } = {}) {
   $('#banda').innerHTML = S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : '';
   if (arriba) window.scrollTo(0, 0);
   if (S.vista === 'ia') bajarChat();
+  encuadrar(v);
 }
 function ir(vista, { arriba = true } = {}) {
   vista = ALIAS[vista] || vista;
@@ -181,6 +183,7 @@ function abrirHoja(html) {
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(() => { velo.classList.add('on'); hoja.classList.add('on'); });
   S.hoja = hoja;
+  encuadrar(hoja);
   let y0 = null;
   hoja.addEventListener('touchstart', (e) => { y0 = hoja.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
   hoja.addEventListener('touchmove', (e) => { if (y0 == null) return; const d = e.touches[0].clientY - y0; if (d > 0) hoja.style.transform = `translateY(${d}px)`; }, { passive: true });
@@ -204,6 +207,7 @@ function repintarHoja() {
   const sc = S.hoja.scrollTop;
   S.hoja.innerHTML = `<div class="asa"></div>${htmlHoja(...S.tipoHoja)}`;
   S.hoja.scrollTop = sc;
+  encuadrar(S.hoja);
 }
 
 window.atras = () => {

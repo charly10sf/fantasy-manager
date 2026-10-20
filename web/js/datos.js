@@ -96,6 +96,24 @@ export async function actualizar(alPaso = () => {}) {
   alPaso(6, PASOS[6]);
   const mercado = (await blando('mercado', async () => { const r = await api.mercado(liga.id); const l = N.lista(r); if (l[0]) muestras.mercado = recorte(l[0]); return N.mercado(r, equipos); })) || [];
   for (const m of mercado) maestro[m.pid] = mezclar(maestro[m.pid], m.jugador);
+
+  // tus jugadores en venta y las ofertas que tienes por ellos
+  const misVentas = [];
+  if (mio) {
+    const mias = mercado.filter((m) => m.vendedorTeamId === mio.teamId || (m.tipo === 'manager' && (plantillas[mio.teamId] || []).some((f) => f.pid === m.pid)));
+    await enParalelo(mias, 3, async (m) => {
+      let lista = m.ofertasLista;
+      const ptId = m.ptId || ((plantillas[mio.teamId] || []).find((f) => f.pid === m.pid) || {}).ptId;
+      if (!lista && ptId) {
+        lista = await blando(`ofertas ${m.jugador.nombre}`, async () => {
+          const r = await api.ofertas(liga.id, ptId);
+          if (!muestras.ofertas) muestras.ofertas = recorte(r);
+          return N.ofertas(r);
+        });
+      }
+      misVentas.push({ marketId: m.id, pid: m.pid, ptId, precio: m.precio, cierra: m.cierra, ofertas: (lista || []).filter((o) => !/reject|declin|cancel|expired/.test(o.estado)) });
+    });
+  }
   mercado.forEach((m) => { delete m.jugador; });
 
   alPaso(7, PASOS[7]);
@@ -140,7 +158,7 @@ export async function actualizar(alPaso = () => {}) {
     yo: { userId, nombre: miNombre, teamId: mio ? mio.teamId : null },
     liga, ligas, equipos, equiposT: viejo && viejo.equiposT && equipos === viejo.equipos ? viejo.equiposT : Date.now(),
     clasif, plantillas, maestro, mercado, actividad: act.slice(0, 400),
-    dinero, valorEquipo, jornada, partidos, tendencias, avisos, muestras,
+    dinero, valorEquipo, jornada, partidos, tendencias, avisos, muestras, misVentas,
   };
   return guardarFoto(D, viejo);
 }

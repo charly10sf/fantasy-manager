@@ -191,6 +191,27 @@ export function analizar(D, H, c, extra = {}) {
   M.cierreMercado = Math.min(...M.mercado.map((m) => m.cierra || Infinity).filter((x) => x > ahora), Infinity);
   if (!Number.isFinite(M.cierreMercado)) M.cierreMercado = null;
 
+  /* ---------- tus jugadores en venta y sus ofertas ---------- */
+  M.misVentas = (D.misVentas || []).map((v) => {
+    const j = J(v.pid), t = M.tend(v.pid);
+    const mia = (D.plantillas[yoTid] || []).find((f) => f.pid === v.pid);
+    const compra = mia && (mia.compra || null);
+    const ofertas = (v.ofertas || []).map((o) => ({ ...o, sobre: j.valor ? o.importe / j.valor - 1 : 0 }));
+    const mejor = ofertas[0] || null;
+    // ¿aceptar? si paga más que su valor, o si está bajando y la oferta no se queda muy corta
+    let consejo = 'esperar', porque = '';
+    const bajando = (t.p1 != null && t.p1 < -0.5) || (t.p7 != null && t.p7 < -2);
+    const subiendo = (t.p1 != null && t.p1 > 0.5) || (t.p7 != null && t.p7 > 2);
+    if (!mejor) { consejo = 'sin ofertas'; porque = 'Aún no tienes ofertas.'; }
+    else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
+    else if (bajando && mejor.sobre >= -0.04) { consejo = 'aceptar'; porque = `Está bajando${t.p7 != null ? ` (${pct(t.p7)} en 7 días)` : ''} y la oferta casi iguala su valor.`; }
+    else if (MALOS.has(j.estado) && mejor.sobre >= -0.1) { consejo = 'aceptar'; porque = 'Está lesionado o sancionado: mejor venderlo ya.'; }
+    else if (subiendo) { consejo = 'esperar'; porque = 'Está subiendo: mañana puede llegar una oferta mejor.'; }
+    else { consejo = 'esperar'; porque = `La oferta se queda un ${Math.round(Math.abs(mejor.sobre) * 100)} % por debajo de lo que vale.`; }
+    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, ganado: mejor && compra ? mejor.importe - compra : null };
+  });
+  M.enVenta = new Set(M.misVentas.map((v) => v.pid));
+
   /* ---------- quién sube y quién baja en toda LaLiga ---------- */
   const todos = Object.values(D.maestro).filter((j) => j && j.valor && j.pos && j.pos < 5);
   const conT = todos.map((j) => ({ j, t: M.tend(j.id), dueno: M.dueno[j.id] || null })).filter((x) => x.t.d1 != null || x.t.d7 != null);
@@ -348,14 +369,21 @@ export function planAuto(D, M, c) {
   const vendidos = new Set();
   const op = (o) => ops.push({ confianza: 'media', ...o });
 
+  // 0. aceptar las ofertas buenas por lo que ya tienes en venta
+  for (const v of M.misVentas.filter((y) => y.consejo === 'aceptar')) {
+    op({ accion: 'vender', pid: v.pid, jugador: v.j.nombre, donde: `acepta la oferta de ${v.mejor.de}`, importe: v.mejor.importe, cuando: v.mejor.caduca ? `antes de ${cuando(v.mejor.caduca)}` : 'hoy',
+      motivo: `${v.porque} Vale ${eur(v.j.valor)}${v.ganado != null ? ` y lo pagaste a ${eur(v.compra)} (${eur(v.ganado, { signo: true })})` : ''}.`, confianza: v.mejor.sobre >= 0.02 ? 'alta' : 'media' });
+    saldo += v.mejor.importe; vendidos.add(v.pid);
+  }
+
   // 1. vender lo que no va a puntuar o se está desplomando con beneficio
-  for (const x of M.mias.filter((y) => MALOS.has(y.j.estado))) {
-    op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'a la liga', importe: x.j.valor, cuando: 'hoy',
+  for (const x of M.mias.filter((y) => MALOS.has(y.j.estado) && !vendidos.has(y.pid))) {
+    op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
       motivo: `${x.j.estado === 'injured' ? 'Lesionado' : x.j.estado === 'suspended' ? 'Sancionado' : 'Fuera de LaLiga'}: no te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y ya ha perdido un ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Mejor venderlo antes de que baje más.`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
   for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ganado > 0 && y.tend.p7 != null && y.tend.p7 < -4).slice(0, 2)) {
-    op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'a la liga', importe: x.j.valor, cuando: 'hoy',
+    op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
       motivo: `Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva un ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días. Asegura el beneficio.` });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
@@ -408,7 +436,7 @@ export function planAuto(D, M, c) {
       .sort((a, b) => (num(a.j.media) - num(b.j.media)) || (a.j.valor - b.j.valor));
     for (const x of candidatos) {
       if (saldo >= 0) break;
-      op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'a la liga', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
+      op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
         motivo: `Para no empezar la jornada en negativo (no puntuarías). Es de los que menos te aporta: ${String(x.j.media || 0).replace('.', ',')} pts de media.`, confianza: 'alta' });
       saldo += x.j.valor; vendidos.add(x.pid);
     }

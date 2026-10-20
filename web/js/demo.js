@@ -89,6 +89,18 @@ export function demo() {
     mercado.push({ id: 'mm' + i, pid: f.pid, tipo: 'manager', precio: Math.round(maestro[f.pid].valor * (1.05 + r() * 0.3)), cierra: fin, pujas: Math.floor(r() * 2), ofertas: 0, vendedorTeamId: e.teamId, vendedor: e.manager, miPuja: null, clausula: f.clausula });
   });
 
+  // dos de los tuyos en venta: uno con la oferta de LaLiga y la de un rival, otro sin ofertas
+  const misF = plantillas[yo.teamId];
+  const v1 = maestro[misF[3].pid], v2 = maestro[misF[9].pid];
+  const misVentas = [
+    { marketId: 'v1', pid: v1.id, ptId: 'pt' + v1.id, precio: Math.round(v1.valor * 1.1 / 1000) * 1000, cierra: fin, ofertas: [
+      { id: 'o1', importe: Math.round(v1.valor * 1.04 / 1000) * 1000, estado: 'pending', caduca: fin, de: clasif[4].manager, deLiga: false, deTeamId: clasif[4].teamId },
+      { id: 'o2', importe: Math.round(v1.valor * 0.98 / 1000) * 1000, estado: 'pending', caduca: fin, de: 'LaLiga', deLiga: true },
+    ] },
+    { marketId: 'v2', pid: v2.id, ptId: 'pt' + v2.id, precio: Math.round(v2.valor * 1.25 / 1000) * 1000, cierra: fin, ofertas: [] },
+  ];
+  for (const v of misVentas) mercado.push({ id: v.marketId, pid: v.pid, tipo: 'manager', precio: v.precio, cierra: fin, pujas: 0, ofertas: v.ofertas.length, vendedorTeamId: yo.teamId, vendedor: yo.manager, miPuja: null, clausula: null });
+
   const tendencias = {};
   for (const pid of Object.keys(maestro)) {
     const p1 = (r() - 0.45) * 6;
@@ -130,7 +142,7 @@ export function demo() {
     yo: { userId: yo.userId, nombre: yo.manager, teamId: yo.teamId },
     liga: { id: 'demo', nombre: 'Liga de ejemplo' }, ligas: [{ id: 'demo', nombre: 'Liga de ejemplo' }],
     equipos, equiposT: ahora, clasif, plantillas, maestro, mercado, actividad,
-    dinero: 6430000, valorEquipo: yo.valor, jornada: 10, partidos, tendencias, avisos: [],
+    dinero: 6430000, valorEquipo: yo.valor, jornada: 10, partidos, tendencias, avisos: [], misVentas,
   };
 
   // un histórico de 21 días para que haya gráficos

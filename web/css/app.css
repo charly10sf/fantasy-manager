@@ -186,10 +186,14 @@ main { padding: 16px 16px 120px; }
 .filtros button.activo { background: var(--rojo); color: #fff; }
 
 /* ---------- jugadores ---------- */
-.ava { display: block; width: 52px; height: 52px; border-radius: 50%; flex: none; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 30%, #2c2c35, #17171c); box-shadow: inset 0 0 0 2px var(--plano3); }
+.ava { display: block; width: 52px; height: 52px; border-radius: 50%; flex: none; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 30%, #2c2c35, #17171c); }
+.ava::after { content: ''; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--plano3); pointer-events: none; }
 .ava .ini { position: absolute; inset: 0; display: grid; place-items: center; font: 700 17px var(--cond); color: var(--texto2); }
-.ava img.cara { position: absolute; left: -12%; top: 2%; width: 124%; height: 124%; object-fit: cover; object-position: 50% 0; }
-.ava.p1 { box-shadow: inset 0 0 0 2px var(--por); } .ava.p2 { box-shadow: inset 0 0 0 2px var(--def); } .ava.p3 { box-shadow: inset 0 0 0 2px var(--med); } .ava.p4 { box-shadow: inset 0 0 0 2px var(--del); } .ava.p5 { box-shadow: inset 0 0 0 2px var(--ent); }
+/* la foto se encuadra sola (caras.js): hasta que se sabe dónde está la cara, no se ve */
+.ava img.cara { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; opacity: 0; transition: opacity 0.2s; }
+.ava img.cara.lista { opacity: 1; object-fit: fill; }
+.ava img.cara.entera { opacity: 1; }
+.ava.p1::after { box-shadow: inset 0 0 0 2px var(--por); } .ava.p2::after { box-shadow: inset 0 0 0 2px var(--def); } .ava.p3::after { box-shadow: inset 0 0 0 2px var(--med); } .ava.p4::after { box-shadow: inset 0 0 0 2px var(--del); } .ava.p5::after { box-shadow: inset 0 0 0 2px var(--ent); }
 .ava-w { display: block; position: relative; flex: none; }
 .ava-w .esc { position: absolute; right: -3px; bottom: -3px; width: 21px; height: 21px; border-radius: 50%; background: #fff; padding: 2px; object-fit: contain; box-shadow: 0 0 0 2px var(--fondo); }
 .ava.g { width: 88px; height: 88px; } .ava.g .ini { font-size: 30px; }
@@ -359,3 +363,14 @@ pre.diag { white-space: pre-wrap; word-break: break-word; font: 11.5px/1.45 ui-m
 .tostada { position: fixed; left: 50%; bottom: calc(80px + env(safe-area-inset-bottom)); transform: translate(-50%, 16px); z-index: 70; background: var(--plano3); color: var(--texto); padding: 11px 16px; border-radius: 12px; font-size: 14.5px; opacity: 0; transition: all 0.2s; max-width: calc(100% - 32px); text-align: center; }
 .tostada.on { opacity: 1; transform: translate(-50%, 0); }
 @media (max-width: 370px) { .marcador .col .v { font-size: 25px; } .plan-titular { font-size: 25px; } .titulo { font-size: 30px; } }
+
+/* tus jugadores en venta y sus ofertas */
+.venta { border-bottom: 1px solid var(--linea); padding-bottom: 12px; }
+.venta .fila { border-bottom: 0; padding-bottom: 6px; }
+.ofertas { margin-left: 64px; display: grid; gap: 6px; }
+.oferta { display: flex; align-items: center; gap: 10px; font-size: 14px; padding: 7px 10px; border-radius: 9px; background: var(--plano); }
+.oferta .de { flex: 1; min-width: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.oferta .de.liga { color: var(--rojo-l); }
+.oferta .cifra { font-size: 15px; }
+.oferta .apag { display: inline-flex; align-items: center; gap: 3px; font-size: 12.5px; }
+.oferta .apag .ic { width: 13px; height: 13px; }

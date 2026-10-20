@@ -209,7 +209,11 @@ export function contexto(D, M, c, { corto = false } = {}) {
   const yo = M.yo || {};
   L.push(`MI EQUIPO: ${yo.nombre || '?'} · ${yo.pos || '?'}º de ${D.clasif.length} · ${yo.puntos || 0} pts · valor ${eur(D.valorEquipo)} · SALDO ${m1(D.dinero)} · PUEDO GASTAR COMO MUCHO ${eur(M.pujaMax)}${M.misPujas ? ` (ya tengo ${eur(M.misPujas)} comprometidos en pujas)` : ''}.`);
   L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | forma) + cláusula, protección, riesgo, próximo partido y lo que pagué:');
-  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.prox ? ` | ${partido(x.prox)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
+  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.prox ? ` | ${partido(x.prox)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
+  if (M.misVentas && M.misVentas.length) {
+    L.push('\nMIS JUGADORES EN VENTA Y SUS OFERTAS:');
+    for (const v of M.misVentas) L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}`);
+  }
   L.push('\nRIVALES (pos | equipo | manager | puntos | valor | cambio de valor 7d | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d | peligro):');
   for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel}`);
   const cl = M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, corto ? 16 : 30);
@@ -238,7 +242,7 @@ export function contexto(D, M, c, { corto = false } = {}) {
 }
 
 const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España, directo, como un colega que sabe mucho del juego.
-Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). El mercado cambia cada día; se puja a ciegas y gana la puja más alta. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa. Vender a la liga da el valor del jugador.
+Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). El mercado cambia cada día; se puja a ciegas y gana la puja más alta. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
 Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Busca en Google lo reciente que importe: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.`;
 
 /* ---------------- el plan del día ---------------- */
@@ -261,12 +265,12 @@ export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
   const pedido = `${contexto(D, M, c)}${memoria(M)}
 
 Hazme el PLAN DE HOY. Primero busca noticias de mis jugadores, de los candidatos (cláusulas, mercado, los que suben) y de la próxima jornada.
-Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero lo que vendo (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría (según las pujas que lleva y si sube). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
+Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría (según las pujas que lleva y si sube). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
 Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
 {
  "titular": "8 a 16 palabras con lo más importante de hoy",
  "situacion": "2 o 3 frases: cómo está mi equipo y qué buscamos hoy, con cifras",
- "operaciones": [{"accion": "vender|pujar|clausular|blindar|aceptar_oferta|alinear|esperar", "jugador": "nombre exacto de los datos", "donde": "a la liga | en el mercado | cláusula a <manager> | ...", "importe": número en euros o null, "puja_max": número o null, "cuando": "ahora | hoy antes de las 18:00 | mañana 14:05 cuando se abra", "motivo": "por qué, con cifras y la noticia que lo justifica (1 o 2 frases)", "confianza": "alta|media|baja"}],
+ "operaciones": [{"accion": "aceptar_oferta|vender|pujar|clausular|blindar|alinear|esperar", "jugador": "nombre exacto de los datos", "donde": "a la liga | en el mercado | cláusula a <manager> | ...", "importe": número en euros o null, "puja_max": número o null, "cuando": "ahora | hoy antes de las 18:00 | mañana 14:05 cuando se abra", "motivo": "por qué, con cifras y la noticia que lo justifica (1 o 2 frases)", "confianza": "alta|media|baja"}],
  "proximos_dias": [{"dia": "mañana miércoles 21 | jueves 22 | antes de la jornada", "texto": "qué hacer ese día y a qué hora"}],
  "vigilar": [{"jugador": "nombre", "texto": "por qué hay que seguirlo"}],
  "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta", "efecto": "sube|baja|neutro"}],
@@ -311,9 +315,17 @@ export function cuadrarPlan(P, D, M) {
     const mia = pid && M.mias.find((x) => x.pid === pid);
     const cl = pid && M.clausulas.find((x) => x.pid === pid);
     const mk = pid && M.mercado.find((x) => x.pid === pid);
-    const accion = String(o.accion || '').toLowerCase().replace('aceptar_oferta', 'vender');
+    const original = String(o.accion || '').toLowerCase();
+    const accion = original.replace('aceptar_oferta', 'vender').replace('aceptar', 'vender');
+    const venta = pid && (M.misVentas || []).find((v) => v.pid === pid);
+    const aceptar = /aceptar/.test(original) || /acepta/i.test(o.donde || '');
     let importe = o.importe != null ? +o.importe : null, signo = 0, aviso = null;
-    if (accion === 'vender') { signo = 1; if (!importe && j) importe = j.valor; if (pid && !mia) aviso = 'No es tuyo'; }
+    if (accion === 'vender') {
+      signo = 1;
+      if (!importe) importe = aceptar && venta && venta.mejor ? venta.mejor.importe : j ? j.valor : null;
+      if (pid && !mia) aviso = 'No es tuyo';
+      else if (aceptar && venta && !venta.mejor) aviso = 'Aún no tiene ofertas';
+    }
     if (accion === 'clausular') { signo = -1; if (cl) importe = cl.clausula; if (cl && !cl.abierta) aviso = `Se abre ${cuando(cl.protegidoHasta)}`; if (pid && !cl) aviso = 'No está en ningún rival'; }
     if (accion === 'pujar') { signo = -1; importe = o.puja_max != null ? +o.puja_max : importe || (mk ? mk.precio : null); if (pid && !mk) aviso = 'No está en el mercado'; }
     if (accion === 'blindar') signo = importe ? -1 : 0;
@@ -322,7 +334,7 @@ export function cuadrarPlan(P, D, M) {
     const otroDia = /cuando se abra|se abre|si vendes/i.test(cu) || (/^(el )?(mañana|lunes|martes|miércoles|jueves|viernes|sábado|domingo)/i.test(cu) && accion !== 'pujar');
     const hoy = !otroDia || !!(cl && cl.abierta && accion === 'clausular');
     if (saldo != null && signo && importe && hoy) saldo += signo * importe;
-    return { ...o, accion, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy ? saldo : null, aviso, hoy };
+    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy ? saldo : null, aviso, hoy };
   });
   const final = saldo;
   const avisoSaldo = final != null && final < -M.deuda ? `Te pasarías del límite de deuda (${eur(-M.deuda)})` : final != null && final < 0 ? `Acabarías en negativo (${eur(final)}): vende antes de que empiece la jornada` : null;

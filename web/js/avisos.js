@@ -31,6 +31,13 @@ export function calcular(D, M, c = cfgAvisos()) {
       .forEach((x) => add(`mia-${x.pid}`, x.protegidoHasta - 2 * HORA, `A ${x.j.nombre} le quedan 2 h de protección`,
         `Su cláusula es ${eur(x.clausula)} y vale ${eur(x.j.valor)}. Si no quieres perderlo, súbesela.`, 'equipo'));
   }
+  if (c.mercado) {
+    for (const v of M.misVentas || []) {
+      const m = v.mejor;
+      if (m && m.caduca) add(`oferta-${v.pid}-${m.id || m.importe}`, m.caduca - HORA, `Caduca la oferta por ${v.j.nombre}`,
+        `${m.de} te da ${eur(m.importe)} (vale ${eur(v.j.valor)}). ${v.consejo === 'aceptar' ? 'Te conviene aceptarla.' : 'Si no la quieres, déjala caducar.'}`, 'equipo');
+    }
+  }
   if (c.mercado && M.cierreMercado) {
     const n = M.mercado.filter((m) => m.miPuja).length;
     add('mercado', M.cierreMercado - HORA, 'El mercado cambia en 1 hora', n ? `Tienes ${n} puja${n > 1 ? 's' : ''} en marcha. Revisa que te llega el dinero.` : 'Última hora para pujar por lo de hoy.', 'mercado');
