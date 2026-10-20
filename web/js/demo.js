@@ -158,6 +158,14 @@ export function demo() {
     H.eq[e.teamId] = s;
   }
   for (let d = 21; d >= 1; d--) H.yo.push([diaDe(ahora - d * DIA), 4e6 + r() * 5e6, yo.valor * (0.88 + (21 - d) * 0.006)]);
+  // unos cuantos del mercado en racha (para que se vea lo de especular)
+  mercado.filter((m) => m.tipo === 'liga').slice(3, 7).forEach((m, i) => {
+    const sube = 0.022 + i * 0.006;
+    const j = maestro[m.pid];
+    H.v[m.pid] = Array.from({ length: 21 }, (_, k) => [diaDe(ahora - (21 - k) * DIA), Math.round(j.valor / Math.pow(1 + sube, 21 - k))]);
+    tendencias[m.pid] = { d1: Math.round(j.valor * sube), p1: sube * 100, d7: null, p7: null, ffValor: j.valor };
+    m.pujas = i % 2;
+  });
   H.mov.push({ t: ahora - 9 * HORA, teamId: clasif[3].teamId, tipo: 'blinda', pid: plantillas[clasif[3].teamId][0].pid, de: 14e6, a: 21e6 });
   return { D, H };
 }

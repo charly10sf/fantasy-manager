@@ -281,5 +281,5 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 export function borrarTodo() {
-  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'demo']) LS.del(k);
+  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'demo']) LS.del(k);
 }

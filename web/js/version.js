@@ -1,9 +1,19 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // 0.x mientras esté en pruebas: el número del medio sube con cada tanda de mejoras y el último con los arreglos.
-export const VERSION = '0.4.0';
+export const VERSION = '0.5.0';
 
 // Lo nuevo de cada versión (lo enseña la app la primera vez que se abre una versión nueva)
 export const NOVEDADES = [
+  {
+    v: '0.5.0',
+    cosas: [
+      'Dos tipos de fichaje: para tu once o para revender. Cada paso del plan dice cuál es',
+      'Especular entre semana: comprar lo que sube aunque no te haga falta, bajando hasta el límite de deuda, y venderlo el día antes de la jornada',
+      'Nueva pestaña Mercado → Especular, con el beneficio esperado de cada candidato y cuándo venderlo',
+      'Lo que compras para revender queda apuntado y el plan te dice cuándo venderlo (o márcalo tú desde la ficha)',
+      'La IA sabe que puede usar la deuda entre semana y que solo hay que empezar la jornada en positivo',
+    ],
+  },
   {
     v: '0.4.0',
     cosas: [

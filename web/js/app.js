@@ -2,7 +2,7 @@
 import { esc, icono, LOGO, $, $$, LS, eur, rel, MIN, diaDe } from './util.js';
 import { enApp, nativo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion } from './auth.js';
-import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles } from './datos.js';
+import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K } from './datos.js';
 import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
@@ -105,9 +105,26 @@ function rehacer() {
   S.H = historico();
   S.det = { ...detalles(), ...S.det };
   ponerEquipos(S.D.equipos);
-  S.M = analizar(S.D, S.H, S.c, { det: S.det });
+  S.M = analizar(S.D, S.H, S.c, { det: S.det, reventa: reventa() });
   montarPlan();
+  if (apuntarReventa()) { S.M = analizar(S.D, S.H, S.c, { det: S.det, reventa: reventa() }); montarPlan(); }
   programar(S.D, S.M);
+}
+
+/* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
+const reventa = () => LS.get(K('reventa'), {});
+function apuntarReventa() {
+  const r = reventa();
+  let cambia = false;
+  const mios = new Set(S.M.mias.map((x) => x.pid));
+  for (const o of (S.plan && S.plan.ops) || []) {
+    if (!String(o.objetivo || '').startsWith('revend') || o.signo >= 0 || !o.pid || r[o.pid]) continue;
+    if (mios.has(o.pid) && V.hecho(S, S.plan, o)) { r[o.pid] = { t: Date.now(), precio: o.puja_max || o.importe || null }; cambia = true; }
+  }
+  // fuera los que ya no son tuyos
+  for (const pid of Object.keys(r)) if (!mios.has(pid) && Date.now() - r[pid].t > 3600e3) { delete r[pid]; cambia = true; }
+  if (cambia) LS.set(K('reventa'), r);
+  return cambia;
 }
 
 /** el plan que se enseña: el de la IA si es de hoy (o el último mientras llega el nuevo); si no, el automático */
@@ -342,6 +359,7 @@ document.addEventListener('click', async (ev) => {
       // solo los de la última semana
       for (const k of Object.keys(todos)) if (!todos[k] || Date.now() - (todos[k].t || 0) > 7 * 86400e3) delete todos[k];
       LS.set('hechos', todos);
+      if (apuntarReventa()) rehacer();
       pintar();
       break;
     }
@@ -378,6 +396,14 @@ document.addEventListener('click', async (ev) => {
     case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Bajando la versión nueva…'); } break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarChat': borrarConversacion(); pintar(); break;
+    case 'reventa': {
+      const r = reventa();
+      if (r[d.pid]) delete r[d.pid]; else r[d.pid] = { t: Date.now(), precio: (S.M.mias.find((x) => x.pid === d.pid) || {}).compra || S.M.J(d.pid).valor };
+      LS.set(K('reventa'), r);
+      rehacer(); repintarHoja(); pintar();
+      tostada(r[d.pid] ? 'Apuntado para revender: te diré cuándo venderlo' : 'Ya no está marcado para revender');
+      break;
+    }
     case 'enviar': { const ta = $('#pregunta'); if (ta) { const t = ta.value; ta.value = ''; enviarPregunta(t); } break; }
     case 'preguntarJ': { const j = S.M.J(d.pid); cerrarHoja(true); enviarPregunta(`¿Qué hago con ${j.nombre}? Dime si comprarlo, venderlo, clausularlo o esperar, cuánto pagar como mucho y por qué.`); break; }
     default: break;
@@ -439,7 +465,7 @@ async function arrancar() {
   setInterval(() => {
     if (!S.D || S.hoja || S.cargando || S.charlando || S.planEstado.cargando || S.vista === 'ia' || document.visibilityState !== 'visible' || Date.now() - toqueT < 30e3) return;
     const y = window.scrollY;
-    S.M = analizar(S.D, S.H, S.c, { det: S.det });
+    S.M = analizar(S.D, S.H, S.c, { det: S.det, reventa: reventa() });
     montarPlan();
     pintar();
     window.scrollTo(0, y);

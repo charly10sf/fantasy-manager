@@ -296,6 +296,44 @@ export function analizar(D, H, c, extra = {}) {
   });
 
   /* ---------- lo que toca hacer ---------- */
+  /* ---------- especular: comprar entre semana lo que sube y venderlo antes de la jornada ---------- */
+  // lo único obligatorio es empezar la jornada con saldo >= 0; entre medias se puede bajar hasta la deuda permitida
+  const inicioJ = M.proxima ? M.proxima.ini : null;
+  M.ventanaEsp = null;
+  if (inicioJ) {
+    const ponerVenta = inicioJ - DIA;           // el día antes, para que la oferta llegue antes de que empiece
+    const ciclos = Math.floor((inicioJ - 2 * HORA - ahora) / DIA);   // cambios de mercado hasta la oferta de venta
+    M.ventanaEsp = { ponerVenta, limite: inicioJ - 2 * HORA, ciclos };
+  }
+  M.reventa = extra.reventa || {};
+  const proyectar = (j, t, dias) => {
+    // la subida diaria reciente (7 días si hay, si no la de hoy rebajada) y que se va frenando
+    let r = t.p7 != null ? t.p7 / 100 / 7 : t.p1 != null ? (t.p1 / 100) * 0.5 : 0;
+    r = clamp(r, -0.03, 0.04);
+    let v = j.valor;
+    for (let k = 0; k < dias; k++) v *= 1 + r * Math.pow(0.85, k);
+    return { r, v };
+  };
+  M.especular = [];
+  if (M.ventanaEsp && M.ventanaEsp.ciclos >= 1 && !M.enJuego) {
+    const add = (j, t, origen, precio, extraInfo) => {
+      if (MALOS.has(j.estado)) return;
+      // lo del mercado llega en el próximo cambio y luego hay que ponerlo a la venta: hacen falta 2 cambios
+      const dias = M.ventanaEsp.ciclos;
+      if (dias < (origen === 'mercado' ? 2 : 1)) return;
+      const { r, v } = proyectar(j, t, dias);
+      const beneficio = v - precio;
+      if (r <= 0.004 || beneficio < Math.max(250000, precio * 0.025)) return;
+      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVenta, confianza: t.p7 != null && r > 0.008 ? 'media' : 'baja', ...extraInfo });
+    };
+    // para revender se puja poco por encima del precio (si no, se come el beneficio)
+    for (const m of M.mercado) if (m.tipo === 'liga' && !m.miPuja) { const puja = Math.ceil(m.precio * (1 + 0.012 + 0.012 * Math.min(m.pujas, 4)) / 10000) * 10000; add(m.j, m.tend, 'mercado', puja, { puja, precioMercado: m.precio }); }
+    for (const x of M.clausulas) if (x.abierta) add(x.j, x.tend, 'clausula', x.clausula, { rival: x.rival });
+    M.especular.sort((a, b) => b.beneficio - a.beneficio);
+  }
+  // lo que compraste para revender y sigue en tu equipo
+  M.paraRevender = M.mias.filter((x) => M.reventa[x.pid]).map((x) => ({ ...x, rev: M.reventa[x.pid], beneficioYa: x.j.valor - (M.reventa[x.pid].precio || x.compra || x.j.valor) }));
+
   M.acciones = acciones(D, M, c);
   return M;
 }
@@ -438,7 +476,7 @@ export function planAuto(D, M, c) {
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;
     const g = gana(x.j);
-    op({ accion: 'clausular', pid: x.pid, jugador: x.j.nombre, donde: `cláusula a ${x.rival.manager || x.rival.nombre}`, importe: x.clausula, cuando: 'ahora',
+    op({ accion: 'clausular', objetivo: 'titular', pid: x.pid, jugador: x.j.nombre, donde: `cláusula a ${x.rival.manager || x.rival.nombre}`, importe: x.clausula, cuando: 'ahora',
       motivo: `Vale ${eur(x.j.valor)} y su cláusula es ${eur(x.clausula)}. Entra en tu once (${M.mejorOnce([...plantilla, x.j]).nombre}) y suma unos ${String(Math.round(g * 10) / 10).replace('.', ',')} pts por jornada${x.por.length ? `; ${x.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.`, confianza: x.interes >= 70 ? 'alta' : 'media' });
     saldo -= x.clausula; clausulas++; yaHoy.add(x.j.pos); fichar(x.j);
   }
@@ -447,7 +485,7 @@ export function planAuto(D, M, c) {
   let pujas = 0;
   for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && (y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)))) {
     if (pujas >= 2 || m.puja > presupuesto() || yaHoy.has(m.j.pos) || !hueco(m.j)) continue;
-    op({ accion: 'pujar', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? `antes de ${cuando(M.cierreMercado)}` : 'hoy',
+    op({ accion: 'pujar', objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? `antes de ${cuando(M.cierreMercado)}` : 'hoy',
       motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}` });
     saldo -= m.puja; pujas++; yaHoy.add(m.j.pos); fichar(m.j);
   }
@@ -468,11 +506,44 @@ export function planAuto(D, M, c) {
       .sort((a, b) => (a.pierde - b.pierde) || (b.j.valor - a.j.valor));
     for (const x of candidatos) {
       if (saldo >= 0) break;
-      op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
+      op({ accion: 'vender', objetivo: 'caja', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
         motivo: `Para no empezar la jornada en negativo (no puntuarías). ${x.pierde < 0.3 ? 'No entra en tu once: no pierdes puntos.' : `Es el que menos resta a tu once (−${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts/jornada).`}`, confianza: 'alta' });
       saldo += x.j.valor; vendidos.add(x.pid);
       plantilla = plantilla.filter((j) => j.id !== x.pid); onceAhora = M.mejorOnce(plantilla);
     }
+  }
+
+  // 4b. lo que compraste para revender: ponerlo a la venta el día antes de la jornada (o ya, si se acerca)
+  const ventana = M.ventanaEsp;
+  for (const x of M.paraRevender.filter((y) => !vendidos.has(y.pid))) {
+    const toca = !ventana || ahora >= ventana.ponerVenta - 6 * HORA || (x.tend.p1 != null && x.tend.p1 < -1);
+    if (!toca) continue;
+    op({ accion: 'vender', objetivo: 'revender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
+      motivo: `Lo compraste para revender a ${eur(x.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}).${x.tend.p1 != null && x.tend.p1 < -1 ? ' Ha empezado a bajar: mejor salir ya.' : ' Toca venderlo para empezar la jornada en positivo.'}`, confianza: 'alta' });
+    saldo += x.j.valor; vendidos.add(x.pid);
+  }
+
+  // 4c. especular: entre semana se puede bajar hasta el límite de deuda si lo que compras lo vendes antes de la jornada
+  const especula = [];
+  if (ventana && ventana.ciclos >= 1 && !M.paraRevender.length) {
+    const ya = new Set(ops.map((o) => o.pid));
+    let espSaldo = saldo;
+    for (const e of M.especular) {
+      if (especula.length >= 2 || ya.has(e.pid) || M.dueno[e.pid] === D.yo.teamId) continue;
+      // nunca más allá del 90 % de la deuda permitida, y que al vender lo especulado se vuelva a positivo
+      const tras = espSaldo - e.precio;
+      if (tras < limite * 0.9) continue;
+      if (tras + especula.reduce((s, x) => s + x.valorFuturo, 0) + e.valorFuturo * 0.95 < 0) continue;
+      especula.push(e); espSaldo = tras;
+      const diaVenta = cuando(e.vender, { hora: false });
+      op({ accion: e.origen === 'mercado' ? 'pujar' : 'clausular', objetivo: 'revender', pid: e.pid, jugador: e.j.nombre,
+        donde: e.origen === 'mercado' ? 'en el mercado' : `cláusula a ${e.rival.manager || e.rival.nombre}`, importe: e.origen === 'mercado' ? e.precioMercado : e.precio, puja_max: e.origen === 'mercado' ? e.puja : null,
+        cuando: e.origen === 'mercado' ? (M.cierreMercado ? `antes de ${cuando(M.cierreMercado)}` : 'hoy') : 'ahora',
+        vender_el: diaVenta, beneficio_esperado: Math.round(e.beneficio),
+        motivo: `Para revender, no para tu once: sube un ${pct(e.r * 100, 1, false)} al día. Si sigue así, el ${diaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta el ${diaVenta} para estar en positivo antes de la jornada.`,
+        confianza: e.confianza });
+    }
+    saldo = espSaldo;
   }
 
   // 5. proteger a los tuyos más expuestos
@@ -498,6 +569,8 @@ export function planAuto(D, M, c) {
   }
   for (const x of M.mias.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.riesgo !== 'ninguno')) add(x.protegidoHasta, 90, `${hora(x.protegidoHasta)} se acaba la protección de tu ${x.j.nombre}`);
   if (inicio) add(inicio, 100, `${hora(inicio)} empieza la jornada ${M.proxima.n}: saldo en positivo y once revisado antes`);
+  const aRevender = [...especula.map((e) => e.j.nombre), ...M.paraRevender.filter((x) => !vendidos.has(x.pid)).map((x) => x.j.nombre)];
+  if (aRevender.length && ventana) add(ventana.ponerVenta, 99, `pon a la venta lo de revender (${aRevender.join(', ')}) y acepta las ofertas antes de la jornada`);
   if (M.paron && M.paron.ini > ahora) add(M.paron.ini, 95, 'empieza el parón: los valores se paran, vende a los que estén en lo alto');
   const proximos = Object.values(dias).sort((a, b) => a.t - b.t).slice(0, 5).map((d) => {
     const cosas = d.cosas.sort((a, b) => b.prio - a.prio);
@@ -507,6 +580,7 @@ export function planAuto(D, M, c) {
 
   const n = (a) => ops.filter((o) => o.accion === a).length;
   const partes = [n('vender') && `vender ${n('vender')}`, n('clausular') && `clausular ${n('clausular')}`, n('pujar') && `pujar por ${n('pujar')}`, n('blindar') && `proteger ${n('blindar')}`].filter(Boolean);
+  if (especula.length) partes.push(`especular con ${especula.length} para revender`);
   return {
     auto: true, t: ahora, dia: diaDe(ahora),
     titular: partes.length ? `Hoy toca ${partes.join(', ')}` : ops[0].accion === 'alinear' ? 'Hoy solo toca preparar la jornada' : 'Hoy, quieto: guarda el dinero',

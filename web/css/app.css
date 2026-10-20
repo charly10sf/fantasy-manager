@@ -162,6 +162,8 @@ main { padding: 16px 16px 120px; }
 .cierre { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--plano2); margin-top: 4px; }
 .cierre .v { margin-left: auto; font: 700 22px var(--cond); }
 .cierre.mal { background: var(--baja-s); }
+.cierre.oro { background: var(--oro-s); }
+.cierre.oro .ic { color: var(--oro); }
 .cargando-ia { margin: 18px 0; padding: 16px; border-radius: 16px; border: 1px solid var(--rojo3); background: linear-gradient(135deg, rgba(238,28,60,0.08), transparent); }
 .cargando-ia .t { font: 700 20px var(--cond); text-transform: uppercase; }
 .cargando-ia .p { color: var(--texto2); font-size: 14.5px; margin-top: 4px; min-height: 21px; }
