@@ -303,7 +303,7 @@ function cerrarHoja(ya = false) {
   setTimeout(() => { h.remove(); v && v.remove(); }, 250);
   return true;
 }
-const htmlHoja = (tipo, arg) => (tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : Hj.diagnostico(S));
+const htmlHoja = (tipo, arg) => (tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -466,6 +466,7 @@ document.addEventListener('click', async (ev) => {
     case 'plan': S.planEstado = {}; generarPlan(); break;
     case 'planYa': cerrarHoja(); ir('hoy'); S.planEstado = {}; generarPlan(); break;
     case 'voz': escuchar(); break;
+    case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); } break;
     case 'novedades': listaVersiones(); break;
     case 'presentacion': cerrarHoja(true); verNovedades((NOVEDADES[1] || {}).v || null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;

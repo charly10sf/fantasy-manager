@@ -1,7 +1,7 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
-import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, num, horaDe, LS, DIA } from './util.js';
+import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML } from './comunes.js';
-import { linea, barra, barras } from './graficos.js';
+import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
@@ -19,6 +19,7 @@ const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', blindar:
 export const RANGOS = [[7, '7 días'], [30, '1 mes'], [90, '3 meses']];
 /** el histórico de valor más largo que haya: el de la API de LaLiga o el que apunta la app cada día */
 export function serieValor(S, pid) {
+  if (pid === '__equipo') return serieEquipo(S);
   const a = (S.M.tend(pid).serie || []), b = (S.det && S.det[pid] && S.det[pid].valores) || [];
   const s = (b.length > a.length ? b : a).slice();
   const j = S.M.J(pid);
@@ -26,7 +27,7 @@ export function serieValor(S, pid) {
   if (j && j.valor && s.length && Date.now() - s[s.length - 1][0] > 20 * 3600e3) s.push([Date.now(), j.valor]);
   return s;
 }
-export const cargandoValor = (S, pid) => !S.D.demo && !(S.det && S.det[pid] && (S.det[pid].valores || S.det[pid].sinValores || S.det[pid].error));
+export const cargandoValor = (S, pid) => pid !== '__equipo' && !S.D.demo && !(S.det && S.det[pid] && (S.det[pid].valores || S.det[pid].sinValores || S.det[pid].error));
 export function grafValor(serie, dias, cargando = false) {
   const p = (serie || []).filter(([t, v]) => Number.isFinite(t) && v > 0);
   if (p.length < 2) return `<div class="graf-vacio">${cargando ? 'Cargando su histórico de valor…' : 'LaLiga no da su histórico de valor y la app aún no ha apuntado bastantes días.'}</div>`;
@@ -37,6 +38,66 @@ export function grafValor(serie, dias, cargando = false) {
   const span = Math.max(1, Math.round((q[q.length - 1][0] - q[0][0]) / DIA));
   return `${linea(q, { alto: 150, color: d >= 0 ? 'var(--sube)' : 'var(--baja)' })}
     <div class="graf-pie"><b class="${clase(d)}">${eur(d, { signo: true })} (${pct((v1 / v0 - 1) * 100)})</b> en ${span} día${span > 1 ? 's' : ''} · máx ${eur(Math.max(...vs))} · mín ${eur(Math.min(...vs))}</div>`;
+}
+
+/* ---------- tu equipo hoy (al tocar el marcador de Hoy) ---------- */
+/** el valor de tu equipo día a día (lo que apunta la app cada día) */
+export function serieEquipo(S) {
+  const s = (S.H.yo || []).map(([d, , v]) => [Date.parse(d + 'T12:00:00'), v]).filter(([, v]) => v);
+  if (S.D.valorEquipo && (!s.length || Date.now() - s[s.length - 1][0] > 20 * 3600e3)) s.push([Date.now(), S.D.valorEquipo]);
+  return s;
+}
+export function resumenEquipo(S) {
+  const { D, M } = S;
+  const mias = M.mias.filter((x) => x.j);
+  const d1 = mias.reduce((s, x) => s + num(x.tend.d1), 0);
+  const d7 = mias.reduce((s, x) => s + num(x.tend.d7), 0);
+  const base = D.valorEquipo - d1;
+  const suben = mias.filter((x) => num(x.tend.d1) > 0).sort((a, b) => b.tend.d1 - a.tend.d1);
+  const bajan = mias.filter((x) => num(x.tend.d1) < 0).sort((a, b) => a.tend.d1 - b.tend.d1);
+  const quietos = mias.length - suben.length - bajan.length;
+  const rango = S.rango || 30;
+  let h = `<div class="hoja-cab"><h2>Tu equipo hoy</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  h += `<div class="valor-g"><span class="v">${eur(D.valorEquipo)}</span><span class="d ${clase(d1)}">${d1 ? `${d1 > 0 ? '▲' : '▼'} ${eur(Math.abs(d1), { dec: 2 })}${base > 0 ? ` (${pct((d1 / base) * 100)})` : ''} hoy` : '= hoy'}</span>${d7 ? `<span class="d ${clase(d7)}">${eur(d7, { signo: true })} 7d</span>` : ''}</div>`;
+  h += `<p class="t2 peq" style="margin:2px 0 0">${suben.length} suben · ${bajan.length} bajan · ${quietos} igual${suben[0] ? ` · el que más sube, <b class="sube">${esc(suben[0].j.nombre)} ${eur(suben[0].tend.d1, { signo: true })}</b>` : ''}${bajan[0] ? ` · el que más baja, <b class="baja">${esc(bajan[0].j.nombre)} ${eur(bajan[0].tend.d1, { signo: true })}</b>` : ''}</p>`;
+  h += `<div class="graf-cab"><span>Valor del equipo</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="__equipo" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
+  h += `<div id="graf-j">${grafValor(serieEquipo(S), rango)}</div>`;
+
+  // el dinero
+  const enVenta = M.misVentas.reduce((s, v) => s + num(v.j && v.j.valor), 0);
+  h += `<div class="rejilla" style="margin-top:12px">
+    <div class="dato"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'baja' : ''}">${eur(D.dinero)}</div></div>
+    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>con el 20 % de deuda</small></div></div>
+    <div class="dato"><div class="et">En pujas</div><div class="v">${eur(M.misPujas || 0)}</div></div>
+    <div class="dato"><div class="et">En venta</div><div class="v">${eur(enVenta)}<small>${M.misVentas.length} jugador${M.misVentas.length === 1 ? '' : 'es'}</small></div></div>
+    ${M.conCompra ? `<div class="dato"><div class="et">Ganado sobre lo pagado</div><div class="v ${clase(M.ganadoTotal)}">${eur(M.ganadoTotal, { signo: true })}</div></div>` : ''}
+  </div>`;
+
+  const fila = (x) => filaJugador(x, {
+    sub: `vale ${eur(x.j.valor)} · ${esc(x.j.equipo || '')}`,
+    derecha: `<div class="v ${clase(x.tend.d1)}">${eur(x.tend.d1, { signo: true })}</div><div class="d ${clase(x.tend.d1)}">${x.tend.p1 != null ? pct(x.tend.p1) : ''}</div>${mini(x.tend.serie, x.tend.d1 >= 0)}`,
+  });
+  if (suben.length) h += `<div class="sec"><h2>Suben hoy</h2><span class="sub sube">${eur(suben.reduce((s, x) => s + x.tend.d1, 0), { signo: true })}</span></div>${suben.map(fila).join('')}`;
+  if (bajan.length) h += `<div class="sec"><h2>Bajan hoy</h2><span class="sub baja">${eur(bajan.reduce((s, x) => s + x.tend.d1, 0), { signo: true })}</span></div>${bajan.map(fila).join('')}`;
+  if (!suben.length && !bajan.length) h += nada('Hoy no se ha movido ninguno de tus jugadores (los valores cambian una vez al día, de madrugada).');
+
+  // por puestos
+  const puestos = [1, 2, 3, 4, 5].map((p) => {
+    const xs = mias.filter((x) => x.j.pos === p);
+    return { p, n: xs.length, v: xs.reduce((s, x) => s + x.j.valor, 0), d: xs.reduce((s, x) => s + num(x.tend.d1), 0), d7: xs.reduce((s, x) => s + num(x.tend.d7), 0) };
+  }).filter((x) => x.n);
+  h += `<div class="sec"><h2>Por puestos</h2></div><div class="tabla-p">${puestos.map((x) => `<div class="tp"><span class="pos p${x.p}">${({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL', 5: 'ENT' })[x.p]}</span><span class="n">${x.n} · ${eur(x.v, { dec: 1 })}</span><span class="${clase(x.d)}">${x.d ? eur(x.d, { signo: true }) : '='}</span><span class="${clase(x.d7)} apag7">${x.d7 ? `${eur(x.d7, { signo: true, dec: 1 })} 7d` : ''}</span></div>`).join('')}</div>`;
+
+  // tu liga: cuánto sube el valor de cada equipo
+  const serie = serieEquipo(S);
+  const hace = (d) => { const x = [...serie].reverse().find(([t]) => t <= Date.now() - d * DIA + 6 * 3600e3); return x ? x[1] : null; };
+  const yo7 = hace(7);
+  const filas = D.clasif.map((e) => {
+    const r = M.rivales.find((x) => x.e.teamId === e.teamId);
+    return r ? { e, hoy: r.dValor1, d7: r.dValor, yo: false } : { e, hoy: d1, d7: yo7 ? D.valorEquipo - yo7 : d7, yo: true };
+  }).sort((a, b) => b.e.valor - a.e.valor);
+  h += `<div class="sec"><h2>Valor en tu liga</h2><span class="sub">hoy · 7 días</span></div>${filas.map((f, i) => `<button class="fila ${f.yo ? 'yo-fila' : ''}" ${f.yo ? '' : `data-r="${esc(f.e.teamId)}"`}><span class="posn ${f.yo ? 'yo' : ''}">${i + 1}</span><div class="fila-c"><div class="fila-n">${esc(f.e.nombre)}</div><div class="fila-s">${eur(f.e.valor, { dec: 1 })}${f.e.manager && f.e.manager !== f.e.nombre ? ` · ${esc(f.e.manager)}` : ''}</div></div><div class="fila-d"><div class="v ${clase(f.hoy)}">${f.hoy ? eur(f.hoy, { signo: true, dec: 1 }) : '='}</div><div class="d ${clase(f.d7)}">${f.d7 != null ? `${eur(f.d7, { signo: true, dec: 1 })} 7d` : ''}</div></div></button>`).join('')}`;
+  return h;
 }
 
 export function fichaJugador(S, pid) {

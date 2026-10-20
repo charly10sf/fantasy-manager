@@ -99,6 +99,16 @@ main { padding: 16px 16px 120px; }
     linear-gradient(135deg, #2a0710 0%, #12060a 55%, #0d0d10 100%);
   border: 1px solid #3a0c18;
 }
+.marcador[data-accion] { cursor: pointer; transition: transform 0.12s; }
+.marcador[data-accion]:active { transform: scale(0.985); }
+.marcador-mas { position: relative; display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 10px; font: 600 13px 'Barlow'; color: var(--rojo-l); }
+.marcador-mas .ic { width: 15px; height: 15px; }
+.tabla-p { display: flex; flex-direction: column; gap: 2px; }
+.tp { display: grid; grid-template-columns: 44px 1fr auto 86px; align-items: center; gap: 10px; padding: 9px 2px; border-bottom: 1px solid var(--linea); font-size: 14.5px; }
+.tp .pos { justify-self: start; }
+.tp .n { color: var(--texto2); }
+.tp > span:nth-child(3) { font: 700 15px var(--cond); text-align: right; }
+.tp .apag7 { font-size: 13px; text-align: right; }
 .marcador .fila-j { display: flex; align-items: center; gap: 8px; font: 600 13px 'Barlow'; letter-spacing: 1px; text-transform: uppercase; color: var(--texto2); }
 .marcador .fila-j .vivo { color: var(--rojo-l); display: inline-flex; align-items: center; gap: 6px; }
 .marcador .fila-j .vivo::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--rojo); box-shadow: 0 0 0 4px rgba(238,28,60,0.25); }
