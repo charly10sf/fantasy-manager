@@ -1,0 +1,106 @@
+name: App Android
+
+# Compila la app (la web de web/ metida dentro, en un WebView con su puente) y la publica en
+# github.com/charly10sf/fantasy-manager/releases/tag/app. La firma usa android/firma.p12, cifrada con el
+# secreto ANDROID_CLAVE; si la clave no existe todavía, la crea la primera vez. Sin el secreto, compila
+# con una clave de prueba para comprobar que todo funciona, pero no publica nada.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "web/**"
+      - ".github/workflows/android.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+
+      - name: Clave de firma
+        env:
+          CLAVE: ${{ secrets.ANDROID_CLAVE }}
+        run: |
+          if [ -z "$CLAVE" ]; then
+            keytool -genkeypair -keystore /tmp/prueba.p12 -storetype PKCS12 -alias fantasy -keyalg RSA -keysize 2048 -validity 10000 -storepass prueba123 -keypass prueba123 -dname "CN=Prueba"
+            echo "FIRMA=prueba" >> "$GITHUB_ENV"
+            echo "FIRMA_RUTA=/tmp/prueba.p12" >> "$GITHUB_ENV"
+          else
+            if [ ! -f android/firma.p12 ]; then
+              keytool -genkeypair -keystore android/firma.p12 -storetype PKCS12 -alias fantasy -keyalg RSA -keysize 3072 -validity 20000 -storepass "$CLAVE" -keypass "$CLAVE" -dname "CN=Fantasy Manager"
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add android/firma.p12
+              git commit -q -m "App: clave de firma, cifrada con el secreto ANDROID_CLAVE"
+              git pull -q --rebase origin main && git push -q origin HEAD:main
+            fi
+            echo "FIRMA=buena" >> "$GITHUB_ENV"
+            echo "FIRMA_RUTA=$GITHUB_WORKSPACE/android/firma.p12" >> "$GITHUB_ENV"
+          fi
+
+      - name: Versión
+        run: |
+          v=$(grep -oP "VERSION = '\K[0-9.]+" web/js/version.js | head -1)
+          echo "VERSION_NAME=${v:-0.0.0}" >> "$GITHUB_ENV"
+          echo "Versión ${v:-0.0.0}, compilación ${{ github.run_number }}"
+
+      - name: Compilar
+        working-directory: android
+        env:
+          FIRMA_CLAVE: ${{ secrets.ANDROID_CLAVE || 'prueba123' }}
+          VERSION_CODE: ${{ github.run_number }}
+        run: |
+          set -o pipefail
+          gradle assembleRelease --no-daemon --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/compilacion.log"
+
+      # solo desde main: en otras ramas se compila para probar, sin publicar
+      - name: Publicar la app
+        if: env.FIRMA == 'buena' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk fantasy-manager.apk
+          gh release view app >/dev/null 2>&1 || gh release create app --title "App de Android" --notes "Fantasy Manager para Android. Descarga fantasy-manager.apk e instálala."
+          gh release upload app fantasy-manager.apk --clobber
+          gh release edit app --title "App de Android $VERSION_NAME" || true
+          printf '{"version": %s, "nombre": "%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "${{ github.run_number }}" "$VERSION_NAME" "${{ github.repository }}" > app.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.json
+          git commit -q -m "App: versión ${{ github.run_number }} publicada" || true
+          git pull -q --rebase origin main && git push -q origin HEAD:main
+
+      # el registro de la compilación, en la rama android-registro, para poder revisarlo si falla
+      - name: Guardar el registro
+        if: always()
+        run: |
+          mkdir -p /tmp/registro && cd /tmp/registro
+          cp "$GITHUB_WORKSPACE/compilacion.log" . 2>/dev/null || echo "sin registro" > compilacion.log
+          tail -c 60000 compilacion.log > ultimo.log
+          echo "run ${{ github.run_number }} firma ${FIRMA:-?} $(date -u +%FT%TZ)" > estado.txt
+          ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/release/" >> estado.txt 2>&1 || true
+          rm compilacion.log
+          git init -q && git checkout -q -b android-registro
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "Registro ${{ github.run_number }}"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" android-registro

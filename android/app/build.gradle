@@ -1,0 +1,68 @@
+plugins {
+    id 'com.android.application'
+}
+
+// La firma: la clave vive en android/firma.p12, cifrada con el secreto ANDROID_CLAVE de GitHub.
+// Sin ese secreto, la Action firma con una clave de prueba solo para comprobar que compila.
+def rutaFirma = System.getenv('FIRMA_RUTA')
+def claveFirma = System.getenv('FIRMA_CLAVE')
+
+android {
+    namespace 'es.fantasymanager.app'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'es.fantasymanager.app'
+        minSdk 26
+        targetSdk 34
+        versionCode((System.getenv('VERSION_CODE') ?: '1') as int)
+        // el mismo número que la web (web/js/version.js); la Action lo saca de ahí
+        versionName System.getenv('VERSION_NAME') ?: "0.0.${System.getenv('VERSION_CODE') ?: '0'}"
+    }
+
+    // la web va dentro de la app: web/ del repositorio se copia tal cual a los assets
+    sourceSets {
+        main {
+            assets.srcDirs += file('../../web')
+        }
+    }
+
+    signingConfigs {
+        release {
+            if (rutaFirma && claveFirma) {
+                storeFile file(rutaFirma)
+                storePassword claveFirma
+                keyAlias 'fantasy'
+                keyPassword claveFirma
+                storeType 'pkcs12'
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (rutaFirma && claveFirma) signingConfig signingConfigs.release
+        }
+    }
+
+    buildFeatures { buildConfig true }
+
+    // es una app para ti, no para Google Play: que los avisos de Play no paren la compilación
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    // la página de LaLiga para entrar (con Google) se abre en una pestaña de Chrome dentro de la app
+    implementation 'androidx.browser:browser:1.8.0'
+    // sirve la web de los assets con https, para que funcionen el cifrado y el almacenamiento del navegador
+    implementation 'androidx.webkit:webkit:1.12.1'
+}

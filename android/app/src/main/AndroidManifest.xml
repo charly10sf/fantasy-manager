@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- los avisos: cláusulas que se abren, mercado que cierra, jornada que empieza -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- para volver a programar los avisos cuando se reinicia el móvil -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- avisos al minuto exacto (cuando se abre una cláusula); si no lo das, llegan con unos minutos de margen -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- para instalar la versión nueva de la app desde el aviso de la propia app -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <queries>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Fantasy Manager"
+        android:supportsRtl="false"
+        android:theme="@style/Tema">
+
+        <activity
+            android:name=".Principal"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode|density"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- la vuelta del inicio de sesión de LaLiga (la misma dirección que usa su app) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="authredirect" android:host="com.lfp.laligafantasy" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".Avisos"
+            android:exported="false" />
+
+        <receiver
+            android:name=".Arranque"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name=".Archivos"
+            android:authorities="es.fantasymanager.app.archivos"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
+</manifest>
