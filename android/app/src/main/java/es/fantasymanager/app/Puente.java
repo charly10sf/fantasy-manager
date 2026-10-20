@@ -41,7 +41,9 @@ public class Puente {
             "api-fantasy.llt-services.com",
             "login.laliga.es",
             "www.futbolfantasy.com",
-            "raw.githubusercontent.com"
+            "raw.githubusercontent.com",
+            // Gemini: por aquí y no desde la web, porque el WebView corta las peticiones POST a Google
+            "generativelanguage.googleapis.com"
     ));
     private static final int MAX = 16 * 1024 * 1024;
     private static final ExecutorService HILOS = Executors.newFixedThreadPool(4);
@@ -74,7 +76,8 @@ public class Puente {
                 con = (HttpURLConnection) u.openConnection();
                 con.setRequestMethod(metodo == null || metodo.isEmpty() ? "GET" : metodo.toUpperCase());
                 con.setConnectTimeout(15000);
-                con.setReadTimeout(30000);
+                // Gemini piensa y busca en Google antes de contestar: hasta 3 minutos
+                con.setReadTimeout("generativelanguage.googleapis.com".equalsIgnoreCase(u.getHost()) ? 180000 : 30000);
                 con.setInstanceFollowRedirects(true);
                 if (cabeceras != null && !cabeceras.isEmpty()) {
                     JSONObject h = new JSONObject(cabeceras);

@@ -28,7 +28,7 @@ export function analizar(D, H, c, extra = {}) {
   for (const e of D.clasif) { if (e.manager) porManager[norm(e.manager)] = e.teamId; if (e.nombre) porManager[norm(e.nombre)] = e.teamId; }
   M.teamDeManager = (nombre) => porManager[norm(nombre)] || null;
   const porUsuario = {};
-  for (const e of D.clasif) if (e.userId) porUsuario[e.userId] = e.teamId;
+  for (const e of D.clasif) { if (e.userId) porUsuario[e.userId] = e.teamId; if (e.managerId) porUsuario[e.managerId] = e.teamId; }
   if (D.yo && D.yo.userId && yoTid) porUsuario[D.yo.userId] = yoTid;
   M.teamDeUsuario = (id, nombre) => (id && porUsuario[id]) || M.teamDeManager(nombre);
   const nombreEquipo = (tid) => { const e = tid && M.equipo[tid]; return e ? e.manager || e.nombre : ''; };
@@ -107,29 +107,63 @@ export function analizar(D, H, c, extra = {}) {
     };
   };
 
-  /* ---------- cuánto interesa un jugador (0 a 100) ---------- */
+  /* ---------- tu once: posiciones, formaciones gratuitas y huecos ---------- */
   const misFichasRaw = (D.plantillas || {})[yoTid] || [];
-  const cuantosPorPos = {};
-  for (const f of misFichasRaw) { const p = J(f.pid).pos; cuantosPorPos[p] = (cuantosPorPos[p] || 0) + 1; }
-  const minimo = { 1: 2, 2: 5, 3: 5, 4: 3 };
+  M.formaciones = (D.formaciones && D.formaciones.length ? D.formaciones : FORMACIONES).map(partirFormacion).filter(Boolean);
+  M.ppEsperado = (j) => puntosEsperados(j, M.forma(j.id));
+  M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado);
+  const misJs = misFichasRaw.map((f) => J(f.pid));
+  M.once = M.mejorOnce(misJs);
+  /** cuántos puntos por jornada gana tu once si fichas a j (0 si se quedaría en el banquillo) */
+  const cacheMejora = {};
+  M.mejora = (j) => {
+    if (!j || !j.pos) return 0;
+    if (misJs.some((x) => x.id === j.id)) return 0;
+    if (cacheMejora[j.id] != null) return cacheMejora[j.id];
+    return (cacheMejora[j.id] = Math.max(0, M.mejorOnce([...misJs, j]).total - M.once.total));
+  };
+  /** cuántos puntos pierde tu once si vendes a j (0 si es suplente) */
+  const cachePerdida = {};
+  M.perdida = (pid) => {
+    if (cachePerdida[pid] != null) return cachePerdida[pid];
+    return (cachePerdida[pid] = Math.max(0, M.once.total - M.mejorOnce(misJs.filter((x) => x.id !== pid)).total));
+  };
+  // por puesto: cuántos tienes sanos, cuántos necesitas en tu mejor formación y si te sobran
+  const MAXIMO = { 1: 1, 2: 5, 3: 5, 4: 3, 5: 1 };
+  M.puestos = [1, 2, 3, 4].map((p) => {
+    const sanos = misJs.filter((j) => j.pos === p && !MALOS.has(j.estado)).length;
+    const total = misJs.filter((j) => j.pos === p).length;
+    const necesita = M.once.formacion ? (p === 1 ? 1 : M.once.formacion[p - 2]) : 0;
+    const minimo = p === 1 ? 1 : Math.min(...M.formaciones.map((f) => f[p - 2]));
+    return { pos: p, sanos, total, necesita, faltan: Math.max(0, minimo - sanos), sobran: Math.max(0, sanos - (MAXIMO[p] + 1)) };
+  });
+
+  /* ---------- cuánto interesa un jugador (0 a 100) ---------- */
   M.interes = (j, precio, t = M.tend(j.id)) => {
     const partes = [];
-    const rend = clamp(num(j.media) / 7, 0, 1.3) * 40;
+    const rend = clamp(num(j.media) / 7, 0, 1.3) * 30;
     if (j.media) partes.push(`${String(Math.round(j.media * 10) / 10).replace('.', ',')} pts de media`);
     const mov = t.p7 != null ? t.p7 : t.p1 != null ? t.p1 * 3 : 0;
     const momentum = clamp(mov / 10, -1, 1) * 15;
     if (t.p7 != null && Math.abs(t.p7) >= 2) partes.push(`${t.p7 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p7), 1, false)} en 7 días`);
     else if (t.p1 != null && Math.abs(t.p1) >= 1) partes.push(`${t.p1 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p1), 1, false)} hoy`);
     const ratio = j.valor ? precio / j.valor : 2;
-    const barato = clamp((1.6 - ratio) / 0.6, 0, 1) * 25;
+    const barato = clamp((1.6 - ratio) / 0.6, 0, 1) * 20;
     if (ratio <= 1.05) partes.push('cuesta lo que vale');
     else if (ratio < 1.35) partes.push(`cuesta un ${Math.round((ratio - 1) * 100)} % más de lo que vale`);
     let pen = 0;
     if (MALOS.has(j.estado)) { pen = j.estado === 'out_of_league' ? 80 : 35; partes.push(j.estado === 'injured' ? 'lesionado' : j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'); }
     else if (j.estado === 'doubtful') { pen = 12; partes.push('es duda'); }
-    const falta = j.pos && minimo[j.pos] && (cuantosPorPos[j.pos] || 0) < minimo[j.pos] ? 8 : 0;
-    if (falta) partes.push(`te faltan ${POS[j.pos] === 'POR' ? 'porteros' : POS[j.pos] === 'DEF' ? 'defensas' : POS[j.pos] === 'MED' ? 'medios' : 'delanteros'}`);
-    return { n: Math.round(clamp(rend + momentum + barato + 10 - pen + falta, 0, 100)), por: partes };
+    // lo que aporta a TU once: si entra de titular, cuánto suma; si no, si el puesto ya está lleno
+    let once = 0;
+    const mio = misJs.some((x) => x.id === j.id);
+    if (!mio && j.pos && j.pos < 5) {
+      const gana = M.mejora(j);
+      const puesto = M.puestos.find((p) => p.pos === j.pos);
+      if (gana >= 0.3) { once = clamp(gana * 5, 4, 25); partes.push(puesto && puesto.faltan ? `te tapa un hueco en ${NOMBRE_POS[j.pos]} (+${dec1(gana)} pts/jornada)` : `mejora tu once +${dec1(gana)} pts/jornada`); }
+      else { once = puesto && puesto.sobran ? -18 : -6; partes.push(puesto && puesto.sobran ? `te sobran ${NOMBRE_POS[j.pos]}` : 'no entraría en tu once'); }
+    }
+    return { n: Math.round(clamp(rend + momentum + barato + 12 - pen + once, 0, 100)), por: partes, once };
   };
 
   /* ---------- tus jugadores ---------- */
@@ -274,7 +308,7 @@ function compras(D, M, yoTid) {
   const acts = [...(D.actividad || [])].sort((a, b) => (a.t || 0) - (b.t || 0));
   for (const a of acts) {
     if (!a.pid || !a.importe) continue;
-    const mio = (D.yo && D.yo.userId && a.quienId === D.yo.userId) || misNombres.has(norm(a.quien));
+    const mio = (yoTid && M.teamDeUsuario(a.quienId, a.quien) === yoTid) || (D.yo && D.yo.userId && a.quienId === D.yo.userId) || misNombres.has(norm(a.quien));
     if (mio && (a.clase === 'compra' || a.clase === 'clausula')) out[a.pid] = Math.abs(a.importe);
   }
   return out;
@@ -388,17 +422,12 @@ export function planAuto(D, M, c) {
     saldo += x.j.valor; vendidos.add(x.pid);
   }
 
-  // ¿le hace falta a tu plantilla? (no fichar el tercer portero ni dos del mismo puesto el mismo día)
-  const tope = { 1: 2, 2: 6, 3: 6, 4: 4 };
-  const porPos = {};
-  for (const x of M.mias) if (!vendidos.has(x.pid)) (porPos[x.j.pos] ||= []).push(x.j);
-  const hueco = (j) => {
-    const mios = porPos[j.pos] || [];
-    if (mios.length < (tope[j.pos] || 99)) return true;
-    const peor = Math.min(...mios.map((m) => num(m.media)));
-    return num(j.media) - peor >= 1.2;
-  };
-  const fichar = (j) => (porPos[j.pos] ||= []).push(j);
+  // ¿le hace falta a tu once? solo fichajes que entren de titular en una formación gratuita (o que tapen un hueco)
+  let plantilla = M.mias.filter((x) => !vendidos.has(x.pid)).map((x) => x.j);
+  let onceAhora = M.mejorOnce(plantilla);
+  const gana = (j) => M.mejorOnce([...plantilla, j]).total - onceAhora.total;
+  const hueco = (j) => gana(j) >= 0.5;
+  const fichar = (j) => { plantilla = [...plantilla, j]; onceAhora = M.mejorOnce(plantilla); };
   const yaHoy = new Set();
   // sin IA el plan no tira de deuda: solo con el dinero que tienes y lo que vendes
   const presupuesto = () => saldo;
@@ -408,8 +437,9 @@ export function planAuto(D, M, c) {
   let clausulas = 0;
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;
+    const g = gana(x.j);
     op({ accion: 'clausular', pid: x.pid, jugador: x.j.nombre, donde: `cláusula a ${x.rival.manager || x.rival.nombre}`, importe: x.clausula, cuando: 'ahora',
-      motivo: `Vale ${eur(x.j.valor)} y su cláusula es ${eur(x.clausula)}${x.por.length ? `: ${x.por.slice(0, 3).join(', ')}` : ''}.`, confianza: x.interes >= 70 ? 'alta' : 'media' });
+      motivo: `Vale ${eur(x.j.valor)} y su cláusula es ${eur(x.clausula)}. Entra en tu once (${M.mejorOnce([...plantilla, x.j]).nombre}) y suma unos ${String(Math.round(g * 10) / 10).replace('.', ',')} pts por jornada${x.por.length ? `; ${x.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.`, confianza: x.interes >= 70 ? 'alta' : 'media' });
     saldo -= x.clausula; clausulas++; yaHoy.add(x.j.pos); fichar(x.j);
   }
 
@@ -418,7 +448,7 @@ export function planAuto(D, M, c) {
   for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && (y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)))) {
     if (pujas >= 2 || m.puja > presupuesto() || yaHoy.has(m.j.pos) || !hueco(m.j)) continue;
     op({ accion: 'pujar', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? `antes de ${cuando(M.cierreMercado)}` : 'hoy',
-      motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}${m.por.length ? `: ${m.por.slice(0, 3).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}` });
+      motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}` });
     saldo -= m.puja; pujas++; yaHoy.add(m.j.pos); fichar(m.j);
   }
   // lo mejor que no te llega todavía, para que sepas cuánto te falta
@@ -432,13 +462,16 @@ export function planAuto(D, M, c) {
   // 4. si te quedas en negativo, vender lo que menos aporta antes de que empiece la jornada (o no puntúas)
   if (saldo < 0) {
     const fichados = new Set(ops.filter((o) => o.accion !== 'vender').map((o) => o.pid));
-    const candidatos = M.mias.filter((x) => !vendidos.has(x.pid) && !fichados.has(x.pid) && x.j.pos !== 1 && x.j.pos !== 5)
-      .sort((a, b) => (num(a.j.media) - num(b.j.media)) || (a.j.valor - b.j.valor));
+    const perdida = (x) => onceAhora.total - M.mejorOnce(plantilla.filter((j) => j.id !== x.pid)).total;
+    const candidatos = M.mias.filter((x) => !vendidos.has(x.pid) && !fichados.has(x.pid))
+      .map((x) => ({ ...x, pierde: perdida(x) }))
+      .sort((a, b) => (a.pierde - b.pierde) || (b.j.valor - a.j.valor));
     for (const x of candidatos) {
       if (saldo >= 0) break;
       op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
-        motivo: `Para no empezar la jornada en negativo (no puntuarías). Es de los que menos te aporta: ${String(x.j.media || 0).replace('.', ',')} pts de media.`, confianza: 'alta' });
+        motivo: `Para no empezar la jornada en negativo (no puntuarías). ${x.pierde < 0.3 ? 'No entra en tu once: no pierdes puntos.' : `Es el que menos resta a tu once (−${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts/jornada).`}`, confianza: 'alta' });
       saldo += x.j.valor; vendidos.add(x.pid);
+      plantilla = plantilla.filter((j) => j.id !== x.pid); onceAhora = M.mejorOnce(plantilla);
     }
   }
 
@@ -450,9 +483,9 @@ export function planAuto(D, M, c) {
 
   // 6. alineación si la jornada empieza pronto
   if (inicio && inicio - ahora < 30 * HORA && inicio > ahora) {
-    const tocados = M.mias.filter((x) => !vendidos.has(x.pid) && (MALOS.has(x.j.estado) || x.j.estado === 'doubtful'));
+    const tocados = M.mias.filter((x) => !vendidos.has(x.pid) && x.j.estado === 'doubtful');
     op({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: `antes de ${cuando(inicio)}`,
-      motivo: tocados.length ? `Quita del once a ${tocados.map((x) => x.j.nombre).join(', ')}.` : 'Revisa que no tengas a nadie lesionado o sancionado de titular.' });
+      motivo: `Pon el ${onceAhora.nombre}: ${onceAhora.lineas.flat().map((j) => j.nombre).join(', ')}.${onceAhora.huecos ? ` Te faltan ${onceAhora.huecos} para completarlo.` : ''}${tocados.length ? ` Ojo con ${tocados.map((x) => x.j.nombre).join(', ')}, que son duda.` : ''}` });
   }
   if (!ops.length) op({ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'hoy', motivo: 'Hoy no hay ninguna operación clara: ni cláusulas que merezcan la pena abiertas ni chollos en el mercado. Mejor guardar el dinero.', confianza: 'media' });
 
@@ -479,5 +512,47 @@ export function planAuto(D, M, c) {
     titular: partes.length ? `Hoy toca ${partes.join(', ')}` : ops[0].accion === 'alinear' ? 'Hoy solo toca preparar la jornada' : 'Hoy, quieto: guarda el dinero',
     situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`,
     operaciones: ops, proximos_dias: proximos,
+    alineacion: onceAhora.formacion ? { formacion: onceAhora.nombre, titulares: onceAhora.lineas.flat().map((j) => j.nombre), dudas: onceAhora.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`) } : null,
   };
+}
+
+
+/* ---------- el once: formaciones gratuitas, puntos esperados y el mejor once posible ---------- */
+// las formaciones gratuitas de LaLiga Fantasy, por si la API no las da
+const FORMACIONES = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-3-2', '5-4-1'];
+const NOMBRE_POS = { 1: 'portería', 2: 'defensa', 3: 'el medio', 4: 'delantera' };
+const dec1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+export function partirFormacion(f) {
+  const m = String(f).match(/(\d)\D?(\d)\D?(\d)/);
+  return m && +m[1] + +m[2] + +m[3] === 10 ? [+m[1], +m[2], +m[3]] : null;
+}
+/** los puntos que se esperan de un jugador en la próxima jornada: su forma (últimas 5) o su media, y si puede jugar */
+export function puntosEsperados(j, forma) {
+  if (!j || MALOS.has(j.estado)) return 0;
+  let pp = forma && forma.de >= 3 ? forma.media * 0.6 + num(j.media) * 0.4 : num(j.media);
+  if (forma && forma.de >= 3 && forma.jugados / forma.de < 0.5) pp *= 0.7;
+  if (j.estado === 'doubtful') pp *= 0.55;
+  return Math.max(0, pp);
+}
+/** el mejor once con esos jugadores entre las formaciones dadas: { formacion, lineas: [[POR],[DEF],[MED],[DEL]], entrenador, total, huecos } */
+export function mejorOnce(lista, formaciones, pp) {
+  const por = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+  for (const j of lista || []) if (j && por[j.pos]) por[j.pos].push({ j, p: pp(j), ok: !MALOS.has(j.estado) });
+  for (const k of Object.keys(por)) por[k].sort((a, b) => b.p - a.p);
+  let mejor = null;
+  for (const f of formaciones.length ? formaciones : [[4, 3, 3]]) {
+    const pide = { 1: 1, 2: f[0], 3: f[1], 4: f[2] };
+    let total = 0, huecos = 0;
+    const lineas = [1, 2, 3, 4].map((pos) => {
+      const disp = por[pos].filter((x) => x.ok).slice(0, pide[pos]);
+      huecos += pide[pos] - disp.length;
+      total += disp.reduce((s, x) => s + x.p, 0);
+      return disp.map((x) => x.j);
+    });
+    const ent = por[5].find((x) => x.ok);
+    if (ent) total += ent.p;
+    const nota = total - huecos * 4;
+    if (!mejor || nota > mejor.nota) mejor = { formacion: f, nombre: f.join('-'), lineas, entrenador: ent ? ent.j : null, total, huecos, nota };
+  }
+  return mejor || { formacion: null, nombre: '', lineas: [[], [], [], []], entrenador: null, total: 0, huecos: 11, nota: 0 };
 }

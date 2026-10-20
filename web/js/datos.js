@@ -37,6 +37,7 @@ export async function actualizar(alPaso = () => {}) {
   const c = cfg();
   const viejo = foto();
   const avisos = [];
+  const muestras = {};
   const blando = async (paso, f) => { try { return await f(); } catch (e) { if (e.sesion) throw e; avisos.push({ paso, e: e.message }); return null; } };
 
   alPaso(0, PASOS[0]);
@@ -54,16 +55,20 @@ export async function actualizar(alPaso = () => {}) {
   let equipos = viejo && viejo.equiposT && Date.now() - viejo.equiposT < DIA && viejo.liga && viejo.equipos ? viejo.equipos : null;
   if (!equipos) equipos = (await blando('equipos', async () => N.equiposLaLiga(await api.equiposLaLiga()))) || (viejo && viejo.equipos) || {};
 
+  // las formaciones gratuitas cambian poco: una vez al día
+  let formaciones = viejo && viejo.formaciones && viejo.formacionesT && Date.now() - viejo.formacionesT < DIA ? viejo.formaciones : null;
+  let formacionesT = formaciones ? viejo.formacionesT : Date.now();
+  if (!formaciones) formaciones = (await blando('formaciones', async () => { const r = await api.formaciones(); muestras.formaciones = recorte(r); return N.formaciones(r); })) || (viejo && viejo.formaciones) || [];
+
   alPaso(2, PASOS[2]);
   const clasif = N.clasificacion(await api.clasificacion(liga.id));
   if (!clasif.length) throw new Error('La clasificación de tu liga ha llegado vacía');
   let mio = clasif.find((e) => c.miEquipo && e.teamId === String(c.miEquipo))
-    || clasif.find((e) => userId && e.userId === userId)
+    || clasif.find((e) => userId && (e.userId === userId || e.managerId === userId))
     || clasif.find((e) => miNombre && e.manager && e.manager === miNombre);
   clasif.forEach((e) => { e.esYo = !!mio && e.teamId === mio.teamId; });
 
   alPaso(3, PASOS[3]);
-  const muestras = {};
   const maestro = (await blando('jugadores', async () => {
     const r = await api.jugadores();
     const l = N.lista(r);
@@ -111,7 +116,11 @@ export async function actualizar(alPaso = () => {}) {
           return N.ofertas(r);
         });
       }
-      misVentas.push({ marketId: m.id, pid: m.pid, ptId, precio: m.precio, cierra: m.cierra, ofertas: (lista || []).filter((o) => !/reject|declin|cancel|expired/.test(o.estado)) });
+      const ofs = (lista || []).filter((o) => !/reject|declin|cancel|expired/.test(o.estado));
+      // la de LaLiga viene aparte (directOffer) si no está en la lista
+      if (m.ofertaLiga && !ofs.some((o) => o.deLiga || o.importe === m.ofertaLiga)) ofs.push({ id: 'liga', importe: m.ofertaLiga, estado: 'pending', caduca: m.cierra, de: 'LaLiga', deLiga: true });
+      ofs.sort((a, b) => b.importe - a.importe);
+      misVentas.push({ marketId: m.id, pid: m.pid, ptId, precio: m.precio, cierra: m.cierra, ofertas: ofs });
     });
   }
   mercado.forEach((m) => { delete m.jugador; });
@@ -158,7 +167,7 @@ export async function actualizar(alPaso = () => {}) {
     yo: { userId, nombre: miNombre, teamId: mio ? mio.teamId : null },
     liga, ligas, equipos, equiposT: viejo && viejo.equiposT && equipos === viejo.equipos ? viejo.equiposT : Date.now(),
     clasif, plantillas, maestro, mercado, actividad: act.slice(0, 400),
-    dinero, valorEquipo, jornada, partidos, tendencias, avisos, muestras, misVentas,
+    dinero, valorEquipo, jornada, partidos, tendencias, avisos, muestras, misVentas, formaciones, formacionesT,
   };
   return guardarFoto(D, viejo);
 }

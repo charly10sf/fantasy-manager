@@ -94,20 +94,35 @@ function planHTML(S) {
   if (!hayClave()) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Activar la IA</button></div>`;
   if (Array.isArray(P.proximos_dias) && P.proximos_dias.length) h += `<div class="sec"><h2>Los próximos días</h2></div><div class="dias">${P.proximos_dias.map((d) => `<div class="dia"><b>${esc(d.dia)}</b><span>${esc(d.texto)}</span></div>`).join('')}</div>`;
   if (P.paron) h += `<div class="caja">${icono('bandera', 'oro')} <b>El parón.</b> <span class="t2">${esc(P.paron)}</span></div>`;
-  if (P.alineacion && Array.isArray(P.alineacion.titulares) && P.alineacion.titulares.length) {
-    const mios = M.mias.map((x) => x.j), todos = Object.values(S.D.maestro);
-    const k = (n) => String(n || '').toLowerCase();
-    const buscar = (n) => mios.find((j) => k(j.nombre) === k(n)) || todos.find((j) => k(j.nombre) === k(n)) || mios.find((j) => k(n).includes(k(j.nombre)));
-    const tit = P.alineacion.titulares.map(buscar).filter(Boolean);
-    const form = P.alineacion.formacion || '4-3-3';
-    h += `<div class="sec"><h2>Tu once</h2><span class="sub">${esc(form)}</span></div>${campo(form, [1, 2, 3, 4].map((p) => tit.filter((j) => j.pos === p).map((j) => j.nombre)))}`;
-    if (Array.isArray(P.alineacion.dudas) && P.alineacion.dudas.length) h += `<p class="t2 peq">Dudas: ${esc(P.alineacion.dudas.join(' · '))}</p>`;
-  }
+  h += onceHTML(S, P.alineacion);
   if (Array.isArray(P.vigilar) && P.vigilar.length) h += `<div class="sec"><h2>Vigila</h2></div>${P.vigilar.map((v) => notaJugador(S, v.jugador, v.texto)).join('')}`;
   if (Array.isArray(P.noticias) && P.noticias.length) h += `<div class="sec"><h2>Noticias que te afectan</h2></div>${P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join('')}`;
   if (Array.isArray(P.rivales) && P.rivales.length) h += `<div class="sec"><h2>Tus rivales</h2></div>${P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}><span class="ic-act">${icono('rivales')}</span><div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s" style="white-space:normal">${esc(r.texto || '')}</div></div></button>`; }).join('')}`;
   if (P.fuentes && P.fuentes.length) h += `<div class="sec"><h2>Fuentes</h2></div><div class="fuentes">${P.fuentes.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>`;
   return h + '</div>';
+}
+
+/** el once: el que propone la IA si es una formación gratuita y cuadra con tus jugadores; si no, el mejor que sale de los números */
+export function onceHTML(S, al) {
+  const { M } = S;
+  const gratis = M.formaciones.map((f) => f.join('-'));
+  const todos = Object.values(S.D.maestro);
+  const k = (n) => String(n || '').toLowerCase().trim();
+  const buscar = (n) => M.mias.map((x) => x.j).find((j) => k(j.nombre) === k(n)) || todos.find((j) => k(j.nombre) === k(n)) || M.mias.map((x) => x.j).find((j) => k(n).includes(k(j.nombre)));
+  let form = null, lineas = null, deIA = false, dudas = [];
+  if (al && Array.isArray(al.titulares) && gratis.includes(String(al.formacion || '').replace(/\s/g, ''))) {
+    const tit = al.titulares.map(buscar).filter(Boolean);
+    const f = String(al.formacion).split('-').map(Number);
+    const ls = [1, 2, 3, 4].map((p) => tit.filter((j) => j.pos === p));
+    if (ls[0].length === 1 && ls[1].length === f[0] && ls[2].length === f[1] && ls[3].length === f[2]) { form = al.formacion; lineas = ls; deIA = true; dudas = al.dudas || []; }
+  }
+  if (!lineas && M.once && M.once.formacion) { form = M.once.nombre; lineas = M.once.lineas; dudas = M.once.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`); }
+  if (!lineas) return '';
+  const huecos = !deIA && M.once.huecos;
+  let h = `<div class="sec"><h2>Tu once</h2><span class="sub">${esc(form)}${deIA ? ' · IA' : ''}</span></div>`;
+  h += campo(form, lineas.map((l) => l.map((j) => j.nombre)));
+  h += `<p class="t2 peq">${huecos ? `<b class="rojo">Te faltan ${huecos} jugador${huecos > 1 ? 'es' : ''} sanos para completarlo.</b> ` : ''}${M.puestos.map((p) => `${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]} ${p.sanos}${p.faltan ? ` <b class="rojo">(faltan ${p.faltan})</b>` : p.sobran ? ' <span class="oro">(sobran)</span>' : ''}`).join(' · ')}${dudas.length ? `<br>Dudas: ${esc(dudas.join(' · '))}` : ''}</p>`;
+  return h;
 }
 
 function notaJugador(S, nombre, texto, efecto) {
@@ -166,6 +181,8 @@ export function equipo(S) {
   if (!M.mias.length) return h + nada('No encuentro tu plantilla. Si tienes varias ligas o equipos, elige el tuyo en Ajustes.');
 
   if (seg === 'plantilla') {
+    h += onceHTML(S, null);
+    const titulares = new Set((M.once ? M.once.lineas.flat() : []).map((j) => j.id));
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p);
       if (!xs.length) continue;
@@ -174,7 +191,7 @@ export function equipo(S) {
         const f = M.forma(x.pid);
         return filaJugador(x, {
           sub: `${esc(x.j.equipo)}${x.prox ? ` · ${partidoTxt(x.prox)}` : ''}`,
-          extra: `${M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : ''}${estadoPill(x.j)}${clausulaPill(x)}${f ? `<span class="pill">${f.pts.slice(-3).join(' · ')} pts</span>` : x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`,
+          extra: `${titulares.has(x.pid) ? '<span class="pill bien">Titular</span>' : x.j.pos < 5 ? '<span class="pill">Suplente</span>' : ''}${M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : ''}${estadoPill(x.j)}${clausulaPill(x)}${f ? `<span class="pill">${f.pts.slice(-3).join(' · ')} pts</span>` : x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`,
           conMini: true, op: op(x.pid),
         });
       }).join('');

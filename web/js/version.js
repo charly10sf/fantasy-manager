@@ -1,9 +1,20 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // 0.x mientras esté en pruebas: el número del medio sube con cada tanda de mejoras y el último con los arreglos.
-export const VERSION = '0.3.0';
+export const VERSION = '0.4.0';
 
 // Lo nuevo de cada versión (lo enseña la app la primera vez que se abre una versión nueva)
 export const NOVEDADES = [
+  {
+    v: '0.4.0',
+    cosas: [
+      'La IA ya funciona: las preguntas a Gemini salen por la parte nativa de la app (el WebView las cortaba)',
+      'Posiciones y formaciones gratuitas: el plan solo te ficha jugadores que entren en tu once y tapa antes los huecos',
+      'Tu mejor once con las formaciones gratis, cuántos tienes por puesto y si te faltan o te sobran',
+      'Cada fichaje dice cuántos puntos por jornada sumaría a tu once',
+      'Para vender, primero los suplentes que no juegan',
+      'En los movimientos de la liga sale el nombre de quién hace cada cosa',
+    ],
+  },
   {
     v: '0.3.0',
     cosas: [

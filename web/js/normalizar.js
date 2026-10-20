@@ -114,7 +114,8 @@ export function clasificacion(r) {
       teamId,
       nombre: primero(t.name, e.name, m.managerName, typeof e.manager === 'string' ? e.manager : null) || `Equipo ${i + 1}`,
       manager: primero(m.managerName, typeof e.manager === 'string' ? e.manager : null, t.name, e.name) || '',
-      userId: id(primero(e.userId, t.userId, m.id, m.userId, e.managerId)),
+      userId: id(primero(e.userId, t.userId, m.userId, m.id, e.managerId)),
+      managerId: id(primero(m.id, e.managerId, t.managerId)),
       puntos: num(primero(e.points, t.teamPoints, t.points)),
       valor: num(primero(e.teamValue, t.teamValue)),
       puntosJornada: num(primero(e.weekPoints, t.weekPoints)),
@@ -151,10 +152,13 @@ export function mercado(r, equipos) {
       pujas: num(primero(it.numberOfBids, it.bids && it.bids.length)),
       ofertas: num(it.numberOfOffers),
       vendedorTeamId: id(vend.id),
+      vendedorManagerId: id(vend.manager && vend.manager.id),
       vendedor: (vend.manager && vend.manager.managerName) || vend.name || '',
       miPuja: bid ? num(primero(bid.money, bid.amount)) : (typeof it.bid === 'number' ? it.bid : null),
       clausula: it.playerTeam ? num(it.playerTeam.buyoutClause) : null,
       ptId: id(it.playerTeam ? primero(it.playerTeam.playerTeamId, it.playerTeam.id) : it.playerTeamId),
+      // la oferta de LaLiga por un jugador que vendes (directOffer)
+      ofertaLiga: num(primero(it.directOffer && typeof it.directOffer === 'object' ? primero(it.directOffer.money, it.directOffer.amount) : null, typeof it.directOffer === 'number' ? it.directOffer : null)) || null,
       // a veces las ofertas ya vienen dentro del mercado
       ofertasLista: Array.isArray(it.offers) ? ofertas(it.offers) : null,
       jugador: j,
@@ -319,4 +323,21 @@ export function detalleJugador(r) {
   };
   visitar(d, 0);
   return { stats, valores: valores && valores.length > 2 ? valores : null, img: imagenDe(pm) };
+}
+
+/* ---------- las formaciones gratuitas ("4-3-3", "433", {name}, {formation}…) → ["4-3-3", …] ---------- */
+export function formaciones(r) {
+  const out = new Set();
+  const visitar = (x, prof) => {
+    if (x == null || prof > 4) return;
+    if (typeof x === 'string' || typeof x === 'number') {
+      const m = String(x).match(/^\s*(\d)\s*-?\s*(\d)\s*-?\s*(\d)\s*$/);
+      if (m && +m[1] + +m[2] + +m[3] === 10) out.add(`${m[1]}-${m[2]}-${m[3]}`);
+      return;
+    }
+    if (Array.isArray(x)) { x.forEach((y) => visitar(y, prof + 1)); return; }
+    if (typeof x === 'object') Object.values(x).forEach((y) => visitar(y, prof + 1));
+  };
+  visitar(r, 0);
+  return [...out];
 }

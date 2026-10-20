@@ -3,7 +3,7 @@
    cruzando todo lo de tu liga con lo que busca en Google (lesiones, convocatorias, alineaciones probables).
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
-import { leer, guardar } from './puente.js';
+import { leer, guardar, http, enApp } from './puente.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, diaDe, norm } from './util.js';
 import { K } from './datos.js';
 
@@ -32,10 +32,10 @@ const sacar = (m, motivo) => { const a = fuera(); a[m] = { d: diaGoogle(), motiv
 const sinWebHoy = () => LS.get('ia-sin-web', null) === diaGoogle();
 
 const esGemma = (m) => /^gemma/i.test(m);
-const NO_VALE = /(embedding|aqa|imagen|tts|image|live|audio|robotics|computer|learnlm|veo|nano-banana|vision|exp-\d|thinking-exp)/i;
+const NO_VALE = /(embedding|aqa|imagen|tts|image|live|audio|robotics|computer|learnlm|veo|nano-banana|vision|exp-\d|thinking-exp|transcribe|customtools|argon)/i;
 function orden(m) {
   const v = parseFloat((m.match(/-(\d+(?:\.\d+)?)/) || [])[1] || '0');
-  const tipo = /flash-lite/.test(m) ? 2 : /flash/.test(m) ? 0 : /pro/.test(m) ? 1 : esGemma(m) ? 3 : 4;
+  const tipo = /flash-lite/.test(m) ? 1 : /flash/.test(m) ? 0 : /pro/.test(m) ? 2 : esGemma(m) ? 3 : 4;
   const tam = esGemma(m) ? parseFloat((m.match(/(\d+)b/) || [])[1] || '0') : 0;
   return tipo * 1000 - v * 10 - tam / 10 + (/preview|latest/.test(m) ? 2 : 0);
 }
@@ -44,9 +44,8 @@ function orden(m) {
 export async function modelosDisponibles(k = clave(), forzar = false) {
   const guardado = LS.get('ia-modelos', null);
   if (!forzar && guardado && guardado.d === diaGoogle() && guardado.lista && guardado.lista.length) return guardado.lista;
-  const r = await fetch(`${GEMINI}/models?pageSize=1000`, { headers: { 'x-goog-api-key': (k || '').trim() } });
-  if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) { /* nada */ } throw errorDe(r.status, j); }
-  const j = await r.json();
+  const r = await peticion('GET', `${GEMINI}/models?pageSize=1000`, null, (k || '').trim());
+  const j = r.j || {};
   const lista = (j.models || [])
     .filter((m) => (m.supportedGenerationMethods || []).includes('generateContent'))
     .map((m) => m.name.replace(/^models\//, ''))
@@ -94,10 +93,37 @@ function errorDe(estado, j) {
 export const intentosIA = [];
 const apuntar = (x) => { intentosIA.unshift({ t: Date.now(), ...x }); if (intentosIA.length > 60) intentosIA.length = 60; };
 
-async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal } = {}) {
-  const url = `${GEMINI}/models/${modelo}:${stream ? 'streamGenerateContent?alt=sse' : 'generateContent'}`;
-  const r = await fetch(url, { method: 'POST', signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': clave() }, body: JSON.stringify(cuerpo) });
+/**
+ * Una petición a Google. En la app va por la parte nativa (el WebView corta los POST a Google con «Failed to fetch»);
+ * en el navegador, con fetch. Devuelve { j } con el JSON o { r } con la respuesta en streaming (solo navegador).
+ */
+async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, signal } = {}) {
+  if (enApp) {
+    const r = await http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: 200000 });
+    if (r.s === 0) throw new ErrorIA(`Sin conexión con Google (${r.e || 'sin respuesta'})`, 0, { red: true });
+    let j = null;
+    try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
+    if (r.s >= 400) throw errorDe(r.s, j);
+    if (!j) throw new ErrorIA(`Respuesta rara de Google (${r.s})`, r.s);
+    return { j };
+  }
+  let r;
+  try {
+    r = await fetch(url, { method: metodo, signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': k }, body: cuerpo == null ? undefined : JSON.stringify(cuerpo) });
+  } catch (e) {
+    if (e.name === 'AbortError') throw e;
+    throw new ErrorIA(`Sin conexión con Google (${e.message})`, 0, { red: true });
+  }
   if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) { /* nada */ } throw errorDe(r.status, j); }
+  if (stream) return { r };
+  return { j: await r.json() };
+}
+
+async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal } = {}) {
+  // en la app no hay streaming: llega la respuesta entera de una vez
+  const enVivo = stream && !enApp;
+  const url = `${GEMINI}/models/${modelo}:${enVivo ? 'streamGenerateContent?alt=sse' : 'generateContent'}`;
+  const resp = await peticion('POST', url, cuerpo, clave(), { stream: enVivo, signal });
   let texto = '', fuentes = [], fin = null, bloqueo = null;
   const procesar = (j) => {
     if (j.promptFeedback && j.promptFeedback.blockReason) bloqueo = j.promptFeedback.blockReason;
@@ -107,9 +133,9 @@ async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal }
     if (g && g.groundingChunks) fuentes.push(...g.groundingChunks.map((x) => x.web).filter((w) => w && w.uri).map((w) => ({ t: w.title || w.uri, u: w.uri })));
     if (c.finishReason) fin = c.finishReason;
   };
-  if (!stream) procesar(await r.json());
+  if (!enVivo) procesar(resp.j);
   else {
-    const lector = r.body.getReader(), dec = new TextDecoder();
+    const lector = resp.r.body.getReader(), dec = new TextDecoder();
     let buf = '';
     for (;;) {
       const { value, done } = await lector.read();
@@ -175,7 +201,8 @@ async function preguntar({ sistema, contents }, op = {}) {
         if (e.estado === 429) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
         if (e.estado === 404 || e.estado === 403 || e.estado === 400) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
         if (e.vacio && intento < 1) continue;
-        if ((e.estado >= 500 || e.estado === 0) && intento < 2) { await espera(2.5 * (intento + 1), op.signal); continue; }
+        if ((e.estado >= 500 || e.estado === 0 || e.estado == null) && intento < 2) { await espera(2.5 * (intento + 1), op.signal); continue; }
+        if (e.red) { resumen.push(`sin conexión con Google (${e.message})`); throw new ErrorIA(`No hay conexión con Google: ${e.message}. Comprueba que tienes internet y vuelve a probar.`, 0); }
         resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`);
         break;
       }
@@ -195,6 +222,7 @@ const lineaJ = (M, j, x = {}) => [
   forma(M, j.id),
   j.estado && j.estado !== 'ok' ? `ESTADO: ${j.estado}` : null,
 ].filter(Boolean).join(' | ');
+const mejoraTxt = (M, j) => { const g = M.mejora ? M.mejora(j) : 0; return g >= 0.3 ? `entraría en mi once (+${String(Math.round(g * 10) / 10).replace('.', ',')} pts/jornada)` : 'NO entraría en mi once'; };
 const partido = (p) => (p ? `${p.casa ? 'en casa vs' : 'fuera en'} ${p.rival} ${cuando(p.fecha)}` : null);
 
 export function contexto(D, M, c, { corto = false } = {}) {
@@ -208,8 +236,15 @@ export function contexto(D, M, c, { corto = false } = {}) {
   if (M.cierreMercado) L.push(`EL MERCADO CAMBIA: ${cuando(M.cierreMercado)} (en ${dura(M.cierreMercado - Date.now())}).`);
   const yo = M.yo || {};
   L.push(`MI EQUIPO: ${yo.nombre || '?'} · ${yo.pos || '?'}º de ${D.clasif.length} · ${yo.puntos || 0} pts · valor ${eur(D.valorEquipo)} · SALDO ${m1(D.dinero)} · PUEDO GASTAR COMO MUCHO ${eur(M.pujaMax)}${M.misPujas ? ` (ya tengo ${eur(M.misPujas)} comprometidos en pujas)` : ''}.`);
-  L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | forma) + cláusula, protección, riesgo, próximo partido y lo que pagué:');
-  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.prox ? ` | ${partido(x.prox)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
+  if (M.once) {
+    const tit = new Set(M.once.lineas.flat().map((j) => j.id));
+    L.push(`\nJUEGA CON LA VERSIÓN GRATUITA. Formaciones que puede usar: ${M.formaciones.map((f) => f.join('-')).join(', ')} (ninguna otra).`);
+    L.push(`MI PLANTILLA POR PUESTOS (sanos/total): ${M.puestos.map((p) => `${POS[p.pos]} ${p.sanos}/${p.total}${p.faltan ? ` (FALTAN ${p.faltan})` : ''}${p.sobran ? ` (sobran ${p.sobran})` : ''}`).join(' · ')}.`);
+    L.push(`MI MEJOR ONCE AHORA: ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}, unos ${String(Math.round(M.once.total * 10) / 10).replace('.', ',')} pts esperados: ${M.once.lineas.map((l) => l.map((j) => j.nombre).join(', ')).filter(Boolean).join(' | ')}${M.once.entrenador ? ` · entrenador ${M.once.entrenador.nombre}` : ''}.`);
+    M._tit = tit;
+  }
+  L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | forma) + titular o suplente, cláusula, protección, riesgo, próximo partido y lo que pagué:');
+  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.prox ? ` | ${partido(x.prox)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
   if (M.misVentas && M.misVentas.length) {
     L.push('\nMIS JUGADORES EN VENTA Y SUS OFERTAS:');
     for (const v of M.misVentas) L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}`);
@@ -218,10 +253,10 @@ export function contexto(D, M, c, { corto = false } = {}) {
   for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel}`);
   const cl = M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, corto ? 16 : 30);
   L.push('\nCLÁUSULAS DE RIVALES (abiertas o que se abren en 3 días; de más a menos interesantes según la app):');
-  for (const x of cl) L.push(`- ${lineaJ(M, x.j, x)} | de ${x.rival.nombre} | CLÁUSULA ${eur(x.clausula)} ${x.abierta ? 'ABIERTA YA' : `se abre ${cuando(x.protegidoHasta)}`} | ${x.meLlega ? 'me llega' : 'NO me llega'} | interés ${x.interes}/100${x.prox ? ` | ${partido(x.prox)}` : ''}`);
+  for (const x of cl) L.push(`- ${lineaJ(M, x.j, x)} | de ${x.rival.nombre} | CLÁUSULA ${eur(x.clausula)} ${x.abierta ? 'ABIERTA YA' : `se abre ${cuando(x.protegidoHasta)}`} | ${x.meLlega ? 'me llega' : 'NO me llega'} | interés ${x.interes}/100 | ${mejoraTxt(M, x.j)}${x.prox ? ` | ${partido(x.prox)}` : ''}`);
   if (M.mercado.length) {
     L.push(`\nMERCADO DE HOY:`);
-    for (const m of M.mercado.slice(0, 26)) L.push(`- ${lineaJ(M, m.j, m)} | PRECIO ${eur(m.precio)}${m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : ' (de la liga)'} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100${m.prox ? ` | ${partido(m.prox)}` : ''}`);
+    for (const m of M.mercado.slice(0, 26)) L.push(`- ${lineaJ(M, m.j, m)} | PRECIO ${eur(m.precio)}${m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : ' (de la liga)'} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100 | ${mejoraTxt(M, m.j)}${m.prox ? ` | ${partido(m.prox)}` : ''}`);
   }
   if (!corto) {
     L.push('\nLOS QUE MÁS SUBEN HOY EN TODA LALIGA:');
@@ -243,7 +278,8 @@ export function contexto(D, M, c, { corto = false } = {}) {
 
 const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España, directo, como un colega que sabe mucho del juego.
 Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). El mercado cambia cada día; se puja a ciegas y gana la puja más alta. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
-Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Busca en Google lo reciente que importe: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.`;
+Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Busca en Google lo reciente que importe: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
+Las posiciones mandan: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). No recomiendes fichar a alguien que no entraría en su once salvo para revenderlo con beneficio claro, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;
 
 /* ---------------- el plan del día ---------------- */
 export const planes = () => LS.get(K('planes'), []);
@@ -276,7 +312,7 @@ Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
  "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta", "efecto": "sube|baja|neutro"}],
  "rivales": [{"manager": "nombre", "texto": "qué está haciendo y si va a por mis jugadores"}],
  "paron": "qué hacer con el parón si está cerca, o null",
- "alineacion": {"formacion": "4-3-3", "titulares": ["nombres de mis jugadores"], "dudas": ["jugador: por qué"]}
+ "alineacion": {"formacion": "una de las formaciones gratuitas", "titulares": ["portero, defensas, medios y delanteros: nombres exactos"], "dudas": ["jugador: por qué"]}
 }
 Entre 1 y 8 operaciones. Entre 2 y 5 días en proximos_dias.`;
   const r = await preguntar({ sistema: SISTEMA, contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso });
