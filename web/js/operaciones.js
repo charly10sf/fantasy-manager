@@ -60,7 +60,7 @@ export function comoConseguir(D, M, pid, cat) {
   const tid = M.dueno[pid];
   if (tid === yo) return 'ES MÍO';
   const ops = cat.lista.filter((o) => o.pid === pid && ['pujar', 'comprar', 'clausular'].includes(o.tipo));
-  if (ops.length) return ops.map((o) => `[${o.ref}] ${textoOp(o)}`).join(' · ');
+  if (ops.length) return ops.map((o) => `[${o.ref}] ${textoOp(o, M)}`).join(' · ');
   if (!tid) return 'LIBRE pero no está hoy en el mercado: no se puede fichar hasta que salga';
   const x = M.clausulas.find((c) => c.pid === pid);
   const fa = M.fichadoPor && M.fichadoPor(pid);
@@ -68,10 +68,13 @@ export function comoConseguir(D, M, pid, cat) {
 }
 
 /** una operación del catálogo en texto, con lo que cuesta y cómo funciona */
-export function textoOp(o) {
+export function textoOp(o, M = null) {
   const j = o.j;
   const sobre = j && j.valor && o.precio ? o.precio / j.valor - 1 : 0;
-  const sobreTxt = j && j.valor && o.precio ? ` (${pct(sobre * 100)} sobre su valor de ${eur(j.valor)}${sobre > 0.02 ? `: ${eur(o.precio - j.valor)} de más` : ''})` : '';
+  const sc = M && M.sobrecoste && j ? M.sobrecoste(j, o.precio) : null;
+  const sobreTxt = j && j.valor && o.precio
+    ? ` (${pct(sobre * 100)} sobre su valor de ${eur(j.valor)}${sobre > 0.02 ? `: ${eur(o.precio - j.valor)} de más${sc ? `, sobrecoste ${sc.nivel.toUpperCase()}${sc.recTxt ? `, ${sc.recTxt}` : ''}` : ''}` : ''})`
+    : '';
   switch (o.ref[0]) {
     case 'P': return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}; la app pujaría ${eur(o.puja)}`;
     case 'M': return `COMPRAR a ${o.vendedor} ${j.nombre}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${sobreTxt}; es suyo hasta que ACEPTE una oferta, no es seguro${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}` : ''}`;
@@ -122,7 +125,7 @@ export function catalogoTxt(D, M, cat, { corto = false, datos = null } = {}) {
     if (!ops.length) return;
     L.push(`\n${titulo}`);
     for (const o of ops.slice(0, n)) {
-      L.push(`- [${o.ref}] ${textoOp(o)}`);
+      L.push(`- [${o.ref}] ${textoOp(o, M)}`);
       const d = datos && datos(o);
       if (d) L.push(`    ${d}`);
     }

@@ -1,13 +1,21 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.1.6';
+export const VERSION = '0.1.7';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.1.7', f: '2026-10-21', h: '00:47', t: 'Lo caro se mide en euros',
+    cosas: [
+      { tipo: 'mejora', d: 'dinero', t: 'No es lo mismo un +25 % de 3 M que de 40 M', x: 'Lo que se paga de más se mide en euros, frente al tamaño de tu equipo y frente a lo que sube el jugador al día. Pagar 750 mil de más por uno de 3 M es poco; 10 M de más por uno de 40 M es una barbaridad aunque suba.' },
+      { tipo: 'mejora', d: 'escudo', t: 'Cuatro niveles de sobrecoste', x: 'Nada, poco, alto o excesivo, con los días que tardas en recuperarlo. El plan tacha lo excesivo (salvo un trato tuyo), avisa de lo alto y deja pasar lo poco. La IA los recibe con cada operación y los usa también al contestarte en el chat.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'lupa', t: 'El interés, en euros', x: 'El interés de cada jugador y el plan automático castigan el dinero que se pierde, no el porcentaje. En la ficha, la cláusula dice también cuántos euros son de más.' },
+    ],
+  },
   {
     v: '0.1.6', f: '2026-10-21', h: '00:11', t: 'Pregunta, espera y sigue a lo tuyo',
     cosas: [

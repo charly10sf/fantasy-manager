@@ -270,6 +270,27 @@ export function analizar(D, H, c, extra = {}) {
     return { pos: p, sanos, total, necesita, faltan: Math.max(0, minimo - sanos), sobran: Math.max(0, sanos - (MAXIMO[p] + 1)) };
   });
 
+  /* ---------- lo que se paga de más: en euros, no solo en porcentaje ---------- */
+  // un +25 % por uno de 3 M son 750 mil; por uno de 40 M, 10 M. Cuenta el dinero que se pierde, comparado con el
+  // tamaño de tu equipo, y en cuántos días lo recuperas con lo que sube el jugador
+  const escala = clamp(num(D.valorEquipo) / 200e6, 0.5, 2);
+  M.sobrecoste = (j, precio, t = j ? M.tend(j.id) : null) => {
+    if (!j || !j.valor || !precio) return { extra: 0, sobre: 0, nivel: 'nada', dias: null };
+    const extra = precio - j.valor, sobre = precio / j.valor - 1;
+    const diario = t ? (t.d7 != null && t.d7 > 0 ? t.d7 / 7 : t.d1 != null && t.d1 > 0 ? t.d1 : 0) : 0;
+    const dias = extra > 0 && diario > 0 ? extra / diario : extra > 0 ? Infinity : 0;
+    const rel = num(D.valorEquipo) ? extra / num(D.valorEquipo) : null;
+    let nivel;
+    if (extra <= 0.3e6 * escala || sobre <= 0.03) nivel = 'nada';
+    else if (extra <= 1.5e6 * escala || (extra <= 3e6 * escala && dias <= 5)) nivel = 'poco';
+    else if (extra <= 5e6 * escala || dias <= 7) nivel = 'alto';
+    else nivel = 'excesivo';
+    // aunque sea poco dinero, pagar casi el doble de lo que vale no es serio
+    if (sobre > 0.8 && nivel !== 'excesivo' && !(dias <= 5)) nivel = nivel === 'alto' ? 'excesivo' : 'alto';
+    const recTxt = extra <= 0 ? '' : !Number.isFinite(dias) ? 'no sube: no lo recuperas' : dias > 30 ? 'con lo que sube tardarías más de un mes en recuperarlo' : `lo recuperas en ${Math.max(1, Math.round(dias))} día${Math.round(dias) <= 1 ? '' : 's'} con lo que sube`;
+    return { extra, sobre, rel, dias, diario, nivel, recTxt };
+  };
+
   /* ---------- cuánto interesa un jugador (0 a 100) ---------- */
   M.interes = (j, precio, t = M.tend(j.id)) => {
     const partes = [];
@@ -281,10 +302,11 @@ export function analizar(D, H, c, extra = {}) {
     else if (t.p1 != null && Math.abs(t.p1) >= 1) partes.push(`${t.p1 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p1), 1, false)} hoy`);
     const ratio = j.valor ? precio / j.valor : 2;
     const barato = clamp((1.6 - ratio) / 0.6, 0, 1) * 20;
-    // pagar de más se pierde en el valor del equipo: castiga a partir de un 15 % y mucho a partir del 40 %
-    const caro = ratio > 1.15 ? clamp((ratio - 1.15) / 0.45, 0, 1) * 45 : 0;
+    // pagar de más se pierde en el valor del equipo: lo que castiga es el dinero que se pierde, no el porcentaje
+    const sc = M.sobrecoste(j, precio, t);
+    const caro = { nada: 0, poco: 5, alto: 22, excesivo: 45 }[sc.nivel];
     if (ratio <= 1.05) partes.push('cuesta lo que vale');
-    else partes.push(`cuesta un ${Math.round((ratio - 1) * 100)} % más de lo que vale (${eur(precio - j.valor, { signo: true })})`);
+    else partes.push(`cuesta ${eur(sc.extra)} más de lo que vale (${pct(sc.sobre * 100)}${sc.recTxt ? `; ${sc.recTxt}` : ''})`);
     let pen = 0;
     if (MALOS.has(j.estado)) { pen = j.estado === 'out_of_league' ? 80 : 35; partes.push(j.estado === 'injured' ? 'lesionado' : j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'); }
     else if (j.estado === 'doubtful') { pen = 12; partes.push('es duda'); }
@@ -642,7 +664,7 @@ export function planAuto(D, M, c) {
 
   // 2. clausular lo mejor que esté abierto y te llegue
   // nunca una cláusula mucho más cara de lo que vale el jugador (lo de más se pierde en el valor del equipo)
-  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && x.clausula <= x.j.valor * 1.3).slice(0, 8);
+  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && ['nada', 'poco'].includes(M.sobrecoste(x.j, x.clausula, x.tend).nivel)).slice(0, 8);
   let clausulas = 0;
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;
