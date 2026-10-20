@@ -185,6 +185,7 @@ export function ajustes(S) {
 
   h += `<div class="grupo"><span>App</span></div>`;
   h += `<div class="ajuste"><div class="c"><b>Versión ${VERSION}</b><span>${enApp ? `Compilación ${nativo.version()}` : 'En el navegador (ejemplo)'}</span></div>${enApp ? '<button class="btn chico sec" data-accion="buscarVersion">Buscar nueva</button>' : ''}</div>`;
+  h += `<div class="ajuste"><div class="c"><b>Novedades</b><span>Lo que trae cada versión y lo que arregla</span></div><button class="btn chico sec" data-accion="novedades">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google, para mandármelo si algo falla</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;
   if (enApp && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Borrar los datos guardados</b><span>Histórico, fichas y planes (tu sesión y tu clave no)</span></div><button class="btn chico sec" data-accion="borrarDatos">Borrar</button></div>`;

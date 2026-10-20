@@ -15,7 +15,8 @@ import { md } from './texto.js';
 import { ponerEquipos } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor } from './externas.js';
-import { VERSION, NOVEDADES } from './version.js';
+import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
+import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null };
@@ -313,6 +314,7 @@ function repintarHoja() {
 }
 
 window.atras = () => {
+  if (cerrarPresentacion()) return true;
   if (cerrarHoja()) return true;
   if (S.D && S.vista !== 'hoy') { ir('hoy'); return true; }
   return false;
@@ -464,6 +466,8 @@ document.addEventListener('click', async (ev) => {
     case 'plan': S.planEstado = {}; generarPlan(); break;
     case 'planYa': cerrarHoja(); ir('hoy'); S.planEstado = {}; generarPlan(); break;
     case 'voz': escuchar(); break;
+    case 'novedades': listaVersiones(); break;
+    case 'presentacion': cerrarHoja(true); verNovedades((NOVEDADES[1] || {}).v || null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
     case 'hecho': {
@@ -556,13 +560,29 @@ document.addEventListener('input', (ev) => {
 window.addEventListener('hashchange', () => { const v = ALIAS[location.hash.slice(1)] || location.hash.slice(1); if (S.D && VISTAS[v] && v !== S.vista) ir(v); });
 
 /* ---------------- lo nuevo de esta versión ---------------- */
+/** la última versión que viste (la numeración cambió en la 0.1.0: lo de antes se traduce) */
+function versionVista() {
+  const v = LS.get('version-vista2', null);
+  if (v) return v;
+  const vieja = LS.get('version-vista', null);
+  return vieja ? deNumeracionVieja(vieja) || '0.0.1' : null;
+}
+/** al estrenar versión, las novedades contadas bajando; la primera vez que se instala, nada */
 function novedades() {
-  const vista = LS.get('version-vista', null);
-  LS.set('version-vista', VERSION);
-  if (!vista || vista === VERSION) return;
-  const n = NOVEDADES.find((x) => x.v === VERSION);
-  if (!n) return;
-  abrirHoja(`<div class="hoja-cab"><h2>Novedades ${VERSION}</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div><ul class="lista-ok">${n.cosas.map((c) => `<li>${icono('ok')}${esc(c)}</li>`).join('')}</ul>`);
+  const vista = versionVista();
+  LS.set('version-vista2', VERSION);
+  if (!vista || cmpVer(vista, VERSION) >= 0) return;
+  verNovedades(vista);
+}
+function verNovedades(desde) {
+  presentarNovedades(desde, {
+    alIr: (a) => { if (!a || !S.D) return; if (a.seg) { const [v, sg] = a.seg.split(':'); S.seg[v] = sg; } ir(a.v); },
+    alLista: () => listaVersiones(),
+  });
+}
+function listaVersiones() {
+  abrirHoja(`<div class="hoja-cab"><h2>Novedades</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>
+    <button class="btn chico" data-accion="presentacion" style="margin:0 0 6px">${icono('ia')}Ver la ${VERSION.replace(/\.0$/, '')} en presentación</button>${listaNovedades()}`);
 }
 
 /* ---------------- arranque ---------------- */
