@@ -14,6 +14,7 @@ import { linea } from './graficos.js';
 import { md } from './texto.js';
 import { ponerEquipos } from './comunes.js';
 import { encuadrar } from './caras.js';
+import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES } from './version.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null };
@@ -252,7 +253,8 @@ window.alVolver = () => {
 
 /* ---------------- la ficha de un jugador: puntos por jornada ---------------- */
 async function cargarDetalle(pid) {
-  if (S.det[pid] && Date.now() - S.det[pid].t < 6 * 3600e3 && !S.det[pid].error) { pintarDetalle(pid); return; }
+  const ya = S.det[pid];
+  if (ya && Date.now() - ya.t < 6 * 3600e3 && !ya.error && (ya.valores || ya.sinValores || enDemo())) { pintarDetalle(pid); return; }
   let det;
   if (enDemo()) {
     const j = S.M.J(pid);
@@ -261,7 +263,9 @@ async function cargarDetalle(pid) {
     det = { stats: Array.from({ length: 9 }, (_, i) => { const min = azar() < 0.15 ? 0 : Math.round(45 + azar() * 45); return { n: i + 1, pts: min ? Math.round(j.media * (0.3 + azar() * 1.4)) : 0, min, gol: j.pos === 4 && azar() < 0.4 ? 1 : 0, asis: azar() < 0.15 ? 1 : 0, am: azar() < 0.12 ? 1 : 0, roja: 0 }; }), valores: null };
   } else {
     try {
-      const d = detalleJugador(await api.jugador(pid, S.D.liga.id));
+      const d = ya && Date.now() - ya.t < 6 * 3600e3 && !ya.error ? ya : detalleJugador(await api.jugador(pid, S.D.liga.id));
+      // el histórico de valor para la gráfica, si la ficha no lo trae
+      if (!d.valores) { d.valores = await historialValor(pid).catch(() => null); if (!d.valores) d.sinValores = true; }
       det = d;
       if (d.img && S.D.maestro[pid] && !S.D.maestro[pid].img) { S.D.maestro[pid].img = d.img; const caras = LS.get('caras', {}); caras[pid] = d.img; LS.set('caras', caras); }
     } catch (e) { det = { error: e.message, stats: [] }; }
@@ -272,9 +276,14 @@ async function cargarDetalle(pid) {
 function pintarDetalle(pid) {
   if (!S.tipoHoja || S.tipoHoja[0] !== 'j' || S.tipoHoja[1] !== pid) return;
   const el = $('#det-j'); if (el) el.innerHTML = Hj.detalleHTML(S.det[pid]);
-  const v = S.det[pid] && S.det[pid].valores;
+  pintarGraf(pid);
+}
+function pintarGraf(pid) {
   const g = $('#graf-j');
-  if (v && g && v.length > (S.M.tend(pid).serie || []).length) g.innerHTML = linea(v, { alto: 140 });
+  if (!g) return;
+  const r = S.rango || 30;
+  g.innerHTML = Hj.grafValor(Hj.serieValor(S, pid), r, Hj.cargandoValor(S, pid));
+  $$('.rangos button').forEach((b) => b.classList.toggle('activo', +b.dataset.n === r));
 }
 
 /* ---------------- el chat ---------------- */
@@ -362,6 +371,7 @@ document.addEventListener('click', async (ev) => {
     case 'copiarDiag': nativo.copiar(Hj.textoDiagnostico(S)); tostada('Copiado'); break;
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
+    case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
     case 'hecho': {
       const P = S.plan; if (!P) break;
       const todos = LS.get('hechos', {});

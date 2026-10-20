@@ -64,7 +64,7 @@ export function jugador(p, equipos = {}) {
     pos: num(primero(pm.positionId, pm.position)) || 0,
     valor: num(primero(pm.marketValue, pm.value, pm.price)),
     puntos: num(primero(pm.points, pm.totalPoints)),
-    media: num(primero(pm.averagePoints, pm.avgPoints)),
+    media: Math.round(num(primero(pm.averagePoints, pm.avgPoints)) * 10) / 10,
     estado: pm.playerStatus || pm.status || 'ok',
     img: typeof img === 'string' ? img : null,
     temporadaPasada: num(pm.lastSeasonPoints),

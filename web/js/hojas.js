@@ -1,5 +1,5 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
-import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, num, horaDe, LS } from './util.js';
+import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, num, horaDe, LS, DIA } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML } from './comunes.js';
 import { linea, barra, barras } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML } from './vistas.js';
@@ -14,6 +14,30 @@ import { enDemo } from './datos.js';
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
 
 /* ================= FICHA DE JUGADOR ================= */
+/* ---------- la gráfica del precio ---------- */
+export const RANGOS = [[7, '7 días'], [30, '1 mes'], [90, '3 meses']];
+/** el histórico de valor más largo que haya: el de la API de LaLiga o el que apunta la app cada día */
+export function serieValor(S, pid) {
+  const a = (S.M.tend(pid).serie || []), b = (S.det && S.det[pid] && S.det[pid].valores) || [];
+  const s = (b.length > a.length ? b : a).slice();
+  const j = S.M.J(pid);
+  // el valor de hoy al final, si el histórico no lo trae todavía
+  if (j && j.valor && s.length && Date.now() - s[s.length - 1][0] > 20 * 3600e3) s.push([Date.now(), j.valor]);
+  return s;
+}
+export const cargandoValor = (S, pid) => !S.D.demo && !(S.det && S.det[pid] && (S.det[pid].valores || S.det[pid].sinValores || S.det[pid].error));
+export function grafValor(serie, dias, cargando = false) {
+  const p = (serie || []).filter(([t, v]) => Number.isFinite(t) && v > 0);
+  if (p.length < 2) return `<div class="graf-vacio">${cargando ? 'Cargando su histórico de valor…' : 'LaLiga no da su histórico de valor y la app aún no ha apuntado bastantes días.'}</div>`;
+  let q = p.filter(([t]) => t >= Date.now() - dias * DIA - 12 * 3600e3);
+  if (q.length < 2) q = p.slice(-2);
+  const v0 = q[0][1], v1 = q[q.length - 1][1], d = v1 - v0;
+  const vs = q.map((x) => x[1]);
+  const span = Math.max(1, Math.round((q[q.length - 1][0] - q[0][0]) / DIA));
+  return `${linea(q, { alto: 150, color: d >= 0 ? 'var(--sube)' : 'var(--baja)' })}
+    <div class="graf-pie"><b class="${clase(d)}">${eur(d, { signo: true })} (${pct((v1 / v0 - 1) * 100)})</b> en ${span} día${span > 1 ? 's' : ''} · máx ${eur(Math.max(...vs))} · mín ${eur(Math.min(...vs))}</div>`;
+}
+
 export function fichaJugador(S, pid) {
   const { M } = S;
   const j = M.J(pid), t = M.tend(pid);
@@ -30,7 +54,9 @@ export function fichaJugador(S, pid) {
     <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div></div>`;
   h += `<div class="valor-g"><span class="v">${eur(j.valor)}</span><span class="d">${delta(t, { largo: true })}</span>${t.d7 != null ? `<span class="d ${clase(t.d7)}">${eur(t.d7, { signo: true })} 7d</span>` : ''}</div>`;
   if (op) h += `<div class="aviso-ficha">${icono('rayo')}<div><b>Plan de hoy: ${ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max ? ` (puja hasta ${eur(op.puja_max)})` : ''}.</b> ${esc(op.motivo || '')}</div></div>`;
-  h += `<div id="graf-j">${linea(t.serie, { alto: 140 })}</div>`;
+  const rango = S.rango || 30;
+  h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
+  h += `<div id="graf-j">${grafValor(serieValor(S, pid), rango, cargandoValor(S, pid))}</div>`;
 
   if (mia) {
     h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}, ${mia.abierta ? '<b>abierta</b>: te lo pueden quitar ya' : `protegido hasta ${cuando(mia.protegidoHasta)} (${dura(mia.abreEn)})`}. ${mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`}.${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : ''}</div></div>`;
@@ -49,7 +75,7 @@ export function fichaJugador(S, pid) {
   if (venta) h += `<div class="sec"><h2>En venta</h2></div>${ventaHTML(venta)}`;
   const f = mia || suya;
   h += `<div class="rejilla" style="margin-top:14px">
-    <div class="dato"><div class="et">Puntos</div><div class="v">${num(j.puntos)}<small>${j.media ? String(j.media).replace('.', ',') + ' de media' : ''}</small></div></div>
+    <div class="dato"><div class="et">Puntos</div><div class="v">${num(j.puntos)}<small>${j.media ? String(Math.round(j.media * 10) / 10).replace('.', ',') + ' de media' : ''}</small></div></div>
     <div class="dato"><div class="et">Interés</div><div class="v">${inter.n}<small>/100</small></div></div>
     ${f ? `<div class="dato"><div class="et">Cláusula</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? pct((f.ratio - 1) * 100, 0) : ''}</small></div></div>` : ''}
     <div class="dato"><div class="et">Próximo partido</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : 'en'} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></div>

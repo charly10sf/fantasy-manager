@@ -281,6 +281,12 @@ main { padding: 16px 16px 120px; }
 /* gráficos */
 .graf { width: 100%; height: auto; display: block; margin: 6px 0; }
 .graf-vacio { color: var(--apagado); font-size: 14px; padding: 16px 0; text-align: center; }
+.graf-cab { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 0 2px; }
+.graf-cab > span { font: 700 12.5px 'Barlow'; letter-spacing: 1.3px; text-transform: uppercase; color: var(--texto2); }
+.rangos { display: flex; padding: 2px; border-radius: 10px; background: var(--plano2); }
+.rangos button { padding: 5px 10px; border-radius: 8px; font: 600 12.5px 'Barlow'; color: var(--texto2); }
+.rangos button.activo { background: var(--plano3); color: var(--texto); }
+.graf-pie { font-size: 13.5px; color: var(--texto2); margin: -2px 0 6px; }
 .g-et { font: 600 12px var(--cond); fill: var(--texto2); }
 .g-eje { font: 500 11px 'Barlow'; fill: var(--apagado); }
 .b { fill: var(--plano3); } .b-yo { fill: var(--rojo); }

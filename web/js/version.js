@@ -1,9 +1,16 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // 0.x mientras esté en pruebas: el número del medio sube con cada tanda de mejoras y el último con los arreglos.
-export const VERSION = '0.7.0';
+export const VERSION = '0.7.1';
 
 // Lo nuevo de cada versión (lo enseña la app la primera vez que se abre una versión nueva)
 export const NOVEDADES = [
+  {
+    v: '0.7.1',
+    cosas: [
+      'Gráfica del valor de mercado en la ficha de cada jugador (7 días, 1 mes o 3 meses), con lo que ha subido o bajado y su máximo y mínimo. Si no es tuyo, la app pide su histórico a LaLiga al abrir la ficha',
+      'La media de puntos sale con un decimal',
+    ],
+  },
   {
     v: '0.7.0',
     cosas: [
