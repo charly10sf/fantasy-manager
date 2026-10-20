@@ -1,7 +1,7 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes, el chat y el diagnóstico. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, num, horaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada } from './comunes.js';
-import { linea, barra } from './graficos.js';
+import { linea, barra, barras } from './graficos.js';
 import { filaActividad, PELIGRO } from './vistas.js';
 import { conversacion, hayClave, clave, cfgIA, NOMBRES } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
@@ -29,7 +29,7 @@ export function fichaJugador(S, pid) {
   h += `<div id="graf-j">${linea(t.serie, { alto: 150 })}</div>`;
 
   if (mia) {
-    h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}, ${mia.abierta ? '<b>abierta</b>: te lo pueden quitar ya' : `protegido hasta ${cuando(mia.protegidoHasta)} (${dura(mia.abreEn)})`}. Riesgo ${mia.riesgo}.${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : ''}</div></div>`;
+    h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}, ${mia.abierta ? '<b>abierta</b>: te lo pueden quitar ya' : `protegido hasta ${cuando(mia.protegidoHasta)} (${dura(mia.abreEn)})`}. ${mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`}.${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : ''}</div></div>`;
   } else if (suya) {
     if (suya.abierta && suya.meLlega) h += `<div class="aviso-ficha verde">${icono('diana')}<div><b>Puedes clausularlo ya</b> a ${esc(suya.rival.nombre)} por ${eur(suya.clausula)}. Te quedarías con ${eur(suya.teQueda)}${suya.teQueda < 0 ? ' (en negativo: véndete algo antes de que empiece la jornada)' : ''}.</div></div>`;
     else if (suya.abierta) h += `<div class="aviso-ficha">${icono('candado')}<div>Su cláusula está abierta (${eur(suya.clausula)}, de ${esc(suya.rival.nombre)}), pero te faltan <b>${eur(suya.clausula - M.pujaMax)}</b>.</div></div>`;
@@ -48,9 +48,23 @@ export function fichaJugador(S, pid) {
     <div class="dato"><div class="et">Próximo partido</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : 'en'} ${esc(prox.rival)}` : '–'}<small>${prox ? cuando(prox.fecha) : ''}</small></div></div>
   </div>`;
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
+  h += `<div id="det-j">${S.det && S.det[pid] ? detalleHTML(S.det[pid]) : '<div class="graf-vacio">Cargando sus partidos…</div>'}</div>`;
   const acts = M.actividad.filter((a) => a.pid === pid).slice(0, 6);
   if (acts.length) h += `<h2 class="sec">Sus movimientos en tu liga</h2><div class="tabla-act">${acts.map(filaActividad).join('')}</div>`;
   h += `<button class="btn sec ancho" style="margin-top:20px" data-accion="preguntarJ" data-pid="${esc(pid)}">${icono('ia')}¿Qué hago con ${esc(j.nombre)}?</button>`;
+  return h;
+}
+
+/** sus puntos por jornada, minutos y goles (de la ficha del jugador en la API) */
+export function detalleHTML(det) {
+  if (!det || det.error) return `<div class="graf-vacio">${det && det.error ? 'No se ha podido leer su ficha en LaLiga.' : ''}</div>`;
+  const st = det.stats || [];
+  if (!st.length) return '';
+  const ult = st.slice(-5), jugados = st.filter((s) => s.min > 0);
+  const media5 = ult.reduce((a, s) => a + s.pts, 0) / ult.length;
+  const tot = (k) => st.reduce((a, s) => a + s[k], 0);
+  let h = `<h2 class="sec">Puntos por jornada</h2>${barras(st.slice(-10).map((s) => ({ et: 'J' + s.n, v: s.pts, yo: s === st[st.length - 1] })), { alto: 130 })}`;
+  h += `<p class="t2 peq">Últimas ${ult.length}: <b>${String(Math.round(media5 * 10) / 10).replace('.', ',')}</b> pts de media · ha jugado ${jugados.length} de ${st.length} (${Math.round(tot('min'))} min)${tot('gol') ? ` · ${tot('gol')} gol${tot('gol') > 1 ? 'es' : ''}` : ''}${tot('asis') ? ` · ${tot('asis')} asist.` : ''}${tot('am') ? ` · ${tot('am')} amarilla${tot('am') > 1 ? 's' : ''}` : ''}${tot('roja') ? ` · ${tot('roja')} roja` : ''}</p>`;
   return h;
 }
 

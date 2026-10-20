@@ -246,3 +246,29 @@ export function unirTendencias(ff, maestro) {
   }
   return out;
 }
+
+/* ---------- la ficha de un jugador: puntos por jornada (y el histórico de valor si viene) ---------- */
+export function detalleJugador(r) {
+  const d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r || {};
+  const pm = d.playerMaster && typeof d.playerMaster === 'object' ? d.playerMaster : d;
+  const st = (x, k) => { const v = x && x.stats && x.stats[k]; return Array.isArray(v) ? num(v[0]) : num(v); };
+  const stats = (Array.isArray(pm.playerStats) ? pm.playerStats : Array.isArray(d.playerStats) ? d.playerStats : [])
+    .map((s) => ({ n: num(s.weekNumber), pts: num(s.totalPoints), min: st(s, 'mins_played'), gol: st(s, 'goals'), asis: st(s, 'goal_assist'), am: st(s, 'yellow_card'), roja: st(s, 'red_card') }))
+    .filter((s) => s.n).sort((a, b) => a.n - b.n);
+  // si en algún sitio viene una lista de valores con fecha, es el histórico de valor
+  let valores = null;
+  const visitar = (x, prof) => {
+    if (valores || !x || prof > 4 || typeof x !== 'object') return;
+    if (Array.isArray(x)) {
+      if (x.length > 2 && x[0] && typeof x[0] === 'object' && 'marketValue' in x[0] && ('date' in x[0] || 'day' in x[0] || 'createdAt' in x[0])) {
+        valores = x.map((v) => [ms(v.date || v.day || v.createdAt), num(v.marketValue)]).filter(([t, v]) => t && v).sort((a, b) => a[0] - b[0]);
+        return;
+      }
+      x.slice(0, 50).forEach((y) => visitar(y, prof + 1));
+      return;
+    }
+    Object.values(x).forEach((y) => visitar(y, prof + 1));
+  };
+  visitar(d, 0);
+  return { stats, valores: valores && valores.length > 2 ? valores : null };
+}

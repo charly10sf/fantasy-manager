@@ -40,22 +40,30 @@ jobs:
         env:
           CLAVE: ${{ secrets.ANDROID_CLAVE }}
         run: |
-          if [ -z "$CLAVE" ]; then
-            keytool -genkeypair -keystore /tmp/prueba.p12 -storetype PKCS12 -alias fantasy -keyalg RSA -keysize 2048 -validity 10000 -storepass prueba123 -keypass prueba123 -dname "CN=Prueba"
-            echo "FIRMA=prueba" >> "$GITHUB_ENV"
-            echo "FIRMA_RUTA=/tmp/prueba.p12" >> "$GITHUB_ENV"
-          else
-            if [ ! -f android/firma.p12 ]; then
-              keytool -genkeypair -keystore android/firma.p12 -storetype PKCS12 -alias fantasy -keyalg RSA -keysize 3072 -validity 20000 -storepass "$CLAVE" -keypass "$CLAVE" -dname "CN=Fantasy Manager"
-              git config user.name "github-actions[bot]"
-              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-              git add android/firma.p12
-              git commit -q -m "App: clave de firma, cifrada con el secreto ANDROID_CLAVE"
-              git pull -q --rebase origin main && git push -q origin HEAD:main
+          set -o pipefail
+          {
+            if [ -z "$CLAVE" ]; then
+              echo "Sin secreto ANDROID_CLAVE: clave de prueba, no se publica"
+              keytool -genkeypair -keystore /tmp/prueba.p12 -storetype PKCS12 -alias fantasy -keyalg RSA -keysize 2048 -validity 10000 -storepass prueba123 -keypass prueba123 -dname "CN=Prueba"
+              echo "FIRMA=prueba" >> "$GITHUB_ENV"
+              echo "FIRMA_RUTA=/tmp/prueba.p12" >> "$GITHUB_ENV"
+            else
+              echo "Secreto ANDROID_CLAVE de ${#CLAVE} caracteres"
+              if [ ${#CLAVE} -lt 6 ]; then echo "ERROR: ANDROID_CLAVE tiene que tener al menos 6 caracteres"; exit 1; fi
+              if [ ! -f android/firma.p12 ]; then
+                keytool -genkeypair -keystore android/firma.p12 -storetype PKCS12 -alias fantasy -keyalg RSA -keysize 3072 -validity 20000 -storepass "$CLAVE" -keypass "$CLAVE" -dname "CN=Fantasy Manager"
+                git config user.name "github-actions[bot]"
+                git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                git add android/firma.p12
+                git commit -q -m "App: clave de firma, cifrada con el secreto ANDROID_CLAVE"
+                git pull -q --rebase origin main && git push -q origin HEAD:main
+                echo "Clave de firma creada y guardada"
+              fi
+              keytool -list -keystore android/firma.p12 -storetype PKCS12 -storepass "$CLAVE" | head -3
+              echo "FIRMA=buena" >> "$GITHUB_ENV"
+              echo "FIRMA_RUTA=$GITHUB_WORKSPACE/android/firma.p12" >> "$GITHUB_ENV"
             fi
-            echo "FIRMA=buena" >> "$GITHUB_ENV"
-            echo "FIRMA_RUTA=$GITHUB_WORKSPACE/android/firma.p12" >> "$GITHUB_ENV"
-          fi
+          } 2>&1 | tee "$GITHUB_WORKSPACE/firma.log"
 
       - name: Versión
         run: |
@@ -95,6 +103,7 @@ jobs:
         run: |
           mkdir -p /tmp/registro && cd /tmp/registro
           cp "$GITHUB_WORKSPACE/compilacion.log" . 2>/dev/null || echo "sin registro" > compilacion.log
+          cp "$GITHUB_WORKSPACE/firma.log" . 2>/dev/null || true
           tail -c 60000 compilacion.log > ultimo.log
           echo "run ${{ github.run_number }} firma ${FIRMA:-?} $(date -u +%FT%TZ)" > estado.txt
           ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/release/" >> estado.txt 2>&1 || true

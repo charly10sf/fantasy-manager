@@ -8,10 +8,12 @@ import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
 import { analisisDelDia, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion } from './ia.js';
-import { ultimaVersion } from './api.js';
+import { ultimaVersion, api } from './api.js';
+import { detalleJugador } from './normalizar.js';
+import { linea } from './graficos.js';
 import { VERSION, NOVEDADES } from './version.js';
 
-const S = { D: null, H: null, M: null, c: cfg(), vista: 'inicio', seg: {}, filtro: {}, cargando: false, analizando: false, errorIA: null, hoja: null, charlando: false, parcial: '', nueva: null };
+const S = { det: {}, D: null, H: null, M: null, c: cfg(), vista: 'inicio', seg: {}, filtro: {}, cargando: false, analizando: false, errorIA: null, hoja: null, charlando: false, parcial: '', nueva: null };
 window.S = S;
 const VISTAS = { inicio: V.inicio, equipo: V.equipo, rivales: V.rivales, mercado: V.mercado, analisis: V.analisis };
 const NAV = [['inicio', 'inicio', 'Inicio'], ['equipo', 'equipo', 'Equipo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['analisis', 'ia', 'Análisis']];
@@ -183,6 +185,29 @@ window.alVolver = () => {
   if (S.D && !S.cargando && Date.now() - S.D.t > 15 * MIN && (enDemo() || haySesion())) cargar({ silencio: true });
 };
 
+/* ---------------- la ficha completa de un jugador (puntos por jornada) ---------------- */
+async function cargarDetalle(pid) {
+  if (S.det[pid] && Date.now() - S.det[pid].t < 30 * MIN) { pintarDetalle(pid); return; }
+  let det;
+  if (enDemo()) {
+    const j = S.M.J(pid);
+    let x = +pid || 7;
+    const azar = () => { x = (x * 9301 + 49297) % 233280; return x / 233280; };
+    det = { stats: Array.from({ length: 9 }, (_, i) => { const min = azar() < 0.15 ? 0 : Math.round(45 + azar() * 45); return { n: i + 1, pts: min ? Math.round(j.media * (0.3 + azar() * 1.4)) : 0, min, gol: j.pos === 4 && azar() < 0.4 ? 1 : 0, asis: azar() < 0.15 ? 1 : 0, am: azar() < 0.12 ? 1 : 0, roja: 0 }; }), valores: null };
+  } else {
+    try { det = detalleJugador(await api.jugador(pid, S.D.liga.id)); } catch (e) { det = { error: e.message }; }
+  }
+  S.det[pid] = { ...det, t: Date.now() };
+  pintarDetalle(pid);
+}
+function pintarDetalle(pid) {
+  if (!S.tipoHoja || S.tipoHoja[0] !== 'j' || S.tipoHoja[1] !== pid) return;
+  const el = $('#det-j'); if (el) el.innerHTML = Hj.detalleHTML(S.det[pid]);
+  const v = S.det[pid] && S.det[pid].valores;
+  const g = $('#graf-j');
+  if (v && g && v.length > (S.M.tend(pid).serie || []).length) g.innerHTML = linea(v, { alto: 150 });
+}
+
 /* ---------------- la IA ---------------- */
 async function analizarIA() {
   if (S.analizando) return;
@@ -257,7 +282,7 @@ document.addEventListener('click', async (ev) => {
   if (d.sugerencia) { enviarPregunta(d.sugerencia); return; }
   if (d.seg) { const [v, s] = d.seg.split(':'); S.seg[v] = s; if (!d.ir) { pintar(); return; } }
   if (d.filtro) { const [k, f] = d.filtro.split(':'); S.filtro[k] = f; pintar(); return; }
-  if (d.j && S.D) { hoja('j', d.j); return; }
+  if (d.j && S.D) { hoja('j', d.j); cargarDetalle(d.j); return; }
   if (d.r && S.D) { hoja('r', d.r); return; }
   if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }
   const a = d.accion;
