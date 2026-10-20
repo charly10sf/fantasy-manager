@@ -377,14 +377,23 @@ async function enviarPregunta(texto) {
   S.charlando = true; S.parcial = ''; S.pasoChat = '';
   pintar();
   let ultimo = 0;
+  // como con el plan: aunque salgas de la app sigue pensando, y si no estás en ella te avisa al contestar
+  nativo.trabajando(true, `«${t.length > 60 ? `${t.slice(0, 57)}…` : t}» · Puedes salir de la app: te aviso cuando conteste.`, 'Pensando la respuesta');
   try {
-    await charlar(t, S.D, S.M, S.c, (parcial) => {
+    const r = await charlar(t, S.D, S.M, S.c, (parcial) => {
       S.parcial = parcial;
       const ahora = Date.now();
-      if (ahora - ultimo > 120) { ultimo = ahora; const r = $('#respuesta'); if (r) { r.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
+      if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
     });
+    if (!nativo.aLaVista()) {
+      const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();
+      nativo.notificar('Tu director deportivo ha contestado', limpio.length > 220 ? `${limpio.slice(0, 217)}…` : limpio || 'Entra para leer la respuesta', 'ia');
+    }
   } catch (e) {
     tostada(e.message || 'No ha contestado', 7000);
+    if (!nativo.aLaVista()) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
+  } finally {
+    nativo.trabajando(false);
   }
   S.charlando = false; S.parcial = '';
   if (S.vista === 'ia') pintar();

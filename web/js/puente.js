@@ -70,6 +70,7 @@ export function leer(clave, json = false) {
   try { return JSON.parse(v); } catch (e) { return null; }
 }
 
+let trabajos = 0;
 const llamar = (f, ...a) => { try { return N && typeof N[f] === 'function' ? N[f](...a) : undefined; } catch (e) { return undefined; } };
 export const nativo = {
   abrirLogin: (url) => (N ? llamar('abrirLogin', url) : window.open(url, '_blank')),
@@ -89,7 +90,12 @@ export const nativo = {
   abrir: (url) => (N ? llamar('abrir', url) : window.open(url, '_blank', 'noopener')),
   toque: () => llamar('toque'),
   // mientras la IA trabaja: pantalla encendida y notificación fija para que Android no corte internet
-  trabajando: (si, texto = '') => llamar('trabajando', !!si, texto),
+  // se cuentan los trabajos a la vez (el plan y una pregunta): la notificación fija se quita cuando acaba el último
+  trabajando: (si, texto = '', titulo = '') => {
+    trabajos = Math.max(0, trabajos + (si ? 1 : -1));
+    if (!si && trabajos > 0) return undefined;
+    return N && typeof N.trabajandoCon === 'function' ? llamar('trabajandoCon', !!si, titulo, texto) : llamar('trabajando', !!si, texto);
+  },
   aLaVista: () => (N && typeof N.aLaVista === 'function' ? !!llamar('aLaVista') : !document.hidden),
   // la IA en segundo plano: encenderla o apagarla y decir cuándo cambia el mercado; avisar de que ha terminado
   programarFondo: (on, prox = 0) => llamar('programarFondo', !!on, Math.max(0, +prox || 0)),

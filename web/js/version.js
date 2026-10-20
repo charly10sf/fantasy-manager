@@ -1,13 +1,19 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.1.5';
+export const VERSION = '0.1.6';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.1.6', f: '2026-10-21', h: '00:02', t: 'Pregunta y sigue a lo tuyo',
+    cosas: [
+      { tipo: 'mejora', d: 'voz', t: 'El chat sigue aunque salgas', x: 'Pregúntale algo y vete a otra app: mientras piensa sale una notificación fija y no se corta. Cuando contesta, te llega una notificación con el principio de la respuesta; tócala y vas directo al chat.', ir: { v: 'ia' } },
+    ],
+  },
   {
     v: '0.1.5', f: '2026-10-20', h: '23:57', t: 'El rival y el rendimiento, a fondo',
     cosas: [

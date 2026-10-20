@@ -352,6 +352,12 @@ public class Puente {
      */
     @JavascriptInterface
     public void trabajando(boolean si, String texto) {
+        trabajandoCon(si, null, texto);
+    }
+
+    /** lo mismo, con el título de la notificación fija («Preparando tu plan», «Pensando la respuesta»…) */
+    @JavascriptInterface
+    public void trabajandoCon(boolean si, String titulo, String texto) {
         ocupada = si;
         if (act == null) return;
         act.runOnUiThread(() -> {
@@ -359,7 +365,7 @@ public class Puente {
             else act.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         });
         try {
-            if (si) Trabajo.empezar(ctx, texto);
+            if (si) Trabajo.empezar(ctx, titulo, texto);
             else Trabajo.parar(ctx);
         } catch (Exception e) {
             // Android no deja empezarlo ahora: se sigue sin él

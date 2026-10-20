@@ -25,8 +25,8 @@ public class Trabajo extends Service {
     private static final long MAXIMO = 12 * 60 * 1000L;
     private final Handler reloj = new Handler(Looper.getMainLooper());
 
-    static void empezar(Context c, String texto) {
-        Intent i = new Intent(c, Trabajo.class).putExtra("texto", texto);
+    static void empezar(Context c, String titulo, String texto) {
+        Intent i = new Intent(c, Trabajo.class).putExtra("titulo", titulo).putExtra("texto", texto);
         if (Build.VERSION.SDK_INT >= 26) c.startForegroundService(i);
         else c.startService(i);
     }
@@ -38,10 +38,11 @@ public class Trabajo extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String texto = intent != null ? intent.getStringExtra("texto") : null;
+        String titulo = intent != null ? intent.getStringExtra("titulo") : null;
         NotificationManager nm = getSystemService(NotificationManager.class);
         if (nm != null && nm.getNotificationChannel(CANAL) == null) {
             NotificationChannel ch = new NotificationChannel(CANAL, "IA trabajando", NotificationManager.IMPORTANCE_LOW);
-            ch.setDescription("Sale mientras la IA prepara tu plan, para que no se corte aunque salgas de la app");
+            ch.setDescription("Sale mientras la IA prepara tu plan o contesta en el chat, para que no se corte aunque salgas de la app");
             ch.setShowBadge(false);
             nm.createNotificationChannel(ch);
         }
@@ -50,7 +51,7 @@ public class Trabajo extends Service {
         Notification n = new Notification.Builder(this, CANAL)
                 .setSmallIcon(R.drawable.ic_aviso)
                 .setColor(0xFFF0213B)
-                .setContentTitle("Preparando tu plan")
+                .setContentTitle(titulo == null || titulo.isEmpty() ? "Preparando tu plan" : titulo)
                 .setContentText(texto == null || texto.isEmpty() ? "La IA está leyendo tu liga y las noticias" : texto)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
