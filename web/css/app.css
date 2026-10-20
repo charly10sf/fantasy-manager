@@ -138,7 +138,7 @@ main { padding: 16px 16px 120px; }
 .paso-op:last-child::before { display: none; }
 .paso-op .num { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font: 700 18px var(--cond); background: var(--plano2); border: 2px solid var(--plano3); color: var(--texto); position: relative; z-index: 1; }
 .paso-op.vender .num { border-color: var(--sube); color: var(--sube); }
-.paso-op.clausular .num, .paso-op.pujar .num { border-color: var(--rojo); color: var(--rojo-l); background: var(--rojo-s); }
+.paso-op.clausular .num, .paso-op.pujar .num, .paso-op.comprar .num { border-color: var(--rojo); color: var(--rojo-l); background: var(--rojo-s); }
 .paso-op.blindar .num { border-color: var(--oro); color: var(--oro); }
 .paso-op.alinear .num, .paso-op.esperar .num { border-color: var(--azul); color: var(--azul); }
 .paso-op.hecho .num { background: var(--sube); border-color: var(--sube); color: #08080a; }
@@ -147,7 +147,7 @@ main { padding: 16px 16px 120px; }
 .op-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .accion-t { font: 700 13px 'Barlow'; letter-spacing: 1px; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; background: var(--plano3); color: var(--texto); }
 .accion-t.vender { background: var(--sube-s); color: var(--sube); }
-.accion-t.clausular, .accion-t.pujar { background: var(--rojo-s); color: var(--rojo-l); }
+.accion-t.clausular, .accion-t.pujar, .accion-t.comprar { background: var(--rojo-s); color: var(--rojo-l); }
 .accion-t.blindar { background: var(--oro-s); color: var(--oro); }
 .accion-t.alinear, .accion-t.esperar { background: var(--azul-s); color: var(--azul); }
 .op-top .cuando { font: 600 13.5px 'Barlow'; color: var(--texto2); display: inline-flex; align-items: center; gap: 4px; }
@@ -538,3 +538,9 @@ body.con-nv { overflow: hidden; }
 .nvl-c .nv-tipo { flex: none; min-width: 86px; text-align: center; margin-top: 2px; }
 .nvl-c b { font-weight: 600; }
 .nvl-c p { margin: 3px 0 0; color: var(--texto2); font-size: 14.5px; }
+
+/* un paso del plan que la app descarta (pagar muchísimo más de lo que vale) */
+.paso-op.descartada .op { opacity: 0.6; border-style: dashed; }
+.paso-op.descartada .num { border-color: var(--plano3); color: var(--apagado); background: none; }
+.paso-op.descartada .imp { text-decoration: line-through; }
+.aviso-op.mal { color: var(--baja); }

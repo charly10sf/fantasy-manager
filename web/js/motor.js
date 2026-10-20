@@ -206,8 +206,10 @@ export function analizar(D, H, c, extra = {}) {
     else if (t.p1 != null && Math.abs(t.p1) >= 1) partes.push(`${t.p1 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p1), 1, false)} hoy`);
     const ratio = j.valor ? precio / j.valor : 2;
     const barato = clamp((1.6 - ratio) / 0.6, 0, 1) * 20;
+    // pagar de más se pierde en el valor del equipo: castiga a partir de un 15 % y mucho a partir del 40 %
+    const caro = ratio > 1.15 ? clamp((ratio - 1.15) / 0.45, 0, 1) * 45 : 0;
     if (ratio <= 1.05) partes.push('cuesta lo que vale');
-    else if (ratio < 1.35) partes.push(`cuesta un ${Math.round((ratio - 1) * 100)} % más de lo que vale`);
+    else partes.push(`cuesta un ${Math.round((ratio - 1) * 100)} % más de lo que vale (${eur(precio - j.valor, { signo: true })})`);
     let pen = 0;
     if (MALOS.has(j.estado)) { pen = j.estado === 'out_of_league' ? 80 : 35; partes.push(j.estado === 'injured' ? 'lesionado' : j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'); }
     else if (j.estado === 'doubtful') { pen = 12; partes.push('es duda'); }
@@ -230,7 +232,7 @@ export function analizar(D, H, c, extra = {}) {
       if (gana >= 0.3) { once = clamp(gana * 5, 4, 25); partes.push(puesto && puesto.faltan ? `te tapa un hueco en ${NOMBRE_POS[j.pos]} (+${dec1(gana)} pts/jornada)` : `mejora tu once +${dec1(gana)} pts/jornada`); }
       else { once = puesto && puesto.sobran ? -18 : -6; partes.push(puesto && puesto.sobran ? `te sobran ${NOMBRE_POS[j.pos]}` : 'no entraría en tu once'); }
     }
-    return { n: Math.round(clamp(rend + momentum + barato + 12 - pen - fueraOnce + once + rival, 0, 100)), por: partes, once };
+    return { n: Math.round(clamp(rend + momentum + barato + 12 - pen - fueraOnce + once + rival - caro, 0, 100)), por: partes, once };
   };
 
   /* ---------- tus jugadores ---------- */
@@ -547,7 +549,8 @@ export function planAuto(D, M, c) {
   const presupuesto = () => saldo;
 
   // 2. clausular lo mejor que esté abierto y te llegue
-  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado)).slice(0, 8);
+  // nunca una cláusula mucho más cara de lo que vale el jugador (lo de más se pierde en el valor del equipo)
+  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && x.clausula <= x.j.valor * 1.3).slice(0, 8);
   let clausulas = 0;
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;

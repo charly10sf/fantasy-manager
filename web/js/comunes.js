@@ -85,7 +85,7 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false } = {}) {
     <span class="cr-dato">${dato}</span></button>`;
 }
 
-const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
+const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
 /** la pastilla del plan del día en las listas, si el plan dice algo de este jugador */
 export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${ACC[op.accion] || op.accion} hoy</span>` : '');
 

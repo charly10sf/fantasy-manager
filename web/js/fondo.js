@@ -13,11 +13,11 @@ export const ultimoFondo = () => LS.get('fondo-ultimo', null);
 export const deNoche = (d = new Date()) => d.getHours() >= 1 && d.getHours() < 8;
 export const callado = (d = new Date()) => d.getHours() < 8 || (d.getHours() === 23 && d.getMinutes() >= 30);
 
-const ACC = { aceptar: 'Aceptar oferta', vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
+const ACC = { aceptar: 'Aceptar oferta', vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
 
 /** el plan en una notificación: el titular y los pasos de hoy, numerados */
 export function avisoPlan(P, conIA) {
-  const ops = (P.ops || []).filter((o) => o.hoy !== false && o.accion !== 'esperar').slice(0, 5);
+  const ops = (P.ops || []).filter((o) => o.hoy !== false && !o.descartada && o.accion !== 'esperar').slice(0, 5);
   const pasos = ops.map((o, i) => `${i + 1}. ${o.etiqueta || ACC[o.accion] || o.accion}${o.jugador ? ` ${o.jugador}` : ''}${o.importe ? ` (${eur(o.importe)})` : ''}`);
   return {
     k: `plan:${P.t || diaDe()}`,

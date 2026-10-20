@@ -214,7 +214,7 @@ function montarPlan() {
   else base = planAuto(S.D, S.M, S.c);
   S.plan = cuadrarPlan(base, S.D, S.M);
   S.opPorPid = {};
-  for (const o of S.plan.ops) if (o.pid && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
+  for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
 }
 
 async function cargar({ silencio = false } = {}) {

@@ -44,7 +44,7 @@ function marcador(S) {
 }
 
 /* ================= EL PLAN DEL DÍA ================= */
-const ACCION = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
+const ACCION = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
 
 /** ¿ya lo has hecho? lo marcas tú o se ve en la actividad de la liga */
 export const claveHechos = (P) => (P.auto ? `auto-${P.dia}` : String(P.t));
@@ -52,7 +52,7 @@ export function hecho(S, P, o) {
   const marcados = (LS.get('hechos', {})[claveHechos(P)] || {}).n || [];
   if (marcados.includes(o.n)) return true;
   if (!o.pid) return false;
-  const clase = { vender: 'venta', clausular: 'clausula', pujar: 'compra' }[o.accion];
+  const clase = { vender: 'venta', clausular: 'clausula', pujar: 'compra', comprar: 'compra' }[o.accion];
   const desde = P.auto ? Date.parse(P.dia + 'T00:00:00') : P.t;
   return !!clase && S.M.actividad.some((a) => a.esYo && a.pid === o.pid && a.t > desde && (a.clase === clase || (clase === 'compra' && a.clase === 'clausula')));
 }
@@ -71,13 +71,13 @@ function pasoOp(S, P, o) {
   const imp = o.importe ? `<div class="imp ${o.signo > 0 ? 'mas' : 'menos'}">${o.signo > 0 ? '+' : o.signo < 0 ? '−' : ''}${eur(o.importe)}</div>` : '';
   const puja = o.accion === 'pujar' && o.puja_max ? `<div class="puja">puja hasta ${eur(o.puja_max)}</div>` : '';
   const sub = j ? `${esc(j.equipo || '')}${o.donde ? ` · ${esc(o.donde)}` : ''}` : esc(o.donde || '');
-  return `<div class="paso-op ${esc(o.accion)} ${ok ? 'hecho' : ''}"><span class="num">${ok ? icono('ok') : o.n}</span>
+  return `<div class="paso-op ${esc(o.accion)} ${ok ? 'hecho' : ''} ${o.descartada ? 'descartada' : ''}"><span class="num">${ok ? icono('ok') : o.n}</span>
     <div class="op ${ok ? 'hecho' : ''}">
-      <div class="op-top"><span class="accion-t ${esc(o.accion)}">${esc(o.etiqueta || ACCION[o.accion] || o.accion)}</span>${objetivoPill(o)}${o.cuando ? `<span class="cuando">${icono('reloj')}${esc(o.cuando)}</span>` : ''}</div>
+      <div class="op-top"><span class="accion-t ${esc(o.accion)}">${esc(o.etiqueta || ACCION[o.accion] || o.accion)}</span>${o.descartada ? '<span class="pill mal">No lo hagas</span>' : ''}${objetivoPill(o)}${o.cuando ? `<span class="cuando">${icono('reloj')}${esc(o.cuando)}</span>` : ''}</div>
       ${j ? `<button class="op-j" data-j="${esc(j.id)}">${ava(j, 'm')}<div style="min-width:0"><div class="n">${esc(j.nombre)}</div><div class="s">${sub}</div></div><div class="der">${imp}${puja}</div></button>`
         : o.jugador || o.importe ? `<div class="op-j"><div style="min-width:0"><div class="n">${esc(o.jugador || '')}</div><div class="s">${sub}</div></div><div class="der">${imp}${puja}</div></div>` : ''}
       ${o.motivo ? `<p class="motivo">${esc(o.motivo)}</p>` : ''}
-      ${o.aviso ? `<div class="aviso-op">${icono('info')}${esc(o.aviso)}</div>` : ''}
+      ${o.aviso ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : ''}
       <div class="op-pie">${o.confianza ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}
         <button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>
         ${o.saldo != null ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>
