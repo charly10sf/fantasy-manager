@@ -9,7 +9,6 @@ import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -37,6 +36,8 @@ public class Principal extends Activity {
     private File pendiente;
     private boolean cargada;
     volatile boolean aLaVista;
+    /** la app está en pantalla: el trabajo en segundo plano no arranca */
+    static volatile boolean abierta;
     /** la dirección authredirect://... con el código de LaLiga, hasta que la web la recoge */
     volatile String loginPendiente;
 
@@ -50,20 +51,8 @@ public class Principal extends Activity {
         web.setHorizontalScrollBarEnabled(false);
         setContentView(web);
 
-        WebSettings s = web.getSettings();
-        s.setJavaScriptEnabled(true);
-        s.setDomStorageEnabled(true);
-        s.setDatabaseEnabled(true);
-        s.setAllowFileAccess(false);
-        s.setAllowContentAccess(false);
-        s.setMediaPlaybackRequiresUserGesture(true);
-        s.setUserAgentString(s.getUserAgentString() + " FantasyManagerApp/" + BuildConfig.VERSION_CODE);
-        CookieManager.getInstance().setAcceptCookie(true);
-
-        final WebViewAssetLoader cargador = new WebViewAssetLoader.Builder()
-                .setDomain(HOST)
-                .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this))
-                .build();
+        Web.preparar(web);
+        final WebViewAssetLoader cargador = Web.cargador(this);
 
         web.addJavascriptInterface(new Puente(this), "FantasyApp");
         web.setWebViewClient(new WebViewClient() {
@@ -93,6 +82,8 @@ public class Principal extends Activity {
         else web.loadUrl(direccion(getIntent()));
         // los avisos se vuelven a programar por si el sistema los borró al actualizar la app
         Avisos.reprogramar(this);
+        // y el trabajo de la IA en segundo plano
+        Fondo.reprogramar(this);
     }
 
     /** La vuelta del inicio de sesión: authredirect://com.lfp.laligafantasy?code=... */
@@ -250,6 +241,7 @@ public class Principal extends Activity {
     @Override
     protected void onPause() {
         aLaVista = false;
+        abierta = false;
         web.onPause();
         CookieManager.getInstance().flush();
         super.onPause();
@@ -259,6 +251,7 @@ public class Principal extends Activity {
     protected void onResume() {
         super.onResume();
         aLaVista = true;
+        abierta = true;
         web.onResume();
         js("window.alVolver && alVolver()");
     }

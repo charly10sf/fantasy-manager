@@ -52,11 +52,33 @@ public class Puente {
     private static final ExecutorService HILOS = Executors.newFixedThreadPool(4);
     private final Map<String, String> respuestas = new ConcurrentHashMap<>();
     private final Context ctx;
+    /** la pantalla de la app; null cuando la web trabaja en segundo plano (Fondo) */
     private final Principal act;
+    private final Fondo fondo;
+    /** la IA está trabajando en la app abierta: el trabajo en segundo plano no arranca */
+    static volatile boolean ocupada;
 
     Puente(Principal a) {
         act = a;
+        fondo = null;
         ctx = a.getApplicationContext();
+    }
+
+    Puente(Context c, Fondo f) {
+        act = null;
+        fondo = f;
+        ctx = c.getApplicationContext();
+    }
+
+    /** ejecuta algo en la web, esté en pantalla o en segundo plano */
+    private void js(String codigo) {
+        if (act != null) act.js(codigo);
+        else if (fondo != null) fondo.js(codigo);
+    }
+
+    /** algo que solo tiene sentido con la pantalla (abrir el login, pedir permisos...) */
+    private void enPantalla(Runnable r) {
+        if (act != null) act.runOnUiThread(r);
     }
 
     static SharedPreferences prefs(Context c) {
@@ -80,7 +102,7 @@ public class Puente {
                     // Gemini va por OkHttp: HTTP/2 con pings mientras piensa y DNS por https si hace falta
                     r = Red.pedir(metodo, url, cabeceras, cuerpo, MAX);
                     respuestas.put(id, r.toString());
-                    act.js("window.__http && window.__http(" + JSONObject.quote(id) + ")");
+                    js("window.__http && window.__http(" + JSONObject.quote(id) + ")");
                     return;
                 }
                 con = (HttpURLConnection) u.openConnection();
@@ -139,7 +161,7 @@ public class Puente {
                 if (con != null) con.disconnect();
             }
             respuestas.put(id, r.toString());
-            act.js("window.__http && window.__http(" + JSONObject.quote(id) + ")");
+            js("window.__http && window.__http(" + JSONObject.quote(id) + ")");
         });
     }
 
@@ -185,7 +207,7 @@ public class Puente {
                 if (con != null) con.disconnect();
             }
             respuestas.put(id, r.toString());
-            act.js("window.__http && window.__http(" + JSONObject.quote(id) + ")");
+            js("window.__http && window.__http(" + JSONObject.quote(id) + ")");
         });
     }
 
@@ -200,12 +222,13 @@ public class Puente {
 
     @JavascriptInterface
     public void abrirLogin(String url) {
-        act.runOnUiThread(() -> act.abrirLogin(url));
+        enPantalla(() -> act.abrirLogin(url));
     }
 
     /** La dirección de vuelta del inicio de sesión, si ha llegado (y se olvida) */
     @JavascriptInterface
     public String loginPendiente() {
+        if (act == null) return null;
         String l = act.loginPendiente;
         act.loginPendiente = null;
         return l;
@@ -243,7 +266,7 @@ public class Puente {
 
     @JavascriptInterface
     public void pedirPermisoAvisos() {
-        act.runOnUiThread(act::pedirPermisoAvisos);
+        enPantalla(() -> act.pedirPermisoAvisos());
     }
 
     @JavascriptInterface
@@ -255,7 +278,7 @@ public class Puente {
 
     @JavascriptInterface
     public void pedirAlarmasExactas() {
-        act.runOnUiThread(act::pedirAlarmasExactas);
+        enPantalla(() -> act.pedirAlarmasExactas());
     }
 
     @JavascriptInterface
@@ -277,6 +300,7 @@ public class Puente {
 
     @JavascriptInterface
     public void actualizar(String url) {
+        if (act == null) return;
         if (!Actualizador.valida(url)) {
             act.progreso(-1, "dirección no válida");
             return;
@@ -286,14 +310,14 @@ public class Puente {
 
     @JavascriptInterface
     public void instalar() {
-        act.runOnUiThread(() -> act.instalar(Actualizador.archivo(ctx)));
+        enPantalla(() -> act.instalar(Actualizador.archivo(ctx)));
     }
 
     /* ---------------- varios ---------------- */
 
     @JavascriptInterface
     public void copiar(String texto) {
-        act.runOnUiThread(() -> {
+        enPantalla(() -> {
             ClipboardManager cm = ctx.getSystemService(ClipboardManager.class);
             if (cm != null) cm.setPrimaryClip(ClipData.newPlainText("Fantasy Manager", texto));
         });
@@ -301,7 +325,7 @@ public class Puente {
 
     @JavascriptInterface
     public void compartir(String texto) {
-        act.runOnUiThread(() -> {
+        enPantalla(() -> {
             Intent i = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, texto);
             try {
                 act.startActivity(Intent.createChooser(i, "Compartir"));
@@ -314,7 +338,7 @@ public class Puente {
     @JavascriptInterface
     public void abrir(String url) {
         if (url == null || !url.startsWith("https://")) return;
-        act.runOnUiThread(() -> act.abrirFuera(Uri.parse(url)));
+        enPantalla(() -> act.abrirFuera(Uri.parse(url)));
     }
 
     /**
@@ -323,6 +347,8 @@ public class Puente {
      */
     @JavascriptInterface
     public void trabajando(boolean si, String texto) {
+        ocupada = si;
+        if (act == null) return;
         act.runOnUiThread(() -> {
             if (si) act.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             else act.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -338,12 +364,47 @@ public class Puente {
     /** si la app está a la vista (para avisar con una notificación cuando el plan llega con la app cerrada) */
     @JavascriptInterface
     public boolean aLaVista() {
-        return act.aLaVista;
+        return act != null && act.aLaVista;
     }
 
     /** un toque suave (la vibración de las teclas) al cambiar de pestaña */
     @JavascriptInterface
     public void toque() {
-        act.runOnUiThread(() -> act.getWindow().getDecorView().performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP));
+        enPantalla(() -> act.getWindow().getDecorView().performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP));
+    }
+
+    /* ---------------- la IA en segundo plano ---------------- */
+
+    /**
+     * Enciende o apaga el trabajo en segundo plano y apunta cuándo cambia el mercado (milisegundos), para pasar
+     * unos minutos después. En segundo plano no se toca nada hasta que acaba la pasada (Fondo lo hace al final).
+     */
+    @JavascriptInterface
+    public void programarFondo(boolean on, double prox) {
+        prefs(ctx).edit().putBoolean("fondo_on", on).putLong("fondo_prox", (long) prox).apply();
+        if (fondo == null) Fondo.reprogramar(ctx);
+    }
+
+    /** la web en segundo plano ha terminado su pasada */
+    @JavascriptInterface
+    public void fondoTerminado() {
+        if (fondo != null) fondo.terminar();
+    }
+
+    /** cuándo empezó y acabó la última pasada en segundo plano y si falló algo, para el diagnóstico */
+    @JavascriptInterface
+    public String estadoFondo() {
+        SharedPreferences p = prefs(ctx);
+        JSONObject r = new JSONObject();
+        try {
+            r.put("on", p.getBoolean("fondo_on", true));
+            r.put("ini", p.getLong("fondo_ini", 0));
+            r.put("fin", p.getLong("fondo_fin", 0));
+            r.put("prog", p.getLong("fondo_prog", 0));
+            r.put("error", p.getString("fondo_error", null));
+        } catch (Exception e) {
+            // no puede fallar
+        }
+        return r.toString();
     }
 }

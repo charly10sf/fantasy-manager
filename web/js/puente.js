@@ -91,4 +91,8 @@ export const nativo = {
   // mientras la IA trabaja: pantalla encendida y notificación fija para que Android no corte internet
   trabajando: (si, texto = '') => llamar('trabajando', !!si, texto),
   aLaVista: () => (N && typeof N.aLaVista === 'function' ? !!llamar('aLaVista') : !document.hidden),
+  // la IA en segundo plano: encenderla o apagarla y decir cuándo cambia el mercado; avisar de que ha terminado
+  programarFondo: (on, prox = 0) => llamar('programarFondo', !!on, Math.max(0, +prox || 0)),
+  fondoTerminado: () => llamar('fondoTerminado'),
+  estadoFondo: () => { try { return JSON.parse(llamar('estadoFondo') || 'null'); } catch (e) { return null; } },
 };

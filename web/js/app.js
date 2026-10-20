@@ -7,7 +7,7 @@ import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
-import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave } from './ia.js';
+import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA } from './ia.js';
 import { ultimaVersion, api } from './api.js';
 import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -16,6 +16,7 @@ import { ponerEquipos } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES } from './version.js';
+import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null };
 window.S = S;
@@ -110,6 +111,75 @@ function rehacer() {
   montarPlan();
   if (apuntarReventa()) { S.M = analizar(S.D, S.H, S.c, extraM()); montarPlan(); }
   programar(S.D, S.M);
+  if (!EN_FONDO) {
+    programarFondo();
+    // lo que ves con la app abierta ya no te llega luego como notificación
+    marcarVistos(avisosNuevos(null, S.D, S.M));
+  }
+}
+/** la IA en segundo plano: cada 3 horas y unos minutos después del próximo cambio de mercado */
+function programarFondo() {
+  if (!enApp) return;
+  nativo.programarFondo(cfgFondo().on && !enDemo(), S.M && S.M.cierreMercado ? S.M.cierreMercado + 8 * MIN : 0);
+}
+
+/**
+ * La pasada en segundo plano (Android abre la web sin pantalla con ?fondo=1): pone la liga al día, rehace el plan
+ * con la IA si toca y avisa con notificaciones de lo nuevo. Al acabar se lo dice a la app, pase lo que pase.
+ */
+async function trabajoFondo() {
+  const t0 = Date.now();
+  const reg = { t: t0, pasos: [] };
+  const paso = (x) => reg.pasos.push(x);
+  const avisar = (lista) => {
+    for (const a of lista.slice(0, 4)) nativo.notificar(a.titulo, a.texto, a.hash || 'hoy');
+    if (lista.length > 4) nativo.notificar(`Y ${lista.length - 4} cosas más en tu liga`, 'Abre la app para verlas', 'hoy');
+  };
+  try {
+    if (!enApp || enDemo()) { paso('liga de ejemplo: nada que hacer'); return; }
+    if (!cfgFondo().on) { paso('apagado en Ajustes'); return; }
+    if (!haySesion()) { paso('sin sesión de LaLiga'); return; }
+    if (deNoche()) { paso('de noche: nada'); return; }
+    const antes = foto();
+    S.D = await actualizar(() => {});
+    rehacer();
+    paso('liga al día');
+    try { const f = await fuentesExternas(S.D, S.M); if (f) S.fuentes = f; } catch (e) { paso(`onces y noticias: ${e.message}`); }
+    try { const det = await completar(S.D, S.M); if (det) S.det = { ...S.det, ...det }; } catch (e) { if (e.sesion) throw e; paso(`fichas: ${e.message}`); }
+    rehacer();
+    const lista = avisosNuevos(antes, S.D, S.M);
+    if (planViejo(S.M)) {
+      let conIA = false;
+      if (hayClave()) {
+        try {
+          await Promise.race([
+            planDelDia(S.D, S.M, S.c, {}),
+            new Promise((_, mal) => setTimeout(() => mal(new Error('la IA ha tardado más de 7 minutos')), 7 * MIN)),
+          ]);
+          conIA = true;
+          paso('plan nuevo con IA');
+        } catch (e) { paso(`IA: ${e.message || e}`); }
+        rehacer();
+      }
+      if (S.plan) {
+        const a = avisoPlan(S.plan, conIA);
+        if (!conIA) a.k = `plan-auto:${diaDe()}:${(S.M && S.M.cierreMercado) || ''}`;
+        lista.unshift(a);
+      }
+    }
+    if (callado()) paso('de madrugada: sin avisos');
+    else { const nuevos = sinAvisar(lista); avisar(nuevos); reg.avisos = nuevos.length; }
+    reg.ok = true;
+  } catch (e) {
+    reg.error = e.message || String(e);
+    if (e.sesion && !callado()) avisar(sinAvisar([{ k: `sesion:${diaDe()}`, titulo: 'Tu sesión de LaLiga ha caducado', texto: 'Entra en la app para volver a conectarte. Mientras, la IA no puede mirar tu liga.', hash: 'hoy' }]));
+  } finally {
+    reg.ms = Date.now() - t0;
+    reg.ia = intentosIA.slice(0, 10);
+    LS.set('fondo-ultimo', reg);
+    try { programarFondo(); } catch (e) { /* nada */ }
+    nativo.fondoTerminado();
+  }
 }
 
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
@@ -321,8 +391,8 @@ window.progresoApp = (pct, estado) => {
   else tostada(`Bajando la versión nueva… ${pct} %`, 1500);
 };
 window.permisoAvisos = (ok) => {
-  if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos', 5000);
-  else { if (S.D) programar(S.D, S.M); tostada('Avisos activados'); }
+  if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada', 5000);
+  else { if (S.D) programar(S.D, S.M); tostada('Notificaciones activadas'); }
   repintarHoja();
 };
 
@@ -405,6 +475,14 @@ document.addEventListener('click', async (ev) => {
     case 'probarIA': try { const l = await probarClave(); tostada(`${l.length} modelos disponibles con tu clave`); } catch (e) { tostada(e.message, 6000); } repintarHoja(); break;
     case 'iaWeb': guardarCfgIA({ web: !cfgIA().web }); repintarHoja(); break;
     case 'iaAuto': guardarCfgIA({ auto: !cfgIA().auto }); repintarHoja(); break;
+    case 'fondo': {
+      const on = !cfgFondo().on;
+      guardarCfgFondo({ on });
+      programarFondo();
+      if (on && enApp && !nativo.avisosPermitidos()) nativo.pedirPermisoAvisos();
+      repintarHoja();
+      break;
+    }
     case 'avisos': {
       const on = !cfgAvisos().on;
       guardarCfgAvisos({ on });
@@ -483,6 +561,11 @@ async function arrancar() {
   if (enApp) setTimeout(() => window.vueltaLogin(), 300);
   novedades();
   setTimeout(() => buscarVersion(false), 4000);
+  // la IA con la app cerrada avisa con notificaciones: se pide el permiso una vez
+  if (enApp && !enDemo() && haySesion() && cfgFondo().on && !nativo.avisosPermitidos() && !LS.get('permiso-fondo')) {
+    LS.set('permiso-fondo', Date.now());
+    setTimeout(() => nativo.pedirPermisoAvisos(), 2500);
+  }
   // cada minuto se recalculan las cuentas atrás, si no estás tocando nada
   let toqueT = 0;
   for (const e of ['touchstart', 'scroll', 'keydown']) window.addEventListener(e, () => { toqueT = Date.now(); }, { passive: true });
@@ -496,4 +579,4 @@ async function arrancar() {
   }, 60e3);
 }
 
-arrancar();
+if (EN_FONDO) trabajoFondo(); else arrancar();

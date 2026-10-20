@@ -1,9 +1,18 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // 0.x mientras esté en pruebas: el número del medio sube con cada tanda de mejoras y el último con los arreglos.
-export const VERSION = '0.7.1';
+export const VERSION = '0.8.0';
 
 // Lo nuevo de cada versión (lo enseña la app la primera vez que se abre una versión nueva)
 export const NOVEDADES = [
+  {
+    v: '0.8.0',
+    cosas: [
+      'La IA trabaja con la app cerrada: cada 3 horas y unos minutos después de cada cambio de mercado pone tu liga al día y rehace el plan con Gemini',
+      'Te avisa con una notificación del plan nuevo (con los pasos), de las ofertas que llegan por tus jugadores, de los que te clausulan y de lo que fichas',
+      'Cada aviso llega una sola vez y lo que ya has visto en la app no te llega luego. De madrugada no avisa',
+      'Se enciende y se apaga en Ajustes → «Trabaja con la app cerrada». Necesita el permiso de notificaciones',
+    ],
+  },
   {
     v: '0.7.1',
     cosas: [
