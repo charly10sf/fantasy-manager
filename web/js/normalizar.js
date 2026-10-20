@@ -27,6 +27,26 @@ export function equiposLaLiga(r) {
   return m;
 }
 
+/* ---------- la mejor foto de un jugador ----------
+   La API trae varias (images.transparent['256x256'], images.player, image...) y a veces la silueta
+   genérica (/no-player/). Se coge la más grande que no sea la silueta. */
+const sinCara = (u) => !u || /no-player|placeholder|default/i.test(u);
+export function imagenDe(pm) {
+  const cands = [];
+  const visitar = (x, ruta, prof) => {
+    if (!x || prof > 4) return;
+    if (typeof x === 'string') { if (/^https?:\/\//.test(x) && /\.(png|jpe?g|webp)(\?|$)/i.test(x)) cands.push({ u: x, ruta }); return; }
+    if (typeof x === 'object') for (const [k, v] of Object.entries(x)) visitar(v, `${ruta}/${k}`, prof + 1);
+  };
+  visitar(pm.images, 'images', 0);
+  for (const k of ['image', 'photo', 'picture', 'avatar']) if (typeof pm[k] === 'string') visitar(pm[k], k, 0);
+  const buenas = cands.filter((c) => !sinCara(c.u));
+  if (!buenas.length) return null;
+  const tam = (c) => { const m = (c.ruta + ' ' + c.u).match(/(\d{2,4})x(\d{2,4})/); return m ? +m[1] : /big|large|full/i.test(c.ruta) ? 400 : 128; };
+  const punt = (c) => tam(c) + (/transparent/i.test(c.ruta) ? 60 : 0) + (/beat|shirt|badge|team/i.test(c.ruta) ? -500 : 0);
+  return buenas.sort((a, b) => punt(b) - punt(a))[0].u;
+}
+
 /* ---------- jugadores ---------- */
 export function jugador(p, equipos = {}) {
   if (!p || typeof p !== 'object') return null;
@@ -34,11 +54,7 @@ export function jugador(p, equipos = {}) {
   if (pm.id == null) return null;
   const eqId = id(primero(pm.teamId, pm.team && pm.team.id));
   const eq = equipos[eqId] || {};
-  const img = primero(
-    pm.images && pm.images.transparent && pm.images.transparent['256x256'],
-    pm.images && pm.images.player,
-    pm.image, pm.photo,
-  );
+  const img = imagenDe(pm);
   return {
     id: id(pm.id),
     nombre: pm.nickname || pm.name || 'Jugador',
@@ -174,6 +190,13 @@ export function partidos(r, equipos, n) {
 }
 
 /* ---------- actividad de la liga ---------- */
+// «Pepe ha fichado a Pedri por ... a Juan»: el primero es quien lo hace y el segundo, el otro
+function deDescripcion(t, n) {
+  const s = String(t || '');
+  if (n === 1) { const m = s.match(/^\s*([^.]+?)\s+ha\s/); return m ? m[1].trim() : ''; }
+  const m = s.match(/\s(?:a|de)\s([^.]+?)\.?\s*$/);
+  return m && !/\d/.test(m[1]) ? m[1].trim() : '';
+}
 // 1 compró · 4 blindó · 6 ganancia por jornada · 7 alineación incorrecta · 9 nuevo miembro · 31 fichó · 32 clausuló · 33 vendió
 export const TIPO_ACT = { 1: 'compra', 31: 'compra', 32: 'clausula', 33: 'venta', 4: 'blindaje', 6: 'premio', 7: 'alineacion', 9: 'entra' };
 export function actividad(r) {
@@ -189,9 +212,9 @@ export function actividad(r) {
         t: ms(primero(x.createdAt, x.timestamp, x.date, x.publicationDate)),
         tipo: num(x.activityTypeId),
         clase: TIPO_ACT[num(x.activityTypeId)] || 'otro',
-        quien: x.user1Name || '', quienId: id(x.user1Id),
-        otro: x.user2Name || '', otroId: id(x.user2Id),
-        pid: id(primero(x.playerMasterId, pl.id)),
+        quien: x.user1Name || (x.user1 && (x.user1.managerName || x.user1.name)) || deDescripcion(x.description, 1), quienId: id(primero(x.user1Id, x.user1 && x.user1.id, x.managerId)),
+        otro: x.user2Name || (x.user2 && (x.user2.managerName || x.user2.name)) || deDescripcion(x.description, 2), otroId: id(primero(x.user2Id, x.user2 && x.user2.id)),
+        pid: id(primero(x.playerMasterId, x.playerId, pl.id)),
         jugador: x.playerName || pl.nickname || pl.name || '',
         importe: x.amount == null ? null : num(x.amount),
         texto: x.description || '',
@@ -270,5 +293,5 @@ export function detalleJugador(r) {
     Object.values(x).forEach((y) => visitar(y, prof + 1));
   };
   visitar(d, 0);
-  return { stats, valores: valores && valores.length > 2 ? valores : null };
+  return { stats, valores: valores && valores.length > 2 ? valores : null, img: imagenDe(pm) };
 }

@@ -1,53 +1,106 @@
 /* La IA: Gemini (Google AI Studio) con tu clave gratuita, llamada directamente desde el móvil a Google.
-   Busca en internet con Google (noticias, lesiones, convocatorias, alineaciones probables) y cruza eso con
-   los números de tu liga. Dos usos: el análisis del día (sale en la pestaña Análisis) y el chat. */
+   Hace el plan del día (las operaciones en orden: qué vender, qué comprar, a quién clausular, cuánto pujar)
+   cruzando todo lo de tu liga con lo que busca en Google (lesiones, convocatorias, alineaciones probables).
+   Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
+   Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar } from './puente.js';
-import { LS, eur, pct, cuando, dura, POS, DIA } from './util.js';
+import { LS, eur, pct, cuando, dura, POS, DIA, diaDe, norm } from './util.js';
 import { K } from './datos.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
-// los gratuitos, del más listo al más rápido; si uno gasta su cupo del día, se salta al siguiente
-const CADENA = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-3.5-flash-lite'];
-export const NOMBRES = { 'gemini-3.8-flash': 'Gemini 3.8 Flash', 'gemini-3.6-flash': 'Gemini 3.6 Flash', 'gemini-3.5-flash-lite': 'Gemini 3.5 Flash-Lite' };
+// los de siempre, por si la lista de modelos de tu clave no llega
+const BASE = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
 const diaGoogle = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
 
 export const clave = () => leer('gemini') || '';
-export const guardarClave = (k) => guardar('gemini', (k || '').trim() || null);
+export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); };
 export const hayClave = () => !!clave();
-export const cfgIA = () => ({ modelo: CADENA[0], web: true, ...LS.get('cfg-ia', {}) });
+export const cfgIA = () => ({ modelo: '', web: true, auto: true, ...LS.get('cfg-ia', {}) });
 export const guardarCfgIA = (c) => LS.set('cfg-ia', { ...cfgIA(), ...c });
 
-const agotados = () => { const a = LS.get('ia-agotados', {}), d = diaGoogle(); return Object.keys(a).filter((m) => a[m] === d); };
-const agotar = (m) => { const a = LS.get('ia-agotados', {}); a[m] = diaGoogle(); LS.set('ia-agotados', a); };
+/** nombre bonito: gemini-3.8-flash-lite → Gemini 3.8 Flash-Lite */
+export function nombreModelo(m) {
+  if (!m) return '';
+  return String(m).replace(/^models\//, '').split('-').map((p, i) => (i === 0 ? p[0].toUpperCase() + p.slice(1) : /^\d/.test(p) ? p : p[0].toUpperCase() + p.slice(1)))
+    .join(' ').replace(/ Lite\b/, '-Lite').replace(/ It$/, '').replace(/ Preview.*$/, ' (preview)');
+}
+export const NOMBRES = new Proxy({}, { get: (_, m) => nombreModelo(m) });
 
-function cadena() {
-  const cfg = cfgIA();
-  const extra = LS.get('ia-modelos', []) || [];
-  const todos = [...new Set([cfg.modelo, ...CADENA, ...extra])];
-  const fuera = agotados();
-  return todos.filter((m) => !fuera.includes(m));
+/* ---------------- los modelos de tu clave ---------------- */
+const fuera = () => { const a = LS.get('ia-agotados', {}), d = diaGoogle(); return Object.fromEntries(Object.entries(a).filter(([, v]) => v.d === d)); };
+const sacar = (m, motivo) => { const a = fuera(); a[m] = { d: diaGoogle(), motivo }; LS.set('ia-agotados', a); };
+const sinWebHoy = () => LS.get('ia-sin-web', null) === diaGoogle();
+
+const esGemma = (m) => /^gemma/i.test(m);
+const NO_VALE = /(embedding|aqa|imagen|tts|image|live|audio|robotics|computer|learnlm|veo|nano-banana|vision|exp-\d|thinking-exp)/i;
+function orden(m) {
+  const v = parseFloat((m.match(/-(\d+(?:\.\d+)?)/) || [])[1] || '0');
+  const tipo = /flash-lite/.test(m) ? 2 : /flash/.test(m) ? 0 : /pro/.test(m) ? 1 : esGemma(m) ? 3 : 4;
+  const tam = esGemma(m) ? parseFloat((m.match(/(\d+)b/) || [])[1] || '0') : 0;
+  return tipo * 1000 - v * 10 - tam / 10 + (/preview|latest/.test(m) ? 2 : 0);
 }
 
+/** la lista de modelos que admite tu clave (no gasta cupo); se guarda un día */
+export async function modelosDisponibles(k = clave(), forzar = false) {
+  const guardado = LS.get('ia-modelos', null);
+  if (!forzar && guardado && guardado.d === diaGoogle() && guardado.lista && guardado.lista.length) return guardado.lista;
+  const r = await fetch(`${GEMINI}/models?pageSize=1000`, { headers: { 'x-goog-api-key': (k || '').trim() } });
+  if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) { /* nada */ } throw errorDe(r.status, j); }
+  const j = await r.json();
+  const lista = (j.models || [])
+    .filter((m) => (m.supportedGenerationMethods || []).includes('generateContent'))
+    .map((m) => m.name.replace(/^models\//, ''))
+    .filter((n) => /^(gemini|gemma)-/.test(n) && !NO_VALE.test(n))
+    .sort((a, b) => orden(a) - orden(b));
+  LS.set('ia-modelos', { d: diaGoogle(), lista });
+  return lista;
+}
+export const probarClave = (k) => modelosDisponibles(k, true);
+
+async function cadena() {
+  let lista;
+  try { lista = await modelosDisponibles(); } catch (e) { if (e.estado === 400 || e.estado === 401 || e.estado === 403) throw e; lista = BASE; }
+  if (!lista.length) lista = BASE;
+  const elegido = cfgIA().modelo;
+  const todos = [...new Set([...(elegido ? [elegido] : []), ...lista])];
+  const f = fuera();
+  return todos.filter((m) => !f[m]);
+}
+
+/* ---------------- errores de Google ---------------- */
 class ErrorIA extends Error {
-  constructor(m, estado, diario) { super(m); this.estado = estado; this.diario = diario; }
+  constructor(m, estado, info = {}) { super(m); this.estado = estado; Object.assign(this, info); }
 }
-
 function errorDe(estado, j) {
   const e0 = (j && j.error) || {}, m = e0.message || '', det = JSON.stringify(e0.details || '');
-  if (/API key not valid|API_KEY_INVALID/i.test(m + det)) return new ErrorIA('Google dice que la clave no es válida. Cópiala otra vez entera desde aistudio.google.com/apikey.', estado);
-  if (estado === 401 || estado === 403) return new ErrorIA('Google no acepta esta clave. Crea otra gratis en aistudio.google.com/apikey.', estado);
-  if (estado === 404) return new ErrorIA('Ese modelo de Gemini ya no existe', 404);
-  if (estado === 429) return new ErrorIA('Has llegado al límite gratuito de Google por ahora', 429, /per.?day|PerDay|daily/i.test(m + det) || !/minute/i.test(m + det));
-  if (estado >= 500) return new ErrorIA('Google está saturado ahora mismo. Prueba en un momento.', estado);
-  return new ErrorIA(m || `Error ${estado} de Google`, estado);
+  const todo = m + ' ' + det;
+  const info = { google: m.slice(0, 260) };
+  const ri = (e0.details || []).find((d) => /RetryInfo/.test(d['@type'] || ''));
+  if (ri && ri.retryDelay) info.espera = parseFloat(ri.retryDelay);
+  if (/API key not valid|API_KEY_INVALID/i.test(todo)) return new ErrorIA('Google dice que la clave no es válida. Cópiala otra vez entera desde aistudio.google.com/apikey.', estado, { ...info, clave: true });
+  if (estado === 401 || (estado === 403 && /PERMISSION_DENIED|SERVICE_DISABLED|has not been used/i.test(todo))) return new ErrorIA('Google no deja usar Gemini con esta clave. Crea otra en aistudio.google.com/apikey (mejor en un proyecto nuevo).', estado, { ...info, clave: estado === 401 });
+  if (estado === 404) return new ErrorIA('Ese modelo no existe para tu clave', 404, info);
+  if (estado === 429) {
+    const busqueda = /search|grounding/i.test(todo);
+    const minuto = /per.?minute|PerMinute|retry in \d+(\.\d+)?s/i.test(todo) && !/per.?day|PerDay/i.test(todo);
+    const cero = /limit:\s*0\b/.test(todo);
+    return new ErrorIA(busqueda ? 'Se ha acabado la búsqueda en Google gratis de hoy' : cero ? 'Este modelo no tiene cupo gratis' : minuto ? 'Demasiadas preguntas seguidas' : 'Cupo gratis del día gastado', 429, { ...info, busqueda, minuto, cero });
+  }
+  if (estado >= 500) return new ErrorIA('Google está saturado ahora mismo', estado, info);
+  return new ErrorIA(m || `Error ${estado} de Google`, estado, info);
 }
+
+/* el registro de intentos, para Ajustes → Diagnóstico */
+export const intentosIA = [];
+const apuntar = (x) => { intentosIA.unshift({ t: Date.now(), ...x }); if (intentosIA.length > 60) intentosIA.length = 60; };
 
 async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal } = {}) {
   const url = `${GEMINI}/models/${modelo}:${stream ? 'streamGenerateContent?alt=sse' : 'generateContent'}`;
   const r = await fetch(url, { method: 'POST', signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': clave() }, body: JSON.stringify(cuerpo) });
   if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) { /* nada */ } throw errorDe(r.status, j); }
-  let texto = '', fuentes = [], fin = null;
+  let texto = '', fuentes = [], fin = null, bloqueo = null;
   const procesar = (j) => {
+    if (j.promptFeedback && j.promptFeedback.blockReason) bloqueo = j.promptFeedback.blockReason;
     const c = (j.candidates || [])[0] || {};
     for (const p of (c.content && c.content.parts) || []) if (p.text && !p.thought) { texto += p.text; if (alTexto) alTexto(texto); }
     const g = c.groundingMetadata;
@@ -71,130 +124,217 @@ async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal }
     }
     if (buf.trim().startsWith('data:')) { try { procesar(JSON.parse(buf.trim().slice(5))); } catch (e) { /* nada */ } }
   }
+  if (!texto.trim()) throw new ErrorIA(bloqueo ? `Google ha bloqueado la pregunta (${bloqueo})` : `El modelo ha contestado vacío${fin ? ` (${fin})` : ''}`, 0, { vacio: true });
   const vistas = new Set();
   fuentes = fuentes.filter((f) => !vistas.has(f.u) && vistas.add(f.u));
   return { texto, fuentes, fin };
 }
 
-/** prueba la clave sin gastar cupo (lista los modelos) y apunta los Flash que haya por si cambian de nombre */
-export async function probarClave(k) {
-  const r = await fetch(`${GEMINI}/models?pageSize=200`, { headers: { 'x-goog-api-key': (k || '').trim() } });
-  if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) { /* nada */ } throw errorDe(r.status, j); }
-  const j = await r.json();
-  const flash = (j.models || []).filter((m) => (m.supportedGenerationMethods || []).includes('generateContent'))
-    .map((m) => m.name.replace(/^models\//, '')).filter((n) => /^gemini-[\d.]+-flash(-lite)?$/.test(n))
-    .sort((a, b) => parseFloat(b.split('-')[1]) - parseFloat(a.split('-')[1]) || (a.includes('lite') ? 1 : -1));
-  LS.set('ia-modelos', flash.slice(0, 6));
-  return flash;
-}
+const espera = (s, signal) => new Promise((res, rej) => { const t = setTimeout(res, s * 1000); if (signal) signal.addEventListener('abort', () => { clearTimeout(t); rej(new DOMException('Parado', 'AbortError')); }, { once: true }); });
 
-/** una llamada con todo: salta de modelo si uno se agota, quita el «pensar» o la búsqueda si el modelo no los admite */
-async function preguntar(cuerpoBase, op = {}) {
-  const cfg = cfgIA();
-  let web = cfg.web && !LS.get('ia-sin-web', false);
-  let pensar = true, ultimo = null;
-  const modelos = cadena();
-  if (!modelos.length) throw new ErrorIA('Los modelos gratuitos de Gemini han gastado su cupo de hoy. Mañana a las 9:00 vuelven.', 429, true);
+/**
+ * Pregunta con todos los modelos que haga falta. Por cada modelo: con búsqueda en Google; si la búsqueda se ha
+ * acabado, sin ella; si es el cupo por minuto, espera lo que diga Google y repite; si es el del día, al siguiente.
+ * alPaso(texto) cuenta lo que va pasando (para enseñarlo mientras piensa).
+ */
+async function preguntar({ sistema, contents }, op = {}) {
+  const alPaso = op.alPaso || (() => {});
+  const modelos = await cadena();
+  if (!modelos.length) {
+    const f = fuera();
+    throw new ErrorIA(`Todos los modelos de tu clave han gastado su cupo gratis de hoy (${Object.keys(f).length} probados). Vuelven mañana a las 9:00.`, 429, { todos: true });
+  }
+  const quiereWeb = cfgIA().web;
+  const resumen = [];
+  let ultimo = null;
   for (const modelo of modelos) {
-    for (let intento = 0; intento < 3; intento++) {
-      const cuerpo = { ...cuerpoBase, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: 12000, temperature: 0.7, ...(pensar ? { thinkingConfig: { thinkingLevel: 'high' } } : {}) } };
+    let web = quiereWeb && !sinWebHoy() && !esGemma(modelo);
+    let pensar = !esGemma(modelo) && !/gemini-(1|2\.0)/.test(modelo);
+    let esperado = false;
+    for (let intento = 0; intento < 5; intento++) {
+      const cuerpo = esGemma(modelo)
+        ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${contents.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
+        : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: 'high' } } : {}) } };
+      alPaso(`${nombreModelo(modelo)}${web ? ' con búsqueda en Google' : ''}…`);
+      const t0 = Date.now();
       try {
         const r = await llamar(modelo, cuerpo, op);
-        return { ...r, modelo, web };
+        apuntar({ modelo, web, ok: true, ms: Date.now() - t0 });
+        return { ...r, modelo, web, intentos: resumen };
       } catch (e) {
         if (e.name === 'AbortError') throw e;
         ultimo = e;
-        if (e.estado === 400 && pensar && /thinking/i.test(e.message)) { pensar = false; continue; }
-        if (e.estado === 400 && web && /search|tool|grounding/i.test(e.message)) { web = false; LS.set('ia-sin-web', true); continue; }
-        if (e.estado === 404) break;
-        if (e.estado === 429) { if (e.diario) agotar(modelo); else if (intento === 0) { await new Promise((r) => setTimeout(r, 4000)); continue; } break; }
-        if (e.estado >= 500 && intento < 2) { await new Promise((r) => setTimeout(r, 2500 * (intento + 1))); continue; }
-        throw e;
+        apuntar({ modelo, web, s: e.estado, e: e.message, google: e.google, ms: Date.now() - t0 });
+        if (e.clave) throw e;
+        if (e.estado === 400 && pensar && /thinking|thought/i.test(e.google || e.message)) { pensar = false; continue; }
+        if (e.estado === 400 && web && /search|tool|grounding/i.test(e.google || e.message)) { web = false; continue; }
+        if (e.estado === 400 && /system|developer instruction/i.test(e.google || '')) { sacar(modelo, 'no admite instrucciones'); break; }
+        if (e.estado === 429 && e.busqueda && web) { LS.set('ia-sin-web', diaGoogle()); web = false; continue; }
+        if (e.estado === 429 && web && !e.minuto) { web = false; continue; } // por si el cupo que falta es el de la búsqueda y Google no lo dice
+        if (e.estado === 429 && e.minuto && !esperado && (e.espera || 20) <= 45) { esperado = true; alPaso(`Esperando ${Math.ceil(e.espera || 20)} s a que Google deje volver a preguntar…`); await espera(e.espera || 20, op.signal); continue; }
+        if (e.estado === 429) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
+        if (e.estado === 404 || e.estado === 403 || e.estado === 400) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
+        if (e.vacio && intento < 1) continue;
+        if ((e.estado >= 500 || e.estado === 0) && intento < 2) { await espera(2.5 * (intento + 1), op.signal); continue; }
+        resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`);
+        break;
       }
     }
   }
-  throw ultimo || new ErrorIA('No se ha podido hablar con Gemini');
+  throw new ErrorIA(`Ningún modelo ha podido contestar. ${resumen.slice(0, 4).join(' · ')}${resumen.length > 4 ? ` y ${resumen.length - 4} más` : ''}.${ultimo && ultimo.google ? ` Google: «${ultimo.google.slice(0, 140)}»` : ''}`, ultimo ? ultimo.estado : 0, { todos: true });
 }
 
-/* ---------------- lo que la IA sabe de tu liga ---------------- */
-const lineaJ = (j, x = {}) => [
+/* ---------------- todo lo que la IA sabe de tu liga ---------------- */
+const m1 = (v) => (v == null ? '?' : eur(v));
+const forma = (M, pid) => { const f = M.forma && M.forma(pid); return f ? `últimas ${f.de}: ${f.pts.join(',')} pts (jugó ${f.jugados}/${f.de}, ${f.min} min)` : null; };
+const lineaJ = (M, j, x = {}) => [
   POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
-  x.tend && x.tend.p7 != null ? `7d ${pct(x.tend.p7)}` : x.tend && x.tend.p1 != null ? `hoy ${pct(x.tend.p1)}` : null,
+  x.tend && x.tend.d1 != null ? `hoy ${eur(x.tend.d1, { signo: true })}` : null,
+  x.tend && x.tend.p7 != null ? `7d ${pct(x.tend.p7)}` : null,
   j.media ? `media ${String(j.media).replace('.', ',')}` : null, `${j.puntos} pts`,
-  j.estado && j.estado !== 'ok' ? `ESTADO ${j.estado}` : null,
+  forma(M, j.id),
+  j.estado && j.estado !== 'ok' ? `ESTADO: ${j.estado}` : null,
 ].filter(Boolean).join(' | ');
-
-const partido = (p) => (p ? `${p.casa ? 'vs' : 'en'} ${p.rival} ${cuando(p.fecha)}` : null);
+const partido = (p) => (p ? `${p.casa ? 'en casa vs' : 'fuera en'} ${p.rival} ${cuando(p.fecha)}` : null);
 
 export function contexto(D, M, c, { corto = false } = {}) {
   const L = [];
   const ahora = new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   L.push(`AHORA: ${ahora} (hora de España)`);
-  L.push(`LIGA: ${D.liga.nombre}, ${D.clasif.length} equipos. Se puede quedar en negativo hasta el ${c.deuda} % del valor del equipo.`);
+  L.push(`LIGA: ${D.liga.nombre}, ${D.clasif.length} equipos. Se puede quedar en negativo hasta el ${c.deuda} % del valor del equipo (${eur(M.deuda)}).`);
   if (M.enJuego) L.push(`JORNADA ${M.enJuego.n} EN JUEGO hasta ${cuando(M.enJuego.fin)}.`);
-  if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, empieza ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).`);
-  if (M.paron) L.push(`PARÓN DE SELECCIONES: ${cuando(M.paron.ini, { hora: false })} a ${cuando(M.paron.fin, { hora: false })}${M.enParon ? ' (estamos en él)' : ''}.`);
+  if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, primer partido ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).`);
+  if (M.paron) L.push(`PARÓN DE SELECCIONES: del ${cuando(M.paron.ini, { hora: false })} al ${cuando(M.paron.fin, { hora: false })}${M.enParon ? ' (estamos en él)' : ''}.`);
+  if (M.cierreMercado) L.push(`EL MERCADO CAMBIA: ${cuando(M.cierreMercado)} (en ${dura(M.cierreMercado - Date.now())}).`);
   const yo = M.yo || {};
-  L.push(`MI EQUIPO: ${yo.nombre || '?'} · ${yo.pos || '?'}º · ${yo.puntos || 0} pts · valor ${eur(D.valorEquipo)} · saldo ${eur(D.dinero)} · puedo gastar hasta ${eur(M.pujaMax)}${M.misPujas ? ` (ya tengo ${eur(M.misPujas)} en pujas)` : ''}.`);
-  L.push('\nMIS JUGADORES (pos | nombre | equipo | valor | tendencia | media | puntos | estado) + cláusula, protección, próximo partido y lo que pagué:');
-  for (const x of M.mias) L.push(`- ${lineaJ(x.j, x)} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA' : `protegida ${dura(x.abreEn)} más`} | riesgo ${x.riesgo}${x.prox ? ` | ${partido(x.prox)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)}` : ''}`);
-  L.push('\nRIVALES (pos | equipo | manager | puntos | valor | cambio de valor 7d | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d):');
-  for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''}`);
-  const cl = M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, corto ? 15 : 28);
-  L.push('\nCLÁUSULAS DE RIVALES (abiertas o que se abren en 3 días, de más a menos interesante):');
-  for (const x of cl) L.push(`- ${lineaJ(x.j, x)} | de ${x.rival.nombre} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA' : `se abre ${cuando(x.protegidoHasta)}`} | ${x.meLlega ? 'me llega' : 'NO me llega'}${x.prox ? ` | ${partido(x.prox)}` : ''}`);
+  L.push(`MI EQUIPO: ${yo.nombre || '?'} · ${yo.pos || '?'}º de ${D.clasif.length} · ${yo.puntos || 0} pts · valor ${eur(D.valorEquipo)} · SALDO ${m1(D.dinero)} · PUEDO GASTAR COMO MUCHO ${eur(M.pujaMax)}${M.misPujas ? ` (ya tengo ${eur(M.misPujas)} comprometidos en pujas)` : ''}.`);
+  L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | forma) + cláusula, protección, riesgo, próximo partido y lo que pagué:');
+  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.prox ? ` | ${partido(x.prox)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
+  L.push('\nRIVALES (pos | equipo | manager | puntos | valor | cambio de valor 7d | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d | peligro):');
+  for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel}`);
+  const cl = M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, corto ? 16 : 30);
+  L.push('\nCLÁUSULAS DE RIVALES (abiertas o que se abren en 3 días; de más a menos interesantes según la app):');
+  for (const x of cl) L.push(`- ${lineaJ(M, x.j, x)} | de ${x.rival.nombre} | CLÁUSULA ${eur(x.clausula)} ${x.abierta ? 'ABIERTA YA' : `se abre ${cuando(x.protegidoHasta)}`} | ${x.meLlega ? 'me llega' : 'NO me llega'} | interés ${x.interes}/100${x.prox ? ` | ${partido(x.prox)}` : ''}`);
   if (M.mercado.length) {
-    L.push(`\nMERCADO DE HOY${M.cierreMercado ? ` (cambia ${cuando(M.cierreMercado)})` : ''}:`);
-    for (const m of M.mercado.slice(0, 24)) L.push(`- ${lineaJ(m.j, m)} | precio ${eur(m.precio)}${m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : ''} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ${eur(m.miPuja)}` : ''}${m.prox ? ` | ${partido(m.prox)}` : ''}`);
+    L.push(`\nMERCADO DE HOY:`);
+    for (const m of M.mercado.slice(0, 26)) L.push(`- ${lineaJ(M, m.j, m)} | PRECIO ${eur(m.precio)}${m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : ' (de la liga)'} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100${m.prox ? ` | ${partido(m.prox)}` : ''}`);
   }
   if (!corto) {
-    L.push('\nLOS QUE MÁS SUBEN HOY EN LALIGA:');
-    for (const x of M.suben.slice(0, 12)) L.push(`- ${x.j.nombre} (${x.j.equipo}) ${x.t.d1 != null ? eur(x.t.d1, { signo: true }) : ''} · ${x.dueno ? (x.dueno === D.yo.teamId ? 'mío' : `de ${(M.equipo[x.dueno] || {}).nombre}`) : 'libre'}`);
+    L.push('\nLOS QUE MÁS SUBEN HOY EN TODA LALIGA:');
+    for (const x of M.suben.slice(0, 14)) L.push(`- ${x.j.nombre} (${x.j.equipo}, ${eur(x.j.valor)}) ${x.t.d1 != null ? eur(x.t.d1, { signo: true }) : ''} · ${x.dueno ? (x.dueno === D.yo.teamId ? 'MÍO' : `de ${(M.equipo[x.dueno] || {}).nombre}`) : 'libre'}`);
     L.push('LOS QUE MÁS BAJAN HOY:');
-    for (const x of M.bajan.slice(0, 10)) L.push(`- ${x.j.nombre} (${x.j.equipo}) ${x.t.d1 != null ? eur(x.t.d1, { signo: true }) : ''} · ${x.dueno ? (x.dueno === D.yo.teamId ? 'mío' : `de ${(M.equipo[x.dueno] || {}).nombre}`) : 'libre'}`);
+    for (const x of M.bajan.slice(0, 12)) L.push(`- ${x.j.nombre} (${x.j.equipo}, ${eur(x.j.valor)}) ${x.t.d1 != null ? eur(x.t.d1, { signo: true }) : ''} · ${x.dueno ? (x.dueno === D.yo.teamId ? 'MÍO' : `de ${(M.equipo[x.dueno] || {}).nombre}`) : 'libre'}`);
+    if (M.jornadas.length) {
+      L.push('\nCALENDARIO (próximas jornadas):');
+      for (const j of M.jornadas.filter((x) => x.fin > Date.now()).slice(0, 2)) L.push(`- Jornada ${j.n}: ${j.partidos.map((p) => `${p.local}-${p.visitante} ${cuando(p.fecha)}`).join('; ')}`);
+    }
   }
-  const act = M.actividad.filter((a) => a.t && Date.now() - a.t < 7 * DIA).slice(0, corto ? 20 : 40);
+  const act = M.actividad.filter((a) => a.t && Date.now() - a.t < 7 * DIA && a.clase !== 'premio').slice(0, corto ? 20 : 45);
   if (act.length) {
     L.push('\nMOVIMIENTOS DE LA LIGA (7 días):');
-    for (const a of act) L.push(`- ${cuando(a.t)}: ${a.quien} ${({ compra: 'fichó', clausula: 'clausuló', venta: 'vendió', blindaje: 'blindó', premio: 'cobró por jornada', entra: 'entró' })[a.clase] || 'movió'} ${a.nombreJ || ''}${a.importe ? ` por ${eur(a.importe)}` : ''}${a.otro ? ` a ${a.otro}` : ''}`);
+    for (const a of act) L.push(`- ${cuando(a.t)}: ${a.esYo ? 'YO' : a.quien || '?'} ${({ compra: 'fichó', clausula: 'clausuló', venta: 'vendió', blindaje: 'blindó', entra: 'entró' })[a.clase] || 'movió'} ${a.nombreJ || ''}${a.importe ? ` por ${eur(a.importe)}` : ''}${a.otro ? ` ${a.clase === 'clausula' ? 'a' : 'a'} ${a.contraMi ? 'MÍ' : a.otro}` : ''}`);
   }
   return L.join('\n');
 }
 
-const SISTEMA = `Eres el asesor de LaLiga Fantasy (el juego oficial de LaLiga) de un manager de una liga privada. Hablas en español de España, cercano y directo, como un colega que sabe mucho del juego, sin rodeos ni frases hechas.
-Cómo funciona su liga: cada jugador de un equipo tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al momento. El dueño puede subirla (blindar). El mercado cambia cada día. Puede quedarse en negativo hasta un % del valor de su equipo, pero si empieza la jornada en negativo no puntúa.
-Usa siempre los datos que te paso: cifras exactas en euros (en millones, «12,4 M»), fechas y horas. No inventes jugadores ni cifras que no estén. Busca en internet con Google lo reciente que importe: lesiones, sanciones, convocatorias con su selección, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador y el calendario de los próximos partidos. Ten en cuenta los parones de selecciones (los valores se mueven distinto y hay riesgo de lesiones). Piensa en sacar beneficio: comprar antes de que suba, vender antes de que baje, cláusulas que son un chollo para revender. Mira qué hacen los rivales y quién puede ir a por sus jugadores.`;
+const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España, directo, como un colega que sabe mucho del juego.
+Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). El mercado cambia cada día; se puja a ciegas y gana la puja más alta. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa. Vender a la liga da el valor del jugador.
+Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Busca en Google lo reciente que importe: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.`;
 
-/** el análisis del día: devuelve { titular, resumen, acciones[], noticias[], rivales[], paron, alineacion, fuentes[], modelo, t } */
-export async function analisisDelDia(D, M, c, signal) {
-  const pedido = `${contexto(D, M, c)}
+/* ---------------- el plan del día ---------------- */
+export const planes = () => LS.get(K('planes'), []);
+export const ultimoPlan = () => planes()[0] || null;
 
-Hazme el análisis de hoy. Antes, busca noticias de mis jugadores, de los que más me interesan de cláusulas y mercado y de la próxima jornada.
-Contesta SOLO con un bloque \`\`\`json con este formato (sin texto fuera):
+/** lo que te recomendó los últimos días y lo que hiciste desde entonces, para que siga el hilo */
+function memoria(M) {
+  const P = planes().slice(0, 3);
+  if (!P.length) return '';
+  const L = ['\nLO QUE TE RECOMENDÉ LOS ÚLTIMOS DÍAS:'];
+  for (const p of P) L.push(`- ${cuando(p.t)}: ${p.titular || ''} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador || ''}${o.importe ? ` ${eur(o.importe)}` : ''}`).join('; ')}`);
+  const desde = P[P.length - 1].t;
+  const mias = M.actividad.filter((a) => a.esYo && a.t > desde);
+  L.push(mias.length ? `LO QUE HAS HECHO DESDE ENTONCES: ${mias.map((a) => `${a.clase} ${a.nombreJ}${a.importe ? ` ${eur(a.importe)}` : ''}`).join('; ')}` : 'DESDE ENTONCES NO HAS HECHO NINGÚN MOVIMIENTO.');
+  return L.join('\n');
+}
+
+export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
+  const pedido = `${contexto(D, M, c)}${memoria(M)}
+
+Hazme el PLAN DE HOY. Primero busca noticias de mis jugadores, de los candidatos (cláusulas, mercado, los que suben) y de la próxima jornada.
+Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero lo que vendo (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría (según las pujas que lleva y si sube). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
+Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
 {
- "titular": "una frase de 8 a 16 palabras con lo más importante de hoy",
- "resumen": "3 o 4 frases con la situación y lo que haría yo, con cifras",
- "acciones": [{"tipo": "clausular|pujar|vender|blindar|alinear|esperar|vigilar", "jugador": "nombre exacto como en los datos", "precio": número en euros o null, "cuando": "ya | hoy antes de las 18:00 | antes del parón...", "motivo": "por qué, con cifras y la noticia si la hay (1 o 2 frases)", "confianza": "alta|media|baja"}],
- "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta (1 frase)", "efecto": "sube|baja|neutro"}],
- "rivales": [{"manager": "nombre", "texto": "qué está haciendo y si es un peligro para mí (1 frase)"}],
- "paron": "qué hacer con el parón de selecciones si está cerca, o null",
+ "titular": "8 a 16 palabras con lo más importante de hoy",
+ "situacion": "2 o 3 frases: cómo está mi equipo y qué buscamos hoy, con cifras",
+ "operaciones": [{"accion": "vender|pujar|clausular|blindar|aceptar_oferta|alinear|esperar", "jugador": "nombre exacto de los datos", "donde": "a la liga | en el mercado | cláusula a <manager> | ...", "importe": número en euros o null, "puja_max": número o null, "cuando": "ahora | hoy antes de las 18:00 | mañana 14:05 cuando se abra", "motivo": "por qué, con cifras y la noticia que lo justifica (1 o 2 frases)", "confianza": "alta|media|baja"}],
+ "proximos_dias": [{"dia": "mañana miércoles 21 | jueves 22 | antes de la jornada", "texto": "qué hacer ese día y a qué hora"}],
+ "vigilar": [{"jugador": "nombre", "texto": "por qué hay que seguirlo"}],
+ "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta", "efecto": "sube|baja|neutro"}],
+ "rivales": [{"manager": "nombre", "texto": "qué está haciendo y si va a por mis jugadores"}],
+ "paron": "qué hacer con el parón si está cerca, o null",
  "alineacion": {"formacion": "4-3-3", "titulares": ["nombres de mis jugadores"], "dudas": ["jugador: por qué"]}
 }
-Entre 4 y 8 acciones, de más a menos importante. Las de clausular o pujar, solo si me llega el dinero.`;
-  const r = await preguntar({ systemInstruction: { parts: [{ text: SISTEMA }] }, contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal });
+Entre 1 y 8 operaciones. Entre 2 y 5 días en proximos_dias.`;
+  const r = await preguntar({ sistema: SISTEMA, contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso });
   const json = sacarJSON(r.texto);
-  if (!json) throw new ErrorIA('Gemini ha contestado sin el formato esperado. Vuelve a probar.');
-  const A = { ...json, fuentes: r.fuentes.slice(0, 12), modelo: r.modelo, web: r.web, t: Date.now() };
-  LS.set(K('ia'), A);
-  return A;
+  if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA('Gemini ha contestado sin el formato del plan. Vuelve a probar.', 0);
+  const P = { ...json, fuentes: r.fuentes.slice(0, 14), modelo: r.modelo, web: r.web, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null };
+  const lista = planes();
+  lista.unshift(P);
+  LS.set(K('planes'), lista.slice(0, 10));
+  return P;
 }
-export const ultimoAnalisis = () => LS.get(K('ia'), null);
+
+/** ¿hace falta un plan nuevo? (no hay de hoy, es de antes de que cambiara el mercado o tiene más de 10 horas) */
+export function planViejo(M) {
+  const p = ultimoPlan();
+  if (!p) return true;
+  if (p.dia !== diaDe()) return true;
+  if (M && M.cierreMercado && p.mercado && Math.abs(M.cierreMercado - p.mercado) > 3600e3) return true;
+  return Date.now() - p.t > 10 * 3600e3;
+}
+
+/** las operaciones del plan con sus jugadores y el saldo después de cada una, con los números de la app */
+export function cuadrarPlan(P, D, M) {
+  if (!P) return null;
+  const buscar = (n) => {
+    const k = norm(n);
+    if (!k) return null;
+    const todos = Object.values(D.maestro);
+    return todos.find((j) => norm(j.nombre) === k) || todos.find((j) => norm(j.largo) === k)
+      || todos.find((j) => norm(j.nombre).includes(k) || k.includes(norm(j.nombre))) || null;
+  };
+  let saldo = D.dinero == null ? null : +D.dinero;
+  const ops = (P.operaciones || []).map((o, i) => {
+    const j = (o.pid && D.maestro[o.pid]) || buscar(o.jugador);
+    const pid = j && j.id;
+    const mia = pid && M.mias.find((x) => x.pid === pid);
+    const cl = pid && M.clausulas.find((x) => x.pid === pid);
+    const mk = pid && M.mercado.find((x) => x.pid === pid);
+    const accion = String(o.accion || '').toLowerCase().replace('aceptar_oferta', 'vender');
+    let importe = o.importe != null ? +o.importe : null, signo = 0, aviso = null;
+    if (accion === 'vender') { signo = 1; if (!importe && j) importe = j.valor; if (pid && !mia) aviso = 'No es tuyo'; }
+    if (accion === 'clausular') { signo = -1; if (cl) importe = cl.clausula; if (cl && !cl.abierta) aviso = `Se abre ${cuando(cl.protegidoHasta)}`; if (pid && !cl) aviso = 'No está en ningún rival'; }
+    if (accion === 'pujar') { signo = -1; importe = o.puja_max != null ? +o.puja_max : importe || (mk ? mk.precio : null); if (pid && !mk) aviso = 'No está en el mercado'; }
+    if (accion === 'blindar') signo = importe ? -1 : 0;
+    // lo que se hace hoy suma al saldo; lo de otro día (o cuando se abra una cláusula), no
+    const cu = String(o.cuando || '').trim();
+    const otroDia = /cuando se abra|se abre|si vendes/i.test(cu) || (/^(el )?(mañana|lunes|martes|miércoles|jueves|viernes|sábado|domingo)/i.test(cu) && accion !== 'pujar');
+    const hoy = !otroDia || !!(cl && cl.abierta && accion === 'clausular');
+    if (saldo != null && signo && importe && hoy) saldo += signo * importe;
+    return { ...o, accion, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy ? saldo : null, aviso, hoy };
+  });
+  const final = saldo;
+  const avisoSaldo = final != null && final < -M.deuda ? `Te pasarías del límite de deuda (${eur(-M.deuda)})` : final != null && final < 0 ? `Acabarías en negativo (${eur(final)}): vende antes de que empiece la jornada` : null;
+  return { ...P, ops, final, avisoSaldo };
+}
 
 function sacarJSON(t) {
-  const m = String(t || '').match(/```(?:json)?\s*([\s\S]*?)```/);
-  const trozo = m ? m[1] : String(t || '').slice(String(t || '').indexOf('{'), String(t || '').lastIndexOf('}') + 1);
+  const s = String(t || '');
+  const m = s.match(/```(?:json)?\s*([\s\S]*?)```/);
+  const trozo = m ? m[1] : s.slice(s.indexOf('{'), s.lastIndexOf('}') + 1);
   try { return JSON.parse(trozo); } catch (e) {
-    try { return JSON.parse(trozo.replace(/,\s*([}\]])/g, '$1')); } catch (e2) { return null; }
+    try { return JSON.parse(trozo.replace(/,\s*([}\]])/g, '$1').replace(/[“”]/g, '"')); } catch (e2) { return null; }
   }
 }
 
@@ -208,11 +348,11 @@ export async function charlar(pregunta, D, M, c, alTexto, signal) {
   hist.push({ r: 'yo', t: pregunta, ts: Date.now() });
   LS.set(K('chat'), hist.slice(-40));
   const contents = hist.slice(-14).map((m) => ({ role: m.r === 'yo' ? 'user' : 'model', parts: [{ text: m.t }] }));
-  const sistema = `${SISTEMA}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta y cuándo hacerlo.\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { corto: true })}`;
-  const r = await preguntar({ systemInstruction: { parts: [{ text: sistema }] }, contents }, { stream: true, alTexto, signal });
+  const p = ultimoPlan();
+  const sistema = `${SISTEMA}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { corto: true })}${p ? `\n\nEL PLAN DE HOY QUE LE DISTE (${cuando(p.t)}): ${p.titular} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador}`).join('; ')}` : ''}`;
+  const r = await preguntar({ sistema, contents }, { stream: true, alTexto, signal });
   const h2 = conversacion();
   h2.push({ r: 'ia', t: r.texto, ts: Date.now(), fuentes: r.fuentes.slice(0, 8), modelo: r.modelo });
   LS.set(K('chat'), h2.slice(-40));
   return r;
 }
-

@@ -10,7 +10,7 @@ const PARONES = [
 ];
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 
-export function analizar(D, H, c) {
+export function analizar(D, H, c, extra = {}) {
   const M = { t: Date.now() };
   if (!D) return M;
   const ahora = Date.now();
@@ -27,6 +27,20 @@ export function analizar(D, H, c) {
   const porManager = {};
   for (const e of D.clasif) { if (e.manager) porManager[norm(e.manager)] = e.teamId; if (e.nombre) porManager[norm(e.nombre)] = e.teamId; }
   M.teamDeManager = (nombre) => porManager[norm(nombre)] || null;
+  const porUsuario = {};
+  for (const e of D.clasif) if (e.userId) porUsuario[e.userId] = e.teamId;
+  if (D.yo && D.yo.userId && yoTid) porUsuario[D.yo.userId] = yoTid;
+  M.teamDeUsuario = (id, nombre) => (id && porUsuario[id]) || M.teamDeManager(nombre);
+  const nombreEquipo = (tid) => { const e = tid && M.equipo[tid]; return e ? e.manager || e.nombre : ''; };
+
+  /* ---------- forma reciente (de la ficha de cada jugador, si se ha bajado) ---------- */
+  const det = extra.det || {};
+  M.forma = (pid) => {
+    const d = det[pid];
+    if (!d || !d.stats || !d.stats.length) return null;
+    const ult = d.stats.slice(-5);
+    return { pts: ult.map((x) => x.pts), media: ult.reduce((a, x) => a + x.pts, 0) / ult.length, jugados: ult.filter((x) => x.min > 0).length, de: ult.length, min: ult.reduce((a, x) => a + x.min, 0) };
+  };
 
   /* ---------- tendencias de valor ---------- */
   const cacheT = {};
@@ -164,11 +178,15 @@ export function analizar(D, H, c) {
     const sobre = j.valor ? m.precio / j.valor - 1 : 0;
     let veredicto = 'normal';
     if (MALOS.has(j.estado)) veredicto = 'evitar';
-    else if (sobre <= 0.02 && ((t.p7 != null && t.p7 > 2) || (t.p1 != null && t.p1 > 0.8) || num(j.media) >= 5)) veredicto = 'chollo';
+    else if (sobre <= 0.02 && !(t.p1 != null && t.p1 < -0.5) && ((t.p7 != null && t.p7 > 2) || (t.p1 != null && t.p1 > 0.8) || num(j.media) >= 5)) veredicto = 'chollo';
     else if (t.p1 != null && t.p1 > 1) veredicto = 'sube';
     else if (sobre > 0.15) veredicto = 'caro';
     else if (t.p7 != null && t.p7 < -4) veredicto = 'baja';
-    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
+    // la puja que pondría: el precio y un margen por las pujas que lleva y por si está subiendo
+    let margen = 0.02 + Math.min(m.pujas, 5) * 0.025 + (t.p1 != null && t.p1 > 0 ? Math.min(t.p1, 4) / 100 : 0) + (i.n >= 70 ? 0.03 : 0);
+    if (m.tipo === 'manager') margen = 0;
+    const puja = Math.ceil(m.precio * (1 + margen) / 10000) * 10000;
+    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
   M.cierreMercado = Math.min(...M.mercado.map((m) => m.cierra || Infinity).filter((x) => x > ahora), Infinity);
   if (!Number.isFinite(M.cierreMercado)) M.cierreMercado = null;
@@ -183,8 +201,13 @@ export function analizar(D, H, c) {
 
   /* ---------- actividad de la liga, con nombres ---------- */
   M.actividad = (D.actividad || []).map((a) => {
-    const quienT = M.teamDeManager(a.quien), otroT = M.teamDeManager(a.otro);
-    return { ...a, quienT, otroT, nombreJ: a.jugador || (a.pid && D.maestro[a.pid] ? D.maestro[a.pid].nombre : ''), esYo: quienT === yoTid, contraMi: otroT === yoTid };
+    const quienT = M.teamDeUsuario(a.quienId, a.quien), otroT = M.teamDeUsuario(a.otroId, a.otro);
+    return {
+      ...a, quienT, otroT,
+      quien: a.quien || nombreEquipo(quienT), otro: a.otro || nombreEquipo(otroT),
+      nombreJ: a.jugador || (a.pid && D.maestro[a.pid] ? D.maestro[a.pid].nombre : ''),
+      esYo: !!yoTid && quienT === yoTid, contraMi: !!yoTid && otroT === yoTid,
+    };
   });
   // los cambios de plantilla que la actividad no cuenta (blindajes)
   M.cambios = (H.mov || []).filter((m) => ahora - m.t < 21 * DIA).map((m) => ({ ...m, j: J(m.pid), equipo: M.equipo[m.teamId] })).reverse();
@@ -307,4 +330,126 @@ function acciones(D, M, c) {
   });
 
   return out.sort((a, b) => b.prio - a.prio);
+}
+
+
+/**
+ * El plan del día sin IA: las mismas reglas de «lo que toca», pero ordenadas como operaciones para que el
+ * dinero cuadre (primero vender, luego clausular y pujar, después proteger y alinear). Tiene la misma forma
+ * que el plan de la IA, así que se pinta igual.
+ */
+export function planAuto(D, M, c) {
+  const ahora = Date.now();
+  const ops = [];
+  let saldo = num(D.dinero);
+  const limite = -M.deuda;
+  const inicio = M.proxima ? M.proxima.ini : null;
+  const jornadaCerca = inicio && inicio - ahora < 2 * DIA;
+  const vendidos = new Set();
+  const op = (o) => ops.push({ confianza: 'media', ...o });
+
+  // 1. vender lo que no va a puntuar o se está desplomando con beneficio
+  for (const x of M.mias.filter((y) => MALOS.has(y.j.estado))) {
+    op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'a la liga', importe: x.j.valor, cuando: 'hoy',
+      motivo: `${x.j.estado === 'injured' ? 'Lesionado' : x.j.estado === 'suspended' ? 'Sancionado' : 'Fuera de LaLiga'}: no te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y ya ha perdido un ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Mejor venderlo antes de que baje más.`, confianza: 'alta' });
+    saldo += x.j.valor; vendidos.add(x.pid);
+  }
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ganado > 0 && y.tend.p7 != null && y.tend.p7 < -4).slice(0, 2)) {
+    op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'a la liga', importe: x.j.valor, cuando: 'hoy',
+      motivo: `Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva un ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días. Asegura el beneficio.` });
+    saldo += x.j.valor; vendidos.add(x.pid);
+  }
+
+  // ¿le hace falta a tu plantilla? (no fichar el tercer portero ni dos del mismo puesto el mismo día)
+  const tope = { 1: 2, 2: 6, 3: 6, 4: 4 };
+  const porPos = {};
+  for (const x of M.mias) if (!vendidos.has(x.pid)) (porPos[x.j.pos] ||= []).push(x.j);
+  const hueco = (j) => {
+    const mios = porPos[j.pos] || [];
+    if (mios.length < (tope[j.pos] || 99)) return true;
+    const peor = Math.min(...mios.map((m) => num(m.media)));
+    return num(j.media) - peor >= 1.2;
+  };
+  const fichar = (j) => (porPos[j.pos] ||= []).push(j);
+  const yaHoy = new Set();
+  // sin IA el plan no tira de deuda: solo con el dinero que tienes y lo que vendes
+  const presupuesto = () => saldo;
+
+  // 2. clausular lo mejor que esté abierto y te llegue
+  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado)).slice(0, 8);
+  let clausulas = 0;
+  for (const x of abiertas) {
+    if (clausulas >= 2 || x.clausula > presupuesto() || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;
+    op({ accion: 'clausular', pid: x.pid, jugador: x.j.nombre, donde: `cláusula a ${x.rival.manager || x.rival.nombre}`, importe: x.clausula, cuando: 'ahora',
+      motivo: `Vale ${eur(x.j.valor)} y su cláusula es ${eur(x.clausula)}${x.por.length ? `: ${x.por.slice(0, 3).join(', ')}` : ''}.`, confianza: x.interes >= 70 ? 'alta' : 'media' });
+    saldo -= x.clausula; clausulas++; yaHoy.add(x.j.pos); fichar(x.j);
+  }
+
+  // 3. pujar por los chollos del mercado
+  let pujas = 0;
+  for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && (y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)))) {
+    if (pujas >= 2 || m.puja > presupuesto() || yaHoy.has(m.j.pos) || !hueco(m.j)) continue;
+    op({ accion: 'pujar', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? `antes de ${cuando(M.cierreMercado)}` : 'hoy',
+      motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}${m.por.length ? `: ${m.por.slice(0, 3).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}` });
+    saldo -= m.puja; pujas++; yaHoy.add(m.j.pos); fichar(m.j);
+  }
+  // lo mejor que no te llega todavía, para que sepas cuánto te falta
+  const enPlan = new Set(ops.map((o) => o.pid));
+  const fuera = M.clausulas.find((x) => !enPlan.has(x.pid) && x.abierta && x.interes >= 70 && x.clausula > saldo && x.clausula <= M.pujaMax && !MALOS.has(x.j.estado) && hueco(x.j));
+  if (fuera && clausulas < 2) {
+    op({ accion: 'esperar', pid: fuera.pid, jugador: fuera.j.nombre, donde: `cláusula de ${eur(fuera.clausula)} a ${fuera.rival.manager || fuera.rival.nombre}`, importe: null, cuando: 'si vendes algo',
+      motivo: `Es el mejor a tiro (interés ${fuera.interes}), pero te faltan ${eur(fuera.clausula - saldo)} sin tirar de deuda. Si vendes a alguien que no juegue, ve a por él.`, confianza: 'baja' });
+  }
+
+  // 4. si te quedas en negativo, vender lo que menos aporta antes de que empiece la jornada (o no puntúas)
+  if (saldo < 0) {
+    const fichados = new Set(ops.filter((o) => o.accion !== 'vender').map((o) => o.pid));
+    const candidatos = M.mias.filter((x) => !vendidos.has(x.pid) && !fichados.has(x.pid) && x.j.pos !== 1 && x.j.pos !== 5)
+      .sort((a, b) => (num(a.j.media) - num(b.j.media)) || (a.j.valor - b.j.valor));
+    for (const x of candidatos) {
+      if (saldo >= 0) break;
+      op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'a la liga', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
+        motivo: `Para no empezar la jornada en negativo (no puntuarías). Es de los que menos te aporta: ${String(x.j.media || 0).replace('.', ',')} pts de media.`, confianza: 'alta' });
+      saldo += x.j.valor; vendidos.add(x.pid);
+    }
+  }
+
+  // 5. proteger a los tuyos más expuestos
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto').slice(0, 2)) {
+    op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: 'subir su cláusula', importe: null, cuando: x.abierta ? 'ahora' : `antes de ${cuando(x.protegidoHasta)}`,
+      motivo: `Su cláusula (${eur(x.clausula)}) casi no pasa de lo que vale (${eur(x.j.valor)}) y ${x.abierta ? 'ya está abierta' : `se abre en ${dura(x.abreEn)}`}. Súbela o te lo quitan.` });
+  }
+
+  // 6. alineación si la jornada empieza pronto
+  if (inicio && inicio - ahora < 30 * HORA && inicio > ahora) {
+    const tocados = M.mias.filter((x) => !vendidos.has(x.pid) && (MALOS.has(x.j.estado) || x.j.estado === 'doubtful'));
+    op({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: `antes de ${cuando(inicio)}`,
+      motivo: tocados.length ? `Quita del once a ${tocados.map((x) => x.j.nombre).join(', ')}.` : 'Revisa que no tengas a nadie lesionado o sancionado de titular.' });
+  }
+  if (!ops.length) op({ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'hoy', motivo: 'Hoy no hay ninguna operación clara: ni cláusulas que merezcan la pena abiertas ni chollos en el mercado. Mejor guardar el dinero.', confianza: 'media' });
+
+  // los próximos días: cláusulas que se abren, mercado, jornada y parón (lo más importante de cada día)
+  const dias = {};
+  const add = (t, prio, texto) => { const d = diaDe(t); (dias[d] ||= { t, cosas: [] }).cosas.push({ prio, texto }); };
+  const hora = (t) => cuando(t).split(' ').pop();
+  for (const x of M.clausulas.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.meLlega && y.interes >= 55)) {
+    add(x.protegidoHasta, x.interes, `${hora(x.protegidoHasta)} se abre ${x.j.nombre} (${eur(x.clausula)}, de ${x.rival.manager || x.rival.nombre})`);
+  }
+  for (const x of M.mias.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.riesgo !== 'ninguno')) add(x.protegidoHasta, 90, `${hora(x.protegidoHasta)} se acaba la protección de tu ${x.j.nombre}`);
+  if (inicio) add(inicio, 100, `${hora(inicio)} empieza la jornada ${M.proxima.n}: saldo en positivo y once revisado antes`);
+  if (M.paron && M.paron.ini > ahora) add(M.paron.ini, 95, 'empieza el parón: los valores se paran, vende a los que estén en lo alto');
+  const proximos = Object.values(dias).sort((a, b) => a.t - b.t).slice(0, 5).map((d) => {
+    const cosas = d.cosas.sort((a, b) => b.prio - a.prio);
+    const resto = cosas.length - 3;
+    return { dia: cuando(d.t, { hora: false }), texto: cosas.slice(0, 3).map((c) => c.texto).join('. ') + (resto > 0 ? `. Y ${resto} cláusula${resto > 1 ? 's' : ''} más` : '') + '.' };
+  });
+
+  const n = (a) => ops.filter((o) => o.accion === a).length;
+  const partes = [n('vender') && `vender ${n('vender')}`, n('clausular') && `clausular ${n('clausular')}`, n('pujar') && `pujar por ${n('pujar')}`, n('blindar') && `proteger ${n('blindar')}`].filter(Boolean);
+  return {
+    auto: true, t: ahora, dia: diaDe(ahora),
+    titular: partes.length ? `Hoy toca ${partes.join(', ')}` : ops[0].accion === 'alinear' ? 'Hoy solo toca preparar la jornada' : 'Hoy, quieto: guarda el dinero',
+    situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`,
+    operaciones: ops, proximos_dias: proximos,
+  };
 }

@@ -59,7 +59,7 @@ export function demo() {
   const plantillas = {};
   let k = 0;
   for (const e of clasif) {
-    const n = e.esYo ? 15 : 10 + Math.floor(r() * 4);
+    const n = e.esYo ? 15 : 8 + Math.floor(r() * 4);
     plantillas[e.teamId] = ids.slice(k, k + n).map((pid) => {
       const j = maestro[pid];
       const prot = r();

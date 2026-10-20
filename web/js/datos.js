@@ -63,7 +63,13 @@ export async function actualizar(alPaso = () => {}) {
   clasif.forEach((e) => { e.esYo = !!mio && e.teamId === mio.teamId; });
 
   alPaso(3, PASOS[3]);
-  const maestro = (await blando('jugadores', async () => N.jugadores(await api.jugadores(), equipos))) || {};
+  const muestras = {};
+  const maestro = (await blando('jugadores', async () => {
+    const r = await api.jugadores();
+    const l = N.lista(r);
+    if (l[0]) muestras.jugador = recorte(l.find((x) => x && x.images) || l[0]);
+    return N.jugadores(r, equipos);
+  })) || {};
 
   alPaso(4, PASOS[4]);
   const plantillas = {};
@@ -71,8 +77,9 @@ export async function actualizar(alPaso = () => {}) {
   await enParalelo(clasif, 3, async (e) => {
     const r = await blando(`plantilla ${e.nombre}`, () => api.equipo(liga.id, e.teamId));
     if (!r) return;
+    if (!muestras.plantilla) { const l = (r && (r.players || (r.data && r.data.players))) || N.lista(r); if (l && l[0]) muestras.plantilla = recorte(l[0]); }
     const { fichas, info } = N.plantilla(r, equipos);
-    plantillas[e.teamId] = fichas.map((f) => { if (f.jugador) maestro[f.pid] = { ...(maestro[f.pid] || {}), ...f.jugador }; const { jugador, ...resto } = f; return resto; });
+    plantillas[e.teamId] = fichas.map((f) => { if (f.jugador) maestro[f.pid] = mezclar(maestro[f.pid], f.jugador); const { jugador, ...resto } = f; return resto; });
     infoEquipos[e.teamId] = info;
     if (!e.valor && info.valor) e.valor = info.valor;
   });
@@ -87,8 +94,8 @@ export async function actualizar(alPaso = () => {}) {
   }
 
   alPaso(6, PASOS[6]);
-  const mercado = (await blando('mercado', async () => N.mercado(await api.mercado(liga.id), equipos))) || [];
-  for (const m of mercado) if (!maestro[m.pid]) maestro[m.pid] = m.jugador;
+  const mercado = (await blando('mercado', async () => { const r = await api.mercado(liga.id); const l = N.lista(r); if (l[0]) muestras.mercado = recorte(l[0]); return N.mercado(r, equipos); })) || [];
+  for (const m of mercado) maestro[m.pid] = mezclar(maestro[m.pid], m.jugador);
   mercado.forEach((m) => { delete m.jugador; });
 
   alPaso(7, PASOS[7]);
@@ -105,7 +112,9 @@ export async function actualizar(alPaso = () => {}) {
   let act = [];
   await blando('actividad', async () => {
     for (let i = 0; i < 4; i++) {
-      const pag = N.actividad(await api.actividad(liga.id, i));
+      const r = await api.actividad(liga.id, i);
+      if (i === 0) muestras.actividad = recorte(r);
+      const pag = N.actividad(r);
       if (!pag.length) break;
       act.push(...pag);
       const masVieja = Math.min(...pag.map((a) => a.t || Date.now()));
@@ -121,15 +130,75 @@ export async function actualizar(alPaso = () => {}) {
   const html = await blando('futbolfantasy', () => paginaMercado());
   if (html) tendencias = N.unirTendencias(N.paginaMercado(html), maestro);
 
+  // las caras que ya se sacaron de la ficha de cada jugador (la lista general a veces trae la silueta)
+  const caras = LS.get('caras', {});
+  for (const j of Object.values(maestro)) if (j && !j.img && caras[j.id]) j.img = caras[j.id];
+
   const valorEquipo = mio ? (mio.valor || sumarValor(plantillas[mio.teamId], maestro)) : 0;
   const D = {
     t: Date.now(), demo: false,
     yo: { userId, nombre: miNombre, teamId: mio ? mio.teamId : null },
     liga, ligas, equipos, equiposT: viejo && viejo.equiposT && equipos === viejo.equipos ? viejo.equiposT : Date.now(),
     clasif, plantillas, maestro, mercado, actividad: act.slice(0, 400),
-    dinero, valorEquipo, jornada, partidos, tendencias, avisos,
+    dinero, valorEquipo, jornada, partidos, tendencias, avisos, muestras,
   };
   return guardarFoto(D, viejo);
+}
+
+/** une dos versiones de un jugador sin que los huecos de una borren lo que trae la otra */
+function mezclar(a, b) {
+  if (!a) return b;
+  if (!b) return a;
+  const o = { ...a };
+  for (const [k, v] of Object.entries(b)) {
+    if (v == null || v === '' || (typeof v === 'number' && !v && a[k])) continue;
+    if (k === 'nombre' && v === 'Jugador') continue;
+    if (k === 'estado' && v === 'ok' && a.estado && a.estado !== 'ok') continue;
+    o[k] = v;
+  }
+  return o;
+}
+
+/** un trozo pequeño de una respuesta, para el diagnóstico (forma y nombres de campos) */
+function recorte(x) {
+  try { const t = JSON.stringify(x); return t.length > 900 ? t.slice(0, 900) + '…' : t; } catch (e) { return String(x); }
+}
+
+/* ---------- la ficha de cada jugador que importa: puntos por jornada, minutos y foto ---------- */
+export const detalles = () => LS.get(K('det'), {});
+
+/**
+ * Baja la ficha de tus jugadores y de los que más te interesan (cláusulas y mercado). Se guarda un día.
+ * Sirve para la forma reciente (la usa la IA) y para rellenar las caras que faltan.
+ */
+export async function completar(D, M, alListo = () => {}) {
+  if (!D || !M || D.demo) return null;
+  const det = detalles();
+  const ahora = Date.now();
+  const pids = [];
+  const add = (pid) => { if (pid && !pids.includes(pid)) pids.push(pid); };
+  M.mias.forEach((x) => add(x.pid));
+  M.mercado.slice(0, 14).forEach((m) => add(m.pid));
+  M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, 16).forEach((x) => add(x.pid));
+  M.suben.slice(0, 6).forEach((x) => add(x.j.id));
+  const faltan = pids.filter((pid) => !det[pid] || ahora - det[pid].t > 20 * 3600e3).slice(0, 60);
+  if (!faltan.length) return det;
+  const caras = LS.get('caras', {});
+  await enParalelo(faltan, 3, async (pid) => {
+    try {
+      const d = N.detalleJugador(await api.jugador(pid, D.liga.id));
+      det[pid] = { t: Date.now(), stats: d.stats.slice(-10), valores: d.valores ? d.valores.slice(-60) : null };
+      if (d.img) { caras[pid] = d.img; if (D.maestro[pid] && !D.maestro[pid].img) D.maestro[pid].img = d.img; }
+    } catch (e) {
+      if (e.sesion) throw e;
+      det[pid] = { t: Date.now(), error: e.message, stats: [] };
+    }
+  });
+  LS.set(K('det'), det);
+  LS.set('caras', caras);
+  LS.set(K('datos'), D);
+  alListo(det);
+  return det;
 }
 
 const sumarValor = (fichas, maestro) => (fichas || []).reduce((s, f) => s + num((maestro[f.pid] || {}).valor), 0);
@@ -185,5 +254,5 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 export function borrarTodo() {
-  for (const k of ['datos', 'hist', 'ia', 'chat', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'demo']) LS.del(k);
+  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'demo']) LS.del(k);
 }
