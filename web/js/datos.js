@@ -137,6 +137,21 @@ export async function actualizar(alPaso = () => {}) {
     partidos = listas.filter(Array.isArray).flat();
   });
 
+  // los resultados de las jornadas jugadas, para saber lo fuerte que es cada rival (los de jornadas pasadas no cambian)
+  let resultados = (viejo && Array.isArray(viejo.resultados)) ? viejo.resultados : [];
+  await blando('resultados', async () => {
+    if (jornada == null) return;
+    const tengo = new Set(resultados.map((p) => p.jornada));
+    const faltan = [];
+    for (let n = 1; n < jornada; n++) if (!tengo.has(n)) faltan.push(n);
+    const listas = await enParalelo(faltan.slice(0, 38), 3, async (n) => { const r = await api.calendario(n); if (!muestras.calendario) muestras.calendario = recorte(N.lista(r)[0]); return N.partidos(r, equipos, n); });
+    const nuevos = listas.filter(Array.isArray).flat();
+    resultados = [...resultados, ...nuevos].filter((p) => p.gl != null && p.gv != null)
+      .map(({ jornada: j, localId, visitanteId, gl, gv }) => ({ jornada: j, localId, visitanteId, gl, gv }));
+    // los de la jornada pasada y la actual que ya se han jugado, de lo que acaba de llegar
+    for (const p of partidos) if (p.gl != null && p.gv != null && p.fecha && p.fecha < Date.now() - 2 * 3600e3 && !resultados.some((r) => r.localId === p.localId && r.visitanteId === p.visitanteId && r.jornada === p.jornada)) resultados.push({ jornada: p.jornada, localId: p.localId, visitanteId: p.visitanteId, gl: p.gl, gv: p.gv });
+  });
+
   alPaso(8, PASOS[8]);
   let act = [];
   await blando('actividad', async () => {
@@ -169,7 +184,7 @@ export async function actualizar(alPaso = () => {}) {
     yo: { userId, nombre: miNombre, teamId: mio ? mio.teamId : null },
     liga, ligas, equipos, equiposT: viejo && viejo.equiposT && equipos === viejo.equipos ? viejo.equiposT : Date.now(),
     clasif, plantillas, maestro, mercado, actividad: act.slice(0, 400),
-    dinero, valorEquipo, jornada, partidos, tendencias, avisos, muestras, misVentas, formaciones, formacionesT,
+    dinero, valorEquipo, jornada, partidos, resultados, tendencias, avisos, muestras, misVentas, formaciones, formacionesT,
   };
   return guardarFoto(D, viejo);
 }

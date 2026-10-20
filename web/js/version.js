@@ -1,9 +1,19 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // 0.x mientras esté en pruebas: el número del medio sube con cada tanda de mejoras y el último con los arreglos.
-export const VERSION = '0.6.2';
+export const VERSION = '0.7.0';
 
 // Lo nuevo de cada versión (lo enseña la app la primera vez que se abre una versión nueva)
 export const NOVEDADES = [
+  {
+    v: '0.7.0',
+    cosas: [
+      'La IA ya no se corta a medias: mientras prepara el plan, la app sigue con internet aunque salgas de ella o se apague la pantalla, y te avisa con una notificación cuando está listo',
+      'Si se cae la conexión con Google, espera y vuelve a probar sola en vez de rendirse',
+      'Tu once en la pestaña Equipo, como en el Fantasy: césped, cromos con la cara, el nombre y los puntos esperados, el valor o la forma, y el banquillo debajo',
+      'El rival cuenta: cada jugador lleva su próximo rival en verde, ámbar o rojo según lo difícil que es, y la ficha enseña sus tres próximos partidos',
+      'La IA y la app esperan menos puntos contra el Barça que contra el colista, aunque el jugador sea titular, y miran las rachas de rivales para comprar o vender',
+    ],
+  },
   {
     v: '0.6.0',
     cosas: [

@@ -1,9 +1,10 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia } from './comunes.js';
-import { linea, barra, campo } from './graficos.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub } from './comunes.js';
+import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion } from './ia.js';
 import { md } from './texto.js';
+import { enApp } from './puente.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -92,7 +93,7 @@ function planHTML(S) {
   h += `<div class="plan"><div class="plan-cab"><div><div class="eti">Plan de hoy</div>
     ${P ? `<span class="ia">${icono(esIA ? 'ia' : 'lista')}${esIA ? `${esc(nombreModelo(P.modelo))}${P.web ? ' + Google' : ''} · ${rel(P.t)}` : 'Automático, sin IA'}</span>` : ''}</div>
     ${hayClave() && !E.cargando ? `<button class="btn chico sec der" data-accion="plan">${icono('refrescar')}${esIA ? 'Rehacer' : 'Con IA'}</button>` : ''}</div>`;
-  if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div></div>`;
+  if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te aviso cuando esté.</div>' : ''}</div>`;
   if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (!P) return h + '</div>';
   if (esIA && P.dia && P.viejo) h += `<div class="banda">${icono('reloj')}<span>Este plan es de ${cuando(P.t)}.</span>${hayClave() && !E.cargando ? '<button data-accion="plan">Hacer el de hoy</button>' : ''}</div>`;
@@ -111,7 +112,7 @@ function planHTML(S) {
 }
 
 /** el once: el que propone la IA si es una formación gratuita y cuadra con tus jugadores; si no, el mejor que sale de los números */
-export function onceHTML(S, al) {
+export function onceHTML(S, al, { conBanquillo = false } = {}) {
   const { M } = S;
   const gratis = M.formaciones.map((f) => f.join('-'));
   const todos = Object.values(S.D.maestro);
@@ -127,9 +128,35 @@ export function onceHTML(S, al) {
   if (!lineas && M.once && M.once.formacion) { form = M.once.nombre; lineas = M.once.lineas; dudas = M.once.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`); }
   if (!lineas) return '';
   const huecos = !deIA && M.once.huecos;
-  let h = `<div class="sec"><h2>Tu once</h2><span class="sub">${esc(form)}${deIA ? ' · IA' : ''}</span></div>`;
-  h += campo(form, lineas.map((l) => l.map((j) => j.nombre)));
-  h += `<p class="t2 peq">${huecos ? `<b class="rojo">Te faltan ${huecos} jugador${huecos > 1 ? 'es' : ''} sanos para completarlo.</b> ` : ''}${M.puestos.map((p) => `${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]} ${p.sanos}${p.faltan ? ` <b class="rojo">(faltan ${p.faltan})</b>` : p.sobran ? ' <span class="oro">(sobran)</span>' : ''}`).join(' · ')}${dudas.length ? `<br>Dudas: ${esc(dudas.join(' · '))}` : ''}</p>`;
+  const banquillo = conBanquillo;
+  const modo = S.filtro.campo || 'pp';
+  const f = String(form).split('-').map(Number);
+  const tit = lineas.flat();
+  const total = tit.reduce((s, j) => s + (j.pos < 5 ? M.ppEsperado(j) : 0), 0);
+  let h = `<div class="sec"><h2>Tu once</h2><span class="sub">${deIA ? 'el de la IA' : 'el mejor según la app'}</span></div>`;
+  h += `<div class="campo-cab"><span class="form">${esc(form)}</span><span class="pp"><b>${String(Math.round(total * 10) / 10).replace('.', ',')}</b> pts</span>
+    <div class="campo-modo">${[['pp', 'Puntos'], ['valor', 'Valor'], ['forma', 'Forma']].map(([k, t]) => `<button data-filtro="campo:${k}" class="${modo === k ? 'activo' : ''}">${t}</button>`).join('')}</div></div>`;
+  // de arriba abajo: delanteros, medios, defensas y el portero; los huecos que falten, como cromos vacíos
+  const filas = [3, 2, 1, 0].map((i) => {
+    const n = i === 0 ? 1 : f[i - 1] || 0;
+    const js = (lineas[i] || []).slice(0, n);
+    while (js.length < n) js.push(null);
+    return `<div class="linea-c${n >= 5 ? ' cinco' : ''}">${js.map((j) => cromo(M, j, { modo })).join('')}</div>`;
+  });
+  const ent = M.once && M.once.entrenador;
+  h += `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
+    ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { modo, chico: true, ent: true })}</div>` : ''}</div>`;
+  if (banquillo) {
+    const dentro = new Set([...tit.map((j) => j.id), ent && ent.id]);
+    const resto = M.mias.map((x) => x.j).filter((j) => !dentro.has(j.id)).sort((a, b) => a.pos - b.pos || b.valor - a.valor);
+    if (resto.length) h += `<div class="banquillo"><div class="banq-t">Banquillo <span>${resto.length}</span></div><div class="banq-l">${resto.map((j) => cromo(M, j, { modo, chico: true })).join('')}</div></div>`;
+  }
+  h += `<div class="puestos-c">${M.puestos.map((p) => `<span class="pz p${p.pos}${p.faltan ? ' falta' : p.sobran ? ' sobra' : ''}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.sobran ? ' · sobran' : ''}</span>`).join('')}</div>`;
+  const notas = [];
+  if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
+  if (dudas.length) notas.push(`Dudas: ${esc(dudas.join(' · '))}`);
+  notas.push('<span class="leyenda"><i class="facil"></i>rival fácil <i class="media"></i>medio <i class="dificil"></i>difícil · @ fuera de casa</span>');
+  h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
   return h;
 }
 
@@ -195,7 +222,7 @@ export function equipo(S) {
   if (!M.mias.length) return h + nada('No encuentro tu plantilla. Si tienes varias ligas o equipos, elige el tuyo en Ajustes.');
 
   if (seg === 'plantilla') {
-    h += onceHTML(S, null);
+    h += onceHTML(S, null, { conBanquillo: true });
     const titulares = new Set((M.once ? M.once.lineas.flat() : []).map((j) => j.id));
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p);
@@ -204,7 +231,7 @@ export function equipo(S) {
       h += xs.map((x) => {
         const f = M.forma(x.pid);
         return filaJugador(x, {
-          sub: `${esc(x.j.equipo)}${x.prox ? ` · ${partidoTxt(x.prox)}` : ''}`,
+          sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}`,
           extra: `${M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : ''}${titulares.has(x.pid) ? '<span class="pill plan">En tu once</span>' : ''}${oncePill(M, x.j)}${M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : ''}${estadoPill(x.j)}${clausulaPill(x)}${f ? `<span class="pill">${f.pts.slice(-3).join(' · ')} pts</span>` : x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`,
           conMini: true, op: op(x.pid),
         });
@@ -297,7 +324,7 @@ export function mercado(S) {
     const liga = M.mercado.filter((m) => m.tipo === 'liga'), man = M.mercado.filter((m) => m.tipo === 'manager' && !M.enVenta.has(m.pid));
     if (M.misVentas.length) h += `<div class="grupo"><span>Los tuyos en venta</span><span>${M.misVentas.length}</span></div>${M.misVentas.map(ventaHTML).join('')}`;
     const fila = (m) => filaJugador(m, {
-      sub: `${m.tipo === 'manager' ? `de ${esc(m.vendedor || 'un rival')} · ` : ''}${esc(m.j.equipo)}${m.prox ? ` · ${partidoTxt(m.prox)}` : ''}`,
+      sub: `${m.tipo === 'manager' ? `de ${esc(m.vendedor || 'un rival')} · ` : ''}${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
       extra: `${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${estadoPill(m.j)}${m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.miPuja ? `<span class="pill abierta">Tu puja ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
       derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div><div class="d">${barra(m.interes)}</div>`, op: S.opPorPid[m.pid],
     });

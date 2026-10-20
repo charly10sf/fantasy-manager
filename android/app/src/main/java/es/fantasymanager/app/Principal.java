@@ -36,6 +36,7 @@ public class Principal extends Activity {
     private WebView web;
     private File pendiente;
     private boolean cargada;
+    volatile boolean aLaVista;
     /** la dirección authredirect://... con el código de LaLiga, hasta que la web la recoge */
     volatile String loginPendiente;
 
@@ -248,6 +249,7 @@ public class Principal extends Activity {
 
     @Override
     protected void onPause() {
+        aLaVista = false;
         web.onPause();
         CookieManager.getInstance().flush();
         super.onPause();
@@ -256,6 +258,7 @@ public class Principal extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        aLaVista = true;
         web.onResume();
         js("window.alVolver && alVolver()");
     }

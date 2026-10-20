@@ -284,12 +284,65 @@ main { padding: 16px 16px 120px; }
 .g-et { font: 600 12px var(--cond); fill: var(--texto2); }
 .g-eje { font: 500 11px 'Barlow'; fill: var(--apagado); }
 .b { fill: var(--plano3); } .b-yo { fill: var(--rojo); }
-.campo { width: 100%; max-width: 380px; display: block; margin: 8px auto; }
-.c-cesped { fill: #0e2318; stroke: #1b442d; stroke-width: 2; }
-.c-linea { fill: none; stroke: #1b442d; stroke-width: 2; }
-.c-jug circle { fill: var(--rojo); stroke: #fff; stroke-width: 2; }
-.c-ini { font: 700 12px var(--cond); fill: #fff; }
-.c-nom { font: 600 12.5px 'Barlow'; fill: #fff; }
+/* el once, como en el Fantasy: césped a franjas, cromos con la cara, la placa del nombre y el dato */
+.campo-cab { display: flex; align-items: center; gap: 10px; margin: 8px 0 10px; }
+.campo-cab .form { padding: 3px 10px; border-radius: 8px; background: var(--rojo); color: #fff; font: 700 17px/1.2 var(--cond); letter-spacing: 0.5px; }
+.campo-cab .pp { color: var(--texto2); font-size: 14px; white-space: nowrap; } .campo-cab .pp b { color: var(--texto); font: 700 18px var(--cond); }
+.campo-modo { margin-left: auto; display: flex; padding: 2px; border-radius: 10px; background: var(--plano2); }
+.campo-modo button { padding: 5px 9px; border-radius: 8px; font: 600 12.5px 'Barlow'; color: var(--texto2); }
+.campo-modo button.activo { background: var(--plano3); color: var(--texto); }
+.cancha { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 18px 4px 16px; border-radius: 18px; overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.28)), repeating-linear-gradient(180deg, #1b7240 0 12.5%, #176638 12.5% 25%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.35); }
+.cancha > i { position: absolute; pointer-events: none; border: 2px solid rgba(255, 255, 255, 0.2); }
+.cancha .l-borde { inset: 8px; border-radius: 4px; }
+.cancha .l-medio { left: 8px; right: 8px; top: 50%; height: 0; border-width: 2px 0 0; }
+.cancha .l-circ { left: 50%; top: 50%; width: 88px; height: 88px; margin: -44px 0 0 -44px; border-radius: 50%; }
+.cancha .l-area { left: 50%; width: 48%; height: 12%; transform: translateX(-50%); }
+.cancha .l-area.arriba { top: 8px; border-top: 0; } .cancha .l-area.abajo { bottom: 8px; border-bottom: 0; }
+.linea-c { position: relative; z-index: 1; display: flex; justify-content: space-evenly; align-items: flex-start; }
+.cromo { display: flex; flex-direction: column; align-items: center; width: 22%; max-width: 78px; min-width: 0; padding: 0; color: #fff; }
+.linea-c.cinco .cromo { width: 19.4%; }
+.cr-foto { position: relative; display: block; }
+.ava.cr { width: 54px; height: 54px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45); }
+.ava.cr::after { box-shadow: inset 0 0 0 2.5px var(--plano3); }
+.ava.cr.p1::after { box-shadow: inset 0 0 0 2.5px var(--por); } .ava.cr.p2::after { box-shadow: inset 0 0 0 2.5px var(--def); } .ava.cr.p3::after { box-shadow: inset 0 0 0 2.5px var(--med); } .ava.cr.p4::after { box-shadow: inset 0 0 0 2.5px var(--del); } .ava.cr.p5::after { box-shadow: inset 0 0 0 2.5px var(--ent); }
+.cromo .ava-w .esc { width: 19px; height: 19px; right: -5px; bottom: -2px; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
+.cr-nom { max-width: 100%; margin-top: 5px; padding: 2px 6px; border-radius: 5px; background: rgba(8, 8, 10, 0.88); font: 700 12.5px/1.25 var(--cond); letter-spacing: 0.2px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-nom i { font-style: normal; color: var(--oro); margin-right: 3px; }
+.cr-dato { margin-top: 2px; padding: 1px 6px; border-radius: 5px; background: var(--rojo); font: 700 12px/1.3 var(--cond); white-space: nowrap; }
+.cr-rv { position: absolute; top: -5px; left: -13px; padding: 0 4px; border-radius: 5px; background: #4a4a55; font: 700 10.5px/15px var(--cond); letter-spacing: 0.3px; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
+.cr-rv.facil { background: #1d9a63; } .cr-rv.media { background: #b98314; } .cr-rv.dificil { background: #cf2537; }
+.cr-est { position: absolute; top: -5px; right: -9px; min-width: 18px; height: 18px; padding: 0 3px; border-radius: 9px; font: 800 12px/18px 'Barlow'; text-align: center; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
+.cr-est.mal { background: var(--rojo); font-size: 15px; } .cr-est.duda { background: var(--oro); color: #111; } .cr-est.sup { background: rgba(8, 8, 10, 0.9); color: var(--oro); font-size: 9.5px; letter-spacing: 0.3px; }
+.cromo.baja-c .ava { filter: grayscale(1) brightness(0.7); }
+.cromo.vacio-c .cr-hueco { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; border: 2px dashed rgba(255, 255, 255, 0.5); font: 600 28px var(--cond); color: rgba(255, 255, 255, 0.8); }
+.cromo.vacio-c .cr-nom { background: rgba(238, 28, 60, 0.85); }
+.cr-ent { position: absolute; left: 12px; bottom: 14px; z-index: 1; }
+.cromo.chico { flex: none; width: 66px; }
+.cromo.chico .ava.cr { width: 44px; height: 44px; } .cromo.chico .ava .ini { font-size: 15px; }
+.cromo.chico .cr-nom { font-size: 11.5px; }
+.banquillo { margin-top: 10px; padding: 10px 6px 12px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
+.banq-t { margin: 0 6px 8px; font: 700 12.5px 'Barlow'; letter-spacing: 1.3px; text-transform: uppercase; color: var(--texto2); } .banq-t span { color: var(--apagado); margin-left: 4px; }
+.banq-l { display: flex; gap: 6px; overflow-x: auto; padding: 6px 4px 2px 14px; scrollbar-width: none; } .banq-l::-webkit-scrollbar { display: none; }
+.banq-l .cr-dato { background: var(--plano3); }
+.puestos-c { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; }
+.pz { padding: 4px 9px; border-radius: 8px; background: var(--plano2); font: 600 13px 'Barlow'; color: var(--texto2); }
+.pz b { margin-right: 2px; font: 700 13.5px var(--cond); color: var(--texto); }
+.pz.p1 b { color: var(--por); } .pz.p2 b { color: var(--def); } .pz.p3 b { color: var(--med); } .pz.p4 b { color: var(--del); }
+.pz.falta { background: var(--rojo-s); color: var(--rojo-l); } .pz.sobra { color: var(--oro); }
+.leyenda { white-space: nowrap; } .leyenda i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin: 0 4px 0 2px; vertical-align: -1px; }
+.leyenda i + i, .leyenda i:not(:first-child) { margin-left: 8px; }
+.leyenda i.facil { background: #1d9a63; } .leyenda i.media { background: #b98314; } .leyenda i.dificil { background: #cf2537; }
+/* lo difícil que es el rival, en el texto y en el calendario de la ficha */
+.niv { font-weight: 600; } .niv.facil { color: var(--sube); } .niv.media { color: var(--oro); } .niv.dificil { color: var(--baja); }
+.cal-j { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 4px; }
+.cal-p { display: flex; flex-direction: column; gap: 1px; min-width: 0; padding: 8px 9px; border-radius: 12px; background: var(--plano2); border-top: 3px solid var(--plano3); }
+.cal-p .j { font: 600 11px 'Barlow'; letter-spacing: 0.6px; text-transform: uppercase; color: var(--apagado); }
+.cal-p .r { font: 700 16px var(--cond); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-p .n { font-size: 12.5px; color: var(--texto2); }
+.cal-p.facil { border-top-color: #1d9a63; } .cal-p.media { border-top-color: #b98314; } .cal-p.dificil { border-top-color: #cf2537; }
+.cargando-ia .p2 { margin-top: 10px; font-size: 13px; color: var(--apagado); }
 
 /* ---------- hojas que suben ---------- */
 .velo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); z-index: 50; opacity: 0; transition: opacity 0.2s; }

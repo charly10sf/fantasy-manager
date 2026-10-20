@@ -47,6 +47,7 @@ public class Puente {
             // titulares de prensa (Google Noticias, RSS)
             "news.google.com"
     ));
+    private static final String GEMINI = "generativelanguage.googleapis.com";
     private static final int MAX = 16 * 1024 * 1024;
     private static final ExecutorService HILOS = Executors.newFixedThreadPool(4);
     private final Map<String, String> respuestas = new ConcurrentHashMap<>();
@@ -75,11 +76,17 @@ public class Puente {
                 if (!"https".equals(u.getProtocol()) || !HOSTS.contains(u.getHost().toLowerCase())) {
                     throw new Exception("dirección no permitida: " + u.getHost());
                 }
+                if (GEMINI.equalsIgnoreCase(u.getHost())) {
+                    // Gemini va por OkHttp: HTTP/2 con pings mientras piensa y DNS por https si hace falta
+                    r = Red.pedir(metodo, url, cabeceras, cuerpo, MAX);
+                    respuestas.put(id, r.toString());
+                    act.js("window.__http && window.__http(" + JSONObject.quote(id) + ")");
+                    return;
+                }
                 con = (HttpURLConnection) u.openConnection();
                 con.setRequestMethod(metodo == null || metodo.isEmpty() ? "GET" : metodo.toUpperCase());
                 con.setConnectTimeout(15000);
-                // Gemini piensa y busca en Google antes de contestar: hasta 3 minutos
-                con.setReadTimeout("generativelanguage.googleapis.com".equalsIgnoreCase(u.getHost()) ? 180000 : 30000);
+                con.setReadTimeout(30000);
                 con.setInstanceFollowRedirects(true);
                 if (cabeceras != null && !cabeceras.isEmpty()) {
                     JSONObject h = new JSONObject(cabeceras);
@@ -308,6 +315,30 @@ public class Puente {
     public void abrir(String url) {
         if (url == null || !url.startsWith("https://")) return;
         act.runOnUiThread(() -> act.abrirFuera(Uri.parse(url)));
+    }
+
+    /**
+     * La IA empieza o termina de trabajar: mientras trabaja, la pantalla no se apaga sola y la app queda en primer
+     * plano con una notificación fija, para que Android no le corte internet si sales de la app.
+     */
+    @JavascriptInterface
+    public void trabajando(boolean si, String texto) {
+        act.runOnUiThread(() -> {
+            if (si) act.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            else act.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        });
+        try {
+            if (si) Trabajo.empezar(ctx, texto);
+            else Trabajo.parar(ctx);
+        } catch (Exception e) {
+            // Android no deja empezarlo ahora: se sigue sin él
+        }
+    }
+
+    /** si la app está a la vista (para avisar con una notificación cuando el plan llega con la app cerrada) */
+    @JavascriptInterface
+    public boolean aLaVista() {
+        return act.aLaVista;
     }
 
     /** un toque suave (la vibración de las teclas) al cambiar de pestaña */

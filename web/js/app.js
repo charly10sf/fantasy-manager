@@ -185,6 +185,7 @@ async function generarPlan() {
   S.planEstado = { cargando: true, paso: '' };
   montarPlan();
   if (S.vista === 'hoy') pintar();
+  nativo.trabajando(true, 'La IA está leyendo tu liga y las noticias. Puedes salir de la app: te aviso al terminar.');
   try {
     await planDelDia(S.D, S.M, S.c, {
       alPaso: (t) => { S.planEstado.paso = t; const el = $('#paso-ia'); if (el) el.textContent = t; },
@@ -192,9 +193,13 @@ async function generarPlan() {
     S.planEstado = {};
     rehacer();
     tostada('Plan de hoy listo');
+    if (!nativo.aLaVista()) nativo.notificar('Tu plan de hoy está listo', (S.plan && S.plan.titular) || 'Entra para ver los pasos', 'hoy');
   } catch (e) {
     S.planEstado = { error: e.message || String(e) };
     rehacer();
+    if (!nativo.aLaVista()) nativo.notificar('No ha salido el plan de hoy', 'Entra y dale a Reintentar', 'hoy');
+  } finally {
+    nativo.trabajando(false);
   }
   if (!S.hoja) pintar(); else pintarSup();
 }

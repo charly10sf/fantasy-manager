@@ -190,6 +190,14 @@ export function ofertas(r) {
 }
 
 /* ---------- jornada y partidos ---------- */
+/** los goles de un partido, estén donde estén: localScore, homeGoals, score: {local}, result: "2-1"… */
+function goles(m) {
+  const n = (v) => (v === '' || v == null || Number.isNaN(+v) ? null : +v);
+  let gl = n(primero(m.localScore, m.homeScore, m.localGoals, m.homeGoals, m.scoreLocal, m.score && (m.score.local ?? m.score.home)));
+  let gv = n(primero(m.visitorScore, m.awayScore, m.visitorGoals, m.awayGoals, m.scoreVisitor, m.score && (m.score.visitor ?? m.score.away)));
+  if ((gl == null || gv == null) && typeof m.result === 'string') { const r = m.result.match(/(\d+)\D+(\d+)/); if (r) { gl = +r[1]; gv = +r[2]; } }
+  return { gl, gv };
+}
 export function semana(r) {
   if (typeof r === 'number') return r;
   if (!r || typeof r !== 'object') return null;
@@ -211,7 +219,7 @@ export function partidos(r, equipos, n) {
       localId: lid, visitanteId: vid,
       local: (m.local && m.local.name) || (equipos[lid] || {}).nombre || '',
       visitante: (m.visitor && m.visitor.name) || (equipos[vid] || {}).nombre || '',
-      gl: m.localScore ?? m.homeScore ?? null, gv: m.visitorScore ?? m.awayScore ?? null,
+      ...goles(m),
       estado: m.matchState ?? m.status ?? null,
     });
   }

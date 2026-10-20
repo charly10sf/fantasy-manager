@@ -1,6 +1,6 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, num, horaDe, LS } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML } from './comunes.js';
 import { linea, barra, barras } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA } from './ia.js';
@@ -22,6 +22,7 @@ export function fichaJugador(S, pid) {
   const suya = !mia && duenoT ? (M.clausulas.find((x) => x.pid === pid) || null) : null;
   const enMercado = M.mercado.find((m) => m.pid === pid);
   const prox = M.proximoPartido(j.equipoId);
+  const fr = M.factorRival(j);
   const inter = M.interes(j, suya ? suya.clausula : enMercado ? enMercado.precio : j.valor, t);
   if (mia) inter.por = inter.por.filter((x) => !/cuesta|te faltan/.test(x));
   const op = S.opPorPid[pid];
@@ -51,8 +52,9 @@ export function fichaJugador(S, pid) {
     <div class="dato"><div class="et">Puntos</div><div class="v">${num(j.puntos)}<small>${j.media ? String(j.media).replace('.', ',') + ' de media' : ''}</small></div></div>
     <div class="dato"><div class="et">Interés</div><div class="v">${inter.n}<small>/100</small></div></div>
     ${f ? `<div class="dato"><div class="et">Cláusula</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? pct((f.ratio - 1) * 100, 0) : ''}</small></div></div>` : ''}
-    <div class="dato"><div class="et">Próximo partido</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : 'en'} ${esc(prox.rival)}` : '–'}<small>${prox ? cuando(prox.fecha) : ''}</small></div></div>
+    <div class="dato"><div class="et">Próximo partido</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : 'en'} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></div>
   </div>`;
+  if (j.pos < 5) h += calendarioHTML(M, j);
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
   h += `<div id="det-j">${S.det && S.det[pid] ? detalleHTML(S.det[pid]) : '<div class="graf-vacio">Cargando sus partidos…</div>'}</div>`;
   const nots = M.noticiasDe(pid).slice(0, 6);

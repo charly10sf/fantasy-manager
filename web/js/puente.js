@@ -88,4 +88,7 @@ export const nativo = {
   compartir: (t) => (N ? llamar('compartir', t) : nativo.copiar(t)),
   abrir: (url) => (N ? llamar('abrir', url) : window.open(url, '_blank', 'noopener')),
   toque: () => llamar('toque'),
+  // mientras la IA trabaja: pantalla encendida y notificación fija para que Android no corte internet
+  trabajando: (si, texto = '') => llamar('trabajando', !!si, texto),
+  aLaVista: () => (N && typeof N.aLaVista === 'function' ? !!llamar('aLaVista') : !document.hidden),
 };

@@ -37,6 +37,54 @@ export function delta(t, { largo = false } = {}) {
 
 export const partidoTxt = (p) => (p ? `${p.casa ? 'vs' : 'en'} ${esc(p.rival)} · ${cuando(p.fecha)}` : '');
 
+/* ---------- lo difícil que es el próximo rival ---------- */
+const NIV = { 'fácil': 'facil', media: 'media', 'difícil': 'dificil' };
+export const nivelCls = (n) => NIV[n] || '';
+const corto = (id, nombre) => (EQUIPOS[id] && EQUIPOS[id].corto) || String(nombre || '').slice(0, 3).toUpperCase();
+
+/** «vs Getafe 18º · sáb 16:15», con el rival en verde, ámbar o rojo según lo difícil que es */
+export function rivalSub(M, j) {
+  const fr = M && M.factorRival ? M.factorRival(j) : null;
+  if (!fr || !fr.p) return '';
+  return `${fr.p.casa ? 'vs' : 'en'} <span class="niv ${nivelCls(fr.nivel)}">${esc(fr.p.rival)}${fr.r ? ` ${fr.r.pos}º` : ''}</span> · ${cuando(fr.p.fecha)}`;
+}
+
+/** los próximos tres partidos de su equipo, cada uno con su color */
+export function calendarioHTML(M, j) {
+  const cal = M && M.calendarioDe ? M.calendarioDe(j.equipoId, 3) : [];
+  if (!cal.length) return '';
+  return `<div class="cal-j">${cal.map((p) => `<div class="cal-p ${nivelCls(p.nivel)}"><span class="j">J${p.jornada} · ${p.casa ? 'casa' : 'fuera'}</span><span class="r">${esc(p.rival)}</span><span class="n">${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}</span></div>`).join('')}</div>`;
+}
+
+const dec1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
+const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
+/**
+ * un jugador en el campo, como en el Fantasy: la cara, la placa con el nombre y debajo el dato que toque
+ * (puntos esperados, valor o forma) y, arriba, contra quién juega con el color de lo difícil que es
+ */
+export function cromo(M, j, { modo = 'pp', chico = false, ent = false } = {}) {
+  if (!j) return `<button class="cromo vacio-c" data-ir="mercado"><span class="cr-hueco">+</span><span class="cr-nom">Falta</span></button>`;
+  const fr = M && M.factorRival ? M.factorRival(j) : null;
+  const f = M && M.forma ? M.forma(j.id) : null;
+  let dato;
+  if (modo === 'valor') dato = eur(j.valor);
+  else if (modo === 'forma') dato = f && f.pts.length ? f.pts.slice(-3).join(' · ') : j.media ? `${String(j.media).replace('.', ',')} m` : '–';
+  else dato = M && M.ppEsperado && j.pos < 5 ? `${dec1(M.ppEsperado(j))} pts` : j.media ? `${String(j.media).replace('.', ',')} m` : '–';
+  const conOnce = !!(M && M.hayOnces && j.pos < 5);
+  const o = conOnce ? M.onceProb(j.id) : null;
+  let marca = '';
+  if (MALOS.has(j.estado)) marca = '<span class="cr-est mal">+</span>';
+  else if (j.estado === 'doubtful') marca = '<span class="cr-est duda">?</span>';
+  else if (conOnce && (!o || !o.titular)) marca = '<span class="cr-est sup">SUP</span>';
+  const rv = fr && fr.p ? `<span class="cr-rv ${nivelCls(fr.nivel)}">${fr.p.casa ? '' : '@'}${esc(corto(fr.p.rivalId, fr.p.rival))}</span>` : '';
+  const ape = String(j.nombre || '').split(' ');
+  const nom = ape.length > 1 && j.nombre.length > 11 ? ape.slice(1).join(' ') : j.nombre;
+  return `<button class="cromo p${j.pos}${chico ? ' chico' : ''}${MALOS.has(j.estado) ? ' baja-c' : ''}" data-j="${esc(j.id)}">
+    <span class="cr-foto">${ava(j, 'cr')}${rv}${marca}</span>
+    <span class="cr-nom">${ent ? '<i>ENT</i>' : ''}${esc(nom)}</span>
+    <span class="cr-dato">${dato}</span></button>`;
+}
+
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
 /** la pastilla del plan del día en las listas, si el plan dice algo de este jugador */
 export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${ACC[op.accion] || op.accion} hoy</span>` : '');

@@ -121,6 +121,20 @@ export function demo() {
     }
   }
 
+  // resultados de las jornadas 1 a 9, con equipos más fuertes que otros
+  const fuerza = Object.fromEntries(ordenEq.map((id, i) => [id, 0.6 + ((i * 7) % 20) / 14]));
+  fuerza['15'] = 2.1; fuerza['3'] = 2.2; fuerza['2'] = 1.7; fuerza['43'] = 0.5; fuerza['10'] = 0.6;
+  const resultados = [];
+  for (let n = 1; n <= 9; n++) {
+    const rot = (n * 5) % ordenEq.length;
+    const lista = [...ordenEq.slice(rot), ...ordenEq.slice(0, rot)];
+    for (let i = 0; i < 10; i++) {
+      const a = lista[i], b = lista[19 - i];
+      const gol = (f) => Math.max(0, Math.round(f * (0.4 + r() * 1.3) - 0.3));
+      resultados.push({ jornada: n, localId: a, visitanteId: b, gl: gol(fuerza[a] * 1.1), gv: gol(fuerza[b]) });
+    }
+  }
+
   const actividad = [];
   const nombres = clasif.map((e) => e.manager);
   for (let i = 0; i < 26; i++) {
@@ -142,7 +156,7 @@ export function demo() {
     yo: { userId: yo.userId, nombre: yo.manager, teamId: yo.teamId },
     liga: { id: 'demo', nombre: 'Liga de ejemplo' }, ligas: [{ id: 'demo', nombre: 'Liga de ejemplo' }],
     equipos, equiposT: ahora, clasif, plantillas, maestro, mercado, actividad,
-    dinero: 6430000, valorEquipo: yo.valor, jornada: 10, partidos, tendencias, avisos: [], misVentas,
+    dinero: 6430000, valorEquipo: yo.valor, jornada: 10, partidos, resultados, tendencias, avisos: [], misVentas,
   };
 
   // un histórico de 21 días para que haya gráficos

@@ -100,7 +100,7 @@ const apuntar = (x) => { intentosIA.unshift({ t: Date.now(), ...x }); if (intent
 async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, signal } = {}) {
   if (enApp) {
     const r = await http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: 200000 });
-    if (r.s === 0) throw new ErrorIA(`Sin conexión con Google (${r.e || 'sin respuesta'})`, 0, { red: true });
+    if (r.s === 0) throw new ErrorIA(`Sin conexión con Google (${r.e || 'sin respuesta'})`, 0, { red: true, dns: !!r.dns });
     let j = null;
     try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
     if (r.s >= 400) throw errorDe(r.s, j);
@@ -173,36 +173,55 @@ async function preguntar({ sistema, contents }, op = {}) {
   const quiereWeb = cfgIA().web;
   const resumen = [];
   let ultimo = null;
+  let cortes = 0, webSospecha = null;
+  // si con búsqueda da «cupo gastado» y sin ella el mismo modelo sí contesta, lo gastado es la búsqueda: fuera hoy
+  const confirmarSinWeb = (modelo, e) => { if (webSospecha === modelo && !(e && e.estado === 429)) LS.set('ia-sin-web', diaGoogle()); webSospecha = null; };
   for (const modelo of modelos) {
     let web = quiereWeb && !sinWebHoy() && !esGemma(modelo);
     let pensar = !esGemma(modelo) && !/gemini-(1|2\.0)/.test(modelo);
+    // pensar a medias: contesta en la mitad de tiempo y el plan sale igual de bien; los pro, lo justo
+    let nivel = /pro/.test(modelo) ? 'low' : 'medium';
     let esperado = false;
     for (let intento = 0; intento < 5; intento++) {
       const cuerpo = esGemma(modelo)
         ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${contents.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
-        : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: 'high' } } : {}) } };
+        : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
       alPaso(`${nombreModelo(modelo)}${web ? ' con búsqueda en Google' : ''}…`);
       const t0 = Date.now();
       try {
         const r = await llamar(modelo, cuerpo, op);
         apuntar({ modelo, web, ok: true, ms: Date.now() - t0 });
+        confirmarSinWeb(modelo, null);
         return { ...r, modelo, web, intentos: resumen };
       } catch (e) {
         if (e.name === 'AbortError') throw e;
         ultimo = e;
         apuntar({ modelo, web, s: e.estado, e: e.message, google: e.google, ms: Date.now() - t0 });
         if (e.clave) throw e;
-        if (e.estado === 400 && pensar && /thinking|thought/i.test(e.google || e.message)) { pensar = false; continue; }
+        if (!e.red) confirmarSinWeb(modelo, e);
+        // se ha cortado la conexión (cambio de red, cobertura, Android cortando a la app): se espera y se repite
+        // con el mismo modelo, sin gastar sus intentos, hasta 4 veces en total
+        if (e.red && cortes < 4) {
+          cortes++; intento--;
+          alPaso(`Se ha cortado la conexión con Google. Vuelvo a probar (${cortes}/4)…`);
+          await espera([3, 6, 10, 15][cortes - 1], op.signal);
+          continue;
+        }
+        if (e.estado === 400 && pensar && nivel !== 'low' && /thinking|thought|level/i.test(e.google || e.message)) { nivel = 'low'; continue; }
+        if (e.estado === 400 && pensar && /thinking|thought|level/i.test(e.google || e.message)) { pensar = false; continue; }
         if (e.estado === 400 && web && /search|tool|grounding/i.test(e.google || e.message)) { web = false; continue; }
         if (e.estado === 400 && /system|developer instruction/i.test(e.google || '')) { sacar(modelo, 'no admite instrucciones'); break; }
         if (e.estado === 429 && e.busqueda && web) { LS.set('ia-sin-web', diaGoogle()); web = false; continue; }
-        if (e.estado === 429 && web && !e.minuto) { web = false; continue; } // por si el cupo que falta es el de la búsqueda y Google no lo dice
+        if (e.estado === 429 && web && !e.minuto) { web = false; webSospecha = modelo; continue; } // por si el cupo que falta es el de la búsqueda y Google no lo dice
         if (e.estado === 429 && e.minuto && !esperado && (e.espera || 20) <= 45) { esperado = true; alPaso(`Esperando ${Math.ceil(e.espera || 20)} s a que Google deje volver a preguntar…`); await espera(e.espera || 20, op.signal); continue; }
         if (e.estado === 429) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
         if (e.estado === 404 || e.estado === 403 || e.estado === 400) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
         if (e.vacio && intento < 1) continue;
         if ((e.estado >= 500 || e.estado === 0 || e.estado == null) && intento < 2) { await espera(2.5 * (intento + 1), op.signal); continue; }
-        if (e.red) { resumen.push(`sin conexión con Google (${e.message})`); throw new ErrorIA(`No hay conexión con Google: ${e.message}. Comprueba que tienes internet y vuelve a probar.`, 0); }
+        if (e.red) {
+          resumen.push(`sin conexión con Google (${e.message})`);
+          throw new ErrorIA(`Se ha cortado la conexión con Google ${cortes + 1} veces seguidas (${e.message.replace(/^Sin conexión con Google \((.*)\)$/, '$1')}). Mira que tengas internet (prueba con datos si estás con wifi) y vuelve a probar.`, 0, { red: true });
+        }
         resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`);
         break;
       }
@@ -221,6 +240,7 @@ const lineaJ = (M, j, x = {}) => [
   j.media ? `media ${String(j.media).replace('.', ',')}` : null, `${j.puntos} pts`,
   forma(M, j.id),
   onceTxt(M, j),
+  rivalTxt(M, j),
   j.estado && j.estado !== 'ok' ? `ESTADO: ${j.estado}` : null,
 ].filter(Boolean).join(' | ');
 function onceTxt(M, j) {
@@ -231,7 +251,12 @@ function onceTxt(M, j) {
   return 'once probable: suplente';
 }
 const mejoraTxt = (M, j) => { const g = M.mejora ? M.mejora(j) : 0; return g >= 0.3 ? `entraría en mi once (+${String(Math.round(g * 10) / 10).replace('.', ',')} pts/jornada)` : 'NO entraría en mi once'; };
-const partido = (p) => (p ? `${p.casa ? 'en casa vs' : 'fuera en'} ${p.rival} ${cuando(p.fecha)}` : null);
+const rivalTxt = (M, j) => {
+  const fr = M.factorRival ? M.factorRival(j) : null;
+  if (!fr || !fr.p) return null;
+  const luego = (M.calendarioDe ? M.calendarioDe(j.equipoId, 3) : []).slice(1);
+  return `próximo: ${fr.p.casa ? 'en casa vs' : 'fuera en'} ${fr.p.rival}${fr.r ? ` (${fr.r.pos}º de LaLiga, rival ${fr.nivel})` : ''} ${cuando(fr.p.fecha)}${luego.length ? `; después ${luego.map((x) => `${x.casa ? 'vs' : 'en'} ${x.rival}${x.nivel ? ` (${x.nivel})` : ''}`).join(', ')}` : ''}`;
+};
 
 export function contexto(D, M, c, { corto = false } = {}) {
   const L = [];
@@ -252,7 +277,7 @@ export function contexto(D, M, c, { corto = false } = {}) {
     M._tit = tit;
   }
   L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | forma) + titular o suplente, cláusula, protección, riesgo, próximo partido y lo que pagué:');
-  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.prox ? ` | ${partido(x.prox)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
+  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
   if (M.misVentas && M.misVentas.length) {
     L.push('\nMIS JUGADORES EN VENTA Y SUS OFERTAS:');
     for (const v of M.misVentas) L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}`);
@@ -270,10 +295,10 @@ export function contexto(D, M, c, { corto = false } = {}) {
   for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel}`);
   const cl = M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, corto ? 16 : 30);
   L.push('\nCLÁUSULAS DE RIVALES (abiertas o que se abren en 3 días; de más a menos interesantes según la app):');
-  for (const x of cl) L.push(`- ${lineaJ(M, x.j, x)} | de ${x.rival.nombre} | CLÁUSULA ${eur(x.clausula)} ${x.abierta ? 'ABIERTA YA' : `se abre ${cuando(x.protegidoHasta)}`} | ${x.meLlega ? 'me llega' : 'NO me llega'} | interés ${x.interes}/100 | ${mejoraTxt(M, x.j)}${x.prox ? ` | ${partido(x.prox)}` : ''}`);
+  for (const x of cl) L.push(`- ${lineaJ(M, x.j, x)} | de ${x.rival.nombre} | CLÁUSULA ${eur(x.clausula)} ${x.abierta ? 'ABIERTA YA' : `se abre ${cuando(x.protegidoHasta)}`} | ${x.meLlega ? 'me llega' : 'NO me llega'} | interés ${x.interes}/100 | ${mejoraTxt(M, x.j)}`);
   if (M.mercado.length) {
     L.push(`\nMERCADO DE HOY:`);
-    for (const m of M.mercado.slice(0, 26)) L.push(`- ${lineaJ(M, m.j, m)} | PRECIO ${eur(m.precio)}${m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : ' (de la liga)'} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100 | ${mejoraTxt(M, m.j)}${m.prox ? ` | ${partido(m.prox)}` : ''}`);
+    for (const m of M.mercado.slice(0, 26)) L.push(`- ${lineaJ(M, m.j, m)} | PRECIO ${eur(m.precio)}${m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : ' (de la liga)'} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100 | ${mejoraTxt(M, m.j)}`);
   }
   if (!corto) {
     L.push('\nLOS QUE MÁS SUBEN HOY EN TODA LALIGA:');
@@ -284,6 +309,9 @@ export function contexto(D, M, c, { corto = false } = {}) {
       L.push('\nCALENDARIO (próximas jornadas):');
       for (const j of M.jornadas.filter((x) => x.fin > Date.now()).slice(0, 2)) L.push(`- Jornada ${j.n}: ${j.partidos.map((p) => `${p.local}-${p.visitante} ${cuando(p.fecha)}`).join('; ')}`);
     }
+  }
+  if (M.tabla && M.tabla.length) {
+    L.push(`\nCLASIFICACIÓN DE LALIGA (de los resultados): ${M.tabla.map((t) => `${t.pos}º ${t.nombre} ${t.pts} pts (${t.pj} PJ, ${t.gf}-${t.gc})`).join(' · ')}`);
   }
   if (M.noticias && M.noticias.length) {
     L.push(`\nTITULARES DE PRENSA DE LOS ÚLTIMOS DÍAS (Google Noticias; de webs de fantasy y de diarios):`);
@@ -303,6 +331,7 @@ const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el 
 Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). El mercado cambia cada día; se puja a ciegas y gana la puja más alta. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
 Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador (de futbolfantasy) y titulares de prensa recientes: úsalos. Además, busca en Google lo último de las webs y cuentas especializadas en LaLiga Fantasy (Futbol Fantasy, Jornada Perfecta, Comuniate, Analítica Fantasy…) y lo que publican en X/Twitter los periodistas de cada club sobre lesiones, convocatorias y onces. Busca también: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa.
+El rival importa tanto como ser titular: no es lo mismo jugar contra el Barça o el Madrid que contra el colista, ni en casa que fuera. Te paso el próximo rival de cada jugador con su puesto en LaLiga y si es difícil, medio o fácil; los porteros y defensas puntúan más contra equipos que marcan poco, y los medios y delanteros contra los que encajan mucho. Tenlo en cuenta en el once, en a quién fichar y en cuándo vender (vender antes de una racha de rivales difíciles, comprar antes de una de fáciles).
 Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;
 
 /* ---------------- el plan del día ---------------- */

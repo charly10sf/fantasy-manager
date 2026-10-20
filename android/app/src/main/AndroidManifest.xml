@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- para instalar la versión nueva de la app desde el aviso de la propia app -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- mientras la IA prepara el plan, para que Android no le corte internet a la app si sales de ella -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <queries>
         <intent>
@@ -55,6 +58,11 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".Trabajo"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <provider
             android:name=".Archivos"

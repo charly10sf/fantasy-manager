@@ -91,6 +91,56 @@ export function analizar(D, H, c, extra = {}) {
     return null;
   };
 
+  /* ---------- la clasificación de LaLiga y lo difícil que es cada rival ---------- */
+  const tabla = {};
+  for (const p of D.resultados || []) {
+    for (const [id, gf, gc] of [[p.localId, p.gl, p.gv], [p.visitanteId, p.gv, p.gl]]) {
+      const t = (tabla[id] ||= { id, pj: 0, pts: 0, gf: 0, gc: 0 });
+      t.pj++; t.gf += gf; t.gc += gc; t.pts += gf > gc ? 3 : gf === gc ? 1 : 0;
+    }
+  }
+  const filas = Object.values(tabla).filter((t) => t.pj > 0).sort((a, b) => b.pts - a.pts || (b.gf - b.gc) - (a.gf - a.gc) || b.gf - a.gf);
+  filas.forEach((t, i) => { t.pos = i + 1; t.nombre = (D.equipos[t.id] || {}).nombre || t.id; });
+  M.tabla = filas;
+  const totPj = filas.reduce((s, t) => s + t.pj, 0);
+  const mediaGoles = totPj ? filas.reduce((s, t) => s + t.gf, 0) / totPj : 1.3;
+  const mediaPts = totPj ? filas.reduce((s, t) => s + t.pts, 0) / totPj : 1.4;
+  M.equipoLiga = (id) => tabla[id] || null;
+  /**
+   * lo que cambia lo que se espera de un jugador según su próximo rival (0,75 a 1,25):
+   * porteros y defensas, según lo que marca el rival; medios y delanteros, según lo que encaja; más la fuerza
+   * general del rival (puntos por partido) y si juega en casa
+   */
+  M.factorRival = (j) => {
+    const p = j && M.proximoPartido(j.equipoId);
+    if (!p) return { f: 1, p: null };
+    const r = tabla[p.rivalId];
+    if (!r || r.pj < 3) return { f: p.casa ? 1.04 : 0.96, p, nivel: null };
+    const ataque = r.gf / r.pj / mediaGoles, defensa = r.gc / r.pj / mediaGoles, fuerza = r.pts / r.pj / mediaPts;
+    const base = j.pos <= 2 ? 1 / Math.max(0.4, ataque) : defensa;
+    let f = 0.55 + 0.25 * base + 0.2 / Math.max(0.4, fuerza);
+    f *= p.casa ? 1.05 : 0.95;
+    f = clamp(f, 0.75, 1.25);
+    return { f, p, r, nivel: nivelDe(r) };
+  };
+  function nivelDe(r) {
+    if (!r || r.pj < 3) return null;
+    const fuerza = r.pts / r.pj / mediaPts;
+    return fuerza >= 1.25 || r.pos <= 4 ? 'difícil' : fuerza <= 0.8 || r.pos >= filas.length - 3 ? 'fácil' : 'media';
+  }
+  /** los próximos partidos de un equipo con lo difícil que es cada rival (para ver rachas) */
+  M.calendarioDe = (eqId, n = 3) => {
+    const out = [];
+    for (const jo of jornadas) for (const p of jo.partidos) {
+      if (out.length >= n || p.fecha + 2 * HORA < ahora) continue;
+      const casa = p.localId === eqId;
+      if (!casa && p.visitanteId !== eqId) continue;
+      const rid = casa ? p.visitanteId : p.localId, r = tabla[rid];
+      out.push({ jornada: jo.n, fecha: p.fecha, casa, rival: casa ? p.visitante : p.local, rivalId: rid, pos: r && r.pos, nivel: nivelDe(r) });
+    }
+    return out;
+  };
+
   /* ---------- dinero ---------- */
   M.misPujas = (D.mercado || []).reduce((s, m) => s + num(m.miPuja), 0);
   M.deuda = Math.floor(num(D.valorEquipo) * num(c.deuda) / 100);
@@ -117,7 +167,7 @@ export function analizar(D, H, c, extra = {}) {
   M.onceProb = (pid) => onces[pid] || null;
   M.noticias = (extra.noticias && extra.noticias.lista) || [];
   M.noticiasDe = (pid) => M.noticias.filter((n) => n.pids && n.pids.includes(pid));
-  M.ppEsperado = (j) => puntosEsperados(j, M.forma(j.id), M.hayOnces ? (onces[j.id] || { fuera: true }) : null);
+  M.ppEsperado = (j) => puntosEsperados(j, M.forma(j.id), M.hayOnces ? (onces[j.id] || { fuera: true }) : null) * M.factorRival(j).f;
   M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado);
   const misJs = misFichasRaw.map((f) => J(f.pid));
   M.once = M.mejorOnce(misJs);
@@ -167,6 +217,10 @@ export function analizar(D, H, c, extra = {}) {
     if (op && op.titular) partes.push(`titular probable${op.prob != null ? ` (${op.prob} %)` : ''}`);
     else if (op && op.alternativa) { fueraOnce = 10; partes.push('suplente en el once probable'); }
     else if (M.hayOnces && j.pos !== 5 && !op) { fueraOnce = 6; partes.push('no sale en el once probable'); }
+    // el próximo rival: no es lo mismo el Barça que el colista
+    const fr = M.factorRival(j);
+    let rival = 0;
+    if (fr.p && fr.nivel) { rival = Math.round((fr.f - 1) * 30); partes.push(`${fr.p.casa ? 'recibe' : 'visita'} al ${fr.p.rival} (${fr.r.pos}º, ${fr.nivel})`); }
     // lo que aporta a TU once: si entra de titular, cuánto suma; si no, si el puesto ya está lleno
     let once = 0;
     const mio = misJs.some((x) => x.id === j.id);
@@ -176,7 +230,7 @@ export function analizar(D, H, c, extra = {}) {
       if (gana >= 0.3) { once = clamp(gana * 5, 4, 25); partes.push(puesto && puesto.faltan ? `te tapa un hueco en ${NOMBRE_POS[j.pos]} (+${dec1(gana)} pts/jornada)` : `mejora tu once +${dec1(gana)} pts/jornada`); }
       else { once = puesto && puesto.sobran ? -18 : -6; partes.push(puesto && puesto.sobran ? `te sobran ${NOMBRE_POS[j.pos]}` : 'no entraría en tu once'); }
     }
-    return { n: Math.round(clamp(rend + momentum + barato + 12 - pen - fueraOnce + once, 0, 100)), por: partes, once };
+    return { n: Math.round(clamp(rend + momentum + barato + 12 - pen - fueraOnce + once + rival, 0, 100)), por: partes, once };
   };
 
   /* ---------- tus jugadores ---------- */

@@ -22,8 +22,9 @@ import okhttp3.ResponseBody;
 import okhttp3.dnsoverhttps.DnsOverHttps;
 
 /**
- * Peticiones cuando el DNS del móvil no encuentra una dirección (pasa con bloqueadores de anuncios, algunos DNS
- * privados o redes que filtran). La dirección se pregunta por https a Cloudflare (1.1.1.1) y, si falla, a Google
+ * Peticiones con OkHttp: las de Gemini siempre (con pings para que no se corten mientras piensa) y las demás
+ * cuando el DNS del móvil no encuentra una dirección (bloqueadores de anuncios, algunos DNS privados o redes
+ * que filtran). Entonces la dirección se pregunta por https a Cloudflare (1.1.1.1) y, si falla, a Google
  * (8.8.8.8); la conexión sigue siendo https normal con el mismo certificado.
  */
 final class Red {
@@ -46,9 +47,10 @@ final class Red {
                         .url(HttpUrl.get("https://dns.google/dns-query"))
                         .bootstrapDnsHosts(InetAddress.getByName("8.8.8.8"), InetAddress.getByName("8.8.4.4"))
                         .build();
+                // primero el DNS del móvil; si no encuentra la dirección, Cloudflare y Google por https
                 Dns dns = host -> {
                     List<UnknownHostException> fallos = new ArrayList<>();
-                    for (Dns d : new Dns[]{cloudflare, google, Dns.SYSTEM}) {
+                    for (Dns d : new Dns[]{Dns.SYSTEM, cloudflare, google}) {
                         try {
                             List<InetAddress> l = d.lookup(host);
                             if (!l.isEmpty()) return l;
@@ -63,6 +65,10 @@ final class Red {
                         .connectTimeout(15, TimeUnit.SECONDS)
                         .readTimeout(180, TimeUnit.SECONDS)
                         .writeTimeout(60, TimeUnit.SECONDS)
+                        // mientras Gemini piensa no llega nada; un ping cada 15 s (HTTP/2) mantiene viva la conexión
+                        // para que el router o la operadora no la den por muerta, y si se cae se nota enseguida
+                        .pingInterval(15, TimeUnit.SECONDS)
+                        .retryOnConnectionFailure(true)
                         .build();
             } catch (Exception e) {
                 cliente = new OkHttpClient();
@@ -106,12 +112,14 @@ final class Red {
                 r.put("b", texto);
                 String t = res.header("Content-Type");
                 if (t != null) r.put("t", t);
-                r.put("dns", "https");
+                r.put("via", "okhttp");
             }
         } catch (Exception e) {
             try {
                 r.put("s", 0);
-                r.put("e", "sin conexión ni con DNS por https (" + (e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage()) + ")");
+                String m = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+                r.put("e", e instanceof UnknownHostException ? "no se encuentra " + m + " ni preguntando por https: el móvil no tiene internet o Android se lo ha cortado a la app" : m);
+                if (e instanceof UnknownHostException) r.put("dns", true);
             } catch (Exception ignorada) {
                 // no puede fallar
             }
