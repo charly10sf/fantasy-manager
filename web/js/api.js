@@ -10,6 +10,7 @@ const CMP = '/v1/competition/1';
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 
 export const registro = [];
+export const apuntarRegistro = (x) => apuntar(x);
 function apuntar(x) {
   registro.unshift({ t: Date.now(), ...x });
   if (registro.length > 120) registro.length = 120;
@@ -67,6 +68,7 @@ export const api = {
   equipo: (liga, eq) => pedir(`${CMP}/leagues/${liga}/teams/${eq}`),
   dinero: (eq) => pedir(`${CMP}/teams/${eq}/money`),
   mercado: (liga) => pedir(`${CMP}/league/${liga}/market`),
+  crudo: (ruta) => pedir(ruta),
   formaciones: () => pedir('/v4/teams/lineup/formations?option=free'),
   ofertas: (liga, ptId) => pedir(`${CMP}/league/${liga}/playerTeam/${ptId}/offer`),
   jugadores: () => pedir(`${CMP}/players`),

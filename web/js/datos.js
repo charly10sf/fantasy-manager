@@ -6,6 +6,7 @@ import * as N from './normalizar.js';
 import { LS, diaDe, enParalelo, num, DIA } from './util.js';
 import { enApp } from './puente.js';
 import { demo } from './demo.js';
+import { historialValor, oncesProbables, noticias } from './externas.js';
 
 export const cfg = () => ({ deuda: 20, ligaId: null, miEquipo: null, ...LS.get('cfg', {}) });
 export const guardarCfg = (c) => LS.set('cfg', { ...cfg(), ...c });
@@ -208,13 +209,17 @@ export async function completar(D, M, alListo = () => {}) {
   M.mercado.slice(0, 14).forEach((m) => add(m.pid));
   M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, 16).forEach((x) => add(x.pid));
   M.suben.slice(0, 6).forEach((x) => add(x.j.id));
+  (M.especular || []).slice(0, 8).forEach((e) => add(e.pid));
   const faltan = pids.filter((pid) => !det[pid] || ahora - det[pid].t > 20 * 3600e3).slice(0, 60);
   if (!faltan.length) return det;
   const caras = LS.get('caras', {});
   await enParalelo(faltan, 3, async (pid) => {
     try {
       const d = N.detalleJugador(await api.jugador(pid, D.liga.id));
-      det[pid] = { t: Date.now(), stats: d.stats.slice(-10), valores: d.valores ? d.valores.slice(-60) : null };
+      // el histórico de valor: si no viene en la ficha, de la ruta de valores de la API
+      let valores = d.valores ? d.valores.slice(-90) : null;
+      if (!valores) valores = await historialValor(pid).catch((e) => { if (e.sesion) throw e; return null; });
+      det[pid] = { t: Date.now(), stats: d.stats.slice(-10), valores };
       if (d.img) { caras[pid] = d.img; if (D.maestro[pid] && !D.maestro[pid].img) D.maestro[pid].img = d.img; }
     } catch (e) {
       if (e.sesion) throw e;
@@ -282,4 +287,27 @@ function guardarFoto(D, viejo = foto()) {
 
 export function borrarTodo() {
   for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'demo']) LS.del(k);
+}
+
+/* ---------- fuentes de fuera: onces probables y titulares de prensa ---------- */
+export async function fuentesExternas(D, M) {
+  if (!D || !M) return null;
+  if (D.demo) return { onces: onceDemo(D), noticias: { t: Date.now(), lista: [] } };
+  const [onces, nots] = await Promise.all([
+    oncesProbables(D).catch((e) => ({ error: e.message, jugadores: {} })),
+    noticias(D, M).catch((e) => ({ error: e.message, lista: [] })),
+  ]);
+  return { onces, noticias: nots };
+}
+export const fuentesGuardadas = () => (enDemo() ? null : { onces: LS.get('onces', null), noticias: LS.get('noticias', null) });
+
+/** en la demostración, un once probable inventado: los de más media de cada equipo */
+function onceDemo(D) {
+  const porEq = {};
+  for (const j of Object.values(D.maestro)) (porEq[j.equipoId] ||= []).push(j);
+  const jugadores = {};
+  for (const l of Object.values(porEq)) {
+    l.sort((a, b) => b.media - a.media).forEach((j, i) => { jugadores[j.id] = { titular: i < 4 && j.estado !== 'injured', alternativa: i >= 4, prob: i < 4 ? 90 - i * 8 : 25, estado: j.estado === 'injured' ? 'injured' : 'ok' }; });
+  }
+  return { t: Date.now(), n: Object.keys(jugadores).length, equipos: Object.keys(porEq).length, de: Object.keys(porEq).length, jugadores };
 }

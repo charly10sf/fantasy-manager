@@ -46,7 +46,9 @@ export function analizar(D, H, c, extra = {}) {
   const cacheT = {};
   M.tend = (pid) => {
     if (cacheT[pid]) return cacheT[pid];
-    const s = (H.v && H.v[pid]) || [];
+    let s = (H.v && H.v[pid]) || [];
+    const dv = det[pid] && det[pid].valores;
+    if (dv && dv.length > s.length) s = dv.map(([t, v]) => [diaDe(t), v]);
     const ff = (D.tendencias || {})[pid] || {};
     const valor = J(pid).valor;
     const hace = (dias) => {
@@ -110,7 +112,12 @@ export function analizar(D, H, c, extra = {}) {
   /* ---------- tu once: posiciones, formaciones gratuitas y huecos ---------- */
   const misFichasRaw = (D.plantillas || {})[yoTid] || [];
   M.formaciones = (D.formaciones && D.formaciones.length ? D.formaciones : FORMACIONES).map(partirFormacion).filter(Boolean);
-  M.ppEsperado = (j) => puntosEsperados(j, M.forma(j.id));
+  const onces = (extra.onces && extra.onces.jugadores) || {};
+  M.hayOnces = Object.keys(onces).length > 0;
+  M.onceProb = (pid) => onces[pid] || null;
+  M.noticias = (extra.noticias && extra.noticias.lista) || [];
+  M.noticiasDe = (pid) => M.noticias.filter((n) => n.pids && n.pids.includes(pid));
+  M.ppEsperado = (j) => puntosEsperados(j, M.forma(j.id), M.hayOnces ? (onces[j.id] || { fuera: true }) : null);
   M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado);
   const misJs = misFichasRaw.map((f) => J(f.pid));
   M.once = M.mejorOnce(misJs);
@@ -154,6 +161,12 @@ export function analizar(D, H, c, extra = {}) {
     let pen = 0;
     if (MALOS.has(j.estado)) { pen = j.estado === 'out_of_league' ? 80 : 35; partes.push(j.estado === 'injured' ? 'lesionado' : j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'); }
     else if (j.estado === 'doubtful') { pen = 12; partes.push('es duda'); }
+    // titular o no en su equipo (once probable de futbolfantasy)
+    const op = M.onceProb(j.id);
+    let fueraOnce = 0;
+    if (op && op.titular) partes.push(`titular probable${op.prob != null ? ` (${op.prob} %)` : ''}`);
+    else if (op && op.alternativa) { fueraOnce = 10; partes.push('suplente en el once probable'); }
+    else if (M.hayOnces && j.pos !== 5 && !op) { fueraOnce = 6; partes.push('no sale en el once probable'); }
     // lo que aporta a TU once: si entra de titular, cuánto suma; si no, si el puesto ya está lleno
     let once = 0;
     const mio = misJs.some((x) => x.id === j.id);
@@ -163,7 +176,7 @@ export function analizar(D, H, c, extra = {}) {
       if (gana >= 0.3) { once = clamp(gana * 5, 4, 25); partes.push(puesto && puesto.faltan ? `te tapa un hueco en ${NOMBRE_POS[j.pos]} (+${dec1(gana)} pts/jornada)` : `mejora tu once +${dec1(gana)} pts/jornada`); }
       else { once = puesto && puesto.sobran ? -18 : -6; partes.push(puesto && puesto.sobran ? `te sobran ${NOMBRE_POS[j.pos]}` : 'no entraría en tu once'); }
     }
-    return { n: Math.round(clamp(rend + momentum + barato + 12 - pen + once, 0, 100)), por: partes, once };
+    return { n: Math.round(clamp(rend + momentum + barato + 12 - pen - fueraOnce + once, 0, 100)), por: partes, once };
   };
 
   /* ---------- tus jugadores ---------- */
@@ -533,7 +546,8 @@ export function planAuto(D, M, c) {
       // nunca más allá del 90 % de la deuda permitida, y que al vender lo especulado se vuelva a positivo
       const tras = espSaldo - e.precio;
       if (tras < limite * 0.9) continue;
-      if (tras + especula.reduce((s, x) => s + x.valorFuturo, 0) + e.valorFuturo * 0.95 < 0) continue;
+      // aunque lo especulado baje un 8 % en vez de subir, al venderlo tienes que volver a positivo
+      if (tras + [...especula, e].reduce((s2, x) => s2 + x.precio * 0.92, 0) < 0) continue;
       especula.push(e); espSaldo = tras;
       const diaVenta = cuando(e.vender, { hora: false });
       op({ accion: e.origen === 'mercado' ? 'pujar' : 'clausular', objetivo: 'revender', pid: e.pid, jugador: e.j.nombre,
@@ -601,11 +615,18 @@ export function partirFormacion(f) {
   return m && +m[1] + +m[2] + +m[3] === 10 ? [+m[1], +m[2], +m[3]] : null;
 }
 /** los puntos que se esperan de un jugador en la próxima jornada: su forma (últimas 5) o su media, y si puede jugar */
-export function puntosEsperados(j, forma) {
+export function puntosEsperados(j, forma, once = null) {
   if (!j || MALOS.has(j.estado)) return 0;
+  if (once && once.estado === 'injured') return 0;
   let pp = forma && forma.de >= 3 ? forma.media * 0.6 + num(j.media) * 0.4 : num(j.media);
   if (forma && forma.de >= 3 && forma.jugados / forma.de < 0.5) pp *= 0.7;
-  if (j.estado === 'doubtful') pp *= 0.55;
+  if (j.estado === 'doubtful' || (once && once.estado === 'doubtful')) pp *= 0.55;
+  // el once probable de su equipo (futbolfantasy): titular, alternativa o fuera de la convocatoria
+  if (once && j.pos !== 5) {
+    if (once.titular) pp *= once.prob != null ? Math.max(0.5, once.prob / 100) : 1;
+    else if (once.alternativa) pp *= 0.35;
+    else if (once.fuera) pp *= 0.45;
+  }
   return Math.max(0, pp);
 }
 /** el mejor once con esos jugadores entre las formaciones dadas: { formacion, lineas: [[POR],[DEF],[MED],[DEL]], entrenador, total, huecos } */

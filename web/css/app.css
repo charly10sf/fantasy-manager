@@ -376,3 +376,9 @@ pre.diag { white-space: pre-wrap; word-break: break-word; font: 11.5px/1.45 ui-m
 .oferta .cifra { font-size: 15px; }
 .oferta .apag { display: inline-flex; align-items: center; gap: 3px; font-size: 12.5px; }
 .oferta .apag .ic { width: 13px; height: 13px; }
+
+/* titulares de prensa */
+.noticia { display: block; width: 100%; padding: 11px 0; border-bottom: 1px solid var(--linea); }
+.noticia:last-child { border-bottom: 0; }
+.noticia .tit { display: block; font-size: 15.5px; line-height: 1.35; color: var(--texto); }
+.noticia .meta { display: block; font-size: 12.5px; color: var(--apagado); margin-top: 3px; }

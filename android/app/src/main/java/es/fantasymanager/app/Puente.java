@@ -43,7 +43,9 @@ public class Puente {
             "www.futbolfantasy.com",
             "raw.githubusercontent.com",
             // Gemini: por aquí y no desde la web, porque el WebView corta las peticiones POST a Google
-            "generativelanguage.googleapis.com"
+            "generativelanguage.googleapis.com",
+            // titulares de prensa (Google Noticias, RSS)
+            "news.google.com"
     ));
     private static final int MAX = 16 * 1024 * 1024;
     private static final ExecutorService HILOS = Executors.newFixedThreadPool(4);

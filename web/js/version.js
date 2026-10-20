@@ -1,9 +1,19 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // 0.x mientras esté en pruebas: el número del medio sube con cada tanda de mejoras y el último con los arreglos.
-export const VERSION = '0.5.0';
+export const VERSION = '0.6.0';
 
 // Lo nuevo de cada versión (lo enseña la app la primera vez que se abre una versión nueva)
 export const NOVEDADES = [
+  {
+    v: '0.6.0',
+    cosas: [
+      'Onces probables de cada equipo (futbolfantasy): cada jugador dice si sale de titular, suplente o fuera, y cuenta para tu once y para la IA',
+      'Titulares de prensa de los últimos días (Google Noticias): de tus jugadores, de los candidatos y de las webs de fantasy',
+      'Histórico de valor de la API de LaLiga para tus jugadores y los candidatos, sin esperar a acumular días',
+      'La IA busca también lo de webs y cuentas especializadas en fantasy y lo que publican los periodistas de cada club',
+      'Especular con un colchón: aunque lo comprado baje un 8 %, al venderlo vuelves a positivo',
+    ],
+  },
   {
     v: '0.5.0',
     cosas: [

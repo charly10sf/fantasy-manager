@@ -2,7 +2,7 @@
 import { esc, icono, LOGO, $, $$, LS, eur, rel, MIN, diaDe } from './util.js';
 import { enApp, nativo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion } from './auth.js';
-import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K } from './datos.js';
+import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas } from './datos.js';
 import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
@@ -105,10 +105,16 @@ function rehacer() {
   S.H = historico();
   S.det = { ...detalles(), ...S.det };
   ponerEquipos(S.D.equipos);
-  S.M = analizar(S.D, S.H, S.c, { det: S.det, reventa: reventa() });
+  S.M = analizar(S.D, S.H, S.c, extraM());
   montarPlan();
-  if (apuntarReventa()) { S.M = analizar(S.D, S.H, S.c, { det: S.det, reventa: reventa() }); montarPlan(); }
+  if (apuntarReventa()) { S.M = analizar(S.D, S.H, S.c, extraM()); montarPlan(); }
   programar(S.D, S.M);
+}
+
+/** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
+function extraM() {
+  const f = S.fuentes || fuentesGuardadas() || {};
+  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias };
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
@@ -162,10 +168,13 @@ async function cargar({ silencio = false } = {}) {
 
 /** lo que va después de cargar, sin bloquear: las fichas de los jugadores (forma y caras) y el plan con IA */
 async function despues() {
+  // onces probables y noticias (de fuera de LaLiga) y, a la vez, las fichas de los jugadores
+  const fuentes = fuentesExternas(S.D, S.M).then((f) => { if (f) { S.fuentes = f; rehacer(); if (!S.hoja) pintar(); } }).catch((e) => console.warn('fuentes', e));
   try {
     const det = await completar(S.D, S.M);
     if (det) { S.det = { ...S.det, ...det }; rehacer(); if (!S.hoja) pintar(); }
   } catch (e) { console.warn('fichas', e); }
+  await fuentes;
   const ci = cfgIA();
   if (hayClave() && ci.auto && planViejo(S.M) && !S.planEstado.cargando && !S.planEstado.error) generarPlan();
 }
@@ -465,7 +474,7 @@ async function arrancar() {
   setInterval(() => {
     if (!S.D || S.hoja || S.cargando || S.charlando || S.planEstado.cargando || S.vista === 'ia' || document.visibilityState !== 'visible' || Date.now() - toqueT < 30e3) return;
     const y = window.scrollY;
-    S.M = analizar(S.D, S.H, S.c, { det: S.det, reventa: reventa() });
+    S.M = analizar(S.D, S.H, S.c, extraM());
     montarPlan();
     pintar();
     window.scrollTo(0, y);

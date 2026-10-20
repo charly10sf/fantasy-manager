@@ -57,3 +57,15 @@ export function filaJugador(x, { sub = null, extra = '', derecha = null, conMini
 }
 
 export const nada = (txt) => `<div class="vacio">${txt}</div>`;
+
+/** si sale de titular en el once probable de su equipo (futbolfantasy) */
+export function oncePill(M, j) {
+  if (!M || !M.hayOnces || !j || j.pos === 5) return '';
+  const o = M.onceProb(j.id);
+  if (!o) return '<span class="pill">Fuera del once</span>';
+  if (o.titular) return `<span class="pill bien">Titular${o.prob != null ? ` ${o.prob} %` : ''}</span>`;
+  return '<span class="pill duda">Suplente</span>';
+}
+
+/** un titular de prensa */
+export const filaNoticia = (n) => `<button class="noticia" data-abrir="${esc(n.link)}"><span class="tit">${esc(n.titulo)}</span><span class="meta">${esc(n.fuente || '')}${n.t ? ` · ${cuando(n.t)}` : ''}</span></button>`;

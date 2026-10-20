@@ -220,8 +220,16 @@ const lineaJ = (M, j, x = {}) => [
   x.tend && x.tend.p7 != null ? `7d ${pct(x.tend.p7)}` : null,
   j.media ? `media ${String(j.media).replace('.', ',')}` : null, `${j.puntos} pts`,
   forma(M, j.id),
+  onceTxt(M, j),
   j.estado && j.estado !== 'ok' ? `ESTADO: ${j.estado}` : null,
 ].filter(Boolean).join(' | ');
+function onceTxt(M, j) {
+  if (!M.hayOnces || !j || j.pos === 5) return null;
+  const o = M.onceProb(j.id);
+  if (!o) return 'once probable: no sale';
+  if (o.titular) return `once probable: TITULAR${o.prob != null ? ` ${o.prob} %` : ''}`;
+  return 'once probable: suplente';
+}
 const mejoraTxt = (M, j) => { const g = M.mejora ? M.mejora(j) : 0; return g >= 0.3 ? `entraría en mi once (+${String(Math.round(g * 10) / 10).replace('.', ',')} pts/jornada)` : 'NO entraría en mi once'; };
 const partido = (p) => (p ? `${p.casa ? 'en casa vs' : 'fuera en'} ${p.rival} ${cuando(p.fecha)}` : null);
 
@@ -277,6 +285,12 @@ export function contexto(D, M, c, { corto = false } = {}) {
       for (const j of M.jornadas.filter((x) => x.fin > Date.now()).slice(0, 2)) L.push(`- Jornada ${j.n}: ${j.partidos.map((p) => `${p.local}-${p.visitante} ${cuando(p.fecha)}`).join('; ')}`);
     }
   }
+  if (M.noticias && M.noticias.length) {
+    L.push(`\nTITULARES DE PRENSA DE LOS ÚLTIMOS DÍAS (Google Noticias; de webs de fantasy y de diarios):`);
+    const mios = new Set(M.mias.map((x) => x.pid));
+    const ord = [...M.noticias].sort((a, b) => (b.pids || []).some((p) => mios.has(p)) - (a.pids || []).some((p) => mios.has(p)) || (b.t || 0) - (a.t || 0));
+    for (const n of ord.slice(0, corto ? 18 : 40)) L.push(`- ${n.t ? cuando(n.t) : ''}: ${n.titulo}${n.fuente ? ` (${n.fuente})` : ''}`);
+  }
   const act = M.actividad.filter((a) => a.t && Date.now() - a.t < 7 * DIA && a.clase !== 'premio').slice(0, corto ? 20 : 45);
   if (act.length) {
     L.push('\nMOVIMIENTOS DE LA LIGA (7 días):');
@@ -287,7 +301,7 @@ export function contexto(D, M, c, { corto = false } = {}) {
 
 const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España, directo, como un colega que sabe mucho del juego.
 Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). El mercado cambia cada día; se puja a ciegas y gana la puja más alta. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
-Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Busca en Google lo reciente que importe: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
+Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador (de futbolfantasy) y titulares de prensa recientes: úsalos. Además, busca en Google lo último de las webs y cuentas especializadas en LaLiga Fantasy (Futbol Fantasy, Jornada Perfecta, Comuniate, Analítica Fantasy…) y lo que publican en X/Twitter los periodistas de cada club sobre lesiones, convocatorias y onces. Busca también: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa.
 Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;
 
