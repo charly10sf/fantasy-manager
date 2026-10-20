@@ -9,11 +9,12 @@ export const VERSION = '0.1.7';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.1.7', f: '2026-10-21', h: '00:47', t: 'Lo caro se mide en euros',
+    v: '0.1.7', f: '2026-10-21', h: '00:50', t: 'Lo caro se mide en euros',
     cosas: [
-      { tipo: 'mejora', d: 'dinero', t: 'No es lo mismo un +25 % de 3 M que de 40 M', x: 'Lo que se paga de más se mide en euros, frente al tamaño de tu equipo y frente a lo que sube el jugador al día. Pagar 750 mil de más por uno de 3 M es poco; 10 M de más por uno de 40 M es una barbaridad aunque suba.' },
-      { tipo: 'mejora', d: 'escudo', t: 'Cuatro niveles de sobrecoste', x: 'Nada, poco, alto o excesivo, con los días que tardas en recuperarlo. El plan tacha lo excesivo (salvo un trato tuyo), avisa de lo alto y deja pasar lo poco. La IA los recibe con cada operación y los usa también al contestarte en el chat.', ir: { v: 'hoy' } },
-      { tipo: 'mejora', d: 'lupa', t: 'El interés, en euros', x: 'El interés de cada jugador y el plan automático castigan el dinero que se pierde, no el porcentaje. En la ficha, la cláusula dice también cuántos euros son de más.' },
+      { tipo: 'mejora', d: 'dinero', t: 'No es lo mismo un +25 % de 3 M que de 40 M', x: 'Lo que se paga de más se mide en euros, frente al tamaño de tu equipo y descontando una parte de lo que recuperas en una semana con lo que sube el jugador (no está garantizado que siga subiendo). Pagar 750 mil de más por uno de 3 M es poco; 10 M de más por uno de 40 M es una barbaridad.' },
+      { tipo: 'mejora', d: 'grafica', t: 'Una escala continua, sin saltos', x: 'Un índice de sobrecoste de 0 a 100 que crece poco a poco. Lo que se aguanta también es continuo: de 60 si el jugador no le aporta nada a tu once a 95 si lo mejora mucho. Cuanto más aporta, más se le tolera.' },
+      { tipo: 'mejora', d: 'escudo', t: 'El plan y la IA lo pesan', x: 'El plan tacha lo que pasa de lo aguantable (salvo un trato tuyo) y avisa cuando se acerca. La IA recibe el índice y el límite de cada operación, y los usa también al contestarte en el chat.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'lupa', t: 'El interés, en euros', x: 'El interés de cada jugador baja poco a poco con el sobrecoste. En la ficha, la cláusula dice también cuántos euros son de más.' },
     ],
   },
   {

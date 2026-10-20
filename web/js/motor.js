@@ -270,25 +270,31 @@ export function analizar(D, H, c, extra = {}) {
     return { pos: p, sanos, total, necesita, faltan: Math.max(0, minimo - sanos), sobran: Math.max(0, sanos - (MAXIMO[p] + 1)) };
   });
 
-  /* ---------- lo que se paga de más: en euros, no solo en porcentaje ---------- */
-  // un +25 % por uno de 3 M son 750 mil; por uno de 40 M, 10 M. Cuenta el dinero que se pierde, comparado con el
-  // tamaño de tu equipo, y en cuántos días lo recuperas con lo que sube el jugador
-  const escala = clamp(num(D.valorEquipo) / 200e6, 0.5, 2);
+  /* ---------- lo que se paga de más: en euros, no solo en porcentaje, y en una escala continua ---------- */
+  // un +25 % por uno de 3 M son 750 mil; por uno de 40 M, 10 M. El índice (0 a 100) crece poco a poco con:
+  // - los euros que pierdes de verdad (lo pagado de más menos la mitad de lo que recuperarías en una semana),
+  //   comparados con el valor de tu equipo;
+  // - y, un poco, el porcentaje (pagar casi el doble no es serio aunque sea poco dinero)
+  const valorEq = Math.max(num(D.valorEquipo), 50e6);
   M.sobrecoste = (j, precio, t = j ? M.tend(j.id) : null) => {
-    if (!j || !j.valor || !precio) return { extra: 0, sobre: 0, nivel: 'nada', dias: null };
+    if (!j || !j.valor || !precio) return { extra: 0, sobre: 0, indice: 0, dias: null, efectivo: 0, recTxt: '' };
     const extra = precio - j.valor, sobre = precio / j.valor - 1;
     const diario = t ? (t.d7 != null && t.d7 > 0 ? t.d7 / 7 : t.d1 != null && t.d1 > 0 ? t.d1 : 0) : 0;
     const dias = extra > 0 && diario > 0 ? extra / diario : extra > 0 ? Infinity : 0;
-    const rel = num(D.valorEquipo) ? extra / num(D.valorEquipo) : null;
-    let nivel;
-    if (extra <= 0.3e6 * escala || sobre <= 0.03) nivel = 'nada';
-    else if (extra <= 1.5e6 * escala || (extra <= 3e6 * escala && dias <= 5)) nivel = 'poco';
-    else if (extra <= 5e6 * escala || dias <= 7) nivel = 'alto';
-    else nivel = 'excesivo';
-    // aunque sea poco dinero, pagar casi el doble de lo que vale no es serio
-    if (sobre > 0.8 && nivel !== 'excesivo' && !(dias <= 5)) nivel = nivel === 'alto' ? 'excesivo' : 'alto';
+    // lo que sube no está garantizado: se descuenta solo la mitad de lo que recuperaría en una semana
+    const efectivo = Math.max(0, extra - diario * 7 * 0.5);
+    const x = efectivo / valorEq / 0.02 + Math.max(0, sobre - 0.1) / 1.2;
+    const indice = extra <= 0 ? 0 : Math.round(100 * (1 - Math.exp(-x)));
     const recTxt = extra <= 0 ? '' : !Number.isFinite(dias) ? 'no sube: no lo recuperas' : dias > 30 ? 'con lo que sube tardarías más de un mes en recuperarlo' : `lo recuperas en ${Math.max(1, Math.round(dias))} día${Math.round(dias) <= 1 ? '' : 's'} con lo que sube`;
-    return { extra, sobre, rel, dias, diario, nivel, recTxt };
+    return { extra, sobre, dias, diario, efectivo, indice, recTxt };
+  };
+  /**
+   * cuánto sobrecoste se aguanta por un jugador: de 60 si no aporta nada a tu once a 95 si lo mejora mucho
+   * (también en escala continua, con lo que suma por jornada)
+   */
+  M.tolerancia = (j) => {
+    const g = j && M.mejora ? Math.max(0, M.mejora(j)) : 0;
+    return Math.round(60 + 35 * (1 - Math.exp(-g / 3)));
   };
 
   /* ---------- cuánto interesa un jugador (0 a 100) ---------- */
@@ -304,7 +310,7 @@ export function analizar(D, H, c, extra = {}) {
     const barato = clamp((1.6 - ratio) / 0.6, 0, 1) * 20;
     // pagar de más se pierde en el valor del equipo: lo que castiga es el dinero que se pierde, no el porcentaje
     const sc = M.sobrecoste(j, precio, t);
-    const caro = { nada: 0, poco: 5, alto: 22, excesivo: 45 }[sc.nivel];
+    const caro = sc.indice * 0.5;
     if (ratio <= 1.05) partes.push('cuesta lo que vale');
     else partes.push(`cuesta ${eur(sc.extra)} más de lo que vale (${pct(sc.sobre * 100)}${sc.recTxt ? `; ${sc.recTxt}` : ''})`);
     let pen = 0;
@@ -664,7 +670,7 @@ export function planAuto(D, M, c) {
 
   // 2. clausular lo mejor que esté abierto y te llegue
   // nunca una cláusula mucho más cara de lo que vale el jugador (lo de más se pierde en el valor del equipo)
-  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && ['nada', 'poco'].includes(M.sobrecoste(x.j, x.clausula, x.tend).nivel)).slice(0, 8);
+  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30).slice(0, 8);
   let clausulas = 0;
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;

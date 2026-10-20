@@ -73,7 +73,7 @@ export function textoOp(o, M = null) {
   const sobre = j && j.valor && o.precio ? o.precio / j.valor - 1 : 0;
   const sc = M && M.sobrecoste && j ? M.sobrecoste(j, o.precio) : null;
   const sobreTxt = j && j.valor && o.precio
-    ? ` (${pct(sobre * 100)} sobre su valor de ${eur(j.valor)}${sobre > 0.02 ? `: ${eur(o.precio - j.valor)} de más${sc ? `, sobrecoste ${sc.nivel.toUpperCase()}${sc.recTxt ? `, ${sc.recTxt}` : ''}` : ''}` : ''})`
+    ? ` (${pct(sobre * 100)} sobre su valor de ${eur(j.valor)}${sobre > 0.02 ? `: ${eur(o.precio - j.valor)} de más${sc ? `; ÍNDICE DE SOBRECOSTE ${sc.indice}/100 (aguantable para este jugador hasta ~${M.tolerancia(j)})${sc.recTxt ? `, ${sc.recTxt}` : ''}` : ''}` : ''})`
     : '';
   switch (o.ref[0]) {
     case 'P': return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}; la app pujaría ${eur(o.puja)}`;

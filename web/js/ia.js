@@ -491,7 +491,7 @@ CÓMO DECIDIR (hazlo con cada operación antes de recomendarla, y si algo falla,
 7. ¿Riesgos? Rivales que clausulan, sus cláusulas abiertas, rotaciones por Champions o Copa, parón.
 Mejor no hacer nada que hacer algo dudoso. Confianza «alta» solo si todo cuadra y hay un dato o una noticia que lo respalda; si no has encontrado noticias, dilo.
 COMPRAR A OTRO MANAGER: solo si lo tiene a la venta (te los paso en el bloque «EN EL MERCADO PERO CON DUEÑO») o si es un trato que te ha contado el manager. Un jugador de un rival que no está a la venta NO se puede comprar: su dueño no tiene por qué vendérselo, y menos si lo acaba de fichar (los recién fichados están protegidos unos 14 días). Para quitárselo, solo su cláusula cuando se abra. Y aunque lo tenga a la venta, es el dueño quien decide: dilo y no lo des por hecho.
-PAGAR DE MÁS: lo que importa es el DINERO que se paga por encima del valor, no solo el porcentaje, porque eso se pierde en el valor del equipo (si lo vendes, te dan cerca de su valor). Un +25 % por uno que vale 3 M son 750 mil: casi nada si te da puntos. Un +25 % por uno que vale 40 M son 10 M: muchísimo. Mídelo siempre en euros, frente al tamaño de su equipo y frente a lo que sube al día (en cuántos días lo recupera). Te paso con cada operación el sobrecoste calculado por la app (NADA, POCO, ALTO o EXCESIVO) y en cuántos días se recupera: con POCO, decide por lo que aporta; con ALTO, solo si es un titular que de verdad cambia su once o lo recupera en una semana; con EXCESIVO, no, salvo un trato que te haya contado. Ejemplo de lo que NO hay que hacer: clausular por 21 M a un jugador que vale 9 M.
+PAGAR DE MÁS: lo que importa es el DINERO que se paga por encima del valor, no solo el porcentaje, porque eso se pierde en el valor del equipo (si lo vendes, te dan cerca de su valor). Un +25 % por uno que vale 3 M son 750 mil: casi nada si te da puntos. Un +25 % por uno que vale 40 M son 10 M: muchísimo. Con cada operación te paso el ÍNDICE DE SOBRECOSTE (0 a 100, sube poco a poco con los euros que pierdes de verdad, comparados con el valor de su equipo y descontando lo que recupera en una semana con lo que sube, y algo con el porcentaje) y hasta dónde es aguantable para ese jugador (de 60 si no le aporta nada a su once a 95 si lo mejora mucho). No lo uses como un corte: pésalo frente a lo que aporta. Cuanto más alto el índice, más tiene que aportar para que compense; por encima de lo aguantable, no lo recomiendes salvo un trato que te haya contado. Dilo siempre en euros y en días para recuperarlo. Ejemplo de lo que NO hay que hacer: clausular por 21 M a un jugador que vale 9 M.
 Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;
 
 /* ---------------- el plan del día ---------------- */
@@ -612,10 +612,12 @@ export function cuadrarPlan(P, D, M) {
       const sc = M.sobrecoste ? M.sobrecoste(j, importe) : null;
       const mas = (t) => { aviso = `${aviso ? `${aviso} ` : ''}${t}`; };
       if (sc && sc.extra > 0) {
-        const base = `${eur(sc.extra)} más de lo que vale (${pct(sobre * 100)})${sc.recTxt ? `; ${sc.recTxt}` : ''}`;
-        if (sc.nivel === 'excesivo' && !trato) { descartada = true; aviso = `La app lo descarta: pagarías ${base}.`; }
-        else if (sc.nivel === 'excesivo' || sc.nivel === 'alto') mas(`Ojo: pagas ${base}.`);
-        else if (sc.nivel === 'poco' && sobre > 0.15) mas(`Pagas ${base}: es poco dinero.`);
+        // escala continua: cuanto más mejora tu once, más sobrecoste se aguanta
+        const tol = M.tolerancia(j);
+        const base = `${eur(sc.extra)} más de lo que vale (${pct(sobre * 100)}), sobrecoste ${sc.indice}/100${sc.recTxt ? `; ${sc.recTxt}` : ''}`;
+        if (sc.indice > tol && !trato) { descartada = true; aviso = `La app lo descarta: pagarías ${base}, y para lo que aporta solo compensaría hasta ${tol}/100.`; }
+        else if (sc.indice > tol - 30) mas(`Ojo: pagas ${base}.`);
+        else if (sc.indice >= 15) mas(`Pagas ${base}: aceptable para lo que aporta.`);
       }
     }
     // fichar a un lesionado o sancionado para el once: aviso
