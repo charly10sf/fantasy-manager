@@ -8,7 +8,8 @@ import { enApp } from './puente.js';
 import { demo } from './demo.js';
 import { historialValor, oncesProbables, noticias } from './externas.js';
 
-export const cfg = () => ({ deuda: 20, ligaId: null, miEquipo: null, ...LS.get('cfg', {}) });
+// la deuda permitida en LaLiga Fantasy es siempre el 20 % del valor del equipo
+export const cfg = () => ({ ligaId: null, miEquipo: null, ...LS.get('cfg', {}), deuda: 20 });
 export const guardarCfg = (c) => LS.set('cfg', { ...cfg(), ...c });
 
 /** ¿se usa la demostración? fuera de la app siempre; dentro, si la has pedido en el inicio o en Ajustes */

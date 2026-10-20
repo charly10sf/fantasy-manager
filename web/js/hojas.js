@@ -123,7 +123,6 @@ export function ajustes(S) {
   else h += `<div class="ajuste"><div class="c"><b>${esc((q && (q.nombre || q.correo)) || 'Conectado')}</b><span>${esc(q && q.correo ? q.correo : '')}${ses && ses.desde ? ` · desde ${cuando(ses.desde, { hora: false })}` : ''}</span></div><button class="btn chico sec" data-accion="salir">${icono('salir')}Salir</button></div>`;
   if (S.D && S.D.ligas && S.D.ligas.length > 1) h += `<div class="ajuste"><div class="c"><b>Liga</b></div><select data-cambia="liga">${S.D.ligas.map((l) => `<option value="${esc(l.id)}" ${S.D.liga.id === l.id ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('')}</select></div>`;
   if (S.D && S.D.clasif) h += `<div class="ajuste"><div class="c"><b>Tu equipo</b><span>Lo busco solo; cámbialo si me equivoco</span></div><select data-cambia="miEquipo"><option value="">Automático</option>${S.D.clasif.map((e) => `<option value="${esc(e.teamId)}" ${String(c.miEquipo) === e.teamId ? 'selected' : ''}>${esc(e.nombre)}</option>`).join('')}</select></div>`;
-  h += `<div class="ajuste"><div class="c"><b>Deuda permitida</b><span>Cuánto puedes quedarte en negativo, en % del valor del equipo</span></div><select data-cambia="deuda">${[0, 5, 10, 15, 20, 25, 30, 40, 50].map((n) => `<option value="${n}" ${+c.deuda === n ? 'selected' : ''}>${n} %</option>`).join('')}</select></div>`;
 
   h += `<div class="grupo"><span>IA (Gemini, gratis)</span></div>`;
   h += `<div class="ajuste"><div class="c"><b>Clave de Google AI Studio</b><span>${k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : 'Sin clave: el plan sale sin noticias'}</span></div>${k ? '<button class="btn chico sec" data-accion="borrarClave">Quitar</button>' : '<button class="btn chico" data-accion="irIA">Poner</button>'}</div>`;
@@ -132,8 +131,7 @@ export function ajustes(S) {
     const fuera = LS.get('ia-agotados', {}) || {};
     const hoyG = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
     const agot = Object.entries(fuera).filter(([, v]) => v && v.d === hoyG).map(([m]) => m);
-    h += `<div class="ajuste"><div class="c"><b>Modelos de tu clave</b><span>${lista.length ? `${lista.length} disponibles${agot.length ? ` · ${agot.length} sin cupo hoy` : ''}. Los prueba todos por orden antes de rendirse.` : 'Aún no los he mirado'}</span></div><button class="btn chico sec" data-accion="probarIA">Comprobar</button></div>`;
-    if (lista.length) h += `<div class="ajuste"><div class="c"><b>Empezar por</b><span>El primero que prueba</span></div><select data-cambia="modelo"><option value="">El mejor</option>${lista.map((m) => `<option value="${esc(m)}" ${ci.modelo === m ? 'selected' : ''}>${esc(nombreModelo(m))}${agot.includes(m) ? ' (sin cupo)' : ''}</option>`).join('')}</select></div>`;
+    h += `<div class="ajuste"><div class="c"><b>Modelos de IA</b><span>${lista.length ? `Tu clave de Google da acceso a ${lista.length} versiones de Gemini, cada una con su cupo gratis diario${agot.length ? ` (${agot.length} lo han gastado hoy)` : ''}. Si una se agota, la app pasa sola a la siguiente.` : 'Aún no he comprobado qué versiones de Gemini da tu clave'}</span></div><button class="btn chico sec" data-accion="probarIA">Comprobar</button></div>`;
     h += `<div class="ajuste"><div class="c"><b>Plan automático al abrir</b><span>Lo rehace solo si es de otro día o ha cambiado el mercado</span></div>${interr(ci.auto, 'iaAuto')}</div>`;
     h += `<div class="ajuste"><div class="c"><b>Buscar noticias en Google</b><span>Si se acaba su cupo, sigue sin búsqueda</span></div>${interr(ci.web, 'iaWeb')}</div>`;
   }
