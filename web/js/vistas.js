@@ -154,7 +154,7 @@ export function onceHTML(S, al, { conBanquillo = false } = {}) {
     ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { modo, chico: true, ent: true })}</div>` : ''}</div>`;
   if (banquillo) {
     const dentro = new Set([...tit.map((j) => j.id), ent && ent.id]);
-    const resto = M.mias.map((x) => x.j).filter((j) => !dentro.has(j.id)).sort((a, b) => a.pos - b.pos || b.valor - a.valor);
+    const resto = M.mias.map((x) => x.j).filter((j) => !dentro.has(j.id) && j.pos !== 5).sort((a, b) => a.pos - b.pos || b.valor - a.valor);
     if (resto.length) h += `<div class="banquillo"><div class="banq-t">Banquillo <span>${resto.length}</span></div><div class="banq-l">${resto.map((j) => cromo(M, j, { modo, chico: true })).join('')}</div></div>`;
   }
   h += `<div class="puestos-c">${M.puestos.map((p) => `<span class="pz p${p.pos}${p.faltan ? ' falta' : p.sobran ? ' sobra' : ''}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.sobran ? ' · sobran' : ''}</span>`).join('')}</div>`;
@@ -233,7 +233,7 @@ export function equipo(S) {
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p);
       if (!xs.length) continue;
-      h += `<div class="grupo"><span>${POS_PLURAL[p]}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
+      h += `<div class="grupo"><span>${POS_PLURAL[p]}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       h += xs.map((x) => {
         const f = M.forma(x.pid);
         return filaJugador(x, {

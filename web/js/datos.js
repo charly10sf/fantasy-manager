@@ -195,7 +195,7 @@ function mezclar(a, b) {
   if (!b) return a;
   const o = { ...a };
   for (const [k, v] of Object.entries(b)) {
-    if (v == null || v === '' || (typeof v === 'number' && !v && a[k])) continue;
+    if (v == null || v === '' || (typeof v === 'number' && !v && a[k]) || (Array.isArray(v) && !v.length && a[k])) continue;
     if (k === 'nombre' && v === 'Jugador') continue;
     if (k === 'estado' && v === 'ok' && a.estado && a.estado !== 'ok') continue;
     o[k] = v;

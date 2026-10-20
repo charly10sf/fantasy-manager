@@ -233,15 +233,43 @@ async function preguntar({ sistema, contents }, op = {}) {
 
 /* ---------------- todo lo que la IA sabe de tu liga ---------------- */
 const m1 = (v) => (v == null ? '?' : eur(v));
-const forma = (M, pid) => { const f = M.forma && M.forma(pid); return f ? `últimas ${f.de}: ${f.pts.join(',')} pts (jugó ${f.jugados}/${f.de}, ${f.min} min)` : null; };
+const forma = (M, pid) => { const f = M.forma && M.forma(pid); return f && f.jugados != null ? `jugó ${f.jugados} de las últimas ${f.de} (${f.min} min)` : null; };
+const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
+/** sus últimas jornadas con el rival de cada una: «J9 11 vs Getafe (c, 2-0) · J8 0 en Betis (no jugó)» */
+function historialTxt(M, j, n = 5) {
+  const h = M.historial ? M.historial(j, n) : [];
+  if (!h.length) return null;
+  return `últimas: ${h.map((x) => `J${x.n} ${x.pts}${x.rival ? ` ${x.casa ? 'vs' : 'en'} ${x.rival}${x.posRival ? ` ${x.posRival}º` : ''}${x.gf != null ? ` ${x.gf}-${x.gc}` : ''}` : ''}${x.min === 0 ? ' (no jugó)' : x.min != null && x.min < 45 ? ` (${x.min}')` : ''}`).join(' · ')}`;
+}
+/** cuánto rinde en casa y fuera, y contra los de arriba y los de abajo */
+function rendimientoTxt(M, j) {
+  const r = M.rendimiento ? M.rendimiento(j) : null;
+  if (!r) return null;
+  const t = (x, nom) => (x ? `${nom} ${d1(x.m)} (${x.n})` : null);
+  const l = [t(r.casa, 'en casa'), t(r.fuera, 'fuera'), t(r.arriba, 'vs top-6'), t(r.abajo, 'vs últimos 6')].filter(Boolean);
+  return l.length ? `rinde (pts de media): ${l.join(', ')}` : null;
+}
+/** la previa de su próximo partido */
+function previaTxt(M, j) {
+  const v = M.previa ? M.previa(j) : null;
+  if (!v) return null;
+  const rs = (r) => (r ? `${r.txt}` : '?');
+  const sitio = v.rivalSitio ? `${v.casa ? 'fuera' : 'en casa'} el rival lleva ${v.rivalSitio.v}V ${v.rivalSitio.e}E ${v.rivalSitio.d}D (${v.rivalSitio.gf}-${v.rivalSitio.gc})` : null;
+  const porPos = j.pos <= 2 && v.cero != null ? `portería a cero ~${Math.round(v.cero * 100)} %` : v.golesFavor != null ? `goles esperados de su equipo ${d1(v.golesFavor)}` : null;
+  return `PREVIA: ${v.casa ? 'en casa vs' : 'fuera en'} ${v.rival}${v.posRival ? ` (${v.posRival}º, ${v.nivel || '?'})` : ''} ${cuando(v.p.fecha)} · su equipo llega ${rs(v.rachaTu)}, el rival ${rs(v.rachaRi)}${v.rivalMarca != null ? ` · el rival marca ${d1(v.rivalMarca)} y encaja ${d1(v.rivalEncaja)} por partido` : ''}${sitio ? ` · ${sitio}` : ''}${porPos ? ` · ${porPos}` : ''}${M.ppEsperado && j.pos < 5 ? ` · puntos esperados ${d1(M.ppEsperado(j))}` : ''}`;
+}
 const lineaJ = (M, j, x = {}) => [
   POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
   x.tend && x.tend.d1 != null ? `hoy ${eur(x.tend.d1, { signo: true })}` : null,
   x.tend && x.tend.p7 != null ? `7d ${pct(x.tend.p7)}` : null,
+  j.pos === 5 ? 'ENTRENADOR: no se alinea ni puntúa en la versión gratis' : null,
   j.media ? `media ${String(j.media).replace('.', ',')}` : null, `${j.puntos} pts`,
-  forma(M, j.id),
+  j.pos < 5 ? forma(M, j.id) : null,
+  j.pos < 5 ? historialTxt(M, j) : null,
+  j.pos < 5 ? rendimientoTxt(M, j) : null,
   onceTxt(M, j),
-  rivalTxt(M, j),
+  j.pos < 5 ? previaTxt(M, j) : null,
+  j.pos < 5 ? rivalTxt(M, j) : null,
   j.estado && j.estado !== 'ok' ? `ESTADO: ${j.estado}` : null,
 ].filter(Boolean).join(' | ');
 function onceTxt(M, j) {
@@ -256,7 +284,7 @@ const rivalTxt = (M, j) => {
   const fr = M.factorRival ? M.factorRival(j) : null;
   if (!fr || !fr.p) return null;
   const luego = (M.calendarioDe ? M.calendarioDe(j.equipoId, 3) : []).slice(1);
-  return `próximo: ${fr.p.casa ? 'en casa vs' : 'fuera en'} ${fr.p.rival}${fr.r ? ` (${fr.r.pos}º de LaLiga, rival ${fr.nivel})` : ''} ${cuando(fr.p.fecha)}${luego.length ? `; después ${luego.map((x) => `${x.casa ? 'vs' : 'en'} ${x.rival}${x.nivel ? ` (${x.nivel})` : ''}`).join(', ')}` : ''}`;
+  return luego.length ? `después: ${luego.map((x) => `${x.casa ? 'vs' : 'en'} ${x.rival}${x.pos ? ` ${x.pos}º` : ''}${x.nivel ? ` (${x.nivel})` : ''}`).join(', ')}` : null;
 };
 
 /* ---------------- lo que le cuentas a la IA ---------------- */
@@ -351,7 +379,7 @@ export function contexto(D, M, c, { corto = false } = {}) {
   }
   const nt = notasTxt(D, M);
   if (nt) L.push(nt);
-  L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | forma) + titular o suplente, cláusula, protección, riesgo, próximo partido y lo que pagué:');
+  L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | últimas jornadas con su rival | lo que rinde | once probable | previa del próximo partido | los dos siguientes) + titular o suplente en mi once, cláusula, protección, riesgo y lo que pagué:');
   for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
   if (M.misVentas && M.misVentas.length) {
     L.push('\nMIS JUGADORES EN VENTA Y SUS OFERTAS:');
@@ -413,6 +441,8 @@ const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el 
 Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla (blindar). En el mercado hay DOS cosas muy distintas que no debes mezclar: (1) jugadores LIBRES de LaLiga, que no son de nadie: el mercado cambia cada día, se puja a ciegas desde su precio y se los lleva la puja más alta; (2) jugadores que OTRO MANAGER de la liga ha puesto a la venta: siguen siendo suyos, el precio lo pone él y solo pasan a ser del manager si el dueño acepta su oferta, así que no se pueden conseguir «más baratos en el mercado». Si el dueño es un amigo que se lo deja a un precio, es un trato entre los dos: valóralo por su valor, lo que sube al día, lo que le da a su once y si le llega el dinero, no comparándolo con el mercado de la liga. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
 Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador (de futbolfantasy) y titulares de prensa recientes: úsalos. Además, busca en Google lo último de las webs y cuentas especializadas en LaLiga Fantasy (Futbol Fantasy, Jornada Perfecta, Comuniate, Analítica Fantasy…) y lo que publican en X/Twitter los periodistas de cada club sobre lesiones, convocatorias y onces. Busca también: lesiones, sanciones, convocatorias con selecciones, alineaciones probables, rotaciones por Champions o Copa, cambios de entrenador, dificultad de los próximos rivales. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa.
+VERSIÓN GRATIS SIN ENTRENADOR: no se alinea entrenador ni puntúa. No recomiendes nunca fichar, pujar ni clausular entrenadores; si tiene alguno, es dinero parado: véndelo para hacer caja.
+CADA JUGADOR TE LLEGA CON: sus últimas jornadas con el rival de cada una y el resultado («J9 11 vs Getafe 19º 2-0»), lo que rinde en casa, fuera, contra los 6 primeros y contra los 6 últimos, y la PREVIA de su próximo partido (cómo llegan los dos equipos en los últimos 5, lo que marca y encaja el rival, cómo le va al rival jugando en ese campo, la portería a cero esperada para porteros y defensas o los goles esperados de su equipo para medios y delanteros, y los puntos esperados). Úsalo: un jugador que solo puntúa contra los de abajo no es fiable contra el Madrid; un defensa con un 15 % de portería a cero puntuará poco aunque sea titular; uno que rinde fuera igual que en casa es más seguro. Compara siempre lo que le toca ahora con lo que ha hecho contra rivales parecidos.
 El rival importa tanto como ser titular: no es lo mismo jugar contra el Barça o el Madrid que contra el colista, ni en casa que fuera. Te paso el próximo rival de cada jugador con su puesto en LaLiga y si es difícil, medio o fácil; los porteros y defensas puntúan más contra equipos que marcan poco, y los medios y delanteros contra los que encajan mucho. Tenlo en cuenta en el once, en a quién fichar y en cuándo vender (vender antes de una racha de rivales difíciles, comprar antes de una de fáciles).
 El manager te cuenta cosas que no salen en los datos (tratos con amigos de la liga, ofertas que le hacen por privado, lo que ya ha hecho o piensa hacer, jugadores que no quiere vender): cuentan tanto como los datos. Si otro manager le ofrece venderle un jugador por un precio, se cierra haciéndole una oferta directa por ese importe desde la ficha del jugador; si conviene, ponlo como operación (accion "comprar", donde "a <manager>") y calcula si le compensa con su valor, lo que sube al día, si entra en su once y si le llega el dinero.
 CÓMO DECIDIR (hazlo con cada operación antes de recomendarla, y si algo falla, no la recomiendes):

@@ -68,6 +68,10 @@ export function jugador(p, equipos = {}) {
     estado: pm.playerStatus || pm.status || 'ok',
     img: typeof img === 'string' ? img : null,
     temporadaPasada: num(pm.lastSeasonPoints),
+    // los puntos de cada jornada (viene en la lista de jugadores; en otras respuestas no)
+    semanas: Array.isArray(pm.weekPoints) && pm.weekPoints.length
+      ? pm.weekPoints.map((w) => ({ n: num(w.weekNumber), pts: num(w.points) })).filter((w) => w.n).sort((a, b) => a.n - b.n)
+      : undefined,
   };
 }
 

@@ -37,7 +37,12 @@ export function analizar(D, H, c, extra = {}) {
   const det = extra.det || {};
   M.forma = (pid) => {
     const d = det[pid];
-    if (!d || !d.stats || !d.stats.length) return null;
+    if (!d || !d.stats || !d.stats.length) {
+      const sem = (D.maestro[pid] || {}).semanas;
+      if (!sem || !sem.length) return null;
+      const u = sem.slice(-5);
+      return { pts: u.map((x) => x.pts), media: u.reduce((a, x) => a + x.pts, 0) / u.length, jugados: null, de: u.length, min: null };
+    }
     const ult = d.stats.slice(-5);
     return { pts: ult.map((x) => x.pts), media: ult.reduce((a, x) => a + x.pts, 0) / ult.length, jugados: ult.filter((x) => x.min > 0).length, de: ult.length, min: ult.reduce((a, x) => a + x.min, 0) };
   };
@@ -114,6 +119,50 @@ export function analizar(D, H, c, extra = {}) {
     const u = t.ult.slice(-n);
     return { txt: u.map((x) => x.r).join('-'), gf: u.reduce((s, x) => s + x.gf, 0), gc: u.reduce((s, x) => s + x.gc, 0), pts: u.reduce((s, x) => s + (x.r === 'V' ? 3 : x.r === 'E' ? 1 : 0), 0), de: u.length, ult: u };
   };
+  /* ---------- el historial de cada jugador contra quién jugó, y la previa de su próximo partido ---------- */
+  const resPor = {};
+  for (const p of D.resultados || []) {
+    resPor[`${p.jornada}:${p.localId}`] = { rivalId: p.visitanteId, casa: true, gf: p.gl, gc: p.gv };
+    resPor[`${p.jornada}:${p.visitanteId}`] = { rivalId: p.localId, casa: false, gf: p.gv, gc: p.gl };
+  }
+  const nombreEq = (id) => (D.equipos[id] || {}).nombre || id;
+  /** sus últimas jornadas: puntos, minutos, rival, en casa o fuera y el resultado */
+  M.historial = (j, n = 6) => {
+    if (!j) return [];
+    const d = det[j.id];
+    const base = d && d.stats && d.stats.length ? d.stats : (j.semanas || []).map((w) => ({ n: w.n, pts: w.pts, min: null }));
+    return base.slice(-n).map((s) => {
+      const r = resPor[`${s.n}:${j.equipoId}`];
+      const t = r && tabla[r.rivalId];
+      return { ...s, rival: r ? nombreEq(r.rivalId) : null, rivalId: r ? r.rivalId : null, casa: r ? r.casa : null, gf: r ? r.gf : null, gc: r ? r.gc : null, posRival: t ? t.pos : null };
+    });
+  };
+  /** cuánto rinde en casa y fuera, y contra los de arriba y los de abajo de la tabla */
+  M.rendimiento = (j) => {
+    const h = M.historial(j, 38).filter((x) => x.rivalId && (x.min == null || x.min > 0));
+    if (h.length < 3) return null;
+    const m = (l) => (l.length ? { m: l.reduce((s, x) => s + x.pts, 0) / l.length, n: l.length } : null);
+    const nT = filas.length || 20;
+    return { casa: m(h.filter((x) => x.casa)), fuera: m(h.filter((x) => x.casa === false)), arriba: m(h.filter((x) => x.posRival && x.posRival <= 6)), abajo: m(h.filter((x) => x.posRival && x.posRival > nT - 6)) };
+  };
+  /** la previa de su próximo partido: cómo llegan los dos equipos, los goles que se esperan y la portería a cero */
+  M.previa = (j) => {
+    const p = j && M.proximoPartido(j.equipoId);
+    if (!p) return null;
+    const tu = tabla[j.equipoId], ri = tabla[p.rivalId];
+    const out = { p, rival: p.rival, casa: p.casa, posRival: ri ? ri.pos : null, nivel: nivelDe(ri), rachaTu: M.racha(j.equipoId), rachaRi: M.racha(p.rivalId) };
+    if (tu && ri && tu.pj >= 3 && ri.pj >= 3) {
+      out.golesFavor = (tu.gf / tu.pj) * (ri.gc / ri.pj) / mediaGoles * (p.casa ? 1.1 : 0.9);
+      out.golesContra = (ri.gf / ri.pj) * (tu.gc / tu.pj) / mediaGoles * (p.casa ? 0.9 : 1.1);
+      out.cero = Math.exp(-out.golesContra);
+      out.rivalMarca = ri.gf / ri.pj; out.rivalEncaja = ri.gc / ri.pj;
+      // cómo le va al rival jugando donde le toca (fuera si tú juegas en casa)
+      const sitio = ri.ult.filter((x) => x.casa === !p.casa);
+      if (sitio.length) out.rivalSitio = { v: sitio.filter((x) => x.r === 'V').length, e: sitio.filter((x) => x.r === 'E').length, d: sitio.filter((x) => x.r === 'D').length, gf: sitio.reduce((s, x) => s + x.gf, 0), gc: sitio.reduce((s, x) => s + x.gc, 0) };
+    }
+    return out;
+  };
+
   /** los resultados de la última jornada jugada */
   const jUlt = Math.max(0, ...(D.resultados || []).map((p) => p.jornada || 0));
   M.ultimaJornada = jUlt ? { n: jUlt, partidos: (D.resultados || []).filter((p) => p.jornada === jUlt) } : null;
@@ -272,7 +321,7 @@ export function analizar(D, H, c, extra = {}) {
   for (const [tid, fichas] of Object.entries(D.plantillas || {})) {
     if (tid === yoTid) continue;
     for (const f of fichas) {
-      if (!f.clausula) continue;
+      if (!f.clausula || (D.maestro[f.pid] || {}).pos === 5) continue;
       const x = enriquecer(f, tid);
       x.rival = M.equipo[tid] || { nombre: 'Rival' };
       x.meLlega = x.clausula <= M.pujaMax;
@@ -289,7 +338,9 @@ export function analizar(D, H, c, extra = {}) {
   // un «libre de la liga» que ya tiene dueño en la liga no está a la venta: es que alguien lo acaba de fichar
   // (la API lo sigue devolviendo un rato); se quita, no se toma por una venta de ese manager
   M.mercadoFantasma = (D.mercado || []).filter((m) => m.tipo !== 'manager' && M.dueno[m.pid]).map((m) => m.pid);
-  M.mercado = (D.mercado || []).filter((m) => m.tipo === 'manager' || !M.dueno[m.pid]).map((m0) => {
+  // en la versión gratuita no se alinea entrenador: no cuentan para fichar
+  const esEnt = (pid) => (D.maestro[pid] || {}).pos === 5;
+  M.mercado = (D.mercado || []).filter((m) => (m.tipo === 'manager' || !M.dueno[m.pid]) && !esEnt(m.pid)).map((m0) => {
     const dueno0 = M.dueno[m0.pid];
     const m = { ...m0 };
     if (m.tipo === 'manager') {
@@ -545,6 +596,13 @@ export function planAuto(D, M, c) {
     saldo += v.mejor.importe; vendidos.add(v.pid);
   }
 
+  // 0b. los entrenadores no puntúan en la versión gratuita: dinero parado
+  for (const x of M.mias.filter((y) => y.j.pos === 5 && !vendidos.has(y.pid))) {
+    op({ accion: 'vender', objetivo: 'caja', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
+      motivo: `Es entrenador y en la versión gratuita no se alinea ni puntúa: son ${eur(x.j.valor)} parados que puedes usar en jugadores.`, confianza: 'alta' });
+    saldo += x.j.valor; vendidos.add(x.pid);
+  }
+
   // 1. vender lo que no va a puntuar o se está desplomando con beneficio
   for (const x of M.mias.filter((y) => MALOS.has(y.j.estado) && !vendidos.has(y.pid))) {
     op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
@@ -729,8 +787,7 @@ export function mejorOnce(lista, formaciones, pp) {
       total += disp.reduce((s, x) => s + x.p, 0);
       return disp.map((x) => x.j);
     });
-    const ent = por[5].find((x) => x.ok);
-    if (ent) total += ent.p;
+    const ent = null; // la versión gratuita no alinea entrenador
     const nota = total - huecos * 4;
     if (!mejor || nota > mejor.nota) mejor = { formacion: f, nombre: f.join('-'), lineas, entrenador: ent ? ent.j : null, total, huecos, nota };
   }

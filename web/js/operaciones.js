@@ -42,7 +42,7 @@ export function catalogo(D, M, notas = []) {
   // T: tratos que le has contado (jugador de otro manager con precio)
   for (const n of notas) {
     const tid = n.pid && M.dueno[n.pid];
-    if (!tid || tid === yo || !n.importe || lista.some((o) => o.ref === `M-${n.pid}`)) continue;
+    if (!tid || tid === yo || !n.importe || lista.some((o) => o.ref === `M-${n.pid}`) || (M.J(n.pid) || {}).pos === 5) continue;
     add({ ref: `T-${n.pid}`, tipo: 'comprar', trato: true, pid: n.pid, j: M.J(n.pid), precio: n.importe, vendedor: nombreDe(M, tid), vendedorTeamId: tid, nota: n.texto });
   }
   // C: cláusulas abiertas o que se abren antes de la jornada

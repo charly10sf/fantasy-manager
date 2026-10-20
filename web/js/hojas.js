@@ -177,7 +177,20 @@ export function fichaJugador(S, pid) {
     ${f ? `<div class="dato"><div class="et">Cláusula</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? pct((f.ratio - 1) * 100, 0) : ''}</small></div></div>` : ''}
     <div class="dato"><div class="et">Próximo partido</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : 'en'} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></div>
   </div>`;
-  if (j.pos < 5) h += calendarioHTML(M, j);
+  if (j.pos < 5) {
+    h += calendarioHTML(M, j);
+    const v = M.previa && M.previa(j), r = M.rendimiento && M.rendimiento(j);
+    const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
+    const datos = [];
+    if (v && v.rachaTu) datos.push(`<span>${esc(j.equipo || 'Su equipo')}: <b>${esc(v.rachaTu.txt)}</b></span>`);
+    if (v && v.rachaRi) datos.push(`<span>${esc(v.rival)}: <b>${esc(v.rachaRi.txt)}</b></span>`);
+    if (v && j.pos <= 2 && v.cero != null) datos.push(`<span>Portería a cero <b>~${Math.round(v.cero * 100)} %</b></span>`);
+    else if (v && v.golesFavor != null) datos.push(`<span>Goles esperados de su equipo <b>${d1(v.golesFavor)}</b></span>`);
+    if (M.ppEsperado) datos.push(`<span>Puntos esperados <b>${d1(M.ppEsperado(j))}</b></span>`);
+    if (r && r.casa && r.fuera) datos.push(`<span>En casa <b>${d1(r.casa.m)}</b> · fuera <b>${d1(r.fuera.m)}</b></span>`);
+    if (r && r.arriba && r.abajo) datos.push(`<span>Vs top-6 <b>${d1(r.arriba.m)}</b> · vs últimos <b>${d1(r.abajo.m)}</b></span>`);
+    if (datos.length) h += `<div class="previa">${datos.join('')}</div>`;
+  } else h += `<div class="aviso-ficha">${icono('info')}<div>Es entrenador: en la versión gratis no se alinea ni puntúa. Si es tuyo, véndelo y usa el dinero en jugadores.</div></div>`;
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
   h += `<div id="det-j">${S.det && S.det[pid] ? detalleHTML(S.det[pid]) : '<div class="graf-vacio">Cargando sus partidos…</div>'}</div>`;
   const nots = M.noticiasDe(pid).slice(0, 6);

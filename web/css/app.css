@@ -553,3 +553,8 @@ body.con-nv { overflow: hidden; }
 .descartes summary { display: flex; align-items: center; gap: 8px; font: 600 14.5px 'Barlow'; color: var(--texto2); list-style: none; cursor: pointer; }
 .descartes summary::-webkit-details-marker { display: none; }
 .descartes summary .ic { width: 18px; height: 18px; }
+
+/* la previa del próximo partido en la ficha */
+.previa { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.previa span { padding: 5px 9px; border-radius: 9px; background: var(--plano2); font-size: 13px; color: var(--texto2); }
+.previa b { color: var(--texto); font-family: var(--cond); font-size: 14.5px; }
