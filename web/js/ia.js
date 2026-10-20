@@ -298,7 +298,8 @@ function lineaCompleta(D, M, j) {
   const t = M.tend(j.id);
   const tid = M.dueno[j.id];
   const e = tid && M.equipo[tid];
-  const de = !tid ? 'libre (no es de nadie de la liga)' : tid === D.yo.teamId ? 'ES MÍO' : `es de ${(e && (e.manager || e.nombre)) || 'un rival'}`;
+  const fa = tid && M.fichadoPor && M.fichadoPor(j.id);
+  const de = !tid ? 'libre (no es de nadie de la liga)' : tid === D.yo.teamId ? 'ES MÍO' : `es de ${(e && (e.manager || e.nombre)) || 'un rival'}${fa ? `, que lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)}${fa.importe ? ` por ${eur(fa.importe)}` : ''}` : ''}`;
   const cl = M.clausulas.find((x) => x.pid === j.id);
   const mk = M.mercado.find((m) => m.pid === j.id);
   const serie = t.serie || [];
@@ -406,6 +407,7 @@ Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exact
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa.
 El rival importa tanto como ser titular: no es lo mismo jugar contra el Barça o el Madrid que contra el colista, ni en casa que fuera. Te paso el próximo rival de cada jugador con su puesto en LaLiga y si es difícil, medio o fácil; los porteros y defensas puntúan más contra equipos que marcan poco, y los medios y delanteros contra los que encajan mucho. Tenlo en cuenta en el once, en a quién fichar y en cuándo vender (vender antes de una racha de rivales difíciles, comprar antes de una de fáciles).
 El manager te cuenta cosas que no salen en los datos (tratos con amigos de la liga, ofertas que le hacen por privado, lo que ya ha hecho o piensa hacer, jugadores que no quiere vender): cuentan tanto como los datos. Si otro manager le ofrece venderle un jugador por un precio, se cierra haciéndole una oferta directa por ese importe desde la ficha del jugador; si conviene, ponlo como operación (accion "comprar", donde "a <manager>") y calcula si le compensa con su valor, lo que sube al día, si entra en su once y si le llega el dinero.
+COMPRAR A OTRO MANAGER: solo si lo tiene a la venta (te los paso en el bloque «EN EL MERCADO PERO CON DUEÑO») o si es un trato que te ha contado el manager. Un jugador de un rival que no está a la venta NO se puede comprar: su dueño no tiene por qué vendérselo, y menos si lo acaba de fichar (los recién fichados están protegidos unos 14 días). Para quitárselo, solo su cláusula cuando se abra. Y aunque lo tenga a la venta, es el dueño quien decide: dilo y no lo des por hecho.
 PAGAR DE MÁS: lo que se paga por encima del valor de un jugador se pierde en el valor del equipo (si lo vende, le darán cerca de su valor). Una cláusula o un precio más de un 20 % por encima de su valor solo compensa si sube tan deprisa que lo recupera en pocos días o es un titular que no puede conseguir de otra forma; por encima de un 40 % no lo recomiendes salvo un trato que te haya contado él. Di siempre cuánto paga de más y en cuántos días lo recuperaría con lo que sube. Ejemplo de lo que NO hay que hacer: clausular por 21 M a un jugador que vale 9 M.
 Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;
 
@@ -443,7 +445,7 @@ Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
  "alineacion": {"formacion": "una de las formaciones gratuitas", "titulares": ["portero, defensas, medios y delanteros: nombres exactos"], "dudas": ["jugador: por qué"]}
 }
 Entre 1 y 8 operaciones. Entre 2 y 5 días en proximos_dias.
-"pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager (lo tenga en venta o sea un trato con él) la acción es "comprar", con el precio en "importe" y sin puja_max. Para quitárselo pagando su cláusula, "clausular".`;
+"pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager la acción es "comprar", con el precio en "importe" y sin puja_max, y SOLO si lo tiene a la venta o es un trato que te he contado; si no, no lo pongas. Para quitárselo pagando su cláusula, "clausular" (solo si la cláusula está abierta o se abre pronto).`;
   const r = await preguntar({ sistema: SISTEMA, contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso });
   const json = sacarJSON(r.texto);
   if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA('Gemini ha contestado sin el formato del plan. Vuelve a probar.', 0);
@@ -506,11 +508,18 @@ export function cuadrarPlan(P, D, M) {
     if (accion === 'blindar') signo = importe ? -1 : 0;
     // pagar mucho más de lo que vale: se avisa y, si es una barbaridad sin un trato que le hayas contado, se descarta
     let descartada = false, sobre = null;
+    const tratoJ = pid && notasDe(pid).length > 0;
+    if (accion === 'comprar' && pid) {
+      const enVentaSuya = mk && mk.tipo === 'manager';
+      const fa = M.fichadoPor && M.fichadoPor(pid);
+      if (!enVentaSuya && !tratoJ) { descartada = true; aviso = `La app lo descarta: no lo tiene a la venta y su dueño no tiene por qué vendértelo${fa ? ` (lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)})` : ''}. Solo se le puede quitar con la cláusula.`; }
+      else if (enVentaSuya && !tratoJ && !aviso) aviso = `Lo tiene a la venta por ${eur(mk.precio)}, pero decide él: solo es tuyo si acepta tu oferta.`;
+    }
     if (signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion)) {
       sobre = importe / j.valor - 1;
       const trato = notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe);
-      if (sobre > 0.4 && !trato) { descartada = true; aviso = `La app lo descarta: pagarías ${eur(importe - j.valor)} más de lo que vale (${pct(sobre * 100)})`; }
-      else if (sobre > 0.2 && !aviso) aviso = `Pagas ${eur(importe - j.valor)} más de lo que vale (${pct(sobre * 100)})`;
+      if (descartada) { /* ya descartada */ } else if (sobre > 0.4 && !trato) { descartada = true; aviso = `La app lo descarta: pagarías ${eur(importe - j.valor)} más de lo que vale (${pct(sobre * 100)})`; }
+      else if (sobre > 0.2) aviso = `${aviso ? `${aviso} ` : ''}Pagas ${eur(importe - j.valor)} más de lo que vale (${pct(sobre * 100)}).`;
     }
     // lo que se hace hoy suma al saldo; lo de otro día (o cuando se abra una cláusula), no
     const cu = String(o.cuando || '').trim();

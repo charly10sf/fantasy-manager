@@ -139,6 +139,9 @@ export function dinero(r) {
 export function mercado(r, equipos) {
   const out = [];
   for (const it of lista(r)) {
+    // solo lo que sigue a la venta (la API a veces devuelve también lo ya vendido o adjudicado)
+    const estado = String(it.status || it.state || '').toLowerCase();
+    if (estado && !/on_?sale|sale|active|open|venta/.test(estado)) continue;
     const j = jugador(it.playerMaster || it.player || it, equipos);
     if (!j) continue;
     // ¿lo vende un manager de la liga o es un jugador libre de LaLiga? (marketPlayerTeam frente a marketPlayerLeague)
@@ -150,6 +153,7 @@ export function mercado(r, equipos) {
       id: id(it.id),
       pid: j.id,
       tipo: deManager && !/league/i.test(String(it.discr || '')) ? 'manager' : 'liga',
+      estado,
       precio: num(primero(it.salePrice, it.price, j.valor)),
       cierra: ms(primero(it.expirationDate, it.endDate)),
       pujas: num(primero(it.numberOfBids, it.bids && it.bids.length)),

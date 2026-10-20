@@ -101,7 +101,7 @@ export async function actualizar(alPaso = () => {}) {
   }
 
   alPaso(6, PASOS[6]);
-  const mercado = (await blando('mercado', async () => { const r = await api.mercado(liga.id); const l = N.lista(r); if (l[0]) muestras.mercado = recorte(l[0]); return N.mercado(r, equipos); })) || [];
+  const mercado = (await blando('mercado', async () => { const r = await api.mercado(liga.id); const l = N.lista(r); if (l[0]) muestras.mercado = recorte(l[0]); const dm = l.find((x) => x && !/league/i.test(String(x.discr || ''))); if (dm) muestras.mercadoManager = recorte(dm); return N.mercado(r, equipos); })) || [];
   for (const m of mercado) maestro[m.pid] = mezclar(maestro[m.pid], m.jugador);
 
   // tus jugadores en venta y las ofertas que tienes por ellos

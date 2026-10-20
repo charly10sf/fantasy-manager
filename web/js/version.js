@@ -1,13 +1,21 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.1.3';
+export const VERSION = '0.1.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.1.4', f: '2026-10-20', h: '22:16', t: 'Solo lo que se puede comprar',
+    cosas: [
+      { tipo: 'arreglo', d: 'oferta', t: 'Los recién fichados no están a la venta', x: 'La API de LaLiga sigue dando un rato en el mercado a jugadores que ya ha fichado alguien. La app los tomaba por una venta de ese rival; ahora los quita del mercado.' },
+      { tipo: 'arreglo', d: 'escudo', t: 'A un rival solo se le compra lo que vende', x: 'Si el plan te dice que compres a otro manager un jugador que no tiene a la venta (y no es un trato que le hayas contado), la app lo tacha: su dueño no tiene por qué vendértelo. Para quitárselo, solo la cláusula.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'ia', t: 'La IA sabe quién acaba de fichar a quién', x: 'Con cada jugador de un rival le llega cuándo y por cuánto lo fichó, y la regla de que lo recién fichado está protegido y no se vende. Si lo tiene a la venta, te recuerda que decide él.' },
+    ],
+  },
   {
     v: '0.1.3', f: '2026-10-20', h: '22:07', t: 'Ni un euro de más',
     cosas: [

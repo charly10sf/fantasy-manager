@@ -275,10 +275,12 @@ export function analizar(D, H, c, extra = {}) {
   M.clausulas.sort((a, b) => b.interes - a.interes);
 
   /* ---------- mercado ---------- */
-  M.mercado = (D.mercado || []).map((m0) => {
-    // si el jugador tiene dueño en la liga, lo está vendiendo ese manager aunque la API no lo diga claro
+  // un «libre de la liga» que ya tiene dueño en la liga no está a la venta: es que alguien lo acaba de fichar
+  // (la API lo sigue devolviendo un rato); se quita, no se toma por una venta de ese manager
+  M.mercadoFantasma = (D.mercado || []).filter((m) => m.tipo !== 'manager' && M.dueno[m.pid]).map((m) => m.pid);
+  M.mercado = (D.mercado || []).filter((m) => m.tipo === 'manager' || !M.dueno[m.pid]).map((m0) => {
     const dueno0 = M.dueno[m0.pid];
-    const m = dueno0 && m0.tipo !== 'manager' ? { ...m0, tipo: 'manager', vendedorTeamId: dueno0 } : { ...m0 };
+    const m = { ...m0 };
     if (m.tipo === 'manager') {
       const tid = m.vendedorTeamId || dueno0 || (m.vendedorManagerId && M.teamDeUsuario(m.vendedorManagerId, m.vendedor));
       const e = tid && M.equipo[tid];
@@ -342,6 +344,12 @@ export function analizar(D, H, c, extra = {}) {
       esYo: !!yoTid && quienT === yoTid, contraMi: !!yoTid && otroT === yoTid,
     };
   });
+  /** cuándo y por cuánto fichó su dueño actual a un jugador (compra o cláusula), si está en la actividad */
+  M.fichadoPor = (pid) => {
+    const tid = M.dueno[pid];
+    if (!tid) return null;
+    return M.actividad.find((a) => a.pid === pid && a.quienT === tid && ['compra', 'clausula'].includes(a.clase)) || null;
+  };
   // los cambios de plantilla que la actividad no cuenta (blindajes)
   M.cambios = (H.mov || []).filter((m) => ahora - m.t < 21 * DIA).map((m) => ({ ...m, j: J(m.pid), equipo: M.equipo[m.teamId] })).reverse();
 
