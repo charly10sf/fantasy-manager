@@ -6,7 +6,7 @@ import * as N from './normalizar.js';
 import { LS, diaDe, enParalelo, num, DIA } from './util.js';
 import { enApp } from './puente.js';
 import { demo } from './demo.js';
-import { historialValor, oncesProbables, noticias } from './externas.js';
+import { historialValor, oncesProbables, noticias, avanzadas } from './externas.js';
 
 // la deuda permitida en LaLiga Fantasy es siempre el 20 % del valor del equipo
 export const cfg = () => ({ ligaId: null, miEquipo: null, ...LS.get('cfg', {}), deuda: 20 });
@@ -308,14 +308,40 @@ export function borrarTodo() {
 /* ---------- fuentes de fuera: onces probables y titulares de prensa ---------- */
 export async function fuentesExternas(D, M) {
   if (!D || !M) return null;
-  if (D.demo) return { onces: onceDemo(D), noticias: { t: Date.now(), lista: [] } };
-  const [onces, nots] = await Promise.all([
+  if (D.demo) return { onces: onceDemo(D), noticias: { t: Date.now(), lista: [] }, avanzadas: avanzadasDemo(D) };
+  // las estadísticas avanzadas, de los tuyos y de los mejores candidatos; si tardan, se sigue con lo guardado
+  const foco = [...new Set([
+    ...M.mias.map((x) => x.pid),
+    ...M.mercado.slice(0, 10).map((m) => m.pid),
+    ...M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, 12).map((x) => x.pid),
+    ...M.suben.slice(0, 4).map((x) => x.j.id),
+  ])];
+  const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
+  const [onces, nots, av] = await Promise.all([
     oncesProbables(D).catch((e) => ({ error: e.message, jugadores: {} })),
     noticias(D, M).catch((e) => ({ error: e.message, lista: [] })),
+    Promise.race([avanzadas(D, M, foco).catch((e) => ({ error: e.message, jugadores: {}, sofa: {}, equipos: {} })), espera(35000).then(() => LS.get('avanzadas', null) || { jugadores: {}, sofa: {}, equipos: {}, fuentes: { espera: 'tarda: se usa lo guardado' } })]),
   ]);
-  return { onces, noticias: nots };
+  return { onces, noticias: nots, avanzadas: av };
 }
-export const fuentesGuardadas = () => (enDemo() ? null : { onces: LS.get('onces', null), noticias: LS.get('noticias', null) });
+export const fuentesGuardadas = () => (enDemo() ? null : { onces: LS.get('onces', null), noticias: LS.get('noticias', null), avanzadas: LS.get('avanzadas', null) });
+
+/** en la demostración, unas estadísticas avanzadas inventadas (para ver cómo salen) */
+function avanzadasDemo(D) {
+  let x = 11;
+  const az = () => (x = (x * 9301 + 49297) % 233280) / 233280;
+  const jugadores = {}, sofa = {}, equipos = {};
+  for (const j of Object.values(D.maestro)) {
+    if (j.pos === 5) continue;
+    const min = Math.round(300 + az() * 500);
+    const ata = j.pos === 4 ? 0.45 : j.pos === 3 ? 0.18 : 0.05;
+    const xg = +(ata * min / 90 * (0.5 + az())).toFixed(2), xa = +((j.pos >= 3 ? 0.15 : 0.05) * min / 90 * (0.5 + az())).toFixed(2);
+    jugadores[j.id] = { min, pj: Math.round(min / 80), g: Math.round(xg * (0.5 + az())), xg, a: Math.round(xa * (0.5 + az())), xa, tiros: Math.round(xg * 7 + az() * 4), pc: Math.round(xa * 9 + az() * 3) };
+    sofa[j.id] = { nota: +(6.4 + az() * 1.1).toFixed(2), min, pj: Math.round(min / 80), notas: Array.from({ length: 5 }, () => +(6 + az() * 2).toFixed(1)), entradas: Math.round(az() * 15), intercep: Math.round(az() * 10), recup: Math.round(az() * 30), regates: Math.round(az() * 12), paradas: j.pos === 1 ? Math.round(10 + az() * 20) : 0 };
+  }
+  for (const id of Object.keys(D.equipos || {})) equipos[id] = { pj: 9, xg: +(0.9 + az()).toFixed(2), xga: +(0.9 + az()).toFixed(2), xg5: +(0.8 + az() * 1.2).toFixed(2), xga5: +(0.8 + az() * 1.2).toFixed(2) };
+  return { t: Date.now(), jugadores, sofa, equipos, fuentes: { understat: 'ejemplo', sofascore: 'ejemplo' } };
+}
 
 /** en la demostración, un once probable inventado: los de más media de cada equipo */
 function onceDemo(D) {

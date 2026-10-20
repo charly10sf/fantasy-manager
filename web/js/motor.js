@@ -145,6 +145,13 @@ export function analizar(D, H, c, extra = {}) {
     const nT = filas.length || 20;
     return { casa: m(h.filter((x) => x.casa)), fuera: m(h.filter((x) => x.casa === false)), arriba: m(h.filter((x) => x.posRival && x.posRival <= 6)), abajo: m(h.filter((x) => x.posRival && x.posRival > nT - 6)) };
   };
+  /* ---------- estadísticas avanzadas (Understat y SofaScore) ---------- */
+  const av = extra.avanzadas || {};
+  M.avanzado = (pid) => { const u = (av.jugadores || {})[pid], s = (av.sofa || {})[pid]; return u || s ? { u: u || null, s: s || null } : null; };
+  M.xgEquipo = (id) => (av.equipos || {})[id] || null;
+  M.fuentesAv = av.fuentes || null;
+  const xgMedia = (() => { const l = Object.values(av.equipos || {}).filter((e) => e.xg != null); return l.length ? l.reduce((s, e) => s + e.xg, 0) / l.length : null; })();
+
   /** la previa de su próximo partido: cómo llegan los dos equipos, los goles que se esperan y la portería a cero */
   M.previa = (j) => {
     const p = j && M.proximoPartido(j.equipoId);
@@ -157,6 +164,14 @@ export function analizar(D, H, c, extra = {}) {
       out.cero = Math.exp(-out.golesContra);
       out.rivalMarca = ri.gf / ri.pj; out.rivalEncaja = ri.gc / ri.pj;
       // cómo le va al rival jugando donde le toca (fuera si tú juegas en casa)
+      // con el xG de Understat (lo que generan y conceden de verdad) si lo hay, que dice más que los goles
+      const xt = M.xgEquipo(j.equipoId), xr = M.xgEquipo(p.rivalId);
+      if (xt && xr && xgMedia && xt.xg != null && xr.xga != null) {
+        out.xg = { tu: xt, ri: xr };
+        out.golesFavor = (xt.xg * xr.xga) / xgMedia * (p.casa ? 1.1 : 0.9);
+        out.golesContra = (xr.xg * xt.xga) / xgMedia * (p.casa ? 0.9 : 1.1);
+        out.cero = Math.exp(-out.golesContra);
+      }
       const sitio = ri.ult.filter((x) => x.casa === !p.casa);
       if (sitio.length) out.rivalSitio = { v: sitio.filter((x) => x.r === 'V').length, e: sitio.filter((x) => x.r === 'E').length, d: sitio.filter((x) => x.r === 'D').length, gf: sitio.reduce((s, x) => s + x.gf, 0), gc: sitio.reduce((s, x) => s + x.gc, 0) };
     }

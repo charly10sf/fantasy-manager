@@ -222,3 +222,130 @@ export async function historialValor(pid) {
   if (elegida == null) LS.set('ruta-valor-falla', Date.now());
   return null;
 }
+
+/* ---------------- estadísticas avanzadas: Understat (xG, xA, tiros, pases clave) y SofaScore (notas) ----------------
+   Fuera del Fantasy, para ver el rendimiento de verdad: si genera ocasiones aunque no marque, si su nota baja, cuánto
+   defiende. Understat da en una sola petición todos los jugadores y equipos de LaLiga; SofaScore, jugador a jugador,
+   solo para los tuyos y los mejores candidatos. Todo se guarda 12 horas. Si una web no responde o bloquea, se sigue
+   sin ella. */
+const HUSO = () => { const d = new Date(); return d.getMonth() >= 6 ? d.getFullYear() : d.getFullYear() - 1; };
+const n0 = (v) => { const x = parseFloat(v); return Number.isFinite(x) ? x : 0; };
+/** el JSON que Understat mete en el HTML con \xNN (bytes UTF-8) */
+function deUnderstat(html, variable) {
+  const m = String(html || '').match(new RegExp(`${variable}\\s*=\\s*JSON\\.parse\\('([^']+)'\\)`));
+  if (!m) return null;
+  try { return JSON.parse(decodeURIComponent(m[1].replace(/%/g, '%25').replace(/\\x([0-9A-Fa-f]{2})/g, '%$1'))); } catch (e) { return null; }
+}
+async function pedirJSON(url, cab = {}, etiqueta = url) {
+  const t0 = Date.now();
+  const r = await http('GET', url, { cabeceras: { Accept: 'application/json, text/plain, */*', 'User-Agent': UA, ...cab } });
+  apuntarRegistro({ ruta: etiqueta, s: r.s, ms: Date.now() - t0, e: r.e, forma: r.b ? `${Math.round(r.b.length / 1024)} KB` : '' });
+  if (r.s !== 200 || !r.b) { const e = new Error(r.s ? `${r.s}` : r.e || 'sin respuesta'); e.estado = r.s; throw e; }
+  try { return JSON.parse(r.b); } catch (e) { return { __html: r.b }; }
+}
+async function understat() {
+  const temp = HUSO();
+  const ref = `https://understat.com/league/La_liga/${temp}`;
+  let j = null;
+  try { j = await pedirJSON(`https://understat.com/getLeagueData/La_liga/${temp}`, { 'X-Requested-With': 'XMLHttpRequest', Referer: ref }, `understat datos ${temp}`); } catch (e) { j = null; }
+  if (!j || (!j.players && !j.teams)) {
+    const h = await pedirJSON(ref, { Accept: 'text/html' }, `understat página ${temp}`);
+    const html = h.__html || '';
+    j = { players: deUnderstat(html, 'playersData'), teams: deUnderstat(html, 'teamsData') };
+  }
+  return j;
+}
+const mismoEquipo = (a, b) => { const x = aliasEquipo(a), y = aliasEquipo(b); return x.some((k) => y.includes(k)); };
+// (para los pocos equipos, basta comparar los alias; para los cientos de jugadores, se agrupan antes)
+const ult = (s) => norm(s).split(' ').pop();
+
+/** los datos de Understat de cada jugador de LaLiga Fantasy (por nombre y equipo) y de cada equipo (xG por partido) */
+function cruzarUnderstat(D, u) {
+  const jugadores = {}, equipos = {};
+  const players = Array.isArray(u && u.players) ? u.players : [];
+  // agrupados por equipo (Understat a veces pone «Barcelona,Valencia» si cambió de equipo: cuenta el último)
+  const clave = (n) => aliasEquipo(n)[0];
+  const porEquipo = {};
+  for (const p of players) { const t = String(p.team_title || '').split(',').pop(); (porEquipo[clave(t)] ||= []).push(p); }
+  const claveEq = {};
+  for (const [id, e] of Object.entries(D.equipos || {})) claveEq[id] = clave(e.nombre || '');
+  for (const j of Object.values(D.maestro)) {
+    if (!j.equipoId || j.pos === 5) continue;
+    const lista = porEquipo[claveEq[j.equipoId]] || [];
+    if (!lista.length) continue;
+    const nl = norm(j.largo), nn = norm(j.nombre);
+    const p = lista.find((x) => norm(x.player_name) === nl || norm(x.player_name) === nn)
+      || lista.find((x) => nn.length > 3 && (norm(x.player_name).includes(nn) || nl.includes(norm(x.player_name))))
+      || (() => { const c = lista.filter((x) => ult(x.player_name) === ult(j.largo || j.nombre) && norm(x.player_name)[0] === (nl || nn)[0]); return c.length === 1 ? c[0] : null; })();
+    if (!p) continue;
+    jugadores[j.id] = { min: n0(p.time), pj: n0(p.games), g: n0(p.goals), xg: n0(p.xG), a: n0(p.assists), xa: n0(p.xA), tiros: n0(p.shots), pc: n0(p.key_passes), npxg: n0(p.npxG), xgc: n0(p.xGChain), xgb: n0(p.xGBuildup), am: n0(p.yellow_cards), ro: n0(p.red_cards) };
+  }
+  const teams = u && u.teams ? Object.values(u.teams) : [];
+  for (const t of teams) {
+    const id = Object.keys(D.equipos || {}).find((k) => mismoEquipo(t.title || '', D.equipos[k].nombre || ''));
+    const h = Array.isArray(t.history) ? t.history : [];
+    if (!id || !h.length) continue;
+    const media = (l, k) => (l.length ? l.reduce((s, x) => s + n0(x[k]), 0) / l.length : null);
+    const u5 = h.slice(-5);
+    equipos[id] = { pj: h.length, xg: media(h, 'xG'), xga: media(h, 'xGA'), xg5: media(u5, 'xG'), xga5: media(u5, 'xGA'), ppda: media(h.map((x) => ({ v: x.ppda && x.ppda.def ? n0(x.ppda.att) / Math.max(1, n0(x.ppda.def)) : 0 })), 'v') };
+  }
+  return { jugadores, equipos };
+}
+
+const SOFA = 'https://api.sofascore.com/api/v1';
+const SOFA_CAB = { Referer: 'https://www.sofascore.com/', Origin: 'https://www.sofascore.com' };
+/** SofaScore para unos pocos jugadores: su nota media y las últimas, y lo que hace por 90 minutos */
+async function sofascore(D, pids) {
+  const ids = LS.get('sofa-ids', {});
+  const out = {};
+  const temp = await pedirJSON(`${SOFA}/unique-tournament/8/seasons`, SOFA_CAB, 'sofascore temporadas');
+  const sid = temp && Array.isArray(temp.seasons) && temp.seasons[0] && temp.seasons[0].id;
+  if (!sid) throw new Error('sin temporada');
+  let bloqueado = false;
+  await enParalelo(pids, 2, async (pid) => {
+    if (bloqueado) return;
+    const j = D.maestro[pid];
+    if (!j) return;
+    try {
+      let sofaId = ids[pid];
+      if (sofaId === undefined) {
+        const r = await pedirJSON(`${SOFA}/search/all?q=${encodeURIComponent(j.nombre)}&page=0`, SOFA_CAB, `sofascore busca ${j.nombre}`);
+        const eq = (D.equipos[j.equipoId] || {}).nombre || '';
+        const c = ((r && r.results) || []).filter((x) => x.type === 'player' && x.entity && x.entity.team && mismoEquipo(x.entity.team.name || '', eq));
+        sofaId = c.length ? c[0].entity.id : 0;
+        ids[pid] = sofaId;
+      }
+      if (!sofaId) return;
+      const st = await pedirJSON(`${SOFA}/player/${sofaId}/unique-tournament/8/season/${sid}/statistics/overall`, SOFA_CAB, `sofascore ${j.nombre}`).catch(() => null);
+      const s = (st && st.statistics) || null;
+      let notas = [];
+      const res = await pedirJSON(`${SOFA}/player/${sofaId}/last-year-summary`, SOFA_CAB, `sofascore notas ${j.nombre}`).catch(() => null);
+      if (res && Array.isArray(res.summary)) notas = res.summary.filter((x) => x.type === 'event' && x.value).slice(-5).map((x) => n0(x.value));
+      if (s || notas.length) out[pid] = s ? { nota: n0(s.rating), min: n0(s.minutesPlayed), pj: n0(s.appearances), tit: n0(s.matchesStarted), g: n0(s.goals), xg: n0(s.expectedGoals), a: n0(s.assists), xa: n0(s.expectedAssists), pc: n0(s.keyPasses), tiros: n0(s.totalShots), regates: n0(s.successfulDribbles), entradas: n0(s.tackles), intercep: n0(s.interceptions), despejes: n0(s.clearances), recup: n0(s.ballRecovery), duelos: n0(s.totalDuelsWonPercentage), pases: n0(s.accuratePassesPercentage), paradas: n0(s.saves), encajados: n0(s.goalsConceded), ceros: n0(s.cleanSheet), notas } : { notas };
+    } catch (e) {
+      if (e.estado === 403 || e.estado === 429) bloqueado = true;
+    }
+  });
+  LS.set('sofa-ids', ids);
+  return { jugadores: out, bloqueado };
+}
+
+/** estadísticas avanzadas de los tuyos y los candidatos (se guardan 12 horas) */
+export async function avanzadas(D, M, pidsFoco = []) {
+  const guardado = LS.get('avanzadas', null);
+  if (guardado && Date.now() - guardado.t < 12 * HORA && guardado.liga === (D.liga && D.liga.id)) return guardado;
+  const out = { t: Date.now(), liga: D.liga && D.liga.id, jugadores: {}, sofa: {}, equipos: {}, fuentes: {} };
+  try {
+    const u = await understat();
+    const c = cruzarUnderstat(D, u);
+    out.jugadores = c.jugadores; out.equipos = c.equipos;
+    out.fuentes.understat = `${Object.keys(c.jugadores).length} jugadores, ${Object.keys(c.equipos).length} equipos`;
+  } catch (e) { out.fuentes.understat = `no responde (${e.message})`; }
+  try {
+    const s = await sofascore(D, pidsFoco.slice(0, 32));
+    out.sofa = s.jugadores;
+    out.fuentes.sofascore = `${Object.keys(s.jugadores).length} jugadores${s.bloqueado ? ' (cortado: bloquea)' : ''}`;
+  } catch (e) { out.fuentes.sofascore = `no responde (${e.message})`; }
+  if (Object.keys(out.jugadores).length || Object.keys(out.sofa).length) LS.set('avanzadas', out);
+  return out;
+}

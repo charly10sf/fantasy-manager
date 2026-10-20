@@ -45,7 +45,12 @@ public class Puente {
             // Gemini: por aquí y no desde la web, porque el WebView corta las peticiones POST a Google
             "generativelanguage.googleapis.com",
             // titulares de prensa (Google Noticias, RSS)
-            "news.google.com"
+            "news.google.com",
+            // estadísticas avanzadas: xG y xA (Understat) y notas de cada partido (SofaScore)
+            "understat.com",
+            "www.understat.com",
+            "api.sofascore.com",
+            "www.sofascore.com"
     ));
     private static final String GEMINI = "generativelanguage.googleapis.com";
     private static final int MAX = 16 * 1024 * 1024;
