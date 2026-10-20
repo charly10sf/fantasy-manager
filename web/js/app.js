@@ -7,7 +7,7 @@ import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
-import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA, borrarNota } from './ia.js';
+import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA, borrarNota, quitarUltimaPregunta } from './ia.js';
 import { ultimaVersion, api } from './api.js';
 import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -138,7 +138,11 @@ function pintar({ arriba = false } = {}) {
   try { v.innerHTML = VISTAS[S.vista](S); } catch (e) { v.innerHTML = `<div class="error-c">Algo ha fallado al pintar esta pantalla: ${esc(e.message)}</div>`; console.error(e); }
   $('#banda').innerHTML = S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : '';
   if (arriba) window.scrollTo(0, 0);
-  if (S.vista === 'ia') bajarChat();
+  if (S.vista === 'ia') {
+    bajarChat();
+    // la pregunta que paraste vuelve a la caja
+    if (S.borrador && !S.charlando) { const ta = $('#pregunta'); if (ta) { ta.value = S.borrador; S.borrador = ''; } }
+  }
   encuadrar(v);
 }
 function ir(vista, { arriba = true } = {}) {
@@ -307,8 +311,11 @@ async function generarPlan() {
   montarPlan();
   if (S.vista === 'hoy') pintar();
   nativo.trabajando(true, 'La IA está leyendo tu liga y las noticias. Puedes salir de la app: te aviso al terminar.');
+  const ctl = new AbortController();
+  S.planCtl = ctl;
   try {
     await planDelDia(S.D, S.M, S.c, {
+      signal: ctl.signal,
       alPaso: (t) => { S.planEstado.paso = t; const el = $('#paso-ia'); if (el) el.textContent = t; },
     });
     S.planEstado = {};
@@ -316,10 +323,18 @@ async function generarPlan() {
     tostada('Plan de hoy listo');
     if (!nativo.aLaVista()) nativo.notificar('Tu plan de hoy está listo', (S.plan && S.plan.titular) || 'Entra para ver los pasos', 'hoy');
   } catch (e) {
-    S.planEstado = { error: e.message || String(e) };
-    rehacer();
-    if (!nativo.aLaVista()) nativo.notificar('No ha salido el plan de hoy', 'Entra y dale a Reintentar', 'hoy');
+    if (e.name === 'AbortError') {
+      // lo has parado tú: se queda el plan que había y puedes pedir otro cuando quieras
+      S.planEstado = {};
+      rehacer();
+      tostada('Plan parado. Dale a «Rehacer» cuando quieras otro');
+    } else {
+      S.planEstado = { error: e.message || String(e) };
+      rehacer();
+      if (!nativo.aLaVista()) nativo.notificar('No ha salido el plan de hoy', 'Entra y dale a Reintentar', 'hoy');
+    }
   } finally {
+    if (S.planCtl === ctl) S.planCtl = null;
     nativo.trabajando(false);
   }
   if (!S.hoja) pintar(); else pintarSup();
@@ -423,25 +438,36 @@ async function enviarPregunta(texto) {
   const t = (texto || '').trim();
   if (!t || S.charlando) return;
   if (S.vista !== 'ia') ir('ia');
-  S.charlando = true; S.parcial = ''; S.pasoChat = '';
+  S.charlando = true; S.parcial = ''; S.pasoChat = ''; S.preguntaActual = t;
   pintar();
   let ultimo = 0;
   // como con el plan: aunque salgas de la app sigue pensando, y si no estás en ella te avisa al contestar
   nativo.trabajando(true, `«${t.length > 60 ? `${t.slice(0, 57)}…` : t}» · Puedes salir de la app: te aviso cuando conteste.`, 'Pensando la respuesta');
+  const ctl = new AbortController();
+  S.chatCtl = ctl;
   try {
     const r = await charlar(t, S.D, S.M, S.c, (parcial) => {
       S.parcial = parcial;
       const ahora = Date.now();
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
-    });
+    }, ctl.signal);
     if (!nativo.aLaVista()) {
       const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();
       nativo.notificar('Tu director deportivo ha contestado', limpio.length > 220 ? `${limpio.slice(0, 217)}…` : limpio || 'Entra para leer la respuesta', 'ia');
     }
   } catch (e) {
-    tostada(e.message || 'No ha contestado', 7000);
-    if (!nativo.aLaVista()) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
+    if (e.name === 'AbortError') {
+      // parada: la pregunta vuelve a la caja para cambiarla o mandarla otra vez
+      quitarUltimaPregunta(t);
+      S.borrador = t;
+      tostada('Pregunta parada');
+    } else {
+      tostada(e.message || 'No ha contestado', 7000);
+      if (!nativo.aLaVista()) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
+    }
   } finally {
+    if (S.chatCtl === ctl) S.chatCtl = null;
+    S.preguntaActual = '';
     nativo.trabajando(false);
   }
   S.charlando = false; S.parcial = '';
@@ -535,6 +561,8 @@ document.addEventListener('click', async (ev) => {
     case 'plan': S.planEstado = {}; generarPlan(); break;
     case 'planYa': cerrarHoja(); ir('hoy'); S.planEstado = {}; generarPlan(); break;
     case 'voz': escuchar(); break;
+    case 'pararPlan': if (S.planCtl) S.planCtl.abort(); break;
+    case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
     case 'novedades': listaVersiones(); break;
     case 'presentacion': cerrarHoja(true); verNovedades((NOVEDADES[1] || {}).v || null); break;

@@ -602,3 +602,8 @@ body.con-nv { overflow: hidden; }
 .carga .error-c { width: 100%; text-align: left; }
 .carga-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 16px; }
 @media (prefers-reduced-motion: reduce) { .carga *, .carga *::before, .carga *::after { animation: none !important; } }
+
+/* parar la IA */
+.cargando-ia .parar-ia { margin-top: 12px; }
+.parar-chat { display: flex; justify-content: flex-start; margin: -2px 0 10px; }
+.escribe button.parar { background: var(--plano3); color: var(--rojo-l); }

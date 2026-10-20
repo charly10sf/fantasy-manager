@@ -100,7 +100,12 @@ const apuntar = (x) => { intentosIA.unshift({ t: Date.now(), ...x }); if (intent
  */
 async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, signal } = {}) {
   if (enApp) {
-    const r = await http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: 200000 });
+    const pet = http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: 200000 });
+    // si lo paras, se deja de esperar al momento (la respuesta, si llega, se tira)
+    const r = signal ? await Promise.race([pet, new Promise((_, mal) => {
+      const parar = () => mal(new DOMException('Parado', 'AbortError'));
+      if (signal.aborted) parar(); else signal.addEventListener('abort', parar, { once: true });
+    })]) : await pet;
     if (r.s === 0) throw new ErrorIA(`Sin conexión con Google (${r.e || 'sin respuesta'})`, 0, { red: true, dns: !!r.dns });
     let j = null;
     try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
@@ -184,6 +189,7 @@ async function preguntar({ sistema, contents }, op = {}) {
     let nivel = op.nivel || (/pro/.test(modelo) ? 'low' : 'medium');
     let esperado = false;
     for (let intento = 0; intento < 5; intento++) {
+      if (op.signal && op.signal.aborted) throw new DOMException('Parado', 'AbortError');
       const cuerpo = esGemma(modelo)
         ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${contents.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
         : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
@@ -637,6 +643,11 @@ function sacarJSON(t) {
 
 /* ---------------- el chat ---------------- */
 export const conversacion = () => LS.get(K('chat'), []);
+/** al parar una pregunta, se quita del chat (para poder hacerla otra vez o cambiarla) */
+export function quitarUltimaPregunta(t) {
+  const h = conversacion();
+  if (h.length && h[h.length - 1].r === 'yo' && h[h.length - 1].t === t) { h.pop(); LS.set(K('chat'), h); }
+}
 export const borrarConversacion = () => LS.set(K('chat'), []);
 
 /** pregunta en el chat; alTexto(texto) se llama según va llegando la respuesta */

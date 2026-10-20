@@ -146,6 +146,7 @@ const I = {
   euro: '<path d="M17.5 6.6A7 7 0 1 0 17.5 17.4"/><path d="M4 10h9.5M4 14h9.5"/>',
   copiar: '<rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9.5a1 1 0 0 0 1 1h3.5"/>',
   enviar: '<path d="M4 12.2 20 4.5l-5.6 15.5-2.7-6.3z"/><path d="M11.7 13.7 20 4.5"/>',
+  parar: '<rect x="6.5" y="6.5" width="11" height="11" rx="2.2"/>',
   micro: '<rect x="9" y="3" width="6" height="11.5" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M8.5 21h7"/>',
   nota: '<path d="M6 3.5h9l3.5 3.5v13.5H6z"/><path d="M14.5 3.5V7.5h4M9 12h6M9 15.5h6"/>',
   calendario: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
