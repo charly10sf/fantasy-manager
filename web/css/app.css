@@ -558,3 +558,47 @@ body.con-nv { overflow: hidden; }
 .previa { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
 .previa span { padding: 5px 9px; border-radius: 9px; background: var(--plano2); font-size: 13px; color: var(--texto2); }
 .previa b { color: var(--texto); font-family: var(--cond); font-size: 14.5px; }
+
+/* ---------- la pantalla de carga ---------- */
+.carga { position: relative; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; padding: calc(40px + env(safe-area-inset-top)) 24px calc(30px + env(safe-area-inset-bottom)); }
+.carga-luz { position: absolute; left: 50%; top: -18%; width: 150%; height: 70%; transform: translateX(-50%); pointer-events: none; background: radial-gradient(closest-side, rgba(238, 28, 60, 0.32), rgba(238, 28, 60, 0.08) 55%, transparent); animation: carga-luz 3.2s ease-in-out infinite; }
+@keyframes carga-luz { 50% { opacity: 0.65; transform: translateX(-50%) scale(1.06); } }
+/* medio campo dibujado abajo, muy suave */
+.carga-campo { position: absolute; left: -10%; right: -10%; bottom: -50vh; height: 72vh; border: 2px solid rgba(255, 255, 255, 0.05); border-radius: 50% 50% 0 0 / 30% 30% 0 0; pointer-events: none; }
+.carga-campo i { position: absolute; left: 50%; top: 0; transform: translate(-50%, -50%); width: 34vh; height: 34vh; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.05); }
+.carga-campo i + i { width: 10px; height: 10px; background: rgba(255, 255, 255, 0.08); border: 0; }
+.carga-in { position: relative; z-index: 1; width: 100%; max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.carga-escudo { position: relative; width: 92px; height: 92px; display: grid; place-items: center; }
+.carga-escudo .logo { position: relative; z-index: 1; width: 76px; height: 76px; filter: drop-shadow(0 10px 26px rgba(238, 28, 60, 0.45)); animation: carga-late 1.6s ease-in-out infinite; }
+.carga-escudo::before, .carga-escudo::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(238, 28, 60, 0.5); animation: carga-onda 2.4s ease-out infinite; }
+.carga-escudo::after { animation-delay: 1.2s; }
+@keyframes carga-late { 50% { transform: scale(1.06); } }
+@keyframes carga-onda { from { transform: scale(0.7); opacity: 0.9; } to { transform: scale(1.9); opacity: 0; } }
+.carga-marca { margin-top: 18px; font: 700 15px var(--cond); letter-spacing: 3px; text-transform: uppercase; color: var(--texto2); }
+.carga-marca span { color: var(--rojo-l); }
+.carga-t { margin: 22px 0 26px; font: 700 clamp(34px, 10vw, 46px)/0.98 var(--cond); text-transform: uppercase; }
+.carga-t span { color: var(--rojo); }
+.carga-barra { position: relative; width: 100%; height: 8px; border-radius: 6px; background: var(--plano2); overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04); }
+.carga-barra i { position: relative; display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--rojo2), var(--rojo), #ff5a6f); transition: width 0.45s cubic-bezier(0.3, 0.8, 0.3, 1); overflow: hidden; }
+.carga-barra i::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent); transform: translateX(-100%); animation: carga-brillo 1.3s ease-in-out infinite; }
+@keyframes carga-brillo { to { transform: translateX(100%); } }
+.carga-paso { width: 100%; display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 16px; }
+.carga-paso b { flex: 1; text-align: left; font-weight: 600; }
+.carga-paso .pct { font: 700 16px var(--cond); color: var(--texto2); }
+.carga-paso .balon { display: grid; place-items: center; width: 26px; height: 26px; color: var(--rojo-l); animation: carga-gira 1.1s linear infinite; }
+.carga-paso .balon .ic { width: 22px; height: 22px; }
+@keyframes carga-gira { to { transform: rotate(360deg); } }
+.carga-hechos { width: 100%; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; min-height: 64px; align-content: flex-start; }
+.carga-hechos span { display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px 4px 6px; border-radius: 8px; background: var(--plano); font-size: 13px; color: var(--texto2); animation: carga-chip 0.3s ease both; }
+.carga-hechos .ic { width: 14px; height: 14px; color: var(--sube); }
+@keyframes carga-chip { from { transform: translateY(6px); opacity: 0; } }
+.carga-consejo { position: relative; z-index: 1; width: 100%; max-width: 440px; margin: 34px auto 0; padding: 14px 16px; border-radius: 16px; background: rgba(19, 19, 23, 0.85); border: 1px solid var(--linea); }
+.carga-consejo .et { display: flex; align-items: center; gap: 6px; font: 700 12px 'Barlow'; letter-spacing: 1.4px; text-transform: uppercase; color: var(--oro); }
+.carga-consejo .et .ic { width: 15px; height: 15px; }
+.carga-consejo p { margin: 6px 0 0; min-height: 44px; font-size: 15px; line-height: 1.45; color: var(--texto2); transition: opacity 0.35s, transform 0.35s; }
+.carga-consejo p.sale { opacity: 0; transform: translateY(6px); }
+.carga.mal .carga-escudo::before, .carga.mal .carga-escudo::after, .carga.mal .carga-escudo .logo, .carga.mal .carga-luz { animation: none; }
+.carga.mal .carga-escudo .logo { filter: grayscale(0.6) drop-shadow(0 10px 26px rgba(0, 0, 0, 0.5)); }
+.carga .error-c { width: 100%; text-align: left; }
+.carga-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 16px; }
+@media (prefers-reduced-motion: reduce) { .carga *, .carga *::before, .carga *::after { animation: none !important; } }

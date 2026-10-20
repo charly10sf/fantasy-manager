@@ -30,7 +30,7 @@ export const pasosCarga = PASOS;
  */
 export async function actualizar(alPaso = () => {}) {
   if (enDemo()) {
-    for (let i = 0; i < PASOS.length; i++) { alPaso(i, PASOS[i]); await new Promise((r) => setTimeout(r, 70)); }
+    for (let i = 0; i < PASOS.length; i++) { alPaso(i, PASOS[i]); await new Promise((r) => setTimeout(r, window.__lento || 90)); }
     const { D, H } = demo();
     const h = historico();
     if (!Object.keys(h.v || {}).length) LS.set(K('hist'), H);

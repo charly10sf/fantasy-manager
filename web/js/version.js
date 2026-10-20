@@ -9,8 +9,9 @@ export const VERSION = '0.1.6';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.1.6', f: '2026-10-21', h: '00:02', t: 'Pregunta y sigue a lo tuyo',
+    v: '0.1.6', f: '2026-10-21', h: '00:02', t: 'Pregunta, espera y sigue a lo tuyo',
     cosas: [
+      { tipo: 'mejora', d: 'scroll', t: 'Una pantalla de carga de verdad', x: 'Con el escudo latiendo, una barra con el porcentaje, el paso por el que va, lo que ya tiene listo y, mientras esperas, consejos del juego que van cambiando.' },
       { tipo: 'mejora', d: 'voz', t: 'El chat sigue aunque salgas', x: 'Pregúntale algo y vete a otra app: mientras piensa sale una notificación fija y no se corta. Cuando contesta, te llega una notificación con el principio de la respuesta; tócala y vas directo al chat.', ir: { v: 'ia' } },
     ],
   },

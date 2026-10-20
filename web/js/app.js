@@ -52,11 +52,60 @@ function pantallaEntrar(error = '') {
     <button class="btn sec ancho" data-accion="entrarDemo" style="margin-top:6px">Ver con una liga de ejemplo</button>
   </div>`;
 }
+/* ---------------- la pantalla de carga ---------------- */
+// lo que se va contando mientras carga: cosas del juego que conviene tener presentes
+const CONSEJOS = [
+  'Si empiezas la jornada en negativo, no puntúas. Entre semana puedes bajar hasta el 20 % del valor de tu equipo.',
+  'Un jugador recién fichado tiene la cláusula protegida unos 14 días.',
+  'Lo que pagas por encima del valor de un jugador se pierde: si lo vendes, te dan cerca de su valor.',
+  'En el mercado de la liga se puja a ciegas: gana la puja más alta cuando cambia el mercado.',
+  'Lo que vende otro manager sigue siendo suyo hasta que acepta tu oferta.',
+  'En la versión gratis no hay entrenador: no gastes en ellos.',
+  'Un defensa con poca portería a cero esperada puntúa poco aunque sea titular.',
+  'Si un jugador marca menos de lo que dice su xG, lo normal es que acaben llegando los goles.',
+  'Antes de un parón los valores se paran: buen momento para vender lo que está arriba.',
+  'Puedes contarle a la IA un trato con un amigo y lo tendrá en cuenta en el plan.',
+];
+let consejoT = null;
 function pantallaCarga(paso = -1, error = '') {
-  raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Poniendo al día<br>tu liga</h1>
-    <div class="pasos-c">${pasosCarga.map((p, i) => `<div class="${i < paso ? 'hecho' : i === paso ? 'ahora' : ''}">${icono(i < paso ? 'ok' : i === paso ? 'refrescar' : 'reloj')}${esc(p)}</div>`).join('')}</div>
-    ${error ? `<div class="error-c">${esc(error)}</div><div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button class="btn" data-accion="recargar">Volver a probar</button><button class="btn sec" data-accion="diag">Diagnóstico</button><button class="btn sec" data-accion="entrarDemo">Ver ejemplo</button></div>` : ''}
+  const total = pasosCarga.length;
+  const pct = error ? 0 : Math.max(4, Math.min(100, Math.round(((paso + 0.5) / total) * 100)));
+  const actual = paso >= 0 && paso < total ? pasosCarga[paso] : 'Preparando';
+  const hechos = pasosCarga.slice(0, Math.max(0, paso));
+  const el = $('.carga');
+  // si ya está en pantalla, solo se mueve lo que cambia (para que la barra y las animaciones vayan suaves)
+  if (el && !error && $('.carga-barra', el)) {
+    $('.carga-barra i', el).style.width = `${pct}%`;
+    $('.carga-paso b', el).textContent = actual;
+    $('.carga-paso .pct', el).textContent = `${pct} %`;
+    $('.carga-hechos', el).innerHTML = hechos.map((t) => `<span>${icono('ok')}${esc(t)}</span>`).join('');
+    return;
+  }
+  const liga = (foto() || {}).liga;
+  raiz().innerHTML = `<div class="carga ${error ? 'mal' : ''}">
+    <div class="carga-luz" aria-hidden="true"></div><div class="carga-campo" aria-hidden="true"><i></i><i></i></div>
+    <div class="carga-in">
+      <div class="carga-escudo">${LOGO}</div>
+      <div class="carga-marca">Fantasy <span>Manager</span></div>
+      <h1 class="carga-t">${error ? 'No se ha podido cargar' : liga && liga.nombre ? `Poniendo al día<br><span>${esc(liga.nombre)}</span>` : 'Poniendo al día<br><span>tu liga</span>'}</h1>
+      ${error ? `<div class="error-c">${esc(error)}</div>
+        <div class="carga-btns"><button class="btn" data-accion="recargar">${icono('refrescar')}Volver a probar</button><button class="btn sec" data-accion="diag">Diagnóstico</button><button class="btn sec" data-accion="entrarDemo">Ver la liga de ejemplo</button></div>`
+        : `<div class="carga-barra"><i style="width:${pct}%"></i></div>
+        <div class="carga-paso"><span class="balon">${icono('balon')}</span><b>${esc(actual)}</b><span class="pct">${pct} %</span></div>
+        <div class="carga-hechos">${hechos.map((t) => `<span>${icono('ok')}${esc(t)}</span>`).join('')}</div>`}
+    </div>
+    ${error ? '' : `<div class="carga-consejo"><span class="et">${icono('info')}¿Sabías que…?</span><p id="cConsejo">${esc(CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)])}</p></div>`}
   </div>`;
+  clearInterval(consejoT);
+  if (!error) {
+    let k = Math.floor(Math.random() * CONSEJOS.length);
+    consejoT = setInterval(() => {
+      const c = $('#cConsejo');
+      if (!c) { clearInterval(consejoT); return; }
+      c.classList.add('sale');
+      setTimeout(() => { k = (k + 1) % CONSEJOS.length; c.textContent = CONSEJOS[k]; c.classList.remove('sale'); }, 350);
+    }, 4200);
+  }
 }
 
 /* ---------------- el marco ---------------- */
