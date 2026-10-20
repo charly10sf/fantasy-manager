@@ -9,11 +9,14 @@ export const VERSION = '0.1.4';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.1.4', f: '2026-10-20', h: '22:16', t: 'Solo lo que se puede comprar',
+    v: '0.1.4', f: '2026-10-20', h: '22:31', t: 'Una IA mucho más fina',
     cosas: [
-      { tipo: 'arreglo', d: 'oferta', t: 'Los recién fichados no están a la venta', x: 'La API de LaLiga sigue dando un rato en el mercado a jugadores que ya ha fichado alguien. La app los tomaba por una venta de ese rival; ahora los quita del mercado.' },
-      { tipo: 'arreglo', d: 'escudo', t: 'A un rival solo se le compra lo que vende', x: 'Si el plan te dice que compres a otro manager un jugador que no tiene a la venta (y no es un trato que le hayas contado), la app lo tacha: su dueño no tiene por qué vendértelo. Para quitárselo, solo la cláusula.', ir: { v: 'hoy' } },
-      { tipo: 'mejora', d: 'ia', t: 'La IA sabe quién acaba de fichar a quién', x: 'Con cada jugador de un rival le llega cuándo y por cuánto lo fichó, y la regla de que lo recién fichado está protegido y no se vende. Si lo tiene a la venta, te recuerda que decide él.' },
+      { tipo: 'mejora', d: 'escudo', t: 'Solo lo que se puede hacer', x: 'La app le da a la IA la lista de operaciones posibles hoy, cada una con su referencia: pujar por libres de la liga, comprar lo que otro manager tiene a la venta (decide él), tratos que le has contado, cláusulas abiertas o que se abren antes de la jornada, aceptar ofertas, vender y blindar. Fuera de esa lista no puede recomendar nada.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'Un jugador de un rival no se compra porque sí', x: 'Si no lo tiene a la venta ni es un trato tuyo, el paso sale tachado: su dueño no tiene por qué vendértelo, y menos si lo acaba de fichar. Y los recién fichados que la API sigue dando en el mercado ya no salen como libres ni como «en venta».', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'lupa', t: 'Siete preguntas antes de cada paso', x: '¿Se puede? ¿Juega? ¿Puntúa? ¿Qué cuesta? ¿Te hace falta? ¿Te llega? ¿Qué riesgo tiene? La IA las repasa con cada candidato, piensa a fondo y prefiere no hacer nada a hacer algo dudoso.' },
+      { tipo: 'nuevo', d: 'periodico', t: 'Noticias de cada equipo y cómo le va', x: 'Además de las de cada jugador, titulares de cada equipo (lesiones, convocatorias, ruedas de prensa, alineaciones), los últimos cinco resultados de cada uno y la última jornada. Cada candidato llega con su prensa de los últimos días.' },
+      { tipo: 'nuevo', d: 'plan', t: 'Por qué sí y por qué no', x: 'Cada paso del plan trae sus datos clave en pastillas (titular, forma, rival, lo que sube, lo que pagas de más) y al final sale lo que ha mirado y descartado, con el motivo.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'La gráfica del equipo, desde el primer día', x: 'Si la app aún no ha apuntado días, suma el histórico de valor de cada uno de tus jugadores y te enseña cómo ha ido tu plantilla de hoy.' },
     ],
   },
   {

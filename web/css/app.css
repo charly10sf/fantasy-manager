@@ -294,6 +294,7 @@ main { padding: 16px 16px 120px; }
 .graf { width: 100%; height: auto; display: block; margin: 6px 0; }
 .graf-vacio { color: var(--apagado); font-size: 14px; padding: 16px 0; text-align: center; }
 .graf-cab { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 14px 0 2px; }
+.graf-cab > span small { font: 500 12px 'Barlow'; letter-spacing: 0; text-transform: none; color: var(--apagado); }
 .graf-cab > span { font: 700 12.5px 'Barlow'; letter-spacing: 1.3px; text-transform: uppercase; color: var(--texto2); }
 .rangos { display: flex; padding: 2px; border-radius: 10px; background: var(--plano2); }
 .rangos button { padding: 5px 10px; border-radius: 8px; font: 600 12.5px 'Barlow'; color: var(--texto2); }
@@ -544,3 +545,11 @@ body.con-nv { overflow: hidden; }
 .paso-op.descartada .num { border-color: var(--plano3); color: var(--apagado); background: none; }
 .paso-op.descartada .imp { text-decoration: line-through; }
 .aviso-op.mal { color: var(--baja); }
+
+/* los datos que respaldan cada paso y lo que la IA ha mirado y descartado */
+.claves { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.claves span { padding: 3px 8px; border-radius: 7px; background: var(--plano2); font: 600 12.5px 'Barlow'; color: var(--texto2); }
+.descartes { margin: 14px 0 4px; padding: 10px 12px; border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); }
+.descartes summary { display: flex; align-items: center; gap: 8px; font: 600 14.5px 'Barlow'; color: var(--texto2); list-style: none; cursor: pointer; }
+.descartes summary::-webkit-details-marker { display: none; }
+.descartes summary .ic { width: 18px; height: 18px; }

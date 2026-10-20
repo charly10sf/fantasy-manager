@@ -93,10 +93,11 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- la clasificación de LaLiga y lo difícil que es cada rival ---------- */
   const tabla = {};
-  for (const p of D.resultados || []) {
-    for (const [id, gf, gc] of [[p.localId, p.gl, p.gv], [p.visitanteId, p.gv, p.gl]]) {
-      const t = (tabla[id] ||= { id, pj: 0, pts: 0, gf: 0, gc: 0 });
+  for (const p of [...(D.resultados || [])].sort((a, b) => (a.jornada || 0) - (b.jornada || 0))) {
+    for (const [id, gf, gc, rid, casa] of [[p.localId, p.gl, p.gv, p.visitanteId, true], [p.visitanteId, p.gv, p.gl, p.localId, false]]) {
+      const t = (tabla[id] ||= { id, pj: 0, pts: 0, gf: 0, gc: 0, ult: [] });
       t.pj++; t.gf += gf; t.gc += gc; t.pts += gf > gc ? 3 : gf === gc ? 1 : 0;
+      t.ult.push({ r: gf > gc ? 'V' : gf === gc ? 'E' : 'D', gf, gc, rid, casa, jornada: p.jornada });
     }
   }
   const filas = Object.values(tabla).filter((t) => t.pj > 0).sort((a, b) => b.pts - a.pts || (b.gf - b.gc) - (a.gf - a.gc) || b.gf - a.gf);
@@ -106,6 +107,16 @@ export function analizar(D, H, c, extra = {}) {
   const mediaGoles = totPj ? filas.reduce((s, t) => s + t.gf, 0) / totPj : 1.3;
   const mediaPts = totPj ? filas.reduce((s, t) => s + t.pts, 0) / totPj : 1.4;
   M.equipoLiga = (id) => tabla[id] || null;
+  /** cómo le va a un equipo: sus últimos partidos (V/E/D, goles) */
+  M.racha = (id, n = 5) => {
+    const t = tabla[id];
+    if (!t || !t.ult.length) return null;
+    const u = t.ult.slice(-n);
+    return { txt: u.map((x) => x.r).join('-'), gf: u.reduce((s, x) => s + x.gf, 0), gc: u.reduce((s, x) => s + x.gc, 0), pts: u.reduce((s, x) => s + (x.r === 'V' ? 3 : x.r === 'E' ? 1 : 0), 0), de: u.length, ult: u };
+  };
+  /** los resultados de la última jornada jugada */
+  const jUlt = Math.max(0, ...(D.resultados || []).map((p) => p.jornada || 0));
+  M.ultimaJornada = jUlt ? { n: jUlt, partidos: (D.resultados || []).filter((p) => p.jornada === jUlt) } : null;
   /**
    * lo que cambia lo que se espera de un jugador según su próximo rival (0,75 a 1,25):
    * porteros y defensas, según lo que marca el rival; medios y delanteros, según lo que encaja; más la fuerza

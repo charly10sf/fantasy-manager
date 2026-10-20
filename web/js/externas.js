@@ -120,7 +120,18 @@ async function buscarNoticias(q) {
   return r.s === 200 && r.b ? parseRSS(r.b) : [];
 }
 
-/** titulares de los últimos días: tus jugadores, los candidatos y LaLiga Fantasy en general (se guardan 1 hora) */
+/** cómo sale un equipo en los titulares («Valencia CF» → valencia; «Real Betis» → betis; «Atlético de Madrid» → atlético) */
+const STOP = new Set(['cf', 'fc', 'rcd', 'ud', 'cd', 'sad', 'club', 'de', 'futbol', 'balompie', 'ca', 'rc', 'sd', 'the']);
+const ESPECIALES = [['real madrid', ['real madrid']], ['real sociedad', ['real sociedad']], ['betis', ['betis']], ['atletico', ['atletico', 'atleti']], ['athletic', ['athletic']],
+  ['barcelona', ['barcelona', 'barca']], ['rayo', ['rayo']], ['celta', ['celta']], ['oviedo', ['oviedo']], ['valladolid', ['valladolid']], ['mallorca', ['mallorca']], ['alaves', ['alaves']], ['las palmas', ['las palmas']]];
+export function aliasEquipo(nombre) {
+  const n = norm(nombre);
+  for (const [k, a] of ESPECIALES) if (n.includes(k)) return a;
+  const tok = n.split(' ').filter((w) => !STOP.has(w) && w.length > 2);
+  return tok.length ? [tok.join(' ')] : [n];
+}
+
+/** titulares de los últimos días: tus jugadores, los candidatos, sus equipos y LaLiga Fantasy en general (se guardan 1 hora) */
 export async function noticias(D, M) {
   const guardado = LS.get('noticias', null);
   if (guardado && Date.now() - guardado.t < HORA && guardado.lista && guardado.lista.length) return guardado;
@@ -135,11 +146,20 @@ export async function noticias(D, M) {
   for (let i = 0; i < nombres.length && grupos.length < 6; i += 5) {
     grupos.push(`(${nombres.slice(i, i + 5).map((j) => `"${j.nombre}"`).join(' OR ')}) when:3d`);
   }
+  // los equipos de tus jugadores y de los candidatos: lesiones, convocatorias, ruedas de prensa, alineaciones
+  const eqIds = [...new Set(nombres.map((j) => j.equipoId).filter(Boolean))];
+  const eqAlias = eqIds.map((id) => ({ id, a: aliasEquipo((D.equipos[id] || {}).nombre || '')[0] })).filter((x) => x.a);
+  const gruposEq = [];
+  for (let i = 0; i < eqAlias.length && gruposEq.length < 5; i += 3) {
+    gruposEq.push(`(${eqAlias.slice(i, i + 3).map((x) => `"${x.a}"`).join(' OR ')}) (lesión OR baja OR convocatoria OR "rueda de prensa" OR alineación OR entrenador OR once) when:2d`);
+  }
   const consultas = [
     '"LaLiga Fantasy" when:2d',
     '(futbolfantasy OR "jornada perfecta" OR comuniate OR "analítica fantasy") when:2d',
     '(lesión OR lesionado OR baja OR convocatoria) LaLiga when:2d',
+    'LaLiga (previa OR crónica OR "once probable") when:2d',
     ...grupos,
+    ...gruposEq,
   ];
   const listas = await enParalelo(consultas, 3, (q) => buscarNoticias(q));
   const vistos = new Set();
@@ -152,11 +172,13 @@ export async function noticias(D, M) {
   }
   // a qué jugadores se refiere cada titular
   const candidatos = Object.values(D.maestro).filter((j) => j.nombre && j.nombre.length > 3);
+  const alias = Object.entries(D.equipos || {}).map(([id, e]) => ({ id, a: aliasEquipo(e.nombre || '') }));
   for (const n of todas) {
     const t = ` ${norm(n.titulo)} `;
     n.pids = candidatos.filter((j) => t.includes(` ${norm(j.nombre)} `)).map((j) => j.id).slice(0, 4);
+    n.equipos = alias.filter((x) => x.a.some((a) => t.includes(` ${a} `))).map((x) => x.id).slice(0, 3);
   }
-  const lista = todas.filter((n) => !n.t || Date.now() - n.t < 4 * DIA).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 80);
+  const lista = todas.filter((n) => !n.t || Date.now() - n.t < 4 * DIA).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 140);
   const salida = { t: Date.now(), lista };
   if (lista.length) LS.set('noticias', salida);
   return salida;

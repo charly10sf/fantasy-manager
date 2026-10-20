@@ -44,8 +44,37 @@ export function grafValor(serie, dias, cargando = false) {
 /** el valor de tu equipo día a día (lo que apunta la app cada día) */
 export function serieEquipo(S) {
   const s = (S.H.yo || []).map(([d, , v]) => [Date.parse(d + 'T12:00:00'), v]).filter(([, v]) => v);
-  if (S.D.valorEquipo && (!s.length || Date.now() - s[s.length - 1][0] > 20 * 3600e3)) s.push([Date.now(), S.D.valorEquipo]);
-  return s;
+  // sumando el histórico de valor de cada uno de tus jugadores de hoy (de LaLiga o lo apuntado por la app)
+  const suma = sumaJugadores(S);
+  const base = suma && suma.length > s.length ? suma : s;
+  if (S.D.valorEquipo && (!base.length || Date.now() - base[base.length - 1][0] > 20 * 3600e3)) base.push([Date.now(), S.D.valorEquipo]);
+  return base;
+}
+/** el valor de tus jugadores de hoy, día a día, sumando la serie de cada uno (null si falta la de muchos) */
+export function sumaJugadores(S, dias = 90) {
+  const { M } = S;
+  const series = M.mias.filter((x) => x.j).map((x) => {
+    const dv = (S.det && S.det[x.pid] && S.det[x.pid].valores) || [];
+    const t = M.tend(x.pid).serie || [];
+    return { v: x.j.valor, s: (dv.length > t.length ? dv : t).filter(([ts, v]) => Number.isFinite(ts) && v > 0).sort((a, b) => a[0] - b[0]) };
+  });
+  const con = series.filter((x) => x.s.length >= 3);
+  if (!series.length || con.length < series.length * 0.7) return null;
+  const DIA_MS = 864e5, hoy = new Date(); hoy.setHours(12, 0, 0, 0);
+  const desde = Math.max(hoy.getTime() - (dias - 1) * DIA_MS, Math.min(...con.map((x) => x.s[0][0])));
+  const out = [];
+  for (let t = hoy.getTime() - (dias - 1) * DIA_MS; t <= hoy.getTime(); t += DIA_MS) {
+    if (t < desde - DIA_MS / 2) continue;
+    let total = 0;
+    for (const x of series) {
+      if (!x.s.length) { total += x.v; continue; }
+      let v = x.s[0][1];
+      for (const [ts, val] of x.s) { if (ts <= t + DIA_MS / 2) v = val; else break; }
+      total += v;
+    }
+    out.push([t, total]);
+  }
+  return out.length >= 3 ? out : null;
 }
 export function resumenEquipo(S) {
   const { D, M } = S;
@@ -60,7 +89,7 @@ export function resumenEquipo(S) {
   let h = `<div class="hoja-cab"><h2>Tu equipo hoy</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
   h += `<div class="valor-g"><span class="v">${eur(D.valorEquipo)}</span><span class="d ${clase(d1)}">${d1 ? `${d1 > 0 ? '▲' : '▼'} ${eur(Math.abs(d1), { dec: 2 })}${base > 0 ? ` (${pct((d1 / base) * 100)})` : ''} hoy` : '= hoy'}</span>${d7 ? `<span class="d ${clase(d7)}">${eur(d7, { signo: true })} 7d</span>` : ''}</div>`;
   h += `<p class="t2 peq" style="margin:2px 0 0">${suben.length} suben · ${bajan.length} bajan · ${quietos} igual${suben[0] ? ` · el que más sube, <b class="sube">${esc(suben[0].j.nombre)} ${eur(suben[0].tend.d1, { signo: true })}</b>` : ''}${bajan[0] ? ` · el que más baja, <b class="baja">${esc(bajan[0].j.nombre)} ${eur(bajan[0].tend.d1, { signo: true })}</b>` : ''}</p>`;
-  h += `<div class="graf-cab"><span>Valor del equipo</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="__equipo" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
+  h += `<div class="graf-cab"><span>Valor del equipo${(S.H.yo || []).length < 7 && sumaJugadores(S) ? ' <small>(tus jugadores de hoy)</small>' : ''}</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="__equipo" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   h += `<div id="graf-j">${grafValor(serieEquipo(S), rango)}</div>`;
 
   // el dinero

@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, LOGO, $, $$, LS, eur, rel, MIN, diaDe } from './util.js';
+import { esc, icono, LOGO, $, $$, LS, eur, rel, MIN, diaDe, enParalelo } from './util.js';
 import { enApp, nativo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas } from './datos.js';
@@ -350,6 +350,17 @@ function pintarDetalle(pid) {
   const el = $('#det-j'); if (el) el.innerHTML = Hj.detalleHTML(S.det[pid]);
   pintarGraf(pid);
 }
+/** el histórico de valor de tus jugadores que aún no se tenga, para sumar el del equipo */
+async function valoresMios() {
+  if (enDemo()) return;
+  const faltan = S.M.mias.map((x) => x.pid).filter((pid) => !(S.det[pid] && (S.det[pid].valores || S.det[pid].sinValores)));
+  if (!faltan.length) return;
+  await enParalelo(faltan.slice(0, 25), 3, async (pid) => {
+    const v = await historialValor(pid).catch(() => null);
+    S.det[pid] = { ...(S.det[pid] || { stats: [], t: Date.now() }), valores: v || null, sinValores: !v };
+  });
+  if (S.tipoHoja && S.tipoHoja[0] === 'resumen') repintarHoja();
+}
 function pintarGraf(pid) {
   const g = $('#graf-j');
   if (!g) return;
@@ -466,7 +477,7 @@ document.addEventListener('click', async (ev) => {
     case 'plan': S.planEstado = {}; generarPlan(); break;
     case 'planYa': cerrarHoja(); ir('hoy'); S.planEstado = {}; generarPlan(); break;
     case 'voz': escuchar(); break;
-    case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); } break;
+    case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
     case 'novedades': listaVersiones(); break;
     case 'presentacion': cerrarHoja(true); verNovedades((NOVEDADES[1] || {}).v || null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;

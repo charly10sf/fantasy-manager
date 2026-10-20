@@ -6,6 +6,7 @@
 import { leer, guardar, http, enApp } from './puente.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, diaDe, norm, num } from './util.js';
 import { K } from './datos.js';
+import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo } from './operaciones.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -180,7 +181,7 @@ async function preguntar({ sistema, contents }, op = {}) {
     let web = quiereWeb && !sinWebHoy() && !esGemma(modelo);
     let pensar = !esGemma(modelo) && !/gemini-(1|2\.0)/.test(modelo);
     // pensar a medias: contesta en la mitad de tiempo y el plan sale igual de bien; los pro, lo justo
-    let nivel = /pro/.test(modelo) ? 'low' : 'medium';
+    let nivel = op.nivel || (/pro/.test(modelo) ? 'low' : 'medium');
     let esperado = false;
     for (let intento = 0; intento < 5; intento++) {
       const cuerpo = esGemma(modelo)
@@ -301,15 +302,21 @@ function lineaCompleta(D, M, j) {
   const fa = tid && M.fichadoPor && M.fichadoPor(j.id);
   const de = !tid ? 'libre (no es de nadie de la liga)' : tid === D.yo.teamId ? 'ES MÍO' : `es de ${(e && (e.manager || e.nombre)) || 'un rival'}${fa ? `, que lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)}${fa.importe ? ` por ${eur(fa.importe)}` : ''}` : ''}`;
   const cl = M.clausulas.find((x) => x.pid === j.id);
-  const mk = M.mercado.find((m) => m.pid === j.id);
   const serie = t.serie || [];
   const hace = (d) => { const x = [...serie].reverse().find(([ts]) => ts <= Date.now() - d * DIA); return x ? x[1] : null; };
   const v7 = hace(7), v30 = hace(30);
-  const mkTxt = !mk ? '' : mk.tipo === 'manager'
-    ? ` | SU DUEÑO (${mk.vendedor || 'un manager'}) LO HA PUESTO A LA VENTA y pide ${eur(mk.precio)}: sigue siendo suyo y solo es mío si acepta mi oferta (no es un jugador libre de la liga)`
-    : ` | LIBRE EN EL MERCADO DE LA LIGA: subasta a ciegas, puja mínima ${eur(mk.precio)}`;
-  return `${lineaJ(M, j, { tend: t })} | ${de}${cl ? ` | cláusula ${eur(cl.clausula)} ${cl.abierta ? 'ABIERTA' : `se abre ${cuando(cl.protegidoHasta)}`}` : ''}${mkTxt}${v7 ? ` | hace 7 días valía ${eur(v7)}` : ''}${v30 ? `, hace 30 días ${eur(v30)}` : ''} | ${mejoraTxt(M, j)}`;
+  const como = comoConseguir(D, M, j.id, catDe(D, M));
+  return `${lineaJ(M, j, { tend: t })} | ${de}${cl ? ` | cláusula ${eur(cl.clausula)} ${cl.abierta ? 'ABIERTA' : `se abre ${cuando(cl.protegidoHasta)}`}` : ''} | CÓMO CONSEGUIRLO: ${como}${prensaTxt(M, j.id)}${v7 ? ` | hace 7 días valía ${eur(v7)}` : ''}${v30 ? `, hace 30 días ${eur(v30)}` : ''} | ${mejoraTxt(M, j)}`;
 }
+
+/** el catálogo de operaciones posibles, uno por análisis */
+const catDe = (D, M) => M._cat || (M._cat = catalogo(D, M, notasVigentes()));
+/** los titulares de los últimos días que nombran a un jugador */
+function prensaTxt(M, pid, n = 2) {
+  const l = (M.noticiasDe ? M.noticiasDe(pid) : []).slice(0, n);
+  return l.length ? ` | PRENSA: ${l.map((x) => `«${x.titulo}» (${x.fuente || '?'}${x.t ? `, ${cuando(x.t)}` : ''})`).join('; ')}` : ' | prensa: nada en 3 días';
+}
+const rachaTxt = (M, id) => { const r = M.racha && M.racha(id); return r ? `${r.txt} (${r.gf}-${r.gc}, ${r.pts} de ${r.de * 3} pts)` : null; };
 
 /** lo que el manager le ha contado, para meterlo en el contexto */
 function notasTxt(D, M) {
@@ -361,19 +368,10 @@ export function contexto(D, M, c, { corto = false } = {}) {
   }
   L.push('\nRIVALES (pos | equipo | manager | puntos | valor | cambio de valor 7d | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d | peligro):');
   for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel}`);
-  const cl = M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, corto ? 16 : 30);
-  L.push('\nCLÁUSULAS DE RIVALES (abiertas o que se abren en 3 días; de más a menos interesantes según la app):');
-  for (const x of cl) L.push(`- ${lineaJ(M, x.j, x)} | de ${x.rival.nombre} | CLÁUSULA ${eur(x.clausula)} (${x.j.valor ? `${pct((x.clausula / x.j.valor - 1) * 100)} sobre su valor: pagaría ${eur(x.clausula - x.j.valor)} de más` : '?'}) ${x.abierta ? 'ABIERTA YA' : `se abre ${cuando(x.protegidoHasta)}`} | ${x.meLlega ? 'me llega' : 'NO me llega'} | interés ${x.interes}/100 | ${mejoraTxt(M, x.j)}`);
-  const libres = M.mercado.filter((m) => m.tipo === 'liga');
-  const deOtros = M.mercado.filter((m) => m.tipo === 'manager' && m.vendedorTeamId !== D.yo.teamId && !(M.enVenta && M.enVenta.has(m.pid)));
-  if (libres.length) {
-    L.push(`\nMERCADO DE LA LIGA: JUGADORES LIBRES (no son de nadie; subasta a ciegas que se resuelve ${M.cierreMercado ? cuando(M.cierreMercado) : 'al cambiar el mercado'}; la puja mínima es el precio y se lo lleva la más alta):`);
-    for (const m of libres.slice(0, 20)) L.push(`- ${lineaJ(M, m.j, m)} | LIBRE, puja mínima ${eur(m.precio)} | ${m.pujas} pujas${m.miPuja ? ` | MI PUJA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100 | ${mejoraTxt(M, m.j)}`);
-  }
-  if (deOtros.length) {
-    L.push(`\nEN EL MERCADO PERO CON DUEÑO: LOS PONEN A LA VENTA OTROS MANAGERS DE MI LIGA (siguen siendo suyos; el precio lo pone el dueño; solo son míos si el dueño acepta mi oferta; no se pueden conseguir más baratos «en el mercado»):`);
-    for (const m of deOtros.slice(0, 14)) L.push(`- ${lineaJ(M, m.j, m)} | LO VENDE ${m.vendedor || 'un manager'} y pide ${eur(m.precio)} (${pct((m.sobre || 0) * 100)} sobre su valor)${m.ofertas ? ` | ${m.ofertas} ofertas` : ''}${m.miPuja ? ` | MI OFERTA ACTUAL ${eur(m.miPuja)}` : ''} | interés ${m.interes}/100 | ${mejoraTxt(M, m.j)}`);
-  }
+  // lo que se puede hacer hoy, cada cosa con los datos de su jugador (forma, once, rivales, prensa)
+  const cat = catDe(D, M);
+  L.push('');
+  L.push(catalogoTxt(D, M, cat, { corto, datos: (o) => (['A', 'V', 'B'].includes(o.ref[0]) ? null : `${lineaJ(M, o.j, { tend: M.tend(o.pid) })} | interés ${o.interes != null ? o.interes : '?'}/100 | ${mejoraTxt(M, o.j)}${prensaTxt(M, o.pid)}`) }));
   if (!corto) {
     L.push('\nLOS QUE MÁS SUBEN HOY EN TODA LALIGA:');
     for (const x of M.suben.slice(0, 14)) L.push(`- ${x.j.nombre} (${x.j.equipo}, ${eur(x.j.valor)}) ${x.t.d1 != null ? eur(x.t.d1, { signo: true }) : ''} · ${x.dueno ? (x.dueno === D.yo.teamId ? 'MÍO' : `de ${(M.equipo[x.dueno] || {}).nombre}`) : 'libre'}`);
@@ -385,13 +383,23 @@ export function contexto(D, M, c, { corto = false } = {}) {
     }
   }
   if (M.tabla && M.tabla.length) {
-    L.push(`\nCLASIFICACIÓN DE LALIGA (de los resultados): ${M.tabla.map((t) => `${t.pos}º ${t.nombre} ${t.pts} pts (${t.pj} PJ, ${t.gf}-${t.gc})`).join(' · ')}`);
+    L.push('\nCLASIFICACIÓN DE LALIGA Y CÓMO LE VA A CADA EQUIPO (últimos 5: V victoria, E empate, D derrota):');
+    for (const t of M.tabla) L.push(`- ${t.pos}º ${t.nombre}: ${t.pts} pts en ${t.pj} PJ (${t.gf}-${t.gc}) · últimos ${rachaTxt(M, t.id) || '?'}`);
   }
+  if (M.ultimaJornada) L.push(`ÚLTIMA JORNADA (${M.ultimaJornada.n}): ${M.ultimaJornada.partidos.map((p) => `${(D.equipos[p.localId] || {}).nombre || p.localId} ${p.gl}-${p.gv} ${(D.equipos[p.visitanteId] || {}).nombre || p.visitanteId}`).join(' · ')}`);
   if (M.noticias && M.noticias.length) {
-    L.push(`\nTITULARES DE PRENSA DE LOS ÚLTIMOS DÍAS (Google Noticias; de webs de fantasy y de diarios):`);
-    const mios = new Set(M.mias.map((x) => x.pid));
-    const ord = [...M.noticias].sort((a, b) => (b.pids || []).some((p) => mios.has(p)) - (a.pids || []).some((p) => mios.has(p)) || (b.t || 0) - (a.t || 0));
-    for (const n of ord.slice(0, corto ? 18 : 40)) L.push(`- ${n.t ? cuando(n.t) : ''}: ${n.titulo}${n.fuente ? ` (${n.fuente})` : ''}`);
+    const tit = (n) => `${n.t ? `${cuando(n.t)}: ` : ''}«${n.titulo}»${n.fuente ? ` (${n.fuente})` : ''}`;
+    // por equipo: los de mis jugadores y los de los candidatos
+    const eqs = [...new Set([...M.mias.map((x) => x.j && x.j.equipoId), ...cat.lista.filter((o) => ['P', 'M', 'T', 'C'].includes(o.ref[0])).slice(0, 25).map((o) => o.j.equipoId)].filter(Boolean))];
+    const porEq = eqs.map((id) => ({ id, ns: M.noticias.filter((n) => (n.equipos || []).includes(id)).slice(0, corto ? 2 : 3) })).filter((x) => x.ns.length);
+    if (porEq.length) {
+      L.push('\nNOTICIAS DE CADA EQUIPO (últimos días: lesiones, convocatorias, ruedas de prensa, alineaciones):');
+      for (const x of porEq) L.push(`- ${(D.equipos[x.id] || {}).nombre || x.id}: ${x.ns.map(tit).join(' · ')}`);
+    }
+    const usadas = new Set(porEq.flatMap((x) => x.ns));
+    const resto = M.noticias.filter((n) => !usadas.has(n)).sort((a, b) => (b.t || 0) - (a.t || 0));
+    L.push(`\nOTROS TITULARES (fantasy y LaLiga en general):`);
+    for (const n of resto.slice(0, corto ? 10 : 22)) L.push(`- ${tit(n)}`);
   }
   const act = M.actividad.filter((a) => a.t && Date.now() - a.t < 7 * DIA && a.clase !== 'premio').slice(0, corto ? 20 : 45);
   if (act.length) {
@@ -407,6 +415,15 @@ Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exact
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa.
 El rival importa tanto como ser titular: no es lo mismo jugar contra el Barça o el Madrid que contra el colista, ni en casa que fuera. Te paso el próximo rival de cada jugador con su puesto en LaLiga y si es difícil, medio o fácil; los porteros y defensas puntúan más contra equipos que marcan poco, y los medios y delanteros contra los que encajan mucho. Tenlo en cuenta en el once, en a quién fichar y en cuándo vender (vender antes de una racha de rivales difíciles, comprar antes de una de fáciles).
 El manager te cuenta cosas que no salen en los datos (tratos con amigos de la liga, ofertas que le hacen por privado, lo que ya ha hecho o piensa hacer, jugadores que no quiere vender): cuentan tanto como los datos. Si otro manager le ofrece venderle un jugador por un precio, se cierra haciéndole una oferta directa por ese importe desde la ficha del jugador; si conviene, ponlo como operación (accion "comprar", donde "a <manager>") y calcula si le compensa con su valor, lo que sube al día, si entra en su once y si le llega el dinero.
+CÓMO DECIDIR (hazlo con cada operación antes de recomendarla, y si algo falla, no la recomiendes):
+1. ¿Se puede? Solo las operaciones de «OPERACIONES POSIBLES HOY», con su ref. Un jugador de un rival que no está ahí no se puede conseguir hoy.
+2. ¿Juega? Once probable, minutos de las últimas jornadas, lesión, sanción, convocatoria y lo que diga la prensa de los últimos dos días del jugador y de su equipo.
+3. ¿Puntúa? Su forma (puntos de las últimas jornadas y media), cómo le va a su equipo (últimos resultados) y lo difíciles que son sus próximos 3 rivales.
+4. ¿Qué cuesta? Precio frente a valor y si sube o baja (hoy y en 7 días). Lo que se paga de más se pierde.
+5. ¿Le hace falta? Si es para el once, que entre en una formación gratuita y mejore el once; si es para revender, que suba lo bastante para ganar antes de la jornada.
+6. ¿Le llega el dinero? Con el saldo, el límite de deuda y lo que venda antes. Empezar la jornada en positivo.
+7. ¿Riesgos? Rivales que clausulan, sus cláusulas abiertas, rotaciones por Champions o Copa, parón.
+Mejor no hacer nada que hacer algo dudoso. Confianza «alta» solo si todo cuadra y hay un dato o una noticia que lo respalda; si no has encontrado noticias, dilo.
 COMPRAR A OTRO MANAGER: solo si lo tiene a la venta (te los paso en el bloque «EN EL MERCADO PERO CON DUEÑO») o si es un trato que te ha contado el manager. Un jugador de un rival que no está a la venta NO se puede comprar: su dueño no tiene por qué vendérselo, y menos si lo acaba de fichar (los recién fichados están protegidos unos 14 días). Para quitárselo, solo su cláusula cuando se abra. Y aunque lo tenga a la venta, es el dueño quien decide: dilo y no lo des por hecho.
 PAGAR DE MÁS: lo que se paga por encima del valor de un jugador se pierde en el valor del equipo (si lo vende, le darán cerca de su valor). Una cláusula o un precio más de un 20 % por encima de su valor solo compensa si sube tan deprisa que lo recupera en pocos días o es un titular que no puede conseguir de otra forma; por encima de un 40 % no lo recomiendes salvo un trato que te haya contado él. Di siempre cuánto paga de más y en cuántos días lo recuperaría con lo que sube. Ejemplo de lo que NO hay que hacer: clausular por 21 M a un jugador que vale 9 M.
 Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;
@@ -430,13 +447,14 @@ function memoria(M) {
 export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
   const pedido = `${contexto(D, M, c)}${memoria(M)}
 
-Hazme el PLAN DE HOY. Primero busca noticias de mis jugadores, de los candidatos (cláusulas, mercado, los que suben) y de la próxima jornada.
+Hazme el PLAN DE HOY. Primero busca noticias de hoy y de ayer de mis jugadores, de los candidatos de «OPERACIONES POSIBLES HOY» y de sus equipos (lesiones, convocatorias, ruedas de prensa, onces probables, rotaciones), y contrástalas con los titulares que te paso. Después sigue «CÓMO DECIDIR» con cada candidato.
 Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría (según las pujas que lleva y si sube). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
 Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
 {
  "titular": "8 a 16 palabras con lo más importante de hoy",
  "situacion": "2 o 3 frases: cómo está mi equipo y qué buscamos hoy, con cifras",
- "operaciones": [{"accion": "aceptar_oferta|vender|pujar|comprar|clausular|blindar|alinear|esperar", "objetivo": "titular|revender|caja|proteger", "vender_el": "solo si es para revender: el día en que ponerlo a la venta", "beneficio_esperado": número en euros o null, "jugador": "nombre exacto de los datos", "donde": "a la liga | en el mercado | cláusula a <manager> | ...", "importe": número en euros o null, "puja_max": número o null, "cuando": "ahora | hoy antes de las 18:00 | mañana 14:05 cuando se abra", "motivo": "por qué, con cifras y la noticia que lo justifica (1 o 2 frases)", "confianza": "alta|media|baja"}],
+ "operaciones": [{"ref": "la ref de OPERACIONES POSIBLES HOY (P-…, M-…, T-…, C-…, A-…, V-…, B-…); null solo para alinear o esperar", "accion": "aceptar_oferta|vender|pujar|comprar|clausular|blindar|alinear|esperar", "objetivo": "titular|revender|caja|proteger", "vender_el": "solo si es para revender: el día en que ponerlo a la venta", "beneficio_esperado": número en euros o null, "jugador": "nombre exacto de los datos", "donde": "a la liga | en el mercado | cláusula a <manager> | ...", "importe": número en euros o null, "puja_max": número o null, "cuando": "ahora | hoy antes de las 18:00 | mañana 14:05 cuando se abra", "motivo": "por qué, con cifras y la noticia que lo justifica (1 o 2 frases)", "claves": ["3 a 5 datos cortos que lo respaldan: «Titular 90 %», «8-6-10 pts», «vs Getafe (19º)», «+1,2 %/día», «+3 % sobre su valor», «sin noticias»"], "confianza": "alta|media|baja"}],
+ "descartes": [{"jugador": "nombre", "ref": "su ref o null", "motivo": "por qué NO (lesión, no juega, caro, rival difícil, no entra en el once, no se puede…)"}],
  "proximos_dias": [{"dia": "mañana miércoles 21 | jueves 22 | antes de la jornada", "texto": "qué hacer ese día y a qué hora"}],
  "vigilar": [{"jugador": "nombre", "texto": "por qué hay que seguirlo"}],
  "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta", "efecto": "sube|baja|neutro"}],
@@ -444,9 +462,9 @@ Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
  "paron": "qué hacer con el parón si está cerca, o null",
  "alineacion": {"formacion": "una de las formaciones gratuitas", "titulares": ["portero, defensas, medios y delanteros: nombres exactos"], "dudas": ["jugador: por qué"]}
 }
-Entre 1 y 8 operaciones. Entre 2 y 5 días en proximos_dias.
+Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 a 6 candidatos que has mirado y no convienen. Entre 2 y 5 días en proximos_dias.
 "pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager la acción es "comprar", con el precio en "importe" y sin puja_max, y SOLO si lo tiene a la venta o es un trato que te he contado; si no, no lo pongas. Para quitárselo pagando su cláusula, "clausular" (solo si la cláusula está abierta o se abre pronto).`;
-  const r = await preguntar({ sistema: SISTEMA, contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso });
+  const r = await preguntar({ sistema: SISTEMA, contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso, nivel: 'high' });
   const json = sacarJSON(r.texto);
   if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA('Gemini ha contestado sin el formato del plan. Vuelve a probar.', 0);
   const P = { ...json, fuentes: r.fuentes.slice(0, 14), modelo: r.modelo, web: r.web, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null };
@@ -477,50 +495,57 @@ export function cuadrarPlan(P, D, M) {
       || todos.find((j) => norm(j.nombre).includes(k) || k.includes(norm(j.nombre))) || null;
   };
   let saldo = D.dinero == null ? null : +D.dinero;
+  // cada paso se comprueba contra lo que de verdad se puede hacer hoy
+  const cat = M._cat || (M._cat = catalogo(D, M, notasVigentes()));
+  const OPERA = ['vender', 'clausular', 'pujar', 'comprar', 'ofertar', 'blindar'];
   const ops = (P.operaciones || []).map((o0, i) => {
-    let o = o0;
+    let o = { ...o0 };
     const j = (o.pid && D.maestro[o.pid]) || buscar(o.jugador);
     const pid = j && j.id;
-    const mia = pid && M.mias.find((x) => x.pid === pid);
     const cl = pid && M.clausulas.find((x) => x.pid === pid);
-    const mk = pid && M.mercado.find((x) => x.pid === pid);
     const original = String(o.accion || '').toLowerCase();
-    let accion = original.replace('aceptar_oferta', 'vender').replace('aceptar', 'vender');
-    const venta = pid && (M.misVentas || []).find((v) => v.pid === pid);
-    const aceptar = /aceptar/.test(original) || /acepta/i.test(o.donde || '');
-    let importe = o.importe != null ? +o.importe : null, signo = 0, aviso = null;
-    if (accion === 'vender') {
-      signo = 1;
-      if (!importe) importe = aceptar && venta && venta.mejor ? venta.mejor.importe : j ? j.valor : null;
-      if (pid && !mia) aviso = 'No es tuyo';
-      else if (aceptar && venta && !venta.mejor) aviso = 'Aún no tiene ofertas';
+    let accion = original.replace('aceptar_oferta', 'vender').replace('aceptar', 'vender').replace('ofertar', 'comprar');
+    let aceptar = /aceptar/.test(original) || /acepta/i.test(o.donde || '');
+    let importe = o.importe != null ? +o.importe : null, signo = 0, aviso = null, descartada = false, sobre = null;
+    const opC = OPERA.includes(accion) ? buscarOp(cat, o, pid) : null;
+    if (accion === 'blindar' && !opC) aviso = 'Su cláusula no se abre pronto: aún no hace falta';
+    else if (OPERA.includes(accion) && !opC) {
+      descartada = true;
+      const pq = porQueNo(D, M, o, pid, j);
+      aviso = `La app lo descarta: ${pq.charAt(0).toLowerCase()}${pq.slice(1)}.`;
+      signo = accion === 'vender' ? 1 : -1;
+    } else if (opC) {
+      // la acción, el importe y el «dónde» de verdad, según la operación posible
+      o.ref = opC.ref;
+      switch (opC.ref[0]) {
+        case 'A': accion = 'vender'; aceptar = true; signo = 1; importe = opC.precio; o.donde = `oferta de ${opC.de}`; break;
+        case 'V': accion = 'vender'; signo = 1; importe = importe || opC.precio; break;
+        case 'P': {
+          accion = 'pujar'; signo = -1;
+          const puja = o.puja_max != null ? +o.puja_max : importe || opC.puja;
+          importe = Math.max(puja || 0, opC.precio); o.puja_max = importe; o.donde = 'libre en el mercado de la liga';
+          if (puja && puja < opC.precio) aviso = `La puja mínima es ${eur(opC.precio)}`;
+          break;
+        }
+        case 'M': case 'T':
+          accion = 'comprar'; signo = -1; importe = importe || opC.precio; o.puja_max = null;
+          o.donde = `a ${opC.vendedor}${opC.trato ? ' (vuestro trato)' : ' (lo tiene a la venta)'}`;
+          if (!opC.trato) aviso = importe < opC.precio ? `Pide ${eur(opC.precio)}: por menos puede que no lo acepte.` : 'Decide él: solo es tuyo si acepta tu oferta.';
+          break;
+        case 'C': accion = 'clausular'; signo = -1; importe = opC.precio; o.donde = `cláusula a ${opC.de}`; if (!opC.abierta) aviso = `Se abre ${cuando(opC.abre)}`; break;
+        case 'B': accion = 'blindar'; signo = importe ? -1 : 0; break;
+        default: break;
+      }
     }
-    if (accion === 'clausular') { signo = -1; if (cl) importe = cl.clausula; if (cl && !cl.abierta) aviso = `Se abre ${cuando(cl.protegidoHasta)}`; if (pid && !cl) aviso = 'No está en ningún rival'; }
-    // a un jugador con dueño no se le puja: se le compra (oferta al manager); pujar es solo para los libres
-    const duenoT = pid && M.dueno[pid];
-    const deOtro = duenoT && duenoT !== (D.yo && D.yo.teamId);
-    if ((accion === 'pujar' || accion === 'comprar' || accion === 'ofertar') && deOtro) {
-      accion = 'comprar'; signo = -1;
-      importe = importe || (o.puja_max != null ? +o.puja_max : null) || (mk ? mk.precio : null);
-      o = { ...o, puja_max: null, donde: `a ${(M.equipo[duenoT] || {}).manager || (M.equipo[duenoT] || {}).nombre || 'su dueño'}${mk && mk.tipo === 'manager' ? ' (lo tiene en venta)' : ' (oferta directa)'}` };
-    } else if (accion === 'comprar' || accion === 'ofertar') accion = 'pujar';
-    if (accion === 'pujar') { signo = -1; importe = o.puja_max != null ? +o.puja_max : importe || (mk ? mk.precio : null); if (pid && !mk) aviso = 'No está en el mercado'; }
-    if (accion === 'blindar') signo = importe ? -1 : 0;
     // pagar mucho más de lo que vale: se avisa y, si es una barbaridad sin un trato que le hayas contado, se descarta
-    let descartada = false, sobre = null;
-    const tratoJ = pid && notasDe(pid).length > 0;
-    if (accion === 'comprar' && pid) {
-      const enVentaSuya = mk && mk.tipo === 'manager';
-      const fa = M.fichadoPor && M.fichadoPor(pid);
-      if (!enVentaSuya && !tratoJ) { descartada = true; aviso = `La app lo descarta: no lo tiene a la venta y su dueño no tiene por qué vendértelo${fa ? ` (lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)})` : ''}. Solo se le puede quitar con la cláusula.`; }
-      else if (enVentaSuya && !tratoJ && !aviso) aviso = `Lo tiene a la venta por ${eur(mk.precio)}, pero decide él: solo es tuyo si acepta tu oferta.`;
-    }
-    if (signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion)) {
+    if (!descartada && signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion)) {
       sobre = importe / j.valor - 1;
-      const trato = notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe);
-      if (descartada) { /* ya descartada */ } else if (sobre > 0.4 && !trato) { descartada = true; aviso = `La app lo descarta: pagarías ${eur(importe - j.valor)} más de lo que vale (${pct(sobre * 100)})`; }
+      const trato = (opC && opC.trato) || notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe);
+      if (sobre > 0.4 && !trato) { descartada = true; aviso = `La app lo descarta: pagarías ${eur(importe - j.valor)} más de lo que vale (${pct(sobre * 100)}).`; }
       else if (sobre > 0.2) aviso = `${aviso ? `${aviso} ` : ''}Pagas ${eur(importe - j.valor)} más de lo que vale (${pct(sobre * 100)}).`;
     }
+    // fichar a un lesionado o sancionado para el once: aviso
+    if (!descartada && signo < 0 && j && ['injured', 'suspended'].includes(j.estado) && !String(o.objetivo || '').startsWith('revend')) aviso = `${aviso ? `${aviso} ` : ''}Ojo: está ${j.estado === 'injured' ? 'lesionado' : 'sancionado'}.`;
     // lo que se hace hoy suma al saldo; lo de otro día (o cuando se abra una cláusula), no
     const cu = String(o.cuando || '').trim();
     const otroDia = /cuando se abra|se abre|si vendes/i.test(cu) || (/^(el )?(mañana|lunes|martes|miércoles|jueves|viernes|sábado|domingo)/i.test(cu) && accion !== 'pujar');
