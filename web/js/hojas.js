@@ -92,6 +92,20 @@ export function resumenEquipo(S) {
   h += `<div class="graf-cab"><span>Valor del equipo${(S.H.yo || []).length < 7 && sumaJugadores(S) ? ' <small>(tus jugadores de hoy)</small>' : ''}</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="__equipo" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   h += `<div id="graf-j">${grafValor(serieEquipo(S), rango)}</div>`;
 
+  // la inercia: hacia dónde va cada uno y lo que se espera hasta la jornada
+  const conI = mias.filter((x) => x.inercia && x.j.pos !== 5);
+  const proyJ = conI.reduce((s, x) => s + num(x.inercia.proyJ), 0);
+  const vender = mias.filter((x) => x.ventaInercia).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder);
+  if (M.proxima && conI.length) h += `<div class="aviso-ficha ${proyJ < 0 ? '' : 'verde'}">${icono(proyJ < 0 ? 'baja' : 'sube')}<div>Hasta la jornada ${M.proxima.n}, si cada uno sigue con su inercia, tu equipo ${proyJ >= 0 ? 'ganaría' : 'perdería'} unos <b>${eur(Math.abs(proyJ))}</b>.${vender.length ? ` Lo que más pesa: ${vender.slice(0, 3).map((x) => `${esc(x.j.nombre)} (${x.ventaInercia.urgencia === 'ya' ? 'ha girado' : 'frenando'})`).join(', ')}.` : ''}</div></div>`;
+  if (vender.length) {
+    h += `<div class="sec"><h2>A vender por la inercia</h2><span class="sub">${vender.length}</span></div>`;
+    h += vender.map((x) => filaJugador(x, {
+      sub: esc(x.ventaInercia.urgencia === 'ya' ? 'Ha girado a la baja' : `Se frena: gira en ~${Math.max(1, Math.round(x.ventaInercia.giroEn || 1))} d`),
+      extra: `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${x.ventaInercia.R.slice(-4).map((r) => `${r >= 0 ? '+' : '−'}${String(Math.round(Math.abs(r) / 1e4) / 100).replace('.', ',')}`).join(' · ')} M/día</span>${M.enVenta.has(x.pid) ? '<span class="pill abierta">Ya en venta</span>' : ''}`,
+      derecha: x.ventaInercia.perder > 0 ? `<div class="v baja">${eur(-x.ventaInercia.perder, { signo: true })}</div><div class="d apag">hasta la jornada</div>` : '<div class="d apag">gira pronto</div>',
+    })).join('');
+  }
+
   // el dinero
   const enVenta = M.misVentas.reduce((s, v) => s + num(v.j && v.j.valor), 0);
   h += `<div class="rejilla" style="margin-top:12px">
