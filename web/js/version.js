@@ -9,7 +9,7 @@ export const VERSION = '0.3.0';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.3.0', f: '2026-10-21', h: '20:06', t: 'También en el ordenador',
+    v: '0.3.0', f: '2026-10-21', h: '20:19', t: 'También en el ordenador',
     cosas: [
       { tipo: 'nuevo', d: 'conexion', t: 'La app, en el navegador', x: 'Ahora también está en charly10sf.github.io/fantasy-manager, con tu liga de verdad. Para entrar, en la app: Ajustes → Abrir en el ordenador. Te da un código de 8 letras que dura 10 minutos; lo escribes en la web y entras con tu cuenta de LaLiga, tu clave de la IA y el dinero que te han dicho los rivales. Los avisos y la IA trabajando sola siguen siendo cosa de la app del móvil.' },
       { tipo: 'mejora', d: 'ajustes', t: 'Lista para Android 16', x: 'La app apunta ya a Android 16, lo que pide Google Play. Se dibuja de borde a borde sin que la tapen las barras del sistema ni el teclado, y el gesto de atrás va con el sistema nuevo de Android.' },
