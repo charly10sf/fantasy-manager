@@ -38,7 +38,7 @@ function tostada(t, ms = 3200) {
 
 /* ---------------- pantallas completas ---------------- */
 function pantallaEntrar(error = '') {
-  raiz().innerHTML = `<div class="pantalla">${LOGO}
+  raiz().innerHTML = `<div class="pantalla"><div class="pant-i">${LOGO}
     <h1>Fantasy<br><span>Manager</span></h1>
     <p>Cada día, las operaciones exactas para tu liga de LaLiga Fantasy: a quién vender, a quién comprar, cuánto pujar y a quién clausular.</p>
     <ul class="lista-ok">
@@ -46,13 +46,13 @@ function pantallaEntrar(error = '') {
       <li>${icono('ia')}La IA lee lesiones, convocatorias, alineaciones y el calendario antes de decidir</li>
       <li>${icono('diana')}Aviso al minuto cuando se abre una cláusula que te interesa</li>
       <li>${icono('rivales')}Lo que hace cada rival y quién va a por tus jugadores</li>
-    </ul>
+    </ul></div><div class="pant-d">
     ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${enApp ? `<button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
     <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>` : entrarWebHTML()}
     <button class="btn sec ancho" data-accion="entrarDemo" style="margin-top:6px">Ver con una liga de ejemplo</button>
     <p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. <a href="privacidad.html">Privacidad</a></p>
-  </div>`;
+  </div></div>`;
   if (!enApp) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus(); }, 50);
 }
 /** en el navegador: LaLiga solo devuelve la sesión a su app del móvil, así que se entra con un código de la app */
@@ -142,13 +142,30 @@ function pantallaCarga(paso = -1, error = '') {
 
 /* ---------------- el marco ---------------- */
 function marco() {
-  if ($('#vista')) return;
-  raiz().innerHTML = `<header class="sup">${LOGO}<div class="sup-liga"><b id="supLiga"></b><span id="supEstado"></span></div>
-    <button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar">${icono('refrescar')}</button>
-    <button class="b-ico" data-accion="ajustes" aria-label="Ajustes">${icono('ajustes')}</button></header>
-    <main><div id="banda"></div><div id="vista" class="vista"></div></main>
-    <nav class="nav"><div class="nav-in">${NAV.map(([k, ic, t]) => `<button data-ir="${k}">${icono(ic)}${t}<span class="gl oculto" id="gl-${k}"></span></button>`).join('')}</div></nav>`;
+  // en el ordenador las pestañas van dentro del banquillo (la columna de la izquierda), entre la liga y los botones
+  const anchoYa = V.ancho();
+  if ($('#vista') && S.marcoAncho === anchoYa) return;
+  S.marcoAncho = anchoYa;
+  const nav = `<nav class="nav"><div class="nav-in">${NAV.map(([k, ic, t]) => `<button data-ir="${k}">${icono(ic)}${t}<span class="gl oculto" id="gl-${k}"></span></button>`).join('')}</div></nav>`;
+  const botones = `<button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar">${icono('refrescar')}</button>
+    <button class="b-ico" data-accion="ajustes" aria-label="Ajustes">${icono('ajustes')}</button>`;
+  const liga = `${LOGO}<div class="sup-liga"><b id="supLiga"></b><span id="supEstado"></span></div>`;
+  raiz().innerHTML = anchoYa
+    ? `<header class="sup">${liga}${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
+    : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
 }
+/** el ordenador: la clase en <html> para el CSS y, al pasar de un tamaño a otro, todo se vuelve a pintar */
+function ponerTamano() { document.documentElement.classList.toggle('escritorio', V.ancho()); }
+ponerTamano();
+let tamanoT = null;
+window.addEventListener('resize', () => {
+  clearTimeout(tamanoT);
+  tamanoT = setTimeout(() => {
+    const antes = document.documentElement.classList.contains('escritorio');
+    ponerTamano();
+    if (antes !== V.ancho() && S.D && $('#vista')) pintar();
+  }, 150);
+});
 function pintarSup() {
   const { D } = S;
   $('#supLiga').textContent = D ? D.liga.nombre : 'Fantasy Manager';

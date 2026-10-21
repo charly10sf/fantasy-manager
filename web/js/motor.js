@@ -1024,7 +1024,26 @@ export function analizar(D, H, c, extra = {}) {
     const bajando = (t.p1 != null && t.p1 < -0.5) || (t.p7 != null && t.p7 < -2);
     const subiendo = (t.p1 != null && t.p1 > 0.5) || (t.p7 != null && t.p7 > 2);
     const ine = M.inercia(v.pid);
+    // La oferta de LaLiga se renueva en cada cambio de mercado. Si la de hoy es de las más bajas que da en tu liga y no
+    // hay prisa, lo normal es que mañana llegue una mejor aunque el jugador baje un poco: venderlo hoy es hacerlo por lo
+    // mínimo. Se cuenta con algo menos que la mediana, porque las que se aceptan son las buenas.
+    const OL = M.ofertaLiga && !M.ofertaLiga.poco ? M.ofertaLiga : null;
+    let liga = null;
+    if (mejor && mejor.deLiga && OL && j.valor) {
+      const normal = (OL.p25 + OL.med) / 2;
+      const dia = ine ? Math.min(num(ine.ult), num(t.d1) || 0) : num(t.d1);
+      const valorMan = j.valor + dia;
+      const esperado = Math.round(valorMan * (1 + normal) / 1e4) * 1e4;
+      // prisa: empezar la jornada en negativo si no se vende antes de la próxima oferta, o que esté de baja
+      const jornadaAntes = M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado);
+      const prisa = (num(D.dinero) < 0 && jornadaAntes) ? 'negativo' : MALOS.has(j.estado) ? 'baja' : null;
+      liga = { posicion: mejor.sobre < OL.p25 ? 'baja' : mejor.sobre > OL.p75 ? 'alta' : 'normal', normal, p25: OL.p25, p75: OL.p75, med: OL.med, dia, esperado, gana: esperado - mejor.importe, prisa };
+    }
     if (!mejor) { consejo = 'sin ofertas'; porque = 'Aún no tienes ofertas.'; }
+    else if (liga && liga.posicion === 'baja' && !liga.prisa && liga.gana >= Math.max(150000, j.valor * 0.01)) {
+      consejo = 'esperar';
+      porque = `La de LaLiga es de las más bajas que da (${pct(mejor.sobre * 100)} sobre su valor; en tu liga suele ofrecer entre ${pct(liga.p25 * 100)} y ${pct(liga.p75 * 100)}). Mañana te hará otra: ${liga.dia < 0 ? `aunque baje ${eur(-liga.dia)}, ` : ''}lo normal sería unos ${eur(liga.esperado)} (${eur(liga.gana, { signo: true })}). Espera, salvo que necesites el dinero hoy.`;
+    }
     else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
     // la inercia manda: si ha girado, cada día vale menos; si se está frenando, no se espera a que gire
     else if (ine && (ine.fase === 'giro' || ine.fase === 'baja') && mejor.sobre >= -0.05) { consejo = 'aceptar'; porque = `Ha girado a la baja (hoy ${eur(ine.ult, { signo: true })}): cada día que esperes vale menos, y la oferta casi iguala su valor.`; }
@@ -1034,7 +1053,7 @@ export function analizar(D, H, c, extra = {}) {
     else if (subiendo) { consejo = 'esperar'; porque = 'Está subiendo: mañana puede llegar una oferta mejor.'; }
     else { consejo = 'esperar'; porque = `La oferta se queda un ${Math.round(Math.abs(mejor.sobre) * 100)} % por debajo de lo que vale.`; }
     const deLiga = ofertas.some((o) => o.deLiga);
-    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, ganado: mejor && compra ? mejor.importe - compra : null, ligaEst: deLiga ? null : M.ofertaLigaDe(j) };
+    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, liga, ganado: mejor && compra ? mejor.importe - compra : null, ligaEst: deLiga ? null : M.ofertaLigaDe(j) };
   });
   M.enVenta = new Set(M.misVentas.map((v) => v.pid));
 
@@ -1205,7 +1224,8 @@ function acciones(D, M, c) {
     });
 
   // la inercia: lo que ha girado a la baja se vende ya; lo que está a punto de girar, antes de que gire
-  M.mias.filter((x) => x.ventaInercia && !MALOS.has(x.j.estado)).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
+  // (los que ya están en venta no: ahí manda la oferta que tengan, en «Tus jugadores en venta»)
+  M.mias.filter((x) => x.ventaInercia && !MALOS.has(x.j.estado) && !M.enVenta.has(x.pid)).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
     const vi = x.ventaInercia, pierde = M.perdida(x.pid);
     add({
       tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
@@ -1298,7 +1318,7 @@ export function planAuto(D, M, c) {
   }
 
   // 1b. la inercia: lo que ha girado a la baja, fuera ya; lo que está a punto de girar, si no es clave en el once
-  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ventaInercia && y.j.pos !== 5)) {
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ventaInercia && y.j.pos !== 5 && !M.enVenta.has(y.pid))) {
     const vi = x.ventaInercia;
     if (vi.urgencia !== 'ya' && M.perdida(x.pid) >= 1.5) continue;
     op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',

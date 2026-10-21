@@ -1,13 +1,20 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.3.0';
+export const VERSION = '0.3.1';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.3.1', f: '2026-10-21', h: '20:45', t: 'La web, hecha para el ordenador',
+    cosas: [
+      { tipo: 'mejora', d: 'campo', t: 'En el ordenador, a lo ancho', x: 'La web ya no es el móvil estirado. Las pestañas van en una columna a la izquierda con tu liga. En Hoy, el plan ocupa el centro y a la derecha tienes el marcador, tu equipo, la liga, las cláusulas a tiro y los últimos movimientos. En Equipo, el once al lado de la plantilla; en Rivales, la clasificación con lo que te llega de ellos al lado; y las listas de jugadores, a dos columnas. Las fichas se abren de lado sin taparlo todo y el chat queda centrado, cómodo de leer. En el móvil sigue todo igual.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'No malvender a LaLiga', x: 'LaLiga hace una oferta nueva cada día por lo que tienes en venta. Si la de hoy es de las más bajas que suele dar en tu liga y no hay prisa (no empiezas la jornada en negativo ni está de baja), ya no te dice que vendas aunque el jugador vaya a la baja: te dice que esperes a la de mañana y cuánto ganarías, contando con lo que baje. La IA tiene la misma regla.', ir: { v: 'equipo', seg: 'equipo:venta' } },
+    ],
+  },
   {
     v: '0.3.0', f: '2026-10-21', h: '20:19', t: 'También en el ordenador',
     cosas: [

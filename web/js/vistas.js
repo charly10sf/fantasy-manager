@@ -11,6 +11,14 @@ const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a',
 const VERBO_TU = { compra: 'fichaste a', clausula: 'clausulaste a', venta: 'vendiste a', blindaje: 'blindaste a', premio: 'cobraste por la jornada', alineacion: 'no puntuaste por alineación incorrecta', entra: 'entraste en la liga', otro: 'moviste a' };
 export const PELIGRO = { alta: 'alto', media: 'medio', baja: 'bajo' };
 
+/* ---------- el ordenador ---------- */
+/** pantalla ancha (ordenador o tableta en horizontal): cada pestaña se reparte en columnas */
+export const ancho = () => typeof matchMedia === 'function' && matchMedia('(min-width: 1100px)').matches;
+/** dos columnas: «lado-der» (lo principal y una columna estrecha a la derecha) o «lado-izq» (la estrecha a la izquierda) */
+const cols = (izq, der, tipo = 'lado-der') => `<div class="cols-e ${tipo}"><div class="ce-i">${izq}</div><div class="ce-d">${der}</div></div>`;
+/** las listas de jugadores, en dos columnas en el ordenador */
+const lista2 = (h) => (ancho() ? `<div class="lista2">${h}</div>` : h);
+
 export function filaActividad(a) {
   const quien = a.esYo ? '<span class="quien yo">Tú</span>' : `<span class="quien">${esc(a.quien || 'Un rival')}</span>`;
   const jug = a.nombreJ ? ` <b>${esc(a.nombreJ)}</b>` : '';
@@ -322,10 +330,10 @@ function saludoHTML(S) {
   return `<div class="saludo"><span>${sal}${nombre ? `, <b>${esc(nombre)}</b>` : ''}</span><span class="t2">${esc(fecha.charAt(0).toUpperCase() + fecha.slice(1))}</span></div>`;
 }
 export function hoy(S) {
+  if (ancho()) return hoyAncho(S);
   const { D, M } = S;
   let h = '';
-  if (D.demo) h += `<div class="banda">${icono('info')}<span>Liga de ejemplo con datos inventados.</span><button data-accion="salirDemo">Usar la mía</button></div>`;
-  if (D.avisos && D.avisos.length) h += `<div class="banda">${icono('alerta')}<span>No se ha podido leer: ${esc(D.avisos.map((a) => a.paso).slice(0, 3).join(', '))}.</span><button data-accion="diag">Ver</button></div>`;
+  h += bandasHoy(S);
   h += saludoHTML(S);
   h += marcador(S);
   h += tiemposHTML(S);
@@ -333,26 +341,52 @@ export function hoy(S) {
   h += equipoHoyHTML(S);
   h += planHTML(S);
   if (M.misVentas.length) h += `<div class="sec"><h2>Tus jugadores en venta</h2><button class="mas" data-ir="equipo" data-seg="equipo:venta">Ver</button></div>${M.misVentas.map(ventaHTML).join('')}`;
+  h += aTiroHTML(S);
+  h += ligaHTML(S);
+  h += noticiasHTML(S);
+  h += movimientosHTML(S, 5);
+  return h;
+}
+
+/** Hoy en el ordenador: el plan en grande a la izquierda y la liga de un vistazo a la derecha */
+function hoyAncho(S) {
+  const { M } = S;
+  let izq = saludoHTML(S) + ahoraHTML(S) + planHTML(S);
+  if (M.misVentas.length) izq += `<div class="sec"><h2>Tus jugadores en venta</h2><button class="mas" data-ir="equipo" data-seg="equipo:venta">Ver</button></div>${M.misVentas.map(ventaHTML).join('')}`;
+  izq += noticiasHTML(S);
+  const der = marcador(S) + tiemposHTML(S) + equipoHoyHTML(S) + ligaHTML(S) + aTiroHTML(S) + movimientosHTML(S, 6);
+  return bandasHoy(S) + cols(izq, der);
+}
+function bandasHoy(S) {
+  const { D } = S;
+  let h = '';
+  if (D.demo) h += `<div class="banda">${icono('info')}<span>Liga de ejemplo con datos inventados.</span><button data-accion="salirDemo">Usar la mía</button></div>`;
+  if (D.avisos && D.avisos.length) h += `<div class="banda">${icono('alerta')}<span>No se ha podido leer: ${esc(D.avisos.map((a) => a.paso).slice(0, 3).join(', '))}.</span><button data-accion="diag">Ver</button></div>`;
+  return h;
+}
+/** las cláusulas de rivales que te llegan y se abren ya o pronto */
+function aTiroHTML(S) {
+  const { M } = S;
   const parar = M.clausulas.filter((x) => x.meLlega && x.interes >= 45 && (x.abierta || x.abreEn < 2 * DIA))
-    .sort((a, b) => (a.abierta === b.abierta ? (a.abierta ? b.interes - a.interes : a.abreEn - b.abreEn) : a.abierta ? -1 : 1)).slice(0, 10);
-  if (parar.length) {
-    h += `<div class="sec"><h2>Cláusulas a tiro</h2><button class="mas" data-ir="rivales" data-seg="rivales:clausulas">Todas</button></div><div class="carril">`;
-    h += parar.map((x) => `<button class="tj" data-j="${esc(x.pid)}"><span class="esq">${x.interes}</span>${ava(x.j)}
+    .sort((a, b) => (a.abierta === b.abierta ? (a.abierta ? b.interes - a.interes : a.abreEn - b.abreEn) : a.abierta ? -1 : 1)).slice(0, ancho() ? 6 : 10);
+  if (!parar.length) return '';
+  return `<div class="sec"><h2>Cláusulas a tiro</h2><button class="mas" data-ir="rivales" data-seg="rivales:clausulas">Todas</button></div><div class="carril">${parar.map((x) => `<button class="tj" data-j="${esc(x.pid)}"><span class="esq">${x.interes}</span>${ava(x.j)}
       <div class="n">${esc(x.j.nombre)}</div><div class="s">de ${esc(x.rival.manager || x.rival.nombre)}</div>
       <div class="gr">${eur(x.clausula)}</div>
-      <div class="cuenta ${x.abierta ? 'ya' : ''}">${icono(x.abierta ? 'abierto' : 'reloj')}${x.abierta ? 'Abierta' : cuando(x.protegidoHasta)}</div></button>`).join('');
-    h += '</div>';
-  }
-  h += ligaHTML(S);
-  if (M.noticias.length) {
-    const mios = new Set(M.mias.map((x) => x.pid));
-    const tuyas = M.noticias.filter((n) => (n.pids || []).some((p) => mios.has(p)));
-    const resto = M.noticias.filter((n) => !tuyas.includes(n));
-    h += `<div class="sec"><h2>Noticias</h2><span class="sub">${tuyas.length ? `${tuyas.length} de los tuyos` : 'Google Noticias'}</span></div>${[...tuyas.slice(0, 4), ...resto.slice(0, 6 - Math.min(4, tuyas.length))].map(filaNoticia).join('')}`;
-  }
-  const act = M.actividad.filter((a) => a.clase !== 'premio').slice(0, 5);
-  if (act.length) h += `<div class="sec"><h2>Últimos movimientos</h2><button class="mas" data-ir="rivales" data-seg="rivales:movimientos">Todos</button></div>${act.map(filaActividad).join('')}`;
-  return h;
+      <div class="cuenta ${x.abierta ? 'ya' : ''}">${icono(x.abierta ? 'abierto' : 'reloj')}${x.abierta ? 'Abierta' : cuando(x.protegidoHasta)}</div></button>`).join('')}</div>`;
+}
+function noticiasHTML(S) {
+  const { M } = S;
+  if (!M.noticias.length) return '';
+  const mios = new Set(M.mias.map((x) => x.pid));
+  const tuyas = M.noticias.filter((n) => (n.pids || []).some((p) => mios.has(p)));
+  const resto = M.noticias.filter((n) => !tuyas.includes(n));
+  const n = ancho() ? 8 : 6;
+  return `<div class="sec"><h2>Noticias</h2><span class="sub">${tuyas.length ? `${tuyas.length} de los tuyos` : 'Google Noticias'}</span></div><div class="noticias-l">${[...tuyas.slice(0, 4), ...resto.slice(0, n - Math.min(4, tuyas.length))].map(filaNoticia).join('')}</div>`;
+}
+function movimientosHTML(S, n) {
+  const act = S.M.actividad.filter((a) => a.clase !== 'premio').slice(0, n);
+  return act.length ? `<div class="sec"><h2>Últimos movimientos</h2><button class="mas" data-ir="rivales" data-seg="rivales:movimientos">Todos</button></div>${act.map(filaActividad).join('')}` : '';
 }
 
 /* ================= TUS JUGADORES EN VENTA ================= */
@@ -384,14 +418,14 @@ export function equipo(S) {
   if (!M.mias.length) return h + nada('No encuentro tu plantilla. Si tienes varias ligas o equipos, elige el tuyo en Ajustes.');
 
   if (seg === 'plantilla') {
-    h += equipoHoyHTML(S, { corto: true });
-    h += onceHTML(S, null, { conBanquillo: true });
+    const arriba = equipoHoyHTML(S, { corto: true }) + onceHTML(S, null, { conBanquillo: true });
+    let l = '';
     const titulares = new Set((M.once ? M.once.lineas.flat() : []).map((j) => j.id));
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p);
       if (!xs.length) continue;
-      h += `<div class="grupo"><span>${POS_PLURAL[p]}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
-      h += xs.map((x) => {
+      l += `<div class="grupo"><span>${POS_PLURAL[p]}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
+      l += xs.map((x) => {
         const f = M.forma(x.pid);
         return filaJugador(x, {
           sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}`,
@@ -400,8 +434,10 @@ export function equipo(S) {
         });
       }).join('');
     }
+    // en el ordenador, el once a la izquierda y la plantilla al lado
+    h += ancho() ? cols(arriba, l, 'lado-izq') : arriba + l;
   } else if (seg === 'venta') {
-    h += M.misVentas.length ? M.misVentas.map(ventaHTML).join('') : nada('No tienes a nadie en venta. Cuando pongas a alguien en el mercado, aquí verás sus ofertas (la de LaLiga y las de otros managers) y si te conviene aceptar.');
+    h += M.misVentas.length ? lista2(M.misVentas.map(ventaHTML).join('')) : nada('No tienes a nadie en venta. Cuando pongas a alguien en el mercado, aquí verás sus ofertas (la de LaLiga y las de otros managers) y si te conviene aceptar.');
   } else if (seg === 'clausulas') {
     const xs = [...M.mias].sort((a, b) => (a.abierta === b.abierta ? a.abreEn - b.abreEn : a.abierta ? -1 : 1));
     const abiertas = xs.filter((x) => x.abierta).length;
@@ -412,18 +448,20 @@ export function equipo(S) {
       derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d apag">${x.abierta ? 'abierta' : dura(x.abreEn)}</div>`, op: op(x.pid),
     });
     const grupos = [['Abiertas: te los pueden quitar ya', xs.filter((x) => x.abierta)], ['Se abren en menos de 48 h', xs.filter((x) => !x.abierta && x.abreEn < 2 * DIA)], ['Protegidos', xs.filter((x) => !x.abierta && x.abreEn >= 2 * DIA)]];
-    for (const [t, l] of grupos) if (l.length) h += `<div class="grupo"><span>${t}</span><span>${l.length}</span></div>${l.map(filaCl).join('')}`;
+    let gl = '';
+    for (const [t, l] of grupos) if (l.length) gl += `<div class="grupo"><span>${t}</span><span>${l.length}</span></div>${l.map(filaCl).join('')}`;
+    h += lista2(gl);
   } else {
     const con = M.mias.filter((x) => x.compra).sort((a, b) => b.ganado - a.ganado);
     const serie = (H.yo || []).map(([d, , v]) => [Date.parse(d + 'T12:00:00'), v]).filter(([, v]) => v);
-    h += `<div class="rejilla"><div class="dato"><div class="et">Ganado sobre lo pagado</div><div class="v ${clase(M.ganadoTotal)}">${M.conCompra ? eur(M.ganadoTotal, { signo: true }) : '–'}</div></div>
-      <div class="dato"><div class="et">Con precio de compra</div><div class="v">${con.length}<small>de ${M.mias.length}</small></div></div></div>`;
-    h += `<div class="sec"><h2>Valor del equipo</h2></div>${linea(serie, { alto: 150 })}`;
-    h += `<div class="sec"><h2>Jugador a jugador</h2></div>`;
-    h += con.length ? con.map((x) => filaJugador(x, {
+    const resumen = `<div class="rejilla"><div class="dato"><div class="et">Ganado sobre lo pagado</div><div class="v ${clase(M.ganadoTotal)}">${M.conCompra ? eur(M.ganadoTotal, { signo: true }) : '–'}</div></div>
+      <div class="dato"><div class="et">Con precio de compra</div><div class="v">${con.length}<small>de ${M.mias.length}</small></div></div></div>
+      <div class="sec"><h2>Valor del equipo</h2></div>${linea(serie, { alto: ancho() ? 220 : 150 })}`;
+    const lista = `<div class="sec"><h2>Jugador a jugador</h2></div>${con.length ? con.map((x) => filaJugador(x, {
       sub: `Pagaste ${eur(x.compra)} · vale ${eur(x.j.valor)}`,
       derecha: `<div class="v ${clase(x.ganado)}">${eur(x.ganado, { signo: true })}</div><div class="d ${clase(x.ganado)}">${pct((x.j.valor / x.compra - 1) * 100)}</div>`, op: op(x.pid),
-    })).join('') : nada('Aún no sé lo que pagaste por tus jugadores: sale de los movimientos de la liga, que guardan unas semanas.');
+    })).join('') : nada('Aún no sé lo que pagaste por tus jugadores: sale de los movimientos de la liga, que guardan unas semanas.')}`;
+    h += ancho() ? cols(resumen, lista, 'mitades') : resumen + lista;
   }
   return h;
 }
@@ -438,7 +476,7 @@ export function rivales(S) {
   h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : ''], ['movimientos', 'Movimientos', movs7]]);
 
   if (seg === 'clasif') {
-    h += S.D.clasif.map((e) => {
+    const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);
       const yo = !r;
       return `<button class="fila ${yo ? 'yo-fila' : ''}" ${yo ? 'data-ir="equipo"' : `data-r="${esc(e.teamId)}"`}>
@@ -449,6 +487,8 @@ export function rivales(S) {
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div><div class="d apag">pts${e.puntosJornada ? ` · ${e.puntosJornada} últ.` : ''}</div></div></button>`;
     }).join('');
+    // en el ordenador, al lado de la clasificación: lo que te llega de ellos y lo último que han hecho
+    h += ancho() ? cols(tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : tabla;
   } else if (seg === 'clausulas') {
     const f = S.filtro.cl || 'llegan';
     h += `<div class="filtros">${[['llegan', 'Te llegan'], ['abiertas', 'Abiertas'], ['hoy', 'Se abren hoy'], ['semana', 'Esta semana'], ['todas', 'Todas']].map(([k, t]) => `<button data-filtro="cl:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
@@ -458,22 +498,24 @@ export function rivales(S) {
     if (f === 'hoy') xs = xs.filter((x) => !x.abierta && x.abreEn < 24 * HORA).sort((a, b) => a.abreEn - b.abreEn);
     if (f === 'semana') xs = xs.filter((x) => !x.abierta && x.abreEn < 7 * DIA).sort((a, b) => a.abreEn - b.abreEn);
     h += `<p class="t2 peq">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>. La barra es lo que te interesa: rendimiento, si sube y lo que cuesta sobre su valor.</p>`;
-    h += xs.length ? xs.slice(0, 80).map((x) => filaJugador(x, {
+    h += xs.length ? lista2(xs.slice(0, 80).map((x) => filaJugador(x, {
       sub: `de ${esc(x.rival.manager || x.rival.nombre)} · vale ${eur(x.j.valor)}`,
       extra: `${clausulaPill(x)}${oncePill(M, x.j)}${estadoPill(x.j)}${x.meLlega ? '' : '<span class="pill">No te llega</span>'}`,
       derecha: `<div class="v">${eur(x.clausula)}</div><div class="d">${barra(x.interes)} <span class="t2">${x.interes}</span></div>`, op: S.opPorPid[x.pid],
-    })).join('') : nada('Ninguna con este filtro.');
+    })).join('')) : nada('Ninguna con este filtro.');
   } else {
     const f = S.filtro.mov || 'todos';
     h += `<div class="filtros">${[['todos', 'Todo'], ['clausula', 'Cláusulas'], ['compra', 'Fichajes'], ['venta', 'Ventas'], ['blindaje', 'Blindajes']].map(([k, t]) => `<button data-filtro="mov:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
     let xs = M.actividad.filter((a) => a.clase !== 'premio');
     if (f !== 'todos') xs = xs.filter((a) => a.clase === f);
     const cambios = f === 'todos' || f === 'blindaje' ? M.cambios.filter((m) => m.tipo === 'blinda') : [];
+    let ml = '';
     if (cambios.length) {
-      h += `<div class="grupo"><span>Vistos en sus plantillas</span></div>` + cambios.slice(0, 8).map((m) => `<button class="fila" data-j="${esc(m.pid)}"><span class="ic-act blindaje">${icono('escudo')}</span><div class="fila-c"><div class="act-t"><span class="quien">${esc((m.equipo || {}).manager || (m.equipo || {}).nombre || 'Un rival')}</span> subió la cláusula de <b>${esc(m.j.nombre)}</b></div><div class="fila-s">${cuando(m.t)} · de ${eur(m.de)} a ${eur(m.a)}</div></div></button>`).join('');
-      h += `<div class="grupo"><span>Actividad de la liga</span></div>`;
+      ml += `<div class="grupo"><span>Vistos en sus plantillas</span></div>` + cambios.slice(0, 8).map((m) => `<button class="fila" data-j="${esc(m.pid)}"><span class="ic-act blindaje">${icono('escudo')}</span><div class="fila-c"><div class="act-t"><span class="quien">${esc((m.equipo || {}).manager || (m.equipo || {}).nombre || 'Un rival')}</span> subió la cláusula de <b>${esc(m.j.nombre)}</b></div><div class="fila-s">${cuando(m.t)} · de ${eur(m.de)} a ${eur(m.a)}</div></div></button>`).join('');
+      ml += `<div class="grupo"><span>Actividad de la liga</span></div>`;
     }
-    h += xs.length ? xs.slice(0, 120).map(filaActividad).join('') : nada('Sin movimientos con este filtro.');
+    ml += xs.length ? xs.slice(0, 120).map(filaActividad).join('') : nada('Sin movimientos con este filtro.');
+    h += lista2(ml);
   }
   return h;
 }
@@ -501,27 +543,28 @@ export function mercado(S) {
     });
     const PL = M.pujasLiga;
     const pagaTxt = PL && !PL.poco ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga los libres se llevan de mediana con un <b>${pct(PL.med * 100)}</b> sobre su valor (la mitad entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)}; ${PL.n} compras de las últimas semanas). La puja que te propongo sale de ahí y de lo que te interesa cada uno.</p>` : '';
-    h += liga.length ? `<div class="grupo"><span>Libres de la liga · subasta a ciegas</span><span>${liga.length}</span></div>${pagaTxt}${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
-    if (man.length) h += `<div class="grupo"><span>Con dueño · los vende otro manager</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos: el precio lo pone él y solo son tuyos si acepta tu oferta.</p>${man.map(fila).join('')}`;
+    let ml = liga.length ? `<div class="grupo"><span>Libres de la liga · subasta a ciegas</span><span>${liga.length}</span></div>${pagaTxt}${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
+    if (man.length) ml += `<div class="grupo"><span>Con dueño · los vende otro manager</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos: el precio lo pone él y solo son tuyos si acepta tu oferta.</p>${man.map(fila).join('')}`;
+    h += lista2(ml);
   } else if (seg === 'especular') {
     const v = M.ventanaEsp;
     if (!v || v.ciclos < 1) h += nada(M.enJuego ? 'Con la jornada en juego no se especula: espera a que acabe.' : 'No da tiempo a comprar y vender antes de la jornada.');
     else {
       h += `<p class="t2 peq">Comprar ahora lo que sube y venderlo antes de la jornada, aunque no te haga falta. Entre medias puedes bajar hasta <b>${eur(-M.deuda)}</b>; lo único obligatorio es empezar la jornada en positivo. Ponlo a la venta el <b>${cuando(v.ponerVenta, { hora: false })}</b>. Cuenta con la tendencia de los últimos días, que puede cambiar.</p>`;
       if (M.paraRevender.length) h += `<div class="grupo"><span>Ya tienes para revender</span></div>${M.paraRevender.map((x) => filaJugador(x, { sub: `Comprado a ${eur(x.rev.precio)} · vale ${eur(x.j.valor)}`, derecha: `<div class="v ${clase(x.beneficioYa)}">${eur(x.beneficioYa, { signo: true })}</div><div class="d">${delta(x.tend)}</div>` })).join('')}`;
-      h += M.especular.length ? `<div class="grupo"><span>Candidatos</span><span>${M.especular.length}</span></div>` + M.especular.slice(0, 30).map((e) => filaJugador({ j: e.j, tend: e.tend }, {
+      h += M.especular.length ? lista2(`<div class="grupo"><span>Candidatos</span><span>${M.especular.length}</span></div>` + M.especular.slice(0, 30).map((e) => filaJugador({ j: e.j, tend: e.tend }, {
         sub: `${e.origen === 'mercado' ? `Mercado · puja ${eur(e.puja)}` : `Cláusula ${eur(e.precio)} a ${esc(e.rival.manager || e.rival.nombre)}`}`,
         extra: `<span class="pill bien">${pct(e.r * 100)}/día</span><span class="pill">${e.dias} día${e.dias > 1 ? 's' : ''}</span><span class="pill ${e.confianza === 'media' ? 'duda' : ''}">Confianza ${e.confianza}</span>`,
         derecha: `<div class="v sube">${eur(e.beneficio, { signo: true })}</div><div class="d apag">${pct(e.pct * 100)}</div>`, op: S.opPorPid[e.pid],
-      })).join('') : nada('Ahora mismo nada sube lo bastante como para sacarle beneficio antes de la jornada.');
+      })).join('')) : nada('Ahora mismo nada sube lo bastante como para sacarle beneficio antes de la jornada.');
     }
   } else if (seg === 'suben' || seg === 'bajan') {
     const xs = seg === 'suben' ? M.suben : M.bajan;
     h += `<p class="t2 peq">Toda LaLiga. ${seg === 'suben' ? 'Comprar antes de que suban es cómo se saca beneficio.' : 'Si tienes alguno, piensa en venderlo antes de que pierda más.'}</p>`;
-    h += xs.length ? xs.map((x) => filaJugador({ j: x.j, tend: x.t }, { sub: `${esc(x.j.equipo)} · ${dueno(x.j.id)}`, conMini: true, op: S.opPorPid[x.j.id] })).join('') : nada('Aún no hay subidas: futbolfantasy.com no ha contestado y la app necesita un par de días de histórico.');
+    h += xs.length ? lista2(xs.map((x) => filaJugador({ j: x.j, tend: x.t }, { sub: `${esc(x.j.equipo)} · ${dueno(x.j.id)}`, conMini: true, op: S.opPorPid[x.j.id] })).join('')) : nada('Aún no hay subidas: futbolfantasy.com no ha contestado y la app necesita un par de días de histórico.');
   } else {
     h += `<p class="t2 peq">Nadie los tiene en tu liga. Ordenados por lo que interesan: pueden salir en el mercado cualquier día.</p>`;
-    h += M.libresBuenos.map((x) => filaJugador({ j: x.j, tend: x.t }, { extra: `${estadoPill(x.j)}${x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`, derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d">${barra(x.i.n)}</div>` })).join('') || nada('Sin datos.');
+    h += lista2(M.libresBuenos.map((x) => filaJugador({ j: x.j, tend: x.t }, { extra: `${estadoPill(x.j)}${x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`, derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d">${barra(x.i.n)}</div>` })).join('') || nada('Sin datos.'));
   }
   return h;
 }
@@ -561,13 +604,13 @@ function sugerenciasDe(S) {
 const SUGERENCIAS = ['¿A quién clausulo hoy y por qué?', '¿Qué vendo para tener dinero sin perder puntos?', '¿Cuánto pujo por el mejor del mercado?', '¿Qué once pongo esta jornada?', '¿Qué hago antes del parón?', '¿Qué rival va a por mis jugadores?'];
 export function ia(S) {
   if (!hayClave()) {
-    return `<div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>
+    return `<div class="ia-alta"><div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>
       <p class="entradilla">Gemini, de Google, gratis con tu propia clave. Hace el plan de cada día leyendo las noticias y contesta lo que le preguntes de tu liga.</p>
       <div class="paso"><i>1</i><span>Abre <a href="#" data-abrir="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> con tu cuenta de Google.</span></div>
       <div class="paso"><i>2</i><span>Pulsa <b>Create API key</b>. Mejor en un proyecto nuevo, para que no comparta el cupo gratis con otras apps.</span></div>
       <div class="paso"><i>3</i><span>Cópiala y pégala aquí:</span></div>
       <input class="campo-t" id="claveIA" placeholder="AIza…" autocomplete="off" spellcheck="false">
-      <button class="btn ancho" style="margin-top:12px" data-accion="guardarClave">${icono('ok')}Guardar y hacer el plan</button>`;
+      <button class="btn ancho" style="margin-top:12px" data-accion="guardarClave">${icono('ok')}Guardar y hacer el plan</button></div>`;
   }
   const msgs = conversacion();
   const viejos = chatsAnteriores();
