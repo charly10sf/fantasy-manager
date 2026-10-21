@@ -120,7 +120,7 @@ public class Avisos extends BroadcastReceiver {
         String cuerpo = texto == null ? "" : texto;
         Notification n = new Notification.Builder(c, CANAL)
                 .setSmallIcon(R.drawable.ic_aviso)
-                .setColor(0xFFF0213B)
+                .setColor(0xFFEE1C3C)
                 .setContentTitle(titulo == null ? "Fantasy Manager" : titulo)
                 .setContentText(cuerpo)
                 .setStyle(new Notification.BigTextStyle().bigText(cuerpo))

@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, LOGO, LOGO_P, $, $$, LS, eur, rel, MIN, diaDe, enParalelo } from './util.js';
+import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, diaDe, enParalelo } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
@@ -99,45 +99,66 @@ const CONSEJOS = [
   'Puedes contarle a la IA un trato con un amigo y lo tendrá en cuenta en el plan.',
 ];
 let consejoT = null;
-function pantallaCarga(paso = -1, error = '') {
+/**
+ * la pantalla de carga: la camiseta se va llenando de rojo según avanza, con los pasos debajo.
+ * index.html trae la misma pantalla (en «Preparando») para que no haya salto al arrancar: si cambias el
+ * marcado, cámbialo allí también (cargaHTML(-1) con liga = null).
+ */
+const camisetaCarga = (f) => `<svg class="cc" viewBox="6 10 188 188" aria-hidden="true">
+  <defs><clipPath id="ccClip"><path d="${LOGO_D.camiseta}"/></clipPath></defs>
+  <path class="cc-vacia" d="${LOGO_D.camiseta}"/>
+  <g clip-path="url(#ccClip)"><g class="cc-llena" style="transform:translateY(${Math.round(190 - 168 * f)}px)"><path class="cc-ola" d="M-200 0q12.5-5 25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0t25 0V220H-200Z"/></g></g>
+  <path d="${LOGO_D.punos}" fill="#fff"/><path d="${LOGO_D.cuello}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="${LOGO_D.letras}" fill="#fff"/>
+</svg>`;
+const pctCarga = (paso, total) => Math.max(4, Math.min(100, Math.round(((paso + 0.5) / total) * 100)));
+const segsCarga = (paso, total) => Array.from({ length: total }, (_, i) => `<i class="${i < paso ? 'ok' : i === paso ? 'ya' : ''}"></i>`).join('');
+const tituloCarga = (liga, error) => (error ? 'No se ha podido cargar' : `Poniendo al día <span>${liga && liga.nombre ? esc(liga.nombre) : 'tu liga'}</span>`);
+function cargaHTML(paso, error, liga) {
   const total = pasosCarga.length;
-  const pct = error ? 0 : Math.max(4, Math.min(100, Math.round(((paso + 0.5) / total) * 100)));
+  const pct = error ? 0 : pctCarga(paso, total);
   const actual = paso >= 0 && paso < total ? pasosCarga[paso] : 'Preparando';
-  const hechos = pasosCarga.slice(0, Math.max(0, paso));
-  const el = $('.carga');
-  // si ya está en pantalla, solo se mueve lo que cambia (para que la barra y las animaciones vayan suaves)
-  if (el && !error && $('.carga-barra', el)) {
-    $('.carga-barra i', el).style.width = `${pct}%`;
-    $('.carga-paso b', el).textContent = actual;
-    $('.carga-paso .pct', el).textContent = `${pct} %`;
-    $('.carga-hechos', el).innerHTML = hechos.map((t) => `<span>${icono('ok')}${esc(t)}</span>`).join('');
-    return;
-  }
-  const liga = (foto() || {}).liga;
-  raiz().innerHTML = `<div class="carga ${error ? 'mal' : ''}">
-    <div class="carga-luz" aria-hidden="true"></div><div class="carga-campo" aria-hidden="true"><i></i><i></i></div>
+  return `<div class="carga ${error ? 'mal' : ''}">
     <div class="carga-in">
-      <div class="carga-escudo">${LOGO}</div>
-      <div class="carga-marca">Fantasy <span>Manager</span></div>
-      <h1 class="carga-t">${error ? 'No se ha podido cargar' : liga && liga.nombre ? `Poniendo al día<br><span>${esc(liga.nombre)}</span>` : 'Poniendo al día<br><span>tu liga</span>'}</h1>
+      ${camisetaCarga(pct / 100)}
+      <h1 class="carga-t">${tituloCarga(liga, error)}</h1>
       ${error ? `<div class="error-c">${esc(error)}</div>
         <div class="carga-btns"><button class="btn" data-accion="recargar">${icono('refrescar')}Volver a probar</button><button class="btn sec" data-accion="diag">Diagnóstico</button><button class="btn sec" data-accion="entrarDemo">Ver la liga de ejemplo</button></div>`
-        : `<div class="carga-barra"><i style="width:${pct}%"></i></div>
-        <div class="carga-paso"><span class="balon">${icono('balon')}</span><b>${esc(actual)}</b><span class="pct">${pct} %</span></div>
-        <div class="carga-hechos">${hechos.map((t) => `<span>${icono('ok')}${esc(t)}</span>`).join('')}</div>`}
+        : `<div class="carga-segs" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}">${segsCarga(paso, total)}</div>
+        <div class="carga-paso"><b>${esc(actual)}…</b><span>${Math.max(0, Math.min(paso + 1, total))} de ${total}</span></div>`}
     </div>
     ${error ? '' : `<div class="carga-consejo"><span class="et">${icono('info')}¿Sabías que…?</span><p id="cConsejo">${esc(CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)])}</p></div>`}
   </div>`;
-  clearInterval(consejoT);
-  if (!error) {
-    let k = Math.floor(Math.random() * CONSEJOS.length);
-    consejoT = setInterval(() => {
-      const c = $('#cConsejo');
-      if (!c) { clearInterval(consejoT); return; }
-      c.classList.add('sale');
-      setTimeout(() => { k = (k + 1) % CONSEJOS.length; c.textContent = CONSEJOS[k]; c.classList.remove('sale'); }, 350);
-    }, 4200);
+}
+function pantallaCarga(paso = -1, error = '') {
+  const total = pasosCarga.length;
+  const el = $('.carga');
+  const liga = (foto() || {}).liga;
+  // si ya está en pantalla (también la de index.html), solo se mueve lo que cambia: la camiseta se llena suave
+  if (el && !error && $('.carga-segs', el)) {
+    const pct = pctCarga(paso, total);
+    $('.cc-llena', el).style.transform = `translateY(${Math.round(190 - 168 * (pct / 100))}px)`;
+    $('.carga-segs', el).innerHTML = segsCarga(paso, total);
+    $('.carga-segs', el).setAttribute('aria-valuenow', pct);
+    $('.carga-paso b', el).textContent = `${paso >= 0 && paso < total ? pasosCarga[paso] : 'Preparando'}…`;
+    $('.carga-paso span', el).textContent = `${Math.max(0, Math.min(paso + 1, total))} de ${total}`;
+    $('.carga-t', el).innerHTML = tituloCarga(liga, '');
+    if ($('#cConsejo') && !consejoT) rotarConsejos();
+    return;
   }
+  raiz().innerHTML = cargaHTML(paso, error, liga);
+  clearInterval(consejoT); consejoT = null;
+  if (!error) rotarConsejos();
+}
+function rotarConsejos() {
+  let k = Math.floor(Math.random() * CONSEJOS.length);
+  const c0 = $('#cConsejo');
+  if (c0 && !c0.textContent.trim()) c0.textContent = CONSEJOS[k];
+  consejoT = setInterval(() => {
+    const c = $('#cConsejo');
+    if (!c) { clearInterval(consejoT); consejoT = null; return; }
+    c.classList.add('sale');
+    setTimeout(() => { k = (k + 1) % CONSEJOS.length; c.textContent = CONSEJOS[k]; c.classList.remove('sale'); }, 350);
+  }, 4200);
 }
 
 /* ---------------- el marco ---------------- */
@@ -182,6 +203,7 @@ function pintar({ arriba = false } = {}) {
   if (!S.D) return;
   marco();
   pintarSup();
+  medirSup();
   $$('.nav button').forEach((b) => b.classList.toggle('activo', b.dataset.ir === S.vista));
   const v = $('#vista');
   try { v.innerHTML = VISTAS[S.vista](S); } catch (e) { v.innerHTML = `<div class="error-c">Algo ha fallado al pintar esta pantalla: ${esc(e.message)}</div>`; console.error(e); }
@@ -581,6 +603,78 @@ window.vueltaLogin = async () => {
   }
 };
 
+/* ---------------- a mano: pestañas fijas, deslizar y tirar para actualizar ---------------- */
+// la cabecera mide lo que mide (con la barra de estado en el móvil): las pestañas se pegan justo debajo
+function medirSup() { const s = $('.sup'); if (s) document.documentElement.style.setProperty('--sup-h', `${s.offsetHeight}px`); }
+window.addEventListener('resize', medirSup);
+/** si al cambiar de pestaña estabas más abajo, vuelve al principio de la pestaña (con las pestañas a la vista) */
+function volverAPestanas() {
+  const a = $('#vista .tabs-ancla'), s = $('.sup');
+  if (!a) return;
+  const y = a.getBoundingClientRect().top + window.scrollY - (s && !V.ancho() ? s.offsetHeight : 0);
+  if (window.scrollY > y) window.scrollTo(0, y);
+}
+const conScrollX = (el) => {
+  for (let x = el; x && x !== document.body; x = x.parentElement) {
+    if (x.scrollWidth > x.clientWidth + 2 && /(auto|scroll)/.test(getComputedStyle(x).overflowX)) return true;
+  }
+  return false;
+};
+// deslizar de lado sobre la pantalla pasa a la pestaña de al lado (no desde los bordes: ahí está el «atrás» de Android)
+let desliz = null;
+document.addEventListener('touchstart', (e) => {
+  desliz = null;
+  if (e.touches.length !== 1 || S.hoja || !$('#vista .tabs')) return;
+  const t = e.touches[0];
+  if (t.clientX < 28 || t.clientX > window.innerWidth - 28) return;
+  if (e.target.closest('.tabs, .filtros, .carril, .campo, .graf, .rangos, .campo-modo, input, textarea, select, .nav, [data-quieto]') || conScrollX(e.target)) return;
+  desliz = { x: t.clientX, y: t.clientY, t: Date.now() };
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  const d0 = desliz; desliz = null;
+  if (!d0 || !e.changedTouches.length) return;
+  const dx = e.changedTouches[0].clientX - d0.x, dy = e.changedTouches[0].clientY - d0.y;
+  if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 2 || Date.now() - d0.t > 700) return;
+  const bs = $$('#vista .tabs button[data-seg]');
+  const i = bs.findIndex((b) => b.classList.contains('activo'));
+  const k = i + (dx < 0 ? 1 : -1);
+  if (i < 0 || k < 0 || k >= bs.length) return;
+  nativo.toque();
+  bs[k].click();
+  const n = $('#vista .tabs button.activo');
+  if (n) n.scrollIntoView({ block: 'nearest', inline: 'center' });
+}, { passive: true });
+// tirar hacia abajo desde arriba del todo actualiza, como en cualquier app
+let tiron = null;
+const UMBRAL = 96;
+function marcaTiron(f, listo = false) {
+  let m = $('#tiron');
+  if (!m) { m = document.createElement('div'); m.id = 'tiron'; m.innerHTML = icono('refrescar'); document.body.appendChild(m); }
+  m.style.setProperty('--f', f);
+  m.classList.toggle('listo', f >= 1);
+  m.classList.toggle('va', listo);
+  if (listo) setTimeout(() => m.style.setProperty('--f', 0), 500);
+}
+document.addEventListener('touchstart', (e) => {
+  tiron = null;
+  if (e.touches.length !== 1 || window.scrollY > 0 || S.hoja || !$('#vista') || S.cargando || S.vista === 'ia' || V.ancho()) return;
+  if (e.target.closest('.nav, input, textarea, select, .campo')) return;
+  tiron = { y: e.touches[0].clientY, d: 0 };
+}, { passive: true });
+document.addEventListener('touchmove', (e) => {
+  if (!tiron) return;
+  const d = e.touches[0].clientY - tiron.y;
+  tiron.d = window.scrollY > 0 ? 0 : Math.max(0, d);
+  marcaTiron(Math.min(1, tiron.d / UMBRAL));
+}, { passive: true });
+document.addEventListener('touchend', () => {
+  if (!tiron) return;
+  const listo = tiron.d >= UMBRAL;
+  tiron = null;
+  marcaTiron(0, listo);
+  if (listo) { nativo.toque(); S.planEstado = {}; cargar(); }
+}, { passive: true });
+
 /* ---------------- toques ---------------- */
 document.addEventListener('click', async (ev) => {
   const el = ev.target.closest('[data-accion],[data-ir],[data-j],[data-r],[data-seg],[data-filtro],[data-abrir],[data-sugerencia]');
@@ -588,7 +682,7 @@ document.addEventListener('click', async (ev) => {
   const d = el.dataset;
   if (d.abrir) { ev.preventDefault(); nativo.abrir(d.abrir); return; }
   if (d.sugerencia) { enviarPregunta(d.sugerencia); return; }
-  if (d.seg) { const [v, s] = d.seg.split(':'); S.seg[v] = s; if (!d.ir) { pintar(); return; } }
+  if (d.seg) { const [v, s] = d.seg.split(':'); S.seg[v] = s; if (!d.ir) { pintar(); volverAPestanas(); return; } }
   if (d.filtro) { const [k, f] = d.filtro.split(':'); S.filtro[k] = f; pintar(); return; }
   if (d.j && S.D && !d.accion) { hoja('j', d.j); cargarDetalle(d.j); return; }
   if (d.r && S.D) { hoja('r', d.r); return; }

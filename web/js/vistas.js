@@ -404,7 +404,8 @@ export function ventaHTML(v) {
 
 /* ================= EQUIPO ================= */
 /** las subpestañas, con un número al lado cuando hay algo que contar ([clave, texto, número, 'rojo'|'']) */
-const tabs = (v, actual, lista) => `<div class="tabs">${lista.map(([k, t, n, cls]) => `<button data-seg="${v}:${k}" class="${actual === k ? 'activo' : ''}">${t}${n ? `<span class="tab-n ${cls || ''}">${n}</span>` : ''}</button>`).join('')}</div>`;
+// las pestañas de cada pantalla: se quedan fijas arriba al bajar (el ancla marca dónde van, para volver a ellas)
+const tabs = (v, actual, lista) => `<div class="tabs-ancla"></div><div class="tabs"><div class="tabs-in" role="tablist">${lista.map(([k, t, n, cls]) => `<button data-seg="${v}:${k}" role="tab" aria-selected="${actual === k}" class="${actual === k ? 'activo' : ''}">${t}${n ? `<span class="tab-n ${cls || ''}">${n}</span>` : ''}</button>`).join('')}</div></div>`;
 
 export function equipo(S) {
   const { M, H, D } = S;

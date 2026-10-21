@@ -50,7 +50,7 @@ public class Trabajo extends Service {
         PendingIntent pi = PendingIntent.getActivity(this, ID, abrir, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Notification n = new Notification.Builder(this, CANAL)
                 .setSmallIcon(R.drawable.ic_aviso)
-                .setColor(0xFFF0213B)
+                .setColor(0xFFEE1C3C)
                 .setContentTitle(titulo == null || titulo.isEmpty() ? "Preparando tu plan" : titulo)
                 .setContentText(texto == null || texto.isEmpty() ? "La IA está leyendo tu liga y las noticias" : texto)
                 .setOngoing(true)

@@ -9,8 +9,11 @@ export const VERSION = '0.3.2';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.3.2', f: '2026-10-21', h: '21:45', t: 'Arreglos del calendario',
+    v: '0.3.2', f: '2026-10-21', h: '21:45', t: 'Más a mano y más legible',
     cosas: [
+      { tipo: 'mejora', d: 'camiseta', t: 'Pantalla de carga nueva', x: 'Al abrir la app ya no sale el escudo viejo: la camiseta se va llenando de rojo según se pone al día tu liga, con los 10 pasos debajo y por cuál va.' },
+      { tipo: 'mejora', d: 'campo', t: 'Los menús, más a mano', x: 'Las pestañas de cada pantalla (Plantilla, En venta, Cláusulas…) se ven todas sin que se corte ninguna y se quedan fijas arriba al bajar. Para pasar de una a otra también puedes deslizar el dedo de lado sobre la pantalla. Y para actualizar, tira hacia abajo desde arriba del todo. Los filtros ya no se salen por la derecha y la barra de abajo tiene las letras más grandes.' },
+      { tipo: 'mejora', d: 'lupa', t: 'Todo más legible', x: 'Las letras pequeñas son más grandes, los grises tienen más contraste, los títulos de cada bloque se leen mejor y la segunda línea de cada jugador ya no se corta con puntos suspensivos.' },
       { tipo: 'arreglo', d: 'semaforo', t: 'El calendario no frena una venta', x: 'Con tus jugadores, el calendario ya no te dice «no lo vendas barato» si la app te está diciendo que lo vendas porque baja. Si está bajando, manda la venta (le vengan partidos buenos o malos); si baja poco, te lo dice; y si lo tienes en venta, manda la oferta. El «riesgo» del calendario ya no sale en los tuyos, porque es el riesgo de ficharlo. La IA tiene la misma regla.', ir: { v: 'equipo' } },
       { tipo: 'arreglo', d: 'campo', t: 'Los 5 partidos, aunque no tengan fecha', x: 'Las jornadas que LaLiga aún no ha puesto en el calendario venían sin fecha y se quedaban fuera, así que salían 3 partidos en vez de 5. Ahora cuentan con una fecha aproximada (una semana por jornada, más el parón) y salen como «sin fecha».' },
     ],
