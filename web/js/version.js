@@ -1,7 +1,9 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.3.4';
+// Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
+// arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
+export const VERSION = '0.3.3a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -9,7 +11,7 @@ export const VERSION = '0.3.4';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.3.4', f: '2026-10-22', h: '00:55', t: 'Cómo le fue contra cada rival',
+    v: '0.3.3a', f: '2026-10-22', h: '01:31', t: 'Cómo le fue contra cada rival',
     cosas: [
       { tipo: 'nuevo', d: 'semaforo', t: 'V, E y D contra cada rival', x: 'En el calendario de la ficha de cada jugador, debajo de cada rival salen sus últimos enfrentamientos: V si ganó su equipo, E si empató y D si perdió, de la más vieja a la más reciente (idea de Domy). Salen de SofaScore, con todas las competiciones; si no hay, lo de esta temporada en LaLiga. Cuenta poco en la dificultad del partido (como mucho un 4 %), porque pesa más cómo están ahora los dos equipos, y la IA también lo ve.' },
     ],
@@ -253,10 +255,15 @@ export const NOVEDADES = [
 ];
 
 /** compara dos versiones (0.0.10 va después de la 0.0.9) */
+/** 0.3.3 < 0.3.3a < 0.3.3b < 0.3.4 (la letra es un parche de la versión que lleva delante) */
+const partesVer = (v) => {
+  const m = String(v || '0').trim().match(/^(\d+)(?:\.(\d+))?(?:\.(\d+))?([a-z]?)/i) || [];
+  return [Number(m[1] || 0), Number(m[2] || 0), Number(m[3] || 0), (m[4] || '').toLowerCase()];
+};
 export function cmpVer(a, b) {
-  const x = String(a || '0').split('.').map(Number), y = String(b || '0').split('.').map(Number);
-  for (let i = 0; i < 3; i++) { const d = (x[i] || 0) - (y[i] || 0); if (d) return d; }
-  return 0;
+  const x = partesVer(a), y = partesVer(b);
+  for (let i = 0; i < 3; i++) { const d = x[i] - y[i]; if (d) return d; }
+  return x[3] === y[3] ? 0 : x[3] < y[3] ? -1 : 1;
 }
 
 // la numeración de antes (hasta la 0.9.0) en la de ahora, para saber qué versión habías visto

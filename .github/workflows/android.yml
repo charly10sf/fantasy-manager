@@ -69,7 +69,7 @@ jobs:
 
       - name: Versión
         run: |
-          v=$(grep -oP "VERSION = '\K[0-9.]+" web/js/version.js | head -1)
+          v=$(grep -oP "VERSION = '\K[0-9.]+[a-z]?" web/js/version.js | head -1)
           echo "VERSION_NAME=${v:-0.0.0}" >> "$GITHUB_ENV"
           echo "Versión ${v:-0.0.0}, compilación ${{ github.run_number }}"
 
