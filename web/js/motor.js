@@ -464,6 +464,37 @@ export function analizar(D, H, c, extra = {}) {
     } else M.pujasLiga = pujas.length ? { n: pujas.length, poco: true, med: cuantil(pujas.map((x) => x.s), 0.5), porEquipo: {}, ult: pujas } : null;
   }
 
+  /* ---------- lo que ofrece LaLiga por lo que se pone a la venta ---------- */
+  // Las ofertas de los rivales por un jugador en venta solo las ve su dueño, pero lo que paga LaLiga se sabe: las
+  // ventas a LaLiga de tu liga (y las ofertas de LaLiga que tienes ahora) frente a lo que valía el jugador ese día.
+  // Sirve para saber cuánto le darán a un rival si nadie le compra (por menos no tiene por qué venderte) y lo que te
+  // llegará a ti.
+  {
+    const q = (l, p) => { const o = [...l].sort((a, b) => a - b); const i = (o.length - 1) * p, b = Math.floor(i); return o[b] + (o[Math.min(o.length - 1, b + 1)] - o[b]) * (i - b); };
+    const r = [];
+    // una venta que es también la compra de otro manager (mismo jugador y mismo importe) no fue a LaLiga
+    const comprasManager = new Set();
+    for (const a of AH.lista) if ((a.clase === 'compra' || a.clase === 'clausula') && a.pid) comprasManager.add(`${a.pid}|${Math.abs(num(a.importe))}`);
+    for (const a of AH.lista) {
+      if (a.clase !== 'venta' || !a.pid || !a.importe || !a.t || ahora - a.t > 60 * DIA) continue;
+      const imp = Math.abs(num(a.importe));
+      if (comprasManager.has(`${a.pid}|${imp}`)) continue;
+      const v = valorEn(a.pid, a.t - 3 * HORA);
+      if (!v) continue;
+      const s0 = imp / v - 1;
+      if (s0 >= -0.25 && s0 <= 0.25) r.push(s0);
+    }
+    for (const v of D.misVentas || []) for (const o of v.ofertas || []) if (o.deLiga && o.importe && J(v.pid).valor) r.push(o.importe / J(v.pid).valor - 1);
+    M.ofertaLiga = r.length ? { n: r.length, med: q(r, 0.5), p25: q(r, 0.25), p75: q(r, 0.75), poco: r.length < 3 } : null;
+  }
+  /** lo que ofrecería LaLiga por un jugador: su valor ajustado con lo que suele ofrecer en tu liga */
+  M.ofertaLigaDe = (j) => {
+    if (!j || !j.valor) return null;
+    const OL = M.ofertaLiga && !M.ofertaLiga.poco ? M.ofertaLiga : null;
+    const med = OL ? OL.med : 0;
+    return { v: Math.round((j.valor * (1 + med)) / 1e4) * 1e4, med, n: OL ? OL.n : 0, sinDatos: !OL, min: OL ? Math.round((j.valor * (1 + OL.p25)) / 1e4) * 1e4 : null, max: OL ? Math.round((j.valor * (1 + OL.p75)) / 1e4) * 1e4 : null };
+  };
+
   /* ---------- fichas (jugador en un equipo de tu liga) ---------- */
   const enriquecer = (f, tid) => {
     const j = J(f.pid), t = M.tend(f.pid);
@@ -832,7 +863,7 @@ export function analizar(D, H, c, extra = {}) {
       const tope = M.tolerancia(j) - 15;
       for (let k = 0; k < 60 && puja > m.precio && M.sobrecoste(j, puja, t).indice > tope; k++) { puja = Math.max(m.precio, puja - Math.max(10000, Math.round(puja * 0.01 / 10000) * 10000)); recortada = true; }
     }
-    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, pujaLiga, recortada, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
+    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, pujaLiga, recortada, ofertaLiga: m.tipo === 'manager' && m.vendedorTeamId !== yoTid ? M.ofertaLigaDe(j) : null, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
   M.cierreMercado = Math.min(...M.mercado.map((m) => m.cierra || Infinity).filter((x) => x > ahora), Infinity);
   if (!Number.isFinite(M.cierreMercado)) M.cierreMercado = null;
@@ -858,7 +889,8 @@ export function analizar(D, H, c, extra = {}) {
     else if (MALOS.has(j.estado) && mejor.sobre >= -0.1) { consejo = 'aceptar'; porque = 'Está lesionado o sancionado: mejor venderlo ya.'; }
     else if (subiendo) { consejo = 'esperar'; porque = 'Está subiendo: mañana puede llegar una oferta mejor.'; }
     else { consejo = 'esperar'; porque = `La oferta se queda un ${Math.round(Math.abs(mejor.sobre) * 100)} % por debajo de lo que vale.`; }
-    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, ganado: mejor && compra ? mejor.importe - compra : null };
+    const deLiga = ofertas.some((o) => o.deLiga);
+    return { ...v, j, tend: t, compra, ofertas, mejor, consejo, porque, ganado: mejor && compra ? mejor.importe - compra : null, ligaEst: deLiga ? null : M.ofertaLigaDe(j) };
   });
   M.enVenta = new Set(M.misVentas.map((v) => v.pid));
 

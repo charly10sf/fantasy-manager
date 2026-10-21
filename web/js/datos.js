@@ -373,7 +373,7 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 export function borrarTodo() {
-  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'acthist', 'previs', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'acthist-demo', 'previs-demo', 'demo']) LS.del(k);
+  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'acthist', 'previs', 'chats-viejos', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'acthist-demo', 'previs-demo', 'chats-viejos-demo', 'demo']) LS.del(k);
 }
 
 /* ---------- fuentes de fuera: onces probables y titulares de prensa ---------- */

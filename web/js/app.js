@@ -8,7 +8,7 @@ import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
-import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes } from './ia.js';
+import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api } from './api.js';
 import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -370,7 +370,7 @@ function cerrarHoja(ya = false) {
   setTimeout(() => { h.remove(); v && v.remove(); }, 250);
   return true;
 }
-const htmlHoja = (tipo, arg) => (tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : Hj.diagnostico(S));
+const htmlHoja = (tipo, arg) => (tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -627,6 +627,19 @@ document.addEventListener('click', async (ev) => {
     case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Bajando la versión nueva…'); } break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarChat': borrarConversacion(); pintar(); break;
+    case 'nuevoChat':
+      if (S.charlando) { tostada('Espera a que conteste o para la respuesta'); break; }
+      if (nuevoChat()) tostada('Chat guardado en «anteriores»');
+      S.borrador = '';
+      pintar({ arriba: true });
+      break;
+    case 'chatsViejos': hoja('chats'); break;
+    case 'recuperarChat':
+      if (S.charlando) { tostada('Espera a que conteste o para la respuesta'); break; }
+      if (recuperarChat(+d.i)) { cerrarHoja(true); pintar(); bajarChat(); }
+      break;
+    case 'borrarChatViejo': borrarChatAnterior(+d.i); if (chatsAnteriores().length) repintarHoja(); else { cerrarHoja(true); pintar(); } break;
+    case 'copiarMsg': { const m = conversacion()[+d.i]; if (m) { nativo.copiar(String(m.t || '').replace(/\n> Ojo:[\s\S]*$/, '').trim()); tostada('Copiado'); } break; }
     case 'reventa': {
       const r = reventa();
       if (r[d.pid]) delete r[d.pid]; else r[d.pid] = { t: Date.now(), precio: (S.M.mias.find((x) => x.pid === d.pid) || {}).compra || S.M.J(d.pid).valor };

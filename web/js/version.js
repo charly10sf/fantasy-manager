@@ -9,9 +9,12 @@ export const VERSION = '0.2.2';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.2.2', f: '2026-10-21', h: '04:22', t: 'Te avisa de lo que hay que vender',
+    v: '0.2.2', f: '2026-10-21', h: '04:22', t: 'Vende a tiempo',
     cosas: [
       { tipo: 'nuevo', d: 'campana', t: 'Avisos para poner a la venta', x: 'Una notificación cuando toca poner a alguien en el mercado: si ha girado a la baja, si está a punto de girar, si está lesionado, si es el día de vender lo que compraste para revender o si vas en negativo antes de la jornada. Y en cuanto lo pones, otra con cuándo llega la oferta de LaLiga; cuando llega, te dice si te conviene aceptarla.', ir: { v: 'equipo' } },
+      { tipo: 'nuevo', d: 'dinero', t: 'Lo que ofrece LaLiga', x: 'Las ofertas de otros managers por un jugador en venta solo las ve su dueño, pero lo que paga LaLiga se sabe por las ventas de tu liga. Con eso, en cada jugador que vende un rival ves lo que le daría LaLiga si nadie se lo compra (por menos no tiene por qué vendértelo), y en los tuyos en venta, lo que rondará su oferta antes de que llegue.', ir: { v: 'mercado' } },
+      { tipo: 'nuevo', d: 'ia', t: 'Chat nuevo cuando quieras', x: 'Arriba del chat, «Nuevo chat» empieza de cero. El de antes no se pierde: queda en «anteriores» (los 15 últimos) y puedes volver a él. Lo que le has contado lo sigue recordando.', ir: { v: 'ia' } },
+      { tipo: 'mejora', d: 'voz', t: 'Un chat más cómodo', x: 'Preguntas pensadas para tu liga de hoy (si alguien ha girado a la baja, si una cláusula te llega, si tienes una oferta), botones para seguir la conversación sin escribir («Dímelo más corto», «¿Qué hago primero?»), la hora de cada mensaje y un botón para copiar cada respuesta.', ir: { v: 'ia' } },
       { tipo: 'mejora', d: 'oferta', t: 'Aceptar o esperar, con la inercia', x: 'Si un jugador tuyo en venta ha girado a la baja o se está frenando, la app te dice que aceptes la oferta aunque se quede un poco por debajo de su valor: esperar sale más caro.', ir: { v: 'equipo' } },
     ],
   },

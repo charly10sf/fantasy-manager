@@ -81,7 +81,10 @@ export function textoOp(o, M = null) {
       const liga = PL && !PL.poco ? `; en esta liga los libres se llevan de mediana con un ${pct(PL.med * 100)} sobre su valor (la mitad entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)}, ${PL.n} compras)` : '';
       return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? ', recortada para no pagar de más por lo que aporta' : ''}${liga}`;
     }
-    case 'M': return `COMPRAR a ${o.vendedor} ${j.nombre}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${sobreTxt}; es suyo hasta que ACEPTE una oferta, no es seguro${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}` : ''}`;
+    case 'M': {
+      const ol = M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null;
+      return `COMPRAR a ${o.vendedor} ${j.nombre}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${sobreTxt}; es suyo hasta que ACEPTE una oferta, no es seguro${ol ? `; si nadie se lo compra, LaLiga le daría unos ${eur(ol.v)}, así que por menos de eso no tiene por qué aceptar` : ''}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}` : ''}`;
+    }
     case 'T': return `COMPRAR a ${o.vendedor} ${j.nombre} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
     case 'C': return `CLAUSULAR a ${o.de} ${j.nombre} pagando su cláusula de ${eur(o.precio)}${sobreTxt}; ${o.abierta ? 'ABIERTA YA' : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : '; NO ME LLEGA el dinero'}`;
     case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}`;

@@ -463,7 +463,7 @@ export function contexto(D, M, c, { corto = false } = {}) {
   }
   if (M.misVentas && M.misVentas.length) {
     L.push('\nMIS JUGADORES EN VENTA Y SUS OFERTAS:');
-    for (const v of M.misVentas) L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}`);
+    for (const v of M.misVentas) L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}${v.ligaEst ? `; la de LaLiga rondará ${eur(v.ligaEst.v)}` : ''}`);
   }
   if (M.ventanaEsp) {
     const v = M.ventanaEsp;
@@ -476,6 +476,7 @@ export function contexto(D, M, c, { corto = false } = {}) {
   }
   L.push(`\nRIVALES (pos | equipo | manager | puntos | valor | cambio de valor 7d | movimientos 7d | gastado 7d | cláusulas que han hecho en 14d | peligro | su dinero | lo que suele pagar en el mercado | mis cláusulas que le llegan)${M.dineroExacto ? '' : `. Su dinero, si no es exacto, sale de todos vuestros movimientos desde el principio de la liga (empezasteis con lo mismo); el margen es la recompensa diaria, que no sale en los movimientos`}:`);
   for (const r of M.rivales) L.push(`- ${r.e.pos}º | ${r.e.nombre} | ${r.e.manager} | ${r.e.puntos} pts | ${eur(r.e.valor)} | ${r.dValor != null ? eur(r.dValor, { signo: true }) : '?'} | ${r.movs} | ${eur(r.gastado)} | ${r.clausulazos}${r.contraMi ? ` (${r.contraMi} a mí)` : ''} | ${r.nivel} | ${dineroTxt(r.dinero)} | ${r.paga ? `paga de mediana ${pct(r.paga.med * 100)} sobre el valor (${r.paga.n} compras, como mucho ${pct(r.paga.max * 100)})` : 'sin compras al mercado'} | ${r.leLlegan.length ? r.leLlegan.map((x) => `${x.j.nombre} ${eur(x.clausula)}${x.abierta ? ' ABIERTA' : ` (se abre ${cuando(x.protegidoHasta)})`}`).join(', ') : 'ninguna'}`);
+  if (M.ofertaLiga && !M.ofertaLiga.poco) L.push(`\nLO QUE OFRECE LALIGA por lo que se pone a la venta en esta liga (${M.ofertaLiga.n} ventas): de mediana ${pct(M.ofertaLiga.med * 100)} sobre el valor (la mitad entre ${pct(M.ofertaLiga.p25 * 100)} y ${pct(M.ofertaLiga.p75 * 100)}). Las ofertas de otros managers por los jugadores de un rival no se ven (solo cuántas hay).`);
   const PL = M.pujasLiga;
   if (PL && !PL.poco) {
     L.push(`\nLO QUE SE PAGA EN ESTA LIGA POR LOS LIBRES DEL MERCADO (${PL.n} compras de las últimas 6 semanas, sobre el valor que tenían ese día): mediana ${pct(PL.med * 100)}, la mitad entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)}, el 10 % más alto ${pct(PL.p90 * 100)} o más${PL.caros != null ? `; por los de más de 10 M, ${pct(PL.caros * 100)}` : ''}${PL.baratos != null ? `; por los de menos, ${pct(PL.baratos * 100)}` : ''}. Últimas: ${PL.ult.slice(0, 6).map((x) => `${(D.maestro[x.pid] || {}).nombre || '?'} ${eur(x.imp)} (${pct(x.s * 100)}, ${x.tid ? nombreTid(M, x.tid) : '?'})`).join('; ')}.`);
@@ -717,6 +718,34 @@ export function quitarUltimaPregunta(t) {
   if (h.length && h[h.length - 1].r === 'yo' && h[h.length - 1].t === t) { h.pop(); LS.set(K('chat'), h); }
 }
 export const borrarConversacion = () => LS.set(K('chat'), []);
+
+/* ---------------- los chats anteriores ---------------- */
+// Al empezar uno nuevo, el de ahora se guarda (los 15 últimos) para poder volver a él. Lo que le has contado
+// (las notas) no se borra con el chat: lo sigue teniendo en cuenta.
+export const chatsAnteriores = () => LS.get(K('chats-viejos'), []);
+const guardarAnteriores = (l) => LS.set(K('chats-viejos'), l.slice(0, 15));
+function archivar() {
+  const msgs = conversacion();
+  if (!msgs.length) return false;
+  const primera = msgs.find((m) => m.r === 'yo');
+  const titulo = primera ? (primera.t.length > 70 ? `${primera.t.slice(0, 67)}…` : primera.t) : 'Chat';
+  guardarAnteriores([{ t: Date.now(), ini: msgs[0].ts || Date.now(), titulo, n: msgs.length, msgs }, ...chatsAnteriores()]);
+  return true;
+}
+/** empieza un chat nuevo; el de ahora queda en «anteriores» */
+export function nuevoChat() { const ok = archivar(); LS.set(K('chat'), []); return ok; }
+/** vuelve a un chat anterior (el de ahora se guarda) */
+export function recuperarChat(i) {
+  const l = chatsAnteriores();
+  const c = l[i];
+  if (!c) return false;
+  l.splice(i, 1);
+  guardarAnteriores(l);
+  archivar();
+  LS.set(K('chat'), c.msgs || []);
+  return true;
+}
+export function borrarChatAnterior(i) { const l = chatsAnteriores(); l.splice(i, 1); guardarAnteriores(l); }
 
 /** ¿la respuesta nombra a un jugador que ya vendió sin decir que ya no es suyo? */
 export function cuentaConVendido(texto, nombre) {

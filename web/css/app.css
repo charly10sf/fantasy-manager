@@ -634,3 +634,21 @@ body.con-nv { overflow: hidden; }
 .inercia .in-b em { font: 500 10.5px 'Barlow'; color: var(--apagado); font-style: normal; text-transform: uppercase; }
 .inercia p { margin: 6px 0 0; font-size: 14px; color: var(--texto2); }
 .inercia p b { color: var(--texto); }
+/* 0.2.2: el chat */
+.chat-cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px 10px; flex-wrap: wrap; }
+.chat-acc { display: flex; gap: 8px; align-items: center; flex: none; padding-bottom: 6px; margin-left: auto; }
+.chat-acc:empty { display: none; }
+.chat-acc .btn .ic { width: 16px; height: 16px; }
+.msg .msg-h { font-size: 11.5px; color: var(--apagado); text-align: right; margin-top: 4px; }
+.msg .quien-ia { display: flex; align-items: center; gap: 8px; }
+.msg .quien-ia span { font: 500 11.5px 'Barlow'; letter-spacing: 0; text-transform: none; color: var(--apagado); }
+.msg .copiar-msg { margin-left: auto; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: var(--apagado); }
+.msg .copiar-msg .ic { width: 16px; height: 16px; }
+.msg .copiar-msg:active { background: var(--plano2); color: var(--texto); }
+.seguir { display: flex; gap: 8px; overflow-x: auto; margin: -4px 0 14px 15px; padding-bottom: 2px; scrollbar-width: none; }
+.seguir::-webkit-scrollbar { display: none; }
+.seguir button { flex: none; padding: 8px 12px; border-radius: 999px; background: var(--plano); border: 1px solid var(--linea); color: var(--texto2); font-size: 13.5px; white-space: nowrap; }
+.seguir button:active { border-color: var(--rojo); color: var(--texto); }
+.chat-viejo { align-items: center; }
+.chat-viejo-acc { display: flex; gap: 6px; align-items: center; flex: none; }
+.chat-acc .btn { height: 38px; margin: 0; align-self: center; }

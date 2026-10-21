@@ -2,7 +2,7 @@
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto } from './comunes.js';
 import { linea, barra } from './graficos.js';
-import { hayClave, nombreModelo, conversacion, notasVigentes } from './ia.js';
+import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores } from './ia.js';
 import { md } from './texto.js';
 import { enApp, nativo } from './puente.js';
 
@@ -233,7 +233,7 @@ export function ventaHTML(v) {
         <div class="fila-s">Puesto a ${eur(v.precio)} · vale ${eur(v.j.valor)}${v.compra ? ` · pagaste ${eur(v.compra)}` : ''}</div>
         <div class="fila-x">${CONSEJO[v.consejo] || ''}${v.ofertas.length ? `<span class="pill">${v.ofertas.length} oferta${v.ofertas.length === 1 ? '' : 's'}</span>` : ''}</div></div>
       <div class="fila-d">${m ? `<div class="v ${m.sobre >= 0 ? 'sube' : ''}">${eur(m.importe)}</div><div class="d apag">mejor oferta</div>` : '<div class="d apag">sin ofertas</div>'}</div></button>
-    ${ofs ? `<div class="ofertas">${ofs}</div>` : ''}${v.porque ? `<p class="t2 peq" style="margin:6px 0 0">${esc(v.porque)}${v.ganado != null ? ` Con la mejor oferta ganas <b class="${clase(v.ganado)}">${eur(v.ganado, { signo: true })}</b> sobre lo que pagaste.` : ''}</p>` : ''}</div>`;
+    ${ofs ? `<div class="ofertas">${ofs}</div>` : ''}${v.ligaEst ? `<p class="t2 peq" style="margin:6px 0 0">La oferta de LaLiga llegará con el cambio de mercado y rondará <b>${eur(v.ligaEst.v)}</b>${v.ligaEst.sinDatos ? ' (cerca de su valor)' : ` (en tu liga ofrece de mediana un ${pct(v.ligaEst.med * 100)} sobre el valor)`}.</p>` : ''}${v.porque ? `<p class="t2 peq" style="margin:6px 0 0">${esc(v.porque)}${v.ganado != null ? ` Con la mejor oferta ganas <b class="${clase(v.ganado)}">${eur(v.ganado, { signo: true })}</b> sobre lo que pagaste.` : ''}</p>` : ''}</div>`;
 }
 
 /* ================= EQUIPO ================= */
@@ -351,7 +351,7 @@ export function mercado(S) {
     if (M.misVentas.length) h += `<div class="grupo"><span>Los tuyos en venta</span><span>${M.misVentas.length}</span></div>${M.misVentas.map(ventaHTML).join('')}`;
     const fila = (m) => filaJugador(m, {
       sub: `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
-      extra: `${m.tipo === 'manager' ? `<span class="pill vende">${icono('usuario')}Lo vende ${esc(m.vendedor || 'un manager')}</span>` : '<span class="pill libre">Libre</span>'}${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${estadoPill(m.j)}${m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertas ? `<span class="pill">${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}</span>` : ''}${m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
+      extra: `${m.tipo === 'manager' ? `<span class="pill vende">${icono('usuario')}Lo vende ${esc(m.vendedor || 'un manager')}</span>` : '<span class="pill libre">Libre</span>'}${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${estadoPill(m.j)}${m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertas ? `<span class="pill">${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertaLiga ? `<span class="pill" title="Lo que le daría LaLiga si nadie se lo compra">LaLiga ≈ ${eur(m.ofertaLiga.v)}</span>` : ''}${m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
       derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div><div class="d">${barra(m.interes)}</div>`, op: S.opPorPid[m.pid],
     });
     const PL = M.pujasLiga;
@@ -381,7 +381,38 @@ export function mercado(S) {
   return h;
 }
 
+/** los chats anteriores, para volver a uno */
+export function chatsViejosHTML() {
+  const l = chatsAnteriores();
+  let h = `<div class="hoja-cab"><h2>Chats anteriores</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  if (!l.length) return h + nada('Aún no has empezado ningún chat nuevo.');
+  h += `<p class="t2 peq" style="margin:0 0 8px">Al abrir uno, el de ahora se guarda aquí. Se guardan los 15 últimos.</p>`;
+  h += l.map((c, i) => `<div class="fila chat-viejo"><span class="ic-act">${icono('ia')}</span><div class="fila-c"><div class="fila-n" style="white-space:normal">${esc(c.titulo)}</div><div class="fila-s">${cuando(c.ini || c.t)} · ${c.n} mensaje${c.n === 1 ? '' : 's'}</div></div><div class="chat-viejo-acc"><button class="btn chico sec" data-accion="recuperarChat" data-i="${i}">Abrir</button><button class="b-ico" data-accion="borrarChatViejo" data-i="${i}" aria-label="Borrar">${icono('cerrar')}</button></div></div>`).join('');
+  return h;
+}
+
 /* ================= PREGUNTA (el chat) ================= */
+/** preguntas pensadas para tu liga de hoy (si no hay nada especial, las de siempre) */
+function sugerenciasDe(S) {
+  const { M } = S;
+  const out = [];
+  const add = (t) => { if (t && !out.includes(t) && out.length < 6) out.push(t); };
+  if (M) {
+    const vi = M.mias.filter((x) => x.ventaInercia).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder)[0];
+    if (vi) add(`¿Vendo ya a ${vi.j.nombre}? ${vi.ventaInercia.urgencia === 'ya' ? 'Ha girado a la baja' : 'Se está frenando'}`);
+    const cl = M.clausulas.find((x) => x.abierta && x.meLlega && x.interes >= 55);
+    if (cl) add(`¿Clausulo a ${cl.j.nombre} por ${eur(cl.clausula)}?`);
+    const ml = M.mercado.find((m) => m.tipo === 'liga' && m.interes >= 55);
+    if (ml) add(`¿Cuánto pujo por ${ml.j.nombre}?`);
+    const rg = M.mias.find((x) => x.riesgo === 'alto');
+    if (rg) add(`¿Blindo a ${rg.j.nombre} o me arriesgo?`);
+    const of = (M.misVentas || []).find((v) => v.mejor);
+    if (of) add(`¿Acepto la oferta de ${eur(of.mejor.importe)} por ${of.j.nombre}?`);
+    if (M.paron && M.paron.ini - Date.now() < 7 * DIA) add('¿Qué hago antes del parón?');
+  }
+  for (const t of SUGERENCIAS) add(t);
+  return out;
+}
 const SUGERENCIAS = ['¿A quién clausulo hoy y por qué?', '¿Qué vendo para tener dinero sin perder puntos?', '¿Cuánto pujo por el mejor del mercado?', '¿Qué once pongo esta jornada?', '¿Qué hago antes del parón?', '¿Qué rival va a por mis jugadores?'];
 export function ia(S) {
   if (!hayClave()) {
@@ -394,13 +425,22 @@ export function ia(S) {
       <button class="btn ancho" style="margin-top:12px" data-accion="guardarClave">${icono('ok')}Guardar y hacer el plan</button>`;
   }
   const msgs = conversacion();
-  let h = `<div class="chat"><div class="eti">Pregunta</div><div class="titulo">Tu director deportivo</div>`;
+  const viejos = chatsAnteriores();
+  let h = `<div class="chat"><div class="chat-cab"><div><div class="eti">Pregunta</div><div class="titulo">Tu director deportivo</div></div>
+    <div class="chat-acc">${viejos.length ? `<button class="btn chico sec" data-accion="chatsViejos">${icono('lista')}Anteriores (${viejos.length})</button>` : ''}${msgs.length ? `<button class="btn chico" data-accion="nuevoChat">${icono('mas')}Nuevo chat</button>` : ''}</div></div>`;
   const ns = notasVigentes();
-  if (ns.length) h += `<details class="notas"><summary>${icono('nota')}Tiene en cuenta ${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</summary>${ns.map((n) => `<div class="nota"><span>${esc(n.texto)}<small>${cuando(n.t)}${n.caduca ? ` · hasta ${cuando(n.caduca, { hora: false })}` : ''}</small></span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Olvidar">${icono('cerrar')}</button></div>`).join('')}</details>`;
-  if (!msgs.length && !S.charlando) h += `<p class="entradilla">Sabe todo lo de tu liga ahora mismo y busca noticias en Google antes de contestar. Cuéntale también lo que no sale en la app (un amigo te ofrece un jugador, a quién no quieres vender): lo apunta y lo tiene en cuenta en el plan. Puedes hablarle con el micro.</p><div class="sugerencias">${SUGERENCIAS.map((s) => `<button data-sugerencia="${esc(s)}">${icono('ia')}${esc(s)}</button>`).join('')}</div>`;
-  else if (msgs.length) h += `<div style="text-align:right"><button class="btn chico sec" data-accion="borrarChat">Empezar de nuevo</button></div>`;
+  if (ns.length) h += `<details class="notas"><summary>${icono('nota')}Recuerda ${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</summary>${ns.map((n) => `<div class="nota"><span>${esc(n.texto)}<small>${cuando(n.t)}${n.caduca ? ` · hasta ${cuando(n.caduca, { hora: false })}` : ''}</small></span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Olvidar">${icono('cerrar')}</button></div>`).join('')}<p class="t2 peq" style="margin:6px 2px 2px">Lo recuerda aunque empieces un chat nuevo. Toca la × para que lo olvide.</p></details>`;
+  if (!msgs.length && !S.charlando) {
+    h += `<p class="entradilla">Sabe todo lo de tu liga ahora mismo y busca noticias antes de contestar. Cuéntale también lo que no sale en la app (un amigo te ofrece un jugador, a quién no quieres vender): lo apunta y cuenta en el plan. Puedes hablarle con el micro.</p>`;
+    h += `<div class="sugerencias">${sugerenciasDe(S).map((x) => `<button data-sugerencia="${esc(x)}">${icono('ia')}${esc(x)}</button>`).join('')}</div>`;
+  }
   const ultimaIA = [...msgs].reverse().find((m) => m.r === 'ia');
-  h += msgs.map((m) => (m.r === 'yo' ? `<div class="msg yo">${esc(m.t)}</div>` : `<div class="msg ia"><div class="quien-ia">${esc(nombreModelo(m.modelo) || 'IA')}</div>${md(m.t)}${m.fuentes && m.fuentes.length ? `<div class="fuentes">${m.fuentes.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
+  const hora = (ts) => (ts ? cuando(ts) : '');
+  h += msgs.map((m, i) => (m.r === 'yo'
+    ? `<div class="msg yo">${esc(m.t)}${m.ts ? `<div class="msg-h">${hora(m.ts)}</div>` : ''}</div>`
+    : `<div class="msg ia"><div class="quien-ia">${esc(nombreModelo(m.modelo) || 'IA')}${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${md(m.t)}${m.fuentes && m.fuentes.length ? `<div class="fuentes">${m.fuentes.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
+  // para seguir la conversación sin escribir
+  if (ultimaIA && msgs[msgs.length - 1] === ultimaIA && !S.charlando) h += `<div class="seguir">${['Dímelo más corto', '¿Y qué alternativas tengo?', '¿Qué hago primero?'].map((x) => `<button data-sugerencia="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
   // la pregunta que se está contestando, aunque aún no esté guardada en el chat
   if (S.charlando && S.preguntaActual && !(msgs.length && msgs[msgs.length - 1].r === 'yo' && msgs[msgs.length - 1].t === S.preguntaActual)) h += `<div class="msg yo">${esc(S.preguntaActual)}</div>`;
   if (S.charlando) h += `<div class="msg ia" id="respuesta"><div class="quien-ia">Pensando…</div>${S.parcial ? md(S.parcial) : `<span class="pensando"><i></i><i></i><i></i></span> <span class="t2 peq" id="paso-chat">${esc(S.pasoChat || '')}</span>`}</div><div class="parar-chat"><button class="btn chico sec" data-accion="pararChat">${icono('parar')}Parar la respuesta</button></div>`;
