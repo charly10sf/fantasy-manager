@@ -282,6 +282,14 @@ function previaTxt(M, j) {
   const xg = v.xg ? ` · xG por partido (Understat): su equipo genera ${d1(v.xg.tu.xg)} y concede ${d1(v.xg.tu.xga)}${v.xg.tu.xg5 != null ? ` (últimos 5: ${d1(v.xg.tu.xg5)}/${d1(v.xg.tu.xga5)})` : ''}; el rival genera ${d1(v.xg.ri.xg)} y concede ${d1(v.xg.ri.xga)}${v.xg.ri.xg5 != null ? ` (últimos 5: ${d1(v.xg.ri.xg5)}/${d1(v.xg.ri.xga5)})` : ''}` : '';
   return `PREVIA: ${v.casa ? 'en casa vs' : 'fuera en'} ${v.rival}${v.posRival ? ` (${v.posRival}º, ${v.nivel || '?'})` : ''} ${cuando(v.p.fecha)} · su equipo llega ${rs(v.rachaTu)}, el rival ${rs(v.rachaRi)}${v.rivalMarca != null ? ` · el rival marca ${d1(v.rivalMarca)} y encaja ${d1(v.rivalEncaja)} por partido` : ''}${xg}${sitio ? ` · ${sitio}` : ''}${porPos ? ` · ${porPos}` : ''}`;
 }
+/** hacia dónde va su valor ahora: lo de cada día de la última semana y si se frena o ha girado */
+function inerciaTxt(M, j) {
+  const x = M.inercia ? M.inercia(j.id) : null;
+  if (!x || x.fase === 'plano') return null;
+  const F = { giro: 'HA GIRADO A LA BAJA', baja: 'BAJANDO', parado: 'ESTANCADO TRAS SUBIR', frena: 'FRENANDO', acelera: 'acelerando', sube: 'subiendo' }[x.fase] || x.fase;
+  return `INERCIA ${F}: cada día ${x.R.map((r) => eur(r, { signo: true })).join(' → ')}${x.fase === 'frena' ? ` (deja de subir en ~${Math.max(1, Math.round(x.giroEn))} d)` : ''}${['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; hasta la jornada ${eur(x.proyJ, { signo: true })}` : ''}`;
+}
+
 /** los puntos esperados por partes, la titularidad juntando fuentes y el riesgo de rotación (en corto) */
 function esperadosTxt(M, j) {
   const P = M.ppDetalle ? M.ppDetalle(j) : null;
@@ -325,6 +333,7 @@ const lineaJ = (M, j, x = {}) => [
   POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
   x.tend && x.tend.d1 != null ? `hoy ${eur(x.tend.d1, { signo: true })}` : null,
   x.tend && x.tend.p7 != null ? `7d ${pct(x.tend.p7)}` : null,
+  inerciaTxt(M, j),
   j.pos === 5 ? 'ENTRENADOR: no se alinea ni puntúa en la versión gratis' : null,
   j.media ? `media ${String(j.media).replace('.', ',')}` : null, `${j.puntos} pts`,
   j.pos < 5 ? forma(M, j.id) : null,
@@ -417,8 +426,9 @@ function notasTxt(D, M) {
   const ns = notasVigentes();
   if (!ns.length) return '';
   const L = ['\nLO QUE ME HAS CONTADO TÚ (no sale en los datos de LaLiga; cuenta para todas las recomendaciones, sobre todo los tratos y ofertas con otros managers):'];
+  const fuera = new Set((M.vendidos || []).map((v) => v.pid));
   for (const n of ns) {
-    L.push(`- [${n.id}] ${cuando(n.t)}: ${n.texto}${n.caduca ? ` (vale hasta ${cuando(n.caduca, { hora: false })})` : ''}`);
+    L.push(`- [${n.id}] ${cuando(n.t)}: ${n.texto}${n.caduca ? ` (vale hasta ${cuando(n.caduca, { hora: false })})` : ''}${n.pid && fuera.has(n.pid) ? ' [YA NO ES SUYO: esta nota está superada]' : ''}`);
     const j = n.pid && M.J(n.pid);
     if (j) L.push(`  datos de ${j.nombre}: ${lineaCompleta(D, M, j)}`);
   }
@@ -446,7 +456,11 @@ export function contexto(D, M, c, { corto = false } = {}) {
   const nt = notasTxt(D, M);
   if (nt) L.push(nt);
   L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | últimas jornadas con su rival | lo que rinde | once probable | previa del próximo partido | los dos siguientes) + titular o suplente en mi once, cláusula, protección, riesgo y lo que pagué:');
-  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | riesgo ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
+  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : `protegido hasta ${cuando(x.protegidoHasta)}`} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}riesgo ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : ''}`);
+  if (M.vendidos && M.vendidos.length) {
+    L.push('\nYA NO SON MÍOS (vendidos o clausulados estos días; NO cuentes con ellos para nada: ni para vender, ni para el once, ni para el dinero):');
+    for (const v of M.vendidos) L.push(`- ${v.j.nombre}: ${v.como} ${cuando(v.t)}${v.importe ? ` por ${eur(v.importe)}` : ''}`);
+  }
   if (M.misVentas && M.misVentas.length) {
     L.push('\nMIS JUGADORES EN VENTA Y SUS OFERTAS:');
     for (const v of M.misVentas) L.push(`- ${v.j.nombre} (vale ${eur(v.j.valor)}${v.compra ? `, pagué ${eur(v.compra)}` : ''}) puesto a ${eur(v.precio)}: ${v.ofertas.length ? v.ofertas.map((o) => `${o.de} ofrece ${eur(o.importe)} (${pct(o.sobre * 100)} sobre su valor${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''})`).join('; ') : 'sin ofertas todavía'}`);
@@ -516,6 +530,7 @@ Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (ent
 VERSIÓN GRATIS SIN ENTRENADOR: no se alinea entrenador ni puntúa. No recomiendes nunca fichar, pujar ni clausular entrenadores; si tiene alguno, es dinero parado: véndelo para hacer caja.
 CADA JUGADOR TE LLEGA CON: sus últimas jornadas con el rival de cada una y el resultado («J9 11 vs Getafe 19º 2-0»), lo que rinde en casa, fuera, contra los 6 primeros y contra los 6 últimos, y la PREVIA de su próximo partido (cómo llegan los dos equipos en los últimos 5, lo que marca y encaja el rival, cómo le va al rival jugando en ese campo, la portería a cero esperada para porteros y defensas o los goles esperados de su equipo para medios y delanteros, y los puntos esperados). Úsalo: un jugador que solo puntúa contra los de abajo no es fiable contra el Madrid; un defensa con un 15 % de portería a cero puntuará poco aunque sea titular; uno que rinde fuera igual que en casa es más seguro. Compara siempre lo que le toca ahora con lo que ha hecho contra rivales parecidos.
 ESTADÍSTICAS AVANZADAS (Understat y SofaScore, cuando las hay): mira más allá de los puntos del Fantasy. xG y xA por 90 dicen las ocasiones que genera de verdad: si marca mucho menos de lo que dice su xG, es probable que lleguen los goles (y al revés, si marca mucho más, puede bajar). Tiros y pases clave por 90 son la base de los puntos de un medio o un delantero; entradas, intercepciones y recuperaciones, los de un defensa o un medio defensivo; las paradas y las porterías a cero, los de un portero. La nota de SofaScore y su tendencia (las últimas) avisan de si está en forma o de si puede perder el sitio. Y el xG que genera y concede cada equipo (sobre todo en los últimos 5) dice mejor que los goles cómo de difícil es un partido. Úsalo para afinar, sobre todo entre candidatos parecidos.
+INERCIA DEL VALOR: con cada jugador va lo que ha cambiado su valor cada día de la última semana. Mira hacia dónde va AHORA, no el total de la semana. Si sube cada vez menos (1 M, 800 mil, 500 mil…) está FRENANDO y va a girar: hay que anticiparse y venderlo antes de que empiece a bajar (te digo en cuántos días deja de subir). Si después de subir se ha estancado o ya baja (HA GIRADO A LA BAJA), lo normal es que siga bajando varios días: es VENTA casi obligatoria para no perder lo ganado; solo se queda si es imprescindible en el once para la jornada que viene, y entonces dilo con cifras (lo que perdería de valor hasta la jornada frente a los puntos que da) y dile qué hacer después. Para comprar, y sobre todo para revender, nada que esté frenando o haya girado: tiene que seguir subiendo hasta el día de venderlo.
 PUNTOS ESPERADOS POR PARTES: los de cada jugador vienen desglosados como puntúa LaLiga Fantasy (min: minutos; gol: con su xG; asis: con su xA; cero: portería a cero con lo que marca el rival; encaja: goles encajados; paradas; tarj: tarjetas; resto: la nota de DAZN, recuperaciones, tiros…), con la probabilidad de ser titular juntando el once probable, sus últimos partidos y la temporada. Úsalo para entender de dónde salen sus puntos: un defensa que vive de la portería a cero vale poco contra un equipo que marca mucho; un delantero con mucho xG y pocos goles está para marcar. Si su equipo juega Champions, Europa League, Conference o Copa pegada a la jornada, va marcado como ROTACIÓN: mira en la prensa si su entrenador suele rotar antes de ponerlo de titular o de ficharlo para esa jornada.
 DINERO DE LOS RIVALES: te paso el de cada uno, exacto si LaLiga lo da o estimado con vuestros movimientos (con su margen). Úsalo para saber quién puede ir a por cada cláusula: una cláusula abierta que no le llega a nadie es poco riesgo hoy (aunque podrían vender para juntar el dinero), y si a varios les sobra, hay que blindar o asumirlo. Para blindar te paso el «blindaje justo» (subir la cláusula X cuesta X/2): propón esa cifra, no un número al azar, y solo si el jugador lo merece. Y un rival sin dinero no va a pujar fuerte en el mercado ni a clausular.
 PUJAS EN ESTA LIGA: te paso lo que se paga de verdad aquí por los libres (mediana, el rango normal, por los caros y por los baratos, y lo que paga cada rival). La puja que propongas tiene que salir de ahí: por uno que buscará todo el mundo, hacia la parte alta; por uno que no mira nadie, cerca de la mínima. Dila con su % sobre el valor.
@@ -703,6 +718,21 @@ export function quitarUltimaPregunta(t) {
 }
 export const borrarConversacion = () => LS.set(K('chat'), []);
 
+/** ¿la respuesta nombra a un jugador que ya vendió sin decir que ya no es suyo? */
+export function cuentaConVendido(texto, nombre) {
+  if (!texto || !nombre) return false;
+  const t = norm(texto), k = norm(nombre);
+  let i = t.indexOf(k);
+  while (i >= 0) {
+    const antes = t[i - 1], despues = t[i + k.length];
+    const suelto = (!antes || !/[a-z0-9]/.test(antes)) && (!despues || !/[a-z0-9]/.test(despues));
+    const cerca = t.slice(Math.max(0, i - 70), i + k.length + 70);
+    if (suelto && !/vendid|vendiste|ya no es tuyo|ya no lo tienes|clausularon|te lo quitaron|ya no esta/.test(cerca)) return true;
+    i = t.indexOf(k, i + 1);
+  }
+  return false;
+}
+
 /** pregunta en el chat; alTexto(texto) se llama según va llegando la respuesta */
 const NOTAS_CHAT = `Si en su último mensaje el manager te cuenta algo que tiene que contar a partir de ahora (una oferta o un trato con otro manager, algo que ya ha hecho, lo que piensa hacer, un jugador que no quiere vender, una preferencia), apúntalo para no olvidarlo. Al final de tu respuesta, y solo entonces, añade este bloque (no lo menciones en el texto):
 \`\`\`notas
@@ -747,10 +777,12 @@ export async function charlar(pregunta, D, M, c, alTexto, signal) {
   // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
   const nombrados = jugadoresEn(pregunta, D);
   const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}` : '';
-  const sistema = `${SISTEMA}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\n${NOTAS_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { corto: true })}${extra}${p ? `\n\nEL PLAN DE HOY QUE LE DISTE (${cuando(p.t)}): ${p.titular} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador}`).join('; ')}` : ''}`;
+  const sistema = `${SISTEMA}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${NOTAS_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { corto: true })}${extra}${p ? `\n\nEL PLAN DE HOY QUE LE DISTE (${cuando(p.t)}): ${p.titular} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador}`).join('; ')}` : ''}`;
   const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();
   const r = await preguntar({ sistema, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal });
   const n = aplicarNotas(r.texto, D);
+  const vend = (M.vendidos || []).filter((v) => cuentaConVendido(n.texto, v.j && v.j.nombre));
+  if (vend.length) n.texto += `\n\n> Ojo: ${vend.map((v) => `**${v.j.nombre}** ya no es tuyo (${v.como} ${cuando(v.t)})`).join('; ')}. No cuenta para lo de arriba.`;
   const h2 = conversacion();
   h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: r.fuentes.slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => x.texto), olvidadas: n.olvidadas });
   LS.set(K('chat'), h2.slice(-40));

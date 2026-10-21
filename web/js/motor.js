@@ -33,6 +33,35 @@ export function analizar(D, H, c, extra = {}) {
   M.teamDeUsuario = (id, nombre) => (id && porUsuario[id]) || M.teamDeManager(nombre);
   const nombreEquipo = (tid) => { const e = tid && M.equipo[tid]; return e ? e.manager || e.nombre : ''; };
 
+  /* ---------- lo que ya no es tuyo: vendidos y clausulados estos días ---------- */
+  // La plantilla de la API a veces tarda en enterarse. Si los movimientos dicen que lo vendiste (o que te lo
+  // clausularon) y no lo has vuelto a fichar, o si me has contado en el chat que ya lo has vendido, deja de contar
+  // como tuyo en todo: el once, el plan, las ventas y lo que se le pasa a la IA.
+  const vendidos = {};
+  {
+    const ev = [];
+    for (const a of D.actividad || []) if (a.pid && a.t && ahora - a.t < 10 * DIA) ev.push({ t: a.t, a });
+    for (const m of H.mov || []) if (m.teamId === yoTid && ahora - m.t < 10 * DIA && (m.tipo === 'sale' || m.tipo === 'entra')) ev.push({ t: m.t, m });
+    ev.sort((x, y) => x.t - y.t);
+    for (const { t, a, m } of ev) {
+      if (m) {
+        if (m.tipo === 'sale' && !vendidos[m.pid]) vendidos[m.pid] = { t, como: 'salió de tu equipo' };
+        else if (m.tipo === 'entra') delete vendidos[m.pid];
+        continue;
+      }
+      const q = M.teamDeUsuario(a.quienId, a.quien), o = a.otroId || a.otro ? M.teamDeUsuario(a.otroId, a.otro) : null;
+      if (a.clase === 'venta' && q === yoTid) vendidos[a.pid] = { t, como: 'lo vendiste', importe: a.importe || null };
+      else if ((a.clase === 'compra' || a.clase === 'clausula') && o === yoTid && q && q !== yoTid) vendidos[a.pid] = { t, como: a.clase === 'clausula' ? `te lo clausuló ${nombreEquipo(q)}` : `se lo vendiste a ${nombreEquipo(q)}`, importe: a.importe || null, aTid: q };
+      else if ((a.clase === 'compra' || a.clase === 'clausula') && q === yoTid) delete vendidos[a.pid];
+    }
+    for (const n of extra.notas || []) {
+      if (n.pid && !vendidos[n.pid] && /hecho/.test(n.tipo || '') && /vend|clausul|traspas/i.test(n.texto || '') && n.t && ahora - n.t < 4 * DIA) vendidos[n.pid] = { t: n.t, como: 'me contaste que ya lo vendiste' };
+    }
+  }
+  const enMiPlantilla = new Set(((D.plantillas || {})[yoTid] || []).map((f) => f.pid));
+  M.vendidos = Object.entries(vendidos).map(([pid, v]) => ({ pid, ...v, j: J(pid), seguiaEnLaApi: enMiPlantilla.has(pid) })).sort((a, b) => b.t - a.t);
+  for (const v of M.vendidos) if (M.dueno[v.pid] === yoTid) { if (v.aTid) M.dueno[v.pid] = v.aTid; else delete M.dueno[v.pid]; }
+
   /* ---------- forma reciente (de la ficha de cada jugador, si se ha bajado) ---------- */
   const det = extra.det || {};
   M.forma = (pid) => {
@@ -69,6 +98,87 @@ export function analizar(D, H, c, extra = {}) {
     const p7 = v7 ? (valor / v7 - 1) * 100 : ff.p7 != null ? ff.p7 : null;
     const serie = s.map(([d, v]) => [Date.parse(d + 'T12:00:00'), v]);
     return (cacheT[pid] = { d1, p1, d7, p7, d30: v30 ? valor - v30 : null, serie });
+  };
+
+  /* ---------- la inercia del valor: si sube cada vez menos va a girar, y si ya ha girado hay que vender ---------- */
+  // Con lo que ha cambiado su valor cada día (hasta los últimos 7). Si sube 1 M, luego 800 mil y luego 500 mil, se
+  // está frenando: con lo que se frena cada día se calcula cuándo deja de subir. Si después de varios días subiendo
+  // se para o ya baja, ha girado: lo normal es que siga bajando unos días, así que se vende antes de perder más.
+  const cacheI = {};
+  M.inercia = (pid) => {
+    if (cacheI[pid] !== undefined) return cacheI[pid];
+    const j = J(pid), t = M.tend(pid);
+    if (!j.valor) return (cacheI[pid] = null);
+    // un valor por día (el de hoy, el que hay ahora)
+    const porDia = new Map();
+    for (const [ts, v] of t.serie || []) if (v) porDia.set(diaDe(ts), v);
+    porDia.set(diaDe(ahora), j.valor);
+    const dias = [...porDia.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-9);
+    const R = [], F = [];
+    for (let i = 1; i < dias.length; i++) {
+      const gap = Math.round((Date.parse(dias[i][0] + 'T12:00:00') - Date.parse(dias[i - 1][0] + 'T12:00:00')) / DIA);
+      if (gap < 1 || gap > 3) { R.length = 0; F.length = 0; continue; }
+      R.push((dias[i][1] - dias[i - 1][1]) / gap); F.push(dias[i][0]);
+    }
+    // si hoy aún no se ha guardado el cambio y futbolfantasy lo da, se usa
+    const ff = (D.tendencias || {})[pid];
+    if (ff && ff.d1 != null && F[F.length - 1] !== diaDe(ahora)) { R.push(ff.d1); F.push(diaDe(ahora)); }
+    if (R.length < 3) return (cacheI[pid] = null);
+    const Rs = R.slice(-7), v = j.valor;
+    const n = Rs.length, ult = Rs[n - 1], pen = Rs[n - 2];
+    // por debajo de esto se considera que no se mueve
+    const quieto = Math.max(25000, v * 0.0012);
+    let subia = 0; for (let i = n - 2; i >= 0 && Rs[i] > quieto; i--) subia++;
+    let baja = 0; for (let i = n - 1; i >= 0 && Rs[i] < -quieto; i--) baja++;
+    // lo que cambia la subida cada día (pendiente de los últimos 4 cambios)
+    const u4 = Rs.slice(-4), mx = (u4.length - 1) / 2, my = u4.reduce((s, x) => s + x, 0) / u4.length;
+    const pend = u4.reduce((s, x, i) => s + (i - mx) * (x - my), 0) / Math.max(1e-9, u4.reduce((s, x, i) => s + (i - mx) ** 2, 0));
+    let fase = 'plano', giroEn = null, frenazo = null;
+    // antes de empezar a bajar, ¿venía subiendo? (puede haber uno o dos días quieto entre medias)
+    const antes = Rs.slice(0, n - Math.max(baja, 1));
+    const subioAntes = antes.slice(-5).filter((x) => x > quieto).length >= 2 && antes.slice(-5).reduce((s0, x) => s0 + x, 0) > 2 * quieto;
+    if (ult < -quieto && (subia >= 2 || (subioAntes && baja <= 3))) fase = 'giro';   // venía subiendo y ya baja
+    else if (ult < -quieto) fase = 'baja';
+    else if (Math.abs(ult) <= quieto && subia >= 2) fase = 'parado';      // se ha estancado después de subir
+    else if (ult > quieto) {
+      const u3 = Rs.slice(-3);
+      const frena = u3.every((x) => x > 0) && u3[2] < u3[1] && u3[1] <= u3[0] && u3[2] < u3[0] * 0.8;
+      // cuánto se frena cada día desde el pico (pesa más lo último: si el frenazo se acelera, gira antes)
+      const fr = 0.6 * (u3[2] - u3[1]) + 0.4 * (u3[1] - u3[0]);
+      if (frena && fr < 0) { fase = 'frena'; frenazo = fr; giroEn = ult / -fr; }
+      else fase = Rs.slice(-3).every((x) => x > quieto) && pend >= 0 ? 'acelera' : 'sube';
+    }
+    // lo que se espera los próximos días: el frenazo sigue al mismo ritmo, la bajada se suaviza poco a poco
+    const hastaJ = M.proxima ? clamp(Math.ceil((M.proxima.ini - ahora) / DIA), 1, 7) : 3;
+    const proy = (k) => {
+      let x = 0, r = ult;
+      for (let i = 1; i <= k; i++) {
+        if (fase === 'frena' || fase === 'parado') r = r + Math.min(frenazo != null ? frenazo : pend, -quieto * 0.6);
+        else if (fase === 'giro' || fase === 'baja') r = r * 0.9;
+        else r = r * 0.8;
+        x += r;
+      }
+      return x;
+    };
+    const fmt = (x) => eur(x, { signo: true });
+    const subida = (subia >= 2 ? Rs.slice(Math.max(0, n - 1 - subia), n - 1) : antes.slice(-5)).filter((r) => r > quieto);
+    let texto = '';
+    if (fase === 'giro') texto = `Ha girado a la baja: venía subiendo (${subida.slice(-4).map(fmt).join(', ')} al día) y ${baja >= 2 ? `ya lleva ${baja} días bajando (hoy ${fmt(ult)})` : `hoy ${fmt(ult)}`}. Si sigue así, en ${hastaJ} día${hastaJ > 1 ? 's' : ''} pierde unos ${eur(-proy(hastaJ))}.`;
+    else if (fase === 'parado') texto = `Se ha estancado después de subir (${subida.slice(-4).map(fmt).join(', ')} y hoy ${fmt(ult)}): lo normal es que ahora empiece a bajar.`;
+    else if (fase === 'frena') texto = `Sube cada vez menos (${Rs.slice(-3).map(fmt).join(', ')} al día): a este ritmo deja de subir en unos ${Math.max(1, Math.round(giroEn))} día${Math.round(giroEn) > 1 ? 's' : ''} y luego bajará.`;
+    else if (fase === 'baja') texto = `Baja ${fmt(ult)} al día${baja >= 2 ? ` (${baja} días seguidos)` : ''}: en ${hastaJ} día${hastaJ > 1 ? 's' : ''} perdería unos ${eur(-proy(hastaJ))}.`;
+    else if (fase === 'acelera') texto = `Sube cada vez más (${Rs.slice(-3).map(fmt).join(', ')} al día).`;
+    else if (fase === 'sube') texto = `Sube ${fmt(ult)} al día.`;
+    return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, texto, quieto });
+  };
+  /** ¿hay que venderlo ya por la inercia? (ha girado o se ha parado tras subir, o está a punto) */
+  M.ventaPorInercia = (pid) => {
+    const x = M.inercia(pid);
+    if (!x) return null;
+    const j = J(pid), perder = -x.proyJ;
+    if ((x.fase === 'giro' || x.fase === 'baja') && perder >= Math.max(150000, j.valor * 0.012)) return { urgencia: 'ya', ...x, perder };
+    if (x.fase === 'parado' || (x.fase === 'frena' && x.giroEn != null && x.giroEn <= 2.5)) return { urgencia: 'antes del giro', ...x, perder: Math.max(0, perder) };
+    return null;
   };
 
   /* ---------- jornada, partidos y parones ---------- */
@@ -367,7 +477,7 @@ export function analizar(D, H, c, extra = {}) {
   };
 
   /* ---------- tu once: posiciones, formaciones gratuitas y huecos ---------- */
-  const misFichasRaw = (D.plantillas || {})[yoTid] || [];
+  const misFichasRaw = ((D.plantillas || {})[yoTid] || []).filter((f) => !vendidos[f.pid]);
   M.formaciones = (D.formaciones && D.formaciones.length ? D.formaciones : FORMACIONES).map(partirFormacion).filter(Boolean);
   const onces = (extra.onces && extra.onces.jugadores) || {};
   M.hayOnces = Object.keys(onces).length > 0;
@@ -556,8 +666,18 @@ export function analizar(D, H, c, extra = {}) {
     const rend = clamp(num(j.media) / 7, 0, 1.3) * 30;
     if (j.media) partes.push(`${String(Math.round(j.media * 10) / 10).replace('.', ',')} pts de media`);
     const mov = t.p7 != null ? t.p7 : t.p1 != null ? t.p1 * 3 : 0;
-    const momentum = clamp(mov / 10, -1, 1) * 15;
-    if (t.p7 != null && Math.abs(t.p7) >= 2) partes.push(`${t.p7 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p7), 1, false)} en 7 días`);
+    let momentum = clamp(mov / 10, -1, 1) * 15;
+    // lo que importa es hacia dónde va ahora: un +10 % en 7 días que ya ha girado no es una subida
+    const ine = M.inercia(j.id);
+    if (ine) {
+      if (ine.fase === 'giro' || ine.fase === 'baja') { momentum = Math.min(momentum, 0) - 8; partes.push(ine.fase === 'giro' ? 'ha girado a la baja' : `baja ${eur(Math.abs(ine.ult))} al día`); }
+      else if (ine.fase === 'parado') { momentum = Math.min(momentum, 3) - 4; partes.push('se ha estancado tras subir'); }
+      else if (ine.fase === 'frena') { momentum -= 5; partes.push(`sube cada vez menos (gira en ~${Math.max(1, Math.round(ine.giroEn))} d)`); }
+      else if (ine.fase === 'acelera') momentum += 3;
+    }
+    const ine0 = M.inercia(j.id), giro0 = ine0 && ['giro', 'baja', 'parado'].includes(ine0.fase);
+    if (giro0) { /* lo dice la inercia, más abajo */ }
+    else if (t.p7 != null && Math.abs(t.p7) >= 2) partes.push(`${t.p7 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p7), 1, false)} en 7 días`);
     else if (t.p1 != null && Math.abs(t.p1) >= 1) partes.push(`${t.p1 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p1), 1, false)} hoy`);
     const ratio = j.valor ? precio / j.valor : 2;
     const barato = clamp((1.6 - ratio) / 0.6, 0, 1) * 20;
@@ -636,6 +756,8 @@ export function analizar(D, H, c, extra = {}) {
       }
     }
     x.prox = M.proximoPartido(x.j.equipoId);
+    x.inercia = M.inercia(x.pid);
+    x.ventaInercia = M.ventaPorInercia(x.pid);
     return x;
   }).sort((a, b) => a.j.pos - b.j.pos || b.j.valor - a.j.valor);
   M.ganadoTotal = M.mias.reduce((s, x) => s + (x.ganado || 0), 0);
@@ -665,7 +787,7 @@ export function analizar(D, H, c, extra = {}) {
   M.mercadoFantasma = (D.mercado || []).filter((m) => m.tipo !== 'manager' && M.dueno[m.pid]).map((m) => m.pid);
   // en la versión gratuita no se alinea entrenador: no cuentan para fichar
   const esEnt = (pid) => (D.maestro[pid] || {}).pos === 5;
-  M.mercado = (D.mercado || []).filter((m) => (m.tipo === 'manager' || !M.dueno[m.pid]) && !esEnt(m.pid)).map((m0) => {
+  M.mercado = (D.mercado || []).filter((m) => (m.tipo === 'manager' || !M.dueno[m.pid]) && !esEnt(m.pid) && !(m.tipo === 'manager' && vendidos[m.pid] && (!m.vendedorTeamId || m.vendedorTeamId === yoTid))).map((m0) => {
     const dueno0 = M.dueno[m0.pid];
     const m = { ...m0 };
     if (m.tipo === 'manager') {
@@ -683,6 +805,12 @@ export function analizar(D, H, c, extra = {}) {
     else if (t.p1 != null && t.p1 > 1) veredicto = 'sube';
     else if (sobre > 0.15) veredicto = 'caro';
     else if (t.p7 != null && t.p7 < -4) veredicto = 'baja';
+    // la inercia manda sobre la tendencia de la semana
+    const ineM = M.inercia(m.pid);
+    if (ineM && veredicto !== 'evitar') {
+      if (ineM.fase === 'giro' || ineM.fase === 'baja') veredicto = 'baja';
+      else if ((ineM.fase === 'frena' || ineM.fase === 'parado') && ['chollo', 'sube', 'normal'].includes(veredicto)) veredicto = 'frena';
+    }
     // la puja que pondría: el precio y un margen por las pujas que lleva y por si está subiendo
     let margen = 0.02 + Math.min(m.pujas, 5) * 0.025 + (t.p1 != null && t.p1 > 0 ? Math.min(t.p1, 4) / 100 : 0) + (i.n >= 70 ? 0.03 : 0);
     // y lo que de verdad hace falta en TU liga para llevarse a uno así: cuanto más interesa, más arriba de lo que
@@ -710,7 +838,7 @@ export function analizar(D, H, c, extra = {}) {
   if (!Number.isFinite(M.cierreMercado)) M.cierreMercado = null;
 
   /* ---------- tus jugadores en venta y sus ofertas ---------- */
-  M.misVentas = (D.misVentas || []).map((v) => {
+  M.misVentas = (D.misVentas || []).filter((v) => !vendidos[v.pid]).map((v) => {
     const j = J(v.pid), t = M.tend(v.pid);
     const mia = (D.plantillas[yoTid] || []).find((f) => f.pid === v.pid);
     const compra = mia && (mia.compra || null);
@@ -813,6 +941,9 @@ export function analizar(D, H, c, extra = {}) {
   if (M.ventanaEsp && M.ventanaEsp.ciclos >= 1 && !M.enJuego) {
     const add = (j, t, origen, precio, extraInfo) => {
       if (MALOS.has(j.estado)) return;
+      // para revender tiene que seguir subiendo hasta el día de vender: fuera lo que se frena o ya ha girado
+      const ine = M.inercia(j.id);
+      if (ine && (['giro', 'baja', 'parado'].includes(ine.fase) || (ine.fase === 'frena' && ine.giroEn != null && ine.giroEn < M.ventanaEsp.ciclos + 1))) return;
       // lo del mercado llega en el próximo cambio y luego hay que ponerlo a la venta: hacen falta 2 cambios
       const dias = M.ventanaEsp.ciclos;
       if (dias < (origen === 'mercado' ? 2 : 1)) return;
@@ -886,13 +1017,23 @@ function acciones(D, M, c) {
       : `Se le acaba la protección en ${dura(x.abreEn)} y su cláusula (${eur(x.clausula)}) está muy cerca de su valor. Súbela antes.`,
   }));
 
+  // la inercia: lo que ha girado a la baja se vende ya; lo que está a punto de girar, antes de que gire
+  M.mias.filter((x) => x.ventaInercia && !MALOS.has(x.j.estado)).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
+    const vi = x.ventaInercia, pierde = M.perdida(x.pid);
+    add({
+      tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
+      titulo: vi.urgencia === 'ya' ? `Vende a ${x.j.nombre}: ha girado a la baja` : `Vende a ${x.j.nombre} antes de que gire`,
+      texto: `${vi.texto}${pierde >= 0.3 ? ` Es titular en tu once (${String(Math.round(pierde * 10) / 10).replace('.', ',')} pts por jornada): busca quién lo sustituya.` : ' No es imprescindible en tu once.'}${x.compra ? ` Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}).` : ''}`,
+    });
+  });
+
   M.mias.filter((x) => MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 60, icono: 'lesion', pid: x.pid, cuando: 'Esta semana',
     titulo: `${x.j.nombre}: ${x.j.estado === 'injured' ? 'lesionado' : x.j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'}`,
     texto: `No te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y baja ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Plantéate venderlo antes de que pierda más valor.`,
   }));
 
-  M.mias.filter((x) => x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3 && !MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => !x.ventaInercia && x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3 && !MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 50, icono: 'hucha', pid: x.pid, cuando: 'Antes de que baje más',
     titulo: `Vende a ${x.j.nombre} con beneficio`,
     texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.`,
@@ -959,6 +1100,15 @@ export function planAuto(D, M, c) {
   for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ganado > 0 && y.tend.p7 != null && y.tend.p7 < -4).slice(0, 2)) {
     op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
       motivo: `Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva un ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días. Asegura el beneficio.` });
+    saldo += x.j.valor; vendidos.add(x.pid);
+  }
+
+  // 1b. la inercia: lo que ha girado a la baja, fuera ya; lo que está a punto de girar, si no es clave en el once
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ventaInercia && y.j.pos !== 5)) {
+    const vi = x.ventaInercia;
+    if (vi.urgencia !== 'ya' && M.perdida(x.pid) >= 1.5) continue;
+    op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
+      motivo: `${vi.texto}${M.perdida(x.pid) >= 0.3 ? ` Te quita unos ${String(Math.round(M.perdida(x.pid) * 10) / 10).replace('.', ',')} pts por jornada: ficha a quien lo sustituya.` : ''}`, confianza: vi.urgencia === 'ya' ? 'alta' : 'media' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
 

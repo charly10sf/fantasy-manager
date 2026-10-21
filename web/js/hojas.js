@@ -144,6 +144,7 @@ export function fichaJugador(S, pid) {
   let h = `<div class="ficha-top">${ava(j, 'g')}<div style="min-width:0"><h2>${esc(j.nombre)}</h2>
     <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div></div>`;
   h += `<div class="valor-g"><span class="v">${eur(j.valor)}</span><span class="d">${delta(t, { largo: true })}</span>${t.d7 != null ? `<span class="d ${clase(t.d7)}">${eur(t.d7, { signo: true })} 7d</span>` : ''}</div>`;
+  h += inerciaHTML(M, pid, !!mia);
   for (const n of notasDe(pid)) h += `<div class="aviso-ficha oro">${icono('nota')}<div><b>Le contaste a la IA:</b> ${esc(n.texto)} <span class="t2">(${cuando(n.t)})</span></div></div>`;
   if (op) h += `<div class="aviso-ficha">${icono('rayo')}<div><b>Plan de hoy: ${ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max ? ` (puja hasta ${eur(op.puja_max)})` : ''}.</b> ${esc(op.motivo || '')}</div></div>`;
   const rango = S.rango || 30;
@@ -224,6 +225,19 @@ export function fichaJugador(S, pid) {
   if (acts.length) h += `<div class="sec"><h2>En tu liga</h2></div>${acts.map(filaActividad).join('')}`;
   h += `<button class="btn sec ancho" style="margin-top:18px" data-accion="preguntarJ" data-pid="${esc(pid)}">${icono('ia')}¿Qué hago con ${esc(j.nombre)}?</button>`;
   return h;
+}
+
+/** hacia dónde va su valor: lo que ha cambiado cada día y si se frena o ya ha girado */
+function inerciaHTML(M, pid, mio) {
+  const x = M.inercia ? M.inercia(pid) : null;
+  if (!x || !['giro', 'baja', 'parado', 'frena', 'acelera'].includes(x.fase)) return '';
+  const mal = x.fase === 'giro' || x.fase === 'baja', ojo = x.fase === 'parado' || x.fase === 'frena';
+  const tit = { giro: 'Ha girado a la baja', baja: 'Está bajando', parado: 'Se ha estancado', frena: 'Se está frenando', acelera: 'Sube cada vez más' }[x.fase];
+  const consejo = mio ? (mal ? ' <b>Véndelo ya</b>, salvo que lo necesites sí o sí para la jornada.' : ojo ? ' <b>Véndelo antes de que gire.</b>' : '') : (mal || ojo ? ' No es momento de comprarlo.' : '');
+  const max = Math.max(...x.R.map((r) => Math.abs(r)), 1);
+  const corto = (r) => `${r > 0 ? '+' : r < 0 ? '−' : ''}${String(Math.round(Math.abs(r) / 1e4) / 100).replace('.', ',')}`;
+  const barras = x.R.map((r, i) => `<div class="in-b"><i class="${r >= 0 ? 'up' : 'dw'}" style="--h:${Math.max(4, Math.round(Math.abs(r) / max * 100))}%"></i><span>${corto(r)}</span><em>${x.dias[i] ? new Date(x.dias[i] + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'narrow' }) : ''}</em></div>`).join('');
+  return `<div class="inercia ${mal ? 'mal' : ojo ? 'ojo' : 'bien'}"><div class="in-cab">${icono(mal ? 'baja' : ojo ? 'reloj' : 'sube')}<b>${tit}</b><span class="t2">lo que cambia cada día, en M</span></div><div class="in-barras">${barras}</div><p>${esc(x.texto)}${consejo}</p></div>`;
 }
 
 /** los puntos esperados de su próximo partido, por partes, con la titularidad y la rotación */

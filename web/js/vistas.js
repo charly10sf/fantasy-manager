@@ -258,7 +258,7 @@ export function equipo(S) {
         const f = M.forma(x.pid);
         return filaJugador(x, {
           sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}`,
-          extra: `${M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : ''}${titulares.has(x.pid) ? '<span class="pill plan">En tu once</span>' : ''}${oncePill(M, x.j)}${M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : ''}${estadoPill(x.j)}${clausulaPill(x)}${f ? `<span class="pill">${f.pts.slice(-3).join(' · ')} pts</span>` : x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`,
+          extra: `${x.ventaInercia ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : ''}${M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : ''}${titulares.has(x.pid) ? '<span class="pill plan">En tu once</span>' : ''}${oncePill(M, x.j)}${M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : ''}${estadoPill(x.j)}${clausulaPill(x)}${f ? `<span class="pill">${f.pts.slice(-3).join(' · ')} pts</span>` : x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`,
           conMini: true, op: op(x.pid),
         });
       }).join('');
@@ -343,7 +343,7 @@ export function mercado(S) {
   const seg = S.seg.mercado || 'venta';
   let h = `<div class="eti">${M.cierreMercado ? `Cambia ${cuando(M.cierreMercado)} · en ${dura(M.cierreMercado - Date.now())}` : 'Mercado de hoy'}</div><div class="titulo">Mercado</div><p class="entradilla">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>.</p>`;
   h += tabs('mercado', seg, [['venta', 'En venta'], ['especular', 'Especular'], ['suben', 'Suben'], ['bajan', 'Bajan'], ['libres', 'Libres']]);
-  const tagV = { chollo: '<span class="pill chollo">Chollo</span>', sube: '<span class="pill bien">Subiendo</span>', caro: '<span class="pill duda">Caro</span>', evitar: '<span class="pill mal">Evitar</span>', baja: '<span class="pill mal">Bajando</span>', normal: '' };
+  const tagV = { chollo: '<span class="pill chollo">Chollo</span>', sube: '<span class="pill bien">Subiendo</span>', caro: '<span class="pill duda">Caro</span>', evitar: '<span class="pill mal">Evitar</span>', baja: '<span class="pill mal">Bajando</span>', frena: '<span class="pill duda">Frenando</span>', normal: '' };
   const dueno = (pid) => { const t = M.dueno[pid]; if (!t) return 'Libre'; if (t === S.D.yo.teamId) return '<span class="rojo">Tuyo</span>'; return esc((M.equipo[t] || {}).manager || (M.equipo[t] || {}).nombre || 'Rival'); };
 
   if (seg === 'venta') {

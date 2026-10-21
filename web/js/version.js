@@ -1,13 +1,21 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.2.0';
+export const VERSION = '0.2.1';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.2.1', f: '2026-10-21', h: '03:35', t: 'Vender antes de que baje',
+    cosas: [
+      { tipo: 'nuevo', d: 'grafica', t: 'La inercia del valor', x: 'Lo que cambia el valor de cada jugador cada día de la última semana. Si sube cada vez menos (1 M, 800 mil, 500 mil…), calcula en cuántos días dejará de subir y te dice que lo vendas antes del giro. Si después de subir se estanca o ya baja, ha girado: venta casi obligatoria, con lo que perderías hasta la jornada. En la ficha, con una barra por día; en tu equipo, marcado; y en el plan.', ir: { v: 'equipo' } },
+      { tipo: 'mejora', d: 'especular', t: 'Comprar y revender, con la inercia', x: 'El mercado marca «Frenando» a los que suben cada vez menos, y para revender ya no te propone nada que se esté frenando o haya girado. La IA lo tiene en cuenta para todo: mira hacia dónde va el valor ahora, no el total de la semana.', ir: { v: 'mercado' } },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Lo vendido ya no cuenta', x: 'Si vendes a un jugador o te lo clausulan, sale de tu equipo en la app al momento, aunque LaLiga tarde en quitarlo de tu plantilla. También si se lo dices a la IA en el chat («ya he vendido a…»). La IA recibe la lista de los que ya no son tuyos con la orden de no contar con ellos, y lo hablado antes en el chat no manda sobre los datos de ahora. Si aun así nombra a uno, te avisa debajo de la respuesta.', ir: { v: 'ia' } },
+    ],
+  },
   {
     v: '0.2.0', f: '2026-10-21', h: '02:56', t: 'Cuánto tiene cada rival',
     cosas: [

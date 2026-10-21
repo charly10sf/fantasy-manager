@@ -8,7 +8,7 @@ import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
-import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA, borrarNota, quitarUltimaPregunta } from './ia.js';
+import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes } from './ia.js';
 import { ultimaVersion, api } from './api.js';
 import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -242,7 +242,7 @@ async function trabajoFondo() {
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null };
+  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes() };
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */

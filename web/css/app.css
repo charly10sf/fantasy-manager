@@ -617,3 +617,20 @@ body.con-nv { overflow: hidden; }
 .pp-p b { text-align: right; color: var(--texto); font-family: var(--cond); font-size: 15px; }
 .pill.estim { background: var(--plano2); color: var(--texto2); border: 1px dashed var(--plano3); }
 .aciertos summary b { color: var(--texto); }
+/* 0.2.1: la inercia del valor */
+.inercia { margin: 10px 0 12px; padding: 12px 14px; border-radius: 14px; background: var(--plano); border: 1px solid var(--plano2); }
+.inercia.mal { background: var(--baja-s); border-color: rgba(255, 111, 97, 0.35); }
+.inercia.ojo { background: var(--oro-s); border-color: rgba(255, 197, 71, 0.35); }
+.inercia.bien { background: var(--sube-s); border-color: rgba(47, 209, 143, 0.3); }
+.inercia .in-cab { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.inercia .in-cab .ic { width: 18px; height: 18px; }
+.inercia.mal .in-cab .ic { color: var(--baja); } .inercia.ojo .in-cab .ic { color: var(--oro); } .inercia.bien .in-cab .ic { color: var(--sube); }
+.inercia .in-cab .t2 { font-size: 12px; margin-left: auto; }
+.inercia .in-barras { display: flex; align-items: flex-end; gap: 6px; height: 74px; margin: 10px 0 4px; }
+.inercia .in-b { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 2px; min-width: 0; }
+.inercia .in-b i { display: block; width: 100%; max-width: 30px; height: calc(var(--h) * 0.42); border-radius: 4px; background: var(--sube); }
+.inercia .in-b i.dw { background: var(--baja); }
+.inercia .in-b span { font: 600 11.5px var(--cond); color: var(--texto); }
+.inercia .in-b em { font: 500 10.5px 'Barlow'; color: var(--apagado); font-style: normal; text-transform: uppercase; }
+.inercia p { margin: 6px 0 0; font-size: 14px; color: var(--texto2); }
+.inercia p b { color: var(--texto); }
