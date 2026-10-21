@@ -1,13 +1,20 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.3.1';
+export const VERSION = '0.3.2';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.3.2', f: '2026-10-21', h: '21:45', t: 'Arreglos del calendario',
+    cosas: [
+      { tipo: 'arreglo', d: 'semaforo', t: 'El calendario no frena una venta', x: 'Con tus jugadores, el calendario ya no te dice «no lo vendas barato» si la app te está diciendo que lo vendas porque baja. Si está bajando, manda la venta (le vengan partidos buenos o malos); si baja poco, te lo dice; y si lo tienes en venta, manda la oferta. El «riesgo» del calendario ya no sale en los tuyos, porque es el riesgo de ficharlo. La IA tiene la misma regla.', ir: { v: 'equipo' } },
+      { tipo: 'arreglo', d: 'campo', t: 'Los 5 partidos, aunque no tengan fecha', x: 'Las jornadas que LaLiga aún no ha puesto en el calendario venían sin fecha y se quedaban fuera, así que salían 3 partidos en vez de 5. Ahora cuentan con una fecha aproximada (una semana por jornada, más el parón) y salen como «sin fecha».' },
+    ],
+  },
   {
     v: '0.3.1', f: '2026-10-21', h: '21:23', t: 'El calendario de riesgo',
     cosas: [

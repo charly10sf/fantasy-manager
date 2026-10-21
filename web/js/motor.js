@@ -786,15 +786,30 @@ export function analizar(D, H, c, extra = {}) {
     return { riesgo, cerca };
   };
   const cacheCal = {};
+  // la fecha de una jornada sin fecha: una semana por jornada desde la última con fecha, y otra más si hay parón
+  const iniJ = {};
+  for (const jo of jornadas) iniJ[jo.n] = jo.ini;
+  const fechaEstimada = (n) => {
+    if (!n) return null;
+    if (iniJ[n]) return iniJ[n];
+    const antes = Object.keys(iniJ).map(Number).filter((k) => k < n);
+    if (!antes.length) return null;
+    const k = Math.max(...antes);
+    let t = iniJ[k] + (n - k) * 7 * DIA;
+    for (const pa of PARONES) if (pa.ini > iniJ[k] && pa.ini < t) t += 7 * DIA;
+    return t;
+  };
   M.calendarioRiesgo = (j) => {
     if (!j || !j.equipoId || !j.pos || j.pos === 5) return null;
     if (cacheCal[j.id] !== undefined) return cacheCal[j.id];
     const lista = [];
-    for (const jo of jornadas) for (const p of jo.partidos) {
-      if (!p.fecha || p.fecha + 2 * HORA < ahora) continue;
+    for (const p of D.partidos || []) {
       const casa = p.localId === j.equipoId;
       if (!casa && p.visitanteId !== j.equipoId) continue;
-      lista.push({ jornada: jo.n, fecha: p.fecha, casa, rivalId: casa ? p.visitanteId : p.localId, rival: casa ? p.visitante : p.local });
+      // las jornadas lejanas a veces vienen sin fecha (LaLiga aún no la ha puesto): se calcula una aproximada
+      const fecha = p.fecha || fechaEstimada(p.jornada);
+      if (!fecha || fecha + 2 * HORA < ahora) continue;
+      lista.push({ jornada: p.jornada, fecha, sinFecha: !p.fecha, casa, rivalId: casa ? p.visitanteId : p.localId, rival: casa ? p.visitante : p.local });
     }
     lista.sort((a, b) => a.fecha - b.fecha);
     const enProteccion = lista.filter((x) => x.fecha <= ahora + 14 * DIA).length;

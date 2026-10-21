@@ -59,16 +59,34 @@ export function calendarioHTML(M, j, mio = false) {
   if (!c) return '';
   const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
   const titulo = c.tipo === 'duro' ? 'Calendario duro' : c.tipo === 'favorable' ? 'Calendario favorable' : 'Calendario normal';
-  const riesgo = `<span class="cr-r ${c.riesgo}">Riesgo ${c.riesgo}</span>`;
+  // el riesgo es el de ficharlo: con los tuyos no pinta nada
+  const riesgo = mio ? '' : `<span class="cr-r ${c.riesgo}">Riesgo ${c.riesgo}</span>`;
   const filas = c.partidos.map((p) => `<div class="cr-p ${nivelCls(p.nivel)}">
-      <span class="cr-j">J${p.jornada}<small>${esc(cuando(p.fecha, { hora: false }))}</small></span>
+      <span class="cr-j">J${p.jornada}<small>${p.sinFecha ? 'sin fecha' : esc(cuando(p.fecha, { hora: false }))}</small></span>
       <span class="cr-ri"><b>${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b><small>${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small></span>
       <span class="cr-n"><b>~${d1(p.pts)}</b><small>pts</small></span>
       <span class="cr-n"><b>${p.pTit == null ? '–' : `${Math.round(p.pTit * 100)}%`}</b><small>titular</small></span>
     </div>`).join('');
-  const consejo = mio
-    ? (c.tipo === 'duro' ? 'Es tuyo: le vienen semanas flojas. No es motivo para venderlo, pero tenlo en cuenta si te llega una buena oferta.' : c.tipo === 'favorable' ? 'Es tuyo: le vienen semanas buenas. No lo vendas barato.' : '')
-    : c.consejo;
+  // con los tuyos, el calendario no decide la venta: si está bajando (o a punto de girar), manda la venta
+  let consejo = c.consejo;
+  if (mio) {
+    const vi = M.ventaPorInercia ? M.ventaPorInercia(j.id) : null;
+    const ine = M.inercia ? M.inercia(j.id) : null;
+    const poco = !vi && ine && (ine.fase === 'giro' || ine.fase === 'baja') ? Math.max(0, -ine.proyJ) : null;
+    const baja = vi ? (vi.urgencia === 'ya' ? 'está bajando de valor' : 'está a punto de girar a la baja') : '';
+    const pierde = vi && vi.perder > 0 ? ` (hasta la jornada, unos ${eur(vi.perder)} menos)` : '';
+    if (M.enVenta && M.enVenta.has(j.id)) consejo = `Lo tienes en venta: aquí manda la oferta (mira «En venta»)${vi ? `, y ${baja}${pierde}` : ''}.`;
+    else if (vi) {
+      consejo = c.tipo === 'favorable' ? `Le vienen partidos buenos, pero ${baja}${pierde}: manda la venta. Lo que sume en puntos no compensa lo que pierde cada día; si es titular en tu once, busca antes quién lo sustituya.`
+        : c.tipo === 'duro' ? `Partidos difíciles y ${baja}${pierde}: más motivo para venderlo.`
+        : `${baja[0].toUpperCase()}${baja.slice(1)}${pierde}: manda la venta.`;
+    } else if (poco != null) {
+      consejo = `Va bajando poco a poco${poco > 0 ? ` (unos ${eur(poco)} hasta la jornada)` : ''}: ${c.tipo === 'favorable' ? 'los partidos buenos que le vienen' : 'el calendario'} no son motivo para quedártelo si te sale una buena venta.`;
+    } else {
+      consejo = c.tipo === 'duro' ? 'Le vienen partidos difíciles. No es motivo para venderlo por sí solo; si te llega una buena oferta, cuéntalo.'
+        : c.tipo === 'favorable' ? 'Le vienen partidos buenos: buen momento para tenerlo en el once.' : '';
+    }
+  }
   return `<div class="cal-riesgo ${c.tipo}">
     <div class="cr-cab"><b>${titulo}</b>${riesgo}</div>
     <p class="cr-txt">${esc(c.texto)}</p>
