@@ -764,8 +764,10 @@ export function analizar(D, H, c, extra = {}) {
     const ataque = r.gf / r.pj / mediaGoles, defensa = r.gc / r.pj / mediaGoles, fuerza = r.pts / r.pj / mediaPts;
     const base = j.pos <= 2 ? 1 / Math.max(0.4, ataque) : defensa;
     let f = 0.55 + 0.25 * base + 0.2 / Math.max(0.4, fuerza);
-    f *= casa ? 1.05 : 0.95;
-    return { f: clamp(f, 0.75, 1.25), r, nivel: nivelDe(r) };
+    f = clamp(f * (casa ? 1.05 : 0.95), 0.75, 1.25);
+    // lo difícil que es PARA ÉL (un defensa sufre con el que marca mucho; un delantero, con el que no encaja), en
+    // casa o fuera: no basta con la tabla
+    return { f, r, nivel: f <= 0.93 ? 'difícil' : f >= 1.07 ? 'fácil' : 'media' };
   };
   /** lo que le resta la rotación en un partido concreto (si su equipo juega otra competición a menos de 4 días) */
   const rotacionEn = (eqId, t, p) => {
@@ -823,15 +825,19 @@ export function analizar(D, H, c, extra = {}) {
     const pts = out.reduce((a, x) => a + x.pts, 0);
     const conTit = out.filter((x) => x.pTit != null);
     const pTit = conTit.length ? conTit.reduce((a, x) => a + x.pTit, 0) / conTit.length : null;
-    const tipo = fAvg <= 0.95 || nDif >= Math.ceil(n / 2) ? 'duro' : fAvg >= 1.05 || (nFac >= Math.ceil(n / 2) && nDif === 0) ? 'favorable' : 'normal';
+    const mitad = Math.ceil(n / 2);
+    const tipo = fAvg <= 0.94 || (nDif >= mitad && fAvg < 1) ? 'duro' : (fAvg >= 1.06 && nDif <= Math.floor(n / 3)) || (nFac >= mitad && nDif === 0) ? 'favorable' : 'normal';
     const riesgo = MALOS.has(j.estado) || tipo === 'duro' || (pTit != null && pTit < 0.5) ? 'alto' : (pTit != null && pTit < 0.75) || (tipo === 'normal' && nDif >= 2) ? 'medio' : 'bajo';
     const maxSobre = riesgo === 'alto' ? 0.05 : null;
     const consejo = riesgo === 'alto'
       ? (tipo === 'duro' ? 'Calendario duro: ficharlo solo de parche y sin pagar más de un 5 % sobre su valor.' : 'Poco seguro que juegue: solo de parche y sin pagar de más.')
       : tipo === 'favorable' && (pTit == null || pTit >= 0.75) ? 'Calendario favorable: si es titular, se puede pagar algo más por él.' : riesgo === 'medio' ? 'Riesgo medio: mira el precio y si de verdad entra en tu once.' : 'Sin pegas de calendario.';
     const d1c = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
-    const texto = `${n} partido${n === 1 ? '' : 's'}${enProteccion > 5 ? ' (los de sus 14 días protegido)' : ''}: ${[nDif && `${nDif} difícil${nDif > 1 ? 'es' : ''}`, nMed && `${nMed} de nivel medio`, nFac && `${nFac} fácil${nFac > 1 ? 'es' : ''}`].filter(Boolean).join(', ') || 'rivales sin datos'}. ~${d1c(pts)} pts (${d1c(pts / n)} por partido${j.media ? `; su media es ${d1c(num(j.media))}` : ''})${pTit != null ? `, titular ~${Math.round(pTit * 100)} %` : ''}.`;
-    return (cacheCal[j.id] = { partidos: out, n, fAvg, nDif, nMed, nFac, pts, pTit, tipo, riesgo, maxSobre, consejo, texto, hasta: out[out.length - 1].fecha });
+    const trozos = [nDif && `${nDif} difícil${nDif > 1 ? 'es' : ''}`, nMed && `${nMed} de nivel medio`, nFac && `${nFac} fácil${nFac > 1 ? 'es' : ''}`].filter(Boolean);
+    const resumen = trozos.length > 1 ? `${trozos.slice(0, -1).join(', ')} y ${trozos[trozos.length - 1]}` : trozos[0] || 'rivales sin datos';
+    // «5 partidos (2 difíciles y 3 fáciles): ~33 pts (6,7 por partido; su media es 6,1), titular ~80 %.»
+    const texto = `${n} partido${n === 1 ? '' : 's'}${enProteccion > 5 ? ', los de sus 14 días con la cláusula protegida,' : ''} (${resumen}): ~${d1c(pts)} pts (${d1c(pts / n)} por partido${j.media ? `; su media es ${d1c(num(j.media))}` : ''})${pTit != null ? `, titular ~${Math.round(pTit * 100)} %` : ''}.`;
+    return (cacheCal[j.id] = { partidos: out, n, fAvg, nDif, nMed, nFac, pts, pTit, tipo, riesgo, maxSobre, consejo, texto, resumen, hasta: out[out.length - 1].fecha });
   };
   M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado);
   const misJs = misFichasRaw.map((f) => J(f.pid));
@@ -859,6 +865,22 @@ export function analizar(D, H, c, extra = {}) {
     const minimo = p === 1 ? 1 : Math.min(...M.formaciones.map((f) => f[p - 2]));
     return { pos: p, sanos, total, necesita, faltan: Math.max(0, minimo - sanos), sobran: Math.max(0, sanos - (MAXIMO[p] + 1)) };
   });
+
+  /**
+   * ¿compensa ficharlo con su calendario? Con riesgo alto (calendario duro, poco seguro que juegue o tocado) solo
+   * de parche (te falta gente sana en su puesto) y pagando como mucho un 5 % sobre su valor
+   */
+  M.compraCal = (j, precio) => {
+    const cal = j ? M.calendarioRiesgo(j) : null;
+    if (!cal) return { ok: true, cal: null, txt: '' };
+    const puesto = M.puestos.find((p) => p.pos === j.pos);
+    const parche = !!(puesto && puesto.faltan > 0);
+    const sobre = j.valor && precio ? precio / j.valor - 1 : 0;
+    const ok = cal.riesgo !== 'alto' || (parche && sobre <= cal.maxSobre);
+    const txt = cal.tipo === 'normal' && cal.riesgo !== 'alto' ? ''
+      : `${cal.tipo === 'normal' ? (MALOS.has(j.estado) ? 'No juega, y en' : 'Poco seguro que juegue en') : `Calendario ${cal.tipo} en`} sus próximos ${cal.texto}${cal.riesgo === 'alto' && ok ? ' Solo de parche, y por eso sin pagar más de un 5 % sobre su valor.' : ''}`;
+    return { ok, cal, parche, sobre, txt };
+  };
 
   /* ---------- lo que se paga de más: en euros, no solo en porcentaje, y en una escala continua ---------- */
   // un +25 % por uno de 3 M son 750 mil; por uno de 40 M, 10 M. El índice (0 a 100) crece poco a poco con:
@@ -1087,7 +1109,14 @@ export function analizar(D, H, c, extra = {}) {
       const tope = M.tolerancia(j) - 15;
       for (let k = 0; k < 60 && puja > m.precio && M.sobrecoste(j, puja, t).indice > tope; k++) { puja = Math.max(m.precio, puja - Math.max(10000, Math.round(puja * 0.01 / 10000) * 10000)); recortada = true; }
     }
-    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, pujaLiga, recortada, ofertaLiga: m.tipo === 'manager' && m.vendedorTeamId !== yoTid ? M.ofertaLigaDe(j) : null, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
+    // con un calendario de riesgo alto, como mucho un 5 % sobre su valor (y solo de parche)
+    const calR = j.pos < 5 ? M.calendarioRiesgo(j) : null;
+    let topeCal = null;
+    if (calR && calR.riesgo === 'alto' && m.tipo !== 'manager' && j.valor) {
+      const tope = Math.max(m.precio, Math.floor(j.valor * (1 + calR.maxSobre) / 10000) * 10000);
+      if (puja > tope) { puja = tope; topeCal = tope; }
+    }
+    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, pujaLiga, recortada, topeCal, ofertaLiga: m.tipo === 'manager' && m.vendedorTeamId !== yoTid ? M.ofertaLigaDe(j) : null, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
   {
     // la hora a la que caducan casi todos los libres es el cambio de mercado; lo que pone a la venta un manager
@@ -1284,15 +1313,16 @@ function acciones(D, M, c) {
 
   const abiertas = M.clausulas.filter((x) => x.abierta && x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado)
     && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30
-    && (M.mejora(x.j) >= 0.5 || (x.ratio != null && x.ratio <= 1.05)))
+    && (M.mejora(x.j) >= 0.5 || (x.ratio != null && x.ratio <= 1.05))
+    && M.compraCal(x.j, x.clausula).ok)
     .sort((a, b) => (b.interes + (b.teQueda >= 0 ? 8 : 0)) - (a.interes + (a.teQueda >= 0 ? 8 : 0)));
   abiertas.slice(0, 3).forEach((x, k) => add({
     tipo: 'clausular', prio: 90 - k * 3 + x.interes / 20, icono: 'diana', pid: x.pid, cuando: 'Ya',
     titulo: `Clausula a ${x.j.nombre}`,
-    texto: `De ${x.rival.nombre}. Cláusula ${eur(x.clausula)}, vale ${eur(x.j.valor)}${x.por.length ? `: ${x.por.slice(0, 2).join(', ')}` : ''}. ${x.teQueda >= 0 ? `Te quedarías con ${eur(x.teQueda)}.` : `Te quedarías en ${eur(x.teQueda)}: tendrías que vender antes de que empiece la jornada.`}`,
+    texto: `De ${x.rival.nombre}. Cláusula ${eur(x.clausula)}, vale ${eur(x.j.valor)}${x.por.length ? `: ${x.por.slice(0, 2).join(', ')}` : ''}. ${x.teQueda >= 0 ? `Te quedarías con ${eur(x.teQueda)}.` : `Te quedarías en ${eur(x.teQueda)}: tendrías que vender antes de que empiece la jornada.`}${M.compraCal(x.j, x.clausula).txt ? ` ${M.compraCal(x.j, x.clausula).txt}` : ''}`,
   }));
 
-  const pronto = M.clausulas.filter((x) => !x.abierta && x.abreEn < 30 * HORA && x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado));
+  const pronto = M.clausulas.filter((x) => !x.abierta && x.abreEn < 30 * HORA && x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado) && M.compraCal(x.j, x.clausula).ok);
   pronto.sort((a, b) => a.abreEn - b.abreEn).slice(0, 3).forEach((x, k) => add({
     tipo: 'pronto', prio: 75 - k * 2, icono: 'reloj', pid: x.pid, cuando: cuando(x.protegidoHasta),
     titulo: `Se abre la cláusula de ${x.j.nombre}`,
@@ -1341,10 +1371,10 @@ function acciones(D, M, c) {
     texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.`,
   }));
 
-  M.mercado.filter((m) => m.veredicto === 'chollo' && m.meLlega && !M.dueno[m.pid]).slice(0, 2).forEach((m, k) => add({
+  M.mercado.filter((m) => m.veredicto === 'chollo' && m.meLlega && !M.dueno[m.pid] && M.compraCal(m.j, m.puja || m.precio).ok).slice(0, 2).forEach((m, k) => add({
     tipo: 'pujar', prio: 55 - k, icono: 'mercado', pid: m.pid, cuando: m.cierra ? `Cierra ${cuando(m.cierra)}` : 'Hoy',
     titulo: `Puja por ${m.j.nombre}`,
-    texto: `Está a ${eur(m.precio)}${m.sobre <= 0.005 ? ', lo que vale' : ` (un ${Math.round(m.sobre * 100)} % sobre su valor)`}${m.por.length ? `: ${m.por.slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : ''}`,
+    texto: `Está a ${eur(m.precio)}${m.sobre <= 0.005 ? ', lo que vale' : ` (un ${Math.round(m.sobre * 100)} % sobre su valor)`}${m.por.length ? `: ${m.por.slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : ''}${M.compraCal(m.j, m.puja || m.precio).txt ? ` ${M.compraCal(m.j, m.puja || m.precio).txt}` : ''}`,
   }));
 
   if (M.paron && M.paron.ini > ahora && M.paron.ini - ahora < 12 * DIA) add({
@@ -1430,9 +1460,11 @@ export function planAuto(D, M, c) {
   let clausulas = 0;
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;
+    const cc = M.compraCal(x.j, x.clausula);
+    if (!cc.ok) continue;
     const g = gana(x.j);
     op({ accion: 'clausular', objetivo: 'titular', pid: x.pid, jugador: x.j.nombre, donde: `cláusula a ${x.rival.manager || x.rival.nombre}`, importe: x.clausula, cuando: 'ahora',
-      motivo: `Vale ${eur(x.j.valor)} y su cláusula es ${eur(x.clausula)}. Entra en tu once (${M.mejorOnce([...plantilla, x.j]).nombre}) y suma unos ${String(Math.round(g * 10) / 10).replace('.', ',')} pts por jornada${x.por.length ? `; ${x.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.`, confianza: x.interes >= 70 ? 'alta' : 'media' });
+      motivo: `Vale ${eur(x.j.valor)} y su cláusula es ${eur(x.clausula)}. Entra en tu once (${M.mejorOnce([...plantilla, x.j]).nombre}) y suma unos ${String(Math.round(g * 10) / 10).replace('.', ',')} pts por jornada${x.por.length ? `; ${x.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${cc.txt ? ` ${cc.txt}` : ''}`, confianza: x.interes >= 70 && (!cc.cal || cc.cal.riesgo !== 'alto') ? 'alta' : 'media' });
     saldo -= x.clausula; clausulas++; yaHoy.add(x.j.pos); fichar(x.j);
   }
 
@@ -1440,13 +1472,15 @@ export function planAuto(D, M, c) {
   let pujas = 0;
   for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && (y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)))) {
     if (pujas >= 2 || m.puja > presupuesto() || yaHoy.has(m.j.pos) || !hueco(m.j)) continue;
+    const cm = M.compraCal(m.j, m.puja);
+    if (!cm.ok) continue;
     op({ accion: 'pujar', objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? `antes de ${cuando(M.cierreMercado)}` : 'hoy',
-      motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}` });
+      motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''}` });
     saldo -= m.puja; pujas++; yaHoy.add(m.j.pos); fichar(m.j);
   }
   // lo mejor que no te llega todavía, para que sepas cuánto te falta
   const enPlan = new Set(ops.map((o) => o.pid));
-  const fuera = M.clausulas.find((x) => !enPlan.has(x.pid) && x.abierta && x.interes >= 70 && x.clausula > saldo && x.clausula <= M.pujaMax && !MALOS.has(x.j.estado) && hueco(x.j));
+  const fuera = M.clausulas.find((x) => !enPlan.has(x.pid) && x.abierta && x.interes >= 70 && x.clausula > saldo && x.clausula <= M.pujaMax && !MALOS.has(x.j.estado) && hueco(x.j) && M.compraCal(x.j, x.clausula).ok);
   if (fuera && clausulas < 2) {
     op({ accion: 'esperar', pid: fuera.pid, jugador: fuera.j.nombre, donde: `cláusula de ${eur(fuera.clausula)} a ${fuera.rival.manager || fuera.rival.nombre}`, importe: null, cuando: 'si vendes algo',
       motivo: `Es el mejor a tiro (interés ${fuera.interes}), pero te faltan ${eur(fuera.clausula - saldo)} sin tirar de deuda. Si vendes a alguien que no juegue, ve a por él.`, confianza: 'baja' });

@@ -1,6 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill } from './comunes.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores } from './ia.js';
 import { md } from './texto.js';
@@ -429,7 +429,7 @@ export function equipo(S) {
         const f = M.forma(x.pid);
         return filaJugador(x, {
           sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}`,
-          extra: `${x.ventaInercia ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : ''}${M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : ''}${titulares.has(x.pid) ? '<span class="pill plan">En tu once</span>' : ''}${oncePill(M, x.j)}${M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : ''}${estadoPill(x.j)}${clausulaPill(x)}${f ? `<span class="pill">${f.pts.slice(-3).join(' · ')} pts</span>` : x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`,
+          extra: `${x.ventaInercia ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : ''}${M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : ''}${titulares.has(x.pid) ? '<span class="pill plan">En tu once</span>' : ''}${oncePill(M, x.j)}${calPill(M, x.j)}${M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : ''}${estadoPill(x.j)}${clausulaPill(x)}${f ? `<span class="pill">${f.pts.slice(-3).join(' · ')} pts</span>` : x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`,
           conMini: true, op: op(x.pid),
         });
       }).join('');
@@ -500,7 +500,7 @@ export function rivales(S) {
     h += `<p class="t2 peq">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>. La barra es lo que te interesa: rendimiento, si sube y lo que cuesta sobre su valor.</p>`;
     h += xs.length ? lista2(xs.slice(0, 80).map((x) => filaJugador(x, {
       sub: `de ${esc(x.rival.manager || x.rival.nombre)} · vale ${eur(x.j.valor)}`,
-      extra: `${clausulaPill(x)}${oncePill(M, x.j)}${estadoPill(x.j)}${x.meLlega ? '' : '<span class="pill">No te llega</span>'}`,
+      extra: `${clausulaPill(x)}${oncePill(M, x.j)}${calPill(M, x.j)}${estadoPill(x.j)}${x.meLlega ? '' : '<span class="pill">No te llega</span>'}`,
       derecha: `<div class="v">${eur(x.clausula)}</div><div class="d">${barra(x.interes)} <span class="t2">${x.interes}</span></div>`, op: S.opPorPid[x.pid],
     })).join('')) : nada('Ninguna con este filtro.');
   } else {
@@ -538,7 +538,7 @@ export function mercado(S) {
     if (M.misVentas.length) h += `<div class="grupo"><span>Los tuyos en venta</span><span>${M.misVentas.length}</span></div>${M.misVentas.map(ventaHTML).join('')}`;
     const fila = (m) => filaJugador(m, {
       sub: `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
-      extra: `${m.tipo === 'manager' ? `<span class="pill vende">${icono('usuario')}Lo vende ${esc(m.vendedor || 'un manager')}</span>` : '<span class="pill libre">Libre</span>'}${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${estadoPill(m.j)}${m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertas ? `<span class="pill">${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertaLiga ? `<span class="pill" title="Lo que le daría LaLiga si nadie se lo compra">LaLiga ≈ ${eur(m.ofertaLiga.v)}</span>` : ''}${m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
+      extra: `${m.tipo === 'manager' ? `<span class="pill vende">${icono('usuario')}Lo vende ${esc(m.vendedor || 'un manager')}</span>` : '<span class="pill libre">Libre</span>'}${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${calPill(M, m.j)}${estadoPill(m.j)}${m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertas ? `<span class="pill">${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertaLiga ? `<span class="pill" title="Lo que le daría LaLiga si nadie se lo compra">LaLiga ≈ ${eur(m.ofertaLiga.v)}</span>` : ''}${m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
       derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div><div class="d">${barra(m.interes)}</div>`, op: S.opPorPid[m.pid],
     });
     const PL = M.pujasLiga;

@@ -50,10 +50,31 @@ export function rivalSub(M, j) {
 }
 
 /** los próximos tres partidos de su equipo, cada uno con su color */
-export function calendarioHTML(M, j) {
-  const cal = M && M.calendarioDe ? M.calendarioDe(j.equipoId, 3) : [];
-  if (!cal.length) return '';
-  return `<div class="cal-j">${cal.map((p) => `<div class="cal-p ${nivelCls(p.nivel)}"><span class="j">J${p.jornada} · ${p.casa ? 'casa' : 'fuera'}</span><span class="r">${esc(p.rival)}</span><span class="n">${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}</span></div>`).join('')}</div>`;
+/**
+ * el calendario de riesgo en la ficha: sus próximos partidos (5, o los de sus 14 días protegido si son más), cada
+ * uno con el rival, lo difícil que es para él, los puntos que se esperan y si será titular; y el veredicto
+ */
+export function calendarioHTML(M, j, mio = false) {
+  const c = M && M.calendarioRiesgo ? M.calendarioRiesgo(j) : null;
+  if (!c) return '';
+  const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
+  const titulo = c.tipo === 'duro' ? 'Calendario duro' : c.tipo === 'favorable' ? 'Calendario favorable' : 'Calendario normal';
+  const riesgo = `<span class="cr-r ${c.riesgo}">Riesgo ${c.riesgo}</span>`;
+  const filas = c.partidos.map((p) => `<div class="cr-p ${nivelCls(p.nivel)}">
+      <span class="cr-j">J${p.jornada}<small>${esc(cuando(p.fecha, { hora: false }))}</small></span>
+      <span class="cr-ri"><b>${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b><small>${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small></span>
+      <span class="cr-n"><b>~${d1(p.pts)}</b><small>pts</small></span>
+      <span class="cr-n"><b>${p.pTit == null ? '–' : `${Math.round(p.pTit * 100)}%`}</b><small>titular</small></span>
+    </div>`).join('');
+  const consejo = mio
+    ? (c.tipo === 'duro' ? 'Es tuyo: le vienen semanas flojas. No es motivo para venderlo, pero tenlo en cuenta si te llega una buena oferta.' : c.tipo === 'favorable' ? 'Es tuyo: le vienen semanas buenas. No lo vendas barato.' : '')
+    : c.consejo;
+  return `<div class="cal-riesgo ${c.tipo}">
+    <div class="cr-cab"><b>${titulo}</b>${riesgo}</div>
+    <p class="cr-txt">${esc(c.texto)}</p>
+    <div class="cr-lista">${filas}</div>
+    ${consejo ? `<p class="cr-consejo">${esc(consejo)}</p>` : ''}
+  </div>`;
 }
 
 const dec1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
@@ -113,6 +134,13 @@ export function oncePill(M, j) {
   if (!o) return '<span class="pill">Fuera del once</span>';
   if (o.titular) return `<span class="pill bien">Titular${o.prob != null ? ` ${o.prob} %` : ''}</span>`;
   return '<span class="pill duda">Suplente</span>';
+}
+
+/** el calendario de sus próximos partidos, solo si es duro o favorable */
+export function calPill(M, j) {
+  const c = M && M.calendarioRiesgo && j && j.pos < 5 ? M.calendarioRiesgo(j) : null;
+  if (!c || c.tipo === 'normal') return '';
+  return `<span class="pill ${c.tipo === 'duro' ? 'mal' : 'bien'}" title="${esc(c.texto)}">${c.tipo === 'duro' ? 'Calendario duro' : 'Calendario favorable'}</span>`;
 }
 
 /** un titular de prensa */

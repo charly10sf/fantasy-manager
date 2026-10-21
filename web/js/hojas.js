@@ -179,8 +179,9 @@ export function fichaJugador(S, pid) {
     // en el mercado: libre de la liga (subasta a ciegas) o puesto a la venta por su dueño, otro manager
     if (enMercado) {
       const m = enMercado;
+      const cc = m.tipo !== 'manager' && M.compraCal ? M.compraCal(j, m.puja || m.precio) : null;
       if (m.tipo === 'manager') h += `<div class="aviso-ficha oro">${icono('usuario')}<div><b>Lo vende ${esc(m.vendedor || 'otro manager')}</b>, que lo ha puesto en el mercado y pide ${eur(m.precio)} (${pct((m.sobre || 0) * 100)} sobre su valor). Sigue siendo suyo: solo es tuyo si acepta tu oferta, no es un jugador libre de la liga.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''} (cuánto, solo lo ve él).` : ''}${m.ofertaLiga ? ` Si nadie se lo compra, LaLiga le dará unos <b>${eur(m.ofertaLiga.v)}</b>${m.ofertaLiga.sinDatos ? '' : ` (en tu liga ofrece de mediana un ${pct(m.ofertaLiga.med * 100)} sobre el valor)`}: por menos de eso no tiene por qué vendértelo.` : ''}${m.miPuja ? ` Tu oferta: ${eur(m.miPuja)}.` : ''}</div></div>`;
-      else h += `<div class="aviso-ficha azul">${icono('mercado')}<div><b>Libre en el mercado de la liga</b> desde ${eur(m.precio)}. Subasta a ciegas${m.cierra ? ` hasta ${cuando(m.cierra)}` : ''}: se lo lleva la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}${m.miPuja ? ` Tu puja: ${eur(m.miPuja)}.` : ` Para llevártelo, yo pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)}).`}${M.pujasLiga && !M.pujasLiga.poco ? ` En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : ''}${m.recortada ? ' La he dejado más baja para no pagar de más por lo que te aporta.' : ''}</div></div>`;
+      else h += `<div class="aviso-ficha azul">${icono('mercado')}<div><b>Libre en el mercado de la liga</b> desde ${eur(m.precio)}. Subasta a ciegas${m.cierra ? ` hasta ${cuando(m.cierra)}` : ''}: se lo lleva la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}${m.miPuja ? ` Tu puja: ${eur(m.miPuja)}.` : cc && !cc.ok ? ` Con su calendario no pujaría por él${cc.parche ? `: sale ya a un ${pct(cc.sobre * 100)} sobre su valor y de parche no pagaría más de un 5 %` : ' salvo que te haga falta de parche'}.` : ` Para llevártelo, yo pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)}).`}${M.pujasLiga && !M.pujasLiga.poco ? ` En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : ''}${m.topeCal && (!cc || cc.ok) ? ' La he dejado en un 5 % sobre su valor como mucho por su calendario: es solo de parche.' : m.recortada ? ' La he dejado más baja para no pagar de más por lo que te aporta.' : ''}</div></div>`;
     }
     if (suya) {
       if (suya.abierta && suya.meLlega) h += `<div class="aviso-ficha verde">${icono('diana')}<div><b>Puedes clausularlo ya</b> a ${esc(suya.rival.manager || suya.rival.nombre)} por ${eur(suya.clausula)}. Te quedarías con ${eur(suya.teQueda)}${suya.teQueda < 0 ? ' (en negativo: vende algo antes de que empiece la jornada)' : ''}.</div></div>`;
@@ -201,7 +202,7 @@ export function fichaJugador(S, pid) {
     <div class="dato"><div class="et">Próximo partido</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : 'en'} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></div>
   </div>`;
   if (j.pos < 5) {
-    h += calendarioHTML(M, j);
+    h += calendarioHTML(M, j, !!mia);
     const v = M.previa && M.previa(j), r = M.rendimiento && M.rendimiento(j);
     const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
     const datos = [];

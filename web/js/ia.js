@@ -363,11 +363,19 @@ function onceTxt(M, j) {
   return 'once probable: suplente';
 }
 const mejoraTxt = (M, j) => { const g = M.mejora ? M.mejora(j) : 0; return g >= 0.3 ? `entraría en mi once (+${String(Math.round(g * 10) / 10).replace('.', ',')} pts/jornada)` : 'NO entraría en mi once'; };
+let CORTO = false;
+/**
+ * el calendario de riesgo: sus próximos 5 partidos (o los de sus 14 días con la cláusula protegida), con el
+ * veredicto; partido a partido si es duro, favorable o de riesgo alto (y no vamos en corto)
+ */
 const rivalTxt = (M, j) => {
-  const fr = M.factorRival ? M.factorRival(j) : null;
-  if (!fr || !fr.p) return null;
-  const luego = (M.calendarioDe ? M.calendarioDe(j.equipoId, 3) : []).slice(1);
-  return luego.length ? `después: ${luego.map((x) => `${x.casa ? 'vs' : 'en'} ${x.rival}${x.pos ? ` ${x.pos}º` : ''}${x.nivel ? ` (${x.nivel})` : ''}`).join(', ')}` : null;
+  const c = M.calendarioRiesgo ? M.calendarioRiesgo(j) : null;
+  if (!c) return null;
+  const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
+  const cab = `CALENDARIO ${c.tipo.toUpperCase()} (riesgo ${c.riesgo}): ${c.texto}`;
+  if (CORTO || (c.tipo === 'normal' && c.riesgo !== 'alto')) return cab;
+  const ps = c.partidos.map((p) => `J${p.jornada} ${p.casa ? 'vs' : 'en'} ${p.rival}${p.pos ? ` ${p.pos}º` : ''} ${p.nivel || 'sin datos'} ~${d1(p.pts)}${p.pTit != null ? ` tit ${Math.round(p.pTit * 100)}%` : ''}${p.rot ? ` (${p.rot.join('+')} cerca)` : ''}`);
+  return `${cab} → ${ps.join('; ')}`;
 };
 
 /* ---------------- lo que le cuentas a la IA ---------------- */
@@ -445,6 +453,10 @@ function notasTxt(D, M) {
 }
 
 export function contexto(D, M, c, { corto = false } = {}) {
+  CORTO = corto;
+  try { return contextoDe(D, M, c, { corto }); } finally { CORTO = false; }
+}
+function contextoDe(D, M, c, { corto = false } = {}) {
   const L = [];
   const ahora = new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   L.push(`AHORA: ${ahora} (hora de España)`);
@@ -557,12 +569,13 @@ PULLITAS: si sale alguna noticia extradeportiva con gracia (que le han entrado a
 CÓMO DECIDIR (hazlo con cada operación antes de recomendarla, y si algo falla, no la recomiendes):
 1. ¿Se puede? Solo las operaciones de «OPERACIONES POSIBLES HOY», con su ref. Un jugador de un rival que no está ahí no se puede conseguir hoy.
 2. ¿Juega? Once probable, minutos de las últimas jornadas, lesión, sanción, convocatoria y lo que diga la prensa de los últimos dos días del jugador y de su equipo.
-3. ¿Puntúa? Su forma (puntos de las últimas jornadas y media), cómo le va a su equipo (últimos resultados) y lo difíciles que son sus próximos 3 rivales.
+3. ¿Puntúa? Su forma (puntos de las últimas jornadas y media), cómo le va a su equipo (últimos resultados) y su CALENDARIO (abajo).
 4. ¿Qué cuesta? Precio frente a valor y si sube o baja (hoy y en 7 días). Lo que se paga de más se pierde.
 5. ¿Le hace falta? Si es para el once, que entre en una formación gratuita y mejore el once; si es para revender, que suba lo bastante para ganar antes de la jornada.
 6. ¿Le llega el dinero? Con el saldo, el límite de deuda y lo que venda antes. Empezar la jornada en positivo.
 7. ¿Riesgos? Rivales con dinero para clausular sus jugadores, sus cláusulas abiertas, rotaciones por Champions o Copa, parón.
 Mejor no hacer nada que hacer algo dudoso. Confianza «alta» solo si todo cuadra y hay un dato o una noticia que lo respalda; si no has encontrado noticias, dilo.
+CALENDARIO DE RIESGO: con cada jugador te paso su calendario (sus próximos 5 partidos, o todos los de los 14 días que un fichaje tiene la cláusula protegida si son más): cada rival con su puesto, lo difícil que es PARA ÉL (un defensa sufre con el que marca mucho, un delantero con el que no encaja; y en casa o fuera), los puntos que se esperan y la probabilidad de que sea titular (con la rotación si su equipo juega Champions, Europa o Copa cerca). Si es DURO o de riesgo ALTO, no recomiendes ficharlo salvo que sea un parche (le falta gente sana en ese puesto para sacar el once) y a un precio cerca de su valor (no más de un 5 % por encima); si lo propones así, dilo («de parche»). Si es FAVORABLE y es titular, se puede pagar algo más por él. Cuando lo uses para fichar o descartar a alguien, justifícalo con los partidos (contra quién y si en casa o fuera), los puntos que se esperan y su titularidad, con las cifras que te paso; no basta con decir «calendario difícil». Con los que ya tiene, un calendario duro no es motivo para vender por sí solo, pero cuenta si le llega una buena oferta.
 COMPRAR A OTRO MANAGER: solo si lo tiene a la venta (te los paso en el bloque «EN EL MERCADO PERO CON DUEÑO») o si es un trato que te ha contado el manager. Un jugador de un rival que no está a la venta NO se puede comprar: su dueño no tiene por qué vendérselo, y menos si lo acaba de fichar (los recién fichados están protegidos unos 14 días). Para quitárselo, solo su cláusula cuando se abra. Y aunque lo tenga a la venta, es el dueño quien decide: dilo y no lo des por hecho.
 PAGAR DE MÁS: lo que importa es el DINERO que se paga por encima del valor, no solo el porcentaje, porque eso se pierde en el valor del equipo (si lo vendes, te dan cerca de su valor). Un +25 % por uno que vale 3 M son 750 mil: casi nada si te da puntos. Un +25 % por uno que vale 40 M son 10 M: muchísimo. Con cada operación te paso el ÍNDICE DE SOBRECOSTE (0 a 100, sube poco a poco con los euros que pierdes de verdad, comparados con el valor de su equipo y descontando lo que recupera en una semana con lo que sube, y algo con el porcentaje) y hasta dónde es aguantable para ese jugador (de 60 si no le aporta nada a su once a 95 si lo mejora mucho). No lo uses como un corte: pésalo frente a lo que aporta. Cuanto más alto el índice, más tiene que aportar para que compense; por encima de lo aguantable, no lo recomiendes salvo un trato que te haya contado. Dilo siempre en euros y en días para recuperarlo. Ejemplo de lo que NO hay que hacer: clausular por 21 M a un jugador que vale 9 M.
 Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;

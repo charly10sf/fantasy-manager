@@ -355,12 +355,26 @@ main { padding: 16px 16px 120px; }
 .leyenda i.facil { background: #1d9a63; } .leyenda i.media { background: #b98314; } .leyenda i.dificil { background: #cf2537; }
 /* lo difícil que es el rival, en el texto y en el calendario de la ficha */
 .niv { font-weight: 600; } .niv.facil { color: var(--sube); } .niv.media { color: var(--oro); } .niv.dificil { color: var(--baja); }
-.cal-j { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 4px; }
-.cal-p { display: flex; flex-direction: column; gap: 1px; min-width: 0; padding: 8px 9px; border-radius: 12px; background: var(--plano2); border-top: 3px solid var(--plano3); }
-.cal-p .j { font: 600 11px 'Barlow'; letter-spacing: 0.6px; text-transform: uppercase; color: var(--apagado); }
-.cal-p .r { font: 700 16px var(--cond); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cal-p .n { font-size: 12.5px; color: var(--texto2); }
-.cal-p.facil { border-top-color: #1d9a63; } .cal-p.media { border-top-color: #b98314; } .cal-p.dificil { border-top-color: #cf2537; }
+/* el calendario de riesgo de la ficha: sus próximos partidos con el veredicto */
+.cal-riesgo { margin: 14px 0 6px; padding: 12px 12px 10px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
+.cal-riesgo.duro { border-color: rgba(207, 37, 55, 0.45); }
+.cal-riesgo.favorable { border-color: rgba(29, 154, 99, 0.45); }
+.cr-cab { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cr-cab b { font: 700 18px var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
+.cal-riesgo.duro .cr-cab b { color: var(--rojo-l); } .cal-riesgo.favorable .cr-cab b { color: var(--sube); }
+.cr-r { font: 600 12px 'Barlow'; padding: 3px 9px; border-radius: 99px; background: var(--plano3); color: var(--texto2); white-space: nowrap; }
+.cr-r.alto { background: var(--baja-s); color: var(--baja); } .cr-r.bajo { background: var(--sube-s); color: var(--sube); } .cr-r.medio { background: var(--oro-s); color: var(--oro); }
+.cr-txt { margin: 6px 0 10px; font-size: 14px; line-height: 1.4; color: var(--texto2); }
+.cr-lista { display: flex; flex-direction: column; gap: 4px; }
+.cr-p { display: grid; grid-template-columns: 52px minmax(0, 1fr) 46px 50px; gap: 8px; align-items: center; padding: 7px 10px; border-radius: 10px; background: var(--plano2); border-left: 3px solid var(--plano3); }
+.cr-p.facil { border-left-color: #1d9a63; } .cr-p.media { border-left-color: #b98314; } .cr-p.dificil { border-left-color: #cf2537; }
+.cr-p > span { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
+.cr-p small { font-size: 11.5px; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-j { font: 700 15px var(--cond); }
+.cr-ri b { font: 700 15.5px var(--cond); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-n { text-align: right; align-items: flex-end; }
+.cr-n b { font: 700 15.5px var(--cond); font-variant-numeric: tabular-nums; }
+.cr-consejo { margin: 10px 0 0; font-size: 14px; line-height: 1.4; font-weight: 600; }
 .cargando-ia .p2 { margin-top: 10px; font-size: 13px; color: var(--apagado); }
 
 /* ---------- hojas que suben ---------- */

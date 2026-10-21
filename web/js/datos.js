@@ -190,7 +190,8 @@ export async function actualizar(alPaso = () => {}) {
   await blando('jornada', async () => {
     jornada = N.semana(await api.semana());
     if (jornada == null) return;
-    const semanas = [jornada - 1, jornada, jornada + 1, jornada + 2].filter((n) => n >= 1 && n <= 38);
+    // la pasada, la actual y las 5 siguientes (el calendario de riesgo mira los próximos 5 partidos de cada uno)
+    const semanas = [jornada - 1, jornada, jornada + 1, jornada + 2, jornada + 3, jornada + 4, jornada + 5].filter((n) => n >= 1 && n <= 38);
     const listas = await enParalelo(semanas, 2, async (n) => N.partidos(await api.calendario(n), equipos, n));
     partidos = listas.filter(Array.isArray).flat();
   });

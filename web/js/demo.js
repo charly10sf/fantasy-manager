@@ -107,11 +107,11 @@ export function demo() {
     tendencias[pid] = { d1: Math.round(maestro[pid].valor * p1 / 100), p1, d7: null, p7: null, ffValor: maestro[pid].valor };
   }
 
-  // jornadas 10 a 13 (con el parón de noviembre entre la 12 y la 13)
+  // jornadas 9 a 15 (con el parón de noviembre entre la 12 y la 13)
   const base = Date.parse('2026-10-24T14:00:00+02:00');
   const ordenEq = Object.keys(EQUIPOS);
   const partidos = [];
-  const fechasJ = { 9: base - 7 * DIA, 10: base, 11: base + 7 * DIA, 12: base + 14 * DIA, 13: base + 28 * DIA };
+  const fechasJ = { 9: base - 7 * DIA, 10: base, 11: base + 7 * DIA, 12: base + 14 * DIA, 13: base + 28 * DIA, 14: base + 35 * DIA, 15: base + 42 * DIA };
   for (const [n, f0] of Object.entries(fechasJ)) {
     const rot = (+n * 3) % ordenEq.length;
     const lista = [...ordenEq.slice(rot), ...ordenEq.slice(0, rot)];
