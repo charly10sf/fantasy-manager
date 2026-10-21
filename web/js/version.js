@@ -9,7 +9,7 @@ export const VERSION = '0.2.3';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.2.3', f: '2026-10-21', h: '00:00', t: 'Arreglos de la 0.2.2',
+    v: '0.2.3', f: '2026-10-21', h: '05:31', t: 'Arreglos de la 0.2.2',
     cosas: [
       { tipo: 'arreglo', d: 'escudo', t: 'Proteger solo a quien importa', x: 'Si te clausulan a un jugador, cobras su cláusula: lo que pierdes son los puntos que te da. Así que ya no te pide proteger a un suplente con la cláusula en su valor, y un titular con la cláusula un 30 % o más por encima no tiene ningún riesgo (nadie paga tanto de más, y menos si está bajando). Cuenta también los euros de más, no solo el porcentaje: un 10 % por encima son 500 mil en uno de 5 M (alguien lo paga) y 8 M en uno de 80 M (nadie). Y mira hasta dónde se ha llegado en los clausulazos de tu liga. Solo avisa si es importante en tu once, la cláusula está cerca de su valor, algún rival puede pagarla y el blindaje compensa; y dice las cifras como son (en porcentaje, nada de «casi no pasa de su valor»). Si está a tiro pero blindarlo no compensa, te lo dice sin meterlo en lo urgente.', ir: { v: 'equipo', seg: 'equipo:clausulas' } },
       { tipo: 'arreglo', d: 'campana', t: 'El mercado, a su hora', x: 'El cambio de mercado es la hora a la que caducan los libres de LaLiga. Lo que pone a la venta un manager caduca a su propia hora y ya no adelanta la cuenta atrás.', ir: { v: 'mercado' } },
