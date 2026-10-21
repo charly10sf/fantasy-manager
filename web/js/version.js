@@ -1,13 +1,20 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.2.1';
+export const VERSION = '0.2.2';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.2.2', f: '2026-10-21', h: '04:22', t: 'Te avisa de lo que hay que vender',
+    cosas: [
+      { tipo: 'nuevo', d: 'campana', t: 'Avisos para poner a la venta', x: 'Una notificación cuando toca poner a alguien en el mercado: si ha girado a la baja, si está a punto de girar, si está lesionado, si es el día de vender lo que compraste para revender o si vas en negativo antes de la jornada. Y en cuanto lo pones, otra con cuándo llega la oferta de LaLiga; cuando llega, te dice si te conviene aceptarla.', ir: { v: 'equipo' } },
+      { tipo: 'mejora', d: 'oferta', t: 'Aceptar o esperar, con la inercia', x: 'Si un jugador tuyo en venta ha girado a la baja o se está frenando, la app te dice que aceptes la oferta aunque se quede un poco por debajo de su valor: esperar sale más caro.', ir: { v: 'equipo' } },
+    ],
+  },
   {
     v: '0.2.1', f: '2026-10-21', h: '03:42', t: 'Vender antes de que baje',
     cosas: [

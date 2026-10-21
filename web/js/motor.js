@@ -848,8 +848,12 @@ export function analizar(D, H, c, extra = {}) {
     let consejo = 'esperar', porque = '';
     const bajando = (t.p1 != null && t.p1 < -0.5) || (t.p7 != null && t.p7 < -2);
     const subiendo = (t.p1 != null && t.p1 > 0.5) || (t.p7 != null && t.p7 > 2);
+    const ine = M.inercia(v.pid);
     if (!mejor) { consejo = 'sin ofertas'; porque = 'Aún no tienes ofertas.'; }
     else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
+    // la inercia manda: si ha girado, cada día vale menos; si se está frenando, no se espera a que gire
+    else if (ine && (ine.fase === 'giro' || ine.fase === 'baja') && mejor.sobre >= -0.05) { consejo = 'aceptar'; porque = `Ha girado a la baja (hoy ${eur(ine.ult, { signo: true })}): cada día que esperes vale menos, y la oferta casi iguala su valor.`; }
+    else if (ine && (ine.fase === 'frena' || ine.fase === 'parado') && mejor.sobre >= -0.02) { consejo = 'aceptar'; porque = ine.fase === 'parado' ? 'Ya ha dejado de subir: lo normal es que ahora baje. No esperes.' : `Sube cada vez menos y gira en unos ${Math.max(1, Math.round(ine.giroEn))} días: no esperes a que baje.`; }
     else if (bajando && mejor.sobre >= -0.04) { consejo = 'aceptar'; porque = `Está bajando${t.p7 != null ? ` (${pct(t.p7)} en 7 días)` : ''} y la oferta casi iguala su valor.`; }
     else if (MALOS.has(j.estado) && mejor.sobre >= -0.1) { consejo = 'aceptar'; porque = 'Está lesionado o sancionado: mejor venderlo ya.'; }
     else if (subiendo) { consejo = 'esperar'; porque = 'Está subiendo: mañana puede llegar una oferta mejor.'; }
