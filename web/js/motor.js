@@ -390,7 +390,9 @@ export function analizar(D, H, c, extra = {}) {
     const yoF = flujos[yoTid] || { v: 0 }, f = flujos[tid] || { v: 0, n: 0 };
     const v = num(D.dinero) - yoF.v + f.v;
     const valorR = num((M.equipo[tid] || {}).valor);
-    if (v < -0.3 * valorR - 5e6 || v > 0.8 * valorR + 20e6) return { v: null, exacto: false, fiable: 'no', motivo: `la cuenta da ${eur(v)}, que no cuadra con su equipo` };
+    // en una liga con mucho movimiento se puede tener bastante más dinero que equipo, así que arriba no hay tope;
+    // lo que no puede ser es deber mucho más de lo que deja la deuda (el 20 % de su equipo)
+    if (v < -0.4 * valorR - 15e6) return { v: null, exacto: false, fiable: 'no', motivo: `la cuenta da ${eur(v)}, más deuda de la que permite el juego` };
     // la recompensa diaria que uno coge y otro no (hasta 100 mil al día)
     const margen = Math.round((1e6 + Math.min(diasMov, 150) * 0.04e6 + num(f.dudas) * 1.5e6 + num((flujos[yoTid] || {}).dudas) * 1.5e6) / 1e5) * 1e5;
     return { v, exacto: false, margen, fiable: 'media', desde: AH.desde, n: f.n };
