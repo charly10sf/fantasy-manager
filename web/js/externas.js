@@ -427,7 +427,7 @@ export async function avanzadas(D, M, pidsFoco = []) {
   const guardado = LS.get('avanzadas', null);
   // (lo guardado antes del historial de enfrentamientos se rehace una vez para traerlo)
   if (guardado && guardado.h2h && Date.now() - guardado.t < 12 * HORA && guardado.liga === (D.liga && D.liga.id)) return guardado;
-  const out = { t: Date.now(), liga: D.liga && D.liga.id, jugadores: {}, sofa: {}, equipos: {}, fuentes: {} };
+  const out = { t: Date.now(), liga: D.liga && D.liga.id, jugadores: {}, sofa: {}, equipos: {}, fuentes: {}, h2h: {} };
   try {
     const u = await understat();
     const c = cruzarUnderstat(D, u);
