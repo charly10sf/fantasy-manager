@@ -760,6 +760,7 @@ export function analizar(D, H, c, extra = {}) {
   };
 
   /* ---------- tus jugadores ---------- */
+  const valorMedioLiga = (() => { const v = D.clasif.map((e) => num(e.valor)).filter(Boolean).sort((a, b) => a - b); return v.length ? Math.max(50e6, v[Math.floor(v.length / 2)]) : Math.max(50e6, num(D.valorEquipo)); })();
   const misCompras = compras(D, M, yoTid);
   M.mias = misFichasRaw.map((f) => {
     const x = enriquecer(f, yoTid);
@@ -768,12 +769,19 @@ export function analizar(D, H, c, extra = {}) {
     x.ganado = compra ? x.j.valor - compra : null;
     // riesgo de que te lo quiten. Si te lo clausulan, cobras su cláusula: lo que pierdes de verdad son sus puntos en tu
     // once (y lo que fuera a subir). Así que cuenta lo cerca que está la cláusula de su valor y lo que te aporta
-    // nadie paga mucho más de lo que vale un jugador: por encima de un 30 % no hay riesgo, y si en tu liga los
-    // clausulazos nunca pasan de cierto %, por encima de eso tampoco
+    // ¿quién pagaría su cláusula? Cuenta el porcentaje de más (por encima de un 30 % nadie), los EUROS de más (un 20 %
+    // son 1 M en uno de 5 M y 16 M en uno de 80 M; se comparan con lo que vale un equipo de tu liga) y lo bueno que es
+    // (por uno muy bueno se paga algo más). Sale un número de 0 a 1,3, sin saltos, que se pasa a ninguno/bajo/medio/alto
     let r = 0;
-    if (x.ratio != null && x.clausula) {
-      if (x.abierta) r = x.ratio < 1.1 ? 3 : x.ratio < 1.2 ? 2 : x.ratio < 1.3 ? 1 : 0;
-      else if (x.abreEn < 36 * HORA) r = x.ratio < 1.1 ? 2 : x.ratio < 1.2 ? 1 : 0;
+    x.atractivo = 0;
+    if (x.ratio != null && x.clausula && (x.abierta || x.abreEn < 36 * HORA)) {
+      const pctMas = Math.max(0, x.ratio - 1), eurMas = Math.max(0, x.clausula - x.j.valor);
+      const fp = clamp(1 - pctMas / 0.3, 0, 1);
+      const fe = clamp(1 - eurMas / (0.04 * valorMedioLiga), 0, 1);
+      const fa = clamp(0.6 + num(x.j.media) / 10, 0.6, 1.3);
+      x.atractivo = fp * fe * fa;
+      r = x.atractivo >= 0.6 ? 3 : x.atractivo >= 0.35 ? 2 : x.atractivo >= 0.15 ? 1 : 0;
+      if (!x.abierta) r = Math.max(0, r - 1);
     }
     const CZ = M.clausulazos;
     if (r && CZ && CZ.n >= 3 && x.ratio - 1 > Math.max(CZ.p90, 0.05) + 0.03) r = 0;
@@ -790,7 +798,7 @@ export function analizar(D, H, c, extra = {}) {
     x.pagan = x.clausula ? M.quienPaga(x.clausula) : null;
     if (r && x.pagan) {
       const p = x.pagan;
-      if (p.seguro.length >= 2 && x.ratio < 1.15) r = Math.min(3, r + 1);
+      if (p.seguro.length >= 2 && x.atractivo >= 0.35) r = Math.min(3, r + 1);
       else if (p.hayDatos && !p.seguro.length && !p.quiza.length) r = Math.min(r, p.sinSaber.length ? 2 : 1);
     }
     x.riesgo = ['ninguno', 'bajo', 'medio', 'alto'][r];
