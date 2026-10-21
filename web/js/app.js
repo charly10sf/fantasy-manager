@@ -168,7 +168,9 @@ function marco() {
   if ($('#vista') && S.marcoAncho === anchoYa) return;
   S.marcoAncho = anchoYa;
   const nav = `<nav class="nav"><div class="nav-in">${NAV.map(([k, ic, t]) => `<button data-ir="${k}">${icono(ic)}${t}<span class="gl oculto" id="gl-${k}"></span></button>`).join('')}</div></nav>`;
-  const botones = `<button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar">${icono('refrescar')}</button>
+  // rehacer el plan de la IA, a mano desde cualquier pestaña (te lleva a Hoy)
+  const botones = `<button class="b-ico oculto" id="bPlan" data-accion="planYa" aria-label="Rehacer el plan">${icono('ia')}</button>
+    <button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar">${icono('refrescar')}</button>
     <button class="b-ico" data-accion="ajustes" aria-label="Ajustes">${icono('ajustes')}</button>`;
   const liga = `${LOGO_P}<div class="sup-liga"><b id="supLiga"></b><span id="supEstado"></span></div>`;
   raiz().innerHTML = anchoYa
@@ -194,6 +196,13 @@ function pintarSup() {
   const p = S.cargando ? 'vivo' : edad < 30 * MIN ? 'vivo' : edad < 6 * 3600e3 ? 'viejo' : 'mal';
   $('#supEstado').innerHTML = `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : `Actualizado ${rel(D.t)}`) : ''}`;
   $('#bRefrescar').classList.toggle('gira', S.cargando);
+  const bp = $('#bPlan');
+  if (bp) {
+    const E = S.planEstado || {}, esIA = S.plan && !S.plan.auto;
+    bp.classList.toggle('oculto', !hayClave());
+    bp.classList.toggle('late', !!E.cargando);
+    bp.setAttribute('aria-label', E.cargando ? 'Haciendo el plan…' : esIA ? 'Rehacer el plan' : 'Plan con la IA');
+  }
   const pend = S.plan ? S.plan.ops.filter((o) => o.hoy !== false && !['esperar'].includes(o.accion) && !V.hecho(S, S.plan, o)).length : 0;
   const gh = $('#gl-hoy'); gh.textContent = pend; gh.classList.toggle('oculto', !pend);
   const ga = S.M.mias.filter((x) => x.riesgo === 'alto').length;
@@ -400,7 +409,7 @@ async function generarPlan() {
       // lo has parado tú: se queda el plan que había y puedes pedir otro cuando quieras
       S.planEstado = {};
       rehacer();
-      tostada('Plan parado. Dale a «Rehacer» cuando quieras otro');
+      tostada('Plan parado. Toca la chispa de arriba cuando quieras otro');
     } else {
       S.planEstado = { error: e.message || String(e) };
       rehacer();
@@ -742,7 +751,7 @@ document.addEventListener('click', async (ev) => {
     case 'copiarDiag': nativo.copiar(Hj.textoDiagnostico(S)); tostada('Copiado'); break;
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
-    case 'planYa': cerrarHoja(); ir('hoy'); S.planEstado = {}; generarPlan(); break;
+    case 'planYa': cerrarHoja(); ir('hoy'); if (!(S.planEstado || {}).cargando) { S.planEstado = {}; generarPlan(); } break;
     case 'voz': escuchar(); break;
     case 'pararPlan': if (S.planCtl) S.planCtl.abort(); break;
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;

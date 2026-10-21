@@ -208,11 +208,7 @@ function planHTML(S) {
   const esIA = P && !P.auto;
   h += `<div class="plan"><div class="plan-cab"><div><div class="eti">Plan de hoy</div>
     ${P ? `<span class="ia">${icono(esIA ? 'ia' : 'lista')}${esIA ? `${esc(nombreModelo(P.modelo))}${P.web ? ' + Google' : ''} · ${rel(P.t)}` : 'Automático, sin IA'}</span>` : ''}</div>
-    ${hayClave() && !E.cargando ? `<button class="btn chico sec der" data-accion="plan">${icono('refrescar')}${esIA ? 'Rehacer' : 'Con IA'}</button>` : ''}</div>`;
-  if (hayClave() && !E.cargando) {
-    const ns = notasVigentes();
-    h += `<div class="plan-voz"><button class="btn chico sec" data-accion="voz">${icono('micro')}Cuéntale algo</button>${ns.length ? `<button class="t2 peq" data-ir="ia">${icono('nota')}${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</button>` : ''}</div>`;
-  }
+    </div>`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te aviso cuando esté.</div>' : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (!P) return h + '</div>';

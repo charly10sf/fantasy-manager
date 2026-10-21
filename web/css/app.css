@@ -66,6 +66,9 @@ b, strong { font-weight: 600; color: var(--texto); }
 .b-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: var(--texto2); flex: none; }
 .b-ico:active { background: var(--plano2); }
 .gira .ic { animation: gira 0.9s linear infinite; }
+#bPlan { color: var(--rojo-l); }
+.late .ic { animation: late-ia 1.2s ease-in-out infinite; }
+@keyframes late-ia { 50% { opacity: 0.35; transform: scale(0.88); } }
 @keyframes gira { to { transform: rotate(360deg); } }
 
 main { padding: 16px 16px 120px; }
@@ -439,9 +442,6 @@ pre.diag { white-space: pre-wrap; word-break: break-word; font: 11.5px/1.45 ui-m
 .escribe button { width: 46px; height: 46px; border-radius: 14px; background: var(--rojo); color: #fff; display: grid; place-items: center; flex: none; align-self: flex-end; }
 .escribe-in { gap: 8px; }
 .escribe button.micro { background: var(--plano3); color: var(--texto); }
-.plan-voz { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 10px 0 2px; }
-.plan-voz > button.t2 { display: inline-flex; align-items: center; gap: 5px; }
-.plan-voz .ic { width: 16px; height: 16px; }
 .notas { margin: 6px 0 14px; padding: 10px 12px; border-radius: 14px; background: var(--oro-s); }
 .notas summary { display: flex; align-items: center; gap: 8px; font: 600 14px 'Barlow'; color: var(--oro); list-style: none; cursor: pointer; }
 .notas summary::-webkit-details-marker { display: none; }
