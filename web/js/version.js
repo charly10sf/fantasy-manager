@@ -9,7 +9,7 @@ export const VERSION = '0.2.2';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.2.2', f: '2026-10-21', h: '04:22', t: 'Más clara y más a tiempo',
+    v: '0.2.2', f: '2026-10-21', h: '04:59', t: 'Más clara y más a tiempo',
     cosas: [
       { tipo: 'nuevo', d: 'campana', t: 'Avisos para poner a la venta', x: 'Una notificación cuando toca poner a alguien en el mercado: si ha girado a la baja, si está a punto de girar, si está lesionado, si es el día de vender lo que compraste para revender o si vas en negativo antes de la jornada. Y en cuanto lo pones, otra con cuándo llega la oferta de LaLiga; cuando llega, te dice si te conviene aceptarla.', ir: { v: 'equipo' } },
       { tipo: 'nuevo', d: 'dinero', t: 'Lo que ofrece LaLiga', x: 'Las ofertas de otros managers por un jugador en venta solo las ve su dueño, pero lo que paga LaLiga se sabe por las ventas de tu liga. Con eso, en cada jugador que vende un rival ves lo que le daría LaLiga si nadie se lo compra (por menos no tiene por qué vendértelo), y en los tuyos en venta, lo que rondará su oferta antes de que llegue.', ir: { v: 'mercado' } },
