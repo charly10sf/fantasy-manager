@@ -101,7 +101,7 @@ const apuntar = (x) => { intentosIA.unshift({ t: Date.now(), ...x }); if (intent
  */
 async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, signal } = {}) {
   if (enApp) {
-    const pet = http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: 200000 });
+    const pet = http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: 340000 });
     // si lo paras, se deja de esperar al momento (la respuesta, si llega, se tira)
     const r = signal ? await Promise.race([pet, new Promise((_, mal) => {
       const parar = () => mal(new DOMException('Parado', 'AbortError'));
@@ -131,9 +131,12 @@ async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal }
   const enVivo = stream && !enApp;
   const url = `${GEMINI}/models/${modelo}:${enVivo ? 'streamGenerateContent?alt=sse' : 'generateContent'}`;
   const resp = await peticion('POST', url, cuerpo, clave(), { stream: enVivo, signal });
-  let texto = '', fuentes = [], fin = null, bloqueo = null;
+  let texto = '', fuentes = [], fin = null, bloqueo = null, tok = null;
   const procesar = (j) => {
     if (j.promptFeedback && j.promptFeedback.blockReason) bloqueo = j.promptFeedback.blockReason;
+    // lo que ha gastado: lo que le mandas, lo que escribe y lo que piensa (para el diagnóstico)
+    const u = j.usageMetadata;
+    if (u) tok = { p: u.promptTokenCount || 0, r: u.candidatesTokenCount || 0, th: u.thoughtsTokenCount || 0 };
     const c = (j.candidates || [])[0] || {};
     for (const p of (c.content && c.content.parts) || []) if (p.text && !p.thought) { texto += p.text; if (alTexto) alTexto(texto); }
     const g = c.groundingMetadata;
@@ -157,10 +160,10 @@ async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal }
     }
     if (buf.trim().startsWith('data:')) { try { procesar(JSON.parse(buf.trim().slice(5))); } catch (e) { /* nada */ } }
   }
-  if (!texto.trim()) throw new ErrorIA(bloqueo ? `Google ha bloqueado la pregunta (${bloqueo})` : `El modelo ha contestado vacío${fin ? ` (${fin})` : ''}`, 0, { vacio: true });
+  if (!texto.trim()) throw new ErrorIA(bloqueo ? `Google ha bloqueado la pregunta (${bloqueo})` : `El modelo ha contestado vacío${fin ? ` (${fin}${tok && tok.th ? `, ${tok.th} tokens pensando` : ''})` : ''}`, 0, { vacio: true, fin });
   const vistas = new Set();
   fuentes = fuentes.filter((f) => !vistas.has(f.u) && vistas.add(f.u));
-  return { texto, fuentes, fin };
+  return { texto, fuentes, fin, tok };
 }
 
 const espera = (s, signal) => new Promise((res, rej) => { const t = setTimeout(res, s * 1000); if (signal) signal.addEventListener('abort', () => { clearTimeout(t); rej(new DOMException('Parado', 'AbortError')); }, { once: true }); });
@@ -193,20 +196,24 @@ async function preguntar({ sistema, contents }, op = {}) {
       if (op.signal && op.signal.aborted) throw new DOMException('Parado', 'AbortError');
       const cuerpo = esGemma(modelo)
         ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${contents.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
-        : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
+        : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
       alPaso(`${nombreModelo(modelo)}${web ? ' con búsqueda en Google' : ''}…`);
       const t0 = Date.now();
       try {
         const r = await llamar(modelo, cuerpo, op);
-        apuntar({ modelo, web, ok: true, ms: Date.now() - t0 });
+        apuntar({ modelo, web, ok: true, ms: Date.now() - t0, fin: r.fin, tok: r.tok, car: r.texto.length, nivel: pensar ? nivel : null });
         confirmarSinWeb(modelo, null);
         return { ...r, modelo, web, intentos: resumen };
       } catch (e) {
         if (e.name === 'AbortError') throw e;
         ultimo = e;
-        apuntar({ modelo, web, s: e.estado, e: e.message, google: e.google, ms: Date.now() - t0 });
+        apuntar({ modelo, web, s: e.estado, e: e.message, google: e.google, ms: Date.now() - t0, nivel: pensar ? nivel : null });
         if (e.clave) throw e;
         if (!e.red) confirmarSinWeb(modelo, e);
+        // si se ha agotado el tiempo esperando la respuesta, repetir lo mismo vuelve a tardar igual: se le pide
+        // que piense menos (y, si ya era poco, sin búsqueda)
+        if (e.red && /timeout|timed out|tiempo/i.test(e.message || '') && pensar && nivel !== 'low') { nivel = 'low'; intento--; alPaso('Google tarda demasiado: lo pido pensando menos…'); continue; }
+        if (e.red && /timeout|timed out|tiempo/i.test(e.message || '') && web) { web = false; intento--; alPaso('Google sigue tardando: lo pido sin búsqueda…'); continue; }
         // se ha cortado la conexión (cambio de red, cobertura, Android cortando a la app): se espera y se repite
         // con el mismo modelo, sin gastar sus intentos, hasta 4 veces en total
         if (e.red && cortes < 4) {
@@ -224,6 +231,8 @@ async function preguntar({ sistema, contents }, op = {}) {
         if (e.estado === 429 && e.minuto && !esperado && (e.espera || 20) <= 45) { esperado = true; alPaso(`Esperando ${Math.ceil(e.espera || 20)} s a que Google deje volver a preguntar…`); await espera(e.espera || 20, op.signal); continue; }
         if (e.estado === 429) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
         if (e.estado === 404 || e.estado === 403 || e.estado === 400) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
+        // vacío porque se le ha ido todo pensando: otra vez, pensando menos
+        if (e.vacio && e.fin === 'MAX_TOKENS' && pensar && nivel !== 'low') { nivel = 'low'; alPaso('Se ha quedado sin sitio pensando: lo pido pensando menos…'); continue; }
         if (e.vacio && intento < 1) continue;
         if ((e.estado >= 500 || e.estado === 0 || e.estado == null) && intento < 2) { await espera(2.5 * (intento + 1), op.signal); continue; }
         if (e.red) {
@@ -241,7 +250,7 @@ async function preguntar({ sistema, contents }, op = {}) {
 /* ---------------- todo lo que la IA sabe de tu liga ---------------- */
 const m1 = (v) => (v == null ? '?' : eur(v));
 /** el dinero de un rival: exacto o estimado con su margen */
-const dineroTxt = (d) => (!d || d.v == null ? `dinero: no se sabe${d && d.motivo ? ` (${d.motivo})` : ''}` : d.exacto ? `dinero ${eur(d.v)} (exacto)` : `dinero ≈ ${eur(d.v)} ± ${eur(d.margen)} (estimado con todos sus movimientos)`);
+const dineroTxt = (d) => (!d || d.v == null ? `dinero: no se sabe${d && d.motivo ? ` (${d.motivo})` : ''}` : d.exacto ? `dinero ${eur(d.v)} (exacto)` : d.dicho ? `dinero ≈ ${eur(d.v)} ± ${eur(d.margen)} (me dijo lo que tenía ${cuando(d.dicho.t)}, más lo que ha movido desde entonces)` : `dinero ≈ ${eur(d.v)} ± ${eur(d.margen)} (estimado con todos sus movimientos y sus subidas de cláusula)`);
 /** quién puede pagar una cláusula tuya */
 const paganTxt = (p) => {
   if (!p || (!p.seguro.length && !p.quiza.length && !p.hayDatos)) return p && p.sinSaber.length ? `no se sabe el dinero de ${p.sinSaber.length} rivales` : null;
@@ -570,7 +579,8 @@ function memoria(M) {
 }
 
 export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
-  const pedido = `${contexto(D, M, c)}${memoria(M)}
+  const ctx = contexto(D, M, c);
+  const pedido = `${ctx}${memoria(M)}
 
 Hazme el PLAN DE HOY. Primero busca noticias de hoy y de ayer de mis jugadores, de los candidatos de «OPERACIONES POSIBLES HOY» y de sus equipos (lesiones, convocatorias, ruedas de prensa, onces probables, rotaciones), y contrástalas con los titulares que te paso. Después sigue «CÓMO DECIDIR» con cada candidato.
 Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría (según las pujas que lleva y si sube). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
@@ -589,9 +599,21 @@ Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
 }
 Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 a 6 candidatos que has mirado y no convienen. Entre 2 y 5 días en proximos_dias.
 "pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager la acción es "comprar", con el precio en "importe" y sin puja_max, y SOLO si lo tiene a la venta o es un trato que te he contado; si no, no lo pongas. Para quitárselo pagando su cláusula, "clausular" (solo si la cláusula está abierta o se abre pronto).`;
-  const r = await preguntar({ sistema: SISTEMA, contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso, nivel: 'high' });
-  const json = sacarJSON(r.texto);
-  if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA('Gemini ha contestado sin el formato del plan. Vuelve a probar.', 0);
+  let r = await preguntar({ sistema: SISTEMA, contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso, nivel: 'medium', maxTokens: 32000 });
+  let json = sacarJSON(r.texto);
+  // si se ha quedado sin sitio para escribir (pensando de más) o el JSON ha salido roto: otra vez, con los datos en
+  // corto y pensando poco
+  // lo que ha llegado mal, al diagnóstico (para saber por qué falla)
+  const malPlan = (x) => apuntar({ modelo: x.modelo, web: x.web, s: 'plan', e: `el plan no se puede leer (${x.fin || 'sin motivo'}, ${x.texto.length} caracteres${x.tok ? `, ${x.tok.th} pensando` : ''})`, ms: 0 });
+  if (!json || !Array.isArray(json.operaciones)) {
+    malPlan(r);
+    if (alPaso) alPaso(r.fin === 'MAX_TOKENS' ? 'El plan se ha cortado: lo pido otra vez más corto…' : 'El plan ha llegado mal: lo pido otra vez…');
+    const corto = pedido.replace(ctx, contexto(D, M, c, { corto: true }));
+    r = await preguntar({ sistema: SISTEMA, contents: [{ role: 'user', parts: [{ text: corto }] }] }, { signal, alPaso, nivel: 'low', maxTokens: 32000 });
+    json = sacarJSON(r.texto);
+    if (!json || !Array.isArray(json.operaciones)) malPlan(r);
+  }
+  if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA(`Gemini ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Vuelve a probar.`, 0);
   const P = { ...json, fuentes: r.fuentes.slice(0, 14), modelo: r.modelo, web: r.web, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null };
   // lo que recomienda, con el valor de cada jugador hoy, para ver dentro de unos días cómo salió
   try { P.recs = recsDe(cuadrarPlan(P, D, M).ops, M); } catch (e) { P.recs = []; }

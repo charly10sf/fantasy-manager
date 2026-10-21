@@ -1,13 +1,22 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.2.3';
+export const VERSION = '0.2.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.2.4', f: '2026-10-21', h: '13:41', t: 'El plan vuelve y el dinero cuadra',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan ya no se queda a medias', x: 'Google está tardando mucho (hasta siete minutos) y el plan, pensando a tope, se quedaba sin sitio para escribir y llegaba cortado. Ahora piensa a medias, tiene el doble de sitio y espera hasta cinco minutos y medio. Si aun así se corta, lo vuelve a pedir más corto; y si Google no contesta a tiempo, se lo pide pensando menos o sin búsqueda en vez de darte un error.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'dinero', t: 'El dinero de los rivales, bien contado', x: 'Ahora cuenta lo que se gasta cada uno en subir cláusulas, que LaLiga no apunta en ningún sitio: se ve en su plantilla, comparando la cláusula de cada jugador con la que tenía al ficharlo (pagar X la sube 2X). Antes esto no se restaba y salían rivales con 30 M de más. Y el escudo (lo que LaLiga llama blindar) ya no se cuenta como gasto, porque se paga con un anuncio.', ir: { v: 'rivales' } },
+      { tipo: 'nuevo', d: 'oferta', t: 'Lo que te dice un rival', x: 'Si un rival te dice cuánto tiene, apúntalo en su ficha («¿Te ha dicho cuánto tiene?»), con una cifra o entre dos. Desde entonces su dinero sale de eso más lo que mueva, y ves cuánto fallaba la cuenta.', ir: { v: 'rivales' } },
+      { tipo: 'arreglo', d: 'escudo', t: 'Los clausulazos, a la vista', x: 'LaLiga apunta los clausulazos como un traspaso más. Ahora se detectan cuando se paga justo la cláusula que tenía el jugador, así que cuentan en la amenaza de cada rival y en lo que se paga en tu liga.', ir: { v: 'rivales' } },
+    ],
+  },
   {
     v: '0.2.3', f: '2026-10-21', h: '05:31', t: 'Arreglos de la 0.2.2',
     cosas: [

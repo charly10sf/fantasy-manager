@@ -51,7 +51,7 @@ export function analizar(D, H, c, extra = {}) {
       }
       const q = M.teamDeUsuario(a.quienId, a.quien), o = a.otroId || a.otro ? M.teamDeUsuario(a.otroId, a.otro) : null;
       if (a.clase === 'venta' && q === yoTid) vendidos[a.pid] = { t, como: 'lo vendiste', importe: a.importe || null };
-      else if ((a.clase === 'compra' || a.clase === 'clausula') && o === yoTid && q && q !== yoTid) vendidos[a.pid] = { t, como: a.clase === 'clausula' ? `te lo clausuló ${nombreEquipo(q)}` : `se lo vendiste a ${nombreEquipo(q)}`, importe: a.importe || null, aTid: q };
+      else if ((a.clase === 'compra' || a.clase === 'clausula') && o === yoTid && q && q !== yoTid) vendidos[a.pid] = { t, como: a.clase === 'clausula' ? `te lo clausuló ${nombreEquipo(q)}` : `se lo vendiste a ${nombreEquipo(q)}`, importe: a.importe || null, aTid: q, evId: a.id || `${a.t}|${a.tipo}|${a.pid}|${a.quienId}|${a.importe}` };
       else if ((a.clase === 'compra' || a.clase === 'clausula') && q === yoTid) delete vendidos[a.pid];
     }
     for (const n of extra.notas || []) {
@@ -64,6 +64,15 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- forma reciente (de la ficha de cada jugador, si se ha bajado) ---------- */
   const det = extra.det || {};
+  /** lo que valía un jugador en un momento (de su ficha si se ha bajado; si no, de lo que se ha ido guardando) */
+  const valorEn = (pid, t) => {
+    const dv = det[pid] && det[pid].valores;
+    let v = null;
+    if (dv && dv.length) for (const [tt, vv] of dv) { if (tt <= t) v = vv; else break; }
+    if (v == null) { const d = diaDe(t); for (const [dd, vv] of (H.v && H.v[pid]) || []) { if (dd <= d) v = vv; else break; } }
+    if (v == null && ahora - t < 2 * DIA) v = J(pid).valor;
+    return v;
+  };
   M.forma = (pid) => {
     const d = det[pid];
     if (!d || !d.stats || !d.stats.length) {
@@ -333,18 +342,67 @@ export function analizar(D, H, c, extra = {}) {
   M.negativo = D.dinero != null && D.dinero < 0;
 
   /* ---------- el dinero de cada rival ---------- */
-  // exacto si LaLiga lo da. Si no, se estima: todos empezáis con el mismo dinero, así que su saldo es el tuyo menos
-  // lo que has movido tú más lo que ha movido él (compras, ventas, cláusulas, blindajes y lo que cobra por jornada).
-  // Lo que no sale en los movimientos es la recompensa diaria (unos 100 mil por día que entra), de ahí el margen.
-  const AH = extra.actHist && extra.actHist.lista && extra.actHist.lista.length ? extra.actHist
+  // LaLiga solo da el tuyo. El de los demás se reconstruye con los movimientos de la liga desde el principio:
+  //   100 M de salida + recompensas diarias + ventas + lo que cobra (traspasos y cláusulas) + premios por jornada
+  //   − compras − traspasos y cláusulas que paga − lo que gasta en subir cláusulas
+  // En los movimientos de LaLiga: 31 compra al mercado, 33 venta al mercado, 1 traspaso entre managers (paga user1,
+  // cobra user2; los clausulazos también salen así), 6 premio de la jornada, 4 escudo (se paga con un anuncio: no
+  // cuesta dinero). Lo que no sale:
+  //  - las subidas de cláusula (pagar X la sube 2X): se sacan de sus plantillas, comparando la cláusula de ahora con
+  //    la que tenía al ficharlo (lo que pagó, o su valor si era más, y nunca menos de 1 M), y de las subidas que se
+  //    ven de un día a otro;
+  //  - la recompensa diaria (100 mil por día que se coge): en vez de suponerla, la base común se mide con tu saldo
+  //    (tu saldo − tus movimientos + tus subidas de cláusula) y el margen cubre la diferencia entre lo que coge cada uno.
+  const AH0 = extra.actHist && extra.actHist.lista && extra.actHist.lista.length ? extra.actHist
     : { lista: D.actividad || [], completa: !!D.demo, desde: (D.actividad || []).length ? Math.min(...D.actividad.map((a) => a.t || ahora)) : null };
+  const tidDe = (id, nombre) => (id || nombre ? M.teamDeUsuario(id, nombre) : null);
+  const idAct = (a) => a.id || `${a.t}|${a.tipo}|${a.pid}|${a.quienId}|${a.importe}`;
+  const plantillaDe = (tid) => (D.plantillas || {})[tid] || [];
+  // el último fichaje de cada jugador por cada equipo (antes de un momento)
+  const fichajes = {};
+  for (const a of AH0.lista) {
+    if (!a.pid || !a.t || !(a.clase === 'compra' || a.clase === 'clausula')) continue;
+    const q = tidDe(a.quienId, a.quien);
+    if (q) (fichajes[`${q}|${a.pid}`] ||= []).push(a);
+  }
+  for (const l of Object.values(fichajes)) l.sort((x, y) => x.t - y.t);
+  const fichajeAntes = (tid, pid, t) => { let r = null; for (const a of fichajes[`${tid}|${pid}`] || []) { if (a.t < t) r = a; else break; } return r; };
+  /** la cláusula con la que llega un fichaje: lo que pagó o lo que valía si era más, nunca menos de 1 M */
+  const clausulaAlFichar = (a) => Math.max(Math.abs(num(a.importe)), valorEn(a.pid, a.t) || 0, 1e6);
+
+  /* los clausulazos: LaLiga los apunta como un traspaso más. Lo es si se pagó justo la cláusula que tenía el
+     vendedor (la de cuando lo fichó o la que se le vio después) y ya no estaba protegido */
+  const czIds = new Set();
+  {
+    const vistas = {}; // cláusulas vistas de cada jugador en cada equipo
+    for (const m of H.mov || []) {
+      const c = m.tipo === 'blinda' ? m.a : m.clausula;
+      if (c && m.teamId && m.pid) (vistas[`${m.teamId}|${m.pid}`] ||= []).push(c);
+    }
+    for (const [tid, fichas] of Object.entries(D.plantillas || {})) for (const f of fichas) if (f.clausula) (vistas[`${tid}|${f.pid}`] ||= []).push(f.clausula);
+    const PROTEGIDO = 336 * HORA;
+    for (const a of AH0.lista) {
+      if (a.clase !== 'compra' || !(a.otroId || a.otro) || !a.pid || !a.importe || !a.t) continue;
+      const vend = tidDe(a.otroId, a.otro);
+      if (!vend) continue;
+      const imp = Math.abs(num(a.importe));
+      const suyo = fichajeAntes(vend, a.pid, a.t);
+      if (suyo && a.t - suyo.t < PROTEGIDO - HORA) continue; // aún estaba protegido: fue un trato
+      const cands = [...(vistas[`${vend}|${a.pid}`] || [])];
+      if (suyo) cands.push(clausulaAlFichar(suyo));
+      else if (AH0.completa && AH0.desde) { const v0 = valorEn(a.pid, AH0.desde); if (v0) cands.push(Math.max(v0, 1e6)); }
+      if (cands.some((c) => Math.abs(imp - c) <= Math.max(1000, c * 0.002))) czIds.add(idAct(a));
+    }
+  }
+  const marcarCz = (a) => (czIds.has(idAct(a)) ? { ...a, clase: 'clausula', cz: true } : a);
+  const AH = { ...AH0, lista: AH0.lista.map(marcarCz) };
+  for (const v of M.vendidos) if (v.evId && czIds.has(v.evId) && v.aTid) v.como = `te lo clausuló ${nombreEquipo(v.aTid)}`;
+
   const flujos = {};
   {
-    const fl = (tid) => (flujos[tid] ||= { v: 0, n: 0, gastado: 0, ingresado: 0, premios: 0 });
-    const tidDe = (id, nombre) => (id || nombre ? M.teamDeUsuario(id, nombre) : null);
-    const clausulaDe = {};
-    for (const fichas of Object.values(D.plantillas || {})) for (const f of fichas) if (f.clausula) clausulaDe[f.pid] = f.clausula;
-    // una venta a otro manager sale también como compra suya: no se cuenta dos veces
+    const fl = (tid) => (flujos[tid] ||= { v: 0, n: 0, gastado: 0, ingresado: 0, premios: 0, raros: 0, ev: [] });
+    const mover = (tid, x, t, k) => { const f = fl(tid); f.v += x; f.n++; f.ev.push([t || 0, x]); if (k) f[k] += Math.abs(x); };
+    // una venta a otro manager que saliera también como compra suya: no se cuenta dos veces
     const compraDe = new Set();
     for (const a of AH.lista) if ((a.clase === 'compra' || a.clase === 'clausula') && (a.otroId || a.otro)) compraDe.add(`${a.pid}|${Math.abs(num(a.importe))}|${tidDe(a.otroId, a.otro)}`);
     for (const a of AH.lista) {
@@ -352,50 +410,98 @@ export function analizar(D, H, c, extra = {}) {
       if (!imp) continue;
       const q = tidDe(a.quienId, a.quien), o = tidDe(a.otroId, a.otro);
       if (a.clase === 'compra' || a.clase === 'clausula') {
-        if (q) { fl(q).v -= imp; fl(q).gastado += imp; fl(q).n++; }
-        if (o && o !== q) { fl(o).v += imp; fl(o).ingresado += imp; fl(o).n++; }
+        if (q) mover(q, -imp, a.t, 'gastado');
+        if (o && o !== q) mover(o, imp, a.t, 'ingresado');
       } else if (a.clase === 'venta') {
-        if (q && !compraDe.has(`${a.pid}|${imp}|${q}`)) { fl(q).v += imp; fl(q).ingresado += imp; fl(q).n++; }
+        if (q && !compraDe.has(`${a.pid}|${imp}|${q}`)) mover(q, imp, a.t, 'ingresado');
       } else if (a.clase === 'premio') {
-        if (q) { fl(q).v += imp; fl(q).premios += imp; fl(q).n++; }
-      } else if (a.clase === 'blindaje' && q) {
-        // lo que se paga es la mitad de lo que sube la cláusula. Si el importe parece la cláusula nueva (no lo
-        // pagado), se saca de lo que se vio subir en su plantilla; si no se vio, no se cuenta y se apunta como duda
-        const cl = clausulaDe[a.pid];
-        let pago = imp;
-        if (cl && imp >= cl * 0.7) {
-          const mv = (H.mov || []).find((m) => m.tipo === 'blinda' && m.pid === a.pid && Math.abs(m.t - (a.t || 0)) < 2 * DIA);
-          pago = mv ? Math.max(0, (mv.a - mv.de) / 2) : null;
-        }
-        if (pago == null) fl(q).dudas = (fl(q).dudas || 0) + 1;
-        else { fl(q).v -= pago; fl(q).gastado += pago; fl(q).n++; }
-      }
+        if (q) mover(q, imp, a.t, 'premios');
+      } else if (a.clase === 'otro' && q) fl(q).raros++; // un movimiento con dinero de un tipo que no se conoce: al margen
     }
   }
   M.flujos = flujos;
   M.histMov = { desde: AH.desde || null, completa: !!AH.completa, n: AH.lista.length };
+  // cuántos de cada tipo (para el diagnóstico)
+  M.histTipos = AH.lista.reduce((o, a) => { const k = a.tipo != null ? `${a.tipo}` : a.clase; o[k] = o[k] || { n: 0, conImporte: 0 }; o[k].n++; if (num(a.importe)) o[k].conImporte++; return o; }, {});
+  M.czDetectados = czIds.size;
+
+  // lo que ha gastado cada uno en subir cláusulas
+  const subidas = {};
+  {
+    const sb = (tid) => (subidas[tid] ||= { v: 0, n: 0, dudas: 0, sinBase: 0, vistas: 0, lista: [] });
+    for (const [tid, fichas] of Object.entries(D.plantillas || {})) for (const f of fichas) {
+      if (!f.clausula) continue;
+      const a = fichajeAntes(tid, f.pid, ahora + DIA);
+      let base;
+      if (a) base = clausulaAlFichar(a);
+      else {
+        // de su plantilla del principio: entonces su cláusula era lo que valía
+        const v0 = AH.completa && AH.desde ? valorEn(f.pid, AH.desde) : null;
+        if (v0 == null) {
+          const posible = Math.max(0, f.clausula - Math.max(J(f.pid).valor, 1e6)) / 2;
+          if (posible > 2e5) { sb(tid).sinBase++; sb(tid).dudas += posible; }
+          continue;
+        }
+        base = Math.max(v0, 1e6);
+      }
+      const subio = f.clausula - base;
+      // lo poco puede ser que valiera algo más al ficharlo que lo que se sabe
+      if (subio < Math.max(2e5, 0.03 * base)) continue;
+      sb(tid).v += subio / 2; sb(tid).n++;
+      sb(tid).lista.push({ pid: f.pid, de: base, a: f.clausula, pago: subio / 2 });
+    }
+    // las subidas que se vieron en jugadores que ya no tiene (el dinero se gastó igual)
+    for (const m of H.mov || []) {
+      if (m.tipo !== 'blinda' || !m.teamId || !(m.a > m.de)) continue;
+      if (plantillaDe(m.teamId).some((f) => f.pid === m.pid)) continue;
+      sb(m.teamId).v += (m.a - m.de) / 2; sb(m.teamId).n++; sb(m.teamId).vistas++;
+    }
+  }
+  M.subidas = subidas;
+
   const diasMov = AH.desde ? Math.max(1, (ahora - AH.desde) / DIA) : 0;
+  // la base común: lo que tendrías sin moverte (100 M de salida más las recompensas diarias que has cogido)
+  const miF = flujos[yoTid] || { v: 0, raros: 0 }, miSub = subidas[yoTid] || { v: 0, dudas: 0 };
+  const baseV = D.dinero != null ? num(D.dinero) - miF.v + miSub.v : null;
+  const baseMin = 100e6 - 0.5e6, baseMax = 100e6 + diasMov * 0.1e6 + 0.5e6;
+  const desvio = baseV == null || !AH.completa || D.demo ? 0 : baseV < baseMin ? baseMin - baseV : baseV > baseMax ? baseV - baseMax : 0;
+  M.baseDinero = baseV == null ? null : { v: baseV, min: baseMin, max: baseMax, desvio, saldo: num(D.dinero), mov: miF.v, subidas: miSub.v, dias: diasMov };
+  const dichos = extra.dichos || {};
+  /** la cuenta con los movimientos, sin lo que te haya dicho */
+  M.dineroCuenta = (tid) => {
+    if (!tid || tid === yoTid) return null;
+    if (D.dinero == null) return { v: null, exacto: false, fiable: 'no', motivo: 'no se sabe tu saldo' };
+    if (!AH.completa) return { v: null, exacto: false, fiable: 'no', motivo: `faltan los movimientos del principio de la liga (hay desde ${AH.desde ? cuando(AH.desde, { hora: false }) : '?'})` };
+    const f = flujos[tid] || { v: 0, n: 0, raros: 0 }, s = subidas[tid] || { v: 0, n: 0, dudas: 0 };
+    const v = baseV + f.v - s.v;
+    const valorR = num((M.equipo[tid] || {}).valor);
+    // en una liga con mucho movimiento se puede tener bastante más dinero que equipo, así que arriba no hay tope;
+    // lo que no puede ser es deber mucho más de lo que deja la deuda (el 20 % de su equipo)
+    if (v < -0.4 * valorR - 15e6) return { v: null, exacto: false, fiable: 'no', motivo: `la cuenta da ${eur(v)}, más deuda de la que permite el juego` };
+    // la recompensa diaria que uno coge y otro no, las subidas que no se pueden medir, lo raro y lo que no cuadra en la base
+    const margen = Math.round((1e6 + Math.min(diasMov, 150) * 0.05e6 + s.dudas + num(miSub.dudas) + desvio + (num(f.raros) + num(miF.raros)) * 1e6) / 1e5) * 1e5;
+    return { v, exacto: false, margen, fiable: 'media', desde: AH.desde, n: f.n, cuenta: { base: baseV, mov: f.v, subidas: s.v, nSubidas: s.n } };
+  };
   /**
-   * { v, exacto: true, fuente } si LaLiga lo da; si no, estimado { v, exacto: false, margen, fiable, desde }.
-   * Sin los movimientos desde el principio de la liga no se puede estimar (faltaría lo que movió antes):
-   * entonces { v: null, fiable: 'no', motivo }. Y si sale una cifra imposible para su equipo, tampoco se usa.
+   * { v, exacto: true, fuente } si LaLiga lo da; si te ha dicho cuánto tiene, eso más lo que ha movido desde entonces;
+   * si no, la cuenta con los movimientos { v, exacto: false, margen, fiable, desde }. Sin los movimientos desde el
+   * principio de la liga no se puede estimar: entonces { v: null, fiable: 'no', motivo }.
    */
   M.dineroDe = (tid) => {
     if (!tid) return null;
     if (tid === yoTid) return D.dinero != null ? { v: num(D.dinero), exacto: true, fuente: 'tu cuenta' } : null;
     const ex = (D.dineros || {})[tid];
     if (ex && ex.v != null) return { v: num(ex.v), exacto: true, fuente: ex.fuente || 'LaLiga' };
-    if (D.dinero == null) return { v: null, exacto: false, fiable: 'no', motivo: 'no se sabe tu saldo' };
-    if (!AH.completa) return { v: null, exacto: false, fiable: 'no', motivo: `faltan los movimientos del principio de la liga (hay desde ${AH.desde ? cuando(AH.desde, { hora: false }) : '?'})` };
-    const yoF = flujos[yoTid] || { v: 0 }, f = flujos[tid] || { v: 0, n: 0 };
-    const v = num(D.dinero) - yoF.v + f.v;
-    const valorR = num((M.equipo[tid] || {}).valor);
-    // en una liga con mucho movimiento se puede tener bastante más dinero que equipo, así que arriba no hay tope;
-    // lo que no puede ser es deber mucho más de lo que deja la deuda (el 20 % de su equipo)
-    if (v < -0.4 * valorR - 15e6) return { v: null, exacto: false, fiable: 'no', motivo: `la cuenta da ${eur(v)}, más deuda de la que permite el juego` };
-    // la recompensa diaria que uno coge y otro no (hasta 100 mil al día)
-    const margen = Math.round((1e6 + Math.min(diasMov, 150) * 0.04e6 + num(f.dudas) * 1.5e6 + num((flujos[yoTid] || {}).dudas) * 1.5e6) / 1e5) * 1e5;
-    return { v, exacto: false, margen, fiable: 'media', desde: AH.desde, n: f.n };
+    const dc = dichos[tid];
+    if (dc && dc.v != null && dc.t && ahora - dc.t < 45 * DIA) {
+      const f = flujos[tid] || { ev: [], n: 0 };
+      const mov = f.ev.filter(([t]) => t > dc.t).reduce((x, [, d]) => x + d, 0);
+      const sub = (H.mov || []).filter((m) => m.tipo === 'blinda' && m.teamId === tid && m.t > dc.t && m.a > m.de).reduce((x, m) => x + (m.a - m.de) / 2, 0);
+      const dias = (ahora - dc.t) / DIA;
+      const margen = Math.round((num(dc.r) + 0.3e6 + dias * 0.1e6) / 1e5) * 1e5;
+      return { v: dc.v + mov - sub, exacto: false, margen, fiable: 'alta', dicho: dc, desdeDicho: mov - sub, n: f.n };
+    }
+    return M.dineroCuenta(tid);
   };
   /** lo que puede gastar de golpe en una cláusula: su saldo (con el margen si es estimado); null si no se sabe */
   M.capacidad = (tid) => {
@@ -428,14 +534,6 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- lo que se paga en tu liga por los libres del mercado ---------- */
   // cada compra a LaLiga de las últimas semanas frente a lo que valía el jugador ese día
-  const valorEn = (pid, t) => {
-    const dv = det[pid] && det[pid].valores;
-    let v = null;
-    if (dv && dv.length) for (const [tt, vv] of dv) { if (tt <= t) v = vv; else break; }
-    if (v == null) { const d = diaDe(t); for (const [dd, vv] of (H.v && H.v[pid]) || []) { if (dd <= d) v = vv; else break; } }
-    if (v == null && ahora - t < 2 * DIA) v = J(pid).valor;
-    return v;
-  };
   {
     const clausulasAhora = new Set();
     for (const fichas of Object.values(D.plantillas || {})) for (const f of fichas) if (f.clausula) clausulasAhora.add(`${f.pid}|${f.clausula}`);
@@ -949,7 +1047,8 @@ export function analizar(D, H, c, extra = {}) {
   M.libresBuenos = todos.filter((j) => !M.dueno[j.id]).map((j) => ({ j, t: M.tend(j.id), i: M.interes(j, j.valor) })).sort((a, b) => b.i.n - a.i.n).slice(0, 30);
 
   /* ---------- actividad de la liga, con nombres ---------- */
-  M.actividad = (D.actividad || []).map((a) => {
+  M.actividad = (D.actividad || []).map((a0) => {
+    const a = marcarCz(a0);
     const quienT = M.teamDeUsuario(a.quienId, a.quien), otroT = M.teamDeUsuario(a.otroId, a.otro);
     return {
       ...a, quienT, otroT,

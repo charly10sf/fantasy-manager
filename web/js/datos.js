@@ -356,11 +356,13 @@ function guardarFoto(D, viejo = foto()) {
       const a = new Map(antes.map((f) => [f.pid, f])), b = new Map(fichas.map((f) => [f.pid, f]));
       for (const [pid, f] of b) {
         if (!a.has(pid)) H.mov.push({ t: D.t, teamId: tid, tipo: 'entra', pid, clausula: f.clausula });
-        else if (f.clausula > a.get(pid).clausula * 1.001 && f.protegidoHasta && f.protegidoHasta > (a.get(pid).protegidoHasta || 0)) H.mov.push({ t: D.t, teamId: tid, tipo: 'blinda', pid, de: a.get(pid).clausula, a: f.clausula });
+        // la cláusula solo cambia si su dueño paga por subirla (o si lo vuelve a fichar, y entonces no es una subida)
+        else if (f.clausula > a.get(pid).clausula * 1.001 && !(D.actividad || []).some((x) => x.pid === pid && (x.clase === 'compra' || x.clase === 'clausula') && x.t >= (viejo.t || 0) - 5 * 60e3)) H.mov.push({ t: D.t, teamId: tid, tipo: 'blinda', pid, de: a.get(pid).clausula, a: f.clausula });
       }
-      for (const [pid] of a) if (!b.has(pid)) H.mov.push({ t: D.t, teamId: tid, tipo: 'sale', pid });
+      for (const [pid, f] of a) if (!b.has(pid)) H.mov.push({ t: D.t, teamId: tid, tipo: 'sale', pid, clausula: f.clausula || null });
     }
-    H.mov = H.mov.filter((m) => D.t - m.t < 45 * DIA).slice(-600);
+    // las subidas de cláusula se guardan más tiempo: son dinero gastado y cuentan para el de cada rival
+    H.mov = H.mov.filter((m) => D.t - m.t < (m.tipo === 'blinda' ? 300 : 45) * DIA).slice(-900);
   }
   LS.set(K('hist'), H);
   if (!LS.set(K('datos'), D)) {
@@ -373,7 +375,7 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 export function borrarTodo() {
-  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'acthist', 'previs', 'chats-viejos', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'acthist-demo', 'previs-demo', 'chats-viejos-demo', 'demo']) LS.del(k);
+  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'acthist', 'previs', 'chats-viejos', 'dinero-dicho', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'acthist-demo', 'previs-demo', 'chats-viejos-demo', 'dinero-dicho-demo', 'demo']) LS.del(k);
 }
 
 /* ---------- fuentes de fuera: onces probables y titulares de prensa ---------- */

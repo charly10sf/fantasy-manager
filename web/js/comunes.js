@@ -125,5 +125,7 @@ export function dineroLargo(d) {
   if (!d) return 'No se sabe: LaLiga no lo da y aún no hay movimientos guardados.';
   if (d.v == null) return `No se sabe todavía: LaLiga no lo da y para calcularlo ${d.motivo || 'faltan datos'}.`;
   if (d.exacto) return `${eur(d.v)}, exacto (${d.fuente === 'API' ? 'lo da LaLiga' : `de ${d.fuente}`}).`;
-  return `Unos ${eur(d.v)} (± ${eur(d.margen)}). LaLiga no lo da: sale de restar al tuyo lo que has movido tú y sumarle lo que ha movido él (compras, ventas, cláusulas, blindajes y premios por jornada), porque empezasteis con lo mismo. La recompensa diaria no sale en los movimientos, por eso el margen.${d.fiable === 'media' ? '' : ' Tómalo con cuidado.'}`;
+  if (d.dicho) return `Unos ${eur(d.v)} (± ${eur(d.margen)}). Te dijo que tenía ${d.dicho.min === d.dicho.max ? eur(d.dicho.v) : `entre ${eur(d.dicho.min)} y ${eur(d.dicho.max)}`} ${cuando(d.dicho.t)}${d.desdeDicho ? ` y desde entonces ha movido ${eur(d.desdeDicho, { signo: true })}` : ' y no ha movido nada desde entonces'}.`;
+  const c = d.cuenta;
+  return `Unos ${eur(d.v)} (± ${eur(d.margen)}). LaLiga no lo da: sale de sus movimientos desde el principio. Empezasteis con lo mismo (${c ? eur(c.base) : '100 M'} contando las recompensas diarias), ${c ? `y lo que ha comprado, vendido, cobrado y ganado por jornada le deja en ${eur(c.mov, { signo: true })}` : 'más lo que ha vendido y cobrado, menos lo que ha comprado'}${c && c.subidas ? `; además se ha gastado unos ${eur(c.subidas)} en subir ${c.nSubidas} cláusula${c.nSubidas === 1 ? '' : 's'} (se ve en su plantilla)` : ''}. La recompensa diaria no sale en ningún sitio, por eso el margen.${d.fiable === 'media' ? '' : ' Tómalo con cuidado.'}`;
 }

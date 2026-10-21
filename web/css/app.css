@@ -719,3 +719,14 @@ body.con-nv { overflow: hidden; }
 .once-pleg[open] { padding-bottom: 10px; }
 .tab-n { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 6px; border-radius: 9px; background: var(--plano3); color: var(--texto2); font: 700 11.5px/18px 'Barlow'; text-align: center; vertical-align: 1px; }
 .tab-n.rojo { background: var(--rojo); color: #fff; } .tab-n.verde { background: var(--sube-s); color: var(--sube); }
+
+/* lo que te ha dicho un rival de su dinero */
+.dicho { margin: 2px 0 6px; }
+.dicho .enlace { background: none; border: 0; padding: 0; color: var(--rojo-l); font: 600 13px 'Barlow'; text-decoration: underline; cursor: pointer; }
+.dicho-f { border-radius: 12px; border: 1px dashed var(--plano3); padding: 0 12px; }
+.dicho-f > summary { list-style: none; display: flex; align-items: center; gap: 8px; padding: 11px 0; color: var(--texto2); font: 600 14px 'Barlow'; cursor: pointer; }
+.dicho-f > summary::-webkit-details-marker { display: none; }
+.dicho-f > summary .ic { width: 16px; height: 16px; color: var(--rojo-l); }
+.dicho-in { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.dicho-in input { width: 64px; background: var(--plano2); border: 1px solid var(--linea); border-radius: 10px; padding: 8px 10px; outline: none; text-align: right; }
+.dicho-in .btn { margin-left: auto; }

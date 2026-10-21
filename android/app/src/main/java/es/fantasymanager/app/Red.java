@@ -63,7 +63,7 @@ final class Red {
                 cliente = new OkHttpClient.Builder()
                         .dns(dns)
                         .connectTimeout(15, TimeUnit.SECONDS)
-                        .readTimeout(180, TimeUnit.SECONDS)
+                        .readTimeout(330, TimeUnit.SECONDS)
                         .writeTimeout(60, TimeUnit.SECONDS)
                         // mientras Gemini piensa no llega nada; un ping cada 15 s (HTTP/2) mantiene viva la conexión
                         // para que el router o la operadora no la den por muerta, y si se cae se nota enseguida

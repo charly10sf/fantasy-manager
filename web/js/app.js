@@ -242,7 +242,7 @@ async function trabajoFondo() {
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes() };
+  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}) };
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
@@ -570,6 +570,29 @@ document.addEventListener('click', async (ev) => {
     case 'novedades': listaVersiones(); break;
     case 'presentacion': cerrarHoja(true); verNovedades((NOVEDADES[1] || {}).v || null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
+    case 'guardarDicho': {
+      // lo que te ha dicho un rival que tiene (en millones; si escribe en euros, se entiende igual)
+      const leer = (id) => { const x = parseFloat(String(($(id) || {}).value || '').replace(/\s/g, '').replace(/\.(?=\d{3}\b)/g, '').replace(',', '.')); return Number.isFinite(x) ? (Math.abs(x) >= 10000 ? x : x * 1e6) : null; };
+      let a = leer('#dichoMin'), b = leer('#dichoMax');
+      if (a == null && b == null) { tostada('Pon cuánto te ha dicho que tiene'); break; }
+      if (a == null) a = b; if (b == null) b = a;
+      if (a > b) [a, b] = [b, a];
+      const cu = S.M && S.M.dineroCuenta ? S.M.dineroCuenta(d.tid) : null;
+      const todos = LS.get(K('dinero-dicho'), {});
+      todos[d.tid] = { v: Math.round((a + b) / 2), r: Math.round((b - a) / 2), min: Math.round(a), max: Math.round(b), t: Date.now(), est: cu && cu.v != null ? Math.round(cu.v) : null };
+      LS.set(K('dinero-dicho'), todos);
+      rehacer(); repintarHoja(); pintar();
+      tostada(cu && cu.v != null ? `Apuntado. La cuenta daba ${eur(cu.v)}: ${eur(todos[d.tid].v - cu.v, { signo: true })} de diferencia` : 'Apuntado');
+      break;
+    }
+    case 'borrarDicho': {
+      const todos = LS.get(K('dinero-dicho'), {});
+      delete todos[d.tid];
+      LS.set(K('dinero-dicho'), todos);
+      rehacer(); repintarHoja(); pintar();
+      tostada('Olvidado: vuelve a salir de la cuenta');
+      break;
+    }
     case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
     case 'hecho': {
       const P = S.plan; if (!P) break;
