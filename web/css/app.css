@@ -63,7 +63,10 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-liga span { font-size: 13.5px; color: var(--apagado); display: flex; align-items: center; gap: 6px; }
 .punto { width: 6px; height: 6px; border-radius: 50%; background: var(--apagado); display: inline-block; }
 .punto.vivo { background: var(--sube); } .punto.viejo { background: var(--oro); } .punto.mal { background: var(--rojo); }
-.b-ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: var(--texto2); flex: none; }
+.sup-btns { display: flex; gap: 2px; flex: none; }
+.b-ico { min-width: 52px; height: 48px; padding: 0 4px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--texto2); flex: none; font: 600 12px/1 'Barlow'; white-space: nowrap; }
+.b-ico::after { content: attr(data-et); }
+@media (max-width: 380px) { .sup { gap: 8px; padding-left: 12px; padding-right: 10px; } .sup-btns { gap: 0; } .b-ico { min-width: 46px; padding: 0 2px; font-size: 11.5px; } .sup-liga b { font-size: 16px; letter-spacing: 0.3px; } }
 .b-ico:active { background: var(--plano2); }
 .gira .ic { animation: gira 0.9s linear infinite; }
 #bPlan { color: var(--rojo-l); }
@@ -786,10 +789,10 @@ a.btn { text-decoration: none; }
 .escritorio .sup-liga { flex: none; padding: 0 8px 20px; margin-bottom: 14px; border-bottom: 1px solid var(--linea); }
 .escritorio .sup-liga b { font-size: 25px; line-height: 1; white-space: normal; }
 .escritorio .sup-liga span { margin-top: 8px; }
-.escritorio .sup .b-ico { width: 100%; height: 42px; display: flex; align-items: center; justify-content: flex-start; gap: 12px; padding: 0 12px; font: 600 15px 'Barlow'; }
+.escritorio .sup-btns { flex-direction: column; gap: 0; width: 100%; margin-top: auto; }
+.escritorio .sup .b-ico { width: 100%; height: 42px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 12px; padding: 0 12px; font: 600 15px 'Barlow'; }
 .escritorio .sup .b-ico::after { content: attr(aria-label); }
 .escritorio .sup .b-ico .ic { width: 20px; height: 20px; }
-.escritorio #bRefrescar { margin-top: auto; }
 .escritorio .nav { position: static; background: none; border-top: 0; padding: 0; }
 .escritorio .nav-in { flex-direction: column; gap: 2px; max-width: none; }
 .escritorio .nav button { flex: none; flex-direction: row; justify-content: flex-start; gap: 14px; padding: 0 12px; height: 46px; border-radius: 12px; font: 600 16px 'Barlow'; letter-spacing: 0; text-transform: none; color: var(--texto2); }

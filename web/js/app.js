@@ -169,9 +169,10 @@ function marco() {
   S.marcoAncho = anchoYa;
   const nav = `<nav class="nav"><div class="nav-in">${NAV.map(([k, ic, t]) => `<button data-ir="${k}">${icono(ic)}${t}<span class="gl oculto" id="gl-${k}"></span></button>`).join('')}</div></nav>`;
   // rehacer el plan de la IA, a mano desde cualquier pestaña (te lleva a Hoy)
-  const botones = `<button class="b-ico oculto" id="bPlan" data-accion="planYa" aria-label="Rehacer el plan">${icono('ia')}</button>
-    <button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar">${icono('refrescar')}</button>
-    <button class="b-ico" data-accion="ajustes" aria-label="Ajustes">${icono('ajustes')}</button>`;
+  // en el móvil cada botón lleva su nombre debajo (data-et); en el ordenador, el largo (aria-label) al lado
+  const botones = `<div class="sup-btns"><button class="b-ico oculto" id="bPlan" data-accion="planYa" aria-label="Rehacer el plan" data-et="Plan IA">${icono('ia')}</button>
+    <button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar" data-et="Actualizar">${icono('refrescar')}</button>
+    <button class="b-ico" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}</button></div>`;
   const liga = `${LOGO_P}<div class="sup-liga"><b id="supLiga"></b><span id="supEstado"></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
@@ -202,6 +203,7 @@ function pintarSup() {
     bp.classList.toggle('oculto', !hayClave());
     bp.classList.toggle('late', !!E.cargando);
     bp.setAttribute('aria-label', E.cargando ? 'Haciendo el plan…' : esIA ? 'Rehacer el plan' : 'Plan con la IA');
+    bp.dataset.et = E.cargando ? 'Pensando…' : 'Plan IA';
   }
   const pend = S.plan ? S.plan.ops.filter((o) => o.hoy !== false && !['esperar'].includes(o.accion) && !V.hecho(S, S.plan, o)).length : 0;
   const gh = $('#gl-hoy'); gh.textContent = pend; gh.classList.toggle('oculto', !pend);
