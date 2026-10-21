@@ -150,13 +150,21 @@ export function demo() {
     });
   }
   void nombres;
+  // lo que cobra cada uno por las dos últimas jornadas (en el Fantasy sale como «ha ganado X por jornada»)
+  clasif.forEach((e, i) => {
+    for (const k of [1, 2]) actividad.push({ id: `pr${i}-${k}`, t: ahora - k * 7 * DIA + 2 * HORA, tipo: 6, clase: 'premio', quien: e.manager, quienId: e.userId, otro: '', otroId: '', pid: '', jugador: '', importe: Math.round((1.2 + r() * 2.5) * 1e6 / 1000) * 1000, texto: '' });
+  });
+  actividad.sort((a, b) => b.t - a.t);
+  // el saldo de algunos rivales se sabe (en tu liga real depende de lo que dé LaLiga); el del resto se estima
+  const dineros = { [yo.teamId]: { v: 6430000, fuente: 'tu cuenta' } };
+  clasif.filter((e) => !e.esYo).slice(0, 4).forEach((e) => { dineros[e.teamId] = { v: Math.round((2 + r() * 22) * 1e6 / 10000) * 10000, fuente: 'ejemplo' }; });
 
   const D = {
     t: ahora, demo: true,
     yo: { userId: yo.userId, nombre: yo.manager, teamId: yo.teamId },
     liga: { id: 'demo', nombre: 'Liga de ejemplo' }, ligas: [{ id: 'demo', nombre: 'Liga de ejemplo' }],
     equipos, equiposT: ahora, clasif, plantillas, maestro, mercado, actividad,
-    dinero: 6430000, valorEquipo: yo.valor, jornada: 10, partidos, resultados, tendencias, avisos: [], misVentas,
+    dinero: 6430000, dineros, valorEquipo: yo.valor, jornada: 10, partidos, resultados, tendencias, avisos: [], misVentas,
   };
 
   // un histórico de 21 días para que haya gráficos

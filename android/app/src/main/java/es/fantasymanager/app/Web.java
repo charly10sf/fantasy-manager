@@ -23,6 +23,10 @@ final class Web {
         s.setAllowFileAccess(false);
         s.setAllowContentAccess(false);
         s.setMediaPlaybackRequiresUserGesture(true);
+        // sin zoom: ni pellizcando ni con doble toque
+        s.setSupportZoom(false);
+        s.setBuiltInZoomControls(false);
+        s.setDisplayZoomControls(false);
         s.setUserAgentString(s.getUserAgentString() + " FantasyManagerApp/" + BuildConfig.VERSION_CODE);
         CookieManager.getInstance().setAcceptCookie(true);
     }

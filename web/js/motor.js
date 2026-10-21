@@ -222,6 +222,138 @@ export function analizar(D, H, c, extra = {}) {
   M.pujaMax = num(D.dinero) + M.deuda - M.misPujas;
   M.negativo = D.dinero != null && D.dinero < 0;
 
+  /* ---------- el dinero de cada rival ---------- */
+  // exacto si LaLiga lo da. Si no, se estima: todos empezáis con el mismo dinero, así que su saldo es el tuyo menos
+  // lo que has movido tú más lo que ha movido él (compras, ventas, cláusulas, blindajes y lo que cobra por jornada).
+  // Lo que no sale en los movimientos es la recompensa diaria (unos 100 mil por día que entra), de ahí el margen.
+  const AH = extra.actHist && extra.actHist.lista && extra.actHist.lista.length ? extra.actHist
+    : { lista: D.actividad || [], completa: !!D.demo, desde: (D.actividad || []).length ? Math.min(...D.actividad.map((a) => a.t || ahora)) : null };
+  const flujos = {};
+  {
+    const fl = (tid) => (flujos[tid] ||= { v: 0, n: 0, gastado: 0, ingresado: 0, premios: 0 });
+    const tidDe = (id, nombre) => (id || nombre ? M.teamDeUsuario(id, nombre) : null);
+    const clausulaDe = {};
+    for (const fichas of Object.values(D.plantillas || {})) for (const f of fichas) if (f.clausula) clausulaDe[f.pid] = f.clausula;
+    // una venta a otro manager sale también como compra suya: no se cuenta dos veces
+    const compraDe = new Set();
+    for (const a of AH.lista) if ((a.clase === 'compra' || a.clase === 'clausula') && (a.otroId || a.otro)) compraDe.add(`${a.pid}|${Math.abs(num(a.importe))}|${tidDe(a.otroId, a.otro)}`);
+    for (const a of AH.lista) {
+      const imp = Math.abs(num(a.importe));
+      if (!imp) continue;
+      const q = tidDe(a.quienId, a.quien), o = tidDe(a.otroId, a.otro);
+      if (a.clase === 'compra' || a.clase === 'clausula') {
+        if (q) { fl(q).v -= imp; fl(q).gastado += imp; fl(q).n++; }
+        if (o && o !== q) { fl(o).v += imp; fl(o).ingresado += imp; fl(o).n++; }
+      } else if (a.clase === 'venta') {
+        if (q && !compraDe.has(`${a.pid}|${imp}|${q}`)) { fl(q).v += imp; fl(q).ingresado += imp; fl(q).n++; }
+      } else if (a.clase === 'premio') {
+        if (q) { fl(q).v += imp; fl(q).premios += imp; fl(q).n++; }
+      } else if (a.clase === 'blindaje' && q) {
+        // lo que se paga es la mitad de lo que sube la cláusula. Si el importe parece la cláusula nueva (no lo
+        // pagado), se saca de lo que se vio subir en su plantilla; si no se vio, no se cuenta y se apunta como duda
+        const cl = clausulaDe[a.pid];
+        let pago = imp;
+        if (cl && imp >= cl * 0.7) {
+          const mv = (H.mov || []).find((m) => m.tipo === 'blinda' && m.pid === a.pid && Math.abs(m.t - (a.t || 0)) < 2 * DIA);
+          pago = mv ? Math.max(0, (mv.a - mv.de) / 2) : null;
+        }
+        if (pago == null) fl(q).dudas = (fl(q).dudas || 0) + 1;
+        else { fl(q).v -= pago; fl(q).gastado += pago; fl(q).n++; }
+      }
+    }
+  }
+  M.flujos = flujos;
+  M.histMov = { desde: AH.desde || null, completa: !!AH.completa, n: AH.lista.length };
+  const diasMov = AH.desde ? Math.max(1, (ahora - AH.desde) / DIA) : 0;
+  /**
+   * { v, exacto: true, fuente } si LaLiga lo da; si no, estimado { v, exacto: false, margen, fiable, desde }.
+   * Sin los movimientos desde el principio de la liga no se puede estimar (faltaría lo que movió antes):
+   * entonces { v: null, fiable: 'no', motivo }. Y si sale una cifra imposible para su equipo, tampoco se usa.
+   */
+  M.dineroDe = (tid) => {
+    if (!tid) return null;
+    if (tid === yoTid) return D.dinero != null ? { v: num(D.dinero), exacto: true, fuente: 'tu cuenta' } : null;
+    const ex = (D.dineros || {})[tid];
+    if (ex && ex.v != null) return { v: num(ex.v), exacto: true, fuente: ex.fuente || 'LaLiga' };
+    if (D.dinero == null) return { v: null, exacto: false, fiable: 'no', motivo: 'no se sabe tu saldo' };
+    if (!AH.completa) return { v: null, exacto: false, fiable: 'no', motivo: `faltan los movimientos del principio de la liga (hay desde ${AH.desde ? cuando(AH.desde, { hora: false }) : '?'})` };
+    const yoF = flujos[yoTid] || { v: 0 }, f = flujos[tid] || { v: 0, n: 0 };
+    const v = num(D.dinero) - yoF.v + f.v;
+    const valorR = num((M.equipo[tid] || {}).valor);
+    if (v < -0.3 * valorR - 5e6 || v > 0.8 * valorR + 20e6) return { v: null, exacto: false, fiable: 'no', motivo: `la cuenta da ${eur(v)}, que no cuadra con su equipo` };
+    // la recompensa diaria que uno coge y otro no (hasta 100 mil al día)
+    const margen = Math.round((1e6 + Math.min(diasMov, 150) * 0.04e6 + num(f.dudas) * 1.5e6 + num((flujos[yoTid] || {}).dudas) * 1.5e6) / 1e5) * 1e5;
+    return { v, exacto: false, margen, fiable: 'media', desde: AH.desde, n: f.n };
+  };
+  /** lo que puede gastar de golpe en una cláusula: su saldo (con el margen si es estimado); null si no se sabe */
+  M.capacidad = (tid) => {
+    const d = M.dineroDe(tid);
+    if (!d || d.v == null) return null;
+    const seguro = d.exacto ? d.v : d.v - d.margen, alto = d.exacto ? d.v : d.v + d.margen;
+    return { ...d, seguro, alto };
+  };
+  M.rivalesTid = D.clasif.filter((e) => e.teamId !== yoTid).map((e) => e.teamId);
+  M.dineroExacto = M.rivalesTid.length > 0 && M.rivalesTid.every((tid) => { const d = M.dineroDe(tid); return d && d.exacto; });
+  M.conDinero = M.rivalesTid.filter((tid) => M.capacidad(tid)).length;
+  /**
+   * quién puede pagar una cláusula: seguro (le sobra) o quizá (le llega con el margen de la estimación).
+   * sinSaber: los rivales de los que no se sabe el dinero. Para pagar una cláusula hace falta tenerlo en el saldo.
+   */
+  M.quienPaga = (importe, sinTid = null) => {
+    const out = { seguro: [], quiza: [], sinSaber: [] };
+    for (const tid of M.rivalesTid) {
+      if (tid === sinTid) continue;
+      const c = M.capacidad(tid);
+      if (!c) { out.sinSaber.push({ tid, nombre: nombreEquipo(tid) }); continue; }
+      const x = { tid, nombre: nombreEquipo(tid), c };
+      if (c.seguro >= importe) out.seguro.push(x);
+      else if (c.alto >= importe) out.quiza.push(x);
+    }
+    // solo cuenta si se sabe el de casi todos (si no, «no le llega a nadie» sería mentira)
+    out.hayDatos = M.rivalesTid.length > 0 && out.sinSaber.length <= Math.floor(M.rivalesTid.length * 0.2);
+    return out;
+  };
+
+  /* ---------- lo que se paga en tu liga por los libres del mercado ---------- */
+  // cada compra a LaLiga de las últimas semanas frente a lo que valía el jugador ese día
+  const valorEn = (pid, t) => {
+    const dv = det[pid] && det[pid].valores;
+    let v = null;
+    if (dv && dv.length) for (const [tt, vv] of dv) { if (tt <= t) v = vv; else break; }
+    if (v == null) { const d = diaDe(t); for (const [dd, vv] of (H.v && H.v[pid]) || []) { if (dd <= d) v = vv; else break; } }
+    if (v == null && ahora - t < 2 * DIA) v = J(pid).valor;
+    return v;
+  };
+  {
+    const clausulasAhora = new Set();
+    for (const fichas of Object.values(D.plantillas || {})) for (const f of fichas) if (f.clausula) clausulasAhora.add(`${f.pid}|${f.clausula}`);
+    const pujas = [];
+    for (const a of AH.lista) {
+      if (a.clase !== 'compra' || a.otroId || a.otro || !a.pid || !a.importe || !a.t || ahora - a.t > 45 * DIA) continue;
+      const imp = Math.abs(num(a.importe));
+      if (clausulasAhora.has(`${a.pid}|${imp}`)) continue;
+      const v = valorEn(a.pid, a.t - 3 * HORA);
+      if (!v) continue;
+      const s = imp / v - 1;
+      if (s < -0.1 || s > 1) continue;
+      pujas.push({ s, tid: M.teamDeUsuario(a.quienId, a.quien), v, imp, t: a.t, pid: a.pid });
+    }
+    const cuantil = (l, q) => { const o = [...l].sort((a, b) => a - b); const i = (o.length - 1) * q, b = Math.floor(i); return o[b] + (o[Math.min(o.length - 1, b + 1)] - o[b]) * (i - b); };
+    if (pujas.length >= 4) {
+      const ss = pujas.map((x) => x.s);
+      const porEquipo = {};
+      for (const x of pujas) if (x.tid) (porEquipo[x.tid] ||= []).push(x.s);
+      // los caros (más de 10 M) se pagan distinto que los baratos
+      const caros = pujas.filter((x) => x.v >= 10e6).map((x) => x.s), baratos = pujas.filter((x) => x.v < 10e6).map((x) => x.s);
+      M.pujasLiga = {
+        n: pujas.length, p25: cuantil(ss, 0.25), med: cuantil(ss, 0.5), p75: cuantil(ss, 0.75), p90: cuantil(ss, 0.9),
+        caros: caros.length >= 3 ? cuantil(caros, 0.5) : null, baratos: baratos.length >= 3 ? cuantil(baratos, 0.5) : null,
+        porEquipo: Object.fromEntries(Object.entries(porEquipo).map(([tid, l]) => [tid, { n: l.length, med: cuantil(l, 0.5), max: Math.max(...l) }])),
+        ult: pujas.sort((a, b) => b.t - a.t).slice(0, 10),
+      };
+    } else M.pujasLiga = pujas.length ? { n: pujas.length, poco: true, med: cuantil(pujas.map((x) => x.s), 0.5), porEquipo: {}, ult: pujas } : null;
+  }
+
   /* ---------- fichas (jugador en un equipo de tu liga) ---------- */
   const enriquecer = (f, tid) => {
     const j = J(f.pid), t = M.tend(f.pid);
@@ -242,7 +374,128 @@ export function analizar(D, H, c, extra = {}) {
   M.onceProb = (pid) => onces[pid] || null;
   M.noticias = (extra.noticias && extra.noticias.lista) || [];
   M.noticiasDe = (pid) => M.noticias.filter((n) => n.pids && n.pids.includes(pid));
-  M.ppEsperado = (j) => puntosEsperados(j, M.forma(j.id), M.hayOnces ? (onces[j.id] || { fuera: true }) : null) * M.factorRival(j).f;
+
+  /* ---------- riesgo de rotación: si su equipo juega otra competición pegada a la jornada ---------- */
+  // (los partidos de todas las competiciones de cada equipo vienen de SofaScore; una Champions dos días antes
+  // o después hace rotar más que una eliminatoria de Copa, donde los que descansan son los de la Copa)
+  const calEx = av.calendario || {};
+  M.rotacion = (eqId) => {
+    const p = M.proximoPartido(eqId);
+    const lista = calEx[eqId] || [];
+    if (!p || !lista.length) return null;
+    const cerca = lista.filter((x) => x.t && !x.liga && Math.abs(x.t - p.fecha) <= 4.2 * DIA && Math.abs(x.t - p.fecha) > 8 * HORA)
+      .map((x) => ({ ...x, antes: x.t < p.fecha, dias: Math.abs(x.t - p.fecha) / DIA }));
+    let riesgo = 0;
+    for (const x of cerca) {
+      const peso = /champions/i.test(x.comp) ? 0.14 : /europa|conference/i.test(x.comp) ? 0.11 : /copa|supercopa|cup/i.test(x.comp) ? 0.04 : 0.06;
+      riesgo += peso * (x.dias <= 3.2 ? 1 : 0.6);
+    }
+    return { p, cerca, riesgo: clamp(riesgo, 0, 0.3) };
+  };
+
+  /* ---------- la titularidad de cada jugador, juntando fuentes ---------- */
+  // el once probable de futbolfantasy, sus minutos de las últimas jornadas y lo que ha jugado en la temporada
+  // (SofaScore o Understat); luego la duda, la lesión y el riesgo de rotación
+  M.titularidad = (j) => {
+    if (!j || !j.pos || j.pos === 5) return null;
+    if (MALOS.has(j.estado)) return { p: 0, base: 0, fuentes: [{ f: j.estado === 'injured' ? 'lesionado' : j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga', p: 0, w: 1 }], rot: null, pRot: 0 };
+    const fuentes = [];
+    const op = M.hayOnces ? onces[j.id] || null : null;
+    if (op && op.estado === 'injured') return { p: 0, base: 0, fuentes: [{ f: 'futbolfantasy: lesionado', p: 0, w: 1 }], rot: null, pRot: 0 };
+    if (M.hayOnces) fuentes.push({ f: 'once probable', p: op && op.titular ? (op.prob != null ? op.prob / 100 : 0.85) : op && op.alternativa ? 0.3 : 0.15, w: 0.5 });
+    const st = det[j.id] && det[j.id].stats ? det[j.id].stats.slice(-5) : [];
+    if (st.length >= 3 && st.some((s) => s.min != null)) fuentes.push({ f: `últimas ${st.length}`, p: st.filter((s) => s.min >= 60).length / st.length, w: 0.3 });
+    const a = M.avanzado(j.id), tE = tabla[j.equipoId];
+    if (a && a.s && a.s.pj && a.s.tit != null && tE && tE.pj >= 3) fuentes.push({ f: 'temporada', p: clamp(a.s.tit / tE.pj, 0, 1), w: 0.2 });
+    else if (a && a.u && a.u.min && tE && tE.pj >= 3) fuentes.push({ f: 'temporada', p: clamp((a.u.min / (tE.pj * 90)) * 1.08, 0, 1), w: 0.2 });
+    if (!fuentes.length) return null;
+    const W = fuentes.reduce((s, x) => s + x.w, 0);
+    let p = fuentes.reduce((s, x) => s + x.p * x.w, 0) / W;
+    const base = p;
+    if (j.estado === 'doubtful' || (op && op.estado === 'doubtful')) p *= 0.6;
+    const rot = M.rotacion(j.equipoId);
+    // al indiscutible se le rota menos; al que está en el filo, más
+    const pRot = rot && rot.riesgo ? rot.riesgo * (p >= 0.9 ? 0.6 : p >= 0.5 ? 1.2 : 0.5) : 0;
+    p *= 1 - pRot;
+    return { p: clamp(p, 0, 0.98), base, fuentes, rot, pRot };
+  };
+
+  /* ---------- los puntos esperados por partes, como puntúa LaLiga Fantasy ---------- */
+  // minutos (2 si juega 60', 1 si menos), gol (6 portero y defensa, 5 medio, 4 delantero) con su xG, asistencia (3)
+  // con su xA, portería a cero (4 portero y defensa, 1 medio) con lo que marca el rival, goles encajados (−2 cada
+  // dos), paradas (1 cada 3), tarjetas, y el resto (nota de DAZN, recuperaciones, tiros…) de lo que suele sacar
+  const PG = { 1: 6, 2: 6, 3: 5, 4: 4 }, PC = { 1: 4, 2: 4, 3: 1, 4: 0 };
+  // xG y xA por 90' típicos de cada puesto, si no hay datos suyos
+  const RITMO = { 1: [0, 0.01], 2: [0.05, 0.07], 3: [0.12, 0.13], 4: [0.36, 0.12] };
+  const cacheDes = {};
+  M.desglose = (j) => {
+    if (!j || !j.pos || j.pos === 5) return null;
+    if (cacheDes[j.id] !== undefined) return cacheDes[j.id];
+    const T = M.titularidad(j), pr = M.previa(j);
+    if (!T || !pr || pr.golesFavor == null) return (cacheDes[j.id] = null);
+    const pT = T.p, pS = (1 - pT) * 0.45;
+    const min = pT * 80 + pS * 22, f90 = min / 90;
+    const a = M.avanzado(j.id) || {}, u = a.u, s = a.s;
+    const conU = !!(u && u.min >= 270), conS = !!(s && s.min >= 270 && s.xg != null);
+    const xg90 = conU ? (u.xg * 90) / u.min : conS ? (s.xg * 90) / s.min : RITMO[j.pos][0];
+    const xa90 = conU ? (u.xa * 90) / u.min : conS && s.xa != null ? (s.xa * 90) / s.min : RITMO[j.pos][1];
+    const tE = tabla[j.equipoId], xt = M.xgEquipo(j.equipoId);
+    const mediaEq = xt && xt.xg != null ? xt.xg : tE && tE.pj ? tE.gf / tE.pj : mediaGoles;
+    const mediaContra = xt && xt.xga != null ? xt.xga : tE && tE.pj ? tE.gc / tE.pj : mediaGoles;
+    // lo que se espera que marque su equipo en ESTE partido frente a lo que marca normalmente
+    const fAt = clamp(pr.golesFavor / Math.max(0.4, mediaEq), 0.5, 1.8);
+    const partes = {
+      min: pT * 2 + pS,
+      gol: xg90 * f90 * fAt * PG[j.pos],
+      asis: xa90 * f90 * fAt * 3,
+      cero: (pr.cero || 0) * pT * 0.92 * PC[j.pos],
+      encaja: j.pos <= 2 ? -(pr.golesContra || 0) * f90 * 0.85 : 0,
+    };
+    if (j.pos === 1) {
+      const par90 = s && s.min >= 270 && s.paradas != null ? (s.paradas * 90) / s.min : 2.6;
+      partes.paradas = (par90 * f90 * clamp((pr.golesContra || mediaContra) / Math.max(0.4, mediaContra), 0.6, 1.6)) / 3;
+    }
+    const am90 = conU && u.am != null ? (num(u.am) * 90) / u.min : 0.2, ro90 = conU && u.ro != null ? (num(u.ro) * 90) / u.min : 0.01;
+    partes.tarjetas = -(am90 + ro90 * 3) * f90;
+    // el resto: lo que saca de media por partido menos lo que explican sus minutos, goles, asistencias, ceros y tarjetas
+    let resto90 = 1.4;
+    const pj = s && s.pj ? s.pj : u && u.pj ? u.pj : null;
+    if (num(j.media) > 0 && pj >= 3) {
+      const g = conU ? u.g : s ? num(s.g) : 0, as = conU ? u.a : s ? num(s.a) : 0;
+      const minPj = conU ? u.min / pj : s && s.min ? s.min / pj : 75;
+      const tit = s && s.tit != null ? s.tit / pj : clamp(minPj / 90, 0, 1);
+      const ceros = tE && tE.pj ? tE.ult.filter((x) => x.gc === 0).length / tE.pj : 0.25;
+      const encajados = tE && tE.pj ? tE.gc / tE.pj : mediaGoles;
+      const expl = tit * 2 + (1 - tit) + (g / pj) * PG[j.pos] + (as / pj) * 3 + ceros * tit * PC[j.pos]
+        - (j.pos <= 2 ? encajados * (minPj / 90) * 0.85 : 0) - (conU && u.am != null ? (num(u.am) + num(u.ro) * 3) / pj : 0.2)
+        + (j.pos === 1 && s && s.paradas ? s.paradas / pj / 3 : 0);
+      resto90 = clamp(num(j.media) - expl, -1, 5) / Math.max(0.35, minPj / 90);
+    }
+    partes.resto = resto90 * f90;
+    for (const k of Object.keys(partes)) if (!Number.isFinite(partes[k])) partes[k] = 0;
+    const total = Math.max(0, Object.values(partes).reduce((x, y) => x + y, 0));
+    return (cacheDes[j.id] = { total, partes, pT, min, T, fAt, xg90, xa90, fuente: conU ? 'Understat' : conS ? 'SofaScore' : 'medias del puesto' });
+  };
+
+  /* ---------- los puntos esperados: la fórmula de siempre y el desglose, corregidos con lo que se ha fallado ---------- */
+  // calib (de aprende.js): cuánto pesa el desglose frente a la fórmula de siempre según cuál ha acertado más, y el
+  // sesgo de cada puesto (si a los delanteros se les espera de más, se baja)
+  const cal = extra.calib || null;
+  M.calib = cal;
+  const wDes = cal && cal.w != null ? cal.w : 0.5;
+  const cachePP = {};
+  M.ppDetalle = (j) => {
+    if (!j || !j.id) return null;
+    if (cachePP[j.id]) return cachePP[j.id];
+    const T = j.pos && j.pos !== 5 ? M.titularidad(j) : null;
+    let base = puntosEsperados(j, M.forma(j.id), M.hayOnces ? (onces[j.id] || { fuera: true }) : null) * M.factorRival(j).f;
+    if (T && T.pRot) base *= 1 - T.pRot;
+    const d = M.desglose(j);
+    const crudo = d ? wDes * d.total + (1 - wDes) * base : base;
+    const sesgo = cal && cal.sesgo && cal.sesgo[j.pos] ? cal.sesgo[j.pos] : 1;
+    return (cachePP[j.id] = { base, desg: d ? d.total : null, crudo, final: crudo * sesgo, sesgo, w: d ? wDes : 0, d, T });
+  };
+  M.ppEsperado = (j) => (M.ppDetalle(j) || { final: 0 }).final;
   M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado);
   const misJs = misFichasRaw.map((f) => J(f.pid));
   M.once = M.mejorOnce(misJs);
@@ -352,7 +605,36 @@ export function analizar(D, H, c, extra = {}) {
       else if (x.abreEn < 36 * HORA) r = x.ratio < 1.25 ? 2 : 1;
     }
     if (r && num(x.j.media) >= 5) r = Math.min(3, r + 1);
+    // y quién tiene dinero para pagarla: si no le llega a nadie, el riesgo baja (aunque pueden vender y juntarlo)
+    x.pagan = x.clausula ? M.quienPaga(x.clausula) : null;
+    if (r && x.pagan) {
+      const p = x.pagan;
+      if (p.seguro.length >= 2) r = Math.min(3, r + 1);
+      else if (p.hayDatos && !p.seguro.length && !p.quiza.length) r = Math.min(r, p.sinSaber.length ? 2 : 1);
+    }
     x.riesgo = ['ninguno', 'bajo', 'medio', 'alto'][r];
+    // el blindaje justo: hasta dónde subir la cláusula para que no le llegue a nadie (subir X cuesta X/2)
+    if (x.clausula && (x.abierta || x.abreEn < 2 * DIA) && x.pagan && M.conDinero) {
+      const caps = M.rivalesTid.map((tid) => ({ tid, nombre: nombreEquipo(tid), c: M.capacidad(tid) })).filter((y) => y.c).sort((a, b) => b.c.alto - a.c.alto);
+      const hasta = (v) => Math.ceil((Math.max(v, 0) * 1.03 + 1) / 1e5) * 1e5;
+      if (caps.length) {
+        const T = hasta(caps[0].c.alto);
+        const coste = (t) => Math.ceil((t - x.clausula) / 2 / 1e4) * 1e4;
+        // no compensa gastar en blindarlo más de un tercio de lo que vale
+        const tope = x.j.valor / 3;
+        x.blindaje = T > x.clausula ? { objetivo: T, coste: coste(T), rico: caps[0].nombre, caro: coste(T) > tope } : { objetivo: x.clausula, coste: 0, rico: caps[0].nombre, yaVale: true };
+        // si dejarlo fuera del alcance de todos no compensa: la subida más barata que deja fuera a casi todos
+        if (x.blindaje.caro) {
+          // (solo si deja fuera a casi todos: con más de dos que aún pueden, no protege)
+          for (let k = 1; k <= Math.min(2, caps.length - 1); k++) {
+            const Tk = hasta(caps[k].c.alto);
+            if (Tk <= x.clausula) break;
+            if (coste(Tk) <= tope) { x.blindaje.parcial = { objetivo: Tk, coste: coste(Tk), quedan: caps.slice(0, k).map((y) => y.nombre) }; break; }
+          }
+        }
+        x.blindaje.sinSaber = x.pagan.sinSaber.map((y) => y.nombre);
+      }
+    }
     x.prox = M.proximoPartido(x.j.equipoId);
     return x;
   }).sort((a, b) => a.j.pos - b.j.pos || b.j.valor - a.j.valor);
@@ -403,9 +685,26 @@ export function analizar(D, H, c, extra = {}) {
     else if (t.p7 != null && t.p7 < -4) veredicto = 'baja';
     // la puja que pondría: el precio y un margen por las pujas que lleva y por si está subiendo
     let margen = 0.02 + Math.min(m.pujas, 5) * 0.025 + (t.p1 != null && t.p1 > 0 ? Math.min(t.p1, 4) / 100 : 0) + (i.n >= 70 ? 0.03 : 0);
+    // y lo que de verdad hace falta en TU liga para llevarse a uno así: cuanto más interesa, más arriba de lo que
+    // se suele pagar (los caros se pagan distinto que los baratos)
+    const PL = M.pujasLiga;
+    let pujaLiga = null;
+    if (m.tipo !== 'manager' && PL && !PL.poco) {
+      const tramo = j.valor >= 10e6 ? PL.caros : PL.baratos;
+      const ajuste = tramo != null ? tramo - PL.med : 0;
+      const q = (i.n >= 75 ? PL.p75 : i.n >= 55 ? PL.med : PL.p25) + ajuste;
+      pujaLiga = Math.max(0, q) + Math.min(m.pujas, 5) * 0.01;
+      margen = 0.35 * margen + 0.65 * pujaLiga;
+    }
     if (m.tipo === 'manager') margen = 0;
-    const puja = Math.ceil(m.precio * (1 + margen) / 10000) * 10000;
-    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
+    let puja = Math.ceil(m.precio * (1 + margen) / 10000) * 10000;
+    // sin pasar de lo que se aguanta pagar por lo que aporta a tu once
+    let recortada = false;
+    if (m.tipo !== 'manager') {
+      const tope = M.tolerancia(j) - 15;
+      for (let k = 0; k < 60 && puja > m.precio && M.sobrecoste(j, puja, t).indice > tope; k++) { puja = Math.max(m.precio, puja - Math.max(10000, Math.round(puja * 0.01 / 10000) * 10000)); recortada = true; }
+    }
+    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, pujaLiga, recortada, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
   M.cierreMercado = Math.min(...M.mercado.map((m) => m.cierra || Infinity).filter((x) => x > ahora), Infinity);
   if (!Number.isFinite(M.cierreMercado)) M.cierreMercado = null;
@@ -472,9 +771,14 @@ export function analizar(D, H, c, extra = {}) {
     const clausulazos = quince.filter((a) => a.clase === 'clausula' && suyo(a)).length;
     const contraMi = quince.filter((a) => a.clase === 'clausula' && suyo(a) && a.contraMi).length;
     const fichas = ((D.plantillas || {})[e.teamId] || []).map((f) => M.clausulas.find((x) => x.pid === f.pid && x.teamId === e.teamId) || enriquecer(f, e.teamId));
-    const amenaza = clamp(clausulazos * 22 + contraMi * 25 + sem.filter((a) => suyo(a) && a.clase === 'compra').length * 6 + gastado / 2e6, 0, 100);
+    // su dinero (exacto o estimado) y cuáles de tus cláusulas le llegan
+    const dinero = M.dineroDe(e.teamId), cap = M.capacidad(e.teamId);
+    const leLlegan = M.mias.filter((x) => x.clausula && (x.abierta || x.abreEn < 3 * DIA) && x.pagan && [...x.pagan.seguro, ...x.pagan.quiza].some((y) => y.tid === e.teamId));
+    const leLleganYa = leLlegan.filter((x) => x.abierta);
+    const amenaza = clamp(clausulazos * 22 + contraMi * 25 + sem.filter((a) => suyo(a) && a.clase === 'compra').length * 6 + gastado / 2e6 + leLleganYa.length * 10, 0, 100);
+    const paga = M.pujasLiga && M.pujasLiga.porEquipo ? M.pujasLiga.porEquipo[e.teamId] || null : null;
     return {
-      e, serie, fichas,
+      e, serie, fichas, dinero, cap, leLlegan, leLleganYa, paga, flujo: flujos[e.teamId] || null,
       dValor: hace7 ? e.valor - hace7[1] : null, dValor1: ayer ? e.valor - ayer[1] : null,
       dPos: hace7 ? hace7[3] - e.pos : null,
       movs: sem.length, gastado, ingresado, clausulazos, contraMi,

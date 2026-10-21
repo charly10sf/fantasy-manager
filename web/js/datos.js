@@ -20,6 +20,32 @@ export const K = (k) => (enDemo() ? `${k}-demo` : k);
 export const foto = () => LS.get(K('datos'), null);
 export const historico = () => LS.get(K('hist'), { v: {}, eq: {}, yo: [], mov: [] });
 
+/* ---------- el historial de movimientos de la liga, guardado aparte (para el dinero de los rivales) ---------- */
+const claveAct = (a) => a.id || `${a.t}|${a.tipo}|${a.pid}|${a.quienId}|${a.importe}`;
+/** { liga, lista (lo viejo sin el texto), completa (llega al principio de la liga), desde, profundo } */
+export function actHist(ligaId) {
+  const h = LS.get(K('acthist'), null);
+  if (!h || (ligaId && h.liga !== ligaId)) return { liga: ligaId || null, lista: [], completa: false, desde: null, profundo: null };
+  return h;
+}
+function guardarActHist(ligaId, AH, nuevas, llegoAlFinal, nEquipos = 0) {
+  const m = new Map();
+  for (const a of AH.lista) m.set(claveAct(a), a);
+  for (const a of nuevas) { const { texto, ...resto } = a; m.set(claveAct(a), resto); }
+  const lista = [...m.values()].sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 4000);
+  const desde = lista.length ? Math.min(...lista.map((a) => a.t || Date.now())) : null;
+  // también está completo si sale cuando entró en la liga cada uno de los managers
+  const entraron = new Set(lista.filter((a) => a.clase === 'entra').map((a) => a.quienId || a.quien)).size;
+  const completa = AH.completa || llegoAlFinal || (nEquipos > 1 && entraron >= nEquipos);
+  const h = { liga: ligaId, lista, completa, desde, profundo: AH.profundo || null, t: Date.now() };
+  // si no cabe, se quitan los campos que no hacen falta para las cuentas antes que movimientos
+  if (!LS.set(K('acthist'), h)) {
+    const ligera = lista.map(({ id, t, clase, quienId, quien, otroId, otro, pid, importe }) => ({ id, t, clase, quienId, quien, otroId, otro, pid, importe }));
+    if (!LS.set(K('acthist'), { ...h, lista: ligera })) LS.set(K('acthist'), { ...h, lista: ligera.slice(0, 1500), completa: false });
+  }
+  return h;
+}
+
 const PASOS = ['Tu cuenta', 'Tu liga', 'Clasificación', 'Jugadores de LaLiga', 'Plantillas', 'Tu dinero', 'Mercado', 'Jornada y partidos', 'Movimientos de la liga', 'Subidas y bajadas del día'];
 export const pasosCarga = PASOS;
 
@@ -93,11 +119,43 @@ export async function actualizar(alPaso = () => {}) {
 
   alPaso(5, PASOS[5]);
   let dinero = null;
+  // el saldo de cada equipo, cuando LaLiga lo da (de la clasificación, de su plantilla o de su ruta de dinero)
+  const dineros = {};
+  for (const e of clasif) {
+    const inf = infoEquipos[e.teamId];
+    if (e.dinero != null) dineros[e.teamId] = { v: e.dinero, fuente: 'clasificación' };
+    else if (inf && inf.dinero != null) dineros[e.teamId] = { v: inf.dinero, fuente: 'plantilla' };
+  }
   if (mio) {
     dinero = await blando('dinero', async () => N.dinero(await api.dinero(mio.teamId)));
-    if (dinero == null && infoEquipos[mio.teamId] && infoEquipos[mio.teamId].dinero != null) dinero = infoEquipos[mio.teamId].dinero;
+    if (dinero == null && dineros[mio.teamId]) dinero = dineros[mio.teamId].v;
+    if (dinero != null) dineros[mio.teamId] = { v: dinero, fuente: 'tu cuenta' };
   } else {
     avisos.push({ paso: 'tu equipo', e: 'No encuentro tu equipo en la clasificación: elígelo en Ajustes' });
+  }
+  // el de los rivales: se prueba con uno y, si LaLiga lo da, con todos (si no, se estima con sus movimientos)
+  const sinDinero = clasif.filter((e) => !e.esYo && !dineros[e.teamId]);
+  if (sinDinero.length) {
+    const probar = async (e) => {
+      try {
+        const r = await api.dinero(e.teamId);
+        if (!muestras.dineroRival) muestras.dineroRival = recorte(r);
+        const v = N.dinero(r);
+        if (v != null) dineros[e.teamId] = { v, fuente: 'API' };
+        return v != null;
+      } catch (err) {
+        if (err.sesion) throw err;
+        if (!muestras.dineroRival) muestras.dineroRival = `no lo da: ${err.message}`;
+        return false;
+      }
+    };
+    if (await probar(sinDinero[0])) await enParalelo(sinDinero.slice(1), 3, probar);
+  }
+  // si la ruta devuelve lo mismo para todos, es tu saldo y no el suyo: no vale
+  const deApi = Object.entries(dineros).filter(([tid, x]) => x.fuente === 'API' && tid !== (mio && mio.teamId));
+  if (dinero != null && deApi.length >= 2 && deApi.every(([, x]) => x.v === dinero)) {
+    for (const [tid] of deApi) delete dineros[tid];
+    muestras.dineroRival = 'la ruta del dinero devuelve tu saldo para todos: no sirve para los rivales';
   }
 
   alPaso(6, PASOS[6]);
@@ -154,20 +212,33 @@ export async function actualizar(alPaso = () => {}) {
 
   alPaso(8, PASOS[8]);
   let act = [];
+  // el historial de movimientos se va guardando: la primera vez se baja hasta el principio de la liga
+  // (sirve para estimar el dinero de cada rival); luego, solo lo nuevo
+  const AH = actHist(liga.id);
+  const conocidos = new Set(AH.lista.map(claveAct));
+  let llegoAlFinal = false;
   await blando('actividad', async () => {
-    for (let i = 0; i < 4; i++) {
+    // a fondo solo una vez por semana si no se llegó al principio (son muchas páginas)
+    const aFondo = !AH.completa && !(AH.profundo && Date.now() - AH.profundo < 7 * DIA);
+    if (aFondo) AH.profundo = Date.now();
+    const paginas = aFondo ? 50 : 6;
+    for (let i = 0; i < paginas; i++) {
+      if (i > 3) await new Promise((ok) => setTimeout(ok, 250));
       const r = await api.actividad(liga.id, i);
       if (i === 0) muestras.actividad = recorte(r);
       const pag = N.actividad(r);
-      if (!pag.length) break;
+      if (!pag.length) { llegoAlFinal = true; break; }
       act.push(...pag);
       const masVieja = Math.min(...pag.map((a) => a.t || Date.now()));
-      if (Date.now() - masVieja > 21 * DIA) break;
+      // ya se tenía guardado lo de esta página: no hace falta seguir
+      if (!aFondo && pag.some((a) => conocidos.has(claveAct(a))) && Date.now() - masVieja > 2 * DIA) break;
+      if (!aFondo && Date.now() - masVieja > 21 * DIA) break;
     }
   });
   // sin repetidos y lo nuevo arriba
   const vistos = new Set();
-  act = act.filter((a) => { const k = a.id || `${a.t}|${a.tipo}|${a.pid}|${a.quienId}`; if (vistos.has(k)) return false; vistos.add(k); return true; }).sort((a, b) => (b.t || 0) - (a.t || 0));
+  act = act.filter((a) => { const k = claveAct(a); if (vistos.has(k)) return false; vistos.add(k); return true; }).sort((a, b) => (b.t || 0) - (a.t || 0));
+  guardarActHist(liga.id, AH, act, llegoAlFinal, clasif.length);
 
   alPaso(9, PASOS[9]);
   let tendencias = {};
@@ -184,7 +255,7 @@ export async function actualizar(alPaso = () => {}) {
     yo: { userId, nombre: miNombre, teamId: mio ? mio.teamId : null },
     liga, ligas, equipos, equiposT: viejo && viejo.equiposT && equipos === viejo.equipos ? viejo.equiposT : Date.now(),
     clasif, plantillas, maestro, mercado, actividad: act.slice(0, 400),
-    dinero, valorEquipo, jornada, partidos, resultados, tendencias, avisos, muestras, misVentas, formaciones, formacionesT,
+    dinero, dineros, valorEquipo, jornada, partidos, resultados, tendencias, avisos, muestras, misVentas, formaciones, formacionesT,
   };
   return guardarFoto(D, viejo);
 }
@@ -302,7 +373,7 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 export function borrarTodo() {
-  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'demo']) LS.del(k);
+  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'acthist', 'previs', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'acthist-demo', 'previs-demo', 'demo']) LS.del(k);
 }
 
 /* ---------- fuentes de fuera: onces probables y titulares de prensa ---------- */
@@ -337,10 +408,17 @@ function avanzadasDemo(D) {
     const ata = j.pos === 4 ? 0.45 : j.pos === 3 ? 0.18 : 0.05;
     const xg = +(ata * min / 90 * (0.5 + az())).toFixed(2), xa = +((j.pos >= 3 ? 0.15 : 0.05) * min / 90 * (0.5 + az())).toFixed(2);
     jugadores[j.id] = { min, pj: Math.round(min / 80), g: Math.round(xg * (0.5 + az())), xg, a: Math.round(xa * (0.5 + az())), xa, tiros: Math.round(xg * 7 + az() * 4), pc: Math.round(xa * 9 + az() * 3) };
-    sofa[j.id] = { nota: +(6.4 + az() * 1.1).toFixed(2), min, pj: Math.round(min / 80), notas: Array.from({ length: 5 }, () => +(6 + az() * 2).toFixed(1)), entradas: Math.round(az() * 15), intercep: Math.round(az() * 10), recup: Math.round(az() * 30), regates: Math.round(az() * 12), paradas: j.pos === 1 ? Math.round(10 + az() * 20) : 0 };
+    sofa[j.id] = { nota: +(6.4 + az() * 1.1).toFixed(2), min, pj: Math.round(min / 80), tit: Math.round(min / 95), notas: Array.from({ length: 5 }, () => +(6 + az() * 2).toFixed(1)), entradas: Math.round(az() * 15), intercep: Math.round(az() * 10), recup: Math.round(az() * 30), regates: Math.round(az() * 12), paradas: j.pos === 1 ? Math.round(10 + az() * 20) : 0 };
   }
   for (const id of Object.keys(D.equipos || {})) equipos[id] = { pj: 9, xg: +(0.9 + az()).toFixed(2), xga: +(0.9 + az()).toFixed(2), xg5: +(0.8 + az() * 1.2).toFixed(2), xga5: +(0.8 + az() * 1.2).toFixed(2) };
-  return { t: Date.now(), jugadores, sofa, equipos, fuentes: { understat: 'ejemplo', sofascore: 'ejemplo' } };
+  // unos cuantos con Champions, Europa League o Copa pegados a la próxima jornada (para ver la rotación)
+  const calendario = {};
+  const prox = (id) => (D.partidos || []).filter((p) => (p.localId === id || p.visitanteId === id) && p.fecha > Date.now() - 2 * 3600e3).sort((a, b) => a.fecha - b.fecha)[0];
+  for (const [id, comp, dias, rival] of [['15', 'UEFA Champions League', -3, 'Liverpool'], ['3', 'UEFA Champions League', -3, 'Inter'], ['2', 'UEFA Champions League', 3, 'Benfica'], ['22', 'UEFA Europa League', -2, 'Ajax'], ['4', 'UEFA Conference League', 4, 'Fiorentina'], ['17', 'Copa del Rey', 3, 'CD Ebro']]) {
+    const p = prox(id);
+    if (p) calendario[id] = [{ t: p.fecha + dias * DIA, comp, liga: false, rival, casa: dias > 0 }, { t: p.fecha, comp: 'LaLiga', liga: true, rival: '', casa: p.localId === id }];
+  }
+  return { t: Date.now(), jugadores, sofa, equipos, calendario, fuentes: { understat: 'ejemplo', sofascore: 'ejemplo', calendario: 'ejemplo' } };
 }
 
 /** en la demostración, un once probable inventado: los de más media de cada equipo */

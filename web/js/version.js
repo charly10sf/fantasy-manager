@@ -9,12 +9,16 @@ export const VERSION = '0.1.7';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.1.7', f: '2026-10-21', h: '00:50', t: 'Lo caro se mide en euros',
+    v: '0.1.7', f: '2026-10-21', h: '00:50', t: 'Cuánto tiene cada rival',
     cosas: [
-      { tipo: 'mejora', d: 'dinero', t: 'No es lo mismo un +25 % de 3 M que de 40 M', x: 'Lo que se paga de más se mide en euros, frente al tamaño de tu equipo y descontando una parte de lo que recuperas en una semana con lo que sube el jugador (no está garantizado que siga subiendo). Pagar 750 mil de más por uno de 3 M es poco; 10 M de más por uno de 40 M es una barbaridad.' },
-      { tipo: 'mejora', d: 'grafica', t: 'Una escala continua, sin saltos', x: 'Un índice de sobrecoste de 0 a 100 que crece poco a poco. Lo que se aguanta también es continuo: de 60 si el jugador no le aporta nada a tu once a 95 si lo mejora mucho. Cuanto más aporta, más se le tolera.' },
-      { tipo: 'mejora', d: 'escudo', t: 'El plan y la IA lo pesan', x: 'El plan tacha lo que pasa de lo aguantable (salvo un trato tuyo) y avisa cuando se acerca. La IA recibe el índice y el límite de cada operación, y los usa también al contestarte en el chat.', ir: { v: 'hoy' } },
-      { tipo: 'mejora', d: 'lupa', t: 'El interés, en euros', x: 'El interés de cada jugador baja poco a poco con el sobrecoste. En la ficha, la cláusula dice también cuántos euros son de más.' },
+      { tipo: 'nuevo', d: 'dinero', t: 'El dinero de cada rival', x: 'Si LaLiga lo da, exacto. Si no, se calcula con todos los movimientos de la liga desde el principio: como empezasteis con lo mismo, su saldo es el tuyo menos lo que has movido tú más lo que ha movido él (compras, ventas, cláusulas, blindajes y premios por jornada). La recompensa diaria no sale en los movimientos, por eso va con un margen. La primera vez la carga tarda un poco más: baja la actividad entera.', ir: { v: 'rivales' } },
+      { tipo: 'nuevo', d: 'escudo', t: 'Quién puede quitarte a cada uno', x: 'En la ficha de tus jugadores con la cláusula abierta o a punto: a qué rivales les sobra el dinero y a cuáles les llega justo. Y el blindaje justo: hasta dónde subirla para que no le llegue a nadie y lo que cuesta (subir X cuesta X/2). Si no compensa, te lo dice.' },
+      { tipo: 'nuevo', d: 'oferta', t: 'Pujas a la medida de tu liga', x: 'Cada compra al mercado de las últimas semanas, frente a lo que valía el jugador ese día: lo que se paga de mediana en tu liga, por los caros y por los baratos, y lo que paga cada rival. La puja que te propongo sale de ahí y de lo que te interesa el jugador, sin pasarse de lo que te aporta.', ir: { v: 'mercado' } },
+      { tipo: 'nuevo', d: 'campo', t: 'Puntos esperados por partes', x: 'Como puntúa LaLiga Fantasy: minutos, gol con su xG, asistencia con su xA, portería a cero, goles encajados, paradas, tarjetas y el resto (la nota de DAZN, recuperaciones, tiros…). La titularidad junta el once probable, sus últimos partidos y lo que ha jugado en la temporada. En la ficha, con una barra por cada parte.' },
+      { tipo: 'nuevo', d: 'semaforo', t: 'Riesgo de rotación', x: 'Los partidos de Champions, Europa League, Conference y Copa de cada equipo, de SofaScore. Si le toca uno pegado a la jornada, le baja la titularidad (más con la Champions que con la Copa) y te lo avisa en la ficha.' },
+      { tipo: 'nuevo', d: 'grafica', t: 'Aprende de lo que falla', x: 'Antes de cada jornada apunta lo que espera de cada jugador y después lo compara con lo que sacó: si a los delanteros les espera de más, se corrige solo, y la forma de calcular que más acierta pesa más. También mira cómo salió lo que te recomendó la IA; lo tienes al final del plan y la IA lo ve para no repetir errores.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'dinero', t: 'Lo caro, en euros y sin saltos', x: 'No es lo mismo un +25 % de 3 M que de 40 M: lo que se paga de más se mide en euros frente a tu equipo y descontando parte de lo que recuperas en una semana. Un índice de 0 a 100 que crece poco a poco, y lo que se aguanta va de 60 si no le aporta nada a tu once a 95 si lo mejora mucho. El plan tacha lo que se pasa y la IA lo pesa.' },
+      { tipo: 'arreglo', d: 'ajustes', t: 'Sin zoom', x: 'La app ya no se amplía al pellizcar ni con doble toque.' },
     ],
   },
   {

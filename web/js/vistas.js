@@ -1,6 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto } from './comunes.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes } from './ia.js';
 import { md } from './texto.js';
@@ -113,8 +113,28 @@ function planHTML(S) {
   if (Array.isArray(P.vigilar) && P.vigilar.length) h += `<div class="sec"><h2>Vigila</h2></div>${P.vigilar.map((v) => notaJugador(S, v.jugador, v.texto)).join('')}`;
   if (Array.isArray(P.noticias) && P.noticias.length) h += `<div class="sec"><h2>Noticias que te afectan</h2></div>${P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join('')}`;
   if (Array.isArray(P.rivales) && P.rivales.length) h += `<div class="sec"><h2>Tus rivales</h2></div>${P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}><span class="ic-act">${icono('rivales')}</span><div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s" style="white-space:normal">${esc(r.texto || '')}</div></div></button>`; }).join('')}`;
+  h += aciertosHTML(M);
   if (P.fuentes && P.fuentes.length) h += `<div class="sec"><h2>Fuentes</h2></div><div class="fuentes">${P.fuentes.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>`;
   return h + '</div>';
+}
+
+/** cómo van las recomendaciones de la IA y los puntos esperados de la app (de aprende.js) */
+export function aciertosHTML(M) {
+  const A = M && M.aprende;
+  if (!A) return '';
+  const q = A.planes, p = A.prev && !A.prev.poco ? A.prev : null;
+  if (!(q && q.n) && !p) return '';
+  const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
+  let h = `<details class="descartes aciertos"><summary>${icono('diana')}Cómo van sus aciertos${q && q.n ? `: <b>${q.bien} de ${q.n}</b> (${q.pct} %)` : ''}</summary>`;
+  if (q && q.n) {
+    h += `<p class="t2 peq">Lo que te recomendó la IA hace entre 2 y 30 días y cómo salió: comprar está bien si no ha perdido valor o si saca 6 puntos o más por jornada; vender, si ha bajado o no puntuaba.${q.hechas ? ` De lo que hiciste, ${q.bienHechas} de ${q.hechas} bien.` : ''}</p>`;
+    h += q.lista.slice(0, 10).map((x) => `<button class="fila" data-j="${esc(x.pid)}"><span class="ic-act ${x.bien ? 'compra' : 'clausula'}">${icono(x.bien ? 'ok' : 'alerta')}</span><div class="fila-c"><div class="fila-n">${esc({ pujar: 'Pujar', comprar: 'Comprar', clausular: 'Clausular', vender: 'Vender' }[x.accion] || x.accion)} ${esc(x.nombre || '')}</div><div class="fila-s">${cuando(x.t, { hora: false })} a ${eur(x.valor)} · ahora ${eur(x.ahora)}${x.ppj != null ? ` · ${d1(x.ppj)} pts/jornada` : ''}${x.hecho ? '' : ' · no lo hiciste'}</div></div><div class="fila-d"><div class="v ${x.bien ? 'sube' : 'baja'}">${pct(x.dv * 100)}</div><div class="d apag">${x.accion === 'vender' ? 'bajar es bien' : 'subir es bien'}</div></div></button>`).join('');
+  }
+  if (p) {
+    h += `<p class="t2 peq" style="margin-top:10px"><b>Los puntos esperados</b> fallan de media ${d1(p.mae.final)} pts por jugador; en el ${p.dentro2} % se acierta con ±2 (${p.pares} jugadores en ${p.jornadas} jornada${p.jornadas > 1 ? 's' : ''}). Con eso se corrigen solos: ${p.mae.desg != null ? `el desglose por partes pesa un ${Math.round(p.w * 100)} %` : 'aún sin datos del desglose'}${Object.keys(p.sesgo || {}).length ? `; por puestos ${Object.entries(p.sesgo).map(([pos, f]) => `${['', 'POR', 'DEF', 'MED', 'DEL'][pos]} ×${String(Math.round(f * 100) / 100).replace('.', ',')}`).join(', ')}` : ''}.</p>`;
+    if (p.porJornada && p.porJornada.length) h += `<div class="previa">${p.porJornada.map((x) => `<span>J${x.n}: esperados <b>${d1(x.previsto)}</b> · sacaste <b>${x.real}</b></span>`).join('')}</div>`;
+  }
+  return h + '</details>';
 }
 
 /** el once: el que propone la IA si es una formación gratuita y cuadra con tus jugadores; si no, el mejor que sale de los números */
@@ -284,7 +304,7 @@ export function rivales(S) {
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} 7d</span>` : ''}</div>
-          ${r ? `<div class="fila-x">${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}${r.movs ? `<span class="pill">${r.movs} mov. 7d</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>` : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : ''}${r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}${r.movs ? `<span class="pill">${r.movs} mov. 7d</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div><div class="d apag">pts${e.puntosJornada ? ` · ${e.puntosJornada} últ.` : ''}</div></div></button>`;
     }).join('');
@@ -334,7 +354,9 @@ export function mercado(S) {
       extra: `${m.tipo === 'manager' ? `<span class="pill vende">${icono('usuario')}Lo vende ${esc(m.vendedor || 'un manager')}</span>` : '<span class="pill libre">Libre</span>'}${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${estadoPill(m.j)}${m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertas ? `<span class="pill">${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}</span>` : ''}${m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
       derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div><div class="d">${barra(m.interes)}</div>`, op: S.opPorPid[m.pid],
     });
-    h += liga.length ? `<div class="grupo"><span>Libres de la liga · subasta a ciegas</span><span>${liga.length}</span></div>${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
+    const PL = M.pujasLiga;
+    const pagaTxt = PL && !PL.poco ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga los libres se llevan de mediana con un <b>${pct(PL.med * 100)}</b> sobre su valor (la mitad entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)}; ${PL.n} compras de las últimas semanas). La puja que te propongo sale de ahí y de lo que te interesa cada uno.</p>` : '';
+    h += liga.length ? `<div class="grupo"><span>Libres de la liga · subasta a ciegas</span><span>${liga.length}</span></div>${pagaTxt}${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
     if (man.length) h += `<div class="grupo"><span>Con dueño · los vende otro manager</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos: el precio lo pone él y solo son tuyos si acepta tu oferta.</p>${man.map(fila).join('')}`;
   } else if (seg === 'especular') {
     const v = M.ventanaEsp;

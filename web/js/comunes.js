@@ -117,3 +117,13 @@ export function oncePill(M, j) {
 
 /** un titular de prensa */
 export const filaNoticia = (n) => `<button class="noticia" data-abrir="${esc(n.link)}"><span class="tit">${esc(n.titulo)}</span><span class="meta">${esc(n.fuente || '')}${n.t ? ` · ${cuando(n.t)}` : ''}</span></button>`;
+
+/** el dinero de un rival en corto: «12,3 M» si es exacto, «≈ 8,1 M» si es estimado */
+export const dineroCorto = (d) => (!d || d.v == null ? '' : d.exacto ? eur(d.v) : `≈ ${eur(d.v)}`);
+/** y en largo, con de dónde sale */
+export function dineroLargo(d) {
+  if (!d) return 'No se sabe: LaLiga no lo da y aún no hay movimientos guardados.';
+  if (d.v == null) return `No se sabe todavía: LaLiga no lo da y para calcularlo ${d.motivo || 'faltan datos'}.`;
+  if (d.exacto) return `${eur(d.v)}, exacto (${d.fuente === 'API' ? 'lo da LaLiga' : `de ${d.fuente}`}).`;
+  return `Unos ${eur(d.v)} (± ${eur(d.margen)}). LaLiga no lo da: sale de restar al tuyo lo que has movido tú y sumarle lo que ha movido él (compras, ventas, cláusulas, blindajes y premios por jornada), porque empezasteis con lo mismo. La recompensa diaria no sale en los movimientos, por eso el margen.${d.fiable === 'media' ? '' : ' Tómalo con cuidado.'}`;
+}

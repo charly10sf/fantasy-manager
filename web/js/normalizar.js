@@ -125,6 +125,8 @@ export function clasificacion(r) {
       puntosJornada: num(primero(e.weekPoints, t.weekPoints)),
       pos: num(primero(e.position, e.rank, i + 1)),
       avatar: typeof m.avatar === 'string' ? m.avatar : null,
+      // el saldo, si la clasificación lo trae (normalmente no: LaLiga solo te enseña el tuyo)
+      dinero: primero(e.teamMoney, t.teamMoney, e.money, t.money) != null ? num(primero(e.teamMoney, t.teamMoney, e.money, t.money)) : null,
     });
   });
   out.sort((a, b) => a.pos - b.pos || b.puntos - a.puntos);

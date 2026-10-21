@@ -327,7 +327,52 @@ async function sofascore(D, pids) {
     }
   });
   LS.set('sofa-ids', ids);
-  return { jugadores: out, bloqueado };
+  return { jugadores: out, bloqueado, sid };
+}
+
+/**
+ * Los partidos de todas las competiciones de cada equipo de LaLiga (Champions, Europa League, Conference, Copa…),
+ * para ver quién juega pegado a la jornada y puede rotar. Cambian poco: se guardan 20 horas.
+ * { [equipoId]: [{ t, comp, liga, rival, casa }] }
+ */
+async function calendarioSofa(D, sid) {
+  const guardado = LS.get('sofa-cal', null);
+  if (guardado && Date.now() - guardado.t < 20 * HORA && Object.keys(guardado.equipos || {}).length) return guardado.equipos;
+  const ids = LS.get('sofa-equipos', {});
+  if (Object.keys(ids).length < 15) {
+    const st = await pedirJSON(`${SOFA}/unique-tournament/8/season/${sid}/standings/total`, SOFA_CAB, 'sofascore clasificación');
+    const filas = (st && Array.isArray(st.standings) && st.standings[0] && st.standings[0].rows) || [];
+    for (const f of filas) {
+      const t = f.team || {};
+      const id = Object.keys(D.equipos || {}).find((k) => mismoEquipo(t.name || '', D.equipos[k].nombre || '') || (t.shortName && mismoEquipo(t.shortName, D.equipos[k].nombre || '')));
+      if (id && t.id) ids[id] = t.id;
+    }
+    LS.set('sofa-equipos', ids);
+  }
+  const equipos = {};
+  let bloqueado = false;
+  await enParalelo(Object.entries(ids), 2, async ([eq, sofaId]) => {
+    if (bloqueado) return;
+    try {
+      const r = await pedirJSON(`${SOFA}/team/${sofaId}/events/next/0`, SOFA_CAB, `sofascore partidos ${(D.equipos[eq] || {}).nombre || eq}`);
+      const lista = [];
+      for (const ev of (r && r.events) || []) {
+        const t = n0(ev.startTimestamp) * 1000;
+        if (!t || t > Date.now() + 25 * DIA) continue;
+        const ut = (ev.tournament && ev.tournament.uniqueTournament) || {};
+        const casa = ev.homeTeam && ev.homeTeam.id === sofaId;
+        const otro = casa ? ev.awayTeam : ev.homeTeam;
+        lista.push({ t, comp: ut.name || (ev.tournament && ev.tournament.name) || '', liga: ut.id === 8, rival: (otro && (otro.shortName || otro.name)) || '', casa });
+      }
+      // los que ya tenía guardados de los últimos días (un partido de anteayer también cansa)
+      const viejos = ((guardado && guardado.equipos && guardado.equipos[eq]) || []).filter((x) => x.t < Date.now() && Date.now() - x.t < 6 * DIA && !lista.some((y) => Math.abs(y.t - x.t) < HORA));
+      equipos[eq] = [...viejos, ...lista].sort((a, b) => a.t - b.t);
+    } catch (e) {
+      if (e.estado === 403 || e.estado === 429) bloqueado = true;
+    }
+  });
+  if (Object.keys(equipos).length) LS.set('sofa-cal', { t: Date.now(), equipos });
+  return equipos;
 }
 
 /** estadísticas avanzadas de los tuyos y los candidatos (se guardan 12 horas) */
@@ -341,11 +386,19 @@ export async function avanzadas(D, M, pidsFoco = []) {
     out.jugadores = c.jugadores; out.equipos = c.equipos;
     out.fuentes.understat = `${Object.keys(c.jugadores).length} jugadores, ${Object.keys(c.equipos).length} equipos`;
   } catch (e) { out.fuentes.understat = `no responde (${e.message})`; }
+  let sid = null;
   try {
     const s = await sofascore(D, pidsFoco.slice(0, 32));
-    out.sofa = s.jugadores;
+    out.sofa = s.jugadores; sid = s.sid;
     out.fuentes.sofascore = `${Object.keys(s.jugadores).length} jugadores${s.bloqueado ? ' (cortado: bloquea)' : ''}`;
   } catch (e) { out.fuentes.sofascore = `no responde (${e.message})`; }
-  if (Object.keys(out.jugadores).length || Object.keys(out.sofa).length) LS.set('avanzadas', out);
+  if (sid) {
+    try {
+      out.calendario = await calendarioSofa(D, sid);
+      const otros = Object.values(out.calendario).reduce((n, l) => n + l.filter((x) => !x.liga).length, 0);
+      out.fuentes.calendario = `${Object.keys(out.calendario).length} equipos, ${otros} partidos fuera de LaLiga`;
+    } catch (e) { out.fuentes.calendario = `no responde (${e.message})`; }
+  }
+  if (Object.keys(out.jugadores).length || Object.keys(out.sofa).length || Object.keys(out.calendario || {}).length) LS.set('avanzadas', out);
   return out;
 }

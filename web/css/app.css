@@ -35,7 +35,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html { background: var(--fondo); }
+html { background: var(--fondo); touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--fondo); color: var(--texto);
   font: 400 16px/1.45 'Barlow', system-ui, sans-serif;
@@ -607,3 +607,13 @@ body.con-nv { overflow: hidden; }
 .cargando-ia .parar-ia { margin-top: 12px; }
 .parar-chat { display: flex; justify-content: flex-start; margin: -2px 0 10px; }
 .escribe button.parar { background: var(--plano3); color: var(--rojo-l); }
+
+/* 0.1.7: puntos esperados por partes, dinero de los rivales, aciertos */
+.pp-partes { display: grid; gap: 6px; margin: 6px 0 8px; }
+.pp-p { display: grid; grid-template-columns: 128px 1fr 44px; align-items: center; gap: 8px; font-size: 13.5px; color: var(--texto2); }
+.pp-p i { display: block; height: 8px; border-radius: 4px; background: var(--plano2); position: relative; overflow: hidden; }
+.pp-p i::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--w, 0%); background: var(--sube); border-radius: 4px; }
+.pp-p i.neg::after { background: var(--baja); }
+.pp-p b { text-align: right; color: var(--texto); font-family: var(--cond); font-size: 15px; }
+.pill.estim { background: var(--plano2); color: var(--texto2); border: 1px dashed var(--plano3); }
+.aciertos summary b { color: var(--texto); }

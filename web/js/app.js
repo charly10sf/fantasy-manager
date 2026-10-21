@@ -2,7 +2,8 @@
 import { esc, icono, LOGO, $, $$, LS, eur, rel, MIN, diaDe, enParalelo } from './util.js';
 import { enApp, nativo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion } from './auth.js';
-import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas } from './datos.js';
+import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
+import { aprender, calibracion } from './aprende.js';
 import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
@@ -162,8 +163,10 @@ function rehacer() {
   S.det = { ...detalles(), ...S.det };
   ponerEquipos(S.D.equipos);
   S.M = analizar(S.D, S.H, S.c, extraM());
+  // lo previsto frente a lo que pasó: corrige los puntos esperados de la próxima pasada y lo ve la IA
+  aprender(S.D, S.M, S.det);
   montarPlan();
-  if (apuntarReventa()) { S.M = analizar(S.D, S.H, S.c, extraM()); montarPlan(); }
+  if (apuntarReventa()) { const ap = S.M.aprende; S.M = analizar(S.D, S.H, S.c, extraM()); S.M.aprende = ap; montarPlan(); }
   programar(S.D, S.M);
   if (!EN_FONDO) {
     programarFondo();
@@ -239,7 +242,7 @@ async function trabajoFondo() {
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas };
+  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null };
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
@@ -714,7 +717,9 @@ async function arrancar() {
   setInterval(() => {
     if (!S.D || S.hoja || S.cargando || S.charlando || S.planEstado.cargando || S.vista === 'ia' || document.visibilityState !== 'visible' || Date.now() - toqueT < 30e3) return;
     const y = window.scrollY;
+    const ap = S.M && S.M.aprende;
     S.M = analizar(S.D, S.H, S.c, extraM());
+    S.M.aprende = ap;
     montarPlan();
     pintar();
     window.scrollTo(0, y);
