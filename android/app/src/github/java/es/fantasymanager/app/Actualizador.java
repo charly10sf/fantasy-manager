@@ -78,7 +78,7 @@ final class Actualizador {
             if (f.exists()) f.delete();
             if (!tmp.renameTo(f)) throw new IOException("no se pudo guardar");
             act.progreso(100, "instalar");
-            act.runOnUiThread(() -> act.instalar(f));
+            act.runOnUiThread(() -> Canal.instalar(act, f));
         } catch (Exception e) {
             tmp.delete();
             act.progreso(-1, e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage());

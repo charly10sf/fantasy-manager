@@ -3,23 +3,29 @@ package es.fantasymanager.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.webkit.WebViewAssetLoader;
 
 import org.json.JSONObject;
-
-import java.io.File;
 
 /**
  * La app es la web de web/ (va dentro del APK) en un WebView, servida con https desde
@@ -30,11 +36,9 @@ import java.io.File;
 public class Principal extends Activity {
     static final String HOST = "appassets.androidplatform.net";
     static final String INICIO = "https://" + HOST + "/assets/index.html";
-    private static final int PERMISO_INSTALAR = 8;
     private static final int PERMISO_AVISOS = 10;
     private static final int VOZ = 12;
     private WebView web;
-    private File pendiente;
     private boolean cargada;
     volatile boolean aLaVista;
     /** la app está en pantalla: el trabajo en segundo plano no arranca */
@@ -47,10 +51,25 @@ public class Principal extends Activity {
         super.onCreate(guardado);
         web = new WebView(this);
         web.setBackgroundColor(0xFF0A0A0B);
-        web.setFitsSystemWindows(true);
         web.setVerticalScrollBarEnabled(false);
         web.setHorizontalScrollBarEnabled(false);
-        setContentView(web);
+        // Desde Android 15 la app se dibuja de borde a borde, también debajo de la barra de arriba, de la de
+        // abajo y del teclado. La web va en una caja que deja el hueco justo de lo que ocupan en cada momento.
+        FrameLayout caja = new FrameLayout(this);
+        caja.setBackgroundColor(0xFF0A0A0B);
+        caja.addView(web, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        setContentView(caja);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        ViewCompat.setOnApplyWindowInsetsListener(caja, (v, ins) -> {
+            Insets b = ins.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            Insets t = ins.getInsets(WindowInsetsCompat.Type.ime());
+            v.setPadding(b.left, b.top, b.right, Math.max(b.bottom, t.bottom));
+            return WindowInsetsCompat.CONSUMED;
+        });
+        // el botón y el gesto de atrás: desde Android 13 se registran así (en Android 16 onBackPressed ya no llega)
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::atras);
+        }
 
         Web.preparar(web);
         final WebViewAssetLoader cargador = Web.cargador(this);
@@ -154,32 +173,6 @@ public class Principal extends Activity {
         js("window.progresoApp && progresoApp(" + pct + "," + JSONObject.quote(estado == null ? "" : estado) + ")");
     }
 
-    /** Abre el instalador de Android con el APK descargado; la primera vez pide permiso para instalar desde la app */
-    void instalar(File f) {
-        if (f == null || !f.exists()) {
-            progreso(-1, "no hay nada descargado");
-            return;
-        }
-        if (!getPackageManager().canRequestPackageInstalls()) {
-            pendiente = f;
-            progreso(100, "permiso");
-            try {
-                startActivityForResult(new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName())), PERMISO_INSTALAR);
-            } catch (Exception e) {
-                progreso(-1, "no se pudo abrir el permiso");
-            }
-            return;
-        }
-        Intent i = new Intent(Intent.ACTION_VIEW)
-                .setDataAndType(Archivos.uri(), "application/vnd.android.package-archive")
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
-        try {
-            startActivity(i);
-        } catch (Exception e) {
-            progreso(-1, "no se pudo abrir el instalador");
-        }
-    }
-
     /**
      * Preguntar con la voz: el dictado de Google (el mismo del teclado) escucha y devuelve el texto a la web con
      * vozTexto(texto). No necesita permiso de micrófono: lo pide la app de Google.
@@ -234,19 +227,22 @@ public class Principal extends Activity {
             js("window.vozTexto && vozTexto(" + (t == null ? "null" : JSONObject.quote(t)) + ")");
             return;
         }
-        if (pedido == PERMISO_INSTALAR) {
-            File f = pendiente;
-            pendiente = null;
-            if (f != null && getPackageManager().canRequestPackageInstalls()) instalar(f);
-            else progreso(100, "permiso");
-            return;
-        }
+        if (Canal.resultado(this, pedido)) return;
         super.onActivityResult(pedido, resultado, datos);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onBackPressed() {
-        // primero cierra lo que haya abierto en la web (una ficha, los ajustes); si no hay nada, sale
+        atras();
+    }
+
+    /** primero cierra lo que haya abierto en la web (una ficha, los ajustes); si no hay nada, sale */
+    private void atras() {
+        if (web == null) {
+            finish();
+            return;
+        }
         web.evaluateJavascript("window.atras ? window.atras() : false", r -> {
             if (!"true".equals(r)) {
                 if (web.canGoBack()) web.goBack();

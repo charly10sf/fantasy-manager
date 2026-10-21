@@ -9,15 +9,24 @@ def claveFirma = System.getenv('FIRMA_CLAVE')
 
 android {
     namespace 'es.fantasymanager.app'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId 'es.fantasymanager.app'
         minSdk 26
-        targetSdk 34
+        // Google Play pide apuntar a Android 16 (API 36) desde el 31 de agosto de 2026
+        targetSdk 36
         versionCode((System.getenv('VERSION_CODE') ?: '1') as int)
         // el mismo número que la web (web/js/version.js); la Action lo saca de ahí
         versionName System.getenv('VERSION_NAME') ?: "0.0.${System.getenv('VERSION_CODE') ?: '0'}"
+    }
+
+    // dos versiones de la misma app: la de GitHub (se baja e instala sola la versión nueva desde el aviso) y la
+    // de Google Play (sin eso: Google no deja actualizarse por fuera de la tienda; la actualiza Play)
+    flavorDimensions 'canal'
+    productFlavors {
+        github { dimension 'canal' }
+        play { dimension 'canal' }
     }
 
     // la web va dentro de la app: web/ del repositorio se copia tal cual a los assets
@@ -48,7 +57,7 @@ android {
 
     buildFeatures { buildConfig true }
 
-    // es una app para ti, no para Google Play: que los avisos de Play no paren la compilación
+    // que los avisos de lint no paren la compilación
     lint {
         checkReleaseBuilds false
         abortOnError false
@@ -70,4 +79,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp-dnsoverhttps:4.12.0'
     // la IA trabajando con la app cerrada: Android la despierta cada 3 horas y tras el cambio de mercado
     implementation 'androidx.work:work-runtime:2.9.1'
+    // el hueco de las barras del sistema y del teclado (Android 15 y 16 dibujan la app de borde a borde)
+    implementation 'androidx.core:core:1.13.1'
 }

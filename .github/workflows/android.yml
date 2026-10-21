@@ -6,7 +6,8 @@ name: App Android
 # con una clave de prueba para comprobar que todo funciona, pero no publica nada.
 on:
   push:
-    branches: [main]
+    # en pendiente solo se compila (para probar lo que aún no se ha publicado); publicar, solo desde main
+    branches: [main, pendiente]
     paths:
       - "android/**"
       - "web/**"
@@ -17,7 +18,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: android
+  group: android-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -80,7 +81,8 @@ jobs:
         run: |
           set -o pipefail
           if [ "$FIRMA" = "buena" ]; then export FIRMA_CLAVE="fantasy-manager:$CLAVE"; else export FIRMA_CLAVE="prueba123"; fi
-          gradle assembleRelease --no-daemon --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/compilacion.log"
+          # la de GitHub (APK, se actualiza sola) y la de Google Play (AAB, el formato que pide la tienda)
+          gradle assembleGithubRelease bundlePlayRelease --no-daemon --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/compilacion.log"
 
       # solo desde main: en otras ramas se compila para probar, sin publicar
       - name: Publicar la app
@@ -88,7 +90,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cp android/app/build/outputs/apk/release/app-release.apk fantasy-manager.apk
+          cp android/app/build/outputs/apk/github/release/app-github-release.apk fantasy-manager.apk
           gh release view app >/dev/null 2>&1 || gh release create app --title "App de Android" --notes "Fantasy Manager para Android. Descarga fantasy-manager.apk e instálala."
           gh release upload app fantasy-manager.apk --clobber
           gh release edit app --title "App de Android $VERSION_NAME" || true
@@ -99,6 +101,18 @@ jobs:
           git commit -q -m "App: versión ${{ github.run_number }} publicada" || true
           git pull -q --rebase origin main && git push -q origin HEAD:main
 
+      # lo compilado, para descargarlo desde la ejecución (también en pendiente, sin publicar): el APK de GitHub y
+      # el AAB para subir a Google Play
+      - name: Guardar lo compilado
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fantasy-manager-${{ env.VERSION_NAME }}-${{ github.run_number }}
+          retention-days: 14
+          path: |
+            android/app/build/outputs/apk/github/release/app-github-release.apk
+            android/app/build/outputs/bundle/playRelease/app-play-release.aab
+
       # el registro de la compilación, en la rama android-registro, para poder revisarlo si falla
       - name: Guardar el registro
         if: always()
@@ -108,7 +122,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/firma.log" . 2>/dev/null || true
           tail -c 60000 compilacion.log > ultimo.log
           echo "run ${{ github.run_number }} firma ${FIRMA:-?} $(date -u +%FT%TZ)" > estado.txt
-          ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/release/" >> estado.txt 2>&1 || true
+          ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/github/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/bundle/playRelease/" >> estado.txt 2>&1 || true
           rm compilacion.log
           git init -q && git checkout -q -b android-registro
           git config user.name "github-actions[bot]"

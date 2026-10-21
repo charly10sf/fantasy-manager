@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solo en la versión de GitHub: instalar la versión nueva desde el aviso de la propia app.
+     La de Google Play no lo lleva (Google no deja que una app se actualice por fuera de la tienda). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <application>
+        <provider
+            android:name=".Archivos"
+            android:authorities="es.fantasymanager.app.archivos"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
+</manifest>

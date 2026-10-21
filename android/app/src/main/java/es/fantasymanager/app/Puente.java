@@ -303,19 +303,21 @@ public class Puente {
         return BuildConfig.VERSION_NAME;
     }
 
+    /** de dónde se ha instalado: «github» (se actualiza sola desde el aviso) o «play» (la actualiza la tienda) */
+    @JavascriptInterface
+    public String canal() {
+        return Canal.NOMBRE;
+    }
+
     @JavascriptInterface
     public void actualizar(String url) {
         if (act == null) return;
-        if (!Actualizador.valida(url)) {
-            act.progreso(-1, "dirección no válida");
-            return;
-        }
-        new Thread(() -> Actualizador.bajar(act, url)).start();
+        Canal.actualizar(act, url);
     }
 
     @JavascriptInterface
     public void instalar() {
-        enPantalla(() -> act.instalar(Actualizador.archivo(ctx)));
+        enPantalla(() -> Canal.instalar(act));
     }
 
     /* ---------------- varios ---------------- */
