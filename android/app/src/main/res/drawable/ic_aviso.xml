@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- El icono pequeño de los avisos: el escudo y la flecha en blanco, como pide Android -->
+<!-- El icono pequeño de los avisos: la camiseta en blanco con el 11 calado, como pide Android -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp" android:height="24dp"
-    android:viewportWidth="48" android:viewportHeight="48">
-    <path android:pathData="M24,5.5L38.5,10.2V23.5C38.5,32.4 32.3,39.2 24,42.4C15.7,39.2 9.5,32.4 9.5,23.5V10.2Z" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.2" android:strokeLineJoin="round" />
-    <path android:pathData="M15.5,29.5L20.8,24L25,27.6L31.6,20" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:strokeLineJoin="round" />
-    <path android:pathData="M27,19.4H32.2V24.6" android:strokeColor="#FFFFFFFF" android:strokeWidth="3.2" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    android:viewportWidth="200" android:viewportHeight="200">
+    <group android:pivotX="100" android:pivotY="100" android:scaleX="0.94" android:scaleY="0.94" android:translateY="-6">
+        <path android:pathData="M74 26C84 34 116 34 126 26L154 36L190 70L168 100L150 88V178C150 183 147 186 142 186H58C53 186 50 183 50 178V88L32 100L10 70L46 36Z M77.86 167V94.86H71.43L71 89.13L81.32 80.6H94.65V167Z M109.07 167V94.86H102.65L102.21 89.13L112.53 80.6H125.87V167Z" android:fillColor="#FFFFFFFF" android:fillType="evenOdd" />
+    </group>
 </vector>

@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, LOGO, $, $$, LS, eur, rel, MIN, diaDe, enParalelo } from './util.js';
+import { esc, icono, LOGO, LOGO_P, $, $$, LS, eur, rel, MIN, diaDe, enParalelo } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
@@ -149,7 +149,7 @@ function marco() {
   const nav = `<nav class="nav"><div class="nav-in">${NAV.map(([k, ic, t]) => `<button data-ir="${k}">${icono(ic)}${t}<span class="gl oculto" id="gl-${k}"></span></button>`).join('')}</div></nav>`;
   const botones = `<button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar">${icono('refrescar')}</button>
     <button class="b-ico" data-accion="ajustes" aria-label="Ajustes">${icono('ajustes')}</button>`;
-  const liga = `${LOGO}<div class="sup-liga"><b id="supLiga"></b><span id="supEstado"></span></div>`;
+  const liga = `${LOGO_P}<div class="sup-liga"><b id="supLiga"></b><span id="supEstado"></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;

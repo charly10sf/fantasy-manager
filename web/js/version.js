@@ -11,6 +11,7 @@ export const NOVEDADES = [
   {
     v: '0.3.1', f: '2026-10-21', h: '20:45', t: 'La web, hecha para el ordenador',
     cosas: [
+      { tipo: 'nuevo', d: 'camiseta', t: 'Logo nuevo', x: 'Adiós al escudo: ahora es una camiseta roja vista de espaldas, con MANAGER donde va el nombre y el 11 de dorsal, por tu once. Sale en el icono del móvil, en el de los avisos, en la pestaña del navegador y arriba en la app. Si usas iconos con tema en Android, también tiene su versión de un color.' },
       { tipo: 'mejora', d: 'campo', t: 'En el ordenador, a lo ancho', x: 'La web ya no es el móvil estirado. Las pestañas van en una columna a la izquierda con tu liga. En Hoy, el plan ocupa el centro y a la derecha tienes el marcador, tu equipo, la liga, las cláusulas a tiro y los últimos movimientos. En Equipo, el once al lado de la plantilla; en Rivales, la clasificación con lo que te llega de ellos al lado; y las listas de jugadores, a dos columnas. Las fichas se abren de lado sin taparlo todo y el chat queda centrado, cómodo de leer. En el móvil sigue todo igual.' },
       { tipo: 'arreglo', d: 'oferta', t: 'No malvender a LaLiga', x: 'LaLiga hace una oferta nueva cada día por lo que tienes en venta. Si la de hoy es de las más bajas que suele dar en tu liga y no hay prisa (no empiezas la jornada en negativo ni está de baja), ya no te dice que vendas aunque el jugador vaya a la baja: te dice que esperes a la de mañana y cuánto ganarías, contando con lo que baje. La IA tiene la misma regla.', ir: { v: 'equipo', seg: 'equipo:venta' } },
     ],

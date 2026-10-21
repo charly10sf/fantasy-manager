@@ -1,7 +1,7 @@
 /* Las novedades contadas bajando. Arriba, el número de versión como un marcador de estadio que se monta al abrir;
    después, cada cosa nueva o arreglada entra con el scroll: su cromo llega girando desde un lado, el título sube
    palabra a palabra y detrás el texto. El brillo del fondo toma el color de cada una (los de las posiciones). */
-import { esc, LOGO } from './util.js';
+import { esc, LOGO, LOGO_P } from './util.js';
 import { NOVEDADES, cmpVer } from './version.js';
 import { DIBUJOS } from './dibujos.js';
 
@@ -50,7 +50,7 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
   raiz.setAttribute('aria-modal', 'true');
   raiz.setAttribute('aria-label', `Novedades de la ${n0.v}`);
   raiz.innerHTML = `<div class="nv-luz" aria-hidden="true"></div><div class="nv-barra" aria-hidden="true"></div>
-    <div class="nv-cab">${LOGO}<b>Fantasy Manager</b><button type="button" data-nv="fin">Saltar</button></div>
+    <div class="nv-cab">${LOGO_P}<b>Fantasy Manager</b><button type="button" data-nv="fin">Saltar</button></div>
     <div class="nv-scroll" tabindex="-1">
       <section class="nv-heroe"><div class="nv-heroe-in">
         <p class="nv-eti">${nuevas.length > 1 ? `Lo que te has perdido desde la ${esc(desde)}` : 'Lo nuevo'}</p>
