@@ -129,9 +129,12 @@ const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar:
 export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${ACC[op.accion] || op.accion} hoy</span>` : '');
 
 /** una fila de jugador. x lleva j (jugador) y opcionalmente tend, cláusula, etc. */
-export function filaJugador(x, { sub = null, extra = '', derecha = null, conMini = false, op = null } = {}) {
+// como mucho 3 pastillas por fila, en orden de importancia: lo que sobra se ve en su ficha
+const MAX_PILLS = 3;
+export function filaJugador(x, { sub = null, extra = '', pills = null, derecha = null, conMini = false, op = null } = {}) {
   const j = x.j;
   const t = x.tend;
+  if (pills) { extra = [planPill(op), ...pills].filter(Boolean).slice(0, MAX_PILLS).join(''); op = null; }
   return `<button class="fila" data-j="${esc(j.id)}">
     ${ava(j)}
     <div class="fila-c">
@@ -155,10 +158,18 @@ export function oncePill(M, j) {
 }
 
 /** el calendario de sus próximos partidos, solo si es duro o favorable */
-export function calPill(M, j) {
+export function calPill(M, j, { soloDuro = false } = {}) {
   const c = M && M.calendarioRiesgo && j && j.pos < 5 ? M.calendarioRiesgo(j) : null;
-  if (!c || c.tipo === 'normal') return '';
+  if (!c || c.tipo === 'normal' || (soloDuro && c.tipo !== 'duro')) return '';
   return `<span class="pill ${c.tipo === 'duro' ? 'mal' : 'bien'}" title="${esc(c.texto)}">${c.tipo === 'duro' ? 'Calendario duro' : 'Calendario favorable'}</span>`;
+}
+
+/** el once probable solo cuando avisa de algo (suplente o fuera); ser titular es lo normal */
+export function avisoOnce(M, j) {
+  if (!M || !M.hayOnces || !j || j.pos === 5) return '';
+  const o = M.onceProb(j.id);
+  if (!o) return '<span class="pill duda">Fuera del once</span>';
+  return o.titular ? '' : '<span class="pill duda">Suplente</span>';
 }
 
 /** un titular de prensa */

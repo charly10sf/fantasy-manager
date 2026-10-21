@@ -1218,6 +1218,12 @@ export function analizar(D, H, c, extra = {}) {
   M.cambios = (H.mov || []).filter((m) => ahora - m.t < 21 * DIA).map((m) => ({ ...m, j: J(m.pid), equipo: M.equipo[m.teamId] })).reverse();
 
   /* ---------- rivales ---------- */
+  /** lo que han subido o bajado de valor los jugadores de una plantilla (d1: hoy, d7: en 7 días); null si no hay datos */
+  const pctMov = (fichas, k) => {
+    let n = 0, suma = 0;
+    for (const f of fichas) { const t = M.tend(f.pid); if (t && t[k] != null) { n++; suma += num(t[k]); } }
+    return n ? suma : null;
+  };
   M.rivales = D.clasif.filter((e) => e.teamId !== yoTid).map((e) => {
     const serie = (H.eq && H.eq[e.teamId]) || [];
     const hace7 = serie.filter(([d]) => d <= diaDe(ahora - 7 * DIA)).pop();
@@ -1239,7 +1245,10 @@ export function analizar(D, H, c, extra = {}) {
     const paga = M.pujasLiga && M.pujasLiga.porEquipo ? M.pujasLiga.porEquipo[e.teamId] || null : null;
     return {
       e, serie, fichas, dinero, cap, leLlegan, leLleganYa, paga, flujo: flujos[e.teamId] || null,
-      dValor: hace7 ? e.valor - hace7[1] : null, dValor1: ayer ? e.valor - ayer[1] : null,
+      // lo que se ha movido de mercado lo que tiene ahora (sin contar lo que entra y sale por fichajes, ventas o
+      // clausulazos: vender a uno de 60 M no es «bajar» 60 M); y el valor del equipo de verdad, aparte
+      dValor: pctMov(fichas, 'd7'), dValor1: pctMov(fichas, 'd1'),
+      dValorEquipo: hace7 ? e.valor - hace7[1] : null, dValorEquipo1: ayer ? e.valor - ayer[1] : null,
       dPos: hace7 ? hace7[3] - e.pos : null,
       movs: sem.length, gastado, ingresado, clausulazos, contraMi,
       abiertas: fichas.filter((x) => x.abierta && x.clausula).length,

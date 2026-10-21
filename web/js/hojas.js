@@ -132,14 +132,12 @@ export function resumenEquipo(S) {
   h += `<div class="sec"><h2>Por puestos</h2></div><div class="tabla-p">${puestos.map((x) => `<div class="tp"><span class="pos p${x.p}">${({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL', 5: 'ENT' })[x.p]}</span><span class="n">${x.n} · ${eur(x.v, { dec: 1 })}</span><span class="${clase(x.d)}">${x.d ? eur(x.d, { signo: true }) : '='}</span><span class="${clase(x.d7)} apag7">${x.d7 ? `${eur(x.d7, { signo: true, dec: 1 })} 7d` : ''}</span></div>`).join('')}</div>`;
 
   // tu liga: cuánto sube el valor de cada equipo
-  const serie = serieEquipo(S);
-  const hace = (d) => { const x = [...serie].reverse().find(([t]) => t <= Date.now() - d * DIA + 6 * 3600e3); return x ? x[1] : null; };
-  const yo7 = hace(7);
   const filas = D.clasif.map((e) => {
     const r = M.rivales.find((x) => x.e.teamId === e.teamId);
-    return r ? { e, hoy: r.dValor1, d7: r.dValor, yo: false } : { e, hoy: d1, d7: yo7 ? D.valorEquipo - yo7 : d7, yo: true };
+    // lo que se mueve de mercado su plantilla, como la tuya: sin las ventas y fichajes del día
+    return r ? { e, hoy: r.dValor1, d7: r.dValor, yo: false } : { e, hoy: d1, d7, yo: true };
   }).sort((a, b) => b.e.valor - a.e.valor);
-  h += `<div class="sec"><h2>Valor en tu liga</h2><span class="sub">hoy · 7 días</span></div>${filas.map((f, i) => `<button class="fila ${f.yo ? 'yo-fila' : ''}" ${f.yo ? '' : `data-r="${esc(f.e.teamId)}"`}><span class="posn ${f.yo ? 'yo' : ''}">${i + 1}</span><div class="fila-c"><div class="fila-n">${esc(f.e.nombre)}</div><div class="fila-s">${eur(f.e.valor, { dec: 1 })}${f.e.manager && f.e.manager !== f.e.nombre ? ` · ${esc(f.e.manager)}` : ''}</div></div><div class="fila-d"><div class="v ${clase(f.hoy)}">${f.hoy ? eur(f.hoy, { signo: true, dec: 1 }) : '='}</div><div class="d ${clase(f.d7)}">${f.d7 != null ? `${eur(f.d7, { signo: true, dec: 1 })} 7d` : ''}</div></div></button>`).join('')}`;
+  h += `<div class="sec"><h2>Valor en tu liga</h2><span class="sub">lo que suben sus jugadores</span></div><p class="t2 peq" style="margin:-4px 0 6px">Lo que han subido o bajado de valor los jugadores que tiene cada uno, hoy y en 7 días. No cuenta lo que entra o sale por fichajes, ventas o clausulazos.</p>${filas.map((f, i) => `<button class="fila ${f.yo ? 'yo-fila' : ''}" ${f.yo ? '' : `data-r="${esc(f.e.teamId)}"`}><span class="posn ${f.yo ? 'yo' : ''}">${i + 1}</span><div class="fila-c"><div class="fila-n">${esc(f.e.nombre)}</div><div class="fila-s">${eur(f.e.valor, { dec: 1 })}${f.e.manager && f.e.manager !== f.e.nombre ? ` · ${esc(f.e.manager)}` : ''}</div></div><div class="fila-d"><div class="v ${clase(f.hoy)}">${f.hoy ? eur(f.hoy, { signo: true, dec: 1 }) : '='}</div><div class="d ${clase(f.d7)}">${f.d7 != null ? `${eur(f.d7, { signo: true, dec: 1 })} 7d` : ''}</div></div></button>`).join('')}`;
   return h;
 }
 

@@ -1,6 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, avisoOnce } from './comunes.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores } from './ia.js';
 import { md } from './texto.js';
@@ -102,7 +102,10 @@ function tiemposHTML(S) {
 /** lo urgente de verdad (lo que no puede esperar al plan): como mucho tres cosas */
 function ahoraHTML(S) {
   const { M } = S;
-  const urg = (M.acciones || []).filter((a) => a.prio >= 78).slice(0, 3);
+  // lo que ya está en el plan no se repite aquí
+  const enPlan = new Set(Object.keys(S.opPorPid || {}));
+  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid))).slice(0, 3);
+  if (!urg.length && S.plan) return '';
   if (!urg.length) return `<div class="ahora-ok">${icono('ok')}<span><b>Nada urgente ahora mismo.</b> Ninguna cláusula tuya en peligro ni nada que vender ya.</span></div>`;
   return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<button class="ahora-f t-${esc(a.tipo)}" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b><span>${esc(a.texto)}</span></span>${a.cuando ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button>`).join('')}</div>`;
 }
@@ -118,20 +121,20 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
   const malos = xs.filter((x) => ['injured', 'suspended', 'out_of_league'].includes(x.j.estado)).length;
   const dudas = xs.filter((x) => x.j.estado === 'doubtful').length;
   const abiertas = xs.filter((x) => x.abierta).length, riesgo = xs.filter((x) => x.riesgo === 'alto').length;
+  void suben; void bajan;
   const chips = [
-    suben && `<span class="ch sube">${icono('sube')}${suben} suben</span>`,
-    bajan && `<span class="ch baja">${icono('baja')}${bajan} bajan</span>`,
     giro && `<span class="ch mal">${giro} ha${giro > 1 ? 'n' : ''} girado</span>`,
     frena && `<span class="ch duda">${frena} frenando</span>`,
     malos && `<span class="ch mal">${malos} de baja</span>`,
     dudas && `<span class="ch duda">${dudas} en duda</span>`,
-    abiertas && `<span class="ch ${riesgo ? 'mal' : ''}">${icono('abierto')}${abiertas} abierta${abiertas > 1 ? 's' : ''}${riesgo ? ` · ${riesgo} en riesgo` : ''}</span>`,
+    riesgo && `<span class="ch mal">${icono('abierto')}${riesgo} cláusula${riesgo > 1 ? 's' : ''} en riesgo</span>`,
   ].filter(Boolean);
-  const mov = xs.filter((x) => x.tend.d1).sort((a, b) => Math.abs(b.tend.d1) - Math.abs(a.tend.d1)).slice(0, 3);
+  void abiertas;
   const proy = xs.reduce((s, x) => s + num(x.inercia && x.inercia.proyJ), 0);
-  let h = `<div class="eq-hoy">${corto ? '' : `<div class="eq-hoy-t">${icono('equipo')}<b>Tu equipo hoy</b><button class="mas" data-accion="resumen">Detalle</button></div>`}<div class="chs">${chips.join('') || '<span class="ch">Sin cambios hoy</span>'}</div>`;
-  if (mov.length) h += `<p class="eq-hoy-m">Lo que más se mueve: ${mov.map((x) => `<button data-j="${esc(x.pid)}">${esc(x.j.nombre)} <b class="${clase(x.tend.d1)}">${eur(x.tend.d1, { signo: true })}</b></button>`).join(' · ')}</p>`;
-  if (M.proxima && Math.abs(proy) >= 100000) h += `<p class="eq-hoy-m">Hasta la jornada, con la inercia de cada uno: <b class="${clase(proy)}">${eur(proy, { signo: true })}</b></p>`;
+  const conProy = M.proxima && Math.abs(proy) >= 100000;
+  if (!chips.length && !conProy) return '';
+  let h = `<div class="eq-hoy">${corto ? '' : `<div class="eq-hoy-t">${icono('equipo')}<b>Tu equipo hoy</b><button class="mas" data-accion="resumen">Detalle</button></div>`}${chips.length ? `<div class="chs">${chips.join('')}</div>` : ''}`;
+  if (conProy) h += `<p class="eq-hoy-m">Hasta la jornada, con la inercia de cada uno: <b class="${clase(proy)}">${eur(proy, { signo: true })}</b></p>`;
   return h + '</div>';
 }
 
@@ -334,13 +337,9 @@ export function hoy(S) {
   h += marcador(S);
   h += tiemposHTML(S);
   h += ahoraHTML(S);
-  h += equipoHoyHTML(S);
   h += planHTML(S);
-  if (M.misVentas.length) h += `<div class="sec"><h2>Tus jugadores en venta</h2><button class="mas" data-ir="equipo" data-seg="equipo:venta">Ver</button></div>${M.misVentas.map(ventaHTML).join('')}`;
-  h += aTiroHTML(S);
-  h += ligaHTML(S);
   h += noticiasHTML(S);
-  h += movimientosHTML(S, 5);
+  void D; void M;
   return h;
 }
 
@@ -348,9 +347,9 @@ export function hoy(S) {
 function hoyAncho(S) {
   const { M } = S;
   let izq = saludoHTML(S) + ahoraHTML(S) + planHTML(S);
-  if (M.misVentas.length) izq += `<div class="sec"><h2>Tus jugadores en venta</h2><button class="mas" data-ir="equipo" data-seg="equipo:venta">Ver</button></div>${M.misVentas.map(ventaHTML).join('')}`;
   izq += noticiasHTML(S);
-  const der = marcador(S) + tiemposHTML(S) + equipoHoyHTML(S) + ligaHTML(S) + aTiroHTML(S) + movimientosHTML(S, 6);
+  void M;
+  const der = marcador(S) + tiemposHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
   return bandasHoy(S) + cols(izq, der);
 }
 function bandasHoy(S) {
@@ -423,10 +422,17 @@ export function equipo(S) {
       if (!xs.length) continue;
       l += `<div class="grupo"><span>${POS_PLURAL[p]}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       l += xs.map((x) => {
-        const f = M.forma(x.pid);
+        void titulares;
         return filaJugador(x, {
           sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}`,
-          extra: `${x.ventaInercia ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : ''}${M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : ''}${titulares.has(x.pid) ? '<span class="pill plan">En tu once</span>' : ''}${oncePill(M, x.j)}${calPill(M, x.j)}${M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : ''}${estadoPill(x.j)}${clausulaPill(x)}${f ? `<span class="pill">${f.pts.slice(-3).join(' · ')} pts</span>` : x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`,
+          pills: [
+            estadoPill(x.j),
+            x.ventaInercia && !op(x.pid) ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : '',
+            M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
+            x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
+            M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
+            avisoOnce(M, x.j), calPill(M, x.j, { soloDuro: true }),
+          ],
           conMini: true, op: op(x.pid),
         });
       }).join('');
@@ -440,8 +446,8 @@ export function equipo(S) {
     const abiertas = xs.filter((x) => x.abierta).length;
     h += `<p class="t2 peq">${abiertas ? `<b>${abiertas}</b> de tus jugadores se pueden clausular ya.` : 'Todos tus jugadores están protegidos ahora.'} Si te clausulan a uno, cobras su cláusula: el riesgo es perder lo que te puntúa. Con la cláusula un 30 % o más por encima de su valor (o por encima de lo que se paga en los clausulazos de tu liga) no hay riesgo, y menos si está bajando.</p>`;
     const filaCl = (x) => filaJugador(x, {
-      sub: x.abierta ? `<span class="rojo">Abierta</span> · cláusula ${eur(x.clausula)}` : `Se abre ${cuando(x.protegidoHasta)} · ${eur(x.clausula)}`,
-      extra: `<span class="pill ${x.riesgo === 'alto' ? 'mal' : x.riesgo === 'medio' ? 'duda' : ''}">${x.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${x.riesgo}`}</span>${x.ratio ? `<span class="pill">${pct((x.ratio - 1) * 100, 0)} sobre su valor</span>` : ''}${x.pagan && (x.abierta || x.abreEn < 3 * DIA) && (x.pagan.seguro.length || x.pagan.quiza.length) ? `<span class="pill ${x.pagan.seguro.length ? 'mal' : 'duda'}">${icono('rivales')}Le llega a ${x.pagan.seguro.length + x.pagan.quiza.length}</span>` : x.pagan && x.pagan.hayDatos && x.abierta ? '<span class="pill bien">No le llega a nadie</span>' : ''}${x.blindaje && !x.blindaje.yaVale && !x.blindaje.caro ? `<span class="pill">Blindar a ${eur(x.blindaje.objetivo, { dec: 1 })}: ${eur(x.blindaje.coste, { dec: 1 })}</span>` : ''}`,
+      sub: `${x.abierta ? `<span class="rojo">Abierta</span> · cláusula ${eur(x.clausula)}` : `Se abre ${cuando(x.protegidoHasta)} · ${eur(x.clausula)}`}${x.ratio ? ` (${pct((x.ratio - 1) * 100, 0)})` : ''}`,
+      extra: `<span class="pill ${x.riesgo === 'alto' ? 'mal' : x.riesgo === 'medio' ? 'duda' : ''}">${x.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${x.riesgo}`}</span>${x.pagan && (x.abierta || x.abreEn < 3 * DIA) && (x.pagan.seguro.length || x.pagan.quiza.length) ? `<span class="pill ${x.pagan.seguro.length ? 'mal' : 'duda'}">${icono('rivales')}Le llega a ${x.pagan.seguro.length + x.pagan.quiza.length}</span>` : x.pagan && x.pagan.hayDatos && x.abierta ? '<span class="pill bien">No le llega a nadie</span>' : ''}${x.blindaje && !x.blindaje.yaVale && !x.blindaje.caro ? `<span class="pill">Blindar a ${eur(x.blindaje.objetivo, { dec: 1 })}: ${eur(x.blindaje.coste, { dec: 1 })}</span>` : ''}`,
       derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d apag">${x.abierta ? 'abierta' : dura(x.abreEn)}</div>`, op: op(x.pid),
     });
     const grupos = [['Abiertas: te los pueden quitar ya', xs.filter((x) => x.abierta)], ['Se abren en menos de 48 h', xs.filter((x) => !x.abierta && x.abreEn < 2 * DIA)], ['Protegidos', xs.filter((x) => !x.abierta && x.abreEn >= 2 * DIA)]];
@@ -480,7 +486,7 @@ export function rivales(S) {
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} 7d</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>` : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : ''}${r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}${r.movs ? `<span class="pill">${r.movs} mov. 7d</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>` : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div><div class="d apag">pts${e.puntosJornada ? ` · ${e.puntosJornada} últ.` : ''}</div></div></button>`;
     }).join('');
@@ -488,16 +494,15 @@ export function rivales(S) {
     h += ancho() ? cols(tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : tabla;
   } else if (seg === 'clausulas') {
     const f = S.filtro.cl || 'llegan';
-    h += `<div class="filtros">${[['llegan', 'Te llegan'], ['abiertas', 'Abiertas'], ['hoy', 'Se abren hoy'], ['semana', 'Esta semana'], ['todas', 'Todas']].map(([k, t]) => `<button data-filtro="cl:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
+    h += `<div class="filtros">${[['llegan', 'Te llegan'], ['pronto', 'Se abren pronto'], ['todas', 'Todas']].map(([k, t]) => `<button data-filtro="cl:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
     let xs = M.clausulas;
-    if (f === 'llegan') xs = xs.filter((x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA));
-    if (f === 'abiertas') xs = xs.filter((x) => x.abierta);
-    if (f === 'hoy') xs = xs.filter((x) => !x.abierta && x.abreEn < 24 * HORA).sort((a, b) => a.abreEn - b.abreEn);
-    if (f === 'semana') xs = xs.filter((x) => !x.abierta && x.abreEn < 7 * DIA).sort((a, b) => a.abreEn - b.abreEn);
+    if (f === 'llegan' || f === 'abiertas') xs = xs.filter((x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA));
+    if (f === 'pronto' || f === 'hoy' || f === 'semana') xs = xs.filter((x) => !x.abierta && x.abreEn < 7 * DIA).sort((a, b) => a.abreEn - b.abreEn);
+    void HORA;
     h += `<p class="t2 peq">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>. La barra es lo que te interesa: rendimiento, si sube y lo que cuesta sobre su valor.</p>`;
     h += xs.length ? lista2(xs.slice(0, 80).map((x) => filaJugador(x, {
       sub: `de ${esc(x.rival.manager || x.rival.nombre)} · vale ${eur(x.j.valor)}`,
-      extra: `${clausulaPill(x)}${oncePill(M, x.j)}${calPill(M, x.j)}${estadoPill(x.j)}${x.meLlega ? '' : '<span class="pill">No te llega</span>'}`,
+      pills: [clausulaPill(x), estadoPill(x.j), avisoOnce(M, x.j), calPill(M, x.j, { soloDuro: true }), x.meLlega ? '' : '<span class="pill">No te llega</span>'],
       derecha: `<div class="v">${eur(x.clausula)}</div><div class="d">${barra(x.interes)} <span class="t2">${x.interes}</span></div>`, op: S.opPorPid[x.pid],
     })).join('')) : nada('Ninguna con este filtro.');
   } else {
@@ -520,28 +525,32 @@ export function rivales(S) {
 /* ================= MERCADO ================= */
 export function mercado(S) {
   const { M } = S;
-  const seg = S.seg.mercado || 'venta';
+  let seg = S.seg.mercado || 'venta';
+  // las antiguas Suben / Bajan / Libres son ahora filtros de Tendencias
+  if (['suben', 'bajan', 'libres'].includes(seg)) { S.filtro.tend = seg; seg = S.seg.mercado = 'tendencias'; }
   let h = `<div class="eti">${M.cierreMercado ? `Cambia ${cuando(M.cierreMercado)} · en ${dura(M.cierreMercado - Date.now())}` : 'Mercado de hoy'}</div><div class="titulo">Mercado</div><p class="entradilla">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>.</p>`;
-  h += tabs('mercado', seg, [['venta', 'En venta', M.mercado.filter((m) => !M.enVenta.has(m.pid)).length], ['especular', 'Especular', (M.especular || []).length, (M.especular || []).length ? 'verde' : ''], ['suben', 'Suben'], ['bajan', 'Bajan'], ['libres', 'Libres']]);
+  h += tabs('mercado', seg, [['venta', 'Fichar', M.mercado.filter((m) => !M.enVenta.has(m.pid)).length], ['especular', 'Especular', (M.especular || []).length, (M.especular || []).length ? 'verde' : ''], ['tendencias', 'Tendencias']]);
   const tagV = { chollo: '<span class="pill chollo">Chollo</span>', sube: '<span class="pill bien">Subiendo</span>', caro: '<span class="pill duda">Caro</span>', evitar: '<span class="pill mal">Evitar</span>', baja: '<span class="pill mal">Bajando</span>', frena: '<span class="pill duda">Frenando</span>', normal: '' };
   const dueno = (pid) => { const t = M.dueno[pid]; if (!t) return 'Libre'; if (t === S.D.yo.teamId) return '<span class="rojo">Tuyo</span>'; return esc((M.equipo[t] || {}).manager || (M.equipo[t] || {}).nombre || 'Rival'); };
 
   if (seg === 'venta') {
     const liga = M.mercado.filter((m) => m.tipo === 'liga'), man = M.mercado.filter((m) => m.tipo === 'manager' && !M.enVenta.has(m.pid));
-    // de un vistazo: lo que hay, lo que interesa, tus pujas
-    const chollos = M.mercado.filter((m) => m.veredicto === 'chollo').length, interesan = M.mercado.filter((m) => m.interes >= 60 && m.meLlega).length;
     const misPujasN = M.mercado.filter((m) => m.miPuja).length;
-    h += `<div class="chs" style="margin:2px 0 6px">${liga.length ? `<span class="ch">${liga.length} libres</span>` : ''}${man.length ? `<span class="ch">${man.length} con dueño</span>` : ''}${chollos ? `<span class="ch sube">${chollos} chollo${chollos > 1 ? 's' : ''}</span>` : ''}${interesan ? `<span class="ch sube">${interesan} te interesan y te llegan</span>` : ''}${misPujasN ? `<span class="ch duda">${misPujasN} puja${misPujasN > 1 ? 's' : ''} tuya${misPujasN > 1 ? 's' : ''} · ${eur(M.misPujas, { dec: 1 })}</span>` : ''}</div>`;
-    if (M.misVentas.length) h += `<div class="grupo"><span>Los tuyos en venta</span><span>${M.misVentas.length}</span></div>${M.misVentas.map(ventaHTML).join('')}`;
+    if (misPujasN) h += `<p class="t2 peq" style="margin:0 0 6px">Tienes ${misPujasN} puja${misPujasN > 1 ? 's' : ''} hecha${misPujasN > 1 ? 's' : ''} por ${eur(M.misPujas)} en total.</p>`;
+    if (M.misVentas.length) h += `<p class="t2 peq" style="margin:0 0 6px">Lo que tienes tú en venta está en <button class="rojo" data-ir="equipo" data-seg="equipo:venta">Equipo → En venta</button>.</p>`;
     const fila = (m) => filaJugador(m, {
-      sub: `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
-      extra: `${m.tipo === 'manager' ? `<span class="pill vende">${icono('usuario')}Lo vende ${esc(m.vendedor || 'un manager')}</span>` : '<span class="pill libre">Libre</span>'}${tagV[m.veredicto] || ''}${oncePill(M, m.j)}${calPill(M, m.j)}${estadoPill(m.j)}${m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertas ? `<span class="pill">${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''}</span>` : ''}${m.tipo === 'manager' && m.ofertaLiga ? `<span class="pill" title="Lo que le daría LaLiga si nadie se lo compra">LaLiga ≈ ${eur(m.ofertaLiga.v)}</span>` : ''}${m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : m.tipo === 'liga' ? `<span class="pill">Puja ${eur(m.puja)}</span>` : ''}`,
-      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div><div class="d">${barra(m.interes)}</div>`, op: S.opPorPid[m.pid],
+      sub: m.tipo === 'manager' ? `${esc(m.j.equipo)} · lo vende <b>${esc(m.vendedor || 'un manager')}</b>` : `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
+      pills: [
+        m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : '',
+        estadoPill(m.j), tagV[m.veredicto] || '', avisoOnce(M, m.j), calPill(M, m.j, { soloDuro: true }),
+        m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : '',
+      ],
+      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
     });
     const PL = M.pujasLiga;
-    const pagaTxt = PL && !PL.poco ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga los libres se llevan de mediana con un <b>${pct(PL.med * 100)}</b> sobre su valor (la mitad entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)}; ${PL.n} compras de las últimas semanas). La puja que te propongo sale de ahí y de lo que te interesa cada uno.</p>` : '';
-    let ml = liga.length ? `<div class="grupo"><span>Libres de la liga · subasta a ciegas</span><span>${liga.length}</span></div>${pagaTxt}${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
-    if (man.length) ml += `<div class="grupo"><span>Con dueño · los vende otro manager</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos: el precio lo pone él y solo son tuyos si acepta tu oferta.</p>${man.map(fila).join('')}`;
+    const pagaTxt = PL && !PL.poco ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga se llevan con un <b>${pct(PL.med * 100)}</b> sobre su valor de mediana. A la derecha, la puja que te propongo.</p>` : '';
+    let ml = liga.length ? `<div class="grupo"><span>Libres · subasta a ciegas</span><span>${liga.length}</span></div>${pagaTxt}${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
+    if (man.length) ml += `<div class="grupo"><span>Los vende otro manager</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos: solo son tuyos si acepta tu oferta.</p>${man.map(fila).join('')}`;
     h += lista2(ml);
   } else if (seg === 'especular') {
     const v = M.ventanaEsp;
@@ -555,13 +564,17 @@ export function mercado(S) {
         derecha: `<div class="v sube">${eur(e.beneficio, { signo: true })}</div><div class="d apag">${pct(e.pct * 100)}</div>`, op: S.opPorPid[e.pid],
       })).join('')) : nada('Ahora mismo nada sube lo bastante como para sacarle beneficio antes de la jornada.');
     }
-  } else if (seg === 'suben' || seg === 'bajan') {
-    const xs = seg === 'suben' ? M.suben : M.bajan;
-    h += `<p class="t2 peq">Toda LaLiga. ${seg === 'suben' ? 'Comprar antes de que suban es cómo se saca beneficio.' : 'Si tienes alguno, piensa en venderlo antes de que pierda más.'}</p>`;
-    h += xs.length ? lista2(xs.map((x) => filaJugador({ j: x.j, tend: x.t }, { sub: `${esc(x.j.equipo)} · ${dueno(x.j.id)}`, conMini: true, op: S.opPorPid[x.j.id] })).join('')) : nada('Aún no hay subidas: futbolfantasy.com no ha contestado y la app necesita un par de días de histórico.');
   } else {
-    h += `<p class="t2 peq">Nadie los tiene en tu liga. Ordenados por lo que interesan: pueden salir en el mercado cualquier día.</p>`;
-    h += lista2(M.libresBuenos.map((x) => filaJugador({ j: x.j, tend: x.t }, { extra: `${estadoPill(x.j)}${x.j.media ? `<span class="pill">${String(x.j.media).replace('.', ',')} pts/p</span>` : ''}`, derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d">${barra(x.i.n)}</div>` })).join('') || nada('Sin datos.'));
+    const f = S.filtro.tend || 'suben';
+    h += `<div class="filtros">${[['suben', 'Suben'], ['bajan', 'Bajan'], ['libres', 'Sin dueño']].map(([k, t]) => `<button data-filtro="tend:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
+    if (f === 'libres') {
+      h += `<p class="t2 peq">Nadie los tiene en tu liga. Ordenados por lo que interesan: pueden salir en el mercado cualquier día.</p>`;
+      h += lista2(M.libresBuenos.map((x) => filaJugador({ j: x.j, tend: x.t }, { pills: [estadoPill(x.j)], sub: `${esc(x.j.equipo)}${x.j.media ? ` · ${String(Math.round(x.j.media * 10) / 10).replace('.', ',')} pts por partido` : ''}`, derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d">${delta(x.t)}</div>` })).join('') || nada('Sin datos.'));
+    } else {
+      const xs = f === 'suben' ? M.suben : M.bajan;
+      h += `<p class="t2 peq">Toda LaLiga. ${f === 'suben' ? 'Comprar antes de que suban es cómo se saca beneficio.' : 'Si tienes alguno, piensa en venderlo antes de que pierda más.'}</p>`;
+      h += xs.length ? lista2(xs.map((x) => filaJugador({ j: x.j, tend: x.t }, { sub: `${esc(x.j.equipo)} · ${dueno(x.j.id)}`, conMini: true, op: S.opPorPid[x.j.id] })).join('')) : nada('Aún no hay subidas: futbolfantasy.com no ha contestado y la app necesita un par de días de histórico.');
+    }
   }
   return h;
 }

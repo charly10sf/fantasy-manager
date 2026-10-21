@@ -9,8 +9,10 @@ export const VERSION = '0.3.3';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.3.3', f: '2026-10-21', h: '22:15', t: 'El plan, desde arriba',
+    v: '0.3.3', f: '2026-10-21', h: '22:15', t: 'Menos cosas a la vez',
     cosas: [
+      { tipo: 'mejora', d: 'lupa', t: 'Menos cosas a la vista', x: 'Cada fila de jugador lleva como mucho 3 etiquetas, las que avisan de algo (lesión, que ha girado, suplente, calendario duro…): lo normal, como ser titular o lo que pone el título de la sección, ya no se repite, y el resto está en su ficha. Hoy se queda con el marcador, lo urgente que no está en el plan, el plan y las noticias: tus ventas, las cláusulas a tiro, la clasificación y los movimientos están en su pestaña. Mercado pasa de 5 pestañas a 3 (Fichar, Especular y Tendencias, con Suben, Bajan y Sin dueño dentro), la puja que te propongo va a la derecha de cada libre, y lo tuyo en venta está solo en Equipo. En Rivales, las cláusulas tienen 3 filtros en vez de 5.', ir: { v: 'mercado' } },
+      { tipo: 'arreglo', d: 'grafica', t: 'El valor de los rivales, sin las ventas', x: 'En «Valor en tu liga» salían bajadas de 20 o 67 M porque se restaba el valor del equipo de ayer al de hoy, y si un manager vende o le clausulan a uno de 60 M, su equipo «baja» 60 M aunque el mercado no se haya movido. Ahora es lo que han subido o bajado los jugadores que tiene cada uno, hoy y en 7 días, igual que el tuyo. La IA lo ve igual.', ir: { v: 'rivales' } },
       { tipo: 'mejora', d: 'ia', t: 'Rehacer el plan, arriba', x: 'El botón para rehacer el plan con la IA está ahora en la barra de arriba («Plan IA», al lado de «Actualizar» y «Ajustes», que ahora también llevan su nombre), así que lo tienes en cualquier pestaña: te lleva a Hoy y se pone a hacerlo. Mientras trabaja pone «Pensando…». Y «Cuéntale algo» sale de Hoy: para contarle cosas a la IA (un trato con un amigo, a quién no quieres vender) está el micro y la caja de Pregunta, y allí ves también lo que le has contado.' },
     ],
   },
