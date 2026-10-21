@@ -5,7 +5,7 @@
 const N = typeof window !== 'undefined' && window.FantasyApp ? window.FantasyApp : null;
 export const enApp = !!N;
 /** el Worker publicado (lo usa la web para todo y la app para dejar la sesión con un código) */
-export const WORKER_PUBLICO = 'https://fantasy-manager.growfolio-web-app.workers.dev';
+export const WORKER_PUBLICO = 'https://fantasy-manager.fantasymanager-web-app.workers.dev';
 /** el Worker de la web: el publicado en GitHub Pages; para probar en local, el que diga localStorage «fm-worker» */
 export const WORKER = (() => {
   if (N) return WORKER_PUBLICO;

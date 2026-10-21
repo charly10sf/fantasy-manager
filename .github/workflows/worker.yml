@@ -1,6 +1,6 @@
 # Publica el Worker de Fantasy Manager (worker/) en Cloudflare: lo que usa la versión web para hablar con LaLiga
 # y las webs de datos, y los códigos para entrar en el ordenador con la sesión de la app.
-# Hace falta en GitHub (Settings > Secrets and variables > Actions) lo mismo que en GrowFolio:
+# Hace falta en GitHub (Settings > Secrets and variables > Actions), de su cuenta de Cloudflare (no la de GrowFolio):
 #   CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID
 # El almacén de los códigos (KV «VINCULOS») se crea solo la primera vez si el token tiene permiso; si no, los
 # códigos van en la caché del Worker.
