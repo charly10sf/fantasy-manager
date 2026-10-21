@@ -489,6 +489,21 @@ export function analizar(D, H, c, extra = {}) {
     for (const v of D.misVentas || []) for (const o of v.ofertas || []) if (o.deLiga && o.importe && J(v.pid).valor) r.push(o.importe / J(v.pid).valor - 1);
     M.ofertaLiga = r.length ? { n: r.length, med: q(r, 0.5), p25: q(r, 0.25), p75: q(r, 0.75), poco: r.length < 3 } : null;
   }
+  /* ---------- lo que se paga en tu liga en los clausulazos ---------- */
+  // cada cláusula pagada frente a lo que valía el jugador ese día: dice hasta dónde llega la gente de tu liga
+  {
+    const q = (l, p) => { const o = [...l].sort((a, b) => a - b); const i = (o.length - 1) * p, b = Math.floor(i); return o[b] + (o[Math.min(o.length - 1, b + 1)] - o[b]) * (i - b); };
+    const r = [];
+    for (const a of AH.lista) {
+      if (a.clase !== 'clausula' || !a.pid || !a.importe || !a.t) continue;
+      const v = valorEn(a.pid, a.t - 3 * HORA);
+      if (!v) continue;
+      const s0 = Math.abs(num(a.importe)) / v - 1;
+      if (s0 > -0.1 && s0 < 3) r.push(s0);
+    }
+    M.clausulazos = r.length ? { n: r.length, med: q(r, 0.5), p75: q(r, 0.75), p90: q(r, 0.9), max: Math.max(...r) } : null;
+  }
+
   /** lo que ofrecería LaLiga por un jugador: su valor ajustado con lo que suele ofrecer en tu liga */
   M.ofertaLigaDe = (j) => {
     if (!j || !j.valor) return null;
@@ -753,11 +768,18 @@ export function analizar(D, H, c, extra = {}) {
     x.ganado = compra ? x.j.valor - compra : null;
     // riesgo de que te lo quiten. Si te lo clausulan, cobras su cláusula: lo que pierdes de verdad son sus puntos en tu
     // once (y lo que fuera a subir). Así que cuenta lo cerca que está la cláusula de su valor y lo que te aporta
+    // nadie paga mucho más de lo que vale un jugador: por encima de un 30 % no hay riesgo, y si en tu liga los
+    // clausulazos nunca pasan de cierto %, por encima de eso tampoco
     let r = 0;
     if (x.ratio != null && x.clausula) {
-      if (x.abierta) r = x.ratio < 1.15 ? 3 : x.ratio < 1.3 ? 2 : x.ratio < 1.6 ? 1 : 0;
-      else if (x.abreEn < 36 * HORA) r = x.ratio < 1.15 ? 2 : x.ratio < 1.3 ? 1 : 0;
+      if (x.abierta) r = x.ratio < 1.1 ? 3 : x.ratio < 1.2 ? 2 : x.ratio < 1.3 ? 1 : 0;
+      else if (x.abreEn < 36 * HORA) r = x.ratio < 1.1 ? 2 : x.ratio < 1.2 ? 1 : 0;
     }
+    const CZ = M.clausulazos;
+    if (r && CZ && CZ.n >= 3 && x.ratio - 1 > Math.max(CZ.p90, 0.05) + 0.03) r = 0;
+    // y si está bajando, menos: nadie paga de más por uno que pierde valor
+    const ineR = M.inercia(x.pid);
+    if (r && ineR && ['giro', 'baja', 'parado'].includes(ineR.fase)) r = Math.max(0, r - 1);
     x.pierde = M.perdida(x.pid);
     // o uno que está subiendo bien: si te lo quitan a su valor, pierdes lo que iba a subir
     const sube = (() => { const ine = M.inercia(x.pid); return !!ine && (ine.fase === 'sube' || ine.fase === 'acelera') && ine.proyJ >= Math.max(400000, x.j.valor * 0.04); })();
@@ -768,7 +790,7 @@ export function analizar(D, H, c, extra = {}) {
     x.pagan = x.clausula ? M.quienPaga(x.clausula) : null;
     if (r && x.pagan) {
       const p = x.pagan;
-      if (p.seguro.length >= 2) r = Math.min(3, r + 1);
+      if (p.seguro.length >= 2 && x.ratio < 1.15) r = Math.min(3, r + 1);
       else if (p.hayDatos && !p.seguro.length && !p.quiza.length) r = Math.min(r, p.sinSaber.length ? 2 : 1);
     }
     x.riesgo = ['ninguno', 'bajo', 'medio', 'alto'][r];
