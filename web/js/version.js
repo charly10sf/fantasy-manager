@@ -9,7 +9,7 @@ export const VERSION = '0.3.1';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.3.1', f: '2026-10-21', h: '20:45', t: 'El calendario de riesgo',
+    v: '0.3.1', f: '2026-10-21', h: '21:23', t: 'El calendario de riesgo',
     cosas: [
       { tipo: 'nuevo', d: 'semaforo', t: 'Calendario de riesgo', x: 'En la ficha de cada jugador están sus próximos 5 partidos (o todos los de los 14 días que tendría la cláusula protegida si lo fichas, si son más): contra quién, en casa o fuera, lo difícil que es para él (a un defensa le pesa el rival que marca mucho; a un delantero, el que no encaja), los puntos que se esperan en cada uno y su titularidad, con la rotación si su equipo juega Champions o Copa cerca. De ahí sale si el calendario es duro, normal o favorable y el riesgo de ficharlo. Si es duro o no es seguro que juegue, la app y la IA solo te lo proponen de parche (si te falta gente sana en ese puesto) y sin pagar más de un 5 % sobre su valor, y la puja que te sugieren se queda en ese tope. En las listas lo ves con «Calendario duro» o «Calendario favorable».', ir: { v: 'mercado' } },
       { tipo: 'nuevo', d: 'camiseta', t: 'Logo nuevo', x: 'Adiós al escudo: ahora es una camiseta roja vista de espaldas, con MANAGER donde va el nombre y el 11 de dorsal, por tu once. Sale en el icono del móvil, en el de los avisos, en la pestaña del navegador y arriba en la app. Si usas iconos con tema en Android, también tiene su versión de un color.' },
