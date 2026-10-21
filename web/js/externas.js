@@ -337,7 +337,7 @@ async function sofascore(D, pids) {
  */
 async function calendarioSofa(D, sid) {
   const guardado = LS.get('sofa-cal', null);
-  if (guardado && Date.now() - guardado.t < 20 * HORA && Object.keys(guardado.equipos || {}).length) return guardado.equipos;
+  if (guardado && guardado.v === 2 && Date.now() - guardado.t < 20 * HORA && Object.keys(guardado.equipos || {}).length) return guardado.equipos;
   const ids = LS.get('sofa-equipos', {});
   if (Object.keys(ids).length < 15) {
     const st = await pedirJSON(`${SOFA}/unique-tournament/8/season/${sid}/standings/total`, SOFA_CAB, 'sofascore clasificación');
@@ -358,11 +358,12 @@ async function calendarioSofa(D, sid) {
       const lista = [];
       for (const ev of (r && r.events) || []) {
         const t = n0(ev.startTimestamp) * 1000;
-        if (!t || t > Date.now() + 25 * DIA) continue;
         const ut = (ev.tournament && ev.tournament.uniqueTournament) || {};
+        // los de otras competiciones, para la rotación (los próximos 25 días); los de LaLiga, todos (para el historial)
+        if (!t || (ut.id !== 8 && t > Date.now() + 25 * DIA)) continue;
         const casa = ev.homeTeam && ev.homeTeam.id === sofaId;
         const otro = casa ? ev.awayTeam : ev.homeTeam;
-        lista.push({ t, comp: ut.name || (ev.tournament && ev.tournament.name) || '', liga: ut.id === 8, rival: (otro && (otro.shortName || otro.name)) || '', casa });
+        lista.push({ t, comp: ut.name || (ev.tournament && ev.tournament.name) || '', liga: ut.id === 8, rival: (otro && (otro.shortName || otro.name)) || '', casa, cid: ev.customId || null, yoS: sofaId, rivalS: (otro && otro.id) || null });
       }
       // los que ya tenía guardados de los últimos días (un partido de anteayer también cansa)
       const viejos = ((guardado && guardado.equipos && guardado.equipos[eq]) || []).filter((x) => x.t < Date.now() && Date.now() - x.t < 6 * DIA && !lista.some((y) => Math.abs(y.t - x.t) < HORA));
@@ -371,14 +372,61 @@ async function calendarioSofa(D, sid) {
       if (e.estado === 403 || e.estado === 429) bloqueado = true;
     }
   });
-  if (Object.keys(equipos).length) LS.set('sofa-cal', { t: Date.now(), equipos });
+  if (Object.keys(equipos).length) LS.set('sofa-cal', { v: 2, t: Date.now(), equipos });
   return equipos;
+}
+
+/**
+ * el historial de enfrentamientos de los próximos partidos de LaLiga (SofaScore, todas las competiciones): por
+ * cada pareja de equipos, sus últimos partidos ya jugados. Cambia una vez por partido: se guarda 7 días, y cada vez
+ * se piden como mucho 16 parejas nuevas (primero las de los equipos de tus jugadores y los que te interesan).
+ * { [sofaA-sofaB]: { t, ev: [{ t, h, a, gh, ga, comp }] } } (h y a: ids de SofaScore del local y el visitante)
+ */
+async function historialSofa(D, calendario, equiposFoco) {
+  const guardado = LS.get('sofa-h2h', {});
+  const pares = {};
+  for (const [k, v] of Object.entries(guardado)) if (v && Date.now() - v.t < 30 * DIA) pares[k] = v;
+  const pendientes = [];
+  const vistos = new Set();
+  const orden = Object.keys(calendario || {}).sort((a, b) => (equiposFoco.has(b) ? 1 : 0) - (equiposFoco.has(a) ? 1 : 0));
+  for (const eq of orden) {
+    for (const x of calendario[eq] || []) {
+      if (!x.liga || !x.cid || !x.yoS || !x.rivalS || x.t < Date.now() - 3 * HORA) continue;
+      const clave = [x.yoS, x.rivalS].sort((a, b) => a - b).join('-');
+      if (vistos.has(clave)) continue;
+      vistos.add(clave);
+      if (pares[clave] && Date.now() - pares[clave].t < 7 * DIA) continue;
+      pendientes.push({ clave, cid: x.cid });
+    }
+  }
+  let bloqueado = false;
+  await enParalelo(pendientes.slice(0, 16), 2, async ({ clave, cid }) => {
+    if (bloqueado) return;
+    try {
+      const r = await pedirJSON(`${SOFA}/event/${encodeURIComponent(cid)}/h2h/events`, SOFA_CAB, `sofascore historial ${clave}`);
+      const ev = [];
+      for (const e of (r && r.events) || []) {
+        const gh = e.homeScore && e.homeScore.current, ga = e.awayScore && e.awayScore.current;
+        const t = n0(e.startTimestamp) * 1000;
+        if (gh == null || ga == null || !t || t > Date.now() || (e.status && e.status.type && e.status.type !== 'finished')) continue;
+        const ut = (e.tournament && e.tournament.uniqueTournament) || {};
+        ev.push({ t, h: e.homeTeam && e.homeTeam.id, a: e.awayTeam && e.awayTeam.id, gh: n0(gh), ga: n0(ga), comp: ut.name || '' });
+      }
+      ev.sort((a, b) => b.t - a.t);
+      pares[clave] = { t: Date.now(), ev: ev.slice(0, 6) };
+    } catch (e) {
+      if (e.estado === 403 || e.estado === 429) bloqueado = true;
+    }
+  });
+  LS.set('sofa-h2h', pares);
+  return pares;
 }
 
 /** estadísticas avanzadas de los tuyos y los candidatos (se guardan 12 horas) */
 export async function avanzadas(D, M, pidsFoco = []) {
   const guardado = LS.get('avanzadas', null);
-  if (guardado && Date.now() - guardado.t < 12 * HORA && guardado.liga === (D.liga && D.liga.id)) return guardado;
+  // (lo guardado antes del historial de enfrentamientos se rehace una vez para traerlo)
+  if (guardado && guardado.h2h && Date.now() - guardado.t < 12 * HORA && guardado.liga === (D.liga && D.liga.id)) return guardado;
   const out = { t: Date.now(), liga: D.liga && D.liga.id, jugadores: {}, sofa: {}, equipos: {}, fuentes: {} };
   try {
     const u = await understat();
@@ -398,6 +446,13 @@ export async function avanzadas(D, M, pidsFoco = []) {
       const otros = Object.values(out.calendario).reduce((n, l) => n + l.filter((x) => !x.liga).length, 0);
       out.fuentes.calendario = `${Object.keys(out.calendario).length} equipos, ${otros} partidos fuera de LaLiga`;
     } catch (e) { out.fuentes.calendario = `no responde (${e.message})`; }
+    try {
+      // primero los equipos de los tuyos y de los que te interesan
+      const foco = new Set(pidsFoco.map((pid) => (D.maestro[pid] || {}).equipoId).filter(Boolean));
+      out.h2h = await historialSofa(D, out.calendario || {}, foco);
+      out.sofaEquipos = LS.get('sofa-equipos', {});
+      out.fuentes.historial = `${Object.keys(out.h2h).length} parejas de equipos`;
+    } catch (e) { out.fuentes.historial = `no responde (${e.message})`; }
   }
   if (Object.keys(out.jugadores).length || Object.keys(out.sofa).length || Object.keys(out.calendario || {}).length) LS.set('avanzadas', out);
   return out;

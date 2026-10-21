@@ -50,6 +50,14 @@ export function rivalSub(M, j) {
 }
 
 /** los próximos tres partidos de su equipo, cada uno con su color */
+/** los últimos enfrentamientos con un rival: V, E o D, de la más vieja a la más nueva (con el marcador al pasar por encima) */
+export function h2hHTML(h2h, rival = '') {
+  if (!h2h || !h2h.length) return '';
+  const fecha = (e) => (e.t ? new Date(e.t).toLocaleDateString('es-ES', { month: 'short', year: '2-digit' }) : `J${e.jornada || '?'}`);
+  const txt = h2h.map((e) => `${e.r === 'V' ? 'ganó' : e.r === 'E' ? 'empató' : 'perdió'} ${e.gf}-${e.gc} ${e.casa ? 'en casa' : 'fuera'} (${e.comp || 'LaLiga'}, ${fecha(e)})`).join('; ');
+  return `<span class="cr-h2h" title="${esc(txt)}" aria-label="${esc(`Últimas veces contra ${rival}: ${txt}`)}">${h2h.map((e) => `<i class="h-${e.r}">${e.r}</i>`).join('')}</span>`;
+}
+
 /**
  * el calendario de riesgo en la ficha: sus próximos partidos (5, o los de sus 14 días protegido si son más), cada
  * uno con el rival, lo difícil que es para él, los puntos que se esperan y si será titular; y el veredicto
@@ -63,7 +71,7 @@ export function calendarioHTML(M, j, mio = false) {
   const riesgo = mio ? '' : `<span class="cr-r ${c.riesgo}">Riesgo ${c.riesgo}</span>`;
   const filas = c.partidos.map((p) => `<div class="cr-p ${nivelCls(p.nivel)}">
       <span class="cr-j">J${p.jornada}<small>${p.sinFecha ? 'sin fecha' : esc(cuando(p.fecha, { hora: false }))}</small></span>
-      <span class="cr-ri"><b>${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b><small>${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small></span>
+      <span class="cr-ri"><b>${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b><small>${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small>${h2hHTML(p.h2h, p.rival)}</span>
       <span class="cr-n"><b>~${d1(p.pts)}</b><small>pts</small></span>
       <span class="cr-n"><b>${p.pTit == null ? '–' : `${Math.round(p.pTit * 100)}%`}</b><small>titular</small></span>
     </div>`).join('');
@@ -87,10 +95,12 @@ export function calendarioHTML(M, j, mio = false) {
         : c.tipo === 'favorable' ? 'Le vienen partidos buenos: buen momento para tenerlo en el once.' : '';
     }
   }
+  const conH2h = c.partidos.some((p) => p.h2h && p.h2h.length);
   return `<div class="cal-riesgo ${c.tipo}">
     <div class="cr-cab"><b>${titulo}</b>${riesgo}</div>
     <p class="cr-txt">${esc(c.texto)}</p>
     <div class="cr-lista">${filas}</div>
+    ${conH2h ? `<p class="cr-ley">V, E y D: cómo le fue a su equipo las últimas veces contra ese rival (la de la derecha es la más reciente). Cuenta poco: pesa más cómo están ahora.</p>` : ''}
     ${consejo ? `<p class="cr-consejo">${esc(consejo)}</p>` : ''}
   </div>`;
 }

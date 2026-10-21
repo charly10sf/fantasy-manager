@@ -393,6 +393,11 @@ main { padding: 16px 16px 120px; }
 .cr-ri b { font: 700 15.5px var(--cond); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cr-n { text-align: right; align-items: flex-end; }
 .cr-n b { font: 700 15.5px var(--cond); font-variant-numeric: tabular-nums; }
+.cr-h2h { display: flex; gap: 3px; margin-top: 4px; }
+.cr-h2h i { width: 18px; height: 18px; border-radius: 4px; font: 700 12px/18px 'Barlow'; font-style: normal; text-align: center; background: var(--plano3); color: var(--texto2); }
+.cr-h2h i.h-V { background: var(--sube-s); color: var(--sube); }
+.cr-h2h i.h-D { background: var(--baja-s); color: var(--baja); }
+.cr-ley { margin: 8px 0 0; font-size: 13px; line-height: 1.4; color: var(--apagado); }
 .cr-consejo { margin: 10px 0 0; font-size: 14px; line-height: 1.4; font-weight: 600; }
 .cargando-ia .p2 { margin-top: 10px; font-size: 13px; color: var(--apagado); }
 

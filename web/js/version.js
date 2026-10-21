@@ -1,13 +1,19 @@
 // La versión de la app. La Action de Android la lee de aquí para nombrar el APK.
 // Numeración: la 0.1.0 es la primera completa (las anteriores pasaron a ser la 0.0.1 a la 0.0.11). A partir de
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
-export const VERSION = '0.3.3';
+export const VERSION = '0.3.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.3.4', f: '2026-10-22', h: '00:55', t: 'Cómo le fue contra cada rival',
+    cosas: [
+      { tipo: 'nuevo', d: 'semaforo', t: 'V, E y D contra cada rival', x: 'En el calendario de la ficha de cada jugador, debajo de cada rival salen sus últimos enfrentamientos: V si ganó su equipo, E si empató y D si perdió, de la más vieja a la más reciente (idea de Domy). Salen de SofaScore, con todas las competiciones; si no hay, lo de esta temporada en LaLiga. Cuenta poco en la dificultad del partido (como mucho un 4 %), porque pesa más cómo están ahora los dos equipos, y la IA también lo ve.' },
+    ],
+  },
   {
     v: '0.3.3', f: '2026-10-21', h: '22:35', t: 'Menos cosas a la vez',
     cosas: [

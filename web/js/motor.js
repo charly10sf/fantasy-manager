@@ -785,6 +785,26 @@ export function analizar(D, H, c, extra = {}) {
     riesgo = clamp(riesgo, 0, 0.3) * (p >= 0.9 ? 0.6 : p >= 0.5 ? 1.2 : 0.5);
     return { riesgo, cerca };
   };
+  /**
+   * cómo le fue a un equipo las últimas veces contra otro (SofaScore, todas las competiciones; si no hay, lo de esta
+   * temporada en LaLiga): de la más vieja a la más nueva, [{ r: 'V'|'E'|'D', gf, gc, casa, t, comp }]
+   */
+  const h2hSofa = av.h2h || {}, sofaEq = av.sofaEquipos || {};
+  M.h2h = (eqId, rivalId, n = 5) => {
+    const a = sofaEq[eqId], b = sofaEq[rivalId];
+    let out = [];
+    const par = a && b ? h2hSofa[[a, b].sort((x, y) => x - y).join('-')] : null;
+    if (par && par.ev && par.ev.length) {
+      out = par.ev.filter((e) => e.h === a || e.a === a).map((e) => {
+        const casa = e.h === a, gf = casa ? e.gh : e.ga, gc = casa ? e.ga : e.gh;
+        return { r: gf > gc ? 'V' : gf === gc ? 'E' : 'D', gf, gc, casa, t: e.t, comp: e.comp };
+      });
+    } else {
+      const t = tabla[eqId];
+      out = t ? t.ult.filter((u) => u.rid === rivalId).map((u) => ({ r: u.r, gf: u.gf, gc: u.gc, casa: u.casa, t: null, comp: 'LaLiga', jornada: u.jornada })).reverse() : [];
+    }
+    return out.slice(0, n).reverse();
+  };
   const cacheCal = {};
   // la fecha de una jornada sin fecha: una semana por jornada desde la última con fecha, y otra más si hay parón
   const iniJ = {};
@@ -823,6 +843,13 @@ export function analizar(D, H, c, extra = {}) {
     const p1 = T ? T.p : null;
     const out = ps.map((x, i) => {
       const fc = factorContra(j, x.rivalId, x.casa);
+      // el historial cuenta poco (pesa más cómo están ahora): como mucho un 4 % arriba o abajo
+      const h2h = M.h2h(j.equipoId, x.rivalId);
+      if (h2h.length >= 3) {
+        const saldo = h2h.reduce((a, e) => a + (e.r === 'V' ? 1 : e.r === 'D' ? -1 : 0), 0) / h2h.length;
+        fc.f = clamp(fc.f * (1 + 0.04 * saldo), 0.75, 1.25);
+        if (fc.nivel) fc.nivel = fc.f <= 0.93 ? 'difícil' : fc.f >= 1.07 ? 'fácil' : 'media';
+      }
       // la titularidad: la del próximo partido tal cual; para los siguientes, la de base con la rotación de ese día
       let pTit = p1, rot = null;
       if (T && i > 0) {
@@ -832,7 +859,7 @@ export function analizar(D, H, c, extra = {}) {
       } else if (T && T.rot && T.rot.cerca && T.rot.cerca.length) rot = T.rot.cerca.map((c) => c.comp);
       const ratio = p1 && pTit != null ? clamp(pTit / Math.max(0.05, p1), 0, 1.5) : 1;
       const pts = Math.max(0, sinRival * fc.f * (i === 0 ? 1 : ratio));
-      return { ...x, f: fc.f, nivel: fc.nivel, pos: fc.r ? fc.r.pos : null, pts, pTit, rot };
+      return { ...x, f: fc.f, nivel: fc.nivel, pos: fc.r ? fc.r.pos : null, pts, pTit, rot, h2h };
     });
     const n = out.length;
     const fAvg = out.reduce((a, x) => a + x.f, 0) / n;
