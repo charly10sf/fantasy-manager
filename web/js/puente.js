@@ -1,8 +1,19 @@
-/* El puente con la app de Android (window.FantasyApp). Fuera de la app (en un navegador) no hay puente:
-   la web funciona en modo demostración con datos de ejemplo. */
+/* El puente con la app de Android (window.FantasyApp). Fuera de la app (en un navegador) no hay puente: las
+   peticiones a LaLiga y a las webs de datos van por el Worker de Fantasy Manager (worker/), porque el navegador no
+   deja llamarlas desde otra página. Sin Worker (abriendo la web en local, por ejemplo) solo hay liga de ejemplo. */
 
 const N = typeof window !== 'undefined' && window.FantasyApp ? window.FantasyApp : null;
 export const enApp = !!N;
+/** el Worker publicado (lo usa la web para todo y la app para dejar la sesión con un código) */
+export const WORKER_PUBLICO = 'https://fantasy-manager.growfolio-web-app.workers.dev';
+/** el Worker de la web: el publicado en GitHub Pages; para probar en local, el que diga localStorage «fm-worker» */
+export const WORKER = (() => {
+  if (N) return WORKER_PUBLICO;
+  try { const w = localStorage.getItem('fm-worker'); if (w) return w.replace(/\/+$/, ''); } catch (e) { /* nada */ }
+  return typeof location !== 'undefined' && /\.github\.io$/.test(location.hostname) ? WORKER_PUBLICO : '';
+})();
+/** la versión web de verdad (con tu liga), no la de ejemplo */
+export const enWeb = !N && !!WORKER;
 
 let seq = 0;
 const pendientes = new Map();
@@ -22,7 +33,7 @@ window.__http = (id) => {
  * s = 0 si no llegó a contestar (sin red, dirección no permitida, tiempo agotado).
  */
 export function http(metodo, url, { cabeceras = {}, cuerpo = null, tiempo = 45000 } = {}) {
-  if (!N) return Promise.resolve({ s: 0, e: 'Fuera de la app no se puede hablar con LaLiga' });
+  if (!N) return enWeb ? porWorker(metodo, url, cabeceras, cuerpo, tiempo) : Promise.resolve({ s: 0, e: 'Fuera de la app no se puede hablar con LaLiga' });
   const id = `p${Date.now().toString(36)}${(seq++).toString(36)}`;
   return new Promise((resolver) => {
     const reloj = setTimeout(() => { if (pendientes.delete(id)) resolver({ s: 0, e: 'tiempo agotado' }); }, tiempo);
@@ -34,6 +45,26 @@ export function http(metodo, url, { cabeceras = {}, cuerpo = null, tiempo = 4500
       resolver({ s: 0, e: String(e.message || e) });
     }
   });
+}
+
+/** en la web: la petición la hace el Worker y devuelve lo mismo que la app ({ s, b, t, e }) */
+async function porWorker(metodo, url, cabeceras, cuerpo, tiempo) {
+  const parar = new AbortController();
+  const reloj = setTimeout(() => parar.abort(), tiempo);
+  try {
+    const r = await fetch(`${WORKER}/p`, {
+      method: 'POST', signal: parar.signal,
+      headers: { 'content-type': 'text/plain;charset=utf-8', 'x-u': url, 'x-m': metodo || 'GET', 'x-h': JSON.stringify(cabeceras || {}) },
+      body: cuerpo == null ? '' : String(cuerpo),
+    });
+    const b = await r.text();
+    const s = +(r.headers.get('x-s') || 0);
+    if (!r.ok) return { s: 0, e: `el servidor de la web responde ${r.status}` };
+    if (!s) return { s: 0, e: b || 'sin respuesta' };
+    return { s, b, t: r.headers.get('x-t') || '' };
+  } catch (e) {
+    return { s: 0, e: e.name === 'AbortError' ? 'tiempo agotado' : `sin conexión con el servidor de la web (${e.message || e})` };
+  } finally { clearTimeout(reloj); }
 }
 
 /** una imagen como data:… (para mirar sus píxeles). En la app, por el puente; fuera, con fetch (si el sitio deja) */
@@ -49,7 +80,7 @@ export async function imagenDatos(url) {
     return `data:${r.t || 'image/png'};base64,${r.b}`;
   }
   if (N) throw new Error('esta versión de la app no puede mirar imágenes');
-  const res = await fetch(url, { mode: 'cors' });
+  const res = await fetch(enWeb ? `${WORKER}/img?u=${encodeURIComponent(url)}` : url, { mode: 'cors' });
   if (!res.ok) throw new Error(`imagen ${res.status}`);
   const blob = await res.blob();
   return await new Promise((ok, mal) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = mal; fr.readAsDataURL(blob); });
@@ -82,6 +113,8 @@ export const nativo = {
   pedirAlarmasExactas: () => llamar('pedirAlarmasExactas'),
   notificar: (t, x, h = '') => llamar('notificar', t, x, h),
   version: () => (N ? llamar('version') || 0 : 0),
+  // de dónde viene la app: «github» (se actualiza sola desde el aviso), «play» (la actualiza la tienda) o «web»
+  canal: () => (N ? llamar('canal') || 'github' : 'web'),
   nombreVersion: () => (N ? llamar('nombreVersion') || '' : ''),
   actualizar: (url) => llamar('actualizar', url),
   instalar: () => llamar('instalar'),

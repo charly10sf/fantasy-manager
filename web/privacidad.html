@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0b">
+  <title>Privacidad · Fantasy Manager</title>
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <style>
+    @font-face { font-family: 'Barlow'; src: url('fonts/barlow-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+    @font-face { font-family: 'Barlow'; src: url('fonts/barlow-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+    @font-face { font-family: 'Barlow Condensed'; src: url('fonts/barlow-condensed-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+    :root { --fondo: #08080a; --plano: #121215; --texto: #f4f2f3; --texto2: #b9b5b8; --rojo: #ee1c3c; --linea: #26262b; }
+    * { box-sizing: border-box; }
+    html { background: var(--fondo); }
+    body { margin: 0; background: var(--fondo); color: var(--texto2); font: 400 16px/1.6 'Barlow', system-ui, sans-serif; }
+    main { max-width: 720px; margin: 0 auto; padding: 28px 16px 56px; }
+    h1 { font: 700 38px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; color: var(--texto); margin: 18px 0 6px; }
+    h1 span { color: var(--rojo); }
+    h2 { font: 700 21px/1.2 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .4px; color: var(--texto); margin: 30px 0 8px; }
+    p, li { margin: 0 0 10px; }
+    ul { padding-left: 20px; }
+    b { color: var(--texto); font-weight: 600; }
+    a { color: var(--rojo); }
+    .fecha { color: #85808a; font-size: 14px; }
+    .volver { display: inline-flex; gap: 8px; align-items: center; color: var(--texto2); text-decoration: none; border: 1px solid var(--linea); border-radius: 10px; padding: 8px 12px; background: var(--plano); }
+    .aviso { border: 1px solid var(--linea); background: var(--plano); border-radius: 12px; padding: 12px 14px; margin: 16px 0; }
+  </style>
+</head>
+<body>
+<main>
+  <a class="volver" href="./" onclick="if (history.length > 1) { history.back(); return false; }">← Volver</a>
+  <h1>Política de <span>privacidad</span></h1>
+  <p class="fecha">Fantasy Manager · 21 de octubre de 2026</p>
+
+  <div class="aviso">Fantasy Manager es una app no oficial. No es de LaLiga ni tiene relación con LaLiga, LaLiga Fantasy ni ninguno de sus patrocinadores. Los nombres de LaLiga y LaLiga Fantasy se usan solo para decir con qué juego funciona.</div>
+
+  <h2>Qué es</h2>
+  <p>Una app (para Android y en el navegador) que lee tu liga de LaLiga Fantasy con tu propia cuenta y te ayuda a decidir: qué vender, qué comprar, cuánto pujar y a quién clausular. Se puede usar sin cuenta con una liga de ejemplo.</p>
+
+  <h2>Qué datos usa y dónde se quedan</h2>
+  <ul>
+    <li><b>Tu sesión de LaLiga Fantasy.</b> Entras en la página oficial de LaLiga y la app guarda el permiso que te da LaLiga para leer tu liga. Se guarda solo en tu móvil (o en tu navegador, en la versión web). Fantasy Manager nunca ve tu contraseña.</li>
+    <li><b>Los datos de tu liga</b> (clasificación, plantillas, mercado, movimientos, tu saldo). Se bajan de LaLiga y se guardan solo en tu dispositivo para hacer los cálculos y el histórico.</li>
+    <li><b>Tu clave de Google AI Studio</b>, si la pones para usar la IA. Se guarda solo en tu dispositivo.</li>
+    <li><b>Lo que le preguntas a la IA.</b> Cuando pides el plan o escribes en el chat, la app manda a Google (Gemini), con tu clave, tu pregunta y los datos de tu liga que hacen falta para contestar. Google trata esos datos según sus propias condiciones de la API de Gemini.</li>
+    <li><b>Datos públicos de fútbol</b>: alineaciones probables, noticias y estadísticas de webs públicas. No llevan nada tuyo.</li>
+  </ul>
+
+  <h2>Lo que no hace</h2>
+  <ul>
+    <li>No tiene cuentas propias ni pide tu nombre, tu correo o tu teléfono.</li>
+    <li>No tiene anuncios, ni analítica, ni rastreo, y no vende ni comparte tus datos con nadie.</li>
+    <li>No guarda tus datos en ningún servidor propio.</li>
+  </ul>
+
+  <h2>La versión web</h2>
+  <p>El navegador no deja que una página hable directamente con LaLiga, así que en la versión web las peticiones pasan por un servidor pequeño de Fantasy Manager (en Cloudflare) que las reenvía y no guarda nada. Para entrar en el ordenador con la sesión de tu móvil, la app deja tu sesión en ese servidor con un código de un solo uso que caduca a los 10 minutos. Al usar el código, o al caducar, se borra.</p>
+
+  <h2>Notificaciones</h2>
+  <p>Los avisos (cláusulas que se abren, el cambio de mercado, el plan del día) los programa la propia app en tu móvil. No pasan por ningún servidor.</p>
+
+  <h2>Cómo borrar tus datos</h2>
+  <ul>
+    <li><b>Ajustes → Salir</b> borra tu sesión de LaLiga del dispositivo.</li>
+    <li><b>Ajustes → Borrar los datos guardados</b> borra el histórico, las fichas y los planes.</li>
+    <li>Quitar la clave de la IA en <b>Ajustes</b>, o desinstalar la app (o borrar los datos del sitio en el navegador), lo borra todo.</li>
+  </ul>
+
+  <h2>Menores</h2>
+  <p>La app no está pensada para menores de 14 años.</p>
+
+  <h2>Cambios y contacto</h2>
+  <p>Si esta política cambia, se actualiza aquí con su fecha. Para cualquier duda o para pedir algo sobre tus datos: <a href="https://github.com/charly10sf/fantasy-manager/issues">github.com/charly10sf/fantasy-manager</a>.</p>
+</main>
+</body>
+</html>

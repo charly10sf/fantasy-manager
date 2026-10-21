@@ -1,0 +1,8 @@
+# El Worker de Fantasy Manager: lo que necesita la versión web y un navegador no puede hacer solo (hablar con
+# LaLiga y con las webs de datos, que no dejan llamarlas desde otra página) y el código para entrar en el
+# ordenador con la sesión de la app. Lo publica la GitHub Action «Worker» (.github/workflows/worker.yml), que
+# también crea el almacén de los códigos (VINCULOS) y lo añade aquí al publicar.
+name = "fantasy-manager"
+main = "src/index.js"
+compatibility_date = "2025-06-01"
+workers_dev = true

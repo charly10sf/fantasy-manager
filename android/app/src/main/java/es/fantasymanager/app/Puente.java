@@ -50,7 +50,9 @@ public class Puente {
             "understat.com",
             "www.understat.com",
             "api.sofascore.com",
-            "www.sofascore.com"
+            "www.sofascore.com",
+            // el Worker de la versión web: para dejar la sesión con un código y entrar en el ordenador
+            "fantasy-manager.growfolio-web-app.workers.dev"
     ));
     private static final String GEMINI = "generativelanguage.googleapis.com";
     private static final int MAX = 16 * 1024 * 1024;

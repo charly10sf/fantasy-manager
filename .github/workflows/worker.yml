@@ -1,0 +1,74 @@
+# Publica el Worker de Fantasy Manager (worker/) en Cloudflare: lo que usa la versión web para hablar con LaLiga
+# y las webs de datos, y los códigos para entrar en el ordenador con la sesión de la app.
+# Hace falta en GitHub (Settings > Secrets and variables > Actions) lo mismo que en GrowFolio:
+#   CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID
+# El almacén de los códigos (KV «VINCULOS») se crea solo la primera vez si el token tiene permiso; si no, los
+# códigos van en la caché del Worker.
+name: Worker
+
+on:
+  push:
+    branches: [main]
+    paths: ['worker/**', '.github/workflows/worker.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: worker
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: ¿Están las claves de Cloudflare?
+        id: cf
+        env:
+          T: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          A: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$T" ] || [ -z "$A" ]; then
+            echo "::warning::Faltan CLOUDFLARE_API_TOKEN o CLOUDFLARE_ACCOUNT_ID en los secretos: el Worker no se publica y la web solo enseña la liga de ejemplo"
+            echo "ok=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=si" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Almacén de los códigos
+        if: steps.cf.outputs.ok == 'si'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          lista=$(npx --yes wrangler@4 kv namespace list 2>/dev/null || echo '[]')
+          id=$(echo "$lista" | jq -r '.[]? | select(.title=="VINCULOS" or .title=="fantasy-manager-VINCULOS") | .id' 2>/dev/null | head -1)
+          if [ -z "$id" ]; then
+            salida=$(npx --yes wrangler@4 kv namespace create VINCULOS 2>&1 || true)
+            id=$(echo "$salida" | grep -oE '[0-9a-f]{32}' | head -1)
+          fi
+          if [ -n "$id" ]; then
+            printf '\n[[kv_namespaces]]\nbinding = "VINCULOS"\nid = "%s"\n' "$id" >> wrangler.toml
+            echo "::notice::Almacén de códigos listo"
+          else
+            echo "::warning::No se ha podido crear el almacén KV (el token no tiene permiso de Workers KV): los códigos irán en la caché del Worker"
+          fi
+      - name: Publicar
+        if: steps.cf.outputs.ok == 'si'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -o pipefail
+          if ! npx --yes wrangler@4 deploy 2>&1 | tee salida.txt; then
+            echo "::error::No se ha podido publicar: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
+            exit 1
+          fi
+          url=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' salida.txt | head -1)
+          echo "::notice::Worker publicado en ${url:-(sin dirección workers.dev: actívala en Cloudflare > Workers)}"

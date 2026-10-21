@@ -105,7 +105,8 @@ export function renovar() {
     if (r.s >= 400 || !j) throw new Error(`LaLiga no ha renovado la sesión (error ${r.s})`);
     return guardarTokens(j, s);
   })();
-  renovando.finally(() => { renovando = null; });
+  // (el catch es para que la copia que devuelve finally no quede como error sin recoger: el error ya le llega a quien espera)
+  renovando.finally(() => { renovando = null; }).catch(() => {});
   return renovando;
 }
 

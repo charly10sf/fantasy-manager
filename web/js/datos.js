@@ -4,7 +4,7 @@
 import { api, paginaMercado } from './api.js';
 import * as N from './normalizar.js';
 import { LS, diaDe, enParalelo, num, DIA } from './util.js';
-import { enApp } from './puente.js';
+import { enApp, enWeb } from './puente.js';
 import { demo } from './demo.js';
 import { historialValor, oncesProbables, noticias, avanzadas } from './externas.js';
 
@@ -12,8 +12,8 @@ import { historialValor, oncesProbables, noticias, avanzadas } from './externas.
 export const cfg = () => ({ ligaId: null, miEquipo: null, ...LS.get('cfg', {}), deuda: 20 });
 export const guardarCfg = (c) => LS.set('cfg', { ...cfg(), ...c });
 
-/** ¿se usa la demostración? fuera de la app siempre; dentro, si la has pedido en el inicio o en Ajustes */
-export const enDemo = () => !enApp || !!LS.get('demo', false);
+/** ¿se usa la demostración? en un navegador sin el Worker, siempre; en la app y en la web, si la has pedido */
+export const enDemo = () => (!enApp && !enWeb) || !!LS.get('demo', false);
 // la demostración guarda aparte para no mezclar sus datos con los tuyos
 export const K = (k) => (enDemo() ? `${k}-demo` : k);
 

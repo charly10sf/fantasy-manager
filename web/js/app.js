@@ -1,14 +1,14 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
 import { esc, icono, LOGO, $, $$, LS, eur, rel, MIN, diaDe, enParalelo } from './util.js';
-import { enApp, nativo } from './puente.js';
-import { haySesion, empezarLogin, terminarLogin, cerrarSesion } from './auth.js';
+import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO } from './puente.js';
+import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
 import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
-import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
+import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api } from './api.js';
 import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
@@ -48,10 +48,41 @@ function pantallaEntrar(error = '') {
       <li>${icono('rivales')}Lo que hace cada rival y quién va a por tus jugadores</li>
     </ul>
     ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
-    <button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
-    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>
+    ${enApp ? `<button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
+    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>` : entrarWebHTML()}
     <button class="btn sec ancho" data-accion="entrarDemo" style="margin-top:6px">Ver con una liga de ejemplo</button>
+    <p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. <a href="privacidad.html">Privacidad</a></p>
   </div>`;
+  if (!enApp) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus(); }, 50);
+}
+/** en el navegador: LaLiga solo devuelve la sesión a su app del móvil, así que se entra con un código de la app */
+function entrarWebHTML() {
+  return `<div class="entrar-codigo">
+      <b>${icono('usuario')}Entra con el código de la app</b>
+      <span>En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. Te da un código de 8 letras y números que dura 10 minutos.</span>
+      <div class="codigo-in"><input id="codigoWeb" maxlength="9" placeholder="ABCD2345" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="usarCodigo"><button class="btn" data-accion="usarCodigo">Entrar</button></div>
+    </div>
+    <details class="sin-app"><summary>No tengo la app en el móvil</summary>
+      <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano:</p>
+      <ol>
+        <li>Pulsa <b>Abrir la página de LaLiga</b>: se abre en otra pestaña.</li>
+        <li>En esa pestaña, antes de entrar, abre las herramientas del navegador (<b>F12</b>), ve a <b>Red</b> y marca <b>Conservar registro</b>.</li>
+        <li>Entra como siempre. Al acabar la página se queda en blanco: es lo normal.</li>
+        <li>En <b>Red</b>, la última fila (cancelada) empieza por <b>?state=…&amp;code=…</b>: botón derecho → <b>Copiar → Copiar dirección del enlace</b>.</li>
+        <li>Pégala aquí debajo y pulsa Entrar.</li>
+      </ol>
+      <button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>
+      <textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea>
+      <button class="btn chico" data-accion="pegarVuelta">Entrar</button>
+    </details>`;
+}
+/** lo que manda la app con el código: la sesión, tu liga y tu equipo, la clave de la IA y el dinero que te han dicho */
+function traerVinculo(j) {
+  LS.del('demo');
+  guardar('sesion', j.sesion);
+  if (j.cfg) guardarCfg({ ligaId: j.cfg.ligaId || null, miEquipo: j.cfg.miEquipo || null });
+  if (j.ia && j.ia.clave && !hayClave()) guardarClave(j.ia.clave);
+  if (j.dichos && typeof j.dichos === 'object') LS.set(K('dinero-dicho'), { ...j.dichos, ...LS.get(K('dinero-dicho'), {}) });
 }
 /* ---------------- la pantalla de carga ---------------- */
 // lo que se va contando mientras carga: cosas del juego que conviene tener presentes
@@ -370,7 +401,7 @@ function cerrarHoja(ya = false) {
   setTimeout(() => { h.remove(); v && v.remove(); }, 250);
   return true;
 }
-const htmlHoja = (tipo, arg) => (tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+const htmlHoja = (tipo, arg) => (tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -500,7 +531,8 @@ window.vozTexto = (texto, error) => {
 
 /* ---------------- versión nueva y permisos ---------------- */
 async function buscarVersion(avisar = false) {
-  if (!enApp) return;
+  // la de Google Play la actualiza la tienda; la web siempre está al día
+  if (!enApp || nativo.canal() === 'play') { if (avisar) tostada(enApp ? 'Las versiones nuevas llegan por Google Play' : 'La web siempre está en la última versión'); return; }
   const v = await ultimaVersion();
   if (v && v.version > nativo.version()) { S.nueva = v; pintar(); if (avisar) tostada(`Hay una versión nueva: ${v.nombre}`); }
   else if (avisar) tostada('Tienes la última versión');
@@ -547,9 +579,46 @@ document.addEventListener('click', async (ev) => {
   switch (d.accion) {
     case 'entrar': try { await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
     case 'entrarDemo': cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); break;
+    case 'usarCodigo': {
+      const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (cod.length !== 8) { tostada('El código tiene 8 letras y números'); break; }
+      el.disabled = true; el.textContent = 'Entrando…';
+      try {
+        const r = await fetch(`${WORKER}/vincular/usar`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ codigo: cod }) });
+        const j = await r.json().catch(() => null);
+        if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `El servidor de la web responde ${r.status}`);
+        traerVinculo(j);
+        S.D = null; S.planEstado = {};
+        await cargar();
+      } catch (e) { pantallaEntrar(e.name === 'TypeError' ? `Sin conexión con el servidor de la web (${e.message})` : e.message || String(e)); }
+      break;
+    }
+    case 'pegarVuelta': {
+      const url = (($('#vueltaWeb') || {}).value || '').trim();
+      if (!/[?&]code=/.test(url)) { tostada('Pega la dirección entera: la que lleva «code=»'); break; }
+      el.disabled = true;
+      try { await terminarLogin(url); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); }
+      break;
+    }
+    case 'vincularWeb': {
+      // la app deja la sesión en el Worker y enseña el código para escribirlo en la web
+      el.disabled = true;
+      try {
+        const c = cfg();
+        const datos = { sesion: sesion(), cfg: { ligaId: c.ligaId || null, miEquipo: c.miEquipo || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}) };
+        const r = await http('POST', `${WORKER_PUBLICO}/vincular`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(datos), tiempo: 20000 });
+        let j = null;
+        try { j = JSON.parse(r.b || 'null'); } catch (e2) { j = null; }
+        if (r.s !== 200 || !j || !j.codigo) throw new Error(j && j.e ? j.e : r.s ? `el servidor de la web responde ${r.s}` : `sin conexión (${r.e})`);
+        S.vinculo = j;
+        hoja('vinculo');
+      } catch (e) { tostada(`No se ha podido sacar el código: ${e.message}`, 6000); el.disabled = false; }
+      break;
+    }
+    case 'copiarEnlaceWeb': nativo.copiar('https://charly10sf.github.io/fantasy-manager/'); tostada('Enlace copiado'); break;
     case 'salirDemo':
       cerrarHoja(true); LS.del('demo'); S.D = null; S.planEstado = {};
-      if (!enApp) { LS.set('demo', true); tostada('Fuera de la app solo se puede ver el ejemplo'); cargar(); }
+      if (!enApp && !enWeb) { LS.set('demo', true); tostada('En este navegador solo se puede ver el ejemplo'); cargar(); }
       else if (haySesion()) { S.D = foto(); if (S.D) { rehacer(); pintar(); cargar({ silencio: true }); } else cargar(); }
       else pantallaEntrar();
       break;
@@ -690,6 +759,7 @@ document.addEventListener('change', (ev) => {
 });
 document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Enter' && !ev.shiftKey && ev.target && ev.target.id === 'pregunta') { ev.preventDefault(); const t = ev.target.value; ev.target.value = ''; enviarPregunta(t); }
+  if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
 });
 document.addEventListener('input', (ev) => {
   if (ev.target && ev.target.id === 'pregunta') { ev.target.style.height = 'auto'; ev.target.style.height = Math.min(120, ev.target.scrollHeight) + 'px'; }
@@ -726,7 +796,7 @@ function listaVersiones() {
 async function arrancar() {
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
   if (VISTAS[h]) S.vista = h;
-  if (enApp && !enDemo() && !haySesion()) {
+  if ((enApp || enWeb) && !enDemo() && !haySesion()) {
     pantallaEntrar();
   } else {
     S.D = foto();
