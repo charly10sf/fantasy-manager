@@ -51,9 +51,27 @@ function pieMarcador(S) {
   const tabla = [...D.clasif].sort((a, b) => a.pos - b.pos);
   const lider = tabla[0], segundo = tabla[1];
   const dist = yo.pos === 1 ? (segundo ? yo.puntos - segundo.puntos : null) : lider ? lider.puntos - yo.puntos : null;
-  const conJ = D.clasif.filter((e) => e.puntosJornada != null);
-  const puestoJ = yo.puntosJornada != null ? [...conJ].sort((a, b) => num(b.puntosJornada) - num(a.puntosJornada)).findIndex((e) => e.teamId === yo.teamId) + 1 : 0;
-  const a = yo.puntosJornada != null ? `<span>Última jornada <b>${yo.puntosJornada} pts</b>${puestoJ ? ` · ${puestoJ}º` : ''}</span>` : '<span></span>';
+  // lo de la última jornada jugada: si LaLiga ya da los puntos de la jornada en curso (todo a 0 antes de empezar), se
+  // sacan del histórico de puntos de cada equipo (los de ahora menos los de antes de que empezara)
+  const ultJ = M.ultimaJornada;
+  let ptsJ = null;
+  const jo = ultJ && (M.jornadas || []).find((j) => j.n === ultJ.n);
+  if (!ptsJ && jo && jo.fin < Date.now()) {
+    const dIni = new Date(jo.ini - 6 * 3600e3).toLocaleDateString('en-CA', { timeZone: 'Europe/Madrid' });
+    const m = {};
+    for (const e of D.clasif) {
+      const serie = ((S.H && S.H.eq) || {})[e.teamId] || [];
+      const antes = serie.filter(([d]) => d <= dIni).pop();
+      if (antes && antes[2] != null) m[e.teamId] = e.puntos - antes[2];
+    }
+    const ok = Object.values(m).every((v) => v >= -10 && v <= 200);
+    if (ok && Object.keys(m).length >= Math.max(2, D.clasif.length - 1) && m[yo.teamId] != null) ptsJ = m;
+  }
+  // si no hay histórico, lo que dé LaLiga, pero solo si no está todo a cero (eso es la jornada que aún no ha empezado)
+  if (!ptsJ && D.clasif.filter((e) => num(e.puntosJornada) > 0).length >= 2) ptsJ = Object.fromEntries(D.clasif.map((e) => [e.teamId, num(e.puntosJornada)]));
+  const mioJ = ptsJ ? ptsJ[yo.teamId] : null;
+  const puestoJ = mioJ != null ? Object.values(ptsJ).filter((v) => v > mioJ).length + 1 : 0;
+  const a = mioJ != null ? `<span>${ultJ ? `Jornada ${ultJ.n}` : 'Última jornada'} <b>${mioJ} pts</b> · ${puestoJ}º</span>` : '<span></span>';
   const b = dist != null ? `<span>${yo.pos === 1 ? `Le sacas <b>${dist} pts</b> al 2º` : `A <b>${dist} pts</b> del 1º`}</span>` : '';
   return `<div class="marcador-pie">${a}${b}</div>`;
 }
@@ -125,7 +143,7 @@ function ligaHTML(S) {
     const e = tabla[i], esYo = i === yo, r = M.rivales.find((x) => x.e.teamId === e.teamId);
     const dif = e.puntos - mios;
     h += `<button class="liga-f ${esYo ? 'yo' : ''}" ${esYo ? 'data-ir="equipo"' : `data-r="${esc(e.teamId)}"`}><span class="posn ${esYo ? 'yo' : ''}">${e.pos}</span>
-      <span class="liga-n"><b>${esc(e.nombre)}</b><span>${esc(e.manager && e.manager !== e.nombre ? `${e.manager} · ` : '')}${e.puntosJornada != null ? `${e.puntosJornada} últ.` : ''}${r && r.dinero && r.dinero.v != null ? ` · ${r.dinero.exacto ? '' : '≈ '}${eur(r.dinero.v, { dec: 1 })}` : ''}</span></span>
+      <span class="liga-n"><b>${esc(e.nombre)}</b><span>${esc(e.manager && e.manager !== e.nombre ? `${e.manager} · ` : '')}${num(e.puntosJornada) > 0 ? `${e.puntosJornada} últ.` : ''}${r && r.dinero && r.dinero.v != null ? ` · ${r.dinero.exacto ? '' : '≈ '}${eur(r.dinero.v, { dec: 1 })}` : ''}</span></span>
       ${r && r.nivel === 'alta' ? '<span class="amenaza alta">Peligro</span>' : ''}
       <span class="liga-p"><b>${e.puntos}</b><span class="${esYo ? 'apag' : dif > 0 ? 'baja' : 'sube'}">${esYo ? 'tú' : dif > 0 ? `+${dif}` : dif < 0 ? `${dif}` : '='}</span></span></button>`;
   }
@@ -296,7 +314,10 @@ function notaJugador(S, nombre, texto, efecto) {
 function saludoHTML(S) {
   const h = Number(new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid', hour: 'numeric', hour12: false }));
   const sal = h >= 6 && h < 14 ? 'Buenos días' : h >= 14 && h < 21 ? 'Buenas tardes' : 'Buenas noches';
-  const nombre = String((S.M.yo && S.M.yo.manager) || (S.D.yo && S.D.yo.nombre) || '').split(/\s+/)[0];
+  // el nombre de manager suele ser el del equipo («U.D. Carlista»): solo se usa si parece un nombre de persona
+  const cand = String((S.D.yo && S.D.yo.nombre) || (S.M.yo && S.M.yo.manager) || '').trim();
+  const equipo = String((S.M.yo && S.M.yo.nombre) || '').trim();
+  const nombre = cand && cand !== equipo && !/[.\d_]|\b(fc|cf|ud|cd|sd|rcd|club|team|united|real)\b/i.test(cand) ? cand.split(/\s+/)[0] : '';
   const fecha = new Date().toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long' });
   return `<div class="saludo"><span>${sal}${nombre ? `, <b>${esc(nombre)}</b>` : ''}</span><span class="t2">${esc(fecha.charAt(0).toUpperCase() + fecha.slice(1))}</span></div>`;
 }

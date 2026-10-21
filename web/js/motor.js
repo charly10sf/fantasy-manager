@@ -751,13 +751,19 @@ export function analizar(D, H, c, extra = {}) {
     const compra = f.compra || misCompras[f.pid] || null;
     x.compra = compra;
     x.ganado = compra ? x.j.valor - compra : null;
-    // riesgo de que te lo quiten: cláusula abierta y barata respecto a lo que vale, y que sea bueno
+    // riesgo de que te lo quiten. Si te lo clausulan, cobras su cláusula: lo que pierdes de verdad son sus puntos en tu
+    // once (y lo que fuera a subir). Así que cuenta lo cerca que está la cláusula de su valor y lo que te aporta
     let r = 0;
-    if (x.ratio != null) {
-      if (x.abierta) r = x.ratio < 1.25 ? 3 : x.ratio < 1.6 ? 2 : 1;
-      else if (x.abreEn < 36 * HORA) r = x.ratio < 1.25 ? 2 : 1;
+    if (x.ratio != null && x.clausula) {
+      if (x.abierta) r = x.ratio < 1.15 ? 3 : x.ratio < 1.3 ? 2 : x.ratio < 1.6 ? 1 : 0;
+      else if (x.abreEn < 36 * HORA) r = x.ratio < 1.15 ? 2 : x.ratio < 1.3 ? 1 : 0;
     }
-    if (r && num(x.j.media) >= 5) r = Math.min(3, r + 1);
+    x.pierde = M.perdida(x.pid);
+    // o uno que está subiendo bien: si te lo quitan a su valor, pierdes lo que iba a subir
+    const sube = (() => { const ine = M.inercia(x.pid); return !!ine && (ine.fase === 'sube' || ine.fase === 'acelera') && ine.proyJ >= Math.max(400000, x.j.valor * 0.04); })();
+    x.importa = x.pierde >= 0.8 || (sube && x.ratio != null && x.ratio < 1.15);
+    // uno que no juega en tu once: que te lo clausulen es casi como venderlo por su cláusula
+    if (r && !x.importa) r = x.pierde < 0.3 && x.ratio >= 1 ? 0 : Math.min(r, 1);
     // y quién tiene dinero para pagarla: si no le llega a nadie, el riesgo baja (aunque pueden vender y juntarlo)
     x.pagan = x.clausula ? M.quienPaga(x.clausula) : null;
     if (r && x.pagan) {
@@ -867,7 +873,15 @@ export function analizar(D, H, c, extra = {}) {
     }
     return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, pujaLiga, recortada, ofertaLiga: m.tipo === 'manager' && m.vendedorTeamId !== yoTid ? M.ofertaLigaDe(j) : null, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
-  M.cierreMercado = Math.min(...M.mercado.map((m) => m.cierra || Infinity).filter((x) => x > ahora), Infinity);
+  {
+    // la hora a la que caducan casi todos los libres es el cambio de mercado; lo que pone a la venta un manager
+    // (o tú) caduca a su propia hora y no cuenta
+    const libres = (D.mercado || []).filter((m) => m.tipo !== 'manager' && m.cierra && m.cierra > ahora);
+    const veces = {};
+    for (const m of libres) { const k = Math.round(m.cierra / 60000); veces[k] = (veces[k] || 0) + 1; }
+    const comun = Object.entries(veces).sort((a, b) => b[1] - a[1] || a[0] - b[0])[0];
+    M.cierreMercado = comun ? +comun[0] * 60000 : Math.min(...M.mercado.map((m) => m.cierra || Infinity).filter((x) => x > ahora), Infinity);
+  }
   if (!Number.isFinite(M.cierreMercado)) M.cierreMercado = null;
 
   /* ---------- tus jugadores en venta y sus ofertas ---------- */
@@ -1032,7 +1046,9 @@ function acciones(D, M, c) {
     });
   }
 
-  const abiertas = M.clausulas.filter((x) => x.abierta && x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado))
+  const abiertas = M.clausulas.filter((x) => x.abierta && x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado)
+    && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30
+    && (M.mejora(x.j) >= 0.5 || (x.ratio != null && x.ratio <= 1.05)))
     .sort((a, b) => (b.interes + (b.teQueda >= 0 ? 8 : 0)) - (a.interes + (a.teQueda >= 0 ? 8 : 0)));
   abiertas.slice(0, 3).forEach((x, k) => add({
     tipo: 'clausular', prio: 90 - k * 3 + x.interes / 20, icono: 'diana', pid: x.pid, cuando: 'Ya',
@@ -1047,13 +1063,17 @@ function acciones(D, M, c) {
     texto: `En ${dura(x.abreEn)}. Es de ${x.rival.nombre} y cuesta ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Te aviso al momento si tienes los avisos puestos.`,
   }));
 
-  M.mias.filter((x) => x.riesgo === 'alto').slice(0, 3).forEach((x, k) => add({
-    tipo: 'blindar', prio: 80 - k * 2, icono: 'escudo', pid: x.pid, cuando: x.abierta ? 'Ahora' : cuando(x.protegidoHasta),
-    titulo: `Protege a ${x.j.nombre}`,
-    texto: x.abierta
-      ? `Su cláusula (${eur(x.clausula)}) está abierta y casi no pasa de lo que vale (${eur(x.j.valor)}). Súbela o asume que te lo pueden quitar.`
-      : `Se le acaba la protección en ${dura(x.abreEn)} y su cláusula (${eur(x.clausula)}) está muy cerca de su valor. Súbela antes.`,
-  }));
+  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !(x.blindaje && (x.blindaje.caro || x.blindaje.yaVale)) && !(x.pagan && x.pagan.hayDatos && !x.pagan.seguro.length && !x.pagan.quiza.length))
+    .sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x, k) => {
+      const cerca = x.ratio < 1.05 ? `está en su valor (${eur(x.j.valor)})` : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor (${eur(x.j.valor)})`;
+      const quien = x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) ? ` Le llega a ${[...x.pagan.seguro, ...x.pagan.quiza].slice(0, 3).map((y) => y.nombre).join(', ')}${x.pagan.seguro.length + x.pagan.quiza.length > 3 ? ' y más' : ''}.` : '';
+      const justo = x.blindaje && !x.blindaje.yaVale ? ` Subirla a ${eur(x.blindaje.objetivo)} te cuesta ${eur(x.blindaje.coste)}.` : '';
+      add({
+        tipo: 'blindar', prio: 80 - k * 2, icono: 'escudo', pid: x.pid, cuando: x.abierta ? 'Ahora' : cuando(x.protegidoHasta),
+        titulo: `Protege a ${x.j.nombre}`,
+        texto: `${x.abierta ? 'Cláusula abierta' : `Se abre en ${dura(x.abreEn)}`}: ${eur(x.clausula)}, que ${cerca}, y te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada.${quien}${justo}`,
+      });
+    });
 
   // la inercia: lo que ha girado a la baja se vende ya; lo que está a punto de girar, antes de que gire
   M.mias.filter((x) => x.ventaInercia && !MALOS.has(x.j.estado)).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
@@ -1064,6 +1084,13 @@ function acciones(D, M, c) {
       texto: `${vi.texto}${pierde >= 0.3 ? ` Es titular en tu once (${String(Math.round(pierde * 10) / 10).replace('.', ',')} pts por jornada): busca quién lo sustituya.` : ' No es imprescindible en tu once.'}${x.compra ? ` Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}).` : ''}`,
     });
   });
+
+  // los importantes que están a tiro pero cuyo blindaje no compensa: para que lo sepas, sin urgencias
+  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
+    tipo: 'riesgo', prio: 58, icono: 'escudo', pid: x.pid, cuando: 'Ojo',
+    titulo: `${x.j.nombre} está a tiro de ${x.pagan.seguro.length + x.pagan.quiza.length} rivales`,
+    texto: `Cláusula ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Blindarlo del todo costaría ${eur(x.blindaje.coste)}: no compensa. Si te lo quitan, cobras la cláusula; ten pensado su sustituto (te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada).`,
+  }));
 
   M.mias.filter((x) => MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 60, icono: 'lesion', pid: x.pid, cuando: 'Esta semana',
@@ -1239,9 +1266,11 @@ export function planAuto(D, M, c) {
   }
 
   // 5. proteger a los tuyos más expuestos
-  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto').slice(0, 2)) {
-    op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: 'subir su cláusula', importe: null, cuando: x.abierta ? 'ahora' : `antes de ${cuando(x.protegidoHasta)}`,
-      motivo: `Su cláusula (${eur(x.clausula)}) casi no pasa de lo que vale (${eur(x.j.valor)}) y ${x.abierta ? 'ya está abierta' : `se abre en ${dura(x.abreEn)}`}. Súbela o te lo quitan.` });
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale))).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
+    const b = x.blindaje;
+    op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: b ? `subir su cláusula a ${eur(b.objetivo)}` : 'subir su cláusula', importe: b ? b.coste : null, cuando: x.abierta ? 'ahora' : `antes de ${cuando(x.protegidoHasta)}`,
+      motivo: `Su cláusula (${eur(x.clausula)}) ${x.ratio < 1.05 ? 'está en su valor' : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor`} (${eur(x.j.valor)}), ${x.abierta ? 'ya está abierta' : `se abre en ${dura(x.abreEn)}`} y te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada.${b ? ` Con ${eur(b.coste)} no le llegaría a ningún rival.` : ''}` });
+    if (b) saldo -= b.coste;
   }
 
   // 6. alineación si la jornada empieza pronto
