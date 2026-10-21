@@ -752,6 +752,87 @@ export function analizar(D, H, c, extra = {}) {
     return (cachePP[j.id] = { base, desg: d ? d.total : null, crudo, final: crudo * sesgo, sesgo, w: d ? wDes : 0, d, T });
   };
   M.ppEsperado = (j) => (M.ppDetalle(j) || { final: 0 }).final;
+
+  /* ---------- el calendario de riesgo: sus próximos partidos de una vez ---------- */
+  // Un jugador vale lo que puntúa mientras lo tienes. Se miran sus próximos 5 partidos (o todos los de los 14 días
+  // que un fichaje tiene la cláusula protegida, si son más): contra quién, lo difícil que es, en casa o fuera, lo que
+  // se espera que puntúe en cada uno y si será titular (con la rotación si su equipo juega otra competición cerca).
+  // Con un calendario duro, fichar solo compensa de parche y sin pagar de más.
+  const factorContra = (j, rid, casa) => {
+    const r = tabla[rid];
+    if (!r || r.pj < 3) return { f: casa ? 1.04 : 0.96, r: r || null, nivel: null };
+    const ataque = r.gf / r.pj / mediaGoles, defensa = r.gc / r.pj / mediaGoles, fuerza = r.pts / r.pj / mediaPts;
+    const base = j.pos <= 2 ? 1 / Math.max(0.4, ataque) : defensa;
+    let f = 0.55 + 0.25 * base + 0.2 / Math.max(0.4, fuerza);
+    f *= casa ? 1.05 : 0.95;
+    return { f: clamp(f, 0.75, 1.25), r, nivel: nivelDe(r) };
+  };
+  /** lo que le resta la rotación en un partido concreto (si su equipo juega otra competición a menos de 4 días) */
+  const rotacionEn = (eqId, t, p) => {
+    const lista = calEx[eqId] || [];
+    let riesgo = 0;
+    const cerca = [];
+    for (const x of lista) {
+      if (!x.t || x.liga) continue;
+      const dias = Math.abs(x.t - t) / DIA;
+      if (dias > 4.2 || dias < 8 / 24) continue;
+      const peso = /champions/i.test(x.comp) ? 0.14 : /europa|conference/i.test(x.comp) ? 0.11 : /copa|supercopa|cup/i.test(x.comp) ? 0.04 : 0.06;
+      riesgo += peso * (dias <= 3.2 ? 1 : 0.6);
+      cerca.push(x.comp);
+    }
+    riesgo = clamp(riesgo, 0, 0.3) * (p >= 0.9 ? 0.6 : p >= 0.5 ? 1.2 : 0.5);
+    return { riesgo, cerca };
+  };
+  const cacheCal = {};
+  M.calendarioRiesgo = (j) => {
+    if (!j || !j.equipoId || !j.pos || j.pos === 5) return null;
+    if (cacheCal[j.id] !== undefined) return cacheCal[j.id];
+    const lista = [];
+    for (const jo of jornadas) for (const p of jo.partidos) {
+      if (!p.fecha || p.fecha + 2 * HORA < ahora) continue;
+      const casa = p.localId === j.equipoId;
+      if (!casa && p.visitanteId !== j.equipoId) continue;
+      lista.push({ jornada: jo.n, fecha: p.fecha, casa, rivalId: casa ? p.visitanteId : p.localId, rival: casa ? p.visitante : p.local });
+    }
+    lista.sort((a, b) => a.fecha - b.fecha);
+    const enProteccion = lista.filter((x) => x.fecha <= ahora + 14 * DIA).length;
+    const ps = lista.slice(0, Math.max(Math.min(5, lista.length), enProteccion));
+    if (!ps.length) return (cacheCal[j.id] = null);
+    // lo que puntúa sin contar el rival (los puntos esperados del próximo partido, quitado su rival)
+    const T = M.titularidad(j);
+    const fr1 = M.factorRival(j);
+    const pp1 = M.ppEsperado(j);
+    const sinRival = pp1 > 0 ? pp1 / Math.max(0.5, fr1.f || 1) : num(j.media);
+    const p1 = T ? T.p : null;
+    const out = ps.map((x, i) => {
+      const fc = factorContra(j, x.rivalId, x.casa);
+      // la titularidad: la del próximo partido tal cual; para los siguientes, la de base con la rotación de ese día
+      let pTit = p1, rot = null;
+      if (T && i > 0) {
+        const ro = rotacionEn(j.equipoId, x.fecha, T.base);
+        pTit = clamp(T.base * (1 - ro.riesgo), 0, 0.98);
+        rot = ro.cerca.length ? ro.cerca : null;
+      } else if (T && T.rot && T.rot.cerca && T.rot.cerca.length) rot = T.rot.cerca.map((c) => c.comp);
+      const ratio = p1 && pTit != null ? clamp(pTit / Math.max(0.05, p1), 0, 1.5) : 1;
+      const pts = Math.max(0, sinRival * fc.f * (i === 0 ? 1 : ratio));
+      return { ...x, f: fc.f, nivel: fc.nivel, pos: fc.r ? fc.r.pos : null, pts, pTit, rot };
+    });
+    const n = out.length;
+    const fAvg = out.reduce((a, x) => a + x.f, 0) / n;
+    const nDif = out.filter((x) => x.nivel === 'difícil').length, nFac = out.filter((x) => x.nivel === 'fácil').length, nMed = out.filter((x) => x.nivel === 'media').length;
+    const pts = out.reduce((a, x) => a + x.pts, 0);
+    const conTit = out.filter((x) => x.pTit != null);
+    const pTit = conTit.length ? conTit.reduce((a, x) => a + x.pTit, 0) / conTit.length : null;
+    const tipo = fAvg <= 0.95 || nDif >= Math.ceil(n / 2) ? 'duro' : fAvg >= 1.05 || (nFac >= Math.ceil(n / 2) && nDif === 0) ? 'favorable' : 'normal';
+    const riesgo = MALOS.has(j.estado) || tipo === 'duro' || (pTit != null && pTit < 0.5) ? 'alto' : (pTit != null && pTit < 0.75) || (tipo === 'normal' && nDif >= 2) ? 'medio' : 'bajo';
+    const maxSobre = riesgo === 'alto' ? 0.05 : null;
+    const consejo = riesgo === 'alto'
+      ? (tipo === 'duro' ? 'Calendario duro: ficharlo solo de parche y sin pagar más de un 5 % sobre su valor.' : 'Poco seguro que juegue: solo de parche y sin pagar de más.')
+      : tipo === 'favorable' && (pTit == null || pTit >= 0.75) ? 'Calendario favorable: si es titular, se puede pagar algo más por él.' : riesgo === 'medio' ? 'Riesgo medio: mira el precio y si de verdad entra en tu once.' : 'Sin pegas de calendario.';
+    const d1c = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+    const texto = `${n} partido${n === 1 ? '' : 's'}${enProteccion > 5 ? ' (los de sus 14 días protegido)' : ''}: ${[nDif && `${nDif} difícil${nDif > 1 ? 'es' : ''}`, nMed && `${nMed} de nivel medio`, nFac && `${nFac} fácil${nFac > 1 ? 'es' : ''}`].filter(Boolean).join(', ') || 'rivales sin datos'}. ~${d1c(pts)} pts (${d1c(pts / n)} por partido${j.media ? `; su media es ${d1c(num(j.media))}` : ''})${pTit != null ? `, titular ~${Math.round(pTit * 100)} %` : ''}.`;
+    return (cacheCal[j.id] = { partidos: out, n, fAvg, nDif, nMed, nFac, pts, pTit, tipo, riesgo, maxSobre, consejo, texto, hasta: out[out.length - 1].fecha });
+  };
   M.mejorOnce = (lista) => mejorOnce(lista, M.formaciones, M.ppEsperado);
   const misJs = misFichasRaw.map((f) => J(f.pid));
   M.once = M.mejorOnce(misJs);
@@ -845,6 +926,13 @@ export function analizar(D, H, c, extra = {}) {
     const fr = M.factorRival(j);
     let rival = 0;
     if (fr.p && fr.nivel) { rival = Math.round((fr.f - 1) * 30); partes.push(`${fr.p.casa ? 'recibe' : 'visita'} al ${fr.p.rival} (${fr.r.pos}º, ${fr.nivel})`); }
+    // y los partidos que vienen detrás: con un calendario duro interesa menos, con uno favorable, más
+    const cal = j.pos && j.pos < 5 ? M.calendarioRiesgo(j) : null;
+    if (cal && cal.n >= 3) {
+      rival = Math.round(rival * 0.4 + (cal.fAvg - 1) * 45);
+      if (cal.tipo === 'duro') partes.push(`calendario duro (${cal.nDif} difícil${cal.nDif === 1 ? '' : 'es'} en ${cal.n})`);
+      else if (cal.tipo === 'favorable') partes.push(`calendario favorable (${cal.nFac} fácil${cal.nFac === 1 ? '' : 'es'} en ${cal.n})`);
+    }
     // lo que aporta a TU once: si entra de titular, cuánto suma; si no, si el puesto ya está lleno
     let once = 0;
     const mio = misJs.some((x) => x.id === j.id);
