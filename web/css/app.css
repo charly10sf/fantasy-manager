@@ -608,7 +608,7 @@ body.con-nv { overflow: hidden; }
 .parar-chat { display: flex; justify-content: flex-start; margin: -2px 0 10px; }
 .escribe button.parar { background: var(--plano3); color: var(--rojo-l); }
 
-/* 0.1.7: puntos esperados por partes, dinero de los rivales, aciertos */
+/* 0.2.0: puntos esperados por partes, dinero de los rivales, aciertos */
 .pp-partes { display: grid; gap: 6px; margin: 6px 0 8px; }
 .pp-p { display: grid; grid-template-columns: 128px 1fr 44px; align-items: center; gap: 8px; font-size: 13.5px; color: var(--texto2); }
 .pp-p i { display: block; height: 8px; border-radius: 4px; background: var(--plano2); position: relative; overflow: hidden; }
