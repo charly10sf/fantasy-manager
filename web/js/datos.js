@@ -9,7 +9,8 @@ import { demo } from './demo.js';
 import { historialValor, oncesProbables, noticias, avanzadas } from './externas.js';
 
 // la deuda permitida en LaLiga Fantasy es siempre el 20 % del valor del equipo
-export const cfg = () => ({ ligaId: null, miEquipo: null, ...LS.get('cfg', {}), deuda: 20 });
+// (tu equipo no se elige: sale de la cuenta con la que entras; lo de miEquipo que quedara guardado no cuenta)
+export const cfg = () => ({ ligaId: null, ...LS.get('cfg', {}), miEquipo: null, deuda: 20 });
 export const guardarCfg = (c) => LS.set('cfg', { ...cfg(), ...c });
 
 /** ¿se usa la demostración? en un navegador sin el Worker, siempre; en la app y en la web, si la has pedido */
@@ -91,8 +92,7 @@ export async function actualizar(alPaso = () => {}) {
   alPaso(2, PASOS[2]);
   const clasif = N.clasificacion(await api.clasificacion(liga.id));
   if (!clasif.length) throw new Error('La clasificación de tu liga ha llegado vacía');
-  let mio = clasif.find((e) => c.miEquipo && e.teamId === String(c.miEquipo))
-    || clasif.find((e) => userId && (e.userId === userId || e.managerId === userId))
+  let mio = clasif.find((e) => userId && (e.userId === userId || e.managerId === userId))
     || clasif.find((e) => miNombre && e.manager && e.manager === miNombre);
   clasif.forEach((e) => { e.esYo = !!mio && e.teamId === mio.teamId; });
 

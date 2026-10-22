@@ -357,7 +357,6 @@ export function ajustes(S) {
   // la misma liga en el ordenador: la app deja la sesión con un código de un solo uso
   if (enApp && !enDemo() && ses) h += `<div class="ajuste"><div class="c"><b>Abrir en el ordenador</b><span>Te da un código para entrar en la versión web con tu liga, tu clave de la IA y lo que has apuntado</span></div><button class="btn chico" data-accion="vincularWeb">Código</button></div>`;
   if (S.D && S.D.ligas && S.D.ligas.length > 1) h += `<div class="ajuste"><div class="c"><b>Liga</b></div><select data-cambia="liga">${S.D.ligas.map((l) => `<option value="${esc(l.id)}" ${S.D.liga.id === l.id ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('')}</select></div>`;
-  if (S.D && S.D.clasif) h += `<div class="ajuste"><div class="c"><b>Tu equipo</b><span>Lo busco solo; cámbialo si me equivoco</span></div><select data-cambia="miEquipo"><option value="">Automático</option>${S.D.clasif.map((e) => `<option value="${esc(e.teamId)}" ${String(c.miEquipo) === e.teamId ? 'selected' : ''}>${esc(e.nombre)}</option>`).join('')}</select></div>`;
 
   h += `<div class="grupo"><span>IA (Gemini, gratis)</span></div>`;
   if (enApp && !enDemo()) {

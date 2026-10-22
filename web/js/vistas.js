@@ -411,7 +411,7 @@ export function equipo(S) {
   const aVender = M.mias.filter((x) => x.ventaInercia).length;
   void aVender;
   h += tabs('equipo', seg, [['plantilla', 'Plantilla', M.mias.length], ['venta', 'En venta', M.misVentas.length], ['clausulas', 'Cláusulas', abiertasE, riesgoE ? 'rojo' : ''], ['dinero', 'Beneficio']]);
-  if (!M.mias.length) return h + nada('No encuentro tu plantilla. Si tienes varias ligas o equipos, elige el tuyo en Ajustes.');
+  if (!M.mias.length) return h + nada('No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si estás en varias ligas, cambia de liga en Ajustes.');
 
   if (seg === 'plantilla') {
     const arriba = equipoHoyHTML(S, { corto: true }) + onceHTML(S, null, { conBanquillo: true });

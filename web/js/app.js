@@ -81,7 +81,7 @@ function entrarWebHTML() {
 function traerVinculo(j) {
   LS.del('demo');
   guardar('sesion', j.sesion);
-  if (j.cfg) guardarCfg({ ligaId: j.cfg.ligaId || null, miEquipo: j.cfg.miEquipo || null });
+  if (j.cfg) guardarCfg({ ligaId: j.cfg.ligaId || null });
   if (j.ia && j.ia.clave && !hayClave()) guardarClave(j.ia.clave);
   if (j.dichos && typeof j.dichos === 'object') LS.set(K('dinero-dicho'), { ...j.dichos, ...LS.get(K('dinero-dicho'), {}) });
 }
@@ -750,7 +750,7 @@ document.addEventListener('click', async (ev) => {
       el.disabled = true;
       try {
         const c = cfg();
-        const datos = { sesion: sesion(), cfg: { ligaId: c.ligaId || null, miEquipo: c.miEquipo || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}) };
+        const datos = { sesion: sesion(), cfg: { ligaId: c.ligaId || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}) };
         const r = await http('POST', `${WORKER_PUBLICO}/vincular`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(datos), tiempo: 20000 });
         let j = null;
         try { j = JSON.parse(r.b || 'null'); } catch (e2) { j = null; }
@@ -896,8 +896,7 @@ document.addEventListener('change', (ev) => {
   if (!el) return;
   const k = el.dataset.cambia, v = el.value;
   if (k === 'deuda') { guardarCfg({ deuda: +v }); rehacer(); pintar(); repintarHoja(); }
-  if (k === 'liga') { guardarCfg({ ligaId: v, miEquipo: null }); cerrarHoja(true); S.D = null; cargar(); }
-  if (k === 'miEquipo') { guardarCfg({ miEquipo: v || null }); cerrarHoja(true); cargar(); }
+  if (k === 'liga') { guardarCfg({ ligaId: v }); cerrarHoja(true); S.D = null; cargar(); }
   if (k === 'modelo') guardarCfgIA({ modelo: v });
   if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M); }
   if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M); repintarHoja(); }
