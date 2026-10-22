@@ -1,6 +1,9 @@
 /* Los dibujos de las novedades (viewBox 0 0 160 120). Clases: d-l línea clara, d-al línea del color de la
    novedad, d-a relleno del color, d-s relleno suave, d-w línea blanca (sobre el color), d-t texto. */
 export const DIBUJOS = {
+  foto: `<rect class="d-l" x="22" y="8" width="58" height="104" rx="11"/><rect class="d-s" x="30" y="22" width="42" height="56" rx="5"/>
+    <circle class="d-a" cx="42" cy="36" r="5"/><path class="d-a" d="M30 70l14-16 10 10 6-6 12 12v6a4 4 0 0 1-4 4H34a4 4 0 0 1-4-4z"/><path class="d-l" d="M44 96h14"/>
+    <path class="d-l" d="M92 30h46a8 8 0 0 1 8 8v30a8 8 0 0 1-8 8h-26l-14 12V76h-6a8 8 0 0 1-8-8V38a8 8 0 0 1 8-8z"/><path class="d-al" d="M115 42l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/><path class="d-al" d="M84 54h-6"/>`,
   voz: `<rect class="d-s" x="60" y="12" width="40" height="64" rx="20"/><rect class="d-l" x="60" y="12" width="40" height="64" rx="20"/>
     <path class="d-l" d="M46 56a34 34 0 0 0 68 0M80 90v14M64 104h32"/><path class="d-al" d="M24 46v20M34 38v36M126 38v36M136 46v20"/>`,
   nota: `<rect class="d-s" x="38" y="12" width="70" height="94" rx="8"/><rect class="d-l" x="38" y="12" width="70" height="94" rx="8"/>

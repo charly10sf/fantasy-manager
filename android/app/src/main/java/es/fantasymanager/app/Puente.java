@@ -394,6 +394,12 @@ public class Puente {
         enPantalla(() -> act.escuchar());
     }
 
+    /** elegir fotos o capturas para la IA (como mucho max); llegan a la web con fotosApp() */
+    @JavascriptInterface
+    public void fotos(int max) {
+        enPantalla(() -> act.elegirFotos(max));
+    }
+
     /* ---------------- la IA en segundo plano ---------------- */
 
     /**

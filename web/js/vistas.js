@@ -614,6 +614,15 @@ function sugerenciasDe(S) {
   return out;
 }
 const SUGERENCIAS = ['¿A quién clausulo hoy y por qué?', '¿Qué vendo para tener dinero sin perder puntos?', '¿Cuánto pujo por el mejor del mercado?', '¿Qué once pongo esta jornada?', '¿Qué hago antes del parón?', '¿Qué rival va a por mis jugadores?'];
+/** las fotos que van con la próxima pregunta (en la caja de escribir) */
+export function adjuntosHTML(S) {
+  const fs = S.adjuntos || [];
+  if (!fs.length && !S.preparandoFotos) return '';
+  return `${fs.map((f, i) => `<span class="adj"><img src="${f.mini}" alt="Foto ${i + 1}"><button data-accion="quitarFoto" data-i="${i}" aria-label="Quitar la foto ${i + 1}">${icono('cerrar')}</button></span>`).join('')}${S.preparandoFotos ? `<span class="adj cargando" aria-label="Preparando la foto"><i></i></span>` : ''}<span class="adj-txt">${fs.length ? `${fs.length} foto${fs.length > 1 ? 's' : ''} para mandar` : 'Preparando…'}</span>`;
+}
+/** las fotos de un mensaje del chat */
+const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img src="${f.mini}" alt=""></button>`).join('')}</div>` : '');
+
 export function ia(S) {
   if (!hayClave()) {
     return `<div class="ia-alta"><div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>
@@ -626,24 +635,26 @@ export function ia(S) {
   }
   const msgs = conversacion();
   const viejos = chatsAnteriores();
-  let h = `<div class="chat"><div class="chat-cab"><div><div class="eti">Pregunta</div><div class="titulo">Tu director deportivo</div></div>
+  let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><div class="titulo">Tu director deportivo</div></div>
     <div class="chat-acc">${viejos.length ? `<button class="btn chico sec" data-accion="chatsViejos">${icono('lista')}Anteriores (${viejos.length})</button>` : ''}${msgs.length ? `<button class="btn chico" data-accion="nuevoChat">${icono('mas')}Nuevo chat</button>` : ''}</div></div>`;
   const ns = notasVigentes();
   if (ns.length) h += `<details class="notas"><summary>${icono('nota')}Recuerda ${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</summary>${ns.map((n) => `<div class="nota"><span>${esc(n.texto)}<small>${cuando(n.t)}${n.caduca ? ` · hasta ${cuando(n.caduca, { hora: false })}` : ''}</small></span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Olvidar">${icono('cerrar')}</button></div>`).join('')}<p class="t2 peq" style="margin:6px 2px 2px">Lo recuerda aunque empieces un chat nuevo. Toca la × para que lo olvide.</p></details>`;
   if (!msgs.length && !S.charlando) {
-    h += `<p class="entradilla">Sabe todo lo de tu liga ahora mismo y busca noticias antes de contestar. Cuéntale también lo que no sale en la app (un amigo te ofrece un jugador, a quién no quieres vender): lo apunta y cuenta en el plan. Puedes hablarle con el micro.</p>`;
+    h += `<p class="entradilla">Sabe todo lo de tu liga ahora mismo y busca noticias antes de contestar. Cuéntale también lo que no sale en la app (un amigo te ofrece un jugador, a quién no quieres vender): lo apunta y cuenta en el plan. Puedes hablarle con el micro o mandarle capturas (del mercado, de una oferta, de un chat) con el botón de la foto.</p>`;
     h += `<div class="sugerencias">${sugerenciasDe(S).map((x) => `<button data-sugerencia="${esc(x)}">${icono('ia')}${esc(x)}</button>`).join('')}</div>`;
   }
   const ultimaIA = [...msgs].reverse().find((m) => m.r === 'ia');
   const hora = (ts) => (ts ? cuando(ts) : '');
   h += msgs.map((m, i) => (m.r === 'yo'
-    ? `<div class="msg yo">${esc(m.t)}${m.ts ? `<div class="msg-h">${hora(m.ts)}</div>` : ''}</div>`
+    ? `<div class="msg yo${m.fotos && m.fotos.length ? ' con-fotos' : ''}">${fotosMsg(m.fotos, i)}${m.t ? `<div>${esc(m.t)}</div>` : ''}${m.ts ? `<div class="msg-h">${hora(m.ts)}</div>` : ''}</div>`
     : `<div class="msg ia"><div class="quien-ia">${esc(nombreModelo(m.modelo) || 'IA')}${m.ts ? `<span>${hora(m.ts)}</span>` : ''}<button class="copiar-msg" data-accion="copiarMsg" data-i="${i}" aria-label="Copiar">${icono('copiar')}</button></div>${md(m.t)}${m.fuentes && m.fuentes.length ? `<div class="fuentes">${m.fuentes.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>` : ''}${(m.apuntadas && m.apuntadas.length) || m.olvidadas ? `<div class="apuntado">${icono('nota')}<div>${(m.apuntadas || []).map((t) => `<b>Apuntado:</b> ${esc(t)}`).join('<br>')}${m.olvidadas ? `${m.apuntadas && m.apuntadas.length ? '<br>' : ''}Olvidado${m.olvidadas > 1 ? `s ${m.olvidadas}` : ''} lo que ya no vale.` : ''}${m === ultimaIA ? '<button class="btn chico" data-accion="planYa">Rehacer el plan con esto</button>' : ''}</div></div>` : ''}</div>`)).join('');
   // para seguir la conversación sin escribir
   if (ultimaIA && msgs[msgs.length - 1] === ultimaIA && !S.charlando) h += `<div class="seguir">${['Dímelo más corto', '¿Y qué alternativas tengo?', '¿Qué hago primero?'].map((x) => `<button data-sugerencia="${esc(x)}">${esc(x)}</button>`).join('')}</div>`;
   // la pregunta que se está contestando, aunque aún no esté guardada en el chat
-  if (S.charlando && S.preguntaActual && !(msgs.length && msgs[msgs.length - 1].r === 'yo' && msgs[msgs.length - 1].t === S.preguntaActual)) h += `<div class="msg yo">${esc(S.preguntaActual)}</div>`;
+  const yaEsta = msgs.length && msgs[msgs.length - 1].r === 'yo' && msgs[msgs.length - 1].t === S.preguntaActual;
+  if (S.charlando && (S.preguntaActual || (S.fotosActuales || []).length) && !yaEsta) h += `<div class="msg yo">${fotosMsg(S.fotosActuales, -1)}${S.preguntaActual ? `<div>${esc(S.preguntaActual)}</div>` : ''}</div>`;
   if (S.charlando) h += `<div class="msg ia" id="respuesta"><div class="quien-ia">Pensando…</div>${S.parcial ? md(S.parcial) : `<span class="pensando"><i></i><i></i><i></i></span> <span class="t2 peq" id="paso-chat">${esc(S.pasoChat || '')}</span>`}</div><div class="parar-chat"><button class="btn chico sec" data-accion="pararChat">${icono('parar')}Parar la respuesta</button></div>`;
-  h += `</div><div class="escribe"><div class="escribe-in"><textarea id="pregunta" rows="1" placeholder="Pregunta o cuéntale algo"></textarea>${S.charlando ? `<button class="parar" data-accion="pararChat" aria-label="Parar">${icono('parar')}</button>` : `${nativo.hayVoz() ? `<button class="micro" data-accion="voz" aria-label="Hablar">${icono('micro')}</button>` : ''}<button data-accion="enviar" aria-label="Enviar">${icono('enviar')}</button>`}</div></div>`;
+  const puedeFotos = !S.charlando && (S.adjuntos || []).length < 4;
+  h += `</div><div class="escribe"><div class="adjuntos" id="adjuntos">${adjuntosHTML(S)}</div><div class="escribe-in"><button class="micro foto" data-accion="foto" aria-label="Mandar una foto o captura"${puedeFotos ? '' : ' disabled'}>${icono('foto')}</button><textarea id="pregunta" rows="1" placeholder="Pregunta o cuéntale algo"></textarea>${S.charlando ? `<button class="parar" data-accion="pararChat" aria-label="Parar">${icono('parar')}</button>` : `${nativo.hayVoz() ? `<button class="micro" data-accion="voz" aria-label="Hablar">${icono('micro')}</button>` : ''}<button data-accion="enviar" aria-label="Enviar">${icono('enviar')}</button>`}</div></div>`;
   return h;
 }

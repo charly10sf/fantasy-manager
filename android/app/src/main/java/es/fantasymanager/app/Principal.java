@@ -38,6 +38,7 @@ public class Principal extends Activity {
     static final String INICIO = "https://" + HOST + "/assets/index.html";
     private static final int PERMISO_AVISOS = 10;
     private static final int VOZ = 12;
+    private static final int FOTOS = 14;
     private WebView web;
     private boolean cargada;
     volatile boolean aLaVista;
@@ -189,6 +190,63 @@ public class Principal extends Activity {
         }
     }
 
+    /**
+     * Fotos y capturas para la IA: el selector de fotos de Android (desde Android 13; antes, el de archivos). No
+     * necesita permiso de la galería: solo se lee lo que eliges. Llegan a la web con fotosApp([...]).
+     */
+    void elegirFotos(int max) {
+        int n = Math.max(1, Math.min(4, max));
+        Intent i;
+        if (Build.VERSION.SDK_INT >= 33) {
+            i = new Intent(android.provider.MediaStore.ACTION_PICK_IMAGES).setType("image/*");
+            if (n > 1) i.putExtra(android.provider.MediaStore.EXTRA_PICK_IMAGES_MAX, Math.min(n, android.provider.MediaStore.getPickImagesMaxLimit()));
+        } else {
+            i = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE);
+            if (n > 1) i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        try {
+            startActivityForResult(i, FOTOS);
+        } catch (Exception e) {
+            try {
+                Intent j = new Intent(Intent.ACTION_GET_CONTENT).setType("image/*").addCategory(Intent.CATEGORY_OPENABLE);
+                if (n > 1) j.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                startActivityForResult(j, FOTOS);
+            } catch (Exception e2) {
+                js("window.fotosApp && fotosApp([], 'Este móvil no deja elegir fotos')");
+            }
+        }
+    }
+
+    /** lo elegido en el selector: se prepara fuera del hilo de la pantalla (puede tardar un segundo) */
+    private void fotosElegidas(int resultado, Intent datos) {
+        final java.util.ArrayList<Uri> uris = new java.util.ArrayList<>();
+        if (resultado == RESULT_OK && datos != null) {
+            android.content.ClipData c = datos.getClipData();
+            if (c != null) {
+                for (int k = 0; k < c.getItemCount(); k++) if (c.getItemAt(k).getUri() != null) uris.add(c.getItemAt(k).getUri());
+            } else if (datos.getData() != null) {
+                uris.add(datos.getData());
+            }
+        }
+        if (uris.isEmpty()) return;
+        final android.content.ContentResolver cr = getContentResolver();
+        new Thread(() -> {
+            org.json.JSONArray lista = new org.json.JSONArray();
+            int mal = 0;
+            for (int k = 0; k < uris.size() && k < 4; k++) {
+                try {
+                    String b = Fotos.jpegB64(cr, uris.get(k));
+                    if (b != null) lista.put(b);
+                    else mal++;
+                } catch (Throwable t) {
+                    mal++;
+                }
+            }
+            String error = mal == 0 ? "null" : JSONObject.quote(mal == 1 ? "Una de las fotos no se ha podido abrir" : mal + " fotos no se han podido abrir");
+            js("window.fotosApp && fotosApp(" + lista + "," + error + ")");
+        }, "fotos").start();
+    }
+
     /** Android 13 o más: el permiso de notificaciones, solo cuando activas los avisos */
     void pedirPermisoAvisos() {
         if (android.os.Build.VERSION.SDK_INT >= 33) {
@@ -225,6 +283,10 @@ public class Principal extends Activity {
             java.util.ArrayList<String> r = datos == null ? null : datos.getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS);
             String t = r != null && !r.isEmpty() ? r.get(0) : null;
             js("window.vozTexto && vozTexto(" + (t == null ? "null" : JSONObject.quote(t)) + ")");
+            return;
+        }
+        if (pedido == FOTOS) {
+            fotosElegidas(resultado, datos);
             return;
         }
         if (Canal.resultado(this, pedido)) return;

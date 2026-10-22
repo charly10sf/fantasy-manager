@@ -136,5 +136,8 @@ export const nativo = {
   // preguntar con la voz: en la app, el dictado de Google; en el navegador, el reconocimiento de voz de Chrome si lo hay
   voz: () => llamar('voz'),
   hayVoz: () => !!N || 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window,
+  // fotos y capturas para la IA: en la app, el selector de fotos de Android (las devuelve con fotosApp())
+  hayFotos: () => !!N && typeof N.fotos === 'function',
+  fotos: (max) => llamar('fotos', Math.max(1, Math.min(4, +max || 1))),
   estadoFondo: () => { try { return JSON.parse(llamar('estadoFondo') || 'null'); } catch (e) { return null; } },
 };

@@ -8,6 +8,7 @@ import { LS, eur, pct, cuando, dura, POS, DIA, diaDe, norm, num } from './util.j
 import { K } from './datos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo } from './operaciones.js';
 import { recsDe, aprendeTxt } from './aprende.js';
+import { guardarFoto, leerFoto } from './fotos.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -175,7 +176,13 @@ const espera = (s, signal) => new Promise((res, rej) => { const t = setTimeout(r
  */
 async function preguntar({ sistema, contents }, op = {}) {
   const alPaso = op.alPaso || (() => {});
-  const modelos = await cadena();
+  let modelos = await cadena();
+  // con fotos solo valen los Gemini (los Gemma no ven imágenes)
+  const conFotos = (contents || []).some((c) => (c.parts || []).some((p) => p.inlineData));
+  if (conFotos && modelos.length) {
+    modelos = modelos.filter((m) => !esGemma(m));
+    if (!modelos.length) throw new ErrorIA('Para mirar fotos hace falta un modelo Gemini y los de tu clave ya han gastado el cupo gratis de hoy. Pregúntalo sin la foto o vuelve mañana a las 9:00.', 429, { todos: true });
+  }
   if (!modelos.length) {
     const f = fuera();
     throw new ErrorIA(`Todos los modelos de tu clave han gastado su cupo gratis de hoy (${Object.keys(f).length} probados). Vuelven mañana a las 9:00.`, 429, { todos: true });
@@ -195,7 +202,7 @@ async function preguntar({ sistema, contents }, op = {}) {
     for (let intento = 0; intento < 5; intento++) {
       if (op.signal && op.signal.aborted) throw new DOMException('Parado', 'AbortError');
       const cuerpo = esGemma(modelo)
-        ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${contents.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
+        ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${contents.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).filter(Boolean).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
         : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
       alPaso(`${nombreModelo(modelo)}${web ? ' con búsqueda en Google' : ''}…`);
       const t0 = Date.now();
@@ -782,7 +789,8 @@ function archivar() {
   const msgs = conversacion();
   if (!msgs.length) return false;
   const primera = msgs.find((m) => m.r === 'yo');
-  const titulo = primera ? (primera.t.length > 70 ? `${primera.t.slice(0, 67)}…` : primera.t) : 'Chat';
+  const t0 = primera ? primera.t || (primera.fotos ? 'Captura' : '') : '';
+  const titulo = t0 ? (t0.length > 70 ? `${t0.slice(0, 67)}…` : t0) : 'Chat';
   guardarAnteriores([{ t: Date.now(), ini: msgs[0].ts || Date.now(), titulo, n: msgs.length, msgs }, ...chatsAnteriores()]);
   return true;
 }
@@ -851,16 +859,42 @@ function aplicarNotas(texto, D) {
   return { texto: limpio, apuntadas, olvidadas };
 }
 
-export async function charlar(pregunta, D, M, c, alTexto, signal) {
+/** los últimos mensajes para Gemini, con las fotos enteras de los más recientes (como mucho 6) */
+async function contenidosChat(hist, nuevas) {
+  const recientes = hist.slice(-14);
+  const out = new Array(recientes.length);
+  let quedan = 6;
+  for (let i = recientes.length - 1; i >= 0; i--) {
+    const m = recientes[i];
+    const fs = m.r === 'yo' && Array.isArray(m.fotos) ? m.fotos : [];
+    const parts = [];
+    let perdidas = 0;
+    for (const f of fs) {
+      const b = quedan > 0 ? (nuevas[f.id] || (await leerFoto(f.id))) : null;
+      if (b) { parts.push({ inlineData: { mimeType: 'image/jpeg', data: b } }); quedan--; } else perdidas++;
+    }
+    let t = m.t || (fs.length ? `Mira ${fs.length > 1 ? 'estas capturas' : 'esta captura'}.` : '');
+    if (perdidas) t += `\n[Aquí te mandó ${perdidas} foto${perdidas > 1 ? 's' : ''} que ya no puedes ver: tira de lo que contestaste.]`;
+    parts.push({ text: t || '…' });
+    out[i] = { role: m.r === 'yo' ? 'user' : 'model', parts };
+  }
+  return out;
+}
+
+const SOBRE_FOTOS = `\nFOTOS: si te manda una captura o una foto, léela entera antes de contestar (puede ser del mercado, de una oferta que le han hecho, de la plantilla o las cláusulas de un rival, de un chat con otro manager, de una noticia). Di lo que ves que importa con sus cifras y crúzalo con los datos que te paso; si en la captura sale algo que no cuadra con los datos o un jugador que no tengo, dilo. Si se lee mal o está cortada, dilo en vez de inventarte lo que pone.`;
+
+export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = []) {
   const hist = conversacion();
-  hist.push({ r: 'yo', t: pregunta, ts: Date.now() });
+  const nuevas = Object.fromEntries((fotos || []).map((f) => [f.id, f.b64]));
+  hist.push({ r: 'yo', t: pregunta, ts: Date.now(), ...(fotos && fotos.length ? { fotos: fotos.map((f) => ({ id: f.id, mini: f.mini })) } : {}) });
   LS.set(K('chat'), hist.slice(-40));
-  const contents = hist.slice(-14).map((m) => ({ role: m.r === 'yo' ? 'user' : 'model', parts: [{ text: m.t }] }));
+  for (const f of fotos || []) guardarFoto(f).catch(() => {});
+  const contents = await contenidosChat(hist, nuevas);
   const p = ultimoPlan();
   // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
   const nombrados = jugadoresEn(pregunta, D);
   const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}` : '';
-  const sistema = `${SISTEMA}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${NOTAS_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { corto: true })}${extra}${p ? `\n\nEL PLAN DE HOY QUE LE DISTE (${cuando(p.t)}): ${p.titular} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador}`).join('; ')}` : ''}`;
+  const sistema = `${SISTEMA}${fotos && fotos.length || hist.some((m) => m.fotos) ? SOBRE_FOTOS : ''}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${NOTAS_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { corto: true })}${extra}${p ? `\n\nEL PLAN DE HOY QUE LE DISTE (${cuando(p.t)}): ${p.titular} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador}`).join('; ')}` : ''}`;
   const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();
   const r = await preguntar({ sistema, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal });
   const n = aplicarNotas(r.texto, D);

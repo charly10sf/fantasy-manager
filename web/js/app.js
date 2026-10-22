@@ -18,10 +18,11 @@ import { encuadrar } from './caras.js';
 import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite } from './limite.js';
+import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
-const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null };
+const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
 const VISTAS = { hoy: V.hoy, equipo: V.equipo, rivales: V.rivales, mercado: V.mercado, ia: V.ia };
 const ALIAS = { inicio: 'hoy', analisis: 'ia', chat: 'ia' };
@@ -485,6 +486,8 @@ function repintarHoja() {
 }
 
 window.atras = () => {
+  const visor = $('.visor');
+  if (visor) { visor.remove(); return true; }
   if (cerrarPresentacion()) return true;
   if (cerrarHoja()) return true;
   if (S.D && S.vista !== 'hoy') { ir('hoy'); return true; }
@@ -543,13 +546,17 @@ function pintarGraf(pid) {
 /* ---------------- el chat ---------------- */
 async function enviarPregunta(texto) {
   const t = (texto || '').trim();
-  if (!t || S.charlando) return;
+  if (S.charlando || S.preparandoFotos) return;
+  const fotos = S.adjuntos.slice();
+  if (!t && !fotos.length) return;
+  S.adjuntos = [];
   if (S.vista !== 'ia') ir('ia');
-  S.charlando = true; S.parcial = ''; S.pasoChat = ''; S.preguntaActual = t;
+  S.charlando = true; S.parcial = ''; S.pasoChat = ''; S.preguntaActual = t; S.fotosActuales = fotos;
   pintar();
   let ultimo = 0;
   // como con el plan: aunque salgas de la app sigue pensando, y si no estás en ella te avisa al contestar
-  nativo.trabajando(true, `«${t.length > 60 ? `${t.slice(0, 57)}…` : t}» · Puedes salir de la app: te aviso cuando conteste.`, 'Pensando la respuesta');
+  const resumenP = t ? `«${t.length > 60 ? `${t.slice(0, 57)}…` : t}»` : fotos.length > 1 ? 'Tus capturas' : 'Tu captura';
+  nativo.trabajando(true, `${resumenP} · Puedes salir de la app: te aviso cuando conteste.`, 'Pensando la respuesta');
   const ctl = new AbortController();
   S.chatCtl = ctl;
   try {
@@ -557,7 +564,7 @@ async function enviarPregunta(texto) {
       S.parcial = parcial;
       const ahora = Date.now();
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
-    }, ctl.signal);
+    }, ctl.signal, fotos);
     if (!nativo.aLaVista()) {
       const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();
       nativo.notificar('Tu director deportivo ha contestado', limpio.length > 220 ? `${limpio.slice(0, 217)}…` : limpio || 'Entra para leer la respuesta', 'ia');
@@ -567,6 +574,7 @@ async function enviarPregunta(texto) {
       // parada: la pregunta vuelve a la caja para cambiarla o mandarla otra vez
       quitarUltimaPregunta(t);
       S.borrador = t;
+      S.adjuntos = [...fotos, ...S.adjuntos].slice(0, MAX_FOTOS);
       tostada('Pregunta parada');
     } else {
       tostada(e.message || 'No ha contestado', 7000);
@@ -574,11 +582,90 @@ async function enviarPregunta(texto) {
     }
   } finally {
     if (S.chatCtl === ctl) S.chatCtl = null;
-    S.preguntaActual = '';
+    S.preguntaActual = ''; S.fotosActuales = [];
     nativo.trabajando(false);
   }
   S.charlando = false; S.parcial = '';
   if (S.vista === 'ia') pintar();
+}
+
+/* ---------------- fotos y capturas para la IA ---------------- */
+/** la tira de fotos que van con la próxima pregunta (sin repintar todo, para no perder lo escrito) */
+function pintarAdjuntos() {
+  const el = $('#adjuntos');
+  if (el) el.innerHTML = V.adjuntosHTML(S);
+  const ch = $('.chat');
+  if (ch) ch.classList.toggle('con-adj', S.adjuntos.length > 0 || !!S.preparandoFotos);
+  const bf = $('[data-accion="foto"]');
+  if (bf) bf.disabled = S.adjuntos.length >= MAX_FOTOS;
+}
+async function anadirFotos(lista, preparar) {
+  const sitio = MAX_FOTOS - S.adjuntos.length;
+  if (sitio <= 0) { tostada(`Como mucho ${MAX_FOTOS} fotos por mensaje`); return; }
+  const cola = [...lista].slice(0, sitio);
+  if (lista.length > sitio) tostada(`Solo caben ${MAX_FOTOS} fotos por mensaje: van las ${sitio} primeras`);
+  if (!cola.length) return;
+  S.preparandoFotos = (S.preparandoFotos || 0) + cola.length;
+  pintarAdjuntos();
+  let mal = 0;
+  for (const x of cola) {
+    try { S.adjuntos.push(await preparar(x)); } catch (e) { mal++; }
+    S.preparandoFotos--;
+    pintarAdjuntos();
+  }
+  if (mal) tostada(mal > 1 ? `${mal} archivos no se han podido abrir como imagen` : 'Esa imagen no se ha podido abrir');
+  const ta = $('#pregunta'); if (ta && !S.charlando) ta.focus({ preventScroll: true });
+}
+function elegirFotos() {
+  if (!hayClave()) { ir('ia'); tostada('Primero activa la IA con tu clave de Google'); return; }
+  if (S.adjuntos.length >= MAX_FOTOS) { tostada(`Como mucho ${MAX_FOTOS} fotos por mensaje`); return; }
+  if (enApp && nativo.hayFotos()) { nativo.fotos(MAX_FOTOS - S.adjuntos.length); return; }
+  let inp = $('#fotoArchivo');
+  if (!inp) {
+    inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*'; inp.multiple = true; inp.id = 'fotoArchivo'; inp.hidden = true;
+    inp.addEventListener('change', () => { const fs = [...(inp.files || [])]; inp.value = ''; anadirFotos(fs, prepararArchivo); });
+    document.body.appendChild(inp);
+  }
+  inp.click();
+}
+/** lo que devuelve el selector de fotos de la app: JPEG ya reducidos, en base64 */
+window.fotosApp = (lista, error) => {
+  if (error) tostada(error, 5000);
+  if (Array.isArray(lista) && lista.length) anadirFotos(lista, prepararB64);
+};
+// pegar una captura (Ctrl+V) o arrastrarla encima del chat
+document.addEventListener('paste', (ev) => {
+  if (S.vista !== 'ia' || !hayClave() || S.charlando) return;
+  const fs = [...((ev.clipboardData && ev.clipboardData.files) || [])].filter((f) => /^image\//.test(f.type));
+  if (!fs.length) return;
+  ev.preventDefault();
+  anadirFotos(fs, prepararArchivo);
+});
+document.addEventListener('dragover', (ev) => {
+  if (S.vista !== 'ia' || !hayClave() || !ev.dataTransfer || ![...ev.dataTransfer.types].includes('Files')) return;
+  ev.preventDefault();
+  document.body.classList.add('soltando');
+});
+document.addEventListener('dragleave', (ev) => { if (!ev.relatedTarget) document.body.classList.remove('soltando'); });
+document.addEventListener('drop', (ev) => {
+  document.body.classList.remove('soltando');
+  if (S.vista !== 'ia' || !hayClave() || !ev.dataTransfer) return;
+  const fs = [...(ev.dataTransfer.files || [])].filter((f) => /^image\//.test(f.type));
+  ev.preventDefault();
+  if (fs.length && !S.charlando) anadirFotos(fs, prepararArchivo);
+});
+/** una foto del chat, en grande */
+async function verFoto(id, mini) {
+  const b = id ? await leerFoto(id) : null;
+  const src = b ? `data:image/jpeg;base64,${b}` : mini;
+  if (!src) return;
+  const v = document.createElement('div');
+  v.className = 'visor'; v.setAttribute('role', 'dialog'); v.setAttribute('aria-label', 'Foto');
+  v.innerHTML = `<img alt="Foto que le mandaste a la IA"><button class="visor-x" aria-label="Cerrar">${icono('cerrar')}</button>${b ? '' : '<p>Solo queda la miniatura: la foto entera ya no está guardada.</p>'}`;
+  v.querySelector('img').src = src;
+  v.addEventListener('click', () => v.remove());
+  document.body.appendChild(v);
 }
 
 /* ---------------- preguntar con la voz ---------------- */
@@ -886,6 +973,15 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'enviar': { const ta = $('#pregunta'); if (ta) { const t = ta.value; ta.value = ''; enviarPregunta(t); } break; }
+    case 'foto': elegirFotos(); break;
+    case 'quitarFoto': S.adjuntos.splice(+d.i, 1); pintarAdjuntos(); break;
+    case 'verFoto': {
+      const m = conversacion()[+d.m];
+      const f = m && m.fotos && m.fotos[+d.i];
+      const actual = !f && S.fotosActuales && S.fotosActuales[+d.i];
+      if (f) verFoto(f.id, f.mini); else if (actual) verFoto(actual.id, actual.mini);
+      break;
+    }
     case 'preguntarJ': { const j = S.M.J(d.pid); cerrarHoja(true); enviarPregunta(`¿Qué hago con ${j.nombre}? Dime si comprarlo, venderlo, clausularlo o esperar, cuánto pagar como mucho y por qué.`); break; }
     default: break;
   }
@@ -902,6 +998,7 @@ document.addEventListener('change', (ev) => {
   if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M); repintarHoja(); }
 });
 document.addEventListener('keydown', (ev) => {
+  if (ev.key === 'Escape' && $('.visor')) { $('.visor').remove(); return; }
   if (ev.key === 'Enter' && !ev.shiftKey && ev.target && ev.target.id === 'pregunta') { ev.preventDefault(); const t = ev.target.value; ev.target.value = ''; enviarPregunta(t); }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
 });
