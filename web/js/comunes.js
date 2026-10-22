@@ -24,6 +24,7 @@ export function estadoPill(j) {
 export function clausulaPill(f) {
   if (!f || !f.clausula) return '';
   if (f.abierta) return `<span class="pill abierta">${icono('abierto')}${eur(f.clausula)} abierta</span>`;
+  if (f.escudo) return `<span class="pill pronto">${icono('escudo')}Blindado · ${cuando(f.escudo).replace(/^hoy /, '')}</span>`;
   const pronto = f.abreEn < 24 * 3600e3;
   return `<span class="pill ${pronto ? 'pronto' : ''}">${icono('candado')}${eur(f.clausula)} · ${pronto ? cuando(f.protegidoHasta).replace(/^hoy /, '') : dura(f.abreEn)}</span>`;
 }

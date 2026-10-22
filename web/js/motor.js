@@ -610,13 +610,30 @@ export function analizar(D, H, c, extra = {}) {
     return { v: Math.round((j.valor * (1 + med)) / 1e4) * 1e4, med, n: OL ? OL.n : 0, sinDatos: !OL, min: OL ? Math.round((j.valor * (1 + OL.p25)) / 1e4) * 1e4 : null, max: OL ? Math.round((j.valor * (1 + OL.p75)) / 1e4) * 1e4 : null };
   };
 
+  /* ---------- los blindajes (el escudo de LaLiga, viendo un anuncio) ---------- */
+  // protegen la cláusula de un jugador 24 h (48 h en las ligas Premium); cada equipo tiene 2 por jornada, desde que
+  // acaba una jornada hasta que acaba la siguiente, y solo para jugadores con la cláusula abierta. Se ven en la
+  // actividad de la liga; si después el jugador cambia de dueño, el escudo ya no cuenta
+  M.ESCUDO_H = D.liga && D.liga.premium ? 48 : 24;
+  const ESCUDO = M.ESCUDO_H * HORA;
+  const escudos = {};
+  for (const a of D.actividad || []) {
+    if (a.clase !== 'blindaje' || !a.pid || !a.t || ahora - a.t >= ESCUDO) continue;
+    if ((D.actividad || []).some((b) => b.pid === a.pid && b.t > a.t && ['compra', 'clausula', 'venta'].includes(b.clase))) continue;
+    escudos[a.pid] = Math.max(escudos[a.pid] || 0, a.t + ESCUDO);
+  }
+  M.escudoHasta = (pid) => (escudos[pid] && escudos[pid] > ahora ? escudos[pid] : null);
+
   /* ---------- fichas (jugador en un equipo de tu liga) ---------- */
   const enriquecer = (f, tid) => {
     const j = J(f.pid), t = M.tend(f.pid);
-    const abierta = !f.protegidoHasta || f.protegidoHasta <= ahora;
+    // protegida por los 14 días de fichaje o por un blindaje: la que acabe más tarde
+    const esc = M.escudoHasta(f.pid);
+    const prot = Math.max(f.protegidoHasta || 0, esc || 0) || null;
+    const abierta = !prot || prot <= ahora;
     return {
-      ...f, j, teamId: tid, tend: t, abierta,
-      abreEn: abierta ? 0 : f.protegidoHasta - ahora,
+      ...f, j, teamId: tid, tend: t, abierta, protegidoHasta: prot, escudo: esc && esc >= (f.protegidoHasta || 0) ? esc : null,
+      abreEn: abierta ? 0 : prot - ahora,
       ratio: j.valor ? f.clausula / j.valor : null,
       sobre: f.clausula - j.valor,
     };
@@ -1235,6 +1252,14 @@ export function analizar(D, H, c, extra = {}) {
       esYo: !!yoTid && quienT === yoTid, contraMi: !!yoTid && otroT === yoTid,
     };
   });
+  // tus blindajes de esta jornada: 2, desde que acabó la última jornada hasta que acabe la que viene
+  {
+    const acabadas = jornadas.filter((jo) => jo.fin <= ahora);
+    const desde = acabadas.length ? Math.max(...acabadas.map((jo) => jo.fin)) : 0;
+    const usados = M.actividad.filter((a) => a.clase === 'blindaje' && a.esYo && a.t > desde).length;
+    const sig = M.enJuego || M.proxima;
+    M.escudosMios = { usados, quedan: Math.max(0, 2 - usados), desde, hasta: sig ? sig.fin : null, horas: M.ESCUDO_H };
+  }
   /** cuándo y por cuánto fichó su dueño actual a un jugador (compra o cláusula), si está en la actividad */
   M.fichadoPor = (pid) => {
     const tid = M.dueno[pid];
@@ -1377,10 +1402,24 @@ function acciones(D, M, c) {
   pronto.sort((a, b) => a.abreEn - b.abreEn).slice(0, 3).forEach((x, k) => add({
     tipo: 'pronto', prio: 75 - k * 2, icono: 'reloj', pid: x.pid, cuando: cuando(x.protegidoHasta),
     titulo: `Se abre la cláusula de ${x.j.nombre}`,
-    texto: `En ${dura(x.abreEn)}. Es de ${x.rival.nombre} y cuesta ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Te aviso al momento si tienes los avisos puestos.`,
+    texto: `En ${dura(x.abreEn)}${x.escudo ? ' (lo ha blindado su dueño)' : ''}. Es de ${x.rival.nombre} y cuesta ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Te aviso al momento si tienes los avisos puestos.`,
   }));
 
-  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !(x.blindaje && (x.blindaje.caro || x.blindaje.yaVale)) && !(x.pagan && x.pagan.hayDatos && !x.pagan.seguro.length && !x.pagan.quiza.length))
+  // blindar gratis a los tuyos (el escudo, viendo un anuncio): los importantes con la cláusula abierta y algún rival
+  // que la puede pagar; antes que gastar en subirla
+  const ES = M.escudosMios || { quedan: 0 };
+  const paraEscudo = ES.quedan ? M.mias.filter((x) => x.abierta && !x.escudo && x.importa && x.riesgo !== 'ninguno' && !x.ventaInercia && !MALOS.has(x.j.estado) && x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) && !M.enVenta.has(x.pid)).sort((a, b) => b.pierde - a.pierde).slice(0, ES.quedan) : [];
+  M.paraEscudo = paraEscudo.map((x) => x.pid);
+  paraEscudo.forEach((x, k) => {
+    const quien = [...x.pagan.seguro, ...x.pagan.quiza].slice(0, 3).map((y) => y.nombre).join(', ');
+    add({
+      tipo: 'escudo', prio: 84 - k, icono: 'escudo', pid: x.pid, cuando: 'Ahora',
+      titulo: `Blinda a ${x.j.nombre} (gratis)`,
+      texto: `Su cláusula (${eur(x.clausula)}) está abierta y le llega a ${quien}. Con el blindaje de LaLiga (viendo un anuncio) queda protegida ${M.ESCUDO_H} h, hasta ${cuando(ahora + M.ESCUDO_H * HORA)}. Te quedan ${ES.quedan} esta jornada.`,
+    });
+  });
+
+  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && !(x.blindaje && (x.blindaje.caro || x.blindaje.yaVale)) && !(x.pagan && x.pagan.hayDatos && !x.pagan.seguro.length && !x.pagan.quiza.length))
     .sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x, k) => {
       const cerca = x.ratio < 1.05 ? `está en su valor (${eur(x.j.valor)})` : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor (${eur(x.j.valor)})`;
       const quien = x.pagan && (x.pagan.seguro.length || x.pagan.quiza.length) ? ` Le llega a ${[...x.pagan.seguro, ...x.pagan.quiza].slice(0, 3).map((y) => y.nombre).join(', ')}${x.pagan.seguro.length + x.pagan.quiza.length > 3 ? ' y más' : ''}.` : '';
@@ -1404,7 +1443,7 @@ function acciones(D, M, c) {
   });
 
   // los importantes que están a tiro pero cuyo blindaje no compensa: para que lo sepas, sin urgencias
-  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
     tipo: 'riesgo', prio: 58, icono: 'escudo', pid: x.pid, cuando: 'Ojo',
     titulo: `${x.j.nombre} está a tiro de ${x.pagan.seguro.length + x.pagan.quiza.length} rivales`,
     texto: `Cláusula ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Blindarlo del todo costaría ${eur(x.blindaje.coste)}: no compensa. Si te lo quitan, cobras la cláusula; ten pensado su sustituto (te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada).`,
@@ -1587,8 +1626,14 @@ export function planAuto(D, M, c) {
     saldo = espSaldo;
   }
 
-  // 5. proteger a los tuyos más expuestos
-  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale))).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
+  // 5. proteger a los tuyos más expuestos: primero con el blindaje gratis (2 por jornada), luego subiendo la cláusula
+  for (const pid of (M.paraEscudo || []).filter((p) => !vendidos.has(p))) {
+    const x = M.mias.find((y) => y.pid === pid);
+    if (!x) continue;
+    op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: 'con el blindaje de LaLiga (gratis, viendo un anuncio)', importe: 0, cuando: 'ahora',
+      motivo: `Su cláusula (${eur(x.clausula)}) está abierta y algún rival la puede pagar; te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada. El blindaje la protege ${M.ESCUDO_H} h sin gastar nada (te quedan ${(M.escudosMios || {}).quedan} esta jornada).` });
+  }
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale))).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
     const b = x.blindaje;
     op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: b ? `subir su cláusula a ${eur(b.objetivo)}` : 'subir su cláusula', importe: b ? b.coste : null, cuando: x.abierta ? 'ahora' : `antes de ${cuando(x.protegidoHasta)}`,
       motivo: `Su cláusula (${eur(x.clausula)}) ${x.ratio < 1.05 ? 'está en su valor' : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor`} (${eur(x.j.valor)}), ${x.abierta ? 'ya está abierta' : `se abre en ${dura(x.abreEn)}`} y te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada.${b ? ` Con ${eur(b.coste)} no le llegaría a ningún rival.` : ''}` });

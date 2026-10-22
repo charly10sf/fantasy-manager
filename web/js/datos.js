@@ -76,7 +76,7 @@ export async function actualizar(alPaso = () => {}) {
   const miNombre = yoD.managerName || yoD.displayName || yoD.username || yoD.name || '';
 
   alPaso(1, PASOS[1]);
-  const ligas = N.lista(await api.ligas()).map((l) => ({ id: String(l.id), nombre: l.name || l.leagueName || `Liga ${l.id}` })).filter((l) => l.id);
+  const ligas = N.lista(await api.ligas()).map((l) => ({ id: String(l.id), nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))) })).filter((l) => l.id);
   if (!ligas.length) throw new Error('Tu cuenta no tiene ninguna liga de LaLiga Fantasy');
   const liga = ligas.find((l) => l.id === String(c.ligaId)) || ligas[0];
 
