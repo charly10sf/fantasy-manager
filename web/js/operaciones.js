@@ -38,7 +38,7 @@ export function catalogo(D, M, notas = []) {
   // M: lo que venden otros managers
   for (const m of M.mercado) {
     if (m.tipo !== 'manager' || m.vendedorTeamId === yo || (M.enVenta && M.enVenta.has(m.pid))) continue;
-    add({ ref: `M-${m.pid}`, tipo: 'comprar', pid: m.pid, j: m.j, precio: m.precio, vendedor: m.vendedor || nombreDe(M, m.vendedorTeamId), vendedorTeamId: m.vendedorTeamId, miPuja: m.miPuja, interes: m.interes, sobre: m.sobre });
+    add({ ref: `M-${m.pid}`, tipo: 'comprar', pid: m.pid, j: m.j, precio: m.precio, vendedor: m.vendedor || nombreDe(M, m.vendedorTeamId), vendedorTeamId: m.vendedorTeamId, miPuja: m.miPuja, interes: m.interes, sobre: m.sobre, puja: m.puja, ofertaMin: m.ofertaMin, ofertaAlta: m.ofertaAlta, ofertaLiga: m.ofertaLiga });
   }
   // T: tratos que le has contado (jugador de otro manager con precio)
   for (const n of notas) {
@@ -83,8 +83,15 @@ export function textoOp(o, M = null) {
       return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? ', recortada para no pagar de más por lo que aporta' : ''}${liga}`;
     }
     case 'M': {
-      const ol = M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null;
-      return `COMPRAR a ${o.vendedor} ${j.nombre}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${sobreTxt}; es suyo hasta que ACEPTE una oferta, no es seguro${ol ? `; si nadie se lo compra, LaLiga le daría unos ${eur(ol.v)}, así que por menos de eso no tiene por qué aceptar` : ''}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}` : ''}`;
+      const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);
+      const pide = j && j.valor ? ` (${pct((o.precio / j.valor - 1) * 100)} sobre su valor de ${eur(j.valor)})` : '';
+      const laliga = ol && !ol.sinDatos
+        ? `; LaLiga TAMBIÉN le hace su oferta por él (en esta liga da unos ${eur(ol.v)}, normalmente entre ${eur(ol.min)} y ${eur(ol.max)}) y él se queda con la mejor${o.precio >= ol.max ? ': pide más de lo que le suele dar LaLiga, así que con lo que pide le compensa' : ', así que lo que pide es solo el suelo: por debajo de lo que le da LaLiga NO TE LO VENDE'}`
+        : '; LaLiga TAMBIÉN le hace su oferta por él (aún no sé cuánto suele dar en esta liga) y él se queda con la mejor, así que ofrecer solo lo que pide no basta';
+      const min = o.ofertaMin ? `; OFERTA MÍNIMA CON OPCIONES ${eur(o.ofertaMin)}${o.ofertaAlta && o.ofertaAlta > o.ofertaMin ? `, para tenerlo casi seguro ${eur(o.ofertaAlta)}` : ''}; la app ofrecería ${eur(o.puja || o.ofertaMin)}` : '';
+      const sc = M && M.sobrecoste && j && o.puja ? M.sobrecoste(j, o.puja) : null;
+      const scTxt = sc && j.valor && o.puja > j.valor * 1.02 ? ` (${pct((o.puja / j.valor - 1) * 100)} sobre su valor: ÍNDICE DE SOBRECOSTE ${sc.indice}/100, aguantable hasta ~${M.tolerancia(j)})` : '';
+      return `COMPRAR a ${o.vendedor} ${j.nombre}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${pide}; es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
     }
     case 'T': return `COMPRAR a ${o.vendedor} ${j.nombre} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
     case 'C': return `CLAUSULAR a ${o.de} ${j.nombre} pagando su cláusula de ${eur(o.precio)}${sobreTxt}; ${o.abierta ? 'ABIERTA YA' : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : '; NO ME LLEGA el dinero'}`;

@@ -1133,8 +1133,25 @@ export function analizar(D, H, c, extra = {}) {
       if (!m.vendedor && e) m.vendedor = e.manager || e.nombre;
     }
     const j = J(m.pid), t = M.tend(m.pid);
-    const i = M.interes(j, m.precio, t);
-    const sobre = j.valor ? m.precio / j.valor - 1 : 0;
+    // si lo vende otro manager, LaLiga también le hace su oferta y él se queda con la mejor: lo que pide es solo el
+    // suelo. Para que te lo venda hay que superar lo que le da LaLiga (lo normal en tu liga; con más interés, la parte
+    // alta, para no quedarte a medias)
+    const r10 = (x) => Math.ceil(x / 1e4) * 1e4;
+    let ofertaLiga = null, ofertaMin = null, ofertaAlta = null;
+    if (m.tipo === 'manager' && m.vendedorTeamId !== yoTid && j.valor) {
+      ofertaLiga = M.ofertaLigaDe(j);
+      if (ofertaLiga && !ofertaLiga.sinDatos) {
+        ofertaMin = Math.max(m.precio, r10(Math.max(ofertaLiga.v, j.valor) * 1.01));
+        ofertaAlta = Math.max(ofertaMin, r10(Math.max(ofertaLiga.max, j.valor) * 1.01));
+      } else {
+        // sin ventas a LaLiga en tu liga para saber cuánto da: algo por encima de su valor
+        ofertaMin = Math.max(m.precio, r10(j.valor * 1.05));
+        ofertaAlta = Math.max(ofertaMin, r10(j.valor * 1.1));
+      }
+    }
+    const precioReal = ofertaMin || m.precio;
+    const i = M.interes(j, precioReal, t);
+    const sobre = j.valor ? precioReal / j.valor - 1 : 0;
     let veredicto = 'normal';
     if (MALOS.has(j.estado)) veredicto = 'evitar';
     else if (sobre <= 0.02 && !(t.p1 != null && t.p1 < -0.5) && ((t.p7 != null && t.p7 > 2) || (t.p1 != null && t.p1 > 0.8) || num(j.media) >= 5)) veredicto = 'chollo';
@@ -1162,6 +1179,7 @@ export function analizar(D, H, c, extra = {}) {
     }
     if (m.tipo === 'manager') margen = 0;
     let puja = Math.ceil(m.precio * (1 + margen) / 10000) * 10000;
+    if (ofertaMin) puja = i.n >= 70 ? ofertaAlta : ofertaMin;
     // sin pasar de lo que se aguanta pagar por lo que aporta a tu once
     let recortada = false;
     if (m.tipo !== 'manager') {
@@ -1175,7 +1193,7 @@ export function analizar(D, H, c, extra = {}) {
       const tope = Math.max(m.precio, Math.floor(j.valor * (1 + calR.maxSobre) / 10000) * 10000);
       if (puja > tope) { puja = tope; topeCal = tope; }
     }
-    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: m.precio <= M.pujaMax, puja, pujaLiga, recortada, topeCal, ofertaLiga: m.tipo === 'manager' && m.vendedorTeamId !== yoTid ? M.ofertaLigaDe(j) : null, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
+    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: precioReal <= M.pujaMax, puja, pujaLiga, recortada, topeCal, ofertaLiga, ofertaMin, ofertaAlta, sobrePide: j.valor ? m.precio / j.valor - 1 : 0, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
   {
     // la hora a la que caducan casi todos los libres es el cambio de mercado; lo que pone a la venta un manager
