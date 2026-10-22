@@ -807,7 +807,7 @@ a.btn { text-decoration: none; }
 .escritorio .nav .ic { width: 21px; height: 21px; }
 
 /* el campo de juego */
-.escritorio main { max-width: 1440px; padding: 34px 48px 72px; }
+.escritorio main { max-width: 1600px; margin: 0 auto; padding: 34px 48px 72px; }
 .escritorio .eti { font-size: 13.5px; }
 .escritorio .titulo { font-size: 50px; margin: 8px 0 6px; }
 .escritorio .entradilla { font-size: 17px; max-width: 70ch; }
@@ -818,13 +818,12 @@ a.btn { text-decoration: none; }
 .escritorio .sec h2 { font-size: 24px; }
 .escritorio .vacio { padding: 40px 10px; }
 
-/* dos columnas: lo principal y al lado una estrecha que se queda fija al bajar */
+/* dos columnas: lo principal y al lado una estrecha (sin scroll propio: baja con la página y no se corta) */
 .cols-e { display: grid; gap: 48px; align-items: start; }
 .cols-e.lado-der { grid-template-columns: minmax(0, 1fr) 400px; }
 .cols-e.lado-izq { grid-template-columns: 430px minmax(0, 1fr); }
 .cols-e.mitades { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .cols-e .ce-i, .cols-e .ce-d { min-width: 0; }
-.cols-e.lado-der > .ce-d, .cols-e.lado-izq > .ce-i { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--plano3) transparent; padding-right: 4px; }
 .cols-e > div > :first-child { margin-top: 0; }
 @media (min-width: 1500px) { .cols-e.lado-der { grid-template-columns: minmax(0, 1fr) 440px; gap: 64px; } .cols-e.lado-izq { grid-template-columns: 470px minmax(0, 1fr); gap: 64px; } }
 
@@ -840,6 +839,9 @@ a.btn { text-decoration: none; }
 .escritorio .plan-sit { font-size: 17px; max-width: 72ch; }
 .escritorio .ce-d .carril { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; overflow: visible; margin: 0; padding: 0; }
 .escritorio .ce-d .tj { width: auto; }
+/* los avisos de tiempo (mercado nuevo, se abre…), en varias líneas si no caben */
+.escritorio .tiempos { flex-wrap: wrap; overflow: visible; margin: 12px 0 0; padding: 0; }
+.escritorio .tiempo { flex: 1 1 auto; }
 .escritorio .ce-d .marcador .col .v { font-size: 27px; }
 .escritorio .noticias-l { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; }
 .escritorio .noticias-l .noticia:last-child { border-bottom: 1px solid var(--linea); }

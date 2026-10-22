@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.3.3a';
+export const VERSION = '0.3.3b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.3.3b', f: '2026-10-22', h: '19:20', t: 'El ordenador, sin cortes',
+    cosas: [
+      { tipo: 'arreglo', d: 'campo', t: 'La columna de la derecha, entera', x: 'En el ordenador, la columna de la derecha (el marcador, las cláusulas a tiro, los movimientos) iba en una caja con su propio scroll y se cortaba por abajo, y los avisos de arriba («Mercado nuevo», «Se abre…») se salían por el lado. Ahora baja con la página, los avisos pasan a otra línea si no caben y en pantallas anchas todo queda centrado.' },
+    ],
+  },
   {
     v: '0.3.3a', f: '2026-10-22', h: '01:31', t: 'Cómo le fue contra cada rival',
     cosas: [
