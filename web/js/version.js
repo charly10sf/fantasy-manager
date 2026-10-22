@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.3.3b';
+export const VERSION = '0.3.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -11,9 +11,11 @@ export const VERSION = '0.3.3b';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.3.3b', f: '2026-10-22', h: '19:20', t: 'El ordenador, sin cortes',
+    v: '0.3.4', f: '2026-10-22', h: '19:45', t: 'La carga, por fin, y tiempo para los viciados',
     cosas: [
-      { tipo: 'arreglo', d: 'campo', t: 'La columna de la derecha, entera', x: 'En el ordenador, la columna de la derecha (el marcador, las cláusulas a tiro, los movimientos) iba en una caja con su propio scroll y se cortaba por abajo, y los avisos de arriba («Mercado nuevo», «Se abre…») se salían por el lado. Ahora baja con la página, los avisos pasan a otra línea si no caben y en pantallas anchas todo queda centrado.' },
+      { tipo: 'mejora', d: 'camiseta', t: 'Pantalla de carga nueva', x: 'Al abrir la app sale el logo mientras arranca (se acabó el «0 de 10» que no se movía: eso era la pantalla de arranque, que se quedaba ahí hasta que salía la app). Cuando de verdad hay que bajar toda la liga, la camiseta se llena de rojo con la lista de los 10 pasos: los hechos con ✓, el de ahora girando (con los segundos si tarda) y los que faltan. En el ordenador, la camiseta y el título a la izquierda y los pasos a la derecha.' },
+      { tipo: 'nuevo', d: 'noche', t: 'Límite de uso al día', x: 'Cada equipo de la liga puede tener un máximo de minutos al día con la app abierta. Cinco minutos antes avisa, y al pasarse sale «Se acabó por hoy» hasta las 00:00 (los avisos siguen llegando). En Ajustes se ve cuánto llevas. Los minutos los pone el admin y se cambian sin sacar versión.' },
+      { tipo: 'arreglo', d: 'campo', t: 'El ordenador, a todo lo ancho', x: 'La columna de la derecha (el marcador, las cláusulas a tiro, los movimientos) iba en una caja con su propio scroll y se cortaba por abajo, los avisos de arriba se salían por el lado y en pantallas anchas quedaba un hueco negro a la derecha. Ahora todo baja con la página y ocupa el ancho entero.' },
     ],
   },
   {

@@ -11,6 +11,7 @@ import { quien, sesion } from './auth.js';
 import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
+import { estadoLimite } from './limite.js';
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
 
@@ -389,6 +390,7 @@ export function ajustes(S) {
   }
 
   h += `<div class="grupo"><span>App</span></div>`;
+  if (estadoLimite.min != null) h += `<div class="ajuste"><div class="c"><b>Tiempo de hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min</b><span>Tienes un límite de ${estadoLimite.min} minutos al día con la app abierta. Se reinicia a las 00:00.</span></div></div>`;
   h += `<div class="ajuste"><div class="c"><b>Versión ${VERSION}</b><span>${enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}` : enWeb ? 'En el navegador: siempre la última' : 'En el navegador (ejemplo)'}</span></div>${enApp ? '<button class="btn chico sec" data-accion="buscarVersion">Buscar nueva</button>' : ''}</div>`;
   h += `<div class="ajuste"><div class="c"><b>Novedades</b><span>Lo que trae cada versión y lo que arregla</span></div><button class="btn chico sec" data-accion="novedades">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google, para mandármelo si algo falla</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;

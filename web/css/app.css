@@ -595,34 +595,56 @@ body.con-nv { overflow: hidden; }
 .previa b { color: var(--texto); font-family: var(--cond); font-size: 14.5px; }
 
 /* ---------- la pantalla de carga ---------- */
-/* la pantalla de carga: la camiseta se llena de rojo según avanza, y los pasos debajo */
-.carga { position: relative; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; gap: 28px; overflow: hidden; padding: calc(36px + env(safe-area-inset-top)) 24px calc(28px + env(safe-area-inset-bottom)); background: radial-gradient(120% 60% at 50% 22%, rgba(238, 28, 60, 0.16), transparent 62%), var(--fondo); }
-.carga-in { position: relative; width: 100%; max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.cc { width: 164px; height: 164px; overflow: visible; filter: drop-shadow(0 14px 30px rgba(238, 28, 60, 0.32)); }
+/* la pantalla de carga: la camiseta se llena de rojo según avanza; debajo (al lado, en el ordenador), los pasos.
+   La de arranque (index.html, «splash») es solo el logo mientras se abre la app */
+.carga { position: relative; min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: calc(28px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)); background: radial-gradient(120% 60% at 50% 18%, rgba(238, 28, 60, 0.16), transparent 62%), var(--fondo); }
+.escritorio #app:has(> .carga) { padding-left: 0; }
+.carga-in { width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: 22px; }
+.carga-izq { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.cc { width: 132px; height: 132px; overflow: visible; filter: drop-shadow(0 14px 30px rgba(238, 28, 60, 0.32)); }
 .cc-vacia { fill: #1c1c22; stroke: #34343d; stroke-width: 2; }
 .cc-llena { transition: transform 0.7s cubic-bezier(0.3, 0.8, 0.3, 1); }
 .cc-ola { fill: var(--rojo); animation: cc-ola 2.2s linear infinite; }
 @keyframes cc-ola { to { transform: translateX(-50px); } }
-.carga-t { margin: 26px 0 22px; font: 700 clamp(30px, 8.6vw, 40px)/1.02 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
+.carga-wm { margin-top: 14px; font: 700 15px var(--cond); letter-spacing: 3px; text-transform: uppercase; color: var(--texto2); }
+.carga-wm b { font-weight: 700; color: var(--rojo-l); }
+.carga-t { margin: 10px 0 16px; font: 700 clamp(28px, 8vw, 38px)/1.02 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
 .carga-t span { display: block; color: var(--rojo-l); }
-.carga-segs { width: 100%; display: flex; gap: 5px; }
-.carga-segs i { flex: 1; height: 7px; border-radius: 4px; background: var(--plano3); transition: background 0.3s; }
-.carga-segs i.ok { background: var(--rojo); }
-.carga-segs i.ya { background: var(--rojo); animation: cc-late 1s ease-in-out infinite alternate; }
-@keyframes cc-late { from { opacity: 0.35; } }
-.carga-paso { width: 100%; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 12px; font-size: 17px; }
-.carga-paso b { font-weight: 600; text-align: left; }
-.carga-paso span { font: 600 16px var(--cond); color: var(--texto2); white-space: nowrap; }
-.carga-consejo { position: relative; width: 100%; max-width: 420px; margin: 0 auto; padding: 14px 16px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
+.carga-barra { width: 100%; height: 8px; border-radius: 5px; background: var(--plano3); overflow: hidden; }
+.carga-barra i { display: block; height: 100%; border-radius: 5px; background: var(--rojo); transition: width 0.6s cubic-bezier(0.3, 0.8, 0.3, 1); }
+.carga-pct { width: 100%; display: flex; justify-content: space-between; margin-top: 8px; font: 600 15px var(--cond); color: var(--texto2); }
+.carga-pct b { color: var(--texto); font-weight: 700; }
+.carga-pasos { list-style: none; margin: 0; padding: 12px 14px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 14px; }
+.carga-pasos li { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14.5px; color: var(--apagado); }
+.carga-pasos li span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.carga-pasos li > i { flex: none; width: 10px; height: 10px; margin: 0 3px; border-radius: 50%; background: var(--plano3); }
+.carga-pasos li .ic { flex: none; width: 16px; height: 16px; color: var(--sube); }
+.carga-pasos li.ok { color: var(--texto2); }
+.carga-pasos li.ya { color: var(--texto); font-weight: 600; }
+.carga-pasos li.ya > i { width: 14px; height: 14px; margin: 0 1px; background: none; border: 2px solid var(--rojo-l); border-right-color: transparent; animation: gira 0.8s linear infinite; }
+.carga-pasos li small { margin-left: auto; flex: none; font: 600 13px var(--cond); color: var(--oro); }
+.carga-consejo { padding: 14px 16px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
 .carga-consejo .et { display: flex; align-items: center; gap: 6px; font: 700 14.5px 'Barlow'; color: var(--oro); }
 .carga-consejo .et .ic { width: 17px; height: 17px; }
 .carga-consejo p { margin: 6px 0 0; min-height: 46px; font-size: 16px; line-height: 1.45; color: var(--texto2); transition: opacity 0.35s, transform 0.35s; }
 .carga-consejo p.sale { opacity: 0; transform: translateY(6px); }
+.carga-abre { margin: 18px 0 0; font-size: 16px; color: var(--texto2); }
 .carga.mal .cc { filter: none; }
 .carga.mal .cc-llena { display: none; }
 .carga.mal .carga-t span { color: var(--texto); }
 .carga .error-c { width: 100%; text-align: left; }
 .carga-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 16px; }
+/* en el ordenador: la camiseta y el título a la izquierda, los pasos y el consejo a la derecha */
+@media (min-width: 1000px) {
+  .carga-in { max-width: 1040px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center; }
+  .carga.splash .carga-in { display: flex; max-width: 440px; }
+  .cc { width: 220px; height: 220px; }
+  .carga-wm { font-size: 18px; margin-top: 18px; }
+  .carga-t { font-size: 48px; margin: 14px 0 22px; }
+  .carga-der { display: flex; flex-direction: column; gap: 18px; }
+  .carga-pasos { grid-template-columns: minmax(0, 1fr); padding: 18px 20px; gap: 11px; }
+  .carga-pasos li { font-size: 16.5px; }
+}
 @media (prefers-reduced-motion: reduce) { .carga *, .carga *::before, .carga *::after { animation: none !important; transition: none !important; } }
 
 /* parar la IA */
@@ -807,7 +829,7 @@ a.btn { text-decoration: none; }
 .escritorio .nav .ic { width: 21px; height: 21px; }
 
 /* el campo de juego */
-.escritorio main { max-width: 1600px; margin: 0 auto; padding: 34px 48px 72px; }
+.escritorio main { max-width: none; margin: 0; padding: 34px 48px 72px; }
 .escritorio .eti { font-size: 13.5px; }
 .escritorio .titulo { font-size: 50px; margin: 8px 0 6px; }
 .escritorio .entradilla { font-size: 17px; max-width: 70ch; }
@@ -887,3 +909,13 @@ a.btn { text-decoration: none; }
 .escritorio .pant-d .entrar-codigo { background: none; border: 0; padding: 0; }
 /* la IA sin clave: los pasos en una columna estrecha */
 .escritorio .ia-alta { max-width: 640px; }
+
+/* el límite de uso diario: al pasarse, esto tapa la app hasta las 00:00 */
+#limite { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: calc(24px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom)); text-align: center; background: radial-gradient(120% 60% at 50% 20%, rgba(238, 28, 60, 0.18), transparent 60%), var(--fondo); }
+.lim-in { max-width: 420px; }
+.lim-in .logo { width: 104px; height: 104px; filter: drop-shadow(0 14px 30px rgba(238, 28, 60, 0.32)); }
+.lim-in h1 { margin: 18px 0 14px; font: 700 42px/1 var(--cond); text-transform: uppercase; }
+.lim-in p { margin: 0 0 12px; font-size: 17px; line-height: 1.5; color: var(--texto2); }
+.lim-in .lim-frase { color: var(--texto); font-weight: 600; }
+.lim-in .lim-vuelve { font-size: 15px; color: var(--apagado); }
+body.limitado { overflow: hidden; }

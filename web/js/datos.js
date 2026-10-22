@@ -46,7 +46,7 @@ function guardarActHist(ligaId, AH, nuevas, llegoAlFinal, nEquipos = 0) {
   return h;
 }
 
-const PASOS = ['Tu cuenta', 'Tu liga', 'Clasificación', 'Jugadores de LaLiga', 'Plantillas', 'Tu dinero', 'Mercado', 'Jornada y partidos', 'Movimientos de la liga', 'Subidas y bajadas del día'];
+const PASOS = ['Tu cuenta', 'Tu liga', 'Clasificación', 'Jugadores', 'Plantillas', 'Tu dinero', 'Mercado', 'Jornada y partidos', 'Movimientos', 'Subidas y bajadas'];
 export const pasosCarga = PASOS;
 
 /**

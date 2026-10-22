@@ -17,6 +17,7 @@ import { ponerEquipos } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
+import { iniciarLimite } from './limite.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
@@ -100,9 +101,9 @@ const CONSEJOS = [
 ];
 let consejoT = null;
 /**
- * la pantalla de carga: la camiseta se va llenando de rojo según avanza, con los pasos debajo.
- * index.html trae la misma pantalla (en «Preparando») para que no haya salto al arrancar: si cambias el
- * marcado, cámbialo allí también (cargaHTML(-1) con liga = null).
+ * la pantalla de carga: la camiseta se va llenando de rojo según avanza, con la lista de pasos (debajo en el
+ * móvil, al lado en el ordenador). Solo sale cuando no hay nada guardado; si lo hay, la app se abre con eso y se
+ * pone al día por detrás. index.html trae la de arranque (el logo y «Abriendo…»), sin contador de pasos.
  */
 const camisetaCarga = (f) => `<svg class="cc" viewBox="6 10 188 188" aria-hidden="true">
   <defs><clipPath id="ccClip"><path d="${LOGO_D.camiseta}"/></clipPath></defs>
@@ -111,43 +112,65 @@ const camisetaCarga = (f) => `<svg class="cc" viewBox="6 10 188 188" aria-hidden
   <path d="${LOGO_D.punos}" fill="#fff"/><path d="${LOGO_D.cuello}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="${LOGO_D.letras}" fill="#fff"/>
 </svg>`;
 const pctCarga = (paso, total) => Math.max(4, Math.min(100, Math.round(((paso + 0.5) / total) * 100)));
-const segsCarga = (paso, total) => Array.from({ length: total }, (_, i) => `<i class="${i < paso ? 'ok' : i === paso ? 'ya' : ''}"></i>`).join('');
 const tituloCarga = (liga, error) => (error ? 'No se ha podido cargar' : `Poniendo al día <span>${liga && liga.nombre ? esc(liga.nombre) : 'tu liga'}</span>`);
+/** la lista de pasos: hechos (✓), el de ahora (girando, con los segundos si tarda) y los que faltan */
+const pasosHTML = (paso) => pasosCarga.map((t, i) => {
+  const e = i < paso ? 'ok' : i === paso ? 'ya' : '';
+  return `<li class="${e}">${e === 'ok' ? icono('ok') : '<i></i>'}<span>${esc(t)}</span><small></small></li>`;
+}).join('');
+// cuándo empezó el paso de ahora, para contar los segundos si se atasca
+let pasoAhora = -1, pasoDesde = 0, relojCarga = null;
 function cargaHTML(paso, error, liga) {
   const total = pasosCarga.length;
   const pct = error ? 0 : pctCarga(paso, total);
-  const actual = paso >= 0 && paso < total ? pasosCarga[paso] : 'Preparando';
   return `<div class="carga ${error ? 'mal' : ''}">
     <div class="carga-in">
-      ${camisetaCarga(pct / 100)}
-      <h1 class="carga-t">${tituloCarga(liga, error)}</h1>
-      ${error ? `<div class="error-c">${esc(error)}</div>
-        <div class="carga-btns"><button class="btn" data-accion="recargar">${icono('refrescar')}Volver a probar</button><button class="btn sec" data-accion="diag">Diagnóstico</button><button class="btn sec" data-accion="entrarDemo">Ver la liga de ejemplo</button></div>`
-        : `<div class="carga-segs" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}">${segsCarga(paso, total)}</div>
-        <div class="carga-paso"><b>${esc(actual)}…</b><span>${Math.max(0, Math.min(paso + 1, total))} de ${total}</span></div>`}
+      <div class="carga-izq">
+        ${camisetaCarga(pct / 100)}
+        <div class="carga-wm">Fantasy <b>Manager</b></div>
+        <h1 class="carga-t">${tituloCarga(liga, error)}</h1>
+        ${error ? '' : `<div class="carga-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div><div class="carga-pct"><span>${Math.max(0, Math.min(paso + 1, total))} de ${total}</span><b>${pct} %</b></div>`}
+      </div>
+      <div class="carga-der">
+        ${error ? `<div class="error-c">${esc(error)}</div>
+          <div class="carga-btns"><button class="btn" data-accion="recargar">${icono('refrescar')}Volver a probar</button><button class="btn sec" data-accion="diag">Diagnóstico</button><button class="btn sec" data-accion="entrarDemo">Ver la liga de ejemplo</button></div>`
+          : `<ol class="carga-pasos">${pasosHTML(paso)}</ol>
+          <div class="carga-consejo"><span class="et">${icono('info')}¿Sabías que…?</span><p id="cConsejo">${esc(CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)])}</p></div>`}
+      </div>
     </div>
-    ${error ? '' : `<div class="carga-consejo"><span class="et">${icono('info')}¿Sabías que…?</span><p id="cConsejo">${esc(CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)])}</p></div>`}
   </div>`;
 }
 function pantallaCarga(paso = -1, error = '') {
   const total = pasosCarga.length;
   const el = $('.carga');
   const liga = (foto() || {}).liga;
-  // si ya está en pantalla (también la de index.html), solo se mueve lo que cambia: la camiseta se llena suave
-  if (el && !error && $('.carga-segs', el)) {
+  if (paso !== pasoAhora) { pasoAhora = paso; pasoDesde = Date.now(); }
+  // si ya está en pantalla, solo se mueve lo que cambia: la camiseta se llena suave
+  if (el && !error && $('.carga-pasos', el)) {
     const pct = pctCarga(paso, total);
     $('.cc-llena', el).style.transform = `translateY(${Math.round(190 - 168 * (pct / 100))}px)`;
-    $('.carga-segs', el).innerHTML = segsCarga(paso, total);
-    $('.carga-segs', el).setAttribute('aria-valuenow', pct);
-    $('.carga-paso b', el).textContent = `${paso >= 0 && paso < total ? pasosCarga[paso] : 'Preparando'}…`;
-    $('.carga-paso span', el).textContent = `${Math.max(0, Math.min(paso + 1, total))} de ${total}`;
+    $('.carga-barra i', el).style.width = `${pct}%`;
+    $('.carga-barra', el).setAttribute('aria-valuenow', pct);
+    $('.carga-pct span', el).textContent = `${Math.max(0, Math.min(paso + 1, total))} de ${total}`;
+    $('.carga-pct b', el).textContent = `${pct} %`;
+    $('.carga-pasos', el).innerHTML = pasosHTML(paso);
     $('.carga-t', el).innerHTML = tituloCarga(liga, '');
-    if ($('#cConsejo') && !consejoT) rotarConsejos();
     return;
   }
+  // la primera vez (o desde la pantalla de arranque de index.html): se pinta entera
   raiz().innerHTML = cargaHTML(paso, error, liga);
   clearInterval(consejoT); consejoT = null;
-  if (!error) rotarConsejos();
+  clearInterval(relojCarga); relojCarga = null;
+  if (!error) {
+    rotarConsejos();
+    // si un paso tarda, se ven los segundos: así se sabe que sigue trabajando
+    relojCarga = setInterval(() => {
+      const li = $('.carga-pasos li.ya small');
+      if (!li) { clearInterval(relojCarga); relojCarga = null; return; }
+      const sg = Math.round((Date.now() - pasoDesde) / 1000);
+      li.textContent = sg >= 3 ? `${sg} s` : '';
+    }, 1000);
+  }
 }
 function rotarConsejos() {
   let k = Math.floor(Math.random() * CONSEJOS.length);
@@ -932,6 +955,14 @@ async function arrancar() {
   }
   // por si la vuelta del inicio de sesión llegó antes de que la web estuviera lista
   if (enApp) setTimeout(() => window.vueltaLogin(), 300);
+  // el límite de uso diario (web/limites.json): cuenta el tiempo con la app a la vista
+  // (tu equipo de verdad, el de tu cuenta de LaLiga: no el que se elige a mano en Ajustes)
+  iniciarLimite(() => {
+    const yo = S.D && S.D.yo, cl = (S.D && S.D.clasif) || [];
+    const real = yo && yo.userId ? cl.find((e) => e.userId === yo.userId || e.managerId === yo.userId) : null;
+    const eq = real || (S.M && S.M.yo) || null;
+    return { yo: eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId } : null, demo: enDemo() };
+  }, (t) => tostada(t, 6000));
   novedades();
   setTimeout(() => buscarVersion(false), 4000);
   // la IA con la app cerrada avisa con notificaciones: se pide el permiso una vez
