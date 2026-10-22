@@ -3,7 +3,7 @@
 
 /** los últimos errores de la app que nadie ha recogido (para «Mandar un fallo») */
 export const erroresApp = [];
-function apuntarError(m, donde) {
+export function apuntarError(m, donde) {
   const t = String(m || '').slice(0, 300);
   if (!t || (erroresApp[0] && erroresApp[0].m === t)) return;
   erroresApp.unshift({ t: Date.now(), m: t, donde: donde ? String(donde).slice(0, 160) : '' });
@@ -52,7 +52,7 @@ export function explicarError(e) {
       botones: ['recargar', 'entrarDemo'],
     };
   }
-  if (estado === 400 || estado === 403 || estado === 404 || estado === 405 || estado === 410) {
+  if ((e && e.tipo === 'cambio') || estado === 400 || estado === 403 || estado === 404 || estado === 405 || estado === 410) {
     return {
       tipo: 'cambio', titulo: 'LaLiga ha cambiado algo',
       texto: 'La app lee tu liga como lo hace la app de LaLiga, y LaLiga ha cambiado algo por su lado. Hace falta una actualización de Fantasy Manager: mándame el fallo con el botón y lo arreglo.',

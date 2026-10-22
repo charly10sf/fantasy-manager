@@ -1,7 +1,7 @@
 /* Baja todo lo de tu liga de una vez y lo guarda: la foto del momento (D) y el histórico (H) que se va
    llenando cada vez que abres la app (valores de cada jugador por día, valor y puntos de cada rival,
    y los cambios que se ven en sus plantillas aunque la actividad de la liga no los cuente). */
-import { api, paginaMercado } from './api.js';
+import { api, paginaMercado, forma } from './api.js';
 import * as N from './normalizar.js';
 import { LS, diaDe, enParalelo, num, DIA } from './util.js';
 import { enApp, enWeb } from './puente.js';
@@ -21,6 +21,11 @@ const ligaK = () => {
   const c = LS.get('cfg', {}) || {}, p = LS.get('liga-principal', null);
   return c.ligaId && p && String(c.ligaId) !== String(p) ? `-l${c.ligaId}` : '';
 };
+/** LaLiga contesta, pero con un formato que la app no entiende: hace falta actualizarla */
+function cambioDeFormato(que, r) {
+  return Object.assign(new Error(`LaLiga ha cambiado el formato de ${que}: ${forma(r)}`), { tipo: 'cambio' });
+}
+
 export const K = (k) => (enDemo() ? `${k}-demo` : `${k}${ligaK()}`);
 
 export const foto = () => LS.get(K('datos'), null);
@@ -81,7 +86,9 @@ export async function actualizar(alPaso = () => {}) {
   const miNombre = yoD.managerName || yoD.displayName || yoD.username || yoD.name || '';
 
   alPaso(1, PASOS[1]);
-  const ligas = N.lista(await api.ligas()).map((l) => ({ id: String(l.id), nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))) })).filter((l) => l.id);
+  const ligasR = await api.ligas();
+  const ligas = N.lista(ligasR).map((l) => ({ id: l && l.id != null ? String(l.id) : '', nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))) })).filter((l) => l.id);
+  if (!ligas.length && N.lista(ligasR).length) throw cambioDeFormato('ligas', ligasR);
   if (!ligas.length) throw Object.assign(new Error('Tu cuenta no tiene ninguna liga de LaLiga Fantasy'), { tipo: 'sinLigas' });
   const liga = ligas.find((l) => l.id === String(c.ligaId)) || ligas[0];
   // la primera liga que se carga es «la de siempre» (guarda con las claves de antes); si la elegida ya no está, la que toca
@@ -98,7 +105,9 @@ export async function actualizar(alPaso = () => {}) {
   if (!formaciones) formaciones = (await blando('formaciones', async () => { const r = await api.formaciones(); muestras.formaciones = recorte(r); return N.formaciones(r); })) || (viejo && viejo.formaciones) || [];
 
   alPaso(2, PASOS[2]);
-  const clasif = N.clasificacion(await api.clasificacion(liga.id));
+  const clasifR = await api.clasificacion(liga.id);
+  const clasif = N.clasificacion(clasifR);
+  if (!clasif.length && N.lista(clasifR).length) throw cambioDeFormato('clasificación', clasifR);
   if (!clasif.length) throw Object.assign(new Error('La clasificación de tu liga ha llegado vacía'), { tipo: 'vacia' });
   let mio = clasif.find((e) => userId && (e.userId === userId || e.managerId === userId))
     || clasif.find((e) => miNombre && e.manager && e.manager === miNombre);
@@ -165,6 +174,12 @@ export async function actualizar(alPaso = () => {}) {
     for (const [tid] of deApi) delete dineros[tid];
     muestras.dineroRival = 'la ruta del dinero devuelve tu saldo para todos: no sirve para los rivales';
   }
+
+  // lo que llega vacío sin dar error suele ser que LaLiga ha cambiado el formato: se avisa, no se calla
+  if (!Object.keys(maestro).length && !avisos.some((a) => a.paso === 'jugadores')) avisos.push({ paso: 'jugadores', e: 'LaLiga ha devuelto los jugadores vacíos o con otro formato' });
+  const conPlantilla = clasif.filter((e) => (plantillas[e.teamId] || []).length).length;
+  if (!conPlantilla) avisos.push({ paso: 'plantillas', e: 'ninguna plantilla ha llegado con jugadores (¿formato nuevo?)' });
+  else if (mio && !(plantillas[mio.teamId] || []).length && !avisos.some((a) => a.paso === `plantilla ${mio.nombre}`)) avisos.push({ paso: 'tu plantilla', e: 'tu plantilla ha llegado vacía' });
 
   alPaso(6, PASOS[6]);
   const mercado = (await blando('mercado', async () => { const r = await api.mercado(liga.id); const l = N.lista(r); if (l[0]) muestras.mercado = recorte(l[0]); const dm = l.find((x) => x && !/league/i.test(String(x.discr || ''))); if (dm) muestras.mercadoManager = recorte(dm); return N.mercado(r, equipos); })) || [];

@@ -1,5 +1,6 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
+import { avisosGuardados } from './soporte.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
@@ -393,7 +394,7 @@ export function ajustes(S) {
   if (estadoLimite.min != null) h += `<div class="ajuste"><div class="c"><b>Tiempo de hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min</b><span>Tienes un límite de ${estadoLimite.min} minutos al día con la app abierta. Se reinicia a las 00:00.</span></div></div>`;
   h += `<div class="ajuste"><div class="c"><b>Versión ${VERSION}</b><span>${enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}` : enWeb ? 'En el navegador: siempre la última' : 'En el navegador (ejemplo)'}</span></div>${enApp ? '<button class="btn chico sec" data-accion="buscarVersion">Buscar nueva</button>' : ''}</div>`;
   h += `<div class="ajuste"><div class="c"><b>Novedades</b><span>Lo que trae cada versión y lo que arregla</span></div><button class="btn chico sec" data-accion="novedades">Ver</button></div>`;
-  h += `<div class="ajuste"><div class="c"><b>Avisar de un fallo</b><span>${enApp ? 'Abre WhatsApp (o lo que uses) con todo lo que necesito para arreglarlo: solo tienes que contar qué hacías' : 'Copia todo lo que necesito para arreglarlo: pégalo en un mensaje y cuenta qué hacías'}</span></div><button class="btn chico" data-accion="mandarFallo">${enApp ? 'Mandar' : 'Copiar'}</button></div>`;
+  h += `<div class="ajuste"><div class="c"><b>Avisar de un fallo</b><span>Me llega a mí con lo que necesito para arreglarlo y te contesto en la app. También está arriba, en «Fallo»</span></div><button class="btn chico" data-accion="avisos">Avisar</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google en esta sesión</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;
   if ((enApp || enWeb) && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Borrar los datos guardados</b><span>Histórico, fichas y planes (tu sesión y tu clave no)</span></div><button class="btn chico sec" data-accion="borrarDatos">Borrar</button></div>`;
@@ -417,12 +418,60 @@ export function vinculoWeb(S) {
   <button class="btn sec ancho" data-accion="copiarEnlaceWeb">Copiar el enlace de la web</button>`;
 }
 
+/* ================= AVISOS DE FALLOS ================= */
+const avisoMio = (x) => `<div class="aviso${x.respuesta && !x.vista ? ' nuevo' : ''}">
+  <div class="aviso-cab"><span>${cuando(x.t)}</span>${x.respuesta ? '<span class="pill sube">Contestado</span>' : '<span class="pill">Esperando respuesta</span>'}</div>
+  <p>${esc(x.texto)}</p>
+  ${x.respuesta ? `<div class="aviso-resp"><b>${esc(x.por || 'Respuesta')}</b><span>${esc(x.respuesta)}</span><small>${cuando(x.respondida)}</small></div>` : ''}</div>`;
+function detalleAviso(A) {
+  const d = A.detalle;
+  if (!d) return `<p class="t2 peq">Cargando…</p>`;
+  if (d.error) return `<div class="error-c">${esc(d.error)}</div>`;
+  return `<div class="aviso-det">
+    <p class="aviso-texto">${esc(d.texto)}</p>
+    <p class="t2 peq">${esc([d.liga, d.app].filter(Boolean).join(' · '))}</p>
+    ${d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
+    ${d.respuesta ? `<div class="aviso-resp"><b>Le contestaste</b><span>${esc(d.respuesta)}</span><small>${cuando(d.respondida)}${d.vista ? ' · leído' : ' · sin leer'}</small></div>` : ''}
+    <textarea id="respTxt" class="campo-t aviso-t" rows="3" maxlength="2000" placeholder="${d.respuesta ? 'Cambiar la respuesta' : 'Tu respuesta: le llega en la app'}">${esc(A.respBorrador || '')}</textarea>
+    <button class="btn chico" data-accion="responderAviso" data-id="${esc(d.id)}"${A.respondiendo ? ' disabled' : ''}>${A.respondiendo ? 'Mandando…' : `${icono('enviar')}Responder`}</button></div>`;
+}
+export function avisos(S) {
+  const A = S.av || {};
+  let h = `<div class="hoja-cab"><h2>${A.admin ? 'Avisos de fallos' : 'Avisar de un fallo'}</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  if (A.admin) h += bandejaAvisos(A);
+  if (A.admin) h += '<div class="grupo"><span>Mandar uno tú</span><span></span></div>';
+  if (A.sinSesion) {
+    h += `<p class="t2">Para mandarme un aviso y que te pueda contestar hace falta entrar con tu cuenta de LaLiga${enDemo() ? ' (ahora estás viendo la liga de ejemplo)' : ''}. Mientras, puedes mandarme el diagnóstico por WhatsApp.</p>
+      <button class="btn sec ancho" data-accion="compartirDiag">${icono('copiar')}${enApp ? 'Mandar el diagnóstico' : 'Copiar el diagnóstico'}</button>`;
+  } else {
+    h += `<p class="t2 peq" style="margin-top:0">Cuéntame qué ha pasado y qué estabas haciendo. Me llega a mí y te contesto aquí mismo: te aviso cuando haya respuesta.</p>
+      <textarea id="avisoTxt" class="campo-t aviso-t" rows="4" maxlength="4000" placeholder="Por ejemplo: al abrir Mercado se queda en blanco">${esc(A.borrador || '')}</textarea>
+      <label class="aviso-diag"><input type="checkbox" id="avisoDiag"${A.sinDiag ? '' : ' checked'}><span>Mandar también el diagnóstico (versión, lo que ha contestado LaLiga…). No lleva tu sesión ni tu clave de la IA.</span></label>
+      <button class="btn ancho" data-accion="mandarAviso"${A.enviando ? ' disabled' : ''}>${A.enviando ? 'Mandando…' : `${icono('enviar')}Mandar el aviso`}</button>
+      ${A.error ? `<div class="error-c" style="margin-top:10px">${esc(A.error)}</div>` : ''}`;
+  }
+  const mios = A.lista || avisosGuardados().lista || [];
+  if (mios.length) h += `<div class="grupo"><span>Tus avisos</span><span>${mios.length}</span></div>${mios.map(avisoMio).join('')}`;
+  else if (A.cargando) h += '<p class="t2 peq">Mirando tus avisos…</p>';
+  return h;
+}
+function bandejaAvisos(A) {
+  const todos = A.todos || [];
+  let h = `<div class="grupo"><span>Avisos recibidos</span><span>${A.pendientes || 0} sin contestar</span></div>`;
+  if (!todos.length) h += `<p class="t2 peq">${A.cargandoTodos ? 'Cargando…' : 'Ninguno todavía.'}</p>`;
+  h += todos.map((x) => `<div class="aviso recibido${x.r ? '' : ' nuevo'}${A.abierto === x.id ? ' abierto' : ''}">
+    <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.t)}</span>${x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
+    ${A.abierto === x.id ? detalleAviso(A) : `<p>${esc(x.txt || '')}</p>`}</div>`).join('');
+  return h;
+}
+
 /* ================= DIAGNÓSTICO ================= */
 export function textoDiagnostico(S) {
   const s = sesion();
   const D = S.D;
   const L = [
     `Fantasy Manager ${VERSION} · compilación ${nativo.version()} · ${enApp ? `app (${nativo.canal()})` : enWeb ? 'web' : 'navegador sin servidor'}${enDemo() ? ' · DEMO' : ''}`,
+    `Cuenta de LaLiga: ${(D && D.yo && D.yo.userId) || (avisosGuardados().yo) || '¿?'}`,
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,
     D ? `Datos: ${new Date(D.t).toISOString()} · liga ${D.liga && D.liga.id} · equipos ${D.clasif.length} · mío ${D.yo.teamId || '¿?'} · jugadores ${Object.keys(D.maestro).length} (con cara ${Object.values(D.maestro).filter((j) => j.img).length}) · mercado ${D.mercado.length} (${D.mercado.filter((m) => m.tipo === 'manager').length} de managers${S.M && S.M.mercadoFantasma && S.M.mercadoFantasma.length ? `, ${S.M.mercadoFantasma.length} ya con dueño quitados` : ''}) · actividad ${D.actividad.length} (con nombre ${D.actividad.filter((a) => a.quien).length}, con id ${D.actividad.filter((a) => a.quienId).length}) · partidos ${D.partidos.length} · tendencias ${Object.keys(D.tendencias || {}).length} · dinero ${D.dinero}` : 'Sin datos',
     D && D.avisos && D.avisos.length ? `Fallos: ${D.avisos.map((a) => `${a.paso}: ${a.e}`).join(' | ')}` : 'Sin fallos',

@@ -19,7 +19,8 @@ import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite } from './limite.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
-import { explicarError, bandaError, botonesError } from './errores.js';
+import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
+import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, numeroAvisos, hayQueMirar, avisosGuardados } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
@@ -193,10 +194,11 @@ function marco() {
   if ($('#vista') && S.marcoAncho === anchoYa) return;
   S.marcoAncho = anchoYa;
   const nav = `<nav class="nav"><div class="nav-in">${NAV.map(([k, ic, t]) => `<button data-ir="${k}">${icono(ic)}${t}<span class="gl oculto" id="gl-${k}"></span></button>`).join('')}</div></nav>`;
-  // rehacer el plan de la IA, a mano desde cualquier pestaña (te lleva a Hoy)
+  // arriba solo tres cosas: actualizar la liga (si el plan se ha quedado viejo, la IA lo rehace sola después), avisar
+  // de un fallo y los ajustes. Rehacer el plan a mano está en la tarjeta del plan, en Hoy.
   // en el móvil cada botón lleva su nombre debajo (data-et); en el ordenador, el largo (aria-label) al lado
-  const botones = `<div class="sup-btns"><button class="b-ico oculto" id="bPlan" data-accion="planYa" aria-label="Rehacer el plan" data-et="Plan IA">${icono('ia')}</button>
-    <button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar" data-et="Actualizar">${icono('refrescar')}</button>
+  const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" data-et="Actualizar">${icono('refrescar')}</button>
+    <button class="b-ico" id="bAvisos" data-accion="avisos" aria-label="Avisar de un fallo" data-et="Fallo">${icono('bicho')}<span class="gl oculto" id="gl-avisos"></span></button>
     <button class="b-ico" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}</button></div>`;
   const liga = `${LOGO_P}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span></div>`;
   raiz().innerHTML = anchoYa
@@ -228,14 +230,7 @@ function pintarSup() {
     ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin internet' : 'Sin actualizar'} · ${rel(D.t)}`
     : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : `Actualizado ${rel(D.t)}`) : ''}`;
   $('#bRefrescar').classList.toggle('gira', S.cargando);
-  const bp = $('#bPlan');
-  if (bp) {
-    const E = S.planEstado || {}, esIA = S.plan && !S.plan.auto;
-    bp.classList.toggle('oculto', !hayClave());
-    bp.classList.toggle('late', !!E.cargando);
-    bp.setAttribute('aria-label', E.cargando ? 'Haciendo el plan…' : esIA ? 'Rehacer el plan' : 'Plan con la IA');
-    bp.dataset.et = E.cargando ? 'Pensando…' : 'Plan IA';
-  }
+  pintarNumAvisos();
   const pend = S.plan ? S.plan.ops.filter((o) => o.hoy !== false && !['esperar'].includes(o.accion) && !V.hecho(S, S.plan, o)).length : 0;
   const gh = $('#gl-hoy'); gh.textContent = pend; gh.classList.toggle('oculto', !pend);
   const ga = S.M.mias.filter((x) => x.riesgo === 'alto').length;
@@ -248,7 +243,11 @@ function pintar({ arriba = false } = {}) {
   medirSup();
   $$('.nav button').forEach((b) => b.classList.toggle('activo', b.dataset.ir === S.vista));
   const v = $('#vista');
-  try { v.innerHTML = VISTAS[S.vista](S); } catch (e) { v.innerHTML = `<div class="error-c">Algo ha fallado al pintar esta pantalla: ${esc(e.message)}</div>`; console.error(e); }
+  try { v.innerHTML = VISTAS[S.vista](S); } catch (e) {
+    console.error(e);
+    apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
+    v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
+  }
   $('#banda').innerHTML = (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   if (S.vista === 'ia') {
@@ -421,8 +420,111 @@ async function despues() {
     if (det) { S.det = { ...S.det, ...det }; rehacer(); if (!S.hoja) pintar(); }
   } catch (e) { console.warn('fichas', e); }
   await fuentes;
+  comprobarAvisos();
   const ci = cfgIA();
   if (hayClave() && ci.auto && planViejo(S.M) && !S.planEstado.cargando && !S.planEstado.error) generarPlan();
+}
+
+/* ---------------- avisos de fallos (te llegan a ti y contestas desde la app) ---------------- */
+function pintarNumAvisos() {
+  const g = $('#gl-avisos');
+  if (!g) return;
+  const n = numeroAvisos();
+  g.textContent = n; g.classList.toggle('oculto', !n);
+}
+/** lo escrito en la hoja se guarda antes de repintarla, para no perderlo */
+function repintarAvisos() {
+  if (!S.av) return;
+  const t = $('#avisoTxt'), r = $('#respTxt'), dg = $('#avisoDiag');
+  if (t) S.av.borrador = t.value;
+  if (r) S.av.respBorrador = r.value;
+  if (dg) S.av.sinDiag = !dg.checked;
+  if (S.tipoHoja && S.tipoHoja[0] === 'avisos') repintarHoja();
+}
+async function abrirAvisos() {
+  S.av = { cargando: true, borrador: (S.av && S.av.borrador) || '' };
+  hoja('avisos');
+  if (enDemo() || !haySesion()) { S.av = { ...S.av, cargando: false, sinSesion: true }; repintarAvisos(); return; }
+  try {
+    const r = await misAvisos();
+    Object.assign(S.av, { cargando: false, lista: r.lista, admin: r.admin, pendientes: r.pendientes });
+    repintarAvisos();
+    // las respuestas que ves ahora quedan leídas (el numerito se va)
+    for (const x of r.lista.filter((y) => y.respuesta && !y.vista)) marcarVisto(x.id).then(pintarNumAvisos).catch(() => {});
+    if (r.admin) {
+      S.av.cargandoTodos = true; repintarAvisos();
+      const t = await todosAvisos();
+      Object.assign(S.av, { todos: t.lista, cargandoTodos: false });
+      repintarAvisos();
+    }
+  } catch (e) {
+    Object.assign(S.av, { cargando: false, cargandoTodos: false, sinSesion: !!e.sesion, error: e.sesion ? '' : `No he podido mirar tus avisos: ${e.message}` });
+    repintarAvisos();
+  }
+  pintarNumAvisos();
+}
+async function enviarAviso() {
+  const t = (($('#avisoTxt') || {}).value || '').trim();
+  if (!t) { tostada('Cuenta qué ha pasado'); return; }
+  const conDiag = !!($('#avisoDiag') || {}).checked;
+  let diag = '';
+  if (conDiag) { try { diag = Hj.textoDiagnostico(S); } catch (e) { diag = `(no se ha podido sacar el diagnóstico: ${e.message})`; } }
+  S.av.borrador = t; S.av.sinDiag = !conDiag; S.av.enviando = true; S.av.error = '';
+  repintarAvisos();
+  try {
+    await mandarAviso({ texto: t, diag, equipo: (S.M && S.M.yo && S.M.yo.nombre) || '', liga: (S.D && S.D.liga && S.D.liga.nombre) || '', app: `${VERSION} · ${enApp ? `app ${nativo.canal()}` : 'web'}` });
+    S.av.borrador = ''; S.av.enviando = false;
+    tostada('Aviso mandado: te aviso cuando conteste', 5000);
+    const r = await misAvisos().catch(() => null);
+    if (r) Object.assign(S.av, { lista: r.lista, admin: r.admin, pendientes: r.pendientes });
+  } catch (e) {
+    S.av.enviando = false;
+    if (e.sesion) S.av.sinSesion = true; else S.av.error = `No se ha podido mandar: ${e.message}`;
+  }
+  repintarAvisos();
+  pintarNumAvisos();
+}
+async function abrirAvisoRecibido(id) {
+  if (S.av.abierto === id) { S.av.abierto = null; repintarAvisos(); return; }
+  S.av.abierto = id; S.av.detalle = null; S.av.respBorrador = '';
+  repintarAvisos();
+  try { S.av.detalle = await unAviso(id); } catch (e) { S.av.detalle = { error: e.message }; }
+  if (S.av.abierto === id) repintarAvisos();
+}
+async function contestarAviso(id) {
+  const t = (($('#respTxt') || {}).value || '').trim();
+  if (!t) { tostada('Escribe la respuesta'); return; }
+  S.av.respBorrador = t; S.av.respondiendo = true;
+  repintarAvisos();
+  try {
+    await responderAviso(id, t);
+    S.av.respBorrador = ''; S.av.respondiendo = false;
+    tostada('Respuesta mandada: le llega en la app');
+    const [d, todos] = await Promise.all([unAviso(id).catch(() => null), todosAvisos().catch(() => null)]);
+    if (d) S.av.detalle = d;
+    if (todos) S.av.todos = todos.lista;
+    const r = await misAvisos().catch(() => null);
+    if (r) S.av.pendientes = r.pendientes;
+  } catch (e) { S.av.respondiendo = false; tostada(`No se ha podido mandar: ${e.message}`, 6000); }
+  repintarAvisos();
+  pintarNumAvisos();
+}
+/** de vez en cuando (al abrir y al volver a la app): ¿hay respuesta a tus avisos o, si eres el dueño, avisos nuevos? */
+async function comprobarAvisos() {
+  if (enDemo() || !haySesion() || !hayQueMirar()) return;
+  if (Date.now() - (avisosGuardados().t || 0) < 10 * MIN) return;
+  let r;
+  try { r = await misAvisos(); } catch (e) { return; }
+  pintarNumAvisos();
+  const resp = r.nuevasResp[0];
+  if (resp) {
+    const t = `${resp.por || 'Te han'} ${resp.por ? 'te ha contestado' : 'contestado'}: «${resp.respuesta.length > 120 ? `${resp.respuesta.slice(0, 117)}…` : resp.respuesta}»`;
+    if (nativo.aLaVista()) tostada(`${t} · Toca Fallo, arriba`, 8000); else nativo.notificar('Respuesta a tu aviso', t, 'hoy');
+  }
+  if (r.nuevosRecibidos) {
+    const t = r.nuevosRecibidos > 1 ? `${r.nuevosRecibidos} avisos de fallos nuevos` : 'Un aviso de fallo nuevo';
+    if (nativo.aLaVista()) tostada(`${t}: toca Fallo, arriba`, 6000); else nativo.notificar(t, 'Entra para leerlo y contestar', 'hoy');
+  }
 }
 
 /** a otra liga de tu cuenta: lo de cada liga se guarda aparte, así que se carga la suya */
@@ -432,12 +534,6 @@ function cambiarDeLiga(id) {
   guardarCfg({ ligaId: id });
   S.D = null; S.M = null; S.plan = null; S.planEstado = {}; S.det = {}; S.fuentes = null; S.opPorPid = {}; S.errorCarga = null; S.adjuntos = [];
   cargar();
-}
-/** el diagnóstico listo para mandar por WhatsApp (en la app) o copiado (en el navegador) */
-function mandarFallo() {
-  const t = `Fallo en Fantasy Manager. Lo que estaba haciendo: \n\n----\n${Hj.textoDiagnostico(S)}`;
-  if (enApp) nativo.compartir(t);
-  else { nativo.copiar(t); tostada('Copiado: pégalo en un mensaje y cuéntame qué hacías', 5000); }
 }
 // al volver internet, si lo último falló, se vuelve a probar solo
 window.addEventListener('online', () => {
@@ -508,7 +604,14 @@ function cerrarHoja(ya = false) {
   setTimeout(() => { h.remove(); v && v.remove(); }, 250);
   return true;
 }
-const htmlHoja = (tipo, arg) => (tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+const htmlHoja = (tipo, arg) => {
+  try { return htmlHoja0(tipo, arg); } catch (e) {
+    console.error(e);
+    apuntarError(e.message, `hoja ${tipo}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
+    return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
+  }
+};
+const htmlHoja0 = (tipo, arg) => (tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -527,6 +630,7 @@ window.atras = () => {
   return false;
 };
 window.alVolver = () => {
+  comprobarAvisos();
   if (S.D && !S.cargando && Date.now() - S.D.t > 15 * MIN && (enDemo() || haySesion())) cargar({ silencio: true });
 };
 
@@ -909,7 +1013,10 @@ document.addEventListener('click', async (ev) => {
     case 'recargar': S.planEstado = {}; cargar(); break;
     case 'ajustes': hoja('ajustes'); break;
     case 'diag': hoja('diag'); break;
-    case 'mandarFallo': mandarFallo(); break;
+    case 'mandarFallo': case 'avisos': abrirAvisos(); break;
+    case 'mandarAviso': enviarAviso(); break;
+    case 'abrirAviso': abrirAvisoRecibido(d.id); break;
+    case 'responderAviso': contestarAviso(d.id); break;
     case 'ligas': {
       const D = S.D; if (!D || !D.ligas || D.ligas.length < 2) break;
       abrirHoja(`<div class="hoja-cab"><h2>Tus ligas</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>

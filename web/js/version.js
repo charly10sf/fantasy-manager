@@ -3,13 +3,22 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.4.0';
+export const VERSION = '0.4.1';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.4.1', f: '2026-10-23', h: '03:00', t: 'Avisos de fallos con respuesta',
+    cosas: [
+      { tipo: 'nuevo', d: 'campana', t: 'Avísame de un fallo y te contesto', x: 'Arriba, en «Fallo», cuentas qué ha pasado y me llega a mí con lo que necesito para arreglarlo. Te contesto desde la app y te llega la respuesta: un aviso al abrirla y el numerito en el botón. Ahí mismo ves todos tus avisos y sus respuestas.' },
+      { tipo: 'mejora', d: 'plan', t: 'Arriba, menos lío', x: 'Arriba quedan tres botones: Actualizar (trae lo último de tu liga y, si el plan se ha quedado viejo, la IA lo rehace sola), Fallo y Ajustes. Para rehacer el plan a mano, el botón está en la propia tarjeta del plan, en Hoy.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'conexion', t: 'Si LaLiga cambia algo, se nota', x: 'Si LaLiga cambia el formato de sus datos, la app ya no se queda vacía como si nada: te dice que LaLiga ha cambiado algo y te deja mandarme el fallo. Si lo que falta son los jugadores o las plantillas, sale un aviso en Hoy con el botón «Avisar».', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Una pantalla rota no rompe la app', x: 'Si una pestaña o una ficha falla al abrirse, lo dice, las demás siguen funcionando y tienes un botón para mandarme el fallo con todo lo que necesito.' },
+    ],
+  },
   {
     v: '0.4.0', f: '2026-10-23', h: '01:33', t: 'Lista para más ligas',
     cosas: [

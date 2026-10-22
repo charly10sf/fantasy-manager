@@ -212,7 +212,7 @@ function planHTML(S) {
   const esIA = P && !P.auto;
   h += `<div class="plan"><div class="plan-cab"><div><div class="eti">Plan de hoy</div>
     ${P ? `<span class="ia">${icono(esIA ? 'ia' : 'lista')}${esIA ? `${esc(nombreModelo(P.modelo))}${P.web ? ' + Google' : ''} · ${rel(P.t)}` : 'Automático, sin IA'}</span>` : ''}</div>
-    </div>`;
+    ${hayClave() && !E.cargando ? `<button class="btn chico sec plan-rehacer" data-accion="planYa">${icono('ia')}${esIA ? 'Rehacer con la IA' : 'Hacerlo con la IA'}</button>` : ''}</div>`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te aviso cuando esté.</div>' : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
   else if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
@@ -358,7 +358,10 @@ function bandasHoy(S) {
   const { D } = S;
   let h = '';
   if (D.demo) h += `<div class="banda">${icono('info')}<span>Liga de ejemplo con datos inventados.</span><button data-accion="salirDemo">Usar la mía</button></div>`;
-  if (D.avisos && D.avisos.length) h += `<div class="banda">${icono('alerta')}<span>No se ha podido leer: ${esc(D.avisos.map((a) => a.paso).slice(0, 3).join(', '))}.</span><button data-accion="diag">Ver</button></div>`;
+  if (D.avisos && D.avisos.length) {
+    const graves = D.avisos.some((a) => /formato|vac[ií]/i.test(a.e) || ['jugadores', 'plantillas', 'tu plantilla', 'mercado'].includes(a.paso));
+    h += `<div class="banda">${icono('alerta')}<span>No se ha podido leer: ${esc(D.avisos.map((a) => a.paso).slice(0, 3).join(', '))}${D.avisos.length > 3 ? ` y ${D.avisos.length - 3} más` : ''}.${graves ? ' Lo que depende de eso puede salir incompleto.' : ''}</span><button data-accion="${graves ? 'mandarFallo' : 'diag'}">${graves ? 'Avisar' : 'Ver'}</button></div>`;
+  }
   return h;
 }
 /** las cláusulas de rivales que te llegan y se abren ya o pronto */

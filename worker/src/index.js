@@ -12,7 +12,16 @@
  *   POST /vincular       la app deja aquí su sesión y recibe un código de 8 letras que dura 10 minutos.
  *   POST /vincular/usar  la web cambia ese código (una sola vez) por la sesión.
  *
- * No guarda nada más: las sesiones de los códigos se borran al usarse o a los 10 minutos.
+ *   Los avisos de fallos (con la sesión de LaLiga en Authorization, para saber quién es; el token no se guarda):
+ *   POST /fallos              manda un aviso: { texto, diag, app, equipo, liga }
+ *   GET  /fallos/mios         los avisos de quien llama, con su respuesta (y si es el dueño, admin: true)
+ *   POST /fallos/visto        { id }: ha leído la respuesta
+ *   GET  /fallos/todos        (el dueño) todos los avisos, resumidos
+ *   GET  /fallos/uno?id=…     (el dueño) un aviso entero, con su diagnóstico
+ *   POST /fallos/responder    (el dueño) { id, respuesta }
+ *   El dueño es la cuenta de LaLiga cuyo número está en ADMINS (lo pone la Action desde el secreto FM_ADMINS).
+ *
+ * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
 
 const PERMITIDOS = new Set([
@@ -30,7 +39,7 @@ function cors(origen) {
   return {
     'Access-Control-Allow-Origin': origen || '*',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'content-type, x-u, x-m, x-h',
+    'Access-Control-Allow-Headers': 'content-type, authorization, x-u, x-m, x-h',
     'Access-Control-Expose-Headers': 'x-s, x-t',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin',
@@ -118,6 +127,118 @@ async function usar(req, env, c) {
   return json(JSON.parse(v), 200, c);
 }
 
+/* ---------- los avisos de fallos ---------- */
+// Van en el mismo almacén KV que los códigos, con la clave f:<cuenta>:<id> (así se listan los de cada uno) y un
+// resumen en los metadatos (para listarlos todos sin leerlos uno a uno). Si no hay almacén, no hay avisos.
+const VIVE = 180 * 86400; // lo que se guarda un aviso, en segundos
+const MAX_TEXTO = 4000, MAX_RESPUESTA = 2000, MAX_DIAG = 40000, AL_DIA = 15;
+const adminsDe = (env) => String(env.ADMINS || '').split(/[\s,;]+/).filter(Boolean);
+
+/** quién llama, comprobado con LaLiga ({ uid, nombre }); se recuerda 10 minutos por sesión */
+async function quienEs(req) {
+  const tk = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  if (tk.length < 20) return null;
+  const h = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(tk)))].map((b) => b.toString(16).padStart(2, '0')).join('');
+  const clave = new Request(`https://quien.fantasy-manager.invalid/${h}`);
+  const g = await caches.default.match(clave);
+  if (g) return g.json();
+  let r;
+  try {
+    r = await fetch('https://fantasy-api.llt-services.com/api/v4/user/me?x-lang=es', { headers: { Authorization: `Bearer ${tk}`, 'x-app': '2', 'x-lang': 'es', Accept: 'application/json', 'user-agent': UA } });
+  } catch (e) { return null; }
+  if (!r.ok) return null;
+  let j = null;
+  try { j = await r.json(); } catch (e) { return null; }
+  const d = j && j.data && typeof j.data === 'object' ? j.data : j || {};
+  const uid = String(d.id ?? d.userId ?? d.managerId ?? '');
+  if (!uid) return null;
+  const u = { uid, nombre: String(d.managerName || d.displayName || d.username || d.name || '').slice(0, 60) };
+  await caches.default.put(clave, new Response(JSON.stringify(u), { headers: { 'cache-control': 'max-age=600' } }));
+  return u;
+}
+const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
+const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(f.texto.replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0 });
+async function guardarFallo(env, f) {
+  await env.VINCULOS.put(`f:${f.uid}:${f.id}`, JSON.stringify(f), { expirationTtl: VIVE, metadata: resumen(f) });
+}
+async function listar(env, prefijo, max = 1000) {
+  const out = [];
+  let cursor;
+  do {
+    const l = await env.VINCULOS.list({ prefix: prefijo, cursor, limit: 1000 });
+    out.push(...l.keys);
+    cursor = l.list_complete ? null : l.cursor;
+  } while (cursor && out.length < max);
+  return out;
+}
+/** un aviso por su id (de quien sea, para el dueño; de quien llama, para los demás) */
+async function buscarFallo(env, u, id, admin) {
+  if (!/^[a-z0-9]{6,40}$/.test(String(id || ''))) return null;
+  if (!admin) { const v = await env.VINCULOS.get(`f:${u.uid}:${id}`); return v ? JSON.parse(v) : null; }
+  const k = (await listar(env, 'f:')).find((x) => x.name.endsWith(`:${id}`));
+  if (!k) return null;
+  const v = await env.VINCULOS.get(k.name);
+  return v ? JSON.parse(v) : null;
+}
+const sinDiag = ({ diag, uid, ...f }) => f;
+
+async function fallos(req, env, c, ruta) {
+  if (!env.VINCULOS) return json({ e: 'El servidor no tiene dónde guardar los avisos' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga para mandar avisos', sesion: true }, 401, c);
+  const admin = adminsDe(env).includes(u.uid);
+  const cuerpo = req.method === 'POST' ? await req.json().catch(() => null) : null;
+
+  if (ruta === '/fallos' && req.method === 'POST') {
+    const texto = corta(cuerpo && cuerpo.texto, MAX_TEXTO).trim();
+    if (!texto) return json({ e: 'Cuenta qué ha pasado' }, 400, c);
+    const mios = await listar(env, `f:${u.uid}:`);
+    const hoy = Date.now() - 86400e3;
+    if (mios.filter((k) => k.metadata && k.metadata.t > hoy).length >= AL_DIA) return json({ e: `Como mucho ${AL_DIA} avisos al día` }, 429, c);
+    const id = Date.now().toString(36) + [...crypto.getRandomValues(new Uint8Array(4))].map((b) => b.toString(36)).join('').slice(0, 6);
+    const f = {
+      id, t: Date.now(), uid: u.uid, quien: u.nombre, equipo: corta(cuerpo.equipo, 60), liga: corta(cuerpo.liga, 60),
+      texto, diag: corta(cuerpo.diag, MAX_DIAG), app: corta(cuerpo.app, 120), respuesta: null, respondida: null, vista: true,
+    };
+    await guardarFallo(env, f);
+    return json({ ok: true, id }, 200, c);
+  }
+  if (ruta === '/fallos/mios' && req.method === 'GET') {
+    const ks = (await listar(env, `f:${u.uid}:`)).sort((a, b) => (b.metadata?.t || 0) - (a.metadata?.t || 0)).slice(0, 30);
+    const lista = (await Promise.all(ks.map((k) => env.VINCULOS.get(k.name)))).filter(Boolean).map((v) => sinDiag(JSON.parse(v)));
+    let pendientes = null;
+    if (admin) pendientes = (await listar(env, 'f:')).filter((k) => k.metadata && !k.metadata.r).length;
+    return json({ lista, admin, pendientes, yo: u.uid }, 200, c);
+  }
+  if (ruta === '/fallos/visto' && req.method === 'POST') {
+    const f = await buscarFallo(env, u, cuerpo && cuerpo.id, false);
+    if (!f) return json({ e: 'No existe' }, 404, c);
+    if (!f.vista) { f.vista = true; await guardarFallo(env, f); }
+    return json({ ok: true }, 200, c);
+  }
+  if (!admin) return json({ e: 'Solo para el dueño de la app' }, 403, c);
+  if (ruta === '/fallos/todos' && req.method === 'GET') {
+    const ks = (await listar(env, 'f:')).sort((a, b) => (b.metadata?.t || 0) - (a.metadata?.t || 0)).slice(0, 200);
+    return json({ lista: ks.map((k) => ({ id: k.name.split(':').pop(), ...(k.metadata || {}) })) }, 200, c);
+  }
+  if (ruta === '/fallos/uno' && req.method === 'GET') {
+    const f = await buscarFallo(env, u, new URL(req.url).searchParams.get('id'), true);
+    if (!f) return json({ e: 'No existe' }, 404, c);
+    const { uid, ...resto } = f;
+    return json(resto, 200, c);
+  }
+  if (ruta === '/fallos/responder' && req.method === 'POST') {
+    const respuesta = corta(cuerpo && cuerpo.respuesta, MAX_RESPUESTA).trim();
+    if (!respuesta) return json({ e: 'Escribe la respuesta' }, 400, c);
+    const f = await buscarFallo(env, u, cuerpo && cuerpo.id, true);
+    if (!f) return json({ e: 'No existe' }, 404, c);
+    f.respuesta = respuesta; f.respondida = Date.now(); f.vista = false; f.por = u.nombre;
+    await guardarFallo(env, f);
+    return json({ ok: true }, 200, c);
+  }
+  return json({ e: 'No existe' }, 404, c);
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -129,7 +250,8 @@ export default {
       if (url.pathname === '/img' && req.method === 'GET') return await imagen(url, c);
       if (url.pathname === '/vincular' && req.method === 'POST') return await vincular(req, env, c);
       if (url.pathname === '/vincular/usar' && req.method === 'POST') return await usar(req, env, c);
-      if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS }, 200, c);
+      if (url.pathname === '/fallos' || url.pathname.startsWith('/fallos/')) return await fallos(req, env, c, url.pathname);
+      if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
     } catch (e) {
       return json({ e: String((e && e.message) || e) }, 500, c);

@@ -72,10 +72,33 @@ b, strong { font-weight: 600; color: var(--texto); }
 .ligas-l button small { font-size: 12.5px; color: var(--oro); }
 .ligas-l button.activa { border-color: var(--rojo); background: var(--rojo-s); }
 .ligas-l button .ic { color: var(--rojo-l); width: 20px; height: 20px; }
+/* los avisos de fallos */
+.b-ico { position: relative; }
+.b-ico .gl { position: absolute; top: 2px; left: calc(50% + 5px); min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--rojo); color: #fff; font: 700 11px/17px 'Barlow'; text-align: center; }
+.aviso-t { width: 100%; resize: vertical; min-height: 96px; margin: 4px 0 10px; font-size: 16px; line-height: 1.4; }
+.aviso-diag { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: var(--texto2); margin: 0 0 14px; line-height: 1.4; }
+.aviso-diag input { width: 20px; height: 20px; margin: 1px 0 0; flex: none; accent-color: var(--rojo); }
+.aviso { background: var(--plano2); border: 1px solid var(--linea); border-radius: 13px; padding: 12px 14px; margin: 0 0 10px; }
+.aviso.nuevo { border-color: var(--rojo); }
+.aviso p { margin: 6px 0 0; font-size: 15px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+.aviso-cab { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; text-align: left; font-size: 13px; color: var(--apagado); }
+.aviso-cab b { color: var(--texto); font-size: 15px; }
+.aviso-cab .pill { margin-left: auto; }
+.aviso-t2 { color: var(--apagado); }
+.aviso-resp { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--sube-s); display: flex; flex-direction: column; gap: 3px; font-size: 15px; line-height: 1.45; }
+.aviso-resp b { font-size: 13px; color: var(--sube); }
+.aviso-resp span { white-space: pre-wrap; word-break: break-word; }
+.aviso-resp small { font-size: 12px; color: var(--apagado); }
+.aviso-det { margin-top: 8px; }
+.aviso-det details { margin: 8px 0; }
+.aviso-det summary { cursor: pointer; color: var(--texto2); font-size: 14px; }
+.aviso-det pre.diag { max-height: 260px; overflow: auto; }
+.aviso-texto { font-size: 15.5px !important; color: var(--texto); }
 /* un fallo al cargar, explicado */
 .banda.mal { background: var(--baja-s); }
 .banda.mal .ic { color: var(--baja); }
 .fallo p { margin: 0 0 10px; font-size: 16px; line-height: 1.5; color: var(--texto2); }
+.error-c .fallo-det { margin-top: 6px; font-size: 12.5px; color: var(--apagado); font-family: ui-monospace, monospace; word-break: break-word; }
 .fallo p.fallo-det { font-size: 12.5px; color: var(--apagado); font-family: ui-monospace, monospace; word-break: break-word; }
 .punto { width: 6px; height: 6px; border-radius: 50%; background: var(--apagado); display: inline-block; }
 .punto.vivo { background: var(--sube); } .punto.viejo { background: var(--oro); } .punto.mal { background: var(--rojo); }
@@ -157,6 +180,8 @@ main { padding: 16px 16px 120px; }
 .plan-cab { display: flex; align-items: flex-end; gap: 10px; }
 .plan-cab .ia { margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px 'Barlow'; color: var(--texto2); padding: 5px 10px; border-radius: 8px; background: var(--plano2); }
 .plan-cab .ia .ic { width: 15px; height: 15px; color: var(--rojo-l); }
+.plan-rehacer { margin-left: auto; flex: none; }
+.plan-rehacer .ic { color: var(--rojo-l); }
 .plan-cab .der { margin-left: auto; }
 .plan-titular { font: 700 29px/1.08 var(--cond); margin: 10px 0 8px; }
 .plan-sit { color: var(--texto2); font-size: 16px; margin: 0 0 6px; }
