@@ -1,6 +1,7 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
+import { DIBUJOS } from './dibujos.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
@@ -375,6 +376,8 @@ export function ajustes(S) {
     h += `<div class="ajuste"><div class="c"><b>Modelos de IA</b><span>${lista.length ? `Tu clave de Google da acceso a ${lista.length} versiones de Gemini, cada una con su cupo gratis diario${agot.length ? ` (${agot.length} lo han gastado hoy)` : ''}. Si una se agota, la app pasa sola a la siguiente.` : 'Aún no he comprobado qué versiones de Gemini da tu clave'}</span></div><button class="btn chico sec" data-accion="probarIA">Comprobar</button></div>`;
     h += `<div class="ajuste"><div class="c"><b>Plan automático al abrir</b><span>Lo rehace solo si es de otro día o ha cambiado el mercado</span></div>${interr(ci.auto, 'iaAuto')}</div>`;
     h += `<div class="ajuste"><div class="c"><b>Buscar noticias en Google</b><span>Si se acaba su cupo, sigue sin búsqueda</span></div>${interr(ci.web, 'iaWeb')}</div>`;
+    const pu = ci.pullitas || 'normal';
+    h += `<div class="ajuste"><div class="c"><b>Pullitas de la IA</b><span>Las bromas sobre noticias de los jugadores y sobre lo que hacen tus rivales. Nunca deciden una compra ni una venta</span></div><select data-cambia="pullitas">${[['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']].map(([v, t]) => `<option value="${v}"${pu === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>`;
   }
 
   h += `<div class="grupo"><span>Avisos en el móvil</span></div>`;
@@ -416,6 +419,27 @@ export function vinculoWeb(S) {
   <div class="codigo-grande">${esc(cod.slice(0, 4))}<span>${esc(cod.slice(4))}</span></div>
   <p class="t2 peq" style="text-align:center">Vale una sola vez y caduca ${cuando(v.caduca)}. Entras con tu cuenta de LaLiga y tu clave de la IA, como en la app.</p>
   <button class="btn sec ancho" data-accion="copiarEnlaceWeb">Copiar el enlace de la web</button>`;
+}
+
+/* ================= LA BIENVENIDA (la primera vez que entras) ================= */
+const PASOS_BIEN = [
+  { d: 'plan', acc: '#ee1c3c', t: 'Tu plan de cada día', x: 'En Hoy tienes las operaciones exactas para tu liga: qué vender, a quién clausular y cuánto pujar, con el saldo que te queda después de cada una. Se rehace solo cuando cambia el mercado.' },
+  { d: 'ia', acc: '#ffc547', t: 'La IA, gratis con tu clave', x: 'Con una clave gratuita de Google, la IA lee noticias, lesiones y alineaciones antes de decidir, y le puedes preguntar lo que quieras, también con capturas. Sin clave tienes el plan automático, que ya funciona.' },
+  { d: 'campana', acc: '#2fd18f', t: 'Avisos y fallos', x: 'La app te avisa cuando se abre una cláusula que te interesa o cambia el mercado. Y si algo falla, toca «Fallo» arriba: me llega y te contesto en la app.' },
+];
+export function bienvenida(S) {
+  const i = Math.max(0, Math.min(PASOS_BIEN.length - 1, S.bien || 0)), p = PASOS_BIEN[i], ultimo = i === PASOS_BIEN.length - 1;
+  const botones = i === 1 && !hayClave()
+    ? `<button class="btn ancho" data-accion="bienIA">${icono('ia')}Activarla ahora</button><button class="btn sec ancho" data-accion="bienSig">Más tarde</button>`
+    : ultimo
+      ? `${enApp ? `<button class="btn ancho" data-accion="bienAvisos">${icono('campana')}Activar los avisos</button>` : ''}<button class="btn ${enApp ? 'sec ' : ''}ancho" data-accion="bienFin">Empezar</button>`
+      : `<button class="btn ancho" data-accion="bienSig">Siguiente</button>`;
+  return `<div class="bien" style="--acc:${p.acc}">
+    <div class="hoja-cab"><span class="eti">Bienvenido · ${i + 1} de ${PASOS_BIEN.length}</span><button class="b-ico" data-accion="bienFin" aria-label="Saltar">${icono('cerrar')}</button></div>
+    <svg class="dib bien-dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[p.d] || DIBUJOS.ia}</svg>
+    <h2 class="bien-t">${esc(p.t)}</h2><p class="bien-x">${esc(p.x)}</p>
+    <div class="bien-puntos" aria-hidden="true">${PASOS_BIEN.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
+    <div class="bien-btns">${botones}</div></div>`;
 }
 
 /* ================= AVISOS DE FALLOS ================= */

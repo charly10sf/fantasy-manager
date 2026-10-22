@@ -395,6 +395,8 @@ async function cargar({ silencio = false } = {}) {
     rehacer();
     S.cargando = false;
     pintar();
+    // la primera vez que entras con tu cuenta: tres pasos para saber dónde está cada cosa
+    if (conPantalla && !enDemo() && !LS.get('bienvenida')) { LS.set('bienvenida', Date.now()); setTimeout(() => { if (!S.hoja) { S.bien = 0; hoja('bienvenida'); } }, 700); }
     if (!silencio && !conPantalla) tostada('Liga al día');
     despues();
   } catch (e) {
@@ -611,7 +613,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'bienvenida' ? Hj.bienvenida(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -1015,6 +1017,10 @@ document.addEventListener('click', async (ev) => {
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'mandarAviso': enviarAviso(); break;
+    case 'bienSig': S.bien = (S.bien || 0) + 1; repintarHoja(); break;
+    case 'bienIA': cerrarHoja(); ir('ia'); break;
+    case 'bienAvisos': nativo.pedirPermisoAvisos(); cerrarHoja(); tostada('Listo: ya puedes empezar'); break;
+    case 'bienFin': cerrarHoja(); break;
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;
     case 'responderAviso': contestarAviso(d.id); break;
     case 'ligas': {
@@ -1168,6 +1174,7 @@ document.addEventListener('change', (ev) => {
   if (k === 'deuda') { guardarCfg({ deuda: +v }); rehacer(); pintar(); repintarHoja(); }
   if (k === 'liga') { cerrarHoja(true); cambiarDeLiga(v); }
   if (k === 'modelo') guardarCfgIA({ modelo: v });
+  if (k === 'pullitas') { guardarCfgIA({ pullitas: v }); tostada(v === 'no' ? 'Sin pullitas desde el próximo plan' : 'Hecho: se nota desde el próximo plan o la próxima respuesta'); }
   if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M); }
   if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M); repintarHoja(); }
 });
@@ -1209,6 +1216,8 @@ function listaVersiones() {
 
 /* ---------------- arranque ---------------- */
 async function arrancar() {
+  // quien ya usaba la app no necesita la bienvenida
+  if (!LS.get('bienvenida') && versionVista()) LS.set('bienvenida', 'ya la conocía');
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
   if (VISTAS[h]) S.vista = h;
   if ((enApp || enWeb) && !enDemo() && !haySesion()) {

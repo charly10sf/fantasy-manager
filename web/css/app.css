@@ -62,7 +62,7 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-liga b { display: block; font: 700 17px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sup-liga span { font-size: 13.5px; color: var(--apagado); display: flex; align-items: center; gap: 6px; }
 /* el nombre de la liga: con varias ligas, un botón para cambiar */
-.sup-nombre { display: flex; align-items: center; gap: 4px; max-width: 100%; color: var(--texto); text-align: left; padding: 0; }
+.sup-nombre { display: flex; align-items: center; gap: 4px; max-width: 100%; color: var(--texto); text-align: left; padding: 7px 0; margin: -7px 0; }
 .sup-nombre b { min-width: 0; }
 .sup-nombre .ic { width: 18px; height: 18px; flex: none; color: var(--rojo-l); }
 .sup-nombre:disabled { cursor: default; opacity: 1; }
@@ -986,3 +986,20 @@ a.btn { text-decoration: none; }
 .lim-in .lim-frase { color: var(--texto); font-weight: 600; }
 .lim-in .lim-vuelve { font-size: 15px; color: var(--apagado); }
 body.limitado { overflow: hidden; }
+
+/* toques más cómodos: los botones de texto pequeños ganan zona de toque sin cambiar de aspecto */
+.banda button, .op-pie button, .sec .mas, .eq-hoy-t .mas, button.rojo, .ia-alta .paso a { padding-top: 10px; padding-bottom: 10px; margin-top: -10px; margin-bottom: -10px; }
+.op-pie button { padding-left: 6px; padding-right: 6px; margin-left: -6px; }
+.campo-modo button { padding: 8px 11px; }
+
+/* la bienvenida */
+.bien { text-align: center; padding-bottom: 8px; }
+.bien .hoja-cab { justify-content: space-between; text-align: left; }
+.bien-dib { width: 200px; max-width: 60%; height: auto; margin: 4px auto 6px; display: block; }
+.bien-t { font: 700 28px/1.05 var(--cond); text-transform: uppercase; margin: 6px 0 10px; }
+.bien-x { font-size: 16.5px; line-height: 1.5; color: var(--texto2); margin: 0 auto 18px; max-width: 34em; }
+.bien-puntos { display: flex; justify-content: center; gap: 8px; margin: 0 0 18px; }
+.bien-puntos i { width: 8px; height: 8px; border-radius: 4px; background: var(--plano3); transition: width 0.2s; }
+.bien-puntos i.on { width: 22px; background: var(--acc); }
+.bien-btns { display: flex; flex-direction: column; gap: 10px; }
+@media (prefers-reduced-motion: reduce) { .bien-puntos i { transition: none; } }
