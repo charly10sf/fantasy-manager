@@ -148,6 +148,7 @@ const I = {
   enviar: '<path d="M4 12.2 20 4.5l-5.6 15.5-2.7-6.3z"/><path d="M11.7 13.7 20 4.5"/>',
   parar: '<rect x="6.5" y="6.5" width="11" height="11" rx="2.2"/>',
   micro: '<rect x="9" y="3" width="6" height="11.5" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M8.5 21h7"/>',
+  abajo: '<path d="M6.5 9.5l5.5 5.5 5.5-5.5"/>',
   foto: '<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M20.5 15.5l-4.8-4.8a1 1 0 0 0-1.4 0L5 20"/>',
   nota: '<path d="M6 3.5h9l3.5 3.5v13.5H6z"/><path d="M14.5 3.5V7.5h4M9 12h6M9 15.5h6"/>',
   calendario: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',

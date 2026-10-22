@@ -61,6 +61,22 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-liga { flex: 1; min-width: 0; }
 .sup-liga b { display: block; font: 700 17px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sup-liga span { font-size: 13.5px; color: var(--apagado); display: flex; align-items: center; gap: 6px; }
+/* el nombre de la liga: con varias ligas, un botón para cambiar */
+.sup-nombre { display: flex; align-items: center; gap: 4px; max-width: 100%; color: var(--texto); text-align: left; padding: 0; }
+.sup-nombre b { min-width: 0; }
+.sup-nombre .ic { width: 18px; height: 18px; flex: none; color: var(--rojo-l); }
+.sup-nombre:disabled { cursor: default; opacity: 1; }
+.ligas-l { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 12px; }
+.ligas-l button { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 13px; background: var(--plano2); border: 1px solid var(--linea); text-align: left; font-size: 16px; }
+.ligas-l button b { flex: 1; min-width: 0; }
+.ligas-l button small { font-size: 12.5px; color: var(--oro); }
+.ligas-l button.activa { border-color: var(--rojo); background: var(--rojo-s); }
+.ligas-l button .ic { color: var(--rojo-l); width: 20px; height: 20px; }
+/* un fallo al cargar, explicado */
+.banda.mal { background: var(--baja-s); }
+.banda.mal .ic { color: var(--baja); }
+.fallo p { margin: 0 0 10px; font-size: 16px; line-height: 1.5; color: var(--texto2); }
+.fallo p.fallo-det { font-size: 12.5px; color: var(--apagado); font-family: ui-monospace, monospace; word-break: break-word; }
 .punto { width: 6px; height: 6px; border-radius: 50%; background: var(--apagado); display: inline-block; }
 .punto.vivo { background: var(--sube); } .punto.viejo { background: var(--oro); } .punto.mal { background: var(--rojo); }
 .sup-btns { display: flex; gap: 2px; flex: none; }

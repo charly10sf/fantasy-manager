@@ -19,6 +19,7 @@ import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite } from './limite.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
+import { explicarError, bandaError, botonesError } from './errores.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
@@ -113,7 +114,7 @@ const camisetaCarga = (f) => `<svg class="cc" viewBox="6 10 188 188" aria-hidden
   <path d="${LOGO_D.punos}" fill="#fff"/><path d="${LOGO_D.cuello}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="${LOGO_D.letras}" fill="#fff"/>
 </svg>`;
 const pctCarga = (paso, total) => Math.max(4, Math.min(100, Math.round(((paso + 0.5) / total) * 100)));
-const tituloCarga = (liga, error) => (error ? 'No se ha podido cargar' : `Poniendo al día <span>${liga && liga.nombre ? esc(liga.nombre) : 'tu liga'}</span>`);
+const tituloCarga = (liga, error) => (error ? esc(error.titulo || 'No se ha podido cargar') : `Poniendo al día <span>${liga && liga.nombre ? esc(liga.nombre) : 'tu liga'}</span>`);
 /** la lista de pasos: hechos (✓), el de ahora (girando, con los segundos si tarda) y los que faltan */
 const pasosHTML = (paso) => pasosCarga.map((t, i) => {
   const e = i < paso ? 'ok' : i === paso ? 'ya' : '';
@@ -133,15 +134,15 @@ function cargaHTML(paso, error, liga) {
         ${error ? '' : `<div class="carga-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div><div class="carga-pct"><span>${Math.max(0, Math.min(paso + 1, total))} de ${total}</span><b>${pct} %</b></div>`}
       </div>
       <div class="carga-der">
-        ${error ? `<div class="error-c">${esc(error)}</div>
-          <div class="carga-btns"><button class="btn" data-accion="recargar">${icono('refrescar')}Volver a probar</button><button class="btn sec" data-accion="diag">Diagnóstico</button><button class="btn sec" data-accion="entrarDemo">Ver la liga de ejemplo</button></div>`
+        ${error ? `<div class="fallo"><p>${esc(error.texto)}</p>${error.detalle && error.detalle !== error.texto ? `<p class="fallo-det">${esc(error.detalle)}</p>` : ''}</div>
+          <div class="carga-btns">${botonesError(error, icono)}</div>`
           : `<ol class="carga-pasos">${pasosHTML(paso)}</ol>
           <div class="carga-consejo"><span class="et">${icono('info')}¿Sabías que…?</span><p id="cConsejo">${esc(CONSEJOS[Math.floor(Math.random() * CONSEJOS.length)])}</p></div>`}
       </div>
     </div>
   </div>`;
 }
-function pantallaCarga(paso = -1, error = '') {
+function pantallaCarga(paso = -1, error = null) {
   const total = pasosCarga.length;
   const el = $('.carga');
   const liga = (foto() || {}).liga;
@@ -155,7 +156,7 @@ function pantallaCarga(paso = -1, error = '') {
     $('.carga-pct span', el).textContent = `${Math.max(0, Math.min(paso + 1, total))} de ${total}`;
     $('.carga-pct b', el).textContent = `${pct} %`;
     $('.carga-pasos', el).innerHTML = pasosHTML(paso);
-    $('.carga-t', el).innerHTML = tituloCarga(liga, '');
+    $('.carga-t', el).innerHTML = tituloCarga(liga, null);
     return;
   }
   // la primera vez (o desde la pantalla de arranque de index.html): se pinta entera
@@ -197,7 +198,7 @@ function marco() {
   const botones = `<div class="sup-btns"><button class="b-ico oculto" id="bPlan" data-accion="planYa" aria-label="Rehacer el plan" data-et="Plan IA">${icono('ia')}</button>
     <button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar" data-et="Actualizar">${icono('refrescar')}</button>
     <button class="b-ico" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}</button></div>`;
-  const liga = `${LOGO_P}<div class="sup-liga"><b id="supLiga"></b><span id="supEstado"></span></div>`;
+  const liga = `${LOGO_P}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
@@ -216,10 +217,16 @@ window.addEventListener('resize', () => {
 });
 function pintarSup() {
   const { D } = S;
-  $('#supLiga').textContent = D ? D.liga.nombre : 'Fantasy Manager';
+  const varias = !!(D && D.ligas && D.ligas.length > 1);
+  const sl = $('#supLiga');
+  sl.innerHTML = `<b>${esc(D ? D.liga.nombre : 'Fantasy Manager')}</b>${varias ? icono('abajo') : ''}`;
+  sl.disabled = !varias;
+  sl.setAttribute('aria-label', varias ? `${D.liga.nombre}: cambiar de liga` : (D ? D.liga.nombre : 'Fantasy Manager'));
   const edad = D ? Date.now() - D.t : Infinity;
   const p = S.cargando ? 'vivo' : edad < 30 * MIN ? 'vivo' : edad < 6 * 3600e3 ? 'viejo' : 'mal';
-  $('#supEstado').innerHTML = `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : `Actualizado ${rel(D.t)}`) : ''}`;
+  $('#supEstado').innerHTML = S.errorCarga && D && !S.cargando
+    ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin internet' : 'Sin actualizar'} · ${rel(D.t)}`
+    : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : `Actualizado ${rel(D.t)}`) : ''}`;
   $('#bRefrescar').classList.toggle('gira', S.cargando);
   const bp = $('#bPlan');
   if (bp) {
@@ -242,7 +249,7 @@ function pintar({ arriba = false } = {}) {
   $$('.nav button').forEach((b) => b.classList.toggle('activo', b.dataset.ir === S.vista));
   const v = $('#vista');
   try { v.innerHTML = VISTAS[S.vista](S); } catch (e) { v.innerHTML = `<div class="error-c">Algo ha fallado al pintar esta pantalla: ${esc(e.message)}</div>`; console.error(e); }
-  $('#banda').innerHTML = S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : '';
+  $('#banda').innerHTML = (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   if (S.vista === 'ia') {
     bajarChat();
@@ -385,6 +392,7 @@ async function cargar({ silencio = false } = {}) {
   if (conPantalla) pantallaCarga(0); else if ($('#vista')) pintarSup();
   try {
     S.D = await actualizar((i) => { if (conPantalla) pantallaCarga(i); });
+    S.errorCarga = null;
     rehacer();
     S.cargando = false;
     pintar();
@@ -394,8 +402,13 @@ async function cargar({ silencio = false } = {}) {
     S.cargando = false;
     console.error(e);
     if (e.sesion) { S.D = null; pantallaEntrar(e.message); return; }
-    if (conPantalla) pantallaCarga(-1, e.message || String(e));
-    else { pintar(); tostada(`No se ha podido actualizar: ${e.message}`, 5000); }
+    const x = { ...explicarError(e), detalle: e.message || String(e), t: Date.now() };
+    S.errorCarga = x;
+    // sin poder cargar, pero con la liga guardada de antes: se enseña esa, avisando de que no está al día
+    const guardada = conPantalla && x.tipo !== 'sinLigas' ? foto() : null;
+    if (guardada) { S.D = guardada; rehacer(); pintar(); return; }
+    if (conPantalla) pantallaCarga(-1, x);
+    else pintar();
   }
 }
 
@@ -411,6 +424,26 @@ async function despues() {
   const ci = cfgIA();
   if (hayClave() && ci.auto && planViejo(S.M) && !S.planEstado.cargando && !S.planEstado.error) generarPlan();
 }
+
+/** a otra liga de tu cuenta: lo de cada liga se guarda aparte, así que se carga la suya */
+function cambiarDeLiga(id) {
+  if (S.planCtl) S.planCtl.abort();
+  if (S.chatCtl) S.chatCtl.abort();
+  guardarCfg({ ligaId: id });
+  S.D = null; S.M = null; S.plan = null; S.planEstado = {}; S.det = {}; S.fuentes = null; S.opPorPid = {}; S.errorCarga = null; S.adjuntos = [];
+  cargar();
+}
+/** el diagnóstico listo para mandar por WhatsApp (en la app) o copiado (en el navegador) */
+function mandarFallo() {
+  const t = `Fallo en Fantasy Manager. Lo que estaba haciendo: \n\n----\n${Hj.textoDiagnostico(S)}`;
+  if (enApp) nativo.compartir(t);
+  else { nativo.copiar(t); tostada('Copiado: pégalo en un mensaje y cuéntame qué hacías', 5000); }
+}
+// al volver internet, si lo último falló, se vuelve a probar solo
+window.addEventListener('online', () => {
+  if (S.cargando) return;
+  if (S.errorCarga || $('.carga.mal')) { tostada('Ha vuelto la conexión: actualizo'); S.planEstado = {}; cargar({ silencio: true }); }
+});
 
 /* ---------------- el plan con IA ---------------- */
 async function generarPlan() {
@@ -437,7 +470,7 @@ async function generarPlan() {
       rehacer();
       tostada('Plan parado. Toca la chispa de arriba cuando quieras otro');
     } else {
-      S.planEstado = { error: e.message || String(e) };
+      S.planEstado = { error: e.message || String(e), clave: !!e.clave };
       rehacer();
       if (!nativo.aLaVista()) nativo.notificar('No ha salido el plan de hoy', 'Entra y dale a Reintentar', 'hoy');
     }
@@ -577,7 +610,7 @@ async function enviarPregunta(texto) {
       S.adjuntos = [...fotos, ...S.adjuntos].slice(0, MAX_FOTOS);
       tostada('Pregunta parada');
     } else {
-      tostada(e.message || 'No ha contestado', 7000);
+      if (e.clave) { S.claveMal = true; if (S.vista === 'ia') pintar(); } else tostada(e.message || 'No ha contestado', 7000);
       if (!nativo.aLaVista()) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
     }
   } finally {
@@ -876,6 +909,21 @@ document.addEventListener('click', async (ev) => {
     case 'recargar': S.planEstado = {}; cargar(); break;
     case 'ajustes': hoja('ajustes'); break;
     case 'diag': hoja('diag'); break;
+    case 'mandarFallo': mandarFallo(); break;
+    case 'ligas': {
+      const D = S.D; if (!D || !D.ligas || D.ligas.length < 2) break;
+      abrirHoja(`<div class="hoja-cab"><h2>Tus ligas</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>
+        <div class="ligas-l">${D.ligas.map((l) => `<button class="${l.id === D.liga.id ? 'activa' : ''}" data-accion="cambiarLiga" data-id="${esc(l.id)}"${l.id === D.liga.id ? ' aria-current="true"' : ''}><b>${esc(l.nombre)}</b>${l.premium ? '<small>Premium</small>' : ''}${l.id === D.liga.id ? icono('ok') : ''}</button>`).join('')}</div>
+        <p class="t2 peq">Cada liga guarda su plan, su chat y lo que le has contado a la IA por separado.</p>`);
+      break;
+    }
+    case 'cambiarLiga': {
+      cerrarHoja(true);
+      if (!S.D || d.id === S.D.liga.id) break;
+      cambiarDeLiga(d.id);
+      break;
+    }
+    case 'cambiarClave': guardarClave(''); S.planEstado = {}; S.claveMal = false; rehacer(); ir('ia'); tostada('Pega la clave nueva'); break;
     case 'cerrarHoja': cerrarHoja(); break;
     case 'irIA': cerrarHoja(); ir('ia'); break;
     case 'copiarDiag': nativo.copiar(Hj.textoDiagnostico(S)); tostada('Copiado'); break;
@@ -929,6 +977,7 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'guardarClave': {
+      S.claveMal = false;
       const k = ($('#claveIA') || {}).value || '';
       if (!k.trim()) { tostada('Pega la clave primero'); break; }
       el.disabled = true; el.textContent = 'Probando…';
@@ -1010,7 +1059,7 @@ document.addEventListener('change', (ev) => {
   if (!el) return;
   const k = el.dataset.cambia, v = el.value;
   if (k === 'deuda') { guardarCfg({ deuda: +v }); rehacer(); pintar(); repintarHoja(); }
-  if (k === 'liga') { guardarCfg({ ligaId: v }); cerrarHoja(true); S.D = null; cargar(); }
+  if (k === 'liga') { cerrarHoja(true); cambiarDeLiga(v); }
   if (k === 'modelo') guardarCfgIA({ modelo: v });
   if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M); }
   if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M); repintarHoja(); }

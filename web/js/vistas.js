@@ -214,7 +214,8 @@ function planHTML(S) {
     ${P ? `<span class="ia">${icono(esIA ? 'ia' : 'lista')}${esIA ? `${esc(nombreModelo(P.modelo))}${P.web ? ' + Google' : ''} · ${rel(P.t)}` : 'Automático, sin IA'}</span>` : ''}</div>
     </div>`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te aviso cuando esté.</div>' : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
-  if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
+  if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
+  else if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (!P) return h + '</div>';
   if (esIA && P.dia && P.viejo) h += `<div class="banda">${icono('reloj')}<span>Este plan es de ${cuando(P.t)}.</span>${hayClave() && !E.cargando ? '<button data-accion="plan">Hacer el de hoy</button>' : ''}</div>`;
   h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? `<p class="plan-sit">${esc(P.situacion)}</p>` : ''}`;
@@ -412,7 +413,7 @@ export function equipo(S) {
   const aVender = M.mias.filter((x) => x.ventaInercia).length;
   void aVender;
   h += tabs('equipo', seg, [['plantilla', 'Plantilla', M.mias.length], ['venta', 'En venta', M.misVentas.length], ['clausulas', 'Cláusulas', abiertasE, riesgoE ? 'rojo' : ''], ['dinero', 'Beneficio']]);
-  if (!M.mias.length) return h + nada('No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si estás en varias ligas, cambia de liga en Ajustes.');
+  if (!M.mias.length) return h + nada(S.D && S.D.ligas && S.D.ligas.length > 1 ? 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Toca el nombre de la liga, arriba, para cambiar a otra de tus ligas.' : 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si acabas de entrar en ella, prueba a actualizar en un rato.');
 
   if (seg === 'plantilla') {
     const arriba = equipoHoyHTML(S, { corto: true }) + onceHTML(S, null, { conBanquillo: true });
@@ -653,6 +654,7 @@ export function ia(S) {
   // la pregunta que se está contestando, aunque aún no esté guardada en el chat
   const yaEsta = msgs.length && msgs[msgs.length - 1].r === 'yo' && msgs[msgs.length - 1].t === S.preguntaActual;
   if (S.charlando && (S.preguntaActual || (S.fotosActuales || []).length) && !yaEsta) h += `<div class="msg yo">${fotosMsg(S.fotosActuales, -1)}${S.preguntaActual ? `<div>${esc(S.preguntaActual)}</div>` : ''}</div>`;
+  if (S.claveMal && !S.charlando) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Crea otra en aistudio.google.com/apikey y pégala: tu chat no se borra.<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
   if (S.charlando) h += `<div class="msg ia" id="respuesta"><div class="quien-ia">Pensando…</div>${S.parcial ? md(S.parcial) : `<span class="pensando"><i></i><i></i><i></i></span> <span class="t2 peq" id="paso-chat">${esc(S.pasoChat || '')}</span>`}</div><div class="parar-chat"><button class="btn chico sec" data-accion="pararChat">${icono('parar')}Parar la respuesta</button></div>`;
   const puedeFotos = !S.charlando && (S.adjuntos || []).length < 4;
   h += `</div><div class="escribe"><div class="adjuntos" id="adjuntos">${adjuntosHTML(S)}</div><div class="escribe-in"><button class="micro foto" data-accion="foto" aria-label="Mandar una foto o captura"${puedeFotos ? '' : ' disabled'}>${icono('foto')}</button><textarea id="pregunta" rows="1" placeholder="Pregunta o cuéntale algo"></textarea>${S.charlando ? `<button class="parar" data-accion="pararChat" aria-label="Parar">${icono('parar')}</button>` : `${nativo.hayVoz() ? `<button class="micro" data-accion="voz" aria-label="Hablar">${icono('micro')}</button>` : ''}<button data-accion="enviar" aria-label="Enviar">${icono('enviar')}</button>`}</div></div>`;

@@ -3,13 +3,22 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.3.5a';
+export const VERSION = '0.4.0';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.4.0', f: '2026-10-23', h: '02:00', t: 'Lista para más ligas',
+    cosas: [
+      { tipo: 'mejora', d: 'conexion', t: 'Los fallos, explicados', x: 'Si no se puede cargar tu liga, ahora te dice qué pasa y qué hacer: sin internet (y lo vuelve a intentar sola en cuanto vuelve), LaLiga caída, LaLiga ha cambiado algo, una cuenta sin ligas o una liga vacía. Si ya tenías la liga guardada, la sigues viendo con un aviso de cuándo es.' },
+      { tipo: 'nuevo', d: 'camiseta', t: 'Cambia de liga desde arriba', x: 'Si tu cuenta está en varias ligas, toca su nombre en la cabecera para cambiar. Cada liga guarda su plan, su chat y lo que le has contado a la IA por separado, sin mezclarse.' },
+      { tipo: 'nuevo', d: 'ajustes', t: 'Avisar de un fallo', x: 'En Ajustes, «Avisar de un fallo» abre WhatsApp (o lo que uses) con todo lo que necesito para arreglarlo. Solo tienes que contar qué hacías.' },
+      { tipo: 'arreglo', d: 'ia', t: 'La clave de la IA, sin líos', x: 'Si Google deja de aceptar tu clave (la borraste o se copió mal), el plan y el chat te lo dicen con un botón para poner otra, en vez de un error raro.' },
+    ],
+  },
   {
     v: '0.3.5a', f: '2026-10-22', h: '23:03', t: 'El teclado del chat',
     cosas: [

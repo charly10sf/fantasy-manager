@@ -15,8 +15,13 @@ export const guardarCfg = (c) => LS.set('cfg', { ...cfg(), ...c });
 
 /** ¿se usa la demostración? en un navegador sin el Worker, siempre; en la app y en la web, si la has pedido */
 export const enDemo = () => (!enApp && !enWeb) || !!LS.get('demo', false);
-// la demostración guarda aparte para no mezclar sus datos con los tuyos
-export const K = (k) => (enDemo() ? `${k}-demo` : k);
+// la demostración guarda aparte para no mezclar sus datos con los tuyos, y cada liga lo suyo (el plan, el chat, las
+// notas, el histórico): la primera que se cargó sigue con las claves de siempre y las demás llevan su id detrás
+const ligaK = () => {
+  const c = LS.get('cfg', {}) || {}, p = LS.get('liga-principal', null);
+  return c.ligaId && p && String(c.ligaId) !== String(p) ? `-l${c.ligaId}` : '';
+};
+export const K = (k) => (enDemo() ? `${k}-demo` : `${k}${ligaK()}`);
 
 export const foto = () => LS.get(K('datos'), null);
 export const historico = () => LS.get(K('hist'), { v: {}, eq: {}, yo: [], mov: [] });
@@ -77,8 +82,11 @@ export async function actualizar(alPaso = () => {}) {
 
   alPaso(1, PASOS[1]);
   const ligas = N.lista(await api.ligas()).map((l) => ({ id: String(l.id), nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))) })).filter((l) => l.id);
-  if (!ligas.length) throw new Error('Tu cuenta no tiene ninguna liga de LaLiga Fantasy');
+  if (!ligas.length) throw Object.assign(new Error('Tu cuenta no tiene ninguna liga de LaLiga Fantasy'), { tipo: 'sinLigas' });
   const liga = ligas.find((l) => l.id === String(c.ligaId)) || ligas[0];
+  // la primera liga que se carga es «la de siempre» (guarda con las claves de antes); si la elegida ya no está, la que toca
+  if (!LS.get('liga-principal', null)) LS.set('liga-principal', liga.id);
+  if (String(c.ligaId || '') !== liga.id) guardarCfg({ ligaId: liga.id });
 
   // los equipos de LaLiga cambian poco: una vez al día
   let equipos = viejo && viejo.equiposT && Date.now() - viejo.equiposT < DIA && viejo.liga && viejo.equipos ? viejo.equipos : null;
@@ -91,7 +99,7 @@ export async function actualizar(alPaso = () => {}) {
 
   alPaso(2, PASOS[2]);
   const clasif = N.clasificacion(await api.clasificacion(liga.id));
-  if (!clasif.length) throw new Error('La clasificación de tu liga ha llegado vacía');
+  if (!clasif.length) throw Object.assign(new Error('La clasificación de tu liga ha llegado vacía'), { tipo: 'vacia' });
   let mio = clasif.find((e) => userId && (e.userId === userId || e.managerId === userId))
     || clasif.find((e) => miNombre && e.manager && e.manager === miNombre);
   clasif.forEach((e) => { e.esYo = !!mio && e.teamId === mio.teamId; });
@@ -131,7 +139,7 @@ export async function actualizar(alPaso = () => {}) {
     if (dinero == null && dineros[mio.teamId]) dinero = dineros[mio.teamId].v;
     if (dinero != null) dineros[mio.teamId] = { v: dinero, fuente: 'tu cuenta' };
   } else {
-    avisos.push({ paso: 'tu equipo', e: 'No encuentro tu equipo en la clasificación: elígelo en Ajustes' });
+    avisos.push({ paso: 'tu equipo', e: 'No encuentro tu equipo en la clasificación de esta liga con tu cuenta' });
   }
   // el de los rivales: se prueba con uno y, si LaLiga lo da, con todos (si no, se estima con sus movimientos)
   const sinDinero = clasif.filter((e) => !e.esYo && !dineros[e.teamId]);
