@@ -726,7 +726,11 @@ window.vueltaLogin = async () => {
 
 /* ---------------- a mano: pestañas fijas, deslizar y tirar para actualizar ---------------- */
 // la cabecera mide lo que mide (con la barra de estado en el móvil): las pestañas se pegan justo debajo
-function medirSup() { const s = $('.sup'); if (s) document.documentElement.style.setProperty('--sup-h', `${s.offsetHeight}px`); }
+function medirSup() {
+  const s = $('.sup'); if (s) document.documentElement.style.setProperty('--sup-h', `${s.offsetHeight}px`);
+  // y la barra de abajo (con la letra grande del móvil es más alta): la caja del chat va justo encima
+  const n = $('.nav'); if (n && n.offsetHeight) document.documentElement.style.setProperty('--nav-h', `${n.offsetHeight}px`);
+}
 window.addEventListener('resize', medirSup);
 /** si al cambiar de pestaña estabas más abajo, vuelve al principio de la pestaña (con las pestañas a la vista) */
 function volverAPestanas() {
@@ -795,6 +799,20 @@ document.addEventListener('touchend', () => {
   marcaTiron(0, listo);
   if (listo) { nativo.toque(); S.planEstado = {}; cargar(); }
 }, { passive: true });
+
+/* ---------------- el teclado en la app ---------------- */
+// Al volver del selector de fotos o del dictado, Android a veces deja la app sin foco y al tocar donde se escribe
+// no sale el teclado. Al tocar una caja de texto se le pide a la app que lo saque (y se enfoca la caja si no lo estaba).
+const esCampo = (el) => el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && !/^(checkbox|radio|range|file|button|submit)$/i.test(el.type || '')));
+if (enApp) {
+  document.addEventListener('focusin', (ev) => { if (esCampo(ev.target)) nativo.teclado(); });
+  document.addEventListener('click', (ev) => {
+    const c = ev.target && ev.target.closest && ev.target.closest('textarea, input');
+    if (!esCampo(c)) return;
+    if (document.activeElement !== c) c.focus();
+    nativo.teclado();
+  });
+}
 
 /* ---------------- toques ---------------- */
 document.addEventListener('click', async (ev) => {

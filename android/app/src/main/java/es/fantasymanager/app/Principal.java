@@ -73,6 +73,8 @@ public class Principal extends Activity {
         }
 
         Web.preparar(web);
+        web.setFocusable(true);
+        web.setFocusableInTouchMode(true);
         final WebViewAssetLoader cargador = Web.cargador(this);
 
         web.addJavascriptInterface(new Puente(this), "FantasyApp");
@@ -247,6 +249,23 @@ public class Principal extends Activity {
         }, "fotos").start();
     }
 
+    /**
+     * El teclado para escribir en la web. Al volver de otra pantalla (el selector de fotos, el dictado) Android a
+     * veces deja el WebView sin foco y, aunque toques la caja de escribir, el teclado no sale: se le devuelve el
+     * foco y se pide el teclado.
+     */
+    void teclado() {
+        if (web == null) return;
+        if (!web.hasFocus()) web.requestFocus();
+        android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) imm.showSoftInput(web, 0);
+        try {
+            WindowCompat.getInsetsController(getWindow(), web).show(WindowInsetsCompat.Type.ime());
+        } catch (Exception e) {
+            // con el de antes basta
+        }
+    }
+
     /** Android 13 o más: el permiso de notificaciones, solo cuando activas los avisos */
     void pedirPermisoAvisos() {
         if (android.os.Build.VERSION.SDK_INT >= 33) {
@@ -334,6 +353,8 @@ public class Principal extends Activity {
         aLaVista = true;
         abierta = true;
         web.onResume();
+        // de vuelta de otra pantalla, el foco otra vez al WebView (sin él no sale el teclado)
+        if (!web.hasFocus()) web.requestFocus();
         js("window.alVolver && alVolver()");
     }
 }

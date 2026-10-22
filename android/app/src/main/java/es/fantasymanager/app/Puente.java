@@ -394,6 +394,12 @@ public class Puente {
         enPantalla(() -> act.escuchar());
     }
 
+    /** sacar el teclado al tocar donde se escribe (por si el WebView se ha quedado sin foco) */
+    @JavascriptInterface
+    public void teclado() {
+        enPantalla(() -> act.teclado());
+    }
+
     /** elegir fotos o capturas para la IA (como mucho max); llegan a la web con fotosApp() */
     @JavascriptInterface
     public void fotos(int max) {
