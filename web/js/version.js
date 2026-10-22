@@ -11,7 +11,7 @@ export const VERSION = '0.3.5a';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.3.5a', f: '2026-10-22', h: '22:50', t: 'El teclado del chat',
+    v: '0.3.5a', f: '2026-10-22', h: '23:03', t: 'El teclado del chat',
     cosas: [
       { tipo: 'arreglo', d: 'voz', t: 'Ya puedes escribir', x: 'En la app, al tocar donde se escribe a la IA a veces no salía el teclado (pasaba al volver del selector de fotos o del dictado: Android dejaba la app sin foco). Ahora, al tocar la caja, la app recupera el foco y saca el teclado.', ir: { v: 'ia' } },
     ],
