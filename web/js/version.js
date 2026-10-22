@@ -11,7 +11,7 @@ export const VERSION = '0.3.5';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.3.5', f: '2026-10-22', h: '22:30', t: 'Fotos y capturas en el chat',
+    v: '0.3.5', f: '2026-10-22', h: '22:19', t: 'Fotos y capturas en el chat',
     cosas: [
       { tipo: 'nuevo', d: 'foto', t: 'Mándale capturas a la IA', x: 'En Pregunta, el botón de la foto (a la izquierda de donde escribes) te deja mandarle hasta 4 fotos o capturas por mensaje: una oferta que te han hecho, el mercado, las cláusulas de un rival, un chat con otro manager… La IA la lee, la cruza con los datos de tu liga y te dice qué hacer. Puedes mandarla con una pregunta o sola. En el ordenador también se pueden pegar (Ctrl+V) o arrastrar al chat. Si sigues hablando de ella, se la vuelve a mandar; toca la foto para verla en grande.', ir: { v: 'ia' } },
     ],
