@@ -11,7 +11,7 @@ export const VERSION = '0.4.4c';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.4.4c', f: '2026-10-23', h: '12:50', t: 'El calendario, más claro',
+    v: '0.4.4c', f: '2026-10-23', h: '12:44', t: 'El calendario, más claro',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'Cómo llega cada rival', x: 'En el calendario de la ficha de cada jugador, cada rival lleva sus últimos 5 partidos en bolitas (verde ganó, amarilla empató, roja perdió) y arriba sale cómo llega su equipo. Debajo, «Cómo puntúa»: su media en casa, fuera, contra los 6 primeros y contra los 6 últimos, en verde o en rojo si se sale de su media.' },
     ],
