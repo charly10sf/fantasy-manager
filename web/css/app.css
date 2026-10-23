@@ -1110,3 +1110,14 @@ body.en-tour { overflow: hidden; }
 .bloq-hoja .btn { margin-top: 6px; }
 .inercia.neutra { background: var(--plano2); border-color: var(--linea); }
 .inercia.neutra .in-cab .ic { color: var(--azul); }
+/* la web abierta desde un móvil: en Android, la app; en el iPhone, cómo entrar la primera vez */
+.entrar-movil { display: grid; gap: 8px; text-align: left; margin: 0 0 12px; padding: 14px; border-radius: 16px; background: var(--rojo-s); border: 1px solid rgba(238, 28, 60, 0.4); }
+.entrar-movil > b { display: flex; align-items: center; gap: 8px; font: 700 18px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.entrar-movil > b .ic { width: 19px; height: 19px; color: var(--rojo-l); }
+.entrar-movil > span { font-size: 14.5px; line-height: 1.5; color: var(--texto2); }
+.entrar-movil > span b { color: var(--texto); }
+.entrar-movil .btn { margin-top: 4px; }
+.entrar-o { margin: 4px 0 8px; font-size: 13.5px; color: var(--apagado); text-align: left; }
+.entrar-movil a.btn { color: #fff; }
+.entrar-movil a.btn .ic { color: #fff; }
+.pant-i .entrar-movil { margin: 14px 0 16px; }
