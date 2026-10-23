@@ -333,7 +333,7 @@ main { padding: 16px 16px 120px; }
 .vacio { color: var(--texto2); text-align: center; padding: 24px 10px; font-size: 16px; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 18px; border-radius: 13px; background: var(--rojo); color: #fff; font: 700 15px 'Barlow'; letter-spacing: 0.5px; text-transform: uppercase; }
 .btn:active { background: var(--rojo2); }
-.btn.sec { background: var(--plano2); color: var(--texto); border: 1px solid var(--linea); }
+.btn.sec { background: var(--plano2); color: var(--texto); border: 1px solid var(--linea); margin: 0; }
 .btn.chico { min-height: 40px; padding: 9px 13px; font-size: 14px; border-radius: 10px; }
 .btn.ancho { width: 100%; }
 .btn[disabled] { opacity: 0.5; }
@@ -1234,3 +1234,8 @@ body.limitado .tostada { z-index: 120; }
 .gc-priv { display: flex; gap: 9px; align-items: flex-start; margin: 14px 2px 4px; font-size: 13.5px; line-height: 1.4; color: var(--apagado); }
 .gc-priv .ic { width: 16px; height: 16px; margin-top: 1px; }
 @media (prefers-reduced-motion: reduce) { .gc-dib .tap { animation: none; opacity: 0.25; } .gc-paso.resalta .gc-c { animation: none; } }
+/* 0.5.0a: el botón de cerrar de las fichas de jugador y rival, solo en el ordenador (en el móvil, el asa y atrás) */
+.cerrar-flota { display: none; }
+.escritorio .cerrar-flota { display: grid; position: sticky; top: 0; float: right; margin: -8px -12px 0 10px; z-index: 3; background: var(--plano2); border: 1px solid var(--linea); }
+/* 0.5.0a: las etiquetas largas de una fila («No lo venderá: se quedaría con…») bajan de línea en vez de sacar la página de la pantalla */
+.fila-x .pill { max-width: 100%; white-space: normal; }

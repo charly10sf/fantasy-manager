@@ -3,13 +3,22 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.0';
+export const VERSION = '0.5.0a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.0a', f: '2026-10-23', h: '19:00', t: 'Arreglos de la 0.5.0',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'La guía de la IA, desde arriba', x: 'Al abrir Pregunta sin clave, la pantalla bajaba sola hasta el final y te saltabas los pasos. Ahora empieza por el paso 1. Lo que hayas pegado en la casilla ya no se borra si la app se actualiza mientras tanto, y al volver de AI Studio a la app te lleva a la casilla.', ir: { v: 'ia' } },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Botones en su sitio', x: 'Los botones grises (en Ajustes, en los avisos de error de la IA o «Anteriores» en el chat) salían más abajo de la cuenta, con un hueco encima. Ya están alineados.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'El mercado ya cabe en la pantalla', x: 'Cuando un rival vende a uno que no te va a vender, la etiqueta «No lo venderá: …» era tan larga que la pantalla del Mercado se podía mover de lado. Ahora el texto baja de línea.', ir: { v: 'mercado' } },
+      { tipo: 'arreglo', d: 'cara', t: 'Cerrar fichas en el ordenador', x: 'En la web, las fichas de jugador y de rival no tenían botón de cerrar: había que tocar fuera. Ahora llevan la X arriba a la derecha, y la tecla Esc cierra cualquier ficha.' },
+    ],
+  },
   {
     v: '0.5.0', f: '2026-10-23', h: '18:25', t: 'Activar la IA, paso a paso',
     cosas: [

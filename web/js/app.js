@@ -264,6 +264,8 @@ function pintar({ arriba = false } = {}) {
   medirSup();
   $$('.nav button').forEach((b) => b.classList.toggle('activo', b.dataset.ir === S.vista));
   const v = $('#vista');
+  // lo que llevas pegado en la casilla de la clave no se pierde si se repinta (al acabar de cargar la liga, por ejemplo)
+  const claveEscrita = ($('#claveIA') || {}).value || '';
   try { v.innerHTML = VISTAS[S.vista](S); } catch (e) {
     console.error(e);
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
@@ -271,7 +273,9 @@ function pintar({ arriba = false } = {}) {
   }
   $('#banda').innerHTML = (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
-  if (S.vista === 'ia') {
+  if (claveEscrita && $('#claveIA')) $('#claveIA').value = claveEscrita;
+  // el chat se lee de abajo arriba; la guía de la clave, de arriba abajo
+  if (S.vista === 'ia' && hayClave()) {
     bajarChat();
     // la pregunta que paraste vuelve a la caja
     if (S.borrador && !S.charlando) { const ta = $('#pregunta'); if (ta) { ta.value = S.borrador; S.borrador = ''; } }
@@ -634,11 +638,13 @@ async function generarPlan() {
 }
 
 /* ---------------- ventanas de abajo ---------------- */
+/** las fichas sin botón de cerrar (jugador, rival) lo llevan en el ordenador, donde no hay asa ni gesto de atrás */
+const conCerrar = (html) => (/data-accion="cerrarHoja"/.test(html) ? html : `<button class="b-ico cerrar-flota" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button>${html}`);
 function abrirHoja(html) {
   cerrarHoja(true);
   const velo = document.createElement('div'); velo.className = 'velo'; velo.dataset.accion = 'cerrarHoja';
   const hoja = document.createElement('div'); hoja.className = 'hoja';
-  hoja.innerHTML = `<div class="asa"></div>${html}`;
+  hoja.innerHTML = `<div class="asa"></div>${conCerrar(html)}`;
   document.body.append(velo, hoja);
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(() => { velo.classList.add('on'); hoja.classList.add('on'); });
@@ -672,7 +678,7 @@ function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, a
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
   const sc = S.hoja.scrollTop;
-  S.hoja.innerHTML = `<div class="asa"></div>${htmlHoja(...S.tipoHoja)}`;
+  S.hoja.innerHTML = `<div class="asa"></div>${conCerrar(htmlHoja(...S.tipoHoja))}`;
   S.hoja.scrollTop = sc;
   encuadrar(S.hoja);
 }
@@ -688,6 +694,7 @@ window.atras = () => {
 };
 window.alVolver = () => {
   comprobarAvisos();
+  if (S.vista === 'ia' && !hayClave() && vieneDeAIStudio()) setTimeout(aPegar, 250);
   if (enApp && Date.now() - (S.versionT || 0) > 30 * MIN) buscarVersion(false);
   if (S.D && !S.cargando && Date.now() - S.D.t > 15 * MIN && (enDemo() || haySesion())) cargar({ silencio: true });
 };
@@ -1195,7 +1202,7 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'guardarClave': await probarYGuardar(); break;
-    case 'abrirAIStudio': marcarAIStudio(); nativo.abrir(AISTUDIO); break;
+    case 'abrirAIStudio': marcarAIStudio(); nativo.abrir(AISTUDIO); pintar(); break;
     case 'irAPegar': ev.preventDefault(); aPegar(); break;
     case 'pegarClave': {
       let t = '';
@@ -1285,6 +1292,7 @@ document.addEventListener('change', (ev) => {
 });
 document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && $('.visor')) { $('.visor').remove(); return; }
+  if (ev.key === 'Escape' && S.hoja && !tourAbierto()) { cerrarHoja(); return; }
   if (ev.key === 'Enter' && !ev.shiftKey && ev.target && ev.target.id === 'pregunta') { ev.preventDefault(); const t = ev.target.value; ev.target.value = ''; enviarPregunta(t); }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
 });
