@@ -650,7 +650,7 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
     if (!json || !Array.isArray(json.operaciones)) malPlan(r);
   }
   if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA(`Gemini ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Vuelve a probar.`, 0);
-  const P = { ...json, fuentes: r.fuentes.slice(0, 14), modelo: r.modelo, web: r.web, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid) } };
+  const P = { ...json, fuentes: r.fuentes.slice(0, 14), modelo: r.modelo, web: r.web, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };
   // lo que recomienda, con el valor de cada jugador hoy, para ver dentro de unos días cómo salió
   try { P.recs = recsDe(cuadrarPlan(P, D, M).ops, M); } catch (e) { P.recs = []; }
   const lista = planes();
@@ -692,8 +692,14 @@ export function cuadrarPlan(P, D, M) {
     let accion = original.replace('aceptar_oferta', 'vender').replace('aceptar', 'vender').replace('ofertar', 'comprar');
     let aceptar = /aceptar/.test(original) || /acepta/i.test(o.donde || '');
     let importe = o.importe != null ? +o.importe : null, signo = 0, aviso = null, descartada = false, sobre = null;
-    const opC = OPERA.includes(accion) ? buscarOp(cat, o, pid) : null;
-    if (accion === 'blindar' && !opC) aviso = 'Su cláusula no se abre pronto: aún no hace falta';
+    // lo que ya has hecho en LaLiga desde que se hizo el plan (vender al que decía, fichar al que decía) no se puede
+    // volver a hacer, pero no es un error: se queda como hecho, sin contarlo otra vez en el saldo
+    const desdeP = P.t || (P.dia ? Date.parse(`${P.dia}T00:00:00`) : 0);
+    const ya = pid && OPERA.includes(accion) ? (M.actividad || []).find((a) => a.esYo && a.pid === pid && a.t > desdeP
+      && (accion === 'vender' ? a.clase === 'venta' : accion === 'blindar' ? a.clase === 'blindaje' : a.clase === 'compra' || a.clase === 'clausula')) : null;
+    const opC = !ya && OPERA.includes(accion) ? buscarOp(cat, o, pid) : null;
+    if (ya) { signo = accion === 'vender' ? 1 : accion === 'blindar' ? 0 : -1; importe = ya.importe || importe; }
+    else if (accion === 'blindar' && !opC) aviso = 'Su cláusula no se abre pronto: aún no hace falta';
     else if (OPERA.includes(accion) && !opC) {
       descartada = true;
       const pq = porQueNo(D, M, o, pid, j);
@@ -735,7 +741,7 @@ export function cuadrarPlan(P, D, M) {
     // pagar mucho más de lo que vale: se avisa y, si es una barbaridad sin un trato que le hayas contado, se descarta
     // lo que cuenta es el dinero que se pierde (un +25 % por uno de 3 M no es lo mismo que por uno de 40 M),
     // comparado con tu equipo y con lo que sube al día
-    if (!descartada && signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion)) {
+    if (!ya && !descartada && signo < 0 && importe && j && j.valor && ['clausular', 'comprar', 'pujar'].includes(accion)) {
       sobre = importe / j.valor - 1;
       const trato = (opC && opC.trato) || notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe);
       const sc = M.sobrecoste ? M.sobrecoste(j, importe) : null;
@@ -750,13 +756,14 @@ export function cuadrarPlan(P, D, M) {
       }
     }
     // fichar a un lesionado o sancionado para el once: aviso
-    if (!descartada && signo < 0 && j && ['injured', 'suspended'].includes(j.estado) && !String(o.objetivo || '').startsWith('revend')) aviso = `${aviso ? `${aviso} ` : ''}Ojo: está ${j.estado === 'injured' ? 'lesionado' : 'sancionado'}.`;
+    if (!ya && !descartada && signo < 0 && j && ['injured', 'suspended'].includes(j.estado) && !String(o.objetivo || '').startsWith('revend')) aviso = `${aviso ? `${aviso} ` : ''}Ojo: está ${j.estado === 'injured' ? 'lesionado' : 'sancionado'}.`;
     // lo que se hace hoy suma al saldo; lo de otro día (o cuando se abra una cláusula), no
     const cu = String(o.cuando || '').trim();
     const otroDia = /cuando se abra|se abre|si vendes/i.test(cu) || (/^(el )?(mañana|lunes|martes|miércoles|jueves|viernes|sábado|domingo)/i.test(cu) && accion !== 'pujar');
     const hoy = (!otroDia || !!(cl && cl.abierta && accion === 'clausular')) && !descartada;
-    if (saldo != null && signo && importe && hoy) saldo += signo * importe;
-    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy ? saldo : null, aviso, hoy, descartada, sobre };
+    // (lo ya hecho ya está en tu saldo de ahora)
+    if (saldo != null && signo && importe && hoy && !ya) saldo += signo * importe;
+    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, sobre, ya: !!ya };
   });
   const final = saldo;
   // en negativo puede ser a propósito: lo comprado para revender se vende antes de la jornada

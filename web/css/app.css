@@ -1050,3 +1050,30 @@ body.en-tour { overflow: hidden; }
 /* con la app cerrada también se puede actualizar */
 .lim-nueva { margin-top: 18px; padding: 14px; border-radius: 14px; background: var(--plano2); border: 1px solid var(--linea); }
 .lim-nueva p { margin: 0 0 10px; font-size: 14.5px; color: var(--texto2); }
+
+/* lo que llevas hoy: lo que has hecho de verdad en LaLiga */
+.llevas { margin: 0 0 18px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
+.llevas > summary { list-style: none; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 12px 14px; cursor: pointer; }
+.llevas > summary::-webkit-details-marker { display: none; }
+.llevas-t { display: inline-flex; align-items: center; gap: 9px; color: var(--texto); font: 700 18px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; }
+.llevas-t .ic { width: 19px; height: 19px; color: var(--rojo-l); }
+.llevas-n { margin-left: auto; font-size: 13.5px; color: var(--apagado); white-space: nowrap; }
+.llevas[open] > summary { border-bottom: 1px solid var(--linea); }
+.llevas-vacio { margin: 0; padding: 12px 14px 14px; font-size: 14px; line-height: 1.5; color: var(--texto2); }
+.llevas-l { list-style: none; margin: 0; padding: 4px 0; }
+.llevas-f { display: flex; align-items: center; gap: 11px; width: 100%; padding: 10px 14px; text-align: left; }
+.ll-ic { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--sube-s); color: var(--sube); }
+.ll-ic .ic { width: 16px; height: 16px; }
+.llevas-l li.curso .ll-ic { background: var(--oro-s); color: var(--oro); }
+.llevas-l li.contra .ll-ic { background: var(--baja-s); color: var(--baja); }
+.ll-t { flex: 1; min-width: 0; font-size: 14.5px; line-height: 1.4; color: var(--texto); }
+.ll-t small { color: var(--apagado); font-size: 12.5px; white-space: nowrap; }
+.ll-tag { flex: none; font-size: 12px; font-weight: 600; color: var(--apagado); padding: 3px 8px; border-radius: 999px; background: var(--plano2); }
+.ll-tag.plan { color: var(--rojo-l); background: var(--rojo-s); }
+.llevas-pie { margin: 0; padding: 4px 14px 13px; font-size: 13px; line-height: 1.45; color: var(--apagado); }
+/* los pasos del plan que se ven hechos (o en marcha) en LaLiga */
+.paso-liga { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; padding: 9px 11px; border-radius: 11px; background: var(--sube-s); font-size: 14px; line-height: 1.4; color: var(--texto); }
+.paso-liga .ic { flex: none; width: 17px; height: 17px; margin-top: 1px; color: var(--sube); }
+.paso-liga.curso { background: var(--oro-s); }
+.paso-liga.curso .ic { color: var(--oro); }
+.paso-op.curso .num { background: var(--oro-s); border-color: var(--oro); color: var(--oro); }

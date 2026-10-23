@@ -107,6 +107,59 @@ function tiemposHTML(S) {
   return `<div class="tiempos">${c.map(([ic, t, sub, a]) => `<button class="tiempo" ${a.startsWith('j:') ? `data-j="${esc(a.slice(2))}"` : a ? `data-ir="${a}"` : ''}>${icono(ic)}<div><b>${esc(t)}</b><span>${esc(sub)}</span></div></button>`).join('')}</div>`;
 }
 
+/**
+ * Lo que llevas hoy: lo que de verdad has hecho en LaLiga desde el último cambio de mercado (lo veas o no en el
+ * plan): lo terminado, lo que está en marcha (pujas, ofertas, lo que tienes a la venta) y lo que te han hecho a ti.
+ * Cada cosa dice si venía en el plan o es por tu cuenta.
+ */
+export function llevasHTML(S) {
+  const { M } = S;
+  const P = S.plan;
+  if (!M || !M.actividad) return '';
+  const ahora = Date.now();
+  const desde = M.cierreMercado && M.cierreMercado > ahora ? Math.max(M.cierreMercado - 24 * HORA, ahora - 24 * HORA) : ahora - 24 * HORA;
+  const ops = P ? P.ops.filter((o) => o.pid && !o.descartada) : [];
+  const delPlan = (pid, acciones) => ops.some((o) => o.pid === pid && acciones.includes(o.accion));
+  const items = [];
+  for (const a of M.actividad) {
+    if (!a.t || a.t <= desde || !a.pid) continue;
+    const nom = a.nombreJ || 'un jugador';
+    if (a.esYo && ['compra', 'clausula', 'venta', 'blindaje'].includes(a.clase)) {
+      const t = a.clase === 'venta' ? `Vendiste a ${nom}${a.importe ? ` por ${eur(a.importe)}` : ''}${a.otro ? ` a ${a.otro}` : ''}`
+        : a.clase === 'clausula' ? `Clausulaste a ${nom}${a.otro ? ` de ${a.otro}` : ''}${a.importe ? ` por ${eur(a.importe)}` : ''}`
+          : a.clase === 'blindaje' ? `Blindaste a ${nom}`
+            : `Fichaste a ${nom}${a.importe ? ` por ${eur(a.importe)}` : ''}${a.otro ? ` (de ${a.otro})` : ''}`;
+      const acc = { venta: ['vender'], clausula: ['clausular', 'pujar', 'comprar'], compra: ['pujar', 'comprar', 'clausular'], blindaje: ['blindar'] }[a.clase];
+      items.push({ t: a.t, estado: 'hecho', texto: t, pid: a.pid, plan: delPlan(a.pid, acc), dinero: a.clase === 'venta' ? num(a.importe) : a.clase === 'blindaje' ? 0 : -num(a.importe) });
+    } else if (a.contraMi && a.clase === 'clausula') {
+      items.push({ t: a.t, estado: 'contra', texto: `${a.quien || 'Un rival'} te clausuló a ${nom}${a.importe ? `: cobras ${eur(a.importe)}` : ''}`, pid: a.pid, dinero: num(a.importe) });
+    }
+  }
+  for (const m of M.mercado || []) {
+    if (!m.miPuja) continue;
+    items.push({ t: ahora, estado: 'curso', pid: m.pid, plan: delPlan(m.pid, ['pujar', 'comprar']),
+      texto: m.tipo === 'manager' ? `Ofreces ${eur(m.miPuja)} por ${m.j.nombre} a ${m.vendedor || 'su dueño'}: decide él` : `Pujas ${eur(m.miPuja)} por ${m.j.nombre}${M.cierreMercado ? `: se resuelve ${cuando(M.cierreMercado)}` : ''}` });
+  }
+  for (const v of M.misVentas || []) {
+    const mej = v.mejor;
+    items.push({ t: ahora - 1, estado: 'curso', pid: v.pid, plan: delPlan(v.pid, ['vender']),
+      texto: `${v.j.nombre} a la venta${mej ? `: la mejor oferta, ${eur(mej.importe)}${mej.deLiga ? ' (LaLiga)' : ''}` : ': aún sin ofertas'}` });
+  }
+  const hechos = items.filter((x) => x.estado === 'hecho').length, curso = items.filter((x) => x.estado === 'curso').length;
+  const quedan = P && !P.viejo ? P.ops.filter((o) => !o.descartada && !['esperar', 'alinear'].includes(o.accion) && o.hoy !== false && !hecho(S, P, o)).length : 0;
+  const balance = items.filter((x) => x.estado !== 'curso').reduce((s, x) => s + (x.dinero || 0), 0);
+  const cab = `<summary><span class="llevas-t">${icono('lista')}<b>Lo que llevas hoy</b></span><span class="llevas-n">${items.length ? [hechos ? `${hechos} hecho${hechos > 1 ? 's' : ''}` : '', curso ? `${curso} en marcha` : ''].filter(Boolean).join(' · ') : 'nada aún'}</span></summary>`;
+  if (!items.length) {
+    return `<details class="llevas vacio">${cab}<p class="llevas-vacio">Desde el último cambio de mercado no has movido nada en LaLiga. Lo que hagas allí (pujas, ofertas, ventas, cláusulas) sale aquí al darle a Actualizar, y los pasos del plan se tachan solos.</p></details>`;
+  }
+  const ICO = { hecho: 'ok', curso: 'reloj', contra: 'alerta' };
+  const orden = { curso: 0, contra: 1, hecho: 2 };
+  items.sort((a, b) => orden[a.estado] - orden[b.estado] || b.t - a.t);
+  return `<details class="llevas" ${items.length <= 8 ? 'open' : ''}>${cab}
+    <ul class="llevas-l">${items.map((x) => `<li class="${x.estado}"><button class="llevas-f" data-j="${esc(x.pid)}"><span class="ll-ic">${icono(ICO[x.estado])}</span><span class="ll-t">${esc(x.texto)}${x.estado === 'hecho' && x.t ? ` <small>${esc(cuando(x.t))}</small>` : ''}</span>${x.estado === 'contra' ? '' : `<span class="ll-tag ${x.plan ? 'plan' : ''}">${x.plan ? 'Del plan' : 'Por tu cuenta'}</span>`}</button></li>`).join('')}</ul>
+    <p class="llevas-pie">${balance ? `Hecho hasta ahora: ${eur(balance, { signo: true })}. ` : ''}${M.misPujas ? `En pujas tienes ${eur(M.misPujas)} comprometidos. ` : ''}${quedan ? `Del plan te ${quedan === 1 ? 'queda 1 paso' : `quedan ${quedan} pasos`}.` : P && !P.viejo ? 'Del plan no te queda nada por hacer hoy.' : ''}</p></details>`;
+}
+
 /** lo urgente de verdad (lo que no puede esperar al plan): como mucho tres cosas */
 function ahoraHTML(S) {
   const { M } = S;
@@ -177,11 +230,47 @@ export const claveHechos = (P) => (P.auto ? `auto-${P.dia}` : String(P.t));
 export function hecho(S, P, o) {
   const marcados = (LS.get('hechos', {})[claveHechos(P)] || {}).n || [];
   if (marcados.includes(o.n)) return true;
-  if (!o.pid) return false;
-  // (proteger con el escudo se ve como un blindaje tuyo en la actividad)
-  const clase = { vender: 'venta', clausular: 'clausula', pujar: 'compra', comprar: 'compra', blindar: !o.importe ? 'blindaje' : null }[o.accion];
+  return !!hechoEnLiga(S, P, o);
+}
+
+/**
+ * ¿lo has hecho ya en LaLiga? Se mira en tu actividad (desde que se hizo el plan), en tus pujas y ofertas, en lo que
+ * tienes a la venta y en tus cláusulas. Devuelve null o { estado: 'hecho' | 'curso', texto }: «curso» es que tú ya lo
+ * has hecho pero falta que se resuelva (la puja hasta el cambio de mercado, la oferta hasta que el otro acepte).
+ */
+export function hechoEnLiga(S, P, o) {
+  const M = S.M;
+  if (!o || !o.pid || o.descartada || !M) return null;
   const desde = P.auto ? Date.parse(P.dia + 'T00:00:00') : P.t;
-  return !!clase && S.M.actividad.some((a) => a.esYo && a.pid === o.pid && a.t > desde && (a.clase === clase || (clase === 'compra' && a.clase === 'clausula')));
+  const mio = (clases) => M.actividad.find((a) => a.esYo && a.pid === o.pid && a.t > desde && clases.includes(a.clase));
+  const porImp = (a, verbo) => `${verbo}${a && a.importe ? ` por ${eur(a.importe)}` : ''}`;
+  const resuelve = M.cierreMercado ? ` · se resuelve ${cuando(M.cierreMercado)}` : '';
+  switch (o.accion) {
+    case 'vender': {
+      const a = mio(['venta']);
+      if (a) return { estado: 'hecho', texto: porImp(a, 'Vendido') };
+      if (o.etiqueta !== 'Aceptar oferta' && M.enVenta && M.enVenta.has(o.pid)) return { estado: 'curso', texto: 'Puesto a la venta: falta aceptar una oferta' };
+      return null;
+    }
+    case 'pujar':
+    case 'comprar':
+    case 'clausular': {
+      const a = mio(['compra', 'clausula']);
+      if (a) return { estado: 'hecho', texto: porImp(a, a.clase === 'clausula' ? 'Clausulado' : 'Fichado') };
+      if (o.accion !== 'clausular') {
+        const m = (M.mercado || []).find((x) => x.pid === o.pid && x.miPuja);
+        if (m) return { estado: 'curso', texto: m.tipo === 'manager' ? `Oferta hecha: ${eur(m.miPuja)} · decide ${m.vendedor || 'él'}` : `Pujado ${eur(m.miPuja)}${resuelve}` };
+      }
+      return null;
+    }
+    case 'blindar': {
+      if (!o.importe) { const a = mio(['blindaje']); return a ? { estado: 'hecho', texto: 'Blindado' } : null; }
+      const antes = P.foto && P.foto.clausulas ? P.foto.clausulas[o.pid] : null;
+      const ahora = M.mias.find((x) => x.pid === o.pid);
+      return antes && ahora && ahora.clausula > antes + 1000 ? { estado: 'hecho', texto: `Cláusula subida a ${eur(ahora.clausula)}` } : null;
+    }
+    default: return null;
+  }
 }
 
 const OBJ = { titular: ['bien', 'Para tu once'], revender: ['oro', 'Para revender'], caja: ['', 'Para hacer caja'] };
@@ -195,10 +284,12 @@ function objetivoPill(o) {
 function pasoOp(S, P, o) {
   const j = o.j;
   const ok = hecho(S, P, o);
+  // si se ve en LaLiga que lo has hecho, se dice qué y no hace falta el botón
+  const liga = hechoEnLiga(S, P, o);
   const imp = o.importe ? `<div class="imp ${o.signo > 0 ? 'mas' : 'menos'}">${o.signo > 0 ? '+' : o.signo < 0 ? '−' : ''}${eur(o.importe)}</div>` : '';
   const puja = o.accion === 'pujar' && o.puja_max ? `<div class="puja">puja hasta ${eur(o.puja_max)}</div>` : '';
   const sub = j ? `${esc(j.equipo || '')}${o.donde ? ` · ${esc(o.donde)}` : ''}` : esc(o.donde || '');
-  return `<div class="paso-op ${esc(o.accion)} ${ok ? 'hecho' : ''} ${o.descartada ? 'descartada' : ''}"><span class="num">${ok ? icono('ok') : o.n}</span>
+  return `<div class="paso-op ${esc(o.accion)} ${ok ? 'hecho' : ''} ${liga && liga.estado === 'curso' ? 'curso' : ''} ${o.descartada ? 'descartada' : ''}"><span class="num">${liga && liga.estado === 'curso' ? icono('reloj') : ok ? icono('ok') : o.n}</span>
     <div class="op ${ok ? 'hecho' : ''}">
       <div class="op-top"><span class="accion-t ${esc(o.accion)}">${esc(o.etiqueta || ACCION[o.accion] || o.accion)}</span>${o.descartada ? '<span class="pill mal">No lo hagas</span>' : ''}${objetivoPill(o)}${o.cuando ? `<span class="cuando">${icono('reloj')}${esc(o.cuando)}</span>` : ''}</div>
       ${j ? `<button class="op-j" data-j="${esc(j.id)}">${ava(j, 'm')}<div style="min-width:0"><div class="n">${esc(j.nombre)}</div><div class="s">${sub}</div></div><div class="der">${imp}${puja}</div></button>`
@@ -206,8 +297,9 @@ function pasoOp(S, P, o) {
       ${o.motivo ? `<p class="motivo">${esc(o.motivo)}</p>` : ''}
       ${Array.isArray(o.claves) && o.claves.length ? `<div class="claves">${o.claves.slice(0, 5).map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : ''}
       ${o.aviso ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : ''}
+      ${liga ? `<div class="paso-liga ${liga.estado}">${icono(liga.estado === 'curso' ? 'reloj' : 'ok')}<span><b>${liga.estado === 'curso' ? 'En marcha' : 'Hecho en LaLiga'}:</b> ${esc(liga.texto)}</span></div>` : ''}
       <div class="op-pie">${o.confianza ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}
-        <button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>
+        ${liga ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}
         ${o.saldo != null ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>
     </div></div>`;
 }
@@ -374,6 +466,7 @@ export function hoy(S) {
   h += marcador(S);
   h += tiemposHTML(S);
   h += ahoraHTML(S);
+  h += llevasHTML(S);
   h += planHTML(S);
   h += noticiasHTML(S);
   void D; void M;
@@ -383,7 +476,7 @@ export function hoy(S) {
 /** Hoy en el ordenador: el plan en grande a la izquierda y la liga de un vistazo a la derecha */
 function hoyAncho(S) {
   const { M } = S;
-  let izq = saludoHTML(S) + ahoraHTML(S) + planHTML(S);
+  let izq = saludoHTML(S) + ahoraHTML(S) + llevasHTML(S) + planHTML(S);
   izq += noticiasHTML(S);
   void M;
   const der = marcador(S) + tiemposHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
