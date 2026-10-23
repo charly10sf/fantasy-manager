@@ -52,6 +52,12 @@ export function rivalSub(M, j) {
 
 /** los próximos tres partidos de su equipo, cada uno con su color */
 /** los últimos enfrentamientos con un rival: V, E o D, de la más vieja a la más nueva (con el marcador al pasar por encima) */
+/** la racha de un equipo: sus últimos partidos como bolitas (V verde, E amarilla, D roja; la de la derecha, la última) */
+export function rachaHTML(r, quien = '') {
+  if (!r || !r.ult || !r.ult.length) return '';
+  const dice = r.ult.map((x) => ({ V: 'ganó', E: 'empató', D: 'perdió' }[x.r] || x.r) + (x.gf != null ? ` ${x.gf}-${x.gc}` : '')).join(', ');
+  return `<span class="racha" role="img" aria-label="${esc(`${quien ? `${quien}, ` : ''}últimos ${r.ult.length}: ${dice}`)}" title="${esc(dice)}">${r.ult.map((x) => `<i class="r-${esc(x.r)}">${esc(x.r)}</i>`).join('')}</span>`;
+}
 export function h2hHTML(h2h, rival = '') {
   if (!h2h || !h2h.length) return '';
   const fecha = (e) => (e.t ? new Date(e.t).toLocaleDateString('es-ES', { month: 'short', year: '2-digit' }) : `J${e.jornada || '?'}`);
@@ -70,9 +76,10 @@ export function calendarioHTML(M, j, mio = false) {
   const titulo = c.tipo === 'duro' ? 'Calendario duro' : c.tipo === 'favorable' ? 'Calendario favorable' : 'Calendario normal';
   // el riesgo es el de ficharlo: con los tuyos no pinta nada
   const riesgo = mio ? '' : `<span class="cr-r ${c.riesgo}">Riesgo ${c.riesgo}</span>`;
+  // cada rival, con cómo llega (sus últimos partidos); arriba, cómo llega su equipo
   const filas = c.partidos.map((p) => `<div class="cr-p ${nivelCls(p.nivel)}">
       <span class="cr-j">J${p.jornada}<small>${p.sinFecha ? 'sin fecha' : esc(cuando(p.fecha, { hora: false }))}</small></span>
-      <span class="cr-ri"><b>${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b><small>${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small>${h2hHTML(p.h2h, p.rival)}</span>
+      <span class="cr-ri"><b>${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b><span class="cr-ri2"><small>${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small>${M.racha ? rachaHTML(M.racha(p.rivalId), p.rival) : ''}</span></span>
       <span class="cr-n"><b>~${d1(p.pts)}</b><small>pts</small></span>
       <span class="cr-n"><b>${p.pTit == null ? '–' : `${Math.round(p.pTit * 100)}%`}</b><small>titular</small></span>
     </div>`).join('');
@@ -96,12 +103,13 @@ export function calendarioHTML(M, j, mio = false) {
         : c.tipo === 'favorable' ? 'Le vienen partidos buenos: buen momento para tenerlo en el once.' : '';
     }
   }
-  const conH2h = c.partidos.some((p) => p.h2h && p.h2h.length);
+  const suya = M.racha ? M.racha(j.equipoId) : null;
   return `<div class="cal-riesgo ${c.tipo}">
     <div class="cr-cab"><b>${titulo}</b>${riesgo}</div>
     <p class="cr-txt">${esc(c.texto)}</p>
+    ${suya ? `<div class="cr-su"><span>Cómo llega ${esc(j.equipo || 'su equipo')}</span>${rachaHTML(suya, j.equipo)}</div>` : ''}
     <div class="cr-lista">${filas}</div>
-    ${conH2h ? `<p class="cr-ley">V, E y D: cómo le fue a su equipo las últimas veces contra ese rival (la de la derecha es la más reciente). Cuenta poco: pesa más cómo están ahora.</p>` : ''}
+    <p class="cr-ley">Las bolitas, los últimos partidos de cada equipo: <b class="ley-V">V</b> ganó, <b class="ley-E">E</b> empató, <b class="ley-D">D</b> perdió. La de la derecha es la más reciente.</p>
     ${consejo ? `<p class="cr-consejo">${esc(consejo)}</p>` : ''}
   </div>`;
 }

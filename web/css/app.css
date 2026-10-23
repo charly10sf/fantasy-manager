@@ -1121,3 +1121,27 @@ body.en-tour { overflow: hidden; }
 .entrar-movil a.btn { color: #fff; }
 .entrar-movil a.btn .ic { color: #fff; }
 .pant-i .entrar-movil { margin: 14px 0 16px; }
+/* las rachas: últimos partidos de cada equipo en bolitas */
+.racha { display: inline-flex; gap: 3px; flex: none; }
+.racha i { width: 17px; height: 17px; border-radius: 50%; display: grid; place-items: center; font: 700 10.5px/1 'Barlow'; font-style: normal; color: #08080a; background: var(--plano3); }
+.racha i.r-V { background: var(--sube); }
+.racha i.r-E { background: var(--oro); }
+.racha i.r-D { background: var(--baja); }
+.cr-ri2 { display: flex; align-items: center; gap: 8px; min-width: 0; margin-top: 3px; }
+.cr-ri2 small { flex: 0 1 auto; min-width: 0; }
+.cr-su { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 8px; padding: 8px 10px; border-radius: 10px; background: var(--plano2); font-size: 14px; color: var(--texto2); }
+.cr-ley b { display: inline-grid; place-items: center; width: 15px; height: 15px; border-radius: 50%; font-size: 9.5px; color: #08080a; vertical-align: 1px; }
+.cr-ley .ley-V { background: var(--sube); } .cr-ley .ley-E { background: var(--oro); } .cr-ley .ley-D { background: var(--baja); }
+.rejilla.rinde .v.sube { color: var(--sube); }
+.rejilla.rinde .v.baja { color: var(--baja); }
+@media (max-width: 380px) { .racha i { width: 15px; height: 15px; font-size: 9.5px; } .racha { gap: 2px; } }
+.cr-p .racha { gap: 2px; }
+.cr-p .racha i { width: 14px; height: 14px; font-size: 8.5px; }
+.cr-ri2 { gap: 6px; }
+.cr-ri2 small { overflow: visible; text-overflow: clip; }
+/* si el puesto y el nivel no caben con las bolitas, las bolitas bajan a la línea siguiente */
+.cr-ri2 { flex-wrap: wrap; row-gap: 4px; }
+.cr-ri2 small { flex: none; white-space: nowrap; }
+/* siempre igual: el nombre, debajo el puesto y el nivel, y debajo sus últimos partidos */
+.cr-ri2 { flex-direction: column; align-items: flex-start; gap: 4px; }
+.cr-p .racha i { width: 16px; height: 16px; font-size: 9.5px; }

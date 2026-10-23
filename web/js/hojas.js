@@ -160,6 +160,9 @@ export function fichaJugador(S, pid) {
   const enMercado = M.mercado.find((m) => m.pid === pid);
   const prox = M.proximoPartido(j.equipoId);
   const fr = M.factorRival(j);
+  // la dificultad del próximo rival, la misma que en el calendario de abajo (cuenta si juega en casa o fuera)
+  const cal1 = j.pos < 5 && M.calendarioRiesgo ? M.calendarioRiesgo(j) : null;
+  if (cal1 && cal1.partidos[0] && cal1.partidos[0].nivel) fr.nivel = cal1.partidos[0].nivel;
   const inter = M.interes(j, suya ? suya.clausula : enMercado ? enMercado.precio : j.valor, t);
   if (mia) inter.por = inter.por.filter((x) => !/cuesta|te faltan/.test(x));
   const op = S.opPorPid[pid];
@@ -214,14 +217,18 @@ export function fichaJugador(S, pid) {
     h += calendarioHTML(M, j, !!mia);
     const v = M.previa && M.previa(j), r = M.rendimiento && M.rendimiento(j);
     const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
-    const datos = [];
-    if (v && v.rachaTu) datos.push(`<span>${esc(j.equipo || 'Su equipo')}: <b>${esc(v.rachaTu.txt)}</b></span>`);
-    if (v && v.rachaRi) datos.push(`<span>${esc(v.rival)}: <b>${esc(v.rachaRi.txt)}</b></span>`);
-    if (v && j.pos <= 2 && v.cero != null) datos.push(`<span>Portería a cero <b>~${Math.round(v.cero * 100)} %</b></span>`);
-    else if (v && v.golesFavor != null) datos.push(`<span>Goles esperados de su equipo <b>${d1(v.golesFavor)}</b></span>`);
-    if (r && r.casa && r.fuera) datos.push(`<span>En casa <b>${d1(r.casa.m)}</b> · fuera <b>${d1(r.fuera.m)}</b></span>`);
-    if (r && r.arriba && r.abajo) datos.push(`<span>Vs top-6 <b>${d1(r.arriba.m)}</b> · vs últimos <b>${d1(r.abajo.m)}</b></span>`);
-    if (datos.length) h += `<div class="previa">${datos.join('')}</div>`;
+    // cómo puntúa según dónde y contra quién (puntos por partido), comparado con su media; y lo del próximo partido
+    const med = num(j.media);
+    const tono = (m) => (!med ? '' : m >= med * 1.15 ? 'sube' : m <= med * 0.85 ? 'baja' : '');
+    const tile = (et, val, sub, cls = '') => `<div class="dato"><div class="et">${et}</div><div class="v ${cls}">${val}<small>${sub}</small></div></div>`;
+    const tiles = [];
+    if (r && r.casa) tiles.push(tile('En casa', d1(r.casa.m), `pts · ${r.casa.n} partido${r.casa.n === 1 ? '' : 's'}`, tono(r.casa.m)));
+    if (r && r.fuera) tiles.push(tile('Fuera', d1(r.fuera.m), `pts · ${r.fuera.n} partido${r.fuera.n === 1 ? '' : 's'}`, tono(r.fuera.m)));
+    if (r && r.arriba) tiles.push(tile('Contra los 6 primeros', d1(r.arriba.m), `pts · ${r.arriba.n} partido${r.arriba.n === 1 ? '' : 's'}`, tono(r.arriba.m)));
+    if (r && r.abajo) tiles.push(tile('Contra los 6 últimos', d1(r.abajo.m), `pts · ${r.abajo.n} partido${r.abajo.n === 1 ? '' : 's'}`, tono(r.abajo.m)));
+    if (v && j.pos <= 2 && v.cero != null) tiles.push(tile(`Portería a cero vs ${esc(v.rival)}`, `~${Math.round(v.cero * 100)} %`, 'de probabilidad'));
+    else if (v && v.golesFavor != null) tiles.push(tile(`Goles de su equipo vs ${esc(v.rival)}`, `~${d1(v.golesFavor)}`, 'esperados'));
+    if (tiles.length) h += `<div class="sec"><h2>Cómo puntúa</h2><span class="sub">${med ? `su media es ${d1(med)} pts` : 'puntos por partido'}</span></div><div class="rejilla rinde">${tiles.join('')}</div>`;
     h += esperadosHTML(M, j);
     // fuera del Fantasy: Understat y SofaScore
     const a = M.avanzado && M.avanzado(j.id);

@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.4.4b';
+export const VERSION = '0.4.4c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.4.4c', f: '2026-10-23', h: '12:50', t: 'El calendario, más claro',
+    cosas: [
+      { tipo: 'mejora', d: 'campo', t: 'Cómo llega cada rival', x: 'En el calendario de la ficha de cada jugador, cada rival lleva sus últimos 5 partidos en bolitas (verde ganó, amarilla empató, roja perdió) y arriba sale cómo llega su equipo. Debajo, «Cómo puntúa»: su media en casa, fuera, contra los 6 primeros y contra los 6 últimos, en verde o en rojo si se sale de su media.' },
+    ],
+  },
   {
     v: '0.4.4b', f: '2026-10-23', h: '12:03', t: 'La web, desde el móvil',
     cosas: [
