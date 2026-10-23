@@ -11,7 +11,7 @@ export const VERSION = '0.4.2';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.4.2', f: '2026-10-23', h: '04:25', t: 'Se pone al día sola',
+    v: '0.4.2', f: '2026-10-23', h: '04:28', t: 'Se pone al día sola',
     cosas: [
       { tipo: 'nuevo', d: 'versiones', t: 'Los arreglos llegan solos', x: 'Al abrir la app (y cada rato mientras la usas, y aunque esté cerrada hasta la hora de apertura) mira si hay arreglos nuevos, se los baja y se los pone sin reinstalar nada: nada más abrirla, al volver a ella o con el botón «Ponerla» si estabas en medio de algo. Si un arreglo saliera mal, vuelve sola a la versión de antes.' },
       { tipo: 'mejora', d: 'campana', t: 'Actualizar también con la app cerrada', x: 'Solo cuando cambie la parte de Android hará falta instalar una versión nueva. Su botón sale arriba y también en la cuenta atrás y en la pantalla de minutos agotados. En Ajustes, «Buscar nueva» mira las dos cosas.' },
