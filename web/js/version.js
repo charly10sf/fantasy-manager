@@ -11,7 +11,7 @@ export const VERSION = '0.4.4b';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.4.4b', f: '2026-10-23', h: '12:10', t: 'La web, desde el móvil',
+    v: '0.4.4b', f: '2026-10-23', h: '12:03', t: 'La web, desde el móvil',
     cosas: [
       { tipo: 'mejora', d: 'conexion', t: 'Desde un Android, la app', x: 'Si alguien abre la web desde un móvil Android, lo primero que ve es «Estás en un Android: instala la app», con el botón para bajarla, en vez de que le pida un código. Desde un iPhone se le explica que la primera vez hay que entrar desde un ordenador.' },
     ],
