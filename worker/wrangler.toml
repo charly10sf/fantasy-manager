@@ -6,3 +6,9 @@ name = "fantasy-manager"
 main = "src/index.js"
 compatibility_date = "2025-06-01"
 workers_dev = true
+
+# El dueño de la app (Carlos): el número de su cuenta de LaLiga. Con él lee y contesta desde la app los avisos de
+# fallos de todos. No da acceso a nada por sí solo: el Worker comprueba con LaLiga, con la sesión de quien llama,
+# que de verdad es esa cuenta. Si existe el secreto FM_ADMINS, manda el secreto.
+[vars]
+ADMINS = "667015"

@@ -1123,6 +1123,19 @@ export function analizar(D, H, c, extra = {}) {
   M.mercadoFantasma = (D.mercado || []).filter((m) => m.tipo !== 'manager' && M.dueno[m.pid]).map((m) => m.pid);
   // en la versión gratuita no se alinea entrenador: no cuentan para fichar
   const esEnt = (pid) => (D.maestro[pid] || {}).pos === 5;
+  // lo que le quedaría al que vende: si se queda sin portero, o con menos defensas, medios o delanteros de los que
+  // pide la formación gratuita más justa, no podría alinear un once y no te lo va a vender (aunque lo tenga a la venta:
+  // será para ver qué le ofrece LaLiga)
+  const minimoPos = { 1: 1 };
+  for (const k of [2, 3, 4]) minimoPos[k] = Math.min(...(M.formaciones.length ? M.formaciones : [[3, 3, 1]]).map((f) => f[k - 2]));
+  const NOMBRES_POS = { 1: ['portero', 'porteros'], 2: ['defensa', 'defensas'], 3: ['medio', 'medios'], 4: ['delantero', 'delanteros'] };
+  const sinRelevo = (tid, j) => {
+    if (!tid || tid === yoTid || !(j.pos >= 1 && j.pos <= 4)) return null;
+    const quedan = ((D.plantillas || {})[tid] || []).filter((f) => f.pid !== j.id && (D.maestro[f.pid] || {}).pos === j.pos).length;
+    if (quedan >= minimoPos[j.pos]) return null;
+    const [uno, varios] = NOMBRES_POS[j.pos];
+    return quedan === 0 ? `es su único ${uno}` : `se quedaría con ${quedan} ${quedan === 1 ? uno : varios} y no podría alinear`;
+  };
   M.mercado = (D.mercado || []).filter((m) => (m.tipo === 'manager' || !M.dueno[m.pid]) && !esEnt(m.pid) && !(m.tipo === 'manager' && vendidos[m.pid] && (!m.vendedorTeamId || m.vendedorTeamId === yoTid))).map((m0) => {
     const dueno0 = M.dueno[m0.pid];
     const m = { ...m0 };
@@ -1151,6 +1164,8 @@ export function analizar(D, H, c, extra = {}) {
     }
     const precioReal = ofertaMin || m.precio;
     const i = M.interes(j, precioReal, t);
+    const noVende = m.tipo === 'manager' ? sinRelevo(m.vendedorTeamId, j) : null;
+    if (noVende) { i.n = Math.min(i.n, 20); i.por = [`No te lo venderá: ${noVende}`, ...(i.por || [])]; }
     const sobre = j.valor ? precioReal / j.valor - 1 : 0;
     let veredicto = 'normal';
     if (MALOS.has(j.estado)) veredicto = 'evitar';
@@ -1193,7 +1208,7 @@ export function analizar(D, H, c, extra = {}) {
       const tope = Math.max(m.precio, Math.floor(j.valor * (1 + calR.maxSobre) / 10000) * 10000);
       if (puja > tope) { puja = tope; topeCal = tope; }
     }
-    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, veredicto, meLlega: precioReal <= M.pujaMax, puja, pujaLiga, recortada, topeCal, ofertaLiga, ofertaMin, ofertaAlta, sobrePide: j.valor ? m.precio / j.valor - 1 : 0, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
+    return { ...m, j, tend: t, sobre, interes: i.n, por: i.por, noVende, veredicto, meLlega: precioReal <= M.pujaMax, puja, pujaLiga, recortada, topeCal, ofertaLiga, ofertaMin, ofertaAlta, sobrePide: j.valor ? m.precio / j.valor - 1 : 0, prox: M.proximoPartido(j.equipoId), dueno: M.dueno[m.pid] || null };
   }).sort((a, b) => b.interes - a.interes);
   {
     // la hora a la que caducan casi todos los libres es el cambio de mercado; lo que pone a la venta un manager

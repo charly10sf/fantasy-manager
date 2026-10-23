@@ -4,7 +4,7 @@
 #   CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID
 # El almacén de los códigos (KV «VINCULOS») se crea solo la primera vez si el token tiene permiso; si no, los
 # códigos van en la caché del Worker. En el mismo almacén van los avisos de fallos.
-# Opcional: FM_ADMINS, el número de tu cuenta de LaLiga (sale en la app, en Ajustes > Diagnóstico). Con él, esa
+# Opcional: FM_ADMINS (si no, vale el ADMINS de wrangler.toml), el número de tu cuenta de LaLiga (sale en la app, en Ajustes > Diagnóstico). Con él, esa
 # cuenta ve en la app los avisos de fallos de todos y puede contestarlos. Varios, separados por comas.
 name: Worker
 

@@ -583,10 +583,11 @@ export function mercado(S) {
       sub: m.tipo === 'manager' ? `${esc(m.j.equipo)} · lo vende <b>${esc(m.vendedor || 'un manager')}</b>` : `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
       pills: [
         m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : '',
-        estadoPill(m.j), tagV[m.veredicto] || '', avisoOnce(M, m.j), calPill(M, m.j, { soloDuro: true }),
+        m.noVende ? `<span class="pill mal" title="${esc(`No te lo venderá: ${m.noVende}`)}">No lo venderá: ${esc(m.noVende.replace(/^es /, ''))}</span>` : '',
+        estadoPill(m.j), m.noVende ? '' : tagV[m.veredicto] || '', avisoOnce(M, m.j), calPill(M, m.j, { soloDuro: true }),
         m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : '',
       ],
-      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja, { dec: 1 })}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio ? `<div class="d apag">ofrece ${eur(m.puja, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
+      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja, { dec: 1 })}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
     });
     const PL = M.pujasLiga;
     const pagaTxt = PL && !PL.poco ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga se llevan con un <b>${pct(PL.med * 100)}</b> sobre su valor de mediana. A la derecha, la puja que te propongo.</p>` : '';

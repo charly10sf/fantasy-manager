@@ -11,8 +11,9 @@ export const VERSION = '0.4.2a';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.4.2a', f: '2026-10-23', h: '04:45', t: 'Pedir otro plan, más arriba',
+    v: '0.4.2a', f: '2026-10-23', h: '04:45', t: 'Pedir otro plan más arriba y compras con sentido',
     cosas: [
+      { tipo: 'arreglo', d: 'oferta', t: 'No te propone lo que no te van a vender', x: 'Si un rival tiene a la venta su único portero (o uno que le dejaría sin poder alinear un once), el plan ya no te propone comprárselo: lo normal es que lo tenga a la venta solo para ver qué le da LaLiga. En el Mercado sale marcado como «No lo venderá» y en su ficha se explica por qué.', ir: { v: 'mercado' } },
       { tipo: 'mejora', d: 'ia', t: 'El botón de la IA, a mano', x: '«Pedir otro plan a la IA» va ahora justo debajo del resumen del plan, antes de los pasos: ya no hay que bajar hasta el final. Si tenías la 0.4.2, esta versión te ha llegado sola, sin instalar nada.', ir: { v: 'hoy' } },
     ],
   },

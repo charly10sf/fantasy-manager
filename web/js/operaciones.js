@@ -38,6 +38,8 @@ export function catalogo(D, M, notas = []) {
   // M: lo que venden otros managers
   for (const m of M.mercado) {
     if (m.tipo !== 'manager' || m.vendedorTeamId === yo || (M.enVenta && M.enVenta.has(m.pid))) continue;
+    // si al venderlo se queda sin poder alinear (su único portero…), no lo va a vender: ni se propone
+    if (m.noVende) continue;
     add({ ref: `M-${m.pid}`, tipo: 'comprar', pid: m.pid, j: m.j, precio: m.precio, vendedor: m.vendedor || nombreDe(M, m.vendedorTeamId), vendedorTeamId: m.vendedorTeamId, miPuja: m.miPuja, interes: m.interes, sobre: m.sobre, puja: m.puja, ofertaMin: m.ofertaMin, ofertaAlta: m.ofertaAlta, ofertaLiga: m.ofertaLiga });
   }
   // T: tratos que le has contado (jugador de otro manager con precio)
@@ -132,6 +134,8 @@ export function porQueNo(D, M, o, pid, j) {
     const x = M.clausulas.find((c) => c.pid === pid);
     return x ? `Su cláusula no se abre hasta ${cuando(x.protegidoHasta)}, después de la próxima jornada` : 'No tiene cláusula';
   }
+  const venta = (M.mercado || []).find((m) => m.pid === pid && m.tipo === 'manager' && m.noVende);
+  if (venta) return `Lo tiene a la venta, pero ${venta.noVende}: ${venta.vendedor || nombreDe(M, tid)} no te lo va a vender`;
   if (tid) {
     const fa = M.fichadoPor && M.fichadoPor(pid);
     return `No lo tiene a la venta y su dueño (${nombreDe(M, tid)}) no tiene por qué vendértelo${fa ? `: lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)}` : ''}. Solo se le puede quitar con la cláusula`;
