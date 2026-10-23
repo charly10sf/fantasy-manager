@@ -77,11 +77,14 @@ export function calendarioHTML(M, j, mio = false) {
   // el riesgo es el de ficharlo: con los tuyos no pinta nada
   const riesgo = mio ? '' : `<span class="cr-r ${c.riesgo}">Riesgo ${c.riesgo}</span>`;
   // cada rival, con cómo llega (sus últimos partidos); arriba, cómo llega su equipo
+  // dos líneas por partido: el rival con sus puntos y su titularidad; debajo, su puesto y nivel y, a la derecha, cómo llega
   const filas = c.partidos.map((p) => `<div class="cr-p ${nivelCls(p.nivel)}">
       <span class="cr-j">J${p.jornada}<small>${p.sinFecha ? 'sin fecha' : esc(cuando(p.fecha, { hora: false }))}</small></span>
-      <span class="cr-ri"><b>${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b><span class="cr-ri2"><small>${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small>${M.racha ? rachaHTML(M.racha(p.rivalId), p.rival) : ''}</span></span>
-      <span class="cr-n"><b>~${d1(p.pts)}</b><small>pts</small></span>
-      <span class="cr-n"><b>${p.pTit == null ? '–' : `${Math.round(p.pTit * 100)}%`}</b><small>titular</small></span>
+      <b class="cr-rv2">${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b>
+      <span class="cr-pt"><b>~${d1(p.pts)}</b> pts</span>
+      <span class="cr-ti"><b>${p.pTit == null ? '–' : `${Math.round(p.pTit * 100)}%`}</b> tit.</span>
+      <small class="cr-nv">${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small>
+      <span class="cr-ra">${M.racha ? rachaHTML(M.racha(p.rivalId), p.rival) : ''}</span>
     </div>`).join('');
   // con los tuyos, el calendario no decide la venta: si está bajando (o a punto de girar), manda la venta
   let consejo = c.consejo;

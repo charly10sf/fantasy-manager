@@ -1145,3 +1145,19 @@ body.en-tour { overflow: hidden; }
 /* siempre igual: el nombre, debajo el puesto y el nivel, y debajo sus últimos partidos */
 .cr-ri2 { flex-direction: column; align-items: flex-start; gap: 4px; }
 .cr-p .racha i { width: 16px; height: 16px; font-size: 9.5px; }
+/* el calendario en dos líneas: rival, puntos y titularidad; debajo, puesto y nivel con sus últimos partidos a la derecha */
+.cal-riesgo .cr-p { grid-template-columns: 48px minmax(0, 1fr) 54px 50px; grid-template-areas: "j rv pt ti" "j nv ra ra"; column-gap: 8px; row-gap: 3px; padding: 8px 10px; }
+.cal-riesgo .cr-p > .cr-j { grid-area: j; align-self: center; }
+.cr-rv2 { grid-area: rv; min-width: 0; font: 700 15.5px var(--cond); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-pt, .cr-ti { font-size: 12.5px; color: var(--apagado); text-align: right; white-space: nowrap; }
+.cr-pt { grid-area: pt; } .cr-ti { grid-area: ti; }
+.cr-pt b, .cr-ti b { font: 700 15.5px var(--cond); color: var(--texto); font-variant-numeric: tabular-nums; }
+.cal-riesgo .cr-p > small.cr-nv { grid-area: nv; min-width: 0; align-self: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-ra { grid-area: ra; display: flex; justify-content: flex-end; align-items: center; }
+.cal-riesgo .cr-p .racha i { width: 16px; height: 16px; font-size: 9.5px; }
+.cal-riesgo .cr-p .racha { gap: 3px; }
+@media (max-width: 370px) { .cal-riesgo .cr-p { grid-template-columns: 44px minmax(0, 1fr) 50px 46px; column-gap: 6px; } .cal-riesgo .cr-p .racha i { width: 15px; height: 15px; } .cal-riesgo .cr-p .racha { gap: 2px; } }
+.cal-riesgo .cr-p { grid-template-columns: 48px minmax(0, 1fr) 60px 54px; }
+.cal-riesgo .cr-p > .cr-pt, .cal-riesgo .cr-p > .cr-ti { display: block; line-height: 1.2; }
+.cal-riesgo .cr-p > .cr-ra { flex-direction: row; }
+@media (max-width: 370px) { .cal-riesgo .cr-p { grid-template-columns: 44px minmax(0, 1fr) 56px 50px; } }
