@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.4.4c';
+export const VERSION = '0.4.4d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.4.4d', f: '2026-10-23', h: '12:50', t: 'El código, también antes de abrir',
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', t: 'Pasar al iPhone con la cuenta atrás', x: 'Mientras la app está cerrada hasta la hora de apertura, en la pantalla de la cuenta atrás sale «Abrir en el iPhone u otro dispositivo» (en la app, «Abrir en el ordenador»). Te da el código de 8 letras para entrar allí sin esperar a que se abra.' },
+    ],
+  },
   {
     v: '0.4.4c', f: '2026-10-23', h: '12:44', t: 'El calendario, más claro',
     cosas: [

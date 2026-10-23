@@ -156,7 +156,8 @@ function taparHastaApertura(t, mensaje, demo = false) {
     ${mensaje ? `<p class="lim-msg">${esc(mensaje)}</p>` : ''}
     ${demo
     ? '<p class="lim-vuelve">La liga de ejemplo también se abre a esa hora. Si aún no has entrado con tu cuenta, entra ya y a esa hora estará todo listo.</p><button class="btn" data-accion="salirDemo">Entrar con mi cuenta</button>'
-    : `<p class="lim-vuelve">Ya has entrado con tu cuenta: a esa hora, abre la app y estará todo listo.${enApp ? ' Mientras, se pone al día sola con los arreglos que vayan saliendo.' : ''}</p>${enApp ? (nativo.avisosPermitidos() ? '<p class="lim-vuelve">Te llegará una notificación cuando se abra.</p>' : '<button class="btn" data-accion="permisoApertura">Avísame cuando se abra</button>') : ''}`}${botonNueva()}</div>`;
+    : `<p class="lim-vuelve">Ya has entrado con tu cuenta: a esa hora, abre la app y estará todo listo.${enApp ? ' Mientras, se pone al día sola con los arreglos que vayan saliendo.' : ''}</p>${enApp ? (nativo.avisosPermitidos() ? '<p class="lim-vuelve">Te llegará una notificación cuando se abra.</p>' : '<button class="btn" data-accion="permisoApertura">Avísame cuando se abra</button>') : ''}
+      <div class="lim-otro"><p>${enApp ? '¿La vas a usar también en el ordenador? Saca aquí el código para entrar.' : '¿La vas a usar en el iPhone o en otro ordenador? Saca aquí el código para entrar allí.'}</p><button class="btn sec" data-accion="vincularWeb">${enApp ? 'Abrir en el ordenador' : 'Abrir en el iPhone u otro dispositivo'}</button></div>`}${botonNueva()}</div>`;
   if (!el) {
     el = document.createElement('div');
     el.id = 'limite'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'limT');
