@@ -34,7 +34,13 @@ async function leerLimites() {
       const r = await fetch(`limites.json?t=${Date.now()}`, { cache: 'no-store' });
       if (r.ok) cfg = await r.json();
     }
-    if (cfg) { LS.set('limites', { t: Date.now(), cfg }); return cfg; }
+    if (cfg) {
+      const antes = JSON.stringify(g && g.cfg);
+      LS.set('limites', { t: Date.now(), cfg });
+      // lo bloqueado depende de esto: si ha cambiado, que se vuelva a pintar
+      if (antes !== JSON.stringify(cfg) && typeof window !== 'undefined') window.dispatchEvent(new Event('limites-nuevos'));
+      return cfg;
+    }
   } catch (e) { /* sin red: lo guardado, aunque sea viejo */ }
   return g ? g.cfg : null;
 }
@@ -44,6 +50,21 @@ function esDe(yo) {
   const n = norm(yo.nombre || ''), id = String(yo.teamId || ''), uid = String(yo.userId || '');
   return (k) => (norm(k) && norm(k) === n) || String(k) === id || (uid && String(k) === uid);
 }
+/* Las funciones top, bloqueadas hasta que lleguen los anuncios (entonces se desbloquearán viendo uno).
+   limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas tres), y «todoAbierto», los equipos que las ven
+   todas (si no lo dice, los de «sinLimite»). En la liga de ejemplo, bloqueadas. */
+const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia'];
+let yoB = null, demoB = false;
+/** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
+export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }
+export function bloqueada(clave) {
+  const g = LS.get('limites', null), cfg = g && g.cfg;
+  const lista = cfg && Array.isArray(cfg.bloqueadas) ? cfg.bloqueadas : BLOQUEADAS;
+  if (!lista.includes(clave)) return false;
+  if (demoB || !yoB || !cfg) return true;
+  return !(cfg.todoAbierto || cfg.sinLimite || []).some(esDe(yoB));
+}
+
 /** los minutos de un equipo (null: sin límite) */
 export function minutosDe(cfg, yo) {
   if (!cfg || !yo) return null;

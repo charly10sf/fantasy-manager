@@ -157,6 +157,21 @@ export function analizar(D, H, c, extra = {}) {
       if (frena && fr < 0) { fase = 'frena'; frenazo = fr; giroEn = ult / -fr; }
       else fase = Rs.slice(-3).every((x) => x > quieto) && pend >= 0 ? 'acelera' : 'sube';
     }
+    // lo de las últimas semanas: si viene de bajar mucho y la «subida» de estos días es un rebote pequeño (menos de
+    // un 30 % de lo que había caído), que se pare o se frene no es girar: no hay una subida que se dé la vuelta.
+    // Puede estar tocando fondo o seguir bajando, así que eso solo no es motivo para venderlo
+    let rebote = null;
+    {
+      const mes = (t.serie || []).filter(([ts]) => ts >= ahora - 35 * DIA).map(([, x]) => x).filter(Boolean);
+      mes.push(v);
+      if (mes.length >= 10) {
+        let iMax = 0;
+        mes.forEach((x, i) => { if (x > mes[iMax]) iMax = i; });
+        const max = mes[iMax], min = Math.min(...mes.slice(iMax));
+        if (max - min >= v * 0.08 && v - min < (max - min) * 0.3 && iMax <= mes.length - 6) rebote = { max, min, caida: (max - min) / max };
+      }
+    }
+    if (rebote && (fase === 'parado' || fase === 'frena')) { fase = 'rebote'; giroEn = null; frenazo = null; }
     // lo que se espera los próximos días: el frenazo sigue al mismo ritmo, la bajada se suaviza poco a poco
     const hastaJ = M.proxima ? clamp(Math.ceil((M.proxima.ini - ahora) / DIA), 1, 7) : 3;
     const proy = (k) => {
@@ -173,12 +188,13 @@ export function analizar(D, H, c, extra = {}) {
     const subida = (subia >= 2 ? Rs.slice(Math.max(0, n - 1 - subia), n - 1) : antes.slice(-5)).filter((r) => r > quieto);
     let texto = '';
     if (fase === 'giro') texto = `Ha girado a la baja: venía subiendo (${subida.slice(-4).map(fmt).join(', ')} al día) y ${baja >= 2 ? `ya lleva ${baja} días bajando (hoy ${fmt(ult)})` : `hoy ${fmt(ult)}`}. Si sigue así, en ${hastaJ} día${hastaJ > 1 ? 's' : ''} pierde unos ${eur(-proy(hastaJ))}.`;
+    else if (fase === 'rebote') texto = `Viene de bajar un ${Math.round(rebote.caida * 100)} % en el último mes (de ${eur(rebote.max)} a ${eur(rebote.min)}) y estos días ha rebotado un poco (${subida.slice(-4).map(fmt).join(', ')}${Math.abs(ult) <= quieto ? `; hoy ${fmt(ult)}, se ha parado` : ', cada vez menos'}). Es un rebote pequeño después de mucho bajar, no una subida que se vaya a dar la vuelta: puede estar tocando fondo o seguir bajando, así que esto solo no es motivo para venderlo.`;
     else if (fase === 'parado') texto = `Se ha estancado después de subir (${subida.slice(-4).map(fmt).join(', ')} y hoy ${fmt(ult)}): lo normal es que ahora empiece a bajar.`;
     else if (fase === 'frena') texto = `Sube cada vez menos (${Rs.slice(-3).map(fmt).join(', ')} al día): a este ritmo deja de subir en unos ${Math.max(1, Math.round(giroEn))} día${Math.round(giroEn) > 1 ? 's' : ''} y luego bajará.`;
     else if (fase === 'baja') texto = `Baja ${fmt(ult)} al día${baja >= 2 ? ` (${baja} días seguidos)` : ''}: en ${hastaJ} día${hastaJ > 1 ? 's' : ''} perdería unos ${eur(-proy(hastaJ))}.`;
     else if (fase === 'acelera') texto = `Sube cada vez más (${Rs.slice(-3).map(fmt).join(', ')} al día).`;
     else if (fase === 'sube') texto = `Sube ${fmt(ult)} al día.`;
-    return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, texto, quieto });
+    return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, texto, quieto, rebote });
   };
   /** ¿hay que venderlo ya por la inercia? (ha girado o se ha parado tras subir, o está a punto) */
   M.ventaPorInercia = (pid) => {

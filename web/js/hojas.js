@@ -2,7 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML, puntosUltimaJornada } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
@@ -13,7 +13,7 @@ import { quien, sesion } from './auth.js';
 import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
-import { estadoLimite } from './limite.js';
+import { estadoLimite, bloqueada } from './limite.js';
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
 
@@ -104,8 +104,10 @@ export function resumenEquipo(S) {
   const conI = mias.filter((x) => x.inercia && x.j.pos !== 5);
   const proyJ = conI.reduce((s, x) => s + num(x.inercia.proyJ), 0);
   const vender = mias.filter((x) => x.ventaInercia).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder);
-  if (M.proxima && conI.length) h += `<div class="aviso-ficha ${proyJ < 0 ? '' : 'verde'}">${icono(proyJ < 0 ? 'baja' : 'sube')}<div>Hasta la jornada ${M.proxima.n}, si cada uno sigue con su inercia, tu equipo ${proyJ >= 0 ? 'ganaría' : 'perdería'} unos <b>${eur(Math.abs(proyJ))}</b>.${vender.length ? ` Lo que más pesa: ${vender.slice(0, 3).map((x) => `${esc(x.j.nombre)} (${x.ventaInercia.urgencia === 'ya' ? 'ha girado' : 'frenando'})`).join(', ')}.` : ''}</div></div>`;
-  if (vender.length) {
+  const sinI = bloqueada('inercia');
+  if (sinI && (conI.length || vender.length)) h += candado('inercia');
+  if (!sinI && M.proxima && conI.length) h += `<div class="aviso-ficha ${proyJ < 0 ? '' : 'verde'}">${icono(proyJ < 0 ? 'baja' : 'sube')}<div>Hasta la jornada ${M.proxima.n}, si cada uno sigue con su inercia, tu equipo ${proyJ >= 0 ? 'ganaría' : 'perdería'} unos <b>${eur(Math.abs(proyJ))}</b>.${vender.length ? ` Lo que más pesa: ${vender.slice(0, 3).map((x) => `${esc(x.j.nombre)} (${x.ventaInercia.urgencia === 'ya' ? 'ha girado' : 'frenando'})`).join(', ')}.` : ''}</div></div>`;
+  if (!sinI && vender.length) {
     h += `<div class="sec"><h2>A vender por la inercia</h2><span class="sub">${vender.length}</span></div>`;
     h += vender.map((x) => filaJugador(x, {
       sub: esc(x.ventaInercia.urgencia === 'ya' ? 'Ha girado a la baja' : `Se frena: gira en ~${Math.max(1, Math.round(x.ventaInercia.giroEn || 1))} d`),
@@ -164,7 +166,7 @@ export function fichaJugador(S, pid) {
   let h = `<div class="ficha-top">${ava(j, 'g')}<div style="min-width:0"><h2>${esc(j.nombre)}</h2>
     <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div></div>`;
   h += `<div class="valor-g"><span class="v">${eur(j.valor)}</span><span class="d">${delta(t, { largo: true })}</span>${t.d7 != null ? `<span class="d ${clase(t.d7)}">${eur(t.d7, { signo: true })} 7d</span>` : ''}</div>`;
-  h += inerciaHTML(M, pid, !!mia);
+  if (M.inercia && M.inercia(pid)) h += bloqueada('inercia') ? candado('inercia') : inerciaHTML(M, pid, !!mia);
   for (const n of notasDe(pid)) h += `<div class="aviso-ficha oro">${icono('nota')}<div><b>Le contaste a la IA:</b> ${esc(n.texto)} <span class="t2">(${cuando(n.t)})</span></div></div>`;
   if (op) h += `<div class="aviso-ficha">${icono('rayo')}<div><b>Plan de hoy: ${ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max ? ` (puja hasta ${eur(op.puja_max)})` : ''}.</b> ${esc(op.motivo || '')}</div></div>`;
   const rango = S.rango || 30;
@@ -174,7 +176,8 @@ export function fichaJugador(S, pid) {
   if (mia) {
     h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}, ${mia.abierta ? '<b>abierta</b>: te lo pueden quitar ya' : `${mia.escudo ? '<b>blindado</b>' : 'protegido'} hasta ${cuando(mia.protegidoHasta)} (${dura(mia.abreEn)})`}.${mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? ` <b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido; te quedan ${S.M.escudosMios.quedan} esta jornada.` : ''} ${mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`}.${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : ''}</div></div>`;
     const pg = mia.pagan;
-    if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
+    if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) h += candado('quienPaga');
+    else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
       const nadie = !pg.seguro.length && !pg.quiza.length;
       const lista = [...pg.seguro.map((x) => `<b>${esc(x.nombre)}</b> (${dineroCorto(x.c)})`), ...pg.quiza.map((x) => `${esc(x.nombre)} (justo, ${dineroCorto(x.c)})`)];
       const b = mia.blindaje;
@@ -251,14 +254,15 @@ export function fichaJugador(S, pid) {
 /** hacia dónde va su valor: lo que ha cambiado cada día y si se frena o ya ha girado */
 function inerciaHTML(M, pid, mio) {
   const x = M.inercia ? M.inercia(pid) : null;
-  if (!x || !['giro', 'baja', 'parado', 'frena', 'acelera'].includes(x.fase)) return '';
+  if (!x || !['giro', 'baja', 'parado', 'frena', 'acelera', 'rebote'].includes(x.fase)) return '';
   const mal = x.fase === 'giro' || x.fase === 'baja', ojo = x.fase === 'parado' || x.fase === 'frena';
-  const tit = { giro: 'Ha girado a la baja', baja: 'Está bajando', parado: 'Se ha estancado', frena: 'Se está frenando', acelera: 'Sube cada vez más' }[x.fase];
-  const consejo = mio ? (mal ? ' <b>Véndelo ya</b>, salvo que lo necesites sí o sí para la jornada.' : ojo ? ' <b>Véndelo antes de que gire.</b>' : '') : (mal || ojo ? ' No es momento de comprarlo.' : '');
+  const tit = { giro: 'Ha girado a la baja', baja: 'Está bajando', parado: 'Se ha estancado', frena: 'Se está frenando', acelera: 'Sube cada vez más', rebote: 'Rebota tras semanas bajando' }[x.fase];
+  const consejo = x.fase === 'rebote' ? (mio ? ' Decide por sus puntos y su sitio en tu once.' : ' Si lo quieres, está cerca de su mínimo del mes, pero aún no ha demostrado que vaya a subir.')
+    : mio ? (mal ? ' <b>Véndelo ya</b>, salvo que lo necesites sí o sí para la jornada.' : ojo ? ' <b>Véndelo antes de que gire.</b>' : '') : (mal || ojo ? ' No es momento de comprarlo.' : '');
   const max = Math.max(...x.R.map((r) => Math.abs(r)), 1);
   const corto = (r) => `${r > 0 ? '+' : r < 0 ? '−' : ''}${String(Math.round(Math.abs(r) / 1e4) / 100).replace('.', ',')}`;
   const barras = x.R.map((r, i) => `<div class="in-b"><i class="${r >= 0 ? 'up' : 'dw'}" style="--h:${Math.max(4, Math.round(Math.abs(r) / max * 100))}%"></i><span>${corto(r)}</span><em>${x.dias[i] ? new Date(x.dias[i] + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'narrow' }) : ''}</em></div>`).join('');
-  return `<div class="inercia ${mal ? 'mal' : ojo ? 'ojo' : 'bien'}"><div class="in-cab">${icono(mal ? 'baja' : ojo ? 'reloj' : 'sube')}<b>${tit}</b><span class="t2">lo que cambia cada día, en M</span></div><div class="in-barras">${barras}</div><p>${esc(x.texto)}${consejo}</p></div>`;
+  return `<div class="inercia ${mal ? 'mal' : ojo ? 'ojo' : x.fase === 'rebote' ? 'neutra' : 'bien'}"><div class="in-cab">${icono(mal ? 'baja' : ojo ? 'reloj' : x.fase === 'rebote' ? 'cambio' : 'sube')}<b>${tit}</b><span class="t2">lo que cambia cada día, en M</span></div><div class="in-barras">${barras}</div><p>${esc(x.texto)}${consejo}</p></div>`;
 }
 
 /** los puntos esperados de su próximo partido, por partes, con la titularidad y la rotación */
@@ -309,12 +313,12 @@ export function fichaRival(S, tid) {
     <div class="dato"><div class="et">Movimientos 7d</div><div class="v">${r.movs}</div></div>
     <div class="dato"><div class="et">Gastado 7d</div><div class="v">${eur(r.gastado)}<small>${r.ingresado ? `+${eur(r.ingresado, { dec: 1 })}` : ''}</small></div></div>
     <div class="dato"><div class="et">Cláusulas hechas</div><div class="v">${r.clausulazos}<small>14 d${r.contraMi ? `, ${r.contraMi} a ti` : ''}</small></div></div>
-    <div class="dato"><div class="et">Dinero</div><div class="v">${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}<small>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'exacto' : `± ${eur(r.dinero.margen)} · estimado`) : 'no se sabe'}</small></div></div>
+    ${bloqueada('dineroRivales') ? '' : `<div class="dato"><div class="et">Dinero</div><div class="v">${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}<small>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'exacto' : `± ${eur(r.dinero.margen)} · estimado`) : 'no se sabe'}</small></div></div>`}
     <div class="dato"><div class="et">Paga en el mercado</div><div class="v">${r.paga ? pct(r.paga.med * 100) : '–'}<small>${r.paga ? `sobre el valor · ${r.paga.n} compra${r.paga.n > 1 ? 's' : ''}` : 'sin compras al mercado'}</small></div></div>
   </div>
-  <p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`;
+  ${bloqueada('dineroRivales') ? candado('dineroRivales') : `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`}`;
   // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva
-  if (!(r.dinero && r.dinero.exacto)) {
+  if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales')) {
     const dc = r.dinero && r.dinero.dicho, cu = M.dineroCuenta ? M.dineroCuenta(tid) : null;
     h += `<div class="dicho">`;
     if (dc) h += `<p class="t2 peq">${dc.est != null ? `Cuando te lo dijo, la cuenta con los movimientos daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })} de diferencia).` : ''}${cu && cu.v != null && (dc.est == null || Math.abs(cu.v - dc.est) >= 1e5) ? ` Ahora daría ${eur(cu.v)}.` : ''} <button class="enlace" data-accion="borrarDicho" data-tid="${esc(tid)}">Olvidar lo que te dijo</button></p>`;
@@ -323,7 +327,8 @@ export function fichaRival(S, tid) {
       <p class="t2 peq">En millones. Si te dijo una cifra, ponla en los dos. A partir de ahora su dinero sale de esto más lo que mueva, y la app aprende cuánto fallaba la cuenta.</p>
     </details></div>`;
   }
-  if (r.leLlegan && r.leLlegan.length) {
+  if (r.leLlegan && r.leLlegan.length && bloqueada('quienPaga')) h += `<div class="sec"><h2>Tus cláusulas a su alcance</h2></div>${candado('quienPaga')}`;
+  else if (r.leLlegan && r.leLlegan.length) {
     h += `<div class="sec"><h2>Tus cláusulas a su alcance</h2><span class="sub">${r.leLleganYa.length} abierta${r.leLleganYa.length === 1 ? '' : 's'}</span></div>`;
     h += r.leLlegan.map((x) => filaJugador(x, {
       sub: `Tuyo · vale ${eur(x.j.valor)}${x.blindaje && !x.blindaje.yaVale && !x.blindaje.caro ? ` · subirla a ${eur(x.blindaje.objetivo)} (${eur(x.blindaje.coste)})` : x.blindaje && x.blindaje.parcial ? ` · subirla a ${eur(x.blindaje.parcial.objetivo)} (${eur(x.blindaje.parcial.coste)})` : ''}`,
@@ -403,6 +408,7 @@ export function ajustes(S) {
   const ew = enApp ? nativo.estadoWeb() : null;
   h += `<div class="ajuste"><div class="c"><b>Versión ${VERSION}</b><span>${enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}${ew && ew.activa ? ' · puesta al día sola, sin reinstalar' : ''}` : enWeb ? 'En el navegador: siempre la última' : 'En el navegador (ejemplo)'}</span></div>${enApp ? '<button class="btn chico sec" data-accion="buscarVersion">Buscar nueva</button>' : ''}</div>`;
   h += `<div class="ajuste"><div class="c"><b>Novedades</b><span>Lo que trae cada versión y lo que arregla</span></div><button class="btn chico sec" data-accion="novedades">Ver</button></div>`;
+  if (avisosGuardados().admin && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Quién usa la app</b><span>Solo lo ves tú: quién de tu liga la tiene, cuándo entró y quién está dentro ahora</span></div><button class="btn chico" data-accion="quienUsa">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Avisar de un fallo</b><span>Me llega a mí con lo que necesito para arreglarlo y te contesto en la app. También está arriba, en «Fallo»</span></div><button class="btn chico" data-accion="avisos">Avisar</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google en esta sesión</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;
   if ((enApp || enWeb) && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;
@@ -474,6 +480,41 @@ function bandejaAvisos(A) {
   return h;
 }
 
+/* ================= QUIÉN USA LA APP (el dueño) ================= */
+export function quienUsaHTML(S) {
+  const Q = S.quien || {};
+  let h = `<div class="hoja-cab"><h2>Quién usa la app</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  if (Q.cargando) return `${h}<p class="t2">Mirando…</p>`;
+  if (Q.error) return `${h}<div class="error-c">${esc(Q.error)}</div>`;
+  const lista = Q.lista || [], ahora = Q.ahora || Date.now();
+  const porUid = new Map(lista.map((x) => [String(x.uid), x]));
+  const D = S.D;
+  const tabla = D ? [...D.clasif].sort((a, b) => a.pos - b.pos) : [];
+  const deLiga = new Set();
+  const DENTRO = 12 * 60e3;
+  const fila = (nombre, equipo, x) => {
+    const dentro = x && ahora - x.ultima < DENTRO;
+    const donde = x ? (x.canal === 'web' ? 'web' : x.canal === 'play' ? 'Google Play' : 'Android') : '';
+    const sub = !x ? 'Aún no ha entrado'
+      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(x.v || '')}${x.segHoy ? ` · ${Math.round(x.segHoy / 60)} min hoy` : ''}`;
+    return `<div class="quien-f ${x ? (dentro ? 'dentro' : 'si') : 'no'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${sub}</span></div>${x && x.primera ? `<small>desde ${esc(cuando(x.primera, { hora: false }))}</small>` : ''}</div>`;
+  };
+  let filas = '';
+  for (const e of tabla) {
+    const x = porUid.get(String(e.managerId)) || porUid.get(String(e.userId));
+    if (x) deLiga.add(String(x.uid));
+    filas += fila(e.manager || e.nombre, e.manager ? e.nombre : '', x);
+  }
+  const conApp = tabla.filter((e) => porUid.has(String(e.managerId)) || porUid.has(String(e.userId))).length;
+  const dentro = lista.filter((x) => ahora - x.ultima < DENTRO).length;
+  h += `<p class="quien-res"><b>${conApp} de ${tabla.length}</b> de tu liga han entrado en la app${dentro ? ` · <b>${dentro}</b> dentro ahora` : ''}.</p>`;
+  h += `<div class="quien-l">${filas}</div>`;
+  const fuera = lista.filter((x) => !deLiga.has(String(x.uid)));
+  if (fuera.length) h += `<div class="grupo"><span>De fuera de tu liga</span></div><div class="quien-l">${fuera.map((x) => fila(x.nombre || 'Sin nombre', x.equipo, x)).join('')}</div>`;
+  h += `<p class="peq apag" style="margin-top:14px">«Dentro ahora» es que ha tenido la app abierta en los últimos 12 minutos. Se apunta al abrirla con su cuenta de LaLiga (no en la liga de ejemplo).</p>`;
+  return h;
+}
+
 /* ================= DIAGNÓSTICO ================= */
 export function textoDiagnostico(S) {
   const s = sesion();
@@ -492,6 +533,7 @@ export function textoDiagnostico(S) {
     (() => {
       const M = S.M;
       if (!D || !M || !M.dineroDe) return 'Dinero de los rivales: sin datos';
+      if (bloqueada('dineroRivales')) return 'Dinero de los rivales: bloqueado en esta cuenta';
       const m1 = (v) => String(Math.round(num(v) / 1e5) / 10);
       const ex = Object.entries(D.dineros || {}).filter(([tid]) => tid !== D.yo.teamId);
       const hm = M.histMov || {};

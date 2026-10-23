@@ -1,6 +1,7 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, avisoOnce } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, avisoOnce, candadoMini } from './comunes.js';
+import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores } from './ia.js';
 import { md } from './texto.js';
@@ -183,16 +184,17 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
   const dudas = xs.filter((x) => x.j.estado === 'doubtful').length;
   const abiertas = xs.filter((x) => x.abierta).length, riesgo = xs.filter((x) => x.riesgo === 'alto').length;
   void suben; void bajan;
+  const sinI = bloqueada('inercia');
   const chips = [
-    giro && `<span class="ch mal">${giro} ha${giro > 1 ? 'n' : ''} girado</span>`,
-    frena && `<span class="ch duda">${frena} frenando</span>`,
+    !sinI && giro && `<span class="ch mal">${giro} ha${giro > 1 ? 'n' : ''} girado</span>`,
+    !sinI && frena && `<span class="ch duda">${frena} frenando</span>`,
     malos && `<span class="ch mal">${malos} de baja</span>`,
     dudas && `<span class="ch duda">${dudas} en duda</span>`,
     riesgo && `<span class="ch mal">${icono('abierto')}${riesgo} cláusula${riesgo > 1 ? 's' : ''} en riesgo</span>`,
   ].filter(Boolean);
   void abiertas;
   const proy = xs.reduce((s, x) => s + num(x.inercia && x.inercia.proyJ), 0);
-  const conProy = M.proxima && Math.abs(proy) >= 100000;
+  const conProy = !sinI && M.proxima && Math.abs(proy) >= 100000;
   if (!chips.length && !conProy) return '';
   let h = `<div class="eq-hoy">${corto ? '' : `<div class="eq-hoy-t">${icono('equipo')}<b>Tu equipo hoy</b><button class="mas" data-accion="resumen">Detalle</button></div>`}${chips.length ? `<div class="chs">${chips.join('')}</div>` : ''}`;
   if (conProy) h += `<p class="eq-hoy-m">Hasta la jornada, con la inercia de cada uno: <b class="${clase(proy)}">${eur(proy, { signo: true })}</b></p>`;
@@ -560,7 +562,7 @@ export function equipo(S) {
           sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}`,
           pills: [
             estadoPill(x.j),
-            x.ventaInercia && !op(x.pid) ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : '',
+            x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : '',
             M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
             x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
             M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
@@ -620,7 +622,7 @@ export function rivales(S) {
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} 7d</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>` : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales') ? candadoMini('dineroRivales', 'Dinero') : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga') ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div><div class="d apag">pts${e.puntosJornada ? ` · ${e.puntosJornada} últ.` : ''}</div></div></button>`;
     }).join('');

@@ -24,6 +24,12 @@
  *   POST /uso                 { seg }: suma esos segundos al tiempo de hoy de quien llama (hora de Madrid) y devuelve el
  *                             total, para que el límite diario de minutos cuente igual en la app y en la web.
  *
+ *   Quién usa la app (para que el dueño vea quién de su liga la tiene y quién está dentro):
+ *   POST /hola                { v, canal, app, liga, equipo }: la app avisa de que está abierta (al abrirla y cada 10
+ *                             minutos a la vista). Se apunta como mucho cada 9 minutos por cuenta.
+ *   GET  /hola/todos          (el dueño) cada cuenta con su nombre, equipo, versión, primera y última vez y sus minutos
+ *                             de hoy. Se borra a los 90 días sin abrir la app.
+ *
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
 
@@ -257,6 +263,39 @@ async function uso(req, env, c) {
   return json({ dia, seg }, 200, c);
 }
 
+/* ---------- quién usa la app ---------- */
+const VIVE_HOLA = 90 * 86400;
+async function hola(req, env, c, ruta) {
+  if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  if (ruta === '/hola' && req.method === 'POST') {
+    const b = await req.json().catch(() => ({})) || {};
+    const k = `p:${u.uid}`;
+    const ya = await env.VINCULOS.getWithMetadata(k);
+    const m = ya && ya.metadata ? ya.metadata : null;
+    const ahora = Date.now();
+    const nuevo = {
+      uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20), v: corta(b.v, 12),
+      canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
+      primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
+    };
+    // (Cloudflare deja unas mil escrituras al día gratis: cada cuenta, como mucho una cada 9 minutos, salvo que cambie la versión)
+    const cambia = !m || m.v !== nuevo.v || m.canal !== nuevo.canal || m.equipo !== nuevo.equipo;
+    if (!m || cambia || ahora - (m.ultima || 0) > 9 * 60e3) await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo });
+    return json({ ok: true }, 200, c);
+  }
+  if (!adminsDe(env).includes(u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
+  if (ruta === '/hola/todos' && req.method === 'GET') {
+    const dia = hoyMadrid();
+    const ks = (await listar(env, 'p:', 500)).filter((k) => k.metadata);
+    const seg = await Promise.all(ks.slice(0, 100).map((k) => env.VINCULOS.get(`u:${k.metadata.uid}:${dia}`)));
+    const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: Number(seg[i]) || 0 })).sort((a, b) => b.ultima - a.ultima);
+    return json({ lista, ahora: Date.now() }, 200, c);
+  }
+  return json({ e: 'No existe' }, 404, c);
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -270,6 +309,7 @@ export default {
       if (url.pathname === '/vincular/usar' && req.method === 'POST') return await usar(req, env, c);
       if (url.pathname === '/fallos' || url.pathname.startsWith('/fallos/')) return await fallos(req, env, c, url.pathname);
       if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
+      if (url.pathname === '/hola' || url.pathname === '/hola/todos') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
     } catch (e) {

@@ -1,10 +1,18 @@
 {
-  "_": "Minutos al día que puede usar la app cada equipo de la liga. «minutos»: para todos los que no salen en «equipos». «equipos»: por el nombre del equipo (o su id), con sus minutos. «sinLimite»: los que no tienen límite. Solo cuenta el tiempo con la app abierta y a la vista, y se reinicia a las 00:00 (hora de Madrid). La app lo lee de aquí: cambiarlo y subirlo a main lo cambia para todos sin sacar versión. «abre»: la fecha y hora (de Madrid) a partir de la que se puede usar; hasta entonces, a todos menos a los de «sinLimite» les sale la cuenta atrás. Para quitarlo, bórralo o pon una fecha pasada. «mensajeApertura»: una frase que sale en la cuenta atrás.",
+  "_": "Minutos al día que puede usar la app cada equipo de la liga. «minutos»: para todos los que no salen en «equipos». «equipos»: por el nombre del equipo (o su id), con sus minutos. «sinLimite»: los que no tienen límite. Solo cuenta el tiempo con la app abierta y a la vista, y se reinicia a las 00:00 (hora de Madrid). La app lo lee de aquí: cambiarlo y subirlo a main lo cambia para todos sin sacar versión. «abre»: la fecha y hora (de Madrid) a partir de la que se puede usar; hasta entonces, a todos menos a los de «sinLimite» les sale la cuenta atrás. Para quitarlo, bórralo o pon una fecha pasada. «mensajeApertura»: una frase que sale en la cuenta atrás. «bloqueadas»: las funciones top bloqueadas hasta los anuncios (dineroRivales, quienPaga, inercia); quítalas de la lista para abrirlas a todos. «todoAbierto»: los equipos que las ven todas.",
   "abre": "2026-10-23T20:00:00+02:00",
   "mensajeApertura": "No seáis impacientes… Va por ti, Domy.",
   "minutos": 10,
   "equipos": {},
   "sinLimite": [
+    "U.D. Carlista"
+  ],
+  "bloqueadas": [
+    "dineroRivales",
+    "quienPaga",
+    "inercia"
+  ],
+  "todoAbierto": [
     "U.D. Carlista"
   ]
 }

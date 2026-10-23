@@ -59,6 +59,14 @@ export async function marcarVisto(id) {
   LS.set('avisos', { ...a, lista: (a.lista || []).map((x) => (x.id === id ? { ...x, vista: true } : x)) });
 }
 export const todosAvisos = () => pedirWorker('GET', '/fallos/todos');
+
+/* quién usa la app: cada app avisa al abrirse (y cada 10 minutos a la vista) y el dueño ve la lista */
+export async function saludar(datos) {
+  if (Date.now() - LS.get('hola-t', 0) < 9 * 60e3) return;
+  LS.set('hola-t', Date.now());
+  try { await pedirWorker('POST', '/hola', datos); } catch (e) { LS.set('hola-t', 0); }
+}
+export const quienUsa = () => pedirWorker('GET', '/hola/todos');
 export const unAviso = (id) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}`);
 export async function responderAviso(id, respuesta) {
   const r = await pedirWorker('POST', '/fallos/responder', { id, respuesta });

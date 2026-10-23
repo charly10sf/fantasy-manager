@@ -9,6 +9,7 @@ import { K } from './datos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo } from './operaciones.js';
 import { recsDe, aprendeTxt } from './aprende.js';
 import { guardarFoto, leerFoto } from './fotos.js';
+import { bloqueada } from './limite.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -302,7 +303,7 @@ function previaTxt(M, j) {
 function inerciaTxt(M, j) {
   const x = M.inercia ? M.inercia(j.id) : null;
   if (!x || x.fase === 'plano') return null;
-  const F = { giro: 'HA GIRADO A LA BAJA', baja: 'BAJANDO', parado: 'ESTANCADO TRAS SUBIR', frena: 'FRENANDO', acelera: 'acelerando', sube: 'subiendo' }[x.fase] || x.fase;
+  const F = { giro: 'HA GIRADO A LA BAJA', baja: 'BAJANDO', parado: 'ESTANCADO TRAS SUBIR', frena: 'FRENANDO', acelera: 'acelerando', sube: 'subiendo', rebote: `REBOTE PEQUEÑO TRAS CAER UN ${x.rebote ? Math.round(x.rebote.caida * 100) : '?'} % EN UN MES (cerca de su mínimo; pararse aquí NO es girar ni motivo para vender)` }[x.fase] || x.fase;
   return `INERCIA ${F}: cada día ${x.R.map((r) => eur(r, { signo: true })).join(' → ')}${x.fase === 'frena' ? ` (deja de subir en ~${Math.max(1, Math.round(x.giroEn))} d)` : ''}${['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; hasta la jornada ${eur(x.proyJ, { signo: true })}` : ''}`;
 }
 
@@ -596,7 +597,18 @@ const PULLITAS = {
   no: 'SIN PULLITAS: no hagas bromas ni te metas con nadie. Si sale una noticia extradeportiva que afecte al jugador, cuéntala en una línea, seria. Lo extradeportivo NUNCA es motivo para comprar ni vender. En «noticias», lo extradeportivo va con efecto «neutro».',
 };
 /** las instrucciones de la IA con las pullitas elegidas */
-const sistemaIA = () => SISTEMA.replace('{{PULLITAS}}', PULLITAS[cfgIA().pullitas] || PULLITAS.normal);
+// las funciones top bloqueadas (hasta los anuncios): la IA las usa para decidir, pero no da las cifras
+const SOBRE_BLOQUEO = {
+  dineroRivales: 'cuánto dinero tiene cada rival (no des cifras de su saldo ni de lo que pueden gastar)',
+  quienPaga: 'qué rivales pueden pagar cada una de mis cláusulas (no digas nombres de quién me la puede pagar ni cuánto subirla para que no le llegue a nadie)',
+  inercia: 'cuántos días le quedan subiendo o cuándo gira cada jugador (puedes decir si sube o baja, pero no le pongas días ni fecha al giro)',
+};
+function reglasBloqueo() {
+  const b = Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k));
+  if (!b.length) return '';
+  return `\n\nFUNCIONES BLOQUEADAS EN ESTA CUENTA (se desbloquearán viendo un anuncio, más adelante): ${b.map((k) => SOBRE_BLOQUEO[k]).join('; ')}. Úsalo para decidir bien, pero no lo cuentes. Si te lo pide, dile en una frase que es una función top que se desbloqueará pronto viendo un anuncio.`;
+}
+const sistemaIA = () => SISTEMA.replace('{{PULLITAS}}', PULLITAS[cfgIA().pullitas] || PULLITAS.normal) + reglasBloqueo();
 
 /* ---------------- el plan del día ---------------- */
 export const planes = () => LS.get(K('planes'), []);

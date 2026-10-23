@@ -197,3 +197,20 @@ export function dineroLargo(d) {
   const c = d.cuenta;
   return `Unos ${eur(d.v)} (± ${eur(d.margen)}). LaLiga no lo da: sale de sus movimientos desde el principio. Empezasteis con lo mismo (${c ? eur(c.base) : '100 M'} contando las recompensas diarias), ${c ? `y lo que ha comprado, vendido, cobrado y ganado por jornada le deja en ${eur(c.mov, { signo: true })}` : 'más lo que ha vendido y cobrado, menos lo que ha comprado'}${c && c.subidas ? `; además se ha gastado unos ${eur(c.subidas)} en subir ${c.nSubidas} cláusula${c.nSubidas === 1 ? '' : 's'} (se ve en su plantilla)` : ''}. La recompensa diaria no sale en ningún sitio, por eso el margen.${d.fiable === 'media' ? '' : ' Tómalo con cuidado.'}`;
 }
+
+/* ---------- las funciones top, bloqueadas (limite.js: bloqueada) ---------- */
+export const BLOQUEO = {
+  dineroRivales: ['Dinero de los rivales', 'Cuánto tiene cada rival y hasta dónde puede gastar.'],
+  quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales tienen dinero para quitarte a cada jugador y cuánto subir la cláusula para que no le llegue a nadie.'],
+  inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor, cuántos días le quedan subiendo y cuándo venderlo antes de que baje.'],
+};
+/** la caja de una función bloqueada (se toca para ver qué es) */
+export function candado(clave) {
+  const [t, x] = BLOQUEO[clave] || ['Función top', ''];
+  return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)} Se desbloqueará pronto viendo un anuncio.</span></span></button>`;
+}
+/** lo mismo, en pequeño (en una fila) */
+export function candadoMini(clave, texto) {
+  const [t] = BLOQUEO[clave] || ['Función top'];
+  return `<span class="pill bloq-p" data-accion="bloqueada" data-clave="${esc(clave)}">${icono('candado')}${esc(texto || t)}</span>`;
+}

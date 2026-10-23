@@ -13,14 +13,14 @@ import { ultimaVersion, api } from './api.js';
 import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
-import { ponerEquipos } from './comunes.js';
+import { ponerEquipos, BLOQUEO } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite, mirarLimite, estadoLimite, versionNueva } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, numeroAvisos, hayQueMirar, avisosGuardados } from './soporte.js';
+import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
@@ -271,12 +271,21 @@ function ir(vista, { arriba = true } = {}) {
 const bajarChat = () => setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 30);
 
 /* ---------------- datos ---------------- */
+/** tu equipo de verdad (el de tu cuenta de LaLiga, no el que se elige a mano en Ajustes) */
+function yoReal() {
+  const yo = S.D && S.D.yo, cl = (S.D && S.D.clasif) || [];
+  const real = yo && yo.userId ? cl.find((e) => e.userId === yo.userId || e.managerId === yo.userId) : null;
+  const eq = real || (S.M && S.M.yo) || null;
+  return eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId } : null;
+}
 function rehacer() {
   S.c = cfg();
   S.H = historico();
   S.det = { ...detalles(), ...S.det };
   ponerEquipos(S.D.equipos);
   S.M = analizar(S.D, S.H, S.c, extraM());
+  // quién eres, para lo bloqueado (antes de pintar nada)
+  fijarYo(yoReal(), enDemo());
   // lo previsto frente a lo que pasó: corrige los puntos esperados de la próxima pasada y lo ve la IA
   aprender(S.D, S.M, S.det);
   montarPlan();
@@ -417,7 +426,17 @@ async function cargar({ silencio = false } = {}) {
 }
 
 /** lo que va después de cargar, sin bloquear: las fichas de los jugadores (forma y caras) y el plan con IA */
+/** avisa al servidor de que la app está abierta (para la lista «Quién usa la app» del dueño); nada en la de ejemplo */
+function saludarSiToca() {
+  if (!S.D || enDemo() || !haySesion() || document.hidden) return;
+  const yo = S.M && S.M.yo;
+  saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '' });
+}
+setInterval(saludarSiToca, 10 * 60e3);
+// con la configuración nueva de limites.json puede cambiar lo que está bloqueado
+window.addEventListener('limites-nuevos', () => { if (S.D && S.M && !S.hoja) pintar(); });
 async function despues() {
+  saludarSiToca();
   // onces probables y noticias (de fuera de LaLiga) y, a la vez, las fichas de los jugadores
   const fuentes = fuentesExternas(S.D, S.M).then((f) => { if (f) { S.fuentes = f; rehacer(); if (!S.hoja) pintar(); } }).catch((e) => console.warn('fuentes', e));
   try {
@@ -445,6 +464,14 @@ function repintarAvisos() {
   if (r) S.av.respBorrador = r.value;
   if (dg) S.av.sinDiag = !dg.checked;
   if (S.tipoHoja && S.tipoHoja[0] === 'avisos') repintarHoja();
+}
+/** (el dueño) quién de la liga tiene la app, cuándo entró y quién está dentro ahora */
+async function abrirQuien() {
+  S.quien = { cargando: true };
+  hoja('quien');
+  try { const r = await quienUsa(); S.quien = { lista: r.lista || [], ahora: r.ahora || Date.now() }; }
+  catch (e) { S.quien = { error: e.estado === 403 ? 'Esto solo lo ve el dueño de la app.' : e.message || String(e) }; }
+  if (S.tipoHoja && S.tipoHoja[0] === 'quien') repintarHoja();
 }
 async function abrirAvisos() {
   S.av = { cargando: true, borrador: (S.av && S.av.borrador) || '' };
@@ -620,7 +647,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -1067,6 +1094,15 @@ document.addEventListener('click', async (ev) => {
     case 'ajustes': hoja('ajustes'); break;
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
+    case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
+    case 'bloqueada': {
+      const [t, x] = BLOQUEO[d.clave] || ['Función top', ''];
+      abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
+        <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
+        <p>Es una de las funciones top de Fantasy Manager. De momento está bloqueada: <b>muy pronto se desbloqueará viendo un anuncio corto</b>, gratis.</p>
+        <button class="btn ancho" data-accion="cerrarHoja">Entendido</button></div>`);
+      break;
+    }
     case 'mandarAviso': enviarAviso(); break;
     case 'tutorial': lanzarTutorial(); break;
     case 'permisoApertura': if (!cfgAvisos().on) guardarCfgAvisos({ on: true }); nativo.pedirPermisoAvisos(); break;

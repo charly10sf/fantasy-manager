@@ -3,13 +3,21 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.4.3';
+export const VERSION = '0.4.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.4.4', f: '2026-10-23', h: '07:15', t: 'Funciones top y quién usa la app',
+    cosas: [
+      { tipo: 'nuevo', d: 'escudo', t: 'Funciones top', x: 'El dinero de cada rival, quién puede pagar tus cláusulas (y cuánto subirlas para que no le llegue a nadie) y cuándo gira un jugador son funciones top: se desbloquearán pronto viendo un anuncio corto. Mientras, salen con un candado; tócalo para ver qué hacen. El plan y la IA las siguen usando para decidir.', ir: { v: 'rivales' } },
+      { tipo: 'nuevo', d: 'campana', t: 'Quién usa la app', x: 'El desarrollador ve, en Ajustes, quién de la liga tiene la app, cuándo entró por última vez y quién está dentro ahora. Está contado en la política de privacidad.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'Un rebote no es un giro', x: 'Un jugador que viene de bajar semanas y rebota un poco ya no sale como «estancado después de subir, véndelo antes de que gire»: es un rebote pequeño cerca de su mínimo, y eso solo no es motivo para venderlo. El plan tampoco lo cuenta como venta por inercia.' },
+    ],
+  },
   {
     v: '0.4.3', f: '2026-10-23', h: '05:56', t: 'Lo que llevas hoy',
     cosas: [
