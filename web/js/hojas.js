@@ -358,7 +358,7 @@ export function ajustes(S) {
   if (enDemo()) h += `<div class="ajuste"><div class="c"><b>Liga de ejemplo</b><span>Los datos son inventados</span></div>${enApp || enWeb ? '<button class="btn chico" data-accion="salirDemo">Usar la mía</button>' : ''}</div>`;
   else h += `<div class="ajuste"><div class="c"><b>${esc((q && (q.nombre || q.correo)) || 'Conectado')}</b><span>${esc(q && q.correo ? q.correo : '')}${ses && ses.desde ? ` · desde ${cuando(ses.desde, { hora: false })}` : ''}</span></div><button class="btn chico sec" data-accion="salir">${icono('salir')}Salir</button></div>`;
   // la misma liga en el ordenador: la app deja la sesión con un código de un solo uso
-  if (enApp && !enDemo() && ses) h += `<div class="ajuste"><div class="c"><b>Abrir en el ordenador</b><span>Te da un código para entrar en la versión web con tu liga, tu clave de la IA y lo que has apuntado</span></div><button class="btn chico" data-accion="vincularWeb">Código</button></div>`;
+  if ((enApp || enWeb) && !enDemo() && ses) h += `<div class="ajuste"><div class="c"><b>${enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo'}</b><span>${enApp ? 'Te da un código para entrar en la versión web con tu liga, tu clave de la IA y lo que has apuntado' : 'Te da un código para entrar con tu cuenta en la web desde el iPhone u otro ordenador, sin volver a hacer lo del F12'}</span></div><button class="btn chico" data-accion="vincularWeb">Código</button></div>`;
   if (S.D && S.D.ligas && S.D.ligas.length > 1) h += `<div class="ajuste"><div class="c"><b>Liga</b></div><select data-cambia="liga">${S.D.ligas.map((l) => `<option value="${esc(l.id)}" ${S.D.liga.id === l.id ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('')}</select></div>`;
 
   h += `<div class="grupo"><span>IA (Gemini, gratis)</span></div>`;
@@ -411,9 +411,9 @@ export function vinculoWeb(S) {
   const v = S.vinculo;
   if (!v) return nada('No hay código.');
   const cod = String(v.codigo || '');
-  return `<div class="hoja-cab"><h2>Abrir en el ordenador</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>
+  return `<div class="hoja-cab"><h2>${enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo'}</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>
   <ol class="pasos-web">
-    <li>En el ordenador, abre <b>charly10sf.github.io/fantasy-manager</b></li>
+    <li>En ${enApp ? 'el ordenador' : 'el otro dispositivo (el iPhone o el otro ordenador)'}, abre <b>charly10sf.github.io/fantasy-manager</b></li>
     <li>Escribe este código y pulsa Entrar:</li>
   </ol>
   <div class="codigo-grande">${esc(cod.slice(0, 4))}<span>${esc(cod.slice(4))}</span></div>

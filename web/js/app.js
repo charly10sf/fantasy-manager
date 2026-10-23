@@ -63,11 +63,11 @@ function pantallaEntrar(error = '') {
 function entrarWebHTML() {
   return `<div class="entrar-codigo">
       <b>${icono('usuario')}Entra con el código de la app</b>
-      <span>En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. Te da un código de 8 letras y números que dura 10 minutos.</span>
+      <span>En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. O, si ya has entrado en la web de un ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código de 8 letras y números que dura 10 minutos.</span>
       <div class="codigo-in"><input id="codigoWeb" maxlength="9" placeholder="ABCD2345" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="usarCodigo"><button class="btn" data-accion="usarCodigo">Entrar</button></div>
     </div>
     <details class="sin-app"><summary>No tengo la app en el móvil</summary>
-      <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano:</p>
+      <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un código para escribirlo aquí en el iPhone.</p>
       <ol>
         <li>Pulsa <b>Abrir la página de LaLiga</b>: se abre en otra pestaña.</li>
         <li>En esa pestaña, antes de entrar, abre las herramientas del navegador (<b>F12</b>), ve a <b>Red</b> y marca <b>Conservar registro</b>.</li>
@@ -995,7 +995,10 @@ document.addEventListener('click', async (ev) => {
       try {
         const c = cfg();
         const datos = { sesion: sesion(), cfg: { ligaId: c.ligaId || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}) };
-        const r = await http('POST', `${WORKER_PUBLICO}/vincular`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(datos), tiempo: 20000 });
+        // en la app por la parte nativa; en la web, directo al Worker (no pasa por su reenvío)
+        const r = enApp
+          ? await http('POST', `${WORKER_PUBLICO}/vincular`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(datos), tiempo: 20000 })
+          : await fetch(`${WORKER_PUBLICO}/vincular`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(datos) }).then(async (x) => ({ s: x.status, b: await x.text() }), (e) => ({ s: 0, e: e.message }));
         let j = null;
         try { j = JSON.parse(r.b || 'null'); } catch (e2) { j = null; }
         if (r.s !== 200 || !j || !j.codigo) throw new Error(j && j.e ? j.e : r.s ? `el servidor de la web responde ${r.s}` : `sin conexión (${r.e})`);
