@@ -14,7 +14,7 @@ export const NOVEDADES = [
     v: '0.4.3', f: '2026-10-23', h: '06:00', t: 'Lo que llevas hoy',
     cosas: [
       { tipo: 'nuevo', d: 'plan', t: 'Lo que llevas hoy', x: 'Una lista en Hoy con lo que has hecho de verdad en LaLiga desde el último cambio de mercado: lo terminado (fichajes, ventas, cláusulas, blindajes), lo que está en marcha (pujas, ofertas, lo que tienes a la venta) y si te han clausulado a alguien. Cada cosa dice si venía en el plan o fue por tu cuenta, y abajo, lo que has movido de dinero y lo que te queda del plan.', ir: { v: 'hoy' } },
-      { tipo: 'mejora', d: 'lista', t: 'El plan se tacha solo', x: 'Cuando haces en LaLiga un paso del plan, se marca solo, sin tocar «Hecho», y dice qué ha visto: «Vendido por 38 M», «Pujado 930 mil, se resuelve a las 20:00», «Cláusula subida a 16,8 M». Lo que está pendiente de resolverse sale en amarillo.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'semaforo', t: 'El plan se tacha solo', x: 'Cuando haces en LaLiga un paso del plan, se marca solo, sin tocar «Hecho», y dice qué ha visto: «Vendido por 38 M», «Pujado 930 mil, se resuelve a las 20:00», «Cláusula subida a 16,8 M». Lo que está pendiente de resolverse sale en amarillo.', ir: { v: 'hoy' } },
       { tipo: 'arreglo', d: 'arreglo', t: 'Lo ya hecho no sale como error', x: 'Antes, al vender al jugador que decía el plan, ese paso pasaba a «No lo hagas: no es tuyo» y su dinero se contaba dos veces en el saldo. Ahora queda como hecho y el saldo cuadra.', ir: { v: 'hoy' } },
     ],
   },
