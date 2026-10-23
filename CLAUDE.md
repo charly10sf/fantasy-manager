@@ -18,7 +18,7 @@ Repo: charly10sf/fantasy-manager (público).
 ## Cómo está hecha
 
 - `web/`: la app entera, módulos JS sin compilación.
-  - motor.js: cálculos (valor, inercia, cláusulas, mercado, qué vende cada rival).
+  - motor.js: cálculos (valor, inercia, cláusulas, mercado, qué vende cada rival). Incluye el cierre de cláusulas de LaLiga: nadie puede clausular en las 24 h antes del primer partido de la jornada y se reabren a esa hora (`M.vedas`, `M.vedaAhora`; cada ficha lleva `veda` y `protegidoHasta` ya es la hora en que de verdad se puede pagar).
   - ia.js: plan del día y chat con Gemini (clave gratuita de cada usuario).
   - app.js: arranque, acciones, tutorial, actualizaciones solas.
   - vistas.js: pestañas. hojas.js: fichas de jugador y rival, Ajustes, diagnóstico.
