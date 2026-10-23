@@ -630,9 +630,9 @@ const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map(
 export function ia(S) {
   if (!hayClave()) {
     return `<div class="ia-alta"><div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>
-      <p class="entradilla">Gemini, de Google, gratis con tu propia clave. Hace el plan de cada día leyendo las noticias y contesta lo que le preguntes de tu liga.</p>
+      <p class="entradilla">Gemini, de Google, gratis con tu propia clave: no pide tarjeta y se saca en dos minutos. Hace el plan de cada día leyendo las noticias y contesta lo que le preguntes de tu liga, también con capturas.</p>
       <div class="paso"><i>1</i><span>Abre <a href="#" data-abrir="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> con tu cuenta de Google.</span></div>
-      <div class="paso"><i>2</i><span>Pulsa <b>Create API key</b>. Mejor en un proyecto nuevo, para que no comparta el cupo gratis con otras apps.</span></div>
+      <div class="paso"><i>2</i><span>Pulsa <b>Create API key</b> (si te pide aceptar las condiciones, acéptalas). Mejor en un proyecto nuevo, para que no comparta el cupo gratis con otras apps.</span></div>
       <div class="paso"><i>3</i><span>Cópiala y pégala aquí:</span></div>
       <input class="campo-t" id="claveIA" placeholder="AIza…" autocomplete="off" spellcheck="false">
       <button class="btn ancho" style="margin-top:12px" data-accion="guardarClave">${icono('ok')}Guardar y hacer el plan</button></div>`;

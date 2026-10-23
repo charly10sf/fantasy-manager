@@ -432,7 +432,7 @@ export function bienvenida(S) {
   const botones = i === 1 && !hayClave()
     ? `<button class="btn ancho" data-accion="bienIA">${icono('ia')}Activarla ahora</button><button class="btn sec ancho" data-accion="bienSig">Más tarde</button>`
     : ultimo
-      ? `${enApp ? `<button class="btn ancho" data-accion="bienAvisos">${icono('campana')}Activar los avisos</button>` : ''}<button class="btn ${enApp ? 'sec ' : ''}ancho" data-accion="bienFin">Empezar</button>`
+      ? `${enApp && !nativo.avisosPermitidos() ? `<button class="btn ancho" data-accion="bienAvisos">${icono('campana')}Activar los avisos</button><button class="btn sec ancho" data-accion="bienFin">Empezar</button>` : '<button class="btn ancho" data-accion="bienFin">Empezar</button>'}`
       : `<button class="btn ancho" data-accion="bienSig">Siguiente</button>`;
   return `<div class="bien" style="--acc:${p.acc}">
     <div class="hoja-cab"><span class="eti">Bienvenido · ${i + 1} de ${PASOS_BIEN.length}</span><button class="b-ico" data-accion="bienFin" aria-label="Saltar">${icono('cerrar')}</button></div>
