@@ -11,7 +11,7 @@ export const VERSION = '0.4.1a';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.4.1a', f: '2026-10-23', h: '03:15', t: 'Hora de apertura',
+    v: '0.4.1a', f: '2026-10-23', h: '03:10', t: 'Hora de apertura',
     cosas: [
       { tipo: 'nuevo', d: 'noche', t: 'Todos a la vez', x: 'La app puede tener una hora de apertura: hasta entonces, a los nuevos les sale una cuenta atrás (pueden instalarla y entrar con su cuenta, pero no ver nada) y no les llega ningún aviso. A esa hora se abre sola y se pone al día.' },
     ],

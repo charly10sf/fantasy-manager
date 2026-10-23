@@ -982,6 +982,7 @@ a.btn { text-decoration: none; }
 .lim-in p { margin: 0 0 12px; font-size: 17px; line-height: 1.5; color: var(--texto2); }
 .lim-in .lim-frase { color: var(--texto); font-weight: 600; }
 .lim-in .lim-vuelve { font-size: 15px; color: var(--apagado); }
+.lim-in .lim-msg { margin: 18px auto 14px; padding: 12px 16px; border-radius: 14px; background: var(--rojo-s); color: var(--texto); font: 700 22px/1.2 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; max-width: 340px; }
 body.limitado { overflow: hidden; }
 
 /* toques más cómodos: los botones de texto pequeños ganan zona de toque sin cambiar de aspecto */

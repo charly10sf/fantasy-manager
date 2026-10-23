@@ -94,11 +94,12 @@ function tapar(min, usados) {
   document.body.classList.add('limitado');
 }
 /** la cuenta atrás hasta que se abre */
-function taparHastaApertura(t) {
+function taparHastaApertura(t, mensaje) {
   let el = document.getElementById('limite');
   const html = `<div class="lim-in">${LOGO}<h1 id="limT">Se abre ${esc(cuandoAbre(t))}</h1>
     <p>Todavía no se puede usar: empezamos todos a la vez, con el cambio de mercado.</p>
     <p class="lim-frase">${t - Date.now() < 60e3 ? 'Falta menos de un minuto' : `Faltan ${esc(dura(t - Date.now()))}`}</p>
+    ${mensaje ? `<p class="lim-msg">${esc(mensaje)}</p>` : ''}
     <p class="lim-vuelve">Ya has entrado con tu cuenta: a esa hora, abre la app y estará todo listo.</p></div>`;
   if (!el) {
     el = document.createElement('div');
@@ -129,7 +130,7 @@ export function iniciarLimite(quien, aviso = () => {}, alAbrir = () => {}) {
     const cerrada = q.demo ? null : cerradaHasta(cfg, q.yo);
     const estaba = estadoLimite.cerrada;
     estadoLimite.cerrada = cerrada;
-    if (cerrada) { taparHastaApertura(cerrada); return; }
+    if (cerrada) { taparHastaApertura(cerrada, cfg && cfg.mensajeApertura); return; }
     if (estaba) { destapar(); alAbrir(); }
     const min = q.demo ? null : minutosDe(cfg, q.yo);
     const usados = usoHoy();
