@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.4.4d';
+export const VERSION = '0.4.4e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.4.4e', f: '2026-10-23', h: '17:00', t: 'Cláusulas cerradas antes de la jornada',
+    cosas: [
+      { tipo: 'arreglo', d: 'escudo', t: 'Nada de clausular en el cierre', x: 'LaLiga no deja clausular a nadie desde 24 h antes del primer partido de la jornada hasta que acaba. La app no lo tenía en cuenta y proponía clausular a uno cuya protección vencía dentro de ese cierre. Ahora esas cláusulas salen como cerradas hasta que acabe la jornada, el plan no las propone (ni blindar, que mientras tanto no hace falta), la IA lo sabe y en Hoy se avisa de cuándo se cierran y cuándo vuelven a abrirse.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.4.4d', f: '2026-10-23', h: '12:50', t: 'El código, también antes de abrir',
     cosas: [

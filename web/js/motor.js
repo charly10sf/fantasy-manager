@@ -215,6 +215,22 @@ export function analizar(D, H, c, extra = {}) {
   M.jornadas = jornadas;
   M.enJuego = jornadas.find((j) => j.ini <= ahora && ahora <= j.fin) || null;
   M.proxima = jornadas.find((j) => j.ini > ahora) || null;
+  // el cierre de cláusulas: LaLiga no deja clausular a nadie desde 24 h antes del primer partido de cada jornada hasta
+  // que acaba (la hora de reapertura es aproximada: el último partido más 2 h). Un aplazado que se juega semanas
+  // después no alarga el cierre: cuenta lo que se juega en los 5 días siguientes al primer partido
+  M.VEDA_H = 24;
+  M.vedas = jornadas.map((j) => {
+    const ultimo = Math.max(...j.partidos.map((p) => p.fecha).filter((t) => t <= j.ini + 5 * DIA));
+    return { n: j.n, ini: j.ini - M.VEDA_H * HORA, fin: ultimo + 2 * HORA };
+  });
+  const vedaEn = (t) => M.vedas.find((v) => t >= v.ini && t < v.fin) || null;
+  M.vedaAhora = vedaEn(ahora);
+  /** si una cláusula que LaLiga deja de proteger en t cae en un cierre de jornada: cuál y cuándo se puede pagar de verdad */
+  M.vedaDe = (t) => {
+    let x = Math.max(t || 0, ahora), v = vedaEn(x), primera = v;
+    while (v) { x = v.fin; v = vedaEn(x); }
+    return primera ? { n: primera.n, cierra: primera.ini, abre: x } : null;
+  };
   const parones = [...PARONES];
   for (let i = 1; i < jornadas.length; i++) {
     const a = jornadas[i - 1], b = jornadas[i];
@@ -645,10 +661,13 @@ export function analizar(D, H, c, extra = {}) {
     const j = J(f.pid), t = M.tend(f.pid);
     // protegida por los 14 días de fichaje o por un blindaje: la que acabe más tarde
     const esc = M.escudoHasta(f.pid);
-    const prot = Math.max(f.protegidoHasta || 0, esc || 0) || null;
+    const protLiga = Math.max(f.protegidoHasta || 0, esc || 0) || null;
+    // y si se abre (o ya está abierta) dentro del cierre de una jornada, no se puede pagar hasta que acabe
+    const veda = M.vedaDe(protLiga);
+    const prot = veda ? veda.abre : protLiga;
     const abierta = !prot || prot <= ahora;
     return {
-      ...f, j, teamId: tid, tend: t, abierta, protegidoHasta: prot, escudo: esc && esc >= (f.protegidoHasta || 0) ? esc : null,
+      ...f, j, teamId: tid, tend: t, abierta, protegidoHasta: prot, protLiga, veda, escudo: esc && esc >= (f.protegidoHasta || 0) ? esc : null,
       abreEn: abierta ? 0 : prot - ahora,
       ratio: j.valor ? f.clausula / j.valor : null,
       sobre: f.clausula - j.valor,
@@ -1706,6 +1725,7 @@ export function planAuto(D, M, c) {
   }
   for (const x of M.mias.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.riesgo !== 'ninguno')) add(x.protegidoHasta, 90, `${hora(x.protegidoHasta)} se acaba la protección de tu ${x.j.nombre}`);
   if (inicio) add(inicio, 100, `${hora(inicio)} empieza la jornada ${M.proxima.n}: saldo en positivo y once revisado antes`);
+  if (inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que acabe la jornada: lo que quieras clausular, antes`);
   const aRevender = [...especula.map((e) => e.j.nombre), ...M.paraRevender.filter((x) => !vendidos.has(x.pid)).map((x) => x.j.nombre)];
   if (aRevender.length && ventana) add(ventana.ponerVenta, 99, `pon a la venta lo de revender (${aRevender.join(', ')}) y acepta las ofertas antes de la jornada`);
   if (M.paron && M.paron.ini > ahora) add(M.paron.ini, 95, 'empieza el parón: los valores se paran, vende a los que estén en lo alto');

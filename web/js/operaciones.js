@@ -4,7 +4,8 @@
    P  pujar por un jugador LIBRE de la liga (subasta a ciegas al cambiar el mercado)
    M  comprar a otro manager un jugador que TIENE A LA VENTA (decide él si acepta)
    T  un trato con otro manager que le has contado a la IA
-   C  clausular a un rival (cláusula abierta ya o que se abre antes de la jornada)
+   C  clausular a un rival (cláusula abierta ya o que se abre antes de que LaLiga cierre las cláusulas, 24 h antes de
+      la jornada)
    A  aceptar la mejor oferta por un jugador tuyo que ya tienes en venta
    V  poner a la venta (o vender) un jugador tuyo
    B  proteger a un jugador tuyo con la cláusula abierta o a punto: con el blindaje gratis de LaLiga (24 h, 2 por
@@ -20,7 +21,8 @@ export function catalogo(D, M, notas = []) {
   const add = (op) => { if (op.j) lista.push(op); };
   const yo = D.yo && D.yo.teamId;
   const ahora = Date.now();
-  const limiteC = M.proxima ? M.proxima.ini : ahora + 3 * DIA;
+  // LaLiga cierra las cláusulas 24 h antes del primer partido: lo que se abra después ya no da tiempo
+  const limiteC = M.proxima ? M.proxima.ini - (M.VEDA_H || 24) * HORA : ahora + 3 * DIA;
 
   // A y V: lo tuyo
   for (const v of M.misVentas || []) {
@@ -48,10 +50,10 @@ export function catalogo(D, M, notas = []) {
     if (!tid || tid === yo || !n.importe || lista.some((o) => o.ref === `M-${n.pid}`) || (M.J(n.pid) || {}).pos === 5) continue;
     add({ ref: `T-${n.pid}`, tipo: 'comprar', trato: true, pid: n.pid, j: M.J(n.pid), precio: n.importe, vendedor: nombreDe(M, tid), vendedorTeamId: tid, nota: n.texto });
   }
-  // C: cláusulas abiertas o que se abren antes de la jornada
+  // C: cláusulas abiertas o que se abren antes del cierre de la jornada
   for (const x of M.clausulas) {
     if (!x.abierta && x.protegidoHasta > limiteC) continue;
-    add({ ref: `C-${x.pid}`, tipo: 'clausular', pid: x.pid, j: x.j, precio: x.clausula, abierta: x.abierta, abre: x.protegidoHasta, de: x.rival.manager || x.rival.nombre, teamId: x.teamId, meLlega: x.meLlega, interes: x.interes, ratio: x.ratio });
+    add({ ref: `C-${x.pid}`, tipo: 'clausular', pid: x.pid, j: x.j, precio: x.clausula, abierta: x.abierta, abre: x.protegidoHasta, veda: x.veda, de: x.rival.manager || x.rival.nombre, teamId: x.teamId, meLlega: x.meLlega, interes: x.interes, ratio: x.ratio });
   }
   const ref = Object.fromEntries(lista.map((o) => [o.ref, o]));
   return { lista, ref };
@@ -96,7 +98,7 @@ export function textoOp(o, M = null) {
       return `COMPRAR a ${o.vendedor} ${j.nombre}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${pide}; es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
     }
     case 'T': return `COMPRAR a ${o.vendedor} ${j.nombre} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
-    case 'C': return `CLAUSULAR a ${o.de} ${j.nombre} pagando su cláusula de ${eur(o.precio)}${sobreTxt}; ${o.abierta ? 'ABIERTA YA' : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : '; NO ME LLEGA el dinero'}`;
+    case 'C': return `CLAUSULAR a ${o.de} ${j.nombre} pagando su cláusula de ${eur(o.precio)}${sobreTxt}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA por la jornada ${o.veda.n}: no se puede pagar hasta que acabe, hacia ${cuando(o.abre)}` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : '; NO ME LLEGA el dinero'}`;
     case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}`;
     case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})`;
     case 'B': {
@@ -132,7 +134,12 @@ export function porQueNo(D, M, o, pid, j) {
   if (acc === 'clausular') {
     if (!tid) return 'No es de nadie: no tiene cláusula que pagar';
     const x = M.clausulas.find((c) => c.pid === pid);
-    return x ? `Su cláusula no se abre hasta ${cuando(x.protegidoHasta)}, después de la próxima jornada` : 'No tiene cláusula';
+    if (!x) return 'No tiene cláusula';
+    if (x.veda) {
+      const ya = x.veda.cierra <= Date.now();
+      return `Las cláusulas ${ya ? 'están cerradas desde' : 'se cierran'} ${cuando(x.veda.cierra)} (24 h antes del primer partido de la jornada ${x.veda.n}) y no se puede clausular a nadie hasta que acabe: la de ${x.j.nombre}, hacia ${cuando(x.protegidoHasta)}`;
+    }
+    return `Su cláusula no se abre hasta ${cuando(x.protegidoHasta)}, después de la próxima jornada`;
   }
   const venta = (M.mercado || []).find((m) => m.pid === pid && m.tipo === 'manager' && m.noVende);
   if (venta) return `Lo tiene a la venta, pero ${venta.noVende}: ${venta.vendedor || nombreDe(M, tid)} no te lo va a vender`;

@@ -179,6 +179,8 @@ main { padding: 16px 16px 120px; }
 .marcador .neg { color: var(--baja); }
 .alerta-m { margin-top: 12px; padding: 9px 12px; border-radius: 11px; background: rgba(238,28,60,0.18); font-size: 14px; display: flex; gap: 8px; align-items: center; }
 .alerta-m .ic { width: 18px; height: 18px; color: var(--rojo-l); }
+.alerta-m.oro { background: var(--oro-s); color: var(--texto); }
+.alerta-m.oro .ic { color: var(--oro); flex: none; }
 
 /* ---------- el plan del día ---------- */
 .plan { margin-top: 18px; }
