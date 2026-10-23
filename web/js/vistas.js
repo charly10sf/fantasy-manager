@@ -1,6 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, avisoOnce, candadoMini, candado, ventasDe, ventaPill } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, avisoOnce, candadoMini, candado } from './comunes.js';
 import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
@@ -206,22 +206,26 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
   const { M } = S;
   const xs = M.mias.filter((x) => x.j && x.j.pos !== 5);
   if (!xs.length) return '';
-  const suben = xs.filter((x) => num(x.tend.d1) > 0).length, bajan = xs.filter((x) => num(x.tend.d1) < 0).length;
-  const giro = xs.filter((x) => x.ventaInercia && x.ventaInercia.urgencia === 'ya').length;
-  const frena = xs.filter((x) => x.ventaInercia && x.ventaInercia.urgencia !== 'ya').length;
-  const malos = xs.filter((x) => ['injured', 'suspended', 'out_of_league'].includes(x.j.estado)).length;
-  const dudas = xs.filter((x) => x.j.estado === 'doubtful').length;
-  const abiertas = xs.filter((x) => x.abierta).length, riesgo = xs.filter((x) => x.riesgo === 'alto').length;
-  void suben; void bajan;
+  const giro = xs.filter((x) => x.ventaInercia && x.ventaInercia.urgencia === 'ya');
+  const frena = xs.filter((x) => x.ventaInercia && x.ventaInercia.urgencia !== 'ya');
+  const malos = xs.filter((x) => ['injured', 'suspended', 'out_of_league'].includes(x.j.estado));
+  const dudas = xs.filter((x) => x.j.estado === 'doubtful');
+  const riesgo = xs.filter((x) => x.riesgo === 'alto');
   const sinI = bloqueada('inercia');
+  // cada uno con su nombre (se toca y se abre su ficha); si son muchos, los 3 primeros y «+N»
+  const de = (lista, cls, txt, ic = '') => {
+    if (!lista.length) return '';
+    const v = lista.slice(0, 3).map((x) => `<button class="ch ${cls}" data-j="${esc(x.pid)}">${ic ? icono(ic) : ''}${esc(txt(x.j.nombre))}</button>`);
+    if (lista.length > 3) v.push(`<span class="ch ${cls}">+${lista.length - 3}</span>`);
+    return v.join('');
+  };
   const chips = [
-    !sinI && giro && `<span class="ch mal">${giro} ha${giro > 1 ? 'n' : ''} girado</span>`,
-    !sinI && frena && `<span class="ch duda">${frena} frenando</span>`,
-    malos && `<span class="ch mal">${malos} de baja</span>`,
-    dudas && `<span class="ch duda">${dudas} en duda</span>`,
-    riesgo && `<span class="ch mal">${icono('abierto')}${riesgo} cláusula${riesgo > 1 ? 's' : ''} en riesgo</span>`,
+    !sinI && de(giro, 'mal', (n) => `${n} ha girado`),
+    !sinI && de(frena, 'duda', (n) => `${n} frenando`),
+    de(malos, 'mal', (n) => `${n} de baja`),
+    de(dudas, 'duda', (n) => `${n} en duda`),
+    de(riesgo, 'mal', (n) => `cláusula de ${n} en riesgo`, 'abierto'),
   ].filter(Boolean);
-  void abiertas;
   const proy = xs.reduce((s, x) => s + num(x.inercia && x.inercia.proyJ), 0);
   const conProy = !sinI && M.proxima && Math.abs(proy) >= 100000;
   if (!chips.length && !conProy) return '';
@@ -644,18 +648,14 @@ export function rivales(S) {
   h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : ''], ['movimientos', 'Movimientos', movs7]]);
 
   if (seg === 'clasif') {
-    const ventasBloq = bloqueada('ventasRivales');
     const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);
       const yo = !r;
-      // lo que tiene en el mercado y lo que le da LaLiga (función top)
-      const vs = r ? ventasDe(M, e.teamId) : [];
-      const ventasH = vs.length ? (ventasBloq ? candadoMini('ventasRivales', `${vs.length} en venta`) : vs.map(ventaPill).join('')) : '';
       return `<button class="fila ${yo ? 'yo-fila' : ''}" ${yo ? 'data-ir="equipo"' : `data-r="${esc(e.teamId)}"`}>
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} 7d</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales') ? candadoMini('dineroRivales', 'Dinero') : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga') ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}${ventasH}</div>` : ''}
+          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales') ? candadoMini('dineroRivales', 'Dinero') : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga') ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div><div class="d apag">pts${e.puntosJornada ? ` · ${e.puntosJornada} últ.` : ''}</div></div></button>`;
     }).join('');

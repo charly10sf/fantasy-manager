@@ -809,6 +809,17 @@ export function cuadrarPlan(P, D, M) {
     }
     return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, sobre, ya: !!ya };
   });
+  // los blindajes gratis de LaLiga: 2 por jornada. Si el plan pide más de los que te quedan, sobran los últimos
+  const ES = M.escudosMios;
+  if (ES) {
+    let libres = ES.quedan;
+    for (const o of ops) {
+      if (o.accion !== 'blindar' || o.importe || o.ya || o.descartada) continue;
+      if (libres > 0) { libres--; continue; }
+      o.descartada = true;
+      o.aviso = ES.quedan ? `No te queda blindaje para este: te ${ES.quedan === 1 ? 'queda 1' : `quedan ${ES.quedan}`} esta jornada y ya va${ES.quedan === 1 ? '' : 'n'} en el plan antes.` : `Ya has gastado los ${ES.usados} blindajes de esta jornada: hasta que acabe la jornada no hay más.`;
+    }
+  }
   const final = saldo;
   // vender sin necesidad: si sin esa venta acabarías en positivo y la app no la aceptaría (no entra en tu once y la
   // oferta no es buena), se dice; puede esperar a una oferta mejor
