@@ -41,30 +41,40 @@ function marcador(S) {
   else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${dura(M.proxima.ini - ahora)}</span>`;
   else fila = `<span>${esc(D.liga.nombre)}</span>`;
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
-  let h = `<div class="marcador" data-accion="resumen" role="button" tabindex="0" aria-label="Ver el detalle de tu equipo"><div class="fila-j">${fila}</div>
+  let h = `<div class="marcador" data-accion="resumen" role="button" tabindex="0" aria-label="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
     <div class="cols">
       <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">gastas hasta ${eur(M.pujaMax, { dec: 1 })}</div></div>
       <div class="col"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
-      <div class="col"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div></div>
-    </div>${pieMarcador(S)}<div class="marcador-mas">Ver el detalle ${icono('flecha')}</div>`;
+      <div class="col"><div class="et">Puesto</div><div class="v">${yo.pos || '–'}º<small>/${D.clasif.length}</small></div><div class="d apag">${num(yo.puntos)} pts</div>${distanciaHTML(S)}</div>
+    </div>`;
   if (M.negativo && M.proxima) h += `<div class="alerta-m">${icono('alerta')}En negativo: si la jornada empieza así, no puntúas.</div>`;
   return h + '</div>';
 }
 
-/** debajo del marcador: lo que sacaste en la última jornada y a cuánto estás del primero (o cuánto le sacas al segundo) */
-function pieMarcador(S) {
+/** en la columna del puesto: a cuánto estás del primero (o cuánto le sacas al segundo) */
+function distanciaHTML(S) {
   const { D, M } = S;
   const yo = M.yo;
   if (!yo) return '';
   const tabla = [...D.clasif].sort((a, b) => a.pos - b.pos);
   const lider = tabla[0], segundo = tabla[1];
-  const dist = yo.pos === 1 ? (segundo ? yo.puntos - segundo.puntos : null) : lider ? lider.puntos - yo.puntos : null;
-  // lo de la última jornada jugada: si LaLiga ya da los puntos de la jornada en curso (todo a 0 antes de empezar), se
-  // sacan del histórico de puntos de cada equipo (los de ahora menos los de antes de que empezara)
+  if (yo.pos === 1) return segundo ? `<div class="dist">+${yo.puntos - segundo.puntos} al 2º</div>` : '';
+  return lider ? `<div class="dist">a ${lider.puntos - yo.puntos} del 1º</div>` : '';
+}
+
+/**
+ * lo que sacaste en la última jornada jugada y en qué puesto de esa jornada quedaste ({ n, pts, puesto } o null). Si
+ * LaLiga ya da los puntos de la jornada en curso (todo a 0 antes de empezar), se sacan del histórico de puntos de cada
+ * equipo (los de ahora menos los de antes de que empezara)
+ */
+export function puntosUltimaJornada(S) {
+  const { D, M } = S;
+  const yo = M.yo;
+  if (!yo) return null;
   const ultJ = M.ultimaJornada;
   let ptsJ = null;
   const jo = ultJ && (M.jornadas || []).find((j) => j.n === ultJ.n);
-  if (!ptsJ && jo && jo.fin < Date.now()) {
+  if (jo && jo.fin < Date.now()) {
     const dIni = new Date(jo.ini - 6 * 3600e3).toLocaleDateString('en-CA', { timeZone: 'Europe/Madrid' });
     const m = {};
     for (const e of D.clasif) {
@@ -77,11 +87,9 @@ function pieMarcador(S) {
   }
   // si no hay histórico, lo que dé LaLiga, pero solo si no está todo a cero (eso es la jornada que aún no ha empezado)
   if (!ptsJ && D.clasif.filter((e) => num(e.puntosJornada) > 0).length >= 2) ptsJ = Object.fromEntries(D.clasif.map((e) => [e.teamId, num(e.puntosJornada)]));
-  const mioJ = ptsJ ? ptsJ[yo.teamId] : null;
-  const puestoJ = mioJ != null ? Object.values(ptsJ).filter((v) => v > mioJ).length + 1 : 0;
-  const a = mioJ != null ? `<span>${ultJ ? `Jornada ${ultJ.n}` : 'Última jornada'} <b>${mioJ} pts</b> · ${puestoJ}º</span>` : '<span></span>';
-  const b = dist != null ? `<span>${yo.pos === 1 ? `Le sacas <b>${dist} pts</b> al 2º` : `A <b>${dist} pts</b> del 1º`}</span>` : '';
-  return `<div class="marcador-pie">${a}${b}</div>`;
+  const pts = ptsJ ? ptsJ[yo.teamId] : null;
+  if (pts == null) return null;
+  return { n: ultJ ? ultJ.n : null, pts, puesto: Object.values(ptsJ).filter((v) => v > pts).length + 1 };
 }
 
 /** lo que va a pasar pronto, en chips: el mercado, las cláusulas, tu protección, el parón */
@@ -204,20 +212,45 @@ function pasoOp(S, P, o) {
     </div></div>`;
 }
 
+/**
+ * lo que ha cambiado en tu plantilla desde que la IA hizo el plan (un texto, o null): jugadores que se han ido o han
+ * llegado sin que el plan lo dijera. Lo que el plan mandaba hacer (vender a uno, fichar a otro) no cuenta.
+ */
+export function cambiosDesdePlan(S) {
+  const P = S.plan, M = S.M;
+  if (!P || P.auto || !P.foto || !Array.isArray(P.foto.mias) || !M) return null;
+  const ahora = new Set(M.mias.map((x) => x.pid)), antes = new Set(P.foto.mias);
+  const mandado = new Set();
+  for (const o of P.ops || []) {
+    const id = (o.j && o.j.id) || o.pid;
+    if (!id || o.descartada) continue;
+    mandado.add(`${o.accion === 'vender' ? 'fuera' : 'dentro'}:${id}`);
+  }
+  const nombre = (id) => (S.D.maestro[id] && S.D.maestro[id].nombre) || 'uno';
+  const fuera = P.foto.mias.filter((id) => !ahora.has(id) && !mandado.has(`fuera:${id}`)).map(nombre);
+  const dentro = [...ahora].filter((id) => !antes.has(id) && !mandado.has(`dentro:${id}`)).map(nombre);
+  if (!fuera.length && !dentro.length) return null;
+  const lista = (l) => (l.length > 2 ? `${l.slice(0, 2).join(', ')} y ${l.length - 2} más` : l.join(' y '));
+  return [fuera.length ? `Se ${fuera.length > 1 ? 'han ido' : 'ha ido'} ${lista(fuera)}.` : '', dentro.length ? `${dentro.length > 1 ? 'Han llegado' : 'Ha llegado'} ${lista(dentro)}.` : ''].filter(Boolean).join(' ');
+}
+
 function planHTML(S) {
   const { M } = S;
   const P = S.plan;
   const E = S.planEstado || {};
   let h = '';
   const esIA = P && !P.auto;
-  h += `<div class="plan"><div class="plan-cab"><div><div class="eti">Plan de hoy</div>
-    ${P ? `<span class="ia">${icono(esIA ? 'ia' : 'lista')}${esIA ? `${esc(nombreModelo(P.modelo))}${P.web ? ' + Google' : ''} · ${rel(P.t)}` : 'Automático, sin IA'}</span>` : ''}</div>
-    ${hayClave() && !E.cargando ? `<button class="btn chico sec plan-rehacer" data-accion="planYa">${icono('ia')}${esIA ? 'Rehacer con la IA' : 'Hacerlo con la IA'}</button>` : ''}</div>`;
+  // arriba, solo quién lo ha hecho y cuándo; el botón para pedir otro va al final de los pasos (y en la banda si tu liga
+  // ha cambiado desde entonces), para no confundirlo con «Actualizar», que trae los datos de LaLiga
+  const quien = P ? (esIA ? `${esc(String(nombreModelo(P.modelo) || 'IA').replace(/\s*\(.*?\)/g, ''))}${P.web ? ' + Google' : ''} · ${rel(P.t)}` : 'Automático, sin IA') : '';
+  h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${quien ? `<span class="plan-quien">${icono(esIA ? 'ia' : 'lista')}${quien}</span>` : ''}</div>`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te aviso cuando esté.</div>' : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
   else if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
   if (!P) return h + '</div>';
+  const cambios = !E.cargando && !(esIA && P.dia && P.viejo) ? cambiosDesdePlan(S) : null;
   if (esIA && P.dia && P.viejo) h += `<div class="banda">${icono('reloj')}<span>Este plan es de ${cuando(P.t)}.</span>${hayClave() && !E.cargando ? '<button data-accion="plan">Hacer el de hoy</button>' : ''}</div>`;
+  else if (cambios) h += `<div class="banda plan-cambio">${icono('cambio')}<span>${esc(cambios)} El plan es de antes.</span>${hayClave() ? '<button data-accion="planYa">Rehacer el plan</button>' : ''}</div>`;
   h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? `<p class="plan-sit">${esc(P.situacion)}</p>` : ''}`;
   const VISTOS = 4;
   if (P.ops.length > VISTOS + 1) {
@@ -225,6 +258,7 @@ function planHTML(S) {
     h += `<details class="mas-pasos"><summary>${icono('lista')}Ver los otros ${P.ops.length - VISTOS} pasos</summary><div class="pasos">${P.ops.slice(VISTOS).map((o) => pasoOp(S, P, o)).join('')}</div></details>`;
   } else h += `<div class="pasos">${P.ops.map((o) => pasoOp(S, P, o)).join('')}</div>`;
   if (P.final != null && P.ops.some((o) => o.signo && o.importe)) h += `<div class="cierre ${P.avisoTipo === 'mal' ? 'mal' : P.avisoTipo === 'plan' ? 'oro' : ''}">${icono(P.avisoTipo === 'mal' ? 'alerta' : P.avisoTipo === 'plan' ? 'cambio' : 'euro')}<span>${P.avisoSaldo ? esc(P.avisoSaldo) : 'Te quedas con'}</span><span class="v">${eur(P.final)}</span></div>`;
+  if (hayClave() && !E.cargando) h += `<div class="plan-otro"><button class="btn ancho" data-accion="planYa">${icono('ia')}${esIA ? 'Pedir otro plan a la IA' : 'Hacer el plan con la IA'}</button><p>${esIA ? 'La IA vuelve a leer tu liga y las noticias y rehace los pasos (1 o 2 minutos). «Actualizar», arriba, solo trae los datos de LaLiga.' : 'La IA lee las noticias, las lesiones y los onces probables antes de decidir. Tarda 1 o 2 minutos.'}</p></div>`;
   if (Array.isArray(P.descartes) && P.descartes.length) h += `<details class="descartes"><summary>${icono('buscar')}Mirados y descartados (${P.descartes.length})</summary>${P.descartes.map((d) => notaJugador(S, d.jugador, d.motivo)).join('')}</details>`;
   if (!hayClave()) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Activar la IA</button></div>`;
   if (Array.isArray(P.proximos_dias) && P.proximos_dias.length) h += `<div class="sec"><h2>Los próximos días</h2></div><div class="dias">${P.proximos_dias.map((d) => `<div class="dia"><b>${esc(d.dia)}</b><span>${esc(d.texto)}</span></div>`).join('')}</div>`;

@@ -1,11 +1,10 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
-import { DIBUJOS } from './dibujos.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
-import { filaActividad, PELIGRO, ventaHTML } from './vistas.js';
+import { filaActividad, PELIGRO, ventaHTML, puntosUltimaJornada } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
 import { nativo, enApp, enWeb } from './puente.js';
@@ -93,6 +92,11 @@ export function resumenEquipo(S) {
   let h = `<div class="hoja-cab"><h2>Tu equipo hoy</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
   h += `<div class="valor-g"><span class="v">${eur(D.valorEquipo)}</span><span class="d ${clase(d1)}">${d1 ? `${d1 > 0 ? '▲' : '▼'} ${eur(Math.abs(d1), { dec: 2 })}${base > 0 ? ` (${pct((d1 / base) * 100)})` : ''} hoy` : '= hoy'}</span>${d7 ? `<span class="d ${clase(d7)}">${eur(d7, { signo: true })} 7d</span>` : ''}</div>`;
   h += `<p class="t2 peq" style="margin:2px 0 0">${suben.length} suben · ${bajan.length} bajan · ${quietos} igual${suben[0] ? ` · el que más sube, <b class="sube">${esc(suben[0].j.nombre)} ${eur(suben[0].tend.d1, { signo: true })}</b>` : ''}${bajan[0] ? ` · el que más baja, <b class="baja">${esc(bajan[0].j.nombre)} ${eur(bajan[0].tend.d1, { signo: true })}</b>` : ''}</p>`;
+  // lo que antes iba debajo del marcador: la última jornada y la distancia en la clasificación
+  const uj = puntosUltimaJornada(S), yo = M.yo;
+  const tabla = [...D.clasif].sort((a, b) => a.pos - b.pos);
+  const dist = yo ? (yo.pos === 1 ? (tabla[1] ? `Le sacas <b>${yo.puntos - tabla[1].puntos} pts</b> al 2º` : '') : tabla[0] ? `Estás a <b>${tabla[0].puntos - yo.puntos} pts</b> del 1º` : '') : '';
+  if (uj || dist) h += `<div class="resumen-liga">${uj ? `<span>${uj.n ? `Jornada ${uj.n}` : 'Última jornada'}: <b>${uj.pts} pts</b>, ${uj.puesto}º de la jornada</span>` : ''}${dist ? `<span>${dist}${yo ? ` (vas ${yo.pos}º con ${num(yo.puntos)})` : ''}</span>` : ''}</div>`;
   h += `<div class="graf-cab"><span>Valor del equipo${(S.H.yo || []).length < 7 && sumaJugadores(S) ? ' <small>(tus jugadores de hoy)</small>' : ''}</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="__equipo" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   h += `<div id="graf-j">${grafValor(serieEquipo(S), rango)}</div>`;
 
@@ -353,6 +357,7 @@ export function ajustes(S) {
   const k = clave();
   const prog = programados();
   let h = `<div class="hoja-cab"><h2>Ajustes</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  h += `<button class="ajuste-tour" data-accion="tutorial">${icono('info')}<span><b>Tutorial de la app</b><small>Dónde está cada cosa y para qué sirve, en un minuto</small></span>${icono('flecha')}</button>`;
 
   h += `<div class="grupo"><span>Tu cuenta de LaLiga</span></div>`;
   if (enDemo()) h += `<div class="ajuste"><div class="c"><b>Liga de ejemplo</b><span>Los datos son inventados</span></div>${enApp || enWeb ? '<button class="btn chico" data-accion="salirDemo">Usar la mía</button>' : ''}</div>`;
@@ -419,27 +424,6 @@ export function vinculoWeb(S) {
   <div class="codigo-grande">${esc(cod.slice(0, 4))}<span>${esc(cod.slice(4))}</span></div>
   <p class="t2 peq" style="text-align:center">Vale una sola vez y caduca ${cuando(v.caduca)}. Entras con tu cuenta de LaLiga y tu clave de la IA, como en la app.</p>
   <button class="btn sec ancho" data-accion="copiarEnlaceWeb">Copiar el enlace de la web</button>`;
-}
-
-/* ================= LA BIENVENIDA (la primera vez que entras) ================= */
-const PASOS_BIEN = [
-  { d: 'plan', acc: '#ee1c3c', t: 'Tu plan de cada día', x: 'En Hoy tienes las operaciones exactas para tu liga: qué vender, a quién clausular y cuánto pujar, con el saldo que te queda después de cada una. Se rehace solo cuando cambia el mercado.' },
-  { d: 'ia', acc: '#ffc547', t: 'La IA, gratis con tu clave', x: 'Con una clave gratuita de Google, la IA lee noticias, lesiones y alineaciones antes de decidir, y le puedes preguntar lo que quieras, también con capturas. Sin clave tienes el plan automático, que ya funciona.' },
-  { d: 'campana', acc: '#2fd18f', t: 'Avisos y fallos', x: 'La app te avisa cuando se abre una cláusula que te interesa o cambia el mercado. Y si algo falla, toca «Fallo» arriba: me llega y te contesto en la app.' },
-];
-export function bienvenida(S) {
-  const i = Math.max(0, Math.min(PASOS_BIEN.length - 1, S.bien || 0)), p = PASOS_BIEN[i], ultimo = i === PASOS_BIEN.length - 1;
-  const botones = i === 1 && !hayClave()
-    ? `<button class="btn ancho" data-accion="bienIA">${icono('ia')}Activarla ahora</button><button class="btn sec ancho" data-accion="bienSig">Más tarde</button>`
-    : ultimo
-      ? `${enApp && !nativo.avisosPermitidos() ? `<button class="btn ancho" data-accion="bienAvisos">${icono('campana')}Activar los avisos</button><button class="btn sec ancho" data-accion="bienFin">Empezar</button>` : '<button class="btn ancho" data-accion="bienFin">Empezar</button>'}`
-      : `<button class="btn ancho" data-accion="bienSig">Siguiente</button>`;
-  return `<div class="bien" style="--acc:${p.acc}">
-    <div class="hoja-cab"><span class="eti">Bienvenido · ${i + 1} de ${PASOS_BIEN.length}</span><button class="b-ico" data-accion="bienFin" aria-label="Saltar">${icono('cerrar')}</button></div>
-    <svg class="dib bien-dib" viewBox="0 0 160 120" aria-hidden="true">${DIBUJOS[p.d] || DIBUJOS.ia}</svg>
-    <h2 class="bien-t">${esc(p.t)}</h2><p class="bien-x">${esc(p.x)}</p>
-    <div class="bien-puntos" aria-hidden="true">${PASOS_BIEN.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
-    <div class="bien-btns">${botones}</div></div>`;
 }
 
 /* ================= AVISOS DE FALLOS ================= */

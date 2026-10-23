@@ -22,6 +22,7 @@ import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, numeroAvisos, hayQueMirar, avisosGuardados } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
+import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
@@ -197,7 +198,7 @@ function marco() {
   // arriba solo tres cosas: actualizar la liga (si el plan se ha quedado viejo, la IA lo rehace sola después), avisar
   // de un fallo y los ajustes. Rehacer el plan a mano está en la tarjeta del plan, en Hoy.
   // en el móvil cada botón lleva su nombre debajo (data-et); en el ordenador, el largo (aria-label) al lado
-  const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" data-et="Actualizar">${icono('refrescar')}</button>
+  const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
     <button class="b-ico" id="bAvisos" data-accion="avisos" aria-label="Avisar de un fallo" data-et="Fallo">${icono('bicho')}<span class="gl oculto" id="gl-avisos"></span></button>
     <button class="b-ico" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}</button></div>`;
   const liga = `${LOGO_P}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
@@ -397,9 +398,9 @@ async function cargar({ silencio = false } = {}) {
     rehacer();
     S.cargando = false;
     pintar();
-    // la primera vez que entras con tu cuenta: tres pasos para saber dónde está cada cosa
-    if (conPantalla && !enDemo() && !LS.get('bienvenida') && !estadoLimite.cerrada) { LS.set('bienvenida', Date.now()); setTimeout(() => { if (!S.hoja) { S.bien = 0; hoja('bienvenida'); } }, 700); }
-    if (!silencio && !conPantalla) tostada('Liga al día');
+    // la primera vez: el tutorial, que recorre la app para saber dónde está cada cosa
+    if (conPantalla) quizaTutorial(900);
+    if (!silencio && !conPantalla) tostada(V.cambiosDesdePlan(S) ? 'Datos de LaLiga al día. Tu liga ha cambiado: mira el plan' : 'Datos de LaLiga al día');
     despues();
   } catch (e) {
     S.cargando = false;
@@ -572,7 +573,7 @@ async function generarPlan() {
       // lo has parado tú: se queda el plan que había y puedes pedir otro cuando quieras
       S.planEstado = {};
       rehacer();
-      tostada('Plan parado. Toca la chispa de arriba cuando quieras otro');
+      tostada('Plan parado. Pide otro con «Pedir otro plan» cuando quieras');
     } else {
       S.planEstado = { error: e.message || String(e), clave: !!e.clave };
       rehacer();
@@ -619,7 +620,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'bienvenida' ? Hj.bienvenida(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -633,6 +634,7 @@ window.atras = () => {
   const visor = $('.visor');
   if (visor) { visor.remove(); return true; }
   if (cerrarPresentacion()) return true;
+  if (tourAbierto()) { cerrarTour('saltar'); return true; }
   if (cerrarHoja()) return true;
   if (S.D && S.vista !== 'hoy') { ir('hoy'); return true; }
   return false;
@@ -1015,23 +1017,14 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'copiarEnlaceWeb': nativo.copiar('https://charly10sf.github.io/fantasy-manager/'); tostada('Enlace copiado'); break;
-    case 'salirDemo':
-      cerrarHoja(true); LS.del('demo'); S.D = null; S.planEstado = {};
-      if (!enApp && !enWeb) { LS.set('demo', true); tostada('En este navegador solo se puede ver el ejemplo'); cargar(); }
-      else if (haySesion()) { S.D = foto(); if (S.D) { rehacer(); pintar(); cargar({ silencio: true }); } else cargar(); }
-      else pantallaEntrar();
-      mirarLimite();
-      break;
+    case 'salirDemo': salirDemo(); break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
     case 'recargar': S.planEstado = {}; cargar(); break;
     case 'ajustes': hoja('ajustes'); break;
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'mandarAviso': enviarAviso(); break;
-    case 'bienSig': S.bien = (S.bien || 0) + 1; repintarHoja(); break;
-    case 'bienIA': cerrarHoja(); ir('ia'); break;
-    case 'bienAvisos': nativo.pedirPermisoAvisos(); cerrarHoja(); tostada('Listo: ya puedes empezar'); break;
-    case 'bienFin': cerrarHoja(); break;
+    case 'tutorial': lanzarTutorial(); break;
     case 'permisoApertura': if (!cfgAvisos().on) guardarCfgAvisos({ on: true }); nativo.pedirPermisoAvisos(); break;
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;
     case 'responderAviso': contestarAviso(d.id); break;
@@ -1219,6 +1212,7 @@ function verNovedades(desde) {
   presentarNovedades(desde, {
     alIr: (a) => { if (!a || !S.D) return; if (a.seg) { const [v, sg] = a.seg.split(':'); S.seg[v] = sg; } ir(a.v); },
     alLista: () => listaVersiones(),
+    alCerrar: () => quizaTutorial(700),
   });
 }
 function listaVersiones() {
@@ -1226,10 +1220,77 @@ function listaVersiones() {
     <button class="btn chico" data-accion="presentacion" style="margin:0 0 6px">${icono('ia')}Ver la ${VERSION.replace(/\.0$/, '')} en presentación</button>${listaNovedades()}`);
 }
 
+/* ---------------- el tutorial ---------------- */
+function salirDemo() {
+  cerrarHoja(true); LS.del('demo'); S.D = null; S.planEstado = {};
+  if (!enApp && !enWeb) { LS.set('demo', true); tostada('En este navegador solo se puede ver el ejemplo'); cargar(); }
+  else if (haySesion()) { S.D = foto(); if (S.D) { rehacer(); pintar(); cargar({ silencio: true }); } else cargar(); }
+  else pantallaEntrar();
+  mirarLimite();
+}
+/** lo que conviene hacer para empezar (al final del tutorial) */
+function itemsEmpezar() {
+  if (enDemo()) return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Entra con tu cuenta de LaLiga', x: 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga: la app nunca ve tu contraseña.', b: 'Entrar' }];
+  const l = [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'Activa la IA, gratis', x: 'Una clave de Google en dos minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
+  if (enApp) l.push({ k: 'avisos', ok: nativo.avisosPermitidos() && cfgAvisos().on, ic: 'campana', t: 'Activa los avisos', x: 'Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando está tu plan.', b: 'Activar' });
+  return l;
+}
+function pasosTour() {
+  const demo = enDemo(), conClave = hayClave();
+  const liga = S.D && S.D.liga && !demo ? S.D.liga.nombre : 'tu liga';
+  return [
+    { logo: true, t: 'Bienvenido a Fantasy Manager', x: `Cada día te digo qué hacer en ${liga}: a quién vender, a quién clausular y cuánto pujar. Te enseño dónde está cada cosa en un minuto.` },
+    { v: 'hoy', sel: '.marcador', t: 'Tu equipo de un vistazo', x: 'Tu saldo y lo que puedes gastar de verdad (con lo que te dejan quedarte en negativo y quitando tus pujas), lo que vale tu equipo y tu puesto. Tócalo para ver el detalle.' },
+    { v: 'hoy', sel: '.tiempos', si: () => !!$('.tiempos'), t: 'Lo que viene', x: 'Cuándo cambia el mercado, cuándo se abre la cláusula de uno tuyo y las de rivales que te interesan. Toca uno para ir a él.' },
+    { v: 'hoy', sel: '.plan-cab', con: ['.plan-sit', '.plan-titular'], si: () => !!$('.plan-cab'), t: 'Tu plan de hoy', x: 'Las operaciones exactas para hoy, en orden y con el saldo que te queda después de cada una. Cuando hagas una en LaLiga, márcala con «Hecho». Si algo no se puede hacer, la app lo tacha y te dice por qué.' },
+    conClave
+      ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
+      : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: 'Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Al final te digo cómo activarla.' },
+    { v: 'hoy', sel: '#bRefrescar', t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. No gasta la IA. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
+    { v: 'hoy', sel: '#bAvisos', con: '.sup-btns [data-accion="ajustes"]', t: 'Fallo y Ajustes', x: '«Fallo», si algo no funciona o no cuadra: me llega a mí y te contesto aquí mismo. En «Ajustes», tu clave de la IA, los avisos, abrir la app en el ordenador o el iPhone y este tutorial.' },
+    { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
+    { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
+    { v: 'rivales', sel: '.nav [data-ir="rivales"]', t: 'Rivales', x: 'Las cláusulas de los demás que te llegan con tu dinero, cuándo se abren las que están protegidas y lo que ha hecho cada uno.' },
+    { v: 'mercado', sel: '.nav [data-ir="mercado"]', t: 'Mercado', x: 'Cuánto pujar por cada libre según lo que se paga en tu liga, qué ofrecer a otro mánager para que te venda y quién sube y quién baja.' },
+    { v: 'ia', sel: '.nav [data-ir="ia"]', t: 'Pregunta', x: conClave ? 'Pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.' : 'Aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.' },
+    demo
+      ? { v: 'hoy', t: 'Esto era la liga de ejemplo', x: 'Con datos inventados. Cuando quieras, entra con tu cuenta y lo tendrás con tu liga. El tutorial queda en Ajustes.', lista: itemsEmpezar, fin: 'Seguir mirando' }
+      : { v: 'hoy', t: 'Para empezar', x: () => (itemsEmpezar().some((y) => !y.ok) ? 'Esto se hace una vez (si no, lo tienes en Ajustes). Después, empieza por el paso 1 de tu plan de hoy.' : 'Ya lo tienes todo. Empieza por el paso 1 de tu plan de hoy. El tutorial queda en Ajustes por si quieres repetirlo.'), lista: itemsEmpezar, fin: 'Ver mi plan', finAccion: 'plan' },
+  ];
+}
+/** abre el tutorial desde el principio (desde Ajustes, o la primera vez) */
+function lanzarTutorial() {
+  if (!S.D || tourAbierto()) return;
+  cerrarHoja(true);
+  if (S.vista !== 'hoy') ir('hoy');
+  window.scrollTo(0, 0);
+  setTimeout(() => empezarTour({
+    pasos: pasosTour(),
+    vista: () => S.vista,
+    ir: (v) => { ir(v); window.scrollTo(0, 0); },
+    alAcabar: (como) => {
+      if (S.vista !== 'hoy' || como === 'saltar') ir('hoy');
+      if (como === 'saltar') { window.scrollTo(0, 0); tostada('El tutorial está en Ajustes cuando quieras', 3500); }
+      else if (como === 'plan' || como === 'fin') { const pl = $('.plan'); if (pl) window.scrollTo({ top: pl.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); }
+      else if (como === 'clave') ir('ia');
+      else if (como === 'avisos') { if (!cfgAvisos().on) guardarCfgAvisos({ on: true }); nativo.pedirPermisoAvisos(); tostada('Avisos activados', 3000); }
+      else if (como === 'cuenta') salirDemo();
+    },
+  }), 250);
+}
+/** la primera vez (o al abrirse la app a la hora): el tutorial, si no se ha visto y no hay nada delante */
+function quizaTutorial(ms, intento = 0) {
+  if (tourVisto() || !S.D || estadoLimite.cerrada) return;
+  setTimeout(() => {
+    if (tourVisto() || tourAbierto() || !S.D || estadoLimite.cerrada || S.cargando && !S.D) return;
+    // con la presentación de novedades o una ventana abierta, se espera
+    if ($('.nv') || S.hoja || $('#limite')) { if (intento < 20) quizaTutorial(3000, intento + 1); return; }
+    lanzarTutorial();
+  }, ms);
+}
+
 /* ---------------- arranque ---------------- */
 async function arrancar() {
-  // quien ya usaba la app no necesita la bienvenida
-  if (!LS.get('bienvenida') && versionVista()) LS.set('bienvenida', 'ya la conocía');
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
   if (VISTAS[h]) S.vista = h;
   if ((enApp || enWeb) && !enDemo() && !haySesion()) {
@@ -1256,10 +1317,11 @@ async function arrancar() {
   }, (t) => tostada(t, 6000), () => {
     tostada('¡Ya está abierta! Pongo tu liga al día', 5000); S.planEstado = {};
     if (!S.cargando) cargar({ silencio: true });
-    // la bienvenida, que no se ha visto con la app cerrada
-    if (!LS.get('bienvenida') && !enDemo()) { LS.set('bienvenida', Date.now()); setTimeout(() => { if (!S.hoja) { S.bien = 0; hoja('bienvenida'); } }, 1500); }
+    // el tutorial, que no se ha visto con la app cerrada
+    quizaTutorial(1800);
   }, () => { if (S.D && S.M) programar(S.D, S.M); });
   novedades();
+  quizaTutorial(2500);
   setTimeout(() => buscarVersion(false), 4000);
   // la IA con la app cerrada avisa con notificaciones: se pide el permiso una vez
   if (enApp && !enDemo() && haySesion() && cfgFondo().on && !nativo.avisosPermitidos() && !LS.get('permiso-fondo')) {

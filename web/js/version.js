@@ -3,13 +3,21 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.4.1b';
+export const VERSION = '0.4.1c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.4.1c', f: '2026-10-23', h: '04:05', t: 'Tutorial y un Hoy más claro',
+    cosas: [
+      { tipo: 'nuevo', d: 'versiones', t: 'Un tutorial por la app', x: 'La primera vez te enseña cada cosa sobre la app de verdad: el marcador, el plan, la IA, Actualizar, Fallo y las pestañas, y al final lo que conviene activar. Se pasa con Siguiente o deslizando la tarjeta. Lo puedes repetir cuando quieras desde Ajustes, arriba del todo.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'ia', t: 'Pedir otro plan, más a mano', x: 'El botón de la IA va ahora al final de los pasos del plan, grande, y explica en qué se diferencia de «Actualizar», que solo trae los datos de LaLiga. Si tu plantilla cambia sin que el plan lo dijera (un clausulazo, una puja que ganas), te lo avisa arriba del plan con un botón para rehacerlo.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'camiseta', t: 'El marcador, sin huecos', x: 'A cuántos puntos estás del primero va ahora en la columna del puesto, y la flecha de arriba dice que el marcador se toca para ver el detalle. Lo de la última jornada está dentro de ese detalle.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.4.1b', f: '2026-10-23', h: '03:30', t: 'Minutos en total y aviso de apertura',
     cosas: [
