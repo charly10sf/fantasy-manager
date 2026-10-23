@@ -1,9 +1,9 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
-import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, avisoOnce, candadoMini } from './comunes.js';
+import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe } from './util.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, avisoOnce, candadoMini, candado, ventasDe, ventaPill } from './comunes.js';
 import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
-import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores } from './ia.js';
+import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
 import { md } from './texto.js';
 import { enApp, nativo } from './puente.js';
 import { guiaClave } from './clave.js';
@@ -107,9 +107,29 @@ function tiemposHTML(S) {
   if (prot) c.push(['candado', `Se abre ${prot.j.nombre}`, `en ${dura(prot.abreEn)}`, `j:${prot.pid}`]);
   const cl = M.clausulas.filter((x) => !x.abierta && x.meLlega && x.interes >= 60 && x.abreEn < 2 * DIA).sort((a, b) => a.abreEn - b.abreEn)[0];
   if (cl) c.push(['diana', `Cláusula de ${cl.j.nombre}`, `en ${dura(cl.abreEn)}`, `j:${cl.pid}`]);
-  if (M.paron && !M.enParon && M.paron.ini - ahora < 21 * DIA) c.push(['bandera', 'Parón', `en ${dura(M.paron.ini - ahora)}`, '']);
+  if (M.paron && !M.enParon && M.paron.ini - ahora < 21 * DIA) c.push(['bandera', 'Parón', `en ${dura(M.paron.ini - ahora)}`, 'accion:paron']);
   if (!c.length) return '';
-  return `<div class="tiempos">${c.map(([ic, t, sub, a]) => `<button class="tiempo" ${a.startsWith('j:') ? `data-j="${esc(a.slice(2))}"` : a ? `data-ir="${a}"` : ''}>${icono(ic)}<div><b>${esc(t)}</b><span>${esc(sub)}</span></div></button>`).join('')}</div>`;
+  // cada chip lleva a lo que dice: el jugador, el mercado o lo que pasa en el parón
+  const destino = (a) => (a.startsWith('j:') ? `data-j="${esc(a.slice(2))}"` : a.startsWith('accion:') ? `data-accion="${esc(a.slice(7))}"` : a ? `data-ir="${a}"` : '');
+  return `<div class="tiempos">${c.map(([ic, t, sub, a]) => `<button class="tiempo" ${destino(a)}>${icono(ic)}<div><b>${esc(t)}</b><span>${esc(sub)}</span></div>${a ? icono('flecha', 'tiempo-ir') : ''}</button>`).join('')}</div>`;
+}
+
+/** un texto con los nombres de jugadores que salen en él, para tocarlos y abrir su ficha */
+const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+export function conEnlaces(S, texto) {
+  const t = String(texto || '');
+  let html = esc(t);
+  if (!S.D || !t) return html;
+  const marcas = [];
+  for (const j of jugadoresEn(t, S.D).sort((a, b) => b.nombre.length - a.nombre.length)) {
+    for (const n of [j.nombre, j.nombre.split(' ').pop()].filter((x) => x && x.length >= 4)) {
+      const re = new RegExp(`(^|[^\\p{L}\\u0000])(${reEsc(esc(n))})(?![\\p{L}])`, 'iu');
+      if (!re.test(html)) continue;
+      html = html.replace(re, (m, a, b) => { marcas.push(`<button class="enlace-j" data-j="${esc(j.id)}">${b}</button>`); return `${a}\u0000${marcas.length - 1}\u0000`; });
+      break;
+    }
+  }
+  return html.replace(/\u0000(\d+)\u0000/g, (m, i) => marcas[+i]);
 }
 
 /**
@@ -124,7 +144,12 @@ export function llevasHTML(S) {
   const ahora = Date.now();
   const desde = M.cierreMercado && M.cierreMercado > ahora ? Math.max(M.cierreMercado - 24 * HORA, ahora - 24 * HORA) : ahora - 24 * HORA;
   const ops = P ? P.ops.filter((o) => o.pid && !o.descartada) : [];
-  const delPlan = (pid, acciones) => ops.some((o) => o.pid === pid && acciones.includes(o.accion));
+  // y lo que te propusieron los planes anteriores de hoy (al pedir otro plan, lo que ya hiciste del primero sigue
+  // siendo «del plan»)
+  const hoyD = diaDe(ahora);
+  const accDe = (a) => String(a || '').toLowerCase().replace('aceptar_oferta', 'vender').replace('aceptar', 'vender').replace('ofertar', 'comprar');
+  const deAntes = planes().filter((p) => p && p.t && diaDe(p.t) === hoyD && p !== P).flatMap((p) => (p.operaciones || []).map((o) => ({ pid: o.pid || pidDe(o.jugador, S.D), accion: accDe(o.accion) })));
+  const delPlan = (pid, acciones) => ops.some((o) => o.pid === pid && acciones.includes(o.accion)) || deAntes.some((o) => o.pid === pid && acciones.includes(o.accion));
   const items = [];
   for (const a of M.actividad) {
     if (!a.t || a.t <= desde || !a.pid) continue;
@@ -349,7 +374,7 @@ function planHTML(S) {
   const cambios = !E.cargando && !(esIA && P.dia && P.viejo) ? cambiosDesdePlan(S) : null;
   if (esIA && P.dia && P.viejo) h += `<div class="banda">${icono('reloj')}<span>Este plan es de ${cuando(P.t)}.</span>${hayClave() && !E.cargando ? '<button data-accion="plan">Hacer el de hoy</button>' : ''}</div>`;
   else if (cambios) h += `<div class="banda plan-cambio">${icono('cambio')}<span>${esc(cambios)} El plan es de antes.</span>${hayClave() ? '<button data-accion="planYa">Rehacer el plan</button>' : ''}</div>`;
-  h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? `<p class="plan-sit">${esc(P.situacion)}</p>` : ''}`;
+  h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? `<p class="plan-sit">${conEnlaces(S, P.situacion)}</p>` : ''}`;
   // pedir otro: justo debajo del resumen, antes de los pasos (al final quedaba a más de una pantalla en el móvil)
   if (hayClave() && !E.cargando) h += `<div class="plan-otro"><button class="btn ancho" data-accion="planYa">${icono('ia')}${esIA ? 'Pedir otro plan a la IA' : 'Hacer el plan con la IA'}</button><p>${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}</p></div>`;
   const VISTOS = 4;
@@ -360,8 +385,8 @@ function planHTML(S) {
   if (P.final != null && P.ops.some((o) => o.signo && o.importe)) h += `<div class="cierre ${P.avisoTipo === 'mal' ? 'mal' : P.avisoTipo === 'plan' ? 'oro' : ''}">${icono(P.avisoTipo === 'mal' ? 'alerta' : P.avisoTipo === 'plan' ? 'cambio' : 'euro')}<span>${P.avisoSaldo ? esc(P.avisoSaldo) : 'Te quedas con'}</span><span class="v">${eur(P.final)}</span></div>`;
   if (Array.isArray(P.descartes) && P.descartes.length) h += `<details class="descartes"><summary>${icono('buscar')}Mirados y descartados (${P.descartes.length})</summary>${P.descartes.map((d) => notaJugador(S, d.jugador, d.motivo)).join('')}</details>`;
   if (!hayClave()) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Activar la IA</button></div>`;
-  if (Array.isArray(P.proximos_dias) && P.proximos_dias.length) h += `<div class="sec"><h2>Los próximos días</h2></div><div class="dias">${P.proximos_dias.map((d) => `<div class="dia"><b>${esc(d.dia)}</b><span>${esc(d.texto)}</span></div>`).join('')}</div>`;
-  if (P.paron) h += `<div class="caja">${icono('bandera', 'oro')} <b>El parón.</b> <span class="t2">${esc(P.paron)}</span></div>`;
+  if (Array.isArray(P.proximos_dias) && P.proximos_dias.length) h += `<div class="sec"><h2>Los próximos días</h2></div><div class="dias">${P.proximos_dias.map((d) => `<div class="dia"><b>${esc(d.dia)}</b><span>${conEnlaces(S, d.texto)}</span></div>`).join('')}</div>`;
+  if (P.paron) h += `<div class="caja">${icono('bandera', 'oro')} <b>El parón.</b> <span class="t2">${conEnlaces(S, P.paron)}</span></div>`;
   // el once, abierto cuando la jornada está cerca; si no, plegado
   const onceH = onceHTML(S, P.alineacion, { sinCab: true });
   if (onceH) {
@@ -619,14 +644,18 @@ export function rivales(S) {
   h += tabs('rivales', seg, [['clasif', 'Clasificación'], ['clausulas', 'Cláusulas', llegan, llegan ? 'verde' : ''], ['movimientos', 'Movimientos', movs7]]);
 
   if (seg === 'clasif') {
+    const ventasBloq = bloqueada('ventasRivales');
     const tabla = S.D.clasif.map((e) => {
       const r = M.rivales.find((x) => x.e.teamId === e.teamId);
       const yo = !r;
+      // lo que tiene en el mercado y lo que le da LaLiga (función top)
+      const vs = r ? ventasDe(M, e.teamId) : [];
+      const ventasH = vs.length ? (ventasBloq ? candadoMini('ventasRivales', `${vs.length} en venta`) : vs.map(ventaPill).join('')) : '';
       return `<button class="fila ${yo ? 'yo-fila' : ''}" ${yo ? 'data-ir="equipo"' : `data-r="${esc(e.teamId)}"`}>
         <span class="posn ${yo ? 'yo' : ''}">${e.pos}</span>
         <div class="fila-c"><div class="fila-n">${esc(e.nombre)}</div>
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} 7d</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
-          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales') ? candadoMini('dineroRivales', 'Dinero') : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga') ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
+          ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales') ? candadoMini('dineroRivales', 'Dinero') : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga') ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}${ventasH}</div>` : ''}
         </div>
         <div class="fila-d"><div class="v">${e.puntos}</div><div class="d apag">pts${e.puntosJornada ? ` · ${e.puntosJornada} últ.` : ''}</div></div></button>`;
     }).join('');
@@ -691,7 +720,8 @@ export function mercado(S) {
     const PL = M.pujasLiga;
     const pagaTxt = PL && !PL.poco ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga se llevan con un <b>${pct(PL.med * 100)}</b> sobre su valor de mediana. A la derecha, la puja que te propongo.</p>` : '';
     let ml = liga.length ? `<div class="grupo"><span>Libres · subasta a ciegas</span><span>${liga.length}</span></div>${pagaTxt}${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
-    if (man.length) ml += `<div class="grupo"><span>Los vende otro manager</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos y LaLiga también les hace una oferta: solo te lo vende si la tuya es mejor. A la derecha, lo que tendrías que ofrecer.</p>${man.map(fila).join('')}`;
+    if (man.length && bloqueada('ventasRivales')) ml += `<div class="grupo"><span>Los vende otro manager</span><span>${man.length}</span></div>${candado('ventasRivales')}`;
+    else if (man.length) ml += `<div class="grupo"><span>Los vende otro manager</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos y LaLiga también les hace una oferta: solo te lo vende si la tuya es mejor. A la derecha, lo que tendrías que ofrecer.</p>${man.map(fila).join('')}`;
     h += lista2(ml);
   } else if (seg === 'especular') {
     const v = M.ventanaEsp;

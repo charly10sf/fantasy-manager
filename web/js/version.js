@@ -3,13 +3,24 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.0d';
+export const VERSION = '0.5.1';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.1', f: '2026-10-23', h: '20:22', t: 'La IA, más rápida',
+    cosas: [
+      { tipo: 'mejora', d: 'ia', t: 'Respuestas y plan más rápidos', x: 'La IA piensa menos rato antes de contestar (con la mitad de tiempo el plan sale igual, y la app comprueba cada paso), en el chat le llegan la mitad de datos (tus jugadores enteros, los candidatos en resumen) y solo busca en Google si la pregunta lo necesita. Si un modelo falla por algo pasajero, las siguientes preguntas se lo saltan un rato en vez de esperarlo cada vez. Mientras piensa, dice qué está haciendo.', ir: { v: 'ia' } },
+      { tipo: 'nuevo', d: 'oferta', t: 'Lo que venden los rivales', x: 'En Rivales, al lado de cada uno, los jugadores que tiene en el mercado con lo que pide y lo que le da LaLiga, y en su ficha, cuánto ofrecerle para que te lo venda a ti. Es una función top: se desbloqueará viendo un anuncio.', ir: { v: 'rivales', seg: 'rivales:clasif' } },
+      { tipo: 'arreglo', d: 'plan', t: 'Nada de vender sin necesidad', x: 'El plan te mandaba aceptar una oferta «para hacer caja» por un suplente aunque estuvieras en positivo y no hiciera falta el dinero. Ahora, si no entra en tu once y la oferta no es buena, te dice que puede quedarse hasta que llegue una mejor (salvo que caiga deprisa o esté lesionado). Si la IA lo propone igual, el paso te avisa.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'scroll', t: 'Todo lleva a donde dice', x: 'Los chips de arriba de Hoy llevan una flecha y te llevan a lo que dicen: «Se abre Denis Suárez» abre su ficha, «Mercado nuevo» el mercado y «Parón» te cuenta cuándo es. En el plan, los nombres de jugadores de «Los próximos días» y del resumen salen subrayados: tócalos y se abre su ficha.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'plan', t: 'Lo que llevas hoy, con todos los planes', x: '«Del plan» ahora cuenta cualquier plan de hoy, no solo el último: si haces algo que te propuso el primero y luego pides otro, sigue saliendo como del plan. Y la caja está un poco más separada de los chips de arriba.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Etiquetas dentro de la tarjeta', x: 'En los pasos del plan, una etiqueta larga como «Para revender · +200 mil · vender mañana sábado 24» se salía por la derecha. Ahora baja de línea.' },
+    ],
+  },
   {
     v: '0.5.0d', f: '2026-10-23', h: '19:40', t: 'Las cláusulas, con tu saldo',
     cosas: [

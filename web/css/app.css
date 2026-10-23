@@ -1239,3 +1239,10 @@ body.limitado .tostada { z-index: 120; }
 .escritorio .cerrar-flota { display: grid; position: sticky; top: 0; float: right; margin: -8px -12px 0 10px; z-index: 3; background: var(--plano2); border: 1px solid var(--linea); }
 /* 0.5.0a: las etiquetas largas de una fila («No lo venderá: se quedaría con…») bajan de línea en vez de sacar la página de la pantalla */
 .fila-x .pill { max-width: 100%; white-space: normal; }
+/* 0.5.1: las etiquetas de los pasos del plan («Para revender · +200 mil · vender mañana sábado 24») bajan de línea en vez de salirse de la tarjeta */
+.op .pill { max-width: 100%; white-space: normal; }
+/* 0.5.1: lo que llevas hoy, separado de los chips de arriba; los chips llevan flecha (se tocan) */
+.llevas { margin-top: 16px; }
+.tiempo .tiempo-ir { width: 14px; height: 14px; color: var(--apagado); margin-left: 2px; }
+/* los nombres de jugadores dentro de un texto del plan: se tocan para abrir su ficha */
+.enlace-j { display: inline; padding: 0; font: inherit; font-weight: 600; color: var(--texto); text-decoration: underline; text-decoration-color: var(--rojo); text-decoration-thickness: 1.5px; text-underline-offset: 3px; cursor: pointer; }

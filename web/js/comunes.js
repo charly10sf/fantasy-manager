@@ -214,7 +214,19 @@ export const BLOQUEO = {
   dineroRivales: ['Dinero de los rivales', 'Cuánto tiene cada rival y hasta dónde puede gastar.'],
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales tienen dinero para quitarte a cada jugador y cuánto subir la cláusula para que no le llegue a nadie.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor, cuántos días le quedan subiendo y cuándo venderlo antes de que baje.'],
+  ventasRivales: ['Lo que venden los rivales', 'Qué jugadores tiene cada rival en el mercado, cuánto le da LaLiga por cada uno y cuánto ofrecerle para que te lo venda a ti.'],
 };
+
+/* ---------- lo que tiene en venta cada rival (función top «ventasRivales») ---------- */
+/** sus jugadores en el mercado, con lo que pide y lo que le da LaLiga */
+export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === 'manager' && String(m.vendedorTeamId || '') === String(tid));
+/** «Pedri · pide 12,5 M · LaLiga ~13,1 M», en una etiqueta */
+export function ventaPill(m) {
+  const ol = m.ofertaLiga;
+  const liga = ol && !ol.sinDatos && ol.v ? `LaLiga ~${eur(ol.v, { dec: 1 })}` : 'LaLiga ?';
+  const tit = `Lo tiene en venta a ${eur(m.precio)}. ${ol && !ol.sinDatos && ol.v ? `LaLiga le ofrece unos ${eur(ol.v)}${m.ofertaMin ? `: para que te lo venda a ti, ofrécele ${eur(m.puja || m.ofertaMin)}` : ''}.` : 'Aún no se sabe lo que le da LaLiga en esta liga.'}`;
+  return `<span class="pill venta-r" title="${esc(tit)}">${icono('mercado')}${esc(m.j.nombre)} · pide ${eur(m.precio, { dec: 1 })} · ${liga}</span>`;
+}
 /** la caja de una función bloqueada (se toca para ver qué es) */
 export function candado(clave) {
   const [t, x] = BLOQUEO[clave] || ['Función top', ''];

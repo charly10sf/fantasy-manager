@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, diaDe, enParalelo } from './util.js';
+import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, diaDe, enParalelo, cuando as cuandoT } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
@@ -791,7 +791,7 @@ async function enviarPregunta(texto) {
       S.parcial = parcial;
       const ahora = Date.now();
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
-    }, ctl.signal, fotos);
+    }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; });
     if (!nativo.aLaVista()) {
       const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();
       nativo.notificar('Tu director deportivo ha contestado', limpio.length > 220 ? `${limpio.slice(0, 217)}…` : limpio || 'Entra para leer la respuesta', 'ia');
@@ -1175,6 +1175,7 @@ document.addEventListener('click', async (ev) => {
     }
     case 'cambiarClave': guardarClave(''); S.planEstado = {}; S.claveMal = false; rehacer(); ir('ia'); tostada('Pega la clave nueva'); break;
     case 'cerrarHoja': cerrarHoja(); break;
+    case 'paron': if (S.M && S.M.paron) tostada(`${S.M.paron.nombre || 'Parón de selecciones'}: del ${cuandoT(S.M.paron.ini, { hora: false })} al ${cuandoT(S.M.paron.fin, { hora: false })}. No hay jornada y los valores casi no se mueven: lo que vayas a vender, mejor antes.`, 7000); break;
     case 'irIA': cerrarHoja(); ir('ia'); break;
     case 'copiarDiag': nativo.copiar(Hj.textoDiagnostico(S)); tostada('Copiado'); break;
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;

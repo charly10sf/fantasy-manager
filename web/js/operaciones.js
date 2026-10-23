@@ -151,7 +151,7 @@ export function porQueNo(D, M, o, pid, j) {
 }
 
 /** el catálogo para la IA, por grupos (lo más interesante primero) */
-export function catalogoTxt(D, M, cat, { corto = false, datos = null } = {}) {
+export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = null } = {}) {
   const L = [];
   const g = (titulo, ops, n) => {
     if (!ops.length) return;
@@ -167,9 +167,10 @@ export function catalogoTxt(D, M, cat, { corto = false, datos = null } = {}) {
   const t = (x) => cat.lista.filter((o) => o.ref[0] === x);
   L.push('OPERACIONES POSIBLES HOY (las ÚNICAS que puedes recomendar; cada operación del plan lleva su "ref"):');
   g('ACEPTAR OFERTAS (lo que ya tengo en venta):', t('A'), 20);
-  g('PUJAR (jugadores LIBRES de la liga, subasta a ciegas):', t('P').sort(por), corto ? 12 : 22);
-  g('COMPRAR A OTRO MANAGER (solo lo que TIENE A LA VENTA o un TRATO que te conté; decide él):', [...t('T'), ...t('M').sort(por)], corto ? 8 : 14);
-  g('CLAUSULAR (cláusulas de rivales abiertas o que se abren antes de la jornada):', t('C').sort(por), corto ? 14 : 26);
+  // (cada candidato va con su ficha entera: con más, la IA tarda mucho más y no decide mejor)
+  g('PUJAR (jugadores LIBRES de la liga, subasta a ciegas):', t('P').sort(por), chat ? 10 : corto ? 12 : 14);
+  g('COMPRAR A OTRO MANAGER (solo lo que TIENE A LA VENTA o un TRATO que te conté; decide él):', [...t('T'), ...t('M').sort(por)], chat ? 8 : corto ? 8 : 10);
+  g('CLAUSULAR (cláusulas de rivales abiertas o que se abren antes de la jornada):', t('C').sort(por), chat ? 12 : corto ? 14 : 16);
   g('BLINDAR (mis cláusulas abiertas o a punto):', t('B'), 12);
   L.push(`VENDER: cualquiera de mis jugadores con [V-<id>] (ids: ${t('V').map((o) => `${o.j.nombre} V-${o.pid}`).join(', ')}).`);
   L.push('Cualquier jugador de un rival que no esté arriba NO SE PUEDE CONSEGUIR HOY: ni comprándoselo ni de otra forma.');

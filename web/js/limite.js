@@ -56,7 +56,7 @@ function esDe(yo) {
 /* Las funciones top, bloqueadas hasta que lleguen los anuncios (entonces se desbloquearán viendo uno).
    limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas tres), y «todoAbierto», los equipos que las ven
    todas (si no lo dice, los de «sinLimite»). En la liga de ejemplo, bloqueadas. */
-const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia'];
+const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'ventasRivales'];
 let yoB = null, demoB = false;
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
 export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }

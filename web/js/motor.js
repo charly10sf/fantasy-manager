@@ -1293,6 +1293,14 @@ export function analizar(D, H, c, extra = {}) {
       porque = `La de LaLiga es de las más bajas que da (${pct(mejor.sobre * 100)} sobre su valor; en tu liga suele ofrecer entre ${pct(liga.p25 * 100)} y ${pct(liga.p75 * 100)}). Mañana te hará otra: ${liga.dia < 0 ? `aunque baje ${eur(-liga.dia)}, ` : ''}lo normal sería unos ${eur(liga.esperado)} (${eur(liga.gana, { signo: true })}). Espera, salvo que necesites el dinero hoy.`;
     }
     else if (mejor.sobre >= 0.02) { consejo = 'aceptar'; porque = `Te pagan un ${Math.round(mejor.sobre * 100)} % más de lo que vale.`; }
+    // si no te hace falta el dinero y no te quita puntos, no hay prisa: puede quedarse hasta que llegue una oferta
+    // mejor (LaLiga hace una nueva en cada cambio de mercado). Salvo que caiga deprisa (más de un 3 % al día),
+    // esté de baja o la oferta sea de las altas
+    else if (num(D.dinero) >= 0 && M.perdida(v.pid) < 0.3 && !MALOS.has(j.estado) && !(liga && liga.posicion === 'alta')
+      && !(ine && j.valor && num(ine.ult) < -0.03 * j.valor) && !(t.p1 != null && t.p1 < -3)) {
+      consejo = 'esperar';
+      porque = `No te hace falta el dinero (tienes ${eur(D.dinero)}) y no entra en tu once: puede quedarse hasta que LaLiga te haga una oferta mejor${ine && ine.ult < 0 ? ` (baja unos ${eur(-ine.ult)} al día, poco para lo que varía la oferta de un día a otro)` : ''}.`;
+    }
     // la inercia manda: si ha girado, cada día vale menos; si se está frenando, no se espera a que gire
     else if (ine && (ine.fase === 'giro' || ine.fase === 'baja') && mejor.sobre >= -0.05) { consejo = 'aceptar'; porque = `Ha girado a la baja (hoy ${eur(ine.ult, { signo: true })}): cada día que esperes vale menos, y la oferta casi iguala su valor.`; }
     else if (ine && (ine.fase === 'frena' || ine.fase === 'parado') && mejor.sobre >= -0.02) { consejo = 'aceptar'; porque = ine.fase === 'parado' ? 'Ya ha dejado de subir: lo normal es que ahora baje. No esperes.' : `Sube cada vez menos y gira en unos ${Math.max(1, Math.round(ine.giroEn))} días: no esperes a que baje.`; }
