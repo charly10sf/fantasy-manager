@@ -11,7 +11,7 @@ export const VERSION = '0.5.1';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.1', f: '2026-10-23', h: '20:22', t: 'La IA, más rápida',
+    v: '0.5.1', f: '2026-10-23', h: '20:29', t: 'La IA, más rápida',
     cosas: [
       { tipo: 'mejora', d: 'ia', t: 'Respuestas y plan más rápidos', x: 'La IA piensa menos rato antes de contestar (con la mitad de tiempo el plan sale igual, y la app comprueba cada paso), en el chat le llegan la mitad de datos (tus jugadores enteros, los candidatos en resumen) y solo busca en Google si la pregunta lo necesita. Si un modelo falla por algo pasajero, las siguientes preguntas se lo saltan un rato en vez de esperarlo cada vez. Mientras piensa, dice qué está haciendo.', ir: { v: 'ia' } },
       { tipo: 'nuevo', d: 'oferta', t: 'Lo que venden los rivales', x: 'En Rivales, al lado de cada uno, los jugadores que tiene en el mercado con lo que pide y lo que le da LaLiga, y en su ficha, cuánto ofrecerle para que te lo venda a ti. Es una función top: se desbloqueará viendo un anuncio.', ir: { v: 'rivales', seg: 'rivales:clasif' } },
