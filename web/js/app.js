@@ -474,11 +474,15 @@ async function enviarAviso() {
   S.av.borrador = t; S.av.sinDiag = !conDiag; S.av.enviando = true; S.av.error = '';
   repintarAvisos();
   try {
-    await mandarAviso({ texto: t, diag, equipo: (S.M && S.M.yo && S.M.yo.nombre) || '', liga: (S.D && S.D.liga && S.D.liga.nombre) || '', app: `${VERSION} · ${enApp ? `app ${nativo.canal()}` : 'web'}` });
+    const env = await mandarAviso({ texto: t, diag, equipo: (S.M && S.M.yo && S.M.yo.nombre) || '', liga: (S.D && S.D.liga && S.D.liga.nombre) || '', app: `${VERSION} · ${enApp ? `app ${nativo.canal()}` : 'web'}` });
     S.av.borrador = ''; S.av.enviando = false;
     tostada('Aviso mandado: te aviso cuando conteste', 5000);
+    // el servidor tarda unos segundos en listarlo: mientras, se pone a mano para que lo veas ya
+    const nuevo = { id: env.id, t: Date.now(), texto: t, respuesta: null, respondida: null, vista: true };
     const r = await misAvisos().catch(() => null);
-    if (r) Object.assign(S.av, { lista: r.lista, admin: r.admin, pendientes: r.pendientes });
+    const lista = (r ? r.lista : S.av.lista) || [];
+    S.av.lista = lista.some((x) => x.id === env.id) ? lista : [nuevo, ...lista];
+    if (r) Object.assign(S.av, { admin: r.admin, pendientes: r.pendientes });
   } catch (e) {
     S.av.enviando = false;
     if (e.sesion) S.av.sinSesion = true; else S.av.error = `No se ha podido mandar: ${e.message}`;
@@ -502,9 +506,9 @@ async function contestarAviso(id) {
     await responderAviso(id, t);
     S.av.respBorrador = ''; S.av.respondiendo = false;
     tostada('Respuesta mandada: le llega en la app');
-    const [d, todos] = await Promise.all([unAviso(id).catch(() => null), todosAvisos().catch(() => null)]);
-    if (d) S.av.detalle = d;
-    if (todos) S.av.todos = todos.lista;
+    // lo contestado, a mano ya (el servidor tarda unos segundos en listarlo)
+    if (S.av.detalle && S.av.detalle.id === id) Object.assign(S.av.detalle, { respuesta: t, respondida: Date.now(), vista: false });
+    S.av.todos = (S.av.todos || []).map((x) => (x.id === id ? { ...x, r: Date.now() } : x));
     const r = await misAvisos().catch(() => null);
     if (r) S.av.pendientes = r.pendientes;
   } catch (e) { S.av.respondiendo = false; tostada(`No se ha podido mandar: ${e.message}`, 6000); }
