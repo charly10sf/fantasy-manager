@@ -59,6 +59,8 @@ export async function marcarVisto(id) {
   LS.set('avisos', { ...a, lista: (a.lista || []).map((x) => (x.id === id ? { ...x, vista: true } : x)) });
 }
 export const todosAvisos = () => pedirWorker('GET', '/fallos/todos');
+/** los sin contestar contados por la app (la cuenta del servidor llega con retraso tras contestar) */
+export function fijarPendientes(n) { const a = avisosGuardados(); if (a.admin) LS.set('avisos', { ...a, pendientes: n }); }
 
 /* quién usa la app: cada app avisa al abrirse (y cada 10 minutos a la vista) y el dueño ve la lista */
 export async function saludar(datos) {

@@ -21,7 +21,7 @@ import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloque
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
+import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
@@ -532,7 +532,8 @@ async function abrirAvisos() {
     if (r.admin) {
       S.av.cargandoTodos = true; repintarAvisos();
       const t = await todosAvisos();
-      Object.assign(S.av, { todos: t.lista, cargandoTodos: false });
+      Object.assign(S.av, { todos: conContestados(t.lista), cargandoTodos: false });
+      S.av.pendientes = S.av.todos.filter((x) => !x.r).length; fijarPendientes(S.av.pendientes);
       repintarAvisos();
     }
   } catch (e) {
@@ -571,6 +572,8 @@ async function abrirAvisoRecibido(id) {
   S.av.abierto = id; S.av.detalle = null; S.av.respBorrador = '';
   repintarAvisos();
   try { S.av.detalle = await unAviso(id); } catch (e) { S.av.detalle = { error: e.message }; }
+  // el aviso entero sí está al día: si ya tiene respuesta, cuenta como contestado aunque la lista aún no lo diga
+  if (S.av.detalle && S.av.detalle.respondida) { apuntarContestado(id, S.av.detalle.respondida); S.av.todos = conContestados(S.av.todos); S.av.pendientes = (S.av.todos || []).filter((x) => !x.r).length; fijarPendientes(S.av.pendientes); }
   if (S.av.abierto === id) repintarAvisos();
 }
 /* para el dueño: los avisos sin contestar, enteros y con su diagnóstico, para pegarlos en el chat de Claude */
@@ -596,6 +599,11 @@ async function copiarAvisosClaude() {
   repintarAvisos();
   tostada(`Copiados ${lista.length}: pégalos en el chat de Claude`, 5000);
 }
+/* lo que contestas tarda hasta un minuto en salir como contestado en la lista del servidor (el almacén del Worker
+   lista con retraso): se apunta aquí y manda sobre la lista durante un día */
+const contestados = () => { const c = LS.get('avisos-contestados', {}); for (const [k, t] of Object.entries(c)) if (Date.now() - t > 86400e3) delete c[k]; return c; };
+function apuntarContestado(id, t = Date.now()) { const c = contestados(); c[id] = t; LS.set('avisos-contestados', c); }
+const conContestados = (lista) => { const c = contestados(); return (lista || []).map((x) => (!x.r && c[x.id] ? { ...x, r: c[x.id] } : x)); };
 async function contestarAviso(id) {
   const t = (($('#respTxt') || {}).value || '').trim();
   if (!t) { tostada('Escribe la respuesta'); return; }
@@ -607,9 +615,10 @@ async function contestarAviso(id) {
     tostada('Respuesta mandada: le llega en la app');
     // lo contestado, a mano ya (el servidor tarda unos segundos en listarlo)
     if (S.av.detalle && S.av.detalle.id === id) Object.assign(S.av.detalle, { respuesta: t, respondida: Date.now(), vista: false });
-    S.av.todos = (S.av.todos || []).map((x) => (x.id === id ? { ...x, r: Date.now() } : x));
-    const r = await misAvisos().catch(() => null);
-    if (r) S.av.pendientes = r.pendientes;
+    apuntarContestado(id);
+    S.av.todos = conContestados(S.av.todos);
+    await misAvisos().catch(() => null);
+    S.av.pendientes = S.av.todos.filter((x) => !x.r).length; fijarPendientes(S.av.pendientes);
   } catch (e) { S.av.respondiendo = false; tostada(`No se ha podido mandar: ${e.message}`, 6000); }
   repintarAvisos();
   pintarNumAvisos();
