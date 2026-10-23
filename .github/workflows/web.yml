@@ -6,7 +6,8 @@ name: Web
 on:
   push:
     branches: [main]
-    paths: ['web/**', '.github/workflows/web.yml']
+    # también cuando cambia la parte Android: así el paquete.json publicado lleva su huella nueva
+    paths: ['web/**', 'android/app/src/**', '.github/paquete.py', '.github/workflows/web.yml']
   workflow_dispatch:
 
 permissions:
@@ -27,6 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # web/paquete.json: lo que la app compara con lo que trae dentro para ponerse al día sin reinstalar
+      - name: Huellas
+        run: python3 .github/paquete.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web

@@ -17,7 +17,7 @@ import { ponerEquipos } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite, mirarLimite, estadoLimite } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite, versionNueva } from './limite.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, numeroAvisos, hayQueMirar, avisosGuardados } from './soporte.js';
@@ -249,7 +249,7 @@ function pintar({ arriba = false } = {}) {
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
     v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
   }
-  $('#banda').innerHTML = (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : '');
+  $('#banda').innerHTML = (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   if (S.vista === 'ia') {
     bajarChat();
@@ -641,6 +641,7 @@ window.atras = () => {
 };
 window.alVolver = () => {
   comprobarAvisos();
+  if (enApp && Date.now() - (S.versionT || 0) > 30 * MIN) buscarVersion(false);
   if (S.D && !S.cargando && Date.now() - S.D.t > 15 * MIN && (enDemo() || haySesion())) cargar({ silencio: true });
 };
 
@@ -840,10 +841,53 @@ window.vozTexto = (texto, error) => {
 async function buscarVersion(avisar = false) {
   // la de Google Play la actualiza la tienda; la web siempre está al día
   if (!enApp || nativo.canal() === 'play') { if (avisar) tostada(enApp ? 'Las versiones nuevas llegan por Google Play' : 'La web siempre está en la última versión'); return; }
+  // la web nueva se baja sola (contesta webBuscada); el APK nuevo solo hace falta si ha cambiado la parte Android
+  S.versionT = Date.now();
+  const conAlDia = avisar ? nativo.buscarWeb() : !!nativo.estadoWeb();
+  if (avisar) { S.buscaAvisar = conAlDia ? Date.now() : 0; tostada('Buscando versión nueva…', 2000); }
   const v = await ultimaVersion();
-  if (v && v.version > nativo.version()) { S.nueva = v; pintar(); if (avisar) tostada(`Hay una versión nueva: ${v.nombre}`); }
-  else if (avisar) tostada('Tienes la última versión');
+  const mia = nativo.huellaNativa();
+  const hace = v && v.version > nativo.version() && !(mia && v.nativo && v.nativo === mia);
+  if (hace) { S.nueva = v; versionNueva(v); pintar(); if (avisar) tostada(`Hay una versión nueva de la app: ${v.nombre}`); }
+  else if (avisar && !conAlDia) tostada('Tienes la última versión');
 }
+
+/* ---------------- la web al día sin reinstalar ----------------
+   La app mira al abrirse (y cada rato) si se ha publicado web nueva; si es para su misma parte Android, la baja
+   sola y avisa con webBuscada('nueva'). Entonces se pone recargando la página, pero solo cuando no se pierde nada:
+   con la cuenta atrás o sin minutos, recién abierta o al volver a la app después de un rato. Si no, una banda. */
+const arranqueT = Date.now();
+let fueraT = 0;
+function sePuedeRecargar(alVolver = false) {
+  if ($('#limite')) return true;
+  if (S.cargando || (S.planEstado || {}).cargando || S.chatCtl || tourAbierto()) return false;
+  if ([...document.querySelectorAll('textarea, input[type="text"], input:not([type])')].some((e) => e.value && e.value.trim())) return false;
+  if (!S.D) return true;
+  return alVolver || (Date.now() - arranqueT < 25000 && !S.hoja);
+}
+function ponerWebNueva() {
+  LS.set('web-puesta', { t: Date.now() });
+  location.reload();
+}
+window.webBuscada = (estado) => {
+  const avisar = S.buscaAvisar && Date.now() - S.buscaAvisar < 120000;
+  S.buscaAvisar = 0;
+  if (estado === 'nueva') {
+    S.webNueva = true;
+    if (sePuedeRecargar()) ponerWebNueva();
+    else { if (S.D && !S.hoja) pintar(); if (avisar) tostada('Versión nueva lista: toca «Ponerla»'); }
+    return;
+  }
+  if (!avisar) return;
+  if (String(estado).startsWith('error')) tostada(`No he podido mirar si hay versión nueva (${String(estado).slice(7)})`, 5000);
+  else if (!S.nueva) tostada('Tienes la última versión');
+};
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { fueraT = Date.now(); return; }
+  if (S.webNueva && fueraT && Date.now() - fueraT > 60000 && sePuedeRecargar(true)) ponerWebNueva();
+});
+// por si llegó en mal momento (cargando la liga, la IA trabajando): se vuelve a mirar cada poco
+setInterval(() => { if (S.webNueva && sePuedeRecargar()) ponerWebNueva(); }, 10000);
 window.progresoApp = (pct, estado) => {
   if (pct < 0) tostada(`No se ha podido bajar: ${estado}`, 5000);
   else if (estado === 'permiso') tostada('Dale permiso para instalar y vuelve a pulsar Actualizar', 6000);
@@ -1133,6 +1177,7 @@ document.addEventListener('click', async (ev) => {
     case 'exactas': nativo.pedirAlarmasExactas(); break;
     case 'probarAviso': if (enApp) { nativo.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'rivales'); tostada('Mira las notificaciones'); } else tostada('Los avisos solo funcionan en la app'); break;
     case 'buscarVersion': buscarVersion(true); break;
+    case 'ponerWeb': ponerWebNueva(); break;
     case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Bajando la versión nueva…'); } break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarChat': borrarConversacion(); pintar(); break;
@@ -1343,4 +1388,7 @@ async function arrancar() {
   }, 60e3);
 }
 
+// todos los módulos han cargado: la web arranca bien (si era una bajada sin reinstalar, la app se la queda)
+nativo.webViva();
+if (!EN_FONDO) { const wp = LS.get('web-puesta', null); if (wp) { LS.del('web-puesta'); if (Date.now() - wp.t < 120000) setTimeout(() => tostada(`App al día: versión ${VERSION}`, 4000), 1800); } }
 if (EN_FONDO) trabajoFondo(); else arrancar();

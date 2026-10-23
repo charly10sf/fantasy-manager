@@ -45,7 +45,8 @@ final class Web {
         return new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest r) {
-                return cargador.shouldInterceptRequest(r.getUrl());
+                WebResourceResponse nueva = AlDia.servir(c, r.getUrl());
+                return nueva != null ? nueva : cargador.shouldInterceptRequest(r.getUrl());
             }
 
             @Override

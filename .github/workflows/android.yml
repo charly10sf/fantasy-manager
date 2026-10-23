@@ -11,6 +11,7 @@ on:
     paths:
       - "android/**"
       - "web/**"
+      - ".github/paquete.py"
       - ".github/workflows/android.yml"
   workflow_dispatch:
 
@@ -73,6 +74,11 @@ jobs:
           echo "VERSION_NAME=${v:-0.0.0}" >> "$GITHUB_ENV"
           echo "Versión ${v:-0.0.0}, compilación ${{ github.run_number }}"
 
+      # las huellas de la web y de la parte Android (web/paquete.json va dentro del APK; NATIVO, en BuildConfig):
+      # con ellas la app se pone al día sin reinstalar cuando solo cambia la web
+      - name: Huellas
+        run: python3 .github/paquete.py >> "$GITHUB_ENV"
+
       - name: Compilar
         working-directory: android
         env:
@@ -94,7 +100,7 @@ jobs:
           gh release view app >/dev/null 2>&1 || gh release create app --title "App de Android" --notes "Fantasy Manager para Android. Descarga fantasy-manager.apk e instálala."
           gh release upload app fantasy-manager.apk --clobber
           gh release edit app --title "App de Android $VERSION_NAME" || true
-          printf '{"version": %s, "nombre": "%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "${{ github.run_number }}" "$VERSION_NAME" "${{ github.repository }}" > app.json
+          printf '{"version": %s, "nombre": "%s", "nativo": "%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "${{ github.run_number }}" "$VERSION_NAME" "$NATIVO" "${{ github.repository }}" > app.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add app.json

@@ -47,6 +47,8 @@ public class Fondo extends Worker {
         // con la app abierta (o la IA ya trabajando en ella) no hace falta: lo hace la propia app
         if (Principal.abierta || Puente.ocupada) return Result.success();
         p.edit().putLong("fondo_ini", System.currentTimeMillis()).remove("fondo_error").apply();
+        // la web al día también con la app cerrada: así la próxima vez que la abras ya está puesta
+        AlDia.buscar(c);
         ui.post(() -> {
             try {
                 WebView w = new WebView(c);

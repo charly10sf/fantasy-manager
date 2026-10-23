@@ -1,6 +1,7 @@
 package es.fantasymanager.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -81,7 +82,9 @@ public class Principal extends Activity {
         web.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest r) {
-                return cargador.shouldInterceptRequest(r.getUrl());
+                // primero lo que se haya bajado para tener la web al día (AlDia); si no, lo del APK
+                WebResourceResponse nueva = AlDia.servir(Principal.this, r.getUrl());
+                return nueva != null ? nueva : cargador.shouldInterceptRequest(r.getUrl());
             }
 
             @Override
@@ -93,14 +96,24 @@ public class Principal extends Activity {
             }
 
             @Override
+            public void onPageStarted(WebView v, String url, android.graphics.Bitmap icono) {
+                AlDia.cargaT = System.currentTimeMillis();
+            }
+
+            @Override
             public void onPageFinished(WebView v, String url) {
+                boolean primera = !cargada;
                 cargada = true;
                 entregarLogin();
+                vigilar();
+                if (primera) web.postDelayed(() -> buscarWeb(false), 4000);
             }
         });
         web.setWebChromeClient(new WebChromeClient());
 
         loginPendiente = loginDe(getIntent());
+        // si la web bajada no arrancó las dos últimas veces, se vuelve a la del APK
+        AlDia.alAbrir(this);
         if (guardado != null) web.restoreState(guardado);
         else web.loadUrl(direccion(getIntent()));
         // los avisos se vuelven a programar por si el sistema los borró al actualizar la app
@@ -162,6 +175,34 @@ public class Principal extends Activity {
         } catch (Exception e) {
             Toast.makeText(this, "No se puede abrir " + u, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * La web bajada tiene 20 segundos para dar señal de vida (webViva); si no, se descarta y se vuelve a cargar la
+     * del APK. Así un fallo en una web publicada nunca deja la app en blanco.
+     */
+    private void vigilar() {
+        final long t0 = AlDia.cargaT;
+        if (AlDia.activa(this) == null) return;
+        web.postDelayed(() -> {
+            if (web != null && AlDia.cargaT == t0 && AlDia.sinSenal(this)) {
+                AlDia.descartar(this, "no daba señal a los 20 segundos");
+                web.reload();
+            }
+        }, 20000);
+    }
+
+    /**
+     * Mira si hay web nueva publicada y la baja (en otro hilo). Al acabar se lo dice a la web con webBuscada(estado):
+     * «nueva» (lista para ponerla), «igual», «apk» (hace falta el APK nuevo), «parada» o «error: …».
+     */
+    void buscarWeb(boolean aunqueReciente) {
+        if (!aunqueReciente && System.currentTimeMillis() - AlDia.ultimaBusqueda < 60000) return;
+        final Context app = getApplicationContext();
+        new Thread(() -> {
+            String r = AlDia.buscar(app);
+            js("window.webBuscada && webBuscada(" + JSONObject.quote(r) + ")");
+        }, "aldia").start();
     }
 
     /** Ejecuta algo en la web desde cualquier hilo */
@@ -356,5 +397,7 @@ public class Principal extends Activity {
         // de vuelta de otra pantalla, el foco otra vez al WebView (sin él no sale el teclado)
         if (!web.hasFocus()) web.requestFocus();
         js("window.alVolver && alVolver()");
+        // de vuelta tras un rato: ¿hay web nueva?
+        if (cargada && System.currentTimeMillis() - AlDia.ultimaBusqueda > 20 * 60000) buscarWeb(false);
     }
 }

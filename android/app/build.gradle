@@ -19,6 +19,9 @@ android {
         versionCode((System.getenv('VERSION_CODE') ?: '1') as int)
         // el mismo número que la web (web/js/version.js); la Action lo saca de ahí
         versionName System.getenv('VERSION_NAME') ?: "0.0.${System.getenv('VERSION_CODE') ?: '0'}"
+        // la huella de la parte Android (la calcula la Action con .github/paquete.py): la web publicada solo se baja
+        // sin reinstalar si es para esta misma parte Android (AlDia.java)
+        buildConfigField 'String', 'NATIVO', "\"${System.getenv('NATIVO') ?: 'local'}\""
     }
 
     // dos versiones de la misma app: la de GitHub (se baja e instala sola la versión nueva desde el aviso) y la

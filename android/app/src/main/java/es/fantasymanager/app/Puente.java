@@ -311,6 +311,30 @@ public class Puente {
         return Canal.NOMBRE;
     }
 
+    /** la huella de la parte Android de este APK: si la de la versión publicada es otra, hace falta el APK nuevo */
+    @JavascriptInterface
+    public String nativo() {
+        return BuildConfig.NATIVO;
+    }
+
+    /** la web ha arrancado bien (si era una bajada, se queda) */
+    @JavascriptInterface
+    public void webViva() {
+        AlDia.viva(ctx);
+    }
+
+    /** la web que va dentro del APK, la bajada que se usa (si la hay), cuándo se miró y el último fallo */
+    @JavascriptInterface
+    public String web() {
+        return AlDia.estado(ctx).toString();
+    }
+
+    /** mirar ya si hay web nueva (contesta con webBuscada) */
+    @JavascriptInterface
+    public void buscarWeb() {
+        if (act != null) act.buscarWeb(true);
+    }
+
     @JavascriptInterface
     public void actualizar(String url) {
         if (act == null) return;

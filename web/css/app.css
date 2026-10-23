@@ -1042,3 +1042,7 @@ body.en-tour { overflow: hidden; }
 .ajuste-tour b { display: block; font-size: 15.5px; font-weight: 600; }
 .ajuste-tour small { display: block; margin-top: 2px; font-size: 13.5px; color: var(--texto2); }
 .ajuste-tour > .ic:last-child { width: 18px; height: 18px; flex: none; color: var(--apagado); }
+
+/* con la app cerrada también se puede actualizar */
+.lim-nueva { margin-top: 18px; padding: 14px; border-radius: 14px; background: var(--plano2); border: 1px solid var(--linea); }
+.lim-nueva p { margin: 0 0 10px; font-size: 14.5px; color: var(--texto2); }

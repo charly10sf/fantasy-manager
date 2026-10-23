@@ -103,13 +103,21 @@ function hastaMedianoche() {
   return ((23 - Number(p.hour)) * 3600 + (59 - Number(p.minute)) * 60 + (60 - Number(p.second))) * 1000;
 }
 
+/* con la app cerrada (cuenta atrás o sin minutos) se puede actualizar igual: la web se pone al día sola, y si hace
+   falta el APK nuevo (cambia la parte Android), su botón sale aquí también */
+let appNueva = null;
+export function versionNueva(v) {
+  appNueva = v || null;
+  if (document.getElementById('limite') && comprobarYa) comprobarYa();
+}
+const botonNueva = () => (appNueva && enApp ? `<div class="lim-nueva"><p>Hay una versión nueva de la app (${esc(appNueva.nombre || '')}). Instálala ya y estarás listo.</p><button class="btn" data-accion="actualizarApp">Actualizar la app</button></div>` : '');
 function tapar(min, usados) {
   let el = document.getElementById('limite');
   const frase = FRASES[Math.floor(Date.now() / 86400e3) % FRASES.length];
   const html = `<div class="lim-in">${LOGO}<h1 id="limT">Se acabó por hoy</h1>
     <p>Hoy llevas <b>${Math.round(usados / 60)} min</b> con la app abierta (contando la app y la web) y tu límite son <b>${min} min al día</b>.</p>
     <p class="lim-frase">${esc(frase)}</p>
-    <p class="lim-vuelve">Vuelve mañana: se reinicia a las 00:00 (dentro de ${esc(dura(hastaMedianoche()))}).${enApp ? ' Los avisos te siguen llegando.' : ''}</p></div>`;
+    <p class="lim-vuelve">Vuelve mañana: se reinicia a las 00:00 (dentro de ${esc(dura(hastaMedianoche()))}).${enApp ? ' Los avisos te siguen llegando.' : ''}</p>${botonNueva()}</div>`;
   if (!el) {
     el = document.createElement('div');
     el.id = 'limite'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'limT');
@@ -127,7 +135,7 @@ function taparHastaApertura(t, mensaje, demo = false) {
     ${mensaje ? `<p class="lim-msg">${esc(mensaje)}</p>` : ''}
     ${demo
     ? '<p class="lim-vuelve">La liga de ejemplo también se abre a esa hora. Si aún no has entrado con tu cuenta, entra ya y a esa hora estará todo listo.</p><button class="btn" data-accion="salirDemo">Entrar con mi cuenta</button>'
-    : `<p class="lim-vuelve">Ya has entrado con tu cuenta: a esa hora, abre la app y estará todo listo.</p>${enApp ? (nativo.avisosPermitidos() ? '<p class="lim-vuelve">Te llegará una notificación cuando se abra.</p>' : '<button class="btn" data-accion="permisoApertura">Avísame cuando se abra</button>') : ''}`}</div>`;
+    : `<p class="lim-vuelve">Ya has entrado con tu cuenta: a esa hora, abre la app y estará todo listo.${enApp ? ' Mientras, se pone al día sola con los arreglos que vayan saliendo.' : ''}</p>${enApp ? (nativo.avisosPermitidos() ? '<p class="lim-vuelve">Te llegará una notificación cuando se abra.</p>' : '<button class="btn" data-accion="permisoApertura">Avísame cuando se abra</button>') : ''}`}${botonNueva()}</div>`;
   if (!el) {
     el = document.createElement('div');
     el.id = 'limite'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'limT');

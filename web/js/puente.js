@@ -142,4 +142,10 @@ export const nativo = {
   teclado: () => (N && typeof N.teclado === 'function' ? llamar('teclado') : undefined),
   fotos: (max) => llamar('fotos', Math.max(1, Math.min(4, +max || 1))),
   estadoFondo: () => { try { return JSON.parse(llamar('estadoFondo') || 'null'); } catch (e) { return null; } },
+  // la web al día sin reinstalar (AlDia.java): la huella de la parte Android de este APK, decir que la web ha
+  // arrancado bien, cómo está (la que trae el APK, la bajada y el último fallo) y buscar ya (contesta webBuscada)
+  huellaNativa: () => (N && typeof N.nativo === 'function' ? llamar('nativo') || '' : ''),
+  webViva: () => llamar('webViva'),
+  estadoWeb: () => { try { return JSON.parse(llamar('web') || 'null'); } catch (e) { return null; } },
+  buscarWeb: () => { if (!N || typeof N.buscarWeb !== 'function') return false; llamar('buscarWeb'); return true; },
 };
