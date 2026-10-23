@@ -4,7 +4,8 @@ import { http, enApp, WORKER_PUBLICO } from './puente.js';
 import { token } from './auth.js';
 import { LS } from './util.js';
 
-async function pedir(metodo, ruta, cuerpo = null) {
+/** una petición al Worker con la sesión de LaLiga (para saber quién es); también la usa el límite de minutos */
+export async function pedirWorker(metodo, ruta, cuerpo = null) {
   const tk = await token(); // sin sesión de LaLiga lanza un error de sesión
   const cab = { Authorization: `Bearer ${tk}`, 'content-type': 'application/json', Accept: 'application/json' };
   let s, b;
@@ -34,7 +35,7 @@ export function numeroAvisos() {
 export const hayQueMirar = () => { const a = avisosGuardados(); return !!(a.admin || (a.lista || []).some((x) => !x.respuesta || !x.vista) || LS.get('avisos-mandado', 0)); };
 
 export async function mandarAviso(datos) {
-  const r = await pedir('POST', '/fallos', datos);
+  const r = await pedirWorker('POST', '/fallos', datos);
   LS.set('avisos-mandado', Date.now());
   return r;
 }
@@ -44,7 +45,7 @@ export async function mandarAviso(datos) {
  */
 export async function misAvisos() {
   const antes = avisosGuardados();
-  const r = await pedir('GET', '/fallos/mios');
+  const r = await pedirWorker('GET', '/fallos/mios');
   const ya = new Set(LS.get('avisos-notificados', []));
   const nuevasResp = (r.lista || []).filter((x) => x.respuesta && !x.vista && !ya.has(`${x.id}:${x.respondida}`));
   const nuevosRecibidos = r.admin ? Math.max(0, (r.pendientes || 0) - (antes.admin ? antes.pendientes || 0 : 0)) : 0;
@@ -53,14 +54,14 @@ export async function misAvisos() {
   return { ...r, nuevasResp, nuevosRecibidos };
 }
 export async function marcarVisto(id) {
-  await pedir('POST', '/fallos/visto', { id });
+  await pedirWorker('POST', '/fallos/visto', { id });
   const a = avisosGuardados();
   LS.set('avisos', { ...a, lista: (a.lista || []).map((x) => (x.id === id ? { ...x, vista: true } : x)) });
 }
-export const todosAvisos = () => pedir('GET', '/fallos/todos');
-export const unAviso = (id) => pedir('GET', `/fallos/uno?id=${encodeURIComponent(id)}`);
+export const todosAvisos = () => pedirWorker('GET', '/fallos/todos');
+export const unAviso = (id) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}`);
 export async function responderAviso(id, respuesta) {
-  const r = await pedir('POST', '/fallos/responder', { id, respuesta });
+  const r = await pedirWorker('POST', '/fallos/responder', { id, respuesta });
   const a = avisosGuardados();
   if (a.admin) LS.set('avisos', { ...a, pendientes: Math.max(0, (a.pendientes || 0) - 1) });
   return r;

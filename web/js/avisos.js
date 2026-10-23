@@ -73,7 +73,10 @@ export function programar(D, M) {
   // si la app aún no se ha abierto para este equipo (limites.json, «abre»), nada de avisos antes de esa hora
   const e = D && !D.demo && D.yo ? (D.clasif || []).find((x) => x.teamId === D.yo.teamId) : null;
   const hasta = e ? cerradaHasta((LS.get('limites', null) || {}).cfg, { nombre: e.nombre, teamId: e.teamId, userId: D.yo.userId }) : null;
-  if (hasta) lista = lista.filter((a) => a.t >= hasta);
+  if (hasta) {
+    lista = lista.filter((a) => a.t >= hasta);
+    if (hasta > Date.now() + 30e3) lista.push({ id: 'apertura', t: Math.round(hasta), titulo: '¡Fantasy Manager ya está abierta!', texto: 'Mercado nuevo y tu plan del día listos. Entra antes de que empiece la jornada.', hash: 'hoy' });
+  }
   LS.set('avisos-prog', lista);
   if (enApp) nativo.programarAvisos(lista);
   return lista;

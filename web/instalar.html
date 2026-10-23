@@ -47,7 +47,7 @@
     <svg viewBox="6 10 188 188" aria-hidden="true"><path d="M74 26C84 34 116 34 126 26L154 36L190 70L168 100L150 88V178C150 183 147 186 142 186H58C53 186 50 183 50 178V88L32 100L10 70L46 36Z" fill="#EE1C3C"/><path d="M77.86 167V94.86H71.43L71 89.13L81.32 80.6H94.65V167Z M109.07 167V94.86H102.65L102.21 89.13L112.53 80.6H125.87V167Z" fill="#fff"/></svg>
     <h1>Fantasy<br><span>Manager</span></h1>
   </div>
-  <p class="lema">Te dice qué hacer cada día en tu liga de LaLiga Fantasy: a quién vender, a quién clausular y cuánto pujar.</p>
+  <p class="lema">Te dice qué hacer cada día en tu liga de LaLiga Fantasy: a quién vender, a quién clausular y cuánto pujar. Hay tres formas de usarla, con tu cuenta de LaLiga en todas: elige la tuya.</p>
 
   <section class="caja" id="android">
     <h2>Android <small>la app</small></h2>
@@ -60,12 +60,22 @@
     <p class="nota">Se actualiza sola: cuando haya versión nueva te sale un aviso dentro.</p>
   </section>
 
+  <section class="caja" id="ordenador">
+    <h2>Ordenador <small>la web</small></h2>
+    <ol>
+      <li>Abre <b>charly10sf.github.io/fantasy-manager</b> en Chrome o Edge.</li>
+      <li>Si ya tienes la app en Android: en la app, <b>Ajustes → Abrir en el ordenador</b> te da un código. Escríbelo en la web y listo.</li>
+      <li>Sin la app: pulsa <b>No tengo la app en el móvil</b> y sigue los pasos. Solo se hace una vez.</li>
+    </ol>
+    <a class="btn sec" href="./">Abrir la web</a>
+  </section>
+
   <section class="caja" id="iphone">
     <h2>iPhone <small>la web</small></h2>
     <ol>
-      <li>LaLiga solo deja entrar desde su app de Android o desde un ordenador, así que la primera vez hazlo en un ordenador: abre la web y sigue <b>No tengo la app en el móvil</b>.</li>
+      <li>LaLiga no deja entrar desde el iPhone la primera vez: entra antes en la web desde un <b>ordenador</b> (mira «Ordenador»).</li>
       <li>Ya dentro, en el ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código que dura 10 minutos.</li>
-      <li>En el iPhone, abre la web, escribe el código y listo. Para tenerla como una app: <b>Compartir → Añadir a pantalla de inicio</b>.</li>
+      <li>En el iPhone, abre la web y escribe el código. Para tenerla como una app: <b>Compartir → Añadir a pantalla de inicio</b>.</li>
     </ol>
     <a class="btn sec" href="./">Abrir la web</a>
     <p class="nota">Solo hace falta el ordenador la primera vez. Después, la sesión se renueva sola en el iPhone.</p>
@@ -83,11 +93,15 @@
   <footer>App no oficial: no es de LaLiga ni tiene relación con LaLiga. <a href="privacidad.html">Privacidad</a></footer>
 </main>
 <script>
-  // en un iPhone, lo del iPhone primero
+  // primero lo de tu dispositivo, destacado
   (function () {
-    var ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    var a = document.getElementById('android'), i = document.getElementById('iphone');
-    if (ios) { a.parentNode.insertBefore(i, a); i.classList.add('primero'); i.querySelector('.btn').classList.remove('sec'); a.querySelector('.btn').classList.add('sec'); } else if (/Android/.test(navigator.userAgent)) a.classList.add('primero');
+    var ua = navigator.userAgent;
+    var ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var id = ios ? 'iphone' : /Android/.test(ua) ? 'android' : 'ordenador';
+    var c = document.getElementById(id), primera = document.querySelector('.caja');
+    if (c !== primera) primera.parentNode.insertBefore(c, primera);
+    c.classList.add('primero');
+    document.querySelectorAll('.caja .btn').forEach(function (b) { b.classList.toggle('sec', !c.contains(b)); });
   })();
 </script>
 </body>

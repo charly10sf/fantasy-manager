@@ -3,13 +3,21 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.4.1a';
+export const VERSION = '0.4.1b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.4.1b', f: '2026-10-23', h: '03:30', t: 'Minutos en total y aviso de apertura',
+    cosas: [
+      { tipo: 'arreglo', d: 'noche', t: 'El límite de minutos, en total', x: 'Los minutos al día se cuentan por cuenta de LaLiga, no por dispositivo: el tiempo en la app y en la web se suma. Arriba, debajo del nombre de la liga, ves los que te quedan hoy.' },
+      { tipo: 'nuevo', d: 'campana', t: 'Aviso cuando se abra', x: 'Si la app aún no se ha abierto, te llega una notificación justo a la hora de apertura. En la cuenta atrás tienes el botón «Avísame cuando se abra» para dar el permiso.' },
+      { tipo: 'arreglo', d: 'camiseta', t: 'Cerrada para todos hasta la hora', x: 'Hasta la hora de apertura tampoco se puede ver la liga de ejemplo, y el cierre sale nada más cargar tu liga, sin esperar.' },
+    ],
+  },
   {
     v: '0.4.1a', f: '2026-10-23', h: '03:10', t: 'Hora de apertura',
     cosas: [

@@ -61,6 +61,9 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-liga { flex: 1; min-width: 0; }
 .sup-liga b { display: block; font: 700 17px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sup-liga span { font-size: 13.5px; color: var(--apagado); display: flex; align-items: center; gap: 6px; }
+.sup-liga .sup-queda { color: var(--oro); font-weight: 600; font-size: 12.5px; margin-top: 1px; }
+.sup-liga .sup-queda.poco { color: var(--baja); }
+.sup-liga .sup-queda[hidden] { display: none; }
 /* el nombre de la liga: con varias ligas, un botón para cambiar */
 .sup-nombre { display: flex; align-items: center; gap: 4px; max-width: 100%; color: var(--texto); text-align: left; padding: 7px 0; margin: -7px 0; }
 .sup-nombre b { min-width: 0; }

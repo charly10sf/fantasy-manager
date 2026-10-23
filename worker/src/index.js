@@ -21,6 +21,9 @@
  *   POST /fallos/responder    (el dueño) { id, respuesta }
  *   El dueño es la cuenta de LaLiga cuyo número está en ADMINS (lo pone la Action desde el secreto FM_ADMINS).
  *
+ *   POST /uso                 { seg }: suma esos segundos al tiempo de hoy de quien llama (hora de Madrid) y devuelve el
+ *                             total, para que el límite diario de minutos cuente igual en la app y en la web.
+ *
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
 
@@ -239,6 +242,21 @@ async function fallos(req, env, c, ruta) {
   return json({ e: 'No existe' }, 404, c);
 }
 
+/* ---------- el tiempo de uso de hoy, por cuenta (para el límite diario de minutos) ---------- */
+const hoyMadrid = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+async function uso(req, env, c) {
+  if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
+  const cuerpo = await req.json().catch(() => ({}));
+  const mas = Math.max(0, Math.min(120, Math.round(Number(cuerpo && cuerpo.seg) || 0)));
+  const dia = hoyMadrid(), k = `u:${u.uid}:${dia}`;
+  const antes = Number(await env.VINCULOS.get(k)) || 0;
+  const seg = antes + mas;
+  if (mas) await env.VINCULOS.put(k, String(seg), { expirationTtl: 3 * 86400 });
+  return json({ dia, seg }, 200, c);
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -251,6 +269,7 @@ export default {
       if (url.pathname === '/vincular' && req.method === 'POST') return await vincular(req, env, c);
       if (url.pathname === '/vincular/usar' && req.method === 'POST') return await usar(req, env, c);
       if (url.pathname === '/fallos' || url.pathname.startsWith('/fallos/')) return await fallos(req, env, c, url.pathname);
+      if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
     } catch (e) {

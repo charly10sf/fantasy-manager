@@ -17,7 +17,7 @@ import { ponerEquipos } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite } from './limite.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, numeroAvisos, hayQueMirar, avisosGuardados } from './soporte.js';
@@ -200,7 +200,7 @@ function marco() {
   const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" data-et="Actualizar">${icono('refrescar')}</button>
     <button class="b-ico" id="bAvisos" data-accion="avisos" aria-label="Avisar de un fallo" data-et="Fallo">${icono('bicho')}<span class="gl oculto" id="gl-avisos"></span></button>
     <button class="b-ico" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}</button></div>`;
-  const liga = `${LOGO_P}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span></div>`;
+  const liga = `${LOGO_P}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
@@ -256,6 +256,8 @@ function pintar({ arriba = false } = {}) {
     if (S.borrador && !S.charlando) { const ta = $('#pregunta'); if (ta) { ta.value = S.borrador; S.borrador = ''; } }
   }
   encuadrar(v);
+  // el cierre hasta la hora de apertura y el límite de minutos, sin esperar a la próxima vuelta del reloj
+  mirarLimite();
 }
 function ir(vista, { arriba = true } = {}) {
   vista = ALIAS[vista] || vista;
@@ -396,7 +398,7 @@ async function cargar({ silencio = false } = {}) {
     S.cargando = false;
     pintar();
     // la primera vez que entras con tu cuenta: tres pasos para saber dónde está cada cosa
-    if (conPantalla && !enDemo() && !LS.get('bienvenida')) { LS.set('bienvenida', Date.now()); setTimeout(() => { if (!S.hoja) { S.bien = 0; hoja('bienvenida'); } }, 700); }
+    if (conPantalla && !enDemo() && !LS.get('bienvenida') && !estadoLimite.cerrada) { LS.set('bienvenida', Date.now()); setTimeout(() => { if (!S.hoja) { S.bien = 0; hoja('bienvenida'); } }, 700); }
     if (!silencio && !conPantalla) tostada('Liga al día');
     despues();
   } catch (e) {
@@ -850,6 +852,7 @@ window.permisoAvisos = (ok) => {
   if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada', 5000);
   else { if (S.D) programar(S.D, S.M); tostada('Notificaciones activadas'); }
   repintarHoja();
+  mirarLimite();
 };
 
 /* ---------------- la vuelta del inicio de sesión ---------------- */
@@ -1017,6 +1020,7 @@ document.addEventListener('click', async (ev) => {
       if (!enApp && !enWeb) { LS.set('demo', true); tostada('En este navegador solo se puede ver el ejemplo'); cargar(); }
       else if (haySesion()) { S.D = foto(); if (S.D) { rehacer(); pintar(); cargar({ silencio: true }); } else cargar(); }
       else pantallaEntrar();
+      mirarLimite();
       break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
     case 'recargar': S.planEstado = {}; cargar(); break;
@@ -1028,6 +1032,7 @@ document.addEventListener('click', async (ev) => {
     case 'bienIA': cerrarHoja(); ir('ia'); break;
     case 'bienAvisos': nativo.pedirPermisoAvisos(); cerrarHoja(); tostada('Listo: ya puedes empezar'); break;
     case 'bienFin': cerrarHoja(); break;
+    case 'permisoApertura': if (!cfgAvisos().on) guardarCfgAvisos({ on: true }); nativo.pedirPermisoAvisos(); break;
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;
     case 'responderAviso': contestarAviso(d.id); break;
     case 'ligas': {
@@ -1248,7 +1253,12 @@ async function arrancar() {
     const real = yo && yo.userId ? cl.find((e) => e.userId === yo.userId || e.managerId === yo.userId) : null;
     const eq = real || (S.M && S.M.yo) || null;
     return { yo: eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId } : null, demo: enDemo() };
-  }, (t) => tostada(t, 6000), () => { tostada('¡Ya está abierta! Pongo tu liga al día', 5000); S.planEstado = {}; if (!S.cargando) cargar({ silencio: true }); });
+  }, (t) => tostada(t, 6000), () => {
+    tostada('¡Ya está abierta! Pongo tu liga al día', 5000); S.planEstado = {};
+    if (!S.cargando) cargar({ silencio: true });
+    // la bienvenida, que no se ha visto con la app cerrada
+    if (!LS.get('bienvenida') && !enDemo()) { LS.set('bienvenida', Date.now()); setTimeout(() => { if (!S.hoja) { S.bien = 0; hoja('bienvenida'); } }, 1500); }
+  }, () => { if (S.D && S.M) programar(S.D, S.M); });
   novedades();
   setTimeout(() => buscarVersion(false), 4000);
   // la IA con la app cerrada avisa con notificaciones: se pide el permiso una vez
