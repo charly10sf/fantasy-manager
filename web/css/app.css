@@ -1259,3 +1259,4 @@ body.limitado .tostada { z-index: 120; }
 .avisos-claude { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 12px; }
 .avisos-claude .t2 { flex: 1; min-width: 160px; margin: 0; }
 .para-claude { margin-bottom: 16px; }
+.paso-compra { margin: 4px 0 0; font-size: 14px; color: var(--texto2); }

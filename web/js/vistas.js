@@ -336,6 +336,7 @@ function pasoOp(S, P, o) {
       ${j ? `<button class="op-j" data-j="${esc(j.id)}">${ava(j, 'm')}<div style="min-width:0"><div class="n">${esc(j.nombre)}</div><div class="s">${sub}</div></div><div class="der">${imp}${puja}</div></button>`
         : o.jugador || o.importe ? `<div class="op-j"><div style="min-width:0"><div class="n">${esc(o.jugador || '')}</div><div class="s">${sub}</div></div><div class="der">${imp}${puja}</div></div>` : ''}
       ${o.motivo ? `<p class="motivo">${esc(o.motivo)}</p>` : ''}
+      ${o.compra && !o.descartada ? `<p class="paso-compra">Lo pagaste a ${eur(o.compra.precio)}: ${o.compra.con === 'venta' ? 'con esta venta' : 'hoy'} <b class="${clase(o.compra.gana)}">${eur(o.compra.gana, { signo: true })}</b>.</p>` : ''}
       ${Array.isArray(o.claves) && o.claves.length ? `<div class="claves">${o.claves.slice(0, 5).map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : ''}
       ${o.aviso ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : ''}
       ${liga ? `<div class="paso-liga ${liga.estado}">${icono(liga.estado === 'curso' ? 'reloj' : 'ok')}<span><b>${liga.estado === 'curso' ? 'En marcha' : 'Hecho en LaLiga'}:</b> ${esc(liga.texto)}</span></div>` : ''}
@@ -637,7 +638,7 @@ export function equipo(S) {
       <div class="dato"><div class="et">Con precio de compra</div><div class="v">${con.length}<small>de ${M.mias.length}</small></div></div></div>
       <div class="sec"><h2>Valor del equipo</h2></div>${linea(serie, { alto: ancho() ? 220 : 150 })}`;
     const lista = `<div class="sec"><h2>Jugador a jugador</h2></div>${con.length ? con.map((x) => filaJugador(x, {
-      sub: `Pagaste ${eur(x.compra)} · vale ${eur(x.j.valor)}`,
+      sub: `Pagaste ${eur(x.compra)} · vale ${eur(x.j.valor)}${(() => { const ol = M.ofertaLigaDe ? M.ofertaLigaDe(x.j) : null; return ol ? ` · LaLiga te daría ~${eur(ol.v)}` : ''; })()}`,
       derecha: `<div class="v ${clase(x.ganado)}">${eur(x.ganado, { signo: true })}</div><div class="d ${clase(x.ganado)}">${pct((x.j.valor / x.compra - 1) * 100)}</div>`, op: op(x.pid),
     })).join('') : nada('Aún no sé lo que pagaste por tus jugadores: sale de los movimientos de la liga, que guardan unas semanas.')}`;
     h += ancho() ? cols(resumen, lista, 'mitades') : resumen + lista;

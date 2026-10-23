@@ -11,9 +11,12 @@ export const VERSION = '0.5.2a';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.2a', f: '2026-10-23', h: '22:20', t: 'Los avisos, para Claude',
+    v: '0.5.2a', f: '2026-10-24', h: '00:45', t: 'Lo que te da LaLiga y lo que pagaste',
     cosas: [
-      { tipo: 'mejora', d: 'arreglo', t: 'Copiar los avisos para Claude', x: 'Para el dueño: en «Avisos de fallos», un botón copia los que están sin contestar, enteros y con su diagnóstico, para pegarlos en el chat de Claude y que los revise y los arregle. El texto queda a la vista por si el navegador no deja copiarlo solo.' },
+      { tipo: 'mejora', d: 'dinero', t: 'Lo que te daría LaLiga por cada uno', x: 'En la ficha de cada jugador tuyo sale lo que te daría LaLiga si lo pones a la venta: lo que suele ofrecer en tu liga sobre su valor (entre cuánto y cuánto) y lo que ganarías o perderías frente a lo que pagaste. En Equipo > Beneficio, al lado de cada uno. Gracias, Domy.', ir: { v: 'equipo', seg: 'equipo:dinero' } },
+      { tipo: 'mejora', d: 'plan', t: 'Las ventas, con lo que pagaste', x: 'Cada venta del plan dice ahora cuánto ganas o pierdes frente a lo que pagaste. Si venderías perdiendo dinero sin que te haga falta y el jugador no está bajando, te avisa de que puede esperar; si está bajando, lo que pagaste no cambia nada (esperar solo pierde más). La IA también lo tiene en cuenta. Gracias, Domy.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'ia', t: 'Pregunta, sin clave', x: 'Sin la clave de Google, la pestaña Pregunta solo enseñaba la guía y no quedaba claro por qué no se podía preguntar. Ahora lo dice arriba: para hacerle preguntas primero hace falta tu clave, que se saca una vez y es gratis.', ir: { v: 'ia' } },
+      { tipo: 'mejora', d: 'arreglo', t: 'Copiar los avisos para Claude', x: 'Para el dueño: en «Avisos de fallos», un botón copia los que están sin contestar, enteros y con su diagnóstico, para pegarlos en el chat de Claude y que los revise y los arregle.' },
     ],
   },
   {

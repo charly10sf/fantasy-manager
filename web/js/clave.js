@@ -80,7 +80,7 @@ export function guiaClave() {
   const paso = (n, t, cuerpo, extra = '') => `<li class="gc-paso"${extra}><span class="gc-num">${n}</span><div class="gc-c"><b class="gc-t">${t}</b>${cuerpo}</div></li>`;
   return `<div class="ia-alta gc">
     <div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>
-    <p class="entradilla">Gemini, de Google, con tu propia clave. Hace el plan de cada día leyendo noticias, lesiones y onces probables, y contesta lo que le preguntes de tu liga, también con capturas.</p>
+    <p class="entradilla"><b>Para hacerle preguntas, primero necesita tu clave</b> (se saca una sola vez). Es Gemini, de Google, con tu propia clave: contesta lo que le preguntes de tu liga, también con capturas, y te hace el plan de cada día leyendo noticias, lesiones y onces probables. Mientras, en Hoy tienes el plan automático.</p>
     <div class="gc-chips"><span>${icono('ok')}Gratis</span><span>${icono('ok')}Sin tarjeta</span><span>${icono('reloj')}3 minutos</span></div>
     ${vieneDeAIStudio() ? `<a class="gc-vuelta" href="#pegaClave" data-accion="irAPegar">${icono('copiar')}<span>¿Ya la tienes copiada? <b>Pégala abajo</b></span></a>` : ''}
     <ol class="gc-pasos">
