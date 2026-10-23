@@ -18,6 +18,7 @@ import { encuadrar } from './caras.js';
 import { historialValor } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
+import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
@@ -295,7 +296,7 @@ function yoReal() {
   const yo = S.D && S.D.yo, cl = (S.D && S.D.clasif) || [];
   const real = yo && yo.userId ? cl.find((e) => e.userId === yo.userId || e.managerId === yo.userId) : null;
   const eq = real || (S.M && S.M.yo) || null;
-  return eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId } : null;
+  return eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId, ligas: (S.D && S.D.ligas) || [] } : null;
 }
 function rehacer() {
   S.c = cfg();
@@ -1193,19 +1194,18 @@ document.addEventListener('click', async (ev) => {
       pintar();
       break;
     }
-    case 'guardarClave': {
-      S.claveMal = false;
-      const k = ($('#claveIA') || {}).value || '';
-      if (!k.trim()) { tostada('Pega la clave primero'); break; }
-      el.disabled = true; el.textContent = 'Probando…';
-      try {
-        guardarClave(k);
-        const lista = await probarClave(k).catch((e) => { guardarClave(''); throw e; });
-        tostada(`Clave guardada: ${lista.length} modelos disponibles`);
-        ir('hoy');
-        S.planEstado = {};
-        generarPlan();
-      } catch (e) { tostada(e.message, 7000); el.disabled = false; el.textContent = 'Guardar y hacer el plan'; }
+    case 'guardarClave': await probarYGuardar(); break;
+    case 'abrirAIStudio': marcarAIStudio(); nativo.abrir(AISTUDIO); break;
+    case 'irAPegar': ev.preventDefault(); aPegar(); break;
+    case 'pegarClave': {
+      let t = '';
+      try { t = await navigator.clipboard.readText(); } catch (e) { /* sin permiso */ }
+      const c = $('#claveIA');
+      if (!t) { if (c) c.focus(); tostada('No he podido leer lo copiado: pégalo tú en la casilla', 5000); break; }
+      const k = limpiarClave(t);
+      if (c) c.value = k;
+      if (pareceClave(k)) await probarYGuardar();
+      else tostada('Lo que tienes copiado no parece una clave: copia la de AI Studio (empieza por AQ. o AIza)', 6000);
       break;
     }
     case 'borrarClave': if (confirm('¿Quitar la clave de Gemini?')) { guardarClave(''); rehacer(); repintarHoja(); pintar(); } break;
@@ -1292,6 +1292,45 @@ document.addEventListener('input', (ev) => {
   if (ev.target && ev.target.id === 'pregunta') { ev.target.style.height = 'auto'; ev.target.style.height = Math.min(120, ev.target.scrollHeight) + 'px'; }
 });
 window.addEventListener('hashchange', () => { const v = ALIAS[location.hash.slice(1)] || location.hash.slice(1); if (S.D && VISTAS[v] && v !== S.vista) ir(v); });
+
+/* ---------------- la clave de la IA ---------------- */
+/** prueba la clave de la casilla con Google y, si vale, la guarda y hace el plan */
+let probandoClave = false;
+async function probarYGuardar() {
+  if (probandoClave) return;
+  S.claveMal = false;
+  const k = leerCasilla();
+  if (!k) { tostada('Pega la clave primero'); const c = $('#claveIA'); if (c) c.focus(); return; }
+  const b = $('[data-accion="guardarClave"]');
+  probandoClave = true;
+  if (b) { b.disabled = true; b.textContent = 'Probando la clave…'; }
+  try {
+    guardarClave(k);
+    const lista = await probarClave(k).catch((e) => { guardarClave(''); throw e; });
+    LS.del('guia-clave');
+    tostada(`IA activada: ${lista.length} modelos disponibles con tu clave`);
+    ir('hoy');
+    S.planEstado = {};
+    generarPlan();
+  } catch (e) {
+    const raro = !pareceClave(k);
+    tostada(raro ? 'Eso no parece una clave de Google: empieza por AQ. o AIza y es larga. Cópiala entera desde AI Studio.' : e.message, 7000);
+    // si es cosa de la clave, la ayuda abierta («Dice que la clave no vale»)
+    const ay = $('.gc-ayuda');
+    if (ay && (raro || e.clave)) ay.open = true;
+    if (b) { b.disabled = false; b.innerHTML = `${icono('ok')}Guardar y hacer el plan`; }
+  } finally { probandoClave = false; }
+}
+// en cuanto se pega algo con pinta de clave, se prueba sin tener que pulsar
+document.addEventListener('input', (ev) => {
+  if (!ev.target || ev.target.id !== 'claveIA') return;
+  const k = limpiarClave(ev.target.value);
+  if (pareceClave(k) && !probandoClave) { ev.target.value = k; probarYGuardar(); }
+});
+// al volver de AI Studio, la casilla de pegar a la vista
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && S.vista === 'ia' && !hayClave() && vieneDeAIStudio()) setTimeout(aPegar, 250);
+});
 
 /* ---------------- lo nuevo de esta versión ---------------- */
 /** la última versión que viste (la numeración cambió en la 0.1.0: lo de antes se traduce) */
@@ -1417,7 +1456,7 @@ async function arrancar() {
     const yo = S.D && S.D.yo, cl = (S.D && S.D.clasif) || [];
     const real = yo && yo.userId ? cl.find((e) => e.userId === yo.userId || e.managerId === yo.userId) : null;
     const eq = real || (S.M && S.M.yo) || null;
-    return { yo: eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId } : null, demo: enDemo() };
+    return { yo: eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId, ligas: (S.D && S.D.ligas) || [] } : null, demo: enDemo() };
   }, (t) => tostada(t, 6000), () => {
     tostada('¡Ya está abierta! Pongo tu liga al día', 5000); S.planEstado = {};
     if (!S.cargando) cargar({ silencio: true });

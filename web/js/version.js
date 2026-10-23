@@ -3,13 +3,20 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.4.4e';
+export const VERSION = '0.5.0';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.0', f: '2026-10-23', h: '18:22', t: 'Activar la IA, paso a paso',
+    cosas: [
+      { tipo: 'nuevo', d: 'ia', t: 'La clave de la IA, paso a paso', x: 'Sin clave, en Pregunta sale una guía con lo que vas a ver en la web de Google en cada paso y dónde tocar: entrar con tu cuenta, aceptar las condiciones, buscar tu clave y copiarla. El botón abre AI Studio y, al volver, te lleva a la casilla. En cuanto pegas la clave se prueba sola y te hace el plan. Vale la clave nueva de Google (empieza por AQ.) y la de antes (AIza). Si algo no sale igual, abajo está la ayuda.', ir: { v: 'ia' } },
+      { tipo: 'mejora', d: 'ajustes', t: 'Lista para otras ligas', x: 'La cuenta atrás de apertura y el límite de minutos al día son solo para la liga de los amigos. Quien instale la app y juegue en otra liga entra sin esperar y sin límite.' },
+    ],
+  },
   {
     v: '0.4.4e', f: '2026-10-23', h: '17:08', t: 'Cláusulas cerradas antes de la jornada',
     cosas: [

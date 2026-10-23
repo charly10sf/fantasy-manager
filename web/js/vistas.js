@@ -6,6 +6,7 @@ import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores } from './ia.js';
 import { md } from './texto.js';
 import { enApp, nativo } from './puente.js';
+import { guiaClave } from './clave.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -761,15 +762,7 @@ export function adjuntosHTML(S) {
 const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img src="${f.mini}" alt=""></button>`).join('')}</div>` : '');
 
 export function ia(S) {
-  if (!hayClave()) {
-    return `<div class="ia-alta"><div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>
-      <p class="entradilla">Gemini, de Google, gratis con tu propia clave: no pide tarjeta y se saca en dos minutos. Hace el plan de cada día leyendo las noticias y contesta lo que le preguntes de tu liga, también con capturas.</p>
-      <div class="paso"><i>1</i><span>Abre <a href="#" data-abrir="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> con tu cuenta de Google.</span></div>
-      <div class="paso"><i>2</i><span>Pulsa <b>Create API key</b> (si te pide aceptar las condiciones, acéptalas). Mejor en un proyecto nuevo, para que no comparta el cupo gratis con otras apps.</span></div>
-      <div class="paso"><i>3</i><span>Cópiala y pégala aquí:</span></div>
-      <input class="campo-t" id="claveIA" placeholder="AIza…" autocomplete="off" spellcheck="false">
-      <button class="btn ancho" style="margin-top:12px" data-accion="guardarClave">${icono('ok')}Guardar y hacer el plan</button></div>`;
-  }
+  if (!hayClave()) return guiaClave();
   const msgs = conversacion();
   const viejos = chatsAnteriores();
   let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><div class="titulo">Tu director deportivo</div></div>

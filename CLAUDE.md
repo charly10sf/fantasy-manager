@@ -24,7 +24,8 @@ Repo: charly10sf/fantasy-manager (público).
   - vistas.js: pestañas. hojas.js: fichas de jugador y rival, Ajustes, diagnóstico.
   - limite.js: cuenta atrás, minutos por día y funciones bloqueadas. comunes.js: piezas compartidas (candados, calendario, rachas).
   - tour.js: tutorial. version.js: versión y novedades. soporte.js: llamadas al Worker. puente.js: puente con Android.
-- `web/limites.json`: apertura (`abre`, `mensajeApertura`), `minutos`, `sinLimite`, `bloqueadas`, `todoAbierto`. La app lo lee de raw de main y la web de Pages, con 6 h de caché.
+  - clave.js: la guía para sacar la clave de Gemini en AI Studio (pasos con esquemas, pegar y probar sola). Las claves nuevas de Google empiezan por «AQ.» y las de antes por «AIza»: valen las dos.
+- `web/limites.json`: apertura (`abre`, `mensajeApertura`), `ligas`, `minutos`, `equipos`, `sinLimite`, `bloqueadas`, `todoAbierto`. La cuenta atrás y los minutos son solo para las cuentas con alguna liga de `ligas` (por nombre o id; ahora «Maulazzos»); las demás, sin límite. Lo bloqueado, para todos. La app lo lee de raw de main y la web de Pages, con 6 h de caché.
 - `android/`: WebView que sirve web/ desde el APK. AlDia.java baja la web nueva de Pages si la parte Android no ha cambiado (comparando huellas) y vuelve a la del APK si la nueva no arranca. Sabores `github` (la liga) y `play`.
 - `worker/`: Cloudflare Worker con KV VINCULOS. Rutas /p (proxy a LaLiga), /img, /vincular (código para abrir en otro dispositivo), /fallos (avisos de fallo con respuesta), /hola (quién usa la app). ADMINS = 667015 (Carlos) en wrangler.toml.
 - `.github/`: android.yml (compila en main y pendiente, publica APK y app.json solo desde main), web.yml (Pages), worker.yml. paquete.py genera paquete.json con las huellas.

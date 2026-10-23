@@ -2,6 +2,8 @@
    Y la hora de apertura («abre» en limites.json): hasta entonces, a todos menos a los de «sinLimite» les sale la
    cuenta atrás en vez de la app (pueden instalarla y entrar con su cuenta, pero no ver nada).
    Lo decide web/limites.json, que se lee de GitHub (cambiarlo en main lo cambia para todos sin sacar versión).
+   Los minutos y la cuenta atrás son solo para las ligas de «ligas» (la de los amigos); en las demás, ni una cosa ni
+   la otra.
    Solo cuenta el tiempo con la app a la vista; los avisos y la IA trabajando sola siguen igual. Se reinicia a las
    00:00, hora de Madrid. Al pasarse, una pantalla de «hasta mañana» tapa la app.
    El tiempo se suma también en el Worker, por cuenta de LaLiga: así los minutos son en total, entre la app y la web
@@ -65,12 +67,27 @@ export function bloqueada(clave) {
   return !(cfg.todoAbierto || cfg.sinLimite || []).some(esDe(yoB));
 }
 
+/* «ligas» en limites.json: las ligas (por nombre o id) a las que se aplican «minutos» y «abre». La app ya no es solo
+   de una liga: quien juega en otra no tiene límite ni cuenta atrás. Cuenta cualquier liga de la cuenta de LaLiga, no
+   solo la que se está viendo (así no se escapa uno cambiando de liga). Sin «ligas» (una configuración de antes de la
+   0.5.0, aún guardada), a todos, como entonces. */
+function enSusLigas(cfg, yo) {
+  if (!cfg || !Array.isArray(cfg.ligas)) return true;
+  const mias = (yo && yo.ligas) || [];
+  return cfg.ligas.some((k) => {
+    const n = norm(String(k));
+    return n && mias.some((l) => String(l.id) === String(k) || norm(l.nombre || '') === n || (n.length >= 5 && norm(l.nombre || '').includes(n)));
+  });
+}
+
 /** los minutos de un equipo (null: sin límite) */
 export function minutosDe(cfg, yo) {
   if (!cfg || !yo) return null;
   const es = esDe(yo);
   if ((cfg.sinLimite || []).some(es)) return null;
+  // los que salen con nombre en «equipos», con sus minutos, sea cual sea su liga
   for (const [k, m] of Object.entries(cfg.equipos || {})) if (es(k)) return Number(m) >= 0 ? Number(m) : null;
+  if (!enSusLigas(cfg, yo)) return null;
   return Number(cfg.minutos) > 0 ? Number(cfg.minutos) : null;
 }
 
@@ -83,7 +100,7 @@ function cerradaDemo(cfg) {
 export function cerradaHasta(cfg, yo) {
   const t = cfg && cfg.abre ? Date.parse(cfg.abre) : NaN;
   if (!yo || !Number.isFinite(t) || Date.now() >= t) return null;
-  if ((cfg.sinLimite || []).some(esDe(yo))) return null;
+  if ((cfg.sinLimite || []).some(esDe(yo)) || !enSusLigas(cfg, yo)) return null;
   return t;
 }
 /** «hoy a las 20:00», «mañana a las 20:00» o «el sábado 24 a las 20:00» (hora de Madrid) */
@@ -176,7 +193,8 @@ function destapar() {
 export const estadoLimite = { min: null, usados: 0, cerrada: null };
 
 /**
- * empieza a contar. quien() da { yo, demo } (yo: tu equipo, con nombre y teamId); aviso(texto) enseña un aviso corto
+ * empieza a contar. quien() da { yo, demo } (yo: tu equipo, con nombre, teamId, userId y las ligas de tu cuenta);
+ * aviso(texto) enseña un aviso corto
  */
 let comprobarYa = null;
 /** vuelve a mirar el límite ahora mismo (al acabar de cargar la liga, al salir del ejemplo) */

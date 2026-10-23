@@ -1169,3 +1169,68 @@ body.limitado .hoja { z-index: 111; }
 body.limitado .tostada { z-index: 120; }
 .lim-otro { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--linea); }
 .lim-otro p { margin: 0 0 10px; font-size: 14.5px; color: var(--texto2); }
+/* la guía de la clave de Gemini (clave.js): pasos numerados con un esquema de AI Studio y dónde tocar en rojo */
+.gc .entradilla { margin-bottom: 12px; }
+.gc-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.gc-chips span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px 6px 9px; border-radius: 99px; background: var(--plano2); border: 1px solid var(--linea); font: 600 13.5px 'Barlow'; color: var(--texto); }
+.gc-chips .ic { width: 15px; height: 15px; color: var(--sube); }
+.gc-vuelta { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 12px 14px; border-radius: 13px; background: var(--rojo-s); border: 1px solid var(--rojo3); color: var(--texto); font-size: 15px; }
+.gc-vuelta .ic { color: var(--rojo-l); }
+.gc-vuelta b { color: var(--rojo-l); }
+.gc-pasos { list-style: none; margin: 0; padding: 0; }
+.gc-paso { position: relative; display: flex; gap: 12px; padding: 0 0 22px; }
+.gc-paso::before { content: ''; position: absolute; left: 15px; top: 34px; bottom: 4px; width: 2px; background: var(--linea); }
+.gc-paso:last-child::before { display: none; }
+.gc-num { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--rojo); color: #fff; font: 700 17px var(--cond); position: relative; z-index: 1; }
+.gc-c { flex: 1; min-width: 0; padding-top: 4px; }
+.gc-t { display: block; font: 700 18px/1.2 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
+.gc-c p { margin: 5px 0 0; color: var(--texto2); font-size: 15px; line-height: 1.45; }
+.gc-c p b { color: var(--texto); }
+.gc-abrir { margin-top: 12px; }
+.gc-abrir .ic { width: 19px; height: 19px; }
+.gc-fila { display: flex; gap: 8px; margin-top: 12px; align-items: stretch; }
+.gc-campo { flex: 1; min-width: 0; height: 50px; padding: 0 13px; font: 600 15.5px/1 ui-monospace, 'SFMono-Regular', Menlo, monospace; letter-spacing: 0.2px; }
+.gc-pegar { flex: none; height: 50px; margin: 0; padding: 0 14px; border-radius: 12px; }
+.gc-mono { font: 700 0.92em ui-monospace, 'SFMono-Regular', Menlo, monospace; color: var(--texto); background: var(--plano2); padding: 1px 5px; border-radius: 5px; }
+.gc-guardar { margin-top: 10px; }
+.gc-paso.resalta .gc-c { animation: gc-luz 1.6s ease-out; border-radius: 12px; }
+@keyframes gc-luz { 0%, 30% { box-shadow: 0 0 0 6px var(--rojo-s); background: var(--rojo-s); } 100% { box-shadow: 0 0 0 6px transparent; background: transparent; } }
+.gc-dib { display: block; width: 100%; max-width: 380px; height: auto; margin: 12px 0 0; }
+.gc-dib .m { fill: var(--plano); stroke: var(--plano3); stroke-width: 1.5; }
+.gc-dib .l { fill: none; stroke: var(--plano3); stroke-width: 1.2; }
+.gc-dib .p { fill: var(--plano3); }
+.gc-dib .u { fill: var(--plano2); }
+.gc-dib .ut { fill: var(--apagado); font: 500 9.5px 'Barlow', sans-serif; }
+.gc-dib .c { fill: var(--plano2); stroke: var(--plano3); stroke-width: 1; }
+.gc-dib .side { fill: var(--plano2); }
+.gc-dib .g { fill: var(--plano3); }
+.gc-dib .g.on { fill: var(--apagado); }
+.gc-dib .t { fill: var(--texto2); font: 500 11px 'Barlow', sans-serif; }
+.gc-dib .t.tb { fill: var(--texto); font: 700 14px 'Barlow', sans-serif; }
+.gc-dib .t.s { fill: var(--apagado); font-size: 10px; }
+.gc-dib .av { fill: var(--azul); }
+.gc-dib .av-t { fill: #08080a; font: 700 11px 'Barlow', sans-serif; }
+.gc-dib .chk { fill: none; stroke: var(--apagado); stroke-width: 1.4; }
+.gc-dib .chk.on { fill: var(--azul); stroke: var(--azul); }
+.gc-dib .w { fill: none; stroke: #08080a; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.gc-dib .b { fill: var(--azul); }
+.gc-dib .bt { fill: #08080a; font: 700 10.5px 'Barlow', sans-serif; }
+.gc-dib .f { fill: var(--fondo); stroke: var(--plano3); stroke-width: 1; }
+.gc-dib .k { fill: var(--texto); font: 600 11px ui-monospace, Menlo, monospace; }
+.gc-dib .cp { fill: none; stroke: var(--texto2); stroke-width: 1.4; stroke-linejoin: round; }
+.gc-dib .toast { fill: var(--texto); }
+.gc-dib .tt { fill: #08080a; font: 600 10px 'Barlow', sans-serif; }
+.gc-dib .ring { fill: none; stroke: var(--rojo); stroke-width: 2.4; }
+.gc-dib .tap { fill: var(--rojo); opacity: 0.28; transform-box: fill-box; transform-origin: center; animation: gc-tap 1.8s ease-out infinite; }
+.gc-dib .tap2 { fill: var(--rojo-l); }
+@keyframes gc-tap { 0% { transform: scale(0.6); opacity: 0.5; } 70%, 100% { transform: scale(1.6); opacity: 0; } }
+.gc-ayuda { margin: 4px 0 0; border-radius: 13px; background: var(--plano); border: 1px solid var(--linea); }
+.gc-ayuda summary { display: flex; align-items: center; gap: 8px; padding: 13px 14px; font-weight: 600; cursor: pointer; list-style: none; }
+.gc-ayuda summary::-webkit-details-marker { display: none; }
+.gc-ayuda summary .ic { width: 19px; height: 19px; color: var(--oro); }
+.gc-ayuda dl { margin: 0; padding: 0 14px 6px; }
+.gc-ayuda dt { font-weight: 700; font-size: 15px; margin-top: 4px; }
+.gc-ayuda dd { margin: 3px 0 12px; color: var(--texto2); font-size: 14.5px; line-height: 1.45; }
+.gc-priv { display: flex; gap: 9px; align-items: flex-start; margin: 14px 2px 4px; font-size: 13.5px; line-height: 1.4; color: var(--apagado); }
+.gc-priv .ic { width: 16px; height: 16px; margin-top: 1px; }
+@media (prefers-reduced-motion: reduce) { .gc-dib .tap { animation: none; opacity: 0.25; } .gc-paso.resalta .gc-c { animation: none; } }
