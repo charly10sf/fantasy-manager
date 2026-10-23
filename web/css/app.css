@@ -185,9 +185,13 @@ main { padding: 16px 16px 120px; }
 .plan-cab { display: flex; align-items: center; gap: 10px; min-height: 24px; }
 .plan-quien { margin-left: auto; min-width: 0; display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px 'Barlow'; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .plan-quien .ic { width: 15px; height: 15px; flex: none; color: var(--rojo-l); }
-.plan-otro { margin: 14px 0 4px; }
+.plan-otro { margin: 6px 0 18px; }
+.plan-otro .btn { min-height: 48px; padding-top: 11px; padding-bottom: 11px; }
 .plan-otro .btn .ic { color: #fff; }
-.plan-otro p { margin: 8px 2px 0; font-size: 13.5px; line-height: 1.45; color: var(--apagado); text-align: center; }
+.plan-otro p { margin: 7px 2px 0; font-size: 13px; line-height: 1.4; color: var(--apagado); text-align: center; }
+.escritorio .plan-otro { display: flex; align-items: center; gap: 14px; }
+.escritorio .plan-otro .btn { width: auto; flex: none; }
+.escritorio .plan-otro p { margin: 0; text-align: left; }
 .banda.plan-cambio { border: 1px solid rgba(255, 197, 71, 0.35); background: var(--oro-s); }
 .banda.plan-cambio .ic { color: var(--oro); }
 .plan-cab .der { margin-left: auto; }
