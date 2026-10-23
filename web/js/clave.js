@@ -11,11 +11,12 @@ export const AISTUDIO = 'https://aistudio.google.com/apikey';
 /** saca la clave de lo pegado: sin espacios, sin comillas y aunque venga con más texto («GEMINI_API_KEY=AQ.…») */
 export function limpiarClave(t) {
   const s = String(t || '').replace(/[\s"'`]+/g, ' ').trim();
-  const m = s.match(/(AQ\.[^\s"'`<>]{20,}|AIza[0-9A-Za-z_-]{30,})/);
-  return m ? m[1] : s.replace(/\s+/g, '');
+  // si se ha pegado encima de otra (o dos veces), vale la última
+  const ms = [...s.split(/(?=AQ\.|AIza)/)].map((x) => x.match(/^(AQ\.[^\s"'`<>]{20,}|AIza[0-9A-Za-z_-]{30,})/)).filter(Boolean);
+  return ms.length ? ms[ms.length - 1][1] : s.replace(/\s+/g, '');
 }
 /** ¿tiene pinta de clave de Google? */
-export const pareceClave = (t) => /^(AQ\.[^\s"'`<>]{20,}|AIza[0-9A-Za-z_-]{35})$/.test(t || '');
+export const pareceClave = (t) => /^(AQ\.[^\s"'`<>]{20,200}|AIza[0-9A-Za-z_-]{35})$/.test(t || '') && !/.(AQ\.|AIza)/.test(t || '');
 
 /** acabas de ir a AI Studio (en la última media hora): al volver, la casilla de pegar sale a la vista */
 export const vieneDeAIStudio = () => { const t = LS.get('guia-clave', 0); return !!t && Date.now() - t < 30 * 60e3; };

@@ -15,6 +15,13 @@ const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
 const BASE = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
 const diaGoogle = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+/** cuándo vuelve el cupo gratis: a medianoche en California (en España, las 9:00, o las 8:00 cuando un país ha
+    cambiado la hora y el otro no) */
+function vuelveCupo() {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: 'numeric', second: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value]));
+  const pasado = ((+p.hour % 24) * 3600 + +p.minute * 60 + +p.second) * 1000;
+  return cuando(Date.now() + 864e5 - pasado);
+}
 
 export const clave = () => leer('gemini') || '';
 export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); };
@@ -81,7 +88,7 @@ function errorDe(estado, j) {
   const ri = (e0.details || []).find((d) => /RetryInfo/.test(d['@type'] || ''));
   if (ri && ri.retryDelay) info.espera = parseFloat(ri.retryDelay);
   if (/API key not valid|API_KEY_INVALID/i.test(todo)) return new ErrorIA('Google dice que la clave no es válida. Cópiala otra vez entera desde aistudio.google.com/apikey.', estado, { ...info, clave: true });
-  if (estado === 401 || (estado === 403 && /PERMISSION_DENIED|SERVICE_DISABLED|has not been used/i.test(todo))) return new ErrorIA('Google no deja usar Gemini con esta clave. Crea otra en aistudio.google.com/apikey (mejor en un proyecto nuevo).', estado, { ...info, clave: estado === 401 });
+  if (estado === 401 || (estado === 403 && /PERMISSION_DENIED|SERVICE_DISABLED|has not been used/i.test(todo))) return new ErrorIA('Google no deja usar Gemini con esta clave. Crea otra en aistudio.google.com/apikey (mejor en un proyecto nuevo).', estado, { ...info, clave: estado === 401 || /SERVICE_DISABLED|has not been used|API_KEY_SERVICE_BLOCKED/i.test(todo) });
   if (estado === 404) return new ErrorIA('Ese modelo no existe para tu clave', 404, info);
   if (estado === 429) {
     const busqueda = /search|grounding/i.test(todo);
@@ -182,11 +189,11 @@ async function preguntar({ sistema, contents }, op = {}) {
   const conFotos = (contents || []).some((c) => (c.parts || []).some((p) => p.inlineData));
   if (conFotos && modelos.length) {
     modelos = modelos.filter((m) => !esGemma(m));
-    if (!modelos.length) throw new ErrorIA('Para mirar fotos hace falta un modelo Gemini y los de tu clave ya han gastado el cupo gratis de hoy. Pregúntalo sin la foto o vuelve mañana a las 9:00.', 429, { todos: true });
+    if (!modelos.length) throw new ErrorIA(`Para mirar fotos hace falta un modelo Gemini y los de tu clave ya han gastado el cupo gratis de hoy. Pregúntalo sin la foto o vuelve ${vuelveCupo()}.`, 429, { todos: true });
   }
   if (!modelos.length) {
     const f = fuera();
-    throw new ErrorIA(`Todos los modelos de tu clave han gastado su cupo gratis de hoy (${Object.keys(f).length} probados). Vuelven mañana a las 9:00.`, 429, { todos: true });
+    throw new ErrorIA(`Todos los modelos de tu clave han gastado su cupo gratis de hoy (${Object.keys(f).length} probados). Vuelven ${vuelveCupo()}.`, 429, { todos: true });
   }
   const quiereWeb = cfgIA().web;
   const resumen = [];
@@ -237,8 +244,12 @@ async function preguntar({ sistema, contents }, op = {}) {
         if (e.estado === 429 && e.busqueda && web) { LS.set('ia-sin-web', diaGoogle()); web = false; continue; }
         if (e.estado === 429 && web && !e.minuto) { web = false; webSospecha = modelo; continue; } // por si el cupo que falta es el de la búsqueda y Google no lo dice
         if (e.estado === 429 && e.minuto && !esperado && (e.espera || 20) <= 45) { esperado = true; alPaso(`Esperando ${Math.ceil(e.espera || 20)} s a que Google deje volver a preguntar…`); await espera(e.espera || 20, op.signal); continue; }
-        if (e.estado === 429) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
-        if (e.estado === 404 || e.estado === 403 || e.estado === 400) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
+        // el límite por minuto pasa en un rato: se prueba con el siguiente modelo, pero este no se da por gastado hoy
+        if (e.estado === 429 && e.minuto) { resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
+        if (e.estado === 429 || e.estado === 404) { sacar(modelo, e.message); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
+        // un 400 o un 403 suele ser de la pregunta (una foto rota, demasiado larga) y no del modelo: siguiente, sin
+        // darlo por gastado hoy (antes una foto rota dejaba sin IA hasta el día siguiente)
+        if (e.estado === 403 || e.estado === 400) { resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
         // vacío porque se le ha ido todo pensando: otra vez, pensando menos
         if (e.vacio && e.fin === 'MAX_TOKENS' && pensar && nivel !== 'low') { nivel = 'low'; alPaso('Se ha quedado sin sitio pensando: lo pido pensando menos…'); continue; }
         if (e.vacio && intento < 1) continue;

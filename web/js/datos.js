@@ -124,11 +124,17 @@ export async function actualizar(alPaso = () => {}) {
   alPaso(4, PASOS[4]);
   const plantillas = {};
   const infoEquipos = {};
+  // si LaLiga falla con la plantilla de un equipo, la de la última vez: que no desaparezca (ni se avise de que se han
+  // ido todos sus jugadores)
+  const mismaLiga = viejo && !viejo.demo && viejo.liga && viejo.liga.id === liga.id && viejo.plantillas;
+  const plantillasViejas = [];
   await enParalelo(clasif, 3, async (e) => {
     const r = await blando(`plantilla ${e.nombre}`, () => api.equipo(liga.id, e.teamId));
-    if (!r) return;
+    const anterior = mismaLiga ? viejo.plantillas[e.teamId] : null;
+    if (!r) { if (anterior && anterior.length) { plantillas[e.teamId] = anterior; plantillasViejas.push(e.teamId); } return; }
     if (!muestras.plantilla) { const l = (r && (r.players || (r.data && r.data.players))) || N.lista(r); if (l && l[0]) muestras.plantilla = recorte(l[0]); }
     const { fichas, info } = N.plantilla(r, equipos);
+    if (!fichas.length && anterior && anterior.length) { plantillas[e.teamId] = anterior; plantillasViejas.push(e.teamId); return; }
     plantillas[e.teamId] = fichas.map((f) => { if (f.jugador) maestro[f.pid] = mezclar(maestro[f.pid], f.jugador); const { jugador, ...resto } = f; return resto; });
     infoEquipos[e.teamId] = info;
     if (!e.valor && info.valor) e.valor = info.valor;
@@ -218,6 +224,11 @@ export async function actualizar(alPaso = () => {}) {
     const listas = await enParalelo(semanas, 2, async (n) => N.partidos(await api.calendario(n), equipos, n));
     partidos = listas.filter(Array.isArray).flat();
   });
+  // sin calendario no se sabe cuándo se cierran las cláusulas: mejor el de la última vez que darlas todas por abiertas
+  if (!partidos.length && viejo && !viejo.demo && Array.isArray(viejo.partidos) && viejo.partidos.length) {
+    partidos = viejo.partidos;
+    if (jornada == null) jornada = viejo.jornada;
+  }
 
   // los resultados de las jornadas jugadas, para saber lo fuerte que es cada rival (los de jornadas pasadas no cambian)
   let resultados = (viejo && Array.isArray(viejo.resultados)) ? viejo.resultados : [];
@@ -280,6 +291,7 @@ export async function actualizar(alPaso = () => {}) {
     liga, ligas, equipos, equiposT: viejo && viejo.equiposT && equipos === viejo.equipos ? viejo.equiposT : Date.now(),
     clasif, plantillas, maestro, mercado, actividad: act.slice(0, 400),
     dinero, dineros, valorEquipo, jornada, partidos, resultados, tendencias, avisos, muestras, misVentas, formaciones, formacionesT,
+    plantillasViejas,
   };
   return guardarFoto(D, viejo);
 }
@@ -323,6 +335,8 @@ export async function completar(D, M, alListo = () => {}) {
   (M.especular || []).slice(0, 8).forEach((e) => add(e.pid));
   const faltan = pids.filter((pid) => !det[pid] || ahora - det[pid].t > 20 * 3600e3).slice(0, 60);
   if (!faltan.length) return det;
+  // tarda 20-40 s: se guarda con las claves de la liga de ahora (si cambias de liga mientras tanto, no se mezclan)
+  const kDet = K('det'), kDatos = K('datos');
   const caras = LS.get('caras', {});
   await enParalelo(faltan, 3, async (pid) => {
     try {
@@ -337,9 +351,13 @@ export async function completar(D, M, alListo = () => {}) {
       det[pid] = { t: Date.now(), error: e.message, stats: [] };
     }
   });
-  LS.set(K('det'), det);
   LS.set('caras', caras);
-  LS.set(K('datos'), D);
+  if (K('datos') === kDatos) {
+    LS.set(kDet, det);
+    // y sin pisar una foto más nueva (si has actualizado mientras tanto)
+    const f = LS.get(kDatos, null);
+    if (!f || !f.t || f.t <= D.t) LS.set(kDatos, D);
+  }
   alListo(det);
   return det;
 }

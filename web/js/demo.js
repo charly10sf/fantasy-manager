@@ -107,8 +107,9 @@ export function demo() {
     tendencias[pid] = { d1: Math.round(maestro[pid].valor * p1 / 100), p1, d7: null, p7: null, ffValor: maestro[pid].valor };
   }
 
-  // jornadas 9 a 15 (con el parón de noviembre entre la 12 y la 13)
-  const base = Date.parse('2026-10-24T14:00:00+02:00');
+  // jornadas 9 a 15 (con un parón entre la 12 y la 13). La 10 empieza siempre el próximo sábado a las 14:00 (hora de
+  // Madrid): con una fecha fija, la liga de ejemplo se quedaba vieja en una semana (jornada ya jugada, sin la siguiente)
+  const base = proximoSabado(ahora);
   const ordenEq = Object.keys(EQUIPOS);
   const partidos = [];
   const fechasJ = { 9: base - 7 * DIA, 10: base, 11: base + 7 * DIA, 12: base + 14 * DIA, 13: base + 28 * DIA, 14: base + 35 * DIA, 15: base + 42 * DIA };
@@ -190,4 +191,19 @@ export function demo() {
   });
   H.mov.push({ t: ahora - 9 * HORA, teamId: clasif[3].teamId, tipo: 'blinda', pid: plantillas[clasif[3].teamId][0].pid, de: 14e6, a: 21e6 });
   return { D, H };
+}
+
+/** el próximo sábado a las 14:00 en Madrid (si ya ha pasado la de esta semana, el de la siguiente) */
+function proximoSabado(ahora) {
+  for (let k = 0; k < 9; k++) {
+    const t = ahora + k * 864e5;
+    const f = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short', timeZoneName: 'shortOffset' });
+    const p = Object.fromEntries(f.formatToParts(new Date(t)).map((x) => [x.type, x.value]));
+    if (p.weekday !== 'Sat') continue;
+    const m = String(p.timeZoneName || '').match(/GMT([+-]\d+)(?::(\d+))?/);
+    const off = m ? `${m[1].startsWith('-') ? '-' : '+'}${String(Math.abs(+m[1])).padStart(2, '0')}:${m[2] || '00'}` : '+01:00';
+    const sab = Date.parse(`${p.year}-${p.month}-${p.day}T14:00:00${off}`);
+    if (sab > ahora + 3600e3) return sab;
+  }
+  return ahora + 3 * 864e5;
 }

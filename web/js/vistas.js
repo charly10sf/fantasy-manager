@@ -7,6 +7,7 @@ import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores } 
 import { md } from './texto.js';
 import { enApp, nativo } from './puente.js';
 import { guiaClave } from './clave.js';
+import { K } from './datos.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -233,7 +234,7 @@ const ACCION = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', compr
 /** ¿ya lo has hecho? lo marcas tú o se ve en la actividad de la liga */
 export const claveHechos = (P) => (P.auto ? `auto-${P.dia}` : String(P.t));
 export function hecho(S, P, o) {
-  const marcados = (LS.get('hechos', {})[claveHechos(P)] || {}).n || [];
+  const marcados = (LS.get(K('hechos'), {})[claveHechos(P)] || {}).n || [];
   if (marcados.includes(o.n)) return true;
   return !!hechoEnLiga(S, P, o);
 }
@@ -722,7 +723,7 @@ export function mercado(S) {
 /** los chats anteriores, para volver a uno */
 export function chatsViejosHTML() {
   const l = chatsAnteriores();
-  let h = `<div class="hoja-cab"><h2>Chats anteriores</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  let h = `<div class="hoja-cab"><h2>Chats anteriores</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (!l.length) return h + nada('Aún no has empezado ningún chat nuevo.');
   h += `<p class="t2 peq" style="margin:0 0 8px">Al abrir uno, el de ahora se guarda aquí. Se guardan los 15 últimos.</p>`;
   h += l.map((c, i) => `<div class="fila chat-viejo"><span class="ic-act">${icono('ia')}</span><div class="fila-c"><div class="fila-n" style="white-space:normal">${esc(c.titulo)}</div><div class="fila-s">${cuando(c.ini || c.t)} · ${c.n} mensaje${c.n === 1 ? '' : 's'}</div></div><div class="chat-viejo-acc"><button class="btn chico sec" data-accion="recuperarChat" data-i="${i}">Abrir</button><button class="b-ico" data-accion="borrarChatViejo" data-i="${i}" aria-label="Borrar">${icono('cerrar')}</button></div></div>`).join('');

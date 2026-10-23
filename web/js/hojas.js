@@ -89,7 +89,7 @@ export function resumenEquipo(S) {
   const bajan = mias.filter((x) => num(x.tend.d1) < 0).sort((a, b) => a.tend.d1 - b.tend.d1);
   const quietos = mias.length - suben.length - bajan.length;
   const rango = S.rango || 30;
-  let h = `<div class="hoja-cab"><h2>Tu equipo hoy</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  let h = `<div class="hoja-cab"><h2>Tu equipo hoy</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   h += `<div class="valor-g"><span class="v">${eur(D.valorEquipo)}</span><span class="d ${clase(d1)}">${d1 ? `${d1 > 0 ? '▲' : '▼'} ${eur(Math.abs(d1), { dec: 2 })}${base > 0 ? ` (${pct((d1 / base) * 100)})` : ''} hoy` : '= hoy'}</span>${d7 ? `<span class="d ${clase(d7)}">${eur(d7, { signo: true })} 7d</span>` : ''}</div>`;
   h += `<p class="t2 peq" style="margin:2px 0 0">${suben.length} suben · ${bajan.length} bajan · ${quietos} igual${suben[0] ? ` · el que más sube, <b class="sube">${esc(suben[0].j.nombre)} ${eur(suben[0].tend.d1, { signo: true })}</b>` : ''}${bajan[0] ? ` · el que más baja, <b class="baja">${esc(bajan[0].j.nombre)} ${eur(bajan[0].tend.d1, { signo: true })}</b>` : ''}</p>`;
   // lo que antes iba debajo del marcador: la última jornada y la distancia en la clasificación
@@ -361,14 +361,14 @@ export function fichaRival(S, tid) {
 }
 
 /* ================= AJUSTES ================= */
-const interr = (on, accion, extra = '') => `<button class="interr ${on ? 'on' : ''}" data-accion="${accion}" ${extra} aria-pressed="${on}"></button>`;
+const interr = (on, accion, extra = '', nombre = '') => `<button class="interr ${on ? 'on' : ''}" data-accion="${accion}" ${extra} aria-pressed="${on}"${nombre ? ` aria-label="${esc(nombre)}"` : ''}></button>`;
 export function ajustes(S) {
   const c = S.c, ca = cfgAvisos(), ci = cfgIA();
   const q = quien();
   const ses = sesion();
   const k = clave();
   const prog = programados();
-  let h = `<div class="hoja-cab"><h2>Ajustes</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  let h = `<div class="hoja-cab"><h2>Ajustes</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   h += `<button class="ajuste-tour" data-accion="tutorial">${icono('info')}<span><b>Tutorial de la app</b><small>Dónde está cada cosa y para qué sirve, en un minuto</small></span>${icono('flecha')}</button>`;
 
   h += `<div class="grupo"><span>Tu cuenta de LaLiga</span></div>`;
@@ -382,7 +382,7 @@ export function ajustes(S) {
   if (enApp && !enDemo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `Última vez ${cuando(uf.t)}: ${uf.error ? `falló (${uf.error})` : (uf.pasos || []).slice(-1)[0] || 'bien'}` : 'Aún no ha trabajado sola';
-    h += `<div class="ajuste"><div class="c"><b>Trabaja con la app cerrada</b><span>${cf.on ? `Cada 3 horas y al cambiar el mercado pone tu liga al día, rehace el plan y te avisa de ofertas, cláusulas y fichajes. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}.` : 'Apagado: solo trabaja cuando abres la app'}</span></div>${interr(cf.on, 'fondo')}</div>`;
+    h += `<div class="ajuste"><div class="c"><b>Trabaja con la app cerrada</b><span>${cf.on ? `Cada 3 horas y al cambiar el mercado pone tu liga al día, rehace el plan y te avisa de ofertas, cláusulas y fichajes. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}.` : 'Apagado: solo trabaja cuando abres la app'}</span></div>${interr(cf.on, 'fondo', '', 'Trabaja con la app cerrada')}</div>`;
   }
   h += `<div class="ajuste"><div class="c"><b>Clave de Google AI Studio</b><span>${k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : 'Sin clave: el plan sale sin noticias'}</span></div>${k ? '<button class="btn chico sec" data-accion="borrarClave">Quitar</button>' : '<button class="btn chico" data-accion="irIA">Poner</button>'}</div>`;
   if (k) {
@@ -391,19 +391,19 @@ export function ajustes(S) {
     const hoyG = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
     const agot = Object.entries(fuera).filter(([, v]) => v && v.d === hoyG).map(([m]) => m);
     h += `<div class="ajuste"><div class="c"><b>Modelos de IA</b><span>${lista.length ? `Tu clave de Google da acceso a ${lista.length} versiones de Gemini, cada una con su cupo gratis diario${agot.length ? ` (${agot.length} lo han gastado hoy)` : ''}. Si una se agota, la app pasa sola a la siguiente.` : 'Aún no he comprobado qué versiones de Gemini da tu clave'}</span></div><button class="btn chico sec" data-accion="probarIA">Comprobar</button></div>`;
-    h += `<div class="ajuste"><div class="c"><b>Plan automático al abrir</b><span>Lo rehace solo si es de otro día o ha cambiado el mercado</span></div>${interr(ci.auto, 'iaAuto')}</div>`;
-    h += `<div class="ajuste"><div class="c"><b>Buscar noticias en Google</b><span>Si se acaba su cupo, sigue sin búsqueda</span></div>${interr(ci.web, 'iaWeb')}</div>`;
+    h += `<div class="ajuste"><div class="c"><b>Plan automático al abrir</b><span>Lo rehace solo si es de otro día o ha cambiado el mercado</span></div>${interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir')}</div>`;
+    h += `<div class="ajuste"><div class="c"><b>Buscar noticias en Google</b><span>Si se acaba su cupo, sigue sin búsqueda</span></div>${interr(ci.web, 'iaWeb', '', 'Buscar noticias en Google')}</div>`;
     const pu = ci.pullitas || 'normal';
     h += `<div class="ajuste"><div class="c"><b>Pullitas de la IA</b><span>Las bromas sobre noticias de los jugadores y sobre lo que hacen tus rivales. Nunca deciden una compra ni una venta</span></div><select data-cambia="pullitas">${[['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']].map(([v, t]) => `<option value="${v}"${pu === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>`;
   }
 
   h += `<div class="grupo"><span>Avisos en el móvil</span></div>`;
   if (!enApp) h += `<p class="t2 peq" style="margin:4px 0 0">Los avisos (cláusulas que se abren, el cambio de mercado, el plan del día) y la IA trabajando sola llegan en la app del móvil. En el navegador no.</p>`;
-  else h += `<div class="ajuste"><div class="c"><b>Avisos</b><span>${ca.on ? (nativo.avisosPermitidos() || !enApp ? `${prog.length} programados` : 'Falta el permiso de notificaciones') : 'Apagados'}</span></div>${interr(ca.on, 'avisos')}</div>`;
+  else h += `<div class="ajuste"><div class="c"><b>Avisos</b><span>${ca.on ? (nativo.avisosPermitidos() || !enApp ? `${prog.length} programados` : 'Falta el permiso de notificaciones') : 'Apagados'}</span></div>${interr(ca.on, 'avisosOn', '', 'Avisos')}</div>`;
   if (ca.on && enApp) {
     if (!nativo.alarmasExactas()) h += `<div class="ajuste"><div class="c"><b>Al minuto exacto</b><span>Sin este permiso pueden llegar unos minutos tarde</span></div><button class="btn chico" data-accion="exactas">Dar permiso</button></div>`;
     h += [['rivales', 'Cláusulas de rivales que se abren', 'Las que te interesan y te llegan'], ['mias', 'Protección de los tuyos', '2 horas antes de que se acabe'], ['mercado', 'El mercado cambia', '1 hora antes'], ['jornada', 'Empieza la jornada', '3 horas antes'], ['diario', 'Plan del día', 'Un aviso para abrir la app y ver el plan']]
-      .map(([kk, t, s]) => `<div class="ajuste"><div class="c"><b>${t}</b><span>${s}</span></div>${kk === 'diario' && ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" style="margin-right:6px">` : ''}${interr(ca[kk], 'avisoTipo', `data-k="${kk}"`)}</div>`).join('');
+      .map(([kk, t, s]) => `<div class="ajuste"><div class="c"><b>${t}</b><span>${s}</span></div>${kk === 'diario' && ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" style="margin-right:6px">` : ''}${interr(ca[kk], 'avisoTipo', `data-k="${kk}"`, t)}</div>`).join('');
     h += `<div class="ajuste"><div class="c"><b>Interés mínimo</b><span>Solo cláusulas que te interesen al menos esto</span></div><select data-cambia="interes">${[30, 40, 50, 55, 60, 70, 80].map((n) => `<option value="${n}" ${+ca.interes === n ? 'selected' : ''}>${n}</option>`).join('')}</select></div>`;
     const prox = prog.filter((a) => a.id !== 'diario').slice(0, 6);
     if (prox.length) h += `<p class="t2 peq" style="margin:10px 0 0">Próximos: ${prox.map((a) => `${esc(a.titulo)} (${cuando(a.t)})`).join(' · ')}</p>`;
@@ -430,7 +430,7 @@ export function vinculoWeb(S) {
   const v = S.vinculo;
   if (!v) return nada('No hay código.');
   const cod = String(v.codigo || '');
-  return `<div class="hoja-cab"><h2>${enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo'}</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>
+  return `<div class="hoja-cab"><h2>${enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
   <ol class="pasos-web">
     <li>En ${enApp ? 'el ordenador' : 'el otro dispositivo (el iPhone o el otro ordenador)'}, abre <b>charly10sf.github.io/fantasy-manager</b></li>
     <li>Escribe este código y pulsa Entrar:</li>
@@ -459,7 +459,7 @@ function detalleAviso(A) {
 }
 export function avisos(S) {
   const A = S.av || {};
-  let h = `<div class="hoja-cab"><h2>${A.admin ? 'Avisos de fallos' : 'Avisar de un fallo'}</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  let h = `<div class="hoja-cab"><h2>${A.admin ? 'Avisos de fallos' : 'Avisar de un fallo'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (A.admin) h += bandejaAvisos(A);
   if (A.admin) h += '<div class="grupo"><span>Mandar uno tú</span><span></span></div>';
   if (A.sinSesion) {
@@ -490,7 +490,7 @@ function bandejaAvisos(A) {
 /* ================= QUIÉN USA LA APP (el dueño) ================= */
 export function quienUsaHTML(S) {
   const Q = S.quien || {};
-  let h = `<div class="hoja-cab"><h2>Quién usa la app</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>`;
+  let h = `<div class="hoja-cab"><h2>Quién usa la app</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (Q.cargando) return `${h}<p class="t2">Mirando…</p>`;
   if (Q.error) return `${h}<div class="error-c">${esc(Q.error)}</div>`;
   const lista = Q.lista || [], ahora = Q.ahora || Date.now();
@@ -571,7 +571,7 @@ export function textoDiagnostico(S) {
   return L.join('\n');
 }
 export function diagnostico(S) {
-  return `<div class="hoja-cab"><h2>Diagnóstico</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>
+  return `<div class="hoja-cab"><h2>Diagnóstico</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
   <p class="t2 peq">Lo que han contestado LaLiga y Google en esta sesión. Si algo no funciona, cópialo y pásamelo.</p>
   <pre class="diag">${esc(textoDiagnostico(S))}</pre>
   <div style="display:flex;gap:10px;margin-top:12px"><button class="btn chico" data-accion="copiarDiag">${icono('copiar')}Copiar</button><button class="btn chico sec" data-accion="compartirDiag">Compartir</button></div>`;

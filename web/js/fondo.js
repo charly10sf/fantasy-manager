@@ -2,6 +2,7 @@
    minutos después de cada cambio de mercado; aquí se decide qué contar con una notificación: el plan nuevo, las
    ofertas que llegan por tus jugadores, los que te quitan o fichas y la sesión caducada. Cada aviso, una vez. */
 import { LS, eur, pct, diaDe, cuando } from './util.js';
+import { bloqueada } from './limite.js';
 
 export const EN_FONDO = /[?&]fondo=1\b/.test(location.search);
 export const cfgFondo = () => ({ on: true, ...LS.get('cfg-fondo', {}) });
@@ -57,12 +58,14 @@ export function avisosNuevos(antes, D, M) {
       out.push({ k: `puesto:${v.pid}:${diaDe()}`, titulo: `${v.j.nombre} ya está en el mercado`, texto: `Puesto a ${eur(v.precio)} (vale ${eur(v.j.valor)}). La oferta de LaLiga llega con el cambio de mercado${M.cierreMercado ? ` (${cuando(M.cierreMercado)})` : ''}: te aviso en cuanto llegue y si te conviene aceptarla.`, hash: 'equipo' });
     }
   }
+  // cuándo gira un jugador es una función top: si está bloqueada, el aviso no lo cuenta (en la app sale con candado)
+  const inerciaTop = bloqueada('inercia');
   for (const x of (M.mias || []).filter((y) => y.ventaInercia && !enVenta.has(y.pid))) {
     const vi = x.ventaInercia;
     out.push({
       k: `vende:${x.pid}:${vi.urgencia}:${diaDe()}`,
-      titulo: vi.urgencia === 'ya' ? `Pon a ${x.j.nombre} en el mercado: ha girado a la baja` : `Pon a ${x.j.nombre} en el mercado antes de que gire`,
-      texto: vi.texto,
+      titulo: inerciaTop ? `Pon a ${x.j.nombre} en el mercado` : vi.urgencia === 'ya' ? `Pon a ${x.j.nombre} en el mercado: ha girado a la baja` : `Pon a ${x.j.nombre} en el mercado antes de que gire`,
+      texto: inerciaTop ? 'Por cómo va su valor, conviene venderlo ya. Entra para ver el plan.' : vi.texto,
       hash: 'equipo',
     });
   }

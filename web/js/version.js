@@ -3,13 +3,24 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.0b';
+export const VERSION = '0.5.0c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.0c', f: '2026-10-23', h: '19:32', t: 'Revisión a fondo',
+    cosas: [
+      { tipo: 'arreglo', d: 'campana', t: 'El interruptor de los avisos', x: 'En Ajustes, tocar el interruptor de «Avisos» abría «Avisar de un fallo» en vez de encenderlos o apagarlos. Ya funciona: actívalos para que te lleguen las cláusulas que se abren y el cambio de mercado.' },
+      { tipo: 'arreglo', d: 'plan', t: 'Cláusulas con el dinero que tienes', x: 'El plan automático sumaba al saldo lo que te mandaba poner en venta y con eso te proponía clausular «ahora», cuando ese dinero no entra hasta que aceptas la oferta en el cambio de mercado. Ahora las cláusulas de ahora se pagan con lo que tienes ya, y si te llega solo con lo de las ventas te lo dice. Tampoco te propone subir una cláusula si no tienes el dinero.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'camiseta', t: 'Puntos esperados más justos', x: 'A los jugadores de los que aún no se había bajado la ficha se les restaba un 30 % de sus puntos esperados por error, así que fichajes buenos salían como que no entraban en tu once.' },
+      { tipo: 'arreglo', d: 'ia', t: 'La IA no se queda sin modelos por nada', x: 'Hacer dos preguntas seguidas, o mandar una captura que Google no puede leer, daba por gastado el modelo bueno hasta el día siguiente. Ahora solo pasa cuando de verdad se acaba el cupo del día, y te dice a qué hora vuelve (las 8:00 o las 9:00, según el cambio de hora).', ir: { v: 'ia' } },
+      { tipo: 'arreglo', d: 'nota', t: 'Lo que escribes no se borra', x: 'Si llegaba el plan o se ponía al día la liga mientras escribías una pregunta, la caja se quedaba vacía. Además, la clave de la IA ahora se prueba antes de guardarla y, si pegas una encima de otra, vale la última.', ir: { v: 'ia' } },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Más arreglos', x: 'Actualizar con un plan en marcha ya no pide otro a la vez. Si LaLiga falla con la plantilla de un equipo, se usa la de la última vez en vez de desaparecer (y de avisarte de que se han ido todos tus jugadores). Sin calendario, se usa el de la última vez, para no dar las cláusulas por abiertas durante el cierre. Cambiar de liga mientras carga ya no mezcla los datos de las dos. Lo marcado como «Hecho» va por liga. La liga de ejemplo ya no se queda vieja: su jornada es siempre la del próximo sábado. Una nota tuya del chat como «he clausulado a X» ya no lo da por vendido.' },
+    ],
+  },
   {
     v: '0.5.0b', f: '2026-10-23', h: '19:22', t: 'La app ya no se congela',
     cosas: [

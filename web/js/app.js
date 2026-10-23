@@ -259,13 +259,13 @@ function pintarSup() {
 }
 function pintar({ arriba = false } = {}) {
   if (!S.D) return;
+  // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
+  const escrito = ['pregunta', 'claveIA'].map((id) => { const el = $(`#${id}`); return el && el.value ? [id, el.value, document.activeElement === el ? el.selectionStart : null] : null; }).filter(Boolean);
   marco();
   pintarSup();
   medirSup();
   $$('.nav button').forEach((b) => b.classList.toggle('activo', b.dataset.ir === S.vista));
   const v = $('#vista');
-  // lo que llevas pegado en la casilla de la clave no se pierde si se repinta (al acabar de cargar la liga, por ejemplo)
-  const claveEscrita = ($('#claveIA') || {}).value || '';
   try { v.innerHTML = VISTAS[S.vista](S); } catch (e) {
     console.error(e);
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
@@ -273,7 +273,12 @@ function pintar({ arriba = false } = {}) {
   }
   $('#banda').innerHTML = (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
-  if (claveEscrita && $('#claveIA')) $('#claveIA').value = claveEscrita;
+  for (const [id, v, cur] of escrito) {
+    const el = $(`#${id}`);
+    if (!el || el.value) continue;
+    el.value = v;
+    if (cur != null) { el.focus({ preventScroll: true }); try { el.setSelectionRange(cur, cur); } catch (e) { /* nada */ } }
+  }
   // el chat se lee de abajo arriba; la guía de la clave, de arriba abajo
   if (S.vista === 'ia' && hayClave()) {
     bajarChat();
@@ -420,7 +425,21 @@ function montarPlan() {
   for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
 }
 
-async function cargar({ silencio = false } = {}) {
+/* cambiar de liga, entrar o salir de la demo mientras se carga la liga guardaría lo de una con las claves de la
+   otra: se hace al terminar la carga en marcha */
+function trasCargar(f) {
+  if (!S.cargando) return false;
+  S.pendiente = f;
+  tostada('Un momento: termino de cargar y cambio');
+  return true;
+}
+async function cargar(op = {}) {
+  try { await cargar0(op); } finally {
+    const f = S.pendiente;
+    if (f && !S.cargando) { S.pendiente = null; setTimeout(f, 0); }
+  }
+}
+async function cargar0({ silencio = false } = {}) {
   if (S.cargando) return;
   S.cargando = true;
   const conPantalla = !S.D;
@@ -589,6 +608,7 @@ async function comprobarAvisos() {
 
 /** a otra liga de tu cuenta: lo de cada liga se guarda aparte, así que se carga la suya */
 function cambiarDeLiga(id) {
+  if (trasCargar(() => cambiarDeLiga(id))) return;
   if (S.planCtl) S.planCtl.abort();
   if (S.chatCtl) S.chatCtl.abort();
   guardarCfg({ ligaId: id });
@@ -598,10 +618,12 @@ function cambiarDeLiga(id) {
 // al volver internet, si lo último falló, se vuelve a probar solo
 window.addEventListener('online', () => {
   if (S.cargando) return;
-  if (S.errorCarga || $('.carga.mal')) { tostada('Ha vuelto la conexión: actualizo'); S.planEstado = {}; cargar({ silencio: true }); }
+  if (S.errorCarga || $('.carga.mal')) { tostada('Ha vuelto la conexión: actualizo'); sinErrorPlan(); cargar({ silencio: true }); }
 });
 
 /* ---------------- el plan con IA ---------------- */
+/** quita el error del plan para que se pueda volver a intentar, sin tocar uno que esté en marcha (se pedirían dos) */
+const sinErrorPlan = () => { if (!S.planEstado.cargando) S.planEstado = {}; };
 async function generarPlan() {
   if (S.planEstado.cargando || !S.D) return;
   S.planEstado = { cargando: true, paso: '' };
@@ -621,8 +643,9 @@ async function generarPlan() {
     if (!nativo.aLaVista()) nativo.notificar('Tu plan de hoy está listo', (S.plan && S.plan.titular) || 'Entra para ver los pasos', 'hoy');
   } catch (e) {
     if (e.name === 'AbortError') {
-      // lo has parado tú: se queda el plan que había y puedes pedir otro cuando quieras
+      // lo has parado tú (o has cambiado de liga): se queda el plan que había y puedes pedir otro cuando quieras
       S.planEstado = {};
+      if (!S.D) return;
       rehacer();
       tostada('Plan parado. Pide otro con «Pedir otro plan» cuando quieras');
     } else {
@@ -670,7 +693,7 @@ const htmlHoja = (tipo, arg) => {
   try { return htmlHoja0(tipo, arg); } catch (e) {
     console.error(e);
     apuntarError(e.message, `hoja ${tipo}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
-    return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
+    return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
 const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
@@ -1043,7 +1066,7 @@ document.addEventListener('touchend', () => {
   const listo = tiron.d >= UMBRAL;
   tiron = null;
   marcaTiron(0, listo);
-  if (listo) { nativo.toque(); S.planEstado = {}; cargar(); }
+  if (listo) { nativo.toque(); sinErrorPlan(); cargar(); }
 }, { passive: true });
 
 /* ---------------- el teclado en la app ---------------- */
@@ -1074,7 +1097,7 @@ document.addEventListener('click', async (ev) => {
   if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }
   switch (d.accion) {
     case 'entrar': try { await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
-    case 'entrarDemo': cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); break;
+    case 'entrarDemo': { const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
       const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
       if (cod.length !== 8) { tostada('El código tiene 8 letras y números'); break; }
@@ -1117,7 +1140,7 @@ document.addEventListener('click', async (ev) => {
     case 'copiarEnlaceWeb': nativo.copiar('https://charly10sf.github.io/fantasy-manager/'); tostada('Enlace copiado'); break;
     case 'salirDemo': salirDemo(); break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
-    case 'recargar': S.planEstado = {}; cargar(); break;
+    case 'recargar': sinErrorPlan(); cargar(); break;
     case 'ajustes': hoja('ajustes'); break;
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
@@ -1127,7 +1150,7 @@ document.addEventListener('click', async (ev) => {
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>Es una de las funciones top de Fantasy Manager. De momento está bloqueada: <b>muy pronto se desbloqueará viendo un anuncio corto</b>, gratis.</p>
-        <button class="btn ancho" data-accion="cerrarHoja">Entendido</button></div>`);
+        <button class="btn ancho" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
       break;
     }
     case 'mandarAviso': enviarAviso(); break;
@@ -1137,7 +1160,7 @@ document.addEventListener('click', async (ev) => {
     case 'responderAviso': contestarAviso(d.id); break;
     case 'ligas': {
       const D = S.D; if (!D || !D.ligas || D.ligas.length < 2) break;
-      abrirHoja(`<div class="hoja-cab"><h2>Tus ligas</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>
+      abrirHoja(`<div class="hoja-cab"><h2>Tus ligas</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <div class="ligas-l">${D.ligas.map((l) => `<button class="${l.id === D.liga.id ? 'activa' : ''}" data-accion="cambiarLiga" data-id="${esc(l.id)}"${l.id === D.liga.id ? ' aria-current="true"' : ''}><b>${esc(l.nombre)}</b>${l.premium ? '<small>Premium</small>' : ''}${l.id === D.liga.id ? icono('ok') : ''}</button>`).join('')}</div>
         <p class="t2 peq">Cada liga guarda su plan, su chat y lo que le has contado a la IA por separado.</p>`);
       break;
@@ -1188,7 +1211,7 @@ document.addEventListener('click', async (ev) => {
     case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
     case 'hecho': {
       const P = S.plan; if (!P) break;
-      const todos = LS.get('hechos', {});
+      const todos = LS.get(K('hechos'), {});
       const clave = V.claveHechos(P);
       const l = new Set((todos[clave] || {}).n || []);
       const n = +d.n;
@@ -1196,7 +1219,7 @@ document.addEventListener('click', async (ev) => {
       todos[clave] = { t: Date.now(), n: [...l] };
       // solo los de la última semana
       for (const k of Object.keys(todos)) if (!todos[k] || Date.now() - (todos[k].t || 0) > 7 * 86400e3) delete todos[k];
-      LS.set('hechos', todos);
+      LS.set(K('hechos'), todos);
       if (apuntarReventa()) rehacer();
       pintar();
       break;
@@ -1227,7 +1250,7 @@ document.addEventListener('click', async (ev) => {
       repintarHoja();
       break;
     }
-    case 'avisos': {
+    case 'avisosOn': {
       const on = !cfgAvisos().on;
       guardarCfgAvisos({ on });
       if (on && enApp && !nativo.avisosPermitidos()) nativo.pedirPermisoAvisos();
@@ -1293,6 +1316,7 @@ document.addEventListener('change', (ev) => {
 document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && $('.visor')) { $('.visor').remove(); return; }
   if (ev.key === 'Escape' && S.hoja && !tourAbierto()) { cerrarHoja(); return; }
+  if ((ev.key === 'Enter' || ev.key === ' ') && ev.target && ev.target.matches && ev.target.matches('[role="button"][data-accion]')) { ev.preventDefault(); ev.target.click(); return; }
   if (ev.key === 'Enter' && !ev.shiftKey && ev.target && ev.target.id === 'pregunta') { ev.preventDefault(); const t = ev.target.value; ev.target.value = ''; enviarPregunta(t); }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
 });
@@ -1313,8 +1337,10 @@ async function probarYGuardar() {
   probandoClave = true;
   if (b) { b.disabled = true; b.textContent = 'Probando la clave…'; }
   try {
+    // primero se prueba y luego se guarda: si no, mientras Google contesta la app ya cree que hay clave (cambia la
+    // guía por el chat y puede lanzar el plan con una clave sin probar)
+    const lista = await probarClave(k);
     guardarClave(k);
-    const lista = await probarClave(k).catch((e) => { guardarClave(''); throw e; });
     LS.del('guia-clave');
     tostada(`IA activada: ${lista.length} modelos disponibles con tu clave`);
     ir('hoy');
@@ -1327,13 +1353,25 @@ async function probarYGuardar() {
     const ay = $('.gc-ayuda');
     if (ay && (raro || e.clave)) ay.open = true;
     if (b) { b.disabled = false; b.innerHTML = `${icono('ok')}Guardar y hacer el plan`; }
+    const c = $('#claveIA');
+    if (c) c.select();
   } finally { probandoClave = false; }
 }
-// en cuanto se pega algo con pinta de clave, se prueba sin tener que pulsar
+// en cuanto se pega algo con pinta de clave, se prueba sin tener que pulsar (escribiéndola a mano, al parar un momento)
+let claveT = 0;
 document.addEventListener('input', (ev) => {
   if (!ev.target || ev.target.id !== 'claveIA') return;
-  const k = limpiarClave(ev.target.value);
-  if (pareceClave(k) && !probandoClave) { ev.target.value = k; probarYGuardar(); }
+  clearTimeout(claveT);
+  const pegado = ev.inputType === 'insertFromPaste' || ev.inputType === 'insertReplacementText';
+  claveT = setTimeout(() => {
+    const c = $('#claveIA');
+    if (!c) return;
+    const k = limpiarClave(c.value);
+    if (!pareceClave(k)) return;
+    if (probandoClave) { tostada('Espera, estoy probando la de antes'); return; }
+    c.value = k;
+    probarYGuardar();
+  }, pegado ? 50 : 700);
 });
 // al volver de AI Studio, la casilla de pegar a la vista
 document.addEventListener('visibilitychange', () => {
@@ -1366,12 +1404,13 @@ function verNovedades(desde) {
   });
 }
 function listaVersiones() {
-  abrirHoja(`<div class="hoja-cab"><h2>Novedades</h2><button class="b-ico" data-accion="cerrarHoja">${icono('cerrar')}</button></div>
+  abrirHoja(`<div class="hoja-cab"><h2>Novedades</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
     <button class="btn chico" data-accion="presentacion" style="margin:0 0 6px">${icono('ia')}Ver la ${VERSION.replace(/\.0$/, '')} en presentación</button>${listaNovedades()}`);
 }
 
 /* ---------------- el tutorial ---------------- */
 function salirDemo() {
+  if (trasCargar(salirDemo)) return;
   cerrarHoja(true); LS.del('demo'); S.D = null; S.planEstado = {};
   if (!enApp && !enWeb) { LS.set('demo', true); tostada('En este navegador solo se puede ver el ejemplo'); cargar(); }
   else if (haySesion()) { S.D = foto(); if (S.D) { rehacer(); pintar(); cargar({ silencio: true }); } else cargar(); }
@@ -1381,7 +1420,7 @@ function salirDemo() {
 /** lo que conviene hacer para empezar (al final del tutorial) */
 function itemsEmpezar() {
   if (enDemo()) return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Entra con tu cuenta de LaLiga', x: 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga: la app nunca ve tu contraseña.', b: 'Entrar' }];
-  const l = [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'Activa la IA, gratis', x: 'Una clave de Google en dos minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
+  const l = [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'Activa la IA, gratis', x: 'Una clave gratis de Google en unos 3 minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
   if (enApp) l.push({ k: 'avisos', ok: nativo.avisosPermitidos() && cfgAvisos().on, ic: 'campana', t: 'Activa los avisos', x: 'Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando está tu plan.', b: 'Activar' });
   return l;
 }
@@ -1396,8 +1435,8 @@ function pasosTour() {
     { v: 'hoy', sel: '.plan-cab', con: ['.plan-sit', '.plan-titular'], si: () => !!$('.plan-cab'), t: 'Tu plan de hoy', x: 'Las operaciones exactas para hoy, en orden y con el saldo que te queda después de cada una. Cuando hagas una en LaLiga, el paso se tacha solo (o lo marcas tú con «Hecho»). Si algo no se puede hacer, la app lo tacha y te dice por qué.' },
     conClave
       ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
-      : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: 'Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Al final te digo cómo activarla.' },
-    { v: 'hoy', sel: '#bRefrescar', t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. No gasta la IA. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
+      : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: 'Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en la pestaña Pregunta.' },
+    { v: 'hoy', sel: '#bRefrescar', t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Solo usa la IA si tu plan es de antes del último cambio de mercado. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
     { v: 'hoy', sel: '#bAvisos', con: '.sup-btns [data-accion="ajustes"]', t: 'Fallo y Ajustes', x: '«Fallo», si algo no funciona o no cuadra: me llega a mí y te contesto aquí mismo. En «Ajustes», tu clave de la IA, los avisos, abrir la app en el ordenador o el iPhone y este tutorial.' },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
@@ -1466,7 +1505,7 @@ async function arrancar() {
     const eq = real || (S.M && S.M.yo) || null;
     return { yo: eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId, ligas: (S.D && S.D.ligas) || [] } : null, demo: enDemo() };
   }, (t) => tostada(t, 6000), () => {
-    tostada('¡Ya está abierta! Pongo tu liga al día', 5000); S.planEstado = {};
+    tostada('¡Ya está abierta! Pongo tu liga al día', 5000); sinErrorPlan();
     if (!S.cargando) cargar({ silencio: true });
     // el tutorial, que no se ha visto con la app cerrada
     quizaTutorial(1800);
@@ -1481,9 +1520,9 @@ async function arrancar() {
   }
   // cada minuto se recalculan las cuentas atrás, si no estás tocando nada
   let toqueT = 0;
-  for (const e of ['touchstart', 'scroll', 'keydown']) window.addEventListener(e, () => { toqueT = Date.now(); }, { passive: true });
+  for (const e of ['touchstart', 'pointerdown', 'scroll', 'keydown']) window.addEventListener(e, () => { toqueT = Date.now(); }, { passive: true });
   setInterval(() => {
-    if (!S.D || S.hoja || S.cargando || S.charlando || S.planEstado.cargando || S.vista === 'ia' || document.visibilityState !== 'visible' || Date.now() - toqueT < 30e3) return;
+    if (!S.D || S.hoja || S.cargando || S.charlando || S.planEstado.cargando || S.vista === 'ia' || tourAbierto() || document.visibilityState !== 'visible' || Date.now() - toqueT < 30e3) return;
     const y = window.scrollY;
     const ap = S.M && S.M.aprende;
     S.M = analizar(S.D, S.H, S.c, extraM());
