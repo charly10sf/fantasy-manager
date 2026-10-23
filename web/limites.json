@@ -5,15 +5,10 @@
   "ligas": [
     "Maulazzos"
   ],
-  "minutosLiga": 10,
+  "minutosLiga": 40,
   "minutos": 0,
   "equipos": {},
-  "extra": {
-    "C.A.D Domyngas": {
-      "dia": "2026-10-23",
-      "min": 20
-    }
-  },
+  "extra": {},
   "sinLimite": [
     "667015"
   ],
