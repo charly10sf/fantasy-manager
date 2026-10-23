@@ -10,7 +10,7 @@ export const cfgAvisos = () => ({
 });
 export const guardarCfgAvisos = (c) => LS.set('cfg-avisos', { ...cfgAvisos(), ...c });
 
-// las cláusulas que solo esperan a que acabe una jornada: la hora es aproximada, así que un aviso por jornada
+// las cláusulas que esperan a que empiece la jornada (el cierre de 24 h antes) se reabren todas a la vez: un aviso para todas
 const porVeda = (xs) => Object.values(xs.filter((x) => x.veda).reduce((g, x) => ((g[x.veda.n] ||= []).push(x), g), {}));
 const nombres = (xs, conPrecio = false) => `${xs.slice(0, 3).map((x) => (conPrecio ? `${x.j.nombre} (${eur(x.clausula)})` : x.j.nombre)).join(', ')}${xs.length > 3 ? ` y ${xs.length - 3} más` : ''}`;
 
@@ -26,8 +26,11 @@ export function calcular(D, M, c = cfgAvisos()) {
       .sort((a, b) => b.interes - a.interes).slice(0, 10);
     for (const xs of porVeda(vanAbrir)) {
       const v = xs[0].veda;
-      add(`reabre-${v.n}`, v.abre, 'Se reabren las cláusulas',
-        `Acaba la jornada ${v.n}: ${nombres(xs, true)} se ${xs.length > 1 ? 'pueden' : 'puede'} clausular en cuanto LaLiga las abra.`, 'rivales');
+      const h = cuando(v.abre).split(' ').pop();
+      add(`reabre15-${v.n}`, v.abre - 15 * MIN, 'En 15 min se reabren las cláusulas',
+        `A las ${h} empieza la jornada ${v.n} y se puede volver a clausular: ${nombres(xs, true)}. Ten la app de LaLiga Fantasy a mano.`, 'rivales');
+      add(`reabre-${v.n}`, v.abre, 'Ya se puede clausular',
+        `Empieza la jornada ${v.n}: ${nombres(xs, true)}. Corre antes que el resto.`, 'rivales');
     }
     vanAbrir.filter((x) => !x.veda)
       .forEach((x) => {
@@ -41,8 +44,8 @@ export function calcular(D, M, c = cfgAvisos()) {
     const expuestos = M.mias.filter((x) => !x.abierta && x.abreEn < 7 * DIA && x.ratio != null && x.ratio < 1.6);
     for (const xs of porVeda(expuestos)) {
       const v = xs[0].veda;
-      add(`mias-reabre-${v.n}`, v.abre - 2 * HORA, 'Al acabar la jornada se reabren las cláusulas',
-        `${nombres(xs)} se ${xs.length > 1 ? 'quedan' : 'queda'} con la cláusula abierta. ${xs.length > 1 ? 'Si no quieres perderlos, blíndalos o súbeles la cláusula.' : 'Si no quieres perderlo, blíndalo o súbele la cláusula.'}`, 'equipo');
+      add(`mias-reabre-${v.n}`, v.abre - 2 * HORA, `A las ${cuando(v.abre).split(' ').pop()} se reabren las cláusulas`,
+        `Empieza la jornada ${v.n} y ${nombres(xs)} se ${xs.length > 1 ? 'quedan' : 'queda'} con la cláusula abierta. ${xs.length > 1 ? 'Si no quieres perderlos, súbeles la cláusula antes o blíndalos a esa hora.' : 'Si no quieres perderlo, súbele la cláusula antes o blíndalo a esa hora.'}`, 'equipo');
     }
     expuestos.filter((x) => !x.veda)
       .forEach((x) => add(`mia-${x.pid}`, x.protegidoHasta - 2 * HORA, `A ${x.j.nombre} le quedan 2 h de protección`,

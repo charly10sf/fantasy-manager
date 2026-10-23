@@ -11,9 +11,9 @@ export const VERSION = '0.4.4e';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.4.4e', f: '2026-10-23', h: '17:00', t: 'Cláusulas cerradas antes de la jornada',
+    v: '0.4.4e', f: '2026-10-23', h: '17:07', t: 'Cláusulas cerradas antes de la jornada',
     cosas: [
-      { tipo: 'arreglo', d: 'escudo', t: 'Nada de clausular en el cierre', x: 'LaLiga no deja clausular a nadie desde 24 h antes del primer partido de la jornada hasta que acaba. La app no lo tenía en cuenta y proponía clausular a uno cuya protección vencía dentro de ese cierre. Ahora esas cláusulas salen como cerradas hasta que acabe la jornada, el plan no las propone (ni blindar, que mientras tanto no hace falta), la IA lo sabe y en Hoy se avisa de cuándo se cierran y cuándo vuelven a abrirse.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'escudo', t: 'Nada de clausular en el cierre', x: 'LaLiga no deja clausular a nadie en las 24 h antes del primer partido de la jornada, y las reabre a la hora de ese partido. La app no lo tenía en cuenta y te proponía clausular a uno cuya protección vencía dentro de ese cierre. Ahora esas cláusulas salen cerradas hasta la hora del primer partido, el plan y la IA te dicen que es a esa hora, en Hoy se avisa de cuándo se cierran y se reabren, y te llega un aviso 15 min antes de que se reabran.', ir: { v: 'hoy' } },
     ],
   },
   {
