@@ -11,7 +11,7 @@ export const VERSION = '0.4.4';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.4.4', f: '2026-10-23', h: '07:15', t: 'Funciones top y quién usa la app',
+    v: '0.4.4', f: '2026-10-23', h: '06:59', t: 'Funciones top y quién usa la app',
     cosas: [
       { tipo: 'nuevo', d: 'escudo', t: 'Funciones top', x: 'El dinero de cada rival, quién puede pagar tus cláusulas (y cuánto subirlas para que no le llegue a nadie) y cuándo gira un jugador son funciones top: se desbloquearán pronto viendo un anuncio corto. Mientras, salen con un candado; tócalo para ver qué hacen. El plan y la IA las siguen usando para decidir.', ir: { v: 'rivales' } },
       { tipo: 'nuevo', d: 'campana', t: 'Quién usa la app', x: 'El desarrollador ve, en Ajustes, quién de la liga tiene la app, cuándo entró por última vez y quién está dentro ahora. Está contado en la política de privacidad.' },
