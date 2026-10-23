@@ -26,7 +26,8 @@ const FRASES = [
 /** la configuración: la guardada (vale 6 horas) o la de GitHub */
 async function leerLimites() {
   const g = LS.get('limites', null);
-  if (g && Date.now() - g.t < 6 * 3600e3) return g.cfg;
+  // la guardada vale 6 horas, salvo que sea de antes de la 0.5.0 (sin «ligas»): esa se vuelve a leer ya
+  if (g && Date.now() - g.t < 6 * 3600e3 && g.cfg && Array.isArray(g.cfg.ligas)) return g.cfg;
   try {
     let cfg = null;
     if (enApp) {
@@ -88,7 +89,10 @@ export function minutosDe(cfg, yo) {
   // los que salen con nombre en «equipos», con sus minutos, sea cual sea su liga
   for (const [k, m] of Object.entries(cfg.equipos || {})) if (es(k)) return Number(m) >= 0 ? Number(m) : null;
   if (!enSusLigas(cfg, yo)) return null;
-  return Number(cfg.minutos) > 0 ? Number(cfg.minutos) : null;
+  // «minutosLiga» manda sobre «minutos»: las versiones de antes de la 0.5.0b solo leen «minutos», y con un fallo que
+  // congelaba la app al contar el tiempo; ahí se deja a 0 para que a ellas no les toque contar
+  const m = cfg.minutosLiga != null ? cfg.minutosLiga : cfg.minutos;
+  return Number(m) > 0 ? Number(m) : null;
 }
 
 /** hasta cuándo está cerrada la liga de ejemplo (para todos: sin cuenta no se sabe quién eres) */
@@ -222,7 +226,9 @@ export function iniciarLimite(quien, aviso = () => {}, alAbrir = () => {}, alCer
     if (estaba) { destapar(); if (Date.now() >= estaba && !q.demo) alAbrir(); }
     const min = q.demo ? null : minutosDe(cfg, q.yo);
     // la primera vez, el total de hoy que lleva en el Worker (puede venir de la web o de otro móvil)
-    if (min != null && !ultimoSync) sincronizar(true).then(() => comprobar());
+    // (solo si no hay ya una en marcha: si no, cada comprobación lanzaría otra que vuelve al momento y llama a
+    // comprobar() otra vez, en bucle, y la app se queda congelada)
+    if (min != null && !ultimoSync && !sincronizando) sincronizar(true).then(() => comprobar());
     const usados = usadosHoy();
     estadoLimite.min = min; estadoLimite.usados = usados;
     pintarQueda(min, usados);
@@ -237,7 +243,9 @@ export function iniciarLimite(quien, aviso = () => {}, alAbrir = () => {}, alCer
   setInterval(() => {
     if (document.visibilityState === 'visible') {
       const q = quien() || {};
-      if (!q.demo && q.yo && !estadoLimite.cerrada) {
+      // con la pantalla de «Se acabó por hoy» ya no se cuenta (ni se manda al servidor cada minuto)
+      const agotado = estadoLimite.min != null && estadoLimite.usados >= estadoLimite.min * 60;
+      if (!q.demo && q.yo && !estadoLimite.cerrada && !agotado) {
         sumar(CADA);
         if (estadoLimite.min != null) { porMandar += CADA; sincronizar(); }
       }

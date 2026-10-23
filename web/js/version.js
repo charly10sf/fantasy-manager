@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.0a';
+export const VERSION = '0.5.0b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.0b', f: '2026-10-23', h: '19:22', t: 'La app ya no se congela',
+    cosas: [
+      { tipo: 'arreglo', d: 'arreglo', t: 'Sin congelarse al contar los minutos', x: 'Con el límite de minutos activo, si la app comprobaba tu tiempo mientras aún esperaba la respuesta del servidor, entraba en un bucle y se quedaba congelada. Ahora espera a esa respuesta. Además, con la pantalla de «Se acabó por hoy» ya no sigue contando ni mandando tu tiempo al servidor cada minuto.' },
+    ],
+  },
   {
     v: '0.5.0a', f: '2026-10-23', h: '19:00', t: 'Arreglos de la 0.5.0',
     cosas: [
