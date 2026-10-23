@@ -1,0 +1,45 @@
+# Los avisos de fallos de la app (los que mandan los amigos con el botón «Fallo»), para que Claude los revise antes
+# de cada versión. Lee el almacén KV del Worker y los deja como artefacto («fallos», un día) cifrados con la llave
+# pública que se le pasa: solo los abre el chat que tiene la privada (.github/fallos-leer.mjs). Con «respuestas» los
+# contesta y al que lo mandó le llega en la app. El repo es público: nada de los avisos sale sin cifrar, y las
+# respuestas se ven en la Action, así que en ellas nada personal. Lanzarla solo pueden los que escriben en el repo.
+name: Fallos
+
+on:
+  workflow_dispatch:
+    inputs:
+      llave:
+        description: 'Llave pública en base64 (node .github/fallos-leer.mjs llave)'
+        required: true
+      respuestas:
+        description: 'Respuestas en JSON: [{"id":"…","respuesta":"…"}] (opcional)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fallos
+  cancel-in-progress: false
+
+jobs:
+  avisos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Leer (y contestar) los avisos
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          LLAVE: ${{ inputs.llave }}
+          RESPUESTAS: ${{ inputs.respuestas }}
+        run: node .github/fallos.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallos
+          path: fallos.enc
+          retention-days: 1
