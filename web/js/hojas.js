@@ -1,7 +1,7 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
-import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe } from './util.js';
+import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML, puntosUltimaJornada } from './vistas.js';
@@ -196,9 +196,9 @@ export function fichaJugador(S, pid) {
       else h += `<div class="aviso-ficha azul">${icono('mercado')}<div><b>Libre en el mercado de la liga</b> desde ${eur(m.precio)}. Subasta a ciegas${m.cierra ? ` hasta ${cuando(m.cierra)}` : ''}: se lo lleva la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}${m.miPuja ? ` Tu puja: ${eur(m.miPuja)}.` : cc && !cc.ok ? ` Con su calendario no pujaría por él${cc.parche ? `: sale ya a un ${pct(cc.sobre * 100)} sobre su valor y de parche no pagaría más de un 5 %` : ' salvo que te haga falta de parche'}.` : ` Para llevártelo, yo pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)}).`}${M.pujasLiga && !M.pujasLiga.poco ? ` En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : ''}${m.topeCal && (!cc || cc.ok) ? ' La he dejado en un 5 % sobre su valor como mucho por su calendario: es solo de parche.' : m.recortada ? ' La he dejado más baja para no pagar de más por lo que te aporta.' : ''}</div></div>`;
     }
     if (suya) {
-      if (suya.abierta && suya.meLlega) h += `<div class="aviso-ficha verde">${icono('diana')}<div><b>Puedes clausularlo ya</b> a ${esc(suya.rival.manager || suya.rival.nombre)} por ${eur(suya.clausula)}. Te quedarías con ${eur(suya.teQueda)}${suya.teQueda < 0 ? ' (en negativo: vende algo antes de que empiece la jornada)' : ''}.</div></div>`;
-      else if (suya.abierta) h += `<div class="aviso-ficha">${icono('candado')}<div>Su cláusula está abierta (${eur(suya.clausula)}, de ${esc(suya.rival.manager || suya.rival.nombre)}), pero te faltan <b>${eur(suya.clausula - M.pujaMax)}</b>.</div></div>`;
-      else h += `<div class="aviso-ficha oro">${icono('reloj')}<div>Es de <b>${esc(suya.rival.manager || suya.rival.nombre)}</b>. ${suya.escudo ? 'Lo ha <b>blindado</b>. ' : ''}${suya.veda ? `Las cláusulas están cerradas hasta que empiece la jornada ${suya.veda.n}: la suya (${eur(suya.clausula)}) se puede pagar <b>${cuando(suya.protegidoHasta)}</b>, en ${dura(suya.abreEn)}.` : `Su cláusula (${eur(suya.clausula)}) se abre <b>${cuando(suya.protegidoHasta)}</b>, en ${dura(suya.abreEn)}.`}${suya.meLlega ? ' Te llega el dinero.' : ` Te faltan ${eur(suya.clausula - M.pujaMax)}.`}</div></div>`;
+      if (suya.abierta && suya.meLlega) h += `<div class="aviso-ficha verde">${icono('diana')}<div><b>Puedes clausularlo ya</b> a ${esc(suya.rival.manager || suya.rival.nombre)} por ${eur(suya.clausula)}. Te quedarías con ${eur(suya.teQueda)}.</div></div>`;
+      else if (suya.abierta) h += `<div class="aviso-ficha">${icono('candado')}<div>Su cláusula está abierta (${eur(suya.clausula)}, de ${esc(suya.rival.manager || suya.rival.nombre)}), pero te faltan <b>${eur(suya.clausula - num(S.D.dinero))}</b>: una cláusula solo se paga con saldo, sin deuda.</div></div>`;
+      else h += `<div class="aviso-ficha oro">${icono('reloj')}<div>Es de <b>${esc(suya.rival.manager || suya.rival.nombre)}</b>. ${suya.escudo ? 'Lo ha <b>blindado</b>. ' : ''}${suya.veda ? `Las cláusulas están cerradas hasta que empiece la jornada ${suya.veda.n}: la suya (${eur(suya.clausula)}) se puede pagar <b>${cuando(suya.protegidoHasta)}</b>, en ${dura(suya.abreEn)}.` : `Su cláusula (${eur(suya.clausula)}) se abre <b>${cuando(suya.protegidoHasta)}</b>, en ${dura(suya.abreEn)}.`}${suya.meLlega ? ' Te llega con tu saldo.' : ` Con tu saldo te faltan ${eur(suya.clausula - num(S.D.dinero))} (las cláusulas no se pueden pagar con deuda).`}</div></div>`;
     } else if (!enMercado) {
       h += `<div class="aviso-ficha azul">${icono('info')}<div>No es de nadie en tu liga: puede salir en el mercado.</div></div>`;
     }
@@ -502,23 +502,30 @@ export function quienUsaHTML(S) {
   const fila = (nombre, equipo, x) => {
     const dentro = x && ahora - x.ultima < DENTRO;
     const donde = x ? (x.canal === 'web' ? 'web' : x.canal === 'play' ? 'Google Play' : 'Android') : '';
+    const fallo = x && / !$/.test(x.v || '');
     const sub = !x ? 'Aún no ha entrado'
-      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(x.v || '')}${x.segHoy ? ` · ${Math.round(x.segHoy / 60)} min hoy` : ''}`;
+      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(String(x.v || '').replace(/ !$/, ''))}${fallo ? ' · <b class="rojo">no le carga la liga</b>' : ''}${x.segHoy ? ` · ${Math.round(x.segHoy / 60)} min hoy` : ''}`;
     return `<div class="quien-f ${x ? (dentro ? 'dentro' : 'si') : 'no'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${sub}</span></div>${x && x.primera ? `<small>desde ${esc(cuando(x.primera, { hora: false }))}</small>` : ''}</div>`;
   };
   let filas = '';
+  // por su número de cuenta; si no cuadra (LaLiga no siempre da el mismo id en la clasificación que en la cuenta),
+  // por el nombre de su equipo en esta liga o por su nombre de mánager
+  const ligaId = D && D.liga ? String(D.liga.id) : '';
+  const buscar = (e) => porUid.get(String(e.managerId)) || porUid.get(String(e.userId))
+    || lista.find((x) => !deLiga.has(String(x.uid)) && x.equipo && String(x.liga || '') === ligaId && norm(x.equipo) === norm(e.nombre))
+    || lista.find((x) => !deLiga.has(String(x.uid)) && x.nombre && e.manager && norm(x.nombre) === norm(e.manager));
   for (const e of tabla) {
-    const x = porUid.get(String(e.managerId)) || porUid.get(String(e.userId));
+    const x = buscar(e);
     if (x) deLiga.add(String(x.uid));
     filas += fila(e.manager || e.nombre, e.manager ? e.nombre : '', x);
   }
-  const conApp = tabla.filter((e) => porUid.has(String(e.managerId)) || porUid.has(String(e.userId))).length;
+  const conApp = deLiga.size;
   const dentro = lista.filter((x) => ahora - x.ultima < DENTRO).length;
   h += `<p class="quien-res"><b>${conApp} de ${tabla.length}</b> de tu liga han entrado en la app${dentro ? ` · <b>${dentro}</b> dentro ahora` : ''}.</p>`;
   h += `<div class="quien-l">${filas}</div>`;
   const fuera = lista.filter((x) => !deLiga.has(String(x.uid)));
   if (fuera.length) h += `<div class="grupo"><span>De fuera de tu liga</span></div><div class="quien-l">${fuera.map((x) => fila(x.nombre || 'Sin nombre', x.equipo, x)).join('')}</div>`;
-  h += `<p class="peq apag" style="margin-top:14px">«Dentro ahora» es que ha tenido la app abierta en los últimos 12 minutos. Se apunta al abrirla con su cuenta de LaLiga (no en la liga de ejemplo).</p>`;
+  h += `<p class="peq apag" style="margin-top:14px">«Dentro ahora» es que ha tenido la app abierta en los últimos 12 minutos. Se apunta al abrirla con su cuenta de LaLiga: quien solo ha visto la liga de ejemplo, o tiene una versión anterior a la 0.4.4, no sale.</p>`;
   return h;
 }
 

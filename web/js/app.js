@@ -458,6 +458,8 @@ async function cargar0({ silencio = false } = {}) {
     S.cargando = false;
     console.error(e);
     if (e.sesion) { S.D = null; pantallaEntrar(e.message); return; }
+    // ha entrado con su cuenta pero no le carga la liga: que el dueño lo vea en «Quién usa la app»
+    if (!enDemo() && haySesion() && !document.hidden) saludar({ v: `${VERSION} !`, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: '', equipo: '' });
     const x = { ...explicarError(e), detalle: e.message || String(e), t: Date.now() };
     S.errorCarga = x;
     // sin poder cargar, pero con la liga guardada de antes: se enseña esa, avisando de que no está al día

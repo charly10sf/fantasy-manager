@@ -1145,7 +1145,8 @@ export function analizar(D, H, c, extra = {}) {
       if (!f.clausula || (D.maestro[f.pid] || {}).pos === 5) continue;
       const x = enriquecer(f, tid);
       x.rival = M.equipo[tid] || { nombre: 'Rival' };
-      x.meLlega = x.clausula <= M.pujaMax;
+      // una cláusula solo se paga con saldo: LaLiga no deja clausular quedándote en negativo (solo pujando en el mercado)
+      x.meLlega = x.clausula <= num(D.dinero);
       x.teQueda = num(D.dinero) - x.clausula;
       const i = M.interes(x.j, x.clausula, x.tend);
       x.interes = i.n; x.por = i.por;
@@ -1654,7 +1655,7 @@ export function planAuto(D, M, c) {
     op({ accion: 'esperar', pid: fuera.pid, jugador: fuera.j.nombre, donde: `cláusula de ${eur(fuera.clausula)} a ${fuera.rival.manager || fuera.rival.nombre}`, importe: null, cuando: conVentas ? 'cuando entre lo de las ventas' : 'si vendes algo',
       motivo: conVentas
         ? `Es el mejor a tiro (interés ${fuera.interes}) y con lo que pones en venta te llega, pero ese dinero entra cuando aceptes las ofertas, en el próximo cambio de mercado. Ahora tienes ${eur(caja)}: si sigue abierta entonces, ve a por él.`
-        : `Es el mejor a tiro (interés ${fuera.interes}), pero te faltan ${eur(fuera.clausula - saldo)} sin tirar de deuda. Si vendes a alguien que no juegue, ve a por él.`, confianza: 'baja' });
+        : `Es el mejor a tiro (interés ${fuera.interes}), pero te faltan ${eur(fuera.clausula - saldo)}: una cláusula solo se paga con saldo, sin deuda. Si vendes a alguien que no juegue, ve a por él.`, confianza: 'baja' });
   }
 
   // 4. si te quedas en negativo, vender lo que menos aporta antes de que empiece la jornada (o no puntúas)

@@ -3,13 +3,20 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.0c';
+export const VERSION = '0.5.0d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.0d', f: '2026-10-23', h: '19:40', t: 'Las cláusulas, con tu saldo',
+    cosas: [
+      { tipo: 'arreglo', d: 'dinero', t: 'Cláusulas sin deuda', x: 'LaLiga no deja clausular quedándote en negativo: eso solo se puede pujando o comprando en el mercado. La app contaba el margen de deuda también para las cláusulas y te decía «te llega» cuando no. Ahora una cláusula te llega solo si la pagas con tu saldo, la IA lo sabe y, si un plan te propone una que no cabe, te avisa en ese paso.', ir: { v: 'rivales', seg: 'rivales:clausulas' } },
+      { tipo: 'mejora', d: 'cara', t: 'Quién usa la app, más fiable', x: 'Para el dueño: si el número de cuenta de alguien no cuadra con el de la clasificación, se le encuentra por el nombre de su equipo o de mánager. Y si alguien entra con su cuenta pero no le carga la liga, sale como «no le carga la liga».' },
+    ],
+  },
   {
     v: '0.5.0c', f: '2026-10-23', h: '19:32', t: 'Revisión a fondo',
     cosas: [
@@ -161,7 +168,7 @@ export const NOVEDADES = [
   {
     v: '0.3.4a', f: '2026-10-22', h: '21:00', t: 'Blindajes y ofertas a otros managers',
     cosas: [
-      { tipo: 'arreglo', d: 'mercado', t: 'Ofertas que sí te puede aceptar', x: 'Cuando otro manager pone a uno a la venta, LaLiga también le hace su oferta y él se queda con la mejor. La app te proponía ofrecerle lo que pide (a veces justo su valor), y así nunca te lo iba a vender. Ahora calcula lo que suele dar LaLiga en tu liga y te propone ofrecer por encima: lo ves en el mercado («ofrece…»), en su ficha y en el plan de la IA, que ya no te pide menos de eso.', ir: { v: 'mercado', seg: 'mercado:venta' } },
+      { tipo: 'arreglo', d: 'oferta', t: 'Ofertas que sí te puede aceptar', x: 'Cuando otro manager pone a uno a la venta, LaLiga también le hace su oferta y él se queda con la mejor. La app te proponía ofrecerle lo que pide (a veces justo su valor), y así nunca te lo iba a vender. Ahora calcula lo que suele dar LaLiga en tu liga y te propone ofrecer por encima: lo ves en el mercado («ofrece…»), en su ficha y en el plan de la IA, que ya no te pide menos de eso.', ir: { v: 'mercado', seg: 'mercado:venta' } },
       { tipo: 'arreglo', d: 'escudo', t: 'Los blindajes, en cuenta', x: 'El blindaje de LaLiga (el escudo que se pone viendo un anuncio) protege la cláusula de un jugador 24 h. La app no lo contaba y te decía que clausularas a uno que su dueño acababa de blindar. Ahora un jugador blindado sale como «Blindado · hasta…», no te lo propone hasta que se acabe y te avisa cuando se abra. La IA también lo sabe.', ir: { v: 'rivales', seg: 'rivales:clausulas' } },
       { tipo: 'nuevo', d: 'escudo', t: 'Tus blindajes, a tu favor', x: 'Tienes 2 blindajes gratis por jornada. Si uno de los tuyos que importa tiene la cláusula abierta y algún rival la puede pagar, la app y la IA te proponen blindarlo (gratis) antes que gastar en subirle la cláusula, y no te lo proponen con los que toca vender. En Equipo → Cláusulas ves cuántos te quedan y cuáles están blindados.', ir: { v: 'equipo', seg: 'equipo:clausulas' } },
     ],

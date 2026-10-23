@@ -639,7 +639,7 @@ export function rivales(S) {
     if (f === 'llegan' || f === 'abiertas') xs = xs.filter((x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA));
     if (f === 'pronto' || f === 'hoy' || f === 'semana') xs = xs.filter((x) => !x.abierta && x.abreEn < 7 * DIA).sort((a, b) => a.abreEn - b.abreEn);
     void HORA;
-    h += `<p class="t2 peq">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>. La barra es lo que te interesa: rendimiento, si sube y lo que cuesta sobre su valor.</p>`;
+    h += `<p class="t2 peq">Para clausular tienes <b>${eur(S.D.dinero)}</b>: las cláusulas se pagan con saldo, sin deuda. La barra es lo que te interesa: rendimiento, si sube y lo que cuesta sobre su valor.</p>`;
     h += xs.length ? lista2(xs.slice(0, 80).map((x) => filaJugador(x, {
       sub: `de ${esc(x.rival.manager || x.rival.nombre)} · vale ${eur(x.j.valor)}`,
       pills: [clausulaPill(x), estadoPill(x.j), avisoOnce(M, x.j), calPill(M, x.j, { soloDuro: true }), x.meLlega ? '' : '<span class="pill">No te llega</span>'],
