@@ -573,6 +573,29 @@ async function abrirAvisoRecibido(id) {
   try { S.av.detalle = await unAviso(id); } catch (e) { S.av.detalle = { error: e.message }; }
   if (S.av.abierto === id) repintarAvisos();
 }
+/* para el dueño: los avisos sin contestar, enteros y con su diagnóstico, para pegarlos en el chat de Claude */
+async function copiarAvisosClaude() {
+  const todos = S.av.todos || [];
+  let lista = todos.filter((x) => !x.r);
+  const sinContestar = lista.length > 0;
+  if (!sinContestar) lista = todos.slice(0, 5);
+  lista = lista.slice(0, 15);
+  if (!lista.length) { tostada('No hay avisos'); return; }
+  tostada('Juntando los avisos…');
+  const det = await enParalelo(lista, 3, (x) => unAviso(x.id).catch((e) => ({ error: e.message })));
+  const partes = lista.map((x, i) => {
+    const d = det[i] || {};
+    const cab = `## ${x.id} · ${cuandoT(x.t)} · ${x.equipo || '?'}${x.quien ? ` (${x.quien})` : ''}${d.app ? ` · ${d.app}` : ''}`;
+    const resp = d.respuesta ? `\n→ Le contestaste: ${d.respuesta}` : '';
+    const diag = d.diag ? `\n--- diagnóstico (recortado) ---\n${String(d.diag).slice(0, 3000)}` : '';
+    return `${cab}\n${d.texto || x.txt || ''}${resp}${diag}`;
+  });
+  // (en el navegador, copiar después de esperar a la red puede fallar: el texto queda a la vista con su botón)
+  S.av.paraClaude = `Avisos de fallos de Fantasy Manager (${sinContestar ? 'sin contestar' : 'los últimos'}), a ${cuandoT(Date.now())}:\n\n${partes.join('\n\n')}`;
+  nativo.copiar(S.av.paraClaude);
+  repintarAvisos();
+  tostada(`Copiados ${lista.length}: pégalos en el chat de Claude`, 5000);
+}
 async function contestarAviso(id) {
   const t = (($('#respTxt') || {}).value || '').trim();
   if (!t) { tostada('Escribe la respuesta'); return; }
@@ -1161,6 +1184,8 @@ document.addEventListener('click', async (ev) => {
     case 'permisoApertura': if (!cfgAvisos().on) guardarCfgAvisos({ on: true }); nativo.pedirPermisoAvisos(); break;
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;
     case 'responderAviso': contestarAviso(d.id); break;
+    case 'copiarAvisos': copiarAvisosClaude(); break;
+    case 'copiarParaClaude': if (S.av && S.av.paraClaude) { nativo.copiar(S.av.paraClaude); tostada('Copiado'); } break;
     case 'ligas': {
       const D = S.D; if (!D || !D.ligas || D.ligas.length < 2) break;
       abrirHoja(`<div class="hoja-cab"><h2>Tus ligas</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>

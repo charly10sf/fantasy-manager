@@ -1254,3 +1254,8 @@ body.limitado .tostada { z-index: 120; }
 .tiempo .tiempo-ir { width: 14px; height: 14px; color: var(--apagado); margin-left: 2px; }
 /* los nombres de jugadores dentro de un texto del plan: se tocan para abrir su ficha */
 .enlace-j { display: inline; padding: 0; font: inherit; font-weight: 600; color: var(--texto); text-decoration: underline; text-decoration-color: var(--rojo); text-decoration-thickness: 1.5px; text-underline-offset: 3px; cursor: pointer; }
+
+/* el botón del dueño para pasar los avisos a Claude */
+.avisos-claude { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 12px; }
+.avisos-claude .t2 { flex: 1; min-width: 160px; margin: 0; }
+.para-claude { margin-bottom: 16px; }

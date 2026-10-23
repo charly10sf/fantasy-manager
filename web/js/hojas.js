@@ -496,6 +496,8 @@ function bandejaAvisos(A) {
   const todos = A.todos || [];
   let h = `<div class="grupo"><span>Avisos recibidos</span><span>${A.pendientes || 0} sin contestar</span></div>`;
   if (!todos.length) h += `<p class="t2 peq">${A.cargandoTodos ? 'Cargando…' : 'Ninguno todavía.'}</p>`;
+  // para revisarlos con Claude: los sin contestar, enteros y con su diagnóstico, listos para pegar en el chat
+  else h += `<div class="avisos-claude"><button class="btn chico sec" data-accion="copiarAvisos">${icono('copiar')}Copiar para Claude</button><span class="t2 peq">${A.pendientes ? 'Los que están sin contestar' : 'Los últimos 5'}, con su diagnóstico. Pégalos en el chat.</span></div>${A.paraClaude ? `<div class="para-claude"><textarea class="campo-t aviso-t" rows="5" readonly>${esc(A.paraClaude)}</textarea><button class="btn chico" data-accion="copiarParaClaude">${icono('copiar')}Copiar otra vez</button></div>` : ''}`;
   h += todos.map((x) => `<div class="aviso recibido${x.r ? '' : ' nuevo'}${A.abierto === x.id ? ' abierto' : ''}">
     <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.t)}</span>${x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
     ${A.abierto === x.id ? detalleAviso(A) : `<p>${esc(x.txt || '')}</p>`}</div>`).join('');
