@@ -1582,6 +1582,15 @@ function acciones(D, M, c) {
     hash: 'equipo',
   });
 
+  // las alineaciones confirmadas: los tuyos que se quedan en el banquillo o no van, si su partido aún no ha empezado
+  const noJuegan = M.mias.filter((x) => { const a = M.alineacion(x.pid); return a && a.estado !== 'titular' && a.ini > ahora; });
+  if (noJuegan.length) add({
+    tipo: 'alinear', prio: 75, icono: 'campo', cuando: cuando(Math.min(...noJuegan.map((x) => M.alineacion(x.pid).ini))),
+    titulo: noJuegan.length === 1 ? `${noJuegan[0].j.nombre} no es titular` : `${noJuegan.length} de los tuyos no son titulares`,
+    texto: `${noJuegan.map((x) => { const a = M.alineacion(x.pid); return `${x.j.nombre}, ${a.estado === 'suplente' ? 'suplente' : a.estado === 'baja' ? 'de baja' : 'no convocado'} (juega ${cuando(a.ini)})`; }).join('; ')}. ${noJuegan.length === 1 ? 'Si lo tienes en el once, cámbialo antes de que empiece su partido' : 'Si los tienes en el once, cámbialos antes de que empiece su partido'}.`,
+    hash: 'equipo',
+  });
+
   return out.sort((a, b) => b.prio - a.prio);
 }
 

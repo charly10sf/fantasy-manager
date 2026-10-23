@@ -706,6 +706,8 @@ export function planViejo(M) {
   if (p.dia !== diaDe()) return true;
   if (LS.get(K('notas-t'), 0) > p.t) return true;
   if (M && M.cierreMercado && p.mercado && Math.abs(M.cierreMercado - p.mercado) > 3600e3) return true;
+  // hecho antes de que empezara la jornada: con ella en juego cambia todo (se reabren las cláusulas, el once ya está puesto)
+  if (M && M.enJuego && p.t < M.enJuego.ini) return true;
   return Date.now() - p.t > 10 * 3600e3;
 }
 
@@ -726,7 +728,12 @@ export function cuadrarPlan(P, D, M) {
   // cada paso se comprueba contra lo que de verdad se puede hacer hoy
   const cat = M._cat || (M._cat = catalogo(D, M, notasVigentes()));
   const OPERA = ['vender', 'clausular', 'pujar', 'comprar', 'ofertar', 'blindar'];
-  const ops = (P.operaciones || []).map((o0, i) => {
+  // un plan de antes de que empezara la jornada: lo de poner el once ya ha pasado (el once ya está puesto, y en LaLiga
+  // solo se puede cambiar a los que aún no han jugado), así que ese paso y su once se quitan
+  const empezo = !!(M.enJuego && (P.t || 0) < M.enJuego.ini);
+  let lista = (P.operaciones || []).filter((o) => !(empezo && /alinea/i.test(String(o.accion || ''))));
+  if (empezo && !lista.length) lista = [{ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'ahora', motivo: `La jornada ${M.enJuego.n} ya ha empezado (${cuando(M.enJuego.ini)}) y este plan es de antes. En LaLiga Fantasy solo puedes cambiar a los que aún no han jugado: mira en Equipo quién está de suplente o no va convocado. Y pide un plan nuevo: con la jornada empezada se han reabierto las cláusulas.` }];
+  const ops = lista.map((o0, i) => {
     let o = { ...o0 };
     const j = (o.pid && D.maestro[o.pid]) || buscar(o.jugador);
     const pid = j && j.id;
@@ -841,7 +848,7 @@ export function cuadrarPlan(P, D, M) {
     avisoSaldo = `En negativo a propósito hasta que vendas lo de revender (${rev.map((o) => (o.j && o.j.nombre) || o.jugador).join(', ')}). Con eso vuelves a unos ${eur(final + recupera)} antes de la jornada`;
     avisoTipo = 'plan';
   } else if (final != null && final < 0) { avisoSaldo = `Acabarías en negativo (${eur(final)}): vende antes de que empiece la jornada`; avisoTipo = 'mal'; }
-  return { ...P, ops, final, avisoSaldo, avisoTipo, recupera };
+  return { ...P, ops, final, avisoSaldo, avisoTipo, recupera, empezo, alineacion: empezo ? null : P.alineacion };
 }
 
 function sacarJSON(t) {

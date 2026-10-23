@@ -351,6 +351,7 @@ function pasoOp(S, P, o) {
  */
 export function cambiosDesdePlan(S) {
   const P = S.plan, M = S.M;
+  if (P && !P.auto && P.empezo && M && M.enJuego) return `La jornada ${M.enJuego.n} ha empezado y se han reabierto las cláusulas.`;
   if (!P || P.auto || !P.foto || !Array.isArray(P.foto.mias) || !M) return null;
   const ahora = new Set(M.mias.map((x) => x.pid)), antes = new Set(P.foto.mias);
   const mandado = new Set();
@@ -401,7 +402,7 @@ function planHTML(S) {
   const onceH = onceHTML(S, P.alineacion, { sinCab: true });
   if (onceH) {
     const abrir = !!M.enJuego || (M.proxima && M.proxima.ini - Date.now() < 2 * DIA);
-    h += `<details class="once-pleg" ${abrir ? 'open' : ''}><summary>${icono('campo')}<b>Tu once</b><span>${M.proxima ? `jornada ${M.proxima.n} · ${cuando(M.proxima.ini)}` : ''}</span></summary>${onceH}</details>`;
+    h += `<details class="once-pleg" ${abrir ? 'open' : ''}><summary>${icono('campo')}<b>Tu once</b><span>${M.enJuego ? `jornada ${M.enJuego.n} · en juego` : M.proxima ? `jornada ${M.proxima.n} · ${cuando(M.proxima.ini)}` : ''}</span></summary>${onceH}</details>`;
   }
   if (Array.isArray(P.vigilar) && P.vigilar.length) h += `<div class="sec"><h2>Vigila</h2></div>${P.vigilar.map((v) => notaJugador(S, v.jugador, v.texto)).join('')}`;
   if (Array.isArray(P.noticias) && P.noticias.length) h += `<div class="sec"><h2>Noticias que te afectan</h2></div>${P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join('')}`;
