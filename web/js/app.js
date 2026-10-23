@@ -1286,6 +1286,9 @@ function versionVista() {
 function novedades() {
   const vista = versionVista();
   LS.set('version-vista2', VERSION);
+  // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
+  // sola: le basta con el tutorial. Las de después, sí
+  if (!tourVisto()) return;
   if (!vista || cmpVer(vista, VERSION) >= 0) return;
   verNovedades(vista);
 }
@@ -1427,5 +1430,5 @@ async function arrancar() {
 
 // todos los módulos han cargado: la web arranca bien (si era una bajada sin reinstalar, la app se la queda)
 nativo.webViva();
-if (!EN_FONDO) { const wp = LS.get('web-puesta', null); if (wp) { LS.del('web-puesta'); if (Date.now() - wp.t < 120000) setTimeout(() => tostada(`App al día: versión ${VERSION}`, 4000), 1800); } }
+if (!EN_FONDO) { const wp = LS.get('web-puesta', null); if (wp) { LS.del('web-puesta'); if (Date.now() - wp.t < 120000 && tourVisto()) setTimeout(() => tostada(`App al día: versión ${VERSION}`, 4000), 1800); } }
 if (EN_FONDO) trabajoFondo(); else arrancar();
