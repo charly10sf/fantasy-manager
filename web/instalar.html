@@ -38,6 +38,11 @@
     .falta li::before { content: ''; flex: none; width: 8px; height: 8px; margin-top: 10px; border-radius: 50%; background: var(--sube); }
     footer { margin-top: 28px; font-size: 14px; color: var(--apagado); }
     a { color: var(--rojo-l); }
+    .ayuda { margin-top: 14px; border-top: 1px solid var(--linea); padding-top: 12px; }
+    .ayuda summary { cursor: pointer; color: var(--texto); font-weight: 600; min-height: 32px; }
+    .ayuda p { margin: 10px 0 6px; font-size: 15.5px; }
+    .ayuda ul { margin: 0; padding-left: 20px; font-size: 15.5px; }
+    .ayuda li { margin: 0 0 6px; }
     a:focus-visible, .btn:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
   </style>
 </head>
@@ -58,6 +63,18 @@
     </ol>
     <a class="btn" href="https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Bajar la app</a>
     <p class="nota">Se pone al día sola cada vez que la abres. Solo alguna vez te pedirá instalar una versión nueva, con un botón dentro.</p>
+    <details class="ayuda">
+      <summary>¿No te deja instalarla?</summary>
+      <p>Es normal: Android pone pegas a las apps que no vienen de Google Play. Según el móvil, sale uno de estos avisos:</p>
+      <ul>
+        <li>Abre este enlace en <b>Chrome</b>, no dentro de WhatsApp: en WhatsApp, los tres puntos → «Abrir en Chrome».</li>
+        <li>«El archivo puede ser dañino»: <b>Descargar de todas formas</b>.</li>
+        <li>«No se pueden instalar apps de esta fuente»: <b>Ajustes</b> → activa <b>Permitir de esta fuente</b> y vuelve atrás.</li>
+        <li>Play Protect dice que la ha bloqueado: <b>Más detalles → Instalar de todos modos</b>.</li>
+        <li>En un Samsung que no deja ni así: Ajustes → Seguridad y privacidad → <b>Bloqueador automático</b>. Desactívalo, instala y vuelve a activarlo.</li>
+      </ul>
+      <p>¿Tienes iPhone? Esta app es solo para Android: mira «iPhone».</p>
+    </details>
   </section>
 
   <section class="caja" id="ordenador">
