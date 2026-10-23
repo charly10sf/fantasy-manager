@@ -11,7 +11,7 @@ export const VERSION = '0.5.2b';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.2b', f: '2026-10-24', h: '00:55', t: 'Contestado al momento',
+    v: '0.5.2b', f: '2026-10-24', h: '01:07', t: 'Contestado al momento',
     cosas: [
       { tipo: 'arreglo', d: 'arreglo', t: 'Los avisos contestados, como contestados', x: 'Para el dueño: un aviso de fallo que acababas de contestar seguía saliendo «Sin contestar» en la lista hasta un minuto después (el servidor lista con retraso). Ahora sale contestado al momento, y el numerito de Fallo baja a la vez.' },
     ],
