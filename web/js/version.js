@@ -11,7 +11,7 @@ export const VERSION = '0.5.0';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.0', f: '2026-10-23', h: '18:22', t: 'Activar la IA, paso a paso',
+    v: '0.5.0', f: '2026-10-23', h: '18:25', t: 'Activar la IA, paso a paso',
     cosas: [
       { tipo: 'nuevo', d: 'ia', t: 'La clave de la IA, paso a paso', x: 'Sin clave, en Pregunta sale una guía con lo que vas a ver en la web de Google en cada paso y dónde tocar: entrar con tu cuenta, aceptar las condiciones, buscar tu clave y copiarla. El botón abre AI Studio y, al volver, te lleva a la casilla. En cuanto pegas la clave se prueba sola y te hace el plan. Vale la clave nueva de Google (empieza por AQ.) y la de antes (AIza). Si algo no sale igual, abajo está la ayuda.', ir: { v: 'ia' } },
       { tipo: 'mejora', d: 'ajustes', t: 'Lista para otras ligas', x: 'La cuenta atrás de apertura y el límite de minutos al día son solo para la liga de los amigos. Quien instale la app y juegue en otra liga entra sin esperar y sin límite.' },
