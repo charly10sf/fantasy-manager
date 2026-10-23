@@ -11,7 +11,7 @@ export const VERSION = '0.5.2';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.2', f: '2026-10-23', h: '21:22', t: '¿Juega o no juega?',
+    v: '0.5.2', f: '2026-10-23', h: '21:28', t: '¿Juega o no juega?',
     cosas: [
       { tipo: 'nuevo', d: 'semaforo', t: 'Su % de titular, al lado del nombre', x: 'En todas las listas (tu equipo, el mercado, las cláusulas y las plantillas de los rivales) sale al lado de cada jugador el % de que sea titular en su próximo partido: verde de 75 % para arriba, amarillo de 45 a 75 y rojo por debajo. Junta el once probable de futbolfantasy, sus minutos de las últimas jornadas y lo que ha jugado en la temporada, y baja si es duda o si su equipo juega Champions o Copa cerca. En su ficha ves de dónde sale.', ir: { v: 'equipo' } },
       { tipo: 'arreglo', d: 'plan', t: 'Nada de poner el once con la jornada empezada', x: 'Un plan hecho antes de que empezara la jornada seguía diciéndote que pusieras tu once cuando ya se estaba jugando. Ahora, en cuanto empieza la jornada, ese paso y el once de la IA se quitan, el plan se da por viejo (con la jornada empezada se reabren las cláusulas) y te sale para pedir otro.', ir: { v: 'hoy' } },
