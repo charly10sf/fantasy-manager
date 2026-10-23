@@ -289,6 +289,12 @@ main { padding: 16px 16px 120px; }
 .fila:active { opacity: 0.7; }
 .fila-c { flex: 1; min-width: 0; }
 .fila-n { font: 600 17px 'Barlow'; display: flex; align-items: center; gap: 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fila-n .nom { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* al lado del nombre: la probabilidad de ser titular o, con la alineación confirmada, si está */
+.tit-b { flex-shrink: 0; display: inline-flex; align-items: center; gap: 3px; font: 700 12.5px/1 'Barlow'; padding: 3px 6px; border-radius: 5px; background: var(--plano2); color: var(--texto2); letter-spacing: 0.2px; }
+.tit-b .ic { width: 12px; height: 12px; stroke-width: 2.6; }
+.tit-b.bien { background: var(--sube-s); color: var(--sube); } .tit-b.duda { background: var(--oro-s); color: var(--oro); } .tit-b.mal { background: var(--baja-s); color: var(--baja); }
+.tit-b.conf { box-shadow: inset 0 0 0 1px currentColor; }
 .fila-s { font-size: 14.5px; line-height: 1.35; color: var(--texto2); margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .fila-x { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .fila-d { text-align: right; flex: none; }
@@ -407,6 +413,8 @@ main { padding: 16px 16px 120px; }
 .cr-rv { position: absolute; top: -5px; left: -13px; padding: 0 4px; border-radius: 5px; background: #4a4a55; font: 700 10.5px/15px var(--cond); letter-spacing: 0.3px; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
 .cr-rv.facil { background: #1d9a63; } .cr-rv.media { background: #b98314; } .cr-rv.dificil { background: #cf2537; }
 .cr-est { position: absolute; top: -5px; right: -9px; min-width: 18px; height: 18px; padding: 0 3px; border-radius: 9px; font: 800 12px/18px 'Barlow'; text-align: center; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
+.cr-est.no { font-size: 9.5px; letter-spacing: 0.3px; }
+.cr-est.ok { background: var(--sube); color: #0b1a10; display: inline-flex; align-items: center; justify-content: center; } .cr-est.ok .ic { width: 12px; height: 12px; stroke-width: 3; }
 .cr-est.mal { background: var(--rojo); font-size: 15px; } .cr-est.duda { background: var(--oro); color: #111; } .cr-est.sup { background: rgba(8, 8, 10, 0.9); color: var(--oro); font-size: 9.5px; letter-spacing: 0.3px; }
 .cromo.baja-c .ava { filter: grayscale(1) brightness(0.7); }
 .cromo.vacio-c .cr-hueco { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; border: 2px dashed rgba(255, 255, 255, 0.5); font: 600 28px var(--cond); color: rgba(255, 255, 255, 0.8); }

@@ -3,13 +3,20 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.1a';
+export const VERSION = '0.5.2';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.2', f: '2026-10-23', h: '21:06', t: '¿Juega o no juega?',
+    cosas: [
+      { tipo: 'nuevo', d: 'semaforo', t: 'Su % de titular, al lado del nombre', x: 'En todas las listas (tu equipo, el mercado, las cláusulas y las plantillas de los rivales) sale al lado de cada jugador el % de que sea titular en su próximo partido: verde de 75 % para arriba, amarillo de 45 a 75 y rojo por debajo. Junta el once probable de futbolfantasy, sus minutos de las últimas jornadas y lo que ha jugado en la temporada, y baja si es duda o si su equipo juega Champions o Copa cerca. En su ficha ves de dónde sale.', ir: { v: 'equipo' } },
+      { tipo: 'nuevo', d: 'campo', t: 'Alineaciones confirmadas', x: 'Cuando salen los onces oficiales, una hora antes de cada partido, el % cambia por lo que hay de verdad: «Titular», «Suplente» o «No convocado». En el campo de Tu once lo ves en cada cromo, y «Tu equipo hoy» te avisa de quién se queda en el banquillo o no juega, para que lo cambies antes de que empiece su partido. Con la app abierta se mira cada 3 minutos, y la IA también lo tiene en cuenta.', ir: { v: 'equipo' } },
+    ],
+  },
   {
     v: '0.5.1a', f: '2026-10-23', h: '20:48', t: 'Blindajes que te quedan',
     cosas: [

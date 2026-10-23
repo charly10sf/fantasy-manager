@@ -1,6 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, avisoOnce, candadoMini, candado } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado } from './comunes.js';
 import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
@@ -211,6 +211,10 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
   const malos = xs.filter((x) => ['injured', 'suspended', 'out_of_league'].includes(x.j.estado));
   const dudas = xs.filter((x) => x.j.estado === 'doubtful');
   const riesgo = xs.filter((x) => x.riesgo === 'alto');
+  // con la alineación de su partido ya confirmada: los que se quedan en el banquillo o no van
+  const conf = (x) => (M.alineacion && M.alineacion(x.j.id)) || {};
+  const confSup = xs.filter((x) => conf(x).estado === 'suplente');
+  const confFuera = xs.filter((x) => ['fuera', 'baja'].includes(conf(x).estado) && !malos.includes(x));
   const sinI = bloqueada('inercia');
   // cada uno con su nombre (se toca y se abre su ficha); si son muchos, los 3 primeros y «+N»
   const de = (lista, cls, txt, ic = '') => {
@@ -222,6 +226,8 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
   const chips = [
     !sinI && de(giro, 'mal', (n) => `${n} ha girado`),
     !sinI && de(frena, 'duda', (n) => `${n} frenando`),
+    de(confFuera, 'mal', (n) => `${n} no juega`),
+    de(confSup, 'duda', (n) => `${n} suplente`),
     de(malos, 'mal', (n) => `${n} de baja`),
     de(dudas, 'duda', (n) => `${n} en duda`),
     de(riesgo, 'mal', (n) => `cláusula de ${n} en riesgo`, 'abierto'),
@@ -599,7 +605,7 @@ export function equipo(S) {
             M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
             x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
             M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
-            avisoOnce(M, x.j), calPill(M, x.j, { soloDuro: true }),
+            calPill(M, x.j, { soloDuro: true }),
           ],
           conMini: true, op: op(x.pid),
         });
@@ -671,7 +677,7 @@ export function rivales(S) {
     h += `<p class="t2 peq">Para clausular tienes <b>${eur(S.D.dinero)}</b>: las cláusulas se pagan con saldo, sin deuda. La barra es lo que te interesa: rendimiento, si sube y lo que cuesta sobre su valor.</p>`;
     h += xs.length ? lista2(xs.slice(0, 80).map((x) => filaJugador(x, {
       sub: `de ${esc(x.rival.manager || x.rival.nombre)} · vale ${eur(x.j.valor)}`,
-      pills: [clausulaPill(x), estadoPill(x.j), avisoOnce(M, x.j), calPill(M, x.j, { soloDuro: true }), x.meLlega ? '' : '<span class="pill">No te llega</span>'],
+      pills: [clausulaPill(x), estadoPill(x.j), calPill(M, x.j, { soloDuro: true }), x.meLlega ? '' : '<span class="pill">No te llega</span>'],
       derecha: `<div class="v">${eur(x.clausula)}</div><div class="d">${barra(x.interes)} <span class="t2">${x.interes}</span></div>`, op: S.opPorPid[x.pid],
     })).join('')) : nada('Ninguna con este filtro.');
   } else {
@@ -712,7 +718,7 @@ export function mercado(S) {
       pills: [
         m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : '',
         m.noVende ? `<span class="pill mal" title="${esc(`No te lo venderá: ${m.noVende}`)}">No lo venderá: ${esc(m.noVende.replace(/^es /, ''))}</span>` : '',
-        estadoPill(m.j), m.noVende ? '' : tagV[m.veredicto] || '', avisoOnce(M, m.j), calPill(M, m.j, { soloDuro: true }),
+        estadoPill(m.j), m.noVende ? '' : tagV[m.veredicto] || '', calPill(M, m.j, { soloDuro: true }),
         m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : '',
       ],
       derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja, { dec: 1 })}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],

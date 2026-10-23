@@ -3,10 +3,11 @@
    - Titulares de prensa (Google Noticias): de tus jugadores, de los candidatos y de LaLiga Fantasy en general,
      que recoge lo que publican Futbol Fantasy, Jornada Perfecta, Comuniate, Analítica Fantasy, Marca, AS, Relevo…
    - Histórico de valor de cada jugador (la API de LaLiga, probando las rutas que ha tenido).
+   - Las alineaciones confirmadas (SofaScore), en cuanto salen, una hora antes de cada partido.
    Todo pasa por el puente de la app (sin CORS) y se guarda un rato para no repetir. */
 import { http } from './puente.js';
 import { api, apuntarRegistro } from './api.js';
-import { norm, LS, DIA, HORA, enParalelo, ms, num } from './util.js';
+import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num } from './util.js';
 
 const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36';
 
@@ -455,5 +456,130 @@ export async function avanzadas(D, M, pidsFoco = []) {
     } catch (e) { out.fuentes.historial = `no responde (${e.message})`; }
   }
   if (Object.keys(out.jugadores).length || Object.keys(out.sofa).length || Object.keys(out.calendario || {}).length) LS.set('avanzadas', out);
+  return out;
+}
+
+/* ---------------- alineaciones confirmadas (SofaScore) ----------------
+   Una hora antes de cada partido salen los onces de verdad. SofaScore los da marcados con «confirmed»: los titulares,
+   los del banquillo y los que faltan (lesionados, sancionados); el que no sale en ninguna lista no va convocado.
+   Antes de eso, lo que da SofaScore es su once probable (sin «confirmed») y no se usa: para eso está el de
+   futbolfantasy. Solo se piden los partidos de LaLiga que empiezan en menos de 75 minutos o se están jugando, y uno
+   ya confirmado no se vuelve a pedir.
+   { t, partidos: { [ev]: { t, ini, local, visitante, conf, jug: { pid: estado } } },
+     jugadores: { [pid]: { estado: 'titular'|'suplente'|'fuera'|'baja', ini } } } */
+export const ANTES_ONCE = 75 * MIN, DURA_PARTIDO = 2.5 * HORA;
+const casaEquipo = (a, b) => {
+  if (mismoEquipo(a, b)) return true;
+  const x = aliasEquipo(a)[0], y = aliasEquipo(b)[0];
+  return x.length >= 4 && y.length >= 4 && (x.includes(y) || y.includes(x));
+};
+/** los partidos que importan ahora: los que empiezan en menos de 75 minutos o se están jugando */
+export const partidosConOnce = (D, ahora = Date.now()) => ((D && D.partidos) || []).filter((p) => p.fecha && p.fecha - ahora < ANTES_ONCE && ahora - p.fecha < DURA_PARTIDO);
+/** ¿hay alguno de esos sin alineación confirmada todavía? (para mirar cada pocos minutos) */
+export function faltaOnce(D) {
+  const g = LS.get('alineaciones', null);
+  const P = Object.values((g && g.partidos) || {});
+  return partidosConOnce(D).some((p) => !P.some((x) => x.conf && x.local === p.localId && x.visitante === p.visitanteId));
+}
+async function temporadaSofa() {
+  const g = LS.get('sofa-sid', null);
+  if (g && g.id && Date.now() - g.t < 7 * DIA) return g.id;
+  const temp = await pedirJSON(`${SOFA}/unique-tournament/8/seasons`, SOFA_CAB, 'sofascore temporadas');
+  const id = temp && Array.isArray(temp.seasons) && temp.seasons[0] && temp.seasons[0].id;
+  if (!id) throw new Error('sin temporada');
+  LS.set('sofa-sid', { id, t: Date.now() });
+  return id;
+}
+/** los partidos de una jornada en SofaScore, con los equipos ya casados con los de LaLiga (se guardan 3 horas) */
+async function rondaSofa(D, n) {
+  const g = LS.get('sofa-ronda', {});
+  if (g[n] && Date.now() - g[n].t < 3 * HORA && g[n].ev.length) return g[n].ev;
+  const sid = await temporadaSofa();
+  const r = await pedirJSON(`${SOFA}/unique-tournament/8/season/${sid}/events/round/${n}`, SOFA_CAB, `sofascore jornada ${n}`);
+  const ids = LS.get('sofa-equipos', {});
+  const eqDe = (t) => {
+    if (!t) return null;
+    const porId = Object.keys(ids).find((k) => ids[k] === t.id);
+    if (porId) return porId;
+    return Object.keys(D.equipos || {}).find((k) => casaEquipo(t.name || '', D.equipos[k].nombre || '') || (t.shortName && casaEquipo(t.shortName, D.equipos[k].nombre || ''))) || null;
+  };
+  const ev = ((r && r.events) || []).map((e) => ({ id: e.id, t: n0(e.startTimestamp) * 1000, local: eqDe(e.homeTeam), visitante: eqDe(e.awayTeam), nombre: `${(e.homeTeam && e.homeTeam.shortName) || ''}-${(e.awayTeam && e.awayTeam.shortName) || ''}` })).filter((e) => e.id && e.local && e.visitante);
+  const otro = {};
+  for (const [k, v] of Object.entries(g)) if (Number(k) >= n - 2 && Number(k) <= n + 2) otro[k] = v;
+  LS.set('sofa-ronda', { ...otro, [n]: { t: Date.now(), ev } });
+  return ev;
+}
+/** casa los convocados de SofaScore con los jugadores de LaLiga Fantasy: { pid: estado } */
+export function cruzarOnce(D, e, r) {
+  const sofaIds = LS.get('sofa-ids', {});
+  const out = {};
+  for (const [lado, eq] of [['home', e.local], ['away', e.visitante]]) {
+    const L = (r && r[lado]) || {};
+    // (sin la lista de ese equipo no se puede decir quién no va)
+    if (!(L.players || []).length) continue;
+    const nuestros = Object.values(D.maestro || {}).filter((j) => String(j.equipoId) === String(eq) && j.pos !== 5);
+    const entradas = [
+      ...(L.players || []).map((x) => ({ p: x.player || {}, estado: x.substitute ? 'suplente' : 'titular' })),
+      ...(L.missingPlayers || []).map((x) => ({ p: x.player || {}, estado: 'baja' })),
+    ].map((x) => ({ ...x, nm: norm(x.p.name), sn: norm(String(x.p.shortName || '').replace(/^\S{1,3}\.\s*/, '')), ln: norm(x.p.lastName || ''), casado: null }));
+    const libres = new Set(nuestros.map((j) => j.id));
+    // de lo más seguro a lo menos: el id de SofaScore, el nombre entero, el apellido (si solo hay uno), parte del nombre
+    const pasos = [
+      (x, j) => sofaIds[j.id] && sofaIds[j.id] === x.p.id,
+      (x, j) => norm(j.largo) === x.nm || norm(j.nombre) === x.nm,
+      (x, j) => norm(j.nombre) === x.sn || (x.ln && norm(j.nombre) === x.ln) || (x.ln && norm(j.largo) === x.ln),
+      (x, j) => { const a = norm(j.nombre), b = norm(j.largo); return (a.length > 3 && x.nm.includes(a)) || (b.length > 3 && (b.includes(x.nm) || x.nm.includes(b))); },
+      (x, j) => ult(j.largo || j.nombre) === ult(x.p.name || '') && ult(x.p.name || '').length > 3,
+    ];
+    for (const [i, f] of pasos.entries()) {
+      for (const x of entradas) {
+        if (x.casado) continue;
+        const c = nuestros.filter((j) => libres.has(j.id) && f(x, j));
+        if (c.length === 1 || (i < 2 && c.length)) { x.casado = c[0]; libres.delete(c[0].id); out[c[0].id] = x.estado; }
+      }
+    }
+    // los que no salen en ninguna lista no van convocados; salvo que se parezcan a alguno que no se ha podido casar
+    const sueltos = new Set(entradas.filter((x) => !x.casado && x.estado !== 'baja').flatMap((x) => x.nm.split(' ').filter((w) => w.length >= 4)));
+    for (const pid of libres) {
+      const j = D.maestro[pid];
+      const suyos = norm(`${j.nombre} ${j.largo || ''}`).split(' ').filter((w) => w.length >= 4);
+      if (!suyos.some((w) => sueltos.has(w))) out[pid] = 'fuera';
+    }
+  }
+  return out;
+}
+/** las alineaciones de los partidos que empiezan ya (o se están jugando) */
+export async function alineaciones(D) {
+  const g = LS.get('alineaciones', null);
+  const ahora = Date.now();
+  const P = {};
+  for (const [id, p] of Object.entries((g && g.partidos) || {})) if (p.ini > ahora - DIA) P[id] = p;
+  const faltan = partidosConOnce(D, ahora).filter((p) => !Object.values(P).some((x) => x.conf && x.local === p.localId && x.visitante === p.visitanteId));
+  if (faltan.length && !D.demo) {
+    try {
+      const evs = [];
+      for (const n of [...new Set(faltan.map((p) => p.jornada).filter(Boolean))]) evs.push(...(await rondaSofa(D, n)));
+      const pedir = faltan.map((p) => evs.find((e) => e.local === p.localId && e.visitante === p.visitanteId))
+        .filter((e) => e && (!P[e.id] || ahora - P[e.id].t > 3 * MIN));
+      let bloqueado = false;
+      await enParalelo(pedir, 2, async (e) => {
+        if (bloqueado) return;
+        const base = { t: Date.now(), ini: e.t, local: e.local, visitante: e.visitante, conf: false, jug: {} };
+        try {
+          // (con la hora en la dirección: si no, la caché de SofaScore da un rato el once probable de antes)
+          const r = await pedirJSON(`${SOFA}/event/${e.id}/lineups?_=${Math.floor(ahora / (2 * MIN))}`, SOFA_CAB, `sofascore once ${e.nombre}`);
+          P[e.id] = r && r.confirmed === true ? { ...base, conf: true, jug: cruzarOnce(D, e, r) } : base;
+        } catch (er) {
+          // un 404: aún no hay nada
+          if (er.estado === 403 || er.estado === 429) bloqueado = true;
+          P[e.id] = { ...base, e: er.message };
+        }
+      });
+    } catch (er) { /* sin la jornada de SofaScore no se sabe qué partido es: se sigue sin alineaciones */ }
+  }
+  const jugadores = {};
+  for (const p of Object.values(P)) if (p.conf) for (const [pid, estado] of Object.entries(p.jug || {})) jugadores[pid] = { estado, ini: p.ini };
+  const out = { t: Date.now(), partidos: P, jugadores };
+  if (!D.demo) LS.set('alineaciones', out);
   return out;
 }

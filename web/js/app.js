@@ -13,9 +13,9 @@ import { ultimaVersion, api } from './api.js';
 import { detalleJugador } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
-import { ponerEquipos, BLOQUEO } from './comunes.js';
+import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
-import { historialValor } from './externas.js';
+import { historialValor, alineaciones, faltaOnce } from './externas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
@@ -313,12 +313,13 @@ function rehacer() {
   S.det = { ...detalles(), ...S.det };
   ponerEquipos(S.D.equipos);
   S.M = analizar(S.D, S.H, S.c, extraM());
+  fijarMotor(S.M);
   // quién eres, para lo bloqueado (antes de pintar nada)
   fijarYo(yoReal(), enDemo());
   // lo previsto frente a lo que pasó: corrige los puntos esperados de la próxima pasada y lo ve la IA
   aprender(S.D, S.M, S.det);
   montarPlan();
-  if (apuntarReventa()) { const ap = S.M.aprende; S.M = analizar(S.D, S.H, S.c, extraM()); S.M.aprende = ap; montarPlan(); }
+  if (apuntarReventa()) { const ap = S.M.aprende; S.M = analizar(S.D, S.H, S.c, extraM()); S.M.aprende = ap; fijarMotor(S.M); montarPlan(); }
   programar(S.D, S.M);
   if (!EN_FONDO) {
     programarFondo();
@@ -394,7 +395,7 @@ async function trabajoFondo() {
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}) };
+  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}) };
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
@@ -1530,10 +1531,17 @@ async function arrancar() {
     const ap = S.M && S.M.aprende;
     S.M = analizar(S.D, S.H, S.c, extraM());
     S.M.aprende = ap;
+    fijarMotor(S.M);
     montarPlan();
     pintar();
     window.scrollTo(0, y);
   }, 60e3);
+  // las alineaciones confirmadas salen una hora antes de cada partido: mientras falte alguna, se mira cada 3 minutos
+  // (solo eso, sin recargar la liga); lo pinta la vuelta de cada minuto de arriba
+  setInterval(() => {
+    if (!S.D || S.cargando || document.visibilityState !== 'visible' || !faltaOnce(S.D)) return;
+    alineaciones(S.D).then((a) => { if (a) S.fuentes = { ...(S.fuentes || fuentesGuardadas() || {}), alineaciones: a }; }).catch(() => {});
+  }, 3 * MIN);
 }
 
 // todos los módulos han cargado: la web arranca bien (si era una bajada sin reinstalar, la app se la queda)

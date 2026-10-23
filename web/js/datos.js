@@ -6,7 +6,7 @@ import * as N from './normalizar.js';
 import { LS, diaDe, enParalelo, num, DIA } from './util.js';
 import { enApp, enWeb } from './puente.js';
 import { demo } from './demo.js';
-import { historialValor, oncesProbables, noticias, avanzadas } from './externas.js';
+import { historialValor, oncesProbables, noticias, avanzadas, alineaciones } from './externas.js';
 
 // la deuda permitida en LaLiga Fantasy es siempre el 20 % del valor del equipo
 // (tu equipo no se elige: sale de la cuenta con la que entras; lo de miEquipo que quedara guardado no cuenta)
@@ -423,7 +423,7 @@ export function borrarTodo() {
 /* ---------- fuentes de fuera: onces probables y titulares de prensa ---------- */
 export async function fuentesExternas(D, M) {
   if (!D || !M) return null;
-  if (D.demo) return { onces: onceDemo(D), noticias: { t: Date.now(), lista: [] }, avanzadas: avanzadasDemo(D) };
+  if (D.demo) { const onces = onceDemo(D); return { onces, noticias: { t: Date.now(), lista: [] }, avanzadas: avanzadasDemo(D), alineaciones: alineacionDemo(D, onces) }; }
   // las estadísticas avanzadas, de los tuyos y de los mejores candidatos; si tardan, se sigue con lo guardado
   const foco = [...new Set([
     ...M.mias.map((x) => x.pid),
@@ -432,14 +432,30 @@ export async function fuentesExternas(D, M) {
     ...M.suben.slice(0, 4).map((x) => x.j.id),
   ])];
   const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
-  const [onces, nots, av] = await Promise.all([
+  const [onces, nots, av, alin] = await Promise.all([
     oncesProbables(D).catch((e) => ({ error: e.message, jugadores: {} })),
     noticias(D, M).catch((e) => ({ error: e.message, lista: [] })),
     Promise.race([avanzadas(D, M, foco).catch((e) => ({ error: e.message, jugadores: {}, sofa: {}, equipos: {} })), espera(35000).then(() => LS.get('avanzadas', null) || { jugadores: {}, sofa: {}, equipos: {}, fuentes: { espera: 'tarda: se usa lo guardado' } })]),
+    alineaciones(D).catch((e) => ({ error: e.message, partidos: {}, jugadores: {} })),
   ]);
-  return { onces, noticias: nots, avanzadas: av };
+  return { onces, noticias: nots, avanzadas: av, alineaciones: alin };
 }
-export const fuentesGuardadas = () => (enDemo() ? null : { onces: LS.get('onces', null), noticias: LS.get('noticias', null), avanzadas: LS.get('avanzadas', null) });
+export const fuentesGuardadas = () => (enDemo() ? null : { onces: LS.get('onces', null), noticias: LS.get('noticias', null), avanzadas: LS.get('avanzadas', null), alineaciones: LS.get('alineaciones', null) });
+
+/** en la demostración, la alineación de un partido de tus jugadores ya confirmada (para ver cómo sale) */
+function alineacionDemo(D, onces) {
+  const mio = (D.plantillas || {})[D.yo && D.yo.teamId] || Object.values(D.plantillas || {})[0] || [];
+  const eq = mio.map((f) => (D.maestro[f.pid] || {}).equipoId).find(Boolean);
+  const jugadores = {};
+  if (!eq) return { t: Date.now(), partidos: {}, jugadores };
+  const ini = Date.now() + 40 * 60e3;
+  for (const j of Object.values(D.maestro)) {
+    if (j.equipoId !== eq || j.pos === 5) continue;
+    const o = onces.jugadores[j.id];
+    jugadores[j.id] = { estado: j.estado === 'injured' ? 'baja' : o && o.titular ? 'titular' : o && o.alternativa ? 'suplente' : 'fuera', ini };
+  }
+  return { t: Date.now(), partidos: {}, jugadores };
+}
 
 /** en la demostración, unas estadísticas avanzadas inventadas (para ver cómo salen) */
 function avanzadasDemo(D) {

@@ -133,8 +133,11 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false } = {}) {
   else dato = M && M.ppEsperado && j.pos < 5 ? `${dec1(M.ppEsperado(j))} pts` : j.media ? `${String(j.media).replace('.', ',')} m` : '–';
   const conOnce = !!(M && M.hayOnces && j.pos < 5);
   const o = conOnce ? M.onceProb(j.id) : null;
+  const al = M && M.alineacion && j.pos < 5 ? M.alineacion(j.id) : null;
   let marca = '';
-  if (MALOS.has(j.estado)) marca = '<span class="cr-est mal">+</span>';
+  // con la alineación confirmada, lo que diga: titular, suplente o fuera
+  if (al) marca = al.estado === 'titular' ? `<span class="cr-est ok" title="Titular confirmado">${icono('ok')}</span>` : al.estado === 'suplente' ? '<span class="cr-est sup" title="Suplente en la alineación confirmada">SUP</span>' : '<span class="cr-est mal no" title="No va convocado">NO</span>';
+  else if (MALOS.has(j.estado)) marca = '<span class="cr-est mal">+</span>';
   else if (j.estado === 'doubtful') marca = '<span class="cr-est duda">?</span>';
   else if (conOnce && (!o || !o.titular)) marca = '<span class="cr-est sup">SUP</span>';
   const rv = fr && fr.p ? `<span class="cr-rv ${nivelCls(fr.nivel)}">${fr.p.casa ? '' : '@'}${esc(corto(fr.p.rivalId, fr.p.rival))}</span>` : '';
@@ -150,6 +153,26 @@ const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar:
 /** la pastilla del plan del día en las listas, si el plan dice algo de este jugador */
 export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${ACC[op.accion] || op.accion} hoy</span>` : '');
 
+/* la probabilidad de ser titular al lado del nombre, en todas las listas: el motor lo pone la app cada vez que lo rehace */
+let MF = null;
+export function fijarMotor(M) { MF = M; }
+const CONF_TXT = { titular: ['bien', 'Titular'], suplente: ['duda', 'Suplente'], fuera: ['mal', 'No convocado'], baja: ['mal', 'Baja'] };
+/** al lado del nombre: la probabilidad de que sea titular o, con la alineación ya confirmada, si está */
+export function titBadge(M, j) {
+  if (!M || !j || !j.pos || j.pos === 5 || !M.titularidad) return '';
+  const al = M.alineacion ? M.alineacion(j.id) : null;
+  if (al && CONF_TXT[al.estado]) {
+    const [cls, txt] = CONF_TXT[al.estado];
+    return `<span class="tit-b ${cls} conf" title="Alineación confirmada">${al.estado === 'titular' ? icono('ok') : ''}${txt}</span>`;
+  }
+  // el lesionado o sancionado ya lleva su pastilla
+  if (['injured', 'suspended', 'out_of_league'].includes(j.estado)) return '';
+  const T = M.titularidad(j);
+  if (!T || T.p == null) return '';
+  const p = Math.round(T.p * 100);
+  return `<span class="tit-b ${p >= 75 ? 'bien' : p >= 45 ? 'duda' : 'mal'}" title="Probabilidad de ser titular">${p} %</span>`;
+}
+
 /** una fila de jugador. x lleva j (jugador) y opcionalmente tend, cláusula, etc. */
 // como mucho 3 pastillas por fila, en orden de importancia: lo que sobra se ve en su ficha
 const MAX_PILLS = 3;
@@ -160,7 +183,7 @@ export function filaJugador(x, { sub = null, extra = '', pills = null, derecha =
   return `<button class="fila" data-j="${esc(j.id)}">
     ${ava(j)}
     <div class="fila-c">
-      <div class="fila-n">${posTag(j)}<span>${esc(j.nombre)}</span></div>
+      <div class="fila-n">${posTag(j)}<span class="nom">${esc(j.nombre)}</span>${titBadge(MF, j)}</div>
       <div class="fila-s">${sub != null ? sub : esc(j.equipo || '')}</div>
       ${extra || op ? `<div class="fila-x">${planPill(op)}${extra}</div>` : ''}
     </div>
@@ -170,9 +193,15 @@ export function filaJugador(x, { sub = null, extra = '', pills = null, derecha =
 
 export const nada = (txt) => `<div class="vacio">${txt}</div>`;
 
-/** si sale de titular en el once probable de su equipo (futbolfantasy) */
+/** si sale de titular en la alineación confirmada o, si aún no la hay, en el once probable de su equipo (futbolfantasy) */
 export function oncePill(M, j) {
-  if (!M || !M.hayOnces || !j || j.pos === 5) return '';
+  if (!M || !j || j.pos === 5) return '';
+  const al = M.alineacion ? M.alineacion(j.id) : null;
+  if (al && CONF_TXT[al.estado]) { const [cls, txt] = CONF_TXT[al.estado]; return `<span class="pill ${cls}">${al.estado === 'titular' ? icono('ok') : ''}${txt} (confirmado)</span>`; }
+  // el mismo % que sale en las listas (junta el once probable con sus minutos y la temporada)
+  const T = M.titularidad && !['injured', 'suspended', 'out_of_league'].includes(j.estado) ? M.titularidad(j) : null;
+  if (T && T.p != null) { const p = Math.round(T.p * 100); return `<span class="pill ${p >= 75 ? 'bien' : p >= 45 ? 'duda' : 'mal'}">${p} % de ser titular</span>`; }
+  if (!M.hayOnces) return '';
   const o = M.onceProb(j.id);
   if (!o) return '<span class="pill">Fuera del once</span>';
   if (o.titular) return `<span class="pill bien">Titular${o.prob != null ? ` ${o.prob} %` : ''}</span>`;
@@ -186,13 +215,6 @@ export function calPill(M, j, { soloDuro = false } = {}) {
   return `<span class="pill ${c.tipo === 'duro' ? 'mal' : 'bien'}" title="${esc(c.texto)}">${c.tipo === 'duro' ? 'Calendario duro' : 'Calendario favorable'}</span>`;
 }
 
-/** el once probable solo cuando avisa de algo (suplente o fuera); ser titular es lo normal */
-export function avisoOnce(M, j) {
-  if (!M || !M.hayOnces || !j || j.pos === 5) return '';
-  const o = M.onceProb(j.id);
-  if (!o) return '<span class="pill duda">Fuera del once</span>';
-  return o.titular ? '' : '<span class="pill duda">Suplente</span>';
-}
 
 /** un titular de prensa */
 export const filaNoticia = (n) => `<button class="noticia" data-abrir="${esc(n.link)}"><span class="tit">${esc(n.titulo)}</span><span class="meta">${esc(n.fuente || '')}${n.t ? ` · ${cuando(n.t)}` : ''}</span></button>`;
