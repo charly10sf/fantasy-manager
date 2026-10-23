@@ -11,7 +11,7 @@ export const VERSION = '0.5.2a';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.2a', f: '2026-10-24', h: '00:45', t: 'Lo que te da LaLiga y lo que pagaste',
+    v: '0.5.2a', f: '2026-10-24', h: '00:46', t: 'Lo que te da LaLiga y lo que pagaste',
     cosas: [
       { tipo: 'mejora', d: 'dinero', t: 'Lo que te daría LaLiga por cada uno', x: 'En la ficha de cada jugador tuyo sale lo que te daría LaLiga si lo pones a la venta: lo que suele ofrecer en tu liga sobre su valor (entre cuánto y cuánto) y lo que ganarías o perderías frente a lo que pagaste. En Equipo > Beneficio, al lado de cada uno. Gracias, Domy.', ir: { v: 'equipo', seg: 'equipo:dinero' } },
       { tipo: 'mejora', d: 'plan', t: 'Las ventas, con lo que pagaste', x: 'Cada venta del plan dice ahora cuánto ganas o pierdes frente a lo que pagaste. Si venderías perdiendo dinero sin que te haga falta y el jugador no está bajando, te avisa de que puede esperar; si está bajando, lo que pagaste no cambia nada (esperar solo pierde más). La IA también lo tiene en cuenta. Gracias, Domy.', ir: { v: 'hoy' } },
