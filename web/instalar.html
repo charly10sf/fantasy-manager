@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08080a">
+  <title>Instalar Fantasy Manager</title>
+  <meta name="description" content="Cómo instalar Fantasy Manager en Android y usarlo en el iPhone.">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <style>
+    @font-face { font-family: 'Barlow'; src: url('fonts/barlow-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+    @font-face { font-family: 'Barlow'; src: url('fonts/barlow-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+    @font-face { font-family: 'Barlow Condensed'; src: url('fonts/barlow-condensed-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+    :root { --fondo: #08080a; --plano: #131317; --plano2: #1b1b21; --texto: #f4f2f3; --texto2: #c3bec5; --apagado: #948f9b; --rojo: #ee1c3c; --rojo-l: #ff5269; --linea: #26262e; --sube: #2fd18f; }
+    * { box-sizing: border-box; }
+    html { background: var(--fondo); }
+    body { margin: 0; background: var(--fondo); color: var(--texto2); font: 400 17px/1.55 'Barlow', system-ui, sans-serif; }
+    main { max-width: 640px; margin: 0 auto; padding: 32px 16px 56px; }
+    .cab { display: flex; align-items: center; gap: 16px; }
+    .cab svg { width: 76px; height: 76px; flex: none; }
+    h1 { font: 700 46px/0.92 'Barlow Condensed', sans-serif; text-transform: uppercase; color: var(--texto); margin: 0; }
+    h1 span { color: var(--rojo); }
+    .lema { margin: 18px 0 26px; font-size: 18px; }
+    .caja { background: var(--plano); border: 1px solid var(--linea); border-radius: 18px; padding: 20px 18px; margin: 0 0 16px; }
+    .caja.primero { border-color: var(--rojo); }
+    h2 { font: 700 26px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; color: var(--texto); margin: 0 0 14px; display: flex; align-items: center; gap: 10px; }
+    h2 small { font: 600 13px 'Barlow', sans-serif; text-transform: none; color: var(--apagado); margin-left: auto; }
+    ol { margin: 0 0 16px; padding-left: 22px; }
+    li { margin: 0 0 8px; }
+    li::marker { color: var(--rojo-l); font-weight: 600; }
+    b { color: var(--texto); font-weight: 600; }
+    .btn { display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%; min-height: 54px; border-radius: 14px; background: var(--rojo); color: #fff; text-decoration: none; font: 700 19px 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .6px; }
+    .btn.sec { background: var(--plano2); border: 1px solid var(--linea); color: var(--texto); }
+    .btn svg { width: 22px; height: 22px; }
+    .nota { font-size: 14.5px; color: var(--apagado); margin: 12px 0 0; }
+    .falta { list-style: none; padding: 0; margin: 0; }
+    .falta li { display: flex; gap: 12px; align-items: flex-start; }
+    .falta li::before { content: ''; flex: none; width: 8px; height: 8px; margin-top: 10px; border-radius: 50%; background: var(--sube); }
+    footer { margin-top: 28px; font-size: 14px; color: var(--apagado); }
+    a { color: var(--rojo-l); }
+    a:focus-visible, .btn:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="cab">
+    <svg viewBox="6 10 188 188" aria-hidden="true"><path d="M74 26C84 34 116 34 126 26L154 36L190 70L168 100L150 88V178C150 183 147 186 142 186H58C53 186 50 183 50 178V88L32 100L10 70L46 36Z" fill="#EE1C3C"/><path d="M77.86 167V94.86H71.43L71 89.13L81.32 80.6H94.65V167Z M109.07 167V94.86H102.65L102.21 89.13L112.53 80.6H125.87V167Z" fill="#fff"/></svg>
+    <h1>Fantasy<br><span>Manager</span></h1>
+  </div>
+  <p class="lema">Te dice qué hacer cada día en tu liga de LaLiga Fantasy: a quién vender, a quién clausular y cuánto pujar.</p>
+
+  <section class="caja" id="android">
+    <h2>Android <small>la app</small></h2>
+    <ol>
+      <li>Pulsa <b>Bajar la app</b>. Si el móvil avisa de que el archivo puede ser dañino, dale a <b>Descargar de todas formas</b>.</li>
+      <li>Ábrelo. La primera vez, Android te pedirá permiso para instalar apps de este origen: actívalo y vuelve atrás.</li>
+      <li>Pulsa <b>Instalar</b>, abre la app y entra con tu cuenta de LaLiga, como siempre.</li>
+    </ol>
+    <a class="btn" href="https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Bajar la app</a>
+    <p class="nota">Se actualiza sola: cuando haya versión nueva te sale un aviso dentro.</p>
+  </section>
+
+  <section class="caja" id="iphone">
+    <h2>iPhone <small>la web</small></h2>
+    <ol>
+      <li>LaLiga solo deja entrar desde su app de Android o desde un ordenador, así que la primera vez hazlo en un ordenador: abre la web y sigue <b>No tengo la app en el móvil</b>.</li>
+      <li>Ya dentro, en el ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código que dura 10 minutos.</li>
+      <li>En el iPhone, abre la web, escribe el código y listo. Para tenerla como una app: <b>Compartir → Añadir a pantalla de inicio</b>.</li>
+    </ol>
+    <a class="btn sec" href="./">Abrir la web</a>
+    <p class="nota">Solo hace falta el ordenador la primera vez. Después, la sesión se renueva sola en el iPhone.</p>
+  </section>
+
+  <section class="caja">
+    <h2>Qué necesitas</h2>
+    <ul class="falta">
+      <li><span>Tu cuenta de LaLiga Fantasy. Entras en la página oficial de LaLiga: la app nunca ve tu contraseña, y tu equipo sale solo.</span></li>
+      <li><span>Para la IA, una clave gratuita de Google (opcional). La app te explica cómo sacarla en dos minutos. Sin ella tienes el plan automático.</span></li>
+      <li><span>Si algo falla, toca <b>Fallo</b> arriba en la app: me llega y te contesto ahí mismo.</span></li>
+    </ul>
+  </section>
+
+  <footer>App no oficial: no es de LaLiga ni tiene relación con LaLiga. <a href="privacidad.html">Privacidad</a></footer>
+</main>
+<script>
+  // en un iPhone, lo del iPhone primero
+  (function () {
+    var ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var a = document.getElementById('android'), i = document.getElementById('iphone');
+    if (ios) { a.parentNode.insertBefore(i, a); i.classList.add('primero'); i.querySelector('.btn').classList.remove('sec'); a.querySelector('.btn').classList.add('sec'); } else if (/Android/.test(navigator.userAgent)) a.classList.add('primero');
+  })();
+</script>
+</body>
+</html>
