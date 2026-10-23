@@ -23,11 +23,12 @@ const FRASES = [
   'Ni el VAR revisa tanto como tú.',
 ];
 
-/** la configuración: la guardada (vale 6 horas) o la de GitHub */
-async function leerLimites() {
+/** la configuración: la guardada (vale media hora) o la de GitHub; forzar: sin mirar la guardada */
+async function leerLimites(forzar = false) {
   const g = LS.get('limites', null);
-  // la guardada vale 6 horas, salvo que sea de antes de la 0.5.0 (sin «ligas»): esa se vuelve a leer ya
-  if (g && Date.now() - g.t < 6 * 3600e3 && g.cfg && Array.isArray(g.cfg.ligas)) return g.cfg;
+  // la guardada vale media hora (antes 6 h: un cambio del admin, como darle minutos a uno, tardaba demasiado en
+  // llegar), salvo que sea de antes de la 0.5.0 (sin «ligas»): esa se vuelve a leer ya
+  if (!forzar && g && Date.now() - g.t < 30 * 60e3 && g.cfg && Array.isArray(g.cfg.ligas)) return g.cfg;
   try {
     let cfg = null;
     if (enApp) {
@@ -87,12 +88,19 @@ export function minutosDe(cfg, yo) {
   const es = esDe(yo);
   if ((cfg.sinLimite || []).some(es)) return null;
   // los que salen con nombre en «equipos», con sus minutos, sea cual sea su liga
-  for (const [k, m] of Object.entries(cfg.equipos || {})) if (es(k)) return Number(m) >= 0 ? Number(m) : null;
+  for (const [k, m] of Object.entries(cfg.equipos || {})) if (es(k)) return Number(m) >= 0 ? Number(m) + extraHoy(cfg, es) : null;
   if (!enSusLigas(cfg, yo)) return null;
   // «minutosLiga» manda sobre «minutos»: las versiones de antes de la 0.5.0b solo leen «minutos», y con un fallo que
   // congelaba la app al contar el tiempo; ahí se deja a 0 para que a ellas no les toque contar
   const m = cfg.minutosLiga != null ? cfg.minutosLiga : cfg.minutos;
-  return Number(m) > 0 ? Number(m) : null;
+  return Number(m) > 0 ? Number(m) + extraHoy(cfg, es) : null;
+}
+/* «extra»: minutos de más para un equipo un día concreto ({ "C.A.D Domyngas": { "dia": "2026-10-23", "min": 20 } }).
+   Al día siguiente deja de contar solo. */
+function extraHoy(cfg, es) {
+  let mas = 0;
+  for (const [k, x] of Object.entries(cfg.extra || {})) if (es(k) && x && x.dia === hoy() && Number(x.min) > 0) mas += Number(x.min);
+  return mas;
 }
 
 /** hasta cuándo está cerrada la liga de ejemplo (para todos: sin cuenta no se sabe quién eres) */
@@ -217,6 +225,7 @@ export function iniciarLimite(quien, aviso = () => {}, alAbrir = () => {}, alCer
   let cfg = LS.get('limites', null) ? LS.get('limites', null).cfg : null;
   leerLimites().then((c) => { cfg = c; comprobar(); });
   let avisado = LS.get('uso-avisado', null);
+  let releido = 0;
   function comprobar() {
     const q = quien() || {};
     const cerrada = q.demo ? cerradaDemo(cfg) : cerradaHasta(cfg, q.yo);
@@ -233,7 +242,12 @@ export function iniciarLimite(quien, aviso = () => {}, alAbrir = () => {}, alCer
     estadoLimite.min = min; estadoLimite.usados = usados;
     pintarQueda(min, usados);
     if (min == null) { destapar(); return; }
-    if (usados >= min * 60) { tapar(min, usados); return; }
+    if (usados >= min * 60) {
+      tapar(min, usados);
+      // por si el admin le ha dado minutos de más: se vuelve a mirar limites.json (como mucho cada 2 min)
+      if (Date.now() - releido > 2 * 60e3) { releido = Date.now(); leerLimites(true).then((c) => { if (c) { cfg = c; comprobar(); } }); }
+      return;
+    }
     destapar();
     const quedan = min * 60 - usados;
     if (quedan <= 3 * 60 && avisado !== hoy()) { avisado = hoy(); LS.set('uso-avisado', avisado); aviso(`Te quedan ${Math.max(1, Math.round(quedan / 60))} min de app por hoy`); }
@@ -252,7 +266,7 @@ export function iniciarLimite(quien, aviso = () => {}, alAbrir = () => {}, alCer
     }
     comprobar();
   }, CADA * 1000);
-  // la configuración se vuelve a mirar cada 6 horas (por si el admin cambia los minutos)
-  setInterval(() => leerLimites().then((c) => { cfg = c; comprobar(); }), 6 * 3600e3);
+  // la configuración se vuelve a mirar cada media hora (por si el admin cambia los minutos)
+  setInterval(() => leerLimites().then((c) => { if (c) cfg = c; comprobar(); }), 30 * 60e3);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') comprobar(); });
 }

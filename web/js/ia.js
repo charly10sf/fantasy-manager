@@ -519,7 +519,8 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   }
   if (M.ventanaEsp) {
     const v = M.ventanaEsp;
-    L.push(`\nESPECULAR: hasta la jornada caben ${v.ciclos} cambios de mercado. Para estar en positivo, lo de revender se pone a la venta el ${cuando(v.ponerVenta, { hora: false })}. Margen: puede bajar hasta −${eur(M.deuda)} entre medias.`);
+    if (M.enJuego || v.ciclos < 1) L.push(`\nNO ESPECULES AHORA: ${M.enJuego ? 'la jornada está en juego' : 'antes de la jornada no queda ningún cambio de mercado que cuente (el del mismo día en que empieza la jornada no cuenta)'}. Lo que compre ahora no lo puede vender a tiempo: nada de comprar «para revender».`);
+    else L.push(`\nESPECULAR: hasta la jornada quedan ${v.ciclos} cambio${v.ciclos === 1 ? '' : 's'} de mercado que cuentan (${v.cambios.map((t) => cuando(t)).join(', ')}); el del mismo día que empieza la jornada NO cuenta. Lo de revender se pone a la venta ${cuando(v.ponerVenta)} para aceptar la oferta del cambio de ${cuando(v.ultimoMercado)}. Una compra en el mercado llega en el siguiente cambio y luego hay que ponerla a la venta: necesita 2 cambios; una cláusula, 1. Margen: puede bajar hasta −${eur(M.deuda)} entre medias.`);
     if (M.paraRevender && M.paraRevender.length) L.push(`COMPRADOS PARA REVENDER: ${M.paraRevender.map((x) => `${x.j.nombre} (comprado a ${eur(x.rev.precio)}, vale ${eur(x.j.valor)}, ${eur(x.beneficioYa, { signo: true })})`).join('; ')}.`);
     if (M.especular && M.especular.length) {
       L.push('CANDIDATOS PARA REVENDER SEGÚN LA TENDENCIA (precio de compra | subida diaria | valor esperado el día de vender | beneficio):');

@@ -11,10 +11,11 @@ export const VERSION = '0.5.1a';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.1a', f: '2026-10-23', h: '20:36', t: 'Blindajes que te quedan',
+    v: '0.5.1a', f: '2026-10-23', h: '20:48', t: 'Blindajes que te quedan',
     cosas: [
       { tipo: 'arreglo', d: 'oferta', t: 'Lo que venden los rivales, en su ficha', x: 'La lista de lo que tiene en venta cada rival ya no ocupa la clasificación de Rivales: está dentro de su ficha, con lo que pide, lo que le da LaLiga y cuánto ofrecerle.', ir: { v: 'rivales', seg: 'rivales:clasif' } },
       { tipo: 'arreglo', d: 'escudo', t: 'No más blindajes de los que tienes', x: 'El plan de la IA podía pedirte blindar a dos a la vez aunque solo te quedara uno esta jornada. Ahora los que pasan de los que te quedan salen tachados con «No lo hagas» y te dice por qué.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'especular', t: 'El mercado del día de la jornada no cuenta', x: 'Para revender antes de la jornada, la app contaba también el cambio de mercado del mismo día en que empieza (una hora antes, por ejemplo), y te proponía comprar para vender cuando ya no daba tiempo. Ahora ese cambio no cuenta, ni los de mientras se juega la jornada: te dice cuántos quedan de verdad, a qué hora ponerlo a la venta y en qué cambio aceptar la oferta. Si no queda ninguno, la IA no te propone especular. Gracias, Domy.', ir: { v: 'mercado', seg: 'mercado:especular' } },
       { tipo: 'mejora', d: 'camiseta', t: 'Quién frena, quién está en duda', x: 'En «Tu equipo hoy», en vez de «1 frenando» o «2 en duda» sale el nombre de cada uno (los tres primeros), y al tocarlo se abre su ficha.', ir: { v: 'equipo' } },
     ],
   },

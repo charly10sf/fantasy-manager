@@ -1283,7 +1283,8 @@ export function analizar(D, H, c, extra = {}) {
       const valorMan = j.valor + dia;
       const esperado = Math.round(valorMan * (1 + normal) / 1e4) * 1e4;
       // prisa: empezar la jornada en negativo si no se vende antes de la próxima oferta, o que esté de baja
-      const jornadaAntes = M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado);
+      // (el cambio de mercado del mismo día que empieza la jornada no cuenta: no da tiempo a contar con él)
+      const jornadaAntes = M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado || diaDe(M.cierreMercado) === diaDe(M.proxima.ini));
       const prisa = (num(D.dinero) < 0 && jornadaAntes) ? 'negativo' : MALOS.has(j.estado) ? 'baja' : null;
       liga = { posicion: mejor.sobre < OL.p25 ? 'baja' : mejor.sobre > OL.p75 ? 'alta' : 'normal', normal, p25: OL.p25, p75: OL.p75, med: OL.med, dia, esperado, gana: esperado - mejor.importe, prisa };
     }
@@ -1397,9 +1398,17 @@ export function analizar(D, H, c, extra = {}) {
   const inicioJ = M.proxima ? M.proxima.ini : null;
   M.ventanaEsp = null;
   if (inicioJ) {
-    const ponerVenta = inicioJ - DIA;           // el día antes, para que la oferta llegue antes de que empiece
-    const ciclos = Math.floor((inicioJ - 2 * HORA - ahora) / DIA);   // cambios de mercado hasta la oferta de venta
-    M.ventanaEsp = { ponerVenta, limite: inicioJ - 2 * HORA, ciclos };
+    // los cambios de mercado que sirven para vender antes de la jornada: los de antes de su primer partido, sin el del
+    // mismo día (con una o dos horas de margen no se puede contar con él: aviso de Domy, 23 oct) ni los de mientras
+    // se juega la jornada de ahora
+    const diaJ = diaDe(inicioJ);
+    const vale = (t) => t > ahora && t < inicioJ && diaDe(t) !== diaJ && !(M.enJuego && t <= M.enJuego.fin);
+    const cambios = [];
+    if (M.cierreMercado) { for (let k = 0; k < 14; k++) { const t = M.cierreMercado + k * DIA; if (t >= inicioJ) break; if (vale(t)) cambios.push(t); } } else { for (let t = inicioJ - DIA; t > ahora; t -= DIA) if (vale(t)) cambios.unshift(t); }
+    const ultimo = cambios.length ? cambios[cambios.length - 1] : null;
+    // se pone a la venta después del penúltimo cambio, para aceptar la oferta que llega en el último
+    const ponerVenta = cambios.length >= 2 ? cambios[cambios.length - 2] + 5 * MIN : ahora;
+    M.ventanaEsp = { ponerVenta, limite: ultimo, ultimoMercado: ultimo, ciclos: cambios.length, cambios };
   }
   M.reventa = extra.reventa || {};
   const proyectar = (j, t, dias) => {
