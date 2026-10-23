@@ -2,6 +2,7 @@
    pasa a la app, que pone una alarma del sistema para cada cosa (llegan aunque la app esté cerrada). */
 import { nativo, enApp } from './puente.js';
 import { LS, eur, cuando, MIN, HORA, DIA } from './util.js';
+import { cerradaHasta } from './limite.js';
 
 export const cfgAvisos = () => ({
   on: false, rivales: true, mias: true, mercado: true, jornada: true, diario: true, hora: '13:30', interes: 55,
@@ -68,7 +69,11 @@ export function calcular(D, M, c = cfgAvisos()) {
 /** recalcula y se los pasa a la app (o los quita todos si están apagados) */
 export function programar(D, M) {
   const c = cfgAvisos();
-  const lista = c.on ? calcular(D, M, c) : [];
+  let lista = c.on ? calcular(D, M, c) : [];
+  // si la app aún no se ha abierto para este equipo (limites.json, «abre»), nada de avisos antes de esa hora
+  const e = D && !D.demo && D.yo ? (D.clasif || []).find((x) => x.teamId === D.yo.teamId) : null;
+  const hasta = e ? cerradaHasta((LS.get('limites', null) || {}).cfg, { nombre: e.nombre, teamId: e.teamId, userId: D.yo.userId }) : null;
+  if (hasta) lista = lista.filter((a) => a.t >= hasta);
   LS.set('avisos-prog', lista);
   if (enApp) nativo.programarAvisos(lista);
   return lista;

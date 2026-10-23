@@ -1248,7 +1248,7 @@ async function arrancar() {
     const real = yo && yo.userId ? cl.find((e) => e.userId === yo.userId || e.managerId === yo.userId) : null;
     const eq = real || (S.M && S.M.yo) || null;
     return { yo: eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId } : null, demo: enDemo() };
-  }, (t) => tostada(t, 6000));
+  }, (t) => tostada(t, 6000), () => { tostada('¡Ya está abierta! Pongo tu liga al día', 5000); S.planEstado = {}; if (!S.cargando) cargar({ silencio: true }); });
   novedades();
   setTimeout(() => buscarVersion(false), 4000);
   // la IA con la app cerrada avisa con notificaciones: se pide el permiso una vez
