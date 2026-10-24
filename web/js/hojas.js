@@ -480,7 +480,7 @@ export function vinculoWeb(S) {
   const cod = String(v.codigo || '');
   return `<div class="hoja-cab"><h2>${enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
   <ol class="pasos-web">
-    <li>En ${enApp ? 'el ordenador' : 'el otro dispositivo (el iPhone o el otro ordenador)'}, abre <b>charly10sf.github.io/fantasy-manager</b></li>
+    <li>En ${enApp ? 'el ordenador' : 'el otro dispositivo (el iPhone o el otro ordenador)'}, abre <b>fantasymanagerapp.com</b></li>
     <li>Escribe este código y pulsa Entrar:</li>
   </ol>
   <div class="codigo-grande">${esc(cod.slice(0, 4))}<span>${esc(cod.slice(4))}</span></div>

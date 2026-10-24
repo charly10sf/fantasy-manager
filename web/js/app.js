@@ -49,6 +49,7 @@ function pantallaEntrar(error = '') {
   ponerBanner(false);
   raiz().innerHTML = `<div class="pantalla"><div class="pant-i">${LOGO}
     <h1>Fantasy<br><span>Manager</span></h1>
+    ${enWebVieja ? '<a class="aviso-mudanza" href="https://fantasymanagerapp.com/">La web ahora está en <b>fantasymanagerapp.com</b> →</a>' : ''}
     ${enApp ? '' : avisoMovilHTML()}
     <p>Cada día, las operaciones exactas para tu liga de LaLiga Fantasy: a quién vender, a quién comprar, cuánto pujar y a quién clausular.</p>
     <ul class="lista-ok">
@@ -79,7 +80,7 @@ function movilDe() {
 function avisoMovilHTML() {
   const movil = movilDe();
   return movil === 'android'
-    ? `<div class="entrar-movil"><b>${icono('descargar')}Estás en un Android: instala la app</b><span>Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos. Si el móvil avisa de que el archivo puede ser dañino, pulsa «Descargar de todas formas»; luego ábrelo e instálalo.</span><a class="btn ancho" href="https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk">${icono('descargar')}Bajar la app</a></div>`
+    ? `<div class="entrar-movil"><b>${icono('descargar')}Estás en un Android: instala la app</b><span>Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos. Si el móvil avisa de que el archivo puede ser dañino, pulsa «Descargar de todas formas»; luego ábrelo e instálalo.</span><a class="btn ancho" href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">${icono('descargar')}Bajar la app</a></div>`
     : movil === 'iphone'
       ? `<div class="entrar-movil"><b>${icono('info')}Estás en un iPhone</b><span>La primera vez hay que entrar desde un <b>ordenador</b>: LaLiga no deja hacerlo en el iPhone. En el ordenador abre esta misma web, pulsa «No tengo la app en el móvil» y sigue los pasos. Ya dentro, en <b>Ajustes → Abrir en otro dispositivo</b> te da un código: escríbelo aquí abajo. Solo se hace una vez.</span></div>`
       : '';
@@ -112,6 +113,48 @@ function traerVinculo(j) {
   if (j.ia && j.ia.clave && !hayClave()) guardarClave(j.ia.clave);
   if (j.dichos && typeof j.dichos === 'object') LS.set(K('dinero-dicho'), { ...j.dichos, ...LS.get(K('dinero-dicho'), {}) });
 }
+/* ---------------- la mudanza de la web: de charly10sf.github.io a fantasymanagerapp.com ----------------
+   La web de antes (GitHub Pages) sigue sirviendo la misma web unas semanas, con una banda arriba para irse a la nueva
+   con la sesión, la liga y la clave de la IA: un código de un solo uso, como el de abrir en otro dispositivo, que va
+   en la dirección detrás de # (no llega a ningún servidor). Lo guardado en el navegador (histórico, notas) se queda. */
+const DOMINIO = 'https://fantasymanagerapp.com/';
+const enWebVieja = !enApp && typeof location !== 'undefined' && location.hostname === 'charly10sf.github.io';
+async function mudarse(el) {
+  if (!haySesion() || enDemo()) { location.href = DOMINIO; return; }
+  if (el) { el.disabled = true; el.textContent = 'Preparando…'; }
+  try {
+    const c = cfg();
+    // también el tutorial y la última versión vista, para que en la nueva no le salgan otra vez
+    const datos = { sesion: sesion(), cfg: { ligaId: c.ligaId || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}), tour: LS.get('tour', null), vista: versionVista() };
+    const r = await fetch(`${WORKER_PUBLICO}/vincular`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(datos) });
+    const j = await r.json().catch(() => null);
+    if (!r.ok || !j || !j.codigo) throw new Error((j && j.e) || `el servidor responde ${r.status}`);
+    location.href = `${DOMINIO}#codigo=${encodeURIComponent(j.codigo)}`;
+  } catch (e) {
+    tostada(`No se ha podido preparar la mudanza (${e.message}). Entra en fantasymanagerapp.com con el código de Ajustes → Abrir en otro dispositivo.`, 9000);
+    if (el) { el.disabled = false; el.textContent = 'Llevarme'; }
+  }
+}
+/** en la web nueva: si viene de la de antes con un código, entra con él sin volver a hacer nada */
+async function codigoDeMudanza() {
+  const m = !enApp && location.hash.match(/^#codigo=([A-Za-z0-9]{8})$/);
+  if (!m) return false;
+  history.replaceState(null, '', location.pathname + location.search);
+  try {
+    const r = await fetch(`${WORKER}/vincular/usar`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ codigo: m[1].toUpperCase() }) });
+    const j = await r.json().catch(() => null);
+    if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `el servidor responde ${r.status}`);
+    traerVinculo(j);
+    if (j.tour && !tourVisto()) LS.set('tour', j.tour);
+    if (typeof j.vista === 'string' && !LS.get('version-vista2', null)) LS.set('version-vista2', j.vista);
+    return true;
+  } catch (e) {
+    setTimeout(() => tostada(`No se ha podido traer tu cuenta (${e.message}). Saca un código en la web de antes: Ajustes → Abrir en otro dispositivo.`, 9000), 1500);
+    return false;
+  }
+}
+const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
+
 /* ---------------- la pantalla de carga ---------------- */
 // lo que se va contando mientras carga: cosas del juego que conviene tener presentes
 const CONSEJOS = [
@@ -279,7 +322,7 @@ function pintar({ arriba = false } = {}) {
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
     v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
   }
-  $('#banda').innerHTML = (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
+  $('#banda').innerHTML = bandaMudanza() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -1376,7 +1419,8 @@ document.addEventListener('click', async (ev) => {
       } catch (e) { tostada(`No se ha podido sacar el código: ${e.message}`, 6000); el.disabled = false; }
       break;
     }
-    case 'copiarEnlaceWeb': nativo.copiar('https://charly10sf.github.io/fantasy-manager/'); tostada('Enlace copiado'); break;
+    case 'copiarEnlaceWeb': nativo.copiar('https://fantasymanagerapp.com/'); tostada('Enlace copiado'); break;
+    case 'mudarse': mudarse(el); break;
     case 'salirDemo': salirDemo(); break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
     case 'recargar': sinErrorPlan(); cargar(); break;
@@ -1750,6 +1794,8 @@ async function arrancar() {
   if (VISTAS[h]) S.vista = h;
   const aFallos = h === 'fallos';
   if (aFallos) history.replaceState(null, '', '#hoy');
+  // venía de la web de antes con un código de mudanza
+  await codigoDeMudanza();
   if ((enApp || enWeb) && !enDemo() && !haySesion()) {
     pantallaEntrar();
   } else {

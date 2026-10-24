@@ -1387,3 +1387,7 @@ body.limitado .tostada { z-index: 120; }
 .cr-dato.prob { background: rgba(8, 8, 10, 0.85); }
 .cr-dato.prob.bien { color: var(--sube); } .cr-dato.prob.duda { color: var(--oro); } .cr-dato.prob.mal { color: var(--baja); }
 .cancha.pf-c { padding-left: 14px; padding-right: 10px; }
+
+/* la mudanza de la web (solo en charly10sf.github.io) */
+.aviso-mudanza { display: block; margin: 0 0 14px; padding: 10px 12px; border-radius: 12px; background: var(--oro-s); color: var(--oro); font-size: 15px; text-decoration: none; }
+.aviso-mudanza b { color: var(--texto); }

@@ -37,7 +37,8 @@ const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
   'www.futbolfantasy.com', 'futbolfantasy.com', 'understat.com', 'www.understat.com', 'api.sofascore.com', 'www.sofascore.com', 'news.google.com',
 ]);
-const ORIGENES = [/^https:\/\/charly10sf\.github\.io$/, /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/, /^https:\/\/appassets\.androidplatform\.net$/];
+// la web: su dominio (y su dirección de Cloudflare Pages) y, mientras dura la mudanza, la de GitHub Pages
+const ORIGENES = [/^https:\/\/(www\.)?fantasymanagerapp\.com$/, /^https:\/\/([a-z0-9-]+\.)?fantasy-manager(-[a-z0-9]+)?\.pages\.dev$/, /^https:\/\/charly10sf\.github\.io$/, /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/, /^https:\/\/appassets\.androidplatform\.net$/];
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 const DURA = 600; // lo que dura un código, en segundos
 const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin 0/O ni 1/I, que se confunden
