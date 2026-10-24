@@ -16,6 +16,7 @@ La mudanza al dominio (desde la 0.6.0): la web, AlDia, app.json y el APK van pri
 - Fantasy Manager y GrowFolio van del todo separados: ni código, ni cuentas, ni Cloudflare compartidos.
 - Ceñirse al roadmap. Lo nuevo que salga va a versiones posteriores.
 - Respuestas en español informal, directas y con números.
+- Después de cada publicación, pasarle a Carlos en el chat el enlace del APK para descargarlo (https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk): su Android no siempre se pone al día solo (con partidos, el dominio no contesta).
 
 ## Cómo está hecha
 

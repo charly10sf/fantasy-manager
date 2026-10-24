@@ -5,16 +5,23 @@
 import { esc, cuando, horaDe } from './util.js';
 import { cromo, nada } from './comunes.js';
 
-/** las jornadas que se pueden ver: las que ya han empezado y, si no hay ninguna en juego, la próxima */
-export function jornadasVisibles(M) {
+/**
+ * las jornadas que se pueden ver: de la 1 a la última empezada y, si no hay ninguna en juego, la próxima. (El
+ * calendario que se baja solo trae de la pasada en adelante: las de antes salen de los resultados, y sin fecha)
+ */
+export function jornadasVisibles(M, D) {
   const ahora = Date.now();
-  const l = (M.jornadas || []).filter((j) => j.ini && j.ini <= ahora);
-  if (!M.enJuego && M.proxima) l.push(M.proxima);
-  return l.sort((a, b) => a.n - b.n);
+  const emp = (M.jornadas || []).filter((j) => j.ini && j.ini <= ahora).map((j) => j.n);
+  const jug = ((D && D.resultados) || []).map((p) => Number(p.jornada) || 0);
+  const ult = Math.max(0, ...emp, ...jug, M.enJuego ? M.enJuego.n : 0);
+  const l = [];
+  for (let n = 1; n <= ult; n++) l.push((M.jornadas || []).find((j) => j.n === n) || { n });
+  if (!M.enJuego && M.proxima && M.proxima.n > ult) l.push(M.proxima);
+  return l;
 }
 /** la que se enseña: la elegida o, si no, la que se juega, la última empezada o la próxima */
 export function jornadaElegida(S) {
-  const l = jornadasVisibles(S.M);
+  const l = jornadasVisibles(S.M, S.D);
   if (S.jornadaSel && l.some((j) => j.n === S.jornadaSel)) return S.jornadaSel;
   if (S.M.enJuego) return S.M.enJuego.n;
   const emp = l.filter((j) => j.ini <= Date.now());
@@ -32,7 +39,7 @@ const clsPts = (v) => (v == null ? 'cero' : v > 0 ? 'sube' : v < 0 ? 'baja' : 'c
 
 export function jornadasHTML(S) {
   const { M, D } = S;
-  const lista = jornadasVisibles(M);
+  const lista = jornadasVisibles(M, D);
   if (!lista.length) return nada('Aún no ha empezado ninguna jornada.');
   const n = jornadaElegida(S);
   const est = estadoJornada(M, n);
@@ -69,7 +76,8 @@ export function jornadasHTML(S) {
   if (!g.ids) return h + nada(g.error ? `No se ha podido leer tu once de la jornada ${n}: ${esc(g.error)}` : `LaLiga no tiene tu once de la jornada ${n}: puede que aún no estuvieras en la liga o que no llegaras a poner equipo.`);
 
   // cada uno con su rival de esa jornada arriba y, debajo, lo que sumó (o la hora de su partido, si aún no ha jugado)
-  const partidoDe = (j) => (D.partidos || []).find((p) => p.jornada === n && (p.localId === j.equipoId || p.visitanteId === j.equipoId));
+  const deEsa = (p) => p.jornada === n;
+  const partidoDe = (j) => (D.partidos || []).find((p) => deEsa(p) && (p.localId === j.equipoId || p.visitanteId === j.equipoId)) || (D.resultados || []).find((p) => deEsa(p) && (p.localId === j.equipoId || p.visitanteId === j.equipoId));
   const crom = (j) => {
     const p = partidoDe(j);
     const casa = p && p.localId === j.equipoId;
