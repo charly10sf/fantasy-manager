@@ -1498,3 +1498,19 @@ button.pf-eq:active { opacity: 0.7; }
 .aviso-capt .ac-mas.cuadro { width: 66px; height: 100px; padding: 0; flex-direction: column; justify-content: center; gap: 4px; font-size: 13px; }
 .ac-nota { margin: 2px 0 8px; }
 .aviso p .ic { width: 14px; height: 14px; vertical-align: -2px; }
+/* Equipo → Jornadas: el once de cada jornada */
+.jor-chips { display: flex; gap: 6px; overflow-x: auto; margin: 0 -16px 12px; padding: 2px 16px 4px; scrollbar-width: none; }
+.jor-chips::-webkit-scrollbar { display: none; }
+.jor-chips button { flex: none; display: inline-flex; align-items: center; gap: 5px; min-width: 50px; height: 38px; padding: 0 12px; border-radius: 10px; background: var(--plano2); color: var(--texto2); font: 700 16px var(--cond); justify-content: center; }
+.jor-chips button small { font: 600 11.5px 'Barlow'; opacity: 0.8; }
+.jor-chips button.activo { background: var(--rojo); color: #fff; }
+.jor-chips .vivo-dot { margin: 0; }
+.jor-cab { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin: 4px 0 12px; }
+.jor-cab b { display: block; font: 700 26px/1 var(--cond); text-transform: uppercase; }
+.jor-cab span { display: flex; align-items: center; gap: 6px; margin-top: 5px; font-size: 14.5px; color: var(--texto2); }
+.jor-pts { text-align: right; }
+.jor-pts b { display: inline; font-size: 34px; }
+.jor-pts small { margin-left: 3px; font: 600 14px 'Barlow'; color: var(--texto2); }
+.jor-pts span { justify-content: flex-end; margin-top: 3px; font-size: 13.5px; }
+.escritorio .jor-chips { margin: 0 0 12px; padding: 2px 0 4px; flex-wrap: wrap; }
+.cromo.sin-poner .cr-hueco { font-size: 20px; }

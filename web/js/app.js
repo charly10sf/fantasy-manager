@@ -12,13 +12,14 @@ import * as Cl from './clubes.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
 import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api } from './api.js';
-import { detalleJugador } from './normalizar.js';
+import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
 import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub } from './externas.js';
-import { enVivo, onceRival, jornadaStats } from './vivo.js';
+import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce } from './vivo.js';
+import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
@@ -341,6 +342,7 @@ function pintar({ arriba = false } = {}) {
   encuadrar(v);
   // en Directo, la clasificación de la jornada dice cuántos le quedan a cada rival: hacen falta sus onces
   if (S.vista === 'directo' && S.M.enJuego && S.M.vivo && (S.seg.directo === 'liga' || V.ancho())) cargarOncesRivales();
+  if (S.vista === 'equipo' && S.seg.equipo === 'jornadas') cargarJornadaMia();
   // el cierre hasta la hora de apertura y el límite de minutos, sin esperar a la próxima vuelta del reloj
   mirarLimite();
   // el banner de los anuncios (solo en la versión de Google Play): en las pestañas, nunca en Pregunta
@@ -679,6 +681,60 @@ async function cargarPartido(n, id) {
   if (r) { S.jugadas[id] = r; if (S.tipoHoja && S.tipoHoja[0] === 'p' && S.tipoHoja[1] === `${n}:${id}`) repintarHoja(); }
 }
 /** el once de un rival en la jornada en juego, para su ficha (se pide al abrirla, como mucho cada 3 minutos) */
+/*
+ * Equipo → Jornadas: tu once de la jornada elegida (de LaLiga) y los puntos de cada equipo en ella. Los de las
+ * jornadas acabadas se guardan (no cambian); el de la que se juega es el de vivo.js; el de la próxima, el que tienes
+ * puesto ahora (se mira como mucho cada 3 minutos)
+ */
+async function cargarJornadaMia() {
+  if (!S.D || !S.M || !S.M.yo) return;
+  const n = jornadaElegida(S);
+  if (!n) return;
+  const tid = String(S.M.yo.teamId);
+  S.misJ ||= LS.get(K('mis-jornadas'), {});
+  S.ptsJ ||= LS.get(K('pts-jornadas'), {});
+  S.cargandoJ ||= {};
+  if (S.cargandoJ[n]) return;
+  const est = estadoJornada(S.M, n);
+  const g = S.misJ[n];
+  // (lo que ha fallado o no estaba no se vuelve a pedir hasta pasados 3 minutos: pintar() llama aquí cada vez)
+  const fresco = g && ((est === 'acabada' && g.acabada && g.ids) || Date.now() - g.t < 3 * MIN);
+  const faltanPts = est === 'acabada' && !S.ptsJ[n] && !enDemo();
+  if (fresco && !faltanPts) return;
+  S.cargandoJ[n] = true;
+  try {
+    if (!fresco) {
+      let ids = null, forma = null;
+      if (enDemo()) ids = S.M.once ? [...S.M.once.lineas.flat().map((j) => j.id), ...(S.M.once.entrenador ? [S.M.once.entrenador.id] : [])] : null;
+      else if (est === 'vivo' && S.M.vivo && S.M.vivo.once) { ids = S.M.vivo.once; forma = S.M.vivo.forma || null; } else {
+        const r = est === 'proxima' ? await api.miOnce(tid) : await api.onceSemana(tid, n);
+        ids = idsOnce(r); forma = formaOnce(r);
+      }
+      S.misJ[n] = { ids: ids && ids.length ? ids : null, forma, t: Date.now(), acabada: est === 'acabada' };
+    }
+    if (faltanPts) {
+      try {
+        const m = {};
+        for (const it of listaN(await api.clasifSemana(S.D.liga.id, n))) {
+          const t = (it && it.team) || {};
+          const id = it.teamId != null ? it.teamId : t.id != null ? t.id : it.id;
+          const v = it.points != null ? it.points : it.weekPoints != null ? it.weekPoints : t.weekPoints;
+          if (id != null && v != null && Number.isFinite(Number(v))) m[String(id)] = Number(v);
+        }
+        S.ptsJ[n] = m;
+      } catch (e) { if (e.sesion) throw e; S.ptsJ[n] = {}; }
+    }
+  } catch (e) {
+    if (e.sesion) { delete S.cargandoJ[n]; return; }
+    S.misJ[n] = { ids: null, error: e.message, t: Date.now(), acabada: false };
+  }
+  delete S.cargandoJ[n];
+  // se guardan las acabadas (lo de la que se juega y la próxima cambia)
+  const guardar = (o, ok) => Object.fromEntries(Object.entries(o).filter(([k, v]) => ok(Number(k), v)));
+  LS.set(K('mis-jornadas'), guardar(S.misJ, (k, v) => v.acabada && v.ids));
+  LS.set(K('pts-jornadas'), guardar(S.ptsJ, (k) => S.misJ[k] && S.misJ[k].acabada));
+  if (S.vista === 'equipo' && S.seg.equipo === 'jornadas' && !S.hoja) pintar();
+}
 async function cargarOnceRival(tid) {
   const n = S.M && S.M.enJuego && S.M.enJuego.n;
   if (!n || enDemo() || !haySesion()) return;
@@ -1467,6 +1523,7 @@ document.addEventListener('click', async (ev) => {
   switch (d.accion) {
     case 'verPartido': cargarPartido(Number(d.n), d.id); hoja('p', `${d.n}:${d.id}`, pilaDesde(el, 'p', `${d.n}:${d.id}`)); break;
     case 'volverHoja': volverHoja(); break;
+    case 'verJornada': S.jornadaSel = Number(d.n); pintar(); break;
     case 'filtroClub': S.filtro.club = d.f; repintarHoja(); break;
     case 'vivoYa': {
       if (enDemo()) { tostada('En la demo no hay jornada en directo'); break; }

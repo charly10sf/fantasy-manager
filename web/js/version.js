@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.1c';
+export const VERSION = '0.6.2';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -11,7 +11,13 @@ export const VERSION = '0.6.1c';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.6.1c', f: '2026-10-24', h: 'HH:MM', t: 'Menos avisos al cargar',
+    v: '0.6.2', f: '2026-10-24', h: '22:53', t: 'Tus jornadas',
+    cosas: [
+      { tipo: 'nuevo', d: 'campo', t: 'El once de cada jornada', x: 'En Equipo → Jornadas, como en la app oficial: eliges la jornada (de la 1 a la que se juega, o la próxima) y ves el once que pusiste, con lo que sumó cada uno, tus puntos y en qué puesto quedaste en la jornada. En la que se juega, al minuto; en la próxima, el once que tienes puesto ahora y cuándo juega cada uno.', ir: { v: 'equipo', seg: 'equipo:jornadas' } },
+    ],
+  },
+  {
+    v: '0.6.1c', f: '2026-10-24', h: '22:53', t: 'Menos avisos al cargar',
     cosas: [
       { tipo: 'arreglo', d: 'conexion', t: 'Sin el aviso de las subidas y bajadas', x: 'Si al actualizar no se podían leer las subidas y bajadas del mercado, salía un aviso arriba. Ahora la app usa las que ya había leído ese día y no te dice nada; el aviso solo sale si ese día no las ha podido leer ninguna vez.' },
     ],

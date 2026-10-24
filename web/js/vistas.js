@@ -9,6 +9,7 @@ import { md } from './texto.js';
 import { enApp, nativo } from './puente.js';
 import { guiaClave } from './clave.js';
 import { K } from './datos.js';
+import { jornadasHTML } from './jornadas.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -617,7 +618,7 @@ export function equipo(S) {
   const abiertasE = M.mias.filter((x) => x.abierta && x.clausula).length, riesgoE = M.mias.filter((x) => x.riesgo === 'alto').length;
   const aVender = M.mias.filter((x) => x.ventaInercia).length;
   void aVender;
-  h += tabs('equipo', seg, [['plantilla', 'Plantilla', M.mias.length], ['venta', 'En venta', M.misVentas.length], ['clausulas', 'Cláusulas', abiertasE, riesgoE ? 'rojo' : ''], ['dinero', 'Beneficio']]);
+  h += tabs('equipo', seg, [['plantilla', 'Plantilla', M.mias.length], ['jornadas', 'Jornadas'], ['venta', 'En venta', M.misVentas.length], ['clausulas', 'Cláusulas', abiertasE, riesgoE ? 'rojo' : ''], ['dinero', 'Beneficio']]);
   if (!M.mias.length) return h + nada(S.D && S.D.ligas && S.D.ligas.length > 1 ? 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Toca el nombre de la liga, arriba, para cambiar a otra de tus ligas.' : 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si acabas de entrar en ella, prueba a actualizar en un rato.');
 
   if (seg === 'plantilla') {
@@ -646,6 +647,8 @@ export function equipo(S) {
     }
     // en el ordenador, el once a la izquierda y la plantilla al lado
     h += ancho() ? cols(arriba, l, 'lado-izq') : arriba + l;
+  } else if (seg === 'jornadas') {
+    h += jornadasHTML(S);
   } else if (seg === 'venta') {
     h += M.misVentas.length ? lista2(M.misVentas.map(ventaHTML).join('')) : nada('No tienes a nadie en venta. Cuando pongas a alguien en el mercado, aquí verás sus ofertas (la de LaLiga y las de otros managers) y si te conviene aceptar.');
   } else if (seg === 'clausulas') {
