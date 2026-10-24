@@ -21,7 +21,7 @@ import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub } fr
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada, topConAnuncio, abrirTop } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -376,18 +376,27 @@ function pedirOtroPlan() {
 /** la vuelta del anuncio bonificado (Anuncios.java) */
 window.anuncioVisto = (para, visto, motivo) => {
   const sinAnuncio = !visto && /sin anuncio|sin consentimiento|no se pudo/.test(motivo || '');
-  // las funciones top: un anuncio las abre las cuatro hasta medianoche (si no hay anuncio que enseñar, igual)
+  // las funciones top, en dos niveles: 1 anuncio abre las de nivel 1 y 2 anuncios, todas, hasta medianoche (limite.js)
   if (para === 'top') {
+    const clave = S.anuncio && S.anuncio.clave;
+    if (visto) anuncioTopVisto();
+    // sin anuncio que enseñar, se abre igual lo que pedía, pero solo media hora
+    else if (sinAnuncio) abrirTopGratis(clave, 30);
+    // con el primero de dos visto, la ventana sigue abierta para el segundo (cada anuncio lo pide él: así lo quiere Google)
+    if (visto && clave && bloqueada(clave)) {
+      S.anuncio = { ...(S.anuncio || {}), para, cargando: false, error: null, uno: true };
+      if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja();
+      tostada('Primer anuncio visto: ya tienes abiertas cuándo gira, lo que venden y hasta cuánto pujar', 5000);
+      return;
+    }
     if (visto || sinAnuncio) {
-      // sin anuncio que enseñar, se abren igual, pero solo media hora
-      abrirTop(visto ? 0 : 30);
       const volver = S.anuncio && S.anuncio.volver;
       S.anuncio = null;
       cerrarHoja();
       pintar();
       // si el candado estaba en una ficha, se vuelve a ella para ver lo que se ha abierto
       if (volver) hoja(volver[0], volver[1]);
-      tostada(visto ? 'Funciones top abiertas hasta mañana' : 'No había anuncio ahora: abiertas gratis media hora');
+      tostada(visto ? 'Abiertas hasta medianoche' : 'No había anuncio ahora: abiertas gratis media hora');
       return;
     }
     S.anuncio = { ...(S.anuncio || {}), para, cargando: false, error: 'Para abrirlas hay que ver el anuncio hasta el final.' };

@@ -60,25 +60,48 @@ function esDe(yo) {
 /* Las funciones top, bloqueadas.
    limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas cuatro), y «todoAbierto», los equipos que las ven
    todas (si no lo dice, los de «sinLimite»). En la liga de ejemplo, bloqueadas.
-   En la versión de Google Play (la que lleva anuncios) se abren las cuatro viendo un anuncio bonificado, hasta las
-   00:00 de Madrid; también en la liga de ejemplo (así las ve quien revisa la app en Google). En la de la liga, que no
-   lleva anuncios, siguen como diga limites.json. */
+   En la versión de Google Play (la que lleva anuncios) se abren viendo anuncios bonificados, hasta las 00:00 de Madrid,
+   en dos niveles (desde la 0.6.3a; lo decidió Carlos el 25 oct, un amigo veía poco 1 anuncio por el dinero de los
+   rivales): con 1 anuncio, cuándo gira, lo que venden los rivales y hasta cuánto pujar; con 2, además el dinero de los
+   rivales y quién puede pagar tus cláusulas (van juntas: saber quién te puede pagar 30 M ya dice que tiene 30 M). El
+   primer anuncio ya abre el nivel 1. También en la liga de ejemplo (así las ve quien revisa la app en Google). En la de
+   la liga, que no lleva anuncios, siguen como diga limites.json, y «hasta cuánto pujar» (pujaMax) va abierta: solo se
+   cierra donde hay anuncios para abrirla. */
 const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'ventasRivales'];
+const SOLO_CON_ANUNCIOS = ['pujaMax'];
+/** cuántos anuncios pide cada una */
+export const NIVEL_TOP = { dineroRivales: 2, quienPaga: 2, inercia: 1, ventasRivales: 1, pujaMax: 1 };
+const nivelDe = (clave) => NIVEL_TOP[clave] || 1;
 /** ¿se pueden abrir viendo un anuncio? (solo en la versión de Google Play) */
 export const topConAnuncio = () => enApp && nativo.hayAnuncios();
-/** ¿están abiertas? (hoy, y si fue sin anuncio, solo un rato) */
-export const topAbierto = () => { const g = LS.get('top-abierto', null); return !!g && g.dia === diaDe() && (!g.hasta || Date.now() < g.hasta); };
-/** las abre: con el anuncio visto, hasta medianoche; si no había anuncio que enseñar, solo «min» minutos (así no se
-    abren gratis todo el día tocando el candado antes de que AdMob arranque) */
-export function abrirTop(min = 0) { const t = Date.now(); LS.set('top-abierto', { dia: diaDe(), t, hasta: min > 0 ? t + min * 60e3 : 0 }); }
+/** lo de hoy: cuántos anuncios has visto (0 a 2) y, si no había anuncio que enseñar, qué nivel se abrió gratis y hasta cuándo */
+function hoyTop() {
+  const g = LS.get('top-abierto', null);
+  if (!g || g.dia !== diaDe()) return { vistos: 0, libre: 0 };
+  // lo guardado por la 0.6.3, { dia, t, hasta }: un anuncio abría las cuatro hasta medianoche
+  if (g.vistos == null) return { vistos: g.hasta ? 0 : 2, libre: g.hasta && Date.now() < g.hasta ? 2 : 0, libreHasta: g.hasta || 0 };
+  return { vistos: Math.min(2, g.vistos || 0), libre: g.libreHasta && Date.now() < g.libreHasta ? g.libreNivel || 0 : 0, libreHasta: g.libreHasta || 0 };
+}
+const guardarTop = (h) => LS.set('top-abierto', { dia: diaDe(), t: Date.now(), vistos: h.vistos, libreNivel: h.libre, libreHasta: h.libre ? h.libreHasta : 0 });
+/** el nivel abierto hoy (0, 1 o 2) */
+export const nivelAbierto = () => { const h = hoyTop(); return Math.max(h.vistos, h.libre); };
+/** ¿está abierta hoy? (sin clave: alguna) */
+export const topAbierto = (clave) => nivelAbierto() >= (clave ? nivelDe(clave) : 1);
+/** cuántos anuncios te faltan hoy para abrirla */
+export const faltanAnuncios = (clave) => Math.max(0, nivelDe(clave) - nivelAbierto());
+/** un anuncio visto hasta el final */
+export function anuncioTopVisto() { const h = hoyTop(); guardarTop({ ...h, vistos: Math.min(2, h.vistos + 1) }); }
+/** sin anuncio que enseñar: se abre igual lo que pedías, pero solo «min» minutos (así no se abren gratis todo el día
+    tocando el candado antes de que AdMob arranque) */
+export function abrirTopGratis(clave, min = 30) { const h = hoyTop(); guardarTop({ ...h, libre: Math.max(h.libre, nivelDe(clave)), libreHasta: Date.now() + min * 60e3 }); }
 let yoB = null, demoB = false;
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
 export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }
 export function bloqueada(clave) {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   const lista = cfg && Array.isArray(cfg.bloqueadas) ? cfg.bloqueadas : BLOQUEADAS;
-  if (!lista.includes(clave)) return false;
-  if (topAbierto()) return false;
+  if (!lista.includes(clave) && !(SOLO_CON_ANUNCIOS.includes(clave) && topConAnuncio())) return false;
+  if (topAbierto(clave)) return false;
   if (demoB || !yoB || !cfg) return true;
   return !(cfg.todoAbierto || cfg.sinLimite || []).some(esDe(yoB));
 }
