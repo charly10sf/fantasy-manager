@@ -147,9 +147,10 @@ async function sincronizar(forzar = false) {
 }
 
 /** lo que falta para las 00:00 en Madrid */
+const FHORA = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
 function hastaMedianoche() {
   const ahora = new Date();
-  const p = Object.fromEntries(new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false }).formatToParts(ahora).map((x) => [x.type, x.value]));
+  const p = Object.fromEntries(FHORA.formatToParts(ahora).map((x) => [x.type, x.value]));
   return ((23 - Number(p.hour)) * 3600 + (59 - Number(p.minute)) * 60 + (60 - Number(p.second))) * 1000;
 }
 

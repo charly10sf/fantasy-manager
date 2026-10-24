@@ -36,8 +36,25 @@ export const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 export const ahora = () => Date.now();
 export const MIN = 60e3, HORA = 3600e3, DIA = 86400e3;
 const TZ = 'Europe/Madrid';
+/* Los formateadores de fechas se crean una vez: crear uno en cada llamada (toLocaleDateString con zona horaria) cuesta
+   mucho, y el motor pide el día de cada punto del histórico de cada jugador (decenas de miles de veces por pasada).
+   Además, el día de España no cambia dentro de una hora en punto (su diferencia con UTC es de horas enteras), así que
+   se guarda por hora. */
+const FDIA = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
+const DIA_H = new Map();
 /** el día en España, "2026-10-20" */
-export const diaDe = (t = Date.now()) => new Date(t).toLocaleDateString('en-CA', { timeZone: TZ });
+export const diaDe = (t = Date.now()) => {
+  const n = typeof t === 'number' ? t : new Date(t).getTime();
+  if (!Number.isFinite(n)) return 'Invalid Date';
+  const h = Math.floor(n / HORA);
+  let d = DIA_H.get(h);
+  if (d === undefined) {
+    d = FDIA.format(new Date(h * HORA));
+    if (DIA_H.size > 50000) DIA_H.clear();
+    DIA_H.set(h, d);
+  }
+  return d;
+};
 export const ms = (x) => {
   if (x == null || x === '') return null;
   if (typeof x === 'number') return x < 1e12 ? x * 1000 : x;
@@ -63,12 +80,13 @@ export function rel(t) {
 }
 const DIAS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const FPARTES = new Intl.DateTimeFormat('es-ES', { timeZone: TZ, year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+const FSEMANA = new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'short' });
+const DSEM = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
 function partes(t) {
-  const f = new Intl.DateTimeFormat('es-ES', { timeZone: TZ, year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', weekday: 'short', hour12: false });
-  const o = {};
-  for (const p of f.formatToParts(new Date(t))) o[p.type] = p.value;
-  const dw = new Date(new Date(t).toLocaleString('en-US', { timeZone: TZ })).getDay();
-  return { d: +o.day, m: +o.month - 1, y: +o.year, h: o.hour === '24' ? '00' : o.hour, min: o.minute, dw };
+  const o = {}, f = new Date(t);
+  for (const p of FPARTES.formatToParts(f)) o[p.type] = p.value;
+  return { d: +o.day, m: +o.month - 1, y: +o.year, h: o.hour === '24' ? '00' : o.hour, min: o.minute, dw: DSEM[FSEMANA.format(f)] };
 }
 /** "hoy 18:30", "mañana 14:00", "jue 23, 21:00", "23 oct" */
 export function cuando(t, { hora = true } = {}) {

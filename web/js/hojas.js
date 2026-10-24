@@ -467,9 +467,10 @@ const avisoMio = (x) => `<div class="aviso${x.respuesta && !x.vista ? ' nuevo' :
   <div class="aviso-cab"><span>${cuando(x.t)}</span>${x.respuesta ? '<span class="pill sube">Contestado</span>' : '<span class="pill">Esperando respuesta</span>'}</div>
   <p>${esc(x.texto)}</p>
   ${x.respuesta ? `<div class="aviso-resp"><b>${esc(x.por || 'Respuesta')}</b><span>${esc(x.respuesta)}</span><small>${cuando(x.respondida)}</small></div>` : ''}</div>`;
-function detalleAviso(A) {
+function detalleAviso(A, x) {
   const d = A.detalle;
-  if (!d) return `<p class="t2 peq">Cargando…</p>`;
+  // mientras llega el aviso entero, su texto (el de la lista) y que se está cargando
+  if (!d) return `<div class="aviso-det"><p class="aviso-texto">${esc((x && x.txt) || '')}</p><p class="t2 peq cargando-av">${icono('reloj')}Cargando el aviso entero…</p></div>`;
   if (d.error) return `<div class="error-c">${esc(d.error)}</div>`;
   return `<div class="aviso-det">
     <p class="aviso-texto">${esc(d.texto)}</p>
@@ -507,7 +508,7 @@ function bandejaAvisos(A) {
   else h += `<div class="avisos-claude"><button class="btn chico sec" data-accion="copiarAvisos">${icono('copiar')}Copiar para Claude</button><span class="t2 peq">${A.pendientes ? 'Los que están sin contestar' : 'Los últimos 5'}, con su diagnóstico. Pégalos en el chat.</span></div>${A.paraClaude ? `<div class="para-claude"><textarea class="campo-t aviso-t" rows="5" readonly>${esc(A.paraClaude)}</textarea><button class="btn chico" data-accion="copiarParaClaude">${icono('copiar')}Copiar otra vez</button></div>` : ''}`;
   h += todos.map((x) => `<div class="aviso recibido${x.r ? '' : ' nuevo'}${A.abierto === x.id ? ' abierto' : ''}">
     <button class="aviso-cab" data-accion="abrirAviso" data-id="${esc(x.id)}"><b>${esc(x.quien || '¿?')}</b><span>${esc(x.equipo || '')}</span><span class="aviso-t2">${cuando(x.t)}</span>${x.r ? '<span class="pill sube">Contestado</span>' : '<span class="pill pronto">Sin contestar</span>'}</button>
-    ${A.abierto === x.id ? detalleAviso(A) : `<p>${esc(x.txt || '')}</p>`}</div>`).join('');
+    ${A.abierto === x.id ? detalleAviso(A, x) : `<p>${esc(x.txt || '')}</p>`}</div>`).join('');
   return h;
 }
 

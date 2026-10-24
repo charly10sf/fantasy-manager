@@ -3,13 +3,20 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.2c';
+export const VERSION = '0.5.2d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.2d', f: '2026-10-24', h: '03:40', t: 'Más rápida',
+    cosas: [
+      { tipo: 'arreglo', d: 'arreglo', t: 'Sin parones ni tirones', x: 'La app se quedaba parada unos segundos al cargar y cada minuto, mientras rehacía sus cuentas: sacar el día de cada valor guardado de cada jugador era lentísimo en el móvil. Ahora esas cuentas van unas 30 veces más rápido, así que carga antes, cambiar de pestaña va fino y ya no da tirones.' },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Los avisos de fallos se abren al momento', x: 'Para el dueño: al tocar un aviso a veces no se abría nada y parecía pillado (el servidor tardaba en darlo y un segundo toque lo cerraba). Ahora sale su texto en el acto, los que están sin contestar se cargan solos al abrir la lista y el servidor responde antes.' },
+    ],
+  },
   {
     v: '0.5.2c', f: '2026-10-24', h: '02:32', t: 'Lo que pagaste, siempre',
     cosas: [

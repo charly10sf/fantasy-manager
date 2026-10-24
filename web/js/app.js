@@ -520,7 +520,7 @@ async function abrirQuien() {
   if (S.tipoHoja && S.tipoHoja[0] === 'quien') repintarHoja();
 }
 async function abrirAvisos() {
-  S.av = { cargando: true, borrador: (S.av && S.av.borrador) || '' };
+  S.av = { cargando: true, borrador: (S.av && S.av.borrador) || '', cache: (S.av && S.av.cache) || {} };
   hoja('avisos');
   if (enDemo() || !haySesion()) { S.av = { ...S.av, cargando: false, sinSesion: true }; repintarAvisos(); return; }
   try {
@@ -534,6 +534,7 @@ async function abrirAvisos() {
       const t = await todosAvisos();
       Object.assign(S.av, { todos: conContestados(t.lista), cargandoTodos: false });
       S.av.pendientes = S.av.todos.filter((x) => !x.r).length; fijarPendientes(S.av.pendientes);
+      precargarAvisos();
       repintarAvisos();
     }
   } catch (e) {
@@ -567,13 +568,31 @@ async function enviarAviso() {
   repintarAvisos();
   pintarNumAvisos();
 }
+/* un aviso entero (con su diagnóstico). El servidor tarda uno o dos segundos en darlo: se guardan los que ya se han
+   pedido y, al abrir la lista, se piden solos los que están sin contestar, para que se abran al momento */
+const avisoCache = () => (S.av.cache ||= {});
+async function pedirAviso(id) {
+  const c = avisoCache();
+  if (c[id] && c[id].then) return c[id];
+  const p = unAviso(id).then((d) => { c[id] = d; return d; }).catch((e) => { delete c[id]; throw e; });
+  c[id] = p;
+  return p;
+}
+const avisoListo = (id) => { const d = avisoCache()[id]; return d && !d.then ? d : null; };
+function precargarAvisos() {
+  const ids = (S.av.todos || []).filter((x) => !x.r).slice(0, 10).map((x) => x.id);
+  enParalelo(ids, 2, (id) => pedirAviso(id).catch(() => null));
+}
 async function abrirAvisoRecibido(id) {
-  if (S.av.abierto === id) { S.av.abierto = null; repintarAvisos(); return; }
-  S.av.abierto = id; S.av.detalle = null; S.av.respBorrador = '';
+  // tocarlo otra vez lo cierra, salvo mientras carga (parecía que no hacía nada y se quedaba pillado)
+  if (S.av.abierto === id) { if (!avisoListo(id) && !(S.av.detalle && S.av.detalle.error)) return; S.av.abierto = null; repintarAvisos(); return; }
+  S.av.abierto = id; S.av.detalle = avisoListo(id); S.av.respBorrador = '';
   repintarAvisos();
-  try { S.av.detalle = await unAviso(id); } catch (e) { S.av.detalle = { error: e.message }; }
+  if (S.av.detalle) return;
+  try { const d = await pedirAviso(id); if (S.av.abierto === id) S.av.detalle = d; } catch (e) { if (S.av.abierto === id) S.av.detalle = { error: e.message }; }
   // el aviso entero sí está al día: si ya tiene respuesta, cuenta como contestado aunque la lista aún no lo diga
-  if (S.av.detalle && S.av.detalle.respondida) { apuntarContestado(id, S.av.detalle.respondida); S.av.todos = conContestados(S.av.todos); S.av.pendientes = (S.av.todos || []).filter((x) => !x.r).length; fijarPendientes(S.av.pendientes); }
+  const d = avisoListo(id);
+  if (d && d.respondida) { apuntarContestado(id, d.respondida); S.av.todos = conContestados(S.av.todos); S.av.pendientes = (S.av.todos || []).filter((x) => !x.r).length; fijarPendientes(S.av.pendientes); }
   if (S.av.abierto === id) repintarAvisos();
 }
 /* para el dueño: los avisos sin contestar, enteros y con su diagnóstico, para pegarlos en el chat de Claude */
@@ -585,7 +604,7 @@ async function copiarAvisosClaude() {
   lista = lista.slice(0, 15);
   if (!lista.length) { tostada('No hay avisos'); return; }
   tostada('Juntando los avisos…');
-  const det = await enParalelo(lista, 3, (x) => unAviso(x.id).catch((e) => ({ error: e.message })));
+  const det = await enParalelo(lista, 3, (x) => pedirAviso(x.id).catch((e) => ({ error: e.message })));
   const partes = lista.map((x, i) => {
     const d = det[i] || {};
     const cab = `## ${x.id} · ${cuandoT(x.t)} · ${x.equipo || '?'}${x.quien ? ` (${x.quien})` : ''}${d.app ? ` · ${d.app}` : ''}`;
@@ -615,6 +634,7 @@ async function contestarAviso(id) {
     tostada('Respuesta mandada: le llega en la app');
     // lo contestado, a mano ya (el servidor tarda unos segundos en listarlo)
     if (S.av.detalle && S.av.detalle.id === id) Object.assign(S.av.detalle, { respuesta: t, respondida: Date.now(), vista: false });
+    if (avisoListo(id)) Object.assign(avisoListo(id), { respuesta: t, respondida: Date.now(), vista: false });
     apuntarContestado(id);
     S.av.todos = conContestados(S.av.todos);
     await misAvisos().catch(() => null);

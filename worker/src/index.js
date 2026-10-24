@@ -144,10 +144,20 @@ const MAX_TEXTO = 4000, MAX_RESPUESTA = 2000, MAX_DIAG = 40000, AL_DIA = 15;
 const adminsDe = (env) => String(env.ADMINS || '').split(/[\s,;]+/).filter(Boolean);
 
 /** quién llama, comprobado con LaLiga ({ uid, nombre }); se recuerda 10 minutos por sesión */
+// (también en la memoria del Worker: caches.default no guarda nada en *.workers.dev, y sin esto cada petición
+// preguntaba a LaLiga quién es, uno o dos segundos más)
+const QUIEN = new Map();
 async function quienEs(req) {
   const tk = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
   if (tk.length < 20) return null;
   const h = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(tk)))].map((b) => b.toString(16).padStart(2, '0')).join('');
+  const m = QUIEN.get(h);
+  if (m && Date.now() - m.t < 10 * 60e3) return m.u;
+  const u = await quienEsLaLiga(tk, h);
+  if (u) { if (QUIEN.size > 2000) QUIEN.clear(); QUIEN.set(h, { t: Date.now(), u }); }
+  return u;
+}
+async function quienEsLaLiga(tk, h) {
   const clave = new Request(`https://quien.fantasy-manager.invalid/${h}`);
   const g = await caches.default.match(clave);
   if (g) return g.json();

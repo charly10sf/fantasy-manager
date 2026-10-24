@@ -1261,3 +1261,4 @@ body.limitado .tostada { z-index: 120; }
 .para-claude { margin-bottom: 16px; }
 .paso-compra { margin: 4px 0 0; font-size: 14px; color: var(--texto2); }
 .imp-t { font: 600 11.5px 'Barlow'; color: var(--texto2); text-align: right; margin-top: 1px; }
+.cargando-av { display: flex; align-items: center; gap: 6px; } .cargando-av .ic { width: 14px; height: 14px; }
