@@ -1,0 +1,1 @@
+La clave de subida a Google Play (cifrada con el secreto PLAY_CLAVE). No borrar esta rama.
