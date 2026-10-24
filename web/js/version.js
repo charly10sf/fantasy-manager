@@ -11,7 +11,7 @@ export const VERSION = '0.5.3';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.3', f: '2026-10-24', h: '06:00', t: 'La jornada en directo',
+    v: '0.5.3', f: '2026-10-24', h: '05:56', t: 'La jornada en directo',
     cosas: [
       { tipo: 'nuevo', d: 'campo', t: 'Tus puntos en directo', x: 'Mientras se juega la jornada, en Hoy y en Equipo ves los puntos que llevas y los de cada jugador de tu once de LaLiga, y en qué puesto vas de la jornada en tu liga. En cada lista, al lado del nombre, los puntos de los que ya han jugado, y en el campo de Tu once también. Se pone al día solo cada 2 minutos con la app abierta.', ir: { v: 'equipo' } },
       { tipo: 'nuevo', d: 'cara', t: 'Y los de tus rivales', x: 'En Rivales, al lado de los puntos de cada uno, lo que lleva en la jornada. Y en su ficha, su once con los puntos de cada jugador.', ir: { v: 'rivales', seg: 'rivales:clasif' } },
