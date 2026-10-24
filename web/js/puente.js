@@ -153,6 +153,7 @@ export const nativo = {
   hayAnuncios: () => !!(N && typeof N.hayAnuncios === 'function' && llamar('hayAnuncios')),
   banner: (si) => llamar('banner', !!si),
   verAnuncio: (para) => llamar('verAnuncio', String(para || '')),
+  cancelarAnuncio: () => llamar('cancelarAnuncio'),
   hayPrivacidadAnuncios: () => !!(N && typeof N.hayPrivacidadAnuncios === 'function' && llamar('hayPrivacidadAnuncios')),
   privacidadAnuncios: () => llamar('privacidadAnuncios'),
 };

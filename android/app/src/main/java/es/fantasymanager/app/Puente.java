@@ -421,6 +421,12 @@ public class Puente {
         if (act != null) Anuncios.ver(act, para == null ? "" : para);
     }
 
+    /** la web ya no quiere el bonificado que pidió (ha cerrado la ventana) */
+    @JavascriptInterface
+    public void cancelarAnuncio() {
+        if (act != null) Anuncios.cancelar();
+    }
+
     /** si se puede (y hay que dejar) cambiar el consentimiento de los anuncios */
     @JavascriptInterface
     public boolean hayPrivacidadAnuncios() {

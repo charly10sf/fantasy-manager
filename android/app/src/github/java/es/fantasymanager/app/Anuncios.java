@@ -24,7 +24,10 @@ final class Anuncios {
     static void alVolver() {
     }
 
-    static void alCerrar() {
+    static void alCerrar(Principal a) {
+    }
+
+    static void cancelar() {
     }
 
     static void ver(Principal a, String para) {

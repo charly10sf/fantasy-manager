@@ -306,11 +306,13 @@ function pintar({ arriba = false } = {}) {
 let bannerYa = null;
 function ponerBanner(si) {
   if (EN_FONDO || !enApp) return;
-  si = !!si;
+  // nunca en la pantalla del límite de minutos o la cuenta atrás (Google no deja anuncios en una pantalla sin salida)
+  si = !!si && !document.body.classList.contains('limitado');
   if (si === bannerYa) return;
   bannerYa = si;
   nativo.banner(si);
 }
+window.addEventListener('limite-cambia', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia'));
 const conAnuncios = () => enApp && !EN_FONDO && nativo.hayAnuncios();
 // «Pedir otro plan a la IA»: 3 veces al día gratis; a partir de la 4.ª, viendo un anuncio (solo en la de Google Play)
 const PLANES_GRATIS = 3;
@@ -901,6 +903,8 @@ function abrirHoja(html) {
 function cerrarHoja(ya = false) {
   const h = $('.hoja'), v = $('.velo');
   if (!h) return false;
+  // si se estaba cargando un anuncio para esto, ya no se enseña
+  if (S.tipoHoja && S.tipoHoja[0] === 'anuncio' && S.anuncio && S.anuncio.cargando) { nativo.cancelarAnuncio(); S.anuncio = null; }
   S.hoja = null; S.tipoHoja = null;
   document.body.style.overflow = '';
   if (ya) { h.remove(); v && v.remove(); return true; }
@@ -1416,7 +1420,15 @@ document.addEventListener('click', async (ev) => {
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
     case 'planYa': cerrarHoja(); ir('hoy'); pedirOtroPlan(); break;
-    case 'verAnuncio': S.anuncio = { para: d.para, cargando: true }; repintarHoja(); nativo.verAnuncio(d.para); break;
+    case 'verAnuncio': {
+      S.anuncio = { para: d.para, cargando: true };
+      repintarHoja();
+      nativo.verAnuncio(d.para);
+      // por si la app no contesta: a los 20 segundos se puede volver a probar
+      const t0 = S.anuncio;
+      setTimeout(() => { if (S.anuncio === t0 && t0.cargando) { S.anuncio = { para: d.para, error: 'No ha llegado el anuncio. Prueba otra vez en un rato.' }; if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja(); } }, 20000);
+      break;
+    }
     case 'privAnuncios': nativo.privacidadAnuncios(); break;
     case 'voz': escuchar(); break;
     case 'pararPlan': if (S.planCtl) S.planCtl.abort(); break;

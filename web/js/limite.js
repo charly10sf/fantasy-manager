@@ -176,6 +176,8 @@ function tapar(min, usados) {
   }
   el.innerHTML = html;
   document.body.classList.add('limitado');
+  // (sin anuncios en esta pantalla: es un callejón sin salida)
+  window.dispatchEvent(new Event('limite-cambia'));
 }
 /** la cuenta atrás hasta que se abre (demo: en la liga de ejemplo, sin cuenta) */
 function taparHastaApertura(t, mensaje, demo = false) {
@@ -195,11 +197,14 @@ function taparHastaApertura(t, mensaje, demo = false) {
   }
   el.innerHTML = html;
   document.body.classList.add('limitado');
+  // (sin anuncios en esta pantalla: es un callejón sin salida)
+  window.dispatchEvent(new Event('limite-cambia'));
 }
 function destapar() {
   const el = document.getElementById('limite');
   if (el) el.remove();
   document.body.classList.remove('limitado');
+  window.dispatchEvent(new Event('limite-cambia'));
 }
 
 /** lo último que se ha comprobado (para enseñarlo en Ajustes): minutos de límite (null: sin límite), segundos usados y si está cerrada */
