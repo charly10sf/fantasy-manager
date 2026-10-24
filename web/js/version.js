@@ -11,7 +11,7 @@ export const VERSION = '0.5.3b';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.3b', f: '2026-10-24', h: '06:45', t: 'Tu once en directo, en su campo',
+    v: '0.5.3b', f: '2026-10-24', h: '06:36', t: 'Tu once en directo, en su campo',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'El directo, en el campo', x: 'Los puntos en directo salen ahora en un campo con tu once de LaLiga en su forma de verdad (4-3-3, 3-5-2…), cada uno en su línea con los puntos que lleva, y el que aún no ha jugado con la hora de su partido. El de cada rival, igual en su ficha.', ir: { v: 'equipo' } },
       { tipo: 'mejora', d: 'versiones', t: 'Si te has perdido muchas versiones, lo principal', x: 'Si abres la app después de varias actualizaciones, ya no te cuenta todo una por una: te enseña lo nuevo más importante (hasta cinco cosas) y el resto, sobre todo arreglos, queda en la lista de versiones de Ajustes.' },
