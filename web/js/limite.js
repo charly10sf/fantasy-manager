@@ -57,10 +57,20 @@ function esDe(yo) {
   const n = norm(yo.nombre || ''), id = String(yo.teamId || ''), uid = String(yo.userId || '');
   return (k) => (norm(k) && norm(k) === n) || String(k) === id || (uid && String(k) === uid);
 }
-/* Las funciones top, bloqueadas hasta que lleguen los anuncios (entonces se desbloquearán viendo uno).
-   limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas tres), y «todoAbierto», los equipos que las ven
-   todas (si no lo dice, los de «sinLimite»). En la liga de ejemplo, bloqueadas. */
+/* Las funciones top, bloqueadas.
+   limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas cuatro), y «todoAbierto», los equipos que las ven
+   todas (si no lo dice, los de «sinLimite»). En la liga de ejemplo, bloqueadas.
+   En la versión de Google Play (la que lleva anuncios) se abren las cuatro viendo un anuncio bonificado, hasta las
+   00:00 de Madrid; también en la liga de ejemplo (así las ve quien revisa la app en Google). En la de la liga, que no
+   lleva anuncios, siguen como diga limites.json. */
 const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'ventasRivales'];
+/** ¿se pueden abrir viendo un anuncio? (solo en la versión de Google Play) */
+export const topConAnuncio = () => enApp && nativo.hayAnuncios();
+/** ¿están abiertas? (hoy, y si fue sin anuncio, solo un rato) */
+export const topAbierto = () => { const g = LS.get('top-abierto', null); return !!g && g.dia === diaDe() && (!g.hasta || Date.now() < g.hasta); };
+/** las abre: con el anuncio visto, hasta medianoche; si no había anuncio que enseñar, solo «min» minutos (así no se
+    abren gratis todo el día tocando el candado antes de que AdMob arranque) */
+export function abrirTop(min = 0) { const t = Date.now(); LS.set('top-abierto', { dia: diaDe(), t, hasta: min > 0 ? t + min * 60e3 : 0 }); }
 let yoB = null, demoB = false;
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
 export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }
@@ -68,6 +78,7 @@ export function bloqueada(clave) {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   const lista = cfg && Array.isArray(cfg.bloqueadas) ? cfg.bloqueadas : BLOQUEADAS;
   if (!lista.includes(clave)) return false;
+  if (topAbierto()) return false;
   if (demoB || !yoB || !cfg) return true;
   return !(cfg.todoAbierto || cfg.sinLimite || []).some(esDe(yoB));
 }

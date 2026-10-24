@@ -2,7 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, ventasDe, campoVivo, estiloClub } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, BLOQUEO, ventasDe, campoVivo, estiloClub } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML, puntosUltimaJornada } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
@@ -399,11 +399,24 @@ export function fichaRival(S, tid) {
 /** antes de ver un anuncio para desbloquear algo (de momento, otro plan de la IA cuando ya llevas 3 hoy) */
 export function anuncioHTML(S, para) {
   const A = S.anuncio || {};
+  if (para === 'top') return anuncioTopHTML(A);
   let h = `<div class="hoja-cab"><h2>Otro plan</h2></div>`;
   h += `<p class="t2" style="margin:0 0 14px">Hoy ya has pedido 3 planes a la IA. Para pedir otro, mira un anuncio corto. Mañana vuelves a tener 3 gratis.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
   h += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn" data-accion="verAnuncio" data-para="${esc(para)}"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button><button class="btn sec" data-accion="cerrarHoja">Ahora no</button></div>`;
   h += `<p class="t2 peq" style="margin-top:14px">Con los anuncios la app sigue siendo gratis. El plan automático, sin IA, no tiene límite.</p>`;
+  return h;
+}
+
+/** las funciones top: un anuncio las abre las cuatro hasta medianoche */
+function anuncioTopHTML(A) {
+  const [t, x] = BLOQUEO[A.clave] || ['Funciones top', ''];
+  let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
+    <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}
+    <p>Mira un anuncio corto y se abren <b>las cuatro funciones top hasta mañana</b>: el dinero de los rivales, quién puede pagar tus cláusulas, cuándo gira un jugador y lo que venden los rivales.</p>`;
+  if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
+  h += `<button class="btn ancho" data-accion="verAnuncio" data-para="top"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button>
+    <button class="btn ancho sec" data-accion="noTop" style="margin-top:8px">Ahora no</button></div>`;
   return h;
 }
 

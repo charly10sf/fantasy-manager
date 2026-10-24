@@ -21,7 +21,7 @@ import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub } fr
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada, topConAnuncio, abrirTop } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -375,8 +375,26 @@ function pedirOtroPlan() {
 }
 /** la vuelta del anuncio bonificado (Anuncios.java) */
 window.anuncioVisto = (para, visto, motivo) => {
-  if (para !== 'plan') return;
   const sinAnuncio = !visto && /sin anuncio|sin consentimiento|no se pudo/.test(motivo || '');
+  // las funciones top: un anuncio las abre las cuatro hasta medianoche (si no hay anuncio que enseñar, igual)
+  if (para === 'top') {
+    if (visto || sinAnuncio) {
+      // sin anuncio que enseñar, se abren igual, pero solo media hora
+      abrirTop(visto ? 0 : 30);
+      const volver = S.anuncio && S.anuncio.volver;
+      S.anuncio = null;
+      cerrarHoja();
+      pintar();
+      // si el candado estaba en una ficha, se vuelve a ella para ver lo que se ha abierto
+      if (volver) hoja(volver[0], volver[1]);
+      tostada(visto ? 'Funciones top abiertas hasta mañana' : 'No había anuncio ahora: abiertas gratis media hora');
+      return;
+    }
+    S.anuncio = { ...(S.anuncio || {}), para, cargando: false, error: 'Para abrirlas hay que ver el anuncio hasta el final.' };
+    if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja();
+    return;
+  }
+  if (para !== 'plan') return;
   if (visto || sinAnuncio) {
     // si no hay anuncio que enseñar, va igual: no es culpa suya
     S.anuncio = null;
@@ -1617,6 +1635,8 @@ document.addEventListener('click', async (ev) => {
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
     case 'bloqueada': {
+      // en la de Google Play se abren viendo un anuncio
+      if (topConAnuncio()) { S.anuncio = { para: 'top', clave: d.clave, volver: S.tipoHoja && S.tipoHoja[0] !== 'anuncio' ? [...S.tipoHoja] : null }; hoja('anuncio', 'top'); break; }
       const [t, x] = BLOQUEO[d.clave] || ['Función top', ''];
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
@@ -1659,13 +1679,15 @@ document.addEventListener('click', async (ev) => {
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
     case 'planYa': cerrarHoja(); ir('hoy'); pedirOtroPlan(); break;
+    // «Ahora no» en el anuncio de las funciones top: de vuelta a la ficha de la que venía (si venía de una)
+    case 'noTop': { const v = S.anuncio && S.anuncio.volver; cerrarHoja(); S.anuncio = null; if (v) hoja(v[0], v[1]); break; }
     case 'verAnuncio': {
-      S.anuncio = { para: d.para, cargando: true };
+      S.anuncio = { ...(S.anuncio || {}), para: d.para, cargando: true, error: null };
       repintarHoja();
       nativo.verAnuncio(d.para);
       // por si la app no contesta: a los 20 segundos se puede volver a probar
       const t0 = S.anuncio;
-      setTimeout(() => { if (S.anuncio === t0 && t0.cargando) { S.anuncio = { para: d.para, error: 'No ha llegado el anuncio. Prueba otra vez en un rato.' }; if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja(); } }, 20000);
+      setTimeout(() => { if (S.anuncio === t0 && t0.cargando) { S.anuncio = { ...t0, cargando: false, error: 'No ha llegado el anuncio. Prueba otra vez en un rato.' }; if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja(); } }, 20000);
       break;
     }
     case 'privAnuncios': nativo.privacidadAnuncios(); break;

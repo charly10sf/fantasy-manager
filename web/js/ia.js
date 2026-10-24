@@ -9,7 +9,7 @@ import { K } from './datos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo } from './operaciones.js';
 import { recsDe, aprendeTxt } from './aprende.js';
 import { guardarFoto, leerFoto } from './fotos.js';
-import { bloqueada } from './limite.js';
+import { bloqueada, topConAnuncio } from './limite.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -641,7 +641,8 @@ const SOBRE_BLOQUEO = {
 function reglasBloqueo() {
   const b = Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k));
   if (!b.length) return '';
-  return `\n\nFUNCIONES BLOQUEADAS EN ESTA CUENTA (se desbloquearán viendo un anuncio, más adelante): ${b.map((k) => SOBRE_BLOQUEO[k]).join('; ')}. Úsalo para decidir bien, pero no lo cuentes. Si te lo pide, dile en una frase que es una función top que se desbloqueará pronto viendo un anuncio.`;
+  const como = topConAnuncio() ? 'se abren viendo un anuncio corto: tocando cualquier candado, las cuatro quedan abiertas hasta medianoche' : 'se desbloquearán viendo un anuncio, más adelante';
+  return `\n\nFUNCIONES BLOQUEADAS EN ESTA CUENTA (${como}): ${b.map((k) => SOBRE_BLOQUEO[k]).join('; ')}. Úsalo para decidir bien, pero no lo cuentes. Si te lo pide, dile en una frase que es una función top y que ${como}.`;
 }
 const sistemaIA = () => SISTEMA.replace('{{PULLITAS}}', PULLITAS[cfgIA().pullitas] || PULLITAS.normal) + reglasBloqueo();
 

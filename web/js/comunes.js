@@ -1,6 +1,7 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
 import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando, norm } from './util.js';
 import { mini } from './graficos.js';
+import { topConAnuncio } from './limite.js';
 
 let EQUIPOS = {};
 export const ponerEquipos = (m) => { EQUIPOS = m || {}; };
@@ -309,7 +310,9 @@ export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === '
 /** la caja de una función bloqueada (se toca para ver qué es) */
 export function candado(clave) {
   const [t, x] = BLOQUEO[clave] || ['Función top', ''];
-  return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)} Se desbloqueará pronto viendo un anuncio.</span></span></button>`;
+  // en la de Google Play se abre viendo un anuncio (las cuatro, hasta mañana); en la de la liga, aún no
+  const cola = topConAnuncio() ? ' Tócalo y ábrela gratis viendo un anuncio corto.' : ' Se desbloqueará pronto viendo un anuncio.';
+  return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${cola}</span></span></button>`;
 }
 /** lo mismo, en pequeño (en una fila) */
 export function candadoMini(clave, texto) {
