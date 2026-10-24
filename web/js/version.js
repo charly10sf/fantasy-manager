@@ -11,7 +11,7 @@ export const VERSION = '0.5.2d';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.2d', f: '2026-10-24', h: '03:40', t: 'Más rápida',
+    v: '0.5.2d', f: '2026-10-24', h: '05:07', t: 'Más rápida',
     cosas: [
       { tipo: 'arreglo', d: 'arreglo', t: 'Sin parones ni tirones', x: 'La app se quedaba parada unos segundos al cargar y cada minuto, mientras rehacía sus cuentas: sacar el día de cada valor guardado de cada jugador era lentísimo en el móvil. Ahora esas cuentas van unas 30 veces más rápido, así que carga antes, cambiar de pestaña va fino y ya no da tirones.' },
       { tipo: 'arreglo', d: 'arreglo', t: 'Los avisos de fallos se abren al momento', x: 'Para el dueño: al tocar un aviso a veces no se abría nada y parecía pillado (el servidor tardaba en darlo y un segundo toque lo cerraba). Ahora sale su texto en el acto, los que están sin contestar se cargan solos al abrir la lista y el servidor responde antes.' },
