@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.2b';
+export const VERSION = '0.6.2c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.6.2c', f: '2026-10-24', h: 'HH:MM', t: 'El once de la jornada, el que puntúa',
+    cosas: [
+      { tipo: 'arreglo', d: 'campo', t: 'Tu once de la jornada en juego', x: 'Con la jornada en juego salía el once que tienes puesto ahora, y si habías cambiado algo después de que empezara no era el que puntúa. Ahora sale el de la jornada, en Equipo → Jornadas, en «Tu once» y en Directo.', ir: { v: 'equipo', seg: 'equipo:jornadas' } },
+    ],
+  },
   {
     v: '0.6.2b', f: '2026-10-24', h: '23:28', t: 'Las jornadas, más a mano',
     cosas: [

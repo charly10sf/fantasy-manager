@@ -144,10 +144,13 @@ export async function enVivo(D, n, yoTid) {
     const v = porNombre[norm(j.nombre)] != null ? porNombre[norm(j.nombre)] : porNombre[norm(j.largo)];
     if (v != null) puntos[j.id] = v;
   }
-  // tu once de verdad (el que tienes puesto en LaLiga) y los puntos de cada equipo en la jornada
+  // tu once de la jornada: el que puntúa en ella (/lineup/week/{n}); el de ahora (/lineup) puede ser ya otro, si has
+  // cambiado algo después de que empezara. Si LaLiga no da el de la jornada, el de ahora
   let once = null, forma = null;
   if (yoTid) {
-    try { const r = await api.miOnce(yoTid); const ids = idsOnce(r); if (ids.length >= 5) { once = ids; forma = formaOnce(r); } } catch (e) { if (e.sesion) throw e; }
+    for (const pedirlo of [() => api.onceSemana(yoTid, n), () => api.miOnce(yoTid)]) {
+      try { const r = await pedirlo(); const ids = idsOnce(r); if (ids.length >= 5) { once = ids; forma = formaOnce(r); break; } } catch (e) { if (e.sesion) throw e; }
+    }
   }
   const equipos = {};
   if (D.liga && D.liga.id) {

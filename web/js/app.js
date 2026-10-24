@@ -706,9 +706,11 @@ async function cargarJornadaMia() {
     if (!fresco) {
       let ids = null, forma = null;
       if (enDemo()) ids = S.M.once ? [...S.M.once.lineas.flat().map((j) => j.id), ...(S.M.once.entrenador ? [S.M.once.entrenador.id] : [])] : null;
-      else if (est === 'vivo' && S.M.vivo && S.M.vivo.once) { ids = S.M.vivo.once; forma = S.M.vivo.forma || null; } else {
+      else {
+        // el de esa jornada (también el de la que se juega: el de ahora puede ser ya otro); el de la próxima, el de ahora
         const r = est === 'proxima' ? await api.miOnce(tid) : await api.onceSemana(tid, n);
         ids = idsOnce(r); forma = formaOnce(r);
+        if (ids.length < 5 && est === 'vivo' && S.M.vivo && S.M.vivo.once) { ids = S.M.vivo.once; forma = S.M.vivo.forma || null; }
       }
       S.misJ[n] = { ids: ids && ids.length ? ids : null, forma, t: Date.now(), acabada: est === 'acabada' };
     }
