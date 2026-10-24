@@ -1,6 +1,6 @@
 # Publica la web en el dominio de la app, https://fantasymanagerapp.com (Cloudflare Pages, proyecto «fantasy-manager»
 # de la cuenta de Cloudflare de Fantasy Manager, no la de GrowFolio): la carpeta web/ con su paquete.json, app.json,
-# el APK de GitHub en /descargas/fantasy-manager.apk y el app-ads.txt de AdMob.
+# el APK de GitHub en /descargas/fantasy-manager.apk (ads.txt y app-ads.txt van en web/).
 #
 # Siempre sube lo de main (lo publicado), venga de donde venga la ejecución. Se lanza sola al terminar «Web» y «App Android»
 # en main (es cuando cambian la web, el APK y app.json), a mano, y al cambiar este archivo en pendiente (para montar
@@ -78,7 +78,7 @@ jobs:
           # (y la web nueva, dentro de una app vieja, lee este primero). Cuando nadie tenga una de antes, se cambia
           # por https://fantasymanagerapp.com/descargas/fantasy-manager.apk (hace falta antes de poner el repo privado)
           cp app.json sitio/app.json
-          printf 'google.com, pub-3175956326240112, DIRECT, f08c47fec0942fa0\n' > sitio/app-ads.txt
+          # ads.txt (AdSense) y app-ads.txt (AdMob) van dentro de web/: así siguen en la raíz del dominio aunque cambie quién lo sirve
           cat > sitio/_headers <<'FIN'
           /descargas/*
             Content-Type: application/vnd.android.package-archive
@@ -151,6 +151,6 @@ jobs:
             echo "::warning::El dominio está «$estado»: falta activarlo en Cloudflare > Workers & Pages > $PROYECTO > Custom domains"
           fi
           # lo que de verdad responde
-          for p in "" app.json paquete.json app-ads.txt descargas/fantasy-manager.apk; do
+          for p in "" app.json paquete.json ads.txt app-ads.txt descargas/fantasy-manager.apk; do
             echo "::notice::https://$DOMINIO/$p → $(curl -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}' "https://$DOMINIO/$p" || echo fallo)"
           done
