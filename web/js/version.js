@@ -11,7 +11,7 @@ export const VERSION = '0.5.3c';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.3c', f: '2026-10-24', h: '07:00', t: 'Los puntos, en tu once',
+    v: '0.5.3c', f: '2026-10-24', h: '06:44', t: 'Los puntos, en tu once',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'Los puntos de la jornada, en tu once', x: 'Con la jornada en juego, en Equipo, «Tu once» pasa a ser el que tienes puesto en LaLiga, con su forma, y debajo de cada jugador los puntos que lleva (verde si suma, rojo si resta) o la hora de su partido si aún no ha jugado. Arriba, lo que llevas y tu puesto en la jornada. En Hoy ya no sale nada aparte.', ir: { v: 'equipo' } },
     ],
