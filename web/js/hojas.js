@@ -278,7 +278,10 @@ function inerciaHTML(M, pid, mio) {
   if (!x || !['giro', 'baja', 'parado', 'frena', 'acelera', 'rebote'].includes(x.fase)) return '';
   const mal = x.fase === 'giro' || x.fase === 'baja', ojo = x.fase === 'parado' || x.fase === 'frena';
   const tit = { giro: 'Ha girado a la baja', baja: 'Está bajando', parado: 'Se ha estancado', frena: 'Se está frenando', acelera: 'Sube cada vez más', rebote: 'Rebota tras semanas bajando' }[x.fase];
-  const consejo = x.fase === 'rebote' ? (mio ? ' Decide por sus puntos y su sitio en tu once.' : ' Si lo quieres, está cerca de su mínimo del mes, pero aún no ha demostrado que vaya a subir.')
+  // un partidazo de hace nada cambia el consejo: lo normal es que mañana suba (lo avisó Domy el 25 oct)
+  const pz = M.partidazo ? M.partidazo(pid) : null;
+  const consejo = pz && (mal || ojo) ? ` <b>Ojo: acaba de hacer ${pz.pts} puntos.</b> Tras un partido así LaLiga suele subirle el valor los días siguientes, así que esta bajada puede frenarse o darse la vuelta. ${mio ? 'Espera a ver el cambio de mañana antes de venderlo.' : 'Si lo quieres, puede que mañana ya esté más caro.'}`
+    : x.fase === 'rebote' ? (mio ? ' Decide por sus puntos y su sitio en tu once.' : ' Si lo quieres, está cerca de su mínimo del mes, pero aún no ha demostrado que vaya a subir.')
     : mio ? (mal ? ' <b>Véndelo ya</b>, salvo que lo necesites sí o sí para la jornada.' : ojo ? ' <b>Véndelo antes de que gire.</b>' : '') : (mal || ojo ? ' No es momento de comprarlo.' : '');
   const max = Math.max(...x.R.map((r) => Math.abs(r)), 1);
   const corto = (r) => `${r > 0 ? '+' : r < 0 ? '−' : ''}${String(Math.round(Math.abs(r) / 1e4) / 100).replace('.', ',')}`;

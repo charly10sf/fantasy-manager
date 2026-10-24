@@ -220,10 +220,30 @@ export function analizar(D, H, c, extra = {}) {
     else if (fase === 'sube') texto = `Sube ${fmt(ult)} al día.`;
     return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, texto, quieto, rebote });
   };
+  /** un partidazo reciente: 9 puntos o más en un partido de hace menos de 3 días (en juego, los de ahora). Tras uno así
+      LaLiga suele subirle el valor los días siguientes, así que una bajada puede frenarse o girar al alza (lo avisó
+      Domy el 25 oct: Grimaldo salía «perdiendo valor» la noche que hizo más de 10). Sin caché: los puntos en directo
+      entran sin rehacer el motor */
+  M.partidazo = (pid) => {
+    const j = J(pid);
+    if (!j || !j.pos || j.pos > 4) return null;
+    const vivo = M.puntosVivo ? M.puntosVivo(pid) : null;
+    let n = null, pts = null;
+    if (vivo != null && M.enJuego) { n = M.enJuego.n; pts = vivo; }
+    else { const s = [...(j.semanas || [])].filter((w) => w.pts != null).sort((a, b) => b.n - a.n)[0]; if (s) { n = s.n; pts = s.pts; } }
+    if (n == null || pts == null || pts < 9) return null;
+    const p = [...(D.partidos || []), ...(D.resultados || [])].find((q) => Number(q.jornada) === n && (q.localId === j.equipoId || q.visitanteId === j.equipoId) && q.fecha);
+    const jo = (M.jornadas || []).find((x) => x.n === n);
+    const fue = p ? p.fecha : jo ? jo.ini : null;
+    const ahoraP = Date.now();
+    return fue && fue <= ahoraP && ahoraP - fue < 3 * DIA ? { pts, n } : null;
+  };
   /** ¿hay que venderlo ya por la inercia? (ha girado o se ha parado tras subir, o está a punto) */
   M.ventaPorInercia = (pid) => {
     const x = M.inercia(pid);
     if (!x) return null;
+    // con un partidazo de hace nada, no se manda vender por la bajada: lo normal es que mañana suba
+    if (M.partidazo(pid) && ['giro', 'baja', 'parado', 'frena'].includes(x.fase)) return null;
     const j = J(pid), perder = -x.proyJ;
     if ((x.fase === 'giro' || x.fase === 'baja') && perder >= Math.max(150000, j.valor * 0.012)) return { urgencia: 'ya', ...x, perder };
     if (x.fase === 'parado' || (x.fase === 'frena' && x.giroEn != null && x.giroEn <= 2.5)) return { urgencia: 'antes del giro', ...x, perder: Math.max(0, perder) };
@@ -1110,7 +1130,7 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- tus jugadores ---------- */
   const valorMedioLiga = (() => { const v = D.clasif.map((e) => num(e.valor)).filter(Boolean).sort((a, b) => a - b); return v.length ? Math.max(50e6, v[Math.floor(v.length / 2)]) : Math.max(50e6, num(D.valorEquipo)); })();
-  const misCompras = compras(D, M, yoTid);
+  const misCompras = compras(D, M, yoTid, AH.lista);
   M.mias = misFichasRaw.map((f) => {
     const x = enriquecer(f, yoTid);
     const compra = f.compra || misCompras[f.pid] || null;
@@ -1502,11 +1522,15 @@ export function analizar(D, H, c, extra = {}) {
 }
 
 /** lo que pagaste por cada jugador tuyo, sacado de la actividad de la liga */
-function compras(D, M, yoTid) {
+function compras(D, M, yoTid, historial = []) {
   const out = {};
   const yo = M.equipo[yoTid];
   const misNombres = new Set([yo && norm(yo.manager), yo && norm(yo.nombre), D.yo && norm(D.yo.nombre)].filter(Boolean));
-  const acts = [...(D.actividad || [])].sort((a, b) => (a.t || 0) - (b.t || 0));
+  // todos los movimientos: los guardados desde el principio de la liga y los de ahora (antes solo los de ahora, unos 80:
+  // lo fichado hace tiempo no salía y se daba por hecho que venía en el equipo inicial; lo avisó Domy el 25 oct)
+  const vistos = new Map();
+  for (const a of [...historial, ...(D.actividad || [])]) vistos.set(a.id || `${a.t}|${a.tipo}|${a.pid}|${a.quienId}|${a.importe}`, a);
+  const acts = [...vistos.values()].sort((a, b) => (a.t || 0) - (b.t || 0));
   for (const a of acts) {
     if (!a.pid || !a.importe) continue;
     const mio = (yoTid && M.teamDeUsuario(a.quienId, a.quien) === yoTid) || (D.yo && D.yo.userId && a.quienId === D.yo.userId) || misNombres.has(norm(a.quien));

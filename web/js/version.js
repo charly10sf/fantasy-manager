@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.3a';
+export const VERSION = '0.6.3b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.6.3a';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.3b', f: '2026-10-25', h: '01:46', t: 'Lo que pagaste y los partidazos',
+    cosas: [
+      { tipo: 'arreglo', d: 'dinero', t: 'Lo que pagaste, aunque lo fichases hace tiempo', x: 'Para decirte cuánto ganas o pierdes al vender, la app solo miraba los últimos movimientos de la liga: si lo fichaste hace tiempo no encontraba la compra y decía que venía en tu equipo inicial. Ahora mira todos, desde el principio de la liga, y cuenta desde que lo fichaste hasta que lo vendes.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'Un partidazo puede frenar la bajada', x: 'Si un jugador viene bajando pero acaba de hacer 9 puntos o más, la app ya no te dice que lo vendas ya: tras un partido así LaLiga suele subirle el valor los días siguientes. Lo avisa en su ficha, en el plan y la IA lo tiene en cuenta.' },
+    ],
+  },
   {
     v: '0.6.3a', f: '2026-10-25', h: '01:26', t: 'Las funciones top, con más cabeza',
     cosas: [

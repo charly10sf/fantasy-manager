@@ -320,7 +320,12 @@ function previaTxt(M, j) {
 /** hacia dónde va su valor ahora: lo de cada día de la última semana y si se frena o ha girado */
 function inerciaTxt(M, j) {
   const x = M.inercia ? M.inercia(j.id) : null;
-  if (!x || x.fase === 'plano') return null;
+  const pz = M.partidazo ? M.partidazo(j.id) : null;
+  const ojo = pz ? `; OJO: ACABA DE HACER ${pz.pts} PTS (J${pz.n}): tras un partido así LaLiga suele subirle el valor los días siguientes, así que la bajada puede frenarse o girar al alza; no digas que sigue bajando sin decir esto` : '';
+  if (!x || x.fase === 'plano') return pz ? `ACABA DE HACER ${pz.pts} PTS (J${pz.n}): lo normal es que suba los próximos días` : null;
+  return inerciaLinea(M, j, x) + ojo;
+}
+function inerciaLinea(M, j, x) {
   const F = { giro: 'HA GIRADO A LA BAJA', baja: 'BAJANDO', parado: 'ESTANCADO TRAS SUBIR', frena: 'FRENANDO', acelera: 'acelerando', sube: 'subiendo', rebote: `REBOTE PEQUEÑO TRAS CAER UN ${x.rebote ? Math.round(x.rebote.caida * 100) : '?'} % EN UN MES (cerca de su mínimo; pararse aquí NO es girar ni motivo para vender)` }[x.fase] || x.fase;
   return `INERCIA ${F}: cada día ${x.R.map((r) => eur(r, { signo: true })).join(' → ')}${x.fase === 'frena' ? ` (deja de subir en ~${Math.max(1, Math.round(x.giroEn))} d)` : ''}${['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; hasta la jornada ${eur(x.proyJ, { signo: true })}` : ''}`;
 }
