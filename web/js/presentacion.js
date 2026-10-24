@@ -41,8 +41,17 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
   if (abierta) abierta(true);
   const quieta = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nuevas = versionesDesde(desde);
-  const cosas = [];
-  for (const n of nuevas) for (const c of n.cosas || []) cosas.push({ ...c, v: n.v });
+  const todas = [];
+  for (const n of nuevas) for (const c of n.cosas || []) todas.push({ ...c, v: n.v });
+  // si te has perdido muchas, solo lo principal: lo nuevo (de lo más reciente a lo más viejo) y, si falta, las mejoras;
+  // los arreglos y lo pequeño, en la lista de versiones
+  const MAX = 6, PRINCIPALES = 5;
+  let cosas = todas, resto = 0;
+  if (todas.length > MAX) {
+    cosas = [...todas.filter((c) => !c.tipo || c.tipo === 'nuevo'), ...todas.filter((c) => c.tipo === 'mejora')].slice(0, PRINCIPALES);
+    if (!cosas.length) cosas = todas.slice(0, PRINCIPALES);
+    resto = todas.length - cosas.length;
+  }
   const n0 = nuevas[0], ver = n0.v.replace(/\.0$/, '');
   const raiz = document.createElement('div');
   raiz.className = `nv${quieta ? ' quieta' : ''}`;
@@ -53,9 +62,9 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
     <div class="nv-cab">${LOGO_P}<b>Fantasy Manager</b><button type="button" data-nv="fin">Saltar</button></div>
     <div class="nv-scroll" tabindex="-1">
       <section class="nv-heroe"><div class="nv-heroe-in">
-        <p class="nv-eti">${nuevas.length > 1 ? `Lo que te has perdido desde la ${esc(desde)}` : 'Lo nuevo'}</p>
+        <p class="nv-eti">${nuevas.length > 1 ? `${resto ? 'Lo principal' : 'Lo que te has perdido'} desde la ${esc(desde)}` : 'Lo nuevo'}</p>
         <h1 class="nv-num" aria-label="Versión ${esc(n0.v)}">${[...ver].map((ch, i) => (ch === '.' ? '<span class="pt" aria-hidden="true"></span>' : `<span class="dg" style="--i:${i}" aria-hidden="true">${esc(ch)}</span>`)).join('')}</h1>
-        <div class="nv-lema"><h2>${esc(n0.t)}</h2><p>${esc(fechaNov(n0))} · ${esc(cuenta(cosas))}</p></div>
+        <div class="nv-lema"><h2>${esc(n0.t)}</h2><p>${esc(fechaNov(n0))} · ${esc(cuenta(todas))}${resto ? ` en ${nuevas.length} versiones: te cuento las ${cosas.length} principales` : ''}</p></div>
         <div class="nv-baja" aria-hidden="true"><span>Desliza</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
       </div></section>
       ${cosas.map((c, k) => `<section class="nv-cap" data-lado="${k % 2 ? 'd' : 'i'}" style="--acc:${ACENTOS[k % ACENTOS.length]}">
@@ -69,10 +78,10 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
       </section>`).join('')}
       <section class="nv-fin">
         <div class="nv-fin-logo">${LOGO}</div>
-        <h2>Eso es todo</h2>
-        <p>Si algo no va como esperas, mándame el diagnóstico desde Ajustes.</p>
+        <h2>${resto ? 'Y más' : 'Eso es todo'}</h2>
+        <p>${resto ? `Hay ${resto} cosa${resto > 1 ? 's' : ''} más, sobre todo arreglos: están en la lista de versiones.` : 'Si algo no va como esperas, mándame el diagnóstico desde Ajustes.'}</p>
         <button type="button" class="btn" data-nv="fin">A mi liga</button>
-        <button type="button" class="nv-enlace" data-nv="lista">Ver todas las versiones</button>
+        <button type="button" class="nv-enlace" data-nv="lista">${resto ? 'Ver todo lo que ha cambiado' : 'Ver todas las versiones'}</button>
       </section>
     </div>`;
   document.body.appendChild(raiz);

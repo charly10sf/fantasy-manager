@@ -1,6 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, norm } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, campoVivo } from './comunes.js';
 import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
@@ -520,9 +520,11 @@ export function vivoHTML(S) {
     const pr = p == null && M.proximoPartido ? M.proximoPartido(x.j.equipoId) : null;
     return `<button class="vv-j" data-j="${esc(x.pid)}" title="${p == null ? `Aún no ha jugado${pr ? `: ${esc(cuando(pr.fecha))}` : ''}` : 'Puntos en esta jornada'}"><span>${esc(x.j.nombre)}</span><b class="${p == null ? 'apag' : p > 0 ? 'sube' : p < 0 ? 'baja' : ''}">${p == null ? '–' : p}</b></button>`;
   }).join('');
+  // con tu once de LaLiga, en su campo y con su forma; si no se sabe, los que ya han jugado
+  const campo = enOnce ? campoVivo(M, V.once) : '';
   return `<div class="vivo-c"><div class="vivo-t"><span class="vivo-dot"></span><b>En directo · Jornada ${V.n}</b><span class="vivo-tot">${total} pts</span></div>
     <p class="vivo-s">${pos && tabla.length > 1 ? `${pos}º de la jornada en tu liga · ` : ''}${enOnce ? 'tu once de LaLiga' : 'los tuyos que ya han jugado'} · ${rel(V.t)}</p>
-    ${chips ? `<div class="vv-l">${chips}</div>` : '<p class="t2 peq" style="margin:6px 0 0">Aún no ha jugado ninguno de los tuyos.</p>'}</div>`;
+    ${campo || (chips ? `<div class="vv-l">${chips}</div>` : '<p class="t2 peq" style="margin:6px 0 0">Aún no ha jugado ninguno de los tuyos.</p>')}</div>`;
 }
 
 export function hoy(S) {

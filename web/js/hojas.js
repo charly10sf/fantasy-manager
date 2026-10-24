@@ -2,7 +2,7 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, ventasDe } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, ventasDe, campoVivo } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML, puntosUltimaJornada } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
@@ -336,10 +336,9 @@ export function fichaRival(S, tid) {
   if (M.vivo && M.enJuego) {
     const V = M.vivo, tot = V.equipos && V.equipos[String(tid)];
     const o = S.oncesRival && S.oncesRival[tid] && S.oncesRival[tid].n === V.n ? S.oncesRival[tid] : null;
-    const js = o && o.ids ? o.ids.map((pid) => M.J(pid)).filter((j) => j && j.pos).sort((a, b) => a.pos - b.pos) : [];
-    const chips = js.map((j) => { const p = M.puntosVivo(j.id); return `<button class="vv-j" data-j="${esc(j.id)}"><span>${esc(j.nombre)}</span><b class="${p == null ? 'apag' : p > 0 ? 'sube' : p < 0 ? 'baja' : ''}">${p == null ? '–' : p}</b></button>`; }).join('');
+    const campo = o && o.ids ? campoVivo(M, o.ids) : '';
     h += `<div class="vivo-c"><div class="vivo-t"><span class="vivo-dot"></span><b>En directo · Jornada ${V.n}</b>${tot != null ? `<span class="vivo-tot">${tot} pts</span>` : ''}</div>
-      ${chips ? `<div class="vv-l">${chips}</div>` : `<p class="t2 peq" style="margin:6px 0 0">${o ? 'LaLiga no enseña todavía su once de esta jornada.' : 'Cargando su once…'}</p>`}</div>`;
+      ${campo || `<p class="t2 peq" style="margin:6px 0 0">${o ? 'LaLiga no enseña todavía su once de esta jornada.' : 'Cargando su once…'}</p>`}</div>`;
   }
   // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva
   if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales')) {

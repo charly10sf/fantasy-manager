@@ -3,13 +3,20 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.3a';
+export const VERSION = '0.5.3b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.3b', f: '2026-10-24', h: '06:45', t: 'Tu once en directo, en su campo',
+    cosas: [
+      { tipo: 'mejora', d: 'campo', t: 'El directo, en el campo', x: 'Los puntos en directo salen ahora en un campo con tu once de LaLiga en su forma de verdad (4-3-3, 3-5-2…), cada uno en su línea con los puntos que lleva, y el que aún no ha jugado con la hora de su partido. El de cada rival, igual en su ficha.', ir: { v: 'equipo' } },
+      { tipo: 'mejora', d: 'versiones', t: 'Si te has perdido muchas versiones, lo principal', x: 'Si abres la app después de varias actualizaciones, ya no te cuenta todo una por una: te enseña lo nuevo más importante (hasta cinco cosas) y el resto, sobre todo arreglos, queda en la lista de versiones de Ajustes.' },
+    ],
+  },
   {
     v: '0.5.3a', f: '2026-10-24', h: '06:01', t: 'Menos «no se ha podido leer»',
     cosas: [

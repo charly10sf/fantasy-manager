@@ -1286,3 +1286,10 @@ body.limitado .tostada { z-index: 120; }
 .busca-j input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--texto); font: 500 16px 'Barlow'; padding: 12px 0; }
 .busca-j:focus-within { border-color: var(--rojo); }
 #buscaRes:not(:empty) { margin-bottom: 14px; }
+.vivo-c .cancha { margin-top: 10px; }
+.cv-forma { position: absolute; top: 12px; left: 14px; font: 700 13px 'Barlow Condensed', 'Barlow'; letter-spacing: 0.4px; color: rgba(255, 255, 255, 0.75); z-index: 1; }
+.cr-hora { font-weight: 600; opacity: 0.85; }
+/* en el campo del directo: los puntos en una pastilla oscura con el número en color, la hora más apagada */
+.cancha-vivo .cr-dato { background: rgba(8, 8, 10, 0.88); }
+.cancha-vivo .cr-dato .cr-vivo { font-size: 13px; color: #fff; } .cancha-vivo .cr-dato .cr-vivo.sube { color: var(--sube); } .cancha-vivo .cr-dato .cr-vivo.baja { color: var(--baja); }
+.cancha-vivo .cr-dato .cr-hora { color: rgba(255, 255, 255, 0.7); font-weight: 600; }
