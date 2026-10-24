@@ -555,9 +555,12 @@ function bandasHoy(S) {
   const { D } = S;
   let h = '';
   if (D.demo) h += `<div class="banda">${icono('info')}<span>Liga de ejemplo con datos inventados.</span><button data-accion="salirDemo">Usar la mía</button></div>`;
-  if (D.avisos && D.avisos.length) {
-    const graves = D.avisos.some((a) => /formato|vac[ií]/i.test(a.e) || ['jugadores', 'plantillas', 'tu plantilla', 'mercado'].includes(a.paso));
-    h += `<div class="banda">${icono('alerta')}<span>No se ha podido leer: ${esc(D.avisos.map((a) => a.paso).slice(0, 3).join(', '))}${D.avisos.length > 3 ? ` y ${D.avisos.length - 3} más` : ''}.${graves ? ' Lo que depende de eso puede salir incompleto.' : ''}</span><button data-accion="${graves ? 'mandarFallo' : 'diag'}">${graves ? 'Avisar' : 'Ver'}</button></div>`;
+  // (lo que falla pero se ha tapado con lo de la última vez, como las ofertas, no se avisa: queda en el diagnóstico)
+  const av = (D.avisos || []).filter((a) => !a.leve);
+  if (av.length) {
+    const graves = av.some((a) => /formato|vac[ií]/i.test(a.e) || ['jugadores', 'plantillas', 'tu plantilla', 'mercado'].includes(a.paso));
+    const conexion = av.every((a) => /conexi|connect|tiempo agotado|timeout/i.test(a.e || ''));
+    h += `<div class="banda">${icono('alerta')}<span>${conexion ? 'Sin conexión al leer' : 'No se ha podido leer'}: ${esc(av.map((a) => a.paso).slice(0, 3).join(', '))}${av.length > 3 ? ` y ${av.length - 3} más` : ''}.${graves ? ' Lo que depende de eso puede salir incompleto.' : conexion ? ' Dale a Actualizar en un rato.' : ''}</span><button data-accion="${graves ? 'mandarFallo' : conexion ? 'recargar' : 'diag'}">${graves ? 'Avisar' : conexion ? 'Actualizar' : 'Ver'}</button></div>`;
   }
   return h;
 }

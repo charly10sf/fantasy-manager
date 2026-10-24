@@ -199,11 +199,17 @@ export async function actualizar(alPaso = () => {}) {
       let lista = m.ofertasLista;
       const ptId = m.ptId || ((plantillas[mio.teamId] || []).find((f) => f.pid === m.pid) || {}).ptId;
       if (!lista && ptId) {
-        lista = await blando(`ofertas ${m.jugador.nombre}`, async () => {
+        try {
           const r = await api.ofertas(liga.id, ptId);
           if (!muestras.ofertas) muestras.ofertas = recorte(r);
-          return N.ofertas(r);
-        });
+          lista = N.ofertas(r);
+        } catch (e) {
+          if (e.sesion) throw e;
+          // si falla (la conexión, casi siempre), las de la última vez: las ofertas no cambian hasta el cambio de mercado
+          const antes = viejo && !viejo.demo && (viejo.misVentas || []).find((v) => v.pid === m.pid);
+          if (antes && Array.isArray(antes.ofertas)) lista = antes.ofertas.filter((o) => !o.deLiga || o.id !== 'liga');
+          avisos.push({ paso: `ofertas ${m.jugador.nombre}`, e: e.message, leve: !!antes });
+        }
       }
       const ofs = (lista || []).filter((o) => !/reject|declin|cancel|expired/.test(o.estado));
       // la de LaLiga viene aparte (directOffer) si no está en la lista

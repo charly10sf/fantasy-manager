@@ -29,7 +29,7 @@ export function forma(x, prof = 0) {
   return '{' + Object.keys(x).slice(0, 14).map((k) => `${k}${prof < 2 && x[k] && typeof x[k] === 'object' ? ':' + forma(x[k], prof + 1) : ''}`).join(', ') + (Object.keys(x).length > 14 ? ', …' : '') + '}';
 }
 
-async function pedir(ruta, { metodo = 'GET', otraVez = true } = {}) {
+async function pedir(ruta, { metodo = 'GET', otraVez = true, reintento = true } = {}) {
   const t0 = Date.now();
   // (las estadísticas de la jornada cuelgan de /stats, fuera de /api)
   const url = (ruta.startsWith('/stats/') ? HOST : BASE) + ruta + (ruta.includes('?') ? '&' : '?') + 'x-lang=es';
@@ -44,6 +44,12 @@ async function pedir(ruta, { metodo = 'GET', otraVez = true } = {}) {
     return pedir(ruta, { metodo, otraVez: false });
   }
   if (r.s === 401) { apuntar(base); throw new ErrorSesion('LaLiga no acepta la sesión: vuelve a entrar'); }
+  // sin conexión (con datos móviles a veces no llega a conectar): una lectura se prueba una vez más antes de darla por perdida
+  if (r.s === 0 && metodo === 'GET' && reintento) {
+    apuntar({ ...base, e: r.e, nota: 'sin conexión: se prueba otra vez' });
+    await new Promise((ok) => setTimeout(ok, 800));
+    return pedir(ruta, { metodo, otraVez, reintento: false });
+  }
   if (r.s === 0) { apuntar({ ...base, e: r.e }); throw new ErrorApi(`Sin conexión (${r.e})`, 0); }
   let j = null;
   const texto = r.b || '';

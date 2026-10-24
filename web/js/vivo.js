@@ -2,7 +2,9 @@
    Sale de la API de LaLiga Fantasy (la misma que usa su app):
    - /stats/v1/competition/1/stats/week/{n}: los partidos de la jornada con los puntos de cada jugador (weekPoints)
    - /teams/{equipo}/lineup: el once que tienes puesto en LaLiga; /teams/{equipo}/lineup/week/{n}: el de un rival
-   - /leagues/{liga}/standing/{n}: los puntos de cada equipo de tu liga en esa jornada
+   - /leagues/{liga}/standing: la clasificación, que trae los puntos de cada equipo en la jornada en juego
+     (livePoints); si no los trae, /leagues/{liga}/standing/{n}
+   Si las estadísticas no responden, los puntos de cada jugador salen de /players (weekPoints de cada jornada).
    Solo con una jornada en juego; con la app abierta se mira cada 2 minutos. Lo que no cuadre se queda fuera: la
    forma de cada respuesta queda en el registro del diagnóstico. */
 import { api } from './api.js';
@@ -42,7 +44,8 @@ export function idsOnce(r) {
  * acabados, partidos }
  */
 export async function enVivo(D, n, yoTid) {
-  const partidos = lista(await api.statsSemana(n));
+  let partidos = [];
+  try { partidos = lista(await api.statsSemana(n)); } catch (e) { if (e.sesion) throw e; }
   const puntos = {}, porNombre = {};
   let enJuego = 0, acabados = 0;
   for (const m of partidos) {
@@ -59,6 +62,15 @@ export async function enVivo(D, n, yoTid) {
       }
     }
   }
+  // sin estadísticas: los puntos de la jornada de la lista de jugadores (weekPoints)
+  if (!Object.keys(puntos).length) {
+    try {
+      for (const p of lista(await api.jugadores())) {
+        const w = Array.isArray(p.weekPoints) ? p.weekPoints.find((x) => Number(x.weekNumber) === Number(n)) : null;
+        if (w && w.points != null && p.id != null) puntos[String(p.id)] = Number(w.points);
+      }
+    } catch (e) { if (e.sesion) throw e; }
+  }
   // por si el id de la estadística no es el del jugador: por el nombre
   for (const j of Object.values(D.maestro || {})) {
     if (puntos[j.id] != null) continue;
@@ -72,6 +84,16 @@ export async function enVivo(D, n, yoTid) {
   }
   const equipos = {};
   if (D.liga && D.liga.id) {
+    // la clasificación trae los de la jornada en juego (livePoints)
+    try {
+      for (const it of lista(await api.clasificacion(D.liga.id))) {
+        const t = (it && it.team) || {};
+        const tid = it.teamId != null ? it.teamId : t.id;
+        if (tid != null && it.livePoints != null) equipos[String(tid)] = num(it.livePoints);
+      }
+    } catch (e) { if (e.sesion) throw e; }
+  }
+  if (D.liga && D.liga.id && !Object.keys(equipos).length) {
     try {
       for (const it of lista(await api.clasifSemana(D.liga.id, n))) {
         const t = (it && it.team) || {};

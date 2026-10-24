@@ -3,13 +3,20 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.3';
+export const VERSION = '0.5.3a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.3a', f: '2026-10-24', h: '06:01', t: 'Menos «no se ha podido leer»',
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', t: 'Si se corta la conexión, lo vuelve a probar', x: 'Con datos móviles, a veces una petición a LaLiga no llega a conectar y salía «No se ha podido leer: ofertas Fornals». Ahora cada lectura que falla por la conexión se prueba otra vez, y si las ofertas de uno no se pueden leer, se usan las de la última vez (no cambian hasta el cambio de mercado) sin avisarte. Si aun así falla, el aviso dice que es la conexión y te deja actualizar.' },
+      { tipo: 'mejora', d: 'campo', t: 'Los puntos en directo, más seguros', x: 'Los puntos de cada equipo de tu liga en la jornada salen directamente de la clasificación de LaLiga, y si las estadísticas de los partidos no responden, los de cada jugador salen de la lista de jugadores.' },
+    ],
+  },
   {
     v: '0.5.3', f: '2026-10-24', h: '05:56', t: 'La jornada en directo',
     cosas: [

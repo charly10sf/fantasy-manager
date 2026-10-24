@@ -123,6 +123,8 @@ export function clasificacion(r) {
       puntos: num(primero(e.points, t.teamPoints, t.points)),
       valor: num(primero(e.teamValue, t.teamValue)),
       puntosJornada: num(primero(e.weekPoints, t.weekPoints)),
+      // los de la jornada que se está jugando (LaLiga los da en la clasificación como livePoints)
+      puntosVivo: primero(e.livePoints, t.livePoints) != null ? num(primero(e.livePoints, t.livePoints)) : null,
       pos: num(primero(e.position, e.rank, i + 1)),
       avatar: typeof m.avatar === 'string' ? m.avatar : null,
       // el saldo, si la clasificación lo trae (normalmente no: LaLiga solo te enseña el tuyo)
