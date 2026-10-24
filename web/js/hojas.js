@@ -13,7 +13,7 @@ import { quien, sesion } from './auth.js';
 import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
-import { estadoLimite, bloqueada } from './limite.js';
+import { estadoLimite, bloqueada, NIVEL_TOP, faltanAnuncios } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
@@ -408,14 +408,19 @@ export function anuncioHTML(S, para) {
   return h;
 }
 
-/** las funciones top: un anuncio las abre las cuatro hasta medianoche */
+/** las funciones top: con 1 anuncio se abren las de nivel 1; con 2, todas (hasta medianoche) */
 function anuncioTopHTML(A) {
   const [t, x] = BLOQUEO[A.clave] || ['Funciones top', ''];
+  const dos = NIVEL_TOP[A.clave] === 2, faltan = faltanAnuncios(A.clave);
+  const UNO = 'cuándo gira un jugador, lo que venden los rivales y hasta cuánto pujar';
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-    <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}
-    <p>Mira un anuncio corto y se abren <b>las cuatro funciones top hasta mañana</b>: el dinero de los rivales, quién puede pagar tus cláusulas, cuándo gira un jugador y lo que venden los rivales.</p>`;
+    <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
+  if (dos && faltan >= 2) h += `<p>Esta pide <b>dos anuncios cortos</b>, uno detrás de otro. Con los dos se abren hasta medianoche todas las funciones top: el dinero de los rivales, quién puede pagar tus cláusulas, ${UNO}. Con el primero ya tienes ${UNO}.</p>`;
+  else if (dos) h += `<p><b>Llevas 1 de 2.</b> Mira el segundo y se abren hasta medianoche el dinero de los rivales y quién puede pagar tus cláusulas.</p>`;
+  else h += `<p>Mira un anuncio corto y se abren <b>hasta medianoche</b> ${UNO}. El dinero de los rivales y quién puede pagar tus cláusulas piden dos.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
-  h += `<button class="btn ancho" data-accion="verAnuncio" data-para="top"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button>
+  const txt = A.cargando ? 'Cargando el anuncio…' : dos ? (faltan >= 2 ? 'Ver el primer anuncio (1 de 2)' : 'Ver el segundo anuncio (2 de 2)') : 'Ver el anuncio';
+  h += `<button class="btn ancho" data-accion="verAnuncio" data-para="top"${A.cargando ? ' disabled' : ''}>${txt}</button>
     <button class="btn ancho sec" data-accion="noTop" style="margin-top:8px">Ahora no</button></div>`;
   return h;
 }

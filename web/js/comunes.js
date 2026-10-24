@@ -1,7 +1,7 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
 import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando, norm } from './util.js';
 import { mini } from './graficos.js';
-import { topConAnuncio } from './limite.js';
+import { topConAnuncio, NIVEL_TOP } from './limite.js';
 
 let EQUIPOS = {};
 export const ponerEquipos = (m) => { EQUIPOS = m || {}; };
@@ -302,6 +302,7 @@ export const BLOQUEO = {
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales tienen dinero para quitarte a cada jugador y cuánto subir la cláusula para que no le llegue a nadie.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor, cuántos días le quedan subiendo y cuándo venderlo antes de que baje.'],
   ventasRivales: ['Lo que venden los rivales', 'Qué jugadores tiene cada rival en el mercado, cuánto le da LaLiga por cada uno y cuánto ofrecerle para que te lo venda a ti.'],
+  pujaMax: ['Hasta cuánto pujar', 'La puja con la que te lo llevas en el mercado sin pagar de más, con lo que se paga en tu liga y su calendario.'],
 };
 
 /* ---------- lo que tiene en venta cada rival (función top «ventasRivales») ---------- */
@@ -310,8 +311,8 @@ export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === '
 /** la caja de una función bloqueada (se toca para ver qué es) */
 export function candado(clave) {
   const [t, x] = BLOQUEO[clave] || ['Función top', ''];
-  // en la de Google Play se abre viendo un anuncio (las cuatro, hasta mañana); en la de la liga, aún no
-  const cola = topConAnuncio() ? ' Tócalo y ábrela gratis viendo un anuncio corto.' : ' Se desbloqueará pronto viendo un anuncio.';
+  // en la de Google Play se abre viendo anuncios (1 o 2, según cuál, hasta medianoche); en la de la liga, aún no
+  const cola = topConAnuncio() ? (NIVEL_TOP[clave] === 2 ? ' Tócalo y ábrela gratis viendo dos anuncios cortos.' : ' Tócalo y ábrela gratis viendo un anuncio corto.') : ' Se desbloqueará pronto viendo un anuncio.';
   return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${cola}</span></span></button>`;
 }
 /** lo mismo, en pequeño (en una fila) */
