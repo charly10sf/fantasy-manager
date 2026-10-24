@@ -327,7 +327,8 @@ function pasoOp(S, P, o) {
   const ok = hecho(S, P, o);
   // si se ve en LaLiga que lo has hecho, se dice qué y no hace falta el botón
   const liga = hechoEnLiga(S, P, o);
-  const imp = o.importe ? `<div class="imp ${o.signo > 0 ? 'mas' : 'menos'}">${o.signo > 0 ? '+' : o.signo < 0 ? '−' : ''}${eur(o.importe)}</div>` : '';
+  // el importe es el dinero que entra o sale, no lo que ganas: se dice debajo
+  const imp = o.importe ? `<div class="imp ${o.signo > 0 ? 'mas' : 'menos'}">${o.signo > 0 ? '+' : o.signo < 0 ? '−' : ''}${eur(o.importe)}</div>${o.signo ? `<div class="imp-t">${o.signo > 0 ? 'te entran' : 'pagas'}</div>` : ''}` : '';
   const puja = o.accion === 'pujar' && o.puja_max ? `<div class="puja">puja hasta ${eur(o.puja_max)}</div>` : '';
   const sub = j ? `${esc(j.equipo || '')}${o.donde ? ` · ${esc(o.donde)}` : ''}` : esc(o.donde || '');
   return `<div class="paso-op ${esc(o.accion)} ${ok ? 'hecho' : ''} ${liga && liga.estado === 'curso' ? 'curso' : ''} ${o.descartada ? 'descartada' : ''}"><span class="num">${liga && liga.estado === 'curso' ? icono('reloj') : ok ? icono('ok') : o.n}</span>
@@ -336,7 +337,7 @@ function pasoOp(S, P, o) {
       ${j ? `<button class="op-j" data-j="${esc(j.id)}">${ava(j, 'm')}<div style="min-width:0"><div class="n">${esc(j.nombre)}</div><div class="s">${sub}</div></div><div class="der">${imp}${puja}</div></button>`
         : o.jugador || o.importe ? `<div class="op-j"><div style="min-width:0"><div class="n">${esc(o.jugador || '')}</div><div class="s">${sub}</div></div><div class="der">${imp}${puja}</div></div>` : ''}
       ${o.motivo ? `<p class="motivo">${esc(o.motivo)}</p>` : ''}
-      ${o.compra && !o.descartada ? `<p class="paso-compra">Lo pagaste a ${eur(o.compra.precio)}: ${o.compra.con === 'venta' ? 'con esta venta' : 'hoy'} <b class="${clase(o.compra.gana)}">${eur(o.compra.gana, { signo: true })}</b>.</p>` : ''}
+      ${o.compra && !o.descartada ? `<p class="paso-compra">${o.compra.desconocida ? 'Lo que pagaste por él no sale en los movimientos de la liga, así que no sé si con esta venta ganas o pierdes.' : `${o.compra.inicial ? `Venía en tu equipo inicial: al empezar la liga valía ${eur(o.compra.precio)}` : `Lo pagaste a ${eur(o.compra.precio)}`}: ${o.compra.con === 'venta' ? 'con esta venta' : 'hoy'} ${o.compra.gana >= 0 ? 'ganas' : 'pierdes'} <b class="${clase(o.compra.gana)}">${eur(Math.abs(o.compra.gana))}</b>.`}</p>` : ''}
       ${Array.isArray(o.claves) && o.claves.length ? `<div class="claves">${o.claves.slice(0, 5).map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : ''}
       ${o.aviso ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : ''}
       ${liga ? `<div class="paso-liga ${liga.estado}">${icono(liga.estado === 'curso' ? 'reloj' : 'ok')}<span><b>${liga.estado === 'curso' ? 'En marcha' : 'Hecho en LaLiga'}:</b> ${esc(liga.texto)}</span></div>` : ''}

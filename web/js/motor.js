@@ -80,6 +80,25 @@ export function analizar(D, H, c, extra = {}) {
     if (v == null && ahora - t < 2 * DIA) v = J(pid).valor;
     return v;
   };
+  /** lo más que ha valido desde t (con lo que se sabe: su ficha y el histórico de la app) */
+  const maxValorDesde = (pid, t) => {
+    let m = J(pid).valor || 0;
+    for (const [tt, vv] of (det[pid] && det[pid].valores) || []) if (tt >= t && vv > m) m = vv;
+    const d = diaDe(t);
+    for (const [dd, vv] of (H.v && H.v[pid]) || []) if (dd >= d && vv > m) m = vv;
+    return m;
+  };
+  /* LaLiga sube sola la cláusula cuando sube el valor del jugador: eso no lo ha pagado nadie. Una subida de cláusula
+     vista entre dos cargas solo cuenta como pagada si la cláusula queda por encima de lo que vale (más de un 2 %) y no
+     ha subido lo mismo que su valor */
+  const autoClausula = (m) => {
+    if (m.auto) return true;
+    const v = m.vA || valorEn(m.pid, m.t);
+    if (v && m.a <= v * 1.02) return true;
+    if (m.vDe && m.vA && m.vA > m.vDe) { const dV = m.vA - m.vDe, dC = m.a - m.de; if (Math.abs(dC - dV) <= Math.max(0.1 * dV, 5e4) || Math.abs(dC / m.de - dV / m.vDe) < 0.005) return true; }
+    return false;
+  };
+  M.blindaPagada = (m) => m.tipo === 'blinda' && m.a > m.de && !autoClausula(m);
   M.forma = (pid) => {
     const d = det[pid];
     if (!d || !d.stats || !d.stats.length) {
@@ -479,6 +498,12 @@ export function analizar(D, H, c, extra = {}) {
         }
         base = Math.max(v0, 1e6);
       }
+      // lo que sube sola la cláusula con el valor del jugador no cuenta: si está en lo más que ha valido desde entonces,
+      // o ha subido justo lo que subió su valor, ha sido LaLiga
+      const tBase = a ? a.t : AH.desde;
+      if (f.clausula <= maxValorDesde(f.pid, tBase) * 1.02) continue;
+      const vB0 = valorEn(f.pid, tBase), dV = vB0 ? J(f.pid).valor - vB0 : 0;
+      if (dV > 0 && Math.abs(f.clausula - base - dV) <= Math.max(0.1 * dV, 5e4)) continue;
       const subio = f.clausula - base;
       // lo poco puede ser que valiera algo más al ficharlo que lo que se sabe
       if (subio < Math.max(2e5, 0.03 * base)) continue;
@@ -487,7 +512,7 @@ export function analizar(D, H, c, extra = {}) {
     }
     // las subidas que se vieron en jugadores que ya no tiene (el dinero se gastó igual)
     for (const m of H.mov || []) {
-      if (m.tipo !== 'blinda' || !m.teamId || !(m.a > m.de)) continue;
+      if (!M.blindaPagada(m) || !m.teamId) continue;
       if (plantillaDe(m.teamId).some((f) => f.pid === m.pid)) continue;
       sb(m.teamId).v += (m.a - m.de) / 2; sb(m.teamId).n++; sb(m.teamId).vistas++;
     }
@@ -531,7 +556,7 @@ export function analizar(D, H, c, extra = {}) {
     if (dc && dc.v != null && dc.t && ahora - dc.t < 45 * DIA) {
       const f = flujos[tid] || { ev: [], n: 0 };
       const mov = f.ev.filter(([t]) => t > dc.t).reduce((x, [, d]) => x + d, 0);
-      const sub = (H.mov || []).filter((m) => m.tipo === 'blinda' && m.teamId === tid && m.t > dc.t && m.a > m.de).reduce((x, m) => x + (m.a - m.de) / 2, 0);
+      const sub = (H.mov || []).filter((m) => M.blindaPagada(m) && m.teamId === tid && m.t > dc.t).reduce((x, m) => x + (m.a - m.de) / 2, 0);
       const dias = (ahora - dc.t) / DIA;
       const margen = Math.round((num(dc.r) + 0.3e6 + dias * 0.1e6) / 1e5) * 1e5;
       return { v: dc.v + mov - sub, exacto: false, margen, fiable: 'alta', dicho: dc, desdeDicho: mov - sub, n: f.n };
@@ -1082,6 +1107,9 @@ export function analizar(D, H, c, extra = {}) {
     const compra = f.compra || misCompras[f.pid] || null;
     x.compra = compra;
     x.ganado = compra ? x.j.valor - compra : null;
+    // sin compra en los movimientos, y con los movimientos completos desde el principio de la liga: venía en tu equipo
+    // inicial. No lo pagaste, pero lo que valía entonces es con lo que se compara
+    if (!compra && AH.completa && AH.desde) { const v0 = valorEn(f.pid, AH.desde); if (v0) { x.inicial = v0; x.ganadoIni = x.j.valor - v0; } }
     // riesgo de que te lo quiten. Si te lo clausulan, cobras su cláusula: lo que pierdes de verdad son sus puntos en tu
     // once (y lo que fuera a subir). Así que cuenta lo cerca que está la cláusula de su valor y lo que te aporta
     // ¿quién pagaría su cláusula? Cuenta el porcentaje de más (por encima de un 30 % nadie), los EUROS de más (un 20 %
@@ -1358,7 +1386,8 @@ export function analizar(D, H, c, extra = {}) {
     return M.actividad.find((a) => a.pid === pid && a.quienT === tid && ['compra', 'clausula'].includes(a.clase)) || null;
   };
   // los cambios de plantilla que la actividad no cuenta (blindajes)
-  M.cambios = (H.mov || []).filter((m) => ahora - m.t < 21 * DIA).map((m) => ({ ...m, j: J(m.pid), equipo: M.equipo[m.teamId] })).reverse();
+  // (las subidas de cláusula que hace LaLiga sola, al subir el valor, no son movimientos de nadie)
+  M.cambios = (H.mov || []).filter((m) => ahora - m.t < 21 * DIA && (m.tipo !== 'blinda' || M.blindaPagada(m))).map((m) => ({ ...m, j: J(m.pid), equipo: M.equipo[m.teamId] })).reverse();
 
   /* ---------- rivales ---------- */
   /** lo que han subido o bajado de valor los jugadores de una plantilla (d1: hoy, d7: en 7 días); null si no hay datos */

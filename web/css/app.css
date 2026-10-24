@@ -1260,3 +1260,4 @@ body.limitado .tostada { z-index: 120; }
 .avisos-claude .t2 { flex: 1; min-width: 160px; margin: 0; }
 .para-claude { margin-bottom: 16px; }
 .paso-compra { margin: 4px 0 0; font-size: 14px; color: var(--texto2); }
+.imp-t { font: 600 11.5px 'Barlow'; color: var(--texto2); text-align: right; margin-top: 1px; }

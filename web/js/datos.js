@@ -399,7 +399,11 @@ function guardarFoto(D, viejo = foto()) {
       for (const [pid, f] of b) {
         if (!a.has(pid)) H.mov.push({ t: D.t, teamId: tid, tipo: 'entra', pid, clausula: f.clausula });
         // la cláusula solo cambia si su dueño paga por subirla (o si lo vuelve a fichar, y entonces no es una subida)
-        else if (f.clausula > a.get(pid).clausula * 1.001 && !(D.actividad || []).some((x) => x.pid === pid && (x.clase === 'compra' || x.clase === 'clausula') && x.t >= (viejo.t || 0) - 5 * 60e3)) H.mov.push({ t: D.t, teamId: tid, tipo: 'blinda', pid, de: a.get(pid).clausula, a: f.clausula });
+        else if (f.clausula > a.get(pid).clausula * 1.001 && !(D.actividad || []).some((x) => x.pid === pid && (x.clase === 'compra' || x.clase === 'clausula') && x.t >= (viejo.t || 0) - 5 * 60e3)) {
+          // con lo que valía en las dos cargas: si la cláusula solo ha seguido al valor, la ha subido LaLiga sola
+          const vDe = num(((viejo.maestro || {})[pid] || {}).valor) || null, vA = num((D.maestro[pid] || {}).valor) || null;
+          H.mov.push({ t: D.t, teamId: tid, tipo: 'blinda', pid, de: a.get(pid).clausula, a: f.clausula, vDe, vA });
+        }
       }
       for (const [pid, f] of a) if (!b.has(pid)) H.mov.push({ t: D.t, teamId: tid, tipo: 'sale', pid, clausula: f.clausula || null });
     }
