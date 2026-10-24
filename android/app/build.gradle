@@ -87,6 +87,12 @@ android {
     }
 }
 
+// AdMob trae una ListenableFuture vacía (9999.0-empty-to-avoid-conflict-with-guava) que gana a la de verdad, la que
+// necesita WorkManager (el trabajo en segundo plano): se fuerza la de verdad
+configurations.configureEach {
+    resolutionStrategy { force 'com.google.guava:listenablefuture:1.0' }
+}
+
 dependencies {
     // la página de LaLiga para entrar (con Google) se abre en una pestaña de Chrome dentro de la app
     implementation 'androidx.browser:browser:1.8.0'
