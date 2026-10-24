@@ -12,9 +12,9 @@ Todo lo que pide Play Console para publicar, listo para copiar y pegar. Las imá
 | Gratis o de pago | Gratis |
 | Categoría | Deportes |
 | Etiquetas | Fútbol, Deportes de fantasía, Estadísticas deportivas |
-| Correo de contacto | (el correo propio de la app, crearlo antes del alta) |
-| Web | https://charly10sf.github.io/fantasy-manager/ |
-| Política de privacidad | https://charly10sf.github.io/fantasy-manager/privacidad.html |
+| Correo de contacto | contacto@fantasymanagerapp.com (llega a la Gmail de la app) |
+| Web | https://fantasymanagerapp.com (tiene que ser esta: AdMob busca ahí el app-ads.txt) |
+| Política de privacidad | https://fantasymanagerapp.com/privacidad.html |
 
 ## Descripción breve (máx. 80)
 

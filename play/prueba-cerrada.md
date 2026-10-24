@@ -7,7 +7,7 @@ Los textos e imágenes de la ficha y las respuestas de cada formulario están en
 ## 0. Antes de empezar
 
 - La cuenta de Play Console verificada (identidad y teléfono). Si Play Console pide comprobar un móvil Android, se hace con la app de Play Console en el móvil.
-- Un correo de contacto para la ficha. Lo ve todo el mundo en Google Play: mejor uno de la app y no el personal.
+- El correo de contacto de la ficha: contacto@fantasymanagerapp.com (Email Routing de Cloudflare, llega a la Gmail de la app). Lo ve todo el mundo en Google Play.
 - Una lista de 15 o 16 correos de Gmail para los testers (12 es el mínimo y alguno se da de baja). Cuentan los apuntados, no los que han instalado. Aun así, Google pregunta luego cómo la han usado, así que conviene que la instalen y la abran.
 - Ojo con los de la liga que ya tienen la app de GitHub: la de Google Play va firmada por Google, así que para instalarla tienen que desinstalar antes la de GitHub (y volver a entrar con LaLiga y poner su clave de la IA). Si prefieren seguir con la de GitHub, que se apunten igual: cuentan como apuntados, aunque Google valora que la usen.
 
@@ -24,7 +24,7 @@ Play Console → **Crear aplicación**:
 
 Uno por uno, con las respuestas de [ficha.md](ficha.md):
 
-1. **Política de privacidad**: https://charly10sf.github.io/fantasy-manager/privacidad.html
+1. **Política de privacidad**: https://fantasymanagerapp.com/privacidad.html
 2. **Acceso a la aplicación**: «Todas o algunas funciones están restringidas», con las instrucciones de ficha.md (la liga de ejemplo; no hace falta usuario).
 3. **Anuncios**: Sí, tiene anuncios.
 4. **Clasificación de contenido**: el cuestionario de ficha.md (categoría: la que no es juego ni red social).
@@ -38,14 +38,14 @@ Si sale alguna declaración más (permisos, por ejemplo), copiar aquí la pregun
 
 ## 3. Ficha de Play Store
 
-Crecer → Presencia en Play Store → **Ficha principal**: descripción breve y completa de ficha.md, icono (icono-512.png), gráfico destacado (grafico-destacado-1024x500.png) y las 8 capturas. Categoría Deportes y el correo de contacto.
+Crecer → Presencia en Play Store → **Ficha principal**: descripción breve y completa de ficha.md, icono (icono-512.png), gráfico destacado (grafico-destacado-1024x500.png) y las 8 capturas. Categoría Deportes, el correo de contacto y, como web, https://fantasymanagerapp.com.
 
 ## 4. AdMob
 
 En https://admob.google.com:
 
 1. **Privacidad y mensajes → RGPD (Europa)**: crear un mensaje para la app Fantasy Manager (idioma español; las opciones por defecto valen) y publicarlo. Sin él, la app no puede pedir el consentimiento y en la UE apenas salen anuncios.
-2. Cuando la app ya esté en Google Play (la prueba cerrada vale): **Aplicaciones → Fantasy Manager → Configuración de la aplicación → Añadir tienda** y vincularla con la ficha de Play. Así AdMob comprueba el app-ads.txt (ya publicado en https://charly10sf.github.io/app-ads.txt).
+2. Cuando la app ya esté en Google Play (la prueba cerrada vale): **Aplicaciones → Fantasy Manager → Configuración de la aplicación → Añadir tienda** y vincularla con la ficha de Play. Así AdMob comprueba el app-ads.txt en la web de la ficha (https://fantasymanagerapp.com/app-ads.txt, lo sube la Action «Dominio»).
 
 Durante la prueba cerrada la app enseña los anuncios de prueba de Google (salen marcados «Test Ad» y no pagan), para que ningún tester toque uno de verdad: Google cierra cuentas de AdMob por clics de gente cercana. Los de verdad se encienden para producción (`fm.anunciosReales=true` en android/gradle.properties).
 
@@ -57,8 +57,8 @@ Probar y publicar → Probar → **Prueba cerrada**:
 2. **Países**: España (y los que quieras).
 3. **Testers**: crear una lista de correo con los 15 o 16 correos. En «Comentarios», un correo o enlace donde contestar (puede ser el mismo de contacto).
 4. **Crear versión**:
-   - Firma de apps de Google Play: aceptar la que propone Google (la clave la genera y guarda Google; la nuestra, android/firma.p12, queda como clave de subida).
-   - Subir el AAB: en GitHub → Actions → «App Android» → la última ejecución en verde → abajo, en Artifacts, `fantasy-manager-<versión>-<número>` (un zip). Dentro va `app-play-release.aab`. Los artefactos duran 14 días: si ha caducado, se vuelve a lanzar la Action.
+   - Firma de apps de Google Play: aceptar la que propone Google (la clave la genera y guarda Google; la nuestra, subida.p12 de la rama `claves`, cifrada con el secreto PLAY_CLAVE, queda como clave de subida; la de la app de GitHub es otra).
+   - Subir el AAB: en GitHub → Actions → «App Android» → la última ejecución en verde → abajo, en Artifacts, `fantasy-manager-<versión>-<número>` (un zip). Dentro va `app-play-release.aab`. Si al lado viene NO-SUBIR-A-GOOGLE-PLAY.txt, ese AAB va con una clave de prueba: no se sube. Los artefactos duran 14 días: si ha caducado, se vuelve a lanzar la Action.
    - Nombre de la versión: el que pone (el número de compilación) o `0.6.0`.
    - Notas de la versión: «Primera versión de prueba. Si algo falla, toca «Fallo», arriba en la app».
 5. **Guardar → Revisar versión → Lanzar en prueba cerrada**, y luego, en «Resumen de la publicación», **Enviar cambios a revisión**. La primera revisión suele tardar de 1 a 7 días.
