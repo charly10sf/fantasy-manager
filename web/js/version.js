@@ -11,7 +11,7 @@ export const VERSION = '0.6.2c';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.6.2c', f: '2026-10-24', h: 'HH:MM', t: 'El once de la jornada, el que puntúa',
+    v: '0.6.2c', f: '2026-10-24', h: '23:36', t: 'El once de la jornada, el que puntúa',
     cosas: [
       { tipo: 'arreglo', d: 'campo', t: 'Tu once de la jornada en juego', x: 'Con la jornada en juego salía el once que tienes puesto ahora, y si habías cambiado algo después de que empezara no era el que puntúa. Ahora sale el de la jornada, en Equipo → Jornadas, en «Tu once» y en Directo.', ir: { v: 'equipo', seg: 'equipo:jornadas' } },
     ],
