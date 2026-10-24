@@ -11,7 +11,7 @@ export const VERSION = '0.6.2d';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.6.2d', f: '2026-10-24', h: 'HH:MM', t: 'La web, al día',
+    v: '0.6.2d', f: '2026-10-24', h: '23:43', t: 'La web, al día',
     cosas: [
       { tipo: 'mejora', d: 'versiones', t: 'Aviso de versión nueva en la web', x: 'En la web (iPhone y ordenador), cuando sale una versión nueva aparece una banda arriba con «Recargar»: un toque y la tienes, sin esperar a que el navegador suelte la de antes.' },
     ],
