@@ -339,7 +339,25 @@ function rehacer() {
 /** la IA en segundo plano: cada 3 horas y unos minutos después del próximo cambio de mercado */
 function programarFondo() {
   if (!enApp) return;
-  nativo.programarFondo(cfgFondo().on && !enDemo(), S.M && S.M.cierreMercado ? S.M.cierreMercado + 8 * MIN : 0);
+  const cierre = (S.M && S.M.cierreMercado) || LS.get('fondo-cierre', 0) || 0;
+  let prox = cierre ? cierre + 8 * MIN : 0;
+  // con un aviso de fallo esperando respuesta (o, para el dueño, avisos sin contestar) se mira cada 40 minutos, para
+  // que la respuesta llegue en una notificación aunque la app esté cerrada
+  const a = avisosGuardados();
+  if (haySesion() && ((a.lista || []).some((x) => !x.respuesta) || (a.admin && a.pendientes > 0))) {
+    const t = Date.now() + 40 * MIN;
+    if (!prox || prox < Date.now() || t < prox) prox = t;
+  }
+  nativo.programarFondo(cfgFondo().on && !enDemo(), prox);
+}
+/** las respuestas a tus avisos de fallo (y al dueño, los avisos nuevos), como notificaciones: una sola petición */
+async function avisosDeFallos() {
+  if (!hayQueMirar()) return [];
+  let r;
+  try { r = await misAvisos(); } catch (e) { if (e.sesion) throw e; return []; }
+  const out = r.nuevasResp.slice(0, 3).map((x) => ({ k: `fallo:${x.id}:${x.respondida}`, titulo: `${x.por || 'Fantasy Manager'} te ha contestado`, texto: x.respuesta.length > 300 ? `${x.respuesta.slice(0, 297)}…` : x.respuesta, hash: 'fallos' }));
+  if (r.nuevosRecibidos) out.push({ k: `fallos-nuevos:${r.pendientes}:${Date.now()}`, titulo: r.nuevosRecibidos > 1 ? `${r.nuevosRecibidos} avisos de fallos nuevos` : 'Un aviso de fallo nuevo', texto: 'Entra para leerlo y contestar', hash: 'fallos' });
+  return out;
 }
 
 /**
@@ -359,6 +377,16 @@ async function trabajoFondo() {
     if (!cfgFondo().on) { paso('apagado en Ajustes'); return; }
     if (!haySesion()) { paso('sin sesión de LaLiga'); return; }
     if (deNoche()) { paso('de noche: nada'); return; }
+    // (de madrugada no se miran: se darían por avisadas sin avisar)
+    const fallos = callado() ? [] : await avisosDeFallos();
+    if (fallos.length) paso(`${fallos.length} aviso${fallos.length > 1 ? 's' : ''} de fallo`);
+    const completo = LS.get('fondo-completo', 0), cierre = LS.get('fondo-cierre', 0);
+    if (completo && Date.now() - completo < 150 * MIN && Date.now() < cierre) {
+      paso('liga mirada hace poco: solo los avisos de fallo');
+      if (!callado()) { const nuevos = sinAvisar(fallos); avisar(nuevos); reg.avisos = nuevos.length; }
+      reg.ok = true;
+      return;
+    }
     const antes = foto();
     S.D = await actualizar(() => {});
     rehacer();
@@ -366,7 +394,8 @@ async function trabajoFondo() {
     try { const f = await fuentesExternas(S.D, S.M); if (f) S.fuentes = f; } catch (e) { paso(`onces y noticias: ${e.message}`); }
     try { const det = await completar(S.D, S.M); if (det) S.det = { ...S.det, ...det }; } catch (e) { if (e.sesion) throw e; paso(`fichas: ${e.message}`); }
     rehacer();
-    const lista = avisosNuevos(antes, S.D, S.M);
+    const lista = [...fallos, ...avisosNuevos(antes, S.D, S.M)];
+    LS.set('fondo-completo', Date.now()); LS.set('fondo-cierre', (S.M && S.M.cierreMercado) || 0);
     if (planViejo(S.M)) {
       let conIA = false;
       if (hayClave()) {
@@ -488,6 +517,8 @@ function saludarSiToca() {
   saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '' });
 }
 setInterval(saludarSiToca, 10 * 60e3);
+// con la app abierta, las respuestas a tus avisos también llegan sin tocar nada (comprobarAvisos mira como mucho cada 10 min)
+if (!EN_FONDO) setInterval(() => { if (!document.hidden && S.D) comprobarAvisos(); }, 10 * 60e3 + 5e3);
 // con la configuración nueva de limites.json puede cambiar lo que está bloqueado
 window.addEventListener('limites-nuevos', () => { if (S.D && S.M && !S.hoja) pintar(); });
 /* ---------------- la jornada en directo (vivo.js) ---------------- */
@@ -640,13 +671,15 @@ async function enviarAviso() {
   try {
     const env = await mandarAviso({ texto: t, diag, equipo: (S.M && S.M.yo && S.M.yo.nombre) || '', liga: (S.D && S.D.liga && S.D.liga.nombre) || '', app: `${VERSION} · ${enApp ? `app ${nativo.canal()}` : 'web'}` });
     S.av.borrador = ''; S.av.enviando = false;
-    tostada('Aviso mandado: te aviso cuando conteste', 5000);
+    tostada(enApp ? 'Aviso mandado: cuando conteste te llega una notificación' : 'Aviso mandado: te aviso cuando conteste', 5000);
     // el servidor tarda unos segundos en listarlo: mientras, se pone a mano para que lo veas ya
     const nuevo = { id: env.id, t: Date.now(), texto: t, respuesta: null, respondida: null, vista: true };
     const r = await misAvisos().catch(() => null);
     const lista = (r ? r.lista : S.av.lista) || [];
     S.av.lista = lista.some((x) => x.id === env.id) ? lista : [nuevo, ...lista];
     if (r) Object.assign(S.av, { admin: r.admin, pendientes: r.pendientes });
+    if (!r) { const g = avisosGuardados(); LS.set('avisos', { ...g, lista: [nuevo, ...(g.lista || [])] }); }
+    programarFondo();
   } catch (e) {
     S.av.enviando = false;
     if (e.sesion) S.av.sinSesion = true; else S.av.error = `No se ha podido mandar: ${e.message}`;
@@ -1491,7 +1524,11 @@ document.addEventListener('input', (ev) => {
 document.addEventListener('input', (ev) => {
   if (ev.target && ev.target.id === 'pregunta') { ev.target.style.height = 'auto'; ev.target.style.height = Math.min(120, ev.target.scrollHeight) + 'px'; }
 });
-window.addEventListener('hashchange', () => { const v = ALIAS[location.hash.slice(1)] || location.hash.slice(1); if (S.D && VISTAS[v] && v !== S.vista) ir(v); });
+window.addEventListener('hashchange', () => {
+  // la notificación de una respuesta a tu aviso de fallo abre la bandeja de avisos
+  if (location.hash === '#fallos') { history.replaceState(null, '', '#' + S.vista); if (S.D) abrirAvisos(); return; }
+  const v = ALIAS[location.hash.slice(1)] || location.hash.slice(1); if (S.D && VISTAS[v] && v !== S.vista) ir(v);
+});
 
 /* ---------------- la clave de la IA ---------------- */
 /** prueba la clave de la casilla con Google y, si vale, la guarda y hace el plan */
@@ -1652,6 +1689,8 @@ function quizaTutorial(ms, intento = 0) {
 async function arrancar() {
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
   if (VISTAS[h]) S.vista = h;
+  const aFallos = h === 'fallos';
+  if (aFallos) history.replaceState(null, '', '#hoy');
   if ((enApp || enWeb) && !enDemo() && !haySesion()) {
     pantallaEntrar();
   } else {
@@ -1663,6 +1702,8 @@ async function arrancar() {
     } else {
       await cargar();
     }
+    // venía de tocar la notificación de una respuesta a tu aviso de fallo
+    if (aFallos && S.D) setTimeout(() => { if (!S.hoja) abrirAvisos(); }, 400);
   }
   // por si la vuelta del inicio de sesión llegó antes de que la web estuviera lista
   if (enApp) setTimeout(() => window.vueltaLogin(), 300);

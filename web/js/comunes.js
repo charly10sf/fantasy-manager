@@ -123,7 +123,9 @@ const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
  * un jugador en el campo, como en el Fantasy: la cara, la placa con el nombre y debajo el dato que toque
  * (puntos esperados, valor o forma) y, arriba, contra quién juega con el color de lo difícil que es
  */
-export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = false, directo = false } = {}) {
+// (en la ficha de un partido: tag es la etiqueta de arriba a la izquierda, { txt, cls }, en vez del rival; marca, lo
+// de arriba a la derecha; datoFijo, lo de debajo del nombre, { txt, cls })
+export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = false, directo = false, tag = null, marca: marcaFija = null, datoFijo = null } = {}) {
   if (!j) return `<button class="cromo vacio-c" data-ir="mercado"><span class="cr-hueco">+</span><span class="cr-nom">Falta</span></button>`;
   const fr = M && M.factorRival ? M.factorRival(j) : null;
   const f = M && M.forma ? M.forma(j.id) : null;
@@ -143,6 +145,7 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
       datoCls = ' hora';
     }
   }
+  if (datoFijo) { dato = esc(datoFijo.txt); datoCls = datoFijo.cls ? ` ${datoFijo.cls}` : ''; }
   const conOnce = !!(M && M.hayOnces && j.pos < 5);
   const o = conOnce ? M.onceProb(j.id) : null;
   const al = M && M.alineacion && j.pos < 5 ? M.alineacion(j.id) : null;
@@ -152,7 +155,8 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   else if (MALOS.has(j.estado)) marca = '<span class="cr-est mal">+</span>';
   else if (j.estado === 'doubtful') marca = '<span class="cr-est duda">?</span>';
   else if (conOnce && (!o || !o.titular)) marca = '<span class="cr-est sup">SUP</span>';
-  const rv = fr && fr.p ? `<span class="cr-rv ${nivelCls(fr.nivel)}">${fr.p.casa ? '' : '@'}${esc(corto(fr.p.rivalId, fr.p.rival))}</span>` : '';
+  if (marcaFija != null) marca = marcaFija;
+  const rv = tag ? (tag.txt ? `<span class="cr-rv ${tag.cls || ''}">${esc(tag.txt)}</span>` : '') : fr && fr.p ? `<span class="cr-rv ${nivelCls(fr.nivel)}">${fr.p.casa ? '' : '@'}${esc(corto(fr.p.rivalId, fr.p.rival))}</span>` : '';
   const ape = String(j.nombre || '').split(' ');
   const nom = ape.length > 1 && j.nombre.length > 11 ? ape.slice(1).join(' ') : j.nombre;
   return `<button class="cromo p${j.pos}${chico ? ' chico' : ''}${MALOS.has(j.estado) ? ' baja-c' : ''}" data-j="${esc(j.id)}">

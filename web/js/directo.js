@@ -3,7 +3,7 @@
    Sin jornada en juego: cuándo empieza la próxima y cómo acabó la última.
    Los datos salen de vivo.js (LaLiga Fantasy) y, si SofaScore deja, las jugadas de cada partido (externas.js). */
 import { esc, icono, cuando, rel, dura, MIN, HORA, horaDe, norm } from './util.js';
-import { ava, posTag, nada, campoVivo, filaJugador } from './comunes.js';
+import { ava, posTag, nada, campoVivo, filaJugador, cromo } from './comunes.js';
 import { ancho, cols, tabs, puntosUltimaJornada } from './vistas.js';
 
 const est = (x) => { if (x == null || x === '') return null; const v = Number(x); return Number.isFinite(v) ? v : null; };
@@ -292,6 +292,100 @@ function filaPt(S, x, ju) {
   return `<${tag}>${ava(j || { nombre: nom, pos: x.pos })}<div class="fila-c"><div class="fila-n">${posTag(j || { pos: x.pos })}<span class="nom">${esc(nom)}</span></div><div class="fila-s">${sub}</div></div>
     <div class="fila-d"><div class="v pf-pts ${ptsCls(x.pts)}">${x.pts == null ? '–' : x.pts}</div></div></${j ? 'button' : 'div'}>`;
 }
+/* ---------------- el partido en el campo ---------------- */
+/** la etiqueta de arriba a la izquierda de cada cromo: de quién es en tu liga */
+function tagDe(S, pid) {
+  const d = duenoDe(S, pid);
+  if (!d) return { txt: '' };
+  if (d.yo) return { txt: 'TUYO', cls: 'tuyo' };
+  return { txt: String(d.txt).split(' ')[0].slice(0, 8).toUpperCase(), cls: 'suyo' };
+}
+/** arriba a la derecha: si ha marcado o le han sacado tarjeta (de SofaScore si hay jugadas; si no, de LaLiga) */
+function marcaDe(x, j, ju) {
+  let gol = 0, am = 0, roja = 0;
+  if (ju && ju.lista.length) {
+    for (const i of ju.lista) {
+      if (!mismoNombre(i.quien, j)) continue;
+      if (i.tipo === 'gol' || i.tipo === 'penalti') gol++; else if (i.tipo === 'amarilla') am++; else if (i.tipo === 'roja') roja++;
+    }
+  } else if (x) { gol = x.gol || 0; am = x.am || 0; roja = x.roja || 0; }
+  if (gol) return `<span class="cr-est ev gol" title="${gol} gol${gol > 1 ? 'es' : ''}">${icono('balon')}${gol > 1 ? `<b>${gol}</b>` : ''}</span>`;
+  if (roja || am > 1) return '<span class="cr-est ev" title="Roja"><i class="tarjeta roja"></i></span>';
+  if (am) return '<span class="cr-est ev" title="Amarilla"><i class="tarjeta amarilla"></i></span>';
+  return '';
+}
+/** el campo: de arriba abajo delanteros, medios, defensas y portero */
+function canchaHTML(os, crom, etiqueta = '') {
+  const lineas = [1, 2, 3, 4].map((pos) => os.filter((o) => o.j.pos === pos));
+  const filas = [3, 2, 1, 0].filter((i) => lineas[i].length).map((i) => `<div class="linea-c${lineas[i].length >= 6 ? ' seis' : lineas[i].length >= 5 ? ' cinco' : ''}">${lineas[i].map(crom).join('')}</div>`);
+  return `<div class="cancha cancha-vivo pf-c"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
+    ${etiqueta ? `<span class="cv-forma">${esc(etiqueta)}</span>` : ''}${filas.join('')}</div>`;
+}
+/** de una lista, el once: el portero con más de lo que sea y los 10 de campo con más; y el resto */
+function once11(os, f) {
+  const xs = [...os].sort((a, b) => f(b) - f(a));
+  const por = xs.find((o) => o.j.pos === 1);
+  const campo = xs.filter((o) => o !== por && o.j.pos > 1).slice(0, 10);
+  const tit = [por, ...campo].filter(Boolean);
+  return { tit, resto: xs.filter((o) => !tit.includes(o)) };
+}
+/** un equipo en el partido ya empezado: los que han jugado en su campo, con sus puntos y de quién es cada uno */
+function equipoJugado(S, p, l, ju) {
+  const { D, M } = S;
+  const tid = l ? p.lid : p.vid;
+  let os = p.jug.filter((x) => x.l === l).map((x) => ({ x, j: D.maestro[x.id] })).filter((o) => o.j && o.j.pos >= 1 && o.j.pos <= 4);
+  if (!os.length) return '';
+  const tot = p.jug.filter((x) => x.l === l).reduce((t, x) => t + (x.pts || 0), 0);
+  const hayMin = os.some((o) => o.x.min != null);
+  // si viene la plantilla entera y no se sabe quién ha jugado: los que puntúan
+  if (!hayMin && os.length > 16) os = os.filter((o) => o.x.pts != null && o.x.pts !== 0);
+  let tit = os, banq = [], nota = '';
+  if (hayMin) ({ tit, resto: banq } = once11(os.filter((o) => o.x.min > 0), (o) => o.x.min || 0));
+  else {
+    const conf = os.filter((o) => { const a = M.alineacion(o.j.id); return a && a.estado === 'titular'; });
+    if (conf.length >= 10) { tit = conf; banq = os.filter((o) => !conf.includes(o)); } else if (os.length > 11) nota = `Todos los que han jugado (${os.length}): LaLiga no dice quién salió de titular.`;
+  }
+  const crom = (o) => cromo(M, o.j, { tag: tagDe(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } });
+  let h = `<div class="pf-cab">${escudo(D, tid)}<b>${esc(nombreEq(D, tid))}</b><span>${tot} pts entre todos</span></div>`;
+  h += canchaHTML(tit, crom);
+  if (banq.length) h += `<div class="banquillo"><div class="banq-t">Entraron <span>${banq.length}</span></div><div class="banq-l">${banq.map((o) => cromo(M, o.j, { chico: true, tag: tagDe(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } })).join('')}</div></div>`;
+  if (nota) h += `<p class="t2 peq">${nota}</p>`;
+  return h;
+}
+/** el once probable de un equipo: el confirmado o el de futbolfantasy si está entero; si no, la formación gratis que más suma */
+function oncePrevio(M, os) {
+  const ya = os.filter((o) => { const a = M.alineacion(o.j.id); if (a) return a.estado === 'titular'; const op = M.onceProb(o.j.id); return !!(op && op.titular); });
+  if (ya.length === 11 && ya.filter((o) => o.j.pos === 1).length === 1) return ya;
+  const porP = (a, b) => b.T.p - a.T.p;
+  const por = os.filter((o) => o.j.pos === 1).sort(porP)[0];
+  const lin = [2, 3, 4].map((pos) => os.filter((o) => o.j.pos === pos).sort(porP));
+  const forms = M.formaciones && M.formaciones.length ? M.formaciones : [[4, 4, 2], [4, 3, 3], [3, 5, 2], [3, 4, 3], [5, 3, 2], [4, 5, 1], [5, 4, 1]];
+  let mejor = null;
+  for (const f of forms) {
+    if (lin.some((l, i) => l.length < f[i])) continue;
+    const xs = lin.flatMap((l, i) => l.slice(0, f[i]));
+    const suma = xs.reduce((t, o) => t + o.T.p, 0);
+    if (!mejor || suma > mejor.suma) mejor = { suma, xs };
+  }
+  return por && mejor ? [por, ...mejor.xs] : null;
+}
+/** un equipo antes de empezar: su once (el confirmado o el más probable) con lo probable que es que salga cada uno */
+function equipoPrevio(S, p, l) {
+  const { D, M } = S;
+  const tid = l ? p.lid : p.vid;
+  const os = Object.values(D.maestro).filter((j) => j.equipoId === tid && j.pos >= 1 && j.pos <= 4).map((j) => ({ j, T: M.titularidad ? M.titularidad(j) : null })).filter((o) => o.T && o.T.p != null);
+  if (os.length < 11) return '';
+  const tit = oncePrevio(M, os);
+  if (!tit || tit.length < 11 || tit.reduce((t, o) => t + o.T.p, 0) < 5) return '';
+  const conf = tit.every((o) => o.T.confirmada === 'titular');
+  // (arriba a la derecha solo lo que importa: la alineación confirmada, una lesión o una duda; «SUP» no, que va en el %)
+  const marca = (j) => (M.alineacion(j.id) || ['injured', 'suspended', 'out_of_league', 'doubtful'].includes(j.estado) ? null : '');
+  const crom = (o) => { const v = Math.round(o.T.p * 100); return cromo(M, o.j, { tag: tagDe(S, o.j.id), marca: marca(o.j), datoFijo: { txt: `${v} %`, cls: `prob ${v >= 75 ? 'bien' : v >= 45 ? 'duda' : 'mal'}` } }); };
+  const forma = [2, 3, 4].map((pos) => tit.filter((o) => o.j.pos === pos).length).join('-');
+  const deLiga = tit.filter((o) => M.dueno[o.j.id]).length;
+  return `<div class="pf-cab">${escudo(D, tid)}<b>${esc(nombreEq(D, tid))}</b><span>${conf ? 'confirmado' : 'probable'} · ${forma} · ${deLiga} de tu liga</span></div>${canchaHTML(tit, crom)}`;
+}
+
 export function fichaPartido(S, clave) {
   const { D, M } = S;
   const [nS, id] = String(clave).split(':');
@@ -307,17 +401,20 @@ export function fichaPartido(S, clave) {
     <div class="pf-eq">${escudo(D, p.vid, 'g')}<span>${esc(nombreEq(D, p.vid))}</span></div></div>`;
   if (ju && ju.lista.length) h += `<div class="sec"><h2>Jugadas</h2><span class="sub">SofaScore</span></div><div class="pf-jug">${ju.lista.map((i) => jugadaHTML(S, p, i)).join('')}</div>`;
   if (emp && p.jug.length) {
-    for (const [l, tid] of [[true, p.lid], [false, p.vid]]) {
-      const xs = p.jug.filter((x) => x.l === l).sort((a, b) => (b.pts == null ? -99 : b.pts) - (a.pts == null ? -99 : a.pts));
-      if (!xs.length) continue;
-      const tot = xs.reduce((t, x) => t + (x.pts || 0), 0);
-      h += `<div class="sec"><h2>${esc(nombreEq(D, tid))}</h2><span class="sub">${tot} pts entre todos</span></div>${xs.map((x) => filaPt(S, x, ju)).join('')}`;
-    }
-    h += `<p class="t2 peq">Los puntos son los de LaLiga Fantasy${enJuego(p) ? ' y se ponen al día solos cada minuto' : ''}.${ju ? '' : ' El minuto es aproximado: LaLiga solo dice en qué parte va.'}</p>`;
+    h += equipoJugado(S, p, true, ju) + equipoJugado(S, p, false, ju);
+    // los que no se pueden poner en el campo (no están en la lista de jugadores de LaLiga Fantasy), en lista
+    const sueltos = p.jug.filter((x) => !(D.maestro[x.id] && D.maestro[x.id].pos >= 1 && D.maestro[x.id].pos <= 4) && x.pts != null && x.pos !== 5 && !(D.maestro[x.id] && D.maestro[x.id].pos === 5));
+    if (sueltos.length) h += `<div class="sec"><h2>Otros</h2></div>${sueltos.map((x) => filaPt(S, x, ju)).join('')}`;
+    h += `<p class="t2 peq">Arriba de cada uno, de quién es en tu liga. Los puntos son los de LaLiga Fantasy${enJuego(p) ? ' y se ponen al día solos cada minuto' : ''}.${ju || !enJuego(p) ? '' : ' El minuto es aproximado: LaLiga solo dice en qué parte va.'} Toca a uno para ver su ficha.</p>`;
     return h;
   }
   if (emp) h += nada(S.cargandoPartido ? 'Cargando los puntos…' : 'LaLiga todavía no da los puntos de este partido. Se mira solo cada minuto.');
-  // antes de empezar (o sin puntos): quién juega de tu liga, con lo probable que es que salga
+  // antes de empezar: el once probable de cada uno (o el confirmado), con lo probable que es que salga cada jugador
+  if (!emp) {
+    const campos = equipoPrevio(S, p, true) + equipoPrevio(S, p, false);
+    if (campos) return h + campos + '<p class="t2 peq">Arriba de cada uno, de quién es en tu liga; debajo, lo probable que es que salga de titular. Toca a uno para ver su ficha.</p>';
+  }
+  // (sin once probable o sin puntos): quién juega de tu liga
   const delLiga = Object.values(D.maestro).filter((j) => (j.equipoId === p.lid || j.equipoId === p.vid) && j.pos < 5 && M.dueno[j.id]);
   const yo = M.yo ? String(M.yo.teamId) : '';
   delLiga.sort((a, b) => (String(M.dueno[b.id]) === yo) - (String(M.dueno[a.id]) === yo) || a.pos - b.pos || b.valor - a.valor);

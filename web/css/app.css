@@ -1370,3 +1370,20 @@ body.limitado .tostada { z-index: 120; }
 .dt-j .enlace { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 6px 0; color: var(--rojo-l); font: 600 14px 'Barlow'; }
 .dt-j .enlace .ic { width: 14px; height: 14px; }
 @media (max-width: 370px) { .dt-yo .v { font-size: 34px; } .dt-once { padding-left: 10px; } .pt-est { width: 46px; } .pt-eq { font-size: 15px; } }
+/* la ficha de un partido: cada equipo en su campo */
+.pf-cab { display: flex; align-items: center; gap: 9px; margin: 22px 0 10px; }
+.pf-cab b { flex: 1; min-width: 0; font: 700 21px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pf-cab span { font-size: 14px; color: var(--apagado); white-space: nowrap; }
+.pf-cab .pt-esc { width: 26px; height: 26px; }
+.linea-c.seis .cromo { width: 16%; }
+.linea-c.seis .ava.cr { width: 46px; height: 46px; }
+.linea-c.seis .cr-nom { font-size: 11px; padding: 2px 4px; }
+.cr-rv.tuyo { background: var(--rojo); } .cr-rv.suyo { background: #3c3c47; color: #e6e3e8; }
+.cr-est.ev { display: inline-flex; align-items: center; justify-content: center; gap: 1px; background: rgba(8, 8, 10, 0.9); }
+.cr-est.ev.gol { background: #fff; color: #0b1a10; }
+.cr-est.ev .ic { width: 13px; height: 13px; stroke-width: 2.2; }
+.cr-est.ev b { font: 800 11px/1 'Barlow'; }
+.cr-est.ev .tarjeta { width: 9px; height: 12px; }
+.cr-dato.prob { background: rgba(8, 8, 10, 0.85); }
+.cr-dato.prob.bien { color: var(--sube); } .cr-dato.prob.duda { color: var(--oro); } .cr-dato.prob.mal { color: var(--baja); }
+.cancha.pf-c { padding-left: 14px; padding-right: 10px; }
