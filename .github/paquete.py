@@ -41,7 +41,35 @@ def junta(pares):
     return hashlib.sha256(''.join(f'{k} {v}\n' for k, v in sorted(pares)).encode()).hexdigest()[:16]
 
 
+def versionar_index():
+    """
+    En index.html, cada módulo con su huella en la dirección (js/x.js?v=…), con un mapa de importaciones: así el
+    navegador y las cachés de GitHub y Cloudflare no pueden mezclar archivos de una versión con los de otra (un
+    index.html viejo pide los suyos y uno nuevo, los nuevos). Se puede ejecutar más de una vez: quita lo de la vez
+    anterior antes de ponerlo.
+    """
+    ruta = os.path.join(WEB, 'index.html')
+    with open(ruta, encoding='utf-8') as f:
+        html = f.read()
+    html = re.sub(r'\s*<script type="importmap">.*?</script>', '', html, flags=re.S)
+    html = re.sub(r'((?:src|href)="(?:js|css)/[A-Za-z0-9._/-]+)\?v=[0-9a-f]+"', r'\1"', html)
+    corta = lambda rel: sha(os.path.join(WEB, rel))[:12]
+    mods = {rel: corta(rel) for rel in arbol(WEB) if rel.startswith('js/') and rel.endswith('.js')}
+    mapa = {'imports': {f'./{rel}': f'./{rel}?v={h}' for rel, h in sorted(mods.items())}}
+    entrada = '<script type="module" src="js/app.js"></script>'
+    if entrada not in html:
+        sys.exit('index.html: no encuentro la entrada de js/app.js')
+    html = html.replace(entrada, f'<script type="importmap">{json.dumps(mapa, separators=(",", ":"))}</script>\n  '
+                        f'<script type="module" src="js/app.js?v={mods["js/app.js"]}"></script>', 1)
+    for rel in arbol(WEB):
+        if rel.startswith('css/') and rel.endswith('.css'):
+            html = html.replace(f'href="{rel}"', f'href="{rel}?v={corta(rel)}"')
+    with open(ruta, 'w', encoding='utf-8') as f:
+        f.write(html)
+
+
 def main():
+    versionar_index()
     archivos = {rel: sha(os.path.join(WEB, rel)) for rel in arbol(WEB) if rel != 'paquete.json'}
     raras = [r for r in archivos if not re.fullmatch(r'[A-Za-z0-9._/-]+', r)]
     if raras:

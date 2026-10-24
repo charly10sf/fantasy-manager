@@ -765,7 +765,11 @@ async function mirarWebNueva() {
 async function recargarWeb() {
   const j = S.webNuevaWeb;
   tostada('Poniendo la versión nueva…', 4000);
-  const fs = j && j.archivos ? Object.keys(j.archivos).filter((k) => /\.(js|css|html|json)$/.test(k)) : [];
+  // primero la página tal como se abrió (puede ser la carpeta, «/», y no «index.html»: el navegador las guarda aparte);
+  // index.html ya pide cada módulo con su huella (paquete.py), así que con ella nueva llega todo lo demás nuevo
+  const pagina = location.href.split('#')[0];
+  await Promise.all([pagina, 'index.html'].map((u) => fetch(u, { cache: 'reload' }).catch(() => null)));
+  const fs = j && j.archivos ? Object.keys(j.archivos).filter((k) => /\.(js|css|json)$/.test(k)) : [];
   await enParalelo(fs, 6, (k) => fetch(k, { cache: 'reload' }).catch(() => null));
   location.reload();
 }
@@ -1751,6 +1755,13 @@ document.addEventListener('click', async (ev) => {
     case 'buscarVersion': buscarVersion(true); break;
     case 'ponerWeb': ponerWebNueva(); break;
     case 'recargarWeb': recargarWeb(); break;
+    case 'buscarWeb': {
+      tostada('Buscando versión nueva…', 2000);
+      webMiradaT = 0;
+      await mirarWebNueva();
+      if (S.webNuevaWeb) recargarWeb(); else tostada(`Tienes la última: la ${VERSION}`);
+      break;
+    }
     case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Bajando la versión nueva…'); } break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarChat': borrarConversacion(); pintar(); break;

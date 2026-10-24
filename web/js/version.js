@@ -3,13 +3,20 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.2d';
+export const VERSION = '0.6.2e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.6.2e', f: '2026-10-24', h: '23:55', t: 'La web ya no se queda en una versión vieja',
+    cosas: [
+      { tipo: 'arreglo', d: 'versiones', t: 'La web se queda en una versión vieja', x: 'En el iPhone y en el navegador del móvil la web se podía quedar en una versión de antes aunque hubiera salido otra. Ahora cada archivo va con su huella y el navegador ya no los mezcla. Si aún ves una versión anterior a esta, cierra la web del todo y vuelve a abrirla una vez.' },
+      { tipo: 'mejora', d: 'versiones', t: '«Buscar nueva» en la web', x: 'En Ajustes, al lado de la versión, la web también tiene «Buscar nueva»: si la hay, la pone al momento.' },
+    ],
+  },
   {
     v: '0.6.2d', f: '2026-10-24', h: '23:43', t: 'La web, al día',
     cosas: [
