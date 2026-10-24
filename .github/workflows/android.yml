@@ -152,6 +152,8 @@ jobs:
           printf '{"version": %s, "nombre": "%s", "nativo": "%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "${{ github.run_number }}" "$VERSION_NAME" "$NATIVO" "${{ github.repository }}" > app.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # paquete.py deja web/index.html con las huellas de los módulos: eso no se sube (en el repo va sin ellas)
+          git checkout -- web/index.html
           git add app.json
           git commit -q -m "App: versión ${{ github.run_number }} publicada" || true
           git pull -q --rebase origin main && git push -q origin HEAD:main
