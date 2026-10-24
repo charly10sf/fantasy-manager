@@ -88,15 +88,13 @@ export function analizar(D, H, c, extra = {}) {
     for (const [dd, vv] of (H.v && H.v[pid]) || []) if (dd >= d && vv > m) m = vv;
     return m;
   };
-  /* LaLiga sube sola la cláusula cuando sube el valor del jugador: eso no lo ha pagado nadie. Una subida de cláusula
-     vista entre dos cargas solo cuenta como pagada si la cláusula queda por encima de lo que vale (más de un 2 %) y no
-     ha subido lo mismo que su valor */
+  /* LaLiga sube sola la cláusula cuando el valor del jugador la pasa: la pone igual que el valor (confirmado por Carlos).
+     Eso no lo ha pagado nadie. Una subida de cláusula vista entre dos cargas solo cuenta como pagada si la cláusula queda
+     por encima de lo que vale (más de un 2 %) */
   const autoClausula = (m) => {
     if (m.auto) return true;
     const v = m.vA || valorEn(m.pid, m.t);
-    if (v && m.a <= v * 1.02) return true;
-    if (m.vDe && m.vA && m.vA > m.vDe) { const dV = m.vA - m.vDe, dC = m.a - m.de; if (Math.abs(dC - dV) <= Math.max(0.1 * dV, 5e4) || Math.abs(dC / m.de - dV / m.vDe) < 0.005) return true; }
-    return false;
+    return !!(v && m.a <= v * 1.02);
   };
   M.blindaPagada = (m) => m.tipo === 'blinda' && m.a > m.de && !autoClausula(m);
   M.forma = (pid) => {
@@ -499,11 +497,9 @@ export function analizar(D, H, c, extra = {}) {
         base = Math.max(v0, 1e6);
       }
       // lo que sube sola la cláusula con el valor del jugador no cuenta: si está en lo más que ha valido desde entonces,
-      // o ha subido justo lo que subió su valor, ha sido LaLiga
+      // la ha puesto LaLiga al pasarla el valor
       const tBase = a ? a.t : AH.desde;
       if (f.clausula <= maxValorDesde(f.pid, tBase) * 1.02) continue;
-      const vB0 = valorEn(f.pid, tBase), dV = vB0 ? J(f.pid).valor - vB0 : 0;
-      if (dV > 0 && Math.abs(f.clausula - base - dV) <= Math.max(0.1 * dV, 5e4)) continue;
       const subio = f.clausula - base;
       // lo poco puede ser que valiera algo más al ficharlo que lo que se sabe
       if (subio < Math.max(2e5, 0.03 * base)) continue;
