@@ -14,6 +14,7 @@ export const NOVEDADES = [
     v: '0.6.2a', f: '2026-10-24', h: 'HH:MM', t: 'Todas tus jornadas',
     cosas: [
       { tipo: 'arreglo', d: 'campo', t: 'Desde la jornada 1', x: 'En Equipo → Jornadas solo salían la jornada pasada y la que se juega. Ahora salen todas, de la 1 a la de ahora.', ir: { v: 'equipo', seg: 'equipo:jornadas' } },
+      { tipo: 'arreglo', d: 'foto', t: 'Las capturas de los avisos, a la vista', x: 'En la bandeja de avisos, las capturas de los que estaban sin contestar se quedaban en «Cargando…». Ya se ven.' },
     ],
   },
   {

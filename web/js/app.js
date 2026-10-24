@@ -855,7 +855,8 @@ async function abrirAvisoRecibido(id) {
   if (S.av.abierto === id) { if (!avisoListo(id) && !(S.av.detalle && S.av.detalle.error)) return; S.av.abierto = null; repintarAvisos(); return; }
   S.av.abierto = id; S.av.detalle = avisoListo(id); S.av.respBorrador = '';
   repintarAvisos();
-  if (S.av.detalle) return;
+  // (los sin contestar ya vienen cargados de antes: sus capturas se piden aquí también)
+  if (S.av.detalle) { if (S.av.detalle.capturas) cargarCapturas(id, S.av.detalle.capturas); return; }
   try { const d = await pedirAviso(id); if (S.av.abierto === id) S.av.detalle = d; } catch (e) { if (S.av.abierto === id) S.av.detalle = { error: e.message }; }
   // el aviso entero sí está al día: si ya tiene respuesta, cuenta como contestado aunque la lista aún no lo diga
   const d = avisoListo(id);
@@ -866,7 +867,7 @@ async function abrirAvisoRecibido(id) {
 /** las capturas de un aviso (el dueño, al abrirlo): se piden una vez y se guardan mientras la app está abierta */
 async function cargarCapturas(id, n) {
   const c = (S.av.capt ||= {});
-  if (c[id]) return;
+  if (c[id] && !c[id].some((x) => x === '')) return;
   c[id] = new Array(n).fill(null);
   await enParalelo([...Array(n).keys()], 2, async (i) => {
     try { c[id][i] = await capturaAviso(id, i); } catch (e) { c[id][i] = ''; }
