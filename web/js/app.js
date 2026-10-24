@@ -8,6 +8,7 @@ import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import * as Dr from './directo.js';
+import * as Cl from './clubes.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
 import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api } from './api.js';
@@ -16,7 +17,7 @@ import { linea } from './graficos.js';
 import { md } from './texto.js';
 import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
-import { historialValor, alineaciones, faltaOnce, jugadasSofa } from './externas.js';
+import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub } from './externas.js';
 import { enVivo, onceRival, jornadaStats } from './vivo.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
@@ -30,9 +31,9 @@ import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, aviso
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
-const VISTAS = { hoy: V.hoy, equipo: V.equipo, directo: Dr.directo, rivales: V.rivales, mercado: V.mercado, ia: V.ia };
-const ALIAS = { inicio: 'hoy', analisis: 'ia', chat: 'ia', vivo: 'directo' };
-const NAV = [['hoy', 'rayo', 'Hoy'], ['equipo', 'equipo', 'Equipo'], ['directo', 'directo', 'Directo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['ia', 'ia', 'Pregunta']];
+const VISTAS = { hoy: V.hoy, equipo: V.equipo, directo: Dr.directo, rivales: V.rivales, mercado: V.mercado, clubes: Cl.clubes, ia: V.ia };
+const ALIAS = { inicio: 'hoy', analisis: 'ia', chat: 'ia', vivo: 'directo', equipos: 'clubes' };
+const NAV = [['hoy', 'rayo', 'Hoy'], ['equipo', 'equipo', 'Equipo'], ['directo', 'directo', 'Directo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['clubes', 'club', 'Clubes'], ['ia', 'ia', 'Pregunta']];
 const raiz = () => document.getElementById('app');
 
 /* ---------------- avisos de abajo ---------------- */
@@ -948,7 +949,7 @@ function cerrarHoja(ya = false) {
   if (!h) return false;
   // si se estaba cargando un anuncio para esto, ya no se enseña
   if (S.tipoHoja && S.tipoHoja[0] === 'anuncio' && S.anuncio && S.anuncio.cargando) { nativo.cancelarAnuncio(); S.anuncio = null; }
-  S.hoja = null; S.tipoHoja = null;
+  S.hoja = null; S.tipoHoja = null; S.pila = [];
   document.body.style.overflow = '';
   if (ya) { h.remove(); v && v.remove(); return true; }
   h.classList.remove('on'); v && v.classList.remove('on');
@@ -962,12 +963,55 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
-function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+/*
+ * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
+ * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
+ */
+const CON_PILA = new Set(['c', 'j', 'p']);
+function pilaDesde(el, tipo, arg) {
+  if (!S.hoja || !S.tipoHoja || !CON_PILA.has(S.tipoHoja[0]) || !CON_PILA.has(tipo) || !(el && el.closest && el.closest('.hoja'))) return [];
+  if (S.tipoHoja[0] === tipo && String(S.tipoHoja[1]) === String(arg)) return S.pila || [];
+  return [...(S.pila || []), [...S.tipoHoja]].slice(-6);
+}
+function nombreHoja([tipo, arg]) {
+  if (tipo === 'c') return Cl.nombreClub(S, arg);
+  if (tipo === 'j') { const j = S.M && S.M.J(arg); return (j && j.nombre) || 'el jugador'; }
+  return 'el partido';
+}
+function cuerpoHoja(tipo, arg, pila = S.pila) {
+  const atras = pila && pila.length ? `<button class="volver-h" data-accion="volverHoja">${icono('atras')}<span>${esc(nombreHoja(pila[pila.length - 1]))}</span></button>` : '';
+  return atras + htmlHoja(tipo, arg);
+}
+function hoja(tipo, arg, pila = []) { abrirHoja(cuerpoHoja(tipo, arg, pila)); S.tipoHoja = [tipo, arg]; S.pila = pila; }
+/** lo que hay que pedir al abrir cada ficha */
+function alAbrir(tipo, arg) {
+  if (tipo === 'j') cargarDetalle(arg);
+  else if (tipo === 'p') { const [n, id] = String(arg).split(':'); cargarPartido(Number(n), id); } else if (tipo === 'c') cargarClub(arg);
+}
+function volverHoja() {
+  const pila = [...(S.pila || [])];
+  const ant = pila.pop();
+  if (!ant) return false;
+  hoja(ant[0], ant[1], pila);
+  alAbrir(ant[0], ant[1]);
+  return true;
+}
+/** al abrir un club: sus titulares de los últimos días (Google Noticias, 1 hora guardados) */
+async function cargarClub(id) {
+  if (enDemo() || !S.D || (S.notClub && S.notClub[id] && Date.now() - S.notClub[id].t < 60 * MIN)) return;
+  S.notClub = S.notClub || {};
+  S.cargandoClub = id;
+  let l = [];
+  try { l = await noticiasClub(S.D, id); } catch (e) { l = []; }
+  S.notClub[id] = { t: Date.now(), l };
+  if (S.cargandoClub === id) S.cargandoClub = null;
+  if (S.tipoHoja && S.tipoHoja[0] === 'c' && String(S.tipoHoja[1]) === String(id)) repintarHoja();
+}
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
   const sc = S.hoja.scrollTop;
-  S.hoja.innerHTML = `<div class="asa"></div>${conCerrar(htmlHoja(...S.tipoHoja))}`;
+  S.hoja.innerHTML = `<div class="asa"></div>${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
   S.hoja.scrollTop = sc;
   encuadrar(S.hoja);
 }
@@ -977,6 +1021,7 @@ window.atras = () => {
   if (visor) { visor.remove(); return true; }
   if (cerrarPresentacion()) return true;
   if (tourAbierto()) { cerrarTour('saltar'); return true; }
+  if (S.hoja && S.pila && S.pila.length && volverHoja()) return true;
   if (cerrarHoja()) return true;
   if (S.D && S.vista !== 'hoy') { ir('hoy'); return true; }
   return false;
@@ -1356,18 +1401,21 @@ if (enApp) {
 
 /* ---------------- toques ---------------- */
 document.addEventListener('click', async (ev) => {
-  const el = ev.target.closest('[data-accion],[data-ir],[data-j],[data-r],[data-seg],[data-filtro],[data-abrir],[data-sugerencia]');
+  const el = ev.target.closest('[data-accion],[data-ir],[data-j],[data-r],[data-club],[data-seg],[data-filtro],[data-abrir],[data-sugerencia]');
   if (!el) return;
   const d = el.dataset;
   if (d.abrir) { ev.preventDefault(); nativo.abrir(d.abrir); return; }
   if (d.sugerencia) { enviarPregunta(d.sugerencia); return; }
   if (d.seg) { const [v, s] = d.seg.split(':'); S.seg[v] = s; if (!d.ir) { pintar(); volverAPestanas(); return; } }
   if (d.filtro) { const [k, f] = d.filtro.split(':'); S.filtro[k] = f; pintar(); return; }
-  if (d.j && S.D && !d.accion) { hoja('j', d.j); cargarDetalle(d.j); return; }
+  if (d.j && S.D && !d.accion) { hoja('j', d.j, pilaDesde(el, 'j', d.j)); cargarDetalle(d.j); return; }
+  if (d.club && S.D && !d.accion) { hoja('c', d.club, pilaDesde(el, 'c', d.club)); cargarClub(d.club); return; }
   if (d.r && S.D) { hoja('r', d.r); cargarOnceRival(d.r); return; }
   if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }
   switch (d.accion) {
-    case 'verPartido': cargarPartido(Number(d.n), d.id); hoja('p', `${d.n}:${d.id}`); break;
+    case 'verPartido': cargarPartido(Number(d.n), d.id); hoja('p', `${d.n}:${d.id}`, pilaDesde(el, 'p', `${d.n}:${d.id}`)); break;
+    case 'volverHoja': volverHoja(); break;
+    case 'filtroClub': S.filtro.club = d.f; repintarHoja(); break;
     case 'vivoYa': {
       if (enDemo()) { tostada('En la demo no hay jornada en directo'); break; }
       if (S.cargandoVivo) break;
@@ -1751,6 +1799,7 @@ function pasosTour() {
     { v: 'directo', sel: '.nav [data-ir="directo"]', t: 'Directo', x: 'La jornada mientras se juega: los marcadores, los puntos de cada jugador y de quién es en tu liga, tu once con lo que lleva cada uno y cómo va tu liga. Toca un partido para verlo jugador a jugador.' },
     { v: 'rivales', sel: '.nav [data-ir="rivales"]', t: 'Rivales', x: 'Las cláusulas de los demás que te llegan con tu dinero, cuándo se abren las que están protegidas y lo que ha hecho cada uno.' },
     { v: 'mercado', sel: '.nav [data-ir="mercado"]', t: 'Mercado', x: 'Cuánto pujar por cada libre según lo que se paga en tu liga, qué ofrecer a otro mánager para que te venda y quién sube y quién baja.' },
+    { v: 'clubes', sel: '.nav [data-ir="clubes"]', t: 'Clubes', x: 'Los 20 de LaLiga por la clasificación. En cada uno, su próximo partido, el once probable en el campo, las bajas, sus partidos y la plantilla con lo que vale cada jugador y de quién es en tu liga.' },
     { v: 'ia', sel: '.nav [data-ir="ia"]', t: 'Pregunta', x: conClave ? 'Pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.' : 'Aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.' },
     demo
       ? { v: 'hoy', t: 'Esto era la liga de ejemplo', x: 'Con datos inventados. Cuando quieras, entra con tu cuenta y lo tendrás con tu liga. El tutorial queda en Ajustes.', lista: itemsEmpezar, fin: 'Seguir mirando' }

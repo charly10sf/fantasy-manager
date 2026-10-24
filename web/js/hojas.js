@@ -168,7 +168,7 @@ export function fichaJugador(S, pid) {
   if (mia) inter.por = inter.por.filter((x) => !/cuesta|te faltan/.test(x));
   const op = S.opPorPid[pid];
   let h = `<div class="ficha-top">${ava(j, 'g')}<div style="min-width:0"><h2>${esc(j.nombre)}</h2>
-    <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div></div>`;
+    <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${j.equipoId && S.D.equipos && S.D.equipos[j.equipoId] ? `<button class="enlace-j" data-club="${esc(j.equipoId)}">${esc(j.equipo || S.D.equipos[j.equipoId].nombre)}</button>` : esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div></div>`;
   h += `<div class="valor-g"><span class="v">${eur(j.valor)}</span><span class="d">${delta(t, { largo: true })}</span>${t.d7 != null ? `<span class="d ${clase(t.d7)}">${eur(t.d7, { signo: true })} 7d</span>` : ''}</div>`;
   // con su partido de la jornada empezado: lo que lleva y lo que ha hecho (se pone al día solo)
   const vj = jornadaJugadorHTML(S, pid);

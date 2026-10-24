@@ -121,6 +121,37 @@ async function buscarNoticias(q) {
   return r.s === 200 && r.b ? parseRSS(r.b) : [];
 }
 
+/**
+ * los titulares de un club de los últimos 3 días, al abrir su ficha en Clubes (se guardan 1 hora, de los últimos 8
+ * clubes que se han mirado). Cada uno con los jugadores que salen en él, como en noticias()
+ */
+export async function noticiasClub(D, eqId) {
+  const g = LS.get('noticias-club', {});
+  if (g[eqId] && Date.now() - g[eqId].t < HORA) return g[eqId].lista;
+  const e = (D.equipos || {})[eqId];
+  if (!e || !e.nombre) return [];
+  const a = aliasEquipo(e.nombre)[0];
+  const l = await buscarNoticias(`"${a}" (LaLiga OR lesión OR baja OR convocatoria OR alineación OR "rueda de prensa" OR entrenador OR fichaje) when:3d`);
+  const suyos = Object.values(D.maestro || {}).filter((j) => j.equipoId === eqId && j.nombre && j.nombre.length > 3);
+  const vistos = new Set();
+  const lista = [];
+  for (const n of l) {
+    const k = norm(n.titulo).slice(0, 80);
+    if (vistos.has(k) || (n.t && Date.now() - n.t > 4 * DIA)) continue;
+    vistos.add(k);
+    const t = ` ${norm(n.titulo)} `;
+    n.pids = suyos.filter((j) => t.includes(` ${norm(j.nombre)} `)).map((j) => j.id).slice(0, 4);
+    n.equipos = [eqId];
+    lista.push(n);
+  }
+  lista.sort((x, y) => (y.t || 0) - (x.t || 0));
+  const corta = lista.slice(0, 12);
+  const nuevo = { ...g, [eqId]: { t: Date.now(), lista: corta } };
+  const ids = Object.keys(nuevo).sort((x, y) => nuevo[y].t - nuevo[x].t).slice(0, 8);
+  LS.set('noticias-club', Object.fromEntries(ids.map((k) => [k, nuevo[k]])));
+  return corta;
+}
+
 /** cómo sale un equipo en los titulares («Valencia CF» → valencia; «Real Betis» → betis; «Atlético de Madrid» → atlético) */
 const STOP = new Set(['cf', 'fc', 'rcd', 'ud', 'cd', 'sad', 'club', 'de', 'futbol', 'balompie', 'ca', 'rc', 'sd', 'the']);
 const ESPECIALES = [['real madrid', ['real madrid']], ['real sociedad', ['real sociedad']], ['betis', ['betis']], ['atletico', ['atletico', 'atleti']], ['athletic', ['athletic']],

@@ -3,13 +3,20 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.0a';
+export const VERSION = '0.6.1';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.6.1', f: '2026-10-24', h: '21:53', t: 'Clubes',
+    cosas: [
+      { tipo: 'nuevo', d: 'campo', t: 'Clubes: los 20 de LaLiga', x: 'Pestaña nueva, al lado de Mercado: los 20 equipos por la clasificación, con su racha y su próximo rival. Toca uno y ves su once probable en el campo (de quién es cada jugador en tu liga y lo probable que es que salga), las bajas, los partidos que le vienen y su plantilla con lo que vale cada uno, si está libre y si está en el mercado.' },
+      { tipo: 'mejora', d: 'periodico', t: 'Sus noticias, y de un sitio a otro', x: 'En la ficha de cada club salen sus titulares de los últimos días. Desde la ficha de un jugador, tocando su equipo, vas a su club, y desde un partido de Directo, tocando un escudo. Con «‹ Volver», arriba, regresas a la ficha de antes.' },
+    ],
+  },
   {
     v: '0.6.0a', f: '2026-10-24', h: '20:24', t: 'Tus datos',
     cosas: [

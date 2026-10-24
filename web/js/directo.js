@@ -13,7 +13,7 @@ const empezo = (p, ahora = Date.now()) => (p.st != null ? p.st >= 2 : !!(p.fecha
 const acabado = (p, ahora = Date.now()) => p.st === 7 || (p.st == null && p.gl != null && p.fecha && ahora - p.fecha > 2 * HORA);
 const ptsCls = (v) => (v == null ? '' : v > 0 ? 'sube' : v < 0 ? 'baja' : 'cero');
 const eqDe = (D, id) => (D.equipos && D.equipos[id]) || {};
-const escudo = (D, id, cls = '') => { const e = eqDe(D, id); return e.escudo ? `<img class="pt-esc ${cls}" src="${esc(e.escudo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : `<span class="pt-esc ${cls} sin"></span>`; };
+export const escudo = (D, id, cls = '') => { const e = eqDe(D, id); return e.escudo ? `<img class="pt-esc ${cls}" src="${esc(e.escudo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : `<span class="pt-esc ${cls} sin"></span>`; };
 const nombreEq = (D, id) => eqDe(D, id).nombre || '¿?';
 
 /** un partido del calendario (datos.js) con la misma forma que los de vivo.js */
@@ -54,7 +54,7 @@ export function estadoP(p, ahora = Date.now()) {
 }
 
 /** de quién es en tu liga: { yo, tid, txt } o null si no es de nadie */
-function duenoDe(S, pid) {
+export function duenoDe(S, pid) {
   const t = S.M.dueno[pid];
   if (!t) return null;
   if (S.M.yo && String(t) === String(S.M.yo.teamId)) return { yo: true, tid: t, txt: 'Tuyo' };
@@ -371,19 +371,23 @@ function oncePrevio(M, os) {
 }
 /** un equipo antes de empezar: su once (el confirmado o el más probable) con lo probable que es que salga cada uno */
 function equipoPrevio(S, p, l) {
+  const o = onceDeEquipo(S, l ? p.lid : p.vid);
+  return o ? o.cab + o.campo : '';
+}
+/** el once de un equipo (el confirmado o el más probable) en el campo: { cab, campo, forma, conf, deLiga } o null */
+export function onceDeEquipo(S, tid) {
   const { D, M } = S;
-  const tid = l ? p.lid : p.vid;
   const os = Object.values(D.maestro).filter((j) => j.equipoId === tid && j.pos >= 1 && j.pos <= 4).map((j) => ({ j, T: M.titularidad ? M.titularidad(j) : null })).filter((o) => o.T && o.T.p != null);
-  if (os.length < 11) return '';
+  if (os.length < 11) return null;
   const tit = oncePrevio(M, os);
-  if (!tit || tit.length < 11 || tit.reduce((t, o) => t + o.T.p, 0) < 5) return '';
+  if (!tit || tit.length < 11 || tit.reduce((t, o) => t + o.T.p, 0) < 5) return null;
   const conf = tit.every((o) => o.T.confirmada === 'titular');
   // (arriba a la derecha solo lo que importa: la alineación confirmada, una lesión o una duda; «SUP» no, que va en el %)
   const marca = (j) => (M.alineacion(j.id) || ['injured', 'suspended', 'out_of_league', 'doubtful'].includes(j.estado) ? null : '');
   const crom = (o) => { const v = Math.round(o.T.p * 100); return cromo(M, o.j, { tag: tagDe(S, o.j.id), marca: marca(o.j), datoFijo: { txt: `${v} %`, cls: `prob ${v >= 75 ? 'bien' : v >= 45 ? 'duda' : 'mal'}` } }); };
   const forma = [2, 3, 4].map((pos) => tit.filter((o) => o.j.pos === pos).length).join('-');
   const deLiga = tit.filter((o) => M.dueno[o.j.id]).length;
-  return `<div class="pf-cab">${escudo(D, tid)}<b>${esc(nombreEq(D, tid))}</b><span>${conf ? 'confirmado' : 'probable'} · ${forma} · ${deLiga} de tu liga</span></div>${canchaHTML(tit, crom)}`;
+  return { cab: `<div class="pf-cab">${escudo(D, tid)}<b>${esc(nombreEq(D, tid))}</b><span>${conf ? 'confirmado' : 'probable'} · ${forma} · ${deLiga} de tu liga</span></div>`, campo: canchaHTML(tit, crom), forma, conf, deLiga };
 }
 
 export function fichaPartido(S, clave) {
@@ -396,9 +400,9 @@ export function fichaPartido(S, clave) {
   const ju = S.jugadas && S.jugadas[p.id];
   let h = `<div class="hoja-cab"><h2>Jornada ${n}</h2></div>`;
   h += `<div class="pf-mar">
-    <div class="pf-eq">${escudo(D, p.lid, 'g')}<span>${esc(nombreEq(D, p.lid))}</span></div>
+    <button class="pf-eq" data-club="${esc(p.lid)}">${escudo(D, p.lid, 'g')}<span>${esc(nombreEq(D, p.lid))}</span></button>
     <div class="pf-res"><b>${emp && p.gl != null ? `${p.gl}<i>-</i>${p.gv}` : p.fecha ? horaDe(p.fecha) : '–'}</b><span class="pf-e ${e.cls}">${e.cls === 'vivo' ? '<span class="vivo-dot"></span>' : ''}${esc(e.largo)}</span></div>
-    <div class="pf-eq">${escudo(D, p.vid, 'g')}<span>${esc(nombreEq(D, p.vid))}</span></div></div>`;
+    <button class="pf-eq" data-club="${esc(p.vid)}">${escudo(D, p.vid, 'g')}<span>${esc(nombreEq(D, p.vid))}</span></button></div>`;
   if (ju && ju.lista.length) h += `<div class="sec"><h2>Jugadas</h2><span class="sub">SofaScore</span></div><div class="pf-jug">${ju.lista.map((i) => jugadaHTML(S, p, i)).join('')}</div>`;
   if (emp && p.jug.length) {
     h += equipoJugado(S, p, true, ju) + equipoJugado(S, p, false, ju);

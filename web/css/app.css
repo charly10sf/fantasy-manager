@@ -1391,3 +1391,50 @@ body.limitado .tostada { z-index: 120; }
 /* la mudanza de la web (solo en charly10sf.github.io) */
 .aviso-mudanza { display: block; margin: 0 0 14px; padding: 10px 12px; border-radius: 12px; background: var(--oro-s); color: var(--oro); font-size: 15px; text-decoration: none; }
 .aviso-mudanza b { color: var(--texto); }
+
+/* Clubes: la lista de los 20 y la ficha de cada uno */
+.club-f .pt-esc.club-esc { width: 30px; height: 30px; }
+.club-f .fila-d { text-align: right; }
+.club-f .fila-d .v small { font: 600 13px 'Barlow'; color: var(--apagado); }
+.club-f .fila-d .d { margin-top: 5px; }
+.club-f .racha i { width: 14px; height: 14px; font-size: 9px; }
+.club-ley { margin-top: 12px; }
+.club-top { display: flex; gap: 14px; align-items: center; margin: 4px 0 12px; }
+.club-top .pt-esc.club-g { width: 62px; height: 62px; }
+.club-top h2 { margin: 0; font: 700 32px/1 var(--cond); text-transform: uppercase; overflow-wrap: anywhere; }
+.club-top .s { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 6px; color: var(--texto2); font-size: 15px; }
+.club-prox { padding: 14px 16px; }
+.club-prox .cp-t { font: 600 13px 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; color: var(--apagado); }
+.club-prox .cp-r { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 8px; font-size: 16px; color: var(--texto2); }
+.club-prox .cp-rival { display: inline-flex; align-items: center; gap: 7px; font: 700 19px/1.1 'Barlow'; color: var(--texto); }
+.club-prox .cp-rival b { text-decoration: underline; text-decoration-color: var(--rojo); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+.club-prox .cp-s { margin-top: 4px; font-size: 14.5px; color: var(--texto2); }
+.club-prox .cp-x { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 10px; font-size: 14px; color: var(--texto2); }
+.club-prox .cp-x > span { display: inline-flex; align-items: center; gap: 7px; }
+.club-prox .cp-x .cr-h2h { margin: 0; }
+.club-prox .cp-rot { display: flex; gap: 7px; align-items: center; margin: 10px 0 0; font-size: 14.5px; color: var(--oro); }
+.club-prox .cp-rot .ic { width: 17px; height: 17px; flex: none; }
+.club-prox .enlace { display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; padding: 6px 0; color: var(--rojo-l); font: 600 15px 'Barlow'; }
+.club-prox .enlace .ic { width: 16px; height: 16px; }
+.club-nada { margin: 0 0 4px; }
+.club-p { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 0 10px 10px; border-bottom: 1px solid var(--linea); border-left: 3px solid var(--plano3); }
+.club-p:active { opacity: 0.7; }
+.club-p.facil { border-left-color: var(--sube); } .club-p.media { border-left-color: var(--oro); } .club-p.dificil { border-left-color: var(--baja); }
+.club-p .cp-j { width: 52px; flex: none; font: 700 17px/1 var(--cond); display: flex; flex-direction: column; gap: 3px; }
+.club-p .cp-j small { font: 600 12.5px 'Barlow'; color: var(--apagado); text-transform: lowercase; }
+.club-p .cp-n { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.club-p .cp-n b { font: 600 16px 'Barlow'; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.club-p .cp-n small { font-size: 13.5px; color: var(--apagado); }
+.club-p .cp-res { flex: none; min-width: 44px; padding: 4px 8px; border-radius: 7px; text-align: center; font: 700 15px 'Barlow'; background: var(--plano3); color: var(--texto2); }
+.club-p .cp-res.r-V { background: var(--sube-s); color: var(--sube); } .club-p .cp-res.r-E { background: var(--oro-s); color: var(--oro); } .club-p .cp-res.r-D { background: var(--baja-s); color: var(--baja); }
+.club-ps .grupo:first-child { margin-top: 4px; }
+/* ‹ Volver a la ficha de antes (un jugador abierto desde su club…) */
+.volver-h { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; margin: 0 0 8px; padding: 6px 12px 6px 6px; border-radius: 10px; background: var(--plano2); color: var(--texto2); font: 600 15px 'Barlow'; }
+.volver-h .ic { width: 18px; height: 18px; flex: none; }
+.volver-h span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ficha-top .s .enlace-j { font-weight: 600; }
+button.pf-eq { cursor: pointer; }
+button.pf-eq:active { opacity: 0.7; }
+/* con 7 pestañas abajo, las letras un poco más pequeñas en los móviles estrechos */
+@media (max-width: 400px) { .nav button { font-size: 11.5px; letter-spacing: -0.2px; } .nav button .ic { width: 23px; height: 23px; } }
+.escritorio .club-lista, .escritorio .club-ley { max-width: 760px; }
