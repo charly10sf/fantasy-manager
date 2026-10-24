@@ -394,6 +394,18 @@ export function fichaRival(S, tid) {
   return h;
 }
 
+/* ================= ANUNCIO BONIFICADO ================= */
+/** antes de ver un anuncio para desbloquear algo (de momento, otro plan de la IA cuando ya llevas 3 hoy) */
+export function anuncioHTML(S, para) {
+  const A = S.anuncio || {};
+  let h = `<div class="hoja-cab"><h2>Otro plan</h2></div>`;
+  h += `<p class="t2" style="margin:0 0 14px">Hoy ya has pedido 3 planes a la IA. Para pedir otro, mira un anuncio corto. Mañana vuelves a tener 3 gratis.</p>`;
+  if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
+  h += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn" data-accion="verAnuncio" data-para="${esc(para)}"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button><button class="btn sec" data-accion="cerrarHoja">Ahora no</button></div>`;
+  h += `<p class="t2 peq" style="margin-top:14px">Con los anuncios la app sigue siendo gratis. El plan automático, sin IA, no tiene límite.</p>`;
+  return h;
+}
+
 /* ================= AJUSTES ================= */
 const interr = (on, accion, extra = '', nombre = '') => `<button class="interr ${on ? 'on' : ''}" data-accion="${accion}" ${extra} aria-pressed="${on}"${nombre ? ` aria-label="${esc(nombre)}"` : ''}></button>`;
 export function ajustes(S) {
@@ -455,6 +467,8 @@ export function ajustes(S) {
   if ((enApp || enWeb) && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Borrar los datos guardados</b><span>Histórico, fichas y planes (tu sesión y tu clave no)</span></div><button class="btn chico sec" data-accion="borrarDatos">Borrar</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Privacidad</b><span>Qué datos usa la app y dónde se quedan</span></div><a class="btn chico sec" href="privacidad.html">Ver</a></div>`;
+  // (solo en la versión de Google Play, si Google pide dejar cambiarlo: en la UE, sí)
+  if (enApp && nativo.hayPrivacidadAnuncios()) h += `<div class="ajuste"><div class="c"><b>Privacidad de los anuncios</b><span>Cambia si los anuncios pueden usar tus datos para personalizarse</span></div><button class="btn chico sec" data-accion="privAnuncios">Cambiar</button></div>`;
   h += `<p class="peq apag" style="margin-top:16px">Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga. Lee tu liga con tu cuenta, como su app, y usa datos públicos de fútbol. Tu sesión y tu clave se quedan en ${enApp ? 'este móvil' : 'este navegador'}.</p>`;
   return h;
 }

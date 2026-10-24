@@ -148,4 +148,11 @@ export const nativo = {
   webViva: () => llamar('webViva'),
   estadoWeb: () => { try { return JSON.parse(llamar('web') || 'null'); } catch (e) { return null; } },
   buscarWeb: () => { if (!N || typeof N.buscarWeb !== 'function') return false; llamar('buscarWeb'); return true; },
+  // los anuncios, solo en la versión de Google Play (Anuncios.java): si los lleva, el banner de abajo (si va en la
+  // pantalla de ahora), el bonificado para desbloquear algo (contesta con anuncioVisto) y el consentimiento
+  hayAnuncios: () => !!(N && typeof N.hayAnuncios === 'function' && llamar('hayAnuncios')),
+  banner: (si) => llamar('banner', !!si),
+  verAnuncio: (para) => llamar('verAnuncio', String(para || '')),
+  hayPrivacidadAnuncios: () => !!(N && typeof N.hayPrivacidadAnuncios === 'function' && llamar('hayPrivacidadAnuncios')),
+  privacidadAnuncios: () => llamar('privacidadAnuncios'),
 };

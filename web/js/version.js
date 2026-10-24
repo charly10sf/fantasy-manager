@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.4a';
+export const VERSION = '0.6.0';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.6.0', f: '2026-10-24', h: 'HH:MM', t: 'Camino de Google Play',
+    cosas: [
+      { tipo: 'nuevo', d: 'versiones', t: 'Fantasy Manager, camino de Google Play', x: 'La app se prepara para salir en Google Play. Allí será gratis, con un anuncio pequeño debajo de las pestañas, y para pedirle a la IA más de 3 planes en el mismo día habrá que ver un anuncio corto. La versión de nuestra liga, la que te instalas desde aquí, sigue sin anuncios y sin límite.' },
+    ],
+  },
   {
     v: '0.5.4a', f: '2026-10-24', h: '15:27', t: 'Cada partido, en su campo',
     cosas: [

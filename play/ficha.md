@@ -83,26 +83,44 @@ Las capturas usan la liga de ejemplo (datos inventados).
 
 18 años o más. Así la app no entra en la política de Familias, que complica los anuncios.
 
-## Seguridad de los datos (formulario)
+## Acceso a la app (para la revisión de Google)
 
-Hasta la 0.5, sin anuncios. Repasar al meter AdMob en la 0.6: añade identificadores del dispositivo y datos de uso para publicidad.
+«Todas o algunas funciones están restringidas» → instrucciones:
 
-| Pregunta | Respuesta |
-| --- | --- |
-| ¿Recoge o comparte datos? | Sí, recoge (solo si el usuario manda un aviso de fallo) |
-| ¿Se cifran en tránsito? | Sí (todo va por https) |
-| ¿Puede el usuario pedir que se borren? | Sí (se borran solos a los 180 días; o pidiéndolo por correo) |
-| Información personal → Nombre | Recogido: el nombre de mánager, solo en los avisos de fallos. Uso: asistencia. Opcional |
-| Información y rendimiento de la app → Registros de fallos y Diagnóstico | Recogido: solo si marca la casilla al mandar un aviso. Uso: asistencia y analítica de fallos. Opcional |
-| Mensajes en la app → Otros mensajes | Recogido: el texto del aviso de fallo. Uso: asistencia. Opcional |
-| Compartido con terceros | No |
+> La app funciona con una cuenta de LaLiga Fantasy (se entra en la página oficial de LaLiga). Para revisarla sin cuenta: en la primera pantalla, toca «Ver con una liga de ejemplo». Todas las funciones están disponibles con datos inventados: plan del día, equipo, Directo, rivales, mercado y Ajustes. La IA (pestaña Pregunta) necesita una clave gratuita de Google AI Studio; sin ella, el plan sale igual, sin IA.
 
-Lo que no sale del móvil (no hace falta declararlo): la sesión de LaLiga, los datos de la liga, la clave de Gemini. Lo que se manda a Google Gemini lo manda el usuario con su propia clave.
+No hace falta dar usuario y contraseña.
 
 ## Anuncios
 
-«¿Contiene anuncios?»: No, hasta la 0.6. Cambiarlo a Sí al publicar la versión con AdMob.
+«¿Contiene anuncios?»: **Sí** (desde la 0.6: banner de AdMob y un bonificado para pedir más planes a la IA). Solo la versión de Google Play.
+
+## ID de publicidad
+
+«¿Usa el ID de publicidad?»: **Sí** → Publicidad o marketing, Analítica y Prevención del fraude, seguridad y cumplimiento. (Lo usa la librería de AdMob; el permiso AD_ID lo añade ella.)
+
+## Seguridad de los datos (formulario)
+
+Para la versión con anuncios (0.6 y siguientes). Lo de AdMob sale de la guía de Google para la versión 25.5.0 de su librería: https://developers.google.com/admob/android/privacy/play-data-disclosure
+
+| Pregunta | Respuesta |
+| --- | --- |
+| ¿Recoge o comparte datos? | Sí |
+| ¿Se cifran en tránsito? | Sí (todo va por https) |
+| ¿Puede el usuario pedir que se borren? | Sí (escribiendo al correo de contacto; los avisos se borran solos a los 180 días y el uso, a los 90) |
+
+| Tipo de dato | Recogido | Compartido | Para qué | ¿Opcional? |
+| --- | --- | --- | --- | --- |
+| Ubicación → Ubicación aproximada (la IP, la usa AdMob) | Sí | Sí | Publicidad o marketing, Analítica, Prevención del fraude | No |
+| Información personal → Nombre (el nombre de mánager: «Quién usa la app» y avisos de fallo) | Sí | No | Funciones de la app, Analítica | No |
+| Información personal → ID de usuario (el número de cuenta de LaLiga, para lo mismo) | Sí | No | Funciones de la app, Analítica | No |
+| Actividad en la app → Interacciones con la app (AdMob: aperturas, toques, vídeos; y los minutos de uso, donde hay límite) | Sí | Sí | Publicidad o marketing, Analítica, Funciones de la app, Prevención del fraude | No |
+| Mensajes → Otros mensajes en la app (el texto de un aviso de fallo) | Sí | No | Funciones de la app (soporte), Comunicaciones del desarrollador | Sí |
+| Información y rendimiento de la app → Diagnóstico (AdMob; y el diagnóstico si marcas la casilla en un aviso de fallo) | Sí | Sí | Analítica, Publicidad o marketing, Prevención del fraude | No |
+| Dispositivo u otros identificadores (ID de publicidad e ID de conjunto de apps, AdMob) | Sí | Sí | Publicidad o marketing, Analítica, Prevención del fraude | No |
+
+Lo que no sale del móvil (no hace falta declararlo): la sesión de LaLiga, los datos de la liga, la clave de Gemini. Lo que se manda a Google Gemini lo manda el usuario con su propia clave.
 
 ## Prueba cerrada
 
-12 testers como mínimo durante 14 días seguidos. Apuntar 15–16 por si alguien se da de baja.
+12 testers como mínimo apuntados 14 días seguidos. Apuntar 15–16 por si alguien se da de baja. Paso a paso, en prueba-cerrada.md.

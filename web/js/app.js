@@ -46,6 +46,7 @@ function tostada(t, ms = 3200) {
 
 /* ---------------- pantallas completas ---------------- */
 function pantallaEntrar(error = '') {
+  ponerBanner(false);
   raiz().innerHTML = `<div class="pantalla"><div class="pant-i">${LOGO}
     <h1>Fantasy<br><span>Manager</span></h1>
     ${enApp ? '' : avisoMovilHTML()}
@@ -167,6 +168,7 @@ function cargaHTML(paso, error, liga) {
   </div>`;
 }
 function pantallaCarga(paso = -1, error = null) {
+  ponerBanner(false);
   const total = pasosCarga.length;
   const el = $('.carga');
   const liga = (foto() || {}).liga;
@@ -297,7 +299,50 @@ function pintar({ arriba = false } = {}) {
   if (S.vista === 'directo' && S.M.enJuego && S.M.vivo && (S.seg.directo === 'liga' || V.ancho())) cargarOncesRivales();
   // el cierre hasta la hora de apertura y el límite de minutos, sin esperar a la próxima vuelta del reloj
   mirarLimite();
+  // el banner de los anuncios (solo en la versión de Google Play): en las pestañas, nunca en Pregunta
+  ponerBanner(S.vista !== 'ia');
 }
+/* ---------------- anuncios (solo en la versión de Google Play) ---------------- */
+let bannerYa = null;
+function ponerBanner(si) {
+  if (EN_FONDO || !enApp) return;
+  si = !!si;
+  if (si === bannerYa) return;
+  bannerYa = si;
+  nativo.banner(si);
+}
+const conAnuncios = () => enApp && !EN_FONDO && nativo.hayAnuncios();
+// «Pedir otro plan a la IA»: 3 veces al día gratis; a partir de la 4.ª, viendo un anuncio (solo en la de Google Play)
+const PLANES_GRATIS = 3;
+const planesHoy = () => { const g = LS.get('planes-mano', null); return g && g.dia === diaDe() ? g.n : 0; };
+const contarPlan = () => LS.set('planes-mano', { dia: diaDe(), n: planesHoy() + 1 });
+function pedirOtroPlan() {
+  if ((S.planEstado || {}).cargando) return;
+  // (el primero con IA del día no cuenta: solo cuando ya hay uno de la IA)
+  const yaHay = S.plan && !S.plan.auto && S.plan.dia === diaDe();
+  if (yaHay && conAnuncios() && planesHoy() >= PLANES_GRATIS) { S.anuncio = { para: 'plan' }; hoja('anuncio', 'plan'); return; }
+  if (yaHay) contarPlan();
+  S.planEstado = {};
+  generarPlan();
+}
+/** la vuelta del anuncio bonificado (Anuncios.java) */
+window.anuncioVisto = (para, visto, motivo) => {
+  if (para !== 'plan') return;
+  const sinAnuncio = !visto && /sin anuncio|sin consentimiento|no se pudo/.test(motivo || '');
+  if (visto || sinAnuncio) {
+    // si no hay anuncio que enseñar, va igual: no es culpa suya
+    S.anuncio = null;
+    cerrarHoja();
+    if (S.vista !== 'hoy') ir('hoy');
+    contarPlan();
+    S.planEstado = {};
+    generarPlan();
+    if (sinAnuncio) tostada('No había anuncio ahora: este va gratis');
+    return;
+  }
+  S.anuncio = { para, error: 'Para el plan hay que ver el anuncio hasta el final.' };
+  if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja();
+};
 function ir(vista, { arriba = true } = {}) {
   vista = ALIAS[vista] || vista;
   if (!VISTAS[vista]) vista = 'hoy';
@@ -870,7 +915,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -1370,7 +1415,9 @@ document.addEventListener('click', async (ev) => {
     case 'copiarDiag': nativo.copiar(Hj.textoDiagnostico(S)); tostada('Copiado'); break;
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
-    case 'planYa': cerrarHoja(); ir('hoy'); if (!(S.planEstado || {}).cargando) { S.planEstado = {}; generarPlan(); } break;
+    case 'planYa': cerrarHoja(); ir('hoy'); pedirOtroPlan(); break;
+    case 'verAnuncio': S.anuncio = { para: d.para, cargando: true }; repintarHoja(); nativo.verAnuncio(d.para); break;
+    case 'privAnuncios': nativo.privacidadAnuncios(); break;
     case 'voz': escuchar(); break;
     case 'pararPlan': if (S.planCtl) S.planCtl.abort(); break;
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;

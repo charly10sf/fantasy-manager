@@ -91,6 +91,17 @@ jobs:
           # probarla en un móvil sin pasar por la tienda)
           gradle assembleGithubRelease bundlePlayRelease assemblePlayRelease --no-daemon --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/compilacion.log"
 
+      # los permisos y la versión de cada una, para comprobar lo que va a la tienda (sale en la rama android-registro)
+      - name: Permisos
+        if: success()
+        run: |
+          A=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)
+          for f in android/app/build/outputs/apk/github/release/app-github-release.apk android/app/build/outputs/apk/play/release/app-play-release.apk; do
+            echo "== $f"
+            "$A/aapt2" dump badging "$f" | grep -E "^package:|^sdkVersion|^targetSdkVersion|^uses-permission" || true
+            "$A/aapt2" dump xmltree --file AndroidManifest.xml "$f" | grep -E "meta-data|APPLICATION_ID|service" -A2 | grep -E "android:name|android:value" | head -20 || true
+          done > "$GITHUB_WORKSPACE/permisos.txt" 2>&1 || true
+
       # solo desde main: en otras ramas se compila para probar, sin publicar
       - name: Publicar la app
         if: env.FIRMA == 'buena' && github.ref == 'refs/heads/main'
@@ -128,6 +139,7 @@ jobs:
           mkdir -p /tmp/registro && cd /tmp/registro
           cp "$GITHUB_WORKSPACE/compilacion.log" . 2>/dev/null || echo "sin registro" > compilacion.log
           cp "$GITHUB_WORKSPACE/firma.log" . 2>/dev/null || true
+          cp "$GITHUB_WORKSPACE/permisos.txt" . 2>/dev/null || true
           tail -c 60000 compilacion.log > ultimo.log
           echo "run ${{ github.run_number }} firma ${FIRMA:-?} $(date -u +%FT%TZ)" > estado.txt
           ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/github/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/apk/play/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/bundle/playRelease/" >> estado.txt 2>&1 || true
