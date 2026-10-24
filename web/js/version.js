@@ -11,7 +11,7 @@ export const VERSION = '0.6.2b';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.6.2b', f: '2026-10-24', h: 'HH:MM', t: 'Las jornadas, más a mano',
+    v: '0.6.2b', f: '2026-10-24', h: '23:28', t: 'Las jornadas, más a mano',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'Pasar de una jornada a otra', x: 'En Equipo → Jornadas, junto al título salen ‹ y › para ir a la jornada anterior o a la siguiente. Los botones de arriba (J1, J2…) siguen ahí, pero al bajar se quedan tapados por las pestañas.', ir: { v: 'equipo', seg: 'equipo:jornadas' } },
     ],
