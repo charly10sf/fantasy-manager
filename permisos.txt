@@ -1,0 +1,55 @@
+== android/app/build/outputs/apk/github/release/app-github-release.apk
+package: name='es.fantasymanager.app' versionCode='173' versionName='0.6.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+targetSdkVersion:'36'
+uses-permission: name='android.permission.REQUEST_INSTALL_PACKAGES'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
+uses-permission: name='android.permission.SCHEDULE_EXACT_ALARM'
+uses-permission: name='android.permission.FOREGROUND_SERVICE'
+uses-permission: name='android.permission.FOREGROUND_SERVICE_DATA_SYNC'
+uses-permission: name='android.permission.WAKE_LOCK'
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='es.fantasymanager.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="es.fantasymanager.app.Trabajo" (Raw: "es.fantasymanager.app.Trabajo")
+                A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.work.WorkManagerInitializer" (Raw: "androidx.work.WorkManagerInitializer")
+                A: http://schemas.android.com/apk/res/android:value(0x01010024)="androidx.startup" (Raw: "androidx.startup")
+                A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.profileinstaller.ProfileInstallerInitializer" (Raw: "androidx.profileinstaller.ProfileInstallerInitializer")
+                A: http://schemas.android.com/apk/res/android:value(0x01010024)="androidx.startup" (Raw: "androidx.startup")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.work.impl.background.systemalarm.SystemAlarmService" (Raw: "androidx.work.impl.background.systemalarm.SystemAlarmService")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.work.impl.background.systemjob.SystemJobService" (Raw: "androidx.work.impl.background.systemjob.SystemJobService")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.work.impl.foreground.SystemForegroundService" (Raw: "androidx.work.impl.foreground.SystemForegroundService")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.room.MultiInstanceInvalidationService" (Raw: "androidx.room.MultiInstanceInvalidationService")
+== android/app/build/outputs/apk/play/release/app-play-release.apk
+package: name='es.fantasymanager.app' versionCode='173' versionName='0.6.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+targetSdkVersion:'36'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
+uses-permission: name='android.permission.SCHEDULE_EXACT_ALARM'
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='com.google.android.gms.permission.AD_ID'
+uses-permission: name='android.permission.ACCESS_ADSERVICES_AD_ID'
+uses-permission: name='android.permission.ACCESS_ADSERVICES_ATTRIBUTION'
+uses-permission: name='android.permission.ACCESS_ADSERVICES_TOPICS'
+uses-permission: name='android.permission.WAKE_LOCK'
+uses-permission: name='es.fantasymanager.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.android.gms.ads.APPLICATION_ID" (Raw: "com.google.android.gms.ads.APPLICATION_ID")
+            A: http://schemas.android.com/apk/res/android:value(0x01010024)="ca-app-pub-3175956326240112~3275745965" (Raw: "ca-app-pub-3175956326240112~3275745965")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION" (Raw: "com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION")
+            A: http://schemas.android.com/apk/res/android:value(0x01010024)=true
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING" (Raw: "com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING")
+            A: http://schemas.android.com/apk/res/android:value(0x01010024)=true
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.android.gms.ads.AdService" (Raw: "com.google.android.gms.ads.AdService")
+                A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.work.WorkManagerInitializer" (Raw: "androidx.work.WorkManagerInitializer")
+                A: http://schemas.android.com/apk/res/android:value(0x01010024)="androidx.startup" (Raw: "androidx.startup")
+                A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.profileinstaller.ProfileInstallerInitializer" (Raw: "androidx.profileinstaller.ProfileInstallerInitializer")
+                A: http://schemas.android.com/apk/res/android:value(0x01010024)="androidx.startup" (Raw: "androidx.startup")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.work.impl.background.systemalarm.SystemAlarmService" (Raw: "androidx.work.impl.background.systemalarm.SystemAlarmService")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.work.impl.background.systemjob.SystemJobService" (Raw: "androidx.work.impl.background.systemjob.SystemJobService")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.work.impl.foreground.SystemForegroundService" (Raw: "androidx.work.impl.foreground.SystemForegroundService")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.android.play.core.hsdp.service.HsdpShimActivity" (Raw: "com.google.android.play.core.hsdp.service.HsdpShimActivity")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="com.google.android.gms.version" (Raw: "com.google.android.gms.version")
+            A: http://schemas.android.com/apk/res/android:value(0x01010024)=@0x7f070000
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="android.ext.adservices" (Raw: "android.ext.adservices")
+            A: http://schemas.android.com/apk/res/android:name(0x01010003)="androidx.room.MultiInstanceInvalidationService" (Raw: "androidx.room.MultiInstanceInvalidationService")

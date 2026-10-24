@@ -1,0 +1,122 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preGithubReleaseBuild UP-TO-DATE
+> Task :app:mergeGithubReleaseJniLibFolders
+> Task :app:mergeGithubReleaseNativeLibs NO-SOURCE
+> Task :app:stripGithubReleaseDebugSymbols NO-SOURCE
+> Task :app:extractGithubReleaseNativeSymbolTables NO-SOURCE
+> Task :app:mergeGithubReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:generateGithubReleaseBuildConfig
+> Task :app:checkGithubReleaseDuplicateClasses
+> Task :app:javaPreCompileGithubRelease
+> Task :app:generateGithubReleaseResValues
+> Task :app:checkGithubReleaseAarMetadata
+> Task :app:mapGithubReleaseSourceSetPaths
+> Task :app:generateGithubReleaseResources
+> Task :app:packageGithubReleaseResources
+> Task :app:createGithubReleaseCompatibleScreenManifests
+> Task :app:mergeGithubReleaseResources
+> Task :app:extractDeepLinksGithubRelease
+> Task :app:parseGithubReleaseLocalResources
+> Task :app:processGithubReleaseMainManifest
+> Task :app:processGithubReleaseManifest
+> Task :app:desugarGithubReleaseFileDependencies
+> Task :app:mergeGithubReleaseStartupProfile
+> Task :app:processGithubReleaseManifestForPackage
+> Task :app:mergeGithubReleaseArtProfile
+> Task :app:mergeGithubReleaseShaders
+> Task :app:compileGithubReleaseShaders NO-SOURCE
+> Task :app:generateGithubReleaseAssets UP-TO-DATE
+> Task :app:mergeGithubReleaseAssets
+> Task :app:processGithubReleaseResources
+> Task :app:compressGithubReleaseAssets
+> Task :app:extractGithubReleaseVersionControlInfo
+> Task :app:mergeExtDexGithubRelease
+
+> Task :app:compileGithubReleaseJavaWithJavac
+Note: /home/runner/work/fantasy-manager/fantasy-manager/android/app/src/main/java/es/fantasymanager/app/Web.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:dexBuilderGithubRelease
+> Task :app:mergeGithubReleaseGlobalSynthetics
+> Task :app:processGithubReleaseJavaRes NO-SOURCE
+> Task :app:collectGithubReleaseDependencies
+> Task :app:sdkGithubReleaseDependencyData
+> Task :app:validateSigningGithubRelease
+> Task :app:optimizeGithubReleaseResources
+> Task :app:writeGithubReleaseAppMetadata
+> Task :app:writeGithubReleaseSigningConfigVersions
+> Task :app:prePlayReleaseBuild UP-TO-DATE
+> Task :app:mergeGithubReleaseJavaResource
+> Task :app:generatePlayReleaseResValues
+> Task :app:mergeDexGithubRelease
+> Task :app:mapPlayReleaseSourceSetPaths
+> Task :app:generatePlayReleaseResources
+> Task :app:compileGithubReleaseArtProfile
+> Task :app:createPlayReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksPlayRelease
+> Task :app:mergePlayReleaseResources
+> Task :app:processPlayReleaseMainManifest
+> Task :app:processPlayReleaseManifest
+> Task :app:processApplicationManifestPlayReleaseForBundle
+> Task :app:checkPlayReleaseAarMetadata
+> Task :app:packagePlayReleaseResources
+> Task :app:extractPlayReleaseVersionControlInfo
+> Task :app:parsePlayReleaseLocalResources
+> Task :app:packageGithubRelease
+> Task :app:createGithubReleaseApkListingFileRedirect
+> Task :app:assembleGithubRelease
+> Task :app:generatePlayReleaseBuildConfig
+> Task :app:javaPreCompilePlayRelease
+> Task :app:processPlayReleaseManifestForPackage
+> Task :app:checkPlayReleaseDuplicateClasses
+> Task :app:desugarPlayReleaseFileDependencies
+> Task :app:mergePlayReleaseStartupProfile
+> Task :app:processPlayReleaseResources
+> Task :app:mergeExtDexPlayRelease
+> Task :app:bundlePlayReleaseResources
+
+> Task :app:compilePlayReleaseJavaWithJavac
+Note: /home/runner/work/fantasy-manager/fantasy-manager/android/app/src/main/java/es/fantasymanager/app/Web.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:dexBuilderPlayRelease
+> Task :app:mergePlayReleaseShaders
+> Task :app:compilePlayReleaseShaders NO-SOURCE
+> Task :app:generatePlayReleaseAssets UP-TO-DATE
+> Task :app:mergePlayReleaseAssets
+> Task :app:processPlayReleaseJavaRes NO-SOURCE
+> Task :app:mergePlayReleaseGlobalSynthetics
+> Task :app:mergePlayReleaseJniLibFolders
+> Task :app:mergePlayReleaseNativeLibs NO-SOURCE
+> Task :app:stripPlayReleaseDebugSymbols NO-SOURCE
+> Task :app:writePlayReleaseAppMetadata
+> Task :app:mergePlayReleaseArtProfile
+> Task :app:collectPlayReleaseDependencies
+> Task :app:configurePlayReleaseDependencies
+> Task :app:extractPlayReleaseNativeSymbolTables NO-SOURCE
+> Task :app:validateSigningPlayRelease
+> Task :app:parsePlayReleaseIntegrityConfig
+> Task :app:mergePlayReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:compressPlayReleaseAssets
+> Task :app:sdkPlayReleaseDependencyData
+> Task :app:writePlayReleaseSigningConfigVersions
+> Task :app:optimizePlayReleaseResources
+> Task :app:mergePlayReleaseJavaResource
+> Task :app:mergeDexPlayRelease
+> Task :app:buildPlayReleasePreBundle
+> Task :app:compilePlayReleaseArtProfile
+> Task :app:packagePlayReleaseBundle
+> Task :app:packagePlayRelease
+> Task :app:createPlayReleaseApkListingFileRedirect
+> Task :app:assemblePlayRelease
+> Task :app:signPlayReleaseBundle
+> Task :app:producePlayReleaseBundleIdeListingFile
+> Task :app:createPlayReleaseBundleListingFileRedirect
+> Task :app:bundlePlayRelease
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_5-1792861425301.json
+[Incubating] Problems report is available at: file:///home/runner/work/fantasy-manager/fantasy-manager/android/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m 12s
+87 actionable tasks: 87 executed
