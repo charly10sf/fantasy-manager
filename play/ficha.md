@@ -31,15 +31,19 @@ QUÉ HACER HOY
 
 CLÁUSULAS Y RIVALES
 • Las cláusulas de tus rivales que te llegan con tu dinero, y cuándo se abren las que aún están protegidas.
-• Qué jugadores tuyos están en riesgo y quién puede pagarlos.
+• Qué jugadores tuyos están en riesgo de que te los clausulen.
 • Los blindajes, en cuenta: no te propone clausular a uno que acaban de blindar.
-• Lo que hace cada rival: fichajes, ventas y clausulazos al momento.
+• Lo que hace cada rival: fichajes y clausulazos al momento.
 
 MERCADO
 • Cuánto pujar por cada libre según lo que se paga de verdad en tu liga.
 • Qué ofrecer a otro mánager para que te venda, por encima de lo que le daría LaLiga.
 • Quién sube y quién baja, con la tendencia de cada jugador día a día.
 • Especular entre semana: comprar lo que sube y venderlo antes de la jornada.
+
+JORNADA EN DIRECTO
+• Los partidos con su marcador y tus jugadores con los puntos que llevan.
+• Cómo va la jornada en tu liga y cuántos jugadores le quedan a cada rival.
 
 TU EQUIPO
 • Tu mejor once con las formaciones gratuitas.
