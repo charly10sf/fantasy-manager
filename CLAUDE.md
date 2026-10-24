@@ -29,7 +29,13 @@ Repo: charly10sf/fantasy-manager (público).
 - `web/limites.json`: apertura (`abre`, `mensajeApertura`), `ligas`, `minutosLiga`, `minutos`, `equipos`, `sinLimite`, `bloqueadas`, `todoAbierto`. La cuenta atrás y los minutos son solo para las cuentas con alguna liga de `ligas` (por nombre o id; ahora «Maulazzos»); las demás, sin límite. Lo bloqueado (`bloqueadas`: dineroRivales, quienPaga, inercia, ventasRivales), para todos menos `todoAbierto`. `minutosLiga` (40 desde el 23 oct: 10 + 30 que pidió Carlos) es lo que leen las versiones desde la 0.5.0b; `minutos` está a 0 porque las anteriores tenían un fallo que congelaba la app al contar el tiempo: cuando nadie tenga una versión vieja, se puede volver a poner igual. `sinLimite` y `todoAbierto` van por id de cuenta (667015), no por nombre de equipo: un nombre lo puede copiar cualquiera. La app lo lee de raw de main y la web de Pages, con 6 h de caché (la guardada sin `ligas` se vuelve a leer).
 - `android/`: WebView que sirve web/ desde el APK. AlDia.java baja la web nueva de Pages si la parte Android no ha cambiado (comparando huellas) y vuelve a la del APK si la nueva no arranca. Sabores `github` (la liga) y `play`.
 - `worker/`: Cloudflare Worker con KV VINCULOS. Rutas /p (proxy a LaLiga), /img, /vincular (código para abrir en otro dispositivo), /fallos (avisos de fallo con respuesta), /hola (quién usa la app). ADMINS = 667015 (Carlos) en wrangler.toml.
-- `.github/`: android.yml (compila en main y pendiente, publica APK y app.json solo desde main), web.yml (Pages), worker.yml. paquete.py genera paquete.json con las huellas.
+- `.github/`: android.yml (compila en main y pendiente, publica APK y app.json solo desde main), web.yml (Pages), worker.yml. paquete.py genera paquete.json con las huellas. fallos.yml (a mano): lee y contesta los avisos de Fallo del KV.
+
+## Los avisos de Fallo (revisarlos antes de cada versión)
+
+- Llegan por el botón «Copiar para Claude» de la app (Fallo, solo Carlos), que los copia con su diagnóstico, o por captura. El artefacto de la Action no se puede bajar desde aquí (blob.core.windows.net bloqueado).
+- Contestar uno: `gh workflow run fallos.yml -R charly10sf/fantasy-manager --ref main -f llave="$(node .github/fallos-leer.mjs llave)" -f respuestas='[{"buscar":"trozo del principio del aviso","por":"Claude · Fantasy Manager","respuesta":"…"}]'` (o `"id"` si se tiene). Solo los sin contestar; las respuestas se ven en la Action: nada personal. Se comprueba con las anotaciones del job (`gh api repos/charly10sf/fantasy-manager/check-runs/<job>/annotations`): «N contestados ahora».
+- Contestar solo con lo ya publicado.
 
 ## Publicar (solo con su OK)
 
