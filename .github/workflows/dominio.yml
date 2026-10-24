@@ -6,6 +6,7 @@
 # en main (es cuando cambian la web, el APK y app.json), a mano, y al cambiar este archivo en pendiente (para montar
 # el dominio antes de publicar la versión que lo usa). Mientras dura la mudanza, GitHub Pages sigue publicando lo mismo.
 #
+# Sin el dominio activo, sirve en https://fantasy-manager-61v.pages.dev.
 # Usa los secretos del Worker: CLOUDFLARE_API_TOKEN (con permiso de Cloudflare Pages) y CLOUDFLARE_ACCOUNT_ID.
 name: Dominio
 
