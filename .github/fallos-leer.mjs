@@ -1,6 +1,8 @@
 // Para Claude: abre los avisos de fallos que deja la Action «Fallos».
 //   node .github/fallos-leer.mjs llave              → crea (o reutiliza) la llave de este chat y saca la pública
-//   node .github/fallos-leer.mjs leer fallos.enc    → los avisos, legibles (DIAG=1 para ver también el diagnóstico)
+//   node .github/fallos-leer.mjs leer fallos.enc    → los avisos, legibles (DIAG=1 para ver también el diagnóstico;
+//                                                      CAPTURAS=<carpeta> guarda ahí las de los que están sin contestar)
+//   el fallos.enc de la última vez: git -C /home/claude/fantasy-manager-avisos pull (repo privado, añadirlo a la sesión)
 // La privada se queda en ~/.fm/fallos.key, fuera del repo, y no se sube a ningún sitio: cada chat nuevo crea la suya.
 import { constants, createDecipheriv, generateKeyPairSync, privateDecrypt } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -29,7 +31,20 @@ if (que === 'llave') {
   for (const a of avisos) {
     console.log(`## ${a.id} · ${f(a.t)} · ${a.equipo || ''}${a.quien ? ` (${a.quien})` : ''} · ${a.app || ''}`);
     console.log(a.texto);
-    if (a.capturas) console.log(`(${a.capturas} captura${a.capturas > 1 ? 's' : ''}: en la bandeja de la app)`);
+    if (a.capturas) {
+      const guardadas = [];
+      if (process.env.CAPTURAS && a.imagenes) {
+        mkdirSync(process.env.CAPTURAS, { recursive: true });
+        a.imagenes.forEach((img, n) => {
+          const m = /^data:image\/(\w+);base64,(.+)$/.exec(img || '');
+          if (!m) return;
+          const f = join(process.env.CAPTURAS, `${a.id}-${n + 1}.${m[1] === 'jpeg' ? 'jpg' : m[1]}`);
+          writeFileSync(f, Buffer.from(m[2], 'base64'));
+          guardadas.push(f);
+        });
+      }
+      console.log(guardadas.length ? `(capturas: ${guardadas.join(', ')})` : `(${a.capturas} captura${a.capturas > 1 ? 's' : ''}${a.imagenes ? '' : ': en la bandeja de la app'})`);
+    }
     if (a.respondida) console.log(`→ ${a.por || 'Respuesta'} (${f(a.respondida)}${a.vista ? ', leída' : ', sin leer'}): ${a.respuesta}`);
     if (process.env.DIAG && a.diag) console.log(`\n--- diagnóstico ---\n${a.diag}`);
     console.log('');

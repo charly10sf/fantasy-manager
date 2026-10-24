@@ -1,6 +1,8 @@
 # Los avisos de fallos de la app (los que mandan los amigos con el botón «Fallo»), para que Claude los revise antes
-# de cada versión. Lee el almacén KV del Worker y los deja como artefacto («fallos», un día) cifrados con la llave
-# pública que se le pasa: solo los abre el chat que tiene la privada (.github/fallos-leer.mjs). Con «respuestas» los
+# de cada versión. Lee el almacén KV del Worker y los deja cifrados con la llave pública que se le pasa en el repo
+# privado charly10sf/fantasy-manager-avisos (un solo commit, se rehace cada vez; con el secreto AVISOS_TOKEN, un token
+# de grano fino con permiso de Contents solo en ese repo) y como artefacto: solo los abre el chat que tiene la privada
+# (.github/fallos-leer.mjs). Claude no puede bajar artefactos desde su entorno; ese repo, sí, con git. Con «respuestas» los
 # contesta y al que lo mandó le llega en la app. El repo es público: nada de los avisos sale sin cifrar, y las
 # respuestas se ven en la Action, así que en ellas nada personal. Lanzarla solo pueden los que escriben en el repo.
 name: Fallos
@@ -38,6 +40,19 @@ jobs:
           LLAVE: ${{ inputs.llave }}
           RESPUESTAS: ${{ inputs.respuestas }}
         run: node .github/fallos.mjs
+      # en el repo privado de los avisos, sin historia: así Claude lo lee con git
+      - name: Dejarlos en el repo privado de los avisos
+        env:
+          AVISOS_TOKEN: ${{ secrets.AVISOS_TOKEN }}
+        run: |
+          if [ -z "$AVISOS_TOKEN" ]; then echo "::warning::Falta el secreto AVISOS_TOKEN: solo queda el artefacto"; exit 0; fi
+          mkdir -p /tmp/avisos && cp fallos.enc /tmp/avisos/ && cd /tmp/avisos
+          git init -q && git checkout -q -b main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fallos.enc && git commit -q -m "Avisos cifrados $(date -u +%FT%TZ)"
+          git push -q -f "https://x-access-token:${AVISOS_TOKEN}@github.com/charly10sf/fantasy-manager-avisos.git" main
+          echo "::notice::Avisos dejados en charly10sf/fantasy-manager-avisos"
       - uses: actions/upload-artifact@v4
         with:
           name: fallos

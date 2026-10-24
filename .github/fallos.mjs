@@ -1,8 +1,9 @@
 // Los avisos de fallos de la app, para que Claude los revise (lo lanza .github/workflows/fallos.yml).
 // Lee los avisos del almacén KV del Worker («VINCULOS», claves f:<cuenta>:<id>) con la API de Cloudflare y los deja
 // en fallos.enc cifrados con la llave pública que se le pasa al lanzarla (RSA-OAEP + AES-256-GCM): solo los abre
-// quien tiene la privada, que no sale del chat que la creó (.github/fallos-leer.mjs). El repo es público y los
-// artefactos también; en el registro solo sale cuántos hay. Lanzarla solo pueden los que escriben en el repo.
+// quien tiene la privada, que no sale del chat que la creó (.github/fallos-leer.mjs). La Action lo deja en el repo
+// privado charly10sf/fantasy-manager-avisos (Claude no puede bajar artefactos, pero sí leer ese repo con git). En el
+// registro solo sale cuántos hay. Lanzarla solo pueden los que escriben en el repo.
 // Con RESPUESTAS ([{ id | buscar, respuesta, por? }], sin datos de nadie: se ve en la Action) contesta esos avisos y al que
 // lo mandó le llega la respuesta en la app.
 import { constants, createCipheriv, publicEncrypt, randomBytes } from 'node:crypto';
@@ -42,7 +43,7 @@ do {
 const leer = async (k) => JSON.parse(await (await cf(`${base}/values/${encodeURIComponent(k)}`)).text());
 // el mismo resumen que guarda el Worker (worker/src/index.js)
 const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
-const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(String(f.texto || '').replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0 });
+const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(String(f.texto || '').replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0, c: f.capturas || 0 });
 
 // las respuestas
 let contestados = 0;
@@ -66,11 +67,18 @@ if (RESPUESTAS.trim()) {
   }
 }
 
-// los avisos, del más nuevo al más viejo (sin el número de cuenta)
+// los avisos, del más nuevo al más viejo (sin el número de cuenta); los que están sin contestar, con sus capturas
+// (fc:<id>:<n>, como las guarda el Worker), para que Claude las vea sin que nadie se las pase
 const avisos = [];
 for (const k of claves.sort((a, b) => ((b.metadata || {}).t || 0) - ((a.metadata || {}).t || 0)).slice(0, 150)) {
   const { uid, ...f } = await leer(k.name);
   void uid;
+  if (!f.respondida && f.capturas) {
+    f.imagenes = [];
+    for (let n = 0; n < Math.min(3, f.capturas); n++) {
+      try { f.imagenes.push(await (await cf(`${base}/values/${encodeURIComponent(`fc:${f.id}:${n}`)}`)).text()); } catch (e) { /* caducada */ }
+    }
+  }
   avisos.push(f);
 }
 writeFileSync('fallos.enc', cifrar(JSON.stringify({ t: Date.now(), avisos })));
