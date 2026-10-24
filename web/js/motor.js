@@ -704,6 +704,16 @@ export function analizar(D, H, c, extra = {}) {
   const onces = (extra.onces && extra.onces.jugadores) || {};
   M.hayOnces = Object.keys(onces).length > 0;
   M.onceProb = (pid) => onces[pid] || null;
+  // la jornada en directo (vivo.js): los puntos de cada uno, solo si su partido de esta jornada ya ha empezado
+  const vivo = extra.vivo && M.enJuego && extra.vivo.n === M.enJuego.n ? extra.vivo : null;
+  M.vivo = vivo;
+  M.puntosVivo = (pid) => {
+    if (!vivo || !vivo.puntos || vivo.puntos[pid] == null) return null;
+    const j = J(pid);
+    const p = (D.partidos || []).find((x) => x.jornada === vivo.n && (x.localId === j.equipoId || x.visitanteId === j.equipoId));
+    if (p && p.fecha && p.fecha > Date.now()) return null;
+    return vivo.puntos[pid];
+  };
   // la alineación confirmada (SofaScore, una hora antes del partido): mientras dura su partido, manda sobre todo lo demás
   const alin = (extra.alineaciones && extra.alineaciones.jugadores) || {};
   M.alineacion = (pid) => { const a = alin[pid]; return a && Date.now() > a.ini - 2 * HORA && Date.now() < a.ini + 2.5 * HORA ? a : null; };

@@ -5,7 +5,7 @@
 import { http } from './puente.js';
 import { token, renovar, ErrorSesion } from './auth.js';
 
-const BASE = 'https://fantasy-api.llt-services.com/api';
+const HOST = 'https://fantasy-api.llt-services.com', BASE = `${HOST}/api`;
 const CMP = '/v1/competition/1';
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 
@@ -31,7 +31,8 @@ export function forma(x, prof = 0) {
 
 async function pedir(ruta, { metodo = 'GET', otraVez = true } = {}) {
   const t0 = Date.now();
-  const url = BASE + ruta + (ruta.includes('?') ? '&' : '?') + 'x-lang=es';
+  // (las estadísticas de la jornada cuelgan de /stats, fuera de /api)
+  const url = (ruta.startsWith('/stats/') ? HOST : BASE) + ruta + (ruta.includes('?') ? '&' : '?') + 'x-lang=es';
   const tk = await token();
   const r = await http(metodo, url, {
     cabeceras: { Authorization: `Bearer ${tk}`, 'x-app': '2', 'x-lang': 'es', Accept: 'application/json', 'User-Agent': UA },
@@ -77,6 +78,11 @@ export const api = {
   calendario: (n) => pedir(`${CMP}/calendar?weekNumber=${n}`),
   equiposLaLiga: () => pedir('/v3/teams-master'),
   actividad: (liga, i = 0) => pedir(`${CMP}/leagues/${liga}/activity/${i}`),
+  // la jornada en directo (vivo.js)
+  statsSemana: (n) => pedir(`/stats/v1/competition/1/stats/week/${n}`),
+  miOnce: (eq) => pedir(`${CMP}/teams/${eq}/lineup`),
+  onceSemana: (eq, n) => pedir(`${CMP}/teams/${eq}/lineup/week/${n}`),
+  clasifSemana: (liga, n) => pedir(`${CMP}/leagues/${liga}/standing/${n}`),
 };
 
 /** la página de mercado de futbolfantasy.com (valor y subida o bajada de cada jugador en el día) */

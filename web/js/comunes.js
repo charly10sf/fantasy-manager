@@ -131,6 +131,9 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false } = {}) {
   if (modo === 'valor') dato = eur(j.valor);
   else if (modo === 'forma') dato = f && f.pts.length ? f.pts.slice(-3).join(' · ') : j.media ? `${String(j.media).replace('.', ',')} m` : '–';
   else dato = M && M.ppEsperado && j.pos < 5 ? `${dec1(M.ppEsperado(j))} pts` : j.media ? `${String(j.media).replace('.', ',')} m` : '–';
+  // en la jornada en directo, en «Puntos», los que lleva (si su partido ha empezado)
+  const pv = modo === 'pp' && M && M.puntosVivo ? M.puntosVivo(j.id) : null;
+  if (pv != null) dato = `<b class="cr-vivo ${pv > 0 ? 'sube' : pv < 0 ? 'baja' : ''}">${pv}</b> pts`;
   const conOnce = !!(M && M.hayOnces && j.pos < 5);
   const o = conOnce ? M.onceProb(j.id) : null;
   const al = M && M.alineacion && j.pos < 5 ? M.alineacion(j.id) : null;
@@ -159,7 +162,11 @@ export function fijarMotor(M) { MF = M; }
 const CONF_TXT = { titular: ['bien', 'Titular'], suplente: ['duda', 'Suplente'], fuera: ['mal', 'No convocado'], baja: ['mal', 'Baja'] };
 /** al lado del nombre: la probabilidad de que sea titular o, con la alineación ya confirmada, si está */
 export function titBadge(M, j) {
-  if (!M || !j || !j.pos || j.pos === 5 || !M.titularidad) return '';
+  if (!M || !j || !j.pos) return '';
+  // con su partido de la jornada ya empezado, los puntos que lleva
+  const pv = M.puntosVivo ? M.puntosVivo(j.id) : null;
+  if (pv != null) return `<span class="tit-b vivo ${pv > 0 ? 'bien' : pv < 0 ? 'mal' : ''}" title="Puntos en esta jornada">${pv} pts</span>`;
+  if (j.pos === 5 || !M.titularidad) return '';
   const al = M.alineacion ? M.alineacion(j.id) : null;
   if (al && CONF_TXT[al.estado]) {
     const [cls, txt] = CONF_TXT[al.estado];

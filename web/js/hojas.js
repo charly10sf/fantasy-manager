@@ -332,6 +332,15 @@ export function fichaRival(S, tid) {
     <div class="dato"><div class="et">Paga en el mercado</div><div class="v">${r.paga ? pct(r.paga.med * 100) : '–'}<small>${r.paga ? `sobre el valor · ${r.paga.n} compra${r.paga.n > 1 ? 's' : ''}` : 'sin compras al mercado'}</small></div></div>
   </div>
   ${bloqueada('dineroRivales') ? candado('dineroRivales') : `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`}`;
+  // la jornada en directo: lo que lleva y su once, jugador a jugador
+  if (M.vivo && M.enJuego) {
+    const V = M.vivo, tot = V.equipos && V.equipos[String(tid)];
+    const o = S.oncesRival && S.oncesRival[tid] && S.oncesRival[tid].n === V.n ? S.oncesRival[tid] : null;
+    const js = o && o.ids ? o.ids.map((pid) => M.J(pid)).filter((j) => j && j.pos).sort((a, b) => a.pos - b.pos) : [];
+    const chips = js.map((j) => { const p = M.puntosVivo(j.id); return `<button class="vv-j" data-j="${esc(j.id)}"><span>${esc(j.nombre)}</span><b class="${p == null ? 'apag' : p > 0 ? 'sube' : p < 0 ? 'baja' : ''}">${p == null ? '–' : p}</b></button>`; }).join('');
+    h += `<div class="vivo-c"><div class="vivo-t"><span class="vivo-dot"></span><b>En directo · Jornada ${V.n}</b>${tot != null ? `<span class="vivo-tot">${tot} pts</span>` : ''}</div>
+      ${chips ? `<div class="vv-l">${chips}</div>` : `<p class="t2 peq" style="margin:6px 0 0">${o ? 'LaLiga no enseña todavía su once de esta jornada.' : 'Cargando su once…'}</p>`}</div>`;
+  }
   // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva
   if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales')) {
     const dc = r.dinero && r.dinero.dicho, cu = M.dineroCuenta ? M.dineroCuenta(tid) : null;

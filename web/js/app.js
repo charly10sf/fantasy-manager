@@ -16,6 +16,7 @@ import { md } from './texto.js';
 import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor, alineaciones, faltaOnce } from './externas.js';
+import { enVivo, onceRival } from './vivo.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
@@ -261,6 +262,8 @@ function pintar({ arriba = false } = {}) {
   if (!S.D) return;
   // lo que estás escribiendo (la pregunta, la clave) no se pierde al repintar (llega el plan, se pone al día la liga…)
   const escrito = ['pregunta', 'claveIA'].map((id) => { const el = $(`#${id}`); return el && el.value ? [id, el.value, document.activeElement === el ? el.selectionStart : null] : null; }).filter(Boolean);
+  // (el buscador del Mercado guarda lo escrito en S.busca; solo hay que devolverle el cursor)
+  const focoBusca = document.activeElement && document.activeElement.id === 'buscaJ' ? document.activeElement.selectionStart : null;
   marco();
   pintarSup();
   medirSup();
@@ -279,6 +282,7 @@ function pintar({ arriba = false } = {}) {
     el.value = v;
     if (cur != null) { el.focus({ preventScroll: true }); try { el.setSelectionRange(cur, cur); } catch (e) { /* nada */ } }
   }
+  if (focoBusca != null) { const el = $('#buscaJ'); if (el) { el.focus({ preventScroll: true }); try { el.setSelectionRange(focoBusca, focoBusca); } catch (e) { /* nada */ } } }
   // el chat se lee de abajo arriba; la guía de la clave, de arriba abajo
   if (S.vista === 'ia' && hayClave()) {
     bajarChat();
@@ -395,7 +399,7 @@ async function trabajoFondo() {
 /** lo que el motor necesita además de la foto: fichas, reventa, onces probables y noticias */
 function extraM() {
   const f = S.fuentes || fuentesGuardadas() || {};
-  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}) };
+  return { det: S.det, reventa: reventa(), onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, vivo: vivoGuardado(), calib: calibracion(), actHist: S.D && S.D.liga ? actHist(S.D.liga.id) : null, notas: notasVigentes(), dichos: LS.get(K('dinero-dicho'), {}) };
 }
 
 /* lo que compras para revender se apunta (para recordarte venderlo antes de la jornada) */
@@ -481,8 +485,38 @@ function saludarSiToca() {
 setInterval(saludarSiToca, 10 * 60e3);
 // con la configuración nueva de limites.json puede cambiar lo que está bloqueado
 window.addEventListener('limites-nuevos', () => { if (S.D && S.M && !S.hoja) pintar(); });
+/* ---------------- la jornada en directo (vivo.js) ---------------- */
+// los puntos de cada uno mientras se juega; se guardan (por liga) para que se vean al abrir sin esperar
+const vivoGuardado = () => {
+  if (enDemo()) return null;
+  const liga = S.D && S.D.liga && S.D.liga.id;
+  if (S.vivo === undefined || (S.vivo && S.vivo.liga !== liga)) S.vivo = LS.get(K('vivo'), null);
+  return S.vivo && S.vivo.liga === liga ? S.vivo : null;
+};
+let cargandoVivo = false;
+async function cargarVivo() {
+  if (cargandoVivo || !S.D || !S.M || !S.M.enJuego || enDemo() || !haySesion()) return false;
+  cargandoVivo = true;
+  try {
+    const yoTid = (S.M.yo && S.M.yo.teamId) || (S.D.yo && S.D.yo.teamId);
+    S.vivo = { ...(await enVivo(S.D, S.M.enJuego.n, yoTid)), liga: S.D.liga && S.D.liga.id };
+    LS.set(K('vivo'), S.vivo);
+    return true;
+  } catch (e) { console.warn('en directo', e); return false; } finally { cargandoVivo = false; }
+}
+/** el once de un rival en la jornada en juego, para su ficha (se pide al abrirla, como mucho cada 3 minutos) */
+async function cargarOnceRival(tid) {
+  const n = S.M && S.M.enJuego && S.M.enJuego.n;
+  if (!n || enDemo() || !haySesion()) return;
+  S.oncesRival ||= {};
+  const g = S.oncesRival[tid];
+  if (g && g.n === n && Date.now() - g.t < 3 * MIN) return;
+  try { S.oncesRival[tid] = { t: Date.now(), n, ids: await onceRival(tid, n) }; } catch (e) { S.oncesRival[tid] = { t: Date.now(), n, ids: null }; }
+  if (S.tipoHoja && S.tipoHoja[0] === 'r' && S.tipoHoja[1] === tid) repintarHoja();
+}
 async function despues() {
   saludarSiToca();
+  if (S.M && S.M.enJuego) cargarVivo().then((ok) => { if (ok) { rehacer(); if (!S.hoja) pintar(); } });
   // onces probables y noticias (de fuera de LaLiga) y, a la vez, las fichas de los jugadores
   const fuentes = fuentesExternas(S.D, S.M).then((f) => { if (f) { S.fuentes = f; rehacer(); if (!S.hoja) pintar(); } }).catch((e) => console.warn('fuentes', e));
   try {
@@ -1148,7 +1182,7 @@ document.addEventListener('click', async (ev) => {
   if (d.seg) { const [v, s] = d.seg.split(':'); S.seg[v] = s; if (!d.ir) { pintar(); volverAPestanas(); return; } }
   if (d.filtro) { const [k, f] = d.filtro.split(':'); S.filtro[k] = f; pintar(); return; }
   if (d.j && S.D && !d.accion) { hoja('j', d.j); cargarDetalle(d.j); return; }
-  if (d.r && S.D) { hoja('r', d.r); return; }
+  if (d.r && S.D) { hoja('r', d.r); cargarOnceRival(d.r); return; }
   if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }
   switch (d.accion) {
     case 'entrar': try { await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
@@ -1378,6 +1412,14 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Enter' && !ev.shiftKey && ev.target && ev.target.id === 'pregunta') { ev.preventDefault(); const t = ev.target.value; ev.target.value = ''; enviarPregunta(t); }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
 });
+// el buscador del Mercado: solo se repinta la lista de resultados (así no se pierde lo que escribes ni el teclado)
+let buscaT = 0;
+document.addEventListener('input', (ev) => {
+  if (!ev.target || ev.target.id !== 'buscaJ') return;
+  S.busca = ev.target.value;
+  clearTimeout(buscaT);
+  buscaT = setTimeout(() => { const r = $('#buscaRes'); if (r && S.M) r.innerHTML = V.buscaHTML(S); }, 120);
+});
 document.addEventListener('input', (ev) => {
   if (ev.target && ev.target.id === 'pregunta') { ev.target.style.height = 'auto'; ev.target.style.height = Math.min(120, ev.target.scrollHeight) + 'px'; }
 });
@@ -1590,6 +1632,19 @@ async function arrancar() {
     pintar();
     window.scrollTo(0, y);
   }, 60e3);
+  // con la jornada en juego, los puntos en directo cada 2 minutos (y se pinta si no estás tocando nada)
+  setInterval(async () => {
+    if (!S.D || !S.M || !S.M.enJuego || S.cargando || document.visibilityState !== 'visible') return;
+    if (!(await cargarVivo())) return;
+    if (S.hoja || S.charlando || S.planEstado.cargando || S.vista === 'ia' || tourAbierto() || Date.now() - toqueT < 8e3) return;
+    const y = window.scrollY, ap = S.M && S.M.aprende;
+    S.M = analizar(S.D, S.H, S.c, extraM());
+    S.M.aprende = ap;
+    fijarMotor(S.M);
+    montarPlan();
+    pintar();
+    window.scrollTo(0, y);
+  }, 2 * MIN);
   // las alineaciones confirmadas salen una hora antes de cada partido: mientras falte alguna, se mira cada 3 minutos
   // (solo eso, sin recargar la liga); lo pinta la vuelta de cada minuto de arriba
   setInterval(() => {

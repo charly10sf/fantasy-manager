@@ -1,5 +1,5 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
-import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe } from './util.js';
+import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, norm } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado } from './comunes.js';
 import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
@@ -501,6 +501,30 @@ function saludoHTML(S) {
   const fecha = new Date().toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long' });
   return `<div class="saludo"><span>${sal}${nombre ? `, <b>${esc(nombre)}</b>` : ''}</span><span class="t2">${esc(fecha.charAt(0).toUpperCase() + fecha.slice(1))}</span></div>`;
 }
+/** la jornada en directo: tus puntos y los de tu once, jugador a jugador (los tocas y se abre su ficha) */
+export function vivoHTML(S) {
+  const { M } = S;
+  const V = M.vivo;
+  if (!V || !M.enJuego) return '';
+  const yoT = M.yo && M.yo.teamId != null ? String(M.yo.teamId) : null;
+  const enOnce = V.once ? new Set(V.once) : null;
+  const mias = M.mias.filter((x) => x.j && x.j.pos);
+  const lista = (enOnce ? mias.filter((x) => enOnce.has(x.pid)) : mias.filter((x) => M.puntosVivo(x.pid) != null)).sort((a, b) => a.j.pos - b.j.pos);
+  const suma = lista.reduce((t, x) => t + (M.puntosVivo(x.pid) || 0), 0);
+  const oficial = yoT && V.equipos && V.equipos[yoT] != null ? V.equipos[yoT] : null;
+  const total = oficial != null ? oficial : suma;
+  const tabla = Object.entries(V.equipos || {}).sort((a, b) => b[1] - a[1]);
+  const pos = yoT ? tabla.findIndex(([t]) => t === yoT) + 1 : 0;
+  const chips = lista.map((x) => {
+    const p = M.puntosVivo(x.pid);
+    const pr = p == null && M.proximoPartido ? M.proximoPartido(x.j.equipoId) : null;
+    return `<button class="vv-j" data-j="${esc(x.pid)}" title="${p == null ? `Aún no ha jugado${pr ? `: ${esc(cuando(pr.fecha))}` : ''}` : 'Puntos en esta jornada'}"><span>${esc(x.j.nombre)}</span><b class="${p == null ? 'apag' : p > 0 ? 'sube' : p < 0 ? 'baja' : ''}">${p == null ? '–' : p}</b></button>`;
+  }).join('');
+  return `<div class="vivo-c"><div class="vivo-t"><span class="vivo-dot"></span><b>En directo · Jornada ${V.n}</b><span class="vivo-tot">${total} pts</span></div>
+    <p class="vivo-s">${pos && tabla.length > 1 ? `${pos}º de la jornada en tu liga · ` : ''}${enOnce ? 'tu once de LaLiga' : 'los tuyos que ya han jugado'} · ${rel(V.t)}</p>
+    ${chips ? `<div class="vv-l">${chips}</div>` : '<p class="t2 peq" style="margin:6px 0 0">Aún no ha jugado ninguno de los tuyos.</p>'}</div>`;
+}
+
 export function hoy(S) {
   if (ancho()) return hoyAncho(S);
   const { D, M } = S;
@@ -508,6 +532,7 @@ export function hoy(S) {
   h += bandasHoy(S);
   h += saludoHTML(S);
   h += marcador(S);
+  h += vivoHTML(S);
   h += tiemposHTML(S);
   h += ahoraHTML(S);
   h += llevasHTML(S);
@@ -523,7 +548,7 @@ function hoyAncho(S) {
   let izq = saludoHTML(S) + ahoraHTML(S) + llevasHTML(S) + planHTML(S);
   izq += noticiasHTML(S);
   void M;
-  const der = marcador(S) + tiemposHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
+  const der = marcador(S) + vivoHTML(S) + tiemposHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
   return bandasHoy(S) + cols(izq, der);
 }
 function bandasHoy(S) {
@@ -591,7 +616,7 @@ export function equipo(S) {
   if (!M.mias.length) return h + nada(S.D && S.D.ligas && S.D.ligas.length > 1 ? 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Toca el nombre de la liga, arriba, para cambiar a otra de tus ligas.' : 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si acabas de entrar en ella, prueba a actualizar en un rato.');
 
   if (seg === 'plantilla') {
-    const arriba = equipoHoyHTML(S, { corto: true }) + onceHTML(S, null, { conBanquillo: true });
+    const arriba = vivoHTML(S) + equipoHoyHTML(S, { corto: true }) + onceHTML(S, null, { conBanquillo: true });
     let l = '';
     const titulares = new Set((M.once ? M.once.lineas.flat() : []).map((j) => j.id));
     for (const p of [1, 2, 3, 4, 5]) {
@@ -666,7 +691,7 @@ export function rivales(S) {
           <div class="fila-s">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${eur(e.valor)}${r && r.dValor != null ? ` · <span class="${clase(r.dValor)}">${eur(r.dValor, { signo: true, dec: 1 })} 7d</span>` : ''}${r && M.yo ? ` · ${e.puntos > M.yo.puntos ? `te saca ${e.puntos - M.yo.puntos}` : e.puntos < M.yo.puntos ? `le sacas ${M.yo.puntos - e.puntos}` : 'empatados'}` : ''}</div>
           ${r ? `<div class="fila-x">${r.dinero && r.dinero.v != null ? (bloqueada('dineroRivales') ? candadoMini('dineroRivales', 'Dinero') : `<span class="pill ${r.dinero.exacto ? '' : 'estim'}" title="${r.dinero.exacto ? 'Saldo exacto' : 'Saldo estimado'}">${icono('euro')}${dineroCorto(r.dinero)}</span>`) : ''}${r.nivel !== 'baja' ? `<span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span>` : ''}${r.leLleganYa && r.leLleganYa.length && !bloqueada('quienPaga') ? `<span class="pill mal">Te puede quitar ${r.leLleganYa.length}</span>` : r.meLlegan ? `<span class="pill abierta">${r.meLlegan} a tiro</span>` : ''}</div>` : ''}
         </div>
-        <div class="fila-d"><div class="v">${e.puntos}</div><div class="d apag">pts${e.puntosJornada ? ` · ${e.puntosJornada} últ.` : ''}</div></div></button>`;
+        <div class="fila-d"><div class="v">${e.puntos}</div>${M.vivo && M.vivo.equipos && M.vivo.equipos[String(e.teamId)] != null ? `<div class="d vivo-d"><span class="vivo-dot"></span>${M.vivo.equipos[String(e.teamId)]} J${M.vivo.n}</div>` : `<div class="d apag">pts${e.puntosJornada ? ` · ${e.puntosJornada} últ.` : ''}</div>`}</div></button>`;
     }).join('');
     // en el ordenador, al lado de la clasificación: lo que te llega de ellos y lo último que han hecho
     h += ancho() ? cols(tabla, aTiroHTML(S) + movimientosHTML(S, 10)) : tabla;
@@ -701,12 +726,34 @@ export function rivales(S) {
 }
 
 /* ================= MERCADO ================= */
+/** el buscador del Mercado: cualquier jugador de LaLiga por su nombre o su equipo, con su dueño y su cláusula */
+export function buscaHTML(S) {
+  const q = norm(S.busca || '');
+  if (q.length < 2) return '';
+  const { M, D } = S;
+  const todos = Object.values(D.maestro || {}).filter((j) => j && j.pos && (norm(j.nombre).includes(q) || norm(j.largo || '').includes(q) || norm(j.equipo || '').includes(q)));
+  // primero los que empiezan por lo que buscas; luego, los que más valen
+  const empieza = (j) => (norm(j.nombre).startsWith(q) || norm(j.largo || '').split(' ').some((w) => w.startsWith(q)) ? 0 : 1);
+  const xs = todos.sort((a, b) => empieza(a) - empieza(b) || b.valor - a.valor).slice(0, 25);
+  if (!xs.length) return nada(`Ningún jugador con «${esc(S.busca)}».`);
+  const dueno = (pid) => { const t = M.dueno[pid]; if (!t) return 'libre'; if (String(t) === String(S.D.yo.teamId)) return '<span class="rojo">tuyo</span>'; return `de ${esc((M.equipo[t] || {}).manager || (M.equipo[t] || {}).nombre || 'un rival')}`; };
+  return `<div class="grupo"><span>Resultados</span><span>${todos.length > 25 ? `25 de ${todos.length}` : todos.length}</span></div>${xs.map((j) => {
+    const enM = M.mercado.find((m) => m.pid === j.id);
+    const cl = M.clausulas.find((x) => x.pid === j.id);
+    return filaJugador({ j, tend: M.tend(j.id) }, {
+      sub: `${esc(j.equipo || '')} · ${dueno(j.id)}`,
+      pills: [enM ? `<span class="pill abierta">En el mercado · ${eur(enM.precio)}</span>` : '', cl ? clausulaPill(cl) : '', estadoPill(j)],
+    });
+  }).join('')}`;
+}
+
 export function mercado(S) {
   const { M } = S;
   let seg = S.seg.mercado || 'venta';
   // las antiguas Suben / Bajan / Libres son ahora filtros de Tendencias
   if (['suben', 'bajan', 'libres'].includes(seg)) { S.filtro.tend = seg; seg = S.seg.mercado = 'tendencias'; }
   let h = `<div class="eti">${M.cierreMercado ? `Cambia ${cuando(M.cierreMercado)} · en ${dura(M.cierreMercado - Date.now())}` : 'Mercado de hoy'}</div><div class="titulo">Mercado</div><p class="entradilla">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>.</p>`;
+  h += `<div class="busca-j">${icono('buscar')}<input id="buscaJ" type="search" enterkeyhint="search" placeholder="Busca cualquier jugador o equipo" autocomplete="off" aria-label="Buscar jugador" value="${esc(S.busca || '')}"></div><div id="buscaRes">${buscaHTML(S)}</div>`;
   h += tabs('mercado', seg, [['venta', 'Fichar', M.mercado.filter((m) => !M.enVenta.has(m.pid)).length], ['especular', 'Especular', (M.especular || []).length, (M.especular || []).length ? 'verde' : ''], ['tendencias', 'Tendencias']]);
   const tagV = { chollo: '<span class="pill chollo">Chollo</span>', sube: '<span class="pill bien">Subiendo</span>', caro: '<span class="pill duda">Caro</span>', evitar: '<span class="pill mal">Evitar</span>', baja: '<span class="pill mal">Bajando</span>', frena: '<span class="pill duda">Frenando</span>', normal: '' };
   const dueno = (pid) => { const t = M.dueno[pid]; if (!t) return 'Libre'; if (t === S.D.yo.teamId) return '<span class="rojo">Tuyo</span>'; return esc((M.equipo[t] || {}).manager || (M.equipo[t] || {}).nombre || 'Rival'); };

@@ -3,13 +3,21 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.2d';
+export const VERSION = '0.5.3';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.3', f: '2026-10-24', h: '06:00', t: 'La jornada en directo',
+    cosas: [
+      { tipo: 'nuevo', d: 'campo', t: 'Tus puntos en directo', x: 'Mientras se juega la jornada, en Hoy y en Equipo ves los puntos que llevas y los de cada jugador de tu once de LaLiga, y en qué puesto vas de la jornada en tu liga. En cada lista, al lado del nombre, los puntos de los que ya han jugado, y en el campo de Tu once también. Se pone al día solo cada 2 minutos con la app abierta.', ir: { v: 'equipo' } },
+      { tipo: 'nuevo', d: 'cara', t: 'Y los de tus rivales', x: 'En Rivales, al lado de los puntos de cada uno, lo que lleva en la jornada. Y en su ficha, su once con los puntos de cada jugador.', ir: { v: 'rivales', seg: 'rivales:clasif' } },
+      { tipo: 'nuevo', d: 'lupa', t: 'Buscador de jugadores', x: 'Arriba del Mercado, busca cualquier jugador de LaLiga por su nombre o por su equipo: sale de quién es, si está en el mercado, su cláusula y cómo va su valor. Tócalo y se abre su ficha.', ir: { v: 'mercado' } },
+    ],
+  },
   {
     v: '0.5.2d', f: '2026-10-24', h: '05:07', t: 'Más rápida',
     cosas: [
