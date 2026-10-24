@@ -3,7 +3,7 @@
 // en fallos.enc cifrados con la llave pública que se le pasa al lanzarla (RSA-OAEP + AES-256-GCM): solo los abre
 // quien tiene la privada, que no sale del chat que la creó (.github/fallos-leer.mjs). El repo es público y los
 // artefactos también; en el registro solo sale cuántos hay. Lanzarla solo pueden los que escriben en el repo.
-// Con RESPUESTAS ([{ id, respuesta, por? }], sin datos de nadie: se ve en la Action) contesta esos avisos y al que
+// Con RESPUESTAS ([{ id | buscar, respuesta, por? }], sin datos de nadie: se ve en la Action) contesta esos avisos y al que
 // lo mandó le llega la respuesta en la app.
 import { constants, createCipheriv, publicEncrypt, randomBytes } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
@@ -47,9 +47,14 @@ const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equ
 // las respuestas
 let contestados = 0;
 if (RESPUESTAS.trim()) {
-  for (const { id, respuesta, por } of JSON.parse(RESPUESTAS)) {
-    const k = claves.find((x) => x.name.endsWith(`:${id}`));
-    if (!k || !String(respuesta || '').trim()) continue;
+  // cada respuesta va a un aviso por su id o, si no se tiene, por un trozo de su texto («buscar»: a los que estén sin
+  // contestar y lo lleven al principio)
+  const norm = (t) => String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+  for (const { id, buscar, respuesta, por } of JSON.parse(RESPUESTAS)) {
+    if (!String(respuesta || '').trim()) continue;
+    const ks = id ? claves.filter((x) => x.name.endsWith(`:${id}`))
+      : buscar ? claves.filter((x) => x.metadata && !x.metadata.r && norm(x.metadata.txt).includes(norm(buscar))) : [];
+    for (const k of ks) {
     const f = await leer(k.name);
     f.respuesta = String(respuesta).trim().slice(0, 2000); f.respondida = Date.now(); f.vista = false; f.por = corta(por || 'Fantasy Manager', 40);
     const fd = new FormData();
@@ -57,6 +62,7 @@ if (RESPUESTAS.trim()) {
     fd.append('metadata', JSON.stringify(resumen(f)));
     await cf(`${base}/values/${encodeURIComponent(k.name)}?expiration_ttl=${180 * 86400}`, { method: 'PUT', body: fd });
     contestados++;
+    }
   }
 }
 

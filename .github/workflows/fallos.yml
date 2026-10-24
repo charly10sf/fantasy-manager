@@ -12,7 +12,7 @@ on:
         description: 'Llave pública en base64 (node .github/fallos-leer.mjs llave)'
         required: true
       respuestas:
-        description: 'Respuestas en JSON: [{"id":"…","respuesta":"…"}] (opcional)'
+        description: 'Respuestas en JSON: [{"id":"…" o "buscar":"trozo del aviso","respuesta":"…"}] (opcional)'
         required: false
         default: ''
 
