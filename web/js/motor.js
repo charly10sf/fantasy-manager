@@ -1141,8 +1141,10 @@ export function analizar(D, H, c, extra = {}) {
     // o uno que está subiendo bien: si te lo quitan a su valor, pierdes lo que iba a subir
     const sube = (() => { const ine = M.inercia(x.pid); return !!ine && (ine.fase === 'sube' || ine.fase === 'acelera') && ine.proyJ >= Math.max(400000, x.j.valor * 0.04); })();
     x.importa = x.pierde >= 0.8 || (sube && x.ratio != null && x.ratio < 1.15);
-    // uno que no juega en tu once: que te lo clausulen es casi como venderlo por su cláusula
-    if (r && !x.importa) r = x.pierde < 0.3 && x.ratio >= 1 ? 0 : Math.min(r, 1);
+    // uno que no juega en tu once: que te lo clausulen es como venderlo por su cláusula
+    // (solo si la cláusula pasa de lo que da LaLiga al venderlo: si no, te lo quitan más barato de lo que lo venderías)
+    const vLiga = M.ofertaLiga && !M.ofertaLiga.poco ? Math.max(0, M.ofertaLiga.med) : 0.05;
+    if (r && !x.importa) r = x.pierde < 0.3 && x.ratio >= 1 + vLiga ? 0 : Math.min(r, 1);
     // y quién tiene dinero para pagarla: si no le llega a nadie, el riesgo baja (aunque pueden vender y juntarlo)
     x.pagan = x.clausula ? M.quienPaga(x.clausula) : null;
     if (r && x.pagan) {
@@ -1156,16 +1158,21 @@ export function analizar(D, H, c, extra = {}) {
       const caps = M.rivalesTid.map((tid) => ({ tid, nombre: nombreEquipo(tid), c: M.capacidad(tid) })).filter((y) => y.c).sort((a, b) => b.c.alto - a.c.alto);
       const hasta = (v) => Math.ceil((Math.max(v, 0) * 1.03 + 1) / 1e5) * 1e5;
       if (caps.length) {
-        const T = hasta(caps[0].c.alto);
+        // tampoco hace falta pasar de lo que de verdad se paga en tu liga por una cláusula: nadie paga el doble de lo que
+        // vale un jugador por mucho dinero que tenga. Por encima de lo más que se suele pagar (el 90 % de los clausulazos
+        // de tu liga, con un 5 % de margen; un +50 % si aún no hay bastantes) está a salvo
+        const czP = M.clausulazos && M.clausulazos.n >= 5 ? Math.max(0.25, M.clausulazos.p90) : 0.5;
+        const techo = hasta(x.j.valor * (1 + czP + 0.05));
+        const T0 = hasta(caps[0].c.alto), T = Math.min(T0, techo);
         const coste = (t) => Math.ceil((t - x.clausula) / 2 / 1e4) * 1e4;
-        // no compensa gastar en blindarlo más de un tercio de lo que vale
-        const tope = x.j.valor / 3;
-        x.blindaje = T > x.clausula ? { objetivo: T, coste: coste(T), rico: caps[0].nombre, caro: coste(T) > tope } : { objetivo: x.clausula, coste: 0, rico: caps[0].nombre, yaVale: true };
+        // y no compensa gastar en blindarlo más de una cuarta parte de lo que vale
+        const tope = x.j.valor / 4;
+        x.blindaje = T > x.clausula ? { objetivo: T, coste: coste(T), rico: caps[0].nombre, caro: coste(T) > tope, porTecho: T < T0, techoPct: czP } : { objetivo: x.clausula, coste: 0, rico: caps[0].nombre, yaVale: true };
         // si dejarlo fuera del alcance de todos no compensa: la subida más barata que deja fuera a casi todos
         if (x.blindaje.caro) {
           // (solo si deja fuera a casi todos: con más de dos que aún pueden, no protege)
           for (let k = 1; k <= Math.min(2, caps.length - 1); k++) {
-            const Tk = hasta(caps[k].c.alto);
+            const Tk = Math.min(hasta(caps[k].c.alto), techo);
             if (Tk <= x.clausula) break;
             if (coste(Tk) <= tope) { x.blindaje.parcial = { objetivo: Tk, coste: coste(Tk), quedan: caps.slice(0, k).map((y) => y.nombre) }; break; }
           }
