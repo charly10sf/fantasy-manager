@@ -11,7 +11,7 @@ export const VERSION = '0.5.4a';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.4a', f: '2026-10-24', h: 'HH:MM', t: 'Cada partido, en su campo',
+    v: '0.5.4a', f: '2026-10-24', h: '15:27', t: 'Cada partido, en su campo',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'Cada partido, en su campo', x: 'Al tocar un partido en Directo, cada equipo sale en su campo, como un once, en vez de en una lista: cada jugador en su línea con los puntos que lleva, arriba de quién es en tu liga («TUYO» o el nombre del rival) y un balón o una tarjeta si ha marcado o le han sacado una. Si se sabe quién salió de titular, los que entraron desde el banquillo van debajo. Antes de empezar, el once probable de cada equipo con el % de que salga cada uno.', ir: { v: 'directo' } },
       { tipo: 'mejora', d: 'campana', t: 'La respuesta a tu aviso, en una notificación', x: 'Cuando te contestan a un aviso de fallo, te llega una notificación al móvil aunque tengas la app cerrada (mientras esperas respuesta, la app mira cada 40 minutos más o menos; de madrugada, no). Al tocarla se abre la respuesta. Con la app abierta, sale sola en unos minutos sin tener que tocar nada. En la web y el iPhone, solo con la web abierta.' },
