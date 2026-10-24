@@ -2,7 +2,7 @@
 # de la cuenta de Cloudflare de Fantasy Manager, no la de GrowFolio): la carpeta web/ con su paquete.json, app.json,
 # el APK de GitHub en /descargas/fantasy-manager.apk y el app-ads.txt de AdMob.
 #
-# Siempre sube lo de main (lo publicado), venga de donde venga la ejecución. Se lanza sola al terminar «App Android»
+# Siempre sube lo de main (lo publicado), venga de donde venga la ejecución. Se lanza sola al terminar «Web» y «App Android»
 # en main (es cuando cambian la web, el APK y app.json), a mano, y al cambiar este archivo en pendiente (para montar
 # el dominio antes de publicar la versión que lo usa). Mientras dura la mudanza, GitHub Pages sigue publicando lo mismo.
 #
@@ -12,7 +12,7 @@ name: Dominio
 
 on:
   workflow_run:
-    workflows: ["App Android"]
+    workflows: ["Web", "App Android"]
     types: [completed]
     branches: [main]
   push:
