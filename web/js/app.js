@@ -7,6 +7,7 @@ import { aprender, calibracion } from './aprende.js';
 import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
+import * as Dr from './directo.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
 import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api } from './api.js';
@@ -15,8 +16,8 @@ import { linea } from './graficos.js';
 import { md } from './texto.js';
 import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
-import { historialValor, alineaciones, faltaOnce } from './externas.js';
-import { enVivo, onceRival } from './vivo.js';
+import { historialValor, alineaciones, faltaOnce, jugadasSofa } from './externas.js';
+import { enVivo, onceRival, jornadaStats } from './vivo.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
@@ -29,9 +30,9 @@ import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, aviso
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
-const VISTAS = { hoy: V.hoy, equipo: V.equipo, rivales: V.rivales, mercado: V.mercado, ia: V.ia };
-const ALIAS = { inicio: 'hoy', analisis: 'ia', chat: 'ia' };
-const NAV = [['hoy', 'rayo', 'Hoy'], ['equipo', 'equipo', 'Equipo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['ia', 'ia', 'Pregunta']];
+const VISTAS = { hoy: V.hoy, equipo: V.equipo, directo: Dr.directo, rivales: V.rivales, mercado: V.mercado, ia: V.ia };
+const ALIAS = { inicio: 'hoy', analisis: 'ia', chat: 'ia', vivo: 'directo' };
+const NAV = [['hoy', 'rayo', 'Hoy'], ['equipo', 'equipo', 'Equipo'], ['directo', 'directo', 'Directo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['ia', 'ia', 'Pregunta']];
 const raiz = () => document.getElementById('app');
 
 /* ---------------- avisos de abajo ---------------- */
@@ -257,6 +258,8 @@ function pintarSup() {
   const gh = $('#gl-hoy'); gh.textContent = pend; gh.classList.toggle('oculto', !pend);
   const ga = S.M.mias.filter((x) => x.riesgo === 'alto').length;
   const ge = $('#gl-equipo'); ge.textContent = ga; ge.classList.toggle('oculto', !ga);
+  // Directo: un punto verde mientras se juega la jornada
+  const gd = $('#gl-directo'); if (gd) { gd.classList.add('punto-v'); gd.classList.toggle('oculto', !S.M.enJuego); }
 }
 function pintar({ arriba = false } = {}) {
   if (!S.D) return;
@@ -290,6 +293,8 @@ function pintar({ arriba = false } = {}) {
     if (S.borrador && !S.charlando) { const ta = $('#pregunta'); if (ta) { ta.value = S.borrador; S.borrador = ''; } }
   }
   encuadrar(v);
+  // en Directo, la clasificación de la jornada dice cuántos le quedan a cada rival: hacen falta sus onces
+  if (S.vista === 'directo' && S.M.enJuego && S.M.vivo && (S.seg.directo === 'liga' || V.ancho())) cargarOncesRivales();
   // el cierre hasta la hora de apertura y el límite de minutos, sin esperar a la próxima vuelta del reloj
   mirarLimite();
 }
@@ -496,13 +501,60 @@ const vivoGuardado = () => {
 let cargandoVivo = false;
 async function cargarVivo() {
   if (cargandoVivo || !S.D || !S.M || !S.M.enJuego || enDemo() || !haySesion()) return false;
-  cargandoVivo = true;
+  cargandoVivo = true; S.cargandoVivo = true;
   try {
     const yoTid = (S.M.yo && S.M.yo.teamId) || (S.D.yo && S.D.yo.teamId);
     S.vivo = { ...(await enVivo(S.D, S.M.enJuego.n, yoTid)), liga: S.D.liga && S.D.liga.id };
     LS.set(K('vivo'), S.vivo);
+    // los puntos nuevos, sin rehacer todas las cuentas
+    if (S.M.ponerVivo) S.M.ponerVivo(S.vivo);
     return true;
-  } catch (e) { console.warn('en directo', e); return false; } finally { cargandoVivo = false; }
+  } catch (e) { console.warn('en directo', e); return false; } finally { cargandoVivo = false; S.cargandoVivo = false; }
+}
+/** con los puntos nuevos: lo que esté abierto (la pestaña, la ficha de un partido o la de un jugador) */
+function pintarVivo({ forzar = false } = {}) {
+  if (S.tipoHoja && S.tipoHoja[0] === 'p') { repintarHoja(); return; }
+  if (S.tipoHoja && S.tipoHoja[0] === 'j') { const el = $('#vivo-j'); if (el) el.innerHTML = Dr.jornadaJugadorHTML(S, S.tipoHoja[1]); return; }
+  if (S.hoja || S.charlando || S.planEstado.cargando || S.vista === 'ia' || tourAbierto()) return;
+  if (!forzar && S.vista !== 'directo' && S.vista !== 'equipo' && S.vista !== 'rivales') return;
+  const y = window.scrollY;
+  pintar();
+  window.scrollTo(0, y);
+}
+/** los onces de todos los rivales en la jornada en juego (para «le quedan N por jugar»), como mucho cada 3 minutos */
+async function cargarOncesRivales() {
+  const n = S.M && S.M.enJuego && S.M.enJuego.n;
+  if (!n || S.cargandoOnces || enDemo() || !haySesion() || Date.now() - (S.oncesT || 0) < 3 * MIN) return;
+  S.cargandoOnces = true; S.oncesT = Date.now();
+  S.oncesRival ||= {};
+  const tids = (S.M.rivales || []).map((r) => r.e.teamId).filter((tid) => { const g = S.oncesRival[tid]; return !(g && g.n === n && Date.now() - g.t < 3 * MIN); });
+  await enParalelo(tids, 3, async (tid) => {
+    try { S.oncesRival[tid] = { t: Date.now(), n, ids: await onceRival(tid, n) }; } catch (e) { S.oncesRival[tid] = { t: Date.now(), n, ids: null }; }
+  });
+  S.cargandoOnces = false;
+  if (S.vista === 'directo' && !S.hoja) pintarVivo();
+}
+/** la ficha de un partido: sus puntos (si no es la jornada en juego, se piden) y, si SofaScore deja, sus jugadas */
+async function cargarPartido(n, id) {
+  if (!S.D || enDemo() || !haySesion()) return;
+  const vivoN = S.M && S.M.enJuego && S.M.enJuego.n;
+  S.jornadasV ||= {}; S.jugadas ||= {};
+  if (n !== vivoN) {
+    const g = S.jornadasV[n];
+    if (!g || Date.now() - g.t > 30 * MIN) {
+      S.cargandoPartido = true;
+      try { S.jornadasV[n] = await jornadaStats(S.D, n); } catch (e) { console.warn('partido', e); }
+      S.cargandoPartido = false;
+      if (S.tipoHoja && S.tipoHoja[0] === 'p' && S.tipoHoja[1] === `${n}:${id}`) repintarHoja();
+    }
+  }
+  const ps = Dr.partidosJornada(S, n).find((x) => String(x.id) === String(id));
+  const p = ps ? (S.D.partidos || []).find((x) => x.jornada === n && x.localId === ps.lid && x.visitanteId === ps.vid) : null;
+  if (!p || Dr.estadoP(ps).cls === 'prox') return;
+  const g = S.jugadas[id];
+  if (g && (Dr.estadoP(ps).cls === 'fin' ? true : Date.now() - g.t < MIN)) return;
+  const r = await jugadasSofa(S.D, p);
+  if (r) { S.jugadas[id] = r; if (S.tipoHoja && S.tipoHoja[0] === 'p' && S.tipoHoja[1] === `${n}:${id}`) repintarHoja(); }
 }
 /** el once de un rival en la jornada en juego, para su ficha (se pide al abrirla, como mucho cada 3 minutos) */
 async function cargarOnceRival(tid) {
@@ -785,7 +837,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
 function hoja(tipo, arg) { abrirHoja(htmlHoja(tipo, arg)); S.tipoHoja = [tipo, arg]; }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -814,7 +866,9 @@ window.alVolver = () => {
 /* ---------------- la ficha de un jugador: puntos por jornada ---------------- */
 async function cargarDetalle(pid) {
   const ya = S.det[pid];
-  if (ya && Date.now() - ya.t < 6 * 3600e3 && !ya.error && (ya.valores || ya.sinValores || enDemo())) { pintarDetalle(pid); return; }
+  // con su partido de la jornada en juego, lo que lleva hecho se vuelve a pedir (como mucho cada 2 minutos)
+  const jugando = !!(S.M && S.M.vivo && Dr.jornadaJugadorHTML(S, pid) && Date.now() - ((ya && ya.t) || 0) > 2 * MIN);
+  if (ya && !jugando && Date.now() - ya.t < 6 * 3600e3 && !ya.error && (ya.valores || ya.sinValores || enDemo())) { pintarDetalle(pid); return; }
   let det;
   if (enDemo()) {
     const j = S.M.J(pid);
@@ -823,7 +877,9 @@ async function cargarDetalle(pid) {
     det = { stats: Array.from({ length: 9 }, (_, i) => { const min = azar() < 0.15 ? 0 : Math.round(45 + azar() * 45); return { n: i + 1, pts: min ? Math.round(j.media * (0.3 + azar() * 1.4)) : 0, min, gol: j.pos === 4 && azar() < 0.4 ? 1 : 0, asis: azar() < 0.15 ? 1 : 0, am: azar() < 0.12 ? 1 : 0, roja: 0 }; }), valores: null };
   } else {
     try {
-      const d = ya && Date.now() - ya.t < 6 * 3600e3 && !ya.error ? ya : detalleJugador(await api.jugador(pid, S.D.liga.id));
+      const d = ya && !jugando && Date.now() - ya.t < 6 * 3600e3 && !ya.error ? ya : detalleJugador(await api.jugador(pid, S.D.liga.id));
+      // (el histórico de valor que ya se tenía no se vuelve a pedir)
+      if (!d.valores && ya && !ya.error && (ya.valores || ya.sinValores)) { d.valores = ya.valores || null; d.sinValores = !ya.valores; }
       // el histórico de valor para la gráfica, si la ficha no lo trae
       if (!d.valores) { d.valores = await historialValor(pid).catch(() => null); if (!d.valores) d.sinValores = true; }
       det = d;
@@ -836,6 +892,7 @@ async function cargarDetalle(pid) {
 function pintarDetalle(pid) {
   if (!S.tipoHoja || S.tipoHoja[0] !== 'j' || S.tipoHoja[1] !== pid) return;
   const el = $('#det-j'); if (el) el.innerHTML = Hj.detalleHTML(S.det[pid]);
+  const vj = $('#vivo-j'); if (vj) vj.innerHTML = Dr.jornadaJugadorHTML(S, pid);
   pintarGraf(pid);
 }
 /** el histórico de valor de tus jugadores que aún no se tenga, para sumar el del equipo */
@@ -1185,6 +1242,17 @@ document.addEventListener('click', async (ev) => {
   if (d.r && S.D) { hoja('r', d.r); cargarOnceRival(d.r); return; }
   if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }
   switch (d.accion) {
+    case 'verPartido': cargarPartido(Number(d.n), d.id); hoja('p', `${d.n}:${d.id}`); break;
+    case 'vivoYa': {
+      if (enDemo()) { tostada('En la demo no hay jornada en directo'); break; }
+      if (S.cargandoVivo) break;
+      const b = el; b.classList.add('gira');
+      const ok = await cargarVivo();
+      b.classList.remove('gira');
+      if (!ok) tostada('No se ha podido leer la jornada en LaLiga');
+      pintarVivo({ forzar: true });
+      break;
+    }
     case 'entrar': try { await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
     case 'entrarDemo': { const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
@@ -1540,6 +1608,7 @@ function pasosTour() {
     { v: 'hoy', sel: '#bAvisos', con: '.sup-btns [data-accion="ajustes"]', t: 'Fallo y Ajustes', x: '«Fallo», si algo no funciona o no cuadra: me llega a mí y te contesto aquí mismo. En «Ajustes», tu clave de la IA, los avisos, abrir la app en el ordenador o el iPhone y este tutorial.' },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
+    { v: 'directo', sel: '.nav [data-ir="directo"]', t: 'Directo', x: 'La jornada mientras se juega: los marcadores, los puntos de cada jugador y de quién es en tu liga, tu once con lo que lleva cada uno y cómo va tu liga. Toca un partido para verlo jugador a jugador.' },
     { v: 'rivales', sel: '.nav [data-ir="rivales"]', t: 'Rivales', x: 'Las cláusulas de los demás que te llegan con tu dinero, cuándo se abren las que están protegidas y lo que ha hecho cada uno.' },
     { v: 'mercado', sel: '.nav [data-ir="mercado"]', t: 'Mercado', x: 'Cuánto pujar por cada libre según lo que se paga en tu liga, qué ofrecer a otro mánager para que te venda y quién sube y quién baja.' },
     { v: 'ia', sel: '.nav [data-ir="ia"]', t: 'Pregunta', x: conClave ? 'Pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.' : 'Aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.' },
@@ -1632,19 +1701,18 @@ async function arrancar() {
     pintar();
     window.scrollTo(0, y);
   }, 60e3);
-  // con la jornada en juego, los puntos en directo cada 2 minutos (y se pinta si no estás tocando nada)
+  // con la jornada en juego, los puntos en directo cada 2 minutos; cada minuto en Directo o con la ficha de un partido
+  // abierta (y se pinta lo que haya abierto, si no estás tocando nada)
   setInterval(async () => {
     if (!S.D || !S.M || !S.M.enJuego || S.cargando || document.visibilityState !== 'visible') return;
+    const prisa = S.vista === 'directo' || (S.tipoHoja && (S.tipoHoja[0] === 'p' || (S.tipoHoja[0] === 'j' && $('#vivo-j'))));
+    if (!prisa && S.vivo && Date.now() - S.vivo.t < 2 * MIN - 5e3) return;
     if (!(await cargarVivo())) return;
-    if (S.hoja || S.charlando || S.planEstado.cargando || S.vista === 'ia' || tourAbierto() || Date.now() - toqueT < 8e3) return;
-    const y = window.scrollY, ap = S.M && S.M.aprende;
-    S.M = analizar(S.D, S.H, S.c, extraM());
-    S.M.aprende = ap;
-    fijarMotor(S.M);
-    montarPlan();
-    pintar();
-    window.scrollTo(0, y);
-  }, 2 * MIN);
+    if (S.tipoHoja && S.tipoHoja[0] === 'p') { const [n, id] = S.tipoHoja[1].split(':'); cargarPartido(Number(n), id); }
+    if (S.tipoHoja && S.tipoHoja[0] === 'j' && $('#vivo-j')) cargarDetalle(S.tipoHoja[1]);
+    if (Date.now() - toqueT < 8e3 && !S.hoja) return;
+    pintarVivo();
+  }, MIN);
   // las alineaciones confirmadas salen una hora antes de cada partido: mientras falte alguna, se mira cada 3 minutos
   // (solo eso, sin recargar la liga); lo pinta la vuelta de cada minuto de arriba
   setInterval(() => {

@@ -1,4 +1,5 @@
-/* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
+/* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
+   (Directo, la jornada en juego, está en directo.js.) */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, norm } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado } from './comunes.js';
 import { bloqueada } from './limite.js';
@@ -18,9 +19,9 @@ export const PELIGRO = { alta: 'alto', media: 'medio', baja: 'bajo' };
 /** pantalla ancha (ordenador o tableta en horizontal): cada pestaña se reparte en columnas */
 export const ancho = () => typeof matchMedia === 'function' && matchMedia('(min-width: 1100px)').matches;
 /** dos columnas: «lado-der» (lo principal y una columna estrecha a la derecha) o «lado-izq» (la estrecha a la izquierda) */
-const cols = (izq, der, tipo = 'lado-der') => `<div class="cols-e ${tipo}"><div class="ce-i">${izq}</div><div class="ce-d">${der}</div></div>`;
+export const cols = (izq, der, tipo = 'lado-der') => `<div class="cols-e ${tipo}"><div class="ce-i">${izq}</div><div class="ce-d">${der}</div></div>`;
 /** las listas de jugadores, en dos columnas en el ordenador */
-const lista2 = (h) => (ancho() ? `<div class="lista2">${h}</div>` : h);
+export const lista2 = (h) => (ancho() ? `<div class="lista2">${h}</div>` : h);
 
 export function filaActividad(a) {
   const quien = a.esYo ? '<span class="quien yo">Tú</span>' : `<span class="quien">${esc(a.quien || 'Un rival')}</span>`;
@@ -599,7 +600,7 @@ export function ventaHTML(v) {
 /* ================= EQUIPO ================= */
 /** las subpestañas, con un número al lado cuando hay algo que contar ([clave, texto, número, 'rojo'|'']) */
 // las pestañas de cada pantalla: se quedan fijas arriba al bajar (el ancla marca dónde van, para volver a ellas)
-const tabs = (v, actual, lista) => `<div class="tabs-ancla"></div><div class="tabs"><div class="tabs-in" role="tablist">${lista.map(([k, t, n, cls]) => `<button data-seg="${v}:${k}" role="tab" aria-selected="${actual === k}" class="${actual === k ? 'activo' : ''}">${t}${n ? `<span class="tab-n ${cls || ''}">${n}</span>` : ''}</button>`).join('')}</div></div>`;
+export const tabs = (v, actual, lista) => `<div class="tabs-ancla"></div><div class="tabs"><div class="tabs-in" role="tablist">${lista.map(([k, t, n, cls]) => `<button data-seg="${v}:${k}" role="tab" aria-selected="${actual === k}" class="${actual === k ? 'activo' : ''}">${t}${n ? `<span class="tab-n ${cls || ''}">${n}</span>` : ''}</button>`).join('')}</div></div>`;
 
 export function equipo(S) {
   const { M, H, D } = S;

@@ -3,13 +3,21 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.3d';
+export const VERSION = '0.5.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.4', f: '2026-10-24', h: '15:04', t: 'Directo',
+    cosas: [
+      { tipo: 'nuevo', d: 'directo', t: 'Una pestaña para la jornada en directo', x: 'Abajo hay una pestaña nueva, Directo. Con la jornada en juego salen todos los partidos con su marcador y por dónde van (en juego, descanso, acabados y los que faltan con su hora), y debajo de cada uno tus jugadores con los puntos que llevan y cuántos de tus rivales juegan en él. Arriba, lo que llevas, tu puesto en la jornada y cuántos de tu once ya han jugado, juegan ahora o faltan. Se pone al día sola cada minuto mientras la miras. Gracias, Domy.', ir: { v: 'directo' } },
+      { tipo: 'nuevo', d: 'campo', t: 'Cada partido, jugador a jugador', x: 'Toca un partido y ves a todos los que han jugado con sus puntos y de quién es cada uno en tu liga. Si SofaScore deja, también las jugadas con su minuto (goles, tarjetas y cambios) y quién las hizo. Antes de empezar, quién de tu liga juega en él y lo probable que es que salga de titular.', ir: { v: 'directo' } },
+      { tipo: 'nuevo', d: 'cara', t: 'Tu liga en la jornada', x: 'En Directo > Tu liga, la clasificación de la jornada mientras se juega, con cuántos jugadores le quedan por jugar a cada uno, para saber quién puede remontar. En Tu once, tu once de LaLiga con los puntos de cada uno y lo que habrían sumado los del banquillo. Y en la ficha de cada jugador, lo que lleva en la jornada: sus puntos, minutos, goles y tarjetas.', ir: { v: 'directo', seg: 'directo:liga' } },
+    ],
+  },
   {
     v: '0.5.3d', f: '2026-10-24', h: '14:19', t: 'Cláusulas con cabeza',
     cosas: [

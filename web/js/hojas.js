@@ -14,6 +14,7 @@ import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { estadoLimite, bloqueada } from './limite.js';
+import { jornadaJugadorHTML } from './directo.js';
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
 
@@ -169,6 +170,9 @@ export function fichaJugador(S, pid) {
   let h = `<div class="ficha-top">${ava(j, 'g')}<div style="min-width:0"><h2>${esc(j.nombre)}</h2>
     <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div></div>`;
   h += `<div class="valor-g"><span class="v">${eur(j.valor)}</span><span class="d">${delta(t, { largo: true })}</span>${t.d7 != null ? `<span class="d ${clase(t.d7)}">${eur(t.d7, { signo: true })} 7d</span>` : ''}</div>`;
+  // con su partido de la jornada empezado: lo que lleva y lo que ha hecho (se pone al día solo)
+  const vj = jornadaJugadorHTML(S, pid);
+  if (vj) h += `<div id="vivo-j">${vj}</div>`;
   if (M.inercia && M.inercia(pid)) h += bloqueada('inercia') ? candado('inercia') : inerciaHTML(M, pid, !!mia);
   for (const n of notasDe(pid)) h += `<div class="aviso-ficha oro">${icono('nota')}<div><b>Le contaste a la IA:</b> ${esc(n.texto)} <span class="t2">(${cuando(n.t)})</span></div></div>`;
   if (op) h += `<div class="aviso-ficha">${icono('rayo')}<div><b>Plan de hoy: ${ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max ? ` (puja hasta ${eur(op.puja_max)})` : ''}.</b> ${esc(op.motivo || '')}</div></div>`;
@@ -573,6 +577,14 @@ export function textoDiagnostico(S) {
     `Sesión: ${s ? `caduca ${new Date(s.caduca).toISOString()} · renovar ${s.renovar ? 'sí' : 'no'}` : 'no'}`,
     D ? `Datos: ${new Date(D.t).toISOString()} · liga ${D.liga && D.liga.id} · equipos ${D.clasif.length} · mío ${D.yo.teamId || '¿?'} · jugadores ${Object.keys(D.maestro).length} (con cara ${Object.values(D.maestro).filter((j) => j.img).length}) · mercado ${D.mercado.length} (${D.mercado.filter((m) => m.tipo === 'manager').length} de managers${S.M && S.M.mercadoFantasma && S.M.mercadoFantasma.length ? `, ${S.M.mercadoFantasma.length} ya con dueño quitados` : ''}) · actividad ${D.actividad.length} (con nombre ${D.actividad.filter((a) => a.quien).length}, con id ${D.actividad.filter((a) => a.quienId).length}) · partidos ${D.partidos.length} · tendencias ${Object.keys(D.tendencias || {}).length} · dinero ${D.dinero}` : 'Sin datos',
     D && D.avisos && D.avisos.length ? `Fallos: ${D.avisos.map((a) => `${a.paso}: ${a.e}`).join(' | ')}` : 'Sin fallos',
+    (() => {
+      // la jornada en directo (vivo.js): lo que ha llegado de LaLiga
+      const v = S.vivo;
+      if (!S.M || !S.M.enJuego) return 'Directo: sin jornada en juego';
+      if (!v) return `Directo: J${S.M.enJuego.n} sin datos todavía`;
+      const ps = Array.isArray(v.ps) ? v.ps : [];
+      return `Directo: J${v.n}${S.M.vivo ? '' : ' (no es la de ahora)'} · ${horaDe(v.t)} · partidos ${ps.length} (${ps.filter((p) => p.jug && p.jug.length).length} con puntos, ${ps.filter((p) => p.st != null).length} con estado) · jugadores con puntos ${Object.keys(v.puntos || {}).length} · tu once ${v.once ? v.once.length : 'no'} · equipos ${Object.keys(v.equipos || {}).length}${S.jugadas ? ` · jugadas SofaScore ${Object.keys(S.jugadas).length}` : ''}`;
+    })(),
     S.errorCarga ? `Última carga: ✗ ${S.errorCarga.tipo} · ${S.errorCarga.detalle} (${horaDe(S.errorCarga.t)})` : 'Última carga: bien',
     `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.premium ? ' (premium)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
     ...(erroresApp.length ? ['Errores de la app:', ...erroresApp.map((x) => `  ${horaDe(x.t)} ${x.m}${x.donde ? ` (${x.donde})` : ''}`)] : []),

@@ -705,11 +705,14 @@ export function analizar(D, H, c, extra = {}) {
   M.hayOnces = Object.keys(onces).length > 0;
   M.onceProb = (pid) => onces[pid] || null;
   // la jornada en directo (vivo.js): los puntos de cada uno, solo si su partido de esta jornada ya ha empezado
-  const vivo = extra.vivo && M.enJuego && extra.vivo.n === M.enJuego.n ? extra.vivo : null;
-  M.vivo = vivo;
+  // (M.vivo se cambia sin rehacer todo cuando llegan puntos nuevos: M.ponerVivo)
+  M.ponerVivo = (v) => { M.vivo = v && M.enJuego && v.n === M.enJuego.n ? v : null; return M.vivo; };
+  M.ponerVivo(extra.vivo);
   M.puntosVivo = (pid) => {
+    const vivo = M.vivo;
     if (!vivo || !vivo.puntos || vivo.puntos[pid] == null) return null;
     const j = J(pid);
+    if (!j) return vivo.puntos[pid];
     const p = (D.partidos || []).find((x) => x.jornada === vivo.n && (x.localId === j.equipoId || x.visitanteId === j.equipoId));
     if (p && p.fecha && p.fecha > Date.now()) return null;
     return vivo.puntos[pid];

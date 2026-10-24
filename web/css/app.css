@@ -1296,3 +1296,77 @@ body.limitado .tostada { z-index: 120; }
 .cr-dato.vivo-p.cero { background: #3b3e46; color: #fff; }
 .cr-dato.hora { background: rgba(8, 8, 10, 0.85); color: rgba(255, 255, 255, 0.75); font-weight: 600; }
 .pp-vivo { display: inline-flex; align-items: center; gap: 6px; } .pp-vivo b { color: var(--sube); }
+
+/* ---------- Directo (directo.js) ---------- */
+/* seis pestañas abajo: algo más estrechas */
+.nav button { min-width: 0; font-size: 12.5px; letter-spacing: -0.1px; }
+.nav button .ic { width: 24px; height: 24px; }
+@media (max-width: 360px) { .nav button { font-size: 11.5px; } .nav button .ic { width: 22px; height: 22px; } }
+.nav .gl.punto-v { min-width: 0; width: 9px; height: 9px; padding: 0; top: 8px; left: calc(50% + 8px); background: var(--sube); box-shadow: 0 0 0 2px #0d0d10; }
+.escritorio .nav .gl.punto-v { margin-left: auto; box-shadow: none; }
+.vivo-tot.baja { color: var(--baja); } .vivo-tot.cero { color: var(--texto2); }
+.dt-ent { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.dt-ent .vivo-dot { margin-right: 2px; }
+.dt-act { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; padding: 8px 0; color: var(--rojo-l); font: 600 14px 'Barlow'; }
+.dt-act .ic { width: 15px; height: 15px; }
+.dt-res { display: flex; align-items: stretch; gap: 14px; margin: 0 0 6px; padding: 14px 16px; border-radius: 16px; background: linear-gradient(135deg, #0d2a1e 0%, #0d1511 60%, #0d0d10 100%); border: 1px solid rgba(47, 209, 143, 0.22); }
+.dt-yo { flex: 1; min-width: 0; }
+.dt-yo .et { font: 600 12.5px 'Barlow'; letter-spacing: 1px; text-transform: uppercase; color: var(--apagado); }
+.dt-yo .v { font: 700 40px/1 var(--cond); color: var(--sube); margin-top: 2px; }
+.dt-yo .v small { font-size: 17px; color: var(--texto2); margin-left: 4px; font-weight: 600; }
+.dt-yo .d { font-size: 14px; color: var(--texto2); margin-top: 4px; }
+.dt-yo .d b { color: var(--texto); }
+.dt-once { display: grid; gap: 4px; align-content: center; padding-left: 14px; border-left: 1px solid rgba(255, 255, 255, 0.08); font-size: 13.5px; color: var(--texto2); }
+.dt-once span { display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.dt-once b { font: 700 19px/1 var(--cond); color: var(--texto); min-width: 16px; text-align: right; }
+.dt-once span.on b { color: var(--sube); }
+/* un partido en la lista */
+.pt { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 12px 0; border-bottom: 1px solid var(--linea); text-align: left; }
+.pt:active { opacity: 0.7; }
+.pt-est { flex: none; width: 52px; padding-top: 3px; display: flex; flex-direction: column; align-items: center; gap: 3px; font: 600 13px 'Barlow'; color: var(--texto2); text-align: center; }
+.pt-est b { font: 700 15px/1.1 var(--cond); color: var(--texto); letter-spacing: 0.2px; }
+.pt-est small { font-size: 12px; color: var(--apagado); }
+.pt-est.vivo b { color: var(--sube); }
+.pt-est.fin b { color: var(--apagado); text-transform: uppercase; font-size: 13.5px; letter-spacing: 0.6px; }
+.pt-eqs { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.pt-eq { display: flex; align-items: center; gap: 9px; font: 600 16px 'Barlow'; color: var(--texto2); }
+.pt-eq.gana { color: var(--texto); }
+.pt-nom { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pt-g { font: 700 20px/1 var(--cond); color: var(--texto); min-width: 18px; text-align: right; }
+.pt.en-juego .pt-g { color: var(--sube); }
+.pt-esc { width: 22px; height: 22px; flex: none; object-fit: contain; }
+.pt-esc.sin { display: inline-block; border-radius: 50%; background: var(--plano3); }
+.pt-esc.g { width: 52px; height: 52px; }
+.pt-esc.chico { width: 16px; height: 16px; }
+.pt-mios { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+.pt-chip { display: inline-flex; align-items: center; gap: 5px; font: 600 13px 'Barlow'; padding: 3px 8px; border-radius: 6px; background: var(--rojo-s); color: var(--texto); }
+.pt-chip b { font: 700 14px/1 var(--cond); }
+.pt-chip.sube b { color: var(--sube); } .pt-chip.baja b { color: var(--baja); } .pt-chip.cero b { color: var(--texto2); }
+.pt-chip.banq { background: var(--plano2); color: var(--texto2); }
+.pt-mas { align-self: center; font-size: 13px; color: var(--apagado); }
+/* la ficha de un partido */
+.pf-mar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin: 4px 0 8px; padding: 16px 10px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
+.pf-eq { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; font: 700 16px/1.15 'Barlow'; text-align: center; }
+.pf-eq span { overflow-wrap: anywhere; }
+.pf-res { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.pf-res b { font: 700 40px/1 var(--cond); letter-spacing: 1px; }
+.pf-res b i { font-style: normal; color: var(--apagado); margin: 0 6px; }
+.pf-e { display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px 'Barlow'; color: var(--texto2); white-space: nowrap; }
+.pf-e.vivo { color: var(--sube); }
+.pf-jug { display: flex; flex-direction: column; }
+.jg { display: flex; align-items: center; gap: 9px; padding: 8px 0; border-bottom: 1px solid var(--linea); font-size: 15px; }
+.jg:last-child { border-bottom: 0; }
+.jg-min { width: 40px; flex: none; font: 700 15px var(--cond); color: var(--texto2); text-align: right; }
+.jg-ic { width: 22px; height: 22px; flex: none; display: grid; place-items: center; color: var(--texto2); }
+.jg-ic .ic { width: 18px; height: 18px; }
+.jg-ic.gol { color: var(--sube); }
+.jg-t { flex: 1; min-width: 0; }
+.jg-r { font: 700 14px var(--cond); color: var(--texto); background: var(--plano2); padding: 1px 6px; border-radius: 5px; margin-left: 4px; }
+.tarjeta { display: block; width: 11px; height: 15px; border-radius: 2px; }
+.tarjeta.amarilla { background: #ffd23f; } .tarjeta.roja { background: #ff3b47; }
+.pf-pts { min-width: 34px; }
+.pf-pts.sube { color: var(--sube); } .pf-pts.baja { color: var(--baja); } .pf-pts.cero { color: var(--texto2); }
+/* en la ficha de un jugador */
+.dt-j .enlace { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 6px 0; color: var(--rojo-l); font: 600 14px 'Barlow'; }
+.dt-j .enlace .ic { width: 14px; height: 14px; }
+@media (max-width: 370px) { .dt-yo .v { font-size: 34px; } .dt-once { padding-left: 10px; } .pt-est { width: 46px; } .pt-eq { font-size: 15px; } }

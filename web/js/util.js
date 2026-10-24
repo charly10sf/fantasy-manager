@@ -186,6 +186,7 @@ const I = {
   bandera: '<path d="M5 21V4M5 4.5c4-2 6.5 2 11 0v8.5c-4.5 2-7-2-11 0"/>',
   lesion: '<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M12 8v8M8 12h8"/>',
   rayo: '<path d="M13 2.8 5 13.2h6l-1 8 8-10.4h-6z"/>',
+  directo: '<circle cx="12" cy="12" r="2.3"/><path d="M8 8a5.7 5.7 0 0 0 0 8M16 8a5.7 5.7 0 0 1 0 8M5.2 5.2a9.6 9.6 0 0 0 0 13.6M18.8 5.2a9.6 9.6 0 0 1 0 13.6"/>',
   lista: '<path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.8" cy="6.5" r="1"/><circle cx="4.8" cy="12" r="1"/><circle cx="4.8" cy="17.5" r="1"/>',
   campo: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 12h17"/><circle cx="12" cy="12" r="2.8"/><path d="M8.5 3.5v3.2h7V3.5M8.5 20.5v-3.2h7v3.2"/>',
   usuario: '<circle cx="12" cy="8.2" r="3.8"/><path d="M4.5 20.5c.8-3.9 3.8-6.3 7.5-6.3s6.7 2.4 7.5 6.3"/>',

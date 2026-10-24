@@ -583,3 +583,34 @@ export async function alineaciones(D) {
   if (!D.demo) LS.set('alineaciones', out);
   return out;
 }
+
+/* ---------------- las jugadas de un partido (SofaScore) ----------------
+   Para la pestaña Directo: los goles (con quién asiste), las tarjetas y los cambios de un partido de LaLiga, con su
+   minuto. SofaScore no deja a todos (desde algunos móviles responde 403): si corta, no se vuelve a probar en media hora
+   y el partido se ve igual, con lo de LaLiga Fantasy. { t, ev, lista: [{ min, extra, tipo, casa, quien, asis,
+   entra, sale, gl, gv }] } */
+let sofaCortado = 0;
+const nn = (v) => (v == null || v === '' || !Number.isFinite(+v) ? null : +v);
+const nombreSofa = (p) => (p && (p.shortName || p.name)) || '';
+export async function jugadasSofa(D, p) {
+  if (!p || D.demo || Date.now() - sofaCortado < 30 * MIN) return null;
+  try {
+    const evs = await rondaSofa(D, p.jornada);
+    const e = evs.find((x) => x.local === p.localId && x.visitante === p.visitanteId);
+    if (!e) return null;
+    const r = await pedirJSON(`${SOFA}/event/${e.id}/incidents?_=${Math.floor(Date.now() / MIN)}`, SOFA_CAB, `sofascore jugadas ${e.nombre}`);
+    const lista = [];
+    for (const i of (r && Array.isArray(r.incidents) ? r.incidents : [])) {
+      const base = { min: nn(i.time), extra: nn(i.addedTime) || 0, casa: !!i.isHome };
+      if (i.incidentType === 'goal') lista.push({ ...base, tipo: i.incidentClass === 'ownGoal' ? 'propia' : i.incidentClass === 'penalty' ? 'penalti' : 'gol', quien: nombreSofa(i.player) || i.playerName || '', asis: nombreSofa(i.assist1), gl: nn(i.homeScore), gv: nn(i.awayScore) });
+      else if (i.incidentType === 'card') lista.push({ ...base, tipo: /red/i.test(i.incidentClass || '') ? 'roja' : 'amarilla', quien: nombreSofa(i.player) || i.playerName || '' });
+      else if (i.incidentType === 'substitution') lista.push({ ...base, tipo: 'cambio', entra: nombreSofa(i.playerIn), sale: nombreSofa(i.playerOut) });
+      else if (i.incidentType === 'varDecision' && i.confirmed === false) lista.push({ ...base, tipo: 'var', quien: nombreSofa(i.player) || '' });
+    }
+    lista.sort((a, b) => (a.min || 0) - (b.min || 0) || a.extra - b.extra);
+    return { t: Date.now(), ev: e.id, lista };
+  } catch (er) {
+    if (er.estado === 403 || er.estado === 429 || er.message === 'sin temporada') sofaCortado = Date.now();
+    return null;
+  }
+}
