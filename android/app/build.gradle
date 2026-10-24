@@ -7,6 +7,12 @@ plugins {
 def rutaFirma = System.getenv('FIRMA_RUTA')
 def claveFirma = System.getenv('FIRMA_CLAVE')
 
+// Los anuncios (AdMob, solo en la versión de Google Play). Con fm.anunciosReales=false (gradle.properties) van los
+// bloques de prueba de Google, que salen marcados como «Test Ad» y no pagan: así nadie de la prueba cerrada puede
+// tocar un anuncio de verdad (Google cierra la cuenta por clics propios). Para producción, a true.
+def anunciosReales = (System.getenv('ANUNCIOS_REALES') ?: (project.findProperty('fm.anunciosReales') ?: 'false')).toString() == 'true'
+def bloque = { real, prueba -> ("\"" + (anunciosReales ? real : prueba) + "\"").toString() }
+
 android {
     namespace 'es.fantasymanager.app'
     compileSdk 36
@@ -28,8 +34,17 @@ android {
     // de Google Play (sin eso: Google no deja actualizarse por fuera de la tienda; la actualiza Play)
     flavorDimensions 'canal'
     productFlavors {
-        github { dimension 'canal' }
-        play { dimension 'canal' }
+        github {
+            dimension 'canal'
+            buildConfigField 'String', 'BANNER', '""'
+            buildConfigField 'String', 'BONIFICADO', '""'
+        }
+        play {
+            dimension 'canal'
+            // Banner Inferior y Bonificado Desbloqueo (creados el 23 oct en AdMob); los de prueba, los de Google
+            buildConfigField 'String', 'BANNER', bloque('ca-app-pub-3175956326240112/5804998548', 'ca-app-pub-3940256099942544/9214589741')
+            buildConfigField 'String', 'BONIFICADO', bloque('ca-app-pub-3175956326240112/4365466356', 'ca-app-pub-3940256099942544/5224354917')
+        }
     }
 
     // la web va dentro de la app: web/ del repositorio se copia tal cual a los assets
@@ -84,4 +99,7 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.9.1'
     // el hueco de las barras del sistema y del teclado (Android 15 y 16 dibujan la app de borde a borde)
     implementation 'androidx.core:core:1.13.1'
+    // solo en la versión de Google Play: los anuncios (AdMob) y el consentimiento de la UE para mostrarlos (UMP)
+    playImplementation 'com.google.android.gms:play-services-ads:25.5.0'
+    playImplementation 'com.google.android.ump:user-messaging-platform:4.0.0'
 }

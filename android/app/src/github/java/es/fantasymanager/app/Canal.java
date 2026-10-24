@@ -12,6 +12,8 @@ import java.io.File;
  */
 final class Canal {
     static final String NOMBRE = "github";
+    /** con el servicio en primer plano mientras la IA trabaja (Trabajo) */
+    static final boolean TRABAJO = true;
     private static final int PERMISO_INSTALAR = 8;
     private static File pendiente;
 

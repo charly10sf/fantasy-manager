@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solo en la versión de Google Play:
+     - Los anuncios (AdMob): el id de la app en AdMob. El permiso del identificador de publicidad (AD_ID) lo añade
+       la librería de AdMob.
+     - Sin el servicio en primer plano de la IA (Trabajo): Google Play pide justificarlo con un vídeo y en esta
+       versión no hace falta (la IA sigue trabajando mientras la app esté abierta). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" tools:node="remove" />
+
+    <application>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3175956326240112~3275745965" />
+        <!-- que arrancar AdMob no frene la apertura de la app -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
+            android:value="true" />
+
+        <service
+            android:name=".Trabajo"
+            tools:node="remove" />
+    </application>
+</manifest>

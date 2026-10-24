@@ -392,12 +392,45 @@ public class Puente {
             if (si) act.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             else act.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         });
+        if (!Canal.TRABAJO) return;
         try {
             if (si) Trabajo.empezar(ctx, titulo, texto);
             else Trabajo.parar(ctx);
         } catch (Exception e) {
             // Android no deja empezarlo ahora: se sigue sin él
         }
+    }
+
+    /* ---------------- anuncios (solo en la versión de Google Play: Anuncios.java de src/play) ---------------- */
+
+    /** si esta versión lleva anuncios */
+    @JavascriptInterface
+    public boolean hayAnuncios() {
+        return Anuncios.HAY;
+    }
+
+    /** si en la pantalla de ahora va el banner de abajo */
+    @JavascriptInterface
+    public void banner(boolean si) {
+        if (act != null) Anuncios.banner(si);
+    }
+
+    /** el anuncio bonificado para desbloquear algo («plan»); contesta con anuncioVisto(para, visto, motivo) */
+    @JavascriptInterface
+    public void verAnuncio(String para) {
+        if (act != null) Anuncios.ver(act, para == null ? "" : para);
+    }
+
+    /** si se puede (y hay que dejar) cambiar el consentimiento de los anuncios */
+    @JavascriptInterface
+    public boolean hayPrivacidadAnuncios() {
+        return act != null && Anuncios.hayPrivacidad();
+    }
+
+    /** el formulario para cambiar el consentimiento de los anuncios */
+    @JavascriptInterface
+    public void privacidadAnuncios() {
+        if (act != null) Anuncios.privacidad(act);
     }
 
     /** si la app está a la vista (para avisar con una notificación cuando el plan llega con la app cerrada) */

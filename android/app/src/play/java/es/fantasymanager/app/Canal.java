@@ -8,6 +8,8 @@ import android.net.Uri;
  */
 final class Canal {
     static final String NOMBRE = "play";
+    /** sin el servicio en primer plano de la IA (Google Play pide justificarlo con un vídeo): src/play/AndroidManifest.xml */
+    static final boolean TRABAJO = false;
 
     private Canal() {
     }

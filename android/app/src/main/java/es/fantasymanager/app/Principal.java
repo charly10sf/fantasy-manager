@@ -57,15 +57,25 @@ public class Principal extends Activity {
         web.setHorizontalScrollBarEnabled(false);
         // Desde Android 15 la app se dibuja de borde a borde, también debajo de la barra de arriba, de la de
         // abajo y del teclado. La web va en una caja que deja el hueco justo de lo que ocupan en cada momento.
+        // Debajo de la web, el hueco del banner de los anuncios (solo en la versión de Google Play; si no, no se ve).
         FrameLayout caja = new FrameLayout(this);
         caja.setBackgroundColor(0xFF0A0A0B);
-        caja.addView(web, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        android.widget.LinearLayout columna = new android.widget.LinearLayout(this);
+        columna.setOrientation(android.widget.LinearLayout.VERTICAL);
+        columna.addView(web, new android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+        FrameLayout hueco = new FrameLayout(this);
+        hueco.setBackgroundColor(0xFF0D0D10);
+        hueco.setVisibility(android.view.View.GONE);
+        columna.addView(hueco, new android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        caja.addView(columna, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(caja);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         ViewCompat.setOnApplyWindowInsetsListener(caja, (v, ins) -> {
             Insets b = ins.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
             Insets t = ins.getInsets(WindowInsetsCompat.Type.ime());
             v.setPadding(b.left, b.top, b.right, Math.max(b.bottom, t.bottom));
+            // con el teclado abierto, sin banner
+            Anuncios.teclado(t.bottom > b.bottom);
             return WindowInsetsCompat.CONSUMED;
         });
         // el botón y el gesto de atrás: desde Android 13 se registran así (en Android 16 onBackPressed ya no llega)
@@ -120,6 +130,14 @@ public class Principal extends Activity {
         Avisos.reprogramar(this);
         // y el trabajo de la IA en segundo plano
         Fondo.reprogramar(this);
+        // los anuncios (solo en la versión de Google Play): primero el consentimiento
+        Anuncios.alCrear(this, hueco);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Anuncios.alCerrar();
+        super.onDestroy();
     }
 
     /** La vuelta del inicio de sesión: authredirect://com.lfp.laligafantasy?code=... */
@@ -381,6 +399,7 @@ public class Principal extends Activity {
 
     @Override
     protected void onPause() {
+        Anuncios.alPausar();
         aLaVista = false;
         abierta = false;
         web.onPause();
@@ -394,6 +413,7 @@ public class Principal extends Activity {
         aLaVista = true;
         abierta = true;
         web.onResume();
+        Anuncios.alVolver();
         // de vuelta de otra pantalla, el foco otra vez al WebView (sin él no sale el teclado)
         if (!web.hasFocus()) web.requestFocus();
         js("window.alVolver && alVolver()");

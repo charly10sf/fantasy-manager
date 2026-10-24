@@ -87,8 +87,9 @@ jobs:
         run: |
           set -o pipefail
           if [ "$FIRMA" = "buena" ]; then export FIRMA_CLAVE="fantasy-manager:$CLAVE"; else export FIRMA_CLAVE="prueba123"; fi
-          # la de GitHub (APK, se actualiza sola) y la de Google Play (AAB, el formato que pide la tienda)
-          gradle assembleGithubRelease bundlePlayRelease --no-daemon --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/compilacion.log"
+          # la de GitHub (APK, se actualiza sola) y la de Google Play (AAB, el formato que pide la tienda; y su APK, para
+          # probarla en un móvil sin pasar por la tienda)
+          gradle assembleGithubRelease bundlePlayRelease assemblePlayRelease --no-daemon --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/compilacion.log"
 
       # solo desde main: en otras ramas se compila para probar, sin publicar
       - name: Publicar la app
@@ -117,6 +118,7 @@ jobs:
           retention-days: 14
           path: |
             android/app/build/outputs/apk/github/release/app-github-release.apk
+            android/app/build/outputs/apk/play/release/app-play-release.apk
             android/app/build/outputs/bundle/playRelease/app-play-release.aab
 
       # el registro de la compilación, en la rama android-registro, para poder revisarlo si falla
@@ -128,7 +130,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/firma.log" . 2>/dev/null || true
           tail -c 60000 compilacion.log > ultimo.log
           echo "run ${{ github.run_number }} firma ${FIRMA:-?} $(date -u +%FT%TZ)" > estado.txt
-          ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/github/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/bundle/playRelease/" >> estado.txt 2>&1 || true
+          ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/github/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/apk/play/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/bundle/playRelease/" >> estado.txt 2>&1 || true
           rm compilacion.log
           git init -q && git checkout -q -b android-registro
           git config user.name "github-actions[bot]"
