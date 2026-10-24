@@ -11,7 +11,7 @@ export const VERSION = '0.6.0';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.6.0', f: '2026-10-24', h: 'HH:MM', t: 'Camino de Google Play',
+    v: '0.6.0', f: '2026-10-24', h: '19:03', t: 'Camino de Google Play',
     cosas: [
       { tipo: 'nuevo', d: 'versiones', t: 'Fantasy Manager, camino de Google Play', x: 'La app se prepara para salir en Google Play. Allí será gratis, con un anuncio pequeño debajo de las pestañas, y para pedirle a la IA más de 3 planes en el mismo día habrá que ver un anuncio corto. La versión de nuestra liga, la que te instalas desde aquí, sigue sin anuncios y sin límite.' },
       { tipo: 'mejora', d: 'conexion', t: 'La web, en fantasymanagerapp.com', x: 'La versión web (la del iPhone y el ordenador) tiene su propia dirección: fantasymanagerapp.com. Si entras por la de antes, arriba te sale «Llevarme»: un toque y entras en la nueva con tu cuenta, tu liga y tu clave de la IA, sin volver a hacer nada. En Android, la app se pone al día desde ahí a partir de esta versión: instala el APK nuevo cuando te salga el aviso arriba.' },
