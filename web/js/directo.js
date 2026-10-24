@@ -333,22 +333,37 @@ function once11(os, f) {
 function equipoJugado(S, p, l, ju) {
   const { D, M } = S;
   const tid = l ? p.lid : p.vid;
-  let os = p.jug.filter((x) => x.l === l).map((x) => ({ x, j: D.maestro[x.id] })).filter((o) => o.j && o.j.pos >= 1 && o.j.pos <= 4);
+  const os = p.jug.filter((x) => x.l === l).map((x) => ({ x, j: D.maestro[x.id] })).filter((o) => o.j && o.j.pos >= 1 && o.j.pos <= 4);
   if (!os.length) return '';
   const tot = p.jug.filter((x) => x.l === l).reduce((t, x) => t + (x.pts || 0), 0);
   const hayMin = os.some((o) => o.x.min != null);
-  // si viene la plantilla entera y no se sabe quién ha jugado: los que puntúan
-  if (!hayMin && os.length > 16) os = os.filter((o) => o.x.pts != null && o.x.pts !== 0);
-  let tit = os, banq = [], nota = '';
+  let tit = os, banq = [], nota = '', banqT = 'Entraron';
   if (hayMin) ({ tit, resto: banq } = once11(os.filter((o) => o.x.min > 0), (o) => o.x.min || 0));
   else {
+    // LaLiga no dice los minutos (suele dar la plantilla entera, con 0 puntos los que no han jugado y también los que
+    // juegan y aún no suman): el once confirmado de SofaScore; si no lo hay, el once probable, con lo que lleva cada
+    // uno; y debajo, los demás que ya puntúan
     const conf = os.filter((o) => { const a = M.alineacion(o.j.id); return a && a.estado === 'titular'; });
-    if (conf.length >= 10) { tit = conf; banq = os.filter((o) => !conf.includes(o)); } else if (os.length > 11) nota = `Todos los que han jugado (${os.length}): LaLiga no dice quién salió de titular.`;
+    // (con 16 o menos, LaLiga da solo los que han jugado: esos)
+    const prob = conf.length >= 10 || os.length <= 16 ? null : onceProbable(S, tid);
+    const conPts = (o) => o.x.pts != null && o.x.pts !== 0;
+    if (conf.length >= 10) { tit = conf; banq = os.filter((o) => !conf.includes(o) && conPts(o)); } else if (prob) {
+      const porId = new Map(os.map((o) => [o.j.id, o]));
+      tit = prob.map((o) => porId.get(o.j.id) || { x: { id: o.j.id, pts: null }, j: o.j });
+      const dentro = new Set(prob.map((o) => o.j.id));
+      banq = os.filter((o) => !dentro.has(o.j.id) && conPts(o));
+      banqT = 'Fuera del once probable, ya puntúan';
+      nota = 'LaLiga no dice quién ha salido de titular: en el campo, el once probable con lo que lleva cada uno.';
+    } else if (os.length > 16) {
+      tit = os.filter(conPts);
+      nota = 'LaLiga no dice quién juega: salen solo los que ya han sumado o restado puntos.';
+    } else if (os.length > 11) nota = `Todos los que han jugado (${os.length}): LaLiga no dice quién salió de titular.`;
   }
+  if (!tit.length) return '';
   const crom = (o) => cromo(M, o.j, { tag: tagDe(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } });
   let h = `<div class="pf-cab">${escudo(D, tid)}<b>${esc(nombreEq(D, tid))}</b><span>${tot} pts entre todos</span></div>`;
   h += canchaHTML(tit, crom);
-  if (banq.length) h += `<div class="banquillo"><div class="banq-t">Entraron <span>${banq.length}</span></div><div class="banq-l">${banq.map((o) => cromo(M, o.j, { chico: true, tag: tagDe(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } })).join('')}</div></div>`;
+  if (banq.length) h += `<div class="banquillo"><div class="banq-t">${banqT} <span>${banq.length}</span></div><div class="banq-l">${banq.map((o) => cromo(M, o.j, { chico: true, tag: tagDe(S, o.j.id), marca: marcaDe(o.x, o.j, ju), datoFijo: { txt: o.x.pts == null ? '–' : `${o.x.pts} pts`, cls: `vivo-p ${ptsCls(o.x.pts) || 'cero'}` } })).join('')}</div></div>`;
   if (nota) h += `<p class="t2 peq">${nota}</p>`;
   return h;
 }
@@ -375,12 +390,19 @@ function equipoPrevio(S, p, l) {
   return o ? o.cab + o.campo : '';
 }
 /** el once de un equipo (el confirmado o el más probable) en el campo: { cab, campo, forma, conf, deLiga } o null */
-export function onceDeEquipo(S, tid) {
+/** el once más probable de un equipo: [{ j, T }] (11) o null si no hay datos para sacarlo */
+function onceProbable(S, tid) {
   const { D, M } = S;
   const os = Object.values(D.maestro).filter((j) => j.equipoId === tid && j.pos >= 1 && j.pos <= 4).map((j) => ({ j, T: M.titularidad ? M.titularidad(j) : null })).filter((o) => o.T && o.T.p != null);
   if (os.length < 11) return null;
   const tit = oncePrevio(M, os);
   if (!tit || tit.length < 11 || tit.reduce((t, o) => t + o.T.p, 0) < 5) return null;
+  return tit;
+}
+export function onceDeEquipo(S, tid) {
+  const { D, M } = S;
+  const tit = onceProbable(S, tid);
+  if (!tit) return null;
   const conf = tit.every((o) => o.T.confirmada === 'titular');
   // (arriba a la derecha solo lo que importa: la alineación confirmada, una lesión o una duda; «SUP» no, que va en el %)
   const marca = (j) => (M.alineacion(j.id) || ['injured', 'suspended', 'out_of_league', 'doubtful'].includes(j.estado) ? null : '');

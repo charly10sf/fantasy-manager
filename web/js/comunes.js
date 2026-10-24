@@ -1,5 +1,5 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
-import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando } from './util.js';
+import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando, norm } from './util.js';
 import { mini } from './graficos.js';
 
 let EQUIPOS = {};
@@ -13,6 +13,35 @@ export function ava(j, tam = '') {
   const esc2 = eq && eq.escudo && tam !== 'm' ? `<img class="esc" src="${esc(eq.escudo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
   return `<span class="ava-w"><span class="ava ${p} ${tam}"><span class="ini">${esc(iniciales(j && j.nombre))}</span>${cara}</span>${esc2}</span>`;
 }
+/* ---------- los colores de cada club (para la cabecera de su ficha y el brillo detrás de la cara de sus jugadores) ---------- */
+// [color 1, color 2] de la camiseta; se busca por el nombre (sin tildes). Los que no estén, sin colores.
+const COLORES = [
+  ['real madrid', '#FFFFFF', '#FEBE10'], ['barcelona', '#A50044', '#004D98'], ['atletico', '#CB3524', '#272E61'], ['athletic', '#EE2523', '#FFFFFF'],
+  ['real sociedad', '#0067B1', '#FFFFFF'], ['betis', '#00954C', '#FFFFFF'], ['sevilla', '#FFFFFF', '#D81E05'], ['valencia', '#FFFFFF', '#111111'],
+  ['villarreal', '#FFE667', '#005187'], ['celta', '#8AC3EE', '#FFFFFF'], ['espanyol', '#007FC8', '#FFFFFF'], ['getafe', '#005999', '#FFFFFF'],
+  ['girona', '#CD2534', '#FFFFFF'], ['levante', '#B4053F', '#005B9E'], ['mallorca', '#E20613', '#111111'], ['osasuna', '#D91A21', '#0A346F'],
+  ['alaves', '#0057B8', '#FFFFFF'], ['elche', '#05642C', '#FFFFFF'], ['rayo', '#FFFFFF', '#E53027'], ['oviedo', '#0047AB', '#FFFFFF'],
+  ['las palmas', '#FFE400', '#0057A8'], ['valladolid', '#5B2C83', '#FFFFFF'], ['leganes', '#0B4DA2', '#FFFFFF'], ['deportivo', '#00529F', '#FFFFFF'],
+  ['racing', '#00843D', '#FFFFFF'], ['zaragoza', '#FFFFFF', '#1C3F94'], ['sporting', '#D2001F', '#FFFFFF'], ['malaga', '#3EA7E0', '#FFFFFF'],
+  ['almeria', '#EE1119', '#FFFFFF'], ['granada', '#C8102E', '#FFFFFF'], ['cadiz', '#FDE100', '#0045A5'], ['eibar', '#A6192E', '#003DA5'],
+  ['huesca', '#A6192E', '#003DA5'], ['tenerife', '#FFFFFF', '#004A99'], ['cordoba', '#00965E', '#FFFFFF'], ['mirandes', '#D10A11', '#111111'],
+];
+const luz = (hex) => { const n = parseInt(hex.slice(1), 16); return (0.2126 * (n >> 16) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255; };
+const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+const colorCache = {};
+/** los colores de un club: { c1, c2, brillo } (el brillo, el primero que no sea blanco ni negro, ya con transparencia) o null */
+export function coloresClub(id, nombre = '') {
+  const k = `${id}|${nombre}`;
+  if (k in colorCache) return colorCache[k];
+  const n = ` ${norm(nombre || (EQUIPOS[id] && EQUIPOS[id].nombre) || '')} `;
+  const f = COLORES.find(([clave]) => n.includes(` ${clave} `) || n.includes(` ${clave}`));
+  if (!f) return (colorCache[k] = null);
+  const vivo = [f[1], f[2]].find((c) => { const l = luz(c); return l < 0.8 && l > 0.12; });
+  return (colorCache[k] = { c1: f[1], c2: f[2], brillo: vivo ? rgba(vivo, 0.42) : 'rgba(255,255,255,0.12)', suave: vivo ? rgba(vivo, 0.22) : 'rgba(255,255,255,0.07)' });
+}
+/** el atributo style con los colores del club (vacío si no se conocen) */
+export const estiloClub = (id, nombre) => { const c = coloresClub(id, nombre); return c ? ` style="--c1:${c.c1};--c2:${c.c2};--cb:${c.brillo};--cs:${c.suave}"` : ''; };
+
 export const posTag = (j) => (j && j.pos ? `<span class="pos p${j.pos}">${POS[j.pos]}</span>` : '');
 
 export function estadoPill(j) {
