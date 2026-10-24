@@ -1289,7 +1289,10 @@ body.limitado .tostada { z-index: 120; }
 .vivo-c .cancha { margin-top: 10px; }
 .cv-forma { position: absolute; top: 12px; left: 14px; font: 700 13px 'Barlow Condensed', 'Barlow'; letter-spacing: 0.4px; color: rgba(255, 255, 255, 0.75); z-index: 1; }
 .cr-hora { font-weight: 600; opacity: 0.85; }
-/* en el campo del directo: los puntos en una pastilla oscura con el número en color, la hora más apagada */
-.cancha-vivo .cr-dato { background: rgba(8, 8, 10, 0.88); }
-.cancha-vivo .cr-dato .cr-vivo { font-size: 13px; color: #fff; } .cancha-vivo .cr-dato .cr-vivo.sube { color: var(--sube); } .cancha-vivo .cr-dato .cr-vivo.baja { color: var(--baja); }
-.cancha-vivo .cr-dato .cr-hora { color: rgba(255, 255, 255, 0.7); font-weight: 600; }
+/* en el campo, con la jornada en juego: los puntos que lleva cada uno, bien a la vista; la hora del que aún no ha jugado */
+.cr-dato.vivo-p { font-size: 13px; padding: 1px 8px; }
+.cr-dato.vivo-p.sube { background: var(--sube); color: #062015; }
+.cr-dato.vivo-p.baja { background: var(--baja); color: #fff; }
+.cr-dato.vivo-p.cero { background: #3b3e46; color: #fff; }
+.cr-dato.hora { background: rgba(8, 8, 10, 0.85); color: rgba(255, 255, 255, 0.75); font-weight: 600; }
+.pp-vivo { display: inline-flex; align-items: center; gap: 6px; } .pp-vivo b { color: var(--sube); }

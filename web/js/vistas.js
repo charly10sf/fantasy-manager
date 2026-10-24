@@ -1,6 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML. */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, norm } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, campoVivo } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado } from './comunes.js';
 import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
@@ -434,7 +434,7 @@ export function aciertosHTML(M) {
 }
 
 /** el once: el que propone la IA si es una formación gratuita y cuadra con tus jugadores; si no, el mejor que sale de los números */
-export function onceHTML(S, al, { conBanquillo = false, sinCab = false } = {}) {
+export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo = false } = {}) {
   const { M } = S;
   const gratis = M.formaciones.map((f) => f.join('-'));
   const todos = Object.values(S.D.maestro);
@@ -447,31 +447,50 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false } = {}) {
     const ls = [1, 2, 3, 4].map((p) => tit.filter((j) => j.pos === p));
     if (ls[0].length === 1 && ls[1].length === f[0] && ls[2].length === f[1] && ls[3].length === f[2]) { form = al.formacion; lineas = ls; deIA = true; dudas = al.dudas || []; }
   }
+  // con la jornada en juego (en Equipo): el once que tienes puesto en LaLiga, con los puntos que lleva cada uno
+  const V = directo && M.vivo && M.enJuego ? M.vivo : null;
+  let real = false;
+  if (!lineas && V && V.once) {
+    const js = V.once.map((pid) => M.J(pid)).filter((j) => j && j.pos && j.pos < 5);
+    const ls = [1, 2, 3, 4].map((p) => js.filter((j) => j.pos === p));
+    if (ls[0].length === 1 && js.length >= 10) { lineas = ls; form = ls.slice(1).map((l) => l.length).join('-'); real = true; }
+  }
   if (!lineas && M.once && M.once.formacion) { form = M.once.nombre; lineas = M.once.lineas; dudas = M.once.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`); }
   if (!lineas) return '';
-  const huecos = !deIA && M.once.huecos;
+  const huecos = !deIA && !real && M.once.huecos;
   const banquillo = conBanquillo;
   const modo = S.filtro.campo || 'pp';
   const f = String(form).split('-').map(Number);
   const tit = lineas.flat();
   const total = tit.reduce((s, j) => s + (j.pos < 5 ? M.ppEsperado(j) : 0), 0);
-  let h = sinCab ? `<p class="t2 peq" style="margin:2px 0 6px">${deIA ? 'El que propone la IA.' : 'El mejor según la app.'}</p>` : `<div class="sec"><h2>Tu once</h2><span class="sub">${deIA ? 'el de la IA' : 'el mejor según la app'}</span></div>`;
-  h += `<div class="campo-cab"><span class="form">${esc(form)}</span><span class="pp"><b>${String(Math.round(total * 10) / 10).replace('.', ',')}</b> pts</span>
+  // en directo: lo que llevas (el de LaLiga si lo da; si no, la suma de tu once) y tu puesto en la jornada
+  let cabPts = `<b>${String(Math.round(total * 10) / 10).replace('.', ',')}</b> pts`;
+  if (V) {
+    const yoT = M.yo && M.yo.teamId != null ? String(M.yo.teamId) : null;
+    const suma = tit.reduce((t, j) => t + (M.puntosVivo(j.id) || 0), 0);
+    const lleva = real && yoT && V.equipos && V.equipos[yoT] != null ? V.equipos[yoT] : suma;
+    const tabla = Object.entries(V.equipos || {}).sort((a, b) => b[1] - a[1]);
+    const pos = yoT ? tabla.findIndex(([t]) => t === yoT) + 1 : 0;
+    cabPts = `<span class="vivo-dot"></span><b>${lleva}</b> pts${pos && tabla.length > 1 ? ` · ${pos}º` : ''}`;
+  }
+  const sub = real ? `el tuyo en LaLiga · J${V.n} en directo` : deIA ? 'el de la IA' : 'el mejor según la app';
+  let h = sinCab ? `<p class="t2 peq" style="margin:2px 0 6px">${deIA ? 'El que propone la IA.' : 'El mejor según la app.'}</p>` : `<div class="sec"><h2>Tu once</h2><span class="sub">${sub}</span></div>`;
+  h += `<div class="campo-cab"><span class="form">${esc(form)}</span><span class="pp${V ? ' pp-vivo' : ''}">${cabPts}</span>
     <div class="campo-modo">${[['pp', 'Puntos'], ['valor', 'Valor'], ['forma', 'Forma']].map(([k, t]) => `<button data-filtro="campo:${k}" class="${modo === k ? 'activo' : ''}">${t}</button>`).join('')}</div></div>`;
   // de arriba abajo: delanteros, medios, defensas y el portero; los huecos que falten, como cromos vacíos
   const filas = [3, 2, 1, 0].map((i) => {
     const n = i === 0 ? 1 : f[i - 1] || 0;
     const js = (lineas[i] || []).slice(0, n);
     while (js.length < n) js.push(null);
-    return `<div class="linea-c${n >= 5 ? ' cinco' : ''}">${js.map((j) => cromo(M, j, { modo })).join('')}</div>`;
+    return `<div class="linea-c${n >= 5 ? ' cinco' : ''}">${js.map((j) => cromo(M, j, { modo, directo: !!V })).join('')}</div>`;
   });
   const ent = M.once && M.once.entrenador;
   h += `<div class="cancha"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
-    ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { modo, chico: true, ent: true })}</div>` : ''}</div>`;
+    ${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { modo, chico: true, ent: true, directo: !!V })}</div>` : ''}</div>`;
   if (banquillo) {
     const dentro = new Set([...tit.map((j) => j.id), ent && ent.id]);
     const resto = M.mias.map((x) => x.j).filter((j) => !dentro.has(j.id) && j.pos !== 5).sort((a, b) => a.pos - b.pos || b.valor - a.valor);
-    if (resto.length) h += `<div class="banquillo"><div class="banq-t">Banquillo <span>${resto.length}</span></div><div class="banq-l">${resto.map((j) => cromo(M, j, { modo, chico: true })).join('')}</div></div>`;
+    if (resto.length) h += `<div class="banquillo"><div class="banq-t">Banquillo <span>${resto.length}</span></div><div class="banq-l">${resto.map((j) => cromo(M, j, { modo, chico: true, directo: !!V })).join('')}</div></div>`;
   }
   h += `<div class="puestos-c">${M.puestos.map((p) => `<span class="pz p${p.pos}${p.faltan ? ' falta' : p.sobran ? ' sobra' : ''}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.sobran ? ' · sobran' : ''}</span>`).join('')}</div>`;
   const notas = [];
@@ -501,32 +520,6 @@ function saludoHTML(S) {
   const fecha = new Date().toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long' });
   return `<div class="saludo"><span>${sal}${nombre ? `, <b>${esc(nombre)}</b>` : ''}</span><span class="t2">${esc(fecha.charAt(0).toUpperCase() + fecha.slice(1))}</span></div>`;
 }
-/** la jornada en directo: tus puntos y los de tu once, jugador a jugador (los tocas y se abre su ficha) */
-export function vivoHTML(S) {
-  const { M } = S;
-  const V = M.vivo;
-  if (!V || !M.enJuego) return '';
-  const yoT = M.yo && M.yo.teamId != null ? String(M.yo.teamId) : null;
-  const enOnce = V.once ? new Set(V.once) : null;
-  const mias = M.mias.filter((x) => x.j && x.j.pos);
-  const lista = (enOnce ? mias.filter((x) => enOnce.has(x.pid)) : mias.filter((x) => M.puntosVivo(x.pid) != null)).sort((a, b) => a.j.pos - b.j.pos);
-  const suma = lista.reduce((t, x) => t + (M.puntosVivo(x.pid) || 0), 0);
-  const oficial = yoT && V.equipos && V.equipos[yoT] != null ? V.equipos[yoT] : null;
-  const total = oficial != null ? oficial : suma;
-  const tabla = Object.entries(V.equipos || {}).sort((a, b) => b[1] - a[1]);
-  const pos = yoT ? tabla.findIndex(([t]) => t === yoT) + 1 : 0;
-  const chips = lista.map((x) => {
-    const p = M.puntosVivo(x.pid);
-    const pr = p == null && M.proximoPartido ? M.proximoPartido(x.j.equipoId) : null;
-    return `<button class="vv-j" data-j="${esc(x.pid)}" title="${p == null ? `Aún no ha jugado${pr ? `: ${esc(cuando(pr.fecha))}` : ''}` : 'Puntos en esta jornada'}"><span>${esc(x.j.nombre)}</span><b class="${p == null ? 'apag' : p > 0 ? 'sube' : p < 0 ? 'baja' : ''}">${p == null ? '–' : p}</b></button>`;
-  }).join('');
-  // con tu once de LaLiga, en su campo y con su forma; si no se sabe, los que ya han jugado
-  const campo = enOnce ? campoVivo(M, V.once) : '';
-  return `<div class="vivo-c"><div class="vivo-t"><span class="vivo-dot"></span><b>En directo · Jornada ${V.n}</b><span class="vivo-tot">${total} pts</span></div>
-    <p class="vivo-s">${pos && tabla.length > 1 ? `${pos}º de la jornada en tu liga · ` : ''}${enOnce ? 'tu once de LaLiga' : 'los tuyos que ya han jugado'} · ${rel(V.t)}</p>
-    ${campo || (chips ? `<div class="vv-l">${chips}</div>` : '<p class="t2 peq" style="margin:6px 0 0">Aún no ha jugado ninguno de los tuyos.</p>')}</div>`;
-}
-
 export function hoy(S) {
   if (ancho()) return hoyAncho(S);
   const { D, M } = S;
@@ -534,7 +527,6 @@ export function hoy(S) {
   h += bandasHoy(S);
   h += saludoHTML(S);
   h += marcador(S);
-  h += vivoHTML(S);
   h += tiemposHTML(S);
   h += ahoraHTML(S);
   h += llevasHTML(S);
@@ -550,7 +542,7 @@ function hoyAncho(S) {
   let izq = saludoHTML(S) + ahoraHTML(S) + llevasHTML(S) + planHTML(S);
   izq += noticiasHTML(S);
   void M;
-  const der = marcador(S) + vivoHTML(S) + tiemposHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
+  const der = marcador(S) + tiemposHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
   return bandasHoy(S) + cols(izq, der);
 }
 function bandasHoy(S) {
@@ -621,7 +613,7 @@ export function equipo(S) {
   if (!M.mias.length) return h + nada(S.D && S.D.ligas && S.D.ligas.length > 1 ? 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Toca el nombre de la liga, arriba, para cambiar a otra de tus ligas.' : 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si acabas de entrar en ella, prueba a actualizar en un rato.');
 
   if (seg === 'plantilla') {
-    const arriba = vivoHTML(S) + equipoHoyHTML(S, { corto: true }) + onceHTML(S, null, { conBanquillo: true });
+    const arriba = equipoHoyHTML(S, { corto: true }) + onceHTML(S, null, { conBanquillo: true, directo: true });
     let l = '';
     const titulares = new Set((M.once ? M.once.lineas.flat() : []).map((j) => j.id));
     for (const p of [1, 2, 3, 4, 5]) {

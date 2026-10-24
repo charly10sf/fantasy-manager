@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.5.3b';
+export const VERSION = '0.5.3c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.5.3c', f: '2026-10-24', h: '07:00', t: 'Los puntos, en tu once',
+    cosas: [
+      { tipo: 'mejora', d: 'campo', t: 'Los puntos de la jornada, en tu once', x: 'Con la jornada en juego, en Equipo, «Tu once» pasa a ser el que tienes puesto en LaLiga, con su forma, y debajo de cada jugador los puntos que lleva (verde si suma, rojo si resta) o la hora de su partido si aún no ha jugado. Arriba, lo que llevas y tu puesto en la jornada. En Hoy ya no sale nada aparte.', ir: { v: 'equipo' } },
+    ],
+  },
   {
     v: '0.5.3b', f: '2026-10-24', h: '06:36', t: 'Tu once en directo, en su campo',
     cosas: [

@@ -123,7 +123,7 @@ const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
  * un jugador en el campo, como en el Fantasy: la cara, la placa con el nombre y debajo el dato que toque
  * (puntos esperados, valor o forma) y, arriba, contra quién juega con el color de lo difícil que es
  */
-export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = false } = {}) {
+export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = false, directo = false } = {}) {
   if (!j) return `<button class="cromo vacio-c" data-ir="mercado"><span class="cr-hueco">+</span><span class="cr-nom">Falta</span></button>`;
   const fr = M && M.factorRival ? M.factorRival(j) : null;
   const f = M && M.forma ? M.forma(j.id) : null;
@@ -131,15 +131,17 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   if (modo === 'valor') dato = eur(j.valor);
   else if (modo === 'forma') dato = f && f.pts.length ? f.pts.slice(-3).join(' · ') : j.media ? `${String(j.media).replace('.', ',')} m` : '–';
   else dato = M && M.ppEsperado && j.pos < 5 ? `${dec1(M.ppEsperado(j))} pts` : j.media ? `${String(j.media).replace('.', ',')} m` : '–';
-  // en la jornada en directo, en «Puntos», los que lleva (si su partido ha empezado)
-  const pv = modo === 'pp' && M && M.puntosVivo ? M.puntosVivo(j.id) : null;
-  if (pv != null) dato = `<b class="cr-vivo ${pv > 0 ? 'sube' : pv < 0 ? 'baja' : ''}">${pv}</b> pts`;
-  // en el campo del directo, el que aún no ha jugado lleva la hora de su partido
-  else if (vivo) {
-    // corta: «16:15» hoy, «mañ. 14:00», «lun 21:00»
-    const p = M && M.proximoPartido ? M.proximoPartido(j.equipoId) : null;
-    const h = p ? cuando(p.fecha).replace(/^hoy /, '').replace(/^mañana /, 'mañ. ').replace(/^(\S+) \d+, /, '$1 ') : '–';
-    dato = `<span class="cr-hora">${esc(h)}</span>`;
+  // con la jornada en juego (en Equipo y en la ficha de un rival), en «Puntos»: los que lleva, en verde si suma y en rojo
+  // si resta; el que aún no ha jugado, la hora de su partido («16:15» hoy, «mañ. 14:00», «lun 21:00»)
+  let datoCls = '';
+  if ((vivo || directo) && modo === 'pp' && M && M.vivo) {
+    const pv = M.puntosVivo ? M.puntosVivo(j.id) : null;
+    if (pv != null) { dato = `${pv} pts`; datoCls = ` vivo-p ${pv > 0 ? 'sube' : pv < 0 ? 'baja' : 'cero'}`; }
+    else {
+      const p = M.proximoPartido ? M.proximoPartido(j.equipoId) : null;
+      dato = esc(p ? cuando(p.fecha).replace(/^hoy /, '').replace(/^mañana /, 'mañ. ').replace(/^(\S+) \d+, /, '$1 ') : '–');
+      datoCls = ' hora';
+    }
   }
   const conOnce = !!(M && M.hayOnces && j.pos < 5);
   const o = conOnce ? M.onceProb(j.id) : null;
@@ -156,7 +158,7 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   return `<button class="cromo p${j.pos}${chico ? ' chico' : ''}${MALOS.has(j.estado) ? ' baja-c' : ''}" data-j="${esc(j.id)}">
     <span class="cr-foto">${ava(j, 'cr')}${rv}${marca}</span>
     <span class="cr-nom">${ent ? '<i>ENT</i>' : ''}${esc(nom)}</span>
-    <span class="cr-dato">${dato}</span></button>`;
+    <span class="cr-dato${datoCls}">${dato}</span></button>`;
 }
 
 /**
