@@ -324,7 +324,7 @@ function pintar({ arriba = false } = {}) {
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
     v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
   }
-  $('#banda').innerHTML = bandaMudanza() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
+  $('#banda').innerHTML = bandaMudanza() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Recargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -746,8 +746,32 @@ async function cargarOnceRival(tid) {
   try { S.oncesRival[tid] = { t: Date.now(), n, ids: await onceRival(tid, n) }; } catch (e) { S.oncesRival[tid] = { t: Date.now(), n, ids: null }; }
   if (S.tipoHoja && S.tipoHoja[0] === 'r' && S.tipoHoja[1] === tid) repintarHoja();
 }
+/*
+ * en la web (iPhone, ordenador): si hay versión nueva publicada, una banda para ponerla. El navegador guarda los
+ * archivos un rato (GitHub Pages, 10 minutos) y una recarga normal puede traer los de antes: «Recargar» los vuelve a
+ * pedir todos sin caché (los de paquete.json) y luego recarga la página
+ */
+let webMiradaT = 0;
+async function mirarWebNueva() {
+  if (enApp || Date.now() - webMiradaT < 5 * MIN) return;
+  webMiradaT = Date.now();
+  try {
+    const r = await fetch(`paquete.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    if (j && j.version && cmpVer(j.version, VERSION) > 0) { const antes = S.webNuevaWeb; S.webNuevaWeb = j; if (!antes && S.D && !S.hoja) pintar(); }
+  } catch (e) { /* sin red: ya se mirará */ }
+}
+async function recargarWeb() {
+  const j = S.webNuevaWeb;
+  tostada('Poniendo la versión nueva…', 4000);
+  const fs = j && j.archivos ? Object.keys(j.archivos).filter((k) => /\.(js|css|html|json)$/.test(k)) : [];
+  await enParalelo(fs, 6, (k) => fetch(k, { cache: 'reload' }).catch(() => null));
+  location.reload();
+}
 async function despues() {
   saludarSiToca();
+  mirarWebNueva();
   if (S.M && S.M.enJuego) cargarVivo().then((ok) => { if (ok) { rehacer(); if (!S.hoja) pintar(); } });
   // onces probables y noticias (de fuera de LaLiga) y, a la vez, las fichas de los jugadores
   const fuentes = fuentesExternas(S.D, S.M).then((f) => { if (f) { S.fuentes = f; rehacer(); if (!S.hoja) pintar(); } }).catch((e) => console.warn('fuentes', e));
@@ -1726,6 +1750,7 @@ document.addEventListener('click', async (ev) => {
     case 'probarAviso': if (enApp) { nativo.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'rivales'); tostada('Mira las notificaciones'); } else tostada('Los avisos solo funcionan en la app'); break;
     case 'buscarVersion': buscarVersion(true); break;
     case 'ponerWeb': ponerWebNueva(); break;
+    case 'recargarWeb': recargarWeb(); break;
     case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Bajando la versión nueva…'); } break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarChat': borrarConversacion(); pintar(); break;
@@ -1852,6 +1877,9 @@ document.addEventListener('input', (ev) => {
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden && S.vista === 'ia' && !hayClave() && vieneDeAIStudio()) setTimeout(aPegar, 250);
 });
+// la web nueva: al volver a la pestaña y cada 10 minutos con ella a la vista (como mucho cada 5)
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.D) mirarWebNueva(); });
+setInterval(() => { if (!document.hidden && S.D) mirarWebNueva(); }, 10 * MIN);
 
 /* ---------------- lo nuevo de esta versión ---------------- */
 /** la última versión que viste (la numeración cambió en la 0.1.0: lo de antes se traduce) */
