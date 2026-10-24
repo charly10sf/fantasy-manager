@@ -148,5 +148,5 @@ jobs:
           fi
           # lo que de verdad responde
           for p in "" app.json paquete.json app-ads.txt descargas/fantasy-manager.apk; do
-            echo "https://$DOMINIO/$p → $(curl -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}' "https://$DOMINIO/$p" || echo fallo)"
+            echo "::notice::https://$DOMINIO/$p → $(curl -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}' "https://$DOMINIO/$p" || echo fallo)"
           done
