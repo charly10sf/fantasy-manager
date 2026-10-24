@@ -11,7 +11,7 @@ export const VERSION = '0.5.2c';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.2c', f: '2026-10-24', h: '02:20', t: 'Lo que pagaste, siempre',
+    v: '0.5.2c', f: '2026-10-24', h: '02:32', t: 'Lo que pagaste, siempre',
     cosas: [
       { tipo: 'arreglo', d: 'dinero', t: 'Cada venta, con lo que pagaste', x: 'Si de un jugador no sale lo que pagaste en los movimientos de la liga, la venta ya no se queda callada: si venía en tu equipo inicial, la compara con lo que valía al empezar la liga; si no, te dice que no se sabe. Y donde pone «+3,22 M» ahora dice «te entran», para que no se confunda con lo que ganas, que va debajo («ganas» o «pierdes»). Gracias, Domy.', ir: { v: 'hoy' } },
       { tipo: 'arreglo', d: 'escudo', t: 'Las cláusulas que sube LaLiga sola', x: 'Cuando el valor de un jugador pasa su cláusula, LaLiga se la sube sola hasta su valor. La app lo tomaba por una subida pagada por su dueño: salía en Rivales > Movimientos y le restaba ese dinero. Ahora solo cuenta la que deja la cláusula por encima de su valor, la que paga el entrenador. Gracias, Domy.', ir: { v: 'rivales', seg: 'rivales:movimientos' } },
