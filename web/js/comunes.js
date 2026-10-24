@@ -1,7 +1,7 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
 import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando, norm } from './util.js';
 import { mini } from './graficos.js';
-import { topConAnuncio } from './limite.js';
+import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 
 let EQUIPOS = {};
 export const ponerEquipos = (m) => { EQUIPOS = m || {}; };
@@ -310,9 +310,16 @@ export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === '
 /** la caja de una función bloqueada (se toca para ver qué es) */
 export function candado(clave) {
   const [t, x] = BLOQUEO[clave] || ['Función top', ''];
-  // en la de Google Play se abre viendo un anuncio (las cuatro, hasta mañana); en la de la liga, aún no
-  const cola = topConAnuncio() ? ' Tócalo y ábrela gratis viendo un anuncio corto.' : ' Se desbloqueará pronto viendo un anuncio.';
-  return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${cola}</span></span></button>`;
+  // en la de Google Play se abre viendo anuncios (las de los rivales, con 2 y unas veces por jornada); en la de la liga, aún no
+  return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${colaCandado(clave)}</span></span></button>`;
+}
+/** lo que dice un candado de cómo se abre */
+export function colaCandado(clave) {
+  if (!topConAnuncio()) return ' Se desbloqueará pronto viendo un anuncio.';
+  if (!POR_JORNADA.includes(clave)) return ' Tócalo y ábrela hasta medianoche viendo un anuncio corto.';
+  const q = usosQuedan(clave), n = usosPorJornada();
+  if (!q) return ` Ya la has abierto las ${n} veces de esta jornada: vuelve en la siguiente.`;
+  return ` Tócalo y ábrela ${minutosPorVez() >= 60 && minutosPorVez() % 60 === 0 ? `${minutosPorVez() / 60} hora${minutosPorVez() > 60 ? 's' : ''}` : `${minutosPorVez()} minutos`} con dos anuncios cortos. ${n} veces por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.`;
 }
 /** lo mismo, en pequeño (en una fila) */
 export function candadoMini(clave, texto) {

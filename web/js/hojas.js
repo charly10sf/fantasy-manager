@@ -13,7 +13,7 @@ import { quien, sesion } from './auth.js';
 import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
-import { estadoLimite, bloqueada } from './limite.js';
+import { estadoLimite, bloqueada, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
@@ -194,7 +194,8 @@ export function fichaJugador(S, pid) {
     if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) h += candado('quienPaga');
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
       const nadie = !pg.seguro.length && !pg.quiza.length;
-      const lista = [...pg.seguro.map((x) => `<b>${esc(x.nombre)}</b> (${dineroCorto(x.c)})`), ...pg.quiza.map((x) => `${esc(x.nombre)} (justo, ${dineroCorto(x.c)})`)];
+      // solo a quién le llega, sin cuánto tiene (eso es «dinero de los rivales», que va aparte)
+      const lista = [...pg.seguro.map((x) => `<b>${esc(x.nombre)}</b>`), ...pg.quiza.map((x) => `${esc(x.nombre)} (justo)`)];
       const b = mia.blindaje;
       const bl = !b || b.yaVale ? '' : b.caro ? ` Dejarla fuera del alcance de todos costaría ${eur(b.coste)}: no compensa para lo que vale.${b.parcial ? ` <b>Lo que sí compensa:</b> subirla a ${eur(b.parcial.objetivo)} (te cuesta ${eur(b.parcial.coste)}) y solo le llegaría a ${esc(b.parcial.quedan.join(', '))}.` : ''}` : ` <b>Blindaje justo:</b> subirla a ${eur(b.objetivo)} te cuesta ${eur(b.coste)} y no le llegaría a nadie.`;
       h += `<div class="aviso-ficha ${nadie ? 'verde' : pg.seguro.length ? '' : 'oro'}">${icono('rivales')}<div>${nadie ? '<b>Ahora mismo no le llega a ningún rival.</b> Podrían juntarlo vendiendo, pero hoy no.' : `<b>Les llega:</b> ${lista.join(', ')}.`}${pg.sinSaber.length ? ` <span class="t2">(De ${pg.sinSaber.length} no se sabe el dinero.)</span>` : ''}${bl}</div></div>`;
@@ -408,14 +409,24 @@ export function anuncioHTML(S, para) {
   return h;
 }
 
-/** las funciones top: un anuncio las abre las cuatro hasta medianoche */
+/** las funciones top: las de los rivales, con 2 anuncios y unas veces por jornada; cuándo gira, con 1, hasta medianoche */
 function anuncioTopHTML(A) {
   const [t, x] = BLOQUEO[A.clave] || ['Funciones top', ''];
+  const rivales = POR_JORNADA.includes(A.clave), faltan = faltanAnuncios(A.clave), q = usosQuedan(A.clave), n = usosPorJornada();
+  const min = minutosPorVez(), dura = min % 60 === 0 ? `${min / 60} hora${min > 60 ? 's' : ''}` : `${min} minutos`;
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-    <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}
-    <p>Mira un anuncio corto y se abren <b>las cuatro funciones top hasta mañana</b>: el dinero de los rivales, quién puede pagar tus cláusulas, cuándo gira un jugador y lo que venden los rivales.</p>`;
+    <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
+  if (rivales && !q) {
+    h += `<p><b>Ya la has abierto las ${n} veces de esta jornada.</b> Vuelve a estar disponible en la siguiente.</p>
+      <button class="btn ancho sec" data-accion="noTop">Entendido</button></div>`;
+    return h;
+  }
+  if (rivales && faltan >= 2) h += `<p>Se abre <b>${dura}</b> viendo <b>dos anuncios cortos</b>, uno detrás de otro. Puedes hacerlo ${n} veces por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
+  else if (rivales) h += `<p><b>Llevas 1 de 2.</b> Mira el segundo y se abre ${dura}. Te ${q === 1 ? 'queda 1 vez' : `quedan ${q} veces`} esta jornada.</p>`;
+  else h += `<p>Mira un anuncio corto y se abre <b>hasta medianoche</b>.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
-  h += `<button class="btn ancho" data-accion="verAnuncio" data-para="top"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button>
+  const txt = A.cargando ? 'Cargando el anuncio…' : rivales ? (faltan >= 2 ? 'Ver el primer anuncio (1 de 2)' : 'Ver el segundo anuncio (2 de 2)') : 'Ver el anuncio';
+  h += `<button class="btn ancho" data-accion="verAnuncio" data-para="top"${A.cargando ? ' disabled' : ''}>${txt}</button>
     <button class="btn ancho sec" data-accion="noTop" style="margin-top:8px">Ahora no</button></div>`;
   return h;
 }

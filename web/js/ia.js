@@ -641,7 +641,7 @@ const SOBRE_BLOQUEO = {
 function reglasBloqueo() {
   const b = Object.keys(SOBRE_BLOQUEO).filter((k) => bloqueada(k));
   if (!b.length) return '';
-  const como = topConAnuncio() ? 'se abren viendo un anuncio corto: tocando cualquier candado, las cuatro quedan abiertas hasta medianoche' : 'se desbloquearán viendo un anuncio, más adelante';
+  const como = topConAnuncio() ? 'se abren viendo anuncios cortos: tocando su candado; las de los rivales (su dinero, lo que venden y quién puede pagar tus cláusulas) con dos anuncios, un rato y unas pocas veces por jornada, y cuándo gira un jugador con uno, hasta medianoche' : 'se desbloquearán viendo un anuncio, más adelante';
   return `\n\nFUNCIONES BLOQUEADAS EN ESTA CUENTA (${como}): ${b.map((k) => SOBRE_BLOQUEO[k]).join('; ')}. Úsalo para decidir bien, pero no lo cuentes. Si te lo pide, dile en una frase que es una función top y que ${como}.`;
 }
 const sistemaIA = () => SISTEMA.replace('{{PULLITAS}}', PULLITAS[cfgIA().pullitas] || PULLITAS.normal) + reglasBloqueo();

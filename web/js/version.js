@@ -3,30 +3,40 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.3';
+export const VERSION = '0.6.3a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
+// A los que no son el dueño solo les sale lo que les cambia algo (el filtro, en app.js): ni los arreglos, ni lo que lleva
+// menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
+// 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.3a', f: '2026-10-25', h: '01:26', t: 'Las funciones top, con más cabeza',
+    cosas: [
+      { para: 'play', tipo: 'mejora', d: 'escudo', t: 'Las funciones top, con más cabeza', x: 'El dinero de los rivales, lo que venden y cuánto les da LaLiga, y quién puede pagar tus cláusulas se abren cada una 1 hora con dos anuncios cortos, y como mucho 2 veces por jornada: así son una ventaja de verdad y no algo que tiene todo el mundo siempre. Cuándo gira un jugador sigue con uno, hasta medianoche. En «quién puede pagar tu cláusula» ya no sale el dinero de cada rival, solo si le llega o no.', ir: { v: 'rivales' } },
+      { menor: true, tipo: 'mejora', d: 'versiones', t: 'Novedades, solo lo que te afecta', x: 'Al estrenar versión, a cada uno le salen solo las novedades que le cambian algo: sin los arreglos, los detalles ni lo que es de otra versión de la app (la de Google Play, la web). El dueño lo sigue viendo todo, y la lista entera está en Ajustes → Novedades.' },
+    ],
+  },
   {
     v: '0.6.3', f: '2026-10-25', h: '00:23', t: 'Funciones top con un anuncio',
     cosas: [
-      { tipo: 'nuevo', d: 'escudo', t: 'Las funciones top, viendo un anuncio', x: 'En la versión de Google Play, las cuatro funciones top (el dinero de cada rival, quién puede pagar tus cláusulas, cuándo gira un jugador y lo que venden los rivales) se abren viendo un anuncio corto: toca cualquier candado y quedan abiertas hasta medianoche. En la versión de la liga, que no lleva anuncios, siguen como estaban.', ir: { v: 'rivales' } },
+      { para: 'play', tipo: 'nuevo', d: 'escudo', t: 'Las funciones top, viendo un anuncio', x: 'En la versión de Google Play, las cuatro funciones top (el dinero de cada rival, quién puede pagar tus cláusulas, cuándo gira un jugador y lo que venden los rivales) se abren viendo un anuncio corto: toca cualquier candado y quedan abiertas hasta medianoche. En la versión de la liga, que no lleva anuncios, siguen como estaban.', ir: { v: 'rivales' } },
     ],
   },
   {
     v: '0.6.2e', f: '2026-10-24', h: '23:55', t: 'La web ya no se queda en una versión vieja',
     cosas: [
       { tipo: 'arreglo', d: 'versiones', t: 'La web se queda en una versión vieja', x: 'En el iPhone y en el navegador del móvil la web se podía quedar en una versión de antes aunque hubiera salido otra. Ahora cada archivo va con su huella y el navegador ya no los mezcla. Si aún ves una versión anterior a esta, cierra la web del todo y vuelve a abrirla una vez.' },
-      { tipo: 'mejora', d: 'versiones', t: '«Buscar nueva» en la web', x: 'En Ajustes, al lado de la versión, la web también tiene «Buscar nueva»: si la hay, la pone al momento.' },
+      { para: 'web', tipo: 'mejora', d: 'versiones', t: '«Buscar nueva» en la web', x: 'En Ajustes, al lado de la versión, la web también tiene «Buscar nueva»: si la hay, la pone al momento.' },
     ],
   },
   {
     v: '0.6.2d', f: '2026-10-24', h: '23:43', t: 'La web, al día',
     cosas: [
-      { tipo: 'mejora', d: 'versiones', t: 'Aviso de versión nueva en la web', x: 'En la web (iPhone y ordenador), cuando sale una versión nueva aparece una banda arriba con «Recargar»: un toque y la tienes, sin esperar a que el navegador suelte la de antes.' },
+      { para: 'web', tipo: 'mejora', d: 'versiones', t: 'Aviso de versión nueva en la web', x: 'En la web (iPhone y ordenador), cuando sale una versión nueva aparece una banda arriba con «Recargar»: un toque y la tienes, sin esperar a que el navegador suelte la de antes.' },
     ],
   },
   {
@@ -38,7 +48,7 @@ export const NOVEDADES = [
   {
     v: '0.6.2b', f: '2026-10-24', h: '23:28', t: 'Las jornadas, más a mano',
     cosas: [
-      { tipo: 'mejora', d: 'campo', t: 'Pasar de una jornada a otra', x: 'En Equipo → Jornadas, junto al título salen ‹ y › para ir a la jornada anterior o a la siguiente. Los botones de arriba (J1, J2…) siguen ahí, pero al bajar se quedan tapados por las pestañas.', ir: { v: 'equipo', seg: 'equipo:jornadas' } },
+      { menor: true, tipo: 'mejora', d: 'campo', t: 'Pasar de una jornada a otra', x: 'En Equipo → Jornadas, junto al título salen ‹ y › para ir a la jornada anterior o a la siguiente. Los botones de arriba (J1, J2…) siguen ahí, pero al bajar se quedan tapados por las pestañas.', ir: { v: 'equipo', seg: 'equipo:jornadas' } },
     ],
   },
   {
@@ -84,21 +94,21 @@ export const NOVEDADES = [
   {
     v: '0.6.0a', f: '2026-10-24', h: '20:24', t: 'Tus datos',
     cosas: [
-      { tipo: 'mejora', d: 'escudo', t: 'Cómo borrar tus datos', x: 'La política de privacidad (Ajustes → Privacidad) explica ahora cómo se borra lo que se guarda en el servidor de Fantasy Manager, que es quién usa la app y tus avisos de fallo: se borra solo con el tiempo o, si lo pides en contacto@fantasymanagerapp.com, en 30 días como mucho.' },
+      { menor: true, tipo: 'mejora', d: 'escudo', t: 'Cómo borrar tus datos', x: 'La política de privacidad (Ajustes → Privacidad) explica ahora cómo se borra lo que se guarda en el servidor de Fantasy Manager, que es quién usa la app y tus avisos de fallo: se borra solo con el tiempo o, si lo pides en contacto@fantasymanagerapp.com, en 30 días como mucho.' },
     ],
   },
   {
     v: '0.6.0', f: '2026-10-24', h: '19:03', t: 'Camino de Google Play',
     cosas: [
-      { tipo: 'nuevo', d: 'versiones', t: 'Fantasy Manager, camino de Google Play', x: 'La app se prepara para salir en Google Play. Allí será gratis, con un anuncio pequeño debajo de las pestañas, y para pedirle a la IA más de 3 planes en el mismo día habrá que ver un anuncio corto. La versión de nuestra liga, la que te instalas desde aquí, sigue sin anuncios y sin límite.' },
-      { tipo: 'mejora', d: 'conexion', t: 'La web, en fantasymanagerapp.com', x: 'La versión web (la del iPhone y el ordenador) tiene su propia dirección: fantasymanagerapp.com. Si entras por la de antes, arriba te sale «Llevarme»: un toque y entras en la nueva con tu cuenta, tu liga y tu clave de la IA, sin volver a hacer nada. En Android, la app se pone al día desde ahí a partir de esta versión: instala el APK nuevo cuando te salga el aviso arriba.' },
+      { para: 'dueño', tipo: 'nuevo', d: 'versiones', t: 'Fantasy Manager, camino de Google Play', x: 'La app se prepara para salir en Google Play. Allí será gratis, con un anuncio pequeño debajo de las pestañas, y para pedirle a la IA más de 3 planes en el mismo día habrá que ver un anuncio corto. La versión de nuestra liga, la que te instalas desde aquí, sigue sin anuncios y sin límite.' },
+      { para: 'web', tipo: 'mejora', d: 'conexion', t: 'La web, en fantasymanagerapp.com', x: 'La versión web (la del iPhone y el ordenador) tiene su propia dirección: fantasymanagerapp.com. Si entras por la de antes, arriba te sale «Llevarme»: un toque y entras en la nueva con tu cuenta, tu liga y tu clave de la IA, sin volver a hacer nada. En Android, la app se pone al día desde ahí a partir de esta versión: instala el APK nuevo cuando te salga el aviso arriba.' },
     ],
   },
   {
     v: '0.5.4a', f: '2026-10-24', h: '15:27', t: 'Cada partido, en su campo',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'Cada partido, en su campo', x: 'Al tocar un partido en Directo, cada equipo sale en su campo, como un once, en vez de en una lista: cada jugador en su línea con los puntos que lleva, arriba de quién es en tu liga («TUYO» o el nombre del rival) y un balón o una tarjeta si ha marcado o le han sacado una. Si se sabe quién salió de titular, los que entraron desde el banquillo van debajo. Antes de empezar, el once probable de cada equipo con el % de que salga cada uno.', ir: { v: 'directo' } },
-      { tipo: 'mejora', d: 'campana', t: 'La respuesta a tu aviso, en una notificación', x: 'Cuando te contestan a un aviso de fallo, te llega una notificación al móvil aunque tengas la app cerrada (mientras esperas respuesta, la app mira cada 40 minutos más o menos; de madrugada, no). Al tocarla se abre la respuesta. Con la app abierta, sale sola en unos minutos sin tener que tocar nada. En la web y el iPhone, solo con la web abierta.' },
+      { para: 'app', tipo: 'mejora', d: 'campana', t: 'La respuesta a tu aviso, en una notificación', x: 'Cuando te contestan a un aviso de fallo, te llega una notificación al móvil aunque tengas la app cerrada (mientras esperas respuesta, la app mira cada 40 minutos más o menos; de madrugada, no). Al tocarla se abre la respuesta. Con la app abierta, sale sola en unos minutos sin tener que tocar nada. En la web y el iPhone, solo con la web abierta.' },
     ],
   },
   {
@@ -126,14 +136,14 @@ export const NOVEDADES = [
     v: '0.5.3b', f: '2026-10-24', h: '06:36', t: 'Tu once en directo, en su campo',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'El directo, en el campo', x: 'Los puntos en directo salen ahora en un campo con tu once de LaLiga en su forma de verdad (4-3-3, 3-5-2…), cada uno en su línea con los puntos que lleva, y el que aún no ha jugado con la hora de su partido. El de cada rival, igual en su ficha.', ir: { v: 'equipo' } },
-      { tipo: 'mejora', d: 'versiones', t: 'Si te has perdido muchas versiones, lo principal', x: 'Si abres la app después de varias actualizaciones, ya no te cuenta todo una por una: te enseña lo nuevo más importante (hasta cinco cosas) y el resto, sobre todo arreglos, queda en la lista de versiones de Ajustes.' },
+      { menor: true, tipo: 'mejora', d: 'versiones', t: 'Si te has perdido muchas versiones, lo principal', x: 'Si abres la app después de varias actualizaciones, ya no te cuenta todo una por una: te enseña lo nuevo más importante (hasta cinco cosas) y el resto, sobre todo arreglos, queda en la lista de versiones de Ajustes.' },
     ],
   },
   {
     v: '0.5.3a', f: '2026-10-24', h: '06:01', t: 'Menos «no se ha podido leer»',
     cosas: [
       { tipo: 'arreglo', d: 'conexion', t: 'Si se corta la conexión, lo vuelve a probar', x: 'Con datos móviles, a veces una petición a LaLiga no llega a conectar y salía «No se ha podido leer: ofertas Fornals». Ahora cada lectura que falla por la conexión se prueba otra vez, y si las ofertas de uno no se pueden leer, se usan las de la última vez (no cambian hasta el cambio de mercado) sin avisarte. Si aun así falla, el aviso dice que es la conexión y te deja actualizar.' },
-      { tipo: 'mejora', d: 'campo', t: 'Los puntos en directo, más seguros', x: 'Los puntos de cada equipo de tu liga en la jornada salen directamente de la clasificación de LaLiga, y si las estadísticas de los partidos no responden, los de cada jugador salen de la lista de jugadores.' },
+      { menor: true, tipo: 'mejora', d: 'campo', t: 'Los puntos en directo, más seguros', x: 'Los puntos de cada equipo de tu liga en la jornada salen directamente de la clasificación de LaLiga, y si las estadísticas de los partidos no responden, los de cada jugador salen de la lista de jugadores.' },
     ],
   },
   {

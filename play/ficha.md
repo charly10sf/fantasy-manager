@@ -120,6 +120,7 @@ Para la versión con anuncios (0.6 y siguientes). Lo de AdMob sale de la guía d
 | Información personal → ID de usuario (el número de cuenta de LaLiga, para lo mismo) | Sí | No | Funciones de la app, Analítica | No |
 | Actividad en la app → Interacciones con la app (AdMob: aperturas, toques, vídeos; y los minutos de uso, donde hay límite) | Sí | Sí | Publicidad o marketing, Analítica, Funciones de la app, Prevención del fraude | No |
 | Mensajes → Otros mensajes en la app (el texto de un aviso de fallo) | Sí | No | Funciones de la app (soporte), Comunicaciones del desarrollador | Sí |
+| Fotos y vídeos → Fotos (hasta 3 capturas en un aviso de fallo, desde la 0.6.1b) | Sí | No | Funciones de la app (soporte), Comunicaciones del desarrollador | Sí |
 | Información y rendimiento de la app → Diagnóstico (AdMob; y el diagnóstico si marcas la casilla en un aviso de fallo) | Sí | Sí | Analítica, Publicidad o marketing, Prevención del fraude | No |
 | Dispositivo u otros identificadores (ID de publicidad e ID de conjunto de apps, AdMob) | Sí | Sí | Publicidad o marketing, Analítica, Prevención del fraude | No |
 
