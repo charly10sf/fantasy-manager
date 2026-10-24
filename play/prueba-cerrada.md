@@ -15,7 +15,7 @@ Los textos e imágenes de la ficha y las respuestas de cada formulario están en
 
 Play Console → **Crear aplicación**:
 
-- Nombre: `Fantasy Manager: liga fantasy`
+- Nombre: `Fantasy Manager: tu míster IA`
 - Idioma predeterminado: Español (España)
 - App, Gratis
 - Aceptar las dos declaraciones (políticas y leyes de exportación de EE. UU.)

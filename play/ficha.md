@@ -6,7 +6,7 @@ Todo lo que pide Play Console para publicar, listo para copiar y pegar. Las imá
 
 | Campo | Valor |
 | --- | --- |
-| Nombre (máx. 30) | Fantasy Manager: liga fantasy |
+| Nombre (máx. 30) | Fantasy Manager: tu míster IA |
 | Idioma predeterminado | Español (España) – es-ES |
 | App o juego | App |
 | Gratis o de pago | Gratis |
