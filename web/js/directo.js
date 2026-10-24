@@ -214,6 +214,8 @@ function onceHTML(S, n, ps) {
   const campo = ids ? campoVivo(M, ids) : '';
   if (!campo) return h + nada('LaLiga no enseña tu once ahora mismo. En Equipo tienes el mejor según la app.');
   h += campo;
+  const enCampo = ids.map((pid) => M.J(pid)).filter((j) => j && j.pos && j.pos < 5).length;
+  if (enCampo < 11) h += `<p class="t2 peq"><b class="rojo">Tienes ${enCampo} en el once de LaLiga: ${11 - enCampo > 1 ? `los ${11 - enCampo} huecos no puntúan` : 'el hueco no puntúa'}.</b></p>`;
   // los del banquillo, con lo que habrían sumado
   const dentro = new Set(ids);
   const banq = M.mias.map((x) => x.j).filter((j) => !dentro.has(j.id) && j.pos < 5);

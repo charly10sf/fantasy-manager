@@ -42,6 +42,13 @@ export function idsOnce(r) {
   return out;
 }
 
+/** la formación de una alineación de LaLiga ([defensas, medios, delanteros], que sumen 10) o null */
+export function formaOnce(r) {
+  const d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r;
+  const f = d && d.formation && Array.isArray(d.formation.tacticalFormation) ? d.formation.tacticalFormation.map(Number) : null;
+  return f && f.length === 3 && f.every((x) => Number.isInteger(x) && x >= 1 && x <= 6) && f[0] + f[1] + f[2] === 10 ? f : null;
+}
+
 const txt = (x) => (x == null || x === '' ? '' : String(x));
 const n0 = (v) => (v === '' || v == null || Number.isNaN(+v) ? null : +v);
 /** un dato de la estadística de un jugador: [valor, puntos] o el valor solo */
@@ -138,9 +145,9 @@ export async function enVivo(D, n, yoTid) {
     if (v != null) puntos[j.id] = v;
   }
   // tu once de verdad (el que tienes puesto en LaLiga) y los puntos de cada equipo en la jornada
-  let once = null;
+  let once = null, forma = null;
   if (yoTid) {
-    try { const ids = idsOnce(await api.miOnce(yoTid)); if (ids.length >= 5) once = ids; } catch (e) { if (e.sesion) throw e; }
+    try { const r = await api.miOnce(yoTid); const ids = idsOnce(r); if (ids.length >= 5) { once = ids; forma = formaOnce(r); } } catch (e) { if (e.sesion) throw e; }
   }
   const equipos = {};
   if (D.liga && D.liga.id) {
@@ -163,7 +170,7 @@ export async function enVivo(D, n, yoTid) {
       }
     } catch (e) { if (e.sesion) throw e; }
   }
-  return { t: Date.now(), n, puntos, once, equipos, enJuego, acabados, ps };
+  return { t: Date.now(), n, puntos, once, forma, equipos, enJuego, acabados, ps };
 }
 
 /** el once de un rival en la jornada n: [pid] (o null si LaLiga no lo enseña) */

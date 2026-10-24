@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.1a';
+export const VERSION = '0.6.1b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.6.1b', f: '2026-10-24', h: 'HH:MM', t: 'Tu once de la jornada',
+    cosas: [
+      { tipo: 'arreglo', d: 'campo', t: 'Tu once de LaLiga, aunque le falte alguien', x: 'Con la jornada en juego, en Equipo sale el once que tienes puesto en LaLiga con los puntos de cada uno. Si te faltaba alguien en el once, salía el mejor según la app en vez del tuyo. Ahora sale el tuyo, con los huecos vacíos y un aviso: los huecos no puntúan. En Directo, en «Tu once», también avisa.', ir: { v: 'equipo' } },
+    ],
+  },
   {
     v: '0.6.1a', f: '2026-10-24', h: '22:20', t: 'Clubes, con sus colores',
     cosas: [

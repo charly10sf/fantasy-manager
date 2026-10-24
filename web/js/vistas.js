@@ -451,10 +451,16 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   // con la jornada en juego (en Equipo): el once que tienes puesto en LaLiga, con los puntos que lleva cada uno
   const V = directo && M.vivo && M.enJuego ? M.vivo : null;
   let real = false;
+  // (aunque le falte alguno: el que tiene puesto, con los huecos vacíos, que no puntúan)
+  let faltanReal = 0;
   if (!lineas && V && V.once) {
     const js = V.once.map((pid) => M.J(pid)).filter((j) => j && j.pos && j.pos < 5);
     const ls = [1, 2, 3, 4].map((p) => js.filter((j) => j.pos === p));
-    if (ls[0].length === 1 && js.length >= 10) { lineas = ls; form = ls.slice(1).map((l) => l.length).join('-'); real = true; }
+    if (ls[0].length <= 1 && js.length >= 5) {
+      const fl = V.forma && ls.slice(1).every((l, i) => l.length <= V.forma[i]) ? V.forma : ls.slice(1).map((l) => l.length);
+      lineas = ls; form = fl.join('-'); real = true;
+      faltanReal = 11 - js.length;
+    }
   }
   if (!lineas && M.once && M.once.formacion) { form = M.once.nombre; lineas = M.once.lineas; dudas = M.once.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`); }
   if (!lineas) return '';
@@ -496,6 +502,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   h += `<div class="puestos-c">${M.puestos.map((p) => `<span class="pz p${p.pos}${p.faltan ? ' falta' : p.sobran ? ' sobra' : ''}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.sobran ? ' · sobran' : ''}</span>`).join('')}</div>`;
   const notas = [];
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
+  if (real && faltanReal > 0) notas.push(`<b class="rojo">En LaLiga tienes ${11 - faltanReal} en el once: ${faltanReal > 1 ? `los ${faltanReal} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
   if (dudas.length) notas.push(`Dudas: ${esc(dudas.join(' · '))}`);
   notas.push('<span class="leyenda"><i class="facil"></i>rival fácil <i class="media"></i>medio <i class="dificil"></i>difícil · @ fuera de casa</span>');
   h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
