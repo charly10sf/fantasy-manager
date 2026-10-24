@@ -11,7 +11,7 @@ export const VERSION = '0.5.3d';
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
   {
-    v: '0.5.3d', f: '2026-10-24', h: '14:20', t: 'Cláusulas con cabeza',
+    v: '0.5.3d', f: '2026-10-24', h: '14:19', t: 'Cláusulas con cabeza',
     cosas: [
       { tipo: 'arreglo', d: 'escudo', t: 'Blindajes con cifras de verdad', x: 'Para decirte hasta dónde subir una cláusula, la app miraba el dinero del rival más rico, y con uno de 88 M salía «súbela a 88 M» por un jugador de 41 M. Ahora mira también lo que de verdad se paga en tu liga por una cláusula (nadie paga el doble de lo que vale un jugador): por encima de lo más que se suele pagar ya está a salvo. Y solo te propone subirla si cuesta como mucho una cuarta parte de lo que vale (antes, un tercio).', ir: { v: 'equipo', seg: 'equipo:clausulas' } },
       { tipo: 'arreglo', d: 'ia', t: 'Que te clausulen a su valor no es un regalo', x: 'La IA podía decirte que si te clausulaban a uno por su valor «le pusieras un lacito». Está mal: te lo quitan sin pagar nada de más, pierdes sus puntos y lo que iba a subir, venderlo a LaLiga te daría más y reponerlo te costaría más. Ahora lo sabe, y no rebaja el riesgo que calcula la app sin un dato nuevo. Y un suplente con la cláusula a su valor ya no sale «sin riesgo»: solo si la cláusula pasa de lo que te daría LaLiga.', ir: { v: 'ia' } },
