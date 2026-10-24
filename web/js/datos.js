@@ -282,9 +282,16 @@ export async function actualizar(alPaso = () => {}) {
   guardarActHist(liga.id, AH, act, llegoAlFinal, clasif.length);
 
   alPaso(9, PASOS[9]);
-  let tendencias = {};
-  const html = await blando('futbolfantasy', () => paginaMercado());
+  // las subidas y bajadas de cada jugador (de una web de fuera): si no contesta, las que se leyeron antes ese mismo
+  // día (los valores cambian una vez al día), sin avisar; si no hay, el aviso de siempre, sin decir de dónde salen
+  let tendencias = {}, tendenciasT = Date.now();
+  let html = null;
+  try { html = await paginaMercado(); } catch (e) { if (e.sesion) throw e; }
   if (html) tendencias = N.unirTendencias(N.paginaMercado(html), maestro);
+  if (!Object.keys(tendencias).length) {
+    const vt = viejo && (viejo.tendenciasT || viejo.t);
+    if (viejo && viejo.tendencias && Object.keys(viejo.tendencias).length && vt && diaDe(vt) === diaDe()) { tendencias = viejo.tendencias; tendenciasT = vt; } else avisos.push({ paso: 'las subidas y bajadas del mercado', e: 'no contesta' });
+  }
 
   // las caras que ya se sacaron de la ficha de cada jugador (la lista general a veces trae la silueta)
   const caras = LS.get('caras', {});
@@ -296,7 +303,7 @@ export async function actualizar(alPaso = () => {}) {
     yo: { userId, nombre: miNombre, teamId: mio ? mio.teamId : null },
     liga, ligas, equipos, equiposT: viejo && viejo.equiposT && equipos === viejo.equipos ? viejo.equiposT : Date.now(),
     clasif, plantillas, maestro, mercado, actividad: act.slice(0, 400),
-    dinero, dineros, valorEquipo, jornada, partidos, resultados, tendencias, avisos, muestras, misVentas, formaciones, formacionesT,
+    dinero, dineros, valorEquipo, jornada, partidos, resultados, tendencias, tendenciasT, avisos, muestras, misVentas, formaciones, formacionesT,
     plantillasViejas,
   };
   return guardarFoto(D, viejo);

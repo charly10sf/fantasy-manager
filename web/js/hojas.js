@@ -253,12 +253,12 @@ export function fichaJugador(S, pid) {
         c.push(`<span>Tiros/90 <b>${p90(a.u.tiros, a.u.min)}</b></span>`, `<span>Pases clave/90 <b>${p90(a.u.pc, a.u.min)}</b></span>`);
       }
       if (a.s) {
-        if (a.s.nota) c.push(`<span>Nota SofaScore <b>${String(a.s.nota).replace('.', ',')}</b></span>`);
+        if (a.s.nota) c.push(`<span>Nota media <b>${String(a.s.nota).replace('.', ',')}</b></span>`);
         if (a.s.notas && a.s.notas.length) c.push(`<span>Últimas <b>${a.s.notas.map((n) => String(n).replace('.', ',')).join(' · ')}</b></span>`);
         if (j.pos === 1 && a.s.paradas && a.s.min) c.push(`<span>Paradas/90 <b>${p90(a.s.paradas, a.s.min)}</b></span>`);
         if (j.pos !== 1 && a.s.min && (a.s.recup || a.s.entradas)) c.push(`<span>Recup./90 <b>${p90(a.s.recup || a.s.entradas, a.s.min)}</b></span>`);
       }
-      if (c.length) h += `<div class="sec"><h2>Rendimiento a fondo</h2><span class="sub">${[a.u ? 'Understat' : '', a.s ? 'SofaScore' : ''].filter(Boolean).join(' · ')}</span></div><div class="previa">${c.join('')}</div>`;
+      if (c.length) h += `<div class="sec"><h2>Rendimiento a fondo</h2><span class="sub">esta temporada</span></div><div class="previa">${c.join('')}</div>`;
     }
   } else h += `<div class="aviso-ficha">${icono('info')}<div>Es entrenador: en la versión gratis no se alinea ni puntúa. Si es tuyo, véndelo y usa el dinero en jugadores.</div></div>`;
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
@@ -296,7 +296,7 @@ function esperadosHTML(M, j) {
   if (d) {
     const N = { min: 'Minutos', gol: 'Gol', asis: 'Asistencia', cero: 'Portería a cero', encaja: 'Encajados', paradas: 'Paradas', tarjetas: 'Tarjetas', resto: 'Nota DAZN y extras' };
     h += `<div class="pp-partes">${Object.entries(d.partes).filter(([, v]) => Math.abs(v) >= 0.05).map(([k, v]) => `<div class="pp-p"><span>${N[k] || k}</span><i style="--w:${Math.min(100, Math.abs(v) / 4 * 100)}%" class="${v < 0 ? 'neg' : ''}"></i><b>${v < 0 ? '−' : '+'}${d1(Math.abs(v))}</b></div>`).join('')}</div>`;
-    h += `<p class="t2 peq">Por partes, como puntúa LaLiga Fantasy, con ${d.fuente === 'medias del puesto' ? 'las medias de su puesto (no hay xG suyo)' : `su xG y xA de ${d.fuente}`}, salen ${d1(d.total)}. Con la fórmula de siempre (media, forma y rival), ${d1(P.base)}. La cifra de arriba junta las dos${P.w && P.w !== 0.5 ? ` (el desglose pesa un ${Math.round(P.w * 100)} %, según lo que ha acertado cada una)` : ''}${P.sesgo !== 1 ? ` y se corrige ×${String(P.sesgo).replace('.', ',')} por lo que se ha fallado con su puesto` : ''}.</p>`;
+    h += `<p class="t2 peq">Por partes, como puntúa LaLiga Fantasy, con ${d.fuente === 'medias del puesto' ? 'las medias de su puesto (no hay xG suyo)' : 'su xG y su xA de esta temporada'}, salen ${d1(d.total)}. Con la fórmula de siempre (media, forma y rival), ${d1(P.base)}. La cifra de arriba junta las dos${P.w && P.w !== 0.5 ? ` (el desglose pesa un ${Math.round(P.w * 100)} %, según lo que ha acertado cada una)` : ''}${P.sesgo !== 1 ? ` y se corrige ×${String(P.sesgo).replace('.', ',')} por lo que se ha fallado con su puesto` : ''}.</p>`;
   }
   const T = P.T;
   if (T) h += `<div class="previa"><span>Titular <b>~${Math.round(T.p * 100)} %</b></span>${T.fuentes.map((f) => `<span>${esc(f.f)} <b>${Math.round(f.p * 100)} %</b></span>`).join('')}</div>`;

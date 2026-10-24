@@ -427,7 +427,7 @@ export function fichaPartido(S, clave) {
     <button class="pf-eq" data-club="${esc(p.lid)}">${escudo(D, p.lid, 'g')}<span>${esc(nombreEq(D, p.lid))}</span></button>
     <div class="pf-res"><b>${emp && p.gl != null ? `${p.gl}<i>-</i>${p.gv}` : p.fecha ? horaDe(p.fecha) : '–'}</b><span class="pf-e ${e.cls}">${e.cls === 'vivo' ? '<span class="vivo-dot"></span>' : ''}${esc(e.largo)}</span></div>
     <button class="pf-eq" data-club="${esc(p.vid)}">${escudo(D, p.vid, 'g')}<span>${esc(nombreEq(D, p.vid))}</span></button></div>`;
-  if (ju && ju.lista.length) h += `<div class="sec"><h2>Jugadas</h2><span class="sub">SofaScore</span></div><div class="pf-jug">${ju.lista.map((i) => jugadaHTML(S, p, i)).join('')}</div>`;
+  if (ju && ju.lista.length) h += `<div class="sec"><h2>Jugadas</h2></div><div class="pf-jug">${ju.lista.map((i) => jugadaHTML(S, p, i)).join('')}</div>`;
   if (emp && p.jug.length) {
     h += equipoJugado(S, p, true, ju) + equipoJugado(S, p, false, ju);
     // los que no se pueden poner en el campo (no están en la lista de jugadores de LaLiga Fantasy), en lista

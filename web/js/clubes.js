@@ -148,7 +148,7 @@ function bajasHTML(S, suyos) {
   for (const [k, l] of Object.entries(grupos)) {
     if (!l.length) continue;
     h += `<div class="grupo"><span>${MALOS[k]}</span><span>${l.length}</span></div>`;
-    h += l.sort((a, b) => b.valor - a.valor).map((j) => fila(j, k === 'doubtful' ? '<span class="pill duda">Duda (futbolfantasy)</span>' : '<span class="pill mal">Lesionado (futbolfantasy)</span>')).join('');
+    h += l.sort((a, b) => b.valor - a.valor).map((j) => fila(j, k === 'doubtful' ? '<span class="pill duda">Duda</span>' : '<span class="pill mal">Lesionado</span>')).join('');
   }
   if (aper.length) {
     h += '<div class="grupo"><span>A una amarilla de la sanción</span><span>' + aper.length + '</span></div>';

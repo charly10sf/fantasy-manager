@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.1b';
+export const VERSION = '0.6.1c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.6.1c', f: '2026-10-24', h: 'HH:MM', t: 'Menos avisos al cargar',
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', t: 'Sin el aviso de las subidas y bajadas', x: 'Si al actualizar no se podían leer las subidas y bajadas del mercado, salía un aviso arriba. Ahora la app usa las que ya había leído ese día y no te dice nada; el aviso solo sale si ese día no las ha podido leer ninguna vez.' },
+    ],
+  },
   {
     v: '0.6.1b', f: '2026-10-24', h: '22:39', t: 'Tu once de la jornada',
     cosas: [
@@ -55,7 +61,7 @@ export const NOVEDADES = [
     v: '0.5.4', f: '2026-10-24', h: '15:04', t: 'Directo',
     cosas: [
       { tipo: 'nuevo', d: 'directo', t: 'Una pestaña para la jornada en directo', x: 'Abajo hay una pestaña nueva, Directo. Con la jornada en juego salen todos los partidos con su marcador y por dónde van (en juego, descanso, acabados y los que faltan con su hora), y debajo de cada uno tus jugadores con los puntos que llevan y cuántos de tus rivales juegan en él. Arriba, lo que llevas, tu puesto en la jornada y cuántos de tu once ya han jugado, juegan ahora o faltan. Se pone al día sola cada minuto mientras la miras. Gracias, Domy.', ir: { v: 'directo' } },
-      { tipo: 'nuevo', d: 'campo', t: 'Cada partido, jugador a jugador', x: 'Toca un partido y ves a todos los que han jugado con sus puntos y de quién es cada uno en tu liga. Si SofaScore deja, también las jugadas con su minuto (goles, tarjetas y cambios) y quién las hizo. Antes de empezar, quién de tu liga juega en él y lo probable que es que salga de titular.', ir: { v: 'directo' } },
+      { tipo: 'nuevo', d: 'campo', t: 'Cada partido, jugador a jugador', x: 'Toca un partido y ves a todos los que han jugado con sus puntos y de quién es cada uno en tu liga. Cuando se puede, también las jugadas con su minuto (goles, tarjetas y cambios) y quién las hizo. Antes de empezar, quién de tu liga juega en él y lo probable que es que salga de titular.', ir: { v: 'directo' } },
       { tipo: 'nuevo', d: 'cara', t: 'Tu liga en la jornada', x: 'En Directo > Tu liga, la clasificación de la jornada mientras se juega, con cuántos jugadores le quedan por jugar a cada uno, para saber quién puede remontar. En Tu once, tu once de LaLiga con los puntos de cada uno y lo que habrían sumado los del banquillo. Y en la ficha de cada jugador, lo que lleva en la jornada: sus puntos, minutos, goles y tarjetas.', ir: { v: 'directo', seg: 'directo:liga' } },
     ],
   },
@@ -126,7 +132,7 @@ export const NOVEDADES = [
   {
     v: '0.5.2', f: '2026-10-23', h: '21:28', t: '¿Juega o no juega?',
     cosas: [
-      { tipo: 'nuevo', d: 'semaforo', t: 'Su % de titular, al lado del nombre', x: 'En todas las listas (tu equipo, el mercado, las cláusulas y las plantillas de los rivales) sale al lado de cada jugador el % de que sea titular en su próximo partido: verde de 75 % para arriba, amarillo de 45 a 75 y rojo por debajo. Junta el once probable de futbolfantasy, sus minutos de las últimas jornadas y lo que ha jugado en la temporada, y baja si es duda o si su equipo juega Champions o Copa cerca. En su ficha ves de dónde sale.', ir: { v: 'equipo' } },
+      { tipo: 'nuevo', d: 'semaforo', t: 'Su % de titular, al lado del nombre', x: 'En todas las listas (tu equipo, el mercado, las cláusulas y las plantillas de los rivales) sale al lado de cada jugador el % de que sea titular en su próximo partido: verde de 75 % para arriba, amarillo de 45 a 75 y rojo por debajo. Junta el once probable de la prensa, sus minutos de las últimas jornadas y lo que ha jugado en la temporada, y baja si es duda o si su equipo juega Champions o Copa cerca. En su ficha ves de dónde sale.', ir: { v: 'equipo' } },
       { tipo: 'arreglo', d: 'plan', t: 'Nada de poner el once con la jornada empezada', x: 'Un plan hecho antes de que empezara la jornada seguía diciéndote que pusieras tu once cuando ya se estaba jugando. Ahora, en cuanto empieza la jornada, ese paso y el once de la IA se quitan, el plan se da por viejo (con la jornada empezada se reabren las cláusulas) y te sale para pedir otro.', ir: { v: 'hoy' } },
       { tipo: 'nuevo', d: 'campo', t: 'Alineaciones confirmadas', x: 'Cuando salen los onces oficiales, una hora antes de cada partido, el % cambia por lo que hay de verdad: «Titular», «Suplente» o «No convocado». En el campo de Tu once lo ves en cada cromo, y «Tu equipo hoy» te avisa de quién se queda en el banquillo o no juega, para que lo cambies antes de que empiece su partido. Con la app abierta se mira cada 3 minutos, y la IA también lo tiene en cuenta.', ir: { v: 'equipo' } },
     ],
@@ -326,7 +332,7 @@ export const NOVEDADES = [
   {
     v: '0.3.3a', f: '2026-10-22', h: '01:31', t: 'Cómo le fue contra cada rival',
     cosas: [
-      { tipo: 'nuevo', d: 'semaforo', t: 'V, E y D contra cada rival', x: 'En el calendario de la ficha de cada jugador, debajo de cada rival salen sus últimos enfrentamientos: V si ganó su equipo, E si empató y D si perdió, de la más vieja a la más reciente (idea de Domy). Salen de SofaScore, con todas las competiciones; si no hay, lo de esta temporada en LaLiga. Cuenta poco en la dificultad del partido (como mucho un 4 %), porque pesa más cómo están ahora los dos equipos, y la IA también lo ve.' },
+      { tipo: 'nuevo', d: 'semaforo', t: 'V, E y D contra cada rival', x: 'En el calendario de la ficha de cada jugador, debajo de cada rival salen sus últimos enfrentamientos: V si ganó su equipo, E si empató y D si perdió, de la más vieja a la más reciente (idea de Domy). Salen con todas las competiciones; si no hay, lo de esta temporada en LaLiga. Cuenta poco en la dificultad del partido (como mucho un 4 %), porque pesa más cómo están ahora los dos equipos, y la IA también lo ve.' },
     ],
   },
   {
@@ -410,7 +416,7 @@ export const NOVEDADES = [
       { tipo: 'nuevo', d: 'escudo', t: 'Quién puede quitarte a cada uno', x: 'En la ficha de tus jugadores con la cláusula abierta o a punto: a qué rivales les sobra el dinero y a cuáles les llega justo. Y el blindaje justo: hasta dónde subirla para que no le llegue a nadie y lo que cuesta (subir X cuesta X/2). Si no compensa, te lo dice.' },
       { tipo: 'nuevo', d: 'oferta', t: 'Pujas a la medida de tu liga', x: 'Cada compra al mercado de las últimas semanas, frente a lo que valía el jugador ese día: lo que se paga de mediana en tu liga, por los caros y por los baratos, y lo que paga cada rival. La puja que te propongo sale de ahí y de lo que te interesa el jugador, sin pasarse de lo que te aporta.', ir: { v: 'mercado' } },
       { tipo: 'nuevo', d: 'campo', t: 'Puntos esperados por partes', x: 'Como puntúa LaLiga Fantasy: minutos, gol con su xG, asistencia con su xA, portería a cero, goles encajados, paradas, tarjetas y el resto (la nota de DAZN, recuperaciones, tiros…). La titularidad junta el once probable, sus últimos partidos y lo que ha jugado en la temporada. En la ficha, con una barra por cada parte.' },
-      { tipo: 'nuevo', d: 'semaforo', t: 'Riesgo de rotación', x: 'Los partidos de Champions, Europa League, Conference y Copa de cada equipo, de SofaScore. Si le toca uno pegado a la jornada, le baja la titularidad (más con la Champions que con la Copa) y te lo avisa en la ficha.' },
+      { tipo: 'nuevo', d: 'semaforo', t: 'Riesgo de rotación', x: 'Los partidos de Champions, Europa League, Conference y Copa de cada equipo. Si le toca uno pegado a la jornada, le baja la titularidad (más con la Champions que con la Copa) y te lo avisa en la ficha.' },
       { tipo: 'nuevo', d: 'grafica', t: 'Aprende de lo que falla', x: 'Antes de cada jornada apunta lo que espera de cada jugador y después lo compara con lo que sacó: si a los delanteros les espera de más, se corrige solo, y la forma de calcular que más acierta pesa más. También mira cómo salió lo que te recomendó la IA; lo tienes al final del plan y la IA lo ve para no repetir errores.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'dinero', t: 'Lo caro, en euros y sin saltos', x: 'No es lo mismo un +25 % de 3 M que de 40 M: lo que se paga de más se mide en euros frente a tu equipo y descontando parte de lo que recuperas en una semana. Un índice de 0 a 100 que crece poco a poco, y lo que se aguanta va de 60 si no le aporta nada a tu once a 95 si lo mejora mucho. El plan tacha lo que se pasa y la IA lo pesa.' },
       { tipo: 'arreglo', d: 'ajustes', t: 'Sin zoom', x: 'La app ya no se amplía al pellizcar ni con doble toque.' },
@@ -431,7 +437,7 @@ export const NOVEDADES = [
       { tipo: 'mejora', d: 'semaforo', t: 'Contra quién y cómo le fue', x: 'La IA recibe las últimas jornadas de cada jugador con su rival y el resultado («J9 11 vs Getafe 19º 2-0»), y lo que rinde en casa, fuera, contra los seis primeros y contra los seis últimos.' },
       { tipo: 'nuevo', d: 'campo', t: 'La previa de cada partido', x: 'Cómo llegan los dos equipos en sus últimos cinco partidos, lo que marca y encaja el rival, cómo le va en ese campo, la portería a cero esperada para porteros y defensas, los goles esperados para medios y delanteros, y los puntos que se esperan. También en la ficha de cada jugador.' },
       { tipo: 'mejora', d: 'ia', t: 'Lo usa para decidir', x: 'Un jugador que solo puntúa contra los de abajo no es fiable contra el Madrid, y un defensa con poca portería a cero puntuará poco aunque sea titular. La IA compara lo que le toca con lo que hizo contra rivales parecidos.' },
-      { tipo: 'nuevo', d: 'grafica', t: 'Más allá del Fantasy', x: 'Estadísticas avanzadas de Understat (xG, xA, tiros y pases clave de cada jugador, y el xG que genera y concede cada equipo) y de SofaScore (nota media, las últimas notas y lo que hace en defensa o bajo palos). La IA las usa para afinar: si genera ocasiones aunque no marque, si su nota baja, cuánto recupera un defensa. También en la ficha, en «Rendimiento a fondo».' },
+      { tipo: 'nuevo', d: 'grafica', t: 'Más allá del Fantasy', x: 'Estadísticas avanzadas (xG, xA, tiros y pases clave de cada jugador, y el xG que genera y concede cada equipo) y más (nota media, las últimas notas y lo que hace en defensa o bajo palos). La IA las usa para afinar: si genera ocasiones aunque no marque, si su nota baja, cuánto recupera un defensa. También en la ficha, en «Rendimiento a fondo».' },
       { tipo: 'mejora', d: 'semaforo', t: 'Partidos medidos con xG', x: 'Los goles esperados y la portería a cero de la previa se calculan con el xG de los dos equipos cuando lo hay, que dice más que los goles.' },
       { tipo: 'arreglo', d: 'camiseta', t: 'Fuera los entrenadores', x: 'En la versión gratis no se alinean ni puntúan: ya no salen en el once, en el mercado ni en las cláusulas. Si tienes alguno, el plan te dice que lo vendas.' },
     ],
@@ -522,7 +528,7 @@ export const NOVEDADES = [
   {
     v: '0.0.6', f: '2026-10-20', h: '20:00', t: 'Onces, prensa e histórico',
     cosas: [
-      { tipo: 'nuevo', d: 'camiseta', t: 'Onces probables', x: 'De futbolfantasy: cada jugador dice si sale de titular, suplente o fuera, y cuenta para tu once y para la IA.' },
+      { tipo: 'nuevo', d: 'camiseta', t: 'Onces probables', x: 'Cada jugador dice si sale de titular, suplente o fuera, y cuenta para tu once y para la IA.' },
       { tipo: 'nuevo', d: 'periodico', t: 'Titulares de prensa', x: 'De tus jugadores, de los candidatos y de las webs de fantasy, de los últimos días.' },
       { tipo: 'nuevo', d: 'grafica', t: 'Histórico de valor de LaLiga', x: 'Para tus jugadores y los candidatos, sin esperar a que la app vaya apuntando días.' },
       { tipo: 'mejora', d: 'dinero', t: 'Especular con colchón', x: 'Aunque lo comprado baje un 8 %, al venderlo vuelves a positivo.' },

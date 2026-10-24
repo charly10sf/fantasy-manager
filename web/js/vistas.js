@@ -805,7 +805,7 @@ export function mercado(S) {
     } else {
       const xs = f === 'suben' ? M.suben : M.bajan;
       h += `<p class="t2 peq">Toda LaLiga. ${f === 'suben' ? 'Comprar antes de que suban es cómo se saca beneficio.' : 'Si tienes alguno, piensa en venderlo antes de que pierda más.'}</p>`;
-      h += xs.length ? lista2(xs.map((x) => filaJugador({ j: x.j, tend: x.t }, { sub: `${esc(x.j.equipo)} · ${dueno(x.j.id)}`, conMini: true, op: S.opPorPid[x.j.id] })).join('')) : nada('Aún no hay subidas: futbolfantasy.com no ha contestado y la app necesita un par de días de histórico.');
+      h += xs.length ? lista2(xs.map((x) => filaJugador({ j: x.j, tend: x.t }, { sub: `${esc(x.j.equipo)} · ${dueno(x.j.id)}`, conMini: true, op: S.opPorPid[x.j.id] })).join('')) : nada('Aún no hay subidas: hoy no se han podido leer y la app necesita un par de días de histórico.');
     }
   }
   return h;

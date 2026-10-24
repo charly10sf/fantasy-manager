@@ -752,7 +752,7 @@ export function analizar(D, H, c, extra = {}) {
     if (MALOS.has(j.estado)) return { p: 0, base: 0, fuentes: [{ f: j.estado === 'injured' ? 'lesionado' : j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga', p: 0, w: 1 }], rot: null, pRot: 0 };
     const fuentes = [];
     const op = M.hayOnces ? onces[j.id] || null : null;
-    if (op && op.estado === 'injured') return { p: 0, base: 0, fuentes: [{ f: 'futbolfantasy: lesionado', p: 0, w: 1 }], rot: null, pRot: 0 };
+    if (op && op.estado === 'injured') return { p: 0, base: 0, fuentes: [{ f: 'lesionado, según la prensa', p: 0, w: 1 }], rot: null, pRot: 0 };
     if (M.hayOnces) fuentes.push({ f: 'once probable', p: op && op.titular ? (op.prob != null ? op.prob / 100 : 0.85) : op && op.alternativa ? 0.3 : 0.15, w: 0.5 });
     const st = det[j.id] && det[j.id].stats ? det[j.id].stats.slice(-5) : [];
     if (st.length >= 3 && st.some((s) => s.min != null)) fuentes.push({ f: `últimas ${st.length}`, p: st.filter((s) => s.min >= 60).length / st.length, w: 0.3 });
@@ -826,7 +826,7 @@ export function analizar(D, H, c, extra = {}) {
     partes.resto = resto90 * f90;
     for (const k of Object.keys(partes)) if (!Number.isFinite(partes[k])) partes[k] = 0;
     const total = Math.max(0, Object.values(partes).reduce((x, y) => x + y, 0));
-    return (cacheDes[j.id] = { total, partes, pT, min, T, fAt, xg90, xa90, fuente: conU ? 'Understat' : conS ? 'SofaScore' : 'medias del puesto' });
+    return (cacheDes[j.id] = { total, partes, pT, min, T, fAt, xg90, xa90, fuente: conU || conS ? 'datos' : 'medias del puesto' });
   };
 
   /* ---------- los puntos esperados: la fórmula de siempre y el desglose, corregidos con lo que se ha fallado ---------- */
