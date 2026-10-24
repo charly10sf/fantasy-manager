@@ -26,7 +26,7 @@ import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, a
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
-import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
+import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
@@ -1696,7 +1696,7 @@ document.addEventListener('click', async (ev) => {
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
     case 'novedades': listaVersiones(); break;
-    case 'presentacion': cerrarHoja(true); verNovedades((NOVEDADES[1] || {}).v || null); break;
+    case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'guardarDicho': {
       // lo que te ha dicho un rival que tiene (en millones; si escribe en euros, se entiende igual)
@@ -1922,6 +1922,17 @@ function versionVista() {
   const vieja = LS.get('version-vista', null);
   return vieja ? deNumeracionVieja(vieja) || '0.0.1' : null;
 }
+/* A cada uno, lo que le afecta: el dueño (Carlos, el admin de los avisos) lo ve todo; los demás, ni los arreglos ni lo
+   «menor» (detalles, cosas de dentro) ni lo que es de otra versión de la app: «para» 'play' (la de Google Play),
+   'app' (Android), 'web' (iPhone y ordenador) o 'dueño' (solo él) */
+fijarFiltroNovedades((c) => {
+  if (avisosGuardados().admin) return true;
+  if (c.tipo === 'arreglo' || c.menor || c.para === 'dueño') return false;
+  if (c.para === 'play') return topConAnuncio();
+  if (c.para === 'app') return enApp;
+  if (c.para === 'web') return !enApp;
+  return true;
+});
 /** al estrenar versión, las novedades contadas bajando; la primera vez que se instala, nada */
 function novedades() {
   const vista = versionVista();
@@ -1929,7 +1940,7 @@ function novedades() {
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto()) return;
-  if (!vista || cmpVer(vista, VERSION) >= 0) return;
+  if (!vista || cmpVer(vista, VERSION) >= 0 || !hayNovedadesDesde(vista)) return;
   verNovedades(vista);
 }
 function verNovedades(desde) {
@@ -1941,7 +1952,7 @@ function verNovedades(desde) {
 }
 function listaVersiones() {
   abrirHoja(`<div class="hoja-cab"><h2>Novedades</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
-    <button class="btn chico" data-accion="presentacion" style="margin:0 0 6px">${icono('ia')}Ver la ${VERSION.replace(/\.0$/, '')} en presentación</button>${listaNovedades()}`);
+    <button class="btn chico" data-accion="presentacion" style="margin:0 0 6px">${icono('ia')}Ver la ${((versionesDesde(null)[0] || {}).v || VERSION).replace(/\.0$/, '')} en presentación</button>${listaNovedades()}`);
 }
 
 /* ---------------- el tutorial ---------------- */

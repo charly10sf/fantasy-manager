@@ -11,7 +11,7 @@ La mudanza al dominio (desde la 0.6.0): la web, AlDia, app.json y el APK van pri
 - No se publica nada sin su OK en su último mensaje («Sí», «Publica»…). Un push a main es publicar: sale la web en GitHub Pages, el APK y app.json. Lo que no está publicado va a la rama `pendiente` con `git push -q -f origin HEAD:refs/heads/pendiente`.
 - Un solo chat trabajando a la vez: `pendiente` se sube con -f y version.js lo tocan todas las versiones, así que dos chats a la vez se pisan.
 - Versiones: algo nuevo sube el número (0.4.5); los parches y cosas leves llevan letra (0.4.4e). Cada una con su entrada en NOVEDADES (web/js/version.js), con fecha y hora de Madrid.
-- A quien acaba de llegar no le salen novedades de versión, solo el tutorial. Si al abrir hay más de 6 novedades pendientes, salen solo las 5 principales (presentacion.js).
+- A quien acaba de llegar no le salen novedades de versión, solo el tutorial. Si al abrir hay más de 6 novedades pendientes, salen solo las 5 principales (presentacion.js). Al que no es el dueño (el admin de los avisos) solo le sale lo que le afecta: ni arreglos, ni lo que lleva `menor: true` (detalles, cosas de dentro), ni lo que es de otra versión (`para`: 'play', 'app', 'web' o 'dueño'); el dueño lo ve todo. Cada novedad nueva se marca al escribirla (lo pidió Carlos el 25 oct).
 - El token de Cloudflare y el Account ID no se piden ni se pegan en el chat.
 - Fantasy Manager y GrowFolio van del todo separados: ni código, ni cuentas, ni Cloudflare compartidos.
 - Ceñirse al roadmap. Lo nuevo que salga va a versiones posteriores.
