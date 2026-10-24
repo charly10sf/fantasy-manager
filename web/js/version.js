@@ -3,13 +3,19 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.0';
+export const VERSION = '0.6.0a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
 // Cada cosa: tipo (nuevo | mejora | arreglo), d (el dibujo, de dibujos.js), t (título), x (texto) e ir (a dónde
 // lleva «Verlo»: { v: pestaña, seg: 'pestaña:sección' }).
 export const NOVEDADES = [
+  {
+    v: '0.6.0a', f: '2026-10-24', h: '20:24', t: 'Tus datos',
+    cosas: [
+      { tipo: 'mejora', d: 'escudo', t: 'Cómo borrar tus datos', x: 'La política de privacidad (Ajustes → Privacidad) explica ahora cómo se borra lo que se guarda en el servidor de Fantasy Manager, que es quién usa la app y tus avisos de fallo: se borra solo con el tiempo o, si lo pides en contacto@fantasymanagerapp.com, en 30 días como mucho.' },
+    ],
+  },
   {
     v: '0.6.0', f: '2026-10-24', h: '19:03', t: 'Camino de Google Play',
     cosas: [

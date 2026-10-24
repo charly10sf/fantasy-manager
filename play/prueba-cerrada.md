@@ -47,7 +47,7 @@ En https://admob.google.com:
 1. **Privacidad y mensajes → RGPD (Europa)**: crear un mensaje para la app Fantasy Manager (idioma español; las opciones por defecto valen) y publicarlo. Sin él, la app no puede pedir el consentimiento y en la UE apenas salen anuncios.
 2. Cuando la app ya esté en Google Play (la prueba cerrada vale): **Aplicaciones → Fantasy Manager → Configuración de la aplicación → Añadir tienda** y vincularla con la ficha de Play. Así AdMob comprueba el app-ads.txt en la web de la ficha (https://fantasymanagerapp.com/app-ads.txt, lo sube la Action «Dominio»).
 
-Durante la prueba cerrada la app enseña los anuncios de prueba de Google (salen marcados «Test Ad» y no pagan), para que ningún tester toque uno de verdad: Google cierra cuentas de AdMob por clics de gente cercana. Los de verdad se encienden para producción (`fm.anunciosReales=true` en android/gradle.properties).
+Desde la 0.6.0a la versión de Google Play enseña anuncios de verdad ya en la prueba cerrada (`fm.anunciosReales=true` en android/gradle.properties; con false salen los de prueba de Google, marcados «Test Ad»). Hay que avisar a los amigos de que no toquen nunca un anuncio: Google cierra cuentas de AdMob por clics de gente cercana. Hasta que la app esté vinculada en AdMob y revisada, AdMob sirve pocos anuncios.
 
 ## 5. La prueba cerrada
 
