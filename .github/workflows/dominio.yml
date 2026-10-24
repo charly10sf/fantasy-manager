@@ -1,0 +1,151 @@
+# Publica la web en el dominio de la app, https://fantasymanagerapp.com (Cloudflare Pages, proyecto «fantasy-manager»
+# de la cuenta de Cloudflare de Fantasy Manager, no la de GrowFolio): la carpeta web/ con su paquete.json, app.json,
+# el APK de GitHub en /descargas/fantasy-manager.apk y el app-ads.txt de AdMob.
+#
+# Siempre sube lo de main (lo publicado), venga de donde venga la ejecución. Se lanza sola al terminar «App Android»
+# en main (es cuando cambian la web, el APK y app.json), a mano, y al cambiar este archivo en pendiente (para montar
+# el dominio antes de publicar la versión que lo usa). Mientras dura la mudanza, GitHub Pages sigue publicando lo mismo.
+#
+# Usa los secretos del Worker: CLOUDFLARE_API_TOKEN (con permiso de Cloudflare Pages) y CLOUDFLARE_ACCOUNT_ID.
+name: Dominio
+
+on:
+  workflow_run:
+    workflows: ["App Android"]
+    types: [completed]
+    branches: [main]
+  push:
+    branches: [pendiente]
+    paths: ['.github/workflows/dominio.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# una detrás de otra: cada una lee app.json y el APK al empezar, así que la última siempre sube lo más nuevo
+concurrency:
+  group: dominio
+  cancel-in-progress: false
+
+env:
+  PROYECTO: fantasy-manager
+  DOMINIO: fantasymanagerapp.com
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: ¿Están las claves de Cloudflare?
+        id: cf
+        env:
+          T: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          A: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$T" ] || [ -z "$A" ]; then
+            echo "::warning::Faltan CLOUDFLARE_API_TOKEN o CLOUDFLARE_ACCOUNT_ID en los secretos: no se publica en el dominio"
+            echo "ok=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=si" >> "$GITHUB_OUTPUT"
+          fi
+
+      # lo que se sube: web/ tal cual (con el paquete.json que lee AlDia.java) y, al lado, lo que no va dentro de la app
+      - name: Montar la web
+        if: steps.cf.outputs.ok == 'si'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          python3 .github/paquete.py > /dev/null
+          mkdir -p sitio/descargas
+          cp -r web/. sitio/
+          # el APK de GitHub (el de la liga), para bajarlo desde la web
+          if gh release download app -p fantasy-manager.apk -D sitio/descargas -R "${{ github.repository }}"; then
+            echo "APK: $(stat -c %s sitio/descargas/fantasy-manager.apk) bytes"
+          else
+            echo "::warning::No se ha podido bajar el APK de la release: la web va sin él"
+          fi
+          # app.json tal cual: su «apk» sigue en GitHub porque las apps de antes de la 0.6.0 solo se actualizan desde ahí
+          # (y la web nueva, dentro de una app vieja, lee este primero). Cuando nadie tenga una de antes, se cambia
+          # por https://fantasymanagerapp.com/descargas/fantasy-manager.apk (hace falta antes de poner el repo privado)
+          cp app.json sitio/app.json
+          printf 'google.com, pub-3175956326240112, DIRECT, f08c47fec0942fa0\n' > sitio/app-ads.txt
+          cat > sitio/_headers <<'FIN'
+          /descargas/*
+            Content-Type: application/vnd.android.package-archive
+            Content-Disposition: attachment; filename="fantasy-manager.apk"
+            Cache-Control: no-cache
+          /app.json
+            Cache-Control: no-cache
+          /paquete.json
+            Cache-Control: no-cache
+          /limites.json
+            Cache-Control: no-cache
+          FIN
+          echo "web $(grep -oP "VERSION = '\K[^']+" web/js/version.js): $(find sitio -type f | wc -l) archivos"
+
+      - name: Proyecto de Cloudflare Pages
+        if: steps.cf.outputs.ok == 'si'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          api="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects"
+          auth="Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+          r=$(curl -s -H "$auth" "$api/$PROYECTO")
+          if [ "$(echo "$r" | jq -r '.success')" != "true" ]; then
+            echo "No existe el proyecto: se crea"
+            r=$(curl -s -X POST -H "$auth" -H 'content-type: application/json' "$api" -d "{\"name\":\"$PROYECTO\",\"production_branch\":\"main\"}")
+            if [ "$(echo "$r" | jq -r '.success')" != "true" ]; then
+              echo "::error::No se ha podido crear el proyecto de Pages: $(echo "$r" | jq -c '.errors' | cut -c1-300)"
+              exit 1
+            fi
+          fi
+          echo "::notice::Proyecto de Pages: https://$(echo "$r" | jq -r '.result.subdomain')"
+
+      - name: Publicar
+        if: steps.cf.outputs.ok == 'si'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -o pipefail
+          if ! npx --yes wrangler@4 pages deploy sitio --project-name "$PROYECTO" --branch main --commit-dirty=true 2>&1 | tee salida.txt; then
+            echo "::error::No se ha podido publicar: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
+            exit 1
+          fi
+
+      # el dominio, enganchado al proyecto. Si se queda «pending», falta su registro DNS: se activa en Cloudflare >
+      # Workers & Pages > fantasy-manager > Custom domains > Activate domain (el token no tiene permiso de DNS)
+      - name: Dominio
+        if: steps.cf.outputs.ok == 'si'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          api="https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROYECTO/domains"
+          auth="Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+          d=$(curl -s -H "$auth" "$api/$DOMINIO")
+          if [ "$(echo "$d" | jq -r '.success')" != "true" ]; then
+            d=$(curl -s -X POST -H "$auth" -H 'content-type: application/json' "$api" -d "{\"name\":\"$DOMINIO\"}")
+            echo "Añadido: $(echo "$d" | jq -c '{success, errors}' | cut -c1-300)"
+          fi
+          estado=$(echo "$d" | jq -r '.result.status // "?"')
+          echo "$d" | jq -c '.result | {name, status, verification_data, validation_data}' 2>/dev/null | cut -c1-500 || true
+          if [ "$estado" = "active" ]; then
+            echo "::notice::https://$DOMINIO sirve la web"
+          else
+            echo "::warning::El dominio está «$estado»: falta activarlo en Cloudflare > Workers & Pages > $PROYECTO > Custom domains"
+          fi
+          # lo que de verdad responde
+          for p in "" app.json paquete.json app-ads.txt descargas/fantasy-manager.apk; do
+            echo "https://$DOMINIO/$p → $(curl -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}' "https://$DOMINIO/$p" || echo fallo)"
+          done
