@@ -2,7 +2,7 @@
    cada uno, como en la app oficial. Los onces salen de LaLiga (/teams/{id}/lineup/week/{n}; el de la próxima, de
    /teams/{id}/lineup) y los puntos de cada jugador, de sus puntos por jornada (weekPoints); los de la jornada en
    juego, de vivo.js. app.js los pide (cargarJornadaMia) y los guarda: los de las jornadas acabadas ya no cambian. */
-import { esc, cuando, horaDe } from './util.js';
+import { esc, cuando, horaDe, icono } from './util.js';
 import { cromo, nada } from './comunes.js';
 
 /**
@@ -69,7 +69,11 @@ export function jornadasHTML(S) {
 
   const forma = g && g.forma && [1, 2, 3].every((i) => campo.filter((j) => j.pos === i + 1).length <= g.forma[i - 1]) ? g.forma : [2, 3, 4].map((p) => campo.filter((j) => j.pos === p).length);
   const sub = est === 'vivo' ? '<span class="vivo-dot"></span>en juego' : est === 'proxima' ? `empieza ${esc(cuando(J.ini))}` : 'acabada';
-  h += `<div class="jor-cab"><div><b>Jornada ${n}</b><span>${sub}${campo.length ? ` · ${forma.join('-')}` : ''}</span></div>
+  // ‹ y › para ir a la anterior y a la siguiente (los botones de arriba se pueden quedar tapados por las pestañas al bajar)
+  const i = lista.findIndex((j) => j.n === n);
+  const ant = i > 0 ? lista[i - 1].n : null, sig = i >= 0 && i < lista.length - 1 ? lista[i + 1].n : null;
+  const flecha = (m, ic, txt) => `<button class="jor-fl" ${m ? `data-accion="verJornada" data-n="${m}"` : 'disabled'} aria-label="${txt}">${icono(ic)}</button>`;
+  h += `<div class="jor-cab">${flecha(ant, 'atras', 'Jornada anterior')}<div class="jor-t"><b>Jornada ${n}</b><span>${sub}${campo.length ? ` · ${forma.join('-')}` : ''}</span></div>${flecha(sig, 'flecha', 'Jornada siguiente')}
     ${total != null ? `<div class="jor-pts"><b>${total}</b><small>pts</small>${puesto ? `<span>${puesto}º de ${deN} en la jornada</span>` : ''}</div>` : ''}</div>`;
 
   if (!g || (S.cargandoJ && S.cargandoJ[n] && !g.ids)) return h + `<p class="t2 peq">Mirando en LaLiga tu once de la jornada ${n}…</p>`;
