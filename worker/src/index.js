@@ -13,12 +13,13 @@
  *   POST /vincular/usar  la web cambia ese código (una sola vez) por la sesión.
  *
  *   Los avisos de fallos (con la sesión de LaLiga en Authorization, para saber quién es; el token no se guarda):
- *   POST /fallos              manda un aviso: { texto, diag, app, equipo, liga }
+ *   POST /fallos              manda un aviso: { texto, diag, app, equipo, liga, capturas: [data:image/…] (hasta 3) }
  *   GET  /fallos/mios         los avisos de quien llama, con su respuesta (y si es el dueño, admin: true)
  *   POST /fallos/visto        { id }: ha leído la respuesta
  *   GET  /fallos/todos        (el dueño) todos los avisos, resumidos
  *   GET  /fallos/uno?id=…     (el dueño) un aviso entero, con su diagnóstico
  *   POST /fallos/responder    (el dueño) { id, respuesta }
+ *   GET  /fallos/captura?id=…&n=0  una captura de un aviso ({ img: data:image/… }): el dueño, o quien lo mandó
  *   El dueño es la cuenta de LaLiga cuyo número está en ADMINS (lo pone la Action desde el secreto FM_ADMINS).
  *
  *   POST /uso                 { seg }: suma esos segundos al tiempo de hoy de quien llama (hora de Madrid) y devuelve el
@@ -142,6 +143,11 @@ async function usar(req, env, c) {
 // resumen en los metadatos (para listarlos todos sin leerlos uno a uno). Si no hay almacén, no hay avisos.
 const VIVE = 180 * 86400; // lo que se guarda un aviso, en segundos
 const MAX_TEXTO = 4000, MAX_RESPUESTA = 2000, MAX_DIAG = 40000, AL_DIA = 15;
+// las capturas van aparte, una por clave (fc:<id>:<n>), para que la lista de avisos no las tenga que leer
+// (la app las manda ya reducidas, unos 150-300 KB cada una; solo se mira el principio: el plan gratis de Workers da
+// 10 ms de CPU por petición y recorrer megas con una expresión regular se los come)
+const MAX_CAPTURAS = 3, MAX_CAPTURA = 700000;
+const esCaptura = (x) => typeof x === 'string' && x.length <= MAX_CAPTURA && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]/.test(x.slice(0, 40));
 const adminsDe = (env) => String(env.ADMINS || '').split(/[\s,;]+/).filter(Boolean);
 
 /** quién llama, comprobado con LaLiga ({ uid, nombre }); se recuerda 10 minutos por sesión */
@@ -177,7 +183,7 @@ async function quienEsLaLiga(tk, h) {
   return u;
 }
 const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
-const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(f.texto.replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0 });
+const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(f.texto.replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0, c: f.capturas || 0 });
 async function guardarFallo(env, f) {
   await env.VINCULOS.put(`f:${f.uid}:${f.id}`, JSON.stringify(f), { expirationTtl: VIVE, metadata: resumen(f) });
 }
@@ -216,10 +222,14 @@ async function fallos(req, env, c, ruta) {
     const hoy = Date.now() - 86400e3;
     if (mios.filter((k) => k.metadata && k.metadata.t > hoy).length >= AL_DIA) return json({ e: `Como mucho ${AL_DIA} avisos al día` }, 429, c);
     const id = Date.now().toString(36) + [...crypto.getRandomValues(new Uint8Array(4))].map((b) => b.toString(36)).join('').slice(0, 6);
+    const caps = (Array.isArray(cuerpo.capturas) ? cuerpo.capturas : []).filter(esCaptura).slice(0, MAX_CAPTURAS);
     const f = {
       id, t: Date.now(), uid: u.uid, quien: u.nombre, equipo: corta(cuerpo.equipo, 60), liga: corta(cuerpo.liga, 60),
       texto, diag: corta(cuerpo.diag, MAX_DIAG), app: corta(cuerpo.app, 120), respuesta: null, respondida: null, vista: true,
+      capturas: caps.length,
     };
+    // primero las capturas: si el aviso se guarda, ya están
+    for (let n = 0; n < caps.length; n++) await env.VINCULOS.put(`fc:${id}:${n}`, caps[n], { expirationTtl: VIVE });
     await guardarFallo(env, f);
     return json({ ok: true, id }, 200, c);
   }
@@ -235,6 +245,15 @@ async function fallos(req, env, c, ruta) {
     if (!f) return json({ e: 'No existe' }, 404, c);
     if (!f.vista) { f.vista = true; await guardarFallo(env, f); }
     return json({ ok: true }, 200, c);
+  }
+  if (ruta === '/fallos/captura' && req.method === 'GET') {
+    const q = new URL(req.url).searchParams;
+    const n = Number(q.get('n'));
+    const f = await buscarFallo(env, u, q.get('id'), admin);
+    if (!f || !Number.isInteger(n) || n < 0 || n >= (f.capturas || 0)) return json({ e: 'No existe' }, 404, c);
+    const img = await env.VINCULOS.get(`fc:${f.id}:${n}`);
+    if (!img) return json({ e: 'Esa captura ya no está' }, 404, c);
+    return json({ img }, 200, c);
   }
   if (!admin) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/fallos/todos' && req.method === 'GET') {

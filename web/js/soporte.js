@@ -5,12 +5,12 @@ import { token } from './auth.js';
 import { LS } from './util.js';
 
 /** una petición al Worker con la sesión de LaLiga (para saber quién es); también la usa el límite de minutos */
-export async function pedirWorker(metodo, ruta, cuerpo = null) {
+export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000 } = {}) {
   const tk = await token(); // sin sesión de LaLiga lanza un error de sesión
   const cab = { Authorization: `Bearer ${tk}`, 'content-type': 'application/json', Accept: 'application/json' };
   let s, b;
   if (enApp) {
-    const r = await http(metodo, WORKER_PUBLICO + ruta, { cabeceras: cab, cuerpo: cuerpo ? JSON.stringify(cuerpo) : null, tiempo: 20000 });
+    const r = await http(metodo, WORKER_PUBLICO + ruta, { cabeceras: cab, cuerpo: cuerpo ? JSON.stringify(cuerpo) : null, tiempo });
     s = r.s; b = r.b;
     if (s === 0) throw Object.assign(new Error('Sin conexión: vuelve a probar en un rato'), { estado: 0 });
   } else {
@@ -35,7 +35,8 @@ export function numeroAvisos() {
 export const hayQueMirar = () => { const a = avisosGuardados(); return !!(a.admin || (a.lista || []).some((x) => !x.respuesta || !x.vista) || LS.get('avisos-mandado', 0)); };
 
 export async function mandarAviso(datos) {
-  const r = await pedirWorker('POST', '/fallos', datos);
+  // (con capturas, más tiempo: son unos cientos de KB)
+  const r = await pedirWorker('POST', '/fallos', datos, { tiempo: datos.capturas && datos.capturas.length ? 60000 : 20000 });
   LS.set('avisos-mandado', Date.now());
   return r;
 }
@@ -70,6 +71,8 @@ export async function saludar(datos) {
 }
 export const quienUsa = () => pedirWorker('GET', '/hola/todos');
 export const unAviso = (id) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}`);
+/** una captura de un aviso: data:image/… (la tuya o, si eres el dueño, la de cualquiera) */
+export const capturaAviso = (id, n) => pedirWorker('GET', `/fallos/captura?id=${encodeURIComponent(id)}&n=${Number(n) || 0}`, null, { tiempo: 30000 }).then((r) => r.img);
 export async function responderAviso(id, respuesta) {
   const r = await pedirWorker('POST', '/fallos/responder', { id, respuesta });
   const a = avisosGuardados();

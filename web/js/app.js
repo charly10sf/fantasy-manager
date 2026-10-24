@@ -22,9 +22,9 @@ import { enVivo, onceRival, jornadaStats } from './vivo.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, bloqueada } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
-import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS } from './fotos.js';
+import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
+import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
@@ -760,11 +760,12 @@ async function enviarAviso() {
   S.av.borrador = t; S.av.sinDiag = !conDiag; S.av.enviando = true; S.av.error = '';
   repintarAvisos();
   try {
-    const env = await mandarAviso({ texto: t, diag, equipo: (S.M && S.M.yo && S.M.yo.nombre) || '', liga: (S.D && S.D.liga && S.D.liga.nombre) || '', app: `${VERSION} · ${enApp ? `app ${nativo.canal()}` : 'web'}` });
-    S.av.borrador = ''; S.av.enviando = false;
+    const caps = (S.av.capturas || []).map((c) => c.url);
+    const env = await mandarAviso({ texto: t, diag, equipo: (S.M && S.M.yo && S.M.yo.nombre) || '', liga: (S.D && S.D.liga && S.D.liga.nombre) || '', app: `${VERSION} · ${enApp ? `app ${nativo.canal()}` : 'web'}`, capturas: caps });
+    S.av.borrador = ''; S.av.enviando = false; S.av.capturas = [];
     tostada(enApp ? 'Aviso mandado: cuando conteste te llega una notificación' : 'Aviso mandado: te aviso cuando conteste', 5000);
     // el servidor tarda unos segundos en listarlo: mientras, se pone a mano para que lo veas ya
-    const nuevo = { id: env.id, t: Date.now(), texto: t, respuesta: null, respondida: null, vista: true };
+    const nuevo = { id: env.id, t: Date.now(), texto: t, respuesta: null, respondida: null, vista: true, capturas: caps.length };
     const r = await misAvisos().catch(() => null);
     const lista = (r ? r.lista : S.av.lista) || [];
     S.av.lista = lista.some((x) => x.id === env.id) ? lista : [nuevo, ...lista];
@@ -804,6 +805,54 @@ async function abrirAvisoRecibido(id) {
   const d = avisoListo(id);
   if (d && d.respondida) { apuntarContestado(id, d.respondida); S.av.todos = conContestados(S.av.todos); S.av.pendientes = (S.av.todos || []).filter((x) => !x.r).length; fijarPendientes(S.av.pendientes); }
   if (S.av.abierto === id) repintarAvisos();
+  if (d && d.capturas) cargarCapturas(id, d.capturas);
+}
+/** las capturas de un aviso (el dueño, al abrirlo): se piden una vez y se guardan mientras la app está abierta */
+async function cargarCapturas(id, n) {
+  const c = (S.av.capt ||= {});
+  if (c[id]) return;
+  c[id] = new Array(n).fill(null);
+  await enParalelo([...Array(n).keys()], 2, async (i) => {
+    try { c[id][i] = await capturaAviso(id, i); } catch (e) { c[id][i] = ''; }
+    if (S.av.abierto === id) repintarAvisos();
+  });
+}
+/* las capturas para un aviso que vas a mandar: de la galería (en la app, con su selector de fotos) o de un archivo */
+const MAX_CAPTURAS = 3;
+function elegirCapturas() {
+  const caps = (S.av.capturas ||= []);
+  if (caps.length >= MAX_CAPTURAS) { tostada(`Como mucho ${MAX_CAPTURAS} capturas por aviso`); return; }
+  S.fotosPara = 'aviso';
+  if (enApp && nativo.hayFotos()) { nativo.fotos(MAX_CAPTURAS - caps.length); return; }
+  let inp = $('#capturaArchivo');
+  if (!inp) {
+    inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*'; inp.multiple = true; inp.id = 'capturaArchivo'; inp.hidden = true;
+    inp.addEventListener('change', () => { const fs = [...(inp.files || [])]; inp.value = ''; anadirCapturas(fs, capturaArchivo); });
+    document.body.appendChild(inp);
+  }
+  inp.click();
+}
+async function anadirCapturas(lista, preparar) {
+  S.fotosPara = null;
+  if (!S.av) return;
+  const caps = (S.av.capturas ||= []);
+  let mal = 0;
+  for (const x of (lista || []).slice(0, MAX_CAPTURAS - caps.length)) {
+    try { caps.push(await preparar(x)); } catch (e) { mal++; }
+  }
+  if (mal) tostada(mal > 1 ? `${mal} archivos no se han podido abrir como imagen` : 'Esa imagen no se ha podido abrir');
+  repintarAvisos();
+}
+/** una imagen en grande, encima de todo (se cierra tocándola o con atrás) */
+function verImagen(src, alt = 'Imagen') {
+  if (!src) return;
+  const v = document.createElement('div');
+  v.className = 'visor'; v.setAttribute('role', 'dialog'); v.setAttribute('aria-label', alt);
+  v.innerHTML = `<img alt=""><button class="visor-x" aria-label="Cerrar">${icono('cerrar')}</button>`;
+  const im = v.querySelector('img'); im.src = src; im.alt = alt;
+  v.addEventListener('click', () => v.remove());
+  document.body.appendChild(v);
 }
 /* para el dueño: los avisos sin contestar, enteros y con su diagnóstico, para pegarlos en el chat de Claude */
 async function copiarAvisosClaude() {
@@ -819,8 +868,9 @@ async function copiarAvisosClaude() {
     const d = det[i] || {};
     const cab = `## ${x.id} · ${cuandoT(x.t)} · ${x.equipo || '?'}${x.quien ? ` (${x.quien})` : ''}${d.app ? ` · ${d.app}` : ''}`;
     const resp = d.respuesta ? `\n→ Le contestaste: ${d.respuesta}` : '';
+    const caps = d.capturas ? `\n(${d.capturas} captura${d.capturas > 1 ? 's' : ''}: ábrelas en la bandeja de la app y mándamelas)` : '';
     const diag = d.diag ? `\n--- diagnóstico (recortado) ---\n${String(d.diag).slice(0, 3000)}` : '';
-    return `${cab}\n${d.texto || x.txt || ''}${resp}${diag}`;
+    return `${cab}\n${d.texto || x.txt || ''}${caps}${resp}${diag}`;
   });
   // (en el navegador, copiar después de esperar a la red puede fallar: el texto queda a la vista con su botón)
   S.av.paraClaude = `Avisos de fallos de Fantasy Manager (${sinContestar ? 'sin contestar' : 'los últimos'}), a ${cuandoT(Date.now())}:\n\n${partes.join('\n\n')}`;
@@ -1160,6 +1210,7 @@ async function anadirFotos(lista, preparar) {
 function elegirFotos() {
   if (!hayClave()) { ir('ia'); tostada('Primero activa la IA con tu clave de Google'); return; }
   if (S.adjuntos.length >= MAX_FOTOS) { tostada(`Como mucho ${MAX_FOTOS} fotos por mensaje`); return; }
+  S.fotosPara = null;
   if (enApp && nativo.hayFotos()) { nativo.fotos(MAX_FOTOS - S.adjuntos.length); return; }
   let inp = $('#fotoArchivo');
   if (!inp) {
@@ -1173,6 +1224,7 @@ function elegirFotos() {
 /** lo que devuelve el selector de fotos de la app: JPEG ya reducidos, en base64 */
 window.fotosApp = (lista, error) => {
   if (error) tostada(error, 5000);
+  if (S.fotosPara === 'aviso') { anadirCapturas(Array.isArray(lista) ? lista : [], capturaB64); return; }
   if (Array.isArray(lista) && lista.length) anadirFotos(lista, prepararB64);
 };
 // pegar una captura (Ctrl+V) o arrastrarla encima del chat
@@ -1485,6 +1537,13 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'mandarAviso': enviarAviso(); break;
+    case 'capturaAviso': repintarAvisos(); elegirCapturas(); break;
+    case 'quitarCaptura': if (S.av && S.av.capturas) { S.av.capturas.splice(Number(d.i), 1); repintarAvisos(); } break;
+    case 'verCaptura': {
+      const n = Number(d.n);
+      if (d.id) { const l = S.av && S.av.capt && S.av.capt[d.id]; if (l && l[n]) verImagen(l[n], `Captura ${n + 1}`); } else if (S.av && S.av.capturas && S.av.capturas[n]) verImagen(S.av.capturas[n].url, `Captura ${n + 1}`);
+      break;
+    }
     case 'tutorial': lanzarTutorial(); break;
     case 'permisoApertura': if (!cfgAvisos().on) guardarCfgAvisos({ on: true }); nativo.pedirPermisoAvisos(); break;
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;

@@ -81,6 +81,24 @@ export async function prepararArchivo(file) {
 /** de lo que devuelve la app (ya reducida, JPEG en base64) */
 export const prepararB64 = (b64) => preparar(`data:image/jpeg;base64,${b64}`);
 
+/*
+ * una captura para un aviso de Fallo: más pequeña que las del chat (el servidor del Worker las guarda tal cual y tiene
+ * poco tiempo para cada petición): lado largo de 1400 px y, si aún pasa de unos 650 KB, más pequeña
+ */
+async function captura(src) {
+  const im = await cargarImg(src);
+  let g = dibujar(im, 1400, 0.72);
+  if (g.url.length > 650000) g = dibujar(im, 1100, 0.6);
+  if (g.url.length > 650000) g = dibujar(im, 900, 0.5);
+  return { id: nuevoId(), url: g.url, mini: dibujar(im, 240, 0.6).url };
+}
+export async function capturaArchivo(file) {
+  if (!file || !/^image\//.test(file.type || '')) throw new Error('Eso no es una imagen');
+  const url = URL.createObjectURL(file);
+  try { return await captura(url); } finally { URL.revokeObjectURL(url); }
+}
+export const capturaB64 = (b64) => captura(`data:image/jpeg;base64,${b64}`);
+
 async function preparar(src) {
   const im = await cargarImg(src);
   const grande = dibujar(im, LADO, 0.85);

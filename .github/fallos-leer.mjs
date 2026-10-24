@@ -29,6 +29,7 @@ if (que === 'llave') {
   for (const a of avisos) {
     console.log(`## ${a.id} · ${f(a.t)} · ${a.equipo || ''}${a.quien ? ` (${a.quien})` : ''} · ${a.app || ''}`);
     console.log(a.texto);
+    if (a.capturas) console.log(`(${a.capturas} captura${a.capturas > 1 ? 's' : ''}: en la bandeja de la app)`);
     if (a.respondida) console.log(`→ ${a.por || 'Respuesta'} (${f(a.respondida)}${a.vista ? ', leída' : ', sin leer'}): ${a.respuesta}`);
     if (process.env.DIAG && a.diag) console.log(`\n--- diagnóstico ---\n${a.diag}`);
     console.log('');

@@ -490,9 +490,24 @@ export function vinculoWeb(S) {
 }
 
 /* ================= AVISOS DE FALLOS ================= */
+/** las capturas del aviso que vas a mandar (hasta 3), con el botón para añadir otra */
+function capturasHTML(A) {
+  const caps = A.capturas || [];
+  const minis = caps.map((c, i) => `<span class="ac-m"><button class="ac-ver" data-accion="verCaptura" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(c.mini)}" alt=""></button><button class="ac-x" data-accion="quitarCaptura" data-i="${i}" aria-label="Quitar la captura ${i + 1}">${icono('cerrar')}</button></span>`).join('');
+  const mas = caps.length < 3 ? `<button class="ac-mas${caps.length ? ' cuadro' : ''}" data-accion="capturaAviso">${icono('foto')}<span>${caps.length ? 'Otra' : 'Añadir una captura'}</span></button>` : '';
+  return `<div class="aviso-capt">${minis}${mas}</div>${caps.length ? '' : '<p class="t2 peq ac-nota">Una captura de lo que ves ayuda mucho. Hasta 3.</p>'}`;
+}
+/** las capturas de un aviso recibido (el dueño): se cargan al abrirlo */
+function capturasRecibidas(A, d) {
+  if (!d.capturas) return '';
+  const l = (A.capt && A.capt[d.id]) || [];
+  const cel = [...Array(d.capturas).keys()].map((i) => (l[i] ? `<span class="ac-m"><button class="ac-ver" data-accion="verCaptura" data-id="${esc(d.id)}" data-n="${i}" aria-label="Ver la captura ${i + 1}"><img src="${esc(l[i])}" alt=""></button></span>`
+    : `<span class="ac-m vacia">${l[i] === '' ? 'No se pudo' : 'Cargando…'}</span>`)).join('');
+  return `<div class="aviso-capt">${cel}</div>`;
+}
 const avisoMio = (x) => `<div class="aviso${x.respuesta && !x.vista ? ' nuevo' : ''}">
   <div class="aviso-cab"><span>${cuando(x.t)}</span>${x.respuesta ? '<span class="pill sube">Contestado</span>' : '<span class="pill">Esperando respuesta</span>'}</div>
-  <p>${esc(x.texto)}</p>
+  <p>${esc(x.texto)}</p>${x.capturas ? `<p class="t2 peq">${icono('foto')} ${x.capturas} captura${x.capturas > 1 ? 's' : ''}</p>` : ''}
   ${x.respuesta ? `<div class="aviso-resp"><b>${esc(x.por || 'Respuesta')}</b><span>${esc(x.respuesta)}</span><small>${cuando(x.respondida)}</small></div>` : ''}</div>`;
 function detalleAviso(A, x) {
   const d = A.detalle;
@@ -501,6 +516,7 @@ function detalleAviso(A, x) {
   if (d.error) return `<div class="error-c">${esc(d.error)}</div>`;
   return `<div class="aviso-det">
     <p class="aviso-texto">${esc(d.texto)}</p>
+    ${capturasRecibidas(A, d)}
     <p class="t2 peq">${esc([d.liga, d.app].filter(Boolean).join(' · '))}</p>
     ${d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
     ${d.respuesta ? `<div class="aviso-resp"><b>Le contestaste</b><span>${esc(d.respuesta)}</span><small>${cuando(d.respondida)}${d.vista ? ' · leído' : ' · sin leer'}</small></div>` : ''}
@@ -518,6 +534,7 @@ export function avisos(S) {
   } else {
     h += `<p class="t2 peq" style="margin-top:0">Cuéntame qué ha pasado y qué estabas haciendo. Me llega a mí y te contesto aquí mismo: te aviso cuando haya respuesta.</p>
       <textarea id="avisoTxt" class="campo-t aviso-t" rows="4" maxlength="4000" placeholder="Por ejemplo: al abrir Mercado se queda en blanco">${esc(A.borrador || '')}</textarea>
+      ${capturasHTML(A)}
       <label class="aviso-diag"><input type="checkbox" id="avisoDiag"${A.sinDiag ? '' : ' checked'}><span>Mandar también el diagnóstico (versión, lo que ha contestado LaLiga…). No lleva tu sesión ni tu clave de la IA.</span></label>
       <button class="btn ancho" data-accion="mandarAviso"${A.enviando ? ' disabled' : ''}>${A.enviando ? 'Mandando…' : `${icono('enviar')}Mandar el aviso`}</button>
       ${A.error ? `<div class="error-c" style="margin-top:10px">${esc(A.error)}</div>` : ''}`;

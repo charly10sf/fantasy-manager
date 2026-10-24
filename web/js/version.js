@@ -13,6 +13,7 @@ export const NOVEDADES = [
   {
     v: '0.6.1b', f: '2026-10-24', h: 'HH:MM', t: 'Tu once de la jornada',
     cosas: [
+      { tipo: 'mejora', d: 'foto', t: 'Capturas en los avisos de fallo', x: 'Al avisar de un fallo (arriba, «Fallo») puedes añadir hasta tres capturas de lo que ves. Me ayudan mucho a encontrarlo.' },
       { tipo: 'arreglo', d: 'campo', t: 'Tu once de LaLiga, aunque le falte alguien', x: 'Con la jornada en juego, en Equipo sale el once que tienes puesto en LaLiga con los puntos de cada uno. Si te faltaba alguien en el once, salía el mejor según la app en vez del tuyo. Ahora sale el tuyo, con los huecos vacíos y un aviso: los huecos no puntúan. En Directo, en «Tu once», también avisa.', ir: { v: 'equipo' } },
     ],
   },
