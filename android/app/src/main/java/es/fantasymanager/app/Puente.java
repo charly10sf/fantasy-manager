@@ -42,6 +42,8 @@ public class Puente {
             "login.laliga.es",
             "www.futbolfantasy.com",
             "raw.githubusercontent.com",
+            // el dominio de la app: la web publicada, app.json (la versión nueva) y limites.json
+            "fantasymanagerapp.com",
             // Gemini: por aquí y no desde la web, porque el WebView corta las peticiones POST a Google
             "generativelanguage.googleapis.com",
             // titulares de prensa (Google Noticias, RSS)

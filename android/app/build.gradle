@@ -6,6 +6,10 @@ plugins {
 // Sin ese secreto, la Action firma con una clave de prueba solo para comprobar que compila.
 def rutaFirma = System.getenv('FIRMA_RUTA')
 def claveFirma = System.getenv('FIRMA_CLAVE')
+// La de Google Play va con otra clave, la de subida (la que Google conoce): vive cifrada con el secreto PLAY_CLAVE en
+// la rama «claves» del repositorio y la Action la deja en SUBIDA_RUTA. Sin el secreto, una de prueba.
+def rutaSubida = System.getenv('SUBIDA_RUTA')
+def claveSubida = System.getenv('SUBIDA_CLAVE')
 
 // Los anuncios (AdMob, solo en la versión de Google Play). Con fm.anunciosReales=false (gradle.properties) van los
 // bloques de prueba de Google, que salen marcados como «Test Ad» y no pagan: así nadie de la prueba cerrada puede
@@ -30,17 +34,40 @@ android {
         buildConfigField 'String', 'NATIVO', "\"${System.getenv('NATIVO') ?: 'local'}\""
     }
 
+    signingConfigs {
+        release {
+            if (rutaFirma && claveFirma) {
+                storeFile file(rutaFirma)
+                storePassword claveFirma
+                keyAlias 'fantasy'
+                keyPassword claveFirma
+                storeType 'pkcs12'
+            }
+        }
+        subida {
+            if (rutaSubida && claveSubida) {
+                storeFile file(rutaSubida)
+                storePassword claveSubida
+                keyAlias 'subida'
+                keyPassword claveSubida
+                storeType 'pkcs12'
+            }
+        }
+    }
+
     // dos versiones de la misma app: la de GitHub (se baja e instala sola la versión nueva desde el aviso) y la
     // de Google Play (sin eso: Google no deja actualizarse por fuera de la tienda; la actualiza Play)
     flavorDimensions 'canal'
     productFlavors {
         github {
             dimension 'canal'
+            if (rutaFirma && claveFirma) signingConfig signingConfigs.release
             buildConfigField 'String', 'BANNER', '""'
             buildConfigField 'String', 'BONIFICADO', '""'
         }
         play {
             dimension 'canal'
+            if (rutaSubida && claveSubida) signingConfig signingConfigs.subida
             // Banner Inferior y Bonificado Desbloqueo (creados el 23 oct en AdMob); los de prueba, los de Google
             buildConfigField 'String', 'BANNER', bloque('ca-app-pub-3175956326240112/5804998548', 'ca-app-pub-3940256099942544/9214589741')
             buildConfigField 'String', 'BONIFICADO', bloque('ca-app-pub-3175956326240112/4365466356', 'ca-app-pub-3940256099942544/5224354917')
@@ -54,22 +81,9 @@ android {
         }
     }
 
-    signingConfigs {
-        release {
-            if (rutaFirma && claveFirma) {
-                storeFile file(rutaFirma)
-                storePassword claveFirma
-                keyAlias 'fantasy'
-                keyPassword claveFirma
-                storeType 'pkcs12'
-            }
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled false
-            if (rutaFirma && claveFirma) signingConfig signingConfigs.release
         }
     }
 

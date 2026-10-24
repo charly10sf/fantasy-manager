@@ -36,7 +36,8 @@ import java.util.Set;
  * vuelve a la del APK. Con «parar» en el paquete.json se vuelve a la del APK en todos los móviles.
  */
 final class AlDia {
-    static final String ORIGEN = "https://charly10sf.github.io/fantasy-manager/";
+    /** la web publicada (Cloudflare Pages, en el dominio de la app; antes, GitHub Pages en charly10sf.github.io) */
+    static final String ORIGEN = "https://fantasymanagerapp.com/";
     /** de dónde se baja (siempre ORIGEN; las pruebas lo cambian por un servidor local) */
     static String origen = ORIGEN;
     private static final long MAX_ARCHIVO = 8L << 20, MAX_TOTAL = 40L << 20;

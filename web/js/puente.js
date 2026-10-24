@@ -10,7 +10,7 @@ export const WORKER_PUBLICO = 'https://fantasy-manager.fantasymanager-web-app.wo
 export const WORKER = (() => {
   if (N) return WORKER_PUBLICO;
   try { const w = localStorage.getItem('fm-worker'); if (w) return w.replace(/\/+$/, ''); } catch (e) { /* nada */ }
-  return typeof location !== 'undefined' && /\.github\.io$/.test(location.hostname) ? WORKER_PUBLICO : '';
+  return typeof location !== 'undefined' && /(\.github\.io|(^|\.)fantasymanagerapp\.com|\.pages\.dev)$/.test(location.hostname) ? WORKER_PUBLICO : '';
 })();
 /** la versión web de verdad (con tu liga), no la de ejemplo */
 export const enWeb = !N && !!WORKER;

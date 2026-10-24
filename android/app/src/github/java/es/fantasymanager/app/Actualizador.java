@@ -13,7 +13,8 @@ import java.net.URL;
 /** Baja la versión nueva de la app (el APK de las releases de GitHub) a la caché de la propia app. */
 final class Actualizador {
     static final String NOMBRE = "fantasy-manager.apk";
-    private static final String ORIGEN = "https://github.com/charly10sf/fantasy-manager/releases/";
+    /** de dónde se acepta el APK: el dominio de la app y, mientras dure la mudanza, las releases de GitHub */
+    private static final String[] ORIGENES = {"https://fantasymanagerapp.com/descargas/", "https://github.com/charly10sf/fantasy-manager/releases/"};
     private static volatile boolean bajando;
 
     private Actualizador() {
@@ -25,9 +26,11 @@ final class Actualizador {
         return new File(d, NOMBRE);
     }
 
-    /** Solo acepta el APK publicado en las releases del repositorio, nunca otra dirección */
+    /** Solo acepta el APK publicado por la app (su dominio o las releases del repositorio), nunca otra dirección */
     static boolean valida(String url) {
-        return url != null && url.startsWith(ORIGEN) && url.endsWith(".apk");
+        if (url == null || !url.endsWith(".apk")) return false;
+        for (String o : ORIGENES) if (url.startsWith(o)) return true;
+        return false;
     }
 
     static void bajar(Principal act, String url) {

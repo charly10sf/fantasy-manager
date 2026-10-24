@@ -104,7 +104,11 @@ export async function paginaMercado() {
 
 /** el número de la última versión publicada de la app (lo escribe la Action en app.json) */
 export async function ultimaVersion() {
-  const r = await http('GET', `https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/app.json?t=${Date.now()}`, { tiempo: 15000 });
-  if (r.s !== 200) return null;
-  try { return JSON.parse(r.b); } catch (e) { return null; }
+  // del dominio de la app; si no contesta, de GitHub (donde estaba antes de la mudanza)
+  for (const u of ['https://fantasymanagerapp.com/app.json', 'https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/app.json']) {
+    const r = await http('GET', `${u}?t=${Date.now()}`, { tiempo: 15000 });
+    if (r.s !== 200) continue;
+    try { return JSON.parse(r.b); } catch (e) { /* la siguiente */ }
+  }
+  return null;
 }

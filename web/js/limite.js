@@ -12,7 +12,8 @@ import { LS, norm, diaDe, esc, LOGO, dura } from './util.js';
 import { http, enApp, nativo } from './puente.js';
 import { pedirWorker } from './soporte.js';
 
-const URL_APP = 'https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/web/limites.json';
+// del dominio de la app; si no contesta, de GitHub (donde estaba antes de la mudanza)
+const URLS_APP = ['https://fantasymanagerapp.com/limites.json', 'https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/web/limites.json'];
 const CADA = 15; // segundos entre cuentas
 const FRASES = [
   'Ni Mbappé entrena tanto. Sal a que te dé el aire.',
@@ -32,8 +33,10 @@ async function leerLimites(forzar = false) {
   try {
     let cfg = null;
     if (enApp) {
-      const r = await http('GET', `${URL_APP}?t=${Date.now()}`, { tiempo: 12000 });
-      if (r.s === 200 && r.b) cfg = JSON.parse(r.b);
+      for (const u of URLS_APP) {
+        const r = await http('GET', `${u}?t=${Date.now()}`, { tiempo: 12000 });
+        if (r.s === 200 && r.b) { try { cfg = JSON.parse(r.b); break; } catch (e) { /* la siguiente */ } }
+      }
     } else {
       const r = await fetch(`limites.json?t=${Date.now()}`, { cache: 'no-store' });
       if (r.ok) cfg = await r.json();
