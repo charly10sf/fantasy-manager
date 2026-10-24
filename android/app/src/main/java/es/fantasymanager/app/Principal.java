@@ -65,6 +65,9 @@ public class Principal extends Activity {
         columna.addView(web, new android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
         FrameLayout hueco = new FrameLayout(this);
         hueco.setBackgroundColor(0xFF0D0D10);
+        // un poco de aire entre las pestañas y el anuncio, para no tocarlo sin querer
+        int aire = Math.round(6 * getResources().getDisplayMetrics().density);
+        hueco.setPadding(0, aire, 0, 0);
         hueco.setVisibility(android.view.View.GONE);
         columna.addView(hueco, new android.widget.LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         caja.addView(columna, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
