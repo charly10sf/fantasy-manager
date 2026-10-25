@@ -4,7 +4,7 @@ Léelo entero antes de tocar el código. El estado del día y el roadmap están 
 
 Repo: charly10sf/fantasy-manager (público).
 
-La mudanza al dominio (desde la 0.6.0): la web, AlDia, app.json y el APK van primero a fantasymanagerapp.com y, si no contesta, a GitHub. La web de GitHub Pages sigue igual con una banda para llevarse la cuenta (`mudarse`, un código de /vincular en `#codigo=`). El «apk» de app.json sigue en GitHub porque las apps de antes solo se actualizan desde ahí. Antes de poner el repo privado: que nadie tenga una app anterior a la 0.6.0, cambiar ese «apk» al del dominio (dominio.yml) y quitar GitHub Pages.
+La mudanza al dominio (desde la 0.6.0): la web, AlDia, app.json y el APK van primero a fantasymanagerapp.com y, si no contesta, a GitHub. Desde el 25 oct a las 2:15 el dominio lo sirve GitHub Pages, no Cloudflare (con partidos las operadoras cortan las IP de Cloudflare: claude/BLOQUEO-LALIGA.md): en el DNS de Cloudflare, A @ → 185.199.108.153, .109, .110 y .111 y CNAME www → charly10sf.github.io, todo en «DNS only», y en GitHub Settings → Pages el dominio con «Enforce HTTPS». web.yml sube también app.json y el APK en /descargas/ (y se rehace al acabar «App Android»); ads.txt y app-ads.txt van en web/. charly10sf.github.io/fantasy-manager redirige al dominio (302, mismo camino), así que la banda de `mudarse` ya no sale. dominio.yml sigue subiendo lo mismo a Cloudflare Pages, solo en https://fantasy-manager-61v.pages.dev, de respaldo. El «apk» de app.json sigue en GitHub porque las apps de antes solo se actualizan desde ahí. Antes de poner el repo privado: GitHub Pages con repo privado pide GitHub Pro (unos 4 € al mes) o volver el dominio a Cloudflare Pages; y que nadie tenga una app anterior a la 0.6.0.
 
 ## Reglas de Carlos
 
@@ -52,7 +52,7 @@ La mudanza al dominio (desde la 0.6.0): la web, AlDia, app.json y el APK van pri
 2. Commit con los trailers de Claude.
 3. `git pull -q --rebase origin main && git push -q origin HEAD:main`.
 4. Esperar las Actions «Web» y «App Android» (y «Worker» si cambia worker/).
-5. `git pull` (la Action sube app.json), subir también a `pendiente` y comprobar https://charly10sf.github.io/fantasy-manager/paquete.json y, tras la Action «Dominio», https://fantasy-manager-61v.pages.dev/paquete.json (el mismo que fantasymanagerapp.com; WebFetch no lee el dominio por su robots).
+5. `git pull` (la Action sube app.json), subir también a `pendiente` y comprobar https://fantasymanagerapp.com/paquete.json (GitHub Pages; github.io redirige ahí) y, tras la Action «Dominio», el respaldo https://fantasy-manager-61v.pages.dev/paquete.json.
 
 Si cambia algo en android/app/src cambia la huella nativa y los móviles necesitan el APK nuevo. Si no, la web les llega sola.
 
