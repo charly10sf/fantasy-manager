@@ -118,7 +118,8 @@ async function buscarNoticias(q) {
   const t0 = Date.now();
   const r = await http('GET', url, { cabeceras: { Accept: 'application/rss+xml, application/xml', 'User-Agent': UA } });
   apuntarRegistro({ ruta: `noticias «${q.slice(0, 50)}»`, s: r.s, ms: Date.now() - t0, e: r.e, forma: r.b ? `${Math.round(r.b.length / 1024)} KB` : '' });
-  return r.s === 200 && r.b ? parseRSS(r.b) : [];
+  // null si no ha contestado bien (no es lo mismo que «no hay noticias»)
+  return r.s === 200 && r.b ? parseRSS(r.b) : null;
 }
 
 /**
@@ -132,6 +133,8 @@ export async function noticiasClub(D, eqId) {
   if (!e || !e.nombre) return [];
   const a = aliasEquipo(e.nombre)[0];
   const l = await buscarNoticias(`"${a}" (LaLiga OR lesión OR baja OR convocatoria OR alineación OR "rueda de prensa" OR entrenador OR fichaje) when:3d`);
+  // si Google no contesta, lo de la última vez (aunque tenga más de una hora) y sin guardar nada
+  if (!l) return g[eqId] ? g[eqId].lista : [];
   const suyos = Object.values(D.maestro || {}).filter((j) => j.equipoId === eqId && j.nombre && j.nombre.length > 3);
   const vistos = new Set();
   const lista = [];
@@ -167,6 +170,13 @@ export function aliasEquipo(nombre) {
 export async function noticias(D, M) {
   const guardado = LS.get('noticias', null);
   if (guardado && Date.now() - guardado.t < HORA && guardado.lista && guardado.lista.length) return guardado;
+  // si Google Noticias no contestó hace poco, no se vuelve a probar en media hora: desde la web (el Worker) da 503 a
+  // todo y eran 14 búsquedas de 6 a 9 s cada vez, algunas colgadas más de un minuto. Mientras, lo de la última vez
+  // que funcionó (hasta 12 h), y si no hay, se dice que no se ha podido mirar (la IA lo leía como «nada en 3 días»)
+  const sinGoogle = (fallo) => (guardado && guardado.lista && guardado.lista.length && Date.now() - guardado.t < 12 * HORA
+    ? { ...guardado, fallo, viejas: true } : { t: Date.now(), lista: [], fallo });
+  const falla = LS.get('noticias-falla', 0);
+  if (falla && Date.now() - falla < 30 * MIN) return sinGoogle('Google Noticias no contesta');
   const nombres = [];
   const add = (j) => { if (j && j.nombre && j.nombre.length > 2 && !nombres.some((x) => x.id === j.id)) nombres.push(j); };
   M.mias.forEach((x) => add(x.j));
@@ -185,15 +195,22 @@ export async function noticias(D, M) {
   for (let i = 0; i < eqAlias.length && gruposEq.length < 5; i += 3) {
     gruposEq.push(`(${eqAlias.slice(i, i + 3).map((x) => `"${x.a}"`).join(' OR ')}) (lesión OR baja OR convocatoria OR "rueda de prensa" OR alineación OR entrenador OR once) when:2d`);
   }
-  const consultas = [
+  const generales = [
     '"LaLiga Fantasy" when:2d',
     '(futbolfantasy OR "jornada perfecta" OR comuniate OR "analítica fantasy") when:2d',
     '(lesión OR lesionado OR baja OR convocatoria) LaLiga when:2d',
+  ];
+  const consultas = [
     'LaLiga (previa OR crónica OR "once probable") when:2d',
     ...grupos,
     ...gruposEq,
   ];
-  const listas = await enParalelo(consultas, 3, (q) => buscarNoticias(q));
+  // primero las tres generales (con 25 s como mucho cada una): si no contesta ninguna, no se lanzan las demás
+  const conTope = (q) => Promise.race([buscarNoticias(q), new Promise((ok) => setTimeout(() => ok(null), 25000))]);
+  const primeras = await enParalelo(generales, 3, conTope);
+  if (!primeras.some(Array.isArray)) { LS.set('noticias-falla', Date.now()); return sinGoogle('Google Noticias no contesta'); }
+  LS.del('noticias-falla');
+  const listas = [...primeras, ...(await enParalelo(consultas, 3, conTope))];
   const vistos = new Set();
   const todas = [];
   for (const l of listas) for (const n of Array.isArray(l) ? l : []) {

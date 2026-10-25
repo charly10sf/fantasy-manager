@@ -121,7 +121,9 @@ export function calendarioHTML(M, j, mio = false) {
   if (mio) {
     const vi = M.ventaPorInercia ? M.ventaPorInercia(j.id) : null;
     const ine = M.inercia ? M.inercia(j.id) : null;
-    const poco = !vi && ine && (ine.fase === 'giro' || ine.fase === 'baja') ? Math.max(0, -ine.proyJ) : null;
+    // tras un partidazo (10 o más) la venta no manda: lo normal es que suba estos días
+    const pz = M.partidazo ? M.partidazo(j.id) : null;
+    const poco = !vi && ine && (ine.fase === 'giro' || ine.fase === 'baja') && !(pz && pz.nivel >= 3) ? Math.max(0, -ine.proyJ) : null;
     const baja = vi ? (vi.urgencia === 'ya' ? 'está bajando de valor' : 'está a punto de girar a la baja') : '';
     const pierde = vi && vi.perder > 0 ? ` (hasta la jornada, unos ${eur(vi.perder)} menos)` : '';
     if (M.enVenta && M.enVenta.has(j.id)) consejo = `Lo tienes en venta: aquí manda la oferta (mira «En venta»)${vi ? `, y ${baja}${pierde}` : ''}.`;

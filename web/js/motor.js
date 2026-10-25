@@ -220,6 +220,19 @@ export function analizar(D, H, c, extra = {}) {
     else if (fase === 'sube') texto = `Sube ${fmt(ult)} al día.`;
     return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, texto, quieto, rebote });
   };
+  // la hora del partido de cada equipo en cada jornada, hecha una vez (M.partidazo se llama con cientos de jugadores
+  // desde M.interes)
+  let horaPartido = null;
+  const horaDe = (n, eqId) => {
+    if (!horaPartido) {
+      horaPartido = {};
+      for (const q of [...(D.partidos || []), ...(D.resultados || [])]) {
+        if (!q.fecha) continue;
+        for (const id of [q.localId, q.visitanteId]) { const k = `${Number(q.jornada)}|${id}`; if (!(k in horaPartido)) horaPartido[k] = q.fecha; }
+      }
+    }
+    return horaPartido[`${n}|${eqId}`] || null;
+  };
   /** un partidazo reciente: 9 puntos o más en un partido de hace menos de 3 días (en juego, los de ahora). Tras uno así
       LaLiga suele subirle el valor los días siguientes, así que una bajada puede frenarse o girar al alza (lo avisó
       Domy el 25 oct: Grimaldo salía «perdiendo valor» la noche que hizo más de 10). Sin caché: los puntos en directo
@@ -232,9 +245,8 @@ export function analizar(D, H, c, extra = {}) {
     if (vivo != null && M.enJuego) { n = M.enJuego.n; pts = vivo; }
     else { const s = [...(j.semanas || [])].filter((w) => w.pts != null).sort((a, b) => b.n - a.n)[0]; if (s) { n = s.n; pts = s.pts; } }
     if (n == null || pts == null || pts < 6) return null;
-    const p = [...(D.partidos || []), ...(D.resultados || [])].find((q) => Number(q.jornada) === n && (q.localId === j.equipoId || q.visitanteId === j.equipoId) && q.fecha);
     const jo = (M.jornadas || []).find((x) => x.n === n);
-    const fue = p ? p.fecha : jo ? jo.ini : null;
+    const fue = horaDe(n, j.equipoId) || (jo ? jo.ini : null);
     const ahoraP = Date.now();
     if (!(fue && fue <= ahoraP && ahoraP - fue < 3 * DIA)) return null;
     // por escalones (lo pidió Carlos el 25 oct): 6-7 un buen partido (solo se avisa), 8-9 muy bueno (no se manda
@@ -751,6 +763,8 @@ export function analizar(D, H, c, extra = {}) {
   const alin = (extra.alineaciones && extra.alineaciones.jugadores) || {};
   M.alineacion = (pid) => { const a = alin[pid]; return a && Date.now() > a.ini - 2 * HORA && Date.now() < a.ini + 2.5 * HORA ? a : null; };
   M.noticias = (extra.noticias && extra.noticias.lista) || [];
+  // si Google Noticias no ha contestado: sin titulares no es lo mismo que «no hay noticias»
+  M.noticiasFallo = extra.noticias && extra.noticias.fallo ? { fallo: extra.noticias.fallo, viejas: !!extra.noticias.viejas, t: extra.noticias.t } : null;
   M.noticiasDe = (pid) => M.noticias.filter((n) => n.pids && n.pids.includes(pid));
 
   /* ---------- riesgo de rotación: si su equipo juega otra competición pegada a la jornada ---------- */
@@ -1085,19 +1099,40 @@ export function analizar(D, H, c, extra = {}) {
     const rend = clamp(num(j.media) / 7, 0, 1.3) * 30;
     if (j.media) partes.push(`${String(Math.round(j.media * 10) / 10).replace('.', ',')} pts de media`);
     const mov = t.p7 != null ? t.p7 : t.p1 != null ? t.p1 * 3 : 0;
-    let momentum = clamp(mov / 10, -1, 1) * 15;
+    const mom0 = clamp(mov / 10, -1, 1) * 15;
+    let momentum = mom0;
     // lo que importa es hacia dónde va ahora: un +10 % en 7 días que ya ha girado no es una subida
     const ine = M.inercia(j.id);
+    // y lo que acaba de puntuar: tras un buen partido LaLiga suele subirle el valor los días siguientes, así que una
+    // bajada puede frenarse o darse la vuelta. Antes las cláusulas y el mercado lo miraban como si fuera a seguir
+    // bajando (lo avisó Domy el 25 oct). Por escalones, como en la venta: 6-7 suaviza, 8-9 frena, 10 o más da la vuelta
+    const pz = M.partidazo(j.id), pzN = pz ? pz.nivel : 0;
+    const abajo = !!ine && ['giro', 'baja', 'parado', 'frena'].includes(ine.fase);
+    let txtIne = null;
     if (ine) {
-      if (ine.fase === 'giro' || ine.fase === 'baja') { momentum = Math.min(momentum, 0) - 8; partes.push(ine.fase === 'giro' ? 'ha girado a la baja' : `baja ${eur(Math.abs(ine.ult))} al día`); }
-      else if (ine.fase === 'parado') { momentum = Math.min(momentum, 3) - 4; partes.push('se ha estancado tras subir'); }
-      else if (ine.fase === 'frena') { momentum -= 5; partes.push(`sube cada vez menos (gira en ~${Math.max(1, Math.round(ine.giroEn))} d)`); }
+      if (ine.fase === 'giro' || ine.fase === 'baja') { momentum = Math.min(momentum, 0) - 8; txtIne = ine.fase === 'giro' ? 'ha girado a la baja' : `baja ${eur(Math.abs(ine.ult))} al día`; }
+      else if (ine.fase === 'parado') { momentum = Math.min(momentum, 3) - 4; txtIne = 'se ha estancado tras subir'; }
+      else if (ine.fase === 'frena') { momentum -= 5; txtIne = `sube cada vez menos (gira en ~${Math.max(1, Math.round(ine.giroEn))} d)`; }
       else if (ine.fase === 'acelera') momentum += 3;
     }
-    const ine0 = M.inercia(j.id), giro0 = ine0 && ['giro', 'baja', 'parado'].includes(ine0.fase);
-    if (giro0) { /* lo dice la inercia, más abajo */ }
+    const pzTxt = pz ? `acaba de hacer ${pz.pts} pts (J${pz.n})` : '';
+    // (si ya ha vuelto a subir estos días, la semana en negativo no cuenta como bajada)
+    const cae = abajo || (mom0 < 0 && !(ine && ['sube', 'acelera'].includes(ine.fase)));
+    if (pz && cae) {
+      // lo que se le quita por bajar: con 10 o más, nada; con 8 o 9, el 40 %; con 6 o 7, el 75 %
+      const queda = [1, 0.75, 0.4, 0][pzN];
+      if (momentum < 0) momentum *= queda;
+      if (pzN >= 3) momentum += 3;
+      txtIne = pzN >= 3 ? `venía bajando, pero ${pzTxt}: lo normal es que suba estos días`
+        : pzN === 2 ? `venía bajando, pero ${pzTxt}: la bajada puede frenarse`
+        : `${txtIne || 'viene bajando'}, aunque ${pzTxt}: puede suavizar la bajada`;
+    } else if (pz) momentum += [0, 1, 2, 4][pzN];
+    if (txtIne) partes.push(txtIne);
+    if (pz && cae) { /* ya lo dice el texto de arriba */ }
+    else if (abajo && ine.fase !== 'frena') { /* lo dice la inercia */ }
     else if (t.p7 != null && Math.abs(t.p7) >= 2) partes.push(`${t.p7 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p7), 1, false)} en 7 días`);
     else if (t.p1 != null && Math.abs(t.p1) >= 1) partes.push(`${t.p1 > 0 ? 'sube' : 'baja'} ${pct(Math.abs(t.p1), 1, false)} hoy`);
+    if (pz && !cae) partes.push(pzTxt);
     const ratio = j.valor ? precio / j.valor : 2;
     const barato = clamp((1.6 - ratio) / 0.6, 0, 1) * 20;
     // pagar de más se pierde en el valor del equipo: lo que castiga es el dinero que se pierde, no el porcentaje
@@ -1167,9 +1202,10 @@ export function analizar(D, H, c, extra = {}) {
     }
     const CZ = M.clausulazos;
     if (r && CZ && CZ.n >= 3 && x.ratio - 1 > Math.max(CZ.p90, 0.05) + 0.03) r = 0;
-    // y si está bajando, menos: nadie paga de más por uno que pierde valor
+    // y si está bajando, menos: nadie paga de más por uno que pierde valor (salvo que acabe de hacer 8 puntos o más: ahí
+    // lo normal es que la bajada se frene, y es justo cuando los demás lo miran)
     const ineR = M.inercia(x.pid);
-    if (r && ineR && ['giro', 'baja', 'parado'].includes(ineR.fase)) r = Math.max(0, r - 1);
+    if (r && ineR && ['giro', 'baja', 'parado'].includes(ineR.fase) && ((M.partidazo(x.pid) || {}).nivel || 0) < 2) r = Math.max(0, r - 1);
     x.pierde = M.perdida(x.pid);
     // o uno que está subiendo bien: si te lo quitan a su valor, pierdes lo que iba a subir
     const sube = (() => { const ine = M.inercia(x.pid); return !!ine && (ine.fase === 'sube' || ine.fase === 'acelera') && ine.proyJ >= Math.max(400000, x.j.valor * 0.04); })();
@@ -1299,10 +1335,13 @@ export function analizar(D, H, c, extra = {}) {
     else if (t.p7 != null && t.p7 < -4) veredicto = 'baja';
     // la inercia manda sobre la tendencia de la semana
     const ineM = M.inercia(m.pid);
-    if (ineM && veredicto !== 'evitar') {
+    // tras un partido de 8 puntos o más, «Bajando» no es lo que va a pasar: lo normal es que se frene o suba
+    const pzM = (M.partidazo(m.pid) || {}).nivel || 0;
+    if (ineM && veredicto !== 'evitar' && pzM < 2) {
       if (ineM.fase === 'giro' || ineM.fase === 'baja') veredicto = 'baja';
       else if ((ineM.fase === 'frena' || ineM.fase === 'parado') && ['chollo', 'sube', 'normal'].includes(veredicto)) veredicto = 'frena';
     }
+    if (pzM >= 2 && veredicto === 'baja') veredicto = 'normal';
     // la puja que pondría: el precio y un margen por las pujas que lleva y por si está subiendo
     let margen = 0.02 + Math.min(m.pujas, 5) * 0.025 + (t.p1 != null && t.p1 > 0 ? Math.min(t.p1, 4) / 100 : 0) + (i.n >= 70 ? 0.03 : 0);
     // y lo que de verdad hace falta en TU liga para llevarse a uno así: cuanto más interesa, más arriba de lo que
@@ -1356,7 +1395,7 @@ export function analizar(D, H, c, extra = {}) {
     let consejo = 'esperar', porque = '';
     const bajando = (t.p1 != null && t.p1 < -0.5) || (t.p7 != null && t.p7 < -2);
     const subiendo = (t.p1 != null && t.p1 > 0.5) || (t.p7 != null && t.p7 > 2);
-    const ine = M.inercia(v.pid);
+    const ine = M.inercia(v.pid), pzV = M.partidazo(v.pid);
     // La oferta de LaLiga se renueva en cada cambio de mercado. Si la de hoy es de las más bajas que da en tu liga y no
     // hay prisa, lo normal es que mañana llegue una mejor aunque el jugador baje un poco: venderlo hoy es hacerlo por lo
     // mínimo. Se cuenta con algo menos que la mediana, porque las que se aceptan son las buenas.
@@ -1386,6 +1425,12 @@ export function analizar(D, H, c, extra = {}) {
       && !(ine && j.valor && num(ine.ult) < -0.03 * j.valor) && !(t.p1 != null && t.p1 < -3)) {
       consejo = 'esperar';
       porque = `No te hace falta el dinero (tienes ${eur(D.dinero)}) y no entra en tu once: puede quedarse hasta que LaLiga te haga una oferta mejor${ine && ine.ult < 0 ? ` (baja unos ${eur(-ine.ult)} al día, poco para lo que varía la oferta de un día a otro)` : ''}.`;
+    }
+    // salvo que acabe de hacer 8 puntos o más: ahí lo normal es que la bajada se frene o se dé la vuelta, y venderlo hoy
+    // es hacerlo en el peor momento (con dinero en positivo no hay prisa)
+    else if (pzV && pzV.nivel >= 2 && num(D.dinero) >= 0 && !MALOS.has(j.estado) && ((ine && ['giro', 'baja', 'parado', 'frena'].includes(ine.fase)) || bajando)) {
+      consejo = 'esperar';
+      porque = `Venía bajando, pero acaba de hacer ${pzV.pts} puntos: ${pzV.nivel >= 3 ? 'lo normal es que suba estos días' : 'la bajada puede frenarse'}. Espera al cambio de mañana, salvo que necesites el dinero hoy.`;
     }
     // la inercia manda: si ha girado, cada día vale menos; si se está frenando, no se espera a que gire
     else if (ine && (ine.fase === 'giro' || ine.fase === 'baja') && mejor.sobre >= -0.05) { consejo = 'aceptar'; porque = `Ha girado a la baja (hoy ${eur(ine.ult, { signo: true })}): cada día que esperes vale menos, y la oferta casi iguala su valor.`; }
