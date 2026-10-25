@@ -1555,3 +1555,8 @@ button.pf-eq:active { opacity: 0.7; }
 .fav-mini .ic { width: 14px; height: 14px; }
 .fav-mini .ic path { fill: currentColor; }
 .tabs button .ic { width: 15px; height: 15px; margin-right: 4px; vertical-align: -2px; }
+/* los eventos del partido (Directo → ficha de un partido) */
+button.jg.ev-f { width: 100%; text-align: left; color: var(--texto); }
+.ev-f .ev-pts { flex: none; min-width: 34px; padding: 2px 7px; border-radius: 7px; font: 700 15px var(--cond); text-align: center; background: var(--plano2); }
+.ev-f .ev-pts.sube { color: var(--sube); }
+.ev-f .ev-pts.baja { color: var(--baja); }

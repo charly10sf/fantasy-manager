@@ -11,14 +11,14 @@ import * as Dr from './directo.js';
 import * as Cl from './clubes.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
 import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
-import { ultimaVersion, api } from './api.js';
+import { ultimaVersion, api, apuntarRegistro } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
 import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub } from './externas.js';
-import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce } from './vivo.js';
+import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop } from './limite.js';
@@ -675,12 +675,52 @@ async function cargarVivo() {
   cargandoVivo = true; S.cargandoVivo = true;
   try {
     const yoTid = (S.M.yo && S.M.yo.teamId) || (S.D.yo && S.D.yo.teamId);
+    const antes = S.vivo && S.vivo.n === S.M.enJuego.n ? S.vivo : null;
     S.vivo = { ...(await enVivo(S.D, S.M.enJuego.n, yoTid)), liga: S.D.liga && S.D.liga.id };
     LS.set(K('vivo'), S.vivo);
     // los puntos nuevos, sin rehacer todas las cuentas
     if (S.M.ponerVivo) S.M.ponerVivo(S.vivo);
+    vigilarClausulables(antes).catch((e) => console.warn('clausulables en directo', e));
     return true;
   } catch (e) { console.warn('en directo', e); return false; } finally { cargandoVivo = false; S.cargandoVivo = false; }
+}
+/**
+ * con la jornada en juego: si el jugador de un rival que te conviene clausular (cláusula abierta o a punto, te llega con
+ * tu saldo, te interesa y no paga de más) marca o da una asistencia, te avisa al momento: tras un partido así LaLiga
+ * suele subirle el valor y la cláusula con él (lo pidió Domy el 25 oct). Se mira con cada puesta al día del directo (cada
+ * 2 minutos con la app abierta): un salto de 3 puntos o más, o 6 o más si es la primera vez que se mira, y entonces su
+ * ficha dice si ha sido gol o asistencia. Un aviso por gol o asistencia nuevos, por jornada
+ */
+async function vigilarClausulables(antes) {
+  const V = S.vivo, M = S.M;
+  if (!V || !M || !M.enJuego || V.n !== M.enJuego.n || enDemo() || !haySesion()) return;
+  const sano = (j) => !['injured', 'suspended', 'out_of_league'].includes(j.estado);
+  const cand = M.clausulas.filter((x) => x.meLlega && (x.abierta || x.abreEn < 12 * 60 * MIN) && x.interes >= 50 && sano(x.j)
+    && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30 && M.compraCal(x.j, x.clausula).ok);
+  if (!cand.length) return;
+  const vistos = LS.get(K('vivo-avisados'), {});
+  const ya = (pid) => (vistos[pid] && vistos[pid].n === V.n ? vistos[pid] : { n: V.n, g: 0, as: 0 });
+  const mirar = cand.filter((x) => {
+    const b = V.puntos[x.pid], a = antes && antes.puntos ? antes.puntos[x.pid] : null;
+    if (b == null) return false;
+    return a != null ? b - a >= 3 : !vistos[x.pid] || vistos[x.pid].n !== V.n ? b >= 6 : false;
+  }).slice(0, 4);
+  for (const x of mirar) {
+    let h = null;
+    try { h = hechosSemana(await api.jugador(x.pid, S.D.liga.id), V.n); } catch (e) { if (e.sesion) return; }
+    if (!h) continue;
+    const g = h.ev.gol ? h.ev.gol[0] : 0, as = h.ev.asis ? h.ev.asis[0] : 0, p0 = ya(x.pid);
+    vistos[x.pid] = { n: V.n, g: Math.max(g, p0.g), as: Math.max(as, p0.as) };
+    if (g <= p0.g && as <= p0.as) continue;
+    const que = g > p0.g ? (g - p0.g > 1 ? `ha marcado ${g - p0.g} goles` : 'ha marcado') : as - p0.as > 1 ? `ha dado ${as - p0.as} asistencias` : 'ha dado una asistencia';
+    const pts = V.puntos[x.pid];
+    const tit = `${x.j.nombre} ${que} (${pts} pts)`;
+    const cuerpo = `Es de ${x.rival.manager || x.rival.nombre} y su cláusula, ${eur(x.clausula)} (vale ${eur(x.j.valor)}), ${x.abierta ? 'está abierta' : `se abre ${cuandoT(x.protegidoHasta)}`} y te llega: te quedarías con ${eur(x.teQueda)}. Tras un partido así suele subir de valor${x.abierta ? ': si lo quieres, es el momento' : ''}.`;
+    if (nativo.aLaVista()) tostada(`⚡ ${tit}. ${cuerpo}`, 12000);
+    else nativo.notificar(`⚡ ${tit}`, cuerpo, 'rivales');
+    apuntarRegistro({ ruta: `aviso en directo: ${x.j.nombre} ${que}`, s: 200, ms: 0 });
+  }
+  LS.set(K('vivo-avisados'), vistos);
 }
 /** con los puntos nuevos: lo que esté abierto (la pestaña, la ficha de un partido o la de un jugador) */
 function pintarVivo({ forzar = false } = {}) {
@@ -722,10 +762,32 @@ async function cargarPartido(n, id) {
   const ps = Dr.partidosJornada(S, n).find((x) => String(x.id) === String(id));
   const p = ps ? (S.D.partidos || []).find((x) => x.jornada === n && x.localId === ps.lid && x.visitanteId === ps.vid) : null;
   if (!p || Dr.estadoP(ps).cls === 'prox') return;
+  cargarHechos(n, ps);
   const g = S.jugadas[id];
   if (g && (Dr.estadoP(ps).cls === 'fin' ? true : Date.now() - g.t < MIN)) return;
   const r = await jugadasSofa(S.D, p);
   if (r) { S.jugadas[id] = r; if (S.tipoHoja && S.tipoHoja[0] === 'p' && S.tipoHoja[1] === `${n}:${id}`) repintarHoja(); }
+}
+/**
+ * lo que ha hecho cada uno en un partido empezado (minutos, goles, asistencias, tarjetas, penaltis…): de la ficha de cada
+ * jugador que ya ha sumado o restado puntos, porque las estadísticas de la jornada no lo dicen. En juego, como mucho cada
+ * 2 minutos; acabado, una vez (lo pidió Domy el 25 oct: los eventos del partido y quién ha salido de titular)
+ */
+async function cargarHechos(n, p) {
+  if (!S.D || !p || !p.id || enDemo() || !haySesion()) return;
+  S.hechos ||= {};
+  const k = `${n}:${p.id}`, g = S.hechos[k];
+  const fin = Dr.estadoP(p).cls === 'fin';
+  if (g && (g.cargando || (fin && g.fin && Date.now() - g.t < 6 * 3600e3) || Date.now() - g.t < 2 * MIN)) return;
+  const ids = [...new Set(p.jug.filter((x) => x.id && x.pts != null && x.pts !== 0 && S.D.maestro[x.id] && S.D.maestro[x.id].pos <= 4).map((x) => String(x.id)))].slice(0, 36);
+  if (!ids.length) return;
+  S.hechos[k] = { ...(g || { porJug: {} }), cargando: true };
+  const porJug = { ...((g && g.porJug) || {}) };
+  await enParalelo(ids, 4, async (pid) => {
+    try { const h = hechosSemana(await api.jugador(pid, S.D.liga.id), n); if (h) porJug[pid] = h; } catch (e) { if (e.sesion) throw e; }
+  });
+  S.hechos[k] = { t: Date.now(), fin, porJug, cargando: false };
+  if (S.tipoHoja && S.tipoHoja[0] === 'p' && S.tipoHoja[1] === k) repintarHoja();
 }
 /** el once de un rival en la jornada en juego, para su ficha (se pide al abrirla, como mucho cada 3 minutos) */
 /*

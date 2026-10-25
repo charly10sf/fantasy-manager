@@ -5,6 +5,7 @@
 import { esc, icono, cuando, rel, dura, MIN, HORA, horaDe, norm } from './util.js';
 import { ava, posTag, nada, campoVivo, filaJugador, cromo } from './comunes.js';
 import { ancho, cols, tabs, puntosUltimaJornada } from './vistas.js';
+import { EVENTOS } from './vivo.js';
 
 const est = (x) => { if (x == null || x === '') return null; const v = Number(x); return Number.isFinite(v) ? v : null; };
 const enJuego = (p) => p.st != null && p.st >= 2 && p.st < 7;
@@ -294,6 +295,42 @@ function filaPt(S, x, ju) {
   return `<${tag}>${ava(j || { nombre: nom, pos: x.pos })}<div class="fila-c"><div class="fila-n">${posTag(j || { pos: x.pos })}<span class="nom">${esc(nom)}</span></div><div class="fila-s">${sub}</div></div>
     <div class="fila-d"><div class="v pf-pts ${ptsCls(x.pts)}">${x.pts == null ? '–' : x.pts}</div></div></${j ? 'button' : 'div'}>`;
 }
+/**
+ * un partido con lo que ha hecho cada uno (S.hechos, de la ficha de cada jugador en LaLiga Fantasy): los minutos para
+ * saber quién salió de titular y los goles, asistencias y tarjetas para el campo y los eventos
+ */
+function conHechos(S, n, p) {
+  const H = S.hechos && S.hechos[`${n}:${p.id}`];
+  if (!H || !H.porJug) return p;
+  const c = (h, k) => (h.ev[k] ? h.ev[k][0] : 0);
+  return { ...p, hechos: true, jug: p.jug.map((x) => {
+    const h = H.porJug[x.id];
+    if (!h) return x;
+    return { ...x, min: x.min != null ? x.min : h.min, gol: x.gol || c(h, 'gol'), asis: x.asis || c(h, 'asis'), am: x.am || c(h, 'am') + c(h, 'am2'), roja: x.roja || c(h, 'roja') || (c(h, 'am2') ? 1 : 0), ev: h.ev };
+  }) };
+}
+/** los eventos del partido que dan o quitan puntos (sin minuto: LaLiga no lo da), de cada equipo y de quién es cada uno */
+function eventosHTML(S, p) {
+  const { D } = S;
+  const items = [];
+  for (const x of p.jug) {
+    if (!x.ev) continue;
+    EVENTOS.forEach(([, c, uno, varios], orden) => { const v = x.ev[c]; if (v) items.push({ x, c, txt: v[0] > 1 ? `${v[0]} ${varios.toLowerCase()}` : uno, pts: v[1], orden }); });
+  }
+  if (!items.length) return '';
+  items.sort((a, b) => a.orden - b.orden || (b.x.l - a.x.l) || String(a.x.nom).localeCompare(String(b.x.nom)));
+  const ic = (c) => (c === 'gol' || c === 'propia' ? `<span class="jg-ic gol">${icono('balon')}</span>`
+    : c === 'am' || c === 'am2' || c === 'roja' ? `<span class="jg-ic"><i class="tarjeta ${c === 'am' ? 'amarilla' : 'roja'}"></i></span>`
+      : c.startsWith('pen') ? `<span class="jg-ic">${icono('diana')}</span>` : `<span class="jg-ic">${icono('balon')}</span>`);
+  const fila = (it) => {
+    const j = D.maestro[it.x.id];
+    const d = j ? duenoDe(S, j.id) : null;
+    const quien = d ? (d.yo ? ' <b class="rojo">· tuyo</b>' : ` <span class="apag">· de ${esc(d.txt)}</span>`) : '';
+    const pts = it.pts == null ? '' : `<span class="ev-pts ${it.pts > 0 ? 'sube' : it.pts < 0 ? 'baja' : 'cero'}">${it.pts > 0 ? '+' : ''}${it.pts}</span>`;
+    return `<${j ? `button class="jg ev-f" data-j="${esc(j.id)}"` : 'div class="jg ev-f"'}>${escudo(D, it.x.l ? p.lid : p.vid, 'chico')}${ic(it.c)}<span class="jg-t"><b>${esc(j ? j.nombre : it.x.nom)}</b> ${esc(it.txt)}${quien}</span>${pts}</${j ? 'button' : 'div'}>`;
+  };
+  return `<div class="sec"><h2>Eventos</h2><span class="sub">lo que da o quita puntos</span></div><div class="pf-jug">${items.map(fila).join('')}</div>`;
+}
 /* ---------------- el partido en el campo ---------------- */
 /** la etiqueta de arriba a la izquierda de cada cromo: de quién es en tu liga */
 function tagDe(S, pid) {
@@ -340,7 +377,10 @@ function equipoJugado(S, p, l, ju) {
   const tot = p.jug.filter((x) => x.l === l).reduce((t, x) => t + (x.pts || 0), 0);
   const hayMin = os.some((o) => o.x.min != null);
   let tit = os, banq = [], nota = '', banqT = 'Entraron';
-  if (hayMin) ({ tit, resto: banq } = once11(os.filter((o) => o.x.min > 0), (o) => o.x.min || 0));
+  if (hayMin) {
+    ({ tit, resto: banq } = once11(os.filter((o) => o.x.min > 0), (o) => o.x.min || 0));
+    if (p.hechos && !ju) nota = 'En el campo, los 11 que más minutos llevan: los que salieron de titular. Debajo, los que han entrado.';
+  }
   else {
     // LaLiga no dice los minutos (suele dar la plantilla entera, con 0 puntos los que no han jugado y también los que
     // juegan y aún no suman): el once confirmado de SofaScore; si no lo hay, el once probable, con lo que lleva cada
@@ -418,8 +458,9 @@ export function fichaPartido(S, clave) {
   const { D, M } = S;
   const [nS, id] = String(clave).split(':');
   const n = Number(nS);
-  const p = partidosJornada(S, n).find((x) => String(x.id) === String(id));
-  if (!p) return `<div class="hoja-cab"><h2>Jornada ${n || ''}</h2></div>${nada('No encuentro este partido.')}`;
+  const p0 = partidosJornada(S, n).find((x) => String(x.id) === String(id));
+  if (!p0) return `<div class="hoja-cab"><h2>Jornada ${n || ''}</h2></div>${nada('No encuentro este partido.')}`;
+  const p = conHechos(S, n, p0);
   const e = estadoP(p), emp = empezo(p);
   const ju = S.jugadas && S.jugadas[p.id];
   let h = `<div class="hoja-cab"><h2>Jornada ${n}</h2></div>`;
@@ -428,6 +469,7 @@ export function fichaPartido(S, clave) {
     <div class="pf-res"><b>${emp && p.gl != null ? `${p.gl}<i>-</i>${p.gv}` : p.fecha ? horaDe(p.fecha) : '–'}</b><span class="pf-e ${e.cls}">${e.cls === 'vivo' ? '<span class="vivo-dot"></span>' : ''}${esc(e.largo)}</span></div>
     <button class="pf-eq" data-club="${esc(p.vid)}">${escudo(D, p.vid, 'g')}<span>${esc(nombreEq(D, p.vid))}</span></button></div>`;
   if (ju && ju.lista.length) h += `<div class="sec"><h2>Jugadas</h2></div><div class="pf-jug">${ju.lista.map((i) => jugadaHTML(S, p, i)).join('')}</div>`;
+  else if (emp) h += eventosHTML(S, p);
   if (emp && p.jug.length) {
     h += equipoJugado(S, p, true, ju) + equipoJugado(S, p, false, ju);
     // los que no se pueden poner en el campo (no están en la lista de jugadores de LaLiga Fantasy), en lista

@@ -181,3 +181,37 @@ export async function onceRival(tid, n) {
   const ids = idsOnce(await api.onceSemana(tid, n));
   return ids.length >= 5 ? ids : null;
 }
+
+/* ---------------- lo que ha hecho cada jugador en un partido ---------------- */
+// Las estadísticas de la jornada no dicen los minutos ni los goles de cada uno; la ficha de cada jugador de LaLiga
+// Fantasy sí (playerStats de cada jornada, con cada cosa como [cuántas, puntos]), también la de la jornada en juego.
+// Los eventos que dan o quitan puntos de golpe, en el orden en que se enseñan (lo pidió Domy el 25 oct)
+export const EVENTOS = [
+  ['goals', 'gol', 'Gol', 'Goles'],
+  ['goal_assist', 'asis', 'Asistencia', 'Asistencias'],
+  ['offtarget_att_assist', 'asisSin', 'Asistencia sin gol', 'Asistencias sin gol'],
+  ['penalty_won', 'penGana', 'Penalti provocado', 'Penaltis provocados'],
+  ['penalty_save', 'penPara', 'Penalti parado', 'Penaltis parados'],
+  ['penalty_failed', 'penFalla', 'Penalti fallado', 'Penaltis fallados'],
+  ['penalty_conceded', 'penComete', 'Penalti cometido', 'Penaltis cometidos'],
+  ['own_goals', 'propia', 'Gol en propia', 'Goles en propia'],
+  ['yellow_card', 'am', 'Amarilla', 'Amarillas'],
+  ['second_yellow_card', 'am2', 'Segunda amarilla', 'Segundas amarillas'],
+  ['red_card', 'roja', 'Roja', 'Rojas'],
+];
+/**
+ * de la ficha de un jugador (la respuesta de /player/{id}), lo que hizo en la jornada n:
+ * { min, pts, ev: { gol: [cuántos, puntos], … } } o null si esa jornada no está
+ */
+export function hechosSemana(r, n) {
+  const d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r || {};
+  const pm = d.playerMaster && typeof d.playerMaster === 'object' ? d.playerMaster : d;
+  const l = Array.isArray(pm.playerStats) ? pm.playerStats : Array.isArray(d.playerStats) ? d.playerStats : [];
+  const s = l.find((x) => x && Number(x.weekNumber) === Number(n));
+  if (!s || !s.stats || typeof s.stats !== 'object') return null;
+  const par = (k) => { const v = s.stats[k]; if (v == null) return null; const a = Array.isArray(v) ? v : [v, null]; const c = Number(a[0]) || 0; return c ? [c, a[1] == null ? null : Number(a[1]) || 0] : null; };
+  const ev = {};
+  for (const [k, c] of EVENTOS) { const v = par(k); if (v) ev[c] = v; }
+  const m = s.stats.mins_played;
+  return { min: m == null ? null : Number(Array.isArray(m) ? m[0] : m) || 0, pts: s.totalPoints == null ? null : Number(s.totalPoints), ev };
+}
