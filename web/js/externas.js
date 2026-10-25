@@ -6,7 +6,8 @@
    - Las alineaciones confirmadas (SofaScore o, si no deja, futbolfantasy), en cuanto salen, una hora antes de cada partido.
    Todo pasa por el puente de la app (sin CORS) y se guarda un rato para no repetir. */
 import { http } from './puente.js';
-import { api, apuntarRegistro } from './api.js';
+import { api, apuntarRegistro, registro } from './api.js';
+import { guardarMuestraVivo } from './vivo.js';
 import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe } from './util.js';
 
 const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36';
@@ -68,25 +69,29 @@ export function parseOnce(html) {
 /**
  * ¿la página de un equipo dice ya «Alineación confirmada»? Futbolfantasy lo apunta en los últimos eventos del equipo,
  * con día y hora de España («25/10 19:41 Alineación confirmada de Real Madrid»); cuando sale, los 11 titulares quedan
- * al 100 % y todos los demás al 0 %. Devuelve { mes, dia, h, mi } de la más reciente, o null. (Esa línea se queda en
- * la página días después: quien la usa mira que sea de la hora de su partido, `confirmadaPara`.)
+ * al 100 % y todos los demás al 0 %. Devuelve todas las que encuentra, de la primera a la última, como
+ * [{ mes, dia, h, mi }] (en la página puede salir más de una: la de otra jornada, en noticias o en el calendario;
+ * quien la usa mira cuál es de la hora de su partido, `confirmadaPara`).
  */
 export function confirmadaFF(html) {
-  if (!html) return null;
-  const txt = String(html).replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ');
-  const m = txt.match(/(\d{1,2})\/(\d{1,2})\s*(\d{1,2}):(\d{2})\s*Alineaci(?:ó|o|&oacute;|&#243;|&#xf3;)n\s+confirmada/i);
-  return m ? { mes: +m[2], dia: +m[1], h: +m[3], mi: +m[4] } : null;
+  if (!html) return [];
+  const txt = String(html).replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;|&#xa0;/gi, ' ');
+  const out = [];
+  for (const m of txt.matchAll(/(\d{1,2})\/(\d{1,2})\s*(\d{1,2}):(\d{2})\s*Alineaci(?:ó|o|&oacute;|&#243;|&#xf3;)n\s+confirmada/gi)) out.push({ mes: +m[2], dia: +m[1], h: +m[3], mi: +m[4] });
+  return out;
 }
 /** la hora de pared de España de un instante, en ms «de reloj» (para comparar con la que pone futbolfantasy) */
 const paredEs = (t) => { const [y, mo, d] = diaDe(t).split('-').map(Number); const [h, mi] = horaDe(t).split(':').map(Number); return Date.UTC(y, mo - 1, d, h, mi); };
-/** ¿esa confirmación es de este partido? (de las 5 h antes de que empiece a la hora y media después) */
-export function confirmadaPara(c, inicio) {
-  if (!c || !inicio) return false;
+/** ¿alguna de esas confirmaciones es de este partido? (de las 5 h antes de que empiece a la hora y media después) */
+export function confirmadaPara(cs, inicio) {
+  if (!inicio) return false;
   const K = paredEs(inicio), anyo = new Date(K).getUTCFullYear();
-  let C = Date.UTC(anyo, c.mes - 1, c.dia, c.h, c.mi);
-  if (C - K > 180 * DIA) C = Date.UTC(anyo - 1, c.mes - 1, c.dia, c.h, c.mi);
-  else if (K - C > 180 * DIA) C = Date.UTC(anyo + 1, c.mes - 1, c.dia, c.h, c.mi);
-  return K - C >= -90 * MIN && K - C <= 5 * HORA;
+  return (Array.isArray(cs) ? cs : cs ? [cs] : []).some((c) => {
+    let C = Date.UTC(anyo, c.mes - 1, c.dia, c.h, c.mi);
+    if (C - K > 180 * DIA) C = Date.UTC(anyo - 1, c.mes - 1, c.dia, c.h, c.mi);
+    else if (K - C > 180 * DIA) C = Date.UTC(anyo + 1, c.mes - 1, c.dia, c.h, c.mi);
+    return K - C >= -90 * MIN && K - C <= 5 * HORA;
+  });
 }
 
 /** casa los jugadores del once probable con los de la API: { pid: { titular, alternativa, prob, estado } } */
@@ -100,6 +105,33 @@ export function unirOnce(lista, jugadoresEquipo) {
     if (j && !out[j.id]) out[j.id] = { titular: x.titular, alternativa: x.alternativa, prob: x.prob, estado: x.estado };
   }
   return out;
+}
+
+/**
+ * casa los titulares de futbolfantasy con los jugadores de la API, uno a uno (cada jugador, a un solo titular): de lo más
+ * seguro a lo menos (el nombre entero, parte del nombre, el nombre corto, una palabra de 4 letras o más en común); si a
+ * un titular le caben varios, el de nombre más largo si lo es claramente, y si no, se deja sin casar.
+ * Devuelve { ids: [pid], sin: [nombres que no se han casado] }.
+ */
+export function unirTitulares(lista, plantilla) {
+  const libres = new Set(plantilla.map((j) => j.id));
+  const pend = lista.filter((x) => x.titular);
+  const ids = [];
+  const pal = (t) => norm(t).split(' ').filter((w) => w.length >= 4);
+  const pasos = [
+    (x, j) => { const l = norm(x.nombre); return !!l && (norm(j.largo) === l || norm(j.nombre) === l) || (!!norm(x.corto) && norm(j.nombre) === norm(x.corto)); },
+    (x, j) => { const l = norm(x.nombre), n = norm(j.nombre); return !!l && n.length >= 3 && (l.includes(n) || norm(j.largo).includes(l)); },
+    (x, j) => { const c = norm(x.corto); return c.length > 3 && norm(j.nombre).includes(c); },
+    (x, j) => { const a = new Set([...pal(x.nombre), ...pal(x.corto)]); return [...pal(j.nombre), ...pal(j.largo)].some((w) => a.has(w)); },
+  ];
+  for (const f of pasos) {
+    for (const x of [...pend]) {
+      const c = plantilla.filter((j) => libres.has(j.id) && f(x, j)).sort((a, b) => norm(b.nombre).length - norm(a.nombre).length);
+      if (!c.length || (c.length > 1 && norm(c[0].nombre).length === norm(c[1].nombre).length)) continue;
+      ids.push(String(c[0].id)); libres.delete(c[0].id); pend.splice(pend.indexOf(x), 1);
+    }
+  }
+  return { ids, sin: pend.map((x) => x.nombre || x.corto) };
 }
 
 /** los onces probables de todos los equipos (se guardan 6 horas) */
@@ -639,16 +671,28 @@ async function onceFF(D, partidos, P, ahora) {
     const eqs = { ...prev.eqs }, jug = { ...prev.jug };
     const pedir = [p.localId, p.visitanteId].filter((id) => slugs[id] && !eqs[id]);
     await enParalelo(pedir, 2, async (eq) => {
-      const t0 = Date.now();
-      const r = await http('GET', `https://www.futbolfantasy.com/laliga/equipos/${slugs[eq]}`, { cabeceras: { Accept: 'text/html', 'Accept-Language': 'es-ES,es;q=0.9', 'User-Agent': UA } });
-      apuntarRegistro({ ruta: `futbolfantasy alineación ${slugs[eq]}`, s: r.s, ms: Date.now() - t0, e: r.e });
-      if (r.s !== 200 || !r.b || !confirmadaPara(confirmadaFF(r.b), p.fecha)) return;
-      const un = unirOnce(parseOnce(r.b), porEquipo[eq] || []);
-      const tit = Object.keys(un).filter((id) => un[id].titular && (un[id].prob == null || un[id].prob >= 90));
-      const porteros = tit.filter((id) => D.maestro[id] && D.maestro[id].pos === 1).length;
-      if (tit.length !== 11 || porteros !== 1) { apuntarRegistro({ ruta: `futbolfantasy alineación ${slugs[eq]}`, s: 200, ms: 0, e: `confirmada, pero salen ${tit.length} titulares y ${porteros} porteros: no se usa` }); return; }
-      for (const j of porEquipo[eq] || []) if (j.pos !== 5) jug[j.id] = tit.includes(String(j.id)) ? 'titular' : 'nosale';
+      const t0 = Date.now(), ruta = `futbolfantasy alineación ${slugs[eq]}`;
+      // (con la hora en la dirección: si no, una caché de por medio da la página de antes de confirmarse)
+      const r = await http('GET', `https://www.futbolfantasy.com/laliga/equipos/${slugs[eq]}?_=${Math.floor(Date.now() / (3 * MIN))}`, { cabeceras: { Accept: 'text/html', 'Accept-Language': 'es-ES,es;q=0.9', 'User-Agent': UA } });
+      // (una sola línea por motivo: se mira cada 3 minutos y el registro es corto)
+      const nota = (e) => { const ant = registro.find((x) => x.ruta === ruta); if (!ant || ant.e !== e) apuntarRegistro({ ruta, s: r.s, ms: Date.now() - t0, e }); };
+      if (r.s !== 200 || !r.b) { nota(r.e); return; }
+      const cs = confirmadaFF(r.b);
+      if (!confirmadaPara(cs, p.fecha)) { nota(cs.length ? `confirmada, pero no de la hora de este partido (${cs.slice(0, 3).map((c) => `${c.dia}/${c.mes} ${c.h}:${String(c.mi).padStart(2, '0')}`).join(', ')})` : 'aún sin «Alineación confirmada»'); return; }
+      const plantilla = porEquipo[eq] || [];
+      const { ids, sin } = unirTitulares(parseOnce(r.b), plantilla);
+      const porteros = ids.filter((id) => D.maestro[id] && D.maestro[id].pos === 1).length;
+      guardarMuestraVivo(`futbolfantasy ${slugs[eq]}`, `casados ${ids.length} (porteros ${porteros}); sin casar: ${sin.join(', ') || 'ninguno'}`);
+      // 11 casados, o 10 con uno que no se ha podido casar (el nombre no se parece)
+      if (!(porteros === 1 && (ids.length === 11 || (ids.length === 10 && sin.length === 1)))) { nota(`confirmada, pero salen ${ids.length} titulares casados y ${porteros} porteros${sin.length ? ` (sin casar: ${sin.join(', ')})` : ''}: no se usa`); return; }
+      // (con 10: solo se marcan los 10 que se han casado; de los demás no se dice nada, porque uno de ellos es el que falta)
+      for (const j of plantilla) {
+        if (j.pos === 5) continue;
+        if (ids.includes(String(j.id))) jug[j.id] = 'titular';
+        else if (ids.length === 11) jug[j.id] = 'nosale';
+      }
       eqs[eq] = Date.now();
+      nota(ids.length === 11 ? 'once confirmado leído' : `once confirmado leído (uno sin casar: ${sin[0]})`);
     });
     P[clave] = { ...prev, t: Date.now(), ini: p.fecha, eqs, jug, conf: !!(eqs[p.localId] && eqs[p.visitanteId]) };
   }
