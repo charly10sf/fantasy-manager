@@ -118,15 +118,25 @@ export function demo() {
     const lista = [...ordenEq.slice(rot), ...ordenEq.slice(0, rot)];
     for (let i = 0; i < 10; i++) {
       const fecha = f0 + Math.floor(i / 3) * DIA + (i % 3) * 2.25 * HORA;
-      partidos.push({ id: `p${n}-${i}`, jornada: +n, fecha, localId: lista[i], visitanteId: lista[19 - i], local: EQUIPOS[lista[i]][0], visitante: EQUIPOS[lista[19 - i]][0], gl: null, gv: null, estado: null });
+      // los que ya han empezado, con su marcador y su estado (7 acabado, 2 o 4 jugándose), como los da LaLiga: si no, la
+      // jornada en juego salía con partidos de ayer «por jugar» (revisión del 25 oct)
+      let gl = null, gv = null, st = null;
+      if (fecha <= ahora) {
+        const pasado = ahora - fecha;
+        const g = () => Math.max(0, Math.round(0.4 + r() * 2.2 - 0.6));
+        gl = g(); gv = g(); st = pasado > 2 * HORA ? 7 : pasado > HORA ? 4 : 2;
+        if (st !== 7) { gl = Math.min(gl, 1); gv = Math.min(gv, 1); }
+      }
+      partidos.push({ id: `p${n}-${i}`, jornada: +n, fecha, localId: lista[i], visitanteId: lista[19 - i], local: EQUIPOS[lista[i]][0], visitante: EQUIPOS[lista[19 - i]][0], gl, gv, st, estado: null });
     }
   }
 
-  // resultados de las jornadas 1 a 9, con equipos más fuertes que otros
+  // resultados de las jornadas 1 a 8, con equipos más fuertes que otros; los de la 9 son sus partidos ya acabados
+  // (antes salía también una J9 inventada con otros cruces: Clubes y la ficha de un club no cuadraban con Directo)
   const fuerza = Object.fromEntries(ordenEq.map((id, i) => [id, 0.6 + ((i * 7) % 20) / 14]));
   fuerza['15'] = 2.1; fuerza['3'] = 2.2; fuerza['2'] = 1.7; fuerza['43'] = 0.5; fuerza['10'] = 0.6;
   const resultados = [];
-  for (let n = 1; n <= 9; n++) {
+  for (let n = 1; n <= 8; n++) {
     const rot = (n * 5) % ordenEq.length;
     const lista = [...ordenEq.slice(rot), ...ordenEq.slice(0, rot)];
     for (let i = 0; i < 10; i++) {
@@ -135,6 +145,7 @@ export function demo() {
       resultados.push({ jornada: n, localId: a, visitanteId: b, gl: gol(fuerza[a] * 1.1), gv: gol(fuerza[b]) });
     }
   }
+  for (const p of partidos) if (p.st === 7) resultados.push({ jornada: p.jornada, localId: p.localId, visitanteId: p.visitanteId, gl: p.gl, gv: p.gv });
 
   const actividad = [];
   const nombres = clasif.map((e) => e.manager);

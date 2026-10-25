@@ -1832,7 +1832,7 @@ export function planAuto(D, M, c) {
     const x = M.mias.find((y) => y.pid === pid);
     if (!x) continue;
     op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: 'con el blindaje de LaLiga (gratis, viendo un anuncio)', importe: 0, cuando: 'ahora',
-      motivo: `Su cláusula (${eur(x.clausula)}) está abierta y algún rival la puede pagar; te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada. El blindaje la protege ${M.ESCUDO_H} h sin gastar nada (te quedan ${(M.escudosMios || {}).quedan} esta jornada).` });
+      motivo: `Su cláusula (${eur(x.clausula)}) está abierta y algún rival la puede pagar; ${x.pierde >= 0.5 ? `te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada` : 'aunque no te puntúe, te lo quitarían casi a su valor: vendiéndolo a LaLiga sacarías más y reponerlo cuesta más'}. El blindaje la protege ${M.ESCUDO_H} h sin gastar nada (te quedan ${(M.escudosMios || {}).quedan} esta jornada).` });
   }
   for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale))).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
     const b = x.blindaje;

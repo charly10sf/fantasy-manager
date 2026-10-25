@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.3d';
+export const VERSION = '0.6.3e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.6.3d';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.3e', f: '2026-10-25', h: '02:12', t: 'La liga de ejemplo, al día',
+    cosas: [
+      { tipo: 'arreglo', d: 'campo', t: 'La liga de ejemplo, al día', x: 'En la liga de ejemplo, los partidos de la jornada en juego que ya se han jugado salen con su resultado, y Clubes, Directo y la ficha de cada club cuentan lo mismo.' },
+      { menor: true, tipo: 'arreglo', d: 'escudo', t: 'Detalles del escudo y del plan', x: 'El escudo dice las horas que da tu liga (48 en las Premium), la IA ya no llama «plan de hoy» a uno de otro día, y lo que puedes gastar sale con la misma cifra en Hoy y en Mercado.' },
+    ],
+  },
   {
     v: '0.6.3d', f: '2026-10-25', h: '02:07', t: 'Un plan de la IA que se puede hacer',
     cosas: [
