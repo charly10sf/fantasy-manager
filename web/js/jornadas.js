@@ -73,7 +73,9 @@ export function jornadasHTML(S) {
   const i = lista.findIndex((j) => j.n === n);
   const ant = i > 0 ? lista[i - 1].n : null, sig = i >= 0 && i < lista.length - 1 ? lista[i + 1].n : null;
   const flecha = (m, ic, txt) => `<button class="jor-fl" ${m ? `data-accion="verJornada" data-n="${m}"` : 'disabled'} aria-label="${txt}">${icono(ic)}</button>`;
-  h += `<div class="jor-cab">${flecha(ant, 'atras', 'Jornada anterior')}<div class="jor-t"><b>Jornada ${n}</b><span>${sub}${campo.length ? ` · ${forma.join('-')}` : ''}</span></div>${flecha(sig, 'flecha', 'Jornada siguiente')}
+  // la formación solo si LaLiga la da (con huecos, contar por líneas da cosas como «3-2-3»)
+  const formaTxt = g && g.forma && campo.length ? ` · ${g.forma.join('-')}${11 - campo.length > 0 ? ` con ${11 - campo.length} hueco${11 - campo.length > 1 ? 's' : ''}` : ''}` : campo.length === 11 ? ` · ${forma.join('-')}` : '';
+  h += `<div class="jor-cab">${flecha(ant, 'atras', 'Jornada anterior')}<div class="jor-t"><b>Jornada ${n}</b><span>${sub}${formaTxt}</span></div>${flecha(sig, 'flecha', 'Jornada siguiente')}
     ${total != null ? `<div class="jor-pts"><b>${total}</b><small>pts</small>${puesto ? `<span>${puesto}º de ${deN} en la jornada</span>` : ''}</div>` : ''}</div>`;
 
   if (!g || (S.cargandoJ && S.cargandoJ[n] && !g.ids)) return h + `<p class="t2 peq">Mirando en LaLiga tu once de la jornada ${n}…</p>`;

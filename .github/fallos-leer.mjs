@@ -2,7 +2,7 @@
 //   node .github/fallos-leer.mjs llave              → crea (o reutiliza) la llave de este chat y saca la pública
 //   node .github/fallos-leer.mjs leer fallos.enc    → los avisos, legibles (DIAG=1 para ver también el diagnóstico;
 //                                                      CAPTURAS=<carpeta> guarda ahí las de los que están sin contestar)
-//   el fallos.enc de la última vez: git -C /home/claude/fantasy-manager-avisos pull (repo privado, añadirlo a la sesión)
+//   el fallos.enc de la última vez: git -C <clon> fetch -q origin main && git -C <clon> reset -q --hard FETCH_HEAD (repo privado fantasy-manager-avisos)
 // La privada se queda en ~/.fm/fallos.key, fuera del repo, y no se sube a ningún sitio: cada chat nuevo crea la suya.
 import { constants, createDecipheriv, generateKeyPairSync, privateDecrypt } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';

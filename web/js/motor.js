@@ -1200,7 +1200,8 @@ export function analizar(D, H, c, extra = {}) {
         const coste = (t) => Math.ceil((t - x.clausula) / 2 / 1e4) * 1e4;
         // y no compensa gastar en blindarlo más de una cuarta parte de lo que vale
         const tope = x.j.valor / 4;
-        x.blindaje = T > x.clausula ? { objetivo: T, coste: coste(T), rico: caps[0].nombre, caro: coste(T) > tope, porTecho: T < T0, techoPct: czP } : { objetivo: x.clausula, coste: 0, rico: caps[0].nombre, yaVale: true };
+        const aSalvo = x.ratio != null && x.ratio >= 1 + czP + 0.05;
+        x.blindaje = T > x.clausula && !aSalvo ? { objetivo: T, coste: coste(T), rico: caps[0].nombre, caro: coste(T) > tope, porTecho: T < T0, techoPct: czP } : { objetivo: x.clausula, coste: 0, rico: caps[0].nombre, yaVale: true };
         // si dejarlo fuera del alcance de todos no compensa: la subida más barata que deja fuera a casi todos
         if (x.blindaje.caro) {
           // (solo si deja fuera a casi todos: con más de dos que aún pueden, no protege)

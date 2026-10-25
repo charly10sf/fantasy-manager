@@ -197,7 +197,7 @@ export function fichaJugador(S, pid) {
       // solo a quién le llega, sin cuánto tiene (eso es «dinero de los rivales», que va aparte)
       const lista = [...pg.seguro.map((x) => `<b>${esc(x.nombre)}</b>`), ...pg.quiza.map((x) => `${esc(x.nombre)} (justo)`)];
       const b = mia.blindaje;
-      const bl = !b || b.yaVale ? '' : b.caro ? ` Dejarla fuera del alcance de todos costaría ${eur(b.coste)}: no compensa para lo que vale.${b.parcial ? ` <b>Lo que sí compensa:</b> subirla a ${eur(b.parcial.objetivo)} (te cuesta ${eur(b.parcial.coste)}) y solo le llegaría a ${esc(b.parcial.quedan.join(', '))}.` : ''}` : ` <b>Blindaje justo:</b> subirla a ${eur(b.objetivo)} te cuesta ${eur(b.coste)} y no le llegaría a nadie.`;
+      const bl = !b || b.yaVale ? '' : b.caro ? ` Dejarla fuera del alcance de todos costaría ${eur(b.coste)}: no compensa para lo que vale.${b.parcial ? ` <b>Lo que sí compensa:</b> subirla a ${eur(b.parcial.objetivo)} (te cuesta ${eur(b.parcial.coste)}) y solo le llegaría a ${esc(b.parcial.quedan.join(', '))}.` : ''}` : ` <b>Blindaje justo:</b> subirla a ${eur(b.objetivo)} te cuesta ${eur(b.coste)} y ${b.porTecho ? 'quedaría por encima de lo que se suele pagar en tu liga por una cláusula' : 'no le llegaría a nadie'}.`;
       h += `<div class="aviso-ficha ${nadie ? 'verde' : pg.seguro.length ? '' : 'oro'}">${icono('rivales')}<div>${nadie ? '<b>Ahora mismo no le llega a ningún rival.</b> Podrían juntarlo vendiendo, pero hoy no.' : `<b>Les llega:</b> ${lista.join(', ')}.`}${pg.sinSaber.length ? ` <span class="t2">(De ${pg.sinSaber.length} no se sabe el dinero.)</span>` : ''}${bl}</div></div>`;
     }
   } else {

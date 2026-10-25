@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.3c';
+export const VERSION = '0.6.3d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.6.3c';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.3d', f: '2026-10-25', h: '02:07', t: 'Un plan de la IA que se puede hacer',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan no se pasa de lo que puedes gastar', x: 'Si la IA proponía pujas por más de lo que puedes gastar (tu saldo más el margen de deuda, menos lo que ya tienes pujado) o una cláusula que no te llega con tu saldo, salía con un aviso. Ahora la app las descarta y no las cuenta en el saldo final.' },
+      { tipo: 'arreglo', d: 'escudo', t: 'Los blindajes, con cuentas que cuadran', x: 'Una cláusula que ya está por encima de lo que se suele pagar en tu liga ya no sale con «súbela», y el texto ya no dice «no le llega a nadie» cuando sí le llega a alguno. Un escudo para una cláusula que aún no se ha abierto va para cuando se abra.' },
+      { tipo: 'arreglo', d: 'campo', t: 'Detalles de Equipo e IA', x: 'En Jornadas ya no sale una formación inventada cuando faltan jugadores; la IA ya no confunde nombres de managers con jugadores ni se contradice con el motor sobre las cláusulas a su valor, y «Le llega a N» de Cláusulas va dentro de «quién puede pagar tu cláusula».' },
+    ],
+  },
   {
     v: '0.6.3c', f: '2026-10-25', h: '02:48', t: 'Los partidazos, por escalones',
     cosas: [

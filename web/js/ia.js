@@ -530,7 +530,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   }
   if (M.ventanaEsp) {
     const v = M.ventanaEsp;
-    if (M.enJuego || v.ciclos < 1) L.push(`\nNO ESPECULES AHORA: ${M.enJuego ? 'la jornada está en juego' : 'antes de la jornada no queda ningún cambio de mercado que cuente (el del mismo día en que empieza la jornada no cuenta)'}. Lo que compre ahora no lo puede vender a tiempo: nada de comprar «para revender».`);
+    if (v.ciclos < 1) L.push(`\nNO ESPECULES AHORA: ${M.enJuego ? `la jornada ${M.enJuego.n} está en juego y antes de la siguiente no da tiempo` : 'antes de la jornada no queda ningún cambio de mercado que cuente (el del mismo día en que empieza la jornada no cuenta)'}. Lo que compre ahora no lo puede vender a tiempo: nada de comprar «para revender».`);
     else L.push(`\nESPECULAR: hasta la jornada quedan ${v.ciclos} cambio${v.ciclos === 1 ? '' : 's'} de mercado que cuentan (${v.cambios.map((t) => cuando(t)).join(', ')}); el del mismo día que empieza la jornada NO cuenta. Lo de revender se pone a la venta ${cuando(v.ponerVenta)} para aceptar la oferta del cambio de ${cuando(v.ultimoMercado)}. Una compra en el mercado llega en el siguiente cambio y luego hay que ponerla a la venta: necesita 2 cambios; una cláusula, 1. Margen: puede bajar hasta −${eur(M.deuda)} entre medias.`);
     if (M.paraRevender && M.paraRevender.length) L.push(`COMPRADOS PARA REVENDER: ${M.paraRevender.map((x) => `${x.j.nombre} (comprado a ${eur(x.rev.precio)}, vale ${eur(x.j.valor)}, ${eur(x.beneficioYa, { signo: true })})`).join('; ')}.`);
     if (M.especular && M.especular.length) {
@@ -602,12 +602,12 @@ Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (ent
 CLÁUSULAS TUYAS: el riesgo de cada jugador te lo paso calculado con el dinero de cada rival y lo que se paga en esta liga; no lo rebajes sin un dato nuevo. NUNCA digas que te viene bien que te clausulen a uno por su valor (ni «ponle un lacito», ni «así haces caja»): con la cláusula a su valor o cerca te lo quitan sin pagar nada de más, pierdes sus puntos y lo que suba, el otro puede revenderlo con beneficio y tú pagarías más por otro igual. Solo es buena noticia si la cláusula está muy por encima de su valor y el jugador no te aporta. Si no compensa protegerlo, dilo así: que es un riesgo que asumes, no un regalo.
 VENDER SIN NECESIDAD: no le hagas vender para «hacer caja» si el dinero no hace falta (está en positivo y no lo necesita para algo de este mismo plan) y el jugador no entra en su once: puede quedarse hasta que LaLiga le haga una oferta mejor (hace una nueva en cada cambio de mercado), y que sea suplente o falte poco para la jornada no es motivo para venderlo. Vende solo si la oferta es buena (por encima de su valor o de las altas en su liga), si su valor cae deprisa (más de un 3 % al día), si está lesionado o si hace falta el dinero. Si le aconsejas esperar, díselo así.
 LO QUE PAGÓ: de cada uno te paso «pagué X». Cuando propongas vender, di cuánto gana o pierde frente a eso. Vender perdiendo dinero frente a lo que pagó solo si hace falta el dinero o si está bajando (por la inercia, una lesión…): en ese caso lo que pagó no cambia nada, lo perdido ya no vuelve y esperar solo pierde más. Si no hace falta el dinero y no baja, que espere a una oferta mejor.
-VERSIÓN GRATIS SIN ENTRENADOR: no se alinea entrenador ni puntúa. No recomiendes nunca fichar, pujar ni clausular entrenadores; si tiene alguno, es dinero parado: véndelo para hacer caja.
+VERSIÓN GRATIS SIN ENTRENADOR: no se alinea entrenador ni puntúa. No recomiendes nunca fichar, pujar ni clausular entrenadores; si tiene alguno, es dinero parado: véndelo cuando llegue una buena oferta o cuando haga falta el dinero.
 CADA JUGADOR TE LLEGA CON: sus últimas jornadas con el rival de cada una y el resultado («J9 11 vs Getafe 19º 2-0»), lo que rinde en casa, fuera, contra los 6 primeros y contra los 6 últimos, y la PREVIA de su próximo partido (cómo llegan los dos equipos en los últimos 5, lo que marca y encaja el rival, cómo le va al rival jugando en ese campo, la portería a cero esperada para porteros y defensas o los goles esperados de su equipo para medios y delanteros, y los puntos esperados). Úsalo: un jugador que solo puntúa contra los de abajo no es fiable contra el Madrid; un defensa con un 15 % de portería a cero puntuará poco aunque sea titular; uno que rinde fuera igual que en casa es más seguro. Compara siempre lo que le toca ahora con lo que ha hecho contra rivales parecidos.
 ESTADÍSTICAS AVANZADAS (cuando las hay): mira más allá de los puntos del Fantasy. xG y xA por 90 dicen las ocasiones que genera de verdad: si marca mucho menos de lo que dice su xG, es probable que lleguen los goles (y al revés, si marca mucho más, puede bajar). Tiros y pases clave por 90 son la base de los puntos de un medio o un delantero; entradas, intercepciones y recuperaciones, los de un defensa o un medio defensivo; las paradas y las porterías a cero, los de un portero. La nota media y su tendencia (las últimas) avisan de si está en forma o de si puede perder el sitio. Y el xG que genera y concede cada equipo (sobre todo en los últimos 5) dice mejor que los goles cómo de difícil es un partido. Úsalo para afinar, sobre todo entre candidatos parecidos.
 INERCIA DEL VALOR: con cada jugador va lo que ha cambiado su valor cada día de la última semana. Mira hacia dónde va AHORA, no el total de la semana. Si sube cada vez menos (1 M, 800 mil, 500 mil…) está FRENANDO y va a girar: hay que anticiparse y venderlo antes de que empiece a bajar (te digo en cuántos días deja de subir). Si después de subir se ha estancado o ya baja (HA GIRADO A LA BAJA), lo normal es que siga bajando varios días: es VENTA casi obligatoria para no perder lo ganado; solo se queda si es imprescindible en el once para la jornada que viene, y entonces dilo con cifras (lo que perdería de valor hasta la jornada frente a los puntos que da) y dile qué hacer después. Para comprar, y sobre todo para revender, nada que esté frenando o haya girado: tiene que seguir subiendo hasta el día de venderlo.
 PUNTOS ESPERADOS POR PARTES: los de cada jugador vienen desglosados como puntúa LaLiga Fantasy (min: minutos; gol: con su xG; asis: con su xA; cero: portería a cero con lo que marca el rival; encaja: goles encajados; paradas; tarj: tarjetas; resto: la nota de DAZN, recuperaciones, tiros…), con la probabilidad de ser titular juntando el once probable, sus últimos partidos y la temporada. Úsalo para entender de dónde salen sus puntos: un defensa que vive de la portería a cero vale poco contra un equipo que marca mucho; un delantero con mucho xG y pocos goles está para marcar. Si su equipo juega Champions, Europa League, Conference o Copa pegada a la jornada, va marcado como ROTACIÓN: mira en la prensa si su entrenador suele rotar antes de ponerlo de titular o de ficharlo para esa jornada.
-SI TE CLAUSULAN, COBRAS LA CLÁUSULA: lo que se pierde es lo que ese jugador te puntúa (y lo que fuera a subir), no su valor. Así que proteger solo merece la pena con jugadores importantes en su once y con la cláusula cerca de su valor; un suplente con la cláusula en su valor o un titular con la cláusula un 30 % o más por encima (y menos si está bajando) no corren ningún riesgo: nadie paga tanto de más. Y cuenta también los EUROS de más, no solo el porcentaje: un 20 % por encima son 1 M en uno de 5 M (alguien lo paga) y 16 M en uno de 80 M (nadie). Mira también hasta dónde se ha llegado en los clausulazos de esta liga. Y nunca digas que una cláusula «casi no pasa de su valor» si pasa más de un 10 %: dilo en porcentaje.
+SI TE CLAUSULAN, COBRAS LA CLÁUSULA, pero con la cláusula en su valor o cerca es regalarlo: pierdes sus puntos y lo que suba, vendiéndolo a LaLiga sacarías más y reponerlo cuesta más, aunque sea suplente. El riesgo de cada uno te lo paso calculado: no lo rebajes. Una cláusula un 30 % o más por encima de su valor (y menos si está bajando) corre poco riesgo: casi nadie paga tanto de más. Y cuenta también los EUROS de más, no solo el porcentaje: un 20 % por encima son 1 M en uno de 5 M (alguien lo paga) y 16 M en uno de 80 M (nadie). Mira también hasta dónde se ha llegado en los clausulazos de esta liga. Y nunca digas que una cláusula «casi no pasa de su valor» si pasa más de un 10 %: dilo en porcentaje.
 DINERO DE LOS RIVALES: te paso el de cada uno, exacto si LaLiga lo da o estimado con vuestros movimientos (con su margen). Úsalo para saber quién puede ir a por cada cláusula: una cláusula abierta que no le llega a nadie es poco riesgo hoy (aunque podrían vender para juntar el dinero), y si a varios les sobra, hay que blindar o asumirlo. Para blindar te paso el «blindaje justo» (subir la cláusula X cuesta X/2): propón esa cifra, no un número al azar, y solo si el jugador lo merece. Ya tiene en cuenta lo que de verdad se paga en su liga por una cláusula: no hace falta dejarla por encima de todo el dinero del más rico (nadie paga el doble de lo que vale un jugador), así que no hables de subirla más que eso. Si te paso que NO compensa, dilo en una frase con esa cifra; no hagas cuentas tuyas para «sacarlo del alcance» de nadie. Y un rival sin dinero no va a pujar fuerte en el mercado ni a clausular.
 PUJAS EN ESTA LIGA: te paso lo que se paga de verdad aquí por los libres (mediana, el rango normal, por los caros y por los baratos, y lo que paga cada rival). La puja que propongas tiene que salir de ahí: por uno que buscará todo el mundo, hacia la parte alta; por uno que no mira nadie, cerca de la mínima. Dila con su % sobre el valor.
 APRENDE DE LO QUE FALLA: en «CÓMO VAN TUS ACIERTOS» te digo cuánto fallan los puntos esperados y cómo salieron tus recomendaciones de los últimos días. Si algo salió mal, piensa por qué (¿no jugó?, ¿el rival?, ¿se pagó de más?) y no lo repitas; si un tipo de operación sale bien, sigue por ahí.
@@ -641,7 +641,7 @@ const PULLITAS = {
 // las funciones top bloqueadas (hasta los anuncios): la IA las usa para decidir, pero no da las cifras
 const SOBRE_BLOQUEO = {
   dineroRivales: 'cuánto dinero tiene cada rival (no des cifras de su saldo ni de lo que pueden gastar)',
-  quienPaga: 'qué rivales pueden pagar cada una de mis cláusulas (no digas nombres de quién me la puede pagar ni cuánto subirla para que no le llegue a nadie)',
+  quienPaga: 'qué rivales pueden pagar cada una de mis cláusulas (no digas nombres de quién me la puede pagar; el blindaje justo, cuánto subirla, sí lo puedes decir)',
   inercia: 'cuántos días le quedan subiendo o cuándo gira cada jugador (puedes decir si sube o baja, pero no le pongas días ni fecha al giro)',
   ventasRivales: 'lo que LaLiga le ofrece a cada rival por lo que tiene en venta (no des esa cifra ni lo que tiene en venta cada rival si no te lo pregunta por un jugador concreto)',
 };
@@ -741,6 +741,9 @@ export function cuadrarPlan(P, D, M) {
   // lo que hay en caja de verdad: una cláusula solo se paga con saldo (sin deuda), y lo que pones en venta no entra
   // hasta que aceptas una oferta; aceptar una oferta, sí
   let caja = saldo;
+  // lo que se puede pujar o comprar en el mercado: el saldo más el margen de deuda, menos lo ya pujado (M.pujaMax);
+  // poner a la venta no suma nada hasta que aceptas una oferta (revisión del 25 oct)
+  let margen = M.pujaMax != null ? +M.pujaMax : null;
   // cada paso se comprueba contra lo que de verdad se puede hacer hoy
   const cat = M._cat || (M._cat = catalogo(D, M, notasVigentes()));
   const OPERA = ['vender', 'clausular', 'pujar', 'comprar', 'ofertar', 'blindar'];
@@ -771,12 +774,16 @@ export function cuadrarPlan(P, D, M) {
       const pq = porQueNo(D, M, o, pid, j);
       aviso = `La app lo descarta: ${pq.charAt(0).toLowerCase()}${pq.slice(1)}.`;
       signo = accion === 'vender' ? 1 : -1;
+    } else if (opC && !({ A: ['vender'], V: ['vender'], P: ['pujar', 'comprar'], M: ['comprar', 'pujar'], T: ['comprar', 'pujar'], C: ['clausular'], B: ['blindar'] }[opC.ref[0]] || [accion]).includes(accion)) {
+      // la ref dice una cosa y la acción otra (p. ej. «pujar» con la ref de una venta): no se adivina cuál quería
+      descartada = true;
+      aviso = `La app lo descarta: la operación ${opC.ref} no es «${accion}».`;
     } else if (opC) {
       // la acción, el importe y el «dónde» de verdad, según la operación posible
       o.ref = opC.ref;
       switch (opC.ref[0]) {
         case 'A': accion = 'vender'; aceptar = true; signo = 1; importe = opC.precio; o.donde = `oferta de ${opC.de}`; break;
-        case 'V': accion = 'vender'; signo = 1; importe = importe || opC.precio; break;
+        case 'V': accion = 'vender'; signo = 1; importe = importe && importe >= opC.precio * 0.9 ? importe : opC.precio; break;
         case 'P': {
           accion = 'pujar'; signo = -1;
           const puja = o.puja_max != null ? +o.puja_max : importe || opC.puja;
@@ -800,7 +807,7 @@ export function cuadrarPlan(P, D, M) {
           }
           break;
         case 'C': accion = 'clausular'; signo = -1; importe = opC.precio; o.donde = `cláusula a ${opC.de}`; if (!opC.abierta) aviso = opC.veda ? `Cláusulas cerradas hasta que empiece la jornada ${opC.veda.n}: se puede pagar ${cuando(opC.abre)}, no antes` : `Se abre ${cuando(opC.abre)}`; break;
-        case 'B': accion = 'blindar'; signo = importe ? -1 : 0; break;
+        case 'B': accion = 'blindar'; signo = importe ? -1 : 0; if (!importe && !opC.abierta) { o.cuando = `cuando se abra (${cuando(opC.abre)})`; aviso = `El escudo solo vale con la cláusula abierta: úsalo cuando se abra, ${cuando(opC.abre)}.`; } break;
         default: break;
       }
     }
@@ -828,11 +835,18 @@ export function cuadrarPlan(P, D, M) {
     const otroDia = /cuando se abra|se abre|si vendes/i.test(cu) || (opC && opC.tipo === 'clausular' && !opC.abierta && diaDe(opC.abre) !== diaDe()) || (/^(el )?(mañana|lunes|martes|miércoles|jueves|viernes|sábado|domingo)/i.test(cu) && accion !== 'pujar');
     const hoy = (!otroDia || !!(cl && cl.abierta && accion === 'clausular')) && !descartada;
     // una cláusula de hoy que no cabe en la caja: LaLiga no deja clausular quedándote en negativo
-    if (caja != null && accion === 'clausular' && hoy && !ya && importe && importe > caja) aviso = `${aviso ? `${aviso} ` : ''}No te llega: una cláusula solo se paga con saldo, sin deuda, y ahora tendrías ${eur(Math.max(0, caja))}${caja < saldo ? ' (lo que pones en venta no entra hasta que aceptas la oferta)' : ''}.`;
+    if (margen != null && ['pujar', 'comprar'].includes(accion) && hoy && !ya && !descartada && importe) {
+      const mia = opC && opC.miPuja ? +opC.miPuja : 0;
+      if (importe - mia > margen) { descartada = true; aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: no puedes pujar ni comprar por más de ${eur(Math.max(0, margen + mia))} (tu saldo más el margen de deuda, menos lo que ya tienes pujado).`; }
+      else margen -= importe - mia;
+    }
+    if (caja != null && accion === 'clausular' && hoy && !ya && importe && importe > caja) descartada = true;
+    if (caja != null && accion === 'clausular' && hoy && !ya && importe && importe > caja) aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta. No te llega: una cláusula solo se paga con saldo, sin deuda, y ahora tendrías ${eur(Math.max(0, caja))}${caja < saldo ? ' (lo que pones en venta no entra hasta que aceptas la oferta)' : ''}.`;
     // (lo ya hecho ya está en tu saldo de ahora)
-    if (saldo != null && signo && importe && hoy && !ya) {
+    if (saldo != null && signo && importe && hoy && !ya && !descartada) {
       saldo += signo * importe;
       if (signo < 0 || aceptar) caja += signo * importe;
+      if (aceptar && margen != null) margen += importe;
     }
     return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, sobre, ya: !!ya };
   });
@@ -841,7 +855,7 @@ export function cuadrarPlan(P, D, M) {
   if (ES) {
     let libres = ES.quedan;
     for (const o of ops) {
-      if (o.accion !== 'blindar' || o.importe || o.ya || o.descartada) continue;
+      if (o.accion !== 'blindar' || o.importe || o.ya || o.descartada || !o.hoy) continue;
       if (libres > 0) { libres--; continue; }
       o.descartada = true;
       o.aviso = ES.quedan ? `No te queda blindaje para este: te ${ES.quedan === 1 ? 'queda 1' : `quedan ${ES.quedan}`} esta jornada y ya va${ES.quedan === 1 ? '' : 'n'} en el plan antes.` : `Ya has gastado los ${ES.usados} blindajes de esta jornada: hasta que acabe la jornada no hay más.`;
