@@ -14,7 +14,7 @@ export const VERSION = '0.6.6a';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.6a', f: '2026-10-25', h: '21:01', t: 'El once confirmado de cada equipo',
+    v: '0.6.6a', f: '2026-10-25', h: '21:26', t: 'El once confirmado de cada equipo',
     cosas: [
       { tipo: 'arreglo', d: 'campo', t: 'El once confirmado no salía de un equipo', x: 'Esta noche, antes del Clásico, el once confirmado del Barça salía y el del Madrid no, aunque futbolfantasy lo tenía desde las 19:41. La app daba por bueno un once solo si le casaban los 11 nombres con los de LaLiga y a un equipo le bastaba un nombre raro para quedarse sin él. Ahora casa los nombres uno a uno con más margen, vale con 10 si uno no se parece a ninguno, mira todas las veces que la página dice «confirmada» (no solo la primera) y pide la página de futbolfantasy sin quedarse con una copia vieja.' },
       { para: 'dueño', menor: true, tipo: 'arreglo', d: 'lupa', t: 'El diagnóstico de los onces confirmados', x: 'Si un once confirmado no se lee, el diagnóstico dice por qué (cuántos titulares ha casado, cuál no y si la «confirmada» es de otro partido) y deja una muestra.' },
