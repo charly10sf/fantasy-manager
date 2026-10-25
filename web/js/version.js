@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.3e';
+export const VERSION = '0.6.3f';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.3e';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.3f', f: '2026-10-25', h: '11:16', t: 'Siempre en la última versión',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'versiones', t: 'Siempre en la última versión', x: 'En la web (iPhone y ordenador), cuando sale una versión nueva aparece una ventana en mitad de la pantalla con «Actualizar ahora»: un toque y la tienes. Así nadie se queda con una versión vieja.' },
+    ],
+  },
   {
     v: '0.6.3e', f: '2026-10-25', h: '02:12', t: 'La liga de ejemplo, al día',
     cosas: [

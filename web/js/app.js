@@ -800,8 +800,24 @@ async function mirarWebNueva() {
     const r = await fetch(`paquete.json?t=${Date.now()}`, { cache: 'no-store' });
     if (!r.ok) return;
     const j = await r.json();
-    if (j && j.version && cmpVer(j.version, VERSION) > 0) { const antes = S.webNuevaWeb; S.webNuevaWeb = j; if (!antes && S.D && !S.hoja) pintar(); }
+    if (j && j.version && cmpVer(j.version, VERSION) > 0) { const antes = S.webNuevaWeb; S.webNuevaWeb = j; forzarWebNueva(j); if (!antes && S.D && !S.hoja) pintar(); }
   } catch (e) { /* sin red: ya se mirará */ }
+}
+/* Con versión nueva en la web, una ventana en mitad de la pantalla que no se puede cerrar: «Actualizar ahora» y
+   nada más (lo pidió Carlos el 25 oct: con solo la banda, Domy se quedaba en una vieja). Si tras dos intentos sigue en
+   la vieja (la caché del iPhone), le dice que la cierre del todo */
+function forzarWebNueva(j) {
+  if (enApp || !j || document.getElementById('forzar')) return;
+  let intentos = 0;
+  try { intentos = Number(sessionStorage.getItem('fm-forzar-' + j.version)) || 0; } catch (e) { /* sin almacenamiento */ }
+  const d = document.createElement('div');
+  d.id = 'forzar'; d.className = 'forzar'; d.setAttribute('role', 'alertdialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'forzar-t');
+  d.innerHTML = `<div class="forzar-c"><span class="forzar-ic">${icono('refrescar')}</span><h2 id="forzar-t">Hay una versión nueva</h2>
+    <p>Ya está la <b>${esc(j.version)}</b> y tú tienes la ${esc(VERSION)}. Actualiza para seguir: es un momento y no pierdes nada.</p>
+    ${intentos >= 2 ? '<p class="t2 peq">Si vuelve a salir esto, cierra la web del todo (en el iPhone, desliza hacia arriba y quítala de las apps abiertas) y vuelve a abrirla.</p>' : ''}
+    <button class="btn ancho" data-accion="recargarWeb">Actualizar ahora</button></div>`;
+  document.body.appendChild(d);
+  d.querySelector('button').focus();
 }
 async function recargarWeb() {
   const j = S.webNuevaWeb;
@@ -812,8 +828,13 @@ async function recargarWeb() {
   await Promise.all([pagina, 'index.html'].map((u) => fetch(u, { cache: 'reload' }).catch(() => null)));
   const fs = j && j.archivos ? Object.keys(j.archivos).filter((k) => /\.(js|css|json)$/.test(k)) : [];
   await enParalelo(fs, 6, (k) => fetch(k, { cache: 'reload' }).catch(() => null));
-  location.reload();
+  // con una dirección nueva (?v=), el navegador no puede tirar de la página guardada; al arrancar se quita (limpiarV)
+  try { const k = 'fm-forzar-' + ((j && j.version) || ''); sessionStorage.setItem(k, String((Number(sessionStorage.getItem(k)) || 0) + 1)); } catch (e) { /* sin almacenamiento */ }
+  if (j && j.version) location.replace(`${location.pathname}?v=${encodeURIComponent(j.version)}${location.hash}`);
+  else location.reload();
 }
+// la ?v= que deja recargarWeb, fuera de la barra de direcciones
+(function limpiarV() { try { if (/[?&]v=/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash); } catch (e) { /* nada */ } })();
 async function despues() {
   saludarSiToca();
   mirarWebNueva();

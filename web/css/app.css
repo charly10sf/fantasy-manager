@@ -1521,3 +1521,12 @@ button.pf-eq:active { opacity: 0.7; }
 .jor-fl .ic { width: 20px; height: 20px; }
 .jor-cab .jor-pts { order: 3; }
 .jor-cab .jor-fl:last-of-type { order: 4; }
+
+/* versión nueva de la web: no se puede cerrar (app.js, forzarWebNueva) */
+.forzar { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0, 0, 0, 0.78); }
+.forzar-c { width: 100%; max-width: 360px; background: var(--plano); border: 1px solid var(--linea); border-radius: 18px; padding: 24px 20px 20px; text-align: center; }
+.forzar-c h2 { margin: 10px 0 8px; font-size: 20px; }
+.forzar-c p { margin: 0 0 16px; color: var(--apagado); line-height: 1.45; }
+.forzar-c p b { color: var(--texto); }
+.forzar-ic { display: inline-flex; width: 52px; height: 52px; border-radius: 50%; align-items: center; justify-content: center; background: var(--rojo-s); color: var(--rojo-l); }
+.forzar-ic svg { width: 26px; height: 26px; }
