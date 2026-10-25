@@ -14,7 +14,7 @@ export const VERSION = '0.6.6';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.6', f: '2026-10-25', h: '20:28', t: 'Los onces antes del partido',
+    v: '0.6.6', f: '2026-10-25', h: '20:32', t: 'Los onces antes del partido',
     cosas: [
       { tipo: 'nuevo', d: 'campo', t: 'Los onces de cada partido, antes de que empiece', x: 'Toca un partido que aún no ha empezado y salen los dos onces en el campo: el probable, con el % de cada uno, y, en cuanto sale el oficial (una hora antes), los 11 que van a jugar con «Titular». En la lista de Directo, el partido lleva «Onces confirmados» cuando ya están los dos. El oficial ahora también lo lee de futbolfantasy, porque SofaScore no deja desde la web ni desde algún móvil: llega igual. Con la app abierta se mira cada 3 minutos, y «Tu equipo hoy» te avisa de los tuyos que se quedan fuera.', ir: { v: 'directo' } },
       { para: 'dueño', menor: true, tipo: 'mejora', d: 'lupa', t: 'El diagnóstico con lo que da LaLiga en directo', x: 'El diagnóstico lleva ahora una muestra de lo que devuelve LaLiga con la jornada en juego (la lista de cada partido y la ficha de un jugador, con sus minutos si los trae), para saber de verdad qué datos hay en directo en vez de suponerlo.' },
