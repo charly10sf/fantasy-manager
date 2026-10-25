@@ -416,7 +416,7 @@ function planHTML(S) {
   }
   if (Array.isArray(P.vigilar) && P.vigilar.length) h += `<div class="sec"><h2>Vigila</h2></div>${P.vigilar.map((v) => notaJugador(S, v.jugador, v.texto)).join('')}`;
   if (Array.isArray(P.noticias) && P.noticias.length) h += `<div class="sec"><h2>Noticias que te afectan</h2></div>${P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join('')}`;
-  if (Array.isArray(P.rivales) && P.rivales.length) h += `<div class="sec"><h2>Tus rivales</h2></div>${P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}><span class="ic-act">${icono('rivales')}</span><div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s" style="white-space:normal">${esc(r.texto || '')}</div></div></button>`; }).join('')}`;
+  if (Array.isArray(P.rivales) && P.rivales.length) h += `<div class="sec"><h2>Tus rivales</h2></div>${P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}><span class="ic-act">${icono('rivales')}</span><div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s entero">${esc(r.texto || '')}</div></div></button>`; }).join('')}`;
   h += aciertosHTML(M);
   if (P.fuentes && P.fuentes.length) h += `<div class="sec"><h2>Fuentes</h2></div><div class="fuentes">${P.fuentes.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>`;
   return h + '</div>';
@@ -520,7 +520,7 @@ function notaJugador(S, nombre, texto, efecto) {
   const k = String(nombre || '').toLowerCase();
   const j = Object.values(S.D.maestro).find((x) => x.nombre.toLowerCase() === k) || Object.values(S.D.maestro).find((x) => k && x.nombre.toLowerCase().includes(k));
   const mio = j && S.M.mias.some((x) => x.pid === j.id);
-  return `<button class="fila" ${j ? `data-j="${esc(j.id)}"` : ''}>${j ? ava(j, 'm') : `<span class="ic-act">${icono('info')}</span>`}<div class="fila-c"><div class="fila-n">${esc(nombre || '')}${mio ? '<span class="pill abierta">Tuyo</span>' : ''}</div><div class="fila-s" style="white-space:normal">${esc(texto || '')}</div></div>${efecto ? `<div class="fila-d cifra ${efecto === 'sube' ? 'sube' : efecto === 'baja' ? 'baja' : 'apag'}">${efecto === 'sube' ? '▲' : efecto === 'baja' ? '▼' : '•'}</div>` : ''}</button>`;
+  return `<button class="fila" ${j ? `data-j="${esc(j.id)}"` : ''}>${j ? ava(j, 'm') : `<span class="ic-act">${icono('info')}</span>`}<div class="fila-c"><div class="fila-n">${esc(nombre || '')}${mio ? '<span class="pill abierta">Tuyo</span>' : ''}</div><div class="fila-s entero">${esc(texto || '')}</div></div>${efecto ? `<div class="fila-d cifra ${efecto === 'sube' ? 'sube' : efecto === 'baja' ? 'baja' : 'apag'}">${efecto === 'sube' ? '▲' : efecto === 'baja' ? '▼' : '•'}</div>` : ''}</button>`;
 }
 
 /* ================= HOY ================= */
@@ -777,6 +777,7 @@ export function mercado(S) {
     const liga = M.mercado.filter((m) => m.tipo === 'liga'), man = M.mercado.filter((m) => m.tipo === 'manager' && !M.enVenta.has(m.pid));
     const misPujasN = M.mercado.filter((m) => m.miPuja).length;
     if (misPujasN) h += `<p class="t2 peq" style="margin:0 0 6px">Tienes ${misPujasN} puja${misPujasN > 1 ? 's' : ''} hecha${misPujasN > 1 ? 's' : ''} por ${eur(M.misPujas)} en total.</p>`;
+    h += radarHTML(S);
     if (M.misVentas.length) h += `<p class="t2 peq" style="margin:0 0 6px">Lo que tienes tú en venta está en <button class="rojo" data-ir="equipo" data-seg="equipo:venta">Equipo → En venta</button>.</p>`;
     const fila = (m) => filaJugador(m, {
       sub: m.tipo === 'manager' ? `${esc(m.j.equipo)} · lo vende <b>${esc(m.vendedor || 'un manager')}</b>` : `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
@@ -821,6 +822,37 @@ export function mercado(S) {
     }
   }
   return h;
+}
+
+/**
+ * el radar de subidas (0.6.5), arriba de Mercado → Fichar: los que más van a subir los próximos 3 días según su inercia
+ * y los que acaban de hacer un partidazo, con de quién es cada uno y si se pueden fichar hoy. Va con la llave de la
+ * inercia (en la de Google Play, un anuncio hasta medianoche)
+ */
+function radarHTML(S) {
+  const { M } = S;
+  if (!M.radar) return '';
+  if (bloqueada('inercia')) return candado('inercia', { como: 'radar' });
+  const R = M.radar();
+  if (!R.suben.length && !R.partidazos.length) return '';
+  const quien = (x) => (x.mio ? '<span class="rojo">Tuyo</span>' : x.tid ? `de ${esc((M.equipo[x.tid] || {}).manager || (M.equipo[x.tid] || {}).nombre || 'un rival')}` : 'sin dueño');
+  const hoy = (x) => x.mio ? '' : x.mercado ? `<span class="pill abierta">${x.mercado.tipo === 'manager' ? 'A la venta' : 'En el mercado'} · ${eur(x.mercado.precio)}</span>` : x.cl ? clausulaPill(x.cl) : '';
+  const fila = (x, derecha, extra = '') => filaJugador({ j: x.j, tend: x.tend }, { sub: `${esc(x.j.equipo || '')} · ${quien(x)}`, pills: [extra, hoy(x), estadoPill(x.j)], derecha, op: S.opPorPid[x.pid] });
+  const sube = (x) => fila(x, `<div class="v sube">${eur(x.proy3, { signo: true })}</div><div class="d apag">${pct(x.pct3 * 100)} en 3 días</div>`, x.fase === 'acelera' ? '<span class="pill bien">Acelera</span>' : '');
+  const VISTOS = 4;
+  let h = `<details class="radar" open><summary>${icono('sube', 'rojo')}Radar de subidas<span class="sub">${R.suben.length + R.partidazos.length}</span></summary>`;
+  if (R.suben.length) {
+    h += `<p class="t2 peq">Los que más van a subir los próximos 3 días si siguen al ritmo de ahora (su inercia). Es una proyección, no una promesa.</p>`;
+    h += R.suben.slice(0, VISTOS).map(sube).join('');
+    if (R.suben.length > VISTOS) h += `<details class="mas-radar"><summary>Ver los ${R.suben.length}</summary>${R.suben.slice(VISTOS).map(sube).join('')}</details>`;
+  }
+  if (R.partidazos.length) {
+    h += `<div class="grupo"><span>Acaban de hacer un partidazo</span><span>${R.partidazos.length}</span></div><p class="t2 peq">Tras un partido así LaLiga suele subirles el valor los días siguientes.</p>`;
+    const pz = (x) => fila(x, `<div class="v">${eur(x.j.valor)}</div><div class="d">${delta(x.tend)}</div>`, `<span class="pill ${x.pz.nivel >= 3 ? 'bien' : 'duda'}">${x.pz.pts} pts · J${x.pz.n}</span>`);
+    h += R.partidazos.slice(0, VISTOS).map(pz).join('');
+    if (R.partidazos.length > VISTOS) h += `<details class="mas-radar"><summary>Ver los ${R.partidazos.length}</summary>${R.partidazos.slice(VISTOS).map(pz).join('')}</details>`;
+  }
+  return h + '</details>';
 }
 
 /**

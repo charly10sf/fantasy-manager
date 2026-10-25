@@ -296,6 +296,8 @@ main { padding: 16px 16px 120px; }
 .tit-b.bien { background: var(--sube-s); color: var(--sube); } .tit-b.duda { background: var(--oro-s); color: var(--oro); } .tit-b.mal { background: var(--baja-s); color: var(--baja); }
 .tit-b.conf { box-shadow: inset 0 0 0 1px currentColor; }
 .fila-s { font-size: 14.5px; line-height: 1.35; color: var(--texto2); margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* lo que escribe la IA (notas del plan): entero, sin cortar */
+.fila-s.entero { display: block; -webkit-line-clamp: unset; overflow: visible; white-space: normal; }
 .fila-x { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .fila-d { text-align: right; flex: none; }
 .fila-d .v { font: 700 19px/1.1 var(--cond); }
@@ -333,6 +335,17 @@ main { padding: 16px 16px 120px; }
 /* ---------- bloques ---------- */
 .caja { background: var(--plano); border: 1px solid var(--linea); border-radius: 16px; padding: 14px 16px; margin: 12px 0; }
 .rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 14px; margin: 8px 0; }
+/* cómo juega un rival (0.6.5) */
+.perfil-r { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 10px; }
+.perfil-r .pill .apag { font-weight: 500; opacity: .8; }
+/* el radar de subidas, arriba de Mercado → Fichar (0.6.5) */
+.radar { border: 1px solid var(--linea); border-radius: 16px; padding: 4px 12px 8px; margin: 4px 0 14px; background: var(--plano); }
+.radar > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 0 6px; font-weight: 700; }
+.radar > summary::-webkit-details-marker { display: none; }
+.radar > summary .sub { margin-left: auto; font-weight: 500; color: var(--texto2); font-size: 13.5px; }
+.radar .t2.peq { margin: 0 0 4px; }
+.radar .mas-radar > summary { cursor: pointer; color: var(--rojo-l); font-size: 14px; padding: 8px 0 2px; list-style: none; }
+.radar .mas-radar > summary::-webkit-details-marker { display: none; }
 .dato .et { color: var(--apagado); font: 600 13px 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; }
 .dato .v { font: 700 25px/1.1 var(--cond); margin-top: 3px; }
 .dato .v small { font-size: 15px; font-weight: 600; color: var(--texto2); margin-left: 3px; }
@@ -483,6 +496,7 @@ main { padding: 16px 16px 120px; }
 .valor-g .v { font: 700 44px/1 var(--cond); }
 .valor-g .d { font: 600 16px var(--cond); }
 .aviso-ficha { display: flex; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--rojo-s); margin: 10px 0; font-size: 15px; }
+.aviso-ficha.peq { font-size: 13.5px; line-height: 1.4; padding: 9px 12px; }
 .aviso-ficha.verde { background: var(--sube-s); } .aviso-ficha.oro { background: var(--oro-s); } .aviso-ficha.azul { background: var(--azul-s); }
 .aviso-ficha .ic { color: var(--rojo-l); margin-top: 1px; }
 .aviso-ficha.verde .ic { color: var(--sube); } .aviso-ficha.oro .ic { color: var(--oro); } .aviso-ficha.azul .ic { color: var(--azul); }

@@ -11,6 +11,7 @@
 import { LS, norm, diaDe, otroDia, esc, LOGO, dura } from './util.js';
 import { http, enApp, nativo } from './puente.js';
 import { pedirWorker } from './soporte.js';
+import { VERSION } from './version.js';
 
 // del dominio de la app; si no contesta, de GitHub (donde estaba antes de la mudanza)
 const URLS_APP = ['https://fantasymanagerapp.com/limites.json', 'https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/web/limites.json'];
@@ -29,7 +30,8 @@ async function leerLimites(forzar = false) {
   const g = LS.get('limites', null);
   // la guardada vale media hora (antes 6 h: un cambio del admin, como darle minutos a uno, tardaba demasiado en
   // llegar), salvo que sea de antes de la 0.5.0 (sin «ligas»): esa se vuelve a leer ya
-  if (!forzar && g && Date.now() - g.t < 30 * 60e3 && g.cfg && Array.isArray(g.cfg.ligas)) return g.cfg;
+  // (y la que guardó otra versión de la app, que puede no saber de una función top nueva)
+  if (!forzar && g && Date.now() - g.t < 30 * 60e3 && g.cfg && Array.isArray(g.cfg.ligas) && g.v === VERSION) return g.cfg;
   try {
     let cfg = null;
     if (enApp) {
@@ -43,7 +45,7 @@ async function leerLimites(forzar = false) {
     }
     if (cfg) {
       const antes = JSON.stringify(g && g.cfg);
-      LS.set('limites', { t: Date.now(), cfg });
+      LS.set('limites', { t: Date.now(), cfg, v: VERSION });
       // lo bloqueado depende de esto: si ha cambiado, que se vuelva a pintar
       if (antes !== JSON.stringify(cfg) && typeof window !== 'undefined') window.dispatchEvent(new Event('limites-nuevos'));
       return cfg;
@@ -63,17 +65,21 @@ function esDe(yo) {
    En la versión de Google Play (la que lleva anuncios) se abren viendo anuncios bonificados (desde la 0.6.3a; lo
    decidió Carlos el 25 oct, tras decirle sus amigos que 1 anuncio por el dinero de los rivales era poco y que eso es
    demasiado fuerte para tenerlo siempre):
-   - Las de los rivales (dineroRivales, ventasRivales y quienPaga), cada una por su lado: 2 anuncios seguidos por vez y
+   - Las de los rivales (dineroRivales, ventasRivales, quienPaga y, desde la 0.6.5, perfilRival: cómo juega cada uno),
+     cada una por su lado: 2 anuncios seguidos por vez y
      como mucho 2 veces por jornada (de una jornada a la siguiente), y cada vez abierta 1 hora. Se cambia en
      limites.json con «top»: { "usos": 2, "minutos": 60 }.
-   - Cuándo gira un jugador (inercia): con cualquier anuncio visto hoy, hasta las 00:00 de Madrid.
+   - Cuándo gira un jugador (inercia, y con ella el radar de subidas del Mercado): con cualquier anuncio visto hoy,
+     hasta las 00:00 de Madrid.
    Si no hay anuncio que enseñar, se abre igual media hora (y en las de los rivales cuenta como una vez). También en la
    liga de ejemplo (así las ve quien revisa la app en Google). En la de la liga, que no lleva anuncios, siguen como
    diga limites.json. Todo se guarda en el móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar
    sin un servidor, y no compensa). */
-const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'ventasRivales'];
+const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'ventasRivales', 'perfilRival'];
 /** las que van por veces a la jornada, con 2 anuncios cada vez */
-export const POR_JORNADA = ['dineroRivales', 'ventasRivales', 'quienPaga'];
+export const POR_JORNADA = ['dineroRivales', 'ventasRivales', 'quienPaga', 'perfilRival'];
+/** las que no conoce un limites.json leído por una versión anterior: con ese, cerradas hasta volver a leerlo */
+const NUEVAS = ['perfilRival'];
 const porJornada = (clave) => POR_JORNADA.includes(clave);
 /** cuántos anuncios pide cada vez */
 export const anunciosPorVez = (clave) => (porJornada(clave) ? 2 : 1);
@@ -153,7 +159,7 @@ export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }
 export function bloqueada(clave) {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   const lista = cfg && Array.isArray(cfg.bloqueadas) ? cfg.bloqueadas : BLOQUEADAS;
-  if (!lista.includes(clave)) return false;
+  if (!lista.includes(clave) && !(NUEVAS.includes(clave) && cfg && g.v !== VERSION)) return false;
   if (topAbierto(clave)) return false;
   if (demoB || !yoB || !cfg) return true;
   return !(cfg.todoAbierto || cfg.sinLimite || []).some(esDe(yoB));

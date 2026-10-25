@@ -1749,8 +1749,8 @@ document.addEventListener('click', async (ev) => {
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
     case 'bloqueada': {
       // en la de Google Play se abren viendo un anuncio
-      if (topConAnuncio()) { S.anuncio = { para: 'top', clave: d.clave, volver: S.tipoHoja && S.tipoHoja[0] !== 'anuncio' ? [...S.tipoHoja] : null }; hoja('anuncio', 'top'); break; }
-      const [t, x] = BLOQUEO[d.clave] || ['Función top', ''];
+      if (topConAnuncio()) { S.anuncio = { para: 'top', clave: d.clave, como: d.como || null, volver: S.tipoHoja && S.tipoHoja[0] !== 'anuncio' ? [...S.tipoHoja] : null }; hoja('anuncio', 'top'); break; }
+      const [t, x] = BLOQUEO[d.como] || BLOQUEO[d.clave] || ['Función top', ''];
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>Es una de las funciones top de Fantasy Manager. De momento está bloqueada: <b>muy pronto se desbloqueará viendo un anuncio corto</b>, gratis.</p>

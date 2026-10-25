@@ -304,6 +304,8 @@ export const BLOQUEO = {
   dineroRivales: ['Dinero de los rivales', 'Cuánto tiene cada rival y hasta dónde puede gastar.'],
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales tienen dinero para quitarte a cada jugador.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor, cuántos días le quedan subiendo y cuándo venderlo antes de que baje.'],
+  perfilRival: ['Cómo juega cada rival', 'A quién clausula y cuánto paga, si vende rápido o aguanta, qué puestos ficha, si se protege y a qué hora se mueve.'],
+  radar: ['Radar de subidas', 'Los que más van a subir estos días según su inercia y los que acaban de hacer un partidazo, con de quién es cada uno. Se abre junto con «Cuándo gira un jugador».'],
   ventasRivales: ['Lo que venden los rivales', 'Qué jugadores tiene cada rival en el mercado, cuánto le suele dar LaLiga por cada uno y cuánto ofrecerle para que te lo venda a ti.'],
 };
 
@@ -311,10 +313,11 @@ export const BLOQUEO = {
 /** sus jugadores en el mercado, con lo que pide y lo que suele dar LaLiga */
 export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === 'manager' && String(m.vendedorTeamId || '') === String(tid));
 /** la caja de una función bloqueada (se toca para ver qué es) */
-export function candado(clave) {
-  const [t, x] = BLOQUEO[clave] || ['Función top', ''];
+export function candado(clave, { como = null } = {}) {
+  // «como»: otra cara para la misma llave (el radar se abre con la de la inercia)
+  const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', ''];
   // en la de Google Play se abre viendo anuncios (las de los rivales, con 2 y unas veces por jornada); en la de la liga, aún no
-  return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${colaCandado(clave)}</span></span></button>`;
+  return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${colaCandado(clave)}</span></span></button>`;
 }
 /** lo que dice un candado de cómo se abre */
 export function colaCandado(clave) {

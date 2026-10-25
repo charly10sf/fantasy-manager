@@ -153,7 +153,9 @@ export function demo() {
     const quien = clasif[Math.floor(r() * clasif.length)];
     const pid = ids[Math.floor(r() * ids.length)];
     const tipo = [31, 31, 33, 32, 31, 4, 33][Math.floor(r() * 7)];
-    const otro = tipo === 32 ? clasif[Math.floor(r() * clasif.length)] : null;
+    // (nadie se clausula a sí mismo)
+    const otros = clasif.filter((e) => e !== quien);
+    const otro = tipo === 32 ? otros[Math.floor(r() * otros.length)] : null;
     actividad.push({
       id: 'a' + i, t: ahora - i * 5.3 * HORA - r() * 3 * HORA, tipo,
       clase: { 31: 'compra', 32: 'clausula', 33: 'venta', 4: 'blindaje' }[tipo],

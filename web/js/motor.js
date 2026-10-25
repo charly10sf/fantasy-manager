@@ -2,7 +2,7 @@
    Cláusulas de los rivales y cuánto interesa cada una, el riesgo de las tuyas, el mercado, quién sube y
    quién baja, lo que has ganado con tus compras, cómo se mueve cada rival, la jornada, los parones y la
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
-import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, eur, pct, dura, cuando, POS, norm } from './util.js';
+import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, eur, pct, dura, cuando, POS, norm, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
 const PARONES = [
@@ -1582,6 +1582,107 @@ export function analizar(D, H, c, extra = {}) {
   }
   // lo que compraste para revender y sigue en tu equipo
   M.paraRevender = M.mias.filter((x) => M.reventa[x.pid]).map((x) => ({ ...x, rev: M.reventa[x.pid], beneficioYa: x.j.valor - (M.reventa[x.pid].precio || x.compra || x.j.valor) }));
+
+  /* ---------- cómo juega cada rival (función top «perfilRival», 0.6.5) ---------- */
+  // con todo el historial de la liga (AH): sus clausulazos (a quién y con cuánto sobre el valor), lo que ficha y vende
+  // (a LaLiga o a otros managers), cuántos días tiene a un jugador antes de venderlo, qué puestos ficha, cuántas veces
+  // se protege y a qué hora se mueve. Se calcula al pedirlo (su ficha y la IA), una vez por análisis
+  const cachePerfil = {};
+  const mediana = (l) => { if (!l.length) return null; const o = [...l].sort((x, y) => x - y), m = (o.length - 1) / 2; return (o[Math.floor(m)] + o[Math.ceil(m)]) / 2; };
+  M.perfil = (tid) => {
+    if (!tid) return null;
+    if (tid in cachePerfil) return cachePerfil[tid];
+    const de = (a) => tidDe(a.quienId, a.quien), otroDe = (a) => tidDe(a.otroId, a.otro);
+    const lista = AH.lista.filter((a) => a.t && (de(a) === tid || otroDe(a) === tid)).sort((x, y) => y.t - x.t);
+    const suyos = lista.filter((a) => de(a) === tid);
+    const imp = (a) => Math.abs(num(a.importe));
+    const sobre = (a) => { const v = valorEn(a.pid, a.t - 3 * HORA); return v && imp(a) ? imp(a) / v - 1 : null; };
+    // los clausulazos que ha hecho y a quién
+    const czs = suyos.filter((a) => a.clase === 'clausula' && a.pid).map((a) => ({ pid: a.pid, t: a.t, imp: imp(a), s: sobre(a), a: otroDe(a) }));
+    const czS = czs.map((x) => x.s).filter((x) => x != null && x > -0.1 && x < 3);
+    const victimas = {};
+    for (const x of czs) if (x.a && x.a !== tid) victimas[x.a] = (victimas[x.a] || 0) + 1;
+    const recibidos = lista.filter((a) => a.clase === 'clausula' && otroDe(a) === tid && de(a) !== tid).length;
+    // lo que ficha: del mercado (a LaLiga) o a otro manager; y lo que paga sobre el valor en el mercado
+    const comprasL = suyos.filter((a) => a.clase === 'compra' && a.pid && !(a.otroId || a.otro));
+    const comprasM = suyos.filter((a) => a.clase === 'compra' && a.pid && (a.otroId || a.otro));
+    const pagaS = comprasL.map(sobre).filter((x) => x != null && x >= -0.1 && x <= 1);
+    // lo que vende: a LaLiga (una venta que no es la compra de otro manager) o a otro manager (la compra de otro con él
+    // de vendedor; los clausulazos que le hacen no cuentan: no los decide él)
+    const deManager = new Set(AH.lista.filter((a) => (a.clase === 'compra' || a.clase === 'clausula') && a.pid && (a.otroId || a.otro)).map((a) => `${a.pid}|${imp(a)}`));
+    const ventasL = suyos.filter((a) => a.clase === 'venta' && a.pid && !deManager.has(`${a.pid}|${imp(a)}`));
+    const ventasM = lista.filter((a) => a.clase === 'compra' && a.pid && otroDe(a) === tid && de(a) !== tid);
+    // cuántos días tiene a un jugador desde que lo ficha hasta que lo vende
+    const dias = [];
+    for (const a of [...ventasL, ...ventasM]) { const f = fichajeAntes(tid, a.pid, a.t); if (f) dias.push((a.t - f.t) / DIA); }
+    const puestos = { 1: 0, 2: 0, 3: 0, 4: 0 };
+    for (const a of [...comprasL, ...comprasM, ...czs]) { const q = J(a.pid).pos; if (puestos[q] != null) puestos[q]++; }
+    // se protege: el escudo de LaLiga y las subidas de cláusula que paga (las que hace LaLiga sola no cuentan; esas se
+    // guardan desde que se usa la app en este dispositivo)
+    const escudos = suyos.filter((a) => a.clase === 'blindaje').length;
+    const subidas = (H.mov || []).filter((m) => m.teamId === tid && M.blindaPagada(m)).length;
+    // a qué hora se mueve: lo que hace él al momento (clausular, vender, blindar); las compras del mercado se cierran
+    // todas en el cambio de mercado y no dicen nada de cuándo entra
+    const propios = suyos.filter((a) => ['clausula', 'venta', 'blindaje'].includes(a.clase));
+    let franja = null;
+    if (propios.length >= 5) {
+      const horas = new Array(24).fill(0);
+      for (const a of propios) horas[Number(horaReloj(a.t).slice(0, 2)) % 24]++;
+      let mejor = -1, ini = 0;
+      for (let h = 0; h < 24; h++) { const n = horas[h] + horas[(h + 1) % 24] + horas[(h + 2) % 24]; if (n > mejor) { mejor = n; ini = h; } }
+      franja = { ini, fin: (ini + 3) % 24, n: mejor, de: propios.length, pct: mejor / propios.length };
+    }
+    const sem = AH.desde ? Math.max(1, (ahora - AH.desde) / (7 * DIA)) : null;
+    const dMed = mediana(dias), pagaMed = mediana(pagaS);
+    // en dos palabras, solo lo que se sale de lo normal
+    const rasgos = [];
+    if (yoTid && victimas[yoTid] >= 2) rasgos.push(['mal', 'Va a por ti', `te ha clausulado a ${victimas[yoTid]}`]);
+    if (czs.length >= 3 && sem && czs.length / sem >= 0.4) rasgos.push(['mal', 'Clausula mucho', `${czs.length} en ${Math.round(sem)} semanas`]);
+    else if (!czs.length && suyos.length >= 10) rasgos.push(['bien', 'No clausula', 'no ha pagado ninguna cláusula']);
+    if (dias.length >= 3 && dMed < 7) rasgos.push(['duda', 'Vende rápido', `los tiene unos ${Math.max(1, Math.round(dMed))} días`]);
+    else if (dias.length >= 3 && dMed > 25) rasgos.push(['bien', 'Aguanta a los suyos', `los tiene unos ${Math.round(dMed)} días`]);
+    if (pagaS.length >= 3 && pagaMed >= 0.15) rasgos.push(['duda', 'Puja fuerte', `paga un ${pct(pagaMed * 100)} sobre el valor`]);
+    if (escudos + subidas >= 3) rasgos.push(['', 'Se protege', `${escudos + subidas} veces`]);
+    if (suyos.length < 5) rasgos.push(['', 'Casi no se mueve', `${suyos.length} movimiento${suyos.length === 1 ? '' : 's'}`]);
+    return (cachePerfil[tid] = {
+      n: suyos.length, desde: AH.desde || null, completa: !!AH.completa, sem,
+      cz: { n: czs.length, med: mediana(czS), max: czS.length ? Math.max(...czS) : null, victimas, ult: czs.slice(0, 5) }, recibidos,
+      compras: { liga: comprasL.length, manager: comprasM.length, paga: pagaMed, nPaga: pagaS.length },
+      ventas: { liga: ventasL.length, manager: ventasM.length, dias: dMed, nDias: dias.length },
+      puestos, escudos, subidas, franja, rasgos,
+    });
+  };
+
+  /* ---------- el radar de subidas (Mercado → Fichar, con la función top «inercia», 0.6.5) ---------- */
+  // los que más van a subir los próximos 3 días según su inercia (suben o aceleran), con de quién es cada uno, y los
+  // que acaban de hacer un partidazo (tras uno así LaLiga suele subirles el valor). Lo de la inercia, una vez por
+  // análisis; los partidazos, cada vez (los puntos en directo entran sin rehacer el motor)
+  let radarSuben = null;
+  const enRadar = (j) => {
+    const tid = M.dueno[j.id] || null;
+    return {
+      j, pid: j.id, tid, mio: !!tid && tid === yoTid, tend: M.tend(j.id),
+      mercado: M.mercado.find((m) => m.pid === j.id && !(m.tipo === 'manager' && m.vendedorTeamId === yoTid)) || null,
+      cl: tid && tid !== yoTid ? M.clausulas.find((x) => x.pid === j.id) || null : null,
+    };
+  };
+  M.radar = () => {
+    const base = Object.values(D.maestro).filter((j) => j && j.valor && j.pos && j.pos < 5 && !MALOS.has(j.estado));
+    if (!radarSuben) {
+      const l = [];
+      for (const j of base) {
+        const x = M.inercia(j.id);
+        if (!x || !['sube', 'acelera'].includes(x.fase) || !(x.proy3 > 0)) continue;
+        l.push({ j, proy3: x.proy3, fase: x.fase, ult: x.ult });
+      }
+      l.sort((a, b) => b.proy3 - a.proy3);
+      radarSuben = l.slice(0, 10).map((x) => ({ ...enRadar(x.j), proy3: x.proy3, pct3: x.proy3 / x.j.valor, fase: x.fase, ult: x.ult }));
+    }
+    const pz = [];
+    for (const j of base) { const p = M.partidazo(j.id); if (p && p.nivel >= 2) pz.push({ j, p }); }
+    pz.sort((a, b) => b.p.pts - a.p.pts || b.j.valor - a.j.valor);
+    return { suben: radarSuben, partidazos: pz.slice(0, 8).map((x) => ({ ...enRadar(x.j), pz: x.p })) };
+  };
 
   M.acciones = acciones(D, M, c);
   return M;

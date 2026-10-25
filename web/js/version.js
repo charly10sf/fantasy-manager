@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.4a';
+export const VERSION = '0.6.5';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,16 @@ export const VERSION = '0.6.4a';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.5', f: '2026-10-25', h: '', t: 'Radar de subidas y cómo juega cada rival',
+    cosas: [
+      { para: 'play', tipo: 'nuevo', d: 'grafica', t: 'Radar de subidas', x: 'Arriba de Mercado → Fichar: los 10 jugadores de toda LaLiga que más van a subir los próximos 3 días si siguen al ritmo de ahora, con cuánto, de quién es cada uno y si lo puedes fichar hoy (en el mercado o con la cláusula abierta). Debajo, los que acaban de hacer un partidazo, que suelen subir los días siguientes. Se abre junto con «Cuándo gira un jugador».', ir: { v: 'mercado', seg: 'mercado:venta' } },
+      { para: 'play', tipo: 'nuevo', d: 'cara', t: 'Cómo juega cada rival', x: 'En la ficha de cada rival (tócalo en Rivales), con todo lo que ha hecho en la liga: cuántos clausulazos ha hecho, a quién y cuánto pagó sobre el valor, cuántos días tiene a un jugador antes de venderlo, qué puestos ficha, si se protege con escudos o subiendo cláusulas y a qué hora suele moverse. Con dos anuncios, 1 hora y 2 veces por jornada, como las otras de los rivales.', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'plan', t: 'Lo que dice el plan, entero', x: 'Lo que la IA dice de cada rival y de cada jugador en el plan (Tus rivales, Vigila, Noticias y los descartados) ya no se corta a las dos líneas. Y al tocar a ese rival o a ese jugador, su ficha lo enseña arriba en pequeño, para no perderlo de vista.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'ia', t: 'La IA sabe quién clausula', x: 'Para decirte quién puede ir a por tus jugadores, la IA mira cómo juega cada rival: el que clausula a menudo y le llega es el peligro de verdad; el que no ha clausulado nunca, mucho menos. Y si alguien suele moverse a una hora, te avisa antes.' },
+      { para: 'dueño', menor: true, tipo: 'arreglo', d: 'lupa', t: 'La liga de ejemplo', x: 'En la liga de ejemplo, un rival podía salir clausulándose a sí mismo.' },
+    ],
+  },
   {
     v: '0.6.4a', f: '2026-10-25', h: '15:44', t: 'La oferta de LaLiga, como lo que es: una estimación',
     cosas: [

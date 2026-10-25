@@ -178,6 +178,7 @@ export function fichaJugador(S, pid) {
   if (M.inercia && M.inercia(pid)) h += bloqueada('inercia') ? candado('inercia') : inerciaHTML(M, pid, !!mia);
   for (const n of notasDe(pid)) h += `<div class="aviso-ficha oro">${icono('nota')}<div><b>Le contaste a la IA:</b> ${esc(n.texto)} <span class="t2">(${cuando(n.t)})</span></div></div>`;
   if (op) h += `<div class="aviso-ficha">${icono('rayo')}<div><b>Plan de hoy: ${ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max ? ` (puja hasta ${eur(op.puja_max)})` : ''}.</b> ${esc(op.motivo || '')}</div></div>`;
+  for (const n of notasPlan(S, { j })) h += notaPlanHTML(n);
   const rango = S.rango || 30;
   h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   h += `<div id="graf-j">${grafValor(serieValor(S, pid), rango, cargandoValor(S, pid))}</div>`;
@@ -326,6 +327,56 @@ export function detalleHTML(det) {
   return h;
 }
 
+/** lo que dice el plan de hoy de un rival o de un jugador (Tus rivales, Vigila, Noticias, Mirados y descartados), para
+ * verlo también en su ficha: en el plan va en una línea corta y al tocarlo no salía en ningún lado (aviso de Domy) */
+function notasPlan(S, { tid, j } = {}) {
+  const P = S.plan;
+  if (!P) return [];
+  const out = [];
+  if (tid) for (const r of P.rivales || []) if (r && r.texto && S.M.teamDeManager(r.manager) === tid) out.push(['Tu plan de hoy', r.texto]);
+  if (j) {
+    const n = norm(j.nombre);
+    const es = (x) => { const k = norm(x); return !!k && (k === n || (k.length >= 5 && (n.includes(k) || k.includes(n)))); };
+    for (const v of P.vigilar || []) if (v && es(v.jugador)) out.push(['Vigila (plan de hoy)', v.texto]);
+    for (const v of P.noticias || []) if (v && es(v.jugador)) out.push(['Noticia del plan de hoy', v.texto]);
+    for (const v of P.descartes || []) if (v && es(v.jugador)) out.push(['Mirado y descartado hoy', v.motivo]);
+  }
+  return out.filter(([, t]) => t);
+}
+const notaPlanHTML = ([et, t]) => `<div class="aviso-ficha azul peq">${icono('ia')}<div><b>${esc(et)}:</b> ${esc(t)}</div></div>`;
+
+/** cómo juega un rival (M.perfil): sus clausulazos, cómo ficha y vende, si se protege y a qué hora se mueve */
+function perfilHTML(S, tid) {
+  const { M } = S, P = M.perfil ? M.perfil(tid) : null;
+  if (!P) return '';
+  const yo = S.D.yo && S.D.yo.teamId;
+  const quien = (t) => (t === yo ? 'ti' : esc((M.equipo[t] || {}).manager || (M.equipo[t] || {}).nombre || 'otro'));
+  const desde = P.completa ? 'toda la temporada' : P.desde ? `desde el ${cuando(P.desde, { hora: false })}` : '';
+  let h = `<div class="sec"><h2>Cómo juega</h2>${desde ? `<span class="sub">${desde}</span>` : ''}</div>`;
+  if (!P.n) return h + `<p class="t2 peq">No ha hecho ningún movimiento${desde ? ` (${desde})` : ''}.</p>`;
+  if (P.rasgos.length) h += `<div class="perfil-r">${P.rasgos.map(([cls, t, x]) => `<span class="pill ${cls}" title="${esc(x)}">${esc(t)} <span class="apag">· ${esc(x)}</span></span>`).join('')}</div>`;
+  const vic = Object.entries(P.cz.victimas).sort((a, b) => b[1] - a[1]);
+  const dato = (et, v, sub) => `<div class="dato"><div class="et">${et}</div><div class="v">${v}<small>${sub || ''}</small></div></div>`;
+  h += `<div class="rejilla">`;
+  h += dato('Clausulazos', P.cz.n, P.cz.n ? `${P.cz.med != null ? `${pct(P.cz.med * 100)} sobre el valor` : ''}${P.recibidos ? ` · le han hecho ${P.recibidos}` : ''}` : P.recibidos ? `le han hecho ${P.recibidos}` : 'ninguno');
+  const nV = P.ventas.liga + P.ventas.manager;
+  const desglose = `${P.ventas.liga} a LaLiga${P.ventas.manager ? `, ${P.ventas.manager} a managers` : ''}`;
+  h += dato('Vende', nV ? (P.ventas.dias != null ? `~${Math.max(1, Math.round(P.ventas.dias))} días` : nV) : '0', nV ? `${P.ventas.dias != null ? 'los tiene antes de vender' : nV === 1 ? 'venta' : 'ventas'} · ${desglose}` : 'no ha vendido');
+  h += dato('Ficha', P.compras.liga + P.compras.manager, `${P.compras.liga} del mercado${P.compras.manager ? `, ${P.compras.manager} a managers` : ''}${P.compras.paga != null && P.compras.nPaga >= 2 ? ` · paga ${pct(P.compras.paga * 100)}` : ''}`);
+  h += dato('Se protege', P.escudos + P.subidas, `${P.escudos} escudo${P.escudos === 1 ? '' : 's'}, ${P.subidas} subida${P.subidas === 1 ? '' : 's'} pagada${P.subidas === 1 ? '' : 's'}`);
+  if (P.franja) h += dato('Se mueve', `${P.franja.ini}–${P.franja.fin} h`, `${P.franja.n} de ${P.franja.de} (clausular, vender, blindar)`);
+  h += `</div>`;
+  const pu = Object.entries(P.puestos).filter(([, n]) => n).sort((a, b) => b[1] - a[1]);
+  const POSC = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
+  if (pu.length) h += `<p class="t2 peq" style="margin:2px 0 6px">Lo que ficha: ${pu.map(([q, n]) => `<b>${POSC[q]}</b> ${n}`).join(' · ')}.${vic.length ? ` Ha clausulado a ${vic.map(([t, n]) => `${quien(t)} (${n})`).join(', ')}.` : ''}</p>`;
+  else if (vic.length) h += `<p class="t2 peq" style="margin:2px 0 6px">Ha clausulado a ${vic.map(([t, n]) => `${quien(t)} (${n})`).join(', ')}.</p>`;
+  if (P.cz.ult.length) {
+    h += `<div class="grupo"><span>Sus últimos clausulazos</span><span>${P.cz.n}</span></div>`;
+    h += P.cz.ult.map((x) => { const j = M.J(x.pid); return j ? filaJugador({ j, tend: M.tend(x.pid) }, { sub: `a ${quien(x.a)} · ${cuando(x.t, { hora: false })}${x.s != null ? ` · ${pct(x.s * 100)} sobre su valor` : ''}`, derecha: `<div class="v">${eur(x.imp)}</div><div class="d apag">pagó</div>` }) : ''; }).join('');
+  }
+  return h;
+}
+
 /* ================= FICHA DE RIVAL ================= */
 export function fichaRival(S, tid) {
   const { M } = S;
@@ -335,6 +386,7 @@ export function fichaRival(S, tid) {
   const serie = r.serie.map(([d, v]) => [Date.parse(d + 'T12:00:00'), v]);
   let h = `<div class="hoja-cab"><h2>${esc(e.nombre)}</h2><span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span></div>
   <p class="t2" style="margin:0 0 12px">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</p>
+  ${notasPlan(S, { tid }).map(notaPlanHTML).join('')}
   <div class="rejilla">
     <div class="dato"><div class="et">Valor</div><div class="v">${eur(e.valor)}<small class="${clase(r.dValor)}">${r.dValor != null ? eur(r.dValor, { signo: true, dec: 1 }) + ' 7d' : ''}</small></div></div>
     <div class="dato"><div class="et">Movimientos 7d</div><div class="v">${r.movs}</div></div>
@@ -371,6 +423,8 @@ export function fichaRival(S, tid) {
       derecha: `<div class="v">${eur(x.clausula)}</div>`, op: S.opPorPid[x.pid],
     })).join('');
   }
+  // cómo juega (función top, desde la 0.6.5)
+  h += bloqueada('perfilRival') ? `<div class="sec"><h2>Cómo juega</h2></div>${candado('perfilRival')}` : perfilHTML(S, tid);
   // lo que tiene en el mercado y lo que le da LaLiga por cada uno (función top)
   const vs = ventasDe(M, tid);
   if (vs.length && bloqueada('ventasRivales')) h += `<div class="sec"><h2>En el mercado</h2><span class="sub">${vs.length} en venta</span></div>${candado('ventasRivales')}`;
@@ -417,7 +471,7 @@ export function anuncioHTML(S, para) {
 
 /** las funciones top: las de los rivales, con 2 anuncios y unas veces por jornada; cuándo gira, con 1, hasta medianoche */
 function anuncioTopHTML(A) {
-  const [t, x] = BLOQUEO[A.clave] || ['Funciones top', ''];
+  const [t, x] = BLOQUEO[A.como] || BLOQUEO[A.clave] || ['Funciones top', ''];
   const rivales = POR_JORNADA.includes(A.clave), faltan = faltanAnuncios(A.clave), q = usosQuedan(A.clave), n = usosPorJornada();
   const min = minutosPorVez(), dura = min % 60 === 0 ? `${min / 60} hora${min > 60 ? 's' : ''}` : `${min} minutos`;
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
