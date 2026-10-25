@@ -304,11 +304,11 @@ export const BLOQUEO = {
   dineroRivales: ['Dinero de los rivales', 'Cuánto tiene cada rival y hasta dónde puede gastar.'],
   quienPaga: ['Quién puede pagar tu cláusula', 'Qué rivales tienen dinero para quitarte a cada jugador.'],
   inercia: ['Cuándo gira un jugador', 'Hacia dónde va su valor, cuántos días le quedan subiendo y cuándo venderlo antes de que baje.'],
-  ventasRivales: ['Lo que venden los rivales', 'Qué jugadores tiene cada rival en el mercado, cuánto le da LaLiga por cada uno y cuánto ofrecerle para que te lo venda a ti.'],
+  ventasRivales: ['Lo que venden los rivales', 'Qué jugadores tiene cada rival en el mercado, cuánto le suele dar LaLiga por cada uno y cuánto ofrecerle para que te lo venda a ti.'],
 };
 
 /* ---------- lo que tiene en venta cada rival (función top «ventasRivales») ---------- */
-/** sus jugadores en el mercado, con lo que pide y lo que le da LaLiga */
+/** sus jugadores en el mercado, con lo que pide y lo que suele dar LaLiga */
 export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === 'manager' && String(m.vendedorTeamId || '') === String(tid));
 /** la caja de una función bloqueada (se toca para ver qué es) */
 export function candado(clave) {

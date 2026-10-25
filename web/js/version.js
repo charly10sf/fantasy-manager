@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.4';
+export const VERSION = '0.6.4a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.4';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.4a', f: '2026-10-25', h: '', t: 'La oferta de LaLiga, como lo que es: una estimación',
+    cosas: [
+      { tipo: 'arreglo', d: 'dinero', t: 'La oferta de LaLiga a un rival es una estimación', x: 'La IA podía decir «LaLiga le va a ofrecer hoy X» por un jugador que un rival tiene a la venta. Esa oferta solo la ve el vendedor: lo que da la app es lo que suele pagar LaLiga en tu liga (la mediana de lo que se le ha vendido), y un día puede ser menos o más. Ahora la ficha, el Mercado y la IA lo dicen así («suele rondar X, normalmente entre X e Y») y la IA ya no promete que vaya a aceptar.' },
+    ],
+  },
   {
     v: '0.6.4', f: '2026-10-25', h: '15:19', t: 'Favoritos, eventos en directo y una IA con las cuentas hechas',
     cosas: [
