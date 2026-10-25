@@ -14,7 +14,7 @@ export const VERSION = '0.6.3g';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.3g', f: '2026-10-25', h: '12:55', t: 'Cláusulas y fichajes con el último partido',
+    v: '0.6.3g', f: '2026-10-25', h: '13:13', t: 'Cláusulas y fichajes con el último partido',
     cosas: [
       { tipo: 'mejora', d: 'grafica', t: 'Cláusulas y fichajes con el último partido', x: 'Si el jugador de un rival venía bajando pero acaba de hacer un buen partido, las cláusulas que te propone la app y el Mercado ya no lo dan por perdido: con 8 o 9 puntos la bajada puede frenarse y con 10 o más lo normal es que suba estos días, así que lo ves más arriba y con el motivo («acaba de hacer 12 pts»). Lo mismo con los tuyos en venta: tras un partidazo, la app te dice que esperes al cambio de mañana.', ir: { v: 'rivales', seg: 'rivales:clausulas' } },
       { para: 'web', tipo: 'arreglo', d: 'periodico', t: 'Las noticias en la web', x: 'En la web, Google Noticias no contesta y la app lo intentaba con 14 búsquedas cada vez. Ahora, si no contesta, lo deja estar media hora, usa los titulares de la última vez si los hay y la IA sabe que no ha podido mirarlos (antes creía que no había noticias de nadie).' },
