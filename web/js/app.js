@@ -28,13 +28,15 @@ import { explicarError, bandaError, botonesError, apuntarError } from './errores
 import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
+import { cambiarFav } from './favoritos.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
 const VISTAS = { hoy: V.hoy, equipo: V.equipo, directo: Dr.directo, rivales: V.rivales, mercado: V.mercado, clubes: Cl.clubes, ia: V.ia };
 const ALIAS = { inicio: 'hoy', analisis: 'ia', chat: 'ia', vivo: 'directo', equipos: 'clubes' };
-const NAV = [['hoy', 'rayo', 'Hoy'], ['equipo', 'equipo', 'Equipo'], ['directo', 'directo', 'Directo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['clubes', 'club', 'Clubes'], ['ia', 'ia', 'Pregunta']];
+const NAV = [['hoy', 'rayo', 'Hoy'], ['equipo', 'equipo', 'Equipo'], ['directo', 'directo', 'Directo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['clubes', 'club', 'Clubes']];
+// Pregunta (la IA) no va en la barra de abajo: con 7 pestañas no cabían bien. Va arriba, en rojo (lo pidió Carlos el 25 oct)
 const raiz = () => document.getElementById('app');
 
 /* ---------------- avisos de abajo ---------------- */
@@ -264,15 +266,18 @@ function marco() {
   if ($('#vista') && S.marcoAncho === anchoYa) return;
   S.marcoAncho = anchoYa;
   const nav = `<nav class="nav"><div class="nav-in">${NAV.map(([k, ic, t]) => `<button data-ir="${k}">${icono(ic)}${t}<span class="gl oculto" id="gl-${k}"></span></button>`).join('')}</div></nav>`;
-  // arriba solo tres cosas: actualizar la liga (si el plan se ha quedado viejo, la IA lo rehace sola después), avisar
-  // de un fallo y los ajustes. Rehacer el plan a mano está en la tarjeta del plan, en Hoy.
+  // arriba solo tres cosas: actualizar la liga (si el plan se ha quedado viejo, la IA lo rehace sola después),
+  // preguntarle a la IA (en rojo) y los ajustes, donde lo primero es avisar de un fallo (el numerito de respuestas y de
+  // avisos sin contestar va en Ajustes). Rehacer el plan a mano está en la tarjeta del plan, en Hoy.
   // en el móvil cada botón lleva su nombre debajo (data-et); en el ordenador, el largo (aria-label) al lado
+  // (en el ordenador, Pregunta va arriba del todo de la columna, encima de las pestañas)
+  const preg = `<button class="b-ico b-preg" id="bPregunta" data-ir="ia" aria-label="Pregúntale a la IA" data-et="Pregunta">${icono('ia')}</button>`;
   const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
-    <button class="b-ico" id="bAvisos" data-accion="avisos" aria-label="Avisar de un fallo" data-et="Fallo">${icono('bicho')}<span class="gl oculto" id="gl-avisos"></span></button>
-    <button class="b-ico" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}</button></div>`;
+    ${anchoYa ? '' : preg}
+    <button class="b-ico" id="bAjustes" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}<span class="gl oculto" id="gl-avisos"></span></button></div>`;
   const liga = `${LOGO_P}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
   raiz().innerHTML = anchoYa
-    ? `<header class="sup">${liga}${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
+    ? `<header class="sup">${liga}<div class="sup-preg">${preg}</div>${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
 }
 /** el ordenador: la clase en <html> para el CSS y, al pasar de un tamaño a otro, todo se vuelve a pintar */
@@ -318,6 +323,7 @@ function pintar({ arriba = false } = {}) {
   pintarSup();
   medirSup();
   $$('.nav button').forEach((b) => b.classList.toggle('activo', b.dataset.ir === S.vista));
+  const bp = $('#bPregunta'); if (bp) bp.classList.toggle('activo', S.vista === 'ia');
   const v = $('#vista');
   try { v.innerHTML = VISTAS[S.vista](S); } catch (e) {
     console.error(e);
@@ -1062,11 +1068,11 @@ async function comprobarAvisos() {
   const resp = r.nuevasResp[0];
   if (resp) {
     const t = `${resp.por || 'Te han'} ${resp.por ? 'te ha contestado' : 'contestado'}: «${resp.respuesta.length > 120 ? `${resp.respuesta.slice(0, 117)}…` : resp.respuesta}»`;
-    if (nativo.aLaVista()) tostada(`${t} · Toca Fallo, arriba`, 8000); else nativo.notificar('Respuesta a tu aviso', t, 'hoy');
+    if (nativo.aLaVista()) tostada(`${t} · Está en Ajustes → Reportar un fallo`, 8000); else nativo.notificar('Respuesta a tu aviso', t, 'hoy');
   }
   if (r.nuevosRecibidos) {
     const t = r.nuevosRecibidos > 1 ? `${r.nuevosRecibidos} avisos de fallos nuevos` : 'Un aviso de fallo nuevo';
-    if (nativo.aLaVista()) tostada(`${t}: toca Fallo, arriba`, 6000); else nativo.notificar(t, 'Entra para leerlo y contestar', 'hoy');
+    if (nativo.aLaVista()) tostada(`${t}: en Ajustes → Avisos de fallo`, 6000); else nativo.notificar(t, 'Entra para leerlo y contestar', 'hoy');
   }
 }
 
@@ -1719,6 +1725,8 @@ document.addEventListener('click', async (ev) => {
     case 'cerrarHoja': cerrarHoja(); break;
     case 'paron': if (S.M && S.M.paron) tostada(`${S.M.paron.nombre || 'Parón de selecciones'}: del ${cuandoT(S.M.paron.ini, { hora: false })} al ${cuandoT(S.M.paron.fin, { hora: false })}. No hay jornada y los valores casi no se mueven: lo que vayas a vender, mejor antes.`, 7000); break;
     case 'irIA': cerrarHoja(); ir('ia'); break;
+    // la estrella de la ficha: lo sigue en Mercado → Favoritos (y las listas lo marcan)
+    case 'fav': { const j = S.M && S.M.J(d.pid); if (!j) break; const on = cambiarFav(d.pid); tostada(on ? `${j.nombre}, en tus favoritos (Mercado → Favoritos)` : `${j.nombre}, fuera de tus favoritos`, 2600); repintarHoja(); if (S.vista === 'mercado') pintar(); break; }
     case 'copiarDiag': nativo.copiar(Hj.textoDiagnostico(S)); tostada('Copiado'); break;
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
@@ -2026,16 +2034,16 @@ function pasosTour() {
     { v: 'hoy', sel: '.plan-cab', con: ['.plan-sit', '.plan-titular'], si: () => !!$('.plan-cab'), t: 'Tu plan de hoy', x: 'Las operaciones exactas para hoy, en orden y con el saldo que te queda después de cada una. Cuando hagas una en LaLiga, el paso se tacha solo (o lo marcas tú con «Hecho»). Si algo no se puede hacer, la app lo tacha y te dice por qué.' },
     conClave
       ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
-      : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: 'Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en la pestaña Pregunta.' },
+      : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: 'Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», el botón rojo de arriba.' },
     { v: 'hoy', sel: '#bRefrescar', t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Solo usa la IA si tu plan es de antes del último cambio de mercado. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
-    { v: 'hoy', sel: '#bAvisos', con: '.sup-btns [data-accion="ajustes"]', t: 'Fallo y Ajustes', x: '«Fallo», si algo no funciona o no cuadra: me llega a mí y te contesto aquí mismo. En «Ajustes», tu clave de la IA, los avisos, abrir la app en el ordenador o el iPhone y este tutorial.' },
+    { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Lo primero de «Ajustes» es «Reportar un fallo»: si algo no funciona o no cuadra, me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta). También están tu clave de la IA, los avisos, abrir la app en el ordenador o el iPhone y este tutorial.' },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
     { v: 'directo', sel: '.nav [data-ir="directo"]', t: 'Directo', x: 'La jornada mientras se juega: los marcadores, los puntos de cada jugador y de quién es en tu liga, tu once con lo que lleva cada uno y cómo va tu liga. Toca un partido para verlo jugador a jugador.' },
     { v: 'rivales', sel: '.nav [data-ir="rivales"]', t: 'Rivales', x: 'Las cláusulas de los demás que te llegan con tu dinero, cuándo se abren las que están protegidas y lo que ha hecho cada uno.' },
     { v: 'mercado', sel: '.nav [data-ir="mercado"]', t: 'Mercado', x: 'Cuánto pujar por cada libre según lo que se paga en tu liga, qué ofrecer a otro mánager para que te venda y quién sube y quién baja.' },
     { v: 'clubes', sel: '.nav [data-ir="clubes"]', t: 'Clubes', x: 'Los 20 de LaLiga por la clasificación. En cada uno, su próximo partido, el once probable en el campo, las bajas, sus partidos y la plantilla con lo que vale cada jugador y de quién es en tu liga.' },
-    { v: 'ia', sel: '.nav [data-ir="ia"]', t: 'Pregunta', x: conClave ? 'Pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.' : 'Aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.' },
+    { v: 'ia', sel: '#bPregunta', t: 'Pregunta', x: conClave ? 'El botón rojo de arriba, siempre a mano: pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.' : 'El botón rojo de arriba: aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.' },
     demo
       ? { v: 'hoy', t: 'Esto era la liga de ejemplo', x: 'Con datos inventados. Cuando quieras, entra con tu cuenta y lo tendrás con tu liga. El tutorial queda en Ajustes.', lista: itemsEmpezar, fin: 'Seguir mirando' }
       : { v: 'hoy', t: 'Para empezar', x: () => (itemsEmpezar().some((y) => !y.ok) ? 'Esto se hace una vez (si no, lo tienes en Ajustes). Después, empieza por el paso 1 de tu plan de hoy.' : 'Ya lo tienes todo. Empieza por el paso 1 de tu plan de hoy. El tutorial queda en Ajustes por si quieres repetirlo.'), lista: itemsEmpezar, fin: 'Ver mi plan', finAccion: 'plan' },

@@ -2,6 +2,7 @@
 import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando, norm } from './util.js';
 import { mini } from './graficos.js';
 import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
+import { esFav } from './favoritos.js';
 
 let EQUIPOS = {};
 export const ponerEquipos = (m) => { EQUIPOS = m || {}; };
@@ -250,7 +251,7 @@ export function filaJugador(x, { sub = null, extra = '', pills = null, derecha =
   return `<button class="fila" data-j="${esc(j.id)}">
     ${ava(j)}
     <div class="fila-c">
-      <div class="fila-n">${posTag(j)}<span class="nom">${esc(j.nombre)}</span>${titBadge(MF, j)}</div>
+      <div class="fila-n">${posTag(j)}<span class="nom">${esc(j.nombre)}</span>${esFav(j.id) ? `<span class="fav-mini" title="Favorito">${icono('estrella')}</span>` : ''}${titBadge(MF, j)}</div>
       <div class="fila-s">${sub != null ? sub : esc(j.equipo || '')}</div>
       ${extra || op ? `<div class="fila-x">${planPill(op)}${extra}</div>` : ''}
     </div>

@@ -1530,3 +1530,28 @@ button.pf-eq:active { opacity: 0.7; }
 .forzar-c p b { color: var(--texto); }
 .forzar-ic { display: inline-flex; width: 52px; height: 52px; border-radius: 50%; align-items: center; justify-content: center; background: var(--rojo-s); color: var(--rojo-l); }
 .forzar-ic svg { width: 26px; height: 26px; }
+
+/* Pregunta, arriba y en rojo (fuera de la barra de abajo desde la 0.6.3h) */
+.sup .b-preg { background: var(--rojo); color: #fff; margin: 0 4px; }
+.sup .b-preg .ic { color: #fff; }
+.sup .b-preg:active { background: #c8102e; }
+.sup .b-preg.activo { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85) inset; }
+.escritorio .sup .b-preg { margin: 2px 0; }
+@media (hover: hover) { .escritorio .sup .b-preg:hover { background: #ff2e4c; color: #fff; } }
+/* Reportar un fallo, lo primero de Ajustes */
+.ajuste-tour.ajuste-fallo { margin-bottom: 8px; }
+.ajuste-tour .gl-aj { flex: none; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--rojo); color: #fff; font: 700 12px/20px 'Barlow'; font-style: normal; text-align: center; }
+.escritorio .sup-preg { width: 100%; margin: 0 0 10px; }
+.escritorio .sup-preg .b-preg { width: 100%; height: 46px; margin: 0; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 14px; padding: 0 12px; border-radius: 12px; font: 700 16px 'Barlow'; }
+.escritorio .sup-preg .b-preg::after { content: attr(aria-label); }
+.escritorio .sup-preg .b-preg .ic { width: 21px; height: 21px; }
+/* favoritos: la estrella de la ficha y la marca en las listas */
+.fav-btn { margin-left: auto; flex: none; align-self: flex-start; display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 56px; padding: 7px 6px 6px; border-radius: 12px; border: 1px solid var(--linea); background: var(--plano); color: var(--texto2); font: 600 12px/1 'Barlow'; }
+.fav-btn .ic { width: 22px; height: 22px; }
+.fav-btn.on { color: #ffc93c; border-color: rgba(255, 201, 60, 0.45); background: rgba(255, 201, 60, 0.1); }
+.fav-btn.on .ic path { fill: currentColor; }
+.escritorio .fav-btn { margin-right: 44px; }
+.fav-mini { display: inline-flex; margin-left: 5px; color: #ffc93c; vertical-align: -2px; }
+.fav-mini .ic { width: 14px; height: 14px; }
+.fav-mini .ic path { fill: currentColor; }
+.tabs button .ic { width: 15px; height: 15px; margin-right: 4px; vertical-align: -2px; }

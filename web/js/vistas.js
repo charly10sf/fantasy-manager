@@ -10,6 +10,7 @@ import { enApp, nativo } from './puente.js';
 import { guiaClave } from './clave.js';
 import { K } from './datos.js';
 import { jornadasHTML } from './jornadas.js';
+import { favoritos } from './favoritos.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -746,7 +747,8 @@ export function buscaHTML(S) {
   if (!xs.length) return nada(`Ningún jugador con «${esc(S.busca)}».`);
   const dueno = (pid) => { const t = M.dueno[pid]; if (!t) return 'libre'; if (String(t) === String(S.D.yo.teamId)) return '<span class="rojo">tuyo</span>'; return `de ${esc((M.equipo[t] || {}).manager || (M.equipo[t] || {}).nombre || 'un rival')}`; };
   return `<div class="grupo"><span>Resultados</span><span>${todos.length > 25 ? `25 de ${todos.length}` : todos.length}</span></div>${xs.map((j) => {
-    const enM = M.mercado.find((m) => m.pid === j.id);
+    // (lo que vende otro manager es una función top: con ella cerrada, el buscador no lo dice)
+    const enM = M.mercado.find((m) => m.pid === j.id && !(m.tipo === 'manager' && bloqueada('ventasRivales')));
     const cl = M.clausulas.find((x) => x.pid === j.id);
     return filaJugador({ j, tend: M.tend(j.id) }, {
       sub: `${esc(j.equipo || '')} · ${dueno(j.id)}`,
@@ -762,7 +764,7 @@ export function mercado(S) {
   if (['suben', 'bajan', 'libres'].includes(seg)) { S.filtro.tend = seg; seg = S.seg.mercado = 'tendencias'; }
   let h = `<div class="eti">${M.cierreMercado ? `Cambia ${cuando(M.cierreMercado)} · en ${dura(M.cierreMercado - Date.now())}` : 'Mercado de hoy'}</div><div class="titulo">Mercado</div><p class="entradilla">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>.</p>`;
   h += `<div class="busca-j">${icono('buscar')}<input id="buscaJ" type="search" enterkeyhint="search" placeholder="Busca cualquier jugador o equipo" autocomplete="off" aria-label="Buscar jugador" value="${esc(S.busca || '')}"></div><div id="buscaRes">${buscaHTML(S)}</div>`;
-  h += tabs('mercado', seg, [['venta', 'Fichar', M.mercado.filter((m) => !M.enVenta.has(m.pid)).length], ['especular', 'Especular', (M.especular || []).length, (M.especular || []).length ? 'verde' : ''], ['tendencias', 'Tendencias']]);
+  h += tabs('mercado', seg, [['venta', 'Fichar', M.mercado.filter((m) => !M.enVenta.has(m.pid)).length], ['especular', 'Especular', (M.especular || []).length, (M.especular || []).length ? 'verde' : ''], ['tendencias', 'Tendencias'], ['favoritos', `${icono('estrella')}Favoritos`, favoritos().filter((pid) => M.J(pid)).length]]);
   const tagV = { chollo: '<span class="pill chollo">Chollo</span>', sube: '<span class="pill bien">Subiendo</span>', caro: '<span class="pill duda">Caro</span>', evitar: '<span class="pill mal">Evitar</span>', baja: '<span class="pill mal">Bajando</span>', frena: '<span class="pill duda">Frenando</span>', normal: '' };
   const dueno = (pid) => { const t = M.dueno[pid]; if (!t) return 'Libre'; if (t === S.D.yo.teamId) return '<span class="rojo">Tuyo</span>'; return esc((M.equipo[t] || {}).manager || (M.equipo[t] || {}).nombre || 'Rival'); };
 
@@ -799,6 +801,8 @@ export function mercado(S) {
         derecha: `<div class="v sube">${eur(e.beneficio, { signo: true })}</div><div class="d apag">${pct(e.pct * 100)}</div>`, op: S.opPorPid[e.pid],
       })).join('')) : nada('Ahora mismo nada sube lo bastante como para sacarle beneficio antes de la jornada.');
     }
+  } else if (seg === 'favoritos') {
+    h += favoritosHTML(S, { tagV });
   } else {
     const f = S.filtro.tend || 'suben';
     h += `<div class="filtros">${[['suben', 'Suben'], ['bajan', 'Bajan'], ['libres', 'Sin dueño']].map(([k, t]) => `<button data-filtro="tend:${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
@@ -812,6 +816,41 @@ export function mercado(S) {
     }
   }
   return h;
+}
+
+/**
+ * Mercado → Favoritos: los jugadores que sigues (la estrella de su ficha), arriba los que puedes fichar hoy (libres en el
+ * mercado, a la venta por otro manager o con la cláusula abierta) y debajo el resto, con de quién son y su cláusula
+ */
+function favoritosHTML(S, { tagV }) {
+  const { M } = S;
+  const ids = favoritos().filter((pid) => M.J(pid));
+  if (!ids.length) return nada(`Aún no sigues a nadie. Abre la ficha de cualquier jugador (con el buscador de arriba, desde una lista o desde Clubes) y toca la estrella <b>Seguir</b>: lo tendrás aquí con su precio, de quién es y cuándo se puede fichar.`);
+  const yo = S.D.yo.teamId;
+  // lo que vende otro manager es una función top: si está cerrada, no se dice aquí
+  const sinVentas = bloqueada('ventasRivales');
+  const fichas = ids.map((pid) => {
+    const j = M.J(pid), t = M.tend(pid);
+    const tid = M.dueno[pid];
+    const enM = M.mercado.find((m) => m.pid === pid && !(m.tipo === 'manager' && (sinVentas || m.vendedorTeamId === yo)));
+    const cl = tid && tid !== yo ? M.clausulas.find((x) => x.pid === pid) : null;
+    const mio = tid === yo;
+    const hoy = !mio && (!!enM || !!(cl && cl.abierta));
+    const quien = mio ? '<span class="rojo">Tuyo</span>' : tid ? `de ${esc((M.equipo[tid] || {}).manager || (M.equipo[tid] || {}).nombre || 'un rival')}` : 'sin dueño';
+    const sub = `${esc(j.equipo || '')} · ${quien}${enM ? (enM.tipo === 'manager' ? ' · lo vende' : ' · en el mercado') : !tid ? ' · no está en el mercado' : ''}`;
+    const pills = [
+      enM ? `<span class="pill abierta">${enM.tipo === 'manager' ? 'A la venta' : 'Libre'} · ${eur(enM.precio)}</span>` : '',
+      enM && enM.miPuja ? `<span class="pill abierta">${enM.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(enM.miPuja)}</span>` : '',
+      cl ? clausulaPill(cl) : '', estadoPill(j), enM ? tagV[enM.veredicto] || '' : '', calPill(M, j, { soloDuro: true }),
+    ];
+    const precio = enM ? enM.precio : cl ? cl.clausula : null;
+    return { hoy, html: filaJugador({ j, tend: t }, { sub, pills, derecha: `<div class="v">${eur(precio || j.valor)}</div><div class="d">${precio && precio !== j.valor ? `vale ${eur(j.valor, { dec: 1 })}` : delta(t)}</div>`, op: S.opPorPid[pid] }) };
+  });
+  const ya = fichas.filter((x) => x.hoy), resto = fichas.filter((x) => !x.hoy);
+  let ml = '';
+  if (ya.length) ml += `<div class="grupo"><span>Puedes ficharlos hoy</span><span>${ya.length}</span></div>${ya.map((x) => x.html).join('')}`;
+  if (resto.length) ml += `<div class="grupo"><span>${ya.length ? 'El resto' : 'Los que sigues'}</span><span>${resto.length}</span></div>${resto.map((x) => x.html).join('')}`;
+  return `<p class="t2 peq">Los que sigues con la estrella de su ficha. Se guardan en este dispositivo.</p>${lista2(ml)}`;
 }
 
 /** los chats anteriores, para volver a uno */
