@@ -14,7 +14,7 @@ export const VERSION = '0.6.5';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.5', f: '2026-10-25', h: '', t: 'Radar de subidas y cómo juega cada rival',
+    v: '0.6.5', f: '2026-10-25', h: '16:11', t: 'Radar de subidas y cómo juega cada rival',
     cosas: [
       { para: 'play', tipo: 'nuevo', d: 'grafica', t: 'Radar de subidas', x: 'Arriba de Mercado → Fichar: los 10 jugadores de toda LaLiga que más van a subir los próximos 3 días si siguen al ritmo de ahora, con cuánto, de quién es cada uno y si lo puedes fichar hoy (en el mercado o con la cláusula abierta). Debajo, los que acaban de hacer un partidazo, que suelen subir los días siguientes. Se abre junto con «Cuándo gira un jugador».', ir: { v: 'mercado', seg: 'mercado:venta' } },
       { para: 'play', tipo: 'nuevo', d: 'cara', t: 'Cómo juega cada rival', x: 'En la ficha de cada rival (tócalo en Rivales), con todo lo que ha hecho en la liga: cuántos clausulazos ha hecho, a quién y cuánto pagó sobre el valor, cuántos días tiene a un jugador antes de venderlo, qué puestos ficha, si se protege con escudos o subiendo cláusulas y a qué hora suele moverse. Con dos anuncios, 1 hora y 2 veces por jornada, como las otras de los rivales.', ir: { v: 'rivales' } },
