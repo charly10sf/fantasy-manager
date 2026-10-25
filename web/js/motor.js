@@ -796,7 +796,7 @@ export function analizar(D, H, c, extra = {}) {
   /* ---------- la titularidad de cada jugador, juntando fuentes ---------- */
   // el once probable de futbolfantasy, sus minutos de las últimas jornadas y lo que ha jugado en la temporada
   // (SofaScore o Understat); luego la duda, la lesión y el riesgo de rotación
-  const CONF = { titular: 'titular', suplente: 'suplente', fuera: 'no convocado', baja: 'baja' };
+  const CONF = { titular: 'titular', suplente: 'suplente', nosale: 'no sale de titular', fuera: 'no convocado', baja: 'baja' };
   M.titularidad = (j) => {
     if (!j || !j.pos || j.pos === 5) return null;
     const al = M.alineacion(j.id);
@@ -893,7 +893,7 @@ export function analizar(D, H, c, extra = {}) {
     if (cachePP[j.id]) return cachePP[j.id];
     const T = j.pos && j.pos !== 5 ? M.titularidad(j) : null;
     const al = T && T.confirmada;
-    const onceJ = al ? (al === 'titular' ? { titular: true, prob: 100 } : al === 'suplente' ? { alternativa: true } : { estado: 'injured' }) : M.hayOnces ? (onces[j.id] || { fuera: true }) : null;
+    const onceJ = al ? (al === 'titular' ? { titular: true, prob: 100 } : al === 'suplente' || al === 'nosale' ? { alternativa: true } : { estado: 'injured' }) : M.hayOnces ? (onces[j.id] || { fuera: true }) : null;
     let base = puntosEsperados(j, M.forma(j.id), onceJ) * M.factorRival(j).f;
     if (T && T.pRot) base *= 1 - T.pRot;
     const d = M.desglose(j);
@@ -1154,7 +1154,7 @@ export function analizar(D, H, c, extra = {}) {
     // titular o no en su equipo (once probable de futbolfantasy)
     const op = M.onceProb(j.id), alj = M.alineacion(j.id);
     let fueraOnce = 0;
-    if (alj) { if (alj.estado === 'titular') partes.push('titular en la alineación confirmada'); else { fueraOnce = alj.estado === 'suplente' ? 10 : 12; partes.push(alj.estado === 'suplente' ? 'suplente en la alineación confirmada' : 'no va convocado'); } }
+    if (alj) { if (alj.estado === 'titular') partes.push('titular en la alineación confirmada'); else { fueraOnce = alj.estado === 'suplente' || alj.estado === 'nosale' ? 10 : 12; partes.push(alj.estado === 'suplente' ? 'suplente en la alineación confirmada' : alj.estado === 'nosale' ? 'no sale de titular en la alineación confirmada' : 'no va convocado'); } }
     else if (op && op.titular) partes.push(`titular probable${op.prob != null ? ` (${op.prob} %)` : ''}`);
     else if (op && op.alternativa) { fueraOnce = 10; partes.push('suplente en el once probable'); }
     else if (M.hayOnces && j.pos !== 5 && !op) { fueraOnce = 6; partes.push('no sale en el once probable'); }
@@ -1819,11 +1819,11 @@ function acciones(D, M, c) {
   });
 
   // las alineaciones confirmadas: los tuyos que se quedan en el banquillo o no van, si su partido aún no ha empezado
-  const noJuegan = M.mias.filter((x) => { const a = M.alineacion(x.pid); return a && a.estado !== 'titular' && a.ini > ahora; });
+  const noJuegan = M.mias.filter((x) => { const a = M.alineacion(x.pid); return a && a.estado !== 'titular' && a.ini > ahora && !(a.estado === 'nosale' && MALOS.has(x.j.estado)); });
   if (noJuegan.length) add({
     tipo: 'alinear', prio: 75, icono: 'campo', cuando: cuando(Math.min(...noJuegan.map((x) => M.alineacion(x.pid).ini))),
     titulo: noJuegan.length === 1 ? `${noJuegan[0].j.nombre} no es titular` : `${noJuegan.length} de los tuyos no son titulares`,
-    texto: `${noJuegan.map((x) => { const a = M.alineacion(x.pid); return `${x.j.nombre}, ${a.estado === 'suplente' ? 'suplente' : a.estado === 'baja' ? 'de baja' : 'no convocado'} (juega ${cuando(a.ini)})`; }).join('; ')}. ${noJuegan.length === 1 ? 'Si lo tienes en el once, cámbialo antes de que empiece su partido' : 'Si los tienes en el once, cámbialos antes de que empiece su partido'}.`,
+    texto: `${noJuegan.map((x) => { const a = M.alineacion(x.pid); return `${x.j.nombre}, ${a.estado === 'suplente' ? 'suplente' : a.estado === 'nosale' ? 'no sale de titular' : a.estado === 'baja' ? 'de baja' : 'no convocado'} (juega ${cuando(a.ini)})`; }).join('; ')}. ${noJuegan.length === 1 ? 'Si lo tienes en el once, cámbialo antes de que empiece su partido' : 'Si los tienes en el once, cámbialos antes de que empiece su partido'}.`,
     hash: 'equipo',
   });
 

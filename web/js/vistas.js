@@ -216,7 +216,7 @@ export function equipoHoyHTML(S, { corto = false } = {}) {
   const riesgo = xs.filter((x) => x.riesgo === 'alto');
   // con la alineación de su partido ya confirmada: los que se quedan en el banquillo o no van
   const conf = (x) => (M.alineacion && M.alineacion(x.j.id)) || {};
-  const confSup = xs.filter((x) => conf(x).estado === 'suplente');
+  const confSup = xs.filter((x) => ['suplente', 'nosale'].includes(conf(x).estado));
   const confFuera = xs.filter((x) => ['fuera', 'baja'].includes(conf(x).estado) && !malos.includes(x));
   const sinI = bloqueada('inercia');
   // cada uno con su nombre (se toca y se abre su ficha); si son muchos, los 3 primeros y «+N»

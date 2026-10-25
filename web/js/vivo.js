@@ -10,7 +10,7 @@
    Solo con una jornada en juego; con la app abierta se mira cada 2 minutos (cada minuto en la pestaña Directo). Lo que
    no cuadre se queda fuera: la forma de cada respuesta queda en el registro del diagnóstico. */
 import { api } from './api.js';
-import { norm, num, ms } from './util.js';
+import { norm, num, ms, LS } from './util.js';
 import * as N from './normalizar.js';
 
 /** la lista de una respuesta, venga como venga ({ data: [...] }, [...], { data: { data: [...] } }) */
@@ -106,6 +106,14 @@ function conCalendario(ps, cal) {
 export async function jornadaStats(D, n) {
   let crudo = [];
   try { crudo = lista(await api.statsSemana(n)); } catch (e) { if (e.sesion) throw e; }
+  try {
+    const m0 = crudo.find((m) => m && ((m.local && m.local.players) || []).length);
+    if (m0) {
+      const p0 = m0.local.players[0];
+      guardarMuestraVivo('stats/week: partido', `claves ${Object.keys(m0).join(',')}; estado ${m0.matchState}`);
+      guardarMuestraVivo('stats/week: jugador', JSON.stringify({ ...p0, images: undefined }));
+    }
+  } catch (e) { /* solo es una muestra */ }
   let cal = [];
   try { cal = N.partidos(await api.calendario(n), D.equipos || {}, n); } catch (e) { if (e.sesion) throw e; cal = ((D && D.partidos) || []).filter((p) => Number(p.jornada) === Number(n)); }
   return { t: Date.now(), n, ps: conCalendario(partidosDe(crudo, D, n), cal) };
@@ -201,6 +209,29 @@ export const EVENTOS = [
   ['second_yellow_card', 'am2', 'Segunda amarilla', 'Segundas amarillas'],
   ['red_card', 'roja', 'Roja', 'Rojas'],
 ];
+/*
+ * Para el diagnóstico: una muestra de lo que da LaLiga de verdad en una jornada, con las claves que trae cada cosa
+ * (se guardan en `fm-muestra-vivo`, una por clave y como mucho cada 10 minutos). Así, con un partido en juego, el aviso
+ * de fallo dice si la ficha de cada jugador trae ya sus minutos o no, sin adivinarlo.
+ */
+export function guardarMuestraVivo(clave, txt) {
+  try {
+    const g = LS.get('muestra-vivo', {});
+    if (g[clave] && Date.now() - g[clave].t < 10 * 60e3) return;
+    g[clave] = { t: Date.now(), txt: String(txt).replace(/https?:\/\/\S+/g, '(url)').slice(0, 700) };
+    LS.set('muestra-vivo', g);
+  } catch (e) { /* sin guardar */ }
+}
+export const muestrasVivo = () => LS.get('muestra-vivo', {});
+/** de la ficha de un jugador: lo que trae de la jornada n (su playerStats entero) o, si no está, qué jornadas trae */
+export function muestraSemana(r, n) {
+  const d = r && r.data && typeof r.data === 'object' && !Array.isArray(r.data) ? r.data : r || {};
+  const pm = d.playerMaster && typeof d.playerMaster === 'object' ? d.playerMaster : d;
+  const l = Array.isArray(pm.playerStats) ? pm.playerStats : Array.isArray(d.playerStats) ? d.playerStats : null;
+  if (!l) return `sin playerStats (claves: ${Object.keys(pm).slice(0, 14).join(',')})`;
+  const s = l.find((x) => x && Number(x.weekNumber) === Number(n));
+  return s ? JSON.stringify(s) : `sin la jornada ${n} (trae ${l.length}; las últimas: ${l.slice(-3).map((x) => x && x.weekNumber).join(',') || '—'})`;
+}
 /**
  * de la ficha de un jugador (la respuesta de /player/{id}), lo que hizo en la jornada n:
  * { min, pts, ev: { gol: [cuántos, puntos], … } } o null si esa jornada no está

@@ -1358,6 +1358,8 @@ body.limitado .tostada { z-index: 120; }
 .pt-chip.sube b { color: var(--sube); } .pt-chip.baja b { color: var(--baja); } .pt-chip.cero b { color: var(--texto2); }
 .pt-chip.banq { background: var(--plano2); color: var(--texto2); }
 .pt-mas { align-self: center; font-size: 13px; color: var(--apagado); }
+.pt-conf { align-self: center; display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--sube); }
+.pt-conf .ic { width: 14px; height: 14px; }
 /* la ficha de un partido */
 .pf-mar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin: 4px 0 8px; padding: 16px 10px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
 .pf-eq { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; font: 700 16px/1.15 'Barlow'; text-align: center; }

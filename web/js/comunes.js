@@ -184,7 +184,7 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   const al = M && M.alineacion && j.pos < 5 ? M.alineacion(j.id) : null;
   let marca = '';
   // con la alineación confirmada, lo que diga: titular, suplente o fuera
-  if (al) marca = al.estado === 'titular' ? `<span class="cr-est ok" title="Titular confirmado">${icono('ok')}</span>` : al.estado === 'suplente' ? '<span class="cr-est sup" title="Suplente en la alineación confirmada">SUP</span>' : '<span class="cr-est mal no" title="No va convocado">NO</span>';
+  if (al) marca = al.estado === 'titular' ? `<span class="cr-est ok" title="Titular confirmado">${icono('ok')}</span>` : al.estado === 'suplente' || al.estado === 'nosale' ? `<span class="cr-est sup" title="${al.estado === 'nosale' ? 'No sale de titular en la alineación confirmada' : 'Suplente en la alineación confirmada'}">SUP</span>` : '<span class="cr-est mal no" title="No va convocado">NO</span>';
   else if (MALOS.has(j.estado)) marca = '<span class="cr-est mal">+</span>';
   else if (j.estado === 'doubtful') marca = '<span class="cr-est duda">?</span>';
   else if (conOnce && (!o || !o.titular)) marca = '<span class="cr-est sup">SUP</span>';
@@ -220,7 +220,7 @@ export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}$
 /* la probabilidad de ser titular al lado del nombre, en todas las listas: el motor lo pone la app cada vez que lo rehace */
 let MF = null;
 export function fijarMotor(M) { MF = M; }
-const CONF_TXT = { titular: ['bien', 'Titular'], suplente: ['duda', 'Suplente'], fuera: ['mal', 'No convocado'], baja: ['mal', 'Baja'] };
+const CONF_TXT = { titular: ['bien', 'Titular'], suplente: ['duda', 'Suplente'], nosale: ['duda', 'No titular'], fuera: ['mal', 'No convocado'], baja: ['mal', 'Baja'] };
 /** al lado del nombre: la probabilidad de que sea titular o, con la alineación ya confirmada, si está */
 export function titBadge(M, j) {
   if (!M || !j || !j.pos) return '';

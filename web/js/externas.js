@@ -3,11 +3,11 @@
    - Titulares de prensa (Google Noticias): de tus jugadores, de los candidatos y de LaLiga Fantasy en general,
      que recoge lo que publican Futbol Fantasy, Jornada Perfecta, Comuniate, Analítica Fantasy, Marca, AS, Relevo…
    - Histórico de valor de cada jugador (la API de LaLiga, probando las rutas que ha tenido).
-   - Las alineaciones confirmadas (SofaScore), en cuanto salen, una hora antes de cada partido.
+   - Las alineaciones confirmadas (SofaScore o, si no deja, futbolfantasy), en cuanto salen, una hora antes de cada partido.
    Todo pasa por el puente de la app (sin CORS) y se guarda un rato para no repetir. */
 import { http } from './puente.js';
 import { api, apuntarRegistro } from './api.js';
-import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num } from './util.js';
+import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe } from './util.js';
 
 const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36';
 
@@ -20,7 +20,7 @@ const EQUIPOS_FF = {
   sevilla: 'Sevilla', valencia: 'Valencia', villarreal: 'Villarreal', girona: 'Girona', mallorca: 'Mallorca', 'real-oviedo': 'Oviedo',
 };
 /** a qué página de futbolfantasy corresponde cada equipo de la API */
-function slugsDe(equipos) {
+export function slugsDe(equipos) {
   const out = {};
   for (const [id, e] of Object.entries(equipos || {})) {
     const n = norm(e.nombre);
@@ -65,8 +65,32 @@ export function parseOnce(html) {
   return out.filter((x) => (x.nombre || x.corto).length >= 2);
 }
 
+/**
+ * ¿la página de un equipo dice ya «Alineación confirmada»? Futbolfantasy lo apunta en los últimos eventos del equipo,
+ * con día y hora de España («25/10 19:41 Alineación confirmada de Real Madrid»); cuando sale, los 11 titulares quedan
+ * al 100 % y todos los demás al 0 %. Devuelve { mes, dia, h, mi } de la más reciente, o null. (Esa línea se queda en
+ * la página días después: quien la usa mira que sea de la hora de su partido, `confirmadaPara`.)
+ */
+export function confirmadaFF(html) {
+  if (!html) return null;
+  const txt = String(html).replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ');
+  const m = txt.match(/(\d{1,2})\/(\d{1,2})\s*(\d{1,2}):(\d{2})\s*Alineaci(?:ó|o|&oacute;|&#243;|&#xf3;)n\s+confirmada/i);
+  return m ? { mes: +m[2], dia: +m[1], h: +m[3], mi: +m[4] } : null;
+}
+/** la hora de pared de España de un instante, en ms «de reloj» (para comparar con la que pone futbolfantasy) */
+const paredEs = (t) => { const [y, mo, d] = diaDe(t).split('-').map(Number); const [h, mi] = horaDe(t).split(':').map(Number); return Date.UTC(y, mo - 1, d, h, mi); };
+/** ¿esa confirmación es de este partido? (de las 5 h antes de que empiece a la hora y media después) */
+export function confirmadaPara(c, inicio) {
+  if (!c || !inicio) return false;
+  const K = paredEs(inicio), anyo = new Date(K).getUTCFullYear();
+  let C = Date.UTC(anyo, c.mes - 1, c.dia, c.h, c.mi);
+  if (C - K > 180 * DIA) C = Date.UTC(anyo - 1, c.mes - 1, c.dia, c.h, c.mi);
+  else if (K - C > 180 * DIA) C = Date.UTC(anyo + 1, c.mes - 1, c.dia, c.h, c.mi);
+  return K - C >= -90 * MIN && K - C <= 5 * HORA;
+}
+
 /** casa los jugadores del once probable con los de la API: { pid: { titular, alternativa, prob, estado } } */
-function unirOnce(lista, jugadoresEquipo) {
+export function unirOnce(lista, jugadoresEquipo) {
   const out = {};
   for (const x of lista) {
     const largo = norm(x.nombre), corto = norm(x.corto);
@@ -511,17 +535,19 @@ export async function avanzadas(D, M, pidsFoco = []) {
    Una hora antes de cada partido salen los onces de verdad. SofaScore los da marcados con «confirmed»: los titulares,
    los del banquillo y los que faltan (lesionados, sancionados); el que no sale en ninguna lista no va convocado.
    Antes de eso, lo que da SofaScore es su once probable (sin «confirmed») y no se usa: para eso está el de
-   futbolfantasy. Solo se piden los partidos de LaLiga que empiezan en menos de 75 minutos o se están jugando, y uno
-   ya confirmado no se vuelve a pedir.
+   futbolfantasy. Solo se piden los partidos de LaLiga que empiezan en menos de 100 minutos o se están jugando, y uno
+   ya confirmado no se vuelve a pedir. Si SofaScore no deja (desde la web y desde algún móvil da 403), vale el de
+   futbolfantasy: su página de cada equipo pone «Alineación confirmada» con la hora y deja a los 11 al 100 % (`onceFF`;
+   no dice quién está en el banquillo: los demás quedan como «nosale», «no sale de titular»).
    { t, partidos: { [ev]: { t, ini, local, visitante, conf, jug: { pid: estado } } },
      jugadores: { [pid]: { estado: 'titular'|'suplente'|'fuera'|'baja', ini } } } */
-export const ANTES_ONCE = 75 * MIN, DURA_PARTIDO = 2.5 * HORA;
+export const ANTES_ONCE = 100 * MIN, DURA_PARTIDO = 2.5 * HORA;
 const casaEquipo = (a, b) => {
   if (mismoEquipo(a, b)) return true;
   const x = aliasEquipo(a)[0], y = aliasEquipo(b)[0];
   return x.length >= 4 && y.length >= 4 && (x.includes(y) || y.includes(x));
 };
-/** los partidos que importan ahora: los que empiezan en menos de 75 minutos o se están jugando */
+/** los partidos que importan ahora: los que empiezan en menos de 100 minutos o se están jugando */
 export const partidosConOnce = (D, ahora = Date.now()) => ((D && D.partidos) || []).filter((p) => p.fecha && p.fecha - ahora < ANTES_ONCE && ahora - p.fecha < DURA_PARTIDO);
 /** ¿hay alguno de esos sin alineación confirmada todavía? (para mirar cada pocos minutos) */
 export function faltaOnce(D) {
@@ -596,6 +622,37 @@ export function cruzarOnce(D, e, r) {
   }
   return out;
 }
+/**
+ * el once confirmado de futbolfantasy, por si SofaScore no deja: de cada partido que empieza ya y aún no tiene el
+ * suyo, la página de cada equipo; vale si pone «Alineación confirmada» de la hora de ese partido y salen 11 titulares
+ * (con un solo portero). Se guarda por partido (`ff:local-visitante`), con los equipos que ya han salido, y cada uno
+ * se vuelve a pedir como pronto a los 3 minutos. Los jugadores del equipo que no salen quedan como 'nosale'.
+ */
+async function onceFF(D, partidos, P, ahora) {
+  const slugs = slugsDe(D.equipos);
+  const porEquipo = {};
+  for (const j of Object.values(D.maestro || {})) (porEquipo[j.equipoId] ||= []).push(j);
+  for (const p of partidos) {
+    const clave = `ff:${p.localId}-${p.visitanteId}`;
+    const prev = P[clave] || { t: 0, ini: p.fecha, local: p.localId, visitante: p.visitanteId, conf: false, ff: true, eqs: {}, jug: {} };
+    if (ahora - prev.t < 3 * MIN) continue;
+    const eqs = { ...prev.eqs }, jug = { ...prev.jug };
+    const pedir = [p.localId, p.visitanteId].filter((id) => slugs[id] && !eqs[id]);
+    await enParalelo(pedir, 2, async (eq) => {
+      const t0 = Date.now();
+      const r = await http('GET', `https://www.futbolfantasy.com/laliga/equipos/${slugs[eq]}`, { cabeceras: { Accept: 'text/html', 'Accept-Language': 'es-ES,es;q=0.9', 'User-Agent': UA } });
+      apuntarRegistro({ ruta: `futbolfantasy alineación ${slugs[eq]}`, s: r.s, ms: Date.now() - t0, e: r.e });
+      if (r.s !== 200 || !r.b || !confirmadaPara(confirmadaFF(r.b), p.fecha)) return;
+      const un = unirOnce(parseOnce(r.b), porEquipo[eq] || []);
+      const tit = Object.keys(un).filter((id) => un[id].titular && (un[id].prob == null || un[id].prob >= 90));
+      const porteros = tit.filter((id) => D.maestro[id] && D.maestro[id].pos === 1).length;
+      if (tit.length !== 11 || porteros !== 1) { apuntarRegistro({ ruta: `futbolfantasy alineación ${slugs[eq]}`, s: 200, ms: 0, e: `confirmada, pero salen ${tit.length} titulares y ${porteros} porteros: no se usa` }); return; }
+      for (const j of porEquipo[eq] || []) if (j.pos !== 5) jug[j.id] = tit.includes(String(j.id)) ? 'titular' : 'nosale';
+      eqs[eq] = Date.now();
+    });
+    P[clave] = { ...prev, t: Date.now(), ini: p.fecha, eqs, jug, conf: !!(eqs[p.localId] && eqs[p.visitanteId]) };
+  }
+}
 /** las alineaciones de los partidos que empiezan ya (o se están jugando) */
 export async function alineaciones(D) {
   const g = LS.get('alineaciones', null);
@@ -625,8 +682,14 @@ export async function alineaciones(D) {
       });
     } catch (er) { /* sin la jornada de SofaScore no se sabe qué partido es: se sigue sin alineaciones */ }
   }
+  // si SofaScore no ha dado el once de alguno de esos partidos, el de futbolfantasy
+  if (!D.demo) {
+    const sin = partidosConOnce(D, ahora).filter((p) => !Object.values(P).some((x) => x.conf && !x.ff && x.local === p.localId && x.visitante === p.visitanteId));
+    if (sin.length) await onceFF(D, sin, P, ahora).catch(() => {});
+  }
   const jugadores = {};
-  for (const p of Object.values(P)) if (p.conf) for (const [pid, estado] of Object.entries(p.jug || {})) jugadores[pid] = { estado, ini: p.ini };
+  // (el de SofaScore, si lo hay, manda sobre el de futbolfantasy; y uno de futbolfantasy a medias —solo salió un equipo— vale para ese equipo)
+  for (const p of Object.values(P).sort((a, b) => (a.ff ? 0 : 1) - (b.ff ? 0 : 1))) if (p.conf || (p.ff && Object.keys(p.jug || {}).length)) for (const [pid, estado] of Object.entries(p.jug || {})) jugadores[pid] = { estado, ini: p.ini };
   const out = { t: Date.now(), partidos: P, jugadores };
   if (!D.demo) LS.set('alineaciones', out);
   return out;

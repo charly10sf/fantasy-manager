@@ -15,6 +15,7 @@ import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { estadoLimite, bloqueada, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
+import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
 
 const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
@@ -745,6 +746,11 @@ export function textoDiagnostico(S) {
   if (D && D.muestras) {
     L.push('', 'MUESTRAS (para ver los nombres de los campos):');
     for (const [k, v] of Object.entries(D.muestras)) L.push(`${k}: ${v}`);
+  }
+  const mv = muestrasVivo();
+  if (Object.keys(mv).length) {
+    L.push('', 'MUESTRAS DE LA JORNADA EN DIRECTO (lo que da LaLiga):');
+    for (const [k, v] of Object.entries(mv)) L.push(`${k} (${horaDe(v.t)}): ${v.txt}`);
   }
   return L.join('\n');
 }

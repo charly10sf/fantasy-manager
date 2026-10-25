@@ -18,7 +18,7 @@ import { md } from './texto.js';
 import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub } from './externas.js';
-import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana } from './vivo.js';
+import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop } from './limite.js';
@@ -786,7 +786,12 @@ async function cargarHechos(n, p) {
   S.hechos[k] = { ...(g || { porJug: {} }), cargando: true };
   const porJug = { ...((g && g.porJug) || {}) };
   await enParalelo(ids, 4, async (pid) => {
-    try { const h = hechosSemana(await api.jugador(pid, S.D.liga.id), n); if (h) porJug[pid] = h; } catch (e) { if (e.sesion) throw e; }
+    try {
+      const r = await api.jugador(pid, S.D.liga.id), h = hechosSemana(r, n);
+      if (h) porJug[pid] = h;
+      // (una muestra de lo que trae, para el diagnóstico: con minutos o sin ellos, partido en juego o acabado)
+      guardarMuestraVivo(`ficha de jugador, partido ${fin ? 'acabado' : 'en juego'}, ${h && h.min != null ? 'con minutos' : 'sin minutos'}`, muestraSemana(r, n));
+    } catch (e) { if (e.sesion) throw e; }
   });
   S.hechos[k] = { t: Date.now(), fin, porJug, cargando: false };
   if (S.tipoHoja && S.tipoHoja[0] === 'p' && S.tipoHoja[1] === k) repintarHoja();
