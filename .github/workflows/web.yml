@@ -1,6 +1,9 @@
 # Publica la versión web (la carpeta web/, la misma que va dentro de la app) en GitHub Pages:
-# https://charly10sf.github.io/fantasy-manager/
-# Hace falta una vez: Settings > Pages > Source: «GitHub Actions».
+# https://charly10sf.github.io/fantasy-manager/ y, con el dominio en GitHub Pages (el plan de claude/BLOQUEO-LALIGA.md,
+# para que con partidos no lo corten), https://fantasymanagerapp.com. Hace falta una vez: Settings > Pages > Source:
+# «GitHub Actions» (y el dominio en «Custom domain»). Lleva también lo que antes solo subía dominio.yml a Cloudflare:
+# app.json y el APK en /descargas/ (ads.txt y app-ads.txt ya van en web/). Por eso se vuelve a lanzar al acabar
+# «App Android» en main: es cuando cambian app.json y el APK.
 name: Web
 
 on:
@@ -8,6 +11,10 @@ on:
     branches: [main]
     # también cuando cambia la parte Android: así el paquete.json publicado lleva su huella nueva
     paths: ['web/**', 'android/app/src/**', '.github/paquete.py', '.github/workflows/web.yml']
+  workflow_run:
+    workflows: ["App Android"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -27,10 +34,20 @@ jobs:
       url: ${{ steps.pages.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/configure-pages@v5
       # web/paquete.json: lo que la app compara con lo que trae dentro para ponerse al día sin reinstalar
       - name: Huellas
         run: python3 .github/paquete.py
+      # después de las huellas: no van en paquete.json (AlDia no las baja), solo se sirven
+      - name: app.json y el APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp app.json web/app.json
+          mkdir -p web/descargas
+          gh release download app -p fantasy-manager.apk -D web/descargas -R "${{ github.repository }}" || echo "::warning::No se ha podido bajar el APK de la release"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web
