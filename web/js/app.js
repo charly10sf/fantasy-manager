@@ -2036,25 +2036,29 @@ function versionVista() {
   const vieja = LS.get('version-vista', null);
   return vieja ? deNumeracionVieja(vieja) || '0.0.1' : null;
 }
-/* A cada uno, lo que le afecta: el dueño (Carlos, el admin de los avisos) lo ve todo; los demás, ni los arreglos ni lo
-   «menor» (detalles, cosas de dentro) ni lo que es de otra versión de la app: «para» 'play' (la de Google Play),
-   'app' (Android), 'web' (iPhone y ordenador) o 'dueño' (solo él) */
-fijarFiltroNovedades((c) => {
+/* A cada uno, lo que le afecta: el dueño (Carlos, el admin de los avisos) lo ve todo; los demás, ni lo «menor»
+   (detalles, cosas de dentro) ni lo que es de otra versión de la app: «para» 'play' (la de Google Play), 'app'
+   (Android), 'web' (iPhone y ordenador) o 'dueño' (solo él). Los arreglos no van en cromos: salen al final, numerados,
+   para todos (también los menores), menos los que son de otra versión */
+const paraMi = (c) => {
   if (avisosGuardados().admin) return true;
-  if (c.tipo === 'arreglo' || c.menor || c.para === 'dueño') return false;
+  if (c.para === 'dueño') return false;
   if (c.para === 'play') return topConAnuncio();
   if (c.para === 'app') return enApp;
   if (c.para === 'web') return !enApp;
   return true;
-});
+};
+fijarFiltroNovedades((c) => paraMi(c) && (avisosGuardados().admin || !c.menor), paraMi);
 /** al estrenar versión, las novedades contadas bajando; la primera vez que se instala, nada */
 function novedades() {
   const vista = versionVista();
-  LS.set('version-vista2', VERSION);
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
-  if (!tourVisto()) return;
-  if (!vista || cmpVer(vista, VERSION) >= 0 || !hayNovedadesDesde(vista)) return;
+  if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
+  // si desde la última que viste solo hay arreglos, no se abre nada: se juntan para la próxima con algo nuevo, que los
+  // cuenta al final, numerados
+  if (!hayNovedadesDesde(vista)) return;
+  LS.set('version-vista2', VERSION);
   verNovedades(vista);
 }
 function verNovedades(desde) {

@@ -1560,3 +1560,17 @@ button.jg.ev-f { width: 100%; text-align: left; color: var(--texto); }
 .ev-f .ev-pts { flex: none; min-width: 34px; padding: 2px 7px; border-radius: 7px; font: 700 15px var(--cond); text-align: center; background: var(--plano2); }
 .ev-f .ev-pts.sube { color: var(--sube); }
 .ev-f .ev-pts.baja { color: var(--baja); }
+/* las notas de la actualización: los arreglos al final, numerados (presentación y lista de Ajustes) */
+.nv-notas { padding: 56px 22px 20px; max-width: 620px; margin: 0 auto; }
+.nv-notas .nv-eti { text-align: left; }
+.nv-notas h2 { margin: 4px 0 14px; font: 700 34px var(--cond); text-transform: uppercase; }
+.nv-notas ol, .nvl-arr ol { margin: 0; padding: 0; list-style: none; counter-reset: arr; }
+.nv-notas li, .nvl-arr li { position: relative; padding: 10px 0 10px 40px; border-top: 1px solid var(--linea); counter-increment: arr; text-align: left; }
+.nv-notas li::before, .nvl-arr li::before { content: counter(arr); position: absolute; left: 0; top: 10px; width: 28px; height: 24px; border-radius: 7px; display: grid; place-items: center; background: var(--sube-s); color: var(--sube); font: 700 15px var(--cond); }
+.nv-notas li b { display: block; font-weight: 600; font-size: 16px; }
+.nv-notas li span { display: block; margin-top: 3px; color: var(--texto2); font-size: 14.5px; line-height: 1.4; }
+.nv-notas li small { display: inline-block; margin-top: 4px; color: var(--apagado); font-size: 12.5px; }
+.nvl-arr { margin: 6px 0 4px; }
+.nvl-arr .nv-tipo { margin-bottom: 6px; }
+.nvl-arr li b { font-weight: 600; }
+.nvl-arr li p { margin: 3px 0 0; color: var(--texto2); font-size: 14.5px; }

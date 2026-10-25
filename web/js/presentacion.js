@@ -14,22 +14,24 @@ export function fechaNov(n) {
   const d = new Date(`${n.f}T12:00:00`);
   return `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]}${n.h ? `, ${n.h}` : ''}`;
 }
-const cuenta = (cosas) => {
-  const nuevas = cosas.filter((c) => c.tipo !== 'arreglo').length, arreglos = cosas.length - nuevas;
-  return [nuevas ? `${nuevas} novedad${nuevas > 1 ? 'es' : ''}` : '', arreglos ? `${arreglos} arreglo${arreglos > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ');
-};
+const cuenta = (n, a) => [n ? `${n} novedad${n > 1 ? 'es' : ''}` : '', a ? `${a} ${a > 1 ? 'correcciones' : 'corrección'}` : ''].filter(Boolean).join(' · ');
 
-/* Lo que ve cada uno: el dueño, todo; los demás, solo lo que les cambia algo (app.js pone el filtro: sin arreglos, sin
-   lo «menor» ni lo de otra versión de la app). Las versiones que se quedan sin nada no salen. */
-let filtro = () => true;
-export function fijarFiltroNovedades(f) { filtro = f || (() => true); }
+/* Lo que ve cada uno (app.js pone los dos filtros). Lo nuevo y las mejoras, cada una en su cromo: el dueño, todo; los
+   demás, solo lo que les cambia algo (sin lo «menor» ni lo de otra versión de la app). Los arreglos, para todos, al final
+   en una lista numerada, como las notas de una actualización de un videojuego (lo pidió Carlos el 25 oct). Las
+   versiones que se quedan sin nada no salen. */
+let filtro = () => true, filtroArr = () => true;
+export function fijarFiltroNovedades(f, fa) { filtro = f || (() => true); filtroArr = fa || filtro; }
 // (si a una versión se le quita algo, su título pasa a ser el de lo primero que queda: el suyo podía hablar de lo quitado)
 const visibles = () => NOVEDADES.map((n) => {
-  const cosas = (n.cosas || []).filter((c) => filtro(c));
-  return { ...n, cosas, t: cosas.length && cosas.length < (n.cosas || []).length ? cosas[0].t : n.t };
-}).filter((n) => n.cosas.length);
-/** ¿hay algo que contar desde esa versión? */
-export const hayNovedadesDesde = (desde) => visibles().some((n) => !desde || cmpVer(n.v, desde) > 0);
+  const todas = n.cosas || [];
+  const cosas = todas.filter((c) => c.tipo !== 'arreglo' && filtro(c));
+  const arreglos = todas.filter((c) => c.tipo === 'arreglo' && filtroArr(c));
+  const t = cosas.length ? (todas[0] === cosas[0] ? n.t : cosas[0].t) : arreglos.length ? (todas[0] === arreglos[0] ? n.t : arreglos[0].t) : n.t;
+  return { ...n, cosas, arreglos, t };
+}).filter((n) => n.cosas.length || n.arreglos.length);
+/** ¿hay algo nuevo que contar desde esa versión? (solo arreglos no abren la presentación: se juntan para la siguiente) */
+export const hayNovedadesDesde = (desde) => visibles().some((n) => (!desde || cmpVer(n.v, desde) > 0) && n.cosas.length);
 
 /** las versiones que no has visto (si no hay ninguna, la última con algo para ti) */
 export function versionesDesde(desde) {
@@ -55,10 +57,10 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
   const quieta = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nuevas = versionesDesde(desde);
   if (!nuevas.length) { alCerrar(); return; }
-  const todas = [];
-  for (const n of nuevas) for (const c of n.cosas || []) todas.push({ ...c, v: n.v });
+  const todas = [], arreglos = [];
+  for (const n of nuevas) { for (const c of n.cosas || []) todas.push({ ...c, v: n.v }); for (const c of n.arreglos || []) arreglos.push({ ...c, v: n.v }); }
   // si te has perdido muchas, solo lo principal: lo nuevo (de lo más reciente a lo más viejo) y, si falta, las mejoras;
-  // los arreglos y lo pequeño, en la lista de versiones
+  // lo demás, en la lista de versiones (los arreglos van todos al final, numerados)
   const MAX = 6, PRINCIPALES = 5;
   let cosas = todas, resto = 0;
   if (todas.length > MAX) {
@@ -78,7 +80,7 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
       <section class="nv-heroe"><div class="nv-heroe-in">
         <p class="nv-eti">${nuevas.length > 1 ? `${resto ? 'Lo principal' : 'Lo que te has perdido'} desde la ${esc(desde)}` : 'Lo nuevo'}</p>
         <h1 class="nv-num" aria-label="Versión ${esc(n0.v)}">${[...ver].map((ch, i) => (ch === '.' ? '<span class="pt" aria-hidden="true"></span>' : `<span class="dg" style="--i:${i}" aria-hidden="true">${esc(ch)}</span>`)).join('')}</h1>
-        <div class="nv-lema"><h2>${esc(n0.t)}</h2><p>${esc(fechaNov(n0))} · ${esc(cuenta(todas))}${resto ? ` en ${nuevas.length} versiones: te cuento las ${cosas.length} principales` : ''}</p></div>
+        <div class="nv-lema"><h2>${esc(n0.t)}</h2><p>${esc(fechaNov(n0))} · ${esc(cuenta(todas.length, arreglos.length))}${resto ? ` en ${nuevas.length} versiones: te cuento las ${cosas.length} principales` : ''}</p></div>
         <div class="nv-baja" aria-hidden="true"><span>Desliza</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
       </div></section>
       ${cosas.map((c, k) => `<section class="nv-cap" data-lado="${k % 2 ? 'd' : 'i'}" style="--acc:${ACENTOS[k % ACENTOS.length]}">
@@ -90,10 +92,15 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
           ${c.ir ? `<button type="button" class="btn chico" data-nv-ir="${k}">Verlo</button>` : ''}
         </div>
       </section>`).join('')}
+      ${arreglos.length ? `<section class="nv-notas">
+        <p class="nv-eti">Notas de la actualización</p>
+        <h2>Correcciones</h2>
+        <ol>${arreglos.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<span>${esc(c.x)}</span>` : ''}${nuevas.length > 1 ? `<small>${esc(c.v)}</small>` : ''}</li>`).join('')}</ol>
+      </section>` : ''}
       <section class="nv-fin">
         <div class="nv-fin-logo">${LOGO}</div>
         <h2>${resto ? 'Y más' : 'Eso es todo'}</h2>
-        <p>${resto ? `Hay ${resto} cosa${resto > 1 ? 's' : ''} más${todas.some((c) => c.tipo === 'arreglo') ? ', sobre todo arreglos' : ''}: están en la lista de versiones.` : 'Si algo no va como esperas, mándame el diagnóstico desde Ajustes.'}</p>
+        <p>${resto ? `Hay ${resto} novedad${resto > 1 ? 'es' : ''} más: están en la lista de versiones.` : 'Si algo no va como esperas, avísame desde Ajustes → Reportar un fallo.'}</p>
         <button type="button" class="btn" data-nv="fin">A mi liga</button>
         <button type="button" class="nv-enlace" data-nv="lista">${resto ? 'Ver todo lo que ha cambiado' : 'Ver todas las versiones'}</button>
       </section>
@@ -174,5 +181,6 @@ export function listaNovedades() {
   return visibles().map((n) => `<div class="nvl">
     <div class="nvl-cab"><b>${esc(n.v)}</b><span>${esc(n.t)}</span><small>${esc(fechaNov(n))}</small></div>
     ${(n.cosas || []).map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
+    ${(n.arreglos || []).length ? `<div class="nvl-arr"><span class="nv-tipo arreglo">Correcciones</span><ol>${n.arreglos.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</li>`).join('')}</ol></div>` : ''}
   </div>`).join('');
 }
