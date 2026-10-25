@@ -231,21 +231,26 @@ export function analizar(D, H, c, extra = {}) {
     let n = null, pts = null;
     if (vivo != null && M.enJuego) { n = M.enJuego.n; pts = vivo; }
     else { const s = [...(j.semanas || [])].filter((w) => w.pts != null).sort((a, b) => b.n - a.n)[0]; if (s) { n = s.n; pts = s.pts; } }
-    if (n == null || pts == null || pts < 9) return null;
+    if (n == null || pts == null || pts < 6) return null;
     const p = [...(D.partidos || []), ...(D.resultados || [])].find((q) => Number(q.jornada) === n && (q.localId === j.equipoId || q.visitanteId === j.equipoId) && q.fecha);
     const jo = (M.jornadas || []).find((x) => x.n === n);
     const fue = p ? p.fecha : jo ? jo.ini : null;
     const ahoraP = Date.now();
-    return fue && fue <= ahoraP && ahoraP - fue < 3 * DIA ? { pts, n } : null;
+    if (!(fue && fue <= ahoraP && ahoraP - fue < 3 * DIA)) return null;
+    // por escalones (lo pidió Carlos el 25 oct): 6-7 un buen partido (solo se avisa), 8-9 muy bueno (no se manda
+    // vender con prisa), 10 o más un partidazo (no se manda vender por la bajada)
+    return { pts, n, nivel: pts >= 10 ? 3 : pts >= 8 ? 2 : 1 };
   };
   /** ¿hay que venderlo ya por la inercia? (ha girado o se ha parado tras subir, o está a punto) */
   M.ventaPorInercia = (pid) => {
     const x = M.inercia(pid);
     if (!x) return null;
-    // con un partidazo de hace nada, no se manda vender por la bajada: lo normal es que mañana suba
-    if (M.partidazo(pid) && ['giro', 'baja', 'parado', 'frena'].includes(x.fase)) return null;
+    // tras un partidazo (10 o más) no se manda vender por la bajada: lo normal es que mañana suba; tras uno muy bueno
+    // (8-9), sin prisa: «antes del giro» en vez de «ya»
+    const pz = M.partidazo(pid), nivel = pz ? pz.nivel : 0;
+    if (nivel >= 3 && ['giro', 'baja', 'parado', 'frena'].includes(x.fase)) return null;
     const j = J(pid), perder = -x.proyJ;
-    if ((x.fase === 'giro' || x.fase === 'baja') && perder >= Math.max(150000, j.valor * 0.012)) return { urgencia: 'ya', ...x, perder };
+    if ((x.fase === 'giro' || x.fase === 'baja') && perder >= Math.max(150000, j.valor * 0.012)) return { urgencia: nivel >= 2 ? 'antes del giro' : 'ya', ...x, perder };
     if (x.fase === 'parado' || (x.fase === 'frena' && x.giroEn != null && x.giroEn <= 2.5)) return { urgencia: 'antes del giro', ...x, perder: Math.max(0, perder) };
     return null;
   };
@@ -253,11 +258,16 @@ export function analizar(D, H, c, extra = {}) {
   /* ---------- jornada, partidos y parones ---------- */
   const porJornada = {};
   for (const p of D.partidos || []) if (p.fecha) (porJornada[p.jornada] ||= []).push(p);
-  const jornadas = Object.entries(porJornada).map(([n, ps]) => ({
-    n: +n, ini: Math.min(...ps.map((p) => p.fecha)), fin: Math.max(...ps.map((p) => p.fecha)) + 2 * HORA, partidos: ps,
-  })).sort((a, b) => a.ini - b.ini);
+  // un partido aplazado (más de 6 días después del primero de su jornada) no alarga la jornada: si no, la jornada
+  // seguiría «en juego» semanas y se juntaría con las siguientes (lo avisó Carlos el 25 oct). Va aparte, en «aplazados»
+  const jornadas = Object.entries(porJornada).map(([n, ps]) => {
+    const ini = Math.min(...ps.map((p) => p.fecha));
+    const normales = ps.filter((p) => p.fecha - ini <= 6 * DIA), aplazados = ps.filter((p) => p.fecha - ini > 6 * DIA);
+    return { n: +n, ini, fin: Math.max(...normales.map((p) => p.fecha)) + 2 * HORA, partidos: ps, aplazados };
+  }).sort((a, b) => a.ini - b.ini);
   M.jornadas = jornadas;
-  M.enJuego = jornadas.find((j) => j.ini <= ahora && ahora <= j.fin) || null;
+  // si dos se solapan (una jornada entre semana pegada a otra), manda la última que ha empezado
+  M.enJuego = [...jornadas].reverse().find((j) => j.ini <= ahora && ahora <= j.fin) || null;
   M.proxima = jornadas.find((j) => j.ini > ahora) || null;
   // el cierre de cláusulas: LaLiga no deja clausular a nadie en las 24 h antes del primer partido de cada jornada; se
   // reabren justo a la hora de ese primer partido
@@ -1626,7 +1636,7 @@ function acciones(D, M, c) {
     texto: `No te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y baja ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Plantéate venderlo antes de que pierda más valor.`,
   }));
 
-  M.mias.filter((x) => !x.ventaInercia && x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3 && !MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => !x.ventaInercia && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3 && !MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 50, icono: 'hucha', pid: x.pid, cuando: 'Antes de que baje más',
     titulo: `Vende a ${x.j.nombre} con beneficio`,
     texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.`,
@@ -1702,7 +1712,7 @@ export function planAuto(D, M, c) {
       motivo: `${x.j.estado === 'injured' ? 'Lesionado' : x.j.estado === 'suspended' ? 'Sancionado' : 'Fuera de LaLiga'}: no te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y ya ha perdido un ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Mejor venderlo antes de que baje más.`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
-  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ganado > 0 && y.tend.p7 != null && y.tend.p7 < -4).slice(0, 2)) {
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && ((M.partidazo(y.pid) || {}).nivel || 0) < 2 && y.ganado > 0 && y.tend.p7 != null && y.tend.p7 < -4).slice(0, 2)) {
     op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
       motivo: `Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva un ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días. Asegura el beneficio.` });
     saldo += x.j.valor; vendidos.add(x.pid);

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.3b';
+export const VERSION = '0.6.3c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.6.3b';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.3c', f: '2026-10-25', h: '02:48', t: 'Los partidazos, por escalones',
+    cosas: [
+      { tipo: 'mejora', d: 'grafica', t: 'Los partidazos, por escalones', x: 'Si un jugador viene bajando y acaba de hacer un buen partido, la app lo tiene en cuenta según cuánto: con 6 o 7 puntos te avisa de que puede suavizar la bajada; con 8 o 9 ya no te dice que lo vendas con prisa; con 10 o más no te manda venderlo por la bajada, porque lo normal es que suba los días siguientes.' },
+      { tipo: 'arreglo', d: 'campo', t: 'Los partidos aplazados', x: 'Un partido aplazado ya no deja su jornada «en juego» durante semanas ni la junta con las siguientes.' },
+      { para: 'play', tipo: 'arreglo', d: 'escudo', t: 'Lo abierto con anuncios dura lo que tiene que durar', x: 'Si abrías una función de los rivales justo antes de que acabara la jornada, se cerraba al empezar la siguiente. Ahora dura su hora entera, y al pasar la hora se cierra también en la ficha que tengas abierta.' },
+    ],
+  },
   {
     v: '0.6.3b', f: '2026-10-25', h: '01:46', t: 'Lo que pagaste y los partidazos',
     cosas: [
@@ -30,7 +38,7 @@ export const NOVEDADES = [
   {
     v: '0.6.3', f: '2026-10-25', h: '00:23', t: 'Funciones top con un anuncio',
     cosas: [
-      { para: 'play', tipo: 'nuevo', d: 'escudo', t: 'Las funciones top, viendo un anuncio', x: 'En la versión de Google Play, las cuatro funciones top (el dinero de cada rival, quién puede pagar tus cláusulas, cuándo gira un jugador y lo que venden los rivales) se abren viendo un anuncio corto: toca cualquier candado y quedan abiertas hasta medianoche. En la versión de la liga, que no lleva anuncios, siguen como estaban.', ir: { v: 'rivales' } },
+      { para: 'dueño', tipo: 'nuevo', d: 'escudo', t: 'Las funciones top, viendo un anuncio', x: 'En la versión de Google Play, las cuatro funciones top (el dinero de cada rival, quién puede pagar tus cláusulas, cuándo gira un jugador y lo que venden los rivales) se abren viendo un anuncio corto: toca cualquier candado y quedan abiertas hasta medianoche. En la versión de la liga, que no lleva anuncios, siguen como estaban.', ir: { v: 'rivales' } },
     ],
   },
   {

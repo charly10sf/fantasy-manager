@@ -42,6 +42,7 @@ jobs:
         run: node .github/fallos.mjs
       # en el repo privado de los avisos, sin historia: así Claude lo lee con git
       - name: Dejarlos en el repo privado de los avisos
+        continue-on-error: true
         env:
           AVISOS_TOKEN: ${{ secrets.AVISOS_TOKEN }}
         run: |

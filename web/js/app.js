@@ -21,7 +21,7 @@ import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub } fr
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -373,12 +373,14 @@ function pedirOtroPlan() {
   S.planEstado = {};
   generarPlan();
 }
-/** al pasar su hora, la función que se abrió por un rato se vuelve a cerrar en pantalla */
+/** al pasar su hora, lo que se abrió por un rato se vuelve a cerrar en pantalla (también la ficha abierta). Un solo
+    temporizador, siempre a la hora más cercana de todo lo abierto; se vuelve a poner al rehacer los datos */
 let topT = 0;
-function cerrarTopA(hasta) {
-  if (!hasta) return;
+function cerrarTopA() {
   clearTimeout(topT);
-  topT = setTimeout(() => { if (S.D && S.M) { if (!S.hoja) pintar(); else if (S.tipoHoja && S.tipoHoja[0] !== 'anuncio') repintarHoja(); } }, Math.max(1000, hasta - Date.now() + 500));
+  const hasta = proximoCierreTop();
+  if (!hasta) return;
+  topT = setTimeout(() => { if (S.D && S.M) { if (!S.hoja) pintar(); else if (S.tipoHoja && S.tipoHoja[0] !== 'anuncio') repintarHoja(); } cerrarTopA(); }, Math.max(1000, hasta - Date.now() + 500));
 }
 /** la vuelta del anuncio bonificado (Anuncios.java) */
 window.anuncioVisto = (para, visto, motivo) => {
@@ -406,7 +408,7 @@ window.anuncioVisto = (para, visto, motivo) => {
       if (volver) hoja(volver[0], volver[1]);
       const hasta = abiertaHasta(clave);
       tostada(!visto ? 'No había anuncio ahora: abierta gratis media hora' : hasta ? `Abierta hasta las ${horaDe(hasta)}${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : 'Abierta hasta medianoche', 5000);
-      cerrarTopA(hasta);
+      cerrarTopA();
       return;
     }
     S.anuncio = { ...(S.anuncio || {}), para, cargando: false, error: 'Para abrirlas hay que ver el anuncio hasta el final.' };
@@ -456,6 +458,7 @@ function rehacer() {
   // quién eres, para lo bloqueado (antes de pintar nada)
   fijarYo(yoReal(), enDemo());
   fijarJornada(((S.M && (S.M.enJuego || S.M.proxima)) || {}).n);
+  cerrarTopA();
   // lo previsto frente a lo que pasó: corrige los puntos esperados de la próxima pasada y lo ve la IA
   aprender(S.D, S.M, S.det);
   montarPlan();

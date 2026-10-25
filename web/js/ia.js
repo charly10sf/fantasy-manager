@@ -321,8 +321,10 @@ function previaTxt(M, j) {
 function inerciaTxt(M, j) {
   const x = M.inercia ? M.inercia(j.id) : null;
   const pz = M.partidazo ? M.partidazo(j.id) : null;
-  const ojo = pz ? `; OJO: ACABA DE HACER ${pz.pts} PTS (J${pz.n}): tras un partido así LaLiga suele subirle el valor los días siguientes, así que la bajada puede frenarse o girar al alza; no digas que sigue bajando sin decir esto` : '';
-  if (!x || x.fase === 'plano') return pz ? `ACABA DE HACER ${pz.pts} PTS (J${pz.n}): lo normal es que suba los próximos días` : null;
+  const QUE = pz ? ['', 'un buen partido', 'un partido muy bueno', 'un partidazo'][pz.nivel] : '';
+  const EFECTO = pz ? ['', 'puede suavizar la bajada', 'lo normal es que la bajada se frene', 'lo normal es que suba los próximos días'][pz.nivel] : '';
+  const ojo = !pz ? '' : x && ['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; OJO: ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO}; tenlo en cuenta antes de decir que siga bajando o que lo venda` : `; ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): lo normal es que siga subiendo`;
+  if (!x || x.fase === 'plano') return pz ? `ACABA DE HACER ${QUE} (${pz.pts} PTS, J${pz.n}): ${EFECTO.replace('la bajada', 'su valor')}` : null;
   return inerciaLinea(M, j, x) + ojo;
 }
 function inerciaLinea(M, j, x) {
@@ -865,7 +867,7 @@ export function cuadrarPlan(P, D, M) {
     o.compra = { precio: x.compra, gana: precio - x.compra, con: o.importe ? 'venta' : 'valor' };
     if (o.descartada || o.compra.gana >= 0 || !o.hoy || final == null || final - (o.importe || 0) < 0) continue;
     const t = M.tend(o.pid);
-    const bajando = x.ventaInercia || (t.p1 != null && t.p1 < -1) || (t.p7 != null && t.p7 < -3) || ['injured', 'suspended'].includes(x.j.estado);
+    const bajando = ((M.partidazo && M.partidazo(o.pid)) || {}).nivel !== 3 && (x.ventaInercia || (t.p1 != null && t.p1 < -1) || (t.p7 != null && t.p7 < -3) || ['injured', 'suspended'].includes(x.j.estado));
     if (!bajando && !/No hace falta venderlo/.test(o.aviso || '')) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Lo venderías por ${eur(-o.compra.gana)} menos de lo que pagaste, no te hace falta el dinero y no está bajando: puede esperar a una oferta mejor.`;
   }
   // en negativo puede ser a propósito: lo comprado para revender se vende antes de la jornada

@@ -82,7 +82,7 @@ const cfgTop = () => { const g = LS.get('limites', null), t = (g && g.cfg && g.c
 export const topConAnuncio = () => enApp && nativo.hayAnuncios();
 let jornadaB = 0;
 /** la jornada para contar las veces: la que se juega o, si no, la próxima (lo pone la app al rehacer los datos) */
-export function fijarJornada(n) { jornadaB = Number(n) || 0; }
+export function fijarJornada(n) { if (Number(n) > 0) jornadaB = Number(n); }
 
 /* lo de hoy (para cuándo gira): cuántos anuncios has visto y, si no había anuncio, hasta cuándo va abierta gratis */
 function hoyTop() {
@@ -92,12 +92,23 @@ function hoyTop() {
   if (g.vistos == null) return { vistos: g.hasta ? 0 : 1, libreHasta: g.hasta || 0 };
   return { vistos: g.vistos || 0, libreHasta: g.libreHasta || 0 };
 }
-const guardarHoy = (h) => LS.set('top-abierto', { dia: diaDe(), t: Date.now(), vistos: h.vistos, libreHasta: h.libreHasta || 0 });
+// con «hasta: 1»: la web de la 0.6.3 y anteriores (la que va dentro del APK, si AlDia vuelve a ella) lo lee como cerrado
+const guardarHoy = (h) => LS.set('top-abierto', { dia: diaDe(), t: Date.now(), vistos: h.vistos, libreHasta: h.libreHasta || 0, hasta: 1 });
 /* lo de la jornada (para las de los rivales): por cada una, cuántas veces la has abierto, hasta cuándo está abierta y si
    llevas visto el primero de los dos anuncios */
 function jornadaTop() {
   const g = LS.get('top-jornada', null);
-  return g && g.j === jornadaB ? g : { j: jornadaB, f: {} };
+  if (g && (g.j === jornadaB || !jornadaB)) return g;
+  // jornada nueva: las veces vuelven a 0, pero lo que estaba abierto sigue hasta su hora y el «1 de 2» se guarda
+  const f = {};
+  if (g && g.f) for (const [k, x] of Object.entries(g.f)) if ((x.hasta && x.hasta > Date.now()) || x.uno) f[k] = { usos: 0, hasta: x.hasta || 0, uno: !!x.uno };
+  return { j: jornadaB, f };
+}
+/** la hora más cercana a la que se cierra algo de lo abierto por jornada (0 si nada) */
+export function proximoCierreTop() {
+  const ahora = Date.now();
+  const hs = Object.values(jornadaTop().f || {}).map((x) => x.hasta || 0).filter((h) => h > ahora);
+  return hs.length ? Math.min(...hs) : 0;
 }
 const deJornada = (clave) => jornadaTop().f[clave] || { usos: 0, hasta: 0, uno: false };
 function guardarJornada(clave, x) { const g = jornadaTop(); g.f = { ...g.f, [clave]: x }; LS.set('top-jornada', g); }
