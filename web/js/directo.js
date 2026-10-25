@@ -377,9 +377,29 @@ function equipoJugado(S, p, l, ju) {
   const tot = p.jug.filter((x) => x.l === l).reduce((t, x) => t + (x.pts || 0), 0);
   const hayMin = os.some((o) => o.x.min != null);
   let tit = os, banq = [], nota = '', banqT = 'Entraron';
-  if (hayMin) {
-    ({ tit, resto: banq } = once11(os.filter((o) => o.x.min > 0), (o) => o.x.min || 0));
-    if (p.hechos && !ju) nota = 'En el campo, los 11 que más minutos llevan: los que salieron de titular. Debajo, los que han entrado.';
+  // los minutos de LaLiga salen de la ficha de cada jugador, y en directo solo se piden los que ya puntúan (y el once
+  // probable): con pocos conocidos, el campo salía con 5 o 7 en vez de 11 (aviso de Domy, 25 oct). Con menos de 11 con
+  // minutos, se completa con el once probable (sin contar al que se sabe que no ha jugado)
+  const jugaron = os.filter((o) => o.x.min > 0);
+  if (hayMin && jugaron.length > 0) {
+    ({ tit, resto: banq } = once11(jugaron, (o) => o.x.min || 0));
+    const hayPor = tit.some((o) => o.j.pos === 1), campoN = tit.filter((o) => o.j.pos > 1).length;
+    const prob = tit.length < 11 || !hayPor ? onceProbable(S, tid) : null;
+    if (prob) {
+      const dentro = new Set(tit.map((o) => o.j.id)), porId = new Map(os.map((o) => [o.j.id, o]));
+      const extra = [];
+      for (const q of prob) {
+        const w = porId.get(q.j.id);
+        if (dentro.has(q.j.id) || (w && w.x.min === 0)) continue;
+        if (q.j.pos === 1) { if (!hayPor) extra.push(w || { x: { id: q.j.id, pts: null }, j: q.j }); } else if (campoN + extra.filter((e) => e.j.pos > 1).length < 10) extra.push(w || { x: { id: q.j.id, pts: null }, j: q.j });
+      }
+      if (extra.length) {
+        tit = [...tit, ...extra];
+        banq = banq.filter((o) => !extra.includes(o));
+        nota = `LaLiga aún no da los minutos de todos: en el campo, los ${jugaron.length} que ya sabemos que han jugado y, para completar el once, ${extra.length} del once probable.`;
+      }
+    }
+    if (!nota && p.hechos && !ju) nota = 'En el campo, los 11 que más minutos llevan: los que salieron de titular. Debajo, los que han entrado.';
   }
   else {
     // LaLiga no dice los minutos (suele dar la plantilla entera, con 0 puntos los que no han jugado y también los que
@@ -440,6 +460,12 @@ function onceProbable(S, tid) {
   const tit = oncePrevio(M, os);
   if (!tit || tit.length < 11 || tit.reduce((t, o) => t + o.T.p, 0) < 5) return null;
   return tit;
+}
+/** los ids del once probable de los dos equipos de un partido (para pedir sus minutos a LaLiga aunque aún no puntúen) */
+export function idsProbables(S, p) {
+  const ids = [];
+  for (const tid of [p.lid, p.vid]) { const o = tid ? onceProbable(S, tid) : null; if (o) for (const x of o) ids.push(String(x.j.id)); }
+  return ids;
 }
 export function onceDeEquipo(S, tid) {
   const { D, M } = S;

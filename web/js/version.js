@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.5';
+export const VERSION = '0.6.5a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.5';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.5a', f: '2026-10-25', h: '20:01', t: 'El once de cada partido en directo',
+    cosas: [
+      { tipo: 'arreglo', d: 'campo', t: 'El once de un partido en directo', x: 'En la ficha de un partido empezado, el campo podía salir con solo 5 o 7 jugadores en vez de los 11: LaLiga solo da los minutos de cada jugador cuando ya ha puntuado, y se dibujaba a los que ya se conocían. Ahora se piden también los minutos del once probable de cada equipo y, si aún faltan, el campo se completa hasta 11 con ese once probable (la nota de debajo dice cuántos son seguros).' },
+    ],
+  },
   {
     v: '0.6.5', f: '2026-10-25', h: '16:11', t: 'Radar de subidas y cómo juega cada rival',
     cosas: [

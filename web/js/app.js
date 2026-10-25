@@ -779,7 +779,9 @@ async function cargarHechos(n, p) {
   const k = `${n}:${p.id}`, g = S.hechos[k];
   const fin = Dr.estadoP(p).cls === 'fin';
   if (g && (g.cargando || (fin && g.fin && Date.now() - g.t < 6 * 3600e3) || Date.now() - g.t < 2 * MIN)) return;
-  const ids = [...new Set(p.jug.filter((x) => x.id && x.pts != null && x.pts !== 0 && S.D.maestro[x.id] && S.D.maestro[x.id].pos <= 4).map((x) => String(x.id)))].slice(0, 36);
+  // los que ya puntúan y el once probable de los dos (en directo, a los titulares sin jugadas aún no les suma nadie
+  // y sin su ficha no se sabría quién ha salido: aviso de Domy, 25 oct). Primero los que puntúan
+  const ids = [...new Set([...p.jug.filter((x) => x.id && x.pts != null && x.pts !== 0 && S.D.maestro[x.id] && S.D.maestro[x.id].pos <= 4).map((x) => String(x.id)), ...(Dr.idsProbables ? Dr.idsProbables(S, p) : [])])].slice(0, 48);
   if (!ids.length) return;
   S.hechos[k] = { ...(g || { porJug: {} }), cargando: true };
   const porJug = { ...((g && g.porJug) || {}) };
