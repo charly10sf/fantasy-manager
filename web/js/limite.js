@@ -8,7 +8,7 @@
    00:00, hora de Madrid. Al pasarse, una pantalla de «hasta mañana» tapa la app.
    El tiempo se suma también en el Worker, por cuenta de LaLiga: así los minutos son en total, entre la app y la web
    (y en cualquier dispositivo). Sin conexión, cuenta lo de este dispositivo. */
-import { LS, norm, diaDe, esc, LOGO, dura } from './util.js';
+import { LS, norm, diaDe, otroDia, esc, LOGO, dura } from './util.js';
 import { http, enApp, nativo } from './puente.js';
 import { pedirWorker } from './soporte.js';
 
@@ -208,10 +208,9 @@ export function cerradaHasta(cfg, yo) {
 /** «hoy a las 20:00», «mañana a las 20:00» o «el sábado 24 a las 20:00» (hora de Madrid) */
 function cuandoAbre(t) {
   const f = (x, o) => new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', ...o }).format(new Date(x));
-  const dia = (x) => f(x, { year: 'numeric', month: '2-digit', day: '2-digit' });
   const hora = f(t, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
-  if (dia(t) === dia(Date.now())) return `hoy a las ${hora}`;
-  if (dia(t) === dia(Date.now() + 864e5)) return `mañana a las ${hora}`;
+  if (diaDe(t) === diaDe()) return `hoy a las ${hora}`;
+  if (diaDe(t) === otroDia(diaDe(), 1)) return `mañana a las ${hora}`;
   return `el ${f(t, { weekday: 'long', day: 'numeric' })} a las ${hora}`;
 }
 

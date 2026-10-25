@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.3g';
+export const VERSION = '0.6.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,26 @@ export const VERSION = '0.6.3g';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.4', f: '2026-10-25', h: '15:19', t: 'Favoritos, eventos en directo y una IA con las cuentas hechas',
+    cosas: [
+      { tipo: 'nuevo', d: 'cara', t: 'Favoritos', x: 'Toca la estrella «Seguir» en la ficha de cualquier jugador y lo tendrás en Mercado → Favoritos: arriba los que puedes fichar hoy (libres, a la venta o con la cláusula abierta) y debajo el resto, con de quién es cada uno y su cláusula. En todas las listas llevan una estrellita, y la IA sabe a quién sigues.', ir: { v: 'mercado', seg: 'mercado:favoritos' } },
+      { tipo: 'nuevo', d: 'directo', t: 'Los eventos de cada partido', x: 'En Directo, toca un partido empezado: arriba salen los goles, asistencias, penaltis y tarjetas de cada jugador con los puntos que le dan o le quitan y de quién es en tu liga. Y en el campo, los once que de verdad salieron de titular (los que más minutos llevan) y debajo los que han entrado.', ir: { v: 'directo' } },
+      { tipo: 'nuevo', d: 'campana', t: 'Aviso al momento si marca uno que te interesa', x: 'Con la jornada en juego y la app abierta, si un jugador de un rival que te conviene clausular (cláusula abierta, te llega y no pagas de más) marca o da una asistencia, te avisa al momento con su cláusula y lo que te quedaría: tras un partido así suele subir de valor.', ir: { v: 'rivales', seg: 'rivales:clausulas' } },
+      { tipo: 'mejora', d: 'ia', t: 'Pregunta, arriba y en rojo', x: 'La IA ya no va en la barra de abajo: es el botón rojo de arriba, siempre a mano, y abajo quedan seis pestañas. «Reportar un fallo» es ahora lo primero de Ajustes.', ir: { v: 'ia' } },
+      { tipo: 'mejora', d: 'plan', t: 'Un plan de la IA con las cuentas hechas', x: 'La IA recibe la caja de verdad (también lo que tendrías aceptando las ofertas que ya tienes), sabe qué jugadores son imprescindibles para alinear y cuánto pierde tu once si vendes a cada uno, y con la jornada en juego, quién ha jugado ya. La app comprueba su alineación y te avisa si las ventas te dejan el once cojo. Y busca en Google solo lo que puede cambiar una decisión, así que el plan llega antes.' },
+      { tipo: 'mejora', d: 'versiones', t: 'Las notas de cada actualización', x: 'Al final de las novedades, como en un videojuego, todas las correcciones numeradas. También en Ajustes → Novedades, versión a versión.' },
+      { tipo: 'arreglo', d: 'campo', t: 'El próximo partido, sin aplazados', x: 'Un partido aplazado de una jornada pasada ya no sale como el próximo partido de su equipo (ni cambia el rival, la previa ni el calendario de sus jugadores).' },
+      { tipo: 'arreglo', d: 'dinero', t: 'Tus pujas hechas cuentan en el plan', x: 'El plan da por gastado lo que ya tienes pujado para saber si empiezas la jornada en positivo, y una cláusula que te llega aceptando una oferta que ya tienes ya no sale como imposible.' },
+      { tipo: 'arreglo', d: 'dinero', t: '«Te llega» con tu propia puja', x: 'En el Mercado, un jugador por el que ya has pujado podía salir como que no te llega, porque tu puja se descontaba dos veces. Y el plan ya no te propone pujar por uno que ya tiene tu puja.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'La inercia, sin exagerar', x: 'Una bajada pequeña ya no se proyecta como una caída enorme hasta la jornada, y dos subidas pequeñas ya no cuentan como «se ha estancado tras subir». Y el plan automático no vende a uno sin el que no puedes alinear si la jornada está cerca.' },
+      { tipo: 'arreglo', d: 'escudo', t: 'Blindajes solo si hay riesgo', x: 'Ya no sale «súbela a…» para jugadores que nadie va a clausular, y el riesgo y el blindaje usan el mismo tope de lo que se paga en tu liga por una cláusula.' },
+      { tipo: 'arreglo', d: 'noche', t: 'El cambio de hora', x: '«Ayer», «mañana» y lo que ha cambiado un jugador en un día ya no se descuadran el día del cambio de hora, y el aviso diario llega a su hora (este domingo llegaba una hora antes).' },
+      { tipo: 'arreglo', d: 'directo', t: 'Puntos en directo con nombres repetidos', x: 'Un jugador ya no se lleva los puntos de otro que se llama igual en otro equipo.' },
+      { tipo: 'arreglo', d: 'campo', t: 'El puesto en Jornadas', x: 'Si una vez fallaba la lectura de los puntos de una jornada acabada, se quedaba sin puesto para siempre. Ahora se vuelve a pedir.' },
+      { para: 'dueño', menor: true, tipo: 'arreglo', d: 'lupa', t: 'El buscador y las funciones cerradas', x: 'El buscador del Mercado ya no dice que un rival tiene a uno a la venta si «lo que venden los rivales» está cerrado.' },
+    ],
+  },
   {
     v: '0.6.3g', f: '2026-10-25', h: '13:13', t: 'Cláusulas y fichajes con el último partido',
     cosas: [

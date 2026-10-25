@@ -843,7 +843,8 @@ async function cargarJornadaMia() {
   // se guardan las acabadas (lo de la que se juega y la próxima cambia)
   const guardar = (o, ok) => Object.fromEntries(Object.entries(o).filter(([k, v]) => ok(Number(k), v)));
   LS.set(K('mis-jornadas'), guardar(S.misJ, (k, v) => v.acabada && v.ids));
-  LS.set(K('pts-jornadas'), guardar(S.ptsJ, (k) => S.misJ[k] && S.misJ[k].acabada));
+  // (lo que falló se queda vacío en memoria para no pedirlo en bucle, pero no se guarda: si no, no se volvía a pedir nunca)
+  LS.set(K('pts-jornadas'), guardar(S.ptsJ, (k, v) => S.misJ[k] && S.misJ[k].acabada && v && Object.keys(v).length));
   if (S.vista === 'equipo' && S.seg.equipo === 'jornadas' && !S.hoja) pintar();
 }
 async function cargarOnceRival(tid) {

@@ -399,6 +399,11 @@ function planHTML(S) {
     h += `<details class="mas-pasos"><summary>${icono('lista')}Ver los otros ${P.ops.length - VISTOS} pasos</summary><div class="pasos">${P.ops.slice(VISTOS).map((o) => pasoOp(S, P, o)).join('')}</div></details>`;
   } else h += `<div class="pasos">${P.ops.map((o) => pasoOp(S, P, o)).join('')}</div>`;
   if (P.final != null && P.ops.some((o) => o.signo && o.importe)) h += `<div class="cierre ${P.avisoTipo === 'mal' ? 'mal' : P.avisoTipo === 'plan' ? 'oro' : ''}">${icono(P.avisoTipo === 'mal' ? 'alerta' : P.avisoTipo === 'plan' ? 'cambio' : 'euro')}<span>${P.avisoSaldo ? esc(P.avisoSaldo) : 'Te quedas con'}</span><span class="v">${eur(P.final)}</span></div>`;
+  // lo que el plan te deja: las pujas que ya tienes hechas cuentan como gastadas, el once tras las ventas y si la
+  // alineación de la IA no valía
+  if (P.final != null && P.pujasHechas && P.ops.some((o) => o.signo && o.importe)) h += `<p class="t2 peq" style="margin:6px 2px 0">Cuenta como gastado lo que ya tienes pujado (${eur(P.pujasHechas)}): si no ganas alguna puja, tendrás eso de más.</p>`;
+  if (P.avisoOnce) h += `<div class="cierre mal">${icono('campo')}<span>${esc(P.avisoOnce)}</span></div>`;
+  if (P.avisoAlin) h += `<div class="cierre oro">${icono('alerta')}<span>${esc(P.avisoAlin)}</span></div>`;
   if (Array.isArray(P.descartes) && P.descartes.length) h += `<details class="descartes"><summary>${icono('buscar')}Mirados y descartados (${P.descartes.length})</summary>${P.descartes.map((d) => notaJugador(S, d.jugador, d.motivo)).join('')}</details>`;
   if (!hayClave()) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Activar la IA</button></div>`;
   if (Array.isArray(P.proximos_dias) && P.proximos_dias.length) h += `<div class="sec"><h2>Los próximos días</h2></div><div class="dias">${P.proximos_dias.map((d) => `<div class="dia"><b>${esc(d.dia)}</b><span>${conEnlaces(S, d.texto)}</span></div>`).join('')}</div>`;

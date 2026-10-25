@@ -10,7 +10,7 @@
    V  poner a la venta (o vender) un jugador tuyo
    B  proteger a un jugador tuyo con la cláusula abierta o a punto: con el blindaje gratis de LaLiga (24 h, 2 por
       jornada) o subiéndole la cláusula */
-import { eur, pct, cuando, POS, DIA, HORA } from './util.js';
+import { eur, pct, cuando, POS, DIA, HORA, num } from './util.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const nombreDe = (M, tid) => { const e = tid && M.equipo[tid]; return (e && (e.manager || e.nombre)) || 'un rival'; };
@@ -50,14 +50,20 @@ export function catalogo(D, M, notas = []) {
     if (!tid || tid === yo || !n.importe || lista.some((o) => o.ref === `M-${n.pid}`) || (M.J(n.pid) || {}).pos === 5) continue;
     add({ ref: `T-${n.pid}`, tipo: 'comprar', trato: true, pid: n.pid, j: M.J(n.pid), precio: n.importe, vendedor: nombreDe(M, tid), vendedorTeamId: tid, nota: n.texto });
   }
-  // C: cláusulas abiertas o que se pueden pagar antes de la jornada o justo al empezar
+  // C: cláusulas abiertas o que se pueden pagar antes de la jornada o justo al empezar. La caja de una cláusula es el
+  // saldo; aceptar hoy las ofertas que ya tienes lo sube (lo que pones a la venta, no: no entra hasta aceptar)
+  const cajaA = cajaConOfertas(D, M);
   for (const x of M.clausulas) {
     if (!x.abierta && x.protegidoHasta > limiteC) continue;
-    add({ ref: `C-${x.pid}`, tipo: 'clausular', pid: x.pid, j: x.j, precio: x.clausula, abierta: x.abierta, abre: x.protegidoHasta, veda: x.veda, de: x.rival.manager || x.rival.nombre, teamId: x.teamId, meLlega: x.meLlega, interes: x.interes, ratio: x.ratio });
+    const falta = Math.max(0, x.clausula - num(D.dinero));
+    add({ ref: `C-${x.pid}`, tipo: 'clausular', pid: x.pid, j: x.j, precio: x.clausula, abierta: x.abierta, abre: x.protegidoHasta, veda: x.veda, de: x.rival.manager || x.rival.nombre, teamId: x.teamId, meLlega: x.meLlega, conA: x.clausula <= cajaA, falta, interes: x.interes, ratio: x.ratio });
   }
   const ref = Object.fromEntries(lista.map((o) => [o.ref, o]));
   return { lista, ref };
 }
+
+/** lo que tendrías para una cláusula si aceptas hoy todas las ofertas que ya tienes por lo que vendes */
+export const cajaConOfertas = (D, M) => num(D.dinero) + (M.misVentas || []).filter((v) => v.mejor).reduce((s, v) => s + num(v.mejor.importe), 0);
 
 /** cómo se consigue un jugador (o por qué no se puede), en una frase */
 export function comoConseguir(D, M, pid, cat) {
@@ -82,9 +88,8 @@ export function textoOp(o, M = null) {
     : '';
   switch (o.ref[0]) {
     case 'P': {
-      const PL = M && M.pujasLiga;
-      const liga = PL && !PL.poco ? `; en esta liga los libres se llevan de mediana con un ${pct(PL.med * 100)} sobre su valor (la mitad entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)}, ${PL.n} compras)` : '';
-      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? ', recortada para no pagar de más por lo que aporta' : ''}${liga}`;
+      // (lo que se paga en esta liga por los libres va una sola vez, en su bloque)
+      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? ', recortada para no pagar de más por lo que aporta' : ''}`;
     }
     case 'M': {
       const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);
@@ -98,7 +103,7 @@ export function textoOp(o, M = null) {
       return `COMPRAR ${j.nombre} a ${o.vendedor}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${pide}; es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
     }
     case 'T': return `COMPRAR ${j.nombre} a ${o.vendedor} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
-    case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : '; NO ME LLEGA el dinero'}`;
+    case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;
     case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}`;
     case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})`;
     case 'B': {
@@ -170,7 +175,13 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
   // (cada candidato va con su ficha entera: con más, la IA tarda mucho más y no decide mejor)
   g('PUJAR (jugadores LIBRES de la liga, subasta a ciegas):', t('P').sort(por), chat ? 10 : corto ? 12 : 14);
   g('COMPRAR A OTRO MANAGER (solo lo que TIENE A LA VENTA o un TRATO que te conté; decide él):', [...t('T'), ...t('M').sort(por)], chat ? 8 : corto ? 8 : 10);
-  g('CLAUSULAR (cláusulas de rivales abiertas o que se abren antes de la jornada):', t('C').sort(por), chat ? 12 : corto ? 14 : 16);
+  {
+    // con ficha, las que me llegan (o me llegan aceptando las ofertas de hoy); las demás, como mucho 4 y en una línea:
+    // eran casi todo el bloque y no se pueden hacer hoy
+    const cs = t('C').sort(por), llegan = cs.filter((o) => o.meLlega || o.conA), no = cs.filter((o) => !o.meLlega && !o.conA);
+    g('CLAUSULAR (cláusulas de rivales abiertas o que se abren antes de la jornada, que me llegan con mi saldo o aceptando antes las ofertas que tengo):', llegan, chat ? 10 : corto ? 12 : 14);
+    if (no.length) L.push(`\nCLÁUSULAS QUE NO ME LLEGAN HOY (ni aceptando las ofertas que tengo; solo para saber que existen): ${no.slice(0, 4).map((o) => `[${o.ref}] ${o.j.nombre} (de ${o.de}) ${eur(o.precio)}, faltan ${eur(o.falta)}`).join('; ')}${no.length > 4 ? ` y ${no.length - 4} más` : ''}.`);
+  }
   g('BLINDAR (mis cláusulas abiertas o a punto):', t('B'), 12);
   L.push(`VENDER: cualquiera de mis jugadores con [V-<id>] (ids: ${t('V').map((o) => `${o.j.nombre} V-${o.pid}`).join(', ')}).`);
   L.push('Cualquier jugador de un rival que no esté arriba NO SE PUEDE CONSEGUIR HOY: ni comprándoselo ni de otra forma.');

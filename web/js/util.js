@@ -88,10 +88,15 @@ function partes(t) {
   for (const p of FPARTES.formatToParts(f)) o[p.type] = p.value;
   return { d: +o.day, m: +o.month - 1, y: +o.year, h: o.hour === '24' ? '00' : o.hour, min: o.minute, dw: DSEM[FSEMANA.format(f)] };
 }
+/**
+ * el día de España n días antes o después de d ("2026-10-25"), por calendario: los días del cambio de hora no duran
+ * 24 h, así que «ayer» no es ahora menos 24 h (revisión del 25 oct, el día del cambio)
+ */
+export const otroDia = (d, n) => { const x = new Date(`${d}T12:00:00Z`); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
 /** "hoy 18:30", "mañana 14:00", "jue 23, 21:00", "23 oct" */
 export function cuando(t, { hora = true } = {}) {
   if (!t) return '';
-  const p = partes(t), hoy = diaDe(), dia = diaDe(t), man = diaDe(Date.now() + DIA), ayer = diaDe(Date.now() - DIA);
+  const p = partes(t), hoy = diaDe(), dia = diaDe(t), man = otroDia(hoy, 1), ayer = otroDia(hoy, -1);
   const hh = hora ? ` ${p.h}:${p.min}` : '';
   if (dia === hoy) return `hoy${hh}`;
   if (dia === man) return `mañana${hh}`;

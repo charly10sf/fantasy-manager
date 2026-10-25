@@ -1,7 +1,7 @@
 /* Los avisos del móvil. Con cada actualización se recalcula la lista entera de lo que va a pasar y se le
    pasa a la app, que pone una alarma del sistema para cada cosa (llegan aunque la app esté cerrada). */
 import { nativo, enApp } from './puente.js';
-import { LS, eur, cuando, MIN, HORA, DIA } from './util.js';
+import { LS, eur, cuando, MIN, HORA, DIA, diaDe, otroDia, horaDe } from './util.js';
 import { cerradaHasta } from './limite.js';
 
 export const cfgAvisos = () => ({
@@ -73,14 +73,14 @@ export function calcular(D, M, c = cfgAvisos()) {
       M.negativo ? `Estás en negativo (${eur(D.dinero)}): si empieza así, no puntúas. Y revisa la alineación.` : 'Revisa la alineación y que no tengas a nadie lesionado de titular.', 'equipo');
   }
   if (c.diario) {
+    // uno por día, cada uno a su hora de Madrid: sumar 24 h fijas descuadraba una hora con el cambio de hora (el 25 oct
+    // llegaba a las 12:30). El último se repite cada 24 h, por si no se abre la app en una semana
     const [h, m] = String(c.hora || '13:30').split(':').map(Number);
-    const hoy = new Date();
-    const t = new Date(hoy.toLocaleString('en-US', { timeZone: 'Europe/Madrid' }));
-    const desfase = hoy.getTime() - t.getTime();
-    t.setHours(h || 0, m || 0, 0, 0);
-    let cuandoT = t.getTime() + desfase;
-    if (cuandoT < ahora + MIN) cuandoT += DIA;
-    out.push({ id: 'diario', t: cuandoT, titulo: 'Tu liga hoy', texto: 'Mercado nuevo, cláusulas que se abren y el análisis del día. Ábrela para ponerla al día.', hash: '', cada: DIA });
+    const hhmm = `${String(h || 0).padStart(2, '0')}:${String(m || 0).padStart(2, '0')}`;
+    const enMadrid = (d) => [1, 2].map((o) => Date.parse(`${d}T${hhmm}:00+0${o}:00`)).find((t) => horaDe(t) === hhmm && diaDe(t) === d);
+    const d0 = diaDe(ahora);
+    const ts = [0, 1, 2, 3, 4, 5, 6, 7].map((k) => enMadrid(otroDia(d0, k))).filter((t) => t && t >= ahora + MIN).slice(0, 7);
+    ts.forEach((t, i) => out.push({ id: i === ts.length - 1 ? 'diario' : `diario-${diaDe(t)}`, t, titulo: 'Tu liga hoy', texto: 'Mercado nuevo, cláusulas que se abren y el análisis del día. Ábrela para ponerla al día.', hash: '', ...(i === ts.length - 1 ? { cada: DIA } : {}) }));
   }
   return out.sort((a, b) => a.t - b.t);
 }

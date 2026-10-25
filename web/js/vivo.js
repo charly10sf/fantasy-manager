@@ -125,8 +125,9 @@ export async function enVivo(D, n, yoTid) {
     for (const p of m.jug) {
       if (p.pts == null) continue;
       if (p.id) puntos[p.id] = p.pts;
+      // (por equipo y nombre: si no, uno que aún no sale recibía los puntos de otro que se llama igual en otro equipo)
       const k = norm(p.nom);
-      if (k) porNombre[k] = p.pts;
+      if (k) porNombre[`${p.l ? m.lid : m.vid}|${k}`] = p.pts;
     }
   }
   // sin estadísticas: los puntos de la jornada de la lista de jugadores (weekPoints)
@@ -141,7 +142,8 @@ export async function enVivo(D, n, yoTid) {
   // por si el id de la estadística no es el del jugador: por el nombre
   for (const j of Object.values(D.maestro || {})) {
     if (puntos[j.id] != null) continue;
-    const v = porNombre[norm(j.nombre)] != null ? porNombre[norm(j.nombre)] : porNombre[norm(j.largo)];
+    const a = porNombre[`${j.equipoId}|${norm(j.nombre)}`], b = porNombre[`${j.equipoId}|${norm(j.largo)}`];
+    const v = a != null ? a : b;
     if (v != null) puntos[j.id] = v;
   }
   // tu once de la jornada: el que puntúa en ella (/lineup/week/{n}); el de ahora (/lineup) puede ser ya otro, si has
