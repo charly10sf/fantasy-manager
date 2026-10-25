@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.6a';
+export const VERSION = '0.6.6b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -14,16 +14,22 @@ export const VERSION = '0.6.6a';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
+    v: '0.6.6b', f: '2026-10-25', h: '22:46', t: 'Sin nombres de otras webs',
+    cosas: [
+      { tipo: 'arreglo', d: 'lupa', t: 'Otras webs de fantasy ya no salen como fuente', x: 'Las noticias, las fuentes del plan y las respuestas de la IA ya no nombran a otras webs de fantasy. Si una noticia viene de una de ellas, sale solo con su hora, y la IA habla de «la prensa» o «los onces probables».' },
+    ],
+  },
+  {
     v: '0.6.6a', f: '2026-10-25', h: '21:26', t: 'El once confirmado de cada equipo',
     cosas: [
-      { tipo: 'arreglo', d: 'campo', t: 'El once confirmado no salía de un equipo', x: 'Esta noche, antes del Clásico, el once confirmado del Barça salía y el del Madrid no, aunque futbolfantasy lo tenía desde las 19:41. La app daba por bueno un once solo si le casaban los 11 nombres con los de LaLiga y a un equipo le bastaba un nombre raro para quedarse sin él. Ahora casa los nombres uno a uno con más margen, vale con 10 si uno no se parece a ninguno, mira todas las veces que la página dice «confirmada» (no solo la primera) y pide la página de futbolfantasy sin quedarse con una copia vieja.' },
+      { tipo: 'arreglo', d: 'campo', t: 'El once confirmado no salía de un equipo', x: 'Esta noche, antes del Clásico, el once confirmado del Barça salía y el del Madrid no, aunque ya estaba publicado desde las 19:41. La app daba por bueno un once solo si le casaban los 11 nombres con los de LaLiga y a un equipo le bastaba un nombre raro para quedarse sin él. Ahora casa los nombres uno a uno con más margen, vale con 10 si uno no se parece a ninguno, mira todas las veces que la página dice «confirmada» (no solo la primera) y pide los datos sin quedarse con una copia vieja.' },
       { para: 'dueño', menor: true, tipo: 'arreglo', d: 'lupa', t: 'El diagnóstico de los onces confirmados', x: 'Si un once confirmado no se lee, el diagnóstico dice por qué (cuántos titulares ha casado, cuál no y si la «confirmada» es de otro partido) y deja una muestra.' },
     ],
   },
   {
     v: '0.6.6', f: '2026-10-25', h: '20:32', t: 'Los onces antes del partido',
     cosas: [
-      { tipo: 'nuevo', d: 'campo', t: 'Los onces de cada partido, antes de que empiece', x: 'Toca un partido que aún no ha empezado y salen los dos onces en el campo: el probable, con el % de cada uno, y, en cuanto sale el oficial (una hora antes), los 11 que van a jugar con «Titular». En la lista de Directo, el partido lleva «Onces confirmados» cuando ya están los dos. El oficial ahora también lo lee de futbolfantasy, porque SofaScore no deja desde la web ni desde algún móvil: llega igual. Con la app abierta se mira cada 3 minutos, y «Tu equipo hoy» te avisa de los tuyos que se quedan fuera.', ir: { v: 'directo' } },
+      { tipo: 'nuevo', d: 'campo', t: 'Los onces de cada partido, antes de que empiece', x: 'Toca un partido que aún no ha empezado y salen los dos onces en el campo: el probable, con el % de cada uno, y, en cuanto sale el oficial (una hora antes), los 11 que van a jugar con «Titular». En la lista de Directo, el partido lleva «Onces confirmados» cuando ya están los dos. El oficial ahora sale también en la web y en los móviles donde antes no llegaba. Con la app abierta se mira cada 3 minutos, y «Tu equipo hoy» te avisa de los tuyos que se quedan fuera.', ir: { v: 'directo' } },
       { para: 'dueño', menor: true, tipo: 'mejora', d: 'lupa', t: 'El diagnóstico con lo que da LaLiga en directo', x: 'El diagnóstico lleva ahora una muestra de lo que devuelve LaLiga con la jornada en juego (la lista de cada partido y la ficha de un jugador, con sus minutos si los trae), para saber de verdad qué datos hay en directo en vez de suponerlo.' },
     ],
   },

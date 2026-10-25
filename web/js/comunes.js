@@ -1,5 +1,5 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
-import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando, norm } from './util.js';
+import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
 import { mini } from './graficos.js';
 import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 import { esFav } from './favoritos.js';
@@ -285,7 +285,7 @@ export function calPill(M, j, { soloDuro = false } = {}) {
 
 
 /** un titular de prensa */
-export const filaNoticia = (n) => `<button class="noticia" data-abrir="${esc(n.link)}"><span class="tit">${esc(n.titulo)}</span><span class="meta">${esc(n.fuente || '')}${n.t ? ` · ${cuando(n.t)}` : ''}</span></button>`;
+export const filaNoticia = (n) => `<button class="noticia" data-abrir="${esc(n.link)}"><span class="tit">${esc(n.titulo)}</span><span class="meta">${[n.fuente && !esWebFantasy(n.fuente) ? esc(n.fuente) : '', n.t ? cuando(n.t) : ''].filter(Boolean).join(' · ')}</span></button>`;
 
 /** el dinero de un rival en corto: «12,3 M» si es exacto, «≈ 8,1 M» si es estimado */
 export const dineroCorto = (d) => (!d || d.v == null ? '' : d.exacto ? eur(d.v) : `≈ ${eur(d.v)}`);

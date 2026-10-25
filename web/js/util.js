@@ -109,6 +109,16 @@ export const horaDe = (t) => { const p = partes(t); return `${p.h}:${p.min}`; };
 
 /* ---------- nombres ---------- */
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+// Las webs de fantasy de las que no se enseña el nombre como fuente (aviso de Domy, 25 oct: «te pueden acusar de plagio»).
+// esWebFantasy dice si un nombre o una dirección es de una de ellas (para esconder la fuente de una noticia o un enlace);
+// sinWebs cambia en un texto el nombre de las que no se pueden confundir con otra cosa por «la prensa».
+const WEBS_FANTASY = /\b(futbol ?fantasy|analitica ?fantasy|jornada ?perfecta|comuniate|biwenger|futmondo|mister ?fantasy|fantasy ?marca|sofascore|understat)\b/;
+export const esWebFantasy = (s) => WEBS_FANTASY.test(norm(s)) || /futbolfantasy|analiticafantasy|jornadaperfecta|comuniate|biwenger|futmondo|sofascore|understat/i.test(String(s || ''));
+export const sinWebs = (t) => String(t || '')
+  .replace(/\b(?:www\.)?(?:futbolfantasy|analiticafantasy)(?:\.com)?\b/gi, 'la prensa')
+  .replace(/\bAnal[ií]tica Fantasy\b/gi, 'la prensa')
+  .replace(/\bF[uú]tbol Fantasy\b/g, 'la prensa');
 export const iniciales = (s) => norm(s).split(' ').filter(Boolean).slice(0, 2).map((x) => x[0]).join('').toUpperCase() || '?';
 
 export const POS = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL', 5: 'ENT' };
