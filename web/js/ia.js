@@ -56,7 +56,7 @@ function orden(m) {
 export async function modelosDisponibles(k = clave(), forzar = false) {
   const guardado = LS.get('ia-modelos', null);
   if (!forzar && guardado && guardado.d === diaGoogle() && guardado.lista && guardado.lista.length) return guardado.lista;
-  const r = await peticion('GET', `${GEMINI}/models?pageSize=1000`, null, (k || '').trim());
+  const r = await peticion('GET', `${GEMINI}/models?pageSize=1000`, null, (k || '').trim(), { limite: 25000 });
   const j = r.j || {};
   const lista = (j.models || [])
     .filter((m) => (m.supportedGenerationMethods || []).includes('generateContent'))
@@ -115,38 +115,54 @@ const apuntar = (x) => { intentosIA.unshift({ t: Date.now(), ...x }); if (intent
  * Una petición a Google. En la app va por la parte nativa (el WebView corta los POST a Google con «Failed to fetch»);
  * en el navegador, con fetch. Devuelve { j } con el JSON o { r } con la respuesta en streaming (solo navegador).
  */
-async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, signal } = {}) {
+async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, signal, limite = 150000 } = {}) {
+  const sinTiempo = (m) => new ErrorIA(`Sin conexión con Google (${m})`, 0, { red: true, tiempo: true });
   if (enApp) {
-    const pet = http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: 340000 });
+    const pet = http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: limite });
     // si lo paras, se deja de esperar al momento (la respuesta, si llega, se tira)
     const r = signal ? await Promise.race([pet, new Promise((_, mal) => {
       const parar = () => mal(new DOMException('Parado', 'AbortError'));
       if (signal.aborted) parar(); else signal.addEventListener('abort', parar, { once: true });
     })]) : await pet;
-    if (r.s === 0) throw new ErrorIA(`Sin conexión con Google (${r.e || 'sin respuesta'})`, 0, { red: true, dns: !!r.dns });
+    if (r.s === 0) {
+      if (/tiempo agotado|timeout|timed out/i.test(r.e || '')) throw sinTiempo('tiempo agotado');
+      throw new ErrorIA(`Sin conexión con Google (${r.e || 'sin respuesta'})`, 0, { red: true, dns: !!r.dns });
+    }
     let j = null;
     try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
     if (r.s >= 400) throw errorDe(r.s, j);
     if (!j) throw new ErrorIA(`Respuesta rara de Google (${r.s})`, r.s);
     return { j };
   }
-  let r;
+  // en el navegador, el mismo tiempo máximo: si Google no contesta, se corta (y es distinto de que lo pares tú)
+  const ctl = new AbortController();
+  let vencido = false, sigue = false;
+  const reloj = setTimeout(() => { vencido = true; ctl.abort(); }, limite);
+  const parar = () => ctl.abort();
+  if (signal) { if (signal.aborted) ctl.abort(); else signal.addEventListener('abort', parar, { once: true }); }
   try {
-    r = await fetch(url, { method: metodo, signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': k }, body: cuerpo == null ? undefined : JSON.stringify(cuerpo) });
-  } catch (e) {
-    if (e.name === 'AbortError') throw e;
-    throw new ErrorIA(`Sin conexión con Google (${e.message})`, 0, { red: true });
+    let r;
+    try {
+      r = await fetch(url, { method: metodo, signal: ctl.signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': k }, body: cuerpo == null ? undefined : JSON.stringify(cuerpo) });
+    } catch (e) {
+      if (e.name === 'AbortError') { if (vencido) throw sinTiempo('tiempo agotado'); throw e; }
+      throw new ErrorIA(`Sin conexión con Google (${e.message})`, 0, { red: true });
+    }
+    if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) { /* nada */ } throw errorDe(r.status, j); }
+    // en directo, el cuerpo se sigue leyendo después: parar la pregunta lo sigue cortando (el límite solo vale hasta que llega)
+    if (stream) { sigue = true; return { r }; }
+    try { return { j: await r.json() }; } catch (e) { if (e.name === 'AbortError' && vencido) throw sinTiempo('tiempo agotado'); throw e; }
+  } finally {
+    clearTimeout(reloj);
+    if (signal && !sigue) signal.removeEventListener('abort', parar);
   }
-  if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) { /* nada */ } throw errorDe(r.status, j); }
-  if (stream) return { r };
-  return { j: await r.json() };
 }
 
-async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal } = {}) {
+async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal, limite } = {}) {
   // en la app no hay streaming: llega la respuesta entera de una vez
   const enVivo = stream && !enApp;
   const url = `${GEMINI}/models/${modelo}:${enVivo ? 'streamGenerateContent?alt=sse' : 'generateContent'}`;
-  const resp = await peticion('POST', url, cuerpo, clave(), { stream: enVivo, signal });
+  const resp = await peticion('POST', url, cuerpo, clave(), { stream: enVivo, signal, limite });
   let texto = '', fuentes = [], fin = null, bloqueo = null, tok = null;
   const procesar = (j) => {
     if (j.promptFeedback && j.promptFeedback.blockReason) bloqueo = j.promptFeedback.blockReason;
@@ -205,24 +221,30 @@ async function preguntar({ sistema, contents }, op = {}) {
   const quiereWeb = cfgIA().web;
   const resumen = [];
   let ultimo = null;
-  let cortes = 0, webSospecha = null;
+  let cortes = 0, webSospecha = null, tiempos = 0;
+  // Google a veces se queda sin contestar (con la búsqueda y un modelo saturado, minutos): cada intento tiene su tiempo máximo
+  // y todo junto no pasa de unos 4 minutos; el modelo que no contesta se salta y los siguientes van sin búsqueda
+  const inicio = Date.now(), total = op.total || 240000;
   // si con búsqueda da «cupo gastado» y sin ella el mismo modelo sí contesta, lo gastado es la búsqueda: fuera hoy
   const confirmarSinWeb = (modelo, e) => { if (webSospecha === modelo && !(e && e.estado === 429)) LS.set('ia-sin-web', diaGoogle()); webSospecha = null; };
   for (const modelo of modelos) {
-    let web = quiereWeb && !sinWebHoy() && !esGemma(modelo);
+    let web = quiereWeb && !sinWebHoy() && !esGemma(modelo) && !tiempos;
     let pensar = !esGemma(modelo) && !/gemini-(1|2\.0)/.test(modelo);
     // pensar a medias: contesta en la mitad de tiempo y el plan sale igual de bien; los pro, lo justo
     let nivel = op.nivel || (/pro/.test(modelo) ? 'low' : 'medium');
     let esperado = false;
     for (let intento = 0; intento < 5; intento++) {
       if (op.signal && op.signal.aborted) throw new DOMException('Parado', 'AbortError');
+      const restante = total - (Date.now() - inicio);
+      if (ultimo && restante < 25000) throw new ErrorIA(`Google tarda demasiado en contestar ahora mismo (llevo ${Math.round((Date.now() - inicio) / 1000)} s probando). Vuelve a probar en unos minutos.`, 0, { tarda: true, todos: true });
+      const limite = Math.max(25000, Math.min(/pro/.test(modelo) ? 150000 : web ? 110000 : 90000, restante));
       const cuerpo = esGemma(modelo)
         ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${contents.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).filter(Boolean).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
         : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
       alPaso(`${nombreModelo(modelo)}${web ? ' con búsqueda en Google' : ''}…`);
       const t0 = Date.now();
       try {
-        const r = await llamar(modelo, cuerpo, op);
+        const r = await llamar(modelo, cuerpo, { ...op, limite });
         apuntar({ modelo, web, ok: true, ms: Date.now() - t0, fin: r.fin, tok: r.tok, car: r.texto.length, nivel: pensar ? nivel : null });
         confirmarSinWeb(modelo, null);
         return { ...r, modelo, web, intentos: resumen };
@@ -234,8 +256,17 @@ async function preguntar({ sistema, contents }, op = {}) {
         if (!e.red) confirmarSinWeb(modelo, e);
         // si se ha agotado el tiempo esperando la respuesta, repetir lo mismo vuelve a tardar igual: se le pide
         // que piense menos (y, si ya era poco, sin búsqueda)
-        if (e.red && /timeout|timed out|tiempo/i.test(e.message || '') && pensar && nivel !== 'low') { nivel = 'low'; intento--; alPaso('Google tarda demasiado: lo pido pensando menos…'); continue; }
-        if (e.red && /timeout|timed out|tiempo/i.test(e.message || '') && web) { web = false; intento--; alPaso('Google sigue tardando: lo pido sin búsqueda…'); continue; }
+        if (e.tiempo) {
+          tiempos++;
+          const seg = Math.round(limite / 1000);
+          if (pensar && nivel !== 'low') { nivel = 'low'; intento--; alPaso(`${nombreModelo(modelo)} tarda más de ${seg} s: lo pido pensando menos…`); continue; }
+          if (web) { web = false; intento--; alPaso(`${nombreModelo(modelo)} tarda más de ${seg} s: lo pido sin búsqueda en Google…`); continue; }
+          // ni así contesta: se salta un rato (las siguientes preguntas no esperan por él) y se prueba con otro
+          pausar(modelo, 600);
+          resumen.push(`${nombreModelo(modelo)}: no contesta (más de ${seg} s)`);
+          alPaso(`${nombreModelo(modelo)} no contesta: pruebo con otro modelo…`);
+          break;
+        }
         // se ha cortado la conexión (cambio de red, cobertura, Android cortando a la app): se espera y se repite
         // con el mismo modelo, sin gastar sus intentos, hasta 4 veces en total
         if (e.red && cortes < 4) {

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.6b';
+export const VERSION = '0.6.6c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.6b';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.6c', f: '2026-10-26', h: '11:54', t: 'La IA ya no se queda esperando',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan de la IA no se cuelga minutos', x: 'Si Google no contestaba (un modelo saturado, sobre todo con la búsqueda en Google), la app esperaba hasta 5 minutos y repetía con el mismo modelo. Ahora cada intento espera como mucho 110 segundos (90 sin búsqueda): el modelo que no contesta se salta un rato y los siguientes van sin búsqueda. Si en unos 4 minutos no hay respuesta, te lo dice en vez de quedarse pensando.' },
+    ],
+  },
   {
     v: '0.6.6b', f: '2026-10-25', h: '22:46', t: 'Sin nombres de otras webs',
     cosas: [
