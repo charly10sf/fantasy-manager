@@ -25,7 +25,7 @@ function vuelveCupo() {
 }
 
 export const clave = () => leer('gemini') || '';
-export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); };
+export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); LS.del('ia-bueno'); LS.del('ia-mal-web'); };
 export const hayClave = () => !!clave();
 export const cfgIA = () => ({ modelo: '', web: true, auto: true, ...LS.get('cfg-ia', {}) });
 export const guardarCfgIA = (c) => LS.set('cfg-ia', { ...cfgIA(), ...c });
@@ -72,6 +72,13 @@ export const probarClave = (k) => modelosDisponibles(k, true);
    siguiente pregunta no vuelve a esperar por ellos */
 const pausa = {};
 const pausar = (m, seg) => { pausa[m] = Date.now() + seg * 1000; };
+/* el modelo que contestó bien la última vez va el primero durante 3 horas (los nuevos suelen estar saturados y cada intento
+   con ellos cuesta de 20 s a minutos); pasadas las 3 horas se vuelve a probar el orden de siempre */
+const BUENO_H = 3 * 3600 * 1000;
+/* un modelo que con la búsqueda contesta con una llamada rota (MALFORMED_FUNCTION_CALL) va una hora sin ella */
+const malConWeb = (m) => (LS.get('ia-mal-web', {})[m] || 0) > Date.now();
+const marcarMalConWeb = (m) => { const a = LS.get('ia-mal-web', {}); a[m] = Date.now() + 3600 * 1000; LS.set('ia-mal-web', a); };
+const recordarBueno = (m) => { const b = LS.get('ia-bueno', null); LS.set('ia-bueno', { m, desde: b && b.m === m && Date.now() - b.desde < BUENO_H ? b.desde : Date.now() }); };
 async function cadena() {
   let lista;
   try { lista = await modelosDisponibles(); } catch (e) { if (e.estado === 400 || e.estado === 401 || e.estado === 403) throw e; lista = BASE; }
@@ -81,7 +88,10 @@ async function cadena() {
   const f = fuera();
   const vivos = todos.filter((m) => !f[m]);
   const sinPausa = vivos.filter((m) => !(pausa[m] > Date.now()));
-  return sinPausa.length ? sinPausa : vivos;
+  const orden2 = sinPausa.length ? sinPausa : vivos;
+  const b = LS.get('ia-bueno', null);
+  if (b && !elegido && Date.now() - b.desde < BUENO_H && orden2.includes(b.m)) return [b.m, ...orden2.filter((m) => m !== b.m)];
+  return orden2;
 }
 
 /* ---------------- errores de Google ---------------- */
@@ -205,7 +215,7 @@ const espera = (s, signal) => new Promise((res, rej) => { const t = setTimeout(r
  * acabado, sin ella; si es el cupo por minuto, espera lo que diga Google y repite; si es el del día, al siguiente.
  * alPaso(texto) cuenta lo que va pasando (para enseñarlo mientras piensa).
  */
-async function preguntar({ sistema, contents }, op = {}) {
+async function preguntar({ sistema, contents, contentsSinWeb }, op = {}) {
   const alPaso = op.alPaso || (() => {});
   let modelos = await cadena();
   // con fotos solo valen los Gemini (los Gemma no ven imágenes)
@@ -228,7 +238,7 @@ async function preguntar({ sistema, contents }, op = {}) {
   // si con búsqueda da «cupo gastado» y sin ella el mismo modelo sí contesta, lo gastado es la búsqueda: fuera hoy
   const confirmarSinWeb = (modelo, e) => { if (webSospecha === modelo && !(e && e.estado === 429)) LS.set('ia-sin-web', diaGoogle()); webSospecha = null; };
   for (const modelo of modelos) {
-    let web = quiereWeb && !sinWebHoy() && !esGemma(modelo) && !tiempos;
+    let web = quiereWeb && !sinWebHoy() && !esGemma(modelo) && !tiempos && !malConWeb(modelo);
     let pensar = !esGemma(modelo) && !/gemini-(1|2\.0)/.test(modelo);
     // pensar a medias: contesta en la mitad de tiempo y el plan sale igual de bien; los pro, lo justo
     let nivel = op.nivel || (/pro/.test(modelo) ? 'low' : 'medium');
@@ -238,15 +248,17 @@ async function preguntar({ sistema, contents }, op = {}) {
       const restante = total - (Date.now() - inicio);
       if (ultimo && restante < 25000) throw new ErrorIA(`Google tarda demasiado en contestar ahora mismo (llevo ${Math.round((Date.now() - inicio) / 1000)} s probando). Vuelve a probar en unos minutos.`, 0, { tarda: true, todos: true });
       const limite = Math.max(25000, Math.min(/pro/.test(modelo) ? 150000 : web ? 110000 : 90000, restante));
+      const cont = !web && contentsSinWeb ? contentsSinWeb : contents;
       const cuerpo = esGemma(modelo)
-        ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${contents.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).filter(Boolean).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
-        : { systemInstruction: { parts: [{ text: sistema }] }, contents, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
+        ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${cont.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).filter(Boolean).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
+        : { systemInstruction: { parts: [{ text: sistema }] }, contents: cont, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
       alPaso(`${nombreModelo(modelo)}${web ? ' con búsqueda en Google' : ''}…`);
       const t0 = Date.now();
       try {
         const r = await llamar(modelo, cuerpo, { ...op, limite });
         apuntar({ modelo, web, ok: true, ms: Date.now() - t0, fin: r.fin, tok: r.tok, car: r.texto.length, nivel: pensar ? nivel : null });
         confirmarSinWeb(modelo, null);
+        recordarBueno(modelo);
         return { ...r, modelo, web, intentos: resumen };
       } catch (e) {
         if (e.name === 'AbortError') throw e;
@@ -290,12 +302,22 @@ async function preguntar({ sistema, contents }, op = {}) {
         if (e.estado === 403 || e.estado === 400) { if (e.estado === 403) pausar(modelo, 30 * 60); resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
         // vacío porque se le ha ido todo pensando: otra vez, pensando menos
         if (e.vacio && e.fin === 'MAX_TOKENS' && pensar && nivel !== 'low') { nivel = 'low'; alPaso('Se ha quedado sin sitio pensando: lo pido pensando menos…'); continue; }
+        // una llamada a la herramienta de búsqueda mal hecha (MALFORMED_FUNCTION_CALL): repetirlo igual falla igual (y tarda minutos);
+        // sin búsqueda, o si ya iba sin ella, el siguiente modelo
+        if (e.vacio && /MALFORMED|TOOL|FUNCTION/i.test(e.fin || '')) {
+          if (web) { marcarMalConWeb(modelo); web = false; intento--; alPaso(`${nombreModelo(modelo)} ha fallado con la búsqueda: lo pido sin ella…`); continue; }
+          resumen.push(`${nombreModelo(modelo)}: respuesta rota (${e.fin})`);
+          alPaso(`${nombreModelo(modelo)} contesta mal: pruebo con otro modelo…`);
+          break;
+        }
         if (e.vacio && intento < 1) continue;
+        if (e.vacio) { resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
         if ((e.estado >= 500 || e.estado === 0 || e.estado == null) && intento < 2) { await espera(2.5 * (intento + 1), op.signal); continue; }
         if (e.red) {
           resumen.push(`sin conexión con Google (${e.message})`);
           throw new ErrorIA(`Se ha cortado la conexión con Google ${cortes + 1} veces seguidas (${e.message.replace(/^Sin conexión con Google \((.*)\)$/, '$1')}). Mira que tengas internet (prueba con datos si estás con wifi) y vuelve a probar.`, 0, { red: true });
         }
+        if (e.estado >= 500) pausar(modelo, 300);
         resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`);
         break;
       }
@@ -764,11 +786,15 @@ function memoria(M) {
   return L.join('\n');
 }
 
+// Sin búsqueda en Google (apagada, cupo gastado o un modelo que no contesta con ella) no se le manda buscar: si se le manda, a veces
+// intenta llamar a una herramienta que no tiene y contesta vacío (MALFORMED_FUNCTION_CALL, 26 oct, 100 s para nada)
+const BUSCAR_PLAN = `Busca en Google solo lo que pueda cambiar una decisión (como mucho 8 búsquedas): los jugadores que vayas a meter en operaciones o en la alineación con la titularidad por debajo del 70 % o con ESTADO, y las lesiones o convocatorias de última hora de sus equipos; contrástalo con los titulares que te paso. Después sigue «CÓMO DECIDIR» con cada candidato.`;
+const SIN_BUSCAR_PLAN = 'Hoy no tienes búsqueda en Google: decide solo con los datos y los titulares que te paso (si algo no lo sabes, dilo). Sigue «CÓMO DECIDIR» con cada candidato.';
 export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
   const ctx = contexto(D, M, c);
   const pedido = `${ctx}${memoria(M)}
 
-Hazme el PLAN DE HOY. Busca en Google solo lo que pueda cambiar una decisión (como mucho 8 búsquedas): los jugadores que vayas a meter en operaciones o en la alineación con la titularidad por debajo del 70 % o con ESTADO, y las lesiones o convocatorias de última hora de sus equipos; contrástalo con los titulares que te paso. Después sigue «CÓMO DECIDIR» con cada candidato.
+Hazme el PLAN DE HOY. ${BUSCAR_PLAN}
 Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría (según las pujas que lleva y si sube). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
 Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato, en este orden (primero las cuentas y lo que descartas, después las operaciones y al final el titular, que resume lo decidido):
 {
@@ -787,7 +813,8 @@ Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato, en es
 Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 a 6 candidatos que has mirado y no convienen. Entre 2 y 5 días en proximos_dias.
 "pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager la acción es "comprar", con el precio en "importe" y sin puja_max, y SOLO si lo tiene a la venta o es un trato que te he contado; si no, no lo pongas. Para quitárselo pagando su cláusula, "clausular" (solo si la cláusula está abierta o se abre pronto).`;
   // pensando poco: con «medium» tardaba un par de minutos y el plan salía igual (la app comprueba cada paso)
-  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso, nivel: 'low', maxTokens: 32000 });
+  const sinBuscar = (t) => [{ role: 'user', parts: [{ text: t.replace(BUSCAR_PLAN, SIN_BUSCAR_PLAN) }] }];
+  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: 32000 });
   let json = sacarJSON(r.texto);
   // si se ha quedado sin sitio para escribir (pensando de más) o el JSON ha salido roto: otra vez, con los datos en
   // corto y pensando poco
@@ -797,7 +824,7 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
     malPlan(r);
     if (alPaso) alPaso(r.fin === 'MAX_TOKENS' ? 'El plan se ha cortado: lo pido otra vez más corto…' : 'El plan ha llegado mal: lo pido otra vez…');
     const corto = pedido.replace(ctx, contexto(D, M, c, { corto: true }));
-    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }] }, { signal, alPaso, nivel: 'low', maxTokens: 32000 });
+    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000 });
     json = sacarJSON(r.texto);
     if (!json || !Array.isArray(json.operaciones)) malPlan(r);
   }
