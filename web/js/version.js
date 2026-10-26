@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.6d';
+export const VERSION = '0.6.6e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.6d';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.6e', f: '2026-10-26', h: '12:33', t: 'El plan sale aunque salgas de la app',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan de la IA ya no se queda esperando fuera de la app', x: 'Con la app en segundo plano, el móvil retrasaba los relojes de la app y el plan se quedaba minutos esperando a un modelo de Google que no contestaba (hoy, 4 minutos con el 3.8). Ahora los relojes de la IA siguen andando fuera de la app, y si un modelo tarda más de 45 segundos se pregunta a la vez al siguiente y vale la primera respuesta. Los modelos saturados se recuerdan aunque la app se actualice.' },
+    ],
+  },
   {
     v: '0.6.6d', f: '2026-10-26', h: '12:14', t: 'El plan de la IA sale aunque Google falle',
     cosas: [

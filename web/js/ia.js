@@ -3,7 +3,7 @@
    cruzando todo lo de tu liga con lo que busca en Google (lesiones, convocatorias, alineaciones probables).
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
-import { leer, guardar, http, enApp } from './puente.js';
+import { leer, guardar, http, enApp, despues } from './puente.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, diaDe, norm, num, esWebFantasy, sinWebs } from './util.js';
 import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
@@ -25,7 +25,7 @@ function vuelveCupo() {
 }
 
 export const clave = () => leer('gemini') || '';
-export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); LS.del('ia-bueno'); LS.del('ia-mal-web'); };
+export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); LS.del('ia-bueno'); LS.del('ia-mal-web'); LS.del('ia-pausa'); };
 export const hayClave = () => !!clave();
 export const cfgIA = () => ({ modelo: '', web: true, auto: true, ...LS.get('cfg-ia', {}) });
 export const guardarCfgIA = (c) => LS.set('cfg-ia', { ...cfgIA(), ...c });
@@ -70,11 +70,12 @@ export const probarClave = (k) => modelosDisponibles(k, true);
 
 /* los modelos que acaban de fallar por algo pasajero (el límite por minuto, un permiso) se saltan un rato: así la
    siguiente pregunta no vuelve a esperar por ellos */
-const pausa = {};
-const pausar = (m, seg) => { pausa[m] = Date.now() + seg * 1000; };
+const pausas = () => { const p = LS.get('ia-pausa', {}), a = Date.now(); return Object.fromEntries(Object.entries(p).filter(([, t]) => t > a)); };
+const pausar = (m, seg) => { const p = pausas(); p[m] = Date.now() + seg * 1000; LS.set('ia-pausa', p); };
 /* el modelo que contestó bien la última vez va el primero durante 3 horas (los nuevos suelen estar saturados y cada intento
    con ellos cuesta de 20 s a minutos); pasadas las 3 horas se vuelve a probar el orden de siempre */
 const BUENO_H = 3 * 3600 * 1000;
+const RELEVO_MS = 45000;
 /* un modelo que con la búsqueda contesta con una llamada rota (MALFORMED_FUNCTION_CALL) va una hora sin ella */
 const malConWeb = (m) => (LS.get('ia-mal-web', {})[m] || 0) > Date.now();
 const marcarMalConWeb = (m) => { const a = LS.get('ia-mal-web', {}); a[m] = Date.now() + 3600 * 1000; LS.set('ia-mal-web', a); };
@@ -87,7 +88,8 @@ async function cadena() {
   const todos = [...new Set([...(elegido ? [elegido] : []), ...lista])];
   const f = fuera();
   const vivos = todos.filter((m) => !f[m]);
-  const sinPausa = vivos.filter((m) => !(pausa[m] > Date.now()));
+  const pz = pausas();
+  const sinPausa = vivos.filter((m) => !pz[m]);
   const orden2 = sinPausa.length ? sinPausa : vivos;
   const b = LS.get('ia-bueno', null);
   if (b && !elegido && Date.now() - b.desde < BUENO_H && orden2.includes(b.m)) return [b.m, ...orden2.filter((m) => m !== b.m)];
@@ -147,7 +149,7 @@ async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, sign
   // en el navegador, el mismo tiempo máximo: si Google no contesta, se corta (y es distinto de que lo pares tú)
   const ctl = new AbortController();
   let vencido = false, sigue = false;
-  const reloj = setTimeout(() => { vencido = true; ctl.abort(); }, limite);
+  const quitarReloj = despues(limite, () => { vencido = true; ctl.abort(); });
   const parar = () => ctl.abort();
   if (signal) { if (signal.aborted) ctl.abort(); else signal.addEventListener('abort', parar, { once: true }); }
   try {
@@ -163,7 +165,7 @@ async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, sign
     if (stream) { sigue = true; return { r }; }
     try { return { j: await r.json() }; } catch (e) { if (e.name === 'AbortError' && vencido) throw sinTiempo('tiempo agotado'); throw e; }
   } finally {
-    clearTimeout(reloj);
+    quitarReloj();
     if (signal && !sigue) signal.removeEventListener('abort', parar);
   }
 }
@@ -208,7 +210,7 @@ async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal, 
   return { texto: sinWebs(texto), fuentes, fin, tok };
 }
 
-const espera = (s, signal) => new Promise((res, rej) => { const t = setTimeout(res, s * 1000); if (signal) signal.addEventListener('abort', () => { clearTimeout(t); rej(new DOMException('Parado', 'AbortError')); }, { once: true }); });
+const espera = (s, signal) => new Promise((res, rej) => { const quitar = despues(s * 1000, res); if (signal) signal.addEventListener('abort', () => { quitar(); rej(new DOMException('Parado', 'AbortError')); }, { once: true }); });
 
 /**
  * Pregunta con todos los modelos que haga falta. Por cada modelo: con búsqueda en Google; si la búsqueda se ha
@@ -235,9 +237,60 @@ async function preguntar({ sistema, contents, contentsSinWeb }, op = {}) {
   // Google a veces se queda sin contestar (con la búsqueda y un modelo saturado, minutos): cada intento tiene su tiempo máximo
   // y todo junto no pasa de unos 4 minutos; el modelo que no contesta se salta y los siguientes van sin búsqueda
   const inicio = Date.now(), total = op.total || 240000;
+  const cuerpoDe = (modelo, web, pensar, nivel) => {
+    const cont = !web && contentsSinWeb ? contentsSinWeb : contents;
+    return esGemma(modelo)
+      ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${cont.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).filter(Boolean).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
+      : { systemInstruction: { parts: [{ text: sistema }] }, contents: cont, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
+  };
+  /* El relevo: si un modelo lleva 45 s sin contestar (lo normal son 15-35 s), se pregunta a la vez al siguiente, sin
+     búsqueda, y vale la primera respuesta que llegue. Una vez por pregunta. Así un modelo colgado ya no deja minutos sin plan. */
+  let relevo = null, viendoTexto = false;
+  const saltar = new Set();
+  const siguienteSano = (actual) => { const pz = pausas(); return modelos.slice(modelos.indexOf(actual) + 1).find((m) => !esGemma(m) && !pz[m] && !saltar.has(m)) || null; };
+  const conRelevo = (modelo, pr) => new Promise((res, rej) => {
+    let fin = false, quitar = () => {};
+    const ganar = (x) => { if (fin) return; fin = true; quitar(); res(x); };
+    const perder = (e) => { if (fin) return; fin = true; quitar(); rej(e); };
+    if (!relevo) {
+      quitar = despues(RELEVO_MS, () => {
+        if (fin || relevo || viendoTexto) return;
+        // el relevo va probando los siguientes modelos sanos (hasta 3) mientras el primero no conteste
+        relevo = { p: (async () => {
+          let desde = modelo;
+          for (let k = 0; k < 3 && !fin; k++) {
+            const otro = siguienteSano(desde);
+            if (!otro) break;
+            desde = otro;
+            alPaso(`${nombreModelo(modelo)} tarda: pregunto también a ${nombreModelo(otro)}…`);
+            const t1 = Date.now(), pensarO = !/gemini-(1|2\.0)/.test(otro);
+            try {
+              const r = await llamar(otro, cuerpoDe(otro, false, pensarO, 'low'), { signal: op.signal, limite: 90000 });
+              apuntar({ modelo: otro, web: false, ok: true, ms: Date.now() - t1, fin: r.fin, tok: r.tok, car: r.texto.length, nivel: pensarO ? 'low' : null, relevo: true });
+              return { r, modelo: otro };
+            } catch (e) {
+              if (e.name === 'AbortError') return { e };
+              apuntar({ modelo: otro, web: false, s: e.estado, e: e.message, google: e.google, ms: Date.now() - t1, nivel: pensarO ? 'low' : null, relevo: true });
+              saltar.add(otro);
+              if (e.estado === 429 && !e.minuto) sacar(otro, e.message);
+              else if (e.estado >= 500 || e.tiempo) pausar(otro, e.tiempo ? 600 : 300);
+            }
+          }
+          return { e: null };
+        })() };
+        relevo.p.then((x) => { if (x.r && !viendoTexto) ganar({ ...x.r, deRelevo: x.modelo }); });
+      });
+    }
+    pr.then(ganar, (e) => {
+      // el que se esperaba falla con el relevo en marcha: se espera al relevo
+      if (relevo && !fin) relevo.p.then((x) => (x.r ? ganar({ ...x.r, deRelevo: x.modelo }) : perder(e)));
+      else perder(e);
+    });
+  });
   // si con búsqueda da «cupo gastado» y sin ella el mismo modelo sí contesta, lo gastado es la búsqueda: fuera hoy
   const confirmarSinWeb = (modelo, e) => { if (webSospecha === modelo && !(e && e.estado === 429)) LS.set('ia-sin-web', diaGoogle()); webSospecha = null; };
   for (const modelo of modelos) {
+    if (saltar.has(modelo)) continue;
     let web = quiereWeb && !sinWebHoy() && !esGemma(modelo) && !tiempos && !malConWeb(modelo);
     let pensar = !esGemma(modelo) && !/gemini-(1|2\.0)/.test(modelo);
     // pensar a medias: contesta en la mitad de tiempo y el plan sale igual de bien; los pro, lo justo
@@ -248,14 +301,18 @@ async function preguntar({ sistema, contents, contentsSinWeb }, op = {}) {
       const restante = total - (Date.now() - inicio);
       if (ultimo && restante < 25000) throw new ErrorIA(`Google tarda demasiado en contestar ahora mismo (llevo ${Math.round((Date.now() - inicio) / 1000)} s probando). Vuelve a probar en unos minutos.`, 0, { tarda: true, todos: true });
       const limite = Math.max(25000, Math.min(/pro/.test(modelo) ? 150000 : web ? 110000 : 90000, restante));
-      const cont = !web && contentsSinWeb ? contentsSinWeb : contents;
-      const cuerpo = esGemma(modelo)
-        ? { contents: [{ role: 'user', parts: [{ text: `${sistema}\n\n---\n\n${cont.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).filter(Boolean).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
-        : { systemInstruction: { parts: [{ text: sistema }] }, contents: cont, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
+      const cuerpo = cuerpoDe(modelo, web, pensar, nivel);
       alPaso(`${nombreModelo(modelo)}${web ? ' con búsqueda en Google' : ''}…`);
       const t0 = Date.now();
       try {
-        const r = await llamar(modelo, cuerpo, { ...op, limite });
+        const r = await conRelevo(modelo, llamar(modelo, cuerpo, { ...op, limite, alTexto: op.alTexto ? (t) => { viendoTexto = true; op.alTexto(t); } : null }));
+        if (r.deRelevo) {
+          // ha contestado antes el relevo: el lento se salta un rato y el que ha contestado va el primero la próxima vez
+          apuntar({ modelo, web, s: 'relevo', e: `sin contestar en ${Math.round((Date.now() - t0) / 1000)} s: ha contestado antes ${nombreModelo(r.deRelevo)}`, ms: Date.now() - t0, nivel: pensar ? nivel : null });
+          pausar(modelo, 600);
+          recordarBueno(r.deRelevo);
+          return { ...r, modelo: r.deRelevo, web: false, intentos: resumen };
+        }
         apuntar({ modelo, web, ok: true, ms: Date.now() - t0, fin: r.fin, tok: r.tok, car: r.texto.length, nivel: pensar ? nivel : null });
         confirmarSinWeb(modelo, null);
         recordarBueno(modelo);

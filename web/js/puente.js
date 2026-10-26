@@ -18,6 +18,37 @@ export const enWeb = !N && !!WORKER;
 let seq = 0;
 const pendientes = new Map();
 
+/* Relojes que siguen andando con la app fuera de la vista. La app dice «puedes salir: te aviso al terminar», pero con la
+   página oculta el WebView retrasa sus setTimeout hasta minutos (26 oct: un tiempo máximo de 90 s saltó a los 252 s y el
+   plan se quedó esperando a un modelo de Google colgado). Los de un Worker no se retrasan. Por si el Worker no arranca, va
+   también el setTimeout de siempre: vale el primero que llegue. */
+let relojW = null, relojN = 0;
+const relojes = new Map();
+function trabajador() {
+  if (relojW !== null) return relojW;
+  try {
+    const src = 'const t={};onmessage=(e)=>{const d=e.data;if(d.q){clearTimeout(t[d.id]);delete t[d.id];return;}t[d.id]=setTimeout(()=>{delete t[d.id];postMessage(d.id);},d.ms);};';
+    relojW = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+    relojW.onmessage = (e) => { const f = relojes.get(e.data); if (f) f(); };
+    relojW.onerror = () => { relojW = false; };
+  } catch (e) { relojW = false; }
+  return relojW;
+}
+/** como setTimeout(f, ms), pero sin pararse con la app en segundo plano; devuelve con qué cancelarlo */
+export function despues(ms, f) {
+  const w = trabajador();
+  const id = ++relojN;
+  let hecho = false, t = null;
+  const quitar = () => {
+    hecho = true; relojes.delete(id); clearTimeout(t);
+    if (w) { try { w.postMessage({ id, q: 1 }); } catch (e) { /* nada */ } }
+  };
+  const una = () => { if (hecho) return; quitar(); f(); };
+  t = setTimeout(una, ms);
+  if (w) { relojes.set(id, una); try { w.postMessage({ id, ms }); } catch (e) { /* vale el normal */ } }
+  return () => { if (!hecho) quitar(); };
+}
+
 // la app avisa con __http(id) cuando acaba una petición; la respuesta se recoge con respuesta(id)
 window.__http = (id) => {
   const fin = pendientes.get(id);
@@ -36,12 +67,12 @@ export function http(metodo, url, { cabeceras = {}, cuerpo = null, tiempo = 4500
   if (!N) return enWeb ? porWorker(metodo, url, cabeceras, cuerpo, tiempo) : Promise.resolve({ s: 0, e: 'Fuera de la app no se puede hablar con LaLiga' });
   const id = `p${Date.now().toString(36)}${(seq++).toString(36)}`;
   return new Promise((resolver) => {
-    const reloj = setTimeout(() => { if (pendientes.delete(id)) resolver({ s: 0, e: 'tiempo agotado' }); }, tiempo);
-    pendientes.set(id, (r) => { clearTimeout(reloj); resolver(r); });
+    const quitar = despues(tiempo, () => { if (pendientes.delete(id)) resolver({ s: 0, e: 'tiempo agotado' }); });
+    pendientes.set(id, (r) => { quitar(); resolver(r); });
     try {
       N.http(id, metodo, url, JSON.stringify(cabeceras || {}), cuerpo == null ? '' : String(cuerpo));
     } catch (e) {
-      pendientes.delete(id); clearTimeout(reloj);
+      pendientes.delete(id); quitar();
       resolver({ s: 0, e: String(e.message || e) });
     }
   });
@@ -50,7 +81,7 @@ export function http(metodo, url, { cabeceras = {}, cuerpo = null, tiempo = 4500
 /** en la web: la petición la hace el Worker y devuelve lo mismo que la app ({ s, b, t, e }) */
 async function porWorker(metodo, url, cabeceras, cuerpo, tiempo) {
   const parar = new AbortController();
-  const reloj = setTimeout(() => parar.abort(), tiempo);
+  const quitar = despues(tiempo, () => parar.abort());
   try {
     const r = await fetch(`${WORKER}/p`, {
       method: 'POST', signal: parar.signal,
@@ -64,7 +95,7 @@ async function porWorker(metodo, url, cabeceras, cuerpo, tiempo) {
     return { s, b, t: r.headers.get('x-t') || '' };
   } catch (e) {
     return { s: 0, e: e.name === 'AbortError' ? 'tiempo agotado' : `sin conexión con el servidor de la web (${e.message || e})` };
-  } finally { clearTimeout(reloj); }
+  } finally { quitar(); }
 }
 
 /** una imagen como data:… (para mirar sus píxeles). En la app, por el puente; fuera, con fetch (si el sitio deja) */
