@@ -14,7 +14,7 @@ export const VERSION = '0.6.6c';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.6c', f: '2026-10-26', h: '11:54', t: 'La IA ya no se queda esperando',
+    v: '0.6.6c', f: '2026-10-26', h: '11:59', t: 'La IA ya no se queda esperando',
     cosas: [
       { tipo: 'arreglo', d: 'ia', t: 'El plan de la IA no se cuelga minutos', x: 'Si Google no contestaba (un modelo saturado, sobre todo con la búsqueda en Google), la app esperaba hasta 5 minutos y repetía con el mismo modelo. Ahora cada intento espera como mucho 110 segundos (90 sin búsqueda): el modelo que no contesta se salta un rato y los siguientes van sin búsqueda. Si en unos 4 minutos no hay respuesta, te lo dice en vez de quedarse pensando.' },
     ],
