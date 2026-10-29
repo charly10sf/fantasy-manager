@@ -679,10 +679,17 @@ async function onceFF(D, partidos, P, ahora) {
       if (r.s !== 200 || !r.b) { nota(r.e); return; }
       const cs = confirmadaFF(r.b);
       if (!confirmadaPara(cs, p.fecha)) { nota(cs.length ? `confirmada, pero no de la hora de este partido (${cs.slice(0, 3).map((c) => `${c.dia}/${c.mes} ${c.h}:${String(c.mi).padStart(2, '0')}`).join(', ')})` : 'aún sin «Alineación confirmada»'); return; }
-      const plantilla = porEquipo[eq] || [];
-      const { ids, sin } = unirTitulares(parseOnce(r.b), plantilla);
+      // (sin entrenadores: LaLiga Fantasy los tiene como jugadores y su nombre se casaba como un titular más)
+      const plantilla = (porEquipo[eq] || []).filter((j) => j.pos !== 5);
+      // con la alineación confirmada, los 11 van al 100 %: si la página da más de 11 «titulares» (camisetas de otro bloque,
+      // alternativas), valen los que van a 90 % o más, si son 10 u 11 (diagnóstico de Domy, 29 oct: salían 12 y 13)
+      const lista = parseOnce(r.b);
+      const tits = lista.filter((x) => x.titular);
+      const seguros = tits.filter((x) => x.prob != null && x.prob >= 90);
+      const usar = tits.length > 11 && seguros.length >= 10 && seguros.length <= 11 ? [...seguros, ...lista.filter((x) => !x.titular)] : lista;
+      const { ids, sin } = unirTitulares(usar, plantilla);
       const porteros = ids.filter((id) => D.maestro[id] && D.maestro[id].pos === 1).length;
-      guardarMuestraVivo(`futbolfantasy ${slugs[eq]}`, `casados ${ids.length} (porteros ${porteros}); sin casar: ${sin.join(', ') || 'ninguno'}`);
+      guardarMuestraVivo(`futbolfantasy ${slugs[eq]}`, `titulares en la página ${tits.length} (al 90 % o más ${seguros.length}), casados ${ids.length} (porteros ${porteros}); sin casar: ${sin.join(', ') || 'ninguno'}`);
       // 11 casados, o 10 con uno que no se ha podido casar (el nombre no se parece)
       if (!(porteros === 1 && (ids.length === 11 || (ids.length === 10 && sin.length === 1)))) { nota(`confirmada, pero salen ${ids.length} titulares casados y ${porteros} porteros${sin.length ? ` (sin casar: ${sin.join(', ')})` : ''}: no se usa`); return; }
       // (con 10: solo se marcan los 10 que se han casado; de los demás no se dice nada, porque uno de ellos es el que falta)

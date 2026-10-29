@@ -813,7 +813,13 @@ body.con-nv { overflow: hidden; }
 .ahora-ok .ic { width: 18px; height: 18px; color: var(--sube); flex: none; margin-top: 1px; }
 .ahora-ok b { color: var(--texto); }
 .ahora { display: grid; gap: 8px; }
-.ahora-f { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); border-left: 3px solid var(--rojo); width: 100%; }
+.ahora-f { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 4px; padding: 12px 8px 12px 14px; border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); border-left: 3px solid var(--rojo); width: 100%; }
+.ahora-b { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; padding: 0; background: none; border: 0; color: inherit; text-align: left; font: inherit; cursor: pointer; }
+.ahora-x { flex: none; width: 30px; height: 30px; margin: -4px 0 0; border-radius: 9px; display: grid; place-items: center; background: none; border: 0; color: var(--apagado); cursor: pointer; }
+.ahora-x .ic { width: 16px; height: 16px; }
+.ahora-x:hover { background: var(--plano2, rgba(255,255,255,.06)); color: var(--texto2); }
+.ahora-sust { flex-basis: 100%; margin-left: 46px; display: inline-flex; align-items: center; gap: 6px; width: max-content; max-width: calc(100% - 46px); padding: 6px 10px; border-radius: 9px; border: 1px solid var(--linea); background: none; color: var(--texto); font: 600 13px 'Barlow'; cursor: pointer; }
+.ahora-sust .ic { width: 15px; height: 15px; color: var(--rojo-l); }
 .ahora-f.t-vender { border-left-color: var(--baja); } .ahora-f.t-blindar { border-left-color: var(--oro); } .ahora-f.t-clausular { border-left-color: var(--sube); }
 .ahora-ic { width: 34px; height: 34px; border-radius: 10px; background: var(--rojo-s); display: grid; place-items: center; flex: none; }
 .ahora-ic .ic { width: 18px; height: 18px; color: var(--rojo-l); }

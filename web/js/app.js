@@ -696,7 +696,7 @@ async function vigilarClausulables(antes) {
   if (!V || !M || !M.enJuego || V.n !== M.enJuego.n || enDemo() || !haySesion()) return;
   const sano = (j) => !['injured', 'suspended', 'out_of_league'].includes(j.estado);
   const cand = M.clausulas.filter((x) => x.meLlega && (x.abierta || x.abreEn < 12 * 60 * MIN) && x.interes >= 50 && sano(x.j)
-    && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30 && M.compraCal(x.j, x.clausula).ok);
+    && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30 && M.compraCal(x.j, x.clausula).ok && (!M.conSalida || M.conSalida(x.j, x.clausula, x.tend)));
   if (!cand.length) return;
   const vistos = LS.get(K('vivo-avisados'), {});
   const ya = (pid) => (vistos[pid] && vistos[pid].n === V.n ? vistos[pid] : { n: V.n, g: 0, as: 0 });
@@ -1238,12 +1238,12 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
  */
-const CON_PILA = new Set(['c', 'j', 'p']);
+const CON_PILA = new Set(['c', 'j', 'p', 'sust']);
 function pilaDesde(el, tipo, arg) {
   if (!S.hoja || !S.tipoHoja || !CON_PILA.has(S.tipoHoja[0]) || !CON_PILA.has(tipo) || !(el && el.closest && el.closest('.hoja'))) return [];
   if (S.tipoHoja[0] === tipo && String(S.tipoHoja[1]) === String(arg)) return S.pila || [];
@@ -1252,6 +1252,7 @@ function pilaDesde(el, tipo, arg) {
 function nombreHoja([tipo, arg]) {
   if (tipo === 'c') return Cl.nombreClub(S, arg);
   if (tipo === 'j') { const j = S.M && S.M.J(arg); return (j && j.nombre) || 'el jugador'; }
+  if (tipo === 'sust') return 'Sustitutos';
   return 'el partido';
 }
 function cuerpoHoja(tipo, arg, pila = S.pila) {
@@ -1692,6 +1693,8 @@ document.addEventListener('click', async (ev) => {
   switch (d.accion) {
     case 'verPartido': cargarPartido(Number(d.n), d.id); hoja('p', `${d.n}:${d.id}`, pilaDesde(el, 'p', `${d.n}:${d.id}`)); break;
     case 'volverHoja': volverHoja(); break;
+    case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }
+    case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;
     case 'verJornada': S.jornadaSel = Number(d.n); pintar(); break;
     case 'filtroClub': S.filtro.club = d.f; repintarHoja(); break;
     case 'vivoYa': {

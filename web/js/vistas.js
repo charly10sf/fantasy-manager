@@ -194,14 +194,46 @@ export function llevasHTML(S) {
 }
 
 /** lo urgente de verdad (lo que no puede esperar al plan): como mucho tres cosas */
+/** cada cosa urgente se puede quitar hasta mañana (aviso de Domy, 27 oct): se guarda por liga con el día */
+export const claveUrgente = (a) => `${a.tipo}|${a.pid || a.titulo}`;
+export const urgentesQuitados = () => { const q = LS.get(K('urgentes-quitados'), {}), d = diaDe(); return new Set(Object.keys(q).filter((k) => q[k] === d)); };
 function ahoraHTML(S) {
   const { M } = S;
-  // lo que ya está en el plan no se repite aquí
+  // lo que ya está en el plan no se repite aquí, ni lo que has quitado hoy
   const enPlan = new Set(Object.keys(S.opPorPid || {}));
-  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid))).slice(0, 3);
+  const fuera = urgentesQuitados();
+  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a))).slice(0, 3);
   if (!urg.length && S.plan) return '';
-  if (!urg.length) return `<div class="ahora-ok">${icono('ok')}<span><b>Nada urgente ahora mismo.</b> Ninguna cláusula tuya en peligro ni nada que vender ya.</span></div>`;
-  return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<button class="ahora-f t-${esc(a.tipo)}" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b><span>${esc(a.texto)}</span></span>${a.cuando ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button>`).join('')}</div>`;
+  if (!urg.length) return `<div class="ahora-ok">${icono('ok')}<span><b>Nada urgente ahora mismo.</b> ${fuera.size ? 'Lo que has quitado vuelve mañana si sigue igual.' : 'Ninguna cláusula tuya en peligro ni nada que vender ya.'}</span></div>`;
+  const yo = S.D && S.D.yo && S.D.yo.teamId;
+  // a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto
+  const conSust = (a) => a.pid && M.dueno[a.pid] === yo && (a.tipo === 'vender' || ['injured', 'suspended'].includes((M.J(a.pid) || {}).estado));
+  return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<div class="ahora-f t-${esc(a.tipo)}"><button class="ahora-b" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b><span>${esc(a.texto)}</span></span>${a.cuando ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button><button class="ahora-x" data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}" aria-label="Quitar hasta mañana" title="Quitar hasta mañana">${icono('cerrar')}</button>${conSust(a) ? `<button class="ahora-sust" data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}</div>`).join('')}</div>`;
+}
+
+/**
+ * los sustitutos de uno tuyo (aviso de Domy, 27 oct): de su mismo puesto, lo que podrías poner o fichar hoy, de más a
+ * menos puntos esperados: tus suplentes, los del mercado y las cláusulas que te llegan y tienen salida
+ */
+export function sustitutosHTML(S, pid) {
+  const { M } = S;
+  const j = M.J(pid);
+  const cab = `<div class="hoja-cab"><h2>Sustitutos${j ? ` de ${esc(j.nombre)}` : ''}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  if (!j) return `${cab}${nada('No encuentro a ese jugador.')}`;
+  const pp = (x) => (M.ppEsperado ? M.ppEsperado(x) : num(x.media));
+  const ppTxt = (x) => { const v = pp(x); return v ? `${String(Math.round(v * 10) / 10).replace('.', ',')} pts esperados` : ''; };
+  const sano = (x) => !['injured', 'suspended', 'out_of_league'].includes(x.estado);
+  const mios = M.mias.filter((x) => x.j && x.pid !== pid && x.j.pos === j.pos && sano(x.j)).sort((a, b) => pp(b.j) - pp(a.j));
+  const merc = M.mercado.filter((m) => m.j && m.j.pos === j.pos && !M.enVenta.has(m.pid) && !m.noVende && sano(m.j) && !(m.tipo === 'manager' && bloqueada('ventasRivales')))
+    .sort((a, b) => pp(b.j) - pp(a.j)).slice(0, 8);
+  const cls = M.clausulas.filter((x) => x.j.pos === j.pos && x.meLlega && (x.abierta || x.abreEn < 30 * 3600e3) && sano(x.j) && (!M.conSalida || M.conSalida(x.j, x.clausula, x.tend)))
+    .sort((a, b) => pp(b.j) - pp(a.j)).slice(0, 8);
+  let h = `${cab}<p class="t2 peq">${esc(POS_PLURAL[j.pos] || 'Su puesto')}: lo que podrías poner o fichar hoy en su sitio, de más a menos puntos esperados. Toca uno para ver su ficha.</p>`;
+  if (mios.length) h += `<div class="grupo"><span>Ya los tienes</span><span>${mios.length}</span></div>${mios.map((x) => filaJugador(x, { sub: `${esc(x.j.equipo)}${ppTxt(x.j) ? ` · ${ppTxt(x.j)}` : ''}`, derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d">${delta(x.tend)}</div>` })).join('')}`;
+  if (merc.length) h += `<div class="grupo"><span>En el mercado</span><span>${merc.length}</span></div>${merc.map((m) => filaJugador(m, { sub: `${m.tipo === 'manager' ? `lo vende ${esc(m.vendedor || 'un manager')}` : 'libre'}${ppTxt(m.j) ? ` · ${ppTxt(m.j)}` : ''}`, derecha: `<div class="v">${eur(m.precio)}</div>${m.puja ? `<div class="d apag">${m.tipo === 'manager' ? 'ofrece' : 'puja'} ${eur(m.puja, { dec: 1 })}</div>` : ''}` })).join('')}`;
+  if (cls.length) h += `<div class="grupo"><span>Cláusulas que te llegan</span><span>${cls.length}</span></div>${cls.map((x) => filaJugador(x, { sub: `de ${esc(x.rival.manager || x.rival.nombre)}${ppTxt(x.j) ? ` · ${ppTxt(x.j)}` : ''}`, derecha: `<div class="v">${eur(x.clausula)}</div><div class="d apag">${x.abierta ? 'abierta' : `se abre ${cuando(x.protegidoHasta)}`}</div>` })).join('')}`;
+  if (!mios.length && !merc.length && !cls.length) h += nada('Ahora mismo no hay nadie de su puesto que puedas poner o fichar hoy. Mira mañana el mercado nuevo.');
+  return h;
 }
 
 /** tu equipo de un vistazo: cuántos suben y bajan, los que hay que vender, lesionados y cláusulas abiertas */

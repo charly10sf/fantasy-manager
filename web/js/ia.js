@@ -852,7 +852,7 @@ export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
   const pedido = `${ctx}${memoria(M)}
 
 Hazme el PLAN DE HOY. ${BUSCAR_PLAN}
-Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría (según las pujas que lleva y si sube). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
+Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría: como poco la que pondría la app (ya cuenta lo que se suele pagar en esta liga por los libres, mira LO QUE SE PAGA EN ESTA LIGA); por debajo de eso lo normal es perderlo. Antes de proponer un clausulazo mira su SALIDA: si se tuerce y no lo puedo vender sin perder dinero, solo vale si es titular seguro y se espera un buen partido (dilo en el motivo, con lo que perdería). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
 Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato, en este orden (primero las cuentas y lo que descartas, después las operaciones y al final el titular, que resume lo decidido):
 {
  "cuentas": {"caja_hoy": número (mi saldo), "caja_con_ofertas": número (si acepto las ofertas que tengo), "pujas_hechas": número, "huecos_once": número},
@@ -971,6 +971,12 @@ export function cuadrarPlan(P, D, M) {
           const puja = o.puja_max != null ? +o.puja_max : importe || opC.puja;
           importe = Math.max(puja || 0, opC.precio); o.puja_max = importe; o.donde = 'libre en el mercado de la liga';
           if (puja && puja < opC.precio) aviso = `La puja mínima es ${eur(opC.precio)}`;
+          // lo que se paga en esta liga (aviso de Domy, 29 oct): la puja de la app ya lo cuenta; por debajo, lo normal es perderlo
+          const PL = M.pujasLiga;
+          if (opC.puja && importe < opC.puja && PL && !PL.poco) {
+            aviso = `${aviso ? `${aviso}. ` : ''}Subida de ${eur(importe)} a ${eur(opC.puja)}: en esta liga los libres se llevan de mediana con un ${pct(PL.med * 100)} sobre su valor (la mitad, entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)}); con menos lo normal es perderlo.`;
+            importe = opC.puja; o.puja_max = importe;
+          }
           break;
         }
         case 'M': case 'T':
@@ -1009,6 +1015,14 @@ export function cuadrarPlan(P, D, M) {
         else if (sc.indice > tol - 30) mas(`Ojo: pagas ${base}.`);
         else if (sc.indice >= 15) mas(`Pagas ${base}: aceptable para lo que aporta.`);
       }
+    }
+    // la salida (aviso de Domy, 29 oct): un clausulazo que, si el jugador se tuerce, no se puede vender sin perder y que
+    // tampoco es por un titular seguro con buen partido, no se propone; si se puede perder algo, se dice cuánto
+    if (!ya && !descartada && signo < 0 && importe && j && j.valor && ['clausular', 'comprar'].includes(accion) && M.salida && !String(o.objetivo || '').startsWith('revend')) {
+      const s = M.salida(j, importe);
+      const trato = (opC && opC.trato) || notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe);
+      if (s && !s.ok && accion === 'clausular' && !trato) { descartada = true; aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: ${s.txt}, y no es un titular seguro con buen partido como para ficharlo solo por los puntos.`; }
+      else if (s && s.pierde > 0) aviso = `${aviso ? `${aviso} ` : ''}Salida: ${s.txt}.`;
     }
     // fichar a un lesionado o sancionado para el once: aviso
     if (!ya && !descartada && signo < 0 && j && ['injured', 'suspended'].includes(j.estado) && !String(o.objetivo || '').startsWith('revend')) aviso = `${aviso ? `${aviso} ` : ''}Ojo: está ${j.estado === 'injured' ? 'lesionado' : 'sancionado'}.`;

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.6e';
+export const VERSION = '0.6.7';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.6.6e';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.7', f: '2026-10-29', h: 'HH:MM', t: 'Clausulazos con salida y sustitutos',
+    cosas: [
+      { tipo: 'nuevo', d: 'lupa', t: 'Buscar sustituto y quitar lo urgente', x: 'En Hoy, cada cosa de «Ahora mismo» lleva una X para quitarla hasta mañana. Si es uno tuyo que hay que vender o que no puede jugar, también «Buscar sustituto»: los de su puesto que ya tienes, los del mercado y las cláusulas que te llegan, de más a menos puntos esperados.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'semaforo', t: 'Clausulazos que se pueden deshacer', x: 'Antes de proponerte un clausulazo, la app mira su salida: si el jugador se tuerce y empieza a bajar, ¿lo podrías vender a LaLiga sin perder dinero? Si no, solo te lo propone si es titular seguro y se espera un buen partido. En el plan, en los avisos y en lo que lee la IA, con lo que perderías.' },
+      { tipo: 'mejora', d: 'oferta', t: 'La puja, con lo que se paga en tu liga', x: 'Si la IA propone pujar menos de lo que la app sabe que se suele pagar en tu liga por un libre, el plan la sube a la puja de la app y te dice por qué: con menos, lo normal es perderlo.' },
+    ],
+  },
   {
     v: '0.6.6e', f: '2026-10-26', h: '12:33', t: 'El plan sale aunque salgas de la app',
     cosas: [

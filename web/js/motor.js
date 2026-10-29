@@ -1101,6 +1101,31 @@ export function analizar(D, H, c, extra = {}) {
     return Math.round(60 + 35 * (1 - Math.exp(-g / 3)));
   };
 
+  /* ---------- la salida de un fichaje caro (aviso de Domy, 29 oct) ---------- */
+  // si pagas por uno más de lo que te daría LaLiga al venderlo y luego se tuerce, pierdes la diferencia. Un clausulazo así
+  // solo compensa si: lo podrías vender sin perder (o casi), o sube lo bastante para cubrirlo en pocos días sin señales
+  // de bajar, o lo fichas por los puntos porque es titular seguro y se espera un buen partido
+  M.salida = (j, precio, t = j ? M.tend(j.id) : null) => {
+    if (!j || !j.valor || !precio) return null;
+    // (lo que suele dar LaLiga por la parte baja: si se tuerce, mejor no contar con la oferta buena)
+    const ol = M.ofertaLigaDe(j);
+    const venta = ol ? (ol.min || ol.v) : j.valor;
+    const pierde = Math.max(0, precio - venta);
+    const diario = t ? (t.d7 != null && t.d7 > 0 ? t.d7 / 7 : t.d1 != null && t.d1 > 0 ? t.d1 : 0) : 0;
+    const dias = pierde > 0 ? (diario > 0 ? pierde / diario : Infinity) : 0;
+    const ine = M.inercia(j.id);
+    const tuerce = !!(ine && ['giro', 'baja', 'frena'].includes(ine.fase)) || !!(t && t.p1 != null && t.p1 < 0);
+    const T = M.titularidad(j), des = M.desglose(j);
+    const seguro = !!(T && T.p >= 0.9 && !MALOS.has(j.estado) && (des ? des.total >= 5 : num(j.media) >= 6));
+    const casiNada = pierde <= j.valor * 0.02;
+    const margen = casiNada || (!tuerce && dias <= 5);
+    const d = Math.max(1, Math.round(dias));
+    const txt = casiNada ? `si se tuerce, lo vendes a LaLiga por unos ${eur(venta)} sin perder`
+      : `si se tuerce, venderlo a LaLiga te daría unos ${eur(venta)}: perderías ${eur(pierde)}${tuerce ? ' (y ya da señales de bajar)' : Number.isFinite(dias) ? ` (con lo que sube lo cubre en ${d} día${d === 1 ? '' : 's'})` : ' (y no está subiendo)'}${!margen && seguro ? '; solo compensa por los puntos: titular seguro y se espera un buen partido' : ''}`;
+    return { venta, pierde, dias, tuerce, seguro, margen, ok: margen || seguro, txt };
+  };
+  M.conSalida = (j, precio, t) => { const s = M.salida(j, precio, t); return !s || s.ok; };
+
   /* ---------- cuánto interesa un jugador (0 a 100) ---------- */
   M.interes = (j, precio, t = M.tend(j.id)) => {
     const partes = [];
@@ -1727,13 +1752,13 @@ function acciones(D, M, c) {
   const clausulable = (x) => x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado)
     && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30
     && (M.mejora(x.j) >= 0.5 || (x.ratio != null && x.ratio <= 1.05))
-    && M.compraCal(x.j, x.clausula).ok;
+    && M.compraCal(x.j, x.clausula).ok && M.conSalida(x.j, x.clausula, x.tend);
   const abiertas = M.clausulas.filter((x) => x.abierta && clausulable(x))
     .sort((a, b) => (b.interes + (b.teQueda >= 0 ? 8 : 0)) - (a.interes + (a.teQueda >= 0 ? 8 : 0)));
   abiertas.slice(0, 3).forEach((x, k) => add({
     tipo: 'clausular', prio: 90 - k * 3 + x.interes / 20, icono: 'diana', pid: x.pid, cuando: 'Ya',
     titulo: `Clausula a ${x.j.nombre}`,
-    texto: `De ${x.rival.nombre}. Cláusula ${eur(x.clausula)}, vale ${eur(x.j.valor)}${x.por.length ? `: ${x.por.slice(0, 2).join(', ')}` : ''}. ${x.teQueda >= 0 ? `Te quedarías con ${eur(x.teQueda)}.` : `Te quedarías en ${eur(x.teQueda)}: tendrías que vender antes de que empiece la jornada.`}${M.compraCal(x.j, x.clausula).txt ? ` ${M.compraCal(x.j, x.clausula).txt}` : ''}`,
+    texto: `De ${x.rival.nombre}. Cláusula ${eur(x.clausula)}, vale ${eur(x.j.valor)}${x.por.length ? `: ${x.por.slice(0, 2).join(', ')}` : ''}. ${x.teQueda >= 0 ? `Te quedarías con ${eur(x.teQueda)}.` : `Te quedarías en ${eur(x.teQueda)}: tendrías que vender antes de que empiece la jornada.`}${M.compraCal(x.j, x.clausula).txt ? ` ${M.compraCal(x.j, x.clausula).txt}` : ''}${(() => { const s = M.salida(x.j, x.clausula, x.tend); return s && s.pierde > 0 ? ` ${s.txt[0].toUpperCase()}${s.txt.slice(1)}.` : ''; })()}`,
   }));
 
   const pronto = M.clausulas.filter((x) => !x.abierta && x.abreEn < 30 * HORA && clausulable(x));
@@ -1908,7 +1933,7 @@ export function planAuto(D, M, c) {
 
   // 2. clausular lo mejor que esté abierto y te llegue
   // nunca una cláusula mucho más cara de lo que vale el jugador (lo de más se pierde en el valor del equipo)
-  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30).slice(0, 8);
+  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30 && M.conSalida(x.j, x.clausula, x.tend)).slice(0, 8);
   let clausulas = 0;
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || x.clausula > caja || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;
