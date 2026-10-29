@@ -509,7 +509,14 @@ export function fichaPartido(S, clave) {
     h += `<p class="t2 peq">Arriba de cada uno, de quién es en tu liga. Los puntos son los de LaLiga Fantasy${enJuego(p) ? ' y se ponen al día solos cada minuto' : ''}.${ju || !enJuego(p) ? '' : ' El minuto es aproximado: LaLiga solo dice en qué parte va.'} Toca a uno para ver su ficha.</p>`;
     return h;
   }
-  if (emp) h += nada(S.cargandoPartido ? 'Cargando los puntos…' : 'LaLiga todavía no da los puntos de este partido. Se mira solo cada minuto.');
+  if (emp) {
+    h += nada(S.cargandoPartido ? 'Cargando los puntos…' : 'LaLiga todavía no da los puntos de este partido. Se mira solo cada minuto.');
+    // mientras llegan, el once que ha salido (el confirmado si lo hay; si no, el probable), en vez de quedarse en blanco
+    const oL = onceDeEquipo(S, p.lid), oV = onceDeEquipo(S, p.vid);
+    const campos = (oL ? oL.cab + oL.campo : '') + (oV ? oV.cab + oV.campo : '');
+    const nConf = [oL, oV].filter((o) => o && o.conf).length;
+    if (campos) return h + campos + `<p class="t2 peq">Mientras llegan los puntos, ${nConf === 2 ? 'los onces confirmados' : nConf === 1 ? 'un once confirmado y el otro probable' : 'los onces probables'}. Toca a uno para ver su ficha.</p>`;
+  }
   // antes de empezar: el once probable de cada uno (o el confirmado), con lo probable que es que salga cada jugador
   if (!emp) {
     const oL = onceDeEquipo(S, p.lid), oV = onceDeEquipo(S, p.vid);
