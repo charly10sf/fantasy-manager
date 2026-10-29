@@ -1,6 +1,6 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
 import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
-import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO } from './puente.js';
+import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
@@ -540,10 +540,15 @@ async function trabajoFondo() {
       let conIA = false;
       if (hayClave()) {
         try {
-          await Promise.race([
-            planDelDia(S.D, S.M, S.c, {}),
-            new Promise((_, mal) => setTimeout(() => mal(new Error('la IA ha tardado más de 7 minutos')), 7 * MIN)),
-          ]);
+          // (con un reloj que no se para en segundo plano, y que corta de verdad la pregunta si salta)
+          const ctlF = new AbortController();
+          let quitarF = () => {};
+          try {
+            await Promise.race([
+              planDelDia(S.D, S.M, S.c, { signal: ctlF.signal }),
+              new Promise((_, mal) => { quitarF = relojFijo(7 * MIN, () => { ctlF.abort(); mal(new Error('la IA ha tardado más de 7 minutos')); }); }),
+            ]);
+          } finally { quitarF(); }
           conIA = true;
           paso('plan nuevo con IA');
         } catch (e) { paso(`IA: ${e.message || e}`); }
