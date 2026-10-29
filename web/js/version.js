@@ -14,8 +14,9 @@ export const VERSION = '0.6.7a';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.7a', f: '2026-10-29', h: 'HH:MM', t: 'Cambio de cuenta y fichajes recientes',
+    v: '0.6.7a', f: '2026-10-29', h: 'HH:MM', t: 'Aviso del once y fichajes recientes',
     cosas: [
+      { para: 'app', tipo: 'mejora', d: 'campana', t: 'Te avisa si uno de tu once no es titular', x: 'Con la app cerrada, unos 50 y 20 minutos antes de cada partido en que juega alguno de tu alineación, la app mira el once confirmado. Si uno de los tuyos sale de suplente o no va convocado, te llega una notificación para que lo cambies antes de que empiece su partido, y con quién de tu plantilla meter.' },
       { tipo: 'arreglo', d: 'cara', t: 'Otra cuenta en el mismo móvil no ve lo de la anterior', x: 'Si en el mismo móvil o navegador entra otra cuenta de LaLiga, se borra lo de la anterior (su liga, su histórico, sus planes, su chat y sus notas) antes de enseñar nada. Se quedan los ajustes y la clave de Gemini. Y «Borrar datos» borra ya también lo de las otras ligas.' },
       { tipo: 'arreglo', d: 'oferta', t: 'Los fichajes de hace un rato cuentan ya', x: 'LaLiga tarda en poner en la plantilla un fichaje o un clausulazo recién hecho. Ahora, si los movimientos de la liga dicen que un jugador ya es de otro (o tuyo), la app no te propone clausularlo ni lo pone en la lista del que lo tenía.' },
       { para: 'dueño', menor: true, tipo: 'arreglo', d: 'conexion', t: 'El código para entrar desde el ordenador, más seguro', x: 'Si se acaban las escrituras gratis del servidor, el código para entrar desde el ordenador o el iPhone sigue funcionando, y «Quién usa la app» escribe como mucho una vez por hora por cuenta.' },

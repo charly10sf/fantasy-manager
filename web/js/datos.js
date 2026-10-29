@@ -440,7 +440,7 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 /* lo que es de una cuenta (su liga, su histórico, sus planes, su chat, sus notas…), con las claves de cada liga (-l<id>) */
-const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'hechos', 'hist', 'ia', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
+const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'hechos', 'hist', 'ia', 'mi-once', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
 const borrarClaves = (lista) => {
   let ks = [];
   try { ks = Object.keys(localStorage); } catch (e) { return; }
@@ -459,7 +459,7 @@ export function borrarTodo() {
  */
 export function borrarCuenta() {
   borrarClaves(DE_LA_CUENTA);
-  for (const k of ['liga-principal', 'avisos', 'avisos-contestados', 'avisos-mandado', 'avisos-notificados', 'avisos-prog', 'fondo-avisados', 'fondo-cierre', 'fondo-completo', 'fondo-ultimo', 'planes-mano', 'noticias']) LS.del(k);
+  for (const k of ['liga-principal', 'avisos', 'avisos-contestados', 'avisos-mandado', 'avisos-notificados', 'avisos-prog', 'fondo-avisados', 'fondo-cierre', 'fondo-completo', 'fondo-onces', 'fondo-ultimo', 'planes-mano', 'noticias']) LS.del(k);
   const c = LS.get('cfg', null);
   if (c && c.ligaId) { delete c.ligaId; LS.set('cfg', c); }
 }

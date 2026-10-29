@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
+import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
@@ -17,7 +17,7 @@ import { linea } from './graficos.js';
 import { md } from './texto.js';
 import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
-import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub } from './externas.js';
+import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
@@ -515,7 +515,89 @@ function programarFondo() {
     const t = Date.now() + 40 * MIN;
     if (!prox || prox < Date.now() || t < prox) prox = t;
   }
+  // y unos 50 y 20 minutos antes de cada partido en que juega alguno de tu once, para el once confirmado
+  const tOnce = (S.D ? pasadasOnce(S.D) : LS.get('fondo-onces', [])).find((x) => x > Date.now() + MIN);
+  if (tOnce && (!prox || prox < Date.now() || tOnce < prox)) prox = tOnce;
   nativo.programarFondo(cfgFondo().on && !enDemo(), prox);
+}
+
+/* ---------- el once confirmado con la app cerrada ----------
+   Unos 50 y 20 minutos antes de cada partido en que juega alguno de los que tienes alineados, una pasada en segundo
+   plano mira el once confirmado y, si uno de los tuyos no sale de titular, te avisa para que lo cambies antes de que
+   empiece (en LaLiga Fantasy se puede cambiar a cada uno hasta que empieza su partido). */
+const ONCE_ANTES = [50 * MIN, 20 * MIN];
+/** tu once de LaLiga, el último que se ha visto (o null) */
+function onceSabido() {
+  const g = LS.get(K('mi-once'), null);
+  if (g && Date.now() - g.t < 8 * DIA && (g.ids || []).length >= 5) return g.ids;
+  const v = LS.get(K('vivo'), null);
+  return v && Array.isArray(v.once) && v.once.length >= 5 ? v.once : null;
+}
+const apuntarMiOnce = (ids) => { if (ids && ids.length >= 5) LS.set(K('mi-once'), { t: Date.now(), ids: ids.map(String) }); };
+/** las horas de esas pasadas (de los partidos de los próximos 8 días); se guardan para cuando no hay datos a mano */
+function pasadasOnce(D) {
+  if (!D || D.demo || !D.maestro) return [];
+  const yo = D.yo && D.yo.teamId;
+  const ids = onceSabido() || ((D.plantillas && D.plantillas[yo]) || []).map((f) => f.pid);
+  const eqs = new Set(ids.map((pid) => D.maestro[pid] && String(D.maestro[pid].equipoId)).filter(Boolean));
+  const ahora = Date.now(), horas = new Set();
+  for (const p of D.partidos || []) {
+    if (!p.fecha || p.fecha < ahora || p.fecha - ahora > 8 * DIA) continue;
+    if (!eqs.has(String(p.localId)) && !eqs.has(String(p.visitanteId))) continue;
+    for (const a of ONCE_ANTES) horas.add(p.fecha - a);
+  }
+  const out = [...horas].filter((t) => t > ahora).sort((a, b) => a - b).slice(0, 40);
+  LS.set('fondo-onces', out);
+  return out;
+}
+/** ¿empieza pronto (en menos de 100 minutos) algún partido de los tuyos? */
+const onceCerca = (D, ahora = Date.now()) => (D && D.partidos ? D.partidos : []).some((p) => p.fecha > ahora && p.fecha - ahora < ANTES_ONCE);
+/** los avisos del once confirmado: los de tu once de LaLiga que no son titulares y aún no han empezado su partido */
+async function avisosOnce(D, M, al) {
+  const yo = D && D.yo && D.yo.teamId;
+  if (!yo || !M || D.demo || !onceCerca(D)) return [];
+  let ids = null;
+  try { ids = idsOnce(await api.miOnce(yo)).map(String); } catch (e) { if (e.sesion) throw e; }
+  if (ids && ids.length >= 5) apuntarMiOnce(ids); else ids = onceSabido();
+  if (!ids) return [];
+  if (!al || !al.jugadores) al = await alineaciones(D).catch(() => null);
+  const ahora = Date.now(), J = (al && al.jugadores) || {};
+  const TXT = { suplente: 'suplente', nosale: 'no sale de titular', fuera: 'no convocado', baja: 'de baja' };
+  const FRASE = { suplente: 'Sale de suplente en el once confirmado', nosale: 'No sale de titular en el once confirmado', fuera: 'No está convocado', baja: 'Está de baja' };
+  const malos = ids.map((pid) => ({ pid, j: M.J(pid), a: J[pid] })).filter((x) => x.a && x.a.estado !== 'titular' && x.a.ini > ahora && TXT[x.a.estado]);
+  if (!malos.length) return [];
+  // a quién meter: uno tuyo del mismo puesto que no está en el once, cuyo partido no ha empezado y que no se sabe que no juegue
+  const usados = new Set();
+  const cambio = (x) => {
+    const c = (M.mias || []).filter((y) => !ids.includes(String(y.pid)) && !usados.has(y.pid) && y.j.pos === x.j.pos && !['injured', 'suspended', 'out_of_league'].includes(y.j.estado))
+      .filter((y) => {
+        const a = J[y.pid];
+        if (a) return a.estado === 'titular' && a.ini > ahora;
+        // (sin once confirmado de su equipo: que su próximo partido no haya empezado ya)
+        const p = (D.partidos || []).filter((q) => q.fecha > ahora - 3 * HORA && (String(q.localId) === String(y.j.equipoId) || String(q.visitanteId) === String(y.j.equipoId))).sort((q, r) => q.fecha - r.fecha)[0];
+        return !p || p.fecha > ahora;
+      })
+      .sort((a, b) => M.ppEsperado(b.j) - M.ppEsperado(a.j))[0];
+    if (c) usados.add(c.pid);
+    return c;
+  };
+  const hora = (t) => `${cuandoT(t, { hora: false })} a las ${horaDe(t)}`;
+  if (malos.length === 1) {
+    const x = malos[0], c = cambio(x);
+    return [{
+      k: `once:${x.pid}:${x.a.ini}`,
+      titulo: `${x.j.nombre} no es titular`,
+      texto: `${FRASE[x.a.estado]} (su partido empieza ${hora(x.a.ini)}) y lo tienes en tu alineación: cámbialo antes de que empiece${c ? `, puedes meter a ${c.j.nombre}` : ''}.`,
+      hash: 'equipo',
+    }];
+  }
+  const partes = malos.map((x) => { const c = cambio(x); return `${x.j.nombre}, ${TXT[x.a.estado]} (${hora(x.a.ini)})${c ? ` → ${c.j.nombre}` : ''}`; });
+  return [{
+    k: `once:${malos.map((x) => `${x.pid}:${x.a.ini}`).sort().join(',')}`,
+    titulo: `${malos.length} de tu once no son titulares`,
+    texto: `${partes.join('; ')}. Cámbialos antes de que empiece su partido.`,
+    hash: 'equipo',
+  }];
 }
 /** las respuestas a tus avisos de fallo (y al dueño, los avisos nuevos), como notificaciones: una sola petición */
 async function avisosDeFallos() {
@@ -549,8 +631,18 @@ async function trabajoFondo() {
     if (fallos.length) paso(`${fallos.length} aviso${fallos.length > 1 ? 's' : ''} de fallo`);
     const completo = LS.get('fondo-completo', 0), cierre = LS.get('fondo-cierre', 0);
     if (completo && Date.now() - completo < 150 * MIN && Date.now() < cierre) {
-      paso('liga mirada hace poco: solo los avisos de fallo');
-      if (!callado()) { const nuevos = sinAvisar(fallos); avisar(nuevos); reg.avisos = nuevos.length; }
+      const lista = [...fallos];
+      // con un partido de los tuyos a punto de empezar, el once confirmado (con la liga guardada: está al día)
+      const g = foto();
+      if (g && onceCerca(g)) {
+        try {
+          S.D = g; rehacer();
+          const o = await avisosOnce(S.D, S.M);
+          lista.push(...o);
+          paso(`once confirmado: ${o.length ? 'alguno de los tuyos no es titular' : 'nada'}`);
+        } catch (e) { if (e.sesion) throw e; paso(`once confirmado: ${e.message}`); }
+      } else paso('liga mirada hace poco: solo los avisos de fallo');
+      if (!callado()) { const nuevos = sinAvisar(lista); avisar(nuevos); reg.avisos = nuevos.length; }
       reg.ok = true;
       return;
     }
@@ -562,6 +654,10 @@ async function trabajoFondo() {
     try { const det = await completar(S.D, S.M); if (det) S.det = { ...S.det, ...det }; } catch (e) { if (e.sesion) throw e; paso(`fichas: ${e.message}`); }
     rehacer();
     const lista = [...fallos, ...avisosNuevos(antes, S.D, S.M)];
+    try {
+      const o = await avisosOnce(S.D, S.M, S.fuentes && S.fuentes.alineaciones);
+      if (o.length) { lista.unshift(...o); paso('once confirmado: alguno de los tuyos no es titular'); }
+    } catch (e) { if (e.sesion) throw e; paso(`once confirmado: ${e.message}`); }
     LS.set('fondo-completo', Date.now()); LS.set('fondo-cierre', (S.M && S.M.cierreMercado) || 0);
     if (planViejo(S.M)) {
       let conIA = false;
@@ -866,6 +962,7 @@ async function cargarJornadaMia() {
         // el de esa jornada (también el de la que se juega: el de ahora puede ser ya otro); el de la próxima, el de ahora
         const r = est === 'proxima' ? await api.miOnce(tid) : await api.onceSemana(tid, n);
         ids = idsOnce(r); forma = formaOnce(r);
+        if (est === 'proxima') apuntarMiOnce(ids);
         if (ids.length < 5 && est === 'vivo' && S.M.vivo && S.M.vivo.once) { ids = S.M.vivo.once; forma = S.M.vivo.forma || null; }
       }
       S.misJ[n] = { ids: ids && ids.length ? ids : null, forma, t: Date.now(), acabada: est === 'acabada' };
