@@ -713,6 +713,7 @@ export function textoDiagnostico(S) {
       return `Directo: J${v.n}${S.M.vivo ? '' : ' (no es la de ahora)'} · ${horaDe(v.t)} · partidos ${ps.length} (${ps.filter((p) => p.jug && p.jug.length).length} con puntos, ${ps.filter((p) => p.st != null).length} con estado) · jugadores con puntos ${Object.keys(v.puntos || {}).length} · tu once ${v.once ? v.once.length : 'no'} · equipos ${Object.keys(v.equipos || {}).length}${S.jugadas ? ` · jugadas SofaScore ${Object.keys(S.jugadas).length}` : ''}`;
     })(),
     S.errorCarga ? `Última carga: ✗ ${S.errorCarga.tipo} · ${S.errorCarga.detalle} (${horaDe(S.errorCarga.t)})` : 'Última carga: bien',
+    ocupado(),
     `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.premium ? ' (premium)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'}${medidasVista()} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
     ...(erroresApp.length ? ['Errores de la app:', ...erroresApp.map((x) => `  ${horaDe(x.t)} ${x.m}${x.donde ? ` (${x.donde})` : ''}`)] : []),
     `Fuentes: onces ${S.M && S.M.hayOnces ? `${Object.keys(((S.fuentes || {}).onces || {}).jugadores || {}).length} jugadores, ${((S.fuentes || {}).onces || {}).equipos ?? '?'}/${((S.fuentes || {}).onces || {}).de ?? '?'} equipos` : 'no'} · noticias ${S.M ? S.M.noticias.length : 0}${S.M && S.M.noticiasFallo ? ` (${S.M.noticiasFallo.viejas ? 'las de antes: ' : ''}${S.M.noticiasFallo.fallo})` : ''} · avanzadas ${S.M && S.M.fuentesAv ? Object.entries(S.M.fuentesAv).map(([k, v]) => `${k} ${v}`).join(', ') : 'sin datos'} · histórico de valor ${LS.get('ruta-valor', null) != null ? `ruta ${LS.get('ruta-valor')}` : LS.get('ruta-valor-falla', 0) ? 'ninguna ruta' : 'sin probar'}`,
@@ -753,6 +754,19 @@ export function textoDiagnostico(S) {
     for (const [k, v] of Object.entries(mv)) L.push(`${k} (${horaDe(v.t)}): ${v.txt}`);
   }
   return L.join('\n');
+}
+/** lo que ocupa lo guardado en este dispositivo (el navegador deja unos 5 MB): el total y lo que más pesa */
+function ocupado() {
+  try {
+    const t = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('fm-')) t.push([k.slice(3), (localStorage.getItem(k) || '').length * 2]);
+    }
+    const mb = (b) => `${(b / 1048576).toFixed(2).replace('.', ',')} MB`;
+    t.sort((a, b) => b[1] - a[1]);
+    return `Guardado: ${mb(t.reduce((s, x) => s + x[1], 0))} en ${t.length} claves (${t.slice(0, 4).map(([k, b]) => `${k} ${mb(b)}`).join(', ')})`;
+  } catch (e) { return 'Guardado: no se puede mirar'; }
 }
 /** para el fallo de la barra de abajo en el iPhone: lo que Safari dice que se ve y dónde acaba la barra */
 function medidasVista() {

@@ -429,12 +429,13 @@ function guardarFoto(D, viejo = foto()) {
     // las subidas de cláusula se guardan más tiempo: son dinero gastado y cuentan para el de cada rival
     H.mov = H.mov.filter((m) => D.t - m.t < (m.tipo === 'blinda' ? 300 : 45) * DIA).slice(-900);
   }
-  LS.set(K('hist'), H);
-  if (!LS.set(K('datos'), D)) {
-    // sin sitio: se recorta el histórico de valores a 30 días y se vuelve a probar
-    for (const s of Object.values(H.v)) if (s.length > 30) s.splice(0, s.length - 30);
-    LS.set(K('hist'), H);
-    LS.set(K('datos'), D);
+  const hBien = LS.set(K('hist'), H);
+  if (!LS.set(K('datos'), D) || !hBien) {
+    // sin sitio: se recorta el histórico de valores a 30 días (y luego a 14) y se vuelve a probar
+    for (const dias of [30, 14]) {
+      for (const s of Object.values(H.v)) if (s.length > dias) s.splice(0, s.length - dias);
+      if (LS.set(K('hist'), H) && LS.set(K('datos'), D)) break;
+    }
   }
   return D;
 }

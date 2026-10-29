@@ -66,6 +66,22 @@ function destinoDe(u) {
   return d.protocol === 'https:' && PERMITIDOS.has(d.hostname) ? d : null;
 }
 
+/** fetch que solo sigue las redirecciones a sitios permitidos (hasta 4); una a otro sitio se devuelve tal cual */
+async function traer(d, op) {
+  let u = d;
+  for (let i = 0; i < 5; i++) {
+    const r = await fetch(u.toString(), { ...op, redirect: 'manual' });
+    if (![301, 302, 303, 307, 308].includes(r.status)) return r;
+    let sig = null;
+    try { sig = destinoDe(new URL(r.headers.get('location') || '', u).toString()); } catch (e) { sig = null; }
+    if (!sig) return r;
+    u = sig;
+    // (un 303, o un 301/302 de un POST, sigue como GET y sin cuerpo, como haría el navegador)
+    if (r.status === 303 || ((r.status === 301 || r.status === 302) && op.method && op.method !== 'GET')) op = { ...op, method: 'GET', body: undefined };
+  }
+  return new Response('Demasiadas redirecciones', { status: 508 });
+}
+
 async function pasar(req, c) {
   const d = destinoDe(req.headers.get('x-u'));
   if (!d) return sinRespuesta(`Sitio no permitido: ${req.headers.get('x-u') || '(nada)'}`, c);
@@ -79,7 +95,7 @@ async function pasar(req, c) {
   const cuerpo = m === 'GET' ? undefined : await req.arrayBuffer();
   let r;
   try {
-    r = await fetch(d.toString(), { method: m, headers: cab, body: cuerpo && cuerpo.byteLength ? cuerpo : undefined, redirect: 'follow' });
+    r = await traer(d, { method: m, headers: cab, body: cuerpo && cuerpo.byteLength ? cuerpo : undefined });
   } catch (e) {
     return sinRespuesta(String((e && e.message) || e || 'sin respuesta'), c);
   }
@@ -90,7 +106,7 @@ async function pasar(req, c) {
 async function imagen(url, c) {
   const d = destinoDe(url.searchParams.get('u'));
   if (!d) return new Response('Sitio no permitido', { status: 403, headers: c });
-  const r = await fetch(d.toString(), { headers: { 'user-agent': UA }, cf: { cacheTtl: 86400, cacheEverything: true } });
+  const r = await traer(d, { headers: { 'user-agent': UA }, cf: { cacheTtl: 86400, cacheEverything: true } });
   return new Response(r.body, { status: r.status, headers: { ...c, 'content-type': r.headers.get('content-type') || 'image/png', 'cache-control': 'public, max-age=86400' } });
 }
 
@@ -337,6 +353,9 @@ export default {
     const c = cors(req.headers.get('Origin'));
     if (!c) return new Response('Origen no permitido', { status: 403 });
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: c });
+    // el proxy (/p) y las imágenes (/img) solo para la web de Fantasy Manager: el navegador siempre manda de qué página
+    // viene; sin ella (un script, curl) no se pasa nada (revisión del 23 oct: era un proxy abierto a LaLiga)
+    if ((url.pathname === '/p' || url.pathname === '/img') && !req.headers.get('Origin')) return new Response('Solo para la web de Fantasy Manager', { status: 403, headers: c });
     try {
       if (url.pathname === '/p' && req.method === 'POST') return await pasar(req, c);
       if (url.pathname === '/img' && req.method === 'GET') return await imagen(url, c);

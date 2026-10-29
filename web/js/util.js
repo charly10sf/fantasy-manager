@@ -135,9 +135,28 @@ export const ESTADO = {
 export const estadoDe = (e) => ESTADO[e] || (e && e !== 'ok' ? { t: e, c: 'duda' } : null);
 
 /* ---------- almacenamiento del navegador (lo que se puede volver a bajar) ---------- */
+/* Si el almacenamiento se llena (unos 5 MB en el navegador), fuera lo que la app vuelve a pedir sola —muestras,
+   noticias, onces, lo de SofaScore y Understat, las caras recortadas— y se prueba otra vez. Lo tuyo (la liga, el
+   histórico, los planes, el chat) no se toca. */
+const TIRABLES = ['muestra-vivo', 'noticias', 'noticias-club', 'sofa-h2h', 'sofa-cal', 'sofa-ronda', 'ruta-valor', 'avanzadas', 'onces', 'alineaciones', 'caras'];
+function hacerSitio(k) {
+  let hecho = false;
+  for (const t of TIRABLES) {
+    if (t === k) continue;
+    try { if (localStorage.getItem('fm-' + t) != null) { localStorage.removeItem('fm-' + t); hecho = true; } } catch (e) { /* nada */ }
+  }
+  return hecho;
+}
 export const LS = {
   get(k, def = null) { try { const v = localStorage.getItem('fm-' + k); return v == null ? def : JSON.parse(v); } catch (e) { return def; } },
-  set(k, v) { try { localStorage.setItem('fm-' + k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  set(k, v) {
+    let txt;
+    try { txt = JSON.stringify(v); } catch (e) { return false; }
+    try { localStorage.setItem('fm-' + k, txt); return true; } catch (e) {
+      if (!hacerSitio(k)) return false;
+      try { localStorage.setItem('fm-' + k, txt); return true; } catch (e2) { return false; }
+    }
+  },
   del(k) { try { localStorage.removeItem('fm-' + k); } catch (e) { /* nada */ } },
 };
 
