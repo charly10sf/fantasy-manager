@@ -168,11 +168,16 @@ export function bloqueada(clave) {
 /** los anuncios de la web (AdSense): si «anunciosWeb» está a true en limites.json, para todos menos los de «todoAbierto»
     o «sinLimite» (Carlos), y solo cuando ya se sabe quién eres */
 export const anunciosWebEncendidos = () => { const g = LS.get('limites', null); return !!(g && g.cfg && g.cfg.anunciosWeb === true); };
-export function anunciosWebOk() {
+/** 'real' para todos; para el dueño, 'prueba' (con «anunciosWebDueno»: true: anuncios de prueba, que no cuentan, para
+    ver cómo quedan y cazar fallos) o nada; null antes de saber quién eres o con «anunciosWeb» apagado */
+export function anunciosWebModo() {
   const g = LS.get('limites', null), cfg = g && g.cfg;
-  if (!cfg || cfg.anunciosWeb !== true || !yoB) return false;
-  return ![...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
+  if (!cfg || cfg.anunciosWeb !== true || !yoB) return null;
+  const dueno = [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
+  if (!dueno) return 'real';
+  return cfg.anunciosWebDueno === true ? 'prueba' : null;
 }
+export const anunciosWebOk = () => anunciosWebModo() === 'real';
 
 /* «ligas» en limites.json: las ligas (por nombre o id) a las que se aplican «minutos» y «abre». La app ya no es solo
    de una liga: quien juega en otra no tiene límite ni cuenta atrás. Cuenta cualquier liga de la cuenta de LaLiga, no

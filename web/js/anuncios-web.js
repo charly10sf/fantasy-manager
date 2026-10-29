@@ -1,8 +1,8 @@
 /* Los anuncios de la web (Google AdSense, desde la 0.6.8). En el móvil, un banner de 320×50 encima de las pestañas;
    en el ordenador, si sobra sitio a la derecha, uno de 160×600. Solo en el navegador: dentro de la app de Android no,
    porque AdSense no deja anuncios en el navegador de una app (ahí van los de AdMob, en la versión de Google Play).
-   Quién los ve lo decide limite.js (`anunciosWebOk`: «anunciosWeb» en limites.json y nunca los de «todoAbierto» o
-   «sinLimite»); cuándo, app.js (`ponerBanner`: en las pestañas, nunca en Pregunta, la carga, la entrada ni la pantalla
+   Quién los ve lo decide limite.js (`anunciosWebModo`: «anunciosWeb» en limites.json; a los de «todoAbierto» o
+   «sinLimite» —Carlos— solo con «anunciosWebDueno», y de prueba: data-adtest="on", que no cuentan); cuándo, app.js (`ponerBanner`: en las pestañas, nunca en Pregunta, la carga, la entrada ni la pantalla
    del límite). La barra solo se ve cuando Google ha puesto un anuncio (data-ad-status="filled"): mientras AdSense revisa
    la web, o si no tiene anuncio que dar, no se ve nada ni se reserva sitio. El mensaje de consentimiento de la UE lo saca
    el propio script de AdSense (Privacidad y mensajes → Reglamentos europeos, publicado el 29 oct). Los bloques se crearon
@@ -20,7 +20,7 @@ const ANCHO_LATERAL = 1260, ALTO_LATERAL = 720;
 
 let scriptPuesto = false;
 const cajas = {};
-let quiere = false, escritorio = false;
+let quiere = false, escritorio = false, prueba = false;
 
 function ponerScript() {
   if (scriptPuesto) return;
@@ -36,11 +36,14 @@ function ponerScript() {
 const lleno = (tipo) => { const c = cajas[tipo]; const ins = c && c.querySelector('ins'); return !!ins && ins.getAttribute('data-ad-status') === 'filled'; };
 
 function caja(tipo) {
-  if (cajas[tipo]) return cajas[tipo];
+  // (si ha cambiado de real a prueba o al revés, por ejemplo al entrar otra cuenta, la caja se hace de nuevo)
+  if (cajas[tipo] && cajas[tipo].dataset.prueba === String(prueba)) return cajas[tipo];
+  if (cajas[tipo]) { cajas[tipo].remove(); document.body.classList.remove(`con-aw-${tipo}`); delete cajas[tipo]; }
   const b = BLOQUES[tipo];
   const d = document.createElement('div');
   d.className = `aw aw-${tipo}`;
-  d.innerHTML = `<span class="aw-et">Publicidad</span><ins class="adsbygoogle" style="display:inline-block;width:${b.w}px;height:${b.h}px" data-ad-client="${CLIENTE}" data-ad-slot="${b.slot}"></ins>`;
+  d.dataset.prueba = String(prueba);
+  d.innerHTML = `<span class="aw-et">Publicidad${prueba ? ' · prueba' : ''}</span><ins class="adsbygoogle" style="display:inline-block;width:${b.w}px;height:${b.h}px" data-ad-client="${CLIENTE}" data-ad-slot="${b.slot}"${prueba ? ' data-adtest="on"' : ''}></ins>`;
   document.body.appendChild(d);
   cajas[tipo] = d;
   new MutationObserver(colocar).observe(d.querySelector('ins'), { attributes: true, attributeFilter: ['data-ad-status'] });
@@ -53,7 +56,7 @@ const cabeLateral = () => window.innerWidth >= ANCHO_LATERAL && window.innerHeig
 /** enseña la barra que toca (o ninguna) y deja sitio para ella solo si ya lleva anuncio */
 function colocar() {
   const tipo = !quiere ? null : escritorio ? (cabeLateral() ? 'lateral' : null) : 'movil';
-  if (tipo && !cajas[tipo]) caja(tipo);
+  if (tipo) caja(tipo);
   for (const t of Object.keys(cajas)) {
     const si = t === tipo && lleno(t);
     cajas[t].classList.toggle('on', si);
@@ -61,12 +64,13 @@ function colocar() {
   }
 }
 
-/** lo llama app.js: si ahora tocan anuncios (si), si la pantalla es la del ordenador y si el script va ya aunque no
-    haya bloques (en la entrada: así Google ve su código en la página que revisa) */
-export function anunciosWeb(si, enEscritorio, script = false) {
+/** lo llama app.js: si ahora tocan anuncios (si), si la pantalla es la del ordenador, si el script va ya aunque no
+    haya bloques (en la entrada: así Google ve su código en la página que revisa) y si son de prueba (el dueño) */
+export function anunciosWeb(si, enEscritorio, script = false, dePrueba = false) {
   if (enApp || !enWeb) return;
   quiere = !!si;
   escritorio = !!enEscritorio;
+  prueba = !!dePrueba;
   if (quiere || script) ponerScript();
   colocar();
 }

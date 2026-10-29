@@ -21,7 +21,7 @@ import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANT
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebOk, anunciosWebEncendidos } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, anunciosWebEncendidos } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -390,7 +390,7 @@ function ponerBanner(si) {
   si = !!si && !document.body.classList.contains('limitado');
   // en la web, los de AdSense (anuncios-web.js), y solo con la liga ya cargada (antes no se sabe quién eres)
   // (el script de AdSense va también en la entrada, sin bloques: así Google ve su código en la página que revisa)
-  if (!enApp) { anunciosWeb(si && !!S.D && anunciosWebOk(), V.ancho(), anunciosWebEncendidos()); return; }
+  if (!enApp) { const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo, V.ancho(), anunciosWebEncendidos(), modo === 'prueba'); return; }
   if (si === bannerYa) return;
   bannerYa = si;
   nativo.banner(si);

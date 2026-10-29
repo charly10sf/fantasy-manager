@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.8';
+export const VERSION = '0.6.8a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.8';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.8a', f: '2026-10-29', h: 'HH:MM', t: 'Anuncios de prueba para ti',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'oferta', t: 'Tú también ves los anuncios de la web', x: 'En la web te salen los mismos anuncios que a los demás, pero de prueba («Publicidad · prueba»): no cuentan para AdSense, así que puedes ver cómo quedan y si algo se descoloca sin riesgo. Se quitan poniendo «anunciosWebDueno» a false en limites.json. Aun así, no los toques.' },
+    ],
+  },
   {
     v: '0.6.8', f: '2026-10-29', h: '20:11', t: 'Anuncios en la web',
     cosas: [
