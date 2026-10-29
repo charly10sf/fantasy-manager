@@ -14,13 +14,13 @@ export const VERSION = '0.6.8';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.8', f: '2026-10-29', h: 'HH:MM', t: 'Anuncios en la web',
+    v: '0.6.8', f: '2026-10-29', h: '20:11', t: 'Anuncios en la web',
     cosas: [
       { para: 'web', tipo: 'nuevo', d: 'oferta', t: 'La web lleva anuncios', x: 'Para que la app siga siendo gratis, la web lleva un anuncio pequeño encima de las pestañas en el móvil (en el ordenador, a la derecha si cabe). Nunca en Pregunta. En la UE, la primera vez te pregunta si pueden usar tus datos para personalizarse, y lo puedes cambiar en Ajustes → Privacidad de los anuncios.' },
     ],
   },
   {
-    v: '0.6.7a', f: '2026-10-29', h: 'HH:MM', t: 'Aviso del once y fichajes recientes',
+    v: '0.6.7a', f: '2026-10-29', h: '20:11', t: 'Aviso del once y fichajes recientes',
     cosas: [
       { para: 'app', tipo: 'mejora', d: 'campana', t: 'Te avisa si uno de tu once no es titular', x: 'Con la app cerrada, unos 50 y 20 minutos antes de cada partido en que juega alguno de tu alineación, la app mira el once confirmado. Si uno de los tuyos sale de suplente o no va convocado, te llega una notificación para que lo cambies antes de que empiece su partido, y con quién de tu plantilla meter.' },
       { para: 'web', tipo: 'arreglo', d: 'scroll', t: 'La barra de abajo, en su sitio en el iPhone', x: 'En el iPhone, Safari a veces dejaba la barra de las pestañas a media pantalla al bajar por la página, sobre todo después de escribir algo (es un fallo de Safari desde iOS 26). Ahora la app lo nota y la vuelve a poner abajo.' },
