@@ -14,7 +14,7 @@ export const VERSION = '0.6.7';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.7', f: '2026-10-29', h: 'HH:MM', t: 'Clausulazos con salida y sustitutos',
+    v: '0.6.7', f: '2026-10-29', h: '17:50', t: 'Clausulazos con salida y sustitutos',
     cosas: [
       { tipo: 'nuevo', d: 'lupa', t: 'Buscar sustituto y quitar lo urgente', x: 'En Hoy, cada cosa de «Ahora mismo» lleva una X para quitarla hasta mañana. Si es uno tuyo que hay que vender o que no puede jugar, también «Buscar sustituto»: los de su puesto que ya tienes, los del mercado y las cláusulas que te llegan, de más a menos puntos esperados.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'semaforo', t: 'Clausulazos que se pueden deshacer', x: 'Antes de proponerte un clausulazo, la app mira su salida: si el jugador se tuerce y empieza a bajar, ¿lo podrías vender a LaLiga sin perder dinero? Si no, solo te lo propone si es titular seguro y se espera un buen partido. En el plan, en los avisos y en lo que lee la IA, con lo que perderías.' },
