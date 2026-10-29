@@ -1754,6 +1754,44 @@ function medirSup() {
   const n = $('.nav'); if (n && n.offsetHeight) document.documentElement.style.setProperty('--nav-h', `${n.offsetHeight}px`);
 }
 window.addEventListener('resize', medirSup);
+/* iPhone, en el navegador: desde iOS 26, Safari a veces deja la barra de abajo (que es fija) a media pantalla al hacer
+   scroll, sobre todo después de cerrar el teclado (un fallo de WebKit que sigue en la beta de iOS 27; aviso de Domy del
+   29 oct; en el foro de Apple: tras cerrar el teclado, visualViewport.height se queda más bajo que innerHeight). Si la
+   barra, o lo que Safari dice que se ve, acaba bastante más arriba que el alto de la ventana, se baja la barra hasta
+   abajo con --ios-dy (también la caja del chat, las hojas y los avisos de abajo). Con el teclado abierto no se toca. */
+function vigilarBarraIOS() {
+  const vv = window.visualViewport;
+  if (!vv || enApp || movilDe() !== 'iphone') return;
+  let dy = 0, pend = false;
+  const campo = () => { const a = document.activeElement; return !!a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable); };
+  const ajustar = () => {
+    pend = false;
+    const nav = $('.nav');
+    let nuevo = 0;
+    if (nav && nav.offsetHeight && !campo() && getComputedStyle(nav).position === 'fixed') {
+      // (dónde la pone Safari sin el arreglo y dónde acaba lo que dice que se ve: con el fallo, una de las dos se queda
+      // a la altura del teclado y window.innerHeight sigue siendo el alto de verdad)
+      const sin = nav.getBoundingClientRect().bottom - dy, vista = vv.offsetTop + vv.height;
+      const d = Math.round(window.innerHeight - Math.min(sin, vista));
+      if (d > 40 && d < window.innerHeight * 0.75) nuevo = d;
+    }
+    if (nuevo !== dy) { dy = nuevo; document.documentElement.style.setProperty('--ios-dy', `${dy}px`); }
+  };
+  const pedir = () => { if (!pend) { pend = true; requestAnimationFrame(ajustar); } };
+  vv.addEventListener('resize', pedir);
+  vv.addEventListener('scroll', pedir);
+  window.addEventListener('scroll', pedir, { passive: true });
+  window.addEventListener('focusin', pedir);
+  window.addEventListener('focusout', () => setTimeout(() => {
+    if (campo()) return;
+    // (el empujón de siempre para que Safari vuelva a colocar lo fijo al cerrar el teclado)
+    const y = window.scrollY;
+    window.scrollTo(window.scrollX, y + 1); window.scrollTo(window.scrollX, y);
+    pedir();
+  }, 150));
+  pedir();
+}
+vigilarBarraIOS();
 /** si al cambiar de pestaña estabas más abajo, vuelve al principio de la pestaña (con las pestañas a la vista) */
 function volverAPestanas() {
   const a = $('#vista .tabs-ancla'), s = $('.sup');
