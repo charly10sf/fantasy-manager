@@ -14,7 +14,7 @@ export const VERSION = '0.6.8a';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.8a', f: '2026-10-29', h: 'HH:MM', t: 'Anuncios de prueba para ti',
+    v: '0.6.8a', f: '2026-10-29', h: '20:26', t: 'Anuncios de prueba para ti',
     cosas: [
       { para: 'dueño', tipo: 'mejora', d: 'oferta', t: 'Tú también ves los anuncios de la web', x: 'En la web te salen los mismos anuncios que a los demás, pero de prueba («Publicidad · prueba»): no cuentan para AdSense, así que puedes ver cómo quedan y si algo se descoloca sin riesgo. Se quitan poniendo «anunciosWebDueno» a false en limites.json. Aun así, no los toques.' },
     ],
