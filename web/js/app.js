@@ -21,7 +21,7 @@ import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANT
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebOk, anunciosWebEncendidos } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -29,6 +29,7 @@ import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso
 import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { cambiarFav } from './favoritos.js';
+import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
@@ -381,12 +382,15 @@ function pintar({ arriba = false } = {}) {
   // el banner de los anuncios (solo en la versión de Google Play): en las pestañas, nunca en Pregunta
   ponerBanner(S.vista !== 'ia');
 }
-/* ---------------- anuncios (solo en la versión de Google Play) ---------------- */
+/* ---------------- anuncios: AdMob en la versión de Google Play y AdSense en la web ---------------- */
 let bannerYa = null;
 function ponerBanner(si) {
-  if (EN_FONDO || !enApp) return;
+  if (EN_FONDO) return;
   // nunca en la pantalla del límite de minutos o la cuenta atrás (Google no deja anuncios en una pantalla sin salida)
   si = !!si && !document.body.classList.contains('limitado');
+  // en la web, los de AdSense (anuncios-web.js), y solo con la liga ya cargada (antes no se sabe quién eres)
+  // (el script de AdSense va también en la entrada, sin bloques: así Google ve su código en la página que revisa)
+  if (!enApp) { anunciosWeb(si && !!S.D && anunciosWebOk(), V.ancho(), anunciosWebEncendidos()); return; }
   if (si === bannerYa) return;
   bannerYa = si;
   nativo.banner(si);
@@ -2012,7 +2016,7 @@ document.addEventListener('click', async (ev) => {
       setTimeout(() => { if (S.anuncio === t0 && t0.cargando) { S.anuncio = { ...t0, cargando: false, error: 'No ha llegado el anuncio. Prueba otra vez en un rato.' }; if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja(); } }, 20000);
       break;
     }
-    case 'privAnuncios': nativo.privacidadAnuncios(); break;
+    case 'privAnuncios': if (enApp) nativo.privacidadAnuncios(); else privacidadWeb(); break;
     case 'voz': escuchar(); break;
     case 'pararPlan': if (S.planCtl) S.planCtl.abort(); break;
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;

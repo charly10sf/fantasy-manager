@@ -1598,3 +1598,17 @@ button.jg.ev-f { width: 100%; text-align: left; color: var(--texto); }
 .nvl-arr .nv-tipo { margin-bottom: 6px; }
 .nvl-arr li b { font-weight: 600; }
 .nvl-arr li p { margin: 3px 0 0; color: var(--texto2); font-size: 14.5px; }
+
+/* ---------- los anuncios de la web (AdSense, anuncios-web.js): solo se ven cuando Google ha puesto uno ---------- */
+.aw { position: fixed; z-index: 24; visibility: hidden; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
+.aw.on { visibility: visible; pointer-events: auto; }
+.aw-et { font: 600 10px/1 'Barlow', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: var(--apagado); margin-bottom: 4px; }
+/* en el móvil, encima de las pestañas y con aire entre el anuncio y ellas (que no se toque sin querer) */
+.aw-movil { left: 0; right: 0; bottom: calc(var(--nav-h, calc(62px + env(safe-area-inset-bottom))) - var(--ios-dy, 0px)); padding: 5px 0 12px; background: #0d0d10; border-top: 1px solid var(--linea); }
+body.con-aw-movil main { padding-bottom: 205px; }
+body.con-aw-movil .tostada { bottom: calc(165px + env(safe-area-inset-bottom) - var(--ios-dy, 0px)); }
+/* en el ordenador, a la derecha, con su hueco */
+.aw-lateral { right: 24px; top: 96px; }
+.escritorio body.con-aw-lateral main { padding-right: 232px; }
+/* nunca con el tutorial, la pantalla del límite ni en Pregunta (la caja de escribir va donde iría el anuncio) */
+body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }

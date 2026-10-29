@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.7a';
+export const VERSION = '0.6.8';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.7a';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.8', f: '2026-10-29', h: 'HH:MM', t: 'Anuncios en la web',
+    cosas: [
+      { para: 'web', tipo: 'nuevo', d: 'oferta', t: 'La web lleva anuncios', x: 'Para que la app siga siendo gratis, la web lleva un anuncio pequeño encima de las pestañas en el móvil (en el ordenador, a la derecha si cabe). Nunca en Pregunta. En la UE, la primera vez te pregunta si pueden usar tus datos para personalizarse, y lo puedes cambiar en Ajustes → Privacidad de los anuncios.' },
+    ],
+  },
   {
     v: '0.6.7a', f: '2026-10-29', h: 'HH:MM', t: 'Aviso del once y fichajes recientes',
     cosas: [
