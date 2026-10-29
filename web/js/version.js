@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.7';
+export const VERSION = '0.6.7a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.6.7';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.7a', f: '2026-10-29', h: 'HH:MM', t: 'Cambio de cuenta y fichajes recientes',
+    cosas: [
+      { tipo: 'arreglo', d: 'cara', t: 'Otra cuenta en el mismo móvil no ve lo de la anterior', x: 'Si en el mismo móvil o navegador entra otra cuenta de LaLiga, se borra lo de la anterior (su liga, su histórico, sus planes, su chat y sus notas) antes de enseñar nada. Se quedan los ajustes y la clave de Gemini. Y «Borrar datos» borra ya también lo de las otras ligas.' },
+      { tipo: 'arreglo', d: 'oferta', t: 'Los fichajes de hace un rato cuentan ya', x: 'LaLiga tarda en poner en la plantilla un fichaje o un clausulazo recién hecho. Ahora, si los movimientos de la liga dicen que un jugador ya es de otro (o tuyo), la app no te propone clausularlo ni lo pone en la lista del que lo tenía.' },
+      { para: 'dueño', menor: true, tipo: 'arreglo', d: 'conexion', t: 'El código para entrar desde el ordenador, más seguro', x: 'Si se acaban las escrituras gratis del servidor, el código para entrar desde el ordenador o el iPhone sigue funcionando, y «Quién usa la app» escribe como mucho una vez por hora por cuenta.' },
+    ],
+  },
   {
     v: '0.6.7', f: '2026-10-29', h: '17:50', t: 'Clausulazos con salida y sustitutos',
     cosas: [

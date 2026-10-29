@@ -156,10 +156,15 @@ export function demo() {
 
   const actividad = [];
   const nombres = clasif.map((e) => e.manager);
+  // (que cuadren con las plantillas: lo que uno fichó, clausuló o blindó es suyo ahora; lo que vendió a LaLiga está libre)
+  const duenoDemo = {};
+  for (const [tid, fs] of Object.entries(plantillas)) for (const f of fs) duenoDemo[f.pid] = tid;
+  const libresDemo = ids.filter((pid) => !duenoDemo[pid]);
   for (let i = 0; i < 26; i++) {
     const quien = clasif[Math.floor(r() * clasif.length)];
-    const pid = ids[Math.floor(r() * ids.length)];
     const tipo = [31, 31, 33, 32, 31, 4, 33][Math.floor(r() * 7)];
+    const suyos = plantillas[quien.teamId] || [];
+    const pid = tipo === 33 || !suyos.length ? libresDemo[Math.floor(r() * libresDemo.length)] : suyos[Math.floor(r() * suyos.length)].pid;
     // (nadie se clausula a sí mismo)
     const otros = clasif.filter((e) => e !== quien);
     const otro = tipo === 32 ? otros[Math.floor(r() * otros.length)] : null;

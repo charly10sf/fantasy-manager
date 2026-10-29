@@ -65,6 +65,25 @@ export function analizar(D, H, c, extra = {}) {
       if (n.pid && !vendidos[n.pid] && /hecho/.test(n.tipo || '') && sale && !entra && n.t && ahora - n.t < 4 * DIA && !(comprados[n.pid] > n.t - HORA)) vendidos[n.pid] = { t: n.t, como: 'me contaste que ya lo vendiste' };
     }
   }
+  // la plantilla de la API tarda en enterarse de un fichaje: si la actividad de los últimos días dice que un jugador ha
+  // cambiado de dueño después (lo ha fichado o clausulado otro, o lo han vendido a LaLiga), manda la actividad. Antes
+  // proponía clausular a uno que ya era tuyo o que acababa de fichar otro (pendiente de la revisión del 23 oct)
+  M.recienCambiado = {};
+  {
+    const ult = {};
+    for (const a of D.actividad || []) if (a.pid && a.t && ahora - a.t < 4 * DIA && ['compra', 'clausula', 'venta'].includes(a.clase) && (!ult[a.pid] || a.t > ult[a.pid].t)) ult[a.pid] = a;
+    for (const [pid, a] of Object.entries(ult)) {
+      const q = M.teamDeUsuario(a.quienId, a.quien);
+      if (!q) continue;
+      const nuevo = a.clase === 'venta' ? (a.otroId || a.otro ? M.teamDeUsuario(a.otroId, a.otro) : null) : q;
+      if (a.clase === 'venta' && (a.otroId || a.otro) && !nuevo) continue;
+      if ((M.dueno[pid] || null) === (nuevo || null)) continue;
+      // (si quien sale en la actividad no es el dueño que dice la plantilla, la plantilla va por detrás)
+      if (a.clase === 'venta' && M.dueno[pid] !== q) continue;
+      M.recienCambiado[pid] = { de: M.dueno[pid] || null, a: nuevo, t: a.t, clase: a.clase };
+      if (nuevo) M.dueno[pid] = nuevo; else delete M.dueno[pid];
+    }
+  }
   const enMiPlantilla = new Set(((D.plantillas || {})[yoTid] || []).map((f) => f.pid));
   M.vendidos = Object.entries(vendidos).map(([pid, v]) => ({ pid, ...v, j: J(pid), seguiaEnLaApi: enMiPlantilla.has(pid) })).sort((a, b) => b.t - a.t);
   for (const v of M.vendidos) if (M.dueno[v.pid] === yoTid) { if (v.aTid) M.dueno[v.pid] = v.aTid; else delete M.dueno[v.pid]; }
@@ -1299,6 +1318,8 @@ export function analizar(D, H, c, extra = {}) {
     if (tid === yoTid) continue;
     for (const f of fichas) {
       if (!f.clausula || (D.maestro[f.pid] || {}).pos === 5) continue;
+      // (ya no es suyo: la actividad dice que lo ha fichado otro o que lo has fichado tú)
+      if (M.dueno[f.pid] !== tid) continue;
       const x = enriquecer(f, tid);
       x.rival = M.equipo[tid] || { nombre: 'Rival' };
       // una cláusula solo se paga con saldo: LaLiga no deja clausular quedándote en negativo (solo pujando en el mercado)
@@ -1535,7 +1556,8 @@ export function analizar(D, H, c, extra = {}) {
     const ingresado = sem.filter((a) => (a.clase === 'venta' && suyo(a)) || (a.clase === 'clausula' && a.otroT === e.teamId)).reduce((s, a) => s + num(a.importe), 0);
     const clausulazos = quince.filter((a) => a.clase === 'clausula' && suyo(a)).length;
     const contraMi = quince.filter((a) => a.clase === 'clausula' && suyo(a) && a.contraMi).length;
-    const fichas = ((D.plantillas || {})[e.teamId] || []).map((f) => M.clausulas.find((x) => x.pid === f.pid && x.teamId === e.teamId) || enriquecer(f, e.teamId));
+    // (sin los que la actividad dice que ya no son suyos: la plantilla de la API va por detrás)
+    const fichas = ((D.plantillas || {})[e.teamId] || []).filter((f) => !M.recienCambiado[f.pid] || M.dueno[f.pid] === e.teamId).map((f) => M.clausulas.find((x) => x.pid === f.pid && x.teamId === e.teamId) || enriquecer(f, e.teamId));
     // su dinero (exacto o estimado) y cuáles de tus cláusulas le llegan
     const dinero = M.dineroDe(e.teamId), cap = M.capacidad(e.teamId);
     const leLlegan = M.mias.filter((x) => x.clausula && (x.abierta || x.abreEn < 3 * DIA) && x.pagan && [...x.pagan.seguro, ...x.pagan.quiza].some((y) => y.tid === e.teamId));
