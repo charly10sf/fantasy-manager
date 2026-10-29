@@ -428,7 +428,7 @@ main { padding: 16px 16px 120px; }
 .cr-est { position: absolute; top: -5px; right: -9px; min-width: 18px; height: 18px; padding: 0 3px; border-radius: 9px; font: 800 12px/18px 'Barlow'; text-align: center; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
 .cr-est.no { font-size: 9.5px; letter-spacing: 0.3px; }
 .cr-est.ok { background: var(--sube); color: #0b1a10; display: inline-flex; align-items: center; justify-content: center; } .cr-est.ok .ic { width: 12px; height: 12px; stroke-width: 3; }
-.cr-est.mal { background: var(--rojo); font-size: 15px; } .cr-est.duda { background: var(--oro); color: #111; } .cr-est.sup { background: rgba(8, 8, 10, 0.9); color: var(--oro); font-size: 9.5px; letter-spacing: 0.3px; }
+.cr-est.mal { background: var(--rojo); font-size: 15px; } .cr-est.duda { background: var(--oro); color: #111; } .cr-est.supl { background: rgba(8, 8, 10, 0.9); color: var(--oro); font-size: 9.5px; letter-spacing: 0.3px; }
 .cromo.baja-c .ava { filter: grayscale(1) brightness(0.7); }
 .cromo.vacio-c .cr-hueco { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; border: 2px dashed rgba(255, 255, 255, 0.5); font: 600 28px var(--cond); color: rgba(255, 255, 255, 0.8); }
 .cromo.vacio-c .cr-nom { background: rgba(238, 28, 60, 0.85); }
@@ -445,7 +445,7 @@ main { padding: 16px 16px 120px; }
 .pz b { margin-right: 2px; font: 700 13.5px var(--cond); color: var(--texto); }
 .pz.p1 b { color: var(--por); } .pz.p2 b { color: var(--def); } .pz.p3 b { color: var(--med); } .pz.p4 b { color: var(--del); }
 .pz.falta { background: var(--rojo-s); color: var(--rojo-l); } .pz.sobra { color: var(--oro); }
-.leyenda { white-space: nowrap; } .leyenda i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin: 0 4px 0 2px; vertical-align: -1px; }
+.leyenda { white-space: normal; } .leyenda i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin: 0 4px 0 2px; vertical-align: -1px; }
 .leyenda i + i, .leyenda i:not(:first-child) { margin-left: 8px; }
 .leyenda i.facil { background: #1d9a63; } .leyenda i.media { background: #b98314; } .leyenda i.dificil { background: #cf2537; }
 /* lo difícil que es el rival, en el texto y en el calendario de la ficha */
@@ -589,6 +589,8 @@ body.soltando::after { content: 'Suelta la imagen para mandársela a la IA'; pos
 .pasos-c div .ic { width: 18px; height: 18px; }
 .tostada { position: fixed; left: 50%; bottom: calc(80px + env(safe-area-inset-bottom)); transform: translate(-50%, 16px); z-index: 70; background: var(--plano3); color: var(--texto); padding: 11px 16px; border-radius: 12px; font-size: 14.5px; opacity: 0; transition: all 0.2s; max-width: calc(100% - 32px); text-align: center; }
 .tostada.on { opacity: 1; transform: translate(-50%, 0); }
+/* (solo texto: que no tape lo de debajo, como el botón de enviar del chat en el ordenador) */
+.tostada { pointer-events: none; }
 @media (max-width: 370px) { .marcador .col .v { font-size: 25px; } .plan-titular { font-size: 25px; } .titulo { font-size: 30px; } }
 
 /* tus jugadores en venta y sus ofertas */
@@ -942,7 +944,7 @@ a.btn { text-decoration: none; }
 .escritorio .tabs { top: 0; margin: 14px 0 18px; padding: 10px 0; }
 .escritorio .tabs-in { display: inline-flex; }
 .escritorio .tabs button { flex: none; padding: 0 18px; font-size: 16.5px; }
-.escritorio .sec { margin-top: 34px; }
+.escritorio .sec:not(.btn) { margin-top: 34px; }
 .escritorio .sec h2 { font-size: 24px; }
 .escritorio .vacio { padding: 40px 10px; }
 

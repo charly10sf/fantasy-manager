@@ -33,6 +33,9 @@ import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, aviso
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
+// la app ha arrancado: el aviso de index.html («no ha podido abrirse») ya no sale, y si ya había salido se quita
+window.__fmArranco = true;
+try { const f = document.querySelector('.arranque-fallo'); if (f) f.remove(); } catch (e) { /* nada */ }
 const VISTAS = { hoy: V.hoy, equipo: V.equipo, directo: Dr.directo, rivales: V.rivales, mercado: V.mercado, clubes: Cl.clubes, ia: V.ia };
 const ALIAS = { inicio: 'hoy', analisis: 'ia', chat: 'ia', vivo: 'directo', equipos: 'clubes' };
 const NAV = [['hoy', 'rayo', 'Hoy'], ['equipo', 'equipo', 'Equipo'], ['directo', 'directo', 'Directo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['clubes', 'club', 'Clubes']];
@@ -41,6 +44,10 @@ const raiz = () => document.getElementById('app');
 
 /* ---------------- avisos de abajo ---------------- */
 let relojT;
+/** copia y lo dice; si el navegador no deja, también lo dice */
+function copiarY(t, bien = 'Copiado') {
+  Promise.resolve(nativo.copiar(t)).then((ok) => tostada(ok === false ? 'El navegador no deja copiar: mantén pulsado el texto y cópialo a mano' : bien), () => tostada('No se ha podido copiar'));
+}
 function tostada(t, ms = 3200) {
   let el = $('.tostada');
   if (!el) { el = document.createElement('div'); el.className = 'tostada'; document.body.appendChild(el); }
@@ -346,6 +353,11 @@ function pintar({ arriba = false } = {}) {
     if (S.borrador && !S.charlando) { const ta = $('#pregunta'); if (ta) { ta.value = S.borrador; S.borrador = ''; } }
   }
   encuadrar(v);
+  // la subpestaña elegida, a la vista en su barra (al repintar, la barra volvía al principio y la tapaba)
+  try {
+    const t = v.querySelector('.tabs .activo'), b = t && t.closest('.tabs-in');
+    if (t && b && b.scrollWidth > b.clientWidth) { const r = t.getBoundingClientRect(), rb = b.getBoundingClientRect(); b.scrollLeft += (r.left - rb.left) - (rb.width - r.width) / 2; }
+  } catch (e) { /* nada */ }
   // en Directo, la clasificación de la jornada dice cuántos le quedan a cada rival: hacen falta sus onces
   if (S.vista === 'directo' && S.M.enJuego && S.M.vivo && (S.seg.directo === 'liga' || V.ancho())) cargarOncesRivales();
   if (S.vista === 'equipo' && S.seg.equipo === 'jornadas') cargarJornadaMia();
@@ -648,9 +660,17 @@ async function cargar0({ silencio = false } = {}) {
     S.errorCarga = x;
     // sin poder cargar, pero con la liga guardada de antes: se enseña esa, avisando de que no está al día
     const guardada = conPantalla && x.tipo !== 'sinLigas' ? foto() : null;
-    if (guardada) { S.D = guardada; rehacer(); pintar(); return; }
-    if (conPantalla) pantallaCarga(-1, x);
-    else pintar();
+    // (si el fallo es del motor, la liga guardada vuelve a fallar al rehacerse: entonces, la pantalla de error, nunca
+    // quedarse en la de carga; revisión del 29 oct)
+    if (guardada) {
+      try { S.D = guardada; rehacer(); pintar(); return; } catch (e2) {
+        console.error(e2);
+        apuntarError(e2.message, `al abrir la liga guardada${e2.stack ? ` · ${String(e2.stack).split('\n')[1] || ''}` : ''}`);
+        S.D = null;
+      }
+    }
+    if (conPantalla || !S.D) pantallaCarga(-1, x);
+    else { try { pintar(); } catch (e3) { console.error(e3); pantallaCarga(-1, x); } }
   }
 }
 
@@ -1232,6 +1252,7 @@ function cerrarHoja(ya = false) {
   S.hoja = null; S.tipoHoja = null; S.pila = [];
   document.body.style.overflow = '';
   if (ya) { h.remove(); v && v.remove(); return true; }
+  quitarAtras();
   h.classList.remove('on'); v && v.classList.remove('on');
   setTimeout(() => { h.remove(); v && v.remove(); }, 250);
   return true;
@@ -1264,7 +1285,27 @@ function cuerpoHoja(tipo, arg, pila = S.pila) {
   const atras = pila && pila.length ? `<button class="volver-h" data-accion="volverHoja">${icono('atras')}<span>${esc(nombreHoja(pila[pila.length - 1]))}</span></button>` : '';
   return atras + htmlHoja(tipo, arg);
 }
-function hoja(tipo, arg, pila = []) { abrirHoja(cuerpoHoja(tipo, arg, pila)); S.tipoHoja = [tipo, arg]; S.pila = pila; }
+function hoja(tipo, arg, pila = []) { abrirHoja(cuerpoHoja(tipo, arg, pila)); S.tipoHoja = [tipo, arg]; S.pila = pila; marcarAtras(); }
+/* en la web, el «atrás» del navegador (o el gesto del móvil) cierra la ficha en vez de salir de la app: al abrir una
+   ficha se apunta un paso en el historial y, al cerrarla con la X, se quita (revisión del 29 oct). En la app de
+   Android lo hace window.atras */
+let porAtras = false, porVuelta = false;
+function marcarAtras() {
+  if (enApp) return;
+  try { if (!(history.state && history.state.fmHoja)) history.pushState({ fmHoja: 1 }, '', location.href); } catch (e) { /* nada */ }
+}
+function quitarAtras() {
+  if (enApp || porAtras) return;
+  try { if (history.state && history.state.fmHoja) { porVuelta = true; history.back(); } } catch (e) { /* nada */ }
+}
+if (!enApp) {
+  window.addEventListener('popstate', () => {
+    if (porVuelta) { porVuelta = false; return; }
+    if (!S.hoja && !$('.visor')) return;
+    porAtras = true;
+    try { window.atras(); } finally { porAtras = false; }
+  });
+}
 /** lo que hay que pedir al abrir cada ficha */
 function alAbrir(tipo, arg) {
   if (tipo === 'j') cargarDetalle(arg);
@@ -1370,7 +1411,7 @@ async function enviarPregunta(texto) {
   const t = (texto || '').trim();
   if (S.charlando || S.preparandoFotos) return;
   const fotos = S.adjuntos.slice();
-  if (!t && !fotos.length) return;
+  if (!t && !fotos.length) { tostada('Escribe tu pregunta (o manda una foto) y dale a enviar'); const ta = $('#pregunta'); if (ta) ta.focus(); return; }
   S.adjuntos = [];
   if (S.vista !== 'ia') ir('ia');
   S.charlando = true; S.parcial = ''; S.pasoChat = ''; S.preguntaActual = t; S.fotosActuales = fotos;
@@ -1753,7 +1794,7 @@ document.addEventListener('click', async (ev) => {
       } catch (e) { tostada(`No se ha podido sacar el código: ${e.message}`, 6000); el.disabled = false; }
       break;
     }
-    case 'copiarEnlaceWeb': nativo.copiar('https://fantasymanagerapp.com/'); tostada('Enlace copiado'); break;
+    case 'copiarEnlaceWeb': copiarY('https://fantasymanagerapp.com/', 'Enlace copiado'); break;
     case 'mudarse': mudarse(el); break;
     case 'salirDemo': salirDemo(); break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
@@ -1785,7 +1826,7 @@ document.addEventListener('click', async (ev) => {
     case 'abrirAviso': abrirAvisoRecibido(d.id); break;
     case 'responderAviso': contestarAviso(d.id); break;
     case 'copiarAvisos': copiarAvisosClaude(); break;
-    case 'copiarParaClaude': if (S.av && S.av.paraClaude) { nativo.copiar(S.av.paraClaude); tostada('Copiado'); } break;
+    case 'copiarParaClaude': if (S.av && S.av.paraClaude) copiarY(S.av.paraClaude); break;
     case 'ligas': {
       const D = S.D; if (!D || !D.ligas || D.ligas.length < 2) break;
       abrirHoja(`<div class="hoja-cab"><h2>Tus ligas</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
@@ -1805,7 +1846,7 @@ document.addEventListener('click', async (ev) => {
     case 'irIA': cerrarHoja(); ir('ia'); break;
     // la estrella de la ficha: lo sigue en Mercado → Favoritos (y las listas lo marcan)
     case 'fav': { const j = S.M && S.M.J(d.pid); if (!j) break; const on = cambiarFav(d.pid); tostada(on ? `${j.nombre}, en tus favoritos (Mercado → Favoritos)` : `${j.nombre}, fuera de tus favoritos`, 2600); repintarHoja(); if (S.vista === 'mercado') pintar(); break; }
-    case 'copiarDiag': nativo.copiar(Hj.textoDiagnostico(S)); tostada('Copiado'); break;
+    case 'copiarDiag': copiarY(Hj.textoDiagnostico(S)); break;
     case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
     case 'planYa': cerrarHoja(); ir('hoy'); pedirOtroPlan(); break;
@@ -1929,7 +1970,7 @@ document.addEventListener('click', async (ev) => {
       if (recuperarChat(+d.i)) { cerrarHoja(true); pintar(); bajarChat(); }
       break;
     case 'borrarChatViejo': borrarChatAnterior(+d.i); if (chatsAnteriores().length) repintarHoja(); else { cerrarHoja(true); pintar(); } break;
-    case 'copiarMsg': { const m = conversacion()[+d.i]; if (m) { nativo.copiar(String(m.t || '').replace(/\n> Ojo:[\s\S]*$/, '').trim()); tostada('Copiado'); } break; }
+    case 'copiarMsg': { const m = conversacion()[+d.i]; if (m) copiarY(String(m.t || '').replace(/\n> Ojo:[\s\S]*$/, '').trim()); break; }
     case 'reventa': {
       const r = reventa();
       if (r[d.pid]) delete r[d.pid]; else r[d.pid] = { t: Date.now(), precio: (S.M.mias.find((x) => x.pid === d.pid) || {}).compra || S.M.J(d.pid).valor };

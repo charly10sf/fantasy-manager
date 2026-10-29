@@ -149,7 +149,21 @@ export const nativo = {
   nombreVersion: () => (N ? llamar('nombreVersion') || '' : ''),
   actualizar: (url) => llamar('actualizar', url),
   instalar: () => llamar('instalar'),
-  copiar: (t) => { if (N) return llamar('copiar', t); try { navigator.clipboard.writeText(t); } catch (e) { /* nada */ } },
+  // fuera de la app: primero a la vieja usanza (va dentro del toque, sin pedir permiso) y, si no, el portapapeles moderno;
+  // devuelve si se ha copiado (antes decía «Copiado» aunque el navegador no dejara; revisión del 29 oct)
+  copiar: (t) => {
+    if (N) { llamar('copiar', t); return Promise.resolve(true); }
+    try {
+      const a = document.createElement('textarea');
+      a.value = String(t == null ? '' : t); a.setAttribute('readonly', ''); a.style.cssText = 'position:fixed;top:-1000px;left:0;opacity:0';
+      document.body.appendChild(a); a.select();
+      const ok = document.execCommand && document.execCommand('copy');
+      a.remove();
+      if (ok) return Promise.resolve(true);
+    } catch (e) { /* nada */ }
+    try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(String(t)).then(() => true, () => false); } catch (e) { /* nada */ }
+    return Promise.resolve(false);
+  },
   compartir: (t) => (N ? llamar('compartir', t) : nativo.copiar(t)),
   abrir: (url) => (N ? llamar('abrir', url) : window.open(url, '_blank', 'noopener')),
   toque: () => llamar('toque'),

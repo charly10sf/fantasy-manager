@@ -51,15 +51,22 @@ export function demo() {
     const id = String(1000 + i);
     const valor = Math.round((v * (0.92 + r() * 0.16)) * 1e6 / 1000) * 1000;
     const estado = r() < 0.05 ? 'injured' : r() < 0.05 ? 'doubtful' : 'ok';
-    maestro[id] = { id, nombre, largo: nombre, equipoId: String(eq), equipo: EQUIPOS[eq][0], pos, valor, puntos: Math.round(media * 9 * (0.8 + r() * 0.4)), media, estado, img: null, temporadaPasada: Math.round(media * 34) };
+    // (los puntos de cada jornada de la 1 a la 9, alrededor de su media: Equipo → Jornadas los lee de aquí)
+    const semanas = Array.from({ length: 9 }, (_, w) => ({ n: w + 1, pts: Math.max(-2, Math.round(media + (r() - 0.5) * 2.4 * media)) }));
+    maestro[id] = { id, nombre, largo: nombre, equipoId: String(eq), equipo: EQUIPOS[eq][0], pos, valor, puntos: semanas.reduce((t, x) => t + x.pts, 0), media, estado, img: null, temporadaPasada: Math.round(media * 34), semanas };
   });
   // un entrenador por equipo (también puntúa en LaLiga Fantasy)
   const ids = Object.keys(maestro).sort(() => r() - 0.5);
   const clasif = RIVALES.map(([nombre, manager], i) => ({ teamId: String(500 + i), nombre, manager, userId: String(900 + i), puntos: 0, valor: 0, puntosJornada: Math.round(30 + r() * 50), pos: 0, esYo: i === 0, avatar: null }));
   const plantillas = {};
+  const cupo = { 1: 2, 2: 5, 3: 5, 4: 3 };
+  const mios = [];
+  for (const pid of ids) if (cupo[maestro[pid].pos] > 0) { cupo[maestro[pid].pos]--; mios.push(pid); }
+  const resto = ids.filter((pid) => !mios.includes(pid));
+  ids.length = 0; ids.push(...mios, ...resto);
   let k = 0;
   for (const e of clasif) {
-    const n = e.esYo ? 15 : 8 + Math.floor(r() * 4);
+    const n = e.esYo ? mios.length : 8 + Math.floor(r() * 4);
     plantillas[e.teamId] = ids.slice(k, k + n).map((pid) => {
       const j = maestro[pid];
       const prot = r();
@@ -127,7 +134,7 @@ export function demo() {
         gl = g(); gv = g(); st = pasado > 2 * HORA ? 7 : pasado > HORA ? 4 : 2;
         if (st !== 7) { gl = Math.min(gl, 1); gv = Math.min(gv, 1); }
       }
-      partidos.push({ id: `p${n}-${i}`, jornada: +n, fecha, localId: lista[i], visitanteId: lista[19 - i], local: EQUIPOS[lista[i]][0], visitante: EQUIPOS[lista[19 - i]][0], gl, gv, st, estado: null });
+      partidos.push({ id: `p${n}-${i}`, jornada: +n, fecha, localId: lista[i], visitanteId: lista[19 - i], local: EQUIPOS[lista[i]][0], visitante: EQUIPOS[lista[19 - i]][0], gl, gv, st, estado: st });
     }
   }
 

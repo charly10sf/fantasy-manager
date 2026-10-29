@@ -184,10 +184,10 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   const al = M && M.alineacion && j.pos < 5 ? M.alineacion(j.id) : null;
   let marca = '';
   // con la alineación confirmada, lo que diga: titular, suplente o fuera
-  if (al) marca = al.estado === 'titular' ? `<span class="cr-est ok" title="Titular confirmado">${icono('ok')}</span>` : al.estado === 'suplente' || al.estado === 'nosale' ? `<span class="cr-est sup" title="${al.estado === 'nosale' ? 'No sale de titular en la alineación confirmada' : 'Suplente en la alineación confirmada'}">SUP</span>` : '<span class="cr-est mal no" title="No va convocado">NO</span>';
+  if (al) marca = al.estado === 'titular' ? `<span class="cr-est ok" title="Titular confirmado">${icono('ok')}</span>` : al.estado === 'suplente' || al.estado === 'nosale' ? `<span class="cr-est supl" title="${al.estado === 'nosale' ? 'No sale de titular en la alineación confirmada' : 'Suplente en la alineación confirmada'}">SUP</span>` : '<span class="cr-est mal no" title="No va convocado">NO</span>';
   else if (MALOS.has(j.estado)) marca = '<span class="cr-est mal">+</span>';
   else if (j.estado === 'doubtful') marca = '<span class="cr-est duda">?</span>';
-  else if (conOnce && (!o || !o.titular)) marca = '<span class="cr-est sup">SUP</span>';
+  else if (conOnce && (!o || !o.titular)) marca = '<span class="cr-est supl">SUP</span>';
   if (marcaFija != null) marca = marcaFija;
   const rv = tag ? (tag.txt ? `<span class="cr-rv ${tag.cls || ''}">${esc(tag.txt)}</span>` : '') : fr && fr.p ? `<span class="cr-rv ${nivelCls(fr.nivel)}">${fr.p.casa ? '' : '@'}${esc(corto(fr.p.rivalId, fr.p.rival))}</span>` : '';
   const ape = String(j.nombre || '').split(' ');
