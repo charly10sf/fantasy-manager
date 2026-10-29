@@ -73,8 +73,7 @@ export async function actualizar(alPaso = () => {}) {
     if (!Object.keys(h.v || {}).length) LS.set(K('hist'), H);
     return guardarFoto(D, null);
   }
-  const c = cfg();
-  const viejo = foto();
+  let c = cfg();
   const avisos = [];
   const muestras = {};
   const blando = async (paso, f) => { try { return await f(); } catch (e) { if (e.sesion) throw e; avisos.push({ paso, e: e.message }); return null; } };
@@ -84,6 +83,13 @@ export async function actualizar(alPaso = () => {}) {
   const yoD = yo && yo.data && typeof yo.data === 'object' ? yo.data : yo || {};
   const userId = String(yoD.id ?? yoD.userId ?? yoD.managerId ?? '');
   const miNombre = yoD.managerName || yoD.displayName || yoD.username || yoD.name || '';
+  // otra cuenta en este dispositivo: lo de la anterior se borra antes de leer nada guardado (antes se veía y se mezclaba)
+  if (userId) {
+    const antes = LS.get('cuenta', null);
+    if (antes && String(antes) !== userId) { borrarCuenta(); c = cfg(); }
+    if (String(antes) !== userId) LS.set('cuenta', userId);
+  }
+  const viejo = foto();
 
   alPaso(1, PASOS[1]);
   const ligasR = await api.ligas();
@@ -433,8 +439,29 @@ function guardarFoto(D, viejo = foto()) {
   return D;
 }
 
+/* lo que es de una cuenta (su liga, su histórico, sus planes, su chat, sus notas…), con las claves de cada liga (-l<id>) */
+const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'hechos', 'hist', 'ia', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
+const borrarClaves = (lista) => {
+  let ks = [];
+  try { ks = Object.keys(localStorage); } catch (e) { return; }
+  const pref = lista.map((k) => `fm-${k}`);
+  for (const k of ks) if (pref.some((p) => k === p || k.startsWith(`${p}-l`) || k === `${p}-demo`)) { try { localStorage.removeItem(k); } catch (e) { /* nada */ } }
+};
+/** «Borrar datos»: el histórico, las fichas y los planes guardados, de todas las ligas (antes solo los de la principal) */
 export function borrarTodo() {
-  for (const k of ['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'acthist', 'previs', 'chats-viejos', 'dinero-dicho', 'datos-demo', 'hist-demo', 'ia-demo', 'chat-demo', 'det-demo', 'planes-demo', 'reventa-demo', 'acthist-demo', 'previs-demo', 'chats-viejos-demo', 'dinero-dicho-demo', 'demo']) LS.del(k);
+  borrarClaves(['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'acthist', 'previs', 'chats-viejos', 'dinero-dicho']);
+  LS.del('demo');
+}
+/**
+ * otra cuenta en este dispositivo: se borra todo lo de la anterior (su liga, su histórico, sus planes, su chat y sus notas,
+ * sus avisos de fallo y lo del segundo plano) para no enseñarlo ni mezclarlo con lo de la nueva. Quedan los ajustes del
+ * dispositivo y la clave de Gemini (revisión del 29 oct)
+ */
+export function borrarCuenta() {
+  borrarClaves(DE_LA_CUENTA);
+  for (const k of ['liga-principal', 'avisos', 'avisos-contestados', 'avisos-mandado', 'avisos-notificados', 'avisos-prog', 'fondo-avisados', 'fondo-cierre', 'fondo-completo', 'fondo-ultimo', 'planes-mano', 'noticias']) LS.del(k);
+  const c = LS.get('cfg', null);
+  if (c && c.ligaId) { delete c.ligaId; LS.set('cfg', c); }
 }
 
 /* ---------- fuentes de fuera: onces probables y titulares de prensa ---------- */

@@ -98,17 +98,19 @@ async function imagen(url, c) {
 // En el almacén KV si está (VINCULOS); si no, en la caché del Worker (vale si el móvil y el ordenador llegan al
 // mismo centro de Cloudflare, que es lo normal estando en la misma ciudad).
 const claveCache = (cod) => new Request(`https://vinculos.fantasy-manager.invalid/${cod}`);
+// Si el almacén falla (por ejemplo, gastadas las escrituras gratis del día), el código va a la caché: así los de iPhone
+// pueden seguir entrando (revisión del 29 oct; antes la petición daba error)
 async function guardarVinculo(env, cod, valor) {
-  if (env.VINCULOS) return env.VINCULOS.put(`v:${cod}`, valor, { expirationTtl: DURA });
+  if (env.VINCULOS) { try { return await env.VINCULOS.put(`v:${cod}`, valor, { expirationTtl: DURA }); } catch (e) { /* a la caché */ } }
   return caches.default.put(claveCache(cod), new Response(valor, { headers: { 'cache-control': `max-age=${DURA}` } }));
 }
 async function leerVinculo(env, cod) {
-  if (env.VINCULOS) return env.VINCULOS.get(`v:${cod}`);
+  if (env.VINCULOS) { try { const v = await env.VINCULOS.get(`v:${cod}`); if (v != null) return v; } catch (e) { /* a la caché */ } }
   const r = await caches.default.match(claveCache(cod));
   return r ? r.text() : null;
 }
 async function borrarVinculo(env, cod) {
-  if (env.VINCULOS) return env.VINCULOS.delete(`v:${cod}`);
+  if (env.VINCULOS) { try { await env.VINCULOS.delete(`v:${cod}`); } catch (e) { /* nada */ } }
   return caches.default.delete(claveCache(cod));
 }
 function nuevoCodigo() {
@@ -289,7 +291,8 @@ async function uso(req, env, c) {
   const dia = hoyMadrid(), k = `u:${u.uid}:${dia}`;
   const antes = Number(await env.VINCULOS.get(k)) || 0;
   const seg = antes + mas;
-  if (mas) await env.VINCULOS.put(k, String(seg), { expirationTtl: 3 * 86400 });
+  // (si el almacén no deja escribir, se sigue: el tiempo de uso no es para tanto)
+  if (mas) { try { await env.VINCULOS.put(k, String(seg), { expirationTtl: 3 * 86400 }); } catch (e) { /* nada */ } }
   return json({ dia, seg }, 200, c);
 }
 
@@ -310,9 +313,11 @@ async function hola(req, env, c, ruta) {
       canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
       primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
     };
-    // (Cloudflare deja unas mil escrituras al día gratis: cada cuenta, como mucho una cada 9 minutos, salvo que cambie la versión)
-    const cambia = !m || m.v !== nuevo.v || m.canal !== nuevo.canal || m.equipo !== nuevo.equipo;
-    if (!m || cambia || ahora - (m.ultima || 0) > 9 * 60e3) await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo });
+    // (Cloudflare deja unas mil escrituras al día gratis y las comparte con los códigos de entrar y los avisos: cada cuenta,
+    // como mucho una por hora, salvo que cambie la versión o el equipo; alternar app y web ya no escribe cada vez, y si
+    // el almacén no deja, se sigue sin más; revisión del 29 oct)
+    const cambia = !m || m.v !== nuevo.v || m.equipo !== nuevo.equipo;
+    if (!m || cambia || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
     return json({ ok: true }, 200, c);
   }
   if (!adminsDe(env).includes(u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);

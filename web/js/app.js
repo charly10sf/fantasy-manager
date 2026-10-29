@@ -1,8 +1,8 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
 import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
-import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion } from './auth.js';
-import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
+import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
+import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
 import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
@@ -117,9 +117,24 @@ function entrarWebHTML() {
     </details>`;
 }
 /** lo que manda la app con el código: la sesión, tu liga y tu equipo, la clave de la IA y el dinero que te han dicho */
+/**
+ * otra cuenta en este dispositivo (lo que dice el token al entrar): lo de la anterior se borra antes de enseñar nada,
+ * para que no se vea mientras carga la nueva (la carga lo vuelve a mirar con el id de la cuenta; revisión del 29 oct)
+ */
+function mirarCuentaNueva() {
+  try {
+    const q = quien();
+    const k = q && (q.correo || q.nombre);
+    if (!k) return;
+    const antes = LS.get('cuenta-quien', null);
+    if (antes && antes !== k) { borrarCuenta(); S.D = null; S.plan = null; S.planEstado = {}; }
+    LS.set('cuenta-quien', k);
+  } catch (e) { /* nada */ }
+}
 function traerVinculo(j) {
   LS.del('demo');
   guardar('sesion', j.sesion);
+  mirarCuentaNueva();
   if (j.cfg) guardarCfg({ ligaId: j.cfg.ligaId || null });
   if (j.ia && j.ia.clave && !hayClave()) guardarClave(j.ia.clave);
   if (j.dichos && typeof j.dichos === 'object') LS.set(K('dinero-dicho'), { ...j.dichos, ...LS.get(K('dinero-dicho'), {}) });
@@ -1625,6 +1640,7 @@ window.vueltaLogin = async () => {
   raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
   try {
     await terminarLogin(url);
+    mirarCuentaNueva();
     LS.del('demo');
     S.D = null;
     await cargar();
@@ -1773,7 +1789,7 @@ document.addEventListener('click', async (ev) => {
       const url = (($('#vueltaWeb') || {}).value || '').trim();
       if (!/[?&]code=/.test(url)) { tostada('Pega la dirección entera: la que lleva «code=»'); break; }
       el.disabled = true;
-      try { await terminarLogin(url); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); }
+      try { await terminarLogin(url); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); }
       break;
     }
     case 'vincularWeb': {
