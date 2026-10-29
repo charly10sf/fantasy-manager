@@ -783,7 +783,7 @@ async function cargarHechos(n, p) {
   S.hechos ||= {};
   const k = `${n}:${p.id}`, g = S.hechos[k];
   const fin = Dr.estadoP(p).cls === 'fin';
-  if (g && (g.cargando || (fin && g.fin && Date.now() - g.t < 6 * 3600e3) || Date.now() - g.t < 2 * MIN)) return;
+  if (g && (g.cargando || (fin && g.fin && Date.now() - g.t < 6 * 3600e3) || Date.now() - g.t < 2 * MIN - 10e3)) return;
   // los que ya puntúan y el once probable de los dos (en directo, a los titulares sin jugadas aún no les suma nadie
   // y sin su ficha no se sabría quién ha salido: aviso de Domy, 25 oct). Primero los que puntúan
   const ids = [...new Set([...p.jug.filter((x) => x.id && x.pts != null && x.pts !== 0 && S.D.maestro[x.id] && S.D.maestro[x.id].pos <= 4).map((x) => String(x.id)), ...(Dr.idsProbables ? Dr.idsProbables(S, p) : [])])].slice(0, 48);
@@ -2237,7 +2237,15 @@ async function arrancar() {
   // (solo eso, sin recargar la liga); lo pinta la vuelta de cada minuto de arriba
   setInterval(() => {
     if (!S.D || S.cargando || document.visibilityState !== 'visible' || !faltaOnce(S.D)) return;
-    alineaciones(S.D).then((a) => { if (a) S.fuentes = { ...(S.fuentes || fuentesGuardadas() || {}), alineaciones: a }; }).catch(() => {});
+    const antes = JSON.stringify(((S.fuentes || {}).alineaciones || {}).jugadores || {});
+    alineaciones(S.D).then((a) => {
+      if (!a) return;
+      S.fuentes = { ...(S.fuentes || fuentesGuardadas() || {}), alineaciones: a };
+      // si ha salido un once confirmado, el motor se rehace para que se vea ya (también con la ficha de un partido abierta)
+      if (JSON.stringify(a.jugadores || {}) === antes || S.cargando) return;
+      rehacer();
+      if (S.hoja) repintarHoja(); else if (Date.now() - toqueT > 8e3) pintar();
+    }).catch(() => {});
   }, 3 * MIN);
 }
 

@@ -36,8 +36,20 @@ const nombreDeSlug = (href) => { const m = href && String(href).match(/\/jugador
 export function parseOnce(html) {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const out = [];
-  const visto = new Set();
-  const meter = (x) => { const k = norm(x.nombre || x.corto); if (!k || visto.has(k)) return; visto.add(k); out.push(x); };
+  const visto = new Map();
+  // un jugador puede salir más de una vez (con el once confirmado la página trae el probable y el confirmado): se juntan,
+  // con el % más alto y titular si lo es en alguno (antes valía la primera vez y el confirmado se perdía; revisión del 29 oct)
+  const meter = (x) => {
+    const k = norm(x.nombre || x.corto);
+    if (!k) return;
+    const e = visto.get(k);
+    if (!e) { visto.set(k, x); out.push(x); return; }
+    if (x.titular) { e.titular = true; e.alternativa = false; }
+    if (x.prob != null && (e.prob == null || x.prob > e.prob)) e.prob = x.prob;
+    if (!e.nombre && x.nombre) e.nombre = x.nombre;
+  };
+  // (el entrenador, con su enlace a /entrenadores/, no es un jugador)
+  const noJugador = (a) => { const h = a && a.getAttribute && a.getAttribute('href'); return !!h && !/\/jugadores\//.test(h); };
   const estadoDe = (a) => { const l = a && a.getAttribute('data-lesion'); return l === '0' ? 'injured' : l === '1' || l === '2' ? 'doubtful' : 'ok'; };
   const probDe = (el) => {
     if (!el) return null;
@@ -50,16 +62,24 @@ export function parseOnce(html) {
   const camisetas = [...doc.querySelectorAll('.camiseta-wrapper[data-onceff], .camiseta-wrapper')];
   for (const w of camisetas) {
     const titularW = String(w.getAttribute('data-onceff') || 'titular').toLowerCase() === 'titular';
-    const anchors = [...w.querySelectorAll('a.juggador, a.jugador, a[href*="/jugadores/"]')];
+    const anchors = [...w.querySelectorAll('a.juggador, a.jugador, a[href*="/jugadores/"]')].filter((a) => !noJugador(a));
+    // el % del titular, si no lo lleva su enlace: el de la camiseta sin el de sus alternativas
+    let probW = null;
+    if (anchors.length) {
+      const c = w.cloneNode(true);
+      [...c.querySelectorAll('a.juggador, a.jugador, a[href*="/jugadores/"]')].slice(1).forEach((x) => x.remove());
+      probW = probDe(c);
+    }
     anchors.forEach((a, i) => {
       const corto = (a.querySelector('.truncate-name') || {}).textContent || a.getAttribute('title') || '';
-      meter({ nombre: nombreDeSlug(a.getAttribute('href')), corto: corto.trim(), titular: titularW && i === 0, alternativa: i > 0, prob: probDe(a) ?? (i === 0 ? probDe(w) : null), estado: estadoDe(a) });
+      meter({ nombre: nombreDeSlug(a.getAttribute('href')), corto: corto.trim(), titular: titularW && i === 0, alternativa: i > 0, prob: probDe(a) ?? (i === 0 ? probW : null), estado: estadoDe(a) });
     });
   }
   // la lista (formato antiguo): titulares y suplentes por separado
   for (const [sel, titular] of [['[class*="jugadores-titulares"] .jugador', true], ['[class*="jugadores-suplentes"] .jugador', false]]) {
     for (const el of doc.querySelectorAll(sel)) {
       const a = el.querySelector('a[href*="/jugadores/"]') || el;
+      if (!el.querySelector('a[href*="/jugadores/"]') && el.querySelector('a[href*="/entrenador"]')) continue;
       meter({ nombre: nombreDeSlug(a.getAttribute && a.getAttribute('href')), corto: (el.getAttribute('data-nombre') || (el.querySelector('.nombre') || {}).textContent || '').trim(), titular, alternativa: !titular, prob: probDe(el), estado: estadoDe(el) });
     }
   }
@@ -73,11 +93,18 @@ export function parseOnce(html) {
  * [{ mes, dia, h, mi }] (en la página puede salir más de una: la de otra jornada, en noticias o en el calendario;
  * quien la usa mira cuál es de la hora de su partido, `confirmadaPara`).
  */
-export function confirmadaFF(html) {
+export function confirmadaFF(html, equipo = '') {
   if (!html) return [];
   const txt = String(html).replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;|&#xa0;/gi, ' ');
   const out = [];
-  for (const m of txt.matchAll(/(\d{1,2})\/(\d{1,2})\s*(\d{1,2}):(\d{2})\s*Alineaci(?:ó|o|&oacute;|&#243;|&#xf3;)n\s+confirmada/gi)) out.push({ mes: +m[2], dia: +m[1], h: +m[3], mi: +m[4] });
+  // si detrás pone «de <equipo>», tiene que ser el de la página (una noticia del rival a la misma hora no vale)
+  const palabras = norm(equipo).split(' ').filter((w) => w.length >= 3);
+  for (const m of txt.matchAll(/(\d{1,2})\/(\d{1,2})\s*(\d{1,2}):(\d{2})\s*Alineaci(?:ó|o|&oacute;|&#243;|&#xf3;)n\s+confirmada/gi)) {
+    const tras = txt.slice(m.index + m[0].length, m.index + m[0].length + 45);
+    const de = tras.match(/^\s+del?\s+(.+)/i);
+    if (de && palabras.length && !palabras.every((w) => norm(de[1]).split(' ').includes(w))) continue;
+    out.push({ mes: +m[2], dia: +m[1], h: +m[3], mi: +m[4] });
+  }
   return out;
 }
 /** la hora de pared de España de un instante, en ms «de reloj» (para comparar con la que pone futbolfantasy) */
@@ -117,21 +144,40 @@ export function unirTitulares(lista, plantilla) {
   const libres = new Set(plantilla.map((j) => j.id));
   const pend = lista.filter((x) => x.titular);
   const ids = [];
-  const pal = (t) => norm(t).split(' ').filter((w) => w.length >= 4);
+  // el apellido: la última palabra de 4 letras o más (nunca el nombre de pila: «José» casaba a Mourinho con Vini Jr.)
+  const apellido = (t) => { const w = norm(t).split(' ').filter((x) => x.length >= 4); return w.length ? w[w.length - 1] : ''; };
   const pasos = [
     (x, j) => { const l = norm(x.nombre); return !!l && (norm(j.largo) === l || norm(j.nombre) === l) || (!!norm(x.corto) && norm(j.nombre) === norm(x.corto)); },
     (x, j) => { const l = norm(x.nombre), n = norm(j.nombre); return !!l && n.length >= 3 && (l.includes(n) || norm(j.largo).includes(l)); },
     (x, j) => { const c = norm(x.corto); return c.length > 3 && norm(j.nombre).includes(c); },
-    (x, j) => { const a = new Set([...pal(x.nombre), ...pal(x.corto)]); return [...pal(j.nombre), ...pal(j.largo)].some((w) => a.has(w)); },
+    (x, j) => { const a = new Set([apellido(x.nombre), apellido(x.corto)].filter(Boolean)); return [apellido(j.nombre), apellido(j.largo)].some((w) => w && a.has(w)); },
   ];
-  for (const f of pasos) {
+  for (const [k, f] of pasos.entries()) {
     for (const x of [...pend]) {
       const c = plantilla.filter((j) => libres.has(j.id) && f(x, j)).sort((a, b) => norm(b.nombre).length - norm(a.nombre).length);
-      if (!c.length || (c.length > 1 && norm(c[0].nombre).length === norm(c[1].nombre).length)) continue;
+      // con varios candidatos: en el último paso, ninguno; en los demás, el de nombre más largo solo si lo es claramente
+      if (!c.length || (c.length > 1 && (k === pasos.length - 1 || norm(c[0].nombre).length - norm(c[1].nombre).length < 3))) continue;
       ids.push(String(c[0].id)); libres.delete(c[0].id); pend.splice(pend.indexOf(x), 1);
     }
   }
   return { ids, sin: pend.map((x) => x.nombre || x.corto) };
+}
+
+/**
+ * el once confirmado de la página de un equipo: con la alineación confirmada, futbolfantasy pone a los 11 al 100 %;
+ * si son 10 u 11 los que van a 99 % o más, valen esos (la página trae también el probable de antes: sumados salían 12
+ * o 13); si no, los de más de 11 se cuentan al 90 % o más, y si tampoco, todos los titulares que haya.
+ * Devuelve { ids, sin, tits, al100 }.
+ */
+export function leerConfirmado(html, plantilla) {
+  const lista = parseOnce(html);
+  const tits = lista.filter((x) => x.titular || (x.prob != null && x.prob >= 99));
+  const cien = lista.filter((x) => x.prob != null && x.prob >= 99);
+  const noventa = lista.filter((x) => x.titular && x.prob != null && x.prob >= 90);
+  const base = cien.length >= 10 && cien.length <= 11 ? cien
+    : tits.length > 11 && noventa.length >= 10 && noventa.length <= 11 ? noventa : lista.filter((x) => x.titular);
+  const { ids, sin } = unirTitulares(base.map((x) => ({ ...x, titular: true })), plantilla);
+  return { ids, sin, tits: base, al100: cien.length };
 }
 
 /** los onces probables de todos los equipos (se guardan 6 horas) */
@@ -667,7 +713,8 @@ async function onceFF(D, partidos, P, ahora) {
   for (const p of partidos) {
     const clave = `ff:${p.localId}-${p.visitanteId}`;
     const prev = P[clave] || { t: 0, ini: p.fecha, local: p.localId, visitante: p.visitanteId, conf: false, ff: true, eqs: {}, jug: {} };
-    if (ahora - prev.t < 3 * MIN) continue;
+    // (con 15 s de margen: si no, el aviso de cada 3 minutos llega justo antes y se salta una vuelta)
+    if (ahora - prev.t < 3 * MIN - 15e3) continue;
     const eqs = { ...prev.eqs }, jug = { ...prev.jug };
     const pedir = [p.localId, p.visitanteId].filter((id) => slugs[id] && !eqs[id]);
     await enParalelo(pedir, 2, async (eq) => {
@@ -677,26 +724,24 @@ async function onceFF(D, partidos, P, ahora) {
       // (una sola línea por motivo: se mira cada 3 minutos y el registro es corto)
       const nota = (e) => { const ant = registro.find((x) => x.ruta === ruta); if (!ant || ant.e !== e) apuntarRegistro({ ruta, s: r.s, ms: Date.now() - t0, e }); };
       if (r.s !== 200 || !r.b) { nota(r.e); return; }
-      const cs = confirmadaFF(r.b);
+      const cs = confirmadaFF(r.b, EQUIPOS_FF[slugs[eq]] || '');
       if (!confirmadaPara(cs, p.fecha)) { nota(cs.length ? `confirmada, pero no de la hora de este partido (${cs.slice(0, 3).map((c) => `${c.dia}/${c.mes} ${c.h}:${String(c.mi).padStart(2, '0')}`).join(', ')})` : 'aún sin «Alineación confirmada»'); return; }
       // (sin entrenadores: LaLiga Fantasy los tiene como jugadores y su nombre se casaba como un titular más)
       const plantilla = (porEquipo[eq] || []).filter((j) => j.pos !== 5);
       // con la alineación confirmada, los 11 van al 100 %: si la página da más de 11 «titulares» (camisetas de otro bloque,
       // alternativas), valen los que van a 90 % o más, si son 10 u 11 (diagnóstico de Domy, 29 oct: salían 12 y 13)
-      const lista = parseOnce(r.b);
-      const tits = lista.filter((x) => x.titular);
-      const seguros = tits.filter((x) => x.prob != null && x.prob >= 90);
-      const usar = tits.length > 11 && seguros.length >= 10 && seguros.length <= 11 ? [...seguros, ...lista.filter((x) => !x.titular)] : lista;
-      const { ids, sin } = unirTitulares(usar, plantilla);
+      const { ids, sin, tits, al100 } = leerConfirmado(r.b, plantilla);
       const porteros = ids.filter((id) => D.maestro[id] && D.maestro[id].pos === 1).length;
-      guardarMuestraVivo(`futbolfantasy ${slugs[eq]}`, `titulares en la página ${tits.length} (al 90 % o más ${seguros.length}), casados ${ids.length} (porteros ${porteros}); sin casar: ${sin.join(', ') || 'ninguno'}`);
+      guardarMuestraVivo(`futbolfantasy ${slugs[eq]}`, `titulares en la página ${tits.length} (al 100 %: ${al100}), casados ${ids.length} (porteros ${porteros}); sin casar: ${sin.join(', ') || 'ninguno'}; leídos: ${tits.slice(0, 16).map((x) => `${x.corto || x.nombre}${x.prob != null ? ` ${x.prob}` : ''}`).join(', ')}`);
       // 11 casados, o 10 con uno que no se ha podido casar (el nombre no se parece)
       if (!(porteros === 1 && (ids.length === 11 || (ids.length === 10 && sin.length === 1)))) { nota(`confirmada, pero salen ${ids.length} titulares casados y ${porteros} porteros${sin.length ? ` (sin casar: ${sin.join(', ')})` : ''}: no se usa`); return; }
       // (con 10: solo se marcan los 10 que se han casado; de los demás no se dice nada, porque uno de ellos es el que falta)
+      // con 10: el que no se ha casado puede ser cualquiera que comparta una palabra con su nombre; a los demás, «no sale»
+      const dudoso = ids.length === 10 && sin[0] ? new Set(norm(sin[0]).split(' ').filter((w) => w.length >= 3)) : null;
+      const puedeSer = (j) => dudoso && [...norm(j.nombre).split(' '), ...norm(j.largo || '').split(' ')].some((w) => dudoso.has(w));
       for (const j of plantilla) {
-        if (j.pos === 5) continue;
         if (ids.includes(String(j.id))) jug[j.id] = 'titular';
-        else if (ids.length === 11) jug[j.id] = 'nosale';
+        else if (ids.length === 11 || !puedeSer(j)) jug[j.id] = 'nosale';
       }
       eqs[eq] = Date.now();
       nota(ids.length === 11 ? 'once confirmado leído' : `once confirmado leído (uno sin casar: ${sin[0]})`);
@@ -705,7 +750,13 @@ async function onceFF(D, partidos, P, ahora) {
   }
 }
 /** las alineaciones de los partidos que empiezan ya (o se están jugando) */
-export async function alineaciones(D) {
+/** (una sola a la vez: la del arranque y la de cada 3 minutos podían pisarse al guardar) */
+let alineandoEn = null;
+export function alineaciones(D) {
+  if (!alineandoEn) alineandoEn = alineaciones0(D).finally(() => { alineandoEn = null; });
+  return alineandoEn;
+}
+async function alineaciones0(D) {
   const g = LS.get('alineaciones', null);
   const ahora = Date.now();
   const P = {};
@@ -716,7 +767,7 @@ export async function alineaciones(D) {
       const evs = [];
       for (const n of [...new Set(faltan.map((p) => p.jornada).filter(Boolean))]) evs.push(...(await rondaSofa(D, n)));
       const pedir = faltan.map((p) => evs.find((e) => e.local === p.localId && e.visitante === p.visitanteId))
-        .filter((e) => e && (!P[e.id] || ahora - P[e.id].t > 3 * MIN));
+        .filter((e) => e && (!P[e.id] || ahora - P[e.id].t > 3 * MIN - 15e3));
       let bloqueado = false;
       await enParalelo(pedir, 2, async (e) => {
         if (bloqueado) return;
