@@ -2,7 +2,7 @@
 import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
-import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist } from './datos.js';
+import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
 import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
@@ -25,7 +25,7 @@ import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJ
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa } from './soporte.js';
+import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { cambiarFav } from './favoritos.js';
@@ -1052,8 +1052,27 @@ async function recargarWeb() {
 }
 // la ?v= que deja recargarWeb, fuera de la barra de direcciones
 (function limpiarV() { try { if (/[?&]v=/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash); } catch (e) { /* nada */ } })();
+/** las fotos de los rivales que también usan la app (0.6.9a): LaLiga solo le da a cada uno la suya; el Worker la guarda
+    cuando saluda (la lee él de LaLiga) y se la da a los de su liga. Cada 6 horas, o cada 20 minutos mientras no haya
+    ninguna (alguien de la liga puede empezar a usarla) */
+let carasPidiendo = false;
+async function cargarCaras() {
+  const D = S.D;
+  if (!D || D.demo || enDemo() || !D.liga || !haySesion() || carasPidiendo) return;
+  const g = LS.get(K('fotos-rivales'), null);
+  if (g && Date.now() - g.t < (Object.keys(g.caras || {}).length ? 6 * HORA : 20 * MIN)) return;
+  carasPidiendo = true;
+  try {
+    const caras = await carasLiga(D.liga.id);
+    LS.set(K('fotos-rivales'), { t: Date.now(), caras });
+    if (S.D === D && ponerCaras(D)) { if (S.hoja) repintarHoja(); else pintar(); }
+  } catch (e) { /* sin red o sin sesión: las iniciales, y se prueba en la siguiente carga */ }
+  finally { carasPidiendo = false; }
+}
 async function despues() {
   saludarSiToca();
+  // (después del saludo: así tu foto ya está en el Worker la primera vez)
+  setTimeout(cargarCaras, 3000);
   mirarWebNueva();
   if (S.M && S.M.enJuego) cargarVivo().then((ok) => { if (ok) { rehacer(); if (!S.hoja) pintar(); } });
   // onces probables y noticias (de fuera de LaLiga) y, a la vez, las fichas de los jugadores

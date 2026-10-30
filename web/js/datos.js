@@ -125,7 +125,9 @@ export async function actualizar(alPaso = () => {}) {
   // venir en /v4/user/me (si es la genérica, fotoValida la tira y salen tus iniciales)
   const miFoto = N.fotoValida(yoD.avatar || yoD.profileImage || yoD.picture || yoD.image);
   if (mio && miFoto) mio.avatar = miFoto;
-  muestras.fotos = `user/me: ${yoD.avatar || yoD.profileImage || 'sin foto'} · rivales con foto en la clasificación: ${clasif.filter((e) => !e.esYo && e.avatar).length}/${clasif.length - 1}`;
+  // las de los rivales que usan la app, de la última vez que se pidieron al Worker (app.js, cargarCaras)
+  ponerCaras({ clasif });
+  muestras.fotos = `user/me: ${yoD.avatar || yoD.profileImage || 'sin foto'} · rivales con foto: ${clasif.filter((e) => !e.esYo && e.avatar).length}/${clasif.length - 1} (de la app: ${Object.keys((LS.get(K('fotos-rivales'), null) || {}).caras || {}).length})`;
 
   alPaso(3, PASOS[3]);
   const maestro = (await blando('jugadores', async () => {
@@ -449,7 +451,7 @@ function guardarFoto(D, viejo = foto()) {
 }
 
 /* lo que es de una cuenta (su liga, su histórico, sus planes, su chat, sus notas…), con las claves de cada liga (-l<id>) */
-const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'hechos', 'hist', 'ia', 'mi-once', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
+const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'fotos-rivales', 'hechos', 'hist', 'ia', 'mi-once', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
 const borrarClaves = (lista) => {
   let ks = [];
   try { ks = Object.keys(localStorage); } catch (e) { return; }
@@ -457,6 +459,19 @@ const borrarClaves = (lista) => {
   for (const k of ks) if (pref.some((p) => k === p || k.startsWith(`${p}-l`) || k === `${p}-demo`)) { try { localStorage.removeItem(k); } catch (e) { /* nada */ } }
 };
 /** «Borrar datos»: el histórico, las fichas y los planes guardados, de todas las ligas (antes solo los de la principal) */
+/** pone a cada rival la foto que el Worker sabe de él (la de su perfil de LaLiga, guardada cuando usa la app: LaLiga
+    solo se la da a cada uno); dice si ha cambiado alguna */
+export function ponerCaras(D) {
+  const g = LS.get(K('fotos-rivales'), null);
+  const caras = (g && g.caras) || {};
+  let cambia = false;
+  for (const e of (D && D.clasif) || []) {
+    if (e.esYo) continue;
+    const f = N.fotoValida(caras[e.managerId] || caras[e.userId]);
+    if (f && e.avatar !== f) { e.avatar = f; cambia = true; }
+  }
+  return cambia;
+}
 export function borrarTodo() {
   borrarClaves(['datos', 'hist', 'ia', 'chat', 'det', 'planes', 'reventa', 'acthist', 'previs', 'chats-viejos', 'dinero-dicho']);
   LS.del('demo');

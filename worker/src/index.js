@@ -196,9 +196,34 @@ async function quienEsLaLiga(tk, h) {
   const d = j && j.data && typeof j.data === 'object' ? j.data : j || {};
   const uid = String(d.id ?? d.userId ?? d.managerId ?? '');
   if (!uid) return null;
-  const u = { uid, nombre: String(d.managerName || d.displayName || d.username || d.name || '').slice(0, 60) };
+  // la foto del perfil: LaLiga solo se la da a cada uno (a los demás, la genérica); se guarda con /hola y la ven los de su
+  // liga que usan la app (/caras, 0.6.9a)
+  const av = String(d.avatar || d.profileImage || '');
+  const foto = /^https:\/\/[^\s"'<>]{8,380}$/.test(av) && !/default\.(png|jpe?g|svg|webp)(\?|$)/i.test(av) ? av : '';
+  const u = { uid, nombre: String(d.managerName || d.displayName || d.username || d.name || '').slice(0, 60), foto };
   await caches.default.put(clave, new Response(JSON.stringify(u), { headers: { 'cache-control': 'max-age=600' } }));
   return u;
+}
+/** los ids de los mánagers de una liga, pedidos a LaLiga con la sesión de quien llama (null si no es suya); 30 min */
+const MIEMBROS = new Map();
+async function miembros(req, liga) {
+  const tk = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  const k = `${tk.slice(-24)}|${liga}`;
+  const g = MIEMBROS.get(k);
+  if (g && Date.now() - g.t < 30 * 60e3) return g.ids;
+  let r;
+  try {
+    r = await fetch(`https://fantasy-api.llt-services.com/api/v1/competition/1/leagues/${liga}/standing?x-lang=es`, { headers: { Authorization: `Bearer ${tk}`, 'x-app': '2', 'x-lang': 'es', Accept: 'application/json', 'user-agent': UA } });
+  } catch (e) { return null; }
+  if (!r.ok) return null;
+  let j = null;
+  try { j = await r.json(); } catch (e) { return null; }
+  const l = Array.isArray(j) ? j : (j && (Array.isArray(j.data) ? j.data : Array.isArray(j.elements) ? j.elements : null)) || [];
+  const ids = [...new Set(l.map((e) => { const t = (e && e.team) || {}; const m = t.manager || (e && e.manager) || {}; return String(m.id ?? t.managerId ?? (e && e.managerId) ?? ''); }).filter((x) => /^\d+$/.test(x)))];
+  if (!ids.length) return null;
+  if (MIEMBROS.size > 2000) MIEMBROS.clear();
+  MIEMBROS.set(k, { t: Date.now(), ids });
+  return ids;
 }
 const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
 const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(f.texto.replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0, c: f.capturas || 0 });
@@ -328,13 +353,27 @@ async function hola(req, env, c, ruta) {
       uid: u.uid, nombre: corta(u.nombre, 40), equipo: corta(b.equipo, 40), liga: corta(b.liga, 20), v: corta(b.v, 12),
       canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
       primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
+      foto: u.foto || '',
     };
     // (Cloudflare deja unas mil escrituras al día gratis y las comparte con los códigos de entrar y los avisos: cada cuenta,
     // como mucho una por hora, salvo que cambie la versión o el equipo; alternar app y web ya no escribe cada vez, y si
     // el almacén no deja, se sigue sin más; revisión del 29 oct)
-    const cambia = !m || m.v !== nuevo.v || m.equipo !== nuevo.equipo;
+    const cambia = !m || m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto;
     if (!m || cambia || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
     return json({ ok: true }, 200, c);
+  }
+  // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
+  // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app
+  if (ruta === '/caras' && req.method === 'GET') {
+    const liga = new URL(req.url).searchParams.get('liga') || '';
+    if (!/^\d{1,20}$/.test(liga)) return json({ e: 'Liga no válida' }, 400, c);
+    const ids = await miembros(req, liga);
+    if (!ids) return json({ e: 'Esa liga no es tuya' }, 403, c);
+    const caras = {};
+    await Promise.all(ids.slice(0, 40).map(async (id) => {
+      try { const x = await env.VINCULOS.getWithMetadata(`p:${id}`); const f = x && x.metadata && x.metadata.foto; if (f) caras[id] = f; } catch (e) { /* nada */ }
+    }));
+    return json({ caras }, 200, c);
   }
   if (!adminsDe(env).includes(u.uid)) return json({ e: 'Solo para el dueño de la app' }, 403, c);
   if (ruta === '/hola/todos' && req.method === 'GET') {
@@ -363,7 +402,7 @@ export default {
       if (url.pathname === '/vincular/usar' && req.method === 'POST') return await usar(req, env, c);
       if (url.pathname === '/fallos' || url.pathname.startsWith('/fallos/')) return await fallos(req, env, c, url.pathname);
       if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
-      if (url.pathname === '/hola' || url.pathname === '/hola/todos') return await hola(req, env, c, url.pathname);
+      if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
     } catch (e) {

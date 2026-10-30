@@ -70,6 +70,8 @@ export async function saludar(datos) {
   try { await pedirWorker('POST', '/hola', datos); } catch (e) { LS.set('hola-t', 0); }
 }
 export const quienUsa = () => pedirWorker('GET', '/hola/todos');
+/** las fotos de los de tu liga que usan la app ({ id del mánager: foto }); el Worker comprueba con LaLiga que la liga es tuya */
+export const carasLiga = (liga) => pedirWorker('GET', `/caras?liga=${encodeURIComponent(liga)}`).then((r) => (r && r.caras) || {});
 export const unAviso = (id) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}`);
 /** una captura de un aviso: data:image/… (la tuya o, si eres el dueño, la de cualquiera) */
 export const capturaAviso = (id, n) => pedirWorker('GET', `/fallos/captura?id=${encodeURIComponent(id)}&n=${Number(n) || 0}`, null, { tiempo: 30000 }).then((r) => r.img);
