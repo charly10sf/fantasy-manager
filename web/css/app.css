@@ -1646,3 +1646,78 @@ body.con-aw-movil .tostada { bottom: calc(165px + env(safe-area-inset-bottom) - 
 .escritorio body.con-aw-lateral main { padding-right: 232px; }
 /* nunca con el tutorial, la pantalla del límite ni en Pregunta (la caja de escribir va donde iría el anuncio) */
 body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
+
+/* ---------- Hoy en corto (0.6.9, 30 oct: «más quirúrgica y clara») ---------- */
+.saludo { align-items: center; margin: 0 2px 8px; }
+.saludo .eti { margin: 0; }
+.saludo .t2 { font-size: 13.5px; }
+.marcador { padding: 12px 14px 14px; }
+.marcador .cols { margin-top: 10px; }
+.marcador .col .v { font-size: 27px; }
+.alerta-m { margin-top: 10px; padding: 8px 11px; font-size: 13.5px; line-height: 1.35; }
+.plan { margin-top: 20px; }
+.plan-cab { flex-wrap: nowrap; }
+.plan-otro-b { flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--rojo3); background: var(--rojo-s); color: var(--rojo-l); font: 700 13px 'Barlow'; white-space: nowrap; }
+.plan-otro-b .ic { width: 15px; height: 15px; }
+.plan-quien { margin-left: auto; }
+.plan-titular { font-size: 25px; margin: 8px 0 6px; }
+.plan-sit { font-size: 15px; line-height: 1.45; margin-bottom: 4px; }
+.pasos-cab { display: flex; align-items: baseline; gap: 8px; margin: 14px 2px 8px; font-size: 13.5px; color: var(--texto2); flex-wrap: wrap; }
+.pasos-cab b { font: 700 16px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.pasos-tip { margin-left: auto; font-size: 12.5px; color: var(--apagado); }
+.pasos2 { display: grid; gap: 8px; margin-bottom: 10px; }
+/* cada paso: cerrado, una fila con lo justo; abierto, el detalle */
+.paso2 { border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); border-left: 3px solid var(--plano3); }
+.paso2.vender { border-left-color: var(--sube); } .paso2.clausular, .paso2.pujar, .paso2.comprar { border-left-color: var(--rojo); }
+.paso2.blindar { border-left-color: var(--oro); } .paso2.alinear, .paso2.esperar { border-left-color: var(--azul); }
+.paso2.hecho { opacity: 0.6; } .paso2.descartada { opacity: 0.75; border-left-color: var(--baja); }
+.paso2 > summary { list-style: none; display: grid; grid-template-columns: 26px minmax(0, 1fr) 16px; gap: 10px; align-items: start; padding: 11px 10px 11px 11px; cursor: pointer; }
+.paso2 > summary::-webkit-details-marker { display: none; }
+.pp-num { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 15px var(--cond); background: var(--plano2); color: var(--texto2); }
+.pp-num .ic { width: 15px; height: 15px; }
+.paso2.hecho .pp-num { background: var(--sube); color: #08080a; } .paso2.curso .pp-num { background: var(--oro-s); color: var(--oro); }
+.pp-c { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pp-l1 { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.pp-l1 .accion-t { font-size: 11.5px; padding: 3px 7px; }
+.pp-cu, .pp-est { min-width: 0; display: inline-flex; align-items: center; gap: 4px; font: 600 12.5px 'Barlow'; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pp-cu .ic, .pp-est .ic { width: 14px; height: 14px; flex: none; }
+.pp-est.hecho { color: var(--sube); } .pp-est.curso { color: var(--oro); }
+.pp-l2 { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.pp-l2 .ava { width: 34px; height: 34px; }
+.pp-n { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.pp-n b { font: 700 18px/1.1 var(--cond); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-n small { font-size: 13px; color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-imp { flex: none; margin-left: auto; text-align: right; font: 700 19px/1 var(--cond); }
+.pp-imp.mas { color: var(--sube); }
+.pp-imp small { display: block; margin-top: 2px; font: 600 11.5px 'Barlow'; color: var(--apagado); }
+.pp-porque { font-size: 13.5px; line-height: 1.4; color: var(--texto2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.paso2.descartada .pp-porque { color: var(--baja); }
+.pp-ab { align-self: center; color: var(--apagado); transition: transform 0.15s; }
+.pp-ab .ic { width: 16px; height: 16px; transform: rotate(90deg); }
+.paso2[open] .pp-ab { transform: rotate(180deg); }
+.paso2[open] .pp-porque { -webkit-line-clamp: unset; display: block; }
+.pp-d { padding: 0 12px 12px 47px; }
+.pp-d .claves { margin-top: 8px; }
+.pp-d .paso-compra { margin: 8px 0 0; font-size: 13.5px; color: var(--texto2); }
+.pp-d .aviso-op { margin-top: 8px; font-size: 13.5px; color: var(--oro); display: flex; gap: 6px; align-items: flex-start; }
+.pp-d .aviso-op.mal { color: var(--baja); }
+.pp-d .aviso-op .ic { width: 15px; height: 15px; flex: none; margin-top: 2px; }
+.pp-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pp-mot { margin: 8px 0 0; font-size: 14px; line-height: 1.45; color: var(--texto2); }
+.paso2 .op-pie { margin-top: 10px; padding-top: 9px; }
+.paso2 .op-pie button + button { margin-left: 6px; }
+.llevas { margin: 12px 0 6px; }
+.llevas > summary { min-height: 46px; padding: 10px 14px; }
+.llevas-t { font-size: 16px; }
+.paso2 .op-pie { flex-wrap: wrap; row-gap: 6px; }
+.paso2 .op-pie .conf, .paso2 .op-pie .saldo { white-space: nowrap; }
+
+/* ---------- la cara de cada mánager (0.6.9): su foto o el escudo de su equipo; si no, sus iniciales en su color ---------- */
+.cara-m { position: relative; flex: none; width: 38px; height: 38px; border-radius: 50%; overflow: hidden; display: grid; place-items: center;
+  background: linear-gradient(145deg, hsl(var(--h, 0) 55% 34%), hsl(var(--h, 0) 50% 20%)); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.14); }
+.cara-m .ini { font: 700 14px var(--cond); letter-spacing: 0.3px; color: rgba(255, 255, 255, 0.92); }
+.cara-m img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cara-m img.escudo { object-fit: contain; padding: 4px; background: var(--plano2); }
+.cara-m.g { width: 56px; height: 56px; } .cara-m.g .ini { font-size: 20px; }
+.fila > .cara-m { margin-right: 2px; }
+.rival-cab h2 { min-width: 0; }

@@ -77,6 +77,18 @@ export function camisetaClub(id, nombre = '', cls = '') {
   return `<svg class="camiseta ${cls}" viewBox="0 0 40 40" aria-hidden="true"><defs><clipPath id="${k}"><path d="${CAMISETA}"/></clipPath></defs><g clip-path="url(#${k})"><rect width="40" height="40" fill="${c.c1}"/>${dib}<path d="M2 17l6 2.4 .8-3M38 17l-6 2.4-.8-3" stroke="${ribete}" stroke-width="2.4" fill="none"/></g><path d="M13 4c1.6 3 12.4 3 14 0" stroke="${ribete}" stroke-width="2.2" fill="none"/><path d="${CAMISETA}" fill="none" stroke="${borde}" stroke-width="1"/></svg>`;
 }
 
+/** la cara de un mánager de tu liga: su foto o el escudo de su equipo si los ha puesto en LaLiga Fantasy; si no, sus
+    iniciales en un color fijo para cada uno */
+export function caraManager(e, tam = '') {
+  if (!e) return '';
+  const quien = e.manager || e.nombre || '';
+  let k = 0;
+  for (const c of String(e.teamId || quien)) k = (k * 31 + c.charCodeAt(0)) % 100003;
+  const n = Math.round((k * 137.508) % 360);
+  const img = e.avatar || e.escudo;
+  return `<span class="cara-m ${tam}" style="--h:${n}"><span class="ini">${esc(iniciales(quien))}</span>${img ? `<img src="${esc(img)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" class="${e.avatar ? 'foto' : 'escudo'}" onerror="this.remove()">` : ''}</span>`;
+}
+
 export const posTag = (j) => (j && j.pos ? `<span class="pos p${j.pos}">${POS[j.pos]}</span>` : '');
 
 export function estadoPill(j) {

@@ -107,6 +107,8 @@ export function plantilla(r, equipos) {
 }
 
 /* ---------- clasificación ---------- */
+/** una foto que sirve: https y que no sea la genérica de LaLiga */
+const fotoValida = (u) => (typeof u === 'string' && /^https:\/\//.test(u) && !/default\.(png|jpe?g|svg|webp)(\?|$)/i.test(u) ? u : null);
 export function clasificacion(r) {
   const out = [];
   lista(r).forEach((e, i) => {
@@ -126,7 +128,10 @@ export function clasificacion(r) {
       // los de la jornada que se está jugando (LaLiga los da en la clasificación como livePoints)
       puntosVivo: primero(e.livePoints, t.livePoints) != null ? num(primero(e.livePoints, t.livePoints)) : null,
       pos: num(primero(e.position, e.rank, i + 1)),
-      avatar: typeof m.avatar === 'string' ? m.avatar : null,
+      // la foto del mánager y el escudo de su equipo, si los ha puesto (LaLiga da una genérica, default.png, a quien no
+      // ha puesto ninguna: esa no vale)
+      avatar: fotoValida(primero(m.avatar, t.avatar, e.avatar, m.image, m.picture)),
+      escudo: fotoValida(primero(t.badgeColor, t.badge, t.badgeWhite, t.image, t.logo)),
       // el saldo, si la clasificación lo trae (normalmente no: LaLiga solo te enseña el tuyo)
       dinero: primero(e.teamMoney, t.teamMoney, e.money, t.money) != null ? num(primero(e.teamMoney, t.teamMoney, e.money, t.money)) : null,
     });

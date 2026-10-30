@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.8b';
+export const VERSION = '0.6.9';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.6.8b';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.9', f: '2026-10-30', h: 'HH:MM', t: 'Hoy, al grano',
+    cosas: [
+      { tipo: 'mejora', d: 'plan', t: 'Hoy, al grano', x: 'Cada paso del plan va en una fila: qué hacer, con quién, el dinero, cuándo y por qué en dos líneas. Al tocarlo se abre el resto (los datos, lo que pagaste, los avisos, la confianza y «Hecho»). Arriba dice cuántos te quedan, ya no hay que abrir «Ver los otros pasos», el botón de pedir otro plan va pequeño en la cabecera y «Lo que llevas hoy» va plegado debajo de las cuentas. En el ordenador, los próximos días van a la derecha.', ir: { v: 'hoy' } },
+      { tipo: 'nuevo', d: 'cara', t: 'La cara de cada rival', x: 'En Rivales, en su ficha, en la clasificación de la jornada y en el plan, cada mánager lleva su foto o el escudo de su equipo si los ha puesto en LaLiga Fantasy; si no, sus iniciales en un color suyo.', ir: { v: 'rivales' } },
+    ],
+  },
   {
     v: '0.6.8b', f: '2026-10-30', h: '02:07', t: 'Clubes con sus colores',
     cosas: [

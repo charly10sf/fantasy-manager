@@ -113,6 +113,8 @@ export async function actualizar(alPaso = () => {}) {
   alPaso(2, PASOS[2]);
   const clasifR = await api.clasificacion(liga.id);
   const clasif = N.clasificacion(clasifR);
+  // (una muestra para el diagnóstico: qué trae cada equipo, por ejemplo si hay foto del mánager o escudo)
+  { const l = N.lista(clasifR); if (l && l[0]) muestras.clasificacion = recorte(l.find((x) => x && x.team && x.team.manager && x.team.manager.avatar && !/default/.test(x.team.manager.avatar)) || l[0]); }
   if (!clasif.length && N.lista(clasifR).length) throw cambioDeFormato('clasificación', clasifR);
   if (!clasif.length) throw Object.assign(new Error('La clasificación de tu liga ha llegado vacía'), { tipo: 'vacia' });
   let mio = clasif.find((e) => userId && (e.userId === userId || e.managerId === userId))

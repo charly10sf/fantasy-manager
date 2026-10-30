@@ -3,7 +3,7 @@
    Sin jornada en juego: cuándo empieza la próxima y cómo acabó la última.
    Los datos salen de vivo.js (LaLiga Fantasy) y, si SofaScore deja, las jugadas de cada partido (externas.js). */
 import { esc, icono, cuando, rel, dura, MIN, HORA, horaDe, norm } from './util.js';
-import { ava, posTag, nada, campoVivo, filaJugador, cromo } from './comunes.js';
+import { ava, posTag, nada, campoVivo, filaJugador, cromo, caraManager } from './comunes.js';
 import { ancho, cols, tabs, puntosUltimaJornada } from './vistas.js';
 import { EVENTOS } from './vivo.js';
 
@@ -210,7 +210,7 @@ function ligaHTML(S, n, ps) {
     const c = x.cuenta;
     const queda = c ? (c.faltan + c.ahora ? `${x.yo ? 'te quedan' : 'le quedan'} ${c.faltan + c.ahora}${c.ahora ? ` (${c.ahora} jugando)` : ''}` : 'ya han jugado todos') : '';
     return `<button class="fila${x.yo ? ' yo-fila' : ''}" ${x.yo ? 'data-seg="directo:once"' : `data-r="${esc(x.e.teamId)}"`}>
-      <span class="posn${x.yo ? ' yo' : ''}">${x.pts != null ? i + 1 : '–'}</span>
+      <span class="posn${x.yo ? ' yo' : ''}">${x.pts != null ? i + 1 : '–'}</span>${caraManager(x.e)}
       <div class="fila-c"><div class="fila-n">${esc(x.e.nombre)}</div>
         <div class="fila-s">${esc(x.e.manager && x.e.manager !== x.e.nombre ? `${x.e.manager} · ` : '')}${x.e.pos}º general${queda ? ` · ${queda}` : ''}</div></div>
       <div class="fila-d"><div class="v">${x.pts != null ? `${x.aprox ? '≈' : ''}${x.pts}` : '–'}</div><div class="d apag">pts J${n}</div></div></button>`;
