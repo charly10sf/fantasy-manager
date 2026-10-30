@@ -89,8 +89,12 @@ export function textoOp(o, M = null) {
     : '';
   switch (o.ref[0]) {
     case 'P': {
-      // (lo que se paga en esta liga por los libres va una sola vez, en su bloque)
-      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? ', recortada para no pagar de más por lo que aporta' : ''}`;
+      // (lo que se paga en esta liga por los libres va entero una sola vez, en su bloque; aquí, lo de los de su valor,
+      // que es con lo que hay que comparar: un +100 % por uno de 600 mil puede ser lo normal; Carlos, 30 oct)
+      const PV = M && M.pagaLiga && j && j.valor ? M.pagaLiga(j.valor) : null;
+      const enE = (s) => eur(j.valor * (1 + s));
+      const pvTxt = PV ? `; en esta liga, por los libres de su valor (${PV.n} compras de ${eur(PV.desde)} a ${eur(PV.hasta)}) se paga de mediana un ${pct(PV.med * 100)} (para él, ${enE(PV.med)}), 3 de cada 4 hasta ${pct(PV.p75 * 100)} (${enE(PV.p75)}) y el 90 % hasta ${pct(PV.p90 * 100)} (${enE(PV.p90)})` : '';
+      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? ', recortada para no pagar de más por lo que aporta' : ''}`;
     }
     case 'M': {
       const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);

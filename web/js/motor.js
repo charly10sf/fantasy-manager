@@ -9,6 +9,8 @@ const PARONES = [
   { ini: Date.parse('2026-11-09T00:00:00+01:00'), fin: Date.parse('2026-11-17T23:59:00+01:00'), nombre: 'Parón de selecciones de noviembre' },
 ];
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
+// los tramos de valor en los que se cuenta lo que se paga en la liga por los libres (motor y contexto de la IA)
+const TRAMOS_PUJA = [[0, 1e6], [1e6, 3e6], [3e6, 10e6], [10e6, 30e6], [30e6, Infinity]];
 
 export function analizar(D, H, c, extra = {}) {
   const M = { t: Date.now() };
@@ -677,24 +679,70 @@ export function analizar(D, H, c, extra = {}) {
       const v = valorEn(a.pid, a.t - 3 * HORA);
       if (!v) continue;
       const s = imp / v - 1;
-      if (s < -0.1 || s > 1) continue;
+      // (los baratos se pagan muy por encima en porcentaje: uno de 600 mil por 1,5 M es normal; Carlos, 30 oct. Antes
+      // se tiraba todo lo de más de un +100 % y la liga parecía pagar por ellos mucho menos de lo que paga. Solo se tira
+      // lo que no puede ser: más de 6 veces su valor, o más del doble con más de 3 M de más)
+      if (s < -0.1 || s > 5 || (s > 1 && imp - v > 3e6)) continue;
       pujas.push({ s, tid: M.teamDeUsuario(a.quienId, a.quien), v, imp, t: a.t, pid: a.pid });
     }
     const cuantil = (l, q) => { const o = [...l].sort((a, b) => a - b); const i = (o.length - 1) * q, b = Math.floor(i); return o[b] + (o[Math.min(o.length - 1, b + 1)] - o[b]) * (i - b); };
     if (pujas.length >= 4) {
       const ss = pujas.map((x) => x.s);
       const porEquipo = {};
-      for (const x of pujas) if (x.tid) (porEquipo[x.tid] ||= []).push(x.s);
-      // los caros (más de 10 M) se pagan distinto que los baratos
-      const caros = pujas.filter((x) => x.v >= 10e6).map((x) => x.s), baratos = pujas.filter((x) => x.v < 10e6).map((x) => x.s);
+      // (lo de cada rival, como antes: sin lo de más de un +100 %, que en los baratos es lo normal y lo haría parecer manirroto)
+      for (const x of pujas) if (x.tid && x.s <= 1) (porEquipo[x.tid] ||= []).push(x.s);
+      // por tramos de valor: cuanto más barato, más se paga en porcentaje (para el contexto de la IA y el diagnóstico;
+      // las cuentas de cada jugador van con `M.pagaLiga`, con los de su valor)
+      const tramos = TRAMOS_PUJA.map(([desde, hasta]) => {
+        const l = pujas.filter((x) => x.v >= desde && x.v < hasta).map((x) => x.s);
+        return l.length >= 3 ? { desde, hasta, n: l.length, med: cuantil(l, 0.5), p75: cuantil(l, 0.75), p90: cuantil(l, 0.9) } : null;
+      }).filter(Boolean);
       M.pujasLiga = {
-        n: pujas.length, p25: cuantil(ss, 0.25), med: cuantil(ss, 0.5), p75: cuantil(ss, 0.75), p90: cuantil(ss, 0.9),
-        caros: caros.length >= 3 ? cuantil(caros, 0.5) : null, baratos: baratos.length >= 3 ? cuantil(baratos, 0.5) : null,
+        n: pujas.length, p25: cuantil(ss, 0.25), med: cuantil(ss, 0.5), p75: cuantil(ss, 0.75), p90: cuantil(ss, 0.9), tramos,
+        todas: pujas.map((x) => ({ s: x.s, v: x.v })),
         porEquipo: Object.fromEntries(Object.entries(porEquipo).map(([tid, l]) => [tid, { n: l.length, med: cuantil(l, 0.5), max: Math.max(...l) }])),
         ult: pujas.sort((a, b) => b.t - a.t).slice(0, 10),
       };
     } else M.pujasLiga = pujas.length ? { n: pujas.length, poco: true, med: cuantil(pujas.map((x) => x.s), 0.5), porEquipo: {}, ult: pujas } : null;
+    /* lo que se paga en tu liga por los libres de un valor parecido al suyo (Carlos, 30 oct: «no puede aplicar el mismo
+       porcentaje a uno de 600 mil que a uno de 80 M»). Las compras más cercanas en valor, en escala logarítmica (de 600
+       mil a 1,5 M hay lo mismo que de 20 M a 50 M): las que estén entre la mitad y el doble y medio de su valor (hasta
+       20) y, si no llegan a 6, las 6 más cercanas sin pasar de 5 veces arriba o abajo. Con menos de 4, null.
+       Devuelve los cuantiles sobre el valor (`q(p)` da cualquiera) y entre qué valores están esas compras */
+    const cachePaga = new WeakMap();
+    M.pagaLiga = (v) => {
+      const PL = M.pujasLiga;
+      if (!PL || PL.poco || !PL.todas || !(v > 0)) return null;
+      let c = cachePaga.get(PL);
+      if (!c) cachePaga.set(PL, (c = new Map()));
+      const k = Math.round(Math.log(v) * 40);
+      if (c.has(k)) return c.get(k);
+      const lv = Math.log(v);
+      const cerca = PL.todas.map((x) => ({ s: x.s, v: x.v, d: Math.abs(Math.log(x.v) - lv) })).sort((a, b) => a.d - b.d);
+      let sel = cerca.filter((x) => x.d <= Math.log(2.5)).slice(0, 20);
+      if (sel.length < 6) sel = cerca.filter((x) => x.d <= Math.log(5)).slice(0, 6);
+      let r = null;
+      if (sel.length >= 4) {
+        const ss = sel.map((x) => x.s), vs = sel.map((x) => x.v);
+        const q = (p) => cuantil(ss, p);
+        r = { n: ss.length, p25: q(0.25), med: q(0.5), p75: q(0.75), p90: q(0.9), q, desde: Math.min(...vs), hasta: Math.max(...vs) };
+      }
+      c.set(k, r);
+      return r;
+    };
   }
+  // lo que es normal pagar de más, en porcentaje, por uno de ese valor en tu liga: lo que pagan 3 de cada 4 por los de
+  // su valor, y como poco un 10 % (lo de antes para todos). A partir de ahí el porcentaje empieza a contar como sobrecoste
+  M.sobreNormal = (v) => { const P = M.pagaLiga(v); return P ? Math.max(0.1, P.p75) : 0.1; };
+  // con un calendario de riesgo alto, solo de parche y por lo bajo de lo que se paga por los de su valor: un 5 % sobre
+  // uno de 600 mil no se lo lleva nadie. Como poco un 5 % (lo de antes para todos) y, por encima de eso, sin pasar de
+  // medio punto del valor de tu equipo en euros de más (lo que importa es el dinero que se pierde: con un equipo de
+  // 150 M, 750 mil; así a uno de 9 M no se le sube de un 5 % a un 13 %, pero a uno de 600 mil sí se le deja pujar)
+  M.sobreParche = (v) => {
+    const P = M.pagaLiga(v);
+    if (!P || !(v > 0)) return 0.05;
+    return Math.max(0.05, Math.min(P.p25, (Math.max(num(D.valorEquipo), 50e6) * 0.005) / v));
+  };
 
   /* ---------- lo que ofrece LaLiga por lo que se pone a la venta ---------- */
   // Las ofertas de los rivales por un jugador en venta solo las ve su dueño, pero lo que paga LaLiga se sabe: las
@@ -1048,9 +1096,10 @@ export function analizar(D, H, c, extra = {}) {
     const mitad = Math.ceil(n / 2);
     const tipo = fAvg <= 0.94 || (nDif >= mitad && fAvg < 1) ? 'duro' : (fAvg >= 1.06 && nDif <= Math.floor(n / 3)) || (nFac >= mitad && nDif === 0) ? 'favorable' : 'normal';
     const riesgo = MALOS.has(j.estado) || tipo === 'duro' || (pTit != null && pTit < 0.5) ? 'alto' : (pTit != null && pTit < 0.75) || (tipo === 'normal' && nDif >= 2) ? 'medio' : 'bajo';
-    const maxSobre = riesgo === 'alto' ? 0.05 : null;
+    // (un 5 % sobre su valor, o lo bajo de lo que se paga en tu liga por los de su valor si es más: `M.sobreParche`)
+    const maxSobre = riesgo === 'alto' ? M.sobreParche(j.valor) : null;
     const consejo = riesgo === 'alto'
-      ? (tipo === 'duro' ? 'Calendario duro: ficharlo solo de parche y sin pagar más de un 5 % sobre su valor.' : 'Poco seguro que juegue: solo de parche y sin pagar de más.')
+      ? (tipo === 'duro' ? `Calendario duro: ficharlo solo de parche y sin pagar más de un ${pct(maxSobre * 100, 0, false)} sobre su valor.` : 'Poco seguro que juegue: solo de parche y sin pagar de más.')
       : tipo === 'favorable' && (pTit == null || pTit >= 0.75) ? 'Calendario favorable: si es titular, se puede pagar algo más por él.' : riesgo === 'medio' ? 'Riesgo medio: mira el precio y si de verdad entra en tu once.' : 'Sin pegas de calendario.';
     const d1c = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
     const trozos = [nDif && `${nDif} difícil${nDif > 1 ? 'es' : ''}`, nMed && `${nMed} de nivel medio`, nFac && `${nFac} fácil${nFac > 1 ? 'es' : ''}`].filter(Boolean);
@@ -1088,7 +1137,8 @@ export function analizar(D, H, c, extra = {}) {
 
   /**
    * ¿compensa ficharlo con su calendario? Con riesgo alto (calendario duro, poco seguro que juegue o tocado) solo
-   * de parche (te falta gente sana en su puesto) y pagando como mucho un 5 % sobre su valor
+   * de parche (te falta gente sana en su puesto) y pagando como mucho `cal.maxSobre` sobre su valor (un 5 %, o lo
+   * bajo de lo que se paga en tu liga por los de su valor: `M.sobreParche`)
    */
   M.compraCal = (j, precio) => {
     const cal = j ? M.calendarioRiesgo(j) : null;
@@ -1098,7 +1148,7 @@ export function analizar(D, H, c, extra = {}) {
     const sobre = j.valor && precio ? precio / j.valor - 1 : 0;
     const ok = cal.riesgo !== 'alto' || (parche && sobre <= cal.maxSobre);
     const txt = cal.tipo === 'normal' && cal.riesgo !== 'alto' ? ''
-      : `${cal.tipo === 'normal' ? (MALOS.has(j.estado) ? 'No juega, y en' : 'Poco seguro que juegue en') : `Calendario ${cal.tipo} en`} sus próximos ${cal.texto}${cal.riesgo === 'alto' && ok ? ' Solo de parche, y por eso sin pagar más de un 5 % sobre su valor.' : ''}`;
+      : `${cal.tipo === 'normal' ? (MALOS.has(j.estado) ? 'No juega, y en' : 'Poco seguro que juegue en') : `Calendario ${cal.tipo} en`} sus próximos ${cal.texto}${cal.riesgo === 'alto' && ok ? ` Solo de parche, y por eso sin pagar más de un ${pct(cal.maxSobre * 100, 0, false)} sobre su valor.` : ''}`;
     return { ok, cal, parche, sobre, txt };
   };
 
@@ -1106,7 +1156,8 @@ export function analizar(D, H, c, extra = {}) {
   // un +25 % por uno de 3 M son 750 mil; por uno de 40 M, 10 M. El índice (0 a 100) crece poco a poco con:
   // - los euros que pierdes de verdad (lo pagado de más menos la mitad de lo que recuperarías en una semana),
   //   comparados con el valor de tu equipo;
-  // - y, un poco, el porcentaje (pagar casi el doble no es serio aunque sea poco dinero)
+  // - y, un poco, el porcentaje por encima de lo que se suele pagar en tu liga por los de su valor (`M.sobreNormal`):
+  //   por uno de 40 M, pagar el doble no es serio; por uno de 600 mil puede ser lo normal (Carlos, 30 oct)
   const valorEq = Math.max(num(D.valorEquipo), 50e6);
   M.sobrecoste = (j, precio, t = j ? M.tend(j.id) : null) => {
     if (!j || !j.valor || !precio) return { extra: 0, sobre: 0, indice: 0, dias: null, efectivo: 0, recTxt: '' };
@@ -1115,7 +1166,7 @@ export function analizar(D, H, c, extra = {}) {
     const dias = extra > 0 && diario > 0 ? extra / diario : extra > 0 ? Infinity : 0;
     // lo que sube no está garantizado: se descuenta solo la mitad de lo que recuperaría en una semana
     const efectivo = Math.max(0, extra - diario * 7 * 0.5);
-    const x = efectivo / valorEq / 0.02 + Math.max(0, sobre - 0.1) / 1.2;
+    const x = efectivo / valorEq / 0.02 + Math.max(0, sobre - M.sobreNormal(j.valor)) / 1.2;
     const indice = extra <= 0 ? 0 : Math.round(100 * (1 - Math.exp(-x)));
     const recTxt = extra <= 0 ? '' : !Number.isFinite(dias) ? 'no sube: no lo recuperas' : dias > 30 ? 'con lo que sube tardarías más de un mes en recuperarlo' : `lo recuperas en ${Math.max(1, Math.round(dias))} día${Math.round(dias) <= 1 ? '' : 's'} con lo que sube`;
     return { extra, sobre, dias, diario, efectivo, indice, recTxt };
@@ -1408,18 +1459,23 @@ export function analizar(D, H, c, extra = {}) {
       else if ((ineM.fase === 'frena' || ineM.fase === 'parado') && ['chollo', 'sube', 'normal'].includes(veredicto)) veredicto = 'frena';
     }
     if (pzM >= 2 && veredicto === 'baja') veredicto = 'normal';
-    // la puja que pondría: el precio y un margen por las pujas que lleva y por si está subiendo
-    let margen = 0.02 + Math.min(m.pujas, 5) * 0.025 + (t.p1 != null && t.p1 > 0 ? Math.min(t.p1, 4) / 100 : 0) + (i.n >= 70 ? 0.03 : 0);
-    // y lo que de verdad hace falta en TU liga para llevarse a uno así: cuanto más interesa, más arriba de lo que
-    // se suele pagar (los caros se pagan distinto que los baratos)
-    const PL = M.pujasLiga;
+    // la puja que pondría: el precio y un margen por las pujas que lleva y por si está subiendo. Cada puja de otro
+    // suma un 2,5 %, pero como poco 100 mil: por uno de 600 mil, un 2,5 % son 15 mil y con eso no se lo lleva nadie
+    // (Carlos, 30 oct). Esto solo pesa entero si tu liga aún no tiene compras de jugadores de su valor
+    const porPuja = m.precio > 0 ? Math.max(0.025, 100000 / m.precio) : 0.025;
+    let margen = 0.02 + Math.min(m.pujas, 5) * porPuja + (t.p1 != null && t.p1 > 0 ? Math.min(t.p1, 4) / 100 : 0) + (i.n >= 70 ? 0.03 : 0);
+    // y lo que de verdad hace falta en TU liga para llevarse a uno así: lo que se ha pagado por los de su valor
+    // (`M.pagaLiga`: un barato se paga mucho más en porcentaje que uno de 40 M), más arriba cuanto más interesa y
+    // cuantas más pujas lleva (cada una, 5 puntos más de cuantil, hasta el 90 %)
+    const PV = m.tipo !== 'manager' && j.valor ? M.pagaLiga(j.valor) : null;
     let pujaLiga = null;
-    if (m.tipo !== 'manager' && PL && !PL.poco) {
-      const tramo = j.valor >= 10e6 ? PL.caros : PL.baratos;
-      const ajuste = tramo != null ? tramo - PL.med : 0;
-      const q = (i.n >= 75 ? PL.p75 : i.n >= 55 ? PL.med : PL.p25) + ajuste;
-      pujaLiga = Math.max(0, q) + Math.min(m.pujas, 5) * 0.01;
-      margen = 0.35 * margen + 0.65 * pujaLiga;
+    if (PV) {
+      const nivel = Math.min(0.9, (i.n >= 75 ? 0.75 : i.n >= 55 ? 0.5 : 0.25) + Math.min(m.pujas, 5) * 0.05);
+      pujaLiga = Math.max(0, PV.q(nivel));
+      // (los cuantiles van sobre el valor; el margen, sobre la puja mínima)
+      const enPrecio = m.precio > 0 ? (j.valor * (1 + pujaLiga)) / m.precio - 1 : pujaLiga;
+      const w = PV.n >= 8 ? 0.8 : 0.65;
+      margen = (1 - w) * margen + w * enPrecio;
     }
     if (m.tipo === 'manager') margen = 0;
     let puja = Math.ceil(m.precio * (1 + margen) / 10000) * 10000;
@@ -1430,7 +1486,7 @@ export function analizar(D, H, c, extra = {}) {
       const tope = M.tolerancia(j) - 15;
       for (let k = 0; k < 60 && puja > m.precio && M.sobrecoste(j, puja, t).indice > tope; k++) { puja = Math.max(m.precio, puja - Math.max(10000, Math.round(puja * 0.01 / 10000) * 10000)); recortada = true; }
     }
-    // con un calendario de riesgo alto, como mucho un 5 % sobre su valor (y solo de parche)
+    // con un calendario de riesgo alto, como mucho `calR.maxSobre` sobre su valor (y solo de parche)
     const calR = j.pos < 5 ? M.calendarioRiesgo(j) : null;
     let topeCal = null;
     if (calR && calR.riesgo === 'alto' && m.tipo !== 'manager' && j.valor) {

@@ -959,7 +959,11 @@ export function mercado(S) {
       derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja, { dec: 1 })}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
     });
     const PL = M.pujasLiga;
-    const pagaTxt = PL && !PL.poco ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga se llevan con un <b>${pct(PL.med * 100)}</b> sobre su valor de mediana. A la derecha, la puja que te propongo.</p>` : '';
+    // (por tramos de valor: cuanto más barato, más se paga en porcentaje; Carlos, 30 oct)
+    const tramoCorto = (x) => (x.desde === 0 ? `menos de ${eur(x.hasta, { dec: 0 })}` : x.hasta === Infinity ? `más de ${eur(x.desde, { dec: 0 })}` : `de ${x.desde / 1e6} a ${eur(x.hasta, { dec: 0 })}`);
+    const pagaTxt = !PL || PL.poco ? ''
+      : PL.tramos && PL.tramos.length >= 2 ? `<p class="t2 peq" style="margin:4px 0 2px">En tu liga, cuanto más barato, más se paga sobre su valor (mediana): ${PL.tramos.map((x) => `${tramoCorto(x)}, <b>${pct(x.med * 100)}</b>`).join(' · ')}. A la derecha, la puja que te propongo, con lo que se paga por los de su valor.</p>`
+      : `<p class="t2 peq" style="margin:4px 0 2px">En tu liga se llevan con un <b>${pct(PL.med * 100)}</b> sobre su valor de mediana. A la derecha, la puja que te propongo.</p>`;
     let ml = liga.length ? `<div class="grupo"><span>Libres · subasta a ciegas</span><span>${liga.length}</span></div>${pagaTxt}${liga.map(fila).join('')}` : nada('No hay jugadores libres en el mercado ahora.');
     if (man.length && bloqueada('ventasRivales')) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div>${candado('ventasRivales')}`;
     else if (man.length) ml += `<div class="grupo"><span>En venta de tus rivales</span><span>${man.length}</span></div><p class="t2 peq" style="margin:4px 0 2px">Siguen siendo suyos y LaLiga también les hace una oferta: solo te lo vende si la tuya es mejor. A la derecha, lo que tendrías que ofrecer.</p>${man.map(fila).join('')}`;

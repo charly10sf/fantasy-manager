@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10d';
+export const VERSION = '0.6.10e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.6.10d';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10e', f: '2026-10-30', h: '20:15', t: 'Pujas a la medida de cada jugador',
+    cosas: [
+      { tipo: 'mejora', d: 'oferta', t: 'Pujas a la medida de cada jugador', x: 'La puja que te propongo ya no aplica el mismo porcentaje a todos. Por uno de 600 mil con varias pujas, un +15 % casi nunca gana: se los suelen llevar por bastante más. Ahora miro lo que se ha pagado en tu liga por jugadores de su valor y pujo en consecuencia. Con los caros sigue igual de prudente, porque ahí un +20 % son millones. En la ficha de cada libre ves lo que se paga en tu liga por los de su valor.', ir: { v: 'mercado' } },
+      { tipo: 'arreglo', d: 'ia', t: 'Fichar justo antes de la jornada', x: 'La IA decía que lo que ganaras en el mercado el mismo día de la jornada no llegaba a tiempo. Si el mercado cambia a las 20:00 y el primer partido es a las 21:00, el jugador es tuyo a las 20:00 y lo puedes alinear. Ahora lo sabe.' },
+    ],
+  },
   {
     v: '0.6.10d', f: '2026-10-30', h: '13:57', t: 'La web, también con partidos',
     cosas: [
