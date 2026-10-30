@@ -6,3 +6,7 @@ android/local.properties
 .DS_Store
 web/paquete.json
 __pycache__/
+# por si una clave de subida generada en local acaba dentro de la carpeta del repo (android/firma.p12 sí va, a propósito)
+subida*
+*.jks
+*.keystore

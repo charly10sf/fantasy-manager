@@ -57,7 +57,7 @@ Probar y publicar → Probar → **Prueba cerrada**:
 2. **Países**: España (y los que quieras).
 3. **Testers**: crear una lista de correo con los 15 o 16 correos. En «Comentarios», un correo o enlace donde contestar (puede ser el mismo de contacto).
 4. **Crear versión**:
-   - Firma de apps de Google Play: aceptar la que propone Google (la clave la genera y guarda Google; la nuestra, subida.p12 de la rama `claves`, cifrada con el secreto PLAY_CLAVE, queda como clave de subida; la de la app de GitHub es otra).
+   - Firma de apps de Google Play: aceptar la que propone Google (la clave la genera y guarda Google; la nuestra, la de subida, vive solo como secretos de Actions, SUBIDA_P12 y SUBIDA_CLAVE, y queda como clave de subida; la de la app de GitHub es otra). Si Play ya tiene registrada la anterior (subida.p12 de la rama `claves`, retirada el 30 oct por estar en el repo público), hay que pedir en Play Console el restablecimiento de la clave de subida con el certificado de la nueva.
    - Subir el AAB: en GitHub → Actions → «App Android» → la última ejecución en verde → abajo, en Artifacts, `fantasy-manager-<versión>-<número>` (un zip). Dentro va `app-play-release.aab`. Si al lado viene NO-SUBIR-A-GOOGLE-PLAY.txt, ese AAB va con una clave de prueba: no se sube. Los artefactos duran 14 días: si ha caducado, se vuelve a lanzar la Action.
    - Nombre de la versión: el que pone (el número de compilación) o `0.6.0`.
    - Notas de la versión: «Primera versión de prueba. Si algo falla, toca «Fallo», arriba en la app».

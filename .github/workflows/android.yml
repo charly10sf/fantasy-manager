@@ -67,39 +67,31 @@ jobs:
             fi
           } 2>&1 | tee "$GITHUB_WORKSPACE/firma.log"
 
-      # La de Google Play se firma con otra clave, la de subida: vive en la rama «claves» (subida.p12), cifrada con el
-      # secreto PLAY_CLAVE. La primera vez que está el secreto, la crea y la guarda ahí (en una rama aparte para que
-      # nada la pise). Sin el secreto, una de prueba: ese AAB no vale para subirlo a Google Play.
+      # La de Google Play se firma con otra clave, la de subida. No está en el repositorio (es público): vive solo como
+      # secretos de Actions, SUBIDA_P12 (el .p12 en base64) y SUBIDA_CLAVE (su contraseña; alias «subida»). Se deja en
+      # RUNNER_TEMP, fuera del repo, y nada la guarda ni la sube. Sin los secretos, una de prueba: ese AAB no vale para
+      # subirlo a Google Play.
       - name: Clave de subida a Google Play
         env:
-          PLAY: ${{ secrets.PLAY_CLAVE }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          P12: ${{ secrets.SUBIDA_P12 }}
+          PASS: ${{ secrets.SUBIDA_CLAVE }}
         run: |
           set -o pipefail
           {
-            if [ -z "$PLAY" ]; then
-              echo "Sin secreto PLAY_CLAVE: el AAB va con una clave de prueba y no se puede subir a Google Play"
+            if [ -z "$P12" ] || [ -z "$PASS" ]; then
+              echo "Sin los secretos SUBIDA_P12 y SUBIDA_CLAVE: el AAB va con una clave de prueba y no se puede subir a Google Play"
               keytool -genkeypair -keystore /tmp/subida-prueba.p12 -storetype PKCS12 -alias subida -keyalg RSA -keysize 2048 -validity 10000 -storepass prueba123 -keypass prueba123 -dname "CN=Prueba"
               echo "SUBIDA=prueba" >> "$GITHUB_ENV"
               echo "SUBIDA_RUTA=/tmp/subida-prueba.p12" >> "$GITHUB_ENV"
             else
-              PASS="fantasy-manager-play:$PLAY"
-              mkdir -p /tmp/claves
-              repo="https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
-              if git fetch -q "$repo" claves 2>/dev/null && git show FETCH_HEAD:subida.p12 > /tmp/claves/subida.p12 2>/dev/null; then
-                echo "Clave de subida: la guardada en la rama claves"
-              else
-                keytool -genkeypair -keystore /tmp/claves/subida.p12 -storetype PKCS12 -alias subida -keyalg RSA -keysize 4096 -validity 25000 -storepass "$PASS" -keypass "$PASS" -dname "CN=Fantasy Manager"
-                ( cd /tmp/claves && git init -q && git checkout -q -b claves \
-                  && git config user.name "github-actions[bot]" && git config user.email "41898282+github-actions[bot]@users.noreply.github.com" \
-                  && printf 'La clave de subida a Google Play (cifrada con el secreto PLAY_CLAVE). No borrar esta rama.\n' > LEEME.txt \
-                  && git add subida.p12 LEEME.txt && git commit -q -m "Clave de subida a Google Play" && git push -q "$repo" claves ) \
-                  && echo "Clave de subida creada y guardada en la rama claves" \
-                  || { echo "Otra compilación la ha creado a la vez: se usa esa"; git fetch -q "$repo" claves && git show FETCH_HEAD:subida.p12 > /tmp/claves/subida.p12; }
+              ( umask 077; printf '%s' "$P12" | base64 -d > "$RUNNER_TEMP/subida.p12" )
+              if ! keytool -list -keystore "$RUNNER_TEMP/subida.p12" -storetype PKCS12 -storepass "$PASS" -alias subida > /dev/null 2>&1; then
+                echo "La clave de subida no abre: revisa los secretos SUBIDA_P12 (el .p12 en base64, con alias subida) y SUBIDA_CLAVE"
+                exit 1
               fi
-              keytool -list -keystore /tmp/claves/subida.p12 -storetype PKCS12 -storepass "$PASS" > /dev/null && echo "Clave de subida lista"
+              echo "Clave de subida lista"
               echo "SUBIDA=buena" >> "$GITHUB_ENV"
-              echo "SUBIDA_RUTA=/tmp/claves/subida.p12" >> "$GITHUB_ENV"
+              echo "SUBIDA_RUTA=$RUNNER_TEMP/subida.p12" >> "$GITHUB_ENV"
             fi
           } 2>&1 | tee -a "$GITHUB_WORKSPACE/firma.log"
 
@@ -118,12 +110,12 @@ jobs:
         working-directory: android
         env:
           CLAVE: ${{ secrets.ANDROID_CLAVE }}
-          PLAY: ${{ secrets.PLAY_CLAVE }}
+          SUBIDA_PASS: ${{ secrets.SUBIDA_CLAVE }}
           VERSION_CODE: ${{ github.run_number }}
         run: |
           set -o pipefail
           if [ "$FIRMA" = "buena" ]; then export FIRMA_CLAVE="fantasy-manager:$CLAVE"; else export FIRMA_CLAVE="prueba123"; fi
-          if [ "$SUBIDA" = "buena" ]; then export SUBIDA_CLAVE="fantasy-manager-play:$PLAY"; else export SUBIDA_CLAVE="prueba123"; fi
+          if [ "$SUBIDA" = "buena" ]; then export SUBIDA_CLAVE="$SUBIDA_PASS"; else export SUBIDA_CLAVE="prueba123"; fi
           # la de GitHub (APK, se actualiza sola) y la de Google Play (AAB, el formato que pide la tienda; y su APK, para
           # probarla en un móvil sin pasar por la tienda)
           gradle assembleGithubRelease bundlePlayRelease assemblePlayRelease --no-daemon --stacktrace 2>&1 | tee "$GITHUB_WORKSPACE/compilacion.log"
@@ -163,7 +155,7 @@ jobs:
       - name: Aviso si el AAB no vale para Google Play
         if: success() && env.SUBIDA != 'buena'
         run: |
-          echo "Este AAB va firmado con una clave de prueba (falta el secreto PLAY_CLAVE): no lo subas a Google Play." > android/app/build/outputs/bundle/playRelease/NO-SUBIR-A-GOOGLE-PLAY.txt
+          echo "Este AAB va firmado con una clave de prueba (faltan los secretos SUBIDA_P12 y SUBIDA_CLAVE): no lo subas a Google Play." > android/app/build/outputs/bundle/playRelease/NO-SUBIR-A-GOOGLE-PLAY.txt
 
       - name: Guardar lo compilado
         if: success()

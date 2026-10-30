@@ -6,8 +6,8 @@ plugins {
 // Sin ese secreto, la Action firma con una clave de prueba solo para comprobar que compila.
 def rutaFirma = System.getenv('FIRMA_RUTA')
 def claveFirma = System.getenv('FIRMA_CLAVE')
-// La de Google Play va con otra clave, la de subida (la que Google conoce): vive cifrada con el secreto PLAY_CLAVE en
-// la rama «claves» del repositorio y la Action la deja en SUBIDA_RUTA. Sin el secreto, una de prueba.
+// La de Google Play va con otra clave, la de subida (la que Google conoce): no está en el repositorio, vive solo como
+// secretos de Actions (SUBIDA_P12 y SUBIDA_CLAVE) y la Action la deja fuera del repo, en SUBIDA_RUTA. Sin ellos, una de prueba.
 def rutaSubida = System.getenv('SUBIDA_RUTA')
 def claveSubida = System.getenv('SUBIDA_CLAVE')
 
