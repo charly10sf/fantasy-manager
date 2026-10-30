@@ -62,7 +62,7 @@ Lo que se cambia sin sacar versión. La app lo lee de raw de main y la web de Pa
 
 ### .github/
 
-- android.yml (compila en main y pendiente, publica APK y app.json solo desde main), web.yml (GitHub Pages), dominio.yml (el respaldo en Cloudflare Pages, al acabar «Web» y «App Android» en main), worker.yml y fallos.yml (a mano: lee y contesta los avisos de Fallo).
+- android.yml (compila en main y pendiente, publica APK y app.json solo desde main; desde pendiente deja el APK de GitHub en la pre-release `prueba`, enlace directo para probarlo en el móvil: https://github.com/charly10sf/fantasy-manager/releases/download/prueba/fantasy-manager-prueba.apk; lo pidió Carlos el 31 oct), web.yml (GitHub Pages), dominio.yml (el respaldo en Cloudflare Pages, al acabar «Web» y «App Android» en main), worker.yml y fallos.yml (a mano: lee y contesta los avisos de Fallo).
 - paquete.py genera paquete.json con las huellas y pone en web/index.html cada módulo con su huella (`js/x.js?v=…`): en el repo index.html va sin huellas, se ponen al publicar.
 
 ## Avisos de Fallo

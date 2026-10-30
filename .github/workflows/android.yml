@@ -143,6 +143,19 @@ jobs:
           A=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)
           python3 .github/r8.py "$A/dexdump" android/app/build/outputs/apk/github/release/app-github-release.apk android/app/build/outputs/apk/play/release/app-play-release.apk --aab android/app/build/outputs/bundle/playRelease/app-play-release.aab 2>&1 | tee "$GITHUB_WORKSPACE/r8.txt"
 
+      # desde pendiente, el APK de GitHub con un enlace directo para probarlo en el móvil sin iniciar sesión ni descomprimir
+      # los artefactos: va a la pre-release «prueba», aparte de la release «app». No llega a nadie: app.json y las
+      # actualizaciones siguen apuntando a «app»
+      - name: APK de prueba
+        if: env.FIRMA == 'buena' && github.ref == 'refs/heads/pendiente'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cp android/app/build/outputs/apk/github/release/app-github-release.apk fantasy-manager-prueba.apk
+          gh release view prueba >/dev/null 2>&1 || gh release create prueba --prerelease --target pendiente --title "Prueba" --notes "APK de prueba de la rama pendiente, sin publicar. No es la app de la liga (esa es la release «app»): no la instales si Carlos no te lo ha pedido."
+          gh release upload prueba fantasy-manager-prueba.apk --clobber
+          gh release edit prueba --prerelease --title "Prueba $VERSION_NAME (compilación ${{ github.run_number }}), sin publicar" || true
+
       # solo desde main: en otras ramas se compila para probar, sin publicar
       - name: Publicar la app
         if: env.FIRMA == 'buena' && github.ref == 'refs/heads/main'
