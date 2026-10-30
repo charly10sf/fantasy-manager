@@ -170,6 +170,8 @@ jobs:
             android/app/build/outputs/apk/play/release/app-play-release.apk
             android/app/build/outputs/bundle/playRelease/app-play-release.aab
             android/app/build/outputs/bundle/playRelease/NO-SUBIR-A-GOOGLE-PLAY.txt
+            android/app/build/outputs/mapping/githubRelease/mapping.txt
+            android/app/build/outputs/mapping/playRelease/mapping.txt
 
       # el registro de la compilación, en la rama android-registro, para poder revisarlo si falla
       - name: Guardar el registro

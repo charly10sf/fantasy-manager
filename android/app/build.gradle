@@ -83,7 +83,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            // R8: quita el código y los recursos que no se usan y renombra el resto (Play avisaba «Ofuscación 0 %»).
+            // En las dos versiones, así la de GitHub sirve para probarlo en el móvil antes de subir la de Play.
+            // Lo que no se puede renombrar (el puente con la web), en reglas-r8.pro.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'reglas-r8.pro'
         }
     }
 
