@@ -48,8 +48,19 @@ function clubesEnOrden(S) {
   const pos = (id) => { const t = M.equipoLiga(id); return t ? t.pos : 99; };
   return ids.sort((a, b) => pos(a) - pos(b) || String(D.equipos[a].nombre).localeCompare(D.equipos[b].nombre, 'es'));
 }
-/** los puestos que dan algo: Champions (1-4), Europa League (5), Conference (6) y descenso (los 3 últimos) */
-const zonaDe = (pos, n) => (pos <= 4 ? 'ucl' : pos === 5 ? 'uel' : pos === 6 ? 'uecl' : pos > n - 3 ? 'desc' : '');
+/** la competición europea que juega cada club esta temporada (lo pidió Carlos el 30 oct: con los colores de cada club el
+    fondo de la tabla confundía). Sale de la temporada anterior (Champions: Madrid, Barça, Atlético, Villarreal y Betis;
+    Europa League: Celta y Real Sociedad; Conference: el Getafe, que pasó la previa ante el Partizán): cambia una vez
+    al año, en verano. Pasada la fecha, no se pinta nada antes que pintar lo del año pasado */
+const EUROPA = { hasta: Date.parse('2027-07-01T00:00:00+02:00'), temporada: '2026-27',
+  ucl: ['real madrid', 'barcelona', 'atletico', 'villarreal', 'betis'], uel: ['celta', 'real sociedad'], uecl: ['getafe'] };
+const COMP = { ucl: 'Champions', uel: 'Europa League', uecl: 'Conference' };
+export function europaDe(nombre) {
+  if (Date.now() > EUROPA.hasta) return '';
+  const n = ` ${norm(nombre || '')} `;
+  for (const k of ['ucl', 'uel', 'uecl']) if (EUROPA[k].some((c) => n.includes(` ${c} `) || n.includes(` ${c}`))) return k;
+  return '';
+}
 
 /* ================= LA PESTAÑA ================= */
 /** ganados, empatados y perdidos, de sus resultados */
@@ -87,24 +98,28 @@ export function clubes(S) {
   h += tusClubesHTML(S, ids, mios);
   const filas = ids.map((id) => {
     const e = D.equipos[id], t = M.equipoLiga(id);
-    const z = hayTabla && t && n >= 18 ? zonaDe(t.pos, n) : '';
+    const eu = europaDe(e.nombre);
+    const desc = hayTabla && t && n >= 18 && t.pos > n - 3;
     const dg = t ? t.gf - t.gc : null;
     const r = gep(t);
     const caras = (mios[id] || []).sort((a, b) => b.valor - a.valor);
     const carasH = caras.length ? `<span class="cf-caras" title="${esc(caras.map((j) => j.nombre).join(', '))}">${caras.slice(0, 3).map((j) => ava(j, 'm')).join('')}${caras.length > 3 ? `<b>+${caras.length - 3}</b>` : ''}</span>` : '';
     const prox = proxTxt(S, id);
-    return `<button class="club-f${z ? ` z-${z}` : ''}" data-club="${esc(id)}"${estiloClub(id, e.nombre)} aria-label="${esc(`${t ? `${t.pos}º, ` : ''}${e.nombre}${t ? `, ${t.pts} puntos` : ''}${caras.length ? `, ${caras.length} tuyos` : ''}`)}">
+    const cls = `${eu ? ` eu-${eu}` : ''}${desc ? ' z-desc' : ''}`;
+    const sub = [eu ? `<b class="cf-comp">${COMP[eu]}</b>` : '', desc ? '<b class="cf-comp">Descenso</b>' : '', prox].filter(Boolean).join(' · ');
+    return `<button class="club-f${cls}" data-club="${esc(id)}" aria-label="${esc(`${t ? `${t.pos}º, ` : ''}${e.nombre}${eu ? `, juega la ${COMP[eu]}` : ''}${t ? `, ${t.pts} puntos` : ''}${caras.length ? `, ${caras.length} tuyos` : ''}`)}">
       <span class="cf-kit" aria-hidden="true"></span>
       <span class="cf-pos">${t ? t.pos : '–'}</span>
       <span class="cf-esc">${escudo(D, id)}</span>
       <span class="cf-n"><span class="nom">${esc(e.nombre)}</span>${carasH}</span>
       <span class="cf-forma">${rachaHTML(M.racha(id, 5), e.nombre)}</span>
       <span class="cf-d cf-pj">${t ? t.pj : ''}</span><span class="cf-d cf-gep">${t ? `${r.V}-${r.E}-${r.D}` : ''}</span><span class="cf-d cf-gol">${t ? `${t.gf}:${t.gc}` : ''}</span><span class="cf-d cf-dg">${dg == null ? '' : dg > 0 ? `+${dg}` : dg}</span><span class="cf-d cf-pts">${t ? t.pts : '–'}</span>
-      ${prox ? `<span class="cf-s">${prox}</span>` : ''}
+      ${sub ? `<span class="cf-s">${sub}</span>` : ''}
     </button>`;
   }).join('');
   const cab = '<div class="cf-cab" aria-hidden="true"><span></span><span></span><span></span><span>Club</span><span class="cf-forma">Últimos 5</span><span class="cf-pj">PJ</span><span class="cf-gep">G-E-P</span><span class="cf-gol">Goles</span><span class="cf-dg">DG</span><span class="cf-pts">Pts</span></div>';
-  const ley = hayTabla && n >= 18 ? '<div class="cf-ley"><span class="z-ucl">Champions</span><span class="z-uel">Europa League</span><span class="z-uecl">Conference</span><span class="z-desc">Descenso</span></div>' : '';
+  const hayEu = ids.some((id) => europaDe(D.equipos[id].nombre));
+  const ley = hayEu || (hayTabla && n >= 18) ? `<div class="cf-ley">${hayEu ? `<span class="eu-ucl">Champions</span><span class="eu-uel">Europa League</span><span class="eu-uecl">Conference</span>` : ''}${hayTabla && n >= 18 ? '<span class="z-desc">Descenso</span>' : ''}${hayEu ? `<small>El color dice qué competición europea juega cada club esta temporada (${EUROPA.temporada}): esos juegan también entre semana y rotan más.</small>` : ''}</div>` : '';
   return h + `<div class="sec"><h2>Clasificación</h2><span class="sub">${hayTabla ? `tras ${Math.max(...ids.map((id) => (M.equipoLiga(id) || { pj: 0 }).pj))} jornadas` : 'aún sin jugar'}</span></div><div class="club-lista">${cab}${filas}</div>${ley}`;
 }
 
@@ -248,7 +263,7 @@ export function fichaClub(S, id) {
   const l = enTuLiga(S)[id] || { liga: 0, mios: 0 };
   const libres = suyos.filter((j) => j.pos < 5 && !M.dueno[j.id]).length;
   let h = `<div class="club-hero"${estiloClub(id, e.nombre)}>${camisetaClub(id, e.nombre, 'ch-cam')}${escudo(D, id, 'club-g')}<div class="ch-t"><h2>${esc(e.nombre)}</h2>
-    <div class="ch-s">${t ? `<span>${t.pos}º en LaLiga</span>` : ''}${r ? rachaHTML(r, e.nombre) : ''}</div></div></div>`;
+    <div class="ch-s">${t ? `<span>${t.pos}º en LaLiga</span>` : ''}${europaDe(e.nombre) ? `<span class="ch-eu eu-${europaDe(e.nombre)}">${COMP[europaDe(e.nombre)]}</span>` : ''}${r ? rachaHTML(r, e.nombre) : ''}</div></div></div>`;
   h += `<div class="club-num">
     <div><b>${t ? t.pts : '–'}</b><span>${t ? `puntos en ${t.pj}` : 'puntos'}</span></div>
     <div><b>${t ? `${t.gf}-${t.gc}` : '–'}</b><span>goles</span></div>

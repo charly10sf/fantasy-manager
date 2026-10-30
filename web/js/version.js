@@ -14,9 +14,10 @@ export const VERSION = '0.6.9a';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.9a', f: '2026-10-30', h: 'HH:MM', t: 'Las fotos de tus rivales',
+    v: '0.6.9a', f: '2026-10-30', h: '04:30', t: 'Fotos de rivales y Europa',
     cosas: [
       { tipo: 'mejora', d: 'cara', t: 'Las fotos de tus rivales', x: 'LaLiga solo le da a cada uno su propia foto. Ahora, la de cada rival que usa Fantasy Manager y tiene foto en LaLiga Fantasy sale en Rivales, en su ficha, en Directo y en el plan; los demás llevan sus iniciales. Tu foto también la ven los de tu liga que usan la app.', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'camiseta', t: 'Clubes: quién juega en Europa', x: 'En la clasificación de Clubes, el color de cada fila ya no es el del club: dice qué competición europea juega esta temporada (azul Champions, naranja Europa League, verde Conference) y el rojo, el descenso. Esos equipos juegan también entre semana y rotan más. En la ficha de cada club sale al lado de su puesto.', ir: { v: 'clubes' } },
     ],
   },
   {

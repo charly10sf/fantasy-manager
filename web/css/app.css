@@ -1418,20 +1418,25 @@ body.limitado .tostada { z-index: 120; }
 
 /* Clubes: la clasificación (con los puestos de Europa y el descenso) y la ficha de cada club con sus colores */
 .club-lista { margin-top: 4px; }
-/* la fila: los colores del club a la izquierda, el puesto en su caja (con el color de la zona), el escudo, el nombre con
-   tus caras y los números; en el ordenador, además, la racha, ganados-empatados-perdidos y los goles */
+/* la fila: a la izquierda y de fondo, el color de la competición europea que juega esta temporada (Champions, Europa
+   League, Conference) o el del descenso; el puesto, el escudo, el nombre con tus caras y los números; en el ordenador,
+   además, la racha, ganados-empatados-perdidos y los goles (desde el 30 oct: con los colores del club confundía) */
 .cf-cab, .club-f { display: grid; grid-template-columns: 5px 26px 28px minmax(0, 1fr) 24px 34px 30px; column-gap: 10px; align-items: center; }
 .cf-cab { padding: 0 2px 7px 0; font: 600 12.5px 'Barlow'; color: var(--apagado); border-bottom: 1px solid var(--linea); }
 .cf-cab span:nth-child(n+5) { text-align: right; }
 .cf-cab .cf-forma, .cf-cab .cf-gep, .cf-cab .cf-gol, .club-f .cf-forma, .club-f .cf-gep, .club-f .cf-gol { display: none; }
 .club-f { position: relative; width: 100%; padding: 11px 2px 11px 0; row-gap: 3px; border-bottom: 1px solid var(--linea); text-align: left;
   grid-template-areas: "kit pos esc n pj dg pts" "kit pos esc s s s s";
-  background: linear-gradient(90deg, var(--ct, transparent), transparent 58%); transition: background-color 0.15s; }
+  --eu: transparent; --eu-f: transparent; background: linear-gradient(90deg, var(--eu-f), transparent 62%); transition: background-color 0.15s; }
+.club-f.eu-ucl, .cf-ley .eu-ucl, .ch-eu.eu-ucl { --eu: #4d94ff; --eu-f: rgba(77, 148, 255, 0.16); --eu-t: #9cc4ff; }
+.club-f.eu-uel, .cf-ley .eu-uel, .ch-eu.eu-uel { --eu: #ff9a3c; --eu-f: rgba(255, 154, 60, 0.15); --eu-t: #ffbd80; }
+.club-f.eu-uecl, .cf-ley .eu-uecl, .ch-eu.eu-uecl { --eu: #2fd18f; --eu-f: rgba(47, 209, 143, 0.13); --eu-t: #6fe3b3; }
+.club-f.z-desc, .cf-ley .z-desc { --eu: var(--baja); --eu-f: var(--baja-s); --eu-t: var(--baja); }
+.cf-comp { font-weight: 700; color: var(--eu-t, var(--texto2)); }
 .club-f:active { background-color: var(--plano); }
-.cf-kit { grid-area: kit; align-self: stretch; margin: -2px 0; border-radius: 3px; background: linear-gradient(180deg, var(--c1, var(--plano3)) 0 50%, var(--c2, var(--plano3)) 50% 100%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.cf-kit { grid-area: kit; align-self: stretch; margin: -2px 0; border-radius: 3px; background: var(--eu); }
 .cf-pos { grid-area: pos; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; font: 700 16px/1 var(--cond); color: var(--texto2); background: var(--plano2); }
-.club-f.z-ucl .cf-pos { background: rgba(77, 148, 255, 0.18); color: #8fbcff; } .club-f.z-uel .cf-pos { background: rgba(255, 154, 60, 0.18); color: #ffb36b; }
-.club-f.z-uecl .cf-pos { background: var(--sube-s); color: var(--sube); } .club-f.z-desc .cf-pos { background: var(--baja-s); color: var(--baja); }
+.club-f.z-desc .cf-pos { background: var(--baja-s); color: var(--baja); }
 .cf-esc { grid-area: esc; display: grid; place-items: center; }
 .cf-esc .pt-esc { width: 28px; height: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45)); }
 .cf-n { grid-area: n; display: flex; align-items: center; gap: 8px; min-width: 0; font: 600 16.5px/1.2 'Barlow'; }
@@ -1448,7 +1453,9 @@ body.limitado .tostada { z-index: 120; }
 .cf-ley { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 12px 0 0; font-size: 13px; color: var(--apagado); }
 .cf-ley span { display: inline-flex; align-items: center; gap: 6px; }
 .cf-ley span::before { content: ''; width: 12px; height: 12px; border-radius: 4px; }
-.cf-ley .z-ucl::before { background: rgba(77, 148, 255, 0.5); } .cf-ley .z-uel::before { background: rgba(255, 154, 60, 0.5); } .cf-ley .z-uecl::before { background: var(--sube); } .cf-ley .z-desc::before { background: var(--baja); }
+.cf-ley span::before { background: var(--eu); }
+.cf-ley small { flex-basis: 100%; font-size: 12.5px; line-height: 1.4; }
+.ch-eu { padding: 2px 8px; border-radius: 99px; font: 700 12.5px 'Barlow'; color: #fff; background: var(--eu); }
 /* en el ordenador, la tabla entera */
 .escritorio .cf-cab, .escritorio .club-f { grid-template-columns: 5px 28px 30px minmax(0, 1fr) 118px 30px 64px 58px 38px 38px; column-gap: 14px; }
 .escritorio .club-f { grid-template-areas: "kit pos esc n forma pj gep gol dg pts" "kit pos esc s forma pj gep gol dg pts"; padding: 12px 6px 12px 0; }
