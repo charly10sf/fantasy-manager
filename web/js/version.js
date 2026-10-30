@@ -14,10 +14,10 @@ export const VERSION = '0.6.9';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.9', f: '2026-10-30', h: 'HH:MM', t: 'Hoy, al grano',
+    v: '0.6.9', f: '2026-10-30', h: '03:57', t: 'Hoy, al grano',
     cosas: [
       { tipo: 'mejora', d: 'plan', t: 'Hoy, al grano', x: 'Cada paso del plan va en una fila: qué hacer, con quién, el dinero, cuándo y por qué en dos líneas. Al tocarlo se abre el resto (los datos, lo que pagaste, los avisos, la confianza y «Hecho»). Arriba dice cuántos te quedan, ya no hay que abrir «Ver los otros pasos», el botón de pedir otro plan va pequeño en la cabecera y «Lo que llevas hoy» va plegado debajo de las cuentas. En el ordenador, los próximos días van a la derecha.', ir: { v: 'hoy' } },
-      { tipo: 'nuevo', d: 'cara', t: 'La cara de cada rival', x: 'En Rivales, en su ficha, en la clasificación de la jornada y en el plan, cada mánager lleva su cara: sus iniciales en un color suyo y, si LaLiga la da, su foto. La tuya sale de tu perfil de LaLiga Fantasy; las de tus rivales, solo si LaLiga deja verlas (en su propia app no salen).', ir: { v: 'rivales' } },
+      { tipo: 'mejora', d: 'cara', t: 'Cada rival, con su cara', x: 'En Rivales, en su ficha, en la clasificación de la jornada y en el plan, cada mánager lleva un círculo con sus iniciales en un color suyo, siempre el mismo: se distinguen de un vistazo.', ir: { v: 'rivales' } },
     ],
   },
   {
