@@ -1133,7 +1133,8 @@ export function analizar(D, H, c, extra = {}) {
     const diario = t ? (t.d7 != null && t.d7 > 0 ? t.d7 / 7 : t.d1 != null && t.d1 > 0 ? t.d1 : 0) : 0;
     const dias = pierde > 0 ? (diario > 0 ? pierde / diario : Infinity) : 0;
     const ine = M.inercia(j.id);
-    const tuerce = !!(ine && ['giro', 'baja', 'frena'].includes(ine.fase)) || !!(t && t.p1 != null && t.p1 < 0);
+    // (frenando con 5 días o más de subida por delante no es señal de bajar: lo cubre antes; Carlos, 30 oct)
+    const tuerce = !!(ine && (['giro', 'baja'].includes(ine.fase) || (ine.fase === 'frena' && !(ine.giroEn >= 5)))) || !!(t && t.p1 != null && t.p1 < 0);
     const T = M.titularidad(j), des = M.desglose(j);
     const seguro = !!(T && T.p >= 0.9 && !MALOS.has(j.estado) && (des ? des.total >= 5 : num(j.media) >= 6));
     const casiNada = pierde <= j.valor * 0.02;

@@ -1069,8 +1069,24 @@ async function cargarCaras() {
   } catch (e) { /* sin red o sin sesión: las iniciales, y se prueba en la siguiente carga */ }
   finally { carasPidiendo = false; }
 }
+/** tu once puesto en LaLiga, al cargar (fuera de la jornada en juego; como mucho cada 10 min): el plan no te pide
+    alinear lo que ya tienes puesto (Carlos, 30 oct) */
+async function mirarMiOnce() {
+  const D = S.D;
+  if (!D || D.demo || enDemo() || !haySesion() || (S.M && S.M.enJuego) || !(D.yo && D.yo.teamId)) return;
+  const g = LS.get(K('mi-once'), null);
+  if (g && Date.now() - g.t < 10 * MIN) return;
+  try {
+    const ids = idsOnce(await api.miOnce(D.yo.teamId)).map(String);
+    if (ids.length < 5 || S.D !== D) return;
+    const antes = ((g && g.ids) || []).join();
+    apuntarMiOnce(ids);
+    if (antes !== ids.join()) { rehacer(); if (!S.hoja) pintar(); }
+  } catch (e) { /* sin red: el plan sigue con lo que sabía */ }
+}
 async function despues() {
   saludarSiToca();
+  mirarMiOnce();
   // (después del saludo: así tu foto ya está en el Worker la primera vez)
   setTimeout(cargarCaras, 3000);
   mirarWebNueva();
@@ -1916,7 +1932,7 @@ document.addEventListener('click', async (ev) => {
     case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }
     case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;
     case 'verJornada': S.jornadaSel = Number(d.n); pintar(); break;
-    case 'ordenEq': S.ordenEq = d.o; LS.set('orden-equipo', d.o); pintar(); break;
+    case 'ordenEq': S.ordenEq = d.o; LS.set('orden-equipo', d.o); pintar(); if (d.ver) { const o = $('#vista .eq2-orden'); if (o) o.scrollIntoView({ behavior: 'smooth', block: 'start' }); } break;
     case 'filtroClub': S.filtro.club = d.f; repintarHoja(); break;
     case 'vivoYa': {
       if (enDemo()) { tostada('En la demo no hay jornada en directo'); break; }

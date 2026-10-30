@@ -281,6 +281,9 @@ function inerciaHTML(M, pid, mio) {
   const x = M.inercia ? M.inercia(pid) : null;
   if (!x || !['giro', 'baja', 'parado', 'frena', 'acelera', 'rebote'].includes(x.fase)) return '';
   const mal = x.fase === 'giro' || x.fase === 'baja', ojo = x.fase === 'parado' || x.fase === 'frena';
+  // frenando, pero con días de subida por delante: para comprar y vender pronto todavía vale (Carlos, 30 oct, con Gulácsi:
+  // +250 mil al día y 6 días hasta girar; antes decía «No es momento de comprarlo»)
+  const larga = x.fase === 'frena' && x.giroEn != null && x.giroEn >= 3;
   const tit = { giro: 'Ha girado a la baja', baja: 'Está bajando', parado: 'Se ha estancado', frena: 'Se está frenando', acelera: 'Sube cada vez más', rebote: 'Rebota tras semanas bajando' }[x.fase];
   // un partidazo de hace nada cambia el consejo: lo normal es que mañana suba (lo avisó Domy el 25 oct)
   const pz = M.partidazo ? M.partidazo(pid) : null;
@@ -288,7 +291,8 @@ function inerciaHTML(M, pid, mio) {
   const pzTxt = pz ? [` <b>Ha hecho un buen partido (${pz.pts} puntos):</b> puede suavizar la bajada.`, ` <b>Ha hecho un partido muy bueno (${pz.pts} puntos):</b> lo normal es que la bajada se frene. ${mio ? 'Sin prisa: espera al cambio de mañana antes de venderlo.' : 'Si lo quieres, puede que mañana no esté más barato.'}`, ` <b>Ojo: acaba de hacer ${pz.pts} puntos.</b> Tras un partido así LaLiga suele subirle el valor los días siguientes, así que esta bajada puede frenarse o darse la vuelta. ${mio ? 'Espera a ver el cambio de mañana antes de venderlo.' : 'Si lo quieres, puede que mañana ya esté más caro.'}`][pz.nivel - 1] : '';
   const consejo = pz && pz.nivel >= 2 && (mal || ojo) ? pzTxt
     : (pz && (mal || ojo) ? pzTxt : '') + (x.fase === 'rebote' ? (mio ? ' Decide por sus puntos y su sitio en tu once.' : ' Si lo quieres, está cerca de su mínimo del mes, pero aún no ha demostrado que vaya a subir.')
-    : mio ? (mal ? ' <b>Véndelo ya</b>, salvo que lo necesites sí o sí para la jornada.' : ojo ? ' <b>Véndelo antes de que gire.</b>' : '') : (mal || ojo ? ' No es momento de comprarlo.' : ''));
+    : mio ? (mal ? ' <b>Véndelo ya</b>, salvo que lo necesites sí o sí para la jornada.' : larga ? ` Aún sube: <b>véndelo en los próximos ${Math.max(1, Math.round(x.giroEn) - 1)} días</b>, antes de que gire.` : ojo ? ' <b>Véndelo antes de que gire.</b>' : '')
+      : larga ? ` <b>Aún le quedan unos ${Math.round(x.giroEn)} días subiendo</b>${x.proy3 > 0 ? ` (unos ${eur(x.proy3, { signo: true })} en 3 días)` : ''}: para comprarlo y venderlo antes de que gire, todavía da; para quedártelo mucho tiempo, no.` : (mal || ojo ? ' No es momento de comprarlo.' : ''));
   const max = Math.max(...x.R.map((r) => Math.abs(r)), 1);
   const corto = (r) => `${r > 0 ? '+' : r < 0 ? '−' : ''}${String(Math.round(Math.abs(r) / 1e4) / 100).replace('.', ',')}`;
   const barras = x.R.map((r, i) => `<div class="in-b"><i class="${r >= 0 ? 'up' : 'dw'}" style="--h:${Math.max(4, Math.round(Math.abs(r) / max * 100))}%"></i><span>${corto(r)}</span><em>${x.dias[i] ? new Date(x.dias[i] + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'narrow' }) : ''}</em></div>`).join('');

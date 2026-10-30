@@ -681,9 +681,11 @@ const MALOS_EQ = ['injured', 'suspended', 'out_of_league'];
 function eqCabHTML(S) {
   const { M, D, H } = S;
   const yoE = (D.clasif || []).find((e) => e.esYo) || null;
-  const serie = (H.yo || []).filter((f) => f && num(f[2]));
-  const hace7 = serie.filter(([d]) => Date.parse(d + 'T12:00:00') <= Date.now() - 6.5 * DIA).pop();
-  const dv = hace7 ? num(D.valorEquipo) - num(hace7[2]) : null;
+  // lo que han subido o bajado en 7 días los que tienes ahora (el valor del equipo de hace 7 días contaba también a los
+  // que has vendido: Carlos vio «−14,75 M» tras vender a varios)
+  void H;
+  const con7 = M.mias.filter((x) => x.tend && x.tend.d7 != null);
+  const dv = con7.length ? con7.reduce((s, x) => s + num(x.tend.d7), 0) : null;
   const jug = M.mias.filter((x) => x.j.pos !== 5).length, ent = M.mias.length - jug;
   return `<div class="eq2-cab">
     <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><div class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</div></div></div>
@@ -721,7 +723,7 @@ function eqEstadoHTML(S) {
   const vender = sinI ? null : xs.filter((x) => x.ventaInercia).length;
   const tiles = [
     `<div class="eq2-t ${pueden < xs.length ? 'duda' : 'bien'}"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar</span></div>`,
-    `<div class="eq2-t"><b><em class="sube"><small>▲</small>${suben}</em> <em class="baja"><small>▼</small>${bajan}</em></b><span>suben y bajan hoy</span></div>`,
+    `<button class="eq2-t" data-accion="ordenEq" data-o="sube" data-ver="1"><b><em class="sube"><small>▲</small>${suben}</em> <em class="baja"><small>▼</small>${bajan}</em></b><span>suben y bajan hoy ›</span></button>`,
     vender != null ? `<div class="eq2-t ${vender ? 'duda' : ''}"><b>${vender}</b><span>para vender</span></div>` : '',
     `<button class="eq2-t ${riesgo ? 'mal' : abiertas ? 'duda' : 'bien'}" data-seg="equipo:clausulas"><b>${abiertas}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'cláusulas abiertas'}</span></button>`,
   ].filter(Boolean).join('');
@@ -761,8 +763,13 @@ function eqPlantillaHTML(S, op) {
       l += `<div class="grupo"><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       l += xs.map(fila).join('');
     }
+  } else if (orden === 'sube') {
+    // los que suben hoy (de más a menos), los que siguen igual y los que bajan (de los que más bajan a los que menos)
+    const d1 = (x) => (x.tend && x.tend.d1 != null ? num(x.tend.d1) : 0);
+    const grupos = [['Suben hoy', M.mias.filter((x) => d1(x) > 0).sort((a, b) => d1(b) - d1(a))], ['Bajan hoy', M.mias.filter((x) => d1(x) < 0).sort((a, b) => d1(a) - d1(b))], ['Sin cambio', M.mias.filter((x) => !d1(x))]];
+    for (const [t, xs] of grupos) if (xs.length) l += `<div class="grupo"><span>${t} · ${xs.length}</span><span class="${t === 'Suben hoy' ? 'sube' : t === 'Bajan hoy' ? 'baja' : ''}">${t === 'Sin cambio' ? '' : eur(xs.reduce((s, x) => s + d1(x), 0), { signo: true })}</span></div>${xs.map(fila).join('')}`;
   } else {
-    const val = { valor: (x) => x.j.valor, sube: (x) => (x.tend ? num(x.tend.d1) : -Infinity), puntos: (x) => num(x.j.puntos) }[orden];
+    const val = { valor: (x) => x.j.valor, puntos: (x) => num(x.j.puntos) }[orden];
     l += [...M.mias].sort((a, b) => val(b) - val(a)).map(fila).join('');
   }
   return l;

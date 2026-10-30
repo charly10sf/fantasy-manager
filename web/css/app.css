@@ -1778,7 +1778,8 @@ button.eq2-t { cursor: pointer; } button.eq2-t:active { background: var(--plano2
 .eq2-at-x { flex: none; display: inline-flex; align-items: center; gap: 5px; min-height: 38px; padding: 0 12px; border-radius: 10px; background: var(--plano2); font: 600 14px 'Barlow'; color: var(--texto); }
 .eq2-at-x .ic { width: 14px; height: 14px; }
 /* ordenar la plantilla */
-.eq2-orden { display: flex; gap: 6px; margin: 0 0 4px; overflow-x: auto; scrollbar-width: none; }
+.eq2-orden { display: flex; gap: 6px; margin: 0 0 4px; overflow-x: auto; scrollbar-width: none; scroll-margin-top: 150px; }
+.grupo .sube { color: var(--sube); } .grupo .baja { color: var(--baja); }
 .eq2-orden::-webkit-scrollbar { display: none; }
 .eq2-orden button { flex: none; min-height: 36px; padding: 0 14px; border-radius: 99px; background: var(--plano); border: 1px solid var(--linea); font: 600 14px 'Barlow'; color: var(--texto2); }
 .eq2-orden button.activo { background: var(--texto); border-color: transparent; color: var(--fondo); }

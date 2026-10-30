@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10';
+export const VERSION = '0.6.10a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,16 @@ export const VERSION = '0.6.10';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10a', f: '2026-10-30', h: 'HH:MM', t: 'El plan, con más cabeza',
+    cosas: [
+      { tipo: 'mejora', d: 'grafica', t: 'Fichar para revender', x: 'Que uno «se esté frenando» ya no es motivo para no ficharlo si aún le quedan días subiendo: su ficha te dice cuántos y cuánto puede subir en 3 días, y el plan lo tiene en cuenta para revenderlo. Y tener ya a otro en su puesto no es motivo para descartarlo si lo fichas para vender.' },
+      { tipo: 'mejora', d: 'grafica', t: 'Los que suben y bajan', x: 'En Equipo, toca la casilla de los que suben y bajan hoy y bajas a la lista: primero los que suben, luego los que bajan, con lo que cambia cada grupo.', ir: { v: 'equipo' } },
+      { tipo: 'arreglo', d: 'campo', t: 'Alinear lo que ya tienes', x: 'El plan te pedía alinear un once que ya tenías puesto en LaLiga. Ahora lo mira y, si cambia algo, te dice quién entra y quién sale.' },
+      { tipo: 'arreglo', d: 'escudo', t: 'Blindajes sin sentido', x: 'El plan ya no te propone blindar a uno con la cláusula muy por encima de su valor: no hay riesgo. Sale en «Mirado y descartado» con el porqué.' },
+      { tipo: 'arreglo', d: 'dinero', t: 'El valor de tu equipo en 7 días', x: 'Arriba en Equipo, lo que ha cambiado en 7 días es lo que han subido o bajado tus jugadores de ahora; antes restaba también a los que vendiste.' },
+    ],
+  },
   {
     v: '0.6.10', f: '2026-10-30', h: '04:58', t: 'Tu equipo, más claro',
     cosas: [
