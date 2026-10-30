@@ -1934,7 +1934,8 @@ document.addEventListener('click', async (ev) => {
   if (d.sugerencia) { enviarPregunta(d.sugerencia); return; }
   if (d.seg) { const [v, s] = d.seg.split(':'); S.seg[v] = s; if (!d.ir) { pintar(); volverAPestanas(); return; } }
   if (d.filtro) { const [k, f] = d.filtro.split(':'); S.filtro[k] = f; pintar(); return; }
-  if (d.j && S.D && !d.accion) { hoja('j', d.j, pilaDesde(el, 'j', d.j)); cargarDetalle(d.j); return; }
+  // dentro del resumen de una tarjeta que se despliega (los pasos del plan), abrir la ficha sin desplegarla
+  if (d.j && S.D && !d.accion) { if (el.closest('summary')) ev.preventDefault(); hoja('j', d.j, pilaDesde(el, 'j', d.j)); cargarDetalle(d.j); return; }
   if (d.club && S.D && !d.accion) { hoja('c', d.club, pilaDesde(el, 'c', d.club)); cargarClub(d.club); return; }
   if (d.r && S.D) { hoja('r', d.r); cargarOnceRival(d.r); return; }
   if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }

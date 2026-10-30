@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10g';
+export const VERSION = '0.6.10h';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.10g';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10h', f: '2026-10-30', h: '21:10', t: 'Del plan a la ficha',
+    cosas: [
+      { tipo: 'mejora', d: 'plan', t: 'Toca al jugador del plan y ves su ficha', x: 'En cada paso del plan, toca la cara o el nombre del jugador y se abre su ficha con todos sus datos, sin tener que ir a buscarlo al mercado. Al cerrarla sigues en el plan. Tocando el resto de la tarjeta se despliega como siempre.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.6.10g', f: '2026-10-30', h: '20:32', t: 'Alarma para tus clausulazos',
     cosas: [

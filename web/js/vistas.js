@@ -373,6 +373,9 @@ function pasoOp(S, P, o) {
   const imp = o.importe ? `<span class="pp-imp ${o.signo > 0 ? 'mas' : ''}">${o.signo > 0 ? '+' : o.signo < 0 ? '−' : ''}${eur(o.importe)}<small>${o.signo > 0 ? 'te entran' : o.signo < 0 ? 'pagas' : ''}</small></span>` : '';
   const sub = [j && j.equipo, o.donde].filter(Boolean).map(esc).join(' · ');
   const nombre = j ? j.nombre : o.jugador || '';
+  // la cara y el nombre abren su ficha (30 oct, Carlos: sin tener que ir a buscarlo al mercado); el resto de la
+  // tarjeta la sigue abriendo y cerrando
+  const quien = `${j ? ava(j, 'm') : ''}<span class="pp-n"><b>${esc(nombre)}</b>${sub ? `<small>${sub}</small>` : ''}</span>`;
   const estadoTxt = o.descartada ? '<span class="pill mal">No lo hagas</span>' : liga ? `<span class="pp-est ${liga.estado}">${icono(curso ? 'reloj' : 'ok')}${esc(liga.texto)}</span>` : ok ? `<span class="pp-est hecho">${icono('ok')}Hecho</span>` : o.cuando ? `<span class="pp-cu">${icono('reloj')}${esc(o.cuando)}</span>` : '';
   const porque = o.descartada && o.aviso ? o.aviso : o.motivo;
   const dentro = [
@@ -387,7 +390,7 @@ function pasoOp(S, P, o) {
       <span class="pp-num">${curso ? icono('reloj') : ok ? icono('ok') : o.n}</span>
       <span class="pp-c">
         <span class="pp-l1"><span class="accion-t ${esc(o.accion)}">${esc(o.etiqueta || ACCION[o.accion] || o.accion)}</span>${estadoTxt}</span>
-        ${nombre ? `<span class="pp-l2">${j ? ava(j, 'm') : ''}<span class="pp-n"><b>${esc(nombre)}</b>${sub ? `<small>${sub}</small>` : ''}</span>${imp}</span>` : imp ? `<span class="pp-l2">${imp}</span>` : ''}
+        ${nombre ? `<span class="pp-l2">${j ? `<button class="pp-j" data-j="${esc(j.id)}" aria-label="Ficha de ${esc(nombre)}">${quien}</button>` : quien}${imp}</span>` : imp ? `<span class="pp-l2">${imp}</span>` : ''}
         ${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}
       </span>
       <span class="pp-ab" aria-hidden="true">${icono('flecha')}</span>

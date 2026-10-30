@@ -1699,6 +1699,8 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pp-est.hecho { color: var(--sube); } .pp-est.curso { color: var(--oro); }
 .pp-l2 { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .pp-l2 .ava { width: 34px; height: 34px; }
+.pp-j { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 0 1 auto; border-radius: 10px; -webkit-tap-highlight-color: transparent; }
+.pp-j:active { opacity: 0.6; }
 .pp-n { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .pp-n b { font: 700 18px/1.1 var(--cond); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pp-n small { font-size: 13px; color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
