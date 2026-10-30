@@ -1,6 +1,6 @@
 # Fantasy Manager — cómo trabajamos
 
-Léelo entero antes de tocar el código. En el proyecto de Claude «Fantasy Manager» solo hay dos docs: claude/ESTADO.md (dónde estamos y qué falta; léelo al empezar) y claude/COMO-TRABAJAMOS.md (copia de este archivo: si cambias algo de aquí, cámbialo también allí). El resto está en la carpeta claude/ de este repo y se abre solo cuando hace falta: versiones/0.X.md (lo pendiente de cada versión), historial.md (lo hecho y el detalle largo de cada módulo), cerrar-version.md y BLOQUEO-LALIGA.md.
+Léelo entero antes de tocar el código. En el proyecto de Claude «Fantasy Manager» están claude/ESTADO.md (dónde estamos y qué falta), claude/COMO-TRABAJAMOS.md (copia de este archivo: si cambias algo de aquí, cámbialo también allí) y claude/VIABILIDAD.md (las cuentas del negocio: no va al repo porque es público). Vienen cargados con el proyecto. El resto está en la carpeta claude/ de este repo y se abre solo cuando hace falta: versiones/0.X.md (lo pendiente de cada versión), historial.md (lo hecho y el detalle largo de cada módulo), cerrar-version.md y BLOQUEO-LALIGA.md.
 
 Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo con acceso de escritura y clonarlo.
 
