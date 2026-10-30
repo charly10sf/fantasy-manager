@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10f';
+export const VERSION = '0.6.10g';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.10f';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10g', f: '2026-10-30', h: '20:26', t: 'Alarma para tus clausulazos',
+    cosas: [
+      { para: 'app', tipo: 'nuevo', d: 'campana', t: 'Alarma 1 minuto antes de cada clausulazo', x: 'Si tu plan dice clausular a uno cuya cláusula aún no se ha abierto, te salta un aviso en el móvil 1 minuto antes de que se abra, con el precio y a quién se lo quitas, para que tengas LaLiga Fantasy abierta a la hora. Si se abren varias a la vez al empezar la jornada, va un solo aviso con todas. Si rehaces el plan y ya no lo manda, o marcas el paso como hecho, el aviso se quita. Se apaga en Ajustes → Avisos, «Clausulazos de tu plan».', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.6.10f', f: '2026-10-30', h: '20:15', t: 'Versión entera y fichajes a tiempo',
     cosas: [

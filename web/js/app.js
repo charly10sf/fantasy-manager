@@ -505,7 +505,7 @@ function rehacer() {
   aprender(S.D, S.M, S.det);
   montarPlan();
   if (apuntarReventa()) { const ap = S.M.aprende; S.M = analizar(S.D, S.H, S.c, extraM()); S.M.aprende = ap; fijarMotor(S.M); montarPlan(); }
-  programar(S.D, S.M);
+  programar(S.D, S.M, planAvisos());
   if (!EN_FONDO) {
     programarFondo();
     // lo que ves con la app abierta ya no te llega luego como notificación
@@ -739,6 +739,13 @@ function montarPlan() {
   S.plan = cuadrarPlan(base, S.D, S.M);
   S.opPorPid = {};
   for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
+}
+/** el plan para los avisos (la alarma de 1 min de cada clausulazo): sin los pasos que ya has marcado como hechos */
+function planAvisos() {
+  const P = S.plan;
+  if (!P || !P.ops) return null;
+  const hechos = new Set((LS.get(K('hechos'), {})[V.claveHechos(P)] || {}).n || []);
+  return { ...P, ops: P.ops.filter((o) => !hechos.has(o.n)) };
 }
 
 /* cambiar de liga, entrar o salir de la demo mientras se carga la liga guardaría lo de una con las claves de la
@@ -1769,7 +1776,7 @@ window.progresoApp = (pct, estado) => {
 };
 window.permisoAvisos = (ok) => {
   if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada', 5000);
-  else { if (S.D) programar(S.D, S.M); tostada('Notificaciones activadas'); }
+  else { if (S.D) programar(S.D, S.M, planAvisos()); tostada('Notificaciones activadas'); }
   repintarHoja();
   mirarLimite();
 };
@@ -2113,6 +2120,7 @@ document.addEventListener('click', async (ev) => {
       for (const k of Object.keys(todos)) if (!todos[k] || Date.now() - (todos[k].t || 0) > 7 * 86400e3) delete todos[k];
       LS.set(K('hechos'), todos);
       if (apuntarReventa()) rehacer();
+      else if (S.D) programar(S.D, S.M, planAvisos());
       pintar();
       break;
     }
@@ -2146,11 +2154,11 @@ document.addEventListener('click', async (ev) => {
       const on = !cfgAvisos().on;
       guardarCfgAvisos({ on });
       if (on && enApp && !nativo.avisosPermitidos()) nativo.pedirPermisoAvisos();
-      if (S.D) programar(S.D, S.M);
+      if (S.D) programar(S.D, S.M, planAvisos());
       repintarHoja();
       break;
     }
-    case 'avisoTipo': guardarCfgAvisos({ [d.k]: !cfgAvisos()[d.k] }); if (S.D) programar(S.D, S.M); repintarHoja(); break;
+    case 'avisoTipo': guardarCfgAvisos({ [d.k]: !cfgAvisos()[d.k] }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); break;
     case 'exactas': nativo.pedirAlarmasExactas(); break;
     case 'probarAviso': if (enApp) { nativo.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'rivales'); tostada('Mira las notificaciones'); } else tostada('Los avisos solo funcionan en la app'); break;
     case 'buscarVersion': buscarVersion(true); break;
@@ -2210,8 +2218,8 @@ document.addEventListener('change', (ev) => {
   if (k === 'liga') { cerrarHoja(true); cambiarDeLiga(v); }
   if (k === 'modelo') guardarCfgIA({ modelo: v });
   if (k === 'pullitas') { guardarCfgIA({ pullitas: v }); tostada(v === 'no' ? 'Sin pullitas desde el próximo plan' : 'Hecho: se nota desde el próximo plan o la próxima respuesta'); }
-  if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M); }
-  if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M); repintarHoja(); }
+  if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M, planAvisos()); }
+  if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); }
 });
 document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && $('.visor')) { $('.visor').remove(); return; }
@@ -2447,7 +2455,7 @@ async function arrancar() {
     if (!S.cargando) cargar({ silencio: true });
     // el tutorial, que no se ha visto con la app cerrada
     quizaTutorial(1800);
-  }, () => { if (S.D && S.M) programar(S.D, S.M); });
+  }, () => { if (S.D && S.M) programar(S.D, S.M, planAvisos()); });
   novedades();
   quizaTutorial(2500);
   setTimeout(() => buscarVersion(false), 4000);
