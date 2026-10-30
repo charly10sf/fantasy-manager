@@ -14,6 +14,7 @@ on:
       - "android/**"
       - "web/**"
       - ".github/paquete.py"
+      - ".github/r8.py"
       - ".github/workflows/android.yml"
   workflow_dispatch:
 
@@ -133,6 +134,15 @@ jobs:
             "$A/aapt2" dump xmltree --file AndroidManifest.xml "$f" | grep -E "meta-data|APPLICATION_ID|service" -A2 | grep -E "android:name|android:value" | head -20 || true
           done > "$GITHUB_WORKSPACE/permisos.txt" 2>&1 || true
 
+      # R8 encoge y renombra el código: que el puente con la web siga entero, que las clases que Android abre por su
+      # nombre sigan con él y que el AAB lleve el mapping. Si algo falla, la compilación falla y no se publica
+      - name: Comprobar R8
+        if: success()
+        run: |
+          set -o pipefail
+          A=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)
+          python3 .github/r8.py "$A/dexdump" android/app/build/outputs/apk/github/release/app-github-release.apk android/app/build/outputs/apk/play/release/app-play-release.apk --aab android/app/build/outputs/bundle/playRelease/app-play-release.aab 2>&1 | tee "$GITHUB_WORKSPACE/r8.txt"
+
       # solo desde main: en otras ramas se compila para probar, sin publicar
       - name: Publicar la app
         if: env.FIRMA == 'buena' && github.ref == 'refs/heads/main'
@@ -181,6 +191,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/compilacion.log" . 2>/dev/null || echo "sin registro" > compilacion.log
           cp "$GITHUB_WORKSPACE/firma.log" . 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/permisos.txt" . 2>/dev/null || true
+          cp "$GITHUB_WORKSPACE/r8.txt" . 2>/dev/null || true
           tail -c 60000 compilacion.log > ultimo.log
           echo "run ${{ github.run_number }} firma ${FIRMA:-?} $(date -u +%FT%TZ)" > estado.txt
           ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/github/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/apk/play/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/bundle/playRelease/" >> estado.txt 2>&1 || true
