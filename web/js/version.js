@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.9a';
+export const VERSION = '0.6.10';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.6.9a';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10', f: '2026-10-30', h: 'HH:MM', t: 'Tu equipo, más claro',
+    cosas: [
+      { tipo: 'mejora', d: 'camiseta', t: 'Tu equipo, más claro', x: 'Arriba, tu cara y cuatro números: el valor (con lo que ha cambiado en la semana), tu puesto, tu saldo y la plantilla. Las pestañas caben todas sin moverlas. En Plantilla, unas casillas con cuántos pueden jugar, cuántos suben y bajan hoy y tus cláusulas abiertas, y «Pide atención»: cada lesionado, suplente o cláusula en riesgo con su botón para buscarle sustituto o verla. Y la plantilla se puede ordenar por puesto, valor, lo que sube hoy o puntos.', ir: { v: 'equipo' } },
+      { tipo: 'mejora', d: 'escudo', t: 'Tus cláusulas, de un vistazo', x: 'En Equipo → Cláusulas, arriba cuántas están abiertas, cuántas se abren en 48 horas, cuántas están protegidas y los blindajes que te quedan. Cada jugador lleva una barra con lo que está su cláusula por encima de su valor: pasada la raya (un 30 %), sin riesgo. La explicación va plegada en «Cómo funcionan».', ir: { v: 'equipo', seg: 'equipo:clausulas' } },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Las etiquetas de cada jugador', x: 'La etiqueta roja del plan («Vender hoy», «Proteger hoy») salía más abajo que las demás de la misma fila.' },
+    ],
+  },
   {
     v: '0.6.9a', f: '2026-10-30', h: '04:30', t: 'Fotos de rivales y Europa',
     cosas: [

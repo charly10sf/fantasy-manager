@@ -289,10 +289,10 @@ export function titBadge(M, j) {
 /** una fila de jugador. x lleva j (jugador) y opcionalmente tend, cláusula, etc. */
 // como mucho 3 pastillas por fila, en orden de importancia: lo que sobra se ve en su ficha
 const MAX_PILLS = 3;
-export function filaJugador(x, { sub = null, extra = '', pills = null, derecha = null, conMini = false, op = null } = {}) {
+export function filaJugador(x, { sub = null, extra = '', pills = null, derecha = null, conMini = false, op = null, maxPills = MAX_PILLS } = {}) {
   const j = x.j;
   const t = x.tend;
-  if (pills) { extra = [planPill(op), ...pills].filter(Boolean).slice(0, MAX_PILLS).join(''); op = null; }
+  if (pills) { extra = [planPill(op), ...pills].filter(Boolean).slice(0, maxPills).join(''); op = null; }
   return `<button class="fila" data-j="${esc(j.id)}">
     ${ava(j)}
     <div class="fila-c">

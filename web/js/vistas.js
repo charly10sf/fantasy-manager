@@ -1,7 +1,7 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, norm, esWebFantasy, sinWebs } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, caraManager } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, caraManager, planPill } from './comunes.js';
 import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, nombreModelo, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
@@ -669,74 +669,176 @@ export function ventaHTML(v) {
 /* ================= EQUIPO ================= */
 /** las subpestañas, con un número al lado cuando hay algo que contar ([clave, texto, número, 'rojo'|'']) */
 // las pestañas de cada pantalla: se quedan fijas arriba al bajar (el ancla marca dónde van, para volver a ellas)
-export const tabs = (v, actual, lista) => `<div class="tabs-ancla"></div><div class="tabs"><div class="tabs-in" role="tablist">${lista.map(([k, t, n, cls]) => `<button data-seg="${v}:${k}" role="tab" aria-selected="${actual === k}" class="${actual === k ? 'activo' : ''}">${t}${n ? `<span class="tab-n ${cls || ''}">${n}</span>` : ''}</button>`).join('')}</div></div>`;
+export const tabs = (v, actual, lista, { llenas = false } = {}) => `<div class="tabs-ancla"></div><div class="tabs${llenas ? ' llenas' : ''}"><div class="tabs-in" role="tablist"${llenas ? ` style="--n:${lista.length}"` : ''}>${lista.map(([k, t, n, cls]) => `<button data-seg="${v}:${k}" role="tab" aria-selected="${actual === k}" class="${actual === k ? 'activo' : ''}">${t}${n ? `<span class="tab-n ${cls || ''}">${n}</span>` : ''}</button>`).join('')}</div></div>`;
+
+/* ================= EQUIPO ================= */
+// Rediseño del 30 oct (lo pidió Carlos: «todo más claro y más visual»): arriba tu cara, el nombre y cuatro números; las
+// pestañas caben sin salirse; en Plantilla, el estado del equipo en casillas y lo que pide atención, cada cosa con su
+// botón; la plantilla se puede ordenar; en Cláusulas, el resumen en casillas y una barra de lo protegida que está cada una
+const MALOS_EQ = ['injured', 'suspended', 'out_of_league'];
+
+/** arriba: tu cara, el nombre del equipo y el valor (con lo que ha cambiado en 7 días), el puesto, el saldo y la plantilla */
+function eqCabHTML(S) {
+  const { M, D, H } = S;
+  const yoE = (D.clasif || []).find((e) => e.esYo) || null;
+  const serie = (H.yo || []).filter((f) => f && num(f[2]));
+  const hace7 = serie.filter(([d]) => Date.parse(d + 'T12:00:00') <= Date.now() - 6.5 * DIA).pop();
+  const dv = hace7 ? num(D.valorEquipo) - num(hace7[2]) : null;
+  const jug = M.mias.filter((x) => x.j.pos !== 5).length, ent = M.mias.length - jug;
+  return `<div class="eq2-cab">
+    <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><div class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</div></div></div>
+    <div class="eq2-num">
+      <div><b>${eur(D.valorEquipo)}</b><span>valor</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</div>
+      <div><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts` : 'en la liga'}</span></div>
+      <div><b class="${D.dinero != null && num(D.dinero) < 0 ? 'baja' : ''}">${D.dinero != null ? eur(D.dinero) : '–'}</b><span>saldo</span></div>
+      <div><b>${jug}</b><span>jugadores${ent ? ` y ${ent} entr.` : ''}</span></div>
+    </div>
+  </div>`;
+}
+
+/** el estado de tu equipo: casillas y, debajo, lo que pide atención (bajas, suplentes, los que hay que vender y las
+    cláusulas en riesgo), cada uno con su botón: buscar sustituto o ir a sus cláusulas */
+function eqEstadoHTML(S) {
+  const { M } = S;
+  const xs = M.mias.filter((x) => x.j && x.j.pos !== 5);
+  if (!xs.length) return '';
+  const conf = (x) => ((M.alineacion && M.alineacion(x.j.id)) || {}).estado;
+  const sinI = bloqueada('inercia');
+  const at = [];
+  for (const x of xs) {
+    const c = conf(x);
+    if (MALOS_EQ.includes(x.j.estado)) at.push({ x, n: 'mal', t: x.j.estado === 'injured' ? 'Lesionado' : x.j.estado === 'suspended' ? 'Sancionado' : 'Fuera de LaLiga', sust: true });
+    else if (['fuera', 'baja'].includes(c)) at.push({ x, n: 'mal', t: 'No va convocado', sust: true });
+    else if (['suplente', 'nosale'].includes(c)) at.push({ x, n: 'duda', t: 'No es titular en el once confirmado', sust: true });
+    else if (x.j.estado === 'doubtful') at.push({ x, n: 'duda', t: 'En duda para el próximo partido', sust: true });
+    if (!sinI && x.ventaInercia) at.push({ x, n: x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda', t: x.ventaInercia.urgencia === 'ya' ? 'Ha girado: toca venderlo' : 'Se está frenando: piensa en venderlo', sust: true });
+    if (x.riesgo === 'alto') at.push({ x, n: 'mal', t: `Cláusula en riesgo: ${eur(x.clausula)}${x.abierta ? ', abierta' : ''}`, cl: true });
+  }
+  at.sort((a, b) => (a.n === b.n ? 0 : a.n === 'mal' ? -1 : 1));
+  const pueden = xs.filter((x) => !MALOS_EQ.includes(x.j.estado) && !['fuera', 'baja'].includes(conf(x))).length;
+  const suben = xs.filter((x) => x.tend && num(x.tend.d1) > 0).length, bajan = xs.filter((x) => x.tend && num(x.tend.d1) < 0).length;
+  const abiertas = M.mias.filter((x) => x.abierta && x.clausula).length, riesgo = M.mias.filter((x) => x.riesgo === 'alto').length;
+  const vender = sinI ? null : xs.filter((x) => x.ventaInercia).length;
+  const tiles = [
+    `<div class="eq2-t ${pueden < xs.length ? 'duda' : 'bien'}"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar</span></div>`,
+    `<div class="eq2-t"><b><em class="sube"><small>▲</small>${suben}</em> <em class="baja"><small>▼</small>${bajan}</em></b><span>suben y bajan hoy</span></div>`,
+    vender != null ? `<div class="eq2-t ${vender ? 'duda' : ''}"><b>${vender}</b><span>para vender</span></div>` : '',
+    `<button class="eq2-t ${riesgo ? 'mal' : abiertas ? 'duda' : 'bien'}" data-seg="equipo:clausulas"><b>${abiertas}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'cláusulas abiertas'}</span></button>`,
+  ].filter(Boolean).join('');
+  const MAX = 4;
+  const fila = (a) => `<div class="eq2-at ${a.n}">
+      <button class="eq2-at-b" data-j="${esc(a.x.pid)}">${ava(a.x.j, 'm')}<span class="eq2-at-c"><b>${esc(a.x.j.nombre)}</b><span>${esc(a.t)}</span></span></button>
+      ${a.cl ? '<button class="eq2-at-x" data-seg="equipo:clausulas">Ver</button>' : a.sust ? `<button class="eq2-at-x" data-accion="sustituto" data-pid="${esc(a.x.pid)}">${icono('buscar')}Sustituto</button>` : ''}
+    </div>`;
+  const lista = at.length ? `<div class="sec"><h2>Pide atención</h2><span class="sub">${at.length === 1 ? '1 cosa' : `${at.length} cosas`}</span></div><div class="eq2-ats">${at.slice(0, MAX).map(fila).join('')}${at.length > MAX ? `<p class="t2 peq">Y ${at.length - MAX} más: los ves en la plantilla, abajo.</p>` : ''}</div>`
+    : `<div class="ahora-ok">${icono('ok')}<span><b>Todo en orden.</b> Nadie de baja, ninguna cláusula en riesgo ni nadie que vender ya.</span></div>`;
+  return `<div class="eq2-tiles">${tiles}</div>${lista}`;
+}
+
+/** la plantilla, en el orden que elijas: por puesto (con el valor de cada línea), valor, lo que sube hoy o puntos */
+const ORDENES_EQ = [['puesto', 'Puesto'], ['valor', 'Valor'], ['sube', 'Sube hoy'], ['puntos', 'Puntos']];
+function eqPlantillaHTML(S, op) {
+  const { M } = S;
+  const orden = ORDENES_EQ.some(([k]) => k === S.ordenEq) ? S.ordenEq : 'puesto';
+  const fila = (x) => filaJugador(x, {
+    sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}${orden === 'puntos' ? ` · <b>${num(x.j.puntos)} pts</b>` : ''}`,
+    pills: [
+      estadoPill(x.j),
+      x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : '',
+      x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
+      M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
+      M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
+      calPill(M, x.j, { soloDuro: true }),
+    ],
+    maxPills: 2, conMini: true, op: op(x.pid),
+  });
+  let l = `<div class="sec"><h2>Plantilla</h2><span class="sub">${M.mias.length} jugadores</span></div>
+    <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div>`;
+  if (orden === 'puesto') {
+    for (const p of [1, 2, 3, 4, 5]) {
+      const xs = M.mias.filter((x) => x.j.pos === p).sort((a, b) => b.j.valor - a.j.valor);
+      if (!xs.length) continue;
+      l += `<div class="grupo"><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
+      l += xs.map(fila).join('');
+    }
+  } else {
+    const val = { valor: (x) => x.j.valor, sube: (x) => (x.tend ? num(x.tend.d1) : -Infinity), puntos: (x) => num(x.j.puntos) }[orden];
+    l += [...M.mias].sort((a, b) => val(b) - val(a)).map(fila).join('');
+  }
+  return l;
+}
+
+/** Cláusulas: el resumen en casillas, cómo funcionan (plegado) y cada uno con una barra de cuánto está su cláusula por
+    encima de su valor: a partir de un 30 % no hay riesgo (la raya) */
+function eqClausulasHTML(S, op) {
+  const { M } = S;
+  const xs = [...M.mias].sort((a, b) => (a.abierta === b.abierta ? a.abreEn - b.abreEn : a.abierta ? -1 : 1));
+  const ab = xs.filter((x) => x.abierta), pronto = xs.filter((x) => !x.abierta && x.abreEn < 2 * DIA), prot = xs.filter((x) => !x.abierta && x.abreEn >= 2 * DIA);
+  const riesgo = xs.filter((x) => x.riesgo === 'alto').length;
+  const ES = M.escudosMios;
+  let h = `<div class="eq2-tiles">
+    <div class="eq2-t ${riesgo ? 'mal' : ab.length ? 'duda' : 'bien'}"><b>${ab.length}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'abiertas ya'}</span></div>
+    <div class="eq2-t ${pronto.length ? 'duda' : ''}"><b>${pronto.length}</b><span>se abren en 48 h</span></div>
+    <div class="eq2-t bien"><b>${prot.length}</b><span>protegidas</span></div>
+    ${ES ? `<div class="eq2-t"><b>${ES.quedan}<small>/2</small></b><span>blindajes esta jornada</span></div>` : ''}
+  </div>
+  <details class="eq2-como"><summary>${icono('info')}Cómo funcionan</summary><p>Si te clausulan a uno, cobras su cláusula, pero lo pierdes: sus puntos, lo que iba a subir y, si la cláusula está en su valor, te lo quitan sin pagar nada de más (venderlo a LaLiga te daría más, y reponerlo te costaría más). Con la cláusula un 30 % o más por encima de su valor (o por encima de lo que se paga en los clausulazos de tu liga) no hay riesgo, y menos si está bajando.${ES ? ` En LaLiga puedes blindar a uno viendo un anuncio: ${ES.horas} h protegido, 2 por jornada.` : ''} La barra de cada uno dice cuánto está su cláusula por encima de su valor; la raya es el 30 %.</p></details>`;
+  const barraCl = (x) => {
+    if (!x.ratio) return '';
+    const sobre = (x.ratio - 1) * 100;
+    const w = Math.max(3, Math.min(100, (sobre / 60) * 100));
+    return `<span class="cl-m ${x.riesgo === 'alto' ? 'mal' : x.riesgo === 'medio' ? 'duda' : 'bien'}" title="Cláusula ${pct(sobre, 0)} sobre su valor"><i style="width:${w.toFixed(0)}%"></i></span>`;
+  };
+  const filaCl = (x) => filaJugador(x, {
+    sub: `${x.abierta ? '<span class="rojo">Abierta</span>' : `Se abre ${cuando(x.protegidoHasta)}`} · cláusula ${eur(x.clausula)}${x.ratio ? ` (${pct((x.ratio - 1) * 100, 0)})` : ''}`,
+    extra: `${barraCl(x)}${planPill(op(x.pid))}${x.escudo ? `<span class="pill pronto">${icono('escudo')}Blindado · ${cuando(x.escudo).replace(/^hoy /, '')}</span>` : (M.paraEscudo || []).includes(x.pid) ? `<span class="pill plan">${icono('escudo')}Blíndalo gratis</span>` : ''}<span class="pill ${x.riesgo === 'alto' ? 'mal' : x.riesgo === 'medio' ? 'duda' : ''}">${x.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${x.riesgo}`}</span>${x.pagan && !bloqueada('quienPaga') && (x.abierta || x.abreEn < 3 * DIA) && (x.pagan.seguro.length || x.pagan.quiza.length) ? `<span class="pill ${x.pagan.seguro.length ? 'mal' : 'duda'}">${icono('rivales')}Le llega a ${x.pagan.seguro.length + x.pagan.quiza.length}</span>` : x.pagan && !bloqueada('quienPaga') && x.pagan.hayDatos && x.abierta ? '<span class="pill bien">No le llega a nadie</span>' : ''}${x.blindaje && !x.blindaje.yaVale && !x.blindaje.caro ? `<span class="pill">Subirla a ${eur(x.blindaje.objetivo, { dec: 1 })}: ${eur(x.blindaje.coste, { dec: 1 })}</span>` : ''}`,
+    derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d apag">${x.abierta ? 'abierta' : dura(x.abreEn)}</div>`,
+  });
+  let gl = '';
+  for (const [t, l] of [['Abiertas: te los pueden quitar ya', ab], ['Se abren en menos de 48 h', pronto], ['Protegidas', prot]]) if (l.length) gl += `<div class="grupo"><span>${t}</span><span>${l.length}</span></div>${l.map(filaCl).join('')}`;
+  return h + lista2(gl);
+}
+
+/** Beneficio: lo ganado sobre lo pagado, el mejor y el peor fichaje, el valor del equipo y jugador a jugador */
+function eqBeneficioHTML(S, op) {
+  const { M, H } = S;
+  const con = M.mias.filter((x) => x.compra).sort((a, b) => b.ganado - a.ganado);
+  const serie = (H.yo || []).map(([d, , v]) => [Date.parse(d + 'T12:00:00'), v]).filter(([, v]) => v);
+  const mejor = con[0], peor = con.length > 1 ? con[con.length - 1] : null;
+  const resumen = `<div class="eq2-tiles">
+      <div class="eq2-t ${M.conCompra ? (M.ganadoTotal >= 0 ? 'bien' : 'mal') : ''}"><b class="${clase(M.ganadoTotal)}">${M.conCompra ? eur(M.ganadoTotal, { signo: true }) : '–'}</b><span>ganado sobre lo pagado (${con.length} de ${M.mias.length})</span></div>
+      ${mejor ? `<button class="eq2-t" data-j="${esc(mejor.pid)}"><b class="${clase(mejor.ganado)}">${eur(mejor.ganado, { signo: true })}</b><span>el mejor: ${esc(mejor.j.nombre)}</span></button>` : ''}
+      ${peor && peor.ganado < 0 ? `<button class="eq2-t" data-j="${esc(peor.pid)}"><b class="${clase(peor.ganado)}">${eur(peor.ganado, { signo: true })}</b><span>el peor: ${esc(peor.j.nombre)}</span></button>` : ''}
+    </div>
+    <div class="sec"><h2>Valor del equipo</h2></div>${linea(serie, { alto: ancho() ? 220 : 150 })}`;
+  const lista = `<div class="sec"><h2>Jugador a jugador</h2></div>${con.length ? con.map((x) => filaJugador(x, {
+    sub: `Pagaste ${eur(x.compra)} · vale ${eur(x.j.valor)}${(() => { const ol = M.ofertaLigaDe ? M.ofertaLigaDe(x.j) : null; return ol ? ` · LaLiga te daría ~${eur(ol.v)}` : ''; })()}`,
+    derecha: `<div class="v ${clase(x.ganado)}">${eur(x.ganado, { signo: true })}</div><div class="d ${clase(x.ganado)}">${pct((x.j.valor / x.compra - 1) * 100)}</div>`, op: op(x.pid),
+  })).join('') : nada('Aún no sé lo que pagaste por tus jugadores: sale de los movimientos de la liga, que guardan unas semanas.')}`;
+  return ancho() ? cols(resumen, lista, 'mitades') : resumen + lista;
+}
 
 export function equipo(S) {
-  const { M, H, D } = S;
+  const { M } = S;
   const seg = S.seg.equipo || 'plantilla';
   const op = (pid) => S.opPorPid[pid];
-  let h = `<div class="eti">Tu equipo</div><div class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</div><p class="entradilla">${M.mias.length} jugadores · ${eur(D.valorEquipo)}${M.yo ? ` · ${M.yo.pos}º con ${M.yo.puntos} pts` : ''}</p>`;
+  let h = eqCabHTML(S);
   const abiertasE = M.mias.filter((x) => x.abierta && x.clausula).length, riesgoE = M.mias.filter((x) => x.riesgo === 'alto').length;
-  const aVender = M.mias.filter((x) => x.ventaInercia).length;
-  void aVender;
-  h += tabs('equipo', seg, [['plantilla', 'Plantilla', M.mias.length], ['jornadas', 'Jornadas'], ['venta', 'En venta', M.misVentas.length], ['clausulas', 'Cláusulas', abiertasE, riesgoE ? 'rojo' : ''], ['dinero', 'Beneficio']]);
+  h += tabs('equipo', seg, [['plantilla', 'Plantilla', M.mias.length], ['jornadas', 'Jornadas'], ['venta', 'En venta', M.misVentas.length], ['clausulas', 'Cláusulas', abiertasE, riesgoE ? 'rojo' : ''], ['dinero', 'Beneficio']], { llenas: true });
   if (!M.mias.length) return h + nada(S.D && S.D.ligas && S.D.ligas.length > 1 ? 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Toca el nombre de la liga, arriba, para cambiar a otra de tus ligas.' : 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si acabas de entrar en ella, prueba a actualizar en un rato.');
 
   if (seg === 'plantilla') {
-    const arriba = equipoHoyHTML(S, { corto: true }) + onceHTML(S, null, { conBanquillo: true, directo: true });
-    let l = '';
-    const titulares = new Set((M.once ? M.once.lineas.flat() : []).map((j) => j.id));
-    for (const p of [1, 2, 3, 4, 5]) {
-      const xs = M.mias.filter((x) => x.j.pos === p);
-      if (!xs.length) continue;
-      l += `<div class="grupo"><span>${POS_PLURAL[p]}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
-      l += xs.map((x) => {
-        void titulares;
-        return filaJugador(x, {
-          sub: `${esc(x.j.equipo)}${x.prox ? ` · ${rivalSub(M, x.j)}` : ''}`,
-          pills: [
-            estadoPill(x.j),
-            x.ventaInercia && !op(x.pid) && !bloqueada('inercia') ? `<span class="pill ${x.ventaInercia.urgencia === 'ya' ? 'mal' : 'duda'}">${icono(x.ventaInercia.urgencia === 'ya' ? 'baja' : 'reloj')}${x.ventaInercia.urgencia === 'ya' ? 'Ha girado: vender' : 'Frenando: vender'}</span>` : '',
-            M.enVenta.has(x.pid) ? '<span class="pill abierta">En venta</span>' : '',
-            x.riesgo === 'alto' ? `<span class="pill mal">${icono('abierto')}Cláusula en riesgo</span>` : '',
-            M.reventa[x.pid] ? '<span class="pill oro">Para revender</span>' : '',
-            calPill(M, x.j, { soloDuro: true }),
-          ],
-          conMini: true, op: op(x.pid),
-        });
-      }).join('');
-    }
-    // en el ordenador, el once a la izquierda y la plantilla al lado
-    h += ancho() ? cols(arriba, l, 'lado-izq') : arriba + l;
+    const once = onceHTML(S, null, { conBanquillo: true, directo: true });
+    // en el ordenador, el estado y el once a la izquierda y la plantilla al lado
+    h += ancho() ? cols(eqEstadoHTML(S) + once, eqPlantillaHTML(S, op), 'lado-izq') : eqEstadoHTML(S) + once + eqPlantillaHTML(S, op);
   } else if (seg === 'jornadas') {
     h += jornadasHTML(S);
   } else if (seg === 'venta') {
     h += M.misVentas.length ? lista2(M.misVentas.map(ventaHTML).join('')) : nada('No tienes a nadie en venta. Cuando pongas a alguien en el mercado, aquí verás sus ofertas (la de LaLiga y las de otros managers) y si te conviene aceptar.');
   } else if (seg === 'clausulas') {
-    const xs = [...M.mias].sort((a, b) => (a.abierta === b.abierta ? a.abreEn - b.abreEn : a.abierta ? -1 : 1));
-    const abiertas = xs.filter((x) => x.abierta).length;
-    const ES = M.escudosMios;
-    h += `<p class="t2 peq">${abiertas ? `<b>${abiertas}</b> de tus jugadores se pueden clausular ya.` : 'Todos tus jugadores están protegidos ahora.'}${ES ? ` Te quedan <b>${ES.quedan} de 2 blindajes</b> esta jornada (en LaLiga, viendo un anuncio: ${ES.horas} h protegido).` : ''} Si te clausulan a uno, cobras su cláusula, pero lo pierdes: sus puntos, lo que iba a subir y, si la cláusula está en su valor, te lo quitan sin pagar nada de más (venderlo a LaLiga te daría más, y reponerlo te costaría más). Con la cláusula un 30 % o más por encima de su valor (o por encima de lo que se paga en los clausulazos de tu liga) no hay riesgo, y menos si está bajando.</p>`;
-    const filaCl = (x) => filaJugador(x, {
-      sub: `${x.abierta ? `<span class="rojo">Abierta</span> · cláusula ${eur(x.clausula)}` : `Se abre ${cuando(x.protegidoHasta)} · ${eur(x.clausula)}`}${x.ratio ? ` (${pct((x.ratio - 1) * 100, 0)})` : ''}`,
-      extra: `${x.escudo ? `<span class="pill pronto">${icono('escudo')}Blindado · ${cuando(x.escudo).replace(/^hoy /, '')}</span>` : (S.M.paraEscudo || []).includes(x.pid) ? `<span class="pill plan">${icono('escudo')}Blíndalo gratis</span>` : ''}<span class="pill ${x.riesgo === 'alto' ? 'mal' : x.riesgo === 'medio' ? 'duda' : ''}">${x.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${x.riesgo}`}</span>${x.pagan && !bloqueada('quienPaga') && (x.abierta || x.abreEn < 3 * DIA) && (x.pagan.seguro.length || x.pagan.quiza.length) ? `<span class="pill ${x.pagan.seguro.length ? 'mal' : 'duda'}">${icono('rivales')}Le llega a ${x.pagan.seguro.length + x.pagan.quiza.length}</span>` : x.pagan && !bloqueada('quienPaga') && x.pagan.hayDatos && x.abierta ? '<span class="pill bien">No le llega a nadie</span>' : ''}${x.blindaje && !x.blindaje.yaVale && !x.blindaje.caro ? `<span class="pill">Subirla a ${eur(x.blindaje.objetivo, { dec: 1 })}: ${eur(x.blindaje.coste, { dec: 1 })}</span>` : ''}`,
-      derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d apag">${x.abierta ? 'abierta' : dura(x.abreEn)}</div>`, op: op(x.pid),
-    });
-    const grupos = [['Abiertas: te los pueden quitar ya', xs.filter((x) => x.abierta)], ['Se abren en menos de 48 h', xs.filter((x) => !x.abierta && x.abreEn < 2 * DIA)], ['Protegidos', xs.filter((x) => !x.abierta && x.abreEn >= 2 * DIA)]];
-    let gl = '';
-    for (const [t, l] of grupos) if (l.length) gl += `<div class="grupo"><span>${t}</span><span>${l.length}</span></div>${l.map(filaCl).join('')}`;
-    h += lista2(gl);
+    h += eqClausulasHTML(S, op);
   } else {
-    const con = M.mias.filter((x) => x.compra).sort((a, b) => b.ganado - a.ganado);
-    const serie = (H.yo || []).map(([d, , v]) => [Date.parse(d + 'T12:00:00'), v]).filter(([, v]) => v);
-    const resumen = `<div class="rejilla"><div class="dato"><div class="et">Ganado sobre lo pagado</div><div class="v ${clase(M.ganadoTotal)}">${M.conCompra ? eur(M.ganadoTotal, { signo: true }) : '–'}</div></div>
-      <div class="dato"><div class="et">Con precio de compra</div><div class="v">${con.length}<small>de ${M.mias.length}</small></div></div></div>
-      <div class="sec"><h2>Valor del equipo</h2></div>${linea(serie, { alto: ancho() ? 220 : 150 })}`;
-    const lista = `<div class="sec"><h2>Jugador a jugador</h2></div>${con.length ? con.map((x) => filaJugador(x, {
-      sub: `Pagaste ${eur(x.compra)} · vale ${eur(x.j.valor)}${(() => { const ol = M.ofertaLigaDe ? M.ofertaLigaDe(x.j) : null; return ol ? ` · LaLiga te daría ~${eur(ol.v)}` : ''; })()}`,
-      derecha: `<div class="v ${clase(x.ganado)}">${eur(x.ganado, { signo: true })}</div><div class="d ${clase(x.ganado)}">${pct((x.j.valor / x.compra - 1) * 100)}</div>`, op: op(x.pid),
-    })).join('') : nada('Aún no sé lo que pagaste por tus jugadores: sale de los movimientos de la liga, que guardan unas semanas.')}`;
-    h += ancho() ? cols(resumen, lista, 'mitades') : resumen + lista;
+    h += eqBeneficioHTML(S, op);
   }
   return h;
 }
