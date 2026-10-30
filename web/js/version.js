@@ -14,7 +14,7 @@ export const VERSION = '0.6.10d';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10d', f: '2026-10-30', h: '13:40', t: 'La web, también con partidos',
+    v: '0.6.10d', f: '2026-10-30', h: '13:57', t: 'La web, también con partidos',
     cosas: [
       { tipo: 'mejora', d: 'conexion', para: 'web', t: 'La web, también con partidos', x: 'Con partidos, algunas operadoras cortan las direcciones de Cloudflare, por donde la web pide los datos a LaLiga. Ahora, si a los pocos segundos no contesta, la web los pide por otro camino fuera de Cloudflare, sin que tengas que hacer nada. Lo que no cambia: los avisos de fallo y el código para entrar desde otro dispositivo siguen yendo solo por el camino de siempre.' },
     ],
