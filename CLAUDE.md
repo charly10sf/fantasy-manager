@@ -1,6 +1,6 @@
 # Fantasy Manager — cómo trabajamos
 
-Léelo entero antes de tocar el código. En el proyecto de Claude «Fantasy Manager» están claude/ESTADO.md (dónde estamos y qué falta), claude/COMO-TRABAJAMOS.md (copia de este archivo: si cambias algo de aquí, cámbialo también allí) y claude/VIABILIDAD.md (las cuentas del negocio: no va al repo porque es público). Vienen cargados con el proyecto. El resto está en la carpeta claude/ de este repo y se abre solo cuando hace falta: versiones/0.X.md (lo pendiente de cada versión), historial.md (lo hecho y el detalle largo de cada módulo), cerrar-version.md y BLOQUEO-LALIGA.md.
+Léelo entero antes de tocar el código. En el proyecto de Claude «Fantasy Manager» está claude/ESTADO.md (dónde estamos y qué falta); viene cargado con el proyecto, igual que su claude/COMO-TRABAJAMOS.md, que solo remite a este archivo. Las cuentas del negocio (viabilidad) las guarda Carlos en un doc privado suyo: no van al repo porque es público. El resto está en la carpeta claude/ de este repo y se abre solo cuando hace falta: versiones/0.X.md (lo pendiente de cada versión), historial.md (lo hecho y el detalle largo de cada módulo), cerrar-version.md y BLOQUEO-LALIGA.md.
 
 Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo con acceso de escritura y clonarlo.
 
@@ -10,6 +10,7 @@ Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo 
 - Un solo chat trabajando a la vez: `pendiente` se sube con -f y version.js lo tocan todas las versiones, así que dos chats a la vez se pisan.
 - Para cerrar una versión, lee claude/cerrar-version.md.
 - El token de Cloudflare y el Account ID no se piden ni se pegan en el chat.
+- Ninguna clave de firma, keystore ni contraseña entra en el repo (es público). La clave de subida a Google Play vive solo como secretos de Actions, `SUBIDA_P12` (el .p12 en base64) y `SUBIDA_CLAVE` (su contraseña); la Action la deja en `RUNNER_TEMP`. La genera Carlos en su ordenador: ni la Action ni Claude crean ni guardan claves. Salvedad: `android/firma.p12` (la del APK de la liga, cifrada con ANDROID_CLAVE) ya está en el repo; no se toca sin hablarlo con Carlos.
 - Fantasy Manager y GrowFolio van del todo separados: ni código, ni cuentas, ni Cloudflare compartidos.
 - Ceñirse al roadmap. Lo nuevo que salga va a versiones posteriores.
 - Respuestas en español informal, directas y con números.
