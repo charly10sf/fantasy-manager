@@ -14,7 +14,7 @@ export const VERSION = '0.6.10a';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10a', f: '2026-10-30', h: 'HH:MM', t: 'El plan, con más cabeza',
+    v: '0.6.10a', f: '2026-10-30', h: '05:17', t: 'El plan, con más cabeza',
     cosas: [
       { tipo: 'mejora', d: 'grafica', t: 'Fichar para revender', x: 'Que uno «se esté frenando» ya no es motivo para no ficharlo si aún le quedan días subiendo: su ficha te dice cuántos y cuánto puede subir en 3 días, y el plan lo tiene en cuenta para revenderlo. Y tener ya a otro en su puesto no es motivo para descartarlo si lo fichas para vender.' },
       { tipo: 'mejora', d: 'grafica', t: 'Los que suben y bajan', x: 'En Equipo, toca la casilla de los que suben y bajan hoy y bajas a la lista: primero los que suben, luego los que bajan, con lo que cambia cada grupo.', ir: { v: 'equipo' } },
