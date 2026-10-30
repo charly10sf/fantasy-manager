@@ -430,13 +430,20 @@ export function analizar(D, H, c, extra = {}) {
     if (!p) return { f: 1, p: null };
     const r = tabla[p.rivalId];
     if (!r || r.pj < 3) return { f: p.casa ? 1.04 : 0.96, p, nivel: null };
-    const ataque = r.gf / r.pj / mediaGoles, defensa = r.gc / r.pj / mediaGoles, fuerza = r.pts / r.pj / mediaPts;
-    const base = j.pos <= 2 ? 1 / Math.max(0.4, ataque) : defensa;
-    let f = 0.55 + 0.25 * base + 0.2 / Math.max(0.4, fuerza);
-    f *= p.casa ? 1.05 : 0.95;
-    f = clamp(f, 0.75, 1.25);
-    return { f, p, r, nivel: nivelDe(r) };
+    return { f: fuerzaContra(j.pos, r, p.casa), p, r, nivel: nivelDe(r) };
   };
+  // (aviso de Domy, 30 oct: «me recomienda alinear un defensa del Racing jugando contra el Madrid») a porteros y defensas
+  // el rival les pesa más que al resto: casi todo lo que puntúan (portería a cero, goles encajados, la nota) depende de
+  // lo que les ataquen. Con un rival normal da 1 igual que antes; contra uno que marca mucho baja más (el Madrid de
+  // ahora, de 0,84 a 0,77) y el tope de abajo pasa de 0,75 a 0,65
+  function fuerzaContra(pos, r, casa) {
+    const ataque = r.gf / r.pj / mediaGoles, defensa = r.gc / r.pj / mediaGoles, fuerza = r.pts / r.pj / mediaPts;
+    const atras = pos <= 2;
+    const base = atras ? 1 / Math.max(0.4, ataque) : defensa;
+    let f = (atras ? 0.4 + 0.4 * base : 0.55 + 0.25 * base) + 0.2 / Math.max(0.4, fuerza);
+    f *= casa ? 1.05 : 0.95;
+    return clamp(f, atras ? 0.65 : 0.75, 1.25);
+  }
   function nivelDe(r) {
     if (!r || r.pj < 3) return null;
     const fuerza = r.pts / r.pj / mediaPts;
@@ -894,10 +901,15 @@ export function analizar(D, H, c, extra = {}) {
         + (j.pos === 1 && s && s.paradas ? s.paradas / pj / 3 : 0);
       resto90 = clamp(num(j.media) - expl, -1, 5) / Math.max(0.35, minPj / 90);
     }
-    partes.resto = resto90 * f90;
+    // el resto (la nota del partido, recuperaciones, tiros, duelos…) también depende de cómo le vaya a su equipo: contra
+    // uno muy superior se defiende más, se pierde y las notas bajan. Antes contaba igual contra cualquiera (aviso de
+    // Domy, 30 oct: un defensa del Racing contra el Madrid). Se mueve con la diferencia de goles que se espera en ESTE
+    // partido frente a la que suele tener su equipo: un gol peor que lo normal, un 20 % menos
+    const fRes = clamp(1 + 0.2 * ((pr.golesFavor - (pr.golesContra || 0)) - (mediaEq - mediaContra)), 0.55, 1.35);
+    partes.resto = resto90 * f90 * (resto90 > 0 ? fRes : 1);
     for (const k of Object.keys(partes)) if (!Number.isFinite(partes[k])) partes[k] = 0;
     const total = Math.max(0, Object.values(partes).reduce((x, y) => x + y, 0));
-    return (cacheDes[j.id] = { total, partes, pT, min, T, fAt, xg90, xa90, fuente: conU || conS ? 'datos' : 'medias del puesto' });
+    return (cacheDes[j.id] = { total, partes, pT, min, T, fAt, fRes, xg90, xa90, fuente: conU || conS ? 'datos' : 'medias del puesto' });
   };
 
   /* ---------- los puntos esperados: la fórmula de siempre y el desglose, corregidos con lo que se ha fallado ---------- */
@@ -930,10 +942,7 @@ export function analizar(D, H, c, extra = {}) {
   const factorContra = (j, rid, casa) => {
     const r = tabla[rid];
     if (!r || r.pj < 3) return { f: casa ? 1.04 : 0.96, r: r || null, nivel: null };
-    const ataque = r.gf / r.pj / mediaGoles, defensa = r.gc / r.pj / mediaGoles, fuerza = r.pts / r.pj / mediaPts;
-    const base = j.pos <= 2 ? 1 / Math.max(0.4, ataque) : defensa;
-    let f = 0.55 + 0.25 * base + 0.2 / Math.max(0.4, fuerza);
-    f = clamp(f * (casa ? 1.05 : 0.95), 0.75, 1.25);
+    const f = fuerzaContra(j.pos, r, casa);
     // lo difícil que es PARA ÉL (un defensa sufre con el que marca mucho; un delantero, con el que no encaja), en
     // casa o fuera: no basta con la tabla
     return { f, r, nivel: f <= 0.93 ? 'difícil' : f >= 1.07 ? 'fácil' : 'media' };

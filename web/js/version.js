@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10b';
+export const VERSION = '0.6.10c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.10b';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10c', f: '2026-10-30', h: '12:57', t: 'El rival, en tu once',
+    cosas: [
+      { tipo: 'mejora', d: 'campo', t: 'El rival cuenta en tu once', x: 'A un portero o un defensa le pesa mucho contra quién juega: contra uno que marca mucho casi nunca deja la portería a cero, resta por los goles y saca peor nota. Ahora lo que se espera de cada uno baja más cuando su equipo lo va a pasar mal (y sube cuando le toca uno flojo). Si la IA te alinea a uno así teniendo a otro mejor en el banquillo, la app lo cambia y te dice por qué, con los dos partidos. Y si no tienes con quién cambiarlo, debajo de tu once te lo avisa.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.6.10b', f: '2026-10-30', h: '05:46', t: 'Cada dato, a su sitio',
     cosas: [

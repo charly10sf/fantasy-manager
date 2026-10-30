@@ -544,7 +544,8 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
     cabPts = `<span class="vivo-dot"></span><b>${lleva}</b> pts${pos && tabla.length > 1 ? ` · ${pos}º` : ''}`;
   }
   const sub = real ? `el tuyo en LaLiga · J${V.n} en directo` : deIA ? 'el de la IA' : 'el mejor según la app';
-  let h = sinCab ? `<p class="t2 peq" style="margin:2px 0 6px">${deIA ? 'El que propone la IA.' : 'El mejor según la app.'}</p>` : `<div class="sec"><h2>Tu once</h2><span class="sub">${sub}</span></div>`;
+  const cambiosApp = deIA && al.cambiosApp ? `, con ${al.cambiosApp > 1 ? `${al.cambiosApp} cambios` : 'un cambio'} de la app` : '';
+  let h = sinCab ? `<p class="t2 peq" style="margin:2px 0 6px">${deIA ? `El que propone la IA${cambiosApp}.` : 'El mejor según la app.'}</p>` : `<div class="sec"><h2>Tu once</h2><span class="sub">${sub}</span></div>`;
   h += `<div class="campo-cab"><span class="form">${esc(form)}</span><span class="pp${V ? ' pp-vivo' : ''}">${cabPts}</span>
     <div class="campo-modo">${[['pp', 'Puntos'], ['valor', 'Valor'], ['forma', 'Forma']].map(([k, t]) => `<button data-filtro="campo:${k}" class="${modo === k ? 'activo' : ''}">${t}</button>`).join('')}</div></div>`;
   // de arriba abajo: delanteros, medios, defensas y el portero; los huecos que falten, como cromos vacíos
@@ -567,6 +568,12 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
   if (real && faltanReal > 0) notas.push(`<b class="rojo">En LaLiga tienes ${11 - faltanReal} en el once: ${faltanReal > 1 ? `los ${faltanReal} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
   if (dudas.length) notas.push(`Dudas: ${esc(dudas.join(' · '))}`);
+  // (aviso de Domy, 30 oct: un defensa del Racing contra el Madrid) el portero o el defensa que va de titular contra uno
+  // que marca mucho, si no hay nadie mejor en el banquillo (si lo hubiera, la app ya lo habría cambiado): se dice
+  if (!real) {
+    const duros = tit.filter((j) => j.pos <= 2 && M.ppEsperado(j) < 2 && !dudas.some((d) => String(d).toLowerCase().includes(String(j.nombre).toLowerCase()))).filter((j) => { const fr = M.factorRival(j); return fr.p && fr.f <= 0.8; });
+    if (duros.length) notas.push(`Contra un rival que marca mucho: ${esc(duros.map((j) => { const fr = M.factorRival(j); return `${j.nombre} (${fr.p.casa ? 'vs' : 'en'} ${fr.p.rival}, ~${String(Math.round(M.ppEsperado(j) * 10) / 10).replace('.', ',')} pts)`; }).join(', '))}. No tienes a nadie en el banquillo que sume bastante más en su sitio: si fichas para ${duros.length > 1 ? 'esos puestos' : 'ese puesto'}, que tenga mejor partido.`);
+  }
   notas.push('<span class="leyenda"><i class="facil"></i>rival fácil <i class="media"></i>medio <i class="dificil"></i>difícil · @ fuera de casa</span>');
   h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
   return h;

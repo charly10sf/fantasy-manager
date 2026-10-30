@@ -683,7 +683,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     const tit = new Set(M.once.lineas.flat().map((j) => j.id));
     L.push(`\nJUEGA CON LA VERSIÓN GRATUITA. Formaciones que puede usar: ${M.formaciones.map((f) => f.join('-')).join(', ')} (ninguna otra).`);
     L.push(`MI PLANTILLA POR PUESTOS (sanos/total): ${M.puestos.map((p) => `${POS[p.pos]} ${p.sanos}/${p.total}${p.faltan ? ` (FALTAN ${p.faltan})` : ''}${p.sobran ? ` (sobran ${p.sobran})` : ''}`).join(' · ')}.`);
-    L.push(`MI MEJOR ONCE AHORA: ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}, unos ${String(Math.round(M.once.total * 10) / 10).replace('.', ',')} pts esperados: ${M.once.lineas.map((l) => l.map((j) => j.nombre).join(', ')).filter(Boolean).join(' | ')}${M.once.entrenador ? ` · entrenador ${M.once.entrenador.nombre}` : ''}.`);
+    L.push(`MI MEJOR ONCE AHORA: ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}, unos ${String(Math.round(M.once.total * 10) / 10).replace('.', ',')} pts esperados (cada uno con su próximo rival y lo que se espera de él): ${M.once.lineas.map((l) => l.map((j) => `${j.nombre} (${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))})`).join(', ')).filter(Boolean).join(' | ')}${M.once.entrenador ? ` · entrenador ${M.once.entrenador.nombre}` : ''}.`);
     // el once que tiene puesto ahora en LaLiga (app.js lo guarda al mirarlo): si es el que le propones, no hay que alinear
     const g = !M.enJuego ? LS.get(K('mi-once'), null) : null;
     if (g && Date.now() - g.t < 2 * DIA && (g.ids || []).length >= 10) {
@@ -856,7 +856,8 @@ Mejor no hacer nada que hacer algo dudoso. Confianza «alta» solo si todo cuadr
 CALENDARIO DE RIESGO: con cada jugador te paso su calendario (sus próximos 5 partidos, o todos los de los 14 días que un fichaje tiene la cláusula protegida si son más): cada rival con su puesto, lo difícil que es PARA ÉL (un defensa sufre con el que marca mucho, un delantero con el que no encaja; y en casa o fuera), los puntos que se esperan y la probabilidad de que sea titular (con la rotación si su equipo juega Champions, Europa o Copa cerca), y cómo le fue a su equipo las últimas veces contra ese rival (V, E o D con el marcador, de la más vieja a la más reciente; pesa poco, menos que cómo están ahora). Si es DURO o de riesgo ALTO, no recomiendes ficharlo salvo que sea un parche (le falta gente sana en ese puesto para sacar el once) y a un precio cerca de su valor (no más de un 5 % por encima); si lo propones así, dilo («de parche»). Si es FAVORABLE y es titular, se puede pagar algo más por él. Cuando lo uses para fichar o descartar a alguien, justifícalo con los partidos (contra quién y si en casa o fuera), los puntos que se esperan y su titularidad, con las cifras que te paso; no basta con decir «calendario difícil». Con los que ya tiene, el calendario no decide la venta: uno duro no es motivo para vender por sí solo (aunque cuenta si le llega una buena oferta), y uno favorable NO es motivo para quedarse a uno que está bajando de valor: si toca venderlo por la inercia, eso manda, porque lo que sume en puntos no compensa lo que pierde cada día.
 COMPRAR A OTRO MANAGER: solo si lo tiene a la venta (te los paso en el bloque «EN EL MERCADO PERO CON DUEÑO») o si es un trato que te ha contado el manager. Un jugador de un rival que no está a la venta NO se puede comprar: su dueño no tiene por qué vendérselo, y menos si lo acaba de fichar (los recién fichados están protegidos unos 14 días). Para quitárselo, solo su cláusula cuando se abra. Y aunque lo tenga a la venta, es el dueño quien decide: dilo y no lo des por hecho. Ojo con el precio: LaLiga también le hace una oferta por lo que pone a la venta y él se queda con la mejor, así que ofrecerle lo que pide (o su valor) casi nunca basta. Ofrece como poco la OFERTA MÍNIMA CON OPCIONES que te paso (la que supera lo que le suele dar LaLiga) y, si interesa mucho, la de «muchas opciones»; si esa cifra ya es demasiado para lo que aporta, no lo propongas. Lo que LaLiga le ofrece hoy a un rival NO LO SABES (solo lo ve él): es una estimación con lo que se ha vendido a LaLiga en esta liga. Dilo así («suele rondar X», «normalmente entre X e Y»), nunca «le va a ofrecer X», y no prometas que acepte: puede tener otras ofertas o esperar a la de mañana.
 PAGAR DE MÁS: lo que importa es el DINERO que se paga por encima del valor, no solo el porcentaje, porque eso se pierde en el valor del equipo (si lo vendes, te dan cerca de su valor). Un +25 % por uno que vale 3 M son 750 mil: casi nada si te da puntos. Un +25 % por uno que vale 40 M son 10 M: muchísimo. Con cada operación te paso el ÍNDICE DE SOBRECOSTE (0 a 100, sube poco a poco con los euros que pierdes de verdad, comparados con el valor de su equipo y descontando lo que recupera en una semana con lo que sube, y algo con el porcentaje) y hasta dónde es aguantable para ese jugador (de 60 si no le aporta nada a su once a 95 si lo mejora mucho). No lo uses como un corte: pésalo frente a lo que aporta. Cuanto más alto el índice, más tiene que aportar para que compense; por encima de lo aguantable, no lo recomiendes salvo un trato que te haya contado. Dilo siempre en euros y en días para recuperarlo. Ejemplo de lo que NO hay que hacer: clausular por 21 M a un jugador que vale 9 M.
-Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.`;
+Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender, y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.
+EL RIVAL MANDA EN LA ALINEACIÓN: elige el once por los PUNTOS ESPERADOS de su próximo partido (ya cuentan el rival, si juega en casa o fuera, la portería a cero y lo que se espera que encaje), no por su media ni por el nombre. Mira la PREVIA de cada uno: un portero o un defensa contra un equipo de arriba que marca mucho (el Madrid, el Barça, el Atlético…) casi nunca deja la portería a cero, resta por los goles encajados y saca peor nota, sobre todo si su equipo es de la parte de abajo. Si tiene otro de su puesto que juega contra un rival más flojo, o puede cambiar de formación para meter a otro con mejor partido, siéntalo; y si lo alineas igual, dilo en «dudas» con el rival. Lo mismo con un delantero contra una defensa que casi no encaja.`;
 /** las pullitas, al gusto (Ajustes > Pullitas de la IA): normal es como siempre ha sido */
 const PULLITAS = {
   normal: 'PULLITAS: si sale alguna noticia extradeportiva con gracia (que le han entrado a robar en casa, una fiesta, un tatuaje nuevo, un lío en redes, un cambio de look), cuéntala con una pullita corta y con chispa, como lo haría un colega del grupo. También puedes soltarle alguna a los rivales por lo que hacen (el que acumula millones y no ficha, el que paga de más por todo, el que se deja las cláusulas abiertas). Con gracia y sin crueldad: nada de reírte de lesiones graves, enfermedades, muertes, violencia contra personas ni de la familia. Lo extradeportivo NUNCA es motivo para comprar ni vender: la pullita va aparte y el motivo de la operación tiene que ser deportivo o de valor (minutos, forma, rival, inercia, precio). En «noticias», lo extradeportivo va con efecto «neutro». Una o dos pullitas por plan o por respuesta como mucho, que no se coman la información.',
@@ -963,6 +964,55 @@ export function planViejo(M) {
   // hecho antes de que empezara la jornada: con ella en juego cambia todo (se reabren las cláusulas, el once ya está puesto)
   if (M && M.enJuego && p.t < M.enJuego.ini) return true;
   return Date.now() - p.t > 10 * 3600e3;
+}
+
+/** su próximo partido en corto: «vs Getafe 18º» en casa, «en Real Madrid 3º» fuera */
+function partidoTxt(M, j) {
+  const p = M.proximoPartido ? M.proximoPartido(j.equipoId) : null;
+  if (!p) return 'sin partido';
+  const r = M.equipoLiga ? M.equipoLiga(p.rivalId) : null;
+  return `${p.casa ? 'vs' : 'en'} ${p.rival}${r && r.pos ? ` ${r.pos}º` : ''}`;
+}
+/**
+ * el once de la IA, mejorado con los números de la app: cambia (hasta 3 veces) un titular por uno del banquillo que
+ * pueda jugar si la app espera de él 1,5 pts más y al menos un 40 % más (los puntos esperados ya cuentan el rival, si
+ * juega en casa o fuera y la portería a cero). Entre puestos distintos solo si la formación sigue siendo de las gratis;
+ * el portero, solo por otro portero. No toca a los que ya han empezado a jugar ni mete a los que la IA ha descartado
+ */
+export function mejorarAlin(js, pool, M, no = new Set()) {
+  const ahora = Date.now();
+  const pp = (j) => (M.ppEsperado ? M.ppEsperado(j) : 0) || 0;
+  const prox = (j) => (M.proximoPartido ? M.proximoPartido(j.equipoId) : null);
+  const forms = new Set((M.formaciones || []).map((f) => f.join('-')));
+  const formaDe = (l) => [2, 3, 4].map((p) => l.filter((j) => j.pos === p).length).join('-');
+  let once = js.slice();
+  const cambios = [];
+  for (let n = 0; n < 3; n++) {
+    const dentro = new Set(once.map((j) => j.id));
+    const banco = pool.filter((j) => {
+      if (!j || !(j.pos >= 1 && j.pos <= 4) || dentro.has(j.id) || esMalo(j) || no.has(norm(j.nombre))) return false;
+      const p = prox(j);
+      return !!p && p.fecha > ahora;
+    });
+    let mejor = null;
+    for (const sale of once) {
+      const p = prox(sale);
+      if (p && p.fecha <= ahora) continue;
+      const ps = pp(sale);
+      for (const entra of banco) {
+        if ((sale.pos === 1) !== (entra.pos === 1)) continue;
+        const pe = pp(entra), gana = pe - ps;
+        if (gana < 1.5 || pe < ps * 1.4) continue;
+        const nuevo = once.map((j) => (j === sale ? entra : j));
+        if (sale.pos !== entra.pos && !forms.has(formaDe(nuevo))) continue;
+        if (!mejor || gana > mejor.gana) mejor = { sale, entra, gana, ps, pe, nuevo };
+      }
+    }
+    if (!mejor) break;
+    once = mejor.nuevo;
+    cambios.push({ sale: mejor.sale, entra: mejor.entra, gana: mejor.gana, ps: mejor.ps, pe: mejor.pe });
+  }
+  return { once, cambios };
 }
 
 /** las operaciones del plan con sus jugadores y el saldo después de cada una, con los números de la app */
@@ -1235,8 +1285,44 @@ export function cuadrarPlan(P, D, M) {
     const bien = js.length === 11 && js.every(Boolean) && new Set(js.map((j) => j.id)).size === 11 && js.filter((j) => j.pos === 1).length === 1
       && !!f && [2, 3, 4].every((p, i) => js.filter((j) => j.pos === p).length === f[i]);
     if (!bien) { avisoAlin = 'La alineación de la IA no cuadra (algún jugador no es tuyo, lo vendes hoy, sobra o falta alguno, o la formación no es de las gratis): te pongo la mejor que sale con tu plantilla.'; alineacion = null; } else {
+      // (aviso de Domy, 30 oct: «me recomienda alinear un defensa del Racing jugando contra el Madrid») la IA no siempre
+      // pesa el rival: si en el banquillo hay uno que puede jugar y del que la app espera bastante más, se cambia y se dice
+      const no = new Set([...(Array.isArray(P.descartes) ? P.descartes : []).map((d) => norm(d && d.jugador)), ...ops.filter((o) => o.accion === 'vender' && !o.descartada && o.pid).map((o) => norm((D.maestro[o.pid] || {}).nombre))].filter(Boolean));
+      const mej = mejorarAlin(js, pos, M, no);
+      if (mej.cambios.length) {
+        const once = mej.once;
+        const forma = [2, 3, 4].map((p) => once.filter((j) => j.pos === p).length).join('-');
+        const orden = [1, 2, 3, 4].flatMap((p) => once.filter((j) => j.pos === p));
+        alineacion = { ...alineacion, formacion: forma, titulares: orden.map((j) => j.nombre), dudas: (alineacion.dudas || []).filter((d) => !mej.cambios.some((c) => norm(String(d).split(':')[0]) === norm(c.sale.nombre))), cambiosApp: mej.cambios.length };
+        const enLaLiga = puesto && mej.cambios.some((c) => puesto.has(String(c.sale.id)) || !puesto.has(String(c.entra.id)));
+        const hasta = Math.min(...mej.cambios.flatMap((c) => [c.sale, c.entra].map((j) => (M.proximoPartido(j.equipoId) || {}).fecha || Infinity)));
+        const forma0 = (String(P.alineacion.formacion || '').match(/\d/g) || []).join('-');
+        // «por el rival» solo si el que sale lo tiene más difícil que el que entra; si no, es por la titularidad o la forma
+        const fr = (j) => ((M.factorRival && M.factorRival(j)) || {}).f || 1;
+        const porRival = mej.cambios.every((c) => fr(c.sale) + 0.08 < fr(c.entra));
+        avisoAlin = `La app cambia ${mej.cambios.length > 1 ? `${mej.cambios.length} del once de la IA` : 'uno del once de la IA'}${porRival ? ' por el rival' : ', que espera más puntos así'}: ${mej.cambios.map((c) => `entra ${c.entra.nombre} (${partidoTxt(M, c.entra)}, ~${d1(c.pe)} pts) por ${c.sale.nombre} (${partidoTxt(M, c.sale)}, ~${d1(c.ps)})`).join('; ')}.${forma !== forma0 ? ` Queda en ${forma}.` : ''}${enLaLiga && Number.isFinite(hasta) ? ` Cámbialo en LaLiga antes de que empiece su partido (${cuando(hasta)}).` : ''}`;
+        // el paso de alinear del plan decía quién entraba y salía con el once de la IA: ahora, con el bueno
+        if (puesto) {
+          const ids = once.map((j) => String(j.id));
+          const nom = (id) => (D.maestro[id] || {}).nombre || '';
+          const entran = ids.filter((id) => !puesto.has(id)), salen = [...puesto].filter((id) => !ids.includes(id));
+          const txt = entran.length ? `Cambia en tu once de LaLiga: entra${entran.length > 1 ? 'n' : ''} ${entran.map(nom).join(', ')}${salen.length ? ` y sale${salen.length > 1 ? 'n' : ''} ${salen.map(nom).join(', ')}` : ''}.` : '';
+          // (si con el cambio queda justo el que ya tienes puesto, el paso de alinear sobra)
+          if (!entran.length) for (let i = ops.length - 1; i >= 0; i--) { if (ops[i].accion === 'alinear') ops.splice(i, 1); }
+          for (const o of ops) if (o.accion === 'alinear' && o.cambioOnce) { o.aviso = String(o.aviso || '').replace(o.cambioOnce, txt) || txt; o.cambioOnce = txt; }
+        }
+        // y si el paso de alinear nombra a uno que la app ha sacado, pasa a nombrar al que entra por él
+        for (const o of ops) {
+          if (o.accion !== 'alinear' || !o.pid) continue;
+          const c = mej.cambios.find((x) => String(x.sale.id) === String(o.pid));
+          if (!c) continue;
+          const nota = `La app pone a ${c.entra.nombre} en vez de ${c.sale.nombre} (${partidoTxt(M, c.sale)}).`;
+          Object.assign(o, { j: c.entra, pid: c.entra.id, jugador: c.entra.nombre, aviso: o.aviso ? `${nota} ${o.aviso}` : nota });
+        }
+        js.splice(0, js.length, ...once);
+      }
       const malos = js.filter((j) => ['injured', 'suspended', 'out_of_league'].includes(j.estado));
-      if (malos.length) avisoAlin = `Ojo: en la alineación de la IA ${malos.length > 1 ? 'van' : 'va'} ${malos.map((j) => j.nombre).join(', ')}, que no puede${malos.length > 1 ? 'n' : ''} jugar.`;
+      if (malos.length) avisoAlin = `${avisoAlin ? `${avisoAlin} ` : ''}Ojo: en la alineación ${malos.length > 1 ? 'van' : 'va'} ${malos.map((j) => j.nombre).join(', ')}, que no puede${malos.length > 1 ? 'n' : ''} jugar.`;
     }
   }
   const descartes0 = Array.isArray(P.descartes) ? P.descartes.filter((d) => !String((d && d.ref) || '').trim().toUpperCase().startsWith('M-')) : P.descartes;
