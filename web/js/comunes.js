@@ -15,34 +15,67 @@ export function ava(j, tam = '') {
   const esc2 = eq && eq.escudo && tam !== 'm' ? `<img class="esc" src="${esc(eq.escudo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
   return `<span class="ava-w"><span class="ava ${p} ${tam}"><span class="ini">${esc(iniciales(j && j.nombre))}</span>${cara}</span>${esc2}</span>`;
 }
-/* ---------- los colores de cada club (para la cabecera de su ficha y el brillo detrás de la cara de sus jugadores) ---------- */
-// [color 1, color 2] de la camiseta; se busca por el nombre (sin tildes). Los que no estén, sin colores.
+/* ---------- los colores de cada club (su ficha, su fila en Clubes, su camiseta y el brillo detrás de la cara de sus jugadores) ----------
+   [clave del nombre (sin tildes), color 1, color 2, dibujo de la camiseta, color 3 opcional]. El 1 es el de la camiseta;
+   el 2, el de las rayas, la franja o los detalles; el 3, un toque (pantalón o ribete). Dibujos: liso, rayas (verticales),
+   franja (horizontal), banda (diagonal) y aros. Revisados el 30 oct (Carlos: «el Madrid es blanco y morado, no blanco y
+   amarillo»). El orden importa: va la primera clave que salga en el nombre («alaves» antes que «deportivo», que el
+   Alavés es «Deportivo Alavés»). Los que no estén, sin colores. */
 const COLORES = [
-  ['real madrid', '#FFFFFF', '#FEBE10'], ['barcelona', '#A50044', '#004D98'], ['atletico', '#CB3524', '#272E61'], ['athletic', '#EE2523', '#FFFFFF'],
-  ['real sociedad', '#0067B1', '#FFFFFF'], ['betis', '#00954C', '#FFFFFF'], ['sevilla', '#FFFFFF', '#D81E05'], ['valencia', '#FFFFFF', '#111111'],
-  ['villarreal', '#FFE667', '#005187'], ['celta', '#8AC3EE', '#FFFFFF'], ['espanyol', '#007FC8', '#FFFFFF'], ['getafe', '#005999', '#FFFFFF'],
-  ['girona', '#CD2534', '#FFFFFF'], ['levante', '#B4053F', '#005B9E'], ['mallorca', '#E20613', '#111111'], ['osasuna', '#D91A21', '#0A346F'],
-  ['alaves', '#0057B8', '#FFFFFF'], ['elche', '#05642C', '#FFFFFF'], ['rayo', '#FFFFFF', '#E53027'], ['oviedo', '#0047AB', '#FFFFFF'],
-  ['las palmas', '#FFE400', '#0057A8'], ['valladolid', '#5B2C83', '#FFFFFF'], ['leganes', '#0B4DA2', '#FFFFFF'], ['deportivo', '#00529F', '#FFFFFF'],
-  ['racing', '#00843D', '#FFFFFF'], ['zaragoza', '#FFFFFF', '#1C3F94'], ['sporting', '#D2001F', '#FFFFFF'], ['malaga', '#3EA7E0', '#FFFFFF'],
-  ['almeria', '#EE1119', '#FFFFFF'], ['granada', '#C8102E', '#FFFFFF'], ['cadiz', '#FDE100', '#0045A5'], ['eibar', '#A6192E', '#003DA5'],
-  ['huesca', '#A6192E', '#003DA5'], ['tenerife', '#FFFFFF', '#004A99'], ['cordoba', '#00965E', '#FFFFFF'], ['mirandes', '#D10A11', '#111111'],
+  ['real madrid', '#FFFFFF', '#5E2B97', 'liso'], ['barcelona', '#A50044', '#004D98', 'rayas'], ['atletico', '#CB3524', '#FFFFFF', 'rayas', '#272E61'],
+  ['athletic', '#EE2523', '#FFFFFF', 'rayas', '#111111'], ['real sociedad', '#0067B1', '#FFFFFF', 'rayas'], ['betis', '#00954C', '#FFFFFF', 'rayas'],
+  ['sevilla', '#FFFFFF', '#D81E05', 'liso'], ['valencia', '#FFFFFF', '#111111', 'liso', '#F18E00'], ['villarreal', '#FFE135', '#005187', 'liso'],
+  ['celta', '#8AC3EE', '#FFFFFF', 'liso', '#E1261C'], ['espanyol', '#007FC8', '#FFFFFF', 'rayas'], ['getafe', '#005999', '#FFFFFF', 'liso'],
+  ['girona', '#CD2534', '#FFFFFF', 'rayas'], ['levante', '#B4053F', '#005B9E', 'rayas'], ['mallorca', '#E20613', '#111111', 'liso'],
+  ['osasuna', '#D91A21', '#0A346F', 'liso'], ['alaves', '#0057B8', '#FFFFFF', 'rayas'], ['elche', '#FFFFFF', '#05642C', 'franja'],
+  ['rayo', '#FFFFFF', '#E53027', 'banda'], ['oviedo', '#0047AB', '#FFFFFF', 'liso'], ['las palmas', '#FFE400', '#0057A8', 'liso'],
+  ['valladolid', '#FFFFFF', '#6A1B7E', 'rayas'], ['leganes', '#0B4DA2', '#FFFFFF', 'rayas'], ['deportivo', '#00529F', '#FFFFFF', 'rayas'],
+  ['racing', '#00843D', '#FFFFFF', 'liso'], ['zaragoza', '#FFFFFF', '#1C3F94', 'liso'], ['sporting', '#D2001F', '#FFFFFF', 'rayas'],
+  ['malaga', '#3EA7E0', '#FFFFFF', 'rayas'], ['almeria', '#EE1119', '#FFFFFF', 'rayas'], ['granada', '#C8102E', '#FFFFFF', 'aros'],
+  ['cadiz', '#FDE100', '#0045A5', 'liso'], ['eibar', '#A6192E', '#003DA5', 'rayas'], ['huesca', '#A6192E', '#003DA5', 'rayas'],
+  ['tenerife', '#FFFFFF', '#004A99', 'liso'], ['cordoba', '#00965E', '#FFFFFF', 'rayas'], ['mirandes', '#D10A11', '#111111', 'liso'],
+  ['burgos', '#FFFFFF', '#111111', 'liso'], ['castellon', '#111111', '#FFFFFF', 'rayas'],
 ];
 const luz = (hex) => { const n = parseInt(hex.slice(1), 16); return (0.2126 * (n >> 16) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255; };
 const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
 const colorCache = {};
-/** los colores de un club: { c1, c2, brillo } (el brillo, el primero que no sea blanco ni negro, ya con transparencia) o null */
+/** los colores de un club: { c1, c2, c3, dibujo, vivo, brillo, suave, tenue } (vivo: el primero que no sea casi blanco ni
+    casi negro, para los brillos sobre el fondo oscuro) o null */
 export function coloresClub(id, nombre = '') {
   const k = `${id}|${nombre}`;
   if (k in colorCache) return colorCache[k];
   const n = ` ${norm(nombre || (EQUIPOS[id] && EQUIPOS[id].nombre) || '')} `;
   const f = COLORES.find(([clave]) => n.includes(` ${clave} `) || n.includes(` ${clave}`));
   if (!f) return (colorCache[k] = null);
-  const vivo = [f[1], f[2]].find((c) => { const l = luz(c); return l < 0.8 && l > 0.12; });
-  return (colorCache[k] = { c1: f[1], c2: f[2], brillo: vivo ? rgba(vivo, 0.42) : 'rgba(255,255,255,0.12)', suave: vivo ? rgba(vivo, 0.22) : 'rgba(255,255,255,0.07)' });
+  const [, c1, c2, dibujo = 'liso', c3 = null] = f;
+  const vivo = [c1, c2, c3].filter(Boolean).find((c) => { const l = luz(c); return l < 0.8 && l > 0.1; }) || null;
+  return (colorCache[k] = {
+    c1, c2, c3: c3 || c2, dibujo, vivo,
+    brillo: vivo ? rgba(vivo, 0.45) : 'rgba(255,255,255,0.14)',
+    suave: vivo ? rgba(vivo, 0.24) : 'rgba(255,255,255,0.08)',
+    tenue: vivo ? rgba(vivo, 0.13) : 'rgba(255,255,255,0.05)',
+  });
 }
 /** el atributo style con los colores del club (vacío si no se conocen) */
-export const estiloClub = (id, nombre) => { const c = coloresClub(id, nombre); return c ? ` style="--c1:${c.c1};--c2:${c.c2};--cb:${c.brillo};--cs:${c.suave}"` : ''; };
+export const estiloClub = (id, nombre) => { const c = coloresClub(id, nombre); return c ? ` style="--c1:${c.c1};--c2:${c.c2};--c3:${c.c3};--cb:${c.brillo};--cs:${c.suave};--ct:${c.tenue}"` : ''; };
+
+/** la camiseta del club dibujada con sus colores (SVG; vacío si no se conocen) */
+let svgN = 0;
+const CAMISETA = 'M13 4 5 9 2 17l6 2.4 1-3.6V36h22V15.8l1 3.6 6-2.4-3-8-8-5c-1.6 3-12.4 3-14 0Z';
+export function camisetaClub(id, nombre = '', cls = '') {
+  const c = coloresClub(id, nombre);
+  if (!c) return '';
+  const k = `cm${++svgN}`;
+  const borde = luz(c.c1) > 0.85 || luz(c.c1) < 0.08 ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)';
+  let dib = '';
+  if (c.dibujo === 'rayas') dib = [10.5, 18, 25.5].map((x) => `<rect x="${x}" y="0" width="4" height="40" fill="${c.c2}"/>`).join('');
+  else if (c.dibujo === 'franja') dib = `<rect x="0" y="16" width="40" height="7" fill="${c.c2}"/>`;
+  else if (c.dibujo === 'banda') dib = `<path d="M9 7h6l17 29h-6Z" fill="${c.c2}"/>`;
+  else if (c.dibujo === 'aros') dib = [11, 19, 27].map((y) => `<rect x="0" y="${y}" width="40" height="4" fill="${c.c2}"/>`).join('');
+  // el cuello y los puños, del color 2 (o del 3, si las rayas ya son del 2)
+  const ribete = c.dibujo === 'liso' ? c.c2 : c.c3;
+  return `<svg class="camiseta ${cls}" viewBox="0 0 40 40" aria-hidden="true"><defs><clipPath id="${k}"><path d="${CAMISETA}"/></clipPath></defs><g clip-path="url(#${k})"><rect width="40" height="40" fill="${c.c1}"/>${dib}<path d="M2 17l6 2.4 .8-3M38 17l-6 2.4-.8-3" stroke="${ribete}" stroke-width="2.4" fill="none"/></g><path d="M13 4c1.6 3 12.4 3 14 0" stroke="${ribete}" stroke-width="2.2" fill="none"/><path d="${CAMISETA}" fill="none" stroke="${borde}" stroke-width="1"/></svg>`;
+}
 
 export const posTag = (j) => (j && j.pos ? `<span class="pos p${j.pos}">${POS[j.pos]}</span>` : '');
 

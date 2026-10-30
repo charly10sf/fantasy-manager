@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.8a';
+export const VERSION = '0.6.8b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.6.8a';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.8b', f: '2026-10-30', h: '02:07', t: 'Clubes con sus colores',
+    cosas: [
+      { tipo: 'mejora', d: 'camiseta', t: 'Clubes, con sus colores de verdad', x: 'Arriba, «Tus clubes»: los equipos en los que tienes jugadores, con su camiseta, tus caras y su próximo partido. Debajo, la clasificación con el puesto marcado según la zona (Champions, Europa, Conference o descenso) y los colores de cada club al lado. En el ordenador, también la racha, los ganados, empatados y perdidos y los goles. Y cada club lleva sus colores de verdad: el Madrid, blanco y morado.', ir: { v: 'clubes' } },
+      { tipo: 'mejora', d: 'plan', t: 'Hoy, sin lo que venden tus rivales', x: 'El plan ya no te propone comprar lo que tus rivales tienen a la venta: casi siempre lo ponen solo para ver la oferta de LaLiga y no lo quieren vender. Lo tienes en Mercado → Fichar, en «En venta de tus rivales».' },
+    ],
+  },
   {
     v: '0.6.8a', f: '2026-10-29', h: '20:26', t: 'Anuncios de prueba para ti',
     cosas: [

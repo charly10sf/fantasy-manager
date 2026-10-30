@@ -174,7 +174,13 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
   g('ACEPTAR OFERTAS (lo que ya tengo en venta):', t('A'), 20);
   // (cada candidato va con su ficha entera: con más, la IA tarda mucho más y no decide mejor)
   g('PUJAR (jugadores LIBRES de la liga, subasta a ciegas):', t('P').sort(por), chat ? 10 : corto ? 12 : 14);
-  g('COMPRAR A OTRO MANAGER (solo lo que TIENE A LA VENTA o un TRATO que te conté; decide él):', [...t('T'), ...t('M').sort(por)], chat ? 8 : corto ? 8 : 10);
+  // en el plan, solo los tratos: lo que un rival tiene a la venta casi siempre está solo para ver la oferta de LaLiga
+  // (aviso de Domy, 29 oct); en el chat, si se pregunta por ellos, sí van
+  if (chat) g('COMPRAR A OTRO MANAGER (solo lo que TIENE A LA VENTA o un TRATO que te conté; decide él):', [...t('T'), ...t('M').sort(por)], 8);
+  else {
+    g('COMPRAR A OTRO MANAGER (solo un TRATO que te conté; decide él):', t('T'), 10);
+    if (t('M').length) L.push(`\nLO QUE MIS RIVALES TIENEN A LA VENTA (${t('M').length}) NO VA EN EL PLAN: casi siempre lo ponen solo para ver la oferta de LaLiga y no lo quieren vender. No lo propongas ni lo nombres (ni en operaciones, ni en descartes, ni en vigilar, ni en rivales).`);
+  }
   {
     // con ficha, las que me llegan (o me llegan aceptando las ofertas de hoy); las demás, como mucho 4 y en una línea:
     // eran casi todo el bloque y no se pueden hacer hoy

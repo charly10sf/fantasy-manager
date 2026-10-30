@@ -1417,23 +1417,28 @@ body.limitado .tostada { z-index: 120; }
 .aviso-mudanza b { color: var(--texto); }
 
 /* Clubes: la clasificación (con los puestos de Europa y el descenso) y la ficha de cada club con sus colores */
-.club-lista { margin-top: 8px; }
-.cf-cab, .club-f { display: grid; grid-template-columns: 22px 28px minmax(0, 1fr) 24px 32px 30px; column-gap: 10px; align-items: center; }
-.cf-cab { padding: 0 0 7px 9px; font: 600 12.5px 'Barlow'; color: var(--apagado); border-bottom: 1px solid var(--linea); }
-.cf-cab span:nth-child(n+4) { text-align: right; }
-.club-f { position: relative; width: 100%; padding: 11px 0 11px 9px; row-gap: 3px; border-bottom: 1px solid var(--linea); text-align: left;
-  grid-template-areas: "pos esc n pj dg pts" "pos esc s s s s"; }
-.club-f:active { background: var(--plano); }
-.club-f::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 2px; }
-.club-f.z-ucl::before { background: var(--azul); } .club-f.z-uel::before { background: #ff9a3c; } .club-f.z-uecl::before { background: var(--sube); } .club-f.z-desc::before { background: var(--baja); }
-.cf-pos { grid-area: pos; font: 700 19px var(--cond); color: var(--texto2); text-align: center; }
+.club-lista { margin-top: 4px; }
+/* la fila: los colores del club a la izquierda, el puesto en su caja (con el color de la zona), el escudo, el nombre con
+   tus caras y los números; en el ordenador, además, la racha, ganados-empatados-perdidos y los goles */
+.cf-cab, .club-f { display: grid; grid-template-columns: 5px 26px 28px minmax(0, 1fr) 24px 34px 30px; column-gap: 10px; align-items: center; }
+.cf-cab { padding: 0 2px 7px 0; font: 600 12.5px 'Barlow'; color: var(--apagado); border-bottom: 1px solid var(--linea); }
+.cf-cab span:nth-child(n+5) { text-align: right; }
+.cf-cab .cf-forma, .cf-cab .cf-gep, .cf-cab .cf-gol, .club-f .cf-forma, .club-f .cf-gep, .club-f .cf-gol { display: none; }
+.club-f { position: relative; width: 100%; padding: 11px 2px 11px 0; row-gap: 3px; border-bottom: 1px solid var(--linea); text-align: left;
+  grid-template-areas: "kit pos esc n pj dg pts" "kit pos esc s s s s";
+  background: linear-gradient(90deg, var(--ct, transparent), transparent 58%); transition: background-color 0.15s; }
+.club-f:active { background-color: var(--plano); }
+.cf-kit { grid-area: kit; align-self: stretch; margin: -2px 0; border-radius: 3px; background: linear-gradient(180deg, var(--c1, var(--plano3)) 0 50%, var(--c2, var(--plano3)) 50% 100%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.cf-pos { grid-area: pos; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; font: 700 16px/1 var(--cond); color: var(--texto2); background: var(--plano2); }
+.club-f.z-ucl .cf-pos { background: rgba(77, 148, 255, 0.18); color: #8fbcff; } .club-f.z-uel .cf-pos { background: rgba(255, 154, 60, 0.18); color: #ffb36b; }
+.club-f.z-uecl .cf-pos { background: var(--sube-s); color: var(--sube); } .club-f.z-desc .cf-pos { background: var(--baja-s); color: var(--baja); }
 .cf-esc { grid-area: esc; display: grid; place-items: center; }
-.cf-esc .pt-esc { width: 28px; height: 28px; }
+.cf-esc .pt-esc { width: 28px; height: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45)); }
 .cf-n { grid-area: n; display: flex; align-items: center; gap: 8px; min-width: 0; font: 600 16.5px/1.2 'Barlow'; }
 .cf-n .nom { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cf-d { font: 600 15px 'Barlow'; font-variant-numeric: tabular-nums; text-align: right; color: var(--texto2); }
-.club-f .cf-d:nth-child(4) { grid-area: pj; } .club-f .cf-d:nth-child(5) { grid-area: dg; } .club-f .cf-d:nth-child(6) { grid-area: pts; }
-.cf-d.cf-pts { font: 700 19px var(--cond); color: var(--texto); }
+.club-f .cf-pj { grid-area: pj; } .club-f .cf-dg { grid-area: dg; } .club-f .cf-pts { grid-area: pts; }
+.cf-d.cf-pts { font: 700 20px var(--cond); color: var(--texto); }
 .cf-s { grid-area: s; min-width: 0; font-size: 13.5px; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cf-caras { display: inline-flex; align-items: center; flex: none; }
 .cf-caras .ava-w + .ava-w { margin-left: -7px; }
@@ -1442,10 +1447,39 @@ body.limitado .tostada { z-index: 120; }
 .cf-caras b { margin-left: 4px; font: 700 12px 'Barlow'; color: var(--texto2); }
 .cf-ley { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 12px 0 0; font-size: 13px; color: var(--apagado); }
 .cf-ley span { display: inline-flex; align-items: center; gap: 6px; }
-.cf-ley span::before { content: ''; width: 3px; height: 13px; border-radius: 2px; }
-.cf-ley .z-ucl::before { background: var(--azul); } .cf-ley .z-uel::before { background: #ff9a3c; } .cf-ley .z-uecl::before { background: var(--sube); } .cf-ley .z-desc::before { background: var(--baja); }
-.club-hero { position: relative; display: flex; gap: 16px; align-items: center; margin: 0 -16px; padding: 20px 16px 24px; overflow: hidden;
-  background: radial-gradient(120% 150% at 0% 0%, var(--cb, rgba(255, 255, 255, 0.08)), transparent 64%), var(--plano); }
+.cf-ley span::before { content: ''; width: 12px; height: 12px; border-radius: 4px; }
+.cf-ley .z-ucl::before { background: rgba(77, 148, 255, 0.5); } .cf-ley .z-uel::before { background: rgba(255, 154, 60, 0.5); } .cf-ley .z-uecl::before { background: var(--sube); } .cf-ley .z-desc::before { background: var(--baja); }
+/* en el ordenador, la tabla entera */
+.escritorio .cf-cab, .escritorio .club-f { grid-template-columns: 5px 28px 30px minmax(0, 1fr) 118px 30px 64px 58px 38px 38px; column-gap: 14px; }
+.escritorio .club-f { grid-template-areas: "kit pos esc n forma pj gep gol dg pts" "kit pos esc s forma pj gep gol dg pts"; padding: 12px 6px 12px 0; }
+.escritorio .cf-cab .cf-forma, .escritorio .cf-cab .cf-gep, .escritorio .cf-cab .cf-gol { display: block; }
+.escritorio .club-f .cf-forma { display: flex; grid-area: forma; justify-content: flex-end; }
+.escritorio .club-f .cf-gep { display: block; grid-area: gep; } .escritorio .club-f .cf-gol { display: block; grid-area: gol; }
+.escritorio .club-f:hover { background-color: var(--plano); }
+/* tus clubes: tarjetas con los colores, la camiseta y tus caras */
+.club-carril { padding-bottom: 4px; }
+.club-card { position: relative; flex: none; width: 196px; min-height: 150px; padding: 13px 13px 12px; border-radius: 18px; overflow: hidden; text-align: left; display: flex; flex-direction: column; gap: 6px;
+  background: radial-gradient(130% 110% at 100% 0%, var(--cb, rgba(255, 255, 255, 0.1)), transparent 62%), linear-gradient(160deg, var(--ct, transparent), transparent 70%), var(--plano2);
+  border: 1px solid var(--linea); }
+.club-card::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: repeating-linear-gradient(90deg, var(--c1, var(--plano3)) 0 12px, var(--c2, var(--plano2)) 12px 24px); }
+.club-card:active { transform: scale(0.98); }
+.cc-cam { position: absolute; right: -10px; top: 18px; width: 92px; height: 92px; opacity: 0.95; transform: rotate(10deg); filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5)); pointer-events: none; }
+.cc-cab { position: relative; display: flex; align-items: center; gap: 8px; min-width: 0; padding-right: 54px; }
+.cc-cab .pt-esc { width: 26px; height: 26px; }
+.cc-n { font: 700 18px/1.05 var(--cond); text-transform: uppercase; overflow-wrap: anywhere; }
+.cc-pos { position: relative; font: 600 13.5px 'Barlow'; color: var(--texto2); }
+.cc-caras { position: relative; display: flex; align-items: center; margin-top: auto; }
+.cc-caras .ava-w + .ava-w { margin-left: -8px; }
+.cc-caras .ava { width: 30px; height: 30px; box-shadow: 0 0 0 2px var(--plano2); }
+.cc-caras b { margin-left: 5px; font: 700 13px 'Barlow'; }
+.cc-caras small { margin-left: 8px; font: 600 12.5px 'Barlow'; color: var(--texto2); }
+.cc-prox { position: relative; font-size: 13px; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.camiseta { display: block; }
+.club-hero { position: relative; display: flex; gap: 16px; align-items: center; margin: 0 -16px; padding: 22px 16px 26px; overflow: hidden;
+  background: radial-gradient(120% 150% at 0% 0%, var(--cb, rgba(255, 255, 255, 0.08)), transparent 64%), linear-gradient(120deg, transparent 40%, var(--ct, transparent)), var(--plano); }
+.club-hero .ch-cam { position: absolute; right: -18px; top: 50%; width: 150px; height: 150px; transform: translateY(-50%) rotate(12deg); opacity: 0.9; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.55)); pointer-events: none; }
+.club-hero > .pt-esc, .club-hero .ch-t { position: relative; }
+.club-hero .ch-t { padding-right: 96px; }
 .club-hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: repeating-linear-gradient(90deg, var(--c1, var(--plano3)) 0 16px, var(--c2, var(--plano2)) 16px 32px); }
 .club-hero .pt-esc.club-g { width: 76px; height: 76px; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5)); }
 .club-hero .ch-t { min-width: 0; }

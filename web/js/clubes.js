@@ -3,7 +3,7 @@
    tu liga, y sus noticias. Sale todo de lo que la app ya tiene (LaLiga, futbolfantasy, Understat, SofaScore y Google
    Noticias); al abrir un club se piden sus titulares (noticiasClub en externas.js). */
 import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe } from './util.js';
-import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub } from './comunes.js';
+import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo } from './directo.js';
 
 const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Dudas', out_of_league: 'Fuera de LaLiga' };
@@ -52,6 +52,28 @@ function clubesEnOrden(S) {
 const zonaDe = (pos, n) => (pos <= 4 ? 'ucl' : pos === 5 ? 'uel' : pos === 6 ? 'uecl' : pos > n - 3 ? 'desc' : '');
 
 /* ================= LA PESTAÑA ================= */
+/** ganados, empatados y perdidos, de sus resultados */
+const gep = (t) => { const o = { V: 0, E: 0, D: 0 }; for (const u of (t && t.ult) || []) o[u.r]++; return o; };
+
+/** arriba, los clubes en los que tienes a alguien: con sus colores, su camiseta, tus caras y su próximo partido */
+function tusClubesHTML(S, ids, mios) {
+  const { D, M } = S;
+  const xs = ids.filter((id) => (mios[id] || []).length).sort((a, b) => mios[b].length - mios[a].length || (M.equipoLiga(a) || { pos: 99 }).pos - (M.equipoLiga(b) || { pos: 99 }).pos);
+  if (!xs.length) return '';
+  const tarjeta = (id) => {
+    const e = D.equipos[id], t = M.equipoLiga(id), caras = mios[id].sort((a, b) => b.valor - a.valor);
+    const p = M.proximoPartido ? M.proximoPartido(id) : null;
+    return `<button class="club-card" data-club="${esc(id)}"${estiloClub(id, e.nombre)} aria-label="${esc(`${e.nombre}: ${caras.length} tuyo${caras.length > 1 ? 's' : ''}`)}">
+      ${camisetaClub(id, e.nombre, 'cc-cam')}
+      <span class="cc-cab">${escudo(D, id)}<span class="cc-n">${esc(e.nombre)}</span></span>
+      <span class="cc-pos">${t ? `${t.pos}º · ${t.pts} pts` : 'LaLiga'}</span>
+      <span class="cc-caras">${caras.slice(0, 4).map((j) => ava(j, 'm')).join('')}${caras.length > 4 ? `<b>+${caras.length - 4}</b>` : ''}<small>${caras.length} tuyo${caras.length > 1 ? 's' : ''}</small></span>
+      ${p ? `<span class="cc-prox">${p.casa ? 'vs' : 'en'} ${esc(p.rival)}${p.fecha ? ` · ${esc(cuando(p.fecha))}` : ''}</span>` : ''}
+    </button>`;
+  };
+  return `<div class="sec"><h2>Tus clubes</h2><span class="sub">${xs.length} con jugadores tuyos</span></div><div class="carril club-carril">${xs.map(tarjeta).join('')}</div>`;
+}
+
 export function clubes(S) {
   const { D, M } = S;
   const ids = clubesEnOrden(S);
@@ -62,24 +84,28 @@ export function clubes(S) {
   for (const x of M.mias || []) if (x.j && x.j.equipoId) (mios[x.j.equipoId] ||= []).push(x.j);
   let h = `<div class="eti">${M.enJuego ? `Jornada ${M.enJuego.n} en juego` : M.proxima ? `Jornada ${M.proxima.n}` : 'LaLiga'}</div><div class="titulo">Clubes</div>`;
   if (!n) return h + nada('Aún no tengo los equipos de LaLiga. Dale a Actualizar.');
+  h += tusClubesHTML(S, ids, mios);
   const filas = ids.map((id) => {
     const e = D.equipos[id], t = M.equipoLiga(id);
     const z = hayTabla && t && n >= 18 ? zonaDe(t.pos, n) : '';
     const dg = t ? t.gf - t.gc : null;
+    const r = gep(t);
     const caras = (mios[id] || []).sort((a, b) => b.valor - a.valor);
     const carasH = caras.length ? `<span class="cf-caras" title="${esc(caras.map((j) => j.nombre).join(', '))}">${caras.slice(0, 3).map((j) => ava(j, 'm')).join('')}${caras.length > 3 ? `<b>+${caras.length - 3}</b>` : ''}</span>` : '';
     const prox = proxTxt(S, id);
-    return `<button class="club-f${z ? ` z-${z}` : ''}" data-club="${esc(id)}" aria-label="${esc(`${t ? `${t.pos}º, ` : ''}${e.nombre}${t ? `, ${t.pts} puntos` : ''}${caras.length ? `, ${caras.length} tuyos` : ''}`)}">
+    return `<button class="club-f${z ? ` z-${z}` : ''}" data-club="${esc(id)}"${estiloClub(id, e.nombre)} aria-label="${esc(`${t ? `${t.pos}º, ` : ''}${e.nombre}${t ? `, ${t.pts} puntos` : ''}${caras.length ? `, ${caras.length} tuyos` : ''}`)}">
+      <span class="cf-kit" aria-hidden="true"></span>
       <span class="cf-pos">${t ? t.pos : '–'}</span>
       <span class="cf-esc">${escudo(D, id)}</span>
       <span class="cf-n"><span class="nom">${esc(e.nombre)}</span>${carasH}</span>
-      <span class="cf-d">${t ? t.pj : ''}</span><span class="cf-d">${dg == null ? '' : dg > 0 ? `+${dg}` : dg}</span><span class="cf-d cf-pts">${t ? t.pts : '–'}</span>
+      <span class="cf-forma">${rachaHTML(M.racha(id, 5), e.nombre)}</span>
+      <span class="cf-d cf-pj">${t ? t.pj : ''}</span><span class="cf-d cf-gep">${t ? `${r.V}-${r.E}-${r.D}` : ''}</span><span class="cf-d cf-gol">${t ? `${t.gf}:${t.gc}` : ''}</span><span class="cf-d cf-dg">${dg == null ? '' : dg > 0 ? `+${dg}` : dg}</span><span class="cf-d cf-pts">${t ? t.pts : '–'}</span>
       ${prox ? `<span class="cf-s">${prox}</span>` : ''}
     </button>`;
   }).join('');
-  const cab = '<div class="cf-cab" aria-hidden="true"><span></span><span></span><span>Club</span><span>PJ</span><span>DG</span><span>Pts</span></div>';
+  const cab = '<div class="cf-cab" aria-hidden="true"><span></span><span></span><span></span><span>Club</span><span class="cf-forma">Últimos 5</span><span class="cf-pj">PJ</span><span class="cf-gep">G-E-P</span><span class="cf-gol">Goles</span><span class="cf-dg">DG</span><span class="cf-pts">Pts</span></div>';
   const ley = hayTabla && n >= 18 ? '<div class="cf-ley"><span class="z-ucl">Champions</span><span class="z-uel">Europa League</span><span class="z-uecl">Conference</span><span class="z-desc">Descenso</span></div>' : '';
-  return h + `<div class="club-lista">${cab}${filas}</div>${ley}`;
+  return h + `<div class="sec"><h2>Clasificación</h2><span class="sub">${hayTabla ? `tras ${Math.max(...ids.map((id) => (M.equipoLiga(id) || { pj: 0 }).pj))} jornadas` : 'aún sin jugar'}</span></div><div class="club-lista">${cab}${filas}</div>${ley}`;
 }
 
 /* ================= LA FICHA DE UN CLUB ================= */
@@ -221,7 +247,7 @@ export function fichaClub(S, id) {
   const suyos = Object.values(D.maestro || {}).filter((j) => j.equipoId === id && j.pos >= 1 && j.pos <= 5);
   const l = enTuLiga(S)[id] || { liga: 0, mios: 0 };
   const libres = suyos.filter((j) => j.pos < 5 && !M.dueno[j.id]).length;
-  let h = `<div class="club-hero"${estiloClub(id, e.nombre)}>${escudo(D, id, 'club-g')}<div class="ch-t"><h2>${esc(e.nombre)}</h2>
+  let h = `<div class="club-hero"${estiloClub(id, e.nombre)}>${camisetaClub(id, e.nombre, 'ch-cam')}${escudo(D, id, 'club-g')}<div class="ch-t"><h2>${esc(e.nombre)}</h2>
     <div class="ch-s">${t ? `<span>${t.pos}º en LaLiga</span>` : ''}${r ? rachaHTML(r, e.nombre) : ''}</div></div></div>`;
   h += `<div class="club-num">
     <div><b>${t ? t.pts : '–'}</b><span>${t ? `puntos en ${t.pj}` : 'puntos'}</span></div>
