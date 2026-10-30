@@ -14,7 +14,7 @@ export const VERSION = '0.6.10c';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10c', f: '2026-10-30', h: '12:57', t: 'El rival, en tu once',
+    v: '0.6.10c', f: '2026-10-30', h: '13:14', t: 'El rival, en tu once',
     cosas: [
       { tipo: 'mejora', d: 'campo', t: 'El rival cuenta en tu once', x: 'A un portero o un defensa le pesa mucho contra quién juega: contra uno que marca mucho casi nunca deja la portería a cero, resta por los goles y saca peor nota. Ahora lo que se espera de cada uno baja más cuando su equipo lo va a pasar mal (y sube cuando le toca uno flojo). Si la IA te alinea a uno así teniendo a otro mejor en el banquillo, la app lo cambia y te dice por qué, con los dos partidos. Y si no tienes con quién cambiarlo, debajo de tu once te lo avisa.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'camiseta', t: 'Quién va a ser titular, en el campo', x: 'En tu once, abajo a la izquierda de cada foto, lo que tiene de ser titular: en verde de 75 % para arriba, en ámbar de 50 a 74 % y en rojo por debajo. Arriba sigue su próximo rival, con el color de lo difícil que es, y ya sin la @ de fuera de casa. Con la alineación confirmada manda la marca de la derecha, y con su partido empezado el % ya no sale.', ir: { v: 'equipo' } },
