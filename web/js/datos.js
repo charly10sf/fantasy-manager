@@ -120,6 +120,19 @@ export async function actualizar(alPaso = () => {}) {
   let mio = clasif.find((e) => userId && (e.userId === userId || e.managerId === userId))
     || clasif.find((e) => miNombre && e.manager && e.manager === miNombre);
   clasif.forEach((e) => { e.esYo = !!mio && e.teamId === mio.teamId; });
+  // la foto del perfil: en la clasificación, el mercado y las plantillas LaLiga pone la genérica (default.png) a todos,
+  // también a quien sí tiene foto (lo vio Carlos el 30 oct); la tuya puede venir en /v4/user/me. Si su dirección lleva
+  // el id de tu cuenta, se prueba la misma con el de cada rival (si no existe, la cara sale con iniciales: caraManager)
+  const miFoto = N.fotoValida(yoD.avatar || yoD.profileImage || yoD.picture || yoD.image);
+  if (mio && miFoto) {
+    mio.avatar = miFoto;
+    const tramo = new RegExp(`(^|[/_=-])${userId}(?=[._/?-]|$)`);
+    if (userId && tramo.test(miFoto)) for (const e of clasif) {
+      const otro = e.managerId || e.userId;
+      if (!e.esYo && !e.avatar && otro && otro !== userId) { e.avatar = miFoto.replace(tramo, (_, a) => a + otro); e.fotoSupuesta = true; }
+    }
+  }
+  muestras.fotos = `user/me: ${yoD.avatar || yoD.profileImage || 'sin foto'} · rivales con foto en la clasificación: ${clasif.filter((e) => !e.esYo && e.avatar && !e.fotoSupuesta).length}/${clasif.length - 1}${clasif.some((e) => e.fotoSupuesta) ? ' · probando la de cada rival con su id' : ''}`;
 
   alPaso(3, PASOS[3]);
   const maestro = (await blando('jugadores', async () => {

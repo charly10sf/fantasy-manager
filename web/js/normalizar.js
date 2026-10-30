@@ -108,7 +108,7 @@ export function plantilla(r, equipos) {
 
 /* ---------- clasificación ---------- */
 /** una foto que sirve: https y que no sea la genérica de LaLiga */
-const fotoValida = (u) => (typeof u === 'string' && /^https:\/\//.test(u) && !/default\.(png|jpe?g|svg|webp)(\?|$)/i.test(u) ? u : null);
+export const fotoValida = (u) => (typeof u === 'string' && /^https:\/\//.test(u) && !/default\.(png|jpe?g|svg|webp)(\?|$)/i.test(u) ? u : null);
 export function clasificacion(r) {
   const out = [];
   lista(r).forEach((e, i) => {
