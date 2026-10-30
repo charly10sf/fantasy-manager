@@ -14,7 +14,7 @@ export const VERSION = '0.6.10h';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10h', f: '2026-10-30', h: '21:10', t: 'Del plan a la ficha',
+    v: '0.6.10h', f: '2026-10-31', h: '00:33', t: 'Del plan a la ficha',
     cosas: [
       { tipo: 'mejora', d: 'plan', t: 'Toca al jugador del plan y ves su ficha', x: 'En cada paso del plan, toca la cara o el nombre del jugador y se abre su ficha con todos sus datos, sin tener que ir a buscarlo al mercado. Al cerrarla sigues en el plan. Tocando el resto de la tarjeta se despliega como siempre.', ir: { v: 'hoy' } },
     ],
