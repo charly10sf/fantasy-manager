@@ -17,9 +17,10 @@ import zipfile
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PUENTE = os.path.join(RAIZ, 'android/app/src/main/java/es/fantasymanager/app/Puente.java')
 PAQ = 'Les/fantasymanager/app/'
-# las que Android crea por su nombre: actividad, receptores, servicio, el Worker de WorkManager y el proveedor de la de GitHub
-POR_NOMBRE = ['Principal', 'Avisos', 'Arranque', 'Trabajo', 'Fondo']
-SOLO_GITHUB = ['Archivos']
+# las que Android crea por su nombre: actividad, receptores y el Worker de WorkManager; en la de GitHub, también el
+# servicio en primer plano (Trabajo: la de Play lo quita del manifiesto) y el proveedor de archivos
+POR_NOMBRE = ['Principal', 'Avisos', 'Arranque', 'Fondo']
+SOLO_GITHUB = ['Trabajo', 'Archivos']
 MAPPING_AAB = 'BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map'
 
 
