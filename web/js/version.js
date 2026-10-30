@@ -14,7 +14,7 @@ export const VERSION = '0.6.10f';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10f', f: '2026-10-30', h: '20:25', t: 'Versión entera y fichajes a tiempo',
+    v: '0.6.10f', f: '2026-10-30', h: '20:15', t: 'Versión entera y fichajes a tiempo',
     cosas: [
       { tipo: 'arreglo', d: 'campo', t: 'Clausulazos que llegan tarde al once', x: 'El plan te mandaba alinear a uno que clausulabas justo cuando empieza su partido (cláusula a las 21:00 y partido a las 21:00): para entonces ya no se puede alinear. Ahora el paso de clausular lo avisa, el de alinear se descarta y te queda la mejor alineación con lo que tienes. Además, ese paso dice la hora real a la que se abre la cláusula, no «antes de las 21:00».' },
       { tipo: 'arreglo', d: 'arreglo', t: 'El número de versión, cortado', x: 'Con una versión de cinco casillas como la 0.6.10e, el número se salía de la pantalla del móvil y arrastraba el título y la fecha. Ahora el marcador se ajusta al ancho y se ve entero.' },
