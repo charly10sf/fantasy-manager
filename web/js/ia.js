@@ -4,7 +4,7 @@
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, despues } from './puente.js';
-import { LS, eur, pct, cuando, dura, POS, DIA, diaDe, norm, num, esWebFantasy, sinWebs } from './util.js';
+import { LS, eur, pct, cuando, dura, POS, DIA, MIN, diaDe, norm, num, esWebFantasy, sinWebs } from './util.js';
 import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo } from './operaciones.js';
@@ -667,8 +667,8 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   L.push(`LIGA: ${D.liga.nombre}, ${D.clasif.length} equipos. Se puede quedar en negativo hasta el ${c.deuda} % del valor del equipo (${eur(M.deuda)}), pero solo pujando o comprando en el mercado: las cláusulas se pagan con saldo.`);
   if (M.enJuego) L.push(`JORNADA ${M.enJuego.n} EN JUEGO hasta ${cuando(M.enJuego.fin)}.`);
   if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, primer partido ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).`);
-  if (M.vedaAhora) L.push(`CLÁUSULAS CERRADAS: desde ${cuando(M.vedaAhora.ini)} (24 h antes del primer partido de la jornada ${M.vedaAhora.n}) LaLiga no deja clausular a nadie, ni a mí me pueden clausular, hasta que empiece la jornada (${cuando(M.vedaAhora.fin)}). Un clausulazo, a esa hora y no antes; blindar tampoco hace falta hasta entonces.`);
-  else if (M.proxima) L.push(`LAS CLÁUSULAS SE CIERRAN ${cuando(M.proxima.ini - M.VEDA_H * 3600e3)} (24 h antes del primer partido) y se reabren cuando empieza la jornada (${cuando(M.proxima.ini)}): un clausulazo, antes del cierre o a partir de esa hora.`);
+  if (M.vedaAhora) L.push(`CLÁUSULAS CERRADAS: desde ${cuando(M.vedaAhora.ini)} (24 h antes del primer partido de la jornada ${M.vedaAhora.n}) LaLiga no deja clausular a nadie, ni a mí me pueden clausular, hasta que empiece la jornada (${cuando(M.vedaAhora.fin)}). Un clausulazo, a esa hora y no antes; blindar tampoco hace falta hasta entonces. Un jugador clausulado a esa hora NO llega a la alineación de esa jornada si su partido empieza a esa hora o poco después: no lo pongas en el once ni cuentes con sus puntos.`);
+  else if (M.proxima) L.push(`LAS CLÁUSULAS SE CIERRAN ${cuando(M.proxima.ini - M.VEDA_H * 3600e3)} (24 h antes del primer partido) y se reabren cuando empieza la jornada (${cuando(M.proxima.ini)}): un clausulazo, antes del cierre o a partir de esa hora. Si es a partir de esa hora, el jugador NO llega a la alineación de esa jornada si su partido empieza a esa hora o poco después.`);
   if (M.paron) L.push(`PARÓN DE SELECCIONES: del ${cuando(M.paron.ini, { hora: false })} al ${cuando(M.paron.fin, { hora: false })}${M.enParon ? ' (estamos en él)' : ''}.`);
   if (M.cierreMercado) {
     // lo que se gana en la subasta es tuyo al cambiar el mercado y se puede alinear mientras su partido no haya empezado:
@@ -1163,7 +1163,7 @@ export function cuadrarPlan(P, D, M) {
               : `${liga}: si tu oferta no la supera, se queda con la de LaLiga.`;
           }
           break;
-        case 'C': accion = 'clausular'; signo = -1; importe = opC.precio; o.donde = `cláusula a ${opC.de}`; if (!opC.abierta) aviso = opC.veda ? `Cláusulas cerradas hasta que empiece la jornada ${opC.veda.n}: se puede pagar ${cuando(opC.abre)}, no antes` : `Se abre ${cuando(opC.abre)}`; break;
+        case 'C': accion = 'clausular'; signo = -1; importe = opC.precio; o.donde = `cláusula a ${opC.de}`; if (!opC.abierta) { aviso = opC.veda ? `Cláusulas cerradas hasta que empiece la jornada ${opC.veda.n}: se puede pagar ${cuando(opC.abre)}, no antes` : `Se abre ${cuando(opC.abre)}`; o.cuando = opC.veda ? `${cuando(opC.abre)}, al empezar la jornada` : cuando(opC.abre); } break;
         case 'B': accion = 'blindar'; signo = importe ? -1 : 0; if (!importe && !opC.abierta) { o.cuando = `cuando se abra (${cuando(opC.abre)})`; aviso = `El escudo solo vale con la cláusula abierta: úsalo cuando se abra, ${cuando(opC.abre)}.`; } break;
         default: break;
       }
@@ -1279,8 +1279,27 @@ export function cuadrarPlan(P, D, M) {
   } else if (final != null && final < 0) { avisoSaldo = M.enJuego ? `Acabarías en negativo (${eur(final)}): vende antes de que empiece la próxima jornada` : `Acabarías en negativo (${eur(final)}): vende antes de que empiece la jornada`; avisoTipo = 'mal'; }
   // lo que queda en tu plantilla tras el plan de hoy: lo que vendes, fuera; lo que clausulas o compras, dentro (las
   // pujas solo si las ganas: no cuentan). Si el once pierde mucho o se queda con huecos, se dice (revisión del 25 oct)
+  // (aviso de Carlos, 30 oct: Gulácsi, con la cláusula a las 21:00 y su partido a las 21:00) una cláusula que se abre
+  // cuando el partido del jugador ya ha empezado, o está a punto, se puede pagar pero no llega a alinearlo: cuenta en
+  // el saldo, no en el once
+  const tarde = new Map();
+  for (const o of ops) {
+    if (o.accion !== 'clausular' || !o.pid || !o.j || o.descartada || o.ya) continue;
+    const cl = M.clausulas.find((x) => x.pid === o.pid);
+    const pa = cl && !cl.abierta && M.proximoPartido ? M.proximoPartido(o.j.equipoId) : null;
+    if (!pa || !pa.fecha || cl.protegidoHasta + 10 * MIN <= pa.fecha) continue;
+    tarde.set(o.pid, { j: o.j, abre: cl.protegidoHasta, ini: pa.fecha });
+    const t = `Se abre ${cuando(cl.protegidoHasta)} y su partido es ${cuando(pa.fecha)}: esta jornada no lo vas a poder alinear.`;
+    o.aviso = o.aviso ? `${String(o.aviso).replace(/[.\s]+$/, '')}. ${t}` : t;
+  }
+  for (const o of ops) {
+    if (o.accion !== 'alinear' || !o.pid || o.descartada || !tarde.has(o.pid)) continue;
+    const t = tarde.get(o.pid);
+    o.descartada = true;
+    o.aviso = `La app lo descarta: ${t.j.nombre} no llega a tu once esta jornada. Su cláusula se abre ${cuando(t.abre)} y su partido es ${cuando(t.ini)}.`;
+  }
   const vendeHoy = new Set(ops.filter((o) => o.accion === 'vender' && o.hoy && !o.descartada && !o.ya && o.pid).map((o) => o.pid));
-  const entraHoy = ops.filter((o) => ['clausular', 'comprar'].includes(o.accion) && o.hoy && !o.descartada && !o.ya && o.j).map((o) => o.j);
+  const entraHoy = ops.filter((o) => ['clausular', 'comprar'].includes(o.accion) && o.hoy && !o.descartada && !o.ya && o.j && !tarde.has(o.pid)).map((o) => o.j);
   const quedan = [...M.mias.filter((x) => !vendeHoy.has(x.pid)).map((x) => x.j), ...entraHoy];
   let avisoOnce = null;
   if (!empezo && M.once && M.mejorOnce && vendeHoy.size) {
@@ -1298,7 +1317,13 @@ export function cuadrarPlan(P, D, M) {
     const f = (M.formaciones || []).find((g) => g.join('-') === (String(alineacion.formacion || '').match(/\d/g) || []).join('-'));
     const bien = js.length === 11 && js.every(Boolean) && new Set(js.map((j) => j.id)).size === 11 && js.filter((j) => j.pos === 1).length === 1
       && !!f && [2, 3, 4].every((p, i) => js.filter((j) => j.pos === p).length === f[i]);
-    if (!bien) { avisoAlin = 'La alineación de la IA no cuadra (algún jugador no es tuyo, lo vendes hoy, sobra o falta alguno, o la formación no es de las gratis): te pongo la mejor que sale con tu plantilla.'; alineacion = null; } else {
+    const llegaTarde = [...tarde.values()].filter((t) => alineacion.titulares.some((n) => norm(n) === norm(t.j.nombre)));
+    if (!bien) {
+      avisoAlin = llegaTarde.length
+        ? `La alineación de la IA ponía a ${llegaTarde.map((t) => t.j.nombre).join(', ')}, que no llega${llegaTarde.length > 1 ? 'n' : ''}: su cláusula se abre ${cuando(llegaTarde[0].abre)}, cuando ya ha empezado su partido. Te pongo la mejor que sale con tu plantilla.`
+        : 'La alineación de la IA no cuadra (algún jugador no es tuyo, lo vendes hoy, sobra o falta alguno, o la formación no es de las gratis): te pongo la mejor que sale con tu plantilla.';
+      alineacion = null;
+    } else {
       // (aviso de Domy, 30 oct: «me recomienda alinear un defensa del Racing jugando contra el Madrid») la IA no siempre
       // pesa el rival: si en el banquillo hay uno que puede jugar y del que la app espera bastante más, se cambia y se dice
       const no = new Set([...(Array.isArray(P.descartes) ? P.descartes : []).map((d) => norm(d && d.jugador)), ...ops.filter((o) => o.accion === 'vender' && !o.descartada && o.pid).map((o) => norm((D.maestro[o.pid] || {}).nombre))].filter(Boolean));
