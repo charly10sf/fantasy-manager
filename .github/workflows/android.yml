@@ -4,6 +4,8 @@ name: App Android
 # github.com/charly10sf/fantasy-manager/releases/tag/app. La firma usa android/firma.p12, cifrada con el
 # secreto ANDROID_CLAVE; si la clave no existe todavía, la crea la primera vez. Sin el secreto, compila
 # con una clave de prueba para comprobar que todo funciona, pero no publica nada.
+# El AAB de Google Play va con otra, la de subida, que no está en el repo: solo existe como secretos de Actions
+# (SUBIDA_P12 y SUBIDA_CLAVE). Sin ellos, también se firma con una de prueba y el AAB no vale para subirlo a Play.
 on:
   push:
     # en pendiente solo se compila (para probar lo que aún no se ha publicado); publicar, solo desde main
