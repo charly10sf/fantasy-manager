@@ -425,6 +425,12 @@ main { padding: 16px 16px 120px; }
 .cr-dato { margin-top: 2px; padding: 1px 6px; border-radius: 5px; background: var(--rojo); font: 700 12px/1.3 var(--cond); white-space: nowrap; }
 .cr-rv { position: absolute; top: -5px; left: -13px; padding: 0 4px; border-radius: 5px; background: #4a4a55; font: 700 10.5px/15px var(--cond); letter-spacing: 0.3px; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
 .cr-rv.facil { background: #1d9a63; } .cr-rv.media { background: #b98314; } .cr-rv.dificil { background: #cf2537; }
+/* lo que tiene de ser titular, arriba a la izquierda de la foto (0.6.10c) */
+.cr-tit { left: -9px; min-width: 26px; text-align: center; font-size: 10px; letter-spacing: 0; color: #fff; }
+/* con cinco en la línea no caben las dos marcas hacia fuera: van más pegadas a la foto */
+.linea-c.cinco .cr-tit { left: -3px; min-width: 24px; font-size: 9.5px; } .linea-c.cinco .cr-est { right: -3px; }
+.cr-tit.alta { background: #1d9a63; } .cr-tit.media { background: #b98314; } .cr-tit.baja { background: #cf2537; }
+.leyenda i.alta { background: #1d9a63; } .leyenda i.baja { background: #cf2537; }
 .cr-est { position: absolute; top: -5px; right: -9px; min-width: 18px; height: 18px; padding: 0 3px; border-radius: 9px; font: 800 12px/18px 'Barlow'; text-align: center; box-shadow: 0 0 0 1.5px rgba(8, 8, 10, 0.55); }
 .cr-est.no { font-size: 9.5px; letter-spacing: 0.3px; }
 .cr-est.ok { background: var(--sube); color: #0b1a10; display: inline-flex; align-items: center; justify-content: center; } .cr-est.ok .ic { width: 12px; height: 12px; stroke-width: 3; }
