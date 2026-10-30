@@ -14,7 +14,7 @@ export const VERSION = '0.6.10e';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10e', f: '2026-10-30', h: '20:15', t: 'Pujas a la medida de cada jugador',
+    v: '0.6.10e', f: '2026-10-30', h: '19:54', t: 'Pujas a la medida de cada jugador',
     cosas: [
       { tipo: 'mejora', d: 'oferta', t: 'Pujas a la medida de cada jugador', x: 'La puja que te propongo ya no aplica el mismo porcentaje a todos. Por uno de 600 mil con varias pujas, un +15 % casi nunca gana: se los suelen llevar por bastante más. Ahora miro lo que se ha pagado en tu liga por jugadores de su valor y pujo en consecuencia. Con los caros sigue igual de prudente, porque ahí un +20 % son millones. En la ficha de cada libre ves lo que se paga en tu liga por los de su valor.', ir: { v: 'mercado' } },
       { tipo: 'arreglo', d: 'ia', t: 'Fichar justo antes de la jornada', x: 'La IA decía que lo que ganaras en el mercado el mismo día de la jornada no llegaba a tiempo. Si el mercado cambia a las 20:00 y el primer partido es a las 21:00, el jugador es tuyo a las 20:00 y lo puedes alinear. Ahora lo sabe.' },
