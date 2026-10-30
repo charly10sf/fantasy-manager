@@ -14,7 +14,7 @@ export const VERSION = '0.6.10b';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10b', f: '2026-10-30', h: 'HH:MM', t: 'Cada dato, a su sitio',
+    v: '0.6.10b', f: '2026-10-30', h: '05:46', t: 'Cada dato, a su sitio',
     cosas: [
       { tipo: 'mejora', d: 'scroll', t: 'Cada dato lleva a su sitio', x: 'Los números que llevan «›» se tocan. En Equipo: el valor te lleva a Beneficio, el puesto a la clasificación, el saldo a las cuentas de Hoy y los jugadores a la plantilla; las casillas bajan a tu once, a lo que pide atención o a cada grupo de cláusulas, y los POR, DEF, MED y DEL de debajo del once, a esos jugadores. En la ficha de un jugador: sus puntos, su cláusula (la tuya o la ficha del rival que lo tiene), su próximo rival y cada partido de su calendario. En la de un rival: su valor y sus movimientos. En la de un club: los puntos, los de tu liga y los libres. Y en Directo, lo que llevas o hiciste en la jornada.' },
     ],
