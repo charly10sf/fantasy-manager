@@ -14,7 +14,7 @@ export const VERSION = '0.6.10';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10', f: '2026-10-30', h: 'HH:MM', t: 'Tu equipo, más claro',
+    v: '0.6.10', f: '2026-10-30', h: '04:58', t: 'Tu equipo, más claro',
     cosas: [
       { tipo: 'mejora', d: 'camiseta', t: 'Tu equipo, más claro', x: 'Arriba, tu cara y cuatro números: el valor (con lo que ha cambiado en la semana), tu puesto, tu saldo y la plantilla. Las pestañas caben todas sin moverlas. En Plantilla, unas casillas con cuántos pueden jugar, cuántos suben y bajan hoy y tus cláusulas abiertas, y «Pide atención»: cada lesionado, suplente o cláusula en riesgo con su botón para buscarle sustituto o verla. Y la plantilla se puede ordenar por puesto, valor, lo que sube hoy o puntos.', ir: { v: 'equipo' } },
       { tipo: 'mejora', d: 'escudo', t: 'Tus cláusulas, de un vistazo', x: 'En Equipo → Cláusulas, arriba cuántas están abiertas, cuántas se abren en 48 horas, cuántas están protegidas y los blindajes que te quedan. Cada jugador lleva una barra con lo que está su cláusula por encima de su valor: pasada la raya (un 30 %), sin riesgo. La explicación va plegada en «Cómo funcionan».', ir: { v: 'equipo', seg: 'equipo:clausulas' } },
