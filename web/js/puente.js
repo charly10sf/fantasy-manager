@@ -19,7 +19,7 @@ export const enWeb = !N && !!WORKER;
  * Cloudflare (claude/BLOQUEO-LALIGA.md) y el Worker puede no contestar. Hace lo mismo que /p e /img del Worker; los
  * avisos, los códigos y /hola siguen solo en el Worker. Vacío = sin segundo intermediario. Para probar, «fm-proxy2»
  */
-export const PROXY2_PUBLICO = '';
+export const PROXY2_PUBLICO = 'https://fantasy-manager-proxy-nzzmze4kphaa.fantasy-manager.deno.net';
 const PROXY2 = (() => {
   if (N) return '';
   try { const w = localStorage.getItem('fm-proxy2'); if (w) return w.replace(/\/+$/, ''); } catch (e) { /* nada */ }
