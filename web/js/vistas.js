@@ -562,7 +562,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
     const resto = M.mias.map((x) => x.j).filter((j) => !dentro.has(j.id) && j.pos !== 5).sort((a, b) => a.pos - b.pos || b.valor - a.valor);
     if (resto.length) h += `<div class="banquillo"><div class="banq-t">Banquillo <span>${resto.length}</span></div><div class="banq-l">${resto.map((j) => cromo(M, j, { modo, chico: true, directo: !!V })).join('')}</div></div>`;
   }
-  h += `<div class="puestos-c">${M.puestos.map((p) => `<span class="pz p${p.pos}${p.faltan ? ' falta' : p.sobran ? ' sobra' : ''}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.sobran ? ' · sobran' : ''}</span>`).join('')}</div>`;
+  h += `<div class="puestos-c">${M.puestos.map((p) => `<button class="pz p${p.pos}${p.faltan ? ' falta' : p.sobran ? ' sobra' : ''}" data-accion="verPuesto" data-p="${p.pos}" aria-label="Ver tus ${esc(POS_PLURAL[p.pos] || '')}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.sobran ? ' · sobran' : ''}</button>`).join('')}</div>`;
   const notas = [];
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
   if (real && faltanReal > 0) notas.push(`<b class="rojo">En LaLiga tienes ${11 - faltanReal} en el once: ${faltanReal > 1 ? `los ${faltanReal} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
@@ -690,10 +690,10 @@ function eqCabHTML(S) {
   return `<div class="eq2-cab">
     <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><div class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</div></div></div>
     <div class="eq2-num">
-      <div><b>${eur(D.valorEquipo)}</b><span>valor</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</div>
-      <div><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts` : 'en la liga'}</span></div>
-      <div><b class="${D.dinero != null && num(D.dinero) < 0 ? 'baja' : ''}">${D.dinero != null ? eur(D.dinero) : '–'}</b><span>saldo</span></div>
-      <div><b>${jug}</b><span>jugadores${ent ? ` y ${ent} entr.` : ''}</span></div>
+      <button data-seg="equipo:dinero" aria-label="Valor del equipo: ver Beneficio"><b>${eur(D.valorEquipo)}</b><span>valor ›</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</button>
+      <button data-ir="rivales" data-seg="rivales:clasif" aria-label="Tu puesto: ver la clasificación"><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts ›` : 'en la liga ›'}</span></button>
+      <button data-ir="hoy" aria-label="Tu saldo: ver las cuentas del plan"><b class="${D.dinero != null && num(D.dinero) < 0 ? 'baja' : ''}">${D.dinero != null ? eur(D.dinero) : '–'}</b><span>saldo ›</span></button>
+      <button data-accion="ver" data-seg2="equipo:plantilla" data-sel="#eq-plantilla" aria-label="Ver la plantilla"><b>${jug}</b><span>jugadores${ent ? ` y ${ent} entr.` : ''} ›</span></button>
     </div>
   </div>`;
 }
@@ -722,17 +722,17 @@ function eqEstadoHTML(S) {
   const abiertas = M.mias.filter((x) => x.abierta && x.clausula).length, riesgo = M.mias.filter((x) => x.riesgo === 'alto').length;
   const vender = sinI ? null : xs.filter((x) => x.ventaInercia).length;
   const tiles = [
-    `<div class="eq2-t ${pueden < xs.length ? 'duda' : 'bien'}"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar</span></div>`,
+    `<button class="eq2-t ${pueden < xs.length ? 'duda' : 'bien'}" data-accion="ver" data-sel="#eq-once"><b>${pueden}<small>/${xs.length}</small></b><span>pueden jugar ›</span></button>`,
     `<button class="eq2-t" data-accion="ordenEq" data-o="sube" data-ver="1"><b><em class="sube"><small>▲</small>${suben}</em> <em class="baja"><small>▼</small>${bajan}</em></b><span>suben y bajan hoy ›</span></button>`,
-    vender != null ? `<div class="eq2-t ${vender ? 'duda' : ''}"><b>${vender}</b><span>para vender</span></div>` : '',
-    `<button class="eq2-t ${riesgo ? 'mal' : abiertas ? 'duda' : 'bien'}" data-seg="equipo:clausulas"><b>${abiertas}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'cláusulas abiertas'}</span></button>`,
+    vender != null ? (vender ? `<button class="eq2-t duda" data-accion="ver" data-sel="#eq-atencion"><b>${vender}</b><span>para vender ›</span></button>` : '<div class="eq2-t"><b>0</b><span>para vender</span></div>') : '',
+    `<button class="eq2-t ${riesgo ? 'mal' : abiertas ? 'duda' : 'bien'}" data-seg="equipo:clausulas"><b>${abiertas}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'cláusulas abiertas'} ›</span></button>`,
   ].filter(Boolean).join('');
   const MAX = 4;
   const fila = (a) => `<div class="eq2-at ${a.n}">
       <button class="eq2-at-b" data-j="${esc(a.x.pid)}">${ava(a.x.j, 'm')}<span class="eq2-at-c"><b>${esc(a.x.j.nombre)}</b><span>${esc(a.t)}</span></span></button>
       ${a.cl ? '<button class="eq2-at-x" data-seg="equipo:clausulas">Ver</button>' : a.sust ? `<button class="eq2-at-x" data-accion="sustituto" data-pid="${esc(a.x.pid)}">${icono('buscar')}Sustituto</button>` : ''}
     </div>`;
-  const lista = at.length ? `<div class="sec"><h2>Pide atención</h2><span class="sub">${at.length === 1 ? '1 cosa' : `${at.length} cosas`}</span></div><div class="eq2-ats">${at.slice(0, MAX).map(fila).join('')}${at.length > MAX ? `<p class="t2 peq">Y ${at.length - MAX} más: los ves en la plantilla, abajo.</p>` : ''}</div>`
+  const lista = at.length ? `<div class="sec" id="eq-atencion" data-ancla><h2>Pide atención</h2><span class="sub">${at.length === 1 ? '1 cosa' : `${at.length} cosas`}</span></div><div class="eq2-ats">${at.slice(0, MAX).map(fila).join('')}${at.length > MAX ? `<p class="t2 peq">Y ${at.length - MAX} más: los ves en la plantilla, abajo.</p>` : ''}</div>`
     : `<div class="ahora-ok">${icono('ok')}<span><b>Todo en orden.</b> Nadie de baja, ninguna cláusula en riesgo ni nadie que vender ya.</span></div>`;
   return `<div class="eq2-tiles">${tiles}</div>${lista}`;
 }
@@ -754,13 +754,13 @@ function eqPlantillaHTML(S, op) {
     ],
     maxPills: 2, conMini: true, op: op(x.pid),
   });
-  let l = `<div class="sec"><h2>Plantilla</h2><span class="sub">${M.mias.length} jugadores</span></div>
+  let l = `<div class="sec" id="eq-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${M.mias.length} jugadores</span></div>
     <div class="eq2-orden" role="group" aria-label="Ordenar la plantilla">${ORDENES_EQ.map(([k, t]) => `<button data-accion="ordenEq" data-o="${k}" class="${k === orden ? 'activo' : ''}" aria-pressed="${k === orden}">${t}</button>`).join('')}</div>`;
   if (orden === 'puesto') {
     for (const p of [1, 2, 3, 4, 5]) {
       const xs = M.mias.filter((x) => x.j.pos === p).sort((a, b) => b.j.valor - a.j.valor);
       if (!xs.length) continue;
-      l += `<div class="grupo"><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
+      l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       l += xs.map(fila).join('');
     }
   } else if (orden === 'sube') {
@@ -784,9 +784,7 @@ function eqClausulasHTML(S, op) {
   const riesgo = xs.filter((x) => x.riesgo === 'alto').length;
   const ES = M.escudosMios;
   let h = `<div class="eq2-tiles">
-    <div class="eq2-t ${riesgo ? 'mal' : ab.length ? 'duda' : 'bien'}"><b>${ab.length}</b><span>${riesgo ? `abiertas, ${riesgo} en riesgo` : 'abiertas ya'}</span></div>
-    <div class="eq2-t ${pronto.length ? 'duda' : ''}"><b>${pronto.length}</b><span>se abren en 48 h</span></div>
-    <div class="eq2-t bien"><b>${prot.length}</b><span>protegidas</span></div>
+    ${[[ab, riesgo ? `abiertas, ${riesgo} en riesgo` : 'abiertas ya', riesgo ? 'mal' : ab.length ? 'duda' : 'bien'], [pronto, 'se abren en 48 h', pronto.length ? 'duda' : ''], [prot, 'protegidas', 'bien']].map(([l, t, c], i) => (l.length ? `<button class="eq2-t ${c}" data-accion="ver" data-sel="#cl-g${i}"><b>${l.length}</b><span>${t} ›</span></button>` : `<div class="eq2-t ${c}"><b>0</b><span>${t}</span></div>`)).join('')}
     ${ES ? `<div class="eq2-t"><b>${ES.quedan}<small>/2</small></b><span>blindajes esta jornada</span></div>` : ''}
   </div>
   <details class="eq2-como"><summary>${icono('info')}Cómo funcionan</summary><p>Si te clausulan a uno, cobras su cláusula, pero lo pierdes: sus puntos, lo que iba a subir y, si la cláusula está en su valor, te lo quitan sin pagar nada de más (venderlo a LaLiga te daría más, y reponerlo te costaría más). Con la cláusula un 30 % o más por encima de su valor (o por encima de lo que se paga en los clausulazos de tu liga) no hay riesgo, y menos si está bajando.${ES ? ` En LaLiga puedes blindar a uno viendo un anuncio: ${ES.horas} h protegido, 2 por jornada.` : ''} La barra de cada uno dice cuánto está su cláusula por encima de su valor; la raya es el 30 %.</p></details>`;
@@ -802,7 +800,7 @@ function eqClausulasHTML(S, op) {
     derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d apag">${x.abierta ? 'abierta' : dura(x.abreEn)}</div>`,
   });
   let gl = '';
-  for (const [t, l] of [['Abiertas: te los pueden quitar ya', ab], ['Se abren en menos de 48 h', pronto], ['Protegidas', prot]]) if (l.length) gl += `<div class="grupo"><span>${t}</span><span>${l.length}</span></div>${l.map(filaCl).join('')}`;
+  [['Abiertas: te los pueden quitar ya', ab], ['Se abren en menos de 48 h', pronto], ['Protegidas', prot]].forEach(([t, l], i) => { if (l.length) gl += `<div class="grupo" id="cl-g${i}" data-ancla><span>${t}</span><span>${l.length}</span></div>${l.map(filaCl).join('')}`; });
   return h + lista2(gl);
 }
 
@@ -813,12 +811,12 @@ function eqBeneficioHTML(S, op) {
   const serie = (H.yo || []).map(([d, , v]) => [Date.parse(d + 'T12:00:00'), v]).filter(([, v]) => v);
   const mejor = con[0], peor = con.length > 1 ? con[con.length - 1] : null;
   const resumen = `<div class="eq2-tiles">
-      <div class="eq2-t ${M.conCompra ? (M.ganadoTotal >= 0 ? 'bien' : 'mal') : ''}"><b class="${clase(M.ganadoTotal)}">${M.conCompra ? eur(M.ganadoTotal, { signo: true }) : '–'}</b><span>ganado sobre lo pagado (${con.length} de ${M.mias.length})</span></div>
+      <button class="eq2-t ${M.conCompra ? (M.ganadoTotal >= 0 ? 'bien' : 'mal') : ''}" data-accion="ver" data-sel="#eq-jaj"><b class="${clase(M.ganadoTotal)}">${M.conCompra ? eur(M.ganadoTotal, { signo: true }) : '–'}</b><span>ganado sobre lo pagado (${con.length} de ${M.mias.length}) ›</span></button>
       ${mejor ? `<button class="eq2-t" data-j="${esc(mejor.pid)}"><b class="${clase(mejor.ganado)}">${eur(mejor.ganado, { signo: true })}</b><span>el mejor: ${esc(mejor.j.nombre)}</span></button>` : ''}
       ${peor && peor.ganado < 0 ? `<button class="eq2-t" data-j="${esc(peor.pid)}"><b class="${clase(peor.ganado)}">${eur(peor.ganado, { signo: true })}</b><span>el peor: ${esc(peor.j.nombre)}</span></button>` : ''}
     </div>
     <div class="sec"><h2>Valor del equipo</h2></div>${linea(serie, { alto: ancho() ? 220 : 150 })}`;
-  const lista = `<div class="sec"><h2>Jugador a jugador</h2></div>${con.length ? con.map((x) => filaJugador(x, {
+  const lista = `<div class="sec" id="eq-jaj" data-ancla><h2>Jugador a jugador</h2></div>${con.length ? con.map((x) => filaJugador(x, {
     sub: `Pagaste ${eur(x.compra)} · vale ${eur(x.j.valor)}${(() => { const ol = M.ofertaLigaDe ? M.ofertaLigaDe(x.j) : null; return ol ? ` · LaLiga te daría ~${eur(ol.v)}` : ''; })()}`,
     derecha: `<div class="v ${clase(x.ganado)}">${eur(x.ganado, { signo: true })}</div><div class="d ${clase(x.ganado)}">${pct((x.j.valor / x.compra - 1) * 100)}</div>`, op: op(x.pid),
   })).join('') : nada('Aún no sé lo que pagaste por tus jugadores: sale de los movimientos de la liga, que guardan unas semanas.')}`;
@@ -835,7 +833,7 @@ export function equipo(S) {
   if (!M.mias.length) return h + nada(S.D && S.D.ligas && S.D.ligas.length > 1 ? 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Toca el nombre de la liga, arriba, para cambiar a otra de tus ligas.' : 'No encuentro tu equipo en esta liga con tu cuenta de LaLiga. Si acabas de entrar en ella, prueba a actualizar en un rato.');
 
   if (seg === 'plantilla') {
-    const once = onceHTML(S, null, { conBanquillo: true, directo: true });
+    const once = `<div id="eq-once" data-ancla>${onceHTML(S, null, { conBanquillo: true, directo: true })}</div>`;
     // en el ordenador, el estado y el once a la izquierda y la plantilla al lado
     h += ancho() ? cols(eqEstadoHTML(S) + once, eqPlantillaHTML(S, op), 'lado-izq') : eqEstadoHTML(S) + once + eqPlantillaHTML(S, op);
   } else if (seg === 'jornadas') {

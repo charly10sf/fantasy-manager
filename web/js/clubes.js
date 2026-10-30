@@ -228,7 +228,7 @@ function plantillaHTML(S, suyos) {
   const libres = suyos.filter((j) => !M.dueno[j.id]).length;
   const enMercado = new Set((M.mercado || []).map((m) => m.pid));
   const pasa = (j) => (f === 'libres' ? !M.dueno[j.id] : f === 'liga' ? !!M.dueno[j.id] : true);
-  let h = `<div class="sec"><h2>Plantilla</h2><span class="sub">${suyos.length} jugadores, ${libres} libre${libres === 1 ? '' : 's'}</span></div>`;
+  let h = `<div class="sec" id="club-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${suyos.length} jugadores, ${libres} libre${libres === 1 ? '' : 's'}</span></div>`;
   h += `<div class="filtros">${[['todos', 'Todos'], ['libres', 'Libres'], ['liga', 'De tu liga']].map(([k, t]) => `<button data-accion="filtroClub" data-f="${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
   let l = '';
   for (const p of [1, 2, 3, 4, 5]) {
@@ -265,10 +265,10 @@ export function fichaClub(S, id) {
   let h = `<div class="club-hero"${estiloClub(id, e.nombre)}>${camisetaClub(id, e.nombre, 'ch-cam')}${escudo(D, id, 'club-g')}<div class="ch-t"><h2>${esc(e.nombre)}</h2>
     <div class="ch-s">${t ? `<span>${t.pos}º en LaLiga</span>` : ''}${europaDe(e.nombre) ? `<span class="ch-eu eu-${europaDe(e.nombre)}">${COMP[europaDe(e.nombre)]}</span>` : ''}${r ? rachaHTML(r, e.nombre) : ''}</div></div></div>`;
   h += `<div class="club-num">
-    <div><b>${t ? t.pts : '–'}</b><span>${t ? `puntos en ${t.pj}` : 'puntos'}</span></div>
-    <div><b>${t ? `${t.gf}-${t.gc}` : '–'}</b><span>goles</span></div>
-    <div><b>${l.liga}</b><span>${l.mios ? `en tu liga, ${l.mios} tuyo${l.mios > 1 ? 's' : ''}` : 'en tu liga'}</span></div>
-    <div><b>${libres}</b><span>libre${libres === 1 ? '' : 's'}</span></div>
+    <button data-ir="clubes"><b>${t ? t.pts : '–'}</b><span>${t ? `puntos en ${t.pj}` : 'puntos'} ›</span></button>
+    <button data-ir="clubes"><b>${t ? `${t.gf}-${t.gc}` : '–'}</b><span>goles ›</span></button>
+    <button data-accion="filtroClub" data-f="liga" data-sel="#club-plantilla"><b>${l.liga}</b><span>${l.mios ? `en tu liga, ${l.mios} tuyo${l.mios > 1 ? 's' : ''}` : 'en tu liga'} ›</span></button>
+    <button data-accion="filtroClub" data-f="libres" data-sel="#club-plantilla"><b>${libres}</b><span>libre${libres === 1 ? '' : 's'} ›</span></button>
   </div>`;
   h += proximoHTML(S, id);
   const o = onceDeEquipo(S, id);

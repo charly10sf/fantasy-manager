@@ -1797,3 +1797,23 @@ button.eq2-t { cursor: pointer; } button.eq2-t:active { background: var(--plano2
    del plan de Hoy (`.plan`), que la bajaba 20 px */
 .fila-x { align-items: flex-start; }
 .pill.plan { margin-top: 0; }
+
+/* los datos que llevan a su sitio (30 oct, Carlos: «el valor de los últimos 7 días debería llevarte a la pestaña adecuada»):
+   se tocan como un botón, con «›» en la etiqueta; y las anclas a las que bajan dejan sitio a la cabecera */
+[data-ancla] { scroll-margin-top: 150px; }
+.hoja [data-ancla] { scroll-margin-top: 16px; }
+.eq2-num > button { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 10px 9px 9px; background: var(--plano); text-align: left; }
+.eq2-num > button:active { background: var(--plano2); }
+.escritorio .eq2-num > button { padding: 12px 14px 11px; }
+.escritorio .eq2-num > button:hover, .escritorio button.dato:hover, .escritorio .club-num > button:hover { background: var(--plano2); }
+button.dato { display: block; width: 100%; text-align: left; border-radius: 10px; }
+button.dato:active { background: var(--plano); }
+.club-num > button { text-align: left; }
+.club-num > button:active { background: var(--plano2); }
+button.dt-yo, button.dt-once { text-align: left; }
+button.dt-yo:active, button.dt-once:active { opacity: 0.75; }
+button.cr-p { width: 100%; text-align: left; }
+button.cr-p:active { background: var(--plano); }
+.puestos-c button.pz:active { opacity: 0.7; }
+.club-num > button { padding: 12px 8px 12px 16px; border-right: 1px solid var(--linea); min-width: 0; }
+.club-num > button:last-child { border-right: 0; }

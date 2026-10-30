@@ -467,6 +467,11 @@ window.anuncioVisto = (para, visto, motivo) => {
   S.anuncio = { para, error: 'Para el plan hay que ver el anuncio hasta el final.' };
   if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja();
 };
+/** baja hasta un ancla (#id) de la pestaña o de la ficha abierta, dejando sitio para la cabecera (scroll-margin-top) */
+function bajarA(sel, raiz = null) {
+  if (!sel) return;
+  requestAnimationFrame(() => { const r = (raiz && raiz.isConnected ? raiz : null) || S.hoja || $('#vista'); const o = (r && r.querySelector(sel)) || $(`#vista ${sel}`); if (o) o.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+}
 function ir(vista, { arriba = true } = {}) {
   vista = ALIAS[vista] || vista;
   if (!VISTAS[vista]) vista = 'hoy';
@@ -1933,7 +1938,19 @@ document.addEventListener('click', async (ev) => {
     case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;
     case 'verJornada': S.jornadaSel = Number(d.n); pintar(); break;
     case 'ordenEq': S.ordenEq = d.o; LS.set('orden-equipo', d.o); pintar(); if (d.ver) { const o = $('#vista .eq2-orden'); if (o) o.scrollIntoView({ behavior: 'smooth', block: 'start' }); } break;
-    case 'filtroClub': S.filtro.club = d.f; repintarHoja(); break;
+    case 'filtroClub': S.filtro.club = d.f; repintarHoja(); if (d.sel) bajarA(d.sel, S.hoja); break;
+    // ir a lo que explica un dato (30 oct, Carlos: «el valor de los últimos 7 días debería llevarte a la pestaña adecuada»):
+    // baja hasta el ancla (data-sel), en la ficha abierta o en la pestaña; con data-seg2, antes cambia de subpestaña
+    case 'ver': {
+      const raiz = el.closest('.hoja');
+      if (d.seg2) { const [v, s2] = d.seg2.split(':'); if (S.seg[v] !== s2) { S.seg[v] = s2; pintar(); } }
+      bajarA(d.sel, raiz);
+      break;
+    }
+    // los de un puesto, en Equipo → Plantilla (desde los POR 2, DEF 4… de debajo del once)
+    case 'verPuesto': S.seg.equipo = 'plantilla'; S.ordenEq = 'puesto'; cerrarHoja(); if (S.vista !== 'equipo') ir('equipo'); else pintar(); bajarA(`#eq-pos-${d.p}`); break;
+    // tu once y tus puntos de una jornada, en Equipo → Jornadas
+    case 'irJornada': S.seg.equipo = 'jornadas'; S.jornadaSel = Number(d.n); cerrarHoja(); ir('equipo'); break;
     case 'vivoYa': {
       if (enDemo()) { tostada('En la demo no hay jornada en directo'); break; }
       if (S.cargandoVivo) break;

@@ -199,8 +199,8 @@ function resumenHTML(S, n, ps) {
     if (lider.yo) { const seg = tabla.find((x) => !x.yo && x.pts != null); dif = seg ? (yo.pts > seg.pts ? `le sacas ${yo.pts - seg.pts} al 2º` : 'empatado con el 2º') : ''; } else dif = `a ${lider.pts - yo.pts} del 1º`;
   }
   return `<div class="dt-res">
-    <div class="dt-yo"><div class="et">Llevas</div><div class="v">${yo && yo.pts != null ? `${yo.aprox ? '≈' : ''}${yo.pts}` : '–'}<small>pts</small></div><div class="d">${pos ? `<b>${pos}º</b> de ${tabla.filter((x) => x.pts != null).length} en la jornada` : 'en la jornada'}${dif ? ` · ${dif}` : ''}</div></div>
-    ${c ? `<div class="dt-once"><span><b>${c.ya}</b>ya jugaron</span><span class="${c.ahora ? 'on' : ''}"><b>${c.ahora}</b>jugando</span><span><b>${c.faltan}</b>por jugar</span></div>` : ''}
+    <button class="dt-yo" data-accion="ver" data-sel="#dt-tu-once"><div class="et">Llevas ›</div><div class="v">${yo && yo.pts != null ? `${yo.aprox ? '≈' : ''}${yo.pts}` : '–'}<small>pts</small></div><div class="d">${pos ? `<b>${pos}º</b> de ${tabla.filter((x) => x.pts != null).length} en la jornada` : 'en la jornada'}${dif ? ` · ${dif}` : ''}</div></button>
+    ${c ? `<button class="dt-once" data-accion="ver" data-sel="#dt-tu-once"><span><b>${c.ya}</b>ya jugaron</span><span class="${c.ahora ? 'on' : ''}"><b>${c.ahora}</b>jugando</span><span><b>${c.faltan}</b>por jugar</span></button>` : ''}
   </div>`;
 }
 function ligaHTML(S, n, ps) {
@@ -221,7 +221,7 @@ function onceHTML(S, n, ps) {
   const { M } = S;
   const V = M.vivo;
   const ids = V && V.once;
-  let h = `<div class="sec"><h2>Tu once</h2><span class="sub">el tuyo en LaLiga</span></div>`;
+  let h = `<div class="sec" id="dt-tu-once" data-ancla><h2>Tu once</h2><span class="sub">el tuyo en LaLiga</span></div>`;
   const campo = ids ? campoVivo(M, ids) : '';
   if (!campo) return h + nada('LaLiga no enseña tu once ahora mismo. En Equipo tienes el mejor según la app.');
   h += campo;
@@ -268,7 +268,7 @@ function sinJornada(S) {
   if (ult) {
     const u = puntosUltimaJornada(S);
     b = `<div class="sec"><h2>Jornada ${ult.n}</h2><span class="sub">acabada</span></div>`;
-    if (u && u.n === ult.n) b += `<div class="dt-res"><div class="dt-yo"><div class="et">Hiciste</div><div class="v">${u.pts}<small>pts</small></div><div class="d"><b>${u.puesto}º</b> de tu liga en la jornada</div></div></div>`;
+    if (u && u.n === ult.n) b += `<div class="dt-res"><button class="dt-yo" data-accion="irJornada" data-n="${ult.n}"><div class="et">Hiciste ›</div><div class="v">${u.pts}<small>pts</small></div><div class="d"><b>${u.puesto}º</b> de tu liga en la jornada: ver tu once</div></button></div>`;
     b += listaPartidos(S, ult.n, partidosJornada(S, ult.n), { dias: false });
   }
   if (!a && !b) return h + nada('No hay jornadas a la vista.');
