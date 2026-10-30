@@ -574,7 +574,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
     const duros = tit.filter((j) => j.pos <= 2 && M.ppEsperado(j) < 2 && !dudas.some((d) => String(d).toLowerCase().includes(String(j.nombre).toLowerCase()))).filter((j) => { const fr = M.factorRival(j); return fr.p && fr.f <= 0.8; });
     if (duros.length) notas.push(`Contra un rival que marca mucho: ${esc(duros.map((j) => { const fr = M.factorRival(j); return `${j.nombre} (${fr.p.casa ? 'vs' : 'en'} ${fr.p.rival}, ~${String(Math.round(M.ppEsperado(j) * 10) / 10).replace('.', ',')} pts)`; }).join(', '))}. No tienes a nadie en el banquillo que sume bastante más en su sitio: si fichas para ${duros.length > 1 ? 'esos puestos' : 'ese puesto'}, que tenga mejor partido.`);
   }
-  if (!V) notas.push('<span class="leyenda">Arriba, lo que tiene de ser titular: <i class="alta"></i>75 % o más <i class="media"></i>50-74 % <i class="baja"></i>menos</span>');
+  notas.push(`<span class="leyenda">Arriba, su próximo rival: <i class="facil"></i>fácil <i class="media"></i>medio <i class="dificil"></i>difícil.${V ? '' : ' Abajo, lo que tiene de ser titular: <b class="alta">75 % o más</b>, <b class="media">50-74 %</b>, <b class="baja">menos</b>.'}</span>`);
   h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
   return h;
 }

@@ -117,6 +117,7 @@ export const partidoTxt = (p) => (p ? `${p.casa ? 'vs' : 'en'} ${esc(p.rival)} �
 /* ---------- lo difícil que es el próximo rival ---------- */
 const NIV = { 'fácil': 'facil', media: 'media', 'difícil': 'dificil' };
 export const nivelCls = (n) => NIV[n] || '';
+const corto = (id, nombre) => (EQUIPOS[id] && EQUIPOS[id].corto) || String(nombre || '').slice(0, 3).toUpperCase();
 
 /** «vs Getafe 18º · sáb 16:15», con el rival en verde, ámbar o rojo según lo difícil que es */
 export function rivalSub(M, j) {
@@ -232,23 +233,25 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
   else if (j.estado === 'doubtful') marca = '<span class="cr-est duda">?</span>';
   else if (conOnce && (!o || !o.titular)) marca = '<span class="cr-est supl">SUP</span>';
   if (marcaFija != null) marca = marcaFija;
-  // arriba a la izquierda, lo que tiene de ser titular (lo pidió Carlos el 30 oct; antes iba el próximo rival, que se
-  // confundía con su equipo: su escudo ya va abajo a la derecha). Con la alineación confirmada, lesionado o con su
-  // partido ya empezado no sale: lo dice la marca de la derecha o ya no cuenta
-  let rv = '';
-  if (tag) rv = tag.txt ? `<span class="cr-rv ${tag.cls || ''}">${esc(tag.txt)}</span>` : '';
-  else if (M && M.titularidad && j.pos && j.pos < 5 && !ent && !al && !MALOS.has(j.estado)) {
+  // arriba a la izquierda, su próximo rival con el color de lo difícil que es (sin la @ de fuera de casa desde la 0.6.10c:
+  // Carlos, 30 oct, «que se entienda mejor»); abajo a la izquierda, frente a su escudo, lo que tiene de ser titular (lo
+  // pidió Carlos el 30 oct). El % no sale con la alineación confirmada (manda la marca de la derecha), lesionado, en el
+  // entrenador ni con su partido ya empezado
+  const fr = !tag && M && M.factorRival ? M.factorRival(j) : null;
+  const rv = tag ? (tag.txt ? `<span class="cr-rv ${tag.cls || ''}">${esc(tag.txt)}</span>` : '') : fr && fr.p ? `<span class="cr-rv ${nivelCls(fr.nivel)}" title="${fr.p.casa ? 'En casa contra' : 'Fuera, contra'} ${esc(fr.p.rival)}">${esc(corto(fr.p.rivalId, fr.p.rival))}</span>` : '';
+  let tit = '';
+  if (!tag && M && M.titularidad && j.pos && j.pos < 5 && !ent && !al && !MALOS.has(j.estado)) {
     const T = M.titularidad(j);
-    const p = M.proximoPartido ? M.proximoPartido(j.equipoId) : null;
+    const p = fr && fr.p;
     if (T && T.p > 0 && !(p && p.fecha <= Date.now())) {
       const v = Math.round(T.p * 100);
-      rv = `<span class="cr-rv cr-tit ${v >= 75 ? 'alta' : v >= 50 ? 'media' : 'baja'}" title="Titular ~${v} %">${v}%</span>`;
+      tit = `<span class="cr-tit ${v >= 75 ? 'alta' : v >= 50 ? 'media' : 'baja'}" title="Titular ~${v} %">${v}%</span>`;
     }
   }
   const ape = String(j.nombre || '').split(' ');
   const nom = ape.length > 1 && j.nombre.length > 11 ? ape.slice(1).join(' ') : j.nombre;
   return `<button class="cromo p${j.pos}${chico ? ' chico' : ''}${MALOS.has(j.estado) ? ' baja-c' : ''}" data-j="${esc(j.id)}">
-    <span class="cr-foto">${ava(j, 'cr')}${rv}${marca}</span>
+    <span class="cr-foto">${ava(j, 'cr')}${rv}${tit}${marca}</span>
     <span class="cr-nom">${ent ? '<i>ENT</i>' : ''}${esc(nom)}</span>
     <span class="cr-dato${datoCls}">${dato}</span></button>`;
 }
