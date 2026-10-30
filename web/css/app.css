@@ -632,7 +632,8 @@ body.con-nv { overflow: hidden; }
 .nv-heroe-in { display: flex; flex-direction: column; align-items: center; will-change: transform, opacity; }
 .nv-eti { margin: 0 0 18px; font: 700 13px 'Barlow'; letter-spacing: 2px; text-transform: uppercase; color: var(--rojo-l); }
 /* el número de versión, como un marcador: cada cifra en su casilla, que cae al abrir */
-.nv-num { display: flex; align-items: flex-end; gap: 8px; margin: 0; perspective: 600px; font: 700 clamp(78px, 24vw, 132px)/1 var(--cond); }
+/* el tamaño baja solo si el número es largo: ancho en em = casillas (0.66) + puntos (0.17) + huecos (0.07) y tiene que caber en la pantalla menos el margen */
+.nv-num { --n: 4; --p: 2; display: flex; align-items: flex-end; gap: 0.07em; margin: 0; perspective: 600px; font-weight: 700; font-family: var(--cond); line-height: 1; font-size: min(clamp(78px, 24vw, 132px), max(36px, calc((100vw - 44px) / (0.66 * var(--n) + 0.17 * var(--p) + 0.07 * (var(--n) + var(--p) - 1))))); }
 .nv-num .dg { position: relative; display: grid; place-items: center; min-width: 0.66em; height: 1.18em; padding: 0 0.06em; border-radius: 16px; background: linear-gradient(#1f1f26, #111115 50%, #18181d 50%, #0f0f13); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 14px 34px rgba(0, 0, 0, 0.55), 0 0 40px color-mix(in srgb, var(--nv-acc) 22%, transparent); color: #fff; text-shadow: 0 0 22px color-mix(in srgb, var(--nv-acc) 55%, transparent); transform-origin: 50% 0; animation: nv-cae 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.2) both; animation-delay: calc(0.15s + var(--i) * 0.12s); }
 .nv-num .dg::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: rgba(0, 0, 0, 0.55); }
 .nv-num .pt { width: 0.13em; height: 0.13em; margin: 0 0.02em 0.16em; border-radius: 50%; background: var(--rojo); box-shadow: 0 0 18px var(--rojo); animation: nv-sale 0.4s ease both 0.4s; }

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10e';
+export const VERSION = '0.6.10f';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.10e';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10f', f: '2026-10-30', h: '20:05', t: 'La versión, entera en la presentación',
+    cosas: [
+      { tipo: 'arreglo', d: 'arreglo', t: 'El número de versión, cortado', x: 'Con una versión de cinco casillas como la 0.6.10e, el número se salía de la pantalla del móvil y arrastraba el título y la fecha. Ahora el marcador se ajusta al ancho y se ve entero.' },
+    ],
+  },
   {
     v: '0.6.10e', f: '2026-10-30', h: '19:54', t: 'Pujas a la medida de cada jugador',
     cosas: [

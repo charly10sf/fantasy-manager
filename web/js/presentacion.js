@@ -69,6 +69,8 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
     resto = todas.length - cosas.length;
   }
   const n0 = nuevas[0], ver = n0.v.replace(/\.0$/, '');
+  // casillas y puntos del marcador: el CSS ajusta el tamaño para que el número quepa a lo ancho (0.6.10e, 0.7.2a…)
+  const casillas = [...ver].filter((ch) => ch !== '.').length, puntos = [...ver].length - casillas;
   const raiz = document.createElement('div');
   raiz.className = `nv${quieta ? ' quieta' : ''}`;
   raiz.setAttribute('role', 'dialog');
@@ -79,7 +81,7 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
     <div class="nv-scroll" tabindex="-1">
       <section class="nv-heroe"><div class="nv-heroe-in">
         <p class="nv-eti">${nuevas.length > 1 ? `${resto ? 'Lo principal' : 'Lo que te has perdido'} desde la ${esc(desde)}` : 'Lo nuevo'}</p>
-        <h1 class="nv-num" aria-label="Versión ${esc(n0.v)}">${[...ver].map((ch, i) => (ch === '.' ? '<span class="pt" aria-hidden="true"></span>' : `<span class="dg" style="--i:${i}" aria-hidden="true">${esc(ch)}</span>`)).join('')}</h1>
+        <h1 class="nv-num" style="--n:${casillas};--p:${puntos}" aria-label="Versión ${esc(n0.v)}">${[...ver].map((ch, i) => (ch === '.' ? '<span class="pt" aria-hidden="true"></span>' : `<span class="dg" style="--i:${i}" aria-hidden="true">${esc(ch)}</span>`)).join('')}</h1>
         <div class="nv-lema"><h2>${esc(n0.t)}</h2><p>${esc(fechaNov(n0))} · ${esc(cuenta(todas.length, arreglos.length))}${resto ? ` en ${nuevas.length} versiones: te cuento las ${cosas.length} principales` : ''}</p></div>
         <div class="nv-baja" aria-hidden="true"><span>Desliza</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
       </div></section>
