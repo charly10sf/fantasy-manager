@@ -14,6 +14,38 @@ export const WORKER = (() => {
 })();
 /** la versión web de verdad (con tu liga), no la de ejemplo */
 export const enWeb = !N && !!WORKER;
+/**
+ * El segundo intermediario, en Deno Deploy (repo fantasy-manager-proxy): con partidos, las operadoras cortan muchas IP de
+ * Cloudflare (claude/BLOQUEO-LALIGA.md) y el Worker puede no contestar. Hace lo mismo que /p e /img del Worker; los
+ * avisos, los códigos y /hola siguen solo en el Worker. Vacío = sin segundo intermediario. Para probar, «fm-proxy2»
+ */
+export const PROXY2_PUBLICO = '';
+const PROXY2 = (() => {
+  if (N) return '';
+  try { const w = localStorage.getItem('fm-proxy2'); if (w) return w.replace(/\/+$/, ''); } catch (e) { /* nada */ }
+  return WORKER === WORKER_PUBLICO ? PROXY2_PUBLICO : '';
+})();
+// si el Worker no contesta, 10 minutos por Deno (se guarda: aguanta una recarga); luego se vuelve a probar el Worker
+const CAIDO_MS = 10 * 60e3, SIN_CABECERAS_MS = 7000, SONDA_MS = 4000;
+const proxy = { usos: 0, cambios: 0, ultimo: null, porque: '' };
+const workerCaido = () => { try { return Date.now() < +(localStorage.getItem('fm-worker-caido') || 0); } catch (e) { return false; } };
+function marcarCaido(porque) {
+  if (!workerCaido()) { proxy.cambios++; proxy.ultimo = Date.now(); proxy.porque = porque; }
+  try { localStorage.setItem('fm-worker-caido', String(Date.now() + CAIDO_MS)); } catch (e) { /* nada */ }
+}
+/** ¿contesta el Worker? (su raíz contesta al momento, sin ir a ningún sitio). Una sola prueba a la vez para todas las
+    peticiones que esperan (al cargar van decenas), que vale 5 s */
+let sondaW = null;
+function workerVivo() {
+  if (sondaW && Date.now() - sondaW.t < 5000) return sondaW.p;
+  const parar = new AbortController();
+  const t = setTimeout(() => parar.abort(), SONDA_MS);
+  const p = fetch(`${WORKER}/`, { signal: parar.signal, cache: 'no-store' }).then((r) => r.status > 0, () => false).finally(() => clearTimeout(t));
+  sondaW = { t: Date.now(), p };
+  return p;
+}
+/** para el diagnóstico: por dónde van los datos de la web */
+export const estadoProxy = () => (N ? null : { hay: !!PROXY2, ahora: PROXY2 && workerCaido() ? 'deno' : 'worker', usos: proxy.usos, cambios: proxy.cambios, ultimo: proxy.ultimo, porque: proxy.porque });
 
 let seq = 0;
 const pendientes = new Map();
@@ -78,23 +110,54 @@ export function http(metodo, url, { cabeceras = {}, cuerpo = null, tiempo = 4500
   });
 }
 
-/** en la web: la petición la hace el Worker y devuelve lo mismo que la app ({ s, b, t, e }) */
+/** en la web: la petición la hace el Worker (o, si no contesta, el de Deno) y devuelve lo mismo que la app ({ s, b, t, e }) */
 async function porWorker(metodo, url, cabeceras, cuerpo, tiempo) {
+  if (PROXY2 && workerCaido()) {
+    proxy.usos++;
+    const r = await porProxy(PROXY2, metodo, url, cabeceras, cuerpo, tiempo);
+    // si tampoco llega a Deno, se prueba el Worker por si ya se ha acabado el corte
+    return r.sinServidor ? porProxy(WORKER, metodo, url, cabeceras, cuerpo, tiempo) : r;
+  }
+  if (!PROXY2) return porProxy(WORKER, metodo, url, cabeceras, cuerpo, tiempo);
+  // con los dos: el Worker primero; si a los 7 s no ha contestado y su raíz tampoco (no es que LaLiga vaya lenta, es que
+  // no se llega al Worker), o si no se puede ni conectar, se pide a Deno y vale la primera respuesta buena
+  const t0 = Date.now();
+  let porDeno = null, avisar;
+  const denoP = new Promise((ok) => { avisar = ok; });
+  const aDeno = (porque) => {
+    if (porDeno) return porDeno;
+    marcarCaido(porque);
+    proxy.usos++;
+    porDeno = porProxy(PROXY2, metodo, url, cabeceras, cuerpo, Math.max(5000, tiempo - (Date.now() - t0)));
+    porDeno.then(avisar);
+    return porDeno;
+  };
+  const sinSonda = despues(SIN_CABECERAS_MS, () => { workerVivo().then((vivo) => { if (!vivo) aDeno('el Worker no contesta'); }); });
+  const porW = porProxy(WORKER, metodo, url, cabeceras, cuerpo, tiempo, () => sinSonda());
+  const r = await Promise.race([porW, denoP.then((d) => ({ ...d, deDeno: true }))]);
+  sinSonda();
+  if (r.deDeno) { delete r.deDeno; return r.sinServidor ? porW : r; }
+  if (r.sinServidor) { const d = await aDeno(r.e); return d.sinServidor ? r : d; }
+  return r;
+}
+/** una petición a un intermediario (/p). `sinServidor`: no se ha llegado a él (no es que el sitio de destino falle) */
+async function porProxy(base, metodo, url, cabeceras, cuerpo, tiempo, alContestar) {
   const parar = new AbortController();
   const quitar = despues(tiempo, () => parar.abort());
   try {
-    const r = await fetch(`${WORKER}/p`, {
+    const r = await fetch(`${base}/p`, {
       method: 'POST', signal: parar.signal,
       headers: { 'content-type': 'text/plain;charset=utf-8', 'x-u': url, 'x-m': metodo || 'GET', 'x-h': JSON.stringify(cabeceras || {}) },
       body: cuerpo == null ? '' : String(cuerpo),
     });
+    if (alContestar) alContestar();
     const b = await r.text();
     const s = +(r.headers.get('x-s') || 0);
     if (!r.ok) return { s: 0, e: `el servidor de la web responde ${r.status}` };
     if (!s) return { s: 0, e: b || 'sin respuesta' };
     return { s, b, t: r.headers.get('x-t') || '' };
   } catch (e) {
-    return { s: 0, e: e.name === 'AbortError' ? 'tiempo agotado' : `sin conexión con el servidor de la web (${e.message || e})` };
+    return e.name === 'AbortError' ? { s: 0, e: 'tiempo agotado' } : { s: 0, e: `sin conexión con el servidor de la web (${e.message || e})`, sinServidor: true };
   } finally { quitar(); }
 }
 
@@ -111,7 +174,11 @@ export async function imagenDatos(url) {
     return `data:${r.t || 'image/png'};base64,${r.b}`;
   }
   if (N) throw new Error('esta versión de la app no puede mirar imágenes');
-  const res = await fetch(enWeb ? `${WORKER}/img?u=${encodeURIComponent(url)}` : url, { mode: 'cors' });
+  const deImg = (base) => fetch(`${base}/img?u=${encodeURIComponent(url)}`, { mode: 'cors' });
+  let res;
+  if (!enWeb) res = await fetch(url, { mode: 'cors' });
+  else if (PROXY2 && workerCaido()) res = await deImg(PROXY2).catch(() => deImg(WORKER));
+  else res = await deImg(WORKER).catch((e) => { if (!PROXY2) throw e; marcarCaido('imagen sin Worker'); return deImg(PROXY2); });
   if (!res.ok) throw new Error(`imagen ${res.status}`);
   const blob = await res.blob();
   return await new Promise((ok, mal) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = mal; fr.readAsDataURL(blob); });

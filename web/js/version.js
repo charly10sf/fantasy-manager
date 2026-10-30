@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10c';
+export const VERSION = '0.6.10d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.10c';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10d', f: '2026-10-30', h: '13:40', t: 'La web, también con partidos',
+    cosas: [
+      { tipo: 'mejora', d: 'conexion', para: 'web', t: 'La web, también con partidos', x: 'Con partidos, algunas operadoras cortan las direcciones de Cloudflare, por donde la web pide los datos a LaLiga. Ahora, si a los pocos segundos no contesta, la web los pide por otro camino fuera de Cloudflare, sin que tengas que hacer nada. Lo que no cambia: los avisos de fallo y el código para entrar desde otro dispositivo siguen yendo solo por el camino de siempre.' },
+    ],
+  },
   {
     v: '0.6.10c', f: '2026-10-30', h: '13:14', t: 'El rival, en tu once',
     cosas: [

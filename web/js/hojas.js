@@ -7,7 +7,7 @@ import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML, puntosUltimaJornada } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
-import { nativo, enApp, enWeb } from './puente.js';
+import { nativo, enApp, enWeb, estadoProxy } from './puente.js';
 import { hayAnunciosWeb } from './anuncios-web.js';
 import { registro } from './api.js';
 import { quien, sesion } from './auth.js';
@@ -717,6 +717,8 @@ export function textoDiagnostico(S) {
       const ps = Array.isArray(v.ps) ? v.ps : [];
       return `Directo: J${v.n}${S.M.vivo ? '' : ' (no es la de ahora)'} · ${horaDe(v.t)} · partidos ${ps.length} (${ps.filter((p) => p.jug && p.jug.length).length} con puntos, ${ps.filter((p) => p.st != null).length} con estado) · jugadores con puntos ${Object.keys(v.puntos || {}).length} · tu once ${v.once ? v.once.length : 'no'} · equipos ${Object.keys(v.equipos || {}).length}${S.jugadas ? ` · jugadas SofaScore ${Object.keys(S.jugadas).length}` : ''}`;
     })(),
+    // en la web: por qué intermediario van los datos (el Worker de Cloudflare o, si no contesta, el de Deno)
+    ...(enWeb ? [(() => { const x = estadoProxy(); if (!x) return 'Intermediario: ¿?'; return `Intermediario: ${x.ahora === 'deno' ? 'Deno (el Worker no contestaba)' : 'Worker'}${x.hay ? '' : ' · sin segundo'}${x.cambios ? ` · pasó a Deno ${x.cambios} ${x.cambios > 1 ? 'veces' : 'vez'}, la última ${horaDe(x.ultimo)} (${x.porque})` : ''}${x.usos ? ` · ${x.usos} peticiones por Deno` : ''}`; })()] : []),
     S.errorCarga ? `Última carga: ✗ ${S.errorCarga.tipo} · ${S.errorCarga.detalle} (${horaDe(S.errorCarga.t)})` : 'Última carga: bien',
     ocupado(),
     `Ligas: ${D && D.ligas ? D.ligas.map((l) => `${l.id}${l.premium ? ' (premium)' : ''}${D.liga && l.id === D.liga.id ? ' ←' : ''}`).join(', ') : '¿?'} · pantalla ${typeof innerWidth !== 'undefined' ? `${innerWidth}×${innerHeight}` : '?'}${medidasVista()} · ${typeof navigator !== 'undefined' && navigator.onLine === false ? 'SIN RED' : 'con red'}`,
