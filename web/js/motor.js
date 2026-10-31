@@ -1931,12 +1931,14 @@ function acciones(D, M, c) {
     hash: 'equipo',
   });
 
-  // las alineaciones confirmadas: los tuyos que se quedan en el banquillo o no van, si su partido aún no ha empezado
-  const noJuegan = M.mias.filter((x) => { const a = M.alineacion(x.pid); return a && a.estado !== 'titular' && a.ini > ahora && !(a.estado === 'nosale' && MALOS.has(x.j.estado)); });
+  // las alineaciones confirmadas: los tuyos que se quedan en el banquillo o no van, si aún se puede cambiar el once:
+  // LaLiga lo cierra con el primer partido de la jornada, no con el suyo (aviso de Domy, 31 oct)
+  const cierreOnce = (t, eq) => { const jo = (M.jornadas || []).find((x) => x.partidos.some((p) => Math.abs(p.fecha - t) < 3 * HORA && String(eq) && (String(p.localId) === String(eq) || String(p.visitanteId) === String(eq)))); return jo ? jo.ini : t; };
+  const noJuegan = M.mias.filter((x) => { const a = M.alineacion(x.pid); return a && a.estado !== 'titular' && a.ini > ahora && cierreOnce(a.ini, x.j.equipoId) > ahora && !(a.estado === 'nosale' && MALOS.has(x.j.estado)); });
   if (noJuegan.length) add({
     tipo: 'alinear', prio: 75, icono: 'campo', cuando: cuando(Math.min(...noJuegan.map((x) => M.alineacion(x.pid).ini))),
     titulo: noJuegan.length === 1 ? `${noJuegan[0].j.nombre} no es titular` : `${noJuegan.length} de los tuyos no son titulares`,
-    texto: `${noJuegan.map((x) => { const a = M.alineacion(x.pid); return `${x.j.nombre}, ${a.estado === 'suplente' ? 'suplente' : a.estado === 'nosale' ? 'no sale de titular' : a.estado === 'baja' ? 'de baja' : 'no convocado'} (juega ${cuando(a.ini)})`; }).join('; ')}. ${noJuegan.length === 1 ? 'Si lo tienes en el once, cámbialo antes de que empiece su partido' : 'Si los tienes en el once, cámbialos antes de que empiece su partido'}.`,
+    texto: `${noJuegan.map((x) => { const a = M.alineacion(x.pid); return `${x.j.nombre}, ${a.estado === 'suplente' ? 'suplente' : a.estado === 'nosale' ? 'no sale de titular' : a.estado === 'baja' ? 'de baja' : 'no convocado'} (juega ${cuando(a.ini)})`; }).join('; ')}. ${noJuegan.length === 1 ? 'Si lo tienes en el once, cámbialo' : 'Si los tienes en el once, cámbialos'} antes de ${cuando(Math.min(...noJuegan.map((x) => cierreOnce(M.alineacion(x.pid).ini, x.j.equipoId))))}, cuando empieza la jornada y LaLiga cierra el once.`,
     hash: 'equipo',
   });
 
@@ -2124,8 +2126,8 @@ export function planAuto(D, M, c) {
     if (b) { saldo -= b.coste; caja -= b.coste; }
   }
 
-  // 6. alineación si la jornada empieza pronto
-  if (inicio && inicio - ahora < 30 * HORA && inicio > ahora) {
+  // 6. alineación si la jornada empieza pronto (con otra en juego, no: su «próximo partido» mezcla las dos)
+  if (inicio && inicio - ahora < 30 * HORA && inicio > ahora && !M.enJuego) {
     const tocados = M.mias.filter((x) => !vendidos.has(x.pid) && x.j.estado === 'doubtful');
     op({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: `antes de ${cuando(inicio)}`,
       motivo: `Pon el ${onceAhora.nombre}: ${onceAhora.lineas.flat().map((j) => j.nombre).join(', ')}.${onceAhora.huecos ? ` Te faltan ${onceAhora.huecos} para completarlo.` : ''}${tocados.length ? ` Ojo con ${tocados.map((x) => x.j.nombre).join(', ')}, que son duda.` : ''}` });

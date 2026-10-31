@@ -868,6 +868,7 @@ body.con-nv { overflow: hidden; }
 .mas-pasos > summary::-webkit-details-marker { display: none; }
 .mas-pasos > summary .ic { width: 16px; height: 16px; color: var(--rojo-l); }
 .mas-pasos[open] > summary { display: none; }
+.fila.once-cerrado { margin-top: 18px; }
 .once-pleg { margin: 18px 0 0; border-radius: 14px; border: 1px solid var(--linea); background: var(--plano); padding: 0 12px; }
 .once-pleg > summary { list-style: none; display: flex; align-items: center; gap: 10px; padding: 13px 2px; cursor: pointer; }
 .once-pleg > summary::-webkit-details-marker { display: none; }

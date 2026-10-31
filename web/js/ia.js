@@ -665,21 +665,26 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   const ahora = new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   L.push(`AHORA: ${ahora} (hora de España)`);
   L.push(`LIGA: ${D.liga.nombre}, ${D.clasif.length} equipos. Se puede quedar en negativo hasta el ${c.deuda} % del valor del equipo (${eur(M.deuda)}), pero solo pujando o comprando en el mercado: las cláusulas se pagan con saldo.`);
-  if (M.enJuego) L.push(`JORNADA ${M.enJuego.n} EN JUEGO hasta ${cuando(M.enJuego.fin)}.`);
+  // (aviso de Domy, 31 oct) LaLiga cierra el once con el primer partido de la jornada: con ella en juego, todo lo que se
+  // haga es para la siguiente (o para el parón, si va antes)
+  if (M.enJuego) {
+    const sig = M.proxima, paronAntes = M.paron && sig && M.paron.ini < sig.ini && M.paron.fin > Date.now();
+    L.push(`JORNADA ${M.enJuego.n} EN JUEGO hasta ${cuando(M.enJuego.fin)}. Mi once de esta jornada YA ESTÁ CERRADO: LaLiga lo bloquea con el primer partido (${cuando(M.enJuego.ini)}) y no deja cambiar a nadie, ni a los que aún no han jugado, hasta la jornada siguiente. Para la jornada ${M.enJuego.n} ya no se puede hacer nada: ni alinear, ni fichar o clausular para que puntúe en ella. Lo que haga ahora es para ${sig ? `la jornada ${sig.n} (primer partido ${cuando(sig.ini)})` : 'la jornada siguiente'}${paronAntes ? ` y antes llega el parón de selecciones (del ${cuando(M.paron.ini, { hora: false })} al ${cuando(M.paron.fin, { hora: false })}): ten en cuenta lo que pasa con los valores y las selecciones en esos días` : ''}.`);
+  }
   if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, primer partido ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).`);
-  if (M.vedaAhora) L.push(`CLÁUSULAS CERRADAS: desde ${cuando(M.vedaAhora.ini)} (24 h antes del primer partido de la jornada ${M.vedaAhora.n}) LaLiga no deja clausular a nadie, ni a mí me pueden clausular, hasta que empiece la jornada (${cuando(M.vedaAhora.fin)}). Un clausulazo, a esa hora y no antes; blindar tampoco hace falta hasta entonces. Un jugador clausulado a esa hora NO llega a la alineación de esa jornada si su partido empieza a esa hora o poco después: no lo pongas en el once ni cuentes con sus puntos.`);
-  else if (M.proxima) L.push(`LAS CLÁUSULAS SE CIERRAN ${cuando(M.proxima.ini - M.VEDA_H * 3600e3)} (24 h antes del primer partido) y se reabren cuando empieza la jornada (${cuando(M.proxima.ini)}): un clausulazo, antes del cierre o a partir de esa hora. Si es a partir de esa hora, el jugador NO llega a la alineación de esa jornada si su partido empieza a esa hora o poco después.`);
+  if (M.vedaAhora) L.push(`CLÁUSULAS CERRADAS: desde ${cuando(M.vedaAhora.ini)} (24 h antes del primer partido de la jornada ${M.vedaAhora.n}) LaLiga no deja clausular a nadie, ni a mí me pueden clausular, hasta que empiece la jornada (${cuando(M.vedaAhora.fin)}). Un clausulazo, a esa hora y no antes; blindar tampoco hace falta hasta entonces. Un jugador clausulado a esa hora NO llega a la alineación de esa jornada (el once se cierra con el primer partido): no lo pongas en el once ni cuentes con sus puntos hasta la siguiente.`);
+  else if (M.proxima) L.push(`LAS CLÁUSULAS SE CIERRAN ${cuando(M.proxima.ini - M.VEDA_H * 3600e3)} (24 h antes del primer partido) y se reabren cuando empieza la jornada (${cuando(M.proxima.ini)}): un clausulazo, antes del cierre o a partir de esa hora. Si es a partir de esa hora, el jugador NO llega a la alineación de esa jornada (el once se cierra con el primer partido): cuenta para la siguiente.`);
   if (M.paron) L.push(`PARÓN DE SELECCIONES: del ${cuando(M.paron.ini, { hora: false })} al ${cuando(M.paron.fin, { hora: false })}${M.enParon ? ' (estamos en él)' : ''}.`);
   if (M.cierreMercado) {
-    // lo que se gana en la subasta es tuyo al cambiar el mercado y se puede alinear mientras su partido no haya empezado:
+    // lo que se gana en la subasta es tuyo al cambiar el mercado y se puede alinear hasta el primer partido de la jornada:
     // con el mercado a las 20:00 y el primer partido a las 21:00 hay una hora (la IA decía que lo que se fichara hoy no
-    // llegaba a la jornada; Carlos, 30 oct)
+    // llegaba a la jornada; Carlos, 30 oct). Después, el once está cerrado hasta la siguiente (aviso de Domy, 31 oct)
     const cm = M.cierreMercado, ini = M.enJuego ? null : M.proxima && M.proxima.ini;
     const llega = M.enJuego
-      ? ` Lo que te lleves en esta subasta es tuyo a esa hora y lo puedes alinear para los partidos de la jornada ${M.enJuego.n} que aún no hayan empezado entonces.`
+      ? ` Lo que te lleves en esta subasta es tuyo a esa hora, pero para la jornada ${M.enJuego.n} ya no cuenta (el once está cerrado): es para la jornada ${M.proxima ? M.proxima.n : 'siguiente'}.`
       : ini && cm < ini
         ? ` Hasta entonces se puede pujar. Lo que te lleves en esta subasta es tuyo a esa hora y llega a tiempo para la jornada ${M.proxima.n}: lo puedes alinear antes del primer partido (${cuando(ini)}, ${dura(ini - cm)} después del cambio).`
-        : ini ? ` Lo que te lleves en esta subasta llega cuando la jornada ${M.proxima.n} ya ha empezado (${cuando(ini)}): solo lo puedes alinear si su partido aún no ha empezado a esa hora.` : '';
+        : ini ? ` Lo que te lleves en esta subasta llega cuando la jornada ${M.proxima.n} ya ha empezado (${cuando(ini)}): no entra en el once de esa jornada (se cierra con el primer partido), cuenta para la siguiente.` : '';
     L.push(`EL MERCADO CAMBIA: ${cuando(cm)} (en ${dura(cm - Date.now())}).${llega}`);
   }
   const yo = M.yo || {};
@@ -694,7 +699,9 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     const tit = new Set(M.once.lineas.flat().map((j) => j.id));
     L.push(`\nJUEGA CON LA VERSIÓN GRATUITA. Formaciones que puede usar: ${M.formaciones.map((f) => f.join('-')).join(', ')} (ninguna otra).`);
     L.push(`MI PLANTILLA POR PUESTOS (sanos/total): ${M.puestos.map((p) => `${POS[p.pos]} ${p.sanos}/${p.total}${p.faltan ? ` (FALTAN ${p.faltan})` : ''}${p.sobran ? ` (sobran ${p.sobran})` : ''}`).join(' · ')}.`);
-    L.push(`MI MEJOR ONCE AHORA: ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}, unos ${String(Math.round(M.once.total * 10) / 10).replace('.', ',')} pts esperados (cada uno con su próximo rival y lo que se espera de él): ${M.once.lineas.map((l) => l.map((j) => `${j.nombre} (${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))})`).join(', ')).filter(Boolean).join(' | ')}${M.once.entrenador ? ` · entrenador ${M.once.entrenador.nombre}` : ''}.`);
+    // con la jornada en juego, el «próximo partido» de cada uno mezcla esta jornada y la siguiente: solo quién es titular
+    if (M.enJuego) L.push(`MI MEJOR ONCE (solo de referencia, para saber quién es titular y quién no; la alineación de la jornada ${M.proxima ? M.proxima.n : 'siguiente'} se decide cuando acabe esta): ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}: ${M.once.lineas.map((l) => l.map((j) => j.nombre).join(', ')).filter(Boolean).join(' | ')}.`);
+    else L.push(`MI MEJOR ONCE AHORA: ${M.once.nombre}${M.once.huecos ? ` CON ${M.once.huecos} HUECOS` : ''}, unos ${String(Math.round(M.once.total * 10) / 10).replace('.', ',')} pts esperados (cada uno con su próximo rival y lo que se espera de él): ${M.once.lineas.map((l) => l.map((j) => `${j.nombre} (${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))})`).join(', ')).filter(Boolean).join(' | ')}${M.once.entrenador ? ` · entrenador ${M.once.entrenador.nombre}` : ''}.`);
     // el once que tiene puesto ahora en LaLiga (app.js lo guarda al mirarlo): si es el que le propones, no hay que alinear
     const g = !M.enJuego ? LS.get(K('mi-once'), null) : null;
     if (g && Date.now() - g.t < 2 * DIA && (g.ids || []).length >= 10) {
@@ -724,7 +731,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
       const jugado = pts != null || (pp && pp.jornada === M.enJuego.n && pp.fecha <= ahoraT);
       return `${j.nombre} (${jugado ? `ya jugando o jugado${pts != null ? `, ${pts} pts` : ''}` : pp && pp.jornada === M.enJuego.n ? `juega ${cuando(pp.fecha)}` : 'sin partido'})`;
     };
-    L.push(`MI ONCE EN LALIGA PARA LA JORNADA ${M.enJuego.n} (EN JUEGO): ${M.vivo.once.map(est).filter(Boolean).join(', ')}. Solo se puede cambiar a los que aún no han jugado: la alineación que me propongas, para esos.`);
+    L.push(`MI ONCE EN LALIGA PARA LA JORNADA ${M.enJuego.n} (EN JUEGO): ${M.vivo.once.map(est).filter(Boolean).join(', ')}. Ya no se puede cambiar (LaLiga cierra el once con el primer partido): no me propongas alineación ni el paso de alinear.`);
   }
   if (M.escudosMios) L.push(`BLINDAJES (el escudo de LaLiga, gratis viendo un anuncio): me quedan ${M.escudosMios.quedan} de 2 esta jornada; protegen la cláusula ${M.escudosMios.horas} h y solo se pueden poner a jugadores con la cláusula abierta.`);
   if (M.vendidos && M.vendidos.length) {
@@ -836,7 +843,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
 
 const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España, directo, como un colega que sabe mucho del juego.
 Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla pagando (pagar X la sube 2X) o blindarla gratis un rato (mira BLINDAJES). En el mercado hay DOS cosas muy distintas que no debes mezclar: (1) jugadores LIBRES de LaLiga, que no son de nadie: el mercado cambia cada día, se puja a ciegas desde su precio y se los lleva la puja más alta; (2) jugadores que OTRO MANAGER de la liga ha puesto a la venta: siguen siendo suyos, el precio lo pone él y solo pasan a ser del manager si el dueño acepta su oferta, así que no se pueden conseguir «más baratos en el mercado». Si el dueño es un amigo que se lo deja a un precio, es un trato entre los dos: valóralo por su valor, lo que sube al día, lo que le da a su once y si le llega el dinero, no comparándolo con el mercado de la liga. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
-Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador y titulares de prensa recientes: úsalos. Cuando hables de lo que te paso (el once probable, su nota, su xG), no digas de qué web sale: «el once probable», «su nota». No nombres nunca webs de fantasy ni de onces (futbolfantasy, Analítica Fantasy, Jornada Perfecta, Comuniate, Biwenger, Futmondo…) ni las pongas como fuente o con un «según»: di «la prensa» o «los onces probables». Si un jugador lleva ALINEACIÓN CONFIRMADA (sale una hora antes de su partido), eso manda sobre el once probable y la prensa: si está de SUPLENTE o NO CONVOCADO y lo tengo en el once, dime que lo cambie por uno que juegue antes de que empiece su partido. Si tienes la búsqueda de Google, úsala para lo que pueda cambiar una decisión: lesiones, sanciones, convocatorias, onces de última hora, rotaciones por Champions o Copa y cambios de entrenador de los jugadores que vas a recomendar o a alinear. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
+Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador y titulares de prensa recientes: úsalos. Cuando hables de lo que te paso (el once probable, su nota, su xG), no digas de qué web sale: «el once probable», «su nota». No nombres nunca webs de fantasy ni de onces (futbolfantasy, Analítica Fantasy, Jornada Perfecta, Comuniate, Biwenger, Futmondo…) ni las pongas como fuente o con un «según»: di «la prensa» o «los onces probables». Si un jugador lleva ALINEACIÓN CONFIRMADA (sale una hora antes de su partido), eso manda sobre el once probable y la prensa: si está de SUPLENTE o NO CONVOCADO, lo tengo en el once y la jornada aún no ha empezado, dime que lo cambie por uno que juegue antes del primer partido de la jornada (después ya no se puede). Si tienes la búsqueda de Google, úsala para lo que pueda cambiar una decisión: lesiones, sanciones, convocatorias, onces de última hora, rotaciones por Champions o Copa y cambios de entrenador de los jugadores que vas a recomendar o a alinear. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Para REVENDER da igual que no lo vaya a alinear o que ya tenga a otro en su puesto (otro portero, por ejemplo): NUNCA lo descartes por eso ni lo llames «dinero parado» si está subiendo; cuenta lo que gana hasta venderlo, el dinero y el límite de jugadores de la plantilla. Una CLÁUSULA solo se puede pagar con el saldo que tiene: LaLiga no deja clausular quedándose en negativo (ni con el dinero de lo que pone en venta, que no entra hasta que acepta una oferta). Quedarse en negativo solo se puede pujando o comprando en el mercado. Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa.
 CLÁUSULAS TUYAS: el riesgo de cada jugador te lo paso calculado con el dinero de cada rival y lo que se paga en esta liga; no lo rebajes sin un dato nuevo. NUNCA digas que te viene bien que te clausulen a uno por su valor (ni «ponle un lacito», ni «así haces caja»): con la cláusula a su valor o cerca te lo quitan sin pagar nada de más, pierdes sus puntos y lo que suba, el otro puede revenderlo con beneficio y tú pagarías más por otro igual. Solo es buena noticia si la cláusula está muy por encima de su valor y el jugador no te aporta. Si no compensa protegerlo, dilo así: que es un riesgo que asumes, no un regalo. Para decir quién puede ir a por uno, mira CÓMO JUEGA CADA RIVAL: el que clausula a menudo y le llega es el peligro de verdad; el que no ha clausulado nunca, mucho menos, aunque le llegue. Si se mueve a una hora, avísame antes de esa hora.
 VENDER SIN NECESIDAD: no le hagas vender para «hacer caja» si el dinero no hace falta (está en positivo y no lo necesita para algo de este mismo plan) y el jugador no entra en su once: puede quedarse hasta que LaLiga le haga una oferta mejor (hace una nueva en cada cambio de mercado), y que sea suplente o falte poco para la jornada no es motivo para venderlo. Vende solo si la oferta es buena (por encima de su valor o de las altas en su liga), si su valor cae deprisa (más de un 3 % al día), si está lesionado o si hace falta el dinero. Si le aconsejas esperar, díselo así.
@@ -863,6 +870,7 @@ CÓMO DECIDIR (hazlo con cada operación antes de recomendarla, y si algo falla,
 6. ¿Le llega el dinero? Para clausular, solo con el saldo de ahora. Para pujar o comprar en el mercado, con el saldo, el límite de deuda y lo que venda antes. Empezar la jornada en positivo.
 7. ¿Riesgos? Rivales con dinero para clausular sus jugadores, sus cláusulas abiertas, rotaciones por Champions o Copa, parón.
 CIERRE DE CLÁUSULAS: LaLiga no deja clausular a nadie en las 24 h antes del primer partido de cada jornada; se reabren justo a la hora de ese primer partido. Una cláusula que se abre dentro de ese cierre no se puede pagar hasta esa hora: nunca propongas clausular a la hora en que vence su protección si cae dentro del cierre (te paso cada una ya con la hora en que de verdad se puede pagar).
+LA JORNADA EN JUEGO: LaLiga cierra el once con el primer partido de cada jornada y no deja cambiar a nadie hasta la siguiente, ni a los que aún no han jugado; lo que se ficha o se clausula después no puntúa en esa jornada. Con la jornada en juego, el plan es para la siguiente (o para el parón, si viene antes): mercado, ventas, cláusulas y blindajes, sin paso de alinear ni alineación, y lo que pase en los partidos de esta jornada solo cuenta si cambia una decisión (una lesión, una expulsión, uno que se sale y va a subir de valor).
 BLINDAJES: en LaLiga Fantasy cada equipo puede blindar gratis 2 jugadores por jornada (viendo un anuncio; desde que acaba una jornada hasta que acaba la siguiente) y su cláusula queda protegida 24 h (48 h en las ligas Premium). Un jugador BLINDADO no se puede clausular hasta la hora que te digo: no lo recomiendes como clausulazo hasta entonces (como mucho, «cuando se abra»). Con los míos, si uno importante tiene la cláusula abierta y algún rival la puede pagar, y me quedan blindajes, blindarlo es gratis: recomiéndalo antes que gastar en subirle la cláusula (acción «blindar», importe 0, donde «con el blindaje de LaLiga»). Ojo: dura poco, así que si nadie le puede pagar la cláusula, guárdalo.
 Mejor no hacer nada que hacer algo dudoso. Confianza «alta» solo si todo cuadra y hay un dato o una noticia que lo respalda; si no has encontrado noticias, dilo.
 CALENDARIO DE RIESGO: con cada jugador te paso su calendario (sus próximos 5 partidos, o todos los de los 14 días que un fichaje tiene la cláusula protegida si son más): cada rival con su puesto, lo difícil que es PARA ÉL (un defensa sufre con el que marca mucho, un delantero con el que no encaja; y en casa o fuera), los puntos que se esperan y la probabilidad de que sea titular (con la rotación si su equipo juega Champions, Europa o Copa cerca), y cómo le fue a su equipo las últimas veces contra ese rival (V, E o D con el marcador, de la más vieja a la más reciente; pesa poco, menos que cómo están ahora). Si es DURO o de riesgo ALTO, no recomiendes ficharlo salvo que sea un parche (le falta gente sana en ese puesto para sacar el once) y a un precio cerca de su valor (como mucho el tope que te paso con su calendario, «sin pagar más de un …»: un 5 %, o más en los baratos, que se pagan más caros en porcentaje); si lo propones así, dilo («de parche»). Si es FAVORABLE y es titular, se puede pagar algo más por él. Cuando lo uses para fichar o descartar a alguien, justifícalo con los partidos (contra quién y si en casa o fuera), los puntos que se esperan y su titularidad, con las cifras que te paso; no basta con decir «calendario difícil». Con los que ya tiene, el calendario no decide la venta: uno duro no es motivo para vender por sí solo (aunque cuenta si le llega una buena oferta), y uno favorable NO es motivo para quedarse a uno que está bajando de valor: si toca venderlo por la inercia, eso manda, porque lo que sume en puntos no compensa lo que pierde cada día.
@@ -926,7 +934,7 @@ Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato, en es
  "situacion": "2 o 3 frases: cómo está mi equipo y qué buscamos hoy, con cifras",
  "descartes": [{"jugador": "nombre", "ref": "su ref o null", "motivo": "por qué NO (lesión, no juega, caro, rival difícil, no entra en el once, no se puede…)"}],
  "operaciones": [{"ref": "la ref de OPERACIONES POSIBLES HOY (P-…, T-…, C-…, A-…, V-…, B-…); null solo para alinear o esperar", "motivo": "por qué, con cifras y la noticia que lo justifica (1 o 2 frases)", "claves": ["3 a 5 datos cortos que lo respaldan: «Titular 90 %», «8-6-10 pts», «vs Getafe (19º)», «+1,2 %/día», «+3 % sobre su valor», «sin noticias»"], "accion": "aceptar_oferta|vender|pujar|comprar|clausular|blindar|alinear|esperar", "jugador": "nombre exacto de los datos", "donde": "a la liga | en el mercado | cláusula a <manager> | ...", "importe": número en euros o null, "puja_max": número o null, "cuando": "ahora | hoy antes de las 18:00 | mañana 14:05 cuando se abra", "dia": "hoy | AAAA-MM-DD (el día en que se hace)", "saldo_tras": número (mi saldo después de esta operación, contando las anteriores), "objetivo": "titular|revender|caja|proteger", "vender_el": "solo si es para revender: el día en que ponerlo a la venta", "beneficio_esperado": número en euros o null, "confianza": "alta|media|baja"}],
- "alineacion": {"formacion": "una de las formaciones gratuitas", "titulares": ["portero, defensas, medios y delanteros: nombres exactos"], "dudas": ["jugador: por qué"]},
+ "alineacion": {"formacion": "una de las formaciones gratuitas", "titulares": ["portero, defensas, medios y delanteros: nombres exactos"], "dudas": ["jugador: por qué"]} o null si la jornada está en juego (el once ya está cerrado),
  "proximos_dias": [{"dia": "mañana | lun 26 | antes de la jornada", "texto": "qué hacer ese día y a qué hora"}],
  "vigilar": [{"jugador": "nombre", "texto": "por qué hay que seguirlo"}],
  "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta", "efecto": "sube|baja|neutro"}],
@@ -1049,9 +1057,11 @@ export function cuadrarPlan(P, D, M) {
   // cada paso se comprueba contra lo que de verdad se puede hacer hoy
   const cat = catDe(D, M);
   const OPERA = ['vender', 'clausular', 'pujar', 'comprar', 'ofertar', 'blindar'];
-  // un plan de antes de que empezara la jornada: lo de poner el once ya ha pasado (el once ya está puesto, y en LaLiga
-  // solo se puede cambiar a los que aún no han jugado), así que ese paso y su once se quitan
+  // un plan de antes de que empezara la jornada: lo de poner el once ya ha pasado (LaLiga lo cierra con el primer
+  // partido y no deja cambiar a nadie hasta la siguiente), así que ese paso y su once se quitan. Con la jornada en
+  // juego, tampoco un plan de ahora lleva alinear ni once (aviso de Domy, 31 oct): es para la siguiente
   const empezo = !!(M.enJuego && (P.t || 0) < M.enJuego.ini);
+  const sinOnce = empezo || !!M.enJuego;
   // lo que un rival tiene a la venta no va en el plan (aviso de Domy, 29 oct: casi siempre lo pone solo para ver la oferta
   // de LaLiga y no lo quiere vender); se ve en Mercado → Fichar, «En venta de tus rivales». Un trato que contaste, sí
   const yoT = D.yo && D.yo.teamId;
@@ -1062,7 +1072,7 @@ export function cuadrarPlan(P, D, M) {
     const j = (o.pid && D.maestro[o.pid]) || buscar(o.jugador);
     return !!j && (M.mercado || []).some((m) => m.pid === j.id && m.tipo === 'manager' && m.vendedorTeamId !== yoT);
   };
-  let lista = (P.operaciones || []).filter((o) => !(empezo && /alinea/i.test(String(o.accion || ''))) && !ventaRival(o));
+  let lista = (P.operaciones || []).filter((o) => !(sinOnce && /alinea/i.test(String(o.accion || ''))) && !ventaRival(o));
   // (30 oct, Carlos: «me pone alinear a Unai cuando ya está en el once» y «blindarle cuando su cláusula está en 50 M
   // valiendo 38 M, sin sentido») el paso de alinear sobra si el once que propone es el que ya tienes puesto en LaLiga
   // (K('mi-once'), que app.js mira al cargar), y si cambia dice quién entra y quién sale; blindar a uno sin riesgo no
@@ -1095,7 +1105,7 @@ export function cuadrarPlan(P, D, M) {
     const j = D.maestro[entran[0]];
     return { ...o, jugador: j ? j.nombre : o.jugador, pid: j ? j.id : o.pid, cambioOnce: `Cambia en tu once de LaLiga: entra${entran.length > 1 ? 'n' : ''} ${entran.map(nom).join(', ')}${salen.length ? ` y sale${salen.length > 1 ? 'n' : ''} ${salen.map(nom).join(', ')}` : ''}.` };
   });
-  if (empezo && !lista.length) lista = [{ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'ahora', motivo: `La jornada ${M.enJuego.n} ya ha empezado (${cuando(M.enJuego.ini)}) y este plan es de antes. En LaLiga Fantasy solo puedes cambiar a los que aún no han jugado: mira en Equipo quién está de suplente o no va convocado. Y pide un plan nuevo: con la jornada empezada se han reabierto las cláusulas.` }];
+  if (empezo && !lista.length) lista = [{ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'ahora', motivo: `La jornada ${M.enJuego.n} ya ha empezado (${cuando(M.enJuego.ini)}) y este plan es de antes. Tu once de esta jornada ya está cerrado (LaLiga lo bloquea con el primer partido). Pide un plan nuevo, ya pensando en la jornada ${M.proxima ? M.proxima.n : 'siguiente'}: con la jornada empezada se han reabierto las cláusulas.` }];
   const ops = lista.map((o0, i) => {
     let o = { ...o0 };
     // la ref de la operación manda sobre el nombre (un nombre parecido podía dar otro jugador)
@@ -1280,23 +1290,26 @@ export function cuadrarPlan(P, D, M) {
   // lo que queda en tu plantilla tras el plan de hoy: lo que vendes, fuera; lo que clausulas o compras, dentro (las
   // pujas solo si las ganas: no cuentan). Si el once pierde mucho o se queda con huecos, se dice (revisión del 25 oct)
   // (aviso de Carlos, 30 oct: Gulácsi, con la cláusula a las 21:00 y su partido a las 21:00) una cláusula que se abre
-  // cuando el partido del jugador ya ha empezado, o está a punto, se puede pagar pero no llega a alinearlo: cuenta en
-  // el saldo, no en el once
+  // cuando ya ha empezado la jornada de su partido, o está a punto, se puede pagar pero no llega a alinearlo: LaLiga
+  // cierra el once con el primer partido de la jornada, no con el suyo (aviso de Domy, 31 oct). Cuenta en el saldo, no
+  // en el once. Con esa jornada ya en juego no se avisa: el plan ya es para la siguiente
   const tarde = new Map();
   for (const o of ops) {
     if (o.accion !== 'clausular' || !o.pid || !o.j || o.descartada || o.ya) continue;
     const cl = M.clausulas.find((x) => x.pid === o.pid);
     const pa = cl && !cl.abierta && M.proximoPartido ? M.proximoPartido(o.j.equipoId) : null;
-    if (!pa || !pa.fecha || cl.protegidoHasta + 10 * MIN <= pa.fecha) continue;
-    tarde.set(o.pid, { j: o.j, abre: cl.protegidoHasta, ini: pa.fecha });
-    const t = `Se abre ${cuando(cl.protegidoHasta)} y su partido es ${cuando(pa.fecha)}: esta jornada no lo vas a poder alinear.`;
+    const jo = pa && (M.jornadas || []).find((x) => x.n === pa.jornada);
+    const cierre = jo ? jo.ini : pa && pa.fecha;
+    if (!pa || !cierre || cierre <= Date.now() || cl.protegidoHasta + 10 * MIN <= cierre) continue;
+    tarde.set(o.pid, { j: o.j, abre: cl.protegidoHasta, ini: cierre });
+    const t = `Se abre ${cuando(cl.protegidoHasta)} y la jornada${jo ? ` ${jo.n}` : ''} empieza ${cuando(cierre)} (con el primer partido LaLiga cierra el once): esta jornada no lo vas a poder alinear.`;
     o.aviso = o.aviso ? `${String(o.aviso).replace(/[.\s]+$/, '')}. ${t}` : t;
   }
   for (const o of ops) {
     if (o.accion !== 'alinear' || !o.pid || o.descartada || !tarde.has(o.pid)) continue;
     const t = tarde.get(o.pid);
     o.descartada = true;
-    o.aviso = `La app lo descarta: ${t.j.nombre} no llega a tu once esta jornada. Su cláusula se abre ${cuando(t.abre)} y su partido es ${cuando(t.ini)}.`;
+    o.aviso = `La app lo descarta: ${t.j.nombre} no llega a tu once esta jornada. Su cláusula se abre ${cuando(t.abre)} y la jornada empieza ${cuando(t.ini)}, cuando LaLiga cierra el once.`;
   }
   const vendeHoy = new Set(ops.filter((o) => o.accion === 'vender' && o.hoy && !o.descartada && !o.ya && o.pid).map((o) => o.pid));
   const entraHoy = ops.filter((o) => ['clausular', 'comprar'].includes(o.accion) && o.hoy && !o.descartada && !o.ya && o.j && !tarde.has(o.pid)).map((o) => o.j);
@@ -1304,11 +1317,11 @@ export function cuadrarPlan(P, D, M) {
   let avisoOnce = null;
   if (!empezo && M.once && M.mejorOnce && vendeHoy.size) {
     const tras = M.mejorOnce(quedan);
-    if (tras && ((tras.huecos || 0) > (M.once.huecos || 0) || tras.total < M.once.total - 1.5)) avisoOnce = `Con estas ventas tu once pasa de ${d1(M.once.total)} a ${d1(tras.total)} puntos esperados${(tras.huecos || 0) > (M.once.huecos || 0) ? ` y se queda con ${tras.huecos} hueco${tras.huecos > 1 ? 's' : ''}` : ''}: ficha a alguien antes de la jornada o no vendas a todos.`;
+    if (tras && ((tras.huecos || 0) > (M.once.huecos || 0) || tras.total < M.once.total - 1.5)) avisoOnce = `Con estas ventas tu once pasa de ${d1(M.once.total)} a ${d1(tras.total)} puntos esperados${(tras.huecos || 0) > (M.once.huecos || 0) ? ` y se queda con ${tras.huecos} hueco${tras.huecos > 1 ? 's' : ''}` : ''}: ficha a alguien antes de la jornada${M.enJuego && M.proxima ? ` ${M.proxima.n}` : ''} o no vendas a todos.`;
   }
   // la alineación de la IA, comprobada: 11 tuyos (o fichados hoy en el plan) que no vendes hoy, un portero y una
   // formación de las gratis. Si no cuadra, la de la app
-  let alineacion = empezo ? null : P.alineacion, avisoAlin = null;
+  let alineacion = sinOnce ? null : P.alineacion, avisoAlin = null;
   // (solo la de la IA: la del plan automático es el mejor once de la app)
   if (P.modelo && alineacion && Array.isArray(alineacion.titulares)) {
     const pos = quedan.filter(Boolean);
@@ -1320,7 +1333,7 @@ export function cuadrarPlan(P, D, M) {
     const llegaTarde = [...tarde.values()].filter((t) => alineacion.titulares.some((n) => norm(n) === norm(t.j.nombre)));
     if (!bien) {
       avisoAlin = llegaTarde.length
-        ? `La alineación de la IA ponía a ${llegaTarde.map((t) => t.j.nombre).join(', ')}, que no llega${llegaTarde.length > 1 ? 'n' : ''}: su cláusula se abre ${cuando(llegaTarde[0].abre)}, cuando ya ha empezado su partido. Te pongo la mejor que sale con tu plantilla.`
+        ? `La alineación de la IA ponía a ${llegaTarde.map((t) => t.j.nombre).join(', ')}, que no llega${llegaTarde.length > 1 ? 'n' : ''}: su cláusula se abre ${cuando(llegaTarde[0].abre)}, cuando LaLiga ya ha cerrado el once de la jornada. Te pongo la mejor que sale con tu plantilla.`
         : 'La alineación de la IA no cuadra (algún jugador no es tuyo, lo vendes hoy, sobra o falta alguno, o la formación no es de las gratis): te pongo la mejor que sale con tu plantilla.';
       alineacion = null;
     } else {

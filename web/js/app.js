@@ -532,8 +532,9 @@ function programarFondo() {
 
 /* ---------- el once confirmado con la app cerrada ----------
    Unos 50 y 20 minutos antes de cada partido en que juega alguno de los que tienes alineados, una pasada en segundo
-   plano mira el once confirmado y, si uno de los tuyos no sale de titular, te avisa para que lo cambies antes de que
-   empiece (en LaLiga Fantasy se puede cambiar a cada uno hasta que empieza su partido). */
+   plano mira el once confirmado y, si uno de los tuyos no sale de titular, te avisa para que lo cambies. Solo antes de
+   los partidos que abren la jornada: LaLiga cierra el once con el primer partido y ya no deja cambiar a nadie hasta la
+   siguiente (aviso de Domy, 31 oct; antes se avisaba antes de cada partido). */
 const ONCE_ANTES = [50 * MIN, 20 * MIN];
 /** tu once de LaLiga, el último que se ha visto (o null) */
 function onceSabido() {
@@ -543,6 +544,13 @@ function onceSabido() {
   return v && Array.isArray(v.once) && v.once.length >= 5 ? v.once : null;
 }
 const apuntarMiOnce = (ids) => { if (ids && ids.length >= 5) LS.set(K('mi-once'), { t: Date.now(), ids: ids.map(String) }); };
+/** cuándo cierra LaLiga el once de la jornada del partido de un equipo que empieza hacia t: con el primer partido de esa jornada */
+function cierreOnce(D, t, eq) {
+  const ps = (D && D.partidos) || [];
+  const p = ps.find((q) => q.fecha && Math.abs(q.fecha - t) < 3 * HORA && (eq == null || String(q.localId) === String(eq) || String(q.visitanteId) === String(eq)));
+  if (!p || p.jornada == null) return t;
+  return Math.min(...ps.filter((q) => q.jornada === p.jornada && q.fecha).map((q) => q.fecha));
+}
 /** las horas de esas pasadas (de los partidos de los próximos 8 días); se guardan para cuando no hay datos a mano */
 function pasadasOnce(D) {
   if (!D || D.demo || !D.maestro) return [];
@@ -553,6 +561,7 @@ function pasadasOnce(D) {
   for (const p of D.partidos || []) {
     if (!p.fecha || p.fecha < ahora || p.fecha - ahora > 8 * DIA) continue;
     if (!eqs.has(String(p.localId)) && !eqs.has(String(p.visitanteId))) continue;
+    if (cierreOnce(D, p.fecha, p.localId) < p.fecha) continue;
     for (const a of ONCE_ANTES) horas.add(p.fecha - a);
   }
   const out = [...horas].filter((t) => t > ahora).sort((a, b) => a - b).slice(0, 40);
@@ -561,7 +570,7 @@ function pasadasOnce(D) {
 }
 /** ¿empieza pronto (en menos de 100 minutos) algún partido de los tuyos? */
 const onceCerca = (D, ahora = Date.now()) => (D && D.partidos ? D.partidos : []).some((p) => p.fecha > ahora && p.fecha - ahora < ANTES_ONCE);
-/** los avisos del once confirmado: los de tu once de LaLiga que no son titulares y aún no han empezado su partido */
+/** los avisos del once confirmado: los de tu once de LaLiga que no son titulares, si aún se puede cambiar el once */
 async function avisosOnce(D, M, al) {
   const yo = D && D.yo && D.yo.teamId;
   if (!yo || !M || D.demo || !onceCerca(D)) return [];
@@ -573,7 +582,7 @@ async function avisosOnce(D, M, al) {
   const ahora = Date.now(), J = (al && al.jugadores) || {};
   const TXT = { suplente: 'suplente', nosale: 'no sale de titular', fuera: 'no convocado', baja: 'de baja' };
   const FRASE = { suplente: 'Sale de suplente en el once confirmado', nosale: 'No sale de titular en el once confirmado', fuera: 'No está convocado', baja: 'Está de baja' };
-  const malos = ids.map((pid) => ({ pid, j: M.J(pid), a: J[pid] })).filter((x) => x.a && x.a.estado !== 'titular' && x.a.ini > ahora && TXT[x.a.estado]);
+  const malos = ids.map((pid) => ({ pid, j: M.J(pid), a: J[pid] })).filter((x) => x.a && x.a.estado !== 'titular' && x.a.ini > ahora && TXT[x.a.estado] && cierreOnce(D, x.a.ini, x.j && x.j.equipoId) > ahora);
   if (!malos.length) return [];
   // a quién meter: uno tuyo del mismo puesto que no está en el once, cuyo partido no ha empezado y que no se sabe que no juegue
   const usados = new Set();
@@ -596,7 +605,7 @@ async function avisosOnce(D, M, al) {
     return [{
       k: `once:${x.pid}:${x.a.ini}`,
       titulo: `${x.j.nombre} no es titular`,
-      texto: `${FRASE[x.a.estado]} (su partido empieza ${hora(x.a.ini)}) y lo tienes en tu alineación: cámbialo antes de que empiece${c ? `, puedes meter a ${c.j.nombre}` : ''}.`,
+      texto: `${FRASE[x.a.estado]} (su partido empieza ${hora(x.a.ini)}) y lo tienes en tu alineación: cámbialo antes de ${hora(cierreOnce(D, x.a.ini, x.j && x.j.equipoId))}, cuando LaLiga cierra el once${c ? `; puedes meter a ${c.j.nombre}` : ''}.`,
       hash: 'equipo',
     }];
   }
@@ -604,7 +613,7 @@ async function avisosOnce(D, M, al) {
   return [{
     k: `once:${malos.map((x) => `${x.pid}:${x.a.ini}`).sort().join(',')}`,
     titulo: `${malos.length} de tu once no son titulares`,
-    texto: `${partes.join('; ')}. Cámbialos antes de que empiece su partido.`,
+    texto: `${partes.join('; ')}. Cámbialos antes de ${hora(Math.min(...malos.map((x) => cierreOnce(D, x.a.ini, x.j && x.j.equipoId))))}, cuando LaLiga cierra el once.`,
     hash: 'equipo',
   }];
 }
@@ -1570,6 +1579,19 @@ function pintarGraf(pid) {
 }
 
 /* ---------------- el chat ---------------- */
+/**
+ * «¿Qué hago con X?» según de quién es (aviso de Domy, 31 oct: con uno suyo le preguntaba si comprarlo o clausularlo):
+ * tuyo, venderlo a LaLiga o a un rival, subirle la cláusula o quedártelo; de un rival, clausularlo u ofertarle; libre, pujar
+ */
+function preguntaJ(j) {
+  const M = S.M, D = S.D, yo = D.yo && D.yo.teamId;
+  if ((M.mias || []).some((x) => String(x.pid) === String(j.id))) return `¿Qué hago con ${j.nombre}, que es mío? Dime si me lo quedo, si lo vendo a LaLiga, si se lo vendo a un rival (a quién y por cuánto) o si le subo la cláusula (hasta cuánto), y por qué.`;
+  const tid = M.dueno && M.dueno[j.id];
+  const r = tid != null && String(tid) !== String(yo) ? (D.clasif || []).find((e) => String(e.teamId) === String(tid)) : null;
+  if (r) return `¿Qué hago con ${j.nombre}, que es de ${r.manager || r.nombre}? Dime si clausularlo (cuándo se puede y si me llega), hacerle una oferta (por cuánto) o dejarlo, y por qué.`;
+  if ((M.mercado || []).some((m) => String(m.pid) === String(j.id) && m.tipo === 'liga')) return `¿Qué hago con ${j.nombre}, que está libre en el mercado? Dime si pujar por él, cuánto como mucho y por qué.`;
+  return `¿Qué hago con ${j.nombre}? Dime si me interesa, cómo conseguirlo, cuánto pagar como mucho y por qué.`;
+}
 async function enviarPregunta(texto) {
   const t = (texto || '').trim();
   if (S.charlando || S.preparandoFotos) return;
@@ -2206,7 +2228,7 @@ document.addEventListener('click', async (ev) => {
       if (f) verFoto(f.id, f.mini); else if (actual) verFoto(actual.id, actual.mini);
       break;
     }
-    case 'preguntarJ': { const j = S.M.J(d.pid); cerrarHoja(true); enviarPregunta(`¿Qué hago con ${j.nombre}? Dime si comprarlo, venderlo, clausularlo o esperar, cuánto pagar como mucho y por qué.`); break; }
+    case 'preguntarJ': { const j = S.M.J(d.pid); cerrarHoja(true); enviarPregunta(preguntaJ(j)); break; }
     default: break;
   }
 });

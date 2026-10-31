@@ -456,8 +456,10 @@ function planHTML(S) {
   if (!hayClave()) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Activar la IA</button></div>`;
   // (en el ordenador, los próximos días van a la derecha, con los tiempos)
   if (!ancho()) h += diasHTML(S);
-  // el once, abierto cuando la jornada está cerca; si no, plegado
-  const onceH = onceHTML(S, P.alineacion, { sinCab: true });
+  // el once, abierto cuando la jornada está cerca; si no, plegado. Con la jornada en juego, nada: LaLiga lo cierra con el
+  // primer partido y Hoy ya piensa en la siguiente (aviso de Domy, 31 oct); el que puntúa se ve en Directo
+  const onceH = M.enJuego ? '' : onceHTML(S, P.alineacion, { sinCab: true });
+  if (M.enJuego) h += `<button class="fila once-cerrado" data-ir="directo"><span class="ic-act">${icono('campo')}</span><div class="fila-c"><div class="fila-n">Tu once de la jornada ${M.enJuego.n} ya está cerrado</div><div class="fila-s">LaLiga no deja cambiarlo hasta la jornada ${M.proxima ? M.proxima.n : 'siguiente'}. Lo que lleva, en Directo.</div></div></button>`;
   if (onceH) {
     const abrir = !!M.enJuego || (M.proxima && M.proxima.ini - Date.now() < 2 * DIA);
     h += `<details class="once-pleg" ${abrir ? 'open' : ''}><summary>${icono('campo')}<b>Tu once</b><span>${M.enJuego ? `jornada ${M.enJuego.n} · en juego` : M.proxima ? `jornada ${M.proxima.n} · ${cuando(M.proxima.ini)}` : ''}</span></summary>${onceH}</details>`;
