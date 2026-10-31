@@ -14,7 +14,7 @@ export const VERSION = '0.6.10i';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10i', f: '2026-10-31', h: '21:38', t: 'Con la jornada en juego, a por la siguiente',
+    v: '0.6.10i', f: '2026-10-31', h: '22:30', t: 'Con la jornada en juego, a por la siguiente',
     cosas: [
       { tipo: 'mejora', d: 'plan', t: 'Con la jornada empezada, Hoy piensa en la siguiente', x: 'LaLiga cierra tu once con el primer partido de la jornada y ya no deja cambiar a nadie hasta la siguiente, ni a los que aún no han jugado. La app daba por hecho que sí. Ahora, con la jornada en juego, el plan ya no te pone alinear ni te enseña un once para esa jornada: lo que propone (fichar, vender, clausular, proteger) es para la siguiente, o para el parón si llega antes. En Hoy, en lugar del once, te dice que está cerrado y te lleva a Directo para ver lo que lleva. Y si un clausulazo se abre después del primer partido, te avisa de que esa jornada no lo puedes alinear aunque su partido sea otro día.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'ia', t: '«¿Qué hago con…?», según de quién sea', x: 'El botón de la ficha de cada jugador ya no pregunta lo mismo para todos. Si es tuyo, le pregunta a la IA si te lo quedas, si lo vendes a LaLiga o a un rival (a quién y por cuánto) o si le subes la cláusula. Si es de un rival, si clausularlo, hacerle una oferta o dejarlo. Y si está libre en el mercado, si pujar y cuánto como mucho.', ir: { v: 'equipo' } },
