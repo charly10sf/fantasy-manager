@@ -2,7 +2,7 @@
 
 | Versión | Qué | Cuándo tiene sentido |
 | --- | --- | --- |
-| ~~1.1~~ | ~~Tarjetas compartibles: el plan y la pullita como imagen para el grupo de WhatsApp, con «hecho con Fantasy Manager»~~ | Adelantada y hecha en la 0.6.11 (1 nov, con la alarma del clausulazo en silencio; en `pendiente` hasta que Carlos la pruebe y diga publicar). Del plan solo sale lo hecho y público (lo decidió Carlos): lo pendiente va como «y N movimientos más» |
+| ~~1.1~~ | ~~Tarjetas compartibles: el plan y la pullita como imagen para el grupo de WhatsApp, con «hecho con Fantasy Manager»~~ | Adelantada y hecha en la 0.6.11 (publicada el 1 nov a las 02:02, con la alarma del clausulazo en silencio). Del plan solo sale lo hecho y público (lo decidió Carlos): lo pendiente va como «y N movimientos más» |
 | 1.2 | Historial de temporada de la liga: beneficio por mánager, récords, gráficas largas | Cuando haya 2–3 meses de datos |
 | 1.3 | Avisos finos de cláusulas («se abre en 2 h y te llega el dinero») y widget de Android con el plan; notificaciones web (Web Push con VAPID en el Worker) para que en el iPhone y la web lleguen las respuestas a los avisos con la web cerrada (en iPhone, solo añadida a la pantalla de inicio) | Mercado de invierno (enero) |
 | 1.4 | Onces probables de fuente externa en la ficha y en el once (adelantado en la 0.5.2: % de titular y alineaciones confirmadas de SofaScore; queda comprobar que SofaScore responde por el Worker en la web) | Cuando haya una fuente estable |
