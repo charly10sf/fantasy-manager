@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.11b';
+export const VERSION = '0.6.11c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.11b';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.11c', f: '2026-11-02', h: '00:04', t: '¿Es titular en su partido?',
+    cosas: [
+      { tipo: 'nuevo', d: 'campo', t: 'Tu plantilla, por quién es titular', x: 'En Equipo → Plantilla hay un orden nuevo, «Titular»: tus jugadores en grupos (titular confirmado, probable titular, con dudas, suplente o poco probable, no juegan y sin datos del once), cada uno con su rival y cuándo juega. Con la alineación ya confirmada sale «Titular» o «Suplente»; antes, la probabilidad con el once probable. Lo pidió Domy.', ir: { v: 'equipo', seg: 'equipo:plantilla' } },
+    ],
+  },
   {
     v: '0.6.11b', f: '2026-11-01', h: '13:55', t: 'La portada de la web',
     cosas: [

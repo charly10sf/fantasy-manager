@@ -769,7 +769,19 @@ function eqEstadoHTML(S) {
 }
 
 /** la plantilla, en el orden que elijas: por puesto (con el valor de cada línea), valor, lo que sube hoy o puntos */
-const ORDENES_EQ = [['puesto', 'Puesto'], ['valor', 'Valor'], ['sube', 'Sube hoy'], ['puntos', 'Puntos']];
+const ORDENES_EQ = [['puesto', 'Puesto'], ['titular', 'Titular'], ['valor', 'Valor'], ['sube', 'Sube hoy'], ['puntos', 'Puntos']];
+/* (aviso de Domy, 1 nov) quién de los tuyos es titular en su partido: confirmados, probables (75 % o más), con dudas, suplentes
+   o poco probables, los que no juegan y los que no tienen datos del once; los entrenadores, aparte */
+const GRUPOS_TIT = ['Titular confirmado', 'Probable titular · 75 % o más', 'Con dudas · 45-74 %', 'Suplente o poco probable', 'No juegan: lesión, sanción o sin convocar', 'Sin datos del once', 'Entrenadores'];
+function grupoTitular(M, j) {
+  if (j.pos === 5) return [6, 0];
+  const al = M.alineacion ? M.alineacion(j.id) : null;
+  if (al) return [al.estado === 'titular' ? 0 : ['suplente', 'nosale'].includes(al.estado) ? 3 : 4, al.estado === 'titular' ? 1 : 0];
+  if (MALOS_EQ.includes(j.estado)) return [4, 0];
+  const T = M.titularidad ? M.titularidad(j) : null;
+  if (!T || T.p == null) return [5, 0];
+  return [T.p >= 0.75 ? 1 : T.p >= 0.45 ? 2 : 3, T.p];
+}
 function eqPlantillaHTML(S, op) {
   const { M } = S;
   const orden = ORDENES_EQ.some(([k]) => k === S.ordenEq) ? S.ordenEq : 'puesto';
@@ -794,6 +806,11 @@ function eqPlantillaHTML(S, op) {
       l += `<div class="grupo" id="eq-pos-${p}" data-ancla><span>${POS_PLURAL[p]} · ${xs.length}${p === 5 ? ' · no puntúan en la versión gratis' : ''}</span><span>${eur(xs.reduce((s, x) => s + x.j.valor, 0))}</span></div>`;
       l += xs.map(fila).join('');
     }
+  } else if (orden === 'titular') {
+    const gs = GRUPOS_TIT.map(() => []);
+    for (const x of M.mias) { const [g, p] = grupoTitular(M, x.j); gs[g].push({ x, p }); }
+    l += `<p class="t2 peq">Si cada uno sale de titular en su próximo partido: con la alineación confirmada (sale unas 2 h antes) y, hasta entonces, con el once probable.</p>`;
+    gs.forEach((xs, g) => { if (xs.length) l += `<div class="grupo"><span>${GRUPOS_TIT[g]} · ${xs.length}</span><span></span></div>${xs.sort((a, b) => b.p - a.p || b.x.j.valor - a.x.j.valor).map((o) => fila(o.x)).join('')}`; });
   } else if (orden === 'sube') {
     // los que suben hoy (de más a menos), los que siguen igual y los que bajan (de los que más bajan a los que menos)
     const d1 = (x) => (x.tend && x.tend.d1 != null ? num(x.tend.d1) : 0);
