@@ -14,7 +14,7 @@ export const VERSION = '0.6.11b';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.11b', f: '2026-11-01', h: '13:46', t: 'La portada de la web',
+    v: '0.6.11b', f: '2026-11-01', h: '13:55', t: 'La portada de la web',
     cosas: [
       { para: 'dueño', tipo: 'mejora', d: 'tarjeta', t: 'Portada nueva, sin dar vueltas', x: 'La pantalla de antes de entrar, en la web: en un Android, el botón de bajar la app va primero y lo del código queda plegado; en un iPhone, la liga de ejemplo antes del paso del ordenador; los pasos de F12 solo salen en el ordenador. Debajo, tres móviles dibujados con el plan, las cláusulas y la IA. Y al compartir el enlace sale imagen y descripción.', ir: { v: 'hoy' } },
     ],
