@@ -31,6 +31,7 @@ import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNove
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
+import { seccionMoviles } from './portada.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
@@ -58,13 +59,14 @@ function tostada(t, ms = 3200) {
 }
 
 /* ---------------- pantallas completas ---------------- */
+const PIE_ENTRAR = '<p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. <a href="privacidad.html">Privacidad</a></p>';
 function pantallaEntrar(error = '') {
   ponerBanner(false);
-  raiz().innerHTML = `<div class="pantalla"><div class="pant-i">${LOGO}
+  // la portada de antes de entrar: en la web, con los móviles de abajo; dentro de la app, solo lo de entrar
+  raiz().innerHTML = `<div class="portada${enApp ? '' : ' web'}"><div class="pantalla"><div class="pant-i">${LOGO}
     <h1>Fantasy<br><span>Manager</span></h1>
     ${enWebVieja ? '<a class="aviso-mudanza" href="https://fantasymanagerapp.com/">La web ahora está en <b>fantasymanagerapp.com</b> →</a>' : ''}
-    ${enApp ? '' : avisoMovilHTML()}
-    <p>Cada día, las operaciones exactas para tu liga de LaLiga Fantasy: a quién vender, a quién comprar, cuánto pujar y a quién clausular.</p>
+    <p>Tu director deportivo para LaLiga Fantasy: cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular.</p>
     <ul class="lista-ok">
       <li>${icono('rayo')}Plan del día paso a paso, con el saldo después de cada operación</li>
       <li>${icono('ia')}La IA lee lesiones, convocatorias, alineaciones y el calendario antes de decidir</li>
@@ -73,10 +75,9 @@ function pantallaEntrar(error = '') {
     </ul></div><div class="pant-d">
     ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${enApp ? `<button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
-    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>` : entrarWebHTML()}
-    <button class="btn sec ancho" data-accion="entrarDemo" style="margin-top:6px">Ver con una liga de ejemplo</button>
-    <p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. <a href="privacidad.html">Privacidad</a></p>
-  </div></div>`;
+    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>${botonDemo('sec')}` : entrarWebHTML()}
+    ${enApp ? PIE_ENTRAR : ''}
+  </div></div>${enApp ? '' : seccionMoviles()}</div>`;
   // en el ordenador, el cursor directamente en el código; en el móvil no (sacaría el teclado tapando lo de arriba)
   if (!enApp && !movilDe()) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus(); }, 50);
 }
@@ -87,23 +88,35 @@ function movilDe() {
   if (/iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'iphone';
   return null;
 }
+const botonDemo = (clase) => `<button class="btn ${clase} ancho" data-accion="entrarDemo" style="margin:6px 0 12px">Ver con una liga de ejemplo</button>`;
 /** en el navegador: LaLiga solo devuelve la sesión a su app del móvil, así que se entra con un código de la app */
-/** la web abierta desde un móvil: en un Android lo suyo es la app, sin códigos (es lo que más lía a quien abre la web
-    desde el enlace); en el iPhone, cómo se entra la primera vez. Va arriba del todo, a la vista sin bajar */
-function avisoMovilHTML() {
-  const movil = movilDe();
-  return movil === 'android'
-    ? `<div class="entrar-movil"><b>${icono('descargar')}Estás en un Android: instala la app</b><span>Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos. Si el móvil avisa de que el archivo puede ser dañino, pulsa «Descargar de todas formas»; luego ábrelo e instálalo.</span><a class="btn ancho" href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">${icono('descargar')}Bajar la app</a></div>`
-    : movil === 'iphone'
-      ? `<div class="entrar-movil"><b>${icono('info')}Estás en un iPhone</b><span>La primera vez hay que entrar desde un <b>ordenador</b>: LaLiga no deja hacerlo en el iPhone. En el ordenador abre esta misma web, pulsa «No tengo la app en el móvil» y sigue los pasos. Ya dentro, en <b>Ajustes → Abrir en otro dispositivo</b> te da un código: escríbelo aquí abajo. Solo se hace una vez.</span></div>`
-      : '';
-}
-function entrarWebHTML() {
-  return `${movilDe() === 'android' ? '<p class="entrar-o">¿Ya tienes la app y quieres usar también la web? Entra con un código:</p>' : ''}<div class="entrar-codigo">
+const codigoWebHTML = () => `<div class="entrar-codigo">
       <b>${icono('usuario')}Entra con el código de la app</b>
       <span>En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. O, si ya has entrado en la web de un ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código de 8 letras y números que dura 10 minutos.</span>
       <div class="codigo-in"><input id="codigoWeb" maxlength="9" placeholder="ABCD2345" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="usarCodigo"><button class="btn" data-accion="usarCodigo">Entrar</button></div>
-    </div>
+    </div>`;
+/**
+ * lo de entrar en la web, según desde dónde se abra. En un Android lo suyo es la app, sin códigos (era lo que más lía a
+ * quien abre la web desde el enlace): el botón de bajarla es lo primero y el código queda plegado, para quien ya la
+ * tiene. En el iPhone, cómo se entra la primera vez, y la liga de ejemplo para ver qué es antes de ese paso. En el
+ * ordenador, el código y los pasos para copiar la vuelta a mano (con F12), que en un móvil no sirven de nada.
+ */
+function entrarWebHTML() {
+  const movil = movilDe();
+  if (movil === 'android') {
+    return `<a class="btn ancho cta-grande" href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">${icono('descargar')}Bajar la app para Android</a>
+    <p class="cta-nota">Gratis. Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos.</p>
+    ${botonDemo('sec')}
+    <details class="sin-app"><summary>¿El móvil no te deja instalarla?</summary>
+      <p>Abre esta página en <b>Chrome</b> (no dentro de WhatsApp). Si avisa de que el archivo puede ser dañino, pulsa «Descargar de todas formas»; luego ábrelo e instálalo. <a href="instalar.html#android">Más ayuda</a></p></details>
+    <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>`;
+  }
+  if (movil === 'iphone') {
+    return `<div class="entrar-movil"><b>${icono('info')}Estás en un iPhone</b><span>La primera vez hay que entrar desde un <b>ordenador</b>: LaLiga no deja hacerlo en el iPhone. En el ordenador abre esta misma web, pulsa «No tengo la app en el móvil» y sigue los pasos. Ya dentro, en <b>Ajustes → Abrir en otro dispositivo</b> te da un código: escríbelo aquí abajo. Solo se hace una vez.</span></div>
+    ${botonDemo('')}
+    ${codigoWebHTML()}`;
+  }
+  return `${codigoWebHTML()}
     <details class="sin-app"><summary>No tengo la app en el móvil</summary>
       <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un código para escribirlo aquí en el iPhone.</p>
       <ol>
@@ -116,7 +129,8 @@ function entrarWebHTML() {
       <button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>
       <textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea>
       <button class="btn chico" data-accion="pegarVuelta">Entrar</button>
-    </details>`;
+    </details>
+    ${botonDemo('sec')}`;
 }
 /** lo que manda la app con el código: la sesión, tu liga y tu equipo, la clave de la IA y el dinero que te han dicho */
 /**

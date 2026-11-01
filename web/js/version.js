@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.11a';
+export const VERSION = '0.6.11b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.11a';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.11b', f: '2026-11-01', h: '13:46', t: 'La portada de la web',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'tarjeta', t: 'Portada nueva, sin dar vueltas', x: 'La pantalla de antes de entrar, en la web: en un Android, el botón de bajar la app va primero y lo del código queda plegado; en un iPhone, la liga de ejemplo antes del paso del ordenador; los pasos de F12 solo salen en el ordenador. Debajo, tres móviles dibujados con el plan, las cláusulas y la IA. Y al compartir el enlace sale imagen y descripción.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.6.11a', f: '2026-11-01', h: '12:24', t: 'Lo urgente, de acuerdo con tu plan',
     cosas: [

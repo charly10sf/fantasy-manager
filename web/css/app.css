@@ -1850,3 +1850,105 @@ button.cr-p:active { background: var(--plano); }
 .tj-prev { display: flex; justify-content: center; margin: 0 0 14px; }
 .tj-prev img { display: block; width: 100%; max-width: 420px; max-height: 58vh; object-fit: contain; border-radius: 14px; border: 1px solid var(--linea); background: var(--fondo); }
 .tj-carga { display: flex; align-items: center; justify-content: center; width: 100%; max-width: 420px; aspect-ratio: 1; border-radius: 14px; border: 1px dashed var(--linea); color: var(--apagado); font: 600 15px 'Barlow'; text-align: center; padding: 20px; }
+
+/* ---------- la portada (antes de entrar) ----------
+   En la web: arriba, entrar (el botón de lo que toca según el móvil, sin la lista de cosas antes) y debajo tres móviles
+   dibujados con HTML (js/portada.js). En la app de Android, solo lo de entrar. */
+.portada { background: radial-gradient(120% 36% at 14% 0%, rgba(238, 28, 60, 0.22), transparent 70%), repeating-linear-gradient(115deg, transparent 0 64px, rgba(238, 28, 60, 0.04) 64px 128px); }
+.portada.web .pantalla { min-height: 0; padding-bottom: 28px; }
+/* en el móvil: el logo, el titular, el botón y, por último, la lista (el botón no se queda debajo de ella) */
+.portada .pant-i { display: contents; }
+.portada .pant-d { order: 2; }
+.portada .lista-ok { order: 3; margin: 6px 0 4px; }
+.portada .pantalla h1 { font-size: 58px; }
+.portada .cta-grande { min-height: 60px; font: 700 21px var(--cond); letter-spacing: 0.6px; box-shadow: 0 10px 30px rgba(238, 28, 60, 0.35); }
+.portada .cta-grande .ic { width: 24px; height: 24px; }
+.portada .pantalla p.cta-nota { margin: 10px 0 14px; font-size: 14px; color: var(--apagado); text-align: center; }
+.portada .pant-d .sin-app { margin-top: 10px; }
+.portada .pant-d .sin-app .entrar-codigo { background: none; border: 0; padding: 0; margin: 0 0 12px; }
+.escritorio .portada .pant-i { display: block; }
+.escritorio .portada .pantalla h1 { font-size: 92px; }
+.escritorio .portada.web .pantalla { padding-bottom: 40px; }
+
+.portada-m { max-width: 1120px; margin: 0 auto; padding: 14px 0 48px; }
+.portada-m h2 { font: 700 34px/1 var(--cond); text-transform: uppercase; margin: 0 24px 18px; color: var(--texto); }
+.pm-fila { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 24px 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.pm-fila::-webkit-scrollbar { display: none; }
+.pm-fila figure { margin: 0; flex: 0 0 min(76vw, 290px); scroll-snap-align: center; }
+.pm-fila figcaption { display: grid; gap: 4px; }
+.pm-fila figcaption b { font: 700 24px/1 var(--cond); text-transform: uppercase; color: var(--texto); }
+.pm-fila figcaption span { font-size: 15px; line-height: 1.45; color: var(--texto2); }
+.pm-nota { margin: 6px 24px 0; font-size: 13.5px; color: var(--apagado); }
+.escritorio .pm-fila { overflow: visible; justify-content: center; gap: 56px; padding: 8px 48px 16px; }
+.escritorio .pm-fila figure { flex: 0 0 300px; }
+.escritorio .portada-m h2, .escritorio .pm-nota { margin-left: 48px; margin-right: 48px; }
+
+/* el móvil dibujado */
+.mq { width: 100%; aspect-ratio: 9 / 18; margin-bottom: 16px; filter: drop-shadow(0 18px 38px rgba(238, 28, 60, 0.2)); }
+.mq-p { height: 100%; display: flex; flex-direction: column; border: 7px solid #1d1d24; border-radius: 34px; background: var(--fondo); overflow: hidden; color: var(--texto); text-align: left; }
+.mq .ic { width: 16px; height: 16px; }
+.mq-cab { display: flex; align-items: center; gap: 8px; padding: 12px 12px 8px; border-bottom: 1px solid var(--linea); }
+.mq-cab .logo { width: 24px; height: 24px; flex: none; }
+.mq-cab b { display: block; font: 700 12px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; }
+.mq-cab small { display: flex; align-items: center; gap: 4px; margin-top: 2px; font-size: 9.5px; color: var(--apagado); }
+.mq-cab u { width: 6px; height: 6px; border-radius: 50%; background: var(--sube); }
+.mq-cuerpo { position: relative; flex: 1; min-height: 0; overflow: hidden; padding: 12px 12px 0; }
+.mq-cuerpo::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 46px; background: linear-gradient(transparent, var(--fondo)); }
+.mq-k { font: 700 9.5px var(--cond); text-transform: uppercase; letter-spacing: 1.4px; color: var(--rojo-l); }
+.mq-t { margin: 3px 0 5px; font: 700 21px/1.02 var(--cond); text-transform: uppercase; }
+.mq-x { margin: 0 0 4px; font-size: 10.5px; line-height: 1.4; color: var(--texto2); }
+.mq-x b { color: var(--texto); }
+.mq-op { margin-top: 9px; padding: 9px; border-radius: 12px; background: var(--plano); border: 1px solid var(--linea); }
+.mq-op-c { display: flex; align-items: center; gap: 6px; }
+.mq-op-c em { font: 700 8px var(--cond); text-transform: uppercase; letter-spacing: 0.8px; font-style: normal; padding: 3px 6px; border-radius: 5px; }
+.mq-op-c small { font-size: 9px; color: var(--apagado); }
+.mq-op-f { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; margin-top: 7px; }
+.mq-op-f b { display: block; font-size: 13px; line-height: 1.1; }
+.mq-op-f small { display: block; font-size: 9.5px; color: var(--apagado); }
+.mq-op-f strong { font: 700 15px var(--cond); }
+.mq-op-p { display: flex; justify-content: space-between; margin-top: 7px; padding-top: 6px; border-top: 1px dashed var(--plano3); font: 700 9px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; }
+.mq-op-p span:first-child { color: var(--sube); }
+.mq-op-p span:first-child::before { content: '✓ '; }
+.mq .verde { color: var(--sube); }
+.mq-op-c em.verde { background: var(--sube-s); }
+.mq-av { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--sube); background: var(--plano2); font: 700 11px var(--cond); }
+.mq-av.rojo { border-color: var(--rojo); }
+.mq-av.oro { border-color: var(--oro); }
+.mq-chips { display: flex; gap: 5px; margin: 9px 0 8px; }
+.mq-chips span { padding: 5px 8px; border-radius: 999px; background: var(--plano2); font-size: 9px; font-weight: 600; color: var(--texto2); white-space: nowrap; }
+.mq-chips span.on { background: var(--rojo); color: #fff; }
+.mq-fila { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; padding: 9px 0; border-top: 1px solid var(--linea); }
+.mq-fila b { font-size: 13px; }
+.mq-fila small { display: block; font-size: 9.5px; color: var(--apagado); }
+.mq-fila .pos { display: inline-block; margin-right: 5px; padding: 1px 4px; border-radius: 3px; font: 700 7.5px/1.4 var(--cond); font-style: normal; color: #000; background: var(--por); }
+.mq-fila .pos.DEL { background: var(--del); color: #fff; }
+.mq-b { display: flex; align-items: center; gap: 4px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 6px; background: var(--rojo); color: #fff; font: 700 9px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; }
+.mq-b .ic { width: 10px; height: 10px; }
+.mq-c { display: block; width: fit-content; margin-top: 4px; padding: 3px 7px; border-radius: 6px; background: var(--rojo-s); color: var(--rojo-l); font-size: 9px; font-weight: 600; }
+.mq-fila strong { align-self: start; text-align: right; font: 700 15px var(--cond); }
+.mq-fila strong small { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.mq-fila strong u { width: 26px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--rojo) 70%, var(--plano3) 70%); }
+.mq-yo { margin: 10px 0 10px 22px; padding: 9px; border-radius: 12px 12px 3px 12px; background: var(--plano2); font-size: 10.5px; line-height: 1.35; }
+.mq-ia { padding-left: 9px; border-left: 3px solid var(--rojo); }
+.mq-ia em { font: 700 8.5px var(--cond); font-style: normal; text-transform: uppercase; letter-spacing: 1px; color: var(--rojo-l); }
+.mq-ia p, .mq-ia ul { margin: 5px 0 0; font-size: 10.5px; line-height: 1.4; color: var(--texto2); }
+.mq-ia ul { padding-left: 14px; }
+.mq-ia b { color: var(--texto); }
+.mq-nav { display: flex; justify-content: space-around; padding: 7px 2px 9px; border-top: 1px solid var(--linea); background: var(--fondo); }
+.mq-nav span { display: grid; justify-items: center; gap: 2px; color: var(--apagado); }
+.mq-nav i { font-style: normal; font-size: 8.5px; font-weight: 600; }
+.mq-nav .on { color: var(--rojo-l); }
+/* retoques de la portada: el botón de bajar la app en blanco (`.pantalla a` lo pone en rojo), el titular sin una palabra suelta, móviles más bajos */
+.portada .pantalla a.btn, .portada .pantalla a.btn .ic { color: #fff; }
+.mq-t { text-wrap: balance; }
+.mq { aspect-ratio: 9 / 16; }
+.mq-op-c em.rojo { background: var(--rojo-s); color: var(--rojo-l); }
+.mq .rojo { color: var(--rojo-l); }
+.mq-av.rojo { color: var(--texto); }
+.pm-pie { margin: 22px 24px 0; font-size: 13px; color: var(--apagado); }
+.pm-pie a { color: var(--rojo-l); }
+.escritorio .pm-pie { margin-left: 48px; margin-right: 48px; }
+.escritorio #app:has(> .portada) { padding-left: 0; }
+.mq-in { position: absolute; z-index: 1; left: 10px; right: 10px; bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.mq-in span { flex: 1; padding: 8px 10px; border-radius: 10px; background: var(--plano2); font-size: 9.5px; color: var(--apagado); }
+.mq-in i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: var(--rojo); color: #fff; }
