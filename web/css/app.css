@@ -1830,7 +1830,11 @@ button.cr-p:active { background: var(--plano); }
 .club-num > button:last-child { border-right: 0; }
 
 /* las tarjetas para compartir (0.6.11, tarjetas.js) */
-.plan-comp { padding: 6px 8px; }
+/* (0.6.11a) quién y cuándo, debajo de la cabecera del plan: al lado de los botones se cortaba en el móvil */
+.plan-cab .eti { margin-right: auto; }
+.plan > .plan-quien { display: flex; margin: 4px 0 0; white-space: normal; overflow: visible; line-height: 1.3; }
+/* lo urgente que se ha abierto después del plan */
+.ahora-nota { display: block; margin-top: 4px; font: italic 500 13px/1.3 'Barlow'; color: var(--oro); }
 .tj-nota { margin: 0 0 12px; line-height: 1.4; }
 .tj-ops { flex-wrap: nowrap; overflow-x: auto; margin: 0 -2px 12px; padding: 0 2px; }
 .tj-ops button { display: inline-flex; align-items: center; gap: 6px; max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

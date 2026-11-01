@@ -202,13 +202,29 @@ function ahoraHTML(S) {
   // lo que ya está en el plan no se repite aquí, ni lo que has quitado hoy
   const enPlan = new Set(Object.keys(S.opPorPid || {}));
   const fuera = urgentesQuitados();
-  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a))).slice(0, 3);
+  // (Carlos, 1 nov: le salían 2 clausulazos urgentes que el plan no decía) con un plan de la IA de hoy, una cláusula que
+  // ya estaba abierta cuando se hizo no es urgente: la IA la tenía entre lo que se podía hacer y no la eligió (o la
+  // descartó). Solo sale la que se ha abierto después, y lo dice
+  const P = S.plan;
+  const conIA = !!(P && !P.auto && !P.viejo && P.t);
+  const descartados = new Set(conIA && Array.isArray(P.descartes) ? P.descartes.map((d) => norm(d && d.jugador)).filter(Boolean) : []);
+  const ahora = Date.now();
+  const despuesDelPlan = (x) => (x.protegidoHasta && x.protegidoHasta > P.t) || (M.vedas || []).some((v) => v.ini <= P.t && v.fin > P.t && v.fin <= ahora);
+  const nota = {};
+  const yaVista = (a) => {
+    if (!conIA || a.tipo !== 'clausular' || !a.pid) return false;
+    const x = M.clausulas.find((y) => y.pid === a.pid);
+    if (!x || descartados.has(norm(x.j.nombre)) || !despuesDelPlan(x)) return true;
+    nota[a.pid] = 'Se ha abierto después de tu plan: no lo tiene en cuenta.';
+    return false;
+  };
+  const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a)).slice(0, 3);
   if (!urg.length && S.plan) return '';
   if (!urg.length) return `<div class="ahora-ok">${icono('ok')}<span><b>Nada urgente ahora mismo.</b> ${fuera.size ? 'Lo que has quitado vuelve mañana si sigue igual.' : 'Ninguna cláusula tuya en peligro ni nada que vender ya.'}</span></div>`;
   const yo = S.D && S.D.yo && S.D.yo.teamId;
   // a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto
   const conSust = (a) => a.pid && M.dueno[a.pid] === yo && (a.tipo === 'vender' || ['injured', 'suspended'].includes((M.J(a.pid) || {}).estado));
-  return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<div class="ahora-f t-${esc(a.tipo)}"><button class="ahora-b" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b><span>${esc(a.texto)}</span></span>${a.cuando ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button><button class="ahora-x" data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}" aria-label="Quitar hasta mañana" title="Quitar hasta mañana">${icono('cerrar')}</button>${conSust(a) ? `<button class="ahora-sust" data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}</div>`).join('')}</div>`;
+  return `<div class="sec"><h2>Ahora mismo</h2><span class="sub">${urg.length === 1 ? '1 cosa urgente' : `${urg.length} cosas urgentes`}</span></div><div class="ahora">${urg.map((a) => `<div class="ahora-f t-${esc(a.tipo)}"><button class="ahora-b" ${a.pid ? `data-j="${esc(a.pid)}"` : a.hash ? `data-ir="${esc(a.hash)}"` : ''}><span class="ahora-ic">${icono(a.icono || 'alerta')}</span><span class="ahora-c"><b>${esc(a.titulo)}</b><span>${esc(a.texto)}</span>${a.pid && nota[a.pid] ? `<em class="ahora-nota">${esc(nota[a.pid])}</em>` : ''}</span>${a.cuando ? `<span class="ahora-cu">${esc(a.cuando)}</span>` : ''}</button><button class="ahora-x" data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}" aria-label="Quitar hasta mañana" title="Quitar hasta mañana">${icono('cerrar')}</button>${conSust(a) ? `<button class="ahora-sust" data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}</div>`).join('')}</div>`;
 }
 
 /**
@@ -432,8 +448,9 @@ function planHTML(S) {
   // pedir otro: un botón pequeño en la cabecera (antes, uno grande con su explicación entre el resumen y los pasos)
   const otro = hayClave() && !E.cargando && P ? `<button class="plan-otro-b" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Otro plan' : 'Con la IA'}</button>` : '';
   // compartir: el plan (lo hecho) y sus pullitas como imagen para el grupo de la liga (0.6.11)
-  const compartir = P && !E.cargando ? `<button class="plan-otro-b plan-comp" data-accion="tarjeta" aria-label="Compartir en el grupo de tu liga" title="Compartir en el grupo de tu liga">${icono('enviar')}</button>` : '';
-  h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${quien ? `<span class="plan-quien">${icono(esIA ? 'ia' : 'lista')}${quien}</span>` : ''}${compartir}${otro}</div>`;
+  // (Carlos, 1 nov) con texto: solo el icono no se veía. Quién y cuándo, en su línea: al lado de los botones se cortaba en el móvil
+  const compartir = P && !E.cargando ? `<button class="plan-otro-b plan-comp" data-accion="tarjeta" title="Una imagen de tu plan para el grupo de tu liga">${icono('enviar')}Compartir</button>` : '';
+  h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${compartir}${otro}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}</span></div>` : ''}`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te aviso cuando esté.</div>' : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
   else if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
