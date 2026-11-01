@@ -14,7 +14,7 @@ export const VERSION = '0.6.10j';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.10j', f: '2026-11-01', h: '', t: 'Cuántos planes llevas',
+    v: '0.6.10j', f: '2026-11-01', h: '01:25', t: 'Cuántos planes llevas',
     cosas: [
       { para: 'play', tipo: 'arreglo', d: 'ia', t: 'La cuenta de los planes, bien dicha', x: 'La ventana del anuncio para pedir otro plan decía «ya has pedido 3 planes», pero el primer plan del día no cuenta: son 3 «Otro plan» gratis además de ese. Ahora lo dice así.', ir: { v: 'hoy' } },
     ],
