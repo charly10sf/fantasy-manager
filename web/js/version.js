@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10i';
+export const VERSION = '0.6.10j';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.10i';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.10j', f: '2026-11-01', h: '', t: 'Cuántos planes llevas',
+    cosas: [
+      { para: 'play', tipo: 'arreglo', d: 'ia', t: 'La cuenta de los planes, bien dicha', x: 'La ventana del anuncio para pedir otro plan decía «ya has pedido 3 planes», pero el primer plan del día no cuenta: son 3 «Otro plan» gratis además de ese. Ahora lo dice así.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.6.10i', f: '2026-10-31', h: '22:30', t: 'Con la jornada en juego, a por la siguiente',
     cosas: [

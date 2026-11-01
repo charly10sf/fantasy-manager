@@ -468,7 +468,7 @@ export function anuncioHTML(S, para) {
   const A = S.anuncio || {};
   if (para === 'top') return anuncioTopHTML(A);
   let h = `<div class="hoja-cab"><h2>Otro plan</h2></div>`;
-  h += `<p class="t2" style="margin:0 0 14px">Hoy ya has pedido 3 planes a la IA. Para pedir otro, mira un anuncio corto. Mañana vuelves a tener 3 gratis.</p>`;
+  h += `<p class="t2" style="margin:0 0 14px">Hoy ya le has pedido otro plan a la IA 3 veces. Para uno más, mira un anuncio corto. Mañana vuelves a tener 3 gratis, sin contar el primer plan del día.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
   h += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn" data-accion="verAnuncio" data-para="${esc(para)}"${A.cargando ? ' disabled' : ''}>${A.cargando ? 'Cargando el anuncio…' : 'Ver el anuncio'}</button><button class="btn sec" data-accion="cerrarHoja">Ahora no</button></div>`;
   h += `<p class="t2 peq" style="margin-top:14px">Con los anuncios la app sigue siendo gratis. El plan automático, sin IA, no tiene límite.</p>`;
