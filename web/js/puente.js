@@ -210,6 +210,9 @@ export const nativo = {
   alarmasExactas: () => (N ? !!llamar('alarmasExactas') : false),
   pedirAlarmasExactas: () => llamar('pedirAlarmasExactas'),
   notificar: (t, x, h = '') => llamar('notificar', t, x, h),
+  // la alarma del clausulazo (0.6.11): la de prueba suena a los `seg` segundos
+  hayAlarma: () => !!(N && typeof N.probarAlarma === 'function'),
+  probarAlarma: (seg, t, x) => llamar('probarAlarma', Math.round(seg), t, x),
   version: () => (N ? llamar('version') || 0 : 0),
   // de dónde viene la app: «github» (se actualiza sola desde el aviso), «play» (la actualiza la tienda) o «web»
   canal: () => (N ? llamar('canal') || 'github' : 'web'),
@@ -232,6 +235,9 @@ export const nativo = {
     return Promise.resolve(false);
   },
   compartir: (t) => (N ? llamar('compartir', t) : nativo.copiar(t)),
+  // una imagen (data:image/png;base64,…) con la app que elijas; en la app desde la 0.6.11 (si no, devuelve false)
+  hayImagen: () => !!(N && typeof N.compartirImagen === 'function'),
+  compartirImagen: (datos, t = '') => !!llamar('compartirImagen', datos, t),
   abrir: (url) => (N ? llamar('abrir', url) : window.open(url, '_blank', 'noopener')),
   toque: () => llamar('toque'),
   // mientras la IA trabaja: pantalla encendida y notificación fija para que Android no corte internet

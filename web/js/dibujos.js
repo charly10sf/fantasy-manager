@@ -21,6 +21,8 @@ export const DIBUJOS = {
     <rect class="d-s" x="22" y="88" width="34" height="14" rx="7"/><rect class="d-s" x="63" y="88" width="34" height="14" rx="7"/><rect class="d-s" x="104" y="88" width="34" height="14" rx="7"/>`,
   noche: `<rect class="d-l" x="28" y="12" width="58" height="98" rx="12"/><path class="d-l" d="M44 34h26M44 46h18"/><circle class="d-s" cx="57" cy="80" r="15"/><path class="d-al" d="M50 80l5 5 9-10"/>
     <path class="d-a" d="M128 18a22 22 0 1 0 16 34 18 18 0 0 1-16-34z"/><path class="d-l" d="M104 76h12l-12 14h12"/>`,
+  tarjeta: `<rect class="d-s" x="30" y="12" width="74" height="96" rx="10"/><rect class="d-l" x="30" y="12" width="74" height="96" rx="10"/><circle class="d-a" cx="49" cy="33" r="9"/><path class="d-l" d="M64 29h28M64 38h18M42 60h50M42 71h42M42 82h46"/>
+    <path class="d-al" d="M114 58l32-16-12 34-7-12z"/><path class="d-al" d="M127 64l19-22"/>`,
   campana: `<path class="d-s" d="M80 18c-18 0-30 14-30 32v20l-10 14h80l-10-14V50c0-18-12-32-30-32z"/><path class="d-l" d="M80 18c-18 0-30 14-30 32v20l-10 14h80l-10-14V50c0-18-12-32-30-32zM70 92a10 10 0 0 0 20 0"/>
     <circle class="d-a" cx="110" cy="26" r="11"/><path class="d-al" d="M28 40c-4 8-4 18 0 26M132 40c4 8 4 18 0 26"/>`,
   ajustes: `<rect class="d-l" x="30" y="22" width="100" height="32" rx="16"/><circle class="d-a" cx="114" cy="38" r="11"/><rect class="d-l" x="30" y="68" width="100" height="32" rx="16"/><circle class="d-l" cx="46" cy="84" r="11"/>`,

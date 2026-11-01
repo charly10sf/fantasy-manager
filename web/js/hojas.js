@@ -550,12 +550,12 @@ export function ajustes(S) {
   else h += `<div class="ajuste"><div class="c"><b>Avisos</b><span>${ca.on ? (nativo.avisosPermitidos() || !enApp ? `${prog.length} programados` : 'Falta el permiso de notificaciones') : 'Apagados'}</span></div>${interr(ca.on, 'avisosOn', '', 'Avisos')}</div>`;
   if (ca.on && enApp) {
     if (!nativo.alarmasExactas()) h += `<div class="ajuste"><div class="c"><b>Al minuto exacto</b><span>Sin este permiso pueden llegar unos minutos tarde</span></div><button class="btn chico" data-accion="exactas">Dar permiso</button></div>`;
-    h += [['plan', 'Clausulazos de tu plan', '1 minuto antes de que se abra la cláusula'], ['rivales', 'Cláusulas de rivales que se abren', 'Las que te interesan y te llegan'], ['mias', 'Protección de los tuyos', '2 horas antes de que se acabe'], ['mercado', 'El mercado cambia', '1 hora antes'], ['jornada', 'Empieza la jornada', '3 horas antes'], ['diario', 'Plan del día', 'Un aviso para abrir la app y ver el plan']]
+    h += [['plan', 'Clausulazos de tu plan', '1 minuto antes de que se abra la cláusula'], ...(ca.plan && nativo.hayAlarma() ? [['alarma', 'Que suene como una alarma', 'Aunque tengas el móvil en silencio, hasta que la toques']] : []), ['rivales', 'Cláusulas de rivales que se abren', 'Las que te interesan y te llegan'], ['mias', 'Protección de los tuyos', '2 horas antes de que se acabe'], ['mercado', 'El mercado cambia', '1 hora antes'], ['jornada', 'Empieza la jornada', '3 horas antes'], ['diario', 'Plan del día', 'Un aviso para abrir la app y ver el plan']]
       .map(([kk, t, s]) => `<div class="ajuste"><div class="c"><b>${t}</b><span>${s}</span></div>${kk === 'diario' && ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" style="margin-right:6px">` : ''}${interr(ca[kk], 'avisoTipo', `data-k="${kk}"`, t)}</div>`).join('');
     h += `<div class="ajuste"><div class="c"><b>Interés mínimo</b><span>Solo cláusulas que te interesen al menos esto</span></div><select data-cambia="interes">${[30, 40, 50, 55, 60, 70, 80].map((n) => `<option value="${n}" ${+ca.interes === n ? 'selected' : ''}>${n}</option>`).join('')}</select></div>`;
     const prox = prog.filter((a) => a.id !== 'diario').slice(0, 6);
     if (prox.length) h += `<p class="t2 peq" style="margin:10px 0 0">Próximos: ${prox.map((a) => `${esc(a.titulo)} (${cuando(a.t)})`).join(' · ')}</p>`;
-    h += `<button class="btn chico sec" style="margin-top:10px" data-accion="probarAviso">Probar un aviso</button>`;
+    h += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn chico sec" data-accion="probarAviso">Probar un aviso</button>${ca.plan && ca.alarma && nativo.hayAlarma() ? '<button class="btn chico sec" data-accion="probarAlarma">Probar la alarma</button>' : ''}</div>`;
   }
 
   h += `<div class="grupo"><span>App</span></div>`;

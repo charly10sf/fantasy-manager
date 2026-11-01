@@ -5,7 +5,7 @@ import { LS, eur, cuando, MIN, HORA, DIA, diaDe, otroDia, horaDe } from './util.
 import { cerradaHasta } from './limite.js';
 
 export const cfgAvisos = () => ({
-  on: false, plan: true, rivales: true, mias: true, mercado: true, jornada: true, diario: true, hora: '13:30', interes: 55,
+  on: false, plan: true, alarma: true, rivales: true, mias: true, mercado: true, jornada: true, diario: true, hora: '13:30', interes: 55,
   ...LS.get('cfg-avisos', {}),
 });
 export const guardarCfgAvisos = (c) => LS.set('cfg-avisos', { ...cfgAvisos(), ...c });
@@ -25,8 +25,10 @@ export function calcular(D, M, c = cfgAvisos(), plan = null) {
 
   // (lo pidió Carlos el 30 oct) los clausulazos que manda el plan: una alarma 1 minuto antes de que se abra la cláusula,
   // para tener LaLiga Fantasy abierta a la hora. Sale del plan que se ve: al rehacerlo (o si deja de mandarlo) se recalcula.
-  // El de ayer, no: lo que mandaba ya puede no valer
+  // El de ayer, no: lo que mandaba ya puede no valer. Desde la 0.6.11 suena como una alarma (con el volumen de alarma,
+  // aunque el móvil esté en silencio, hasta que se toca): Avisos.java, «alarma»
   if (c.plan && plan && !plan.viejo) {
+    const al = c.alarma !== false ? { alarma: true } : {};
     const xs = [];
     for (const o of plan.ops || []) {
       if (o.accion !== 'clausular' || !o.pid || o.descartada || o.ya || xs.some((x) => x.pid === o.pid)) continue;
@@ -36,11 +38,11 @@ export function calcular(D, M, c = cfgAvisos(), plan = null) {
     for (const g of porVeda(xs)) {
       const v = g[0].veda;
       add(`plan1-reabre-${v.n}`, v.abre - MIN, 'En 1 min se reabren las cláusulas',
-        `Tu plan dice clausular a ${conY(g.map((x) => `${x.j.nombre} (${eur(x.clausula)})`))} a las ${cuando(v.abre).split(' ').pop()}. Abre LaLiga Fantasy ya.`, 'hoy');
+        `Tu plan dice clausular a ${conY(g.map((x) => `${x.j.nombre} (${eur(x.clausula)})`))} a las ${cuando(v.abre).split(' ').pop()}. Abre LaLiga Fantasy ya.`, 'hoy', al);
     }
     xs.filter((x) => !x.veda)
       .forEach((x) => add(`plan1-${x.teamId}-${x.pid}`, x.protegidoHasta - MIN, `En 1 min se abre ${x.j.nombre}`,
-        `Tu plan dice clausularlo: ${eur(x.clausula)} a ${x.rival.nombre}, a las ${cuando(x.protegidoHasta).split(' ').pop()}. Abre LaLiga Fantasy ya.`, 'hoy'));
+        `Tu plan dice clausularlo: ${eur(x.clausula)} a ${x.rival.nombre}, a las ${cuando(x.protegidoHasta).split(' ').pop()}. Abre LaLiga Fantasy ya.`, 'hoy', al));
   }
 
   if (c.rivales) {

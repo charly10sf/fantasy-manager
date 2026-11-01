@@ -9,6 +9,7 @@ import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import * as Dr from './directo.js';
 import * as Cl from './clubes.js';
+import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
 import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api, apuntarRegistro } from './api.js';
@@ -1436,7 +1437,7 @@ const htmlHoja = (tipo, arg) => {
     return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
-const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
+const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
 /*
  * las fichas que se abren desde otra (un jugador desde su club, el club desde un partido…) llevan arriba «‹ Volver» a
  * la de antes; el gesto de atrás de Android hace lo mismo. pila: las fichas de antes, de la más vieja a la última
@@ -1501,6 +1502,18 @@ async function cargarClub(id) {
   S.notClub[id] = { t: Date.now(), l };
   if (S.cargandoClub === id) S.cargandoClub = null;
   if (S.tipoHoja && S.tipoHoja[0] === 'c' && String(S.tipoHoja[1]) === String(id)) repintarHoja();
+}
+/** dibuja la tarjeta elegida y la pone en su hoja (si sigue abierta y no se ha cambiado mientras) */
+let tarjetaN = 0;
+async function pintarTarjeta() {
+  const T = S.tarjeta;
+  if (!T) return;
+  const n = ++tarjetaN;
+  let r = null;
+  try { r = await Tj.dibujar(S, T.k, T.titular); } catch (e) { console.error(e); apuntarError(e.message, 'tarjeta'); }
+  if (n !== tarjetaN || S.tarjeta !== T) return;
+  if (r) Object.assign(T, r, { error: '' }); else T.error = 'No se ha podido preparar la imagen.';
+  if (S.tipoHoja && S.tipoHoja[0] === 'tarjeta') repintarHoja();
 }
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
@@ -2184,6 +2197,26 @@ document.addEventListener('click', async (ev) => {
     case 'avisoTipo': guardarCfgAvisos({ [d.k]: !cfgAvisos()[d.k] }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); break;
     case 'exactas': nativo.pedirAlarmasExactas(); break;
     case 'probarAviso': if (enApp) { nativo.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'rivales'); tostada('Mira las notificaciones'); } else tostada('Los avisos solo funcionan en la app'); break;
+    // las tarjetas para el grupo de la liga (0.6.11): el plan y sus pullitas como imagen
+    case 'tarjeta': S.tarjeta = { k: 'plan' }; hoja('tarjeta'); pintarTarjeta(); break;
+    case 'tarjetaVer': if (S.tarjeta && S.tarjeta.k !== d.k) { S.tarjeta = { k: d.k, titular: S.tarjeta.titular, chiva: S.tarjeta.chiva }; repintarHoja(); pintarTarjeta(); } break;
+    case 'tarjetaTitular': {
+      const T = S.tarjeta;
+      if (!T) break;
+      T.titular = !(T.titular == null ? !T.chiva : T.titular); T.url = null; T.blob = null;
+      repintarHoja(); pintarTarjeta();
+      break;
+    }
+    case 'tarjetaMandar': {
+      const r = await Tj.mandar(S.tarjeta);
+      if (r === 'descargada') tostada('Imagen descargada: mándala desde tus fotos', 3500);
+      else if (r === 'sin') tostada('Esta versión de la app no manda imágenes: actualízala', 4000);
+      break;
+    }
+    case 'probarAlarma':
+      nativo.probarAlarma(10, 'Así suena la alarma del clausulazo', 'Te llega 1 minuto antes de que se abra la cláusula que manda tu plan. Para pararla, tócala o baja las notificaciones.');
+      tostada('Suena en 10 segundos: pon el móvil en silencio y bloquéalo', 5000);
+      break;
     case 'buscarVersion': buscarVersion(true); break;
     case 'ponerWeb': ponerWebNueva(); break;
     case 'recargarWeb': recargarWeb(); break;

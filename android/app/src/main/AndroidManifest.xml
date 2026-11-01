@@ -64,6 +64,13 @@
             </intent-filter>
         </receiver>
 
+        <!-- las tarjetas para compartir (el plan, una pullita): la app a la que se mandan las lee de aquí -->
+        <provider
+            android:name=".Tarjetas"
+            android:authorities="${applicationId}.tarjetas"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
         <service
             android:name=".Trabajo"
             android:exported="false"

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.10j';
+export const VERSION = '0.6.11';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.6.10j';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.11', f: '2026-11-01', h: '01:54', t: 'Al grupo de la liga',
+    cosas: [
+      { tipo: 'nuevo', d: 'tarjeta', t: 'Tu plan, al grupo de la liga', x: 'Con el botón de enviar de la cabecera del plan sale una imagen para el grupo de WhatsApp de tu liga: el titular y lo que ya has hecho hoy (el clausulazo y a quién se lo has quitado, la venta y quién se lo lleva). Lo que tienes en marcha no sale, va como «y 2 movimientos más que no te cuento», y si el titular nombra a alguno de esos se quita solo (lo puedes volver a poner). También puedes mandar cada noticia y cada rival del plan, con su pullita.', ir: { v: 'hoy' } },
+      { para: 'app', tipo: 'mejora', d: 'campana', t: 'La alarma del clausulazo suena aunque estés en silencio', x: 'El aviso de 1 minuto antes del clausulazo de tu plan suena ahora como una alarma: con el volumen de alarma, aunque tengas el móvil en silencio, hasta que lo toques o bajes las notificaciones (3 minutos como mucho). Si rehaces el plan y ya no lo manda, se quita solo. En Ajustes → Avisos, «Que suene como una alarma» lo deja como un aviso normal y «Probar la alarma» la hace sonar a los 10 segundos.' },
+    ],
+  },
   {
     v: '0.6.10j', f: '2026-11-01', h: '01:25', t: 'Cuántos planes llevas',
     cosas: [

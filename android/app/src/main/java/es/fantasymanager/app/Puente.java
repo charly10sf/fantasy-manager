@@ -290,6 +290,12 @@ public class Puente {
         enPantalla(() -> act.pedirAlarmasExactas());
     }
 
+    /** la alarma del clausulazo, de prueba: suena dentro de unos segundos (para probarla con el móvil en silencio) */
+    @JavascriptInterface
+    public void probarAlarma(int segundos, String titulo, String texto) {
+        Avisos.probarAlarma(ctx, segundos, titulo == null ? "Fantasy Manager" : titulo, texto == null ? "" : texto);
+    }
+
     @JavascriptInterface
     public void notificar(String titulo, String texto, String hash) {
         Avisos.mostrar(ctx, "web:" + titulo, titulo == null ? "Fantasy Manager" : titulo, texto == null ? "" : texto, hash == null ? "" : hash);
@@ -368,6 +374,38 @@ public class Puente {
                 // sin apps para compartir
             }
         });
+    }
+
+    /**
+     * Comparte una tarjeta (un PNG que dibuja la web, en base64 o como data:image/png;base64,…) con la app que elijas.
+     * Devuelve false si no se ha podido guardar: la web comparte entonces el texto.
+     */
+    @JavascriptInterface
+    public boolean compartirImagen(String datos, String texto) {
+        if (datos == null || datos.isEmpty()) return false;
+        try {
+            int coma = datos.indexOf(',');
+            String b64 = datos.startsWith("data:") && coma > 0 ? datos.substring(coma + 1) : datos;
+            byte[] png = android.util.Base64.decode(b64, android.util.Base64.DEFAULT);
+            if (png.length < 8 || png.length > MAX) return false;
+            Uri u = Tarjetas.guardar(ctx, png);
+            enPantalla(() -> {
+                Intent i = new Intent(Intent.ACTION_SEND).setType("image/png")
+                        .putExtra(Intent.EXTRA_STREAM, u)
+                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                if (texto != null && !texto.isEmpty()) i.putExtra(Intent.EXTRA_TEXT, texto);
+                // con la ClipData, el selector enseña la imagen y pasa el permiso de leerla a la app elegida
+                i.setClipData(ClipData.newRawUri("Fantasy Manager", u));
+                try {
+                    act.startActivity(Intent.createChooser(i, "Compartir"));
+                } catch (Exception e) {
+                    // sin apps para compartir
+                }
+            });
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @JavascriptInterface
