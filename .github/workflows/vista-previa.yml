@@ -1,0 +1,37 @@
+# Vista previa de la web de una rama sin publicarla: cada push a una rama «web-…» sube web/ a Cloudflare Pages como
+# despliegue de vista previa (no de producción) en https://<rama>.fantasy-manager-61v.pages.dev. No toca main, ni
+# GitHub Pages, ni fantasymanagerapp.com, ni el APK, ni app.json. Cloudflare marca las vistas previas con
+# X-Robots-Tag: noindex, así que Google no las indexa. El Worker ya admite como origen cualquier *.pages.dev del
+# proyecto, así que la app se puede probar entera (también entrando con el código). Lo pidió Carlos el 2 nov para ver
+# la web de AdSense antes de publicarla.
+name: Vista previa
+
+on:
+  push:
+    branches: ['web-*']
+    paths: ['web/**', '.github/workflows/vista-previa.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vista-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Subir web/ como vista previa
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          RAMA: ${{ github.ref_name }}
+        run: |
+          set -o pipefail
+          if [ "$RAMA" = main ] || [ "$RAMA" = pendiente ]; then echo "::error::Solo para ramas de prueba"; exit 1; fi
+          npx --yes wrangler@4 pages deploy web --project-name fantasy-manager --branch "$RAMA" --commit-dirty=true 2>&1 | tee salida.txt
+          url=$(grep -oE 'https://[a-z0-9.-]+\.pages\.dev' salida.txt | tail -1)
+          echo "::notice::Vista previa: $url (alias de la rama: https://$(echo "$RAMA" | tr -c 'a-z0-9-\n' '-').fantasy-manager-61v.pages.dev)"
