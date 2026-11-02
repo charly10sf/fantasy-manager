@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12';
+export const VERSION = '0.6.12a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.12';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12a', f: '2026-11-02', h: '23:50', t: 'Aviso de app en desarrollo', menor: true,
+    cosas: [
+      { tipo: 'nuevo', d: 'conexion', menor: true, t: 'La app avisa de que sigue en desarrollo', x: 'Arriba sale que la app aún está en desarrollo, con un botón para reportar cualquier fallo. Se cierra con la × y vuelve a salir a la semana.' },
+    ],
+  },
   {
     v: '0.6.12', f: '2026-11-02', h: '23:03', t: 'Entrar con un QR',
     cosas: [
