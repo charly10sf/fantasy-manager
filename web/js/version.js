@@ -14,7 +14,7 @@ export const VERSION = '0.6.12a';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.12a', f: '2026-11-02', h: '23:50', t: 'Aviso de app en desarrollo', menor: true,
+    v: '0.6.12a', f: '2026-11-02', h: '23:57', t: 'Aviso de app en desarrollo', menor: true,
     cosas: [
       { tipo: 'nuevo', d: 'conexion', menor: true, t: 'La app avisa de que sigue en desarrollo', x: 'Arriba sale que la app aún está en desarrollo, con un botón para reportar cualquier fallo. Se cierra con la × y vuelve a salir a la semana.' },
     ],
