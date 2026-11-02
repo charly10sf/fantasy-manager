@@ -1,0 +1,19 @@
+# Sonda de caras y escudos para la liga de ejemplo (solo lectura, sin secretos). Salta con cada push a pruebas-fuentes.
+name: Caras demo
+on:
+  workflow_dispatch:
+  push:
+    branches: [pruebas-fuentes]
+    paths: ['.github/caras/**', '.github/workflows/caras.yml']
+permissions:
+  contents: read
+jobs:
+  sondear:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node .github/caras/sonda.mjs
