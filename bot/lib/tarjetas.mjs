@@ -170,9 +170,14 @@ export function svgJugador(d) {
     + texto(130, 104, `LALIGA FANTASY · J${d.jornada}`, { px: 15, peso: 700, color: tintaIzq, espacio: 2, opacidad: 0.8 });
   // derecha
   const x0 = izq + 70, wDer = ANCHO - x0 - 50;
-  const anchoEt = ancho(d.etiqueta, 16) + 2 * 30 + 32;
-  s += `<rect x="${x0}" y="40" width="${Math.min(wDer, anchoEt)}" height="38" rx="19" fill="${ROJO}"/>`
-    + texto(x0 + 18, 65, d.etiqueta.toUpperCase(), { px: 16, peso: 700, color: '#fff', espacio: 2, max: wDer - 36 })
+  // la etiqueta va en mayúsculas y con 2 px entre letras: se mide así (antes se medía en minúsculas y sin el espaciado, y los
+  // nombres largos, como «Osasuna» o «Real Sociedad», se salían de la píldora roja) y, si no cabe, se encoge la letra
+  const et = d.etiqueta.toUpperCase();
+  const medirEt = (p) => ancho(et, p) * 1.04 + et.length * 2 + 36;
+  let pxEt = 16;
+  while (pxEt > 10 && medirEt(pxEt) > wDer) pxEt--;
+  s += `<rect x="${x0}" y="40" width="${Math.min(wDer, medirEt(pxEt))}" height="38" rx="19" fill="${ROJO}"/>`
+    + texto(x0 + 18, 65, et, { px: pxEt, peso: 700, color: '#fff', espacio: 2 })
     + texto(x0, 150, d.nombre, { px: 68, display: true, color: tema.tinta, max: wDer })
     + texto(x0, 186, `${d.posicion} · ${d.club.corto}`, { px: 20, peso: 600, color: tema.tenue });
   // tres cifras: puntos de la jornada, total y media
