@@ -10,7 +10,7 @@ const puntos = (h) => (Array.isArray(h) ? h : []).map((v) => ({ t: Date.parse(v.
 /** 1 234 567 -> «1,2 M»; por debajo del millón, en miles: «640 K» */
 const dinero = (x) => (x >= 1e6 ? `${fmt(x / 1e6)} M` : `${Math.round(x / 1e3)} K`);
 const numDinero = (x) => (x >= 1e6 ? partes(x / 1e6) : [Math.round(x / 1e3)]);
-const MEDALLA = ['🥇', '🥈', '🥉'];
+const MEDALLA = { suben: ['🥇', '🥈', '🥉'], bajan: ['🔻', '🔻', '🔻'] };
 
 /**
  * ventanas: solo cuando el último valor de la lista es de HOY (Madrid) y aún no se ha publicado; sin ventanas (simulacro o forzado),
@@ -48,7 +48,7 @@ export async function generar({ jugadores, equipos, jornada, registro = null, ve
     const lineas = ord.map((f, i) => {
       const s = f.dif > 0 ? '+' : '-';
       num.push(...numDinero(Math.abs(f.dif)), ...numDinero(f.nuevo), ...partes(Math.abs(f.pct)));
-      return `${MEDALLA[i]} ${f.nombre} (${f.equipo}) ${s}${dinero(Math.abs(f.dif))} (${s}${fmt(Math.abs(f.pct))} %), ahora ${dinero(f.nuevo)}`;
+      return `${MEDALLA[clave][i]} ${f.nombre} (${f.equipo}) ${s}${dinero(Math.abs(f.dif))} (${s}${fmt(Math.abs(f.pct))} %), ahora ${dinero(f.nuevo)}`;
     });
     const coment = clave === 'suben'
       ? elegir(['Si los tienes, hoy sonríes.', 'Quien los fichó a tiempo, hoy gana.', 'Ojo, que la subida se cobra al venderlos.'], `mu${dia}`)

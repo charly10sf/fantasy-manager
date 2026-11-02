@@ -19,7 +19,18 @@ claves sin publicar) y, si sale bien, poner `BOT_MODO` = `publicar`.
 `resumen` (mejores y peores de la jornada, al acabar), `final` (cada partido al acabar, solo los empezados en las últimas 10 h),
 `directo` (cada gol con su asistente y los puntos fantasy, rojas y penaltis fallados, de los partidos de hoy empezados hace menos
 de 3 h; el término medio de Domy, aceptado por Carlos el 2 nov), `mvp` (el MVP de cada partido con su tarjeta), `caidas` (lesionados y sancionados habituales de la jornada que viene, al acabar la actual o antes de que empiece; las dudas, no, hasta
-tener una segunda fuente). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
+tener una segunda fuente), `mercado` (cada noche, tras la actualización de valores de hacia las 00:15: dos tweets, los 3 que más suben y los 3 que más bajan, por euros respecto al día anterior). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
+
+### Cómo se escriben (2 nov, noche)
+
+- Los tweets de partido (`directo`, `final`, `mvp`) no llevan «LaLiga Fantasy J..» en la cabecera: llevan el marcador del momento de la jugada
+  (reconstruido de los `details` de ESPN, solo si cuadra con el marcador final; si no, el actual y un texto sin relato) y una frase de cómo
+  ha sido (`lib/relato.mjs`, `tipos/directo.mjs`, `relato()` en `tipos/final.mjs`).
+- El cierre «Fantasy Manager · enlace en la bio» va solo en `final` y `mercado` (Carlos, 2 nov 23:11). El resto lleva la palabra «fantasy» en el texto o, si no la
+  lleva, cierra con #LaLigaFantasy (`sinCierre` en `lib/texto.mjs`). Las respuestas de Telegram para los clubes siguen con cierre.
+- **Puntos DAZN** (`lib/dazn.mjs`): llegan después del final del partido. `final`, `mvp`, `resumen`, los tweets de `directo` de un partido ya acabado y las
+  respuestas de Telegram esperan a que los jugadores que más puntúan del partido tengan `marca_points` en su ficha (player/{id}); si pasan
+  `daznEsperaHoras` (6, en `config.json`) desde el saque sin verlo, salen igual.
 
 ## Tarjetas con imagen (encendidas desde el 2 nov)
 
@@ -27,7 +38,7 @@ Dos tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov): la 
 peores de cada equipo con su cara y sus puntos oficiales; «peores» = los que menos puntúan de los que jugaron 30' o más, con los
 minutos de la ficha de cada jugador, porque stats/week no los trae) y la de **jugador** (cara, escudo, puntos de la jornada, total,
 media, últimas 5 jornadas y valor de los últimos 30 días con su cambio). La de final va en el tweet `final`; la de jugador, en
-un tweet `mvp` aparte por partido (tope 10 por jornada) y en los dobletes y tripletes de `directo`.
+un tweet `mvp` aparte por partido (tope 10 por jornada) y, en `directo`, una por cada jugador implicado (goleador, asistente, expulsado, el que falla el penalti; hasta 4 por tweet).
 
 - Se encienden en `config.json`: `"tarjetas": { "final": true, "jugador": true }`. Con las dos a false el bot hace lo mismo que sin
   esto (ni instala nada ni genera el tweet `mvp`).
