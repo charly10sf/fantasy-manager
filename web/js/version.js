@@ -14,7 +14,7 @@ export const VERSION = '0.6.12';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.12', f: '2026-11-02', h: '23:00', t: 'Entrar con un QR',
+    v: '0.6.12', f: '2026-11-02', h: '23:03', t: 'Entrar con un QR',
     cosas: [
       { para: 'app', tipo: 'nuevo', d: 'conexion', t: 'Abre tu cuenta en el ordenador con un QR', x: 'Abre fantasymanagerapp.com en el ordenador y sale un QR. En la app: Ajustes → Abrir en el ordenador → Escanear QR, apuntas a la pantalla y el ordenador entra solo con tu liga y tu clave de la IA. Sin escribir códigos.' },
       { para: 'web', tipo: 'mejora', d: 'conexion', t: 'El iPhone entra con la cámara', x: 'Junto al código de 8 letras sale un QR: escanéalo con la cámara del iPhone y la web se abre ya con tu cuenta, sin escribir nada.' },
