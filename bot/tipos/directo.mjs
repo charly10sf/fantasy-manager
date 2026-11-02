@@ -1,8 +1,7 @@
 // Directo: goles, rojas y penaltis fallados de ESPN (con minuto) casados con los puntos oficiales de LaLiga. Aquí se prueba
 // repitiendo partidos ya jugados de la jornada; en directo se llamará igual con el marcador de cada momento.
 import { json } from '../lib/http.mjs';
-import { cierre } from '../lib/texto.mjs';
-import { norm, corto } from '../lib/texto.mjs';
+import { cierre, norm, corto, armar, fmt, partes } from '../lib/texto.mjs';
 
 const ESPN = 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
 const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la', 'del', 'el', 'y', 'sd', 'ad']);
@@ -35,7 +34,8 @@ export function disparadores(detalles) {
   return out;
 }
 
-export async function generar({ stats, jornada, fechasEspn }) {
+export async function generar({ stats, jornada, fechasEspn, jugadores }) {
+  const porId = new Map((jugadores || []).map((j) => [String(j.id), j]));
   const out = [];
   for (const f of fechasEspn) {
     const sb = await json(`${ESPN}/scoreboard?dates=${f}`).catch(() => null);
@@ -53,10 +53,15 @@ export async function generar({ stats, jornada, fechasEspn }) {
         const pts = p && p.weekPoints != null ? Number(p.weekPoints) : null;
         const min = parseInt(dsp.min, 10);
         const marcador = `${corto(m.local.mainName)} ${m.localScore}-${m.visitorScore} ${corto(m.visitor.mainName)}`;
-        const cab = `${dsp.clase === 'roja' ? '🟥' : dsp.clase === 'penalti fallado' ? '❌' : '⚽'} LaLiga Fantasy J${jornada} · ${dsp.clase[0].toUpperCase()}${dsp.clase.slice(1)} de ${nombre} (${corto(lado.mainName)}) en el ${min}'`;
-        const lineas = [`${marcador}.${pts != null ? ` Lleva ${pts} pts.` : ''}`];
-        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.clase}`, jornada, texto: [cab, ...lineas, cierre(`directo${m.id}${dsp.jugador}`)].join('\n'),
-          numeros: [jornada, min, m.localScore, m.visitorScore, ...(pts != null ? [pts] : [])], casado: !!p });
+        const media = p && porId.get(String(p.id)) ? Number(porId.get(String(p.id)).averagePoints) || 0 : 0;
+        const equipo = corto(lado.mainName);
+        const cab = dsp.clase === 'roja' ? `🟥 ¡Roja para ${nombre} (${equipo}) en el ${min}'!`
+          : dsp.clase === 'penalti fallado' ? `❌ ¡${nombre} (${equipo}) falla un penalti en el ${min}'!`
+          : `${'⚽'.repeat(Math.min(dsp.goles || 2, 3))} ¡${dsp.clase === 'doblete' ? 'DOBLETE' : dsp.clase === 'triplete' ? 'TRIPLETE' : 'Goles'} de ${nombre} (${equipo})! Último en el ${min}'.`;
+        const lineas = [`${marcador} · LaLiga Fantasy J${jornada}`];
+        if (pts != null) lineas.push(dsp.clase === 'roja' || dsp.clase === 'penalti fallado' ? `📊 Ahora mismo suma ${pts} pts${media >= 3 ? ` (su media: ${fmt(media)})` : ''}.` : `📊 Ya suma ${pts} pts${media >= 3 ? ` y su media es ${fmt(media)}` : ''}.`);
+        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.clase}`, jornada, texto: armar(cab, lineas, cierre(`directo${m.id}${dsp.jugador}`)),
+          numeros: [jornada, min, m.localScore, m.visitorScore, ...(pts != null ? [pts] : []), ...(media >= 3 ? partes(media) : [])], casado: !!p });
       }
     }
   }

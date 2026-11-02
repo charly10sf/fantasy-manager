@@ -20,19 +20,28 @@ export const CIERRES = [
   'Fantasy Manager · todo en el enlace de la bio',
   'Fantasy Manager · app en la bio',
 ];
-const hash = (s) => [...String(s)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+export const hash = (s) => [...String(s)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
 export const cierre = (semilla) => CIERRES[hash(semilla) % CIERRES.length];
 
-/** corta una lista de líneas para que el tweet entero quepa en max; devuelve las que caben */
+/** el tweet con aire: titular, hueco, cuerpo, hueco, cierre */
+export const armar = (cab, cuerpo, pie) => [cab, '', ...cuerpo, '', pie].join('\n');
+
+/** corta una lista de líneas (por orden de importancia) para que el tweet entero quepa en max; devuelve las que caben */
 export function quepa(cabecera, lineas, pie, max = 280) {
   const out = [];
   for (const l of lineas) {
-    const t = [cabecera, ...out, l, pie].join('\n');
-    if (peso(t) > max) break;
+    if (peso(armar(cabecera, [...out, l], pie)) > max) break;
     out.push(l);
   }
   return out;
 }
+
+/** una variante de varias, siempre la misma para la misma semilla (así no suena igual en cada tweet, pero es repetible) */
+export const elegir = (variantes, semilla) => variantes[hash(semilla) % variantes.length];
+/** 7.25 -> «7,3» */
+export const fmt = (x) => (Math.round(Number(x) * 10) / 10).toString().replace('.', ',');
+/** los números que salen al escribir fmt(x): 7,3 -> [7, 3] (para el validador) */
+export const partes = (x) => { const r = Math.round(Math.abs(Number(x)) * 10) / 10; return [Math.trunc(r), Math.round((r % 1) * 10)]; };
 
 // Nombres de equipo para los tweets (los de la API son largos: «R. Racing Club», «C.A. Osasuna»)
 const CORTOS = [['atletico', 'Atlético'], ['athletic', 'Athletic'], ['barcelona', 'Barça'], ['betis', 'Betis'], ['celta', 'Celta'], ['elche', 'Elche'],

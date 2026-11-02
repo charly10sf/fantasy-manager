@@ -1,7 +1,7 @@
 // Caídas probables de la jornada que viene: titulares habituales con baja o duda (Carlos, 2 nov 16:16: «es probable que no vaya a jugar»).
 // % de titularidad parcial: minutos de las últimas jornadas (peso 0,3) y partidos de más de 60' de la temporada (0,2), sin el once probable
 // de futbolfantasy (0,5, aún no portado); doblado a ×0,6 si es duda; 0 si está lesionado o sancionado.
-import { cierre, quepa, corto } from '../lib/texto.mjs';
+import { cierre, quepa, armar, corto, elegir, fmt, partes } from '../lib/texto.mjs';
 import { ficha, ESTADOS } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
 
@@ -33,18 +33,23 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     if (!b || b.p < 0.6) return;                      // solo titulares habituales
     const p = j.playerStatus === 'doubtful' ? b.p * 0.6 : 0;
     if (p >= config.umbralCaida) return;
-    caidas.push({ id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), estado: ESTADOS[j.playerStatus], pct: Math.round(p * 100) });
+    caidas.push({ id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), estado: ESTADOS[j.playerStatus], pct: Math.round(p * 100), media: Number(j.averagePoints) || 0 });
   });
   const out = [];
-  for (let k = 0; k < caidas.length; k += 5) {
-    const grupo = caidas.slice(k, k + 5);
-    const cab = `🚨 LaLiga Fantasy J${jornada} · Caídas probables`;
+  for (let k = 0; k < caidas.length; k += 4) {
+    const grupo = caidas.slice(k, k + 4);
+    const cab = elegir([`🚨 LaLiga Fantasy J${jornada} · Ojo con las bajas`, `🚑 LaLiga Fantasy J${jornada} · Estos pueden caerse del once`, `⚠️ LaLiga Fantasy J${jornada} · Posibles caídas, mira tu once`], `caidas${jornada}${k}`);
     const pie = cierre(`caidas${jornada}${k}`);
-    const lineas = grupo.map((c) => `• ${c.nombre} (${c.equipo}): ${c.estado}${c.estado === 'duda' ? `, titular ${c.pct}%` : ''}`);
-    const usadas = quepa(cab, lineas, pie);
-    if (usadas.length < 2) continue;
-    const num = [jornada, ...grupo.slice(0, usadas.length).map((c) => c.pct)];
-    out.push({ tipo: 'caidas', clave: `caidas|${jornada}|${grupo.slice(0, usadas.length).map((c) => c.id).join('-')}`, jornada, texto: [cab, ...usadas, pie].join('\n'), numeros: num });
+    const intro = elegir(['Si tienes a alguno en el once, ve pensando en el cambio:', 'Revisa tu alineación, que estos lo tienen difícil:', 'Alguno de estos es titular fijo y ahora mismo no cuenta:'], `intro${jornada}${k}`);
+    const lineas = grupo.map((c) => {
+      const que = c.estado === 'duda' ? `duda (titular ${c.pct}%)` : c.estado;
+      return `${c.estado === 'sancionado' ? '🟥' : c.estado === 'duda' ? '❓' : '🤕'} ${c.nombre} (${c.equipo}) · ${que}${c.media >= 3 ? ` · media ${fmt(c.media)}` : ''}`;
+    });
+    const usadas = quepa(cab, [intro, ...lineas], pie);
+    if (usadas.length < 3) continue;
+    const quienes = grupo.slice(0, usadas.length - 1);
+    const num = [jornada, ...quienes.flatMap((c) => [c.pct, ...(c.media >= 3 ? partes(c.media) : [])])];
+    out.push({ tipo: 'caidas', clave: `caidas|${jornada}|${quienes.map((c) => c.id).join('-')}`, jornada, texto: armar(cab, usadas, pie), numeros: num });
   }
   return out;
 }
