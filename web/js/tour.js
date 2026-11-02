@@ -10,6 +10,8 @@ let T = null;
 export const tourAbierto = () => !!T;
 /** ¿se ha visto ya (o se saltó)? */
 export const tourVisto = () => !!LS.get('tour', null);
+/** ¿se eligió «Lo básico» al empezar? */
+export const tourBasico = () => !!(T && T.basico);
 
 /**
  * opts: pasos (de pasosTour), ir(vista), vista() (la pestaña de ahora), alAcabar(como) con como = 'fin' | 'saltar' |
@@ -37,7 +39,7 @@ export function empezarTour(opts) {
   document.addEventListener('keydown', tecla, true);
   // solo cuentan los pasos que se pueden enseñar ahora (el de tus minutos, solo si tienes límite…)
   const pasos = opts.pasos.filter((p) => !p.si || p.si());
-  T = { capa, i: 0, pasos, opts, n: 0, el: null, raf: 0, quitar: () => { window.removeEventListener('resize', colocar); window.removeEventListener('scroll', colocar, true); document.removeEventListener('keydown', tecla, true); } };
+  T = { capa, i: 0, pasos, todos: pasos, basico: false, opts, n: 0, el: null, raf: 0, quitar: () => { window.removeEventListener('resize', colocar); window.removeEventListener('scroll', colocar, true); document.removeEventListener('keydown', tecla, true); } };
   // deslizar la tarjeta pasa de paso
   let x0 = null, y0 = null;
   capa.addEventListener('touchstart', (e) => { if (!e.target.closest('.tour-caja')) return; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
@@ -51,7 +53,12 @@ export function empezarTour(opts) {
     const b = e.target.closest('[data-t]');
     if (!b) return;
     const a = b.dataset.t;
-    if (a === 'sig') mover(1);
+    if (a === 'basico' || a === 'todo') {
+      // «Lo básico»: solo los pasos marcados con b; «Verlo todo»: todos. En los dos se sigue por el segundo
+      T.basico = a === 'basico';
+      T.pasos = T.basico ? T.todos.filter((p) => p.b) : T.todos;
+      mover(1);
+    } else if (a === 'sig') mover(1);
     else if (a === 'ant') mover(-1);
     else if (a === 'saltar') cerrarTour('saltar');
     else if (a === 'fin') cerrarTour('fin');
@@ -106,10 +113,11 @@ function pintarPaso(dir) {
   caja.innerHTML = `<button type="button" class="tour-x" data-t="saltar" aria-label="Cerrar el tutorial">${icono('cerrar')}</button>
     <div class="tour-prog" aria-hidden="true">${pasos.map((_, k) => `<i class="${k === T.i ? 'on' : k < T.i ? 'ya' : ''}"></i>`).join('')}</div>
     <div class="tour-txt ${dir < 0 ? 'entra-i' : 'entra-d'}">${p.logo ? `<div class="tour-logo">${LOGO}</div>` : ''}<h3>${esc(p.t)}</h3><p>${esc(x)}</p>
+      ${p.elegir && T.i === 0 ? `<div class="tour-elegir"><button type="button" class="btn" data-t="basico">Lo básico<small>${T.todos.filter((q) => q.b).length} pasos, un minuto</small></button><button type="button" class="btn sec" data-t="todo">Verlo todo<small>${T.todos.length} pasos, cada pestaña</small></button></div>` : ''}
       ${lista ? `<ol class="tour-lista">${lista.map((y) => `<li class="${y.ok ? 'ok' : ''}"><span class="tl-ic">${icono(y.ok ? 'ok' : y.ic || 'flecha')}</span><span class="tl-t"><b>${esc(y.t)}</b>${y.ok ? '<small>Hecho</small>' : `<small>${esc(y.x)}</small>`}</span>${y.ok ? '' : `<button type="button" class="btn chico${y === pendientes[0] ? '' : ' sec'}" data-t="emp:${esc(y.k)}">${esc(y.b)}</button>`}</li>`).join('')}</ol>` : ''}</div>
-    <div class="tour-btns"><small class="tour-n">${T.i + 1} de ${pasos.length}</small>
+    <div class="tour-btns"><small class="tour-n">${p.elegir && T.i === 0 ? '' : `${T.i + 1} de ${pasos.length}`}</small>
       ${T.i ? '<button type="button" class="btn chico sec" data-t="ant">Atrás</button>' : '<button type="button" class="btn chico sec" data-t="saltar">Saltar</button>'}
-      ${ultimo ? `<button type="button" class="btn chico${pendientes.length ? ' sec' : ''}" data-t="${p.finAccion ? `emp:${p.finAccion}` : 'fin'}">${esc(p.fin || 'Terminar')}</button>` : `<button type="button" class="btn chico" data-t="sig">${T.i ? 'Siguiente' : 'Empezar'}</button>`}</div>`;
+      ${p.elegir && T.i === 0 ? '' : ultimo ? `<button type="button" class="btn chico${pendientes.length ? ' sec' : ''}" data-t="${p.finAccion ? `emp:${p.finAccion}` : 'fin'}">${esc(p.fin || 'Terminar')}</button>` : `<button type="button" class="btn chico" data-t="sig">${T.i ? 'Siguiente' : 'Empezar'}</button>`}</div>`;
   const n = ++T.n;
   const buscar = () => {
     if (!T || T.n !== n) return;

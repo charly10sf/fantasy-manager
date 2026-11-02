@@ -264,6 +264,7 @@ export function seccionMoviles() {
   <div class="pt-bar" aria-hidden="true"><div class="pt-in">
     <a class="pt-marca" href="#" data-arriba>${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
     <nav class="pt-menu" aria-label="Secciones">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
+    <a class="btn sec pt-web" href="#" tabindex="-1" title="Fantasy Manager funciona también en el navegador, sin descargar nada"><span class="pt-largo">Usar en la web</span><span class="pt-corto">Web</span></a>
     <a class="btn pt-cta" href="${APK}" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
 
   ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Las tres pantallas que vas a abrir cada día.', 'ph')}
@@ -294,8 +295,8 @@ export function seccionMoviles() {
   ${seccion('pPriv', 'Privacidad', 'Tus datos, tuyos', `<div class="pp">${PRIVACIDAD.map(([ic, t, x]) => `<article class="rv">${icono(ic)}<h3>${t}</h3><p>${x}</p></article>`).join('')}</div>`)}
 
   <section class="pz rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
-    <p class="ps-i">Gratis, para Android y en el navegador.</p>
-    <div class="pz-b"><a class="btn" href="${APK}">${icono('descargar')}Descargar la app para Android</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
+    <p class="ps-i">Gratis, para Android y en el navegador: en el ordenador y en el iPhone se usa desde esta misma web, sin descargar nada.</p>
+    <div class="pz-b"><a class="btn" href="${APK}">${icono('descargar')}Descargar la app para Android</a><a class="btn sec" href="#">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
   </section>
 
