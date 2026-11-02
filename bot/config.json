@@ -4,6 +4,7 @@
   "topeDiario": 25,
   "maxPorEjecucion": 4,
   "ventanaFinalHoras": 10,
+  "horasCaidas": [9, 21],
   "tweetMax": 280,
   "hashtag": ""
 }

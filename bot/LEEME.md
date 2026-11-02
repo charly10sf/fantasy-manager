@@ -18,7 +18,7 @@ claves sin publicar) y, si sale bien, poner `BOT_MODO` = `publicar`.
 
 `resumen` (mejores y peores de la jornada, al acabar), `final` (cada partido al acabar, solo los empezados en las últimas 10 h),
 `caidas` (lesionados y sancionados habituales de la jornada que viene, al acabar la actual o antes de que empiece; las dudas, no, hasta
-tener una segunda fuente). `directo` está hecho pero no se programa hasta ver el sondeo del partido en directo.
+tener una segunda fuente). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. `directo` está hecho pero no se programa hasta ver el sondeo del partido en directo.
 
 ## Reglas
 

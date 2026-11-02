@@ -1,7 +1,7 @@
 // Servidor falso de X para probar el publicador de punta a punta sin tocar X: responde 201 a POST /2/tweets (comprueba que lleva una
 // cabecera OAuth firmada y un texto) y 200 a GET /2/users/me. GET /__resumen cuenta lo recibido.
 import http from 'node:http';
-const recibidos = []; let firmados = 0;
+const recibidos = []; let firmados = 0, duplicados = 0;
 http.createServer((req, res) => {
   let cuerpo = '';
   req.on('data', (c) => { cuerpo += c; });
@@ -12,11 +12,12 @@ http.createServer((req, res) => {
     if (req.method === 'POST' && req.url === '/2/tweets') {
       let t = ''; try { t = JSON.parse(cuerpo).text; } catch { /* nada */ }
       if (!firmado || !t) return json(401, { title: 'Unauthorized' });
+      if (recibidos.includes(t)) { duplicados++; return json(403, { detail: 'You are not allowed to create a Tweet with duplicate content.', title: 'Forbidden', status: 403 }); }
       firmados++; recibidos.push(t);
       return json(201, { data: { id: `falso-${recibidos.length}`, text: t } });
     }
     if (req.method === 'GET' && req.url === '/2/users/me') return firmado ? json(200, { data: { username: 'cuenta_falsa' } }) : json(401, {});
-    if (req.url === '/__resumen') return json(200, { total: recibidos.length, unicos: new Set(recibidos).size, firmados, maxLargo: Math.max(0, ...recibidos.map((t) => [...t].length)) });
+    if (req.url === '/__resumen') return json(200, { total: recibidos.length, unicos: new Set(recibidos).size, firmados, duplicados, maxLargo: Math.max(0, ...recibidos.map((t) => [...t].length)) });
     json(404, {});
   });
 }).listen(8787, '127.0.0.1');
