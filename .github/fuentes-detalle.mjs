@@ -54,9 +54,11 @@ if (ev) {
     linea(`- keyEvents[0..5]: ${JSON.stringify((s.keyEvents || []).slice(0, 6)).slice(0, 1400)}`);
     const r0 = s.rosters?.[0];
     linea(`- rosters[0]: formación=${r0?.formation} jugadores=${(r0?.roster || []).length} clave jugador=${Object.keys(r0?.roster?.[0] || {}).join(',')}`);
-    linea(`- rosters[0].roster[0]: ${JSON.stringify(r0?.roster?.[0]).slice(0, 900)}`);
+    
     const bx = s.boxscore?.players?.[0];
-    linea(`- boxscore.players[0] claves=${Object.keys(bx || {}).join(',')} estadísticas=${JSON.stringify(bx?.statistics?.[0]?.names || bx?.statistics?.[0]).slice(0, 500)}`);
+    linea(`- boxscore.players[0] claves=${Object.keys(bx || {}).join(',')} estadísticas=${String(JSON.stringify(bx?.statistics?.[0]?.names || bx?.statistics?.[0])).slice(0, 500)}`);
+    linea(`- rosters[0].roster[0].stats: ${String(JSON.stringify((r0?.roster?.[0]?.stats || []).map((x) => `${x.name}=${x.value}`))).slice(0, 900)}`);
+    linea(`- rosters[0].roster[3] subbedIn/Out: ${String(JSON.stringify([r0?.roster?.find((x) => x.subbedIn)?.subbedIn, r0?.roster?.find((x) => x.subbedOut)?.subbedOut])).slice(0, 400)}`);
     linea(`- commentary[0..2]: ${JSON.stringify((s.commentary || []).slice(0, 2)).slice(0, 700)}`);
   } else linea(`- summary ${sm.s} ${head(sm.b)}`);
 } else linea(`- scoreboard ${sb.s} ${head(sb.b)}`);
