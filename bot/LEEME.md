@@ -5,7 +5,7 @@ Sin dependencias (Node 22). Plan, tono, topes y coste: `claude/bot-x.md` del pro
 
 ## Cómo corre
 
-`.github/workflows/bot.yml`, cada 15 minutos. Según la variable de repositorio `BOT_MODO`:
+`.github/workflows/bot.yml`, cada 5 minutos: lo lanza el cron del Worker de Cloudflare (`scheduled` en `worker/src/index.js`, con el secreto `BOT_DISPATCH_TOKEN`), porque el schedule de GitHub no disparaba; el de 15 min de bot.yml queda de respaldo. Según la variable de repositorio `BOT_MODO`:
 - sin ella o `simulacro`: genera y valida, y enseña los tweets en el resumen de cada ejecución (pestaña Actions). No publica.
 - `publicar`: publica de verdad y apunta lo publicado en la rama `bot-estado` (`registro.json`) para no repetir.
 - `parado`: no hace nada (el interruptor de emergencia: se cambia desde el móvil en Settings > Secrets and variables > Actions > Variables).
@@ -19,7 +19,7 @@ claves sin publicar) y, si sale bien, poner `BOT_MODO` = `publicar`.
 `resumen` (mejores y peores de la jornada, al acabar), `final` (cada partido al acabar, solo los empezados en las últimas 10 h),
 `directo` (cada gol con su asistente y los puntos fantasy, rojas y penaltis fallados, de los partidos de hoy empezados hace menos
 de 3 h; el término medio de Domy, aceptado por Carlos el 2 nov), `mvp` (el MVP de cada partido con su tarjeta), `caidas` (lesionados y sancionados habituales de la jornada que viene, al acabar la actual o antes de que empiece; las dudas, no, hasta
-tener una segunda fuente). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 15 min, los goles salen con hasta 15 min de retraso (más lo que tarde GitHub).
+tener una segunda fuente). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
 
 ## Tarjetas con imagen (encendidas desde el 2 nov)
 
