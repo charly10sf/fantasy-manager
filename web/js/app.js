@@ -2,7 +2,7 @@
 import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
-import { actualizar, foto, historico, cfg, guardarCfg, enDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
+import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
 import { analizar, planAuto } from './motor.js';
 import * as V from './vistas.js';
@@ -31,7 +31,8 @@ import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNove
 import { empezarTour, cerrarTour, tourAbierto, tourVisto } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
-import { seccionMoviles } from './portada.js';
+import { seccionMoviles, ponerCarasPortada, activarPortada } from './portada.js';
+import { poner as ponerCarasDemo } from './caras-demo.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
@@ -78,6 +79,8 @@ function pantallaEntrar(error = '') {
     <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>${botonDemo('sec')}` : entrarWebHTML()}
     ${enApp ? PIE_ENTRAR : ''}
   </div></div>${enApp ? '' : seccionMoviles()}</div>`;
+  // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
+  if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); }
   // en el ordenador, el cursor directamente en el código; en el móvil no (sacaría el teclado tapando lo de arriba)
   if (!enApp && !movilDe()) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus(); }, 50);
 }
@@ -851,6 +854,14 @@ setInterval(saludarSiToca, 10 * 60e3);
 if (!EN_FONDO) setInterval(() => { if (!document.hidden && S.D) comprobarAvisos(); }, 10 * 60e3 + 5e3);
 // con la configuración nueva de limites.json puede cambiar lo que está bloqueado
 window.addEventListener('limites-nuevos', () => { if (S.D && S.M && !S.hoja) pintar(); });
+// las caras y los escudos de la liga de ejemplo llegan de LaLiga después de abrirla (la primera vez o pasados 3 días)
+window.addEventListener('fm-caras', (e) => {
+  ponerCarasPortada(e.detail);
+  if (!S.D || !S.D.demo || S.cargando || !ponerCarasDemo(S.D, e.detail)) return;
+  LS.set(K('datos'), S.D);
+  rehacer();
+  if (S.hoja) repintarHoja(); else if ($('#vista')) pintar();
+});
 /* ---------------- la jornada en directo (vivo.js) ---------------- */
 // los puntos de cada uno mientras se juega; se guardan (por liga) para que se vean al abrir sin esperar
 const vivoGuardado = () => {

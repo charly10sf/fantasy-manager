@@ -4,8 +4,9 @@
 import { api, paginaMercado, forma } from './api.js';
 import * as N from './normalizar.js';
 import { LS, diaDe, enParalelo, num, DIA } from './util.js';
-import { enApp, enWeb } from './puente.js';
-import { demo } from './demo.js';
+import { enApp, enWeb, http } from './puente.js';
+import { demo, jugadoresDemo } from './demo.js';
+import * as CD from './caras-demo.js';
 import { historialValor, oncesProbables, noticias, avanzadas, alineaciones } from './externas.js';
 
 // la deuda permitida en LaLiga Fantasy es siempre el 20 % del valor del equipo
@@ -28,6 +29,20 @@ function cambioDeFormato(que, r) {
 
 export const K = (k) => (enDemo() ? `${k}-demo` : `${k}${ligaK()}`);
 
+let carasPedidas = null;
+/**
+ * las caras de los jugadores y los escudos de la liga de ejemplo y de la portada (caras-demo.js): lo guardado, si tiene
+ * menos de 3 días; si no, se piden a LaLiga una vez por visita y, al llegar, se guardan y se avisa con el evento fm-caras
+ */
+export function carasDemo() {
+  const g = LS.get(CD.CLAVE, null);
+  if ((!g || Date.now() - g.t > CD.DURA) && !carasPedidas) {
+    carasPedidas = CD.traer(http, jugadoresDemo())
+      .then((n) => { if (!n.casados) return; LS.set(CD.CLAVE, n); window.dispatchEvent(new CustomEvent('fm-caras', { detail: n })); })
+      .catch(() => { /* sin LaLiga: iniciales, como antes */ });
+  }
+  return g;
+}
 export const foto = () => LS.get(K('datos'), null);
 export const historico = () => LS.get(K('hist'), { v: {}, eq: {}, yo: [], mov: [] });
 
@@ -69,6 +84,7 @@ export async function actualizar(alPaso = () => {}) {
   if (enDemo()) {
     for (let i = 0; i < PASOS.length; i++) { alPaso(i, PASOS[i]); await new Promise((r) => setTimeout(r, window.__lento || 90)); }
     const { D, H } = demo();
+    CD.poner(D, carasDemo());
     const h = historico();
     if (!Object.keys(h.v || {}).length) LS.set(K('hist'), H);
     return guardarFoto(D, null);
