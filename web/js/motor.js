@@ -897,6 +897,35 @@ export function analizar(D, H, c, extra = {}) {
     return { p: clamp(p, 0, 0.98), base, fuentes, rot, pRot };
   };
 
+  /* ---------- ¿conviene esperar antes de mandar vender a uno tuyo que baja? (aviso de Domy, 2 nov) ---------- */
+  // Las ventas por bajada de Hoy y del plan solo miraban cuánto ha caído en 7 días. Domy pidió que cuenten también
+  // los días de cláusula que le quedan, lo que ha subido el último día y cuándo juega. Devuelve el motivo para esperar
+  // (y la nota con los días de cláusula, que sale siempre) o null si se puede vender ya. Con la cláusula protegida
+  // (14 días de fichaje o blindaje) nadie lo clausula: no hay prisa por ese lado, pero tampoco cobras cláusula
+  M.esperarVenta = (x) => {
+    if (!x || !x.j || MALOS.has(x.j.estado)) return null;
+    const diasProt = x.abreEn > 0 ? Math.max(1, Math.ceil(x.abreEn / DIA)) : 0;
+    const notaClausula = diasProt
+      ? `Su cláusula sigue protegida ${diasProt} día${diasProt > 1 ? 's' : ''} más: nadie te lo puede clausular hasta entonces.`
+      : x.clausula ? `Su cláusula (${eur(x.clausula)}) está abierta.` : '';
+    // 1. juega pronto y es titular: lo normal es esperar a ver cómo puntúa antes de venderlo a LaLiga
+    const p = M.proximoPartido(x.j.equipoId);
+    const tit = M.titularidad(x.j);
+    if (p && p.fecha > ahora && p.fecha - ahora < 2 * DIA && tit && tit.p >= 0.7) {
+      return { tipo: 'juega', nota: notaClausula, texto: `Juega ${cuando(p.fecha)} contra ${p.rival} y es titular probable (${Math.round(tit.p * 100)} %): espera al partido, si puntúa bien la bajada se frena.` };
+    }
+    // 2. ha subido el último día: la bajada de la semana ya se está frenando
+    if (x.tend && x.tend.p1 != null && x.tend.p1 >= 1) {
+      return { tipo: 'sube', nota: notaClausula, texto: `Hoy ha subido ${pct(x.tend.p1, 1, false)}: la bajada de la semana se está frenando, mejor esperar un día.` };
+    }
+    // 3. cláusula abierta, por encima de lo que da LaLiga y con quien pueda pagarla: si te lo clausulan cobras más
+    const vLiga = M.ofertaLiga && !M.ofertaLiga.poco ? Math.max(0, M.ofertaLiga.med) : 0.05;
+    if (x.abierta && x.clausula && x.ratio >= 1 + vLiga && ['medio', 'alto'].includes(x.riesgo) && x.pagan && x.pagan.seguro && x.pagan.seguro.length) {
+      return { tipo: 'clausula', nota: notaClausula, texto: `Su cláusula (${eur(x.clausula)}) está abierta, por encima de lo que te da LaLiga, y a algún rival le llega: si te lo clausulan cobras más que vendiéndolo.` };
+    }
+    return { tipo: null, nota: notaClausula, texto: '' };
+  };
+
   /* ---------- los puntos esperados por partes, como puntúa LaLiga Fantasy ---------- */
   // minutos (2 si juega 60', 1 si menos), gol (6 portero y defensa, 5 medio, 4 delantero) con su xG, asistencia (3)
   // con su xA, portería a cero (4 portero y defensa, 1 medio) con lo que marca el rival, goles encajados (−2 cada
@@ -1906,10 +1935,10 @@ function acciones(D, M, c) {
     texto: `No te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y baja ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Plantéate venderlo antes de que pierda más valor.`,
   }));
 
-  M.mias.filter((x) => !x.ventaInercia && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3 && !MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => !x.ventaInercia && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3 && !MALOS.has(x.j.estado) && !M.esperarVenta(x).tipo).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 50, icono: 'hucha', pid: x.pid, cuando: 'Antes de que baje más',
     titulo: `Vende a ${x.j.nombre} con beneficio`,
-    texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.`,
+    texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,
   }));
 
   M.mercado.filter((m) => !m.miPuja && m.veredicto === 'chollo' && m.meLlega && (m.puja || m.precio) <= M.pujaMax && !M.dueno[m.pid] && M.compraCal(m.j, m.puja || m.precio).ok).slice(0, 2).forEach((m, k) => add({
@@ -1994,10 +2023,10 @@ export function planAuto(D, M, c) {
     const resto = M.mias.filter((y) => !vendidos.has(y.pid)).map((y) => y.j);
     return (M.mejorOnce(resto.filter((j) => j.id !== x.pid)).huecos || 0) > (M.mejorOnce(resto).huecos || 0);
   };
-  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && ((M.partidazo(y.pid) || {}).nivel || 0) < 2 && y.ganado > 0 && y.tend.p7 != null && y.tend.p7 < -4).slice(0, 2)) {
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && ((M.partidazo(y.pid) || {}).nivel || 0) < 2 && y.ganado > 0 && y.tend.p7 != null && y.tend.p7 < -4 && !M.esperarVenta(y).tipo).slice(0, 2)) {
     if (dejaHueco(x)) continue;
     op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
-      motivo: `Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva un ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días. Asegura el beneficio.` });
+      motivo: `Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva un ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días. Asegura el beneficio.${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}` });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
 
