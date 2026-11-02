@@ -16,8 +16,15 @@ const MEDALLA = { suben: ['🥇', '🥈', '🥉'], bajan: ['🔻', '🔻', '🔻
  * ventanas: solo cuando el último valor de la lista es de HOY (Madrid) y aún no se ha publicado; sin ventanas (simulacro o forzado),
  * con el último día que haya. Pide el histórico de los 868 jugadores solo cuando el centinela (el más caro) ya trae el día nuevo.
  */
-export async function generar({ jugadores, equipos, jornada, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log }) {
+const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
+
+export async function generar({ jugadores, equipos, jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log }) {
   const hoy = diaMadrid(ahora);
+  // solo justo después de la actualización (hacia las 00:15): el punto de hoy existe desde esa hora, así que sin esta ventana el tweet
+  // podía salir a cualquier hora del día con un cambio de hace casi 24 h (el 2 nov salió a las 23:27; Carlos, 23:29)
+  const [hDesde, hHasta] = config.horasMercado || [0, 6];
+  const h = horaMadrid(ahora);
+  if (ventanas && !forzar && (h < hDesde || h >= hHasta)) return [];
   const claves = { suben: `mercado|${hoy}|suben`, bajan: `mercado|${hoy}|bajan` };
   if (ventanas && !forzar && registro && registro.claves.has(claves.suben) && registro.claves.has(claves.bajan)) return [];
   const lista = (jugadores || []).filter((j) => Number(j.marketValue) > 0 && j.playerStatus !== 'out_of_league');
