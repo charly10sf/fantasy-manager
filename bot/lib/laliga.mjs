@@ -20,3 +20,18 @@ export function equiposDe(stats) {
 
 /** puntos de las últimas jornadas de un jugador: [[semana, pts], …] de la lista de jugadores */
 export const rachaDe = (j, k = 3) => (j.weekPoints || []).slice().sort((a, b) => a.weekNumber - b.weekNumber).slice(-k).map((w) => [w.weekNumber, w.points]);
+
+/** histórico de valor de un jugador: [{ marketValue, date }, …], un punto por día desde el 29 jun (sin token, probado el 2 nov) */
+export const valorMercado = (id) => json(`${H}/api/v1/competition/1/player/${id}/market-value?x-lang=es`, CAB);
+
+/** una foto o un escudo de LaLiga (PNG); solo de su servidor de imágenes. Guarda lo bajado durante la ejecución. */
+const imagenes = new Map();
+export async function imagen(url) {
+  if (!url || !/^https:\/\/assets-fantasy\.llt-services\.com\//.test(url)) return null;
+  if (!imagenes.has(url)) imagenes.set(url, (async () => {
+    const r = await fetch(url, { signal: AbortSignal.timeout(20000) });
+    const b = Buffer.from(await r.arrayBuffer());
+    return r.status === 200 && b[0] === 0x89 && b.toString('ascii', 1, 4) === 'PNG' ? b : null;
+  })().catch(() => null));
+  return imagenes.get(url);
+}

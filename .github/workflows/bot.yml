@@ -7,6 +7,7 @@
 # Telegram (aparte de X, también con BOT_MODO=simulacro): con los secretos TELEGRAM_BOT_TOKEN y TELEGRAM_CHAT_ID manda a Carlos el
 # texto de respuesta para el tuit de resultado de cada club y un aviso si falla la ejecución. Su registro (telegram.json) vive
 # en la misma rama bot-estado. Sin esos secretos esos pasos no se ejecutan.
+# Tarjetas con imagen: apagadas por defecto; se encienden en bot/config.json («tarjetas»: final y jugador). Detalle en bot/LEEME.md.
 name: Bot X
 
 on:
@@ -43,6 +44,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # Las tarjetas con imagen (bot/lib/con-tarjetas.mjs) necesitan @resvg/resvg-js: solo se instala si alguna está encendida
+      # en bot/config.json («tarjetas»). Si la instalación falla, el bot sigue y los tweets salen sin imagen.
+      - name: Instalar lo de las tarjetas (solo si están encendidas)
+        if: ${{ !inputs.comprobar }}
+        run: |
+          if node -e "const t=require('./bot/config.json').tarjetas||{};process.exit(t.final||t.jugador?0:1)"; then
+            npm ci --prefix bot --no-audit --no-fund || echo "No se pudo instalar: esta vez los tweets salen sin imagen"
+          else
+            echo "Tarjetas apagadas en bot/config.json: no instalo nada"
+          fi
       - name: Comprobar las claves (sin publicar)
         if: ${{ inputs.comprobar }}
         run: node bot/ejecutar.mjs --comprobar=1
@@ -69,6 +80,13 @@ jobs:
       - name: Aviso de fallo (Telegram)
         if: ${{ failure() && !inputs.comprobar && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}
         run: node bot/telegram.mjs --aviso=fallo --estado=estado/telegram.json
+      - name: Guardar las tarjetas de esta ejecución (para verlas en Actions)
+        if: ${{ always() && !inputs.comprobar && hashFiles('tarjetas/*.png') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tarjetas-${{ github.run_id }}
+          path: tarjetas/*.png
+          retention-days: 7
       - name: Guardar el registro de lo publicado
         if: ${{ always() && !inputs.comprobar && steps.traer.outcome == 'success' }}
         run: |

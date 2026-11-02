@@ -1,11 +1,12 @@
 {
   "umbralCaida": 0.5,
-  "topes": { "resumen": 2, "final": 10, "caidas": 9, "directo": 8 },
+  "topes": { "resumen": 2, "final": 10, "mvp": 10, "caidas": 9, "directo": 8 },
   "topeDiario": 25,
   "maxPorEjecucion": 4,
   "ventanaFinalHoras": 10,
   "horasCaidas": [9, 21],
   "tweetMax": 280,
   "hashtag": "",
+  "tarjetas": { "final": false, "jugador": false },
   "telegram": { "topes": { "respuestas": 10 }, "topeDiario": 20, "maxPorEjecucion": 5, "avisosDia": 3, "minJugadoresConPuntos": 12, "cuentasX": {"Real Madrid": "realmadrid", "Barça": "FCBarcelona_es", "Atlético": "Atleti", "Athletic": "AthleticClub", "Villarreal": "VillarrealCF", "Betis": "RealBetis", "Real Sociedad": "RealSociedad", "Celta": "RCCelta", "Osasuna": "Osasuna", "Alavés": "Alaves", "Rayo": "RayoVallecano", "Sevilla": "SevillaFC", "Valencia": "valenciacf", "Málaga": "MalagaCF", "Espanyol": "RCDEspanyol", "Getafe": "GetafeCF", "Elche": "elchecf", "Levante": "LevanteUD", "Deportivo": "RCDeportivo", "Racing": "realracingclub"} }
 }

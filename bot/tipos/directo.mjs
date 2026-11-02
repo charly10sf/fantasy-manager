@@ -63,7 +63,9 @@ export async function generar({ stats, jornada, fechasEspn, jugadores }) {
         const sobre = pts != null && media >= 3 && pts >= 1.5 * media && dsp.clase !== 'roja' && dsp.clase !== 'penalti fallado';
         if (pts != null) lineas.push(dsp.clase === 'roja' || dsp.clase === 'penalti fallado' ? `📊 Ahora mismo suma ${pts} pts.` : `📊 Ya suma ${pts} pts${sobre ? `, muy por encima de su media (${fmt(media)})` : ''}.`);
         out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.clase}`, jornada, texto: armar(cab, lineas, cierre(`directo${m.id}${dsp.jugador}`)),
-          numeros: [jornada, min, m.localScore, m.visitorScore, ...(pts != null ? [pts] : []), ...(sobre ? partes(media) : [])], casado: !!p });
+          numeros: [jornada, min, m.localScore, m.visitorScore, ...(pts != null ? [pts] : []), ...(sobre ? partes(media) : [])], casado: !!p,
+          // para la tarjeta de jugador (solo dobletes y tripletes, y solo si el jugador casa con LaLiga)
+          partido: m.id, jugadorId: p ? p.id : null, motivo: ['doblete', 'triplete'].includes(dsp.clase) ? dsp.clase : null });
       }
     }
   }

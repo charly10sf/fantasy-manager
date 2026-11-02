@@ -2,11 +2,13 @@
 // Publica solo con --modo=publicar (en el workflow, la variable de repositorio BOT_MODO) y con las cuatro claves de X.
 //   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=resumen,final,caidas,directo] [--jornada=11]
 //        [--estado=estado/registro.json] [--ventanas=1] [--forzar=1] [--comprobar=1]
-import { readFileSync, appendFileSync } from 'node:fs';
+//        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
+// Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
+import { readFileSync, appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { semanaActual, jugadores as pedirJugadores, statsSemana, equiposDe } from './lib/laliga.mjs';
 import { validar } from './lib/validar.mjs';
 import { Registro } from './lib/registro.mjs';
-import { publicar, comprobar, clavesDelEntorno } from './lib/x.mjs';
+import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
 
 const config = JSON.parse(readFileSync(new URL('./config.json', import.meta.url), 'utf8'));
 const arg = (k) => (process.argv.find((a) => a.startsWith(`--${k}=`)) || '').split('=')[1];
@@ -33,7 +35,11 @@ if (arg('comprobar') === '1') {
 }
 if (publica && faltan.length) { console.log(`# Modo publicar sin los secretos ${faltan.join(', ')}: no publico nada.`); md(`Modo publicar sin los secretos ${faltan.join(', ')}.`); process.exit(1); }
 
-const quienes = (arg('tipos') || (publica ? 'resumen,final,caidas' : 'resumen,final,caidas,directo')).split(',');
+const quienes = (arg('tipos') || (publica ? 'resumen,final,mvp,caidas' : 'resumen,final,mvp,caidas,directo')).split(',');
+// las tarjetas: encendidas en config.json, o forzadas con --tarjetas=1 en simulacro (para verlas sin tocar lo que se publica)
+const forzarTarjetas = !publica && arg('tarjetas') === '1';
+const conTarjetas = forzarTarjetas || !!(config.tarjetas && (config.tarjetas.final || config.tarjetas.jugador));
+const dirTarjetas = arg('salida-tarjetas') || 'tarjetas';
 const sem = await semanaActual();
 const jornada = Number(arg('jornada')) || sem.weekNumber;
 const [stats, jugadores] = await Promise.all([statsSemana(jornada), pedirJugadores()]);
@@ -47,7 +53,7 @@ if (pendientes === 0) objetivoCaidas = sem.nextWeek;
 else if (stats.every((m) => m.matchState === 1)) objetivoCaidas = jornada;
 if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
 
-const ctx = { stats, jugadores, equipos, jornada, config, ahora: Date.now(), soloSeguras: publica, forzar,
+const ctx = { stats, jugadores, equipos, jornada, config, ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
   completo: !ventanas || pendientes === 0,
   desdeFinal: ventanas ? Date.now() - config.ventanaFinalHoras * 3600e3 : 0,
   fechasEspn: ['20261030', '20261031', '20261101'] };
@@ -56,7 +62,7 @@ const registro = new Registro(config, publica ? (arg('estado') || 'estado/regist
 const horaMadrid = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date()));
 const [hDesde, hHasta] = config.horasCaidas || [0, 24];
 const enHorarioCaidas = !ventanas || forzar || (horaMadrid >= hDesde && horaMadrid < hHasta);
-let abortar = false;
+let abortar = false, subidaRota = false;   // si X rechaza una subida de imagen, no se intenta más en esta ejecución
 let generados = 0, fallos = 0, publicados = 0, previstos = 0;
 
 for (const q of quienes) {
@@ -77,10 +83,36 @@ for (const q of quienes) {
     const v = validar(t.texto, { numeros: t.numeros, max: config.tweetMax });
     let d = v.ok ? registro.decidir(t) : 'no pasa el validador';
     if (!v.ok) fallos++;
+    // tarjetas con imagen (solo si están encendidas): se dibujan y validan; las que no pasan no salen
+    let pngs = [];
+    if (d === 'ok' && conTarjetas && t.partido != null) {
+      let hechas = [];
+      try { hechas = await (await import('./lib/con-tarjetas.mjs')).tarjetasDe(t, { ...c, forzar: forzarTarjetas }); }
+      catch (e) { console.log(`   tarjeta de ${t.clave}: ERROR ${e.message || e}`); md(`Tarjeta de ${t.clave}: error ${e.message || e}`); }
+      for (const h of hechas) {
+        console.log(`   tarjeta ${h.nombre}: ${h.ok ? `válida · ${h.png.length} bytes` : `NO pasa el validador: ${h.errores.join('; ')}`}`);
+        if (h.ok) { mkdirSync(dirTarjetas, { recursive: true }); writeFileSync(`${dirTarjetas}/${h.nombre}.png`, h.png); pngs.push(h.png); }
+        else md(`Tarjeta **${h.nombre}** no pasa el validador: ${h.errores.join('; ')}`);
+      }
+    }
+    if (d === 'ok' && t.soloConImagen && !pngs.length) d = 'sin tarjeta válida (este tipo solo sale con imagen)';
     let estado = d === 'ok' ? (publica ? 'PUBLICAR' : 'PUBLICARÍA') : `omitido: ${d}`;
+    if (d === 'ok' && !publica && pngs.length) estado += ` con ${pngs.length} imagen(es)`;
+    // subir las imágenes a X; si falla, el tweet sale sin imagen (o no sale, si solo tiene sentido con ella)
+    const mediaIds = [];
+    if (d === 'ok' && publica && pngs.length && !subidaRota) {
+      for (const png of pngs) {
+        let s = null;
+        try { s = await subirImagen(png, claves); } catch (e) { s = { ok: false, estado: 0, cuerpo: String(e.message || e) }; }
+        if (s.ok) { mediaIds.push(s.id); continue; }
+        console.log(`   subida de imagen: HTTP ${s.estado} ${s.cuerpo} (no lo intento más en esta ejecución)`); md(`Subida de imagen de ${t.clave}: HTTP ${s.estado} ${s.cuerpo}. No se intenta más en esta ejecución.`);
+        mediaIds.length = 0; subidaRota = true; break;
+      }
+    }
+    if (d === 'ok' && publica && pngs.length && !mediaIds.length && t.soloConImagen) { d = 'no se pudo subir la imagen'; estado = `omitido: ${d}`; }
     if (d === 'ok' && publica) {
-      const r = await publicar(t.texto, claves);
-      if (r.ok) { registro.marcar(t, r.id); publicados++; estado = `PUBLICADO (id ${r.id})`; }
+      const r = await publicar(t.texto, claves, { mediaIds });
+      if (r.ok) { registro.marcar(t, r.id); publicados++; estado = `PUBLICADO (id ${r.id})${mediaIds.length ? ` con ${mediaIds.length} imagen(es)` : ''}`; }
       else if (r.estado === 403 && /duplicate/i.test(r.cuerpo)) { registro.marcar(t, null); estado = 'X dice que ya estaba publicado: lo apunto y sigo'; }
       else { estado = `ERROR al publicar: HTTP ${r.estado} ${r.cuerpo}`; fallos++; abortar = true; console.log(`\n--- ${t.clave} · ${estado}\n${t.texto}`); md(`**Error al publicar** ${t.clave}: HTTP ${r.estado} ${r.cuerpo}. Paro esta ejecución; no se vuelve a intentar hasta la siguiente.`); break; }
     } else if (d === 'ok') { registro.reservar(t); previstos++; }

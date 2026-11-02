@@ -58,7 +58,7 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0 }) {
     }
     const usadas = quepa(cab, lineas, pie);
     if (usadas.length < 1) continue;
-    out.push({ tipo: 'final', clave: `final|${m.id}`, jornada, texto: armar(cab, usadas, pie), numeros: num });
+    out.push({ tipo: 'final', clave: `final|${m.id}`, jornada, texto: armar(cab, usadas, pie), numeros: num, partido: m.id });
   }
   return out;
 }
