@@ -83,7 +83,7 @@ function fraseGol(sit, n, eq, semilla) {
  * Cada tweet lleva el marcador del momento de la jugada (reconstruido de ESPN), una frase de cómo ha sido, y las tarjetas de los
  * jugadores implicados (goleador y asistente, el expulsado, el que falla el penalti) en `tarjetas`.
  */
-export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDirecto = 0, ahora = Date.now() }) {
+export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDirecto = 0, ahora = Date.now(), dazn = null }) {
   const porId = new Map((jugadores || []).map((j) => [String(j.id), j]));
   const out = [];
   for (const f of fechasEspn) {
@@ -97,6 +97,8 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       const m = stats.find((x) => comparten(x.local.mainName, casa.team.displayName) && comparten(x.visitor.mainName, fuera.team.displayName));
       if (!m) { console.log(`  (directo) sin casar ${ev.shortName} con LaLiga`); continue; }
       const dsps = disparadores(c.details || []);
+      // con el partido ya acabado, los puntos solo valen cuando están los DAZN: antes, los tweets esperan (los de durante el partido ya salieron)
+      if (st.state === 'post' && dsps.length && dazn && !(await dazn(m)).listo) { console.log(`  (directo) ${ev.shortName}: acabado, espero a los puntos DAZN para sus ${dsps.length} tweets`); continue; }
       console.log(`  (directo) ${ev.shortName} · ${st.state === 'in' ? `en juego, ${(ev.status.displayClock || '')}` : 'acabado'} · ${casa.score}-${fuera.score} · ${dsps.length} cosas que contar`);
       const asis = dsps.some((d) => d.n && !d.asistente) ? await asistencias(ev.id) : {};
       // el marcador de ESPN, que va al momento (el de LaLiga puede ir por detrás)

@@ -62,11 +62,12 @@ export async function relato(m, semilla) {
   return { num: [], frase: cap(elegir([`${el(G)} gana por la mínima.`, `victoria por la mínima ${del(G)}.`, `${el(G)} se lleva los tres puntos por un solo gol.`], semilla)) };
 }
 
-export async function generar({ stats, jornada, jugadores, desdeFinal = 0 }) {
+export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn = null }) {
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
   const out = [];
   // con ventanas, solo los partidos que empezaron hace poco: al activar el bot no se sueltan los de días atrás
   for (const m of stats.filter((x) => x.matchState === 7 && Date.parse(x.date) >= desdeFinal)) {
+    if (dazn && !(await dazn(m)).listo) continue;   // aún sin los puntos DAZN: los de ahora irían cortos
     const filas = [];
     for (const lado of [m.local, m.visitor]) for (const p of lado.players || []) {
       if (p.weekPoints == null) continue;

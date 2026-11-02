@@ -2,11 +2,12 @@
 // (config.tarjetas.jugador): sin imagen repetiría lo que ya dice el tweet del final, así que ejecutar.mjs no lo publica sin ella.
 import { cierre, quepa, armar, corto, elegir, fmt, partes } from '../lib/texto.mjs';
 
-export async function generar({ stats, jornada, jugadores, config, desdeFinal = 0, forzarTarjetas = false }) {
+export async function generar({ stats, jornada, jugadores, config, desdeFinal = 0, forzarTarjetas = false, dazn = null }) {
   if (!(config.tarjetas && config.tarjetas.jugador) && !forzarTarjetas) return [];
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
   const out = [];
   for (const m of stats.filter((x) => x.matchState === 7 && Date.parse(x.date) >= desdeFinal)) {
+    if (dazn && !(await dazn(m)).listo) continue;   // aún sin los puntos DAZN
     const ps = [m.local, m.visitor].flatMap((l) => (l.players || []).filter((p) => p.weekPoints != null).map((p) => ({ p, eq: l })));
     if (ps.length < 10) continue;
     ps.sort((a, b) => Number(b.p.weekPoints) - Number(a.p.weekPoints) || Number(a.p.id) - Number(b.p.id));

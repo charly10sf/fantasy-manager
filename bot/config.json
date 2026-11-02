@@ -4,6 +4,7 @@
   "topeDiario": 40,
   "maxPorEjecucion": 6,
   "ventanaFinalHoras": 10,
+  "daznEsperaHoras": 6,
   "horasCaidas": [9, 21],
   "tweetMax": 280,
   "hashtag": "",
