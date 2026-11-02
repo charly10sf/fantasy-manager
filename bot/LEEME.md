@@ -38,8 +38,9 @@ datos; topes por tipo y jornada, 25 al día y 4 por ejecución (`config.json`); 
   Cada texto pasa por el mismo validador que los tuits (280, «fantasy», sin enlaces, números que estén en los datos). Si LaLiga aún no
   ha puesto los puntos (menos de 12 jugadores con algo distinto de 0), espera a la siguiente ejecución. Máximo 10 por jornada, 20 al
   día y 5 por ejecución (`telegram` en `config.json`).
-- **Cuentas de los clubes.** `telegram.cuentasX` de `config.json` está vacío (no se han comprobado). Si se rellena, por ejemplo
-  `{"Barça": "FCBarcelona_es"}` (el nombre es el corto de los tweets), el mensaje enseña la cuenta de cada club.
+- **Cuentas de los clubes.** `telegram.cuentasX` de `config.json` lleva la cuenta de X en español de los 20 clubes de la 26/27 (comprobadas
+  el 2 nov 2026 en su perfil de X; la clave es el nombre corto de los tweets) y el mensaje la enseña junto al club. Si cambia un club de
+  categoría o de cuenta, se edita ahí. Celta, Deportivo y Espanyol publican sobre todo en gallego o catalán: no tienen otra cuenta en español.
 - **Aviso de fallo.** Si falla un paso del workflow, un mensaje con el enlace a la ejecución (máximo 3 al día, `avisosDia`).
 - El token va en la URL de la API de Telegram: el bot lo borra de cualquier error que escriba en el registro.
 
