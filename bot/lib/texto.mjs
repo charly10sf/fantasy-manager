@@ -24,7 +24,21 @@ export const hash = (s) => [...String(s)].reduce((a, c) => (a * 31 + c.charCodeA
 export const cierre = (semilla) => CIERRES[hash(semilla) % CIERRES.length];
 
 /** el tweet con aire: titular, hueco, cuerpo, hueco, cierre */
-export const armar = (cab, cuerpo, pie) => [cab, '', ...cuerpo, '', pie].join('\n');
+export const armar = (cab, cuerpo, pie) => [cab, '', ...cuerpo, ...(pie ? ['', pie] : [])].join('\n');
+
+/**
+ * Tweet sin el cierre de «Fantasy Manager · enlace en la bio» (Carlos, 2 nov 23:11: solo va en el del final de partido y en los del
+ * mercado). Como el validador pide la palabra «fantasy» en todos, si el texto no la lleva ya, se cierra con #LaLigaFantasy
+ * (no es un enlace, no cuesta más). Devuelve { texto, usadas } con las líneas que caben.
+ */
+export function sinCierre(cab, lineas, max = 280) {
+  let usadas = quepa(cab, lineas, null, max);
+  if (!/fantasy/i.test([cab, ...usadas].join('\n'))) {
+    usadas = quepa(cab, lineas, '#LaLigaFantasy', max);
+    return { usadas, texto: armar(cab, usadas, '#LaLigaFantasy') };
+  }
+  return { usadas, texto: armar(cab, usadas, null) };
+}
 
 /** corta una lista de líneas (por orden de importancia) para que el tweet entero quepa en max; devuelve las que caben */
 export function quepa(cabecera, lineas, pie, max = 280) {

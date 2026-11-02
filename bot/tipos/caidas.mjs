@@ -38,7 +38,7 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
   let i = 0, k = 0;
   while (i < caidas.length && out.length < 12) {
     const cab = elegir([`🚨 LaLiga Fantasy J${jornada} · Ojo con las bajas`, `🚑 LaLiga Fantasy J${jornada} · Estos pueden caerse del once`, `⚠️ LaLiga Fantasy J${jornada} · Posibles caídas, mira tu once`], `caidas${jornada}${k}`);
-    const pie = cierre(`caidas${jornada}${k}`);
+    const pie = null;   // sin cierre: la cabecera ya lleva «LaLiga Fantasy» (Carlos, 2 nov 23:11)
     const intro = elegir(['Si tienes a alguno en el once, ve pensando en el cambio:', 'Revisa tu alineación, que estos lo tienen difícil:', 'Alguno de estos es titular fijo y ahora mismo no cuenta:'], `intro${jornada}${k}`);
     const resto = caidas.slice(i, i + 6);
     const lineas = resto.map((c) => {

@@ -1,6 +1,6 @@
 // MVP de cada partido acabado: un tweet aparte con la tarjeta de jugador. Solo existe con la tarjeta de jugador encendida
 // (config.tarjetas.jugador): sin imagen repetiría lo que ya dice el tweet del final, así que ejecutar.mjs no lo publica sin ella.
-import { cierre, quepa, armar, corto, elegir, fmt, partes } from '../lib/texto.mjs';
+import { sinCierre, corto, elegir, fmt, partes } from '../lib/texto.mjs';
 
 export async function generar({ stats, jornada, jugadores, config, desdeFinal = 0, forzarTarjetas = false, dazn = null }) {
   if (!(config.tarjetas && config.tarjetas.jugador) && !forzarTarjetas) return [];
@@ -23,10 +23,9 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     if (otro) lineas.push(`Empata con él ${otro.p.nickname || otro.p.name} (${corto(otro.eq.mainName)}).`);
     lineas.push(`Lleva ${j.points} puntos en la temporada, con ${fmt(j.averagePoints)} de media.`);
     num.push(Number(j.points), ...partes(j.averagePoints));
-    const pie = cierre(`mvp${m.id}`);
-    const usadas = quepa(cab, lineas, pie, config.tweetMax);
+    const { usadas, texto } = sinCierre(cab, lineas, config.tweetMax);
     if (!usadas.length) continue;
-    out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto: armar(cab, usadas, pie), numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });
+    out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });
   }
   return out;
 }

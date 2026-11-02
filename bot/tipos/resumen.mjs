@@ -1,5 +1,5 @@
 // Mejores y peores de la jornada, con los puntos oficiales de LaLiga Fantasy (weekPoints de stats/week/{n}).
-import { cierre, quepa, armar, corto, elegir } from '../lib/texto.mjs';
+import { quepa, armar, corto, elegir } from '../lib/texto.mjs';
 
 const MEDALLA = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣'];
 
@@ -27,7 +27,7 @@ export async function generar({ stats, jornada, completo = true, dazn = null }) 
     const cab = clave === 'mejores'
       ? elegir([`🏆 LaLiga Fantasy J${jornada} · Estos son los que la han petado${prov}`, `🔥 LaLiga Fantasy J${jornada} · El top de la jornada${prov}`, `🏆 LaLiga Fantasy J${jornada} · Los reyes de la jornada${prov}`], `cab${jornada}`)
       : elegir([`📉 LaLiga Fantasy J${jornada} · Los números rojos de la jornada${prov}`, `😬 LaLiga Fantasy J${jornada} · Los que más sufrieron${prov}`], `cab${jornada}`);
-    const pie = cierre(`${clave}${jornada}`);
+    const pie = null;   // sin cierre: la cabecera ya lleva «LaLiga Fantasy» (Carlos, 2 nov 23:11)
     const lineas = ord.map((f, i) => `${MEDALLA[i]} ${f.nombre} (${f.equipo}) · ${f.pts} pts`);
     const num = [jornada, acabados.length, stats.length, faltan, ...ord.map((f) => f.pts)];
     // el comentario: si un equipo pone a 3 o más de los que salen, lo decimos

@@ -1,7 +1,7 @@
 // Directo: goles (con asistente), rojas y penaltis fallados de ESPN (con minuto) casados con los puntos oficiales de LaLiga.
 // Sin ventanas repite los partidos ya jugados de los días de fechasEspn (para probar); con ventanas, los de hoy en juego o recién acabados.
 import { json } from '../lib/http.mjs';
-import { cierre, norm, corto, armar, fmt, partes, elegir, el, del, al, quepa } from '../lib/texto.mjs';
+import { norm, corto, fmt, partes, elegir, el, del, al, sinCierre } from '../lib/texto.mjs';
 import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
@@ -174,10 +174,9 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           }
           if (pts != null) cuerpo.push(puntos(nombre, pts, true));
         }
-        const pie = cierre(sem);
-        const usadas = quepa(cab, cuerpo, pie);
+        const { usadas, texto } = sinCierre(cab, cuerpo);
         if (!usadas.length) continue;
-        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto: armar(cab, usadas, pie),
+        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto,
           numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra,
           // para las tarjetas de jugador (cada jugador implicado que case con LaLiga) y su marcador del momento
           partido: m.id, marcador: [sl, sv], tarjetas });

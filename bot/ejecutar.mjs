@@ -1,6 +1,6 @@
 // El bot de la cuenta de X. Por defecto NO publica: genera los tweets con datos reales, los valida y dice cuáles publicaría.
 // Publica solo con --modo=publicar (en el workflow, la variable de repositorio BOT_MODO) y con las cuatro claves de X.
-//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas] [--jornada=11] [--fechas-espn=20261101,…]
+//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas,mercado] [--jornada=11] [--fechas-espn=20261101,…]
 //        [--estado=estado/registro.json] [--ventanas=1] [--forzar=1] [--comprobar=1]
 //        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
 // Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
@@ -42,7 +42,7 @@ if (arg('comprobar') === '1') {
 }
 if (publica && faltan.length) { console.log(`# Modo publicar sin los secretos ${faltan.join(', ')}: no publico nada.`); md(`Modo publicar sin los secretos ${faltan.join(', ')}.`); process.exit(1); }
 
-const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas').split(',');
+const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas,mercado').split(',');
 // las tarjetas: encendidas en config.json, o forzadas con --tarjetas=1 en simulacro (para verlas sin tocar lo que se publica)
 const forzarTarjetas = !publica && arg('tarjetas') === '1';
 const conTarjetas = forzarTarjetas || !!(config.tarjetas && (config.tarjetas.final || config.tarjetas.jugador));
@@ -62,7 +62,7 @@ if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
 
 // los puntos DAZN llegan después del final: final, MVP y resumen esperan a que estén (lib/dazn.mjs)
 const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: config.daznEsperaHoras ?? 6, log: (s) => console.log(s) });
-const ctx = { stats, jugadores, equipos, jornada, config, dazn, ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
+const ctx = { stats, jugadores, equipos, jornada, config, dazn, ventanas, ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
   completo: !ventanas || pendientes === 0,
   desdeFinal: ventanas ? Date.now() - config.ventanaFinalHoras * 3600e3 : 0,
   // directo: con ventanas, el marcador de ESPN de hoy (y de ayer de madrugada) y solo partidos empezados hace menos de 3 h;
@@ -70,6 +70,7 @@ const ctx = { stats, jugadores, equipos, jornada, config, dazn, ahora: Date.now(
   desdeDirecto: ventanas ? Date.now() - 3 * 3600e3 : 0,
   fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
 const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
+ctx.registro = registro;
 // Las caídas se publican de día (en Madrid): al acabar el último partido de la noche no salen de madrugada, sino a las 9
 const horaMadrid = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date()));
 const [hDesde, hHasta] = config.horasCaidas || [0, 24];
