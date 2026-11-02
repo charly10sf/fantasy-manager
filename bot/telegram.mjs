@@ -6,7 +6,8 @@
 // --simulacro=1 enseña los mensajes sin mandarlos ni apuntarlos. --datos= (solo para pruebas) usa { semana, stats } de un fichero
 // en vez de la API de LaLiga. BOT_MODO=parado también lo para.
 import { readFileSync, appendFileSync } from 'node:fs';
-import { semanaActual, statsSemana } from './lib/laliga.mjs';
+import { semanaActual, statsSemana, ficha as pedirFicha } from './lib/laliga.mjs';
+import { crearDazn } from './lib/dazn.mjs';
 import { validar } from './lib/validar.mjs';
 import { Registro } from './lib/registro.mjs';
 import { telegramDelEntorno, enviar, esc } from './lib/telegram.mjs';
@@ -60,6 +61,11 @@ if (arg('datos')) {
   stats = await statsSemana(jornada);
 }
 const desdeFinal = ventanas ? Date.now() - (config.ventanaFinalHoras ?? 10) * 3600e3 : 0;
+// los puntos DAZN llegan después del final: un partido sin ellos no se trata como acabado todavía (lib/dazn.mjs)
+if (!arg('datos')) {
+  const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: config.daznEsperaHoras ?? 6, log: (s) => console.log(s) });
+  stats = await Promise.all(stats.map(async (m) => (m.matchState === 7 && Date.parse(m.date) >= desdeFinal && !(await dazn(m)).listo ? { ...m, matchState: 6 } : m)));
+}
 const items = generar({ stats, jornada, config, desdeFinal, log: (s) => console.log(s) });
 console.log(`# Jornada ${jornada} · ${stats.length} partidos, ${stats.filter((m) => m.matchState === 7).length} acabados · ${items.length} con respuestas listas`);
 

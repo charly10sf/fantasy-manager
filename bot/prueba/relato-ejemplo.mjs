@@ -20,7 +20,7 @@ const P = (id, nick, teamId, pts, pos = 3) => ({ id, name: nick, nickname: nick,
 const g = (min, team, quien, asis = null, extra = {}) => ({ scoringPlay: true, clock: { value: min * 60, displayValue: `${min}'` }, team: { id: String(team) }, athletesInvolved: [{ displayName: quien }, ...(asis ? [{ displayName: asis }] : [])], ...extra });
 const roja = (min, team, quien) => ({ redCard: true, clock: { value: min * 60, displayValue: `${min}'` }, team: { id: String(team) }, athletesInvolved: [{ displayName: quien }] });
 const fallo = (min, team, quien) => ({ penaltyKick: true, scoringPlay: false, clock: { value: min * 60, displayValue: `${min}'` }, team: { id: String(team) }, athletesInvolved: [{ displayName: quien }] });
-const rell = (n, t) => Array.from({ length: n }, (_, i) => P(500 + t * 20 + i, `Relleno${t}${i}`, t, i % 3));
+const rell = (n, t) => Array.from({ length: n }, (_, i) => P(500 + t * 20 + i, `Relleno ${'abcdefghijklmnopqrstuvwxyz'[t % 26]}${'abcdefghijklmnop'[i]}`, t, i % 3));
 
 const barca = [P(1, 'Raphinha', 83, 15), P(2, 'Lamine Yamal', 83, 11), P(3, 'Lewandowski', 83, 4, 4), ...rell(8, 83)];
 const alaves = [P(11, 'Guridi', 3, 5), P(12, 'Kike García', 3, -2, 4), ...rell(9, 3)];
@@ -65,6 +65,25 @@ if (arg('tarjetas')) {
     const hechas = await tarjetasDe(t, { stats, jugadores, jornada: 11, config: { tarjetas: { final: true, jugador: true } }, fuentes });
     for (const h of hechas) { console.log(`tarjeta ${h.nombre}: ${h.ok ? 'válida' : 'NO pasa: ' + h.errores.join('; ')}`); if (h.ok) writeFileSync(`${dirOut}/${h.nombre}.png`, h.png); else fallos++; }
   }
+}
+
+// --- espera a los puntos DAZN: sin valoración en la ficha no sale el final ni el MVP; con ella, sí; y pasado el plazo, sale igual ---
+{
+  const { crearDazn } = await import('../lib/dazn.mjs');
+  const m = stats[0];
+  const ficha = (con) => async () => ({ playerStats: [{ weekNumber: 11, stats: { marca_points: con == null ? [0, 0] : [-1, con] } }] });
+  const caso = async (nombre, f, ahora, esperado) => {
+    const d = crearDazn({ ficha: f, jornada: 11, esperaHoras: 6, ahora: () => ahora, log: () => {} });
+    const r = await d(m); const f1 = await final({ stats: [m], jornada: 11, jugadores, desdeFinal: 0, dazn: d });
+    const ok = r.listo === esperado && (f1.length === 1) === esperado;
+    if (!ok) fallos++;
+    console.log(`DAZN ${nombre}: listo=${r.listo} (${r.con}/${r.de}) tweets de final=${f1.length} ${ok ? 'ok' : 'FALLA'}`);
+  };
+  const saque = Date.parse(m.date);
+  await caso('sin valoración, hace 1 h', ficha(null), saque + 3600e3, false);
+  await caso('valoración puesta', ficha(4), saque + 3600e3, true);
+  await caso('sin valoración, pasadas 7 h', ficha(null), saque + 7 * 3600e3, true);
+  await caso('la ficha falla, hace 2 h', async () => { throw new Error('caído'); }, saque + 2 * 3600e3, false);
 }
 srv.close();
 process.exit(fallos ? 1 : 0);

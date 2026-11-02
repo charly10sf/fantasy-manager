@@ -5,7 +5,8 @@
 //        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
 // Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
 import { readFileSync, appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { semanaActual, jugadores as pedirJugadores, statsSemana, equiposDe } from './lib/laliga.mjs';
+import { semanaActual, jugadores as pedirJugadores, statsSemana, equiposDe, ficha as pedirFicha } from './lib/laliga.mjs';
+import { crearDazn } from './lib/dazn.mjs';
 import { validar } from './lib/validar.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
@@ -59,7 +60,9 @@ if (pendientes === 0) objetivoCaidas = sem.nextWeek;
 else if (stats.every((m) => m.matchState === 1)) objetivoCaidas = jornada;
 if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
 
-const ctx = { stats, jugadores, equipos, jornada, config, ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
+// los puntos DAZN llegan después del final: final, MVP y resumen esperan a que estén (lib/dazn.mjs)
+const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: config.daznEsperaHoras ?? 6, log: (s) => console.log(s) });
+const ctx = { stats, jugadores, equipos, jornada, config, dazn, ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
   completo: !ventanas || pendientes === 0,
   desdeFinal: ventanas ? Date.now() - config.ventanaFinalHoras * 3600e3 : 0,
   // directo: con ventanas, el marcador de ESPN de hoy (y de ayer de madrugada) y solo partidos empezados hace menos de 3 h;
