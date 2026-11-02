@@ -10,3 +10,4 @@ __pycache__/
 subida*
 *.jks
 *.keystore
+node_modules/

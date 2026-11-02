@@ -1,0 +1,41 @@
+# Prueba de las tarjetas y del directo con datos reales (ESPN y LaLiga de la J11), sin publicar nada en X: simulacro y un
+# servidor falso de X. Saca por el log tres PNG en base64 para mirarlos fuera (el entorno de Claude no baja artefactos).
+name: Tarjetas prueba
+on:
+  workflow_dispatch:
+  push:
+    branches: [pruebas-fuentes]
+    paths: ['bot/**', '.github/workflows/tarjetas-prueba.yml']
+permissions:
+  contents: read
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: simulacro con tarjetas forzadas (directo con los partidos ya jugados)
+        run: node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=directo,final,mvp --tarjetas=1 --fechas-espn=20261030,20261031,20261101 --jornada=11
+      - name: de punta a punta contra un servidor falso de X, con las tarjetas encendidas
+        if: always()
+        env:
+          X_API_BASE: http://127.0.0.1:8787
+          X_API_KEY: clave-falsa
+          X_API_SECRET: secreto-falso
+          X_ACCESS_TOKEN: token-falso
+          X_ACCESS_TOKEN_SECRET: secreto-token-falso
+        run: |
+          node -e "const f='bot/config.json',c=require('./'+f);c.tarjetas={final:true,jugador:true};require('fs').writeFileSync(f,JSON.stringify(c))"
+          GUARDAR=/tmp/subidas node bot/prueba/servidor-falso.mjs &
+          sleep 1
+          for i in 1 2 3 4 5; do node bot/ejecutar.mjs --modo=publicar --ventanas=0 --tipos=directo,final,mvp --fechas-espn=20261030,20261031,20261101 --jornada=11 --estado=/tmp/registro.json | grep -E "^# Total|subida|NO pasa|ERROR"; done
+          node -e "fetch('http://127.0.0.1:8787/__resumen').then(r=>r.json()).then(j=>console.log('servidor falso:',JSON.stringify(j)))"
+      - name: tres PNG por el log
+        if: always()
+        run: |
+          ls -la tarjetas || true
+          for f in $(ls tarjetas/final-106*.png tarjetas/directo-*.png tarjetas/mvp-105*.png 2>/dev/null | head -3); do echo "PNG:$(basename $f)"; base64 -w 8000 "$f" | sed 's/^/B64:/'; done
