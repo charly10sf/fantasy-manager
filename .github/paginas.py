@@ -76,6 +76,7 @@ def cta(raiz):
             f'<p>Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular. Gratis y sin registrarte: entras con tu cuenta de LaLiga.</p>'
             f'<div class="cta-b"><a class="btn" href="{APK}">Descargar la app para Android</a>'
             f'<a class="btn sec" href="{raiz or "./"}">Abrirla en el navegador</a></div>'
+            f'<span class="play-pronto"><svg class="play-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="#00a0ff" d="M3.6 1.6 13.4 12 3.6 22.4c-.4-.2-.6-.6-.6-1.1V2.7c0-.5.2-.9.6-1.1z"/><path fill="#00d95f" d="M3.6 1.6c.3-.2.8-.2 1.2.1L16.4 8.4 13.4 12z"/><path fill="#ff3a44" d="M3.6 22.4 13.4 12l3 3.6L4.8 22.3c-.4.3-.9.3-1.2.1z"/><path fill="#ffd500" d="m16.4 8.4 3.9 2.2c.9.5.9 1.8 0 2.4l-3.9 2.2-3-3.6z"/></svg><span><small>Próximamente en</small><b>Google Play</b></span></span>'
             f'<p class="peq">No hace falta descargar nada: en el ordenador y en el iPhone funciona en el navegador, y puedes verla antes con una liga de ejemplo. <a href="{raiz}instalar.html">Cómo instalarla en Android</a></p>'
             f'</aside>')
 
