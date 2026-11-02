@@ -76,3 +76,16 @@ for (const d of ['https://www.futbolfantasy.com/robots.txt', 'https://www.marca.
   const r = await get(d);
   linea(`- ${d} → ${r.s} · «${head(r.b, 700)}»`);
 }
+
+linea('\n## futbolfantasy: lesionados, noticias, posibles alineaciones; y el partido de hoy en ESPN');
+for (const u of ['https://www.futbolfantasy.com/laliga/lesionados', 'https://www.futbolfantasy.com/laliga/noticias', 'https://www.futbolfantasy.com/laliga/posibles-alineaciones']) {
+  const r = await get(u);
+  const jug = (r.b.match(/\/jugadores\//g) || []).length;
+  const art = (r.b.match(/\/laliga\/noticias\/\d+-/g) || []).length;
+  const partes = (r.b.match(/parte-medico/g) || []).length;
+  const t = (r.b.match(/<title>([^<]*)/) || [])[1];
+  linea(`- ${u} → ${r.s || r.err} · ${(r.b.length / 1024).toFixed(1)} KB · ${r.ms} ms · jugadores=${jug} artículos=${art} parte-medico=${partes} data-lesion=${(r.b.match(/data-lesion=/g) || []).length} · título «${t}» · hace-poco=${/hace \d+ (minutos|horas)/i.test(r.b)}`);
+}
+const hoy = await get(`${E}/scoreboard`);
+const hj = j(hoy.b);
+for (const e of hj?.events || []) linea(`- ESPN hoy: ${e.shortName} ${e.date} estado=${e.status?.type?.name} detalles=${(e.competitions?.[0]?.details || []).length}`);
