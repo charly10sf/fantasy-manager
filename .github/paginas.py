@@ -156,7 +156,7 @@ def pagina(p, contenido, hay_guias):
 
 def indice_guias(guias):
     filas = ['  <h1>Guías de <span>LaLiga Fantasy</span></h1>',
-             '  <p>Cómo funcionan las cláusulas, el mercado, los puntos y el dinero en LaLiga Fantasy, explicado con números.</p>']
+             '  <p>Cómo funcionan las cláusulas, el mercado, la alineación y el dinero en LaLiga Fantasy, explicado con números.</p>']
     if guias:
         filas.append('  <ul class="lista-guias">')
         for g in guias:
@@ -175,8 +175,8 @@ def main():
     hay_guias = bool(guias)
     hoy = max((p['fecha'] for p in guias), default='2026-11-02')
     indice = {'ruta': 'guias/index.html', 'tipo': 'guia', 'h1': 'Guías de LaLiga Fantasy',
-              'titulo': 'Guías de LaLiga Fantasy: cláusulas, mercado y puntos · Fantasy Manager',
-              'descripcion': 'Guías para LaLiga Fantasy: cómo funcionan las cláusulas, cuándo vender, cuánto pujar y cómo se calculan los puntos.',
+              'titulo': 'Guías de LaLiga Fantasy: cláusulas, mercado y pujas · Fantasy Manager',
+              'descripcion': 'Guías para LaLiga Fantasy: cómo funcionan las cláusulas, cuándo vender, cuánto pujar y cómo hacer el once.',
               'fecha': hoy}
     if not hay_guias:
         indice['borrador'] = True

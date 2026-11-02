@@ -25,7 +25,7 @@
     {
       "ruta": "guias/clausulas-laliga-fantasy.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cláusulas en LaLiga Fantasy: cómo funcionan",
       "titulo": "Cláusulas en LaLiga Fantasy: cómo funcionan y cuándo se abren",
       "descripcion": "Qué es la cláusula de un jugador, cuándo sube sola, cuándo se puede pagar y por qué solo se paga con saldo, con ejemplos en millones.",
@@ -42,10 +42,10 @@
     {
       "ruta": "guias/blindar-jugador-clausula.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cómo blindar a un jugador en LaLiga Fantasy",
       "titulo": "Blindar a un jugador en LaLiga Fantasy: cuánto subir la cláusula",
-      "descripcion": "Cuánto cuesta subir la cláusula de un jugador, hasta dónde compensa y cuándo es tirar el dinero, con números de una liga real.",
+      "descripcion": "Cuánto cuesta subir la cláusula de un jugador, hasta dónde compensa y cuándo es tirar el dinero, con ejemplos en millones.",
       "busqueda": "blindar jugador LaLiga Fantasy",
       "esquema": [
         ["Qué es blindar", "Pagar para subir la cláusula de un jugador tuyo y que a los rivales no les llegue."],
@@ -59,7 +59,7 @@
     {
       "ruta": "guias/cuando-clausular.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cuándo clausular a un jugador de un rival",
       "titulo": "Cuándo clausular en LaLiga Fantasy: a quién y en qué momento",
       "descripcion": "Cómo saber si una cláusula compensa: lo que pagas por encima del valor, lo que puede subir el jugador y lo que te deja en caja.",
@@ -76,7 +76,7 @@
     {
       "ruta": "guias/valor-de-mercado.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cómo sube y baja el valor de los jugadores en LaLiga Fantasy",
       "titulo": "Valor de mercado en LaLiga Fantasy: por qué suben y bajan",
       "descripcion": "Cuándo cambia el valor de los jugadores, qué lo mueve, cómo leer las rachas de subida y qué pasa con un lesionado.",
@@ -92,7 +92,7 @@
     {
       "ruta": "guias/cuanto-pujar.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cuánto pujar por un jugador en LaLiga Fantasy",
       "titulo": "Cuánto pujar en el mercado de LaLiga Fantasy",
       "descripcion": "Cómo funcionan las pujas, cuánto ponerte por encima del valor, hasta dónde llega el margen de deuda y cómo pujan tus rivales.",
@@ -108,7 +108,7 @@
     {
       "ruta": "guias/cuando-vender.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cuándo vender un jugador en LaLiga Fantasy",
       "titulo": "Cuándo vender jugadores en LaLiga Fantasy (y cuándo esperar)",
       "descripcion": "Vender a LaLiga o a un rival, asegurar el beneficio, cuándo aguantar y qué hacer con lesionados y sancionados.",
@@ -124,7 +124,7 @@
     {
       "ruta": "guias/saldo-negativo.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Saldo negativo en LaLiga Fantasy: qué pasa y cómo salir",
       "titulo": "Saldo negativo en LaLiga Fantasy: qué pasa y cómo salir",
       "descripcion": "Cuánto te puedes endeudar, qué pasa si empieza la jornada en negativo y cómo salir vendiendo lo justo.",
@@ -155,7 +155,7 @@
     {
       "ruta": "guias/alineacion.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cómo hacer la alineación en LaLiga Fantasy",
       "titulo": "La mejor alineación en LaLiga Fantasy: cómo elegir el once",
       "descripcion": "Formaciones, titulares probables, partidos del viernes frente a los del lunes y qué hacer con los cambios de última hora.",
@@ -171,10 +171,10 @@
     {
       "ruta": "guias/ganar-dinero.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cómo ganar dinero en LaLiga Fantasy",
       "titulo": "Cómo ganar dinero en LaLiga Fantasy sin perder puntos",
-      "descripcion": "Comprar antes de que suban, vender al rival que paga más, rotar la plantilla y lo que no funciona, con cifras de una liga real.",
+      "descripcion": "Comprar antes de que suban, vender al rival que paga más, rotar la plantilla y lo que no funciona, con un ejemplo en cifras.",
       "busqueda": "cómo ganar dinero LaLiga Fantasy",
       "esquema": [
         ["Comprar antes de que suban", "Cómo detectar a los que empiezan a subir."],
@@ -187,7 +187,7 @@
     {
       "ruta": "guias/lesionados-sancionados.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Lesionados y sancionados en LaLiga Fantasy: qué hacer",
       "titulo": "Lesionados y sancionados en LaLiga Fantasy: vender o aguantar",
       "descripcion": "Qué significa cada estado de un jugador, cuándo venderlo y cuándo aguantarlo, y cómo funcionan los apercibidos.",
@@ -202,7 +202,7 @@
     {
       "ruta": "guias/empezar-liga.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Cómo empezar en una liga de LaLiga Fantasy",
       "titulo": "Empezar en LaLiga Fantasy: consejos para los primeros días",
       "descripcion": "Qué hacer con el equipo inicial, el primer mercado y las cláusulas desde el primer día, y los errores que más dinero cuestan al empezar.",
@@ -217,7 +217,7 @@
     {
       "ruta": "guias/glosario.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Glosario de LaLiga Fantasy",
       "titulo": "Glosario de LaLiga Fantasy: qué significa cada término",
       "descripcion": "Cláusula, blindaje, clausulazo, puja, saldo, valor de mercado, once probable y el resto de palabras del juego, explicadas con un ejemplo.",
@@ -232,7 +232,7 @@
     {
       "ruta": "guias/preguntas-frecuentes.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-02",
       "h1": "Fantasy Manager: preguntas frecuentes",
       "titulo": "Fantasy Manager: preguntas frecuentes",
       "descripcion": "Si es oficial, si es gratis, cómo se entra con tu cuenta de LaLiga, si funciona en iPhone y qué hace con tus datos.",

@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.11f';
+export const VERSION = '0.6.11g';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.6.11f';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.11g', f: '2026-11-02', h: '22:30', t: 'Guías para jugar mejor',
+    cosas: [
+      { para: 'web', tipo: 'nuevo', d: 'periodico', t: '13 guías de LaLiga Fantasy', x: 'En la web hay guías con números sobre cláusulas, blindajes, cuándo clausular, valor de mercado, pujas, ventas, saldo negativo, alineación, ganar dinero, lesionados, empezar una liga, un glosario y preguntas frecuentes. Se llega desde el pie de la portada.' },
+      { para: 'dueño', tipo: 'mejora', d: 'ajustes', t: 'Guías publicadas', x: 'Las 13 guías escritas salen del borrador (index, sitemap y menú de las páginas públicas). La de puntos sigue en borrador: falta la tabla de puntos de esta temporada comprobada.' },
+    ],
+  },
   {
     v: '0.6.11f', f: '2026-11-02', h: '20:51', t: 'Una portada para enseñarla',
     cosas: [
