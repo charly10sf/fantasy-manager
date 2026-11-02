@@ -69,6 +69,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       const m = stats.find((x) => comparten(x.local.mainName, casa.team.displayName) && comparten(x.visitor.mainName, fuera.team.displayName));
       if (!m) { console.log(`  (directo) sin casar ${ev.shortName} con LaLiga`); continue; }
       const dsps = disparadores(c.details || []);
+      console.log(`  (directo) ${ev.shortName} · ${st.state === 'in' ? `en juego, ${(ev.status.displayClock || '')}` : 'acabado'} · ${casa.score}-${fuera.score} · ${dsps.length} cosas que contar`);
       const asis = dsps.some((d) => d.n && !d.asistente) ? await asistencias(ev.id) : {};
       // el marcador de ESPN, que va al momento (el de LaLiga puede ir por detrás)
       const gl = Number(casa.score), gv = Number(fuera.score);
