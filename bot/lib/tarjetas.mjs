@@ -205,6 +205,64 @@ export function svgJugador(d) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta del resumen de la jornada (Carlos, 2 nov 23:28): los 6 mejores o los 6 peores, en dos columnas de 3.
+// d = { jornada, clave: 'mejores'|'peores', filas: [{ nombre, equipo, club (nombre largo), pts, cara (PNG), escudo (PNG) }] (6) }
+export function svgResumen(d) {
+  const bueno = d.clave === 'mejores';
+  const acento = bueno ? VERDE : MALO;
+  let s = brillo(600, -80, 700, bueno ? '#16c172' : '#ff4d5e', 0.22) + `<rect width="${ANCHO}" height="6" fill="${ROJO}"/>`
+    + texto(60, 62, `LALIGA FANTASY · JORNADA ${d.jornada}`, { px: 17, peso: 700, color: '#948f9b', espacio: 3 })
+    + texto(60, 132, bueno ? 'LOS MEJORES' : 'LOS PEORES', { px: 64, display: true, color: '#fff' })
+    + texto(1140, 132, 'DE LA JORNADA', { px: 22, peso: 700, color: acento, ancla: 'end', espacio: 3 });
+  const w = 525, h = 132, x0 = [60, 615], y0 = 168;
+  d.filas.slice(0, 6).forEach((j, i) => {
+    const x = x0[Math.floor(i / 3)], y = y0 + (i % 3) * (h + 14);
+    const club = coloresClub(j.club || j.equipo);
+    const r = 46, cx = x + 26 + r, cy = y + h / 2;
+    s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="#131317"/>`
+      + texto(x + 14, y + 30, String(i + 1), { px: 20, display: true, color: '#55525c' })
+      + caraCirculo(j.cara, cx, cy, r, { aro: club.vivo, fondo: '#1b1b21', grosor: 3 })
+      + texto(cx + r + 20, cy - 4, j.nombre, { px: 30, peso: 700, color: '#f4f2f3', max: w - (cx + r + 20 - x) - 130 })
+      + escudo(j.escudo, cx + r + 32, cy + 30, 28)
+      + texto(cx + r + (j.escudo ? 52 : 20), cy + 38, j.equipo, { px: 19, peso: 600, color: '#948f9b', max: 220 })
+      + texto(x + w - 58, cy + 20, String(j.pts), { px: 58, display: true, color: acento, ancla: 'end' })
+      + texto(x + w - 18, cy + 18, 'pts', { px: 16, peso: 600, color: '#948f9b', ancla: 'end' });
+  });
+  return marco('#08080a', s + marca(600, 650));
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta de la previa de un partido: los dos onces (posibles, con el % de titularidad de la app, o confirmados).
+// d = { jornada, confirmados, local, visitante } con cada lado { nombre, corto, escudo (PNG), formacion ('4-3-3'),
+//       once: [{ pos: 'POR'|'DEF'|'MED'|'DEL', nombre, pct (0-100) | null, duda: bool }] (11, de portero a delanteros) }
+export function svgOnces(d) {
+  const L = d.local, V = d.visitante;
+  const cL = coloresClub(L.nombre), cV = coloresClub(V.nombre);
+  let s = brillo(230, 60, 520, cL.vivo, 0.5) + brillo(970, 60, 520, cV.vivo, 0.5) + `<rect width="${ANCHO}" height="6" fill="${ROJO}"/>`
+    + texto(600, 44, `${d.confirmados ? 'ONCES CONFIRMADOS' : 'POSIBLES ONCES'} · JORNADA ${d.jornada}`, { px: 17, peso: 700, color: d.confirmados ? VERDE : '#948f9b', ancla: 'middle', espacio: 3 })
+    + escudo(L.escudo, 92, 92, 64) + escudo(V.escudo, 1108, 92, 64)
+    + texto(140, 104, L.corto, { px: 32, peso: 700, color: '#fff', max: 300 })
+    + texto(1060, 104, V.corto, { px: 32, peso: 700, color: '#fff', ancla: 'end', max: 300 })
+    + texto(600, 106, 'VS', { px: 26, display: true, color: '#55525c', ancla: 'middle' });
+  const col = (x, lado, club) => {
+    let t = texto(x + 4, 152, lado.formacion || '', { px: 16, peso: 700, color: '#f4f2f3', espacio: 2 });
+    const fh = 41;
+    lado.once.slice(0, 11).forEach((j, i) => {
+      const y = 164 + i * fh;
+      const pctCol = j.pct == null ? null : j.pct >= 75 ? VERDE : j.pct >= 50 ? '#f2b33d' : MALO;
+      t += `<rect x="${x}" y="${y}" width="525" height="${fh - 5}" rx="9" fill="#131317"/>`
+        + texto(x + 14, y + 25, j.pos, { px: 14, peso: 700, color: '#948f9b', espacio: 1.5 })
+        + texto(x + 70, y + 26, j.nombre, { px: 21, peso: 700, color: '#f4f2f3', max: 330 })
+        + (j.duda ? texto(x + 430, y + 25, 'DUDA', { px: 13, peso: 700, color: '#f2b33d', ancla: 'end', espacio: 1.5 }) : '')
+        + (pctCol ? texto(x + 510, y + 26, `${j.pct} %`, { px: 21, peso: 700, color: pctCol, ancla: 'end' }) : '');
+    });
+    return t;
+  };
+  s += col(50, L, cL) + col(625, V, cV);
+  return marco('#08080a', s + marca(600, 660));
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
 let Resvg = null;
 /** SVG -> PNG (Buffer). @resvg/resvg-js se carga solo si hace falta: el bot sin tarjetas no lo necesita */
 export async function aPng(svg) {

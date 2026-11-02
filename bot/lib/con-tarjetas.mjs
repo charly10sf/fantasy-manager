@@ -4,7 +4,7 @@
 //   mvp     -> tarjeta de jugador del MVP (si tarjetas.jugador)
 //   directo -> tarjeta de cada jugador implicado: goleador, asistente, expulsado o el que falla el penalti (si tarjetas.jugador)
 // Lo que no pasa el validador no sale: el tweet del final se publica entonces sin imagen y el del MVP no se publica.
-import { svgFinal, svgJugador, aPng } from './tarjetas.mjs';
+import { svgFinal, svgJugador, svgResumen, svgOnces, aPng } from './tarjetas.mjs';
 import { datosFinal, datosJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
 import { validarTarjeta } from './validar.mjs';
 import * as LL from './laliga.mjs';
@@ -14,13 +14,22 @@ const fuentesLaLiga = { ficha: LL.ficha, valor: LL.valorMercado, imagen: LL.imag
 /** [{ nombre, png, svg, ok, errores }] para un tweet (vacío si no lleva tarjeta) */
 export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar = false, fuentes = fuentesLaLiga }) {
   const cfg = config.tarjetas || {};
-  const m = stats.find((x) => String(x.id) === String(t.partido));
-  if (!m) return [];
   const hechas = [];
   const hacer = async (nombre, { d, permitidos }, svg) => {
     const v = validarTarjeta(svg, permitidos, PALABRAS_FIJAS);
     hechas.push({ nombre, svg, ok: v.ok, errores: v.errores, png: v.ok ? await aPng(svg) : null });
   };
+  // tarjetas que el propio tipo deja montadas (resumen de la jornada y onces de la previa): aquí solo se bajan las imágenes y se dibujan
+  if (t.tarjeta && (cfg[t.tipo] ?? cfg[t.tarjeta.tipo] ?? forzar)) {
+    const img = (u) => (u ? fuentes.imagen(u).catch(() => null) : null);
+    const d = structuredClone(t.tarjeta.d);
+    if (t.tarjeta.tipo === 'resumen') for (const f of d.filas) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
+    if (t.tarjeta.tipo === 'onces') for (const k of ['local', 'visitante']) d[k].escudo = await img(d[k].escudoUrl);
+    await hacer(t.tarjeta.nombre, { d, permitidos: t.tarjeta.permitidos }, t.tarjeta.tipo === 'resumen' ? svgResumen(d) : svgOnces(d));
+    return hechas;
+  }
+  const m = stats.find((x) => String(x.id) === String(t.partido));
+  if (!m) return [];
   if (t.tipo === 'final' && (cfg.final || forzar)) {
     const x = await datosFinal(m, { jornada, fuentes });
     await hacer(`final-${m.id}`, x, svgFinal(x.d));
