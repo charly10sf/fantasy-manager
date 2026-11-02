@@ -29,7 +29,9 @@ export async function generar({ stats, jornada, jugadores }) {
     const lineas = [];
     // 1) el mejor (o los dos mejores, si empatan)
     if (empate) {
-      lineas.push(`⭐ ${top.nombre} (${top.equipo}) y ${empate.nombre} (${empate.equipo}) se reparten el trono: ${top.pts} puntos cada uno.`);
+      lineas.push(top.equipo === empate.equipo
+        ? `⭐ ${top.nombre} y ${empate.nombre} (${top.equipo}) se reparten el trono: ${top.pts} puntos cada uno.`
+        : `⭐ ${top.nombre} (${top.equipo}) y ${empate.nombre} (${empate.equipo}) se reparten el trono: ${top.pts} puntos cada uno.`);
       num.push(top.pts);
     } else {
       lineas.push(`⭐ ${elegir([`${top.nombre} (${top.equipo}) manda con ${top.pts} puntos.`, `${top.nombre} (${top.equipo}) lo borda: ${top.pts} puntos.`, `El MVP fantasy: ${top.nombre} (${top.equipo}), ${top.pts} puntos.`], `mvp${m.id}`)}`);

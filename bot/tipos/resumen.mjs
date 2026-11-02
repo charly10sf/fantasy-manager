@@ -12,7 +12,8 @@ export async function generar({ stats, jornada }) {
     filas.push({ id: p.id, nombre: p.nickname || p.name, equipo: corto(lado.mainName), pts: Number(p.weekPoints) });
   }
   if (filas.length < 10) return [];
-  const prov = acabados.length < stats.length ? ` (¡aún faltan ${stats.length - acabados.length}!)` : '';
+  const faltan = stats.length - acabados.length;
+  const prov = faltan ? (faltan === 1 ? ' (aún falta 1 partido)' : ` (aún faltan ${faltan} partidos)`) : '';
   const out = [];
   for (const clave of ['mejores', 'peores']) {
     // los 0 pueden ser jugadores que no han jugado: en «peores» solo cuentan los negativos
@@ -25,26 +26,20 @@ export async function generar({ stats, jornada }) {
     const pie = cierre(`${clave}${jornada}`);
     const lineas = ord.map((f, i) => `${MEDALLA[i]} ${f.nombre} (${f.equipo}) · ${f.pts} pts`);
     const num = [jornada, acabados.length, stats.length, stats.length - acabados.length, ...ord.map((f) => f.pts)];
-    // el comentario: si un equipo pone a 3 o más de los 6, lo decimos
-    const porEquipo = {};
-    for (const f of ord) porEquipo[f.equipo] = (porEquipo[f.equipo] || 0) + 1;
-    const [eq, n] = Object.entries(porEquipo).sort((a, b) => b[1] - a[1])[0];
-    const coment = n >= 3
-      ? (clave === 'mejores' ? `💥 ${n} de los ${ord.length} son del ${eq}: así se gana un partido.` : `⚠️ ${n} de los ${ord.length} son del ${eq}: tarde para olvidar.`)
-      : null;
-    if (coment) num.push(n, ord.length);
-    // primero las filas que caben; el comentario va al final si hay sitio
-    const usadas = quepa(cab, coment ? [...lineas, coment] : lineas, pie);
-    const conComent = coment && usadas.includes(coment);
-    const filasUsadas = usadas.filter((l) => l !== coment);
-    if (filasUsadas.length < 3) continue;
-    // si el comentario no cabe con todas las filas, se prefiere el comentario a la última fila
-    let cuerpo = filasUsadas;
-    if (coment && !conComent) {
-      const sinUltima = quepa(cab, [...lineas.slice(0, filasUsadas.length - 1), coment], pie);
-      if (sinUltima.includes(coment) && sinUltima.length - 1 >= 3) cuerpo = sinUltima;
+    // el comentario: si un equipo pone a 3 o más de los que salen, lo decimos
+    // (se prueba con todas las filas y se va quitando la última hasta que quepa con el comentario)
+    let cuerpo = null, coment = null;
+    for (let k = ord.length; k >= 3; k--) {
+      const porEquipo = {};
+      for (const f of ord.slice(0, k)) porEquipo[f.equipo] = (porEquipo[f.equipo] || 0) + 1;
+      const [eq, n] = Object.entries(porEquipo).sort((a, b) => b[1] - a[1])[0];
+      if (n < 3) break;
+      coment = clave === 'mejores' ? `💥 ${n} de los ${k} son del ${eq}: así se gana un partido.` : `⚠️ ${n} de los ${k} son del ${eq}: tarde para olvidar.`;
+      const t = quepa(cab, [...lineas.slice(0, k), coment], pie);
+      if (t.length === k + 1) { cuerpo = t; num.push(n, k); break; }
     }
-    out.push({ tipo: 'resumen', clave: `resumen|${jornada}|${clave}|${acabados.length}`, jornada, texto: armar(cab, cuerpo, pie), numeros: num });
+    if (!cuerpo) { const t = quepa(cab, lineas, pie); if (t.length < 3) continue; cuerpo = t; }
+    out.push({ tipo: 'resumen', clave: `resumen|${jornada}|${clave}|${acabados.length}`, jornada, texto: armar(cab, cuerpo, pie), numeros: [...num, 1] });
   }
   return out;
 }

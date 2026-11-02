@@ -9,7 +9,7 @@ export function validar(texto, { numeros = [], max = 280 } = {}) {
   if (!/fantasy/i.test(texto)) e.push('sin la palabra «fantasy»');
   if (/https?:|www\.|\b[a-z0-9-]+\.(com|es|eus|net|org|io|app)\b/i.test(texto)) e.push('lleva un enlace');
   const ok = new Set(numeros.map((n) => String(Math.abs(Number(n)))));
-  for (const t of texto.match(/\d+/g) || []) if (!ok.has(String(Number(t)))) e.push(`número ${t} que no está en los datos`);
+  for (const t of texto.replace(/[0-9#*]\uFE0F?\u20E3/g, '').match(/\d+/g) || []) if (!ok.has(String(Number(t)))) e.push(`número ${t} que no está en los datos`);
   if (/\n{3,}/.test(texto)) e.push('demasiados saltos de línea');
   return { ok: e.length === 0, errores: e, peso: p };
 }
