@@ -6,5 +6,6 @@
   "ventanaFinalHoras": 10,
   "horasCaidas": [9, 21],
   "tweetMax": 280,
-  "hashtag": ""
+  "hashtag": "",
+  "telegram": { "topes": { "respuestas": 10 }, "topeDiario": 20, "maxPorEjecucion": 5, "avisosDia": 3, "minJugadoresConPuntos": 12, "cuentasX": {} }
 }
