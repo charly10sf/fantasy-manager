@@ -1,0 +1,40 @@
+// Registro de lo publicado: duplicados, topes por tipo y jornada, tope por día. Vive en un archivo JSON (en el workflow, en la
+// rama `bot-estado`) para que sobreviva entre ejecuciones. Se marca SOLO cuando X ha dicho que sí (201).
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { dirname } from 'node:path';
+
+export class Registro {
+  constructor(config, fichero = null) {
+    this.config = config; this.fichero = fichero;
+    this.datos = { enviados: [] };
+    if (fichero && existsSync(fichero)) { try { this.datos = JSON.parse(readFileSync(fichero, 'utf8')); } catch { /* vacío */ } }
+    this.claves = new Set(this.datos.enviados.map((e) => e.clave));
+    this.enEstaEjecucion = 0;
+  }
+  hoy() { return new Date().toISOString().slice(0, 10); }
+  /** 'ok' o el motivo de no publicar */
+  decidir(tw) {
+    if (this.claves.has(tw.clave)) return 'duplicado';
+    const tope = this.config.topes[tw.tipo] ?? 0;
+    const n = this.datos.enviados.filter((e) => e.tipo === tw.tipo && e.jornada === tw.jornada).length;
+    if (n >= tope) return `tope de ${tope} para «${tw.tipo}» en la jornada ${tw.jornada}`;
+    const hoy = this.datos.enviados.filter((e) => e.t.slice(0, 10) === this.hoy()).length;
+    if (hoy >= (this.config.topeDiario ?? 25)) return `tope diario de ${this.config.topeDiario ?? 25}`;
+    if (this.enEstaEjecucion >= (this.config.maxPorEjecucion ?? 4)) return `máximo de ${this.config.maxPorEjecucion ?? 4} por ejecución (sigue en la próxima)`;
+    return 'ok';
+  }
+  marcar(tw, id) {
+    this.claves.add(tw.clave);
+    this.enEstaEjecucion++;
+    this.datos.enviados.push({ clave: tw.clave, tipo: tw.tipo, jornada: tw.jornada, id: id || null, t: new Date().toISOString() });
+    this.guardar();
+  }
+  /** en simulacro solo se reservan en memoria (para que los topes se vean) */
+  reservar(tw) { this.claves.add(tw.clave); this.enEstaEjecucion++; this.reservadas = (this.reservadas || 0) + 1; }
+  guardar() {
+    if (!this.fichero) return;
+    mkdirSync(dirname(this.fichero), { recursive: true });
+    this.datos.enviados = this.datos.enviados.slice(-1500);
+    writeFileSync(this.fichero, JSON.stringify(this.datos, null, 1));
+  }
+}
