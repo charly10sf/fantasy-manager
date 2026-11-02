@@ -2234,6 +2234,7 @@ button.cr-p:active { background: var(--plano); }
 .pz .ps-i { margin: 12px auto 24px; }
 .pz-b { display: grid; gap: 10px; max-width: 420px; margin: 0 auto; }
 .escritorio .pz-b { grid-template-columns: 1fr 1fr; max-width: 640px; }
+.escritorio .pz-b > :nth-child(3) { grid-column: 1 / -1; }
 .pz-b .btn { justify-content: center; margin: 0; }
 .portada .pz a.btn, .portada .pz a.btn .ic { color: #fff; }
 .pz-x { margin: 20px 0 0; font-size: 14px; color: var(--apagado); }
