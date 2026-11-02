@@ -18,7 +18,7 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WEB = os.path.join(RAIZ, 'web')
 NATIVA = os.path.join(RAIZ, 'android', 'app', 'src')
-SOLO_WEB = ('guias/', 'sitemap.xml')
+SOLO_WEB = ('guias/', 'sitemap.xml', 'google')
 
 
 def sha(ruta):
