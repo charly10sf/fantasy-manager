@@ -22,7 +22,7 @@ import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANT
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, anunciosWebEncendidos } from './limite.js';
+import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -403,14 +403,28 @@ function ponerBanner(si) {
   if (EN_FONDO) return;
   // nunca en la pantalla del límite de minutos o la cuenta atrás (Google no deja anuncios en una pantalla sin salida)
   si = !!si && !document.body.classList.contains('limitado');
-  // en la web, los de AdSense (anuncios-web.js), y solo con la liga ya cargada (antes no se sabe quién eres)
-  // (el script de AdSense va también en la entrada, sin bloques: así Google ve su código en la página que revisa)
-  if (!enApp) { const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo, V.ancho(), anunciosWebEncendidos(), modo === 'prueba'); return; }
+  // en la web, los de AdSense (anuncios-web.js), solo con la liga ya cargada (antes no se sabe quién eres) y solo en
+  // una pestaña con contenido. Ni en la portada, ni en la carga, ni en la entrada con código, ni en una pestaña vacía:
+  // AdSense rechazó la web el 2 nov por anuncios en pantallas sin contenido. Por eso el script ya no se pone en la
+  // entrada (antes iba sin bloques para que Google viera su código: la verificación va con la etiqueta
+  // google-adsense-account de index.html y con ads.txt)
+  if (!enApp) { const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo && vistaConContenido(), V.ancho(), false, modo === 'prueba'); return; }
   if (si === bannerYa) return;
   bannerYa = si;
   nativo.banner(si);
 }
 window.addEventListener('limite-cambia', () => ponerBanner(!!S.D && !!$('#vista') && S.vista !== 'ia'));
+/** ¿la pestaña tiene contenido de verdad? Sin contar los «no hay nada» (.vacio) ni el «pensando» de la IA, tiene que
+    quedar texto de sobra; si no (una lista vacía, una pestaña cargando), no hay anuncio */
+const TEXTO_MIN_ANUNCIO = 400;
+function vistaConContenido() {
+  const v = $('#vista');
+  if (!v) return false;
+  const largo = (el) => (el.textContent || '').replace(/\s+/g, ' ').trim().length;
+  let n = largo(v);
+  for (const x of v.querySelectorAll('.vacio, .cargando-ia')) n -= largo(x);
+  return n >= TEXTO_MIN_ANUNCIO;
+}
 const conAnuncios = () => enApp && !EN_FONDO && nativo.hayAnuncios();
 // «Pedir otro plan a la IA»: 3 veces al día gratis; a partir de la 4.ª, viendo un anuncio (solo en la de Google Play)
 const PLANES_GRATIS = 3;

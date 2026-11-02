@@ -165,9 +165,6 @@ export function bloqueada(clave) {
   return !(cfg.todoAbierto || cfg.sinLimite || []).some(esDe(yoB));
 }
 
-/** los anuncios de la web (AdSense): si «anunciosWeb» está a true en limites.json, para todos menos los de «todoAbierto»
-    o «sinLimite» (Carlos), y solo cuando ya se sabe quién eres */
-export const anunciosWebEncendidos = () => { const g = LS.get('limites', null); return !!(g && g.cfg && g.cfg.anunciosWeb === true); };
 /** 'real' para todos; para el dueño, 'prueba' (con «anunciosWebDueno»: true: anuncios de prueba, que no cuentan, para
     ver cómo quedan y cazar fallos) o nada; null antes de saber quién eres o con «anunciosWeb» apagado */
 export function anunciosWebModo() {

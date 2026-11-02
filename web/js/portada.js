@@ -57,11 +57,15 @@ const PIES = [
   [4, CHAT, 'Pregúntale lo que quieras', 'Con una IA gratis que lee lesiones, convocatorias y alineaciones antes de contestar. También con capturas.'],
 ];
 
+/** las páginas públicas (HTML sin JavaScript, de .github/paginas.py). «Guías» entra cuando haya alguna publicada */
+const ENLACES = [['quienes-somos.html', 'Quiénes somos'], ['contacto.html', 'Contacto'], ['privacidad.html', 'Privacidad'], ['instalar.html', 'Instalar']];
+
 /** lo que va debajo de la entrada: los tres móviles, uno a uno en el móvil y en fila en el ordenador */
 export function seccionMoviles() {
   return `<section class="portada-m" aria-labelledby="pmT"><h2 id="pmT">Así se ve</h2>
     <div class="pm-fila">${PIES.map(([a, p, t, x]) => `<figure>${movil(a, p)}<figcaption><b>${t}</b><span>${x}</span></figcaption></figure>`).join('')}</div>
     <p class="pm-nota">Con datos de la liga de ejemplo. Tu liga se carga al entrar con tu cuenta de LaLiga.</p>
-    <p class="pm-pie">App no oficial: no es de LaLiga ni tiene relación con LaLiga. <a href="privacidad.html">Privacidad</a></p>
+    <p class="pm-pie">App no oficial: no es de LaLiga ni tiene relación con LaLiga.</p>
+    <nav class="pm-pie pm-enlaces" aria-label="Más">${ENLACES.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}</nav>
   </section>`;
 }

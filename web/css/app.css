@@ -1948,6 +1948,13 @@ button.cr-p:active { background: var(--plano); }
 .pm-pie { margin: 22px 24px 0; font-size: 13px; color: var(--apagado); }
 .pm-pie a { color: var(--rojo-l); }
 .escritorio .pm-pie { margin-left: 48px; margin-right: 48px; }
+.pm-enlaces { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 8px; }
+.pm-enlaces a { color: var(--texto2); text-decoration: none; }
+/* index.html sin JavaScript (lo que leen los rastreadores): debajo de la pantalla de arranque; app.js lo sustituye */
+.sin-js { max-width: 620px; margin: 0 auto; padding: 28px 20px 48px; color: var(--texto2); font-size: 17px; line-height: 1.6; }
+.sin-js h1 { font: 700 40px/1 var(--cond); text-transform: uppercase; color: var(--texto); margin: 0 0 12px; }
+.sin-js a { color: var(--rojo-l); }
+.sin-js nav { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 18px; }
 .escritorio #app:has(> .portada) { padding-left: 0; }
 .mq-in { position: absolute; z-index: 1; left: 10px; right: 10px; bottom: 8px; display: flex; align-items: center; gap: 6px; }
 .mq-in span { flex: 1; padding: 8px 10px; border-radius: 10px; background: var(--plano2); font-size: 9.5px; color: var(--apagado); }

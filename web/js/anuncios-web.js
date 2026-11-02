@@ -2,8 +2,9 @@
    en el ordenador, si sobra sitio a la derecha, uno de 160×600. Solo en el navegador: dentro de la app de Android no,
    porque AdSense no deja anuncios en el navegador de una app (ahí van los de AdMob, en la versión de Google Play).
    Quién los ve lo decide limite.js (`anunciosWebModo`: «anunciosWeb» en limites.json; a los de «todoAbierto» o
-   «sinLimite» —Carlos— solo con «anunciosWebDueno», y de prueba: data-adtest="on", que no cuentan); cuándo, app.js (`ponerBanner`: en las pestañas, nunca en Pregunta, la carga, la entrada ni la pantalla
-   del límite). La barra solo se ve cuando Google ha puesto un anuncio (data-ad-status="filled"): mientras AdSense revisa
+   «sinLimite» —Carlos— solo con «anunciosWebDueno», y de prueba: data-adtest="on", que no cuentan); cuándo, app.js (`ponerBanner`: en las pestañas con contenido, nunca en Pregunta, una pestaña vacía,
+   la portada, la carga, la entrada ni la pantalla del límite; desde el 2 nov, tras el rechazo de AdSense, el script
+   tampoco se pone en la entrada). La barra solo se ve cuando Google ha puesto un anuncio (data-ad-status="filled"): mientras AdSense revisa
    la web, o si no tiene anuncio que dar, no se ve nada ni se reserva sitio. El mensaje de consentimiento de la UE lo saca
    el propio script de AdSense (Privacidad y mensajes → Reglamentos europeos, publicado el 29 oct). Los bloques se crearon
    el 29 oct en AdSense: «FM web movil abajo» y «FM web ordenador lateral», los dos adaptables y aquí con su tamaño fijo

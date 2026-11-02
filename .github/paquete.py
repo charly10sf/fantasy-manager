@@ -18,6 +18,7 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WEB = os.path.join(RAIZ, 'web')
 NATIVA = os.path.join(RAIZ, 'android', 'app', 'src')
+SOLO_WEB = ('guias/', 'sitemap.xml')
 
 
 def sha(ruta):
@@ -70,7 +71,10 @@ def versionar_index():
 
 def main():
     versionar_index()
-    archivos = {rel: sha(os.path.join(WEB, rel)) for rel in arbol(WEB) if rel != 'paquete.json'}
+    # las páginas públicas de contenido (guias/ y el sitemap, de .github/paginas.py) solo se sirven en la web: la app
+    # no las usa, así que no van en paquete.json y AlDia no las baja al cambiar
+    archivos = {rel: sha(os.path.join(WEB, rel)) for rel in arbol(WEB)
+                if rel != 'paquete.json' and not rel.startswith(SOLO_WEB)}
     raras = [r for r in archivos if not re.fullmatch(r'[A-Za-z0-9._/-]+', r)]
     if raras:
         sys.exit(f'Archivos con nombres que la app no bajaría: {raras}')

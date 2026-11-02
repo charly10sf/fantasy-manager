@@ -1,0 +1,250 @@
+{
+  "_leeme": "Las páginas públicas de la web (HTML real, sin JavaScript). Las genera .github/paginas.py: cabecera, menú, pie, sitemap.xml y robots.txt. El texto de cada página va dentro de su archivo, entre <!-- contenido --> y <!-- /contenido -->, y se edita ahí. Una guía con \"borrador\": true no se indexa (noindex), no va al sitemap ni al índice de guías ni al menú; al tener el texto escrito, se quita \"borrador\" y se pone la fecha. \"titulo\" es el <title> (unos 60 caracteres como mucho) y \"descripcion\" la meta description (unos 150).",
+  "paginas": [
+    {
+      "ruta": "privacidad.html",
+      "tipo": "legal",
+      "titulo": "Política de privacidad · Fantasy Manager",
+      "descripcion": "Qué datos usa Fantasy Manager, dónde se guardan, qué hacen los anuncios de Google y cómo borrar tus datos.",
+      "fecha": "2026-10-30"
+    },
+    {
+      "ruta": "quienes-somos.html",
+      "tipo": "info",
+      "titulo": "Quiénes somos · Fantasy Manager",
+      "descripcion": "Quién hace Fantasy Manager, de dónde salen sus datos, cómo se financia y por qué no es una app oficial de LaLiga.",
+      "fecha": "2026-11-02"
+    },
+    {
+      "ruta": "contacto.html",
+      "tipo": "info",
+      "titulo": "Contacto · Fantasy Manager",
+      "descripcion": "Cómo escribir a Fantasy Manager: correo, avisos de fallo desde la app y la cuenta de X.",
+      "fecha": "2026-11-02"
+    },
+    {
+      "ruta": "guias/clausulas-laliga-fantasy.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cláusulas en LaLiga Fantasy: cómo funcionan",
+      "titulo": "Cláusulas en LaLiga Fantasy: cómo funcionan y cuándo se abren",
+      "descripcion": "Qué es la cláusula de un jugador, cuándo sube sola, cuándo se puede pagar y por qué solo se paga con saldo, con ejemplos en millones.",
+      "busqueda": "cómo funcionan las cláusulas en LaLiga Fantasy",
+      "esquema": [
+        ["Qué es la cláusula de un jugador", "Lo que paga un rival para llevárselo sin que puedas decir que no. Diferencia con el valor de mercado."],
+        ["Cuánto vale al ficharlo y cuándo cambia", "Con qué cláusula llega un fichaje. Cuando el valor pasa la cláusula, LaLiga la sube sola hasta el valor (no es una subida pagada)."],
+        ["Los días de protección", "El plazo en el que a un fichaje no se le puede clausular. Comprobar en el juego los días exactos antes de escribirlo."],
+        ["Cuándo no se puede clausular", "Nadie puede clausular en las 24 h antes del primer partido de la jornada; se reabren a esa hora."],
+        ["Solo con saldo", "Una cláusula se paga con dinero en caja: el margen de deuda solo vale para pujar o comprar en el mercado."],
+        ["Un ejemplo con números", "Un jugador de 12 M con cláusula de 15 M: qué pasa si sube a 16 M, cuánto le cuesta a un rival y cuándo puede hacerlo."]
+      ]
+    },
+    {
+      "ruta": "guias/blindar-jugador-clausula.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cómo blindar a un jugador en LaLiga Fantasy",
+      "titulo": "Blindar a un jugador en LaLiga Fantasy: cuánto subir la cláusula",
+      "descripcion": "Cuánto cuesta subir la cláusula de un jugador, hasta dónde compensa y cuándo es tirar el dinero, con números de una liga real.",
+      "busqueda": "blindar jugador LaLiga Fantasy",
+      "esquema": [
+        ["Qué es blindar", "Pagar para subir la cláusula de un jugador tuyo y que a los rivales no les llegue."],
+        ["Cuánto cuesta subirla", "La relación entre lo que pagas y lo que sube la cláusula, con el cálculo paso a paso. Comprobar la regla exacta del juego."],
+        ["Hasta dónde subirla", "No pasar de lo que se paga en tu liga por un clausulazo (el p90 de los clausulazos de la liga): más arriba no protege más."],
+        ["Cuándo no compensa", "Si blindar cuesta más de 1/4 del valor del jugador, casi siempre sale mejor dejarlo o venderlo."],
+        ["Qué jugadores blindar primero", "Los que suben, los titulares fijos y los que tus rivales pueden pagar hoy con su saldo."],
+        ["Ejemplo", "Un delantero de 20 M con cláusula de 24 M y dos rivales con 30 M en caja."]
+      ]
+    },
+    {
+      "ruta": "guias/cuando-clausular.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cuándo clausular a un jugador de un rival",
+      "titulo": "Cuándo clausular en LaLiga Fantasy: a quién y en qué momento",
+      "descripcion": "Cómo saber si una cláusula compensa: lo que pagas por encima del valor, lo que puede subir el jugador y lo que te deja en caja.",
+      "busqueda": "a quién clausular LaLiga Fantasy",
+      "esquema": [
+        ["Cláusula frente a valor", "Cuánto pagas por encima de lo que vale y en cuántos días lo recuperas si sube."],
+        ["Jugadores que suben", "La cuenta con la subida de los últimos días y su racha."],
+        ["El momento", "Justo cuando se reabren las cláusulas, antes que tus rivales."],
+        ["Lo que te deja en caja", "Clausular deja el saldo tocado para la jornada: cuánto margen guardar."],
+        ["Errores típicos", "Clausular a un lesionado, a un suplente o quedarte sin once completo."],
+        ["Ejemplo", "Una cláusula de 18 M por un jugador de 14 M que sube 400.000 al día."]
+      ]
+    },
+    {
+      "ruta": "guias/valor-de-mercado.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cómo sube y baja el valor de los jugadores en LaLiga Fantasy",
+      "titulo": "Valor de mercado en LaLiga Fantasy: por qué suben y bajan",
+      "descripcion": "Cuándo cambia el valor de los jugadores, qué lo mueve, cómo leer las rachas de subida y qué pasa con un lesionado.",
+      "busqueda": "cómo suben los jugadores LaLiga Fantasy",
+      "esquema": [
+        ["Cuándo cambia el valor", "La hora del cambio de mercado y cada cuánto se actualiza. Comprobar en el juego antes de escribirlo."],
+        ["Qué lo mueve", "Puntos, partidos, compras y ventas de los mánagers. Explicar solo lo que se pueda comprobar con datos."],
+        ["Las rachas", "Un jugador que lleva días subiendo suele seguir unos días más (inercia): cómo se ve y cuándo se corta."],
+        ["Lesiones y sanciones", "Qué le pasa al valor de un jugador que se lesiona o al que sancionan."],
+        ["Cómo leer la tendencia de 7 días", "Un gráfico de ejemplo con un jugador de verdad."]
+      ]
+    },
+    {
+      "ruta": "guias/cuanto-pujar.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cuánto pujar por un jugador en LaLiga Fantasy",
+      "titulo": "Cuánto pujar en el mercado de LaLiga Fantasy",
+      "descripcion": "Cómo funcionan las pujas, cuánto ponerte por encima del valor, hasta dónde llega el margen de deuda y cómo pujan tus rivales.",
+      "busqueda": "cuánto pujar LaLiga Fantasy",
+      "esquema": [
+        ["Cómo funcionan las pujas", "Pujas a ciegas, quién se lo lleva y qué pasa con el dinero si pierdes."],
+        ["Cuánto ponerte por encima del valor", "Un porcentaje según lo buscado que esté el jugador y lo que pueda subir antes de la jornada."],
+        ["El margen de deuda", "Hasta dónde puedes pujar sin tener el dinero y qué tienes que vender después."],
+        ["Cómo pujan tus rivales", "Cada mánager tiene sus costumbres: quién se pasa y quién no."],
+        ["Ejemplo", "Un jugador de 8 M que sale al mercado con tres rivales con saldo."]
+      ]
+    },
+    {
+      "ruta": "guias/cuando-vender.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cuándo vender un jugador en LaLiga Fantasy",
+      "titulo": "Cuándo vender jugadores en LaLiga Fantasy (y cuándo esperar)",
+      "descripcion": "Vender a LaLiga o a un rival, asegurar el beneficio, cuándo aguantar y qué hacer con lesionados y sancionados.",
+      "busqueda": "cuándo vender jugadores LaLiga Fantasy",
+      "esquema": [
+        ["Vender a LaLiga o a un rival", "Cuánto da cada camino y cuándo esperar una oferta."],
+        ["Asegurar el beneficio", "Cuándo vender un jugador que ha subido y empieza a bajar."],
+        ["Cuándo esperar", "Si juega en menos de 2 días como titular probable, si sube hoy o si su cláusula paga más."],
+        ["Lesionados y sancionados", "Venderlos ya o aguantar según cuánto tiempo estén fuera."],
+        ["Ejemplo", "Un jugador comprado a 6 M que vale 9 M y lleva tres días bajando."]
+      ]
+    },
+    {
+      "ruta": "guias/saldo-negativo.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Saldo negativo en LaLiga Fantasy: qué pasa y cómo salir",
+      "titulo": "Saldo negativo en LaLiga Fantasy: qué pasa y cómo salir",
+      "descripcion": "Cuánto te puedes endeudar, qué pasa si empieza la jornada en negativo y cómo salir vendiendo lo justo.",
+      "busqueda": "saldo negativo LaLiga Fantasy",
+      "esquema": [
+        ["Cuánto te puedes endeudar", "El margen de deuda y de qué depende. Comprobar la regla exacta."],
+        ["Si empieza la jornada en negativo", "Qué pasa con los puntos de esa jornada. Comprobar en el juego antes de escribirlo."],
+        ["Cómo salir", "A quién vender primero para perder lo menos posible."],
+        ["Con deuda no se clausula", "Por qué una cláusula solo se paga con saldo."]
+      ]
+    },
+    {
+      "ruta": "guias/puntos-laliga-fantasy.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cómo se calculan los puntos en LaLiga Fantasy",
+      "titulo": "Puntos en LaLiga Fantasy: cómo se calculan",
+      "descripcion": "Qué da puntos y qué los quita en LaLiga Fantasy: goles, asistencias, paradas, tarjetas y la nota de los cronistas, con un partido de ejemplo.",
+      "busqueda": "cómo se puntúa en LaLiga Fantasy",
+      "esquema": [
+        ["Puntos por acciones", "Goles, asistencias, paradas, recuperaciones; lo que cambia según la posición."],
+        ["La nota de los cronistas", "Los puntos de la valoración del partido y cómo pesan."],
+        ["Lo que resta", "Tarjetas, goles en contra, penaltis fallados, pérdidas de balón."],
+        ["Cuándo son definitivos", "Cuándo se cierran los puntos de la jornada."],
+        ["Un partido de ejemplo", "Los puntos de un jugador desglosados acción por acción, con datos de una jornada jugada."]
+      ]
+    },
+    {
+      "ruta": "guias/alineacion.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cómo hacer la alineación en LaLiga Fantasy",
+      "titulo": "La mejor alineación en LaLiga Fantasy: cómo elegir el once",
+      "descripcion": "Formaciones, titulares probables, partidos del viernes frente a los del lunes y qué hacer con los cambios de última hora.",
+      "busqueda": "mejor alineación LaLiga Fantasy",
+      "esquema": [
+        ["Las formaciones", "Cuáles deja el juego y cuándo compensa cada una."],
+        ["Titulares probables", "Cómo se calcula la probabilidad de que juegue: once probable, minutos recientes y titularidades."],
+        ["El calendario de la jornada", "Quién juega antes y quién después, y cómo aprovecharlo."],
+        ["Onces confirmados", "Cuándo salen y qué cambiar a última hora."],
+        ["El que no juega", "Qué pasa con un jugador de tu once que no sale."]
+      ]
+    },
+    {
+      "ruta": "guias/ganar-dinero.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cómo ganar dinero en LaLiga Fantasy",
+      "titulo": "Cómo ganar dinero en LaLiga Fantasy sin perder puntos",
+      "descripcion": "Comprar antes de que suban, vender al rival que paga más, rotar la plantilla y lo que no funciona, con cifras de una liga real.",
+      "busqueda": "cómo ganar dinero LaLiga Fantasy",
+      "esquema": [
+        ["Comprar antes de que suban", "Cómo detectar a los que empiezan a subir."],
+        ["Rotar sin perder puntos", "Vender al que no juega esta jornada y recomprar después."],
+        ["Vender al que paga más", "Cuando un rival paga más que LaLiga."],
+        ["Los clausulazos como negocio", "Cuándo una cláusula se recupera sola."],
+        ["Lo que no funciona", "Comprar por nombre, pujar a lo loco, quedarse sin once."]
+      ]
+    },
+    {
+      "ruta": "guias/lesionados-sancionados.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Lesionados y sancionados en LaLiga Fantasy: qué hacer",
+      "titulo": "Lesionados y sancionados en LaLiga Fantasy: vender o aguantar",
+      "descripcion": "Qué significa cada estado de un jugador, cuándo venderlo y cuándo aguantarlo, y cómo funcionan los apercibidos.",
+      "busqueda": "lesionados LaLiga Fantasy",
+      "esquema": [
+        ["Los estados de un jugador", "Lesionado, duda, sancionado y fuera de la liga: qué quiere decir cada uno."],
+        ["Vender o aguantar", "Según cuántas jornadas esté fuera y lo que baje su valor."],
+        ["Los apercibidos", "El ciclo de amarillas y cuándo se cumple la sanción. Comprobar la regla actual."],
+        ["Dónde mirar los partes", "Partes médicos oficiales de los clubes y ruedas de prensa."]
+      ]
+    },
+    {
+      "ruta": "guias/empezar-liga.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Cómo empezar en una liga de LaLiga Fantasy",
+      "titulo": "Empezar en LaLiga Fantasy: consejos para los primeros días",
+      "descripcion": "Qué hacer con el equipo inicial, el primer mercado y las cláusulas desde el primer día, y los errores que más dinero cuestan al empezar.",
+      "busqueda": "consejos para empezar LaLiga Fantasy",
+      "esquema": [
+        ["El equipo inicial", "Qué guardar y qué vender."],
+        ["El primer mercado", "Cómo repartir el dinero entre fichar y guardar."],
+        ["Las cláusulas desde el día uno", "A quién proteger primero."],
+        ["Los primeros errores", "Los que más dinero cuestan en las primeras semanas."]
+      ]
+    },
+    {
+      "ruta": "guias/glosario.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Glosario de LaLiga Fantasy",
+      "titulo": "Glosario de LaLiga Fantasy: qué significa cada término",
+      "descripcion": "Cláusula, blindaje, clausulazo, puja, saldo, valor de mercado, once probable y el resto de palabras del juego, explicadas con un ejemplo.",
+      "busqueda": "qué significa cláusula, clausulazo o blindar en LaLiga Fantasy",
+      "esquema": [
+        ["Mercado y dinero", "Valor de mercado, saldo, deuda, puja, venta a LaLiga."],
+        ["Cláusulas", "Cláusula, clausulazo, blindar, días de protección."],
+        ["Jornada y puntos", "Jornada, once, titular probable, once confirmado, nota de los cronistas."],
+        ["Estados del jugador", "Lesionado, duda, sancionado, apercibido."]
+      ]
+    },
+    {
+      "ruta": "guias/preguntas-frecuentes.html",
+      "tipo": "guia",
+      "borrador": true,
+      "h1": "Fantasy Manager: preguntas frecuentes",
+      "titulo": "Fantasy Manager: preguntas frecuentes",
+      "descripcion": "Si es oficial, si es gratis, cómo se entra con tu cuenta de LaLiga, si funciona en iPhone y qué hace con tus datos.",
+      "busqueda": "Fantasy Manager app LaLiga Fantasy",
+      "esquema": [
+        ["¿Es oficial?", "No: qué quiere decir eso."],
+        ["¿Es gratis?", "Sí, con anuncios en la versión de Google Play y en la web."],
+        ["¿Cómo entro con mi cuenta?", "Android, ordenador con código e iPhone."],
+        ["¿Funciona en iPhone?", "Hoy, con el código desde otro dispositivo o con la liga de ejemplo."],
+        ["¿Qué hace con mis datos?", "Resumen de la política de privacidad, con el enlace."],
+        ["¿Necesito una clave de IA?", "Para el plan y el chat: es gratis y se saca en unos minutos."]
+      ]
+    }
+  ]
+}
