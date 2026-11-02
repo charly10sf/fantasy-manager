@@ -13,3 +13,21 @@ export function validar(texto, { numeros = [], max = 280 } = {}) {
   if (/\n{3,}/.test(texto)) e.push('demasiados saltos de línea');
   return { ok: e.length === 0, errores: e, peso: p };
 }
+
+// El validador de las tarjetas con imagen: cada texto del SVG se parte en cifras y palabras, y cada una tiene que estar en
+// `permitidos` (sacados de los datos crudos de LaLiga en datos-tarjetas.mjs) o entre las palabras fijas de la tarjeta.
+const desEsc = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+const minus = (s) => String(s).normalize('NFC').toLowerCase();
+export function validarTarjeta(svg, { numeros = [], palabras = [] } = {}, fijas = []) {
+  const e = [];
+  const textos = [...svg.matchAll(/<text\b[^>]*>([^<]*)<\/text>/g)].map((x) => desEsc(x[1]));
+  if (!textos.length) e.push('la tarjeta no lleva texto');
+  const okNum = new Set(numeros.flatMap((n) => String(n).replace('.', ',').match(/\d+(?:,\d+)?/g) || []));
+  const okPal = new Set([...fijas, ...palabras, 'J'].flatMap((p) => String(p).match(/[\p{L}_]+/gu) || []).map(minus));
+  for (const t of textos) {
+    if (/https?:|www\.|\.(com|es|net|org|io|app)\b/i.test(t)) e.push(`enlace en la imagen: «${t}»`);
+    for (const c of t.match(/\d+(?:,\d+)?/g) || []) if (!okNum.has(c)) e.push(`cifra ${c} que no está en los datos («${t}»)`);
+    for (const w of t.match(/[\p{L}_]+/gu) || []) if (!okPal.has(minus(w))) e.push(`palabra «${w}» que no está en los datos («${t}»)`);
+  }
+  return { ok: e.length === 0, errores: [...new Set(e)], textos };
+}

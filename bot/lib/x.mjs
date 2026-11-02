@@ -21,20 +21,41 @@ export function clavesDelEntorno(env = process.env) {
   return { claves: c, faltan };
 }
 
-/** publica un tweet. Devuelve { ok, estado, id, cuerpo }. No reintenta: un fallo no debe duplicar el post. */
-export async function publicar(texto, claves, { base = process.env.X_API_BASE || 'https://api.x.com' } = {}) {
+/** publica un tweet (con imágenes ya subidas, si se pasan sus media_ids). Devuelve { ok, estado, id, cuerpo }.
+    No reintenta: un fallo no debe duplicar el post. */
+export async function publicar(texto, claves, { base = process.env.X_API_BASE || 'https://api.x.com', mediaIds = [] } = {}) {
   if ([...texto].length === 0) throw new Error('tweet vacío');
   const url = `${base}/2/tweets`;
   const oauth = firmar({ metodo: 'POST', url, claves, nonce: crypto.randomBytes(16).toString('hex'), marca: String(Math.floor(Date.now() / 1000)) });
+  const cuerpoTweet = mediaIds.length ? { text: texto, media: { media_ids: mediaIds.map(String) } } : { text: texto };
   const r = await fetch(url, {
     method: 'POST',
     headers: { Authorization: cabecera(oauth), 'Content-Type': 'application/json', 'User-Agent': 'FantasyManager/0.1' },
-    body: JSON.stringify({ text: texto }),
+    body: JSON.stringify(cuerpoTweet),
     signal: AbortSignal.timeout(20000),
   });
   const cuerpo = await r.text();
   let j = null; try { j = JSON.parse(cuerpo); } catch { /* texto */ }
   return { ok: r.status === 201, estado: r.status, id: j && j.data && j.data.id, cuerpo: cuerpo.slice(0, 400) };
+}
+
+/** sube una imagen PNG para un tweet: POST /2/media/upload con cuerpo JSON (la imagen en base64, categoría tweet_image).
+    Con cuerpo JSON la firma OAuth no lleva parámetros, como en /2/tweets. Devuelve { ok, estado, id, cuerpo }. Sin reintentos. */
+export async function subirImagen(png, claves, { base = process.env.X_API_BASE || 'https://api.x.com' } = {}) {
+  if (!png || png.length < 8 || png[0] !== 0x89) throw new Error('no es un PNG');
+  if (png.length > 5 * 1024 * 1024) throw new Error(`imagen de ${png.length} bytes: X no acepta más de 5 MB`);
+  const url = `${base}/2/media/upload`;
+  const oauth = firmar({ metodo: 'POST', url, claves, nonce: crypto.randomBytes(16).toString('hex'), marca: String(Math.floor(Date.now() / 1000)) });
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization: cabecera(oauth), 'Content-Type': 'application/json', 'User-Agent': 'FantasyManager/0.1' },
+    body: JSON.stringify({ media: Buffer.from(png).toString('base64'), media_category: 'tweet_image', media_type: 'image/png' }),
+    signal: AbortSignal.timeout(30000),
+  });
+  const cuerpo = await r.text();
+  let j = null; try { j = JSON.parse(cuerpo); } catch { /* texto */ }
+  const id = j && j.data && j.data.id;
+  return { ok: r.status >= 200 && r.status < 300 && !!id, estado: r.status, id, cuerpo: cuerpo.slice(0, 400) };
 }
 
 /** comprueba las claves sin publicar nada: GET /2/users/me firmado. Devuelve { ok, estado, usuario, cuerpo } */
