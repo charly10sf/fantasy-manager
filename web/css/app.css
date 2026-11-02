@@ -2247,3 +2247,11 @@ button.cr-p:active { background: var(--plano); }
 .pt-cta.btn { white-space: nowrap; }
 .pt-largo { display: none; }
 .escritorio .pt-largo { display: inline; }
+
+/* «Próximamente en Google Play» */
+.play-pronto { display: inline-flex; align-items: center; gap: 10px; padding: 7px 16px 7px 12px; margin: 18px auto 0; border: 1px solid var(--rojo3); border-radius: 12px; background: var(--plano2); color: var(--texto); text-align: left; line-height: 1.1; }
+.play-pronto .play-ic { width: 26px; height: 26px; flex: none; }
+.play-pronto span { display: grid; gap: 2px; }
+.play-pronto small { font-size: 11px; letter-spacing: 0.04em; color: var(--apagado); }
+.play-pronto b { font: 700 17px var(--cond); }
+.pz .play-pronto, .portada .pantalla .play-pronto { display: flex; width: fit-content; }

@@ -69,3 +69,9 @@ th { color: var(--texto); font-weight: 600; }
 .mas-guias h2 { margin-top: 0; }
 .menu a.menu-web { color: var(--texto); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 9px; padding: 5px 11px; font-weight: 600; }
 .menu a.menu-web:hover { border-color: var(--rojo); }
+
+.play-pronto { display: inline-flex; align-items: center; gap: 10px; padding: 7px 16px 7px 12px; margin: 0 0 12px; border: 1px solid var(--linea); border-radius: 12px; background: var(--plano); line-height: 1.1; }
+.play-pronto .play-ic { width: 26px; height: 26px; flex: none; }
+.play-pronto span { display: grid; gap: 2px; }
+.play-pronto small { font-size: 11px; letter-spacing: 0.04em; opacity: 0.7; }
+.play-pronto b { font-size: 17px; }

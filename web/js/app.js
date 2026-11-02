@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
+import { esc, icono, proxPlay, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -109,6 +109,7 @@ function entrarWebHTML() {
   if (movil === 'android') {
     return `<a class="btn ancho cta-grande" href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">${icono('descargar')}Descargar la app para Android</a>
     <p class="cta-nota">Gratis. Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos.</p>
+    ${proxPlay()}
     ${botonDemo('sec')}
     <details class="sin-app"><summary>¿El móvil no te deja instalarla?</summary>
       <p>Abre esta página en <b>Chrome</b> (no dentro de WhatsApp). Si avisa de que el archivo puede ser dañino, pulsa «Descargar de todas formas»; luego ábrelo e instálalo. <a href="instalar.html#android">Más ayuda</a></p></details>

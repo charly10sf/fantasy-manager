@@ -10,7 +10,7 @@
    6. Preguntas, privacidad y cierre.
    Las caras y los escudos son los de LaLiga, cargados al vuelo (caras-demo.js); las cifras son de la liga de ejemplo.
    Nada de esto sale dentro de la app de Android, que solo enseña lo de entrar. */
-import { icono, esc, LOGO_P } from './util.js';
+import { icono, esc, LOGO_P, proxPlay } from './util.js';
 import { jugadoresDemo } from './demo.js';
 
 const NF2 = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -297,6 +297,7 @@ export function seccionMoviles() {
   <section class="pz rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
     <p class="ps-i">Gratis, para Android y en el navegador: en el ordenador y en el iPhone se usa desde esta misma web, sin descargar nada.</p>
     <div class="pz-b"><a class="btn" href="${APK}">${icono('descargar')}Descargar la app para Android</a><a class="btn sec" href="#">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
+    ${proxPlay()}
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
   </section>
 
