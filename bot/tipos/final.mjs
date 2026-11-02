@@ -27,7 +27,7 @@ export async function generar({ stats, jornada, jugadores }) {
       num.push(3, 8, ...r.map(([, p]) => p));
     }
     const usadas = quepa(cab, lineas, pie);
-    if (usadas.length < 2) continue;
+    if (usadas.length < 1) continue;
     out.push({ tipo: 'final', clave: `final|${m.id}`, jornada, texto: [cab, ...usadas, pie].join('\n'), numeros: num });
   }
   return out;
