@@ -107,7 +107,7 @@ const codigoWebHTML = () => `<div class="entrar-codigo">
 function entrarWebHTML() {
   const movil = movilDe();
   if (movil === 'android') {
-    return `<a class="btn ancho cta-grande" href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">${icono('descargar')}Bajar la app para Android</a>
+    return `<a class="btn ancho cta-grande" href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">${icono('descargar')}Descargar la app para Android</a>
     <p class="cta-nota">Gratis. Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos.</p>
     ${botonDemo('sec')}
     <details class="sin-app"><summary>¿El móvil no te deja instalarla?</summary>
