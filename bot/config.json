@@ -1,0 +1,6 @@
+{
+  "umbralCaida": 0.5,
+  "topes": { "resumen": 2, "final": 10, "caidas": 9, "directo": 8 },
+  "tweetMax": 280,
+  "hashtag": ""
+}

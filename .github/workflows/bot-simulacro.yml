@@ -1,0 +1,22 @@
+# Simulacro del bot de la cuenta de X: genera los tweets con datos reales y los valida. No publica nada, no usa ninguna
+# clave ni secreto. Salta con el push a la rama de pruebas (subir a main es publicar y hace falta el OK de Carlos).
+name: Bot simulacro
+
+on:
+  push:
+    branches: [pruebas-fuentes]
+    paths: ['bot/**', '.github/workflows/bot-simulacro.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  simulacro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node bot/ejecutar.mjs
