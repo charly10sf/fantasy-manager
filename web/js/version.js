@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.11e';
+export const VERSION = '0.6.11f';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.6.11e';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.11f', f: '2026-11-02', h: '20:51', t: 'Una portada para enseñarla',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'tarjeta', t: 'La portada, entera nueva', x: 'Antes de entrar, la web enseña cómo funciona la app según bajas, tu once con caras y escudos, cómo decide en cuatro casos de cada semana y dos calculadoras: cuánto blindar a un jugador y cuánto puedes gastar.' },
+      { tipo: 'mejora', d: 'campo', t: 'La liga de ejemplo, con caras y escudos', x: 'Los jugadores de la liga de ejemplo son los de esta temporada y salen con su cara y el escudo de su equipo, como en tu liga.' },
+      { para: 'dueño', tipo: 'mejora', d: 'cara', t: 'Caras de la demo, al vuelo', x: 'caras-demo.js pide a LaLiga sin sesión la lista de jugadores y los equipos, casa la demo por id y guarda solo las direcciones 3 días; ninguna imagen en el repo. La demo trae los 20 equipos de la 26/27 con sus ids y 7 jugadores reales por equipo. «Descargar la app» en vez de «Bajar la app» en la web y las páginas públicas.', menor: true },
+    ],
+  },
   {
     v: '0.6.11e', f: '2026-11-02', h: '20:11', t: 'La web, más clara',
     cosas: [
