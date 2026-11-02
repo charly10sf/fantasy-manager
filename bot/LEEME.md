@@ -26,7 +26,7 @@ tener una segunda fuente). Las caídas solo se publican de 9 a 21 h (Madrid, `ho
 Dos tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov): la de **final** (escudos, marcador y los 3 mejores y los 3
 peores de cada equipo con su cara y sus puntos oficiales; «peores» = los que menos puntúan de los que jugaron 30' o más, con los
 minutos de la ficha de cada jugador, porque stats/week no los trae) y la de **jugador** (cara, escudo, puntos de la jornada, total,
-media, últimas 5 jornadas y valor de los últimos 60 días con el cambio en 30). La de final va en el tweet `final`; la de jugador, en
+media, últimas 5 jornadas y valor de los últimos 30 días con su cambio). La de final va en el tweet `final`; la de jugador, en
 un tweet `mvp` aparte por partido (tope 10 por jornada) y en los dobletes y tripletes de `directo`.
 
 - Se encienden en `config.json`: `"tarjetas": { "final": true, "jugador": true }`. Con las dos a false el bot hace lo mismo que sin

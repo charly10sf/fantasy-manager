@@ -16,11 +16,11 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     const otro = ps[1] && Number(ps[1].p.weekPoints) === Number(p.weekPoints) ? ps[1] : null;
     const nombre = p.nickname || p.name, equipo = corto(eq.mainName), pts = Number(p.weekPoints);
     const marcador = `${corto(m.local.mainName)} ${m.localScore}-${m.visitorScore} ${corto(m.visitor.mainName)}`;
-    const cab = `⭐ El MVP fantasy del ${marcador} · LaLiga Fantasy J${jornada}`;
+    const cab = `⭐ MVP fantasy del ${marcador}`;
     const num = [jornada, m.localScore, m.visitorScore, pts];
     const lineas = [elegir([`${nombre} (${equipo}) se sale: ${pts} puntos.`, `${nombre} (${equipo}) se lleva la jornada con ${pts} puntos.`, `${pts} puntos para ${nombre} (${equipo}).`], `mvpt${m.id}`)];
-    if (otro) lineas.push(`🤝 Empatado con ${otro.p.nickname || otro.p.name} (${corto(otro.eq.mainName)}).`);
-    lineas.push(`📊 Lleva ${j.points} en la temporada, con ${fmt(j.averagePoints)} de media.`);
+    if (otro) lineas.push(`Empata con él ${otro.p.nickname || otro.p.name} (${corto(otro.eq.mainName)}).`);
+    lineas.push(`Lleva ${j.points} puntos en la temporada, con ${fmt(j.averagePoints)} de media.`);
     num.push(Number(j.points), ...partes(j.averagePoints));
     const pie = cierre(`mvp${m.id}`);
     const usadas = quepa(cab, lineas, pie, config.tweetMax);

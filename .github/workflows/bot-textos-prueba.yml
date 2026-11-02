@@ -1,0 +1,28 @@
+# Prueba de los textos nuevos del bot con datos reales (ESPN y LaLiga). No publica nada y no usa ningún secreto.
+name: Bot textos prueba
+
+on:
+  push:
+    branches: [pruebas-bot-textos]
+
+permissions:
+  contents: read
+
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: directo, final y mvp de la jornada 11 (simulacro, con tarjetas)
+        run: node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=directo,final,mvp --ventanas=0 --fechas-espn=20261031,20261101,20261102 --tarjetas=1 --salida-tarjetas=tarjetas
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tarjetas
+          path: tarjetas
+          retention-days: 3
