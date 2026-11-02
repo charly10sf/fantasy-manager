@@ -18,6 +18,7 @@ import { linea } from './graficos.js';
 import { md } from './texto.js';
 import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
 import { encuadrar } from './caras.js';
+import { qrSVG } from './qr.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
@@ -81,6 +82,8 @@ function pantallaEntrar(error = '') {
   </div></div>${enApp ? '' : seccionMoviles()}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
   if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); }
+  // en el ordenador, el QR para entrar escaneándolo con la app del móvil (0.6.12)
+  if (!enApp && !movilDe()) iniciarQR(); else pararQR();
   // en el ordenador, el cursor directamente en el código; en el móvil no (sacaría el teclado tapando lo de arriba)
   if (!enApp && !movilDe()) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus(); }, 50);
 }
@@ -94,9 +97,16 @@ function movilDe() {
 const botonDemo = (clase) => `<button class="btn ${clase} ancho" data-accion="entrarDemo" style="margin:6px 0 12px">Ver con una liga de ejemplo</button>`;
 /** en el navegador: LaLiga solo devuelve la sesión a su app del móvil, así que se entra con un código de la app */
 const codigoWebHTML = () => `<div class="entrar-codigo">
-      <b>${icono('usuario')}Entra con el código de la app</b>
-      <span>En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. O, si ya has entrado en la web de un ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código de 8 letras y números que dura 10 minutos.</span>
+      <b>${icono('usuario')}${!enApp && !movilDe() ? 'O con el código de la app' : 'Entra con el código de la app'}</b>
+      <span>${!enApp && !movilDe() ? 'Si no puedes escanear: en la app, <b>Ajustes → Abrir en el ordenador → Código</b>; en otra web donde ya has entrado, <b>Ajustes → Abrir en otro dispositivo</b>. Dura 10 minutos.' : 'En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. O, si ya has entrado en la web de un ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código de 8 letras y números que dura 10 minutos.'}</span>
       <div class="codigo-in"><input id="codigoWeb" maxlength="9" placeholder="ABCD2345" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="usarCodigo"><button class="btn" data-accion="usarCodigo">Entrar</button></div>
+    </div>`;
+/** en el ordenador: el QR que se escanea con la app del móvil (0.6.12). El dibujo y la espera, en iniciarQR */
+const qrEntrarHTML = () => `<div class="entrar-qr">
+      <div class="eq-qr" id="eqQR"></div>
+      <div class="eq-t"><b>${icono('usuario')}Entra con el móvil</b>
+      <span>En la app del móvil: <b>Ajustes → Abrir en el ordenador → Escanear QR</b>, y apunta aquí. Entras solo, sin escribir nada.</span>
+      <span class="eq-est" id="eqEst">Esperando al móvil…</span></div>
     </div>`;
 /**
  * lo de entrar en la web, según desde dónde se abra. En un Android lo suyo es la app, sin códigos (era lo que más lía a
@@ -115,11 +125,11 @@ function entrarWebHTML() {
     <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>`;
   }
   if (movil === 'iphone') {
-    return `<div class="entrar-movil"><b>${icono('info')}Estás en un iPhone</b><span>La primera vez hay que entrar desde un <b>ordenador</b>: LaLiga no deja hacerlo en el iPhone. En el ordenador abre esta misma web, pulsa «No tengo la app en el móvil» y sigue los pasos. Ya dentro, en <b>Ajustes → Abrir en otro dispositivo</b> te da un código: escríbelo aquí abajo. Solo se hace una vez.</span></div>
+    return `<div class="entrar-movil"><b>${icono('info')}Estás en un iPhone</b><span>La primera vez hay que entrar desde un <b>ordenador</b>: LaLiga no deja hacerlo en el iPhone. En el ordenador abre esta misma web, pulsa «No tengo la app en el móvil» y sigue los pasos. Ya dentro, en <b>Ajustes → Abrir en otro dispositivo</b> te sale un código con su QR: escanea el QR con la cámara del iPhone y entras solo, o escribe el código aquí abajo. Si tienes la app en un Android, sale lo mismo en <b>Ajustes → Abrir en el ordenador → Código</b>. Solo se hace una vez.</span></div>
     ${botonDemo('')}
     ${codigoWebHTML()}`;
   }
-  return `${codigoWebHTML()}
+  return `${qrEntrarHTML()}${codigoWebHTML()}
     <details class="sin-app"><summary>No tengo la app en el móvil</summary>
       <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un código para escribirlo aquí en el iPhone.</p>
       <ol>
@@ -135,6 +145,79 @@ function entrarWebHTML() {
     </details>
     ${botonDemo('sec')}`;
 }
+/**
+ * El QR del ordenador (0.6.12): un id al azar de 128 bits en un enlace a la web (si alguien lo escanea con la cámara
+ * normal, la web le explica dónde se escanea). Pregunta al Worker cada 2 s, solo con la pestaña a la vista, durante
+ * 10 minutos; luego, «Otro QR». La app, al escanearlo, deja su sesión en /qr/dejar con ese id (window.qrLeido).
+ */
+let QRE = null;
+function pararQR() { if (QRE && QRE.reloj) clearTimeout(QRE.reloj); QRE = null; }
+const estQR = (t) => { const e = $('#eqEst'); if (e) e.textContent = t; };
+function iniciarQR() {
+  const caja = $('#eqQR');
+  pararQR();
+  if (!caja || !WORKER) return;
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  const id = btoa(String.fromCharCode(...b)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const q = { id, hasta: Date.now() + 10 * MIN, fallos: 0, reloj: null };
+  QRE = q;
+  caja.innerHTML = qrSVG(`${DOMINIO}#qr=${id}`);
+  estQR('Esperando al móvil…');
+  const paso = async () => {
+    if (QRE !== q) return;
+    if (!document.body.contains(caja)) { pararQR(); return; }
+    if (Date.now() > q.hasta) {
+      QRE = null;
+      caja.innerHTML = `<button class="btn chico" data-accion="otroQR">Otro QR</button>`;
+      estQR('El QR ha caducado (dura 10 minutos)');
+      return;
+    }
+    if (!document.hidden) {
+      try {
+        const r = await fetch(`${WORKER}/qr/esperar?id=${id}`, { cache: 'no-store' });
+        if (QRE !== q) return;
+        if (r.status === 200) {
+          const j = await r.json().catch(() => null);
+          if (j && j.sesion) { QRE = null; entrarConVinculo(j); return; }
+        }
+        q.fallos = r.status === 200 || r.status === 204 ? 0 : q.fallos + 1;
+      } catch (e) { q.fallos++; }
+      estQR(q.fallos >= 5 ? 'Sin conexión con el servidor de la web: usa el código de abajo' : 'Esperando al móvil…');
+    }
+    q.reloj = setTimeout(paso, 2000);
+  };
+  q.reloj = setTimeout(paso, 2000);
+}
+/** entrar con lo que manda la app (por el código o por el QR) */
+async function entrarConVinculo(j) {
+  raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
+  try {
+    traerVinculo(j);
+    S.D = null; S.planEstado = {};
+    await cargar();
+  } catch (e) { pantallaEntrar(e.message || String(e)); }
+}
+/** lo que se pasa al ordenador: la sesión, tu liga y tu equipo, la clave de la IA y el dinero que te han dicho */
+function datosVinculo() {
+  const c = cfg();
+  return { sesion: sesion(), cfg: { ligaId: c.ligaId || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}) };
+}
+/** la app ha leído un QR (Principal.escanearQR): si es el del ordenador, deja ahí la sesión */
+window.qrLeido = async (texto, motivo) => {
+  if (texto == null) { if (motivo) tostada(motivo, 7000); return; }
+  const m = String(texto).match(/[#&?]qr=([A-Za-z0-9_-]{22,64})/);
+  if (!m) { tostada('Ese QR no es el de Fantasy Manager. Abre fantasymanagerapp.com en el ordenador y escanea el que sale allí.', 7000); return; }
+  if (!haySesion()) { tostada('Primero entra con tu cuenta de LaLiga en la app'); return; }
+  tostada('Abriendo tu cuenta en el ordenador…');
+  try {
+    const r = await http('POST', `${WORKER_PUBLICO}/qr/dejar`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify({ id: m[1], ...datosVinculo() }), tiempo: 20000 });
+    let j = null;
+    try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
+    if (r.s !== 200 || !j || !j.ok) throw new Error(j && j.e ? j.e : r.s ? `el servidor de la web responde ${r.s}` : `sin conexión (${r.e})`);
+    cerrarHoja(true);
+    tostada('Listo: el ordenador entra solo en unos segundos', 6000);
+  } catch (e) { tostada(`No se ha podido abrir en el ordenador: ${e.message}`, 7000); }
+};
 /** lo que manda la app con el código: la sesión, tu liga y tu equipo, la clave de la IA y el dinero que te han dicho */
 /**
  * otra cuenta en este dispositivo (lo que dice el token al entrar): lo de la anterior se borra antes de enseñar nada,
@@ -182,6 +265,12 @@ async function mudarse(el) {
 }
 /** en la web nueva: si viene de la de antes con un código, entra con él sin volver a hacer nada */
 async function codigoDeMudanza() {
+  // el QR del ordenador escaneado con la cámara normal: se escanea desde la app (0.6.12)
+  if (!enApp && /^#qr=/.test(location.hash)) {
+    history.replaceState(null, '', location.pathname + location.search);
+    setTimeout(() => tostada('Ese QR se escanea desde la app de Fantasy Manager: Ajustes → Abrir en el ordenador → Escanear QR.', 9000), 1500);
+    return false;
+  }
   const m = !enApp && location.hash.match(/^#codigo=([A-Za-z0-9]{8})$/);
   if (!m) return false;
   history.replaceState(null, '', location.pathname + location.search);
@@ -194,7 +283,7 @@ async function codigoDeMudanza() {
     if (typeof j.vista === 'string' && !LS.get('version-vista2', null)) LS.set('version-vista2', j.vista);
     return true;
   } catch (e) {
-    setTimeout(() => tostada(`No se ha podido traer tu cuenta (${e.message}). Saca un código en la web de antes: Ajustes → Abrir en otro dispositivo.`, 9000), 1500);
+    setTimeout(() => tostada(`No se ha podido traer tu cuenta (${e.message}). Saca otro código: en la app, Ajustes → Abrir en el ordenador; en la web, Ajustes → Abrir en otro dispositivo.`, 9000), 1500);
     return false;
   }
 }
@@ -2053,9 +2142,7 @@ document.addEventListener('click', async (ev) => {
         const r = await fetch(`${WORKER}/vincular/usar`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ codigo: cod }) });
         const j = await r.json().catch(() => null);
         if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `El servidor de la web responde ${r.status}`);
-        traerVinculo(j);
-        S.D = null; S.planEstado = {};
-        await cargar();
+        await entrarConVinculo(j);
       } catch (e) { pantallaEntrar(e.name === 'TypeError' ? `Sin conexión con el servidor de la web (${e.message})` : e.message || String(e)); }
       break;
     }
@@ -2070,8 +2157,7 @@ document.addEventListener('click', async (ev) => {
       // la app deja la sesión en el Worker y enseña el código para escribirlo en la web
       el.disabled = true;
       try {
-        const c = cfg();
-        const datos = { sesion: sesion(), cfg: { ligaId: c.ligaId || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}) };
+        const datos = datosVinculo();
         // en la app por la parte nativa; en la web, directo al Worker (no pasa por su reenvío)
         const r = enApp
           ? await http('POST', `${WORKER_PUBLICO}/vincular`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(datos), tiempo: 20000 })
@@ -2084,6 +2170,11 @@ document.addEventListener('click', async (ev) => {
       } catch (e) { tostada(`No se ha podido sacar el código: ${e.message}`, 6000); el.disabled = false; }
       break;
     }
+    case 'escanearQR':
+      if (!nativo.hayQR()) { tostada('Para escanear el QR, instala la última versión de la app. Mientras, usa el código.', 6000); break; }
+      nativo.escanearQR();
+      break;
+    case 'otroQR': iniciarQR(); break;
     case 'copiarEnlaceWeb': copiarY('https://fantasymanagerapp.com/', 'Enlace copiado'); break;
     case 'mudarse': mudarse(el); break;
     case 'salirDemo': salirDemo(); break;

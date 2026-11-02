@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.11i';
+export const VERSION = '0.6.12';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.6.11i';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12', f: '2026-11-02', h: '23:00', t: 'Entrar con un QR',
+    cosas: [
+      { para: 'app', tipo: 'nuevo', d: 'conexion', t: 'Abre tu cuenta en el ordenador con un QR', x: 'Abre fantasymanagerapp.com en el ordenador y sale un QR. En la app: Ajustes → Abrir en el ordenador → Escanear QR, apuntas a la pantalla y el ordenador entra solo con tu liga y tu clave de la IA. Sin escribir códigos.' },
+      { para: 'web', tipo: 'mejora', d: 'conexion', t: 'El iPhone entra con la cámara', x: 'Junto al código de 8 letras sale un QR: escanéalo con la cámara del iPhone y la web se abre ya con tu cuenta, sin escribir nada.' },
+    ],
+  },
   {
     v: '0.6.11i', f: '2026-11-02', h: '22:30', t: 'Blindar es blindar',
     cosas: [

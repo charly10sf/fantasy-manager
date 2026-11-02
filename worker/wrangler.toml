@@ -17,3 +17,13 @@ ADMINS = "667015"
 # Necesita el secreto BOT_DISPATCH_TOKEN, que worker.yml copia del secreto de Actions del mismo nombre.
 [triggers]
 crons = ["*/5 * * * *"]
+
+# El QR para entrar en el ordenador (0.6.12): un objeto por QR, que ve al momento lo que deja la app (el KV puede
+# tardar hasta un minuto entre centros de Cloudflare). Si Cloudflare no deja crearlo, worker.yml lo quita y publica sin él.
+[[durable_objects.bindings]]
+name = "QR"
+class_name = "Emparejar"
+
+[[migrations]]
+tag = "qr-1"
+new_sqlite_classes = ["Emparejar"]

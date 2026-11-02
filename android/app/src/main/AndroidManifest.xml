@@ -32,6 +32,11 @@
         android:supportsRtl="false"
         android:theme="@style/Tema">
 
+        <!-- el lector de QR de Google (entrar en el ordenador, 0.6.12): que Play Services lo baje al instalar la app -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode_ui" />
+
         <activity
             android:name=".Principal"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode|density"

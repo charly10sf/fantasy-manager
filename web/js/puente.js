@@ -213,6 +213,9 @@ export const nativo = {
   // la alarma del clausulazo (0.6.11): la de prueba suena a los `seg` segundos
   hayAlarma: () => !!(N && typeof N.probarAlarma === 'function'),
   probarAlarma: (seg, t, x) => llamar('probarAlarma', Math.round(seg), t, x),
+  // el lector de QR de Google, para entrar en el ordenador escaneando su QR (0.6.12; las apps de antes no lo tienen)
+  hayQR: () => !!(N && typeof N.escanearQR === 'function'),
+  escanearQR: () => llamar('escanearQR'),
   version: () => (N ? llamar('version') || 0 : 0),
   // de dónde viene la app: «github» (se actualiza sola desde el aviso), «play» (la actualiza la tienda) o «web»
   canal: () => (N ? llamar('canal') || 'github' : 'web'),

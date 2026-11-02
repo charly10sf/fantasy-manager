@@ -11,3 +11,6 @@ subida*
 *.jks
 *.keystore
 node_modules/
+
+# el estado de wrangler dev al probar el Worker en local
+.wrangler/

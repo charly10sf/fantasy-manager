@@ -26,6 +26,11 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.webkit.WebViewAssetLoader;
 
+import com.google.mlkit.common.MlKitException;
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
+
 import org.json.JSONObject;
 
 /**
@@ -251,6 +256,31 @@ public class Principal extends Activity {
             startActivityForResult(i, VOZ);
         } catch (Exception e) {
             js("window.vozTexto && vozTexto(null, 'Este móvil no tiene dictado por voz (instala la app de Google)')");
+        }
+    }
+
+    /**
+     * Escanear el QR del ordenador para entrar allí (0.6.12): el lector de Google Play Services, que abre él la cámara
+     * (la app no pide permiso de cámara). Devuelve a la web qrLeido(texto) o qrLeido(null, motivo); null sin motivo es
+     * que has cancelado. La primera vez Google baja el lector (unos segundos): mientras, avisa de que pruebes otra vez.
+     */
+    void escanearQR() {
+        try {
+            GmsBarcodeScannerOptions op = new GmsBarcodeScannerOptions.Builder()
+                    .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+                    .enableAutoZoom()
+                    .build();
+            GmsBarcodeScanning.getClient(this, op).startScan()
+                    .addOnSuccessListener(b -> js("window.qrLeido && qrLeido(" + JSONObject.quote(b.getRawValue() == null ? "" : b.getRawValue()) + ")"))
+                    .addOnCanceledListener(() -> js("window.qrLeido && qrLeido(null)"))
+                    .addOnFailureListener(e -> {
+                        String m = e instanceof MlKitException && ((MlKitException) e).getErrorCode() == MlKitException.UNAVAILABLE
+                                ? "Google está preparando el lector de QR en tu móvil. Prueba otra vez en unos segundos."
+                                : "No se ha podido abrir el lector de QR (" + e.getMessage() + ")";
+                        js("window.qrLeido && qrLeido(null," + JSONObject.quote(m) + ")");
+                    });
+        } catch (Throwable e) {
+            js("window.qrLeido && qrLeido(null," + JSONObject.quote("Este móvil no tiene el lector de QR de Google (" + e.getMessage() + "). Usa el código de 8 letras.") + ")");
         }
     }
 

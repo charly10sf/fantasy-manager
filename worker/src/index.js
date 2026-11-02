@@ -11,6 +11,8 @@
  *   GET  /img?u=…        una imagen de LaLiga, para poder mirar sus píxeles.
  *   POST /vincular       la app deja aquí su sesión y recibe un código de 8 letras que dura 10 minutos.
  *   POST /vincular/usar  la web cambia ese código (una sola vez) por la sesión.
+ *   POST /qr/dejar       { id, sesion, … }: la app ha escaneado el QR del ordenador y deja ahí su sesión (0.6.12).
+ *   GET  /qr/esperar?id= el ordenador pregunta cada 2 s si ya está; la sesión se da una sola vez (204 mientras no).
  *
  *   Los avisos de fallos (con la sesión de LaLiga en Authorization, para saber quién es; el token no se guarda):
  *   POST /fallos              manda un aviso: { texto, diag, app, equipo, liga, capturas: [data:image/…] (hasta 3) }
@@ -154,6 +156,68 @@ async function usar(req, env, c) {
   if (!v) return json({ e: 'Ese código no existe o ha caducado (dura 10 minutos). Pide otro en la app.' }, 404, c);
   await borrarVinculo(env, cod);
   return json(JSON.parse(v), 200, c);
+}
+
+/* ---------- el QR para entrar en el ordenador (0.6.12) ---------- */
+// El ordenador enseña un QR con un id al azar (128 bits) y pregunta cada 2 s; la app lo escanea y deja su sesión con
+// ese id. Va en un Durable Object (uno por id), que ve al momento lo que se acaba de guardar: en el KV, el ordenador
+// podía tardar hasta un minuto en verlo si el móvil y él llegan a centros de Cloudflare distintos, porque el KV guarda
+// también los «no está». Sin el objeto (si Cloudflare no dejó crearlo al publicar), va por el KV.
+const idQR = (x) => (typeof x === 'string' && /^[A-Za-z0-9_-]{22,64}$/.test(x) ? x : null);
+
+export class Emparejar {
+  constructor(estado) { this.estado = estado; }
+  async fetch(req) {
+    const st = this.estado.storage;
+    if (req.method === 'PUT') {
+      if (await st.get('d')) return new Response('ya', { status: 409 });
+      await st.put({ d: await req.text(), t: Date.now() });
+      await st.setAlarm(Date.now() + DURA * 1000);
+      return new Response('ok');
+    }
+    const t = await st.get('t');
+    if (!t) return new Response(null, { status: 204 });
+    const d = await st.get('d');
+    await st.deleteAll();
+    if (Date.now() - t > DURA * 1000) return new Response(null, { status: 204 });
+    return new Response(d, { status: 200 });
+  }
+  async alarm() { await this.estado.storage.deleteAll(); }
+}
+
+async function qrDejar(req, env, c) {
+  const txt = await req.text();
+  if (txt.length > 60000) return json({ e: 'Demasiados datos' }, 413, c);
+  let j;
+  try { j = JSON.parse(txt); } catch (e) { return json({ e: 'No es JSON' }, 400, c); }
+  const id = idQR(j && j.id);
+  if (!id) return json({ e: 'Ese QR no es de Fantasy Manager' }, 400, c);
+  if (!j.sesion || !(j.sesion.renovar || j.sesion.token)) return json({ e: 'Falta la sesión de LaLiga' }, 400, c);
+  const { id: _, ...datos } = j;
+  const valor = JSON.stringify({ ...datos, t: Date.now() });
+  if (env.QR) {
+    const r = await env.QR.get(env.QR.idFromName(id)).fetch('https://qr/', { method: 'PUT', body: valor });
+    if (r.status === 409) return json({ e: 'Ese QR ya se ha usado. Pide otro en el ordenador.' }, 409, c);
+    return json({ ok: true }, 200, c);
+  }
+  if (!env.VINCULOS) return json({ e: 'El servidor de la web no puede guardar el QR ahora. Usa el código de 8 letras.' }, 503, c);
+  await env.VINCULOS.put(`q:${id}`, valor, { expirationTtl: DURA });
+  return json({ ok: true }, 200, c);
+}
+
+async function qrEsperar(url, env, c) {
+  const id = idQR(url.searchParams.get('id'));
+  if (!id) return json({ e: 'Falta el QR' }, 400, c);
+  let v = null;
+  if (env.QR) {
+    const r = await env.QR.get(env.QR.idFromName(id)).fetch('https://qr/');
+    if (r.status === 200) v = await r.text();
+  } else if (env.VINCULOS) {
+    v = await env.VINCULOS.get(`q:${id}`);
+    if (v) await env.VINCULOS.delete(`q:${id}`);
+  }
+  if (!v) return new Response(null, { status: 204, headers: { ...c, 'cache-control': 'no-store' } });
+  return new Response(v, { status: 200, headers: { ...c, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 }
 
 /* ---------- los avisos de fallos ---------- */
@@ -430,10 +494,12 @@ export default {
       if (url.pathname === '/img' && req.method === 'GET') return await imagen(url, c);
       if (url.pathname === '/vincular' && req.method === 'POST') return await vincular(req, env, c);
       if (url.pathname === '/vincular/usar' && req.method === 'POST') return await usar(req, env, c);
+      if (url.pathname === '/qr/dejar' && req.method === 'POST') return await qrDejar(req, env, c);
+      if (url.pathname === '/qr/esperar' && req.method === 'GET') return await qrEsperar(url, env, c);
       if (url.pathname === '/fallos' || url.pathname.startsWith('/fallos/')) return await fallos(req, env, c, url.pathname);
       if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
-      if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
+      if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);
     } catch (e) {
       return json({ e: String((e && e.message) || e) }, 500, c);

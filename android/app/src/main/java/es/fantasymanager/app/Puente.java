@@ -503,6 +503,12 @@ public class Puente {
         enPantalla(() -> act.teclado());
     }
 
+    /** escanear el QR del ordenador para entrar allí con tu cuenta; llega a la web con qrLeido() (0.6.12) */
+    @JavascriptInterface
+    public void escanearQR() {
+        enPantalla(() -> act.escanearQR());
+    }
+
     /** elegir fotos o capturas para la IA (como mucho max); llegan a la web con fotosApp() */
     @JavascriptInterface
     public void fotos(int max) {
