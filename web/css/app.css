@@ -2272,3 +2272,19 @@ button.cr-p:active { background: var(--plano); }
 .play-pronto small { font-size: 11px; letter-spacing: 0.04em; color: var(--apagado); }
 .play-pronto b { font: 700 17px var(--cond); }
 .pz .play-pronto, .portada .pantalla .play-pronto { display: flex; width: fit-content; }
+
+/* «Próximamente en Google Play» en la cabecera de la entrada: junto al logo, sin restar altura */
+.pant-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.play-hero { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 11px; padding: 9px 18px 9px 13px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.16); background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03)); box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35); line-height: 1.05; animation: play-entra 0.7s 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.play-hero::after { content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.22), transparent); transform: skewX(-18deg); animation: play-brillo 1.3s 1.1s ease-out 1 both; }
+.play-hero .play-ic { width: 30px; height: 30px; flex: none; }
+.play-hero span { display: grid; gap: 3px; }
+.play-hero small { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--texto2); }
+.play-hero b { font: 700 21px var(--cond); letter-spacing: 0.02em; color: var(--texto); }
+.escritorio .pant-top { justify-content: flex-start; gap: 26px; }
+.escritorio .play-hero { padding: 11px 22px 11px 16px; border-radius: 16px; }
+.escritorio .play-hero .play-ic { width: 36px; height: 36px; }
+.escritorio .play-hero b { font-size: 25px; }
+@keyframes play-entra { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@keyframes play-brillo { from { left: -60%; } to { left: 130%; } }
+@media (prefers-reduced-motion: reduce) { .play-hero { animation: none; } .play-hero::after { display: none; } }
