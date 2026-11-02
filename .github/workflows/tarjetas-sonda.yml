@@ -1,0 +1,27 @@
+# Sonda para las tarjetas con imagen del bot de X (solo lectura, sin secretos ni token). Salta con cada push a pruebas-fuentes
+# que toque .github/tarjetas/. Deja como artefacto los datos de la jornada y las fotos y escudos que usarían las tarjetas.
+name: Tarjetas sonda
+on:
+  workflow_dispatch:
+  push:
+    branches: [pruebas-fuentes]
+    paths: ['.github/tarjetas/**', '.github/workflows/tarjetas-sonda.yml']
+permissions:
+  contents: read
+jobs:
+  sondear:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node .github/tarjetas/sonda.mjs
+        env:
+          JORNADA: '11'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tarjetas-datos
+          path: salida
+          retention-days: 5
