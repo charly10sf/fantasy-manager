@@ -53,6 +53,8 @@ b, strong { font-weight: 600; color: var(--texto); }
 
 /* ---------- marco ---------- */
 #app { max-width: 620px; margin: 0 auto; min-height: 100vh; }
+/* la pantalla de arranque y la de carga, a todo lo ancho: antes de saber si es un ordenador (.escritorio) el fondo rojo se quedaba en 620 px */
+#app:has(> .carga) { max-width: none; }
 .sup {
   position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px;
   padding: 10px 16px; background: var(--fondo); border-bottom: 1px solid var(--linea);
