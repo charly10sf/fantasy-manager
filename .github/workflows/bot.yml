@@ -1,0 +1,67 @@
+# Bot de la cuenta de X (@Fantasyman_app). Corre cada 15 minutos y, según la variable de repositorio BOT_MODO:
+#   (sin ella) o «simulacro»  genera y valida los tweets y los enseña en el resumen de la ejecución; NO publica
+#   «publicar»                publica de verdad (hacen falta los 4 secretos de X) y guarda lo publicado en la rama bot-estado
+#   «parado»                  no hace nada
+# Los secretos son X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN y X_ACCESS_TOKEN_SECRET (Settings > Secrets and variables > Actions).
+# «Run workflow» con «comprobar» marcado solo prueba que las claves valen (no publica). Detalle en bot/LEEME.md.
+name: Bot X
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      comprobar:
+        description: 'Solo comprobar las claves de X (no publica nada)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bot-x
+  cancel-in-progress: false
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      BOT_MODO: ${{ vars.BOT_MODO || 'simulacro' }}
+      X_API_KEY: ${{ secrets.X_API_KEY }}
+      X_API_SECRET: ${{ secrets.X_API_SECRET }}
+      X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+      X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Comprobar las claves (sin publicar)
+        if: ${{ inputs.comprobar }}
+        run: node bot/ejecutar.mjs --comprobar=1
+      - name: Traer el registro de lo publicado (solo al publicar)
+        if: ${{ !inputs.comprobar && env.BOT_MODO == 'publicar' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf estado
+          URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads "$URL" bot-estado >/dev/null 2>&1; then
+            git clone -q --depth 1 --branch bot-estado "$URL" estado
+          else
+            mkdir estado && git -C estado init -q -b bot-estado && git -C estado remote add origin "$URL"
+          fi
+      - name: Bot
+        if: ${{ !inputs.comprobar }}
+        run: node bot/ejecutar.mjs --ventanas=1 --estado=estado/registro.json
+      - name: Guardar el registro de lo publicado
+        if: ${{ always() && !inputs.comprobar && env.BOT_MODO == 'publicar' }}
+        run: |
+          cd estado
+          git add -A
+          if ! git diff --cached --quiet; then
+            git -c user.name='bot' -c user.email='bot@users.noreply.github.com' commit -q -m "Registro $(date -u +%FT%TZ)"
+            git push -q origin HEAD:bot-estado
+          fi
