@@ -17,6 +17,8 @@ jobs:
       - name: simulacro
         run: mkdir -p salida && node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=mercado,final,mvp,resumen,directo --ventanas=0 --fechas-espn=20261102 --tarjetas=1 --salida-tarjetas=salida/tarjetas > salida/sal.txt 2>&1 || true
         shell: bash
+      - name: ver
+        run: sed 's/^/@@ /' salida/sal.txt
       - uses: actions/upload-artifact@v4
         with:
           name: salida
