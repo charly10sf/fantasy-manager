@@ -1,0 +1,64 @@
+# Sondeo del partido Osasuna-Deportivo del 2 nov 2026 (21:00 Madrid = 20:00Z). Solo lee, sin secretos ni token.
+# Un ensayo de 75 s al empezar, un trabajo que espera hasta las 17:45Z y otro que sondea hasta las 22:20Z en pasos
+# de unos 45 min (así se pueden leer los registros de los pasos ya acabados mientras el siguiente corre).
+# Salta con el push a la rama de pruebas; no se lanza solo y no publica nada.
+name: Sondeo noche
+
+on:
+  push:
+    branches: [pruebas-fuentes]
+    paths: ['.github/sondeo-noche.mjs', '.github/workflows/sondeo-noche.yml']
+
+concurrency:
+  group: sondeo-noche
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ensayo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node .github/sondeo-noche.mjs --hasta="$(date -u -d '+75 seconds' +%Y-%m-%dT%H:%M:%SZ)" --estado=ensayo.json --resumen=1
+
+  esperar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 200
+    steps:
+      - run: |
+          T=$(date -u -d '2026-11-02T17:45:00Z' +%s); N=$(date -u +%s)
+          if [ "$T" -gt "$N" ]; then echo "durmiendo $((T-N)) s"; sleep $((T-N)); fi
+          date -u
+
+  sondeo:
+    needs: esperar
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: paso 1 (hasta 18:30Z)
+        run: node .github/sondeo-noche.mjs --hasta=2026-11-02T18:30:00Z
+      - name: paso 2 (hasta 19:15Z)
+        if: always()
+        run: node .github/sondeo-noche.mjs --hasta=2026-11-02T19:15:00Z
+      - name: paso 3 (hasta 20:00Z, el saque)
+        if: always()
+        run: node .github/sondeo-noche.mjs --hasta=2026-11-02T20:00:00Z
+      - name: paso 4 (hasta 20:45Z, primera parte)
+        if: always()
+        run: node .github/sondeo-noche.mjs --hasta=2026-11-02T20:45:00Z
+      - name: paso 5 (hasta 21:30Z, segunda parte)
+        if: always()
+        run: node .github/sondeo-noche.mjs --hasta=2026-11-02T21:30:00Z
+      - name: paso 6 (hasta 22:20Z, final y resumen)
+        if: always()
+        run: node .github/sondeo-noche.mjs --hasta=2026-11-02T22:20:00Z --resumen=1
