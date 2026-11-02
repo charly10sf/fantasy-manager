@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.11d';
+export const VERSION = '0.6.11e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,15 @@ export const VERSION = '0.6.11d';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.11e', f: '2026-11-02', h: '20:11', t: 'La web, más clara',
+    cosas: [
+      { para: 'web', tipo: 'mejora', d: 'oferta', t: 'Menos anuncios en la web', x: 'En la web ya no salen anuncios en la portada, mientras carga, al entrar con el código ni en una pestaña vacía: solo en las pestañas con contenido.' },
+      { para: 'web', tipo: 'nuevo', d: 'periodico', t: 'Quiénes somos, contacto y privacidad', x: 'Debajo de la portada hay enlaces a quién hace la app, cómo escribirnos y la política de privacidad, en páginas que se leen sin abrir la app.', menor: true },
+      { para: 'web', tipo: 'arreglo', d: 'arreglo', t: 'La pantalla de arranque, a todo lo ancho', x: 'En el ordenador, el fondo de la pantalla que sale al abrir la web se quedaba en una franja estrecha. Ahora ocupa toda la pantalla.' },
+      { para: 'dueño', tipo: 'mejora', d: 'ajustes', t: 'Páginas públicas y guías', x: 'Privacidad, quiénes somos, contacto y 14 guías en borrador, generadas con .github/paginas.py (sin JavaScript, con sitemap.xml y robots.txt). Las guías no se indexan hasta que tengan texto. Las ramas web-… tienen vista previa en Cloudflare Pages.' },
+    ],
+  },
   {
     v: '0.6.11d', f: '2026-11-02', h: '17:11', t: 'Vender con calma',
     cosas: [
