@@ -132,7 +132,7 @@ const CASOS = [
   {
     id: 'clausula', chip: 'Se abre una cláusula', lid: 3091, eq: 16, nombre: 'Oyarzabal',
     ves: 'La cláusula de Oyarzabal (35,85 M) se ha abierto y tienes 38,10 M de saldo.',
-    mira: ['Una cláusula solo se paga con saldo: el margen de deuda no vale para esto.', 'Nadie puede clausular en las 24 h antes del primer partido de la jornada, y falta un día.', 'Iván, su dueño, tiene dinero para blindarlo mañana.'],
+    mira: ['Una cláusula solo se paga con saldo: el margen de deuda no vale para esto.', 'Nadie puede clausular en las 24 h antes del primer partido de la jornada, y falta un día.', 'Iván, su dueño, tiene dinero para subirle la cláusula mañana.'],
     dice: 'Clausúlalo hoy, antes de que se cierre la ventana. Te quedas con 2,25 M de saldo.', tipo: 'rojo',
   },
   {
@@ -231,7 +231,7 @@ const APK = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk';
 /** las guías que salen en la portada (todas, en guias/): [archivo, icono, título, de qué va] */
 const GUIAS = [
   ['clausulas-laliga-fantasy.html', 'candado', 'Cláusulas', 'Cuándo sube sola, los 14 días de protección y el cierre de 24 h.'],
-  ['blindar-jugador-clausula.html', 'escudo', 'Blindar', 'Cuánto cuesta subir la cláusula y hasta dónde compensa.'],
+  ['subir-clausula.html', 'escudo', 'Subir la cláusula', 'Cuánto cuesta, hasta dónde compensa y cuándo basta el blindaje.'],
   ['cuando-clausular.html', 'diana', 'Cuándo clausular', 'Lo que pagas de más, lo que sube y lo que te deja en caja.'],
   ['cuanto-pujar.html', 'euro', 'Cuánto pujar', 'Pujas a ciegas, margen de deuda y cómo pujan tus rivales.'],
   ['cuando-vender.html', 'baja', 'Cuándo vender', 'A LaLiga o a un rival, y cuándo esperar un día más.'],
@@ -281,7 +281,7 @@ export function seccionMoviles() {
     <div class="pd rv" aria-live="polite">${caso(CASOS[0].id)}</div>`,
     'Cuatro situaciones de cada semana y lo que tiene en cuenta antes de decirte nada.')}
 
-  ${seccion('pCalc', 'Haz tus cuentas', 'Calculadoras', `<div class="pk-chips rv" role="tablist"><button role="tab" data-calc="blindaje" aria-selected="true">¿Cuánto blindo?</button><button role="tab" data-calc="gastar" aria-selected="false">¿Cuánto puedo gastar?</button></div>
+  ${seccion('pCalc', 'Haz tus cuentas', 'Calculadoras', `<div class="pk-chips rv" role="tablist"><button role="tab" data-calc="blindaje" aria-selected="true">¿Cuánto subo la cláusula?</button><button role="tab" data-calc="gastar" aria-selected="false">¿Cuánto puedo gastar?</button></div>
     <div class="pk rv" data-tipo="blindaje"><div class="pk-in">${CALC.blindaje()}</div><div class="pk-r" aria-live="polite"></div></div>`,
     'Las mismas cuentas que hace la app con tu liga. Mueve los números y mira qué cambia.')}
 

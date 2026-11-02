@@ -40,19 +40,19 @@
       ]
     },
     {
-      "ruta": "guias/blindar-jugador-clausula.html",
+      "ruta": "guias/subir-clausula.html",
       "tipo": "guia",
       "fecha": "2026-11-02",
-      "h1": "Cómo blindar a un jugador en LaLiga Fantasy",
-      "titulo": "Blindar a un jugador en LaLiga Fantasy: cuánto subir la cláusula",
-      "descripcion": "Cuánto cuesta subir la cláusula de un jugador, hasta dónde compensa y cuándo es tirar el dinero, con ejemplos en millones.",
-      "busqueda": "blindar jugador LaLiga Fantasy",
+      "h1": "Cuánto subir la cláusula de un jugador en LaLiga Fantasy",
+      "titulo": "Subir la cláusula en LaLiga Fantasy: cuánto y cuándo compensa",
+      "descripcion": "Cuánto cuesta subir la cláusula de un jugador, hasta dónde compensa, cuándo es tirar el dinero y cuándo basta con el blindaje gratis.",
+      "busqueda": "subir cláusula LaLiga Fantasy",
       "esquema": [
-        ["Qué es blindar", "Pagar para subir la cláusula de un jugador tuyo y que a los rivales no les llegue."],
+        ["Subir la cláusula o blindar", "Pagar para subir la cláusula frente al blindaje gratis de 24 h."],
         ["Cuánto cuesta subirla", "La relación entre lo que pagas y lo que sube la cláusula, con el cálculo paso a paso. Comprobar la regla exacta del juego."],
         ["Hasta dónde subirla", "No pasar de lo que se paga en tu liga por un clausulazo (el p90 de los clausulazos de la liga): más arriba no protege más."],
-        ["Cuándo no compensa", "Si blindar cuesta más de 1/4 del valor del jugador, casi siempre sale mejor dejarlo o venderlo."],
-        ["Qué jugadores blindar primero", "Los que suben, los titulares fijos y los que tus rivales pueden pagar hoy con su saldo."],
+        ["Cuándo no compensa", "Si subirla cuesta más de 1/4 del valor del jugador, casi siempre sale mejor dejarlo o venderlo."],
+        ["A quién subírsela primero", "Los que suben, los titulares fijos y los que tus rivales pueden pagar hoy con su saldo."],
         ["Ejemplo", "Un delantero de 20 M con cláusula de 24 M y dos rivales con 30 M en caja."]
       ]
     },
@@ -220,11 +220,11 @@
       "fecha": "2026-11-02",
       "h1": "Glosario de LaLiga Fantasy",
       "titulo": "Glosario de LaLiga Fantasy: qué significa cada término",
-      "descripcion": "Cláusula, blindaje, clausulazo, puja, saldo, valor de mercado, once probable y el resto de palabras del juego, explicadas con un ejemplo.",
-      "busqueda": "qué significa cláusula, clausulazo o blindar en LaLiga Fantasy",
+      "descripcion": "Cláusula, clausulazo, subir la cláusula, blindaje, puja, saldo, valor de mercado, once probable y el resto de palabras del juego, explicadas con un ejemplo.",
+      "busqueda": "qué significa cláusula, clausulazo o blindaje en LaLiga Fantasy",
       "esquema": [
         ["Mercado y dinero", "Valor de mercado, saldo, deuda, puja, venta a LaLiga."],
-        ["Cláusulas", "Cláusula, clausulazo, blindar, días de protección."],
+        ["Cláusulas", "Cláusula, clausulazo, subir la cláusula, blindaje, días de protección."],
         ["Jornada y puntos", "Jornada, once, titular probable, once confirmado, nota de los cronistas."],
         ["Estados del jugador", "Lesionado, duda, sancionado, apercibido."]
       ]
