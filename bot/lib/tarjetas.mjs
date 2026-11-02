@@ -125,7 +125,7 @@ export function svgFinal(d) {
 // ---------------------------------------------------------------------------------------------------------------------------
 // Tarjeta de jugador
 // d = { jornada, etiqueta ('MVP · Barça 6-1 Alavés' o '¡DOBLETE! · …'), nombre, posicion, club: {nombre, corto, escudo},
-//       cara, ptsJornada, total, media, ultimas: [[jornada, pts], …] (5), valor: [[ms, €], …] (60 días), valorHoy, cambio (% en 30 días) }
+//       cara, ptsJornada, total, media, ultimas: [[jornada, pts], …] (5), valor: [[ms, €], …] (30 días), valorHoy, cambio (% en 30 días) }
 
 function barras(x, y, w, h, ultimas, tema) {
   // y es la línea del 0; las barras crecen hacia arriba (h) y las negativas hacia abajo (h/3)

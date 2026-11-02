@@ -54,3 +54,9 @@ export function corto(nombre) {
   for (const [k, v] of CORTOS) if (n.includes(k)) return v;
   return nombre;
 }
+
+// Artículos de los equipos para escribir como se habla: «el Barça», «del Barça», «al Barça»; Osasuna y la Real Sociedad no llevan el mismo.
+const SIN_ARTICULO = new Set(['Osasuna']);
+export const el = (eq) => (SIN_ARTICULO.has(eq) ? eq : eq === 'Real Sociedad' ? 'la Real Sociedad' : `el ${eq}`);
+export const del = (eq) => (SIN_ARTICULO.has(eq) ? `de ${eq}` : eq === 'Real Sociedad' ? 'de la Real Sociedad' : `del ${eq}`);
+export const al = (eq) => (SIN_ARTICULO.has(eq) ? `a ${eq}` : eq === 'Real Sociedad' ? 'a la Real Sociedad' : `al ${eq}`);
