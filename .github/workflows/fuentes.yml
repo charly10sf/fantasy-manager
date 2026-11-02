@@ -1,0 +1,26 @@
+# Prueba de fuentes para el bot de la cuenta de X (solo lectura, a mano). Pide cada fuente desde un servidor de GitHub
+# y apunta código HTTP, tamaño y tiempo (con un User-Agent de navegador y con uno de bot). Sin secretos, sin claves de X,
+# sin publicar nada. Resultado: resumen del job, anotaciones y el artefacto fuentes.json.
+name: Fuentes
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node .github/fuentes-prueba.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fuentes
+          path: fuentes.json
+          retention-days: 7
