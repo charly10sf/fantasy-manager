@@ -1,6 +1,6 @@
 // El bot de la cuenta de X. Por defecto NO publica: genera los tweets con datos reales, los valida y dice cuáles publicaría.
 // Publica solo con --modo=publicar (en el workflow, la variable de repositorio BOT_MODO) y con las cuatro claves de X.
-//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=resumen,final,caidas,directo] [--jornada=11]
+//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas] [--jornada=11] [--fechas-espn=20261101,…]
 //        [--estado=estado/registro.json] [--ventanas=1] [--forzar=1] [--comprobar=1]
 //        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
 // Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
@@ -10,6 +10,12 @@ import { validar } from './lib/validar.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
 
+/** AAAAMMDD de hoy en Madrid (y de ayer, entre las 0 y las 3) */
+function diasEspn() {
+  const dia = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
+  const h = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date()));
+  return h < 3 ? [dia(Date.now() - 864e5), dia(Date.now())] : [dia(Date.now())];
+}
 const config = JSON.parse(readFileSync(new URL('./config.json', import.meta.url), 'utf8'));
 const arg = (k) => (process.argv.find((a) => a.startsWith(`--${k}=`)) || '').split('=')[1];
 const modo = (arg('modo') || process.env.BOT_MODO || 'simulacro').trim();
@@ -35,7 +41,7 @@ if (arg('comprobar') === '1') {
 }
 if (publica && faltan.length) { console.log(`# Modo publicar sin los secretos ${faltan.join(', ')}: no publico nada.`); md(`Modo publicar sin los secretos ${faltan.join(', ')}.`); process.exit(1); }
 
-const quienes = (arg('tipos') || (publica ? 'resumen,final,mvp,caidas' : 'resumen,final,mvp,caidas,directo')).split(',');
+const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas').split(',');
 // las tarjetas: encendidas en config.json, o forzadas con --tarjetas=1 en simulacro (para verlas sin tocar lo que se publica)
 const forzarTarjetas = !publica && arg('tarjetas') === '1';
 const conTarjetas = forzarTarjetas || !!(config.tarjetas && (config.tarjetas.final || config.tarjetas.jugador));
@@ -56,7 +62,10 @@ if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
 const ctx = { stats, jugadores, equipos, jornada, config, ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
   completo: !ventanas || pendientes === 0,
   desdeFinal: ventanas ? Date.now() - config.ventanaFinalHoras * 3600e3 : 0,
-  fechasEspn: ['20261030', '20261031', '20261101'] };
+  // directo: con ventanas, el marcador de ESPN de hoy (y de ayer de madrugada) y solo partidos empezados hace menos de 3 h;
+  // sin ventanas, los días que se pasen con --fechas-espn (para probar con partidos ya jugados)
+  desdeDirecto: ventanas ? Date.now() - 3 * 3600e3 : 0,
+  fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
 const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
 // Las caídas se publican de día (en Madrid): al acabar el último partido de la noche no salen de madrugada, sino a las 9
 const horaMadrid = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date()));

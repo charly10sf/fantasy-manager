@@ -58,11 +58,13 @@ export async function datosFinal(m, { jornada, fuentes, maxFichas = 25 }) {
  * Tarjeta de un jugador. j: el jugador de la lista de LaLiga (players); m: el partido de stats/week/{n} del que se habla;
  * motivo: 'mvp' | 'doblete' | 'triplete'. fuentes: { valor(id) -> lista de market-value, imagen(url) }
  */
-export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, ahora = Date.now() }) {
+export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, ahora = Date.now(), marcador: goles = null }) {
+  // en directo, el marcador de ESPN (va al momento); si no, el de LaLiga
+  const [gl, gv] = goles || [m.localScore, m.visitorScore];
   const enPartido = [...(m.local.players || []), ...(m.visitor.players || [])].find((p) => String(p.id) === String(j.id));
   const club = String(m.local.id) === String(j.teamId) ? m.local : m.visitor;
   const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
-  const marcador = `${L} ${m.localScore}-${m.visitorScore} ${V}`;
+  const marcador = `${L} ${gl}-${gv} ${V}`;
   const etiqueta = `${{ mvp: 'MVP', doblete: '¡DOBLETE!', triplete: '¡TRIPLETE!' }[motivo] || 'MVP'} · ${marcador}`;
   const wp = new Map((j.weekPoints || []).map((w) => [Number(w.weekNumber), Number(w.points)]));
   const ultimas = [];
@@ -88,7 +90,7 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
   const vHoy = serie.length ? serie[serie.length - 1][1] : Number(j.marketValue);
   const vAntes = antes ? antes[1] : null;
   const permitidos = {
-    numeros: [jornada, m.localScore, m.visitorScore, 0, j.points, num1(j.averagePoints), ...(j.weekPoints || []).map((w) => w.points), ...semanas,
+    numeros: [jornada, gl, gv, 0, j.points, num1(j.averagePoints), ...(j.weekPoints || []).map((w) => w.points), ...semanas,
       millones(vHoy).replace(' M', ''), vAntes ? Math.abs(Math.round((vHoy - vAntes) / vAntes * 100)) : 0, DIAS_VALOR, enPartido ? enPartido.weekPoints : 0].map(String),
     palabras: [j.nickname, club.mainName, corto(club.mainName), L, V, POS[j.positionId] || ''],
   };

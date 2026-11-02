@@ -28,7 +28,7 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
   if ((t.tipo === 'mvp' || (t.tipo === 'directo' && t.motivo)) && t.jugadorId != null && (cfg.jugador || forzar)) {
     const j = jugadores.find((x) => String(x.id) === String(t.jugadorId));
     if (j) {
-      const x = await datosJugador(j, m, { jornada, motivo: t.motivo || 'mvp', fuentes });
+      const x = await datosJugador(j, m, { jornada, motivo: t.motivo || 'mvp', fuentes, marcador: t.marcador || null });
       await hacer(`${t.tipo}-${m.id}-${j.id}`, x, svgJugador(x.d));
     }
   }
