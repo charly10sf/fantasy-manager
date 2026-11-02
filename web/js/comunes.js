@@ -271,9 +271,9 @@ export function campoVivo(M, ids) {
     <span class="cv-forma">${esc(forma)}</span>${filas.join('')}${ent ? `<div class="cr-ent">${cromo(M, ent, { chico: true, ent: true, vivo: true })}</div>` : ''}</div>`;
 }
 
-const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
+const ACC = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
 /** la pastilla del plan del día en las listas, si el plan dice algo de este jugador */
-export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${ACC[op.accion] || op.accion} hoy</span>` : '');
+export const planPill = (op) => (op ? `<span class="pill plan">${icono('rayo')}${op.etiqueta || ACC[op.accion] || op.accion} hoy</span>` : '');
 
 /* la probabilidad de ser titular al lado del nombre, en todas las listas: el motor lo pone la app cada vez que lo rehace */
 let MF = null;

@@ -45,7 +45,7 @@ export function delPlan(S) {
       // marcado a mano y aún no se ve en LaLiga: solo lo que no puede ser secreto (una puja sí lo es hasta que se resuelve)
       const por = o.importe ? ` por ${eur(o.importe)}` : '';
       if (o.accion === 'clausular') texto = `Clausulado${por}`;
-      else if (o.accion === 'blindar') texto = 'Blindado';
+      else if (o.accion === 'blindar') texto = o.importe ? 'Cláusula subida' : 'Blindado';
       else if (o.accion === 'vender' && o.etiqueta === 'Aceptar oferta') texto = `Vendido${por}`;
     }
     if (texto && PUBLICA[o.accion]) {

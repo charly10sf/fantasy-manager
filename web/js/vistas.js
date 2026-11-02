@@ -315,7 +315,7 @@ function ligaHTML(S) {
 }
 
 /* ================= EL PLAN DEL DÍA ================= */
-const ACCION = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Proteger', alinear: 'Alinear', esperar: 'Esperar' };
+const ACCION = { vender: 'Vender', clausular: 'Clausular', pujar: 'Pujar', comprar: 'Comprar', blindar: 'Blindar', alinear: 'Alinear', esperar: 'Esperar' };
 
 /** ¿ya lo has hecho? lo marcas tú o se ve en la actividad de la liga */
 export const claveHechos = (P) => (P.auto ? `auto-${P.dia}` : String(P.t));

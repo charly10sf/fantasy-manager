@@ -1926,7 +1926,7 @@ function acciones(D, M, c) {
   M.mias.filter((x) => x.riesgo === 'alto' && x.importa && !x.escudo && !M.paraEscudo.includes(x.pid) && x.blindaje && x.blindaje.caro && x.abierta).sort((a, b) => b.pierde - a.pierde).slice(0, 2).forEach((x) => add({
     tipo: 'riesgo', prio: 58, icono: 'escudo', pid: x.pid, cuando: 'Ojo',
     titulo: `${x.j.nombre} está a tiro de ${x.pagan.seguro.length + x.pagan.quiza.length} rivales`,
-    texto: `Cláusula ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Blindarlo del todo costaría ${eur(x.blindaje.coste)}: no compensa. Si te lo quitan, cobras la cláusula; ten pensado su sustituto (te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada).`,
+    texto: `Cláusula ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Subirle la cláusula hasta que no le llegue a nadie costaría ${eur(x.blindaje.coste)}: no compensa. Si te lo quitan, cobras la cláusula; ten pensado su sustituto (te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada).`,
   }));
 
   M.mias.filter((x) => MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
