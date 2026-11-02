@@ -40,4 +40,6 @@ jobs:
           node bot/ejecutar.mjs --comprobar=1
           # cuatro ejecuciones seguidas con el mismo registro: debe publicar 4, 4, 1 y 0 (9 partidos acabados, sin repetir ninguno)
           for i in 1 2 3 4; do node bot/ejecutar.mjs --modo=publicar --ventanas=0 --tipos=final --estado=/tmp/registro.json | grep -E "^# Total"; done
-          node -e "fetch('http://127.0.0.1:8787/__resumen').then(r=>r.json()).then(j=>{console.log('servidor falso:',JSON.stringify(j)); if(j.total!==9||j.unicos!==9||j.firmados!==9||j.maxLargo>280) process.exit(1)})"
+          # registro nuevo contra el mismo servidor: X dice «duplicado» (403) y el bot lo apunta como publicado, sin atascarse ni dar error
+          for i in 1 2 3; do node bot/ejecutar.mjs --modo=publicar --ventanas=0 --tipos=final --estado=/tmp/registro2.json | grep -E "^# Total|ya estaba publicado" | sort | uniq -c; done
+          node -e "fetch('http://127.0.0.1:8787/__resumen').then(r=>r.json()).then(j=>{console.log('servidor falso:',JSON.stringify(j)); if(j.total!==9||j.unicos!==9||j.firmados!==9||j.duplicados<9||j.maxLargo>280) process.exit(1)})"
