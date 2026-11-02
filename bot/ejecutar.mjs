@@ -52,19 +52,27 @@ const ctx = { stats, jugadores, equipos, jornada, config, ahora: Date.now(), sol
   desdeFinal: ventanas ? Date.now() - config.ventanaFinalHoras * 3600e3 : 0,
   fechasEspn: ['20261030', '20261031', '20261101'] };
 const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
+// Las caídas se publican de día (en Madrid): al acabar el último partido de la noche no salen de madrugada, sino a las 9
+const horaMadrid = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date()));
+const [hDesde, hHasta] = config.horasCaidas || [0, 24];
+const enHorarioCaidas = !ventanas || forzar || (horaMadrid >= hDesde && horaMadrid < hHasta);
+let abortar = false;
 let generados = 0, fallos = 0, publicados = 0, previstos = 0;
 
 for (const q of quienes) {
+  if (abortar) break;
   const mod = await import(`./tipos/${q}.mjs`);
   let c = ctx;
   if (q === 'caidas') {
     if (objetivoCaidas == null) { console.log(`\n## caidas: espero (quedan ${pendientes} partido(s) de la jornada ${jornada})`); continue; }
+    if (!enHorarioCaidas) { console.log(`\n## caidas: fuera de horario (son las ${horaMadrid} h en Madrid; publico de ${hDesde} a ${hHasta} h)`); continue; }
     c = { ...ctx, jornada: objetivoCaidas, ultimaJugada: objetivoCaidas - 1 };
   }
   let tweets = [];
   try { tweets = await mod.generar(c); } catch (e) { console.log(`\n## ${q}: ERROR ${e.stack || e}`); fallos++; continue; }
   console.log(`\n## ${q}: ${tweets.length} tweets`);
   for (const t of tweets) {
+    if (abortar) break;
     generados++;
     const v = validar(t.texto, { numeros: t.numeros, max: config.tweetMax });
     let d = v.ok ? registro.decidir(t) : 'no pasa el validador';
@@ -73,7 +81,8 @@ for (const q of quienes) {
     if (d === 'ok' && publica) {
       const r = await publicar(t.texto, claves);
       if (r.ok) { registro.marcar(t, r.id); publicados++; estado = `PUBLICADO (id ${r.id})`; }
-      else { estado = `ERROR al publicar: HTTP ${r.estado} ${r.cuerpo}`; fallos++; console.log(`\n--- ${t.clave} · ${estado}\n${t.texto}`); md(`**Error al publicar** ${t.clave}: HTTP ${r.estado} ${r.cuerpo}`); break; }
+      else if (r.estado === 403 && /duplicate/i.test(r.cuerpo)) { registro.marcar(t, null); estado = 'X dice que ya estaba publicado: lo apunto y sigo'; }
+      else { estado = `ERROR al publicar: HTTP ${r.estado} ${r.cuerpo}`; fallos++; abortar = true; console.log(`\n--- ${t.clave} · ${estado}\n${t.texto}`); md(`**Error al publicar** ${t.clave}: HTTP ${r.estado} ${r.cuerpo}. Paro esta ejecución; no se vuelve a intentar hasta la siguiente.`); break; }
     } else if (d === 'ok') { registro.reservar(t); previstos++; }
     console.log(`\n--- ${t.clave} · peso ${v.peso} · ${v.ok ? 'válido' : 'FALLA: ' + v.errores.join('; ')} · ${estado}${t.casado === false ? ' · jugador sin casar con LaLiga' : ''}`);
     console.log(t.texto);
