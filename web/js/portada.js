@@ -228,11 +228,21 @@ const PRIVACIDAD = [
 const ENLACES = [['guias/', 'Guías'], ['quienes-somos.html', 'Quiénes somos'], ['contacto.html', 'Contacto'], ['privacidad.html', 'Privacidad'], ['instalar.html', 'Instalar']];
 const APK = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk';
 
+/** las guías que salen en la portada (todas, en guias/): [archivo, icono, título, de qué va] */
+const GUIAS = [
+  ['clausulas-laliga-fantasy.html', 'candado', 'Cláusulas', 'Cuándo sube sola, los 14 días de protección y el cierre de 24 h.'],
+  ['blindar-jugador-clausula.html', 'escudo', 'Blindar', 'Cuánto cuesta subir la cláusula y hasta dónde compensa.'],
+  ['cuando-clausular.html', 'diana', 'Cuándo clausular', 'Lo que pagas de más, lo que sube y lo que te deja en caja.'],
+  ['cuanto-pujar.html', 'euro', 'Cuánto pujar', 'Pujas a ciegas, margen de deuda y cómo pujan tus rivales.'],
+  ['cuando-vender.html', 'baja', 'Cuándo vender', 'A LaLiga o a un rival, y cuándo esperar un día más.'],
+  ['valor-de-mercado.html', 'grafico', 'Valor de mercado', 'A qué hora cambia, qué lo mueve y cómo leer una racha.'],
+];
+
 /** la cabecera de cada sección: a la izquierda lo que es y el título, a la derecha (en el ordenador) la entradilla */
 const seccion = (id, kicker, titulo, cuerpo, intro = '', clase = '') => `<section class="ps ${clase}" id="${id}" aria-labelledby="${id}T">
   <header class="ps-c rv"><div><div class="ps-k">${kicker}</div><h2 id="${id}T">${titulo}</h2></div>${intro ? `<p class="ps-i">${intro}</p>` : ''}</header>${cuerpo}</section>`;
 
-const MENU = [['pAsi', 'Cómo funciona'], ['pOnce', 'Tu once'], ['pDentro', 'Qué hace'], ['pDecide', 'Así decide'], ['pCalc', 'Calculadoras'], ['pFaq', 'Preguntas']];
+const MENU = [['pAsi', 'Cómo funciona'], ['pOnce', 'Tu once'], ['pDentro', 'Qué hace'], ['pDecide', 'Así decide'], ['pCalc', 'Calculadoras'], ['pGuias', 'Guías'], ['pFaq', 'Preguntas']];
 
 /** «Cómo funciona»: en el ordenador, el móvil se queda quieto a la derecha y cambia de pantalla según bajas; en el
     móvil, uno detrás de otro deslizando de lado */
@@ -242,17 +252,18 @@ function comoFunciona() {
       <span class="ph-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${x}</p>
       <ul>${det.map((d) => `<li>${icono('ok')}${esc(d)}</li>`).join('')}</ul></article>`).join('');
   const pantallas = PIES.map(([a, p], i) => `<div class="ph-pant${i === 0 ? ' on' : ''}" data-pant="${i}">${movil(a, p)}</div>`).join('');
-  return `<div class="ph-g"><div class="ph-pasos">${pasos}</div>
+  return `<div class="ph-g"><p class="ph-desliza" aria-hidden="true">Desliza para ver los 3 pasos${icono('flecha')}</p><div class="ph-pasos">${pasos}</div>
+    <div class="ph-puntos ph-puntos-m">${PIES.map((x, i) => `<button type="button" data-ir-paso="${i}" aria-label="Paso ${i + 1}"${i === 0 ? ' class="on"' : ''}></button>`).join('')}</div>
     <div class="ph-fijo" aria-hidden="true"><div class="ph-marco">${pantallas}</div><div class="ph-puntos">${PIES.map((x, i) => `<i${i === 0 ? ' class="on"' : ''}></i>`).join('')}</div></div></div>`;
 }
 
 /** todo lo que va debajo de la entrada */
 export function seccionMoviles() {
   return `<div class="portada-m">
-  <a class="pt-baja" href="#pAsi">Mira cómo funciona${icono('abajo')}</a>
+  <div class="pt-baja"><a class="pt-baja-a" href="#pAsi"><span>Mira cómo funciona</span>${icono('abajo')}</a><a class="pt-baja-g" href="#pGuias">${icono('nota')}<span>Guías del juego</span></a></div>
   <div class="pt-bar" aria-hidden="true"><div class="pt-in">
     <a class="pt-marca" href="#" data-arriba>${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
-    <nav class="pt-menu">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
+    <nav class="pt-menu" aria-label="Secciones">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
     <a class="btn pt-cta" href="${APK}" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
 
   ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Las tres pantallas que vas a abrir cada día.', 'ph')}
@@ -273,6 +284,10 @@ export function seccionMoviles() {
   ${seccion('pCalc', 'Haz tus cuentas', 'Calculadoras', `<div class="pk-chips rv" role="tablist"><button role="tab" data-calc="blindaje" aria-selected="true">¿Cuánto blindo?</button><button role="tab" data-calc="gastar" aria-selected="false">¿Cuánto puedo gastar?</button></div>
     <div class="pk rv" data-tipo="blindaje"><div class="pk-in">${CALC.blindaje()}</div><div class="pk-r" aria-live="polite"></div></div>`,
     'Las mismas cuentas que hace la app con tu liga. Mueve los números y mira qué cambia.')}
+
+  ${seccion('pGuias', 'Aprende', 'Guías del juego', `<div class="pg">${GUIAS.map(([h, ic, t, x], i) => `<a class="pg-c rv" href="guias/${h}"><span class="pg-ic">${icono(ic)}</span><span class="pg-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${esc(x)}</p><span class="pg-ir">Leer la guía${icono('flecha')}</span></a>`).join('')}</div>
+    <div class="pg-todas rv"><a class="btn sec" href="guias/">${icono('lista')}Ver las 13 guías</a><span>También: saldo negativo, alineación, ganar dinero, lesionados, empezar una liga y glosario.</span></div>`,
+    'Cómo funcionan las cláusulas, el mercado y el dinero de LaLiga Fantasy, explicado con números. Gratis y sin entrar.')}
 
   ${seccion('pFaq', 'Dudas', 'Preguntas frecuentes', `<div class="pq">${PREGUNTAS.map(([p, r]) => `<details class="rv"><summary>${esc(p)}</summary><p>${esc(r)}</p></details>`).join('')}</div>`)}
 
@@ -342,7 +357,8 @@ export function activarPortada() {
   const barra = raiz.querySelector('.pt-bar'), prog = raiz.querySelector('.pt-prog');
   const entrada = portada.querySelector('.pantalla');
   const secciones = MENU.map(([id]) => raiz.querySelector(`#${id}`)).filter(Boolean);
-  let pedido = false;
+  const menu = barra.querySelector('.pt-menu');
+  let pedido = false, ultimaSec = null;
   const alBajar = () => {
     pedido = false;
     // (fuera de la portada, al entrar en la app, se deja de escuchar)
@@ -356,6 +372,11 @@ export function activarPortada() {
     let actual = '';
     for (const s of secciones) if (s.getBoundingClientRect().top < innerHeight * 0.4) actual = s.id;
     barra.querySelectorAll('[data-ir-a]').forEach((a) => a.classList.toggle('on', a.dataset.irA === actual));
+    if (actual !== ultimaSec) {
+      ultimaSec = actual;
+      const a = actual && menu.querySelector(`[data-ir-a="${actual}"]`);
+      if (a && menu.scrollWidth > menu.clientWidth) menu.scrollTo({ left: a.offsetLeft - (menu.clientWidth - a.offsetWidth) / 2, behavior: sinMovimiento() ? 'auto' : 'smooth' });
+    }
   };
   escuchar(window, 'scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(alBajar); } }, { passive: true });
   alBajar();
@@ -364,7 +385,7 @@ export function activarPortada() {
     ev.preventDefault();
     const id = a.getAttribute('href').slice(1);
     const el = id && raiz.querySelector(`#${id}`);
-    const top = el ? el.getBoundingClientRect().top + scrollY - 64 : 0;
+    const top = el ? el.getBoundingClientRect().top + scrollY - (barra.offsetHeight || 56) - 8 : 0;
     scrollTo({ top, behavior: sinMovimiento() ? 'auto' : 'smooth' });
   }));
 
@@ -376,6 +397,21 @@ export function activarPortada() {
     pantallas.forEach((p, k) => { p.classList.toggle('on', k === i); p.classList.toggle('antes', k < i); });
     puntos.forEach((p, k) => p.classList.toggle('on', k === i));
   };
+  const carril = raiz.querySelector('.ph-pasos'), puntosM = [...raiz.querySelectorAll('.ph-puntos-m button')];
+  const deLado = () => carril && carril.scrollWidth > carril.clientWidth + 4;
+  if (carril) {
+    escuchar(carril, 'scroll', () => {
+      if (!deLado()) return;
+      const ancho = pasos[1] ? pasos[1].offsetLeft - pasos[0].offsetLeft : carril.clientWidth;
+      const i = Math.max(0, Math.min(pasos.length - 1, Math.round(carril.scrollLeft / ancho)));
+      puntosM.forEach((p, k) => p.classList.toggle('on', k === i));
+      if (i > 0) raiz.querySelector('.ph-desliza')?.classList.add('visto');
+    }, { passive: true });
+    puntosM.forEach((b) => escuchar(b, 'click', () => {
+      const p = pasos[+b.dataset.irPaso];
+      if (p) carril.scrollTo({ left: p.offsetLeft - (carril.clientWidth - p.offsetWidth) / 2, behavior: sinMovimiento() ? 'auto' : 'smooth' });
+    }));
+  }
   if (hayIO) {
     const centro = observar((es) => es.forEach((e) => { if (e.isIntersecting) ponerPaso(+e.target.dataset.paso); }), { rootMargin: '-45% 0px -45% 0px' });
     pasos.forEach((p) => centro.observe(p));

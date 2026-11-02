@@ -16,7 +16,8 @@ export const NOVEDADES = [
   {
     v: '0.6.11g', f: '2026-11-02', h: '22:30', t: 'Guías para jugar mejor',
     cosas: [
-      { para: 'web', tipo: 'nuevo', d: 'periodico', t: '13 guías de LaLiga Fantasy', x: 'En la web hay guías con números sobre cláusulas, blindajes, cuándo clausular, valor de mercado, pujas, ventas, saldo negativo, alineación, ganar dinero, lesionados, empezar una liga, un glosario y preguntas frecuentes. Se llega desde el pie de la portada.' },
+      { para: 'web', tipo: 'nuevo', d: 'periodico', t: '13 guías de LaLiga Fantasy', x: 'En la web hay guías con números sobre cláusulas, blindajes, cuándo clausular, valor de mercado, pujas, ventas, saldo negativo, alineación, ganar dinero, lesionados, empezar una liga, un glosario y preguntas frecuentes. Se llega desde la entrada («Guías del juego»), desde su sección en la portada y desde el menú de arriba, y al final de cada guía salen las tres siguientes.' },
+      { para: 'web', tipo: 'mejora', d: 'tarjeta', t: 'La portada, más fácil de recorrer', x: 'Debajo de la entrada, dos botones grandes: «Mira cómo funciona» y «Guías del juego». En el móvil, la barra de arriba lleva también el menú de secciones, que se desliza de lado y sigue la sección en la que estás, y «Cómo funciona» avisa de que se desliza y tiene puntos para saltar de paso.' },
       { para: 'dueño', tipo: 'mejora', d: 'ajustes', t: 'Guías publicadas', x: 'Las 13 guías escritas salen del borrador (index, sitemap y menú de las páginas públicas). La de puntos sigue en borrador: falta la tabla de puntos de esta temporada comprobada.' },
     ],
   },

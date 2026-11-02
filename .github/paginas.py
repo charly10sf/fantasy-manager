@@ -108,6 +108,19 @@ def datos_estructurados(p, url):
     return f'\n  <script type="application/ld+json">{json.dumps(d, ensure_ascii=False)}</script>'
 
 
+GUIAS_PUB = []  # las guías publicadas, en orden (la rellena main)
+
+
+def mas_guias(p):
+    """al final de cada guía publicada, las tres siguientes (dando la vuelta), para seguir leyendo"""
+    if p['tipo'] != 'guia' or p['ruta'] == 'guias/index.html' or not publicada(p) or len(GUIAS_PUB) < 2:
+        return ''
+    i = next((k for k, g in enumerate(GUIAS_PUB) if g['ruta'] == p['ruta']), -1)
+    sig = [GUIAS_PUB[(i + k) % len(GUIAS_PUB)] for k in range(1, min(4, len(GUIAS_PUB)))]
+    filas = ''.join(f'<li><a href="{g["ruta"].split("/", 1)[1]}"><b>{e(g["h1"])}</b><span>{e(g["descripcion"])}</span></a></li>' for g in sig)
+    return f'\n  <nav class="mas-guias" aria-label="Más guías"><h2>Sigue leyendo</h2><ul class="lista-guias">{filas}</ul><p><a href="./">Todas las guías</a></p></nav>'
+
+
 def pagina(p, contenido, hay_guias):
     raiz = '../' * p['ruta'].count('/')
     url = DOMINIO + (p['ruta'][:-len('index.html')] if p['ruta'].endswith('index.html') else p['ruta'])
@@ -146,7 +159,7 @@ def pagina(p, contenido, hay_guias):
 <main>{migas_linea}
 {INICIO}
 {contenido}
-{FIN}{fecha}{pie_guia}
+{FIN}{fecha}{mas_guias(p)}{pie_guia}
 </main>
 {pie(raiz, hay_guias)}
 </body>
@@ -172,6 +185,7 @@ def main():
     with open(os.path.join(RAIZ, '.github', 'paginas.json'), encoding='utf-8') as f:
         paginas = json.load(f)['paginas']
     guias = [p for p in paginas if p['tipo'] == 'guia' and publicada(p)]
+    GUIAS_PUB[:] = guias
     hay_guias = bool(guias)
     hoy = max((p['fecha'] for p in guias), default='2026-11-02')
     indice = {'ruta': 'guias/index.html', 'tipo': 'guia', 'h1': 'Guías de LaLiga Fantasy',

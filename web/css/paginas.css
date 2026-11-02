@@ -64,3 +64,6 @@ th { color: var(--texto); font-weight: 600; }
   h1 { font-size: 52px; }
   main { padding-top: 30px; }
 }
+/* al final de cada guía: las siguientes, para seguir leyendo */
+.mas-guias { margin-top: 40px; }
+.mas-guias h2 { margin-top: 0; }
