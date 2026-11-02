@@ -1,0 +1,24 @@
+name: Previa prueba
+on:
+  push:
+    branches: [pruebas-previa]
+permissions:
+  contents: read
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: simulacro
+        run: |
+          mkdir -p salida
+          node bot/ejecutar.mjs --modo=simulacro --tipos=previa --previa-acabados=1 --tarjetas=1 --salida-tarjetas=salida > salida/a.txt 2>&1 || true
+          node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=resumen --ventanas=0 --tarjetas=1 --salida-tarjetas=salida > salida/b.txt 2>&1 || true
+          cat salida/a.txt salida/b.txt | sed 's/^/@@ /'
+          ls salida | sed 's/^/@@F /'
+          for f in salida/resumen-11-mejores.png $(ls salida/previa-*.png | head -1) $(ls salida/onces-*.png | head -1); do [ -f "$f" ] && echo "@@B64 $(basename $f) $(base64 -w0 $f)"; done
