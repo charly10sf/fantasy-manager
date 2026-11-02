@@ -30,31 +30,37 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const yaConf = registro && registro.claves.has(`onces|${m.id}`), yaPos = registro && registro.claves.has(`previa|${m.id}`);
       if (!(quiereConf && !yaConf) && !(quierePos && !yaPos)) continue;
       const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
-      const probs = { L: await probabilidades(m.local.id, jugadores, jornada - 1), V: await probabilidades(m.visitor.id, jugadores, jornada - 1) };
-      const pos = { L: elegirOnce(probs.L), V: elegirOnce(probs.V) };
-      if (!pos.L || !pos.V) { log(`  (previa) ${L}-${V}: sin datos para el once`); continue; }
       const sem = `previa${m.id}`;
-      // --- onces confirmados (ESPN) ---
+      // las alineaciones de ESPN, primero: si aún no están y no toca la previa, no se piden las fichas de nadie
+      let rl = null, rv = null;
+      const tit = (r) => (r && r.roster ? r.roster.filter((x) => x.starter) : []);
       if (quiereConf && !yaConf) {
         const e = await partidoEspn(m, diaMadrid(saque)).catch(() => null);
         const sum = e ? await json(`${ESPN}/summary?event=${e.ev.id}`).catch(() => null) : null;
         const ros = sum && sum.rosters ? sum.rosters : [];
-        const lado = (ha) => ros.find((r) => r.homeAway === ha);
-        const tit = (r) => (r && r.roster ? r.roster.filter((x) => x.starter) : []);
-        const rl = lado('home'), rv = lado('away');
-        if (tit(rl).length === 11 && tit(rv).length === 11) {
+        rl = ros.find((r) => r.homeAway === 'home'); rv = ros.find((r) => r.homeAway === 'away');
+      }
+      const hayConf = tit(rl).length === 11 && tit(rv).length === 11;
+      if (!hayConf && !(quierePos && !yaPos)) { if (quiereConf && !yaConf) log(`  (previa) ${L}-${V}: ESPN aún no tiene las alineaciones`); continue; }
+      const probs = { L: await probabilidades(m.local.id, jugadores, jornada - 1), V: await probabilidades(m.visitor.id, jugadores, jornada - 1) };
+      const pos = { L: elegirOnce(probs.L), V: elegirOnce(probs.V) };
+      if (!pos.L || !pos.V) { log(`  (previa) ${L}-${V}: sin datos para el once`); continue; }
+      // --- onces confirmados (ESPN) ---
+      if (hayConf) {
           const conf = {};
           const palabras = [];
           for (const [k, r, eqId] of [['L', rl, m.local.id], ['V', rv, m.visitor.id]]) {
-            const plantilla = { players: jugadores.filter((j) => String(j.teamId) === String(eqId)).map((j) => ({ ...j, name: j.nickname })) };
+            const plantilla = { players: jugadores.filter((j) => String(j.teamId) === String(eqId) && Number(j.positionId) >= 1 && Number(j.positionId) <= 4).map((j) => ({ ...j, name: j.nickname })) };
             const once = tit(r).map((x) => {
               const nom = x.athlete && x.athlete.displayName;
               const p = casarJugador(nom, plantilla);
               palabras.push(nom);
-              return { id: p ? p.id : null, nombre: p ? p.nickname : nom, pos: p ? ({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' })[p.positionId] : POS_ESPN((x.position && x.position.abbreviation) || ''), pct: null, duda: false };
+              return { id: p ? p.id : null, nombre: p ? p.nickname : nom, pos: (p && ({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' })[p.positionId]) || POS_ESPN((x.position && x.position.abbreviation) || ''), pct: null, duda: false };
             }).sort((a, b) => ORDEN[a.pos] - ORDEN[b.pos]);
             const dentro = new Set(once.map((x) => String(x.id)));
-            const fuera = Object.values(probs[k]).filter((x) => x.p >= 0.7 && !dentro.has(String(x.id))).sort((a, b) => b.p - a.p);
+            // si alguno de los 11 de ESPN no casa con LaLiga, no se dice quién se queda fuera (podría ser ese mismo con otro nombre)
+            const todosCasan = once.every((x) => x.id);
+            const fuera = todosCasan ? Object.values(probs[k]).filter((x) => x.p >= 0.7 && !dentro.has(String(x.id))).sort((a, b) => b.p - a.p) : [];
             const sorpresa = once.filter((x) => x.id && probs[k][x.id] && probs[k][x.id].p < 0.4);
             conf[k] = { once, formacion: r.formation || '', fuera, sorpresa };
           }
@@ -76,7 +82,6 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
               d: { jornada, confirmados: true, local: { nombre: m.local.mainName, corto: L, escudoUrl: m.local.badgeColor, formacion: conf.L.formacion, once: conf.L.once }, visitante: { nombre: m.visitor.mainName, corto: V, escudoUrl: m.visitor.badgeColor, formacion: conf.V.formacion, once: conf.V.once } },
               permitidos: { numeros: [jornada, ...fm(conf.L.formacion), ...fm(conf.V.formacion)].map(String), palabras: [L, V, m.local.mainName, m.visitor.mainName, ...conf.L.once.map((x) => x.nombre), ...conf.V.once.map((x) => x.nombre), ...palabras] } } });
           if (usadas.length) continue;
-        } else if (!quierePos || yaPos) { log(`  (previa) ${L}-${V}: ESPN aún no tiene las alineaciones`); continue; }
       }
       // --- posibles onces ---
       if (!(quierePos && !yaPos)) continue;
@@ -84,7 +89,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         once: pos[k].once.map((x) => ({ id: x.id, nombre: x.nombre, pos: x.pos, pct: pct(x.p), duda: x.duda })) });
       const d = { jornada, confirmados: false, local: lado('L', m.local), visitante: lado('V', m.visitor) };
       // el texto: las dudas del once (titulares con menos del 65 %) y las bajas de titulares habituales
-      const dudas = [...pos.L.once.map((x) => ({ ...x, eq: L })), ...pos.V.once.map((x) => ({ ...x, eq: V }))].filter((x) => x.p < 0.65).sort((a, b) => a.p - b.p).slice(0, 3);
+      const dudas = [...pos.L.once.map((x) => ({ ...x, eq: L })), ...pos.V.once.map((x) => ({ ...x, eq: V }))].filter((x) => x.p < 0.65 && x.p >= 0.1).sort((a, b) => a.p - b.p).slice(0, 3);
       const bajas = [...Object.values(probs.L).map((x) => ({ ...x, eq: L })), ...Object.values(probs.V).map((x) => ({ ...x, eq: V }))].filter((x) => (x.estado === 'injured' || x.estado === 'suspended')).slice(0, 4);
       const cab = `🗓️ Posibles onces · ${L} vs ${V}`;
       const lin = [];

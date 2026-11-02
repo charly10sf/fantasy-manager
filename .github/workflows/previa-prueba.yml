@@ -17,8 +17,8 @@ jobs:
       - name: simulacro
         run: |
           mkdir -p salida
-          node bot/ejecutar.mjs --modo=simulacro --tipos=previa --previa-acabados=1 --tarjetas=1 --salida-tarjetas=salida > salida/a.txt 2>&1 || true
+          node bot/ejecutar.mjs --modo=simulacro --tipos=previa --previa-acabados=1 --forzar=1 --tarjetas=1 --salida-tarjetas=salida > salida/a.txt 2>&1 || true
           node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=resumen --ventanas=0 --tarjetas=1 --salida-tarjetas=salida > salida/b.txt 2>&1 || true
           cat salida/a.txt salida/b.txt | sed 's/^/@@ /'
           ls salida | sed 's/^/@@F /'
-          for f in salida/resumen-11-mejores.png $(ls salida/previa-*.png | head -1) $(ls salida/onces-*.png | head -1); do [ -f "$f" ] && echo "@@B64 $(basename $f) $(base64 -w0 $f)"; done
+          for f in resumen-11-mejores previa-113 onces-104; do [ -f salida/$f.png ] && base64 -w 6000 salida/$f.png | awk -v n=$f '{print "@@C " n " " NR " " $0}'; done
