@@ -1,9 +1,10 @@
 {
   "umbralCaida": 0.5,
-  "topes": { "resumen": 2, "final": 10, "mvp": 10, "caidas": 9, "directo": 40 },
+  "topes": { "resumen": 2, "final": 10, "mvp": 10, "caidas": 9, "directo": 40, "mercado": 16 },
   "topeDiario": 40,
   "maxPorEjecucion": 6,
   "ventanaFinalHoras": 10,
+  "daznEsperaHoras": 6,
   "horasCaidas": [9, 21],
   "tweetMax": 280,
   "hashtag": "",

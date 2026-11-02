@@ -1,13 +1,15 @@
 // Mejores y peores de la jornada, con los puntos oficiales de LaLiga Fantasy (weekPoints de stats/week/{n}).
-import { cierre, quepa, armar, corto, elegir } from '../lib/texto.mjs';
+import { quepa, armar, corto, elegir } from '../lib/texto.mjs';
 
 const MEDALLA = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣'];
 
-export async function generar({ stats, jornada, completo = true }) {
+export async function generar({ stats, jornada, completo = true, dazn = null }) {
   const acabados = stats.filter((m) => m.matchState === 7);
   if (!acabados.length) return [];
   // publicando, solo cuando la jornada ha acabado (nada de «provisional»)
   if (!completo && acabados.length < stats.length) return [];
+  // con la jornada entera, todos sus partidos tienen que tener ya los puntos DAZN (si no, los de los últimos irían cortos)
+  if (dazn && completo) for (const m of acabados) if (!(await dazn(m)).listo) return [];
   const filas = [];
   for (const m of acabados) for (const lado of [m.local, m.visitor]) for (const p of lado.players || []) {
     if (p.weekPoints == null) continue;
@@ -25,8 +27,8 @@ export async function generar({ stats, jornada, completo = true }) {
     const cab = clave === 'mejores'
       ? elegir([`🏆 LaLiga Fantasy J${jornada} · Estos son los que la han petado${prov}`, `🔥 LaLiga Fantasy J${jornada} · El top de la jornada${prov}`, `🏆 LaLiga Fantasy J${jornada} · Los reyes de la jornada${prov}`], `cab${jornada}`)
       : elegir([`📉 LaLiga Fantasy J${jornada} · Los números rojos de la jornada${prov}`, `😬 LaLiga Fantasy J${jornada} · Los que más sufrieron${prov}`], `cab${jornada}`);
-    const pie = cierre(`${clave}${jornada}`);
-    const lineas = ord.map((f, i) => `${MEDALLA[i]} ${f.nombre} (${f.equipo}) · ${f.pts} pts`);
+    const pie = null;   // sin cierre: la cabecera ya lleva «LaLiga Fantasy» (Carlos, 2 nov 23:11)
+    const lineas = ord.map((f, i) => `${clave === 'peores' ? '🔻' : MEDALLA[i]} ${f.nombre} (${f.equipo}) · ${f.pts} pts`);
     const num = [jornada, acabados.length, stats.length, faltan, ...ord.map((f) => f.pts)];
     // el comentario: si un equipo pone a 3 o más de los que salen, lo decimos
     // (se prueba con todas las filas y se va quitando la última hasta que quepa con el comentario)

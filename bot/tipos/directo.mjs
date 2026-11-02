@@ -1,9 +1,10 @@
 // Directo: goles (con asistente), rojas y penaltis fallados de ESPN (con minuto) casados con los puntos oficiales de LaLiga.
 // Sin ventanas repite los partidos ya jugados de los días de fechasEspn (para probar); con ventanas, los de hoy en juego o recién acabados.
 import { json } from '../lib/http.mjs';
-import { cierre, norm, corto, armar, fmt, partes } from '../lib/texto.mjs';
+import { norm, corto, fmt, partes, elegir, el, del, al, sinCierre } from '../lib/texto.mjs';
+import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
 
-const ESPN = 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
+const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
 const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la', 'del', 'el', 'y', 'sd', 'ad']);
 const fichas = (s) => new Set(norm(s).split(' ').filter((t) => t && !VACIAS.has(t)));
 const comparten = (a, b) => { const A = fichas(a), B = fichas(b); for (const t of A) if (B.has(t)) return true; return false; };
@@ -37,10 +38,10 @@ export function disparadores(detalles) {
     const min = (d.clock && d.clock.displayValue) || '';
     if (d.scoringPlay && !d.ownGoal) {
       const n = (goles.get(a.displayName) || 0) + 1; goles.set(a.displayName, n);
-      out.push({ clase: n === 2 ? 'doblete' : n === 3 ? 'triplete' : 'gol', n, jugador: a.displayName, min, equipo: d.team && d.team.id, penalti: !!d.penaltyKick,
+      out.push({ ref: d, clase: n === 2 ? 'doblete' : n === 3 ? 'triplete' : 'gol', n, jugador: a.displayName, min, equipo: d.team && d.team.id, penalti: !!d.penaltyKick,
         asistente: (d.athletesInvolved[1] && d.athletesInvolved[1].displayName) || null });
-    } else if (d.redCard) out.push({ clase: 'roja', jugador: a.displayName, min, equipo: d.team && d.team.id });
-    else if (d.penaltyKick && !d.scoringPlay) out.push({ clase: 'penalti fallado', jugador: a.displayName, min, equipo: d.team && d.team.id });
+    } else if (d.redCard) out.push({ ref: d, clase: 'roja', jugador: a.displayName, min, equipo: d.team && d.team.id });
+    else if (d.penaltyKick && !d.scoringPlay) out.push({ ref: d, clase: 'penalti fallado', jugador: a.displayName, min, equipo: d.team && d.team.id });
   }
   return out;
 }
@@ -59,11 +60,30 @@ async function asistencias(evId) {
   return m;
 }
 
+// Cómo se dice lo que ha supuesto cada gol (la situación sale del marcador de ese momento, no del actual).
+const VERBO = { abre: 'abre el marcador', empata: 'empata el partido', adelanta: 'pone por delante a los suyos', voltea: 'da la vuelta al partido',
+  recorta: 'recorta distancias', amplia: 'amplía la ventaja', sentencia: 'sentencia el partido' };
+function fraseGol(sit, n, eq, semilla) {
+  const E = { el: el(eq), del: del(eq), al: al(eq) };
+  const v = {
+    abre: [`${n} abre el marcador para ${E.el}.`, `${n} marca primero y adelanta ${E.al}.`, `Gol de ${n}: ${E.el} se pone por delante.`],
+    empata: [`${n} empata el partido para ${E.el}.`, `${n} iguala el marcador.`, `Empata ${E.el} con gol de ${n}.`],
+    adelanta: [`${n} pone por delante ${E.al}.`, `${n} adelanta ${E.al}.`, `Gol de ${n} y ${E.el} se pone por delante.`],
+    voltea: [`${n} da la vuelta al partido para ${E.el}.`, `Remontada ${E.del}: ${n} lo pone por delante.`, `${n} completa la remontada ${E.del}.`],
+    recorta: [`${n} recorta distancias para ${E.el}.`, `Gol de ${n}: ${E.el} no se rinde.`, `${n} le mete un gol más al partido.`],
+    amplia: [`${n} amplía la ventaja ${E.del}.`, `${n} pone tierra de por medio para ${E.el}.`, `Otro gol para ${E.el}, de ${n}.`],
+    sentencia: [`${n} sentencia el partido para ${E.el}.`, `${n} redondea la goleada ${E.del}.`, `Goleada ${E.del}: ${n} marca otro.`],
+  }[sit];
+  return elegir(v, semilla);
+}
+
 /**
  * ventanas: en directo solo los partidos en juego o empezados hace menos de 3 h (al activar no se sueltan goles viejos).
  * fechasEspn: días del marcador de ESPN (AAAAMMDD); con ventanas, hoy en Madrid.
+ * Cada tweet lleva el marcador del momento de la jugada (reconstruido de ESPN), una frase de cómo ha sido, y las tarjetas de los
+ * jugadores implicados (goleador y asistente, el expulsado, el que falla el penalti) en `tarjetas`.
  */
-export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDirecto = 0, ahora = Date.now() }) {
+export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDirecto = 0, ahora = Date.now(), dazn = null }) {
   const porId = new Map((jugadores || []).map((j) => [String(j.id), j]));
   const out = [];
   for (const f of fechasEspn) {
@@ -77,49 +97,89 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       const m = stats.find((x) => comparten(x.local.mainName, casa.team.displayName) && comparten(x.visitor.mainName, fuera.team.displayName));
       if (!m) { console.log(`  (directo) sin casar ${ev.shortName} con LaLiga`); continue; }
       const dsps = disparadores(c.details || []);
+      // con el partido ya acabado, los puntos solo valen cuando están los DAZN: antes, los tweets esperan (los de durante el partido ya salieron)
+      if (st.state === 'post' && dsps.length && dazn && !(await dazn(m)).listo) { console.log(`  (directo) ${ev.shortName}: acabado, espero a los puntos DAZN para sus ${dsps.length} tweets`); continue; }
       console.log(`  (directo) ${ev.shortName} · ${st.state === 'in' ? `en juego, ${(ev.status.displayClock || '')}` : 'acabado'} · ${casa.score}-${fuera.score} · ${dsps.length} cosas que contar`);
       const asis = dsps.some((d) => d.n && !d.asistente) ? await asistencias(ev.id) : {};
       // el marcador de ESPN, que va al momento (el de LaLiga puede ir por detrás)
       const gl = Number(casa.score), gv = Number(fuera.score);
-      const marcador = `${corto(m.local.mainName)} ${gl}-${gv} ${corto(m.visitor.mainName)}`;
-      const acabado = st.state === 'post';
+      const rel = reconstruir(c.details || [], casa.team.id, fuera.team.id, gl, gv);
+      if (!rel.ok && dsps.length) console.log(`  (directo) ${ev.shortName}: la secuencia de ESPN no cuadra con ${gl}-${gv}; escribo sin relato`);
       for (const dsp of dsps) {
-        const lado = String(dsp.equipo) === String(casa.team.id) ? m.local : String(dsp.equipo) === String(fuera.team.id) ? m.visitor : null;
+        const esCasa = String(dsp.equipo) === String(casa.team.id);
+        const lado = esCasa ? m.local : String(dsp.equipo) === String(fuera.team.id) ? m.visitor : null;
         if (!lado) continue;
         const p = casarJugador(dsp.jugador, lado);
         const nombre = p ? p.nickname || p.name : dsp.jugador;
         // los puntos solo si LaLiga ya los ha movido (un gol nunca deja 0 o menos: si sale eso, aún no se han actualizado)
         let pts = p && p.weekPoints != null ? Number(p.weekPoints) : null;
         if (dsp.n && pts != null && pts <= 0) pts = null;
-        const min = parseInt(dsp.min, 10) || 0;
+        const mn = minutoDe(dsp.ref);
+        const minTxt = mn.extra ? `${mn.min}+${mn.extra}'` : `${mn.min}'`;
         const media = p && porId.get(String(p.id)) ? Number(porId.get(String(p.id)).averagePoints) || 0 : 0;
         const equipo = corto(lado.mainName);
-        const num = [jornada, min, gl, gv];
-        let cab;
-        const lineas = [`${marcador}${acabado ? ' (final)' : ''} · LaLiga Fantasy J${jornada}`];
-        if (dsp.clase === 'roja') cab = `🟥 ¡Roja para ${nombre} (${equipo}) en el ${min}'!`;
-        else if (dsp.clase === 'penalti fallado') cab = `❌ ¡${nombre} (${equipo}) falla un penalti en el ${min}'!`;
-        else {
-          const que = dsp.clase === 'doblete' ? 'DOBLETE' : dsp.clase === 'triplete' ? 'TRIPLETE' : 'Gol';
-          cab = `${'⚽'.repeat(Math.min(dsp.n, 3))} ¡${que} de ${nombre} (${equipo})${dsp.penalti ? ' de penalti' : ''}! ${min}'`;
+        // marcador en el momento de la jugada (si la secuencia cuadra) o el actual de ESPN
+        const mom = rel.ok && rel.tras.get(dsp.ref);
+        const [sl, sv] = mom ? mom.marcador : [gl, gv];
+        const mar = `${corto(m.local.mainName)} ${sl}-${sv} ${corto(m.visitor.mainName)}`;
+        const [propio, rival] = esCasa ? [sl, sv] : [sv, sl];
+        const num = [mn.min, mn.extra, sl, sv, propio, rival].filter((x) => x != null);
+        const sem = `directo${m.id}${dsp.jugador}${dsp.clase}${dsp.n || ''}`;
+        const tarjetas = [];
+        let cab, cuerpo = [];
+        const puntos = (nom, valor, conMedia) => {
+          num.push(valor);
+          const sobre = conMedia && media >= 3 && valor >= 1.5 * media;
+          if (sobre) num.push(...partes(media));
+          if (valor <= 0) return `Para ${nom}, ${valor} puntos fantasy de momento.`;
+          return `${elegir([`${nom} ya suma ${valor} puntos fantasy`, `${valor} puntos fantasy ya para ${nom}`, `Eso son ${valor} puntos fantasy para ${nom} de momento`], sem + 'p')}${sobre ? `. Su media es de ${fmt(media)}` : ''}.`;
+        };
+        if (dsp.clase === 'roja') {
+          cab = `🟥 ${mar} · ${minTxt}`;
+          const rojas = (mom && mom.rojas) || 1;
+          const quedan = rojas === 1 ? 'diez' : rojas === 2 ? 'nueve' : null;
+          if (quedan) num.push(rojas === 1 ? 10 : 9);
+          const estado = propio < rival ? ' y encima va perdiendo' : propio > rival ? ', aunque gana el partido' : ' con el partido empatado';
+          cuerpo.push(quedan ? `${nombre} ve la roja y ${el(equipo)} se queda con ${quedan}${estado}.` : `Expulsan a ${nombre} (${equipo}).`);
+          if (pts != null) cuerpo.push(puntos(nombre, pts, false));
+          if (p) tarjetas.push({ jugadorId: p.id, motivo: 'roja' });
+        } else if (dsp.clase === 'penalti fallado') {
+          cab = `❌ ${mar} · ${minTxt}`;
+          const pudo = propio === rival ? 'que habría adelantado a su equipo' : propio < rival ? (rival - propio === 1 ? 'que habría empatado el partido' : 'que habría recortado distancias') : 'que habría ampliado la ventaja';
+          cuerpo.push(`${nombre} (${equipo}) falla un penalti, ${pudo}.`);
+          if (pts != null) cuerpo.push(puntos(nombre, pts, false));
+          if (p) tarjetas.push({ jugadorId: p.id, motivo: 'penalti' });
+        } else {
+          cab = `${'⚽'.repeat(Math.min(dsp.n, 3))} ${mar} · ${minTxt}`;
+          const sit = mom ? situacion(propio, rival, iba_perdiendo(rel, dsp.ref, esCasa)) : null;
+          let frase;
+          if (!sit) frase = `${{ gol: 'Gol', doblete: 'Doblete', triplete: 'Triplete' }[dsp.clase]} de ${nombre} (${equipo})${dsp.penalti ? ' de penalti' : ''}.`;
+          else if (dsp.clase === 'gol') frase = fraseGol(sit, nombre, equipo, sem);
+          else frase = `${dsp.clase === 'doblete' ? 'Doblete' : 'Triplete'} de ${nombre} (${equipo}), que ${VERBO[sit]}.`;
+          if (dsp.penalti && sit) frase += ' Fue de penalti.';
+          if (sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85) frase += mn.min >= 88 ? ' Casi sobre la bocina.' : ' Ya en el tramo final.';
+          else if (sit === 'abre' && mn.min <= 6) frase += ' Apenas habían pasado unos minutos.';
+          cuerpo.push(frase);
+          if (p) tarjetas.push({ jugadorId: p.id, motivo: dsp.clase === 'doblete' ? 'doblete' : dsp.clase === 'triplete' ? 'triplete' : 'gol' });
           const an = dsp.asistente || asis[`${dsp.jugador}|${dsp.min}`] || null;
           if (an) {
             const pa = casarJugador(an, lado);
+            const na = pa ? pa.nickname || pa.name : an;
             const ptsA = pa && pa.weekPoints != null && Number(pa.weekPoints) > 0 ? Number(pa.weekPoints) : null;
-            lineas.push(`🅰️ Asistencia de ${pa ? pa.nickname || pa.name : an}${ptsA != null ? ` (${ptsA} pts)` : ''}.`);
             if (ptsA != null) num.push(ptsA);
+            cuerpo[0] += ' ' + (ptsA != null
+              ? elegir([`Asistencia de ${na}, que ya suma ${ptsA}.`, `El pase, de ${na} (ya lleva ${ptsA}).`], sem + 'a')
+              : elegir([`Asistencia de ${na}.`, `El pase, de ${na}.`, `Lo asistió ${na}.`], sem + 'a'));
+            if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia' });
           }
+          if (pts != null) cuerpo.push(puntos(nombre, pts, true));
         }
-        // la media solo si el partido la supera de verdad (ahora mismo suma 1,5 veces su media o más)
-        const sobre = pts != null && media >= 3 && pts >= 1.5 * media && dsp.n;
-        if (pts != null) {
-          lineas.push(dsp.n ? `📊 ${nombre} ya suma ${pts} pts fantasy${sobre ? `, muy por encima de su media (${fmt(media)})` : ''}.` : `📊 Ahora mismo suma ${pts} pts fantasy.`);
-          num.push(pts); if (sobre) num.push(...partes(media));
-        }
-        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto: armar(cab, lineas, cierre(`directo${m.id}${dsp.jugador}${dsp.n || ''}`)),
-          numeros: num, casado: !!p, minuto: min,
-          // para la tarjeta de jugador (solo dobletes y tripletes, y solo si el jugador casa con LaLiga)
-          partido: m.id, marcador: [gl, gv], jugadorId: p ? p.id : null, motivo: ['doblete', 'triplete'].includes(dsp.clase) ? dsp.clase : null });
+        const { usadas, texto } = sinCierre(cab, cuerpo);
+        if (!usadas.length) continue;
+        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto,
+          numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra,
+          // para las tarjetas de jugador (cada jugador implicado que case con LaLiga) y su marcador del momento
+          partido: m.id, marcador: [sl, sv], tarjetas });
       }
     }
   }
