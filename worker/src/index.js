@@ -386,7 +386,37 @@ async function hola(req, env, c, ruta) {
   return json({ e: 'No existe' }, 404, c);
 }
 
+// El reloj del bot de X: el cron de GitHub Actions no dispara (2 nov, 0 ejecuciones por schedule), así que este Worker,
+// con su cron de wrangler.toml, lanza «Bot X» en main cada 5 min con la API de GitHub. Token de grano fino solo para
+// este repo con Actions: lectura y escritura, en el secreto BOT_DISPATCH_TOKEN (lo pone worker.yml). Sin él, no hace nada.
+// Si ya hay una ejecución en marcha, la nueva espera (concurrency bot-x en bot.yml): no se pisan.
+const BOT_FLUJO = 'https://api.github.com/repos/charly10sf/fantasy-manager/actions/workflows/bot.yml/dispatches';
+
+export async function lanzarBot(env, pedir = fetch) {
+  const token = env.BOT_DISPATCH_TOKEN;
+  if (!token) return { ok: false, motivo: 'sin BOT_DISPATCH_TOKEN' };
+  const r = await pedir(BOT_FLUJO, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'User-Agent': 'fantasy-manager-worker',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ref: 'main' }),
+  });
+  if (r.status === 204) return { ok: true };
+  // el error de GitHub sin el token (no lo lleva, pero por si acaso se corta y se limpia)
+  const texto = (await r.text().catch(() => '')).replaceAll(token, '***').slice(0, 300);
+  throw new Error(`GitHub contestó ${r.status} al lanzar «Bot X»: ${texto}`);
+}
+
 export default {
+  async scheduled(evento, env, ctx) {
+    ctx.waitUntil(lanzarBot(env).then((r) => { if (!r.ok) console.log('Bot X no lanzado:', r.motivo); }));
+  },
+
   async fetch(req, env) {
     const url = new URL(req.url);
     const c = cors(req.headers.get('Origin'));

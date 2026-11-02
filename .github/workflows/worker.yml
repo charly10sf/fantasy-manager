@@ -78,3 +78,23 @@ jobs:
           fi
           url=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' salida.txt | head -1)
           echo "::notice::Worker publicado en ${url:-(sin dirección workers.dev: actívala en Cloudflare > Workers)}"
+      # El reloj del bot de X: el cron del Worker (wrangler.toml) lanza «Bot X» con este token. Se copia en cada publicación
+      # para que un token nuevo en GitHub llegue al Worker sin más; el valor nunca sale en el log.
+      - name: Token del reloj del bot
+        if: steps.cf.outputs.ok == 'si'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BOT_DISPATCH_TOKEN: ${{ secrets.BOT_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$BOT_DISPATCH_TOKEN" ]; then
+            echo "::warning::Sin el secreto BOT_DISPATCH_TOKEN: el cron del Worker no lanza «Bot X»"
+            exit 0
+          fi
+          if printf '%s' "$BOT_DISPATCH_TOKEN" | npx --yes wrangler@4 secret put BOT_DISPATCH_TOKEN > salida.txt 2>&1; then
+            echo "::notice::Reloj del bot listo: el Worker lanza «Bot X» cada 5 min"
+          else
+            echo "::error::No se ha podido guardar BOT_DISPATCH_TOKEN en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
+            exit 1
+          fi

@@ -1,4 +1,5 @@
-# Bot de la cuenta de X (@Fantasyman_app). Corre cada 15 minutos y, según la variable de repositorio BOT_MODO:
+# Bot de la cuenta de X (@Fantasyman_app). Lo lanza cada 5 min el cron del Worker (worker/, BOT_DISPATCH_TOKEN); el schedule de
+# 15 min de aquí queda de respaldo (el de GitHub no disparaba). Según la variable de repositorio BOT_MODO:
 #   (sin ella) o «simulacro»  genera y valida los tweets y los enseña en el resumen de la ejecución; NO publica
 #   «publicar»                publica de verdad (hacen falta los 4 secretos de X) y guarda lo publicado en la rama bot-estado
 #   «parado»                  no hace nada

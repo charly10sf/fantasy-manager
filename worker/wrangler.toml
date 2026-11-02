@@ -12,3 +12,8 @@ workers_dev = true
 # que de verdad es esa cuenta. Si existe el secreto FM_ADMINS, manda el secreto.
 [vars]
 ADMINS = "667015"
+
+# Cada 5 min lanza el workflow «Bot X» en main (scheduled en src/index.js), porque el cron de GitHub Actions no dispara.
+# Necesita el secreto BOT_DISPATCH_TOKEN, que worker.yml copia del secreto de Actions del mismo nombre.
+[triggers]
+crons = ["*/5 * * * *"]
