@@ -66,7 +66,7 @@ def menu(raiz, hay_guias):
     return (f'<header class="cab"><div class="cab-in">'
             f'<a class="marca" href="{raiz or "./"}"><img src="{raiz}img/logo.svg" alt="" width="30" height="30">Fantasy <b>Manager</b></a>'
             f'<nav class="menu" aria-label="Menú">{guias}<a href="{raiz}quienes-somos.html">Quiénes somos</a>'
-            f'<a href="{raiz}contacto.html">Contacto</a><a class="menu-cta" href="{APK}">Bajar la app</a></nav>'
+            f'<a href="{raiz}contacto.html">Contacto</a><a class="menu-cta" href="{APK}">Descargar la app</a></nav>'
             f'</div></header>')
 
 
@@ -74,7 +74,7 @@ def cta(raiz):
     return (f'<aside class="cta" aria-label="La app">'
             f'<p class="cta-t">Fantasy Manager hace estas cuentas por ti con los datos de tu liga</p>'
             f'<p>Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular. Gratis y sin registrarte: entras con tu cuenta de LaLiga.</p>'
-            f'<div class="cta-b"><a class="btn" href="{APK}">Bajar la app para Android</a>'
+            f'<div class="cta-b"><a class="btn" href="{APK}">Descargar la app para Android</a>'
             f'<a class="btn sec" href="{raiz or "./"}">Abrirla en el navegador</a></div>'
             f'<p class="peq">En el navegador puedes verla antes con una liga de ejemplo. <a href="{raiz}instalar.html">Cómo instalarla</a></p>'
             f'</aside>')

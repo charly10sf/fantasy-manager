@@ -1,6 +1,8 @@
 /* La portada (la pantalla de antes de entrar), en la web: una página larga al estilo de toison.es (Carlos, 2 nov: «todo,
    básicamente»), con la idea y no el código. Debajo de la entrada:
-   1. Así se ve: tres móviles dibujados en HTML (pesan unos KB; web/ entera va dentro del APK).
+   0. Una barra arriba que sale al pasar la entrada, con el menú, lo leído y «Descargar la app».
+   1. Cómo funciona: en el ordenador, el móvil se queda fijo y cambia de pantalla según bajas (en el móvil, de lado).
+      Los móviles van dibujados en HTML (pesan unos KB; web/ entera va dentro del APK).
    2. Tu once: el campo con caras y escudos; un toque en un jugador enseña su ficha.
    3. Qué hace por dentro: las funciones, con un interruptor «Juego por diversión / Voy a por la liga».
    4. Así decide: cuatro casos y lo que mira la app en cada uno (las reglas son las de motor.js).
@@ -66,10 +68,14 @@ const CHAT = `
     <ul><li>Entra directo en tu once por Iñigo Vicente: <b>+2,4 pts por jornada</b>.</li><li>Te quedas con <b>2,2 M</b> de saldo y empiezas la jornada en positivo.</li></ul></div>
   <div class="mq-in"><span>Pregunta o cuéntale algo</span><i>${icono('enviar')}</i></div>`;
 
+/** los tres pasos de «Cómo funciona»: [pestaña activa, pantalla, título, texto, detalles] */
 const PIES = [
-  [0, PLAN, 'Qué hacer hoy', 'Vender, clausular y pujar, paso a paso y con el saldo que te queda después de cada operación.'],
-  [2, CLAUSULAS, 'Cláusulas a tiro', 'Las de tus rivales que te llegan y cuándo se abren. Te avisa al minuto cuando se abre una que te interesa.'],
-  [4, CHAT, 'Pregúntale lo que quieras', 'Con una IA gratis que lee lesiones, convocatorias y alineaciones antes de contestar. También con capturas.'],
+  [0, PLAN, 'Qué hacer hoy', 'Abres la app y el plan ya está hecho: vender, clausular y pujar, en orden y con el saldo que te queda después de cada operación.',
+    ['Con la hora límite de cada cosa', 'Lo que ya has hecho se marca solo', 'Compártelo con tu liga como imagen']],
+  [2, CLAUSULAS, 'Cláusulas a tiro', 'Las cláusulas de tus rivales que te llegan con tu dinero y cuándo se abren las que están protegidas.',
+    ['Aviso al minuto cuando se abre una que te interesa', 'Quién puede ir a por las tuyas', 'Lo que suele pagar cada rival']],
+  [4, CHAT, 'Pregúntale lo que quieras', 'Una IA gratis que lee lesiones, convocatorias y alineaciones antes de contestar. También entiende capturas.',
+    ['Conoce tu plantilla y tu dinero', 'La app comprueba sus cuentas', 'Con tu propia clave gratuita']],
 ];
 
 /* ---------- 2. tu once ----------
@@ -90,7 +96,8 @@ const ONCE = [
 ];
 
 function campo() {
-  const lineas = ONCE.map((l) => `<div class="pc-linea">${l.map(([lid, n, eq, pos], i) => `<button class="pc-j" data-pj="${lid}" aria-label="${esc(n)}"${l === ONCE[0] && i === 1 ? ' aria-pressed="true"' : ''}>
+  let k = 0;
+  const lineas = ONCE.map((l) => `<div class="pc-linea">${l.map(([lid, n, eq, pos], i) => `<button class="pc-j" style="--i:${k++}" data-pj="${lid}" aria-label="${esc(n)}"${l === ONCE[0] && i === 1 ? ' aria-pressed="true"' : ''}>
     ${cara(lid, n, eq, pos === 'DEL' ? 'rojo' : pos === 'POR' ? 'oro' : '')}<b>${esc(n)}</b></button>`).join('')}</div>`).join('');
   return `<div class="pc-campo">${lineas}</div>`;
 }
@@ -112,7 +119,7 @@ const FUNCIONES = [
   ['equipo', 'Tu once', 'Te dice quién juega y quién no antes de cerrar la alineación.', 'Probabilidad de ser titular, rival de cada jornada, rotaciones por Europa o Copa y el once confirmado en cuanto sale.'],
   ['ia', 'La IA', 'Le preguntas lo que quieras, como a un amigo que sabe de esto.', 'Lee lesiones, convocatorias y alineaciones antes de contestar, y la app comprueba sus cuentas antes de enseñártelas.'],
 ];
-const funciones = (modo) => FUNCIONES.map(([ic, t, a, b], i) => `<article class="pf-c"><span class="pf-n">${String(i + 1).padStart(2, '0')}</span>${icono(ic)}<h3>${t}</h3><p>${esc(modo === 'liga' ? b : a)}</p></article>`).join('');
+const funciones = (modo, vis = '') => FUNCIONES.map(([ic, t, a, b], i) => `<article class="pf-c rv${vis}"><span class="pf-n">${String(i + 1).padStart(2, '0')}</span>${icono(ic)}<h3>${t}</h3><p>${esc(modo === 'liga' ? b : a)}</p></article>`).join('');
 
 /* ---------- 4. así decide ---------- */
 const CASOS = [
@@ -176,10 +183,28 @@ const CALC = {
   blindaje: () => `${deslizador('v', 'Lo que vale tu jugador', 1, 150, 0.5, 40)}${deslizador('c', 'Su cláusula ahora', 1, 200, 0.5, 44)}${deslizador('r', 'Lo que puede gastar el rival más rico', 0, 250, 0.5, 60)}${deslizador('p', 'Lo más que se paga en tu liga por una cláusula', 5, 100, 5, 50, ' % sobre su valor')}`,
   gastar: () => `${deslizador('s', 'Tu saldo', -20, 150, 0.5, 12)}${deslizador('e', 'Lo que vale tu equipo', 20, 600, 5, 180)}${deslizador('d', 'Margen de deuda de tu liga', 0, 50, 1, 20, ' % del equipo')}${deslizador('u', 'Lo que ya tienes pujado', 0, 100, 0.5, 0)}`,
 };
+/** la regla de la calculadora del blindaje: cada cifra es una marca en la línea y una fila de la leyenda (así los
+    nombres no se pisan cuando dos cifras están cerca) */
+function regla(marcas, tramo) {
+  const max = Math.max(...marcas.map((m) => m[0])) * 1.1 || 1;
+  const pc = (v) => Math.max(0, Math.min(100, (v / max) * 100));
+  return `<div class="pk-regla">${tramo ? `<span class="pk-tramo" style="--a:${pc(tramo[0])}%;--b:${pc(tramo[1])}%"></span>` : ''}
+    ${marcas.map(([v, , cls]) => `<span class="pk-m ${cls}" style="--x:${pc(v)}%"><i></i></span>`).join('')}</div>
+    <div class="pk-ley2">${marcas.map(([v, t, cls]) => `<span class="${cls}"><i></i>${t}<b>${mM(v)}</b></span>`).join('')}</div>`;
+}
 function resultado(tipo, k) {
-  if (tipo === 'blindaje') { const r = blindaje(k.v, k.c, k.r, k.p); return `<b class="${r.ok ? 'verde' : 'rojo'}">${esc(r.txt)}</b>`; }
+  if (tipo === 'blindaje') {
+    const r = blindaje(k.v, k.c, k.r, k.p);
+    const techo = hasta(k.v * (1 + k.p / 100 + 0.05));
+    const marcas = [[k.c, 'Su cláusula ahora', 'gris'], [hasta(k.r), 'Le llega al más rico', 'rojo'], [techo, 'Lo más que se paga en tu liga', 'oro']];
+    if (r.objetivo) marcas.push([r.objetivo, 'Súbela a', 'verde']);
+    return `${regla(marcas, r.objetivo ? [k.c, r.objetivo] : null)}<b class="pk-dice ${r.ok ? 'verde' : 'rojo'}">${esc(r.txt)}</b>`;
+  }
   const g = gastar(k.s, k.e, k.d, k.u);
-  return `<div class="pk-dos"><div><small>Para pujar</small><b class="${g.puja > 0 ? 'verde' : 'rojo'}">${mM(Math.max(0, g.puja))}</b></div><div><small>Para clausular</small><b>${mM(g.clausula)}</b></div></div>
+  const deuda = g.puja - k.s + k.u, total = Math.max(1, Math.max(0, k.s) + deuda);
+  return `<div class="pk-barra"><span class="v" style="--w:${(Math.max(0, k.s) / total) * 100}%"></span><span class="o" style="--w:${(deuda / total) * 100}%"></span>${k.u ? `<span class="u" style="--w:${Math.min(100, (k.u / total) * 100)}%"></span>` : ''}</div>
+    <div class="pk-ley"><span class="v">Saldo</span><span class="o">Margen de deuda</span>${k.u ? '<span class="u">Ya pujado</span>' : ''}</div>
+    <div class="pk-dos"><div><small>Para pujar</small><b class="${g.puja > 0 ? 'verde' : 'rojo'}">${mM(Math.max(0, g.puja))}</b></div><div><small>Para clausular</small><b>${mM(g.clausula)}</b></div></div>
     <p>Una cláusula solo se paga con saldo; el margen de deuda solo vale para pujar o comprar en el mercado.</p>`;
 }
 
@@ -203,59 +228,233 @@ const PRIVACIDAD = [
 const ENLACES = [['quienes-somos.html', 'Quiénes somos'], ['contacto.html', 'Contacto'], ['privacidad.html', 'Privacidad'], ['instalar.html', 'Instalar']];
 const APK = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk';
 
-const seccion = (id, kicker, titulo, cuerpo, intro = '') => `<section class="ps" id="${id}" aria-labelledby="${id}T">
-  <div class="ps-k">${kicker}</div><h2 id="${id}T">${titulo}</h2>${intro ? `<p class="ps-i">${intro}</p>` : ''}${cuerpo}</section>`;
+/** la cabecera de cada sección: a la izquierda lo que es y el título, a la derecha (en el ordenador) la entradilla */
+const seccion = (id, kicker, titulo, cuerpo, intro = '', clase = '') => `<section class="ps ${clase}" id="${id}" aria-labelledby="${id}T">
+  <header class="ps-c rv"><div><div class="ps-k">${kicker}</div><h2 id="${id}T">${titulo}</h2></div>${intro ? `<p class="ps-i">${intro}</p>` : ''}</header>${cuerpo}</section>`;
+
+const MENU = [['pAsi', 'Cómo funciona'], ['pOnce', 'Tu once'], ['pDentro', 'Qué hace'], ['pDecide', 'Así decide'], ['pCalc', 'Calculadoras'], ['pFaq', 'Preguntas']];
+
+/** «Cómo funciona»: en el ordenador, el móvil se queda quieto a la derecha y cambia de pantalla según bajas; en el
+    móvil, uno detrás de otro deslizando de lado */
+function comoFunciona() {
+  const pasos = PIES.map(([a, p, t, x, det], i) => `<article class="ph-paso${i === 0 ? ' on' : ''}" data-paso="${i}">
+      <div class="ph-solo">${movil(a, p)}</div>
+      <span class="ph-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${x}</p>
+      <ul>${det.map((d) => `<li>${icono('ok')}${esc(d)}</li>`).join('')}</ul></article>`).join('');
+  const pantallas = PIES.map(([a, p], i) => `<div class="ph-pant${i === 0 ? ' on' : ''}" data-pant="${i}">${movil(a, p)}</div>`).join('');
+  return `<div class="ph-g"><div class="ph-pasos">${pasos}</div>
+    <div class="ph-fijo" aria-hidden="true"><div class="ph-marco">${pantallas}</div><div class="ph-puntos">${PIES.map((x, i) => `<i${i === 0 ? ' class="on"' : ''}></i>`).join('')}</div></div></div>`;
+}
 
 /** todo lo que va debajo de la entrada */
 export function seccionMoviles() {
   return `<div class="portada-m">
-  ${seccion('pAsi', 'La app', 'Así se ve', `<div class="pm-fila">${PIES.map(([a, p, t, x]) => `<figure>${movil(a, p)}<figcaption><b>${t}</b><span>${x}</span></figcaption></figure>`).join('')}</div>`)}
+  <a class="pt-baja" href="#pAsi">Mira cómo funciona${icono('abajo')}</a>
+  <div class="pt-bar" aria-hidden="true"><div class="pt-in">
+    <a class="pt-marca" href="#" data-arriba>${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
+    <nav class="pt-menu">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
+    <a class="btn pt-cta" href="${APK}" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
 
-  ${seccion('pOnce', 'Tu equipo', 'Tu once, de un vistazo', `<div class="pc">${campo()}<div class="pc-ficha" aria-live="polite">${fichaOnce(3103)}</div></div>`,
+  ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Las tres pantallas que vas a abrir cada día.', 'ph')}
+
+  ${seccion('pOnce', 'Tu equipo', 'Tu once, de un vistazo', `<div class="pc"><div class="pc-campo-w rv">${campo()}</div><div class="pc-ficha rv" aria-live="polite">${fichaOnce(3103)}</div></div>`,
     'Toca un jugador: lo que vale, su cláusula, si va a jugar y qué te aconseja la app.')}
 
-  ${seccion('pDentro', 'Por dentro', 'Qué hace por ti', `<div class="pf-sw" role="group" aria-label="Cómo juegas">
+  ${seccion('pDentro', 'Por dentro', 'Qué hace por ti', `<div class="pf-sw rv" role="group" aria-label="Cómo juegas">
       <button data-modo="diversion" aria-pressed="true">Juego por diversión</button><button data-modo="liga" aria-pressed="false">Voy a por la liga</button></div>
     <div class="pf-g">${funciones('diversion')}</div>
-    <div class="pf-cifras"><div><b>20</b><span>equipos de LaLiga</span></div><div><b>+800</b><span>jugadores, con su valor de cada día</span></div><div><b>1 min</b><span>lo que tarda en avisarte de una cláusula</span></div></div>`)}
+    <div class="pf-cifras rv"><div><b data-cuenta="20">20</b><span>equipos de LaLiga</span></div><div><b data-cuenta="800" data-antes="+">+800</b><span>jugadores, con su valor de cada día</span></div><div><b data-cuenta="1" data-despues=" min">1 min</b><span>lo que tarda en avisarte de una cláusula</span></div></div>`,
+    'Lo mismo sirve para echar un rato que para ganar la liga. Elige cómo juegas tú.')}
 
-  ${seccion('pDecide', 'El motor', 'Así decide', `<div class="pd-chips" role="tablist">${CASOS.map((c, i) => `<button role="tab" data-caso="${c.id}" aria-selected="${i === 0}">${esc(c.chip)}</button>`).join('')}</div>
-    <div class="pd" aria-live="polite">${caso(CASOS[0].id)}</div>`,
+  ${seccion('pDecide', 'El motor', 'Así decide', `<div class="pd-chips rv" role="tablist">${CASOS.map((c, i) => `<button role="tab" data-caso="${c.id}" aria-selected="${i === 0}"><span>${esc(c.chip)}</span><i></i></button>`).join('')}</div>
+    <div class="pd rv" aria-live="polite">${caso(CASOS[0].id)}</div>`,
     'Cuatro situaciones de cada semana y lo que tiene en cuenta antes de decirte nada.')}
 
-  ${seccion('pCalc', 'Haz tus cuentas', 'Calculadoras', `<div class="pk-chips" role="tablist"><button role="tab" data-calc="blindaje" aria-selected="true">¿Cuánto blindo?</button><button role="tab" data-calc="gastar" aria-selected="false">¿Cuánto puedo gastar?</button></div>
-    <div class="pk" data-tipo="blindaje"><div class="pk-in">${CALC.blindaje()}</div><div class="pk-r" aria-live="polite"></div></div>`,
-    'Las mismas cuentas que hace la app con tu liga, para que juegues con los números.')}
+  ${seccion('pCalc', 'Haz tus cuentas', 'Calculadoras', `<div class="pk-chips rv" role="tablist"><button role="tab" data-calc="blindaje" aria-selected="true">¿Cuánto blindo?</button><button role="tab" data-calc="gastar" aria-selected="false">¿Cuánto puedo gastar?</button></div>
+    <div class="pk rv" data-tipo="blindaje"><div class="pk-in">${CALC.blindaje()}</div><div class="pk-r" aria-live="polite"></div></div>`,
+    'Las mismas cuentas que hace la app con tu liga. Mueve los números y mira qué cambia.')}
 
-  ${seccion('pFaq', 'Dudas', 'Preguntas frecuentes', `<div class="pq">${PREGUNTAS.map(([p, r]) => `<details><summary>${esc(p)}</summary><p>${esc(r)}</p></details>`).join('')}</div>`)}
+  ${seccion('pFaq', 'Dudas', 'Preguntas frecuentes', `<div class="pq">${PREGUNTAS.map(([p, r]) => `<details class="rv"><summary>${esc(p)}</summary><p>${esc(r)}</p></details>`).join('')}</div>`)}
 
-  ${seccion('pPriv', 'Privacidad', 'Tus datos, tuyos', `<div class="pp">${PRIVACIDAD.map(([ic, t, x]) => `<article>${icono(ic)}<h3>${t}</h3><p>${x}</p></article>`).join('')}</div>`)}
+  ${seccion('pPriv', 'Privacidad', 'Tus datos, tuyos', `<div class="pp">${PRIVACIDAD.map(([ic, t, x]) => `<article class="rv">${icono(ic)}<h3>${t}</h3><p>${x}</p></article>`).join('')}</div>`)}
 
-  <section class="ps pz" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
+  <section class="pz rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
     <p class="ps-i">Gratis, para Android y en el navegador.</p>
-    <div class="pz-b"><a class="btn" href="${APK}">${icono('descargar')}Bajar la app para Android</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
+    <div class="pz-b"><a class="btn" href="${APK}">${icono('descargar')}Descargar la app para Android</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
   </section>
 
-  <p class="pm-nota">Liga de ejemplo: las caras y los equipos son los de LaLiga; valores, cláusulas y consejos son inventados. Tu liga se carga al entrar con tu cuenta de LaLiga.</p>
-  <p class="pm-pie">App no oficial: no es de LaLiga ni tiene relación con LaLiga.</p>
-  <nav class="pm-pie pm-enlaces" aria-label="Más">${ENLACES.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}</nav>
-  <div class="pm-prog" aria-hidden="true"><i></i></div>
+  <footer class="pm-fin">
+    <p class="pm-nota">Liga de ejemplo: las caras y los equipos son los de LaLiga; valores, cláusulas y consejos son inventados. Tu liga se carga al entrar con tu cuenta de LaLiga.</p>
+    <p class="pm-pie">App no oficial: no es de LaLiga ni tiene relación con LaLiga.</p>
+    <nav class="pm-pie pm-enlaces" aria-label="Más">${ENLACES.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}</nav>
+  </footer>
   </div>`;
+}
+
+/* ---------- lo que se mueve ---------- */
+const sinMovimiento = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+let quitar = [];
+const escuchar = (el, ev, f, op) => { el.addEventListener(ev, f, op); quitar.push(() => el.removeEventListener(ev, f, op)); };
+const observar = (f, op) => { const o = new IntersectionObserver(f, op); quitar.push(() => o.disconnect()); return o; };
+const relojes = [];
+const cadaTanto = (f, ms) => { const t = setInterval(f, ms); relojes.push(t); return t; };
+
+/** un número que sube de 0 a su valor */
+function contar(el) {
+  const fin = +el.dataset.cuenta, antes = el.dataset.antes || '', despues = el.dataset.despues || '';
+  if (sinMovimiento() || !fin) return;
+  const t0 = performance.now(), dura = 1100;
+  const paso = (t) => {
+    const k = Math.min(1, (t - t0) / dura), e = 1 - (1 - k) ** 3;
+    el.textContent = `${antes}${Math.round(fin * e)}${despues}`;
+    if (k < 1) requestAnimationFrame(paso);
+  };
+  requestAnimationFrame(paso);
 }
 
 /** lo interactivo de la portada (se llama tras pintarla) */
 export function activarPortada() {
+  quitar.forEach((f) => f()); quitar = [];
+  relojes.forEach(clearInterval); relojes.length = 0;
   const raiz = document.querySelector('.portada-m');
   if (!raiz) return;
-  const pulsar = (sel, attr, f) => raiz.querySelectorAll(sel).forEach((b) => b.addEventListener('click', () => {
-    raiz.querySelectorAll(sel).forEach((x) => x.setAttribute(attr, String(x === b)));
-    f(b);
-    ponerCarasPortada(ultimas);
+  const portada = raiz.closest('.portada');
+  const hayIO = typeof IntersectionObserver === 'function';
+  if (hayIO && !sinMovimiento()) portada.classList.add('pr-js');
+
+  // al aparecer: cada cosa entra al llegar a ella (con un poco de retraso entre las de un mismo grupo)
+  if (hayIO) {
+    const vista = observar((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('vis');
+      e.target.querySelectorAll('[data-cuenta]').forEach(contar);
+      vista.unobserve(e.target);
+    }), { rootMargin: '0px 0px -12% 0px' });
+    raiz.querySelectorAll('.rv').forEach((el) => {
+      const hermanos = [...el.parentElement.children].filter((x) => x.classList.contains('rv'));
+      el.style.setProperty('--d', `${Math.min(6, hermanos.indexOf(el)) * 70}ms`);
+      vista.observe(el);
+    });
+  } else raiz.querySelectorAll('.rv').forEach((el) => el.classList.add('vis'));
+
+  // la barra de arriba: sale al pasar la entrada, marca la sección en la que estás y lo leído
+  const barra = raiz.querySelector('.pt-bar'), prog = raiz.querySelector('.pt-prog');
+  const entrada = portada.querySelector('.pantalla');
+  const secciones = MENU.map(([id]) => raiz.querySelector(`#${id}`)).filter(Boolean);
+  let pedido = false;
+  const alBajar = () => {
+    pedido = false;
+    // (fuera de la portada, al entrar en la app, se deja de escuchar)
+    if (!document.body.contains(raiz)) { quitar.forEach((f) => f()); quitar = []; relojes.forEach(clearInterval); relojes.length = 0; return; }
+    const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
+    const fuera = entrada ? entrada.getBoundingClientRect().bottom < 40 : y > 300;
+    barra.classList.toggle('on', fuera);
+    barra.querySelectorAll('a').forEach((a) => (a.tabIndex = fuera ? 0 : -1));
+    barra.setAttribute('aria-hidden', String(!fuera));
+    prog.style.transform = `scaleX(${h > 0 ? Math.min(1, y / h) : 0})`;
+    let actual = '';
+    for (const s of secciones) if (s.getBoundingClientRect().top < innerHeight * 0.4) actual = s.id;
+    barra.querySelectorAll('[data-ir-a]').forEach((a) => a.classList.toggle('on', a.dataset.irA === actual));
+  };
+  escuchar(window, 'scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(alBajar); } }, { passive: true });
+  alBajar();
+  // los enlaces de dentro: suaves y sin dejar el # en la dirección (la app usa el hash para sus pestañas)
+  raiz.querySelectorAll('a[href^="#"]').forEach((a) => escuchar(a, 'click', (ev) => {
+    ev.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const el = id && raiz.querySelector(`#${id}`);
+    const top = el ? el.getBoundingClientRect().top + scrollY - 64 : 0;
+    scrollTo({ top, behavior: sinMovimiento() ? 'auto' : 'smooth' });
   }));
-  pulsar('.pc-j', 'aria-pressed', (b) => { raiz.querySelector('.pc-ficha').innerHTML = fichaOnce(b.dataset.pj); });
-  pulsar('.pf-sw button', 'aria-pressed', (b) => { raiz.querySelector('.pf-g').innerHTML = funciones(b.dataset.modo); });
-  pulsar('.pd-chips button', 'aria-selected', (b) => { raiz.querySelector('.pd').innerHTML = caso(b.dataset.caso); });
+
+  // «Cómo funciona»: el paso que está en el centro de la pantalla manda en el móvil fijo
+  const pasos = [...raiz.querySelectorAll('.ph-paso')];
+  const pantallas = [...raiz.querySelectorAll('.ph-pant')], puntos = [...raiz.querySelectorAll('.ph-puntos i')];
+  const ponerPaso = (i) => {
+    pasos.forEach((p, k) => p.classList.toggle('on', k === i));
+    pantallas.forEach((p, k) => { p.classList.toggle('on', k === i); p.classList.toggle('antes', k < i); });
+    puntos.forEach((p, k) => p.classList.toggle('on', k === i));
+  };
+  if (hayIO) {
+    const centro = observar((es) => es.forEach((e) => { if (e.isIntersecting) ponerPaso(+e.target.dataset.paso); }), { rootMargin: '-45% 0px -45% 0px' });
+    pasos.forEach((p) => centro.observe(p));
+  }
+
+  // el once: va pasando de jugador en jugador mientras se ve, hasta que tocas uno
+  const jugadores = [...raiz.querySelectorAll('.pc-j')];
+  const ficha = raiz.querySelector('.pc-ficha');
+  const elegir = (b) => {
+    jugadores.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    ficha.classList.remove('cambia'); void ficha.offsetWidth; ficha.classList.add('cambia');
+    ficha.innerHTML = fichaOnce(b.dataset.pj);
+    ponerCarasPortada(ultimas);
+  };
+  let tocado = false, verOnce = false;
+  jugadores.forEach((b) => escuchar(b, 'click', () => { tocado = true; elegir(b); }));
+  if (hayIO && !sinMovimiento()) {
+    observar((es) => es.forEach((e) => { verOnce = e.isIntersecting; }), { threshold: 0.5 }).observe(raiz.querySelector('.pc'));
+    const orden = ['3103', '2534', '3106', '230', '3104', '1715'];
+    let k = 0;
+    cadaTanto(() => {
+      if (tocado || !verOnce || document.hidden) return;
+      k = (k + 1) % orden.length;
+      const b = jugadores.find((x) => x.dataset.pj === orden[k]);
+      if (b) elegir(b);
+    }, 3800);
+  }
+  // el campo se inclina un poco siguiendo el ratón
+  const campoW = raiz.querySelector('.pc-campo-w');
+  if (campoW && !sinMovimiento() && matchMedia('(hover: hover)').matches) {
+    escuchar(campoW, 'pointermove', (e) => {
+      const r = campoW.getBoundingClientRect();
+      campoW.style.setProperty('--rx', `${((e.clientY - r.top) / r.height - 0.5) * -6}deg`);
+      campoW.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 8}deg`);
+    });
+    escuchar(campoW, 'pointerleave', () => { campoW.style.setProperty('--rx', '0deg'); campoW.style.setProperty('--ry', '0deg'); });
+  }
+
+  // qué hace por ti: el interruptor y una luz que sigue al ratón en cada tarjeta
+  const grid = raiz.querySelector('.pf-g');
+  raiz.querySelectorAll('.pf-sw button').forEach((b) => escuchar(b, 'click', () => {
+    raiz.querySelectorAll('.pf-sw button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    grid.classList.add('cambia');
+    setTimeout(() => { grid.innerHTML = funciones(b.dataset.modo, ' vis'); grid.classList.remove('cambia'); }, sinMovimiento() ? 0 : 160);
+  }));
+  escuchar(grid, 'pointermove', (e) => {
+    const c = e.target.closest('.pf-c');
+    if (!c) return;
+    const r = c.getBoundingClientRect();
+    c.style.setProperty('--mx', `${e.clientX - r.left}px`); c.style.setProperty('--my', `${e.clientY - r.top}px`);
+  });
+
+  // así decide: los casos pasan solos (con su barra) mientras se ven, hasta que eliges uno
+  const chips = [...raiz.querySelectorAll('.pd-chips button')], pd = raiz.querySelector('.pd');
+  const ponerCaso = (b, solo) => {
+    chips.forEach((x) => { x.setAttribute('aria-selected', String(x === b)); x.classList.remove('corre'); });
+    if (solo) { void b.offsetWidth; b.classList.add('corre'); }
+    pd.classList.remove('cambia'); void pd.offsetWidth; pd.classList.add('cambia');
+    pd.innerHTML = caso(b.dataset.caso);
+    ponerCarasPortada(ultimas);
+  };
+  let elegido = false, iCaso = 0;
+  const filaChips = raiz.querySelector('.pd-chips');
+  chips.forEach((b, i) => {
+    escuchar(b, 'click', () => { elegido = true; iCaso = i; filaChips.classList.remove('auto'); ponerCaso(b, false); });
+    // al acabar su barra, el siguiente
+    escuchar(b, 'animationend', () => {
+      if (elegido) return;
+      iCaso = (iCaso + 1) % chips.length;
+      ponerCaso(chips[iCaso], true);
+    });
+  });
+  if (hayIO && !sinMovimiento()) {
+    filaChips.classList.add('auto', 'pausa');
+    chips[0].classList.add('corre');
+    observar((es) => es.forEach((e) => filaChips.classList.toggle('pausa', !e.isIntersecting)), { threshold: 0.35 }).observe(pd);
+  }
+
+  // calculadoras
   const pk = raiz.querySelector('.pk');
   const calcular = () => {
     const k = {};
@@ -263,21 +462,19 @@ export function activarPortada() {
       k[i.dataset.k] = +i.value;
       const o = pk.querySelector(`output[data-o="${i.dataset.k}"]`);
       if (o) o.textContent = o.textContent.replace(/^[−\-\d.,]+/, NF1.format(+i.value).replace('-', '−'));
+      i.style.setProperty('--p', `${((+i.value - +i.min) / (+i.max - +i.min)) * 100}%`);
     });
     pk.querySelector('.pk-r').innerHTML = resultado(pk.dataset.tipo, k);
   };
-  pk.addEventListener('input', calcular);
-  pulsar('.pk-chips button', 'aria-selected', (b) => { pk.dataset.tipo = b.dataset.calc; pk.querySelector('.pk-in').innerHTML = CALC[b.dataset.calc](); calcular(); });
+  escuchar(pk, 'input', calcular);
+  const pkChips = [...raiz.querySelectorAll('.pk-chips button')];
+  pkChips.forEach((b) => escuchar(b, 'click', () => {
+    pkChips.forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+    pk.dataset.tipo = b.dataset.calc;
+    pk.querySelector('.pk-in').innerHTML = CALC[b.dataset.calc]();
+    calcular();
+  }));
   calcular();
-  // la barra de lectura del pie
-  const barra = raiz.querySelector('.pm-prog i');
-  const leer = () => {
-    const h = document.documentElement.scrollHeight - innerHeight;
-    if (!document.body.contains(barra)) { removeEventListener('scroll', leer); return; }
-    barra.style.transform = `scaleX(${h > 0 ? Math.min(1, scrollY / h) : 0})`;
-  };
-  addEventListener('scroll', leer, { passive: true });
-  leer();
 }
 
 let ultimas = null;
