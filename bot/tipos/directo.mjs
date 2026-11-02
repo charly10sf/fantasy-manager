@@ -59,9 +59,11 @@ export async function generar({ stats, jornada, fechasEspn, jugadores }) {
           : dsp.clase === 'penalti fallado' ? `❌ ¡${nombre} (${equipo}) falla un penalti en el ${min}'!`
           : `${'⚽'.repeat(Math.min(dsp.goles || 2, 3))} ¡${dsp.clase === 'doblete' ? 'DOBLETE' : dsp.clase === 'triplete' ? 'TRIPLETE' : 'Goles'} de ${nombre} (${equipo})! Último en el ${min}'.`;
         const lineas = [`${marcador} · LaLiga Fantasy J${jornada}`];
-        if (pts != null) lineas.push(dsp.clase === 'roja' || dsp.clase === 'penalti fallado' ? `📊 Ahora mismo suma ${pts} pts${media >= 3 ? ` (su media: ${fmt(media)})` : ''}.` : `📊 Ya suma ${pts} pts${media >= 3 ? ` y su media es ${fmt(media)}` : ''}.`);
+        // la media solo si el partido la supera de verdad (ahora mismo suma 1,5 veces su media o más)
+        const sobre = pts != null && media >= 3 && pts >= 1.5 * media && dsp.clase !== 'roja' && dsp.clase !== 'penalti fallado';
+        if (pts != null) lineas.push(dsp.clase === 'roja' || dsp.clase === 'penalti fallado' ? `📊 Ahora mismo suma ${pts} pts.` : `📊 Ya suma ${pts} pts${sobre ? `, muy por encima de su media (${fmt(media)})` : ''}.`);
         out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.clase}`, jornada, texto: armar(cab, lineas, cierre(`directo${m.id}${dsp.jugador}`)),
-          numeros: [jornada, min, m.localScore, m.visitorScore, ...(pts != null ? [pts] : []), ...(media >= 3 ? partes(media) : [])], casado: !!p });
+          numeros: [jornada, min, m.localScore, m.visitorScore, ...(pts != null ? [pts] : []), ...(sobre ? partes(media) : [])], casado: !!p });
       }
     }
   }

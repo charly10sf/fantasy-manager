@@ -13,7 +13,7 @@ export async function generar({ stats, jornada }) {
   }
   if (filas.length < 10) return [];
   const faltan = stats.length - acabados.length;
-  const prov = faltan ? (faltan === 1 ? ' (aún falta 1 partido)' : ` (aún faltan ${faltan} partidos)`) : '';
+  const prov = faltan ? ' (provisional)' : '';
   const out = [];
   for (const clave of ['mejores', 'peores']) {
     // los 0 pueden ser jugadores que no han jugado: en «peores» solo cuentan los negativos
@@ -25,7 +25,7 @@ export async function generar({ stats, jornada }) {
       : elegir([`📉 LaLiga Fantasy J${jornada} · Los números rojos de la jornada${prov}`, `😬 LaLiga Fantasy J${jornada} · Los que más sufrieron${prov}`], `cab${jornada}`);
     const pie = cierre(`${clave}${jornada}`);
     const lineas = ord.map((f, i) => `${MEDALLA[i]} ${f.nombre} (${f.equipo}) · ${f.pts} pts`);
-    const num = [jornada, acabados.length, stats.length, stats.length - acabados.length, ...ord.map((f) => f.pts)];
+    const num = [jornada, acabados.length, stats.length, faltan, ...ord.map((f) => f.pts)];
     // el comentario: si un equipo pone a 3 o más de los que salen, lo decimos
     // (se prueba con todas las filas y se va quitando la última hasta que quepa con el comentario)
     let cuerpo = null, coment = null;
@@ -34,9 +34,9 @@ export async function generar({ stats, jornada }) {
       for (const f of ord.slice(0, k)) porEquipo[f.equipo] = (porEquipo[f.equipo] || 0) + 1;
       const [eq, n] = Object.entries(porEquipo).sort((a, b) => b[1] - a[1])[0];
       if (n < 3) break;
-      coment = clave === 'mejores' ? `💥 ${n} de los ${k} son del ${eq}: así se gana un partido.` : `⚠️ ${n} de los ${k} son del ${eq}: tarde para olvidar.`;
+      coment = clave === 'mejores' ? (n === k ? `💥 Todos del ${eq}: así se gana un partido.` : `💥 ${n} de ${k} son del ${eq}: así se gana.`) : (n === k ? `⚠️ Todos del ${eq}: tarde para olvidar.` : `⚠️ ${n} de ${k} son del ${eq}: tarde para olvidar.`);
       const t = quepa(cab, [...lineas.slice(0, k), coment], pie);
-      if (t.length === k + 1) { cuerpo = t; num.push(n, k); break; }
+      if (t.length === k + 1) { cuerpo = t; if (n < k) num.push(n, k); break; }
     }
     if (!cuerpo) { const t = quepa(cab, lineas, pie); if (t.length < 3) continue; cuerpo = t; }
     out.push({ tipo: 'resumen', clave: `resumen|${jornada}|${clave}|${acabados.length}`, jornada, texto: armar(cab, cuerpo, pie), numeros: [...num, 1] });

@@ -36,20 +36,24 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     caidas.push({ id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), estado: ESTADOS[j.playerStatus], pct: Math.round(p * 100), media: Number(j.averagePoints) || 0 });
   });
   const out = [];
-  for (let k = 0; k < caidas.length; k += 4) {
-    const grupo = caidas.slice(k, k + 4);
+  // se llena cada tweet con todos los que caben (por orden de valor) y se sigue con el resto
+  let i = 0, k = 0;
+  while (i < caidas.length && out.length < 12) {
     const cab = elegir([`🚨 LaLiga Fantasy J${jornada} · Ojo con las bajas`, `🚑 LaLiga Fantasy J${jornada} · Estos pueden caerse del once`, `⚠️ LaLiga Fantasy J${jornada} · Posibles caídas, mira tu once`], `caidas${jornada}${k}`);
     const pie = cierre(`caidas${jornada}${k}`);
     const intro = elegir(['Si tienes a alguno en el once, ve pensando en el cambio:', 'Revisa tu alineación, que estos lo tienen difícil:', 'Alguno de estos es titular fijo y ahora mismo no cuenta:'], `intro${jornada}${k}`);
-    const lineas = grupo.map((c) => {
+    const resto = caidas.slice(i, i + 6);
+    const lineas = resto.map((c) => {
       const que = c.estado === 'duda' ? `duda (titular ${c.pct}%)` : c.estado;
       return `${c.estado === 'sancionado' ? '🟥' : c.estado === 'duda' ? '❓' : '🤕'} ${c.nombre} (${c.equipo}) · ${que}${c.media >= 3 ? ` · media ${fmt(c.media)}` : ''}`;
     });
     const usadas = quepa(cab, [intro, ...lineas], pie);
-    if (usadas.length < 3) continue;
-    const quienes = grupo.slice(0, usadas.length - 1);
+    const n = usadas.length - 1;
+    if (n < 1) break;
+    const quienes = resto.slice(0, n);
     const num = [jornada, ...quienes.flatMap((c) => [c.pct, ...(c.media >= 3 ? partes(c.media) : [])])];
     out.push({ tipo: 'caidas', clave: `caidas|${jornada}|${quienes.map((c) => c.id).join('-')}`, jornada, texto: armar(cab, usadas, pie), numeros: num });
+    i += n; k++;
   }
   return out;
 }
