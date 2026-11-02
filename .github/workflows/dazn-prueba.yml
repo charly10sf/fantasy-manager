@@ -7,10 +7,11 @@ permissions:
 jobs:
   prueba:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node bot/prueba/sonda-mercado.mjs
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=mercado,final,mvp,resumen,directo --ventanas=0 --fechas-espn=20261102 --tarjetas=1 2>&1 > /tmp/sal.txt; grep -E "^# Total|mercado\)|FALLA|ERROR|NO pasa" /tmp/sal.txt; sed -n '/^## mercado/,/^## [a-z]*:/p' /tmp/sal.txt | head -40; sed -n '/^## directo/,/^## /p' /tmp/sal.txt | head -45; sed -n '/^## resumen/,/^## /p' /tmp/sal.txt | head -30
