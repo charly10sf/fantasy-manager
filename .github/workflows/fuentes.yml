@@ -8,7 +8,7 @@ on:
   # mientras no esté en main (subir a main es publicar), salta con cada push a la rama de pruebas
   push:
     branches: [pruebas-fuentes]
-    paths: ['.github/fuentes-prueba.mjs', '.github/fuentes-detalle.mjs', '.github/fuentes-puntos.mjs', '.github/workflows/fuentes.yml']
+    paths: ['.github/fuentes-prueba.mjs', '.github/fuentes-detalle.mjs', '.github/fuentes-puntos.mjs', '.github/fuentes-laliga.mjs', '.github/workflows/fuentes.yml']
 
 permissions:
   contents: read
@@ -25,6 +25,7 @@ jobs:
       - run: node .github/fuentes-prueba.mjs
       - run: node .github/fuentes-detalle.mjs
       - run: node .github/fuentes-puntos.mjs
+      - run: node .github/fuentes-laliga.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: fuentes
