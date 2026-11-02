@@ -4,6 +4,9 @@
 #   «parado»                  no hace nada
 # Los secretos son X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN y X_ACCESS_TOKEN_SECRET (Settings > Secrets and variables > Actions).
 # «Run workflow» con «comprobar» marcado solo prueba que las claves valen (no publica). Detalle en bot/LEEME.md.
+# Telegram (aparte de X, también con BOT_MODO=simulacro): con los secretos TELEGRAM_BOT_TOKEN y TELEGRAM_CHAT_ID manda a Carlos el
+# texto de respuesta para el tuit de resultado de cada club y un aviso si falla la ejecución. Su registro (telegram.json) vive
+# en la misma rama bot-estado. Sin esos secretos esos pasos no se ejecutan.
 name: Bot X
 
 on:
@@ -33,6 +36,8 @@ jobs:
       X_API_SECRET: ${{ secrets.X_API_SECRET }}
       X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
       X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -41,8 +46,9 @@ jobs:
       - name: Comprobar las claves (sin publicar)
         if: ${{ inputs.comprobar }}
         run: node bot/ejecutar.mjs --comprobar=1
-      - name: Traer el registro de lo publicado (solo al publicar)
-        if: ${{ !inputs.comprobar && env.BOT_MODO == 'publicar' }}
+      - name: Traer el registro de lo publicado (al publicar en X o si hay Telegram)
+        id: traer
+        if: ${{ !inputs.comprobar && (env.BOT_MODO == 'publicar' || env.TELEGRAM_BOT_TOKEN != '') }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -56,8 +62,15 @@ jobs:
       - name: Bot
         if: ${{ !inputs.comprobar }}
         run: node bot/ejecutar.mjs --ventanas=1 --estado=estado/registro.json
+      # Telegram corre aunque el paso de X falle, pero no si no se ha podido traer el registro (mandaría otra vez lo ya mandado)
+      - name: Respuestas para los clubes (Telegram)
+        if: ${{ !cancelled() && !inputs.comprobar && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}
+        run: node bot/telegram.mjs --ventanas=1 --estado=estado/telegram.json
+      - name: Aviso de fallo (Telegram)
+        if: ${{ failure() && !inputs.comprobar && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}
+        run: node bot/telegram.mjs --aviso=fallo --estado=estado/telegram.json
       - name: Guardar el registro de lo publicado
-        if: ${{ always() && !inputs.comprobar && env.BOT_MODO == 'publicar' }}
+        if: ${{ always() && !inputs.comprobar && steps.traer.outcome == 'success' }}
         run: |
           cd estado
           git add -A
