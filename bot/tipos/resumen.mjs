@@ -3,9 +3,11 @@ import { cierre, quepa, armar, corto, elegir } from '../lib/texto.mjs';
 
 const MEDALLA = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣'];
 
-export async function generar({ stats, jornada }) {
+export async function generar({ stats, jornada, completo = true }) {
   const acabados = stats.filter((m) => m.matchState === 7);
   if (!acabados.length) return [];
+  // publicando, solo cuando la jornada ha acabado (nada de «provisional»)
+  if (!completo && acabados.length < stats.length) return [];
   const filas = [];
   for (const m of acabados) for (const lado of [m.local, m.visitor]) for (const p of lado.players || []) {
     if (p.weekPoints == null) continue;

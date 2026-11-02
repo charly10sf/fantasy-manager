@@ -3,10 +3,11 @@
 import { cierre, quepa, armar, corto, elegir, fmt, partes } from '../lib/texto.mjs';
 import { rachaDe } from '../lib/laliga.mjs';
 
-export async function generar({ stats, jornada, jugadores }) {
+export async function generar({ stats, jornada, jugadores, desdeFinal = 0 }) {
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
   const out = [];
-  for (const m of stats.filter((x) => x.matchState === 7)) {
+  // con ventanas, solo los partidos que empezaron hace poco: al activar el bot no se sueltan los de días atrás
+  for (const m of stats.filter((x) => x.matchState === 7 && Date.parse(x.date) >= desdeFinal)) {
     const filas = [];
     for (const lado of [m.local, m.visitor]) for (const p of lado.players || []) {
       if (p.weekPoints == null) continue;

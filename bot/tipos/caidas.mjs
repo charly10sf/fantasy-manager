@@ -15,11 +15,7 @@ export function baseTitular(playerStats, hasta) {
   return { p: (0.3 * a + 0.2 * b) / 0.5, ult: ult.length, temporada: s.length };
 }
 
-export async function generar({ jugadores, equipos, jornada, ultimaJugada, config, stats, forzar }) {
-  // Mientras queden partidos de la jornada en curso, el estado de cada jugador (lesión, duda, sanción) es el de ese partido:
-  // las caídas de la siguiente jornada se calculan cuando acaba la actual.
-  const pendientes = (stats || []).filter((m) => m.matchState !== 7).length;
-  if (pendientes && !forzar) { console.log(`  (caídas) esperando: quedan ${pendientes} partido(s) de la jornada ${ultimaJugada}`); return []; }
+export async function generar({ jugadores, equipos, jornada, ultimaJugada, config, soloSeguras = false }) {
   const malos = jugadores
     .filter((j) => ESTADOS[j.playerStatus] && j.playerStatus !== 'out_of_league' && j.positionId >= 1 && j.positionId <= 4)
     .sort((a, b) => Number(b.marketValue) - Number(a.marketValue))
@@ -31,6 +27,8 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     if (!f || f.error) return;
     const b = baseTitular(f.playerStats, ultimaJugada);
     if (!b || b.p < 0.6) return;                      // solo titulares habituales
+    // publicando, solo bajas seguras (lesionado o sancionado): una duda necesita una segunda fuente que aún no está
+    if (soloSeguras && j.playerStatus === 'doubtful') return;
     const p = j.playerStatus === 'doubtful' ? b.p * 0.6 : 0;
     if (p >= config.umbralCaida) return;
     caidas.push({ id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), estado: ESTADOS[j.playerStatus], pct: Math.round(p * 100), media: Number(j.averagePoints) || 0 });

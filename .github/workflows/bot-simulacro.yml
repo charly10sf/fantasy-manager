@@ -23,3 +23,21 @@ jobs:
       - name: caídas forzadas (solo para ver el formato; hoy la jornada 11 no ha acabado)
         if: always()
         run: node bot/ejecutar.mjs --tipos=caidas --forzar=1
+      - name: firma OAuth 1.0a
+        if: always()
+        run: node bot/prueba/firma.mjs
+      - name: publicar de punta a punta contra un servidor falso de X (nada llega a X)
+        if: always()
+        env:
+          X_API_BASE: http://127.0.0.1:8787
+          X_API_KEY: clave-falsa
+          X_API_SECRET: secreto-falso
+          X_ACCESS_TOKEN: token-falso
+          X_ACCESS_TOKEN_SECRET: secreto-token-falso
+        run: |
+          node bot/prueba/servidor-falso.mjs &
+          sleep 1
+          node bot/ejecutar.mjs --comprobar=1
+          # cuatro ejecuciones seguidas con el mismo registro: debe publicar 4, 4, 1 y 0 (9 partidos acabados, sin repetir ninguno)
+          for i in 1 2 3 4; do node bot/ejecutar.mjs --modo=publicar --ventanas=0 --tipos=final --estado=/tmp/registro.json | grep -E "^# Total"; done
+          node -e "fetch('http://127.0.0.1:8787/__resumen').then(r=>r.json()).then(j=>{console.log('servidor falso:',JSON.stringify(j)); if(j.total!==9||j.unicos!==9||j.firmados!==9||j.maxLargo>280) process.exit(1)})"
