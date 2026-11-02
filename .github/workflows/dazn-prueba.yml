@@ -7,12 +7,10 @@ permissions:
 jobs:
   prueba:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm ci --prefix bot --no-audit --no-fund
-      - run: node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=directo,final,mvp,resumen --ventanas=0 --fechas-espn=20261102 2>&1 | grep -E "DAZN|^# Total|^## |directo\) .*espero|--- (final|mvp|resumen)" | head -60
-      - run: node bot/telegram.mjs --simulacro=1 --jornada=11 2>&1 | grep -E "DAZN|^# Total|acabados" | head -30
+      - run: node bot/prueba/sonda-mercado.mjs
