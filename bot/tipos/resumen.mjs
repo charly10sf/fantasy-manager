@@ -13,7 +13,8 @@ export async function generar({ stats, jornada, completo = true, dazn = null }) 
   const filas = [];
   for (const m of acabados) for (const lado of [m.local, m.visitor]) for (const p of lado.players || []) {
     if (p.weekPoints == null) continue;
-    filas.push({ id: p.id, nombre: p.nickname || p.name, equipo: corto(lado.mainName), pts: Number(p.weekPoints) });
+    filas.push({ id: p.id, nombre: p.nickname || p.name, equipo: corto(lado.mainName), club: lado.mainName, pts: Number(p.weekPoints),
+      caraUrl: p.images && p.images.transparent && p.images.transparent['256x256'], escudoUrl: lado.badgeColor });
   }
   if (filas.length < 10) return [];
   const faltan = stats.length - acabados.length;
@@ -43,7 +44,10 @@ export async function generar({ stats, jornada, completo = true, dazn = null }) 
       if (t.length === k + 1) { cuerpo = t; if (n < k) num.push(n, k); break; }
     }
     if (!cuerpo) { const t = quepa(cab, lineas, pie); if (t.length < 3) continue; cuerpo = t; }
-    out.push({ tipo: 'resumen', clave: `resumen|${jornada}|${clave}|${acabados.length}`, jornada, texto: armar(cab, cuerpo, pie), numeros: [...num, 1] });
+    // la tarjeta con los 6 (Carlos, 2 nov 23:28: «algún grafismo chulo para los 6 mejores y peores»)
+    const tarjeta = { tipo: 'resumen', nombre: `resumen-${jornada}-${clave}`, d: { jornada, clave, filas: ord },
+      permitidos: { numeros: [jornada, 1, 2, 3, 4, 5, 6, ...ord.map((f) => f.pts)].map(String), palabras: ord.flatMap((f) => [f.nombre, f.equipo, f.club]) } };
+    out.push({ tipo: 'resumen', clave: `resumen|${jornada}|${clave}|${acabados.length}`, jornada, texto: armar(cab, cuerpo, pie), numeros: [...num, 1], tarjeta });
   }
   return out;
 }
