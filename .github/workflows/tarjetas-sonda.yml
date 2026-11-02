@@ -20,6 +20,7 @@ jobs:
       - run: node .github/tarjetas/sonda.mjs
         env:
           JORNADA: '11'
+      - run: node .github/tarjetas/paquete.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: tarjetas-datos
