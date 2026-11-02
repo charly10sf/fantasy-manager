@@ -11,11 +11,19 @@ const comparten = (a, b) => { const A = fichas(a), B = fichas(b); for (const t o
 export function casarJugador(nombreEspn, lado) {
   const toks = norm(nombreEspn).split(' ').filter(Boolean);
   if (!toks.length) return null;
+  const ps = lado.players || [];
+  const de = (p) => new Set([...norm(p.name).split(' '), ...norm(p.nickname).split(' ')].filter(Boolean));
+  // 1) por el apellido (el último nombre de ESPN) y, si hay varios, por el resto
   const ape = toks[toks.length - 1];
-  const cand = (lado.players || []).filter((p) => norm(p.name).split(' ').includes(ape) || norm(p.nickname).split(' ').includes(ape));
+  const cand = ps.filter((p) => de(p).has(ape));
   if (cand.length === 1) return cand[0];
-  const con = cand.filter((p) => toks.slice(0, -1).some((t) => norm(p.name).split(' ').includes(t)));
-  return con.length === 1 ? con[0] : null;
+  const con = cand.filter((p) => toks.slice(0, -1).some((t) => de(p).has(t)));
+  if (con.length === 1) return con[0];
+  // 2) ESPN a veces trae el segundo apellido y LaLiga no («Mario Soriano Carreno» / «Mario Soriano»): el que comparta más
+  //    nombres, con al menos 2 y sin empate
+  const pun = ps.map((p) => ({ p, n: toks.filter((t) => t.length > 2 && de(p).has(t)).length })).filter((x) => x.n >= 2).sort((a, b) => b.n - a.n);
+  if (pun.length && !(pun[1] && pun[1].n === pun[0].n)) return pun[0].p;
+  return null;
 }
 
 // Lo que se tuitea en directo (término medio que propuso Domy y aceptó Carlos el 2 nov): cada gol, con su asistente y los puntos
