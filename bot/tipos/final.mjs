@@ -1,5 +1,5 @@
 // Resumen al acabar cada partido: marcador, los que más y menos han puntuado y, si hay, una racha.
-import { cierre, quepa } from '../lib/texto.mjs';
+import { cierre, quepa, corto } from '../lib/texto.mjs';
 import { rachaDe } from '../lib/laliga.mjs';
 
 export async function generar({ stats, jornada, jugadores }) {
@@ -9,15 +9,16 @@ export async function generar({ stats, jornada, jugadores }) {
     const filas = [];
     for (const lado of [m.local, m.visitor]) for (const p of lado.players || []) {
       if (p.weekPoints == null) continue;
-      filas.push({ id: p.id, nombre: p.nickname || p.name, equipo: lado.mainName, pts: Number(p.weekPoints) });
+      filas.push({ id: p.id, nombre: p.nickname || p.name, equipo: corto(lado.mainName), pts: Number(p.weekPoints) });
     }
     if (filas.length < 10) continue;
     const ord = [...filas].sort((a, b) => b.pts - a.pts);
-    const top = ord.slice(0, 3), peor = ord[ord.length - 1];
-    const cab = `🏁 LaLiga Fantasy J${jornada} · ${m.local.mainName} ${m.localScore}-${m.visitorScore} ${m.visitor.mainName}`;
+    const top = ord.slice(0, 3), peor = ord[ord.length - 1].pts < 0 ? ord[ord.length - 1] : null;
+    const cab = `🏁 LaLiga Fantasy J${jornada} · ${corto(m.local.mainName)} ${m.localScore}-${m.visitorScore} ${corto(m.visitor.mainName)}`;
     const pie = cierre(`final${m.id}`);
-    const lineas = [`Más puntos: ${top.map((f) => `${f.nombre} ${f.pts}`).join(', ')}`, `Menos: ${peor.nombre} (${peor.equipo}) ${peor.pts}`];
-    const num = [jornada, m.localScore, m.visitorScore, ...top.map((f) => f.pts), peor.pts];
+    const lineas = [`Más puntos: ${top.map((f) => `${f.nombre} ${f.pts}`).join(', ')}`];
+    const num = [jornada, m.localScore, m.visitorScore, ...top.map((f) => f.pts)];
+    if (peor) { lineas.push(`Menos: ${peor.nombre} (${peor.equipo}) ${peor.pts}`); num.push(peor.pts); }
     // racha del mejor: tres jornadas seguidas de 8 o más (dato, no opinión)
     const j = porId.get(String(top[0].id));
     const r = j ? rachaDe(j, 3) : [];

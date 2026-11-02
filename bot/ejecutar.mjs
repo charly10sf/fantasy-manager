@@ -24,7 +24,7 @@ console.log(`# ${stats.length} partidos (${stats.filter((m) => m.matchState === 
   console.log(`# equipos: ${Object.values(equipos).join(' | ')}`);
 }
 
-const ctx = { stats, jugadores, equipos, jornada, config, ultimaJugada: sem.weekNumber,
+const ctx = { stats, jugadores, equipos, jornada, config, ultimaJugada: sem.weekNumber, forzar: arg('forzar') === '1',
   fechasEspn: ['20261030', '20261031', '20261101'] };
 const registro = new Registro(config.topes);
 let generados = 0, fallos = 0, publicables = 0;

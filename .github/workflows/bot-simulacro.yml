@@ -20,3 +20,6 @@ jobs:
         with:
           node-version: 22
       - run: node bot/ejecutar.mjs
+      - name: caídas forzadas (solo para ver el formato; hoy la jornada 11 no ha acabado)
+        if: always()
+        run: node bot/ejecutar.mjs --tipos=caidas --forzar=1

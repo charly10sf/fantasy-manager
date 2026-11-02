@@ -1,7 +1,7 @@
 // Caídas probables de la jornada que viene: titulares habituales con baja o duda (Carlos, 2 nov 16:16: «es probable que no vaya a jugar»).
 // % de titularidad parcial: minutos de las últimas jornadas (peso 0,3) y partidos de más de 60' de la temporada (0,2), sin el once probable
 // de futbolfantasy (0,5, aún no portado); doblado a ×0,6 si es duda; 0 si está lesionado o sancionado.
-import { cierre, quepa } from '../lib/texto.mjs';
+import { cierre, quepa, corto } from '../lib/texto.mjs';
 import { ficha, ESTADOS } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
 
@@ -15,7 +15,11 @@ export function baseTitular(playerStats, hasta) {
   return { p: (0.3 * a + 0.2 * b) / 0.5, ult: ult.length, temporada: s.length };
 }
 
-export async function generar({ jugadores, equipos, jornada, ultimaJugada, config }) {
+export async function generar({ jugadores, equipos, jornada, ultimaJugada, config, stats, forzar }) {
+  // Mientras queden partidos de la jornada en curso, el estado de cada jugador (lesión, duda, sanción) es el de ese partido:
+  // las caídas de la siguiente jornada se calculan cuando acaba la actual.
+  const pendientes = (stats || []).filter((m) => m.matchState !== 7).length;
+  if (pendientes && !forzar) { console.log(`  (caídas) esperando: quedan ${pendientes} partido(s) de la jornada ${ultimaJugada}`); return []; }
   const malos = jugadores
     .filter((j) => ESTADOS[j.playerStatus] && j.playerStatus !== 'out_of_league' && j.positionId >= 1 && j.positionId <= 4)
     .sort((a, b) => Number(b.marketValue) - Number(a.marketValue))
@@ -29,7 +33,7 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     if (!b || b.p < 0.6) return;                      // solo titulares habituales
     const p = j.playerStatus === 'doubtful' ? b.p * 0.6 : 0;
     if (p >= config.umbralCaida) return;
-    caidas.push({ id: j.id, nombre: j.nickname, equipo: equipos[String(j.teamId)] || '?', estado: ESTADOS[j.playerStatus], pct: Math.round(p * 100) });
+    caidas.push({ id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), estado: ESTADOS[j.playerStatus], pct: Math.round(p * 100) });
   });
   const out = [];
   for (let k = 0; k < caidas.length; k += 5) {

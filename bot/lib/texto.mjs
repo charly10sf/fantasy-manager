@@ -33,3 +33,15 @@ export function quepa(cabecera, lineas, pie, max = 280) {
   }
   return out;
 }
+
+// Nombres de equipo para los tweets (los de la API son largos: «R. Racing Club», «C.A. Osasuna»)
+const CORTOS = [['atletico', 'Atlético'], ['athletic', 'Athletic'], ['barcelona', 'Barça'], ['betis', 'Betis'], ['celta', 'Celta'], ['elche', 'Elche'],
+  ['espanyol', 'Espanyol'], ['getafe', 'Getafe'], ['levante', 'Levante'], ['malaga', 'Málaga'], ['osasuna', 'Osasuna'], ['rayo', 'Rayo'],
+  ['real madrid', 'Real Madrid'], ['sociedad', 'Real Sociedad'], ['sevilla', 'Sevilla'], ['valencia', 'Valencia'], ['villarreal', 'Villarreal'],
+  ['alaves', 'Alavés'], ['deportivo', 'Deportivo'], ['racing', 'Racing'], ['oviedo', 'Oviedo'], ['girona', 'Girona'], ['mallorca', 'Mallorca']];
+export function corto(nombre) {
+  const n = norm(nombre);
+  if (n.includes('alaves')) return 'Alavés';           // «Deportivo Alavés» lleva «deportivo»
+  for (const [k, v] of CORTOS) if (n.includes(k)) return v;
+  return nombre;
+}
