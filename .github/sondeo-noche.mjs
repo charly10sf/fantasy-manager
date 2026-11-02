@@ -40,6 +40,7 @@ async function espn(conSumario) {
   const j = J(sb.b);
   const ev = (j?.events || []).find((e) => /OSA/.test(e.shortName || '') && /DEP/.test(e.shortName || ''));
   if (!ev) { if (E.ciclos % 10 === 0) log('ESPN: no veo Osasuna-Deportivo en el scoreboard'); return; }
+  if (!E.espn.id) log(`ESPN: partido encontrado id=${ev.id} ${ev.shortName} ${ev.date} estado=${ev.status?.type?.name}`);
   E.espn.id = ev.id;
   const c = ev.competitions?.[0] || {};
   const estado = `${ev.status?.type?.name}|${ev.status?.displayClock || ''}|${(c.competitors || []).map((x) => x.score).join('-')}`;
@@ -96,9 +97,9 @@ async function ff() {
     const r = await get(`https://www.futbolfantasy.com/laliga/equipos/${slug}`);
     if (r.s !== 200) continue;
     const t = r.b.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
-    const marcas = [...t.matchAll(/Alineaci[oó]n confirmada[^A-Za-z]{0,60}/gi)].map((m) => m[0].trim());
+    const marcas = [...t.matchAll(/.{0,50}Alineaci[oó]n confirmada.{0,110}/gi)].map((m) => m[0].trim());
     const k = marcas.join(' | ');
-    if (E.ff[slug] !== k) { evento('futbolfantasy', slug, `confirmada x${marcas.length}: ${k.slice(0, 200)}`); E.ff[slug] = k; }
+    if (E.ff[slug] !== k) { evento('futbolfantasy', slug, `confirmada x${marcas.length}: ${k.slice(0, 600)}`); E.ff[slug] = k; }
   }
 }
 
