@@ -293,7 +293,7 @@ function iconoEstado(estado, cx, cy, s) {
   return `<circle cx="${cx}" cy="${cy}" r="${s * 0.42}" fill="none" stroke="${c}" stroke-width="${s * 0.14}"/><circle cx="${cx}" cy="${cy}" r="${s * 0.11}" fill="${c}"/>`;
 }
 const anchoPildora = (txt, px) => ancho(txt, px) + [...txt].length * 1.2 + px * 0.55 * 2 + px * 1.6;
-const txtEstado = (f) => (f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : ESTADO_TARJETA[f.estado].txt);
+const txtEstado = (f) => (f.estado === 'duda' && f.leve ? 'DUDA LEVE' : f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : ESTADO_TARJETA[f.estado].txt);
 /** la etiqueta del estado (con el % si es duda), alineada a la derecha en xd */
 function pildora(f, xd, cy, px) {
   const e = ESTADO_TARJETA[f.estado];

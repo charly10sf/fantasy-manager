@@ -30,6 +30,8 @@ const TEMA = /lesi[oó]n|lesiona|baja|alta m[eé]dica|el alta|parte m[eé]dico|m
 // los medios que se nombran primero en el tweet (al revés: el último, el primero)
 const GRANDES = ['COPE', 'Cadena SER', 'SPORT', 'Mundo Deportivo', 'AS', 'MARCA'];
 const QUE = ['lesion', 'molestias', 'descartado', 'vuelve', 'nada'];
+/** gestión de cargas, descanso o precaución: una duda leve, no una lesión */
+export const esLeve = (s) => /gesti[oó]n de (la )?cargas?|carga de trabajo|cargas f[ií]sicas|dosific|descans|precauci[oó]n|rotaci[oó]n|reservad/i.test(String(s || ''));
 export const familia = (que) => (que === 'vuelve' ? 'buena' : 'mala');
 const MEDIOS = new RegExp(`(^|[^\\p{L}])(${[...NOMBRES_MEDIOS, 'SER'].map((m) => m.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?![\\p{L}])`, 'u');
 
@@ -231,14 +233,17 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const fuente = c.oficial ? `🗞️ Lo ha comunicado el club, según ${lis}` : c.medios.length >= 2 ? `🗞️ Lo cuentan ${lis}`
       : c.laliga && c.fam === 'mala' ? `🗞️ Según ${lis}; en LaLiga Fantasy ya sale como ${{ injured: 'lesionado', doubtful: 'duda', suspended: 'sancionado' }[c.est]}` : `🗞️ Según ${lis}`;
     const baja = c.que === 'descartado' || (c.que === 'lesion' && (c.est === 'injured' || (c.parte && c.parte.estado === 'baja') || !!c.plazo));
+    // duda leve (Domy, 3 nov 22:15, con el tweet de Kike Salas): gestión de cargas, descanso o precaución, sin lesión
+    const leve = c.fam === 'mala' && !baja && c.que !== 'lesion' && esLeve(`${c.motivo || ''} ${c.hecho || ''}`);
     const etiqueta = c.fam === 'buena' ? (c.est === 'ok' ? `✅ Disponible Fantasy ${paraLa(pp, jornada)}` : `👀 Apunta a volver en LaLiga Fantasy ${paraLa(pp, jornada)}`)
-      : baja ? `❌ Baja Fantasy ${paraLa(pp, jornada)}` : `⁉️ Duda Fantasy ${paraLa(pp, jornada)}`;
+      : baja ? `❌ Baja Fantasy ${paraLa(pp, jornada)}` : leve ? `⁉️ Duda leve Fantasy ${paraLa(pp, jornada)}` : `⁉️ Duda Fantasy ${paraLa(pp, jornada)}`;
     // el motivo, si dice algo (no «lesión» a secas) y no lo dice ya la cabecera; el plazo, si no lo dice ya
     const motivo = c.fam === 'mala' && c.motivo && c.motivo.split(' ').length >= 2 && !copia(c.motivo, cab, 3) ? c.motivo : '';
     const plazo = c.fam === 'mala' && c.plazo && !copia(c.plazo, cab, 3) && !copia(c.plazo, motivo, 3) ? c.plazo : '';
     const ideas = [motivo ? { t: `⚠️ ${cap(motivo)}`, prio: 8 } : null,
       plazo ? { t: `🗓️ ${cap(plazo)}`, prio: 7 } : null,
       { t: fuente, prio: 6 },
+      leve ? { t: '👀 Es por precaución, no por una lesión', prio: 6 } : null,
       media >= 3 ? { t: `‼️ ${quien} suma ${fmt(media)} puntos de media`, prio: 5 } : null,
       { t: etiqueta, prio: 9 }];
     const { usadas, texto } = tweet(cab, ideas);
@@ -246,7 +251,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const clave = `noticias|${j.id}:${c.fam}|${dia}`;
     const estadoCarta = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : null) : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';
     const fila = { id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo, club: equipos[String(j.teamId)] || '', caraUrl: j.image || null,
-      escudoUrl: escudos[String(j.teamId)] || null, estado: estadoCarta, media, valor: Number(j.marketValue) || 0, pct: null };
+      escudoUrl: escudos[String(j.teamId)] || null, estado: estadoCarta, leve: estadoCarta === 'duda' && leve, media, valor: Number(j.marketValue) || 0, pct: null };
     out.push({ tipo: 'noticias', clave, jornada, texto, numeros: [...(media >= 3 ? partes(media) : []), ...(pp ? [pp.jornada] : [jornada]), ...c.nums],
       tarjeta: estadoCarta ? tarjetaBajas({ jornada, filas: [fila], pp, clave }) : null });
   }

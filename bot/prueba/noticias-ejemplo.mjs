@@ -2,7 +2,7 @@
 //   node bot/prueba/noticias-ejemplo.mjs
 // Casos: una sola fuente espera; dos medios publican; un medio + LaLiga publica; lo de Champions no cuenta; una frase de Gemini que
 // copia el titular se tira; quien ya salió en novedades no se repite; y novedades no repite a quien ya contó la prensa.
-import { generar as noticias, frase, candidatos, copia, yaJugo } from '../tipos/noticias.mjs';
+import { generar as noticias, frase, candidatos, copia, yaJugo, esLeve } from '../tipos/noticias.mjs';
 import { generar as novedades } from '../tipos/novedades.mjs';
 import { leerRss } from '../lib/prensa.mjs';
 import { validar } from '../lib/validar.mjs';
@@ -123,5 +123,8 @@ let leidas = 0;
 ts = await noticias({ ...base, registro: new Registro(config), clave: '', leer: async () => { leidas++; return prensa; } });
 ok(!ts.length && !leidas, 'sin clave no lee nada');
 
+// duda leve (Domy, 3 nov 22:15): gestión de cargas, descanso o precaución sí; molestias o una lesión, no
+{ const r = ['Kike Salas es duda por gestión de cargas', 'descanso por precaución', 'molestias en el gemelo', 'rotura de fibras'].map(esLeve);
+  if (JSON.stringify(r) !== '[true,true,false,false]') { fallos++; console.log(`FALLA: esLeve ${JSON.stringify(r)}`); } }
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);
 process.exit(fallos ? 1 : 0);
