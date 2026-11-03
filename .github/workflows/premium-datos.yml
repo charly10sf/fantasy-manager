@@ -1,0 +1,23 @@
+# Prueba (3 nov): datos reales de LaLiga para rediseñar las tarjetas en local. Deja la carpeta en la rama pruebas-premium-datos.
+# Solo en la rama pruebas-tarjetas-premium. No publica nada.
+name: Premium datos
+on:
+  push:
+    branches: [pruebas-tarjetas-premium]
+permissions:
+  contents: write
+jobs:
+  datos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: node .github/pruebas/volcar-tarjetas.mjs --jornada=11 --salida=out/datos
+      - run: |
+          cd out && ls datos/img | wc -l
+          git init -q -b pruebas-premium-datos && git config user.name github-actions && git config user.email github-actions@users.noreply.github.com
+          git add . && git commit -qm "Datos para las tarjetas" && git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/pruebas-premium-datos
