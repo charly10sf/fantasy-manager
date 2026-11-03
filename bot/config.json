@@ -15,6 +15,7 @@
   "noticiasPorEjecucion": 2,
   "noticiasLotesEjecucion": 2,
   "geminiDia": 60,
+  "pulir": { "tipos": ["final", "mvp", "resumen", "caidas", "novedades", "previa"], "porDia": 40, "segundos": 45 },
   "tweetMax": 280,
   "hashtag": "",
   "tarjetas": { "final": true, "jugador": true, "resumen": true, "previa": true, "onces": true, "mercado": true, "caidas": true, "novedades": true, "noticias": true },
