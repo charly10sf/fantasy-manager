@@ -14,7 +14,7 @@ export const VERSION = '0.6.12f';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.12f', f: '2026-11-03', h: '20:34', t: 'Cuántos usan la app', menor: true,
+    v: '0.6.12f', f: '2026-11-03', h: '20:40', t: 'Cuántos usan la app', menor: true,
     cosas: [
       { para: 'dueño', tipo: 'nuevo', d: 'conexion', t: 'Quién usa la app, también en la web y con todas las cuentas', x: 'En la web ya sale «Quién usa la app» en Ajustes. Arriba tienes cuántas cuentas han entrado alguna vez, cuántas están activas esta semana y este mes, las altas de hoy, de 7 y de 30 días, desde dónde la usan (APK, Google Play o web), las altas de las 8 últimas semanas y las últimas cuentas nuevas.' },
     ],
