@@ -14,7 +14,7 @@ export const VERSION = '0.6.12e';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.12e', f: '2026-11-03', h: '14:00', t: 'Once probable bien leído', menor: true,
+    v: '0.6.12e', f: '2026-11-03', h: '14:01', t: 'Once probable bien leído', menor: true,
     cosas: [
       { tipo: 'arreglo', d: 'conexion', menor: true, t: 'El once probable ya no mete suplentes ni porcentajes al 100 %', x: 'Al leer el once probable entraban también los suplentes y el once tipo (salían 13-16 titulares por equipo) y algunos salían al 100 % porque se leía mal el número (Bernardo Silva, I. Williams o Sadiq). Ahora salen los 11 con su porcentaje real.' },
     ],
