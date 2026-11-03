@@ -1,8 +1,10 @@
 // Tarjetas con imagen para los tweets del bot: dibujo en SVG y paso a PNG con @resvg/resvg-js.
-// Estilo «carta» (Carlos, 3 nov 10:44, elegido entre «carta» y «oro»; antes, desde el 2 nov, «noche»): cartas de coleccionista
-// con diseño propio, fondo casi negro con el brillo del color de cada club y rayos en diagonal, letra Barlow Condensed (OFL, en
-// fuentes/) y titulares en dorado. El metal de cada carta sale de los puntos: élite (15 o más, negra con oro), oro (10-14),
-// plata (5-9), bronce (0-4) y roja (negativos); las que no van de puntos (mercado, bajas) son oscuras con el borde de su color.
+// Estilo «carta» (Carlos, 3 nov 10:44, elegido entre «carta» y «oro»; antes, desde el 2 nov, «noche»): fondo casi negro con el
+// brillo del color de cada club y rayos en diagonal, letra Barlow Condensed (OFL, en fuentes/) y titulares en dorado.
+// La carta de coleccionista (diseño propio) solo sale cuando la tarjeta va de un jugador: la de jugador (MVP y directo) y la de
+// bajas y novedades (Carlos, 3 nov 10:57). Su metal va por lo bueno que es el jugador, medido por su valor de mercado
+// (`metalDe`): leyenda (negra con oro, 90 M o más: Lamine Yamal, Mbappé…), oro (35-90 M), plata (10-35 M) y bronce (menos de
+// 10 M: un reserva del Málaga). Final, resumen, onces y mercado van en fichas, sin carta.
 // Seis tarjetas: final, jugador, resumen, onces, mercado y bajas.
 // Aquí solo se dibuja: los datos llegan ya montados (datos-tarjetas.mjs o el propio tipo) y validar.mjs comprueba que todo lo
 // escrito esté en ellos o en PALABRAS_FIJAS.
@@ -105,16 +107,15 @@ function marca(x, y, { ancla = 'start' } = {}) {
 
 // --- metales -----------------------------------------------------------------------------------------------------------------
 const METAL = {
-  elite: { fondo: [[0, '#1d1a26'], [0.55, '#0e0c13'], [1, '#2a2213']], borde: [[0, '#fff1c1'], [0.4, '#d9ad4b'], [0.7, '#8a6420'], [1, '#f3d58a']], tinta: '#f6e7b8', tenue: '#bfa66a', linea: '#5d4a22', brillo: 0.10, halo: 0.55 },
+  leyenda: { fondo: [[0, '#1d1a26'], [0.55, '#0e0c13'], [1, '#2a2213']], borde: [[0, '#fff1c1'], [0.4, '#d9ad4b'], [0.7, '#8a6420'], [1, '#f3d58a']], tinta: '#f6e7b8', tenue: '#bfa66a', linea: '#5d4a22', brillo: 0.10, halo: 0.55 },
   oro: { fondo: [[0, '#fbe9a6'], [0.45, '#e2bd5a'], [1, '#a77a23']], borde: [[0, '#fff6d6'], [0.5, '#c8952f'], [1, '#7a5512']], tinta: '#2a1c04', tenue: '#5a420f', linea: '#8a6a26', brillo: 0.35, halo: 0.28 },
   plata: { fondo: [[0, '#f3f5f8'], [0.5, '#c5ccd6'], [1, '#8b94a1']], borde: [[0, '#ffffff'], [0.5, '#a2abb7'], [1, '#606875']], tinta: '#1a1e25', tenue: '#454c58', linea: '#7b8491', brillo: 0.35, halo: 0.25 },
   bronce: { fondo: [[0, '#f0c9a0'], [0.5, '#c58a55'], [1, '#86522a']], borde: [[0, '#ffe2c4'], [0.5, '#b0743f'], [1, '#6a3c19']], tinta: '#2b1607', tenue: '#5b3417', linea: '#8d5a33', brillo: 0.3, halo: 0.25 },
-  roja: { fondo: [[0, '#3a0d16'], [0.55, '#1a070b'], [1, '#2b0a10']], borde: [[0, '#ffb3b3'], [0.5, '#d22b40'], [1, '#6e0f1d']], tinta: '#ffe1e4', tenue: '#d98a95', linea: '#6e2430', brillo: 0.08, halo: 0.4 },
 };
-/** el metal por los puntos */
-export const metalDe = (pts) => (pts >= 15 ? 'elite' : pts >= 10 ? 'oro' : pts >= 5 ? 'plata' : pts >= 0 ? 'bronce' : 'roja');
-/** carta oscura con el borde de un color (mercado, bajas) */
-const oscura = (color) => ({ fondo: [[0, '#1f1c27'], [0.6, '#121017'], [1, '#191620']], borde: [[0, '#ffffff'], [0.35, color], [1, '#2a2632']], tinta: TINTA, tenue: TENUE, linea: LINEA, brillo: 0.07, halo: 0.4 });
+// el metal por el valor de mercado (Carlos, 3 nov 10:57: «depende de la calidad del jugador»). Con los valores del 3 nov, de 841
+// jugadores de campo: unos 10 leyenda, unos 50 oro, unos 70 plata y el resto bronce
+export const METALES = [['leyenda', 90e6], ['oro', 35e6], ['plata', 10e6], ['bronce', 0]];
+export const metalDe = (valor) => (METALES.find(([, min]) => Number(valor) >= min) || METALES[METALES.length - 1])[0];
 
 /** silueta de la carta: esquinas de arriba con muesca en el centro, lados rectos y punta suave abajo (todo a escala del ancho) */
 function silueta(x, y, w, h) {
@@ -125,7 +126,7 @@ function silueta(x, y, w, h) {
 }
 
 /**
- * Una carta. o = { metal (objeto de METAL u oscura()), club (coloresClub), cara, escudo, grande ('19'), bajoGrande ('DEL'),
+ * Una carta. o = { metal (objeto de METAL), club (coloresClub), cara, escudo, grande ('19'), bajoGrande ('DEL'),
  *   nombre, lineas: [texto] (bajo el nombre), pie (SVG extra, ya colocado), caraAlto (fracción del ancho), esquina (texto arriba a la derecha) }
  * Devuelve { s, yNombre } para que quien la usa pueda colocar más cosas.
  */
@@ -180,36 +181,59 @@ function cabeceraPartido(L, V, centro, { arriba, colorArriba = TENUE, y = 118 } 
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
-// Tarjeta de final de partido: marcador, los 3 mejores de cada equipo en carta y los 3 peores en fichas.
+// Ficha de un jugador en fila (final, resumen y mercado): borde de un color, el color del club detrás de la cara, nombre, una
+// línea con el escudo y, a la derecha, la cifra grande y una pequeña debajo.
+// o = { cara, club (coloresClub), nombre, sub, escudo, grande, pequeno, acento, rank, borde }
+function fichaJugador(x, y, w, h, o) {
+  const gB = id('fb'), gF = id('ff'), cl = id('fc');
+  const borde = o.borde || o.acento;
+  let s = `<defs>${lineal(gB, [[0, '#ffffff'], [0.35, borde], [1, '#2a2632']], { x1: 0, y1: 0, x2: 1, y2: 1 })}`
+    + `${lineal(gF, [[0, o.club.vivo, 0.35], [0.5, '#17151d', 1], [1, '#121017', 1]], { x1: 0, y1: 0, x2: 1, y2: 0 })}`
+    + `<clipPath id="${cl}"><rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="${Math.min(13, h / 5)}"/></clipPath></defs>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(16, h / 4)}" fill="url(#${gB})"/>`
+    + `<rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="${Math.min(13, h / 5)}" fill="url(#${gF})"/>`;
+  const xc = x + (o.rank != null ? 34 : 10);
+  s += `<g clip-path="url(#${cl})">${caraFundida(o.cara, xc, y + 2, h + 10, { desde: 0.78 })}</g>`;
+  if (o.rank != null) s += texto(x + 20, y + Math.min(34, h * 0.45), String(o.rank), { px: Math.round(Math.min(30, h * 0.38)), peso: 900, ancla: 'middle', opacidad: 0.6 });
+  const xt = xc + h + 14, pxN = Math.round(Math.min(32, h * 0.38)), anchoDer = Math.max(110, medir(o.grande, h * 0.5, B) + 30);
+  const conSub = o.sub && h >= 56;
+  s += texto(xt, conSub ? y + h / 2 - 2 : y + h / 2 + pxN * 0.36, String(o.nombre).toUpperCase(), { px: pxN, peso: 800, max: w - (xt - x) - anchoDer });
+  if (conSub) {
+    const pxS = Math.round(Math.min(22, h * 0.27));
+    s += escudo(o.escudo, xt + pxS * 0.55, y + h / 2 + pxS * 0.95, pxS * 1.15)
+      + texto(xt + (o.escudo ? pxS * 1.35 : 0), y + h / 2 + pxS * 1.35, o.sub, { px: pxS, peso: 600, color: TENUE, max: w - (xt - x) - anchoDer - 24 });
+  }
+  s += texto(x + w - 18, o.pequeno ? y + h / 2 + 4 : y + h / 2 + h * 0.18, o.grande, { px: Math.round(Math.min(o.pequeno ? 40 : 58, h * (o.pequeno ? 0.5 : 0.56))), peso: 900, color: o.acento, ancla: 'end' });
+  if (o.pequeno) s += texto(x + w - 18, y + h / 2 + 30, o.pequeno, { px: 22, peso: 700, color: o.acento, ancla: 'end', opacidad: 0.85 });
+  return s;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta de final de partido: marcador en dorado y, por equipo, los 3 mejores y los 3 peores en fichas.
 // d = { jornada, local, visitante } con cada lado { nombre, corto, goles, escudo (PNG), mejores: [{nombre, pts, cara}] (3),
 //       peores: [...] (hasta 3, de más a menos malo: el primero es el que menos puntos ha sacado) }
-function fichaPeor(x, y, w, j, club) {
-  const r = 19, cx = x + 8 + r, cy = y + 28;
-  return `<rect x="${x}" y="${y}" width="${w}" height="56" rx="10" fill="${PANEL}" stroke="${LINEA}" stroke-width="1.2"/>`
-    + caraCirculo(j.cara, cx, cy, r, { aro: club.vivo, grosor: 2 })
-    + texto(cx + r + 8, cy + 8, String(j.nombre).toUpperCase(), { px: 22, peso: 700, max: w - (cx + r + 8 - x) - 42 })
-    + texto(x + w - 10, cy + 11, String(j.pts), { px: 32, peso: 900, color: j.pts < 0 ? MALO : TINTA, ancla: 'end' });
-}
 export function svgFinal(d) {
   const L = d.local, V = d.visitante;
   const cL = coloresClub(L.nombre), cV = coloresClub(V.nombre);
   const oro = dorado();
   let s = oro.defs + fondo([[200, 60, 560, cL.vivo, 0.6], [1000, 60, 560, cV.vivo, 0.6]]);
-  s += cabeceraPartido(L, V, texto(600, 156, `${L.goles}-${V.goles}`, { px: 132, peso: 900, color: `url(#${oro.g})`, ancla: 'middle', italica: true }),
-    { arriba: `FINAL · LALIGA FANTASY · JORNADA ${d.jornada}` });
+  s += cabeceraPartido(L, V, texto(600, 146, `${L.goles}-${V.goles}`, { px: 124, peso: 900, color: `url(#${oro.g})`, ancla: 'middle', italica: true }),
+    { arriba: `FINAL · LALIGA FANTASY · JORNADA ${d.jornada}`, y: 106 });
   const lado = (x0, eq, club) => {
-    let t = texto(x0 + 2, 210, 'MEJORES', { px: 20, peso: 700, color: VERDE, espacio: 3 });
-    const w = 166, gap = 14;
+    const w = 540;
+    let t = texto(x0 + 2, 194, 'MEJORES', { px: 20, peso: 700, color: VERDE, espacio: 3 });
     eq.mejores.slice(0, 3).forEach((j, i) => {
-      t += carta(x0 + i * (w + gap), 222, w, 274, { metal: METAL[metalDe(j.pts)], club, cara: j.cara, grande: String(j.pts), bajoGrande: 'PTS', nombre: j.nombre, yNombre: 0.83 }).s;
+      t += fichaJugador(x0, 206 + i * 72, w, 64, { cara: j.cara, club, nombre: j.nombre, grande: String(j.pts), acento: VERDE });
     });
     if (eq.peores.length) {
-      t += texto(x0 + 2, 540, 'PEORES', { px: 20, peso: 700, color: MALO, espacio: 3 });
-      eq.peores.slice(0, 3).forEach((j, i) => { t += fichaPeor(x0 + i * 181, 552, 172, j, club); });
+      t += texto(x0 + 2, 446, 'PEORES', { px: 20, peso: 700, color: MALO, espacio: 3 });
+      eq.peores.slice(0, 3).forEach((j, i) => {
+        t += fichaJugador(x0, 458 + i * 58, w, 50, { cara: j.cara, club, nombre: j.nombre, grande: String(j.pts), acento: j.pts < 0 ? MALO : TINTA, borde: MALO });
+      });
     }
     return t;
   };
-  s += lado(48, L, cL) + lado(612, V, cV) + marca(600, 650, { ancla: 'middle' });
+  s += lado(44, L, cL) + lado(616, V, cV) + marca(600, 660, { ancla: 'middle' });
   return marco(s);
 }
 
@@ -243,13 +267,14 @@ function graficaValor(x, y, w, h, valor, color) {
 }
 export function svgJugador(d) {
   const c = coloresClub(d.club.nombre);
-  const oro = dorado(), metal = METAL[metalDe(d.ptsJornada)];
+  const oro = dorado(), metal = METAL[metalDe(d.valorHoy)];
   let s = oro.defs + fondo([[300, 330, 560, c.vivo, 0.75], [1050, 80, 500, c.vivo, 0.18]]);
   // la carta: debajo del nombre, cuatro cifras con su etiqueta (Carlos, 3 nov 10:44: que se entienda qué es cada una)
   const x = 96, y = 36, w = 404, h = 600;
   const C = carta(x, y, w, h, { metal, club: c, cara: d.cara, escudo: d.club.escudo, grande: String(d.ptsJornada), bajoGrande: ABREV[d.posicion] || d.posicion, nombre: d.nombre });
   s += C.s;
-  const colC = d.cambio > 0 ? (metal === METAL.elite || metal === METAL.roja ? VERDE : '#0f7a43') : d.cambio < 0 ? (metal === METAL.elite || metal === METAL.roja ? MALO : '#a3172a') : metal.tenue;
+  const oscuro = metal === METAL.leyenda;
+  const colC = d.cambio > 0 ? (oscuro ? VERDE : '#0f7a43') : d.cambio < 0 ? (oscuro ? MALO : '#a3172a') : metal.tenue;
   const yc = C.yNombre + 66, xs = [x + w * 0.29, x + w * 0.71];
   s += cifra(xs[0], yc, num1(d.media), 'PUNTOS DE MEDIA', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
     + cifra(xs[1], yc, String(d.total), 'PUNTOS TOTALES', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
@@ -274,7 +299,7 @@ export function svgJugador(d) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
-// Tarjeta del resumen de la jornada: los 6 mejores o los 6 peores, seis cartas en fila.
+// Tarjeta del resumen de la jornada: los 6 mejores o los 6 peores, en dos columnas de 3 fichas.
 // d = { jornada, clave: 'mejores'|'peores', filas: [{ nombre, equipo, club (nombre largo), pts, cara (PNG), escudo (PNG) }] (6) }
 export function svgResumen(d) {
   const bueno = d.clave === 'mejores';
@@ -283,13 +308,13 @@ export function svgResumen(d) {
   s += texto(44, 126, bueno ? 'LOS MEJORES' : 'LOS PEORES', { px: 104, peso: 800, italica: true, color: `url(#${tit.g})` })
     + texto(1156, 84, `JORNADA ${d.jornada}`, { px: 40, peso: 800, ancla: 'end', espacio: 1 })
     + texto(1156, 118, 'LALIGA FANTASY', { px: 22, peso: 700, color: TENUE, ancla: 'end', espacio: 3 });
-  const filas = d.filas.slice(0, 6), w = 174, gap = 15, x0 = (ANCHO - (filas.length * w + (filas.length - 1) * gap)) / 2;
-  filas.forEach((j, i) => {
+  const w = 548, h = 132, x0 = [44, 608], y0 = 168;
+  d.filas.slice(0, 6).forEach((j, i) => {
     const club = coloresClub(j.club || j.equipo);
-    s += carta(x0 + i * (w + gap), 176, w, 400, { metal: METAL[metalDe(j.pts)], club, cara: j.cara, escudo: j.escudo, grande: String(j.pts), bajoGrande: 'PTS',
-      nombre: j.nombre, lineas: [j.equipo], esquina: String(i + 1), yNombre: 0.72, caraAlto: 1.25, caraCx: 0.58 }).s;
+    s += fichaJugador(x0[Math.floor(i / 3)], y0 + (i % 3) * (h + 14), w, h, { cara: j.cara, club, nombre: j.nombre, sub: j.equipo, escudo: j.escudo,
+      grande: String(j.pts), acento: bueno ? VERDE : MALO, borde: bueno ? '#e2bd5a' : MALO, rank: i + 1 });
   });
-  return marco(s + marca(600, 648, { ancla: 'middle' }));
+  return marco(s + marca(600, 652, { ancla: 'middle' }));
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -353,22 +378,8 @@ export function svgOnces(d) {
 //       dif: '+2,3 M', pct: '+2,3 %', valor: '102 M' }
 function fichaMercado(x, y, w, h, f, i, bueno) {
   const acento = bueno ? VERDE : MALO;
-  const club = coloresClub(f.club || f.equipo);
-  const gB = id('fb'), gF = id('ff'), cl = id('fc');
-  let s = `<defs>${lineal(gB, [[0, '#ffffff'], [0.35, acento], [1, '#2a2632']], { x1: 0, y1: 0, x2: 1, y2: 1 })}`
-    + `${lineal(gF, [[0, club.vivo, 0.35], [0.5, '#17151d', 1], [1, '#121017', 1]], { x1: 0, y1: 0, x2: 1, y2: 0 })}`
-    + `<clipPath id="${cl}"><rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="13"/></clipPath></defs>`
-    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="16" fill="url(#${gB})"/>`
-    + `<rect x="${x + 3}" y="${y + 3}" width="${w - 6}" height="${h - 6}" rx="13" fill="url(#${gF})"/>`
-    + `<g clip-path="url(#${cl})">${caraFundida(f.cara, x + 34, y + 2, h + 10, { desde: 0.78 })}</g>`
-    + texto(x + 20, y + 34, String(i + 1), { px: 30, peso: 900, color: TINTA, ancla: 'middle', opacidad: 0.6 });
-  const xt = x + 34 + h + 18;
-  s += texto(xt, y + h / 2 - 2, String(f.nombre).toUpperCase(), { px: 30, peso: 800, max: w - (xt - x) - 150 })
-    + escudo(f.escudo, xt + 11, y + h / 2 + 22, 24)
-    + texto(xt + (f.escudo ? 28 : 0), y + h / 2 + 30, `${f.equipo} · ${f.valor}`, { px: 21, peso: 600, color: TENUE, max: w - (xt - x) - 175 })
-    + texto(x + w - 18, y + h / 2 + 4, f.dif, { px: 40, peso: 900, color: acento, ancla: 'end' })
-    + texto(x + w - 18, y + h / 2 + 30, f.pct, { px: 22, peso: 700, color: acento, ancla: 'end', opacidad: 0.85 });
-  return s;
+  return fichaJugador(x, y, w, h, { cara: f.cara, club: coloresClub(f.club || f.equipo), nombre: f.nombre, sub: `${f.equipo} · ${f.valor}`, escudo: f.escudo,
+    grande: f.dif, pequeno: f.pct, acento, rank: i + 1 });
 }
 export function svgMercado(d) {
   const oro = dorado();
@@ -420,8 +431,8 @@ function pildora(f, cx, cy, px, wMax) {
     + texto(x + p * 1.75, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1 });
 }
 function cartaBaja(x, y, w, h, f, { conEscudo }) {
-  const e = ESTADO_TARJETA[f.estado], club = coloresClub(f.club || f.equipo);
-  const C = carta(x, y, w, h, { metal: oscura(e.color), club, cara: f.cara, escudo: conEscudo ? f.escudo : null,
+  const club = coloresClub(f.club || f.equipo);
+  const C = carta(x, y, w, h, { metal: METAL[metalDe(f.valor)], club, cara: f.cara, escudo: conEscudo ? f.escudo : null,
     grande: f.media || null, bajoGrande: f.media ? 'MEDIA' : (ABREV[f.posicion] || null), nombre: f.nombre,
     lineas: [conEscudo ? f.equipo : f.posicion].filter(Boolean), yNombre: conEscudo && w < 200 ? 0.7 : 0.66, caraAlto: w < 200 ? 1.25 : 1.0, caraCx: w < 200 ? 0.58 : 0.6 });
   return C.s + pildora(f, x + w / 2, C.yNombre + Math.max(100 * C.k, 62), Math.round(Math.max(32 * C.k, 16)), w - 40 * C.k);

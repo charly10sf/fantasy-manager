@@ -30,7 +30,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     else if (b === 'ok' && ['injured', 'suspended', 'doubtful'].includes(a)) que = 'vuelve';
     if (!que) continue;
     eventos.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null,
-      estado: que === 'lesion' ? 'lesionado' : que === 'sancion' ? 'sancionado' : 'disponible', media: Number(j.averagePoints) || 0, que, antes: a });
+      estado: que === 'lesion' ? 'lesionado' : que === 'sancion' ? 'sancionado' : 'disponible', media: Number(j.averagePoints) || 0, valor: Number(j.marketValue) || 0, que, antes: a });
   }
   if (!eventos.length) return [];
   log(`  (novedades) ${eventos.length} cambios: ${eventos.map((e) => `${e.nombre} ${e.antes}→${e.que}`).join(', ')}`);
