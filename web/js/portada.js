@@ -329,7 +329,7 @@ export function seccionMoviles() {
 
   ${seccion('pPriv', 'Privacidad', 'Tus datos, tuyos', `<div class="pp">${PRIVACIDAD.map(([ic, t, x]) => `<article class="rv">${icono(ic)}<h3>${t}</h3><p>${x}</p></article>`).join('')}</div>`)}
 
-  <section class="pz rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
+  <section class="pz-fin rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
     <p class="ps-i">Gratis. En Android, con la app. En el ordenador se usa desde esta misma web, sin descargar nada, y en el iPhone también, después de entrar una vez desde un ordenador.</p>
     <div class="pz-b"><a class="btn" href="${APK}">${icono('descargar')}Descargar la app para Android</a><a class="btn sec" href="#">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     ${proxPlay()}

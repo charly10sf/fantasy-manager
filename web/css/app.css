@@ -2086,7 +2086,7 @@ button.cr-p:active { background: var(--plano); }
 .escritorio .ps { padding: 128px 48px 8px; }
 .ps-c { margin-bottom: 26px; }
 .escritorio .ps-c { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 400px); align-items: end; gap: 48px; margin-bottom: 44px; }
-.portada-m .ps h2, .portada-m .pz h2 { margin: 0; font: 700 42px/0.95 var(--cond); text-transform: uppercase; color: var(--texto); }
+.portada-m .ps h2, .portada-m .pz-fin h2 { margin: 0; font: 700 42px/0.95 var(--cond); text-transform: uppercase; color: var(--texto); }
 .escritorio .portada-m .ps h2 { font-size: 68px; }
 .ps-k { margin-bottom: 10px; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 2px; color: var(--rojo-l); }
 .ps-k::before { content: ''; display: inline-block; width: 22px; height: 2px; margin-right: 10px; vertical-align: 4px; background: var(--rojo); }
@@ -2294,15 +2294,15 @@ div.pc { display: grid; gap: 18px; }
 .pp .ic { width: 26px; height: 26px; color: var(--sube); }
 .pp h3 { margin: 12px 0 6px; font: 700 22px/1.05 var(--cond); text-transform: uppercase; }
 .pp p { margin: 0; font-size: 15.5px; line-height: 1.5; color: var(--texto2); }
-.pz { margin: 80px 24px 0; padding: 40px 22px; border-radius: 26px; text-align: center; background: radial-gradient(120% 120% at 50% 0%, rgba(238, 28, 60, 0.3), var(--plano) 70%); border: 1px solid var(--rojo3); }
-.escritorio .pz { margin: 136px 48px 0; padding: 64px 48px; }
-.escritorio .portada-m .pz h2 { font-size: 72px; }
-.pz .ps-i { margin: 12px auto 24px; }
+.pz-fin { margin: 80px 24px 0; padding: 40px 22px; border-radius: 26px; text-align: center; background: radial-gradient(120% 120% at 50% 0%, rgba(238, 28, 60, 0.3), var(--plano) 70%); border: 1px solid var(--rojo3); }
+.escritorio .pz-fin { margin: 136px 48px 0; padding: 64px 48px; }
+.escritorio .portada-m .pz-fin h2 { font-size: 72px; }
+.pz-fin .ps-i { margin: 12px auto 24px; }
 .pz-b { display: grid; gap: 10px; max-width: 420px; margin: 0 auto; }
 .escritorio .pz-b { grid-template-columns: 1fr 1fr; max-width: 640px; }
 .escritorio .pz-b > :nth-child(3) { grid-column: 1 / -1; }
 .pz-b .btn { justify-content: center; margin: 0; }
-.portada .pz a.btn, .portada .pz a.btn .ic { color: #fff; }
+.portada .pz-fin a.btn, .portada .pz-fin a.btn .ic { color: #fff; }
 .pz-x { margin: 20px 0 0; font-size: 14px; color: var(--apagado); }
 .pz-x a { color: var(--rojo-l); }
 .pm-fin { padding: 36px 0 56px; }
@@ -2321,7 +2321,7 @@ div.pc { display: grid; gap: 18px; }
 .play-pronto span { display: grid; gap: 2px; }
 .play-pronto small { font-size: 11px; letter-spacing: 0.04em; color: var(--apagado); }
 .play-pronto b { font: 700 17px var(--cond); }
-.pz .play-pronto, .portada .pantalla .play-pronto { display: flex; width: fit-content; }
+.pz-fin .play-pronto, .portada .pantalla .play-pronto { display: flex; width: fit-content; }
 
 /* «Próximamente en Google Play» en la cabecera de la entrada: junto al logo, sin restar altura */
 .pant-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
