@@ -16,7 +16,7 @@ export const NOVEDADES = [
   {
     v: '0.6.12h', f: '2026-11-03', h: '21:12', t: 'El plan, sin esperas cuando Google se satura',
     cosas: [
-      { tipo: 'arreglo', d: 'conexion', t: 'Si Gemini está saturado, el plan prueba otro modelo al momento', x: 'Cuando Google se satura, los modelos Flash dicen que no a la vez y la app se quedaba minutos preguntándoles una y otra vez (alguno tardaba hasta dos minutos y medio en contestar que no). Ahora, si uno está saturado, pasa enseguida a otro de distinta familia (un Flash-Lite, que suele seguir contestando), ninguna pregunta pasa de su tiempo máximo y, si están todos saturados, te lo dice en vez de seguir esperando.' },
+      { tipo: 'arreglo', d: 'conexion', t: 'El plan ya no se queda esperando si Google va saturado', x: 'Cuando la IA de Google se satura, el plan podía tardar minutos. Ahora prueba enseguida con otra versión de la IA y, si no hay ninguna libre, te lo dice en vez de seguir esperando.' },
     ],
   },
   {
