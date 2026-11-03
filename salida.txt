@@ -1,0 +1,109 @@
+# Bot de X · modo simulacro · forzado
+# Semana 12 (isLive=false) · siguiente 13 · 10 partidos, 0 acabados · 868 jugadores
+
+## caidas: 6 tweets
+   tarjeta bajas-caidas_12_2430-3102: válida · 184371 bytes
+
+--- caidas|12|2430-3102 · peso 218 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 El Real Madrid pierde a Valverde y Vini Jr.
+
+❌ Valverde, lesionado (5,5 de media)
+🟥 Vini Jr., sancionado (6,3 de media)
+
+‼️ Los dos son titulares habituales
+
+❌ Baja Fantasy para la jornada 12 contra el Valencia
+   tarjeta bajas-caidas_12_2473-2477-2470: válida · 186286 bytes
+
+--- caidas|12|2473-2477-2470 · peso 255 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 El Villarreal pierde a Gueye, I. Akhomach y Foyth
+
+🟥 Gueye, sancionado (4,5 de media)
+❌ I. Akhomach, lesionado (4,8 de media)
+❌ Foyth, lesionado (4,3 de media)
+
+‼️ Todos son titulares habituales
+
+❌ Baja Fantasy para la jornada 12 contra el Getafe
+   tarjeta bajas-caidas_12_2924-3150: válida · 174607 bytes
+
+--- caidas|12|2924-3150 · peso 202 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 El Getafe pierde a Zaid Romero y Mojica
+
+❌ Zaid Romero, lesionado (5,9 de media)
+🟥 Mojica, sancionado
+
+‼️ Los dos son titulares habituales
+
+❌ Baja Fantasy para la jornada 12 contra el Villarreal
+   tarjeta bajas-caidas_12_2383-1029: válida · 179345 bytes
+
+--- caidas|12|2383-1029 · peso 247 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 El Rayo puede perder a Pathé I. Ciss y Álvaro García
+
+🟥 Pathé I. Ciss, sancionado (3,2 de media)
+⁉️ Álvaro García, duda: 39 % de titularidad
+
+‼️ Los dos son titulares habituales
+
+⁉️ Duda Fantasy para la jornada 12 contra la Real Sociedad
+   tarjeta bajas-caidas_12_3108-2354-2217-1070-2746-2639: válida · 173344 bytes
+
+--- caidas|12|3108-2354-2217-1070-2746-2639 · peso 269 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 Ojo a tu once fantasy: caídas para la jornada 12
+
+⁉️ Aubameyang (Deportivo), duda: 40 % de titularidad
+❌ Eric (Barça), lesionado
+❌ Cucho (Betis), lesionado
+❌ De Galarreta (Athletic), lesionado
+❌ Miguel Sierra (Sevilla), lesionado
+❌ M. Román (Celta), lesionado
+   tarjeta bajas-caidas_12_2785-3207-3011-2338: válida · 141709 bytes
+
+--- caidas|12|2785-3207-3011-2338 · peso 259 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 Los que se caen del once para la jornada 12 de LaLiga Fantasy
+
+❌ Riedel (Espanyol), lesionado
+❌ P. Martínez (Málaga), lesionado
+🟥 Jorge Salinas (Racing), sancionado
+❌ Aimar (Osasuna), lesionado
+
+‼️ Todos son titulares habituales: revisa tu alineación
+
+# Total: 6 generados, 6 los publicaría, 0 fallos · 3.4 s
+  (novedades) 2 cambios: Valverde ok→lesion, Lamine Yamal injured→vuelve
+
+--- A novedades|3104:vuelve|2026-11-03 · válido
+✅ Lamine Yamal vuelve a estar disponible en LaLiga Fantasy
+
+‼️ El delantero del Barça ya está recuperado, con 13,3 puntos de media
+
+✅ Disponible para la jornada 12 contra el Atlético
+   tarjeta bajas-novedades_3104_vuelve_2026-11-03: válida
+
+--- A novedades|2430:lesion|2026-11-03 · válido
+🚨 Saltan las alarmas con Valverde: lesionado en LaLiga Fantasy
+
+⚠️ El centrocampista del Real Madrid suma 5,5 puntos de media
+
+❌ En principio, baja para la jornada 12 contra el Valencia
+   tarjeta bajas-novedades_2430_lesion_2026-11-03: válida
+  (novedades) 6 cambios: Eric ok→lesion, Xavi Espart ok→lesion, Olmo ok→lesion, Cucho ok→lesion, Raphinha injured→vuelve, Mbappé injured→vuelve
+
+--- B novedades|2522:vuelve,3103:vuelve,2843:lesion,3092:lesion|2026-11-03 · válido
+🚨 Cambios de última hora en LaLiga Fantasy
+
+✅ Raphinha (Barça), disponible otra vez (14,3 de media)
+✅ Mbappé (Real Madrid), disponible otra vez (12,3 de media)
+❌ Xavi Espart (Barça), lesionado (6,2 de media)
+❌ Olmo (Barça), lesionado (5,7 de media)
+   tarjeta bajas-novedades_2522_vuelve_3103_vuelve_2843_lesion_3092_lesion_2026-11-03: válida
+
+--- B novedades|2354:lesion,2217:lesion|2026-11-03 · válido
+🚨 Novedades en LaLiga Fantasy
+
+❌ Eric (Barça), lesionado (5,6 de media)
+❌ Cucho (Betis), lesionado (5,2 de media)
+
+👀 Revisa tu once antes de la jornada
+   tarjeta bajas-novedades_2354_lesion_2217_lesion_2026-11-03: válida
