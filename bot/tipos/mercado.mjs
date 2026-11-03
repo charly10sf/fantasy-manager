@@ -1,16 +1,15 @@
-// Mercado de cada noche (Carlos, 2 nov 23:11): tras la actualización de valores (hacia las 00:15), dos tweets, los 3 jugadores que
-// más suben y los 3 que más bajan respecto al día anterior. Sale de /player/{id}/market-value (un punto por día, fechado a las 00:00
-// de Madrid): el último punto es el de hoy. Los dos tweets llevan el cierre de «Fantasy Manager · enlace en la bio».
+// Mercado de cada noche (Carlos, 2 nov 23:11; 3 nov 06:58): tras la actualización de valores (hacia las 00:15), un tweet corto con la
+// fecha y una tarjeta con los 5 que más suben y los 5 que más bajan respecto al día anterior (cara, escudo, cambio, % y valor). Sale de /player/{id}/market-value (un punto por día, fechado a las 00:00
+// de Madrid): el último punto es el de hoy. Lleva el cierre de «Fantasy Manager · enlace en la bio».
 import { valorMercado } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
-import { cierre, quepa, armar, corto, elegir, fmt, partes } from '../lib/texto.mjs';
+import { cierre, corto, fmt } from '../lib/texto.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t));
 const puntos = (h) => (Array.isArray(h) ? h : []).map((v) => ({ t: Date.parse(v.date), v: Number(v.marketValue) })).filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
 /** 1 234 567 -> «1,2 M»; por debajo del millón, en miles: «640 K» */
 const dinero = (x) => (x >= 1e6 ? `${fmt(x / 1e6)} M` : `${Math.round(x / 1e3)} K`);
-const numDinero = (x) => (x >= 1e6 ? partes(x / 1e6) : [Math.round(x / 1e3)]);
-const MEDALLA = { suben: ['🥇', '🥈', '🥉'], bajan: ['🔻', '🔻', '🔻'] };
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
 /**
  * ventanas: solo cuando el último valor de la lista es de HOY (Madrid) y aún no se ha publicado; sin ventanas (simulacro o forzado),
@@ -18,15 +17,17 @@ const MEDALLA = { suben: ['🥇', '🥈', '🥉'], bajan: ['🔻', '🔻', '🔻
  */
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
 
-export async function generar({ jugadores, equipos, jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), esperarHasta = 0, log = console.log }) {
+export async function generar({ jugadores, equipos, stats = [], jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), esperarHasta = 0, log = console.log }) {
   const hoy = diaMadrid(ahora);
   // solo justo después de la actualización (hacia las 00:15): el punto de hoy existe desde esa hora, así que sin esta ventana el tweet
   // podía salir a cualquier hora del día con un cambio de hace casi 24 h (el 2 nov salió a las 23:27; Carlos, 23:29)
   const [hDesde, hHasta] = config.horasMercado || [0, 6];
   const h = horaMadrid(ahora);
   if (ventanas && !forzar && (h < hDesde || h >= hHasta)) return [];
-  const claves = { suben: `mercado|${hoy}|suben`, bajan: `mercado|${hoy}|bajan` };
-  if (ventanas && !forzar && registro && registro.claves.has(claves.suben) && registro.claves.has(claves.bajan)) return [];
+  // un solo tweet por noche desde el 3 nov (antes, uno de subidas y otro de bajadas: sus claves cuentan como ya publicado)
+  const clave = `mercado|${hoy}`;
+  const viejas = [`mercado|${hoy}|suben`, `mercado|${hoy}|bajan`];
+  if (ventanas && !forzar && registro && (registro.claves.has(clave) || viejas.some((k) => registro.claves.has(k)))) return [];
   const lista = (jugadores || []).filter((j) => Number(j.marketValue) > 0 && j.playerStatus !== 'out_of_league');
   if (!lista.length) return [];
   const centinela = [...lista].sort((a, b) => Number(b.marketValue) - Number(a.marketValue))[0];
@@ -45,36 +46,33 @@ export async function generar({ jugadores, equipos, jornada, config = {}, regist
   if (ventanas && !forzar && dia !== hoy) { log(`  (mercado) el último valor es del ${dia}, aún no ha llegado el de hoy (${hoy})`); return []; }
   log(`  (mercado) valores del ${dia}: pido el histórico de ${lista.length} jugadores`);
   const hist = await enParalelo(lista, 25, (j) => valorMercado(j.id));
+  const escudos = {};
+  for (const m of stats || []) for (const lado of [m.local, m.visitor]) if (lado && lado.id != null && lado.badgeColor) escudos[String(lado.id)] = lado.badgeColor;
   const filas = [];
   lista.forEach((j, i) => {
     const h = puntos(hist[i]);
     if (h.length < 2 || diaMadrid(h[h.length - 1].t) !== dia) return;
     const nuevo = h[h.length - 1].v, antes = h[h.length - 2].v;
-    filas.push({ nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), nuevo, antes, dif: nuevo - antes, pct: (nuevo - antes) / antes * 100 });
+    filas.push({ id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, nuevo, antes, dif: nuevo - antes, pct: (nuevo - antes) / antes * 100 });
   });
   if (filas.length < 100) { log(`  (mercado) solo ${filas.length} jugadores con el valor de ${dia}: espero`); return []; }
-  const out = [];
-  for (const [clave, quien] of [['suben', 'sube'], ['bajan', 'baja']]) {
-    const ord = [...filas].filter((f) => (clave === 'suben' ? f.dif > 0 : f.dif < 0)).sort((a, b) => (clave === 'suben' ? b.dif - a.dif : a.dif - b.dif)).slice(0, 3);
-    if (ord.length < 3) continue;
-    const cab = clave === 'suben'
-      ? elegir(['📈 Mercado fantasy · Los 3 que más suben hoy', '📈 Los 3 jugadores que más se revalorizan hoy en el mercado fantasy', '📈 Mercado fantasy de hoy: los 3 que más suben'], `mc${dia}`)
-      : elegir(['📉 Mercado fantasy · Los 3 que más bajan hoy', '📉 Los 3 jugadores que más se devalúan hoy en el mercado fantasy', '📉 Mercado fantasy de hoy: los 3 que más bajan'], `mc${dia}`);
-    // el «3» de la cabecera también es un número del texto: sin él, el validador tumbaba el de los que bajan cuando ninguna cifra
-    // llevaba un 3 (el 3 nov, de las 00:35 a las 06:00; el de los que suben pasó porque llevaba un «+2,3 M»)
-    const num = [ord.length];
-    const lineas = ord.map((f, i) => {
-      const s = f.dif > 0 ? '+' : '-';
-      num.push(...numDinero(Math.abs(f.dif)), ...numDinero(f.nuevo), ...partes(Math.abs(f.pct)));
-      return `${MEDALLA[clave][i]} ${f.nombre} (${f.equipo}) ${s}${dinero(Math.abs(f.dif))} (${s}${fmt(Math.abs(f.pct))} %), ahora ${dinero(f.nuevo)}`;
-    });
-    const coment = clave === 'suben'
-      ? elegir(['Si los tienes, hoy sonríes.', 'Quien los fichó a tiempo, hoy gana.', 'Ojo, que la subida se cobra al venderlos.'], `mu${dia}`)
-      : elegir(['Si los tienes, hoy duele un poco.', 'Toca mirar si compensa aguantarlos.', 'Ojo con los que ibas a vender mañana.'], `mu${dia}`);
-    const pie = cierre(`mercado${dia}${clave}`);
-    const usadas = quepa(cab, [...lineas, coment], pie);
-    if (usadas.length < 3) continue;
-    out.push({ tipo: 'mercado', clave: claves[clave], jornada, texto: armar(cab, usadas, pie), numeros: num });
-  }
-  return out;
+  const suben = [...filas].filter((f) => f.dif > 0).sort((a, b) => b.dif - a.dif);
+  const bajan = [...filas].filter((f) => f.dif < 0).sort((a, b) => a.dif - b.dif);
+  if (suben.length < 3 || bajan.length < 3) { log('  (mercado) menos de 3 que suban o que bajen: nada que contar'); return []; }
+  const [, mes, dd] = dia.split('-').map(Number);
+  const fecha = `${dd} de ${MESES[mes - 1]}`;
+  // el texto, corto: todo lo demás va en la tarjeta (Carlos, 3 nov 06:58: que no diga top 3 y la imagen enseñe 5). Si la tarjeta
+  // no sale, el tweet tampoco (soloConImagen): un «subidas y bajadas» sin la lista no dice nada
+  const texto = `💸 Subidas y bajadas del mercado fantasy de hoy, ${dd}/${mes}\n\n${cierre(`mercado${dia}`)}`;
+  const num = [dd, mes];
+  // la tarjeta: top 5 de cada lado con cara, escudo, lo que cambia, el % y el valor
+  const N = 5;
+  const fila = (f) => ({ nombre: f.nombre, equipo: f.equipo, club: f.club, caraUrl: f.caraUrl, escudoUrl: f.escudoUrl,
+    dif: `${f.dif > 0 ? '+' : '-'}${dinero(Math.abs(f.dif))}`, pct: `${f.dif > 0 ? '+' : '-'}${fmt(Math.abs(f.pct))} %`, valor: dinero(f.nuevo) });
+  const d = { fecha, suben: suben.slice(0, N).map(fila), bajan: bajan.slice(0, N).map(fila) };
+  const todas = [...d.suben, ...d.bajan];
+  const tarjeta = { tipo: 'mercado', nombre: `mercado-${dia}`, d,
+    permitidos: { numeros: [dd, 1, 2, 3, 4, 5, ...todas.flatMap((f) => [f.dif, f.pct, f.valor])].map(String),
+      palabras: ['MERCADO', 'SUBEN', 'BAJAN', 'Y', 'de', 'M', 'K', MESES[mes - 1], ...todas.flatMap((f) => [f.nombre, f.equipo])] } };
+  return [{ tipo: 'mercado', clave, jornada, texto, numeros: num, tarjeta, soloConImagen: true }];
 }

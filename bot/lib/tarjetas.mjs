@@ -263,6 +263,38 @@ export function svgOnces(d) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta del mercado de cada noche (Carlos, 3 nov 06:56: «top 5 subidas y bajadas»): dos columnas, subidas en verde y bajadas en rojo.
+// d = { fecha: '3 de noviembre', suben: [fila] (5), bajan: [fila] (5) } con fila = { nombre, equipo, club, cara (PNG), escudo (PNG),
+//       dif: '+2,3 M', pct: '+2,3 %', valor: '102 M' }
+export function svgMercado(d) {
+  let s = brillo(240, -60, 560, VERDE, 0.2) + brillo(960, -60, 560, MALO, 0.2) + `<rect width="${ANCHO}" height="6" fill="${ROJO}"/>`
+    + texto(60, 58, 'LALIGA FANTASY', { px: 17, peso: 700, color: '#948f9b', espacio: 3 })
+    + texto(60, 118, 'MERCADO', { px: 58, display: true, color: '#fff' })
+    + texto(1140, 116, d.fecha, { px: 24, peso: 700, color: '#f4f2f3', ancla: 'end' });
+  const w = 525, h = 80, gap = 8, y0 = 182;
+  const col = (x, lista, bueno) => {
+    const acento = bueno ? VERDE : MALO;
+    let t = `<rect x="${x}" y="${y0 - 34}" width="6" height="20" rx="2" fill="${acento}"/>`
+      + texto(x + 16, y0 - 17, bueno ? 'SUBEN' : 'BAJAN', { px: 18, peso: 700, color: acento, espacio: 3 });
+    lista.slice(0, 5).forEach((f, i) => {
+      const y = y0 + i * (h + gap), cy = y + h / 2, r = 27, cx = x + 44 + r;
+      const club = coloresClub(f.club || f.equipo);
+      t += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#131317"/>`
+        + texto(x + 16, cy + 8, String(i + 1), { px: 22, display: true, color: '#55525c' })
+        + caraCirculo(f.cara, cx, cy, r, { aro: club.vivo, fondo: '#1b1b21', grosor: 2.5 })
+        + texto(cx + r + 16, cy - 2, f.nombre, { px: 24, peso: 700, color: '#f4f2f3', max: 230 })
+        + escudo(f.escudo, cx + r + 26, cy + 21, 20)
+        + texto(cx + r + (f.escudo ? 42 : 16), cy + 27, f.equipo, { px: 16, peso: 600, color: '#948f9b', max: 190 })
+        + texto(x + w - 18, cy + 4, f.dif, { px: 30, display: true, color: acento, ancla: 'end' })
+        + texto(x + w - 18, cy + 28, `${f.pct} · ${f.valor}`, { px: 16, peso: 600, color: '#948f9b', ancla: 'end' });
+    });
+    return t;
+  };
+  s += col(60, d.suben, true) + col(615, d.bajan, false);
+  return marco('#08080a', s + marca(600, 657));
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
 let Resvg = null;
 /** SVG -> PNG (Buffer). @resvg/resvg-js se carga solo si hace falta: el bot sin tarjetas no lo necesita */
 export async function aPng(svg) {
