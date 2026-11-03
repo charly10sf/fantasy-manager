@@ -1,0 +1,24 @@
+# Prueba (3 nov): caídas y novedades con la tarjeta de bajas, datos reales, en simulacro (no publica). Deja las imágenes y el texto
+# en la rama pruebas-bajas-salida. Solo en la rama pruebas-tarjetas-bajas.
+name: Bajas prueba
+on:
+  push:
+    branches: [pruebas-tarjetas-bajas]
+permissions:
+  contents: write
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: node bot/ejecutar.mjs --modo=simulacro --tipos=caidas --forzar=1 --ventanas=0 | tee salida.txt
+      - run: node .github/pruebas/novedades-reales.mjs | tee -a salida.txt
+      - run: |
+          mkdir out && cp tarjetas/*.png salida.txt out/ 2>/dev/null; cd out
+          git init -q -b pruebas-bajas-salida && git config user.name github-actions && git config user.email github-actions@users.noreply.github.com
+          git add . && git commit -qm "Prueba de bajas" && git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/pruebas-bajas-salida
