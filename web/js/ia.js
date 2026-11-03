@@ -116,7 +116,7 @@ function errorDe(estado, j) {
   const ri = (e0.details || []).find((d) => /RetryInfo/.test(d['@type'] || ''));
   if (ri && ri.retryDelay) info.espera = parseFloat(ri.retryDelay);
   if (/API key not valid|API_KEY_INVALID/i.test(todo)) return new ErrorIA('Google dice que la clave no es válida. Cópiala otra vez entera desde aistudio.google.com/apikey.', estado, { ...info, clave: true });
-  if (estado === 401 || (estado === 403 && /PERMISSION_DENIED|SERVICE_DISABLED|has not been used/i.test(todo))) return new ErrorIA('Google no deja usar Gemini con esta clave. Crea otra en aistudio.google.com/apikey (mejor en un proyecto nuevo).', estado, { ...info, clave: estado === 401 || /SERVICE_DISABLED|has not been used|API_KEY_SERVICE_BLOCKED/i.test(todo) });
+  if (estado === 401 || (estado === 403 && /PERMISSION_DENIED|SERVICE_DISABLED|has not been used/i.test(todo))) return new ErrorIA('Google no deja usar la IA con esta clave. Crea otra en aistudio.google.com/apikey (mejor en un proyecto nuevo).', estado, { ...info, clave: estado === 401 || /SERVICE_DISABLED|has not been used|API_KEY_SERVICE_BLOCKED/i.test(todo) });
   if (estado === 404) return new ErrorIA('Ese modelo no existe para tu clave', 404, info);
   if (estado === 429) {
     const busqueda = /search|grounding/i.test(todo);
@@ -260,11 +260,11 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
   const conFotos = (contents || []).some((c) => (c.parts || []).some((p) => p.inlineData));
   if (conFotos && modelos.length) {
     modelos = modelos.filter((m) => !esGemma(m));
-    if (!modelos.length) throw new ErrorIA(`Para mirar fotos hace falta un modelo Gemini y los de tu clave ya han gastado el cupo gratis de hoy. Pregúntalo sin la foto o vuelve ${vuelveCupo()}.`, 429, { todos: true });
+    if (!modelos.length) throw new ErrorIA(`Hoy ya se ha gastado el cupo gratis de la IA para mirar fotos. Pregúntalo sin la foto o vuelve ${vuelveCupo()}.`, 429, { todos: true });
   }
   if (!modelos.length) {
     const f = fuera();
-    throw new ErrorIA(`Todos los modelos de tu clave han gastado su cupo gratis de hoy (${Object.keys(f).length} probados). Vuelven ${vuelveCupo()}.`, 429, { todos: true });
+    throw new ErrorIA(`La IA ya ha gastado el cupo gratis de hoy de tu clave. Vuelve ${vuelveCupo()}.`, 429, { todos: true });
   }
   const quiereWeb = cfgIA().web;
   const resumen = [];
@@ -308,7 +308,7 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
               const otro = siguienteSano(desde);
               if (!otro) break;
               desde = otro;
-              alPaso(`${nombreModelo(modelo)} tarda: pregunto también a ${nombreModelo(otro)}…`);
+              alPaso('La IA tarda: pruebo también con otra versión…');
               const t1 = Date.now(), pensarO = !/gemini-(1|2\.0)/.test(otro);
               try {
                 const r = await llamar(otro, cuerpoDe(otro, false, pensarO, 'low'), { signal: ctlR.signal, limite: Math.max(20000, Math.min(90000, resta() - 5000)) });
@@ -356,7 +356,7 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
         // lo que escribió un intento que se ha cortado no se queda en pantalla
         if (viendoTexto && op.alTexto) op.alTexto('');
         viendoTexto = false;
-        alPaso(`${nombreModelo(modelo)}${web ? ' con búsqueda en Google' : ''}…`);
+        alPaso(`La IA está pensando${web ? ' y buscando en Google' : ''}…`);
         const t0 = Date.now();
         const ctlA = ramal();
         try {
@@ -384,12 +384,12 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
           if (e.tiempo) {
             tiempos++;
             const seg = Math.round(limite / 1000);
-            if (pensar && nivel !== 'low') { nivel = 'low'; intento--; alPaso(`${nombreModelo(modelo)} tarda más de ${seg} s: lo pido pensando menos…`); continue; }
+            if (pensar && nivel !== 'low') { nivel = 'low'; intento--; alPaso(`La IA tarda más de ${seg} s: se lo pido pensando menos…`); continue; }
             // repetirle lo mismo sin búsqueda volvía a tardar otro minuto largo: se salta un rato (las siguientes preguntas
             // no esperan por él) y se prueba con otro, ya sin búsqueda (`tiempos`)
             pausar(modelo, 600);
             resumen.push(`${nombreModelo(modelo)}: no contesta (más de ${seg} s)`);
-            alPaso(`${nombreModelo(modelo)} no contesta: pruebo con otro modelo…`);
+            alPaso('La IA no contesta: pruebo con otra versión…');
             break;
           }
           // se ha cortado la conexión (cambio de red, cobertura, Android cortando a la app): se espera y se repite
@@ -420,9 +420,9 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
           // una llamada a la herramienta de búsqueda mal hecha (MALFORMED_FUNCTION_CALL): repetirlo igual falla igual (y tarda minutos);
           // sin búsqueda, o si ya iba sin ella, el siguiente modelo
           if (e.vacio && /MALFORMED|TOOL|FUNCTION/i.test(e.fin || '')) {
-            if (web) { marcarMalConWeb(modelo); web = false; intento--; alPaso(`${nombreModelo(modelo)} ha fallado con la búsqueda: lo pido sin ella…`); continue; }
+            if (web) { marcarMalConWeb(modelo); web = false; intento--; alPaso('La búsqueda en Google ha fallado: lo pido sin ella…'); continue; }
             resumen.push(`${nombreModelo(modelo)}: respuesta rota (${e.fin})`);
-            alPaso(`${nombreModelo(modelo)} contesta mal: pruebo con otro modelo…`);
+            alPaso('La IA ha contestado mal: pruebo con otra versión…');
             break;
           }
           if (e.vacio && intento < 1) continue;
@@ -434,7 +434,7 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
             pausar(modelo, 300);
             resumen.push(`${nombreModelo(modelo)}: saturado`);
             const otro = modelos.slice(modelos.indexOf(modelo) + 1).find((m) => !saltar.has(m) && !pausas()[m]);
-            if (otro) alPaso(`${nombreModelo(modelo)} está saturado: pruebo con ${nombreModelo(otro)}…`);
+            if (otro) alPaso('La IA está saturada: pruebo con otra versión…');
             break;
           }
           if ((e.estado >= 500 || e.estado === 0 || e.estado == null) && intento < 2 && resta() > 2500 * (intento + 1) + 25000) { await espera(2.5 * (intento + 1), op.signal); continue; }
@@ -452,8 +452,8 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
     // lo que llegue después de contestar (la petición que ha perdido la carrera) ya no se pinta
     cerrado = true;
   }
-  if (saturados && saturados >= resumen.length - 1) throw new ErrorIA(`Google está saturado ahora mismo: ${saturados} modelos de Gemini han dicho que no pueden contestar. No es tu clave ni tu conexión; suele pasar en unos minutos. Vuelve a probar en un rato.`, 503, { todos: true, saturado: true });
-  throw new ErrorIA(`Ningún modelo ha podido contestar. ${resumen.slice(0, 4).join(' · ')}${resumen.length > 4 ? ` y ${resumen.length - 4} más` : ''}.${ultimo && ultimo.google ? ` Google: «${ultimo.google.slice(0, 140)}»` : ''}`, ultimo ? ultimo.estado : 0, { todos: true });
+  if (saturados && saturados >= resumen.length - 1) throw new ErrorIA('La IA de Google está saturada ahora mismo. No es tu clave ni tu conexión; suele pasar en unos minutos. Vuelve a probar en un rato.', 503, { todos: true, saturado: true });
+  throw new ErrorIA('La IA no ha podido contestar ahora; prueba en un rato.', ultimo ? ultimo.estado : 0, { todos: true, detalle: `${resumen.slice(0, 4).join(' · ')}${resumen.length > 4 ? ` y ${resumen.length - 4} más` : ''}${ultimo && ultimo.google ? ` · Google: «${ultimo.google.slice(0, 140)}»` : ''}` });
 }
 
 /* ---------------- todo lo que la IA sabe de tu liga ---------------- */
@@ -982,14 +982,14 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
   if (!json || !Array.isArray(json.operaciones)) {
     malPlan(r);
     const queda = TOPE_PLAN - (Date.now() - t0Plan);
-    if (queda < 60000) throw new ErrorIA(`Gemini ha contestado sin el formato del plan y ya no da tiempo a pedirlo otra vez (${Math.round((Date.now() - t0Plan) / 1000)} s). Vuelve a probar.`, 0);
+    if (queda < 60000) throw new ErrorIA(`La IA ha contestado sin el formato del plan y ya no da tiempo a pedirlo otra vez (${Math.round((Date.now() - t0Plan) / 1000)} s). Vuelve a probar.`, 0);
     if (alPaso) alPaso(r.fin === 'MAX_TOKENS' ? 'El plan se ha cortado: lo pido otra vez más corto…' : 'El plan ha llegado mal: lo pido otra vez…');
     const corto = pedido.replace(ctx, contexto(D, M, c, { corto: true }));
     r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, total: Math.min(240000, queda) });
     json = sacarJSON(r.texto);
     if (!json || !Array.isArray(json.operaciones)) malPlan(r);
   }
-  if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA(`Gemini ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Vuelve a probar.`, 0);
+  if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA(`La IA ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Vuelve a probar.`, 0);
   const P = { ...json, fuentes: r.fuentes.slice(0, 14), modelo: r.modelo, web: r.web, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };
   // lo que recomienda, con el valor de cada jugador hoy, para ver dentro de unos días cómo salió
   try { P.recs = recsDe(cuadrarPlan(P, D, M).ops, M); } catch (e) { P.recs = []; }

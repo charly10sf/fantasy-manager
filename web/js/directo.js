@@ -262,8 +262,10 @@ function sinJornada(S) {
   const prox = M.proxima;
   const ult = (M.jornadas || []).filter((j) => j.fin < ahora).pop() || null;
   let h = `<div class="eti">${prox ? `Jornada ${prox.n}` : 'LaLiga'}</div><div class="titulo">Directo</div>`;
-  h += `<p class="entradilla">${prox ? `La jornada ${prox.n} empieza ${cuando(prox.ini)}, en ${dura(prox.ini - ahora)}. ` : ''}Con los partidos en juego, aquí salen los marcadores, los puntos de cada jugador, tu once y cómo va tu liga, al minuto.</p>`;
-  const a = prox ? `<div class="sec"><h2>Jornada ${prox.n}</h2><span class="sub">${M.enParon ? 'tras el parón' : 'la próxima'}</span></div>${listaPartidos(S, prox.n, partidosJornada(S, prox.n))}` : '';
+  const ini = prox ? cuando(prox.ini) : '';
+  h += `<p class="entradilla">${prox ? `Empieza ${/^(lun|mar|mié|jue|vie|sáb|dom)/.test(ini) ? 'el ' : ''}${ini}${M.enParon ? ', tras el parón' : ''}. ` : ''}Aquí verás marcadores, puntos y tu liga al minuto.</p>`;
+  // (en el móvil, sin otra cabecera «Jornada N»: ya está arriba; en el ordenador va en dos columnas y cada una lleva la suya)
+  const a = prox ? `${ancho() ? `<div class="sec"><h2>Jornada ${prox.n}</h2><span class="sub">${M.enParon ? 'tras el parón' : 'la próxima'}</span></div>` : ''}${listaPartidos(S, prox.n, partidosJornada(S, prox.n))}` : '';
   let b = '';
   if (ult) {
     const u = puntosUltimaJornada(S);

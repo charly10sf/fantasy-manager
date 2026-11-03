@@ -4,7 +4,7 @@ import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
-import { analizar, planAuto } from './motor.js';
+import { analizar, planAuto, rematarAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import * as Dr from './directo.js';
@@ -290,8 +290,9 @@ async function codigoDeMudanza() {
 /* el aviso de que la app sigue en desarrollo, arriba en todas las pestañas, en la web y en la app (lo pidió Carlos el
    2 nov): lleva a «Reportar un fallo» y se cierra con la ×; vuelve a salir a los 7 días */
 const BETA_VUELVE = 7 * DIA;
-const bandaBeta = () => (Date.now() - (LS.get('beta-cerrada', 0) || 0) < BETA_VUELVE ? ''
-  : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo.</b> Si ves algo que falla o no cuadra, repórtalo y lo arreglo.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`);
+// (con la liga de ejemplo, solo su banda: las dos juntas se apilaban arriba)
+const bandaBeta = () => (S.D && S.D.demo) || (Date.now() - (LS.get('beta-cerrada', 0) || 0) < BETA_VUELVE) ? ''
+  : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo.</b> Si ves algo que falla o no cuadra, repórtalo y lo arreglo.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
 const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
 
 /* ---------------- la pantalla de carga ---------------- */
@@ -406,7 +407,7 @@ function marco() {
   // avisos sin contestar va en Ajustes). Rehacer el plan a mano está en la tarjeta del plan, en Hoy.
   // en el móvil cada botón lleva su nombre debajo (data-et); en el ordenador, el largo (aria-label) al lado
   // (en el ordenador, Pregunta va arriba del todo de la columna, encima de las pestañas)
-  const preg = `<button class="b-ico b-preg" id="bPregunta" data-ir="ia" aria-label="Pregúntale a la IA" data-et="Pregunta">${icono('ia')}</button>`;
+  const preg = `<button class="b-ico b-preg" id="bPregunta" data-ir="ia" aria-label="Pregunta" data-et="Pregunta">${icono('ia')}</button>`;
   const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
     ${anchoYa ? '' : preg}
     <button class="b-ico" id="bAjustes" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}<span class="gl oculto" id="gl-avisos"></span></button></div>`;
@@ -441,7 +442,7 @@ function pintarSup() {
     : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : `Actualizado ${rel(D.t)}`) : ''}`;
   $('#bRefrescar').classList.toggle('gira', S.cargando);
   pintarNumAvisos();
-  const pend = S.plan ? S.plan.ops.filter((o) => o.hoy !== false && !['esperar'].includes(o.accion) && !V.hecho(S, S.plan, o)).length : 0;
+  const pend = S.plan ? V.cuentaPasos(S, S.plan).pend : 0;
   const gh = $('#gl-hoy'); gh.textContent = pend; gh.classList.toggle('oculto', !pend);
   const ga = S.M.mias.filter((x) => x.riesgo === 'alto').length;
   const ge = $('#gl-equipo'); ge.textContent = ga; ge.classList.toggle('oculto', !ga);
@@ -463,7 +464,7 @@ function pintar({ arriba = false } = {}) {
   try { v.innerHTML = VISTAS[S.vista](S); } catch (e) {
     console.error(e);
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
-    v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
+    v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
   }
   $('#banda').innerHTML = bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Recargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
@@ -871,7 +872,7 @@ function montarPlan() {
   if (P && (P.dia === diaDe() || S.planEstado.cargando || !hayClave())) base = { ...P, viejo: P.dia !== diaDe() };
   else if (P && S.planEstado.error && Date.now() - P.t < 2 * 86400e3) base = { ...P, viejo: true };
   else base = planAuto(S.D, S.M, S.c);
-  S.plan = cuadrarPlan(base, S.D, S.M);
+  S.plan = rematarAuto(cuadrarPlan(base, S.D, S.M));
   S.opPorPid = {};
   for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
 }
@@ -1501,7 +1502,7 @@ async function generarPlan() {
   S.planEstado = { cargando: true, paso: '' };
   montarPlan();
   if (S.vista === 'hoy') pintar();
-  nativo.trabajando(true, 'La IA está leyendo tu liga y las noticias. Puedes salir de la app: te aviso al terminar.');
+  nativo.trabajando(true, 'La IA está leyendo tu liga y las noticias. Puedes salir de la app: te avisa al terminar.');
   const ctl = new AbortController();
   S.planCtl = ctl;
   try {
@@ -1568,7 +1569,7 @@ const htmlHoja = (tipo, arg) => {
   try { return htmlHoja0(tipo, arg); } catch (e) {
     console.error(e);
     apuntarError(e.message, `hoja ${tipo}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
-    return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Mándame el fallo y lo arreglo.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
+    return `<div class="hoja-cab"><h2>No se ha podido abrir</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div><div class="error-c">Algo ha fallado al abrir esto. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button></div></div>`;
   }
 };
 const htmlHoja0 = (tipo, arg) => (tipo === 'quien' ? Hj.quienUsaHTML(S) : tipo === 'avisos' ? Hj.avisos(S) : tipo === 'ajustes' ? Hj.ajustes(S) : tipo === 'vinculo' ? Hj.vinculoWeb(S) : tipo === 'j' ? Hj.fichaJugador(S, arg) : tipo === 'r' ? Hj.fichaRival(S, arg) : tipo === 'p' ? Dr.fichaPartido(S, arg) : tipo === 'c' ? Cl.fichaClub(S, arg) : tipo === 'anuncio' ? Hj.anuncioHTML(S, arg) : tipo === 'tarjeta' ? Tj.hojaTarjeta(S) : tipo === 'resumen' ? Hj.resumenEquipo(S) : tipo === 'chats' ? V.chatsViejosHTML() : tipo === 'sust' ? V.sustitutosHTML(S, arg) : Hj.diagnostico(S));
@@ -1751,7 +1752,7 @@ async function enviarPregunta(texto) {
   let ultimo = 0;
   // como con el plan: aunque salgas de la app sigue pensando, y si no estás en ella te avisa al contestar
   const resumenP = t ? `«${t.length > 60 ? `${t.slice(0, 57)}…` : t}»` : fotos.length > 1 ? 'Tus capturas' : 'Tu captura';
-  nativo.trabajando(true, `${resumenP} · Puedes salir de la app: te aviso cuando conteste.`, 'Pensando la respuesta');
+  nativo.trabajando(true, `${resumenP} · Puedes salir de la app: te avisa cuando conteste.`, 'Pensando la respuesta');
   const ctl = new AbortController();
   S.chatCtl = ctl;
   try {
@@ -1928,7 +1929,7 @@ window.webBuscada = (estado) => {
     return;
   }
   if (!avisar) return;
-  if (String(estado).startsWith('error')) tostada(`No he podido mirar si hay versión nueva (${String(estado).slice(7)})`, 5000);
+  if (String(estado).startsWith('error')) tostada(`No se ha podido mirar si hay versión nueva (${String(estado).slice(7)})`, 5000);
   else if (!S.nueva) tostada('Tienes la última versión');
 };
 document.addEventListener('visibilitychange', () => {
@@ -2304,15 +2305,15 @@ document.addEventListener('click', async (ev) => {
       let t = '';
       try { t = await navigator.clipboard.readText(); } catch (e) { /* sin permiso */ }
       const c = $('#claveIA');
-      if (!t) { if (c) c.focus(); tostada('No he podido leer lo copiado: pégalo tú en la casilla', 5000); break; }
+      if (!t) { if (c) c.focus(); tostada('No se ha podido leer lo copiado: pégalo tú en la casilla', 5000); break; }
       const k = limpiarClave(t);
       if (c) c.value = k;
       if (pareceClave(k)) await probarYGuardar();
       else tostada('Lo que tienes copiado no parece una clave: copia la de AI Studio (empieza por AQ. o AIza)', 6000);
       break;
     }
-    case 'borrarClave': if (confirm('¿Quitar la clave de Gemini?')) { guardarClave(''); rehacer(); repintarHoja(); pintar(); } break;
-    case 'probarIA': try { const l = await probarClave(); tostada(`${l.length} modelos disponibles con tu clave`); } catch (e) { tostada(e.message, 6000); } repintarHoja(); break;
+    case 'borrarClave': if (confirm('¿Quitar la clave de la IA?')) { guardarClave(''); rehacer(); repintarHoja(); pintar(); } break;
+    case 'probarIA': try { const l = await probarClave(); tostada(`La clave funciona: ${l.length} versiones de la IA disponibles`); } catch (e) { tostada(e.message, 6000); } repintarHoja(); break;
     case 'iaWeb': guardarCfgIA({ web: !cfgIA().web }); repintarHoja(); break;
     case 'iaAuto': guardarCfgIA({ auto: !cfgIA().auto }); repintarHoja(); break;
     case 'fondo': {
@@ -2455,7 +2456,7 @@ async function probarYGuardar() {
     const lista = await probarClave(k);
     guardarClave(k);
     LS.del('guia-clave');
-    tostada(`IA activada: ${lista.length} modelos disponibles con tu clave`);
+    tostada('IA activada: ya puedes preguntarle y hacer el plan con noticias');
     ir('hoy');
     S.planEstado = {};
     generarPlan();
@@ -2481,7 +2482,7 @@ document.addEventListener('input', (ev) => {
     if (!c) return;
     const k = limpiarClave(c.value);
     if (!pareceClave(k)) return;
-    if (probandoClave) { tostada('Espera, estoy probando la de antes'); return; }
+    if (probandoClave) { tostada('Espera: aún se está probando la de antes'); return; }
     c.value = k;
     probarYGuardar();
   }, pegado ? 50 : 700);
@@ -2551,7 +2552,7 @@ function salirDemo() {
 /** lo que conviene hacer para empezar (al final del tutorial) */
 function itemsEmpezar() {
   if (enDemo()) return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Entra con tu cuenta de LaLiga', x: 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga: la app nunca ve tu contraseña.', b: 'Entrar' }];
-  const l = [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'Activa la IA, gratis', x: 'Una clave gratis de Google en unos 3 minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
+  const l = [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'La IA, gratis', x: 'Una clave gratis de Google en unos 3 minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
   if (enApp) l.push({ k: 'avisos', ok: nativo.avisosPermitidos() && cfgAvisos().on, ic: 'campana', t: 'Activa los avisos', x: 'Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando está tu plan.', b: 'Activar' });
   return l;
 }
@@ -2561,7 +2562,7 @@ function pasosTour() {
   const demo = enDemo(), conClave = hayClave();
   const liga = S.D && S.D.liga && !demo ? S.D.liga.nombre : 'tu liga';
   return [
-    { logo: true, b: true, elegir: true, t: 'Bienvenido a Fantasy Manager', x: `Cada día te digo qué hacer en ${liga}: a quién vender, a quién clausular y cuánto pujar. ¿Te enseño lo básico o todo?` },
+    { logo: true, b: true, elegir: true, t: 'Bienvenido a Fantasy Manager', x: `Cada día la app te dice qué hacer en ${liga}: a quién vender, a quién clausular y cuánto pujar. ¿Quieres ver lo básico o todo?` },
     { v: 'hoy', sel: '.marcador', b: true, t: 'Tu equipo de un vistazo', x: 'Tu saldo, lo que puedes gastar de verdad (contando la deuda que te dejan y tus pujas), lo que vale tu equipo y tu puesto. Tócalo para ver el detalle.' },
     { v: 'hoy', sel: '.tiempos', si: () => !!$('.tiempos'), t: 'Lo que viene', x: 'Cuándo cambia el mercado, cuándo se abre la cláusula de uno tuyo y las de rivales que te interesan. Toca uno para ir a él.' },
     { v: 'hoy', sel: '.llevas', si: () => !!$('.llevas'), t: 'Lo que llevas hoy', x: 'Lo que has hecho en LaLiga desde el último cambio de mercado: lo terminado y lo que está en marcha (pujas, ofertas, lo que tienes a la venta).' },

@@ -2165,7 +2165,7 @@ export function planAuto(D, M, c) {
 
   // los próximos días: cláusulas que se abren, mercado, jornada y parón (lo más importante de cada día)
   const dias = {};
-  const add = (t, prio, texto) => { const d = diaDe(t); (dias[d] ||= { t, cosas: [] }).cosas.push({ prio, texto }); };
+  const add = (t, prio, texto, rev) => { const d = diaDe(t); (dias[d] ||= { t, cosas: [] }).cosas.push(rev ? { prio, texto, rev } : { prio, texto }); };
   const hora = (t) => cuando(t).split(' ').pop();
   for (const x of M.clausulas.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.meLlega && y.interes >= 55)) {
     add(x.protegidoHasta, x.interes, `${hora(x.protegidoHasta)} se abre ${x.j.nombre} (${eur(x.clausula)}, de ${x.rival.manager || x.rival.nombre})`);
@@ -2173,27 +2173,51 @@ export function planAuto(D, M, c) {
   for (const x of M.mias.filter((y) => !y.abierta && y.abreEn < 4 * DIA && y.riesgo !== 'ninguno')) add(x.protegidoHasta, 90, `${hora(x.protegidoHasta)} se acaba la protección de tu ${x.j.nombre}`);
   if (inicio) add(inicio, 100, `${hora(inicio)} empieza la jornada ${M.proxima.n}: saldo en positivo y once revisado antes`);
   if (inicio && inicio - M.VEDA_H * HORA > ahora) add(inicio - M.VEDA_H * HORA, 97, `${hora(inicio - M.VEDA_H * HORA)} se cierran las cláusulas hasta que empiece la jornada: lo que quieras clausular, antes o a las ${hora(inicio)}`);
-  const aRevender = [...especula.map((e) => e.j.nombre), ...M.paraRevender.filter((x) => !vendidos.has(x.pid)).map((x) => x.j.nombre)];
-  if (aRevender.length && ventana) add(ventana.ponerVenta, 99, `pon a la venta lo de revender (${aRevender.join(', ')}) y acepta las ofertas antes de la jornada`);
+  // (lo de revender lleva quién es: rematarAuto quita a los que la app descarte al cuadrar el plan)
+  const aRevender = [...especula.map((e) => ({ pid: e.pid, nombre: e.j.nombre })), ...M.paraRevender.filter((x) => !vendidos.has(x.pid)).map((x) => ({ pid: x.pid, nombre: x.j.nombre }))];
+  if (aRevender.length && ventana) add(ventana.ponerVenta, 99, '', aRevender);
   if (M.paron && M.paron.ini > ahora) add(M.paron.ini, 95, 'empieza el parón: los valores se paran, vende a los que estén en lo alto');
-  const proximos = Object.values(dias).sort((a, b) => a.t - b.t).slice(0, 5).map((d) => {
-    const cosas = d.cosas.sort((a, b) => b.prio - a.prio);
-    const resto = cosas.length - 3;
-    return { dia: cuando(d.t, { hora: false }), texto: cosas.slice(0, 3).map((c) => c.texto).join('. ') + (resto > 0 ? `. Y ${resto} cláusula${resto > 1 ? 's' : ''} más` : '') + '.' };
-  });
-
-  const n = (a) => ops.filter((o) => o.accion === a).length;
-  const partes = [n('vender') && `vender ${n('vender')}`, n('clausular') && `clausular ${n('clausular')}`, n('pujar') && `pujar por ${n('pujar')}`, n('blindar') && `proteger ${n('blindar')}`].filter(Boolean);
-  if (especula.length) partes.push(`especular con ${especula.length} para revender`);
+  const diasAuto = Object.values(dias).sort((a, b) => a.t - b.t);
   return {
     auto: true, t: ahora, dia: diaDe(ahora),
-    titular: partes.length ? `Hoy toca ${partes.join(', ')}` : ops[0].accion === 'alinear' ? 'Hoy solo toca preparar la jornada' : 'Hoy, quieto: guarda el dinero',
+    titular: titularAuto(ops),
     situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`,
-    operaciones: ops, proximos_dias: proximos,
+    operaciones: ops, proximos_dias: proximosAuto(diasAuto), diasAuto,
     alineacion: onceAhora.formacion ? { formacion: onceAhora.nombre, titulares: onceAhora.lineas.flat().map((j) => j.nombre), dudas: onceAhora.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`) } : null,
   };
 }
 
+/**
+ * el titular del plan automático: cuántas de cada cosa toca hoy. Sin los descartados ni lo de otro día, y lo de especular
+ * (pujas o cláusulas para revender) aparte, no contado otra vez como puja o cláusula
+ */
+function titularAuto(ops) {
+  const vivos = ops.filter((o) => !o.descartada && !o.sugerencia && o.hoy !== false);
+  const esp = (o) => o.objetivo === 'revender' && ['pujar', 'clausular', 'comprar'].includes(o.accion);
+  const n = (a) => vivos.filter((o) => o.accion === a && !esp(o)).length;
+  const e = vivos.filter(esp).length;
+  const partes = [n('vender') && `vender ${n('vender')}`, n('clausular') && `clausular ${n('clausular')}`, n('pujar') && `pujar por ${n('pujar')}`, n('blindar') && `proteger ${n('blindar')}`, e && `especular con ${e} para revender`].filter(Boolean);
+  return partes.length ? `Hoy toca ${partes.join(', ')}` : vivos.some((o) => o.accion === 'alinear') ? 'Hoy solo toca preparar la jornada' : 'Hoy, quieto: guarda el dinero';
+}
+/** los próximos días del plan automático (lo más importante de cada día); fuera de lo de revender, los que no van */
+function proximosAuto(dias, fuera = new Set()) {
+  const texto = (c) => {
+    if (!c.rev) return c.texto;
+    const quien = c.rev.filter((x) => !fuera.has(String(x.pid))).map((x) => x.nombre);
+    return quien.length ? `pon a la venta lo de revender (${quien.join(', ')}) y acepta las ofertas antes de la jornada` : '';
+  };
+  return dias.map((d) => ({ t: d.t, cosas: d.cosas.map((c) => ({ prio: c.prio, texto: texto(c) })).filter((c) => c.texto) })).filter((d) => d.cosas.length).slice(0, 5).map((d) => {
+    const cosas = d.cosas.sort((a, b) => b.prio - a.prio);
+    const resto = cosas.length - 3;
+    return { dia: cuando(d.t, { hora: false }), texto: cosas.slice(0, 3).map((c) => c.texto).join('. ') + (resto > 0 ? `. Y ${resto} cláusula${resto > 1 ? 's' : ''} más` : '') + '.' };
+  });
+}
+/** el plan automático ya cuadrado (con lo que la app descarta): el titular y los próximos días, sin los descartados */
+export function rematarAuto(P) {
+  if (!P || !P.auto || !Array.isArray(P.ops)) return P;
+  const fuera = new Set(P.ops.filter((o) => o.descartada && o.pid).map((o) => String(o.pid)));
+  return { ...P, titular: titularAuto(P.ops), proximos_dias: Array.isArray(P.diasAuto) ? proximosAuto(P.diasAuto, fuera) : P.proximos_dias };
+}
 
 /* ---------- el once: formaciones gratuitas, puntos esperados y el mejor once posible ---------- */
 // las formaciones gratuitas de LaLiga Fantasy, por si la API no las da

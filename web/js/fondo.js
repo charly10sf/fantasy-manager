@@ -55,7 +55,7 @@ export function avisosNuevos(antes, D, M) {
   if (misma) {
     const antesEnVenta = new Set((antes.misVentas || []).map((v) => v.pid));
     for (const v of (M.misVentas || []).filter((y) => !antesEnVenta.has(y.pid) && !(y.ofertas || []).length)) {
-      out.push({ k: `puesto:${v.pid}:${diaDe()}`, titulo: `${v.j.nombre} ya está en el mercado`, texto: `Puesto a ${eur(v.precio)} (vale ${eur(v.j.valor)}). La oferta de LaLiga llega con el cambio de mercado${M.cierreMercado ? ` (${cuando(M.cierreMercado)})` : ''}: te aviso en cuanto llegue y si te conviene aceptarla.`, hash: 'equipo' });
+      out.push({ k: `puesto:${v.pid}:${diaDe()}`, titulo: `${v.j.nombre} ya está en el mercado`, texto: `Puesto a ${eur(v.precio)} (vale ${eur(v.j.valor)}). La oferta de LaLiga llega con el cambio de mercado${M.cierreMercado ? ` (${cuando(M.cierreMercado)})` : ''}: la app te avisa en cuanto llegue y si te conviene aceptarla.`, hash: 'equipo' });
     }
   }
   // cuándo gira un jugador es una función top: si está bloqueada, el aviso no lo cuenta (en la app sale con candado)

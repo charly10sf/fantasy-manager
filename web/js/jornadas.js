@@ -111,7 +111,9 @@ export function jornadasHTML(S) {
   const faltan = 11 - campo.length;
   const notas = [];
   if (faltan > 0) notas.push(`<b class="rojo">${est === 'acabada' ? `Jugaste con ${campo.length}` : `Tienes ${campo.length} en el once`}: ${faltan > 1 ? `los ${faltan} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
-  if (est === 'acabada' && total != null && !puesto) notas.push('La suma de lo que hizo cada uno; LaLiga no da los puntos de cada equipo en esa jornada.');
+  // (en Rivales sale lo que da la clasificación de LaLiga para la última jornada: si no cuadra con la suma, se dice)
+  const pjLiga = est === 'acabada' && !puesto && M.ultimaJornada && M.ultimaJornada.n === n && !M.enJuego ? Number(((D.clasif || []).find((e) => String(e.teamId) === tid) || {}).puntosJornada) || 0 : 0;
+  if (est === 'acabada' && total != null && !puesto) notas.push(pjLiga && pjLiga !== total ? `Es la suma de lo que hizo cada uno de este once. En la clasificación de LaLiga (la que sale en Rivales) llevas ${pjLiga} en la J${n}.` : 'La suma de lo que hizo cada uno; LaLiga no da los puntos de cada equipo en esa jornada.');
   if (est === 'proxima') notas.push('El once que tienes puesto ahora en LaLiga. Debajo de cada uno, cuándo juega.');
   if (est === 'vivo') notas.push(`Se pone al día solo mientras se juega${M.vivo && M.vivo.t ? ` (lo último, a las ${horaDe(M.vivo.t)})` : ''}.`);
   if (notas.length) h += `<p class="t2 peq">${notas.join('<br>')}</p>`;
