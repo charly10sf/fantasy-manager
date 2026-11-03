@@ -1,0 +1,56 @@
+# Lectura de un solo uso de tweets de otras cuentas (3 nov 2026). Solo corre en la rama pruebas-x-lectura.
+# Lee la API de X con las claves del bot (≈1,53 $), cifra el resultado con la clave pública .github/x-lectura.pub.pem
+# y lo deja en la rama pruebas-x-salida. Si esa rama ya existe, no vuelve a leer (no se paga dos veces)
+# salvo que el commit diga [repetir].
+name: X lectura
+on:
+  push:
+    branches: [pruebas-x-lectura]
+    paths: ['.github/x-lectura.mjs', '.github/workflows/x-lectura.yml']
+permissions:
+  contents: write
+concurrency:
+  group: x-lectura
+  cancel-in-progress: false
+jobs:
+  leer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      X_API_KEY: ${{ secrets.X_API_KEY }}
+      X_API_SECRET: ${{ secrets.X_API_SECRET }}
+      X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+      X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: ¿Ya leído?
+        id: hecho
+        run: |
+          if git ls-remote --exit-code origin pruebas-x-salida >/dev/null 2>&1 && ! echo "${{ github.event.head_commit.message }}" | grep -q '\[repetir\]'; then
+            echo "Ya hay salida: no se vuelve a leer."; echo "si=1" >> "$GITHUB_OUTPUT"
+          fi
+      - name: ffmpeg
+        if: steps.hecho.outputs.si != '1'
+        run: which ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null)
+      - name: Leer
+        if: steps.hecho.outputs.si != '1'
+        run: node .github/x-lectura.mjs "$RUNNER_TEMP/salida"
+      - name: Cifrar y guardar
+        if: steps.hecho.outputs.si != '1'
+        run: |
+          cd "$RUNNER_TEMP"
+          tar czf x.tgz -C salida .
+          ls -la x.tgz | awk '{print "Tamaño sin cifrar:", $5}'
+          openssl rand -hex 32 > k.txt
+          openssl enc -aes-256-cbc -pbkdf2 -salt -in x.tgz -out x.enc -pass file:k.txt
+          openssl pkeyutl -encrypt -pubin -inkey "$GITHUB_WORKSPACE/.github/x-lectura.pub.pem" -pkeyopt rsa_padding_mode:oaep -in k.txt -out k.enc
+          rm -f k.txt x.tgz
+          mkdir out && cd out && split -b 45m ../x.enc x.enc. && cp ../k.enc .
+          git init -q -b pruebas-x-salida
+          git config user.name github-actions && git config user.email github-actions@users.noreply.github.com
+          git add . && git commit -qm "Lectura de X cifrada"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/pruebas-x-salida
+          echo "Guardado en pruebas-x-salida"
