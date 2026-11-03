@@ -1,7 +1,7 @@
 /* Las ventanas que suben desde abajo: la ficha de un jugador, la de un rival, los ajustes y el diagnóstico. */
 import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
-import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm } from './util.js';
+import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, ventaHTML, puntosUltimaJornada } from './vistas.js';
@@ -568,7 +568,7 @@ export function ajustes(S) {
   const ew = enApp ? nativo.estadoWeb() : null;
   h += `<div class="ajuste"><div class="c"><b>Versión ${VERSION}</b><span>${enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}${ew && ew.activa ? ' · puesta al día sola, sin reinstalar' : ''}` : enWeb ? 'En el navegador' : 'En el navegador (ejemplo)'}</span></div>${enApp ? '<button class="btn chico sec" data-accion="buscarVersion">Buscar nueva</button>' : '<button class="btn chico sec" data-accion="buscarWeb">Buscar nueva</button>'}</div>`;
   h += `<div class="ajuste"><div class="c"><b>Novedades</b><span>Lo que trae cada versión y lo que arregla</span></div><button class="btn chico sec" data-accion="novedades">Ver</button></div>`;
-  if (avisosGuardados().admin && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Quién usa la app</b><span>Solo lo ves tú: quién de tu liga la tiene, cuándo entró y quién está dentro ahora</span></div><button class="btn chico" data-accion="quienUsa">Ver</button></div>`;
+  if (avisosGuardados().admin && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Quién usa la app</b><span>Solo lo ves tú: cuántos la usan, desde dónde, quién de tu liga la tiene y quién está dentro ahora</span></div><button class="btn chico" data-accion="quienUsa">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google en esta sesión</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;
   if ((enApp || enWeb) && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Borrar los datos guardados</b><span>Histórico, fichas y planes (tu sesión y tu clave no)</span></div><button class="btn chico sec" data-accion="borrarDatos">Borrar</button></div>`;
@@ -697,11 +697,52 @@ export function quienUsaHTML(S) {
   }
   const conApp = deLiga.size;
   const dentro = lista.filter((x) => ahora - x.ultima < DENTRO).length;
+  if (Q.registro) h += registradosHTML(Q.registro, lista, ahora) + `<div class="grupo"><span>Tu liga</span></div>`;
   h += `<p class="quien-res"><b>${conApp} de ${tabla.length}</b> de tu liga han entrado en la app${dentro ? ` · <b>${dentro}</b> dentro ahora` : ''}.</p>`;
   h += `<div class="quien-l">${filas}</div>`;
   const fuera = lista.filter((x) => !deLiga.has(String(x.uid)));
   if (fuera.length) h += `<div class="grupo"><span>De fuera de tu liga</span></div><div class="quien-l">${fuera.map((x) => fila(x.nombre || 'Sin nombre', x.equipo, x)).join('')}</div>`;
   h += `<p class="peq apag" style="margin-top:14px">«Dentro ahora» es que ha tenido la app abierta en los últimos 12 minutos. Se apunta al abrirla con su cuenta de LaLiga: quien solo ha visto la liga de ejemplo, o tiene una versión anterior a la 0.4.4, no sale.</p>`;
+  return h;
+}
+
+/** (el dueño) todas las cuentas que han entrado alguna vez: total, activas, altas y desde dónde */
+const CANAL_TXT = { github: 'Android (APK)', play: 'Google Play', web: 'Web' };
+function registradosHTML(reg, lista, ahora) {
+  const hace = (d) => ahora - d * DIA;
+  const hoy = diaDe(ahora);
+  const cuenta = (f) => reg.filter(f).length;
+  const nuevos = { hoy: cuenta((x) => diaDe(x.primera) === hoy), d7: cuenta((x) => x.primera >= hace(7)), d30: cuenta((x) => x.primera >= hace(30)) };
+  const activos = { d1: cuenta((x) => x.ultima >= hace(1)), d7: cuenta((x) => x.ultima >= hace(7)), d30: cuenta((x) => x.ultima >= hace(30)) };
+  const porCanal = {};
+  for (const x of reg) for (const c of String(x.canales || '').split(',').filter(Boolean)) porCanal[c] = (porCanal[c] || 0) + 1;
+  // altas por semana (las 8 últimas, de 7 en 7 días hacia atrás desde hoy)
+  const semanas = Array.from({ length: 8 }, (_, i) => {
+    const hasta = hace(7 * i), desde = hace(7 * (i + 1));
+    return { desde, n: cuenta((x) => x.primera >= desde && x.primera < hasta) };
+  }).reverse();
+  const max = Math.max(1, ...semanas.map((x) => x.n));
+  const porUid = new Map(lista.map((x) => [String(x.uid), x]));
+  const ultimas = [...reg].sort((a, b) => b.primera - a.primera).slice(0, 8);
+  let h = `<div class="grupo"><span>Todas las cuentas</span></div>`;
+  h += `<div class="reg-cifras">
+    <div><b>${reg.length}</b><span>han entrado alguna vez</span></div>
+    <div><b>${activos.d7}</b><span>activas esta semana</span></div>
+    <div><b>${activos.d30}</b><span>activas en 30 días</span></div>
+  </div>`;
+  h += `<p class="quien-res">Altas: <b>${nuevos.hoy}</b> hoy · <b>${nuevos.d7}</b> en 7 días · <b>${nuevos.d30}</b> en 30 días. Hoy han abierto la app <b>${activos.d1}</b>.</p>`;
+  const canales = Object.keys(CANAL_TXT).filter((c) => porCanal[c]);
+  if (canales.length) h += `<p class="quien-res">Desde dónde: ${canales.map((c) => `${CANAL_TXT[c]} <b>${porCanal[c]}</b>`).join(' · ')}</p>`;
+  h += `<div class="reg-sem" role="img" aria-label="Altas por semana, las 8 últimas: ${semanas.map((x) => x.n).join(', ')}">${semanas.map((x) => `<div class="reg-b"><span class="reg-n">${x.n || ''}</span><i style="height:${Math.round((x.n / max) * 100)}%"></i><small>${esc(fechaCorta(x.desde))}</small></div>`).join('')}</div>`;
+  if (ultimas.length) {
+    h += `<p class="t2 peq" style="margin:12px 0 2px">Últimas altas</p><div class="quien-l">${ultimas.map((x) => {
+      const p = porUid.get(String(x.uid));
+      const nombre = p ? p.nombre || 'Sin nombre' : `Cuenta ${x.uid}`;
+      const donde = String(x.canales || '').split(',').filter(Boolean).map((c) => CANAL_TXT[c] || c).join(', ');
+      return `<div class="quien-f si"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(donde || '¿?')} · última vez ${cuando(x.ultima)}${x.dias ? ` · ${x.dias} ${x.dias === 1 ? 'día' : 'días'} con la app` : ''}</span></div><small>alta ${esc(cuando(x.primera, { hora: false }))}</small></div>`;
+    }).join('')}</div>`;
+  }
+  h += `<p class="peq apag" style="margin-top:10px">Cuenta todas las cuentas de LaLiga que han abierto la app con su sesión desde el 3 de noviembre, más las que la habían abierto en los 90 días anteriores. El nombre solo sale si la ha abierto en los últimos 90 días.</p>`;
   return h;
 }
 

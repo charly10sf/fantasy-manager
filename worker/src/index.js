@@ -31,7 +31,9 @@
  *   POST /hola                { v, canal, app, liga, equipo }: la app avisa de que está abierta (al abrirla y cada 10
  *                             minutos a la vista). Se apunta como mucho cada 9 minutos por cuenta.
  *   GET  /hola/todos          (el dueño) cada cuenta con su nombre, equipo, versión, primera y última vez y sus minutos
- *                             de hoy. Se borra a los 90 días sin abrir la app.
+ *                             de hoy. Se borra a los 90 días sin abrir la app. Además, `registro`: todas las cuentas
+ *                             que han entrado alguna vez (r:<uid>, sin nombre ni equipo y sin caducidad), para contar
+ *                             usuarios. /hola contesta { ok, admin } (admin: si quien llama es el dueño).
  *
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
@@ -403,6 +405,25 @@ async function uso(req, env, c) {
 
 /* ---------- quién usa la app ---------- */
 const VIVE_HOLA = 90 * 86400;
+const CANALES = new Set(['github', 'play', 'web']);
+/**
+ * la ficha de cada cuenta que ha entrado alguna vez (r:<uid>), para contar usuarios: no caduca y no lleva nombre ni
+ * equipo, solo { uid, primera, ultima, canales: 'github,web', dias: días distintos con la app abierta }. Se escribe
+ * como mucho una vez al día por cuenta (o si entra desde un sitio nuevo): las escrituras gratis de KV son unas mil al día.
+ */
+async function registrar(env, uid, canal, primera, ahora) {
+  try {
+    const k = `r:${uid}`, dia = hoyMadrid();
+    const ya = await env.VINCULOS.getWithMetadata(k);
+    const r = ya && ya.metadata ? ya.metadata : null;
+    const cs = new Set(String((r && r.canales) || '').split(',').filter(Boolean));
+    const nuevoCanal = CANALES.has(canal) && !cs.has(canal);
+    if (r && r.dia === dia && !nuevoCanal) return;
+    if (CANALES.has(canal)) cs.add(canal);
+    const ficha = { uid, primera: Math.min((r && r.primera) || primera, primera), ultima: ahora, dia, canales: [...cs].join(','), dias: ((r && r.dias) || 0) + (r && r.dia === dia ? 0 : 1) };
+    await env.VINCULOS.put(k, '1', { metadata: ficha });
+  } catch (e) { /* nada: si el almacén no deja, se sigue */ }
+}
 async function hola(req, env, c, ruta) {
   if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
@@ -424,7 +445,9 @@ async function hola(req, env, c, ruta) {
     // el almacén no deja, se sigue sin más; revisión del 29 oct)
     const cambia = !m || m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto;
     if (!m || cambia || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
-    return json({ ok: true }, 200, c);
+    await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora);
+    // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
+    return json({ ok: true, admin: adminsDe(env).includes(u.uid) }, 200, c);
   }
   // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
   // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app
@@ -445,7 +468,15 @@ async function hola(req, env, c, ruta) {
     const ks = (await listar(env, 'p:', 500)).filter((k) => k.metadata);
     const seg = await Promise.all(ks.slice(0, 100).map((k) => env.VINCULOS.get(`u:${k.metadata.uid}:${dia}`)));
     const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: Number(seg[i]) || 0 })).sort((a, b) => b.ultima - a.ultima);
-    return json({ lista, ahora: Date.now() }, 200, c);
+    // todas las cuentas que han entrado alguna vez: la ficha de r:, y quien aún no la tiene (no ha abierto la app desde
+    // que existe), con lo de p:
+    const reg = new Map((await listar(env, 'r:', 5000)).filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
+    for (const x of lista) {
+      const r = reg.get(String(x.uid));
+      if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
+      else if ((x.ultima || 0) > (r.ultima || 0)) reg.set(String(x.uid), { ...r, ultima: x.ultima });
+    }
+    return json({ lista, registro: [...reg.values()], ahora: Date.now() }, 200, c);
   }
   return json({ e: 'No existe' }, 404, c);
 }

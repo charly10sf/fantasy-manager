@@ -941,7 +941,8 @@ async function cargar0({ silencio = false } = {}) {
 function saludarSiToca() {
   if (!S.D || enDemo() || !haySesion() || document.hidden) return;
   const yo = S.M && S.M.yo;
-  saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '' });
+  saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '' })
+    .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {});
 }
 setInterval(saludarSiToca, 10 * 60e3);
 // con la app abierta, las respuestas a tus avisos también llegan sin tocar nada (comprobarAvisos mira como mucho cada 10 min)
@@ -1278,7 +1279,7 @@ function repintarAvisos() {
 async function abrirQuien() {
   S.quien = { cargando: true };
   hoja('quien');
-  try { const r = await quienUsa(); S.quien = { lista: r.lista || [], ahora: r.ahora || Date.now() }; }
+  try { const r = await quienUsa(); S.quien = { lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now() }; }
   catch (e) { S.quien = { error: e.estado === 403 ? 'Esto solo lo ve el dueño de la app.' : e.message || String(e) }; }
   if (S.tipoHoja && S.tipoHoja[0] === 'quien') repintarHoja();
 }

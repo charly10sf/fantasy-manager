@@ -64,10 +64,17 @@ export const todosAvisos = () => pedirWorker('GET', '/fallos/todos');
 export function fijarPendientes(n) { const a = avisosGuardados(); if (a.admin) LS.set('avisos', { ...a, pendientes: n }); }
 
 /* quién usa la app: cada app avisa al abrirse (y cada 10 minutos a la vista) y el dueño ve la lista */
+/** devuelve true si acaba de saberse que eres el dueño (para enseñar «Quién usa la app» en Ajustes, también en la web) */
 export async function saludar(datos) {
-  if (Date.now() - LS.get('hola-t', 0) < 9 * 60e3) return;
+  if (Date.now() - LS.get('hola-t', 0) < 9 * 60e3) return false;
   LS.set('hola-t', Date.now());
-  try { await pedirWorker('POST', '/hola', datos); } catch (e) { LS.set('hola-t', 0); }
+  let r;
+  try { r = await pedirWorker('POST', '/hola', datos); } catch (e) { LS.set('hola-t', 0); return false; }
+  if (!r || typeof r.admin !== 'boolean') return false;
+  const a = avisosGuardados();
+  if (!!a.admin === r.admin) return false;
+  LS.set('avisos', { ...a, admin: r.admin });
+  return r.admin;
 }
 export const quienUsa = () => pedirWorker('GET', '/hola/todos');
 /** las fotos de los de tu liga que usan la app ({ id del mánager: foto }); el Worker comprueba con LaLiga que la liga es tuya */

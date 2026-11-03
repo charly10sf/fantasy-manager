@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12e';
+export const VERSION = '0.6.12f';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.12e';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12f', f: '2026-11-03', h: '20:34', t: 'Cuántos usan la app', menor: true,
+    cosas: [
+      { para: 'dueño', tipo: 'nuevo', d: 'conexion', t: 'Quién usa la app, también en la web y con todas las cuentas', x: 'En la web ya sale «Quién usa la app» en Ajustes. Arriba tienes cuántas cuentas han entrado alguna vez, cuántas están activas esta semana y este mes, las altas de hoy, de 7 y de 30 días, desde dónde la usan (APK, Google Play o web), las altas de las 8 últimas semanas y las últimas cuentas nuevas.' },
+    ],
+  },
   {
     v: '0.6.12e', f: '2026-11-03', h: '14:01', t: 'Once probable bien leído', menor: true,
     cosas: [
