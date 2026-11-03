@@ -124,11 +124,14 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       for (const xs of tramos.values()) {
         const varios = xs.length > 1, eq = el(xs[0].eq), p = xs[0].p;
         const quien = lista(xs.map((x) => x.nombre));
-        const pcts = `(${lista(xs.map((x) => String(pct(x.p))))} %)`;
+        const ps = xs.map((x) => String(pct(x.p)));
+        const pcts = `(${new Set(ps).size === 1 ? ps[0] : lista(ps)} %)`;
         const frase = p >= 0.45 ? `${quien} ${varios ? 'apuntan' : 'apunta'} a titular en ${eq}, pero no ${varios ? 'son fijos' : 'es fijo'}`
           : p >= 0.25 ? `${quien} ${varios ? 'tienen' : 'tiene'} el puesto en el aire en ${eq}`
             : `${quien} lo ${varios ? 'tienen' : 'tiene'} complicado para salir de inicio en ${eq}`;
-        ideas.push({ t: `⁉️ ${frase} ${pcts}`, prio: prio -= 0.1 });
+        // la primera duda, lo primero; las bajas, antes que el resto de dudas (en la prueba del 3 nov se quedaban fuera por largo)
+        ideas.push({ t: `⁉️ ${frase} ${pcts}`, prio: prio });
+        prio = prio === 9.5 ? 8.5 : prio - 0.1;
         num.push(...xs.map((x) => pct(x.p)));
       }
       if (bajas.length) {
@@ -136,7 +139,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
           const xs = bajas.filter((x) => x.eq === eq).map((x) => x.nombre);
           if (!xs.length) continue;
           const nombres = xs.length > 1 ? `${xs.slice(0, -1).join(', ')} ni ${xs[xs.length - 1]}` : xs[0];
-          ideas.push({ t: `❌ ${mayus(el(eq))} no podrá contar con ${nombres}`, prio: 8 - (eq === V ? 0.1 : 0) });
+          ideas.push({ t: `❌ ${mayus(el(eq))} no podrá contar con ${nombres}`, prio: 9 - (eq === V ? 0.1 : 0) });
         }
       }
       if (!dudas.length && !bajas.length) ideas.push({ t: '✅ Sin dudas ni bajas entre los habituales', prio: 8 });
