@@ -36,7 +36,7 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     if (soloSeguras && j.playerStatus === 'doubtful') return;
     const p = j.playerStatus === 'doubtful' ? b.p * 0.6 : 0;
     if (p >= config.umbralCaida) return;
-    caidas.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0 });
+    caidas.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0, valor: Number(j.marketValue) || 0 });
   });
   // Cómo se escriben (guía de estilo del 3 nov, el formato de @JoseCarrasco_98): un equipo con dos o más caídas, en su propio tweet
   // («🚨 El Villarreal puede perder a…» y una línea por jugador); uno o dos sueltos, un tweet cada uno con la etiqueta final

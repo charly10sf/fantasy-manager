@@ -2,12 +2,16 @@
 // Dos tarjetas (Carlos, 2 nov): la de final de partido (escudos, marcador y los 3 mejores y los 3 peores de cada equipo) y la de
 // jugador (MVP o doblete: cara, escudo, puntos, últimas jornadas y gráfica de valor). Estilo «noche» (el negro y rojo de la app
 // con el brillo del color de cada club), elegido por Carlos el 2 nov a las 21:13 entre tres ejemplos (noche, papel y cromo).
+// Desde el 3 nov (Carlos, 11:11), las que hablan de UN jugador concreto (la de jugador y la de bajas con un solo jugador) van en
+// carta de coleccionista: lib/carta.mjs. Todo lo demás sigue en «noche».
 // Aquí solo se dibuja: los datos llegan ya montados (datos-tarjetas.mjs) y validar.mjs comprueba que todo lo escrito esté en ellos.
 import { coloresClub, luz } from './colores.mjs';
+import { svgJugadorCarta, svgBajaSola } from './carta.mjs';
 
 export const ANCHO = 1200, ALTO = 675;
 const ROJO = '#ee1c3c', VERDE = '#16c172', MALO = '#ff4d5e';
-const FUENTES = ['Inter-Regular.otf', 'Inter-SemiBold.otf', 'Inter-Bold.otf', 'InterDisplay-Black.otf'].map((f) => new URL(`../fuentes/${f}`, import.meta.url).pathname);
+const FUENTES = ['Inter-Regular.otf', 'Inter-SemiBold.otf', 'Inter-Bold.otf', 'InterDisplay-Black.otf',
+  'BarlowCondensed_600SemiBold.ttf', 'BarlowCondensed_700Bold.ttf', 'BarlowCondensed_800ExtraBold.ttf', 'BarlowCondensed_800ExtraBold_Italic.ttf', 'BarlowCondensed_900Black.ttf'].map((f) => new URL(`../fuentes/${f}`, import.meta.url).pathname);
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const uri = (buf) => (buf ? `data:image/png;base64,${Buffer.from(buf).toString('base64')}` : null);
@@ -123,86 +127,10 @@ export function svgFinal(d) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
-// Tarjeta de jugador
+// Tarjeta de jugador (MVP y directo): la carta, en lib/carta.mjs.
 // d = { jornada, etiqueta ('MVP · Barça 6-1 Alavés' o '¡DOBLETE! · …'), nombre, posicion, club: {nombre, corto, escudo},
 //       cara, ptsJornada, total, media, ultimas: [[jornada, pts], …] (5), valor: [[ms, €], …] (30 días), valorHoy, cambio (% en 30 días) }
-
-function barras(x, y, w, h, ultimas, tema) {
-  // y es la línea del 0; las barras crecen hacia arriba (h) y las negativas hacia abajo (h/3)
-  const max = Math.max(4, ...ultimas.map(([, p]) => Math.abs(p)));
-  const paso = w / ultimas.length, bw = Math.min(56, paso - 18);
-  let s = `<rect x="${x}" y="${y}" width="${w}" height="1.5" fill="${tema.linea}"/>`;
-  ultimas.forEach(([jn, p], i) => {
-    const cx = x + paso * i + paso / 2;
-    const alto = Math.max(4, Math.abs(p) / max * (p >= 0 ? h : h / 3));
-    const col = p < 0 ? MALO : i === ultimas.length - 1 ? tema.acento : tema.barra;
-    s += `<rect x="${cx - bw / 2}" y="${p >= 0 ? y - alto : y}" width="${bw}" height="${alto}" rx="6" fill="${col}"/>`
-      + texto(cx, p >= 0 ? y - alto - 10 : y + alto + 26, String(p), { px: 22, peso: 700, color: tema.tinta, ancla: 'middle' })
-      + texto(cx, y + (p < 0 ? alto + 52 : 30), `J${jn}`, { px: 15, peso: 600, color: tema.tenue, ancla: 'middle' });
-  });
-  return s;
-}
-
-function grafica(x, y, w, h, valor, tema, color) {
-  if (!valor || valor.length < 2) return texto(x, y + h / 2, 'Sin histórico de valor', { px: 18, peso: 600, color: tema.tenue });
-  const vs = valor.map(([, v]) => v), min = Math.min(...vs), max = Math.max(...vs), rango = max - min || 1;
-  const t0 = valor[0][0], t1 = valor[valor.length - 1][0];
-  const px = (t) => x + (t - t0) / ((t1 - t0) || 1) * w, py = (v) => y + h - (v - min) / rango * h;
-  const pts = valor.map(([t, v]) => `${px(t).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
-  const g = id('ga');
-  const [ux, uy] = [px(t1), py(vs[vs.length - 1])];
-  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity="0.45"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>`
-    + `<polygon points="${x},${y + h} ${pts} ${ux},${y + h}" fill="url(#${g})"/>`
-    + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`
-    + `<circle cx="${ux}" cy="${uy}" r="7" fill="${color}" stroke="${tema.fondo}" stroke-width="3"/>`;
-}
-
-export function svgJugador(d) {
-  const c = coloresClub(d.club.nombre);
-  const tema = { fondo: '#08080a', panel: '#131317', tinta: '#f4f2f3', tenue: '#948f9b', linea: '#2a2a32', barra: '#3a3a44', acento: VERDE };
-  const izq = 470;
-  let s = brillo(220, 380, 520, c.vivo, 0.6) + `<rect width="${ANCHO}" height="6" fill="${ROJO}"/>`;
-  const tintaIzq = '#fff';
-  // izquierda: la cara grande, el escudo y la etiqueta
-  s += caraSuelta(d.cara, izq / 2 - 10, ALTO, 440)
-    + escudo(d.club.escudo, 70, 88, 96)
-    + texto(130, 74, d.club.corto, { px: 26, peso: 700, color: tintaIzq, max: izq - 160 })
-    + texto(130, 104, `LALIGA FANTASY · J${d.jornada}`, { px: 15, peso: 700, color: tintaIzq, espacio: 2, opacidad: 0.8 });
-  // derecha
-  const x0 = izq + 70, wDer = ANCHO - x0 - 50;
-  // la etiqueta va en mayúsculas y con 2 px entre letras: se mide así (antes se medía en minúsculas y sin el espaciado, y los
-  // nombres largos, como «Osasuna» o «Real Sociedad», se salían de la píldora roja) y, si no cabe, se encoge la letra
-  const et = d.etiqueta.toUpperCase();
-  const medirEt = (p) => ancho(et, p) * 1.04 + et.length * 2 + 36;
-  let pxEt = 16;
-  while (pxEt > 10 && medirEt(pxEt) > wDer) pxEt--;
-  s += `<rect x="${x0}" y="40" width="${Math.min(wDer, medirEt(pxEt))}" height="38" rx="19" fill="${ROJO}"/>`
-    + texto(x0 + 18, 65, et, { px: pxEt, peso: 700, color: '#fff', espacio: 2 })
-    + texto(x0, 150, d.nombre, { px: 68, display: true, color: tema.tinta, max: wDer })
-    + texto(x0, 186, `${d.posicion} · ${d.club.corto}`, { px: 20, peso: 600, color: tema.tenue });
-  // tres cifras: puntos de la jornada, total y media
-  const cifras = [[String(d.ptsJornada), `PUNTOS J${d.jornada}`, d.ptsJornada < 0 ? MALO : VERDE], [String(d.total), 'EN LA TEMPORADA', tema.tinta], [num1(d.media), 'DE MEDIA', tema.tinta]];
-  const wc = (wDer - 2 * 16) / 3;
-  cifras.forEach(([v, et, col], i) => {
-    const x = x0 + i * (wc + 16);
-    s += `<rect x="${x}" y="212" width="${wc}" height="104" rx="16" fill="${tema.panel}"/>`
-      + texto(x + 20, 270, v, { px: 50, display: true, color: col })
-      + texto(x + 20, 300, et, { px: 13, peso: 700, color: tema.tenue, espacio: 1.5 });
-  });
-  // últimas jornadas
-  const wb = 300;
-  s += texto(x0, 360, 'ÚLTIMAS JORNADAS', { px: 14, peso: 700, color: tema.tenue, espacio: 2 })
-    + barras(x0, 548, wb, 140, d.ultimas, { ...tema, acento: d.ptsJornada < 0 ? MALO : VERDE });
-  // valor de mercado
-  const xg = x0 + wb + 40, wg = ANCHO - 50 - xg;
-  const colCambio = d.cambio > 0 ? VERDE : d.cambio < 0 ? MALO : tema.tenue;
-  s += texto(xg, 360, `VALOR · ${d.dias} DÍAS`, { px: 14, peso: 700, color: tema.tenue, espacio: 2 })
-    + texto(xg, 404, millones(d.valorHoy), { px: 36, display: true, color: tema.tinta })
-    + texto(xg + wg, 404, `${signo(d.cambio)} %`, { px: 24, peso: 700, color: colCambio, ancla: 'end' })
-    + grafica(xg, 430, wg, 118, d.valor, tema, d.cambio < 0 ? MALO : VERDE);
-  s += marca(x0, 640, { ancla: 'start', color: tema.tinta, tenue: tema.tenue });
-  return marco(tema.fondo, s);
-}
+export const svgJugador = (d) => svgJugadorCarta(d);
 
 // ---------------------------------------------------------------------------------------------------------------------------
 // Tarjeta del resumen de la jornada (Carlos, 2 nov 23:28): los 6 mejores o los 6 peores, en dos columnas de 3.
@@ -235,6 +163,62 @@ export function svgResumen(d) {
 // Tarjeta de la previa de un partido: los dos onces (posibles, con el % de titularidad de la app, o confirmados).
 // d = { jornada, confirmados, local, visitante } con cada lado { nombre, corto, escudo (PNG), formacion ('4-3-3'),
 //       once: [{ pos: 'POR'|'DEF'|'MED'|'DEL', nombre, pct (0-100) | null, duda: bool }] (11, de portero a delanteros) }
+// Carlos, 3 nov 11:47: «que saliera más en el campo representado el once»: un medio campo por equipo, con cada jugador en su
+// línea según la formación (portero abajo, delanteros arriba), una chapa con el color del club, el nombre y el %.
+function lineasDe(lado) {
+  const once = lado.once.slice(0, 11);
+  const f = String(lado.formacion || '').split('-').map(Number).filter((x) => x > 0);
+  if (f.length && f.reduce((a, b) => a + b, 0) === once.length - 1) {
+    const out = [once.slice(0, 1)]; let i = 1;
+    for (const c of f) { out.push(once.slice(i, i + c)); i += c; }
+    return out;
+  }
+  return ['POR', 'DEF', 'MED', 'DEL'].map((p) => once.filter((j) => j.pos === p)).filter((l) => l.length);   // sin formación que cuadre, por puestos
+}
+function campo(x, y, w, h, lado, club, confirmados) {
+  const g = id('cp');
+  const lc = 'stroke="#ffffff" stroke-opacity="0.14" stroke-width="2" fill="none"';
+  let s = `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${club.vivo}" stop-opacity="0.28"/><stop offset="1" stop-color="#131317" stop-opacity="1"/></linearGradient></defs>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="#131317"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="url(#${g})"/>`;
+  // franjas de césped, muy suaves
+  for (let k = 0; k < 6; k++) if (k % 2) s += `<rect x="${x}" y="${y + k * h / 6}" width="${w}" height="${h / 6}" fill="#ffffff" opacity="0.025"/>`;
+  // líneas: borde, medio campo arriba con su círculo, área grande, área pequeña y punto de penalti abajo
+  s += `<rect x="${x + 10}" y="${y + 10}" width="${w - 20}" height="${h - 20}" rx="10" ${lc}/>`
+    + `<path d="M${x + w * 0.34},${y + 10} A${w * 0.16},${w * 0.16} 0 0 0 ${x + w * 0.66},${y + 10}" ${lc}/>`
+    + `<rect x="${x + w * 0.2}" y="${y + h - 10 - 96}" width="${w * 0.6}" height="96" ${lc}/>`
+    + `<rect x="${x + w * 0.36}" y="${y + h - 10 - 36}" width="${w * 0.28}" height="36" ${lc}/>`
+    + `<path d="M${x + w * 0.4},${y + h - 106} A${w * 0.11},${w * 0.07} 0 0 1 ${x + w * 0.6},${y + h - 106}" ${lc}/>`;
+  const lineas = lineasDe(lado).reverse();
+  const alto = (h - 24) / lineas.length;
+  lineas.forEach((ls, i) => {
+    const cy = y + 14 + alto * i + alto * 0.3;
+    ls.forEach((j, k) => {
+      const cx = x + (w / (ls.length + 1)) * (k + 1);
+      const maxN = Math.min(124, w / ls.length - 8);
+      const colDe = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? '#f2b33d' : MALO);
+      const pctCol = colDe(j.pct);
+      const chapa = (jj, cxx, r) => `<circle cx="${cxx}" cy="${cy + 3}" r="${r + 1}" fill="#000" opacity="0.35"/>`
+        + (jj.cara ? caraCirculo(jj.cara, cxx, cy, r, { aro: jj.duda ? '#f2b33d' : club.vivo, fondo: '#1b1b21', grosor: 2.5 })
+          : `<circle cx="${cxx}" cy="${cy}" r="${Math.round(r * 0.6)}" fill="${club.vivo}" stroke="${jj.duda ? '#f2b33d' : '#ffffff'}" stroke-width="2.5"/>`);
+      if (j.alt && !confirmados) {
+        // dos opciones para el mismo puesto: las dos caras y debajo cada nombre con su %
+        s += chapa(j.alt, cx + 21, 18) + chapa(j, cx - 21, 18)
+          + texto(cx, cy + 37, `${j.nombre} ${j.pct} %`, { px: 15, peso: 700, color: pctCol, ancla: 'middle', max: maxN })
+          + texto(cx, cy + 56, `${j.alt.nombre} ${j.alt.pct} %`, { px: 15, peso: 700, color: colDe(j.alt.pct), ancla: 'middle', max: maxN });
+        return;
+      }
+      s += chapa(j, cx, 23)
+        + texto(cx, cy + 43, j.nombre, { px: 17, peso: 700, color: '#f4f2f3', ancla: 'middle', max: maxN });
+      if (pctCol && !confirmados) {
+        const t = `${j.pct} %`, wp = ancho(t, 15) + 16;
+        s += `<rect x="${cx - wp / 2}" y="${cy + 50}" width="${wp}" height="21" rx="10.5" fill="${pctCol}" fill-opacity="0.18" stroke="${pctCol}" stroke-opacity="0.6" stroke-width="1.2"/>`
+          + texto(cx, cy + 66, t, { px: 15, peso: 700, color: pctCol, ancla: 'middle' });
+      }
+    });
+  });
+  s += texto(x + 24, y + h - 24, lado.formacion || '', { px: 18, peso: 700, color: '#f4f2f3', espacio: 2 });
+  return s;
+}
 export function svgOnces(d) {
   const L = d.local, V = d.visitante;
   const cL = coloresClub(L.nombre), cV = coloresClub(V.nombre);
@@ -244,21 +228,7 @@ export function svgOnces(d) {
     + texto(140, 104, L.corto, { px: 32, peso: 700, color: '#fff', max: 300 })
     + texto(1060, 104, V.corto, { px: 32, peso: 700, color: '#fff', ancla: 'end', max: 300 })
     + texto(600, 106, 'VS', { px: 26, display: true, color: '#55525c', ancla: 'middle' });
-  const col = (x, lado, club) => {
-    let t = texto(x + 4, 152, lado.formacion || '', { px: 16, peso: 700, color: '#f4f2f3', espacio: 2 });
-    const fh = 41;
-    lado.once.slice(0, 11).forEach((j, i) => {
-      const y = 164 + i * fh;
-      const pctCol = j.pct == null ? null : j.pct >= 75 ? VERDE : j.pct >= 50 ? '#f2b33d' : MALO;
-      t += `<rect x="${x}" y="${y}" width="525" height="${fh - 5}" rx="9" fill="#131317"/>`
-        + texto(x + 14, y + 25, j.pos, { px: 14, peso: 700, color: '#948f9b', espacio: 1.5 })
-        + texto(x + 70, y + 26, j.nombre, { px: 21, peso: 700, color: '#f4f2f3', max: 330 })
-        + (j.duda ? texto(x + 430, y + 25, 'DUDA', { px: 13, peso: 700, color: '#f2b33d', ancla: 'end', espacio: 1.5 }) : '')
-        + (pctCol ? texto(x + 510, y + 26, `${j.pct} %`, { px: 21, peso: 700, color: pctCol, ancla: 'end' }) : '');
-    });
-    return t;
-  };
-  s += col(50, L, cL) + col(625, V, cV);
+  s += campo(50, 142, 535, 486, L, cL, d.confirmados) + campo(615, 142, 535, 486, V, cV, d.confirmados);
   return marco('#08080a', s + marca(600, 660));
 }
 
@@ -331,6 +301,7 @@ function pildora(f, xd, cy, px) {
     + texto(x + px * 0.55 + px * 1.3, cy + px * 0.36, txt, { px, peso: 700, color: e.color, espacio: 1.2 });
 }
 export function svgBajas(d) {
+  if (d.filas.length === 1) return svgBajaSola(d);          // un solo jugador: la carta (lib/carta.mjs)
   const filas = d.filas.slice(0, d.equipo ? 4 : 6);
   const tono = d.titulo === 'NOVEDADES' ? VERDE : d.titulo === 'DUDAS' ? '#f2b33d' : MALO;
   let s = `<rect width="${ANCHO}" height="6" fill="${ROJO}"/>`;
@@ -373,7 +344,8 @@ export function svgBajas(d) {
     const w = 525, h = 132, x0 = [60, 615], y0 = 168;
     const enUna = filas.length <= 3;              // con 3 o menos, una columna ancha
     filas.forEach((f, i) => {
-      const x = enUna ? 60 : x0[Math.floor(i / 3)], y = y0 + (i % 3) * (h + 14), ww = enUna ? 1080 : w;
+      const porCol = Math.ceil(filas.length / 2);   // 4 -> 2 y 2, 5 -> 3 y 2, 6 -> 3 y 3
+      const x = enUna ? 60 : x0[Math.floor(i / porCol)], y = y0 + (3 - (enUna ? filas.length : porCol)) * (h + 14) / 2 + (enUna ? i : i % porCol) * (h + 14), ww = enUna ? 1080 : w;
       const club = coloresClub(f.club || f.equipo);
       const r = 46, cx = x + 26 + r, cy = y + h / 2;
       const pil = pildora(f, x + ww - 20, cy, 17);
