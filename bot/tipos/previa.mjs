@@ -62,7 +62,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             // si alguno de los 11 de ESPN no casa con LaLiga, no se dice quién se queda fuera (podría ser ese mismo con otro nombre)
             const todosCasan = once.every((x) => x.id);
             const fuera = todosCasan ? Object.values(probs[k]).filter((x) => x.p >= 0.7 && !dentro.has(String(x.id))).sort((a, b) => b.p - a.p) : [];
-            const sorpresa = once.filter((x) => x.id && probs[k][x.id] && probs[k][x.id].p < 0.4);
+            // sorpresa: menos del 25 % (con el 40 % salían titulares de siempre, como Julián Alvarez, porque el % solo lleva minutos de LaLiga)
+            const sorpresa = once.filter((x) => x.id && probs[k][x.id] && probs[k][x.id].p < 0.25);
             // la formación, contada con las posiciones de LaLiga de la lista (la de ESPN, «4-2-3-1», no cuadraba con las filas)
             const cuenta = (q) => once.filter((x) => x.pos === q).length;
             conf[k] = { once, formacion: `${cuenta('DEF')}-${cuenta('MED')}-${cuenta('DEL')}`, fuera, sorpresa };
@@ -88,8 +89,19 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       }
       // --- posibles onces ---
       if (!(quierePos && !yaPos)) continue;
-      const lado = (k, mm) => ({ nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion,
-        once: pos[k].once.map((x) => ({ id: x.id, nombre: x.nombre, pos: x.pos, pct: pct(x.p), duda: x.duda })) });
+      // en los puestos con más duda (menos del 60 %), también el otro que se lo puede jugar, con su % (Carlos, 3 nov 11:52: «como
+      // dos opciones y poner el porcentaje de cada uno»): el mejor del mismo puesto que no está en el once y tiene 25 % o más,
+      // hasta 3 por equipo
+      const lado = (k, mm) => {
+        const once = pos[k].once.map((x) => ({ id: x.id, nombre: x.nombre, pos: x.pos, pct: pct(x.p), duda: x.duda, p: x.p }));
+        const fuera = new Set(once.map((x) => String(x.id)));
+        for (const x of [...once].filter((y) => y.p < 0.6).sort((a, b) => a.p - b.p).slice(0, 3)) {
+          const alt = Object.values(probs[k]).filter((y) => y.pos === x.pos && !fuera.has(String(y.id)) && y.p >= 0.25 && y.estado !== 'injured' && y.estado !== 'suspended')
+            .sort((a, b) => b.p - a.p)[0];
+          if (alt) { fuera.add(String(alt.id)); x.alt = { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda }; }
+        }
+        return { nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion, once: once.map(({ p, ...x }) => x) };
+      };
       const d = { jornada, confirmados: false, local: lado('L', m.local), visitante: lado('V', m.visitor) };
       // el texto: las dudas del once (titulares con menos del 65 %) y las bajas de titulares habituales
       const dudas = [...pos.L.once.map((x) => ({ ...x, eq: L })), ...pos.V.once.map((x) => ({ ...x, eq: V }))].filter((x) => x.p < 0.65 && x.p >= 0.1).sort((a, b) => a.p - b.p).slice(0, 3);
@@ -111,8 +123,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const fm = (f) => f.match(/\d/g);
       out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, numeros: num, partido: null,
         tarjeta: { tipo: 'onces', nombre: `previa-${m.id}`, d,
-          permitidos: { numeros: [jornada, ...fm(d.local.formacion), ...fm(d.visitante.formacion), ...d.local.once.map((x) => x.pct), ...d.visitante.once.map((x) => x.pct)].map(String),
-            palabras: [L, V, m.local.mainName, m.visitor.mainName, ...d.local.once.map((x) => x.nombre), ...d.visitante.once.map((x) => x.nombre)] } } });
+          permitidos: { numeros: [jornada, ...fm(d.local.formacion), ...fm(d.visitante.formacion), ...[...d.local.once, ...d.visitante.once].flatMap((x) => [x.pct, x.alt ? x.alt.pct : null]).filter((x) => x != null)].map(String),
+            palabras: [L, V, m.local.mainName, m.visitor.mainName, ...[...d.local.once, ...d.visitante.once].flatMap((x) => [x.nombre, x.alt ? x.alt.nombre : null]).filter(Boolean)] } } });
     }
   }
   return out;

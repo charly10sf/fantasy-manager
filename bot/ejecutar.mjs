@@ -62,7 +62,10 @@ if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
 
 // los puntos DAZN llegan después del final: final, MVP y resumen esperan a que estén (lib/dazn.mjs)
 const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: config.daznEsperaHoras ?? 6, log: (s) => console.log(s) });
-const ctx = { stats, jugadores, equipos, jornada, config, dazn, ventanas, semana: sem, probarAcabados: arg('previa-acabados') === '1', ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
+// solo mercado (lo lanza el Worker cada minuto de 00:13 a 00:30): espera dentro de la misma ejecución a que llegue el valor de hoy,
+// como mucho 7 min (el trabajo tiene un tope de 10); si no llega, sigue la siguiente ejecución
+const esperarHasta = ventanas && quienes.length === 1 && quienes[0] === 'mercado' ? Date.now() + 7 * 60e3 : 0;
+const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn, ventanas, semana: sem, probarAcabados: arg('previa-acabados') === '1', ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
   completo: !ventanas || pendientes === 0,
   desdeFinal: ventanas ? Date.now() - config.ventanaFinalHoras * 3600e3 : 0,
   // directo: con ventanas, el marcador de ESPN de hoy (y de ayer de madrugada) y solo partidos empezados hace menos de 3 h;
@@ -82,6 +85,11 @@ for (const q of quienes) {
   if (abortar) break;
   const mod = await import(`./tipos/${q}.mjs`);
   let c = ctx;
+  // horas de silencio (Carlos, 3 nov 09:49: «publique a horas más activas, no a las 5 am»): de 1 a 8 h de Madrid no sale nada salvo
+  // el directo (no hay partidos a esas horas) y el mercado (su propia ventana). Lo que toque se queda para las 8 (final y MVP aguantan
+  // con ventanaFinalHoras = 13: un partido de las 21 h llega a las 10)
+  const [sD, sH] = config.horasSilencio || [24, 24];
+  if (ventanas && !forzar && !['directo', 'mercado'].includes(q) && horaMadrid >= sD && horaMadrid < sH) { console.log(`\n## ${q}: horas de silencio (son las ${horaMadrid} h en Madrid; vuelve a las ${sH} h)`); continue; }
   if (q === 'caidas') {
     if (objetivoCaidas == null) { console.log(`\n## caidas: espero (quedan ${pendientes} partido(s) de la jornada ${jornada})`); continue; }
     if (!enHorarioCaidas) { console.log(`\n## caidas: fuera de horario (son las ${horaMadrid} h en Madrid; publico de ${hDesde} a ${hHasta} h)`); continue; }

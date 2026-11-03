@@ -3,7 +3,7 @@ on:
   push:
     branches: [pruebas-tweets-humanos]
 permissions:
-  contents: read
+  contents: write
 jobs:
   prueba:
     runs-on: ubuntu-latest
@@ -14,12 +14,13 @@ jobs:
         with:
           node-version: 22
       - run: npm ci --prefix bot --no-audit --no-fund
-      - name: simulacro (sin publicar)
+      - name: bajas y novedades con datos reales (sin publicar)
         run: |
-          mkdir -p salida
-          node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=final,mvp,resumen --ventanas=0 > salida/a.txt 2>&1 || true
-          node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=directo --ventanas=0 --fechas-espn=20261030,20261031,20261101,20261102 > salida/b.txt 2>&1 || true
-          node bot/ejecutar.mjs --modo=simulacro --tipos=caidas --forzar=1 > salida/c.txt 2>&1 || true
-          node bot/ejecutar.mjs --modo=simulacro --tipos=previa --forzar=1 > salida/d.txt 2>&1 || true
-          node bot/prueba/onces-real.mjs > salida/e.txt 2>&1 || true
-          cat salida/*.txt | sed 's/^/@@ /'
+          node bot/prueba/bajas-real.mjs 2>&1 | sed 's/^/@@ /'
+      - name: tarjetas a la rama pruebas-bajas2-salida
+        if: always()
+        run: |
+          cd salida-tarjetas || exit 0
+          git init -q -b pruebas-bajas2-salida && git add -A
+          git -c user.name=bot -c user.email=bot@example.com commit -qm "tarjetas de prueba"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:pruebas-bajas2-salida

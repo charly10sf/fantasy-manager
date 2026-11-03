@@ -71,7 +71,8 @@ export async function proximoPartido(teamId, { stats = null, semana = null, jorn
     const m = (await semanaDe(n)).find((x) => String(x.local.id) === String(teamId) || String(x.visitor.id) === String(teamId));
     if (!m || m.matchState === 7) continue;
     const enCasa = String(m.local.id) === String(teamId);
-    return { jornada: n, rival: corto((enCasa ? m.visitor : m.local).mainName), enCasa };
+    const r = enCasa ? m.visitor : m.local;
+    return { jornada: n, rival: corto(r.mainName), rivalNombre: r.mainName, rivalEscudo: r.badgeColor || null, enCasa };
   }
   return null;
 }

@@ -19,7 +19,7 @@ claves sin publicar) y, si sale bien, poner `BOT_MODO` = `publicar`.
 `resumen` (mejores y peores de la jornada, al acabar), `final` (cada partido al acabar, solo los empezados en las últimas 10 h),
 `directo` (cada gol con su asistente y los puntos fantasy, rojas y penaltis fallados, de los partidos de hoy empezados hace menos
 de 3 h; el término medio de Domy, aceptado por Carlos el 2 nov), `mvp` (el MVP de cada partido con su tarjeta), `caidas` (lesionados y sancionados habituales de la jornada que viene, al acabar la actual o antes de que empiece; las dudas, no, hasta
-tener una segunda fuente), `mercado` (cada noche, tras la actualización de valores de hacia las 00:15 y solo de 0 a 6 h: dos tweets, los 3 que más suben y los 3 que más bajan, por euros respecto al día anterior), `previa` (posibles onces de cada partido con el % de titularidad de la app, de 36 h a 3 h antes, de 9 a 23 h; `lib/onces.mjs`), `onces` (onces confirmados en cuanto ESPN los publica, con las sorpresas frente al posible once) y `novedades` (cambios de estado en LaLiga Fantasy de los jugadores que importan: lesionado, sancionado, vuelve; de 9 a 23 h; el estado anterior se guarda en el registro, `estados`). El resumen de la jornada, la previa y los onces llevan tarjeta (`svgResumen` y `svgOnces` en `lib/tarjetas.mjs`). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
+tener una segunda fuente), `mercado` (cada noche, tras la actualización de valores de hacia las 00:15, de 0 a 1 h y, si esa noche falla, de 8 a 12 h: un tweet con la tarjeta del top 5 que sube y baja), `previa` (posibles onces de cada partido con el % de titularidad de la app, de 36 h a 3 h antes, de 9 a 23 h; `lib/onces.mjs`), `onces` (onces confirmados en cuanto ESPN los publica, con las sorpresas frente al posible once) y `novedades` (cambios de estado en LaLiga Fantasy de los jugadores que importan: lesionado, sancionado, vuelve; de 9 a 23 h; el estado anterior se guarda en el registro, `estados`). El resumen de la jornada, la previa y los onces llevan tarjeta (`svgResumen` y `svgOnces` en `lib/tarjetas.mjs`). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Horas de silencio de 1 a 8 h (`horasSilencio`): no sale nada salvo el directo y el mercado; lo pendiente sale a partir de las 8 (`ventanaFinalHoras` = 13 para que el final y el MVP de un partido de las 21 h aguanten). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
 
 ### Cómo se escriben (3 nov: tweets más humanos)
 
@@ -31,7 +31,7 @@ Las piezas comunes están en `lib/redactar.mjs`:
 - Frase corta de sujeto, verbo y dato; la segunda vez que sale un jugador, por su puesto (`segunda`: «el delantero»).
 - Las dudas, con palabras según el % (`enPalabras`) y el número al lado.
 - Jornada y rival en la etiqueta final («❌ Baja Fantasy para la jornada 12 contra el Valencia»; `proximoPartido` y `paraLa`).
-- Caídas y novedades con el formato de Carrasco: un tweet por jugador (o por equipo, si tiene varios) cuando son pocos, en lista si son muchos.
+- Caídas y novedades: un jugador solo, en su tweet con el formato de Carrasco; varios, en un tweet agrupado por lo que pasa, sin lista de paréntesis («❌ Se caen por lesión Lemar en el Elche y M. Román en el Celta», «✅ Vuelven Valverde al Real Madrid y Sadiq al Valencia»), con una cabecera que ya cuenta la noticia y la media solo del que más pesa (`lib/agrupar.mjs`; Carlos, 3 nov 12:06). Sin repetir: caídas deja fuera a quien ya salió en caídas de esa jornada o en novedades de las últimas 24 h (`cubiertos()` del registro, que lo saca de las claves), y entre un tweet de novedades y uno de caídas pasan al menos `separacionBajasMin` (75) minutos. Los cambios de novedades que no salen (topes, separación) quedan pendientes en el registro (`novedadesPend`) hasta 36 h. Prueba sin red: `node bot/prueba/bajas-ejemplo.mjs`.
 - El mercado no usa esto todavía (lo lleva otra sesión). Las respuestas de Telegram siguen igual.
 
 ### Cómo se escriben (2 nov, noche)
@@ -47,7 +47,9 @@ Las piezas comunes están en `lib/redactar.mjs`:
 
 ## Tarjetas con imagen (encendidas desde el 2 nov)
 
-Dos tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov): la de **final** (escudos, marcador y los 3 mejores y los 3
+Tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov). Desde el 3 nov, las que hablan de UN jugador concreto (la de
+jugador y la de bajas o novedades de uno solo) van en carta de coleccionista (diseño propio, `lib/carta.mjs`, letra Barlow
+Condensed), con el metal según su valor de mercado: leyenda 90 M o más, oro 35-90 M, plata 10-35 M, bronce el resto. Las primeras fueron la de **final** (escudos, marcador y los 3 mejores y los 3
 peores de cada equipo con su cara y sus puntos oficiales; «peores» = los que menos puntúan de los que jugaron 30' o más, con los
 minutos de la ficha de cada jugador, porque stats/week no los trae) y la de **jugador** (cara, escudo, puntos de la jornada, total,
 media, últimas 5 jornadas y valor de los últimos 30 días con su cambio). La de final va en el tweet `final`; la de jugador, en
@@ -55,7 +57,7 @@ un tweet `mvp` aparte por partido (tope 10 por jornada) y, en `directo`, una por
 
 - Se encienden en `config.json`: `"tarjetas": { "final": true, "jugador": true }`. Con las dos a false el bot hace lo mismo que sin
   esto (ni instala nada ni genera el tweet `mvp`).
-- Código: `lib/tarjetas.mjs` (dibujo SVG y PNG con @resvg/resvg-js, fuente Inter en `fuentes/`), `lib/datos-tarjetas.mjs` (datos de la
+- Código: `lib/tarjetas.mjs` (dibujo SVG y PNG con @resvg/resvg-js, fuentes Inter y Barlow Condensed, OFL, en `fuentes/`), `lib/datos-tarjetas.mjs` (datos de la
   API de LaLiga sin token: stats/week, player/{id} y player/{id}/market-value; fotos y escudos PNG de assets-fantasy),
   `lib/con-tarjetas.mjs` (qué tarjeta lleva cada tweet), `tipos/mvp.mjs`, y `subirImagen` en `lib/x.mjs` (POST /2/media/upload con
   la imagen en base64, categoría tweet_image; el tweet lleva luego `media.media_ids`).

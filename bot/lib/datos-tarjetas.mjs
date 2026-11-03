@@ -12,7 +12,7 @@ export const DIAS_CAMBIO = 30;          // y el cambio, en esos mismos 30 días
 const POS = { 1: 'Portero', 2: 'Defensa', 3: 'Centrocampista', 4: 'Delantero', 5: 'Entrenador' };
 // palabras fijas de las tarjetas (todo lo demás tiene que salir de los datos)
 export const PALABRAS_FIJAS = ['LALIGA', 'FANTASY', 'JORNADA', 'FINAL', 'MEJORES', 'PEORES', 'pts', 'MANAGER', 'Fantasyman_app', 'MVP', 'DOBLETE',
-  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', ...Object.values(POS)];
+  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', ...Object.values(POS)];
 
 const caraDe = (p) => p && p.images && p.images.transparent && p.images.transparent['256x256'];
 const minutosEn = (ficha, n) => { const s = (ficha && ficha.playerStats || []).find((x) => Number(x.weekNumber) === Number(n)); return s ? Number((s.stats.mins_played || [0])[0]) : 0; };
@@ -96,4 +96,49 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
     palabras: [j.nickname, club.mainName, corto(club.mainName), L, V, POS[j.positionId] || ''],
   };
   return { d, permitidos };
+}
+
+/**
+ * Lo que la carta de un jugador enseña además de su estado (Carlos, 3 nov 11:24: en la de un lesionado, «sus últimas jornadas y el
+ * valor que tiene»): las 5 últimas jornadas que ya tienen puntos (hasta `jornada`), total, media y valor de los últimos 30 días.
+ * Devuelve { d, numeros } (numeros: lo que la imagen puede escribir, sacado de los datos crudos).
+ */
+export async function historialJugador(j, { jornada, fuentes, ahora = Date.now() }) {
+  const wp = new Map((j.weekPoints || []).map((w) => [Number(w.weekNumber), Number(w.points)]));
+  const conDatos = [...wp.keys()].filter((k) => k <= jornada);
+  const hasta = conDatos.length ? Math.max(...conDatos) : jornada;
+  const ultimas = [];
+  for (let k = Math.max(1, hasta - 4); k <= hasta; k++) ultimas.push([k, wp.has(k) ? wp.get(k) : 0]);
+  const crudo = await fuentes.valor(j.id).catch(() => null);
+  const serie = (Array.isArray(crudo) ? crudo : []).map((v) => [Date.parse(v.date), Number(v.marketValue)]).filter(([t, v]) => t && v).sort((a, b) => a[0] - b[0]);
+  const hoy = serie.length ? serie[serie.length - 1] : [ahora, Number(j.marketValue)];
+  const valor = serie.filter(([t]) => t >= hoy[0] - DIAS_VALOR * 864e5);
+  const antes = [...serie].reverse().find(([t]) => t <= hoy[0] - DIAS_CAMBIO * 864e5) || valor[0];
+  const cambio = antes ? Math.round((hoy[1] - antes[1]) / antes[1] * 100) : 0;
+  const d = { ultimas, total: Number(j.points), media: Number(j.averagePoints), valor, valorHoy: hoy[1], cambio, dias: DIAS_VALOR };
+  const numeros = [0, j.points, num1(j.averagePoints), ...ultimas.flat(), millones(hoy[1]).replace(' M', ''), Math.abs(cambio), DIAS_VALOR].map(String);
+  return { d, numeros };
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta de bajas y novedades (caídas y novedades). Recibe a los jugadores ya elegidos por el tipo, cada uno con
+// { id, nombre, teamId, pos, equipo (corto), club (largo), estado ('lesionado'|'sancionado'|'duda'|'disponible'), pct, media, caraUrl, escudoUrl }.
+// Si todos son del mismo club, la tarjeta es la de ese equipo (con su próximo rival, pp de proximoPartido); si no, la lista.
+export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
+  const mismo = filas.length && filas.every((f) => String(f.teamId) === String(filas[0].teamId));
+  const conMedia = (f) => (f.media >= 3 && f.estado !== 'duda' ? num1(f.media) : null);
+  // (Carlos, 3 nov 10:25: «BAJAS» con jugadores «DISPONIBLE» no tiene sentido) si alguno vuelve, la tarjeta es de novedades
+  const titulo = filas.some((f) => f.estado === 'disponible') ? 'NOVEDADES'
+    : filas.some((f) => f.estado === 'duda') ? (filas.every((f) => f.estado === 'duda') ? 'DUDAS' : 'BAJAS Y DUDAS') : 'BAJAS';
+  const fila = (f) => ({ id: f.id, nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
+    estado: f.estado, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f), valor: f.valor || null });
+  const d = { jornada: pp ? pp.jornada : jornada, titulo, filas: filas.slice(0, mismo ? 4 : 6).map(fila),
+    equipo: mismo ? { nombre: filas[0].club, corto: filas[0].equipo, escudoUrl: filas[0].escudoUrl || null } : null,
+    rival: mismo && pp ? { nombre: pp.rivalNombre || pp.rival, corto: pp.rival, escudoUrl: pp.rivalEscudo || null } : null };
+  const permitidos = {
+    numeros: [d.jornada, ...d.filas.flatMap((f) => [f.pct, f.media].filter((x) => x != null))].map(String),
+    palabras: ['BAJAS', 'Y', 'DUDAS', 'NOVEDADES', 'LESIONADO', 'SANCIONADO', 'DISPONIBLE', 'PRÓXIMO', 'RIVAL',
+      ...d.filas.flatMap((f) => [f.nombre, f.equipo, f.club]), ...(d.equipo ? [d.equipo.corto, d.equipo.nombre] : []), ...(d.rival ? [d.rival.corto] : [])],
+  };
+  return { tipo: 'bajas', nombre: `bajas-${clave.replace(/[^\w-]+/g, '_').slice(0, 80)}`, d, permitidos };
 }
