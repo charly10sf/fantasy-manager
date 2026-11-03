@@ -14,7 +14,7 @@ export const VERSION = '0.6.12b';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.12b', f: '2026-11-03', h: '09:00', t: 'Noticias solo de fútbol', menor: true,
+    v: '0.6.12b', f: '2026-11-03', h: '08:55', t: 'Noticias solo de fútbol', menor: true,
     cosas: [
       { tipo: 'arreglo', d: 'conexion', menor: true, t: 'Fuera las noticias que no son de fútbol', x: 'En Noticias salían titulares que no tenían nada que ver (el tiempo, premios de música o fútbol femenino) porque un jugador se llama igual que otra persona. Ahora solo salen las de fútbol de LaLiga.' },
     ],
