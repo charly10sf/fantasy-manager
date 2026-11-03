@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12b';
+export const VERSION = '0.6.12c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.12b';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12c', f: '2026-11-03', h: '10:00', t: 'Ventas que no hacen falta, fuera del plan', menor: true,
+    cosas: [
+      { tipo: 'arreglo', d: 'dinero', menor: true, t: 'El plan ya no manda aceptar una oferta que no te hace falta', x: 'Si no necesitas el dinero y la oferta de LaLiga es de las bajas (o venderías por debajo de su valor perdiendo lo que pagaste), el paso sale como «No lo hagas» y no cuenta en el saldo. Antes salía como recomendado con un aviso al lado.' },
+    ],
+  },
   {
     v: '0.6.12b', f: '2026-11-03', h: '08:55', t: 'Noticias solo de fútbol', menor: true,
     cosas: [

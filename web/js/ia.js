@@ -1255,13 +1255,26 @@ export function cuadrarPlan(P, D, M) {
       o.aviso = ES.quedan ? `No te queda blindaje para este: te ${ES.quedan === 1 ? 'queda 1' : `quedan ${ES.quedan}`} esta jornada y ya va${ES.quedan === 1 ? '' : 'n'} en el plan antes.` : `Ya has gastado los ${ES.usados} blindajes de esta jornada: hasta que acabe la jornada no hay más.`;
     }
   }
-  const final = saldo;
+  let final = saldo;
+  // (aviso de Carlos, 3 nov: Oyarzabal, «Aceptar oferta» con un aviso de que no hacía falta, perdiendo 7,67 M y con 3 días
+  // hasta la jornada) una venta que no hace falta no se recomienda con un aviso al lado: se descarta y sale del saldo.
+  // Se queda (con el aviso) si detrás hay una cláusula o una subida de cláusula de hoy, que se pagan con lo que hay en caja
+  const pagaCaja = (o) => ops.some((x) => x.n > o.n && x.hoy && !x.ya && !x.descartada && x.importe && ['clausular', 'blindar'].includes(x.accion));
+  const quitarVenta = (o, txt) => {
+    o.descartada = true;
+    o.aviso = txt;
+    final -= o.importe;
+    for (const x of ops) if (x.n > o.n && x.saldo != null) x.saldo -= o.importe;
+    o.saldo = null;
+  };
   // vender sin necesidad: si sin esa venta acabarías en positivo y la app no la aceptaría (no entra en tu once y la
-  // oferta no es buena), se dice; puede esperar a una oferta mejor
+  // oferta no es buena), se descarta; puede esperar a una oferta mejor
   for (const o of ops) {
     if (o.accion !== 'vender' || !o.hoy || o.ya || o.descartada || !o.importe || final == null || final - o.importe < 0) continue;
     const v = (M.misVentas || []).find((x) => x.pid === o.pid);
-    if (v && v.consejo === 'esperar' && v.porque) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}No hace falta venderlo: sin esta venta acabarías con ${eur(final - o.importe)}. ${v.porque}`;
+    if (!v || v.consejo !== 'esperar' || !v.porque) continue;
+    if (pagaCaja(o)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}No hace falta venderlo: sin esta venta acabarías con ${eur(final - o.importe)}. ${v.porque}`;
+    else quitarVenta(o, `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(final - o.importe)}). ${v.porque}`);
   }
   // lo que pagaste por él: cuánto ganas o pierdes con la venta. Perder dinero sin necesidad (no hace falta el dinero
   // y no está bajando) se avisa; si está bajando, lo que pagaste no cambia nada: lo perdido ya no vuelve
@@ -1276,7 +1289,11 @@ export function cuadrarPlan(P, D, M) {
     if (o.descartada || o.compra.gana >= 0 || !o.hoy || final == null || final - (o.importe || 0) < 0) continue;
     const t = M.tend(o.pid);
     const bajando = ((M.partidazo && M.partidazo(o.pid)) || {}).nivel !== 3 && (x.ventaInercia || (t.p1 != null && t.p1 < -1) || (t.p7 != null && t.p7 < -3) || ['injured', 'suspended'].includes(x.j.estado));
-    if (!bajando && !/No hace falta venderlo/.test(o.aviso || '')) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Lo venderías por ${eur(-o.compra.gana)} menos de lo que pagaste, no te hace falta el dinero y no está bajando: puede esperar a una oferta mejor.`;
+    if (bajando || /No hace falta venderlo/.test(o.aviso || '')) continue;
+    const perder = `Lo venderías por ${eur(-o.compra.gana)} menos de lo que pagaste, no te hace falta el dinero y no está bajando: puede esperar a una oferta mejor.`;
+    // y si además la oferta no llega a su valor, ni se propone
+    if (o.importe && o.importe < x.j.valor && !pagaCaja(o)) quitarVenta(o, `La app lo descarta: ${perder.charAt(0).toLowerCase()}${perder.slice(1)}`);
+    else o.aviso = `${o.aviso ? `${o.aviso} ` : ''}${perder}`;
   }
   // en negativo puede ser a propósito: lo comprado para revender se vende antes de la jornada
   const rev = ops.filter((o) => String(o.objetivo || '').startsWith('revend') && o.signo < 0 && o.importe && o.hoy);
