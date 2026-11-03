@@ -33,12 +33,16 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
       : elegir([`📉 Los peores de la jornada ${jornada} en LaLiga Fantasy${prov}`, `📉 Los números rojos de la jornada ${jornada} de LaLiga Fantasy${prov}`], `cab${jornada}`);
     const num = [jornada, acabados.length, stats.length, faltan, ord.length];
     const ideas = [];
-    const [a, b2] = ord;
-    if (b2 && b2.pts === a.pts) ideas.push({ t: bueno ? `🥇 ${a.nombre} y ${b2.nombre}, ${a.pts} puntos cada uno` : `🔻 ${a.nombre} y ${b2.nombre} se quedan en ${a.pts}`, prio: 9 });
-    else ideas.push({ t: bueno ? elegir([`🥇 ${a.nombre} se va a ${a.pts} puntos`, `🥇 Nadie saca más que ${a.nombre}: ${a.pts} puntos`], `top${jornada}`) : `🔻 ${a.nombre} se queda en ${a.pts}`, prio: 9 });
-    num.push(a.pts);
-    const det = ord.slice(b2 && b2.pts === a.pts ? 2 : 1, (b2 && b2.pts === a.pts ? 2 : 1) + 2);
-    if (det.length === 2) { ideas.push({ t: `${bueno ? '🥈' : '🔻'} Detrás, ${det[0].nombre} (${det[0].equipo}) con ${det[0].pts} y ${det[1].nombre} (${det[1].equipo}) con ${det[1].pts}`, prio: 6 }); num.push(det[0].pts, det[1].pts); }
+    // el primero (o los empatados con él) y los dos siguientes; con el equipo, porque arriba no hay partido
+    const lista = (xs) => (xs.length > 1 ? `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}` : xs[0]);
+    const conEq = (xs) => { const eqs = new Set(xs.map((f) => f.equipo)); return eqs.size === 1 ? `${lista(xs.map((f) => f.nombre))} (${xs[0].equipo})` : lista(xs.map((f) => `${f.nombre} (${f.equipo})`)); };
+    const a = ord[0];
+    const arriba = ord.filter((f) => f.pts === a.pts);
+    if (arriba.length > 1) ideas.push({ t: bueno ? `🥇 ${arriba.length === 2 ? '' : `${arriba.length} empatados: `}${conEq(arriba)}, ${a.pts} puntos cada uno` : `🔻 ${arriba.length === 2 ? '' : `${arriba.length} se quedan en ${a.pts}: `}${conEq(arriba)}${arriba.length === 2 ? `, ${a.pts} cada uno` : ''}`, prio: 9 });
+    else ideas.push({ t: bueno ? elegir([`🥇 ${conEq([a])} se va a ${a.pts} puntos`, `🥇 Nadie saca más que ${conEq([a])}: ${a.pts} puntos`], `top${jornada}`) : `🔻 ${conEq([a])} se queda en ${a.pts}`, prio: 9 });
+    num.push(a.pts, arriba.length);
+    const det = ord.slice(arriba.length, arriba.length + 2);
+    if (arriba.length < 4 && det.length === 2) { ideas.push({ t: `${bueno ? '🥈 Detrás' : '🔻 Después'}, ${det[0].nombre} (${det[0].equipo}) con ${det[0].pts} y ${det[1].nombre} (${det[1].equipo}) con ${det[1].pts}`, prio: 6 }); num.push(det[0].pts, det[1].pts); }
     // quien se sale de su media (solo en los mejores: el doble o más, con media de 3 o más)
     const sale = bueno ? ord.find((f) => f.media >= 3 && f.pts >= 2 * f.media) : null;
     if (sale) { ideas.push({ t: `📈 ${sale.nombre} suele sacar ${fmt(sale.media)} de media y esta vez ${sale.pts}`, prio: 5 }); num.push(...partes(sale.media), sale.pts); }
@@ -46,7 +50,7 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
     const porEquipo = {};
     for (const f of ord) porEquipo[f.equipo] = (porEquipo[f.equipo] || 0) + 1;
     const [eq, n] = Object.entries(porEquipo).sort((x, y) => y[1] - x[1])[0];
-    if (n >= 3) { ideas.push({ t: bueno ? `💥 ${n} de los ${ord.length} mejores son ${del(eq)}` : `⚠️ ${n} de los ${ord.length} peores son ${del(eq)}`, prio: 7 }); num.push(n); }
+    if (n >= 3) { const cuantos = n === ord.length ? `Los ${n}` : `${n} de los ${ord.length}`; ideas.push({ t: bueno ? `💥 ${cuantos} mejores son ${del(eq)}` : `⚠️ ${cuantos} peores son ${del(eq)}`, prio: 7 }); num.push(n); }
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) continue;
     // la tarjeta con los 6 (Carlos, 2 nov 23:28: «algún grafismo chulo para los 6 mejores y peores»)

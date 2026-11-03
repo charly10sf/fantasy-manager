@@ -21,6 +21,19 @@ claves sin publicar) y, si sale bien, poner `BOT_MODO` = `publicar`.
 de 3 h; el término medio de Domy, aceptado por Carlos el 2 nov), `mvp` (el MVP de cada partido con su tarjeta), `caidas` (lesionados y sancionados habituales de la jornada que viene, al acabar la actual o antes de que empiece; las dudas, no, hasta
 tener una segunda fuente), `mercado` (cada noche, tras la actualización de valores de hacia las 00:15 y solo de 0 a 6 h: dos tweets, los 3 que más suben y los 3 que más bajan, por euros respecto al día anterior), `previa` (posibles onces de cada partido con el % de titularidad de la app, de 36 h a 3 h antes, de 9 a 23 h; `lib/onces.mjs`), `onces` (onces confirmados en cuanto ESPN los publica, con las sorpresas frente al posible once) y `novedades` (cambios de estado en LaLiga Fantasy de los jugadores que importan: lesionado, sancionado, vuelve; de 9 a 23 h; el estado anterior se guarda en el registro, `estados`). El resumen de la jornada, la previa y los onces llevan tarjeta (`svgResumen` y `svgOnces` en `lib/tarjetas.mjs`). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
 
+### Cómo se escriben (3 nov: tweets más humanos)
+
+Guía completa en `claude/estilo-tweets.md` del proyecto (sale de leer 297 tweets de @JoseCarrasco_98, @AnaliticaLaLiga y @futbol_fantasy).
+Las piezas comunes están en `lib/redactar.mjs`:
+- Una idea por línea, con una línea en blanco entre ideas y el emoji solo como etiqueta delante (🚨 noticia, ⚠️ detalle, ‼️ el dato que
+  cambia algo, ⁉️ duda, ✅ buena noticia, ❌ baja, 📍 marcador, 📊 puntos). `tweet(cab, ideas)` arma el texto y, si no cabe en 280, quita
+  primero las ideas de menos `prio`.
+- Frase corta de sujeto, verbo y dato; la segunda vez que sale un jugador, por su puesto (`segunda`: «el delantero»).
+- Las dudas, con palabras según el % (`enPalabras`) y el número al lado.
+- Jornada y rival en la etiqueta final («❌ Baja Fantasy para la jornada 12 contra el Valencia»; `proximoPartido` y `paraLa`).
+- Caídas y novedades con el formato de Carrasco: un tweet por jugador (o por equipo, si tiene varios) cuando son pocos, en lista si son muchos.
+- El mercado no usa esto todavía (lo lleva otra sesión). Las respuestas de Telegram siguen igual.
+
 ### Cómo se escriben (2 nov, noche)
 
 - Los tweets de partido (`directo`, `final`, `mvp`) no llevan «LaLiga Fantasy J..» en la cabecera: llevan el marcador del momento de la jugada

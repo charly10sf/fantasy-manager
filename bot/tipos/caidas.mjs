@@ -41,10 +41,10 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
   const pp = new Map();
   for (const c of caidas) if (!pp.has(String(c.teamId))) pp.set(String(c.teamId), await proximoPartido(c.teamId, { jornada, semana }).catch(() => null));
   const seguro = (c) => c.estado !== 'duda';
-  const estadoTxt = (c) => (c.estado === 'duda' ? `duda, ${enPalabras(c.p)} (${c.pct} %)` : c.estado);
+  const estadoTxt = (c) => (c.estado === 'duda' ? `en duda, ${enPalabras(c.p)}: ${c.pct} %` : c.estado);
   const icono = (c) => (c.estado === 'sancionado' ? '🟥' : c.estado === 'duda' ? '⁉️' : '❌');
-  const conMedia = (c) => (c.media >= 3 ? ` (${fmt(c.media)} de media)` : '');
-  const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 ? partes(c.media) : [])];
+  const conMedia = (c) => (c.media >= 3 && c.estado !== 'duda' ? ` (${fmt(c.media)} de media)` : '');
+  const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 && c.estado !== 'duda' ? partes(c.media) : [])];
   const porEquipo = new Map();
   for (const c of caidas) { const k = String(c.teamId); if (!porEquipo.has(k)) porEquipo.set(k, []); porEquipo.get(k).push(c); }
   const sueltos = [];

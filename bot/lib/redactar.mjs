@@ -49,12 +49,12 @@ export const segunda = (posId, nombre) => (puesto(posId) ? `el ${puesto(posId)}`
  * Los tramos son de partida; se ajustan viendo los tweets de verdad.
  */
 export function enPalabras(p) {
-  if (p >= 0.85) return 'tiene toda la pinta de que juega';
+  if (p >= 0.85) return 'titular casi seguro';
   if (p >= 0.65) return 'en principio, titular';
-  if (p >= 0.45) return 'todo apunta a que sale, pero no es seguro';
-  if (p >= 0.25) return 'está en el aire';
+  if (p >= 0.45) return 'en principio juega, pero no es seguro';
+  if (p >= 0.25) return 'en el aire';
   if (p >= 0.1) return 'lo tiene complicado';
-  return 'cada vez más complicado que juegue';
+  return 'muy difícil que juegue';
 }
 
 /**
