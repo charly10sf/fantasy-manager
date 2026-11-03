@@ -1068,7 +1068,8 @@
    "SPORT|136032764": 1793705626000,
    "SPORT|136028553": 1793705366000,
    "SPORT|136041677": 1793713371000,
-   "SPORT|136042531": 1793714741000
+   "SPORT|136042531": 1793714741000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246788/guruzeta-empieza-cuenta-hoy-sido-operado-rodilla-izquierda.html": 1793722204000
   },
   "hechos": [
    {
@@ -1175,7 +1176,7 @@
   ],
   "gemini": {
    "dia": "2026-11-03",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
