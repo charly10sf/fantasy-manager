@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12j';
+export const VERSION = '0.6.12k';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,15 @@ export const VERSION = '0.6.12j';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12k', f: '2026-11-03', h: '23:05', t: 'Un sancionado de un partido se aguanta',
+    cosas: [
+      { tipo: 'mejora', d: 'tarjeta', t: 'Un sancionado de un partido ya no se vende', x: 'Si uno de los tuyos está sancionado, la app te dice que se pierde la jornada y que se aguanta, en vez de mandarte venderlo. Solo te lo hace vender si su valor cae con fuerza o hay otra razón, y una sanción larga (una roja que ya ha durado más de un partido) sigue contando como una baja.' },
+      { tipo: 'mejora', d: 'oferta', t: 'La IA ya no puja de más', x: 'Si la IA propone pujar bastante más de lo que la app ve justo para ese jugador, el plan baja la puja a la de la app y te dice por qué.' },
+      { para: 'web', tipo: 'mejora', d: 'conexion', t: 'Una entrada más clara en el ordenador', x: 'Si es tu primera vez, arriba tienes la liga de ejemplo y la descarga para Android (con un QR para el móvil); el QR y el código para entrar con tu cuenta están debajo, en «¿Ya tienes la app en el móvil?».' },
+      { tipo: 'arreglo', d: 'campo', t: 'Los puestos de Tu once vuelven a ser pequeños', x: 'En Equipo y en Hoy, «POR 2 · DEF 5 · MED 5 · DEL 3» salía en cajas enormes desde la versión anterior.' },
+    ],
+  },
   {
     v: '0.6.12j', f: '2026-11-03', h: '22:40', t: 'Una sola puja por jugador',
     cosas: [
