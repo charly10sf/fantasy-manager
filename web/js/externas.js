@@ -403,11 +403,23 @@ function deUnderstat(html, variable) {
   if (!m) return null;
   try { return JSON.parse(decodeURIComponent(m[1].replace(/%/g, '%25').replace(/\\x([0-9A-Fa-f]{2})/g, '%$1'))); } catch (e) { return null; }
 }
+/* Understat y SofaScore, cuando no contestan, no contestan en un buen rato (3 nov: understat.com «failed to connect»
+   15 s por petición desde la red de Carlos, y SofaScore con 403 siempre). Cada carga volvía a esperarlos: ahora, tras un
+   fallo así, ese sitio se salta un rato (sin conexión 45 min, 403 6 h, 429 30 min) y se dice en el diagnóstico. */
+const PAUSA_FUENTE = { 0: 45 * MIN, 403: 6 * HORA, 429: 30 * MIN };
+const sitioDe = (url) => { try { return new URL(url).hostname.replace(/^(www|api)\./, ''); } catch (e) { return ''; } };
+export function fuentesEnPausa() { const p = LS.get('fuentes-pausa', {}), a = Date.now(); return Object.fromEntries(Object.entries(p).filter(([, v]) => v && v.hasta > a)); }
 async function pedirJSON(url, cab = {}, etiqueta = url) {
+  const sitio = sitioDe(url), pz = fuentesEnPausa()[sitio];
+  if (pz) { const e = new Error(`saltado: ${pz.motivo}, vuelve a probarse a las ${horaDe(pz.hasta)}`); e.estado = pz.s; e.pausa = true; throw e; }
   const t0 = Date.now();
   const r = await http('GET', url, { cabeceras: { Accept: 'application/json, text/plain, */*', 'User-Agent': UA, ...cab } });
   apuntarRegistro({ ruta: etiqueta, s: r.s, ms: Date.now() - t0, e: r.e, forma: r.b ? `${Math.round(r.b.length / 1024)} KB` : '' });
-  if (r.s !== 200 || !r.b) { const e = new Error(r.s ? `${r.s}` : r.e || 'sin respuesta'); e.estado = r.s; throw e; }
+  if (r.s !== 200 || !r.b) {
+    const dur = PAUSA_FUENTE[r.s || 0];
+    if (dur && sitio) { const p = fuentesEnPausa(); p[sitio] = { hasta: Date.now() + dur, s: r.s || 0, motivo: r.s ? `dio ${r.s}` : `no conectaba (${String(r.e || 'sin respuesta').slice(0, 60)})` }; LS.set('fuentes-pausa', p); }
+    const e = new Error(r.s ? `${r.s}` : r.e || 'sin respuesta'); e.estado = r.s; throw e;
+  }
   try { return JSON.parse(r.b); } catch (e) { return { __html: r.b }; }
 }
 async function understat() {
