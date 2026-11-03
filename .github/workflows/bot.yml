@@ -1,4 +1,5 @@
-# Bot de la cuenta de X (@Fantasyman_app). Lo lanza cada 5 min el cron del Worker (worker/, BOT_DISPATCH_TOKEN); el schedule de
+# Bot de la cuenta de X (@Fantasyman_app). Lo lanza cada 5 min el cron del Worker (worker/, BOT_DISPATCH_TOKEN), y de 00:13 a 00:30
+# de Madrid, cada minuto, solo con el mercado (input «tipos»), para que salga en cuanto LaLiga actualiza los valores; el schedule de
 # 15 min de aquí queda de respaldo (el de GitHub no disparaba). Según la variable de repositorio BOT_MODO:
 #   (sin ella) o «simulacro»  genera y valida los tweets y los enseña en el resumen de la ejecución; NO publica
 #   «publicar»                publica de verdad (hacen falta los 4 secretos de X) y guarda lo publicado en la rama bot-estado
@@ -20,6 +21,10 @@ on:
         description: 'Solo comprobar las claves de X (no publica nada)'
         type: boolean
         default: false
+      tipos:
+        description: 'Solo estos tipos, separados por comas (vacío = todos). El Worker lanza «mercado» cada minuto de 00:13 a 00:30'
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -40,6 +45,7 @@ jobs:
       X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      TIPOS: ${{ inputs.tipos }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -50,7 +56,7 @@ jobs:
       - name: Instalar lo de las tarjetas (solo si están encendidas)
         if: ${{ !inputs.comprobar }}
         run: |
-          if node -e "const t=require('./bot/config.json').tarjetas||{};process.exit(t.final||t.jugador?0:1)"; then
+          if node -e "const t=require('./bot/config.json').tarjetas||{};const q=process.env.TIPOS;process.exit((q?q.split(',').some((k)=>t[k]||(k==='directo'&&t.jugador)):(t.final||t.jugador))?0:1)"; then
             npm ci --prefix bot --no-audit --no-fund || echo "No se pudo instalar: esta vez los tweets salen sin imagen"
           else
             echo "Tarjetas apagadas en bot/config.json: no instalo nada"
@@ -73,10 +79,10 @@ jobs:
           fi
       - name: Bot
         if: ${{ !inputs.comprobar }}
-        run: node bot/ejecutar.mjs --ventanas=1 --estado=estado/registro.json
+        run: node bot/ejecutar.mjs --ventanas=1 --estado=estado/registro.json ${TIPOS:+--tipos=$TIPOS}
       # Telegram corre aunque el paso de X falle, pero no si no se ha podido traer el registro (mandaría otra vez lo ya mandado)
       - name: Respuestas para los clubes (Telegram)
-        if: ${{ !cancelled() && !inputs.comprobar && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}
+        if: ${{ !cancelled() && !inputs.comprobar && !inputs.tipos && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}
         run: node bot/telegram.mjs --ventanas=1 --estado=estado/telegram.json
       - name: Aviso de fallo (Telegram)
         if: ${{ failure() && !inputs.comprobar && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}

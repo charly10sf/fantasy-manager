@@ -456,7 +456,18 @@ async function hola(req, env, c, ruta) {
 // Si ya hay una ejecución en marcha, la nueva espera (concurrency bot-x en bot.yml): no se pisan.
 const BOT_FLUJO = 'https://api.github.com/repos/charly10sf/fantasy-manager/actions/workflows/bot.yml/dispatches';
 
-export async function lanzarBot(env, pedir = fetch) {
+// El mercado de cada noche (3 nov, Carlos: «a las 0:16/0:17»): LaLiga actualiza los valores hacia las 00:15 de Madrid y Analítica
+// y FútbolFantasy lo publican a las 00:16-00:17. Con el cron de 5 min salía a las 00:20-00:25, así que de 00:13 a 00:30 se lanza
+// cada minuto solo el mercado (el bot ya mira si ha llegado el valor del día y si ya se publicó). En los minutos múltiplos de 5
+// ya corre la ejecución normal, que también lo hace. El cron va en UTC y cubre las dos franjas (verano e invierno).
+export const CRON_MERCADO = '13-30 22,23 * * *';
+const HM = new Intl.DateTimeFormat('en-GB', { hour: 'numeric', minute: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' });
+export function tocaMercado(t) {
+  const [h, m] = HM.format(new Date(t)).split(':').map(Number);
+  return h === 0 && m >= 13 && m <= 30 && m % 5 !== 0;
+}
+
+export async function lanzarBot(env, pedir = fetch, inputs = null) {
   const token = env.BOT_DISPATCH_TOKEN;
   if (!token) return { ok: false, motivo: 'sin BOT_DISPATCH_TOKEN' };
   const r = await pedir(BOT_FLUJO, {
@@ -468,7 +479,7 @@ export async function lanzarBot(env, pedir = fetch) {
       'User-Agent': 'fantasy-manager-worker',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ ref: 'main' }),
+    body: JSON.stringify(inputs ? { ref: 'main', inputs } : { ref: 'main' }),
   });
   if (r.status === 204) return { ok: true };
   // el error de GitHub sin el token (no lo lleva, pero por si acaso se corta y se limpia)
@@ -478,7 +489,12 @@ export async function lanzarBot(env, pedir = fetch) {
 
 export default {
   async scheduled(evento, env, ctx) {
-    ctx.waitUntil(lanzarBot(env).then((r) => { if (!r.ok) console.log('Bot X no lanzado:', r.motivo); }));
+    let inputs = null;
+    if (evento.cron === CRON_MERCADO) {
+      if (!tocaMercado(evento.scheduledTime)) return;
+      inputs = { tipos: 'mercado' };
+    }
+    ctx.waitUntil(lanzarBot(env, fetch, inputs).then((r) => { if (!r.ok) console.log('Bot X no lanzado:', r.motivo); }));
   },
 
   async fetch(req, env) {

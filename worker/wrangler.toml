@@ -16,7 +16,9 @@ ADMINS = "667015"
 # Cada 5 min lanza el workflow «Bot X» en main (scheduled en src/index.js), porque el cron de GitHub Actions no dispara.
 # Necesita el secreto BOT_DISPATCH_TOKEN, que worker.yml copia del secreto de Actions del mismo nombre.
 [triggers]
-crons = ["*/5 * * * *"]
+# Y de 00:13 a 00:30 de Madrid, cada minuto, lo lanza solo con el mercado (el cron va en UTC: 22:13-22:30 en verano y
+# 23:13-23:30 en invierno; scheduled en src/index.js mira la hora de Madrid y descarta la franja que no toca).
+crons = ["*/5 * * * *", "13-30 22,23 * * *"]
 
 # El QR para entrar en el ordenador (0.6.12): un objeto por QR, que ve al momento lo que deja la app (el KV puede
 # tardar hasta un minuto entre centros de Cloudflare). Si Cloudflare no deja crearlo, worker.yml lo quita y publica sin él.
