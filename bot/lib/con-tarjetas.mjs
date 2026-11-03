@@ -25,7 +25,14 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     const img = (u) => (u ? fuentes.imagen(u).catch(() => null) : null);
     const d = structuredClone(t.tarjeta.d);
     if (t.tarjeta.tipo === 'resumen') for (const f of d.filas) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
-    if (t.tarjeta.tipo === 'onces') for (const k of ['local', 'visitante']) d[k].escudo = await img(d[k].escudoUrl);
+    if (t.tarjeta.tipo === 'onces') {
+      // las caras de los 22, de la lista de jugadores de LaLiga (Carlos, 3 nov 11:47: el once dibujado en el campo)
+      const porId = new Map((jugadores || []).map((j) => [String(j.id), j]));
+      for (const k of ['local', 'visitante']) {
+        d[k].escudo = await img(d[k].escudoUrl);
+        for (const j of d[k].once) { const p = j.id != null && porId.get(String(j.id)); j.cara = p ? await img(p.image || (p.images && p.images.transparent && p.images.transparent['256x256'])) : null; }
+      }
+    }
     if (t.tarjeta.tipo === 'bajas') {
       for (const f of d.filas) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
       if (d.equipo) d.equipo.escudo = await img(d.equipo.escudoUrl);
