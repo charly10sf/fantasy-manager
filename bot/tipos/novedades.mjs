@@ -6,7 +6,7 @@ import { corto, fmt, partes, elegir, el, del } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, paraLa } from '../lib/redactar.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle } from '../lib/agrupar.mjs';
-import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe } from '../lib/partes.mjs';
+import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 
 const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
@@ -82,10 +82,11 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     let cab, ideas;
     if (e.que === 'lesion') {
       const dudaWeb = p && p.estado === 'duda';
+      const venta = ventaObligatoria(p, ahora);
       cab = elegir([`🚨 ${e.nombre} se cae por lesión`, `🚨 Saltan las alarmas con ${e.nombre}`], `nl${e.id}${d}`);
       ideas = [p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
-        p && p.estado === 'baja' && p.hasta ? { t: `🗓️ No se le espera hasta ${p.hasta}`, prio: 7 } : dudaWeb ? { t: '⁉️ De momento no está descartado', prio: 7 } : null,
-        mediaT, { t: `${dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
+        p && p.estado === 'baja' && p.hasta ? { t: `🗓️ No se le espera hasta ${p.hasta}`, prio: venta ? 9 : 7 } : dudaWeb ? { t: '⁉️ De momento no está descartado', prio: 7 } : null,
+        mediaT, { t: venta ? '💸 Venta Fantasy Obligatoria' : `${dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     } else if (e.que === 'sancion') {
       cab = `🟥 ${e.nombre}, sancionado`;
       ideas = [e.motivoSan ? { t: `⚠️ ${e.motivoSan.txt}`, prio: 9 } : null,

@@ -3,7 +3,7 @@
 // de Madrid): el último punto es el de hoy. Lleva el cierre de «Fantasy Manager · enlace en la bio».
 import { valorMercado } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
-import { cierre, corto, fmt } from '../lib/texto.mjs';
+import { cierre, corto, fmt, partes, del } from '../lib/texto.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t));
 const puntos = (h) => (Array.isArray(h) ? h : []).map((v) => ({ t: Date.parse(v.date), v: Number(v.marketValue) })).filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
@@ -54,7 +54,7 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
     const h = puntos(hist[i]);
     if (h.length < 2 || diaMadrid(h[h.length - 1].t) !== dia) return;
     const nuevo = h[h.length - 1].v, antes = h[h.length - 2].v;
-    filas.push({ id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, nuevo, antes, dif: nuevo - antes, pct: (nuevo - antes) / antes * 100 });
+    filas.push({ media: Number(j.averagePoints) || 0, puntos: Number(j.points) || 0, ok: !j.playerStatus || j.playerStatus === 'ok', id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, nuevo, antes, dif: nuevo - antes, pct: (nuevo - antes) / antes * 100 });
   });
   if (filas.length < 100) { log(`  (mercado) solo ${filas.length} jugadores con el valor de ${dia}: espero`); return []; }
   const suben = [...filas].filter((f) => f.dif > 0).sort((a, b) => b.dif - a.dif);
@@ -64,8 +64,12 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   const fecha = `${dd} de ${MESES[mes - 1]}`;
   // el texto, corto: todo lo demás va en la tarjeta (Carlos, 3 nov 06:58: que no diga top 3 y la imagen enseñe 5). Si la tarjeta
   // no sale, el tweet tampoco (soloConImagen): un «subidas y bajadas» sin la lista no dice nada
-  const texto = `💸 Subidas y bajadas del mercado fantasy de hoy, ${dd}/${mes}\n\n${cierre(`mercado${dia}`)}`;
-  const num = [dd, mes];
+  // el chollo del día (etiqueta de Carrasco, claude/estilo-tweets.md): de los que suben hoy, barato (8 M o menos), disponible, con 4 o
+  // más de media y 25 puntos o más en la temporada (que no sea la media de un solo partido); el de más puntos de media por millón
+  const ch = chollo(suben);
+  const linea = ch ? `\n\n🛒 Chollo Fantasy: ${ch.nombre} ${del(ch.equipo)} vale ${dinero(ch.nuevo)}, suma ${fmt(ch.media)} de media y hoy sube un ${fmt(ch.pct)} %` : '';
+  const texto = `💸 Subidas y bajadas del mercado fantasy de hoy, ${dd}/${mes}${linea}\n\n${cierre(`mercado${dia}`)}`;
+  const num = [dd, mes, ...(ch ? [...partes(ch.nuevo >= 1e6 ? ch.nuevo / 1e6 : ch.nuevo / 1e3), ...partes(ch.media), ...partes(ch.pct)] : [])];
   // la tarjeta: top 5 de cada lado con cara, escudo, lo que cambia, el % y el valor
   const N = 5;
   const fila = (f) => ({ nombre: f.nombre, equipo: f.equipo, club: f.club, caraUrl: f.caraUrl, escudoUrl: f.escudoUrl,
@@ -76,4 +80,10 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
     permitidos: { numeros: [dd, 1, 2, 3, 4, 5, ...todas.flatMap((f) => [f.dif, f.pct, f.valor])].map(String),
       palabras: ['MERCADO', 'SUBEN', 'BAJAN', 'Y', 'de', 'M', 'K', MESES[mes - 1], ...todas.flatMap((f) => [f.nombre, f.equipo])] } };
   return [{ tipo: 'mercado', clave, jornada, texto, numeros: num, tarjeta, soloConImagen: true }];
+}
+
+/** el chollo de los que suben hoy (null si no hay ninguno que cumpla) */
+export function chollo(suben) {
+  const xs = suben.filter((f) => f.ok && f.nuevo <= 8e6 && f.media >= 4 && f.puntos >= 25 && f.pct >= 1);
+  return xs.sort((a, b) => b.media / b.nuevo - a.media / a.nuevo)[0] || null;
 }

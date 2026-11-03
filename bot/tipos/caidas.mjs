@@ -7,7 +7,7 @@ import { ficha, ESTADOS } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { onceProbable, pOnce } from '../lib/ff.mjs';
-import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe } from '../lib/partes.mjs';
+import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle } from '../lib/agrupar.mjs';
 
 export function baseTitular(playerStats, hasta) {
@@ -63,11 +63,11 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     if (soloSeguras && j.playerStatus === 'injured' && !(parte && parte.lesion)) { log(`  (caídas) ${j.nickname}: sin parte de la lesión todavía, espero`); return; }
     caidas.push({ parte, motivoSan, id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0, valor: Number(j.marketValue) || 0 });
   });
-  return escribir(caidas, { jornada, semana });
+  return escribir(caidas, { jornada, semana, ahora });
 }
 
 /** Los tweets a partir de las caídas ya calculadas (aparte para poder probarlo sin red: bot/prueba/bajas-ejemplo.mjs) */
-export async function escribir(caidas, { jornada, semana = null, proximo = proximoPartido }) {
+export async function escribir(caidas, { jornada, semana = null, proximo = proximoPartido, ahora = Date.now() }) {
   // Cómo se escriben (guía de estilo del 3 nov y Carlos, 3 nov 12:06: la lista con paréntesis le sonaba a máquina): un equipo con dos
   // o más caídas, en su propio tweet («🚨 El Villarreal se queda sin dos titulares» y una línea por lo que pasa); uno o dos sueltos,
   // un tweet cada uno con la etiqueta final; más sueltos, agrupados por lo que pasa («❌ Se caen por lesión Lemar en el Elche y…»),
@@ -100,16 +100,18 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const p = c.parte;
     // la web lo da por duda aunque LaLiga lo tenga lesionado: se dice así, sin darlo por perdido
     const dudaWeb = c.estado === 'lesionado' && p && p.estado === 'duda';
+    const venta = c.estado === 'lesionado' && ventaObligatoria(p, ahora);
     const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}`
       : c.estado === 'sancionado' ? `🟥 ${c.nombre} no estará ${pr ? `contra ${el(pr.rival)}` : 'en el próximo partido'}`
       : dudaWeb && pr ? `🚨 ${c.nombre} apunta a perderse el partido contra ${el(pr.rival)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
     const ideas = [
       p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
-      p && p.estado === 'baja' && p.hasta ? { t: `🗓️ No se le espera hasta ${p.hasta}`, prio: 7 } : dudaWeb ? { t: '⁉️ Aún no está descartado del todo', prio: 7 } : null,
+      p && p.estado === 'baja' && p.hasta ? { t: `🗓️ No se le espera hasta ${p.hasta}`, prio: venta ? 9 : 7 } : dudaWeb ? { t: '⁉️ Aún no está descartado del todo', prio: 7 } : null,
       c.motivoSan ? { t: `⚠️ ${c.motivoSan.txt} y cumple sanción`, prio: 9 } : null,
       c.estado === 'duda' ? { t: `📊 ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,
       { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
-      { t: `${c.estado === 'duda' || dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
+      // una baja larga (5 semanas o más según el parte): la etiqueta de Carrasco para las lesiones largas
+      { t: venta ? '💸 Venta Fantasy Obligatoria' : `${c.estado === 'duda' || dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
     const clave = `caidas|${jornada}|${c.id}`;
