@@ -806,7 +806,7 @@
   "3070": "ok",
   "3071": "injured",
   "3072": "ok",
-  "3073": "doubtful",
+  "3073": "injured",
   "3074": "ok",
   "3075": "ok",
   "3076": "ok",
@@ -1032,5 +1032,12 @@
   "3296": "ok",
   "3297": "ok"
  },
- "novedadesPend": []
+ "novedadesPend": [
+  {
+   "id": "3073",
+   "que": "lesion",
+   "antes": "doubtful",
+   "t": 1793710570785
+  }
+ ]
 }
