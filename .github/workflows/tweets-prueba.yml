@@ -14,8 +14,8 @@ jobs:
         with:
           node-version: 22
       - run: npm ci --prefix bot --no-audit --no-fund
-      - name: ff debug
-        run: node bot/prueba/ff-debug.mjs 2>&1 | sed 's/^/@@ /'
+      - name: bajas y novedades con motivo, datos reales
+        run: node bot/prueba/bajas-real.mjs 2>&1 | sed 's/^/@@ /'
       - name: tarjetas a la rama pruebas-bajas2-salida
         if: always()
         run: |
