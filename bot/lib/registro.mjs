@@ -19,12 +19,14 @@ export class Registro {
     if (this.claves.has(tw.clave)) return 'duplicado';
     // novedades y caídas, separadas (Carlos, 3 nov 12:06: a las 11:51 y 11:52 salieron dos tweets de bajas casi seguidos):
     // si el otro tipo ha salido hace menos de `separacionBajasMin`, este espera a una ejecución posterior
-    const otro = { caidas: 'novedades', novedades: 'caidas' }[tw.tipo];
+    // y las noticias de prensa, separadas de las dos y entre sí (`separaciones` en config.json; si no está, `separacionBajasMin`)
     const sep = this.config.separacionBajasMin ?? 0;
-    if (otro && sep) {
+    const seps = this.config.separaciones || { caidas: { novedades: sep }, novedades: { caidas: sep } };
+    for (const [otro, min] of Object.entries(seps[tw.tipo] || {})) {
+      if (!min) continue;
       const ult = this.todos().filter((e) => e.tipo === otro).reduce((m, e) => Math.max(m, Date.parse(e.t) || 0), 0);
       const hace = (Date.now() - ult) / 60e3;
-      if (ult && hace < sep) return `espera: salió un tweet de ${otro} hace ${Math.round(hace)} min (separación de ${sep})`;
+      if (ult && hace < min) return `espera: salió un tweet de ${otro} hace ${Math.round(hace)} min (separación de ${min})`;
     }
     const tope = this.config.topes[tw.tipo] ?? 0;
     const n = this.datos.enviados.filter((e) => e.tipo === tw.tipo && e.jornada === tw.jornada).length;
@@ -48,7 +50,8 @@ export class Registro {
   /** lo publicado y, en simulacro, lo reservado en esta ejecución */
   todos() { return [...this.datos.enviados, ...(this.reservadasLista || [])]; }
   /**
-   * Jugadores que ya han salido en caídas o novedades, sacados de las claves (`caidas|J|id-id`, `novedades|id:que,id:que|día`),
+   * Jugadores que ya han salido en caídas, novedades o noticias, sacados de las claves (`caidas|J|id-id`, `novedades|id:que,id:que|día`,
+   * `noticias|id:familia|día`, con familia «mala» o «buena»),
    * así vale también para lo publicado antes de este cambio. [{ tipo, id, que, jornada, t }]
    */
   cubiertos() {
@@ -56,7 +59,7 @@ export class Registro {
     for (const e of this.todos()) {
       const p = String(e.clave).split('|'), t = Date.parse(e.t) || 0;
       if (e.tipo === 'caidas' && p[2]) for (const id of p[2].split('-')) out.push({ tipo: 'caidas', id, que: null, jornada: e.jornada, t });
-      if (e.tipo === 'novedades' && p[1]) for (const x of p[1].split(',')) { const [id, que] = x.split(':'); out.push({ tipo: 'novedades', id, que: que || null, jornada: e.jornada, t }); }
+      if ((e.tipo === 'novedades' || e.tipo === 'noticias') && p[1]) for (const x of p[1].split(',')) { const [id, que] = x.split(':'); out.push({ tipo: e.tipo, id, que: que || null, jornada: e.jornada, t }); }
     }
     return out;
   }

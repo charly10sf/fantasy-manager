@@ -12,4 +12,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
-      - run: node .github/prueba/rss.mjs
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: node bot/prueba/noticias-ejemplo.mjs | tail -1
+      - run: node bot/ejecutar.mjs --modo=simulacro --tipos=noticias --ventanas=0 --tarjetas=1 || true
+      - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles('tarjetas/*.png') != '' }}
+        with: { name: tarjetas, path: tarjetas/*.png, retention-days: 3 }
