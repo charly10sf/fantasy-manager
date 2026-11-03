@@ -133,7 +133,8 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       const etiqueta = `${xs.every(seguro) ? '❌ Bajas' : '⁉️ Bajas y dudas'} Fantasy para la jornada ${jornada}`;
       const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
       // la etiqueta final tiene que caber: si no, van menos jugadores en este tweet y el resto en el siguiente
-      if ([...lineas, etiqueta].every((l) => r.usadas.includes(l))) { texto = r.texto; break; }
+      // la etiqueta y el motivo (si alguno lo tiene) tienen que caber: si no, van menos jugadores en este tweet
+      if ([...lineas, etiqueta, ...(det ? [det.t] : [])].every((l) => r.usadas.includes(l))) { texto = r.texto; break; }
     }
     if (!texto) break;
     if (n === 1) { const t = unSuelto(resto[0]); if (t) out.push(t); i += 1; k++; continue; }   // si sobra uno, va con el formato de uno solo
