@@ -2,7 +2,7 @@
 //   node bot/prueba/noticias-ejemplo.mjs
 // Casos: una sola fuente espera; dos medios publican; un medio + LaLiga publica; lo de Champions no cuenta; una frase de Gemini que
 // copia el titular se tira; quien ya salió en novedades no se repite; y novedades no repite a quien ya contó la prensa.
-import { generar as noticias, frase, candidatos, copia } from '../tipos/noticias.mjs';
+import { generar as noticias, frase, candidatos, copia, yaJugo } from '../tipos/noticias.mjs';
 import { generar as novedades } from '../tipos/novedades.mjs';
 import { leerRss } from '../lib/prensa.mjs';
 import { validar } from '../lib/validar.mjs';
@@ -42,6 +42,16 @@ const orden = ordenar(['gemini-2.5-flash', 'gemini-3.8-flash-lite', 'gemini-3-fl
 ok(orden === 'gemini-3.8-flash gemini-3.8-flash-lite gemini-3.7-flash gemini-flash-latest gemini-flash-lite-latest gemini-3-flash-preview gemini-2.5-flash', `orden de los modelos: ${orden}`);
 ok(candidatos({ titulo: 'Gerard Moreno vuelve a entrenar', entradilla: '' }, jug, equipos).length === 0, 'G. Moreno sin el club no casa');
 ok(candidatos({ titulo: 'Moreno vuelve a entrenar con el Villarreal', entradilla: '' }, jug, equipos).length === 1, 'G. Moreno con el club casa');
+// una convocatoria con cinco o más nombres: solo los del titular
+{ const ent = 'Andrés Martín, Güler, Pedri, Ayoze y Cucho, en la lista';
+  const c1 = candidatos({ titulo: 'Convocatoria: vuelven Pedri y Ayoze', entradilla: ent }, jug, equipos).map((j) => j.nickname).join(',');
+  ok(c1 === 'Pedri,Ayoze', `convocatoria, solo los del titular: ${c1}`);
+  ok(candidatos({ titulo: 'La lista para el miércoles', entradilla: ent }, jug, equipos).length === 0, 'convocatoria sin nadie en el titular: nada'); }
+// ya jugó en un partido acabado antes de la noticia: una vuelta no es noticia
+{ const st = [{ matchState: 7, date: '2026-11-02T20:00:00+00:00', local: { players: [{ id: '14', weekPoints: 6 }, { id: '11', weekPoints: 0 }] }, visitor: { players: [] } }];
+  ok(yaJugo({ id: '14' }, st, Date.parse('2026-11-03T08:00:00Z')), 'yaJugo: jugó antes');
+  ok(!yaJugo({ id: '14' }, st, Date.parse('2026-11-02T10:00:00Z')), 'yaJugo: la noticia es de antes del partido');
+  ok(!yaJugo({ id: '11' }, st, Date.parse('2026-11-03T08:00:00Z')), 'yaJugo: convocado sin puntos'); }
 const ahora = Date.parse('2026-11-03T14:00:00Z');   // 15:00 en Madrid
 const N = (medio, guid, titulo, entradilla, h = 1) => ({ medio, guid: `${medio}|${guid}`, titulo, entradilla, url: guid, t: ahora - h * 36e5 });
 let prensa = [
