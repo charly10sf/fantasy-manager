@@ -1124,7 +1124,10 @@
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/03/pedro-martinez-quiere-recuperar-eli-ndiaye-136041146.html": 1793717014000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-verdugo-dortmund-busqueda-mejor_0_2008412408.html": 1793703773000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-confirma-lesion-peque_0_2008411945.html": 1793703145000,
-   "Diario Sur|https://www.diariosur.es/malagacf/joaquin-recuperacion-malaga-futbol-racing-20261103132330-nt.html": 1793709234000
+   "Diario Sur|https://www.diariosur.es/malagacf/joaquin-recuperacion-malaga-futbol-racing-20261103132330-nt.html": 1793709234000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
+   "SPORT|136055935": 1793734147000
   },
   "hechos": [
    {
@@ -1290,11 +1293,35 @@
     "motivo": "gestión de cargas",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793736327000,
+    "id": "3073",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793736181000,
+    "id": "3182",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Lemar causa baja por una lesion leve",
+    "motivo": "lesion leve en el abductor",
+    "plazo": "hasta despues del proximo paron",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-03",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
