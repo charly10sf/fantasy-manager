@@ -1,0 +1,14 @@
+name: Pruebas previa
+on:
+  push:
+    branches: [pruebas-previa2]
+jobs:
+  p:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: node bot/ejecutar.mjs --modo=simulacro --tipos=previa --ventanas=0 --tarjetas=1 | grep -vE "once probable|^\s*$" || true
