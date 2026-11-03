@@ -1,0 +1,21 @@
+name: Pruebas pulir
+on:
+  push:
+    branches: [pruebas-pulir]
+jobs:
+  p:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: node bot/prueba/pulir-ejemplo.mjs | tail -1
+      - run: |
+          for t in final resumen caidas previa novedades; do
+            echo "@@@@@@@@ $t"
+            node bot/ejecutar.mjs --modo=simulacro --tipos=$t --ventanas=0 --pulir=1 | grep -vE "^\s*\(dazn\)|^#" || true
+          done
