@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12i';
+export const VERSION = '0.6.12j';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.6.12i';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12j', f: '2026-11-03', h: '22:40', t: 'Una sola puja por jugador',
+    cosas: [
+      { tipo: 'mejora', d: 'oferta', t: 'La misma puja en toda la app', x: 'La puja que te propone la app por un jugador es la misma en Hoy, en Mercado → Fichar, en Especular y en su ficha, y el beneficio de especular se cuenta con ella. Si el plan descarta a uno porque no te llega, Fichar te dice hasta cuánto puedes pujar en vez de llamarlo chollo. Y «Puedes gastar hasta» dice que ya descuenta lo que tienes pujado.' },
+      { para: 'web', tipo: 'mejora', d: 'periodico', t: 'Tres guías más', x: 'El blindaje, los apercibidos y los puntos DAZN, en la web con las demás guías.' },
+      { para: 'dueño', tipo: 'mejora', d: 'ajustes', t: 'Formaciones Premium y protección de 14 días, comprobadas', x: 'Según la ayuda oficial de LaLiga Fantasy: 7 formaciones para todos y 5 más en las ligas Premium (3-6-1, 3-3-4, 4-2-4, 4-6-0 y 5-2-3), que solo valen si el administrador las tiene activadas. Corregido en la guía de alineación y el glosario (también capitán y banquillo, Premium). La protección tras fichar es de 2 semanas (14 días); la app lee la hora exacta de LaLiga.' },
+    ],
+  },
   {
     v: '0.6.12i', f: '2026-11-03', h: '22:34', t: 'Puntos esperados con la tabla de verdad',
     cosas: [
