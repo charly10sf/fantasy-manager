@@ -3,7 +3,7 @@
    tu liga, y sus noticias. Sale todo de lo que la app ya tiene (LaLiga, futbolfantasy, Understat, SofaScore y Google
    Noticias); al abrir un club se piden sus titulares (noticiasClub en externas.js). */
 import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe } from './util.js';
-import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub } from './comunes.js';
+import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo } from './directo.js';
 
 const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Dudas', out_of_league: 'Fuera de LaLiga' };
@@ -27,7 +27,7 @@ function enTuLiga(S) {
 function proxTxt(S, id) {
   const c = S.M.calendarioDe ? S.M.calendarioDe(id, 1)[0] : null;
   if (!c) return '';
-  return `${c.casa ? 'vs' : 'en'} <span class="niv ${nivelCls(c.nivel)}">${esc(c.rival)}</span>${c.pos ? ` (${c.pos}º)` : ''}, ${esc(cuando(c.fecha))}`;
+  return `${c.casa ? 'vs' : enCasaDe(c.rival)} <span class="niv ${nivelCls(c.nivel)}">${esc(c.rival)}</span>${c.pos ? ` (${c.pos}º)` : ''}, ${esc(cuando(c.fecha))}`;
 }
 
 /**
@@ -79,7 +79,7 @@ function tusClubesHTML(S, ids, mios) {
       <span class="cc-cab">${escudo(D, id)}<span class="cc-n">${esc(e.nombre)}</span></span>
       <span class="cc-pos">${t ? `${t.pos}º · ${t.pts} pts` : 'LaLiga'}</span>
       <span class="cc-caras">${caras.slice(0, 4).map((j) => ava(j, 'm')).join('')}${caras.length > 4 ? `<b>+${caras.length - 4}</b>` : ''}<small>${caras.length} tuyo${caras.length > 1 ? 's' : ''}</small></span>
-      ${p ? `<span class="cc-prox">${p.casa ? 'vs' : 'en'} ${esc(p.rival)}${p.fecha ? ` · ${esc(cuando(p.fecha))}` : ''}</span>` : ''}
+      ${p ? `<span class="cc-prox">${p.casa ? 'vs' : enCasaDe(p.rival)} ${esc(p.rival)}${p.fecha ? ` · ${esc(cuando(p.fecha))}` : ''}</span>` : ''}
     </button>`;
   };
   return `<div class="sec"><h2>Tus clubes</h2><span class="sub">${xs.length} con jugadores tuyos</span></div><div class="carril club-carril">${xs.map(tarjeta).join('')}</div>`;
@@ -208,12 +208,12 @@ function partidosHTML(S, id) {
   if (!vienen.length && !ult.length) return '';
   const filaV = (c) => `<button class="club-p ${nivelCls(c.nivel)}" data-club="${esc(c.rivalId)}">
       <span class="cp-j">J${c.jornada}<small>${esc(cuando(c.fecha, { hora: false }))}</small></span>${escudo(D, c.rivalId)}
-      <span class="cp-n"><b>${c.casa ? 'vs' : 'en'} ${esc(c.rival)}</b><small>${c.pos ? `${c.pos}º, ` : ''}${esc(c.nivel === 'media' ? 'nivel medio' : c.nivel || 'sin datos')}</small></span></button>`;
+      <span class="cp-n"><b>${c.casa ? 'vs' : enCasaDe(c.rival)} ${esc(c.rival)}</b><small>${c.pos ? `${c.pos}º, ` : ''}${esc(c.nivel === 'media' ? 'nivel medio' : c.nivel || 'sin datos')}</small></span></button>`;
   const filaU = (u) => {
     const nom = (D.equipos[u.rid] || {}).nombre || '¿?';
     return `<button class="club-p" data-club="${esc(u.rid)}">
       <span class="cp-j">J${u.jornada || '?'}</span>${escudo(D, u.rid)}
-      <span class="cp-n"><b>${u.casa ? 'vs' : 'en'} ${esc(nom)}</b></span>
+      <span class="cp-n"><b>${u.casa ? 'vs' : enCasaDe(nom)} ${esc(nom)}</b></span>
       <span class="cp-res r-${esc(u.r)}">${u.gf}-${u.gc}</span></button>`;
   };
   const a = vienen.length ? `<div class="grupo"><span>Le vienen</span><span>${vienen.length}</span></div>${vienen.map(filaV).join('')}` : '';

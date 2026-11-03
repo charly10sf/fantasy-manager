@@ -2,9 +2,9 @@
 import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta } from './util.js';
-import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
+import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
-import { filaActividad, PELIGRO, ventaHTML, puntosUltimaJornada } from './vistas.js';
+import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
 import { nativo, enApp, enWeb, estadoProxy } from './puente.js';
@@ -178,7 +178,17 @@ export function fichaJugador(S, pid) {
   // con su partido de la jornada empezado: lo que lleva y lo que ha hecho (se pone al día solo)
   const vj = jornadaJugadorHTML(S, pid);
   if (vj) h += `<div id="vivo-j">${vj}</div>`;
-  if (M.inercia && M.inercia(pid)) h += bloqueada('inercia') ? candado('inercia') : inerciaHTML(M, pid, !!mia);
+  // lo básico (puntos, interés, cláusula y próximo partido), justo debajo del precio
+  const f = mia || suya;
+  h += `<div class="rejilla" style="margin:10px 0 4px">
+    <button class="dato" data-accion="ver" data-sel="#j-puntua"><div class="et">Puntos ›</div><div class="v">${num(j.puntos)}<small>${j.media ? String(Math.round(j.media * 10) / 10).replace('.', ',') + ' de media' : ''}</small></div></button>
+    <div class="dato"><div class="et">Interés</div><div class="v">${inter.n}<small>/100</small></div></div>
+    ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` · ${eur(f.clausula - j.valor)} de más` : ''}` : ''}</small></div></button>` : ''}
+    <${prox && prox.rivalId ? `button class="dato" data-club="${esc(prox.rivalId)}"` : 'div class="dato"'}><div class="et">Próximo partido${prox && prox.rivalId ? ' ›' : ''}</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : enCasaDe(prox.rival)} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></${prox && prox.rivalId ? 'button' : 'div'}>
+  </div>`;
+  // las funciones top cerradas, juntas al final de la ficha
+  const cerradas = [];
+  if (M.inercia && M.inercia(pid)) { if (bloqueada('inercia')) cerradas.push('inercia'); else h += inerciaHTML(M, pid, !!mia); }
   for (const n of notasDe(pid)) h += `<div class="aviso-ficha oro">${icono('nota')}<div><b>Le contaste a la IA:</b> ${esc(n.texto)} <span class="t2">(${cuando(n.t)})</span></div></div>`;
   if (op) h += `<div class="aviso-ficha">${icono('rayo')}<div><b>Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max ? ` (puja hasta ${eur(op.puja_max)})` : ''}.</b> ${esc(op.motivo || '')}</div></div>`;
   for (const n of notasPlan(S, { j })) h += notaPlanHTML(n);
@@ -187,7 +197,7 @@ export function fichaJugador(S, pid) {
   h += `<div id="graf-j">${grafValor(serieValor(S, pid), rango, cargandoValor(S, pid))}</div>`;
 
   if (mia) {
-    h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}, ${mia.abierta ? '<b>abierta</b>: te lo pueden quitar ya' : mia.veda ? `a salvo mientras las cláusulas estén cerradas, hasta que empiece la jornada ${mia.veda.n} (${cuando(mia.protegidoHasta)}, en ${dura(mia.abreEn)})` : `${mia.escudo ? '<b>blindado</b>' : 'protegido'} hasta ${cuando(mia.protegidoHasta)} (${dura(mia.abreEn)})`}.${mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? ` <b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido; te quedan ${S.M.escudosMios.quedan} esta jornada.` : ''} ${mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`}.${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : mia.inicial ? ` Venía en tu equipo inicial: al empezar la liga valía ${eur(mia.inicial)} (<b class="${clase(mia.ganadoIni)}">${eur(mia.ganadoIni, { signo: true })}</b>).` : ' Lo que pagaste por él no sale en los movimientos de la liga.'}${(() => {
+    h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}${mia.abierta ? `: <b>abierta</b>${mia.riesgo === 'ninguno' ? ', pero sin riesgo ahora' : `, te lo pueden quitar ya. Riesgo ${mia.riesgo}`}` : ', '}${mia.abierta ? '' : mia.veda ? `a salvo mientras las cláusulas estén cerradas, hasta que empiece la jornada ${mia.veda.n} (${cuando(mia.protegidoHasta)}, en ${dura(mia.abreEn)})` : `${mia.escudo ? '<b>blindado</b>' : 'protegido'} hasta ${cuando(mia.protegidoHasta)} (${dura(mia.abreEn)})`}.${mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? ` <b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido; te quedan ${S.M.escudosMios.quedan} esta jornada.` : ''}${mia.abierta ? '' : ` ${mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`}.`}${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : mia.inicial ? ` Venía en tu equipo inicial: al empezar la liga valía ${eur(mia.inicial)} (<b class="${clase(mia.ganadoIni)}">${eur(mia.ganadoIni, { signo: true })}</b>).` : ' Lo que pagaste por él no sale en los movimientos de la liga.'}${(() => {
       // lo que le daría LaLiga si lo pones a la venta (lo que suele dar en tu liga sobre el valor)
       const ol = S.M.ofertaLigaDe ? S.M.ofertaLigaDe(j) : null;
       if (!ol || S.M.enVenta.has(pid)) return '';
@@ -196,7 +206,7 @@ export function fichaJugador(S, pid) {
       return ` Si lo pones a la venta, LaLiga te daría unos <b>${eur(ol.v)}</b>${ol.sinDatos ? ' (cerca de su valor: aún no hay ventas a LaLiga en tu liga para afinarlo)' : ` (en tu liga da entre ${eur(ol.min)} y ${eur(ol.max)}, de mediana un ${pct(ol.med * 100)} sobre el valor)`}${gana != null ? `: <b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'}` : ''}.`;
     })()}</div></div>`;
     const pg = mia.pagan;
-    if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) h += candado('quienPaga');
+    if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) cerradas.push('quienPaga');
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
       const nadie = !pg.seguro.length && !pg.quiza.length;
       // solo a quién le llega, sin cuánto tiene (eso es «dinero de los rivales», que va aparte)
@@ -212,7 +222,7 @@ export function fichaJugador(S, pid) {
       const cc = m.tipo !== 'manager' && M.compraCal ? M.compraCal(j, m.puja || m.precio) : null;
       const vb = m.tipo === 'manager' && bloqueada('ventasRivales');
       if (m.tipo === 'manager') h += `<div class="aviso-ficha oro">${icono('usuario')}<div><b>Lo vende ${esc(m.vendedor || 'otro manager')}</b>, que lo ha puesto en el mercado y pide ${eur(m.precio)} (${pct((m.sobrePide || 0) * 100)} sobre su valor). Sigue siendo suyo: solo es tuyo si acepta tu oferta, no es un jugador libre de la liga.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''} (cuánto, solo lo ve él).` : ''}${m.ofertaLiga ? (m.ofertaLiga.sinDatos || vb ? ' LaLiga también le hace su oferta y se queda con la mejor, así que lo que pide no basta.' : ` LaLiga también le hace su oferta, que solo ve él: en tu liga suele rondar <b>${eur(m.ofertaLiga.v)}</b> (de mediana un ${pct(m.ofertaLiga.med * 100)} sobre el valor, en ${m.ofertaLiga.n} ventas), y se queda con la mejor${m.precio >= m.ofertaLiga.v ? '. Aquí pide más que eso, así que lo que manda es su precio' : ': por menos lo normal es que no te lo venda'}.`) : ''}${m.noVende ? ` <b>Pero ${esc(m.noVende)}:</b> si lo vendiera no podría alinear un once, así que lo normal es que no te lo venda (lo tendrá a la venta para ver qué le da LaLiga).` : ''}${m.ofertaMin && !m.noVende && !vb ? ` Para que te lo venda, ofrécele <b>${eur(m.puja || m.ofertaMin)}</b>${m.ofertaAlta > m.ofertaMin ? (m.puja === m.ofertaAlta ? ` (lo más probable; con ${eur(m.ofertaMin)} tienes opciones, pero puede que LaLiga le dé más)` : ` (con ${eur(m.ofertaAlta)} es muy probable)`) : ''}.` : ''}${m.miPuja ? ` Tu oferta: ${eur(m.miPuja)}${m.ofertaMin && m.miPuja < m.ofertaMin ? ', por debajo de lo que suele dar LaLiga: súbela o lo normal es que no la acepte' : ''}.` : ''}</div></div>${vb && m.ofertaMin && !m.noVende ? candado('ventasRivales') : ''}`;
-      else h += `<div class="aviso-ficha azul">${icono('mercado')}<div><b>Libre en el mercado de la liga</b> desde ${eur(m.precio)}. Subasta a ciegas${m.cierra ? ` hasta ${cuando(m.cierra)}` : ''}: se lo lleva la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}${m.miPuja ? ` Tu puja: ${eur(m.miPuja)}.` : cc && !cc.ok ? ` Con su calendario no pujaría por él${cc.parche ? `: sale ya a un ${pct(cc.sobre * 100)} sobre su valor y de parche no pagaría más de un ${pct(cc.cal.maxSobre * 100, 0, false)}` : ' salvo que te haga falta de parche'}.` : ` Para llevártelo, yo pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)}).`}${(() => { const PV = M.pagaLiga && m.j.valor ? M.pagaLiga(m.j.valor) : null; return PV ? ` Por los de su valor (de ${eur(PV.desde)} a ${eur(PV.hasta)}), en tu liga se paga de mediana un ${pct(PV.med * 100)} sobre el valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.` : M.pujasLiga && !M.pujasLiga.poco ? ` En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : ''; })()}${m.topeCal && (!cc || cc.ok) ? ` La he dejado en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? ' La he dejado más baja para no pagar de más por lo que te aporta.' : ''}</div></div>`;
+      else h += `<div class="aviso-ficha azul">${icono('mercado')}<div><b>Libre en el mercado de la liga</b> desde ${eur(m.precio)}. Subasta a ciegas${m.cierra ? ` hasta ${cuando(m.cierra)}` : ''}: se lo lleva la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}${m.miPuja ? ` Tu puja: ${eur(m.miPuja)}.` : cc && !cc.ok ? ` Con su calendario no pujaría por él${cc.parche ? `: sale ya a un ${pct(cc.sobre * 100)} sobre su valor y de parche no pagaría más de un ${pct(cc.cal.maxSobre * 100, 0, false)}` : ' salvo que te haga falta de parche'}.` : ` Para llevártelo, la app pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)}).`}${(() => { const PV = M.pagaLiga && m.j.valor ? M.pagaLiga(m.j.valor) : null; return PV ? ` Por los de su valor (de ${eur(PV.desde)} a ${eur(PV.hasta)}), en tu liga se paga de mediana un ${pct(PV.med * 100)} sobre el valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.` : M.pujasLiga && !M.pujasLiga.poco ? ` En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : ''; })()}${m.topeCal && (!cc || cc.ok) ? ` La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? ' La app la deja más baja para no pagar de más por lo que te aporta.' : ''}</div></div>`;
     }
     if (suya) {
       if (suya.abierta && suya.meLlega) h += `<div class="aviso-ficha verde">${icono('diana')}<div><b>Puedes clausularlo ya</b> a ${esc(suya.rival.manager || suya.rival.nombre)} por ${eur(suya.clausula)}. Te quedarías con ${eur(suya.teQueda)}.</div></div>`;
@@ -225,13 +235,6 @@ export function fichaJugador(S, pid) {
   if (mia) h += `<button class="btn chico sec" data-accion="reventa" data-pid="${esc(pid)}" style="margin:2px 0 6px">${icono('cambio')}${M.reventa[pid] ? 'Quitar de «para revender»' : 'Lo tengo para revender'}</button>`;
   const venta = M.misVentas.find((v) => v.pid === pid);
   if (venta) h += `<div class="sec"><h2>En venta</h2></div>${ventaHTML(venta)}`;
-  const f = mia || suya;
-  h += `<div class="rejilla" style="margin-top:14px">
-    <button class="dato" data-accion="ver" data-sel="#j-puntua"><div class="et">Puntos ›</div><div class="v">${num(j.puntos)}<small>${j.media ? String(Math.round(j.media * 10) / 10).replace('.', ',') + ' de media' : ''}</small></div></button>
-    <div class="dato"><div class="et">Interés</div><div class="v">${inter.n}<small>/100</small></div></div>
-    ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` · ${eur(f.clausula - j.valor)} de más` : ''}` : ''}</small></div></button>` : ''}
-    <${prox && prox.rivalId ? `button class="dato" data-club="${esc(prox.rivalId)}"` : 'div class="dato"'}><div class="et">Próximo partido${prox && prox.rivalId ? ' ›' : ''}</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : 'en'} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></${prox && prox.rivalId ? 'button' : 'div'}>
-  </div>`;
   if (j.pos < 5) {
     h += calendarioHTML(M, j, !!mia);
     const v = M.previa && M.previa(j), r = M.rendimiento && M.rendimiento(j);
@@ -255,7 +258,7 @@ export function fichaJugador(S, pid) {
       const p90 = (val, min) => { if (!(min > 0)) return '–'; const x = (val * 90) / min; return String(Math.round(x * (x < 1 ? 100 : 10)) / (x < 1 ? 100 : 10)).replace('.', ','); };
       const c = [];
       if (a.u && a.u.min > 0) {
-        c.push(`<span>xG <b>${d1(a.u.xg)}</b> (${a.u.g} goles)</span>`, `<span>xA <b>${d1(a.u.xa)}</b> (${a.u.a} asist.)</span>`);
+        c.push(`<span>xG <b>${d1(a.u.xg)}</b> (${a.u.g} ${a.u.g === 1 ? 'gol' : 'goles'})</span>`, `<span>xA <b>${d1(a.u.xa)}</b> (${a.u.a} ${a.u.a === 1 ? 'asistencia' : 'asist.'})</span>`);
         c.push(`<span>Tiros/90 <b>${p90(a.u.tiros, a.u.min)}</b></span>`, `<span>Pases clave/90 <b>${p90(a.u.pc, a.u.min)}</b></span>`);
       }
       if (a.s) {
@@ -273,6 +276,7 @@ export function fichaJugador(S, pid) {
   if (nots.length) h += `<div class="sec"><h2>Noticias</h2></div>${nots.map(filaNoticia).join('')}`;
   const acts = M.actividad.filter((a) => a.pid === pid).slice(0, 6);
   if (acts.length) h += `<div class="sec"><h2>En tu liga</h2></div>${acts.map(filaActividad).join('')}`;
+  h += candadosJuntos(cerradas);
   h += `<button class="btn sec ancho" style="margin-top:18px" data-accion="preguntarJ" data-pid="${esc(pid)}">${icono('ia')}¿Qué hago con ${esc(j.nombre)}?</button>`;
   return h;
 }
@@ -391,18 +395,20 @@ export function fichaRival(S, tid) {
   if (!r) return nada('No encuentro este equipo.');
   const e = r.e;
   const serie = r.serie.map(([d, v]) => [Date.parse(d + 'T12:00:00'), v]);
-  let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2><span class="amenaza ${r.nivel}">Peligro ${PELIGRO[r.nivel]}</span></div>
+  let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></div>
   <p class="t2" style="margin:0 0 12px">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</p>
   ${notasPlan(S, { tid }).map(notaPlanHTML).join('')}
   <div class="rejilla">
-    <button class="dato" data-accion="ver" data-sel="#r-valor"><div class="et">Valor ›</div><div class="v">${eur(e.valor)}<small class="${clase(r.dValor)}">${r.dValor != null ? eur(r.dValor, { signo: true, dec: 1 }) + ' 7d' : ''}</small></div></button>
+    <button class="dato" data-accion="ver" data-sel="#r-valor"><div class="et">Valor ›</div><div class="v">${eur(e.valor)}<small class="${clase(r.dValor)}">${r.dValor != null ? eur(r.dValor, { signo: true, dec: 1 }) + ' en 7 días' : ''}</small></div></button>
     <button class="dato" data-accion="ver" data-sel="#r-hace"><div class="et">Movimientos 7d ›</div><div class="v">${r.movs}</div></button>
     <button class="dato" data-accion="ver" data-sel="#r-hace"><div class="et">Gastado 7d ›</div><div class="v">${eur(r.gastado)}<small>${r.ingresado ? `+${eur(r.ingresado, { dec: 1 })}` : ''}</small></div></button>
     <button class="dato" data-accion="ver" data-sel="#r-hace"><div class="et">Cláusulas hechas ›</div><div class="v">${r.clausulazos}<small>14 d${r.contraMi ? `, ${r.contraMi} a ti` : ''}</small></div></button>
     ${bloqueada('dineroRivales') ? '' : `<div class="dato"><div class="et">Dinero</div><div class="v">${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}<small>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'exacto' : `± ${eur(r.dinero.margen)} · estimado`) : 'no se sabe'}</small></div></div>`}
     <div class="dato"><div class="et">Paga en el mercado</div><div class="v">${r.paga ? pct(r.paga.med * 100) : '–'}<small>${r.paga ? `sobre el valor · ${r.paga.n} compra${r.paga.n > 1 ? 's' : ''}` : 'sin compras al mercado'}</small></div></div>
   </div>
-  ${bloqueada('dineroRivales') ? candado('dineroRivales') : `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`}`;
+  ${bloqueada('dineroRivales') ? '' : `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`}`;
+  // las funciones top cerradas, juntas en una tarjeta al final (antes, un candado en cada sección)
+  const cerradas = [bloqueada('dineroRivales') && 'dineroRivales'];
   // la jornada en directo: lo que lleva y su once, jugador a jugador
   if (M.vivo && M.enJuego) {
     const V = M.vivo, tot = V.equipos && V.equipos[String(tid)];
@@ -421,7 +427,7 @@ export function fichaRival(S, tid) {
       <p class="t2 peq">En millones. Si te dijo una cifra, ponla en los dos. A partir de ahora su dinero sale de esto más lo que mueva, y la app aprende cuánto fallaba la cuenta.</p>
     </details></div>`;
   }
-  if (r.leLlegan && r.leLlegan.length && bloqueada('quienPaga')) h += `<div class="sec"><h2>Tus cláusulas a su alcance</h2></div>${candado('quienPaga')}`;
+  if (r.leLlegan && r.leLlegan.length && bloqueada('quienPaga')) cerradas.push('quienPaga');
   else if (r.leLlegan && r.leLlegan.length) {
     h += `<div class="sec"><h2>Tus cláusulas a su alcance</h2><span class="sub">${r.leLleganYa.length} abierta${r.leLleganYa.length === 1 ? '' : 's'}</span></div>`;
     h += r.leLlegan.map((x) => filaJugador(x, {
@@ -431,10 +437,11 @@ export function fichaRival(S, tid) {
     })).join('');
   }
   // cómo juega (función top, desde la 0.6.5)
-  h += bloqueada('perfilRival') ? `<div class="sec"><h2>Cómo juega</h2></div>${candado('perfilRival')}` : perfilHTML(S, tid);
+  if (bloqueada('perfilRival')) cerradas.push('perfilRival');
+  else h += perfilHTML(S, tid);
   // lo que tiene en el mercado y lo que le da LaLiga por cada uno (función top)
   const vs = ventasDe(M, tid);
-  if (vs.length && bloqueada('ventasRivales')) h += `<div class="sec"><h2>En el mercado</h2><span class="sub">${vs.length} en venta</span></div>${candado('ventasRivales')}`;
+  if (vs.length && bloqueada('ventasRivales')) cerradas.push('ventasRivales');
   else if (vs.length) {
     h += `<div class="sec"><h2>En el mercado</h2><span class="sub">${vs.length} en venta</span></div><p class="t2 peq" style="margin:0 0 6px">Lo que pide y lo que suele dar LaLiga por uno así (una estimación con lo vendido en tu liga: lo de hoy solo lo ve él). Se lo queda quien dé más: para que te lo venda a ti, supera la de LaLiga.</p>`;
     h += vs.map((m) => {
@@ -460,7 +467,7 @@ export function fichaRival(S, tid) {
     h += r.cambios.filter((m) => m.tipo === 'blinda').slice(0, 5).map((m) => `<div class="fila"><span class="ic-act blindaje">${icono('escudo')}</span><div class="fila-c"><div class="act-t">Subió la cláusula de <b>${esc(m.j.nombre)}</b> de ${eur(m.de)} a ${eur(m.a)}</div><div class="fila-s">${cuando(m.t)}</div></div></div>`).join('');
     h += acts.map(filaActividad).join('');
   }
-  return h;
+  return h + candadosJuntos(cerradas);
 }
 
 /* ================= ANUNCIO BONIFICADO ================= */
@@ -531,7 +538,7 @@ export function ajustes(S) {
   }
   if (S.D && S.D.ligas && S.D.ligas.length > 1) h += `<div class="ajuste"><div class="c"><b>Liga</b></div><select data-cambia="liga">${S.D.ligas.map((l) => `<option value="${esc(l.id)}" ${S.D.liga.id === l.id ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('')}</select></div>`;
 
-  h += `<div class="grupo"><span>IA (Gemini, gratis)</span></div>`;
+  h += `<div class="grupo"><span>La IA (gratis)</span></div>`;
   if (enApp && !enDemo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
     const ult = uf ? `Última vez ${cuando(uf.t)}: ${uf.error ? `falló (${uf.error})` : (uf.pasos || []).slice(-1)[0] || 'bien'}` : 'Aún no ha trabajado sola';
@@ -543,7 +550,7 @@ export function ajustes(S) {
     const fuera = LS.get('ia-agotados', {}) || {};
     const hoyG = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
     const agot = Object.entries(fuera).filter(([, v]) => v && v.d === hoyG).map(([m]) => m);
-    h += `<div class="ajuste"><div class="c"><b>Modelos de IA</b><span>${lista.length ? `Tu clave de Google da acceso a ${lista.length} versiones de Gemini, cada una con su cupo gratis diario${agot.length ? ` (${agot.length} lo han gastado hoy)` : ''}. Si una se agota, la app pasa sola a la siguiente.` : 'Aún no he comprobado qué versiones de Gemini da tu clave'}</span></div><button class="btn chico sec" data-accion="probarIA">Comprobar</button></div>`;
+    h += `<div class="ajuste"><div class="c"><b>Versiones de la IA</b><span>${lista.length ? `Tu clave de Google da acceso a ${lista.length} versiones de la IA, cada una con su cupo gratis diario${agot.length ? ` (${agot.length} lo han gastado hoy)` : ''}. Si una se agota, la app pasa sola a la siguiente.` : 'La app aún no ha comprobado qué versiones da tu clave'}</span></div><button class="btn chico sec" data-accion="probarIA">Comprobar</button></div>`;
     h += `<div class="ajuste"><div class="c"><b>Plan automático al abrir</b><span>Lo rehace solo si es de otro día o ha cambiado el mercado</span></div>${interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir')}</div>`;
     h += `<div class="ajuste"><div class="c"><b>Buscar noticias en Google</b><span>Si se acaba su cupo, sigue sin búsqueda</span></div>${interr(ci.web, 'iaWeb', '', 'Buscar noticias en Google')}</div>`;
     const pu = ci.pullitas || 'normal';
@@ -636,8 +643,9 @@ export function avisos(S) {
   if (A.admin) h += bandejaAvisos(A);
   if (A.admin) h += '<div class="grupo"><span>Mandar uno tú</span><span></span></div>';
   if (A.sinSesion) {
-    h += `<p class="t2">Para mandarme un aviso y que te pueda contestar hace falta entrar con tu cuenta de LaLiga${enDemo() ? ' (ahora estás viendo la liga de ejemplo)' : ''}. Mientras, puedes mandarme el diagnóstico por WhatsApp.</p>
-      <button class="btn sec ancho" data-accion="compartirDiag">${icono('copiar')}${enApp ? 'Mandar el diagnóstico' : 'Copiar el diagnóstico'}</button>`;
+    h += `<p class="t2">Para mandarme un aviso y que te pueda contestar hace falta entrar con tu cuenta de LaLiga${enDemo() ? ' (ahora estás viendo la liga de ejemplo)' : ''}. Mientras, puedes escribirme desde la página de contacto y pegar el diagnóstico.</p>
+      <button class="btn ancho" data-abrir="https://fantasymanagerapp.com/contacto.html">${icono('enviar')}Ir a contacto</button>
+      <button class="btn sec ancho" data-accion="compartirDiag" style="margin-top:8px">${icono('copiar')}${enApp ? 'Mandar el diagnóstico' : 'Copiar el diagnóstico'}</button>`;
   } else {
     h += `<p class="t2 peq" style="margin-top:0">Cuéntame qué ha pasado y qué estabas haciendo. Me llega a mí y te contesto aquí mismo: te aviso cuando haya respuesta.</p>
       <textarea id="avisoTxt" class="campo-t aviso-t" rows="4" maxlength="4000" placeholder="Por ejemplo: al abrir Mercado se queda en blanco">${esc(A.borrador || '')}</textarea>

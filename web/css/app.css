@@ -1175,6 +1175,13 @@ body.en-tour { overflow: hidden; }
 .bloq-c b { font-size: 15px; }
 .bloq-c span { font-size: 13.5px; line-height: 1.45; color: var(--texto2); }
 .pill.bloq-p { background: var(--oro-s); color: var(--oro); cursor: pointer; }
+.pill.bloq-p { border: 0; }
+.cand-cab { display: flex; justify-content: flex-end; margin: 0 0 8px; }
+.bloq-g { margin: 14px 0; padding: 13px 14px 4px; border-radius: 14px; background: repeating-linear-gradient(135deg, rgba(255, 197, 71, 0.07) 0 10px, rgba(255, 197, 71, 0.03) 10px 20px), var(--plano2); border: 1px dashed rgba(255, 197, 71, 0.45); }
+.bloq-g-cab { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.bloq-i { display: grid; gap: 2px; width: 100%; padding: 9px 0 9px 50px; text-align: left; color: var(--texto); background: none; border: 0; border-top: 1px dashed rgba(255, 197, 71, 0.3); cursor: pointer; font: inherit; }
+.bloq-i b { font-size: 14px; }
+.bloq-i span { font-size: 13px; line-height: 1.4; color: var(--texto2); }
 .pill.bloq-p .ic { width: 13px; height: 13px; }
 .bloq-hoja { text-align: center; padding-bottom: 6px; }
 .bloq-hoja .hoja-cab { justify-content: space-between; }
@@ -1494,6 +1501,8 @@ body.limitado .tostada { z-index: 120; }
 .cf-caras .ava { width: 23px; height: 23px; box-shadow: 0 0 0 2px var(--fondo); }
 .cf-caras .ava .ini { font-size: 9.5px; }
 .cf-caras b { margin-left: 4px; font: 700 12px 'Barlow'; color: var(--texto2); }
+/* en pantallas estrechas, sin caras en la fila (ya salen en «Tus clubes») y el partido en dos líneas si hace falta */
+@media (max-width: 419px) { .club-f .cf-caras { display: none; } .club-f .cf-s { white-space: normal; line-height: 1.35; } }
 .cf-ley { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 12px 0 0; font-size: 13px; color: var(--apagado); }
 .cf-ley span { display: inline-flex; align-items: center; gap: 6px; }
 .cf-ley span::before { content: ''; width: 12px; height: 12px; border-radius: 4px; }
@@ -1723,6 +1732,8 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .paso2.blindar { border-left-color: var(--oro); } .paso2.alinear, .paso2.esperar { border-left-color: var(--azul); }
 .paso2.hecho { opacity: 0.6; } .paso2.descartada { opacity: 0.75; border-left-color: var(--baja); }
 .paso2.sugerencia { border-left-color: var(--plano3); }
+.accion-t.descartada { background: var(--baja-s); color: var(--baja); }
+.pasos-fuera-t { margin: 14px 2px 6px; font: 700 13px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--apagado); }
 .paso2 > summary { list-style: none; display: grid; grid-template-columns: 26px minmax(0, 1fr) 16px; gap: 10px; align-items: start; padding: 11px 10px 11px 11px; cursor: pointer; }
 .paso2 > summary::-webkit-details-marker { display: none; }
 .pp-num { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 15px var(--cond); background: var(--plano2); color: var(--texto2); }

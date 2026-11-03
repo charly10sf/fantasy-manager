@@ -112,18 +112,20 @@ export function delta(t, { largo = false } = {}) {
   return '<span class="apag">=</span>';
 }
 
-export const partidoTxt = (p) => (p ? `${p.casa ? 'vs' : 'en'} ${esc(p.rival)} · ${cuando(p.fecha)}` : '');
+/** el rival de un partido fuera, sin que «en Alavés» parezca un sitio: «en casa del Alavés», «en casa de la Real Sociedad» */
+export const enCasaDe = (rival) => `en casa ${/^(Real Sociedad|Real$|Ud |UD )/i.test(String(rival || '')) ? 'de la' : 'del'}`;
+export const partidoTxt = (p) => (p ? `${p.casa ? 'vs' : enCasaDe(p.rival)} ${esc(p.rival)} · ${cuando(p.fecha)}` : '');
 
 /* ---------- lo difícil que es el próximo rival ---------- */
 const NIV = { 'fácil': 'facil', media: 'media', 'difícil': 'dificil' };
 export const nivelCls = (n) => NIV[n] || '';
 const corto = (id, nombre) => (EQUIPOS[id] && EQUIPOS[id].corto) || String(nombre || '').slice(0, 3).toUpperCase();
 
-/** «vs Getafe 18º · sáb 16:15», con el rival en verde, ámbar o rojo según lo difícil que es */
+/** «vs Getafe (18º) · sáb 16:15» o «en casa del Alavés (14º) · …», con el rival en verde, ámbar o rojo según lo difícil que es */
 export function rivalSub(M, j) {
   const fr = M && M.factorRival ? M.factorRival(j) : null;
   if (!fr || !fr.p) return '';
-  return `${fr.p.casa ? 'vs' : 'en'} <span class="niv ${nivelCls(fr.nivel)}">${esc(fr.p.rival)}${fr.r ? ` ${fr.r.pos}º` : ''}</span> · ${cuando(fr.p.fecha)}`;
+  return `${fr.p.casa ? 'vs' : enCasaDe(fr.p.rival)} <span class="niv ${nivelCls(fr.nivel)}">${esc(fr.p.rival)}${fr.r ? ` (${fr.r.pos}º)` : ''}</span> · ${cuando(fr.p.fecha)}`;
 }
 
 /** los próximos tres partidos de su equipo, cada uno con su color */
@@ -245,7 +247,7 @@ export function cromo(M, j, { modo = 'pp', chico = false, ent = false, vivo = fa
     const p = fr && fr.p;
     if (T && T.p > 0 && !(p && p.fecha <= Date.now())) {
       const v = Math.round(T.p * 100);
-      tit = `<span class="cr-tit ${v >= 75 ? 'alta' : v >= 50 ? 'media' : 'baja'}" title="Titular ~${v} %">${v}%</span>`;
+      tit = `<span class="cr-tit ${v >= 75 ? 'alta' : v >= 50 ? 'media' : 'baja'}" title="Probabilidad de ser titular: ~${v} %" role="img" aria-label="Probabilidad de ser titular: ${v} %">${v}%</span>`;
     }
   }
   const ape = String(j.nombre || '').split(' ');
@@ -296,7 +298,7 @@ export function titBadge(M, j) {
   const T = M.titularidad(j);
   if (!T || T.p == null) return '';
   const p = Math.round(T.p * 100);
-  return `<span class="tit-b ${p >= 75 ? 'bien' : p >= 45 ? 'duda' : 'mal'}" title="Probabilidad de ser titular">${p} %</span>`;
+  return `<span class="tit-b ${p >= 75 ? 'bien' : p >= 45 ? 'duda' : 'mal'}" title="Probabilidad de ser titular" role="img" aria-label="Probabilidad de ser titular: ${p} %">${p} %</span>`;
 }
 
 /** una fila de jugador. x lleva j (jugador) y opcionalmente tend, cláusula, etc. */
@@ -385,8 +387,20 @@ export function colaCandado(clave) {
   if (!q) return ` Ya la has abierto las ${n} veces de esta jornada: vuelve en la siguiente.`;
   return ` Tócalo y ábrela ${minutosPorVez() >= 60 && minutosPorVez() % 60 === 0 ? `${minutosPorVez() / 60} hora${minutosPorVez() > 60 ? 's' : ''}` : `${minutosPorVez()} minutos`} con dos anuncios cortos. ${n} veces por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.`;
 }
-/** lo mismo, en pequeño (en una fila) */
+/** lo mismo, en pequeño (una vez, en la cabecera de una lista) */
 export function candadoMini(clave, texto) {
-  const [t] = BLOQUEO[clave] || ['Función top'];
-  return `<span class="pill bloq-p" data-accion="bloqueada" data-clave="${esc(clave)}">${icono('candado')}${esc(texto || t)}</span>`;
+  const [t, x] = BLOQUEO[clave] || ['Función top', ''];
+  return `<button type="button" class="pill bloq-p" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}" aria-label="${esc(`${t}: función top bloqueada. ${x}`)}">${icono('candado')}${esc(texto || t)}</button>`;
+}
+/**
+ * los candados de una misma pantalla, juntos en una tarjeta (al final): [clave] o [clave, como]. Con uno solo, su caja
+ * de siempre; cada función sigue siendo un botón que dice cómo se abre
+ */
+export function candadosJuntos(lista) {
+  const cs = lista.filter(Boolean).map((c) => (Array.isArray(c) ? c : [c])).filter(([c], i, a) => a.findIndex(([d]) => d === c) === i);
+  if (!cs.length) return '';
+  if (cs.length === 1) return candado(cs[0][0], { como: cs[0][1] || null });
+  const cola = topConAnuncio() ? 'Toca una para ver cómo abrirla viendo un anuncio corto.' : 'Pronto, gratis viendo un anuncio.';
+  return `<div class="bloq-g"><div class="bloq-g-cab"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${cs.length} funciones top</b><span>${cola}</span></span></div>
+    ${cs.map(([clave, como]) => { const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', '']; return `<button class="bloq-i" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}><b>${esc(t)}</b><span>${esc(x)}</span></button>`; }).join('')}</div>`;
 }

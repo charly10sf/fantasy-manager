@@ -13,7 +13,7 @@ const EQUIPOS = {
 // 2/3 del real para que cuadre con el dinero de la demo y la media es la suya, con tope 10. El id sirve para ponerles la
 // cara (caras-demo.js); la foto no se guarda aquí.
 const J = [
-  ['Oblak', 2, 1, 33, 8.2, 2322], ['Grimaldo', 2, 2, 61, 8.6, 3155], ['Marcos Llorente', 2, 2, 40, 6.2, 67], ['Álex Baena', 2, 3, 65, 8.0, 2534], ['Kang-In Lee', 2, 3, 50, 6.8, 3193], ['J. David', 2, 4, 45, 6.6, 3255], ['Julián Alvarez', 2, 4, 36, 5.9, 3088],
+  ['Oblak', 2, 1, 33, 8.2, 2322], ['Grimaldo', 2, 2, 61, 8.6, 3155], ['Marcos Llorente', 2, 2, 40, 6.2, 67], ['Álex Baena', 2, 3, 65, 8.0, 2534], ['Kang-In Lee', 2, 3, 50, 6.8, 3193], ['J. David', 2, 4, 45, 6.6, 3255], ['Julián Álvarez', 2, 4, 36, 5.9, 3088],
   ['Unai Simón', 3, 1, 27, 7.5, 68], ['Laporte', 3, 2, 24, 5.2, 3065], ['Paredes', 3, 2, 20, 5.6, 2315], ['Navarro', 3, 3, 18, 5.1, 2549], ['O. Sancet', 3, 3, 13, 4.4, 2318], ['Nico Williams', 3, 4, 30, 5.9, 3083], ['Iñaki Williams', 3, 4, 18, 5.5, 91],
   ['Joan García', 4, 1, 39, 7.4, 2634], ['Cubarsí', 4, 2, 44, 4.2, 1775], ['Xavi Espart', 4, 2, 35, 6.2, 2843], ['Fermín', 4, 3, 67, 8.5, 1715], ['Rodri', 4, 3, 60, 6.1, 3208], ['Lamine Yamal', 4, 4, 125, 10.0, 3104], ['Raphinha', 4, 4, 115, 10.0, 2522],
   ['Á. Valles', 5, 1, 37, 9.0, 2541], ['Natan', 5, 2, 34, 5.7, 2543], ['Fran García', 5, 2, 14, 2.8, 2429], ['Isco', 5, 3, 41, 6.1, 3090], ['Fornals', 5, 3, 27, 5.5, 3099], ['Ez Abde', 5, 4, 50, 6.1, 3089], ['Antony', 5, 4, 29, 4.7, 2770],
@@ -126,11 +126,13 @@ export function demo() {
   const ordenEq = Object.keys(EQUIPOS);
   const partidos = [];
   const fechasJ = { 9: base - 7 * DIA, 10: base, 11: base + 7 * DIA, 12: base + 14 * DIA, 13: base + 28 * DIA, 14: base + 35 * DIA, 15: base + 42 * DIA };
+  // los 10 partidos de cada jornada, de sábado a lunes: 4 el sábado (desde las 14:00), 5 el domingo y 1 el lunes (antes
+  // eran 3 por día y la jornada acababa el martes)
+  const HORAS = [0, 2.25, 4.5, 7, 22, 24, 26.25, 28.5, 31, 55];
   for (const [n, f0] of Object.entries(fechasJ)) {
-    const rot = (+n * 3) % ordenEq.length;
-    const lista = [...ordenEq.slice(rot), ...ordenEq.slice(0, rot)];
+    const cruces = jornadaDe(ordenEq, +n);
     for (let i = 0; i < 10; i++) {
-      const fecha = f0 + Math.floor(i / 3) * DIA + (i % 3) * 2.25 * HORA;
+      const fecha = f0 + HORAS[i] * HORA;
       // los que ya han empezado, con su marcador y su estado (7 acabado, 2 o 4 jugándose), como los da LaLiga: si no, la
       // jornada en juego salía con partidos de ayer «por jugar» (revisión del 25 oct)
       let gl = null, gv = null, st = null;
@@ -140,20 +142,20 @@ export function demo() {
         gl = g(); gv = g(); st = pasado > 2 * HORA ? 7 : pasado > HORA ? 4 : 2;
         if (st !== 7) { gl = Math.min(gl, 1); gv = Math.min(gv, 1); }
       }
-      partidos.push({ id: `p${n}-${i}`, jornada: +n, fecha, localId: lista[i], visitanteId: lista[19 - i], local: EQUIPOS[lista[i]][0], visitante: EQUIPOS[lista[19 - i]][0], gl, gv, st, estado: st });
+      const [lo, vi] = cruces[i];
+      partidos.push({ id: `p${n}-${i}`, jornada: +n, fecha, localId: lo, visitanteId: vi, local: EQUIPOS[lo][0], visitante: EQUIPOS[vi][0], gl, gv, st, estado: st });
     }
   }
 
   // resultados de las jornadas 1 a 8, con equipos más fuertes que otros; los de la 9 son sus partidos ya acabados
   // (antes salía también una J9 inventada con otros cruces: Clubes y la ficha de un club no cuadraban con Directo)
-  const fuerza = Object.fromEntries(ordenEq.map((id, i) => [id, 0.6 + ((i * 7) % 20) / 14]));
-  fuerza['15'] = 2.1; fuerza['3'] = 2.2; fuerza['2'] = 1.7; fuerza['43'] = 0.5; fuerza['10'] = 0.6;
+  // (lo fuerte que es cada uno, a ojo: antes salía el Barça 16º y el Betis colista jugando la Champions)
+  const fuerza = { 15: 2.2, 4: 2.2, 2: 1.9, 3: 1.6, 20: 1.6, 5: 1.5, 16: 1.4, 6: 1.3, 17: 1.2, 13: 1.1, 14: 1.1, 21: 1, 18: 1, 8: 1, 9: 1, 12: 0.9, 7: 0.9, 26: 0.9, 11: 0.8, 49: 0.8 };
   const resultados = [];
   for (let n = 1; n <= 8; n++) {
-    const rot = (n * 5) % ordenEq.length;
-    const lista = [...ordenEq.slice(rot), ...ordenEq.slice(0, rot)];
+    const cruces = jornadaDe(ordenEq, n);
     for (let i = 0; i < 10; i++) {
-      const a = lista[i], b = lista[19 - i];
+      const [a, b] = cruces[i];
       const gol = (f) => Math.max(0, Math.round(f * (0.4 + r() * 1.3) - 0.3));
       resultados.push({ jornada: n, localId: a, visitanteId: b, gl: gol(fuerza[a] * 1.1), gv: gol(fuerza[b]) });
     }
@@ -225,6 +227,17 @@ export function demo() {
 }
 
 /** el próximo sábado a las 14:00 en Madrid (si ya ha pasado la de esta semana, el de la siguiente) */
+/**
+ * los cruces de la jornada n (1 a 19) con el método del círculo: en 19 jornadas nadie repite rival (antes, con una
+ * rotación, la Real se cruzaba dos veces con el mismo entre la J5 y la J9). Casa y fuera, alternando
+ */
+function jornadaDe(eqs, n) {
+  const r = (n - 1) % (eqs.length - 1);
+  const resto = eqs.slice(1);
+  const giro = [...resto.slice(r), ...resto.slice(0, r)];
+  const arr = [eqs[0], ...giro];
+  return Array.from({ length: arr.length / 2 }, (_, i) => ((n + i) % 2 ? [arr[i], arr[arr.length - 1 - i]] : [arr[arr.length - 1 - i], arr[i]]));
+}
 function proximoSabado(ahora) {
   for (let k = 0; k < 9; k++) {
     const t = ahora + k * 864e5;

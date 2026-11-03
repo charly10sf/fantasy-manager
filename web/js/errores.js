@@ -55,13 +55,13 @@ export function explicarError(e) {
   if ((e && e.tipo === 'cambio') || estado === 400 || estado === 403 || estado === 404 || estado === 405 || estado === 410) {
     return {
       tipo: 'cambio', titulo: 'LaLiga ha cambiado algo',
-      texto: 'La app lee tu liga como lo hace la app de LaLiga, y LaLiga ha cambiado algo por su lado. Hace falta una actualización de Fantasy Manager: mándame el fallo con el botón y lo arreglo.',
+      texto: 'La app lee tu liga como lo hace la app de LaLiga, y LaLiga ha cambiado algo por su lado. Hace falta una actualización de Fantasy Manager: manda el fallo con el botón para que se arregle.',
       botones: ['mandarFallo', 'recargar'],
     };
   }
   return {
     tipo: 'otro', titulo: 'Algo ha fallado',
-    texto: 'No he podido cargar tu liga. Vuelve a probar; si se repite, mándame el fallo con el botón.',
+    texto: 'No se ha podido cargar tu liga. Vuelve a probar; si se repite, manda el fallo con el botón.',
     botones: ['recargar', 'mandarFallo', 'entrarDemo'],
   };
 }
@@ -71,8 +71,8 @@ export function bandaError(x, edad) {
   const hace = !edad || edad === 'ahora' ? 'hace un momento' : edad;
   if (x.tipo === 'red') return `Sin internet: lo que ves es de ${hace}`;
   if (x.tipo === 'laliga') return `LaLiga no responde: lo que ves es de ${hace}`;
-  if (x.tipo === 'cambio') return `LaLiga ha cambiado algo y no puedo actualizar: lo que ves es de ${hace}`;
-  return `No he podido actualizar: lo que ves es de ${hace}`;
+  if (x.tipo === 'cambio') return `LaLiga ha cambiado algo y no se puede actualizar: lo que ves es de ${hace}`;
+  return `No se ha podido actualizar: lo que ves es de ${hace}`;
 }
 
 const ETIQUETAS = { recargar: 'Volver a probar', salir: 'Entrar con otra cuenta', entrarDemo: 'Ver la liga de ejemplo', mandarFallo: 'Mandar el fallo' };

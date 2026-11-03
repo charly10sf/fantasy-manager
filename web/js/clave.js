@@ -60,7 +60,7 @@ const DIB = {
     ${anillo(181, 33, 110, 32, 15)}${dedo(287, 63)}
     <path class="l" d="M60 78h226"/>${barra(60, 86, 60)}${barra(170, 86, 40)}
     <path class="l" d="M60 100h226"/>
-    <text class="t" x="60" y="118">Default Gemini API Key</text><text class="t s" x="170" y="118">…7Qd</text>
+    <text class="t" x="60" y="118">Default API Key</text><text class="t s" x="170" y="118">…7Qd</text>
     <path class="l" d="M60 130h226"/>${barra(60, 142, 90)}${barra(170, 142, 34)}`),
   // copiar la clave
   copiar: marco('aistudio.google.com/apikey', `
@@ -80,7 +80,7 @@ export function guiaClave() {
   const paso = (n, t, cuerpo, extra = '') => `<li class="gc-paso"${extra}><span class="gc-num">${n}</span><div class="gc-c"><b class="gc-t">${t}</b>${cuerpo}</div></li>`;
   return `<div class="ia-alta gc">
     <div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>
-    <p class="entradilla"><b>Para hacerle preguntas, primero necesita tu clave</b> (se saca una sola vez). Es Gemini, de Google, con tu propia clave: contesta lo que le preguntes de tu liga, también con capturas, y te hace el plan de cada día leyendo noticias, lesiones y onces probables. Mientras, en Hoy tienes el plan automático.</p>
+    <p class="entradilla"><b>Para hacerle preguntas, primero necesita tu clave</b> (se saca una sola vez). Es la IA de Google, con tu propia clave de Google AI Studio: contesta lo que le preguntes de tu liga, también con capturas, y te hace el plan de cada día leyendo noticias, lesiones y onces probables. Mientras, en Hoy tienes el plan automático.</p>
     <div class="gc-chips"><span>${icono('ok')}Gratis</span><span>${icono('ok')}Sin tarjeta</span><span>${icono('reloj')}3 minutos</span></div>
     ${vieneDeAIStudio() ? `<a class="gc-vuelta" href="#pegaClave" data-accion="irAPegar">${icono('copiar')}<span>¿Ya la tienes copiada? <b>Pégala abajo</b></span></a>` : ''}
     <ol class="gc-pasos">
@@ -89,8 +89,8 @@ export function guiaClave() {
       ${paso(2, 'Acepta las condiciones', `<p>Solo la primera vez. Marca la casilla de las condiciones y pulsa <b>Continue</b>. La de recibir correos de Google no hace falta.</p>${DIB.condiciones}`)}
       ${paso(3, 'Busca tu clave', `<p>Google te crea una al entrar por primera vez: sale en la lista de <b>API Keys</b>. Si no tienes ninguna, pulsa <b>Create API key</b>, ponle de nombre «Fantasy» y créala en un proyecto nuevo (<b>Create project</b>).</p>${DIB.claves}`)}
       ${paso(4, 'Cópiala', `<p>Toca la clave y luego el icono de copiar. Empieza por <span class="gc-mono">AQ.</span> (las de antes, por <span class="gc-mono">AIza</span>). Cópiala entera.</p>${DIB.copiar}`)}
-      ${paso(5, 'Vuelve aquí y pégala', `<p>${enApp ? 'Mantén el dedo en la casilla y pulsa <b>Pegar</b>.' : 'Pégala en la casilla.'} En cuanto la pegues, la pruebo y te hago el plan.</p>
-        <div class="gc-fila"><input class="campo-t gc-campo" id="claveIA" placeholder="AQ.… o AIza…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Tu clave de Gemini">${pegar ? `<button class="btn sec gc-pegar" data-accion="pegarClave">${icono('copiar')}Pegar</button>` : ''}</div>
+      ${paso(5, 'Vuelve aquí y pégala', `<p>${enApp ? 'Mantén el dedo en la casilla y pulsa <b>Pegar</b>.' : 'Pégala en la casilla.'} En cuanto la pegues, la app la prueba y te hace el plan.</p>
+        <div class="gc-fila"><input class="campo-t gc-campo" id="claveIA" placeholder="AQ.… o AIza…" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Tu clave de Google AI Studio">${pegar ? `<button class="btn sec gc-pegar" data-accion="pegarClave">${icono('copiar')}Pegar</button>` : ''}</div>
         <button class="btn ancho gc-guardar" data-accion="guardarClave">${icono('ok')}Guardar y hacer el plan</button>`, ' id="pegaClave"')}
     </ol>
     <details class="gc-ayuda"><summary>${icono('info')}¿Algo no te sale así?</summary>
