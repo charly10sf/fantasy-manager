@@ -6,6 +6,7 @@ import { generar as noticias, frase, candidatos, copia } from '../tipos/noticias
 import { generar as novedades } from '../tipos/novedades.mjs';
 import { leerRss } from '../lib/prensa.mjs';
 import { validar } from '../lib/validar.mjs';
+import { ordenar } from '../lib/gemini.mjs';
 import { Registro } from '../lib/registro.mjs';
 
 let fallos = 0;
@@ -36,7 +37,9 @@ ok(copia('uno dos tres cuatro cinco seis', 'x uno dos tres cuatro cinco seis y')
 const equipos = { 1: 'Real Racing Club', 2: 'Real Madrid', 3: 'Villarreal CF', 4: 'FC Barcelona' };
 const J = (id, nickname, name, teamId, playerStatus, averagePoints, positionId = 3) => ({ id, nickname, name, teamId, playerStatus, averagePoints, positionId, marketValue: 20e6 });
 const jug = [J('10', 'Andrés Martín', 'Andrés Martín García', 1, 'ok', 6.2), J('11', 'Güler', 'Arda Güler', 2, 'ok', 5.1), J('12', 'G. Moreno', 'Gerard Moreno Balagueró', 3, 'injured', 5.8, 4),
-  J('13', 'Pedri', 'Pedro González López', 4, 'doubtful', 6.5), J('14', 'Ayoze', 'Ayoze Pérez Gutiérrez', 3, 'ok', 4.4, 4)];
+  J('13', 'Pedri', 'Pedro González López', 4, 'doubtful', 6.5), J('14', 'Ayoze', 'Ayoze Pérez Gutiérrez', 3, 'ok', 4.4, 4), J('15', 'Cucho', 'Juan Camilo Hernández', 3, 'injured', 5.2, 4)];
+ok(ordenar(['gemini-2.5-flash', 'gemini-3.8-flash-lite', 'gemini-3-flash-preview', 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-pro', 'gemini-2.5-flash-preview-tts']).join(' ')
+  === 'gemini-3.8-flash gemini-2.5-flash gemini-flash-latest gemini-3-flash-preview gemini-3.8-flash-lite', 'orden de los modelos');
 ok(candidatos({ titulo: 'Gerard Moreno vuelve a entrenar', entradilla: '' }, jug, equipos).length === 0, 'G. Moreno sin el club no casa');
 ok(candidatos({ titulo: 'Moreno vuelve a entrenar con el Villarreal', entradilla: '' }, jug, equipos).length === 1, 'G. Moreno con el club casa');
 const ahora = Date.parse('2026-11-03T14:00:00Z');   // 15:00 en Madrid
@@ -81,7 +84,9 @@ ok(ts.some((t) => t.clave.includes('|13:') && /Duda Fantasy/.test(t.texto)), 'Pe
 for (const t of ts) reg.marcar(t, 'x');
 
 // segunda vuelta: lo ya leído no se vuelve a preguntar; MARCA confirma lo de Andrés Martín
-prensa = [...prensa, N('MARCA', 'm3', 'Andrés Martín, baja varias semanas', 'El jugador del Racing tiene una lesión muscular')];
+prensa = [...prensa, N('MARCA', 'm3', 'Andrés Martín, baja varias semanas', 'El jugador del Racing tiene una lesión muscular'),
+  N('AS', 'a4', 'Cucho causa baja', 'El delantero se lesiona'), N('MARCA', 'm4', 'Cucho, lesionado', 'El delantero se lesiona otra vez')];
+respuestas['Cucho causa baja'] = respuestas['Cucho, lesionado'] = { que: 'lesion', hecho: 'Cucho se lesiona', motivo: '', plazo: '' };
 preguntas = 0;
 reg.enEstaEjecucion = 0;
 ts = await noticias({ ...base, leer: async () => prensa });
@@ -91,6 +96,7 @@ const am = ts.find((t) => t.clave.includes('|10:'));
 ok(am && /Rotura de fibras en la pierna/.test(am.texto), 'el motivo más completo');
 ok(am && /Lo cuentan AS y MARCA|Lo cuentan MARCA y AS/.test(am.texto) && /Baja Fantasy para la jornada 12 contra el Girona/.test(am.texto), 'Andrés Martín sale con dos medios y como baja');
 ok(!ts.some((t) => /\|1[23]:/.test(t.clave)), 'G. Moreno y Pedri no se repiten');
+ok(!ts.some((t) => t.clave.includes('|15:')), 'Cucho, lesionado en LaLiga desde antes, no sale aunque lo cuenten dos medios');
 ok(!JSON.stringify(reg.datos.noticias).includes('Andrés Martín se ha roto'), 'en el registro no se guardan titulares');
 
 // novedades: si LaLiga pasa a Andrés Martín a lesionado, no repite lo que ya contó la prensa

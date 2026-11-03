@@ -19,6 +19,7 @@ import { noticiasPrensa } from '../lib/prensa.mjs';
 import { preguntarJson } from '../lib/gemini.mjs';
 
 const HORA = 36e5;
+const ahoraReal = () => Date.now();
 export const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
@@ -91,8 +92,13 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
   // fuera lo de más de 72 h
   for (const [g, t] of Object.entries(nt.vistas)) if (ahora - t > 72 * HORA) delete nt.vistas[g];
   nt.hechos = nt.hechos.filter((h) => ahora - h.t < 72 * HORA);
-  if (!clave) { log('  (noticias) sin GEMINI_API_KEY: no leo la prensa'); return nt; }
+  // desde cuándo sale cada uno como sale en LaLiga Fantasy (Cucho, 3 nov: lesionado desde antes y la prensa lo repite): lo que se ve
+  // por primera vez cuenta como viejo (t 0)
   const importan = (jugadores || []).filter(IMPORTA);
+  const prim = !nt.desde;
+  nt.desde ||= {};
+  for (const j of importan) { const e = j.playerStatus || 'ok', d = nt.desde[j.id]; if (!d || d.e !== e) nt.desde[j.id] = { e, t: prim || !d ? 0 : ahora }; }
+  if (!clave) { log('  (noticias) sin GEMINI_API_KEY: no leo la prensa'); return nt; }
   const todas = await leer({ log });
   const nuevas = [];
   for (const n of todas) {
@@ -107,12 +113,13 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
   if (!nuevas.length) return nt;
   const hoy = diaMadrid(ahora);
   if (nt.gemini.dia !== hoy) nt.gemini = { dia: hoy, n: 0 };
-  const porLote = 20, maxLotes = config.noticiasLotesEjecucion ?? 2;
+  const porLote = 20, maxLotes = config.noticiasLotesEjecucion ?? 2, hasta = ahoraReal() + (config.noticiasSegundos ?? 120) * 1000;
   for (let k = 0; k < Math.min(maxLotes, Math.ceil(nuevas.length / porLote)); k++) {
     if (nt.gemini.n >= (config.geminiDia ?? 60)) { log(`  (noticias) tope de ${config.geminiDia ?? 60} preguntas a Gemini hoy`); break; }
     const lote = nuevas.slice(k * porLote, (k + 1) * porLote);
     nt.gemini.n++;
-    const r = await pedirIA({ clave, prompt: prompt(lote), esquema: ESQUEMA, log });
+    if (ahoraReal() > hasta - 10000) { log('  (noticias) sin tiempo para más preguntas en esta ejecución'); break; }
+    const r = await pedirIA({ clave, prompt: prompt(lote), esquema: ESQUEMA, log, hasta });
     if (!r.ok) { log(`  (noticias) Gemini no contesta: ${r.error}. Lo vuelvo a intentar en la próxima ejecución`); break; }
     log(`  (noticias) Gemini (${r.modelo}) ha leído ${lote.length}`);
     for (const x of lote) nt.vistas[x.n.guid] = x.n.t;
@@ -154,7 +161,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     // lo de la otra familia anterior no cuenta (lesionado el lunes y de vuelta el miércoles: vale lo del miércoles)
     const corte = Math.max(0, ...hs.filter((h) => familia(h.que) !== fam).map((h) => h.t));
     const mis = hs.filter((h) => familia(h.que) === fam && h.t >= corte);
-    if (ahora - mis[0].t > 18 * HORA) continue;   // la primera noticia de esto tiene que ser de las últimas 18 h
+    if (ahora - mis[0].t > 18 * HORA) { log(`  (noticias) ${j.nickname} (${fam}): la primera noticia es de hace más de 18 h`); continue; }
     const medios = [...new Set(mis.map((h) => h.medio))];
     const est = j.playerStatus || 'ok';
     const laliga = fam === 'mala' ? ['injured', 'doubtful', 'suspended'].includes(est) : est === 'ok';
@@ -168,7 +175,9 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     // lo más grave manda: lesión > descartado > molestias
     const que = fam === 'buena' ? 'vuelve' : ['lesion', 'descartado', 'molestias'].find((q) => mis.some((h) => h.que === q));
     // ya lesionado o sancionado en LaLiga Fantasy: unas molestias o un descarte no cuentan nada nuevo (sigue sin estar)
-    if (fam === 'mala' && que !== 'lesion' && ['injured', 'suspended'].includes(est)) { log(`  (noticias) ${j.nickname}: ya sale como ${est} en LaLiga, nada nuevo`); continue; }
+    // y una lesión tampoco, si ya salía así en LaLiga desde hace más de 48 h antes de la primera noticia
+    const desde = (nt.desde && nt.desde[j.id]) || { t: 0 };
+    if (fam === 'mala' && ['injured', 'suspended'].includes(est) && (que !== 'lesion' || desde.t < mis[0].t - 48 * HORA)) { log(`  (noticias) ${j.nickname}: ya salía como ${est} en LaLiga, nada nuevo`); continue; }
     // la frase de arriba, la última; el motivo y el plazo, los más completos
     const de = (k) => mis.filter((h) => h[k] && h.que === que).concat(mis.filter((h) => h[k]));
     const hecho = (de('hecho').reverse()[0] || {}).hecho || '';
@@ -198,8 +207,11 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const baja = c.que === 'descartado' || (c.que === 'lesion' && (c.est === 'injured' || (c.parte && c.parte.estado === 'baja') || !!c.plazo));
     const etiqueta = c.fam === 'buena' ? (c.est === 'ok' ? `✅ Disponible Fantasy ${paraLa(pp, jornada)}` : `👀 Apunta a volver en LaLiga Fantasy ${paraLa(pp, jornada)}`)
       : baja ? `❌ Baja Fantasy ${paraLa(pp, jornada)}` : `⁉️ Duda Fantasy ${paraLa(pp, jornada)}`;
-    const ideas = [c.fam === 'mala' && c.motivo ? { t: `⚠️ ${cap(c.motivo)}`, prio: 8 } : null,
-      c.fam === 'mala' && c.plazo ? { t: `🗓️ ${cap(c.plazo)}`, prio: 7 } : null,
+    // el motivo, si dice algo (no «lesión» a secas) y no lo dice ya la cabecera; el plazo, si no lo dice ya
+    const motivo = c.fam === 'mala' && c.motivo && c.motivo.split(' ').length >= 2 && !copia(c.motivo, cab, 3) ? c.motivo : '';
+    const plazo = c.fam === 'mala' && c.plazo && !copia(c.plazo, cab, 3) && !copia(c.plazo, motivo, 3) ? c.plazo : '';
+    const ideas = [motivo ? { t: `⚠️ ${cap(motivo)}`, prio: 8 } : null,
+      plazo ? { t: `🗓️ ${cap(plazo)}`, prio: 7 } : null,
       { t: fuente, prio: 6 },
       media >= 3 ? { t: `‼️ ${quien} suma ${fmt(media)} puntos de media`, prio: 5 } : null,
       { t: etiqueta, prio: 9 }];
