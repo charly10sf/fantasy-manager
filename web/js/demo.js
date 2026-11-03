@@ -35,7 +35,7 @@ const J = [
   ['Agirrezabala', 49, 1, 16, 5.3, 1219], ['Jorge Salinas', 49, 2, 2, 2.2, 3011], ['Pablo Ramón', 49, 2, 1, 2.7, 3026], ['Canales', 49, 3, 9, 3.5, 3125], ['Iván Martín', 49, 3, 3, 3.5, 3205], ['Y. Zabiri', 49, 4, 30, 6.0, 3152], ['Iñigo Vicente', 49, 4, 16, 4.8, 3002],
 ];
 const RIVALES = [
-  ['U.D. Carlista', 'Carlos'], ['Los Galácticos de Vallecas', 'Rubén'], ['Patatas Bravas FC', 'Sergio'], ['Real Sociedad Anónima', 'Javi'],
+  ['Unión Clausulera', 'Lucas'], ['Los Galácticos de Vallecas', 'Rubén'], ['Patatas Bravas FC', 'Sergio'], ['Real Sociedad Anónima', 'Javi'],
   ['Atlético Cuñados', 'Dani'], ['Sporting de Sofá', 'Álex'], ['Inter de Mesón', 'Pablo'], ['Rayo Vallekano', 'Iván'],
   ['Hércules del Henares', 'Marcos'], ['Deportivo La Caña', 'Adri'], ['Fantasmas FC', 'Hugo'], ['Club Clausulazo', 'Mario'],
 ];

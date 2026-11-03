@@ -615,7 +615,7 @@ function notaJugador(S, nombre, texto, efecto) {
 function saludoHTML(S) {
   const h = Number(new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid', hour: 'numeric', hour12: false }));
   const sal = h >= 6 && h < 14 ? 'Buenos días' : h >= 14 && h < 21 ? 'Buenas tardes' : 'Buenas noches';
-  // el nombre de manager suele ser el del equipo («U.D. Carlista»): solo se usa si parece un nombre de persona
+  // el nombre de manager suele ser el del equipo («Unión Clausulera»): solo se usa si parece un nombre de persona
   const cand = String((S.D.yo && S.D.yo.nombre) || (S.M.yo && S.M.yo.manager) || '').trim();
   const equipo = String((S.M.yo && S.M.yo.nombre) || '').trim();
   const nombre = cand && cand !== equipo && !/[.\d_]|\b(fc|cf|ud|cd|sd|rcd|club|team|united|real)\b/i.test(cand) ? cand.split(/\s+/)[0] : '';
@@ -724,7 +724,7 @@ function eqCabHTML(S) {
       <button data-seg="equipo:dinero" aria-label="Valor del equipo: ver Beneficio"><b>${eur(D.valorEquipo)}</b><span>valor ›</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</button>
       <button data-ir="rivales" data-seg="rivales:clasif" aria-label="Tu puesto: ver la clasificación"><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts ›` : 'en la liga ›'}</span></button>
       <button data-ir="hoy" aria-label="Tu saldo: ver las cuentas del plan"><b class="${D.dinero != null && num(D.dinero) < 0 ? 'baja' : ''}">${D.dinero != null ? eur(D.dinero) : '–'}</b><span>saldo ›</span></button>
-      <button data-accion="ver" data-seg2="equipo:plantilla" data-sel="#eq-plantilla" aria-label="Ver la plantilla"><b>${jug}</b><span>jugadores${ent ? ` y ${ent} entr.` : ''} ›</span></button>
+      <button data-accion="ver" data-seg2="equipo:plantilla" data-sel="#eq-plantilla" aria-label="Ver la plantilla"><b>${jug}</b><span>jugadores${ent ? ` y ${ent} entr.` : ''}&nbsp;›</span></button>
     </div>
   </div>`;
 }
