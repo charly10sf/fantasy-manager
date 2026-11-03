@@ -20,5 +20,6 @@ jobs:
           node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=final,mvp,resumen --ventanas=0 > salida/a.txt 2>&1 || true
           node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=directo --ventanas=0 --fechas-espn=20261030,20261031,20261101,20261102 > salida/b.txt 2>&1 || true
           node bot/ejecutar.mjs --modo=simulacro --tipos=caidas --forzar=1 > salida/c.txt 2>&1 || true
-          node bot/ejecutar.mjs --modo=simulacro --tipos=previa --previa-acabados=1 --forzar=1 > salida/d.txt 2>&1 || true
+          node bot/ejecutar.mjs --modo=simulacro --tipos=previa --forzar=1 > salida/d.txt 2>&1 || true
+          node bot/prueba/onces-real.mjs > salida/e.txt 2>&1 || true
           cat salida/*.txt | sed 's/^/@@ /'
