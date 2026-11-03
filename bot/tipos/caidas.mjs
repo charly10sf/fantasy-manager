@@ -1,11 +1,12 @@
 // Caídas probables de la jornada que viene: titulares habituales con baja o duda (Carlos, 2 nov 16:16: «es probable que no vaya a jugar»).
-// % de titularidad parcial: minutos de las últimas jornadas (peso 0,3) y partidos de más de 60' de la temporada (0,2), sin el once probable
-// de futbolfantasy (0,5, aún no portado); doblado a ×0,6 si es duda; 0 si está lesionado o sancionado.
+// % de titularidad: el once probable (0,5, lib/ff.mjs, desde el 3 nov), minutos de las últimas jornadas (0,3) y partidos de más de 60'
+// de la temporada (0,2); ×0,6 si es duda; 0 si está lesionado o sancionado. Una duda se publica si el once probable también la da.
 import { corto, elegir, fmt, partes, el, del } from '../lib/texto.mjs';
 import { tweet, cap, segunda, enPalabras, proximoPartido, paraLa } from '../lib/redactar.mjs';
 import { ficha, ESTADOS } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
+import { onceProbable, pOnce } from '../lib/ff.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus } from '../lib/agrupar.mjs';
 
 export function baseTitular(playerStats, hasta) {
@@ -15,7 +16,7 @@ export function baseTitular(playerStats, hasta) {
   const ult = s.slice(-5);
   const a = ult.filter((x) => min(x) >= 60).length / ult.length;
   const b = s.filter((x) => min(x) >= 60).length / s.length;
-  return { p: (0.3 * a + 0.2 * b) / 0.5, ult: ult.length, temporada: s.length };
+  return { p: (0.3 * a + 0.2 * b) / 0.5, a, b, ult: ult.length, temporada: s.length };
 }
 
 export async function generar({ jugadores, equipos, jornada, ultimaJugada, config, stats = [], semana = null, soloSeguras = false, registro = null, ahora = Date.now(), log = console.log }) {
@@ -33,15 +34,25 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     .sort((a, b) => Number(b.marketValue) - Number(a.marketValue))
     .slice(0, 36);
   const fichas = await enParalelo(malos, 5, (j) => ficha(j.id));
+  // el once probable de los equipos con alguna duda (lib/ff.mjs): da el % como la app y sirve de segunda fuente para la duda
+  const ffs = new Map();
+  if (config.onceProbable !== false) {
+    for (const j of malos) {
+      const k = String(j.teamId);
+      if (j.playerStatus !== 'doubtful' || ffs.has(k)) continue;
+      ffs.set(k, await onceProbable(equipos[k] || '', jugadores.filter((x) => String(x.teamId) === k), { log }));
+    }
+  }
   const caidas = [];
   malos.forEach((j, i) => {
     const f = fichas[i];
     if (!f || f.error) return;
     const b = baseTitular(f.playerStats, ultimaJugada);
     if (!b || b.p < 0.6) return;                      // solo titulares habituales
-    // publicando, solo bajas seguras (lesionado o sancionado): una duda necesita una segunda fuente que aún no está
-    if (soloSeguras && j.playerStatus === 'doubtful') return;
-    const p = j.playerStatus === 'doubtful' ? b.p * 0.6 : 0;
+    const ff = ffs.get(String(j.teamId)) || null, o = ff ? ff[j.id] || null : null;
+    // publicando, una duda solo sale con una segunda fuente (regla de Carlos): que el once probable también lo dé por tocado
+    if (soloSeguras && j.playerStatus === 'doubtful' && !(o && o.estado !== 'ok')) return;
+    const p = j.playerStatus === 'doubtful' ? (ff ? 0.5 * pOnce(o) + 0.3 * b.a + 0.2 * b.b : b.p) * 0.6 : 0;
     if (p >= config.umbralCaida) return;
     caidas.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0, valor: Number(j.marketValue) || 0 });
   });
@@ -76,21 +87,23 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const clave = `caidas|${jornada}|${xs.map((c) => c.id).join('-')}`;
     out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...xs.filter((c) => c.estado === 'duda').map((c) => c.pct), ...(top ? top.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: xs, pp: pr, clave }) });
   }
+  // uno suelto: su propio tweet con la etiqueta final (formato Carrasco)
+  const unSuelto = (c) => {
+    const pr = pp.get(String(c.teamId));
+    const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
+    const ideas = [{ t: `⚠️ Aparece como ${c.estado === 'duda' ? `duda en LaLiga Fantasy y ${enPalabras(c.p)}: ${c.pct} %` : `${c.estado} en LaLiga Fantasy`}`, prio: 8 },
+      { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
+      { t: `${c.estado === 'duda' ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
+    const { usadas, texto } = tweet(cab, ideas);
+    if (!usadas.length) return null;
+    const clave = `caidas|${jornada}|${c.id}`;
+    return { tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c)], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
+  };
   if (sueltos.length <= 2) {
-    for (const c of sueltos) {
-      const pr = pp.get(String(c.teamId));
-      const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
-      const ideas = [{ t: `⚠️ Aparece como ${c.estado === 'duda' ? `duda en LaLiga Fantasy y ${enPalabras(c.p)}: ${c.pct} %` : `${c.estado} en LaLiga Fantasy`}`, prio: 8 },
-        { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
-        { t: `${c.estado === 'duda' ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
-      const { usadas, texto } = tweet(cab, ideas);
-      if (!usadas.length) continue;
-      const clave = `caidas|${jornada}|${c.id}`;
-      out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c)], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) });
-    }
+    for (const c of sueltos) { const t = unSuelto(c); if (t) out.push(t); }
     return out;
   }
-  // más de dos sueltos: en lista, llenando cada tweet con todos los que caben (por orden de valor)
+  // más de dos sueltos: agrupados por lo que pasa, llenando cada tweet con todos los que caben (por orden de valor)
   let i = 0, k = 0;
   while (i < sueltos.length && out.length < 12) {
     const resto = sueltos.slice(i, i + 6);
@@ -107,6 +120,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       if ([...lineas, etiqueta].every((l) => r.usadas.includes(l))) { texto = r.texto; break; }
     }
     if (!texto) break;
+    if (n === 1) { const t = unSuelto(resto[0]); if (t) out.push(t); i += 1; k++; continue; }   // si sobra uno, va con el formato de uno solo
     const quienes = resto.slice(0, n);
     const clave = `caidas|${jornada}|${quienes.map((c) => c.id).join('-')}`;
     out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, ...quienes.flatMap((c) => (c.estado === 'duda' ? [c.pct] : [])), ...(top ? top.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: quienes, pp: quienes.every((c) => String(c.teamId) === String(quienes[0].teamId)) ? pp.get(String(quienes[0].teamId)) : null, clave }) });
