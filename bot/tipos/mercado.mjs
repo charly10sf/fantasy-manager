@@ -18,7 +18,7 @@ const MEDALLA = { suben: ['🥇', '🥈', '🥉'], bajan: ['🔻', '🔻', '🔻
  */
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
 
-export async function generar({ jugadores, equipos, jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log }) {
+export async function generar({ jugadores, equipos, jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), esperarHasta = 0, log = console.log }) {
   const hoy = diaMadrid(ahora);
   // solo justo después de la actualización (hacia las 00:15): el punto de hoy existe desde esa hora, así que sin esta ventana el tweet
   // podía salir a cualquier hora del día con un cambio de hace casi 24 h (el 2 nov salió a las 23:27; Carlos, 23:29)
@@ -30,9 +30,18 @@ export async function generar({ jugadores, equipos, jornada, config = {}, regist
   const lista = (jugadores || []).filter((j) => Number(j.marketValue) > 0 && j.playerStatus !== 'out_of_league');
   if (!lista.length) return [];
   const centinela = [...lista].sort((a, b) => Number(b.marketValue) - Number(a.marketValue))[0];
-  const hc = puntos(await valorMercado(centinela.id).catch(() => null));
+  let hc = puntos(await valorMercado(centinela.id).catch(() => null));
+  let dia = hc.length ? diaMadrid(hc[hc.length - 1].t) : null;
+  // ejecución solo de mercado lanzada por el Worker de 00:13 a 00:30 (3 nov, Carlos: «cada 30 s»): en vez de acabar si aún no ha
+  // llegado el valor de hoy, vuelve a mirar el centinela cada 15 s hasta `esperarHasta`; así sale en cuanto LaLiga actualiza,
+  // sin esperar a que arranque otra ejecución de Actions (tardan 15-30 s solo en empezar)
+  while (ventanas && !forzar && dia !== hoy && esperarHasta && Date.now() + 15e3 < esperarHasta) {
+    log(`  (mercado) el último valor es del ${dia}, aún no ha llegado el de hoy: vuelvo a mirar en 15 s`);
+    await new Promise((r) => setTimeout(r, 15e3));
+    const otra = puntos(await valorMercado(centinela.id).catch(() => null));
+    if (otra.length) { hc = otra; dia = diaMadrid(hc[hc.length - 1].t); }
+  }
   if (!hc.length) { log('  (mercado) sin histórico del centinela'); return []; }
-  const dia = diaMadrid(hc[hc.length - 1].t);
   if (ventanas && !forzar && dia !== hoy) { log(`  (mercado) el último valor es del ${dia}, aún no ha llegado el de hoy (${hoy})`); return []; }
   log(`  (mercado) valores del ${dia}: pido el histórico de ${lista.length} jugadores`);
   const hist = await enParalelo(lista, 25, (j) => valorMercado(j.id));
