@@ -195,11 +195,19 @@ function campo(x, y, w, h, lado, club, confirmados) {
     ls.forEach((j, k) => {
       const cx = x + (w / (ls.length + 1)) * (k + 1);
       const maxN = Math.min(124, w / ls.length - 8);
-      const pctCol = j.pct == null ? null : j.pct >= 75 ? VERDE : j.pct >= 50 ? '#f2b33d' : MALO;
-      const aro = j.duda ? '#f2b33d' : '#ffffff';
-      s += `<circle cx="${cx}" cy="${cy + 3}" r="24" fill="#000" opacity="0.35"/>`
-        + (j.cara ? caraCirculo(j.cara, cx, cy, 23, { aro: j.duda ? aro : club.vivo, fondo: '#1b1b21', grosor: 2.5 })
-          : `<circle cx="${cx}" cy="${cy}" r="14" fill="${club.vivo}" stroke="${aro}" stroke-width="2.5"/>`)
+      const colDe = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? '#f2b33d' : MALO);
+      const pctCol = colDe(j.pct);
+      const chapa = (jj, cxx, r) => `<circle cx="${cxx}" cy="${cy + 3}" r="${r + 1}" fill="#000" opacity="0.35"/>`
+        + (jj.cara ? caraCirculo(jj.cara, cxx, cy, r, { aro: jj.duda ? '#f2b33d' : club.vivo, fondo: '#1b1b21', grosor: 2.5 })
+          : `<circle cx="${cxx}" cy="${cy}" r="${Math.round(r * 0.6)}" fill="${club.vivo}" stroke="${jj.duda ? '#f2b33d' : '#ffffff'}" stroke-width="2.5"/>`);
+      if (j.alt && !confirmados) {
+        // dos opciones para el mismo puesto: las dos caras y debajo cada nombre con su %
+        s += chapa(j.alt, cx + 21, 18) + chapa(j, cx - 21, 18)
+          + texto(cx, cy + 37, `${j.nombre} ${j.pct} %`, { px: 15, peso: 700, color: pctCol, ancla: 'middle', max: maxN })
+          + texto(cx, cy + 56, `${j.alt.nombre} ${j.alt.pct} %`, { px: 15, peso: 700, color: colDe(j.alt.pct), ancla: 'middle', max: maxN });
+        return;
+      }
+      s += chapa(j, cx, 23)
         + texto(cx, cy + 43, j.nombre, { px: 17, peso: 700, color: '#f4f2f3', ancla: 'middle', max: maxN });
       if (pctCol && !confirmados) {
         const t = `${j.pct} %`, wp = ancho(t, 15) + 16;

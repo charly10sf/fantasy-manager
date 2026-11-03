@@ -30,7 +30,8 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
       const porId = new Map((jugadores || []).map((j) => [String(j.id), j]));
       for (const k of ['local', 'visitante']) {
         d[k].escudo = await img(d[k].escudoUrl);
-        for (const j of d[k].once) { const p = j.id != null && porId.get(String(j.id)); j.cara = p ? await img(p.image || (p.images && p.images.transparent && p.images.transparent['256x256'])) : null; }
+        const caraDe = async (j) => { const p = j.id != null && porId.get(String(j.id)); return p ? img(p.image || (p.images && p.images.transparent && p.images.transparent['256x256'])) : null; };
+        for (const j of d[k].once) { j.cara = await caraDe(j); if (j.alt) j.alt.cara = await caraDe(j.alt); }
       }
     }
     if (t.tarjeta.tipo === 'bajas') {
