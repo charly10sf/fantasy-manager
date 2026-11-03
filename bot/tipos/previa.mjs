@@ -99,7 +99,11 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         for (const x of [...once].filter((y) => y.p < 0.6).sort((a, b) => a.p - b.p).slice(0, 3)) {
           const alt = Object.values(probs[k]).filter((y) => y.pos === x.pos && !fuera.has(String(y.id)) && y.p >= 0.25 && y.estado !== 'injured' && y.estado !== 'suspended')
             .sort((a, b) => b.p - a.p)[0];
-          if (alt) { fuera.add(String(alt.id)); x.alt = { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda }; }
+          if (!alt) continue;
+          fuera.add(String(alt.id));
+          // arriba, el de más % (el titular de la web puede quedar por debajo del otro con los minutos de LaLiga)
+          if (alt.p > x.p) { const yo = { id: x.id, nombre: x.nombre, pct: x.pct, duda: x.duda }; Object.assign(x, { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda, p: alt.p }); x.alt = yo; }
+          else x.alt = { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda };
         }
         return { nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion, once: once.map(({ p, ...x }) => x) };
       };
