@@ -8,6 +8,7 @@ import { readFileSync, appendFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { semanaActual, jugadores as pedirJugadores, statsSemana, equiposDe, ficha as pedirFicha } from './lib/laliga.mjs';
 import { crearDazn } from './lib/dazn.mjs';
 import { validar } from './lib/validar.mjs';
+import { pulir } from './lib/pulir.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
 
@@ -98,6 +99,13 @@ for (const q of quienes) {
   let tweets = [];
   try { tweets = await mod.generar(c); } catch (e) { console.log(`\n## ${q}: ERROR ${e.stack || e}`); fallos++; continue; }
   console.log(`\n## ${q}: ${tweets.length} tweets`);
+  // Gemini pule el texto de los que van a salir en esta ejecución (lib/pulir.mjs); lo que no pasa la revisión sale con la plantilla
+  const aPulir = tweets.filter((t) => validar(t.texto, { numeros: t.numeros, max: config.tweetMax }).ok && registro.decidir(t) === 'ok')
+    .slice(0, Math.max(0, (config.maxPorEjecucion ?? 4) - registro.enEstaEjecucion));
+  if (aPulir.length) {
+    try { await pulir(aPulir, { tipo: q, registro, config, jugadores, equipos, log: (s) => console.log(s), forzar: arg('pulir') === '1' }); }
+    catch (e) { console.log(`  (pulir) ERROR ${e.message || e}: salen con la plantilla`); }
+  }
   for (const t of tweets) {
     if (abortar) break;
     generados++;
@@ -139,7 +147,8 @@ for (const q of quienes) {
     } else if (d === 'ok') { registro.reservar(t); previstos++; }
     console.log(`\n--- ${t.clave} · peso ${v.peso} · ${v.ok ? 'válido' : 'FALLA: ' + v.errores.join('; ')} · ${estado}${t.casado === false ? ' · jugador sin casar con LaLiga' : ''}`);
     console.log(t.texto);
-    md(`<details><summary>${estado} · ${t.clave} · peso ${v.peso}</summary>\n\n\`\`\`\n${t.texto}\n\`\`\`\n</details>`);
+    if (t.plantilla) console.log(`   (pulido por ${t.pulido}; la plantilla decía:)\n${t.plantilla.replace(/^/gm, '   | ')}`);
+    md(`<details><summary>${estado} · ${t.clave} · peso ${v.peso}${t.pulido ? ' · pulido' : ''}</summary>\n\n\`\`\`\n${t.texto}\n\`\`\`${t.plantilla ? `\n\nPlantilla:\n\`\`\`\n${t.plantilla}\n\`\`\`` : ''}\n</details>`);
   }
 }
 console.log(`\n# Total: ${generados} generados, ${publica ? publicados + ' publicados' : previstos + ' los publicaría'}, ${fallos} fallos · ${((Date.now() - t0) / 1000).toFixed(1)} s`);
