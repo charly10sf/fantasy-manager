@@ -167,6 +167,13 @@
    "jornada": 12,
    "id": "2117610569003884604",
    "t": "2026-11-03T13:31:17.862Z"
+  },
+  {
+   "clave": "noticias|2479:mala|2026-11-03",
+   "tipo": "noticias",
+   "jornada": 12,
+   "id": "2117694981083451500",
+   "t": "2026-11-03T19:06:43.228Z"
   }
  ],
  "estados": {
@@ -1088,7 +1095,29 @@
    "SPORT|136045584": 1793725567000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246831/cuti-romero-queda-argentina.html": 1793729269000,
    "SPORT|136052781": 1793727424000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000,
+   "MARCA|https://www.marca.com/futbol/deportivo/2026/11/02/aubameyang-vuelve.html": 1793657650000,
+   "MARCA|https://www.marca.com/futbol/levante/2026/11/03/enzo-bardeli-regresa-grupo.html": 1793717987000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246138/flick-tres-frentes-abiertos.html": 1793685000000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261102/1004246297/cinco-ausencias-maxima-presion-asi-llega-barca-duelo-champions.html": 1793634953000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261102/1004246280/atletico-listo-medirse-bayern.html": 1793631654000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/03/mourinho-se-desmarca-de-la-mistica-de-roma-antes-de-su-gran-reto-en-la-champions-no-creo-en-puntos-de-inflexion-cadena-ser/": 1793728400000,
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/03/antonio-hidalgo-celebra-la-remontada-del-depor-ante-osasuna-ha-sido-un-subidon-grande-mas-que-merecido-radio-coruna/": 1793696700000,
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/02/el-depor-busca-reencontrarse-con-la-victoria-ante-osasuna-con-la-incognita-de-aubameyang-radio-coruna/": 1793696110000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/lemar-regresara-despues-del-paron-de-selecciones-radio-elche/": 1793709589000,
+   "Cadena SER|https://cadenaser.com/cantabria/2026/11/03/andres-martin-tiene-una-rotura-de-fibras-radio-santander/": 1793710117000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/03/el-gran-problema-de-vinicius-tras-la-explosion-de-diomande-tengo-muchas-dudas-de-que-lo-vaya-a-conseguir-cadena-ser/": 1793687467000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/02/el-chip-del-balon-del-athletic-club-real-sociedad-fallo-la-rfef-reconoce-que-pudo-no-haber-penalti-a-nico-williams-cadena-ser/": 1793658047000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cta-investiga-chip-balon-polemico-penalti-nico-williams-derbi-vasco-20261102_3467125.html": 1793654507000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261102/11674341/tebas-acusa-madrid-danar-liga-estirando-chicle-negreira.html": 1793635487000,
+   "ABC|https://www.abc.es/deportes/futbol/clasificacion-laliga-dos-puntos-separan-barcelona-atletico-20261103090959-nt.html": 1793693400000,
+   "ABC|https://www.abc.es/deportes/futbol/mourinho-sabelotodo-20261102153531-nt.html": 1793644578000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
+   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/03/pedro-martinez-quiere-recuperar-eli-ndiaye-136041146.html": 1793717014000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-verdugo-dortmund-busqueda-mejor_0_2008412408.html": 1793703773000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-confirma-lesion-peque_0_2008411945.html": 1793703145000,
+   "Diario Sur|https://www.diariosur.es/malagacf/joaquin-recuperacion-malaga-futbol-racing-20261103132330-nt.html": 1793709234000
   },
   "hechos": [
    {
@@ -1203,11 +1232,62 @@
     "motivo": "recuperación de lesión",
     "plazo": "su evolución marcará su disponibilidad",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/deportivo/2026/11/02/aubameyang-vuelve.html",
+    "medio": "MARCA",
+    "t": 1793657650000,
+    "id": "3108",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Aubameyang vuelve a jugar tras su lesión",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     24,
+     20
+    ]
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/levante/2026/11/03/enzo-bardeli-regresa-grupo.html",
+    "medio": "MARCA",
+    "t": 1793717987000,
+    "id": "3164",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Enzo Bardeli regresa a los entrenamientos grupales",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/cantabria/2026/11/03/andres-martin-tiene-una-rotura-de-fibras-radio-santander/",
+    "medio": "Cadena SER",
+    "t": 1793710117000,
+    "id": "3073",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Andrés Martín sufre una lesión muscular",
+    "motivo": "",
+    "plazo": "varias semanas",
+    "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-confirma-lesion-peque_0_2008411945.html",
+    "medio": "Diario de Sevilla",
+    "t": 1793703145000,
+    "id": "2479",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "gestión de cargas",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-03",
-   "n": 11
+   "n": 13
   },
   "desde": {
    "67": {
