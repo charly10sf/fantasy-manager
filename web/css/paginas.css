@@ -11,7 +11,9 @@ a { color: var(--rojo-l); }
 b, strong { color: var(--texto); font-weight: 600; }
 
 /* cabecera y menú */
-.cab { border-bottom: 1px solid var(--linea); background: rgba(8, 8, 10, 0.92); position: sticky; top: 0; z-index: 2; }
+.cab { border-bottom: 1px solid var(--linea); background: var(--fondo); position: sticky; top: 0; z-index: 2; }
+/* en el móvil el menú ocupa dos filas: fija se comería media pantalla, así que se queda arriba y se va al bajar */
+@media (max-width: 599px) { .cab { position: static; } }
 .cab-in { max-width: 960px; margin: 0 auto; padding: 10px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
 .marca { display: inline-flex; align-items: center; gap: 9px; color: var(--texto); text-decoration: none; font: 700 22px/1 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.3px; }
 .marca b { color: var(--rojo); font-weight: 700; }
@@ -77,3 +79,25 @@ th { color: var(--texto); font-weight: 600; }
 .play-pronto span { display: grid; gap: 2px; }
 .play-pronto small { font-size: 11px; letter-spacing: 0.04em; opacity: 0.7; }
 .play-pronto b { font-size: 17px; }
+
+/* instalar.html: los tres caminos (Android, ordenador, iPhone), con el de tu dispositivo primero */
+.instalar .lema { margin: 14px 0 24px; font-size: 18px; }
+.instalar .caja { background: var(--plano); border: 1px solid var(--linea); border-radius: 18px; padding: 20px 18px; margin: 0 0 16px; }
+.instalar .caja.primero { border-color: var(--rojo); }
+.instalar h2 { font-size: 26px; line-height: 1; margin: 0 0 14px; display: flex; align-items: center; gap: 10px; }
+.instalar h2 small { font: 600 13px 'Barlow', sans-serif; text-transform: none; letter-spacing: 0; color: var(--apagado); margin-left: auto; }
+.instalar ol { margin: 0 0 16px; }
+.instalar li { margin: 0 0 8px; }
+.instalar li::marker { color: var(--rojo-l); font-weight: 600; }
+.instalar .btn { display: flex; gap: 10px; width: 100%; min-height: 54px; border-radius: 14px; font-size: 19px; }
+.instalar .btn svg { width: 22px; height: 22px; }
+.instalar .nota { font-size: 14.5px; color: var(--apagado); font-style: normal; margin: 12px 0 0; }
+.instalar .falta { list-style: none; padding: 0; margin: 0; }
+.instalar .falta li { display: flex; gap: 12px; align-items: flex-start; }
+.instalar .falta li::before { content: ''; flex: none; width: 8px; height: 8px; margin-top: 10px; border-radius: 50%; background: #2fd18f; }
+.instalar .ayuda { margin-top: 14px; border-top: 1px solid var(--linea); padding-top: 12px; }
+.instalar .ayuda summary { cursor: pointer; color: var(--texto); font-weight: 600; min-height: 32px; }
+.instalar .ayuda p { margin: 10px 0 6px; font-size: 15.5px; }
+.instalar .ayuda ul { margin: 0; padding-left: 20px; font-size: 15.5px; }
+.instalar .ayuda li { margin: 0 0 6px; }
+.instalar a:focus-visible, .instalar .btn:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }

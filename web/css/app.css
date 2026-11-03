@@ -35,7 +35,9 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html { background: var(--fondo); touch-action: pan-x pan-y; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html { background: var(--fondo); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* sin pellizcar para ampliar solo dentro de la app (la clase la pone index.html); en la web se puede, por accesibilidad */
+html.en-app { touch-action: pan-x pan-y; }
 body {
   margin: 0; background: var(--fondo); color: var(--texto);
   font: 400 16px/1.45 'Barlow', system-ui, sans-serif;
@@ -1972,6 +1974,12 @@ button.cr-p:active { background: var(--plano); }
 .mq-nav span { display: grid; justify-items: center; gap: 2px; color: var(--apagado); }
 .mq-nav i { font-style: normal; font-size: 8.5px; font-weight: 600; }
 .mq-nav .on { color: var(--rojo-l); }
+/* Pregunta, arriba y en rojo, como en la app (fuera de la barra de abajo) */
+.mq-preg { margin-left: auto; display: grid; justify-items: center; gap: 1px; padding: 4px 7px; border-radius: 8px; background: var(--rojo); color: #fff; }
+.mq-preg .ic { width: 14px; height: 14px; }
+.mq-preg i { font-style: normal; font-size: 7.5px; font-weight: 600; }
+.mq-preg.on { box-shadow: 0 0 0 2px var(--fondo), 0 0 0 3px var(--rojo-l); }
+.mq-nav span { min-width: 0; }
 /* retoques de la portada: el botón de bajar la app en blanco (`.pantalla a` lo pone en rojo), el titular sin una palabra suelta, móviles más bajos */
 .portada .pantalla a.btn, .portada .pantalla a.btn .ic { color: #fff; }
 .mq-t { text-wrap: balance; }
@@ -2119,9 +2127,9 @@ button.cr-p:active { background: var(--plano); }
 .pg-todas .btn { text-decoration: none; }
 .pg-todas .btn .ic { width: 20px; height: 20px; margin-right: 6px; }
 .pg-todas span { flex: 1 1 260px; font-size: 15px; line-height: 1.5; color: var(--texto2); }
-/* el once */
-.pc { display: grid; gap: 18px; }
-.escritorio .pc { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; gap: 56px; }
+/* el once (div.pc: las caras también llevan la clase pc y, con estas columnas, las iniciales se iban a la izquierda) */
+div.pc { display: grid; gap: 18px; }
+.escritorio div.pc { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; gap: 56px; }
 .pc-campo-w { perspective: 1100px; }
 .pc-campo { position: relative; display: grid; gap: 14px; padding: 22px 8px 18px; border-radius: 22px; overflow: hidden;
   background: repeating-linear-gradient(180deg, #0f3d26 0 46px, #0d361f 46px 92px); border: 1px solid #1d5a3a;

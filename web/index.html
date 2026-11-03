@@ -2,16 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <script>
+    /* dentro de la app de Android (window.FantasyApp, el puente de puente.js), sin zoom, como siempre; en la web se puede
+       ampliar (accesibilidad). Va aquí, antes de pintar nada, para que la app no llegue a ver el viewport con zoom */
+    if (window.FantasyApp) {
+      document.querySelector('meta[name=viewport]').setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover');
+      document.documentElement.classList.add('en-app');
+    }
+  </script>
   <meta name="theme-color" content="#08080a">
   <meta name="google-adsense-account" content="ca-pub-3175956326240112">
-  <title>Fantasy Manager: tu director deportivo para LaLiga Fantasy</title>
+  <title>Fantasy Manager: app de cláusulas y mercado (LaLiga Fantasy)</title>
   <meta name="description" content="Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular en tu liga de LaLiga Fantasy. App no oficial para Android y web.">
   <link rel="canonical" href="https://fantasymanagerapp.com/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Fantasy Manager">
   <meta property="og:locale" content="es_ES">
-  <meta property="og:title" content="Fantasy Manager: tu director deportivo para LaLiga Fantasy">
+  <meta property="og:title" content="Fantasy Manager: app de cláusulas y mercado (LaLiga Fantasy)">
   <meta property="og:description" content="Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular en tu liga.">
   <meta property="og:url" content="https://fantasymanagerapp.com/">
   <meta property="og:image" content="https://fantasymanagerapp.com/img/compartir.jpg">
@@ -23,6 +31,7 @@
   <link rel="preload" href="fonts/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/barlow-condensed-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/app.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://fantasymanagerapp.com/#web", "url": "https://fantasymanagerapp.com/", "name": "Fantasy Manager", "inLanguage": "es-ES", "publisher": {"@id": "https://fantasymanagerapp.com/#org"}}, {"@type": "Organization", "@id": "https://fantasymanagerapp.com/#org", "name": "Fantasy Manager", "url": "https://fantasymanagerapp.com/", "logo": "https://fantasymanagerapp.com/img/icono-180.png", "email": "contacto@fantasymanagerapp.com", "sameAs": ["https://x.com/Fantasyman_app"]}, {"@type": "SoftwareApplication", "name": "Fantasy Manager", "url": "https://fantasymanagerapp.com/", "description": "App no oficial para LaLiga Fantasy: cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular en tu liga.", "applicationCategory": "GameApplication", "operatingSystem": "Android", "inLanguage": "es-ES", "image": "https://fantasymanagerapp.com/img/compartir.jpg", "downloadUrl": "https://fantasymanagerapp.com/descargas/fantasy-manager.apk", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@id": "https://fantasymanagerapp.com/#org"}}]}</script>
 </head>
 <body>
   <!-- la pantalla de arranque mientras se abre la app: solo el logo (la de carga con los pasos la pinta app.js) -->
@@ -30,7 +39,7 @@
     <!-- lo que se lee sin JavaScript (Google, AdSense): la app lo sustituye al arrancar -->
     <section class="sin-js">
       <h1>Fantasy Manager</h1>
-      <p>Tu director deportivo para LaLiga Fantasy: cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular en tu liga.</p>
+      <p>La app para LaLiga Fantasy que hace de director deportivo: cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular en tu liga.</p>
       <ul>
         <li>Plan del día paso a paso, con el saldo que te queda después de cada operación.</li>
         <li>Lo que tiene cada rival, qué cláusulas te llegan y cuándo se abren.</li>
@@ -43,11 +52,31 @@
       <h2>Preguntas frecuentes</h2>
       <p><b>¿La app ve mi contraseña?</b> No. Entras en la página oficial de LaLiga y LaLiga le da a la app una sesión para leer tu liga. Los datos de tu liga se guardan solo en tu móvil o en tu navegador.</p>
       <p><b>¿Cuánto cuesta?</b> Nada. Se paga con anuncios de Google. No hay plan de pago y no se venden datos de nadie.</p>
-      <p><b>¿Funciona en iPhone y en el ordenador?</b> En Android, con la app. En el ordenador, en el navegador, con un código que te da la app del móvil. En iPhone no hay app: en el navegador puedes verla con la liga de ejemplo o entrar con un código desde otro dispositivo.</p>
+      <p><b>¿Funciona en iPhone y en el ordenador?</b> En Android, con la app. En el ordenador, desde esta web: con la app del móvil entras escaneando un QR, y sin ella también se puede. En iPhone no hay app, pero la web funciona: la primera vez hay que entrar desde un ordenador y, ya dentro, sacar un código para el iPhone. Antes puedes verla con la liga de ejemplo.</p>
       <p><b>¿Qué hace la IA?</b> Lee lesiones, convocatorias y alineaciones antes de proponerte el plan o de contestar lo que le preguntes, con una clave gratuita tuya. La app comprueba sus cuentas antes de enseñártelas.</p>
       <h2>Guías de LaLiga Fantasy</h2>
-      <p>Cómo funcionan <a href="guias/clausulas-laliga-fantasy.html">las cláusulas</a>, <a href="guias/subir-clausula.html">cuánto subir la de tus jugadores</a>, <a href="guias/cuanto-pujar.html">cuánto pujar</a>, <a href="guias/cuando-vender.html">cuándo vender</a> y <a href="guias/saldo-negativo.html">qué pasa con el saldo negativo</a>. <a href="guias/">Todas las guías</a>.</p>
-      <p><a href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">Descargar la app para Android</a> · <a href="instalar.html">Cómo instalarla</a></p>
+      <p>Cómo funcionan las cláusulas, el mercado, los puntos y el dinero del juego, explicado con números. <a href="guias/">Todas las guías</a>.</p>
+      <!-- guias -->
+      <ul>
+        <li><a href="guias/empezar-liga.html">Cómo empezar en una liga de LaLiga Fantasy</a></li>
+        <li><a href="guias/puntos-laliga-fantasy.html">Cómo se calculan los puntos en LaLiga Fantasy</a></li>
+        <li><a href="guias/glosario.html">Glosario de LaLiga Fantasy</a></li>
+        <li><a href="guias/clausulas-laliga-fantasy.html">Cláusulas en LaLiga Fantasy: cómo funcionan</a></li>
+        <li><a href="guias/subir-clausula.html">Cuánto subir la cláusula de un jugador en LaLiga Fantasy</a></li>
+        <li><a href="guias/cuando-clausular.html">Cuándo clausular a un jugador de un rival</a></li>
+        <li><a href="guias/hora-mercado-laliga-fantasy.html">A qué hora cambia el mercado en LaLiga Fantasy</a></li>
+        <li><a href="guias/valor-de-mercado.html">Cómo sube y baja el valor de los jugadores en LaLiga Fantasy</a></li>
+        <li><a href="guias/cuanto-pujar.html">Cuánto pujar por un jugador en LaLiga Fantasy</a></li>
+        <li><a href="guias/cuando-vender.html">Cuándo vender un jugador en LaLiga Fantasy</a></li>
+        <li><a href="guias/saldo-negativo.html">Saldo negativo en LaLiga Fantasy: qué pasa y cómo salir</a></li>
+        <li><a href="guias/ganar-dinero.html">Cómo ganar dinero en LaLiga Fantasy</a></li>
+        <li><a href="guias/alineacion.html">Cómo hacer la alineación en LaLiga Fantasy</a></li>
+        <li><a href="guias/puntos-porteros-laliga-fantasy.html">Cómo puntúan los porteros en LaLiga Fantasy</a></li>
+        <li><a href="guias/lesionados-sancionados.html">Lesionados y sancionados en LaLiga Fantasy: qué hacer</a></li>
+        <li><a href="guias/preguntas-frecuentes.html">Fantasy Manager: preguntas frecuentes</a></li>
+      </ul>
+      <!-- /guias -->
+      <p><a href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">Descargar para Android</a> · <a href="instalar.html">Cómo instalarla</a></p>
       <nav aria-label="Más"><a href="guias/">Guías</a><a href="quienes-somos.html">Quiénes somos</a><a href="contacto.html">Contacto</a><a href="privacidad.html">Privacidad</a></nav>
     </section>
   </div>
@@ -60,7 +89,7 @@
       var d = document.createElement('div');
       d.className = 'arranque-fallo';
       d.setAttribute('style', 'position:fixed;left:16px;right:16px;bottom:24px;z-index:99;padding:14px 16px;border-radius:14px;background:#1c1c22;border:1px solid #3a3a44;color:#e8e8ee;font:15px/1.4 system-ui,sans-serif;text-align:center');
-      d.innerHTML = '<p style="margin:0 0 10px"><b>La app no ha podido abrirse.</b> Puede ser la conexión o una versión que se ha bajado a medias.</p><button style="padding:9px 16px;border-radius:10px;border:0;background:#ee1c3c;color:#fff;font:600 15px system-ui,sans-serif">Volver a probar</button>';
+      d.innerHTML = '<p style="margin:0 0 10px"><b>La app no ha podido abrirse.</b> Puede ser la conexión o una versión que se ha descargado a medias.</p><button style="padding:9px 16px;border-radius:10px;border:0;background:#ee1c3c;color:#fff;font:600 15px system-ui,sans-serif">Volver a probar</button>';
       d.querySelector('button').onclick = function () { location.replace(location.pathname + '?v=' + Date.now()); };
       document.body.appendChild(d);
     }, 20000);
