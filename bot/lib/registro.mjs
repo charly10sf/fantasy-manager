@@ -50,7 +50,7 @@ export class Registro {
   /** lo publicado y, en simulacro, lo reservado en esta ejecución */
   todos() { return [...this.datos.enviados, ...(this.reservadasLista || [])]; }
   /**
-   * Jugadores que ya han salido en caídas, novedades o noticias, sacados de las claves (`caidas|J|id-id`, `novedades|id:que,id:que|día`,
+   * Jugadores que ya han salido en caídas, sancionados, novedades o noticias, sacados de las claves (`caidas|J|id-id`, `sancionados|J|id-id`, `novedades|id:que,id:que|día`,
    * `noticias|id:familia|día`, con familia «mala» o «buena»),
    * así vale también para lo publicado antes de este cambio. [{ tipo, id, que, jornada, t }]
    */
@@ -59,6 +59,8 @@ export class Registro {
     for (const e of this.todos()) {
       const p = String(e.clave).split('|'), t = Date.parse(e.t) || 0;
       if (e.tipo === 'caidas' && p[2]) for (const id of p[2].split('-')) out.push({ tipo: 'caidas', id, que: null, jornada: e.jornada, t });
+      // (los apercibidos, `apercibidos|J|ids`, no cuentan: no se caen)
+      if (e.tipo === 'sancionados' && p[0] === 'sancionados' && p[2]) for (const id of p[2].split('-')) out.push({ tipo: 'sancionados', id, que: 'sancion', jornada: e.jornada, t });
       if ((e.tipo === 'novedades' || e.tipo === 'noticias') && p[1]) for (const x of p[1].split(',')) { const [id, que] = x.split(':'); out.push({ tipo: e.tipo, id, que: que || null, jornada: e.jornada, t }); }
     }
     return out;

@@ -22,8 +22,8 @@ jobs:
           curl -sL -A "$UA" "https://fantasy-api.llt-services.com/api/v1/competition/1/players?x-lang=es" -o salida/players.json
           ls -la salida | sed 's/^/@@ /'
       - name: prueba del bot
-        if: hashFiles('bot/prueba/sancionados-real.mjs') != ''
-        run: node bot/prueba/sancionados-real.mjs 2>&1 | tee salida/log.txt | sed 's/^/@@ /'
+        run: |
+          node bot/ejecutar.mjs --modo=simulacro --tipos=sancionados,caidas --ventanas=0 --tarjetas=1 --salida-tarjetas=salida/tarjetas 2>&1 | tee salida/log.txt | sed 's/^/@@ /'
       - name: a la rama pruebas-sancionados-salida
         if: always()
         run: |
