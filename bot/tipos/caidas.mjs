@@ -76,7 +76,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   const pp = new Map();
   for (const c of caidas) if (!pp.has(String(c.teamId))) pp.set(String(c.teamId), await proximo(c.teamId, { jornada, semana }).catch(() => null));
   const seguro = (c) => c.estado !== 'duda';
-  const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 && c.estado !== 'duda' ? partes(c.media) : [])];
+  const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 ? partes(c.media) : [])];
   const porEquipo = new Map();
   for (const c of caidas) { const k = String(c.teamId); if (!porEquipo.has(k)) porEquipo.set(k, []); porEquipo.get(k).push(c); }
   const sueltos = [];
@@ -107,7 +107,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
       p && p.estado === 'baja' && p.hasta ? { t: `🗓️ No se le espera hasta ${p.hasta}`, prio: 7 } : dudaWeb ? { t: '⁉️ Aún no está descartado del todo', prio: 7 } : null,
       c.motivoSan ? { t: `⚠️ ${c.motivoSan.txt} y cumple sanción`, prio: 9 } : null,
-      c.estado === 'duda' ? { t: `⚠️ ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,
+      c.estado === 'duda' ? { t: `📊 ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,
       { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
       { t: `${c.estado === 'duda' || dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
     const { usadas, texto } = tweet(cab, ideas);
