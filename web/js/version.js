@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12h';
+export const VERSION = '0.6.12i';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,18 @@ export const VERSION = '0.6.12h';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12i', f: '2026-11-03', h: '22:25', t: 'Puntos esperados con la tabla de verdad',
+    cosas: [
+      { tipo: 'mejora', d: 'ia', t: 'Los puntos que esperas de cada jugador, con la tabla real', x: 'La app calculaba la portería a cero y las paradas con una tabla vieja: daba 4 puntos de portería a cero a los defensas (son 3), 1 a los medios (son 2) y nada a los delanteros (es 1), y una parada cada 3 en vez de cada 2. Ahora usa la tabla comprobada con miles de jornadas, y a medios y delanteros también les resta encajar. El once y el plan que te propone la app salen de estas cuentas.' },
+      { tipo: 'mejora', d: 'plan', t: 'Un plan más claro', x: 'El titular del plan ya no cuenta lo descartado ni dos veces lo mismo, el número de Hoy coincide con lo que queda por hacer, los pasos dicen cuántos son para luego y cuántos están descartados, y lo descartado va al final con su etiqueta.' },
+      { tipo: 'mejora', d: 'lupa', t: 'Menos ruido en las pantallas', x: 'Las funciones top que aún no están abiertas van juntas en una sola tarjeta al final, no una detrás de otra arriba. En Rivales, «75 en la J9» y «+1,5 M en 7 días» en vez de abreviaturas.' },
+      { tipo: 'arreglo', d: 'cara', t: 'En el móvil, Clubes ya no corta los nombres', x: 'Por debajo de 420 px las caras salen solo en «Tus clubes» y el partido puede ocupar dos líneas.' },
+      { tipo: 'arreglo', d: 'cara', t: 'Textos repetidos y erratas', x: '«Sin ofertas» una sola vez en En venta, «Abiertas ya» en Cláusulas, «1 gol» en singular y la errata de Especular.' },
+      { para: 'web', tipo: 'mejora', d: 'periodico', t: 'Dos guías nuevas', x: 'Cómo puntúan los porteros y a qué hora cambia el mercado, en la web, con las demás guías.' },
+      { para: 'dueño', tipo: 'mejora', d: 'ajustes', t: 'Repaso de la noche del 3 nov', x: 'Demo sin el equipo de Carlos, sin nombres de modelos de IA en ninguna parte, voz de «la app», liga de ejemplo con calendario creíble, guías con migas y datos estructurados, índice por grupos, instalar.html en el sitemap, zoom en la web y campos a 16 px en el iPhone.' },
+    ],
+  },
   {
     v: '0.6.12h', f: '2026-11-03', h: '21:12', t: 'El plan, sin esperas cuando Google se satura',
     cosas: [

@@ -928,9 +928,11 @@ export function analizar(D, H, c, extra = {}) {
 
   /* ---------- los puntos esperados por partes, como puntúa LaLiga Fantasy ---------- */
   // minutos (2 si juega 60', 1 si menos), gol (6 portero y defensa, 5 medio, 4 delantero) con su xG, asistencia (3)
-  // con su xA, portería a cero (4 portero y defensa, 1 medio) con lo que marca el rival, goles encajados (−2 cada
-  // dos), paradas (1 cada 3), tarjetas, y el resto (nota de DAZN, recuperaciones, tiros…) de lo que suele sacar
-  const PG = { 1: 6, 2: 6, 3: 5, 4: 4 }, PC = { 1: 4, 2: 4, 3: 1, 4: 0 };
+  // con su xA, portería a cero (4 portero, 3 defensa, 2 medio, 1 delantero, solo con 60' o más) con lo que marca el rival,
+  // goles encajados (−2 cada dos a porteros y defensas, −1 cada dos a medios y delanteros; tabla comprobada el 3 nov con 4.072
+  // fichas de jornada de LaLiga: guias/puntos-laliga-fantasy.html), paradas (1 cada 2), tarjetas,
+  // y el resto (nota de DAZN, recuperaciones, tiros…) de lo que suele sacar
+  const PG = { 1: 6, 2: 6, 3: 5, 4: 4 }, PC = { 1: 4, 2: 3, 3: 2, 4: 1 }, PE = { 1: 0.85, 2: 0.85, 3: 0.42, 4: 0.42 };
   // xG y xA por 90' típicos de cada puesto, si no hay datos suyos
   const RITMO = { 1: [0, 0.01], 2: [0.05, 0.07], 3: [0.12, 0.13], 4: [0.36, 0.12] };
   const cacheDes = {};
@@ -956,11 +958,11 @@ export function analizar(D, H, c, extra = {}) {
       gol: xg90 * f90 * fAt * PG[j.pos],
       asis: xa90 * f90 * fAt * 3,
       cero: (pr.cero || 0) * pT * 0.92 * PC[j.pos],
-      encaja: j.pos <= 2 ? -(pr.golesContra || 0) * f90 * 0.85 : 0,
+      encaja: -(pr.golesContra || 0) * f90 * (PE[j.pos] || 0),
     };
     if (j.pos === 1) {
       const par90 = s && s.min >= 270 && s.paradas != null ? (s.paradas * 90) / s.min : 2.6;
-      partes.paradas = (par90 * f90 * clamp((pr.golesContra || mediaContra) / Math.max(0.4, mediaContra), 0.6, 1.6)) / 3;
+      partes.paradas = (par90 * f90 * clamp((pr.golesContra || mediaContra) / Math.max(0.4, mediaContra), 0.6, 1.6)) / 2;
     }
     const am90 = conU && u.am != null ? (num(u.am) * 90) / u.min : 0.2, ro90 = conU && u.ro != null ? (num(u.ro) * 90) / u.min : 0.01;
     partes.tarjetas = -(am90 + ro90 * 3) * f90;
@@ -974,8 +976,8 @@ export function analizar(D, H, c, extra = {}) {
       const ceros = tE && tE.pj ? tE.ult.filter((x) => x.gc === 0).length / tE.pj : 0.25;
       const encajados = tE && tE.pj ? tE.gc / tE.pj : mediaGoles;
       const expl = tit * 2 + (1 - tit) + (g / pj) * PG[j.pos] + (as / pj) * 3 + ceros * tit * PC[j.pos]
-        - (j.pos <= 2 ? encajados * (minPj / 90) * 0.85 : 0) - (conU && u.am != null ? (num(u.am) + num(u.ro) * 3) / pj : 0.2)
-        + (j.pos === 1 && s && s.paradas ? s.paradas / pj / 3 : 0);
+        - encajados * (minPj / 90) * (PE[j.pos] || 0) - (conU && u.am != null ? (num(u.am) + num(u.ro) * 3) / pj : 0.2)
+        + (j.pos === 1 && s && s.paradas ? s.paradas / pj / 2 : 0);
       resto90 = clamp(num(j.media) - expl, -1, 5) / Math.max(0.35, minPj / 90);
     }
     // el resto (la nota del partido, recuperaciones, tiros, duelos…) también depende de cómo le vaya a su equipo: contra

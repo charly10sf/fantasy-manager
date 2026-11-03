@@ -2320,3 +2320,6 @@ div.pc { display: grid; gap: 18px; }
 @keyframes play-entra { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
 @keyframes play-brillo { from { left: -60%; } to { left: 130%; } }
 @media (prefers-reduced-motion: reduce) { .play-hero { animation: none; } .play-hero::after { display: none; } }
+/* (3 nov) la web ya deja hacer zoom: Safari del iPhone amplía la página al tocar un campo con letra de menos de 16 px. Solo en iOS
+   (-webkit-touch-callout solo existe ahí), los campos van a 16 px como mínimo */
+@supports (-webkit-touch-callout: none) { input, textarea, select { font-size: max(16px, 1em) !important; } }
