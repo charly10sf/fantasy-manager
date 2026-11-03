@@ -98,6 +98,28 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
   return { d, permitidos };
 }
 
+/**
+ * Lo que la carta de un jugador enseña además de su estado (Carlos, 3 nov 11:24: en la de un lesionado, «sus últimas jornadas y el
+ * valor que tiene»): las 5 últimas jornadas que ya tienen puntos (hasta `jornada`), total, media y valor de los últimos 30 días.
+ * Devuelve { d, numeros } (numeros: lo que la imagen puede escribir, sacado de los datos crudos).
+ */
+export async function historialJugador(j, { jornada, fuentes, ahora = Date.now() }) {
+  const wp = new Map((j.weekPoints || []).map((w) => [Number(w.weekNumber), Number(w.points)]));
+  const conDatos = [...wp.keys()].filter((k) => k <= jornada);
+  const hasta = conDatos.length ? Math.max(...conDatos) : jornada;
+  const ultimas = [];
+  for (let k = Math.max(1, hasta - 4); k <= hasta; k++) ultimas.push([k, wp.has(k) ? wp.get(k) : 0]);
+  const crudo = await fuentes.valor(j.id).catch(() => null);
+  const serie = (Array.isArray(crudo) ? crudo : []).map((v) => [Date.parse(v.date), Number(v.marketValue)]).filter(([t, v]) => t && v).sort((a, b) => a[0] - b[0]);
+  const hoy = serie.length ? serie[serie.length - 1] : [ahora, Number(j.marketValue)];
+  const valor = serie.filter(([t]) => t >= hoy[0] - DIAS_VALOR * 864e5);
+  const antes = [...serie].reverse().find(([t]) => t <= hoy[0] - DIAS_CAMBIO * 864e5) || valor[0];
+  const cambio = antes ? Math.round((hoy[1] - antes[1]) / antes[1] * 100) : 0;
+  const d = { ultimas, total: Number(j.points), media: Number(j.averagePoints), valor, valorHoy: hoy[1], cambio, dias: DIAS_VALOR };
+  const numeros = [0, j.points, num1(j.averagePoints), ...ultimas.flat(), millones(hoy[1]).replace(' M', ''), Math.abs(cambio), DIAS_VALOR].map(String);
+  return { d, numeros };
+}
+
 // ---------------------------------------------------------------------------------------------------------------------------
 // Tarjeta de bajas y novedades (caídas y novedades). Recibe a los jugadores ya elegidos por el tipo, cada uno con
 // { id, nombre, teamId, pos, equipo (corto), club (largo), estado ('lesionado'|'sancionado'|'duda'|'disponible'), pct, media, caraUrl, escudoUrl }.
@@ -107,7 +129,7 @@ export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
   const conMedia = (f) => (f.media >= 3 && f.estado !== 'duda' ? num1(f.media) : null);
   const titulo = filas.every((f) => f.estado === 'disponible') ? 'NOVEDADES'
     : filas.some((f) => f.estado === 'duda') ? (filas.every((f) => f.estado === 'duda') ? 'DUDAS' : 'BAJAS Y DUDAS') : 'BAJAS';
-  const fila = (f) => ({ nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
+  const fila = (f) => ({ id: f.id, nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
     estado: f.estado, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f), valor: f.valor || null });
   const d = { jornada: pp ? pp.jornada : jornada, titulo, filas: filas.slice(0, mismo ? 4 : 6).map(fila),
     equipo: mismo ? { nombre: filas[0].club, corto: filas[0].equipo, escudoUrl: filas[0].escudoUrl || null } : null,

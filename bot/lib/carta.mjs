@@ -211,13 +211,7 @@ export function svgJugadorCarta(d) {
   s += texto(x0 - 4, 158, motivo.toUpperCase(), { px: 150, peso: 800, italica: true, color: `url(#${oro.g})`, max: wd })
     + texto(x0, 206, resto.join(' · ').toUpperCase(), { px: 34, peso: 700, espacio: 1.5, max: wd })
     + texto(x0, 238, `LALIGA FANTASY · JORNADA ${d.jornada}`, { px: 20, peso: 600, color: TENUE, espacio: 3 })
-    + texto(x0, 296, 'PUNTOS EN LAS ÚLTIMAS JORNADAS', { px: 20, peso: 700, color: TENUE, espacio: 3 })
-    + miniJornadas(x0, 312, d.ultimas, oro.g);
-  const yv = 478, colV = d.cambio > 0 ? VERDE : d.cambio < 0 ? MALO : TENUE;
-  s += texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 20, peso: 700, color: TENUE, espacio: 3 })
-    + texto(x0, yv + 50, millones(d.valorHoy), { px: 52, peso: 800 })
-    + texto(x0 + 170, yv + 46, `${signo(d.cambio)} %`, { px: 34, peso: 800, color: colV })
-    + graficaValor(x0 + 290, yv + 6, wd - 290, 62, d.valor, d.cambio < 0 ? MALO : '#e2bd5a');
+    + historial(x0, wd, d, oro.g);
   s += marca(x0, 636);
   return marco(s);
 }
@@ -250,20 +244,54 @@ function pildora(f, cx, cy, px, wMax) {
 const anchoPildora = (f, px) => medir(txtEstado(f), px, B, 1) + px * 2.6;
 
 /** un solo jugador: la carta grande a la izquierda y, a la derecha, su estado en grande, el equipo y el próximo rival */
+/** a la derecha de una carta: los puntos de las últimas jornadas y el valor de los últimos días con su gráfica */
+function historial(x0, wd, d, gOro) {
+  const yv = 478, colV = d.cambio > 0 ? VERDE : d.cambio < 0 ? MALO : TENUE;
+  return texto(x0, 296, 'PUNTOS EN LAS ÚLTIMAS JORNADAS', { px: 20, peso: 700, color: TENUE, espacio: 3 })
+    + miniJornadas(x0, 312, d.ultimas, gOro)
+    + texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 20, peso: 700, color: TENUE, espacio: 3 })
+    + texto(x0, yv + 50, millones(d.valorHoy), { px: 52, peso: 800 })
+    + texto(x0 + 170, yv + 46, `${signo(d.cambio)} %`, { px: 34, peso: 800, color: colV })
+    + graficaValor(x0 + 290, yv + 6, wd - 290, 62, d.valor, d.cambio < 0 ? MALO : '#e2bd5a');
+}
+
+// Baja o novedad de un solo jugador: la carta (media, puntos totales, valor y su estado) y, a la derecha, el estado en grande, el
+// equipo y la jornada, el próximo rival, los puntos de las últimas jornadas y el valor (Carlos, 3 nov 11:24). Si no llegan las
+// últimas jornadas (no se encontró al jugador), solo el estado y el próximo rival en grande.
 export function svgBajaSola(d) {
   const f = d.filas[0];
   const e = ESTADO_TARJETA[f.estado], club = coloresClub(f.club || f.equipo);
-  const g = id('ge');
-  let s = `<defs>${lineal(g, [[0, '#ffffff'], [0.45, e.color], [1, e.color]], { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs>`
+  const g = id('ge'), oro = dorado();
+  const metal = METAL[metalDe(f.valorHoy || f.valor)];
+  let s = oro.defs + `<defs>${lineal(g, [[0, '#ffffff'], [0.45, e.color], [1, e.color]], { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs>`
     + fondo([[300, 330, 560, club.vivo, 0.75], [1050, 80, 500, e.color, 0.16]]);
-  const x = 96, y = 36, w = 404, h = 600;
-  const C = carta(x, y, w, h, { metal: METAL[metalDe(f.valor)], club, cara: f.cara, escudo: f.escudo || (d.equipo && d.equipo.escudo),
-    grande: f.media || null, bajoGrande: f.media ? 'MEDIA' : (ABREV[f.posicion] || null), nombre: f.nombre, lineas: [f.posicion].filter(Boolean), yNombre: 0.7 });
-  s += C.s + pildora(f, x + w / 2, C.yNombre + 112, 30, w - 60);
-  const x0 = 566, wd = ANCHO - x0 - 56;
+  const x = 96, y = 36, w = 404, h = 600, x0 = 566, wd = ANCHO - x0 - 56;
+  const media = f.ultimas ? num1(f.media) : f.media;
   const grande = f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : e.txt;
   s += texto(x0 - 4, 158, grande, { px: 140, peso: 800, italica: true, color: `url(#${g})`, max: wd })
-    + texto(x0, 206, `${(f.equipo || '').toUpperCase()} · JORNADA ${d.jornada}`, { px: 34, peso: 700, espacio: 1.5, max: wd })
+    + texto(x0, 206, `${(f.equipo || '').toUpperCase()} · JORNADA ${d.jornada}`, { px: 34, peso: 700, espacio: 1.5, max: wd });
+  if (f.ultimas) {
+    const C = carta(x, y, w, h, { metal, club, cara: f.cara, escudo: f.escudo || (d.equipo && d.equipo.escudo),
+      grande: media, bajoGrande: 'MEDIA', nombre: f.nombre });
+    const yc = C.yNombre + 66, xs = [x + w * 0.29, x + w * 0.71];
+    s += C.s
+      + cifra(xs[0], yc, String(f.total), 'PUNTOS TOTALES', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
+      + cifra(xs[1], yc, millones(f.valorHoy), 'VALOR', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
+      + `<rect x="${x + w / 2 - 0.75}" y="${yc - 34}" width="1.5" height="56" fill="${metal.linea}"/>`
+      + pildora(f, x + w / 2, yc + 70, 26, w - 80);
+    // el próximo rival, en una línea
+    if (d.rival) {
+      const wr = medir('PRÓXIMO RIVAL', 20, B, 3);
+      s += texto(x0, 240, 'PRÓXIMO RIVAL', { px: 20, peso: 700, color: TENUE, espacio: 3 })
+        + escudo(d.rival.escudo, x0 + wr + 22, 233, 30)
+        + texto(x0 + wr + (d.rival.escudo ? 44 : 14), 241, d.rival.corto.toUpperCase(), { px: 26, peso: 800, max: wd - wr - 50 });
+    } else s += texto(x0, 238, 'LALIGA FANTASY', { px: 20, peso: 600, color: TENUE, espacio: 3 });
+    s += historial(x0, wd, f, oro.g);
+    return marco(s + marca(x0, 636));
+  }
+  const C = carta(x, y, w, h, { metal, club, cara: f.cara, escudo: f.escudo || (d.equipo && d.equipo.escudo),
+    grande: media || null, bajoGrande: media ? 'MEDIA' : (ABREV[f.posicion] || null), nombre: f.nombre, lineas: [f.posicion].filter(Boolean), yNombre: 0.7 });
+  s += C.s + pildora(f, x + w / 2, C.yNombre + 112, 30, w - 60)
     + texto(x0, 238, 'LALIGA FANTASY', { px: 20, peso: 600, color: TENUE, espacio: 3 });
   if (d.rival) {
     const cR = coloresClub(d.rival.nombre || d.rival.corto);
