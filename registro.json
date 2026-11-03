@@ -1039,12 +1039,5 @@
   "3296": "ok",
   "3297": "ok"
  },
- "novedadesPend": [
-  {
-   "id": "3073",
-   "que": "lesion",
-   "antes": "doubtful",
-   "t": 1793710570785
-  }
- ]
+ "novedadesPend": []
 }
