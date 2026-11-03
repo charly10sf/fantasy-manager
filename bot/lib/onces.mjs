@@ -1,7 +1,9 @@
-// Posible once de un equipo con los datos de LaLiga (sin token): % de titularidad de la app a partir de los minutos de cada jugador
-// (últimas 5 jornadas y temporada, `baseTitular` de tipos/caidas.mjs) y su estado (lesionado o sancionado: 0; duda: ×0,6).
-// No lleva aún el once probable de futbolfantasy (peso 0,5 en la app): es la parte que sale solo de los datos de LaLiga.
+// Posible once de un equipo: % de titularidad como el de la app (`M.titularidad`): el once probable de las webs de previas
+// (peso 0,5, lib/ff.mjs; desde el 3 nov), los partidos de 60' o más de las últimas 5 jornadas (0,3) y de la temporada (0,2),
+// sacados de las fichas de LaLiga (`baseTitular` de tipos/caidas.mjs); lesionado o sancionado: 0; duda: ×0,6. Si la página
+// del once probable no se lee, sale solo de los minutos, como antes. Falta el riesgo de rotación por Europa y Copa de la app.
 import { ficha } from './laliga.mjs';
+import { onceProbable, pOnce } from './ff.mjs';
 import { enParalelo } from './http.mjs';
 import { baseTitular } from '../tipos/caidas.mjs';
 
@@ -11,18 +13,28 @@ const FORMACIONES = [[4, 3, 3], [4, 4, 2], [4, 5, 1], [3, 5, 2], [3, 4, 3], [5, 
 const fichas = new Map();
 const fichaDe = (id) => { if (!fichas.has(id)) fichas.set(id, ficha(id).catch(() => null)); return fichas.get(id); };
 
-/** { [idJugador]: { id, nombre, pos, p (0-1), duda, estado } } de los jugadores de un equipo (los 20 de más valor) */
-export async function probabilidades(teamId, jugadores, ultimaJugada) {
-  const del = jugadores.filter((j) => String(j.teamId) === String(teamId) && Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && j.playerStatus !== 'out_of_league')
-    .sort((a, b) => Number(b.marketValue) - Number(a.marketValue)).slice(0, 20);
+/**
+ * { [idJugador]: { id, nombre, pos, p (0-1), duda, estado, ff } } de los jugadores de un equipo: los 20 de más valor y los que el
+ * once probable pone de titulares o alternativas (un chaval barato que juega se quedaba fuera de los 20).
+ * opciones.equipo: el nombre del equipo en LaLiga, para buscar su once probable (sin él, solo minutos).
+ */
+export async function probabilidades(teamId, jugadores, ultimaJugada, { equipo = null, conOnce = true, log = () => {} } = {}) {
+  const todos = jugadores.filter((j) => String(j.teamId) === String(teamId) && Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && j.playerStatus !== 'out_of_league')
+    .sort((a, b) => Number(b.marketValue) - Number(a.marketValue));
+  const ff = conOnce && equipo ? await onceProbable(equipo, todos, { log }) : null;
+  const del = todos.filter((j, i) => i < 20 || (ff && ff[j.id] && (ff[j.id].titular || ff[j.id].alternativa)));
   const fs = await enParalelo(del, 10, (j) => fichaDe(j.id));
   const out = {};
   del.forEach((j, i) => {
     const b = fs[i] && !fs[i].error ? baseTitular(fs[i].playerStats, ultimaJugada) : null;
-    let p = b ? b.p : 0.15;
-    if (j.playerStatus === 'injured' || j.playerStatus === 'suspended') p = 0;
-    if (j.playerStatus === 'doubtful') p *= 0.6;
-    out[j.id] = { id: j.id, nombre: j.nickname, pos: POS[j.positionId], p: Math.min(0.97, p), duda: j.playerStatus === 'doubtful', estado: j.playerStatus };
+    const o = ff ? ff[j.id] || null : null;
+    let p;
+    if (ff) p = b ? 0.5 * pOnce(o) + 0.3 * b.a + 0.2 * b.b : pOnce(o);
+    else p = b ? b.p : 0.15;
+    const duda = j.playerStatus === 'doubtful' || (o && o.estado === 'doubtful');
+    if (j.playerStatus === 'injured' || j.playerStatus === 'suspended' || (o && o.estado === 'injured')) p = 0;
+    else if (duda) p *= 0.6;
+    out[j.id] = { id: j.id, nombre: j.nickname, pos: POS[j.positionId], p: Math.min(0.97, p), duda, estado: j.playerStatus, ff: !!ff };
   });
   return out;
 }

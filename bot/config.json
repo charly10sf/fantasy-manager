@@ -1,5 +1,6 @@
 {
   "umbralCaida": 0.5,
+  "onceProbable": true,
   "topes": { "resumen": 2, "final": 10, "mvp": 10, "caidas": 9, "directo": 40, "mercado": 8, "previa": 10, "onces": 10, "novedades": 20 },
   "topeDiario": 40,
   "maxPorEjecucion": 6,

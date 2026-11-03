@@ -4,6 +4,7 @@
   "type": "module",
   "description": "Bot de la cuenta de X @Fantasyman_app. La única dependencia es para las tarjetas con imagen (SVG a PNG).",
   "dependencies": {
-    "@resvg/resvg-js": "2.6.2"
+    "@resvg/resvg-js": "2.6.2",
+    "linkedom": "^0.18.15"
   }
 }

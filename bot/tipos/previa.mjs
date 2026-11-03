@@ -43,7 +43,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       }
       const hayConf = tit(rl).length === 11 && tit(rv).length === 11;
       if (!hayConf && !(quierePos && !yaPos)) { if (quiereConf && !yaConf) log(`  (previa) ${L}-${V}: ESPN aún no tiene las alineaciones`); continue; }
-      const probs = { L: await probabilidades(m.local.id, jugadores, jornada - 1), V: await probabilidades(m.visitor.id, jugadores, jornada - 1) };
+      const conOnce = config.onceProbable !== false;
+      const probs = { L: await probabilidades(m.local.id, jugadores, jornada - 1, { equipo: m.local.mainName, conOnce, log }), V: await probabilidades(m.visitor.id, jugadores, jornada - 1, { equipo: m.visitor.mainName, conOnce, log }) };
       const pos = { L: elegirOnce(probs.L), V: elegirOnce(probs.V) };
       if (!pos.L || !pos.V) { log(`  (previa) ${L}-${V}: sin datos para el once`); continue; }
       // --- onces confirmados (ESPN) ---
