@@ -35,6 +35,11 @@ ok(r(bueno).length === 0, `bueno: ${r(bueno)}`);
 ok(r(bueno.replace('6,1', '6,2')).length > 0, 'cifra cambiada');
 ok(r(bueno.replace(' de media', ' de media en 11 partidos')).length > 0, 'cifra nueva');
 ok(r(bueno.replace('🟥 Mingueza está sancionado\n\n', '')).length > 0, 'pierde a Mingueza');
+ok(r(bueno.replace('Mingueza está sancionado', 'Mingueza cumple ciclo de sanción')).length > 0, 'añade «ciclo»');
+ok(r(bueno.replace('El Celta pierde a dos titulares', 'Aspas y Mingueza son baja en el Celta')).length > 0, 'mueve nombres a otra línea');
+ok(r(bueno.replace('Aspas, lesionado', 'Aspas, duda')).length > 0, 'lesionado → duda');
+ok(r(bueno.replace('El Celta pierde a dos titulares', 'El Celta pierde a dos')).length > 0, 'pierde «titulares»');
+ok(r(bueno.replace('El Celta pierde a dos titulares', 'El Celta se queda sin dos')).length > 0, 'pierde «titulares» (2)');
 ok(r(bueno.replace('Aspas, lesionado', 'Aspas y Kubo, lesionados')).length > 0, 'añade a Kubo');
 ok(r(bueno.replace('contra el Sevilla', 'ante el Sevilla')).length > 0, 'última línea cambiada');
 ok(r(bueno.replace('🟥 Mingueza', '😱 Mingueza')).length > 0, 'emoji nuevo');
@@ -77,7 +82,7 @@ const fin = `🏁 Deportivo 2-1 Osasuna
 🥈 Budimir 11 · 🥉 Mario Soriano 13
 
 Fantasy Manager · enlace en la bio`;
-const finBueno = fin.replace('⭐ Mario Soriano, el mejor fantasy: 13 puntos', '⭐ Mario Soriano se va a 13 puntos fantasy');
+const finBueno = fin.replace('⭐ Mario Soriano, el mejor fantasy: 13 puntos', '⭐ Mario Soriano es el mejor fantasy con 13 puntos');
 ok(revisar(fin, finBueno, { numeros: [2, 1, 13, 11], nombres }).length === 0, `final: ${revisar(fin, finBueno, { numeros: [2, 1, 13, 11], nombres })}`);
 ok(revisar(fin, finBueno.replace('Mario Soriano se va', 'Soriano se va').replace('🥉 Mario Soriano 13', '🥉 Soriano 13'), { numeros: [2, 1, 13, 11], nombres }).length > 0, 'final: pierde el nombre entero');
 

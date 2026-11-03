@@ -21,6 +21,12 @@ const PROHIBIDO = /@|#|https?:|www\.|\b(mi|mis|nuestro|nuestra|nosotros|bot|brut
 const cifras = (s) => [...new Set(String(s).replace(/[0-9#*]️?⃣/g, '').match(CIFRAS) || [])].sort();
 const lineas = (s) => String(s).split('\n').map((l) => l.trim()).filter(Boolean);
 const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
+// las palabras que cambian lo que se cuenta de un jugador o un partido: cada línea pulida tiene que llevar las mismas (por raíz)
+const ESTADO = ['lesion', 'lesiona', 'sancion', 'baja', 'duda', 'molesti', 'vuelv', 'regres', 'recuper', 'reaparec', 'disponib', 'alta', 'titular',
+  'suplent', 'banquillo', 'descart', 'convoca', 'rotaci', 'descans', 'habitual', 'roja', 'amarill', 'ciclo', 'expuls', 'gol', 'doblete', 'hat',
+  'penalti', 'asist', 'rotura', 'operad', 'quirof', 'semana', 'mes', 'dia', 'hasta', 'seguro', 'mejor', 'peor', 'mvp',
+  'empat', 'remont', 'victori', 'derrot', 'porteria', 'cero', 'sube', 'subid', 'baj', 'chollo', 'vend', 'compr', 'ficha', 'clausul'];
+const estado = (s) => [...new Set(norm(s).split(' ').map((w) => ESTADO.find((r) => w.startsWith(r))).filter(Boolean))].sort().join(' ');
 /** las palabras con mayúscula que no van al principio de la línea (quitado el emoji) */
 const mayusculas = (s) => {
   const out = new Set();
@@ -50,7 +56,19 @@ export function revisar(orig, nuevo, { numeros = [], max = 280, nombres = [] } =
   if (!v.ok) e.push(...v.errores);
   if (cifras(orig).join(' ') !== cifras(nuevo).join(' ')) e.push(`cifras distintas (${cifras(orig).join(' ')} → ${cifras(nuevo).join(' ')})`);
   const lo = lineas(orig), ln = lineas(nuevo);
-  if (!ln.length || lo[lo.length - 1] !== ln[ln.length - 1]) e.push('cambia la última línea');
+  // la etiqueta («Baja Fantasy…») o el cierre, igual letra por letra
+  if (/fantasy/i.test(lo[lo.length - 1] || '') && lo[lo.length - 1] !== ln[ln.length - 1]) e.push('cambia la última línea');
+  // línea a línea (3 nov, primera prueba: «cumple ciclo de sanción» sin que la plantilla dijera ciclo, y Foyth «baja» siendo duda):
+  // mismas líneas, en el mismo orden, con el mismo emoji, las mismas cifras, los mismos nombres y las mismas palabras de estado
+  if (ln.length !== lo.length) e.push(`líneas: ${lo.length} → ${ln.length}`);
+  else for (let i = 0; i < lo.length; i++) {
+    const a = lo[i], b = ln[i];
+    if ((emojis(a)[0] || '') !== (emojis(b)[0] || '')) { e.push(`línea ${i + 1}: cambia el emoji`); continue; }
+    if (cifras(a).join(' ') !== cifras(b).join(' ')) e.push(`línea ${i + 1}: cifras`);
+    if (nombresEn(a, nombres).join('|') !== nombresEn(b, nombres).join('|')) e.push(`línea ${i + 1}: jugadores o equipos`);
+    const ea = estado(a), eb = estado(b);
+    if (ea !== eb) e.push(`línea ${i + 1}: estado «${ea}» → «${eb}»`);
+  }
   const no = nombresEn(orig, nombres), nn = nombresEn(nuevo, nombres);
   const faltan = no.filter((x) => !nn.includes(x)), sobran = nn.filter((x) => !no.includes(x));
   if (faltan.length) e.push(`pierde ${faltan.join(', ')}`);
@@ -66,7 +84,6 @@ export function revisar(orig, nuevo, { numeros = [], max = 280, nombres = [] } =
   if (dentro(ln) > dentro(lo)) e.push('emoji dentro de la frase');
   if (PROHIBIDO.test(nuevo.replace(/#LaLigaFantasy/g, '')) && !PROHIBIDO.test(orig.replace(/#LaLigaFantasy/g, ''))) e.push('@, #, enlace, primera persona o adjetivo de anuncio');
   if (/#LaLigaFantasy/.test(orig) !== /#LaLigaFantasy/.test(nuevo)) e.push('cambia el hashtag');
-  if (ln.length > lo.length + 1 || ln.length < lo.length - 1) e.push(`líneas: ${lo.length} → ${ln.length}`);
   return [...new Set(e)];
 }
 
@@ -84,8 +101,10 @@ Cómo se escribe en la cuenta:
 Reglas que no se pueden saltar:
 - Las mismas cifras, ni una más ni una menos, escritas igual («5,5» sigue siendo «5,5»). Nada de cifras en letra.
 - Los mismos jugadores y equipos, con el nombre escrito igual. Ni uno nuevo, ni uno menos.
+- Las mismas líneas, en el mismo orden y cada una con su emoji: cambia las palabras DENTRO de cada línea, pero no muevas información de una línea a otra, no juntes líneas, no quites ninguna y no añadas ninguna.
+- No cambies lo que se dice de nadie: si es duda, sigue siendo duda; si es baja, baja; si está sancionado, sancionado (sin decir por qué si no lo dice); si es titular habitual, lo sigue diciendo. Las fechas y plazos se quedan.
 - No añadas datos, opiniones, motivos ni predicciones que no estén en el texto. Si una línea ya suena bien, déjala igual.
-- La ÚLTIMA línea se queda exactamente igual, letra por letra.
+- Si la última línea lleva la palabra «Fantasy», se queda exactamente igual, letra por letra.
 - Como mucho 260 caracteres por tweet y la palabra «fantasy» tiene que seguir en el texto.
 Devuelve cada tweet con su i.
 Tweets:
