@@ -237,6 +237,7 @@ const TODAS_GUIAS = [
   ["glosario.html", "Glosario"],
   ["clausulas-laliga-fantasy.html", "Cláusulas"],
   ["subir-clausula.html", "Subir la cláusula"],
+  ["blindaje-laliga-fantasy.html", "Blindaje"],
   ["cuando-clausular.html", "Cuándo clausular"],
   ["hora-mercado-laliga-fantasy.html", "Hora del mercado"],
   ["valor-de-mercado.html", "Valor de mercado"],
@@ -246,7 +247,9 @@ const TODAS_GUIAS = [
   ["ganar-dinero.html", "Ganar dinero"],
   ["alineacion.html", "Alineación"],
   ["puntos-porteros-laliga-fantasy.html", "Puntos de los porteros"],
+  ["puntos-dazn-laliga-fantasy.html", "Puntos DAZN"],
   ["lesionados-sancionados.html", "Lesionados"],
+  ["apercibidos-laliga.html", "Apercibidos"],
 ];
 const FAQ_GUIA = "preguntas-frecuentes.html";
 // </guias>

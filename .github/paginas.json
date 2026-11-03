@@ -123,7 +123,26 @@
       ],
       "grupo": "clausulas",
       "corto": "Subir la cláusula",
-      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/cuando-clausular.html", "guias/saldo-negativo.html"]
+      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/blindaje-laliga-fantasy.html", "guias/cuando-clausular.html"]
+    },
+    {
+      "ruta": "guias/blindaje-laliga-fantasy.html",
+      "tipo": "guia",
+      "fecha": "2026-11-03",
+      "h1": "Blindaje en LaLiga Fantasy: cómo proteger a un jugador gratis",
+      "titulo": "Blindaje en LaLiga Fantasy: proteger a un jugador gratis",
+      "descripcion": "Cómo funciona el blindaje gratis (2 por jornada, 24 horas), en qué se diferencia de subir la cláusula y cuándo usarlo con el cierre de cláusulas.",
+      "busqueda": "blindaje LaLiga Fantasy",
+      "esquema": [
+        ["Cómo funciona", "2 por jornada viendo un anuncio, 24 h (48 en Premium), solo con la cláusula abierta, no cambia la cifra."],
+        ["Blindar o subir la cláusula", "Gratis y corto frente a pagado y para siempre."],
+        ["Cuándo blindar", "Con el cierre de 24 h antes del primer partido: las horas que no sirven y las que más."],
+        ["A quién blindar", "Cláusula abierta, rival con saldo, cerca de su valor y titular."],
+        ["Ejemplo", "Una semana con jornada en viernes."]
+      ],
+      "grupo": "clausulas",
+      "corto": "Blindaje",
+      "relacionadas": ["guias/subir-clausula.html", "guias/clausulas-laliga-fantasy.html", "guias/hora-mercado-laliga-fantasy.html"]
     },
     {
       "ruta": "guias/cuando-clausular.html",
@@ -143,7 +162,7 @@
       ],
       "grupo": "clausulas",
       "corto": "Cuándo clausular",
-      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/valor-de-mercado.html", "guias/saldo-negativo.html"]
+      "relacionadas": ["guias/clausulas-laliga-fantasy.html", "guias/valor-de-mercado.html", "guias/blindaje-laliga-fantasy.html"]
     },
     {
       "ruta": "guias/hora-mercado-laliga-fantasy.html",
@@ -274,7 +293,7 @@
       ],
       "grupo": "once",
       "corto": "Alineación",
-      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/puntos-porteros-laliga-fantasy.html", "guias/lesionados-sancionados.html"]
+      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/lesionados-sancionados.html", "guias/apercibidos-laliga.html"]
     },
     {
       "ruta": "guias/puntos-porteros-laliga-fantasy.html",
@@ -292,7 +311,26 @@
       ],
       "grupo": "once",
       "corto": "Puntos de los porteros",
-      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/alineacion.html", "guias/glosario.html"]
+      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/puntos-dazn-laliga-fantasy.html", "guias/alineacion.html"]
+    },
+    {
+      "ruta": "guias/puntos-dazn-laliga-fantasy.html",
+      "tipo": "guia",
+      "fecha": "2026-11-03",
+      "h1": "Puntos DAZN en LaLiga Fantasy: cuánto dan y cuándo llegan",
+      "titulo": "Puntos DAZN en LaLiga Fantasy: cuánto dan y cuándo llegan",
+      "descripcion": "Cuántos puntos da la valoración DAZN, cada cuánto sale un 4 en cada puesto según 4.072 fichas de jornada y por qué llegan después del partido.",
+      "busqueda": "puntos DAZN LaLiga Fantasy",
+      "esquema": [
+        ["De 0 a 4 por partido", "Lo que suma y por qué no se puede calcular de antemano."],
+        ["Cuántos salen de cada", "El reparto en 4.072 fichas de jornada."],
+        ["Por puesto", "Cada cuánto saca un 4 un portero, un defensa, un medio y un delantero."],
+        ["Cuándo llegan", "Después del partido, a veces horas después."],
+        ["Un ejemplo", "Los 13 puntos de Bellingham en la jornada 2."]
+      ],
+      "grupo": "once",
+      "corto": "Puntos DAZN",
+      "relacionadas": ["guias/puntos-laliga-fantasy.html", "guias/puntos-porteros-laliga-fantasy.html", "guias/alineacion.html"]
     },
     {
       "ruta": "guias/lesionados-sancionados.html",
@@ -310,7 +348,26 @@
       ],
       "grupo": "once",
       "corto": "Lesionados",
-      "relacionadas": ["guias/cuando-vender.html", "guias/alineacion.html", "guias/valor-de-mercado.html"]
+      "relacionadas": ["guias/apercibidos-laliga.html", "guias/cuando-vender.html", "guias/alineacion.html"]
+    },
+    {
+      "ruta": "guias/apercibidos-laliga.html",
+      "tipo": "guia",
+      "fecha": "2026-11-03",
+      "h1": "Apercibidos en LaLiga: el ciclo de cinco amarillas",
+      "titulo": "Apercibidos en LaLiga: el ciclo de cinco amarillas",
+      "descripcion": "Qué es un apercibido, cuándo se cumple la sanción por cinco amarillas, cuánto cuesta en LaLiga Fantasy y qué hacer si tienes uno en tu once.",
+      "busqueda": "apercibidos LaLiga",
+      "esquema": [
+        ["Qué es un apercibido", "Cuatro amarillas: la quinta es un partido de sanción."],
+        ["El ciclo", "Cumplida la sanción, empieza otro: 10, 15."],
+        ["Lo que cuesta en LaLiga Fantasy", "La amarilla resta 1 y el sancionado no puntúa."],
+        ["Qué hacer con un apercibido en tu once", "El rival de esta jornada y de la siguiente, y si tienes recambio."],
+        ["Ejemplo", "Un lateral con cuatro amarillas."]
+      ],
+      "grupo": "once",
+      "corto": "Apercibidos",
+      "relacionadas": ["guias/lesionados-sancionados.html", "guias/alineacion.html", "guias/puntos-laliga-fantasy.html"]
     },
     {
       "ruta": "guias/preguntas-frecuentes.html",
