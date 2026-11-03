@@ -73,7 +73,7 @@ export function elQueMasPesa(xs) {
  * Cada jugador puede llevar `parte` (lib/partes.mjs) y `motivoSan` ({ txt, numeros }). Devuelve { t, numeros } o null.
  */
 export function detalle(xs) {
-  const con = [...xs].filter((x) => (x.parte && x.parte.lesion && x.estado !== 'disponible') || x.motivoSan).sort((a, b) => b.media - a.media);
+  const con = [...xs].filter((x) => (x.parte && x.parte.lesion && x.estado !== 'disponible') || x.motivoSan).sort((a, b) => Number(!!(b.parte && b.parte.lesion)) - Number(!!(a.parte && a.parte.lesion)) || b.media - a.media);   // antes una lesión con parte que una sanción (la sanción ya se dice en su línea)
   const x = con[0];
   if (!x) return null;
   if (x.motivoSan) return { t: `⚠️ ${x.nombre}: ${x.motivoSan.txt.replace(/^./, (c) => c.toLowerCase())}`, numeros: x.motivoSan.numeros };
