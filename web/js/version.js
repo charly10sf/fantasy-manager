@@ -14,7 +14,7 @@ export const VERSION = '0.6.12i';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.12i', f: '2026-11-03', h: '22:25', t: 'Puntos esperados con la tabla de verdad',
+    v: '0.6.12i', f: '2026-11-03', h: '22:34', t: 'Puntos esperados con la tabla de verdad',
     cosas: [
       { tipo: 'mejora', d: 'ia', t: 'Los puntos que esperas de cada jugador, con la tabla real', x: 'La app calculaba la portería a cero y las paradas con una tabla vieja: daba 4 puntos de portería a cero a los defensas (son 3), 1 a los medios (son 2) y nada a los delanteros (es 1), y una parada cada 3 en vez de cada 2. Ahora usa la tabla comprobada con miles de jornadas, y a medios y delanteros también les resta encajar. El once y el plan que te propone la app salen de estas cuentas.' },
       { tipo: 'mejora', d: 'plan', t: 'Un plan más claro', x: 'El titular del plan ya no cuenta lo descartado ni dos veces lo mismo, el número de Hoy coincide con lo que queda por hacer, los pasos dicen cuántos son para luego y cuántos están descartados, y lo descartado va al final con su etiqueta.' },
