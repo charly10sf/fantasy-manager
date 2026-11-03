@@ -336,7 +336,8 @@ export function svgBajas(d) {
     const w = 525, h = 132, x0 = [60, 615], y0 = 168;
     const enUna = filas.length <= 3;              // con 3 o menos, una columna ancha
     filas.forEach((f, i) => {
-      const x = enUna ? 60 : x0[Math.floor(i / 3)], y = y0 + (i % 3) * (h + 14), ww = enUna ? 1080 : w;
+      const porCol = Math.ceil(filas.length / 2);   // 4 -> 2 y 2, 5 -> 3 y 2, 6 -> 3 y 3
+      const x = enUna ? 60 : x0[Math.floor(i / porCol)], y = y0 + (3 - (enUna ? filas.length : porCol)) * (h + 14) / 2 + (enUna ? i : i % porCol) * (h + 14), ww = enUna ? 1080 : w;
       const club = coloresClub(f.club || f.equipo);
       const r = 46, cx = x + 26 + r, cy = y + h / 2;
       const pil = pildora(f, x + ww - 20, cy, 17);
