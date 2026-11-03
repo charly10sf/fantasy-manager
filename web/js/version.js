@@ -253,7 +253,7 @@ export const NOVEDADES = [
     cosas: [
       { para: 'app', tipo: 'mejora', d: 'campana', t: 'Te avisa si uno de tu once no es titular', x: 'Con la app cerrada, unos 50 y 20 minutos antes de cada partido en que juega alguno de tu alineación, la app mira el once confirmado. Si uno de los tuyos sale de suplente o no va convocado, te llega una notificación para que lo cambies antes de que empiece su partido, y con quién de tu plantilla meter.' },
       { para: 'web', tipo: 'arreglo', d: 'scroll', t: 'La barra de abajo, en su sitio en el iPhone', x: 'En el iPhone, Safari a veces dejaba la barra de las pestañas a media pantalla al bajar por la página, sobre todo después de escribir algo (es un fallo de Safari desde iOS 26). Ahora la app lo nota y la vuelve a poner abajo.' },
-      { tipo: 'arreglo', d: 'cara', t: 'Otra cuenta en el mismo móvil no ve lo de la anterior', x: 'Si en el mismo móvil o navegador entra otra cuenta de LaLiga, se borra lo de la anterior (su liga, su histórico, sus planes, su chat y sus notas) antes de enseñar nada. Se quedan los ajustes y la clave de Gemini. Y «Borrar datos» borra ya también lo de las otras ligas.' },
+      { tipo: 'arreglo', d: 'cara', t: 'Otra cuenta en el mismo móvil no ve lo de la anterior', x: 'Si en el mismo móvil o navegador entra otra cuenta de LaLiga, se borra lo de la anterior (su liga, su histórico, sus planes, su chat y sus notas) antes de enseñar nada. Se quedan los ajustes y la clave de la IA. Y «Borrar datos» borra ya también lo de las otras ligas.' },
       { tipo: 'arreglo', d: 'oferta', t: 'Los fichajes de hace un rato cuentan ya', x: 'LaLiga tarda en poner en la plantilla un fichaje o un clausulazo recién hecho. Ahora, si los movimientos de la liga dicen que un jugador ya es de otro (o tuyo), la app no te propone clausularlo ni lo pone en la lista del que lo tenía.' },
       { menor: true, tipo: 'arreglo', d: 'arreglo', t: 'Sin sitio para guardar, la app hace hueco', x: 'Si se llena lo que el navegador deja guardar (unos 5 MB), la app borra lo que vuelve a pedir sola (noticias, onces, muestras) y, si no basta, acorta el histórico de valores, en vez de dejar de guardar tu liga sin decir nada.' },
       { para: 'dueño', menor: true, tipo: 'arreglo', d: 'conexion', t: 'El servidor ya no hace de proxy para cualquiera', x: 'Lo que la web pide a LaLiga y a las demás webs por el servidor (y las imágenes) solo pasa si viene de la web de Fantasy Manager, y ya no sigue redirecciones a sitios que no están en la lista.' },
@@ -927,7 +927,7 @@ export const NOVEDADES = [
   {
     v: '0.0.11', f: '2026-10-20', h: '20:41', t: 'La IA trabaja sola',
     cosas: [
-      { tipo: 'nuevo', d: 'noche', t: 'Trabaja con la app cerrada', x: 'Cada 3 horas, y unos minutos después de cada cambio de mercado, pone tu liga al día y rehace el plan con Gemini.' },
+      { tipo: 'nuevo', d: 'noche', t: 'Trabaja con la app cerrada', x: 'Cada 3 horas, y unos minutos después de cada cambio de mercado, pone tu liga al día y rehace el plan con la IA.' },
       { tipo: 'nuevo', d: 'campana', t: 'Notificaciones de lo importante', x: 'El plan nuevo con sus pasos, las ofertas por tus jugadores, si te clausulan a alguien y lo que fichas. Cada aviso llega una vez y nunca de madrugada.' },
       { tipo: 'mejora', d: 'ajustes', t: 'Tú decides', x: 'Se apaga en Ajustes → «Trabaja con la app cerrada». Ahí ves también cuándo trabajó por última vez.' },
     ],
@@ -948,16 +948,16 @@ export const NOVEDADES = [
     ],
   },
   {
-    v: '0.0.8', f: '2026-10-20', h: '20:09', t: 'Gemini encuentra el camino',
+    v: '0.0.8', f: '2026-10-20', h: '20:09', t: 'La IA encuentra el camino',
     cosas: [
-      { tipo: 'arreglo', d: 'conexion', t: '«Unable to resolve host», resuelto', x: 'Si el DNS del móvil o del wifi no encuentra el servidor de Gemini, la app se lo pregunta por https a Cloudflare o a Google.' },
+      { tipo: 'arreglo', d: 'conexion', t: '«Unable to resolve host», resuelto', x: 'Si el DNS del móvil o del wifi no encuentra el servidor de la IA, la app se lo pregunta por https a Cloudflare o a Google.' },
     ],
   },
   {
     v: '0.0.7', f: '2026-10-20', h: '20:05', t: 'Deuda fija y modelos explicados',
     cosas: [
       { tipo: 'mejora', d: 'dinero', t: 'La deuda, siempre al 20 %', x: 'Como en el juego: ya no hay que elegirla en Ajustes.' },
-      { tipo: 'mejora', d: 'ia', t: 'Los modelos de tu clave, explicados', x: 'Ajustes te dice a cuántas versiones de Gemini te da acceso tu clave y cuántas han gastado ya el cupo de hoy.' },
+      { tipo: 'mejora', d: 'ia', t: 'Tu clave, explicada', x: 'Ajustes te dice si tu clave funciona y si ha gastado ya el cupo de hoy.' },
     ],
   },
   {
@@ -980,7 +980,7 @@ export const NOVEDADES = [
   {
     v: '0.0.4', f: '2026-10-20', h: '19:43', t: 'La IA arranca',
     cosas: [
-      { tipo: 'arreglo', d: 'ia', t: 'La IA ya contesta', x: 'Las preguntas a Gemini salen por la parte nativa de la app. Antes el navegador de dentro las cortaba con «Failed to fetch».' },
+      { tipo: 'arreglo', d: 'ia', t: 'La IA ya contesta', x: 'Las preguntas a la IA salen por la parte nativa de la app. Antes el navegador de dentro las cortaba con «Failed to fetch».' },
       { tipo: 'nuevo', d: 'campo', t: 'Posiciones y formaciones gratis', x: 'El plan solo te ficha jugadores que entren en tu once, tapa antes los huecos y usa las formaciones de la versión gratuita.' },
       { tipo: 'arreglo', d: 'cara', t: 'Quién hace cada movimiento', x: 'En los movimientos de la liga sale el nombre de cada manager.' },
     ],
@@ -996,7 +996,7 @@ export const NOVEDADES = [
     v: '0.0.2', f: '2026-10-20', h: '19:19', t: 'El plan del día',
     cosas: [
       { tipo: 'nuevo', d: 'plan', t: 'El plan de hoy, paso a paso', x: 'Qué vender, a quién clausular y cuánto pujar, con tu saldo después de cada operación.', ir: { v: 'hoy' } },
-      { tipo: 'mejora', d: 'ia', t: 'Todos los modelos gratis', x: 'Si un modelo de Gemini gasta su cupo, pasa al siguiente en vez de pararse.' },
+      { tipo: 'mejora', d: 'ia', t: 'La IA no se para por el cupo', x: 'Si una versión de la IA gasta su cupo, pasa a otra en vez de pararse.' },
       { tipo: 'arreglo', d: 'cara', t: 'Caras y nombres', x: 'Las caras se ven con el escudo de su equipo y en los movimientos sale quién hace cada cosa.' },
     ],
   },
