@@ -76,3 +76,24 @@ export function motivoSancion(ficha) {
   if (v(ult, 'yellow_card') > 0 && amarillas > 0 && amarillas % 5 === 0) return { txt: `Llegó a ${amarillas} amarillas en la jornada ${ult.weekNumber}`, numeros: [amarillas, ult.weekNumber] };
   return null;
 }
+
+/**
+ * Días que faltan hasta la vuelta que da el parte («Baja hasta finales de noviembre», «hasta enero», «hasta el 20 de diciembre»,
+ * «final de temporada»), o null si no se entiende. Principios = día 5, mediados = 15, finales = 25 y un mes a secas, el día 1;
+ * si esa fecha ya ha pasado este año, es la del año siguiente.
+ */
+export function diasHastaVuelta(p, ahora = Date.now()) {
+  const t = norm(p && p.hasta);
+  if (!t) return null;
+  if (/temporada/.test(t)) return 200;
+  const mes = MESES.findIndex((m) => new RegExp(`\\b${m}\\b`).test(t));
+  if (mes < 0) return null;
+  const n = t.match(/\b(\d{1,2})\b/);
+  const dia = n ? Number(n[1]) : /principio/.test(t) ? 5 : /mediado/.test(t) ? 15 : /final/.test(t) ? 25 : 1;
+  const hoy = new Date(ahora);
+  let f = Date.UTC(hoy.getUTCFullYear(), mes, dia);
+  if (f < ahora - 15 * 864e5) f = Date.UTC(hoy.getUTCFullYear() + 1, mes, dia);
+  return Math.round((f - ahora) / 864e5);
+}
+/** «Venta Fantasy Obligatoria»: una baja larga (5 semanas o más según el parte) */
+export const ventaObligatoria = (p, ahora = Date.now()) => !!(p && p.estado === 'baja' && (diasHastaVuelta(p, ahora) ?? 0) >= 35);
