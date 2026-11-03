@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12k';
+export const VERSION = '0.6.12l';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,15 @@ export const VERSION = '0.6.12k';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12l', f: '2026-11-03', h: '23:23', t: 'Fichar te dice lo que puedes gastar',
+    cosas: [
+      { tipo: 'mejora', d: 'dinero', t: 'Si no te llega, Fichar te lo dice claro', x: 'Cuando la puja que haría falta por un jugador pasa de tu dinero, Fichar ya no te enseña esa puja: te dice «Solo puedes gastar» y cuánto. Las pujas salen con el mismo formato en Fichar, Especular y la ficha.' },
+      { tipo: 'mejora', d: 'especular', t: 'En la ficha, lo de revender', x: 'Si un jugador lo tienes para especular, su ficha te dice que para revenderlo da igual su calendario y cuánto pujaría la app por él.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'Los puntos por jornada de la ficha cuadran', x: 'La ficha de un jugador enseña los puntos de cada jornada que ha jugado y suman lo que lleva en total.' },
+      { tipo: 'arreglo', d: 'nota', t: 'Adiós a «1000 mil»', x: 'Las cantidades a punto de llegar al millón salen ya como «1,00 M».' },
+    ],
+  },
   {
     v: '0.6.12k', f: '2026-11-03', h: '23:05', t: 'Un sancionado de un partido se aguanta',
     cosas: [
