@@ -1141,7 +1141,8 @@ export function cuadrarPlan(P, D, M) {
     const original = String(o.accion || '').toLowerCase();
     let accion = original.replace('aceptar_oferta', 'vender').replace('aceptar', 'vender').replace('ofertar', 'comprar');
     let aceptar = /aceptar/.test(original) || /acepta/i.test(o.donde || '');
-    let importe = o.importe != null ? +o.importe : null, signo = 0, aviso = o.cambioOnce || null, descartada = false, sobre = null;
+    // (tope: si la app la descarta porque no te llega, hasta cuánto podrías pujar o comprar; Mercado → Fichar lo enseña)
+    let importe = o.importe != null ? +o.importe : null, signo = 0, aviso = o.cambioOnce || null, descartada = false, sobre = null, tope = null;
     // lo que ya has hecho en LaLiga desde que se hizo el plan (vender al que decía, fichar al que decía) no se puede
     // volver a hacer, pero no es un error: se queda como hecho, sin contarlo otra vez en el saldo
     const desdeP = P.t || (P.dia ? Date.parse(`${P.dia}T00:00:00`) : 0);
@@ -1239,7 +1240,7 @@ export function cuadrarPlan(P, D, M) {
     // una cláusula de hoy que no cabe en la caja: LaLiga no deja clausular quedándote en negativo
     if (margen != null && ['pujar', 'comprar'].includes(accion) && hoy && !ya && !descartada && importe) {
       const mia = opC && opC.miPuja ? +opC.miPuja : 0;
-      if (importe - mia > margen) { descartada = true; aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: no puedes pujar ni comprar por más de ${eur(Math.max(0, margen + mia))} (tu saldo más el margen de deuda, menos lo que ya tienes pujado).`; }
+      if (importe - mia > margen) { descartada = true; tope = Math.max(0, margen + mia); aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: no puedes pujar ni comprar por más de ${eur(Math.max(0, margen + mia))} (tu saldo más el margen de deuda, menos lo que ya tienes pujado).`; }
       else margen -= importe - mia;
     }
     if (caja != null && accion === 'clausular' && hoy && !ya && importe && importe > caja) descartada = true;
@@ -1267,7 +1268,7 @@ export function cuadrarPlan(P, D, M) {
       // (una cláusula o un blindaje pagados también bajan lo que se puede pujar o comprar después)
       if (margen != null && signo < 0 && !['pujar', 'comprar'].includes(accion)) margen -= importe;
     }
-    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : accion === 'blindar' ? (importe ? 'Subir cláusula' : 'Blindar') : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, sobre, ya: !!ya };
+    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : accion === 'blindar' ? (importe ? 'Subir cláusula' : 'Blindar') : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, tope, sobre, ya: !!ya };
   });
   // los blindajes gratis de LaLiga: 2 por jornada. Si el plan pide más de los que te quedan, sobran los últimos
   const ES = M.escudosMios;
