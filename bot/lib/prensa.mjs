@@ -1,5 +1,9 @@
 // Los RSS de la prensa deportiva (Carlos, 2-3 nov: novedades de prensa en el bot). Feeds comprobados desde Actions el 3 nov
-// (rama pruebas-noticias): los de MARCA (Primera y por club), AS (Primera), Mundo Deportivo (fútbol y LaLiga) y SPORT (últimas).
+// (ramas pruebas-noticias y pruebas-feeds): MARCA (Primera y un feed por club), AS (Primera), Mundo Deportivo (fútbol, LaLiga y
+// Madrid, Barça y Atlético), SPORT (últimas), Cadena SER, COPE, Europa Press, La Vanguardia, ABC y El Mundo, y la prensa de cada
+// zona (La Voz de Galicia, Superdeporte, Diario de Sevilla, El Correo y Diario Sur). Más medios = más noticias con dos fuentes.
+// Sin feed que funcione (3 nov): Relevo, El País, El Desmarque (403), Estadio Deportivo, la web de los clubes, LaLiga y el MARCA del
+// Rayo (404); 20minutos sí funciona, pero su nombre lleva una cifra y el validador la tomaría por un dato.
 // De cada noticia solo se usa el titular y la entradilla, y nunca se copian: el tweet lo escribe el bot (tipos/noticias.mjs).
 import { get } from './http.mjs';
 
@@ -12,7 +16,23 @@ export const FEEDS = [
   { medio: 'Mundo Deportivo', url: 'https://www.mundodeportivo.com/rss/futbol/laliga' },
   { medio: 'Mundo Deportivo', url: 'https://www.mundodeportivo.com/rss/futbol' },
   { medio: 'SPORT', url: 'https://www.sport.es/es/rss/last-news/news.xml' },
+  ...['sevilla', 'betis', 'valencia', 'athletic', 'real-sociedad', 'villarreal', 'celta', 'osasuna', 'deportivo', 'racing-santander', 'getafe',
+    'alaves', 'espanyol', 'levante', 'elche', 'malaga'].map((c) => ({ medio: 'MARCA', url: `https://e00-marca.uecdn.es/rss/futbol/${c}.xml` })),
+  ...['real-madrid', 'fc-barcelona', 'atletico-madrid'].map((c) => ({ medio: 'Mundo Deportivo', url: `https://www.mundodeportivo.com/rss/futbol/${c}` })),
+  { medio: 'Cadena SER', url: 'https://cadenaser.com/arc/outboundfeeds/rss/category/deportes/futbol/?outputType=xml' },
+  { medio: 'COPE', url: 'https://www.cope.es/rss/deportes.xml' },
+  { medio: 'Europa Press', url: 'https://www.europapress.es/rss/rss.aspx?ch=00110' },
+  { medio: 'La Vanguardia', url: 'https://www.lavanguardia.com/rss/deportes/futbol.xml' },
+  { medio: 'ABC', url: 'https://www.abc.es/rss/2.0/deportes/futbol/' },
+  { medio: 'El Mundo', url: 'https://e00-elmundo.uecdn.es/elmundodeporte/rss/futbol.xml' },
+  { medio: 'La Voz de Galicia', url: 'https://www.lavozdegalicia.es/deportes/index.xml' },
+  { medio: 'Superdeporte', url: 'https://www.superdeporte.es/rss/' },
+  { medio: 'Diario de Sevilla', url: 'https://www.diariodesevilla.es/rss/deportes/' },
+  { medio: 'El Correo', url: 'https://www.elcorreo.com/rss/2.0/?section=athletic' },
+  { medio: 'Diario Sur', url: 'https://www.diariosur.es/rss/2.0/?section=malagacf' },
 ];
+/** los nombres de todos los medios (para que Gemini no los cite) */
+export const NOMBRES_MEDIOS = [...new Set([...FEEDS.map((f) => f.medio), 'Relevo', 'El País', 'El Desmarque', 'Estadio Deportivo', '20minutos'])];
 
 const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', laquo: '«', raquo: '»', hellip: '…', ndash: '–', mdash: '—', iexcl: '¡', iquest: '¿',
   aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú', Ntilde: 'Ñ', uuml: 'ü', ccedil: 'ç' };
@@ -47,6 +67,7 @@ export async function noticiasPrensa({ log = () => {}, pedir = get, feeds = FEED
     if (vistas.has(k)) continue;
     vistas.add(k); out.push(n);
   }
-  log(`  (prensa) ${out.length} noticias leídas (${[...new Set(out.map((n) => n.medio))].join(', ') || 'ningún medio'})`);
+  const medios = [...new Set(out.map((n) => n.medio))];
+  log(`  (prensa) ${out.length} noticias leídas de ${medios.length} medios (${medios.join(', ') || 'ninguno'})`);
   return out;
 }

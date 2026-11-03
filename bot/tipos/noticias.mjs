@@ -1,4 +1,4 @@
-// Noticias de prensa (Carlos, 2-3 nov): lesiones, molestias, descartes y vueltas que cuentan MARCA, AS, Mundo Deportivo y SPORT
+// Noticias de prensa (Carlos, 2-3 nov): lesiones, molestias, descartes y vueltas que cuenta la prensa (lib/prensa.mjs: MARCA, AS, Mundo Deportivo, SPORT, SER, COPE y más)
 // antes de que salgan en LaLiga Fantasy. Cómo va:
 //   1. Se leen los RSS (lib/prensa.mjs) y se quedan las noticias que nombran a un jugador que importa (media de 4 o más, o 10 M o
 //      más) y hablan de lesión, entrenamiento, convocatoria o alta. Solo las nuevas (las ya vistas se guardan en el registro).
@@ -15,7 +15,7 @@ import { tweet, cap, segunda, proximoPartido, paraLa } from '../lib/redactar.mjs
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { lista as enLista } from '../lib/agrupar.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
-import { noticiasPrensa } from '../lib/prensa.mjs';
+import { noticiasPrensa, NOMBRES_MEDIOS } from '../lib/prensa.mjs';
 import { preguntarJson } from '../lib/gemini.mjs';
 
 const HORA = 36e5;
@@ -27,13 +27,21 @@ const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numer
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 // de qué tiene que hablar una noticia para que merezca preguntar a Gemini
 const TEMA = /lesi[oó]n|lesiona|baja|alta m[eé]dica|el alta|parte m[eé]dico|molesti|entren|convoca|viaj|descart|recuper|vuelve|regres|reaparec|duda|al margen|quir[oó]f|operad|rotura|se rompe|se ha roto|esguince|sobrecarga|fractura|tocado|disponible|se pierde|perder[aá]|no estar[aá]|no jugar[aá]|sancion/i;
+// los medios que se nombran primero en el tweet (al revés: el último, el primero)
+const GRANDES = ['COPE', 'Cadena SER', 'SPORT', 'Mundo Deportivo', 'AS', 'MARCA'];
 const QUE = ['lesion', 'molestias', 'descartado', 'vuelve', 'nada'];
 export const familia = (que) => (que === 'vuelve' ? 'buena' : 'mala');
-const MEDIOS = /\b(MARCA|AS|Mundo Deportivo|SPORT|Relevo|COPE|Cadena SER)\b/;
+const MEDIOS = new RegExp(`(^|[^\\p{L}])(${[...NOMBRES_MEDIOS, 'SER'].map((m) => m.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?![\\p{L}])`, 'u');
 
 /** los jugadores que importan nombrados en la noticia: por apodo entero o nombre completo; «A. Batalla», por apellido y con el club */
 export function candidatos(n, jugadores, equipos = {}) {
-  const txt = ` ${norm(`${n.titulo} ${n.entradilla}`)} `;
+  const todos = nombrados(` ${norm(`${n.titulo} ${n.entradilla}`)} `, jugadores, equipos);
+  if (todos.length <= 4) return todos;
+  // una convocatoria entera o una crónica nombra a cinco o más: entonces solo cuentan los del titular («vuelven Koke y Cuti»)
+  const tit = nombrados(` ${norm(n.titulo)} `, todos, equipos);
+  return tit.length <= 3 ? tit : [];
+}
+function nombrados(txt, jugadores, equipos) {
   const out = [];
   for (const j of jugadores) {
     const apodo = norm(j.nickname), nombre = norm(j.name);
@@ -42,7 +50,7 @@ export function candidatos(n, jugadores, equipos = {}) {
     if (!si && ini && txt.includes(` ${ini[1]} `)) si = txt.includes(` ${norm(corto(equipos[String(j.teamId)] || '-'))} `);
     if (si) out.push(j);
   }
-  return out.length > 4 ? [] : out;   // una noticia que nombra a cinco o más (una convocatoria entera, una crónica) no es de uno
+  return out;
 }
 
 /** ¿copia 6 palabras seguidas de la fuente? */
@@ -60,6 +68,15 @@ export function frase(s, { fuente = '', max = 90, debeLlevar = null } = {}) {
   if (debeLlevar && !debeLlevar.some((k) => k && ` ${norm(s)} `.includes(` ${k} `))) return '';
   return s;
 }
+/** ¿jugó (puntos distintos de 0) en un partido de la jornada que ya acabó antes de la noticia? (Aubameyang, 3 nov: dos crónicas
+ * del partido en el que reapareció salieron como «vuelve») */
+export function yaJugo(j, stats, t) {
+  for (const m of stats || []) {
+    if (m.matchState !== 7 || !(Date.parse(m.date) < t)) continue;
+    for (const lado of [m.local, m.visitor]) for (const p of (lado && lado.players) || []) if (String(p.id) === String(j.id) && p.weekPoints != null && Number(p.weekPoints) !== 0) return true;
+  }
+  return false;
+}
 const llaves = (j) => { const a = norm(j.nickname), b = norm(j.name).split(' '); return [a, b[b.length - 1], b.length > 2 ? b[b.length - 2] : null].filter((x) => x && x.length >= 3); };
 
 const ESQUEMA = { type: 'OBJECT', required: ['noticias'], properties: { noticias: { type: 'ARRAY', items: { type: 'OBJECT',
@@ -72,11 +89,11 @@ export function prompt(lote) {
 - "lesion": se lesiona o el club da un parte con una lesión nueva.
 - "molestias": tiene molestias, no entrena con el grupo o entrena al margen, sin lesión confirmada.
 - "descartado": no viaja, no entra en la convocatoria o el entrenador lo descarta para el próximo partido de LaLiga.
-- "vuelve": recibe el alta, vuelve a entrenar con el grupo o vuelve a una convocatoria después de una lesión o una sanción.
-- "nada": todo lo demás (fichajes, rumores, opiniones, crónicas de partidos ya jugados, una situación que la noticia solo repite, o si habla de otro jugador).
+- "vuelve": recibe el alta, vuelve a entrenar con el grupo o vuelve a una convocatoria después de una lesión o una sanción (también si la convocatoria es de Champions o de Copa: si está para jugar ahí, está para LaLiga).
+- "nada": todo lo demás: fichajes, rumores, opiniones, una situación que la noticia solo repite, si habla de otro jugador, y las crónicas y análisis de partidos ya jugados (si la noticia cuenta que ya jugó, marcó o reapareció en un partido, es "nada": eso ya se sabe).
 Reglas:
 - jugadorId: el id del candidato del que habla la noticia; 0 si no es ninguno o si dudas.
-- otraCompeticion: true si solo afecta a un partido de Champions, Europa League, Conference, Copa o la selección (un descanso para un partido europeo, por ejemplo).
+- otraCompeticion: true si solo afecta a un partido de Champions, Europa League, Conference, Copa o la selección (un descanso o una rotación para un partido europeo, una lesión con la selección que no le quita jugar en LaLiga). Una vuelta a la convocatoria tras una lesión NO es otraCompeticion.
 - seguro: true si la noticia lo da como un hecho; false si es una posibilidad («podría», «apunta a», «se teme», «preocupa»).
 - oficial: true solo si la noticia dice que lo ha comunicado el club (parte médico o comunicado).
 - hecho: una frase corta de periodista con TUS palabras, de 4 a 10 palabras, en presente, que empiece por el nombre del jugador tal como sale en los candidatos (por ejemplo «Andrés Martín se rompe y estará varias semanas fuera»). Sin comillas, sin nombrar al medio y sin copiar el titular.
@@ -164,7 +181,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const corte = Math.max(0, ...hs.filter((h) => familia(h.que) !== fam).map((h) => h.t));
     const mis = hs.filter((h) => familia(h.que) === fam && h.t >= corte);
     if (ahora - mis[0].t > 18 * HORA) { log(`  (noticias) ${j.nickname} (${fam}): la primera noticia es de hace más de 18 h`); continue; }
-    const medios = [...new Set(mis.map((h) => h.medio))];
+    if (fam === 'buena' && yaJugo(j, stats, mis[0].t)) { log(`  (noticias) ${j.nickname} (buena): ya ha jugado en LaLiga después de volver, no es noticia`); continue; }
+    const medios = [...new Set(mis.map((h) => h.medio))].sort((a, b) => GRANDES.indexOf(b) - GRANDES.indexOf(a));
     const est = j.playerStatus || 'ok';
     const parte = parteDe(j, lp);
     // desde cuándo sale así en LaLiga (t 0 = de antes de que el bot lo mirara; entonces vale la fecha de la lesión de la lista)
@@ -207,7 +225,9 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       : c.que === 'lesion' ? elegir([`🚨 ${j.nickname} se lesiona`, `🚨 Saltan las alarmas con ${j.nickname}`], sem)
         : c.que === 'descartado' ? `🚨 ${j.nickname} se queda fuera de la convocatoria`
           : c.que === 'molestias' ? `🚨 Saltan las alarmas con ${j.nickname}` : `✅ Buenas noticias con ${j.nickname}`;
-    const lis = enLista(c.medios);
+    // con muchos medios, los dos primeros y cuántos más (en letra: una cifra suelta no estaría en los datos)
+    const MAS = ['', '', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
+    const lis = c.medios.length <= 3 ? enLista(c.medios) : `${c.medios.slice(0, 2).join(', ')} y ${c.medios.length - 2 === 1 ? 'otro medio' : `${MAS[c.medios.length - 2] || 'muchos'} medios más`}`;
     const fuente = c.oficial ? `🗞️ Lo ha comunicado el club, según ${lis}` : c.medios.length >= 2 ? `🗞️ Lo cuentan ${lis}`
       : c.laliga && c.fam === 'mala' ? `🗞️ Según ${lis}; en LaLiga Fantasy ya sale como ${{ injured: 'lesionado', doubtful: 'duda', suspended: 'sancionado' }[c.est]}` : `🗞️ Según ${lis}`;
     const baja = c.que === 'descartado' || (c.que === 'lesion' && (c.est === 'injured' || (c.parte && c.parte.estado === 'baja') || !!c.plazo));
