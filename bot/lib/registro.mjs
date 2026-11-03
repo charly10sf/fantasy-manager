@@ -2,6 +2,7 @@
 // rama `bot-estado`) para que sobreviva entre ejecuciones. Se marca SOLO cuando X ha dicho que sí (201).
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
+export const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 
 export class Registro {
   constructor(config, fichero = null) {
@@ -11,14 +12,15 @@ export class Registro {
     this.claves = new Set(this.datos.enviados.map((e) => e.clave));
     this.enEstaEjecucion = 0;
   }
-  hoy() { return new Date().toISOString().slice(0, 10); }
+  // el día en Madrid, no en UTC (la noche del 2 al 3 nov llegaron 6 avisos de fallo en vez de 3: el tope se reiniciaba a la 01:00)
+  hoy() { return diaMadrid(Date.now()); }
   /** 'ok' o el motivo de no publicar */
   decidir(tw) {
     if (this.claves.has(tw.clave)) return 'duplicado';
     const tope = this.config.topes[tw.tipo] ?? 0;
     const n = this.datos.enviados.filter((e) => e.tipo === tw.tipo && e.jornada === tw.jornada).length;
     if (n >= tope) return `tope de ${tope} para «${tw.tipo}» en la jornada ${tw.jornada}`;
-    const hoy = this.datos.enviados.filter((e) => e.t.slice(0, 10) === this.hoy()).length;
+    const hoy = this.datos.enviados.filter((e) => diaMadrid(e.t) === this.hoy()).length;
     if (hoy >= (this.config.topeDiario ?? 25)) return `tope diario de ${this.config.topeDiario ?? 25}`;
     if (this.enEstaEjecucion >= (this.config.maxPorEjecucion ?? 4)) return `máximo de ${this.config.maxPorEjecucion ?? 4} por ejecución (sigue en la próxima)`;
     return 'ok';
