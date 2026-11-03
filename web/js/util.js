@@ -105,6 +105,25 @@ export function cuando(t, { hora = true } = {}) {
   if (Math.abs(t - Date.now()) < 6 * DIA) return `${DIAS[p.dw]} ${p.d}${hora ? `, ${p.h}:${p.min}` : ''}`;
   return `${p.d} ${MESES[p.m]}${hora ? `, ${p.h}:${p.min}` : ''}`;
 }
+/**
+ * un plazo, para leer de corrido: «hoy antes de las 08:41», «esta noche antes de las 00:15» (mañana de madrugada),
+ * «antes de mañana a las 21:00», «antes del lun 9 a las 20:00», «antes del 12 nov a las 20:00». Antes salía
+ * «antes de hoy 08:41». Siempre empieza por «hoy», «esta noche» o «antes»: cuadrarPlan (ia.js) solo da un paso por de
+ * otro día si su plazo empieza por «mañana», un día de la semana o una fecha, y un plazo se puede hacer ya.
+ */
+export function antesDe(t) {
+  if (!t) return '';
+  const p = partes(t), hoy = diaDe(), dia = diaDe(t), hh = `${p.h}:${p.min}`;
+  if (dia <= hoy) return `hoy antes de las ${hh}`;
+  if (dia === otroDia(hoy, 1)) return +p.h < 6 ? `esta noche antes de las ${hh}` : `antes de mañana a las ${hh}`;
+  return Math.abs(t - Date.now()) < 6 * DIA ? `antes del ${DIAS[p.dw]} ${p.d} a las ${hh}` : `antes del ${p.d} ${MESES[p.m]} a las ${hh}`;
+}
+/** un día dentro de una frase: «hoy», «mañana», «el lun 9», «el 12 nov» (con cuando() salía «el mañana») */
+export function elDia(t) {
+  if (!t) return '';
+  const c = cuando(t, { hora: false });
+  return /^(hoy|mañana|ayer)$/.test(c) ? c : `el ${c}`;
+}
 export const fechaCorta = (t) => { const p = partes(t); return `${p.d} ${MESES[p.m]}`; };
 export const horaDe = (t) => { const p = partes(t); return `${p.h}:${p.min}`; };
 

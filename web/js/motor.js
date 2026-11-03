@@ -2,7 +2,7 @@
    Cláusulas de los rivales y cuánto interesa cada una, el riesgo de las tuyas, el mercado, quién sube y
    quién baja, lo que has ganado con tus compras, cómo se mueve cada rival, la jornada, los parones y la
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
-import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, eur, pct, dura, cuando, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
+import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
 const PARONES = [
@@ -2066,7 +2066,7 @@ export function planAuto(D, M, c) {
 
   // 0. aceptar las ofertas buenas por lo que ya tienes en venta
   for (const v of M.misVentas.filter((y) => y.consejo === 'aceptar')) {
-    op({ accion: 'vender', pid: v.pid, jugador: v.j.nombre, donde: `acepta la oferta de ${v.mejor.de}`, importe: v.mejor.importe, cuando: v.mejor.caduca ? `antes de ${cuando(v.mejor.caduca)}` : 'hoy',
+    op({ accion: 'vender', pid: v.pid, jugador: v.j.nombre, donde: `acepta la oferta de ${v.mejor.de}`, importe: v.mejor.importe, cuando: v.mejor.caduca ? antesDe(v.mejor.caduca) : 'hoy',
       motivo: `${v.porque} Vale ${eur(v.j.valor)}${v.ganado != null ? ` y lo pagaste a ${eur(v.compra)} (${eur(v.ganado, { signo: true })})` : ''}.`, confianza: v.mejor.sobre >= 0.02 ? 'alta' : 'media' });
     saldo += v.mejor.importe; caja += v.mejor.importe; vendidos.add(v.pid);
   }
@@ -2141,7 +2141,7 @@ export function planAuto(D, M, c) {
     if (pujas >= 2 || m.puja > presupuesto() || yaHoy.has(m.j.pos) || !hueco(m.j)) continue;
     const cm = M.compraCal(m.j, m.puja);
     if (!cm.ok) continue;
-    op({ accion: 'pujar', objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? `antes de ${cuando(M.cierreMercado)}` : 'hoy',
+    op({ accion: 'pujar', objetivo: 'titular', pid: m.pid, jugador: m.j.nombre, donde: 'en el mercado', importe: m.precio, puja_max: m.puja, cuando: M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy',
       motivo: `Sale a ${eur(m.precio)}${m.sobre <= 0.01 ? ', lo que vale' : ''}. Mejora tu once unos ${String(Math.round(gana(m.j) * 10) / 10).replace('.', ',')} pts por jornada${m.por.length ? `; ${m.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}, por eso subo la oferta.` : ''}${cm.txt ? ` ${cm.txt}` : ''}` });
     saldo -= m.puja; pujas++; yaHoy.add(m.j.pos); fichar(m.j);
   }
@@ -2166,7 +2166,7 @@ export function planAuto(D, M, c) {
       .sort((a, b) => (a.pierde - b.pierde) || (b.j.valor - a.j.valor));
     for (const x of candidatos) {
       if (saldo >= 0) break;
-      op({ accion: 'vender', objetivo: 'caja', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
+      op({ accion: 'vender', objetivo: 'caja', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? antesDe(inicio) : 'hoy',
         motivo: `Para no empezar la jornada en negativo (no puntuarías). ${x.pierde < 0.3 ? 'No entra en tu once: no pierdes puntos.' : `Es el que menos resta a tu once (−${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts/jornada).`}`, confianza: 'alta' });
       saldo += x.j.valor; vendidos.add(x.pid);
       plantilla = plantilla.filter((j) => j.id !== x.pid); onceAhora = M.mejorOnce(plantilla);
@@ -2178,7 +2178,7 @@ export function planAuto(D, M, c) {
   for (const x of M.paraRevender.filter((y) => !vendidos.has(y.pid))) {
     const toca = !ventana || ahora >= ventana.ponerVenta - 6 * HORA || (x.tend.p1 != null && x.tend.p1 < -1);
     if (!toca) continue;
-    op({ accion: 'vender', objetivo: 'revender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? `antes de ${cuando(inicio)}` : 'hoy',
+    op({ accion: 'vender', objetivo: 'revender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: inicio ? antesDe(inicio) : 'hoy',
       motivo: `Lo compraste para revender a ${eur(x.rev.precio)} y ahora vale ${eur(x.j.valor)} (${eur(x.beneficioYa, { signo: true })}).${x.tend.p1 != null && x.tend.p1 < -1 ? ' Ha empezado a bajar: mejor salir ya.' : ' Toca venderlo para empezar la jornada en positivo.'}`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
@@ -2199,12 +2199,12 @@ export function planAuto(D, M, c) {
       if (tras + [...especula, e].reduce((s2, x) => s2 + x.precio * 0.92, 0) < 0) continue;
       especula.push(e); espSaldo = tras;
       if (e.origen !== 'mercado') caja -= e.precio;
-      const diaVenta = cuando(e.vender, { hora: false });
+      const diaVenta = cuando(e.vender, { hora: false }), elDiaVenta = elDia(e.vender);
       op({ accion: e.origen === 'mercado' ? 'pujar' : 'clausular', objetivo: 'revender', pid: e.pid, jugador: e.j.nombre,
         donde: e.origen === 'mercado' ? 'en el mercado' : `cláusula a ${e.rival.manager || e.rival.nombre}`, importe: e.origen === 'mercado' ? e.precioMercado : e.precio, puja_max: e.origen === 'mercado' ? e.puja : null,
-        cuando: e.origen === 'mercado' ? (M.cierreMercado ? `antes de ${cuando(M.cierreMercado)}` : 'hoy') : 'ahora',
+        cuando: e.origen === 'mercado' ? (M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy') : 'ahora',
         vender_el: diaVenta, beneficio_esperado: Math.round(e.beneficio),
-        motivo: `Para revender, no para tu once: sube un ${pct(e.r * 100, 1, false)} al día. Si sigue así, el ${diaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta el ${diaVenta} para estar en positivo antes de la jornada.`,
+        motivo: `Para revender, no para tu once: sube un ${pct(e.r * 100, 1, false)} al día. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.`,
         confianza: e.confianza });
     }
     saldo = espSaldo;
@@ -2221,7 +2221,7 @@ export function planAuto(D, M, c) {
     const b = x.blindaje;
     // subirla cuesta dinero al momento: si no lo hay, te dejaría en negativo antes de la jornada
     if (b && b.coste > Math.min(saldo, caja)) continue;
-    op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: b ? `subir su cláusula a ${eur(b.objetivo)}` : 'subir su cláusula', importe: b ? b.coste : null, cuando: x.abierta ? 'ahora' : `antes de ${cuando(x.protegidoHasta)}`,
+    op({ accion: 'blindar', pid: x.pid, jugador: x.j.nombre, donde: b ? `subir su cláusula a ${eur(b.objetivo)}` : 'subir su cláusula', importe: b ? b.coste : null, cuando: x.abierta ? 'ahora' : antesDe(x.protegidoHasta),
       motivo: `Su cláusula (${eur(x.clausula)}) ${x.ratio < 1.05 ? 'está en su valor' : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor`} (${eur(x.j.valor)}), ${x.abierta ? 'ya está abierta' : `se abre en ${dura(x.abreEn)}`} y te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada.${b ? ` Con ${eur(b.coste)} no le llegaría a ningún rival.` : ''}` });
     if (b) { saldo -= b.coste; caja -= b.coste; }
   }
@@ -2230,7 +2230,7 @@ export function planAuto(D, M, c) {
   if (inicio && inicio - ahora < 30 * HORA && inicio > ahora && !M.enJuego) {
     const tocados = M.mias.filter((x) => !vendidos.has(x.pid) && x.j.estado === 'doubtful');
     const sancionados = M.mias.filter((x) => !vendidos.has(x.pid) && M.sancionCorta(x.j));
-    op({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: `antes de ${cuando(inicio)}`,
+    op({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: antesDe(inicio),
       motivo: `Pon el ${onceAhora.nombre}: ${onceAhora.lineas.flat().map((j) => j.nombre).join(', ')}.${onceAhora.huecos ? ` Te faltan ${onceAhora.huecos} para completarlo.` : ''}${tocados.length ? ` Ojo con ${tocados.map((x) => x.j.nombre).join(', ')}, que son duda.` : ''}${sancionados.length ? ` ${sancionados.map((x) => x.j.nombre).join(', ')} ${sancionados.length === 1 ? 'está sancionado y se pierde' : 'están sancionados y se pierden'} la jornada: ${sancionados.length === 1 ? 'aguántalo, vuelve' : 'aguántalos, vuelven'} a la siguiente.` : ''}` });
   }
   if (!ops.length) op({ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'hoy', motivo: 'Hoy no hay ninguna operación clara: ni cláusulas que merezcan la pena abiertas ni chollos en el mercado. Mejor guardar el dinero.', confianza: 'media' });

@@ -1248,7 +1248,7 @@ export function cuadrarPlan(P, D, M) {
     const cu = String(o.cuando || '').trim();
     const diaIA = String(o.dia || '').trim();
     const otroDia = (/^\d{4}-\d{2}-\d{2}$/.test(diaIA) && diaIA !== diaDe()) || /cuando se abra|se abre|si vendes/i.test(cu) || (opC && opC.tipo === 'clausular' && !opC.abierta && diaDe(opC.abre) !== diaDe())
-      || (/^(el )?(pasado )?(mañana|lun|mar|mi[eé]|jue|vie|s[aá]b|dom)\w*\b|^(el )?\d{1,2} (de )?(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)/i.test(cu) && !/^hoy/i.test(cu) && accion !== 'pujar');
+      || (/^(el )?(pasado )?(mañana|lun|mar|mi[eé]|jue|vie|s[aá]b|dom)\w*\b|^(el )?\d{1,2} (de )?(ene|feb|mar|abr|may|jun|jul|ago|sep|oct|nov|dic)/i.test(cu) && !/^(hoy|esta noche|antes|hasta)\b/i.test(cu) && accion !== 'pujar');
     const hoy = (!otroDia || !!(cl && cl.abierta && accion === 'clausular')) && !descartada;
     // una cláusula de hoy que no cabe en la caja: LaLiga no deja clausular quedándote en negativo
     if (margen != null && ['pujar', 'comprar'].includes(accion) && hoy && !ya && !descartada && importe) {
