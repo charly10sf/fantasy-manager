@@ -90,12 +90,13 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       // --- posibles onces ---
       if (!(quierePos && !yaPos)) continue;
       // en los puestos con más duda (menos del 60 %), también el otro que se lo puede jugar, con su % (Carlos, 3 nov 11:52: «como
-      // dos opciones y poner el porcentaje de cada uno»): el mejor del mismo puesto que no está en el once, hasta 3 por equipo
+      // dos opciones y poner el porcentaje de cada uno»): el mejor del mismo puesto que no está en el once y tiene 25 % o más,
+      // hasta 3 por equipo
       const lado = (k, mm) => {
         const once = pos[k].once.map((x) => ({ id: x.id, nombre: x.nombre, pos: x.pos, pct: pct(x.p), duda: x.duda, p: x.p }));
         const fuera = new Set(once.map((x) => String(x.id)));
         for (const x of [...once].filter((y) => y.p < 0.6).sort((a, b) => a.p - b.p).slice(0, 3)) {
-          const alt = Object.values(probs[k]).filter((y) => y.pos === x.pos && !fuera.has(String(y.id)) && y.p >= 0.15 && y.estado !== 'injured' && y.estado !== 'suspended')
+          const alt = Object.values(probs[k]).filter((y) => y.pos === x.pos && !fuera.has(String(y.id)) && y.p >= 0.25 && y.estado !== 'injured' && y.estado !== 'suspended')
             .sort((a, b) => b.p - a.p)[0];
           if (alt) { fuera.add(String(alt.id)); x.alt = { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda }; }
         }
