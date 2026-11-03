@@ -1,0 +1,23 @@
+# Prueba (3 nov): el mercado de hoy con la tarjeta nueva, en simulacro (no publica). Deja la imagen y el texto en la rama
+# pruebas-mercado-salida. Solo en la rama pruebas-mercado-tarjeta.
+name: Mercado prueba
+on:
+  push:
+    branches: [pruebas-mercado-tarjeta]
+permissions:
+  contents: write
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: node bot/ejecutar.mjs --modo=simulacro --tipos=mercado --forzar=1 --ventanas=0 | tee salida.txt
+      - run: |
+          mkdir out && cp tarjetas/*.png salida.txt out/ 2>/dev/null; cd out
+          git init -q -b pruebas-mercado-salida && git config user.name github-actions && git config user.email github-actions@users.noreply.github.com
+          git add . && git commit -qm "Prueba del mercado" && git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/pruebas-mercado-salida
