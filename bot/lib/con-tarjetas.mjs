@@ -6,7 +6,7 @@
 //   directo -> tarjeta de cada jugador implicado: goleador, asistente, expulsado o el que falla el penalti (si tarjetas.jugador)
 // Lo que no pasa el validador no sale: el tweet del final se publica entonces sin imagen y el del MVP no se publica.
 import { svgFinal, svgJugador, svgResumen, svgOnces, svgMercado, svgBajas, aPng } from './tarjetas.mjs';
-import { datosFinal, datosJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
+import { datosFinal, datosJugador, historialJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
 import { validarTarjeta } from './validar.mjs';
 import * as LL from './laliga.mjs';
 
@@ -31,9 +31,18 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
       if (d.equipo) d.equipo.escudo = await img(d.equipo.escudoUrl);
       if (d.rival) d.rival.escudo = await img(d.rival.escudoUrl);
     }
+    let permitidos = t.tarjeta.permitidos;
+    // la de un solo jugador va en carta: con sus últimas jornadas y su valor, como la del MVP (Carlos, 3 nov 11:24)
+    if (t.tarjeta.tipo === 'bajas' && d.filas.length === 1) {
+      const j = (jugadores || []).find((x) => String(x.id) === String(d.filas[0].id));
+      if (j) {
+        const h = await historialJugador(j, { jornada, fuentes }).catch(() => null);
+        if (h) { Object.assign(d.filas[0], h.d); permitidos = { ...permitidos, numeros: [...(permitidos.numeros || []), ...h.numeros] }; }
+      }
+    }
     if (t.tarjeta.tipo === 'mercado') for (const f of [...d.suben, ...d.bajan]) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
     const dibujo = { resumen: svgResumen, onces: svgOnces, mercado: svgMercado, bajas: svgBajas }[t.tarjeta.tipo] || svgOnces;
-    await hacer(t.tarjeta.nombre, { d, permitidos: t.tarjeta.permitidos }, dibujo(d));
+    await hacer(t.tarjeta.nombre, { d, permitidos }, dibujo(d));
     return hechas;
   }
   const m = stats.find((x) => String(x.id) === String(t.partido));
