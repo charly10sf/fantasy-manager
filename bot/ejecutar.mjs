@@ -85,6 +85,11 @@ for (const q of quienes) {
   if (abortar) break;
   const mod = await import(`./tipos/${q}.mjs`);
   let c = ctx;
+  // horas de silencio (Carlos, 3 nov 09:49: «publique a horas más activas, no a las 5 am»): de 1 a 8 h de Madrid no sale nada salvo
+  // el directo (no hay partidos a esas horas) y el mercado (su propia ventana). Lo que toque se queda para las 8 (final y MVP aguantan
+  // con ventanaFinalHoras = 13: un partido de las 21 h llega a las 10)
+  const [sD, sH] = config.horasSilencio || [24, 24];
+  if (ventanas && !forzar && !['directo', 'mercado'].includes(q) && horaMadrid >= sD && horaMadrid < sH) { console.log(`\n## ${q}: horas de silencio (son las ${horaMadrid} h en Madrid; vuelve a las ${sH} h)`); continue; }
   if (q === 'caidas') {
     if (objetivoCaidas == null) { console.log(`\n## caidas: espero (quedan ${pendientes} partido(s) de la jornada ${jornada})`); continue; }
     if (!enHorarioCaidas) { console.log(`\n## caidas: fuera de horario (son las ${horaMadrid} h en Madrid; publico de ${hDesde} a ${hHasta} h)`); continue; }

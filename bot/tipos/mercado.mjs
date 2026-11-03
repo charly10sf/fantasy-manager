@@ -21,9 +21,10 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   const hoy = diaMadrid(ahora);
   // solo justo después de la actualización (hacia las 00:15): el punto de hoy existe desde esa hora, así que sin esta ventana el tweet
   // podía salir a cualquier hora del día con un cambio de hace casi 24 h (el 2 nov salió a las 23:27; Carlos, 23:29)
-  const [hDesde, hHasta] = config.horasMercado || [0, 6];
+  // (Carlos, 3 nov 09:49: nada a las 5 de la mañana) de 0 a 1 h, que es cuando llega; si esa noche falla, de 8 a 12 h, no de madrugada
+  const tramos = Array.isArray((config.horasMercado || [])[0]) ? config.horasMercado : [config.horasMercado || [0, 1], [8, 12]];
   const h = horaMadrid(ahora);
-  if (ventanas && !forzar && (h < hDesde || h >= hHasta)) return [];
+  if (ventanas && !forzar && !tramos.some(([d, hh]) => h >= d && h < hh)) return [];
   // un solo tweet por noche desde el 3 nov (antes, uno de subidas y otro de bajadas: sus claves cuentan como ya publicado)
   const clave = `mercado|${hoy}`;
   const viejas = [`mercado|${hoy}|suben`, `mercado|${hoy}|bajan`];
