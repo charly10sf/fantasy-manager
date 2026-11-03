@@ -1039,5 +1039,935 @@
   "3296": "ok",
   "3297": "ok"
  },
- "novedadesPend": []
+ "novedadesPend": [],
+ "noticias": {
+  "vistas": {
+   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/02/mensaje-caparros-pepe-mel-partido-vas-ganar-seguro.html": 1793657346000,
+   "MARCA|https://www.marca.com/futbol/deportivo/2026/11/02/aubameyang-obra-milagro-alta-medica-listo-reaparecer-osasuna.html": 1793648838000,
+   "MARCA|https://www.marca.com/futbol/racing-santander/2026/11/02/mantilla-rotura-ligamento-cruzado-dice-adios-temporada.html": 1793621140000,
+   "MARCA|https://www.marca.com/futbol/valencia/2026/11/02/aguirre-jugo-caos-sadiq.html": 1793610608000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/mourinho-da-descanso-gueler-tchouameni-llama-sergio-martinez.html": 1793708195000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/02/luz-verde-valverde.html": 1793621437000,
+   "MARCA|https://www.marca.com/futbol/atletico/2026/11/03/lista-convocados-atletico-vs-bayern-munich-vuelve-koke-cuti-baja.html": 1793709326000,
+   "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
+   "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/": 1793711635000,
+   "AS|https://as.com/futbol/videos/la-clara-explicacion-de-munuera-montero-a-jose-alberto-de-por-que-pito-el-penalti-a-mbappe-f202611-v/": 1793697658000,
+   "AS|https://as.com/futbol/primera/soriano-y-nsongo-derriban-la-resistencia-de-herrera-f202611-n/": 1793659158000,
+   "AS|https://as.com/futbol/primera/hierro-prolonga-el-mal-fario-de-los-delanteros-del-athletic-f202611-n/": 1793703983000,
+   "AS|https://as.com/futbol/peque-descartado-ante-el-alaves-kike-salas-duda-f202611-n/": 1793703492000,
+   "AS|https://as.com/futbol/primera/ruibal-el-otro-nueve-f202611-n/": 1793661155000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246691/orian-goren-principal-novedad-convocatoria-aston-villa.html": 1793711167000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246669/simeone-da-lista-bayern-cuti-romero.html": 1793708697000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246637/delantero-filial-asier-hierro-sufre-lesion-rodilla.html": 1793705184000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246582/jugador-atletico-admirado-alemania-koke.html": 1793701337000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261103/1004246573/kubo-no-ira-copa-asia-enero-le-da-respiro-real-sociedad.html": 1793699601000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246481/athletic-empieza-ganar-sistema.html": 1793690700000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261103/1004246503/bakero-atiza-mourinho-mirad-imagenes-esto-no-acabara.html": 1793690139000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246369/inaki-williams-real-sociedad-punto-mira.html": 1793689200000,
+   "SPORT|136034478": 1793705687000,
+   "SPORT|136032764": 1793705626000,
+   "SPORT|136028553": 1793705366000
+  },
+  "hechos": [
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/deportivo/2026/11/02/aubameyang-obra-milagro-alta-medica-listo-reaparecer-osasuna.html",
+    "medio": "MARCA",
+    "t": 1793648838000,
+    "id": "3108",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Aubameyang recibe el alta médica y entra en la convocatoria",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/",
+    "medio": "AS",
+    "t": 1793711657000,
+    "id": "3073",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Andrés Martín se rompe y estará varias semanas fuera",
+    "motivo": "",
+    "plazo": "estará varias semanas fuera",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/",
+    "medio": "AS",
+    "t": 1793711635000,
+    "id": "3108",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": [
+     2,
+     1
+    ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/soriano-y-nsongo-derriban-la-resistencia-de-herrera-f202611-n/",
+    "medio": "AS",
+    "t": 1793659158000,
+    "id": "3108",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Aubameyang reaparece en su regreso tras la lesión",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/peque-descartado-ante-el-alaves-kike-salas-duda-f202611-n/",
+    "medio": "AS",
+    "t": 1793703492000,
+    "id": "2479",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Kike Salas es duda por gestión de cargas",
+    "motivo": "gestión de cargas",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/ruibal-el-otro-nueve-f202611-n/",
+    "medio": "AS",
+    "t": 1793661155000,
+    "id": "2217",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Cucho Hernández causa baja por lesión",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246582/jugador-atletico-admirado-alemania-koke.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793701337000,
+    "id": "2326",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Koke regresa a una convocatoria tras superar sus problemas musculares",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     13
+    ]
+   }
+  ],
+  "gemini": {
+   "dia": "2026-11-03",
+   "n": 2
+  },
+  "desde": {
+   "67": {
+    "e": "ok",
+    "t": 0
+   },
+   "68": {
+    "e": "ok",
+    "t": 0
+   },
+   "74": {
+    "e": "ok",
+    "t": 0
+   },
+   "91": {
+    "e": "ok",
+    "t": 0
+   },
+   "121": {
+    "e": "ok",
+    "t": 0
+   },
+   "184": {
+    "e": "ok",
+    "t": 0
+   },
+   "230": {
+    "e": "ok",
+    "t": 0
+   },
+   "274": {
+    "e": "ok",
+    "t": 0
+   },
+   "356": {
+    "e": "injured",
+    "t": 0
+   },
+   "581": {
+    "e": "ok",
+    "t": 0
+   },
+   "644": {
+    "e": "ok",
+    "t": 0
+   },
+   "652": {
+    "e": "ok",
+    "t": 0
+   },
+   "680": {
+    "e": "ok",
+    "t": 0
+   },
+   "701": {
+    "e": "ok",
+    "t": 0
+   },
+   "886": {
+    "e": "ok",
+    "t": 0
+   },
+   "927": {
+    "e": "ok",
+    "t": 0
+   },
+   "988": {
+    "e": "ok",
+    "t": 0
+   },
+   "1029": {
+    "e": "doubtful",
+    "t": 0
+   },
+   "1033": {
+    "e": "ok",
+    "t": 0
+   },
+   "1070": {
+    "e": "injured",
+    "t": 0
+   },
+   "1147": {
+    "e": "ok",
+    "t": 0
+   },
+   "1197": {
+    "e": "ok",
+    "t": 0
+   },
+   "1210": {
+    "e": "ok",
+    "t": 0
+   },
+   "1219": {
+    "e": "ok",
+    "t": 0
+   },
+   "1337": {
+    "e": "ok",
+    "t": 0
+   },
+   "1480": {
+    "e": "ok",
+    "t": 0
+   },
+   "1535": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "1565": {
+    "e": "ok",
+    "t": 0
+   },
+   "1674": {
+    "e": "ok",
+    "t": 0
+   },
+   "1715": {
+    "e": "ok",
+    "t": 0
+   },
+   "1775": {
+    "e": "ok",
+    "t": 0
+   },
+   "1930": {
+    "e": "ok",
+    "t": 0
+   },
+   "1989": {
+    "e": "ok",
+    "t": 0
+   },
+   "1991": {
+    "e": "ok",
+    "t": 0
+   },
+   "2206": {
+    "e": "ok",
+    "t": 0
+   },
+   "2217": {
+    "e": "injured",
+    "t": 0
+   },
+   "2300": {
+    "e": "ok",
+    "t": 0
+   },
+   "2302": {
+    "e": "ok",
+    "t": 0
+   },
+   "2303": {
+    "e": "ok",
+    "t": 0
+   },
+   "2315": {
+    "e": "ok",
+    "t": 0
+   },
+   "2318": {
+    "e": "ok",
+    "t": 0
+   },
+   "2322": {
+    "e": "ok",
+    "t": 0
+   },
+   "2324": {
+    "e": "ok",
+    "t": 0
+   },
+   "2326": {
+    "e": "ok",
+    "t": 0
+   },
+   "2336": {
+    "e": "injured",
+    "t": 0
+   },
+   "2338": {
+    "e": "injured",
+    "t": 0
+   },
+   "2354": {
+    "e": "injured",
+    "t": 0
+   },
+   "2355": {
+    "e": "injured",
+    "t": 0
+   },
+   "2359": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2383": {
+    "e": "ok",
+    "t": 0
+   },
+   "2384": {
+    "e": "ok",
+    "t": 0
+   },
+   "2387": {
+    "e": "ok",
+    "t": 0
+   },
+   "2389": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2414": {
+    "e": "ok",
+    "t": 0
+   },
+   "2418": {
+    "e": "ok",
+    "t": 0
+   },
+   "2428": {
+    "e": "ok",
+    "t": 0
+   },
+   "2429": {
+    "e": "ok",
+    "t": 0
+   },
+   "2430": {
+    "e": "ok",
+    "t": 0
+   },
+   "2444": {
+    "e": "ok",
+    "t": 0
+   },
+   "2453": {
+    "e": "ok",
+    "t": 0
+   },
+   "2457": {
+    "e": "ok",
+    "t": 0
+   },
+   "2464": {
+    "e": "ok",
+    "t": 0
+   },
+   "2470": {
+    "e": "injured",
+    "t": 0
+   },
+   "2473": {
+    "e": "ok",
+    "t": 0
+   },
+   "2477": {
+    "e": "injured",
+    "t": 0
+   },
+   "2479": {
+    "e": "ok",
+    "t": 0
+   },
+   "2490": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2504": {
+    "e": "ok",
+    "t": 0
+   },
+   "2507": {
+    "e": "ok",
+    "t": 0
+   },
+   "2511": {
+    "e": "ok",
+    "t": 0
+   },
+   "2519": {
+    "e": "injured",
+    "t": 0
+   },
+   "2520": {
+    "e": "ok",
+    "t": 0
+   },
+   "2522": {
+    "e": "ok",
+    "t": 0
+   },
+   "2530": {
+    "e": "ok",
+    "t": 0
+   },
+   "2534": {
+    "e": "ok",
+    "t": 0
+   },
+   "2541": {
+    "e": "ok",
+    "t": 0
+   },
+   "2543": {
+    "e": "ok",
+    "t": 0
+   },
+   "2548": {
+    "e": "ok",
+    "t": 0
+   },
+   "2549": {
+    "e": "ok",
+    "t": 0
+   },
+   "2552": {
+    "e": "ok",
+    "t": 0
+   },
+   "2561": {
+    "e": "ok",
+    "t": 0
+   },
+   "2562": {
+    "e": "ok",
+    "t": 0
+   },
+   "2569": {
+    "e": "ok",
+    "t": 0
+   },
+   "2596": {
+    "e": "ok",
+    "t": 0
+   },
+   "2600": {
+    "e": "ok",
+    "t": 0
+   },
+   "2602": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2603": {
+    "e": "ok",
+    "t": 0
+   },
+   "2607": {
+    "e": "ok",
+    "t": 0
+   },
+   "2609": {
+    "e": "ok",
+    "t": 0
+   },
+   "2613": {
+    "e": "ok",
+    "t": 0
+   },
+   "2616": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2617": {
+    "e": "ok",
+    "t": 0
+   },
+   "2626": {
+    "e": "ok",
+    "t": 0
+   },
+   "2634": {
+    "e": "ok",
+    "t": 0
+   },
+   "2635": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2639": {
+    "e": "injured",
+    "t": 0
+   },
+   "2656": {
+    "e": "ok",
+    "t": 0
+   },
+   "2661": {
+    "e": "ok",
+    "t": 0
+   },
+   "2680": {
+    "e": "ok",
+    "t": 0
+   },
+   "2703": {
+    "e": "ok",
+    "t": 0
+   },
+   "2708": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2713": {
+    "e": "ok",
+    "t": 0
+   },
+   "2718": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2728": {
+    "e": "ok",
+    "t": 0
+   },
+   "2746": {
+    "e": "injured",
+    "t": 0
+   },
+   "2755": {
+    "e": "ok",
+    "t": 0
+   },
+   "2756": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2757": {
+    "e": "ok",
+    "t": 0
+   },
+   "2759": {
+    "e": "ok",
+    "t": 0
+   },
+   "2768": {
+    "e": "ok",
+    "t": 0
+   },
+   "2770": {
+    "e": "ok",
+    "t": 0
+   },
+   "2771": {
+    "e": "ok",
+    "t": 0
+   },
+   "2772": {
+    "e": "ok",
+    "t": 0
+   },
+   "2782": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2784": {
+    "e": "ok",
+    "t": 0
+   },
+   "2789": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2799": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2843": {
+    "e": "injured",
+    "t": 0
+   },
+   "2906": {
+    "e": "ok",
+    "t": 0
+   },
+   "2924": {
+    "e": "injured",
+    "t": 0
+   },
+   "2929": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "2932": {
+    "e": "ok",
+    "t": 0
+   },
+   "2933": {
+    "e": "ok",
+    "t": 0
+   },
+   "2934": {
+    "e": "ok",
+    "t": 0
+   },
+   "2938": {
+    "e": "ok",
+    "t": 0
+   },
+   "2939": {
+    "e": "ok",
+    "t": 0
+   },
+   "2962": {
+    "e": "ok",
+    "t": 0
+   },
+   "2973": {
+    "e": "ok",
+    "t": 0
+   },
+   "2995": {
+    "e": "ok",
+    "t": 0
+   },
+   "3002": {
+    "e": "ok",
+    "t": 0
+   },
+   "3028": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "3040": {
+    "e": "ok",
+    "t": 0
+   },
+   "3045": {
+    "e": "ok",
+    "t": 0
+   },
+   "3065": {
+    "e": "ok",
+    "t": 0
+   },
+   "3067": {
+    "e": "out_of_league",
+    "t": 0
+   },
+   "3068": {
+    "e": "ok",
+    "t": 0
+   },
+   "3069": {
+    "e": "ok",
+    "t": 0
+   },
+   "3072": {
+    "e": "ok",
+    "t": 0
+   },
+   "3073": {
+    "e": "injured",
+    "t": 0
+   },
+   "3074": {
+    "e": "ok",
+    "t": 0
+   },
+   "3075": {
+    "e": "ok",
+    "t": 0
+   },
+   "3076": {
+    "e": "ok",
+    "t": 0
+   },
+   "3077": {
+    "e": "ok",
+    "t": 0
+   },
+   "3079": {
+    "e": "ok",
+    "t": 0
+   },
+   "3080": {
+    "e": "ok",
+    "t": 0
+   },
+   "3081": {
+    "e": "ok",
+    "t": 0
+   },
+   "3082": {
+    "e": "ok",
+    "t": 0
+   },
+   "3083": {
+    "e": "ok",
+    "t": 0
+   },
+   "3084": {
+    "e": "ok",
+    "t": 0
+   },
+   "3085": {
+    "e": "ok",
+    "t": 0
+   },
+   "3086": {
+    "e": "ok",
+    "t": 0
+   },
+   "3087": {
+    "e": "ok",
+    "t": 0
+   },
+   "3088": {
+    "e": "ok",
+    "t": 0
+   },
+   "3089": {
+    "e": "ok",
+    "t": 0
+   },
+   "3090": {
+    "e": "ok",
+    "t": 0
+   },
+   "3091": {
+    "e": "ok",
+    "t": 0
+   },
+   "3092": {
+    "e": "injured",
+    "t": 0
+   },
+   "3099": {
+    "e": "ok",
+    "t": 0
+   },
+   "3100": {
+    "e": "ok",
+    "t": 0
+   },
+   "3101": {
+    "e": "ok",
+    "t": 0
+   },
+   "3102": {
+    "e": "suspended",
+    "t": 0
+   },
+   "3103": {
+    "e": "ok",
+    "t": 0
+   },
+   "3104": {
+    "e": "ok",
+    "t": 0
+   },
+   "3106": {
+    "e": "ok",
+    "t": 0
+   },
+   "3107": {
+    "e": "ok",
+    "t": 0
+   },
+   "3108": {
+    "e": "ok",
+    "t": 0
+   },
+   "3109": {
+    "e": "ok",
+    "t": 0
+   },
+   "3114": {
+    "e": "ok",
+    "t": 0
+   },
+   "3116": {
+    "e": "ok",
+    "t": 0
+   },
+   "3120": {
+    "e": "ok",
+    "t": 0
+   },
+   "3123": {
+    "e": "ok",
+    "t": 0
+   },
+   "3125": {
+    "e": "ok",
+    "t": 0
+   },
+   "3128": {
+    "e": "ok",
+    "t": 0
+   },
+   "3130": {
+    "e": "ok",
+    "t": 0
+   },
+   "3133": {
+    "e": "ok",
+    "t": 0
+   },
+   "3135": {
+    "e": "ok",
+    "t": 0
+   },
+   "3137": {
+    "e": "ok",
+    "t": 0
+   },
+   "3143": {
+    "e": "ok",
+    "t": 0
+   },
+   "3144": {
+    "e": "injured",
+    "t": 0
+   },
+   "3147": {
+    "e": "ok",
+    "t": 0
+   },
+   "3152": {
+    "e": "ok",
+    "t": 0
+   },
+   "3155": {
+    "e": "ok",
+    "t": 0
+   },
+   "3161": {
+    "e": "ok",
+    "t": 0
+   },
+   "3164": {
+    "e": "injured",
+    "t": 0
+   },
+   "3182": {
+    "e": "injured",
+    "t": 0
+   },
+   "3193": {
+    "e": "ok",
+    "t": 0
+   },
+   "3197": {
+    "e": "ok",
+    "t": 0
+   },
+   "3207": {
+    "e": "injured",
+    "t": 0
+   },
+   "3208": {
+    "e": "ok",
+    "t": 0
+   },
+   "3209": {
+    "e": "ok",
+    "t": 0
+   },
+   "3210": {
+    "e": "ok",
+    "t": 0
+   },
+   "3230": {
+    "e": "ok",
+    "t": 0
+   },
+   "3231": {
+    "e": "ok",
+    "t": 0
+   },
+   "3237": {
+    "e": "ok",
+    "t": 0
+   },
+   "3255": {
+    "e": "ok",
+    "t": 0
+   },
+   "3258": {
+    "e": "ok",
+    "t": 0
+   },
+   "3262": {
+    "e": "ok",
+    "t": 0
+   },
+   "3263": {
+    "e": "ok",
+    "t": 0
+   },
+   "3265": {
+    "e": "ok",
+    "t": 0
+   },
+   "3267": {
+    "e": "ok",
+    "t": 0
+   },
+   "3284": {
+    "e": "ok",
+    "t": 0
+   }
+  }
+ }
 }
