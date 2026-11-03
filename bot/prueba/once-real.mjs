@@ -4,6 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { semanaActual, jugadores as pedirJugadores, statsSemana, equiposDe } from '../lib/laliga.mjs';
 import { onceProbable } from '../lib/ff.mjs';
+const sinCasarLog = [];
 import { probabilidades, elegirOnce } from '../lib/onces.mjs';
 import { generar as caidas } from '../tipos/caidas.mjs';
 
