@@ -555,10 +555,12 @@ function avanzadasDemo(D) {
     sofa[j.id] = { nota: +(6.4 + az() * 1.1).toFixed(2), min, pj: Math.round(min / 80), tit: Math.round(min / 95), notas: Array.from({ length: 5 }, () => +(6 + az() * 2).toFixed(1)), entradas: Math.round(az() * 15), intercep: Math.round(az() * 10), recup: Math.round(az() * 30), regates: Math.round(az() * 12), paradas: j.pos === 1 ? Math.round(10 + az() * 20) : 0 };
   }
   for (const id of Object.keys(D.equipos || {})) equipos[id] = { pj: 9, xg: +(0.9 + az()).toFixed(2), xga: +(0.9 + az()).toFixed(2), xg5: +(0.8 + az() * 1.2).toFixed(2), xga5: +(0.8 + az() * 1.2).toFixed(2) };
-  // unos cuantos con Champions, Europa League o Copa pegados a la próxima jornada (para ver la rotación)
+  // unos cuantos con Champions, Europa League o Copa pegados a la próxima jornada (para ver la rotación). Cada club, con
+  // la competición que le da EUROPA en clubes.js (ids de la liga de ejemplo: 15 Madrid, 4 Barça, 2 Atlético, 16 Real
+  // Sociedad, 9 Getafe, 17 Sevilla)
   const calendario = {};
   const prox = (id) => (D.partidos || []).filter((p) => (p.localId === id || p.visitanteId === id) && p.fecha > Date.now() - 2 * 3600e3).sort((a, b) => a.fecha - b.fecha)[0];
-  for (const [id, comp, dias, rival] of [['15', 'UEFA Champions League', -3, 'Liverpool'], ['3', 'UEFA Champions League', -3, 'Inter'], ['2', 'UEFA Champions League', 3, 'Benfica'], ['22', 'UEFA Europa League', -2, 'Ajax'], ['4', 'UEFA Conference League', 4, 'Fiorentina'], ['17', 'Copa del Rey', 3, 'CD Ebro']]) {
+  for (const [id, comp, dias, rival] of [['15', 'UEFA Champions League', -3, 'Liverpool'], ['4', 'UEFA Champions League', -3, 'Inter'], ['2', 'UEFA Champions League', 3, 'Benfica'], ['16', 'UEFA Europa League', -2, 'Ajax'], ['9', 'UEFA Conference League', 4, 'Fiorentina'], ['17', 'Copa del Rey', 3, 'CD Ebro']]) {
     const p = prox(id);
     if (p) calendario[id] = [{ t: p.fecha + dias * DIA, comp, liga: false, rival, casa: dias > 0 }, { t: p.fecha, comp: 'LaLiga', liga: true, rival: '', casa: p.localId === id }];
   }

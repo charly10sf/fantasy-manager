@@ -1701,7 +1701,9 @@ async function cargarDetalle(pid) {
     const j = S.M.J(pid);
     let x = (+pid || 7) * 7;
     const azar = () => { x = (x * 9301 + 49297) % 233280; return x / 233280; };
-    det = { stats: Array.from({ length: 9 }, (_, i) => { const min = azar() < 0.15 ? 0 : Math.round(45 + azar() * 45); return { n: i + 1, pts: min ? Math.round(j.media * (0.3 + azar() * 1.4)) : 0, min, gol: j.pos === 4 && azar() < 0.4 ? 1 : 0, asis: azar() < 0.15 ? 1 : 0, am: azar() < 0.12 ? 1 : 0, roja: 0 }; }), valores: null };
+    // los puntos de cada jornada, los de la liga de ejemplo (j.semanas): si no, las barras no casaban con sus puntos
+    const sem = j.semanas || [];
+    det = { stats: sem.map((w) => { const min = w.pts === 0 && azar() < 0.6 ? 0 : Math.round(45 + azar() * 45); return { n: w.n, pts: w.pts, min, gol: min && j.pos === 4 && w.pts >= 6 && azar() < 0.6 ? 1 : 0, asis: min && w.pts >= 5 && azar() < 0.25 ? 1 : 0, am: min && azar() < 0.12 ? 1 : 0, roja: 0 }; }), valores: null };
   } else {
     try {
       const d = ya && !jugando && Date.now() - ya.t < 6 * 3600e3 && !ya.error ? ya : detalleJugador(await api.jugador(pid, S.D.liga.id));
@@ -1954,10 +1956,10 @@ document.addEventListener('visibilitychange', () => {
 // por si llegó en mal momento (cargando la liga, la IA trabajando): se vuelve a mirar cada poco
 setInterval(() => { if (S.webNueva && sePuedeRecargar()) ponerWebNueva(); }, 10000);
 window.progresoApp = (pct, estado) => {
-  if (pct < 0) tostada(`No se ha podido bajar: ${estado}`, 5000);
+  if (pct < 0) tostada(`No se ha podido descargar: ${estado}`, 5000);
   else if (estado === 'permiso') tostada('Dale permiso para instalar y vuelve a pulsar Actualizar', 6000);
   else if (estado === 'instalar') tostada('Instalando…');
-  else tostada(`Bajando la versión nueva… ${pct} %`, 1500);
+  else tostada(`Descargando la versión nueva… ${pct} %`, 1500);
 };
 window.permisoAvisos = (ok) => {
   if (!ok) tostada('Sin permiso de notificaciones no te llegan los avisos ni el plan con la app cerrada', 5000);
@@ -2380,7 +2382,7 @@ document.addEventListener('click', async (ev) => {
       if (S.webNuevaWeb) recargarWeb(); else tostada(`Tienes la última: la ${VERSION}`);
       break;
     }
-    case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Bajando la versión nueva…'); } break;
+    case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Descargando la versión nueva…'); } break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarChat': borrarConversacion(); pintar(); break;
     case 'nuevoChat':
@@ -2576,6 +2578,8 @@ const T_BASICO = () => tourBasico();
 function pasosTour() {
   const demo = enDemo(), conClave = hayClave();
   const liga = S.D && S.D.liga && !demo ? S.D.liga.nombre : 'tu liga';
+  // en el ordenador, Pregunta está en la barra de la izquierda, no arriba
+  const rojo = V.ancho() ? 'el botón rojo de la barra de la izquierda' : 'el botón rojo de arriba';
   return [
     { logo: true, b: true, elegir: true, t: 'Bienvenido a Fantasy Manager', x: `Cada día la app te dice qué hacer en ${liga}: a quién vender, a quién clausular y cuánto pujar. ¿Quieres ver lo básico o todo?` },
     { v: 'hoy', sel: '.marcador', b: true, t: 'Tu equipo de un vistazo', x: 'Tu saldo, lo que puedes gastar de verdad (contando la deuda que te dejan y tus pujas), lo que vale tu equipo y tu puesto. Tócalo para ver el detalle.' },
@@ -2584,7 +2588,7 @@ function pasosTour() {
     { v: 'hoy', sel: '.plan-cab', b: true, con: ['.plan-sit', '.plan-titular'], si: () => !!$('.plan-cab'), t: 'Tu plan de hoy', x: 'Lo que toca hacer hoy, en orden y con el saldo que te queda tras cada paso. Cuando lo hagas en LaLiga, el paso se tacha solo (o lo marcas con «Hecho»).' },
     conClave
       ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
-      : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: 'Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», el botón rojo de arriba.' },
+      : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: `Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», ${rojo}.` },
     { v: 'hoy', sel: '#bRefrescar', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
     { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta). También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
@@ -2593,7 +2597,7 @@ function pasosTour() {
     { v: 'rivales', sel: '.nav [data-ir="rivales"]', t: 'Rivales', x: 'Las cláusulas de los demás que te llegan con tu dinero, cuándo se abren las que están protegidas y lo que ha hecho cada uno.' },
     { v: 'mercado', sel: '.nav [data-ir="mercado"]', t: 'Mercado', x: 'Cuánto pujar por cada libre según lo que se paga en tu liga, qué ofrecer a otro mánager para que te venda y quién sube y quién baja.' },
     { v: 'clubes', sel: '.nav [data-ir="clubes"]', t: 'Clubes', x: 'Los 20 de LaLiga por la clasificación. En cada uno, su próximo partido, el once probable en el campo, las bajas, sus partidos y la plantilla con lo que vale cada jugador y de quién es en tu liga.' },
-    { v: 'ia', sel: '#bPregunta', b: true, t: 'Pregunta', x: conClave ? 'El botón rojo de arriba, siempre a mano: pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.' : 'El botón rojo de arriba: aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.' },
+    { v: 'ia', sel: '#bPregunta', b: true, t: 'Pregunta', x: conClave ? `${rojo[0].toUpperCase()}${rojo.slice(1)}, siempre a mano: pregúntale a la IA lo que quieras de tu liga, por ejemplo «¿clausulo a este o espero?». También le puedes mandar capturas.` : `${rojo[0].toUpperCase()}${rojo.slice(1)}: aquí le preguntas a la IA lo que quieras de tu liga, también con capturas. Necesita la clave gratis de Google, y aquí mismo te explica cómo sacarla.` },
     demo
       ? { v: 'hoy', b: true, t: 'Esto era la liga de ejemplo', x: 'Con datos inventados. Cuando quieras, entra con tu cuenta y lo tendrás con tu liga. El tutorial queda en Ajustes.', lista: itemsEmpezar, fin: 'Seguir mirando' }
       : { v: 'hoy', b: true, t: 'Para empezar', x: () => `${itemsEmpezar().some((y) => !y.ok) ? 'Esto se hace una vez (si no, lo tienes en Ajustes). Después, empieza por el paso 1 de tu plan de hoy.' : 'Ya lo tienes todo. Empieza por el paso 1 de tu plan de hoy.'} ${T_BASICO() ? 'El tutorial entero, con el resto de pestañas, está en Ajustes.' : 'El tutorial queda en Ajustes por si quieres repetirlo.'}`, lista: itemsEmpezar, fin: 'Ver mi plan', finAccion: 'plan' },

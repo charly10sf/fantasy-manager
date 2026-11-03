@@ -14,8 +14,9 @@ export const entero = (v) => NF0.format(Math.round(num(v)));
 /** 12.403.551 → "12,40 M"; 850.000 → "850 mil"; 4.300 → "4.300 €" */
 export function eur(v, { dec = 2, signo = false } = {}) {
   const x = num(v), a = Math.abs(x), s = signo && x > 0 ? '+' : x < 0 ? '−' : '';
-  if (a >= 1e6) return `${s}${(dec === 1 ? NF1 : dec === 0 ? NF0 : NF2).format(a / 1e6)} M`;
-  if (a >= 1e3) return `${s}${NF0.format(Math.round(a / 1e3))} mil`;
+  // de 999.500 para arriba ya son millones: si no, salía «1000 mil»
+  if (a >= 999500) return `${s}${(dec === 1 ? NF1 : dec === 0 ? NF0 : NF2).format(a / 1e6)} M`;
+  if (a >= 999.5) return `${s}${NF0.format(Math.round(a / 1e3))} mil`;
   return `${s}${NF0.format(a)} €`;
 }
 /** 12.403.551 → "12.403.551 €" */
@@ -23,8 +24,8 @@ export const eurLargo = (v) => `${num(v) < 0 ? '−' : ''}${NF0.format(Math.abs(
 /** el número grande partido: { ent: "12", dec: ",40", uni: "M" } */
 export function eurPartido(v) {
   const x = num(v), a = Math.abs(x), neg = x < 0 ? '−' : '';
-  if (a >= 1e6) { const [e, d] = NF2.format(a / 1e6).split(','); return { ent: neg + e, dec: ',' + d, uni: 'M' }; }
-  if (a >= 1e3) return { ent: neg + NF0.format(Math.round(a / 1e3)), dec: '', uni: 'mil' };
+  if (a >= 999500) { const [e, d] = NF2.format(a / 1e6).split(','); return { ent: neg + e, dec: ',' + d, uni: 'M' }; }
+  if (a >= 999.5) return { ent: neg + NF0.format(Math.round(a / 1e3)), dec: '', uni: 'mil' };
   return { ent: neg + NF0.format(a), dec: '', uni: '€' };
 }
 export const pct = (v, dec = 1, signo = true) => (Number.isFinite(v) ? `${signo && v > 0 ? '+' : v < 0 ? '−' : ''}${(dec === 0 ? NF0 : dec === 2 ? NF2 : NF1).format(Math.abs(v))} %` : '—');

@@ -1,6 +1,6 @@
 /* Una liga de ejemplo para ver la app sin entrar (y para probarla fuera del móvil). Los jugadores son de
    LaLiga, pero los valores, cláusulas, puntos y movimientos son inventados. */
-import { DIA, HORA, diaDe } from './util.js';
+import { DIA, HORA, diaDe, otroDia } from './util.js';
 
 const EQUIPOS = {
   15: ['Real Madrid', 'RMA'], 4: ['Barcelona', 'BAR'], 2: ['Atlético', 'ATM'], 3: ['Athletic', 'ATH'], 20: ['Villarreal', 'VIL'],
@@ -92,7 +92,9 @@ export function demo() {
   const yo = clasif.find((e) => e.esYo);
 
   const libres = ids.slice(k);
-  const fin = ahora + (6 + r() * 10) * HORA;
+  // el mercado cambia a las 00:15 de Madrid, como el de verdad (antes, a una hora al azar)
+  const fin = cambioMercado(ahora);
+  r(); // (el azar que usaba antes se sigue gastando: así el resto de la liga de ejemplo sale igual)
   const mercado = libres.slice(0, 12).map((pid, i) => ({
     id: 'm' + i, pid, tipo: 'liga', precio: maestro[pid].valor, cierra: fin, pujas: Math.floor(r() * 4), ofertas: 0,
     vendedorTeamId: '', vendedor: '', miPuja: i === 2 ? Math.round(maestro[pid].valor * 1.05) : null, clausula: null,
@@ -222,8 +224,22 @@ export function demo() {
     tendencias[m.pid] = { d1: Math.round(j.valor * sube), p1: sube * 100, d7: null, p7: null, ffValor: j.valor };
     m.pujas = i % 2;
   });
+  // lo de hoy sale del histórico (valor de ahora menos el de ayer): si no, Hoy y Equipo daban cifras distintas
+  for (const pid of Object.keys(maestro)) {
+    const s = H.v[pid], ayer = s && s.length ? s[s.length - 1][1] : 0;
+    if (!ayer) continue;
+    const d1 = maestro[pid].valor - ayer;
+    tendencias[pid] = { ...tendencias[pid], d1, p1: (maestro[pid].valor / ayer - 1) * 100, d7: null, p7: null };
+  }
   H.mov.push({ t: ahora - 9 * HORA, teamId: clasif[3].teamId, tipo: 'blinda', pid: plantillas[clasif[3].teamId][0].pid, de: 14e6, a: 21e6 });
   return { D, H };
+}
+
+/** el próximo cambio de mercado: las 00:15 en Madrid (España va a horas enteras de UTC: +1 o +2) */
+function cambioMercado(ahora) {
+  const a0015 = (d) => { const t = Date.parse(`${d}T00:15:00Z`); return diaDe(t - 2 * HORA) === d ? t - 2 * HORA : t - HORA; };
+  const hoy = a0015(diaDe(ahora));
+  return hoy > ahora ? hoy : a0015(otroDia(diaDe(ahora), 1));
 }
 
 /** el próximo sábado a las 14:00 en Madrid (si ya ha pasado la de esta semana, el de la siguiente) */

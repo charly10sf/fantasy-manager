@@ -207,7 +207,9 @@ function colocarTour() {
   if (abajo) { top = fb + HUECO; if (top + hc > B.suelo) { top = Math.max(B.techo, B.suelo - hc); fb = Math.max(ft + 24, top - HUECO); } }
   else { top = ft - HUECO - hc; if (top < B.techo) { top = B.techo; ft = Math.min(fb - 24, top + hc + HUECO); } }
   foco.classList.remove('sin');
-  foco.style.cssText = `left:${(r.left - MARGEN).toFixed(1)}px;top:${ft.toFixed(1)}px;width:${(r.width + 2 * MARGEN).toFixed(1)}px;height:${(fb - ft).toFixed(1)}px`;
+  // de lado, dentro de la pantalla (con lo que va de borde a borde, como «Lo que viene», se salía por los dos lados)
+  const fl = Math.max(1, r.left - MARGEN), fr = Math.min(dw - 1, r.right + MARGEN);
+  foco.style.cssText = `left:${fl.toFixed(1)}px;top:${ft.toFixed(1)}px;width:${Math.max(24, fr - fl).toFixed(1)}px;height:${(fb - ft).toFixed(1)}px`;
   caja.classList.remove('centro');
   caja.classList.toggle('abajo', abajo);
   caja.classList.toggle('arriba', !abajo);

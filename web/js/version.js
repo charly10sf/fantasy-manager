@@ -150,7 +150,7 @@ export const NOVEDADES = [
   {
     v: '0.6.11b', f: '2026-11-01', h: '13:55', t: 'La portada de la web',
     cosas: [
-      { para: 'dueño', tipo: 'mejora', d: 'tarjeta', t: 'Portada nueva, sin dar vueltas', x: 'La pantalla de antes de entrar, en la web: en un Android, el botón de bajar la app va primero y lo del código queda plegado; en un iPhone, la liga de ejemplo antes del paso del ordenador; los pasos de F12 solo salen en el ordenador. Debajo, tres móviles dibujados con el plan, las cláusulas y la IA. Y al compartir el enlace sale imagen y descripción.', ir: { v: 'hoy' } },
+      { para: 'dueño', tipo: 'mejora', d: 'tarjeta', t: 'Portada nueva, sin dar vueltas', x: 'La pantalla de antes de entrar, en la web: en un Android, el botón de descargar la app va primero y lo del código queda plegado; en un iPhone, la liga de ejemplo antes del paso del ordenador; los pasos de F12 solo salen en el ordenador. Debajo, tres móviles dibujados con el plan, las cláusulas y la IA. Y al compartir el enlace sale imagen y descripción.', ir: { v: 'hoy' } },
     ],
   },
   {
@@ -633,7 +633,7 @@ export const NOVEDADES = [
     cosas: [
       { tipo: 'arreglo', d: 'campana', t: 'El interruptor de los avisos', x: 'En Ajustes, tocar el interruptor de «Avisos» abría «Avisar de un fallo» en vez de encenderlos o apagarlos. Ya funciona: actívalos para que te lleguen las cláusulas que se abren y el cambio de mercado.' },
       { tipo: 'arreglo', d: 'plan', t: 'Cláusulas con el dinero que tienes', x: 'El plan automático sumaba al saldo lo que te mandaba poner en venta y con eso te proponía clausular «ahora», cuando ese dinero no entra hasta que aceptas la oferta en el cambio de mercado. Ahora las cláusulas de ahora se pagan con lo que tienes ya, y si te llega solo con lo de las ventas te lo dice. Tampoco te propone subir una cláusula si no tienes el dinero.', ir: { v: 'hoy' } },
-      { tipo: 'arreglo', d: 'camiseta', t: 'Puntos esperados más justos', x: 'A los jugadores de los que aún no se había bajado la ficha se les restaba un 30 % de sus puntos esperados por error, así que fichajes buenos salían como que no entraban en tu once.' },
+      { tipo: 'arreglo', d: 'camiseta', t: 'Puntos esperados más justos', x: 'A los jugadores de los que aún no se había descargado la ficha se les restaba un 30 % de sus puntos esperados por error, así que fichajes buenos salían como que no entraban en tu once.' },
       { tipo: 'arreglo', d: 'ia', t: 'La IA no se queda sin modelos por nada', x: 'Hacer dos preguntas seguidas, o mandar una captura que Google no puede leer, daba por gastado el modelo bueno hasta el día siguiente. Ahora solo pasa cuando de verdad se acaba el cupo del día, y te dice a qué hora vuelve (las 8:00 o las 9:00, según el cambio de hora).', ir: { v: 'ia' } },
       { tipo: 'arreglo', d: 'nota', t: 'Lo que escribes no se borra', x: 'Si llegaba el plan o se ponía al día la liga mientras escribías una pregunta, la caja se quedaba vacía. Además, la clave de la IA ahora se prueba antes de guardarla y, si pegas una encima de otra, vale la última.', ir: { v: 'ia' } },
       { tipo: 'arreglo', d: 'arreglo', t: 'Más arreglos', x: 'Actualizar con un plan en marcha ya no pide otro a la vez. Si LaLiga falla con la plantilla de un equipo, se usa la de la última vez en vez de desaparecer (y de avisarte de que se han ido todos tus jugadores). Sin calendario, se usa el de la última vez, para no dar las cláusulas por abiertas durante el cierre. Cambiar de liga mientras carga ya no mezcla los datos de las dos. Lo marcado como «Hecho» va por liga. La liga de ejemplo ya no se queda vieja: su jornada es siempre la del próximo sábado. Una nota tuya del chat como «he clausulado a X» ya no lo da por vendido.' },
@@ -682,7 +682,7 @@ export const NOVEDADES = [
   {
     v: '0.4.4b', f: '2026-10-23', h: '12:03', t: 'La web, desde el móvil',
     cosas: [
-      { tipo: 'mejora', d: 'conexion', t: 'Desde un Android, la app', x: 'Si alguien abre la web desde un móvil Android, lo primero que ve es «Estás en un Android: instala la app», con el botón para bajarla, en vez de que le pida un código. Desde un iPhone se le explica que la primera vez hay que entrar desde un ordenador.' },
+      { tipo: 'mejora', d: 'conexion', t: 'Desde un Android, la app', x: 'Si alguien abre la web desde un móvil Android, lo primero que ve es «Estás en un Android: instala la app», con el botón para descargarla, en vez de que le pida un código. Desde un iPhone se le explica que la primera vez hay que entrar desde un ordenador.' },
     ],
   },
   {
@@ -717,7 +717,7 @@ export const NOVEDADES = [
   {
     v: '0.4.2', f: '2026-10-23', h: '04:28', t: 'Se pone al día sola',
     cosas: [
-      { tipo: 'nuevo', d: 'versiones', t: 'Los arreglos llegan solos', x: 'Al abrir la app (y cada rato mientras la usas, y aunque esté cerrada hasta la hora de apertura) mira si hay arreglos nuevos, se los baja y se los pone sin reinstalar nada: nada más abrirla, al volver a ella o con el botón «Ponerla» si estabas en medio de algo. Si un arreglo saliera mal, vuelve sola a la versión de antes.' },
+      { tipo: 'nuevo', d: 'versiones', t: 'Los arreglos llegan solos', x: 'Al abrir la app (y cada rato mientras la usas, y aunque esté cerrada hasta la hora de apertura) mira si hay arreglos nuevos, se los descarga y se los pone sin reinstalar nada: nada más abrirla, al volver a ella o con el botón «Ponerla» si estabas en medio de algo. Si un arreglo saliera mal, vuelve sola a la versión de antes.' },
       { tipo: 'mejora', d: 'campana', t: 'Actualizar también con la app cerrada', x: 'Solo cuando cambie la parte de Android hará falta instalar una versión nueva. Su botón sale arriba y también en la cuenta atrás y en la pantalla de minutos agotados. En Ajustes, «Buscar nueva» mira las dos cosas.' },
     ],
   },
@@ -787,7 +787,7 @@ export const NOVEDADES = [
   {
     v: '0.3.4', f: '2026-10-22', h: '19:34', t: 'La carga, por fin, y tiempo para los viciados',
     cosas: [
-      { tipo: 'mejora', d: 'camiseta', t: 'Pantalla de carga nueva', x: 'Al abrir la app sale el logo mientras arranca (se acabó el «0 de 10» que no se movía: eso era la pantalla de arranque, que se quedaba ahí hasta que salía la app). Cuando de verdad hay que bajar toda la liga, la camiseta se llena de rojo con la lista de los 10 pasos: los hechos con ✓, el de ahora girando (con los segundos si tarda) y los que faltan. En el ordenador, la camiseta y el título a la izquierda y los pasos a la derecha.' },
+      { tipo: 'mejora', d: 'camiseta', t: 'Pantalla de carga nueva', x: 'Al abrir la app sale el logo mientras arranca (se acabó el «0 de 10» que no se movía: eso era la pantalla de arranque, que se quedaba ahí hasta que salía la app). Cuando de verdad hay que descargar toda la liga, la camiseta se llena de rojo con la lista de los 10 pasos: los hechos con ✓, el de ahora girando (con los segundos si tarda) y los que faltan. En el ordenador, la camiseta y el título a la izquierda y los pasos a la derecha.' },
       { tipo: 'nuevo', d: 'noche', t: 'Límite de uso al día', x: 'Cada equipo de la liga puede tener un máximo de minutos al día con la app abierta. Cinco minutos antes avisa, y al pasarse sale «Se acabó por hoy» hasta las 00:00 (los avisos siguen llegando). En Ajustes se ve cuánto llevas. Son 15 minutos al día para todos menos para el admin, que los puede cambiar sin sacar versión.' },
       { tipo: 'mejora', d: 'cara', t: 'Tu equipo, el de tu cuenta', x: 'Ya no se elige el equipo en Ajustes: al entrar con tu cuenta de LaLiga, la app te lleva siempre a tu equipo de esa liga. Si estás en varias ligas, en Ajustes sigues pudiendo cambiar de liga.' },
       { tipo: 'arreglo', d: 'campo', t: 'El ordenador, a todo lo ancho', x: 'La columna de la derecha (el marcador, las cláusulas a tiro, los movimientos) iba en una caja con su propio scroll y se cortaba por abajo, los avisos de arriba se salían por el lado y en pantallas anchas quedaba un hueco negro a la derecha. Ahora todo baja con la página y ocupa el ancho entero.' },
@@ -876,7 +876,7 @@ export const NOVEDADES = [
   {
     v: '0.2.0', f: '2026-10-21', h: '02:56', t: 'Cuánto tiene cada rival',
     cosas: [
-      { tipo: 'nuevo', d: 'dinero', t: 'El dinero de cada rival', x: 'Si LaLiga lo da, exacto. Si no, se calcula con todos los movimientos de la liga desde el principio: como empezasteis con lo mismo, su saldo es el tuyo menos lo que has movido tú más lo que ha movido él (compras, ventas, cláusulas, blindajes y premios por jornada). La recompensa diaria no sale en los movimientos, por eso va con un margen. La primera vez la carga tarda un poco más: baja la actividad entera.', ir: { v: 'rivales' } },
+      { tipo: 'nuevo', d: 'dinero', t: 'El dinero de cada rival', x: 'Si LaLiga lo da, exacto. Si no, se calcula con todos los movimientos de la liga desde el principio: como empezasteis con lo mismo, su saldo es el tuyo menos lo que has movido tú más lo que ha movido él (compras, ventas, cláusulas, blindajes y premios por jornada). La recompensa diaria no sale en los movimientos, por eso va con un margen. La primera vez la carga tarda un poco más: descarga la actividad entera.', ir: { v: 'rivales' } },
       { tipo: 'nuevo', d: 'escudo', t: 'Quién puede quitarte a cada uno', x: 'En la ficha de tus jugadores con la cláusula abierta o a punto: a qué rivales les sobra el dinero y a cuáles les llega justo. Y el blindaje justo: hasta dónde subirla para que no le llegue a nadie y lo que cuesta (subir X cuesta X/2). Si no compensa, te lo dice.' },
       { tipo: 'nuevo', d: 'oferta', t: 'Pujas a la medida de tu liga', x: 'Cada compra al mercado de las últimas semanas, frente a lo que valía el jugador ese día: lo que se paga de mediana en tu liga, por los caros y por los baratos, y lo que paga cada rival. La puja que te propongo sale de ahí y de lo que te interesa el jugador, sin pasarse de lo que te aporta.', ir: { v: 'mercado' } },
       { tipo: 'nuevo', d: 'campo', t: 'Puntos esperados por partes', x: 'Como puntúa LaLiga Fantasy: minutos, gol con su xG, asistencia con su xA, portería a cero, goles encajados, paradas, tarjetas y el resto (la nota de DAZN, recuperaciones, tiros…). La titularidad junta el once probable, sus últimos partidos y lo que ha jugado en la temporada. En la ficha, con una barra por cada parte.' },
