@@ -15,7 +15,7 @@ jobs:
       - run: npm ci --prefix bot --no-audit --no-fund
       - run: node bot/prueba/pulir-ejemplo.mjs | tail -1
       - run: |
-          for t in final resumen caidas previa novedades; do
+          for t in caidas novedades; do
             echo "@@@@@@@@ $t"
             node bot/ejecutar.mjs --modo=simulacro --tipos=$t --ventanas=0 --pulir=1 | grep -vE "^\s*\(dazn\)|^#" || true
           done
