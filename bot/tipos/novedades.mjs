@@ -89,8 +89,9 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
         mediaT, { t: `❌ Baja Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     } else {
       // vuelve: la lesión de la que viene, si está en la lista («Deja atrás la lesión en el sóleo»)
-      const les = p && p.lesion ? lesionTxt(p) : '';
-      const art = /^(lesi[oó]n|rotura|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n)/.test(les) ? 'la ' : '';
+      // solo si es una lesión de verdad («trabajo al margen» o «descanso» no se dejan atrás)
+      const les = p && p.lesion && /(lesi[oó]n|rotura|molestia|sobrecarga|contusi[oó]n|esguince|fractura|elongaci[oó]n|tendinitis|luxaci[oó]n|distensi[oó]n|edema|fascitis|pubalgia|golpe|problema|dolencia|tobillo|rodilla|isquio|gemelo|aductor|s[oó]leo|cu[aá]driceps|hombro|espalda)/i.test(p.lesion) ? lesionTxt(p) : '';
+      const art = /^(lesi[oó]n|rotura|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n|luxaci[oó]n|pubalgia)/.test(les) ? 'la ' : /^(golpe|esguince|edema|problema)/.test(les) ? 'el ' : '';
       const tras = les ? ` deja atrás ${art}${les}` : e.antes === 'injured' ? ' ya está recuperado' : e.antes === 'suspended' ? ' ya ha cumplido la sanción' : ' deja de estar en duda';
       cab = `✅ ${e.nombre} vuelve a estar disponible`;
       ideas = [{ t: `‼️ ${quien}${tras}`, prio: 8 }, e.media >= 3 ? { t: `📊 Llega con ${fmt(e.media)} puntos de media`, prio: 5 } : null,
