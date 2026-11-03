@@ -1,0 +1,195 @@
+# Bot de X · modo simulacro · forzado
+# Semana 12 (isLive=false) · siguiente 13 · 10 partidos, 0 acabados · 868 jugadores
+
+## previa: 19 tweets
+   tarjeta previa-113: válida · 267831 bytes
+
+--- previa|113 · peso 268 · válido · PUBLICARÍA con 1 imagen(es)
+🗓️ Posibles onces fantasy del Sevilla-Alavés (jornada 12)
+
+⁉️ Kochorashvili (Sevilla), en el aire: 34 %
+⁉️ Robbie Ure (Sevilla), en el aire: 39 %
+⁉️ T. Martínez (Alavés), en el aire: 44 %
+
+❌ No estarán Miguel Sierra en el Sevilla; Mikel Rodriguez en el Alavés
+   tarjeta previa-116: válida · 279914 bytes
+
+--- previa|116 · peso 207 · válido · PUBLICARÍA con 1 imagen(es)
+🗓️ Posibles onces fantasy del Málaga-Racing (jornada 12)
+
+⁉️ Almeida (Racing), en el aire: 33 %
+⁉️ Iker Luque (Racing), en el aire: 35 %
+⁉️ Aznou (Málaga), en principio juega, pero no es seguro: 50 %
+   tarjeta previa-117: válida · 275774 bytes
+
+--- previa|117 · peso 248 · válido · PUBLICARÍA con 1 imagen(es)
+🗓️ Posibles onces fantasy del Espanyol-Deportivo (jornada 12)
+
+⁉️ Mella (Deportivo), en el aire: 31 %
+⁉️ Dolan (Espanyol), en el aire: 34 %
+⁉️ Q. Hartman (Espanyol), en el aire: 35 %
+
+❌ No estarán Urko, Riedel, Cala y Hinojo en el Espanyol
+   tarjeta previa-115: válida · 271294 bytes
+
+--- previa|115 · peso 268 · válido · PUBLICARÍA con 1 imagen(es)
+🗓️ Posibles onces fantasy del Osasuna-Athletic (jornada 12)
+
+⁉️ Arguibide (Osasuna), en principio juega, pero no es seguro: 49 %
+⁉️ Boyomo (Osasuna), en principio juega, pero no es seguro: 54 %
+⁉️ Paredes (Athletic), en principio juega, pero no es seguro: 54 %
+   tarjeta previa-112: válida · 283572 bytes
+
+--- previa|112 · peso 280 · válido · PUBLICARÍA con 1 imagen(es)
+🗓️ Posibles onces fantasy del Valencia-Real Madrid (jornada 12)
+
+⁉️ Mayol (Valencia), en el aire: 39 %
+⁉️ Rioja (Valencia), en el aire: 41 %
+⁉️ Bernardo Silva (Real Madrid), en el aire: 42 %
+
+❌ No estarán Otorbi y Harvey Elliott en el Valencia; Vini Jr. en el Real Madrid
+   tarjeta previa-118: válida · 262465 bytes
+
+--- previa|118 · peso 246 · válido · PUBLICARÍA con 1 imagen(es)
+🗓️ Posibles onces fantasy del Elche-Betis (jornada 12)
+
+⁉️ Buonanotte (Elche), lo tiene complicado: 23 %
+⁉️ Antony (Betis), en principio juega, pero no es seguro: 49 %
+⁉️ Valentín Gómez (Betis), en principio juega, pero no es seguro: 54 %
+
+--- previa|114 · peso 276 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Real Sociedad-Rayo (jornada 12)
+
+⁉️ Álvaro García (Rayo), en el aire: 39 %
+⁉️ Pedro Díaz (Rayo), en el aire: 42 %
+⁉️ Oskarsson (Real Sociedad), en principio juega, pero no es seguro: 56 %
+
+❌ No estarán A. Batalla y Luiz Felipe en el Rayo
+
+--- previa|119 · peso 244 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Celta-Levante (jornada 12)
+
+⁉️ Pablo Durán (Celta), en el aire: 40 %
+⁉️ Javi Rodríguez (Celta), en principio juega, pero no es seguro: 54 %
+⁉️ Javi Galán (Celta), en principio juega, pero no es seguro: 58 %
+
+--- previa|120 · peso 216 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Atlético-Barça (jornada 12)
+
+⁉️ F. De Jong (Barça), en el aire: 33 %
+⁉️ Barrios (Atlético), en el aire: 44 %
+⁉️ Gerard Martín (Barça), en principio juega, pero no es seguro: 46 %
+
+--- previa|129 · peso 223 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Athletic-Espanyol (jornada 13)
+
+⁉️ Dolan (Espanyol), en el aire: 34 %
+⁉️ Q. Hartman (Espanyol), en el aire: 35 %
+⁉️ Vanja Drkusic (Espanyol), en principio juega, pero no es seguro: 52 %
+
+--- previa|130 · peso 274 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Alavés-Deportivo (jornada 13)
+
+⁉️ Mella (Deportivo), en el aire: 31 %
+⁉️ T. Martínez (Alavés), en el aire: 44 %
+⁉️ A. Alti (Deportivo), en el aire: 44 %
+
+❌ No estarán Mikel Rodriguez en el Alavés; M. Casadó y Bright Ede en el Deportivo
+
+--- previa|123 · peso 274 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Rayo-Valencia (jornada 13)
+
+⁉️ Mayol (Valencia), en el aire: 39 %
+⁉️ Álvaro García (Rayo), en el aire: 39 %
+⁉️ Rioja (Valencia), en el aire: 41 %
+
+❌ No estarán A. Batalla y Luiz Felipe en el Rayo; Otorbi y Harvey Elliott en el Valencia
+
+--- previa|121 · peso 215 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Sevilla-Betis (jornada 13)
+
+⁉️ Kochorashvili (Sevilla), en el aire: 34 %
+⁉️ Robbie Ure (Sevilla), en el aire: 39 %
+⁉️ Antony (Betis), en principio juega, pero no es seguro: 49 %
+
+--- previa|122 · peso 231 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Real Madrid-Celta (jornada 13)
+
+⁉️ Pablo Durán (Celta), en el aire: 40 %
+⁉️ Bernardo Silva (Real Madrid), en el aire: 42 %
+⁉️ Javi Rodríguez (Celta), en principio juega, pero no es seguro: 54 %
+
+--- previa|128 · peso 252 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Barça-Villarreal (jornada 13)
+
+⁉️ F. De Jong (Barça), en el aire: 33 %
+⁉️ Gerard Martín (Barça), en principio juega, pero no es seguro: 46 %
+⁉️ Carlos Macià (Villarreal), en principio juega, pero no es seguro: 47 %
+
+--- previa|124 · peso 262 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Racing-Real Sociedad (jornada 13)
+
+⁉️ Almeida (Racing), en el aire: 33 %
+⁉️ Iker Luque (Racing), en el aire: 35 %
+⁉️ Oskarsson (Real Sociedad), en principio juega, pero no es seguro: 56 %
+
+❌ No estarán Mantilla en el Racing
+
+--- previa|125 · peso 260 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Osasuna-Málaga (jornada 13)
+
+⁉️ Arguibide (Osasuna), en principio juega, pero no es seguro: 49 %
+⁉️ Aznou (Málaga), en principio juega, pero no es seguro: 50 %
+⁉️ Chupe (Málaga), en principio juega, pero no es seguro: 53 %
+
+--- previa|127 · peso 245 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Getafe-Atlético (jornada 13)
+
+⁉️ Barrios (Atlético), en el aire: 44 %
+⁉️ Álex Baena (Atlético), en principio juega, pero no es seguro: 58 %
+⁉️ Hjulmand (Atlético), en principio juega, pero no es seguro: 58 %
+
+--- previa|126 · peso 250 · válido · omitido: máximo de 6 por ejecución (sigue en la próxima)
+🗓️ Posibles onces fantasy del Levante-Elche (jornada 13)
+
+⁉️ Buonanotte (Elche), lo tiene complicado: 23 %
+⁉️ Nacho Perez (Levante), en principio juega, pero no es seguro: 58 %
+⁉️ Requena (Levante), en principio juega, pero no es seguro: 58 %
+
+# Total: 19 generados, 6 los publicaría, 0 fallos · 11.3 s
+  (novedades) 2 cambios: Xavi Espart ok→lesion, Lamine Yamal injured→vuelve
+
+--- A novedades|3104:vuelve|2026-11-03 · válido
+✅ Lamine Yamal vuelve a estar disponible en LaLiga Fantasy
+
+‼️ El delantero del Barça ya está recuperado, con 13,3 puntos de media
+
+✅ Disponible para la jornada 12 contra el Atlético
+   tarjeta bajas-novedades_3104_vuelve_2026-11-03: válida
+
+--- A novedades|2843:lesion|2026-11-03 · válido
+🚨 Saltan las alarmas con Xavi Espart: lesionado en LaLiga Fantasy
+
+⚠️ El defensa del Barça suma 6,2 puntos de media
+
+❌ En principio, baja para la jornada 12 contra el Atlético
+   tarjeta bajas-novedades_2843_lesion_2026-11-03: válida
+  (novedades) 6 cambios: Eric ok→lesion, Zaid Romero ok→lesion, Olmo ok→lesion, Cucho ok→lesion, Raphinha injured→vuelve, Mbappé injured→vuelve
+
+--- B novedades|2522:vuelve,3103:vuelve,2924:lesion,3092:lesion|2026-11-03 · válido
+🚨 Cambios de última hora en LaLiga Fantasy
+
+✅ Raphinha (Barça), disponible otra vez (14,3 de media)
+✅ Mbappé (Real Madrid), disponible otra vez (12,3 de media)
+❌ Zaid Romero (Getafe), lesionado (5,9 de media)
+❌ Olmo (Barça), lesionado (5,7 de media)
+   tarjeta bajas-novedades_2522_vuelve_3103_vuelve_2924_lesion_3092_lesion_2026-11-03: válida
+
+--- B novedades|2354:lesion,2217:lesion|2026-11-03 · válido
+🚨 Novedades en LaLiga Fantasy
+
+❌ Eric (Barça), lesionado (5,6 de media)
+❌ Cucho (Betis), lesionado (5,2 de media)
+
+👀 Revisa tu once antes de la jornada
+   tarjeta bajas-novedades_2354_lesion_2217_lesion_2026-11-03: válida
