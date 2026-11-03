@@ -3,14 +3,20 @@
 // Los modelos se prueban por orden; uno que da 404, 429 o 5xx se salta y se pasa al siguiente.
 const API = 'https://generativelanguage.googleapis.com/v1beta';
 // Los modelos salen de la lista de la clave (el 3 nov 2026, gemini-2.5-flash ya daba 404 a las claves nuevas: «use gemini-3.8…»).
-// Orden: los flash numerados de más nuevo a más viejo, luego flash-latest, los preview y al final las lite. Si la lista no llega, estos:
-export const MODELOS = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-flash-latest', 'gemini-3.5-flash-lite', 'gemini-flash-lite-latest'];
+// Si la lista no llega, estos:
+export const MODELOS = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest'];
 const ver = (n) => Number((n.match(/^gemini-(\d+(?:\.\d+)?)/) || [])[1] || 0);
-/** ordena los modelos de la clave para este uso (sin pro, tts, imagen ni audio) */
+/**
+ * Ordena los modelos de la clave (sin pro, tts, imagen ni audio): el flash más nuevo, la lite más nueva, el siguiente flash, la
+ * siguiente lite, flash-latest, flash-lite-latest y el resto. Alternar es porque los flash nuevos dan 503 a menudo (3 nov: los cuatro
+ * a la vez) y las lite contestan.
+ */
 export function ordenar(nombres) {
-  const xs = nombres.filter((n) => /^gemini-/.test(n) && /flash/.test(n) && !/tts|image|audio|live|embedding|thinking|exp/.test(n));
-  const grupo = (n) => (/lite/.test(n) ? 3 : /preview/.test(n) ? 2 : /latest/.test(n) ? 1 : 0);
-  return xs.sort((a, b) => grupo(a) - grupo(b) || ver(b) - ver(a) || a.length - b.length);
+  const xs = [...new Set(nombres)].filter((n) => /^gemini-/.test(n) && /flash/.test(n) && !/tts|image|audio|live|embedding|thinking|exp/.test(n));
+  const num = (lite) => xs.filter((n) => ver(n) && !/preview|latest/.test(n) && /lite/.test(n) === lite).sort((a, b) => ver(b) - ver(a) || a.length - b.length);
+  const f = num(false), l = num(true);
+  const out = [f[0], l[0], f[1], l[1], 'gemini-flash-latest', 'gemini-flash-lite-latest'].filter((n) => n && (xs.includes(n)));
+  return [...out, ...xs.filter((n) => !out.includes(n)).sort((a, b) => ver(b) - ver(a))];
 }
 let lista = null;
 /** los modelos que admite la clave, una vez por ejecución (no gasta cupo) */
@@ -29,7 +35,7 @@ export async function modelosDe(clave, { pedir = fetch } = {}) {
 export async function preguntarJson({ clave, prompt, esquema, modelos = null, pedir = fetch, log = () => {}, tiempo = 40000, hasta = Date.now() + 120000 }) {
   if (!clave) return { ok: false, error: 'sin clave' };
   let ultimo = '';
-  for (const m of (modelos || await modelosDe(clave, { pedir })).slice(0, 5)) {
+  for (const m of (modelos || await modelosDe(clave, { pedir })).slice(0, 7)) {
     if (Date.now() > hasta - 5000) { ultimo = ultimo || 'sin tiempo'; break; }
     let r, cuerpo;
     try {

@@ -38,8 +38,8 @@ const equipos = { 1: 'Real Racing Club', 2: 'Real Madrid', 3: 'Villarreal CF', 4
 const J = (id, nickname, name, teamId, playerStatus, averagePoints, positionId = 3) => ({ id, nickname, name, teamId, playerStatus, averagePoints, positionId, marketValue: 20e6 });
 const jug = [J('10', 'Andrés Martín', 'Andrés Martín García', 1, 'ok', 6.2), J('11', 'Güler', 'Arda Güler', 2, 'ok', 5.1), J('12', 'G. Moreno', 'Gerard Moreno Balagueró', 3, 'injured', 5.8, 4),
   J('13', 'Pedri', 'Pedro González López', 4, 'doubtful', 6.5), J('14', 'Ayoze', 'Ayoze Pérez Gutiérrez', 3, 'ok', 4.4, 4), J('15', 'Cucho', 'Juan Camilo Hernández', 3, 'injured', 5.2, 4)];
-ok(ordenar(['gemini-2.5-flash', 'gemini-3.8-flash-lite', 'gemini-3-flash-preview', 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-2.5-pro', 'gemini-2.5-flash-preview-tts']).join(' ')
-  === 'gemini-3.8-flash gemini-2.5-flash gemini-flash-latest gemini-3-flash-preview gemini-3.8-flash-lite', 'orden de los modelos');
+const orden = ordenar(['gemini-2.5-flash', 'gemini-3.8-flash-lite', 'gemini-3-flash-preview', 'gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-flash-latest', 'gemini-2.5-pro', 'gemini-2.5-flash-preview-tts', 'gemini-flash-lite-latest']).join(' ');
+ok(orden === 'gemini-3.8-flash gemini-3.8-flash-lite gemini-3.7-flash gemini-flash-latest gemini-flash-lite-latest gemini-3-flash-preview gemini-2.5-flash', `orden de los modelos: ${orden}`);
 ok(candidatos({ titulo: 'Gerard Moreno vuelve a entrenar', entradilla: '' }, jug, equipos).length === 0, 'G. Moreno sin el club no casa');
 ok(candidatos({ titulo: 'Moreno vuelve a entrenar con el Villarreal', entradilla: '' }, jug, equipos).length === 1, 'G. Moreno con el club casa');
 const ahora = Date.parse('2026-11-03T14:00:00Z');   // 15:00 en Madrid
