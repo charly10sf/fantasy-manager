@@ -1,0 +1,53 @@
+# Bot de X · modo simulacro
+# Semana 12 (isLive=false) · siguiente 13 · 10 partidos, 0 acabados · 881 jugadores
+  (mercado) valores del 2026-11-03: pido el histórico de 596 jugadores
+
+## mercado: 1 tweets
+   tarjeta mercado-2026-11-03: válida · 191309 bytes
+
+--- mercado|2026-11-03 · peso 181 · válido · PUBLICARÍA con 1 imagen(es)
+💸 Subidas y bajadas del mercado fantasy de hoy, 3/11
+
+🛒 Chollo Fantasy: Thiago del Levante vale 1,4 M, suma 4,1 de media y hoy sube un 1,5 %
+
+📲 Fantasy Manager (enlace en la bio)
+  (partes) 73 lesionados leídos
+
+## caidas: 3 tweets
+  (pulir) sin GEMINI_API_KEY: caidas sale con la plantilla
+   tarjeta bajas-caidas_12_2477-2470: válida · 167466 bytes
+
+--- caidas|12|2477-2470 · peso 256 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 El Villarreal se queda sin dos titulares
+
+❌ Se caen por lesión I. Akhomach y Foyth
+
+⚠️ Foyth, molestias musculares: duda para la jornada 12
+
+‼️ El que más pesa es I. Akhomach: 4,8 puntos de media
+
+❌ Baja Fantasy para la jornada 12 contra el Getafe
+   tarjeta bajas-caidas_12_3102-2354: válida · 104313 bytes
+
+--- caidas|12|3102-2354 · peso 275 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 Ojo a tu once fantasy: dos titulares habituales se caen para la jornada 12
+
+❌ Eric se cae por lesión en el Barça
+
+🟥 Vini Jr. cumple sanción en el Real Madrid
+
+⚠️ Eric, lesión en el recto anterior: baja hasta principios de noviembre
+
+❌ Bajas Fantasy para la jornada 12
+   tarjeta bajas-caidas_12_2217-2924-1070: válida · 120831 bytes
+
+--- caidas|12|2217-2924-1070 · peso 232 · válido · PUBLICARÍA con 1 imagen(es)
+🚨 Tres titulares habituales se caen para la jornada 12
+
+❌ Se caen por lesión Cucho en el Betis, Zaid Romero en el Getafe y De Galarreta en el Athletic
+
+⚠️ Zaid Romero, lesión en el cuádriceps
+
+❌ Bajas Fantasy para la jornada 12
+
+# Total: 4 generados, 4 los publicaría, 0 fallos · 4.6 s
