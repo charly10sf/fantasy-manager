@@ -148,7 +148,7 @@ function carta(x, y, w, h, o) {
   s += `<g clip-path="url(#${cl})">${dentro}</g>`;
   // arriba a la izquierda: la cifra grande, lo que es y el escudo
   const xi = x + 62 * k;
-  if (o.grande != null) s += texto(xi, y + 128 * k, o.grande, { px: Math.round(104 * k), peso: 900, color: t.tinta, ancla: 'middle', max: 100 * k });
+  if (o.grande != null) s += texto(xi, y + 128 * k, o.grande, { px: Math.round(104 * k), peso: 900, color: t.tinta, ancla: 'middle', max: 92 * k });
   if (o.bajoGrande) s += texto(xi, y + 162 * k, o.bajoGrande, { px: Math.round(30 * k), peso: 700, color: t.tinta, ancla: 'middle', espacio: 1 * k })
     + `<rect x="${xi - 22 * k}" y="${y + 176 * k}" width="${44 * k}" height="${Math.max(1, 2 * k)}" fill="${t.linea}"/>`;
   if (o.escudo) s += escudo(o.escudo, xi, y + 218 * k, 58 * k);
