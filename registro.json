@@ -1128,7 +1128,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
    "SPORT|136055935": 1793734147000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/alineaciones-probables-aek-real-madrid.html": 1793741534000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/alineaciones-probables-aek-real-madrid.html": 1793741534000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/03/preocupacion-con-rodri-a-cinco-dias-de-enfrentarse-al-atletico-de-madrid-cadena-ser/": 1793741974000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-laimer-atletico-0-bayern-2-20261103_3467972.html": 1793741963000
   },
   "hechos": [
    {
@@ -1322,7 +1324,7 @@
   ],
   "gemini": {
    "dia": "2026-11-03",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
