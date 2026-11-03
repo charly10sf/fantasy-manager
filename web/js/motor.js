@@ -2,7 +2,7 @@
    Cláusulas de los rivales y cuánto interesa cada una, el riesgo de las tuyas, el mercado, quién sube y
    quién baja, lo que has ganado con tus compras, cómo se mueve cada rival, la jornada, los parones y la
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
-import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, eur, pct, dura, cuando, POS, norm, horaDe as horaReloj } from './util.js';
+import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, eur, pct, dura, cuando, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
 const PARONES = [
@@ -844,7 +844,7 @@ export function analizar(D, H, c, extra = {}) {
   // la alineación confirmada (SofaScore, una hora antes del partido): mientras dura su partido, manda sobre todo lo demás
   const alin = (extra.alineaciones && extra.alineaciones.jugadores) || {};
   M.alineacion = (pid) => { const a = alin[pid]; return a && Date.now() > a.ini - 2 * HORA && Date.now() < a.ini + 2.5 * HORA ? a : null; };
-  M.noticias = (extra.noticias && extra.noticias.lista) || [];
+  M.noticias = ((extra.noticias && extra.noticias.lista) || []).filter(esDeFutbol);
   // si Google Noticias no ha contestado: sin titulares no es lo mismo que «no hay noticias»
   M.noticiasFallo = extra.noticias && extra.noticias.fallo ? { fallo: extra.noticias.fallo, viejas: !!extra.noticias.viejas, t: extra.noticias.t } : null;
   M.noticiasDe = (pid) => M.noticias.filter((n) => n.pids && n.pids.includes(pid));

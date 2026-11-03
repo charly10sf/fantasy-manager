@@ -8,7 +8,7 @@
 import { http } from './puente.js';
 import { api, apuntarRegistro, registro } from './api.js';
 import { guardarMuestraVivo } from './vivo.js';
-import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe } from './util.js';
+import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe, esDeFutbol } from './util.js';
 
 const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36';
 
@@ -230,13 +230,13 @@ async function buscarNoticias(q) {
  */
 export async function noticiasClub(D, eqId) {
   const g = LS.get('noticias-club', {});
-  if (g[eqId] && Date.now() - g[eqId].t < HORA) return g[eqId].lista;
+  if (g[eqId] && Date.now() - g[eqId].t < HORA) return g[eqId].lista.filter((n) => esDeFutbol({ ...n, equipos: [] }));
   const e = (D.equipos || {})[eqId];
   if (!e || !e.nombre) return [];
   const a = aliasEquipo(e.nombre)[0];
   const l = await buscarNoticias(`"${a}" (LaLiga OR lesión OR baja OR convocatoria OR alineación OR "rueda de prensa" OR entrenador OR fichaje) when:3d`);
   // si Google no contesta, lo de la última vez (aunque tenga más de una hora) y sin guardar nada
-  if (!l) return g[eqId] ? g[eqId].lista : [];
+  if (!l) return g[eqId] ? g[eqId].lista.filter((n) => esDeFutbol({ ...n, equipos: [] })) : [];
   const suyos = Object.values(D.maestro || {}).filter((j) => j.equipoId === eqId && j.nombre && j.nombre.length > 3);
   const vistos = new Set();
   const lista = [];
@@ -245,6 +245,8 @@ export async function noticiasClub(D, eqId) {
     if (vistos.has(k) || (n.t && Date.now() - n.t > 4 * DIA)) continue;
     vistos.add(k);
     const t = ` ${norm(n.titulo)} `;
+    // el club cuenta como «equipo» para el filtro solo si sale en el titular (y uno solo no basta: ver esDeFutbol)
+    if (!esDeFutbol({ ...n, equipos: [] })) continue;
     n.pids = suyos.filter((j) => t.includes(` ${norm(j.nombre)} `)).map((j) => j.id).slice(0, 4);
     n.equipos = [eqId];
     lista.push(n);
@@ -288,7 +290,7 @@ export async function noticias(D, M) {
   // de 5 en 5 jugadores por búsqueda (con su equipo para no confundir apellidos)
   const grupos = [];
   for (let i = 0; i < nombres.length && grupos.length < 6; i += 5) {
-    grupos.push(`(${nombres.slice(i, i + 5).map((j) => `"${j.nombre}"`).join(' OR ')}) when:3d`);
+    grupos.push(`(${nombres.slice(i, i + 5).map((j) => `"${j.nombre}"`).join(' OR ')}) (fútbol OR LaLiga OR gol OR partido OR lesión OR entrenador OR fichaje) when:3d`);
   }
   // los equipos de tus jugadores y de los candidatos: lesiones, convocatorias, ruedas de prensa, alineaciones
   const eqIds = [...new Set(nombres.map((j) => j.equipoId).filter(Boolean))];
@@ -329,7 +331,7 @@ export async function noticias(D, M) {
     n.pids = candidatos.filter((j) => t.includes(` ${norm(j.nombre)} `)).map((j) => j.id).slice(0, 4);
     n.equipos = alias.filter((x) => x.a.some((a) => t.includes(` ${a} `))).map((x) => x.id).slice(0, 3);
   }
-  const lista = todas.filter((n) => !n.t || Date.now() - n.t < 4 * DIA).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 140);
+  const lista = todas.filter((n) => esDeFutbol(n) && (!n.t || Date.now() - n.t < 4 * DIA)).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 140);
   const salida = { t: Date.now(), lista };
   if (lista.length) LS.set('noticias', salida);
   return salida;

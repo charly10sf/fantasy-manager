@@ -110,6 +110,31 @@ export const horaDe = (t) => { const p = partes(t); return `${p.h}:${p.min}`; };
 /* ---------- nombres ---------- */
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
+/* ---------- noticias: solo las de fútbol masculino ----------
+   (aviso de Carlos y Domy, 3 nov) Google Noticias, buscando por apodo («Lemar», «Roberto»…), traía titulares de
+   cantantes, del tiempo o del Valencia femenino. Un titular vale si nombra dos equipos de LaLiga (n.equipos), lleva
+   una palabra de fútbol o viene de un medio deportivo; y nunca si es de otro deporte o de fútbol femenino. */
+const PAL_FUTBOL = ['gol', 'goles', 'golazo', 'doblete', 'hat trick', 'fichaje', 'fichajes', 'ficha', 'fichar', 'traspaso', 'cesion', 'cedido', 'renovacion', 'renueva', 'clausula',
+  'lesion', 'lesiones', 'lesionado', 'lesionados', 'molestias', 'parte medico', 'convocatoria', 'convocado', 'convocados', 'alineacion', 'alineaciones', 'titular', 'titulares', 'suplente',
+  'entrenador', 'entrenamiento', 'entrena', 'mister', 'rueda de prensa', 'vestuario', 'futbol', 'futbolista', 'delantero', 'centrocampista', 'mediocentro', 'extremo', 'portero', 'defensa central',
+  'partido', 'partidos', 'jornada', 'liga', 'laliga', 'champions', 'europa league', 'conference league', 'copa del rey', 'supercopa', 'derbi', 'clasico', 'estadio', 'penalti', 'penaltis',
+  'arbitro', 'var', 'sancion', 'sancionado', 'expulsion', 'expulsado', 'tarjeta roja', 'amarilla', 'asistencia', 'remontada', 'empate', 'empata', 'marcador', 'en directo', 'previa', 'cronica',
+  'fantasy', 'seleccion espanola', 'mundial', 'balon de oro', 'primera division', 'segunda division'];
+const PAL_FUERA = ['femenino', 'femenina', 'liga f', 'baloncesto', 'acb', 'euroliga', 'euroleague', 'nba', 'balonmano', 'futbol sala', 'tenis', 'padel', 'formula 1', 'f1', 'motogp', 'ciclismo', 'rugby', 'voleibol', 'golf'];
+const MEDIOS = ['marca', 'as', 'diario as', 'mundo deportivo', 'sport', 'relevo', 'estadio deportivo', 'defensa central', 'eldesmarque', 'el desmarque', 'futbolfantasy', 'jornada perfecta',
+  'comuniate', 'analitica fantasy', 'superdeporte', 'fichajes net', 'fichajes', 'besoccer', 'goal', 'goal com', 'sportyou', 'todofichajes', 'futbol emotion', 'cope deportes', 'tribuna deportiva'];
+const tiene = (t, l) => l.some((k) => t.includes(` ${k} `));
+export function esDeFutbol(n) {
+  if (!n || !n.titulo) return false;
+  const t = ` ${norm(n.titulo)} `;
+  if (tiene(t, PAL_FUERA)) return false;
+  // dos equipos en el titular es un partido; uno solo no basta (Valencia, Sevilla o Getafe también son ciudades)
+  if (n.equipos && n.equipos.length > 1) return true;
+  if (tiene(t, PAL_FUTBOL)) return true;
+  const f = norm(n.fuente);
+  return !!f && (MEDIOS.includes(f) || / (deport|futbol|fichaj)/.test(` ${f}`));
+}
+
 // Las webs de fantasy de las que no se enseña el nombre como fuente (aviso de Domy, 25 oct: «te pueden acusar de plagio»).
 // esWebFantasy dice si un nombre o una dirección es de una de ellas (para esconder la fuente de una noticia o un enlace);
 // sinWebs cambia en un texto el nombre de las que no se pueden confundir con otra cosa por «la prensa».

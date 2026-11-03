@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12a';
+export const VERSION = '0.6.12b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.12a';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12b', f: '2026-11-03', h: '09:00', t: 'Noticias solo de fútbol', menor: true,
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', menor: true, t: 'Fuera las noticias que no son de fútbol', x: 'En Noticias salían titulares que no tenían nada que ver (el tiempo, premios de música o fútbol femenino) porque un jugador se llama igual que otra persona. Ahora solo salen las de fútbol de LaLiga.' },
+    ],
+  },
   {
     v: '0.6.12a', f: '2026-11-02', h: '23:57', t: 'Aviso de app en desarrollo', menor: true,
     cosas: [
