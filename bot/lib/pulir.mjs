@@ -134,7 +134,7 @@ export async function pulir(tweets, { tipo, registro = null, config = {}, jugado
   const cuenta = (datos.pulido && datos.pulido.dia === hoy) ? datos.pulido : (datos.pulido = { dia: hoy, n: 0, ok: 0, mal: 0 });
   if (cuenta.n >= (cfg.porDia ?? 40)) { log(`  (pulir) tope de ${cfg.porDia ?? 40} preguntas a Gemini hoy: ${tipo} sale con la plantilla`); return 0; }
   cuenta.n++;
-  const r = await pedirIA({ clave, prompt: prompt(tweets.map((t) => t.texto)), esquema: ESQUEMA, log, hasta: Date.now() + (cfg.segundos ?? 45) * 1000 });
+  const r = await pedirIA({ clave, prompt: prompt(tweets.map((t) => t.texto)), esquema: ESQUEMA, log, tiempo: 15000, hasta: Date.now() + (cfg.segundos ?? 45) * 1000 });
   if (registro && registro.fichero) registro.guardar();
   if (!r.ok) { log(`  (pulir) Gemini no contesta (${r.error}): ${tipo} sale con la plantilla`); return 0; }
   const nombres = nombresDe(jugadores, equipos);
