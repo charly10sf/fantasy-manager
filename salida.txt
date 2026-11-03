@@ -1,0 +1,13 @@
+# Bot de X · modo simulacro · forzado
+# Semana 12 (isLive=false) · siguiente 13 · 10 partidos, 0 acabados · 868 jugadores
+  (mercado) valores del 2026-11-03: pido el histórico de 591 jugadores
+
+## mercado: 1 tweets
+   tarjeta mercado-2026-11-03: válida · 191257 bytes
+
+--- mercado|2026-11-03 · peso 92 · válido · PUBLICARÍA con 1 imagen(es)
+💸 Subidas y bajadas del mercado fantasy de hoy, 3/11
+
+📲 Fantasy Manager (enlace en la bio)
+
+# Total: 1 generados, 1 los publicaría, 0 fallos · 7.0 s
