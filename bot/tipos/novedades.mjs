@@ -40,7 +40,10 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     pend.push({ id: j.id, que, antes: a, t: ahora });
   }
   const cub = registro && registro.cubiertos ? registro.cubiertos() : [];
-  const yaSalio = (p) => cub.some((c) => c.tipo === 'novedades' && String(c.id) === String(p.id) && c.que === p.que && c.t >= p.t - 72 * HORA);
+  // también si la prensa ya lo ha contado (tipos/noticias.mjs): una lesión de la que ya habló, o una vuelta, en las 48 h de antes
+  const fam = (q) => (q === 'vuelve' ? 'buena' : 'mala');
+  const yaSalio = (p) => cub.some((c) => String(c.id) === String(p.id) && ((c.tipo === 'novedades' && c.que === p.que && c.t >= p.t - 72 * HORA)
+    || (c.tipo === 'noticias' && c.que === fam(p.que) && c.t >= p.t - 48 * HORA)));
   pend = pend.filter((p) => porId.has(String(p.id)) && IMPORTA(porId.get(String(p.id))) && actual[p.id] === ESTADO_DE[p.que] && ahora - p.t < 36 * HORA && !yaSalio(p));
   if (datos) { datos.novedadesPend = pend; registro.guardar(); }
   const escudos = {};
