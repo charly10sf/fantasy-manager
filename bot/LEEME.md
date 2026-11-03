@@ -47,7 +47,8 @@ Las piezas comunes están en `lib/redactar.mjs`:
 
 ## Tarjetas con imagen (encendidas desde el 2 nov)
 
-Dos tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov): la de **final** (escudos, marcador y los 3 mejores y los 3
+Tarjetas de 1200x675, estilo «carta» desde el 3 nov (cartas de coleccionista con diseño propio, letra Barlow Condensed, metal
+según los puntos: élite 15+, oro 10-14, plata 5-9, bronce 0-4, roja en negativo; antes, «noche»). Las primeras fueron la de **final** (escudos, marcador y los 3 mejores y los 3
 peores de cada equipo con su cara y sus puntos oficiales; «peores» = los que menos puntúan de los que jugaron 30' o más, con los
 minutos de la ficha de cada jugador, porque stats/week no los trae) y la de **jugador** (cara, escudo, puntos de la jornada, total,
 media, últimas 5 jornadas y valor de los últimos 30 días con su cambio). La de final va en el tweet `final`; la de jugador, en
@@ -55,7 +56,7 @@ un tweet `mvp` aparte por partido (tope 10 por jornada) y, en `directo`, una por
 
 - Se encienden en `config.json`: `"tarjetas": { "final": true, "jugador": true }`. Con las dos a false el bot hace lo mismo que sin
   esto (ni instala nada ni genera el tweet `mvp`).
-- Código: `lib/tarjetas.mjs` (dibujo SVG y PNG con @resvg/resvg-js, fuente Inter en `fuentes/`), `lib/datos-tarjetas.mjs` (datos de la
+- Código: `lib/tarjetas.mjs` (dibujo SVG y PNG con @resvg/resvg-js, fuentes Inter y Barlow Condensed, OFL, en `fuentes/`), `lib/datos-tarjetas.mjs` (datos de la
   API de LaLiga sin token: stats/week, player/{id} y player/{id}/market-value; fotos y escudos PNG de assets-fantasy),
   `lib/con-tarjetas.mjs` (qué tarjeta lleva cada tweet), `tipos/mvp.mjs`, y `subirImagen` en `lib/x.mjs` (POST /2/media/upload con
   la imagen en base64, categoría tweet_image; el tweet lleva luego `media.media_ids`).
