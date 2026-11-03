@@ -3,7 +3,8 @@
 // dos onces. En el confirmado se cuentan las sorpresas: titulares habituales que se quedan fuera y los que entran sin esperarlo.
 import { json } from '../lib/http.mjs';
 import { statsSemana } from '../lib/laliga.mjs';
-import { corto, elegir, sinCierre } from '../lib/texto.mjs';
+import { corto, elegir, el } from '../lib/texto.mjs';
+import { tweet, enPalabras } from '../lib/redactar.mjs';
 import { ESPN, partidoEspn } from '../lib/relato.mjs';
 import { casarJugador } from './directo.mjs';
 import { probabilidades, elegirOnce } from '../lib/onces.mjs';
@@ -66,18 +67,18 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             const cuenta = (q) => once.filter((x) => x.pos === q).length;
             conf[k] = { once, formacion: `${cuenta('DEF')}-${cuenta('MED')}-${cuenta('DEL')}`, fuera, sorpresa };
           }
-          const cab = `✅ Onces confirmados · ${L} vs ${V}`;
-          const lin = [];
-          const nombres = (xs) => xs.slice(0, 3).map((x) => x.nombre).join(', ');
+          // como los cuenta @JoseCarrasco_98 (guía de estilo del 3 nov): el partido arriba y una línea por cada sorpresa
+          const cab = `ℹ️ Onces confirmados del ${L}-${V}`;
+          const ideas = [];
+          const nombres = (xs) => { const n = xs.slice(0, 3).map((x) => x.nombre); return n.length > 1 ? `${n.slice(0, -1).join(', ')} y ${n[n.length - 1]}` : n[0]; };
           for (const [k, eq] of [['L', L], ['V', V]]) {
             const c = conf[k];
-            if (c.fuera.length && c.sorpresa.length) lin.push(`${eq}: entra ${nombres(c.sorpresa)} y se queda fuera ${nombres(c.fuera)}.`);
-            else if (c.fuera.length) lin.push(`${eq}: ojo, ${nombres(c.fuera)} no ${c.fuera.length > 1 ? 'salen' : 'sale'} de inicio.`);
-            else if (c.sorpresa.length) lin.push(`${eq}: sorpresa, ${nombres(c.sorpresa)} ${c.sorpresa.length > 1 ? 'son titulares' : 'es titular'}.`);
+            if (c.fuera.length) ideas.push({ t: `❌ ${nombres(c.fuera)} ${c.fuera.length > 1 ? 'se quedan' : 'se queda'} fuera del once en ${el(eq)}`, prio: 9 });
+            if (c.sorpresa.length) ideas.push({ t: `‼️ ${nombres(c.sorpresa)} ${c.sorpresa.length > 1 ? 'son titulares' : 'es titular'} en ${el(eq)}`, prio: 8 });
           }
-          if (!lin.length) lin.push(elegir(['Sin sorpresas: los dos salen como se esperaba. Revisa tu once fantasy.', 'Ni un cambio raro en los dos onces. A revisar tu alineación fantasy.'], sem));
-          else lin.push('Revisa tu once fantasy antes del pitido.');
-          const { usadas, texto } = sinCierre(cab, lin);
+          if (!ideas.length) ideas.push(elegir(['✅ Sin sorpresas: salen los onces que se esperaban', '✅ Ni un cambio raro en los dos onces'], sem));
+          ideas.push({ t: '👀 Revisa tu once fantasy antes del pitido', prio: 7 });
+          const { usadas, texto } = tweet(cab, ideas);
           const fm = (f) => (f || '').match(/\d/g) || [];
           out.push({ tipo: 'onces', clave: `onces|${m.id}`, jornada, texto, numeros: [], partido: null,
             tarjeta: { tipo: 'onces', nombre: `onces-${m.id}`,
@@ -93,13 +94,19 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       // el texto: las dudas del once (titulares con menos del 65 %) y las bajas de titulares habituales
       const dudas = [...pos.L.once.map((x) => ({ ...x, eq: L })), ...pos.V.once.map((x) => ({ ...x, eq: V }))].filter((x) => x.p < 0.65 && x.p >= 0.1).sort((a, b) => a.p - b.p).slice(0, 3);
       const bajas = [...Object.values(probs.L).map((x) => ({ ...x, eq: L })), ...Object.values(probs.V).map((x) => ({ ...x, eq: V }))].filter((x) => (x.estado === 'injured' || x.estado === 'suspended')).slice(0, 4);
-      const cab = `🗓️ Posibles onces · ${L} vs ${V}`;
-      const lin = [];
-      const num = [];
-      if (dudas.length) { lin.push(`Las dudas: ${dudas.map((x) => `${x.nombre} (${x.eq}) ${pct(x.p)} %`).join(', ')}.`); num.push(...dudas.map((x) => pct(x.p))); }
-      if (bajas.length) lin.push(`Bajas: ${bajas.map((x) => `${x.nombre} (${x.eq}, ${x.estado === 'injured' ? 'lesionado' : 'sancionado'})`).join(', ')}.`);
-      lin.push(elegir(['% de titularidad de Fantasy Manager, con los minutos de cada uno y su estado en LaLiga Fantasy.', 'Los % salen de los minutos de cada uno y de su estado en LaLiga Fantasy.'], sem));
-      const { usadas, texto } = sinCierre(cab, lin);
+      // las dudas con palabras y el % al lado (regla 4 de la guía de estilo del 3 nov)
+      const cab = `🗓️ Posibles onces fantasy del ${L}-${V} (jornada ${jornada})`;
+      const ideas = [];
+      const num = [jornada];
+      if (dudas.length) { ideas.push({ t: dudas.map((x) => `⁉️ ${x.nombre} (${x.eq}): ${enPalabras(x.p)}, ${pct(x.p)} %`).join('\n'), prio: 9 }); num.push(...dudas.map((x) => pct(x.p))); }
+      if (bajas.length) {
+        const de = (eq) => bajas.filter((x) => x.eq === eq).map((x) => x.nombre);
+        const partes = [[L, de(L)], [V, de(V)]].filter(([, xs]) => xs.length).map(([eq, xs]) => `${xs.length > 1 ? `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}` : xs[0]} en ${el(eq)}`);
+        ideas.push({ t: `❌ No estarán ${partes.join('; ')}`, prio: 8 });
+      }
+      if (!dudas.length && !bajas.length) ideas.push({ t: '✅ Sin dudas ni bajas entre los habituales', prio: 8 });
+      ideas.push({ t: elegir(['📊 Los % de titularidad son de Fantasy Manager', '📊 % de titularidad de Fantasy Manager, con los minutos y el estado de cada uno'], sem), prio: 5 });
+      const { usadas, texto } = tweet(cab, ideas);
       if (!usadas.length) continue;
       const fm = (f) => f.match(/\d/g);
       out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, numeros: num, partido: null,

@@ -1,7 +1,8 @@
 // Directo: goles (con asistente), rojas y penaltis fallados de ESPN (con minuto) casados con los puntos oficiales de LaLiga.
 // Sin ventanas repite los partidos ya jugados de los días de fechasEspn (para probar); con ventanas, los de hoy en juego o recién acabados.
 import { json } from '../lib/http.mjs';
-import { norm, corto, fmt, partes, elegir, el, del, al, sinCierre } from '../lib/texto.mjs';
+import { norm, corto, fmt, partes, elegir, el, del, al } from '../lib/texto.mjs';
+import { tweet, cap, segunda } from '../lib/redactar.mjs';
 import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
@@ -60,19 +61,20 @@ async function asistencias(evId) {
   return m;
 }
 
-// Cómo se dice lo que ha supuesto cada gol (la situación sale del marcador de ese momento, no del actual).
-const VERBO = { abre: 'abre el marcador', empata: 'empata el partido', adelanta: 'pone por delante a los suyos', voltea: 'da la vuelta al partido',
-  recorta: 'recorta distancias', amplia: 'amplía la ventaja', sentencia: 'sentencia el partido' };
-function fraseGol(sit, n, eq, semilla) {
+// Cómo se dice lo que ha supuesto cada gol (la situación sale del marcador de ese momento, no del actual). Desde el 3 nov, la frase
+// va arriba como titular («⚽ Gol de Budimir y Osasuna se adelanta en el 32'»), el marcador debajo y los puntos en su línea.
+const VERBO = { abre: 'se adelanta', empata: 'empata', adelanta: 'se pone por delante', voltea: 'le da la vuelta',
+  recorta: 'recorta', amplia: 'amplía la ventaja', sentencia: 'sentencia el partido' };
+function titularGol(sit, n, eq, min, semilla) {
   const E = { el: el(eq), del: del(eq), al: al(eq) };
   const v = {
-    abre: [`${n} abre el marcador para ${E.el}.`, `${n} marca primero y adelanta ${E.al}.`, `Gol de ${n}: ${E.el} se pone por delante.`],
-    empata: [`${n} empata el partido para ${E.el}.`, `${n} iguala el marcador.`, `Empata ${E.el} con gol de ${n}.`],
-    adelanta: [`${n} pone por delante ${E.al}.`, `${n} adelanta ${E.al}.`, `Gol de ${n} y ${E.el} se pone por delante.`],
-    voltea: [`${n} da la vuelta al partido para ${E.el}.`, `Remontada ${E.del}: ${n} lo pone por delante.`, `${n} completa la remontada ${E.del}.`],
-    recorta: [`${n} recorta distancias para ${E.el}.`, `Gol de ${n}: ${E.el} no se rinde.`, `${n} le mete un gol más al partido.`],
-    amplia: [`${n} amplía la ventaja ${E.del}.`, `${n} pone tierra de por medio para ${E.el}.`, `Otro gol para ${E.el}, de ${n}.`],
-    sentencia: [`${n} sentencia el partido para ${E.el}.`, `${n} redondea la goleada ${E.del}.`, `Goleada ${E.del}: ${n} marca otro.`],
+    abre: [`⚽ Gol de ${n} y ${E.el} se adelanta en el ${min}`, `⚽ ${n} abre el marcador en el ${min}`],
+    empata: [`⚽ ${n} empata para ${E.el} en el ${min}`, `⚽ Gol de ${n} y empate en el ${min}`],
+    adelanta: [`⚽ Gol de ${n} y ${E.el} se pone por delante en el ${min}`, `⚽ ${n} adelanta ${E.al} en el ${min}`],
+    voltea: [`⚽ ${n} completa la remontada ${E.del} en el ${min}`, `⚽ Gol de ${n} y ${E.el} le da la vuelta en el ${min}`],
+    recorta: [`⚽ ${n} recorta para ${E.el} en el ${min}`, `⚽ Gol de ${n} y ${E.el} se mete en el partido`],
+    amplia: [`⚽ ${n} amplía la ventaja ${E.del} en el ${min}`, `⚽ Otro gol ${E.del}, de ${n}, en el ${min}`],
+    sentencia: [`⚽ ${n} sentencia en el ${min}`, `⚽ Goleada ${E.del}: ${n} marca otro en el ${min}`],
   }[sit];
   return elegir(v, semilla);
 }
@@ -126,40 +128,46 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const num = [mn.min, mn.extra, sl, sv, propio, rival].filter((x) => x != null);
         const sem = `directo${m.id}${dsp.jugador}${dsp.clase}${dsp.n || ''}`;
         const tarjetas = [];
-        let cab, cuerpo = [];
-        const puntos = (nom, valor, conMedia) => {
+        const jp = p ? porId.get(String(p.id)) : null;
+        const pos = jp ? jp.positionId : p && p.positionId;
+        let cab; const ideas = [];
+        const marcador = `📍 ${mar}`;
+        const puntos = (valor, conMedia) => {
           num.push(valor);
           const sobre = conMedia && media >= 3 && valor >= 1.5 * media;
           if (sobre) num.push(...partes(media));
-          if (valor <= 0) return `Para ${nom}, ${valor} puntos fantasy de momento.`;
-          return `${elegir([`${nom} ya suma ${valor} puntos fantasy`, `${valor} puntos fantasy ya para ${nom}`, `Eso son ${valor} puntos fantasy para ${nom} de momento`], sem + 'p')}${sobre ? `. Su media es de ${fmt(media)}` : ''}.`;
+          if (valor <= 0) return { t: `📉 Se queda en ${valor} puntos fantasy`, prio: 8 };
+          const base = elegir([`📊 Ya suma ${valor} puntos fantasy`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos fantasy`, `📊 Lleva ${valor} puntos fantasy de momento`], sem + 'p');
+          return { t: `${base}${sobre ? `, con una media de ${fmt(media)}` : ''}`, prio: 8 };
         };
         if (dsp.clase === 'roja') {
-          cab = `🟥 ${mar} · ${minTxt}`;
+          cab = `🟥 Roja para ${nombre} en el ${minTxt}`;
+          ideas.push({ t: marcador, prio: 9 });
           const rojas = (mom && mom.rojas) || 1;
           const quedan = rojas === 1 ? 'diez' : rojas === 2 ? 'nueve' : null;
-          if (quedan) num.push(rojas === 1 ? 10 : 9);
-          const estado = propio < rival ? ' y encima va perdiendo' : propio > rival ? ', aunque gana el partido' : ' con el partido empatado';
-          cuerpo.push(quedan ? `${nombre} ve la roja y ${el(equipo)} se queda con ${quedan}${estado}.` : `Expulsan a ${nombre} (${equipo}).`);
-          if (pts != null) cuerpo.push(puntos(nombre, pts, false));
+          const estado = propio < rival ? ' y encima va perdiendo' : propio > rival ? ', aunque va ganando' : ' con el empate en el marcador';
+          ideas.push({ t: quedan ? `⚠️ ${cap(el(equipo))} se queda con ${quedan}${estado}` : `⚠️ ${cap(el(equipo))} se queda con un jugador menos`, prio: 7 });
+          if (pts != null) ideas.push(puntos(pts, false));
           if (p) tarjetas.push({ jugadorId: p.id, motivo: 'roja' });
         } else if (dsp.clase === 'penalti fallado') {
-          cab = `❌ ${mar} · ${minTxt}`;
-          const pudo = propio === rival ? 'que habría adelantado a su equipo' : propio < rival ? (rival - propio === 1 ? 'que habría empatado el partido' : 'que habría recortado distancias') : 'que habría ampliado la ventaja';
-          cuerpo.push(`${nombre} (${equipo}) falla un penalti, ${pudo}.`);
-          if (pts != null) cuerpo.push(puntos(nombre, pts, false));
+          cab = `❌ ${nombre} falla un penalti en el ${minTxt}`;
+          ideas.push({ t: marcador, prio: 9 });
+          const pudo = propio === rival ? `Habría adelantado ${al(equipo)}` : propio < rival ? (rival - propio === 1 ? `Habría empatado el partido` : `Habría recortado distancias`) : `Habría ampliado la ventaja ${del(equipo)}`;
+          ideas.push({ t: `⚠️ ${pudo}`, prio: 6 });
+          if (pts != null) ideas.push(puntos(pts, false));
           if (p) tarjetas.push({ jugadorId: p.id, motivo: 'penalti' });
         } else {
-          cab = `${'⚽'.repeat(Math.min(dsp.n, 3))} ${mar} · ${minTxt}`;
           const sit = mom ? situacion(propio, rival, iba_perdiendo(rel, dsp.ref, esCasa)) : null;
-          let frase;
-          if (!sit) frase = `${{ gol: 'Gol', doblete: 'Doblete', triplete: 'Triplete' }[dsp.clase]} de ${nombre} (${equipo})${dsp.penalti ? ' de penalti' : ''}.`;
-          else if (dsp.clase === 'gol') frase = fraseGol(sit, nombre, equipo, sem);
-          else frase = `${dsp.clase === 'doblete' ? 'Doblete' : 'Triplete'} de ${nombre} (${equipo}), que ${VERBO[sit]}.`;
-          if (dsp.penalti && sit) frase += ' Fue de penalti.';
-          if (sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85) frase += mn.min >= 88 ? ' Casi sobre la bocina.' : ' Ya en el tramo final.';
-          else if (sit === 'abre' && mn.min <= 6) frase += ' Apenas habían pasado unos minutos.';
-          cuerpo.push(frase);
+          const goles = '⚽'.repeat(Math.min(dsp.n, 3));
+          // titular: con un gol normal, la frase entera; con doblete, triplete o penalti, eso arriba y lo que supone junto al marcador
+          if (dsp.clase === 'gol' && !dsp.penalti && sit) { cab = titularGol(sit, nombre, equipo, minTxt, sem); ideas.push({ t: marcador, prio: 9 }); }
+          else {
+            const que = dsp.clase === 'doblete' ? 'Doblete' : dsp.clase === 'triplete' ? 'Triplete' : 'Gol';
+            cab = dsp.penalti ? `${goles} ${que} de penalti de ${nombre} en el ${minTxt}` : `${goles} ${que} de ${nombre} en el ${minTxt}`;
+            ideas.push({ t: sit ? `${marcador}: ${el(equipo)} ${VERBO[sit]}` : marcador, prio: 9 });
+          }
+          if (sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85) ideas.push({ t: mn.min >= 88 ? '⏱️ Casi sobre la bocina' : '⏱️ Ya en el tramo final', prio: 4 });
+          else if (sit === 'abre' && mn.min <= 6) ideas.push({ t: '⏱️ Apenas habían pasado unos minutos', prio: 3 });
           if (p) tarjetas.push({ jugadorId: p.id, motivo: dsp.clase === 'doblete' ? 'doblete' : dsp.clase === 'triplete' ? 'triplete' : 'gol' });
           const an = dsp.asistente || asis[`${dsp.jugador}|${dsp.min}`] || null;
           if (an) {
@@ -167,14 +175,12 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
             const na = pa ? pa.nickname || pa.name : an;
             const ptsA = pa && pa.weekPoints != null && Number(pa.weekPoints) > 0 ? Number(pa.weekPoints) : null;
             if (ptsA != null) num.push(ptsA);
-            cuerpo[0] += ' ' + (ptsA != null
-              ? elegir([`Asistencia de ${na}, que ya suma ${ptsA}.`, `El pase, de ${na} (ya lleva ${ptsA}).`], sem + 'a')
-              : elegir([`Asistencia de ${na}.`, `El pase, de ${na}.`, `Lo asistió ${na}.`], sem + 'a'));
+            ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, que ya suma ${ptsA} puntos` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
             if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia' });
           }
-          if (pts != null) cuerpo.push(puntos(nombre, pts, true));
+          if (pts != null) ideas.push(puntos(pts, true));
         }
-        const { usadas, texto } = sinCierre(cab, cuerpo);
+        const { usadas, texto } = tweet(cab, ideas);
         if (!usadas.length) continue;
         out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto,
           numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra,

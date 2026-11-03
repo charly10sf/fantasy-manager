@@ -1,6 +1,7 @@
 // MVP de cada partido acabado: un tweet aparte con la tarjeta de jugador. Solo existe con la tarjeta de jugador encendida
 // (config.tarjetas.jugador): sin imagen repetiría lo que ya dice el tweet del final, así que ejecutar.mjs no lo publica sin ella.
-import { sinCierre, corto, elegir, fmt, partes } from '../lib/texto.mjs';
+import { corto, elegir, fmt, partes, del } from '../lib/texto.mjs';
+import { tweet, segunda, cap } from '../lib/redactar.mjs';
 
 export async function generar({ stats, jornada, jugadores, config, desdeFinal = 0, forzarTarjetas = false, dazn = null }) {
   if (!(config.tarjetas && config.tarjetas.jugador) && !forzarTarjetas) return [];
@@ -19,11 +20,12 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     const marcador = `${corto(m.local.mainName)} ${m.localScore}-${m.visitorScore} ${corto(m.visitor.mainName)}`;
     const cab = `⭐ MVP fantasy del ${marcador}`;
     const num = [jornada, m.localScore, m.visitorScore, pts];
-    const lineas = [elegir([`${nombre} (${equipo}) se sale: ${pts} puntos.`, `${nombre} (${equipo}) se lleva la jornada con ${pts} puntos.`, `${pts} puntos para ${nombre} (${equipo}).`], `mvpt${m.id}`)];
-    if (otro) lineas.push(`Empata con él ${otro.p.nickname || otro.p.name} (${corto(otro.eq.mainName)}).`);
-    lineas.push(`Lleva ${j.points} puntos en la temporada, con ${fmt(j.averagePoints)} de media.`);
+    // el partido ya está arriba: sin el equipo entre paréntesis; la segunda vez, por su puesto (guía de estilo del 3 nov)
+    const ideas = [{ t: elegir([`🔥 ${nombre} se va a ${pts} puntos`, `🔥 ${pts} puntos para ${nombre}`, `🔥 ${nombre} se lleva el partido con ${pts} puntos`], `mvpt${m.id}`), prio: 9 }];
+    if (otro) ideas.push({ t: `🤝 Empata con él ${otro.p.nickname || otro.p.name}`, prio: 7 });
+    ideas.push({ t: `📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`, prio: 6 });
     num.push(Number(j.points), ...partes(j.averagePoints));
-    const { usadas, texto } = sinCierre(cab, lineas, config.tweetMax);
+    const { usadas, texto } = tweet(cab, ideas, { max: config.tweetMax });
     if (!usadas.length) continue;
     out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });
   }
