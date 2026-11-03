@@ -765,7 +765,7 @@ function eqEstadoHTML(S) {
   const at = [];
   for (const x of xs) {
     const c = conf(x);
-    if (MALOS_EQ.includes(x.j.estado)) at.push({ x, n: 'mal', t: x.j.estado === 'injured' ? 'Lesionado' : x.j.estado === 'suspended' ? 'Sancionado' : 'Fuera de LaLiga', sust: true });
+    if (MALOS_EQ.includes(x.j.estado)) at.push({ x, n: 'mal', t: x.j.estado === 'injured' ? 'Lesionado' : x.j.estado === 'suspended' ? (M.sancionCorta && M.sancionCorta(x.j) ? (x.ventaInercia || M.vendeBaja(x) ? 'Sancionado una jornada' : 'Sancionado una jornada: se aguanta') : 'Sancionado más de un partido') : 'Fuera de LaLiga', sust: true });
     else if (['fuera', 'baja'].includes(c)) at.push({ x, n: 'mal', t: 'No va convocado', sust: true });
     else if (['suplente', 'nosale'].includes(c)) at.push({ x, n: 'duda', t: 'No es titular en el once confirmado', sust: true });
     else if (x.j.estado === 'doubtful') at.push({ x, n: 'duda', t: 'En duda para el próximo partido', sust: true });

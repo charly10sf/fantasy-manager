@@ -337,6 +337,59 @@ export function analizar(D, H, c, extra = {}) {
     return (cacheProx[eqId] = null);
   };
 
+  /**
+   * la sanción de un jugador. LaLiga solo dice «suspended», sin cuántos partidos (ni la lista de jugadores ni su ficha
+   * lo traen). Casi todas son de un partido (cinco amarillas, doble amarilla y la mayoría de las rojas directas), así que
+   * se trata como de uno salvo que un dato diga más: que viera una roja (su ficha trae las de cada jornada), no haya
+   * vuelto a jugar desde entonces, su equipo ya haya jugado algún partido de liga sin él (hace más de 36 h: LaLiga
+   * tarda en quitar la sanción) y siga sancionado. Entonces es larga y cuenta como una baja (la guía de lesionados y
+   * sancionados: con una de un partido se aguanta)
+   */
+  const cacheSancion = {};
+  M.sancion = (j) => {
+    if (!j || j.estado !== 'suspended') return null;
+    if (cacheSancion[j.id]) return cacheSancion[j.id];
+    const st = (det[j.id] && det[j.id].stats) || [];
+    const ir = st.map((s) => num(s.roja) > 0).lastIndexOf(true);
+    const roja = ir >= 0 && !st.slice(ir + 1).some((s) => num(s.min) > 0) ? st[ir].n : null;
+    const suyo = (p) => p.localId === j.equipoId || p.visitanteId === j.equipoId;
+    // (los partidos tienen fecha; los resultados viejos, no: esos ya se jugaron hace días)
+    const fecha = {};
+    for (const p of D.partidos || []) if (suyo(p) && p.fecha) fecha[p.jornada] = p.fecha;
+    const sin = new Set();
+    if (roja != null) {
+      for (const p of [...(D.resultados || []), ...(D.partidos || [])]) {
+        if (!suyo(p) || !(p.jornada > roja)) continue;
+        const f = fecha[p.jornada];
+        if (f != null ? f + 2 * HORA < ahora - 36 * HORA : p.gl != null) sin.add(p.jornada);
+      }
+    }
+    const pp = M.proximoPartido(j.equipoId);
+    return (cacheSancion[j.id] = { larga: sin.size > 0, roja, sin: sin.size, jornada: pp ? pp.jornada : null, rival: pp ? pp.rival : null });
+  };
+  /** de baja para venderlo: lesionado, fuera de LaLiga o con una sanción larga (la de un partido se aguanta) */
+  M.deBaja = (j) => !!j && MALOS.has(j.estado) && !(j.estado === 'suspended' && !M.sancion(j).larga);
+  M.sancionCorta = (j) => !!j && j.estado === 'suspended' && !M.sancion(j).larga;
+  /**
+   * ¿toca venderlo por estar de baja? Lesionado, fuera de LaLiga o con una sanción larga, sí. Con una sanción de un
+   * partido, solo si además su valor cae fuerte (más de un 5 % en 7 días o de un 2 % hoy); si no, se pierde la jornada y
+   * se aguanta. Lo demás que hace vender (la inercia, asegurar un beneficio, una buena oferta) va por su lado, como con
+   * cualquier otro
+   */
+  M.vendeBaja = (x) => !!x && !!x.j && (M.deBaja(x.j) || (M.sancionCorta(x.j) && !!x.tend && ((x.tend.p7 != null && x.tend.p7 < -5) || (x.tend.p1 != null && x.tend.p1 < -2))));
+  /** el porqué de venderlo por la baja, para empezar la frase: «Lesionado», «Sancionado más de un partido»… */
+  M.bajaTxt = (j) => {
+    if (j.estado === 'injured') return 'Lesionado';
+    if (j.estado === 'out_of_league') return 'Fuera de LaLiga';
+    const s = M.sancion(j);
+    return s && s.larga ? `Sancionado para más de un partido (su equipo ya ha jugado ${s.sin === 1 ? 'uno' : s.sin} sin él y sigue sancionado)` : 'Sancionado una jornada';
+  };
+  /** lo que se dice de una sanción de un partido: se pierde la jornada y se aguanta */
+  M.sancionCortaTxt = (j) => {
+    const s = M.sancion(j) || {};
+    return `Sancionado: se pierde ${s.jornada ? `la jornada ${s.jornada}` : 'la próxima jornada'}${s.rival ? ` (contra ${s.rival})` : ''} y vuelve a la siguiente. Una sanción de un partido no es motivo para venderlo: baja poco y vuelve enseguida, así que se aguanta.`;
+  };
+
   /* ---------- la clasificación de LaLiga y lo difícil que es cada rival ---------- */
   const tabla = {};
   for (const p of [...(D.resultados || [])].sort((a, b) => (a.jornada || 0) - (b.jornada || 0))) {
@@ -903,7 +956,9 @@ export function analizar(D, H, c, extra = {}) {
   // (y la nota con los días de cláusula, que sale siempre) o null si se puede vender ya. Con la cláusula protegida
   // (14 días de fichaje o blindaje) nadie lo clausula: no hay prisa por ese lado, pero tampoco cobras cláusula
   M.esperarVenta = (x) => {
-    if (!x || !x.j || MALOS.has(x.j.estado)) return null;
+    // (de baja no hay nada que esperar; con una sanción de un partido, como cualquier otro. Antes devolvía null y quien
+    // miraba .tipo de uno de baja fallaba)
+    if (!x || !x.j || M.deBaja(x.j)) return { tipo: null, nota: '', texto: '' };
     const diasProt = x.abreEn > 0 ? Math.max(1, Math.ceil(x.abreEn / DIA)) : 0;
     const notaClausula = diasProt
       ? `Su cláusula sigue protegida ${diasProt} día${diasProt > 1 ? 's' : ''} más: nadie te lo puede clausular hasta entonces.`
@@ -1562,7 +1617,7 @@ export function analizar(D, H, c, extra = {}) {
       // prisa: empezar la jornada en negativo si no se vende antes de la próxima oferta, o que esté de baja
       // (el cambio de mercado del mismo día que empieza la jornada no cuenta: no da tiempo a contar con él)
       const jornadaAntes = M.proxima && (!M.cierreMercado || M.proxima.ini < M.cierreMercado || diaDe(M.cierreMercado) === diaDe(M.proxima.ini));
-      const prisa = (num(D.dinero) < 0 && jornadaAntes) ? 'negativo' : MALOS.has(j.estado) ? 'baja' : null;
+      const prisa = (num(D.dinero) < 0 && jornadaAntes) ? 'negativo' : M.vendeBaja({ j, tend: t }) ? 'baja' : null;
       liga = { posicion: mejor.sobre < OL.p25 ? 'baja' : mejor.sobre > OL.p75 ? 'alta' : 'normal', normal, p25: OL.p25, p75: OL.p75, med: OL.med, dia, esperado, gana: esperado - mejor.importe, prisa };
     }
     if (!mejor) { consejo = 'sin ofertas'; porque = 'Aún no tienes ofertas.'; }
@@ -1574,14 +1629,15 @@ export function analizar(D, H, c, extra = {}) {
     // si no te hace falta el dinero y no te quita puntos, no hay prisa: puede quedarse hasta que llegue una oferta
     // mejor (LaLiga hace una nueva en cada cambio de mercado). Salvo que caiga deprisa (más de un 3 % al día),
     // esté de baja o la oferta sea de las altas
-    else if (num(D.dinero) >= 0 && M.perdida(v.pid) < 0.3 && !MALOS.has(j.estado) && !(liga && liga.posicion === 'alta')
+    // (con una sanción de un partido, igual: se pierde la jornada y se aguanta; por eso no entra en el once de esta)
+    else if (num(D.dinero) >= 0 && M.perdida(v.pid) < 0.3 && !M.vendeBaja({ j, tend: t }) && !(liga && liga.posicion === 'alta')
       && !(ine && j.valor && num(ine.ult) < -0.03 * j.valor) && !(t.p1 != null && t.p1 < -3)) {
       consejo = 'esperar';
-      porque = `No te hace falta el dinero (tienes ${eur(D.dinero)}) y no entra en tu once: puede quedarse hasta que LaLiga te haga una oferta mejor${ine && ine.ult < 0 ? ` (baja unos ${eur(-ine.ult)} al día, poco para lo que varía la oferta de un día a otro)` : ''}.`;
+      porque = M.sancionCorta(j) ? `${M.sancionCortaTxt(j)} No te hace falta el dinero (tienes ${eur(D.dinero)}): puede quedarse hasta que LaLiga te haga una oferta mejor.` : `No te hace falta el dinero (tienes ${eur(D.dinero)}) y no entra en tu once: puede quedarse hasta que LaLiga te haga una oferta mejor${ine && ine.ult < 0 ? ` (baja unos ${eur(-ine.ult)} al día, poco para lo que varía la oferta de un día a otro)` : ''}.`;
     }
     // salvo que acabe de hacer 8 puntos o más: ahí lo normal es que la bajada se frene o se dé la vuelta, y venderlo hoy
     // es hacerlo en el peor momento (con dinero en positivo no hay prisa)
-    else if (pzV && pzV.nivel >= 2 && num(D.dinero) >= 0 && !MALOS.has(j.estado) && ((ine && ['giro', 'baja', 'parado', 'frena'].includes(ine.fase)) || bajando)) {
+    else if (pzV && pzV.nivel >= 2 && num(D.dinero) >= 0 && !M.vendeBaja({ j, tend: t }) && ((ine && ['giro', 'baja', 'parado', 'frena'].includes(ine.fase)) || bajando)) {
       consejo = 'esperar';
       porque = `Venía bajando, pero acaba de hacer ${pzV.pts} puntos: ${pzV.nivel >= 3 ? 'lo normal es que suba estos días' : 'la bajada puede frenarse'}. Espera al cambio de mañana, salvo que necesites el dinero hoy.`;
     }
@@ -1589,7 +1645,7 @@ export function analizar(D, H, c, extra = {}) {
     else if (ine && (ine.fase === 'giro' || ine.fase === 'baja') && mejor.sobre >= -0.05) { consejo = 'aceptar'; porque = `Ha girado a la baja (hoy ${eur(ine.ult, { signo: true })}): cada día que esperes vale menos, y la oferta casi iguala su valor.`; }
     else if (ine && (ine.fase === 'frena' || ine.fase === 'parado') && mejor.sobre >= -0.02) { consejo = 'aceptar'; porque = ine.fase === 'parado' ? 'Ya ha dejado de subir: lo normal es que ahora baje. No esperes.' : `Sube cada vez menos y gira en unos ${Math.max(1, Math.round(ine.giroEn))} días: no esperes a que baje.`; }
     else if (bajando && mejor.sobre >= -0.04) { consejo = 'aceptar'; porque = `Está bajando${t.p7 != null ? ` (${pct(t.p7)} en 7 días)` : ''} y la oferta casi iguala su valor.`; }
-    else if (MALOS.has(j.estado) && mejor.sobre >= -0.1) { consejo = 'aceptar'; porque = 'Está lesionado o sancionado: mejor venderlo ya.'; }
+    else if (M.vendeBaja({ j, tend: t }) && mejor.sobre >= -0.1) { consejo = 'aceptar'; porque = M.deBaja(j) ? `${M.bajaTxt(j)}: mejor venderlo ya.` : `Sancionado una jornada, pero su valor cae deprisa${t.p7 != null && t.p7 < -5 ? ` (${pct(t.p7)} en 7 días)` : ''}: mejor venderlo ya.`; }
     else if (subiendo) { consejo = 'esperar'; porque = 'Está subiendo: mañana puede llegar una oferta mejor.'; }
     else { consejo = 'esperar'; porque = `La oferta se queda un ${Math.round(Math.abs(mejor.sobre) * 100)} % por debajo de lo que vale.`; }
     const deLiga = ofertas.some((o) => o.deLiga);
@@ -1918,7 +1974,7 @@ function acciones(D, M, c) {
 
   // la inercia: lo que ha girado a la baja se vende ya; lo que está a punto de girar, antes de que gire
   // (los que ya están en venta no: ahí manda la oferta que tengan, en «Tus jugadores en venta»)
-  M.mias.filter((x) => x.ventaInercia && !MALOS.has(x.j.estado) && !M.enVenta.has(x.pid)).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
+  M.mias.filter((x) => x.ventaInercia && !M.vendeBaja(x) && !M.enVenta.has(x.pid)).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
     const vi = x.ventaInercia, pierde = M.perdida(x.pid);
     add({
       tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
@@ -1934,13 +1990,20 @@ function acciones(D, M, c) {
     texto: `Cláusula ${eur(x.clausula)} (vale ${eur(x.j.valor)}). Subirle la cláusula hasta que no le llegue a nadie costaría ${eur(x.blindaje.coste)}: no compensa. Si te lo quitan, cobras la cláusula; ten pensado su sustituto (te da ${String(Math.round(x.pierde * 10) / 10).replace('.', ',')} pts por jornada).`,
   }));
 
-  M.mias.filter((x) => MALOS.has(x.j.estado)).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => M.vendeBaja(x)).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 60, icono: 'lesion', pid: x.pid, cuando: 'Esta semana',
     titulo: `${x.j.nombre}: ${x.j.estado === 'injured' ? 'lesionado' : x.j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'}`,
-    texto: `No te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y baja ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Plantéate venderlo antes de que pierda más valor.`,
+    texto: `${M.deBaja(x.j) ? `${M.bajaTxt(x.j)}: no` : 'Sancionado una jornada, pero su valor cae deprisa: no'} te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y baja ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Plantéate venderlo antes de que pierda más valor.`,
+  }));
+  // una sanción de un partido: se pierde la jornada y se aguanta (salvo que haya otra razón para venderlo, que va aparte)
+  M.mias.filter((x) => M.sancionCorta(x.j) && !M.vendeBaja(x) && !x.ventaInercia && !(x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3) && !M.enVenta.has(x.pid)).slice(0, 2).forEach((x) => add({
+    tipo: 'alinear', prio: 56, icono: 'lesion', pid: x.pid, cuando: (M.sancion(x.j) || {}).jornada ? `Jornada ${M.sancion(x.j).jornada}` : 'Próxima jornada',
+    titulo: `${x.j.nombre}: sancionado una jornada`,
+    texto: `${M.sancionCortaTxt(x.j)} Si está en tu once, pon a otro.`,
+    hash: 'equipo',
   }));
 
-  M.mias.filter((x) => !x.ventaInercia && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3 && !MALOS.has(x.j.estado) && !M.esperarVenta(x).tipo).slice(0, 2).forEach((x) => add({
+  M.mias.filter((x) => !x.ventaInercia && (M.partidazo(x.pid) || {}).nivel !== 2 && (M.partidazo(x.pid) || {}).nivel !== 3 && x.ganado > 0 && x.tend.p7 != null && x.tend.p7 < -3 && !M.vendeBaja(x) && !M.esperarVenta(x).tipo).slice(0, 2).forEach((x) => add({
     tipo: 'vender', prio: 50, icono: 'hucha', pid: x.pid, cuando: 'Antes de que baje más',
     titulo: `Vende a ${x.j.nombre} con beneficio`,
     texto: `Lo compraste por ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}), pero lleva ${pct(Math.abs(x.tend.p7), 1, false)} de bajada en 7 días.${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,
@@ -2014,9 +2077,10 @@ export function planAuto(D, M, c) {
   }
 
   // 1. vender lo que no va a puntuar o se está desplomando con beneficio
-  for (const x of M.mias.filter((y) => MALOS.has(y.j.estado) && !vendidos.has(y.pid))) {
+  // (una sanción de un partido no: se pierde la jornada y se aguanta, salvo que su valor caiga fuerte; M.vendeBaja)
+  for (const x of M.mias.filter((y) => M.vendeBaja(y) && !vendidos.has(y.pid))) {
     op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
-      motivo: `${x.j.estado === 'injured' ? 'Lesionado' : x.j.estado === 'suspended' ? 'Sancionado' : 'Fuera de LaLiga'}: no te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y ya ha perdido un ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Mejor venderlo antes de que baje más.`, confianza: 'alta' });
+      motivo: `${M.deBaja(x.j) ? M.bajaTxt(x.j) : 'Sancionado una jornada, pero su valor cae deprisa'}: no te va a puntuar${x.tend.p7 != null && x.tend.p7 < 0 ? ` y ya ha perdido un ${pct(Math.abs(x.tend.p7), 1, false)} en 7 días` : ''}. Mejor venderlo antes de que baje más.`, confianza: 'alta' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
   // si al venderlo tu once se queda con un hueco más (no hay otro sano en su puesto) y la jornada está cerca (menos de 3
@@ -2163,8 +2227,9 @@ export function planAuto(D, M, c) {
   // 6. alineación si la jornada empieza pronto (con otra en juego, no: su «próximo partido» mezcla las dos)
   if (inicio && inicio - ahora < 30 * HORA && inicio > ahora && !M.enJuego) {
     const tocados = M.mias.filter((x) => !vendidos.has(x.pid) && x.j.estado === 'doubtful');
+    const sancionados = M.mias.filter((x) => !vendidos.has(x.pid) && M.sancionCorta(x.j));
     op({ accion: 'alinear', jugador: '', donde: `jornada ${M.proxima.n}`, importe: null, cuando: `antes de ${cuando(inicio)}`,
-      motivo: `Pon el ${onceAhora.nombre}: ${onceAhora.lineas.flat().map((j) => j.nombre).join(', ')}.${onceAhora.huecos ? ` Te faltan ${onceAhora.huecos} para completarlo.` : ''}${tocados.length ? ` Ojo con ${tocados.map((x) => x.j.nombre).join(', ')}, que son duda.` : ''}` });
+      motivo: `Pon el ${onceAhora.nombre}: ${onceAhora.lineas.flat().map((j) => j.nombre).join(', ')}.${onceAhora.huecos ? ` Te faltan ${onceAhora.huecos} para completarlo.` : ''}${tocados.length ? ` Ojo con ${tocados.map((x) => x.j.nombre).join(', ')}, que son duda.` : ''}${sancionados.length ? ` ${sancionados.map((x) => x.j.nombre).join(', ')} ${sancionados.length === 1 ? 'está sancionado y se pierde' : 'están sancionados y se pierden'} la jornada: ${sancionados.length === 1 ? 'aguántalo, vuelve' : 'aguántalos, vuelven'} a la siguiente.` : ''}` });
   }
   if (!ops.length) op({ accion: 'esperar', jugador: '', donde: '', importe: null, cuando: 'hoy', motivo: 'Hoy no hay ninguna operación clara: ni cláusulas que merezcan la pena abiertas ni chollos en el mercado. Mejor guardar el dinero.', confianza: 'media' });
 

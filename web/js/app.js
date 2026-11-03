@@ -85,7 +85,7 @@ function pantallaEntrar(error = '') {
   // en el ordenador, el QR para entrar escaneándolo con la app del móvil (0.6.12)
   if (!enApp && !movilDe()) iniciarQR(); else pararQR();
   // en el ordenador, el cursor directamente en el código; en el móvil no (sacaría el teclado tapando lo de arriba)
-  if (!enApp && !movilDe()) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus(); }, 50);
+  if (!enApp && !movilDe()) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus({ preventScroll: true }); }, 50);
 }
 /** desde qué móvil se abre la web: 'android', 'iphone' o null (ordenador) */
 function movilDe() {
@@ -104,7 +104,7 @@ const codigoWebHTML = () => `<div class="entrar-codigo">
 /** en el ordenador: el QR que se escanea con la app del móvil (0.6.12). El dibujo y la espera, en iniciarQR */
 const qrEntrarHTML = () => `<div class="entrar-qr">
       <div class="eq-qr" id="eqQR"></div>
-      <div class="eq-t"><b>${icono('usuario')}Entra con el móvil</b>
+      <div class="eq-t"><b>${icono('usuario')}Escanea con la app</b>
       <span>En la app del móvil: <b>Ajustes → Abrir en el ordenador → Escanear QR</b>, y apunta aquí. Entras solo, sin escribir nada.</span>
       <span class="eq-est" id="eqEst">Esperando al móvil…</span></div>
     </div>`;
@@ -112,12 +112,15 @@ const qrEntrarHTML = () => `<div class="entrar-qr">
  * lo de entrar en la web, según desde dónde se abra. En un Android lo suyo es la app, sin códigos (era lo que más lía a
  * quien abre la web desde el enlace): el botón de bajarla es lo primero y el código queda plegado, para quien ya la
  * tiene. En el iPhone, cómo se entra la primera vez, y la liga de ejemplo para ver qué es antes de ese paso. En el
- * ordenador, el código y los pasos para copiar la vuelta a mano (con F12), que en un móvil no sirven de nada.
+ * ordenador, primero lo de quien llega nuevo (qué es, la liga de ejemplo y descargar la app, con su QR) y debajo, para quien
+ * ya la tiene, el QR y el código; los pasos para copiar la vuelta a mano (con F12), que en un móvil no sirven de nada,
+ * van plegados en «No tengo la app en el móvil» (el texto del iPhone lo nombra así).
  */
+const APK_WEB = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk';
 function entrarWebHTML() {
   const movil = movilDe();
   if (movil === 'android') {
-    return `<a class="btn ancho cta-grande" href="https://fantasymanagerapp.com/descargas/fantasy-manager.apk">${icono('descargar')}Descargar la app para Android</a>
+    return `<a class="btn ancho cta-grande" href="${APK_WEB}">${icono('descargar')}Descargar la app para Android</a>
     <p class="cta-nota">Gratis. Se instala en un minuto y entras con tu cuenta de LaLiga, sin códigos.</p>
     ${botonDemo('sec')}
     <details class="sin-app"><summary>¿El móvil no te deja instalarla?</summary>
@@ -129,7 +132,17 @@ function entrarWebHTML() {
     ${botonDemo('')}
     ${codigoWebHTML()}`;
   }
-  return `${qrEntrarHTML()}${codigoWebHTML()}
+  // en el ordenador, primero lo de quien llega nuevo (qué es, la liga de ejemplo y descargar la app) y debajo, para
+  // quien ya la tiene, el QR y el código de siempre (lo que hacen igual que antes: solo cambia el orden)
+  return `<div class="entrar-nuevo">
+      <b>${icono('rayo')}¿Es tu primera vez?</b>
+      <span>Mira todo lo que hace con una liga de ejemplo, sin cuenta y sin instalar nada. Para seguir tu liga, descarga la app en el móvil y entra con tu cuenta de LaLiga.</span>
+      <button class="btn ancho" data-accion="entrarDemo">Ver con una liga de ejemplo</button>
+      <div class="en-apk">
+        <div class="en-apk-qr" title="Escanéalo con la cámara del móvil">${qrSVG(APK_WEB)}</div>
+        <div class="en-apk-t"><a class="btn sec ancho" href="${APK_WEB}">${icono('descargar')}Descargar para Android</a>
+        <span>O escanea el QR con la cámara del móvil y se descarga allí. Es gratis.</span></div>
+      </div>
     <details class="sin-app"><summary>No tengo la app en el móvil</summary>
       <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un código para escribirlo aquí en el iPhone.</p>
       <ol>
@@ -143,7 +156,9 @@ function entrarWebHTML() {
       <textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea>
       <button class="btn chico" data-accion="pegarVuelta">Entrar</button>
     </details>
-    ${botonDemo('sec')}`;
+    </div>
+    <div class="entrar-ya"><h2>¿Ya tienes la app en el móvil?</h2>
+    ${qrEntrarHTML()}${codigoWebHTML()}</div>`;
 }
 /**
  * El QR del ordenador (0.6.12): un id al azar de 128 bits en un enlace a la web (si alguien lo escanea con la cámara

@@ -69,8 +69,11 @@ export function avisosNuevos(antes, D, M) {
       hash: 'equipo',
     });
   }
-  for (const x of (M.mias || []).filter((y) => ['injured', 'suspended', 'out_of_league'].includes(y.j.estado) && !enVenta.has(y.pid) && !y.ventaInercia)) {
-    out.push({ k: `lesion-venta:${x.pid}:${x.j.estado}`, titulo: `Pon a ${x.j.nombre} en el mercado`, texto: `Está ${x.j.estado === 'injured' ? 'lesionado' : x.j.estado === 'suspended' ? 'sancionado' : 'fuera de LaLiga'}: no te va a puntuar y puede bajar de valor.`, hash: 'equipo' });
+  // (una sanción de un partido no hace vender: se pierde la jornada y se aguanta, salvo que su valor caiga fuerte)
+  const vendeBaja = (x) => (M.vendeBaja ? M.vendeBaja(x) : ['injured', 'suspended', 'out_of_league'].includes(x.j.estado));
+  for (const x of (M.mias || []).filter((y) => vendeBaja(y) && !enVenta.has(y.pid) && !y.ventaInercia)) {
+    const por = x.j.estado === 'suspended' ? (!M.deBaja ? 'sancionado' : M.deBaja(x.j) ? 'sancionado para más de un partido' : 'sancionado y su valor cae deprisa') : x.j.estado === 'injured' ? 'lesionado' : 'fuera de LaLiga';
+    out.push({ k: `lesion-venta:${x.pid}:${x.j.estado}`, titulo: `Pon a ${x.j.nombre} en el mercado`, texto: `Está ${por}: no te va a puntuar y puede bajar de valor.`, hash: 'equipo' });
   }
   if (M.ventanaEsp && Date.now() >= M.ventanaEsp.ponerVenta) {
     for (const x of (M.paraRevender || []).filter((y) => !enVenta.has(y.pid))) {

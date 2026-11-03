@@ -571,7 +571,7 @@ const lineaJ = (M, j, x = {}) => [
   j.pos < 5 ? previaTxt(M, j) : null,
   j.pos < 5 ? esperadosTxt(M, j) : null,
   j.pos < 5 ? rivalTxt(M, j) : null,
-  j.estado && j.estado !== 'ok' ? `ESTADO: ${j.estado}` : null,
+  j.estado && j.estado !== 'ok' ? `ESTADO: ${j.estado}${j.estado === 'suspended' && M.sancion ? (M.sancion(j).larga ? ' (sanción de más de un partido: su equipo ya ha jugado sin él y sigue sancionado)' : ' (sanción de un partido: se pierde la próxima jornada y vuelve a la siguiente; por eso solo no se vende)') : ''}` : null,
 ].filter(Boolean).join(' | ');
 function onceTxt(M, j) {
   if (!j || j.pos === 5) return null;
@@ -1181,6 +1181,13 @@ export function cuadrarPlan(P, D, M) {
           if (sube > importe && PL && !PL.poco) {
             aviso = `${aviso ? `${aviso}. ` : ''}Subida de ${eur(importe)} a ${eur(sube)}: ${PV ? `en esta liga, los libres de su valor (de ${eur(PV.desde)} a ${eur(PV.hasta)}) se llevan de mediana con un ${pct(PV.med * 100)} sobre su valor (la mitad, entre ${pct(PV.p25 * 100)} y ${pct(PV.p75 * 100)})` : `en esta liga los libres se llevan de mediana con un ${pct(PL.med * 100)} sobre su valor (la mitad, entre ${pct(PL.p25 * 100)} y ${pct(PL.p75 * 100)})`}; con menos lo normal es perderlo${sube < opC.puja ? `. La app pujaría ${eur(opC.puja)}, pero no te llega para más` : ''}.`;
             importe = sube; o.puja_max = importe;
+          } else if (opC.puja && opC.puja >= opC.precio && importe > opC.puja * 1.1 && importe - opC.puja > 500000) {
+            // y al revés: si la IA puja claramente más que la app, se baja a la de la app. La de la app ya cuenta las
+            // pujas que lleva, si está subiendo, lo que se paga en esta liga por los de su valor (hasta el p90 con
+            // muchas pujas) y lo que aguanta pagar por lo que aporta; un 10 % por encima ya es pagar de más. Y como
+            // poco medio millón: en los baratos un 10 % son cuatro duros y se pagan más caros en porcentaje
+            aviso = `${aviso ? `${aviso}. ` : ''}La IA pujaba ${eur(importe)}. La app la deja en ${eur(opC.puja)}: con más pagarías de más.`;
+            importe = opC.puja; o.puja_max = importe;
           }
           break;
         }
@@ -1228,6 +1235,12 @@ export function cuadrarPlan(P, D, M) {
       const trato = (opC && opC.trato) || notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe);
       if (s && !s.ok && accion === 'clausular' && !trato) { descartada = true; aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: ${s.txt}, y no es un titular seguro con buen partido como para ficharlo solo por los puntos.`; }
       else if (s && s.pierde > 0) aviso = `${aviso ? `${aviso} ` : ''}Salida: ${s.txt}.`;
+    }
+    // vender a uno con una sanción de un partido: no es motivo por sí solo (la guía de lesionados y sancionados); si la IA
+    // no tiene otra razón de las que ve la app (la inercia, que su valor caiga fuerte), se dice
+    if (!ya && !descartada && accion === 'vender' && !aceptar && j && M.sancionCorta && M.sancionCorta(j)) {
+      const x = M.mias.find((y) => y.pid === pid);
+      if (x && !x.ventaInercia && !M.vendeBaja(x)) aviso = `${aviso ? `${aviso} ` : ''}Ojo: solo está sancionado una jornada. Se pierde la próxima y vuelve a la siguiente: por eso solo no hace falta venderlo.`;
     }
     // fichar a un lesionado o sancionado para el once: aviso
     if (!ya && !descartada && signo < 0 && j && ['injured', 'suspended'].includes(j.estado) && !String(o.objetivo || '').startsWith('revend')) aviso = `${aviso ? `${aviso} ` : ''}Ojo: está ${j.estado === 'injured' ? 'lesionado' : 'sancionado'}.`;
@@ -1314,7 +1327,7 @@ export function cuadrarPlan(P, D, M) {
     o.compra = { precio: x.compra, gana: precio - x.compra, con: o.importe ? 'venta' : 'valor' };
     if (o.descartada || o.compra.gana >= 0 || !o.hoy || final == null || final - (o.importe || 0) < 0) continue;
     const t = M.tend(o.pid);
-    const bajando = ((M.partidazo && M.partidazo(o.pid)) || {}).nivel !== 3 && (x.ventaInercia || (t.p1 != null && t.p1 < -1) || (t.p7 != null && t.p7 < -3) || ['injured', 'suspended'].includes(x.j.estado));
+    const bajando = ((M.partidazo && M.partidazo(o.pid)) || {}).nivel !== 3 && (x.ventaInercia || (t.p1 != null && t.p1 < -1) || (t.p7 != null && t.p7 < -3) || (M.vendeBaja ? M.vendeBaja(x) : ['injured', 'suspended'].includes(x.j.estado)));
     if (bajando || /No hace falta venderlo/.test(o.aviso || '')) continue;
     const perder = `Lo venderías por ${eur(-o.compra.gana)} menos de lo que pagaste, no te hace falta el dinero y no está bajando: puede esperar a una oferta mejor.`;
     // y si además la oferta no llega a su valor, ni se propone

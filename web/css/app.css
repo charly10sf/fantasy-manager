@@ -929,6 +929,24 @@ a.btn { text-decoration: none; }
 .eq-t .eq-est::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--verde, #2bb673); margin-right: 6px; vertical-align: 1px; animation: eqLatido 1.6s ease-in-out infinite; }
 @keyframes eqLatido { 50% { opacity: 0.25; } }
 @media (prefers-reduced-motion: reduce) { .eq-t .eq-est::before { animation: none; } }
+/* en el ordenador, lo del que llega nuevo arriba (qué es, la liga de ejemplo y descargar la app) y, debajo, para quien ya
+   tiene la app, el QR y el código */
+.entrar-nuevo { text-align: left; margin: 0 0 18px; }
+.entrar-nuevo > b { display: flex; align-items: center; gap: 8px; font: 700 19px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; }
+.entrar-nuevo > b .ic { width: 19px; height: 19px; color: var(--rojo-l); }
+.entrar-nuevo > span { display: block; color: var(--texto2); font-size: 14.5px; line-height: 1.45; margin: 6px 0 14px; }
+.entrar-nuevo > .btn { margin: 0 0 12px; }
+.en-apk { display: flex; gap: 14px; align-items: center; }
+.en-apk-qr { flex: none; width: 92px; height: 92px; background: #fff; border-radius: 8px; }
+.en-apk-qr svg.qr { width: 92px; height: 92px; display: block; border-radius: 8px; }
+.en-apk-t { flex: 1; min-width: 0; }
+.en-apk-t .btn { margin: 0; }
+.en-apk-t > span { display: block; color: var(--texto2); font-size: 13px; margin-top: 8px; }
+.entrar-nuevo .sin-app { margin-top: 14px; }
+.entrar-ya { text-align: left; border-top: 1px solid var(--linea); padding-top: 16px; }
+.entrar-ya > h2 { margin: 0 0 12px; font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); }
+.entrar-ya .entrar-qr { padding: 12px; }
+.entrar-ya .eq-qr, .entrar-ya .eq-qr svg.qr { width: 120px; height: 120px; }
 .vinc-qr { display: flex; gap: 12px; align-items: center; margin: 12px 0; padding: 12px; border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); }
 .vinc-qr svg.qr { flex: none; width: 112px; height: 112px; border-radius: 8px; }
 .vinc-qr p { margin: 0; font-size: 14px; color: var(--texto2); }
