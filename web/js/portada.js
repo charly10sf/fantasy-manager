@@ -21,13 +21,14 @@ const ini = (n) => String(n || '').replace(/[^\p{L} ]/gu, '').split(' ').filter(
 /** la cara de un jugador de la demo: sus iniciales y, cuando llegan de LaLiga, su foto y el escudo de su equipo */
 const cara = (lid, nombre, eq, cls = '') => `<span class="mq-av pc ${cls}" data-lid="${lid}"${eq ? ` data-eq="${eq}"` : ''}><i>${esc(ini(nombre))}</i></span>`;
 
-const NAV = [['rayo', 'Hoy'], ['equipo', 'Equipo'], ['rivales', 'Rivales'], ['mercado', 'Mercado'], ['ia', 'Pregunta']];
+/** la barra de abajo de la app (NAV de app.js); Pregunta va arriba, en rojo */
+const NAV = [['rayo', 'Hoy'], ['equipo', 'Equipo'], ['directo', 'Directo'], ['rivales', 'Rivales'], ['mercado', 'Mercado'], ['club', 'Clubes']];
 
-/** el marco de un móvil con la cabecera de la app, la pestaña activa abajo y la pantalla que se le pase */
+/** el marco de un móvil con la cabecera de la app, la pestaña activa abajo (o 'ia', Pregunta, arriba) y la pantalla que se le pase */
 function movil(activa, pantalla) {
   const nav = NAV.map(([ic, t], i) => `<span${i === activa ? ' class="on"' : ''}>${icono(ic)}<i>${t}</i></span>`).join('');
   return `<div class="mq" aria-hidden="true"><div class="mq-p">
-    <div class="mq-cab">${LOGO_P}<span><b>Liga de ejemplo</b><small><u></u>Al día</small></span></div>
+    <div class="mq-cab">${LOGO_P}<span><b>Liga de ejemplo</b><small><u></u>Al día</small></span><span class="mq-preg${activa === 'ia' ? ' on' : ''}">${icono('ia')}<i>Pregunta</i></span></div>
     <div class="mq-cuerpo">${pantalla}</div>
     <div class="mq-nav">${nav}</div>
   </div></div>`;
@@ -72,9 +73,9 @@ const CHAT = `
 const PIES = [
   [0, PLAN, 'Qué hacer hoy', 'Abres la app y el plan ya está hecho: vender, clausular y pujar, en orden y con el saldo que te queda después de cada operación.',
     ['Con la hora límite de cada cosa', 'Lo que ya has hecho se marca solo', 'Compártelo con tu liga como imagen']],
-  [2, CLAUSULAS, 'Cláusulas a tiro', 'Las cláusulas de tus rivales que te llegan con tu dinero y cuándo se abren las que están protegidas.',
+  [3, CLAUSULAS, 'Cláusulas a tiro', 'Las cláusulas de tus rivales que te llegan con tu dinero y cuándo se abren las que están protegidas.',
     ['Aviso al minuto cuando se abre una que te interesa', 'Quién puede ir a por las tuyas', 'Lo que suele pagar cada rival']],
-  [4, CHAT, 'Pregúntale lo que quieras', 'Una IA gratis que lee lesiones, convocatorias y alineaciones antes de contestar. También entiende capturas.',
+  ['ia', CHAT, 'Pregúntale lo que quieras', 'Una IA gratis que lee lesiones, convocatorias y alineaciones antes de contestar. También entiende capturas.',
     ['Conoce tu plantilla y tu dinero', 'La app comprueba sus cuentas', 'Con tu propia clave gratuita']],
 ];
 
@@ -89,7 +90,7 @@ const ONCE = [
     [3101, 'Bellingham', 15, 'MED', 87.1, 87.1, 10, 94, 'El valor ha pasado su cláusula y LaLiga la ha subido sola hasta su valor: no te ha costado nada.'],
     [1715, 'Fermín', 4, 'MED', 67.3, 70.6, 8.5, 72, 'Con Champions entre semana, la app le baja la probabilidad de ser titular por la rotación. Ten a mano un suplente.']],
   [[3155, 'Grimaldo', 2, 'DEF', 61.4, 64.5, 8.6, 91, '8,6 puntos de media: el que más suma de tu defensa. El más caro, y lo vale.'],
-    [1775, 'Cubarsí', 4, 'DEF', 44.2, 52.1, 4.2, 85, 'Media baja para lo que vale. Si te piden más de 50 M, la app te dirá que lo vendas.'],
+    [1775, 'Cubarsí', 4, 'DEF', 44.2, 52.1, 4.2, 85, 'Media baja para lo que vale. Si te ofrecen más de 50 M, la app te dirá que lo vendas.'],
     [2530, 'Huijsen', 15, 'DEF', 22.4, 24.9, 4.9, 64, '64 % de ser titular. El once confirmado sale una hora antes del partido: si no está, la app te avisa.'],
     [3106, 'Cucurella', 15, 'DEF', 24.4, 27.0, 3.8, 82, 'Ha bajado 7 días seguidos, pero juega mañana de titular: la app no te manda venderlo por eso.']],
   [[230, 'Courtois', 15, 'POR', 33.7, 37.1, 7.1, 99, 'Titular fijo y su cláusula no le llega a ningún rival. Tranquilo.']],
@@ -211,10 +212,10 @@ function resultado(tipo, k) {
 /* ---------- 6. preguntas y privacidad ---------- */
 const PREGUNTAS = [
   ['¿Es la app oficial de LaLiga Fantasy?', 'No. Fantasy Manager no es de LaLiga ni tiene relación con LaLiga, LaLiga Fantasy ni sus patrocinadores. Lee tu liga con tu propia cuenta y hace las cuentas que el juego no te enseña.'],
-  ['¿Cuánto cuesta?', 'Nada. Se paga con anuncios de Google, los de esta web y los de la versión de Android de Google Play. No hay plan de pago y no se venden datos de nadie.'],
+  ['¿Cuánto cuesta?', 'Nada. Se paga con anuncios de Google en esta web (y en la versión de Google Play, cuando salga). No hay plan de pago y no se venden datos de nadie.'],
   ['¿La app ve mi contraseña?', 'No. Entras en la página oficial de LaLiga, como siempre (también con Google), y LaLiga le da a la app una sesión para leer tu liga.'],
   ['¿Dónde se guardan los datos de mi liga?', 'Solo en tu móvil o en tu navegador. Lo que se guarda y dónde está contado en la política de privacidad.'],
-  ['¿Funciona en iPhone y en el ordenador?', 'En Android, con la app, que se instala desde esta web. En el ordenador, en el navegador, entrando con un código que te da la app del móvil. En iPhone no hay app: en el navegador puedes verla con la liga de ejemplo o entrar con un código desde otro dispositivo.'],
+  ['¿Funciona en iPhone y en el ordenador?', 'En Android, con la app, que se instala desde esta web. En el ordenador, desde esta web: con la app del móvil entras escaneando un QR, y sin ella la web te explica cómo entrar. En iPhone no hay app, pero la web funciona: la primera vez hay que entrar desde un ordenador, porque LaLiga no deja hacerlo en el iPhone; ya dentro, en Ajustes → Abrir en otro dispositivo sacas un código para el iPhone. Antes puedes verla con la liga de ejemplo.'],
   ['¿Qué hace la IA y qué necesito para usarla?', 'Lee lesiones, convocatorias y alineaciones antes de proponerte el plan o de contestar lo que le preguntes. Usa una clave gratuita tuya; la app te enseña a sacarla en un par de minutos. Lo que propone pasa antes por la app, que comprueba que las cuentas de dinero salen.'],
   ['¿De dónde salen los datos de fútbol?', 'Los de tu liga, de LaLiga Fantasy con tu sesión. Las alineaciones probables, lesiones, estadísticas y noticias, de páginas públicas.'],
 ];
@@ -228,15 +229,46 @@ const PRIVACIDAD = [
 const ENLACES = [['guias/', 'Guías'], ['quienes-somos.html', 'Quiénes somos'], ['contacto.html', 'Contacto'], ['privacidad.html', 'Privacidad'], ['instalar.html', 'Instalar']];
 const APK = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk';
 
-/** las guías que salen en la portada (todas, en guias/): [archivo, icono, título, de qué va] */
+// <guias>
+/** las guías publicadas, en orden: [archivo en guias/, nombre corto] (las escribe .github/paginas.py) */
+const TODAS_GUIAS = [
+  ["empezar-liga.html", "Empezar una liga"],
+  ["puntos-laliga-fantasy.html", "Puntos"],
+  ["glosario.html", "Glosario"],
+  ["clausulas-laliga-fantasy.html", "Cláusulas"],
+  ["subir-clausula.html", "Subir la cláusula"],
+  ["cuando-clausular.html", "Cuándo clausular"],
+  ["hora-mercado-laliga-fantasy.html", "Hora del mercado"],
+  ["valor-de-mercado.html", "Valor de mercado"],
+  ["cuanto-pujar.html", "Cuánto pujar"],
+  ["cuando-vender.html", "Cuándo vender"],
+  ["saldo-negativo.html", "Saldo negativo"],
+  ["ganar-dinero.html", "Ganar dinero"],
+  ["alineacion.html", "Alineación"],
+  ["puntos-porteros-laliga-fantasy.html", "Puntos de los porteros"],
+  ["lesionados-sancionados.html", "Lesionados"],
+];
+const FAQ_GUIA = "preguntas-frecuentes.html";
+// </guias>
+
+/** las guías con tarjeta en la portada: [archivo en guias/, icono, título, de qué va]. El resto sale en «También:» */
 const GUIAS = [
+  ['empezar-liga.html', 'bandera', 'Empezar una liga', 'El equipo inicial, el primer mercado y los errores que más cuestan.'],
+  ['puntos-laliga-fantasy.html', 'estrella', 'Cómo se puntúa', 'La tabla de puntos por posición, los tramos y la valoración DAZN.'],
   ['clausulas-laliga-fantasy.html', 'candado', 'Cláusulas', 'Cuándo sube sola, los 14 días de protección y el cierre de 24 h.'],
   ['subir-clausula.html', 'escudo', 'Subir la cláusula', 'Cuánto cuesta, hasta dónde compensa y cuándo basta el blindaje.'],
   ['cuando-clausular.html', 'diana', 'Cuándo clausular', 'Lo que pagas de más, lo que sube y lo que te deja en caja.'],
+  ['hora-mercado-laliga-fantasy.html', 'reloj', 'A qué hora cambia el mercado', 'El cambio de cada noche y lo que cierra antes de la jornada.'],
+  ['valor-de-mercado.html', 'grafico', 'Valor de mercado', 'Qué lo mueve y cómo leer una racha.'],
   ['cuanto-pujar.html', 'euro', 'Cuánto pujar', 'Pujas a ciegas, margen de deuda y cómo pujan tus rivales.'],
   ['cuando-vender.html', 'baja', 'Cuándo vender', 'A LaLiga o a un rival, y cuándo esperar un día más.'],
-  ['valor-de-mercado.html', 'grafico', 'Valor de mercado', 'A qué hora cambia, qué lo mueve y cómo leer una racha.'],
-];
+].filter(([h]) => TODAS_GUIAS.some(([x]) => x === h));
+/** «También: …», con enlace: las publicadas que no tienen tarjeta y las preguntas frecuentes */
+function otrasGuias() {
+  const otras = TODAS_GUIAS.filter(([h]) => !GUIAS.some(([x]) => x === h)).map(([h, t]) => `<a href="guias/${h}">${esc(t.charAt(0).toLowerCase() + t.slice(1))}</a>`);
+  if (FAQ_GUIA) otras.push(`<a href="guias/${FAQ_GUIA}">las preguntas frecuentes</a>`);
+  return otras.length > 1 ? `${otras.slice(0, -1).join(', ')} y ${otras[otras.length - 1]}` : otras.join('');
+}
 
 /** la cabecera de cada sección: a la izquierda lo que es y el título, a la derecha (en el ordenador) la entradilla */
 const seccion = (id, kicker, titulo, cuerpo, intro = '', clase = '') => `<section class="ps ${clase}" id="${id}" aria-labelledby="${id}T">
@@ -267,7 +299,7 @@ export function seccionMoviles() {
     <a class="btn sec pt-web" href="#" tabindex="-1" title="Fantasy Manager funciona también en el navegador, sin descargar nada"><span class="pt-largo">Usar en la web</span><span class="pt-corto">Web</span></a>
     <a class="btn pt-cta" href="${APK}" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
 
-  ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Las tres pantallas que vas a abrir cada día.', 'ph')}
+  ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
 
   ${seccion('pOnce', 'Tu equipo', 'Tu once, de un vistazo', `<div class="pc"><div class="pc-campo-w rv">${campo()}</div><div class="pc-ficha rv" aria-live="polite">${fichaOnce(3103)}</div></div>`,
     'Toca un jugador: lo que vale, su cláusula, si va a jugar y qué te aconseja la app.')}
@@ -287,7 +319,7 @@ export function seccionMoviles() {
     'Las mismas cuentas que hace la app con tu liga. Mueve los números y mira qué cambia.')}
 
   ${seccion('pGuias', 'Aprende', 'Guías del juego', `<div class="pg">${GUIAS.map(([h, ic, t, x], i) => `<a class="pg-c rv" href="guias/${h}"><span class="pg-ic">${icono(ic)}</span><span class="pg-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${esc(x)}</p><span class="pg-ir">Leer la guía${icono('flecha')}</span></a>`).join('')}</div>
-    <div class="pg-todas rv"><a class="btn sec" href="guias/">${icono('lista')}Ver las 13 guías</a><span>También: saldo negativo, alineación, ganar dinero, lesionados, empezar una liga y glosario.</span></div>`,
+    <div class="pg-todas rv"><a class="btn sec" href="guias/">${icono('lista')}Ver las ${TODAS_GUIAS.length} guías</a><span>También: ${otrasGuias()}.</span></div>`,
     'Cómo funcionan las cláusulas, el mercado y el dinero de LaLiga Fantasy, explicado con números. Gratis y sin entrar.')}
 
   ${seccion('pFaq', 'Dudas', 'Preguntas frecuentes', `<div class="pq">${PREGUNTAS.map(([p, r]) => `<details class="rv"><summary>${esc(p)}</summary><p>${esc(r)}</p></details>`).join('')}</div>`)}
@@ -295,7 +327,7 @@ export function seccionMoviles() {
   ${seccion('pPriv', 'Privacidad', 'Tus datos, tuyos', `<div class="pp">${PRIVACIDAD.map(([ic, t, x]) => `<article class="rv">${icono(ic)}<h3>${t}</h3><p>${x}</p></article>`).join('')}</div>`)}
 
   <section class="pz rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
-    <p class="ps-i">Gratis, para Android y en el navegador: en el ordenador y en el iPhone se usa desde esta misma web, sin descargar nada.</p>
+    <p class="ps-i">Gratis. En Android, con la app. En el ordenador se usa desde esta misma web, sin descargar nada, y en el iPhone también, después de entrar una vez desde un ordenador.</p>
     <div class="pz-b"><a class="btn" href="${APK}">${icono('descargar')}Descargar la app para Android</a><a class="btn sec" href="#">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     ${proxPlay()}
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
