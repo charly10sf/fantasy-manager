@@ -1087,7 +1087,8 @@
    "AS|https://as.com/futbol/primera/bardeli-de-regreso-f202611-n/": 1793727567000,
    "SPORT|136045584": 1793725567000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246831/cuti-romero-queda-argentina.html": 1793729269000,
-   "SPORT|136052781": 1793727424000
+   "SPORT|136052781": 1793727424000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000
   },
   "hechos": [
    {
@@ -1206,7 +1207,7 @@
   ],
   "gemini": {
    "dia": "2026-11-03",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
