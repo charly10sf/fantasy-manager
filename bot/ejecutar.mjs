@@ -62,7 +62,10 @@ if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
 
 // los puntos DAZN llegan después del final: final, MVP y resumen esperan a que estén (lib/dazn.mjs)
 const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: config.daznEsperaHoras ?? 6, log: (s) => console.log(s) });
-const ctx = { stats, jugadores, equipos, jornada, config, dazn, ventanas, semana: sem, probarAcabados: arg('previa-acabados') === '1', ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
+// solo mercado (lo lanza el Worker cada minuto de 00:13 a 00:30): espera dentro de la misma ejecución a que llegue el valor de hoy,
+// como mucho 7 min (el trabajo tiene un tope de 10); si no llega, sigue la siguiente ejecución
+const esperarHasta = ventanas && quienes.length === 1 && quienes[0] === 'mercado' ? Date.now() + 7 * 60e3 : 0;
+const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn, ventanas, semana: sem, probarAcabados: arg('previa-acabados') === '1', ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
   completo: !ventanas || pendientes === 0,
   desdeFinal: ventanas ? Date.now() - config.ventanaFinalHoras * 3600e3 : 0,
   // directo: con ventanas, el marcador de ESPN de hoy (y de ayer de madrugada) y solo partidos empezados hace menos de 3 h;
