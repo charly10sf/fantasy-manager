@@ -14,7 +14,7 @@ export const VERSION = '0.6.12c';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.12c', f: '2026-11-03', h: '10:00', t: 'Ventas que no hacen falta, fuera del plan', menor: true,
+    v: '0.6.12c', f: '2026-11-03', h: '09:50', t: 'Ventas que no hacen falta, fuera del plan', menor: true,
     cosas: [
       { tipo: 'arreglo', d: 'dinero', menor: true, t: 'El plan ya no manda aceptar una oferta que no te hace falta', x: 'Si no necesitas el dinero y la oferta de LaLiga es de las bajas (o venderías por debajo de su valor perdiendo lo que pagaste), el paso sale como «No lo hagas» y no cuenta en el saldo. Antes salía como recomendado con un aviso al lado.' },
     ],
