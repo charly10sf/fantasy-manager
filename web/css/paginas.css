@@ -31,6 +31,8 @@ ul, ol { padding-left: 22px; }
 table { width: 100%; border-collapse: collapse; margin: 0 0 16px; font-size: 15px; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--linea); }
 th { color: var(--texto); font-weight: 600; }
+.tabla-pos th, .tabla-pos td { padding: 8px 6px; }
+.tabla-pos td + td, .tabla-pos th + th { text-align: center; }
 .peq { font-size: 14px; color: var(--apagado); }
 .fecha { color: var(--apagado); font-size: 14px; }
 .aviso { border: 1px solid var(--linea); background: var(--plano); border-radius: 12px; padding: 12px 14px; margin: 16px 0; }

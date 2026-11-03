@@ -139,14 +139,14 @@
     {
       "ruta": "guias/puntos-laliga-fantasy.html",
       "tipo": "guia",
-      "borrador": true,
+      "fecha": "2026-11-03",
       "h1": "Cómo se calculan los puntos en LaLiga Fantasy",
       "titulo": "Puntos en LaLiga Fantasy: cómo se calculan",
-      "descripcion": "Qué da puntos y qué los quita en LaLiga Fantasy: goles, asistencias, paradas, tarjetas y la nota de los cronistas, con un partido de ejemplo.",
+      "descripcion": "La tabla de puntos de LaLiga Fantasy por posición: goles, asistencias, portería a cero, tramos, tarjetas y la valoración DAZN, con un partido de ejemplo.",
       "busqueda": "cómo se puntúa en LaLiga Fantasy",
       "esquema": [
         ["Puntos por acciones", "Goles, asistencias, paradas, recuperaciones; lo que cambia según la posición."],
-        ["La nota de los cronistas", "Los puntos de la valoración del partido y cómo pesan."],
+        ["La valoración DAZN", "Los puntos de la valoración del partido y cómo pesan."],
         ["Lo que resta", "Tarjetas, goles en contra, penaltis fallados, pérdidas de balón."],
         ["Cuándo son definitivos", "Cuándo se cierran los puntos de la jornada."],
         ["Un partido de ejemplo", "Los puntos de un jugador desglosados acción por acción, con datos de una jornada jugada."]

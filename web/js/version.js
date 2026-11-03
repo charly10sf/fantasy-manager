@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12f';
+export const VERSION = '0.6.12g';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.12f';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12g', f: '2026-11-03', h: '21:08', t: 'Guía de puntos', menor: true,
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'periodico', t: 'Guía de puntos publicada', x: 'La guía «Cómo se calculan los puntos en LaLiga Fantasy» sale del borrador con la tabla sacada de las fichas de LaLiga (420 jugadores, 4.072 fichas de jornada): goles por posición, tramos, portería a cero con 60 minutos, lo que resta y la valoración DAZN, con el desglose de los 13 puntos de Bellingham en la jornada 2. Ya está en el sitemap y enlazada desde las demás guías.' },
+    ],
+  },
   {
     v: '0.6.12f', f: '2026-11-03', h: '20:40', t: 'Cuántos usan la app', menor: true,
     cosas: [
