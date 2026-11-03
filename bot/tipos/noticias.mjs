@@ -195,7 +195,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const oficial = mis.some((h) => h.oficial);
     if (!(oficial || medios.length >= 2 || (medios.length && (laliga || parteOk)))) { log(`  (noticias) ${j.nickname} (${fam}): solo ${medios.join(', ')}, espero a una segunda fuente`); continue; }
     const yaSalio = cub.some((c) => String(c.id) === id && ((c.tipo === 'noticias' && c.que === fam && ahora - c.t < 48 * HORA)
-      || (c.tipo === 'novedades' && familia(c.que) === fam && ahora - c.t < 24 * HORA) || (c.tipo === 'caidas' && fam === 'mala' && c.jornada >= jornada)));
+      || (c.tipo === 'novedades' && familia(c.que) === fam && ahora - c.t < 24 * HORA) || ((c.tipo === 'caidas' || c.tipo === 'sancionados') && fam === 'mala' && c.jornada >= jornada)));
     if (yaSalio) { log(`  (noticias) ${j.nickname} ya ha salido: no lo repito`); continue; }
     // lo más grave manda: lesión > descartado > molestias
     const que = fam === 'buena' ? 'vuelve' : ['lesion', 'descartado', 'molestias'].find((q) => mis.some((h) => h.que === q));
