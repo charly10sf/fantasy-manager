@@ -108,7 +108,7 @@ export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
   const titulo = filas.every((f) => f.estado === 'disponible') ? 'NOVEDADES'
     : filas.some((f) => f.estado === 'duda') ? (filas.every((f) => f.estado === 'duda') ? 'DUDAS' : 'BAJAS Y DUDAS') : 'BAJAS';
   const fila = (f) => ({ nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
-    estado: f.estado, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f) });
+    estado: f.estado, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f), valor: f.valor || null });
   const d = { jornada: pp ? pp.jornada : jornada, titulo, filas: filas.slice(0, mismo ? 4 : 6).map(fila),
     equipo: mismo ? { nombre: filas[0].club, corto: filas[0].equipo, escudoUrl: filas[0].escudoUrl || null } : null,
     rival: mismo && pp ? { nombre: pp.rivalNombre || pp.rival, corto: pp.rival, escudoUrl: pp.rivalEscudo || null } : null };
