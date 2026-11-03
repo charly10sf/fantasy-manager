@@ -9,6 +9,6 @@
   "horasMercado": [0, 6],
   "tweetMax": 280,
   "hashtag": "",
-  "tarjetas": { "final": true, "jugador": true, "resumen": true, "previa": true, "onces": true, "mercado": true },
+  "tarjetas": { "final": true, "jugador": true, "resumen": true, "previa": true, "onces": true, "mercado": true, "caidas": true, "novedades": true },
   "telegram": { "topes": { "respuestas": 10 }, "topeDiario": 20, "maxPorEjecucion": 5, "avisosDia": 3, "minJugadoresConPuntos": 12, "cuentasX": {"Real Madrid": "realmadrid", "Barça": "FCBarcelona_es", "Atlético": "Atleti", "Athletic": "AthleticClub", "Villarreal": "VillarrealCF", "Betis": "RealBetis", "Real Sociedad": "RealSociedad", "Celta": "RCCelta", "Osasuna": "Osasuna", "Alavés": "Alaves", "Rayo": "RayoVallecano", "Sevilla": "SevillaFC", "Valencia": "valenciacf", "Málaga": "MalagaCF", "Espanyol": "RCDEspanyol", "Getafe": "GetafeCF", "Elche": "elchecf", "Levante": "LevanteUD", "Deportivo": "RCDeportivo", "Racing": "realracingclub"} }
 }

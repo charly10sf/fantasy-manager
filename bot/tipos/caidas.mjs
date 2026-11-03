@@ -5,6 +5,7 @@ import { corto, elegir, fmt, partes, el, del } from '../lib/texto.mjs';
 import { tweet, cap, segunda, enPalabras, proximoPartido, paraLa } from '../lib/redactar.mjs';
 import { ficha, ESTADOS } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
+import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 
 export function baseTitular(playerStats, hasta) {
   const s = (playerStats || []).filter((x) => x.weekNumber <= hasta && x.stats && x.stats.mins_played).sort((a, b) => a.weekNumber - b.weekNumber);
@@ -16,7 +17,10 @@ export function baseTitular(playerStats, hasta) {
   return { p: (0.3 * a + 0.2 * b) / 0.5, ult: ult.length, temporada: s.length };
 }
 
-export async function generar({ jugadores, equipos, jornada, ultimaJugada, config, semana = null, soloSeguras = false }) {
+export async function generar({ jugadores, equipos, jornada, ultimaJugada, config, stats = [], semana = null, soloSeguras = false }) {
+  // escudos por equipo, de la jornada que hay en memoria (juegan los 20)
+  const escudos = {};
+  for (const m of stats || []) for (const lado of [m.local, m.visitor]) if (lado && lado.id != null && lado.badgeColor) escudos[String(lado.id)] = lado.badgeColor;
   const malos = jugadores
     .filter((j) => ESTADOS[j.playerStatus] && j.playerStatus !== 'out_of_league' && j.positionId >= 1 && j.positionId <= 4)
     .sort((a, b) => Number(b.marketValue) - Number(a.marketValue))
@@ -32,7 +36,7 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     if (soloSeguras && j.playerStatus === 'doubtful') return;
     const p = j.playerStatus === 'doubtful' ? b.p * 0.6 : 0;
     if (p >= config.umbralCaida) return;
-    caidas.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0 });
+    caidas.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0 });
   });
   // Cómo se escriben (guía de estilo del 3 nov, el formato de @JoseCarrasco_98): un equipo con dos o más caídas, en su propio tweet
   // («🚨 El Villarreal puede perder a…» y una línea por jugador); uno o dos sueltos, un tweet cada uno con la etiqueta final
@@ -59,7 +63,8 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
       { t: `${xs.every(seguro) ? '❌ Baja' : '⁉️ Duda'} Fantasy ${paraLa(pr, jornada)}`, prio: 8 }];
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) continue;
-    out.push({ tipo: 'caidas', clave: `caidas|${jornada}|${xs.map((c) => c.id).join('-')}`, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...xs.flatMap(numDe)] });
+    const clave = `caidas|${jornada}|${xs.map((c) => c.id).join('-')}`;
+    out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...xs.flatMap(numDe)], tarjeta: tarjetaBajas({ jornada, filas: xs, pp: pr, clave }) });
   }
   if (sueltos.length <= 2) {
     for (const c of sueltos) {
@@ -70,7 +75,8 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
         { t: `${c.estado === 'duda' ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
       const { usadas, texto } = tweet(cab, ideas);
       if (!usadas.length) continue;
-      out.push({ tipo: 'caidas', clave: `caidas|${jornada}|${c.id}`, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c)] });
+      const clave = `caidas|${jornada}|${c.id}`;
+      out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c)], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) });
     }
     return out;
   }
@@ -87,7 +93,8 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     }
     if (!texto) break;
     const quienes = resto.slice(0, n);
-    out.push({ tipo: 'caidas', clave: `caidas|${jornada}|${quienes.map((c) => c.id).join('-')}`, jornada, texto, numeros: [jornada, ...quienes.flatMap((c) => (c.estado === 'duda' ? [c.pct] : []))] });
+    const clave = `caidas|${jornada}|${quienes.map((c) => c.id).join('-')}`;
+    out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, ...quienes.flatMap((c) => (c.estado === 'duda' ? [c.pct] : []))], tarjeta: tarjetaBajas({ jornada, filas: quienes, pp: quienes.every((c) => String(c.teamId) === String(quienes[0].teamId)) ? pp.get(String(quienes[0].teamId)) : null, clave }) });
     i += n; k++;
   }
   return out;

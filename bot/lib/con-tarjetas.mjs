@@ -2,9 +2,10 @@
 // pasa a PNG. Solo se carga si alguna tarjeta está encendida en config.json (`tarjetas`) o con --tarjetas=1 en simulacro.
 //   final   -> tarjeta de final de partido (si tarjetas.final)
 //   mvp     -> tarjeta de jugador del MVP (si tarjetas.jugador)
+//   caidas y novedades -> tarjeta de bajas (de un equipo o en lista), montada por el tipo (si tarjetas.caidas / tarjetas.novedades)
 //   directo -> tarjeta de cada jugador implicado: goleador, asistente, expulsado o el que falla el penalti (si tarjetas.jugador)
 // Lo que no pasa el validador no sale: el tweet del final se publica entonces sin imagen y el del MVP no se publica.
-import { svgFinal, svgJugador, svgResumen, svgOnces, svgMercado, aPng } from './tarjetas.mjs';
+import { svgFinal, svgJugador, svgResumen, svgOnces, svgMercado, svgBajas, aPng } from './tarjetas.mjs';
 import { datosFinal, datosJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
 import { validarTarjeta } from './validar.mjs';
 import * as LL from './laliga.mjs';
@@ -25,8 +26,13 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     const d = structuredClone(t.tarjeta.d);
     if (t.tarjeta.tipo === 'resumen') for (const f of d.filas) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
     if (t.tarjeta.tipo === 'onces') for (const k of ['local', 'visitante']) d[k].escudo = await img(d[k].escudoUrl);
+    if (t.tarjeta.tipo === 'bajas') {
+      for (const f of d.filas) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
+      if (d.equipo) d.equipo.escudo = await img(d.equipo.escudoUrl);
+      if (d.rival) d.rival.escudo = await img(d.rival.escudoUrl);
+    }
     if (t.tarjeta.tipo === 'mercado') for (const f of [...d.suben, ...d.bajan]) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
-    const dibujo = { resumen: svgResumen, onces: svgOnces, mercado: svgMercado }[t.tarjeta.tipo] || svgOnces;
+    const dibujo = { resumen: svgResumen, onces: svgOnces, mercado: svgMercado, bajas: svgBajas }[t.tarjeta.tipo] || svgOnces;
     await hacer(t.tarjeta.nombre, { d, permitidos: t.tarjeta.permitidos }, dibujo(d));
     return hechas;
   }

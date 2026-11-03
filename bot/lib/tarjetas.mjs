@@ -295,6 +295,101 @@ export function svgMercado(d) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta de bajas y novedades (Carlos, 3 nov 09:33: «acompañarlo de una tarjeta del Getafe»; las caídas y los sancionados «de forma
+// más gráfica»). Dos formas:
+//   - de un equipo (todas las filas del mismo club): escudo y nombre grandes arriba, el próximo rival a la derecha y una fila grande
+//     por jugador (1 a 4) con cara, puesto, media y la etiqueta de su estado;
+//   - de varios equipos: dos columnas de 3, como el resumen, con el escudo de cada uno.
+// d = { jornada, titulo ('BAJAS'|'BAJAS Y DUDAS'|'NOVEDADES'), equipo: { nombre, corto, escudo } | null,
+//       rival: { corto, nombre, escudo } | null,
+//       filas: [{ nombre, equipo, club, posicion, cara, escudo, estado: 'lesionado'|'sancionado'|'duda'|'disponible', pct, media ('5,2'|null) }] }
+const ESTADO_TARJETA = {
+  lesionado: { txt: 'LESIONADO', color: MALO },
+  sancionado: { txt: 'SANCIONADO', color: MALO },
+  duda: { txt: 'DUDA', color: '#f2b33d' },
+  disponible: { txt: 'DISPONIBLE', color: VERDE },
+};
+/** el dibujo pequeño del estado: cruz (lesión), tarjeta roja (sanción), interrogación (duda) o visto (disponible) */
+function iconoEstado(estado, cx, cy, s) {
+  const c = ESTADO_TARJETA[estado].color;
+  if (estado === 'sancionado') return `<rect x="${cx - s * 0.32}" y="${cy - s * 0.45}" width="${s * 0.64}" height="${s * 0.9}" rx="${s * 0.08}" fill="${c}" transform="rotate(12 ${cx} ${cy})"/>`;
+  if (estado === 'lesionado') { const a = s * 0.16, b = s * 0.46; return `<rect x="${cx - a}" y="${cy - b}" width="${a * 2}" height="${b * 2}" rx="${a * 0.5}" fill="${c}"/><rect x="${cx - b}" y="${cy - a}" width="${b * 2}" height="${a * 2}" rx="${a * 0.5}" fill="${c}"/>`; }
+  if (estado === 'disponible') return `<path d="M${cx - s * 0.4} ${cy} L${cx - s * 0.1} ${cy + s * 0.3} L${cx + s * 0.42} ${cy - s * 0.32}" fill="none" stroke="${c}" stroke-width="${s * 0.18}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  // duda: un círculo con un punto, sin texto (el «?» no es una palabra para el validador)
+  return `<circle cx="${cx}" cy="${cy}" r="${s * 0.42}" fill="none" stroke="${c}" stroke-width="${s * 0.14}"/><circle cx="${cx}" cy="${cy}" r="${s * 0.11}" fill="${c}"/>`;
+}
+const anchoPildora = (txt, px) => ancho(txt, px) + [...txt].length * 1.2 + px * 0.55 * 2 + px * 1.6;
+const txtEstado = (f) => (f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : ESTADO_TARJETA[f.estado].txt);
+/** la etiqueta del estado (con el % si es duda), alineada a la derecha en xd */
+function pildora(f, xd, cy, px) {
+  const e = ESTADO_TARJETA[f.estado];
+  const txt = txtEstado(f);
+  const w = anchoPildora(txt, px), h = px * 2;
+  const x = xd - w;
+  return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${e.color}" fill-opacity="0.14" stroke="${e.color}" stroke-opacity="0.55" stroke-width="1.5"/>`
+    + iconoEstado(f.estado, x + px * 0.55 + px * 0.5, cy, px)
+    + texto(x + px * 0.55 + px * 1.3, cy + px * 0.36, txt, { px, peso: 700, color: e.color, espacio: 1.2 });
+}
+export function svgBajas(d) {
+  const filas = d.filas.slice(0, d.equipo ? 4 : 6);
+  const tono = d.titulo === 'NOVEDADES' ? VERDE : d.titulo === 'DUDAS' ? '#f2b33d' : MALO;
+  let s = `<rect width="${ANCHO}" height="6" fill="${ROJO}"/>`;
+  if (d.equipo) {
+    const club = coloresClub(d.equipo.nombre || d.equipo.corto);
+    s = brillo(140, 60, 620, club.vivo, 0.55) + s
+      + escudo(d.equipo.escudo, 112, 112, 112)
+      + texto(d.equipo.escudo ? 196 : 60, 82, `${d.titulo} · JORNADA ${d.jornada}`, { px: 18, peso: 700, color: tono, espacio: 3 })
+      + texto(d.equipo.escudo ? 194 : 58, 146, d.equipo.corto.toUpperCase(), { px: 62, display: true, color: '#fff', max: d.rival ? 560 : 900 });
+    if (d.rival) {
+      const cR = coloresClub(d.rival.nombre || d.rival.corto);
+      s += brillo(1080, 80, 300, cR.vivo, 0.3)
+        + texto(1140, 82, 'PRÓXIMO RIVAL', { px: 15, peso: 700, color: '#948f9b', ancla: 'end', espacio: 2.5 })
+        + escudo(d.rival.escudo, 1112, 128, 48)
+        + texto(d.rival.escudo ? 1076 : 1140, 142, d.rival.corto, { px: 30, peso: 700, color: '#f4f2f3', ancla: 'end', max: 300 });
+    }
+    // filas grandes: 1 a 4, entre y = 196 y 618
+    const n = filas.length, gap = 12, alto = 422;
+    const h = n === 1 ? 190 : Math.min(134, (alto - gap * (n - 1)) / n);
+    const y0 = n === 1 ? 196 + (alto - h) / 2 : 196;
+    const w = 1080, x = 60;
+    filas.forEach((f, i) => {
+      const y = y0 + i * (h + gap), cy = y + h / 2;
+      const r = Math.round(h * 0.37), cx = x + 22 + r;
+      const pxN = Math.round(Math.min(40, h * 0.34)), pxS = Math.round(Math.min(22, h * 0.2));
+      const sub = [f.posicion, f.media ? `${f.media} pts de media` : null].filter(Boolean).join(' · ');
+      s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="#131317"/>`
+        + `<rect x="${x}" y="${y + 14}" width="5" height="${h - 28}" rx="2" fill="${ESTADO_TARJETA[f.estado].color}"/>`
+        + caraCirculo(f.cara, cx, cy, r, { aro: club.vivo, fondo: '#1b1b21', grosor: 3 })
+        + texto(cx + r + 24, cy - (sub ? pxS * 0.3 : -pxN * 0.35), f.nombre, { px: pxN, peso: 700, color: '#f4f2f3', max: 560 })
+        + (sub ? texto(cx + r + 24, cy + pxS * 1.45, sub, { px: pxS, peso: 600, color: '#948f9b', max: 560 }) : '')
+        + pildora(f, x + w - 24, cy, Math.round(Math.min(22, h * 0.18)));
+    });
+  } else {
+    const acento = tono;
+    s = brillo(600, -80, 700, acento, 0.2) + s
+      + texto(60, 62, 'LALIGA FANTASY', { px: 17, peso: 700, color: '#948f9b', espacio: 3 })
+      + texto(60, 132, d.titulo, { px: 64, display: true, color: '#fff', max: 700 })
+      + texto(1140, 132, `JORNADA ${d.jornada}`, { px: 22, peso: 700, color: acento, ancla: 'end', espacio: 3 });
+    const w = 525, h = 132, x0 = [60, 615], y0 = 168;
+    const enUna = filas.length <= 3;              // con 3 o menos, una columna ancha
+    filas.forEach((f, i) => {
+      const x = enUna ? 60 : x0[Math.floor(i / 3)], y = y0 + (i % 3) * (h + 14), ww = enUna ? 1080 : w;
+      const club = coloresClub(f.club || f.equipo);
+      const r = 46, cx = x + 26 + r, cy = y + h / 2;
+      const pil = pildora(f, x + ww - 20, cy, 17);
+      const anchoPil = anchoPildora(txtEstado(f), 17);
+      s += `<rect x="${x}" y="${y}" width="${ww}" height="${h}" rx="18" fill="#131317"/>`
+        + caraCirculo(f.cara, cx, cy, r, { aro: club.vivo, fondo: '#1b1b21', grosor: 3 })
+        + texto(cx + r + 20, cy - 4, f.nombre, { px: 30, peso: 700, color: '#f4f2f3', max: ww - (cx + r + 20 - x) - anchoPil - 36 })
+        + escudo(f.escudo, cx + r + 32, cy + 30, 28)
+        + texto(cx + r + (f.escudo ? 52 : 20), cy + 38, f.media && enUna ? `${f.equipo} · ${f.media} pts de media` : f.equipo, { px: 19, peso: 600, color: '#948f9b', max: ww - (cx + r + 52 - x) - anchoPil - 30 })
+        + pil;
+    });
+  }
+  return marco('#08080a', s + marca(600, 656));
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
 let Resvg = null;
 /** SVG -> PNG (Buffer). @resvg/resvg-js se carga solo si hace falta: el bot sin tarjetas no lo necesita */
 export async function aPng(svg) {
