@@ -1083,7 +1083,8 @@
    "SPORT|136041677": 1793713371000,
    "SPORT|136042531": 1793714741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246788/guruzeta-empieza-cuenta-hoy-sido-operado-rodilla-izquierda.html": 1793722204000,
-   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/03/antiviolencia-propone-sancionar-youtuber-inaki-angulo-60-001-euros-insultar-bellerin.html": 1793723901000
+   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/03/antiviolencia-propone-sancionar-youtuber-inaki-angulo-60-001-euros-insultar-bellerin.html": 1793723901000,
+   "AS|https://as.com/futbol/primera/bardeli-de-regreso-f202611-n/": 1793727567000
   },
   "hechos": [
    {
@@ -1186,11 +1187,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/bardeli-de-regreso-f202611-n/",
+    "medio": "AS",
+    "t": 1793727567000,
+    "id": "3164",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "recuperación de lesión",
+    "plazo": "su evolución marcará su disponibilidad",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-03",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
