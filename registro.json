@@ -601,7 +601,7 @@
   "2832": "out_of_league",
   "2833": "out_of_league",
   "2834": "injured",
-  "2835": "out_of_league",
+  "2835": "ok",
   "2836": "out_of_league",
   "2837": "ok",
   "2839": "out_of_league",
@@ -1044,7 +1044,11 @@
   "3301": "out_of_league",
   "3302": "out_of_league",
   "3303": "out_of_league",
-  "3304": "ok"
+  "3304": "ok",
+  "3305": "ok",
+  "3306": "ok",
+  "3307": "out_of_league",
+  "3308": "out_of_league"
  },
  "novedadesPend": [],
  "noticias": {
