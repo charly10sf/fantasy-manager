@@ -38,6 +38,7 @@ ok(r(bueno.replace('🟥 Mingueza está sancionado\n\n', '')).length > 0, 'pierd
 ok(r(bueno.replace('Mingueza está sancionado', 'Mingueza cumple ciclo de sanción')).length > 0, 'añade «ciclo»');
 ok(r(bueno.replace('El Celta pierde a dos titulares', 'Aspas y Mingueza son baja en el Celta')).length > 0, 'mueve nombres a otra línea');
 ok(r(bueno.replace('Aspas, lesionado', 'Aspas, duda')).length > 0, 'lesionado → duda');
+ok(revisar('❌ Aspas se cae por lesión\n\n❌ Baja Fantasy', '❌ Aspas, baja por lesión\n\n❌ Baja Fantasy', { nombres }).length === 0, 'se cae = baja');
 ok(r(bueno.replace('El Celta pierde a dos titulares', 'El Celta pierde a dos')).length > 0, 'pierde «titulares»');
 ok(r(bueno.replace('El Celta pierde a dos titulares', 'El Celta se queda sin dos')).length > 0, 'pierde «titulares» (2)');
 ok(r(bueno.replace('Aspas, lesionado', 'Aspas y Kubo, lesionados')).length > 0, 'añade a Kubo');
