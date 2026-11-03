@@ -14,10 +14,8 @@ jobs:
         with:
           node-version: 22
       - run: npm ci --prefix bot --no-audit --no-fund
-      - name: once probable con datos reales
-        run: node bot/prueba/once-real.mjs 2>&1 | sed 's/^/@@ /'
-      - name: previa en simulacro con tarjetas
-        run: node bot/ejecutar.mjs --modo=simulacro --tipos=previa --forzar=1 --tarjetas=1 --salida-tarjetas=salida-tarjetas 2>&1 | sed 's/^/@@ /'
+      - name: ff debug
+        run: node bot/prueba/ff-debug.mjs 2>&1 | sed 's/^/@@ /'
       - name: tarjetas a la rama pruebas-bajas2-salida
         if: always()
         run: |
