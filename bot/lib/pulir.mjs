@@ -22,11 +22,18 @@ const cifras = (s) => [...new Set(String(s).replace(/[0-9#*]️?⃣/g, '').match
 const lineas = (s) => String(s).split('\n').map((l) => l.trim()).filter(Boolean);
 const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
 // las palabras que cambian lo que se cuenta de un jugador o un partido: cada línea pulida tiene que llevar las mismas (por raíz)
-const ESTADO = ['lesion', 'lesiona', 'sancion', 'baja', 'duda', 'molesti', 'vuelv', 'regres', 'recuper', 'reaparec', 'disponib', 'alta', 'titular',
+const ESTADO = ['cae', 'caen', 'cayo', 'lesion', 'lesiona', 'sancion', 'baja', 'duda', 'molesti', 'vuelv', 'regres', 'recuper', 'reaparec', 'disponib', 'alta', 'titular',
   'suplent', 'banquillo', 'descart', 'convoca', 'rotaci', 'descans', 'habitual', 'roja', 'amarill', 'ciclo', 'expuls', 'gol', 'doblete', 'hat',
   'penalti', 'asist', 'rotura', 'operad', 'quirof', 'semana', 'mes', 'dia', 'hasta', 'seguro', 'mejor', 'peor', 'mvp',
   'empat', 'remont', 'victori', 'derrot', 'porteria', 'cero', 'sube', 'subid', 'baj', 'chollo', 'vend', 'compr', 'ficha', 'clausul'];
-const estado = (s) => [...new Set(norm(s).split(' ').map((w) => ESTADO.find((r) => w.startsWith(r))).filter(Boolean))].sort().join(' ');
+// sinónimos (segunda prueba: «se cae por lesión» → «baja por lesión» es lo mismo en un tweet de caídas)
+const IGUAL = { cae: 'baja', caen: 'baja', cayo: 'baja', lesiona: 'lesion', regres: 'vuelv', reaparec: 'vuelv', recuper: 'vuelv' };
+// y una lesión o una sanción ya dicen que es baja («Aspas se cae por lesión» = «Aspas, lesionado»)
+const estado = (s) => {
+  const e = new Set(norm(s).split(' ').map((w) => ESTADO.find((r) => w.startsWith(r))).filter(Boolean).map((r) => IGUAL[r] || r));
+  if (e.has('lesion') || e.has('sancion')) e.delete('baja');
+  return [...e].sort().join(' ');
+};
 /** las palabras con mayúscula que no van al principio de la línea (quitado el emoji) */
 const mayusculas = (s) => {
   const out = new Set();
