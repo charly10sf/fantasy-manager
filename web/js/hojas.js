@@ -4,7 +4,7 @@ import { avisosGuardados } from './soporte.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
-import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada } from './vistas.js';
+import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
 import { nativo, enApp, enWeb, estadoProxy } from './puente.js';
@@ -125,7 +125,7 @@ export function resumenEquipo(S) {
   const enVenta = M.misVentas.reduce((s, v) => s + num(v.j && v.j.valor), 0);
   h += `<div class="rejilla" style="margin-top:12px">
     <div class="dato"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'baja' : ''}">${eur(D.dinero)}</div></div>
-    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>con el 20 % de deuda</small></div></div>
+    <div class="dato"><div class="et">Puedes gastar</div><div class="v">${eur(M.pujaMax)}<small>con el 20 % de deuda${num(M.misPujas) ? ', ya sin lo pujado' : ''}</small></div></div>
     <div class="dato"><div class="et">En pujas</div><div class="v">${eur(M.misPujas || 0)}</div></div>
     <div class="dato"><div class="et">En venta</div><div class="v">${eur(enVenta)}<small>${M.misVentas.length} jugador${M.misVentas.length === 1 ? '' : 'es'}</small></div></div>
     ${M.conCompra ? `<div class="dato"><div class="et">Ganado sobre lo pagado</div><div class="v ${clase(M.ganadoTotal)}">${eur(M.ganadoTotal, { signo: true })}</div></div>` : ''}
@@ -191,6 +191,9 @@ export function fichaJugador(S, pid) {
   if (M.inercia && M.inercia(pid)) { if (bloqueada('inercia')) cerradas.push('inercia'); else h += inerciaHTML(M, pid, !!mia); }
   for (const n of notasDe(pid)) h += `<div class="aviso-ficha oro">${icono('nota')}<div><b>Le contaste a la IA:</b> ${esc(n.texto)} <span class="t2">(${cuando(n.t)})</span></div></div>`;
   if (op) h += `<div class="aviso-ficha">${icono('rayo')}<div><b>Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max ? ` (puja hasta ${eur(op.puja_max)})` : ''}.</b> ${esc(op.motivo || '')}</div></div>`;
+  // si el plan lo descarta (por dinero o por pagar de más), también aquí: la puja del mercado no es una recomendación
+  const dpl = !op && descartePlan(S, pid);
+  if (dpl) h += `<div class="aviso-ficha oro">${icono('alerta')}<div><b>Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : 'pujes'}.</b> ${esc(dpl.aviso || '')}</div></div>`;
   for (const n of notasPlan(S, { j })) h += notaPlanHTML(n);
   const rango = S.rango || 30;
   h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;

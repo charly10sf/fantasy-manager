@@ -1719,8 +1719,11 @@ export function analizar(D, H, c, extra = {}) {
       if (r <= 0.004 || beneficio < Math.max(250000, precio * 0.025)) return;
       M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVenta, confianza: t.p7 != null && r > 0.008 ? 'media' : 'baja', ...extraInfo });
     };
-    // para revender se puja poco por encima del precio (si no, se come el beneficio)
-    for (const m of M.mercado) if (m.tipo === 'liga' && !m.miPuja) { const puja = Math.ceil(m.precio * (1 + 0.012 + 0.012 * Math.min(m.pujas, 4)) / 10000) * 10000; add(m.j, m.tend, 'mercado', puja, { puja, precioMercado: m.precio }); }
+    // la puja es la misma que en Mercado → Fichar y en el plan (`m.puja`: lo que hace falta en tu liga para llevártelo).
+    // Antes, para revender, se pujaba un 1,2 % más por puja sobre el precio, pero al cuadrar el plan se subía a `m.puja`
+    // (con menos, en tu liga lo normal es perderlo) y el beneficio salía contado con la puja baja (3 nov: Cubarsí, 43,96 M
+    // en Especular y 45,87 M en Hoy). Con la misma puja, el beneficio es el de verdad y si no compensa no sale
+    for (const m of M.mercado) if (m.tipo === 'liga' && !m.miPuja && m.puja) add(m.j, m.tend, 'mercado', m.puja, { puja: m.puja, precioMercado: m.precio });
     for (const x of M.clausulas) if (x.abierta) add(x.j, x.tend, 'clausula', x.clausula, { rival: x.rival });
     M.especular.sort((a, b) => b.beneficio - a.beneficio);
   }
@@ -2183,7 +2186,7 @@ export function planAuto(D, M, c) {
   return {
     auto: true, t: ahora, dia: diaDe(ahora),
     titular: titularAuto(ops),
-    situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`,
+    situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`,
     operaciones: ops, proximos_dias: proximosAuto(diasAuto), diasAuto,
     alineacion: onceAhora.formacion ? { formacion: onceAhora.nombre, titulares: onceAhora.lineas.flat().map((j) => j.nombre), dudas: onceAhora.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`) } : null,
   };
