@@ -17,8 +17,9 @@ console.log(`# Jornada ${prox}: ${stats.length} partidos`);
 for (const m of stats) for (const lado of [m.local, m.visitor]) {
   const o = await onceProbable(lado.mainName, jugadores.filter((j) => String(j.teamId) === String(lado.id)), { log: console.log });
   if (!o) { fallos++; console.log(`FALLA ${lado.mainName}: sin once probable`); continue; }
-  const t = Object.values(o).filter((x) => x.titular).length;
-  console.log(`${lado.mainName}: ${Object.keys(o).length} casados, ${t} titulares`);
+  const t = Object.values(o).filter((x) => x.titular), sinP = t.filter((x) => x.prob == null).length;
+  const nom = (id) => (jugadores.find((j) => String(j.id) === String(id)) || {}).nickname;
+  console.log(`${lado.mainName}: ${Object.keys(o).length} casados, ${t.length} titulares (${sinP} sin %): ${Object.entries(o).filter(([, x]) => x.titular).map(([id, x]) => `${nom(id)} ${x.prob ?? '?'}${x.estado !== 'ok' ? ' ' + x.estado : ''}`).join(', ')}`);
 }
 const fmt = (once) => once.once.map((x) => `${x.nombre} ${Math.round(x.p * 100)}`).join(', ');
 for (const m of stats.slice(0, 10)) {
