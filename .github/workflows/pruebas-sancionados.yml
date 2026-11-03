@@ -21,9 +21,8 @@ jobs:
           for p in sancionados apercibidos; do curl -sL -A "$UA" -H "Accept-Language: es-ES" "https://www.futbolfantasy.com/laliga/$p" -o salida/$p.html; done
           curl -sL -A "$UA" "https://fantasy-api.llt-services.com/api/v1/competition/1/players?x-lang=es" -o salida/players.json
           ls -la salida | sed 's/^/@@ /'
-      - name: prueba del bot
-        run: |
-          node bot/ejecutar.mjs --modo=simulacro --tipos=sancionados,caidas --ventanas=0 --tarjetas=1 --salida-tarjetas=salida/tarjetas 2>&1 | tee salida/log.txt | sed 's/^/@@ /'
+      - name: sondeo de puntos
+        run: node bot/prueba/puntos-sondeo.mjs 2>&1 | tee salida/log.txt | grep '^@@'
       - name: a la rama pruebas-sancionados-salida
         if: always()
         run: |
