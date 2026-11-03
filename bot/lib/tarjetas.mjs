@@ -380,7 +380,7 @@ export function svgBajas(d) {
       const anchoPil = anchoPildora(txtEstado(f), 17);
       s += `<rect x="${x}" y="${y}" width="${ww}" height="${h}" rx="18" fill="#131317"/>`
         + caraCirculo(f.cara, cx, cy, r, { aro: club.vivo, fondo: '#1b1b21', grosor: 3 })
-        + texto(cx + r + 20, cy - 4, f.nombre, { px: 30, peso: 700, color: '#f4f2f3', max: ww - (cx + r + 20 - x) - anchoPil - 36 })
+        + texto(cx + r + 20, cy - 4, f.nombre, { px: 30, peso: 700, color: '#f4f2f3', max: ww - (cx + r + 20 - x) - anchoPil - 56 })
         + escudo(f.escudo, cx + r + 32, cy + 30, 28)
         + texto(cx + r + (f.escudo ? 52 : 20), cy + 38, f.media && enUna ? `${f.equipo} · ${f.media} pts de media` : f.equipo, { px: 19, peso: 600, color: '#948f9b', max: ww - (cx + r + 52 - x) - anchoPil - 30 })
         + pil;
