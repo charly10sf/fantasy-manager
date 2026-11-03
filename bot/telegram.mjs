@@ -9,7 +9,7 @@ import { readFileSync, appendFileSync } from 'node:fs';
 import { semanaActual, statsSemana, ficha as pedirFicha } from './lib/laliga.mjs';
 import { crearDazn } from './lib/dazn.mjs';
 import { validar } from './lib/validar.mjs';
-import { Registro } from './lib/registro.mjs';
+import { Registro, diaMadrid } from './lib/registro.mjs';
 import { telegramDelEntorno, enviar, esc } from './lib/telegram.mjs';
 import { generar, mensaje } from './tipos/respuestas.mjs';
 
@@ -34,7 +34,7 @@ if (arg('aviso') === 'fallo') {
   const id = process.env.GITHUB_RUN_ID;
   const url = id ? `${process.env.GITHUB_SERVER_URL || 'https://github.com'}/${process.env.GITHUB_REPOSITORY}/actions/runs/${id}` : null;
   const hoy = registro.hoy();
-  const yaHoy = registro.datos.enviados.filter((e) => e.tipo === 'aviso' && String(e.t).slice(0, 10) === hoy).length;
+  const yaHoy = registro.datos.enviados.filter((e) => e.tipo === 'aviso' && diaMadrid(e.t) === hoy).length;
   const tope = tg.avisosDia ?? 3;
   if (yaHoy >= tope) { console.log(`# Aviso de fallo: ya van ${yaHoy} hoy (tope ${tope}), no mando otro.`); process.exit(0); }
   const texto = `⚠️ Ha fallado una ejecución del bot de LaLiga Fantasy (Bot X).${url ? `\n${esc(url)}` : ''}`;
