@@ -4,6 +4,7 @@
 // bot-estado); la primera vez solo lo guarda. Fuera de horario (9 a 23 h) no mira nada, así los cambios se acumulan para el día.
 import { corto, fmt, partes, elegir, el, del } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, paraLa } from '../lib/redactar.mjs';
+import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 
 const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
@@ -17,6 +18,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   const antes = previos || (registro && registro.datos && registro.datos.estados) || null;
   if (registro && registro.datos) { registro.datos.estados = actual; registro.guardar(); }
   if (!antes) { log('  (novedades) primera vez: guardo los estados y no publico nada'); return []; }
+  const escudos = {};
+  for (const m of stats || []) for (const lado of [m.local, m.visitor]) if (lado && lado.id != null && lado.badgeColor) escudos[String(lado.id)] = lado.badgeColor;
   const eventos = [];
   for (const j of (jugadores || []).filter(IMPORTA)) {
     const a = antes[j.id], b = actual[j.id];
@@ -26,7 +29,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     else if (b === 'suspended' && a !== 'suspended') que = 'sancion';
     else if (b === 'ok' && ['injured', 'suspended', 'doubtful'].includes(a)) que = 'vuelve';
     if (!que) continue;
-    eventos.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), media: Number(j.averagePoints) || 0, que, antes: a });
+    eventos.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null,
+      estado: que === 'lesion' ? 'lesionado' : que === 'sancion' ? 'sancionado' : 'disponible', media: Number(j.averagePoints) || 0, que, antes: a });
   }
   if (!eventos.length) return [];
   log(`  (novedades) ${eventos.length} cambios: ${eventos.map((e) => `${e.nombre} ${e.antes}→${e.que}`).join(', ')}`);
@@ -55,7 +59,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       }
       const { usadas, texto } = tweet(cab, ideas);
       if (!usadas.length) continue;
-      out.push({ tipo: 'novedades', clave: `novedades|${e.id}:${e.que}|${dia}`, jornada, texto, numeros: numDe(e) });
+      const clave = `novedades|${e.id}:${e.que}|${dia}`;
+      out.push({ tipo: 'novedades', clave, jornada, texto, numeros: numDe(e), tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) });
     }
     return out;
   }
@@ -73,8 +78,9 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     for (; n >= 1; n--) { const r = tweet(cab, [resto.slice(0, n).map(linea).join('\n'), { t: '👀 Revisa tu once antes de la jornada', prio: 3 }]); if (r.usadas.length) { texto = r.texto; break; } }
     if (!texto) break;
     const quienes = resto.slice(0, n);
-    out.push({ tipo: 'novedades', clave: `novedades|${quienes.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`, jornada, texto,
-      numeros: quienes.flatMap((e) => (e.media >= 3 ? partes(e.media) : [])) });
+    const clave = `novedades|${quienes.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`;
+    out.push({ tipo: 'novedades', clave, jornada, texto, numeros: quienes.flatMap((e) => (e.media >= 3 ? partes(e.media) : [])),
+      tarjeta: tarjetaBajas({ jornada, filas: quienes, pp: quienes.every((e) => String(e.teamId) === String(quienes[0].teamId)) ? quienes[0].pp : null, clave }) });
     i += n; k++;
   }
   return out;

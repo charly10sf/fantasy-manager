@@ -97,3 +97,25 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
   };
   return { d, permitidos };
 }
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta de bajas y novedades (caídas y novedades). Recibe a los jugadores ya elegidos por el tipo, cada uno con
+// { id, nombre, teamId, pos, equipo (corto), club (largo), estado ('lesionado'|'sancionado'|'duda'|'disponible'), pct, media, caraUrl, escudoUrl }.
+// Si todos son del mismo club, la tarjeta es la de ese equipo (con su próximo rival, pp de proximoPartido); si no, la lista.
+export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
+  const mismo = filas.length && filas.every((f) => String(f.teamId) === String(filas[0].teamId));
+  const conMedia = (f) => (f.media >= 3 && f.estado !== 'duda' ? num1(f.media) : null);
+  const titulo = filas.every((f) => f.estado === 'disponible') ? 'NOVEDADES'
+    : filas.some((f) => f.estado === 'duda') ? (filas.every((f) => f.estado === 'duda') ? 'DUDAS' : 'BAJAS Y DUDAS') : 'BAJAS';
+  const fila = (f) => ({ nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
+    estado: f.estado, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f) });
+  const d = { jornada: pp ? pp.jornada : jornada, titulo, filas: filas.slice(0, mismo ? 4 : 6).map(fila),
+    equipo: mismo ? { nombre: filas[0].club, corto: filas[0].equipo, escudoUrl: filas[0].escudoUrl || null } : null,
+    rival: mismo && pp ? { nombre: pp.rivalNombre || pp.rival, corto: pp.rival, escudoUrl: pp.rivalEscudo || null } : null };
+  const permitidos = {
+    numeros: [d.jornada, ...d.filas.flatMap((f) => [f.pct, f.media].filter((x) => x != null))].map(String),
+    palabras: ['BAJAS', 'Y', 'DUDAS', 'NOVEDADES', 'LESIONADO', 'SANCIONADO', 'DISPONIBLE', 'PRÓXIMO', 'RIVAL',
+      ...d.filas.flatMap((f) => [f.nombre, f.equipo, f.club]), ...(d.equipo ? [d.equipo.corto, d.equipo.nombre] : []), ...(d.rival ? [d.rival.corto] : [])],
+  };
+  return { tipo: 'bajas', nombre: `bajas-${clave.replace(/[^\w-]+/g, '_').slice(0, 80)}`, d, permitidos };
+}
