@@ -101,8 +101,10 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       const cab = elegir([`🚨 ${mayus(quien)} para la jornada ${jornada}`, `🚨 Ojo a tu once fantasy: ${quien} para la jornada ${jornada}`], `caidas${jornada}${k}`);
       const lineas = lineasPorEstado(xs);
       top = elQueMasPesa(xs.filter(seguro));
-      const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), top && { t: top.t, prio: 4 }, { t: `${xs.every(seguro) ? '❌ Bajas' : '⁉️ Bajas y dudas'} Fantasy para la jornada ${jornada}`, prio: 8 }]);
-      if (lineas.every((l) => r.usadas.includes(l))) { texto = r.texto; break; }
+      const etiqueta = `${xs.every(seguro) ? '❌ Bajas' : '⁉️ Bajas y dudas'} Fantasy para la jornada ${jornada}`;
+      const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
+      // la etiqueta final tiene que caber: si no, van menos jugadores en este tweet y el resto en el siguiente
+      if ([...lineas, etiqueta].every((l) => r.usadas.includes(l))) { texto = r.texto; break; }
     }
     if (!texto) break;
     const quienes = resto.slice(0, n);
