@@ -51,7 +51,9 @@ export async function generar({ jugadores, equipos, jornada, config = {}, regist
     const cab = clave === 'suben'
       ? elegir(['📈 Mercado fantasy · Los 3 que más suben hoy', '📈 Los 3 jugadores que más se revalorizan hoy en el mercado fantasy', '📈 Mercado fantasy de hoy: los 3 que más suben'], `mc${dia}`)
       : elegir(['📉 Mercado fantasy · Los 3 que más bajan hoy', '📉 Los 3 jugadores que más se devalúan hoy en el mercado fantasy', '📉 Mercado fantasy de hoy: los 3 que más bajan'], `mc${dia}`);
-    const num = [];
+    // el «3» de la cabecera también es un número del texto: sin él, el validador tumbaba el de los que bajan cuando ninguna cifra
+    // llevaba un 3 (el 3 nov, de las 00:35 a las 06:00; el de los que suben pasó porque llevaba un «+2,3 M»)
+    const num = [ord.length];
     const lineas = ord.map((f, i) => {
       const s = f.dif > 0 ? '+' : '-';
       num.push(...numDinero(Math.abs(f.dif)), ...numDinero(f.nuevo), ...partes(Math.abs(f.pct)));
