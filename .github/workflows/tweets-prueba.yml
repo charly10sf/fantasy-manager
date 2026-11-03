@@ -1,0 +1,24 @@
+name: Tweets prueba
+on:
+  push:
+    branches: [pruebas-tweets-humanos]
+permissions:
+  contents: read
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: simulacro (sin publicar)
+        run: |
+          mkdir -p salida
+          node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=final,mvp,resumen --ventanas=0 > salida/a.txt 2>&1 || true
+          node bot/ejecutar.mjs --modo=simulacro --jornada=11 --tipos=directo --ventanas=0 --fechas-espn=20261030,20261031,20261101,20261102 > salida/b.txt 2>&1 || true
+          node bot/ejecutar.mjs --modo=simulacro --tipos=caidas --forzar=1 > salida/c.txt 2>&1 || true
+          node bot/ejecutar.mjs --modo=simulacro --tipos=previa --previa-acabados=1 --forzar=1 > salida/d.txt 2>&1 || true
+          cat salida/*.txt | sed 's/^/@@ /'
