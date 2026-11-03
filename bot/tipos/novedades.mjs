@@ -5,7 +5,9 @@
 import { corto, fmt, partes, elegir, el, del } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, paraLa } from '../lib/redactar.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
-import { lineasPorEstado, elQueMasPesa, enLetra, mayus } from '../lib/agrupar.mjs';
+import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle } from '../lib/agrupar.mjs';
+import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe } from '../lib/partes.mjs';
+import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 
 const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
@@ -13,7 +15,7 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
 const ESTADO_DE = { lesion: 'injured', sancion: 'suspended', vuelve: 'ok' };
 const HORA = 36e5;
 
-export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido }) {
+export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido, soloSeguras = false, listaPartes = null, fichaDe = fichaLaLiga }) {
   const [hD, hH] = config.horasNovedades || [9, 23];
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   const actual = {};
@@ -49,6 +51,18 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       estado: p.que === 'lesion' ? 'lesionado' : p.que === 'sancion' ? 'sancionado' : 'disponible', media: Number(j.averagePoints) || 0, valor: Number(j.marketValue) || 0, que: p.que, antes: p.antes, desde: p.t };
   });
   if (!eventos.length) return [];
+  // el motivo (Carlos, 3 nov 13:15): la lesión y lo que se espera, de la lista de lesionados; la roja o las amarillas, de la ficha.
+  // Publicando, una lesión sin parte espera (sigue pendiente) a que lo haya.
+  const lista = listaPartes || await lesionados({ log });
+  for (const e of eventos) {
+    const j = porId.get(String(e.id));
+    if (e.que !== 'sancion') e.parte = parteDe(j, lista);
+    else e.motivoSan = motivoSancion(await fichaDe(e.id).catch(() => null));
+  }
+  const listos = eventos.filter((e) => !(soloSeguras && e.que === 'lesion' && !(e.parte && e.parte.lesion)));
+  if (listos.length < eventos.length) log(`  (novedades) sin parte todavía, esperan: ${eventos.filter((e) => !listos.includes(e)).map((e) => e.nombre).join(', ')}`);
+  eventos.length = 0; eventos.push(...listos);
+  if (!eventos.length) return [];
   log(`  (novedades) ${eventos.length} pendientes: ${eventos.map((e) => `${e.nombre} ${e.antes}→${e.que}`).join(', ')}`);
   eventos.sort((a, b) => b.media - a.media);
   for (const e of eventos) e.pp = await proximo(e.teamId, { stats, semana, jornada }).catch(() => null);
@@ -57,29 +71,40 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
 
   // Uno solo: un tweet con la noticia arriba, el detalle por su puesto y la etiqueta final con la jornada y el rival (formato Carrasco)
   const solo = (e) => {
-    const media = e.media >= 3 ? `, con ${fmt(e.media)} puntos de media` : '';
     const quien = `${cap(segunda(e.pos, e.nombre))} ${del(e.equipo)}`;
     const d = diaMadrid(e.desde);
+    const p = e.parte;
+    const mediaT = e.media >= 3 ? { t: `‼️ ${quien} suma ${fmt(e.media)} puntos de media`, prio: 5 } : null;
     let cab, ideas;
     if (e.que === 'lesion') {
-      cab = elegir([`🚨 ${e.nombre} aparece como lesionado en LaLiga Fantasy`, `🚨 Saltan las alarmas con ${e.nombre}: lesionado en LaLiga Fantasy`], `nl${e.id}${d}`);
-      ideas = [e.media >= 3 ? { t: `⚠️ ${quien} suma ${fmt(e.media)} puntos de media`, prio: 6 } : null, { t: `❌ En principio, baja ${paraLa(e.pp, null)}`, prio: 9 }];
+      const dudaWeb = p && p.estado === 'duda';
+      cab = elegir([`🚨 ${e.nombre} se cae por lesión`, `🚨 Saltan las alarmas con ${e.nombre}`], `nl${e.id}${d}`);
+      ideas = [p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
+        p && p.estado === 'baja' && p.hasta ? { t: `🗓️ No se le espera hasta ${p.hasta}`, prio: 7 } : dudaWeb ? { t: '⁉️ De momento no está descartado', prio: 7 } : null,
+        mediaT, { t: `${dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     } else if (e.que === 'sancion') {
-      cab = `🚨 ${e.nombre} aparece como sancionado en LaLiga Fantasy`;
-      ideas = [{ t: `⚠️ ${quien} se pierde el próximo partido${e.media >= 3 ? ` y suma ${fmt(e.media)} puntos de media` : ''}`, prio: 6 }, { t: `❌ Baja confirmada ${paraLa(e.pp, null)}`, prio: 9 }];
+      cab = `🟥 ${e.nombre}, sancionado`;
+      ideas = [e.motivoSan ? { t: `⚠️ ${e.motivoSan.txt}`, prio: 9 } : null,
+        { t: `❌ Se pierde ${e.pp ? `el partido contra ${el(e.pp.rival)}` : 'el próximo partido'}`, prio: 8 },
+        mediaT, { t: `❌ Baja Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     } else {
-      const tras = e.antes === 'injured' ? ' ya está recuperado' : e.antes === 'suspended' ? ' ya ha cumplido la sanción' : ' deja de estar en duda';
-      cab = `✅ ${e.nombre} vuelve a estar disponible en LaLiga Fantasy`;
-      ideas = [{ t: `‼️ ${quien}${tras}${media}`, prio: 6 }, { t: `✅ Disponible ${paraLa(e.pp, null)}`, prio: 9 }];
+      // vuelve: la lesión de la que viene, si está en la lista («Deja atrás la lesión en el sóleo»)
+      // solo si es una lesión de verdad («trabajo al margen» o «descanso» no se dejan atrás)
+      const les = p && p.lesion && /(lesi[oó]n|rotura|molestia|sobrecarga|contusi[oó]n|esguince|fractura|elongaci[oó]n|tendinitis|luxaci[oó]n|distensi[oó]n|edema|fascitis|pubalgia|golpe|problema|dolencia|tobillo|rodilla|isquio|gemelo|aductor|s[oó]leo|cu[aá]driceps|hombro|espalda)/i.test(p.lesion) ? lesionTxt(p) : '';
+      const art = /^(lesi[oó]n|rotura|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n|luxaci[oó]n|pubalgia)/.test(les) ? 'la ' : /^(golpe|esguince|edema|problema)/.test(les) ? 'el ' : '';
+      const tras = les ? ` deja atrás ${art}${les}` : e.antes === 'injured' ? ' ya está recuperado' : e.antes === 'suspended' ? ' ya ha cumplido la sanción' : ' deja de estar en duda';
+      cab = `✅ ${e.nombre} vuelve a estar disponible`;
+      ideas = [{ t: `‼️ ${quien}${tras}`, prio: 8 }, e.media >= 3 ? { t: `📊 Llega con ${fmt(e.media)} puntos de media`, prio: 5 } : null,
+        { t: `✅ Disponible Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     }
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
     const clave = `novedades|${e.id}:${e.que}|${d}`;
-    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
+    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
   };
 
   // Varios: agrupados por lo que pasa, con una cabecera que ya cuenta la noticia y la media solo del que más pesa (Carlos, 3 nov 12:06)
-  const varios = (xs, k) => {
+  const varios = (xs, k, conMotivo = true, conClubes = true) => {
     const buenos = xs.filter((e) => e.que === 'vuelve'), malos = xs.filter((e) => e.que !== 'vuelve');
     const clubes = [...new Set(xs.map((e) => e.equipo))];
     const mismo = clubes.length === 1, n = xs.length, sem = `nov${dia}${k}`;
@@ -97,7 +122,9 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       const m = malos[0];
       const quien = `${cap(segunda(m.pos, m.nombre))} ${del(m.equipo)}`;
       const que = m.que === 'lesion' ? (m.pp ? `en principio no estará contra ${el(m.pp.rival)}` : 'en principio se pierde el próximo partido') : (m.pp ? `se pierde el partido contra ${el(m.pp.rival)}` : 'se pierde el próximo partido');
-      lineas = [...lineasPorEstado(buenos, { club: false, ya: buenos.length > 1 }), `${m.que === 'lesion' ? '❌' : '🟥'} ${quien} ${que}`];
+      // con el motivo delante: «❌ El centrocampista del Elche, rotura fibrilar en el aductor: en principio no estará contra el Girona»
+      const por = !conMotivo ? '' : m.que === 'lesion' && m.parte && m.parte.lesion ? `, ${lesionTxt(m.parte)}:` : m.motivoSan ? `, ${m.motivoSan.txt.replace(/^./, (c) => c.toLowerCase())}:` : '';
+      lineas = [...lineasPorEstado(buenos, { club: !conClubes, ya: buenos.length > 1 }), `${m.que === 'lesion' ? '❌' : '🟥'} ${quien}${por} ${que}`];
     } else if (buenos.length && malos.length) lineas = [...lineasPorEstado(buenos, { club: mismo }), ...lineasPorEstado(malos, { club: mismo })];
     else lineas = lineasPorEstado(xs, { club: mismo });
     const top = elQueMasPesa(xs);
@@ -105,10 +132,11 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const J = pps.length ? Math.min(...pps.map((p) => p.jornada)) : jornada;
     const para = mismo && xs[0].pp ? paraLa(xs[0].pp, J) : `para la jornada ${J}`;
     const etiqueta = !buenos.length ? `❌ Bajas Fantasy ${para}` : !malos.length ? `✅ Disponibles en LaLiga Fantasy ${para}` : `👀 Revisa tu once Fantasy ${para}`;
-    const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
+    const det = buenos.length && malos.length === 1 && !mismo ? null : detalle(xs);   // en el caso de arriba el motivo ya va en su línea
+    const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos
     const clave = `novedades|${xs.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`;
-    return { tipo: 'novedades', clave, jornada, texto, numeros: [J, ...pps.map((p) => p.jornada), ...(top ? top.numeros : [])],
+    return { tipo: 'novedades', clave, jornada, texto, numeros: [J, ...pps.map((p) => p.jornada), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...malos.flatMap((m) => [...numerosDe(m.parte), ...(m.motivoSan ? m.motivoSan.numeros : [])])],
       tarjeta: tarjetaBajas({ jornada, filas: xs, pp: mismo ? xs[0].pp : null, clave }) };
   };
 
@@ -117,7 +145,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   while (i < eventos.length && out.length < 4) {
     const resto = eventos.slice(i, i + 5);
     let n = resto.length, t = null;
-    for (; n >= 2 && !t; n--) t = varios(resto.slice(0, n), k);
+    for (; n >= 2 && !t; n--) { const ys = resto.slice(0, n); t = varios(ys, k) || varios(ys, k, true, false) || varios(ys, k, false); }   // si no cabe: el motivo sin los clubes de los que vuelven y, si aún no, sin motivo, antes que partirlo
     if (t) n++;
     else { n = 1; t = solo(resto[0]); }
     if (t) out.push(t);

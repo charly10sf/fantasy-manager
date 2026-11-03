@@ -7,7 +7,8 @@ import { ficha, ESTADOS } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { onceProbable, pOnce } from '../lib/ff.mjs';
-import { lineasPorEstado, elQueMasPesa, enLetra, mayus } from '../lib/agrupar.mjs';
+import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe } from '../lib/partes.mjs';
+import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle } from '../lib/agrupar.mjs';
 
 export function baseTitular(playerStats, hasta) {
   const s = (playerStats || []).filter((x) => x.weekNumber <= hasta && x.stats && x.stats.mins_played).sort((a, b) => a.weekNumber - b.weekNumber);
@@ -43,6 +44,8 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
       ffs.set(k, await onceProbable(equipos[k] || '', jugadores.filter((x) => String(x.teamId) === k), { log }));
     }
   }
+  // el motivo de cada uno (lib/partes.mjs): la lesión y lo que se espera, o la roja o las amarillas de la sanción
+  const lista = await lesionados({ log });
   const caidas = [];
   malos.forEach((j, i) => {
     const f = fichas[i];
@@ -54,7 +57,11 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     if (soloSeguras && j.playerStatus === 'doubtful' && !(o && o.estado !== 'ok')) return;
     const p = j.playerStatus === 'doubtful' ? (ff ? 0.5 * pOnce(o) + 0.3 * b.a + 0.2 * b.b : b.p) * 0.6 : 0;
     if (p >= config.umbralCaida) return;
-    caidas.push({ id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0, valor: Number(j.marketValue) || 0 });
+    const parte = parteDe(j, lista);
+    const motivoSan = j.playerStatus === 'suspended' ? motivoSancion(f) : null;
+    // publicando, un lesionado sin parte no sale todavía (Carlos, 3 nov 13:15: no vale «aparece como lesionado» a secas); vuelve a mirarse en la siguiente
+    if (soloSeguras && j.playerStatus === 'injured' && !(parte && parte.lesion)) { log(`  (caídas) ${j.nickname}: sin parte de la lesión todavía, espero`); return; }
+    caidas.push({ parte, motivoSan, id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0, valor: Number(j.marketValue) || 0 });
   });
   return escribir(caidas, { jornada, semana });
 }
@@ -69,7 +76,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   const pp = new Map();
   for (const c of caidas) if (!pp.has(String(c.teamId))) pp.set(String(c.teamId), await proximo(c.teamId, { jornada, semana }).catch(() => null));
   const seguro = (c) => c.estado !== 'duda';
-  const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 && c.estado !== 'duda' ? partes(c.media) : [])];
+  const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 ? partes(c.media) : [])];
   const porEquipo = new Map();
   for (const c of caidas) { const k = String(c.teamId); if (!porEquipo.has(k)) porEquipo.set(k, []); porEquipo.get(k).push(c); }
   const sueltos = [];
@@ -79,25 +86,34 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const eq = xs[0].equipo, pr = pp.get(k);
     const cab = `🚨 ${cap(el(eq))} ${xs.every(seguro) ? 'se queda sin' : 'puede quedarse sin'} ${enLetra(xs.length)} titulares`;
     const lineas = lineasPorEstado(xs, { club: true });
-    const top = elQueMasPesa(xs.filter(seguro));
-    const ideas = [...lineas.map((t) => ({ t, prio: 9 })), top && { t: top.t, prio: 5 },
+    const top = elQueMasPesa(xs.filter(seguro)), det = detalle(xs);
+    const ideas = [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 5 },
       { t: `${xs.every(seguro) ? '❌ Baja' : '⁉️ Duda'} Fantasy ${paraLa(pr, jornada)}`, prio: 8 }];
     const { usadas, texto } = tweet(cab, ideas);
     if (!lineas.every((l) => usadas.includes(l))) continue;
     const clave = `caidas|${jornada}|${xs.map((c) => c.id).join('-')}`;
-    out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...xs.filter((c) => c.estado === 'duda').map((c) => c.pct), ...(top ? top.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: xs, pp: pr, clave }) });
+    out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...xs.filter((c) => c.estado === 'duda').map((c) => c.pct), ...(top ? top.numeros : []), ...(det ? det.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: xs, pp: pr, clave }) });
   }
   // uno suelto: su propio tweet con la etiqueta final (formato Carrasco)
   const unSuelto = (c) => {
     const pr = pp.get(String(c.teamId));
-    const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
-    const ideas = [{ t: `⚠️ Aparece como ${c.estado === 'duda' ? `duda en LaLiga Fantasy y ${enPalabras(c.p)}: ${c.pct} %` : `${c.estado} en LaLiga Fantasy`}`, prio: 8 },
+    const p = c.parte;
+    // la web lo da por duda aunque LaLiga lo tenga lesionado: se dice así, sin darlo por perdido
+    const dudaWeb = c.estado === 'lesionado' && p && p.estado === 'duda';
+    const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}`
+      : c.estado === 'sancionado' ? `🟥 ${c.nombre} no estará ${pr ? `contra ${el(pr.rival)}` : 'en el próximo partido'}`
+      : dudaWeb && pr ? `🚨 ${c.nombre} apunta a perderse el partido contra ${el(pr.rival)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
+    const ideas = [
+      p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
+      p && p.estado === 'baja' && p.hasta ? { t: `🗓️ No se le espera hasta ${p.hasta}`, prio: 7 } : dudaWeb ? { t: '⁉️ Aún no está descartado del todo', prio: 7 } : null,
+      c.motivoSan ? { t: `⚠️ ${c.motivoSan.txt} y cumple sanción`, prio: 9 } : null,
+      c.estado === 'duda' ? { t: `📊 ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,
       { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
-      { t: `${c.estado === 'duda' ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
+      { t: `${c.estado === 'duda' || dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
     const clave = `caidas|${jornada}|${c.id}`;
-    return { tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c)], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
+    return { tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c), ...numerosDe(p), ...(c.motivoSan ? c.motivoSan.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
   };
   if (sueltos.length <= 2) {
     for (const c of sueltos) { const t = unSuelto(c); if (t) out.push(t); }
@@ -107,23 +123,24 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   let i = 0, k = 0;
   while (i < sueltos.length && out.length < 12) {
     const resto = sueltos.slice(i, i + 6);
-    let n = resto.length, texto = null, top = null;
+    let n = resto.length, texto = null, top = null, det = null;
     for (; n >= 1; n--) {
       const xs = resto.slice(0, n);
       const quien = `${enLetra(n)} ${n === 1 ? 'titular habitual' : 'titulares habituales'} ${xs.every(seguro) ? (n === 1 ? 'se cae' : 'se caen') : (n === 1 ? 'puede caerse' : 'pueden caerse')}`;
       const cab = elegir([`🚨 ${mayus(quien)} para la jornada ${jornada}`, `🚨 Ojo a tu once fantasy: ${quien} para la jornada ${jornada}`], `caidas${jornada}${k}`);
       const lineas = lineasPorEstado(xs);
-      top = elQueMasPesa(xs.filter(seguro));
+      top = elQueMasPesa(xs.filter(seguro)); det = detalle(xs);
       const etiqueta = `${xs.every(seguro) ? '❌ Bajas' : '⁉️ Bajas y dudas'} Fantasy para la jornada ${jornada}`;
-      const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
+      const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
       // la etiqueta final tiene que caber: si no, van menos jugadores en este tweet y el resto en el siguiente
-      if ([...lineas, etiqueta].every((l) => r.usadas.includes(l))) { texto = r.texto; break; }
+      // la etiqueta y el motivo (si alguno lo tiene) tienen que caber: si no, van menos jugadores en este tweet
+      if ([...lineas, etiqueta, ...(det ? [det.t] : [])].every((l) => r.usadas.includes(l))) { texto = r.texto; break; }
     }
     if (!texto) break;
     if (n === 1) { const t = unSuelto(resto[0]); if (t) out.push(t); i += 1; k++; continue; }   // si sobra uno, va con el formato de uno solo
     const quienes = resto.slice(0, n);
     const clave = `caidas|${jornada}|${quienes.map((c) => c.id).join('-')}`;
-    out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, ...quienes.flatMap((c) => (c.estado === 'duda' ? [c.pct] : [])), ...(top ? top.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: quienes, pp: quienes.every((c) => String(c.teamId) === String(quienes[0].teamId)) ? pp.get(String(quienes[0].teamId)) : null, clave }) });
+    out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, ...quienes.flatMap((c) => (c.estado === 'duda' ? [c.pct] : [])), ...(top ? top.numeros : []), ...(det ? det.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: quienes, pp: quienes.every((c) => String(c.teamId) === String(quienes[0].teamId)) ? pp.get(String(quienes[0].teamId)) : null, clave }) });
     i += n; k++;
   }
   return out;
