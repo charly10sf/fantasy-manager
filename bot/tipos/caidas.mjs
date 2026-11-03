@@ -25,7 +25,7 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
   // tweet de caídas de esta jornada o en uno de novedades de las últimas 24 h. Así, además, un grupo publicado no vuelve a salir
   // con otra forma cuando se le suma o se le quita alguien.
   const cub = registro && registro.cubiertos ? registro.cubiertos() : [];
-  const yaSalio = new Set(cub.filter((c) => (c.tipo === 'caidas' && c.jornada === jornada) || ((c.tipo === 'novedades' || (c.tipo === 'noticias' && c.que === 'mala')) && ahora - c.t < 24 * 36e5)).map((c) => String(c.id)));
+  const yaSalio = new Set(cub.filter((c) => ((c.tipo === 'caidas' || c.tipo === 'sancionados') && c.jornada === jornada) || ((c.tipo === 'novedades' || (c.tipo === 'noticias' && c.que === 'mala')) && ahora - c.t < 24 * 36e5)).map((c) => String(c.id)));
   // escudos por equipo, de la jornada que hay en memoria (juegan los 20)
   const escudos = {};
   for (const m of stats || []) for (const lado of [m.local, m.visitor]) if (lado && lado.id != null && lado.badgeColor) escudos[String(lado.id)] = lado.badgeColor;
