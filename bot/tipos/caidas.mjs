@@ -76,21 +76,23 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const clave = `caidas|${jornada}|${xs.map((c) => c.id).join('-')}`;
     out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...xs.filter((c) => c.estado === 'duda').map((c) => c.pct), ...(top ? top.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: xs, pp: pr, clave }) });
   }
+  // uno suelto: su propio tweet con la etiqueta final (formato Carrasco)
+  const unSuelto = (c) => {
+    const pr = pp.get(String(c.teamId));
+    const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
+    const ideas = [{ t: `⚠️ Aparece como ${c.estado === 'duda' ? `duda en LaLiga Fantasy y ${enPalabras(c.p)}: ${c.pct} %` : `${c.estado} en LaLiga Fantasy`}`, prio: 8 },
+      { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
+      { t: `${c.estado === 'duda' ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
+    const { usadas, texto } = tweet(cab, ideas);
+    if (!usadas.length) return null;
+    const clave = `caidas|${jornada}|${c.id}`;
+    return { tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c)], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
+  };
   if (sueltos.length <= 2) {
-    for (const c of sueltos) {
-      const pr = pp.get(String(c.teamId));
-      const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
-      const ideas = [{ t: `⚠️ Aparece como ${c.estado === 'duda' ? `duda en LaLiga Fantasy y ${enPalabras(c.p)}: ${c.pct} %` : `${c.estado} en LaLiga Fantasy`}`, prio: 8 },
-        { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
-        { t: `${c.estado === 'duda' ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
-      const { usadas, texto } = tweet(cab, ideas);
-      if (!usadas.length) continue;
-      const clave = `caidas|${jornada}|${c.id}`;
-      out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c)], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) });
-    }
+    for (const c of sueltos) { const t = unSuelto(c); if (t) out.push(t); }
     return out;
   }
-  // más de dos sueltos: en lista, llenando cada tweet con todos los que caben (por orden de valor)
+  // más de dos sueltos: agrupados por lo que pasa, llenando cada tweet con todos los que caben (por orden de valor)
   let i = 0, k = 0;
   while (i < sueltos.length && out.length < 12) {
     const resto = sueltos.slice(i, i + 6);
@@ -107,6 +109,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       if ([...lineas, etiqueta].every((l) => r.usadas.includes(l))) { texto = r.texto; break; }
     }
     if (!texto) break;
+    if (n === 1) { const t = unSuelto(resto[0]); if (t) out.push(t); i += 1; k++; continue; }   // si sobra uno, va con el formato de uno solo
     const quienes = resto.slice(0, n);
     const clave = `caidas|${jornada}|${quienes.map((c) => c.id).join('-')}`;
     out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, ...quienes.flatMap((c) => (c.estado === 'duda' ? [c.pct] : [])), ...(top ? top.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: quienes, pp: quienes.every((c) => String(c.teamId) === String(quienes[0].teamId)) ? pp.get(String(quienes[0].teamId)) : null, clave }) });
