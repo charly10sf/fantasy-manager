@@ -34,21 +34,28 @@ export async function probabilidades(teamId, jugadores, ultimaJugada, { equipo =
     const duda = j.playerStatus === 'doubtful' || (o && o.estado === 'doubtful');
     if (j.playerStatus === 'injured' || j.playerStatus === 'suspended' || (o && o.estado === 'injured')) p = 0;
     else if (duda) p *= 0.6;
-    out[j.id] = { id: j.id, nombre: j.nickname, pos: POS[j.positionId], p: Math.min(0.97, p), duda, estado: j.playerStatus, ff: !!ff };
+    out[j.id] = { id: j.id, nombre: j.nickname, pos: POS[j.positionId], p: Math.min(0.97, p), duda, estado: j.playerStatus, ff: !!ff, tit: !!(o && o.titular) };
   });
   return out;
 }
 
-/** el posible once: { formacion: '4-3-3', once: [...], resto } */
+/**
+ * El posible once: { formacion: '4-3-3', once: [...] }. Con once probable, sus titulares (los que pueden jugar) entran siempre y
+ * se queda la formación que más de ellos mete; los huecos, con los de más %. Sin él, la formación que más % suma.
+ * (Carlos, 3 nov 11:52: salían en el once jugadores con un 30-40 %.)
+ */
 export function elegirOnce(probs) {
-  const por = (pos) => Object.values(probs).filter((x) => x.pos === pos).sort((a, b) => b.p - a.p);
+  const xs = Object.values(probs);
+  const fijo = (x) => x.tit && x.p > 0;
+  const por = (pos) => xs.filter((x) => x.pos === pos).sort((a, b) => Number(fijo(b)) - Number(fijo(a)) || b.p - a.p);
   const [P, D, M, F] = ['POR', 'DEF', 'MED', 'DEL'].map(por);
   let mejor = null;
   for (const [d, m, f] of FORMACIONES) {
     if (D.length < d || M.length < m || F.length < f || !P.length) continue;
     const once = [P[0], ...D.slice(0, d), ...M.slice(0, m), ...F.slice(0, f)];
     const suma = once.reduce((s, x) => s + x.p, 0);
-    if (!mejor || suma > mejor.suma + 1e-9) mejor = { suma, formacion: `${d}-${m}-${f}`, once };
+    const puntos = once.filter(fijo).length * 10 + suma;
+    if (!mejor || puntos > mejor.puntos + 1e-9) mejor = { puntos, suma, formacion: `${d}-${m}-${f}`, once };
   }
   return mejor;
 }
