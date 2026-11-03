@@ -41,7 +41,7 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
   const pp = new Map();
   for (const c of caidas) if (!pp.has(String(c.teamId))) pp.set(String(c.teamId), await proximoPartido(c.teamId, { jornada, semana }).catch(() => null));
   const seguro = (c) => c.estado !== 'duda';
-  const estadoTxt = (c) => (c.estado === 'duda' ? `en duda, ${enPalabras(c.p)}: ${c.pct} %` : c.estado);
+  const estadoTxt = (c) => (c.estado === 'duda' ? `duda: ${c.pct} % de titularidad` : c.estado);
   const icono = (c) => (c.estado === 'sancionado' ? '🟥' : c.estado === 'duda' ? '⁉️' : '❌');
   const conMedia = (c) => (c.media >= 3 && c.estado !== 'duda' ? ` (${fmt(c.media)} de media)` : '');
   const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 && c.estado !== 'duda' ? partes(c.media) : [])];
@@ -65,7 +65,7 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     for (const c of sueltos) {
       const pr = pp.get(String(c.teamId));
       const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
-      const ideas = [{ t: `⚠️ Aparece como ${c.estado === 'duda' ? `duda en LaLiga Fantasy: ${enPalabras(c.p)} (${c.pct} %)` : `${c.estado} en LaLiga Fantasy`}`, prio: 8 },
+      const ideas = [{ t: `⚠️ Aparece como ${c.estado === 'duda' ? `duda en LaLiga Fantasy y ${enPalabras(c.p)}: ${c.pct} %` : `${c.estado} en LaLiga Fantasy`}`, prio: 8 },
         { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
         { t: `${c.estado === 'duda' ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
       const { usadas, texto } = tweet(cab, ideas);
