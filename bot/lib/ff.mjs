@@ -81,14 +81,24 @@ export function parseOnce(html) {
 /** casa la lista con los jugadores de LaLiga del equipo (nickname y name): { [id]: { titular, alternativa, prob, estado } } (como unirOnce) */
 export function unirOnce(lista, jugadoresEquipo) {
   const js = jugadoresEquipo.map((p) => ({ id: p.id, nombre: p.nickname || '', largo: p.name || p.nickname || '' }));
-  const out = {};
+  const out = {}, sinCasar = [], sinTit = [];
   for (const x of lista) {
     const largo = norm(x.nombre), corto = norm(x.corto);
     const j = js.find((p) => norm(p.largo) === largo || norm(p.nombre) === corto || norm(p.nombre) === largo)
       || js.find((p) => largo && (largo.includes(norm(p.nombre)) || norm(p.largo).includes(largo)))
       || js.find((p) => corto && corto.length > 3 && norm(p.nombre).includes(corto));
     if (j && !out[j.id]) out[j.id] = { titular: x.titular, alternativa: x.alternativa, prob: x.prob, estado: x.estado };
+    else if (!j) sinCasar.push(x);
   }
+  // por apellido (la última palabra de 4 letras o más, como `unirTitulares` de la app), solo si hay un único candidato libre
+  const apellido = (t) => { const w = norm(t).split(' ').filter((y) => y.length >= 4); return w.length ? w[w.length - 1] : ''; };
+  for (const x of sinCasar) {
+    const a = new Set([apellido(x.nombre), apellido(x.corto)].filter(Boolean));
+    const c = js.filter((p) => !out[p.id] && norm(p.largo).split(' ').concat(norm(p.nombre).split(' ')).some((w) => w.length >= 4 && a.has(w)));
+    if (c.length === 1) out[c[0].id] = { titular: x.titular, alternativa: x.alternativa, prob: x.prob, estado: x.estado };
+    else if (x.titular) sinTit.push(x.corto || x.nombre);
+  }
+  Object.defineProperty(out, 'sinCasar', { value: sinTit });   // titulares que no casan (para el log)
   return out;
 }
 
@@ -115,6 +125,7 @@ export function onceProbable(nombreEquipo, jugadoresEquipo, { log = () => {}, pe
     if (!lista) return null;
     const o = unirOnce(lista, jugadoresEquipo);
     const casados = Object.values(o).filter((x) => x.titular).length;
+    if (o.sinCasar.length) log(`  (once probable) ${slug}: titulares sin casar con LaLiga: ${o.sinCasar.join(', ')}`);
     if (casados < 9) { log(`  (once probable) ${slug}: solo ${casados} titulares casados con LaLiga, no lo uso`); return null; }
     return o;
   });
