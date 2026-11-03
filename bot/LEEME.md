@@ -48,7 +48,7 @@ Las piezas comunes están en `lib/redactar.mjs`:
 ## Tarjetas con imagen (encendidas desde el 2 nov)
 
 Tarjetas de 1200x675, estilo «carta» desde el 3 nov (letra Barlow Condensed y titulares en dorado; antes, «noche»). La carta de
-coleccionista (diseño propio) solo va en las de un jugador (jugador, bajas y novedades), con el metal según su valor de mercado:
+coleccionista (diseño propio) solo va cuando la tarjeta es de UN jugador (jugador, y bajas o novedades de uno solo; con varios, fichas), con el metal según su valor de mercado:
 leyenda 90 M o más, oro 35-90 M, plata 10-35 M, bronce el resto (`METALES` en lib/tarjetas.mjs). Las primeras fueron la de **final** (escudos, marcador y los 3 mejores y los 3
 peores de cada equipo con su cara y sus puntos oficiales; «peores» = los que menos puntúan de los que jugaron 30' o más, con los
 minutos de la ficha de cada jugador, porque stats/week no los trae) y la de **jugador** (cara, escudo, puntos de la jornada, total,
