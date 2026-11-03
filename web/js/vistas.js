@@ -251,7 +251,7 @@ export function sustitutosHTML(S, pid) {
     .sort((a, b) => pp(b.j) - pp(a.j)).slice(0, 8);
   let h = `${cab}<p class="t2 peq">${esc(POS_PLURAL[j.pos] || 'Su puesto')}: lo que podrías poner o fichar hoy en su sitio, de más a menos puntos esperados. Toca uno para ver su ficha.</p>`;
   if (mios.length) h += `<div class="grupo"><span>Ya los tienes</span><span>${mios.length}</span></div>${mios.map((x) => filaJugador(x, { sub: `${esc(x.j.equipo)}${ppTxt(x.j) ? ` · ${ppTxt(x.j)}` : ''}`, derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d">${delta(x.tend)}</div>` })).join('')}`;
-  if (merc.length) h += `<div class="grupo"><span>En el mercado</span><span>${merc.length}</span></div>${merc.map((m) => filaJugador(m, { sub: `${m.tipo === 'manager' ? `lo vende ${esc(m.vendedor || 'un manager')}` : 'libre'}${ppTxt(m.j) ? ` · ${ppTxt(m.j)}` : ''}`, derecha: `<div class="v">${eur(m.precio)}</div>${m.puja ? `<div class="d apag">${m.tipo === 'manager' ? 'ofrece' : 'puja'} ${eur(m.puja, { dec: 1 })}</div>` : ''}` })).join('')}`;
+  if (merc.length) h += `<div class="grupo"><span>En el mercado</span><span>${merc.length}</span></div>${merc.map((m) => filaJugador(m, { sub: `${m.tipo === 'manager' ? `lo vende ${esc(m.vendedor || 'un manager')}` : 'libre'}${ppTxt(m.j) ? ` · ${ppTxt(m.j)}` : ''}`, derecha: `<div class="v">${eur(m.precio)}</div>${m.puja ? `<div class="d apag">${m.tipo === 'manager' ? 'ofrece' : 'puja'} ${eur(m.puja)}</div>` : ''}` })).join('')}`;
   if (cls.length) h += `<div class="grupo"><span>Cláusulas que te llegan</span><span>${cls.length}</span></div>${cls.map((x) => filaJugador(x, { sub: `de ${esc(x.rival.manager || x.rival.nombre)}${ppTxt(x.j) ? ` · ${ppTxt(x.j)}` : ''}`, derecha: `<div class="v">${eur(x.clausula)}</div><div class="d apag">${x.abierta ? 'abierta' : `se abre ${cuando(x.protegidoHasta)}`}</div>` })).join('')}`;
   if (!mios.length && !merc.length && !cls.length) h += nada('Ahora mismo no hay nadie de su puesto que puedas poner o fichar hoy. Mira mañana el mercado nuevo.');
   return h;
@@ -484,7 +484,9 @@ function planHTML(S) {
   // los pasos, todos, en corto: cuántos quedan arriba
   const cp = cuentaPasos(S, P);
   const pl = (n, uno, varios) => `${n} ${n > 1 ? varios : uno}`;
-  if (P.ops.length) h += `<div class="pasos-cab"><b>${pl(P.ops.length, 'paso', 'pasos')}</b><span>${[cp.pend ? `${cp.pend} por hacer` : 'nada por hacer', cp.hechos ? pl(cp.hechos, 'hecho', 'hechos') : '', cp.luego ? `${cp.luego} para luego` : '', cp.descartados ? pl(cp.descartados, 'descartado', 'descartados') : ''].filter(Boolean).join(' · ')}</span><span class="pasos-tip">toca uno para ver el detalle</span></div>`;
+  // con todo por hacer, «10 pasos por hacer» (no «10 pasos · 10 por hacer»)
+  const todos = cp.pend === P.ops.length;
+  if (P.ops.length) h += `<div class="pasos-cab"><b>${pl(P.ops.length, 'paso', 'pasos')}${todos ? ' por hacer' : ''}</b><span>${todos ? '' : [cp.pend ? `${cp.pend} por hacer` : 'nada por hacer', cp.hechos ? pl(cp.hechos, 'hecho', 'hechos') : '', cp.luego ? `${cp.luego} para luego` : '', cp.descartados ? pl(cp.descartados, 'descartado', 'descartados') : ''].filter(Boolean).join(' · ')}</span><span class="pasos-tip">toca uno para ver el detalle</span></div>`;
   // los descartados, al final y separados de los demás
   const vivos = P.ops.filter((o) => !o.descartada), fuera = P.ops.filter((o) => o.descartada);
   h += `<div class="pasos2">${vivos.map((o) => pasoOp(S, P, o)).join('')}</div>`;
@@ -1029,14 +1031,19 @@ export function mercado(S) {
     if (M.misVentas.length) h += `<p class="t2 peq" style="margin:0 0 6px">Lo que tienes tú en venta está en <button class="rojo" data-ir="equipo" data-seg="equipo:venta">Equipo → En venta</button>.</p>`;
     // la puja de la derecha es la misma que en Especular y en el plan; si el plan la descarta o no te llega, se dice
     // (y no se llama «Chollo»: 3 nov, Xavi Espart salía como chollo con puja 39,5 M y el plan lo descartaba por dinero)
+    // si la puja pasa de lo que puedes gastar, no se enseña: «Solo puedes gastar X» (3 nov: Lamine salía con «Te llega
+    // hasta 67,8 M» y «puja 129,9 M» a la vez)
+    const noLlega = new Set();
     const avisoPuja = (m) => {
       if (m.miPuja || m.noVende) return '';
       const dp = descartePlan(S, m.pid);
-      if (dp) return `<span class="pill duda" title="${esc(dp.aviso || '')}">${dp.tope != null ? `Te llega hasta ${eur(dp.tope, { dec: 1 })}` : 'El plan lo descarta'}</span>`;
       const pide = m.tipo === 'liga' ? m.puja : m.ofertaMin ? m.puja : m.precio;
-      return pide > M.pujaMax ? `<span class="pill duda" title="${esc(`Puedes gastar hasta ${eur(M.pujaMax)}`)}">Te llega hasta ${eur(Math.max(0, M.pujaMax), { dec: 1 })}</span>` : '';
+      const tope = dp && dp.tope != null ? dp.tope : !dp && pide > M.pujaMax ? Math.max(0, M.pujaMax) : null;
+      if (tope != null && pide > tope) { noLlega.add(m.pid); return `<span class="pill duda" title="${esc((dp && dp.aviso) || `Puedes gastar hasta ${eur(tope)}`)}">Solo puedes gastar ${eur(tope)}</span>`; }
+      if (dp) return `<span class="pill duda" title="${esc(dp.aviso || '')}">${dp.tope != null ? `Te llega hasta ${eur(dp.tope)}` : 'El plan lo descarta'}</span>`;
+      return '';
     };
-    const fila = (m) => { const ap = avisoPuja(m); return filaJugador(m, {
+    const fila = (m) => { const ap = avisoPuja(m), sinPuja = noLlega.has(m.pid); return filaJugador(m, {
       sub: m.tipo === 'manager' ? `${esc(m.j.equipo)} · lo vende <b>${esc(m.vendedor || 'un manager')}</b>` : `${esc(m.j.equipo)}${m.prox ? ` · ${rivalSub(M, m.j)}` : ''}`,
       pills: [
         m.miPuja ? `<span class="pill abierta">${m.tipo === 'manager' ? 'Tu oferta' : 'Tu puja'} ${eur(m.miPuja)}</span>` : '',
@@ -1044,7 +1051,7 @@ export function mercado(S) {
         ap, estadoPill(m.j), m.noVende || ap ? '' : tagV[m.veredicto] || '', calPill(M, m.j, { soloDuro: true }),
         m.tipo === 'liga' && m.pujas ? `<span class="pill">${m.pujas} puja${m.pujas > 1 ? 's' : ''}</span>` : '',
       ],
-      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja, { dec: 1 })}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja, { dec: 1 })}</div>` : ''}`, op: S.opPorPid[m.pid],
+      derecha: `<div class="v">${eur(m.precio)}</div><div class="d">${delta(m.tend)}</div>${sinPuja ? '' : m.tipo === 'liga' && !m.miPuja ? `<div class="d apag">puja ${eur(m.puja)}</div>` : m.ofertaMin && !m.miPuja && m.puja > m.precio && !m.noVende ? `<div class="d apag">ofrece ${eur(m.puja)}</div>` : ''}`, op: S.opPorPid[m.pid],
     }); };
     const PL = M.pujasLiga;
     // (por tramos de valor: cuanto más barato, más se paga en porcentaje; Carlos, 30 oct)
@@ -1068,7 +1075,7 @@ export function mercado(S) {
       if (M.paraRevender.length) h += `<div class="grupo"><span>Ya tienes para revender</span></div>${M.paraRevender.map((x) => filaJugador(x, { sub: `Comprado a ${eur(x.rev.precio)} · vale ${eur(x.j.valor)}`, derecha: `<div class="v ${clase(x.beneficioYa)}">${eur(x.beneficioYa, { signo: true })}</div><div class="d">${delta(x.tend)}</div>` })).join('')}`;
       h += M.especular.length ? lista2(`<div class="grupo"><span>Candidatos</span><span>${M.especular.length}</span></div>` + M.especular.slice(0, 30).map((e) => filaJugador({ j: e.j, tend: e.tend }, {
         sub: `${e.origen === 'mercado' ? `Mercado · puja ${eur(e.puja)}` : `Cláusula ${eur(e.precio)} a ${esc(e.rival.manager || e.rival.nombre)}`}`,
-        extra: `${(() => { const dp = descartePlan(S, e.pid); return dp ? `<span class="pill duda" title="${esc(dp.aviso || '')}">${dp.tope != null ? `Te llega hasta ${eur(dp.tope, { dec: 1 })}` : 'El plan lo descarta'}</span>` : ''; })()}<span class="pill bien">${pct(e.r * 100)}/día</span><span class="pill">${e.dias} día${e.dias > 1 ? 's' : ''}</span><span class="pill ${e.confianza === 'media' ? 'duda' : ''}">Confianza ${e.confianza}</span>`,
+        extra: `${(() => { const dp = descartePlan(S, e.pid); return dp ? `<span class="pill duda" title="${esc(dp.aviso || '')}">${dp.tope != null ? `Te llega hasta ${eur(dp.tope)}` : 'El plan lo descarta'}</span>` : ''; })()}<span class="pill bien">${pct(e.r * 100)}/día</span><span class="pill">${e.dias} día${e.dias > 1 ? 's' : ''}</span><span class="pill ${e.confianza === 'media' ? 'duda' : ''}">Confianza ${e.confianza}</span>`,
         derecha: `<div class="v sube">${eur(e.beneficio, { signo: true })}</div><div class="d apag">${pct(e.pct * 100)}</div>`, op: S.opPorPid[e.pid],
       })).join('')) : nada('Ahora mismo nada sube lo bastante como para sacarle beneficio antes de la jornada.');
     }

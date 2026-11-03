@@ -2194,7 +2194,9 @@ div.pc { display: grid; gap: 18px; }
 .pc-ficha dl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 18px 0 14px; }
 .pc-ficha dl div { padding: 9px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--linea); }
 .pc-ficha dt { font-size: 11px; color: var(--apagado); }
-.pc-ficha dd { margin: 3px 0 0; font: 700 17px var(--cond); }
+.pc-ficha dd { margin: 3px 0 0; font: 700 17px var(--cond); white-space: nowrap; }
+/* en un móvil estrecho, «121,40 M» no cabía en su casilla y se partía en dos líneas */
+@media (max-width: 440px) { .pc-ficha dl { gap: 6px; } .pc-ficha dl div { padding: 8px 6px; } .pc-ficha dd { font-size: 15px; } }
 .pc-ficha p { display: flex; gap: 9px; margin: 0; font-size: 15.5px; line-height: 1.5; color: var(--texto2); }
 .pc-ficha p .ic { flex: none; width: 18px; height: 18px; margin-top: 2px; color: var(--rojo-l); }
 /* qué hace por ti */

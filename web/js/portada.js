@@ -38,7 +38,7 @@ const PLAN = `
   <div class="mq-k">Plan de hoy</div>
   <div class="mq-t">Hoy toca vender 2, clausular 1</div>
   <p class="mq-x">Tienes 6,43 M y puedes gastar hasta 39,16 M. Vas 1º con 600 puntos.</p>
-  <div class="mq-op"><div class="mq-op-c"><em class="verde">Aceptar oferta</em><small>antes de hoy 08:41</small></div>
+  <div class="mq-op"><div class="mq-op-c"><em class="verde">Aceptar oferta</em><small>hoy, antes de las 08:41</small></div>
     <div class="mq-op-f">${cara(3084, 'Budimir', 13)}<div><b>Budimir</b><small>Osasuna · oferta de Dani</small></div><strong class="verde">+39,64 M</strong></div>
     <div class="mq-op-p"><span>Hecho</span><span>saldo 46,07 M</span></div></div>
   <div class="mq-op"><div class="mq-op-c"><em class="verde">Vender</em><small>hoy</small></div>
@@ -197,7 +197,8 @@ function resultado(tipo, k) {
   if (tipo === 'blindaje') {
     const r = blindaje(k.v, k.c, k.r, k.p);
     const techo = hasta(k.v * (1 + k.p / 100 + 0.05));
-    const marcas = [[k.c, 'Su cláusula ahora', 'gris'], [hasta(k.r), 'Le llega al más rico', 'rojo'], [techo, 'Lo más que se paga en tu liga', 'oro']];
+    // (la marca roja es desde dónde ya no le llega al más rico: con 60 M decía «Le llega al más rico 61,80 M»)
+    const marcas = [[k.c, 'Su cláusula ahora', 'gris'], [hasta(k.r), k.c >= hasta(k.r) ? 'Ya no le llega al más rico' : 'Para que no le llegue al más rico', 'rojo'], [techo, 'Lo más que se paga en tu liga', 'oro']];
     if (r.objetivo) marcas.push([r.objetivo, 'Súbela a', 'verde']);
     return `${regla(marcas, r.objetivo ? [k.c, r.objetivo] : null)}<b class="pk-dice ${r.ok ? 'verde' : 'rojo'}">${esc(r.txt)}</b>`;
   }
@@ -322,7 +323,7 @@ export function seccionMoviles() {
     'Las mismas cuentas que hace la app con tu liga. Mueve los números y mira qué cambia.')}
 
   ${seccion('pGuias', 'Aprende', 'Guías del juego', `<div class="pg">${GUIAS.map(([h, ic, t, x], i) => `<a class="pg-c rv" href="guias/${h}"><span class="pg-ic">${icono(ic)}</span><span class="pg-n">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${esc(x)}</p><span class="pg-ir">Leer la guía${icono('flecha')}</span></a>`).join('')}</div>
-    <div class="pg-todas rv"><a class="btn sec" href="guias/">${icono('lista')}Ver las ${TODAS_GUIAS.length} guías</a><span>También: ${otrasGuias()}.</span></div>`,
+    <div class="pg-todas rv"><a class="btn sec" href="guias/">${icono('lista')}Ver las ${TODAS_GUIAS.length + (FAQ_GUIA ? 1 : 0)} guías</a><span>También: ${otrasGuias()}.</span></div>`,
     'Cómo funcionan las cláusulas, el mercado y el dinero de LaLiga Fantasy, explicado con números. Gratis y sin entrar.')}
 
   ${seccion('pFaq', 'Dudas', 'Preguntas frecuentes', `<div class="pq">${PREGUNTAS.map(([p, r]) => `<details class="rv"><summary>${esc(p)}</summary><p>${esc(r)}</p></details>`).join('')}</div>`)}

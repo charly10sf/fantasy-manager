@@ -316,7 +316,9 @@ export function analizar(D, H, c, extra = {}) {
     while (v) { x = v.fin; v = vedaEn(x); }
     return primera ? { n: primera.n, cierra: primera.ini, abre: x } : null;
   };
-  const parones = [...PARONES];
+  // la liga de ejemplo tiene su propio calendario (con su parón entre la 12 y la 13): los parones reales no casan con él
+  const PAR = D.demo ? [] : PARONES;
+  const parones = [...PAR];
   for (let i = 1; i < jornadas.length; i++) {
     const a = jornadas[i - 1], b = jornadas[i];
     if (b.ini - a.fin > 9 * DIA && !parones.some((p) => p.ini < b.ini && p.fin > a.fin)) parones.push({ ini: a.fin, fin: b.ini, nombre: 'Parón de selecciones', delCalendario: true });
@@ -1128,7 +1130,7 @@ export function analizar(D, H, c, extra = {}) {
     if (!antes.length) return null;
     const k = Math.max(...antes);
     let t = iniJ[k] + (n - k) * 7 * DIA;
-    for (const pa of PARONES) if (pa.ini > iniJ[k] && pa.ini < t) t += 7 * DIA;
+    for (const pa of PAR) if (pa.ini > iniJ[k] && pa.ini < t) t += 7 * DIA;
     return t;
   };
   M.calendarioRiesgo = (j) => {
