@@ -20,6 +20,8 @@ import { preguntarJson } from '../lib/gemini.mjs';
 
 const HORA = 36e5;
 const ahoraReal = () => Date.now();
+/** la fecha de la lista de lesionados («desde el 1/11») como hora: el año, el de ahora (o el anterior si saldría en el futuro) */
+const fechaParte = (p, ahora) => { const y = new Date(ahora).getUTCFullYear(); let t = Date.UTC(y, p.mes - 1, p.dia, 12); if (t > ahora + 2 * 864e5) t = Date.UTC(y - 1, p.mes - 1, p.dia, 12); return t; };
 export const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
@@ -164,8 +166,13 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     if (ahora - mis[0].t > 18 * HORA) { log(`  (noticias) ${j.nickname} (${fam}): la primera noticia es de hace más de 18 h`); continue; }
     const medios = [...new Set(mis.map((h) => h.medio))];
     const est = j.playerStatus || 'ok';
-    const laliga = fam === 'mala' ? ['injured', 'doubtful', 'suspended'].includes(est) : est === 'ok';
     const parte = parteDe(j, lp);
+    // desde cuándo sale así en LaLiga (t 0 = de antes de que el bot lo mirara; entonces vale la fecha de la lesión de la lista)
+    const desde = (nt.desde && nt.desde[j.id]) || { t: 0 };
+    const tParte = parte && parte.dia && parte.mes ? fechaParte(parte, ahora) : 0;
+    const reciente = (desde.t || tParte) >= mis[0].t - 48 * HORA;
+    // LaLiga confirma una mala noticia si lo tiene tocado; una buena, solo si ha vuelto a «ok» hace poco (sano lo está cualquiera)
+    const laliga = fam === 'mala' ? ['injured', 'doubtful', 'suspended'].includes(est) : est === 'ok' && desde.t >= ahora - 72 * HORA;
     const parteOk = fam === 'mala' ? !!(parte && ['baja', 'duda'].includes(parte.estado)) : !!(parte && parte.estado === 'disponible');
     const oficial = mis.some((h) => h.oficial);
     if (!(oficial || medios.length >= 2 || (medios.length && (laliga || parteOk)))) { log(`  (noticias) ${j.nickname} (${fam}): solo ${medios.join(', ')}, espero a una segunda fuente`); continue; }
@@ -175,9 +182,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     // lo más grave manda: lesión > descartado > molestias
     const que = fam === 'buena' ? 'vuelve' : ['lesion', 'descartado', 'molestias'].find((q) => mis.some((h) => h.que === q));
     // ya lesionado o sancionado en LaLiga Fantasy: unas molestias o un descarte no cuentan nada nuevo (sigue sin estar)
-    // y una lesión tampoco, si ya salía así en LaLiga desde hace más de 48 h antes de la primera noticia
-    const desde = (nt.desde && nt.desde[j.id]) || { t: 0 };
-    if (fam === 'mala' && ['injured', 'suspended'].includes(est) && (que !== 'lesion' || desde.t < mis[0].t - 48 * HORA)) { log(`  (noticias) ${j.nickname}: ya salía como ${est} en LaLiga, nada nuevo`); continue; }
+    // y una lesión tampoco, si ya salía así en LaLiga desde 48 h o más antes de la primera noticia
+    if (fam === 'mala' && ['injured', 'suspended'].includes(est) && (que !== 'lesion' || !reciente)) { log(`  (noticias) ${j.nickname}: ya salía como ${est} en LaLiga, nada nuevo`); continue; }
     // la frase de arriba, la última; el motivo y el plazo, los más completos
     const de = (k) => mis.filter((h) => h[k] && h.que === que).concat(mis.filter((h) => h[k]));
     const hecho = (de('hecho').reverse()[0] || {}).hecho || '';

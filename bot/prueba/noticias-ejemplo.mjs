@@ -50,12 +50,14 @@ let prensa = [
   N('MARCA', 'm2', 'Gerard Moreno no se entrena con el Villarreal', 'Molestias en el sóleo'),
   N('Mundo Deportivo', 'd1', 'Pedri entrena al margen', 'El canario arrastra molestias en el isquiotibial', 2),
   N('AS', 'a9', 'El Racing presenta su nueva camiseta', 'Sin jugadores'),
+  N('Mundo Deportivo', 'd2', 'Ayoze vuelve a una convocatoria', 'Supera sus problemas'),
 ];
 const respuestas = {   // lo que contestaría Gemini, por titular
   'Andrés Martín se ha roto': { que: 'lesion', hecho: 'Andrés Martín se rompe y estará un mes fuera', motivo: 'rotura de fibras en la pierna', plazo: 'estará 4 semanas de baja', oficial: false },
   'Mourinho da descanso a Güler para Atenas': { que: 'descartado', otraCompeticion: true, hecho: 'Güler descansa', motivo: '', plazo: '' },
   'Gerard Moreno no se entrena con el Villarreal': { que: 'molestias', hecho: 'Gerard Moreno no se entrena con el Villarreal', motivo: 'molestias en el sóleo', plazo: '' },
   'Pedri entrena al margen': { que: 'molestias', hecho: 'Pedri vuelve a tener molestias', motivo: 'molestias en el isquiotibial', plazo: '' },
+  'Ayoze vuelve a una convocatoria': { que: 'vuelve', hecho: 'Ayoze regresa a la convocatoria', motivo: '', plazo: '' },
   'Andrés Martín, baja varias semanas': { que: 'lesion', hecho: 'Andrés Martín se pierde varias semanas', motivo: 'lesión muscular', plazo: '' },
 };
 let preguntas = 0;
@@ -76,7 +78,7 @@ ver('primera vuelta', ts);
 ok(preguntas === 1, `una pregunta a Gemini (${preguntas})`);
 ok(!ts.some((t) => t.clave.includes('|10:')), 'Andrés Martín, con un solo medio y LaLiga en ok, espera');
 ok(!ts.some((t) => t.clave.includes('|11:')), 'Güler (Champions) no sale');
-ok(!ts.some((t) => t.clave.includes('|14:')), 'nada sobre Ayoze');
+ok(!ts.some((t) => t.clave.includes('|14:')), 'Ayoze vuelve con un solo medio y en LaLiga «ok» de siempre: espera');
 const gm = ts.find((t) => t.clave.includes('|12:'));
 ok(!gm, 'G. Moreno, ya lesionado en LaLiga: unas molestias no son noticia');
 ok(reg.datos.noticias.hechos.some((h) => h.id === '12' && h.hecho === ''), 'la frase que copia el titular se tira');
