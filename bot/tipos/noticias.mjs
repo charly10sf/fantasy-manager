@@ -115,7 +115,7 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
   if (!nuevas.length) return nt;
   const hoy = diaMadrid(ahora);
   if (nt.gemini.dia !== hoy) nt.gemini = { dia: hoy, n: 0 };
-  const porLote = 20, maxLotes = config.noticiasLotesEjecucion ?? 2, hasta = ahoraReal() + (config.noticiasSegundos ?? 120) * 1000;
+  const porLote = 20, maxLotes = config.noticiasLotesEjecucion ?? 2, hasta = ahoraReal() + (config.noticiasSegundos ?? 90) * 1000;
   for (let k = 0; k < Math.min(maxLotes, Math.ceil(nuevas.length / porLote)); k++) {
     if (nt.gemini.n >= (config.geminiDia ?? 60)) { log(`  (noticias) tope de ${config.geminiDia ?? 60} preguntas a Gemini hoy`); break; }
     const lote = nuevas.slice(k * porLote, (k + 1) * porLote);

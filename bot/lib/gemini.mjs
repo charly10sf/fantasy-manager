@@ -32,7 +32,7 @@ export async function modelosDe(clave, { pedir = fetch } = {}) {
  * Pregunta y devuelve el JSON de la respuesta (con responseSchema). { ok, datos, modelo } o { ok: false, error }.
  * pedir(url, opciones) es fetch (se cambia en las pruebas).
  */
-export async function preguntarJson({ clave, prompt, esquema, modelos = null, pedir = fetch, log = () => {}, tiempo = 40000, hasta = Date.now() + 120000 }) {
+export async function preguntarJson({ clave, prompt, esquema, modelos = null, pedir = fetch, log = () => {}, tiempo = 25000, hasta = Date.now() + 90000 }) {
   if (!clave) return { ok: false, error: 'sin clave' };
   let ultimo = '';
   for (const m of (modelos || await modelosDe(clave, { pedir })).slice(0, 7)) {
