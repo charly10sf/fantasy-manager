@@ -495,7 +495,8 @@ export function svgBajas(d) {
       + texto(1156, 84, `JORNADA ${d.jornada}`, { px: 40, peso: 800, ancla: 'end', espacio: 1 })
       + texto(1156, 118, 'LALIGA FANTASY', { px: 22, peso: 700, color: TENUE, ancla: 'end', espacio: 3 });
     const enUna = filas.length <= 3, w = enUna ? 1112 : 548, h = 132;
-    filas.forEach((f, i) => { s += fichaBaja(enUna ? 44 : [44, 608][Math.floor(i / 3)], 168 + (i % 3) * (h + 14), w, h, f, { conEscudo: true }); });
+    const porCol = enUna ? 3 : Math.ceil(filas.length / 2);   // 4 -> 2 y 2, 5 -> 3 y 2, 6 -> 3 y 3
+    filas.forEach((f, i) => { s += fichaBaja(enUna ? 44 : [44, 608][Math.floor(i / porCol)], 168 + (i % porCol) * (h + 14), w, h, f, { conEscudo: true }); });
   }
   return marco(s + marca(600, 652, { ancla: 'middle' }));
 }
