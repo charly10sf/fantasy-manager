@@ -1127,7 +1127,8 @@
    "Diario Sur|https://www.diariosur.es/malagacf/joaquin-recuperacion-malaga-futbol-racing-20261103132330-nt.html": 1793709234000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
-   "SPORT|136055935": 1793734147000
+   "SPORT|136055935": 1793734147000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/alineaciones-probables-aek-real-madrid.html": 1793741534000
   },
   "hechos": [
    {
@@ -1321,7 +1322,7 @@
   ],
   "gemini": {
    "dia": "2026-11-03",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
