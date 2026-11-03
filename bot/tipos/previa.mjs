@@ -98,7 +98,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const cab = `🗓️ Posibles onces fantasy del ${L}-${V} (jornada ${jornada})`;
       const ideas = [];
       const num = [jornada];
-      if (dudas.length) { ideas.push({ t: dudas.map((x) => `⁉️ ${x.nombre} (${x.eq}): ${enPalabras(x.p)}, ${pct(x.p)} %`).join('\n'), prio: 9 }); num.push(...dudas.map((x) => pct(x.p))); }
+      if (dudas.length) { ideas.push({ t: dudas.map((x) => `⁉️ ${x.nombre} (${x.eq}), ${enPalabras(x.p)}: ${pct(x.p)} %`).join('\n'), prio: 9 }); num.push(...dudas.map((x) => pct(x.p))); }
       if (bajas.length) {
         const de = (eq) => bajas.filter((x) => x.eq === eq).map((x) => x.nombre);
         const partes = [[L, de(L)], [V, de(V)]].filter(([, xs]) => xs.length).map(([eq, xs]) => `${xs.length > 1 ? `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}` : xs[0]} en ${el(eq)}`);
