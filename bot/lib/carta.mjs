@@ -230,7 +230,8 @@ function iconoEstado(estado, cx, cy, s, c) {
   if (estado === 'disponible') return `<path d="M${cx - s * 0.4} ${cy} L${cx - s * 0.1} ${cy + s * 0.3} L${cx + s * 0.42} ${cy - s * 0.32}" fill="none" stroke="${c}" stroke-width="${s * 0.18}" stroke-linecap="round" stroke-linejoin="round"/>`;
   return `<circle cx="${cx}" cy="${cy}" r="${s * 0.42}" fill="none" stroke="${c}" stroke-width="${s * 0.14}"/><circle cx="${cx}" cy="${cy}" r="${s * 0.11}" fill="${c}"/>`;
 }
-const txtEstado = (f) => (f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : ESTADO_TARJETA[f.estado].txt);
+// (Domy, 3 nov 22:15: una gestión de cargas es «duda leve», no una duda a secas)
+const txtEstado = (f) => (f.estado === 'duda' && f.leve ? 'DUDA LEVE' : f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : ESTADO_TARJETA[f.estado].txt);
 /** la etiqueta del estado, centrada en cx, en el color del estado y con la letra oscura */
 function pildora(f, cx, cy, px, wMax) {
   const e = ESTADO_TARJETA[f.estado], txt = txtEstado(f);
@@ -267,7 +268,7 @@ export function svgBajaSola(d) {
     + fondo([[300, 330, 560, club.vivo, 0.75], [1050, 80, 500, e.color, 0.16]]);
   const x = 96, y = 36, w = 404, h = 600, x0 = 566, wd = ANCHO - x0 - 56;
   const media = f.ultimas ? num1(f.media) : f.media;
-  const grande = f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : e.txt;
+  const grande = f.estado === 'duda' && f.leve ? 'DUDA LEVE' : f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : e.txt;
   s += texto(x0 - 4, 158, grande, { px: 140, peso: 800, italica: true, color: `url(#${g})`, max: wd })
     + texto(x0, 206, `${(f.equipo || '').toUpperCase()} · JORNADA ${d.jornada}`, { px: 34, peso: 700, espacio: 1.5, max: wd });
   if (f.ultimas) {
