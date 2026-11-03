@@ -36,3 +36,18 @@ const iguales = totales.filter((x) => x.total != null && x.total === x.suma).len
 console.log(`@@ jornadas-jugador: ${totales.length}; suma de acciones = total en ${iguales} (con total: ${totales.filter((x) => x.total != null).length})`);
 console.log('@@ claves de una entrada:', JSON.stringify(Object.keys(fs.find((f) => f && f.playerStats && f.playerStats[0]).playerStats[0])));
 for (const p of Object.keys(t)) for (const k of Object.keys(t[p])) console.log(`@@ ${p} ${k}: ${JSON.stringify(t[p][k]).slice(0, 400)}`);
+// portería a cero: con 0 goles encajados, los puntos según los minutos jugados (y si el partido acabó con el jugador en el campo)
+const pc = {};
+fs.forEach((f, i) => {
+  const p = POS[js[i].positionId];
+  if (!f || !Array.isArray(f.playerStats)) return;
+  for (const s of f.playerStats) {
+    const st = s.stats || {}; const gc = st.goals_conceded, mp = st.mins_played;
+    if (!gc || !mp) continue;
+    const tramo = mp[0] === 0 ? '0' : mp[0] < 60 ? '1-59' : mp[0] < 90 ? '60-89' : '90+';
+    const k = `${p} gc=${gc[0]} min ${tramo}`;
+    ((pc[k] ||= {})[gc[1]] = (pc[k][gc[1]] || 0) + 1);
+    if (gc[0] === 0 && gc[1] > 0 && mp[0] < 60) console.log(`@@ raro: ${js[i].nickname} ${p} J${s.weekNumber} min ${mp[0]} → ${gc[1]}`);
+  }
+});
+for (const k of Object.keys(pc).sort()) if (/gc=[01] /.test(k)) console.log(`@@ ${k}: ${JSON.stringify(pc[k])}`);
