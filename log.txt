@@ -1,0 +1,14 @@
+# Bot de X · modo simulacro
+# Semana 12 (isLive=false) · siguiente 13 · 10 partidos, 10 acabados · 881 jugadores
+  (lloros) jornada 11: 44 fichas miradas, 1 lloros: Álvaro García (minutos, −3)
+
+## lloros: 1 tweets
+
+--- lloros|11 · peso 166 · válido · PUBLICARÍA
+🚨 Álvaro García se queda sin la portería a cero
+
+⚠️ El centrocampista se quedó en 45 minutos con el Rayo a cero: 3 puntos menos
+
+💔 Lloros Fantasy de la jornada 11
+
+# Total: 1 generados, 1 los publicaría, 0 fallos · 2.2 s
