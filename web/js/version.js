@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12g';
+export const VERSION = '0.6.12h';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.6.12g';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12h', f: '2026-11-03', h: '21:12', t: 'El plan, sin esperas cuando Google se satura',
+    cosas: [
+      { tipo: 'arreglo', d: 'conexion', t: 'Si Gemini está saturado, el plan prueba otro modelo al momento', x: 'Cuando Google se satura, los modelos Flash dicen que no a la vez y la app se quedaba minutos preguntándoles una y otra vez (alguno tardaba hasta dos minutos y medio en contestar que no). Ahora, si uno está saturado, pasa enseguida a otro de distinta familia (un Flash-Lite, que suele seguir contestando), ninguna pregunta pasa de su tiempo máximo y, si están todos saturados, te lo dice en vez de seguir esperando.' },
+    ],
+  },
   {
     v: '0.6.12g', f: '2026-11-03', h: '21:08', t: 'Guía de puntos', menor: true,
     cosas: [

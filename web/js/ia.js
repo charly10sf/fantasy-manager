@@ -51,6 +51,15 @@ function orden(m) {
   const tam = esGemma(m) ? parseFloat((m.match(/(\d+)b/) || [])[1] || '0') : 0;
   return tipo * 1000 - v * 10 - tam / 10 + (/preview|latest/.test(m) ? 2 : 0);
 }
+/* flash y flash-lite alternados (3.8 flash, 3.5 lite, 3.7 flash, 3.1 lite…) y detrás pro y gemma: cuando Google se satura,
+   se saturan los flash a la vez y el que contesta es un lite (visto el 3 nov: cuatro flash con 503 seguidos, 5 min sin plan) */
+const familia = (m) => (/flash-lite/.test(m) ? 'l' : /flash/.test(m) ? 'f' : 'o');
+function alternar(lista) {
+  const f = lista.filter((m) => familia(m) === 'f'), l = lista.filter((m) => familia(m) === 'l');
+  const r = [];
+  for (let i = 0; i < Math.max(f.length, l.length); i++) { if (f[i]) r.push(f[i]); if (l[i]) r.push(l[i]); }
+  return [...r, ...lista.filter((m) => familia(m) === 'o')];
+}
 
 /** la lista de modelos que admite tu clave (no gasta cupo); se guarda un día */
 export async function modelosDisponibles(k = clave(), forzar = false) {
@@ -85,7 +94,7 @@ async function cadena() {
   try { lista = await modelosDisponibles(); } catch (e) { if (e.estado === 400 || e.estado === 401 || e.estado === 403) throw e; lista = BASE; }
   if (!lista.length) lista = BASE;
   const elegido = cfgIA().modelo;
-  const todos = [...new Set([...(elegido ? [elegido] : []), ...lista])];
+  const todos = [...new Set([...(elegido ? [elegido] : []), ...alternar(lista)])];
   const f = fuera();
   const vivos = todos.filter((m) => !f[m]);
   const pz = pausas();
@@ -131,11 +140,16 @@ async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, sign
   const sinTiempo = (m) => new ErrorIA(`Sin conexión con Google (${m})`, 0, { red: true, tiempo: true });
   if (enApp) {
     const pet = http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: limite });
-    // si lo paras, se deja de esperar al momento (la respuesta, si llega, se tira)
-    const r = signal ? await Promise.race([pet, new Promise((_, mal) => {
+    // el tiempo de la parte nativa es por lectura, no total: un 503 de Google llegó a tardar 150 s con un límite de 90.
+    // Aquí se corta de verdad (la respuesta, si llega después, se tira); y si lo paras, se deja de esperar al momento
+    let quitarReloj = () => {};
+    const carrera = [pet, new Promise((res) => { quitarReloj = despues(limite + 2000, () => res({ s: 0, e: 'tiempo agotado' })); })];
+    if (signal) carrera.push(new Promise((_, mal) => {
       const parar = () => mal(new DOMException('Parado', 'AbortError'));
       if (signal.aborted) parar(); else signal.addEventListener('abort', parar, { once: true });
-    })]) : await pet;
+    }));
+    let r;
+    try { r = await Promise.race(carrera); } finally { quitarReloj(); }
     if (r.s === 0) {
       // (solo el tiempo máximo que cuenta la app; un «connect timed out» de la conexión es cobertura, no un modelo lento)
       if (r.e === 'tiempo agotado') throw sinTiempo('tiempo agotado');
@@ -255,7 +269,7 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
   const quiereWeb = cfgIA().web;
   const resumen = [];
   let ultimo = null;
-  let cortes = 0, webSospecha = null, tiempos = 0;
+  let cortes = 0, webSospecha = null, tiempos = 0, saturados = 0;
   // Google a veces se queda sin contestar (con la búsqueda y un modelo saturado, minutos): cada intento tiene su tiempo máximo
   // y todo junto no pasa de unos 4 minutos; el modelo que no contesta se salta y los siguientes van sin búsqueda.
   // Sin búsqueda, ni el sistema ni la pregunta le mandan buscar (si se lo mandan, a veces llama a una herramienta que no
@@ -371,8 +385,8 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
             tiempos++;
             const seg = Math.round(limite / 1000);
             if (pensar && nivel !== 'low') { nivel = 'low'; intento--; alPaso(`${nombreModelo(modelo)} tarda más de ${seg} s: lo pido pensando menos…`); continue; }
-            if (web) { web = false; intento--; alPaso(`${nombreModelo(modelo)} tarda más de ${seg} s: lo pido sin búsqueda en Google…`); continue; }
-            // ni así contesta: se salta un rato (las siguientes preguntas no esperan por él) y se prueba con otro
+            // repetirle lo mismo sin búsqueda volvía a tardar otro minuto largo: se salta un rato (las siguientes preguntas
+            // no esperan por él) y se prueba con otro, ya sin búsqueda (`tiempos`)
             pausar(modelo, 600);
             resumen.push(`${nombreModelo(modelo)}: no contesta (más de ${seg} s)`);
             alPaso(`${nombreModelo(modelo)} no contesta: pruebo con otro modelo…`);
@@ -413,6 +427,16 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
           }
           if (e.vacio && intento < 1) continue;
           if (e.vacio) { resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`); break; }
+          // saturado («high demand»): repetirle la pregunta al mismo modelo da otro 503 (el 3 nov, hasta 150 s cada uno);
+          // se salta 5 min y va el siguiente, que con `alternar` es de la otra familia (un flash-lite si este era flash)
+          if (e.estado === 503 || /high demand|overloaded|UNAVAILABLE/i.test(e.google || '')) {
+            saturados++;
+            pausar(modelo, 300);
+            resumen.push(`${nombreModelo(modelo)}: saturado`);
+            const otro = modelos.slice(modelos.indexOf(modelo) + 1).find((m) => !saltar.has(m) && !pausas()[m]);
+            if (otro) alPaso(`${nombreModelo(modelo)} está saturado: pruebo con ${nombreModelo(otro)}…`);
+            break;
+          }
           if ((e.estado >= 500 || e.estado === 0 || e.estado == null) && intento < 2 && resta() > 2500 * (intento + 1) + 25000) { await espera(2.5 * (intento + 1), op.signal); continue; }
           if (e.red) {
             resumen.push(`sin conexión con Google (${e.message})`);
@@ -428,6 +452,7 @@ async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, o
     // lo que llegue después de contestar (la petición que ha perdido la carrera) ya no se pinta
     cerrado = true;
   }
+  if (saturados && saturados >= resumen.length - 1) throw new ErrorIA(`Google está saturado ahora mismo: ${saturados} modelos de Gemini han dicho que no pueden contestar. No es tu clave ni tu conexión; suele pasar en unos minutos. Vuelve a probar en un rato.`, 503, { todos: true, saturado: true });
   throw new ErrorIA(`Ningún modelo ha podido contestar. ${resumen.slice(0, 4).join(' · ')}${resumen.length > 4 ? ` y ${resumen.length - 4} más` : ''}.${ultimo && ultimo.google ? ` Google: «${ultimo.google.slice(0, 140)}»` : ''}`, ultimo ? ultimo.estado : 0, { todos: true });
 }
 
