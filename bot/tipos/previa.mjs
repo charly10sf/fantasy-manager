@@ -43,7 +43,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       }
       const hayConf = tit(rl).length === 11 && tit(rv).length === 11;
       if (!hayConf && !(quierePos && !yaPos)) { if (quiereConf && !yaConf) log(`  (previa) ${L}-${V}: ESPN aún no tiene las alineaciones`); continue; }
-      const probs = { L: await probabilidades(m.local.id, jugadores, jornada - 1), V: await probabilidades(m.visitor.id, jugadores, jornada - 1) };
+      const conOnce = config.onceProbable !== false;
+      const probs = { L: await probabilidades(m.local.id, jugadores, jornada - 1, { equipo: m.local.mainName, conOnce, log }), V: await probabilidades(m.visitor.id, jugadores, jornada - 1, { equipo: m.visitor.mainName, conOnce, log }) };
       const pos = { L: elegirOnce(probs.L), V: elegirOnce(probs.V) };
       if (!pos.L || !pos.V) { log(`  (previa) ${L}-${V}: sin datos para el once`); continue; }
       // --- onces confirmados (ESPN) ---
@@ -98,7 +99,11 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         for (const x of [...once].filter((y) => y.p < 0.6).sort((a, b) => a.p - b.p).slice(0, 3)) {
           const alt = Object.values(probs[k]).filter((y) => y.pos === x.pos && !fuera.has(String(y.id)) && y.p >= 0.25 && y.estado !== 'injured' && y.estado !== 'suspended')
             .sort((a, b) => b.p - a.p)[0];
-          if (alt) { fuera.add(String(alt.id)); x.alt = { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda }; }
+          if (!alt) continue;
+          fuera.add(String(alt.id));
+          // arriba, el de más % (el titular de la web puede quedar por debajo del otro con los minutos de LaLiga)
+          if (alt.p > x.p) { const yo = { id: x.id, nombre: x.nombre, pct: x.pct, duda: x.duda }; Object.assign(x, { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda, p: alt.p }); x.alt = yo; }
+          else x.alt = { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda };
         }
         return { nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion, once: once.map(({ p, ...x }) => x) };
       };
