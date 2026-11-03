@@ -927,7 +927,7 @@ export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
   const pedido = `${ctx}${memoria(M)}
 
 Hazme el PLAN DE HOY. ${BUSCAR_PLAN}
-Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría: como poco la que pondría la app (ya cuenta lo que se suele pagar en esta liga por los libres, mira LO QUE SE PAGA EN ESTA LIGA); por debajo de eso lo normal es perderlo. Antes de proponer un clausulazo mira su SALIDA: si se tuerce y no lo puedo vender sin perder dinero, solo vale si es titular seguro y se espera un buen partido (dilo en el motivo, con lo que perdería). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si hoy lo mejor es no hacer nada, dilo y por qué.
+Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría: como poco la que pondría la app (ya cuenta lo que se suele pagar en esta liga por los libres, mira LO QUE SE PAGA EN ESTA LIGA); por debajo de eso lo normal es perderlo. Antes de proponer un clausulazo mira su SALIDA: si se tuerce y no lo puedo vender sin perder dinero, solo vale si es titular seguro y se espera un buen partido (dilo en el motivo, con lo que perdería). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si ahora estoy en negativo pero quedan 2 o más cambios de mercado antes de la jornada, no me hagas vender hoy perdiendo dinero frente a lo que pagué: dime qué vender y que acepte la oferta el último día que vale (salvo que esté de baja o caiga más de un 3 % al día); la app pone esas ventas como sugerencia. Si hoy lo mejor es no hacer nada, dilo y por qué.
 Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato, en este orden (primero las cuentas y lo que descartas, después las operaciones y al final el titular, que resume lo decidido):
 {
  "cuentas": {"caja_hoy": número (mi saldo), "caja_con_ofertas": número (si acepto las ofertas que tengo), "pujas_hechas": número, "huecos_once": número},
@@ -1295,6 +1295,31 @@ export function cuadrarPlan(P, D, M) {
     if (o.importe && o.importe < x.j.valor && !pagaCaja(o)) quitarVenta(o, `La app lo descarta: ${perder.charAt(0).toLowerCase()}${perder.slice(1)}`);
     else o.aviso = `${o.aviso ? `${o.aviso} ` : ''}${perder}`;
   }
+  // (aviso de Carlos, 3 nov, 12:16: Ibañez y Javi Guerra, «Aceptar oferta · ahora» perdiendo 1,37 y 5,85 M, con el saldo
+  // a −1,18 M y 3 días hasta la jornada) en negativo entre semana no hay que vender ya: lo obligatorio es empezar la
+  // jornada en positivo, y antes LaLiga hace una oferta nueva en cada cambio de mercado. Una venta de hoy que pierde
+  // dinero frente a lo que pagaste, con 2 o más cambios de mercado antes de la jornada, sale como sugerencia (no cuenta
+  // en el saldo ni en lo que queda por hacer), salvo que pague una cláusula o subida de hoy, haga falta para no pasarte
+  // del límite de deuda, esté de baja o se hunda (más de un 3 % al día)
+  const cambiosAntes = M.ventanaEsp ? M.ventanaEsp.ciclos || 0 : 0;
+  let sugeridas = 0;
+  for (const o of ops) {
+    if (o.accion !== 'vender' || !o.hoy || o.ya || o.descartada || !o.importe || !o.pid || final == null) continue;
+    if (!o.compra || o.compra.desconocida || o.compra.gana >= 0 || cambiosAntes < 2 || pagaCaja(o) || final - o.importe < -M.deuda) continue;
+    const x = M.mias.find((y) => y.pid === o.pid);
+    if (!x || ['injured', 'suspended'].includes(x.j.estado)) continue;
+    const t = M.tend(o.pid), ine = M.inercia ? M.inercia(o.pid) : null;
+    if ((ine && x.j.valor && num(ine.ult) < -0.03 * x.j.valor) || (t.p1 != null && t.p1 < -3)) continue;
+    o.sugerencia = true;
+    o.hoy = false;
+    o.cuando = 'sin prisa';
+    final -= o.importe;
+    for (const y of ops) if (y.n > o.n && y.saldo != null) y.saldo -= o.importe;
+    o.saldo = null;
+    sugeridas += o.importe;
+    const lim = M.ventanaEsp.limite;
+    o.aviso = `No hace falta hoy: venderías perdiendo ${eur(-o.compra.gana)} de lo que pagaste y quedan ${cambiosAntes} cambios de mercado antes de la jornada${M.proxima ? ` ${M.proxima.n} (${cuando(M.proxima.ini)})` : ''}, con una oferta nueva de LaLiga en cada uno. Lo obligatorio es empezar la jornada en positivo: ${lim ? `si te hace falta, te vale aceptar la que llegue ${cuando(lim)}` : 'si te hace falta, véndelo antes'}.${o.aviso ? ` ${o.aviso.replace(/\s*Lo venderías por [^.]*mejor\./, '').trim()}` : ''}`.trim();
+  }
   // en negativo puede ser a propósito: lo comprado para revender se vende antes de la jornada
   const rev = ops.filter((o) => String(o.objetivo || '').startsWith('revend') && o.signo < 0 && o.importe && o.hoy);
   const recupera = rev.reduce((s, o) => s + (o.beneficio_esperado ? +o.importe + +o.beneficio_esperado : +o.importe), 0);
@@ -1302,6 +1327,9 @@ export function cuadrarPlan(P, D, M) {
   if (final != null && final < -M.deuda) { avisoSaldo = `Te pasarías del límite de deuda (${eur(-M.deuda)})`; avisoTipo = 'mal'; }
   else if (final != null && final < 0 && rev.length && final + recupera >= 0) {
     avisoSaldo = `En negativo a propósito hasta que vendas lo de revender (${rev.map((o) => (o.j && o.j.nombre) || o.jugador).join(', ')}). Con eso vuelves a unos ${eur(final + recupera)} antes de la jornada`;
+    avisoTipo = 'plan';
+  } else if (final != null && final < 0 && sugeridas && final + sugeridas >= 0) {
+    avisoSaldo = `En negativo, pero sin prisa: tienes hasta ${M.ventanaEsp && M.ventanaEsp.limite ? cuando(M.ventanaEsp.limite) : 'antes de la jornada'} para vender y empezar la jornada en positivo (las ventas sugeridas te dejarían en ${eur(final + sugeridas)})`;
     avisoTipo = 'plan';
   } else if (final != null && final < 0) { avisoSaldo = M.enJuego ? `Acabarías en negativo (${eur(final)}): vende antes de que empiece la próxima jornada` : `Acabarías en negativo (${eur(final)}): vende antes de que empiece la jornada`; avisoTipo = 'mal'; }
   // lo que queda en tu plantilla tras el plan de hoy: lo que vendes, fuera; lo que clausulas o compras, dentro (las

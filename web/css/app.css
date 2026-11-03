@@ -1711,6 +1711,7 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .paso2.vender { border-left-color: var(--sube); } .paso2.clausular, .paso2.pujar, .paso2.comprar { border-left-color: var(--rojo); }
 .paso2.blindar { border-left-color: var(--oro); } .paso2.alinear, .paso2.esperar { border-left-color: var(--azul); }
 .paso2.hecho { opacity: 0.6; } .paso2.descartada { opacity: 0.75; border-left-color: var(--baja); }
+.paso2.sugerencia { border-left-color: var(--plano3); }
 .paso2 > summary { list-style: none; display: grid; grid-template-columns: 26px minmax(0, 1fr) 16px; gap: 10px; align-items: start; padding: 11px 10px 11px 11px; cursor: pointer; }
 .paso2 > summary::-webkit-details-marker { display: none; }
 .pp-num { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 15px var(--cond); background: var(--plano2); color: var(--texto2); }

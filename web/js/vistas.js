@@ -384,7 +384,7 @@ function pasoOp(S, P, o) {
   // si se ve en LaLiga que lo has hecho, se dice qué y no hace falta el botón
   const liga = hechoEnLiga(S, P, o);
   const curso = liga && liga.estado === 'curso';
-  const est = o.descartada ? 'descartada' : curso ? 'curso' : ok ? 'hecho' : '';
+  const est = o.descartada ? 'descartada' : curso ? 'curso' : ok ? 'hecho' : o.sugerencia ? 'sugerencia' : '';
   // el importe es el dinero que entra o sale, no lo que ganas: se dice dentro
   const imp = o.importe ? `<span class="pp-imp ${o.signo > 0 ? 'mas' : ''}">${o.signo > 0 ? '+' : o.signo < 0 ? '−' : ''}${eur(o.importe)}<small>${o.signo > 0 ? 'te entran' : o.signo < 0 ? 'pagas' : ''}</small></span>` : '';
   const sub = [j && j.equipo, o.donde].filter(Boolean).map(esc).join(' · ');
@@ -392,7 +392,7 @@ function pasoOp(S, P, o) {
   // la cara y el nombre abren su ficha (30 oct, Carlos: sin tener que ir a buscarlo al mercado); el resto de la
   // tarjeta la sigue abriendo y cerrando
   const quien = `${j ? ava(j, 'm') : ''}<span class="pp-n"><b>${esc(nombre)}</b>${sub ? `<small>${sub}</small>` : ''}</span>`;
-  const estadoTxt = o.descartada ? '<span class="pill mal">No lo hagas</span>' : liga ? `<span class="pp-est ${liga.estado}">${icono(curso ? 'reloj' : 'ok')}${esc(liga.texto)}</span>` : ok ? `<span class="pp-est hecho">${icono('ok')}Hecho</span>` : o.cuando ? `<span class="pp-cu">${icono('reloj')}${esc(o.cuando)}</span>` : '';
+  const estadoTxt = o.descartada ? '<span class="pill mal">No lo hagas</span>' : o.sugerencia && !liga && !ok ? '<span class="pill">Sugerencia · sin prisa</span>' : liga ? `<span class="pp-est ${liga.estado}">${icono(curso ? 'reloj' : 'ok')}${esc(liga.texto)}</span>` : ok ? `<span class="pp-est hecho">${icono('ok')}Hecho</span>` : o.cuando ? `<span class="pp-cu">${icono('reloj')}${esc(o.cuando)}</span>` : '';
   const porque = o.descartada && o.aviso ? o.aviso : o.motivo;
   const dentro = [
     objetivoPill(o) || o.accion === 'pujar' && o.puja_max ? `<div class="pp-pills">${objetivoPill(o)}${o.accion === 'pujar' && o.puja_max ? `<span class="pill">Puja hasta ${eur(o.puja_max)}</span>` : ''}</div>` : '',
@@ -400,7 +400,7 @@ function pasoOp(S, P, o) {
     o.compra && !o.descartada ? `<p class="paso-compra">${o.compra.desconocida ? 'Lo que pagaste por él no sale en los movimientos de la liga, así que no sé si con esta venta ganas o pierdes.' : `${o.compra.inicial ? `Venía en tu equipo inicial: al empezar la liga valía ${eur(o.compra.precio)}` : `Lo pagaste a ${eur(o.compra.precio)}`}: ${o.compra.con === 'venta' ? 'con esta venta' : 'hoy'} ${o.compra.gana >= 0 ? 'ganas' : 'pierdes'} <b class="${clase(o.compra.gana)}">${eur(Math.abs(o.compra.gana))}</b>.`}</p>` : '',
     Array.isArray(o.claves) && o.claves.length ? `<div class="claves">${o.claves.slice(0, 5).map((c) => `<span>${esc(c)}</span>`).join('')}</div>` : '',
     o.aviso && !(o.descartada && porque === o.aviso) ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : '',
-    `<div class="op-pie">${o.confianza ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`,
+    `<div class="op-pie">${o.confianza && !o.sugerencia ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`,
   ].join('');
   return `<details class="paso2 ${esc(o.accion)} ${est}"><summary>
       <span class="pp-num">${curso ? icono('reloj') : ok ? icono('ok') : o.n}</span>
@@ -460,7 +460,7 @@ function planHTML(S) {
   else if (cambios) h += `<div class="banda plan-cambio">${icono('cambio')}<span>${esc(cambios)} El plan es de antes.</span>${hayClave() ? '<button data-accion="planYa">Rehacer el plan</button>' : ''}</div>`;
   h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? `<p class="plan-sit">${conEnlaces(S, P.situacion)}</p>` : ''}`;
   // los pasos, todos, en corto: cuántos quedan arriba
-  const pend = P.ops.filter((o) => !o.descartada && !['esperar', 'alinear'].includes(o.accion) && !hecho(S, P, o)).length;
+  const pend = P.ops.filter((o) => !o.descartada && !o.sugerencia && !['esperar', 'alinear'].includes(o.accion) && !hecho(S, P, o)).length;
   const hechos = P.ops.filter((o) => !o.descartada && hecho(S, P, o)).length;
   if (P.ops.length) h += `<div class="pasos-cab"><b>${P.ops.length} paso${P.ops.length > 1 ? 's' : ''}</b><span>${[pend ? `${pend} por hacer` : 'nada por hacer', hechos ? `${hechos} hecho${hechos > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ')}</span><span class="pasos-tip">toca uno para ver el detalle</span></div>`;
   h += `<div class="pasos2">${P.ops.map((o) => pasoOp(S, P, o)).join('')}</div>`;
