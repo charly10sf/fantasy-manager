@@ -1,23 +1,33 @@
-# Prueba (3 nov): datos reales de LaLiga para rediseñar las tarjetas en local. Deja la carpeta en la rama pruebas-premium-datos.
-# Solo en la rama pruebas-tarjetas-premium. No publica nada.
-name: Premium datos
+# Prueba (3 nov): rediseño «carta» de las tarjetas con datos reales, en simulacro (no publica). Dibuja todas las tarjetas
+# (final, MVP y resumen de la J11, posibles onces de la J12, onces confirmados de la J11, mercado, caídas y novedades) y deja los
+# PNG y el log en la rama pruebas-premium-salida. Solo en la rama pruebas-tarjetas-premium.
+name: Premium prueba
 on:
   push:
     branches: [pruebas-tarjetas-premium]
 permissions:
   contents: write
 jobs:
-  datos:
+  prueba:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm ci --prefix bot --no-audit --no-fund
-      - run: node .github/pruebas/volcar-tarjetas.mjs --jornada=11 --salida=out/datos
+      - name: Tarjetas
+        run: |
+          S="--modo=simulacro --tarjetas=1 --forzar=1 --ventanas=0"
+          ( node bot/ejecutar.mjs $S --tipos=final,mvp,resumen --jornada=11 || echo "FALLO final/mvp/resumen" ) 2>&1 | tee salida.txt
+          ( node bot/ejecutar.mjs $S --tipos=previa --jornada=12 || echo "FALLO previa" ) 2>&1 | tee -a salida.txt
+          ( node bot/ejecutar.mjs $S --tipos=previa --jornada=11 --previa-acabados=1 || echo "FALLO onces" ) 2>&1 | tee -a salida.txt
+          ( node bot/ejecutar.mjs $S --tipos=mercado || echo "FALLO mercado" ) 2>&1 | tee -a salida.txt
+          ( node bot/ejecutar.mjs $S --tipos=caidas || echo "FALLO caidas" ) 2>&1 | tee -a salida.txt
+          ( node .github/pruebas/novedades-reales.mjs || echo "FALLO novedades" ) 2>&1 | tee -a salida.txt
+          grep -E "FALLA|FALLO|no pasa|inválid" salida.txt | head -40 || true
       - run: |
-          cd out && ls datos/img | wc -l
-          git init -q -b pruebas-premium-datos && git config user.name github-actions && git config user.email github-actions@users.noreply.github.com
-          git add . && git commit -qm "Datos para las tarjetas" && git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/pruebas-premium-datos
+          mkdir out && cp tarjetas/*.png salida.txt out/ 2>/dev/null; cd out && ls | wc -l
+          git init -q -b pruebas-premium-salida && git config user.name github-actions && git config user.email github-actions@users.noreply.github.com
+          git add . && git commit -qm "Prueba de las tarjetas carta" && git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/pruebas-premium-salida
