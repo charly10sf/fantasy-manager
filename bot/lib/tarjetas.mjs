@@ -193,8 +193,12 @@ function campo(x, y, w, h, lado, club, confirmados) {
   lineas.forEach((ls, i) => {
     const cy = y + 14 + alto * i + alto * 0.3;
     ls.forEach((j, k) => {
-      const cx = x + (w / (ls.length + 1)) * (k + 1);
-      const maxN = Math.min(124, w / ls.length - 8);
+      // con 4 o 5 en una línea, repartidos de borde a borde: con w/(n+1) los centros quedaban a 89 px y los nombres de 99 px se pisaban
+      // («Bernardo Silva» con Bellingham y Tchouaméni, 3 nov). El nombre, como mucho el hueco entre centros menos 12 px y con un 10 % de
+      // margen, porque el ancho medido se queda corto con Inter en negrita
+      const n = ls.length, paso = n >= 4 ? (w - 36) / n : w / (n + 1);
+      const cx = n >= 4 ? x + 18 + paso * (k + 0.5) : x + paso * (k + 1);
+      const maxN = Math.min(124, paso - 12) / 1.1;
       const colDe = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? '#f2b33d' : MALO);
       const pctCol = colDe(j.pct);
       const chapa = (jj, cxx, r) => `<circle cx="${cxx}" cy="${cy + 3}" r="${r + 1}" fill="#000" opacity="0.35"/>`

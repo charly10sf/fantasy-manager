@@ -4,6 +4,7 @@
 import { json } from '../lib/http.mjs';
 import { statsSemana } from '../lib/laliga.mjs';
 import { corto, elegir, el } from '../lib/texto.mjs';
+import { lista, mayus } from '../lib/agrupar.mjs';
 import { tweet, enPalabras } from '../lib/redactar.mjs';
 import { ESPN, partidoEspn } from '../lib/relato.mjs';
 import { casarJugador } from './directo.mjs';
@@ -111,15 +112,32 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       // el texto: las dudas del once (titulares con menos del 65 %) y las bajas de titulares habituales
       const dudas = [...pos.L.once.map((x) => ({ ...x, eq: L })), ...pos.V.once.map((x) => ({ ...x, eq: V }))].filter((x) => x.p < 0.65 && x.p >= 0.1).sort((a, b) => a.p - b.p).slice(0, 3);
       const bajas = [...Object.values(probs.L).map((x) => ({ ...x, eq: L })), ...Object.values(probs.V).map((x) => ({ ...x, eq: V }))].filter((x) => (x.estado === 'injured' || x.estado === 'suspended')).slice(0, 4);
-      // las dudas con palabras y el % al lado (regla 4 de la guía de estilo del 3 nov)
-      const cab = `🗓️ Posibles onces fantasy del ${L}-${V} (jornada ${jornada})`;
+      // el texto, con frases y no en lista (Carlos, 3 nov 19:29, «sigue aquí»; antes «⁉️ Youssef (Alavés), en el aire: 33 %» una línea
+      // por jugador): las dudas agrupadas por equipo y tramo con el % al lado, y las bajas de cada equipo en su línea
+      const cab = elegir([`🗓️ ${L}-${V}: posibles onces fantasy para la jornada ${jornada}`,
+        `🗓️ Así pueden salir ${el(L)} y ${el(V)} en la jornada ${jornada} de LaLiga Fantasy`], sem);
       const ideas = [];
       const num = [jornada];
-      if (dudas.length) { ideas.push({ t: dudas.map((x) => `⁉️ ${x.nombre} (${x.eq}), ${enPalabras(x.p)}: ${pct(x.p)} %`).join('\n'), prio: 9 }); num.push(...dudas.map((x) => pct(x.p))); }
+      const tramos = new Map();
+      for (const x of dudas) { const k = `${x.eq}|${enPalabras(x.p)}`; if (!tramos.has(k)) tramos.set(k, []); tramos.get(k).push(x); }
+      let prio = 9.5;
+      for (const xs of tramos.values()) {
+        const varios = xs.length > 1, eq = el(xs[0].eq), p = xs[0].p;
+        const quien = lista(xs.map((x) => x.nombre));
+        const pcts = `(${lista(xs.map((x) => String(pct(x.p))))} %)`;
+        const frase = p >= 0.45 ? `${quien} ${varios ? 'apuntan' : 'apunta'} a titular en ${eq}, pero no ${varios ? 'son fijos' : 'es fijo'}`
+          : p >= 0.25 ? `${quien} ${varios ? 'tienen' : 'tiene'} el puesto en el aire en ${eq}`
+            : `${quien} lo ${varios ? 'tienen' : 'tiene'} complicado para salir de inicio en ${eq}`;
+        ideas.push({ t: `⁉️ ${frase} ${pcts}`, prio: prio -= 0.1 });
+        num.push(...xs.map((x) => pct(x.p)));
+      }
       if (bajas.length) {
-        const de = (eq) => bajas.filter((x) => x.eq === eq).map((x) => x.nombre);
-        const partes = [[L, de(L)], [V, de(V)]].filter(([, xs]) => xs.length).map(([eq, xs]) => `${xs.length > 1 ? `${xs.slice(0, -1).join(', ')} y ${xs[xs.length - 1]}` : xs[0]} en ${el(eq)}`);
-        ideas.push({ t: `❌ No estarán ${partes.join('; ')}`, prio: 8 });
+        for (const eq of [L, V]) {
+          const xs = bajas.filter((x) => x.eq === eq).map((x) => x.nombre);
+          if (!xs.length) continue;
+          const nombres = xs.length > 1 ? `${xs.slice(0, -1).join(', ')} ni ${xs[xs.length - 1]}` : xs[0];
+          ideas.push({ t: `❌ ${mayus(el(eq))} no podrá contar con ${nombres}`, prio: 8 - (eq === V ? 0.1 : 0) });
+        }
       }
       if (!dudas.length && !bajas.length) ideas.push({ t: '✅ Sin dudas ni bajas entre los habituales', prio: 8 });
       ideas.push({ t: elegir(['📊 Los % de titularidad son de Fantasy Manager', '📊 % de titularidad de Fantasy Manager, con los minutos y el estado de cada uno'], sem), prio: 5 });
