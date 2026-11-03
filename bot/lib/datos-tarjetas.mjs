@@ -127,7 +127,8 @@ export async function historialJugador(j, { jornada, fuentes, ahora = Date.now()
 export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
   const mismo = filas.length && filas.every((f) => String(f.teamId) === String(filas[0].teamId));
   const conMedia = (f) => (f.media >= 3 && f.estado !== 'duda' ? num1(f.media) : null);
-  const titulo = filas.every((f) => f.estado === 'disponible') ? 'NOVEDADES'
+  // (Carlos, 3 nov 10:25: «BAJAS» con jugadores «DISPONIBLE» no tiene sentido) si alguno vuelve, la tarjeta es de novedades
+  const titulo = filas.some((f) => f.estado === 'disponible') ? 'NOVEDADES'
     : filas.some((f) => f.estado === 'duda') ? (filas.every((f) => f.estado === 'duda') ? 'DUDAS' : 'BAJAS Y DUDAS') : 'BAJAS';
   const fila = (f) => ({ id: f.id, nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
     estado: f.estado, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f), valor: f.valor || null });
