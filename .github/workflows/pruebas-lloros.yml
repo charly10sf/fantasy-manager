@@ -1,0 +1,33 @@
+name: Pruebas lloros
+on:
+  push:
+    branches: [pruebas-lloros]
+permissions:
+  contents: write
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: paginas
+        run: |
+          mkdir -p salida
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+          for p in sancionados apercibidos; do curl -sL -A "$UA" -H "Accept-Language: es-ES" "https://www.futbolfantasy.com/laliga/$p" -o salida/$p.html; done
+          curl -sL -A "$UA" "https://fantasy-api.llt-services.com/api/v1/competition/1/players?x-lang=es" -o salida/players.json
+          ls -la salida | sed 's/^/@@ /'
+      - name: lloros de la jornada 11
+        run: |
+          node bot/ejecutar.mjs --modo=simulacro --tipos=lloros --jornada=11 --ventanas=0 2>&1 | tee salida/log.txt | sed 's/^/@@ /'
+      - name: a la rama pruebas-lloros-salida
+        if: always()
+        run: |
+          cd salida || exit 0
+          git init -q -b pruebas-lloros-salida && git add -A
+          git -c user.name=bot -c user.email=bot@example.com commit -qm "salida"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:pruebas-lloros-salida
