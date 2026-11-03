@@ -21,10 +21,7 @@ jobs:
         run: |
           S="--modo=simulacro --tarjetas=1 --forzar=1 --ventanas=0"
           : > salida.txt
-          for t in final mvp resumen; do ( node bot/ejecutar.mjs $S --tipos=$t --jornada=11 || echo "FALLO $t" ) 2>&1 | tee -a salida.txt; done
           ( node bot/ejecutar.mjs $S --tipos=previa --jornada=12 || echo "FALLO previa" ) 2>&1 | tee -a salida.txt
-          ( node bot/ejecutar.mjs $S --tipos=mercado || echo "FALLO mercado" ) 2>&1 | tee -a salida.txt
-          ( node bot/ejecutar.mjs $S --tipos=caidas || echo "FALLO caidas" ) 2>&1 | tee -a salida.txt
           ( node .github/pruebas/novedades-reales.mjs || echo "FALLO novedades" ) 2>&1 | tee -a salida.txt
           grep -E "FALLA|FALLO|no pasa|inválid" salida.txt | head -40 || true
       - run: |

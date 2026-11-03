@@ -163,6 +163,54 @@ export function svgResumen(d) {
 // Tarjeta de la previa de un partido: los dos onces (posibles, con el % de titularidad de la app, o confirmados).
 // d = { jornada, confirmados, local, visitante } con cada lado { nombre, corto, escudo (PNG), formacion ('4-3-3'),
 //       once: [{ pos: 'POR'|'DEF'|'MED'|'DEL', nombre, pct (0-100) | null, duda: bool }] (11, de portero a delanteros) }
+// Carlos, 3 nov 11:47: «que saliera más en el campo representado el once»: un medio campo por equipo, con cada jugador en su
+// línea según la formación (portero abajo, delanteros arriba), una chapa con el color del club, el nombre y el %.
+function lineasDe(lado) {
+  const once = lado.once.slice(0, 11);
+  const f = String(lado.formacion || '').split('-').map(Number).filter((x) => x > 0);
+  if (f.length && f.reduce((a, b) => a + b, 0) === once.length - 1) {
+    const out = [once.slice(0, 1)]; let i = 1;
+    for (const c of f) { out.push(once.slice(i, i + c)); i += c; }
+    return out;
+  }
+  return ['POR', 'DEF', 'MED', 'DEL'].map((p) => once.filter((j) => j.pos === p)).filter((l) => l.length);   // sin formación que cuadre, por puestos
+}
+function campo(x, y, w, h, lado, club, confirmados) {
+  const g = id('cp');
+  const lc = 'stroke="#ffffff" stroke-opacity="0.14" stroke-width="2" fill="none"';
+  let s = `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${club.vivo}" stop-opacity="0.28"/><stop offset="1" stop-color="#131317" stop-opacity="1"/></linearGradient></defs>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="#131317"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="url(#${g})"/>`;
+  // franjas de césped, muy suaves
+  for (let k = 0; k < 6; k++) if (k % 2) s += `<rect x="${x}" y="${y + k * h / 6}" width="${w}" height="${h / 6}" fill="#ffffff" opacity="0.025"/>`;
+  // líneas: borde, medio campo arriba con su círculo, área grande, área pequeña y punto de penalti abajo
+  s += `<rect x="${x + 10}" y="${y + 10}" width="${w - 20}" height="${h - 20}" rx="10" ${lc}/>`
+    + `<path d="M${x + w * 0.34},${y + 10} A${w * 0.16},${w * 0.16} 0 0 0 ${x + w * 0.66},${y + 10}" ${lc}/>`
+    + `<rect x="${x + w * 0.2}" y="${y + h - 10 - 96}" width="${w * 0.6}" height="96" ${lc}/>`
+    + `<rect x="${x + w * 0.36}" y="${y + h - 10 - 36}" width="${w * 0.28}" height="36" ${lc}/>`
+    + `<path d="M${x + w * 0.4},${y + h - 106} A${w * 0.11},${w * 0.07} 0 0 1 ${x + w * 0.6},${y + h - 106}" ${lc}/>`;
+  const lineas = lineasDe(lado).reverse();
+  const alto = (h - 24) / lineas.length;
+  lineas.forEach((ls, i) => {
+    const cy = y + 14 + alto * i + alto * 0.3;
+    ls.forEach((j, k) => {
+      const cx = x + (w / (ls.length + 1)) * (k + 1);
+      const maxN = Math.min(124, w / ls.length - 8);
+      const pctCol = j.pct == null ? null : j.pct >= 75 ? VERDE : j.pct >= 50 ? '#f2b33d' : MALO;
+      const aro = j.duda ? '#f2b33d' : '#ffffff';
+      s += `<circle cx="${cx}" cy="${cy + 3}" r="24" fill="#000" opacity="0.35"/>`
+        + (j.cara ? caraCirculo(j.cara, cx, cy, 23, { aro: j.duda ? aro : club.vivo, fondo: '#1b1b21', grosor: 2.5 })
+          : `<circle cx="${cx}" cy="${cy}" r="14" fill="${club.vivo}" stroke="${aro}" stroke-width="2.5"/>`)
+        + texto(cx, cy + 43, j.nombre, { px: 17, peso: 700, color: '#f4f2f3', ancla: 'middle', max: maxN });
+      if (pctCol && !confirmados) {
+        const t = `${j.pct} %`, wp = ancho(t, 15) + 16;
+        s += `<rect x="${cx - wp / 2}" y="${cy + 50}" width="${wp}" height="21" rx="10.5" fill="${pctCol}" fill-opacity="0.18" stroke="${pctCol}" stroke-opacity="0.6" stroke-width="1.2"/>`
+          + texto(cx, cy + 66, t, { px: 15, peso: 700, color: pctCol, ancla: 'middle' });
+      }
+    });
+  });
+  s += texto(x + 24, y + h - 24, lado.formacion || '', { px: 18, peso: 700, color: '#f4f2f3', espacio: 2 });
+  return s;
+}
 export function svgOnces(d) {
   const L = d.local, V = d.visitante;
   const cL = coloresClub(L.nombre), cV = coloresClub(V.nombre);
@@ -172,21 +220,7 @@ export function svgOnces(d) {
     + texto(140, 104, L.corto, { px: 32, peso: 700, color: '#fff', max: 300 })
     + texto(1060, 104, V.corto, { px: 32, peso: 700, color: '#fff', ancla: 'end', max: 300 })
     + texto(600, 106, 'VS', { px: 26, display: true, color: '#55525c', ancla: 'middle' });
-  const col = (x, lado, club) => {
-    let t = texto(x + 4, 152, lado.formacion || '', { px: 16, peso: 700, color: '#f4f2f3', espacio: 2 });
-    const fh = 41;
-    lado.once.slice(0, 11).forEach((j, i) => {
-      const y = 164 + i * fh;
-      const pctCol = j.pct == null ? null : j.pct >= 75 ? VERDE : j.pct >= 50 ? '#f2b33d' : MALO;
-      t += `<rect x="${x}" y="${y}" width="525" height="${fh - 5}" rx="9" fill="#131317"/>`
-        + texto(x + 14, y + 25, j.pos, { px: 14, peso: 700, color: '#948f9b', espacio: 1.5 })
-        + texto(x + 70, y + 26, j.nombre, { px: 21, peso: 700, color: '#f4f2f3', max: 330 })
-        + (j.duda ? texto(x + 430, y + 25, 'DUDA', { px: 13, peso: 700, color: '#f2b33d', ancla: 'end', espacio: 1.5 }) : '')
-        + (pctCol ? texto(x + 510, y + 26, `${j.pct} %`, { px: 21, peso: 700, color: pctCol, ancla: 'end' }) : '');
-    });
-    return t;
-  };
-  s += col(50, L, cL) + col(625, V, cV);
+  s += campo(50, 142, 535, 486, L, cL, d.confirmados) + campo(615, 142, 535, 486, V, cV, d.confirmados);
   return marco('#08080a', s + marca(600, 660));
 }
 
