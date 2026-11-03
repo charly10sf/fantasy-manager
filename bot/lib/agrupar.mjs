@@ -66,3 +66,18 @@ export function elQueMasPesa(xs) {
   if (!(top.media >= 3)) return null;
   return { t: `‼️ El que más pesa es ${top.nombre}: ${fmt(top.media)} puntos de media`, numeros: partes(top.media) };
 }
+
+/**
+ * El motivo del que más pesa de los que lo tienen (Carlos, 3 nov 13:15: sin motivo suena a máquina):
+ * «⚠️ Lemar, rotura fibrilar en el aductor: baja hasta finales de noviembre» · «⚠️ Vini Jr. vio la roja en la jornada 11».
+ * Cada jugador puede llevar `parte` (lib/partes.mjs) y `motivoSan` ({ txt, numeros }). Devuelve { t, numeros } o null.
+ */
+export function detalle(xs) {
+  const con = [...xs].filter((x) => (x.parte && x.parte.lesion && x.estado !== 'disponible') || x.motivoSan).sort((a, b) => b.media - a.media);
+  const x = con[0];
+  if (!x) return null;
+  if (x.motivoSan) return { t: `⚠️ ${x.nombre}: ${x.motivoSan.txt.replace(/^./, (c) => c.toLowerCase())}`, numeros: x.motivoSan.numeros };
+  const p = x.parte;
+  const fin = p.estado === 'baja' && p.hasta ? `: baja hasta ${p.hasta}` : p.estado === 'duda' && p.jornada ? `: duda para la jornada ${p.jornada}` : '';
+  return { t: `⚠️ ${x.nombre}, ${p.lesion.replace(/^./, (c) => c.toLowerCase())}${fin}`, numeros: [p.jornada, ...(String(p.hasta || '').match(/\d+/g) || []).map(Number)].filter((n) => n != null) };
+}
