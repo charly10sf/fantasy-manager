@@ -31,7 +31,7 @@ Las piezas comunes están en `lib/redactar.mjs`:
 - Frase corta de sujeto, verbo y dato; la segunda vez que sale un jugador, por su puesto (`segunda`: «el delantero»).
 - Las dudas, con palabras según el % (`enPalabras`) y el número al lado.
 - Jornada y rival en la etiqueta final («❌ Baja Fantasy para la jornada 12 contra el Valencia»; `proximoPartido` y `paraLa`).
-- Caídas y novedades con el formato de Carrasco: un tweet por jugador (o por equipo, si tiene varios) cuando son pocos, en lista si son muchos.
+- Caídas y novedades: un jugador solo, en su tweet con el formato de Carrasco; varios, en un tweet agrupado por lo que pasa, sin lista de paréntesis («❌ Se caen por lesión Lemar en el Elche y M. Román en el Celta», «✅ Vuelven Valverde al Real Madrid y Sadiq al Valencia»), con una cabecera que ya cuenta la noticia y la media solo del que más pesa (`lib/agrupar.mjs`; Carlos, 3 nov 12:06). Sin repetir: caídas deja fuera a quien ya salió en caídas de esa jornada o en novedades de las últimas 24 h (`cubiertos()` del registro, que lo saca de las claves), y entre un tweet de novedades y uno de caídas pasan al menos `separacionBajasMin` (75) minutos. Los cambios de novedades que no salen (topes, separación) quedan pendientes en el registro (`novedadesPend`) hasta 36 h. Prueba sin red: `node bot/prueba/bajas-ejemplo.mjs`.
 - El mercado no usa esto todavía (lo lleva otra sesión). Las respuestas de Telegram siguen igual.
 
 ### Cómo se escriben (2 nov, noche)

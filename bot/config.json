@@ -8,6 +8,7 @@
   "horasCaidas": [9, 21],
   "horasMercado": [[0, 1], [8, 12]],
   "horasSilencio": [1, 8],
+  "separacionBajasMin": 75,
   "tweetMax": 280,
   "hashtag": "",
   "tarjetas": { "final": true, "jugador": true, "resumen": true, "previa": true, "onces": true, "mercado": true, "caidas": true, "novedades": true },
