@@ -1,10 +1,10 @@
 // Tarjetas con imagen para los tweets del bot: dibujo en SVG y paso a PNG con @resvg/resvg-js.
 // Estilo «carta» (Carlos, 3 nov 10:44, elegido entre «carta» y «oro»; antes, desde el 2 nov, «noche»): fondo casi negro con el
 // brillo del color de cada club y rayos en diagonal, letra Barlow Condensed (OFL, en fuentes/) y titulares en dorado.
-// La carta de coleccionista (diseño propio) solo sale cuando la tarjeta va de un jugador: la de jugador (MVP y directo) y la de
-// bajas y novedades (Carlos, 3 nov 10:57). Su metal va por lo bueno que es el jugador, medido por su valor de mercado
+// La carta de coleccionista (diseño propio) solo sale cuando la tarjeta va de UN jugador: la de jugador (MVP y directo) y la de
+// bajas y novedades con un solo jugador (Carlos, 3 nov 10:57 y 11:06); con varios, fichas sin colores por calidad. Su metal va por lo bueno que es el jugador, medido por su valor de mercado
 // (`metalDe`): leyenda (negra con oro, 90 M o más: Lamine Yamal, Mbappé…), oro (35-90 M), plata (10-35 M) y bronce (menos de
-// 10 M: un reserva del Málaga). Final, resumen, onces y mercado van en fichas, sin carta.
+// 10 M: un reserva del Málaga). Final, resumen, onces, mercado y las bajas de varios van en fichas, sin carta.
 // Seis tarjetas: final, jugador, resumen, onces, mercado y bajas.
 // Aquí solo se dibuja: los datos llegan ya montados (datos-tarjetas.mjs o el propio tipo) y validar.mjs comprueba que todo lo
 // escrito esté en ellos o en PALABRAS_FIJAS.
@@ -195,7 +195,7 @@ function fichaJugador(x, y, w, h, o) {
   const xc = x + (o.rank != null ? 34 : 10);
   s += `<g clip-path="url(#${cl})">${caraFundida(o.cara, xc, y + 2, h + 10, { desde: 0.78 })}</g>`;
   if (o.rank != null) s += texto(x + 20, y + Math.min(34, h * 0.45), String(o.rank), { px: Math.round(Math.min(30, h * 0.38)), peso: 900, ancla: 'middle', opacidad: 0.6 });
-  const xt = xc + h + 14, pxN = Math.round(Math.min(32, h * 0.38)), anchoDer = Math.max(110, medir(o.grande, h * 0.5, B) + 30);
+  const xt = xc + h + 14, pxN = Math.round(Math.min(32, h * 0.38)), anchoDer = o.anchoDerecha || Math.max(110, medir(o.grande, h * 0.5, B) + 30);
   const conSub = o.sub && h >= 56;
   s += texto(xt, conSub ? y + h / 2 - 2 : y + h / 2 + pxN * 0.36, String(o.nombre).toUpperCase(), { px: pxN, peso: 800, max: w - (xt - x) - anchoDer });
   if (conSub) {
@@ -203,7 +203,7 @@ function fichaJugador(x, y, w, h, o) {
     s += escudo(o.escudo, xt + pxS * 0.55, y + h / 2 + pxS * 0.95, pxS * 1.15)
       + texto(xt + (o.escudo ? pxS * 1.35 : 0), y + h / 2 + pxS * 1.35, o.sub, { px: pxS, peso: 600, color: TENUE, max: w - (xt - x) - anchoDer - 24 });
   }
-  s += texto(x + w - 18, o.pequeno ? y + h / 2 + 4 : y + h / 2 + h * 0.18, o.grande, { px: Math.round(Math.min(o.pequeno ? 40 : 58, h * (o.pequeno ? 0.5 : 0.56))), peso: 900, color: o.acento, ancla: 'end' });
+  if (o.grande) s += texto(x + w - 18, o.pequeno ? y + h / 2 + 4 : y + h / 2 + h * 0.18, o.grande, { px: Math.round(Math.min(o.pequeno ? 40 : 58, h * (o.pequeno ? 0.5 : 0.56))), peso: 900, color: o.acento, ancla: 'end' });
   if (o.pequeno) s += texto(x + w - 18, y + h / 2 + 30, o.pequeno, { px: 22, peso: 700, color: o.acento, ancla: 'end', opacidad: 0.85 });
   return s;
 }
@@ -430,15 +430,46 @@ function pildora(f, cx, cy, px, wMax) {
     + iconoEstado(f.estado, x + p * 0.95, cy, p * 0.9, '#120f16')
     + texto(x + p * 1.75, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1 });
 }
-function cartaBaja(x, y, w, h, f, { conEscudo }) {
-  const club = coloresClub(f.club || f.equipo);
-  const C = carta(x, y, w, h, { metal: METAL[metalDe(f.valor)], club, cara: f.cara, escudo: conEscudo ? f.escudo : null,
-    grande: f.media || null, bajoGrande: f.media ? 'MEDIA' : (ABREV[f.posicion] || null), nombre: f.nombre,
-    lineas: [conEscudo ? f.equipo : f.posicion].filter(Boolean), yNombre: conEscudo && w < 200 ? 0.7 : 0.66, caraAlto: w < 200 ? 1.25 : 1.0, caraCx: w < 200 ? 0.58 : 0.6 });
-  return C.s + pildora(f, x + w / 2, C.yNombre + Math.max(100 * C.k, 62), Math.round(Math.max(32 * C.k, 16)), w - 40 * C.k);
+/** ancho de la etiqueta del estado (para colocarla a la derecha) */
+const anchoPildora = (f, px) => medir(txtEstado(f), px, B, 1) + px * 2.6;
+
+/** un solo jugador: la carta grande a la izquierda y, a la derecha, su estado en grande, el equipo y el próximo rival */
+function bajaSola(d, f) {
+  const e = ESTADO_TARJETA[f.estado], club = coloresClub(f.club || f.equipo);
+  const g = id('ge');
+  let s = `<defs>${lineal(g, [[0, '#ffffff'], [0.45, e.color], [1, e.color]], { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs>`
+    + fondo([[300, 330, 560, club.vivo, 0.75], [1050, 80, 500, e.color, 0.16]]);
+  const x = 96, y = 36, w = 404, h = 600;
+  const C = carta(x, y, w, h, { metal: METAL[metalDe(f.valor)], club, cara: f.cara, escudo: f.escudo || (d.equipo && d.equipo.escudo),
+    grande: f.media || null, bajoGrande: f.media ? 'MEDIA' : (ABREV[f.posicion] || null), nombre: f.nombre, lineas: [f.posicion].filter(Boolean), yNombre: 0.7 });
+  s += C.s + pildora(f, x + w / 2, C.yNombre + 112, 30, w - 60);
+  const x0 = 566, wd = ANCHO - x0 - 56;
+  const grande = f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : e.txt;
+  s += texto(x0 - 4, 158, grande, { px: 140, peso: 800, italica: true, color: `url(#${g})`, max: wd })
+    + texto(x0, 206, `${(f.equipo || '').toUpperCase()} · JORNADA ${d.jornada}`, { px: 34, peso: 700, espacio: 1.5, max: wd })
+    + texto(x0, 238, 'LALIGA FANTASY', { px: 20, peso: 600, color: TENUE, espacio: 3 });
+  if (d.rival) {
+    const cR = coloresClub(d.rival.nombre || d.rival.corto);
+    s += radial(1000, 440, 320, cR.vivo, 0.35)
+      + texto(x0, 360, 'PRÓXIMO RIVAL', { px: 22, peso: 700, color: TENUE, espacio: 3 })
+      + escudo(d.rival.escudo, x0 + 44, 444, 96)
+      + texto(x0 + (d.rival.escudo ? 110 : 0), 470, d.rival.corto.toUpperCase(), { px: 72, peso: 800, max: wd - 110 });
+  }
+  return s + marca(x0, 636);
 }
+
+/** varios jugadores: fichas con la etiqueta del estado a la derecha (sin carta ni colores por calidad) */
+function fichaBaja(x, y, w, h, f, { conEscudo }) {
+  const px = Math.round(Math.min(w < 700 ? 19 : 24, h * 0.22)), wp = anchoPildora(f, px);
+  const sub = [conEscudo ? f.equipo : f.posicion, f.media ? `${f.media} pts de media` : null].filter(Boolean).join(' · ');
+  return fichaJugador(x, y, w, h, { cara: f.cara, club: coloresClub(f.club || f.equipo), nombre: f.nombre, sub, escudo: conEscudo ? f.escudo : null,
+    grande: '', acento: ESTADO_TARJETA[f.estado].color, anchoDerecha: wp + 30 })
+    + pildora(f, x + w - 18 - wp / 2, y + h / 2, px, wp + 4);
+}
+
 export function svgBajas(d) {
   const filas = d.filas.slice(0, d.equipo ? 4 : 6);
+  if (filas.length === 1) return marco(bajaSola(d, filas[0]));   // la carta, solo con un jugador (Carlos, 3 nov 11:06)
   const tono = d.titulo === 'NOVEDADES' ? VERDE : d.titulo === 'DUDAS' ? AMBAR : MALO;
   const tit = d.titulo === 'NOVEDADES' ? dorado() : rojizo();
   let s = tit.defs;
@@ -455,17 +486,16 @@ export function svgBajas(d) {
         + escudo(d.rival.escudo, 1126, 112, 54)
         + texto(d.rival.escudo ? 1088 : 1156, 128, d.rival.corto.toUpperCase(), { px: 40, peso: 800, ancla: 'end', max: 300 });
     }
-    const nn = filas.length, w = nn === 1 ? 300 : 250, h = nn === 1 ? 420 : 420, gap = 30;
-    const x0 = (ANCHO - (nn * w + (nn - 1) * gap)) / 2;
-    filas.forEach((f, i) => { s += cartaBaja(x0 + i * (w + gap), 176, w, h, f, { conEscudo: false }); });
+    const nn = filas.length, h = nn <= 2 ? 150 : nn === 3 ? 128 : 100, gap = 12, alto = nn * h + (nn - 1) * gap;
+    const y0 = 182 + (430 - alto) / 2;
+    filas.forEach((f, i) => { s += fichaBaja(44, y0 + i * (h + gap), 1112, h, f, { conEscudo: false }); });
   } else {
     s += fondo([[600, -80, 760, tono, 0.22]])
       + texto(44, 118, d.titulo, { px: 104, peso: 800, italica: true, color: d.titulo === 'DUDAS' ? AMBAR : `url(#${tit.g})`, max: 760 })
       + texto(1156, 84, `JORNADA ${d.jornada}`, { px: 40, peso: 800, ancla: 'end', espacio: 1 })
       + texto(1156, 118, 'LALIGA FANTASY', { px: 22, peso: 700, color: TENUE, ancla: 'end', espacio: 3 });
-    const nn = filas.length, w = nn <= 3 ? 250 : nn === 4 ? 220 : 174, gap = nn <= 4 ? 26 : 15;
-    const x0 = (ANCHO - (nn * w + (nn - 1) * gap)) / 2;
-    filas.forEach((f, i) => { s += cartaBaja(x0 + i * (w + gap), 170, w, Math.min(420, w * 2.3), f, { conEscudo: true }); });
+    const enUna = filas.length <= 3, w = enUna ? 1112 : 548, h = 132;
+    filas.forEach((f, i) => { s += fichaBaja(enUna ? 44 : [44, 608][Math.floor(i / 3)], 168 + (i % 3) * (h + 14), w, h, f, { conEscudo: true }); });
   }
   return marco(s + marca(600, 652, { ancla: 'middle' }));
 }

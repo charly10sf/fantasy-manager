@@ -20,10 +20,7 @@ jobs:
       - name: Tarjetas
         run: |
           S="--modo=simulacro --tarjetas=1 --forzar=1 --ventanas=0"
-          ( node bot/ejecutar.mjs $S --tipos=final --jornada=11 || echo "FALLO final" ) 2>&1 | tee salida.txt
-          ( node bot/ejecutar.mjs $S --tipos=mvp --jornada=11 || echo "FALLO mvp" ) 2>&1 | tee -a salida.txt
-          ( node bot/ejecutar.mjs $S --tipos=resumen --jornada=11 || echo "FALLO resumen" ) 2>&1 | tee -a salida.txt
-          ( node bot/ejecutar.mjs $S --tipos=caidas || echo "FALLO caidas" ) 2>&1 | tee -a salida.txt
+          ( node bot/ejecutar.mjs $S --tipos=caidas || echo "FALLO caidas" ) 2>&1 | tee salida.txt
           ( node .github/pruebas/novedades-reales.mjs || echo "FALLO novedades" ) 2>&1 | tee -a salida.txt
           grep -E "FALLA|FALLO|no pasa|inválid" salida.txt | head -40 || true
       - run: |
