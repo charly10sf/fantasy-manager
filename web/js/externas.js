@@ -32,13 +32,20 @@ export function slugsDe(equipos) {
 }
 const nombreDeSlug = (href) => { const m = href && String(href).match(/\/jugadores\/([^/?#]+)/); return m ? m[1].replace(/-/g, ' ') : ''; };
 
-/** lee la página de un equipo: [{ nombre, corto, titular, prob, estado }] */
+/**
+ * Lee la página de un equipo: [{ nombre, corto, titular, alternativa, prob, estado }].
+ * Mirado con la página real el 3 nov: trae el once probable (`.jugadores-titulares-N`), los suplentes con su %
+ * (`.jugadores-suplentes-N`) y un «once tipo» (`#once-tipo-equipo`) sin %. Antes se leían los tres como once (salían 13-16
+ * titulares, con suplentes y el once tipo dentro) y el % se sacaba del texto de la camiseta, donde va pegado a la altura
+ * («1.73» + «70%» se leía 370 → 100 %: Bernardo Silva, I. Williams o Sadiq salían al 100 %). Ahora: titulares de los campos
+ * de titulares (con el once confirmado la página trae el probable y el confirmado: se juntan, con el % más alto), suplentes
+ * de los de suplentes, el once tipo fuera, y el % de `data-probabilidad` o de un elemento cuyo texto sea solo «NN%».
+ */
 export function parseOnce(html) {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const out = [];
   const visto = new Map();
-  // un jugador puede salir más de una vez (con el once confirmado la página trae el probable y el confirmado): se juntan,
-  // con el % más alto y titular si lo es en alguno (antes valía la primera vez y el confirmado se perdía; revisión del 29 oct)
+  // un jugador puede salir más de una vez: se juntan, con el % más alto y titular si lo es en alguno
   const meter = (x) => {
     const k = norm(x.nombre || x.corto);
     if (!k) return;
@@ -47,40 +54,47 @@ export function parseOnce(html) {
     if (x.titular) { e.titular = true; e.alternativa = false; }
     if (x.prob != null && (e.prob == null || x.prob > e.prob)) e.prob = x.prob;
     if (!e.nombre && x.nombre) e.nombre = x.nombre;
+    if (!e.corto && x.corto) e.corto = x.corto;
   };
-  // (el entrenador, con su enlace a /entrenadores/, no es un jugador)
-  const noJugador = (a) => { const h = a && a.getAttribute && a.getAttribute('href'); return !!h && !/\/jugadores\//.test(h); };
-  const estadoDe = (a) => { const l = a && a.getAttribute('data-lesion'); return l === '0' ? 'injured' : l === '1' || l === '2' ? 'doubtful' : 'ok'; };
-  const probDe = (el) => {
-    if (!el) return null;
-    const a = el.getAttribute('data-probabilidad') || el.getAttribute('data-probability');
-    if (a && /\d/.test(a)) return Math.min(100, parseInt(a, 10));
-    const m = (el.textContent || '').match(/(\d{1,3})\s*%/);
-    return m ? Math.min(100, parseInt(m[1], 10)) : null;
-  };
-  // el campo: cada camiseta lleva al titular y, detrás, sus alternativas
-  const camisetas = [...doc.querySelectorAll('.camiseta-wrapper[data-onceff], .camiseta-wrapper')];
-  for (const w of camisetas) {
-    const titularW = String(w.getAttribute('data-onceff') || 'titular').toLowerCase() === 'titular';
-    const anchors = [...w.querySelectorAll('a.juggador, a.jugador, a[href*="/jugadores/"]')].filter((a) => !noJugador(a));
-    // el % del titular, si no lo lleva su enlace: el de la camiseta sin el de sus alternativas
-    let probW = null;
-    if (anchors.length) {
-      const c = w.cloneNode(true);
-      [...c.querySelectorAll('a.juggador, a.jugador, a[href*="/jugadores/"]')].slice(1).forEach((x) => x.remove());
-      probW = probDe(c);
+  const SEL = 'a[href*="/jugadores/"]';
+  const probDe = (w) => {
+    for (const el of [w, ...w.querySelectorAll('[data-probabilidad], [data-probability]')]) {
+      const a = el.getAttribute && (el.getAttribute('data-probabilidad') || el.getAttribute('data-probability'));
+      if (a && /^\s*\d{1,3}\s*%?\s*$/.test(a)) return Math.min(100, parseInt(a, 10));
     }
-    anchors.forEach((a, i) => {
-      const corto = (a.querySelector('.truncate-name') || {}).textContent || a.getAttribute('title') || '';
-      meter({ nombre: nombreDeSlug(a.getAttribute('href')), corto: corto.trim(), titular: titularW && i === 0, alternativa: i > 0, prob: probDe(a) ?? (i === 0 ? probW : null), estado: estadoDe(a) });
-    });
+    for (const el of w.querySelectorAll('*')) {
+      if (el.children.length) continue;
+      const m = String(el.textContent || '').match(/^\s*(\d{1,3})\s*%\s*$/);
+      if (m) return Math.min(100, parseInt(m[1], 10));
+    }
+    return null;
+  };
+  const estadoDe = (w) => {
+    const l = [w, ...w.querySelectorAll('[data-lesion]')].map((e) => e.getAttribute('data-lesion')).find((x) => x != null);
+    return l === '0' ? 'injured' : l === '1' || l === '2' ? 'doubtful' : 'ok';
+  };
+  // cada camiseta: el primer enlace a /jugadores/ es el jugador (el entrenador enlaza a /entrenadores/ y no entra)
+  const camiseta = (w, titular) => {
+    const a = w.querySelector(SEL);
+    if (!a) return;
+    const corto = (w.querySelector('.truncate-name') || {}).textContent || [...w.querySelectorAll(SEL)].map((x) => x.getAttribute('title')).find(Boolean) || '';
+    meter({ nombre: nombreDeSlug(a.getAttribute('href')), corto: String(corto).trim(), titular, alternativa: !titular, prob: probDe(w), estado: estadoDe(w) });
+  };
+  const tits = [...doc.querySelectorAll('[class*="jugadores-titulares"]')];
+  if (tits.length) {
+    for (const t of tits) for (const w of t.querySelectorAll('.camiseta-wrapper')) camiseta(w, true);
+    for (const sup of doc.querySelectorAll('[class*="jugadores-suplentes"]')) for (const w of sup.querySelectorAll('.camiseta-wrapper')) camiseta(w, false);
   }
-  // la lista (formato antiguo): titulares y suplentes por separado
-  for (const [sel, titular] of [['[class*="jugadores-titulares"] .jugador', true], ['[class*="jugadores-suplentes"] .jugador', false]]) {
-    for (const el of doc.querySelectorAll(sel)) {
-      const a = el.querySelector('a[href*="/jugadores/"]') || el;
-      if (!el.querySelector('a[href*="/jugadores/"]') && el.querySelector('a[href*="/entrenador"]')) continue;
-      meter({ nombre: nombreDeSlug(a.getAttribute && a.getAttribute('href')), corto: (el.getAttribute('data-nombre') || (el.querySelector('.nombre') || {}).textContent || '').trim(), titular, alternativa: !titular, prob: probDe(el), estado: estadoDe(el) });
+  // otro formato: camisetas con data-onceff («titular» o no)
+  if (!out.length) for (const w of doc.querySelectorAll('.camiseta-wrapper[data-onceff]')) camiseta(w, String(w.getAttribute('data-onceff')).toLowerCase() === 'titular');
+  // la lista (formato antiguo): titulares y suplentes por separado, solo si no hay camisetas
+  if (!out.length) {
+    for (const [sel, titular] of [['[class*="jugadores-titulares"] .jugador', true], ['[class*="jugadores-suplentes"] .jugador', false]]) {
+      for (const el of doc.querySelectorAll(sel)) {
+        const a = el.querySelector(SEL) || el;
+        if (!el.querySelector(SEL) && el.querySelector('a[href*="/entrenador"]')) continue;
+        meter({ nombre: nombreDeSlug(a.getAttribute && a.getAttribute('href')), corto: (el.getAttribute('data-nombre') || (el.querySelector('.nombre') || {}).textContent || '').trim(), titular, alternativa: !titular, prob: probDe(el), estado: estadoDe(el) });
+      }
     }
   }
   return out.filter((x) => (x.nombre || x.corto).length >= 2);
