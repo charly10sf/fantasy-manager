@@ -1439,6 +1439,10 @@ export function cuadrarPlan(P, D, M) {
   } else if (final != null && final < 0 && sugeridas && final + sugeridas >= 0) {
     avisoSaldo = `En negativo, pero sin prisa: tienes hasta ${M.ventanaEsp && M.ventanaEsp.limite ? cuando(M.ventanaEsp.limite) : 'antes de la jornada'} para vender y empezar la jornada en positivo (las ventas sugeridas te dejarían en ${eur(final + sugeridas)})`;
     avisoTipo = 'plan';
+  } else if (final != null && final >= 0 && sugeridas > 0) {
+    // (aviso de Carlos, 4 nov: «me pone de vender todo eso y me quedaría con 30 M teniendo 24 M») las ventas sin prisa
+    // no cuentan en el saldo de hoy: se dice, con lo que tendrías si las haces también
+    avisoSaldo = `Te quedas con, haciendo lo de hoy (con las ventas sin prisa también: ${eur(final + sugeridas)})`;
   } else if (final != null && final < 0) { avisoSaldo = M.enJuego ? `Acabarías en negativo (${eur(final)}): vende antes de que empiece la próxima jornada` : `Acabarías en negativo (${eur(final)}): vende antes de que empiece la jornada`; avisoTipo = 'mal'; }
   // lo que queda en tu plantilla tras el plan de hoy: lo que vendes, fuera; lo que clausulas o compras, dentro (las
   // pujas solo si las ganas: no cuentan). Si el once pierde mucho o se queda con huecos, se dice (revisión del 25 oct)
