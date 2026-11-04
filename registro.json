@@ -1243,7 +1243,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html": 1793816929000,
    "SPORT|136094136": 1793814999000,
    "SPORT|136094566": 1793815654000,
-   "SPORT|136095117": 1793816354000
+   "SPORT|136095117": 1793816354000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/04/andres-garcia-multiusos-jose-bordalas-136093338.html": 1793821391000
   },
   "hechos": [
    {
@@ -1764,7 +1765,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
