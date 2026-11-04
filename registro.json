@@ -1160,7 +1160,9 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/03/barca-vuelve-ganar-europa-acaba-invicto-aston-villa/00031793744143964451858.htm": 1793744280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247042/flick-pendiente-pruebas-hoy-rodri.html": 1793781166000,
    "AS|https://as.com/futbol/primera/el-calvario-de-quique-y-mariano-en-nervion-hubo-un-desgaste-terrible-f202611-n/": 1793783139000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247063/eric-christensen-esperan-llegar-metropolitano.html": 1793784669000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247063/eric-christensen-esperan-llegar-metropolitano.html": 1793784669000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-avisa-hansi-flick-gestion-rodri-lesion-jugar-atletico-madrid-jugado-minutos-seguro-seguidores-no-entienden-20261104_3467990.html": 1793784789000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antiviolencia-pide-60-001-euros_0_2008420320.html": 1793786458000
   },
   "hechos": [
    {
@@ -1398,11 +1400,26 @@
     "motivo": "molestias musculares en el gemelo",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-avisa-hansi-flick-gestion-rodri-lesion-jugar-atletico-madrid-jugado-minutos-seguro-seguidores-no-entienden-20261104_3467990.html",
+    "medio": "COPE",
+    "t": 1793784789000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri sufre una lesión y es duda",
+    "motivo": "molestias físicas",
+    "plazo": "",
+    "nums": [
+     3,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
