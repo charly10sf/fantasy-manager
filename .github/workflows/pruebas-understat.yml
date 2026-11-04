@@ -10,16 +10,8 @@ jobs:
         run: |
           UA='Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36'
           pedir() { curl -s -m 30 -A "$UA" -o "$2" -w '%{http_code} %{size_download} %{content_type}' "${@:3}" "$1"; }
-          echo "@@ datos: $(pedir https://understat.com/getLeagueData/La_liga/2026 d.txt -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: https://understat.com/league/La_liga/2026' -H 'Accept: application/json, text/plain, */*')"
-          echo "@@ datos-ini: $(head -c 300 d.txt | tr '\n' ' ')"
-          echo "@@ pagina: $(pedir https://understat.com/league/La_liga/2026 p.html -H 'Accept: text/html')"
-          echo "@@ pagina-title: $(grep -o '<title>[^<]*' p.html | head -1)"
-          echo "@@ pagina-vars: $(grep -o '[a-zA-Z]*Data *= *JSON' p.html | sort | uniq -c | tr '\n' ' ')"
-          echo "@@ pagina-scripts: $(grep -o '<script[^>]*src=\"[^\"]*\"' p.html | head -12 | tr '\n' ' ')"
-          echo "@@ pagina-fetch: $(grep -o -i "getLeagueData[^\"']*\|fetch([^)]*)\|\$.ajax[^;]*" p.html | head -5 | tr '\n' ' ')"
-          for s in $(grep -o 'src="[^"]*\.js[^"]*"' p.html | sed 's/src="//;s/"$//' | grep -v -i 'google\|gtag' | head -6); do
-            u="$s"; case "$u" in http*) ;; *) u="https://understat.com/${u#/}";; esac
-            curl -s -m 20 -A "$UA" -o js.txt "$u"
-            echo "@@ js $u $(wc -c < js.txt) :: $(grep -o -i 'getLeagueData[^,;]\{0,120\}\|/main/[a-zA-Z]*[^,;]\{0,80\}' js.txt | head -4 | tr '\n' ' ')"
+          for u in https://understat.com/ https://understat.com/league/La_liga https://understat.com/league/La_liga/2026 https://understat.com/getLeagueData/La_liga/2026 https://understat.com/main/getLeagueData/La_liga/2026; do
+            echo "@@ $u => $(pedir $u x.html -H 'Accept: text/html,application/json') final=$(curl -s -m 20 -A "$UA" -o /dev/null -w '%{url_effective} %{redirect_url}' -L $u)"
+            echo "@@   texto: $(sed 's/<[^>]*>/ /g' x.html | tr -s ' \n\t' ' ' | head -c 400)"
+            echo "@@   vars: $(grep -o '[a-zA-Z]*Data *= *JSON\|getLeagueData[^\"]\{0,60\}' x.html | sort -u | head -5 | tr '\n' ' ')"
           done
-          echo "@@ 2025: $(pedir https://understat.com/getLeagueData/La_liga/2025 d5.txt -H 'X-Requested-With: XMLHttpRequest' -H 'Referer: https://understat.com/league/La_liga/2025') :: $(head -c 120 d5.txt)"
