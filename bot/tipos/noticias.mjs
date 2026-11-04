@@ -235,7 +235,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const baja = c.que === 'descartado' || (c.que === 'lesion' && (c.est === 'injured' || (c.parte && c.parte.estado === 'baja') || !!c.plazo));
     // duda leve (Domy, 3 nov 22:15, con el tweet de Kike Salas): gestión de cargas, descanso o precaución, sin lesión
     const leve = c.fam === 'mala' && !baja && c.que !== 'lesion' && esLeve(`${c.motivo || ''} ${c.hecho || ''}`);
-    const etiqueta = c.fam === 'buena' ? (c.est === 'ok' ? `✅ Disponible Fantasy ${paraLa(pp, jornada)}` : `👀 Apunta a volver en LaLiga Fantasy ${paraLa(pp, jornada)}`)
+    const etiqueta = c.fam === 'buena' ? (c.est === 'ok' ? `✅ Disponible Fantasy ${paraLa(pp, jornada)}` : `👀 Posible vuelta Fantasy ${paraLa(pp, jornada)}`)
       : baja ? `❌ Baja Fantasy ${paraLa(pp, jornada)}` : leve ? `⁉️ Duda leve Fantasy ${paraLa(pp, jornada)}` : `⁉️ Duda Fantasy ${paraLa(pp, jornada)}`;
     // el motivo, si dice algo (no «lesión» a secas) y no lo dice ya la cabecera; el plazo, si no lo dice ya
     const motivo = c.fam === 'mala' && c.motivo && c.motivo.split(' ').length >= 2 && !copia(c.motivo, cab, 3) ? c.motivo : '';
@@ -249,7 +249,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.includes(etiqueta)) { log(`  (noticias) ${j.nickname}: no cabe la etiqueta`); continue; }
     const clave = `noticias|${j.id}:${c.fam}|${dia}`;
-    const estadoCarta = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : null) : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';
+    // (Carlos, 4 nov 12:43: De Galarreta salió sin carta) una vuelta aún sin el alta en el juego lleva carta «VUELVE»
+    const estadoCarta = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';
     const fila = { id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo, club: equipos[String(j.teamId)] || '', caraUrl: j.image || null,
       escudoUrl: escudos[String(j.teamId)] || null, estado: estadoCarta, leve: estadoCarta === 'duda' && leve, media, valor: Number(j.marketValue) || 0, pct: null };
     out.push({ tipo: 'noticias', clave, jornada, texto, numeros: [...(media >= 3 ? partes(media) : []), ...(pp ? [pp.jornada] : [jornada]), ...c.nums],
