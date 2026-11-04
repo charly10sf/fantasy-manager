@@ -20,6 +20,7 @@ export const NOVEDADES = [
       { tipo: 'nuevo', d: 'ajustes', t: 'Borrar tus datos del servidor', x: 'En Ajustes → Borrar mis datos del servidor se borra al momento lo que Fantasy Manager guarda de ti: que usas la app, cuánto rato y tus avisos de fallo con sus capturas. Tu liga, tu sesión y tu clave están en tu dispositivo y no se tocan.' },
       { tipo: 'mejora', d: 'conexion', t: 'Abrir en el ordenador, cifrado', x: 'Con el QR o con el código de 8 letras, tu sesión y tu clave de la IA viajan cifradas: el servidor de la web las guarda esos minutos sin poder leerlas.' },
       { tipo: 'mejora', d: 'ia', menor: true, t: 'Antes de pegar la clave', x: 'Al activar la IA, un aviso cuenta qué datos de tu liga van a Google y qué puede hacer Google con ellos con la clave gratuita, con una casilla de mayor de 18 años.' },
+      { para: 'dueño', tipo: 'nuevo', d: 'grafica', t: 'Qué hace la gente con la app', x: 'En Quién usa la app, el bloque «Qué hacen»: planes, preguntas, anuncios bonificados y funciones top de esta semana y de las 4 anteriores, y la entrada paso a paso (login, entrar, guía de la clave, clave guardada, primer plan). Solo números por cuenta, sin nada de la liga.' },
       { tipo: 'mejora', d: 'arreglo', menor: true, t: 'Avisos de fallo sin los nombres de tu liga', x: 'El diagnóstico que va con un aviso de fallo ya no lleva los nombres ni las fotos de los demás de tu liga.' },
     ],
   },

@@ -3,6 +3,7 @@
 import { http, enApp, WORKER_PUBLICO } from './puente.js';
 import { token } from './auth.js';
 import { LS } from './util.js';
+import { pendientes, mandados } from './eventos.js';
 
 /** una petición al Worker con la sesión de LaLiga (para saber quién es); también la usa el límite de minutos */
 export async function pedirWorker(metodo, ruta, cuerpo = null, { tiempo = 20000 } = {}) {
@@ -77,7 +78,10 @@ export async function saludar(datos) {
   if (Date.now() - LS.get('hola-t', 0) < 9 * 60e3) return false;
   LS.set('hola-t', Date.now());
   let r;
-  try { r = await pedirWorker('POST', '/hola', datos); } catch (e) { LS.set('hola-t', 0); return false; }
+  // con lo que se ha contado del uso (eventos.js): si el servidor lo suma, se descuenta de lo pendiente
+  const ev = pendientes();
+  try { r = await pedirWorker('POST', '/hola', Object.keys(ev).length ? { ...datos, ev } : datos); } catch (e) { LS.set('hola-t', 0); return false; }
+  if (r && r.ev === true) mandados(ev);
   if (!r || typeof r.admin !== 'boolean') return false;
   const a = avisosGuardados();
   if (!!a.admin === r.admin) return false;

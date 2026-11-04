@@ -12,6 +12,7 @@ import { LS, norm, diaDe, otroDia, esc, LOGO, dura } from './util.js';
 import { http, enApp, nativo } from './puente.js';
 import { pedirWorker } from './soporte.js';
 import { VERSION } from './version.js';
+import { contar } from './eventos.js';
 
 // del dominio de la app; si no contesta, de GitHub (donde estaba antes de la mudanza)
 const URLS_APP = ['https://fantasymanagerapp.com/limites.json', 'https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/web/limites.json'];
@@ -140,10 +141,12 @@ export function faltanAnuncios(clave) {
 export function anuncioTopVisto(clave) {
   const h = hoyTop();
   guardarHoy({ ...h, vistos: h.vistos + 1 });
-  if (!porJornada(clave)) return true;
+  contar('b');
+  if (!porJornada(clave)) { contar('t'); return true; }
   const x = deJornada(clave);
   if (!x.uno) { guardarJornada(clave, { ...x, uno: true }); return false; }
   guardarJornada(clave, { usos: x.usos + 1, hasta: Date.now() + cfgTop().minutos * 60e3, uno: false });
+  contar('t');
   return true;
 }
 /** sin anuncio que enseñar: se abre igual lo que pedías, pero solo «min» minutos (y en las de los rivales cuenta como

@@ -35,6 +35,7 @@ import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada } from './portada.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, nuevoCodigo as codigoNuevo } from './sobre.js';
+import { contar } from './eventos.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
@@ -214,6 +215,7 @@ async function entrarConVinculo(j) {
   raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
   try {
     traerVinculo(j);
+    contar('e');
     S.D = null; S.planEstado = {};
     await cargar();
   } catch (e) { pantallaEntrar(e.message || String(e)); }
@@ -1551,6 +1553,7 @@ async function generarPlan() {
       signal: ctl.signal,
       alPaso: (t) => { S.planEstado.paso = t; const el = $('#paso-ia'); if (el) el.textContent = t; },
     });
+    if (!enDemo()) contar('p');
     S.planEstado = {};
     rehacer();
     tostada('Plan de hoy listo');
@@ -1826,6 +1829,7 @@ async function enviarPregunta(texto) {
       const ahora = Date.now();
       if (ahora - ultimo > 120) { ultimo = ahora; const el = $('#respuesta'); if (el) { el.innerHTML = `<div class="quien-ia">Escribiendo…</div>${md(parcial)}`; bajarChat(); } }
     }, ctl.signal, fotos, (paso) => { S.pasoChat = paso; const el = $('#paso-chat'); if (el) el.textContent = paso; });
+    if (!enDemo()) contar('q');
     if (!nativo.aLaVista()) {
       const limpio = String((r && r.texto) || '').replace(/[*_#>`]/g, '').replace(/^\s*[-•]\s*/gm, '').replace(/\s+/g, ' ').trim();
       nativo.notificar('Tu director deportivo ha contestado', limpio.length > 220 ? `${limpio.slice(0, 217)}…` : limpio || 'Entra para leer la respuesta', 'ia');
@@ -2029,6 +2033,7 @@ window.vueltaLogin = async () => {
   raiz().innerHTML = `<div class="pantalla cargando">${LOGO}<h1 style="font-size:42px">Entrando…</h1></div>`;
   try {
     await terminarLogin(url);
+    contar('e');
     mirarCuentaNueva();
     LS.del('demo');
     S.D = null;
@@ -2210,7 +2215,7 @@ document.addEventListener('click', async (ev) => {
       pintarVivo({ forzar: true });
       break;
     }
-    case 'entrar': try { await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
+    case 'entrar': try { contar('l'); await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
     case 'entrarDemo': { const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
       const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -2229,7 +2234,7 @@ document.addEventListener('click', async (ev) => {
       const url = (($('#vueltaWeb') || {}).value || '').trim();
       if (!/[?&]code=/.test(url)) { tostada('Pega la dirección entera: la que lleva «code=»'); break; }
       el.disabled = true;
-      try { await terminarLogin(url); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); }
+      try { await terminarLogin(url); contar('e'); mirarCuentaNueva(); LS.del('demo'); S.D = null; S.planEstado = {}; await cargar(); } catch (e) { pantallaEntrar(e.message || String(e)); }
       break;
     }
     case 'vincularWeb': {
@@ -2545,6 +2550,7 @@ async function probarYGuardar() {
     // guía por el chat y puede lanzar el plan con una clave sin probar)
     const lista = await probarClave(k);
     guardarClave(k);
+    contar('c');
     LS.del('guia-clave');
     tostada('IA activada: ya puedes preguntarle y hacer el plan con noticias');
     ir('hoy');

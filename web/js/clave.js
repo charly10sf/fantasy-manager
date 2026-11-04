@@ -5,6 +5,7 @@
    Desde mayo de 2026 las claves nuevas empiezan por «AQ.»; las de antes, por «AIza». Las dos valen. */
 import { icono, LS } from './util.js';
 import { enApp } from './puente.js';
+import { contar } from './eventos.js';
 
 export const AISTUDIO = 'https://aistudio.google.com/apikey';
 
@@ -77,6 +78,7 @@ const DIB = {
 /** la pestaña de la IA sin clave: la guía entera */
 export function guiaClave() {
   const pegar = !enApp && typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.readText === 'function';
+  contar('v', { una: true });
   const paso = (n, t, cuerpo, extra = '') => `<li class="gc-paso"${extra}><span class="gc-num">${n}</span><div class="gc-c"><b class="gc-t">${t}</b>${cuerpo}</div></li>`;
   return `<div class="ia-alta gc">
     <div class="eti">Inteligencia artificial</div><div class="titulo">Activa la IA</div>

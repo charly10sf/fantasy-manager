@@ -448,18 +448,53 @@ const CANALES = new Set(['github', 'play', 'web']);
  * equipo, solo { uid, primera, ultima, canales: 'github,web', dias: días distintos con la app abierta }. Se escribe
  * como mucho una vez al día por cuenta (o si entra desde un sitio nuevo): las escrituras gratis de KV son unas mil al día.
  */
-async function registrar(env, uid, canal, primera, ahora) {
+/* lo que hace cada cuenta (web/js/eventos.js): cuántas veces por día; aquí se suma por semanas (la clave es el lunes)
+   y en total. Solo números: ni qué jugador ni qué liga. */
+const EVENTOS = new Set(['p', 'q', 'b', 't', 'l', 'e', 'v', 'c']);
+function limpiarEventos(ev) {
+  const out = {};
+  if (!ev || typeof ev !== 'object') return out;
+  for (const [d, cs] of Object.entries(ev).slice(0, 15)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || !cs || typeof cs !== 'object') continue;
+    for (const [k, n] of Object.entries(cs)) {
+      const v = Math.round(Number(n));
+      if (EVENTOS.has(k) && v > 0 && v <= 500) (out[d] || (out[d] = {}))[k] = v;
+    }
+  }
+  return out;
+}
+const lunesDe = (d) => { const t = new Date(`${d}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); };
+function sumarEventos(r, ev) {
+  const sem = { ...((r && r.ev) || {}) }, tot = { ...((r && r.tot) || {}) };
+  for (const [d, cs] of Object.entries(ev)) {
+    const l = lunesDe(d), x = { ...(sem[l] || {}) };
+    for (const [k, n] of Object.entries(cs)) { x[k] = (x[k] || 0) + n; tot[k] = (tot[k] || 0) + n; }
+    sem[l] = x;
+  }
+  // las 6 semanas últimas (los metadatos del almacén no pasan de 1 KB)
+  const quedan = Object.keys(sem).sort().slice(-6);
+  return { ev: Object.fromEntries(quedan.map((l) => [l, sem[l]])), tot };
+}
+/** devuelve true si ha sumado los eventos que traía (si no, la app los vuelve a mandar en el siguiente saludo) */
+async function registrar(env, uid, canal, primera, ahora, evIn = null) {
   try {
     const k = `r:${uid}`, dia = hoyMadrid();
     const ya = await env.VINCULOS.getWithMetadata(k);
     const r = ya && ya.metadata ? ya.metadata : null;
     const cs = new Set(String((r && r.canales) || '').split(',').filter(Boolean));
     const nuevoCanal = CANALES.has(canal) && !cs.has(canal);
-    if (r && r.dia === dia && !nuevoCanal) return;
+    const ev = limpiarEventos(evIn);
+    const hayEv = Object.keys(ev).length > 0;
+    // una vez al día, o con eventos si hace 12 horas o más de la última (como mucho dos escrituras al día por cuenta)
+    if (r && r.dia === dia && !nuevoCanal && !(hayEv && ahora - (r.ultima || 0) >= 12 * 3600e3)) return false;
     if (CANALES.has(canal)) cs.add(canal);
     const ficha = { uid, primera: Math.min((r && r.primera) || primera, primera), ultima: ahora, dia, canales: [...cs].join(','), dias: ((r && r.dias) || 0) + (r && r.dia === dia ? 0 : 1) };
+    const s = sumarEventos(r, ev);
+    if (Object.keys(s.tot).length) { ficha.ev = s.ev; ficha.tot = s.tot; }
+    while (JSON.stringify(ficha).length > 1000 && ficha.ev && Object.keys(ficha.ev).length > 1) delete ficha.ev[Object.keys(ficha.ev).sort()[0]];
     await env.VINCULOS.put(k, '1', { metadata: ficha });
-  } catch (e) { /* nada: si el almacén no deja, se sigue */ }
+    return hayEv;
+  } catch (e) { return false; /* nada: si el almacén no deja, se sigue */ }
 }
 async function hola(req, env, c, ruta) {
   if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
@@ -482,9 +517,9 @@ async function hola(req, env, c, ruta) {
     // el almacén no deja, se sigue sin más; revisión del 29 oct)
     const cambia = !m || m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto;
     if (!m || cambia || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
-    await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora);
+    const evOk = await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora, b.ev);
     // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
-    return json({ ok: true, admin: adminsDe(env).includes(u.uid) }, 200, c);
+    return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: evOk }, 200, c);
   }
   // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
   // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app

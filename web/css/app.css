@@ -2350,3 +2350,8 @@ div.pc { display: grid; gap: 18px; }
 /* (3 nov) la web ya deja hacer zoom: Safari del iPhone amplía la página al tocar un campo con letra de menos de 16 px. Solo en iOS
    (-webkit-touch-callout solo existe ahí), los campos van a 16 px como mínimo */
 @supports (-webkit-touch-callout: none) { input, textarea, select { font-size: max(16px, 1em) !important; } }
+/* «Qué hacen» en Quién usa la app (0.7a) */
+.reg-ev { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 14px; }
+.reg-ev th { text-align: right; font-weight: 600; color: var(--apagado); font-size: 12px; padding: 4px 6px; }
+.reg-ev td { padding: 6px; border-top: 1px solid var(--linea); text-align: right; }
+.reg-ev td:first-child, .reg-ev th:first-child { text-align: left; }

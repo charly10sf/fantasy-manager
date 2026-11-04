@@ -12,6 +12,7 @@ import { hayAnunciosWeb } from './anuncios-web.js';
 import { registro } from './api.js';
 import { qrSVG } from './qr.js';
 import { quien, sesion } from './auth.js';
+import { EVENTOS } from './eventos.js';
 import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
@@ -723,6 +724,24 @@ export function quienUsaHTML(S) {
 
 /** (el dueño) todas las cuentas que han entrado alguna vez: total, activas, altas y desde dónde */
 const CANAL_TXT = { github: 'Android (APK)', play: 'Google Play', web: 'Web' };
+/** qué hace la gente (eventos.js): esta semana, las 4 anteriores y el embudo de entrada; desde la 0.7a */
+function usoHTML(reg, activos) {
+  const lunes = (d) => { const t = new Date(`${d}T12:00:00Z`); t.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7)); return t.toISOString().slice(0, 10); };
+  const esta = lunes(diaDe());
+  const antes = new Date(`${esta}T12:00:00Z`); antes.setUTCDate(antes.getUTCDate() - 28);
+  const desde4 = antes.toISOString().slice(0, 10);
+  const suma = (filtro) => { const o = {}; for (const x of reg) for (const [l, cs] of Object.entries(x.ev || {})) if (filtro(l)) for (const [k, n] of Object.entries(cs)) o[k] = (o[k] || 0) + n; return o; };
+  const sem = suma((l) => l === esta), cuatro = suma((l) => l >= desde4 && l < esta);
+  const con = (k) => reg.filter((x) => x.tot && x.tot[k] > 0).length;
+  if (!reg.some((x) => x.tot)) return `<div class="grupo"><span>Qué hacen</span></div><p class="quien-res">Aún no hay nada contado: se cuenta desde la 0.7a (planes, preguntas, anuncios, funciones top y la entrada).</p>`;
+  const fila = (k) => `<tr><td>${EVENTOS[k]}</td><td><b>${sem[k] || 0}</b></td><td>${cuatro[k] || 0}</td></tr>`;
+  const porActivo = activos.d7 ? Math.round(((sem.p || 0) / activos.d7) * 10) / 10 : 0;
+  return `<div class="grupo"><span>Qué hacen</span></div>
+    <table class="tabla reg-ev"><tr><th></th><th>Esta semana</th><th>4 anteriores</th></tr>${['p', 'q', 'b', 't', 'e', 'c'].map(fila).join('')}</table>
+    <p class="quien-res">Planes por cuenta activa esta semana: <b>${String(porActivo).replace('.', ',')}</b>.</p>
+    <p class="quien-res">La entrada, en cuentas: empezaron el login <b>${con('l')}</b> · entraron <b>${con('e')}</b> · vieron la guía de la clave <b>${con('v')}</b> · guardaron la clave <b>${con('c')}</b> · pidieron un plan <b>${con('p')}</b>.</p>
+    <p class="peq apag">Lo de antes de entrar con la cuenta solo cuenta para quien acaba entrando. Lo de los últimos días puede tardar hasta un día en llegar.</p>`;
+}
 function registradosHTML(reg, lista, ahora) {
   const hace = (d) => ahora - d * DIA;
   const hoy = diaDe(ahora);
@@ -757,6 +776,7 @@ function registradosHTML(reg, lista, ahora) {
       return `<div class="quien-f si"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(donde || '¿?')} · última vez ${cuando(x.ultima)}${x.dias ? ` · ${x.dias} ${x.dias === 1 ? 'día' : 'días'} con la app` : ''}</span></div><small>alta ${esc(cuando(x.primera, { hora: false }))}</small></div>`;
     }).join('')}</div>`;
   }
+  h += usoHTML(reg, activos);
   h += `<p class="peq apag" style="margin-top:10px">Cuenta todas las cuentas de LaLiga que han abierto la app con su sesión desde el 3 de noviembre, más las que la habían abierto en los 90 días anteriores. El nombre solo sale si la ha abierto en los últimos 90 días.</p>`;
   return h;
 }
