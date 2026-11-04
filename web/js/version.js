@@ -14,7 +14,7 @@ export const VERSION = '0.6.12o';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.6.12o', f: '2026-11-04', h: '', t: 'El dinero de los rivales, más fino',
+    v: '0.6.12o', f: '2026-11-04', h: '09:32', t: 'El dinero de los rivales, más fino',
     cosas: [
       { tipo: 'arreglo', d: 'dinero', t: 'Menos margen en el dinero de los rivales', x: 'Para los jugadores que un rival tiene desde el principio de la liga, la app no sabía con qué cláusula empezaron (guardaba solo los últimos 90 días de su valor) y lo metía todo en el margen: a un rival que casi no se mueve le salía un «± 82 M». Ahora guarda lo que valían al crearse la liga y pide la ficha de esos jugadores, así que el dinero estimado de esos rivales se afina.', ir: { v: 'rivales' } },
       { tipo: 'arreglo', d: 'arreglo', t: 'Understat, en mantenimiento', x: 'La web de estadísticas avanzadas (Understat) está en mantenimiento y contestaba con una página vacía. La app ya no la pide en cada carga: la vuelve a probar cada 3 horas y el diagnóstico dice que está en mantenimiento.', menor: true },
