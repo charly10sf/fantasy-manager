@@ -68,9 +68,9 @@ Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relaci
 | --- | --- | --- |
 | Icono | icono-512.png | 512 × 512 |
 | Gráfico destacado | grafico-destacado-1024x500.png | 1024 × 500 |
-| Capturas de teléfono (8) | captura-1-hoy.png … captura-8-rivales.png | 1080 × 1920 |
+| Capturas de teléfono (8 como mucho) | captura-1-hoy, 2-plan, 3-clausulas, 4-mercado, 6-chat, 7-ficha, 8-rivales y 9-directo (.png) | 1080 × 1920 |
 
-Las capturas usan la liga de ejemplo (datos inventados).
+Las capturas usan la liga de ejemplo (datos inventados) y salen sin caras ni escudos de LaLiga (iniciales). Rehechas el 4 nov con la app de la 0.7a (siete pestañas, saludo a «Lucas»), menos la 6 (el chat de la IA, del 25 oct, con la barra de antes: rehacerla con una respuesta de verdad de la IA). La 5 (Equipo) queda de repuesto. El script que las hace no está en el repo: Playwright con la demo a 390 × 770 ×2 y un marco HTML con Barlow Condensed incrustada.
 
 ## Clasificación de contenido (cuestionario)
 
