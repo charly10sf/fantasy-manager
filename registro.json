@@ -1157,7 +1157,8 @@
    "SPORT|136056334": 1793766655000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rodri-retiro-partido-frente-aston-villa-molestias-musculares-pendiente-pruebas-20261103_3467985.html": 1793745630000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/03/6aea107621efa0c3758b4599.html": 1793746141000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/03/barca-vuelve-ganar-europa-acaba-invicto-aston-villa/00031793744143964451858.htm": 1793744280000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/03/barca-vuelve-ganar-europa-acaba-invicto-aston-villa/00031793744143964451858.htm": 1793744280000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247042/flick-pendiente-pruebas-hoy-rodri.html": 1793781166000
   },
   "hechos": [
    {
@@ -1399,7 +1400,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
