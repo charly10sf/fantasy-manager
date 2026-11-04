@@ -39,7 +39,7 @@ export function prompt(lote, equipos) {
 - "estado": "se_estudia" si se está valorando o se decidirá más adelante, "confirmado" si ya está decidido, "descartado" si se ha decidido que NO (por ejemplo, la jornada se jugará).
 - "primera": true si afecta a Primera división; "segunda": true si afecta también a Segunda.
 - "jornada": el número de la jornada si la noticia lo dice con cifra; si no, 0.
-- "equipos": si es un partido concreto, los dos clubes de Primera, con su nombre corto (por ejemplo ${Object.values(equipos).slice(0, 3).map((e) => `"${corto(e)}"`).join(', ')}); si es la jornada entera, lista vacía.
+- "equipos": si la noticia es de un partido concreto (y no de la jornada entera, aunque nombre algún partido), los dos clubes de Primera, con su nombre corto (por ejemplo ${Object.values(equipos).slice(0, 3).map((e) => `"${corto(e)}"`).join(', ')}); si es la jornada entera, lista vacía.
 - "luto": true si detrás hay un fallecimiento, un accidente o una tragedia.
 - "oficial": true solo si lo ha anunciado LaLiga, la RFEF, el CSD o el club (comunicado), no si son fuentes o informaciones del medio.
 - "contexto": por qué, en una frase corta tuya (como mucho 100 caracteres), sin copiar la noticia, sin nombrar al medio y sin cifras que no estén en ella. Por ejemplo: "Tras el fallecimiento de X". Vacío si no lo dice.
@@ -88,7 +88,8 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
   const hoy = diaMadrid(ahora);
   if (lg.gemini.dia !== hoy) lg.gemini = { dia: hoy, n: 0 };
   if (lg.gemini.n >= (config.ligaGeminiDia ?? 20)) { log(`  (liga) tope de ${config.ligaGeminiDia ?? 20} preguntas a Gemini hoy`); return lg; }
-  const lote = nuevas.slice(0, 15);
+  // las más recientes primero (una historia viva trae muchas; las viejas ya no cambian nada)
+  const lote = nuevas.sort((a, b) => b.t - a.t).slice(0, config.ligaPorLote ?? 30);
   lg.gemini.n++;
   const hasta = ahoraReal() + (config.ligaSegundos ?? 45) * 1000;
   const r = await pedirIA({ clave, prompt: prompt(lote, equipos), esquema: ESQUEMA, log, hasta });
@@ -100,7 +101,9 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
     if (!x || !TIPOS.includes(a.tipo) || a.tipo === 'nada' || !ESTADOS.includes(a.estado) || !a.primera) continue;
     const fuente = `${x.titulo} ${x.entradilla}`;
     const nums = [...new Set((fuente.match(/\d+/g) || []).map(Number))].slice(0, 30);
-    const h = { guid: x.guid, medio: x.medio, t: x.t, tipo: a.tipo, estado: a.estado, segunda: !!a.segunda,
+    // aplazar o suspender la jornada entera es lo mismo para quien juega: un solo tema
+    const tipo = a.tipo === 'aplazamiento' && !(a.equipos && a.equipos.length) ? 'suspension' : a.tipo;
+    const h = { guid: x.guid, medio: x.medio, t: x.t, tipo, estado: a.estado, segunda: !!a.segunda,
       jornada: a.jornada > 0 && a.jornada <= 38 && nums.includes(a.jornada) ? a.jornada : 0, clubes: clubesDe(a.equipos, equipos).slice(0, 2),
       luto: !!a.luto, oficial: !!a.oficial && OFICIAL.test(fuente),
       contexto: frase(a.contexto, { fuente, max: 100 }), detalle: frase(a.detalle, { fuente, max: 100 }), nums };
@@ -164,7 +167,8 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     // lo que se estudia ya no es noticia si ya salió (o sale ahora) la decisión
     if (g.estado === 'se_estudia' && (hechas.some((c) => c.startsWith(`liga|${g.tema}|`)) || grupos.has(`${g.tema}|confirmado`) || grupos.has(`${g.tema}|descartado`))) continue;
     const hs = g.hs.sort((a, b) => a.t - b.t);
-    if (ahora - hs[0].t > 18 * HORA) { log(`  (liga) ${g.tema} (${g.estado}): la primera noticia es de hace más de 18 h`); continue; }
+    // una historia que sigue viva vale mientras haya noticias recientes: manda la última
+    if (ahora - hs[hs.length - 1].t > 12 * HORA) { log(`  (liga) ${g.tema} (${g.estado}): la última noticia es de hace más de 12 h`); continue; }
     const medios = [...new Set(hs.map((h) => h.medio))].sort((a, b) => GRANDES.indexOf(b) - GRANDES.indexOf(a));
     const oficial = hs.some((h) => h.oficial);
     if (!oficial && medios.length < 2) { log(`  (liga) ${g.tema} (${g.estado}): solo ${medios.join(', ')}, espero a una segunda fuente`); continue; }
