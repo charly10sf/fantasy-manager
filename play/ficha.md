@@ -111,20 +111,22 @@ Para la versión con anuncios (0.6 y siguientes). Lo de AdMob sale de la guía d
 | --- | --- |
 | ¿Recoge o comparte datos? | Sí |
 | ¿Se cifran en tránsito? | Sí (todo va por https) |
-| ¿Puede el usuario pedir que se borren? | Sí (escribiendo al correo de contacto; los avisos se borran solos a los 180 días y el uso, a los 90) |
+| ¿Puede el usuario pedir que se borren? | Sí: en la app, Ajustes → Borrar mis datos del servidor (desde la 0.7a); sin la app, escribiendo al correo de contacto. Enlace para Play: https://fantasymanagerapp.com/privacidad.html#borrar. Si no, los avisos se borran solos a los 180 días y el uso, a los 90 |
 
 | Tipo de dato | Recogido | Compartido | Para qué | ¿Opcional? |
 | --- | --- | --- | --- | --- |
 | Ubicación → Ubicación aproximada (la IP, la usa AdMob) | Sí | Sí | Publicidad o marketing, Analítica, Prevención del fraude | No |
 | Información personal → Nombre (el nombre de mánager: «Quién usa la app» y avisos de fallo) | Sí | No | Funciones de la app, Analítica | No |
 | Información personal → ID de usuario (el número de cuenta de LaLiga, para lo mismo) | Sí | No | Funciones de la app, Analítica | No |
-| Actividad en la app → Interacciones con la app (AdMob: aperturas, toques, vídeos; y los minutos de uso, donde hay límite) | Sí | Sí | Publicidad o marketing, Analítica, Funciones de la app, Prevención del fraude | No |
+| Actividad en la app → Interacciones con la app (AdMob: aperturas, toques, vídeos; los minutos de uso, donde hay límite; y desde la 0.7a, cuántos planes, preguntas, bonificados, funciones top y pasos de la entrada por semana) | Sí | Sí | Publicidad o marketing, Analítica, Funciones de la app, Prevención del fraude | No |
 | Mensajes → Otros mensajes en la app (el texto de un aviso de fallo) | Sí | No | Funciones de la app (soporte), Comunicaciones del desarrollador | Sí |
 | Fotos y vídeos → Fotos (hasta 3 capturas en un aviso de fallo, desde la 0.6.1b) | Sí | No | Funciones de la app (soporte), Comunicaciones del desarrollador | Sí |
 | Información y rendimiento de la app → Diagnóstico (AdMob; y el diagnóstico si marcas la casilla en un aviso de fallo) | Sí | Sí | Analítica, Publicidad o marketing, Prevención del fraude | No |
 | Dispositivo u otros identificadores (ID de publicidad e ID de conjunto de apps, AdMob) | Sí | Sí | Publicidad o marketing, Analítica, Prevención del fraude | No |
 
-Lo que no sale del móvil (no hace falta declararlo): la sesión de LaLiga, los datos de la liga, la clave de Gemini. Lo que se manda a Google Gemini lo manda el usuario con su propia clave.
+Lo que no sale del móvil (no hace falta declararlo): la sesión de LaLiga, los datos de la liga, la clave de Gemini. Lo que se manda a Google Gemini lo manda el usuario con su propia clave, directo del móvil a Google, y desde la 0.7a sin los nombres de los rivales («Rival 1», «Rival 2»…). Al abrir la cuenta en el ordenador (QR o código), la sesión y la clave pasan por el Worker cifradas con una clave que el Worker no tiene (0.7a) y se borran al usarse o a los 10 minutos: en principio no cuenta como recogida, porque el desarrollador no puede leerlo.
+
+Si Play pregunta por los datos de otras personas: los nombres de los mánagers de la liga no se guardan en el servidor (solo el del propio usuario) y no van a la IA.
 
 ## Prueba cerrada
 
