@@ -168,10 +168,13 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
 
 /**
  * La previa en un tweet largo (X Premium). Carlos, 4 nov 23:39: el primer intento («En el Valencia, … No estarán … El que más puntos
- * da …» y el mismo párrafo para el Madrid con otros nombres) «es muy robótico»: no puede notarse que es automático. Así que:
- *   - arriba va lo más llamativo del partido (una baja gorda, un fijo de mucha media o un equipo lleno de dudas), contado a su manera;
- *   - cada equipo se cuenta con un orden y unas frases distintas (nunca el mismo esqueleto con otros nombres);
- *   - lo que no dice nada (un equipo sin dudas ni bajas) va en media frase o no va.
+ * da …» y el mismo párrafo para el Madrid con otros nombres) «es muy robótico»: no puede notarse que es automático. Así que se
+ * escribe como lo haría una persona que lo ha mirado:
+ *   - arriba, lo más llamativo del partido (una baja gorda, un fijo de mucha media o un equipo lleno de dudas), con su contraste
+ *     en la misma frase («llega sin Vini Jr., sancionado, pero con Mbappé como fijo…»);
+ *   - el segundo equipo, más corto y con otra forma (no el mismo esqueleto con otros nombres);
+ *   - se escoge: 3 bajas y 3 dudas como mucho por equipo, las dudas en un rango («entre el 51 y el 58 %») y, si son del mismo puesto,
+ *     dónde están («en el centro del campo»).
  * Solo con datos de la app (los %) y de LaLiga; cada cifra va a `num` para el validador.
  */
 export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = Date.now(), sem = '' }) {
@@ -182,15 +185,13 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   const pick = (xs, k = 0) => xs[(h + k) % xs.length];
   const cu = cuando(m.date, ahora);
   if (cu) num.push(...cu.numeros);
-  // lo de cada equipo
   const datos = (k, eq) => ({
     k, eq,
     dudas: pos[k].once.filter((x) => x.p < 0.65 && x.p >= 0.1).sort((a, b) => a.p - b.p).slice(0, 3),
-    bajas: Object.values(probs[k]).filter((x) => x.estado === 'injured' || x.estado === 'suspended').sort((a, b) => med(b) - med(a)).slice(0, 4),
+    bajas: Object.values(probs[k]).filter((x) => x.estado === 'injured' || x.estado === 'suspended').sort((a, b) => med(b) - med(a)).slice(0, 3),
     fijo: pos[k].once.filter((x) => x.p >= 0.8 && med(x) >= 4).sort((a, b) => med(b) - med(a))[0] || null,
   });
   const eqs = [datos('L', L), datos('V', V)];
-  // lo más llamativo: una baja de 5 o más de media, un fijo de 7 o más, o un equipo con 3 dudas en el once
   const cands = [];
   for (const d of eqs) {
     if (d.bajas[0] && med(d.bajas[0]) >= 5) cands.push({ d, que: 'baja', x: d.bajas[0], peso: med(d.bajas[0]) + 1 });
@@ -198,96 +199,93 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
     if (d.dudas.length >= 3) cands.push({ d, que: 'dudas', x: null, peso: 5.5 });
   }
   const lead = cands.sort((a, b) => b.peso - a.peso)[0] || null;
-  const [A, B] = lead && lead.d === eqs[1] ? [eqs[1], eqs[0]] : eqs;   // el del titular va primero
-  const p100 = (x) => { const v = pct(x.p); num.push(v); return v; };
-  const mm = (x) => { num.push(...partes(med(x))); return fmt(med(x)); };
+  const [A, B] = lead && lead.d === eqs[1] ? [eqs[1], eqs[0]] : eqs;
+  const P = (x) => { const v = pct(x.p); num.push(v); return v; };
+  const M = (x) => { num.push(...partes(med(x))); return fmt(med(x)); };
   const pl = (n, uno, varios) => (n > 1 ? varios : uno);
 
-  // las frases, con varias formas (v); cada equipo usa una distinta
-  const fDudas = (xs, v) => {
-    const tramos = new Map();
-    for (const x of xs) { const t = x.p >= 0.45 ? 'apunta' : x.p >= 0.25 ? 'aire' : 'dificil'; if (!tramos.has(t)) tramos.set(t, []); tramos.get(t).push(x); }
-    const trozos = [...tramos.entries()].map(([t, g], i) => {
-      const n = g.length, Q = lista(g.map((x) => x.nombre)), ps = g.map(p100);
-      const P = `${new Set(ps).size === 1 ? ps[0] : lista(ps.map(String))} %`;
-      const w = (v + i) % 3;
-      if (t === 'aire') return [`${Q} ${pl(n, 'se juega', 'se juegan')} el puesto (${P})`, `lo de ${Q} está en el aire: ${P}`, `${Q} no ${pl(n, 'tiene', 'tienen')} el sitio asegurado, con un ${P}`][w];
-      if (t === 'apunta') return [`${Q} ${pl(n, 'apunta', 'apuntan')} a titular, aunque sin garantías (${P})`, `${Q} ${pl(n, 'debería', 'deberían')} salir de inicio, pero no es seguro: ${P}`, `${Q} ${pl(n, 'ronda', 'rondan')} el ${P} de titularidad`][w];
-      return [`${Q} lo ${pl(n, 'tiene', 'tienen')} difícil para salir de inicio (${P})`, `${Q} ${pl(n, 'apunta', 'apuntan')} al banquillo (${P})`, `${Q} lo ${pl(n, 'tiene', 'tienen')} complicado: ${P}`][w];
-    });
-    if (!trozos.length) return '';
-    return trozos.some((t) => t.includes(':')) ? trozos.map(cap).join('. ') : cap(lista(trozos));
-  };
-  const fBajas = (xs, v, tambien = false) => {
-    if (!xs.length) return '';
+  // «Vini Jr., sancionado, ni Rodrygo y Asencio, lesionados» (para «llega sin…») o con «y» (para «le faltan…»)
+  const bajasDe = (xs, une = 'ni') => {
     const les = xs.filter((x) => x.estado === 'injured').map((x) => x.nombre), san = xs.filter((x) => x.estado === 'suspended').map((x) => x.nombre);
-    const n = les.length + san.length;
-    const todos = [...(les.length ? [`${lista(les)}, ${pl(les.length, 'lesionado', 'lesionados')}`] : []), ...(san.length ? [`${lista(san)}, ${pl(san.length, 'sancionado', 'sancionados')}`] : [])];
-    const ni = todos.length > 1 ? `${todos[0]}, ni ${todos[1]}` : todos[0];
-    if (tambien) return `Tampoco ${pl(n, 'estará', 'estarán')} ${ni}`;
-    if (v % 3 === 1 && les.length) return `${pl(les.length, 'Sigue lesionado', 'Siguen lesionados')} ${lista(les)}${san.length ? `, y ${lista(san)} ${pl(san.length, 'cumple', 'cumplen')} sanción` : ''}`;
-    if (v % 3 === 2) return `${pl(n, 'Se cae', 'Se caen')} ${todos.length > 1 ? `${todos[0]}, y ${todos[1]}` : todos[0]}`;
-    return `No ${pl(n, 'estará', 'estarán')} ${ni}`;
+    const g = [...(san.length ? [`${lista(san)}, ${pl(san.length, 'sancionado', 'sancionados')}`] : []), ...(les.length ? [`${lista(les)}, ${pl(les.length, 'lesionado', 'lesionados')}`] : [])];
+    return g.length > 1 ? `${g[0]}, ${une} ${g[1]}` : g[0] || '';
   };
-  const fFijo = (x, v) => [`Lo más seguro es ${x.nombre}: ${p100(x)} % y ${mm(x)} de media`, `${x.nombre}, con ${mm(x)} de media, sale casi seguro (${p100(x)} %)`,
-    `El que no debería faltar es ${x.nombre}, al ${p100(x)} % y con ${mm(x)} de media`, `${x.nombre} va a misa: ${p100(x)} % de titularidad y ${mm(x)} puntos de media`,
-    `Con ${x.nombre} se puede contar: sale al ${p100(x)} % y lleva ${mm(x)} de media`][v % 5];
+  // las dudas: «Sadiq (38 %) y Mayol (45 %)» o, con tres, «Bernardo Silva, Arda Güler y Tchouaméni, entre el 51 y el 58 %»
+  const ZONA = { POR: 'en la portería', DEF: 'en defensa', MED: 'en el centro del campo', DEL: 'arriba' };
+  const zona = (xs) => (xs.length > 1 && xs.every((x) => x.pos === xs[0].pos) ? ZONA[xs[0].pos] : null);
+  // (sigue = va un verbo detrás: con tres, el rango lleva coma de cierre)
+  const rango = (xs, sigue = false) => {
+    const ps = xs.map(P);
+    if (xs.length <= 2) return new Set(ps).size === 1 && xs.length === 2 ? `${lista(xs.map((x) => x.nombre))} (${ps[0]} %)` : lista(xs.map((x, i) => `${x.nombre} (${ps[i]} %)`));
+    const a = Math.min(...ps), b = Math.max(...ps);
+    return `${lista(xs.map((x) => x.nombre))}, ${a === b ? `al ${a} %` : `entre el ${a} y el ${b} %`}${sigue ? ',' : ''}`;
+  };
+  const verboDudas = (xs) => (xs.every((x) => x.p < 0.45) ? pl(xs.length, 'se juega el puesto', 'se juegan el puesto')
+    : xs.every((x) => x.p >= 0.45) ? pl(xs.length, 'apunta a titular, pero sin garantías', 'apuntan a titular, pero sin garantías')
+      : pl(xs.length, 'no tiene el sitio asegurado', 'no tienen el sitio asegurado'));
 
-  // el titular del partido, a su manera
-  let arriba = '';
-  if (lead) {
-    const e = lead.d.eq, x = lead.x;
-    if (lead.que === 'baja') {
-      const san = x.estado === 'suspended';
-      arriba = pick([`${mayus(el(e))} llega sin ${x.nombre}, que ${san ? 'cumple sanción' : 'sigue lesionado'}`,
-        `La baja que más se va a notar en ${el(e)} es la de ${x.nombre}, ${san ? 'sancionado' : 'lesionado'}: ${mm(x)} puntos de media`,
-        `${x.nombre} no estará con ${el(e)}: ${san ? 'le toca cumplir sanción' : 'sigue lesionado'}`]);
-    } else if (lead.que === 'fijo') {
-      arriba = pick([`${x.nombre} es de los que no fallan en ${el(e)}: titular casi seguro (${p100(x)} %) y ${mm(x)} puntos de media`,
-        `En ${el(e)} hay una fija: ${x.nombre}, al ${p100(x)} % y con ${mm(x)} de media`,
-        `${x.nombre} llega como fijo en ${el(e)}, con un ${p100(x)} % y ${mm(x)} puntos de media`]);
-    } else arriba = pick([`${mayus(el(e))} llega con el once muy abierto`, `El once ${del(e)} está lejos de estar claro`, `En ${el(e)} hay varios puestos por decidir`]);
-  }
-  // lo que queda de cada equipo, en un orden distinto para cada uno
-  const ORDENES = [['dudas', 'bajas', 'fijo'], ['bajas', 'fijo', 'dudas'], ['fijo', 'dudas', 'bajas']];
-  const o1 = h % 3, o2 = (o1 + 1 + (h >> 3) % 2) % 3;
-  const resto = (d, v, orden, conLead) => {
-    const usado = conLead ? lead : null;
-    const frases = [];
-    for (const q of ORDENES[orden]) {
-      if (q === 'dudas') { if (usado && usado.que === 'dudas') continue; const t = fDudas(d.dudas, v); if (t) frases.push(t); }
-      if (q === 'bajas') { const xs = usado && usado.que === 'baja' ? d.bajas.filter((x) => x !== usado.x) : d.bajas; const t = fBajas(xs, v, !!(usado && usado.que === 'baja')); if (t) frases.push(t); }
-      if (q === 'fijo') { if (d.fijo && !(usado && usado.que === 'fijo' && usado.x === d.fijo)) frases.push(fFijo(d.fijo, v)); }
+  // el primer equipo: el titular con su contraste, y sus dudas
+  const fa = [];
+  let usadoFijo = false;
+  if (lead && lead.que === 'baja') {
+    const x = lead.x, otras = A.bajas.filter((y) => y !== x), san = x.estado === 'suspended';
+    if (h % 2 === 0) {
+      fa.push(`${mayus(el(A.eq))} llega sin ${bajasDe([x, ...otras], 'ni')}${A.fijo ? `, pero con ${A.fijo.nombre} como fijo: ${P(A.fijo)} % y ${M(A.fijo)} de media` : ''}`);
+      usadoFijo = !!A.fijo;
+    } else {
+      fa.push(`La baja que más se va a notar en ${el(A.eq)} es la de ${x.nombre}, ${san ? 'sancionado' : 'lesionado'}: ${M(x)} puntos de media`);
+      if (otras.length) fa.push(`Tampoco ${pl(otras.length, 'estará', 'estarán')} ${bajasDe(otras)}`);
     }
-    // con el titular de «muchas dudas», las dudas van justo detrás
-    if (usado && usado.que === 'dudas') { const t = fDudas(d.dudas, v); if (t) frases.unshift(t); }
-    return frases;
+  } else if (lead && lead.que === 'fijo') {
+    const F = lead.x;
+    fa.push(h % 2 === 0
+      ? `${F.nombre} es fijo en ${el(A.eq)}: ${P(F)} % y ${M(F)} puntos de media${A.bajas.length ? `, aunque al equipo le ${pl(A.bajas.length, 'falta', 'faltan')} ${bajasDe(A.bajas, 'y')}` : ''}`
+      : `En ${el(A.eq)} hay una fija: ${F.nombre}, con ${M(F)} de media y un ${P(F)} % de titularidad${A.bajas.length ? `. No ${pl(A.bajas.length, 'estará', 'estarán')} ${bajasDe(A.bajas)}` : ''}`);
+    usadoFijo = true;
+  } else if (lead && lead.que === 'dudas') {
+    fa.push(`${mayus(el(A.eq))} llega con el once muy abierto${A.bajas.length ? `, y sin ${bajasDe(A.bajas, 'ni')}` : ''}`);
+  } else {
+    // sin nada llamativo: el local, con lo que tenga
+    fa.push(A.bajas.length ? `${mayus(el(A.eq))} no podrá contar con ${bajasDe(A.bajas)}` : `${mayus(el(A.eq))} llega sin bajas entre los habituales`);
+  }
+  if (A.dudas.length) {
+    const z = zona(A.dudas);
+    fa.push(z ? `Las dudas están ${z}: ${rango(A.dudas)}` : `${cap(rango(A.dudas, true))} ${verboDudas(A.dudas)}`);
+  }
+  if (A.fijo && !usadoFijo && !(lead && lead.que === 'fijo')) fa.push(pick([`Lo más seguro es ${A.fijo.nombre}, al ${P(A.fijo)} %`, `Con ${A.fijo.nombre} se puede contar: ${P(A.fijo)} % y ${M(A.fijo)} de media`]));
+
+  // el segundo, más corto y con otra forma
+  // (el orden de sus frases y la forma de cada una cambian de un partido a otro: que diez previas no se lean igual)
+  // el equipo se nombra solo en la primera frase (nada de «El Valencia no tendrá a… El Valencia tiene sus dudas…»)
+  const bD = (conEq) => {
+    const z = zona(B.dudas), n = B.dudas.length;
+    if (!n) return conEq ? pick([`En ${el(B.eq)}, el once está bastante claro`, `${mayus(el(B.eq))} no tiene dudas entre los que suelen jugar`, `Lo ${del(B.eq)} está más claro`], 1)
+      : pick(['No hay dudas entre los que suelen jugar', 'El once, bastante claro'], 1);
+    if (!conEq) return z ? `Las dudas están ${z}: ${rango(B.dudas)}` : pick([`${cap(rango(B.dudas, true))} ${verboDudas(B.dudas)}`, `Hay dudas con ${rango(B.dudas)}`], 1);
+    return pick([
+      `En ${el(B.eq)} hay ${n > 1 ? 'más incógnitas' : 'una duda'}${z ? ` ${z}` : ''}: ${rango(B.dudas, true)} ${verboDudas(B.dudas)}`,
+      `${mayus(el(B.eq))} tiene sus dudas${z ? ` ${z}` : ''}: ${rango(B.dudas, true)} ${verboDudas(B.dudas)}`,
+      `Más dudas en ${el(B.eq)}${z ? `, ${z}` : ''}: ${rango(B.dudas, true)} ${verboDudas(B.dudas)}`,
+      `En ${el(B.eq)}, ${rango(B.dudas, true)} ${verboDudas(B.dudas)}`,
+    ], 1);
   };
-  // la forma de cada frase sale del partido (no siempre la misma) y la del segundo equipo, distinta de la del primero
-  const fa = resto(A, h, o1, !!lead);
-  const fb = resto(B, h + 1, o2, false);
-  // la primera frase detrás de «En el X,»: en minúscula solo si empieza por una palabra corriente (nunca un nombre: «Iker Luque»)
-  const seguir = (f) => (/^(Lo|El|La|No|Se|Sigue|Siguen|Tampoco|Con|En|Sin)\b/.test(f) ? f.replace(/^./, (c) => c.toLowerCase()) : f);
-  // el primer párrafo: el titular y lo que queda de su equipo (si no hay titular, el primer equipo con su nombre delante)
-  const parA = lead ? [arriba, ...fa].join('. ') : fa.length ? `${pick([`En ${el(A.eq)}`, `Empezando por ${el(A.eq)}`])}, ${seguir(fa[0])}${fa.length > 1 ? `. ${fa.slice(1).join('. ')}` : ''}` : '';
-  // el segundo, con otra entrada; si no tiene nada que contar, media frase
-  let entradaB = pick([`Por el lado ${del(B.eq)}`, `En ${el(B.eq)}`, `¿Y ${el(B.eq)}?`, `Lo ${del(B.eq)}`], 1);
-  // nada de «En el Valencia, en la enfermería…»
-  if (/^En /.test(entradaB) && fb.length && /^En /.test(fb[0])) entradaB = `Por el lado ${del(B.eq)}`;
-  // ni «Lo del Elche: lo más seguro es Dituro: 95 %» (dos «:» seguidos)
-  if (entradaB.startsWith('Lo ') && fb.length && fb[0].includes(':')) entradaB = `¿Y ${el(B.eq)}?`;
-  const parB = fb.length ? (entradaB.endsWith('?') ? `${entradaB} ${fb.join('. ')}` : entradaB.startsWith('Lo ')
-    ? `${entradaB}: ${seguir(fb[0])}${fb.length > 1 ? `. ${fb.slice(1).join('. ')}` : ''}`
-    : `${entradaB}, ${seguir(fb[0])}${fb.length > 1 ? `. ${fb.slice(1).join('. ')}` : ''}`)
-    : pick([`${mayus(el(B.eq))}, en cambio, no tiene dudas ni bajas entre los habituales`, `En ${el(B.eq)}, el once está bastante claro`], 1);
+  const bB = (conEq) => (!B.bajas.length ? '' : conEq ? `${mayus(el(B.eq))} no tendrá a ${bajasDe(B.bajas)}`
+    : pick([`${pl(B.bajas.length, 'Le falta', 'Le faltan')} ${bajasDe(B.bajas, 'y')}`, `No ${pl(B.bajas.length, 'estará', 'estarán')} ${bajasDe(B.bajas)}`,
+      `Se ${pl(B.bajas.length, 'pierde', 'pierden')} el partido ${bajasDe(B.bajas, 'y')}`], 2));
+  const bF = () => (B.fijo ? pick([`${B.fijo.nombre}, al ${P(B.fijo)} %, es lo más seguro`, `Lo fijo es ${B.fijo.nombre}: ${P(B.fijo)} % y ${M(B.fijo)} de media`,
+    `Donde no hay duda es con ${B.fijo.nombre}, al ${P(B.fijo)} %`, `${B.fijo.nombre} sale seguro: ${P(B.fijo)} % y ${M(B.fijo)} puntos de media`], 3) : '');
+  // el orden de sus frases y la forma de cada una cambian de un partido a otro (que diez previas no se lean igual)
+  const ordenB = B.bajas.length ? pick([['d', 'b', 'f'], ['d', 'f', 'b'], ['b', 'd', 'f']], 4) : ['d', 'f'];
+  const fb = ordenB.map((q, i) => (q === 'd' ? bD(i === 0) : q === 'b' ? bB(i === 0) : bF())).filter(Boolean);
+
   const cab = cu ? pick([`🗓️ ${L}-${V}, ${cu.t}: posibles onces fantasy para la jornada ${jornada}`,
     `🗓️ ${cap(cu.t)} juegan ${el(L)} y ${el(V)}: posibles onces fantasy de la jornada ${jornada}`,
     `🗓️ Jornada ${jornada} de LaLiga Fantasy: ${L}-${V}, ${cu.t}`])
     : `🗓️ ${L}-${V}: posibles onces fantasy para la jornada ${jornada}`;
   const ideas = [
-    parA && { t: aparte(parA), prio: 9 },
-    { t: aparte(parB), prio: 9 },
+    { t: aparte(fa.join('. ')), prio: 9 },
+    { t: aparte(fb.join('. ')), prio: 9 },
     { t: pick(['📊 Los % de titularidad son de Fantasy Manager', '📊 % de titularidad de Fantasy Manager', '📊 Porcentajes de Fantasy Manager, con los minutos y el estado de cada uno'], 2), prio: 5 },
-  ].filter(Boolean);
+  ];
   return { cab, ideas, num };
 }
