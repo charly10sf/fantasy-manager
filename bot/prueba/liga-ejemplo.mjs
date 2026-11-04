@@ -66,7 +66,7 @@ ts = await generar({ ...base, leer: async () => prensa });
 ver('dos medios, se estudia', ts);
 ok(ts.length === 1 && /Se estudia suspender la jornada 12 de Primera y Segunda/.test(ts[0].texto), 'sale «se estudia» de la jornada 12');
 ok(ts[0] && ts[0].texto.startsWith('📢') && !/🚨|Fantasy|Pendientes/.test(ts[0].texto), 'tono sobrio con luto');
-ok(ts[0] && /Lo cuentan MARCA y AS|Lo cuentan AS y MARCA/.test(ts[0].texto), 'fuente con los dos medios');
+ok(ts[0] && /Lo cuentan (MARCA y AS|AS y MARCA)/.test(ts[0].texto), "fuente con los dos medios");
 publicar(ts);
 ok(!JSON.stringify(reg.datos.liga).includes('LaLiga estudia'), 'en el registro no se guardan titulares');
 

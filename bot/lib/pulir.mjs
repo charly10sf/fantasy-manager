@@ -101,17 +101,17 @@ export function prompt(textos) {
   return `Eres el redactor de una cuenta de X de LaLiga Fantasy. Te paso tweets escritos con plantilla. Reescríbelos para que suenen a periodista que sabe de fantasy y no a máquina, cambiando SOLO la forma.
 Cómo se escribe en la cuenta:
 - Frases cortas: sujeto, verbo y dato («Budimir marca y se va a 11 puntos», no «El mejor fantasy del partido, Budimir, con 11 puntos»).
-- Una idea por línea, una línea en blanco entre ideas y el emoji solo al principio de la línea, nunca dentro de la frase. Deja el emoji que ya lleva cada línea.
+- Texto corrido, como lo escribiría una persona: dentro de cada párrafo puedes unir frases con «y», «pero», «aunque» o una coma, y quitar repeticiones. Deja el emoji que ya lleva el principio de cada párrafo y no pongas más.
 - La segunda vez que sale un jugador, por su puesto («el delantero», «el central») solo si el texto ya lo dice; si no, por su nombre.
 - Dudas con palabras («en principio», «todo apunta a que», «de momento»).
 - Nada de tono de anuncio: sin «¡» en cada frase, sin adjetivos grandes, sin primera persona, sin «bot», sin @ ni #.
 Reglas que no se pueden saltar:
 - Las mismas cifras, ni una más ni una menos, escritas igual («5,5» sigue siendo «5,5»). Nada de cifras en letra.
 - Los mismos jugadores y equipos, con el nombre escrito igual. Ni uno nuevo, ni uno menos.
-- Las mismas líneas, en el mismo orden y cada una con su emoji: cambia las palabras DENTRO de cada línea, pero no muevas información de una línea a otra, no juntes líneas, no quites ninguna y no añadas ninguna.
+- Los mismos párrafos (separados por una línea en blanco), en el mismo orden y con el mismo emoji al principio: cambia las palabras DENTRO de cada párrafo, pero no muevas información de un párrafo a otro, no juntes párrafos, no quites ninguno y no añadas ninguno.
 - No cambies lo que se dice de nadie: si es duda, sigue siendo duda; si es baja, baja; si está sancionado, sancionado (sin decir por qué si no lo dice); si es titular habitual, lo sigue diciendo. Las fechas y plazos se quedan.
 - No añadas datos, opiniones, motivos ni predicciones que no estén en el texto. Si una línea ya suena bien, déjala igual.
-- Si la última línea lleva la palabra «Fantasy», se queda exactamente igual, letra por letra.
+- Si el último párrafo lleva la palabra «Fantasy», se queda exactamente igual, letra por letra.
 - Como mucho 260 caracteres por tweet.
 Devuelve cada tweet con su i.
 Tweets:

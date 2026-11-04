@@ -1,17 +1,60 @@
 // Cómo se redactan los tweets desde el 3 nov 2026 (Carlos, 06:40: «que suene más natural y humano y menos robótico»). Las reglas
 // salen de leer 297 tweets de @JoseCarrasco_98, @AnaliticaLaLiga y @futbol_fantasy (claude/estilo-tweets.md del proyecto):
-//   - una idea por línea y una línea en blanco entre ideas; el emoji solo como etiqueta al principio de la línea
-//     (🚨 la noticia, ⚠️ el detalle, ‼️ el dato que cambia algo, 👀 lectura, ⁉️ duda, ✅ buena noticia, ❌ baja);
+//   - texto corrido desde el 4 nov (ver armarAire); el emoji, en la cabecera y en la etiqueta final
+//     (🚨 la noticia, ⁉️ duda, ✅ buena noticia, ❌ baja, 👀 lectura);
 //   - frase corta de periodista: sujeto, verbo y dato;
 //   - la segunda vez que sale un jugador, por su puesto («el delantero»);
 //   - dudar con palabras según el % («en principio juega», «está en el aire»…), con el número al lado;
 //   - siempre la jornada y el rival, y una etiqueta final con «Fantasy» («Duda Fantasy para la jornada 12 contra el Valencia»).
-// El validador de siempre sigue mandando: cada número tiene que estar en los datos, «fantasy» en todos y 280 como mucho.
+// El validador de siempre sigue mandando: cada número tiene que estar en los datos y 280 como mucho.
 import { peso, el, corto } from './texto.mjs';
 import { statsSemana } from './laliga.mjs';
 
-/** el tweet con aire: cabecera, cada idea separada por una línea en blanco y el cierre (si lo hay) */
-export const armarAire = (cab, ideas, pie) => [cab, ...ideas, ...(pie ? [pie] : [])].join('\n\n');
+// Desde el 4 nov (Carlos, 13:42: «que suene más humano; no hace falta una frase distinta por línea»): texto corrido. La cabecera y
+// las ideas van en un párrafo, como frases seguidas, sin su emoji; solo la cabecera lleva emoji. Aparte, cada una en su línea: las
+// listas (una línea con « · » o con más de un emoji, como el podio del final), la etiqueta final («❌ Baja Fantasy para la
+// jornada 12…», «👀 Revisa tu once…») y el cierre. «Según MARCA» se pega a la frase de antes («…, según MARCA») y lo que
+// empieza por «tras», «por», «después de»… sigue la frase («Se estudia suspender la jornada tras el fallecimiento de…»).
+const EMO = /^(?:\p{Extended_Pictographic}|\p{Regional_Indicator})[\p{Extended_Pictographic}\p{Regional_Indicator}\uFE0F\u200D\u20E3]*\s*/u;
+const EMO_DENTRO = /\p{Extended_Pictographic}/u;
+const empiezaEmoji = (s) => EMO.test(s);
+const sinEmoji = (s) => String(s).replace(EMO, '').trim();
+const esLista = (s) => / · /.test(s) || EMO_DENTRO.test(sinEmoji(s));
+// la etiqueta final: «Fantasy» con mayúscula («Duda Fantasy…», «LaLiga Fantasy») o un emoji de veredicto al principio
+const esEtiqueta = (s) => empiezaEmoji(s) && !esLista(s) && (/Fantasy/.test(s) || /^(✅|❌|⁉️|👀|💔|🟨|🟥)/u.test(s));
+const cierra = (s) => (/[.!?…:]$/.test(s) ? s : `${s}.`);
+const SIGUE = /^(tras|por|despu[eé]s de|debido a|a ra[ií]z de|ante|para)\s/i;
+/** junta las frases de un párrafo */
+function parrafo(frases) {
+  let out = '';
+  for (const f of frases) {
+    if (!out) { out = f; continue; }
+    const previa = out.replace(/[.]$/, '');
+    if (/^seg[uú]n /i.test(f) && !/:$/.test(out)) out = `${previa}, ${f[0].toLowerCase()}${f.slice(1)}`;
+    else if (SIGUE.test(f) && !/[.:!?]$/.test(out)) out = `${out} ${f[0].toLowerCase()}${f.slice(1)}`;
+    else out = `${cierra(out)} ${f}`;
+  }
+  return out;
+}
+/** el tweet: cabecera e ideas en párrafos de texto corrido, las listas y la etiqueta en su línea, y el cierre (si lo hay) */
+export function armarAire(cab, ideas, pie) {
+  const xs = [...ideas];
+  const fin = xs.length && esEtiqueta(xs[xs.length - 1]) ? xs.pop() : null;
+  const bloques = [];
+  let frases = [cab];
+  // con varias frases, el párrafo acaba en punto; una sola (un titular) va sin él
+  const volcar = () => { if (frases.length) bloques.push(frases.length > 1 ? cierra(parrafo(frases)) : parrafo(frases)); frases = []; };
+  for (const x of xs) {
+    if (esLista(x)) { volcar(); bloques.push(x); continue; }
+    const f = sinEmoji(x);
+    if (!f) continue;
+    // un párrafo largo se parte en dos (más fácil de leer en el móvil)
+    if (frases.length >= 3 && parrafo([...frases, f]).length > 190) volcar();
+    frases.push(f);
+  }
+  volcar();
+  return [...bloques, ...(fin ? [fin] : []), ...(pie ? [pie] : [])].join('\n\n');
+}
 
 /**
  * Elige las ideas que caben. ideas: [{ t, prio }] o textos sueltos (prio 9, imprescindibles), en el orden en que se leen.
