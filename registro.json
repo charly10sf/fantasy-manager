@@ -1000,7 +1000,7 @@
   "3194": "ok",
   "3195": "ok",
   "3196": "ok",
-  "3197": "ok",
+  "3197": "injured",
   "3198": "ok",
   "3199": "suspended",
   "3200": "ok",
@@ -1115,7 +1115,14 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3197",
+   "que": "lesion",
+   "antes": "ok",
+   "t": 1793811974660
+  }
+ ],
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/02/mensaje-caparros-pepe-mel-partido-vas-ganar-seguro.html": 1793657346000,
@@ -2470,8 +2477,8 @@
     "t": 0
    },
    "3197": {
-    "e": "ok",
-    "t": 0
+    "e": "injured",
+    "t": 1793811974660
    },
    "3207": {
     "e": "doubtful",
