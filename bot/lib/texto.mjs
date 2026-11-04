@@ -28,15 +28,11 @@ export const armar = (cab, cuerpo, pie) => [cab, '', ...cuerpo, ...(pie ? ['', p
 
 /**
  * Tweet sin el cierre de «Fantasy Manager · enlace en la bio» (Carlos, 2 nov 23:11: solo va en el del final de partido y en los del
- * mercado). Como el validador pide la palabra «fantasy» en todos, si el texto no la lleva ya, se cierra con #LaLigaFantasy
- * (no es un enlace, no cuesta más). Devuelve { texto, usadas } con las líneas que caben.
+ * mercado). Sin #LaLigaFantasy de relleno: la palabra «fantasy» ya no es obligatoria (Carlos, 4 nov 13:00; ya la lleva el
+ * nombre de la cuenta). Devuelve { texto, usadas } con las líneas que caben.
  */
 export function sinCierre(cab, lineas, max = 280) {
-  let usadas = quepa(cab, lineas, null, max);
-  if (!/fantasy/i.test([cab, ...usadas].join('\n'))) {
-    usadas = quepa(cab, lineas, '#LaLigaFantasy', max);
-    return { usadas, texto: armar(cab, usadas, '#LaLigaFantasy') };
-  }
+  const usadas = quepa(cab, lineas, null, max);
   return { usadas, texto: armar(cab, usadas, null) };
 }
 

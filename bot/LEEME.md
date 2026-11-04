@@ -45,8 +45,8 @@ Las piezas comunes están en `lib/redactar.mjs`:
 - Los tweets de partido (`directo`, `final`, `mvp`) no llevan «LaLiga Fantasy J..» en la cabecera: llevan el marcador del momento de la jugada
   (reconstruido de los `details` de ESPN, solo si cuadra con el marcador final; si no, el actual y un texto sin relato) y una frase de cómo
   ha sido (`lib/relato.mjs`, `tipos/directo.mjs`, `relato()` en `tipos/final.mjs`).
-- El cierre «Fantasy Manager · enlace en la bio» va solo en `final` y `mercado` (Carlos, 2 nov 23:11). El resto lleva la palabra «fantasy» en el texto o, si no la
-  lleva, cierra con #LaLigaFantasy (`sinCierre` en `lib/texto.mjs`). Las respuestas de Telegram para los clubes siguen con cierre.
+- El cierre «Fantasy Manager · enlace en la bio» va solo en `final` y `mercado` (Carlos, 2 nov 23:11). El resto va sin cierre (`sinCierre` en `lib/texto.mjs`).
+  «fantasy» ya no es obligatoria (Carlos, 4 nov 13:00): las etiquetas la llevan cuando encaja y nunca se añade #LaLigaFantasy de relleno. Las respuestas de Telegram para los clubes siguen con cierre.
 - **Puntos DAZN** (`lib/dazn.mjs`): llegan después del final del partido. `final`, `mvp`, `resumen`, los tweets de `directo` de un partido ya acabado y las
   respuestas de Telegram esperan a que los jugadores que más puntúan del partido tengan `marca_points` en su ficha (player/{id}); si pasan
   `daznEsperaHoras` (6, en `config.json`) desde el saque sin verlo, salen igual.
@@ -75,7 +75,7 @@ un tweet `mvp` aparte por partido (tope 10 por jornada) y, en `directo`, una por
 
 ## Reglas
 
-Sin enlaces; «fantasy» en todos; 280 caracteres (el validador cuenta como X, emojis = 2); cada número del texto tiene que estar en los
+Sin enlaces; «fantasy» cuando encaje (no es obligatoria); 280 caracteres (el validador cuenta como X, emojis = 2); cada número del texto tiene que estar en los
 datos; topes por tipo y jornada (el `mvp` cuenta aparte), 25 al día y 4 por ejecución (`config.json`); nunca responde ni da likes; nada de la liga privada.
 
 ## Telegram (avisos para Carlos)
@@ -88,7 +88,7 @@ datos; topes por tipo y jornada (el `mvp` cuenta aparte), 25 al día y 4 por eje
   las respuestas las pone Carlos a mano. Al acabar cada partido (de las últimas 10 h) el bot le manda un mensaje con una respuesta por
   club, en `<code>` para copiarla con un toque: marcador y mejor jugador del club con sus puntos oficiales de LaLiga, con textos
   distintos para quien gana, quien pierde y el empate (si el perdedor no tiene a nadie con puntos positivos, una frase sin dato).
-  Cada texto pasa por el mismo validador que los tuits (280, «fantasy», sin enlaces, números que estén en los datos). Si LaLiga aún no
+  Cada texto pasa por el mismo validador que los tuits (280, sin enlaces, números que estén en los datos). Si LaLiga aún no
   ha puesto los puntos (menos de 12 jugadores con algo distinto de 0), espera a la siguiente ejecución. Máximo 10 por jornada, 20 al
   día y 5 por ejecución (`telegram` en `config.json`).
 - **Cuentas de los clubes.** `telegram.cuentasX` de `config.json` lleva la cuenta de X en español de los 20 clubes de la 26/27 (comprobadas

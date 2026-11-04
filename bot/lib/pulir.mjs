@@ -112,7 +112,7 @@ Reglas que no se pueden saltar:
 - No cambies lo que se dice de nadie: si es duda, sigue siendo duda; si es baja, baja; si está sancionado, sancionado (sin decir por qué si no lo dice); si es titular habitual, lo sigue diciendo. Las fechas y plazos se quedan.
 - No añadas datos, opiniones, motivos ni predicciones que no estén en el texto. Si una línea ya suena bien, déjala igual.
 - Si la última línea lleva la palabra «Fantasy», se queda exactamente igual, letra por letra.
-- Como mucho 260 caracteres por tweet y la palabra «fantasy» tiene que seguir en el texto.
+- Como mucho 260 caracteres por tweet.
 Devuelve cada tweet con su i.
 Tweets:
 ${JSON.stringify(textos.map((texto, i) => ({ i, texto })))}`;
