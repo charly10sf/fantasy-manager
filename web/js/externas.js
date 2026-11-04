@@ -384,6 +384,15 @@ function parseValores(r) {
   visitar(r, 0);
   return out.filter(([, v]) => v > 0).sort((a, b) => a[0] - b[0]);
 }
+/** el histórico de valor: los últimos 90 puntos enteros y lo anterior, uno por semana. LaLiga lo da desde el 29 jun
+    (un punto por día): guardando solo los 90 últimos, el valor de cuando se creó la liga se perdía y no se sabía con qué
+    cláusula empezó un jugador que nadie ha fichado (salía «sin base» en el dinero de los rivales) */
+export function recortarValores(v) {
+  if (!v || v.length <= 90) return v;
+  const viejos = [];
+  for (const p of v.slice(0, -90)) if (!viejos.length || p[0] - viejos[viejos.length - 1][0] >= 7 * DIA - HORA) viejos.push(p);
+  return [...viejos, ...v.slice(-90)];
+}
 export const rutaValorFalla = () => { const t = LS.get('ruta-valor-falla', 0); return !!t && Date.now() - t < DIA; };
 export async function historialValor(pid) {
   const elegida = LS.get('ruta-valor', null);
@@ -392,7 +401,7 @@ export async function historialValor(pid) {
   for (const i of orden) {
     try {
       const v = parseValores(await api.crudo(RUTAS_VALOR[i](pid)));
-      if (v.length > 2) { if (elegida == null) LS.set('ruta-valor', i); return v.slice(-90); }
+      if (v.length > 2) { if (elegida == null) LS.set('ruta-valor', i); return recortarValores(v); }
     } catch (e) {
       if (e.sesion) throw e;
     }
@@ -443,6 +452,13 @@ async function understat() {
     const h = await pedirJSON(ref, { Accept: 'text/html' }, `understat página ${temp}`);
     const html = h.__html || '';
     j = { players: deUnderstat(html, 'playersData'), teams: deUnderstat(html, 'teamsData') };
+    // contesta 200 pero sin datos: desde el 4 nov la web entera dice «We will come back soon» (en mantenimiento). Se
+    // salta 3 horas, como un sitio que no contesta, y el diagnóstico lo dice
+    if (!j.players && !j.teams) {
+      const motivo = /come back soon|maintenance|mantenimiento/i.test(html) ? 'en mantenimiento' : 'la página no trae los datos';
+      const p = fuentesEnPausa(); p['understat.com'] = { hasta: Date.now() + 3 * HORA, s: 200, motivo }; LS.set('fuentes-pausa', p);
+      throw new Error(motivo);
+    }
   }
   return j;
 }

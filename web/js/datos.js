@@ -7,7 +7,7 @@ import { LS, diaDe, enParalelo, num, norm, DIA } from './util.js';
 import { enApp, enWeb, http } from './puente.js';
 import { demo, jugadoresDemo } from './demo.js';
 import * as CD from './caras-demo.js';
-import { historialValor, oncesProbables, noticias, avanzadas, alineaciones } from './externas.js';
+import { historialValor, recortarValores, oncesProbables, noticias, avanzadas, alineaciones } from './externas.js';
 
 // la deuda permitida en LaLiga Fantasy es siempre el 20 % del valor del equipo
 // (tu equipo no se elige: sale de la cuenta con la que entras; lo de miEquipo que quedara guardado no cuenta)
@@ -401,6 +401,9 @@ export async function completar(D, M, alListo = () => {}) {
   M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, 16).forEach((x) => add(x.pid));
   M.suben.slice(0, 6).forEach((x) => add(x.j.id));
   (M.especular || []).slice(0, 8).forEach((e) => add(e.pid));
+  // los de los rivales de los que no se sabe con qué cláusula empezaron (para la cuenta de su dinero): con su ficha
+  // se sabe lo que valían al empezar la liga
+  (M.sinBase || []).slice(0, 30).forEach(add);
   const faltan = pids.filter((pid) => !det[pid] || ahora - det[pid].t > 20 * 3600e3).slice(0, 60);
   if (!faltan.length) return det;
   // tarda 20-40 s: se guarda con las claves de la liga de ahora (si cambias de liga mientras tanto, no se mezclan)
@@ -410,7 +413,7 @@ export async function completar(D, M, alListo = () => {}) {
     try {
       const d = N.detalleJugador(await api.jugador(pid, D.liga.id));
       // el histórico de valor: si no viene en la ficha, de la ruta de valores de la API
-      let valores = d.valores ? d.valores.slice(-90) : null;
+      let valores = d.valores ? recortarValores(d.valores) : null;
       if (!valores) valores = await historialValor(pid).catch((e) => { if (e.sesion) throw e; return null; });
       det[pid] = { t: Date.now(), stats: d.stats.slice(-10), valores };
       if (d.img) { caras[pid] = d.img; if (D.maestro[pid] && !D.maestro[pid].img) D.maestro[pid].img = d.img; }

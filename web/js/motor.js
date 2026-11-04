@@ -611,7 +611,7 @@ export function analizar(D, H, c, extra = {}) {
   M.czDetectados = czIds.size;
 
   // lo que ha gastado cada uno en subir cláusulas
-  const subidas = {};
+  const subidas = {}, sinBase = [];
   {
     const sb = (tid) => (subidas[tid] ||= { v: 0, n: 0, dudas: 0, sinBase: 0, vistas: 0, lista: [] });
     for (const [tid, fichas] of Object.entries(D.plantillas || {})) for (const f of fichas) {
@@ -621,10 +621,13 @@ export function analizar(D, H, c, extra = {}) {
       if (a) base = clausulaAlFichar(a);
       else {
         // de su plantilla del principio: entonces su cláusula era lo que valía
-        const v0 = AH.completa && AH.desde ? valorEn(f.pid, AH.desde) : null;
+        let v0 = AH.completa && AH.desde ? valorEn(f.pid, AH.desde) : null;
+        // si su histórico de valor empieza después de crearse la liga (el juego abre antes que LaLiga), su primer valor,
+        // si es de las 3 semanas siguientes
+        if (v0 == null && AH.completa && AH.desde) { const p0 = ((det[f.pid] && det[f.pid].valores) || [])[0]; if (p0 && p0[0] - AH.desde < 21 * DIA) v0 = p0[1]; }
         if (v0 == null) {
           const posible = Math.max(0, f.clausula - Math.max(J(f.pid).valor, 1e6)) / 2;
-          if (posible > 2e5) { sb(tid).sinBase++; sb(tid).dudas += posible; }
+          if (posible > 2e5) { sb(tid).sinBase++; sb(tid).dudas += posible; sinBase.push(f.pid); }
           continue;
         }
         base = Math.max(v0, 1e6);
@@ -647,6 +650,7 @@ export function analizar(D, H, c, extra = {}) {
     }
   }
   M.subidas = subidas;
+  M.sinBase = sinBase;
 
   const diasMov = AH.desde ? Math.max(1, (ahora - AH.desde) / DIA) : 0;
   // la base común: lo que tendrías sin moverte (100 M de salida más las recompensas diarias que has cogido)
