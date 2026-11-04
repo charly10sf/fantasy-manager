@@ -1210,7 +1210,9 @@
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/manu-hernando-duda-por-un-proceso-gripal-radio-santander/": 1793796850000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/04/el-futuro-de-inigo-perez-empieza-a-generar-dudas-en-la-directiva-del-villarreal-radio-castellon/": 1793796793000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261104/1004247170/kike-salas-vuelve-grupo-e-isaac-sigue-margen.html": 1793796150000,
-   "SPORT|136080056": 1793794158000
+   "SPORT|136080056": 1793794158000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247165/opciones-flick-cubrir-ko-lesion-rodri.html": 1793797556000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html": 1793798837000
   },
   "hechos": [
    {
@@ -1623,11 +1625,35 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247165/opciones-flick-cubrir-ko-lesion-rodri.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793797556000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri sufre una lesión en el bíceps femoral",
+    "motivo": "lesión en el bíceps femoral",
+    "plazo": "unas tres semanas",
+    "nums": []
+   },
+   {
+    "guid": "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html",
+    "medio": "El Mundo",
+    "t": 1793798837000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri se pierde el partido por una lesión",
+    "motivo": "",
+    "plazo": "entre tres y cuatro semanas",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -2483,7 +2509,8 @@
    "AS|https://as.com/futbol/se-suspende-la-jornada-de-futbol-tras-el-fallecimiento-de-jesus-de-miguel-f202611-n/": 1793699827000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261102/11674323/jesus-de-miguel-tenerife-portero-andorra-empeora-uci.html": 1793694928000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
-   "SPORT|136078404": 1793793682000
+   "SPORT|136078404": 1793793682000,
+   "SPORT|136080803": 1793795045000
   },
   "hechos": [
    {
@@ -2620,7 +2647,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 5
+   "n": 6
   }
  }
 }
