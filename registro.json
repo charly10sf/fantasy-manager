@@ -707,7 +707,7 @@
   "2920": "out_of_league",
   "2922": "ok",
   "2923": "ok",
-  "2924": "injured",
+  "2924": "ok",
   "2925": "out_of_league",
   "2926": "ok",
   "2929": "out_of_league",
@@ -1087,7 +1087,14 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2924",
+   "que": "vuelve",
+   "antes": "injured",
+   "t": 1793791870909
+  }
+ ],
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/02/mensaje-caparros-pepe-mel-partido-vas-ganar-seguro.html": 1793657346000,
@@ -1174,7 +1181,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247073/brian-farinas-avalado-registro-nivel-barca.html": 1793787503000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261104/1004247114/galarreta-regresa-trabajo-grupo-tres-dias-visitar-osasuna.html": 1793789547000,
    "SPORT|136067986": 1793786278000,
-   "SPORT|136070467": 1793787476000
+   "SPORT|136070467": 1793787476000,
+   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/04/kike-salas-reincorpora-grupo.html": 1793791579000,
+   "SPORT|136073953": 1793787858000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html": 1793791758000
   },
   "hechos": [
    {
@@ -1469,11 +1479,63 @@
      2,
      8
     ]
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/sevilla/2026/11/04/kike-salas-reincorpora-grupo.html",
+    "medio": "MARCA",
+    "t": 1793791579000,
+    "id": "2479",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Kike Salas vuelve a ejercitarse con normalidad",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136073953",
+    "medio": "SPORT",
+    "t": 1793787858000,
+    "id": "2939",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "situación física",
+    "plazo": "",
+    "nums": [
+     14
+    ]
+   },
+   {
+    "guid": "SPORT|136073953",
+    "medio": "SPORT",
+    "t": 1793787858000,
+    "id": "3182",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Lemar no se ha ejercitado por su situación física",
+    "motivo": "situación física",
+    "plazo": "",
+    "nums": [
+     14
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793791758000,
+    "id": "2354",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Eric continúa al margen del grupo en la sesión",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -1953,8 +2015,8 @@
     "t": 0
    },
    "2924": {
-    "e": "injured",
-    "t": 0
+    "e": "ok",
+    "t": 1793791870909
    },
    "2929": {
     "e": "out_of_league",
