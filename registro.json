@@ -1246,7 +1246,8 @@
    "SPORT|136095117": 1793816354000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/04/andres-garcia-multiusos-jose-bordalas-136093338.html": 1793821391000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247324/valverde-merito-equipo-confiar-final.html": 1793822086000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/04/aek-real-madrid-champions-league-resumen-resultado-136097281.html": 1793821880000
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/04/aek-real-madrid-champions-league-resumen-resultado-136097281.html": 1793821880000,
+   "SPORT|136097342": 1793819410000
   },
   "hechos": [
    {
@@ -1767,7 +1768,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
