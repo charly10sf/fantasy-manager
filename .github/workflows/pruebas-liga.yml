@@ -1,0 +1,20 @@
+name: Pruebas liga
+on:
+  push:
+    branches: [pruebas-liga]
+jobs:
+  p:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: node bot/prueba/liga-ejemplo.mjs | tail -1
+      - name: Titulares que pasan el filtro (solo el número y el medio)
+        run: |
+          node -e "import('./bot/lib/prensa.mjs').then(async (p) => { const { TEMA } = await import('./bot/tipos/liga.mjs'); const ns = await p.noticiasPrensa({}); const t = ns.filter((n) => Date.now() - (n.t || 0) < 30 * 36e5 && TEMA.test(n.titulo + ' ' + n.entradilla)); console.log('@@ ' + ns.length + ' noticias, ' + t.length + ' pasan el filtro'); for (const n of t) console.log('@@ ' + n.medio + ' · ' + n.titulo.slice(0, 110)); })"
+      - run: node bot/ejecutar.mjs --modo=simulacro --tipos=liga --ventanas=0 || true
