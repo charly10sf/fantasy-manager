@@ -1227,7 +1227,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm": 1793805420000,
    "SPORT|136085204": 1793802237000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247209/raphina-records-corazon-encogido.html": 1793806789000,
-   "SPORT|136087097": 1793805717000
+   "SPORT|136087097": 1793805717000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/gerard-lopez-no-me-preocupa-defiende-barca-juega-tumba-abierta-20261104_3467993.html": 1793810443000
   },
   "hechos": [
    {
@@ -1706,7 +1707,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
