@@ -14,7 +14,7 @@ export const VERSION = '0.7b';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.7b', f: '2026-11-04', h: '', t: 'Respuestas de Fantasy Manager',
+    v: '0.7b', f: '2026-11-04', h: '18:53', t: 'Respuestas de Fantasy Manager',
     cosas: [
       { tipo: 'arreglo', d: 'arreglo', menor: true, t: 'Las respuestas a tus avisos, de Fantasy Manager', x: 'Cuando contestamos un aviso de fallo, la respuesta sale firmada como Fantasy Manager, también las de antes.' },
     ],
