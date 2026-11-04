@@ -1237,7 +1237,8 @@
    "SPORT|136087097": 1793805717000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/gerard-lopez-no-me-preocupa-defiende-barca-juega-tumba-abierta-20261104_3467993.html": 1793810443000,
    "SPORT|136073862": 1793807921000,
-   "AS|https://as.com/futbol/primera/cuti-descartado-simeone-entre-le-normand-o-un-medio-f202611-n/": 1793812964000
+   "AS|https://as.com/futbol/primera/cuti-descartado-simeone-entre-le-normand-o-un-medio-f202611-n/": 1793812964000,
+   "ABC|https://www.abc.es/deportes/futbol/raphinha-renueva-barca-2030-rodri-mes-baja-20261104183435-nt.html": 1793813675000
   },
   "hechos": [
    {
@@ -1726,11 +1727,27 @@
     "nums": [
      945
     ]
+   },
+   {
+    "guid": "ABC|https://www.abc.es/deportes/futbol/raphinha-renueva-barca-2030-rodri-mes-baja-20261104183435-nt.html",
+    "medio": "ABC",
+    "t": 1793813675000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "lesión",
+    "plazo": "un mes de baja",
+    "nums": [
+     2030,
+     30,
+     34
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
