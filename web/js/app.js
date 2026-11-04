@@ -2449,6 +2449,7 @@ document.addEventListener('click', async (ev) => {
     case 'borrarClave': if (confirm('¿Quitar la clave de la IA?')) { guardarClave(''); rehacer(); repintarHoja(); pintar(); } break;
     case 'probarIA': try { const l = await probarClave(); tostada(`La clave funciona: ${l.length} versiones de la IA disponibles`); } catch (e) { tostada(e.message, 6000); } repintarHoja(); break;
     case 'iaWeb': guardarCfgIA({ web: !cfgIA().web }); repintarHoja(); break;
+    case 'iaWebPlan': guardarCfgIA({ webPlan: !cfgIA().webPlan }); repintarHoja(); break;
     case 'iaAuto': guardarCfgIA({ auto: !cfgIA().auto }); repintarHoja(); break;
     case 'fondo': {
       const on = !cfgFondo().on;

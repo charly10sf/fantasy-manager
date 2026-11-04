@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7b';
+export const VERSION = '0.7c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.7b';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7c', f: '2026-11-04', h: '20:47', t: 'La IA, más rápida',
+    cosas: [
+      { tipo: 'mejora', d: 'ia', t: 'El plan sale en la mitad de tiempo', x: 'El plan ya no manda a la IA a buscar en Google (las noticias y los onces probables ya van con él): de 40-80 s pasa a 20-30 s y falla menos. Si la quieres, en Ajustes está «Buscar en Google al hacer el plan».' },
+      { tipo: 'mejora', d: 'ia', t: 'Si una versión de la IA se cuelga, otra la releva antes', x: 'A los 25 s sin respuesta la app pregunta también a otra versión, y si tampoco contesta, a otra más a la vez: vale la primera que llegue. La que contesta bien se queda la primera durante un día. Ningún intento pasa de 60-90 s ni todo junto de 3 minutos.' },
+      { tipo: 'mejora', d: 'ia', menor: true, t: 'Se ve cuánto lleva pensando', x: 'Mientras la IA prepara el plan o contesta en el chat, el texto de abajo cuenta los segundos.' },
+    ],
+  },
   {
     v: '0.7b', f: '2026-11-04', h: '18:53', t: 'Respuestas de Fantasy Manager',
     cosas: [

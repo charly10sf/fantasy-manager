@@ -1,6 +1,7 @@
 /* La IA: Gemini (Google AI Studio) con tu clave gratuita, llamada directamente desde el móvil a Google.
    Hace el plan del día (las operaciones en orden: qué vender, qué comprar, a quién clausular, cuánto pujar)
-   cruzando todo lo de tu liga con lo que busca en Google (lesiones, convocatorias, alineaciones probables).
+   con todo lo de tu liga, los titulares de prensa y los onces probables que ya trae la app; la búsqueda en
+   Google es un ajuste (en el chat, solo cuando hace falta; en el plan, apagada por defecto: tarda el doble).
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, despues } from './puente.js';
@@ -27,7 +28,9 @@ function vuelveCupo() {
 export const clave = () => leer('gemini') || '';
 export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null); LS.del('ia-agotados'); LS.del('ia-modelos'); LS.del('ia-sin-web'); LS.del('ia-bueno'); LS.del('ia-mal-web'); LS.del('ia-pausa'); };
 export const hayClave = () => !!clave();
-export const cfgIA = () => ({ modelo: '', web: true, auto: true, ...LS.get('cfg-ia', {}) });
+// web: la búsqueda en Google en el chat (solo cuando hace falta); webPlan: también al hacer el plan (hasta 8 búsquedas:
+// de 40 a 80 s en vez de 20 a 30, y es lo que más falla; apagada por defecto desde la 0.7c, las noticias y los onces ya van)
+export const cfgIA = () => ({ modelo: '', web: true, webPlan: false, auto: true, ...LS.get('cfg-ia', {}) });
 export const guardarCfgIA = (c) => LS.set('cfg-ia', { ...cfgIA(), ...c });
 
 /** nombre bonito: gemini-3.8-flash-lite → Gemini 3.8 Flash-Lite */
@@ -81,10 +84,18 @@ export const probarClave = (k) => modelosDisponibles(k, true);
    siguiente pregunta no vuelve a esperar por ellos */
 const pausas = () => { const p = LS.get('ia-pausa', {}), a = Date.now(); return Object.fromEntries(Object.entries(p).filter(([, t]) => t > a)); };
 const pausar = (m, seg) => { const p = pausas(); p[m] = Date.now() + seg * 1000; LS.set('ia-pausa', p); };
-/* el modelo que contestó bien la última vez va el primero durante 3 horas (los nuevos suelen estar saturados y cada intento
-   con ellos cuesta de 20 s a minutos); pasadas las 3 horas se vuelve a probar el orden de siempre */
-const BUENO_H = 3 * 3600 * 1000;
-const RELEVO_MS = 45000, SILENCIO_MS = 30000;
+/* el modelo que contestó bien la última vez va el primero durante un día (los nuevos suelen estar saturados y cada intento
+   con ellos cuesta de 20 s a minutos; con 3 horas se volvía a tropezar con ellos varias veces al día); si falla, el siguiente
+   que conteste bien ocupa su sitio. Pasado el día se vuelve a probar el orden de siempre */
+const BUENO_H = 24 * 3600 * 1000;
+/* el relevo: a los 25 s sin respuesta (lo normal son 15-30 s) se pregunta también a otro modelo; si el plan va con la
+   búsqueda puesta a propósito se le dan 50 s, que con ella lo normal es tardar más y si no, el relevo sin búsqueda le
+   ganaría casi siempre (en el chat, 25 s aunque tenga la búsqueda: una respuesta rápida vale más que una buscada).
+   ESCALON_MS: cada 20 s sin respuesta de nadie entra otro candidato, en paralelo (hasta 3) */
+const RELEVO_MS = 25000, RELEVO_WEB_MS = 50000, ESCALON_MS = 20000, SILENCIO_MS = 30000;
+/* el tiempo máximo de cada intento: sin búsqueda, 60 s (si en 60 s no ha contestado, no va a contestar: es Google haciendo
+   cola, y un 503 puede tardar 150 s en llegar); con búsqueda, 90 s; un pro, 120 s. Todo junto, 3 minutos */
+const TOPE_MS = 60000, TOPE_WEB_MS = 90000, TOPE_PRO_MS = 120000, TOTAL_MS = 180000;
 /* un modelo que con la búsqueda contesta con una llamada rota (MALFORMED_FUNCTION_CALL) va una hora sin ella */
 const malConWeb = (m) => (LS.get('ia-mal-web', {})[m] || 0) > Date.now();
 const marcarMalConWeb = (m) => { const a = LS.get('ia-mal-web', {}); a[m] = Date.now() + 3600 * 1000; LS.set('ia-mal-web', a); };
@@ -266,9 +277,15 @@ async function preguntar(q, op = {}) {
 
 async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb }, op = {}) {
   // (el tope de tiempo cuenta desde aquí, con lo que tarde en saber qué modelos tiene tu clave)
-  const inicio = Date.now(), total = op.total || 240000;
+  const inicio = Date.now(), total = op.total || TOTAL_MS;
   const resta = () => total - (Date.now() - inicio);
-  const alPaso = op.alPaso || (() => {});
+  const segundos = () => Math.round((Date.now() - inicio) / 1000);
+  // lo que va pasando, con los segundos que lleva (a partir de 3 s, y el contador sigue solo cada segundo: que se vea
+  // que está vivo mientras piensa, que en la app no llega texto hasta el final)
+  let pasoTxt = '', quitarTic = () => {};
+  const conSeg = (t) => (t && segundos() >= 3 ? `${t} ${segundos()} s` : t);
+  const alPaso = (t) => { pasoTxt = t; if (op.alPaso) op.alPaso(conSeg(t)); };
+  const tic = () => { quitarTic = despues(1000, () => { if (pasoTxt && op.alPaso && !viendoTexto) op.alPaso(conSeg(pasoTxt)); tic(); }); };
   let modelos = await cadena();
   // con fotos solo valen los Gemini (los Gemma no ven imágenes)
   const conFotos = (contents || []).some((c) => (c.parts || []).some((p) => p.inlineData));
@@ -280,7 +297,8 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
     const f = fuera();
     throw new ErrorIA(`La IA ya ha gastado el cupo gratis de hoy de tu clave. Vuelve ${vuelveCupo()}.`, 429, { todos: true });
   }
-  const quiereWeb = cfgIA().web;
+  // la búsqueda: lo que diga quien pregunta (el plan, con su ajuste) o, si no dice nada, el ajuste del chat
+  const quiereWeb = op.web != null ? !!op.web : cfgIA().web;
   const resumen = [];
   let ultimo = null;
   let cortes = 0, webSospecha = null, tiempos = 0, saturados = 0;
@@ -301,44 +319,52 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
     if (op.signal) { if (op.signal.aborted) ctl.abort(); else op.signal.addEventListener('abort', () => ctl.abort(), { once: true }); }
     return ctl;
   };
-  /* El relevo: si un modelo lleva 45 s sin contestar (lo normal son 15-35 s), se pregunta a la vez a los siguientes, sin
-     búsqueda, y vale la primera respuesta que llegue. Una vez por pregunta. Así un modelo colgado ya no deja minutos sin plan. */
+  /* El relevo: si un modelo lleva 25 s sin contestar (50 con la búsqueda), se pregunta también al siguiente modelo sano, sin
+     búsqueda, y vale la primera respuesta que llegue. Si tampoco contesta nadie en 20 s, entra otro candidato EN PARALELO (y
+     a los 20 s otro: hasta 3); el que falla deja paso al siguiente al momento. Una vez por pregunta. Así un modelo colgado
+     o un 503 que tarda minutos en llegar ya no dejan sin plan: lo normal es que un lite conteste en 15 s. */
   let relevo = null, viendoTexto = false, cerrado = false;
   const saltar = new Set();
   const siguienteSano = (actual) => { const pz = pausas(); return modelos.slice(modelos.indexOf(actual) + 1).find((m) => !esGemma(m) && !pz[m] && !saltar.has(m)) || null; };
-  const conRelevo = (modelo, pr, ctlA) => new Promise((res, rej) => {
+  const conRelevo = (modelo, pr, ctlA, conWeb) => new Promise((res, rej) => {
     let fin = false, quitar = () => {}, ctlR = null;
-    const ganar = (x) => { if (fin) return; fin = true; quitar(); if (x.deRelevo) ctlA.abort(); else if (ctlR) ctlR.abort(); res(x); };
+    // acabe como acabe, lo que quede en marcha del relevo se corta (el que ha ganado ya ha contestado)
+    const ganar = (x) => { if (fin) return; fin = true; quitar(); if (x.deRelevo) ctlA.abort(); if (ctlR) ctlR.abort(); res(x); };
     const perder = (e) => { if (fin) return; fin = true; quitar(); if (ctlR) ctlR.abort(); rej(e); };
     if (!relevo) {
-      quitar = despues(RELEVO_MS, () => {
+      quitar = despues(conWeb ? RELEVO_WEB_MS : RELEVO_MS, () => {
         if (fin || relevo || viendoTexto || resta() < 30000) return;
-        // el relevo va probando los siguientes modelos sanos (hasta 3) mientras el primero no conteste
         ctlR = ramal();
-        relevo = { p: (async () => {
-          try {
-            let desde = modelo;
-            for (let k = 0; k < 3 && !fin && resta() >= 25000; k++) {
-              const otro = siguienteSano(desde);
-              if (!otro) break;
-              desde = otro;
-              alPaso('La IA tarda: pruebo también con otra versión…');
-              const t1 = Date.now(), pensarO = !/gemini-(1|2\.0)/.test(otro);
-              try {
-                const r = await llamar(otro, cuerpoDe(otro, false, pensarO, 'low'), { signal: ctlR.signal, limite: Math.max(20000, Math.min(90000, resta() - 5000)) });
-                apuntar({ modelo: otro, web: false, ok: true, ms: Date.now() - t1, fin: r.fin, tok: r.tok, car: r.texto.length, nivel: pensarO ? 'low' : null, relevo: true });
-                return { r, modelo: otro };
-              } catch (e) {
-                if (e.name === 'AbortError') return { e };
-                apuntar({ modelo: otro, web: false, s: e.estado, e: e.message, google: e.google, ms: Date.now() - t1, nivel: pensarO ? 'low' : null, relevo: true });
-                saltar.add(otro);
-                if (e.estado === 429 && !e.minuto) sacar(otro, e.message);
-                else if (e.estado >= 500 || e.tiempo) pausar(otro, e.tiempo ? 600 : 300);
-              }
-            }
-          } catch (e) { return { e }; }
-          return { e: null };
-        })() };
+        relevo = { p: new Promise((listo) => {
+          let desde = modelo, lanzados = 0, vivos = 0, acabado = false, quitarEscalon = () => {};
+          const acabar = (x) => { if (acabado) return; acabado = true; quitarEscalon(); listo(x); };
+          const lanzar = () => {
+            if (acabado) return;
+            const otro = !fin && lanzados < 3 && resta() >= 25000 ? siguienteSano(desde) : null;
+            if (!otro) { if (!vivos) acabar({ e: null }); return; }
+            desde = otro; lanzados++; vivos++;
+            alPaso(lanzados > 1 ? 'La IA tarda: pruebo con otra versión más…' : 'La IA tarda: pruebo también con otra versión…');
+            const t1 = Date.now(), pensarO = !/gemini-(1|2\.0)/.test(otro);
+            llamar(otro, cuerpoDe(otro, false, pensarO, 'low'), { signal: ctlR.signal, limite: Math.max(20000, Math.min(TOPE_MS, resta() - 5000)) }).then((r) => {
+              vivos--;
+              apuntar({ modelo: otro, web: false, ok: true, ms: Date.now() - t1, fin: r.fin, tok: r.tok, car: r.texto.length, nivel: pensarO ? 'low' : null, relevo: true });
+              acabar({ r, modelo: otro });
+            }, (e) => {
+              vivos--;
+              if (e.name === 'AbortError') { if (!vivos) acabar({ e }); return; }
+              apuntar({ modelo: otro, web: false, s: e.estado, e: e.message, google: e.google, ms: Date.now() - t1, nivel: pensarO ? 'low' : null, relevo: true });
+              saltar.add(otro);
+              if (e.estado === 429 && !e.minuto) sacar(otro, e.message);
+              else if (e.estado >= 500 || e.tiempo) pausar(otro, e.tiempo ? 600 : 300);
+              // el que falla deja paso al siguiente al momento
+              lanzar();
+            });
+            // y si en 20 s no ha contestado nadie, otro más en paralelo
+            quitarEscalon();
+            quitarEscalon = despues(ESCALON_MS, lanzar);
+          };
+          lanzar();
+        }) };
         relevo.p.then((x) => { if (x.r && !viendoTexto) ganar({ ...x.r, deRelevo: x.modelo }); });
       });
     }
@@ -353,6 +379,7 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
   // si con búsqueda da «cupo gastado» y sin ella el mismo modelo sí contesta, lo gastado es la búsqueda: fuera hoy
   // (solo si contesta: un 503 o un vacío sin búsqueda no dicen nada de la búsqueda)
   const confirmarSinWeb = (modelo) => { if (webSospecha === modelo) LS.set('ia-sin-web', diaGoogle()); webSospecha = null; };
+  tic();
   try {
     for (const modelo of modelos) {
       if (saltar.has(modelo)) continue;
@@ -365,7 +392,7 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
         if (op.signal && op.signal.aborted) throw new DOMException('Parado', 'AbortError');
         const restante = resta();
         if (ultimo && restante < 25000) throw new ErrorIA(`Google tarda demasiado en contestar ahora mismo (llevo ${Math.round((Date.now() - inicio) / 1000)} s probando). Vuelve a probar en unos minutos.`, 0, { tarda: true, todos: true });
-        const limite = Math.max(25000, Math.min(/pro/.test(modelo) ? 150000 : web ? 110000 : 90000, restante));
+        const limite = Math.max(25000, Math.min(/pro/.test(modelo) ? TOPE_PRO_MS : web ? TOPE_WEB_MS : TOPE_MS, restante));
         const cuerpo = cuerpoDe(modelo, web, pensar, nivel);
         // lo que escribió un intento que se ha cortado no se queda en pantalla
         if (viendoTexto && op.alTexto) op.alTexto('');
@@ -374,7 +401,7 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
         const t0 = Date.now();
         const ctlA = ramal();
         try {
-          const r = await conRelevo(modelo, llamar(modelo, cuerpo, { ...op, signal: ctlA.signal, limite, alTexto: op.alTexto ? (t) => { if (cerrado) return; viendoTexto = true; op.alTexto(t); } : null }), ctlA);
+          const r = await conRelevo(modelo, llamar(modelo, cuerpo, { ...op, signal: ctlA.signal, limite, alTexto: op.alTexto ? (t) => { if (cerrado) return; viendoTexto = true; op.alTexto(t); } : null }), ctlA, web && !!op.web);
           if (r.deRelevo) {
             // ha contestado antes el relevo: el lento se salta un rato y el que ha contestado va el primero la próxima vez
             if (r.principal) apuntar({ modelo, web, s: r.principal.estado, e: r.principal.message, google: r.principal.google, ms: Date.now() - t0, nivel: pensar ? nivel : null });
@@ -465,6 +492,7 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
   } finally {
     // lo que llegue después de contestar (la petición que ha perdido la carrera) ya no se pinta
     cerrado = true;
+    quitarTic();
   }
   if (saturados && saturados >= resumen.length - 1) throw new ErrorIA('La IA de Google está saturada ahora mismo. No es tu clave ni tu conexión; suele pasar en unos minutos. Vuelve a probar en un rato.', 503, { todos: true, saturado: true });
   throw new ErrorIA('La IA no ha podido contestar ahora; prueba en un rato.', ultimo ? ultimo.estado : 0, { todos: true, detalle: `${resumen.slice(0, 4).join(' · ')}${resumen.length > 4 ? ` y ${resumen.length - 4} más` : ''}${ultimo && ultimo.google ? ` · Google: «${ultimo.google.slice(0, 140)}»` : ''}` });
@@ -1014,7 +1042,7 @@ function memoria(M) {
 // Sin búsqueda en Google (apagada, cupo gastado o un modelo que no contesta con ella) no se le manda buscar: si se le manda, a veces
 // intenta llamar a una herramienta que no tiene y contesta vacío (MALFORMED_FUNCTION_CALL, 26 oct, 100 s para nada)
 const BUSCAR_PLAN = `Busca en Google solo lo que pueda cambiar una decisión (como mucho 8 búsquedas): los jugadores que vayas a meter en operaciones o en la alineación con la titularidad por debajo del 70 % o con ESTADO, y las lesiones o convocatorias de última hora de sus equipos; contrástalo con los titulares que te paso. Después sigue «CÓMO DECIDIR» con cada candidato.`;
-const SIN_BUSCAR_PLAN = 'Hoy no tienes búsqueda en Google: decide solo con los datos y los titulares que te paso (si algo no lo sabes, dilo). Sigue «CÓMO DECIDIR» con cada candidato.';
+const SIN_BUSCAR_PLAN = 'Decide con los datos, los titulares de prensa y los onces probables que te paso, sin buscar en Google (si algo no lo sabes, dilo sin inventarlo). Sigue «CÓMO DECIDIR» con cada candidato.';
 export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
   const ctx = contexto(D, M, c);
   const seudo = seudonimos(D);
@@ -1040,9 +1068,10 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
 "pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager la acción es "comprar", con el precio en "importe" y sin puja_max, y SOLO si lo tiene a la venta o es un trato que te he contado; si no, no lo pongas. Para quitárselo pagando su cláusula, "clausular" (solo si la cláusula está abierta o se abre pronto).`;
   // pensando poco: con «medium» tardaba un par de minutos y el plan salía igual (la app comprueba cada paso)
   const sinBuscar = (t) => [{ role: 'user', parts: [{ text: t.replace(BUSCAR_PLAN, SIN_BUSCAR_PLAN) }] }];
-  // todo el plan, con la segunda vuelta si el primero llega roto, no pasa de 5 minutos
-  const t0Plan = Date.now(), TOPE_PLAN = 300000;
-  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, seudo, seudoJSON: true });
+  // todo el plan, con la segunda vuelta si el primero llega roto, no pasa de 4 minutos
+  // la búsqueda en Google solo si está puesta para el plan (Ajustes; apagada por defecto: 20-30 s en vez de 40-80)
+  const t0Plan = Date.now(), TOPE_PLAN = 240000, web = !!cfgIA().webPlan;
+  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, web, seudo, seudoJSON: true });
   let json = sacarJSON(r.texto);
   // si se ha quedado sin sitio para escribir (pensando de más) o el JSON ha salido roto: otra vez, con los datos en
   // corto y pensando poco
@@ -1054,7 +1083,7 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
     if (queda < 60000) throw new ErrorIA(`La IA ha contestado sin el formato del plan y ya no da tiempo a pedirlo otra vez (${Math.round((Date.now() - t0Plan) / 1000)} s). Vuelve a probar.`, 0);
     if (alPaso) alPaso(r.fin === 'MAX_TOKENS' ? 'El plan se ha cortado: lo pido otra vez más corto…' : 'El plan ha llegado mal: lo pido otra vez…');
     const corto = pedido.replace(ctx, contexto(D, M, c, { corto: true }));
-    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, total: Math.min(240000, queda), seudo, seudoJSON: true });
+    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, total: Math.min(TOTAL_MS, queda), web: false, seudo, seudoJSON: true });
     json = sacarJSON(r.texto);
     if (!json || !Array.isArray(json.operaciones)) malPlan(r);
   }
