@@ -115,13 +115,13 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const mismo = clubes.length === 1, n = xs.length, sem = `nov${dia}${k}`;
     let cab;
     if (mismo) cab = !malos.length ? `🚨 Buenas noticias en ${el(clubes[0])}` : !buenos.length ? `🚨 Malas noticias en ${el(clubes[0])}` : `🚨 Buenas y malas noticias en ${el(clubes[0])}`;
-    else if (!malos.length) cab = elegir([`🚨 ${mayus(enLetra(n))} jugadores vuelven a estar disponibles en LaLiga Fantasy`, `✅ Buenas noticias en LaLiga Fantasy: vuelven ${enLetra(n)} jugadores`], sem);
-    else if (!buenos.length) cab = elegir([`🚨 ${mayus(enLetra(n))} bajas nuevas en LaLiga Fantasy`, `🚨 Saltan las alarmas en LaLiga Fantasy: ${enLetra(n)} bajas nuevas`], sem);
+    else if (!malos.length) cab = elegir([`✅ ${mayus(enLetra(n))} jugadores vuelven a estar disponibles`, `✅ Buenas noticias: vuelven ${enLetra(n)} jugadores`], sem);
+    else if (!buenos.length) cab = elegir([`🚨 ${mayus(enLetra(n))} bajas nuevas`, `🚨 Saltan las alarmas: ${enLetra(n)} bajas nuevas`], sem);
     else if (malos.length === 1) {
       // «🚨 Vuelven tres y Lemar se lesiona»: la cabecera ya cuenta la noticia y abajo va por su puesto («El centrocampista del Elche…»)
       const m = malos[0];
       cab = `🚨 ${buenos.length === 1 ? `Vuelve ${buenos[0].nombre}` : `Vuelven ${enLetra(buenos.length)}`} y ${m.nombre} ${m.que === 'lesion' ? 'se lesiona' : 'cae sancionado'}`;
-    } else cab = malos.every((e) => e.que === 'lesion') ? elegir(['🚨 Movimiento en la enfermería de LaLiga Fantasy', '🚨 Buenas y malas noticias en LaLiga Fantasy'], sem) : '🚨 Buenas y malas noticias en LaLiga Fantasy';
+    } else cab = malos.every((e) => e.que === 'lesion') ? elegir(['🚨 Movimiento en la enfermería', '🚨 Buenas y malas noticias'], sem) : '🚨 Buenas y malas noticias';
     let lineas;
     if (!mismo && buenos.length && malos.length === 1) {
       const m = malos[0];
@@ -136,7 +136,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const pps = xs.map((e) => e.pp).filter(Boolean);
     const J = pps.length ? Math.min(...pps.map((p) => p.jornada)) : jornada;
     const para = mismo && xs[0].pp ? paraLa(xs[0].pp, J) : `para la jornada ${J}`;
-    const etiqueta = !buenos.length ? `❌ Bajas Fantasy ${para}` : !malos.length ? `✅ Disponibles en LaLiga Fantasy ${para}` : `👀 Revisa tu once Fantasy ${para}`;
+    const etiqueta = !buenos.length ? `❌ Bajas Fantasy ${para}` : !malos.length ? `✅ Disponibles Fantasy ${para}` : `👀 Revisa tu once Fantasy ${para}`;
     const det = buenos.length && malos.length === 1 && !mismo ? null : detalle(xs);   // en el caso de arriba el motivo ya va en su línea
     const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos

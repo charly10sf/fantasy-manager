@@ -222,11 +222,14 @@ const ESTADO_TARJETA = {
   sancionado: { txt: 'SANCIONADO', color: MALO },
   duda: { txt: 'DUDA', color: AMBAR },
   disponible: { txt: 'DISPONIBLE', color: VERDE },
+  vuelve: { txt: 'VUELVE', color: VERDE },
 };
 /** el dibujo pequeño del estado: cruz (lesión), tarjeta roja (sanción), círculo con punto (duda) o visto (disponible) */
 function iconoEstado(estado, cx, cy, s, c) {
   if (estado === 'sancionado') return `<rect x="${cx - s * 0.32}" y="${cy - s * 0.45}" width="${s * 0.64}" height="${s * 0.9}" rx="${s * 0.08}" fill="${c}" transform="rotate(12 ${cx} ${cy})"/>`;
   if (estado === 'lesionado') { const a = s * 0.16, b = s * 0.46; return `<rect x="${cx - a}" y="${cy - b}" width="${a * 2}" height="${b * 2}" rx="${a * 0.5}" fill="${c}"/><rect x="${cx - b}" y="${cy - a}" width="${b * 2}" height="${a * 2}" rx="${a * 0.5}" fill="${c}"/>`; }
+  // vuelve (aún no disponible en el juego, pero apunta a volver): una flecha hacia arriba
+  if (estado === 'vuelve') return `<path d="M${cx} ${cy + s * 0.42} L${cx} ${cy - s * 0.36} M${cx - s * 0.32} ${cy - s * 0.06} L${cx} ${cy - s * 0.4} L${cx + s * 0.32} ${cy - s * 0.06}" fill="none" stroke="${c}" stroke-width="${s * 0.16}" stroke-linecap="round" stroke-linejoin="round"/>`;
   if (estado === 'disponible') return `<path d="M${cx - s * 0.4} ${cy} L${cx - s * 0.1} ${cy + s * 0.3} L${cx + s * 0.42} ${cy - s * 0.32}" fill="none" stroke="${c}" stroke-width="${s * 0.18}" stroke-linecap="round" stroke-linejoin="round"/>`;
   return `<circle cx="${cx}" cy="${cy}" r="${s * 0.42}" fill="none" stroke="${c}" stroke-width="${s * 0.14}"/><circle cx="${cx}" cy="${cy}" r="${s * 0.11}" fill="${c}"/>`;
 }

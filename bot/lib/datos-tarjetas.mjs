@@ -122,13 +122,13 @@ export async function historialJugador(j, { jornada, fuentes, ahora = Date.now()
 
 // ---------------------------------------------------------------------------------------------------------------------------
 // Tarjeta de bajas y novedades (caídas y novedades). Recibe a los jugadores ya elegidos por el tipo, cada uno con
-// { id, nombre, teamId, pos, equipo (corto), club (largo), estado ('lesionado'|'sancionado'|'duda'|'disponible'), pct, media, caraUrl, escudoUrl }.
+// { id, nombre, teamId, pos, equipo (corto), club (largo), estado ('lesionado'|'sancionado'|'duda'|'disponible'|'vuelve'), pct, media, caraUrl, escudoUrl }.
 // Si todos son del mismo club, la tarjeta es la de ese equipo (con su próximo rival, pp de proximoPartido); si no, la lista.
 export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
   const mismo = filas.length && filas.every((f) => String(f.teamId) === String(filas[0].teamId));
   const conMedia = (f) => (f.media >= 3 && f.estado !== 'duda' ? num1(f.media) : null);
   // (Carlos, 3 nov 10:25: «BAJAS» con jugadores «DISPONIBLE» no tiene sentido) si alguno vuelve, la tarjeta es de novedades
-  const titulo = filas.every((f) => f.estado === 'sancionado') && filas.length > 1 ? 'SANCIONADOS' : filas.some((f) => f.estado === 'disponible') ? 'NOVEDADES'
+  const titulo = filas.every((f) => f.estado === 'sancionado') && filas.length > 1 ? 'SANCIONADOS' : filas.some((f) => f.estado === 'disponible' || f.estado === 'vuelve') ? 'NOVEDADES'
     : filas.some((f) => f.estado === 'duda') ? (filas.every((f) => f.estado === 'duda') ? 'DUDAS' : 'BAJAS Y DUDAS') : 'BAJAS';
   const fila = (f) => ({ id: f.id, nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
     estado: f.estado, leve: !!f.leve, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f), valor: f.valor || null });
@@ -137,7 +137,7 @@ export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
     rival: mismo && pp ? { nombre: pp.rivalNombre || pp.rival, corto: pp.rival, escudoUrl: pp.rivalEscudo || null } : null };
   const permitidos = {
     numeros: [d.jornada, ...d.filas.flatMap((f) => [f.pct, f.media].filter((x) => x != null))].map(String),
-    palabras: ['BAJAS', 'Y', 'DUDAS', 'NOVEDADES', 'SANCIONADOS', 'DUDA LEVE', 'LEVE', 'LESIONADO', 'SANCIONADO', 'DISPONIBLE', 'PRÓXIMO', 'RIVAL',
+    palabras: ['BAJAS', 'Y', 'DUDAS', 'NOVEDADES', 'SANCIONADOS', 'DUDA LEVE', 'LEVE', 'LESIONADO', 'SANCIONADO', 'DISPONIBLE', 'VUELVE', 'PRÓXIMO', 'RIVAL',
       ...d.filas.flatMap((f) => [f.nombre, f.equipo, f.club]), ...(d.equipo ? [d.equipo.corto, d.equipo.nombre] : []), ...(d.rival ? [d.rival.corto] : [])],
   };
   return { tipo: 'bajas', nombre: `bajas-${clave.replace(/[^\w-]+/g, '_').slice(0, 80)}`, d, permitidos };
