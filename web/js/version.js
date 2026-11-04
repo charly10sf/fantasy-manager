@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7a';
+export const VERSION = '0.7b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.7a';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7b', f: '2026-11-04', h: '', t: 'Respuestas de Fantasy Manager',
+    cosas: [
+      { tipo: 'arreglo', d: 'arreglo', menor: true, t: 'Las respuestas a tus avisos, de Fantasy Manager', x: 'Cuando contestamos un aviso de fallo, la respuesta sale firmada como Fantasy Manager, también las de antes.' },
+    ],
+  },
   {
     v: '0.7a', f: '2026-11-04', h: '18:19', t: 'Tus datos, más guardados',
     cosas: [
@@ -638,7 +644,7 @@ export const NOVEDADES = [
       { tipo: 'mejora', d: 'dinero', t: 'Lo que te daría LaLiga por cada uno', x: 'En la ficha de cada jugador tuyo sale lo que te daría LaLiga si lo pones a la venta: lo que suele ofrecer en tu liga sobre su valor (entre cuánto y cuánto) y lo que ganarías o perderías frente a lo que pagaste. En Equipo > Beneficio, al lado de cada uno. Gracias, Domy.', ir: { v: 'equipo', seg: 'equipo:dinero' } },
       { tipo: 'mejora', d: 'plan', t: 'Las ventas, con lo que pagaste', x: 'Cada venta del plan dice ahora cuánto ganas o pierdes frente a lo que pagaste. Si venderías perdiendo dinero sin que te haga falta y el jugador no está bajando, te avisa de que puede esperar; si está bajando, lo que pagaste no cambia nada (esperar solo pierde más). La IA también lo tiene en cuenta. Gracias, Domy.', ir: { v: 'hoy' } },
       { tipo: 'arreglo', d: 'ia', t: 'Pregunta, sin clave', x: 'Sin la clave de Google, la pestaña Pregunta solo enseñaba la guía y no quedaba claro por qué no se podía preguntar. Ahora lo dice arriba: para hacerle preguntas primero hace falta tu clave, que se saca una vez y es gratis.', ir: { v: 'ia' } },
-      { tipo: 'mejora', d: 'arreglo', t: 'Copiar los avisos para Claude', x: 'Para el dueño: en «Avisos de fallos», un botón copia los que están sin contestar, enteros y con su diagnóstico, para pegarlos en el chat de Claude y que los revise y los arregle.' },
+      { tipo: 'mejora', d: 'arreglo', t: 'Copiar los avisos', x: 'Para el dueño: en «Avisos de fallos», un botón copia los que están sin contestar, enteros y con su diagnóstico, para pegarlos en el chat y revisarlos.' },
     ],
   },
   {

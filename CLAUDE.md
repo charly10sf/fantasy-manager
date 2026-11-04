@@ -75,7 +75,7 @@ Revisarlos antes de cada versión y contestar solo con lo ya publicado. También
 1. Añadir a la sesión el repo privado charly10sf/fantasy-manager-avisos (lectura) y clonarlo.
 2. `gh workflow run fallos.yml -R charly10sf/fantasy-manager --ref main -f llave="$(node .github/fallos-leer.mjs llave)"`
 3. Al acabar, `git -C <clon> fetch -q origin main && git -C <clon> reset -q --hard FETCH_HEAD` (la rama se rehace cada vez: pull falla) y `CAPTURAS=<carpeta> node .github/fallos-leer.mjs leer <clon>/fallos.enc` (DIAG=1 para el diagnóstico). Las capturas se miran con Read. Nada de esto se pega en el chat ni en el repo público.
-4. Contestar: la misma Action con `-f respuestas='[{"buscar":"trozo del principio del aviso","por":"Claude · Fantasy Manager","respuesta":"…"}]'` (o `"id"` si se tiene). Solo los sin contestar; las respuestas se ven en la Action: nada personal. Se comprueba con las anotaciones del job (`gh api repos/charly10sf/fantasy-manager/check-runs/<job>/annotations`): «N contestados ahora».
+4. Contestar: la misma Action con `-f respuestas='[{"buscar":"trozo del principio del aviso","respuesta":"…"}]'` (o `"id"` si se tiene). Firman como «Fantasy Manager» (el valor por defecto): nunca «Claude» (Carlos, 4 nov). Solo los sin contestar; las respuestas se ven en la Action: nada personal. Se comprueba con las anotaciones del job (`gh api repos/charly10sf/fantasy-manager/check-runs/<job>/annotations`): «N contestados ahora».
 
 ## Publicar (solo con su OK)
 

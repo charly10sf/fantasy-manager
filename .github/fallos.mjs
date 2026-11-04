@@ -45,6 +45,22 @@ const leer = async (k) => JSON.parse(await (await cf(`${base}/values/${encodeURI
 const corta = (x, n) => String(x == null ? '' : x).slice(0, n);
 const resumen = (f) => ({ t: f.t, quien: corta(f.quien, 40), equipo: corta(f.equipo, 40), txt: corta(String(f.texto || '').replace(/\s+/g, ' '), 90), r: f.respondida || 0, v: f.vista ? 1 : 0, c: f.capturas || 0 });
 
+// las respuestas firmadas «Claude · Fantasy Manager» (las de antes del 4 nov) pasan a «Fantasy Manager», sin tocar nada
+// más: ni se vuelven a avisar ni cambia cuándo caducan (Carlos, 4 nov: en la app solo sale Fantasy Manager)
+let firmas = 0;
+for (const k of claves) {
+  if (!k.metadata || !k.metadata.r) continue;
+  const f = await leer(k.name);
+  if (!/claude/i.test(String(f.por || ''))) continue;
+  f.por = 'Fantasy Manager';
+  const fd = new FormData();
+  fd.append('value', JSON.stringify(f));
+  fd.append('metadata', JSON.stringify(resumen(f)));
+  await cf(`${base}/values/${encodeURIComponent(k.name)}${k.expiration ? `?expiration=${k.expiration}` : `?expiration_ttl=${180 * 86400}`}`, { method: 'PUT', body: fd });
+  firmas++;
+}
+if (firmas) console.log(`::notice::${firmas} firmas cambiadas a Fantasy Manager`);
+
 // las respuestas
 let contestados = 0;
 if (RESPUESTAS.trim()) {

@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe } from './util.js';
+import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
 import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -846,7 +846,7 @@ async function avisosDeFallos() {
   if (!hayQueMirar()) return [];
   let r;
   try { r = await misAvisos(); } catch (e) { if (e.sesion) throw e; return []; }
-  const out = r.nuevasResp.slice(0, 3).map((x) => ({ k: `fallo:${x.id}:${x.respondida}`, titulo: `${x.por || 'Fantasy Manager'} te ha contestado`, texto: x.respuesta.length > 300 ? `${x.respuesta.slice(0, 297)}…` : x.respuesta, hash: 'fallos' }));
+  const out = r.nuevasResp.slice(0, 3).map((x) => ({ k: `fallo:${x.id}:${x.respondida}`, titulo: `${firmaDe(x.por) || 'Fantasy Manager'} te ha contestado`, texto: x.respuesta.length > 300 ? `${x.respuesta.slice(0, 297)}…` : x.respuesta, hash: 'fallos' }));
   if (r.nuevosRecibidos) out.push({ k: `fallos-nuevos:${r.pendientes}:${Date.now()}`, titulo: r.nuevosRecibidos > 1 ? `${r.nuevosRecibidos} avisos de fallos nuevos` : 'Un aviso de fallo nuevo', texto: 'Entra para leerlo y contestar', hash: 'fallos' });
   return out;
 }
@@ -1534,7 +1534,7 @@ async function copiarAvisosClaude() {
   S.av.paraClaude = `Avisos de fallos de Fantasy Manager (${sinContestar ? 'sin contestar' : 'los últimos'}), a ${cuandoT(Date.now())}:\n\n${partes.join('\n\n')}`;
   nativo.copiar(S.av.paraClaude);
   repintarAvisos();
-  tostada(`Copiados ${lista.length}: pégalos en el chat de Claude`, 5000);
+  tostada(`Copiados ${lista.length}: pégalos en el chat`, 5000);
 }
 /* lo que contestas tarda hasta un minuto en salir como contestado en la lista del servidor (el almacén del Worker
    lista con retraso): se apunta aquí y manda sobre la lista durante un día */
@@ -1570,7 +1570,7 @@ async function comprobarAvisos() {
   pintarNumAvisos();
   const resp = r.nuevasResp[0];
   if (resp) {
-    const t = `${resp.por || 'Te han'} ${resp.por ? 'te ha contestado' : 'contestado'}: «${resp.respuesta.length > 120 ? `${resp.respuesta.slice(0, 117)}…` : resp.respuesta}»`;
+    const t = `${firmaDe(resp.por) || 'Te han'} ${resp.por ? 'te ha contestado' : 'contestado'}: «${resp.respuesta.length > 120 ? `${resp.respuesta.slice(0, 117)}…` : resp.respuesta}»`;
     if (nativo.aLaVista()) tostada(`${t} · Está en Ajustes → Reportar un fallo`, 8000); else nativo.notificar('Respuesta a tu aviso', t, 'hoy');
   }
   if (r.nuevosRecibidos) {

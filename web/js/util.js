@@ -8,6 +8,9 @@ export const $$ = (sel, raiz = document) => [...raiz.querySelectorAll(sel)];
 /* ---------- números ---------- */
 const nf = (min, max) => new Intl.NumberFormat('es-ES', { minimumFractionDigits: min, maximumFractionDigits: max });
 const NF0 = nf(0, 0), NF1 = nf(1, 1), NF2 = nf(2, 2);
+// quién firma una respuesta a un aviso de fallo: las del principio iban como «Claude · Fantasy Manager» y en la app
+// solo sale Fantasy Manager (Carlos, 4 nov)
+export const firmaDe = (por) => (/claude/i.test(String(por || '')) ? 'Fantasy Manager' : por || '');
 export const num = (v) => (Number.isFinite(+v) ? +v : 0);
 export const entero = (v) => NF0.format(Math.round(num(v)));
 
