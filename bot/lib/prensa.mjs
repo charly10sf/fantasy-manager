@@ -71,3 +71,7 @@ export async function noticiasPrensa({ log = () => {}, pedir = get, feeds = FEED
   log(`  (prensa) ${out.length} noticias leídas de ${medios.length} medios (${medios.join(', ') || 'ninguno'})`);
   return out;
 }
+
+// noticias y liga leen los mismos feeds en la misma ejecución: una sola lectura por proceso
+let unaVez = null;
+export const noticiasPrensaUnaVez = (op = {}) => (unaVez ||= noticiasPrensa(op).catch((e) => { unaVez = null; throw e; }));
