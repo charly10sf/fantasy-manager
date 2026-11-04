@@ -47,6 +47,7 @@ async function leerLimites(forzar = false) {
     if (cfg) {
       const antes = JSON.stringify(g && g.cfg);
       LS.set('limites', { t: Date.now(), cfg, v: VERSION });
+      aplicarSinFotos();
       // lo bloqueado depende de esto: si ha cambiado, que se vuelva a pintar
       if (antes !== JSON.stringify(cfg) && typeof window !== 'undefined') window.dispatchEvent(new Event('limites-nuevos'));
       return cfg;
@@ -54,6 +55,15 @@ async function leerLimites(forzar = false) {
   } catch (e) { /* sin red: lo guardado, aunque sea viejo */ }
   return g ? g.cfg : null;
 }
+
+/* «sinFotos» en limites.json (fase 0 del roadmap): sin las caras de los jugadores ni los escudos y fotos que vienen de
+   LaLiga, en toda la app y la web, sin sacar versión. Por si llega una queja: quedan las iniciales y los colores. Lo
+   hace el CSS (html.sin-fotos) con las imágenes de los servidores de LaLiga; las tarjetas para compartir no las dibujan. */
+export const sinFotos = () => { const g = LS.get('limites', null); return !!(g && g.cfg && g.cfg.sinFotos); };
+export function aplicarSinFotos() { try { if (typeof document !== 'undefined') document.documentElement.classList.toggle('sin-fotos', sinFotos()); } catch (e) { /* nada */ } }
+aplicarSinFotos();
+/** lee limites.json (lo guardado si es reciente) y aplica «sinFotos»: para la portada, antes de entrar */
+export const comprobarFotos = () => leerLimites().then(aplicarSinFotos, () => {});
 
 /** ¿es este equipo uno de los de la lista? (por el nombre del equipo, su id o el id de la cuenta de LaLiga) */
 function esDe(yo) {

@@ -7,6 +7,7 @@
    el titular se quita solo si nombra a uno de esos (se puede volver a poner). */
 import { esc, eur, norm, fechaCorta, iniciales, icono, LOGO_D, POS_LARGO } from './util.js';
 import { imagenDatos, enApp, nativo } from './puente.js';
+import { sinFotos } from './limite.js';
 import { hecho, hechoEnLiga } from './vistas.js';
 
 const W = 1080, PAD = 76, ANCHO = W - 2 * PAD, PIE = 150;
@@ -75,7 +76,7 @@ async function fuentes() {
 // las fotos (de LaLiga: otra web) se piden como data:… para no ensuciar el canvas; si no llegan en 6 s, las iniciales
 const fotos = new Map();
 function foto(url) {
-  if (!url) return Promise.resolve(null);
+  if (!url || sinFotos()) return Promise.resolve(null);
   if (!fotos.has(url)) {
     fotos.set(url, (async () => {
       try {

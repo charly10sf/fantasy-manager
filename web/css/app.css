@@ -2358,3 +2358,6 @@ div.pc { display: grid; gap: 18px; }
 /* invitación de tu liga, en la entrada (0.7a) */
 .invita { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 16px; padding: 12px; border-radius: 12px; background: var(--plano); border: 1px solid var(--rojo); font-size: 14px; line-height: 1.4; text-align: left; }
 .invita svg { flex: none; width: 20px; height: 20px; color: var(--rojo); margin-top: 1px; }
+/* «sinFotos» de limites.json: sin las imágenes de los servidores de LaLiga (caras, escudos, fotos de los mánagers);
+   debajo quedan las iniciales y los colores (0.7a) */
+html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html.sin-fotos img[src*="%2Fllt-services"] { display: none !important; }
