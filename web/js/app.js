@@ -282,7 +282,7 @@ async function traerConCodigo(cod) {
 /** la app ha leído un QR (Principal.escanearQR): si es el del ordenador, deja ahí la sesión */
 window.qrLeido = async (texto, motivo) => {
   if (texto == null) { if (motivo) tostada(motivo, 7000); return; }
-  const m = String(texto).match(/[#&?]qr=([A-Za-z0-9_-]{22,64})(?:\.([A-Za-z0-9_-]{43}))?/);
+  const m = String(texto).match(/[#&?]qr=([A-Za-z0-9_-]{22,64})(?:\.([A-Za-z0-9_-]{22})(?![A-Za-z0-9_-]))?/);
   if (!m) { tostada('Ese QR no es el de Fantasy Manager. Abre fantasymanagerapp.com en el ordenador y escanea el que sale allí.', 7000); return; }
   if (!haySesion()) { tostada('Primero entra con tu cuenta de LaLiga en la app'); return; }
   tostada('Abriendo tu cuenta en el ordenador…');

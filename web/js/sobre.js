@@ -15,8 +15,8 @@ export function nuevoCodigo() {
   const b = crypto.getRandomValues(new Uint8Array(8));
   return [...b].map((x) => ALFABETO[x % ALFABETO.length]).join('');
 }
-/** una clave al azar para el QR (256 bits, 43 caracteres) */
-export const claveQR = () => B64(crypto.getRandomValues(new Uint8Array(32)));
+/** una clave al azar para el QR (128 bits, 22 caracteres: con 256 el QR salía tan denso que costaba leerlo en pantalla) */
+export const claveQR = () => B64(crypto.getRandomValues(new Uint8Array(16)));
 
 const importar = (bytes) => crypto.subtle.importKey('raw', bytes, 'AES-GCM', false, ['encrypt', 'decrypt']);
 const DE_CODIGO = new Map();

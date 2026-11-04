@@ -946,7 +946,7 @@ a.btn { text-decoration: none; }
 .entrar-ya { text-align: left; border-top: 1px solid var(--linea); padding-top: 16px; }
 .entrar-ya > h2 { margin: 0 0 12px; font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.5px; color: var(--texto2); }
 .entrar-ya .entrar-qr { padding: 12px; }
-.entrar-ya .eq-qr, .entrar-ya .eq-qr svg.qr { width: 120px; height: 120px; }
+.entrar-ya .eq-qr, .entrar-ya .eq-qr svg.qr { width: 140px; height: 140px; }
 .vinc-qr { display: flex; gap: 12px; align-items: center; margin: 12px 0; padding: 12px; border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); }
 .vinc-qr svg.qr { flex: none; width: 112px; height: 112px; border-radius: 8px; }
 .vinc-qr p { margin: 0; font-size: 14px; color: var(--texto2); }
