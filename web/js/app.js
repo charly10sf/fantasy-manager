@@ -27,13 +27,14 @@ import { iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJ
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada } from './portada.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
+import { cerrar, abrir, claveQR, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
@@ -174,9 +175,11 @@ function iniciarQR() {
   if (!caja || !WORKER) return;
   const b = crypto.getRandomValues(new Uint8Array(16));
   const id = btoa(String.fromCharCode(...b)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  const q = { id, hasta: Date.now() + 10 * MIN, fallos: 0, reloj: null };
+  // la clave para abrir lo que mande el móvil va en el QR, detrás de # (no llega al servidor): «#qr=<id>.<clave>»
+  const k = claveQR();
+  const q = { id, k, hasta: Date.now() + 10 * MIN, fallos: 0, reloj: null };
   QRE = q;
-  caja.innerHTML = qrSVG(`${DOMINIO}#qr=${id}`);
+  caja.innerHTML = qrSVG(`${DOMINIO}#qr=${id}.${k}`);
   estQR('Esperando al móvil…');
   const paso = async () => {
     if (QRE !== q) return;
@@ -192,7 +195,10 @@ function iniciarQR() {
         const r = await fetch(`${WORKER}/qr/esperar?id=${id}`, { cache: 'no-store' });
         if (QRE !== q) return;
         if (r.status === 200) {
-          const j = await r.json().catch(() => null);
+          let j = await r.json().catch(() => null);
+          if (j && j.cif) {
+            try { j = await abrir({ qr: q.k }, j.cif); } catch (e) { QRE = null; caja.innerHTML = `<button class="btn chico" data-accion="otroQR">Otro QR</button>`; estQR(e.message); return; }
+          }
           if (j && j.sesion) { QRE = null; entrarConVinculo(j); return; }
         }
         q.fallos = r.status === 200 || r.status === 204 ? 0 : q.fallos + 1;
@@ -220,12 +226,15 @@ function datosVinculo() {
 /** la app ha leído un QR (Principal.escanearQR): si es el del ordenador, deja ahí la sesión */
 window.qrLeido = async (texto, motivo) => {
   if (texto == null) { if (motivo) tostada(motivo, 7000); return; }
-  const m = String(texto).match(/[#&?]qr=([A-Za-z0-9_-]{22,64})/);
+  const m = String(texto).match(/[#&?]qr=([A-Za-z0-9_-]{22,64})(?:\.([A-Za-z0-9_-]{43}))?/);
   if (!m) { tostada('Ese QR no es el de Fantasy Manager. Abre fantasymanagerapp.com en el ordenador y escanea el que sale allí.', 7000); return; }
   if (!haySesion()) { tostada('Primero entra con tu cuenta de LaLiga en la app'); return; }
   tostada('Abriendo tu cuenta en el ordenador…');
   try {
-    const r = await http('POST', `${WORKER_PUBLICO}/qr/dejar`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify({ id: m[1], ...datosVinculo() }), tiempo: 20000 });
+    const dejar = (cuerpo) => http('POST', `${WORKER_PUBLICO}/qr/dejar`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(cuerpo), tiempo: 20000 });
+    // con la clave del QR, cerrado; sin ella (QR de una web de antes) o si el servidor aún no lo entiende, como antes
+    let r = m[2] ? await dejar({ id: m[1], cif: await cerrar({ qr: m[2] }, datosVinculo()) }) : null;
+    if (!r || r.s === 400) r = await dejar({ id: m[1], ...datosVinculo() });
     let j = null;
     try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
     if (r.s !== 200 || !j || !j.ok) throw new Error(j && j.e ? j.e : r.s ? `el servidor de la web responde ${r.s}` : `sin conexión (${r.e})`);
@@ -291,7 +300,8 @@ async function codigoDeMudanza() {
   history.replaceState(null, '', location.pathname + location.search);
   try {
     const r = await fetch(`${WORKER}/vincular/usar`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ codigo: m[1].toUpperCase() }) });
-    const j = await r.json().catch(() => null);
+    let j = await r.json().catch(() => null);
+    if (r.ok && j && j.cif) j = await abrir({ codigo: m[1].toUpperCase() }, j.cif);
     if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `el servidor responde ${r.status}`);
     traerVinculo(j);
     if (j.tour && !tourVisto()) LS.set('tour', j.tour);
@@ -1344,7 +1354,7 @@ async function enviarAviso() {
   if (!t) { tostada('Cuenta qué ha pasado'); return; }
   const conDiag = !!($('#avisoDiag') || {}).checked;
   let diag = '';
-  if (conDiag) { try { diag = Hj.textoDiagnostico(S); } catch (e) { diag = `(no se ha podido sacar el diagnóstico: ${e.message})`; } }
+  if (conDiag) { try { diag = Hj.diagnosticoParaMandar(S); } catch (e) { diag = `(no se ha podido sacar el diagnóstico: ${e.message})`; } }
   S.av.borrador = t; S.av.sinDiag = !conDiag; S.av.enviando = true; S.av.error = '';
   repintarAvisos();
   try {
@@ -2208,7 +2218,8 @@ document.addEventListener('click', async (ev) => {
       el.disabled = true; el.textContent = 'Entrando…';
       try {
         const r = await fetch(`${WORKER}/vincular/usar`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ codigo: cod }) });
-        const j = await r.json().catch(() => null);
+        let j = await r.json().catch(() => null);
+        if (r.ok && j && j.cif) j = await abrir({ codigo: cod }, j.cif);
         if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `El servidor de la web responde ${r.status}`);
         await entrarConVinculo(j);
       } catch (e) { pantallaEntrar(e.name === 'TypeError' ? `Sin conexión con el servidor de la web (${e.message})` : e.message || String(e)); }
@@ -2227,9 +2238,18 @@ document.addEventListener('click', async (ev) => {
       try {
         const datos = datosVinculo();
         // en la app por la parte nativa; en la web, directo al Worker (no pasa por su reenvío)
-        const r = enApp
-          ? await http('POST', `${WORKER_PUBLICO}/vincular`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(datos), tiempo: 20000 })
-          : await fetch(`${WORKER_PUBLICO}/vincular`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(datos) }).then(async (x) => ({ s: x.status, b: await x.text() }), (e) => ({ s: 0, e: e.message }));
+        const mandar = (cuerpo) => (enApp
+          ? http('POST', `${WORKER_PUBLICO}/vincular`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(cuerpo), tiempo: 20000 })
+          : fetch(`${WORKER_PUBLICO}/vincular`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(cuerpo) }).then(async (x) => ({ s: x.status, b: await x.text() }), (e) => ({ s: 0, e: e.message })));
+        // cerrado con una clave que sale del código, que pone la app (el servidor guarda algo que no puede leer); si el
+        // código ya está cogido, otro; si el servidor aún no entiende lo cerrado (400), como antes
+        let r = null;
+        for (let k = 0; k < 2; k++) {
+          const codigo = codigoNuevo();
+          r = await mandar({ codigo, cif: await cerrar({ codigo }, datos) });
+          if (r.s !== 409) break;
+        }
+        if (r.s === 400) r = await mandar(datos);
         let j = null;
         try { j = JSON.parse(r.b || 'null'); } catch (e2) { j = null; }
         if (r.s !== 200 || !j || !j.codigo) throw new Error(j && j.e ? j.e : r.s ? `el servidor de la web responde ${r.s}` : `sin conexión (${r.e})`);
@@ -2296,8 +2316,8 @@ document.addEventListener('click', async (ev) => {
     case 'irIA': cerrarHoja(); ir('ia'); break;
     // la estrella de la ficha: lo sigue en Mercado → Favoritos (y las listas lo marcan)
     case 'fav': { const j = S.M && S.M.J(d.pid); if (!j) break; const on = cambiarFav(d.pid); tostada(on ? `${j.nombre}, en tus favoritos (Mercado → Favoritos)` : `${j.nombre}, fuera de tus favoritos`, 2600); repintarHoja(); if (S.vista === 'mercado') pintar(); break; }
-    case 'copiarDiag': copiarY(Hj.textoDiagnostico(S)); break;
-    case 'compartirDiag': nativo.compartir(Hj.textoDiagnostico(S)); break;
+    case 'copiarDiag': copiarY(Hj.diagnosticoParaMandar(S)); break;
+    case 'compartirDiag': nativo.compartir(Hj.diagnosticoParaMandar(S)); break;
     case 'plan': S.planEstado = {}; generarPlan(); break;
     case 'planYa': cerrarHoja(); ir('hoy'); pedirOtroPlan(); break;
     // «Ahora no» en el anuncio de las funciones top: de vuelta a la ficha de la que venía (si venía de una)
@@ -2429,6 +2449,10 @@ document.addEventListener('click', async (ev) => {
     }
     case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Descargando la versión nueva…'); } break;
     case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
+    case 'borrarServidor':
+      if (!confirm('¿Borrar lo que guarda Fantasy Manager de ti en su servidor? Es que usas la app, cuánto rato y tus avisos de fallo con sus respuestas. Tu liga, tu sesión y tu clave están en este dispositivo y no se tocan. Si sigues usando la app, se volverá a apuntar que la usas.')) break;
+      borrarMisDatos().then((r) => tostada(`Borrado${r.avisos ? ` (también ${r.avisos === 1 ? 'tu aviso' : `tus ${r.avisos} avisos`})` : ''}`, 6000)).catch((e) => tostada(e.message || 'No se ha podido borrar', 7000));
+      break;
     case 'borrarChat': borrarConversacion(); pintar(); break;
     case 'nuevoChat':
       if (S.charlando) { tostada('Espera a que conteste o para la respuesta'); break; }
@@ -2509,6 +2533,10 @@ async function probarYGuardar() {
   S.claveMal = false;
   const k = leerCasilla();
   if (!k) { tostada('Pega la clave primero'); const c = $('#claveIA'); if (c) c.focus(); return; }
+  // (la casilla de «tengo 18 años y lo he leído», encima de la clave: la piden las condiciones de la IA de Google)
+  const ok = $('#claveOK');
+  if (ok && !ok.checked) { tostada('Marca antes la casilla de encima de la clave', 5000); ok.focus(); return; }
+  if (ok) LS.set('clave-aviso-ok', true);
   const b = $('[data-accion="guardarClave"]');
   probandoClave = true;
   if (b) { b.disabled = true; b.textContent = 'Probando la clave…'; }

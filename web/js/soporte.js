@@ -34,6 +34,14 @@ export function numeroAvisos() {
 /** ¿merece la pena preguntar? solo si has mandado alguno o eres el dueño (para no gastar el servidor por nada) */
 export const hayQueMirar = () => { const a = avisosGuardados(); return !!(a.admin || (a.lista || []).some((x) => !x.respuesta || !x.vista) || LS.get('avisos-mandado', 0)); };
 
+/** borra lo que el servidor guarda de ti (ficha de quién usa la app, minutos de uso y tus avisos de fallo con sus capturas) */
+export async function borrarMisDatos() {
+  const r = await pedirWorker('POST', '/borrar', {}, { tiempo: 30000 });
+  LS.set('avisos', { t: Date.now(), lista: [], admin: avisosGuardados().admin, pendientes: 0 });
+  LS.set('avisos-mandado', 0);
+  return r;
+}
+
 export async function mandarAviso(datos) {
   // (con capturas, más tiempo: son unos cientos de KB)
   const r = await pedirWorker('POST', '/fallos', datos, { tiempo: datos.capturas && datos.capturas.length ? 60000 : 20000 });

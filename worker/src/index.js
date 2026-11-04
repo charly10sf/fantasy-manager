@@ -133,6 +133,8 @@ async function borrarVinculo(env, cod) {
   if (env.VINCULOS) { try { await env.VINCULOS.delete(`v:${cod}`); } catch (e) { /* nada */ } }
   return caches.default.delete(claveCache(cod));
 }
+/** lo que manda la app ya cerrado (web/js/sobre.js): «v1.<iv>.<cifrado>» en base64url */
+const cifValido = (x) => typeof x === 'string' && x.length <= 60000 && /^v1\.[A-Za-z0-9_-]{16}\.[A-Za-z0-9_-]{20,}$/.test(x);
 function nuevoCodigo() {
   const b = crypto.getRandomValues(new Uint8Array(8));
   return [...b].map((x) => ALFABETO[x % ALFABETO.length]).join('');
@@ -143,6 +145,14 @@ async function vincular(req, env, c) {
   if (txt.length > 60000) return json({ e: 'Demasiados datos' }, 413, c);
   let j;
   try { j = JSON.parse(txt); } catch (e) { return json({ e: 'No es JSON' }, 400, c); }
+  // (desde el 4 nov: la app manda lo suyo cerrado, con la clave sacada de un código que pone ella; el servidor no lo puede leer)
+  if (j && typeof j.cif === 'string') {
+    const cod = String(j.codigo || '');
+    if (!cifValido(j.cif) || cod.length !== 8 || [...cod].some((x) => !ALFABETO.includes(x))) return json({ e: 'Lo cerrado no vale' }, 400, c);
+    if (await leerVinculo(env, cod)) return json({ e: 'Ese código ya está cogido', otro: true }, 409, c);
+    await guardarVinculo(env, cod, JSON.stringify({ cif: j.cif, t: Date.now() }));
+    return json({ codigo: cod, caduca: Date.now() + DURA * 1000 }, 200, c);
+  }
   if (!j || !j.sesion || !(j.sesion.renovar || j.sesion.token)) return json({ e: 'Falta la sesión de LaLiga' }, 400, c);
   const cod = nuevoCodigo();
   await guardarVinculo(env, cod, JSON.stringify({ ...j, t: Date.now() }));
@@ -194,8 +204,10 @@ async function qrDejar(req, env, c) {
   try { j = JSON.parse(txt); } catch (e) { return json({ e: 'No es JSON' }, 400, c); }
   const id = idQR(j && j.id);
   if (!id) return json({ e: 'Ese QR no es de Fantasy Manager' }, 400, c);
-  if (!j.sesion || !(j.sesion.renovar || j.sesion.token)) return json({ e: 'Falta la sesión de LaLiga' }, 400, c);
-  const { id: _, ...datos } = j;
+  const cerrado = typeof j.cif === 'string';
+  if (cerrado && !cifValido(j.cif)) return json({ e: 'Lo cerrado no vale' }, 400, c);
+  if (!cerrado && (!j.sesion || !(j.sesion.renovar || j.sesion.token))) return json({ e: 'Falta la sesión de LaLiga' }, 400, c);
+  const { id: _, ...datos } = cerrado ? { id, cif: j.cif } : j;
   const valor = JSON.stringify({ ...datos, t: Date.now() });
   if (env.QR) {
     const r = await env.QR.get(env.QR.idFromName(id)).fetch('https://qr/', { method: 'PUT', body: valor });
@@ -403,6 +415,31 @@ async function uso(req, env, c) {
   return json({ dia, seg }, 200, c);
 }
 
+/* ---------- borrar mis datos (fase 0 del roadmap: Play y el RGPD) ---------- */
+/**
+ * borra todo lo que el servidor guarda de quien llama: su ficha de /hola (p:), su registro (r:), sus minutos de uso
+ * (u:) y sus avisos de fallo (f:) con sus capturas (fc:). Lo de pasar la sesión al ordenador (v:, q:) ya se borra
+ * solo a los 10 minutos. Si sigue usando la app, se vuelve a apuntar que la usa (eso lo explica la app).
+ */
+async function borrarMios(req, env, c) {
+  if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
+  const u = await quienEs(req);
+  if (!u) return json({ e: 'Hace falta tu sesión de LaLiga para saber qué datos son tuyos', sesion: true }, 401, c);
+  const claves = [`p:${u.uid}`, `r:${u.uid}`];
+  for (const k of await listar(env, `u:${u.uid}:`)) claves.push(k.name);
+  let avisos = 0;
+  for (const k of await listar(env, `f:${u.uid}:`)) {
+    avisos++;
+    claves.push(k.name);
+    const id = k.name.slice(`f:${u.uid}:`.length);
+    for (let n = 0; n < Math.max(MAX_CAPTURAS, (k.metadata && k.metadata.c) || 0); n++) claves.push(`fc:${id}:${n}`);
+  }
+  let fallidas = 0;
+  for (const k of claves) { try { await env.VINCULOS.delete(k); } catch (e) { fallidas++; } }
+  if (fallidas) return json({ e: `No se han podido borrar ${fallidas} de ${claves.length} cosas. Vuelve a probar en un rato.` }, 503, c);
+  return json({ ok: true, avisos, claves: claves.length }, 200, c);
+}
+
 /* ---------- quién usa la app ---------- */
 const VIVE_HOLA = 90 * 86400;
 const CANALES = new Set(['github', 'play', 'web']);
@@ -545,6 +582,7 @@ export default {
       if (url.pathname === '/qr/esperar' && req.method === 'GET') return await qrEsperar(url, env, c);
       if (url.pathname === '/fallos' || url.pathname.startsWith('/fallos/')) return await fallos(req, env, c, url.pathname);
       if (url.pathname === '/uso' && req.method === 'POST') return await uso(req, env, c);
+      if (url.pathname === '/borrar' && req.method === 'POST') return await borrarMios(req, env, c);
       if (url.pathname === '/hola' || url.pathname === '/hola/todos' || url.pathname === '/caras') return await hola(req, env, c, url.pathname);
       if (url.pathname === '/') return json({ ok: true, app: 'Fantasy Manager', kv: !!env.VINCULOS, qr: env.QR ? 'objeto' : env.VINCULOS ? 'kv' : 'no', avisos: !!env.VINCULOS, dueno: adminsDe(env).length > 0 }, 200, c);
       return json({ e: 'No existe' }, 404, c);

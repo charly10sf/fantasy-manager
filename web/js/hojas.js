@@ -5,7 +5,7 @@ import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, 
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
 import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
-import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe } from './ia.js';
+import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
 import { nativo, enApp, enWeb, estadoProxy } from './puente.js';
 import { hayAnunciosWeb } from './anuncios-web.js';
@@ -585,6 +585,7 @@ export function ajustes(S) {
   h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google en esta sesión</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;
   if ((enApp || enWeb) && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Borrar los datos guardados</b><span>Histórico, fichas y planes (tu sesión y tu clave no)</span></div><button class="btn chico sec" data-accion="borrarDatos">Borrar</button></div>`;
+  if (!enDemo() && sesion()) h += `<div class="ajuste"><div class="c"><b>Borrar mis datos del servidor</b><span>Lo que guarda Fantasy Manager de ti: que usas la app, cuánto rato y tus avisos de fallo</span></div><button class="btn chico sec" data-accion="borrarServidor">Borrar</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Privacidad</b><span>Qué datos usa la app y dónde se quedan</span></div><a class="btn chico sec" href="privacidad.html">Ver</a></div>`;
   // (en la versión de Google Play, si Google pide dejar cambiarlo: en la UE, sí; en la web, con los anuncios de AdSense)
   if ((enApp && nativo.hayPrivacidadAnuncios()) || (!enApp && hayAnunciosWeb())) h += `<div class="ajuste"><div class="c"><b>Privacidad de los anuncios</b><span>Cambia si los anuncios pueden usar tus datos para personalizarse</span></div><button class="btn chico sec" data-accion="privAnuncios">Cambiar</button></div>`;
@@ -656,7 +657,7 @@ export function avisos(S) {
     h += `<p class="t2 peq" style="margin-top:0">Cuéntame qué ha pasado y qué estabas haciendo. Me llega a mí y te contesto aquí mismo: te aviso cuando haya respuesta.</p>
       <textarea id="avisoTxt" class="campo-t aviso-t" rows="4" maxlength="4000" placeholder="Por ejemplo: al abrir Mercado se queda en blanco">${esc(A.borrador || '')}</textarea>
       ${capturasHTML(A)}
-      <label class="aviso-diag"><input type="checkbox" id="avisoDiag"${A.sinDiag ? '' : ' checked'}><span>Mandar también el diagnóstico (versión, lo que ha contestado LaLiga…). No lleva tu sesión ni tu clave de la IA.</span></label>
+      <label class="aviso-diag"><input type="checkbox" id="avisoDiag"${A.sinDiag ? '' : ' checked'}><span>Mandar también el diagnóstico (versión, lo que ha contestado LaLiga…). No lleva tu sesión, tu clave de la IA ni los nombres de los demás de tu liga.</span></label>
       <button class="btn ancho" data-accion="mandarAviso"${A.enviando ? ' disabled' : ''}>${A.enviando ? 'Mandando…' : `${icono('enviar')}Mandar el aviso`}</button>
       ${A.error ? `<div class="error-c" style="margin-top:10px">${esc(A.error)}</div>` : ''}`;
   }
@@ -823,6 +824,14 @@ export function textoDiagnostico(S) {
     for (const [k, v] of Object.entries(mv)) L.push(`${k} (${horaDe(v.t)}): ${v.txt}`);
   }
   return L.join('\n');
+}
+/** el diagnóstico que sale del móvil (aviso de fallo, copiar o compartir): los demás de tu liga van como «Rival N» y
+    «Equipo N» y sin su foto, porque son datos de otras personas. El dueño (Carlos) lo ve y lo manda entero. */
+export function diagnosticoParaMandar(S) {
+  const t = textoDiagnostico(S);
+  if (avisosGuardados().admin) return t;
+  const sd = seudonimos(S.D);
+  return sd.tapar(t).replace(/("(?:avatar|photo|image|foto)"\s*:\s*)"[^"]*"/gi, '$1"…"');
 }
 /** lo que ocupa lo guardado en este dispositivo (el navegador deja unos 5 MB): el total y lo que más pesa */
 function ocupado() {

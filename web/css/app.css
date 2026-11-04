@@ -1288,6 +1288,11 @@ body.limitado .tostada { z-index: 120; }
 .gc-abrir { margin-top: 12px; }
 .gc-abrir .ic { width: 19px; height: 19px; }
 .gc-fila { display: flex; gap: 8px; margin-top: 12px; align-items: stretch; }
+.gc-aviso { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: var(--plano); border: 1px solid var(--linea); }
+.gc-aviso b { display: block; margin-bottom: 4px; }
+.gc-aviso p { margin: 0; font-size: 13px; line-height: 1.45; }
+.gc-ok { display: flex; gap: 8px; align-items: flex-start; margin-top: 10px; font-size: 14px; cursor: pointer; }
+.gc-ok input { margin-top: 2px; width: 18px; height: 18px; flex: none; }
 .gc-campo { flex: 1; min-width: 0; height: 50px; padding: 0 13px; font: 600 15.5px/1 ui-monospace, 'SFMono-Regular', Menlo, monospace; letter-spacing: 0.2px; }
 .gc-pegar { flex: none; height: 50px; margin: 0; padding: 0 14px; border-radius: 12px; }
 .gc-mono { font: 700 0.92em ui-monospace, 'SFMono-Regular', Menlo, monospace; color: var(--texto); background: var(--plano2); padding: 1px 5px; border-radius: 5px; }

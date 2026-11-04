@@ -250,7 +250,21 @@ const espera = (s, signal) => new Promise((res, rej) => {
  * acabado, sin ella; si es el cupo por minuto, espera lo que diga Google y repite; si es el del día, al siguiente.
  * alPaso(texto) cuenta lo que va pasando (para enseñarlo mientras piensa).
  */
-async function preguntar({ sistema, sistemaSinWeb, contents, contentsSinWeb }, op = {}) {
+async function preguntar(q, op = {}) {
+  // con alias (op.seudo): lo que sale hacia Google va tapado y lo que vuelve, destapado
+  const sd = op.seudo && op.seudo.n ? op.seudo : null;
+  if (!sd) return preguntarYa(q, op);
+  const tapC = (cs) => cs && cs.map((c) => ({ ...c, parts: (c.parts || []).map((p) => (p.text ? { ...p, text: sd.tapar(p.text) } : p)) }));
+  const q2 = {
+    sistema: sd.tapar(q.sistema) + AVISO_ALIAS,
+    sistemaSinWeb: q.sistemaSinWeb ? sd.tapar(q.sistemaSinWeb) + AVISO_ALIAS : q.sistemaSinWeb,
+    contents: tapC(q.contents), contentsSinWeb: tapC(q.contentsSinWeb),
+  };
+  const r = await preguntarYa(q2, { ...op, alTexto: op.alTexto ? (t) => op.alTexto(sd.destapar(t)) : op.alTexto });
+  return { ...r, texto: sd.destapar(r.texto), fuentes: r.fuentes, alias: sd.n };
+}
+
+async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb }, op = {}) {
   // (el tope de tiempo cuenta desde aquí, con lo que tarde en saber qué modelos tiene tu clave)
   const inicio = Date.now(), total = op.total || 240000;
   const resta = () => total - (Date.now() - inicio);
@@ -665,6 +679,50 @@ function prensaTxt(M, pid, n = 2) {
   return '';
 }
 const nombreTid = (M, tid) => { const e = M.equipo[tid]; return (e && (e.manager || e.nombre)) || '?'; };
+
+/**
+ * Alias para los de tu liga: lo que va a Google lleva «Rival 3» (el mánager) y «Equipo 3» (su equipo) en vez de sus
+ * nombres, que son datos de otras personas; destapar() los vuelve a poner en lo que contesta. Tu nombre y el de tu
+ * equipo sí van. El número es su puesto en la clasificación. Los nombres de jugadores y clubes que contienen el de un
+ * mánager («Hugo Duro» con un mánager «Hugo») se apartan antes de tapar y se devuelven tal cual; si el nombre es
+ * exactamente el de un jugador o un club, ese mánager se queda sin tapar (no se sabría cuál es cuál).
+ */
+export function seudonimos(D) {
+  const yo = D && D.yo && D.yo.teamId;
+  const otros = new Set();
+  for (const j of Object.values((D && D.maestro) || {})) if (j) for (const t of [j.nombre, j.nombreCompleto, j.equipo]) if (typeof t === 'string' && t.trim()) otros.add(t.trim());
+  for (const e of Object.values((D && D.equipos) || {})) if (e) for (const t of [e.nombre, e.corto]) if (typeof t === 'string' && t.trim()) otros.add(t.trim());
+  const igual = new Set([...otros].map(norm));
+  const pares = [], vuelta = {};
+  const rivales = ((D && D.clasif) || []).filter((e) => e && e.teamId !== yo).sort((a, b) => (a.pos || 99) - (b.pos || 99));
+  const vale = (x) => typeof x === 'string' && norm(x).length >= 2 && !igual.has(norm(x));
+  rivales.forEach((e, i) => {
+    const n = i + 1;
+    if (vale(e.manager)) { pares.push([e.manager.trim(), `Rival ${n}`]); vuelta[`rival ${n}`] = e.manager.trim(); }
+    if (e.nombre && e.nombre !== e.manager && vale(e.nombre)) { pares.push([e.nombre.trim(), `Equipo ${n}`]); vuelta[`equipo ${n}`] = e.nombre.trim(); }
+  });
+  // los más largos primero («Los Pepes FC» antes que «Pepe»)
+  pares.sort((a, b) => b[0].length - a[0].length);
+  const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const palabra = (lista) => new RegExp(`(?<![\\p{L}\\p{N}])(${lista.map(esc).join('|')})(?![\\p{L}\\p{N}])`, 'giu');
+  const re = pares.length ? palabra(pares.map((p) => p[0])) : null;
+  const alias = Object.fromEntries(pares.map(([a, b]) => [a.toLocaleLowerCase('es'), b]));
+  // jugadores y clubes que llevan dentro el nombre de un rival: se apartan antes de tapar
+  const aparte = re ? [...otros].filter((t) => { re.lastIndex = 0; return re.test(t); }).sort((a, b) => b.length - a.length) : [];
+  const reAparte = aparte.length ? palabra(aparte) : null;
+  return {
+    n: pares.length,
+    tapar: (t) => {
+      if (!re || typeof t !== 'string') return t;
+      const guardados = [];
+      let x = reAparte ? t.replace(reAparte, (m) => { guardados.push(m); return `\uE000${guardados.length - 1}\uE001`; }) : t;
+      x = x.replace(re, (m) => alias[m.toLocaleLowerCase('es')] || m);
+      return guardados.length ? x.replace(/\uE000(\d+)\uE001/g, (m, k) => guardados[+k]) : x;
+    },
+    destapar: (t) => (pares.length && typeof t === 'string' ? t.replace(/(?<![\p{L}\p{N}])(Rival|Equipo) (\d{1,2})(?![\p{L}\p{N}]|[.,]\d)/gu, (m, q, d) => vuelta[`${q.toLowerCase()} ${d}`] || m) : t),
+  };
+}
+const AVISO_ALIAS = '\nLOS DE LA LIGA VAN CON ALIAS: cada rival sale como «Rival N» (el mánager) y su equipo como «Equipo N», con N su puesto en la clasificación. Escríbelos tal cual, sin inventar nombres: la app los cambia por los de verdad.';
 const rachaTxt = (M, id) => { const r = M.racha && M.racha(id); return r ? `${r.txt} (${r.gf}-${r.gc}, ${r.pts} de ${r.de * 3} pts)` : null; };
 
 /** lo que el manager le ha contado, para meterlo en el contexto */
@@ -949,6 +1007,7 @@ const BUSCAR_PLAN = `Busca en Google solo lo que pueda cambiar una decisión (co
 const SIN_BUSCAR_PLAN = 'Hoy no tienes búsqueda en Google: decide solo con los datos y los titulares que te paso (si algo no lo sabes, dilo). Sigue «CÓMO DECIDIR» con cada candidato.';
 export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
   const ctx = contexto(D, M, c);
+  const seudo = seudonimos(D);
   const pedido = `${ctx}${memoria(M)}
 
 Hazme el PLAN DE HOY. ${BUSCAR_PLAN}
@@ -973,7 +1032,7 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
   const sinBuscar = (t) => [{ role: 'user', parts: [{ text: t.replace(BUSCAR_PLAN, SIN_BUSCAR_PLAN) }] }];
   // todo el plan, con la segunda vuelta si el primero llega roto, no pasa de 5 minutos
   const t0Plan = Date.now(), TOPE_PLAN = 300000;
-  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: 32000 });
+  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, seudo });
   let json = sacarJSON(r.texto);
   // si se ha quedado sin sitio para escribir (pensando de más) o el JSON ha salido roto: otra vez, con los datos en
   // corto y pensando poco
@@ -985,7 +1044,7 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
     if (queda < 60000) throw new ErrorIA(`La IA ha contestado sin el formato del plan y ya no da tiempo a pedirlo otra vez (${Math.round((Date.now() - t0Plan) / 1000)} s). Vuelve a probar.`, 0);
     if (alPaso) alPaso(r.fin === 'MAX_TOKENS' ? 'El plan se ha cortado: lo pido otra vez más corto…' : 'El plan ha llegado mal: lo pido otra vez…');
     const corto = pedido.replace(ctx, contexto(D, M, c, { corto: true }));
-    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, total: Math.min(240000, queda) });
+    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, total: Math.min(240000, queda), seudo });
     json = sacarJSON(r.texto);
     if (!json || !Array.isArray(json.operaciones)) malPlan(r);
   }
@@ -1604,7 +1663,7 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
   const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();
   // sin búsqueda (apagada, cupo gastado o en el relevo) no se le manda buscar: si se le manda, a veces contesta vacío
   const sistemaSinWeb = sistema.replace(BUSCAR_CHAT, 'EN EL CHAT NO TIENES BÚSQUEDA EN GOOGLE: contesta con los datos que te paso y, si para contestar falta algo de hoy (una lesión, un once), dilo.');
-  const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal, alPaso: alPaso || undefined, nivel: 'low' });
+  const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal, alPaso: alPaso || undefined, nivel: 'low', seudo: seudonimos(D) });
   const n = aplicarNotas(r.texto, D);
   const vend = (M.vendidos || []).filter((v) => cuentaConVendido(n.texto, v.j && v.j.nombre));
   if (vend.length) n.texto += `\n\n> Ojo: ${vend.map((v) => `**${v.j.nombre}** ya no es tuyo (${v.como} ${cuando(v.t)})`).join('; ')}. No cuenta para lo de arriba.`;
