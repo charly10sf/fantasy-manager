@@ -186,7 +186,8 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   const med = (x) => media.get(String(x.id)) || 0;
   const num = [jornada];
   const h = hash(sem);
-  const pick = (xs, k = 0) => xs[(h + k) % xs.length];
+  // cada elección con su propia semilla (con una sola, las formas iban atadas entre sí: auditoría del 5 nov)
+  const pick = (xs, k = 0) => xs[hash(`${sem}:${k}`) % xs.length];
   const cu = cuando(m.date, ahora);
   if (cu) num.push(...cu.numeros);
   const datos = (k, eq) => ({
@@ -200,7 +201,7 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   for (const d of eqs) {
     if (d.bajas[0] && med(d.bajas[0]) >= 5) cands.push({ d, que: 'baja', x: d.bajas[0], peso: med(d.bajas[0]) + 1 });
     if (d.fijo && med(d.fijo) >= 7) cands.push({ d, que: 'fijo', x: d.fijo, peso: med(d.fijo) });
-    if (d.dudas.length >= 3) cands.push({ d, que: 'dudas', x: null, peso: 5.5 });
+    if (d.dudas.length >= 3 && d.dudas.filter((x) => x.p < 0.5).length >= 2) cands.push({ d, que: 'dudas', x: null, peso: 5.5 });
   }
   const lead = cands.sort((a, b) => b.peso - a.peso)[0] || null;
   const [A, B] = lead && lead.d === eqs[1] ? [eqs[1], eqs[0]] : eqs;
@@ -220,13 +221,18 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   // (sigue = va un verbo detrás: con tres, el rango lleva coma de cierre)
   const rango = (xs, sigue = false) => {
     const ps = xs.map(P);
-    if (xs.length <= 2) return new Set(ps).size === 1 && xs.length === 2 ? `${lista(xs.map((x) => x.nombre))} (${ps[0]} %)` : lista(xs.map((x, i) => `${x.nombre} (${ps[i]} %)`));
+    if (xs.length <= 2) return new Set(ps).size === 1 && xs.length === 2 ? `${lista(xs.map((x) => x.nombre))}, al ${ps[0]} % los dos${sigue ? ',' : ''}` : lista(xs.map((x, i) => `${x.nombre} (${ps[i]} %)`));
     const a = Math.min(...ps), b = Math.max(...ps);
     return `${lista(xs.map((x) => x.nombre))}, ${a === b ? `al ${a} %` : `entre el ${a} y el ${b} %`}${sigue ? ',' : ''}`;
   };
-  const verboDudas = (xs) => (xs.every((x) => x.p < 0.45) ? pl(xs.length, 'se juega el puesto', 'se juegan el puesto')
-    : xs.every((x) => x.p >= 0.45) ? pl(xs.length, 'apunta a titular, pero sin garantías', 'apuntan a titular, pero sin garantías')
-      : pl(xs.length, 'no tiene el sitio asegurado', 'no tienen el sitio asegurado'));
+  // (k: la semilla de cada equipo; «no tienen el sitio asegurado» salía en las 20 previas de la jornada)
+  const verboDudas = (xs, k) => {
+    const n = xs.length;
+    const fs = xs.every((x) => x.p < 0.45) ? [pl(n, 'se juega el puesto', 'se juegan el puesto'), pl(n, 'está en el aire', 'están en el aire'), pl(n, 'no tiene sitio fijo', 'no tienen sitio fijo')]
+      : xs.every((x) => x.p >= 0.45) ? [pl(n, 'apunta a titular, pero sin garantías', 'apuntan a titular, pero sin garantías'), pl(n, 'debería salir de inicio, aunque no es seguro', 'deberían salir de inicio, aunque no es seguro'), pl(n, 'parte con ventaja para salir de inicio, pero no está fijo', 'parten con ventaja para salir de inicio, pero no están fijos')]
+        : [pl(n, 'no tiene el sitio asegurado', 'no tienen el sitio asegurado'), pl(n, 'no es fijo', 'no son fijos'), pl(n, 'está pendiente de la decisión del entrenador', 'están pendientes de la decisión del entrenador')];
+    return pick(fs, k);
+  };
 
   // el primer equipo: el titular con su contraste, y sus dudas
   const fa = [];
@@ -254,7 +260,7 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   }
   if (A.dudas.length) {
     const z = zona(A.dudas);
-    fa.push(z ? `Las dudas están ${z}: ${rango(A.dudas)}` : `${cap(rango(A.dudas, true))} ${verboDudas(A.dudas)}`);
+    fa.push(z ? `Las dudas están ${z}: ${rango(A.dudas)}` : `${cap(rango(A.dudas, true))} ${verboDudas(A.dudas, 'vA')}`);
   }
   if (A.fijo && !usadoFijo && !(lead && lead.que === 'fijo')) fa.push(pick([`Lo más seguro es ${A.fijo.nombre}, al ${P(A.fijo)} %`, `Con ${A.fijo.nombre} se puede contar: ${P(A.fijo)} % y ${M(A.fijo)} de media`]));
 
@@ -262,24 +268,28 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   // (el orden de sus frases y la forma de cada una cambian de un partido a otro: que diez previas no se lean igual)
   // el equipo se nombra solo en la primera frase (nada de «El Valencia no tendrá a… El Valencia tiene sus dudas…»)
   const bD = (conEq) => {
-    const z = zona(B.dudas), n = B.dudas.length;
-    if (!n) return conEq ? pick([`En ${el(B.eq)}, el once está bastante claro`, `${mayus(el(B.eq))} no tiene dudas entre los que suelen jugar`, `Lo ${del(B.eq)} está más claro`], 1)
-      : pick(['No hay dudas entre los que suelen jugar', 'El once, bastante claro'], 1);
-    if (!conEq) return z ? `Las dudas están ${z}: ${rango(B.dudas)}` : pick([`${cap(rango(B.dudas, true))} ${verboDudas(B.dudas)}`, `Hay dudas con ${rango(B.dudas)}`], 1);
+    const z = zona(B.dudas), n = B.dudas.length, hayA = A.dudas.length > 0;
+    if (!n) return conEq ? pick([`En ${el(B.eq)}, el once está bastante claro`, `${mayus(el(B.eq))} no tiene dudas entre los que suelen jugar`, ...(hayA ? [`Lo ${del(B.eq)} está más claro`] : [])], 'bD0')
+      : pick(['No hay dudas entre los que suelen jugar', 'El once, bastante claro'], 'bD0');
+    // si el primero ya contó tres dudas con su rango, aquí solo la mayor («la mayor duda es Mella, al 41 %»), para no repetir la forma
+    const mayor = B.dudas[0];
+    const soloMayor = n >= 2 && A.dudas.length >= 3 && !zona(A.dudas);
+    const cuerpo = soloMayor ? `la mayor duda es ${mayor.nombre}, al ${P(mayor)} %` : `${rango(B.dudas, true)} ${verboDudas(B.dudas, 'vB')}`;
+    if (!conEq) return z && !soloMayor ? `Las dudas están ${z}: ${rango(B.dudas)}` : cap(cuerpo);
+    if (soloMayor) return pick([`En ${el(B.eq)}, ${cuerpo}`, `${mayus(el(B.eq))} también tiene lo suyo: ${cuerpo}`], 'bD1');
     return pick([
-      `En ${el(B.eq)} hay ${n > 1 ? 'más incógnitas' : 'una duda'}${z ? ` ${z}` : ''}: ${rango(B.dudas, true)} ${verboDudas(B.dudas)}`,
-      `${mayus(el(B.eq))} tiene sus dudas${z ? ` ${z}` : ''}: ${rango(B.dudas, true)} ${verboDudas(B.dudas)}`,
-      `Más dudas en ${el(B.eq)}${z ? `, ${z}` : ''}: ${rango(B.dudas, true)} ${verboDudas(B.dudas)}`,
-      `En ${el(B.eq)}, ${rango(B.dudas, true)} ${verboDudas(B.dudas)}`,
-    ], 1);
+      ...(hayA ? [`En ${el(B.eq)} hay ${n > 1 ? 'más incógnitas' : 'otra duda'}${z ? ` ${z}` : ''}: ${cuerpo}`, `Más dudas en ${el(B.eq)}${z ? `, ${z}` : ''}: ${cuerpo}`] : []),
+      `${mayus(el(B.eq))} tiene sus dudas${z ? ` ${z}` : ''}: ${cuerpo}`,
+      `En ${el(B.eq)}, ${cuerpo}`,
+    ], 'bD1');
   };
   const bB = (conEq) => (!B.bajas.length ? '' : conEq ? `${mayus(el(B.eq))} no tendrá a ${bajasDe(B.bajas)}`
     : pick([`${pl(B.bajas.length, 'Le falta', 'Le faltan')} ${bajasDe(B.bajas, 'y')}`, `No ${pl(B.bajas.length, 'estará', 'estarán')} ${bajasDe(B.bajas)}`,
-      `Se ${pl(B.bajas.length, 'pierde', 'pierden')} el partido ${bajasDe(B.bajas, 'y')}`], 2));
+      `Se ${pl(B.bajas.length, 'pierde', 'pierden')} el partido ${bajasDe(B.bajas, 'y')}`], 'bB'));
   const bF = () => (B.fijo ? pick([`${B.fijo.nombre}, al ${P(B.fijo)} %, es lo más seguro`, `Lo fijo es ${B.fijo.nombre}: ${P(B.fijo)} % y ${M(B.fijo)} de media`,
-    `Donde no hay duda es con ${B.fijo.nombre}, al ${P(B.fijo)} %`, `${B.fijo.nombre} sale seguro: ${P(B.fijo)} % y ${M(B.fijo)} puntos de media`], 3) : '');
+    `Donde no hay duda es con ${B.fijo.nombre}, al ${P(B.fijo)} %`, `${B.fijo.nombre} sale seguro: ${P(B.fijo)} % y ${M(B.fijo)} puntos de media`], 'bF') : '');
   // el orden de sus frases y la forma de cada una cambian de un partido a otro (que diez previas no se lean igual)
-  const ordenB = B.bajas.length ? pick([['d', 'b', 'f'], ['d', 'f', 'b'], ['b', 'd', 'f']], 4) : ['d', 'f'];
+  const ordenB = B.bajas.length ? pick([['d', 'b', 'f'], ['d', 'f', 'b'], ['b', 'd', 'f']], 'ordenB') : ['d', 'f'];
   const fb = ordenB.map((q, i) => (q === 'd' ? bD(i === 0) : q === 'b' ? bB(i === 0) : bF())).filter(Boolean);
 
   const cab = cu ? pick([`🗓️ ${L}-${V}, ${cu.t}: posibles onces fantasy para la jornada ${jornada}`,

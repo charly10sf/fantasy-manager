@@ -25,6 +25,7 @@ ok(decidirLargo({ config, registro: null, env: {}, ahora }).largo === true, 'sin
 ok(rechazoPorLargo({ estado: 403, cuerpo: '{"detail":"You are not permitted to create a Tweet with this length."}' }), '403 por el largo');
 ok(rechazoPorLargo({ estado: 400, cuerpo: '{"errors":[{"message":"Tweet text is too long"}]}' }), '400 «too long»');
 ok(!rechazoPorLargo({ estado: 403, cuerpo: 'You are not allowed to create a Tweet with duplicate content.' }), 'un duplicado no es por largo');
+ok(rechazoPorLargo({ estado: 403, cuerpo: '{"title":"Forbidden","status":403}' }), 'un 403 sin explicación, en un tweet largo, cuenta como rechazo por largo');
 ok(!rechazoPorLargo({ estado: 401, cuerpo: 'Unauthorized' }), 'un 401 no es por largo');
 ok(!rechazoPorLargo({ estado: 429, cuerpo: 'Too Many Requests' }), 'un 429 no es por largo');
 

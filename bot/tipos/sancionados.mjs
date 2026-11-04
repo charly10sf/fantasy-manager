@@ -68,8 +68,10 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {},
     for (let n = Math.min(resto.length, 5); n >= 1 && !hecho; n--) {
       const xs = resto.slice(0, n);
       const cab = n === 1 ? `🟥 ${xs[0].nombre} se pierde la jornada ${jornada} por sanción` : `🟥 ${mayus(enLetra(n))} sancionados para la jornada ${jornada}`;
-      const lineas = xs.map((x) => { const l = lineaSancion(x, { solo: n === 1 }), r = pp[String(x.teamId)];
-        return L && n > 1 && r ? `${l} y se pierde el partido contra ${el(r.rival)}` : l; });
+      // (con tweets largos, contra quién no estará cada uno, dicho de otra forma en cada línea: no la misma coletilla en todas)
+      const cola = [(r) => ` y se pierde el partido contra ${el(r.rival)}`, (r) => `, así que no estará contra ${el(r.rival)}`, (r) => `: no jugará contra ${el(r.rival)}`];
+      const lineas = xs.map((x, i) => { const l = lineaSancion(x, { solo: n === 1 }), r = pp[String(x.teamId)];
+        return L && n > 1 && r ? `${l}${(l.includes(':') ? cola.slice(0, 2) : cola)[i % (l.includes(':') ? 2 : 3)](r)}` : l; });
       const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
       const pr = n === 1 ? pp[String(xs[0].teamId)] : null;
       const etiqueta = n === 1 ? `❌ Baja Fantasy ${paraLa(pr, jornada)}` : `❌ Bajas Fantasy para la jornada ${jornada}`;
@@ -104,9 +106,10 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {},
       if (a) juego = `⚠️ Ojo sobre todo con ${a.nombre}: con otra amarilla se pierde ${partido(a.equipo, pp2[String(a.teamId)])}`
         + (b ? `. Y ${b.nombre} se quedaría sin ${partido(b.equipo, pp2[String(b.teamId)])}` : '');
     }
-    const r = tweet(cab, [{ t: nombres, prio: 9 }, { t: aviso, prio: 9 }, juego && { t: juego, prio: 3 }, top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
+    // (si va el párrafo de «Ojo sobre todo con…», la media de todos sobra: nombraría otra vez a los mismos)
+    const r = tweet(cab, [{ t: nombres, prio: 9 }, { t: aviso, prio: 9 }, juego && { t: juego, prio: 3 }, !juego && top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
     if (![nombres, aviso, etiqueta].every((l) => r.usadas.includes(l))) continue;
-    out.push({ tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, numeros: [jornada, jornada + 1, ...(top ? top.numeros : [])] });
+    out.push({ tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, numeros: [jornada, jornada + 1, ...(top && !juego ? top.numeros : [])] });
     break;
   }
   return out.map(({ n, ...t }) => t);
