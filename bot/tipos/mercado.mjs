@@ -3,7 +3,7 @@
 // de Madrid): el último punto es el de hoy. Lleva el cierre de «Fantasy Manager · enlace en la bio».
 import { valorMercado } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
-import { cierre, corto, fmt, partes, del, largo } from '../lib/texto.mjs';
+import { cierre, corto, fmt, partes, del, largo, hash } from '../lib/texto.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t));
 const puntos = (h) => (Array.isArray(h) ? h : []).map((v) => ({ t: Date.parse(v.date), v: Number(v.marketValue) })).filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
@@ -74,8 +74,13 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   if (largo()) {
     const s = suben[0], b = bajan[0];
     const cifra = (x) => (x >= 1e6 ? x / 1e6 : x / 1e3);
-    lectura = `\n\n📈 ${s.nombre} ${del(s.equipo)} es el que más sube: +${dinero(s.dif)} (+${fmt(s.pct)} %), hasta los ${dinero(s.nuevo)}.`
-      + `\n\n📉 El que más cae es ${b.nombre} ${del(b.equipo)}: -${dinero(-b.dif)} (-${fmt(-b.pct)} %), se queda en ${dinero(b.nuevo)}.`;
+    // la subida y la bajada contadas de forma distinta (Carlos, 4 nov 23:39: nada de dos frases calcadas cambiando el nombre)
+    lectura = [
+      `\n\n📈 ${s.nombre} ${del(s.equipo)} es el que más sube: +${dinero(s.dif)} (+${fmt(s.pct)} %), hasta los ${dinero(s.nuevo)}.`
+        + `\n\n📉 En el otro lado, ${b.nombre} ${del(b.equipo)} pierde ${dinero(-b.dif)} en un día y se queda en ${dinero(b.nuevo)} (-${fmt(-b.pct)} %).`,
+      `\n\n📈 Nadie sube más que ${s.nombre}: +${dinero(s.dif)} en un día (+${fmt(s.pct)} %), y ya vale ${dinero(s.nuevo)}.`
+        + `\n\n📉 ${b.nombre} ${del(b.equipo)} va en sentido contrario: cae ${dinero(-b.dif)}, un ${fmt(-b.pct)} %, hasta los ${dinero(b.nuevo)}.`,
+    ][hash(dia) % 2];
     num.push(...[s.dif, s.nuevo, -b.dif, b.nuevo].flatMap((x) => partes(cifra(x))), ...partes(s.pct), ...partes(-b.pct));
   }
   const texto = `💸 Subidas y bajadas del mercado fantasy de hoy, ${dd}/${mes}${lectura}${linea}\n\n${cierre(`mercado${dia}`)}`;

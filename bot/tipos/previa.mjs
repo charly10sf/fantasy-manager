@@ -225,12 +225,12 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
     const todos = [...(les.length ? [`${lista(les)}, ${pl(les.length, 'lesionado', 'lesionados')}`] : []), ...(san.length ? [`${lista(san)}, ${pl(san.length, 'sancionado', 'sancionados')}`] : [])];
     const ni = todos.length > 1 ? `${todos[0]}, ni ${todos[1]}` : todos[0];
     if (tambien) return `Tampoco ${pl(n, 'estará', 'estarán')} ${ni}`;
-    if (v % 3 === 1 && les.length) return `En la enfermería ${pl(les.length, 'sigue', 'siguen')} ${lista(les)}${san.length ? `, y ${lista(san)} ${pl(san.length, 'cumple', 'cumplen')} sanción` : ''}`;
+    if (v % 3 === 1 && les.length) return `${pl(les.length, 'Sigue lesionado', 'Siguen lesionados')} ${lista(les)}${san.length ? `, y ${lista(san)} ${pl(san.length, 'cumple', 'cumplen')} sanción` : ''}`;
     if (v % 3 === 2) return `${pl(n, 'Se cae', 'Se caen')} ${todos.length > 1 ? `${todos[0]}, y ${todos[1]}` : todos[0]}`;
     return `No ${pl(n, 'estará', 'estarán')} ${ni}`;
   };
   const fFijo = (x, v) => [`Lo más seguro es ${x.nombre}: ${p100(x)} % y ${mm(x)} de media`, `${x.nombre}, con ${mm(x)} de media, sale casi seguro (${p100(x)} %)`,
-    `El que no debería faltar es ${x.nombre}, al ${p100(x)} % y con ${mm(x)} de media`, `${x.nombre} apenas tiene dudas: ${p100(x)} % de titularidad y ${mm(x)} puntos de media`,
+    `El que no debería faltar es ${x.nombre}, al ${p100(x)} % y con ${mm(x)} de media`, `${x.nombre} va a misa: ${p100(x)} % de titularidad y ${mm(x)} puntos de media`,
     `Con ${x.nombre} se puede contar: sale al ${p100(x)} % y lleva ${mm(x)} de media`][v % 5];
 
   // el titular del partido, a su manera
@@ -246,7 +246,7 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
       arriba = pick([`${x.nombre} es de los que no fallan en ${el(e)}: titular casi seguro (${p100(x)} %) y ${mm(x)} puntos de media`,
         `En ${el(e)} hay una fija: ${x.nombre}, al ${p100(x)} % y con ${mm(x)} de media`,
         `${x.nombre} llega como fijo en ${el(e)}, con un ${p100(x)} % y ${mm(x)} puntos de media`]);
-    } else arriba = pick([`${mayus(el(e))} llega con muchas dudas en el once`, `El once ${del(e)} está lejos de estar claro`, `En ${el(e)} hay varios puestos por decidir`]);
+    } else arriba = pick([`${mayus(el(e))} llega con el once muy abierto`, `El once ${del(e)} está lejos de estar claro`, `En ${el(e)} hay varios puestos por decidir`]);
   }
   // lo que queda de cada equipo, en un orden distinto para cada uno
   const ORDENES = [['dudas', 'bajas', 'fijo'], ['bajas', 'fijo', 'dudas'], ['fijo', 'dudas', 'bajas']];
@@ -267,7 +267,7 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   const fa = resto(A, h, o1, !!lead);
   const fb = resto(B, h + 1, o2, false);
   // la primera frase detrás de «En el X,»: en minúscula solo si empieza por una palabra corriente (nunca un nombre: «Iker Luque»)
-  const seguir = (f) => (/^(Lo|El|La|No|Se|Tampoco|Con|En|Sin)\b/.test(f) ? f.replace(/^./, (c) => c.toLowerCase()) : f);
+  const seguir = (f) => (/^(Lo|El|La|No|Se|Sigue|Siguen|Tampoco|Con|En|Sin)\b/.test(f) ? f.replace(/^./, (c) => c.toLowerCase()) : f);
   // el primer párrafo: el titular y lo que queda de su equipo (si no hay titular, el primer equipo con su nombre delante)
   const parA = lead ? [arriba, ...fa].join('. ') : fa.length ? `${pick([`En ${el(A.eq)}`, `Empezando por ${el(A.eq)}`])}, ${seguir(fa[0])}${fa.length > 1 ? `. ${fa.slice(1).join('. ')}` : ''}` : '';
   // el segundo, con otra entrada; si no tiene nada que contar, media frase
