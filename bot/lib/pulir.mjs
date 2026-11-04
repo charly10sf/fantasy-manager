@@ -25,21 +25,28 @@ const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
 const ESTADO = ['cae', 'caen', 'cayo', 'lesion', 'lesiona', 'sancion', 'baja', 'duda', 'molesti', 'vuelv', 'regres', 'recuper', 'reaparec', 'disponib', 'alta', 'titular',
   'suplent', 'banquillo', 'descart', 'convoca', 'rotaci', 'descans', 'habitual', 'roja', 'amarill', 'ciclo', 'expuls', 'gol', 'doblete', 'hat',
   'penalti', 'asist', 'rotura', 'operad', 'quirof', 'semana', 'mes', 'dia', 'hasta', 'seguro', 'mejor', 'peor', 'mvp',
-  'empat', 'remont', 'victori', 'derrot', 'porteria', 'cero', 'sube', 'subid', 'baj', 'chollo', 'vend', 'compr', 'ficha', 'clausul'];
+  'empat', 'remont', 'victori', 'derrot', 'porteria', 'cero', 'sube', 'subid', 'baj', 'chollo', 'vend', 'compr', 'ficha', 'clausul', 'volv'];
 // sinónimos (segunda prueba: «se cae por lesión» → «baja por lesión» es lo mismo en un tweet de caídas)
-const IGUAL = { cae: 'baja', caen: 'baja', cayo: 'baja', lesiona: 'lesion', regres: 'vuelv', reaparec: 'vuelv', recuper: 'vuelv' };
+// palabras «suaves»: se pueden quitar al reescribir (no añadir). En la previa, «apunta a titular» o «sale seguro» se pueden decir de
+// otra forma; en el resto, «titular» cuenta (un «se queda sin dos titulares» no puede perderlo: prueba/pulir-ejemplo.mjs)
+const SUAVES_DE = { previa: ['titular', 'seguro', 'habitual', 'mejor', 'peor'] };
+const SUAVES_BASE = ['seguro'];
+const IGUAL = { cae: 'baja', caen: 'baja', cayo: 'baja', lesiona: 'lesion', regres: 'vuelv', reaparec: 'vuelv', recuper: 'vuelv', volv: 'vuelv' };
 // y una lesión o una sanción ya dicen que es baja («Aspas se cae por lesión» = «Aspas, lesionado»)
 const estado = (s) => {
   const e = new Set(norm(s).split(' ').map((w) => ESTADO.find((r) => w.startsWith(r))).filter(Boolean).map((r) => IGUAL[r] || r));
   if (e.has('lesion') || e.has('sancion')) e.delete('baja');
   return [...e].sort().join(' ');
 };
-/** las palabras con mayúscula que no van al principio de la línea (quitado el emoji) */
+/** las palabras con mayúscula que no van al principio de una frase (quitado el emoji). Desde el texto corrido (4 nov), una línea
+    lleva varias frases: la primera palabra de cada una («Su media…», «Tarde…») no cuenta como nombre nuevo */
 const mayusculas = (s) => {
   const out = new Set();
   for (const l of lineas(s)) {
-    const ws = l.replace(EMOJI, ' ').replace(/[️‍]/g, '').split(/[^\p{L}.]+/u).filter(Boolean);
-    ws.slice(1).forEach((w) => { if (/^\p{Lu}/u.test(w)) out.add(norm(w)); });
+    for (const frase of l.replace(EMOJI, ' ').replace(/[️‍]/g, '').split(/(?<=[.!?:])\s+|[¿¡]/u)) {
+      const ws = frase.split(/[^\p{L}.]+/u).filter(Boolean);
+      ws.slice(1).forEach((w) => { if (/^\p{Lu}/u.test(w)) out.add(norm(w)); });
+    }
   }
   return out;
 };
@@ -57,8 +64,9 @@ export function nombresDe(jugadores = [], equipos = {}) {
 }
 
 /** ¿vale el texto pulido? [] si sí; si no, los motivos */
-export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [] } = {}) {
+export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [], tipo = '' } = {}) {
   const e = [];
+  const SUAVES = new Set(SUAVES_DE[tipo] || SUAVES_BASE);
   const v = validar(nuevo, { numeros, max });
   if (!v.ok) e.push(...v.errores);
   if (cifras(orig).join(' ') !== cifras(nuevo).join(' ')) e.push(`cifras distintas (${cifras(orig).join(' ')} → ${cifras(nuevo).join(' ')})`);
@@ -73,8 +81,10 @@ export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [
     if ((emojis(a)[0] || '') !== (emojis(b)[0] || '')) { e.push(`línea ${i + 1}: cambia el emoji`); continue; }
     if (cifras(a).join(' ') !== cifras(b).join(' ')) e.push(`línea ${i + 1}: cifras`);
     if (nombresEn(a, nombres).join('|') !== nombresEn(b, nombres).join('|')) e.push(`línea ${i + 1}: jugadores o equipos`);
+    // las palabras «suaves» (titular, seguro, habitual, mejor, peor) se pueden quitar al reescribir, pero no añadir; el resto, iguales
     const ea = estado(a), eb = estado(b);
-    if (ea !== eb) e.push(`línea ${i + 1}: estado «${ea}» → «${eb}»`);
+    const duras = (x) => x.split(' ').filter((w) => w && !SUAVES.has(w)).join(' '), suaves = (x) => x.split(' ').filter((w) => SUAVES.has(w));
+    if (duras(ea) !== duras(eb) || suaves(eb).some((w) => !suaves(ea).includes(w))) e.push(`línea ${i + 1}: estado «${ea}» → «${eb}»`);
   }
   const no = nombresEn(orig, nombres), nn = nombresEn(nuevo, nombres);
   const faltan = no.filter((x) => !nn.includes(x)), sobran = nn.filter((x) => !no.includes(x));
@@ -111,6 +121,7 @@ Cómo se escribe en la cuenta:
 - Texto corrido, como lo escribiría una persona: dentro de cada párrafo puedes unir frases con «y», «pero», «aunque» o una coma, y quitar repeticiones. Deja el emoji que ya lleva el principio de cada párrafo y no pongas más.
 - La segunda vez que sale un jugador, por su puesto («el delantero», «el central») solo si el texto ya lo dice; si no, por su nombre.
 - Dudas con palabras («en principio», «todo apunta a que», «de momento»).
+- Que no se note que es automático: si dos párrafos o dos frases tienen el mismo esqueleto y solo cambian los nombres, dale otra forma a uno (otro orden, otro verbo, otra entrada). No repitas la misma muletilla dentro del tweet.
 - Nada de tono de anuncio: sin «¡» en cada frase, sin adjetivos grandes, sin primera persona, sin «bot», sin @ ni #.
 Reglas que no se pueden saltar:
 - Las mismas cifras, ni una más ni una menos, escritas igual («5,5» sigue siendo «5,5»). Nada de cifras en letra.
@@ -152,7 +163,7 @@ export async function pulir(tweets, { tipo, registro = null, config = {}, jugado
     if (!t || typeof a.texto !== 'string') continue;
     const nuevo = a.texto.replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
     if (nuevo === t.texto) continue;
-    const malos = revisar(t.texto, nuevo, { numeros: t.numeros, max: limite(), nombres });
+    const malos = revisar(t.texto, nuevo, { numeros: t.numeros, max: limite(), nombres, tipo });
     if (malos.length) { cuenta.mal++; log(`  (pulir) ${t.clave}: me quedo la plantilla (${malos.slice(0, 3).join('; ')})`); continue; }
     t.plantilla = t.texto; t.texto = nuevo; t.pulido = r.modelo; cuenta.ok++; cambiados++;
   }

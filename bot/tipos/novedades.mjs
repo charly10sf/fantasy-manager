@@ -137,12 +137,12 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       lineas = [...lineasPorEstado(buenos, { club: !conClubes, ya: buenos.length > 1 }), `${m.que === 'lesion' ? '❌' : '🟥'} ${quien}${por} ${que}`];
     } else if (buenos.length && malos.length) lineas = [...lineasPorEstado(buenos, { club: mismo }), ...lineasPorEstado(malos, { club: mismo })];
     else lineas = lineasPorEstado(xs, { club: mismo });
-    const top = L ? (() => { const r = pesos(xs); return r && { ...r, t: aparte(r.t) }; })() : elQueMasPesa(xs);
+    const top = L ? (() => { const r = pesos(xs, `${dia}${k}`, { bajas: !buenos.length }); return r && { ...r, t: aparte(r.t) }; })() : elQueMasPesa(xs);
     const pps = xs.map((e) => e.pp).filter(Boolean);
     const J = pps.length ? Math.min(...pps.map((p) => p.jornada)) : jornada;
     const para = mismo && xs[0].pp ? paraLa(xs[0].pp, J) : `para la jornada ${J}`;
     const etiqueta = !buenos.length ? `❌ Bajas Fantasy ${para}` : !malos.length ? `✅ Disponibles Fantasy ${para}` : `👀 Revisa tu once Fantasy ${para}`;
-    const det = buenos.length && malos.length === 1 && !mismo ? null : L ? detalles(xs) : detalle(xs);   // en el caso de arriba el motivo ya va en su línea
+    const det = buenos.length && malos.length === 1 && !mismo ? null : L ? detalles(xs, 3, `${dia}${k}`) : detalle(xs);   // en el caso de arriba el motivo ya va en su línea
     const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos
     const clave = `novedades|${xs.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`;

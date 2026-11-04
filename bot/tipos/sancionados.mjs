@@ -60,7 +60,7 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {},
   const out = [];
   // con tweets largos (X Premium): contra quién no estará cada sancionado, la media de todos y qué partido se jugaría cada apercibido
   const L = largo();
-  const peso = (xs) => { if (!L) return elQueMasPesa(xs); const r = pesos(xs); return r && { ...r, t: aparte(r.t) }; };
+  const peso = (xs) => { if (!L) return elQueMasPesa(xs); const r = pesos(xs, xs.map((x) => x.id).join('-')); return r && { ...r, t: aparte(r.t) }; };
   // sancionados: un tweet con todos los que caben; si no caben, los que sobran van en otro
   let resto = [...sancionados].sort((a, b) => b.media - a.media || b.valor - a.valor);
   while (resto.length && out.length < 2) {
@@ -94,12 +94,15 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {},
       : `⚠️ Si ${n === 1 ? 've' : 'ven'} una amarilla en la jornada ${jornada}, ${n === 1 ? 'se pierde' : 'se pierden'} la ${jornada + 1}`;
     const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
     const etiqueta = `🟨 Apercibidos Fantasy de la jornada ${jornada}`;
-    // con tweets largos: el partido de la jornada siguiente que se perdería cada uno («Y. Zabiri y Pablo Ramón, el Racing-Real Sociedad»)
+    // con tweets largos: el partido de la jornada siguiente que se perderían los dos que más pesan (de equipos distintos), contado
+    // como lo diría una persona y no como una lista (Carlos, 4 nov 23:39: nada que suene a plantilla)
     let juego = null;
     if (L && n > 1) {
-      const gs = porClub(xs).map((g) => ({ g, pr: pp2[String(g[0].teamId)] })).filter((x) => x.pr);
-      const ts = gs.map(({ g, pr }) => `${lista(g.map((x) => x.nombre))}, ${partido(g[0].equipo, pr)}`);
-      if (ts.length) juego = `⚠️ Con una amarilla más se perderían ${ts.length > 1 ? `${ts.slice(0, -1).join('; ')}, y ${ts[ts.length - 1]}` : ts[0]}`;
+      const dos = [];
+      for (const x of xs) if (pp2[String(x.teamId)] && !dos.some((y) => y.teamId === x.teamId) && dos.length < 2) dos.push(x);
+      const [a, b] = dos;
+      if (a) juego = `⚠️ Ojo sobre todo con ${a.nombre}: con otra amarilla se pierde ${partido(a.equipo, pp2[String(a.teamId)])}`
+        + (b ? `. Y ${b.nombre} se quedaría sin ${partido(b.equipo, pp2[String(b.teamId)])}` : '');
     }
     const r = tweet(cab, [{ t: nombres, prio: 9 }, { t: aviso, prio: 9 }, juego && { t: juego, prio: 3 }, top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
     if (![nombres, aviso, etiqueta].every((l) => r.usadas.includes(l))) continue;

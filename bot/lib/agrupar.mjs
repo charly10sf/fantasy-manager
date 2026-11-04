@@ -3,7 +3,7 @@
 //   «❌ Se caen por lesión Lemar en el Elche y M. Román en el Celta»
 //   «✅ Vuelven Valverde al Real Madrid, Sadiq al Valencia y Gueye al Villarreal»
 // La media, solo la del que más pesa, en su propia línea. Lo usan caidas.mjs y novedades.mjs.
-import { el, al, fmt, partes } from './texto.mjs';
+import { el, al, fmt, partes, hash } from './texto.mjs';
 
 const NUM = ['ningún', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
 /** 3 → «tres» (para las cabeceras: «Tres titulares habituales se caen…») */
@@ -86,19 +86,49 @@ export function detalle(xs) {
   const m = motivoDe(x);
   return { t: `⚠️ ${m.t}`, numeros: m.numeros };
 }
-/** con tweets largos (X Premium): el motivo de todos los que lo tienen, hasta `max`, en frases seguidas */
-export function detalles(xs, max = 5) {
-  const ms = conMotivo(xs).slice(0, max).map(motivoDe);
+// el artículo de una lesión para «tiene una rotura…», «arrastra un golpe…» («molestias», sin artículo)
+const artLesion = (l) => (/^(lesi[oó]n|rotura|luxaci[oó]n|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n|pubalgia|fisura|rotura|tendinopat|inflamaci[oó]n|tendinosis|operaci[oó]n)/i.test(l) ? 'una '
+  : /^(golpe|esguince|edema|problema|pinchazo|tirón|desgarro|traumatismo)/i.test(l) ? 'un ' : '');
+/** el motivo de uno, contado de una de varias formas (v), para que una lista de bajas no suene a plantilla (Carlos, 4 nov 23:39) */
+function motivoVario(x, v) {
+  if (x.motivoSan) return motivoDe(x);
+  const p = x.parte, les = p.lesion.replace(/^./, (c) => c.toLowerCase()), a = artLesion(les);
+  const nums = [p.jornada, ...(String(p.hasta || '').match(/\d+/g) || []).map(Number)].filter((n) => n != null);
+  if (p.estado === 'baja' && p.hasta) {
+    const t = [`${x.nombre}, ${les}: baja hasta ${p.hasta}`, `${x.nombre} no volverá hasta ${p.hasta} por ${a}${les}`,
+      `${x.nombre} estará fuera hasta ${p.hasta}${a ? ` por ${a}${les}` : `: ${les}`}`, `Lo de ${x.nombre} es ${a || 'por '}${les}, y no se le espera hasta ${p.hasta}`][v % 4];
+    return { t, numeros: nums };
+  }
+  if (p.estado === 'duda' && p.jornada) return { t: [`${x.nombre}, ${les}: duda para la jornada ${p.jornada}`, `${x.nombre} arrastra ${a}${les} y es duda para la jornada ${p.jornada}`][v % 2], numeros: nums };
+  return { t: [`${x.nombre}, ${les}`, `${x.nombre} tiene ${a}${les}`][v % 2], numeros: nums };
+}
+/** con tweets largos (X Premium): el motivo de todos los que lo tienen, hasta `max`, cada uno contado de otra forma */
+export function detalles(xs, max = 5, semilla = '') {
+  const h = hash(semilla);
+  const ms = conMotivo(xs).slice(0, max).map((x, i) => motivoVario(x, h + i));
   if (!ms.length) return null;
   return { t: `⚠️ ${ms.map((m) => m.t).join('. ')}`, numeros: ms.flatMap((m) => m.numeros) };
 }
 /** con tweets largos: la media de todos, del que más pesa al que menos: «‼️ El que más pesa es Vini Jr., con 6,3 puntos de media;
     detrás, Rodri con 5,8 y Cuti Romero con 4,1» (sin paréntesis: Carlos, 3 nov). Solo los de 3 o más de media, hasta 4. */
-export function pesos(xs) {
+export function pesos(xs, semilla = '', { bajas = true } = {}) {
   const ys = [...xs].filter((x) => x.media >= 3).sort((a, b) => b.media - a.media).slice(0, 4);
   if (xs.length < 2 || !ys.length) return null;
+  // empatados con el primero: «Y. Zabiri y Yoel Lago, con 6 cada uno, son los que más pesan»
+  const igual = ys.filter((x) => fmt(x.media) === fmt(ys[0].media));
+  if (igual.length > 1) {
+    const otros = ys.filter((x) => !igual.includes(x));
+    const t = `‼️ ${lista(igual.map((x) => x.nombre))}, con ${fmt(igual[0].media)} de media cada uno, son los que más pesan${otros.length ? `; detrás, ${lista(otros.map((x) => `${x.nombre} con ${fmt(x.media)}`))}` : ''}`;
+    return { t, numeros: ys.flatMap((x) => partes(x.media)) };
+  }
   const [a, ...resto] = ys;
-  const t = resto.length ? `‼️ El que más pesa es ${a.nombre}, con ${fmt(a.media)} puntos de media; detrás, ${lista(resto.map((x) => `${x.nombre} con ${fmt(x.media)}`))}`
-    : `‼️ El que más pesa es ${a.nombre}: ${fmt(a.media)} puntos de media`;
+  // los que tienen la misma media, juntos («Cuti Romero, Miguel Sierra y Rodri, con 6,1 cada uno»)
+  const grupos = [];
+  for (const x of resto) { const g = grupos.find((y) => fmt(y[0].media) === fmt(x.media)); if (g) g.push(x); else grupos.push([x]); }
+  const det = lista(grupos.map((g) => (g.length > 1 ? `${lista(g.map((x) => x.nombre))}, con ${fmt(g[0].media)} cada uno` : `${g[0].nombre} con ${fmt(g[0].media)}`)));
+  const v = hash(semilla) % 2;
+  // «la baja que más duele» solo si todos son bajas (en novedades van mezclados con los que vuelven)
+  const t = !resto.length ? [`‼️ El que más pesa es ${a.nombre}: ${fmt(a.media)} puntos de media`, bajas ? `‼️ La baja que más se nota es la de ${a.nombre}, que promedia ${fmt(a.media)} puntos` : `‼️ ${a.nombre} es el que más puntos da: ${fmt(a.media)} de media`][v]
+    : [`‼️ El que más pesa es ${a.nombre}, con ${fmt(a.media)} puntos de media; detrás, ${det}`, bajas ? `‼️ Por puntos, la que más duele es la de ${a.nombre}: ${fmt(a.media)} de media. ${resto.length > 1 ? 'Después van' : 'Después va'} ${det}` : `‼️ Por media manda ${a.nombre}, con ${fmt(a.media)}; luego, ${det}`][v];
   return { t, numeros: ys.flatMap((x) => partes(x.media)) };
 }
