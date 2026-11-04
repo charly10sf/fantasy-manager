@@ -471,7 +471,7 @@ export function fichaRival(S, tid) {
   if (r.cambios.length || acts.length) {
     h += `<div class="sec" id="r-hace" data-ancla><h2>Lo que hace</h2></div>`;
     h += r.cambios.filter((m) => m.tipo === 'blinda').slice(0, 5).map((m) => `<div class="fila"><span class="ic-act blindaje">${icono('escudo')}</span><div class="fila-c"><div class="act-t">Subió la cláusula de <b>${esc(m.j.nombre)}</b> de ${eur(m.de)} a ${eur(m.a)}</div><div class="fila-s">${cuando(m.t)}</div></div></div>`).join('');
-    h += acts.map(filaActividad).join('');
+    h += acts.map((a) => filaActividad(a, { dentroDe: tid })).join('');
   }
   return h + candadosJuntos(cerradas);
 }

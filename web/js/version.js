@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12m';
+export const VERSION = '0.6.12n';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,15 @@ export const VERSION = '0.6.12m';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12n', f: '2026-11-04', h: '', t: 'El dinero de los rivales, con todos los movimientos',
+    cosas: [
+      { tipo: 'arreglo', d: 'dinero', t: 'El dinero de los rivales, con todo el historial', x: 'Si alguien se había ido de la liga, la app daba por leídos todos los movimientos antes de llegar al principio y el dinero estimado de los rivales salía con datos a medias. En ligas con mucho movimiento, además, no pasaba de la página 50. Ahora solo cuenta a los que siguen en la liga y, si no llega al principio, sigue la semana siguiente desde donde lo dejó.', ir: { v: 'rivales' } },
+      { tipo: 'arreglo', d: 'arreglo', t: 'La semana del cambio de hora, bien contada', x: 'Para revender antes de la jornada, la app sumaba 24 horas justas a cada cambio de mercado. La semana del cambio de hora eso no es verdad: en octubre contaba dos cambios el mismo día y en marzo los ponía a la 01:15. Ahora va día a día a las 00:15.', menor: true },
+      { para: 'web', tipo: 'arreglo', d: 'periodico', t: 'Noticias también en la web', x: 'Google Noticias no contesta casi nunca a la web por el servidor de siempre. Ahora, si falla, la web las pide por el segundo servidor y, si ahí salen, sigue por él unas horas.' },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Botones que no hacían nada', x: 'En los movimientos, las filas sin jugador («Fulano cobró por la jornada») parecían botones y no abrían nada: ahora abren la ficha de ese rival, y las tuyas ya no parecen un botón. El «valor ›» de la cabecera de Equipo te lleva a la gráfica del valor aunque ya estés en Beneficio. En la liga de ejemplo, la ficha de un club explica por qué no sale su once.', menor: true },
+    ],
+  },
   {
     v: '0.6.12m', f: '2026-11-04', h: '05:55', t: 'La web se pone al día sola',
     cosas: [

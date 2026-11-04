@@ -140,6 +140,14 @@ async function porWorker(metodo, url, cabeceras, cuerpo, tiempo) {
   if (r.sinServidor) { const d = await aDeno(r.e); return d.sinServidor ? r : d; }
   return r;
 }
+/** solo por el intermediario de Deno (en la web; en la app o sin Deno, no hay). Para lo que el Worker no consigue aunque
+    conteste: Google Noticias da 503 a las IP de Cloudflare */
+export const hayDeno = () => !!PROXY2;
+export function httpPorDeno(metodo, url, { cabeceras = {}, cuerpo = null, tiempo = 45000 } = {}) {
+  if (!PROXY2) return Promise.resolve({ s: 0, e: 'sin segundo intermediario' });
+  proxy.usos++;
+  return porProxy(PROXY2, metodo, url, cabeceras, cuerpo, tiempo);
+}
 /** una petición a un intermediario (/p). `sinServidor`: no se ha llegado a él (no es que el sitio de destino falle) */
 async function porProxy(base, metodo, url, cabeceras, cuerpo, tiempo, alContestar) {
   const parar = new AbortController();

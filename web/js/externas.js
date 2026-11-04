@@ -5,7 +5,7 @@
    - Histórico de valor de cada jugador (la API de LaLiga, probando las rutas que ha tenido).
    - Las alineaciones confirmadas (SofaScore o, si no deja, futbolfantasy), en cuanto salen, una hora antes de cada partido.
    Todo pasa por el puente de la app (sin CORS) y se guarda un rato para no repetir. */
-import { http } from './puente.js';
+import { http, enWeb, hayDeno, httpPorDeno } from './puente.js';
 import { api, apuntarRegistro, registro } from './api.js';
 import { guardarMuestraVivo } from './vivo.js';
 import { norm, LS, DIA, HORA, MIN, enParalelo, ms, num, diaDe, horaDe, esDeFutbol } from './util.js';
@@ -231,9 +231,21 @@ export function parseRSS(xml) {
 }
 async function buscarNoticias(q) {
   const url = `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=es&gl=ES&ceid=ES:es`;
-  const t0 = Date.now();
-  const r = await http('GET', url, { cabeceras: { Accept: 'application/rss+xml, application/xml', 'User-Agent': UA } });
-  apuntarRegistro({ ruta: `noticias «${q.slice(0, 50)}»`, s: r.s, ms: Date.now() - t0, e: r.e, forma: r.b ? `${Math.round(r.b.length / 1024)} KB` : '' });
+  const op = { cabeceras: { Accept: 'application/rss+xml, application/xml', 'User-Agent': UA } };
+  const apuntar = (r, t0, via) => apuntarRegistro({ ruta: `noticias${via} «${q.slice(0, 50)}»`, s: r.s, ms: Date.now() - t0, e: r.e, forma: r.b ? `${Math.round(r.b.length / 1024)} KB` : '' });
+  // en la web, Google Noticias suele dar 503 por el Worker (no le gustan las IP de Cloudflare): si falla, se prueba por
+  // el intermediario de Deno y, si allí contesta, se sigue por Deno 6 horas
+  const porDeno = enWeb && hayDeno() && LS.get('noticias-deno', 0) > Date.now();
+  let t0 = Date.now();
+  let r = await (porDeno ? httpPorDeno('GET', url, op) : http('GET', url, op));
+  apuntar(r, t0, porDeno ? ' por Deno' : '');
+  if (porDeno && r.s !== 200) LS.del('noticias-deno');
+  else if (!porDeno && r.s !== 200 && enWeb && hayDeno()) {
+    t0 = Date.now();
+    const d = await httpPorDeno('GET', url, op);
+    apuntar(d, t0, ' por Deno');
+    if (d.s === 200 && d.b) { LS.set('noticias-deno', Date.now() + 6 * HORA); r = d; }
+  }
   // null si no ha contestado bien (no es lo mismo que «no hay noticias»)
   return r.s === 200 && r.b ? parseRSS(r.b) : null;
 }
