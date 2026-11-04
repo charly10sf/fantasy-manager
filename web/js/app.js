@@ -434,8 +434,23 @@ function marco() {
 /** el ordenador: la clase en <html> para el CSS y, al pasar de un tamaño a otro, todo se vuelve a pintar */
 function ponerTamano() { document.documentElement.classList.toggle('escritorio', V.ancho()); }
 ponerTamano();
+/* Las subpestañas «llenas» (Equipo) reparten el ancho a partes iguales. Con la letra grande del móvil (130 % o más)
+   «Jornadas», «Cláusulas» o «Beneficio» no caben y se montan unas encima de otras: si alguna no cabe, esa barra pasa a
+   deslizarse de lado, como las demás. */
+function ajustarTabs(raiz = document) {
+  for (const t of raiz.querySelectorAll('.tabs.llenas, .tabs.no-caben')) {
+    t.classList.remove('no-caben'); t.classList.add('llenas');
+    if ([...t.querySelectorAll('button')].some((b) => b.scrollWidth > b.clientWidth + 1)) { t.classList.remove('llenas'); t.classList.add('no-caben'); }
+  }
+  // lo mismo con las cuatro cifras de la cabecera de Equipo (a 160 % salía «488,4…»): si alguna no cabe, en dos columnas
+  for (const n of raiz.querySelectorAll('.eq2-num')) {
+    n.classList.remove('dos');
+    if ([...n.querySelectorAll('b, span')].some((b) => b.scrollWidth > b.clientWidth + 1)) n.classList.add('dos');
+  }
+}
 let tamanoT = null;
 window.addEventListener('resize', () => {
+  try { ajustarTabs(); } catch (e) { /* nada */ }
   clearTimeout(tamanoT);
   tamanoT = setTimeout(() => {
     const antes = document.documentElement.classList.contains('escritorio');
@@ -497,6 +512,7 @@ function pintar({ arriba = false } = {}) {
     if (S.borrador && !S.charlando) { const ta = $('#pregunta'); if (ta) { ta.value = S.borrador; S.borrador = ''; } }
   }
   encuadrar(v);
+  ajustarTabs(v);
   // la subpestaña elegida, a la vista en su barra (al repintar, la barra volvía al principio y la tapaba)
   try {
     const t = v.querySelector('.tabs .activo'), b = t && t.closest('.tabs-in');
@@ -1689,6 +1705,28 @@ window.alVolver = () => {
   if (enApp && Date.now() - (S.versionT || 0) > 30 * MIN) buscarVersion(false);
   if (S.D && !S.cargando && Date.now() - S.D.t > 15 * MIN && (enDemo() || haySesion())) cargar({ silencio: true });
 };
+/* En el navegador nadie llamaba a alVolver (solo Android, al volver a la app): con la pestaña abierta o vuelta a ella tras
+   horas, la liga se quedaba como estaba (visto el 4 nov: a las 00:21, «Mercado de hoy» con 17 subastas ya cerradas y el plan
+   con «antes de las 00:15»). Ahora la web recarga al volver a la pestaña (si lo de antes tiene más de 15 min), y la web y
+   la app, en cuanto cambia el mercado con la app abierta (un minuto después del cierre, como mucho cada 5 min). */
+const sesionVale = () => enDemo() || haySesion();
+document.addEventListener('visibilitychange', () => {
+  if (enApp || document.hidden || !S.D || S.cargando || !sesionVale()) return;
+  if (Date.now() - S.D.t > 15 * MIN) cargar({ silencio: true });
+});
+let recargaMercadoT = 0, cierreVisto = 0;
+setInterval(() => {
+  if (!S.D || !S.M || S.cargando || document.hidden || !sesionVale()) return;
+  // (pasado el cierre, el motor rehecho cada minuto ya no trae cierreMercado: vale el último que se vio, o el cierre de
+  // alguna subasta de la lista cargada que ya ha pasado)
+  if (S.M.cierreMercado) cierreVisto = S.M.cierreMercado;
+  const ahora = Date.now();
+  const sub = (S.M.mercado || []).map((m) => m.cierra).filter((t) => t && t > S.D.t && t + MIN < ahora);
+  const c = Math.max(cierreVisto > S.D.t ? cierreVisto : 0, ...sub, 0);
+  if (!c || S.D.t >= c || ahora < c + MIN || ahora - recargaMercadoT < 5 * MIN) return;
+  recargaMercadoT = ahora;
+  cargar({ silencio: true });
+}, 30e3);
 
 /* ---------------- la ficha de un jugador: puntos por jornada ---------------- */
 async function cargarDetalle(pid) {
@@ -1764,7 +1802,7 @@ async function enviarPregunta(texto) {
   if (!t && !fotos.length) { tostada('Escribe tu pregunta (o manda una foto) y dale a enviar'); const ta = $('#pregunta'); if (ta) ta.focus(); return; }
   S.adjuntos = [];
   if (S.vista !== 'ia') ir('ia');
-  S.charlando = true; S.parcial = ''; S.pasoChat = ''; S.preguntaActual = t; S.fotosActuales = fotos;
+  S.charlando = true; S.parcial = ''; S.pasoChat = ''; S.preguntaActual = t; S.fotosActuales = fotos; S.errorChat = null;
   pintar();
   let ultimo = 0;
   // como con el plan: aunque salgas de la app sigue pensando, y si no estás en ella te avisa al contestar
@@ -1790,7 +1828,13 @@ async function enviarPregunta(texto) {
       S.adjuntos = [...fotos, ...S.adjuntos].slice(0, MAX_FOTOS);
       tostada('Pregunta parada');
     } else {
-      if (e.clave) { S.claveMal = true; if (S.vista === 'ia') pintar(); } else tostada(e.message || 'No ha contestado', 7000);
+      // (antes solo salía una tostada de 7 s y la pregunta se quedaba sola en el chat, también al recargar: ahora vuelve
+      // a la caja, con sus fotos, y el error se queda en el chat con «Volver a preguntar»)
+      quitarUltimaPregunta(t);
+      S.borrador = t;
+      S.adjuntos = [...fotos, ...S.adjuntos].slice(0, MAX_FOTOS);
+      if (e.clave) S.claveMal = true;
+      else S.errorChat = { t, n: fotos.length, msg: e.message || 'No ha contestado' };
       if (!nativo.aLaVista()) nativo.notificar('No ha podido contestar', e.message || 'Entra y vuelve a preguntar', 'ia');
     }
   } finally {
@@ -2271,6 +2315,7 @@ document.addEventListener('click', async (ev) => {
     case 'voz': escuchar(); break;
     case 'pararPlan': if (S.planCtl) S.planCtl.abort(); break;
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;
+    case 'repreguntar': { const ta = $('#pregunta'); const t = ta ? ta.value : (S.errorChat && S.errorChat.t) || ''; if (ta) ta.value = ''; S.errorChat = null; enviarPregunta(t); break; }
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
     case 'novedades': listaVersiones(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;

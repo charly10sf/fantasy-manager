@@ -1820,6 +1820,8 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .eq2-num i { font: 600 12px/1.2 'Barlow'; font-style: normal; }
 .eq2-num i.sube { color: var(--sube); } .eq2-num i.baja { color: var(--baja); }
 @media (max-width: 360px) { .eq2-num { grid-template-columns: 1fr 1fr; } }
+.eq2-num.dos { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.tabs.no-caben .tabs-in { display: flex; overflow-x: auto; }
 .escritorio .eq2-num { max-width: 900px; } .escritorio .eq2-num > div { padding: 12px 14px 11px; } .escritorio .eq2-num b { font-size: 27px; } .escritorio .eq2-num span, .escritorio .eq2-num i { font-size: 13.5px; }
 /* las pestañas de Equipo, todas a la vista: cada una con su parte del ancho */
 .tabs.llenas .tabs-in { display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); overflow: visible; }
