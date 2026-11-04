@@ -766,6 +766,11 @@ function registradosHTML(reg, lista, ahora) {
     <div><b>${activos.d7}</b><span>activas esta semana</span></div>
     <div><b>${activos.d30}</b><span>activas en 30 días</span></div>
   </div>`;
+  // ligas con varios que la usan (roadmap: la unidad de captación es la liga): por la liga de /hola, últimos 30 días
+  const porLiga = {};
+  for (const x of lista) if (x.liga && x.ultima >= hace(30)) porLiga[x.liga] = (porLiga[x.liga] || 0) + 1;
+  const nLigas = Object.keys(porLiga).length, de3 = Object.values(porLiga).filter((n) => n >= 3).length, de2 = Object.values(porLiga).filter((n) => n >= 2).length;
+  if (nLigas) h += `<p class="quien-res">Ligas (30 días): <b>${nLigas}</b> con alguien que la usa · <b>${de2}</b> con 2 o más · <b>${de3}</b> con 3 o más.</p>`;
   h += `<p class="quien-res">Altas: <b>${nuevos.hoy}</b> hoy · <b>${nuevos.d7}</b> en 7 días · <b>${nuevos.d30}</b> en 30 días. Hoy han abierto la app <b>${activos.d1}</b>.</p>`;
   const canales = Object.keys(CANAL_TXT).filter((c) => porCanal[c]);
   if (canales.length) h += `<p class="quien-res">Desde dónde: ${canales.map((c) => `${CANAL_TXT[c]} <b>${porCanal[c]}</b>`).join(' · ')}</p>`;
