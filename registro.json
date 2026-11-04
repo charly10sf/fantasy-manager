@@ -1225,7 +1225,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261104/1004247173/eder-sarabia-mi-equipo-espanyol-defender-muerte.html": 1793802316000,
    "SPORT|136085152": 1793801859000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm": 1793805420000,
-   "SPORT|136085204": 1793802237000
+   "SPORT|136085204": 1793802237000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247209/raphina-records-corazon-encogido.html": 1793806789000
   },
   "hechos": [
    {
@@ -1690,7 +1691,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -2554,7 +2555,8 @@
    "SPORT|136085422": 1793801821000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/04/competicion-da-por-finalizado-el-tenerife-andorra-radio-club-tenerife/": 1793806981000,
    "AS|https://as.com/futbol/uefa/entenderiamos-que-se-suspendiese-la-jornada-de-liga-f202611-n/": 1793800276000,
-   "SPORT|136087043": 1793803935000
+   "SPORT|136087043": 1793803935000,
+   "SPORT|136086862": 1793804539000
   },
   "hechos": [
    {
@@ -2721,7 +2723,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 12
+   "n": 13
   }
  }
 }
