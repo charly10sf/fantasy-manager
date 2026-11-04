@@ -1222,7 +1222,9 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html": 1793798837000,
    "SPORT|136070967": 1793797171000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/zabiri-repite-con-marruecos-y-no-jugara-con-el-racing-en-libia-radio-santander/": 1793801780000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261104/1004247173/eder-sarabia-mi-equipo-espanyol-defender-muerte.html": 1793802316000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261104/1004247173/eder-sarabia-mi-equipo-espanyol-defender-muerte.html": 1793802316000,
+   "SPORT|136085152": 1793801859000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm": 1793805420000
   },
   "hechos": [
    {
@@ -1671,11 +1673,23 @@
     "motivo": "lesión en el bíceps femoral",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm",
+    "medio": "La Voz de Galicia",
+    "t": 1793805420000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri sufre una lesión muscular y es baja",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
