@@ -34,7 +34,7 @@ import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada } from './portada.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
-import { cerrar, abrir, claveQR, nuevoCodigo as codigoNuevo } from './sobre.js';
+import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
 
@@ -253,6 +253,32 @@ function datosVinculo() {
   const c = cfg();
   return { sesion: sesion(), cfg: { ligaId: c.ligaId || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}) };
 }
+/**
+ * deja lo que se pasa al ordenador cerrado con un código que pone la app (0.7a): al servidor solo le llega el id que sale
+ * del código, y del id no se saca la clave. mandar(cuerpo) → { s, b }. Si el servidor aún no lo entiende (400), como antes.
+ * Devuelve { s, b } con el código dentro de b, como contestaba el servidor.
+ */
+async function dejarConCodigo(datos, mandar) {
+  for (let k = 0; k < 2; k++) {
+    const codigo = codigoNuevo();
+    const r = await mandar({ id: await idDeCodigo(codigo), cif: await cerrar({ codigo }, datos) });
+    if (r.s === 409) continue;
+    if (r.s !== 200) { if (r.s === 400) break; return r; }
+    let j = null;
+    try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
+    return { s: 200, b: JSON.stringify({ ...(j || {}), codigo }) };
+  }
+  return mandar(datos);
+}
+/** lo que ha dejado el móvil con ese código: primero por su id (lo cerrado); si no está, como antes (una app de antes) */
+async function traerConCodigo(cod) {
+  const post = (cuerpo) => fetch(`${WORKER}/vincular/usar`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(cuerpo) });
+  let r = await post({ id: await idDeCodigo(cod) });
+  if (r.status === 404 || r.status === 400) r = await post({ codigo: cod });
+  let j = await r.json().catch(() => null);
+  if (r.ok && j && j.cif) j = await abrir({ codigo: cod }, j.cif);
+  return { r, j };
+}
 /** la app ha leído un QR (Principal.escanearQR): si es el del ordenador, deja ahí la sesión */
 window.qrLeido = async (texto, motivo) => {
   if (texto == null) { if (motivo) tostada(motivo, 7000); return; }
@@ -308,9 +334,11 @@ async function mudarse(el) {
     const c = cfg();
     // también el tutorial y la última versión vista, para que en la nueva no le salgan otra vez
     const datos = { sesion: sesion(), cfg: { ligaId: c.ligaId || null }, ia: hayClave() ? { clave: clave() } : null, dichos: LS.get(K('dinero-dicho'), {}), tour: LS.get('tour', null), vista: versionVista() };
-    const r = await fetch(`${WORKER_PUBLICO}/vincular`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(datos) });
-    const j = await r.json().catch(() => null);
-    if (!r.ok || !j || !j.codigo) throw new Error((j && j.e) || `el servidor responde ${r.status}`);
+    const mandar = (cuerpo) => fetch(`${WORKER_PUBLICO}/vincular`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(cuerpo) }).then(async (x) => ({ s: x.status, b: await x.text() }));
+    const r = await dejarConCodigo(datos, mandar);
+    let j = null;
+    try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
+    if (r.s !== 200 || !j || !j.codigo) throw new Error((j && j.e) || `el servidor responde ${r.s}`);
     location.href = `${DOMINIO}#codigo=${encodeURIComponent(j.codigo)}`;
   } catch (e) {
     tostada(`No se ha podido preparar la mudanza (${e.message}). Entra en fantasymanagerapp.com con el código de Ajustes → Abrir en otro dispositivo.`, 9000);
@@ -329,9 +357,7 @@ async function codigoDeMudanza() {
   if (!m) return false;
   history.replaceState(null, '', location.pathname + location.search);
   try {
-    const r = await fetch(`${WORKER}/vincular/usar`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ codigo: m[1].toUpperCase() }) });
-    let j = await r.json().catch(() => null);
-    if (r.ok && j && j.cif) j = await abrir({ codigo: m[1].toUpperCase() }, j.cif);
+    const { r, j } = await traerConCodigo(m[1].toUpperCase());
     if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `el servidor responde ${r.status}`);
     traerVinculo(j);
     if (j.tour && !tourVisto()) LS.set('tour', j.tour);
@@ -2250,9 +2276,7 @@ document.addEventListener('click', async (ev) => {
       if (cod.length !== 8) { tostada('El código tiene 8 letras y números'); break; }
       el.disabled = true; el.textContent = 'Entrando…';
       try {
-        const r = await fetch(`${WORKER}/vincular/usar`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ codigo: cod }) });
-        let j = await r.json().catch(() => null);
-        if (r.ok && j && j.cif) j = await abrir({ codigo: cod }, j.cif);
+        const { r, j } = await traerConCodigo(cod);
         if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `El servidor de la web responde ${r.status}`);
         await entrarConVinculo(j);
       } catch (e) { pantallaEntrar(e.name === 'TypeError' ? `Sin conexión con el servidor de la web (${e.message})` : e.message || String(e)); }
@@ -2274,15 +2298,7 @@ document.addEventListener('click', async (ev) => {
         const mandar = (cuerpo) => (enApp
           ? http('POST', `${WORKER_PUBLICO}/vincular`, { cabeceras: { 'content-type': 'application/json' }, cuerpo: JSON.stringify(cuerpo), tiempo: 20000 })
           : fetch(`${WORKER_PUBLICO}/vincular`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(cuerpo) }).then(async (x) => ({ s: x.status, b: await x.text() }), (e) => ({ s: 0, e: e.message })));
-        // cerrado con una clave que sale del código, que pone la app (el servidor guarda algo que no puede leer); si el
-        // código ya está cogido, otro; si el servidor aún no entiende lo cerrado (400), como antes
-        let r = null;
-        for (let k = 0; k < 2; k++) {
-          const codigo = codigoNuevo();
-          r = await mandar({ codigo, cif: await cerrar({ codigo }, datos) });
-          if (r.s !== 409) break;
-        }
-        if (r.s === 400) r = await mandar(datos);
+        const r = await dejarConCodigo(datos, mandar);
         let j = null;
         try { j = JSON.parse(r.b || 'null'); } catch (e2) { j = null; }
         if (r.s !== 200 || !j || !j.codigo) throw new Error(j && j.e ? j.e : r.s ? `el servidor de la web responde ${r.s}` : `sin conexión (${r.e})`);

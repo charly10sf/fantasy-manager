@@ -1,7 +1,9 @@
 /* Lo que se pasa del móvil al ordenador (la sesión, la clave de la IA, la liga), cerrado con AES-GCM para que el
    servidor de la web solo guarde, esos 10 minutos, algo que no puede leer (fase 0 del roadmap, 4 nov 2026).
    - Con el QR: la clave va en el propio QR, detrás de # (no llega a ningún servidor).
-   - Con el código de 8 letras: la clave sale del código (PBKDF2), y el código lo saca el móvil, no el servidor. */
+   - Con el código de 8 letras: el código lo saca el móvil y no sale de los dos dispositivos. De él salen con PBKDF2
+     512 bits: los primeros 256 son el «id» con el que se guarda en el servidor y los otros 256, la clave. El servidor
+     solo ve el id, y del id no se puede sacar la clave. */
 
 const B64 = (b) => btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const deB64 = (s) => { const t = atob(String(s).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(t, (c) => c.charCodeAt(0)); };
@@ -15,14 +17,24 @@ export function nuevoCodigo() {
 }
 /** una clave al azar para el QR (256 bits, 43 caracteres) */
 export const claveQR = () => B64(crypto.getRandomValues(new Uint8Array(32)));
-export const esClaveQR = (k) => typeof k === 'string' && /^[A-Za-z0-9_-]{43}$/.test(k);
 
 const importar = (bytes) => crypto.subtle.importKey('raw', bytes, 'AES-GCM', false, ['encrypt', 'decrypt']);
-async function deCodigo(cod) {
-  const base = await crypto.subtle.importKey('raw', texto.encode(String(cod).toUpperCase()), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: texto.encode('fantasy-manager/vinculo/v1'), iterations: 150000 }, base, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+const DE_CODIGO = new Map();
+/** del código: { id (lo que ve el servidor), llave (la clave AES, que no sale del dispositivo) } */
+function deCodigo(cod) {
+  const c = String(cod).toUpperCase();
+  if (!DE_CODIGO.has(c)) {
+    DE_CODIGO.set(c, (async () => {
+      const base = await crypto.subtle.importKey('raw', texto.encode(c), 'PBKDF2', false, ['deriveBits']);
+      const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: texto.encode('fantasy-manager/vinculo/v1'), iterations: 150000 }, base, 512));
+      return { id: B64(bits.slice(0, 32)), llave: await importar(bits.slice(32)) };
+    })());
+  }
+  return DE_CODIGO.get(c);
 }
-const llave = (x) => (x && x.qr ? importar(deB64(x.qr)) : deCodigo(x.codigo));
+/** el id con el que el servidor guarda lo de este código (43 caracteres) */
+export const idDeCodigo = async (cod) => (await deCodigo(cod)).id;
+const llave = async (x) => (x && x.qr ? importar(deB64(x.qr)) : (await deCodigo(x.codigo)).llave);
 
 /** cierra un objeto: «v1.<iv>.<cifrado>»; x = { qr: clave } o { codigo } */
 export async function cerrar(x, obj) {

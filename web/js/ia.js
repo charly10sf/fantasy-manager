@@ -256,12 +256,12 @@ async function preguntar(q, op = {}) {
   if (!sd) return preguntarYa(q, op);
   const tapC = (cs) => cs && cs.map((c) => ({ ...c, parts: (c.parts || []).map((p) => (p.text ? { ...p, text: sd.tapar(p.text) } : p)) }));
   const q2 = {
-    sistema: sd.tapar(q.sistema) + AVISO_ALIAS,
-    sistemaSinWeb: q.sistemaSinWeb ? sd.tapar(q.sistemaSinWeb) + AVISO_ALIAS : q.sistemaSinWeb,
+    sistema: sd.tapar(q.sistema) + sd.aviso,
+    sistemaSinWeb: q.sistemaSinWeb ? sd.tapar(q.sistemaSinWeb) + sd.aviso : q.sistemaSinWeb,
     contents: tapC(q.contents), contentsSinWeb: tapC(q.contentsSinWeb),
   };
   const r = await preguntarYa(q2, { ...op, alTexto: op.alTexto ? (t) => op.alTexto(sd.destapar(t)) : op.alTexto });
-  return { ...r, texto: sd.destapar(r.texto), fuentes: r.fuentes, alias: sd.n };
+  return { ...r, texto: sd.destapar(r.texto, { json: !!op.seudoJSON }), fuentes: r.fuentes, alias: sd.n };
 }
 
 async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb }, op = {}) {
@@ -683,46 +683,56 @@ const nombreTid = (M, tid) => { const e = M.equipo[tid]; return (e && (e.manager
 /**
  * Alias para los de tu liga: lo que va a Google lleva «Rival 3» (el mánager) y «Equipo 3» (su equipo) en vez de sus
  * nombres, que son datos de otras personas; destapar() los vuelve a poner en lo que contesta. Tu nombre y el de tu
- * equipo sí van. El número es su puesto en la clasificación. Los nombres de jugadores y clubes que contienen el de un
- * mánager («Hugo Duro» con un mánager «Hugo») se apartan antes de tapar y se devuelven tal cual; si el nombre es
- * exactamente el de un jugador o un club, ese mánager se queda sin tapar (no se sabría cuál es cuál).
+ * equipo sí van, y no se tocan. N es su puesto en la clasificación (si dos comparten puesto, su orden).
+ * - Los nombres de jugadores, clubes y los tuyos que contienen el de un mánager («Hugo Duro» con un mánager «Hugo»)
+ *   se apartan antes de tapar y se devuelven tal cual.
+ * - Un rival se queda sin tapar si su nombre es exactamente el de un jugador, un club o el tuyo, si no lleva letras o
+ *   tiene menos de 3, o si es una palabra de las instrucciones de la IA («Mercado»): no se sabría cuál es cuál.
+ * - Se tapa con las mayúsculas tal cual (así sale en los datos).
  */
 export function seudonimos(D) {
   const yo = D && D.yo && D.yo.teamId;
+  const mio = ((D && D.clasif) || []).find((e) => e && e.teamId === yo);
   const otros = new Set();
   for (const j of Object.values((D && D.maestro) || {})) if (j) for (const t of [j.nombre, j.nombreCompleto, j.equipo]) if (typeof t === 'string' && t.trim()) otros.add(t.trim());
   for (const e of Object.values((D && D.equipos) || {})) if (e) for (const t of [e.nombre, e.corto]) if (typeof t === 'string' && t.trim()) otros.add(t.trim());
+  for (const t of [D && D.yo && D.yo.nombre, mio && mio.manager, mio && mio.nombre]) if (typeof t === 'string' && t.trim()) otros.add(t.trim());
   const igual = new Set([...otros].map(norm));
-  const pares = [], vuelta = {};
+  const base = ` ${norm(SISTEMA)} `;
+  const vale = (x) => typeof x === 'string' && x.trim().length >= 3 && /\p{L}/u.test(x) && !igual.has(norm(x)) && !base.includes(` ${norm(x)} `);
   const rivales = ((D && D.clasif) || []).filter((e) => e && e.teamId !== yo).sort((a, b) => (a.pos || 99) - (b.pos || 99));
-  const vale = (x) => typeof x === 'string' && norm(x).length >= 2 && !igual.has(norm(x));
+  const puestos = rivales.map((e) => e.pos);
+  const porPuesto = puestos.every((x) => Number.isInteger(x) && x > 0) && new Set(puestos).size === puestos.length;
+  const pares = [], vuelta = {};
   rivales.forEach((e, i) => {
-    const n = i + 1;
+    const n = porPuesto ? e.pos : i + 1;
     if (vale(e.manager)) { pares.push([e.manager.trim(), `Rival ${n}`]); vuelta[`rival ${n}`] = e.manager.trim(); }
     if (e.nombre && e.nombre !== e.manager && vale(e.nombre)) { pares.push([e.nombre.trim(), `Equipo ${n}`]); vuelta[`equipo ${n}`] = e.nombre.trim(); }
   });
   // los más largos primero («Los Pepes FC» antes que «Pepe»)
   pares.sort((a, b) => b[0].length - a[0].length);
   const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const palabra = (lista) => new RegExp(`(?<![\\p{L}\\p{N}])(${lista.map(esc).join('|')})(?![\\p{L}\\p{N}])`, 'giu');
+  const palabra = (lista) => new RegExp(`(?<![\\p{L}\\p{N}])(${lista.map(esc).join('|')})(?![\\p{L}\\p{N}])`, 'gu');
   const re = pares.length ? palabra(pares.map((p) => p[0])) : null;
-  const alias = Object.fromEntries(pares.map(([a, b]) => [a.toLocaleLowerCase('es'), b]));
-  // jugadores y clubes que llevan dentro el nombre de un rival: se apartan antes de tapar
+  const alias = Object.fromEntries(pares);
+  // jugadores, clubes y lo tuyo que llevan dentro el nombre de un rival: se apartan antes de tapar
   const aparte = re ? [...otros].filter((t) => { re.lastIndex = 0; return re.test(t); }).sort((a, b) => b.length - a.length) : [];
   const reAparte = aparte.length ? palabra(aparte) : null;
+  const deVuelta = /(?<![\p{L}\p{N}])([Rr][Ii][Vv][Aa][Ll]|Equipo) (\d{1,3})(?![\p{L}\p{N}]|[.,]\d)/gu;
   return {
     n: pares.length,
+    aviso: `\nLOS DE LA LIGA VAN CON ALIAS: cada rival sale como «Rival N» (el mánager) y su equipo como «Equipo N»${porPuesto ? ', con N su puesto en la clasificación' : ''}. Yo (el manager) voy con mi nombre. Escríbelos tal cual, sin inventar nombres: la app los cambia por los de verdad.`,
     tapar: (t) => {
       if (!re || typeof t !== 'string') return t;
       const guardados = [];
       let x = reAparte ? t.replace(reAparte, (m) => { guardados.push(m); return `\uE000${guardados.length - 1}\uE001`; }) : t;
-      x = x.replace(re, (m) => alias[m.toLocaleLowerCase('es')] || m);
+      x = x.replace(re, (m) => alias[m] || m);
       return guardados.length ? x.replace(/\uE000(\d+)\uE001/g, (m, k) => guardados[+k]) : x;
     },
-    destapar: (t) => (pares.length && typeof t === 'string' ? t.replace(/(?<![\p{L}\p{N}])(Rival|Equipo) (\d{1,2})(?![\p{L}\p{N}]|[.,]\d)/gu, (m, q, d) => vuelta[`${q.toLowerCase()} ${d}`] || m) : t),
+    // json: lo que vuelve es un JSON (el plan): el nombre va escapado para que no lo rompa una comilla
+    destapar: (t, { json = false } = {}) => (pares.length && typeof t === 'string' ? t.replace(deVuelta, (m, q, d) => { const v = vuelta[`${q.toLowerCase()} ${d}`]; return v == null ? m : json ? JSON.stringify(v).slice(1, -1) : v; }) : t),
   };
 }
-const AVISO_ALIAS = '\nLOS DE LA LIGA VAN CON ALIAS: cada rival sale como «Rival N» (el mánager) y su equipo como «Equipo N», con N su puesto en la clasificación. Escríbelos tal cual, sin inventar nombres: la app los cambia por los de verdad.';
 const rachaTxt = (M, id) => { const r = M.racha && M.racha(id); return r ? `${r.txt} (${r.gf}-${r.gc}, ${r.pts} de ${r.de * 3} pts)` : null; };
 
 /** lo que el manager le ha contado, para meterlo en el contexto */
@@ -1032,7 +1042,7 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
   const sinBuscar = (t) => [{ role: 'user', parts: [{ text: t.replace(BUSCAR_PLAN, SIN_BUSCAR_PLAN) }] }];
   // todo el plan, con la segunda vuelta si el primero llega roto, no pasa de 5 minutos
   const t0Plan = Date.now(), TOPE_PLAN = 300000;
-  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, seudo });
+  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, seudo, seudoJSON: true });
   let json = sacarJSON(r.texto);
   // si se ha quedado sin sitio para escribir (pensando de más) o el JSON ha salido roto: otra vez, con los datos en
   // corto y pensando poco
@@ -1044,7 +1054,7 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
     if (queda < 60000) throw new ErrorIA(`La IA ha contestado sin el formato del plan y ya no da tiempo a pedirlo otra vez (${Math.round((Date.now() - t0Plan) / 1000)} s). Vuelve a probar.`, 0);
     if (alPaso) alPaso(r.fin === 'MAX_TOKENS' ? 'El plan se ha cortado: lo pido otra vez más corto…' : 'El plan ha llegado mal: lo pido otra vez…');
     const corto = pedido.replace(ctx, contexto(D, M, c, { corto: true }));
-    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, total: Math.min(240000, queda), seudo });
+    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, total: Math.min(240000, queda), seudo, seudoJSON: true });
     json = sacarJSON(r.texto);
     if (!json || !Array.isArray(json.operaciones)) malPlan(r);
   }

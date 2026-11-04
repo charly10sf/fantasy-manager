@@ -134,6 +134,7 @@ async function borrarVinculo(env, cod) {
   return caches.default.delete(claveCache(cod));
 }
 /** lo que manda la app ya cerrado (web/js/sobre.js): «v1.<iv>.<cifrado>» en base64url */
+const idCerrado = (x) => typeof x === 'string' && /^[A-Za-z0-9_-]{43}$/.test(x);
 const cifValido = (x) => typeof x === 'string' && x.length <= 60000 && /^v1\.[A-Za-z0-9_-]{16}\.[A-Za-z0-9_-]{20,}$/.test(x);
 function nuevoCodigo() {
   const b = crypto.getRandomValues(new Uint8Array(8));
@@ -145,13 +146,13 @@ async function vincular(req, env, c) {
   if (txt.length > 60000) return json({ e: 'Demasiados datos' }, 413, c);
   let j;
   try { j = JSON.parse(txt); } catch (e) { return json({ e: 'No es JSON' }, 400, c); }
-  // (desde el 4 nov: la app manda lo suyo cerrado, con la clave sacada de un código que pone ella; el servidor no lo puede leer)
+  // (desde la 0.7a: la app manda lo suyo cerrado y un id que sale de un código que pone ella y que el servidor no ve:
+  // del id no se saca la clave; web/js/sobre.js)
   if (j && typeof j.cif === 'string') {
-    const cod = String(j.codigo || '');
-    if (!cifValido(j.cif) || cod.length !== 8 || [...cod].some((x) => !ALFABETO.includes(x))) return json({ e: 'Lo cerrado no vale' }, 400, c);
-    if (await leerVinculo(env, cod)) return json({ e: 'Ese código ya está cogido', otro: true }, 409, c);
-    await guardarVinculo(env, cod, JSON.stringify({ cif: j.cif, t: Date.now() }));
-    return json({ codigo: cod, caduca: Date.now() + DURA * 1000 }, 200, c);
+    if (!cifValido(j.cif) || !idCerrado(j.id)) return json({ e: 'Lo cerrado no vale' }, 400, c);
+    if (await leerVinculo(env, j.id)) return json({ e: 'Ese código ya está cogido', otro: true }, 409, c);
+    await guardarVinculo(env, j.id, JSON.stringify({ cif: j.cif, t: Date.now() }));
+    return json({ ok: true, caduca: Date.now() + DURA * 1000 }, 200, c);
   }
   if (!j || !j.sesion || !(j.sesion.renovar || j.sesion.token)) return json({ e: 'Falta la sesión de LaLiga' }, 400, c);
   const cod = nuevoCodigo();
@@ -162,8 +163,9 @@ async function vincular(req, env, c) {
 async function usar(req, env, c) {
   let j;
   try { j = await req.json(); } catch (e) { return json({ e: 'No es JSON' }, 400, c); }
-  const cod = String((j && j.codigo) || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
-  if (cod.length !== 8) return json({ e: 'El código tiene 8 letras y números' }, 400, c);
+  // lo cerrado (0.7a) se pide por su id; lo de antes, por el código
+  const cod = j && idCerrado(j.id) ? j.id : String((j && j.codigo) || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (cod.length !== 8 && cod.length !== 43) return json({ e: 'El código tiene 8 letras y números' }, 400, c);
   const v = await leerVinculo(env, cod);
   if (!v) return json({ e: 'Ese código no existe o ha caducado (dura 10 minutos). Pide otro en la app.' }, 404, c);
   await borrarVinculo(env, cod);
@@ -421,10 +423,16 @@ async function uso(req, env, c) {
  * (u:) y sus avisos de fallo (f:) con sus capturas (fc:). Lo de pasar la sesión al ordenador (v:, q:) ya se borra
  * solo a los 10 minutos. Si sigue usando la app, se vuelve a apuntar que la usa (eso lo explica la app).
  */
+const BORRADOS = new Map();
 async function borrarMios(req, env, c) {
   if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga para saber qué datos son tuyos', sesion: true }, 401, c);
+  // como mucho una vez por minuto por cuenta: listar y borrar gastan del cupo gratis de todos
+  const ya = BORRADOS.get(u.uid);
+  if (ya && Date.now() - ya < 60e3) return json({ e: 'Ya está borrado. Si quieres repetirlo, espera un minuto.' }, 429, c);
+  if (BORRADOS.size > 2000) BORRADOS.clear();
+  BORRADOS.set(u.uid, Date.now());
   const claves = [`p:${u.uid}`, `r:${u.uid}`];
   for (const k of await listar(env, `u:${u.uid}:`)) claves.push(k.name);
   let avisos = 0;
@@ -432,7 +440,8 @@ async function borrarMios(req, env, c) {
     avisos++;
     claves.push(k.name);
     const id = k.name.slice(`f:${u.uid}:`.length);
-    for (let n = 0; n < Math.max(MAX_CAPTURAS, (k.metadata && k.metadata.c) || 0); n++) claves.push(`fc:${id}:${n}`);
+    const nc = k.metadata && Number.isFinite(k.metadata.c) ? Math.min(MAX_CAPTURAS, k.metadata.c) : MAX_CAPTURAS;
+    for (let n = 0; n < nc; n++) claves.push(`fc:${id}:${n}`);
   }
   let fallidas = 0;
   for (const k of claves) { try { await env.VINCULOS.delete(k); } catch (e) { fallidas++; } }
