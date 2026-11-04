@@ -6,7 +6,7 @@ export function validar(texto, { numeros = [], max = 280 } = {}) {
   const e = [];
   const p = peso(texto);
   if (p > max) e.push(`largo ${p} > ${max}`);
-  if (!/fantasy/i.test(texto)) e.push('sin la palabra «fantasy»');
+  // «fantasy» ya no es obligatoria (Carlos, 4 nov 13:00: «que sea predominante, pero si no encaja, que no vaya»)
   if (/https?:|www\.|\b[a-z0-9-]+\.(com|es|eus|net|org|io|app)\b/i.test(texto)) e.push('lleva un enlace');
   const ok = new Set(numeros.map((n) => String(Math.abs(Number(n)))));
   for (const t of texto.replace(/[0-9#*]\uFE0F?\u20E3/g, '').match(/\d+/g) || []) if (!ok.has(String(Number(t)))) e.push(`número ${t} que no está en los datos`);

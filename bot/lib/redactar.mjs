@@ -26,13 +26,9 @@ export function ajustar(cab, ideas, pie, max = 280) {
   return xs.map((x) => x.t);
 }
 
-/** sin el cierre de la app: si el texto no lleva «fantasy», acaba en #LaLigaFantasy (como sinCierre de texto.mjs) */
+/** el tweet con las ideas que caben (sin #LaLigaFantasy de relleno: «fantasy» ya no es obligatoria, Carlos, 4 nov 13:00) */
 export function tweet(cab, ideas, { pie = null, max = 280 } = {}) {
-  let usadas = ajustar(cab, ideas, pie, max);
-  if (!pie && !/fantasy/i.test([cab, ...usadas].join('\n'))) {
-    usadas = ajustar(cab, ideas, '#LaLigaFantasy', max);
-    return { usadas, texto: armarAire(cab, usadas, '#LaLigaFantasy') };
-  }
+  const usadas = ajustar(cab, ideas, pie, max);
   return { usadas, texto: armarAire(cab, usadas, pie) };
 }
 
