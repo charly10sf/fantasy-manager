@@ -1003,7 +1003,7 @@
   "3204": "ok",
   "3205": "ok",
   "3206": "ok",
-  "3207": "injured",
+  "3207": "doubtful",
   "3208": "injured",
   "3209": "ok",
   "3210": "ok",
@@ -1205,7 +1205,10 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/rodri-hernandez-baja-para-el-barca-en-el-metropolitano-tiene-una-pequena-lesion-en-el-biceps-femoral-de-su-pierna-derecha-cadena-ser/": 1793793689000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html": 1793794237000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261104/11675899/niko-mihic-medico-real-madrid-estalla-horarios-toman-consideracion-salud-dano-jugador-lol.html": 1793793661000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247143/rodri.html": 1793793602000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247143/rodri.html": 1793793602000,
+   "SPORT|136079233": 1793793125000,
+   "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/manu-hernando-duda-por-un-proceso-gripal-radio-santander/": 1793796850000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/04/el-futuro-de-inigo-perez-empieza-a-generar-dudas-en-la-directiva-del-villarreal-radio-castellon/": 1793796793000
   },
   "hechos": [
    {
@@ -1598,7 +1601,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -2350,8 +2353,8 @@
     "t": 0
    },
    "3207": {
-    "e": "injured",
-    "t": 0
+    "e": "doubtful",
+    "t": 1793796972106
    },
    "3208": {
     "e": "injured",
@@ -2444,7 +2447,15 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261103/11674781/jesus-de-miguel-muere-owono-jugador-tenerife-portero-anodorra-en-directo.html": 1793726204000,
    "AS|https://as.com/futbol/primera/afe-pide-suspender-todos-los-partidos-en-espana-f202611-n/": 1793725462000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/afe-solicita-a-rfef-laliga-y-uefa-la-suspension-de-todos-los-partidos-de-futbol-en-espana-del-3-al-9-de-noviembre-cadena-ser/": 1793725318000,
-   "Cadena SER|https://cadenaser.com/castillalamancha/2026/11/03/el-partido-de-copa-del-rey-del-albacete-balompie-se-pospone-de-nuevo-radio-albacete/": 1793724092000
+   "Cadena SER|https://cadenaser.com/castillalamancha/2026/11/03/el-partido-de-copa-del-rey-del-albacete-balompie-se-pospone-de-nuevo-radio-albacete/": 1793724092000,
+   "SPORT|136078993": 1793792750000,
+   "Cadena SER|https://cadenaser.com/murcia/2026/11/03/la-rfef-aplaza-la-minera-fc-cartagena-de-copa-del-rey-en-senal-de-respeto-y-solidaridad-tras-el-fallecimiento-de-jesus-de-miguel-radio-murcia/": 1793723687000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/03/suspendidos-partidos-copa-rey-copa-reina-muerte-jesus-miguel/00031793714469910192824.htm": 1793718900000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-respalda-hijos-nacionalizados-puedan-votar-advierte-inseguridad-si-impide-20261103113539.html": 1793702139000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/03/la-rfef-suspende-la-jornada-de-futbol-de-este-3-de-noviembre-por-el-fallecimiento-de-jesus-de-miguel-cadena-ser/": 1793701247000,
+   "ABC|https://www.abc.es/deportes/futbol/rfef-suspende-jornada-futbol-martes-muestra-respeto-20261103111522-nt.html": 1793700923000,
+   "AS|https://as.com/futbol/se-suspende-la-jornada-de-futbol-tras-el-fallecimiento-de-jesus-de-miguel-f202611-n/": 1793699827000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261102/11674323/jesus-de-miguel-tenerife-portero-andorra-empeora-uci.html": 1793694928000
   },
   "hechos": [
    {
@@ -2566,7 +2577,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 1
+   "n": 2
   }
  }
 }
