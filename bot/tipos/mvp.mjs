@@ -1,7 +1,7 @@
 // MVP de cada partido acabado: un tweet aparte con la tarjeta de jugador. Solo existe con la tarjeta de jugador encendida
 // (config.tarjetas.jugador): sin imagen repetiría lo que ya dice el tweet del final, así que ejecutar.mjs no lo publica sin ella.
-import { corto, elegir, fmt, partes, del } from '../lib/texto.mjs';
-import { tweet, segunda, cap } from '../lib/redactar.mjs';
+import { corto, elegir, fmt, partes, del, el, largo } from '../lib/texto.mjs';
+import { tweet, segunda, cap, proximoPartido, cuando } from '../lib/redactar.mjs';
 
 export async function generar({ stats, jornada, jugadores, config, desdeFinal = 0, forzarTarjetas = false, dazn = null }) {
   if (!(config.tarjetas && config.tarjetas.jugador) && !forzarTarjetas) return [];
@@ -25,6 +25,15 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     if (otro) ideas.push({ t: `🤝 Empata con él ${otro.p.nickname || otro.p.name}`, prio: 7 });
     ideas.push({ t: `📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`, prio: 6 });
     num.push(Number(j.points), ...partes(j.averagePoints));
+    // con tweets largos (X Premium): si hoy dobla su media, lo que vale y cuándo vuelve a jugar
+    if (largo()) {
+      const media = Number(j.averagePoints) || 0, valor = Number(j.marketValue) || 0;
+      if (media >= 3 && pts >= 2 * media) ideas.push({ t: '📈 Hoy saca más del doble de lo que suele', prio: 3 });
+      if (valor > 0) { const v = valor >= 1e6 ? valor / 1e6 : valor / 1e3; ideas.push({ t: `💸 Vale ${fmt(v)} ${valor >= 1e6 ? 'M' : 'K'} en el mercado`, prio: 2 }); num.push(...partes(v)); }
+      const pp = await proximoPartido(eq.id, { jornada: jornada + 1 }).catch(() => null);
+      const c = pp && pp.fecha ? cuando(pp.fecha) : null;
+      if (pp) { ideas.push({ t: `🗓️ Vuelve a jugar ${c ? `${c.t}, ` : `en la jornada ${pp.jornada}, `}contra ${el(pp.rival)}`, prio: 1 }); num.push(...(c ? c.numeros : [pp.jornada])); }
+    }
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) continue;
     out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });

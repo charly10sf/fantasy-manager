@@ -2,8 +2,8 @@
 // una línea de cómo fue, el mejor con sus puntos, quien puntúa aunque pierde, quien lo pasa mal y, si hay una noche grande, una lectura
 // para el mánager. Una idea por línea con su emoji delante. Los puntos salen de LaLiga (jornada, media y racha); la secuencia de goles,
 // de ESPN, solo si cuadra con el marcador.
-import { cierre, corto, elegir, fmt, partes, el, del, al } from '../lib/texto.mjs';
-import { tweet, cap, segunda } from '../lib/redactar.mjs';
+import { cierre, corto, elegir, fmt, partes, el, del, al, largo } from '../lib/texto.mjs';
+import { tweet, cap, segunda, proximoPartido, cuando } from '../lib/redactar.mjs';
 import { rachaDe } from '../lib/laliga.mjs';
 import { partidoEspn, reconstruir, minutoDe } from '../lib/relato.mjs';
 import { casarJugador } from './directo.mjs';
@@ -113,7 +113,9 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     if (!empate && top.media && top.media >= 3 && top.pts >= 2 * top.media) {
       ideas.push({ t: `📈 ${cap(segunda(top.pos, top.nombre))} suele sacar ${fmt(top.media)} de media: hoy, más del doble`, prio: 5 });
       num.push(...partes(top.media));
-    } else if (!empate && racha) {
+    }
+    // la racha, si no ha salido el doble de su media (con tweets largos, las dos)
+    if (!empate && racha && (largo() || !(top.media && top.media >= 3 && top.pts >= 2 * top.media))) {
       ideas.push({ t: `📈 Lleva 3 jornadas seguidas con 8 o más: ${racha.slice(0, -1).join(', ')} y ${racha[racha.length - 1]}`, prio: 5 });
       num.push(3, 8, ...racha);
     }
@@ -129,6 +131,9 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
       const eqP = gl > gv ? V : L;
       ideas.push({ t: `‼️ ${pierde.nombre}${r.goleadores.has(String(pierde.id)) ? ' marcó y' : ''} se va a ${pierde.pts} aunque ${el(eqP)} pierde`, prio: 7 });
       num.push(pierde.pts); ya.add(String(pierde.id));
+      // con tweets largos (X Premium), el podio también
+      const det = largo() ? ord.filter((f) => !ya.has(String(f.id))).slice(0, 2) : [];
+      if (det.length === 2 && det[1].pts > 0) { ideas.push({ t: `🥈 Detrás, ${det[0].nombre} con ${det[0].pts} y ${det[1].nombre} con ${det[1].pts}`, prio: 2 }); num.push(det[0].pts, det[1].pts); }
     } else {
       const det = ord.filter((f) => !ya.has(String(f.id))).slice(0, 2);
       if (det.length === 2 && det[1].pts > 0) { ideas.push({ t: `🥈 Detrás, ${det[0].nombre} con ${det[0].pts} y ${det[1].nombre} con ${det[1].pts}`, prio: 4 }); num.push(det[0].pts, det[1].pts); }
@@ -136,11 +141,17 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     // 5) quien lo ha pasado peor
     if (peor && !ya.has(String(peor.id))) {
       const encajo = peor.equipo === L ? gv : gl;
-      ideas.push({ t: `❌ Noche para olvidar de ${peor.nombre}: ${peor.pts} puntos${encajo >= 3 ? ` y ${encajo} goles encajados por su equipo` : ''}`, prio: 3 });
+      ideas.push({ t: `❌ Noche para olvidar de ${peor.nombre}: ${peor.pts} ${Math.abs(peor.pts) === 1 ? 'punto' : 'puntos'}${encajo >= 3 ? ` y ${encajo} goles encajados por su equipo` : ''}`, prio: 3 });
       num.push(peor.pts); if (encajo >= 3) num.push(encajo);
     }
     // 6) la lectura para el mánager, solo en una noche grande (y no en todos: depende del partido)
     if (!empate && top.pts >= 12) ideas.push({ t: elegir([`✅ Quien lleve a ${top.nombre}, buena noche`, `✅ Si tienes a ${top.nombre}, hoy sonríes`, `✅ Noche redonda para quien tenga a ${top.nombre}`], `lect${m.id}`), prio: 2 });
+    // con tweets largos: el próximo partido del mejor (lo que mira el mánager que lo tiene)
+    if (largo() && !empate && top.pts >= 8) {
+      const pp = await proximoPartido(top.ladoId, { jornada: jornada + 1 }).catch(() => null);
+      const c = pp && pp.fecha ? cuando(pp.fecha) : null;
+      if (pp) { ideas.push({ t: `🗓️ ${cap(segunda(top.pos, top.nombre))} vuelve a jugar ${c ? `${c.t}, ` : `en la jornada ${pp.jornada}, `}contra ${el(pp.rival)}`, prio: 1 }); num.push(...(c ? c.numeros : [pp.jornada])); }
+    }
     const { usadas, texto } = tweet(cab, ideas, { pie });
     if (!usadas.length) continue;
     out.push({ tipo: 'final', clave: `final|${m.id}`, jornada, texto, numeros: num, partido: m.id });
