@@ -1206,7 +1206,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html": 1793791758000,
    "SPORT|136074515": 1793788252000,
    "SPORT|136072010": 1793788867000,
-   "SPORT|136069863": 1793790101000
+   "SPORT|136069863": 1793790101000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/04/rodri-hernandez-baja-para-el-barca-en-el-metropolitano-tiene-una-pequena-lesion-en-el-biceps-femoral-de-su-pierna-derecha-cadena-ser/": 1793793689000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html": 1793794237000
   },
   "hechos": [
    {
@@ -1553,11 +1555,39 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/04/rodri-hernandez-baja-para-el-barca-en-el-metropolitano-tiene-una-pequena-lesion-en-el-biceps-femoral-de-su-pierna-derecha-cadena-ser/",
+    "medio": "Cadena SER",
+    "t": 1793793689000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "lesión en el bíceps femoral",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html",
+    "medio": "COPE",
+    "t": 1793794237000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri se pierde el próximo partido por lesión",
+    "motivo": "molestias físicas",
+    "plazo": "",
+    "nums": [
+     8,
+     21,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
