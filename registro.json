@@ -1173,7 +1173,8 @@
    "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/": 1793787223000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247073/brian-farinas-avalado-registro-nivel-barca.html": 1793787503000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261104/1004247114/galarreta-regresa-trabajo-grupo-tres-dias-visitar-osasuna.html": 1793789547000,
-   "SPORT|136067986": 1793786278000
+   "SPORT|136067986": 1793786278000,
+   "SPORT|136070467": 1793787476000
   },
   "hechos": [
    {
@@ -1472,7 +1473,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
