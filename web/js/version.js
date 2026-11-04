@@ -14,7 +14,7 @@ export const VERSION = '0.7a';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.7a', f: '2026-11-04', h: '', t: 'Tus datos, más guardados',
+    v: '0.7a', f: '2026-11-04', h: '18:19', t: 'Tus datos, más guardados',
     cosas: [
       { tipo: 'mejora', d: 'ia', t: 'La IA ya no ve los nombres de tus rivales', x: 'Para hacerte el plan y contestarte, la IA de Google recibía el nombre de cada mánager de tu liga y de su equipo. Ahora le llegan como «Rival 1», «Rival 2»… y la app les vuelve a poner el nombre en lo que contesta: tú lo ves igual que antes.', ir: { v: 'ia' } },
       { tipo: 'nuevo', d: 'ajustes', t: 'Borrar tus datos del servidor', x: 'En Ajustes → Borrar mis datos del servidor se borra al momento lo que Fantasy Manager guarda de ti: que usas la app, cuánto rato y tus avisos de fallo con sus capturas. Tu liga, tu sesión y tu clave están en tu dispositivo y no se tocan.' },
