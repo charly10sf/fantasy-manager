@@ -3,7 +3,7 @@
 // de Madrid): el último punto es el de hoy. Lleva el cierre de «Fantasy Manager · enlace en la bio».
 import { valorMercado } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
-import { cierre, corto, fmt, partes, del } from '../lib/texto.mjs';
+import { cierre, corto, fmt, partes, del, largo } from '../lib/texto.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t));
 const puntos = (h) => (Array.isArray(h) ? h : []).map((v) => ({ t: Date.parse(v.date), v: Number(v.marketValue) })).filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
@@ -68,8 +68,17 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   // más de media y 25 puntos o más en la temporada (que no sea la media de un solo partido); el de más puntos de media por millón
   const ch = chollo(suben);
   const linea = ch ? `\n\n🛒 Chollo Fantasy: ${ch.nombre} ${del(ch.equipo)} vale ${dinero(ch.nuevo)}, suma ${fmt(ch.media)} de media y hoy sube un ${fmt(ch.pct)} %` : '';
-  const texto = `💸 Subidas y bajadas del mercado fantasy de hoy, ${dd}/${mes}${linea}\n\n${cierre(`mercado${dia}`)}`;
+  // con X Premium (tweets largos), el que más sube y el que más baja contados con una frase (sin lista: la lista es la tarjeta)
   const num = [dd, mes, ...(ch ? [...partes(ch.nuevo >= 1e6 ? ch.nuevo / 1e6 : ch.nuevo / 1e3), ...partes(ch.media), ...partes(ch.pct)] : [])];
+  let lectura = '';
+  if (largo()) {
+    const s = suben[0], b = bajan[0];
+    const cifra = (x) => (x >= 1e6 ? x / 1e6 : x / 1e3);
+    lectura = `\n\n📈 ${s.nombre} ${del(s.equipo)} es el que más sube: +${dinero(s.dif)} (+${fmt(s.pct)} %), hasta los ${dinero(s.nuevo)}.`
+      + `\n\n📉 El que más cae es ${b.nombre} ${del(b.equipo)}: -${dinero(-b.dif)} (-${fmt(-b.pct)} %), se queda en ${dinero(b.nuevo)}.`;
+    num.push(...[s.dif, s.nuevo, -b.dif, b.nuevo].flatMap((x) => partes(cifra(x))), ...partes(s.pct), ...partes(-b.pct));
+  }
+  const texto = `💸 Subidas y bajadas del mercado fantasy de hoy, ${dd}/${mes}${lectura}${linea}\n\n${cierre(`mercado${dia}`)}`;
   // la tarjeta: top 5 de cada lado con cara, escudo, lo que cambia, el % y el valor
   const N = 5;
   const fila = (f) => ({ nombre: f.nombre, equipo: f.equipo, club: f.club, caraUrl: f.caraUrl, escudoUrl: f.escudoUrl,

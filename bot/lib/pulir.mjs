@@ -7,7 +7,7 @@
 //   - la misma última línea (la etiqueta «Baja Fantasy…» o el cierre «Fantasy Manager · enlace en la bio»);
 //   - solo emojis de la plantilla o de la guía de estilo, un emoji al principio de cada línea y nada de @, # ni primera persona.
 // Una pregunta a Gemini por tipo y ejecución, con todos los tweets de ese tipo que van a salir. Tope diario propio (`pulir.porDia`).
-import { norm, corto, peso } from './texto.mjs';
+import { norm, corto, peso, limite, largo } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntarJson } from './gemini.mjs';
 
@@ -57,7 +57,7 @@ export function nombresDe(jugadores = [], equipos = {}) {
 }
 
 /** ¿vale el texto pulido? [] si sí; si no, los motivos */
-export function revisar(orig, nuevo, { numeros = [], max = 280, nombres = [] } = {}) {
+export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [] } = {}) {
   const e = [];
   const v = validar(nuevo, { numeros, max });
   if (!v.ok) e.push(...v.errores);
@@ -98,8 +98,11 @@ const ESQUEMA = { type: 'OBJECT', required: ['tweets'], properties: { tweets: { 
   properties: { i: { type: 'INTEGER' }, texto: { type: 'STRING' } } } } } };
 
 // el largo que se le deja a cada tweet: el suyo y un poco más, sin pasar de 270 (el validador corta en 280; el 4 nov
-// el de apercibidos salió con 281 cuando el prompt decía «260» para todos)
-export const maxDe = (texto) => Math.min(270, peso(texto) + 10);
+// el de apercibidos salió con 281 cuando el prompt decía «260» para todos). Con X Premium (tweets largos), un 20 % más
+// (30 como poco) para que pueda unir frases con «y», «pero» o «aunque», sin pasar del límite largo.
+export const maxDe = (texto) => (largo()
+  ? Math.min(limite() - 20, peso(texto) + Math.max(30, Math.round(peso(texto) * 0.2)))
+  : Math.min(270, peso(texto) + 10));
 
 export function prompt(textos) {
   return `Eres el redactor de una cuenta de X de LaLiga Fantasy. Te paso tweets escritos con plantilla. Reescríbelos para que suenen a periodista que sabe de fantasy y no a máquina, cambiando SOLO la forma.
@@ -117,7 +120,7 @@ Reglas que no se pueden saltar:
 - No añadas datos, opiniones, motivos ni predicciones que no estén en el texto. Si una línea ya suena bien, déjala igual.
 - Si el último párrafo lleva la palabra «Fantasy», se queda exactamente igual, letra por letra.
 - El párrafo que dice de dónde sale la noticia («Lo cuentan…», «Según…») se queda aparte y tal cual, aunque te pida el cuerpo unirlo.
-- Cada tweet trae su «max»: como mucho esos caracteres, contando cada emoji como 2. Si no cabe, quita palabras; nunca lo alargues.
+${largo() ? '- Cada tweet trae su «max»: como mucho esos caracteres, contando cada emoji como 2. Puedes usar unas palabras más que la plantilla para que se lea como lo contaría una persona (unir frases, quitar la lista), pero sin datos nuevos y sin relleno: si sobra espacio, no hace falta gastarlo.' : '- Cada tweet trae su «max»: como mucho esos caracteres, contando cada emoji como 2. Si no cabe, quita palabras; nunca lo alargues.'}
 Devuelve cada tweet con su i.
 Tweets:
 ${JSON.stringify(textos.map((texto, i) => ({ i, max: maxDe(texto), texto })))}`;
@@ -149,7 +152,7 @@ export async function pulir(tweets, { tipo, registro = null, config = {}, jugado
     if (!t || typeof a.texto !== 'string') continue;
     const nuevo = a.texto.replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
     if (nuevo === t.texto) continue;
-    const malos = revisar(t.texto, nuevo, { numeros: t.numeros, max: config.tweetMax ?? 280, nombres });
+    const malos = revisar(t.texto, nuevo, { numeros: t.numeros, max: limite(), nombres });
     if (malos.length) { cuenta.mal++; log(`  (pulir) ${t.clave}: me quedo la plantilla (${malos.slice(0, 3).join('; ')})`); continue; }
     t.plantilla = t.texto; t.texto = nuevo; t.pulido = r.modelo; cuenta.ok++; cambiados++;
   }

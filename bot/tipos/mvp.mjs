@@ -25,7 +25,7 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     if (otro) ideas.push({ t: `🤝 Empata con él ${otro.p.nickname || otro.p.name}`, prio: 7 });
     ideas.push({ t: `📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`, prio: 6 });
     num.push(Number(j.points), ...partes(j.averagePoints));
-    const { usadas, texto } = tweet(cab, ideas, { max: config.tweetMax });
+    const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) continue;
     out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });
   }

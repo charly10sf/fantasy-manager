@@ -1,4 +1,13 @@
 // Formato de los tweets: peso de X (los emojis cuentan 2), cierres rotados y normalización de nombres.
+
+// El límite de cada tweet (Carlos, 4 nov 22:39: X Premium en @Fantasyman_app, «que los tweets sean más largos y se noten más
+// humanos»). Lo fija ejecutar.mjs al arrancar: 280 sin Premium y config.largo.max con él (ver `decidirLargo` en ejecutar.mjs).
+// Las plantillas dejan para el final, con la prio más baja, lo que solo cabe en un tweet largo: con 280 salen igual que antes.
+let LIMITE = 280;
+export const limite = () => LIMITE;
+/** ¿se escriben tweets largos (X Premium)? */
+export const largo = () => LIMITE > 280;
+export function fijarLimite(n) { LIMITE = Math.max(280, Math.round(Number(n)) || 280); return LIMITE; }
 export function peso(s) {
   let n = 0;
   for (const ch of String(s)) {
@@ -31,13 +40,13 @@ export const armar = (cab, cuerpo, pie) => [cab, '', ...cuerpo, ...(pie ? ['', p
  * mercado). Sin #LaLigaFantasy de relleno: la palabra «fantasy» ya no es obligatoria (Carlos, 4 nov 13:00; ya la lleva el
  * nombre de la cuenta). Devuelve { texto, usadas } con las líneas que caben.
  */
-export function sinCierre(cab, lineas, max = 280) {
+export function sinCierre(cab, lineas, max = limite()) {
   const usadas = quepa(cab, lineas, null, max);
   return { usadas, texto: armar(cab, usadas, null) };
 }
 
 /** corta una lista de líneas (por orden de importancia) para que el tweet entero quepa en max; devuelve las que caben */
-export function quepa(cabecera, lineas, pie, max = 280) {
+export function quepa(cabecera, lineas, pie, max = limite()) {
   const out = [];
   for (const l of lineas) {
     if (peso(armar(cabecera, [...out, l], pie)) > max) break;

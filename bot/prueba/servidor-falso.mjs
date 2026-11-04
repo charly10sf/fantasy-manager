@@ -1,9 +1,11 @@
 // Servidor falso de X para probar el publicador de punta a punta sin tocar X: responde 201 a POST /2/tweets (comprueba que lleva una
 // cabecera OAuth firmada y un texto, y que los media_ids, si los hay, se han subido antes), 200 a POST /2/media/upload (comprueba
 // que la imagen es un PNG en base64 de categoría tweet_image; con SUBIDA_FALLA=1 contesta 403) y 200 a GET /2/users/me.
-// GET /__resumen cuenta lo recibido; con GUARDAR=<carpeta> deja ahí las imágenes subidas.
+// GET /__resumen cuenta lo recibido; con GUARDAR=<carpeta> deja ahí las imágenes subidas. Con CORTO=1 hace de cuenta sin X Premium:
+// rechaza con 403 los tweets de más de 280 (para probar la vuelta a 280 de lib/largo.mjs).
 import http from 'node:http';
 import { writeFileSync, mkdirSync } from 'node:fs';
+import { peso } from '../lib/texto.mjs';
 const recibidos = []; let firmados = 0, duplicados = 0;
 const subidas = new Map(); let conImagen = 0, imagenesUsadas = 0;
 const GUARDAR = process.env.GUARDAR; if (GUARDAR) mkdirSync(GUARDAR, { recursive: true });
@@ -18,6 +20,7 @@ http.createServer((req, res) => {
       let t = '', ids = []; try { const c = JSON.parse(cuerpo); t = c.text; ids = (c.media && c.media.media_ids) || []; } catch { /* nada */ }
       if (!firmado || !t) return json(401, { title: 'Unauthorized' });
       if (ids.length > 4 || ids.some((i) => !subidas.has(String(i)))) return json(400, { title: 'Invalid Request', detail: 'media_ids desconocidos' });
+      if (process.env.CORTO === '1' && peso(t) > 280) return json(403, { detail: 'You are not permitted to create a Tweet with this length.', title: 'Forbidden', status: 403 });
       if (ids.length) { conImagen++; imagenesUsadas += ids.length; }
       if (recibidos.includes(t)) { duplicados++; return json(403, { detail: 'You are not allowed to create a Tweet with duplicate content.', title: 'Forbidden', status: 403 }); }
       firmados++; recibidos.push(t);
