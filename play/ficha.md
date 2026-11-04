@@ -58,7 +58,11 @@ INTELIGENCIA ARTIFICIAL (OPCIONAL Y GRATIS)
 AVISOS
 • Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando tienes listo el plan del día.
 
-Funciona en Android y también en el navegador del ordenador.
+TU LIGA
+• Invita a los de tu liga con un enlace: al entrar con su cuenta se les abre esa liga.
+• Tarjetas del plan para mandar al grupo.
+
+Funciona en Android y también en el navegador del ordenador. Tu sesión y tu clave de la IA se quedan en tu móvil, la IA no ve los nombres de tus rivales y puedes borrar lo que guarda el servidor desde Ajustes.
 
 Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relación con LaLiga ni con LaLiga Fantasy. Para usarla necesitas tu propia cuenta de LaLiga Fantasy: entras en la página oficial de LaLiga y la app nunca ve tu contraseña.
 
