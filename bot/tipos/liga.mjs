@@ -125,7 +125,7 @@ export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, o
       ? { suspension: `${alarma} Se estudia suspender ${obj}`, aplazamiento: `${alarma} Se estudia aplazar ${obj}`, horario: `${alarma} Puede cambiar el horario ${deO}`, puertaCerrada: `${alarma} Se estudia jugar ${obj} a puerta cerrada` }[tipo]
       : { suspension: `${alarma} Se suspende ${obj}`, aplazamiento: `${alarma} Se aplaza ${obj}`, horario: `🕐 Cambia el horario ${deO}`, puertaCerrada: `${alarma} ${O} se jugará a puerta cerrada` }[tipo];
   const lis = medios.length <= 3 ? enLista(medios) : `${medios.slice(0, 2).join(', ')} y otros medios`;
-  const fuente = oficial ? `🗞️ Es oficial, según ${lis}` : `🗞️ Lo cuentan ${lis}`;
+  const fuente = oficial ? `Es oficial, según ${lis}` : `Lo cuentan ${lis}`;
   const lectura = luto ? null : estado === 'se_estudia' ? '👀 Pendientes de la decisión oficial'
     : estado === 'confirmado' && (tipo === 'suspension' || tipo === 'aplazamiento') ? '👀 Atentos a cómo lo aplica LaLiga Fantasy' : null;
   // el contexto o el detalle que repiten la cabecera («Se aplaza el partido por…» bajo «Se aplaza el Sevilla-Alavés»), fuera

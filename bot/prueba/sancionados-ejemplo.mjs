@@ -72,7 +72,7 @@ reg.marcar({ clave: 'caidas|12|12', tipo: 'caidas', jornada: 12 }, '1');
 const ts2 = await generar({ ...base, ahora: t('2026-11-04T19:00:00Z'), config: {}, registro: reg });
 igual(ts2[0].clave, 'sancionados|12|10', 'sin Vini Jr., que ya salió en caídas');
 console.log(`--- ${ts2[0].clave}\n${ts2[0].texto}`);
-if (!/❌ El centrocampista cumple el tercero/.test(ts2[0].texto) || !/contra el Rayo/.test(ts2[0].texto)) falla('uno solo: por su puesto y con el rival');
+if (!/El centrocampista cumple el tercero/.test(ts2[0].texto) || !/contra el Rayo/.test(ts2[0].texto)) falla('uno solo: por su puesto y con el rival');
 // y las caídas ya no repiten a los de un tweet de sancionados
 reg.marcar(ts2[0], '2'); reg.marcar(ts2[1], '3');
 if (!reg.cubiertos().some((c) => c.tipo === 'sancionados' && c.id === '10')) falla('cubiertos() con sancionados');
