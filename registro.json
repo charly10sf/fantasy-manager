@@ -241,7 +241,7 @@
   "886": "ok",
   "927": "ok",
   "988": "ok",
-  "1029": "doubtful",
+  "1029": "injured",
   "1031": "ok",
   "1033": "ok",
   "1056": "ok",
@@ -327,8 +327,8 @@
   "2347": "ok",
   "2348": "injured",
   "2351": "out_of_league",
-  "2353": "injured",
-  "2354": "injured",
+  "2353": "ok",
+  "2354": "ok",
   "2355": "injured",
   "2356": "out_of_league",
   "2358": "ok",
@@ -1100,6 +1100,18 @@
    "que": "vuelve",
    "antes": "injured",
    "t": 1793791870909
+  },
+  {
+   "id": "2354",
+   "que": "vuelve",
+   "antes": "injured",
+   "t": 1793793972334
+  },
+  {
+   "id": "1029",
+   "que": "lesion",
+   "antes": "doubtful",
+   "t": 1793793972334
   }
  ],
  "noticias": {
@@ -1193,7 +1205,8 @@
    "SPORT|136073953": 1793787858000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html": 1793791758000,
    "SPORT|136074515": 1793788252000,
-   "SPORT|136072010": 1793788867000
+   "SPORT|136072010": 1793788867000,
+   "SPORT|136069863": 1793790101000
   },
   "hechos": [
    {
@@ -1544,7 +1557,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -1616,8 +1629,8 @@
     "t": 0
    },
    "1029": {
-    "e": "doubtful",
-    "t": 0
+    "e": "injured",
+    "t": 1793793972334
    },
    "1033": {
     "e": "ok",
@@ -1732,8 +1745,8 @@
     "t": 0
    },
    "2354": {
-    "e": "injured",
-    "t": 0
+    "e": "ok",
+    "t": 1793793972334
    },
    "2355": {
     "e": "injured",
