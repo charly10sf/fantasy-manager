@@ -14,7 +14,7 @@ export const VERSION = '0.7c';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.7c', f: '2026-11-04', h: '20:47', t: 'La IA, más rápida',
+    v: '0.7c', f: '2026-11-04', h: '20:52', t: 'La IA, más rápida',
     cosas: [
       { tipo: 'mejora', d: 'ia', t: 'El plan sale en la mitad de tiempo', x: 'El plan ya no manda a la IA a buscar en Google (las noticias y los onces probables ya van con él): de 40-80 s pasa a 20-30 s y falla menos. Si la quieres, en Ajustes está «Buscar en Google al hacer el plan».' },
       { tipo: 'mejora', d: 'ia', t: 'Si una versión de la IA se cuelga, otra la releva antes', x: 'A los 25 s sin respuesta la app pregunta también a otra versión, y si tampoco contesta, a otra más a la vez: vale la primera que llegue. La que contesta bien se queda la primera durante un día. Ningún intento pasa de 60-90 s ni todo junto de 3 minutos.' },
