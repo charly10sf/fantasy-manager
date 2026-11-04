@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.6.12l';
+export const VERSION = '0.6.12m';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,16 @@ export const VERSION = '0.6.12l';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.6.12m', f: '2026-11-04', h: '05:55', t: 'La web se pone al día sola',
+    cosas: [
+      { para: 'web', tipo: 'arreglo', d: 'conexion', t: 'La web recarga tu liga sola', x: 'Si dejabas la web abierta o volvías a la pestaña horas después, seguía enseñando lo de antes: pasadas las 00:15 salía el mercado viejo como si fuera el de hoy. Ahora recarga tu liga al volver a la pestaña y, con la app abierta, un minuto después de que cambie el mercado.' },
+      { tipo: 'arreglo', d: 'conexion', t: 'Si la IA no contesta, tu pregunta no se pierde', x: 'Cuando la IA fallaba en Pregunta, solo salía un aviso unos segundos y tu pregunta se quedaba sola en el chat. Ahora vuelve a la caja de escribir (con sus fotos), el chat te dice qué ha pasado y tienes un botón para volver a preguntar.' },
+      { tipo: 'mejora', d: 'conexion', t: 'Plazos del plan más claros', x: 'Los pasos del plan dicen «esta noche antes de las 00:15» o «antes del jue 5 a las 20:00» en vez de «antes de mañana 00:15», y en las reventas «Ponlo a la venta mañana».' },
+      { tipo: 'arreglo', d: 'conexion', menor: true, t: 'Con la letra grande del móvil, Equipo se ve bien', x: 'Con el texto del móvil en grande, los nombres de las pestañas de Equipo se montaban unos encima de otros y se cortaban cifras. Ahora la barra se desliza de lado y las cifras se ponen en dos columnas si no caben.' },
+      { tipo: 'mejora', d: 'conexion', menor: true, t: 'Carga más rápida si una web de datos no contesta', x: 'Si una de las webs de estadísticas avanzadas no responde, la app deja de esperarla un rato en vez de perder unos segundos en cada carga.' },
+    ],
+  },
   {
     v: '0.6.12l', f: '2026-11-03', h: '23:23', t: 'Fichar te dice lo que puedes gastar',
     cosas: [
