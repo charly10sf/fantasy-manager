@@ -1,0 +1,22 @@
+name: Pruebas humano
+on:
+  push:
+    branches: [pruebas-humano]
+jobs:
+  p:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: |
+          for t in previa caidas sancionados; do
+            echo "@@@@@@@@ $t"
+            node bot/ejecutar.mjs --modo=simulacro --tipos=$t --ventanas=0 --pulir=1 | grep -vE "^\s*\(dazn\)|tarjeta" || true
+          done
+          echo "@@@@@@@@ final,resumen J11"
+          node bot/ejecutar.mjs --modo=simulacro --tipos=resumen,final --jornada=11 --ventanas=0 --pulir=1 | grep -vE "^\s*\(dazn\)|tarjeta" || true
