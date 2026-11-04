@@ -1208,7 +1208,8 @@
    "SPORT|136072010": 1793788867000,
    "SPORT|136069863": 1793790101000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/rodri-hernandez-baja-para-el-barca-en-el-metropolitano-tiene-una-pequena-lesion-en-el-biceps-femoral-de-su-pierna-derecha-cadena-ser/": 1793793689000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html": 1793794237000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html": 1793794237000,
+   "La Vanguardia|https://www.lavanguardia.com/clic/20261104/11675899/niko-mihic-medico-real-madrid-estalla-horarios-toman-consideracion-salud-dano-jugador-lol.html": 1793793661000
   },
   "hechos": [
    {
@@ -1587,7 +1588,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
