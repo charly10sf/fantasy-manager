@@ -9,6 +9,7 @@ import { tweet, enPalabras, cuando, aparte, cap } from '../lib/redactar.mjs';
 import { ESPN, partidoEspn } from '../lib/relato.mjs';
 import { casarJugador } from './directo.mjs';
 import { probabilidades, elegirOnce } from '../lib/onces.mjs';
+import { enElAire } from '../lib/aire.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
@@ -32,6 +33,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const yaConf = registro && registro.claves.has(`onces|${m.id}`), yaPos = registro && registro.claves.has(`previa|${m.id}`);
       if (!(quiereConf && !yaConf) && !(quierePos && !yaPos)) continue;
       const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
+      // si se estudia suspender o aplazar la jornada o el partido (o ya se ha decidido y aún no hay fecha nueva), la previa espera
+      const aire = enElAire(registro, { jornada, m, ahora });
+      if (aire.espera) { log(`  (previa) ${L}-${V}: ${aire.motivo}`); continue; }
       const sem = `previa${m.id}`;
       // las alineaciones de ESPN, primero: si aún no están y no toca la previa, no se piden las fichas de nadie
       let rl = null, rv = null;
