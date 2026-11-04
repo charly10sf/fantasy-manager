@@ -2531,7 +2531,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
    "SPORT|136080803": 1793795045000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/entrenamiento-voluntario-owono-andorra-minuto-silencio-jesus-miguel-20261104_3468574.html": 1793800216000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/entrenamiento-voluntario-owono-andorra-minuto-silencio-jesus-miguel-20261104_3468574.html": 1793800216000,
+   "SPORT|136082717": 1793797745000
   },
   "hechos": [
    {
@@ -2664,11 +2665,26 @@
     "contexto": "Tras el aplazamiento del partido del fin de semana",
     "detalle": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136082717",
+    "medio": "SPORT",
+    "t": 1793797745000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 0,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Tras el fallecimiento de un jugador",
+    "detalle": "La AFE pide la suspensión y el Celta la respalda",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 7
+   "n": 8
   }
  }
 }
