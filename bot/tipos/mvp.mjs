@@ -23,16 +23,25 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     // el partido ya está arriba: sin el equipo entre paréntesis; la segunda vez, por su puesto (guía de estilo del 3 nov)
     const ideas = [{ t: elegir([`🔥 ${nombre} se va a ${pts} puntos`, `🔥 ${pts} puntos para ${nombre}`, `🔥 ${nombre} se lleva el partido con ${pts} puntos`], `mvpt${m.id}`), prio: 9 }];
     if (otro) ideas.push({ t: `🤝 Empata con él ${otro.p.nickname || otro.p.name}`, prio: 7 });
-    ideas.push({ t: `📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`, prio: 6 });
+    ideas.push({ t: largo() ? elegir([`📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`,
+      `📊 En lo que va de temporada suma ${j.points} puntos, a ${fmt(j.averagePoints)} por partido`, `📊 Con esto llega a ${j.points} puntos en la temporada y una media de ${fmt(j.averagePoints)}`], `mvps${m.id}`)
+      : `📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`, prio: 6 });
     num.push(Number(j.points), ...partes(j.averagePoints));
-    // con tweets largos (X Premium): si hoy dobla su media, lo que vale y cuándo vuelve a jugar
+    // con tweets largos (X Premium): lo que vale y cuándo vuelve a jugar, cada MVP contado a su manera. Lo de «más del doble de su media»
+    // ya lo dice el tweet del final, que sale justo antes: aquí no se repite
     if (largo()) {
-      const media = Number(j.averagePoints) || 0, valor = Number(j.marketValue) || 0;
-      if (media >= 3 && pts >= 2 * media) ideas.push({ t: '📈 Hoy saca más del doble de lo que suele', prio: 3 });
-      if (valor > 0) { const v = valor >= 1e6 ? valor / 1e6 : valor / 1e3; ideas.push({ t: `💸 Vale ${fmt(v)} ${valor >= 1e6 ? 'M' : 'K'} en el mercado`, prio: 2 }); num.push(...partes(v)); }
+      const valor = Number(j.marketValue) || 0;
+      const v = valor >= 1e6 ? valor / 1e6 : valor / 1e3, u = valor >= 1e6 ? 'M' : 'K';
       const pp = await proximoPartido(eq.id, { jornada: jornada + 1 }).catch(() => null);
       const c = pp && pp.fecha ? cuando(pp.fecha) : null;
-      if (pp) { ideas.push({ t: `🗓️ Vuelve a jugar ${c ? `${c.t}, ` : `en la jornada ${pp.jornada}, `}contra ${el(pp.rival)}`, prio: 1 }); num.push(...(c ? c.numeros : [pp.jornada])); }
+      const cuandoTxt = pp ? (c ? c.t : `en la jornada ${pp.jornada}`) : null;
+      if (pp) num.push(...(c ? c.numeros : [pp.jornada]));
+      if (valor > 0) num.push(...partes(v));
+      const t = valor > 0 && pp ? elegir([`💸 Vale ${fmt(v)} ${u} en el mercado y vuelve a jugar ${cuandoTxt}, contra ${el(pp.rival)}`,
+        `💸 En el mercado está a ${fmt(v)} ${u}. Su próximo partido, ${cuandoTxt} ante ${el(pp.rival)}`,
+        `🗓️ El siguiente, ${cuandoTxt} contra ${el(pp.rival)}. Por si alguien se lo piensa: vale ${fmt(v)} ${u}`], `mvpl${m.id}`)
+        : valor > 0 ? `💸 Vale ${fmt(v)} ${u} en el mercado` : pp ? `🗓️ Vuelve a jugar ${cuandoTxt}, contra ${el(pp.rival)}` : null;
+      if (t) ideas.push({ t, prio: 2 });
     }
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) continue;
