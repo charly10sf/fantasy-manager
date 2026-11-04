@@ -5,10 +5,11 @@
 
    p plan pedido · q pregunta en el chat · b anuncio bonificado visto · t función top abierta · l login empezado ·
    e entrada hecha (login, QR o código) · v guía de la clave vista (una vez al día) · c clave guardada ·
-   n invitación a tu liga mandada · i llegó con una invitación (una vez) */
+   n invitación a tu liga mandada · i llegó con una invitación (una vez) · a/A carga de la liga bien (A con jornada en
+   juego) · f/F carga fallida (F con jornada en juego: el bloqueo de Cloudflare en los partidos) */
 import { LS, diaDe } from './util.js';
 
-export const EVENTOS = { p: 'planes pedidos', q: 'preguntas al chat', b: 'anuncios bonificados', t: 'funciones top abiertas', l: 'logins empezados', e: 'entradas hechas', v: 'guía de la clave vista', c: 'claves guardadas', n: 'invitaciones mandadas', i: 'llegadas por invitación' };
+export const EVENTOS = { p: 'planes pedidos', q: 'preguntas al chat', b: 'anuncios bonificados', t: 'funciones top abiertas', l: 'logins empezados', e: 'entradas hechas', v: 'guía de la clave vista', c: 'claves guardadas', n: 'invitaciones mandadas', i: 'llegadas por invitación', a: 'cargas bien', A: 'cargas bien en jornada', f: 'cargas fallidas', F: 'cargas fallidas en jornada' };
 
 /** apunta un evento; con una: true, solo si hoy aún no se había apuntado */
 export function contar(k, { una = false } = {}) {

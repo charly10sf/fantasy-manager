@@ -1004,6 +1004,7 @@ async function cargar0({ silencio = false } = {}) {
     S.D = await actualizar((i) => { if (conPantalla) pantallaCarga(i); });
     S.errorCarga = null;
     rehacer();
+    if (!enDemo()) contar(S.M && S.M.enJuego ? 'A' : 'a');
     S.cargando = false;
     pintar();
     // la primera vez: el tutorial, que recorre la app para saber dónde está cada cosa
@@ -1018,6 +1019,8 @@ async function cargar0({ silencio = false } = {}) {
     if (!enDemo() && haySesion() && !document.hidden) saludar({ v: `${VERSION} !`, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: '', equipo: '' });
     const x = { ...explicarError(e), detalle: e.message || String(e), t: Date.now() };
     S.errorCarga = x;
+    // (las aperturas fallidas, aparte si hay jornada en juego: es cuando las operadoras cortan Cloudflare)
+    if (!enDemo() && haySesion()) contar(S.M && S.M.enJuego ? 'F' : 'f');
     // sin poder cargar, pero con la liga guardada de antes: se enseña esa, avisando de que no está al día
     const guardada = conPantalla && x.tipo !== 'sinLigas' ? foto() : null;
     // (si el fallo es del motor, la liga guardada vuelve a fallar al rehacerse: entonces, la pantalla de error, nunca

@@ -459,7 +459,7 @@ const CANALES = new Set(['github', 'play', 'web']);
  */
 /* lo que hace cada cuenta (web/js/eventos.js): cuántas veces por día; aquí se suma por semanas (la clave es el lunes)
    y en total. Solo números: ni qué jugador ni qué liga. */
-const EVENTOS = new Set(['p', 'q', 'b', 't', 'l', 'e', 'v', 'c', 'n', 'i']);
+const EVENTOS = new Set(['p', 'q', 'b', 't', 'l', 'e', 'v', 'c', 'n', 'i', 'a', 'A', 'f', 'F']);
 function limpiarEventos(ev) {
   const out = {};
   if (!ev || typeof ev !== 'object') return out;

@@ -740,6 +740,7 @@ function usoHTML(reg, activos) {
   return `<div class="grupo"><span>Qué hacen</span></div>
     <table class="tabla reg-ev"><tr><th></th><th>Esta semana</th><th>4 anteriores</th></tr>${['p', 'q', 'b', 't', 'e', 'c', 'n', 'i'].map(fila).join('')}</table>
     <p class="quien-res">Planes por cuenta activa esta semana: <b>${String(porActivo).replace('.', ',')}</b>.</p>
+    ${(() => { const pc = (b, f) => (b + f ? `${Math.round((f / (b + f)) * 1000) / 10} %`.replace('.', ',') : '—'); return `<p class="quien-res">Cargas de la liga que fallan esta semana: <b>${pc(sem.a || 0, sem.f || 0)}</b> fuera de jornada · <b>${pc(sem.A || 0, sem.F || 0)}</b> con jornada en juego (${(sem.A || 0) + (sem.F || 0)} cargas).</p>`; })()}
     <p class="quien-res">La entrada, en cuentas: empezaron el login <b>${con('l')}</b> · entraron <b>${con('e')}</b> · vieron la guía de la clave <b>${con('v')}</b> · guardaron la clave <b>${con('c')}</b> · pidieron un plan <b>${con('p')}</b>.</p>
     <p class="peq apag">Lo de antes de entrar con la cuenta solo cuenta para quien acaba entrando. Lo de los últimos días puede tardar hasta un día en llegar.</p>`;
 }
