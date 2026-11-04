@@ -1240,7 +1240,8 @@
    "AS|https://as.com/futbol/primera/cuti-descartado-simeone-entre-le-normand-o-un-medio-f202611-n/": 1793812964000,
    "ABC|https://www.abc.es/deportes/futbol/raphinha-renueva-barca-2030-rodri-mes-baja-20261104183435-nt.html": 1793813675000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247282/bellingham-empata-partido-genialidad.html": 1793816728000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html": 1793816929000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html": 1793816929000,
+   "SPORT|136094136": 1793814999000
   },
   "hechos": [
    {
@@ -1761,7 +1762,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
