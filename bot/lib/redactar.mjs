@@ -36,6 +36,9 @@ function parrafo(frases) {
   }
   return out;
 }
+/** marca de párrafo aparte para armarAire (no sale en el texto): `aparte('En el Sevilla…')` */
+export const APARTE = '¶';
+export const aparte = (s) => `${APARTE}${s}`;
 /** el tweet: cabecera e ideas en párrafos de texto corrido, las listas y la etiqueta en su línea, y el cierre (si lo hay) */
 export function armarAire(cab, ideas, pie) {
   const xs = [...ideas];
@@ -45,7 +48,9 @@ export function armarAire(cab, ideas, pie) {
   // con varias frases, el párrafo acaba en punto; una sola va sin él si es el titular (el primer párrafo) y con él si va después
   // (4 nov, con los tweets largos: «El Sevilla no podrá contar con Marcao» se quedaba sin punto en mitad del texto)
   const volcar = () => { if (frases.length) bloques.push(frases.length > 1 || bloques.length ? cierra(parrafo(frases)) : parrafo(frases)); frases = []; };
-  for (const x of xs) {
+  for (const x0 of xs) {
+    // «¶» al principio: empieza un párrafo nuevo (los tweets largos van por párrafos: uno por equipo o por jugador)
+    const x = String(x0).startsWith(APARTE) ? (volcar(), String(x0).slice(APARTE.length)) : x0;
     if (esLista(x)) { volcar(); bloques.push(x); continue; }
     const f = sinEmoji(x);
     if (!f) continue;
@@ -112,9 +117,25 @@ export async function proximoPartido(teamId, { stats = null, semana = null, jorn
     if (!m || m.matchState === 7) continue;
     const enCasa = String(m.local.id) === String(teamId);
     const r = enCasa ? m.visitor : m.local;
-    return { jornada: n, rival: corto(r.mainName), rivalNombre: r.mainName, rivalEscudo: r.badgeColor || null, enCasa };
+    return { jornada: n, rival: corto(r.mainName), rivalNombre: r.mainName, rivalEscudo: r.badgeColor || null, enCasa, fecha: m.date || null };
   }
   return null;
 }
 /** «para la jornada 12 contra el Valencia» (o solo «para la jornada 12» si no se sabe el rival) */
 export const paraLa = (pp, jornada) => (pp ? `para la jornada ${pp.jornada} contra ${el(pp.rival)}` : jornada ? `para la jornada ${jornada}` : 'para la próxima jornada');
+
+// Cuándo se juega, como lo diría una persona (para los tweets largos): «hoy a las 21:00», «mañana a las 18:30», «el sábado a las
+// 16:15». Con la hora de Madrid. Devuelve { t, numeros } (las cifras de la hora, para el validador) o null si no hay fecha.
+const DIA_SEM = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long' });
+const HORA_MIN = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+const DIA_ISO = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+export function cuando(fecha, ahora = Date.now()) {
+  const t = Date.parse(fecha);
+  if (!Number.isFinite(t)) return null;
+  const hm = HORA_MIN.format(new Date(t));
+  const [h, mi] = hm.split(':').map(Number);
+  const dias = Math.round((Date.parse(DIA_ISO.format(new Date(t))) - Date.parse(DIA_ISO.format(new Date(ahora)))) / 864e5);
+  if (dias < 0 || dias > 6) return null;
+  const dia = dias === 0 ? 'hoy' : dias === 1 ? 'mañana' : `el ${DIA_SEM.format(new Date(t))}`;
+  return { t: `${dia} a las ${hm}`, numeros: [h, mi] };
+}

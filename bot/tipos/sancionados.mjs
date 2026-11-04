@@ -7,13 +7,13 @@
 // Sin repetir: fuera quien ya ha salido sancionado en caídas o en este tipo en la misma jornada, o en novedades en los 5 días de antes.
 // Sale entre las horas de `horasSancionados` y cuando falten menos de `sancionadosAntesHoras` para el primer partido de la jornada
 // (con la jornada de viernes, desde el miércoles por la tarde), nunca con partidos de la anterior a medias.
-import { corto, fmt, partes, el } from '../lib/texto.mjs';
-import { tweet, segunda, proximoPartido, paraLa, cap } from '../lib/redactar.mjs';
+import { corto, fmt, partes, el, largo } from '../lib/texto.mjs';
+import { tweet, segunda, proximoPartido, paraLa, cap, aparte } from '../lib/redactar.mjs';
 import { statsSemana, ficha as fichaLaLiga } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { motivoSancion } from '../lib/partes.mjs';
-import { elQueMasPesa, enLetra, mayus, nombresPorClub } from '../lib/agrupar.mjs';
+import { elQueMasPesa, enLetra, mayus, nombresPorClub, pesos, porClub, lista } from '../lib/agrupar.mjs';
 import { disciplina, casar, amarillasDe } from '../lib/disciplina.mjs';
 import { baseTitular } from './caidas.mjs';
 
@@ -51,9 +51,16 @@ export function lineaSancion(x, { solo = false } = {}) {
 }
 const mediaDe = (x) => (x.media >= 3 ? { t: `‼️ Suma ${fmt(x.media)} puntos de media`, numeros: partes(x.media) } : null);
 
-/** los tweets a partir de los datos ya calculados (aparte para probarlo sin red: bot/prueba/sancionados-ejemplo.mjs) */
-export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {} }) {
+/** «el Racing-Real Sociedad» (el partido de un equipo, con el de casa delante) */
+const partido = (eq, pr) => `el ${pr.enCasa ? `${eq}-${pr.rival}` : `${pr.rival}-${eq}`}`;
+
+/** los tweets a partir de los datos ya calculados (aparte para probarlo sin red: bot/prueba/sancionados-ejemplo.mjs).
+    pp: el próximo partido de cada equipo (la jornada de la sanción); pp2: el de la jornada siguiente (lo que se juegan los apercibidos) */
+export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {}, pp2 = {} }) {
   const out = [];
+  // con tweets largos (X Premium): contra quién no estará cada sancionado, la media de todos y qué partido se jugaría cada apercibido
+  const L = largo();
+  const peso = (xs) => { if (!L) return elQueMasPesa(xs); const r = pesos(xs); return r && { ...r, t: aparte(r.t) }; };
   // sancionados: un tweet con todos los que caben; si no caben, los que sobran van en otro
   let resto = [...sancionados].sort((a, b) => b.media - a.media || b.valor - a.valor);
   while (resto.length && out.length < 2) {
@@ -61,8 +68,9 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {} 
     for (let n = Math.min(resto.length, 5); n >= 1 && !hecho; n--) {
       const xs = resto.slice(0, n);
       const cab = n === 1 ? `🟥 ${xs[0].nombre} se pierde la jornada ${jornada} por sanción` : `🟥 ${mayus(enLetra(n))} sancionados para la jornada ${jornada}`;
-      const lineas = xs.map((x) => lineaSancion(x, { solo: n === 1 }));
-      const top = n === 1 ? mediaDe(xs[0]) : elQueMasPesa(xs);
+      const lineas = xs.map((x) => { const l = lineaSancion(x, { solo: n === 1 }), r = pp[String(x.teamId)];
+        return L && n > 1 && r ? `${l} y se pierde el partido contra ${el(r.rival)}` : l; });
+      const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
       const pr = n === 1 ? pp[String(xs[0].teamId)] : null;
       const etiqueta = n === 1 ? `❌ Baja Fantasy ${paraLa(pr, jornada)}` : `❌ Bajas Fantasy para la jornada ${jornada}`;
       const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
@@ -84,9 +92,16 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {} 
     const pr = n === 1 ? pp[String(xs[0].teamId)] : null;
     const aviso = n === 1 && pr ? `⚠️ Si ve una amarilla contra ${el(pr.rival)}, se pierde la jornada ${jornada + 1}`
       : `⚠️ Si ${n === 1 ? 've' : 'ven'} una amarilla en la jornada ${jornada}, ${n === 1 ? 'se pierde' : 'se pierden'} la ${jornada + 1}`;
-    const top = n === 1 ? mediaDe(xs[0]) : elQueMasPesa(xs);
+    const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
     const etiqueta = `🟨 Apercibidos Fantasy de la jornada ${jornada}`;
-    const r = tweet(cab, [{ t: nombres, prio: 9 }, { t: aviso, prio: 9 }, top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
+    // con tweets largos: el partido de la jornada siguiente que se perdería cada uno («Y. Zabiri y Pablo Ramón, el Racing-Real Sociedad»)
+    let juego = null;
+    if (L && n > 1) {
+      const gs = porClub(xs).map((g) => ({ g, pr: pp2[String(g[0].teamId)] })).filter((x) => x.pr);
+      const ts = gs.map(({ g, pr }) => `${lista(g.map((x) => x.nombre))}, ${partido(g[0].equipo, pr)}`);
+      if (ts.length) juego = `⚠️ Con una amarilla más se perderían ${ts.length > 1 ? `${ts.slice(0, -1).join('; ')}, y ${ts[ts.length - 1]}` : ts[0]}`;
+    }
+    const r = tweet(cab, [{ t: nombres, prio: 9 }, { t: aviso, prio: 9 }, juego && { t: juego, prio: 3 }, top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
     if (![nombres, aviso, etiqueta].every((l) => r.usadas.includes(l))) continue;
     out.push({ tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, numeros: [jornada, jornada + 1, ...(top ? top.numeros : [])] });
     break;
@@ -148,5 +163,8 @@ export async function generar({ jugadores, equipos, jornada, stats = [], semana,
   // el rival (solo hace falta cuando el tweet es de uno: «para la jornada 12 contra el Rayo»)
   const pp = {};
   for (const x of [...sancionados, ...apercibidos]) if (!(String(x.teamId) in pp)) pp[String(x.teamId)] = await proximo(x.teamId, { jornada: J, semana, stats: ob.partidos }).catch(() => null);
-  return escribir({ jornada: J, sancionados, apercibidos, pp });
+  // con tweets largos, el partido de la jornada siguiente de cada apercibido (el que se perdería con una amarilla más)
+  const pp2 = {};
+  if (largo()) for (const x of apercibidos) if (!(String(x.teamId) in pp2)) pp2[String(x.teamId)] = await proximo(x.teamId, { jornada: J + 1 }).catch(() => null);
+  return escribir({ jornada: J, sancionados, apercibidos, pp, pp2 });
 }

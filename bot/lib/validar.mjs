@@ -1,8 +1,8 @@
 // El validador: nada sale si falla. Comprueba el largo, la palabra «fantasy», que no haya enlaces y que cada número
 // del texto esté entre los datos con los que se ha escrito.
-import { peso } from './texto.mjs';
+import { peso, limite } from './texto.mjs';
 
-export function validar(texto, { numeros = [], max = 280 } = {}) {
+export function validar(texto, { numeros = [], max = limite() } = {}) {
   const e = [];
   const p = peso(texto);
   if (p > max) e.push(`largo ${p} > ${max}`);

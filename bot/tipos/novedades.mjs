@@ -2,10 +2,10 @@
 // (media de 4 o más, o 10 M o más de valor): pasa a lesionado, sancionado, o vuelve a estar disponible. Las dudas no salen solas
 // (una duda necesita una segunda fuente, regla de Carlos). Compara con el estado guardado en el registro (`estados`, en la rama
 // bot-estado); la primera vez solo lo guarda. Fuera de horario (9 a 23 h) no mira nada, así los cambios se acumulan para el día.
-import { corto, fmt, partes, elegir, el, del } from '../lib/texto.mjs';
-import { tweet, cap, segunda, proximoPartido, paraLa } from '../lib/redactar.mjs';
+import { corto, fmt, partes, elegir, el, del, largo } from '../lib/texto.mjs';
+import { tweet, cap, segunda, proximoPartido, paraLa, cuando, aparte } from '../lib/redactar.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
-import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle } from '../lib/agrupar.mjs';
+import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 
@@ -74,6 +74,9 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   const out = [];
 
   // Uno solo: un tweet con la noticia arriba, el detalle por su puesto y la etiqueta final con la jornada y el rival (formato Carrasco)
+  // con tweets largos (X Premium): cuándo es el partido, el motivo de todos y la media de todos (lib/agrupar.mjs)
+  const L = largo();
+  const hora = (pp) => { const c = L && pp && pp.fecha ? cuando(pp.fecha, ahora) : null; return c ? { t: `🗓️ El partido es ${c.t}`, numeros: c.numeros } : null; };
   const solo = (e) => {
     const quien = `${cap(segunda(e.pos, e.nombre))} ${del(e.equipo)}`;
     const d = diaMadrid(e.desde);
@@ -102,10 +105,12 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       ideas = [{ t: `‼️ ${quien}${tras}`, prio: 8 }, e.media >= 3 ? { t: `📊 Llega con ${fmt(e.media)} puntos de media`, prio: 5 } : null,
         { t: `✅ Disponible Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     }
+    const hr = hora(e.pp);
+    if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
     const clave = `novedades|${e.id}:${e.que}|${d}`;
-    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
+    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
   };
 
   // Varios: agrupados por lo que pasa, con una cabecera que ya cuenta la noticia y la media solo del que más pesa (Carlos, 3 nov 12:06)
@@ -132,12 +137,12 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       lineas = [...lineasPorEstado(buenos, { club: !conClubes, ya: buenos.length > 1 }), `${m.que === 'lesion' ? '❌' : '🟥'} ${quien}${por} ${que}`];
     } else if (buenos.length && malos.length) lineas = [...lineasPorEstado(buenos, { club: mismo }), ...lineasPorEstado(malos, { club: mismo })];
     else lineas = lineasPorEstado(xs, { club: mismo });
-    const top = elQueMasPesa(xs);
+    const top = L ? (() => { const r = pesos(xs); return r && { ...r, t: aparte(r.t) }; })() : elQueMasPesa(xs);
     const pps = xs.map((e) => e.pp).filter(Boolean);
     const J = pps.length ? Math.min(...pps.map((p) => p.jornada)) : jornada;
     const para = mismo && xs[0].pp ? paraLa(xs[0].pp, J) : `para la jornada ${J}`;
     const etiqueta = !buenos.length ? `❌ Bajas Fantasy ${para}` : !malos.length ? `✅ Disponibles Fantasy ${para}` : `👀 Revisa tu once Fantasy ${para}`;
-    const det = buenos.length && malos.length === 1 && !mismo ? null : detalle(xs);   // en el caso de arriba el motivo ya va en su línea
+    const det = buenos.length && malos.length === 1 && !mismo ? null : L ? detalles(xs) : detalle(xs);   // en el caso de arriba el motivo ya va en su línea
     const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos
     const clave = `novedades|${xs.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`;
