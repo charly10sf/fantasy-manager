@@ -18,9 +18,9 @@ export function decidirLargo({ config = {}, registro = null, env = process.env, 
   return { largo: true, max: c.max ?? 1000 };
 }
 
-/** ¿X ha rechazado el tweet por largo? Solo se mira con tweets de más de 280; un «duplicate» no cuenta. */
+/** ¿X ha rechazado el tweet por largo? Solo se mira con tweets de más de 280. Cualquier 400 o 403 que no sea «duplicate» cuenta:
+    no se sabe con qué texto exacto lo rechaza X sin Premium (auditoría del 5 nov) y lo peor que pasa así es pasar 24 h en 280. */
 export function rechazoPorLargo(r) {
   if (!r || (r.estado !== 400 && r.estado !== 403)) return false;
-  const c = String(r.cuerpo || '');
-  return !/duplicate/i.test(c) && /too long|length|longer|characters?\b|premium|subscri/i.test(c);
+  return !/duplicate/i.test(String(r.cuerpo || ''));
 }

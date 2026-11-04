@@ -58,7 +58,7 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
       const resto = ord.filter((f) => !ya.has(String(f.id)));
       if (resto.length) {
         const ns = lista(resto.map((f) => `${f.nombre} con ${f.pts}`));
-        ideas.push({ t: aparte(bueno ? `${ns} completan los seis` : `También en rojo, ${ns}`), prio: 3 }); num.push(...resto.map((f) => f.pts));
+        ideas.push({ t: aparte(bueno ? `${ns} ${resto.length > 1 ? 'completan' : 'completa'} los seis` : `También en rojo, ${ns}`), prio: 3 }); num.push(...resto.map((f) => f.pts));
       }
       const salen = bueno ? ord.filter((f) => f.media >= 3 && f.pts >= 2 * f.media && f !== sale).slice(0, 3) : [];
       if (salen.length) {
@@ -68,8 +68,9 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
       }
       const barato = bueno ? [...ord].filter((f) => f.valor > 0).sort((x, y) => x.valor - y.valor)[0] : null;
       if (barato && barato.valor <= 15e6) {
-        const v = barato.valor >= 1e6 ? barato.valor / 1e6 : barato.valor / 1e3;
-        ideas.push({ t: aparte(`💸 El más barato de los seis es ${barato.nombre}: vale ${fmt(v)} ${barato.valor >= 1e6 ? 'M' : 'K'} en el mercado`), prio: 2 }); num.push(...partes(v));
+        // en M con un decimal; por debajo del millón, en K enteros (como el mercado: «640 K»)
+        const M = barato.valor >= 1e6, v = M ? barato.valor / 1e6 : Math.round(barato.valor / 1e3);
+        ideas.push({ t: aparte(`💸 El más barato de los seis es ${barato.nombre}: vale ${M ? fmt(v) : v} ${M ? 'M' : 'K'} en el mercado`), prio: 2 }); num.push(...(M ? partes(v) : [v]));
       }
     }
     const { usadas, texto } = tweet(cab, ideas);

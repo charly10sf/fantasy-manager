@@ -9,6 +9,8 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
 const puntos = (h) => (Array.isArray(h) ? h : []).map((v) => ({ t: Date.parse(v.date), v: Number(v.marketValue) })).filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
 /** 1 234 567 -> «1,2 M»; por debajo del millón, en miles: «640 K» */
 const dinero = (x) => (x >= 1e6 ? `${fmt(x / 1e6)} M` : `${Math.round(x / 1e3)} K`);
+/** las cifras que escribe `dinero` (para el validador): 2,1 M → [2, 1]; 640 K → [640] (5 nov: con [639, 6] el tweet no pasaba) */
+const cifrasDinero = (x) => (Math.abs(x) >= 1e6 ? partes(Math.abs(x) / 1e6) : [Math.round(Math.abs(x) / 1e3)]);
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
 /**
@@ -69,11 +71,10 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   const ch = chollo(suben);
   const linea = ch ? `\n\n🛒 Chollo Fantasy: ${ch.nombre} ${del(ch.equipo)} vale ${dinero(ch.nuevo)}, suma ${fmt(ch.media)} de media y hoy sube un ${fmt(ch.pct)} %` : '';
   // con X Premium (tweets largos), el que más sube y el que más baja contados con una frase (sin lista: la lista es la tarjeta)
-  const num = [dd, mes, ...(ch ? [...partes(ch.nuevo >= 1e6 ? ch.nuevo / 1e6 : ch.nuevo / 1e3), ...partes(ch.media), ...partes(ch.pct)] : [])];
+  const num = [dd, mes, ...(ch ? [...cifrasDinero(ch.nuevo), ...partes(ch.media), ...partes(ch.pct)] : [])];
   let lectura = '';
   if (largo()) {
     const s = suben[0], b = bajan[0];
-    const cifra = (x) => (x >= 1e6 ? x / 1e6 : x / 1e3);
     // la subida y la bajada contadas de forma distinta (Carlos, 4 nov 23:39: nada de dos frases calcadas cambiando el nombre)
     lectura = [
       `\n\n📈 ${s.nombre} ${del(s.equipo)} es el que más sube: +${dinero(s.dif)} (+${fmt(s.pct)} %), hasta los ${dinero(s.nuevo)}.`
@@ -81,7 +82,7 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
       `\n\n📈 Nadie sube más que ${s.nombre}: +${dinero(s.dif)} en un día (+${fmt(s.pct)} %), y ya vale ${dinero(s.nuevo)}.`
         + `\n\n📉 ${b.nombre} ${del(b.equipo)} va en sentido contrario: cae ${dinero(-b.dif)}, un ${fmt(-b.pct)} %, hasta los ${dinero(b.nuevo)}.`,
     ][hash(dia) % 2];
-    num.push(...[s.dif, s.nuevo, -b.dif, b.nuevo].flatMap((x) => partes(cifra(x))), ...partes(s.pct), ...partes(-b.pct));
+    num.push(...[s.dif, s.nuevo, -b.dif, b.nuevo].flatMap(cifrasDinero), ...partes(s.pct), ...partes(-b.pct));
   }
   const texto = `💸 Subidas y bajadas del mercado fantasy de hoy, ${dd}/${mes}${lectura}${linea}\n\n${cierre(`mercado${dia}`)}`;
   // la tarjeta: top 5 de cada lado con cara, escudo, lo que cambia, el % y el valor

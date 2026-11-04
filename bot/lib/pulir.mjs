@@ -40,12 +40,19 @@ const estado = (s) => {
 };
 /** las palabras con mayúscula que no van al principio de una frase (quitado el emoji). Desde el texto corrido (4 nov), una línea
     lleva varias frases: la primera palabra de cada una («Su media…», «Tarde…») no cuenta como nombre nuevo */
+// las palabras corrientes con las que puede empezar una frase sin ser un nombre (auditoría del 5 nov: si no se mira la primera palabra,
+// Gemini podía colar «Corberán no lo duda.»); una primera palabra que no esté aquí ni en la plantilla cuenta como nueva
+const ARRANQUES = new Set(('el la los las lo un una unos unas en con sin pero y e o hay por para ya hoy ojo aunque tambien ademas detras despues '
+  + 'al del se su sus no si que quien a de otra otro nadie todo todos esta este eso esto mientras tras sale salen juega juegan vuelve vuelven '
+  + 'llega llegan cae caen sigue siguen tampoco solo nada mas menos le les lleva suma suman saca sacan va van es son era fue tiene tienen '
+  + 'segun cuidado atentos alerta asi entre sobre desde hasta cuando donde como muy bien mal menudo vaya gran buena buen mala mal noche tarde '
+  + 'dia partido jornada media puntos baja bajas duda dudas lesion vuelta vuelve nueva nuevo primera primero segunda segundo mejor peor ahi alli').split(' '));
 const mayusculas = (s) => {
   const out = new Set();
   for (const l of lineas(s)) {
     for (const frase of l.replace(EMOJI, ' ').replace(/[️‍]/g, '').split(/(?<=[.!?:])\s+|[¿¡]/u)) {
       const ws = frase.split(/[^\p{L}.]+/u).filter(Boolean);
-      ws.slice(1).forEach((w) => { if (/^\p{Lu}/u.test(w)) out.add(norm(w)); });
+      ws.forEach((w, i) => { if (/^\p{Lu}/u.test(w) && (i > 0 || !ARRANQUES.has(norm(w)))) out.add(norm(w)); });
     }
   }
   return out;
