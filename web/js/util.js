@@ -94,6 +94,13 @@ function partes(t) {
  * 24 h, así que «ayer» no es ahora menos 24 h (revisión del 25 oct, el día del cambio)
  */
 export const otroDia = (d, n) => { const x = new Date(`${d}T12:00:00Z`); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+/** la misma hora de España n días después (o antes, con n negativo): la semana del cambio de hora no son n × 24 h */
+export function masDias(t, n) {
+  const x = t + n * DIA, a = partes(t), b = partes(x);
+  let d = (+b.h * 60 + +b.min) - (+a.h * 60 + +a.min);
+  if (d > 720) d -= 1440; else if (d < -720) d += 1440;
+  return x - d * MIN;
+}
 /** "hoy 18:30", "mañana 14:00", "jue 23, 21:00", "23 oct" */
 export function cuando(t, { hora = true } = {}) {
   if (!t) return '';

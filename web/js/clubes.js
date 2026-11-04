@@ -273,7 +273,7 @@ export function fichaClub(S, id) {
   h += proximoHTML(S, id);
   const o = onceDeEquipo(S, id);
   const once = `<div class="sec"><h2>Su once</h2><span class="sub">${o ? `${o.conf ? 'confirmado' : 'probable'}, ${o.forma}` : 'probable'}</span></div>`
-    + (o ? `${o.campo}<p class="t2 peq">Arriba, de quién es en tu liga. Debajo, lo probable que es que salga de titular.</p>` : nada('Aún no hay once probable de este club.'));
+    + (o ? `${o.campo}<p class="t2 peq">Arriba, de quién es en tu liga. Debajo, lo probable que es que salga de titular.</p>` : nada(S.D.demo ? 'En la liga de ejemplo cada club trae solo sus 7 jugadores de más valor, así que no da para un once. Con tu liga, aquí sale el once probable del club en el campo.' : 'Aún no hay once probable de este club.'));
   // (en el ordenador la ficha va en un panel de 620 px: una sola columna, como en el móvil)
   return h + figurasHTML(S, suyos) + once + bajasHTML(S, suyos) + partidosHTML(S, id) + plantillaHTML(S, suyos) + noticiasHTML(S, id, suyos);
 }

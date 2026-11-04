@@ -30,15 +30,18 @@ export const cols = (izq, der, tipo = 'lado-der') => `<div class="cols-e ${tipo}
 /** las listas de jugadores, en dos columnas en el ordenador */
 export const lista2 = (h) => (ancho() ? `<div class="lista2">${h}</div>` : h);
 
-export function filaActividad(a) {
+export function filaActividad(a, { dentroDe = null } = {}) {
   const quien = a.esYo ? '<span class="quien yo">Tú</span>' : `<span class="quien">${esc(a.quien || 'Un rival')}</span>`;
   const jug = a.nombreJ ? ` <b>${esc(a.nombreJ)}</b>` : '';
   const a2 = a.otro && a.clase !== 'premio' ? ` ${a.clase === 'clausula' ? 'de' : 'a'} ${a.contraMi ? '<b class="rojo">ti</b>' : esc(a.otro)}` : '';
   const imp = a.importe ? `<div class="v">${eur(a.importe)}</div>` : '';
-  return `<button class="fila" ${a.pid ? `data-j="${esc(a.pid)}"` : ''}>
+  // con jugador abre su ficha; sin él, la del rival; si no hay a dónde ir (lo tuyo sin jugador), no es un botón
+  const ir = a.pid ? `data-j="${esc(a.pid)}"` : !a.esYo && a.quienT && a.quienT !== dentroDe ? `data-r="${esc(a.quienT)}"` : '';
+  const tag = ir ? 'button' : 'div';
+  return `<${tag} class="fila" ${ir}>
     <span class="ic-act ${a.clase}">${icono(ICO_ACT[a.clase] || 'cambio')}</span>
     <div class="fila-c"><div class="act-t">${quien} ${(a.esYo ? VERBO_TU : VERBO)[a.clase] || 'movió a'}${jug}${a2}</div><div class="fila-s">${a.t ? cuando(a.t) : ''}</div></div>
-    <div class="fila-d">${imp}</div></button>`;
+    <div class="fila-d">${imp}</div></${tag}>`;
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
@@ -748,7 +751,7 @@ function eqCabHTML(S) {
   return `<div class="eq2-cab">
     <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><div class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</div></div></div>
     <div class="eq2-num">
-      <button data-seg="equipo:dinero" aria-label="Valor del equipo: ver Beneficio"><b>${eur(D.valorEquipo)}</b><span>valor ›</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</button>
+      <button data-accion="ver" data-seg2="equipo:dinero" data-sel="#eq-valor" aria-label="Valor del equipo: ver Beneficio"><b>${eur(D.valorEquipo)}</b><span>valor ›</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</button>
       <button data-ir="rivales" data-seg="rivales:clasif" aria-label="Tu puesto: ver la clasificación"><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts ›` : 'en la liga ›'}</span></button>
       <button data-ir="hoy" aria-label="Tu saldo: ver las cuentas del plan"><b class="${D.dinero != null && num(D.dinero) < 0 ? 'baja' : ''}">${D.dinero != null ? eur(D.dinero) : '–'}</b><span>saldo ›</span></button>
       <button data-accion="ver" data-seg2="equipo:plantilla" data-sel="#eq-plantilla" aria-label="Ver la plantilla"><b>${jug}</b><span>jugadores${ent ? ` y ${ent} entr.` : ''} ›</span></button>
@@ -890,7 +893,7 @@ function eqBeneficioHTML(S, op) {
       ${mejor ? `<button class="eq2-t" data-j="${esc(mejor.pid)}"><b class="${clase(mejor.ganado)}">${eur(mejor.ganado, { signo: true })}</b><span>el mejor: ${esc(mejor.j.nombre)}</span></button>` : ''}
       ${peor && peor.ganado < 0 ? `<button class="eq2-t" data-j="${esc(peor.pid)}"><b class="${clase(peor.ganado)}">${eur(peor.ganado, { signo: true })}</b><span>el peor: ${esc(peor.j.nombre)}</span></button>` : ''}
     </div>
-    <div class="sec"><h2>Valor del equipo</h2></div>${linea(serie, { alto: ancho() ? 220 : 150 })}`;
+    <div class="sec" id="eq-valor" data-ancla><h2>Valor del equipo</h2></div>${linea(serie, { alto: ancho() ? 220 : 150 })}`;
   const lista = `<div class="sec" id="eq-jaj" data-ancla><h2>Jugador a jugador</h2></div>${con.length ? con.map((x) => filaJugador(x, {
     sub: `Pagaste ${eur(x.compra)} · vale ${eur(x.j.valor)}${(() => { const ol = M.ofertaLigaDe ? M.ofertaLigaDe(x.j) : null; return ol ? ` · LaLiga te daría ~${eur(ol.v)}` : ''; })()}`,
     derecha: `<div class="v ${clase(x.ganado)}">${eur(x.ganado, { signo: true })}</div><div class="d ${clase(x.ganado)}">${pct((x.j.valor / x.compra - 1) * 100)}</div>`, op: op(x.pid),

@@ -3,7 +3,7 @@
    y los cambios que se ven en sus plantillas aunque la actividad de la liga no los cuente). */
 import { api, paginaMercado, forma } from './api.js';
 import * as N from './normalizar.js';
-import { LS, diaDe, enParalelo, num, DIA } from './util.js';
+import { LS, diaDe, enParalelo, num, norm, DIA } from './util.js';
 import { enApp, enWeb, http } from './puente.js';
 import { demo, jugadoresDemo } from './demo.js';
 import * as CD from './caras-demo.js';
@@ -54,16 +54,24 @@ export function actHist(ligaId) {
   if (!h || (ligaId && h.liga !== ligaId)) return { liga: ligaId || null, lista: [], completa: false, desde: null, profundo: null };
   return h;
 }
-function guardarActHist(ligaId, AH, nuevas, llegoAlFinal, nEquipos = 0) {
+// sale cuándo entró en la liga cada uno de los que siguen en ella. Contar entradas sin más lo daba por completo antes
+// de tiempo si alguien se fue: su entrada contaba y faltaba la de otro que sigue
+function entraronTodos(lista, equipos) {
+  const entradas = lista.filter((a) => a.clase === 'entra');
+  const ids = new Set(entradas.map((a) => a.quienId).filter(Boolean));
+  const nombres = new Set(entradas.filter((a) => !a.quienId).map((a) => norm(a.quien)).filter(Boolean));
+  const entro = (e) => [e.userId, e.managerId].some((x) => x && ids.has(x)) || (e.manager && nombres.has(norm(e.manager)));
+  return equipos.length > 1 && equipos.every(entro);
+}
+function guardarActHist(ligaId, AH, nuevas, llegoAlFinal, equipos = []) {
   const m = new Map();
   for (const a of AH.lista) m.set(claveAct(a), a);
   for (const a of nuevas) { const { texto, ...resto } = a; m.set(claveAct(a), resto); }
   const lista = [...m.values()].sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 4000);
   const desde = lista.length ? Math.min(...lista.map((a) => a.t || Date.now())) : null;
-  // también está completo si sale cuando entró en la liga cada uno de los managers
-  const entraron = new Set(lista.filter((a) => a.clase === 'entra').map((a) => a.quienId || a.quien)).size;
-  const completa = AH.completa || llegoAlFinal || (nEquipos > 1 && entraron >= nEquipos);
-  const h = { liga: ligaId, lista, completa, desde, profundo: AH.profundo || null, t: Date.now() };
+  // también está completo si sale cuándo entró cada uno de los que siguen en la liga
+  const completa = AH.completa || llegoAlFinal || entraronTodos(lista, equipos);
+  const h = { liga: ligaId, lista, completa, desde, profundo: AH.profundo || null, pagina: completa ? 0 : AH.pagina || 0, v: 2, t: Date.now() };
   // si no cabe, se quitan los campos que no hacen falta para las cuentas antes que movimientos
   if (!LS.set(K('acthist'), h)) {
     const ligera = lista.map(({ id, t, clase, quienId, quien, otroId, otro, pid, importe }) => ({ id, t, clase, quienId, quien, otroId, otro, pid, importe }));
@@ -288,30 +296,45 @@ export async function actualizar(alPaso = () => {}) {
   // el historial de movimientos se va guardando: la primera vez se baja hasta el principio de la liga
   // (sirve para estimar el dinero de cada rival); luego, solo lo nuevo
   const AH = actHist(liga.id);
+  // lo guardado antes de la 0.6.12n pudo darse por completo con la regla vieja: se vuelve a mirar una vez
+  if (AH.completa && AH.v !== 2 && !entraronTodos(AH.lista, clasif)) { AH.completa = false; AH.profundo = null; }
   const conocidos = new Set(AH.lista.map(claveAct));
   let llegoAlFinal = false;
   await blando('actividad', async () => {
     // a fondo solo una vez por semana si no se llegó al principio (son muchas páginas)
     const aFondo = !AH.completa && !(AH.profundo && Date.now() - AH.profundo < 7 * DIA);
     if (aFondo) AH.profundo = Date.now();
-    const paginas = aFondo ? 50 : 6;
-    for (let i = 0; i < paginas; i++) {
+    // lo reciente: hasta 6 páginas (a fondo, las 6 enteras)
+    let i = 0;
+    for (; i < 6; i++) {
       if (i > 3) await new Promise((ok) => setTimeout(ok, 250));
       const r = await api.actividad(liga.id, i);
       if (i === 0) muestras.actividad = recorte(r);
       const pag = N.actividad(r);
       if (!pag.length) { llegoAlFinal = true; break; }
       act.push(...pag);
+      if (aFondo) continue;
       const masVieja = Math.min(...pag.map((a) => a.t || Date.now()));
       // ya se tenía guardado lo de esta página: no hace falta seguir
-      if (!aFondo && pag.some((a) => conocidos.has(claveAct(a))) && Date.now() - masVieja > 2 * DIA) break;
-      if (!aFondo && Date.now() - masVieja > 21 * DIA) break;
+      if (pag.some((a) => conocidos.has(claveAct(a))) && Date.now() - masVieja > 2 * DIA) break;
+      if (Date.now() - masVieja > 21 * DIA) break;
+    }
+    if (!aFondo || llegoAlFinal) return;
+    // a fondo: 50 páginas más desde donde se quedó la vez anterior (antes empezaba siempre de cero y en ligas largas
+    // no pasaba de la 50). Lo viejo solo se mueve hacia páginas más altas, así que retomar ahí no deja huecos
+    const desde = Math.max(i, AH.pagina || 0);
+    for (let p = desde; p < desde + 50; p++) {
+      await new Promise((ok) => setTimeout(ok, 250));
+      const pag = N.actividad(await api.actividad(liga.id, p));
+      if (!pag.length) { llegoAlFinal = true; break; }
+      act.push(...pag);
+      AH.pagina = p + 1;
     }
   });
   // sin repetidos y lo nuevo arriba
   const vistos = new Set();
   act = act.filter((a) => { const k = claveAct(a); if (vistos.has(k)) return false; vistos.add(k); return true; }).sort((a, b) => (b.t || 0) - (a.t || 0));
-  guardarActHist(liga.id, AH, act, llegoAlFinal, clasif.length);
+  guardarActHist(liga.id, AH, act, llegoAlFinal, clasif);
 
   alPaso(9, PASOS[9]);
   // las subidas y bajadas de cada jugador (de una web de fuera): si no contesta, las que se leyeron antes ese mismo

@@ -2,7 +2,7 @@
    Cláusulas de los rivales y cuánto interesa cada una, el riesgo de las tuyas, el mercado, quién sube y
    quién baja, lo que has ganado con tus compras, cómo se mueve cada rival, la jornada, los parones y la
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
-import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
+import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
 const PARONES = [
@@ -1747,7 +1747,8 @@ export function analizar(D, H, c, extra = {}) {
     const diaJ = diaDe(inicioJ);
     const vale = (t) => t > ahora && t < inicioJ && diaDe(t) !== diaJ && !(M.enJuego && t <= M.enJuego.fin);
     const cambios = [];
-    if (M.cierreMercado) { for (let k = 0; k < 14; k++) { const t = M.cierreMercado + k * DIA; if (t >= inicioJ) break; if (vale(t)) cambios.push(t); } } else { for (let t = inicioJ - DIA; t > ahora; t -= DIA) if (vale(t)) cambios.unshift(t); }
+    // día a día a la misma hora de Madrid (con masDias: la semana del cambio de hora un día dura 23 o 25 h)
+    if (M.cierreMercado) { for (let k = 0; k < 14; k++) { const t = masDias(M.cierreMercado, k); if (t >= inicioJ) break; if (vale(t)) cambios.push(t); } } else { for (let k = 1, t = masDias(inicioJ, -1); t > ahora && k <= 14; k++, t = masDias(inicioJ, -k)) if (vale(t)) cambios.unshift(t); }
     const ultimo = cambios.length ? cambios[cambios.length - 1] : null;
     // se pone a la venta después del penúltimo cambio, para aceptar la oferta que llega en el último
     const ponerVenta = cambios.length >= 2 ? cambios[cambios.length - 2] + 5 * MIN : ahora;
