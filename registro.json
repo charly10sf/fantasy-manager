@@ -188,6 +188,13 @@
    "jornada": 12,
    "id": "2117765331913732096",
    "t": "2026-11-03T23:46:16.168Z"
+  },
+  {
+   "clave": "noticias|3208:mala|2026-11-04",
+   "tipo": "noticias",
+   "jornada": 12,
+   "id": "2117890043880915169",
+   "t": "2026-11-04T08:01:49.825Z"
   }
  ],
  "estados": {
@@ -969,7 +976,7 @@
   "3205": "ok",
   "3206": "ok",
   "3207": "injured",
-  "3208": "ok",
+  "3208": "doubtful",
   "3209": "ok",
   "3210": "ok",
   "3211": "ok",
@@ -1137,7 +1144,20 @@
    "SPORT|136055935": 1793734147000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/alineaciones-probables-aek-real-madrid.html": 1793741534000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/preocupacion-con-rodri-a-cinco-dias-de-enfrentarse-al-atletico-de-madrid-cadena-ser/": 1793741974000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-laimer-atletico-0-bayern-2-20261103_3467972.html": 1793741963000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-laimer-atletico-0-bayern-2-20261103_3467972.html": 1793741963000,
+   "MARCA|https://www.marca.com/futbol/barcelona/2026/11/03/rodri-duda-partido-frente-atletico-madrid.html": 1793745516000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261104/1004247031/antiviolencia-propone-multar-youtuber-inaki-angulo-insultos-homofobos-hector-bellerin.html": 1793776524000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261104/1004246341/luka-sucic-muta-bombardero-gracias-gran-eclosion-le-convierte-lider-real.html": 1793771700000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004246941/positivo-barca-metropolitano.html": 1793770200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246929/rodri-sustituido-molestias-isquiotibial-derecho.html": 1793744582000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261103/1004246925/moleiro-no-salido.html": 1793743759000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246918/raphinha-firma-doblete-aston-villa-e-iguala-ronaldinho-bakero.html": 1793742162000,
+   "SPORT|136063405": 1793774247000,
+   "SPORT|136063348": 1793772228000,
+   "SPORT|136056334": 1793766655000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rodri-retiro-partido-frente-aston-villa-molestias-musculares-pendiente-pruebas-20261103_3467985.html": 1793745630000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/03/6aea107621efa0c3758b4599.html": 1793746141000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/03/barca-vuelve-ganar-europa-acaba-invicto-aston-villa/00031793744143964451858.htm": 1793744280000
   },
   "hechos": [
    {
@@ -1327,11 +1347,59 @@
     "motivo": "lesion leve en el abductor",
     "plazo": "hasta despues del proximo paron",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004246941/positivo-barca-metropolitano.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793770200000,
+    "id": "3208",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Rodri arrastra molestias físicas previas al próximo encuentro",
+    "motivo": "molestias físicas",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246929/rodri-sustituido-molestias-isquiotibial-derecho.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793744582000,
+    "id": "3208",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Rodri sufre molestias y queda pendiente de evolución",
+    "motivo": "molestias en el isquiotibial derecho",
+    "plazo": "próximos días",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136063405",
+    "medio": "SPORT",
+    "t": 1793774247000,
+    "id": "3208",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Rodri se retira del entrenamiento con molestias musculares",
+    "motivo": "molestias en el gemelo derecho",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rodri-retiro-partido-frente-aston-villa-molestias-musculares-pendiente-pruebas-20261103_3467985.html",
+    "medio": "COPE",
+    "t": 1793745630000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri se retira lesionado y pendiente de pruebas médicas",
+    "motivo": "molestias musculares en el gemelo",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-03",
-   "n": 16
+   "dia": "2026-11-04",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -2087,8 +2155,8 @@
     "t": 0
    },
    "3208": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1793779271297
    },
    "3209": {
     "e": "ok",
