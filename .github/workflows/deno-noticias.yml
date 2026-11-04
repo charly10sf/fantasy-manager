@@ -1,0 +1,18 @@
+name: Pruebas Deno noticias
+on:
+  push:
+    branches: [pruebas-deno-noticias]
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Google Noticias por el Worker y por Deno
+        run: |
+          U='https://news.google.com/rss/search?q=%22LaLiga%20Fantasy%22%20when%3A2d&hl=es&gl=ES&ceid=ES:es'
+          for B in https://fantasy-manager.fantasymanager-web-app.workers.dev https://fantasy-manager-proxy-nzzmze4kphaa.fantasy-manager.deno.net; do
+            for i in 1 2 3; do
+              curl -s -m 30 -o cuerpo.txt -D cab.txt -X POST "$B/p" -H 'Origin: https://fantasymanagerapp.com' -H 'content-type: text/plain;charset=utf-8' -H "x-u: $U" -H 'x-m: GET' -H 'x-h: {"Accept":"application/rss+xml, application/xml","User-Agent":"Mozilla/5.0"}' -w '%{http_code} %{time_total}\n' > res.txt || true
+              echo "@@ $B intento $i http=$(cut -d' ' -f1 res.txt) s=$(grep -i '^x-s:' cab.txt | tr -d '\r' | cut -d' ' -f2) bytes=$(wc -c < cuerpo.txt) items=$(grep -o '<item>' cuerpo.txt | wc -l) t=$(cut -d' ' -f2 res.txt)"
+              sleep 3
+            done
+          done
