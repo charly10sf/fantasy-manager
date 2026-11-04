@@ -63,7 +63,7 @@ function tostada(t, ms = 3200) {
 }
 
 /* ---------------- pantallas completas ---------------- */
-const PIE_ENTRAR = '<p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. <a href="privacidad.html">Privacidad</a></p>';
+const PIE_ENTRAR = '<p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. Lee tu liga con tu propia cuenta, como su app, y la usas bajo tu responsabilidad; tu contraseña nunca la ve. <a href="privacidad.html">Privacidad</a></p>';
 function pantallaEntrar(error = '') {
   ponerBanner(false);
   // la portada de antes de entrar: en la web, con los móviles de abajo; dentro de la app, solo lo de entrar
@@ -81,7 +81,7 @@ function pantallaEntrar(error = '') {
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
     ${enApp ? `<button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
     <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>${botonDemo('sec')}` : entrarWebHTML()}
-    ${enApp ? PIE_ENTRAR : ''}
+    ${PIE_ENTRAR}
   </div></div>${enApp ? '' : seccionMoviles()}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
   if (!enApp) { activarPortada(); ponerCarasPortada(carasDemo()); }
