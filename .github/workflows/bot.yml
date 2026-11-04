@@ -39,6 +39,7 @@ jobs:
     timeout-minutes: 10
     env:
       BOT_MODO: ${{ vars.BOT_MODO || 'simulacro' }}
+      BOT_LARGO: ${{ vars.BOT_LARGO || '' }}
       X_API_KEY: ${{ secrets.X_API_KEY }}
       X_API_SECRET: ${{ secrets.X_API_SECRET }}
       X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}

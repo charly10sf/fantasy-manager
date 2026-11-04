@@ -6,8 +6,8 @@
 //   - la segunda vez que sale un jugador, por su puesto («el delantero»);
 //   - dudar con palabras según el % («en principio juega», «está en el aire»…), con el número al lado;
 //   - siempre la jornada y el rival, y una etiqueta final con «Fantasy» («Duda Fantasy para la jornada 12 contra el Valencia»).
-// El validador de siempre sigue mandando: cada número tiene que estar en los datos y 280 como mucho.
-import { peso, el, corto } from './texto.mjs';
+// El validador de siempre sigue mandando: cada número tiene que estar en los datos y el largo, 280 (o el de X Premium, `limite()`).
+import { peso, el, corto, limite } from './texto.mjs';
 import { statsSemana } from './laliga.mjs';
 
 // Desde el 4 nov (Carlos, 13:42: «que suene más humano; no hace falta una frase distinta por línea»): texto corrido. La cabecera y
@@ -42,8 +42,9 @@ export function armarAire(cab, ideas, pie) {
   const fin = xs.length && esEtiqueta(xs[xs.length - 1]) ? xs.pop() : null;
   const bloques = [];
   let frases = [cab];
-  // con varias frases, el párrafo acaba en punto; una sola (un titular) va sin él
-  const volcar = () => { if (frases.length) bloques.push(frases.length > 1 ? cierra(parrafo(frases)) : parrafo(frases)); frases = []; };
+  // con varias frases, el párrafo acaba en punto; una sola va sin él si es el titular (el primer párrafo) y con él si va después
+  // (4 nov, con los tweets largos: «El Sevilla no podrá contar con Marcao» se quedaba sin punto en mitad del texto)
+  const volcar = () => { if (frases.length) bloques.push(frases.length > 1 || bloques.length ? cierra(parrafo(frases)) : parrafo(frases)); frases = []; };
   for (const x of xs) {
     if (esLista(x)) { volcar(); bloques.push(x); continue; }
     const f = sinEmoji(x);
@@ -60,7 +61,7 @@ export function armarAire(cab, ideas, pie) {
  * Elige las ideas que caben. ideas: [{ t, prio }] o textos sueltos (prio 9, imprescindibles), en el orden en que se leen.
  * Si no cabe todo, quita primero la de menos prio (y, entre iguales, la de más abajo). Devuelve las que quedan, en su orden.
  */
-export function ajustar(cab, ideas, pie, max = 280) {
+export function ajustar(cab, ideas, pie, max = limite()) {
   let xs = ideas.filter(Boolean).map((x, i) => (typeof x === 'string' ? { t: x, prio: 9, i } : { ...x, i }));
   while (xs.length && peso(armarAire(cab, xs.map((x) => x.t), pie)) > max) {
     const quitar = [...xs].sort((a, b) => a.prio - b.prio || b.i - a.i)[0];
@@ -70,7 +71,7 @@ export function ajustar(cab, ideas, pie, max = 280) {
 }
 
 /** el tweet con las ideas que caben (sin #LaLigaFantasy de relleno: «fantasy» ya no es obligatoria, Carlos, 4 nov 13:00) */
-export function tweet(cab, ideas, { pie = null, max = 280 } = {}) {
+export function tweet(cab, ideas, { pie = null, max = limite() } = {}) {
   const usadas = ajustar(cab, ideas, pie, max);
   return { usadas, texto: armarAire(cab, usadas, pie) };
 }

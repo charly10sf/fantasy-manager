@@ -11,6 +11,8 @@ import { validar } from './lib/validar.mjs';
 import { pulir } from './lib/pulir.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
+import { fijarLimite, limite, largo } from './lib/texto.mjs';
+import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 
 /** AAAAMMDD de hoy en Madrid (y de ayer, entre las 0 y las 3) */
 function diasEspn() {
@@ -75,6 +77,11 @@ const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn, ve
   fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
 const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
 ctx.registro = registro;
+// tweets largos con X Premium (lib/largo.mjs): el límite se fija antes de escribir nada
+const dl = decidirLargo({ config, registro });
+fijarLimite(dl.largo ? dl.max : config.tweetMax);
+console.log(dl.largo ? `# Tweets largos (X Premium): hasta ${limite()}` : `# Tweets de ${limite()}: ${dl.motivo}`);
+md(dl.largo ? `Tweets largos (X Premium), hasta ${limite()}.` : `Tweets de ${limite()}: ${dl.motivo}.`);
 // Las caídas se publican de día (en Madrid): al acabar el último partido de la noche no salen de madrugada, sino a las 9
 const horaMadrid = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date()));
 const [hDesde, hHasta] = config.horasCaidas || [0, 24];
@@ -100,7 +107,7 @@ for (const q of quienes) {
   try { tweets = await mod.generar(c); } catch (e) { console.log(`\n## ${q}: ERROR ${e.stack || e}`); fallos++; continue; }
   console.log(`\n## ${q}: ${tweets.length} tweets`);
   // Gemini pule el texto de los que van a salir en esta ejecución (lib/pulir.mjs); lo que no pasa la revisión sale con la plantilla
-  const aPulir = tweets.filter((t) => validar(t.texto, { numeros: t.numeros, max: config.tweetMax }).ok && registro.decidir(t) === 'ok')
+  const aPulir = tweets.filter((t) => validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok')
     .slice(0, Math.max(0, (config.maxPorEjecucion ?? 4) - registro.enEstaEjecucion));
   if (aPulir.length) {
     try { await pulir(aPulir, { tipo: q, registro, config, jugadores, equipos, log: (s) => console.log(s), forzar: arg('pulir') === '1' }); }
@@ -109,7 +116,7 @@ for (const q of quienes) {
   for (const t of tweets) {
     if (abortar) break;
     generados++;
-    const v = validar(t.texto, { numeros: t.numeros, max: config.tweetMax });
+    const v = validar(t.texto, { numeros: t.numeros, max: limite() });
     let d = v.ok ? registro.decidir(t) : 'no pasa el validador';
     if (!v.ok) fallos++;
     // tarjetas con imagen (solo si están encendidas): se dibujan y validan; las que no pasan no salen
@@ -143,6 +150,16 @@ for (const q of quienes) {
       const r = await publicar(t.texto, claves, { mediaIds });
       if (r.ok) { registro.marcar(t, r.id); publicados++; estado = `PUBLICADO (id ${r.id})${mediaIds.length ? ` con ${mediaIds.length} imagen(es)` : ''}`; }
       else if (r.estado === 403 && /duplicate/i.test(r.cuerpo)) { registro.marcar(t, null); estado = 'X dice que ya estaba publicado: lo apunto y sigo'; }
+      else if (largo() && v.peso > 280 && rechazoPorLargo(r)) {
+        // X no deja tweets largos (¿se ha acabado el Premium?): se apunta, se vuelve a 280 y este sale corto en la próxima ejecución
+        registro.datos.largoRechazado = { t: new Date().toISOString(), estado: r.estado, cuerpo: String(r.cuerpo).slice(0, 200) };
+        if (registro.fichero) registro.guardar();
+        fijarLimite(config.tweetMax);
+        estado = `X no deja tweets largos (HTTP ${r.estado} ${r.cuerpo}): vuelvo a ${limite()} y este sale en la próxima ejecución`;
+        fallos++; abortar = true; console.log(`\n--- ${t.clave} · ${estado}\n${t.texto}`);
+        md(`**X no deja tweets largos** (${t.clave}, HTTP ${r.estado} ${r.cuerpo}). ¿Se ha acabado el Premium? Vuelvo a ${limite()} y lo vuelvo a probar en ${config.largo?.reintentarHoras ?? 24} h. Paro esta ejecución.`);
+        break;
+      }
       else { estado = `ERROR al publicar: HTTP ${r.estado} ${r.cuerpo}`; fallos++; abortar = true; console.log(`\n--- ${t.clave} · ${estado}\n${t.texto}`); md(`**Error al publicar** ${t.clave}: HTTP ${r.estado} ${r.cuerpo}. Paro esta ejecución; no se vuelve a intentar hasta la siguiente.`); break; }
     } else if (d === 'ok') { registro.reservar(t); previstos++; }
     console.log(`\n--- ${t.clave} · peso ${v.peso} · ${v.ok ? 'válido' : 'FALLA: ' + v.errores.join('; ')} · ${estado}${t.casado === false ? ' · jugador sin casar con LaLiga' : ''}`);
