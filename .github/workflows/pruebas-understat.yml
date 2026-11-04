@@ -6,12 +6,10 @@ jobs:
   probar:
     runs-on: ubuntu-latest
     steps:
-      - name: Understat
+      - name: Histórico de valor de LaLiga
         run: |
-          UA='Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36'
-          pedir() { curl -s -m 30 -A "$UA" -o "$2" -w '%{http_code} %{size_download} %{content_type}' "${@:3}" "$1"; }
-          for u in https://understat.com/ https://understat.com/league/La_liga https://understat.com/league/La_liga/2026 https://understat.com/getLeagueData/La_liga/2026 https://understat.com/main/getLeagueData/La_liga/2026; do
-            echo "@@ $u => $(pedir $u x.html -H 'Accept: text/html,application/json') final=$(curl -s -m 20 -A "$UA" -o /dev/null -w '%{url_effective} %{redirect_url}' -L $u)"
-            echo "@@   texto: $(sed 's/<[^>]*>/ /g' x.html | tr -s ' \n\t' ' ' | head -c 400)"
-            echo "@@   vars: $(grep -o '[a-zA-Z]*Data *= *JSON\|getLeagueData[^\"]\{0,60\}' x.html | sort -u | head -5 | tr '\n' ' ')"
+          for id in 68 2759 3134 856; do
+            curl -s -m 30 -H 'User-Agent: Mozilla/5.0' "https://fantasy-api.llt-services.com/api/v1/competition/1/player/$id/market-value?x-lang=es" -o v.json
+            echo "@@ $id: $(node -e 'const v=JSON.parse(require("fs").readFileSync("v.json","utf8"));const l=Array.isArray(v)?v:(v.data||[]);console.log(l.length+" puntos, primero "+JSON.stringify(l[0])+", segundo "+JSON.stringify(l[1])+", último "+JSON.stringify(l[l.length-1]))' 2>&1 | head -c 400)"
           done
+          curl -s -m 30 -H 'User-Agent: Mozilla/5.0' "https://fantasy-api.llt-services.com/api/v3/player/68/market-value?x-lang=es" -o v3.json; echo "@@ v3: $(head -c 200 v3.json)"
