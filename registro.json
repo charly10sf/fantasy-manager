@@ -245,7 +245,7 @@
   "1031": "ok",
   "1033": "ok",
   "1056": "ok",
-  "1070": "injured",
+  "1070": "ok",
   "1103": "doubtful",
   "1121": "ok",
   "1147": "ok",
@@ -1191,7 +1191,8 @@
    "SPORT|136070467": 1793787476000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/04/kike-salas-reincorpora-grupo.html": 1793791579000,
    "SPORT|136073953": 1793787858000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html": 1793791758000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html": 1793791758000,
+   "SPORT|136074515": 1793788252000
   },
   "hechos": [
    {
@@ -1542,7 +1543,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -1622,8 +1623,8 @@
     "t": 0
    },
    "1070": {
-    "e": "injured",
-    "t": 0
+    "e": "ok",
+    "t": 1793792472522
    },
    "1147": {
     "e": "ok",
