@@ -1236,7 +1236,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247209/raphina-records-corazon-encogido.html": 1793806789000,
    "SPORT|136087097": 1793805717000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/gerard-lopez-no-me-preocupa-defiende-barca-juega-tumba-abierta-20261104_3467993.html": 1793810443000,
-   "SPORT|136073862": 1793807921000
+   "SPORT|136073862": 1793807921000,
+   "AS|https://as.com/futbol/primera/cuti-descartado-simeone-entre-le-normand-o-un-medio-f202611-n/": 1793812964000
   },
   "hechos": [
    {
@@ -1729,7 +1730,7 @@
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
