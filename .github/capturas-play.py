@@ -64,5 +64,5 @@ async def componer(b, arch, tit, sub, png):
     await pg.evaluate('document.fonts.ready'); await pg.wait_for_timeout(400)
     await pg.screenshot(path=f'play/{arch}.png')
     await pg.close()
-import os; os.makedirs('/home/claude/pruebas/play', exist_ok=True)
+import os; os.makedirs('play', exist_ok=True)
 asyncio.run(main())
