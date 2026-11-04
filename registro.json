@@ -1239,7 +1239,8 @@
    "SPORT|136073862": 1793807921000,
    "AS|https://as.com/futbol/primera/cuti-descartado-simeone-entre-le-normand-o-un-medio-f202611-n/": 1793812964000,
    "ABC|https://www.abc.es/deportes/futbol/raphinha-renueva-barca-2030-rodri-mes-baja-20261104183435-nt.html": 1793813675000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247282/bellingham-empata-partido-genialidad.html": 1793816728000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247282/bellingham-empata-partido-genialidad.html": 1793816728000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html": 1793816929000
   },
   "hechos": [
    {
@@ -1744,11 +1745,23 @@
      30,
      34
     ]
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html",
+    "medio": "COPE",
+    "t": 1793816929000,
+    "id": "3197",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Cuti Romero es baja contra el Barcelona por lesión",
+    "motivo": "lesion",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
