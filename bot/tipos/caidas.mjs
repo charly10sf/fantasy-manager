@@ -78,8 +78,8 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   const seguro = (c) => c.estado !== 'duda';
   // con tweets largos (X Premium): el motivo de todos, la media de todos y cuándo es el partido (lib/agrupar.mjs, lib/redactar.mjs)
   const L = largo();
-  const motivo = (xs) => (L ? detalles(xs) : detalle(xs));
-  const peso = (xs) => { if (!L) return elQueMasPesa(xs); const r = pesos(xs); return r && { ...r, t: aparte(r.t) }; };   // en largo, en su párrafo
+  const motivo = (xs) => (L ? detalles(xs, 3, xs.map((x) => x.id).join('-')) : detalle(xs));
+  const peso = (xs) => { if (!L) return elQueMasPesa(xs); const r = pesos(xs, xs.map((x) => x.id).join('-')); return r && { ...r, t: aparte(r.t) }; };   // en largo, en su párrafo
   const hora = (pr) => { const c = L && pr && pr.fecha ? cuando(pr.fecha, ahora) : null; return c ? { t: `🗓️ El partido es ${c.t}`, numeros: c.numeros } : null; };
   const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 ? partes(c.media) : [])];
   const porEquipo = new Map();

@@ -111,6 +111,7 @@ Cómo se escribe en la cuenta:
 - Texto corrido, como lo escribiría una persona: dentro de cada párrafo puedes unir frases con «y», «pero», «aunque» o una coma, y quitar repeticiones. Deja el emoji que ya lleva el principio de cada párrafo y no pongas más.
 - La segunda vez que sale un jugador, por su puesto («el delantero», «el central») solo si el texto ya lo dice; si no, por su nombre.
 - Dudas con palabras («en principio», «todo apunta a que», «de momento»).
+- Que no se note que es automático: si dos párrafos o dos frases tienen el mismo esqueleto y solo cambian los nombres, dale otra forma a uno (otro orden, otro verbo, otra entrada). No repitas la misma muletilla dentro del tweet.
 - Nada de tono de anuncio: sin «¡» en cada frase, sin adjetivos grandes, sin primera persona, sin «bot», sin @ ni #.
 Reglas que no se pueden saltar:
 - Las mismas cifras, ni una más ni una menos, escritas igual («5,5» sigue siendo «5,5»). Nada de cifras en letra.
