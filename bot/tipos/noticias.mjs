@@ -15,7 +15,7 @@ import { tweet, cap, segunda, proximoPartido, paraLa } from '../lib/redactar.mjs
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { lista as enLista } from '../lib/agrupar.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
-import { noticiasPrensa, NOMBRES_MEDIOS } from '../lib/prensa.mjs';
+import { noticiasPrensaUnaVez, NOMBRES_MEDIOS } from '../lib/prensa.mjs';
 import { preguntarJson } from '../lib/gemini.mjs';
 
 const HORA = 36e5;
@@ -161,7 +161,7 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
 }
 
 export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),
-  log = console.log, proximo = proximoPartido, listaPartes = null, leer = noticiasPrensa, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY }) {
+  log = console.log, proximo = proximoPartido, listaPartes = null, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY }) {
   const [hD, hH] = config.horasNoticias || [9, 23];
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   // sin registro guardado (simulacro del cron) no se gasta cupo de Gemini en cada ejecución
