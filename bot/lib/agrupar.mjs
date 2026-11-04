@@ -72,12 +72,33 @@ export function elQueMasPesa(xs) {
  * «⚠️ Lemar, rotura fibrilar en el aductor: baja hasta finales de noviembre» · «⚠️ Vini Jr. vio la roja en la jornada 11».
  * Cada jugador puede llevar `parte` (lib/partes.mjs) y `motivoSan` ({ txt, numeros }). Devuelve { t, numeros } o null.
  */
-export function detalle(xs) {
-  const con = [...xs].filter((x) => (x.parte && x.parte.lesion && x.estado !== 'disponible') || x.motivoSan).sort((a, b) => Number(!!(b.parte && b.parte.lesion)) - Number(!!(a.parte && a.parte.lesion)) || b.media - a.media);   // antes una lesión con parte que una sanción (la sanción ya se dice en su línea)
-  const x = con[0];
-  if (!x) return null;
-  if (x.motivoSan) return { t: `⚠️ ${x.nombre}: ${x.motivoSan.txt.replace(/^./, (c) => c.toLowerCase())}`, numeros: x.motivoSan.numeros };
+const conMotivo = (xs) => [...xs].filter((x) => (x.parte && x.parte.lesion && x.estado !== 'disponible') || x.motivoSan).sort((a, b) => Number(!!(b.parte && b.parte.lesion)) - Number(!!(a.parte && a.parte.lesion)) || b.media - a.media);   // antes una lesión con parte que una sanción (la sanción ya se dice en su línea)
+/** el motivo de uno, sin emoji: { t, numeros } */
+function motivoDe(x) {
+  if (x.motivoSan) return { t: `${x.nombre}: ${x.motivoSan.txt.replace(/^./, (c) => c.toLowerCase())}`, numeros: x.motivoSan.numeros };
   const p = x.parte;
   const fin = p.estado === 'baja' && p.hasta ? `: baja hasta ${p.hasta}` : p.estado === 'duda' && p.jornada ? `: duda para la jornada ${p.jornada}` : '';
-  return { t: `⚠️ ${x.nombre}, ${p.lesion.replace(/^./, (c) => c.toLowerCase())}${fin}`, numeros: [p.jornada, ...(String(p.hasta || '').match(/\d+/g) || []).map(Number)].filter((n) => n != null) };
+  return { t: `${x.nombre}, ${p.lesion.replace(/^./, (c) => c.toLowerCase())}${fin}`, numeros: [p.jornada, ...(String(p.hasta || '').match(/\d+/g) || []).map(Number)].filter((n) => n != null) };
+}
+export function detalle(xs) {
+  const x = conMotivo(xs)[0];
+  if (!x) return null;
+  const m = motivoDe(x);
+  return { t: `⚠️ ${m.t}`, numeros: m.numeros };
+}
+/** con tweets largos (X Premium): el motivo de todos los que lo tienen, hasta `max`, en frases seguidas */
+export function detalles(xs, max = 5) {
+  const ms = conMotivo(xs).slice(0, max).map(motivoDe);
+  if (!ms.length) return null;
+  return { t: `⚠️ ${ms.map((m) => m.t).join('. ')}`, numeros: ms.flatMap((m) => m.numeros) };
+}
+/** con tweets largos: la media de todos, del que más pesa al que menos: «‼️ El que más pesa es Vini Jr., con 6,3 puntos de media;
+    detrás, Rodri con 5,8 y Cuti Romero con 4,1» (sin paréntesis: Carlos, 3 nov). Solo los de 3 o más de media, hasta 4. */
+export function pesos(xs) {
+  const ys = [...xs].filter((x) => x.media >= 3).sort((a, b) => b.media - a.media).slice(0, 4);
+  if (xs.length < 2 || !ys.length) return null;
+  const [a, ...resto] = ys;
+  const t = resto.length ? `‼️ El que más pesa es ${a.nombre}, con ${fmt(a.media)} puntos de media; detrás, ${lista(resto.map((x) => `${x.nombre} con ${fmt(x.media)}`))}`
+    : `‼️ El que más pesa es ${a.nombre}: ${fmt(a.media)} puntos de media`;
+  return { t, numeros: ys.flatMap((x) => partes(x.media)) };
 }
