@@ -1162,7 +1162,9 @@
    "AS|https://as.com/futbol/primera/el-calvario-de-quique-y-mariano-en-nervion-hubo-un-desgaste-terrible-f202611-n/": 1793783139000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247063/eric-christensen-esperan-llegar-metropolitano.html": 1793784669000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-avisa-hansi-flick-gestion-rodri-lesion-jugar-atletico-madrid-jugado-minutos-seguro-seguidores-no-entienden-20261104_3467990.html": 1793784789000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antiviolencia-pide-60-001-euros_0_2008420320.html": 1793786458000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antiviolencia-pide-60-001-euros_0_2008420320.html": 1793786458000,
+   "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/": 1793787223000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247073/brian-farinas-avalado-registro-nivel-barca.html": 1793787503000
   },
   "hechos": [
    {
@@ -1415,11 +1417,23 @@
      3,
      0
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/",
+    "medio": "AS",
+    "t": 1793787223000,
+    "id": "3208",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Rodri sufre molestias físicas en la pierna derecha",
+    "motivo": "biceps femoral",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
