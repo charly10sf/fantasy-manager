@@ -586,6 +586,7 @@ export function ajustes(S) {
   h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google en esta sesión</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;
   if ((enApp || enWeb) && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Borrar los datos guardados</b><span>Histórico, fichas y planes (tu sesión y tu clave no)</span></div><button class="btn chico sec" data-accion="borrarDatos">Borrar</button></div>`;
+  if (!enDemo() && sesion()) h += `<div class="ajuste"><div class="c"><b>Invitar a tu liga</b><span>Un enlace para el grupo: al entrar, se les abre esta liga</span></div><button class="btn chico" data-accion="invitar">${icono('enviar')}Invitar</button></div>`;
   if (!enDemo() && sesion()) h += `<div class="ajuste"><div class="c"><b>Borrar mis datos del servidor</b><span>Lo que guarda Fantasy Manager de ti: que usas la app, cuánto rato y tus avisos de fallo</span></div><button class="btn chico sec" data-accion="borrarServidor">Borrar</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Privacidad</b><span>Qué datos usa la app y dónde se quedan</span></div><a class="btn chico sec" href="privacidad.html">Ver</a></div>`;
   // (en la versión de Google Play, si Google pide dejar cambiarlo: en la UE, sí; en la web, con los anuncios de AdSense)
@@ -737,7 +738,7 @@ function usoHTML(reg, activos) {
   const fila = (k) => `<tr><td>${EVENTOS[k]}</td><td><b>${sem[k] || 0}</b></td><td>${cuatro[k] || 0}</td></tr>`;
   const porActivo = activos.d7 ? Math.round(((sem.p || 0) / activos.d7) * 10) / 10 : 0;
   return `<div class="grupo"><span>Qué hacen</span></div>
-    <table class="tabla reg-ev"><tr><th></th><th>Esta semana</th><th>4 anteriores</th></tr>${['p', 'q', 'b', 't', 'e', 'c'].map(fila).join('')}</table>
+    <table class="tabla reg-ev"><tr><th></th><th>Esta semana</th><th>4 anteriores</th></tr>${['p', 'q', 'b', 't', 'e', 'c', 'n', 'i'].map(fila).join('')}</table>
     <p class="quien-res">Planes por cuenta activa esta semana: <b>${String(porActivo).replace('.', ',')}</b>.</p>
     <p class="quien-res">La entrada, en cuentas: empezaron el login <b>${con('l')}</b> · entraron <b>${con('e')}</b> · vieron la guía de la clave <b>${con('v')}</b> · guardaron la clave <b>${con('c')}</b> · pidieron un plan <b>${con('p')}</b>.</p>
     <p class="peq apag">Lo de antes de entrar con la cuenta solo cuenta para quien acaba entrando. Lo de los últimos días puede tardar hasta un día en llegar.</p>`;

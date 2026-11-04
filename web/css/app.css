@@ -2355,3 +2355,6 @@ div.pc { display: grid; gap: 18px; }
 .reg-ev th { text-align: right; font-weight: 600; color: var(--apagado); font-size: 12px; padding: 4px 6px; }
 .reg-ev td { padding: 6px; border-top: 1px solid var(--linea); text-align: right; }
 .reg-ev td:first-child, .reg-ev th:first-child { text-align: left; }
+/* invitación de tu liga, en la entrada (0.7a) */
+.invita { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 16px; padding: 12px; border-radius: 12px; background: var(--plano); border: 1px solid var(--rojo); font-size: 14px; line-height: 1.4; text-align: left; }
+.invita svg { flex: none; width: 20px; height: 20px; color: var(--rojo); margin-top: 1px; }

@@ -4,10 +4,11 @@
    Lo que pasa antes de entrar con la cuenta (empezar el login, ver la guía de la clave) espera a que haya sesión.
 
    p plan pedido · q pregunta en el chat · b anuncio bonificado visto · t función top abierta · l login empezado ·
-   e entrada hecha (login, QR o código) · v guía de la clave vista (una vez al día) · c clave guardada */
+   e entrada hecha (login, QR o código) · v guía de la clave vista (una vez al día) · c clave guardada ·
+   n invitación a tu liga mandada · i llegó con una invitación (una vez) */
 import { LS, diaDe } from './util.js';
 
-export const EVENTOS = { p: 'planes pedidos', q: 'preguntas al chat', b: 'anuncios bonificados', t: 'funciones top abiertas', l: 'logins empezados', e: 'entradas hechas', v: 'guía de la clave vista', c: 'claves guardadas' };
+export const EVENTOS = { p: 'planes pedidos', q: 'preguntas al chat', b: 'anuncios bonificados', t: 'funciones top abiertas', l: 'logins empezados', e: 'entradas hechas', v: 'guía de la clave vista', c: 'claves guardadas', n: 'invitaciones mandadas', i: 'llegadas por invitación' };
 
 /** apunta un evento; con una: true, solo si hoy aún no se había apuntado */
 export function contar(k, { una = false } = {}) {

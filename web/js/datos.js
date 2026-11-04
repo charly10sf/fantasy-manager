@@ -120,7 +120,10 @@ export async function actualizar(alPaso = () => {}) {
   const ligas = N.lista(ligasR).map((l) => ({ id: l && l.id != null ? String(l.id) : '', nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))) })).filter((l) => l.id);
   if (!ligas.length && N.lista(ligasR).length) throw cambioDeFormato('ligas', ligasR);
   if (!ligas.length) throw Object.assign(new Error('Tu cuenta no tiene ninguna liga de LaLiga Fantasy'), { tipo: 'sinLigas' });
-  const liga = ligas.find((l) => l.id === String(c.ligaId)) || ligas[0];
+  // si se entró con una invitación de tu liga (?l=… en la dirección) y aún no habías elegido liga, esa (0.7a)
+  const inv = !c.ligaId ? LS.get('invita', null) : null;
+  const liga = ligas.find((l) => l.id === String(c.ligaId || (inv && inv.liga))) || ligas[0];
+  if (inv) LS.del('invita');
   // la primera liga que se carga es «la de siempre» (guarda con las claves de antes); si la elegida ya no está, la que toca
   if (!LS.get('liga-principal', null)) LS.set('liga-principal', liga.id);
   if (String(c.ligaId || '') !== liga.id) guardarCfg({ ligaId: liga.id });

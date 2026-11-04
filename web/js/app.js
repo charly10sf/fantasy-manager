@@ -78,6 +78,7 @@ function pantallaEntrar(error = '') {
       <li>${icono('rivales')}Lo que hace cada rival y quién va a por tus jugadores</li>
     </ul></div><div class="pant-d">
     ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
+    ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
     ${enApp ? `<button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
     <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>${botonDemo('sec')}` : entrarWebHTML()}
     ${enApp ? PIE_ENTRAR : ''}
@@ -88,6 +89,33 @@ function pantallaEntrar(error = '') {
   if (!enApp && !movilDe()) iniciarQR(); else pararQR();
   // en el ordenador, el cursor directamente en el código; en el móvil no (sacaría el teclado tapando lo de arriba)
   if (!enApp && !movilDe()) setTimeout(() => { const i = $('#codigoWeb'); if (i) i.focus({ preventScroll: true }); }, 50);
+}
+/* ---------------- invitar a tu liga (fase 0 del roadmap) ----------------
+   Un enlace a la web con el número de tu liga (?l=…). Quien lo abre ve que viene invitado y, al entrar con su cuenta, se
+   abre esa liga si es suya. Sin nombres en el enlace: solo el número de la liga, que ya ven todos sus miembros. */
+const INVITA_DIAS = 14;
+function leerInvitacion() {
+  try {
+    const p = new URLSearchParams(location.search);
+    const l = p.get('l');
+    if (!l || !/^\d{1,15}$/.test(l)) return;
+    p.delete('l');
+    history.replaceState(null, '', location.pathname + (p.toString() ? `?${p}` : '') + location.hash);
+    if (haySesion()) return;
+    LS.set('invita', { liga: l, t: Date.now() });
+    if (!LS.get('invita-contada', false)) { contar('i'); LS.set('invita-contada', true); }
+  } catch (e) { /* nada */ }
+}
+const invitacionViva = () => { const x = LS.get('invita', null); return x && Date.now() - x.t < INVITA_DIAS * DIA ? x : null; };
+function invitarALiga() {
+  const l = S.D && S.D.liga && S.D.liga.id;
+  if (!l || enDemo()) { tostada('Entra con tu cuenta para invitar a los de tu liga'); return; }
+  const url = `${DOMINIO}?l=${encodeURIComponent(l)}`;
+  const t = `Uso Fantasy Manager para la liga: cada día me dice qué fichar, qué vender y a quién clausular. Gratis, en Android y en el navegador: ${url}`;
+  contar('n');
+  if (enApp) { nativo.compartir(t); return; }
+  if (navigator.share) { navigator.share({ text: t }).catch(() => {}); return; }
+  copiarY(t, 'Copiado: pégalo en el grupo de tu liga');
 }
 /** desde qué móvil se abre la web: 'android', 'iphone' o null (ordenador) */
 function movilDe() {
@@ -2458,6 +2486,7 @@ document.addEventListener('click', async (ev) => {
       if (!confirm('¿Borrar lo que guarda Fantasy Manager de ti en su servidor? Es que usas la app, cuánto rato y tus avisos de fallo con sus respuestas. Tu liga, tu sesión y tu clave están en este dispositivo y no se tocan. Si sigues usando la app, se volverá a apuntar que la usas.')) break;
       borrarMisDatos().then((r) => tostada(`Borrado${r.avisos ? ` (también ${r.avisos === 1 ? 'tu aviso' : `tus ${r.avisos} avisos`})` : ''}`, 6000)).catch((e) => tostada(e.message || 'No se ha podido borrar', 7000));
       break;
+    case 'invitar': invitarALiga(); break;
     case 'borrarChat': borrarConversacion(); pintar(); break;
     case 'nuevoChat':
       if (S.charlando) { tostada('Espera a que conteste o para la respuesta'); break; }
@@ -2721,6 +2750,7 @@ async function arrancar() {
   if (aFallos) history.replaceState(null, '', '#hoy');
   // venía de la web de antes con un código de mudanza
   await codigoDeMudanza();
+  leerInvitacion();
   if ((enApp || enWeb) && !enDemo() && !haySesion()) {
     pantallaEntrar();
   } else {
