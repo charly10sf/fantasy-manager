@@ -91,6 +91,7 @@ Si cambia algo en android/app/src cambia la huella nativa y los móviles necesit
 
 - Rendimiento: Playwright con `Emulation.setCPUThrottlingRate` (×4 o ×6) y el perfilador de CDP sobre `analizar`. Nada de crear formateadores de fecha (`toLocale…` con zona horaria, `new Intl.DateTimeFormat`) dentro de bucles: van creados una vez en util.js (`diaDe` guarda el día por hora).
 - `python3 -m http.server 8765` dentro de web/ y Playwright con el Chromium que ya trae el entorno.
+- El Worker sin red: `node worker/prueba/datos.mjs` (borrar, paso al ordenador cerrado y como antes, eventos de /hola). Los alias de la IA: `seudonimos(D)` y `contexto(D, M, cfg())` de ia.js con `demo()` (devuelve { D, H }) en la página.
 - Para salir de la demo en pruebas: interceptar app.js y cambiar `demo: enDemo() };` por `demo: false };`.
 - `localStorage['fm-worker']` simula la web; el user agent, Android o iPhone.
 - El intermediario: `localStorage['fm-proxy2']` (y `fm-worker`) con servidores falsos (vivo y lento, cerrado, agujero negro).
