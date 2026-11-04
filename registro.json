@@ -216,6 +216,13 @@
    "jornada": 12,
    "id": "2117956663739404785",
    "t": "2026-11-04T12:26:33.224Z"
+  },
+  {
+   "clave": "liga|suspension|j|se_estudia|J12",
+   "tipo": "liga",
+   "jornada": 12,
+   "id": "2117963080655409367",
+   "t": "2026-11-04T12:52:03.071Z"
   }
  ],
  "estados": {
@@ -2402,8 +2409,164 @@
  },
  "pulido": {
   "dia": "2026-11-04",
-  "n": 1,
+  "n": 2,
   "ok": 1,
-  "mal": 0
+  "mal": 1
+ },
+ "liga": {
+  "vistas": {
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/04/aplazados-el-granada-tenerife-y-el-andorra-mallorca-de-segunda-division-por-el-fallecimiento-de-jesus-de-miguel-cadena-ser/": 1793794190000,
+   "SPORT|136078371": 1793792395000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247141/posibles-fechas-aplaza-jornada-primera-segunda-todas-opciones.html": 1793791797000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/sentido-recuerdo-jesus-miguel-partidos-champions-equipos-espanoles-dia-duro-mundo-futbol-20261104_3468235.html": 1793790845000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261104/11675852/de-miguel-owono-granada-tenerife-liga-hypermotion.html": 1793790838000,
+   "SPORT|136076483": 1793790357000,
+   "SPORT|136075899": 1793790003000,
+   "SPORT|136075239": 1793789929000,
+   "SPORT|136072261": 1793789758000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261104/1004247120/oficial-aplazado-granada-tenerife.html": 1793789649000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/tenerife-aplazar-proximo-partido-miguel_0_2008420807.html": 1793789085000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/aplazado-granada-tenerife-sabado-muerte-jesus-miguel-20261104_3468252.html": 1793788726000,
+   "SPORT|136073584": 1793787466000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/tenerife-pide-aplazar-proximo-partido-ante-granada-plantilla-despida-jesus-miguel/00031793786156436986545.htm": 1793787180000,
+   "SPORT|136072311": 1793787078000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261104/1004247085/tenerife-pide-aplazar-partido-granada-hay-cosas-jugadores-no-tendrian-haber-visto.html": 1793786621000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261104/1004247067/sabadell-descansa-no-pierde-vista-liga.html": 1793784767000,
+   "MARCA|https://www.marca.com/futbol/elche/2026/11/04/version-completa-victor-chust-he-mejorado-balon.html": 1793783141000,
+   "Europa Press|https://www.europapress.es/madrid/noticia-huelga-universitaria-arranca-menos-alumnos-aulas-piquetes-ciu-ayuso-escucha-uni-lucha-20261104093827.html": 1793781507000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247035/laliga-plantea-suspender-jornada-semana-primera-segunda.html": 1793778293000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/04/la-federacion-suspende-los-partidos-del-ontinyent-1931-y-el-atzeneta-ue-por-la-muerte-de-jesus-de-miguel-radio-ontinyent/": 1793774809000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261103/1004246870/sant-cugat-remonta-figueres.html": 1793741132000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246888/grada-d-animacio-vuelve-suspension.html": 1793736587000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/la-federacion-aplaza-la-jornada-de-copa-en-senal-de-luto-y-el-tarancon-levante-se-reprograma-para-una-tercera-fecha-radio-valencia/": 1793731464000,
+   "ABC|https://www.abc.es/deportes/futbol/futbol-espanol-detiene-jesus-miguel-europa-limita-20261103183701-nt.html": 1793727422000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793726418000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261103/11674781/jesus-de-miguel-muere-owono-jugador-tenerife-portero-anodorra-en-directo.html": 1793726204000,
+   "AS|https://as.com/futbol/primera/afe-pide-suspender-todos-los-partidos-en-espana-f202611-n/": 1793725462000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/03/afe-solicita-a-rfef-laliga-y-uefa-la-suspension-de-todos-los-partidos-de-futbol-en-espana-del-3-al-9-de-noviembre-cadena-ser/": 1793725318000,
+   "Cadena SER|https://cadenaser.com/castillalamancha/2026/11/03/el-partido-de-copa-del-rey-del-albacete-balompie-se-pospone-de-nuevo-radio-albacete/": 1793724092000
+  },
+  "hechos": [
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247141/posibles-fechas-aplaza-jornada-primera-segunda-todas-opciones.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793791797000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 0,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "LaLiga sopesa opciones de calendario",
+    "nums": [
+     6
+    ]
+   },
+   {
+    "guid": "SPORT|136075899",
+    "medio": "SPORT",
+    "t": 1793790003000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "clubes": [
+     "12",
+     "49"
+    ],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "LaLiga debe tomar una decisión",
+    "nums": [
+     12,
+     13
+    ]
+   },
+   {
+    "guid": "SPORT|136072261",
+    "medio": "SPORT",
+    "t": 1793789758000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 0,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "Petición oficial de la AFE a RFEF, LaLiga y UEFA",
+    "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/elche/2026/11/04/version-completa-victor-chust-he-mejorado-balon.html",
+    "medio": "MARCA",
+    "t": 1793783141000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 0,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247035/laliga-plantea-suspender-jornada-semana-primera-segunda.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793778293000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 0,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Por la muerte del delantero Jesús de Miguel",
+    "detalle": "LaLiga medita la decisión",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/afe-pide-suspender-todos-los-partidos-en-espana-f202611-n/",
+    "medio": "AS",
+    "t": 1793725462000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 0,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Petición del sindicato de futbolistas",
+    "detalle": "Reclamada una semana de luto",
+    "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/03/afe-solicita-a-rfef-laliga-y-uefa-la-suspension-de-todos-los-partidos-de-futbol-en-espana-del-3-al-9-de-noviembre-cadena-ser/",
+    "medio": "Cadena SER",
+    "t": 1793725318000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 0,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Solicitud de la AFE",
+    "detalle": "",
+    "nums": [
+     3,
+     9
+    ]
+   }
+  ],
+  "gemini": {
+   "dia": "2026-11-04",
+   "n": 1
+  }
  }
 }
