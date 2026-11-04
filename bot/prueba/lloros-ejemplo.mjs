@@ -39,13 +39,45 @@ igual(casos({ partidos, jornada: 11, jugadores, fichas, golTarde: { '200|l': { m
 // con roja no es un lloro
 igual(casos({ partidos, jornada: 11, jugadores, fichas: { ...fichas, 2: st(58, 0, { red_card: [1, -3] }) }, golTarde }).map((x) => x.nombre), ['Djené', 'Sancet'], 'expulsado');
 
-const ts = escribir(cs, { jornada: 11 });
-for (const t of ts) { const v = validar(t.texto, { numeros: t.numeros }); if (!v.ok) falla(`${t.clave}: ${v.errores.join('; ')}`); console.log(`--- ${t.clave} · peso ${v.peso}\n${t.texto}`); }
-if (!/Vivian se quedó en 58 minutos con el Athletic sin encajar: 4 puntos menos/.test(ts[0].texto)) falla('línea del caso de minutos');
-if (!/el Celta encajó en el 90\+2' y se le van 3 puntos/.test(ts[0].texto)) falla('línea del gol tardío');
-const uno = escribir(cs.slice(0, 1), { jornada: 11 })[0];
-console.log(`--- uno solo\n${uno.texto}`);
-if (!/El defensa se quedó en 58/.test(uno.texto)) falla('uno solo: por su puesto');
+import { fijarLimite } from '../lib/texto.mjs';
+import { lineaLloro, lineasLloros } from '../tipos/lloros.mjs';
+for (const max of [280, 1000]) {
+  fijarLimite(max);
+  const ts = escribir(cs, { jornada: 11 });
+  for (const t of ts) { const v = validar(t.texto, { numeros: t.numeros }); if (!v.ok) falla(`${max} ${t.clave}: ${v.errores.join('; ')}`); console.log(`--- ${max} ${t.clave} · peso ${v.peso}\n${t.texto}`); }
+  if (!/Vivian/.test(ts[0].texto) || !/\b58\b/.test(ts[0].texto) || !/\b4\b/.test(ts[0].texto)) falla(`${max}: línea del caso de minutos`);
+  if (!/Djené/.test(ts[0].texto) || !/90\+2'/.test(ts[0].texto) || !/3 puntos/.test(ts[0].texto)) falla(`${max}: línea del gol tardío`);
+  // con tweets largos caben los tres, y Vivian y Sancet (los dos por minutos) no salen con la misma frase
+  if (max > 280 && !/Sancet/.test(ts[0].texto)) falla('largo: caben los tres');
+  const uno = escribir(cs.slice(0, 1), { jornada: 11 })[0];
+  console.log(`--- ${max} uno solo\n${uno.texto}`);
+  if (!/(El|Al) defensa/.test(uno.texto) || /Vivian.*Vivian/s.test(uno.texto)) falla(`${max} uno solo: por su puesto`);
+}
+fijarLimite(280);
+// las formas de cada caso: todas distintas, con sus cifras y sin «a el»
+const molde = (l, x) => l.replace(x.nombre, 'N').replace(/\d+/g, '#');
+for (const x of cs) {
+  const ls = [0, 1, 2].map((v) => lineaLloro(x, false, v));
+  if (new Set(ls.map((l) => molde(l, x))).size !== 3) falla(`${x.nombre}: formas repetidas`);
+  for (const v of [0, 1, 2]) { const l = lineaLloro(x, true, v); if (/\ba el\b|\bA el\b/.test(l)) falla(`«a el» en ${l}`); }
+  for (const l of ls) { const v = validar(l, { numeros: [11, ...(x.caso === 'minutos' ? [x.pierde, x.min, 60, 60 - x.min] : [x.pierde, x.gol.min, x.gol.extra])] }); if (!v.ok) falla(`${l}: ${v.errores.join('; ')}`); }
+}
+// los dos del Athletic van juntos en una frase
+fijarLimite(1000);
+const t3 = escribir(cs, { jornada: 11 })[0].texto;
+if (!/El Athletic acabó a cero, pero Vivian \(58 minutos\) y Sancet \(59\) no llegaron a los 60: 4 y 3 puntos menos/.test(t3)) falla(`grupo del Athletic: ${t3}`);
+// dos por minutos de equipos distintos: frases distintas, sea cual sea la jornada
+const otro = { ...cs[0], nombre: 'Mingueza', equipo: 'Celta', min: 57, pierde: 3, pos: 2 };
+const molde2 = (l) => l.replace(/Vivian|Mingueza/, 'N').replace(/el Athletic|el Celta/, 'E').replace(/\d+/g, '#');
+for (const j of [9, 10, 11, 12, 13, 14]) {
+  const [a, b] = lineasLloros([cs[0], otro], { jornada: j });
+  if (molde2(a) === molde2(b)) falla(`J${j}: calcados: ${a} / ${b}`);
+}
+// el mismo gol en un equipo: juntos y «cada uno» si pierden lo mismo
+const g2 = [{ ...cs[1] }, { ...cs[1], nombre: 'Aidoo', id: 99 }];
+const lg = lineasLloros(g2, { jornada: 11 });
+if (lg.length !== 1 || !/El Celta encajó en el 90\+2' y lo pagan Djené y Aidoo: 3 puntos menos cada uno/.test(lg[0])) falla(`grupo del gol: ${lg}`);
+fijarLimite(280);
 
 // el minuto del gol encajado, de los detalles de ESPN
 const espn = async () => ({ c: { details: [

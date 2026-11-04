@@ -7,7 +7,7 @@
 //   - juega 60 o más y su equipo solo encaja un gol, a partir del 85' (minuto de ESPN): pierde la portería a cero (un gol no resta).
 // Solo porteros, defensas y centrocampistas que pesan (3 o más de media, o 5 M o más), sin rojas. Un tweet por jornada, cuando ha
 // acabado del todo y han pasado 2 h del último saque + 2 h de partido, de 9 a 23 h.
-import { corto, el, fmt } from '../lib/texto.mjs';
+import { corto, el, fmt, hash, largo } from '../lib/texto.mjs';
 import { tweet, cap, puesto } from '../lib/redactar.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
@@ -65,23 +65,60 @@ export function casos({ partidos, jornada, jugadores, fichas, golTarde }) {
 }
 
 const minTxt = (g) => (g.extra ? `${g.min}+${g.extra}'` : `${g.min}'`);
-/** «⚠️ El defensa se quedó en 58 minutos con el Getafe sin encajar: 4 puntos menos» */
-export function lineaLloro(x, solo) {
+// Varias formas por caso, para que dos lloros seguidos no se lean calcados (Carlos, 4 nov: nada que suene a plantilla).
+// q: quién al principio de la frase; a: «a Vivian» o «al defensa».
+const MINUTOS = [
+  (q, a, x) => `${q} se quedó en ${x.min} minutos con ${el(x.equipo)} sin encajar: ${x.pierde} puntos menos`,
+  (q, a, x) => `${q} jugó ${x.min} minutos y ${el(x.equipo)} acabó a cero. Por no llegar a 60, ${x.pierde} puntos menos`,
+  (q, a, x) => `${cap(a)} le faltaron ${60 - x.min} minutos: jugó ${x.min} con ${el(x.equipo)} a cero y se deja ${x.pierde} puntos`,
+];
+const GOL = [
+  (q, a, x) => `${q}: ${el(x.equipo)} encajó en el ${minTxt(x.gol)} y se le van ${x.pierde} puntos`,
+  (q, a, x) => `${q} tenía la portería a cero hasta el ${minTxt(x.gol)}, cuando encajó ${el(x.equipo)}: ${x.pierde} puntos menos`,
+  (q, a, x) => `El gol que encajó ${el(x.equipo)} en el ${minTxt(x.gol)} le quita ${x.pierde} puntos ${a}`,
+];
+/** «⚠️ El defensa se quedó en 58 minutos con el Getafe sin encajar: 4 puntos menos»; v elige la forma (0 por defecto) */
+export function lineaLloro(x, solo, v = 0) {
   const quien = solo ? cap(`el ${puesto(x.pos)}`) : x.nombre;
-  if (x.caso === 'minutos') return `⚠️ ${quien} se quedó en ${x.min} minutos con ${el(x.equipo)} sin encajar: ${x.pierde} puntos menos`;
-  return `⚠️ ${quien}: ${el(x.equipo)} encajó en el ${minTxt(x.gol)} y se le van ${x.pierde} puntos`;
+  const a = solo ? `al ${puesto(x.pos)}` : `a ${x.nombre}`;
+  const formas = x.caso === 'minutos' ? MINUTOS : GOL;
+  return `⚠️ ${formas[v % formas.length](quien, a, x)}`;
 }
+// dos o más del mismo equipo y el mismo caso van en una frase: «El Athletic acabó a cero, pero Vivian (58 minutos) y Sancet (59)…»
+export function lineaGrupo(xs) {
+  const eq = xs[0].equipo;
+  const iguales = xs.every((x) => x.pierde === xs[0].pierde);
+  const pierden = iguales ? `${xs[0].pierde} puntos menos cada uno` : `${lista(xs.map((x) => x.pierde))} puntos menos`;
+  if (xs[0].caso === 'minutos') {
+    const quienes = lista(xs.map((x, i) => `${x.nombre} (${x.min}${i ? '' : ' minutos'})`));
+    return `⚠️ ${cap(el(eq))} acabó a cero, pero ${quienes} no llegaron a los 60: ${pierden}`;
+  }
+  return `⚠️ ${cap(el(eq))} encajó en el ${minTxt(xs[0].gol)} y lo pagan ${lista(xs.map((x) => x.nombre))}: ${pierden}`;
+}
+/** las líneas del tweet: una por lloro o por grupo, y cada caso rotando de forma según la jornada */
+export function lineasLloros(xs, { solo = false, jornada = 0 } = {}) {
+  const vez = { minutos: hash(`lloros${jornada}m`), gol: hash(`lloros${jornada}g`) };
+  const grupos = [];
+  for (const x of xs) {
+    // un equipo que solo encajó un gol: es el mismo gol para todos los suyos
+    const g = !solo && grupos.find((g) => g[0].caso === x.caso && g[0].equipo === x.equipo);
+    if (g) g.push(x); else grupos.push([x]);
+  }
+  return grupos.map((g) => (g.length > 1 ? lineaGrupo(g) : lineaLloro(g[0], solo, vez[g[0].caso]++)));
+}
+const numerosDe = (x) => [x.pierde, ...(x.caso === 'minutos' ? [x.min, 60, 60 - x.min] : [x.gol.min, x.gol.extra].filter(Boolean))];
 
 export function escribir(cs, { jornada }) {
-  for (let n = Math.min(cs.length, 4); n >= 1; n--) {
+  // con tweets largos (X Premium) caben hasta 6; en 280, hasta 4
+  for (let n = Math.min(cs.length, largo() ? 6 : 4); n >= 1; n--) {
     const xs = cs.slice(0, n);
     const cab = n <= 2 ? `🚨 ${lista(xs.map((x) => x.nombre))} ${n === 1 ? 'se queda' : 'se quedan'} sin la portería a cero`
       : `🚨 ${mayus(enLetra(n))} jugadores se quedan sin la portería a cero por muy poco`;
-    const lineas = xs.map((x) => lineaLloro(x, n === 1));
+    const lineas = lineasLloros(xs, { solo: n === 1, jornada });
     const etiqueta = `💔 Lloros Fantasy de la jornada ${jornada}`;
     const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), { t: etiqueta, prio: 9 }]);
     if (![...lineas, etiqueta].every((l) => r.usadas.includes(l))) continue;
-    const numeros = [jornada, ...xs.flatMap((x) => [x.pierde, ...(x.caso === 'minutos' ? [x.min] : [x.gol.min, x.gol.extra].filter(Boolean))])];
+    const numeros = [jornada, ...xs.flatMap(numerosDe)];
     return [{ tipo: 'lloros', clave: `lloros|${jornada}`, jornada, texto: r.texto, numeros }];
   }
   return [];
