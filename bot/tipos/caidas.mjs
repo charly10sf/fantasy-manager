@@ -92,7 +92,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const cab = `🚨 ${cap(el(eq))} ${xs.every(seguro) ? 'se queda sin' : 'puede quedarse sin'} ${enLetra(xs.length)} titulares`;
     const lineas = lineasPorEstado(xs, { club: true });
     const top = peso(xs.filter(seguro)), det = motivo(xs), hr = hora(pr);
-    const ideas = [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 5 }, hr && { t: hr.t, prio: 3 },
+    const ideas = [...lineas.map((t) => ({ t, prio: 9 })), hr && { t: hr.t, prio: 3 }, det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 5 },
       { t: `${xs.every(seguro) ? '❌ Baja' : '⁉️ Duda'} Fantasy ${paraLa(pr, jornada)}`, prio: 8 }];
     const { usadas, texto } = tweet(cab, ideas);
     if (!lineas.every((l) => usadas.includes(l))) continue;
@@ -116,7 +116,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       c.estado === 'duda' ? { t: `📊 ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,
       { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
       // con tweets largos: cuánto juega y cuándo es el partido
-      L && c.n60 != null && c.ult ? { t: `📊 Ha jugado 60 minutos o más en ${c.n60} de sus ${c.ult} últimos partidos`, prio: 3 } : null,
+      L && c.n60 != null && c.ult ? { t: c.n60 === c.ult ? `📊 Ha jugado 60 minutos o más en sus ${c.ult} últimos partidos` : `📊 Ha jugado 60 minutos o más en ${c.n60} de sus ${c.ult} últimos partidos`, prio: 3 } : null,
       hora(pr) ? { t: hora(pr).t, prio: 2 } : null,
       // una baja larga (5 semanas o más según el parte): la etiqueta de Carrasco para las lesiones largas
       { t: venta ? '💸 Venta Fantasy Obligatoria' : `${c.estado === 'duda' || dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
@@ -124,7 +124,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     if (!usadas.length) return null;
     const clave = `caidas|${jornada}|${c.id}`;
     return { tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c), ...numerosDe(p), ...(c.motivoSan ? c.motivoSan.numeros : []),
-      ...(L && c.n60 != null ? [c.n60, c.ult] : []), ...(hora(pr) ? hora(pr).numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
+      ...(L && c.n60 != null ? [60, c.n60, c.ult] : []), ...(hora(pr) ? hora(pr).numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
   };
   if (sueltos.length <= 2) {
     for (const c of sueltos) { const t = unSuelto(c); if (t) out.push(t); }

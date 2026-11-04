@@ -24,7 +24,7 @@ export function leerLesionados(html) {
     let m;
     if ((m = st.match(/^Duda para la jornada (\d+)/i))) { estado = 'duda'; jornada = +m[1]; }
     else if ((m = st.match(/^Disponible para la jornada (\d+)/i))) { estado = 'disponible'; jornada = +m[1]; }
-    else if ((m = st.match(/^Baja hasta (.+)$/i))) { estado = 'baja'; hasta = m[1].trim(); }
+    else if ((m = st.match(/^Baja hasta (.+)$/i))) { estado = 'baja'; hasta = m[1].trim().replace(/\bmediadios\b/gi, 'mediados'); }   // la web lo escribe mal a veces
     else if (/^Baja/i.test(st)) estado = 'baja';
     out.push({ nombre: (a.textContent || '').trim(), slug: ((a.getAttribute('href') || '').match(/\/jugadores\/([^/?#]+)/) || [])[1] || '',
       lesion, dia: fecha ? +fecha[1] : null, mes: fecha ? +fecha[2] : null, dias: fecha && fecha[3] ? +fecha[3] : null, estado, hasta, jornada });

@@ -86,21 +86,37 @@ export function detalle(xs) {
   const m = motivoDe(x);
   return { t: `⚠️ ${m.t}`, numeros: m.numeros };
 }
-// el artículo de una lesión para «tiene una rotura…», «arrastra un golpe…» («molestias», sin artículo)
-const artLesion = (l) => (/^(lesi[oó]n|rotura|luxaci[oó]n|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n|pubalgia|fisura|rotura|tendinopat|inflamaci[oó]n|tendinosis|operaci[oó]n)/i.test(l) ? 'una '
-  : /^(golpe|esguince|edema|problema|pinchazo|tirón|desgarro|traumatismo)/i.test(l) ? 'un ' : '');
+// cómo se puede decir una lesión en una frase: con artículo («tiene una rotura…», «arrastra unas molestias…»), como participio
+// («fue operado de la tibia») o, si no se sabe (o el parte no es una lesión: «Trabajo al margen», «Descanso»), solo con la forma neutra
+// «X, <lo que dice el parte>…» (auditoría del 5 nov: salían «tiene trabajo al margen», «por sometido a…», «un problemas»)
+function formaLesion(l) {
+  if (/^(trabajo al margen|descanso|gesti[oó]n|baja por|permiso|motivos|asuntos|sin especificar|desconocid)/i.test(l)) return { neutro: true };
+  if (/^(sometido|operado|intervenido|tratado|infiltrado)/i.test(l)) return { part: true };
+  if (/^(molestias|dolencias|lesiones|contusiones|n[aá]useas)/i.test(l)) return { art: 'unas ' };
+  if (/^(problemas|dolores|golpes|calambres)/i.test(l)) return { art: 'unos ' };
+  if (/^(lesi[oó]n|rotura|luxaci[oó]n|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n|pubalgia|fisura|tendinopat[ií]a|inflamaci[oó]n|tendinosis|operaci[oó]n|enfermedad|gripe|gastroenteritis|conmoci[oó]n|rotura|ciática|hernia|microrrotura)/i.test(l)) return { art: 'una ' };
+  if (/^(golpe|esguince|edema|problema|pinchazo|tir[oó]n|desgarro|traumatismo|proceso|cuadro|virus|dolor|corte|hematoma|esguince)/i.test(l)) return { art: 'un ' };
+  return { neutro: true };
+}
 /** el motivo de uno, contado de una de varias formas (v), para que una lista de bajas no suene a plantilla (Carlos, 4 nov 23:39) */
 function motivoVario(x, v) {
   if (x.motivoSan) return motivoDe(x);
-  const p = x.parte, les = p.lesion.replace(/^./, (c) => c.toLowerCase()), a = artLesion(les);
+  const p = x.parte, les = p.lesion.replace(/^./, (c) => c.toLowerCase()), f = formaLesion(les), a = f.art || '';
   const nums = [p.jornada, ...(String(p.hasta || '').match(/\d+/g) || []).map(Number)].filter((n) => n != null);
+  const pick = (xs) => ({ t: xs[v % xs.length], numeros: nums });
   if (p.estado === 'baja' && p.hasta) {
-    const t = [`${x.nombre}, ${les}: baja hasta ${p.hasta}`, `${x.nombre} no volverá hasta ${p.hasta} por ${a}${les}`,
-      `${x.nombre} estará fuera hasta ${p.hasta}${a ? ` por ${a}${les}` : `: ${les}`}`, `Lo de ${x.nombre} es ${a || 'por '}${les}, y no se le espera hasta ${p.hasta}`][v % 4];
-    return { t, numeros: nums };
+    if (f.neutro) return pick([`${x.nombre}, ${les}: baja hasta ${p.hasta}`]);
+    if (f.part) return pick([`${x.nombre}, ${les}: baja hasta ${p.hasta}`, `${x.nombre} fue ${les} y no volverá hasta ${p.hasta}`]);
+    return pick([`${x.nombre}, ${les}: baja hasta ${p.hasta}`, `${x.nombre} no volverá hasta ${p.hasta} por ${a}${les}`,
+      `${x.nombre} estará fuera hasta ${p.hasta} por ${a}${les}`, `Lo de ${x.nombre} es ${a}${les}, y no se le espera hasta ${p.hasta}`]);
   }
-  if (p.estado === 'duda' && p.jornada) return { t: [`${x.nombre}, ${les}: duda para la jornada ${p.jornada}`, `${x.nombre} arrastra ${a}${les} y es duda para la jornada ${p.jornada}`][v % 2], numeros: nums };
-  return { t: [`${x.nombre}, ${les}`, `${x.nombre} tiene ${a}${les}`][v % 2], numeros: nums };
+  if (p.estado === 'duda' && p.jornada) {
+    if (f.neutro) return pick([`${x.nombre}, ${les}: duda para la jornada ${p.jornada}`]);
+    if (f.part) return pick([`${x.nombre}, ${les}: duda para la jornada ${p.jornada}`, `${x.nombre} fue ${les} y es duda para la jornada ${p.jornada}`]);
+    return pick([`${x.nombre}, ${les}: duda para la jornada ${p.jornada}`, `${x.nombre} arrastra ${a}${les} y es duda para la jornada ${p.jornada}`]);
+  }
+  if (f.neutro || p.estado === 'disponible') return pick([`${x.nombre}, ${les}`]);
+  return pick(f.part ? [`${x.nombre}, ${les}`, `${x.nombre} fue ${les}`] : [`${x.nombre}, ${les}`, `${x.nombre} tiene ${a}${les}`]);
 }
 /** con tweets largos (X Premium): el motivo de todos los que lo tienen, hasta `max`, cada uno contado de otra forma */
 export function detalles(xs, max = 5, semilla = '') {
@@ -125,7 +141,9 @@ export function pesos(xs, semilla = '', { bajas = true } = {}) {
   // los que tienen la misma media, juntos («Cuti Romero, Miguel Sierra y Rodri, con 6,1 cada uno»)
   const grupos = [];
   for (const x of resto) { const g = grupos.find((y) => fmt(y[0].media) === fmt(x.media)); if (g) g.push(x); else grupos.push([x]); }
-  const det = lista(grupos.map((g) => (g.length > 1 ? `${lista(g.map((x) => x.nombre))}, con ${fmt(g[0].media)} cada uno` : `${g[0].nombre} con ${fmt(g[0].media)}`)));
+  const trozos = grupos.map((g) => (g.length > 1 ? `${lista(g.map((x) => x.nombre))}, con ${fmt(g[0].media)} cada uno` : `${g[0].nombre} con ${fmt(g[0].media)}`));
+  // con un grupo de empatados en medio, «, y» antes del último («B y C, con 5,8 cada uno, y D con 4,1»)
+  const det = trozos.length > 1 && grupos.some((g) => g.length > 1) ? `${trozos.slice(0, -1).join(', ')}, y ${trozos[trozos.length - 1]}` : lista(trozos);
   const v = hash(semilla) % 2;
   // «la baja que más duele» solo si todos son bajas (en novedades van mezclados con los que vuelven)
   const t = !resto.length ? [`‼️ El que más pesa es ${a.nombre}: ${fmt(a.media)} puntos de media`, bajas ? `‼️ La baja que más se nota es la de ${a.nombre}, que promedia ${fmt(a.media)} puntos` : `‼️ ${a.nombre} es el que más puntos da: ${fmt(a.media)} de media`][v]
