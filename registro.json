@@ -223,6 +223,13 @@
    "jornada": 12,
    "id": "2117963080655409367",
    "t": "2026-11-04T12:52:03.071Z"
+  },
+  {
+   "clave": "apercibidos|12|3152-2206-2511-2939-3072",
+   "tipo": "sancionados",
+   "jornada": 12,
+   "id": "2117980776830845131",
+   "t": "2026-11-04T14:02:22.181Z"
   }
  ],
  "estados": {
@@ -1212,7 +1219,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261104/1004247170/kike-salas-vuelve-grupo-e-isaac-sigue-margen.html": 1793796150000,
    "SPORT|136080056": 1793794158000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247165/opciones-flick-cubrir-ko-lesion-rodri.html": 1793797556000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html": 1793798837000
+   "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html": 1793798837000,
+   "SPORT|136070967": 1793797171000
   },
   "hechos": [
    {
@@ -1649,11 +1657,23 @@
     "motivo": "",
     "plazo": "entre tres y cuatro semanas",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136070967",
+    "medio": "SPORT",
+    "t": 1793797171000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "lesión en el bíceps femoral",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-04",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -2464,9 +2484,9 @@
  },
  "pulido": {
   "dia": "2026-11-04",
-  "n": 2,
+  "n": 3,
   "ok": 1,
-  "mal": 1
+  "mal": 2
  },
  "liga": {
   "vistas": {
