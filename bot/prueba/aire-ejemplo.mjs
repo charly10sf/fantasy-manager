@@ -1,0 +1,21 @@
+// La previa espera si la jornada o el partido están en el aire (lib/aire.mjs), sin red.  node bot/prueba/aire-ejemplo.mjs
+import { enElAire } from '../lib/aire.mjs';
+let fallos = 0;
+const ok = (c, m) => { if (!c) { fallos++; console.log(`FALLA: ${m}`); } else console.log(`ok: ${m}`); };
+const ahora = Date.parse('2026-11-05T08:00:00Z');
+const reg = (...es) => ({ datos: { enviados: es.map(([clave, t]) => ({ clave, tipo: 'liga', jornada: 12, t })) } });
+const m = { local: { id: 15 }, visitor: { id: 9 }, date: '2026-11-07T20:00:00Z' };
+ok(!enElAire(reg(), { jornada: 12, m, ahora }).espera, 'sin noticias: sigue');
+ok(enElAire(reg(['liga|suspension|j|se_estudia|J12', '2026-11-04T12:52:03Z']), { jornada: 12, m, ahora }).espera, 'se estudia suspender la jornada: espera');
+ok(!enElAire(reg(['liga|suspension|j|se_estudia|J12', '2026-11-04T12:52:03Z']), { jornada: 13, m, ahora }).espera, 'otra jornada: sigue');
+ok(!enElAire(reg(['liga|suspension|j|se_estudia|J12', '2026-11-04T12:52:03Z'], ['liga|suspension|j|descartado|J12', '2026-11-05T07:00:00Z']), { jornada: 12, m, ahora }).espera, 'descartado: sigue');
+ok(enElAire(reg(['liga|suspension|j|se_estudia|J12', '2026-11-04T12:52:03Z'], ['liga|suspension|j|confirmado|J12', '2026-11-05T07:00:00Z']), { jornada: 12, m, ahora }).espera, 'confirmado, con la fecha de antes: espera');
+ok(!enElAire(reg(['liga|suspension|j|confirmado|J12', '2026-11-05T07:00:00Z']), { jornada: 12, m: { ...m, date: '2026-12-16T20:00:00Z' }, ahora }).espera, 'confirmado, con la fecha nueva: sigue');
+ok(!enElAire(reg(['liga|suspension|j|se_estudia|J12', '2026-11-03T16:00:00Z']), { jornada: 12, m, ahora }).espera, 'se estudiaba hace más de 36 h sin decisión: sigue');
+ok(enElAire(reg(['liga|aplazamiento|p15-9|se_estudia|J12', '2026-11-05T06:00:00Z']), { jornada: 12, m, ahora }).espera, 'se estudia aplazar ese partido: espera');
+ok(!enElAire(reg(['liga|aplazamiento|p15-9|se_estudia|J12', '2026-11-05T06:00:00Z']), { jornada: 12, m: { local: { id: 1 }, visitor: { id: 2 }, date: m.date }, ahora }).espera, 'otro partido: sigue');
+ok(enElAire(reg(['liga|suspension|c9|confirmado|J12', '2026-11-05T06:00:00Z']), { jornada: 12, m, ahora }).espera, 'suspendido el partido de un club: espera');
+ok(!enElAire(reg(['liga|horario|p15-9|confirmado|J12', '2026-11-05T06:00:00Z']), { jornada: 12, m, ahora }).espera, 'un cambio de horario no para la previa');
+ok(!enElAire(null, { jornada: 12, m, ahora }).espera, 'sin registro (simulacro): sigue');
+console.log(`\n${fallos} fallos`);
+process.exit(fallos ? 1 : 0);
