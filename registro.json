@@ -2029,7 +2029,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -2933,7 +2933,8 @@
    "SPORT|136122725": 1793885037000,
    "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html": 1793891979000
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html": 1793891979000,
+   "SPORT|136128445": 1793891692000
   },
   "hechos": [
    {
@@ -3316,7 +3317,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 28
+   "n": 29
   }
  }
 }
