@@ -1290,7 +1290,8 @@
    "SPORT|136111415": 1793872197000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000,
-   "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/": 1793877225000
+   "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/": 1793877225000,
+   "Diario Sur|https://www.diariosur.es/malagacf/virus-fifa-malaga-aznou-marruecos-sub23-futbol-20261105123950-nt.html": 1793879095000
   },
   "hechos": [
    {
@@ -1912,7 +1913,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
