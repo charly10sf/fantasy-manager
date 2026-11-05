@@ -244,6 +244,13 @@
    "jornada": 12,
    "id": "2118226131983679558",
    "t": "2026-11-05T06:17:19.405Z"
+  },
+  {
+   "clave": "noticias|3083:buena|2026-11-05",
+   "tipo": "noticias",
+   "jornada": 12,
+   "id": "2118293964834902140",
+   "t": "2026-11-05T10:46:52.099Z"
   }
  ],
  "estados": {
@@ -1277,7 +1284,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247434/raphinha-trabaja-brasileno-duradero-barca.html": 1793869772000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/asi-nueva-camiseta-3-real-madrid-regresa-iconico-diseno-dragon.html": 1793871315000,
    "SPORT|136105785": 1793869239000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/revivo-convocado-con-israel-para-disputar-la-nations-league-radio-elche/": 1793873304000
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/revivo-convocado-con-israel-para-disputar-la-nations-league-radio-elche/": 1793873304000,
+   "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000
   },
   "hechos": [
    {
@@ -1833,11 +1841,35 @@
     "motivo": "lesión en partido de Champions",
     "plazo": "un mes de baja",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/",
+    "medio": "AS",
+    "t": 1793874820000,
+    "id": "74",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Yuri reaparece en la convocatoria ante Osasuna",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/",
+    "medio": "AS",
+    "t": 1793874820000,
+    "id": "3083",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Nico Williams regresa a la convocatoria ante Osasuna",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -2648,9 +2680,9 @@
  },
  "pulido": {
   "dia": "2026-11-05",
-  "n": 1,
-  "ok": 0,
-  "mal": 1
+  "n": 2,
+  "ok": 1,
+  "mal": 2
  },
  "liga": {
   "vistas": {
