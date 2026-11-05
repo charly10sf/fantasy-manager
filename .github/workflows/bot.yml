@@ -104,5 +104,12 @@ jobs:
           git add -A
           if ! git diff --cached --quiet; then
             git -c user.name='bot' -c user.email='bot@users.noreply.github.com' commit -q -m "Registro $(date -u +%FT%TZ)"
-            git push -q origin HEAD:bot-estado
+            # (5 nov, 17:01: GitHub dio un 500 al subir el registro, se perdió que Yuri ya había salido y a las 17:16 salió otra vez)
+            # reintentos con espera; si la rama ha cambiado, se rehace encima
+            for espera in 0 5 15 30 60 90; do
+              sleep $espera
+              if git push -q origin HEAD:bot-estado; then exit 0; fi
+              git pull -q --rebase origin bot-estado || git rebase --abort || true
+            done
+            exit 1
           fi
