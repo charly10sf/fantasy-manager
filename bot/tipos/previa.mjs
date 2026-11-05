@@ -37,7 +37,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
       // si se estudia suspender o aplazar la jornada o el partido (o ya se ha decidido y aún no hay fecha nueva), la previa espera
       const aire = enElAire(registro, { jornada, m, ahora });
-      if (aire.espera) { log(`  (previa) ${L}-${V}: ${aire.motivo}`); continue; }
+      // (los onces confirmados sí salen: si ESPN tiene los dos onces, el partido se juega, aunque la fecha apuntada sea la de ahora;
+      // auditoría del 5 nov: un aplazamiento con la fecha nueva ya puesta al publicarse dejaba el partido sin nada)
+      if (aire.espera && !(quiereConf && !yaConf)) { log(`  (previa) ${L}-${V}: ${aire.motivo}`); continue; }
       const sem = `previa${m.id}`;
       const kOrden = Math.max(0, K.indexOf(String(m.id)));
       const Rp = (fs, slot) => rotar(fs, `${slot}${jornada}`, kOrden);
@@ -51,6 +53,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         rl = ros.find((r) => r.homeAway === 'home'); rv = ros.find((r) => r.homeAway === 'away');
       }
       const hayConf = tit(rl).length === 11 && tit(rv).length === 11;
+      if (aire.espera && !hayConf) { log(`  (previa) ${L}-${V}: ${aire.motivo}`); continue; }
       if (!hayConf && !(quierePos && !yaPos)) { if (quiereConf && !yaConf) log(`  (previa) ${L}-${V}: ESPN aún no tiene las alineaciones`); continue; }
       const conOnce = config.onceProbable !== false;
       const probs = { L: await probabilidades(m.local.id, jugadores, jornada - 1, { equipo: m.local.mainName, conOnce, log }), V: await probabilidades(m.visitor.id, jugadores, jornada - 1, { equipo: m.visitor.mainName, conOnce, log }) };
@@ -105,7 +108,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
           if (usadas.length) continue;
       }
       // --- posibles onces ---
-      if (!(quierePos && !yaPos)) continue;
+      if (!(quierePos && !yaPos) || aire.espera) continue;
       // en los puestos con más duda (menos del 60 %), también el otro que se lo puede jugar, con su % (Carlos, 3 nov 11:52: «como
       // dos opciones y poner el porcentaje de cada uno»): el mejor del mismo puesto que no está en el once y tiene 25 % o más,
       // hasta 3 por equipo
@@ -194,6 +197,18 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   // equipo le faltan …» en dos seguidas (5 nov)
   const pick = (xs, s = 0) => (k == null ? xs[hash(`${sem}:${s}`) % xs.length] : rotar(xs, `previa${jornada}:${s}`, k));
   const tres = k == null ? hash(sem) % 3 : turno(3, `previa${jornada}:lead`, k);
+  // las frases que tienen los dos equipos (el verbo de las dudas, el rango): cada equipo rota por el orden del partido (dos previas
+  // seguidas no repiten) y el segundo, si le toca la misma que al primero en este tweet, la siguiente (auditoría del 5 nov)
+  const usados = {};
+  const pickL = (xs, s, lado) => {
+    if (k == null) return xs[hash(`${sem}:${s}:${lado}`) % xs.length];
+    let i = turno(xs.length, `previa${jornada}:${s}${lado ? 'B' : ''}`, k);
+    if (lado && usados[s] === i) i = (i + 1) % xs.length;
+    if (!lado) usados[s] = i;
+    return xs[i];
+  };
+  // en vez de quitar una forma que repite «seguro» o «fijo» (la lista cambiaba de largo y la rotación ya no valía), se cambia por otra
+  const cambia = (fs, ya, alts) => { const ws = ['segur', 'fij'].filter((w) => ya.includes(w)); let j = 0; return fs.map((f) => (ws.some((w) => f.includes(w)) ? alts[j++ % alts.length] : f)); };
   const cu = cuando(m.date, ahora);
   if (cu) num.push(...cu.numeros);
   const datos = (k, eq) => ({
@@ -226,28 +241,27 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   const zona = (xs) => (xs.length > 1 && xs.every((x) => x.pos === xs[0].pos) ? ZONA[xs[0].pos] : null);
   // (sigue = va un verbo detrás: con tres, el rango lleva coma de cierre)
   // (con tres, «entre el X y el Y %» salía 11 veces en las 10 previas de la J12: tres formas que rotan; s, la semilla de cada sitio)
-  const rango = (xs, sigue = false, s = 'r') => {
+  const rango = (xs, sigue = false, lado = 0) => {
     const ps = xs.map(P);
     if (xs.length <= 2) return new Set(ps).size === 1 && xs.length === 2 ? `${lista(xs.map((x) => x.nombre))}, al ${ps[0]} % los dos${sigue ? ',' : ''}` : lista(xs.map((x, i) => `${x.nombre} (${ps[i]} %)`));
     const a = Math.min(...ps), b = Math.max(...ps);
-    const r = a === b ? `al ${a} %` : pick([`entre el ${a} y el ${b} %`, `del ${a} al ${b} %`, `ninguno por encima del ${b} %`], s);
+    // («ninguno por encima del 52 %» no casa con «parten con ventaja»: con todos al 45 % o más, otra forma)
+    const r = a === b ? `al ${a} %` : pickL([`entre el ${a} y el ${b} %`, `del ${a} al ${b} %`, xs.every((x) => x.p >= 0.45) ? `con entre un ${a} y un ${b} %` : `ninguno por encima del ${b} %`], 'rango', lado);
     return `${lista(xs.map((x) => x.nombre))}, ${r}${sigue ? ',' : ''}`;
   };
   // (k: la semilla de cada equipo; «no tienen el sitio asegurado» salía en las 20 previas de la jornada)
   // (sinFijo: el párrafo ya dice «fijo» o «fija»; «hay una fija: Budimir… pero no están fijos», auditoría del 5 nov)
-  const verboDudas = (xs, k, sinFijo = false) => {
+  const verboDudas = (xs, lado, sinFijo = false) => {
     const n = xs.length;
-    // (cuatro formas por caso: con tres, «están pendientes de la decisión del entrenador» salía en 7 de 14 previas)
-    const fs = xs.every((x) => x.p < 0.45) ? [pl(n, 'se juega el puesto', 'se juegan el puesto'), pl(n, 'está en el aire', 'están en el aire'), pl(n, 'no tiene sitio fijo', 'no tienen sitio fijo'), pl(n, 'lo tiene complicado', 'lo tienen complicado')]
-      : xs.every((x) => x.p >= 0.45) ? [pl(n, 'apunta a titular, pero sin garantías', 'apuntan a titular, pero sin garantías'), pl(n, 'debería salir de inicio, aunque no es seguro', 'deberían salir de inicio, aunque no es seguro'), pl(n, 'parte con ventaja para salir de inicio, pero no está fijo', 'parten con ventaja para salir de inicio, pero no están fijos'), pl(n, 'tiene papeletas, pero nada asegurado', 'tienen papeletas, pero nada asegurado')]
-        : [pl(n, 'no tiene el sitio asegurado', 'no tienen el sitio asegurado'), pl(n, 'no es fijo', 'no son fijos'), pl(n, 'está pendiente de la decisión del entrenador', 'están pendientes de la decisión del entrenador'), pl(n, 'no lo tiene ganado', 'no lo tienen ganado')];
-    const sin = fs.filter((f) => !/fij/.test(f));
-    return pick(sinFijo && sin.length ? sin : fs, k);
+    // (cuatro formas por caso: con tres, «están pendientes de la decisión del entrenador» salía en 7 de 14 previas; y la que dice
+    // «fijo», cambiada por otra si el párrafo ya lo dice)
+    const caso = xs.every((x) => x.p < 0.45) ? 'bajo' : xs.every((x) => x.p >= 0.45) ? 'alto' : 'medio';
+    const fs = caso === 'bajo' ? [pl(n, 'se juega el puesto', 'se juegan el puesto'), pl(n, 'está en el aire', 'están en el aire'), sinFijo ? pl(n, 'no lo tiene nada claro', 'no lo tienen nada claro') : pl(n, 'no tiene sitio fijo', 'no tienen sitio fijo'), pl(n, 'tiene que pelear el puesto', 'tienen que pelear el puesto')]
+      : caso === 'alto' ? [pl(n, 'apunta a titular, pero sin garantías', 'apuntan a titular, pero sin garantías'), pl(n, 'debería salir de inicio, aunque no es seguro', 'deberían salir de inicio, aunque no es seguro'), sinFijo ? pl(n, 'parte con ventaja para salir de inicio', 'parten con ventaja para salir de inicio') : pl(n, 'parte con ventaja para salir de inicio, pero no está fijo', 'parten con ventaja para salir de inicio, pero no están fijos'), pl(n, 'tiene papeletas, pero nada asegurado', 'tienen papeletas, pero nada asegurado')]
+        : [pl(n, 'no tiene el sitio asegurado', 'no tienen el sitio asegurado'), sinFijo ? pl(n, 'tiene el puesto en el aire', 'tienen el puesto en el aire') : pl(n, 'no es fijo', 'no son fijos'), pl(n, 'está pendiente de la decisión del entrenador', 'están pendientes de la decisión del entrenador'), pl(n, 'no lo tiene ganado', 'no lo tienen ganado')];
+    return pickL(fs, `v${caso}`, lado);
   };
 
-  // las formas que no repiten «seguro» ni «fijo» si la frase de antes ya lo dice («deberían salir de inicio, aunque no es seguro.
-  // Lo más seguro es Gulácsi»); si no queda ninguna, todas
-  const sinRepetir = (fs, ya) => { const ws = ['segur', 'fij'].filter((w) => ya.includes(w)); const r = fs.filter((f) => !ws.some((w) => f.includes(w))); return r.length ? r : fs; };
   // el primer equipo: el titular con su contraste, y sus dudas
   const fa = [];
   let usadoFijo = false;
@@ -277,9 +291,10 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   }
   if (A.dudas.length) {
     const z = zona(A.dudas);
-    fa.push(z ? `Las dudas están ${z}: ${rango(A.dudas, false, 'rA')}` : `${cap(rango(A.dudas, true, 'rA'))} ${verboDudas(A.dudas, 'vA', usadoFijo || (lead && lead.que === 'fijo'))}`);
+    fa.push(z ? `Las dudas están ${z}: ${rango(A.dudas, false, 0)}` : `${cap(rango(A.dudas, true, 0))} ${verboDudas(A.dudas, 0, usadoFijo || (lead && lead.que === 'fijo'))}`);
   }
-  if (A.fijo && !usadoFijo && !(lead && lead.que === 'fijo')) fa.push(pick(sinRepetir([`Lo más seguro es ${A.fijo.nombre}, al ${P(A.fijo)} %`, `Con ${A.fijo.nombre} se puede contar: ${P(A.fijo)} % y ${M(A.fijo)} de media`], fa.join(' ')), 'fA'));
+  if (A.fijo && !usadoFijo && !(lead && lead.que === 'fijo')) fa.push(pick(cambia([`Lo más seguro es ${A.fijo.nombre}, al ${P(A.fijo)} %`, `Con ${A.fijo.nombre} se puede contar: ${P(A.fijo)} % y ${M(A.fijo)} de media`, `${A.fijo.nombre} tiene el puesto ganado: ${P(A.fijo)} %`],
+    fa.join(' '), [`${A.fijo.nombre}, sin discusión: ${P(A.fijo)} %`]), 'fA'));
 
   // el segundo, más corto y con otra forma
   // (el orden de sus frases y la forma de cada una cambian de un partido a otro: que diez previas no se lean igual)
@@ -292,8 +307,8 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
     const mayor = B.dudas[0];
     const soloMayor = n >= 2 && A.dudas.length >= 3 && !zona(A.dudas);
     const cuerpo = soloMayor ? pick([`la mayor duda es ${mayor.nombre}, al ${P(mayor)} %`, `el que menos claro lo tiene es ${mayor.nombre}, con un ${P(mayor)} %`,
-      `${mayor.nombre} es quien más en el aire está, con un ${P(mayor)} %`], 'mayor') : `${rango(B.dudas, true, 'rB')} ${verboDudas(B.dudas, 'vB')}`;
-    if (!conEq) return z && !soloMayor ? `Las dudas están ${z}: ${rango(B.dudas, false, 'rB')}` : cap(cuerpo);
+      `${mayor.nombre} es quien más en el aire está, con un ${P(mayor)} %`], 'mayor') : `${rango(B.dudas, true, 1)} ${verboDudas(B.dudas, 1)}`;
+    if (!conEq) return z && !soloMayor ? `Las dudas están ${z}: ${rango(B.dudas, false, 1)}` : cap(cuerpo);
     if (soloMayor) return pick([`En ${el(B.eq)}, ${cuerpo}`, `${mayus(el(B.eq))} también tiene lo suyo: ${cuerpo}`, `Al otro lado, en ${el(B.eq)}, ${cuerpo}`], 'bD1s');
     return pick([
       ...(hayA ? [`En ${el(B.eq)} hay ${n > 1 ? 'más incógnitas' : 'otra duda'}${z ? ` ${z}` : ''}: ${cuerpo}`, `Más dudas en ${el(B.eq)}${z ? `, ${z}` : ''}: ${cuerpo}`] : []),
@@ -306,8 +321,9 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
     : pick([`${pl(B.bajas.length, 'Le falta', 'Le faltan')} ${bajasDe(B.bajas, 'y')}`, `No ${pl(B.bajas.length, 'estará', 'estarán')} ${bajasDe(B.bajas)}`,
       `Se ${pl(B.bajas.length, 'pierde', 'pierden')} el partido ${bajasDe(B.bajas, 'y')}`], 'bB'));
   // (ya: lo que lleva dicho el párrafo, para no repetir «seguro» ni «fijo»; las dudas siempre van antes)
-  const bF = (ya = '') => (B.fijo ? pick(sinRepetir([`${B.fijo.nombre}, al ${P(B.fijo)} %, es lo más seguro`, `Lo fijo es ${B.fijo.nombre}: ${P(B.fijo)} % y ${M(B.fijo)} de media`,
-    `Donde no hay duda es con ${B.fijo.nombre}, al ${P(B.fijo)} %`, `${B.fijo.nombre} sale seguro: ${P(B.fijo)} % y ${M(B.fijo)} puntos de media`], ya), 'bF') : '');
+  const bF = (ya = '') => (B.fijo ? pick(cambia([`${B.fijo.nombre}, al ${P(B.fijo)} %, es lo más seguro`, `Lo fijo es ${B.fijo.nombre}: ${P(B.fijo)} % y ${M(B.fijo)} de media`,
+    `Donde no hay duda es con ${B.fijo.nombre}, al ${P(B.fijo)} %`, `${B.fijo.nombre} sale seguro: ${P(B.fijo)} % y ${M(B.fijo)} puntos de media`, `${B.fijo.nombre} tiene el puesto ganado: ${P(B.fijo)} %`],
+    ya, [`Con ${B.fijo.nombre} no hay discusión: ${P(B.fijo)} %`, `${B.fijo.nombre} es de los que no faltan: ${P(B.fijo)} % y ${M(B.fijo)} de media`]), 'bF') : '');
   // el orden de sus frases y la forma de cada una cambian de un partido a otro (que diez previas no se lean igual)
   const ordenB = B.bajas.length ? pick([['d', 'b', 'f'], ['d', 'f', 'b'], ['b', 'd', 'f']], 'ordenB') : ['d', 'f'];
   const fb = [];

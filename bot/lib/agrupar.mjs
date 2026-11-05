@@ -3,7 +3,7 @@
 //   «❌ Se caen por lesión Lemar en el Elche y M. Román en el Celta»
 //   «✅ Vuelven Valverde al Real Madrid, Sadiq al Valencia y Gueye al Villarreal»
 // La media, solo la del que más pesa, en su propia línea. Lo usan caidas.mjs y novedades.mjs.
-import { el, al, fmt, partes, hash } from './texto.mjs';
+import { el, al, fmt, partes, hash, turno } from './texto.mjs';
 
 const NUM = ['ningún', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
 /** 3 → «tres» (para las cabeceras: «Tres titulares habituales se caen…») */
@@ -142,7 +142,7 @@ export function detalles(xs, max = 5, semilla = '') {
 }
 /** con tweets largos: la media de todos, del que más pesa al que menos: «‼️ El que más pesa es Vini Jr., con 6,3 puntos de media;
     detrás, Rodri con 5,8 y Cuti Romero con 4,1» (sin paréntesis: Carlos, 3 nov). Solo los de 3 o más de media, hasta 4. */
-export function pesos(xs, semilla = '', { bajas = true } = {}) {
+export function pesos(xs, semilla = '', { bajas = true, k = null } = {}) {
   const ys = [...xs].filter((x) => x.media >= 3).sort((a, b) => b.media - a.media).slice(0, 4);
   if (xs.length < 2 || !ys.length) return null;
   // empatados con el primero: «Y. Zabiri y Yoel Lago, con 6 cada uno, son los que más pesan»
@@ -160,7 +160,8 @@ export function pesos(xs, semilla = '', { bajas = true } = {}) {
   // con un grupo de empatados en medio, «, y» antes del último («B y C, con 5,8 cada uno, y D con 4,1»)
   const det = trozos.length > 1 && grupos.some((g) => g.length > 1) ? `${trozos.slice(0, -1).join(', ')}, y ${trozos[trozos.length - 1]}` : lista(trozos);
   // (tres formas: con dos, «Por puntos, la que más duele…» salía en 2 de cada 3 caídas; auditoría del 5 nov)
-  const v = hash(semilla) % 3;
+  // (con k, la forma rota por el orden de los tweets: `turno`)
+  const v = k == null ? hash(semilla) % 3 : turno(3, semilla, k);
   // «la baja que más duele» solo si todos son bajas (en novedades van mezclados con los que vuelven)
   const t = !resto.length ? [`‼️ El que más pesa es ${a.nombre}: ${fmt(a.media)} puntos de media`, bajas ? `‼️ La baja que más se nota es la de ${a.nombre}, que promedia ${fmt(a.media)} puntos` : `‼️ ${a.nombre} es el que más puntos da: ${fmt(a.media)} de media`,
     `‼️ ${a.nombre} va a ${fmt(a.media)} puntos por partido`][v]

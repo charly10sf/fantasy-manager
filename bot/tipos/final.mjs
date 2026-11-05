@@ -7,6 +7,7 @@ import { tweet, cap, segunda, proximoPartido, cuando } from '../lib/redactar.mjs
 import { rachaDe } from '../lib/laliga.mjs';
 import { partidoEspn, reconstruir, minutoDe } from '../lib/relato.mjs';
 import { casarJugador } from './directo.mjs';
+import { lista, mayus, enLetra } from '../lib/agrupar.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
 
@@ -140,7 +141,7 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     // «el propio» («Bil Nsongo marca el bueno… el propio Bil Nsongo y Adama Traoré…»)
     const detras = (det) => {
       const [a, b] = det, nom = (x) => (r.nombra && String(x.id) === r.nombra ? `el propio ${x.nombre}` : x.nombre), A = nom(a), B = nom(b);
-      if (!LG) return `🥈 Detrás, ${A} con ${a.pts} y ${B} con ${b.pts}`;
+      if (!LG) return a.pts === b.pts ? `🥈 Detrás, ${A} y ${B}, con ${a.pts} cada uno` : `🥈 Detrás, ${A} con ${a.pts} y ${B} con ${b.pts}`;
       const podio = !empate && String(ord[1].id) === String(a.id) && String(ord[2].id) === String(b.id);
       const tras = empate ? 'Tras ellos' : 'Tras él';
       const fs = a.pts === b.pts
@@ -162,7 +163,8 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
       // si el relato ya lo nombra («Satriano marca el bueno en el 73'»), aquí sin nombre: «Se va a 14 puntos fantasy». La forma es la
       // misma que mira tipos/mvp.mjs (`formaMejor`) para no repetirla en el tweet del MVP, que sale justo después
       const n = top.nombre;
-      ideas.push({ t: (nombrado ? [`⭐ Es el mejor fantasy: ${top.pts} puntos`, `⭐ Se va a ${top.pts} puntos fantasy`, `⭐ ${top.pts} puntos fantasy para él`]
+      // («el goleador», no sin sujeto: «Remontada del Getafe con gol de Satriano. Se va a 14…» parecía que hablaba del Getafe)
+      ideas.push({ t: (nombrado ? [`⭐ El goleador es el mejor fantasy: ${top.pts} puntos`, `⭐ El goleador se va a ${top.pts} puntos fantasy`, `⭐ ${top.pts} puntos fantasy para el goleador`]
         : [`⭐ ${n}, el mejor fantasy: ${top.pts} puntos`, `⭐ ${n} se va a ${top.pts} puntos fantasy`, `⭐ ${top.pts} puntos fantasy para ${n}`])[formaMejor(jornada, k)], prio: 9 });
     }
     num.push(top.pts);
@@ -177,7 +179,8 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
       const veces = top.pts > 3 * mediaR ? 'triple' : 'doble';
       const migas = [`📈 ${cap(segunda(top.pos, top.nombre))} suele sacar ${fmt(top.media)} de media: hoy, más del ${veces}`, `📈 Más del ${veces} de lo que suele: ${fmt(top.media)} de media`,
         `📈 Su media es de ${fmt(top.media)}, así que hoy ha sacado más del ${veces}`, `📈 Va a ${fmt(top.media)} por partido y hoy ha hecho más del ${veces}`];
-      ideas.push({ t: LG ? R(migas, 'miga') : migas[0], prio: 5, fija: true });
+      // (también con 280: las cuatro miden parecido y con una sola salía igual en todos los finales)
+      ideas.push({ t: R(migas, 'miga'), prio: 5, fija: true });
       num.push(...partes(top.media));
     }
     // la racha, si no ha salido el doble de su media (con tweets largos, las dos)
@@ -207,14 +210,21 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
       // («suma», no «se va a»: el mejor ya puede llevar «se va a» en el mismo tweet)
       ideas.push({ t: LG ? R([`‼️ ${pierde.nombre}${marco ? ' marcó y' : ''} suma ${pierde.pts} aunque ${el(eqP)} pierde`, `‼️ En ${el(eqP)} se salva ${pierde.nombre}${marco ? ', que marcó' : ''}: ${pierde.pts} puntos`,
         `‼️ ${pierde.nombre} saca ${pierde.pts} puntos${marco ? ', con gol incluido,' : ''} pese a la derrota ${del(eqP)}`], 'pierde')
-        : `‼️ ${pierde.nombre}${marco ? ' marcó y' : ''} suma ${pierde.pts} aunque ${el(eqP)} pierde`, prio: 7, rota: true });
+        : R([`‼️ ${pierde.nombre}${marco ? ' marcó y' : ''} suma ${pierde.pts} aunque ${el(eqP)} pierde`, `‼️ En ${el(eqP)} se salva ${pierde.nombre}${marco ? ', que marcó' : ''}: ${pierde.pts} puntos`], 'pierde'), prio: 7, rota: true });
       num.push(pierde.pts);
     } else {
       const det = ord.filter((f) => !ya.has(String(f.id))).slice(0, 2);
       if (det.length === 2 && det[1].pts > 0) { ideas.push({ t: detras(det), prio: 4 }); num.push(det[0].pts, det[1].pts); }
     }
     // 5) quien lo ha pasado peor
-    if (peor && !ya.has(String(peor.id))) {
+    // (con varios empatados abajo, «Lo peor se lo lleva Koski: -4» era falso: con dos o tres, todos; con más, cuántos)
+    const peores = peor ? ord.filter((f) => f.pts === peor.pts && !ya.has(String(f.id))) : [];
+    if (peores.length > 1) {
+      const mismoEq = peores.every((f) => f.equipo === peores[0].equipo);
+      const quienes = peores.length <= 3 ? lista(peores.map((f) => f.nombre)) : `${mayus(enLetra(peores.length))} jugadores${mismoEq ? ` ${del(peores[0].equipo)}` : ''}`;
+      ideas.push({ t: `❌ ${quienes} se quedan en ${peor.pts} ${Math.abs(peor.pts) === 1 ? 'punto' : 'puntos'}`, prio: 3, rota: true });
+      num.push(peor.pts);
+    } else if (peor && !ya.has(String(peor.id))) {
       const encajo = peor.equipo === L ? gv : gl;
       const ptsP = `${peor.pts} ${Math.abs(peor.pts) === 1 ? 'punto' : 'puntos'}`;
       const enc = encajo < 3 ? '' : LG ? R([` y ${encajo} goles encajados por su equipo`, `, con ${encajo} goles en contra`, ` en un partido en el que su equipo encajó ${encajo}`], 'enc') : ` y ${encajo} goles encajados por su equipo`;

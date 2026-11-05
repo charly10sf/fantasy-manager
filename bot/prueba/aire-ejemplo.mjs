@@ -1,5 +1,5 @@
 // La previa espera si la jornada o el partido están en el aire (lib/aire.mjs), sin red.  node bot/prueba/aire-ejemplo.mjs
-import { enElAire, apuntarDecision } from '../lib/aire.mjs';
+import { enElAire, apuntarDecision, tocaPendiente } from '../lib/aire.mjs';
 let fallos = 0;
 const ok = (c, m) => { if (!c) { fallos++; console.log(`FALLA: ${m}`); } else console.log(`ok: ${m}`); };
 const ahora = Date.parse('2026-11-05T08:00:00Z');
@@ -40,6 +40,14 @@ ok(!enElAire(r3, { jornada: 13, m: { id: 130, local: { id: 15 }, visitor: { id: 
 // apuntarDecision solo con lo confirmado y solo los partidos a los que toca
 const r4 = reg(); ok(apuntarDecision(r4, 'liga|aplazamiento|p15-9|confirmado|J12', [m, { id: 1, local: { id: 1 }, visitor: { id: 2 } }]) === 1, 'apunta solo el partido aplazado');
 ok(apuntarDecision(reg(), 'liga|suspension|j|se_estudia|J12', [m]) === 0 && apuntarDecision(reg(), 'liga|horario|j|confirmado|J12', [m]) === 0, 'ni «se estudia» ni horarios');
+// «suspendida la J13» publicado el domingo de la J12 (clave J12): ejecutar.mjs apunta los partidos de la J13 con su jornada
+const m12 = { id: 120, local: { id: 1 }, visitor: { id: 2 }, date: '2026-11-08T20:00:00Z', matchState: 1 };
+const m13 = { id: 131, local: { id: 15 }, visitor: { id: 9 }, date: '2026-11-11T19:00:00Z', matchState: 1 };
+const r6 = reg(['liga|suspension|j|confirmado|J12', '2026-11-08T10:00:00Z']);
+apuntarDecision(r6, 'liga|suspension|j|confirmado|J12', [m13], 13);
+ok(!enElAire(r6, { jornada: 12, m: m12, ahora: Date.parse('2026-11-08T12:00:00Z') }).espera, 'J13 suspendida: lo que queda de la J12 sale');
+ok(enElAire(r6, { jornada: 13, m: m13, ahora: Date.parse('2026-11-09T12:00:00Z') }).espera, 'J13 suspendida: la J13 espera');
+ok(tocaPendiente('liga|aplazamiento|p15-9|confirmado|J12', [m13]) && !tocaPendiente('liga|aplazamiento|p15-9|confirmado|J12', [{ ...m13, matchState: 7 }]) && !tocaPendiente('liga|aplazamiento|p15-9|confirmado|J12', [m12]), 'tocaPendiente');
 // registros raros
 ok(!enElAire({ datos: { enviados: [null, { clave: 5 }, { clave: 'liga' }, { clave: 'liga|suspension' }] } }, { jornada: 12, m, ahora }).espera, 'entradas raras en el registro: sin excepción');
 ok(!enElAire({ datos: { enviados: 'x' } }, { jornada: 12, m, ahora }).espera, 'enviados que no es una lista: sin excepción');

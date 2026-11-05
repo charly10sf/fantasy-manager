@@ -6,7 +6,8 @@
 //   - se estudia y aún no hay decisión: espera, como mucho 36 h desde ese tweet (si la decisión no llega al bot, la previa no se
 //     pierde la jornada entera). Vale el de la jornada y el de la anterior: la jornada de la clave es la del bot cuando salió el
 //     tweet, no siempre la de la noticia («la próxima jornada», publicada la semana de antes);
-//   - confirmado (solo el de la misma jornada: con la J12 suspendida, la J13 no espera): espera mientras el partido siga con la
+//   - confirmado (solo para la jornada de la decisión, apuntada al publicarla: con la J12 suspendida, la J13 no espera; «suspendida
+//     la J13» publicado el domingo de la J12 no para lo que queda de la J12): espera mientras el partido siga con la
 //     fecha que tenía cuando se publicó la decisión (`apuntarDecision`, desde ejecutar.mjs, con los partidos de la jornada) y esa
 //     fecha esté a menos de 6 días de la decisión; con la fecha nueva, sigue, aunque sea dentro de dos días. Sin fecha apuntada
 //     (otro partido o un registro de antes), no espera;
@@ -30,14 +31,20 @@ const caja = (datos) => {
   return datos.aire;
 };
 
-/** al publicar una decisión confirmada: la fecha que tenía cada partido de la jornada al que toca (stats/week de esa jornada) */
-export function apuntarDecision(registro, clave, stats = []) {
+/** ¿hay un partido por jugar (matchState 1) al que toca la clave? (para saber si una decisión es de esta jornada o de la siguiente) */
+export function tocaPendiente(clave, stats = []) {
+  const x = leer(clave);
+  return !!x && (Array.isArray(stats) ? stats : []).some((m) => m && Number(m.matchState) === 1 && tocaA(x.obj, m));
+}
+/** al publicar una decisión confirmada: la fecha que tenía cada partido al que toca. `jornada`: la de la decisión, que puede ser la
+ *  siguiente a la de la clave («suspendida la J13», publicado el domingo de la J12); `stats`, los partidos de esa jornada */
+export function apuntarDecision(registro, clave, stats = [], jornada = null) {
   const x = leer(clave);
   if (!x || x.estado !== 'confirmado' || !registro || !registro.datos) return 0;
   const aire = caja(registro.datos);
   const fechas = {};
   for (const m of Array.isArray(stats) ? stats : []) if (m && m.id != null && tocaA(x.obj, m)) fechas[String(m.id)] = m.date || null;
-  aire[`${x.tipo}|${x.obj}|J${x.j}`] = { fechas };
+  aire[`${x.tipo}|${x.obj}|J${x.j}`] = { fechas, jornada: Number(jornada) || x.j };
   return Object.keys(fechas).length;
 }
 
@@ -57,8 +64,12 @@ export function enElAire(registro, { jornada, m = null, ahora = Date.now() } = {
   for (const x of temas.values()) {
     const que = `${x.tipo === 'aplazamiento' ? 'aplazar' : 'suspender'} ${x.obj === 'j' ? 'la jornada' : 'el partido'}`;
     if (x.estado === 'se_estudia' && ahora - x.t <= 36 * H) return { espera: true, motivo: `se estudia ${que} (desde hace ${Math.round((ahora - x.t) / H)} h): espero a la decisión` };
-    if (x.estado === 'confirmado' && x.j === J && m) {
+    if (x.estado === 'confirmado' && m) {
+      // la jornada de la decisión (la apuntada al publicarla; si no, la de la clave): la J12 suspendida no para la J13, y «suspendida
+      // la J13» publicado durante la J12 no para lo que queda de la J12
       const ap = datos && datos.aire && typeof datos.aire === 'object' ? datos.aire[`${x.tipo}|${x.obj}|J${x.j}`] : null;
+      const jDec = ap && Number(ap.jornada) ? Number(ap.jornada) : x.j;
+      if (jDec !== J) continue;
       const fechas = ap && ap.fechas && typeof ap.fechas === 'object' ? ap.fechas : null;
       if (!fechas || !(String(m.id) in fechas)) continue;
       const f = Date.parse(m.date);
