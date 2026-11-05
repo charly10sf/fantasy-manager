@@ -1271,7 +1271,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/mijatovic-senala-el-motivo-detras-del-renacer-de-valverde-si-sienten-que-el-entrenador-tiene-respaldo-del-club-aceptan-todo-cadena-ser/": 1793834838000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-lesiones-perfilan-vuelta_0_2008425309.html": 1793854861000,
    "SPORT|136100198": 1793856626000,
-   "SPORT|136102945": 1793858165000
+   "SPORT|136102945": 1793858165000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247419/vinicius.html": 1793862427000
   },
   "hechos": [
    {
@@ -1831,7 +1832,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -2709,7 +2710,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247401/juegan-tres-encuentros-aplazados-primera-catalana.html": 1793833498000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261104/1004247277/cuti-romero-barca-mejor-ataque-laliga.html": 1793816802000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/ferrol/2026/11/04/objetivo-5000-personas-carrera-contra-cancer/00031793813128758851822.htm": 1793813941000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/el-villena-cf-pierde-4-2-en-novelda-radio-villena/": 1793862273000
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/el-villena-cf-pierde-4-2-en-novelda-radio-villena/": 1793862273000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247424/apunta-habra-jornada-primera-segunda.html": 1793863093000,
+   "Europa Press|https://www.europapress.es/catalunya/noticia-suspenden-24-dias-empleo-sueldo-urbano-barcelona-negarse-hablar-catalan-20261105081514.html": 1793862914000
   },
   "hechos": [
    {
@@ -2922,11 +2925,27 @@
     "contexto": "Petición de la AFE tras el fallecimiento de un futbolista",
     "detalle": "La Liga y la RFEF deciden que se dispute la jornada",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247424/apunta-habra-jornada-primera-segunda.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793863093000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Tras el fallecimiento de Jesús de Miguel",
+    "detalle": "LaLiga comunicará su postura este jueves",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 3
+   "n": 4
   }
  }
 }
