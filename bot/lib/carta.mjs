@@ -7,7 +7,7 @@
 // Las piezas comunes (letra, fondo, degradados, marca, etiquetas de estado) están en estilo.mjs, compartidas con tarjetas.mjs.
 import { coloresClub } from './colores.mjs';
 import { ANCHO, ROJO, VERDE, MALO, TINTA, TENUE, FONDO, PANEL, LINEA, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
-  escudo, caraFundida, fondo, dorado, marca, ESTADO_TARJETA, pildora } from './estilo.mjs';
+  escudo, caraFundida, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit } from './estilo.mjs';
 
 const ABREV = { Portero: 'POR', Defensa: 'DEF', Centrocampista: 'MED', Delantero: 'DEL', Entrenador: 'ENT' };
 
@@ -155,7 +155,10 @@ export function svgBajaSola(d) {
     + fondo([[300, 330, 560, club.vivo, 0.75], [1050, 80, 500, e.color, 0.16]]);
   const x = 96, y = 36, w = 404, h = 600, x0 = 566, wd = ANCHO - x0 - 56;
   const media = f.ultimas ? num1(f.media) : f.media;
-  const grande = f.estado === 'duda' && f.leve ? 'DUDA LEVE' : f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : e.txt;
+  // (Carlos, 5 nov 16:39 y 17:08) el estado, arriba y en grande, y una sola vez; abajo, en la carta, el % de titularidad de la app
+  // (de uno que vuelve o de una duda), en el color del %. Sin %, abajo no va nada
+  const grande = f.estado === 'duda' && f.leve ? 'DUDA LEVE' : e.txt;
+  const abajo = (cy, px, wMax) => (f.pct != null ? pildoraTit(f.pct, x + w / 2, cy, px, wMax) : '');
   s += texto(x0 - 4, 158, grande, { px: 140, peso: 800, italica: true, color: `url(#${g})`, max: wd })
     + texto(x0, 206, `${(f.equipo || '').toUpperCase()} · JORNADA ${d.jornada}`, { px: 34, peso: 700, espacio: 1.5, max: wd });
   if (f.ultimas) {
@@ -166,7 +169,7 @@ export function svgBajaSola(d) {
       + cifra(xs[0], yc, String(f.total), 'PUNTOS TOTALES', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
       + cifra(xs[1], yc, millones(f.valorHoy), 'VALOR', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
       + `<rect x="${x + w / 2 - 0.75}" y="${yc - 34}" width="1.5" height="56" fill="${metal.linea}"/>`
-      + pildora(f, x + w / 2, yc + 70, 26, w - 80);
+      + abajo(yc + 70, 26, w - 80);
     // el próximo rival, en una línea
     if (d.rival) {
       const wr = medir('PRÓXIMO RIVAL', 20, B, 3);
@@ -179,7 +182,7 @@ export function svgBajaSola(d) {
   }
   const C = carta(x, y, w, h, { metal, club, cara: f.cara, escudo: f.escudo || (d.equipo && d.equipo.escudo),
     grande: media || null, bajoGrande: media ? 'MEDIA' : (ABREV[f.posicion] || null), nombre: f.nombre, lineas: [f.posicion].filter(Boolean), yNombre: 0.7 });
-  s += C.s + pildora(f, x + w / 2, C.yNombre + 112, 30, w - 60)
+  s += C.s + abajo(C.yNombre + 112, 30, w - 60)
     + texto(x0, 238, 'LALIGA FANTASY', { px: 20, peso: 600, color: TENUE, espacio: 3 });
   if (d.rival) {
     const cR = coloresClub(d.rival.nombre || d.rival.corto);

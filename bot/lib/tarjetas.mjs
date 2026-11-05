@@ -9,7 +9,7 @@
 import { coloresClub, luz } from './colores.mjs';
 import { svgJugadorCarta, svgBajaSola } from './carta.mjs';
 import { ANCHO, ALTO, VERDE, MALO, AMBAR, TENUE, PANEL, LINEA, num1, millones, medir, B, texto, id, lineal, marco,
-  escudo, caraCirculo, fondo, dorado, rojizo, aColor, caja, marca, pildora, anchoPildora, ESTADO_TARJETA } from './estilo.mjs';
+  escudo, caraCirculo, fondo, dorado, rojizo, aColor, caja, marca, pildora, anchoPildora, pildoraTit, anchoPildoraTit, colPct, ESTADO_TARJETA } from './estilo.mjs';
 
 export { ANCHO, ALTO, num1, millones };
 const FUENTES = ['Inter-Regular.otf', 'Inter-SemiBold.otf', 'Inter-Bold.otf', 'InterDisplay-Black.otf',
@@ -135,7 +135,6 @@ function lineasDe(lado) {
   }
   return ['POR', 'DEF', 'MED', 'DEL'].map((p) => once.filter((j) => j.pos === p)).filter((l) => l.length);   // sin formación que cuadre, por puestos
 }
-const colPct = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? AMBAR : MALO);
 function campo(x, y, w, h, lado, club, confirmados) {
   const g = id('cp');
   const lc = 'stroke="#ffffff" stroke-opacity="0.13" stroke-width="2" fill="none"';
@@ -245,6 +244,13 @@ export function svgBajas(d) {
   const filas = d.filas.slice(0, d.equipo ? 4 : 6);
   const tono = d.titulo === 'NOVEDADES' ? VERDE : d.titulo === 'DUDAS' ? AMBAR : MALO;
   const tit = aColor(tono);
+  // (Carlos, 5 nov 17:08) lo que va a la derecha de cada fila: si el título ya dice el estado de todos (DUDAS, SANCIONADOS), no se
+  // repite: el % de titularidad si lo hay (y si no, nada); en NOVEDADES, el % si lo hay; si no (BAJAS, BAJAS Y DUDAS), el estado, que
+  // es lo que distingue a unos de otros
+  const dicho = d.titulo === 'DUDAS' || d.titulo === 'SANCIONADOS';
+  const derecha = (f, cx, cy, px, wMax) => (f.pct != null && (dicho || d.titulo === 'NOVEDADES') ? { s: pildoraTit(f.pct, cx, cy, px, wMax), w: anchoPildoraTit(f.pct, px) }
+    : dicho ? { s: '', w: 0 } : { s: pildora(f, cx, cy, px, wMax), w: anchoPildora(f, px) });
+  const anchoDer = (f, px) => (f.pct != null && (dicho || d.titulo === 'NOVEDADES') ? anchoPildoraTit(f.pct, px) : dicho ? 0 : anchoPildora(f, px));
   let s = tit.defs;
   if (d.equipo) {
     const club = coloresClub(d.equipo.nombre || d.equipo.corto);
@@ -269,13 +275,13 @@ export function svgBajas(d) {
       const r = Math.round(h * 0.4), cx = x + k + 18 + r;
       const pxN = Math.round(Math.min(50, h * 0.38)), pxS = Math.round(Math.min(25, h * 0.2)), pxP = Math.round(Math.min(26, h * 0.21));
       const sub = [f.posicion, f.media ? `${f.media} pts de media` : null].filter(Boolean).join(' · ');
-      const wp = anchoPildora(f, pxP);
+      const wp = anchoDer(f, pxP);
       s += caja(x, y, w, h, { k })
         + `<path d="M${x + k},${y} L${x + k + 7},${y} L${x + 7},${y + h} L${x},${y + h} Z" fill="${ESTADO_TARJETA[f.estado].color}"/>`
         + caraCirculo(f.cara, cx, cy, r, { aro: club.vivo, grosor: 3 })
         + texto(cx + r + 24, sub ? cy - pxS * 0.15 : cy + pxN * 0.35, mayus(f.nombre), { px: pxN, peso: 800, max: 620 })
         + (sub ? texto(cx + r + 24, cy + pxS * 1.5, mayus(sub), { px: pxS, peso: 700, color: TENUE, espacio: 1, max: 620 }) : '')
-        + pildora(f, x + w - k - 24 - wp / 2, cy, pxP, 420);
+        + derecha(f, x + w - k - 24 - wp / 2, cy, pxP, 420).s;
     });
   } else {
     s += fondo([[300, 40, 660, tono, 0.22], [1050, 60, 520, tono, 0.1]])
@@ -287,9 +293,72 @@ export function svgBajas(d) {
     filas.forEach((f, i) => {
       const x = enUna ? 44 : x0[Math.floor(i / porCol)], ww = enUna ? 1112 : 544;
       const y = y0 + (3 - porCol) * (h + gap) / 2 + (enUna ? i : i % porCol) * (h + gap);
-      const k = Math.round(h * 0.12), wp = anchoPildora(f, pxP);
-      const pil = pildora(f, x + ww - k - 20 - wp / 2, y + h / 2, pxP, 400);
+      const k = Math.round(h * 0.12), wp = anchoDer(f, pxP);
+      const pil = derecha(f, x + ww - k - 20 - wp / 2, y + h / 2, pxP, 400).s;
       s += filaJugador(x, y, ww, h, f, { derecha: pil, wDer: wp, sub: f.media && enUna ? `${f.equipo} · ${f.media} pts de media` : f.equipo });
+    });
+  }
+  return marco(s + marca(600, 650, { ancla: 'middle' }));
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta de apercibidos: los jugadores separados por equipo (Carlos, 5 nov 08:14). Un bloque por equipo (escudo, nombre y sus
+// jugadores con cara, puesto y media) en dos columnas, en el orden en que llegan (de arriba abajo y de izquierda a derecha).
+// d = { jornada, equipos: [{ nombre, corto, escudo, jugadores: [{ nombre, posicion, media, cara }] }] }
+const AP = { y0: 172, alto: 446, x: [44, 612], w: 544, gap: 12, pad: 10 };
+const altoBloque = (e, R) => Math.round(R * 0.7) + e.jugadores.length * R + AP.pad;
+/** cómo se reparten los bloques: la fila más alta con la que caben las dos columnas, o null si no caben ni con la más baja */
+export function planApercibidos(equipos) {
+  if (!equipos || !equipos.length) return null;
+  for (const R of [66, 60, 54, 48]) {
+    const alto = (xs) => xs.reduce((s, e) => s + altoBloque(e, R), 0) + AP.gap * Math.max(0, xs.length - 1);
+    if (equipos.length === 1) { if (alto(equipos) <= AP.alto) return { R, cols: [equipos], max: alto(equipos) }; continue; }
+    // el corte que deja las dos columnas más parejas, sin cambiar el orden
+    let mejor = null;
+    for (let k = 1; k < equipos.length; k++) {
+      const cols = [equipos.slice(0, k), equipos.slice(k)], max = Math.max(...cols.map(alto));
+      if (!mejor || max < mejor.max) mejor = { R, cols, max };
+    }
+    if (mejor.max <= AP.alto) return mejor;
+  }
+  return null;
+}
+
+function bloqueEquipo(x, y, w, e, R, oro) {
+  const club = coloresClub(e.nombre || e.corto), H = Math.round(R * 0.7), h = altoBloque(e, R), k = 10;
+  let s = caja(x, y, w, h, { k })
+    + `<path d="M${x + k},${y} L${x + k + 7},${y} L${x + 7},${y + h} L${x},${y + h} Z" fill="${club.vivo}"/>`;
+  // cabecera del bloque: escudo y nombre del club
+  const eh = H - 8, xe = x + 26 + Math.round(eh * 78 / 105) / 2;
+  s += escudo(e.escudo, xe, y + 6 + eh / 2, eh)
+    + texto(e.escudo ? xe + eh * 0.5 + 10 : x + 26, y + 6 + eh / 2 + H * 0.2, mayus(e.corto), { px: Math.round(H * 0.56), peso: 800, espacio: 1.5, max: w - 80 });
+  e.jugadores.forEach((j, i) => {
+    const yy = y + H + i * R, cy = yy + R / 2, r = Math.round(R * 0.38), cx = x + 30 + r, tx = cx + r + 16;
+    const pxN = Math.round(R * 0.44), pxS = Math.round(R * 0.25), pxM = Math.round(R * 0.48);
+    s += `<rect x="${x + 22}" y="${yy}" width="${w - 44}" height="1.5" fill="${LINEA}"/>`
+      + caraCirculo(j.cara, cx, cy, r, { aro: club.vivo, grosor: 2.5 })
+      + texto(tx, j.posicion ? cy - 1 : cy + pxN * 0.35, mayus(j.nombre), { px: pxN, peso: 800, max: x + w - 92 - tx })
+      + (j.posicion ? texto(tx, cy + pxS * 1.15, mayus(j.posicion), { px: pxS, peso: 700, color: TENUE, espacio: 1, max: x + w - 92 - tx }) : '');
+    if (j.media) {
+      s += texto(x + w - 26, cy + pxM * 0.2, j.media, { px: pxM, peso: 900, color: `url(#${oro})`, ancla: 'end' })
+        + texto(x + w - 26, cy + pxM * 0.2 + 15, 'MEDIA', { px: 13, peso: 700, color: TENUE, ancla: 'end', espacio: 1 });
+    }
+  });
+  return s;
+}
+
+export function svgApercibidos(d) {
+  const plan = planApercibidos(d.equipos);
+  const tit = aColor(AMBAR), oro = dorado();
+  let s = tit.defs + oro.defs + fondo([[300, 40, 660, AMBAR, 0.2], [1050, 60, 520, AMBAR, 0.08]])
+    + cabecera('APERCIBIDOS', tit.g, `JORNADA ${d.jornada}`, 'A UNA AMARILLA DE LA SANCIÓN');
+  if (plan) {
+    const y0 = AP.y0 + (AP.alto - plan.max) / 2;
+    const una = plan.cols.length === 1;
+    plan.cols.forEach((col, c) => {
+      const x = una ? (ANCHO - AP.w) / 2 : AP.x[c];
+      let y = y0;
+      for (const e of col) { s += bloqueEquipo(x, y, AP.w, e, plan.R, oro.g); y += altoBloque(e, plan.R) + AP.gap; }
     });
   }
   return marco(s + marca(600, 650, { ancla: 'middle' }));

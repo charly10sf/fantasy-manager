@@ -15,6 +15,7 @@ import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs'
 import { fijarLimite, limite, largo } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
+import { crearInfo } from './lib/info-jugador.mjs';
 
 /** AAAAMMDD de hoy en Madrid (y de ayer, entre las 0 y las 3) */
 function diasEspn() {
@@ -80,6 +81,8 @@ const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn, ve
   fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
 const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
 ctx.registro = registro;
+// el % de titularidad y el rival para los tweets de un jugador (noticias y novedades; lib/info-jugador.mjs): se pide solo si hace falta
+ctx.info = config.infoJugador === false ? null : crearInfo({ jugadores, equipos, semana: sem, log: (s) => console.log(s) });
 // tweets largos con X Premium (lib/largo.mjs): el límite se fija antes de escribir nada
 const dl = decidirLargo({ config, registro });
 fijarLimite(dl.largo ? dl.max : config.tweetMax);
@@ -121,7 +124,7 @@ for (const q of quienes) {
   for (const t of tweets) {
     if (abortar) break;
     generados++;
-    const v = validar(t.texto, { numeros: t.numeros, max: limite() });
+    let v = validar(t.texto, { numeros: t.numeros, max: limite() });
     let d = v.ok ? registro.decidir(t) : 'no pasa el validador';
     if (!v.ok) fallos++;
     // tarjetas con imagen (solo si están encendidas): se dibujan y validan; las que no pasan no salen
@@ -151,6 +154,14 @@ for (const q of quienes) {
       }
     }
     if (d === 'ok' && publica && pngs.length && !mediaIds.length && t.soloConImagen) { d = 'no se pudo subir la imagen'; estado = `omitido: ${d}`; }
+    // sin imagen (la tarjeta no pasa el validador, están apagadas o no se ha subido), el tweet que dejaba la lista para la tarjeta sale
+    // con el texto de siempre (`sinTarjeta`: los apercibidos, con todos los nombres en el texto)
+    if (d === 'ok' && t.sinTarjeta && !(publica ? mediaIds.length : pngs.length)) {
+      t.texto = t.sinTarjeta.texto; t.numeros = t.sinTarjeta.numeros; delete t.plantilla; delete t.pulido;
+      v = validar(t.texto, { numeros: t.numeros, max: limite() });
+      if (!v.ok) { d = 'no pasa el validador'; estado = `omitido: ${d}`; fallos++; }
+      else if (!publica) estado += ' (sin tarjeta: con el texto de siempre)';
+    }
     if (d === 'ok' && publica) {
       const r = await publicar(t.texto, claves, { mediaIds });
       // una suspensión o un aplazamiento confirmado: la fecha que tenía cada partido, para que la previa espere a la nueva (lib/aire.mjs)

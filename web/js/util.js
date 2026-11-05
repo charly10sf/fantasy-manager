@@ -278,6 +278,8 @@ const I = {
   lesion: '<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M12 8v8M8 12h8"/>',
   rayo: '<path d="M13 2.8 5 13.2h6l-1 8 8-10.4h-6z"/>',
   directo: '<circle cx="12" cy="12" r="2.3"/><path d="M8 8a5.7 5.7 0 0 0 0 8M16 8a5.7 5.7 0 0 1 0 8M5.2 5.2a9.6 9.6 0 0 0 0 13.6M18.8 5.2a9.6 9.6 0 0 1 0 13.6"/>',
+  casa: '<path d="M3.5 11.2 12 4l8.5 7.2"/><path d="M6 9.4V20h12V9.4"/><path d="M10 20v-5.2h4V20"/>',
+  avion: '<path d="M21 12c0-.9-.8-1.5-1.7-1.5h-4.8L9.8 3.5H7.6l2.4 7H5.6L4 8.3H2.5l.9 3.7-.9 3.7H4l1.6-2.2H10l-2.4 7h2.2l4.7-7h4.8c.9 0 1.7-.6 1.7-1.5z"/>',
   lista: '<path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.8" cy="6.5" r="1"/><circle cx="4.8" cy="12" r="1"/><circle cx="4.8" cy="17.5" r="1"/>',
   campo: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 12h17"/><circle cx="12" cy="12" r="2.8"/><path d="M8.5 3.5v3.2h7V3.5M8.5 20.5v-3.2h7v3.2"/>',
   usuario: '<circle cx="12" cy="8.2" r="3.8"/><path d="M4.5 20.5c.8-3.9 3.8-6.3 7.5-6.3s6.7 2.4 7.5 6.3"/>',

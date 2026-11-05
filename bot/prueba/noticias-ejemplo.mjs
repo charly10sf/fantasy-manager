@@ -92,7 +92,7 @@ ok(!ts.some((t) => t.clave.includes('|14:')), 'Ayoze vuelve con un solo medio y 
 const gm = ts.find((t) => t.clave.includes('|12:'));
 ok(!gm, 'G. Moreno, ya lesionado en LaLiga: unas molestias no son noticia');
 ok(reg.datos.noticias.hechos.some((h) => h.id === '12' && h.hecho === ''), 'la frase que copia el titular se tira');
-ok(ts.some((t) => t.clave.includes('|13:') && /Duda Fantasy/.test(t.texto)), 'Pedri: un medio + LaLiga en duda');
+ok(ts.some((t) => t.clave.includes('|13:') && /⁉️ Duda para/.test(t.texto)), 'Pedri: un medio + LaLiga en duda');
 for (const t of ts) reg.marcar(t, 'x');
 
 // segunda vuelta: lo ya leído no se vuelve a preguntar; MARCA confirma lo de Andrés Martín
@@ -105,8 +105,8 @@ ts = await noticias({ ...base, leer: async () => prensa });
 ver('segunda vuelta', ts);
 ok(preguntas === 1, `solo la nueva va a Gemini (${preguntas})`);
 const am = ts.find((t) => t.clave.includes('|10:'));
-ok(am && /Rotura de fibras en la pierna/.test(am.texto), 'el motivo más completo');
-ok(am && /Lo cuentan AS y MARCA|Lo cuentan MARCA y AS/.test(am.texto) && /Baja Fantasy para la jornada 12 contra el Girona/.test(am.texto), 'Andrés Martín sale con dos medios y como baja');
+ok(am && /\(rotura de fibras en la pierna\)/.test(am.texto), 'el motivo más completo, entre paréntesis');
+ok(am && /(según cuentan|como publican|según) (AS y MARCA|MARCA y AS)/.test(am.texto) && /❌ Baja para la jornada 12 contra el Girona/.test(am.texto), 'Andrés Martín sale con dos medios y como baja');
 ok(!ts.some((t) => /\|1[23]:/.test(t.clave)), 'G. Moreno y Pedri no se repiten');
 ok(!ts.some((t) => t.clave.includes('|15:')), 'Cucho, lesionado en LaLiga desde antes, no sale aunque lo cuenten dos medios');
 ok(!JSON.stringify(reg.datos.noticias).includes('Andrés Martín se ha roto'), 'en el registro no se guardan titulares');

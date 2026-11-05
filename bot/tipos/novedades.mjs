@@ -8,6 +8,7 @@ import { tarjetaBajas, tarjetasNovedades } from '../lib/datos-tarjetas.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
+import { ideasInfo, vecesHoy } from '../lib/info-jugador.mjs';
 
 const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
 import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
@@ -15,7 +16,7 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
 const ESTADO_DE = { lesion: 'injured', sancion: 'suspended', vuelve: 'ok' };
 const HORA = 36e5;
 
-export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido, soloSeguras = false, listaPartes = null, fichaDe = fichaLaLiga }) {
+export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido, soloSeguras = false, listaPartes = null, fichaDe = fichaLaLiga, info = null }) {
   const [hD, hH] = horas(config, 'horasNovedades', [9, 23], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   const actual = {};
@@ -80,8 +81,10 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   // las novedades de uno salen a lo largo del día: cada forma rota por cuántas llevamos hoy (las del registro y las de esta vuelta),
   // para que dos seguidas no se lean calcadas cambiando el nombre (Carlos, 4 nov). Las etiquetas del final no cambian (guía de estilo)
   let vez = registro && registro.todos ? registro.todos().filter((x) => x && x.tipo === 'novedades' && x.t && diaMadrid(Date.parse(x.t)) === dia).length : 0;
-  const solo = (e) => {
-    const k = vez++;
+  // el % de titularidad y el rival (lib/info-jugador.mjs) rotan con los de noticias: por cuántos tweets de un jugador van hoy
+  let vezInfo = vecesHoy(registro, dia);
+  const solo = async (e) => {
+    const k = vez++, kI = vezInfo++;
     const R = (fs, slot) => rotar(fs, `nov${slot}${dia}`, k);
     const quien = `${cap(segunda(e.pos, e.nombre))} ${del(e.equipo)}`;
     const d = diaMadrid(e.desde);
@@ -94,30 +97,41 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       cab = R([`🚨 ${e.nombre} se cae por lesión`, `🚨 Saltan las alarmas con ${e.nombre}`, `🚨 Lesión de ${e.nombre}`], 'cabL');
       ideas = [p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
         p && p.estado === 'baja' && p.hasta ? { t: R([`🗓️ No se le espera hasta ${p.hasta}`, `🗓️ Estará fuera hasta ${p.hasta}`], 'hasta'), prio: venta ? 9 : 7 } : dudaWeb ? { t: R(['⁉️ De momento no está descartado', '⁉️ Aún no está descartado del todo'], 'desc'), prio: 7 } : null,
-        mediaT, { t: venta ? '💸 Venta Fantasy Obligatoria' : `${dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
+        mediaT, { t: venta ? '💸 Venta obligatoria' : `${dudaWeb ? '⁉️ Duda' : '❌ Baja'} ${paraLa(e.pp, null)}`, prio: 9 }];
     } else if (e.que === 'sancion') {
       // (la cabecera y «se pierde» van atadas: «no podrá jugar por sanción. No estará contra…» decía lo mismo dos veces)
       const fS = turno(2, `novcabS${dia}`, k);
       cab = [`🟥 ${e.nombre}, sancionado`, `🟥 ${e.nombre} no podrá jugar por sanción`][fS];
       ideas = [e.motivoSan ? { t: `⚠️ ${e.motivoSan.txt}`, prio: 9 } : null,
         { t: e.pp ? (fS === 1 ? `❌ Se pierde el partido contra ${el(e.pp.rival)}` : `❌ No estará contra ${el(e.pp.rival)}`) : '❌ Se pierde el próximo partido', prio: 8 },
-        mediaT, { t: `❌ Baja Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
+        mediaT, { t: `❌ Baja ${paraLa(e.pp, null)}`, prio: 9 }];
     } else {
       // vuelve: la lesión de la que viene, si está en la lista («Deja atrás la lesión en el sóleo»)
       // solo si es una lesión de verdad («trabajo al margen» o «descanso» no se dejan atrás)
       const les = p && p.lesion && /(lesi[oó]n|rotura|molestia|sobrecarga|contusi[oó]n|esguince|fractura|elongaci[oó]n|tendinitis|luxaci[oó]n|distensi[oó]n|edema|fascitis|pubalgia|golpe|problema|dolencia|tobillo|rodilla|isquio|gemelo|aductor|s[oó]leo|cu[aá]driceps|hombro|espalda)/i.test(p.lesion) ? lesionTxt(p) : '';
       const art = /^(lesi[oó]n|rotura|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n|luxaci[oó]n|pubalgia)/.test(les) ? 'la ' : /^(golpe|esguince|edema|problema)/.test(les) ? 'el ' : '';
       const tras = les ? ` deja atrás ${art}${les}` : e.antes === 'injured' ? ' ya está recuperado' : e.antes === 'suspended' ? ' ya ha cumplido la sanción' : ' deja de estar en duda';
-      cab = R([`✅ ${e.nombre} vuelve a estar disponible`, `✅ ${e.nombre}, de nuevo disponible`, `✅ Buenas noticias: vuelve ${e.nombre}`], 'cabV');
-      ideas = [{ t: `‼️ ${quien}${tras}`, prio: 8 }, e.media >= 3 ? { t: R([`📊 Llega con ${fmt(e.media)} puntos de media`, `📊 Es un jugador de ${fmt(e.media)} puntos de media`, `📊 Su media: ${fmt(e.media)} puntos`], 'mediaV'), prio: 5 } : null,
-        { t: `✅ Disponible Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
+      // (Carlos, 5 nov 17:42: frases más largas) de dónde viene, en la misma frase que la noticia («Buenas noticias: vuelve Natan, que ya
+      // está recuperado»); la media, el % y el partido, en las frases de lib/info-jugador.mjs
+      const fC = turno(3, `novcabV${dia}`, k);
+      cab = fC === 2 ? `✅ Buenas noticias: vuelve ${e.nombre}, que${tras}` : `${[`✅ ${e.nombre} vuelve a estar disponible`, `✅ ${e.nombre}, de nuevo disponible`][fC]}:${tras}`;
+      ideas = [{ t: `✅ Disponible ${paraLa(e.pp, null)}`, prio: 9 }];
     }
+    const clave = `novedades|${e.id}:${e.que}|${d}`;
+    // (Carlos, 5 nov 13:33) el que vuelve: si pinta a titular y lo difícil que es el rival (solo si el tweet puede salir: se piden datos)
+    const conInfo = info && e.que === 'vuelve' && e.pp && (!registro || !registro.decidir || registro.decidir({ tipo: 'novedades', clave, jornada }) === 'ok');
+    let extra = { numeros: [] };
     const hr = hora(e.pp);
-    if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });
+    if (e.que === 'vuelve') {
+      const j = porId.get(String(e.id));
+      const tit = conInfo ? await info.titularidad(j, e.pp).catch(() => null) : null, riv = conInfo ? await info.rival(e.pp).catch(() => null) : null;
+      if (conInfo) e.pct = tit ? tit.pct : null;   // (5 nov 16:39) también en la carta
+      extra = ideasInfo({ posId: e.pos, equipo: e.equipo, pp: e.pp, quien, media: e.media, tit, riv, tipo: 'vuelve', hr: L && e.pp && e.pp.fecha ? cuando(e.pp.fecha, ahora) : null, k: kI, dia, largo: L });
+      ideas.splice(ideas.length - 1, 0, ...extra.ideas);
+    } else if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
-    const clave = `novedades|${e.id}:${e.que}|${d}`;
-    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
+    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(e.que === 'vuelve' ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
   };
 
   // Varios: agrupados por lo que pasa, con una cabecera que ya cuenta la noticia y la media solo del que más pesa (Carlos, 3 nov 12:06)
@@ -148,7 +162,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const pps = xs.map((e) => e.pp).filter(Boolean);
     const J = pps.length ? Math.min(...pps.map((p) => p.jornada)) : jornada;
     const para = mismo && xs[0].pp ? paraLa(xs[0].pp, J) : `para la jornada ${J}`;
-    const etiqueta = !buenos.length ? `❌ Bajas Fantasy ${para}` : !malos.length ? `✅ Disponibles Fantasy ${para}` : `👀 Revisa tu once Fantasy ${para}`;
+    const etiqueta = !buenos.length ? `❌ Bajas ${para}` : !malos.length ? `✅ Disponibles ${para}` : `👀 Revisa tu once Fantasy ${para}`;
     const det = buenos.length && malos.length === 1 && !mismo ? null : L ? detalles(xs, 3, `${dia}${k}`) : detalle(xs);   // en el caso de arriba el motivo ya va en su línea
     const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos
@@ -158,14 +172,14 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       tarjeta: tarjetasNovedades({ jornada, filas: xs, clave, ppDe: (fs) => (fs.every((e) => e.equipo === fs[0].equipo) ? fs[0].pp : null) }) };
   };
 
-  if (eventos.length === 1) { const t = solo(eventos[0]); return t ? [t] : []; }
+  if (eventos.length === 1) { const t = await solo(eventos[0]); return t ? [t] : []; }
   let i = 0, k = 0;
   while (i < eventos.length && out.length < 4) {
     const resto = eventos.slice(i, i + 5);
     let n = resto.length, t = null;
     for (; n >= 2 && !t; n--) { const ys = resto.slice(0, n); t = varios(ys, k) || varios(ys, k, true, false) || varios(ys, k, false); }   // si no cabe: el motivo sin los clubes de los que vuelven y, si aún no, sin motivo, antes que partirlo
     if (t) n++;
-    else { n = 1; t = solo(resto[0]); }
+    else { n = 1; t = await solo(resto[0]); }
     if (t) out.push(t);
     i += n; k++;
   }

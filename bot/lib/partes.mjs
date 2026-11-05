@@ -95,5 +95,5 @@ export function diasHastaVuelta(p, ahora = Date.now()) {
   if (f < ahora - 15 * 864e5) f = Date.UTC(hoy.getUTCFullYear() + 1, mes, dia);
   return Math.round((f - ahora) / 864e5);
 }
-/** «Venta Fantasy Obligatoria»: una baja larga (5 semanas o más según el parte) */
+/** «Venta obligatoria»: una baja larga (5 semanas o más según el parte) */
 export const ventaObligatoria = (p, ahora = Date.now()) => !!(p && p.estado === 'baja' && (diasHastaVuelta(p, ahora) ?? 0) >= 35);

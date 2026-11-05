@@ -34,6 +34,26 @@ const EXCEPCION = /ya (estaba|estaban|fueron|hab[ií]an sido) aplazad|salvo (el|
 // (de EXCEPCION, lo que dice que los partidos son viejos o que cae la jornada entera: ahí los partidos no son la noticia)
 const YA = /ya (estaba|estaban|fueron|hab[ií]an sido) aplazad|salvo (el|los) (ya )?aplazad|(suspend\w*|aplaz\w*) (toda )?la (jornada|competici[oó]n)/i;
 const ESTADOS = ['se_estudia', 'confirmado', 'descartado'];
+// (5 nov 17:46: la decisión de jugar la J12, «se juega la jornada y se parará en el minuto 9», llegó a las 17:28 con el tope de 30
+// preguntas del día ya gastado, casi todo en goteos de una noticia y en fallos de Gemini) una noticia que trae una decisión se
+// pregunta enseguida; el resto espera a juntar 3 o a llevar 20 min vista, y solo cuentan para el tope las preguntas contestadas
+// (5 nov 17:46) «se juega la jornada», «habrá fútbol y la jornada no se suspenderá»: la decisión de no suspender la jornada, tan clara
+// que no hace falta Gemini. El 5 nov a las 17:31 el modelo lite que quedaba con cupo leyó la de MARCA y la de COMUNICADO de LaLiga
+// como «nada» y el bot se quedó sin el «se jugará». Si Gemini no saca nada de una noticia así, cuenta igual (con las mismas reglas:
+// dos medios, o tres si alguno dijo lo contrario, o uno oficial). Solo la jornada, sin clubes; lo que es solo de Segunda, no
+export const SE_JUEGA = /((se juega|se jugar[aá]|se disputar[aá]|mantiene|no se suspender[aá]|no se suspende|no se aplazar[aá])\b[^.:;]{0,30}\bla jornada|la jornada( \d+)? (no se (suspende|suspender[aá]|aplaza|aplazar[aá])|se (juega|jugar[aá]|disputar[aá]|mantiene))|habr[aá] f[uú]tbol)/i;
+export function hechoSeJuega(x, jornada = null) {
+  const fuente = `${x.titulo} ${x.entradilla}`;
+  if (!SE_JUEGA.test(fuente)) return null;
+  // solo de Segunda (o de otra categoría): no es la jornada de Primera
+  if (/segunda|primera (rfef|federaci[oó]n)/i.test(fuente) && !/laliga|primera (divisi[oó]n|y segunda)|ea sports|f[uú]tbol (español|profesional)/i.test(fuente)) return null;
+  const nums = [...new Set((fuente.match(/\d+/g) || []).map(Number))].slice(0, 30);
+  const m = fuente.match(/jornada (\d{1,2})\b/i), n = m ? Number(m[1]) : 0;
+  return { guid: x.guid, medio: x.medio, t: x.t, tipo: 'suspension', estado: 'descartado', segunda: /primera y segunda|segunda/i.test(fuente) && /laliga|primera/i.test(fuente),
+    jornada: n > 0 && n <= 38 ? n : jornada || 0, jTxt: n > 0, clubes: [], luto: /fallec|muerte|homenaje|luto|duelo|memoria/i.test(fuente), oficial: OFICIAL.test(fuente),
+    contexto: '', detalle: '', nums, regla: true };
+}
+export const DECISIVA = /se (juega|jugar[aá]n?|disputar[aá]n?|mantiene|aplaza|suspende)\b|habr[aá] f[uú]tbol|no se (suspender|aplazar)[aá]|suspendid[oa]s?\b|aplazad[oa]s?\b|oficial|comunicado|confirma/i;
 const GRANDES = ['COPE', 'Cadena SER', 'SPORT', 'Mundo Deportivo', 'AS', 'MARCA'];
 const OFICIAL = /comunicado|oficial|ha anunciado|anuncia(do)? (laliga|la rfef|la federaci[oó]n|el csd)|(laliga|la rfef|la federaci[oó]n|el csd|el comit[eé]) (ha )?(decidido|confirmado|anunciado|comunicado)/i;
 
@@ -107,7 +127,23 @@ export function objeto(h, equipos) {
 }
 
 /** lee la prensa, pregunta a Gemini por lo nuevo y guarda los hechos en el registro (datos.liga) */
-async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada = null, stats = null, statsDe = statsSemana }) {
+async function actualizar(o) {
+  const lg = await actualizar0(o);
+  if (!o.clave) return lg;
+  const conHecho = new Set(lg.hechos.map((h) => h.guid));
+  for (const n of await o.leer({ log: () => {} })) {
+    const t = n.t || o.ahora;
+    if (conHecho.has(n.guid) || o.ahora - t > 30 * HORA || t - o.ahora > HORA || !TEMA.test(`${n.titulo} ${n.entradilla}`)) continue;
+    // solo las que Gemini ya ha leído sin sacar nada (las nuevas esperan a Gemini, que puede dar más: el número, el contexto)
+    if (!lg.vistas[n.guid]) continue;
+    const h = hechoSeJuega({ ...n, t }, o.jornada);
+    if (!h) continue;
+    lg.hechos.push(h); conHecho.add(n.guid);
+    o.log(`  (liga) ${n.medio}: la jornada se juega (sin Gemini: lo dice claro)${h.oficial ? ' (oficial)' : ''}${h.luto ? ' (luto)' : ''}`);
+  }
+  return lg;
+}
+async function actualizar0({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada = null, stats = null, statsDe = statsSemana }) {
   let siguiente = null;
   const datos = (registro && registro.datos) || {};
   const lg = (datos.liga ||= { vistas: {}, hechos: [], gemini: { dia: '', n: 0 } });
@@ -122,16 +158,24 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
     if (TEMA.test(`${n.titulo} ${n.entradilla}`)) nuevas.push({ ...n, t });
   }
   log(`  (liga) ${nuevas.length} noticias nuevas sobre suspensiones, aplazamientos u horarios`);
+  // desde cuándo espera cada una (la primera vez que el bot la ve)
+  lg.espera = Object.fromEntries(Object.entries(lg.espera || {}).filter(([g]) => nuevas.some((n) => n.guid === g)));
+  for (const n of nuevas) lg.espera[n.guid] ||= ahora;
   if (!nuevas.length) return lg;
   const hoy = diaMadrid(ahora);
-  if (lg.gemini.dia !== hoy) lg.gemini = { dia: hoy, n: 0 };
+  if (lg.gemini.dia !== hoy) lg.gemini = { dia: hoy, n: 0, fallos: 0 };
+  const decisiva = nuevas.some((n) => DECISIVA.test(`${n.titulo} ${n.entradilla}`));
+  const vieja = Math.min(...nuevas.map((n) => lg.espera[n.guid])) <= ahora - (config.ligaEsperaMin ?? 20) * 60e3;
+  if (!decisiva && nuevas.length < (config.ligaJuntar ?? 3) && !vieja) { log('  (liga) ninguna trae una decisión: espero a juntar más antes de preguntar'); return lg; }
   if (lg.gemini.n >= (config.ligaGeminiDia ?? 20)) { log(`  (liga) tope de ${config.ligaGeminiDia ?? 20} preguntas a Gemini hoy`); return lg; }
+  if ((lg.gemini.fallos || 0) >= (config.ligaGeminiFallosDia ?? 60)) { log('  (liga) Gemini ha fallado demasiadas veces hoy: no pregunto más'); return lg; }
   // las más recientes primero (una historia viva trae muchas; las viejas ya no cambian nada)
   const lote = nuevas.sort((a, b) => b.t - a.t).slice(0, config.ligaPorLote ?? 30);
-  lg.gemini.n++;
   const hasta = ahoraReal() + (config.ligaSegundos ?? 45) * 1000;
   const r = await pedirIA({ clave, prompt: prompt(lote, equipos, jornada), esquema: ESQUEMA, log, hasta });
-  if (!r.ok) { log(`  (liga) Gemini no contesta: ${r.error}. Lo vuelvo a intentar en la próxima ejecución`); return lg; }
+  if (!r.ok) { lg.gemini.fallos = (lg.gemini.fallos || 0) + 1; log(`  (liga) Gemini no contesta: ${r.error}. Lo vuelvo a intentar en la próxima ejecución`); return lg; }
+  lg.gemini.n++;
+  for (const x of lote) delete lg.espera[x.guid];
   log(`  (liga) Gemini (${r.modelo}) ha leído ${lote.length}`);
   for (const x of lote) lg.vistas[x.guid] = x.t;
   for (const a of (r.datos && r.datos.noticias) || []) {
@@ -249,7 +293,13 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
   // «el Valencia-Real Madrid se jugará» sobra, y «se estudia suspender el Málaga-Racing» también (auditoría del 5 nov)
   // (solo una jornada que sale de verdad: oficial o con dos medios y reciente; o publicada en las últimas 36 h. Y de la misma jornada
   // que el partido: «suspendida la J13» no tapa un aplazamiento de la J12; auditoría del 5 nov)
-  const sale = (g) => !!g && (g.hs.some((h) => h.oficial) || new Set(g.hs.map((h) => h.medio)).size >= 2) && ahora - Math.max(...g.hs.map((h) => h.t)) <= 12 * HORA;
+  // lo contrario de la misma historia («se suspende» y «se jugará»): manda lo oficial y, si no, lo que cuentan más medios y al menos tres;
+  // si no, ninguno (espero a más noticias). El 5 nov Gemini leyó como «se suspende la jornada» una de SPORT sobre la muerte de Jesús de
+  // Miguel, con LaLiga y la RFEF ya decididas a jugarla (COPE): con una segunda noticia mal leída salía «Se suspende» antes que «se jugará»
+  const medN = (x) => new Set(x.hs.map((h) => h.medio)).size, ofi = (x) => x.hs.some((h) => h.oficial);
+  const rivalDe = (g) => ({ confirmado: grupos.get(`${g.tema}|descartado`), descartado: grupos.get(`${g.tema}|confirmado`) })[g.estado];
+  const gana = (g) => { const r = rivalDe(g); return !r || (ofi(g) !== ofi(r) ? ofi(g) : medN(g) > medN(r) && (ofi(g) || medN(g) >= 3)); };
+  const sale = (g) => !!g && gana(g) && (g.hs.some((h) => h.oficial) || new Set(g.hs.map((h) => h.medio)).size >= 2) && ahora - Math.max(...g.hs.map((h) => h.t)) <= 12 * HORA;
   const recientes = (registro && registro.todos ? registro.todos() : []).filter((e) => e && e.t && ahora - Date.parse(e.t) < 36 * HORA).map((e) => e.clave);
   const aireJ = (tp) => Number((((registro && registro.datos && registro.datos.aire) || {})[`${tp}|j|J${jornada}`] || {}).jornada) || jornada;
   const deJ = (e, jP) => ['suspension', 'aplazamiento'].some((tp) => {
@@ -277,7 +327,11 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     const medios = [...new Set(hs.map((h) => h.medio))].sort((a, b) => GRANDES.indexOf(b) - GRANDES.indexOf(a));
     const oficial = hs.some((h) => h.oficial);
     if (!oficial && medios.length < 2) { log(`  (liga) ${g.tema} (${g.estado}): solo ${medios.join(', ')}, espero a una segunda fuente`); continue; }
-    const mejor = (k) => (hs.filter((h) => h[k]).sort((a, b) => b[k].length - a[k].length)[0] || {})[k] || '';
+    if (!gana(g)) { const r = rivalDe(g); log(`  (liga) ${g.tema} (${g.estado}): ${medN(r)} ${medN(r) === 1 ? 'medio dice' : 'medios dicen'} lo contrario${ofi(r) ? ' (oficial)' : ''}, espero a más`); continue; }
+    // el contexto y el detalle, de las noticias de las últimas 6 h de la historia (5 nov: el «se jugará» de la J12 cogía el «Petición de la
+    // AFE…» de una noticia de la mañana, y parecía que jugar era lo que pedía la AFE); de esas, el más completo
+    const ultT = hs[hs.length - 1].t;
+    const mejor = (k) => (hs.filter((h) => h[k] && h.t >= ultT - 6 * HORA).sort((a, b) => b[k].length - a[k].length)[0] || {})[k] || '';
     const luto = hs.some((h) => h.luto);
     const texto = redactar({ tipo: g.tipo, estado: g.estado, obj: g.obj, luto, contexto: mejor('contexto'), detalle: mejor('detalle'), medios, oficial });
     // el mismo número para el texto y para lib/aire.mjs
