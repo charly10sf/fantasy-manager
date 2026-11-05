@@ -272,6 +272,20 @@
    "jornada": 12,
    "id": "2118377014931374332",
    "t": "2026-11-05T16:16:52.819Z"
+  },
+  {
+   "clave": "liga|suspension|j|descartado|J12",
+   "tipo": "liga",
+   "jornada": 12,
+   "id": "2118388243528106456",
+   "t": "2026-11-05T17:01:29.785Z"
+  },
+  {
+   "clave": "previa|113",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118388293192802636",
+   "t": "2026-11-05T17:01:41.746Z"
   }
  ],
  "estados": {
@@ -2844,9 +2858,9 @@
  },
  "pulido": {
   "dia": "2026-11-05",
-  "n": 5,
+  "n": 7,
   "ok": 4,
-  "mal": 2
+  "mal": 4
  },
  "liga": {
   "vistas": {
@@ -2942,7 +2956,13 @@
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html": 1793896084000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261105/1004247619/comunicado-laliga.html": 1793895137000,
    "SPORT|136129236": 1793892468000,
-   "SPORT|136129351": 1793892151000
+   "SPORT|136129351": 1793892151000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-aplaza-decision-sobre-sancion-owono-20261105_3469777.html": 1793897285000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/asi-sera-homenaje-futbol-espanol-jesus-miguel-solemne-minuto-silencio-paron-memoria-9-20261105_3469770.html": 1793896697000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677030/comite-aplaza-sancion-owono-jornada-liga-convertira-tributo-miguel.html": 1793896288000,
+   "AS|https://as.com/futbol/segunda/laliga-no-para-el-futbol-aplaza-solo-el-granada-tenerife-andorra-mallorca-y-castellon-eibar-f202611-n/": 1793895587000,
+   "SPORT|136130308": 1793892472000,
+   "SPORT|136129776": 1793892308000
   },
   "hechos": [
    {
@@ -3321,11 +3341,92 @@
     "contexto": "El sindicato de jugadores solicita el aplazamiento de la jornada",
     "detalle": "La decisión depende de las autoridades competentes",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html",
+    "medio": "MARCA",
+    "t": 1793896084000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": false,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "",
+    "nums": [
+     9
+    ],
+    "regla": true
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261105/1004247619/comunicado-laliga.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793895137000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": true,
+    "contexto": "",
+    "detalle": "",
+    "nums": [
+     12,
+     13,
+     10
+    ],
+    "regla": true
+   },
+   {
+    "guid": "SPORT|136130308",
+    "medio": "SPORT",
+    "t": 1793892472000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": false,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "",
+    "nums": [
+     13,
+     18,
+     30
+    ],
+    "regla": true
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/asi-sera-homenaje-futbol-espanol-jesus-miguel-solemne-minuto-silencio-paron-memoria-9-20261105_3469770.html",
+    "medio": "COPE",
+    "t": 1793896697000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": false,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "",
+    "nums": [
+     9
+    ],
+    "regla": true
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 30
-  }
+   "n": 31
+  },
+  "espera": {}
  }
 }
