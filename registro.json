@@ -258,6 +258,13 @@
    "jornada": 12,
    "id": "2118320292405678506",
    "t": "2026-11-05T12:31:29.122Z"
+  },
+  {
+   "clave": "noticias|1480:mala|2026-11-05",
+   "tipo": "noticias",
+   "jornada": 12,
+   "id": "2118341690163372465",
+   "t": "2026-11-05T13:56:30.727Z"
   }
  ],
  "estados": {
@@ -1303,7 +1310,8 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html": 1793883472000,
    "SPORT|136119456": 1793881394000,
    "SPORT|136120803": 1793882025000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-malaga-realiza-la-penultima-sesion-antes-de-recibir-este-sabado-al-racing-ser-malaga/": 1793886617000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-malaga-realiza-la-penultima-sesion-antes-de-recibir-este-sabado-al-racing-ser-malaga/": 1793886617000,
+   "SPORT|136120104": 1793882738000
   },
   "hechos": [
    {
@@ -1960,11 +1968,35 @@
      14,
      0
     ]
+   },
+   {
+    "guid": "SPORT|136120104",
+    "medio": "SPORT",
+    "t": 1793882738000,
+    "id": "1674",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136120104",
+    "medio": "SPORT",
+    "t": 1793882738000,
+    "id": "1480",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Tchouaméni realiza trabajo específico al margen del grupo",
+    "motivo": "problemas físicos",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -2775,8 +2807,8 @@
  },
  "pulido": {
   "dia": "2026-11-05",
-  "n": 3,
-  "ok": 2,
+  "n": 4,
+  "ok": 3,
   "mal": 2
  },
  "liga": {
@@ -2862,7 +2894,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000,
    "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-profesores-huelga-encierran-direccion-general-rrhh-consejeria-educacion-forzar-reunion-20261105103009.html": 1793871009000
+   "Europa Press|https://www.europapress.es/madrid/noticia-profesores-huelga-encierran-direccion-general-rrhh-consejeria-educacion-forzar-reunion-20261105103009.html": 1793871009000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000
   },
   "hechos": [
    {
@@ -3175,11 +3208,29 @@
     "contexto": "",
     "detalle": "La AFE pide no jugar",
     "nums": []
+   },
+   {
+    "guid": "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html",
+    "medio": "Superdeporte",
+    "t": 1793886839000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": true,
+    "contexto": "",
+    "detalle": "La AFE ha solicitado la suspensión de la jornada",
+    "nums": [
+     5
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 21
+   "n": 22
   }
  }
 }
