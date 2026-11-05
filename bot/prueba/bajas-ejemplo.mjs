@@ -85,7 +85,7 @@ ver('caídas: con dudas (solo simulacro)', await caidas([{ id: 15, nombre: 'Obla
 const larga = (hasta) => caidas([{ id: 22, nombre: 'Miguel Sierra', teamId: 9, pos: 3, equipo: 'Sevilla', estado: 'lesionado', p: 0, pct: 0, media: 4.1, parte: { lesion: 'Luxación acromioclavicular', dia: 28, mes: 10, dias: 6, estado: 'baja', hasta } }], { jornada: 12, proximo, ahora: Date.parse('2026-11-03T20:00:00Z') });
 const vl = await larga('enero'), vc = await larga('finales de noviembre');
 ver('caídas: baja larga', vl);
-if (!/💸 Venta Fantasy Obligatoria/.test(vl[0].texto) || !/No se le espera hasta enero/.test(vl[0].texto)) falla('baja larga: Venta Fantasy Obligatoria con la fecha');
+if (!/💸 Venta Fantasy Obligatoria/.test(vl[0].texto) || !/(No se le espera|Estará fuera) hasta enero/.test(vl[0].texto)) falla('baja larga: Venta Fantasy Obligatoria con la fecha');
 if (/Venta Fantasy Obligatoria/.test(vc[0].texto)) falla('baja de 3 semanas: no es venta obligatoria');
 
 console.log(fallos ? `\n${fallos} fallos` : '\ntodo bien'); process.exit(fallos ? 1 : 0);

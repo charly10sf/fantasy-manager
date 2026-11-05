@@ -1,7 +1,7 @@
 // Caídas probables de la jornada que viene: titulares habituales con baja o duda (Carlos, 2 nov 16:16: «es probable que no vaya a jugar»).
 // % de titularidad: el once probable (0,5, lib/ff.mjs, desde el 3 nov), minutos de las últimas jornadas (0,3) y partidos de más de 60'
 // de la temporada (0,2); ×0,6 si es duda; 0 si está lesionado o sancionado. Una duda se publica si el once probable también la da.
-import { corto, elegir, fmt, partes, el, del, largo } from '../lib/texto.mjs';
+import { corto, elegir, fmt, partes, el, del, largo, rotar } from '../lib/texto.mjs';
 import { tweet, cap, segunda, enPalabras, proximoPartido, paraLa, cuando, aparte } from '../lib/redactar.mjs';
 import { ficha, ESTADOS } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
@@ -63,11 +63,13 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     if (soloSeguras && j.playerStatus === 'injured' && !(parte && parte.lesion)) { log(`  (caídas) ${j.nickname}: sin parte de la lesión todavía, espero`); return; }
     caidas.push({ parte, motivoSan, id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, estado: ESTADOS[j.playerStatus], p, pct: Math.round(p * 100), media: Number(j.averagePoints) || 0, valor: Number(j.marketValue) || 0, n60: Math.round(b.a * b.ult), ult: b.ult });
   });
-  return escribir(caidas, { jornada, semana, ahora });
+  // cuántas caídas llevamos esta jornada (para que las formas roten entre los tweets que salen a lo largo de los días)
+  const vez = registro && registro.todos ? registro.todos().filter((x) => x && x.tipo === 'caidas' && Number(x.jornada) === Number(jornada)).length : 0;
+  return escribir(caidas, { jornada, semana, ahora, vez });
 }
 
 /** Los tweets a partir de las caídas ya calculadas (aparte para poder probarlo sin red: bot/prueba/bajas-ejemplo.mjs) */
-export async function escribir(caidas, { jornada, semana = null, proximo = proximoPartido, ahora = Date.now() }) {
+export async function escribir(caidas, { jornada, semana = null, proximo = proximoPartido, ahora = Date.now(), vez = 0 }) {
   // Cómo se escriben (guía de estilo del 3 nov y Carlos, 3 nov 12:06: la lista con paréntesis le sonaba a máquina): un equipo con dos
   // o más caídas, en su propio tweet («🚨 El Villarreal se queda sin dos titulares» y una línea por lo que pasa); uno o dos sueltos,
   // un tweet cada uno con la etiqueta final; más sueltos, agrupados por lo que pasa («❌ Se caen por lesión Lemar en el Elche y…»),
@@ -103,7 +105,10 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...xs.filter((c) => c.estado === 'duda').map((c) => c.pct), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...(hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: xs, pp: pr, clave }) });
   }
   // uno suelto: su propio tweet con la etiqueta final (formato Carrasco)
+  let kS = vez;
   const unSuelto = (c) => {
+    // cada forma rota por cuántas caídas sueltas llevamos (dos seguidas no se leen calcadas; las etiquetas del final no cambian)
+    const k = kS++, R = (fs, slot) => rotar(fs, `caida${slot}${jornada}`, k);
     const pr = pp.get(String(c.teamId));
     const p = c.parte;
     // la web lo da por duda aunque LaLiga lo tenga lesionado: se dice así, sin darlo por perdido
@@ -111,13 +116,15 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const venta = c.estado === 'lesionado' && ventaObligatoria(p, ahora);
     const cab = c.estado === 'duda' ? `⁉️ ${c.nombre} es duda en ${el(c.equipo)}`
       : c.estado === 'sancionado' ? `🟥 ${c.nombre} no estará ${pr ? `contra ${el(pr.rival)}` : 'en el próximo partido'}`
-      : dudaWeb && pr ? `🚨 ${c.nombre} apunta a perderse el partido contra ${el(pr.rival)}` : `🚨 ${c.nombre} se cae del once ${del(c.equipo)}`;
+      : dudaWeb && pr ? `🚨 ${c.nombre} apunta a perderse el partido contra ${el(pr.rival)}` : R([`🚨 ${c.nombre} se cae del once ${del(c.equipo)}`, `🚨 ${cap(el(c.equipo))} pierde a ${c.nombre}`, `🚨 Baja importante en ${el(c.equipo)}: ${c.nombre}`], 'cab');
     const ideas = [
       p && p.lesion ? { t: `⚠️ ${cap(lesionTxt(p))}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}`, prio: 9 } : null,
-      p && p.estado === 'baja' && p.hasta ? { t: `🗓️ No se le espera hasta ${p.hasta}`, prio: venta ? 9 : 7 } : dudaWeb ? { t: '⁉️ Aún no está descartado del todo', prio: 7 } : null,
+      p && p.estado === 'baja' && p.hasta ? { t: R([`🗓️ No se le espera hasta ${p.hasta}`, `🗓️ Estará fuera hasta ${p.hasta}`], 'hasta'), prio: venta ? 9 : 7 } : dudaWeb ? { t: R(['⁉️ Aún no está descartado del todo', '⁉️ De momento no está descartado'], 'desc'), prio: 7 } : null,
       c.motivoSan ? { t: `⚠️ ${c.motivoSan.txt} y cumple sanción`, prio: 9 } : null,
       c.estado === 'duda' ? { t: `📊 ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,
-      { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
+      { t: R([`‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`,
+        c.media >= 3 ? `‼️ Es de los fijos y va a ${fmt(c.media)} puntos por partido` : `‼️ Es de los que siempre juegan`,
+        `‼️ ${cap(segunda(c.pos, c.nombre))} sale casi siempre de inicio${c.media >= 3 ? `: ${fmt(c.media)} de media` : ''}`], 'tit'), prio: 6 },
       // con tweets largos: cuánto juega y cuándo es el partido
       // (solo con 3 partidos o más y 2 o más de 60: ni «en 0 de sus 5» con un titular habitual ni «en sus 1 últimos»)
       L && c.n60 != null && c.ult >= 3 && c.n60 >= 2 ? { t: c.n60 === c.ult ? `📊 Ha jugado 60 minutos o más en sus ${c.ult} últimos partidos` : `📊 Ha jugado 60 minutos o más en ${c.n60} de sus ${c.ult} últimos partidos`, prio: 3 } : null,
