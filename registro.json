@@ -237,6 +237,13 @@
    "jornada": 12,
    "id": "2118130229483061710",
    "t": "2026-11-04T23:56:14.549Z"
+  },
+  {
+   "clave": "apercibidos|12|3152-2206-2511-2939-3072-3026",
+   "tipo": "sancionados",
+   "jornada": 12,
+   "id": "2118226131983679558",
+   "t": "2026-11-05T06:17:19.405Z"
   }
  ],
  "estados": {
@@ -361,7 +368,7 @@
   "2356": "out_of_league",
   "2358": "ok",
   "2359": "out_of_league",
-  "2362": "injured",
+  "2362": "ok",
   "2363": "ok",
   "2366": "ok",
   "2372": "ok",
@@ -1257,7 +1264,12 @@
    "SPORT|136097342": 1793819410000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/04/mourinho-hay-centrocampista-mundo-bellingham-unico.html": 1793823656000,
    "SPORT|136094019": 1793813454000,
-   "SPORT|136086757": 1793821382000
+   "SPORT|136086757": 1793821382000,
+   "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/": 1793829352000,
+   "SPORT|136102061": 1793851297000,
+   "SPORT|136099973": 1793829833000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/04/mijatovic-senala-el-motivo-detras-del-renacer-de-valverde-si-sienten-que-el-entrenador-tiene-respaldo-del-club-aceptan-todo-cadena-ser/": 1793834838000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-lesiones-perfilan-vuelta_0_2008425309.html": 1793854861000
   },
   "hechos": [
    {
@@ -1774,11 +1786,38 @@
     "motivo": "lesion",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/",
+    "medio": "AS",
+    "t": 1793829352000,
+    "id": "2924",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Zaid Romero vuelve a los planes tras un mes",
+    "motivo": "lesion",
+    "plazo": "un mes",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136099973",
+    "medio": "SPORT",
+    "t": 1793829833000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri se lesionan y estará un mes fuera",
+    "motivo": "lesión en el bíceps femoral",
+    "plazo": "un mes",
+    "nums": [
+     5,
+     2026
+    ]
    }
   ],
   "gemini": {
-   "dia": "2026-11-04",
-   "n": 43
+   "dia": "2026-11-05",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -2588,10 +2627,10 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-04",
-  "n": 3,
-  "ok": 1,
-  "mal": 2
+  "dia": "2026-11-05",
+  "n": 1,
+  "ok": 0,
+  "mal": 1
  },
  "liga": {
   "vistas": {
@@ -2833,8 +2872,8 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-04",
-   "n": 19
+   "dia": "2026-11-05",
+   "n": 1
   }
  }
 }
