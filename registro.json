@@ -2841,7 +2841,8 @@
    "Cadena SER|https://cadenaser.com/baleares/2026/11/05/luis-garcia-deberia-haberse-aplazado-toda-la-jornada-radio-mallorca/": 1793881539000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247537/palmas-eldense-proponen-detener-juego-minuto-9-homenaje-miguel.html": 1793880966000,
    "SPORT|136117890": 1793879512000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000,
+   "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000
   },
   "hechos": [
    {
@@ -3122,11 +3123,27 @@
     "contexto": "",
     "detalle": "La asociación mantiene su postura tras consultar con los futbolistas",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html",
+    "medio": "MARCA",
+    "t": 1793883719000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "La decisión final sobre la disputa de la jornada está pendiente de valoración",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 18
+   "n": 19
   }
  }
 }
