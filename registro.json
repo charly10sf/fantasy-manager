@@ -2708,7 +2708,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247402/recuperan-dos-partidos-lliga-elit-victorias-prat-singuerlin.html": 1793833745000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247401/juegan-tres-encuentros-aplazados-primera-catalana.html": 1793833498000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261104/1004247277/cuti-romero-barca-mejor-ataque-laliga.html": 1793816802000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/ferrol/2026/11/04/objetivo-5000-personas-carrera-contra-cancer/00031793813128758851822.htm": 1793813941000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/ferrol/2026/11/04/objetivo-5000-personas-carrera-contra-cancer/00031793813128758851822.htm": 1793813941000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/el-villena-cf-pierde-4-2-en-novelda-radio-villena/": 1793862273000
   },
   "hechos": [
    {
@@ -2925,7 +2926,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 2
+   "n": 3
   }
  }
 }
