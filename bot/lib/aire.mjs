@@ -44,7 +44,10 @@ export function apuntarDecision(registro, clave, stats = [], jornada = null) {
   const aire = caja(registro.datos);
   const fechas = {};
   for (const m of Array.isArray(stats) ? stats : []) if (m && m.id != null && tocaA(x.obj, m)) fechas[String(m.id)] = m.date || null;
-  aire[`${x.tipo}|${x.obj}|J${x.j}`] = { fechas, jornada: Number(jornada) || x.j };
+  // el centro de la jornada (la mediana de sus fechas): «lejos» se mide contra él, no contra el día de la decisión (la J13, tras un
+  // parón, puede jugarse 12 días después; auditoría del 5 nov)
+  const ts = (Array.isArray(stats) ? stats : []).map((m) => Date.parse(m && m.date)).filter(Number.isFinite).sort((a, b) => a - b);
+  aire[`${x.tipo}|${x.obj}|J${x.j}`] = { fechas, jornada: Number(jornada) || x.j, centro: ts.length ? ts[Math.floor(ts.length / 2)] : null };
   return Object.keys(fechas).length;
 }
 
@@ -73,7 +76,10 @@ export function enElAire(registro, { jornada, m = null, ahora = Date.now() } = {
       const fechas = ap && ap.fechas && typeof ap.fechas === 'object' ? ap.fechas : null;
       if (!fechas || !(String(m.id) in fechas)) continue;
       const f = Date.parse(m.date);
-      if (fechas[String(m.id)] === (m.date || null) && !(Number.isFinite(f) && f - x.t > 6 * 24 * H)) {
+      // con la fecha de antes, espera; salvo que esa fecha ya esté lejos de la jornada (a más de 4 días de su centro: lo han movido a
+      // otra semana y la API aún no lo dice de otra forma) o, sin centro apuntado, a más de 6 días de la decisión
+      const lejos = Number.isFinite(f) && (Number.isFinite(ap.centro) ? Math.abs(f - ap.centro) > 4 * 24 * H : f - x.t > 6 * 24 * H);
+      if (fechas[String(m.id)] === (m.date || null) && !lejos) {
         return { espera: true, motivo: `${x.obj === 'j' ? 'la jornada está suspendida' : x.tipo === 'aplazamiento' ? 'el partido está aplazado' : 'el partido está suspendido'}: espero a la fecha nueva` };
       }
     }

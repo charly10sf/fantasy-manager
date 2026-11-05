@@ -229,7 +229,7 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
       const ptsP = `${peor.pts} ${Math.abs(peor.pts) === 1 ? 'punto' : 'puntos'}`;
       const enc = encajo < 3 ? '' : LG ? R([` y ${encajo} goles encajados por su equipo`, `, con ${encajo} goles en contra`, ` en un partido en el que su equipo encajó ${encajo}`], 'enc') : ` y ${encajo} goles encajados por su equipo`;
       ideas.push({ t: LG ? R([`❌ ${Franja} para olvidar de ${peor.nombre}: ${ptsP}${enc}`, `❌ Lo peor se lo lleva ${peor.nombre}: ${ptsP}${enc}`, `❌ A ${peor.nombre} se le atraganta el partido: ${ptsP}${enc}`], 'peor')
-        : `❌ ${Franja} para olvidar de ${peor.nombre}: ${ptsP}${enc}`, prio: 3, rota: true });
+        : R([`❌ ${Franja} para olvidar de ${peor.nombre}: ${ptsP}${enc}`, `❌ Lo peor se lo lleva ${peor.nombre}: ${ptsP}${enc}`], 'peor'), prio: 3, rota: true });
       num.push(peor.pts); if (encajo >= 3) num.push(encajo);
     }
     // 6) la lectura para el mánager, solo en un partido grande (y no en todos: depende del partido). Cinco formas, siempre en el mismo
