@@ -123,6 +123,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     if (conInfo) {
       const j = porId.get(String(e.id));
       const tit = await info.titularidad(j, e.pp).catch(() => null), riv = await info.rival(e.pp).catch(() => null);
+      e.pct = tit ? tit.pct : null;   // (5 nov 16:39) también en la carta
       extra = ideasInfo({ posId: e.pos, equipo: e.equipo, pp: e.pp, tit, riv, tipo: 'vuelve', hr: L && e.pp && e.pp.fecha ? cuando(e.pp.fecha, ahora) : null, k: kI, dia, largo: L });
       ideas.splice(ideas.length - 1, 0, ...extra.ideas);
     } else if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });

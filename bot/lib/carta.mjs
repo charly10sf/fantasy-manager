@@ -155,6 +155,9 @@ export function svgBajaSola(d) {
     + fondo([[300, 330, 560, club.vivo, 0.75], [1050, 80, 500, e.color, 0.16]]);
   const x = 96, y = 36, w = 404, h = 600, x0 = 566, wd = ANCHO - x0 - 56;
   const media = f.ultimas ? num1(f.media) : f.media;
+  // (Carlos, 5 nov 16:39) el % de titularidad de la app en la carta de uno que vuelve: en la carta, en vez del valor (que ya va grande
+  // a la derecha); en una duda ya va en el estado («DUDA · 33 %»)
+  const titular = (f.estado === 'disponible' || f.estado === 'vuelve') && f.pct != null;
   const grande = f.estado === 'duda' && f.leve ? 'DUDA LEVE' : f.estado === 'duda' && f.pct != null ? `DUDA · ${f.pct} %` : e.txt;
   s += texto(x0 - 4, 158, grande, { px: 140, peso: 800, italica: true, color: `url(#${g})`, max: wd })
     + texto(x0, 206, `${(f.equipo || '').toUpperCase()} · JORNADA ${d.jornada}`, { px: 34, peso: 700, espacio: 1.5, max: wd });
@@ -164,7 +167,8 @@ export function svgBajaSola(d) {
     const yc = C.yNombre + 66, xs = [x + w * 0.29, x + w * 0.71];
     s += C.s
       + cifra(xs[0], yc, String(f.total), 'PUNTOS TOTALES', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
-      + cifra(xs[1], yc, millones(f.valorHoy), 'VALOR', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
+      + (titular ? cifra(xs[1], yc, `${f.pct} %`, 'TITULARIDAD', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
+        : cifra(xs[1], yc, millones(f.valorHoy), 'VALOR', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 }))
       + `<rect x="${x + w / 2 - 0.75}" y="${yc - 34}" width="1.5" height="56" fill="${metal.linea}"/>`
       + pildora(f, x + w / 2, yc + 70, 26, w - 80);
     // el próximo rival, en una línea
@@ -188,6 +192,7 @@ export function svgBajaSola(d) {
       + escudo(d.rival.escudo, x0 + 44, 444, 96)
       + texto(x0 + (d.rival.escudo ? 110 : 0), 470, d.rival.corto.toUpperCase(), { px: 72, peso: 800, max: wd - 110 });
   }
+  if (titular) s += texto(x0, 566, `TITULARIDAD · ${f.pct} %`, { px: 34, peso: 800, espacio: 1.5, max: wd });
   return marco(s + marca(x0, 636));
 }
 

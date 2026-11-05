@@ -142,6 +142,10 @@ for (const lim of [280, 1000]) {
   if (lim > 280) ok(z && /9º/.test(z.texto) && /\n\n.*72 %/s.test(z.texto), `Zaid (largo): el rival y lo del partido en su párrafo`);
   ok(m && /(Lo cuentan|Lo publican) (AS y MARCA|MARCA y AS)|(AS y MARCA|MARCA y AS) lo dan por hecho|LaLiga Fantasy/.test(m.texto) && /⁉️ Duda para/.test(m.texto), `Mayoral (${lim}): duda con su fuente`);
   ok(m && /33 %/.test(m.texto), `Mayoral (${lim}): duda en LaLiga, con el % de la app`);
+  // (Carlos, 5 nov 16:39) el % también en la carta: el que vuelve, en la carta; la duda, en el estado; la baja, sin %
+  const fc = (t) => t && t.tarjeta && t.tarjeta.d.filas[0];
+  ok(fc(z) && fc(z).estado === 'disponible' && fc(z).pct === 72 && fc(m) && fc(m).pct === 33 && fc(u) && fc(u).pct === null, `% en la carta (${lim}): ${[z, m, u].map((t) => fc(t) && fc(t).pct).join(', ')}`);
+  ok(z && z.tarjeta.permitidos.numeros.includes('72') && z.tarjeta.permitidos.palabras.includes('TITULARIDAD'), 'la carta deja el % y «TITULARIDAD» al validador');
   ok(u && /club/.test(u.texto) && !/\bAS\b/.test(u.texto) && !/ %|º/.test(u.texto) && /❌ Baja/.test(u.texto), `Uche (${lim}): oficial, el club; baja sin % ni rival`);
   ok(a && /\bAS\b/.test(a.texto) && !/LaLiga Fantasy/.test(a.texto) && !/ % de titularidad|en Fantasy Manager/.test(a.texto), `Arambarri (${lim}): un medio y el parte, el medio; en LaLiga «ok», sin %`);
   // el % y el rival no se piden para un tweet que no va a salir
@@ -169,6 +173,7 @@ for (const lim of [280, 1000]) {
   regS.datos.estados = { 504: 'injured' };
   const solo = await novedades({ jugadores, equipos, jornada: 12, config, registro: regS, ventanas: false, ahora, log: () => {}, proximo, listaPartes: [], soloSeguras: false, info });
   for (const t of solo) { const v = validar(t.texto, { numeros: t.numeros, max: lim }); if (!v.ok) falla(`${t.clave} (${lim}): ${v.errores.join('; ')}`); console.log(`--- ${t.clave} · peso ${v.peso}\n${t.texto}`); }
+  ok(solo[0] && solo[0].tarjeta.d.filas[0].pct === 40, `Pepe (${lim}): el % en la carta`);
   ok(solo.length === 1 && /40 %/.test(solo[0].texto) && /✅ Disponible para la jornada 12 contra el Villarreal/.test(solo[0].texto), `Pepe vuelve (${lim}): con su %`);
   if (lim > 280) ok(solo[0] && /9º/.test(solo[0].texto) && /Se juega|Será/.test(solo[0].texto), 'Pepe (largo): el rival y la hora sin «El partido es» detrás de «Partido…»');
   // sin info (las pruebas de antes y un fallo de red): como antes

@@ -287,7 +287,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     // (Carlos, 4 nov 12:43: De Galarreta salió sin carta) una vuelta aún sin el alta en el juego lleva carta «VUELVE»
     const estadoCarta = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';
     const fila = { id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo, club: equipos[String(j.teamId)] || '', caraUrl: j.image || null,
-      escudoUrl: escudos[String(j.teamId)] || null, estado: estadoCarta, leve: estadoCarta === 'duda' && leve, media, valor: Number(j.marketValue) || 0, pct: null };
+      escudoUrl: escudos[String(j.teamId)] || null, estado: estadoCarta, leve: estadoCarta === 'duda' && leve, media, valor: Number(j.marketValue) || 0, pct: tit ? tit.pct : null };
     out.push({ tipo: 'noticias', clave, jornada, texto, numeros: [...(media >= 3 ? partes(media) : []), ...(pp ? [pp.jornada] : [jornada]), ...c.nums, ...inf.numeros],
       tarjeta: estadoCarta ? tarjetaBajas({ jornada, filas: [fila], pp, clave }) : null });
   }
