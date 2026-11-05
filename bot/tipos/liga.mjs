@@ -139,7 +139,9 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
     const nums = [...new Set((fuente.match(/\d+/g) || []).map(Number))].slice(0, 30);
     // si la jornada es el tema y los partidos que nombra son la excepción («se disputen todos los partidos… salvo los ya aplazados»),
     // es de la jornada aunque Gemini ponga clubes (con ellos se tiraba entera; auditoría del 5 nov)
-    if (a.equipos && a.equipos.length && EXCEPCION.test(fuente)) a.equipos = [];
+    // Solo con «descartado» (la jornada se juega): con un partido aplazado o suspendido, «aplaza el Sevilla-Alavés y mantiene la
+    // jornada» acababa en «Se suspende la jornada 12» (auditoría del 5 nov)
+    if (a.estado === 'descartado' && a.equipos && a.equipos.length && EXCEPCION.test(fuente)) a.equipos = [];
     // aplazar o suspender la jornada entera es lo mismo para quien juega: un solo tema
     const tipo = a.tipo === 'aplazamiento' && !(a.equipos && a.equipos.length) ? 'suspension' : a.tipo;
     const h = { guid: x.guid, medio: x.medio, t: x.t, tipo, estado: a.estado, segunda: !!a.segunda,
