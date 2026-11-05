@@ -1299,7 +1299,8 @@
    "Diario Sur|https://www.diariosur.es/malagacf/virus-fifa-malaga-aznou-marruecos-sub23-futbol-20261105123950-nt.html": 1793879095000,
    "SPORT|136113240": 1793877353000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247531/numeros-vinicius-confirman-ocaso-regate-intentado-seis-ceros.html": 1793881800000,
-   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/05/luis-garcia-plaza-rentabilizar-momentos-superiores.html": 1793882703000
+   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/05/luis-garcia-plaza-rentabilizar-momentos-superiores.html": 1793882703000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html": 1793883472000
   },
   "hechos": [
    {
@@ -1929,11 +1930,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html",
+    "medio": "MARCA",
+    "t": 1793883472000,
+    "id": "1480",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Tchouaméni se ejercita en solitario antes del partido",
+    "motivo": "molestias físicas",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -2827,7 +2840,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/ano-suspension-jugador-mando-hospital-arbitro-18-anos-vilagarcia/00031793878536009479432.htm": 1793880240000,
    "Cadena SER|https://cadenaser.com/baleares/2026/11/05/luis-garcia-deberia-haberse-aplazado-toda-la-jornada-radio-mallorca/": 1793881539000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247537/palmas-eldense-proponen-detener-juego-minuto-9-homenaje-miguel.html": 1793880966000,
-   "SPORT|136117890": 1793879512000
+   "SPORT|136117890": 1793879512000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000
   },
   "hechos": [
    {
@@ -3092,11 +3106,27 @@
     "contexto": "",
     "detalle": "La decisión final sobre la disputa de los partidos está pendiente de resolución",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793883223000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "La asociación mantiene su postura tras consultar con los futbolistas",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 17
+   "n": 18
   }
  }
 }
