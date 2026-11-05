@@ -11,7 +11,7 @@
 //      salido en novedades, caídas o noticias (cubiertos() del registro).
 // Solo se guardan en el registro (rama bot-estado, repo público) los datos sacados, nunca los titulares ni las entradillas.
 import { corto, fmt, partes, elegir, el, del, norm, turno, largo as esLargo } from '../lib/texto.mjs';
-import { tweet, cap, segunda, proximoPartido, paraLa, cuando } from '../lib/redactar.mjs';
+import { tweet, cap, segunda, proximoPartido, paraLa, cuando, pegar } from '../lib/redactar.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { lista as enLista } from '../lib/agrupar.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
@@ -174,14 +174,15 @@ const EST_TXT = { injured: 'lesionado', doubtful: 'duda', suspended: 'sancionado
 export function fuenteDe(c, { baja = false, k = 0, dia = '' } = {}) {
   const lis = listaMedios(c.medios || []);
   const f = turno(3, `fue${dia}`, k), arriba = turno(2, `fueP${dia}`, k) === 0;
-  if (c.oficial) return { t: ['🗞️ Lo ha comunicado el club', '🗞️ Es oficial: lo ha confirmado el club', '🗞️ El club ya lo ha hecho oficial'][f], arriba, quien: 'club' };
+  // (Carlos, 5 nov 17:42: menos puntos y frases más largas) va pegada con una coma a la frase de antes (`pegar`): «…tras un mes, según AS»
+  if (c.oficial) return { t: pegar(['según ha comunicado el club', 'como ha confirmado el club', 'y así lo ha comunicado el club'][f]), arriba, quien: 'club' };
   const confirma = c.laliga && (c.fam === 'buena' ? c.est === 'ok' : baja ? ['injured', 'suspended'].includes(c.est) : c.est === 'doubtful');
-  if (confirma && c.fam === 'buena') return { t: ['🗞️ LaLiga Fantasy ya lo da como disponible', '🗞️ En LaLiga Fantasy ya aparece disponible', '🗞️ LaLiga Fantasy también lo da ya por disponible'][f], arriba, quien: 'laliga' };
-  if (confirma) { const e = EST_TXT[c.est]; return { t: [`🗞️ En LaLiga Fantasy ya sale como ${e}`, `🗞️ LaLiga Fantasy ya lo marca como ${e}`, `🗞️ También sale ya como ${e} en LaLiga Fantasy`][f], arriba, quien: 'laliga' }; }
-  if ((c.medios || []).length >= 2) return { t: [`🗞️ Lo cuentan ${lis}`, `🗞️ ${lis} lo dan por hecho`, `🗞️ Lo publican ${lis}`][f], arriba, quien: 'prensa' };
+  if (confirma && c.fam === 'buena') return { t: pegar(['y LaLiga Fantasy ya lo da como disponible', 'y en LaLiga Fantasy ya aparece como disponible', 'con LaLiga Fantasy dándolo ya como disponible'][f]), arriba, quien: 'laliga' };
+  if (confirma) { const e = EST_TXT[c.est]; return { t: pegar([`y en LaLiga Fantasy ya sale como ${e}`, `y LaLiga Fantasy ya lo marca como ${e}`, `con LaLiga Fantasy marcándolo ya como ${e}`][f]), arriba, quien: 'laliga' }; }
+  if ((c.medios || []).length >= 2) return { t: pegar([`según cuentan ${lis}`, `como publican ${lis}`, `según ${lis}`][f]), arriba, quien: 'prensa' };
   // un medio y la lista de lesionados de las webs de previas (que no se nombra), o LaLiga con otro estado (baja en la prensa, duda en LaLiga)
   const otro = c.laliga && c.fam === 'mala' && EST_TXT[c.est] ? `; en LaLiga Fantasy ya sale como ${EST_TXT[c.est]}` : '';
-  return { t: [`🗞️ Según ${lis}${otro}`, `🗞️ Lo adelanta ${lis}${otro}`, `🗞️ La información es de ${lis}${otro}`][f], arriba, quien: 'prensa' };
+  return { t: pegar([`según ${lis}${otro}`, `como adelanta ${lis}${otro}`, `según publica ${lis}${otro}`][f]), arriba, quien: 'prensa' };
 }
 
 export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),
@@ -270,19 +271,21 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const conInfo = info && pp && !baja && (!registro || !registro.decidir || registro.decidir({ tipo: 'noticias', clave, jornada }) === 'ok');
     const tit = conInfo && ((c.fam === 'buena' && c.est === 'ok') || (c.fam === 'mala' && c.est === 'doubtful')) ? await info.titularidad(j, pp).catch(() => null) : null;
     const riv = conInfo ? await info.rival(pp).catch(() => null) : null;
-    const inf = ideasInfo({ posId: j.positionId, equipo, pp, tit, riv, tipo: c.fam === 'buena' ? 'vuelve' : 'duda', hr, k, dia, largo: esLargo() });
-    // de dónde sale la noticia: pegada a la noticia (detrás de la cabecera o del motivo y el plazo, según el tweet), nunca detrás de
-    // la media o del %, que no son del medio
+    const inf = ideasInfo({ posId: j.positionId, equipo, pp, quien, media, tit, riv, tipo: c.fam === 'buena' ? 'vuelve' : 'duda', hr, k, dia, largo: esLargo() });
+    // (Carlos, 5 nov 17:42: «no hace falta que haya tantos puntos») la noticia en una frase con el motivo entre paréntesis y, pegada con
+    // una coma, de dónde sale (detrás de la cabecera o detrás del plazo, según el tweet; nunca detrás de la media o del %, que no son
+    // del medio); luego, el jugador y el partido en dos frases (lib/info-jugador.mjs)
+    // (sin repetir: «Arambarri arrastra molestias (molestias musculares)»)
+    const pal1 = norm(motivo).split(' ')[0] || '';
+    const cabM = motivo && !(pal1.length >= 5 && ` ${norm(cab)} `.includes(` ${pal1} `)) ? `${cab} (${motivo.replace(/^./, (x) => x.toLowerCase())})` : cab;
     const fu = { t: fuente.t, prio: 6 };
-    const ideas = [fuente.arriba ? fu : null,
-      motivo ? { t: `⚠️ ${cap(motivo)}`, prio: 8 } : null,
+    const ideas = [leve ? { t: pegar('aunque es por precaución, no por una lesión'), prio: 6 } : null,
+      fuente.arriba ? fu : null,
       plazo ? { t: `🗓️ ${cap(plazo)}`, prio: 7 } : null,
       fuente.arriba ? null : fu,
-      leve ? { t: '👀 Es por precaución, no por una lesión', prio: 6 } : null,
-      media >= 3 ? { t: `‼️ ${quien} suma ${fmt(media)} puntos de media`, prio: 5 } : null,
       ...inf.ideas,
       { t: etiqueta, prio: 9 }];
-    const { usadas, texto } = tweet(cab, ideas);
+    const { usadas, texto } = tweet(cabM, ideas);
     if (!usadas.includes(etiqueta)) { log(`  (noticias) ${j.nickname}: no cabe la etiqueta`); continue; }
     // (Carlos, 4 nov 12:43: De Galarreta salió sin carta) una vuelta aún sin el alta en el juego lleva carta «VUELVE»
     const estadoCarta = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';

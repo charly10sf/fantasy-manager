@@ -6,7 +6,7 @@
 import { statsSemana } from './laliga.mjs';
 import { probabilidades } from './onces.mjs';
 import { fmt, partes, el, al, turno } from './texto.mjs';
-import { enPalabras, cap, aparte } from './redactar.mjs';
+import { cap, aparte } from './redactar.mjs';
 
 /**
  * La clasificación con los partidos acabados (matchState 7) de stats/week, como la de la app (motor.js): puntos, diferencia de goles
@@ -87,41 +87,49 @@ export function vecesHoy(registro, dia, tipos = ['noticias', 'novedades']) {
   return registro.todos().filter((x) => x && tipos.includes(x.tipo) && x.t && d(Date.parse(x.t)) === dia).length;
 }
 
-/** «el 9º» / «el líder» / «el colista» y sus formas */
-const puestoTxt = (r) => (r.pos === 1 ? { va: 'es el líder', es: 'el líder', corto: 'líder' } : r.pos === r.n ? { va: 'es el colista', es: 'el colista', corto: 'colista' }
-  : { va: `va ${r.pos}º`, es: `el ${r.pos}º`, corto: `${r.pos}º` });
+// Cómo se escribe (Carlos, 5 nov 17:42, con el tweet de Yuri: «el lenguaje debe ser más humano, no hace falta que haya tantos puntos,
+// las oraciones pueden ser más largas y con lenguaje más entendible»): dos frases largas en vez de cinco cortas. Una del jugador (su
+// media y su % de titularidad juntos) y otra del partido (cuándo, contra quién, qué puesto lleva y si es asequible o duro); los goles
+// del rival, si destacan, en una tercera. Cada una con tres esqueletos que rotan.
 
-/** la frase del % de titularidad: tipo «vuelve» (vuelve a estar disponible) o «duda» */
-export function fraseTitularidad(tit, tipo, f) {
-  const { p, pct } = tit;
-  const w = enPalabras(p);
-  if (tipo === 'duda') {
-    return [`📊 ${cap(w)}: ${pct} % de titularidad`, `📊 Fantasy Manager lo deja en un ${pct} % de titularidad`, `📊 Con la duda, se queda en un ${pct} % de titularidad`][f];
-  }
-  if (p >= 0.65) {
-    return [`📊 Y está para jugar: Fantasy Manager le da un ${pct} % de titularidad`, `📊 ${cap(w)}: ${pct} % de titularidad`, `📊 En Fantasy Manager ya tiene un ${pct} % de titularidad`][f];
-  }
-  if (p >= 0.45) {
-    return [`📊 Lo del once está por ver: ${pct} % de titularidad`, `📊 ${cap(w)}: ${pct} % de titularidad`, `📊 Fantasy Manager le da un ${pct} % de titularidad, así que no es fijo`][f];
-  }
-  return [`📊 Otra cosa es que sea titular: de momento, un ${pct} % en Fantasy Manager`,
-    `📊 Eso sí, ${p >= 0.25 ? 'su titularidad está en el aire' : 'lo tiene difícil para ser titular'}: ${pct} %`,
-    `📊 De momento, ${w}: ${pct} % de titularidad`][f];
+/** el tramo del % de titularidad: 'alta' (65 o más), 'media' (45 o más), 'baja'; en una duda, 'duda' (el % ya lleva la duda) */
+const tramo = (tit, tipo) => (tipo === 'duda' ? 'duda' : tit.p >= 0.65 ? 'alta' : tit.p >= 0.45 ? 'media' : 'baja');
+
+/**
+ * La frase del jugador: «El defensa del Athletic suma 5,3 puntos de media y Fantasy Manager le da un 72 % de titularidad».
+ * quien: «El defensa del Athletic». media: su media (sale si es 3 o más). tit: { p, pct } o null. f: el esqueleto (0, 1 o 2).
+ * { t, numeros } o null si no hay nada que decir.
+ */
+export function fraseJugador({ quien, media = 0, tit = null, tipo = 'vuelve', f = 0 }) {
+  const m = media >= 3 ? fmt(media) : null, ql = quien.replace(/^./, (c) => c.toLowerCase());
+  const numeros = [...(m ? partes(media) : []), ...(tit ? [tit.pct] : [])];
+  if (!tit && !m) return null;
+  if (!tit) return { t: `‼️ ${[`${quien} suma ${m} puntos de media`, `${quien} lleva ${m} puntos de media`, `${quien} promedia ${m} puntos por partido`][f]}`, numeros };
+  const pct = tit.pct;
+  const P = {
+    alta: [` y Fantasy Manager le da un ${pct} % de titularidad`, `pinta a titular: tiene un ${pct} % en Fantasy Manager`, `tiene un ${pct} % de titularidad en Fantasy Manager`],
+    media: [` y Fantasy Manager le da un ${pct} % de titularidad, así que no es fijo`, `no es fijo en el once: un ${pct} % de titularidad en Fantasy Manager`, `tiene un ${pct} % de titularidad, así que el once está por ver`],
+    baja: [`, aunque de momento solo tiene un ${pct} % de titularidad en Fantasy Manager`, `lo tiene difícil para ser titular: un ${pct} % en Fantasy Manager`, `se queda de momento en un ${pct} % de titularidad`],
+    duda: [` y con la duda se queda en un ${pct} % de titularidad`, `tiene un ${pct} % de titularidad con la duda`, `queda en un ${pct} % de titularidad por la duda`],
+  }[tramo(tit, tipo)];
+  if (!m) return { t: `📊 ${[`${quien} tiene un ${pct} % de titularidad en Fantasy Manager`, `${quien} ${P[1]}`, `${quien} ${P[2]}`][f]}`, numeros };
+  return { t: `📊 ${[`${quien} suma ${m} puntos de media${P[0]}`, `${quien}, que suma ${m} puntos de media, ${P[1]}`, `Con ${m} puntos de media, ${ql} ${P[2]}`][f]}`, numeros };
 }
 
-/** la frase del rival: tres esqueletos, y cada nivel con sus palabras */
-export function fraseRival(r, { equipo, rival, casa }, f) {
-  const P = puestoTxt(r);
-  const verbo = casa ? 'recibe' : 'visita', donde = casa ? 'en casa' : 'fuera', donde2 = casa ? 'en casa' : 'a domicilio';
-  const entre = r.pos === 1 || r.pos === r.n ? P.corto : `${r.pos}º`;
-  const que = r.pos === 1 || r.pos === r.n ? P.es : `que va ${r.pos}º`;
+/**
+ * La frase del partido: «El sábado a las 18:30 visita a Osasuna, que va 15º, y es un partido asequible». r: lo que da rival().
+ * cuando: «el sábado a las 18:30» (con tweets largos) o null. f: el esqueleto (0, 1 o 2).
+ */
+export function frasePartido(r, { equipo, rival, casa, cuando = null }, f = 0) {
+  const vs = `${casa ? 'recibe' : 'visita'} ${al(rival)}`;
+  const que = r.pos === 1 ? 'el líder' : r.pos === r.n ? 'el colista' : `que va ${r.pos}º`;
+  const va = r.pos === 1 ? 'es el líder' : r.pos === r.n ? 'es el colista' : `va ${r.pos}º`;
+  const N = { 'difícil': 'un partido duro', 'fácil': 'un partido asequible', media: 'un partido de nivel medio' }[r.nivel];
+  const pred = { 'difícil': 'el partido se pone cuesta arriba', 'fácil': 'pinta bien para puntuar', media: 'no es ni fácil ni difícil' }[r.nivel];
   const emo = r.nivel === 'difícil' ? '📉' : r.nivel === 'fácil' ? '📈' : 'ℹ️';
-  const [a, b, c] = r.nivel === 'difícil' ? ['Partido duro', 'El rival no ayuda', `Le toca ${r.pos <= 6 ? 'uno de los de arriba' : 'un rival duro'}`]
-    : r.nivel === 'fácil' ? ['Buen partido para puntuar', 'El rival ayuda', `Le toca ${r.pos >= r.n - 5 ? 'uno de los de abajo' : 'un rival asequible'}`]
-      : ['Ni fácil ni difícil', 'Partido de mitad de tabla', 'Rival de nivel medio'];
-  return [`${emo} ${a}: ${el(equipo)} ${verbo} ${al(rival)}, ${que}`,
-    `${emo} ${b}: ${el(rival)} ${P.va} y ${el(equipo)} juega ${donde}`,
-    `${emo} ${c}: ${donde2}, ante ${el(rival)} (${entre})`][f];
+  return [`${emo} ${cuando ? `${cap(cuando)} ${vs}` : cap(vs)}, ${que}, y es ${N}`,
+    `${emo} Le toca ${N}${cuando ? ` ${cuando}` : ''}: ${el(equipo)} ${vs}, ${que}`,
+    `${emo} ${cap(el(rival))}, su rival${cuando ? ` ${cuando}` : ''}, ${va}, así que ${pred}`][f];
 }
 
 /** lo que marca o encaja el rival, solo si está entre los 4 primeros o los 4 últimos (lo que le importa a un portero o defensa: lo que
@@ -133,34 +141,30 @@ export function fraseGoles(r, posId, f) {
   if (!mucho && !poco) return null;
   const G = fmt(g), goles = G === '1' ? 'gol' : 'goles';
   const t = atras
-    ? (mucho ? [`⚠️ Ojo con la portería a cero: el rival marca ${G} ${goles} por partido`, `⚠️ Y el rival es de los que más marcan: ${G} ${goles} por partido`]
-      : [`📈 Buena pinta para la portería a cero: el rival marca ${G} ${goles} por partido`, `📈 Y el rival es de los que menos marcan: ${G} ${goles} por partido`])
-    : (mucho ? [`📈 Y el rival es de los que más encajan: ${G} ${goles} por partido`, `📈 Hay sitio para el gol: el rival encaja ${G} por partido`]
-      : [`⚠️ Eso sí, el rival es de los que menos encajan: ${G} ${goles} por partido`, `⚠️ Ojo, que el rival solo encaja ${G} ${goles} por partido`]);
+    ? (mucho ? [`⚠️ Ojo con la portería a cero, porque el rival marca ${G} ${goles} por partido`, `⚠️ Eso sí, el rival es de los que más marcan, con ${G} ${goles} por partido`]
+      : [`📈 Buena pinta para la portería a cero, porque el rival solo marca ${G} ${goles} por partido`, `📈 Además, el rival es de los que menos marcan, con ${G} ${goles} por partido`])
+    : (mucho ? [`📈 Además, el rival es de los que más encajan, con ${G} ${goles} por partido`, `📈 Y hay sitio para el gol, porque el rival encaja ${G} por partido`]
+      : [`⚠️ Eso sí, el rival es de los que menos encajan, con ${G} ${goles} por partido`, `⚠️ Ojo, que el rival solo encaja ${G} ${goles} por partido`]);
   return { t: t[f % 2], numeros: partes(g) };
 }
 
 /**
- * Las ideas que se añaden a un tweet de un jugador (para tweet() de lib/redactar.mjs), en un párrafo aparte con tweets largos:
- * el % de titularidad, el rival y lo que marca o encaja, y la hora (con tweets largos; si va con el rival, con otras palabras).
- * tit, riv: lo que dan titularidad() y rival() (o null). hr: lo que da cuando() (o null). k: cuántos tweets de un jugador van hoy.
- * Devuelve { ideas, numeros }.
+ * Lo que le sirve al mánager en un tweet de un jugador (para tweet() de lib/redactar.mjs), en un párrafo aparte con tweets largos:
+ * la frase del jugador (media y % de titularidad), la del partido (cuándo, rival, puesto y nivel) y, si destacan, los goles del rival.
+ * Sin rival, la hora sola («El partido es…»). quien: «El defensa del Athletic». tit, riv: lo que dan titularidad() y rival() (o null).
+ * hr: lo que da cuando() (o null). k: cuántos tweets de un jugador van hoy. Devuelve { ideas, numeros }.
  */
-export function ideasInfo({ posId, equipo, pp, tit = null, riv = null, tipo = 'vuelve', hr = null, k = 0, dia = '', largo = false }) {
+export function ideasInfo({ posId, equipo, pp, quien, media = 0, tit = null, riv = null, tipo = 'vuelve', hr = null, k = 0, dia = '', largo = false }) {
   const ideas = [], numeros = [];
-  if (tit) { ideas.push({ t: fraseTitularidad(tit, tipo, turno(3, `infT${dia}`, k)), prio: 5 }); numeros.push(tit.pct); }
+  const A = quien ? fraseJugador({ quien, media, tit, tipo, f: turno(3, `infA${dia}`, k) }) : null;
+  if (A) { ideas.push({ t: A.t, prio: 5 }); numeros.push(...A.numeros); }
   if (riv && pp) {
-    ideas.push({ t: fraseRival(riv, { equipo, rival: pp.rival, casa: !!pp.enCasa }, turno(3, `infR${dia}`, k)), prio: 4 });
-    numeros.push(riv.pos);
+    ideas.push({ t: frasePartido(riv, { equipo, rival: pp.rival, casa: !!pp.enCasa, cuando: hr ? hr.t : null }, turno(3, `infB${dia}`, k)), prio: 4 });
+    numeros.push(riv.pos, ...(hr ? hr.numeros : []));
     const g = fraseGoles(riv, posId, turno(2, `infG${dia}`, k));
     if (g) { ideas.push({ t: g.t, prio: 3 }); numeros.push(...g.numeros); }
-  }
-  if (hr) {
-    // con el rival ya dicho, «El partido es…» detrás de «Partido duro…» repetía la palabra
-    const t = riv ? [`🗓️ Se juega ${hr.t}`, `🗓️ Será ${hr.t}`][turno(2, `infH${dia}`, k)] : `🗓️ El partido es ${hr.t}`;
-    ideas.push({ t, prio: 2 }); numeros.push(...hr.numeros);
-  }
-  // con tweets largos, lo del partido en su párrafo (la noticia arriba; lo que le sirve al mánager, debajo)
+  } else if (hr) { ideas.push({ t: `🗓️ El partido es ${hr.t}`, prio: 2 }); numeros.push(...hr.numeros); }
+  // con tweets largos, lo que le sirve al mánager en su párrafo (la noticia arriba)
   if (largo && ideas.length >= 2) ideas[0] = { ...ideas[0], t: aparte(ideas[0].t) };
   return { ideas, numeros };
 }
