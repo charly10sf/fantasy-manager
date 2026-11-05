@@ -140,6 +140,17 @@ R['Aplazados el Sevilla-Alavés y el Barça-Osasuna'] = { tipo: 'aplazamiento', 
   const t11 = await generar({ ...base, registro: r11, leer: async () => [n('MARCA', 'Aplazados el Sevilla-Alavés y el Barça-Osasuna', 'Por el temporal'), n('AS', 'Aplazados el Sevilla-Alavés y el Barça-Osasuna', 'Por el temporal')] });
   ok(t11.length === 2 && t11.some((t) => /Sevilla-Alavés/.test(t.texto)) && t11.some((t) => /Barça-Osasuna/.test(t.texto)), `dos partidos en una noticia: ${t11.map((t) => t.texto).join(' | ')}`);
 }
+// 11) la jornada que nombra partidos ya aplazados no se parte en partidos; con stats, cada club con su rival de verdad
+R['LaLiga mantiene la jornada 12; ya estaban aplazados dos'] = { tipo: 'suspension', estado: 'descartado', primera: true, segunda: false, jornada: 12, equipos: ['Sevilla', 'Alavés', 'Barcelona', 'Osasuna'], luto: true, oficial: false, contexto: '', detalle: '' };
+R['Aplazados los partidos del Sevilla y del Barça'] = { tipo: 'aplazamiento', estado: 'confirmado', primera: true, segunda: false, jornada: 0, equipos: ['Sevilla', 'Barcelona', 'Alavés', 'Osasuna'], luto: false, oficial: false, contexto: '', detalle: '' };
+{
+  const t12 = await generar({ ...base, registro: new Registro(config), leer: async () => [n('MARCA', 'LaLiga mantiene la jornada 12; ya estaban aplazados dos', 'La jornada 12 se jugará'), n('AS', 'LaLiga mantiene la jornada 12; ya estaban aplazados dos', 'La jornada 12 se jugará')] });
+  ok(!t12.some((t) => /Sevilla-Alavés|Barça-Osasuna/.test(t.texto)), `la jornada con partidos ya aplazados no da partidos: ${t12.map((t) => t.texto).join(' | ')}`);
+  const st = [{ id: 1, local: { id: 1 }, visitor: { id: 2 } }, { id: 2, local: { id: 3 }, visitor: { id: 5 } }];
+  const t13 = await generar({ ...base, stats: st, registro: new Registro(config), leer: async () => [n('MARCA', 'Aplazados los partidos del Sevilla y del Barça', 'Por el temporal ante el Alavés y Osasuna'), n('AS', 'Aplazados los partidos del Sevilla y del Barça', 'Por el temporal')] });
+  ok(t13.length === 2 && t13.some((t) => /Sevilla-Alavés/.test(t.texto)) && t13.some((t) => /Barça-Osasuna/.test(t.texto)), `con stats, cada uno con su rival: ${t13.map((t) => t.texto).join(' | ')}`);
+}
+ok(TEMA.test('Se jugará la jornada 12') && TEMA.test('La jornada 12 se jugará') && TEMA.test('Han decidido que haya fútbol'), 'TEMA: «se jugará la jornada»');
 // 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 13, jTxt: false }]) === 13 && numeroDe([{ jornada: 13, jTxt: false }, { jornada: 0 }]) === 0, 'el puesto, solo si todas lo traen igual');

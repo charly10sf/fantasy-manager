@@ -21,7 +21,7 @@ const ahoraReal = () => Date.now();
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 // de qué tiene que hablar una noticia para preguntar a Gemini (estrecho a propósito: cada lote gasta una pregunta)
-export const TEMA = /suspend|suspensi[oó]n|aplaz|par(a|an|ar) (la )?competici[oó]n|no habr[aá] partidos|habr[aá] f[uú]tbol|mant(iene|ener|ienen) la (jornada|competici[oó]n)|puerta cerrada|sin p[uú]blico|(cambi\w*|nuevo|modifica\w*) (de |el )?horario|horario (nuevo|definitivo)|no se jugar[aá]|se jugar[aá] (el|a|sin)|huelga|paro de (los )?futbolistas|parar (el )?f[uú]tbol|sin f[uú]tbol (este|el) fin de semana|no habr[aá] f[uú]tbol/i;
+export const TEMA = /suspend|suspensi[oó]n|aplaz|par(a|an|ar) (la )?competici[oó]n|no habr[aá] partidos|habr[aá] f[uú]tbol|mant(iene|ener|ienen) la (jornada|competici[oó]n)|puerta cerrada|sin p[uú]blico|(cambi\w*|nuevo|modifica\w*) (de |el )?horario|horario (nuevo|definitivo)|no se jugar[aá]|se (jugar|disputar)[aá]n? (el|la|los|las|a|sin|todos)|(jornada|partidos)( \d+)? se (jugar|disputar)[aá]n?|haya f[uú]tbol|habr[aá] liga|huelga|paro de (los )?futbolistas|parar (el )?f[uú]tbol|sin f[uú]tbol (este|el) fin de semana|no habr[aá] f[uú]tbol/i;
 const TIPOS = ['suspension', 'aplazamiento', 'horario', 'puertaCerrada', 'nada'];
 // de qué tiene que hablar una noticia sin clubes para contar como la jornada entera (y lo que dice que es de un partido)
 const JORNADA = /jornada|\bj\d{1,2}\b|competici[oó]n|tod[oa]s (los|las) (partidos|encuentros)|(partidos|encuentros) de (primera|segunda|laliga)|primera y segunda|no habr[aá] (f[uú]tbol|liga|partidos)|f[uú]tbol (profesional|español|en españa)/i;
@@ -67,6 +67,20 @@ export function clubesDe(nombres, equipos) {
   }
   return ids;
 }
+/** los partidos de una lista de clubes: con los partidos de la jornada (stats), cada club con su rival, y solo si están todos; sin
+    stats, por parejas en el orden de la lista. null si no cuadra */
+export function emparejar(ids, stats = null) {
+  if (!Array.isArray(stats) || !stats.length) return ids.length % 2 ? null : ids.reduce((ps, id, i) => (i % 2 ? ps : [...ps, [id, ids[i + 1]]]), []);
+  const out = [], usados = new Set();
+  for (const id of ids) {
+    if (usados.has(id)) continue;
+    const m = stats.find((x) => x && x.local && x.visitor && (String(x.local.id) === id || String(x.visitor.id) === id));
+    const rival = m ? String(String(m.local.id) === id ? m.visitor.id : m.local.id) : null;
+    if (!rival || !ids.includes(rival) || usados.has(rival)) return null;
+    usados.add(id); usados.add(rival); out.push([id, rival]);
+  }
+  return out;
+}
 /** el número de jornada de un grupo de noticias: el que sale en el texto si solo hay uno; si ninguna lo trae, el que ha puesto Gemini
     por la fecha si todas coinciden; si no, 0 («la próxima jornada») */
 export function numeroDe(hs) {
@@ -85,7 +99,7 @@ export function objeto(h, equipos) {
 }
 
 /** lee la prensa, pregunta a Gemini por lo nuevo y guarda los hechos en el registro (datos.liga) */
-async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada = null }) {
+async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada = null, stats = null }) {
   const datos = (registro && registro.datos) || {};
   const lg = (datos.liga ||= { vistas: {}, hechos: [], gemini: { dia: '', n: 0 } });
   for (const [g, t] of Object.entries(lg.vistas)) if (ahora - t > 72 * HORA) delete lg.vistas[g];
@@ -133,12 +147,17 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
     // con Gemini dando Granada, Tenerife y Sevilla salía «Se suspende el partido del Sevilla»)
     // salvo que sean dos o tres partidos de Primera con todos sus clubes casados («Aplazados el Valencia-Real Madrid y el Villarreal-
     // Getafe»): un hecho por pareja, en el orden en que los da Gemini
+    // (no si la noticia habla de la jornada: «LaLiga mantiene la jornada 12; el Sevilla-Alavés y el Málaga-Racing ya estaban aplazados»
+    // no son dos partidos que se juegan. Con los partidos de la jornada, cada club con su rival de verdad, no en el orden de Gemini)
     if (a.equipos && a.equipos.length > 2) {
       const todos = clubesDe(a.equipos, equipos);
-      if (a.equipos.length % 2 === 0 && a.equipos.length <= 6 && todos.length === a.equipos.length) {
-        for (let i = 0; i < todos.length; i += 2) lg.hechos.push({ ...h, clubes: [todos[i], todos[i + 1]] });
-        log(`  (liga) ${x.medio}: ${a.tipo} · ${a.estado} de ${todos.length / 2} partidos`);
-        continue;
+      if (!JORNADA.test(fuente) && a.equipos.length % 2 === 0 && a.equipos.length <= 6 && todos.length === a.equipos.length) {
+        const parejas = emparejar(todos, stats);
+        if (parejas) {
+          for (const par of parejas) lg.hechos.push({ ...h, clubes: par });
+          log(`  (liga) ${x.medio}: ${a.tipo} · ${a.estado} de ${parejas.length} partidos`);
+          continue;
+        }
       }
       if (h.clubes.length) { log(`  (liga) ${x.medio}: ${a.tipo} con ${a.equipos.length} equipos: no sé si es un partido o la jornada`); continue; }
     }
@@ -172,11 +191,11 @@ export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, o
 }
 
 export async function generar({ equipos, jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),
-  log = console.log, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY }) {
+  log = console.log, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY, stats = null }) {
   const [hD, hH] = config.horasLiga || [8, 24];
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   if (ventanas && !(registro && registro.fichero)) { log('  (liga) sin registro guardado: no pregunto a Gemini'); return []; }
-  const lg = await actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada });
+  const lg = await actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada, stats });
   if (registro) registro.guardar();
   // lo publicado en los últimos 5 días (la clave lleva la jornada: una suspensión de otra semana es otra noticia)
   const hechas = registro && registro.todos ? registro.todos().filter((e) => !e.t || ahora - Date.parse(e.t) < 5 * 24 * HORA || ahora < Date.parse(e.t)).map((e) => e.clave) : [];
