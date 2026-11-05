@@ -265,6 +265,13 @@
    "jornada": 12,
    "id": "2118341690163372465",
    "t": "2026-11-05T13:56:30.727Z"
+  },
+  {
+   "clave": "noticias|74:buena|2026-11-05",
+   "tipo": "noticias",
+   "jornada": 12,
+   "id": "2118377014931374332",
+   "t": "2026-11-05T16:16:52.819Z"
   }
  ],
  "estados": {
@@ -1203,7 +1210,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/02/el-chip-del-balon-del-athletic-club-real-sociedad-fallo-la-rfef-reconoce-que-pudo-no-haber-penalti-a-nico-williams-cadena-ser/": 1793658047000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cta-investiga-chip-balon-polemico-penalti-nico-williams-derbi-vasco-20261102_3467125.html": 1793654507000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261102/11674341/tebas-acusa-madrid-danar-liga-estirando-chicle-negreira.html": 1793635487000,
    "ABC|https://www.abc.es/deportes/futbol/clasificacion-laliga-dos-puntos-separan-barcelona-atletico-20261103090959-nt.html": 1793693400000,
    "ABC|https://www.abc.es/deportes/futbol/mourinho-sabelotodo-20261102153531-nt.html": 1793644578000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
@@ -1312,7 +1318,9 @@
    "SPORT|136120104": 1793882738000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-real-madrid-no-salir-relajado-partido-hemos-visto-recuperado-gen-competitivo-siempre-tenido-ultimamente-habia-perdido-20261105_3468903.html": 1793887133000,
    "AS|https://as.com/futbol/primera/aznou-y-lucas-breton-primeras-bajas-del-paron-f202611-n/": 1793887252000,
-   "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000
+   "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html": 1793893343000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000
   },
   "hechos": [
    {
@@ -1993,11 +2001,35 @@
     "motivo": "problemas físicos",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793893343000,
+    "id": "74",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Yuri regresa a la dinámica grupal tras no estar ayer",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793893343000,
+    "id": "3083",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -2808,8 +2840,8 @@
  },
  "pulido": {
   "dia": "2026-11-05",
-  "n": 4,
-  "ok": 3,
+  "n": 5,
+  "ok": 4,
   "mal": 2
  },
  "liga": {
