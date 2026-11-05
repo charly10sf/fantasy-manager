@@ -1340,7 +1340,8 @@
    "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
    "SPORT|136122728": 1793893823000,
    "SPORT|136130480": 1793895763000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
+   "SPORT|136131477": 1793897298000
   },
   "hechos": [
    {
@@ -2064,7 +2065,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
