@@ -1275,7 +1275,8 @@
    "SPORT|136071805": 1793862034000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247446/reconquista-bellingham.html": 1793869200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247434/raphinha-trabaja-brasileno-duradero-barca.html": 1793869772000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/asi-nueva-camiseta-3-real-madrid-regresa-iconico-diseno-dragon.html": 1793871315000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/asi-nueva-camiseta-3-real-madrid-regresa-iconico-diseno-dragon.html": 1793871315000,
+   "SPORT|136105785": 1793869239000
   },
   "hechos": [
    {
@@ -1835,7 +1836,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
