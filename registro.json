@@ -440,7 +440,7 @@
   "2474": "ok",
   "2477": "injured",
   "2479": "ok",
-  "2480": "injured",
+  "2480": "ok",
   "2488": "ok",
   "2490": "out_of_league",
   "2492": "ok",
@@ -1274,7 +1274,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247419/vinicius.html": 1793862427000,
    "SPORT|136071805": 1793862034000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247446/reconquista-bellingham.html": 1793869200000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247434/raphinha-trabaja-brasileno-duradero-barca.html": 1793869772000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247434/raphinha-trabaja-brasileno-duradero-barca.html": 1793869772000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/asi-nueva-camiseta-3-real-madrid-regresa-iconico-diseno-dragon.html": 1793871315000
   },
   "hechos": [
    {
@@ -1834,7 +1835,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -2715,7 +2716,8 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/el-villena-cf-pierde-4-2-en-novelda-radio-villena/": 1793862273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247424/apunta-habra-jornada-primera-segunda.html": 1793863093000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-suspenden-24-dias-empleo-sueldo-urbano-barcelona-negarse-hablar-catalan-20261105081514.html": 1793862914000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-mijas-las-lagunas-real-jaen-de-copa-del-rey-se-jugara-este-martes-10-de-noviembre-en-estepona-radio-jaen/": 1793866075000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-mijas-las-lagunas-real-jaen-de-copa-del-rey-se-jugara-este-martes-10-de-noviembre-en-estepona-radio-jaen/": 1793866075000,
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/05/ultima-hora-choque-trenes-toledo-135852320.html": 1793862600000
   },
   "hechos": [
    {
@@ -2948,7 +2950,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 5
+   "n": 6
   }
  }
 }
