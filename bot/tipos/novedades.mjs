@@ -100,7 +100,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       const fS = turno(2, `novcabS${dia}`, k);
       cab = [`🟥 ${e.nombre}, sancionado`, `🟥 ${e.nombre} no podrá jugar por sanción`][fS];
       ideas = [e.motivoSan ? { t: `⚠️ ${e.motivoSan.txt}`, prio: 9 } : null,
-        { t: e.pp ? (fS === 1 ? `❌ Se pierde el partido contra ${el(e.pp.rival)}` : R([`❌ Se pierde el partido contra ${el(e.pp.rival)}`, `❌ No estará contra ${el(e.pp.rival)}`], 'pierde')) : '❌ Se pierde el próximo partido', prio: 8 },
+        { t: e.pp ? (fS === 1 ? `❌ Se pierde el partido contra ${el(e.pp.rival)}` : `❌ No estará contra ${el(e.pp.rival)}`) : '❌ Se pierde el próximo partido', prio: 8 },
         mediaT, { t: `❌ Baja Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     } else {
       // vuelve: la lesión de la que viene, si está en la lista («Deja atrás la lesión en el sóleo»)

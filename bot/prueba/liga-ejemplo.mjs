@@ -43,7 +43,7 @@ const R = {
 let preguntas = 0, leidas = [];
 const pedirIA = async ({ prompt }) => {
   preguntas++;
-  const tit = [...prompt.matchAll(/^\[(\d+)\] (.*)$/gm)].map((m) => [Number(m[1]), m[2]]);
+  const tit = [...prompt.matchAll(/^\[(\d+)\](?: \([\d-]+\))? (.*)$/gm)].map((m) => [Number(m[1]), m[2]]);
   leidas.push(...tit.map((x) => x[1]));
   return { ok: true, modelo: 'falso', datos: { noticias: tit.map(([i, t]) => ({ i, ...(R[t] || { tipo: 'nada', estado: 'confirmado', primera: false, segunda: false, jornada: 0, equipos: [], luto: false, oficial: false, contexto: '', detalle: '' }) })) } };
 };
@@ -89,5 +89,13 @@ const t4 = redactar({ tipo: 'horario', estado: 'confirmado', obj: 'el Barça-Osa
 ok(t4.startsWith('🕐 Cambia el horario del Barça-Osasuna'), `horario: ${t4}`);
 console.log(`\n--- horario\n${t4}`);
 ok(preguntas <= 3, `preguntas a Gemini: ${preguntas}`);
+// 5) un partido de Segunda que Gemini marca como de Primera, y un aplazamiento sin clubes ni jornada: ninguno es «la jornada»
+R['Aplazado el Granada-Tenerife'] = { tipo: 'aplazamiento', estado: 'confirmado', primera: true, segunda: true, jornada: 0, equipos: ['Granada', 'Tenerife'], luto: true, oficial: false, contexto: '', detalle: '' };
+R['Tras el aplazamiento del partido'] = { tipo: 'aplazamiento', estado: 'confirmado', primera: true, segunda: false, jornada: 0, equipos: [], luto: true, oficial: false, contexto: '', detalle: '' };
+const reg5 = new Registro(config);
+const p5 = [n('SPORT', 'Aplazado el Granada-Tenerife', 'Por el fallecimiento de Jesús de Miguel'), n('AS', 'Aplazado el Granada-Tenerife', 'Por el fallecimiento'),
+  n('SPORT', 'Tras el aplazamiento del partido', 'El club informa del aplazamiento'), n('MARCA', 'Tras el aplazamiento del partido', 'Aplazado el encuentro')];
+const t5 = await generar({ ...base, registro: reg5, leer: async () => p5 });
+ok(t5.length === 0, `Segunda o sin clubes ni jornada: no sale «la jornada» (${t5.map((t) => t.texto).join(' | ')})`);
 console.log(`\n${fallos} fallos`);
 process.exit(fallos ? 1 : 0);

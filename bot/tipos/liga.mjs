@@ -33,20 +33,21 @@ const ESQUEMA = { type: 'OBJECT', required: ['noticias'], properties: { noticias
     segunda: { type: 'BOOLEAN' }, jornada: { type: 'INTEGER' }, equipos: { type: 'ARRAY', items: { type: 'STRING' } }, luto: { type: 'BOOLEAN' },
     oficial: { type: 'BOOLEAN' }, contexto: { type: 'STRING' }, detalle: { type: 'STRING' } } } } } };
 
-export function prompt(lote, equipos) {
+export function prompt(lote, equipos, jornada = null) {
   return `Eres redactor de una cuenta de LaLiga Fantasy. Te paso noticias de prensa (titular y entradilla). Para cada una di si cuenta una NOVEDAD sobre la celebración de la jornada o de un partido de LaLiga de Primera división:
 - "tipo": "suspension" (se suspende la jornada o un partido), "aplazamiento" (se aplaza a otra fecha), "horario" (cambia la fecha o la hora de un partido), "puertaCerrada" (se juega sin público) o "nada" (cualquier otra cosa: partidos de otras competiciones, Champions, Copa, selección, fútbol femenino, crónicas, opiniones, sanciones a jugadores, rumores sin fuente).
 - "estado": "se_estudia" si se está valorando o se decidirá más adelante, "confirmado" si ya está decidido, "descartado" si se ha decidido que NO (por ejemplo, la jornada se jugará).
 - "primera": true si afecta a Primera división; "segunda": true si afecta también a Segunda.
-- "jornada": el número de la jornada si la noticia lo dice con cifra; si no, 0.
-- "equipos": si la noticia es de un partido concreto (y no de la jornada entera, aunque nombre algún partido), los dos clubes de Primera, con su nombre corto (por ejemplo ${Object.values(equipos).slice(0, 3).map((e) => `"${corto(e)}"`).join(', ')}); si es la jornada entera, lista vacía.
+- "jornada": el número de la jornada si la noticia lo dice con cifra${jornada ? `; si dice «este fin de semana», «la jornada actual» o «la próxima jornada», ${jornada} o ${jornada + 1} según la fecha de la noticia (la ${jornada} es la que se juega ahora o la siguiente que toca)` : ''}; si no, 0.
+- "equipos": los clubes de un partido concreto, también si no son de Primera (y en ese caso "primera": false).
+- Más sobre "equipos": si la noticia es de un partido concreto (y no de la jornada entera, aunque nombre algún partido), los dos clubes, con su nombre corto (por ejemplo ${Object.values(equipos).slice(0, 3).map((e) => `"${corto(e)}"`).join(', ')}); si es la jornada entera, lista vacía.
 - "luto": true si detrás hay un fallecimiento, un accidente o una tragedia.
 - "oficial": true solo si lo ha anunciado LaLiga, la RFEF, el CSD o el club (comunicado), no si son fuentes o informaciones del medio.
 - "contexto": por qué, en una frase corta tuya (como mucho 100 caracteres), sin copiar la noticia, sin nombrar al medio y sin cifras que no estén en ella. Por ejemplo: "Tras el fallecimiento de X". Vacío si no lo dice.
 - "detalle": lo siguiente que se sabe (quién lo decide y cuándo, la nueva fecha u hora), en una frase corta tuya con las mismas reglas. Vacío si no lo dice.
 Nada de opiniones, adjetivos ni la palabra fantasy. Contesta solo con el JSON.
 
-${lote.map((x, i) => `[${i}] ${x.titulo}\n${x.entradilla}`).join('\n\n')}`;
+${lote.map((x, i) => `[${i}]${x.t ? ` (${diaMadrid(x.t)})` : ''} ${x.titulo}\n${x.entradilla}`).join('\n\n')}`;
 }
 
 /** los ids de los clubes de Primera que nombra Gemini («Barcelona», «Atlético de Madrid», «Sevilla FC»…) */
@@ -70,7 +71,7 @@ export function objeto(h, equipos) {
 }
 
 /** lee la prensa, pregunta a Gemini por lo nuevo y guarda los hechos en el registro (datos.liga) */
-async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave }) {
+async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada = null }) {
   const datos = (registro && registro.datos) || {};
   const lg = (datos.liga ||= { vistas: {}, hechos: [], gemini: { dia: '', n: 0 } });
   for (const [g, t] of Object.entries(lg.vistas)) if (ahora - t > 72 * HORA) delete lg.vistas[g];
@@ -92,7 +93,7 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
   const lote = nuevas.sort((a, b) => b.t - a.t).slice(0, config.ligaPorLote ?? 30);
   lg.gemini.n++;
   const hasta = ahoraReal() + (config.ligaSegundos ?? 45) * 1000;
-  const r = await pedirIA({ clave, prompt: prompt(lote, equipos), esquema: ESQUEMA, log, hasta });
+  const r = await pedirIA({ clave, prompt: prompt(lote, equipos, jornada), esquema: ESQUEMA, log, hasta });
   if (!r.ok) { log(`  (liga) Gemini no contesta: ${r.error}. Lo vuelvo a intentar en la próxima ejecución`); return lg; }
   log(`  (liga) Gemini (${r.modelo}) ha leído ${lote.length}`);
   for (const x of lote) lg.vistas[x.guid] = x.t;
@@ -104,11 +105,15 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
     // aplazar o suspender la jornada entera es lo mismo para quien juega: un solo tema
     const tipo = a.tipo === 'aplazamiento' && !(a.equipos && a.equipos.length) ? 'suspension' : a.tipo;
     const h = { guid: x.guid, medio: x.medio, t: x.t, tipo, estado: a.estado, segunda: !!a.segunda,
-      jornada: a.jornada > 0 && a.jornada <= 38 && nums.includes(a.jornada) ? a.jornada : 0, clubes: clubesDe(a.equipos, equipos).slice(0, 2),
+      // el número: el que sale en la noticia o, si Gemini lo saca de «este fin de semana» / «la próxima jornada», esta o la siguiente
+      jornada: a.jornada > 0 && a.jornada <= 38 && (nums.includes(a.jornada) || (jornada && (a.jornada === jornada || a.jornada === jornada + 1))) ? a.jornada : 0, clubes: clubesDe(a.equipos, equipos).slice(0, 2),
       luto: !!a.luto, oficial: !!a.oficial && OFICIAL.test(fuente),
       contexto: frase(a.contexto, { fuente, max: 100 }), detalle: frase(a.detalle, { fuente, max: 100 }), nums };
-    // un partido de un solo club no se entiende sin el rival; mejor esperar a otra noticia que lo diga
-    if (a.equipos && a.equipos.length === 2 && h.clubes.length < 2) { log(`  (liga) ${x.medio}: ${a.tipo} de un partido sin casar los dos clubes`); continue; }
+    // un partido de un solo club no se entiende sin el rival; mejor esperar a otra noticia que lo diga. Y un club que no es de Primera
+    // (un partido de Segunda: «Granada-Tenerife») no puede acabar como «la jornada» por no tener clubes casados (auditoría del 5 nov)
+    if (a.equipos && a.equipos.length && h.clubes.length < Math.min(2, a.equipos.length)) { log(`  (liga) ${x.medio}: ${a.tipo} de un partido sin casar sus clubes`); continue; }
+    // la jornada entera, solo si la noticia habla de la jornada o del fin de semana (no de «el partido» a secas)
+    if (!h.clubes.length && !/jornada|fin de semana|competici[oó]n|todos los partidos|f[uú]tbol profesional/i.test(fuente)) { log(`  (liga) ${x.medio}: ${a.tipo} sin clubes ni jornada: no lo cuento como la jornada`); continue; }
     log(`  (liga) ${x.medio}: ${a.tipo} · ${a.estado}${h.oficial ? ' (oficial)' : ''}${h.luto ? ' (luto)' : ''}`);
     lg.hechos.push(h);
   }
@@ -140,7 +145,7 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
   const [hD, hH] = config.horasLiga || [8, 24];
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   if (ventanas && !(registro && registro.fichero)) { log('  (liga) sin registro guardado: no pregunto a Gemini'); return []; }
-  const lg = await actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave });
+  const lg = await actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada });
   if (registro) registro.guardar();
   // lo publicado en los últimos 5 días (la clave lleva la jornada: una suspensión de otra semana es otra noticia)
   const hechas = registro && registro.todos ? registro.todos().filter((e) => !e.t || ahora - Date.parse(e.t) < 5 * 24 * HORA || ahora < Date.parse(e.t)).map((e) => e.clave) : [];
