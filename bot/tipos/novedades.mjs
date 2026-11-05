@@ -4,7 +4,7 @@
 // bot-estado); la primera vez solo lo guarda. Fuera de horario (9 a 23 h) no mira nada, así los cambios se acumulan para el día.
 import { corto, fmt, partes, elegir, el, del, largo, rotar, turno } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, paraLa, cuando, aparte } from '../lib/redactar.mjs';
-import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
+import { tarjetaBajas, tarjetasNovedades } from '../lib/datos-tarjetas.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
@@ -154,7 +154,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos
     const clave = `novedades|${xs.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`;
     return { tipo: 'novedades', clave, jornada, texto, numeros: [J, ...pps.map((p) => p.jornada), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...malos.flatMap((m) => [...numerosDe(m.parte), ...(m.motivoSan ? m.motivoSan.numeros : [])])],
-      tarjeta: tarjetaBajas({ jornada, filas: xs, pp: mismo ? xs[0].pp : null, clave }) };
+      // buenas y malas noticias juntas: dos tarjetas, la verde con los que vuelven y la de bajas con el resto (Carlos, 5 nov 07:08)
+      tarjeta: tarjetasNovedades({ jornada, filas: xs, clave, ppDe: (fs) => (fs.every((e) => e.equipo === fs[0].equipo) ? fs[0].pp : null) }) };
   };
 
   if (eventos.length === 1) { const t = solo(eventos[0]); return t ? [t] : []; }
