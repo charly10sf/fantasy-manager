@@ -176,7 +176,8 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     const luto = hs.some((h) => h.luto);
     const texto = redactar({ tipo: g.tipo, estado: g.estado, obj: g.obj, luto, contexto: mejor('contexto'), detalle: mejor('detalle'), medios, oficial });
     const jn = hs.find((h) => h.jornada) ? hs.find((h) => h.jornada).jornada : null;
-    out.push({ tipo: 'liga', clave, jornada, texto, numeros: [...new Set([jornada, ...(jn ? [jn] : []), ...hs.flatMap((h) => h.nums || [])])], tarjeta: null });
+    // jornadaAire: la jornada de la que habla la noticia, si la dice (lib/aire.mjs apunta con ella las fechas de sus partidos)
+    out.push({ tipo: 'liga', clave, jornada, jornadaAire: jn, texto, numeros: [...new Set([jornada, ...(jn ? [jn] : []), ...hs.flatMap((h) => h.nums || [])])], tarjeta: null });
   }
   return out;
 }

@@ -2,7 +2,7 @@
 // (media de 4 o más, o 10 M o más de valor): pasa a lesionado, sancionado, o vuelve a estar disponible. Las dudas no salen solas
 // (una duda necesita una segunda fuente, regla de Carlos). Compara con el estado guardado en el registro (`estados`, en la rama
 // bot-estado); la primera vez solo lo guarda. Fuera de horario (9 a 23 h) no mira nada, así los cambios se acumulan para el día.
-import { corto, fmt, partes, elegir, el, del, largo, rotar } from '../lib/texto.mjs';
+import { corto, fmt, partes, elegir, el, del, largo, rotar, turno } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, paraLa, cuando, aparte } from '../lib/redactar.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
@@ -86,7 +86,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const quien = `${cap(segunda(e.pos, e.nombre))} ${del(e.equipo)}`;
     const d = diaMadrid(e.desde);
     const p = e.parte;
-    const mediaT = e.media >= 3 ? { t: R([`‼️ ${quien} suma ${fmt(e.media)} puntos de media`, `‼️ Es de los que pesan: ${fmt(e.media)} puntos de media`, `‼️ Va a ${fmt(e.media)} puntos por partido`], 'media'), prio: 5 } : null;
+    const mediaT = e.media >= 3 ? { t: R([`‼️ ${quien} suma ${fmt(e.media)} puntos de media`, `‼️ Es de los que pesan en ${el(e.equipo)}: ${fmt(e.media)} puntos de media`, `‼️ En ${el(e.equipo)} va a ${fmt(e.media)} puntos por partido`], 'media'), prio: 5 } : null;
     let cab, ideas;
     if (e.que === 'lesion') {
       const dudaWeb = p && p.estado === 'duda';
@@ -96,9 +96,11 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
         p && p.estado === 'baja' && p.hasta ? { t: R([`🗓️ No se le espera hasta ${p.hasta}`, `🗓️ Estará fuera hasta ${p.hasta}`], 'hasta'), prio: venta ? 9 : 7 } : dudaWeb ? { t: R(['⁉️ De momento no está descartado', '⁉️ Aún no está descartado del todo'], 'desc'), prio: 7 } : null,
         mediaT, { t: venta ? '💸 Venta Fantasy Obligatoria' : `${dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     } else if (e.que === 'sancion') {
-      cab = R([`🟥 ${e.nombre}, sancionado`, `🟥 ${e.nombre} no podrá jugar por sanción`], 'cabS');
+      // (la cabecera y «se pierde» van atadas: «no podrá jugar por sanción. No estará contra…» decía lo mismo dos veces)
+      const fS = turno(2, `novcabS${dia}`, k);
+      cab = [`🟥 ${e.nombre}, sancionado`, `🟥 ${e.nombre} no podrá jugar por sanción`][fS];
       ideas = [e.motivoSan ? { t: `⚠️ ${e.motivoSan.txt}`, prio: 9 } : null,
-        { t: e.pp ? R([`❌ Se pierde el partido contra ${el(e.pp.rival)}`, `❌ No estará contra ${el(e.pp.rival)}`], 'pierde') : '❌ Se pierde el próximo partido', prio: 8 },
+        { t: e.pp ? (fS === 1 ? `❌ Se pierde el partido contra ${el(e.pp.rival)}` : R([`❌ Se pierde el partido contra ${el(e.pp.rival)}`, `❌ No estará contra ${el(e.pp.rival)}`], 'pierde')) : '❌ Se pierde el próximo partido', prio: 8 },
         mediaT, { t: `❌ Baja Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     } else {
       // vuelve: la lesión de la que viene, si está en la lista («Deja atrás la lesión en el sóleo»)
@@ -106,7 +108,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       const les = p && p.lesion && /(lesi[oó]n|rotura|molestia|sobrecarga|contusi[oó]n|esguince|fractura|elongaci[oó]n|tendinitis|luxaci[oó]n|distensi[oó]n|edema|fascitis|pubalgia|golpe|problema|dolencia|tobillo|rodilla|isquio|gemelo|aductor|s[oó]leo|cu[aá]driceps|hombro|espalda)/i.test(p.lesion) ? lesionTxt(p) : '';
       const art = /^(lesi[oó]n|rotura|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n|luxaci[oó]n|pubalgia)/.test(les) ? 'la ' : /^(golpe|esguince|edema|problema)/.test(les) ? 'el ' : '';
       const tras = les ? ` deja atrás ${art}${les}` : e.antes === 'injured' ? ' ya está recuperado' : e.antes === 'suspended' ? ' ya ha cumplido la sanción' : ' deja de estar en duda';
-      cab = R([`✅ ${e.nombre} vuelve a estar disponible`, `✅ ${e.nombre} ya está disponible`, `✅ Buenas noticias: vuelve ${e.nombre}`], 'cabV');
+      cab = R([`✅ ${e.nombre} vuelve a estar disponible`, `✅ ${e.nombre}, de nuevo disponible`, `✅ Buenas noticias: vuelve ${e.nombre}`], 'cabV');
       ideas = [{ t: `‼️ ${quien}${tras}`, prio: 8 }, e.media >= 3 ? { t: R([`📊 Llega con ${fmt(e.media)} puntos de media`, `📊 Es un jugador de ${fmt(e.media)} puntos de media`, `📊 Su media: ${fmt(e.media)} puntos`], 'mediaV'), prio: 5 } : null,
         { t: `✅ Disponible Fantasy ${paraLa(e.pp, null)}`, prio: 9 }];
     }

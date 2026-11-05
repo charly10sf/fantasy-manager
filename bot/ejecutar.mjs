@@ -13,7 +13,7 @@ import { Registro } from './lib/registro.mjs';
 import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
 import { fijarLimite, limite, largo } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
-import { apuntarDecision } from './lib/aire.mjs';
+import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
 
 /** AAAAMMDD de hoy en Madrid (y de ayer, entre las 0 y las 3) */
 function diasEspn() {
@@ -150,7 +150,12 @@ for (const q of quienes) {
     if (d === 'ok' && publica) {
       const r = await publicar(t.texto, claves, { mediaIds });
       // una suspensión o un aplazamiento confirmado: la fecha que tenía cada partido, para que la previa espere a la nueva (lib/aire.mjs)
-      if (t.tipo === 'liga' && (r.ok || (r.estado === 403 && /duplicate/i.test(r.cuerpo)))) apuntarDecision(registro, t.clave, stats);
+      if (t.tipo === 'liga' && (r.ok || (r.estado === 403 && /duplicate/i.test(r.cuerpo)))) {
+        // la jornada de la decisión: la que dice la noticia; si no lo dice, esta mientras le queden partidos por jugar a los que toque
+        // (la jornada entera: si ya ha empezado, la siguiente). «Suspendida la J13» el domingo de la J12 apunta los partidos de la J13
+        const jA = Number(t.jornadaAire) || ((t.clave.split('|')[2] === 'j' ? !stats.some((x) => Number(x.matchState) !== 1) : tocaPendiente(t.clave, stats)) ? jornada : jornada + 1);
+        apuntarDecision(registro, t.clave, jA === jornada ? stats : await statsSemana(jA).catch(() => []), jA);
+      }
       if (r.ok) { registro.marcar(t, r.id); publicados++; estado = `PUBLICADO (id ${r.id})${mediaIds.length ? ` con ${mediaIds.length} imagen(es)` : ''}`; }
       else if (r.estado === 403 && /duplicate/i.test(r.cuerpo)) { registro.marcar(t, null); estado = 'X dice que ya estaba publicado: lo apunto y sigo'; }
       else if (largo() && v.peso > 280 && rechazoPorLargo(r)) {

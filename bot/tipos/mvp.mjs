@@ -38,10 +38,10 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     // si el final ya dijo su media («Su media es de 4,7…», cuando dobla), aquí solo los puntos de la temporada
     const mediaR = Math.round(Number(j.averagePoints) * 10) / 10, yaMedia = !otro && mediaR >= 3 && pts > 2 * mediaR;
     const seg = `${cap(segunda(j.positionId, nombre))} ${del(equipo)}`;
-    ideas.push({ t: largo() ? R(yaMedia ? [`📊 ${seg} lleva ${j.points} puntos en la temporada`, `📊 En lo que va de temporada suma ${j.points} puntos`, `📊 Con esto llega a ${j.points} puntos en la temporada`]
+    // (también con 280: con una sola forma, la segunda frase de los diez MVP era la misma)
+    ideas.push({ t: R(yaMedia ? [`📊 ${seg} lleva ${j.points} puntos en la temporada`, `📊 En lo que va de temporada suma ${j.points} puntos`, `📊 Con esto llega a ${j.points} puntos en la temporada`]
       : [`📊 ${seg} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`,
-        `📊 En lo que va de temporada suma ${j.points} puntos, a ${fmt(j.averagePoints)} por partido`, `📊 Con esto llega a ${j.points} puntos en la temporada y una media de ${fmt(j.averagePoints)}`], 'mvps')
-      : `📊 ${seg} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`, prio: 6 });
+        `📊 En lo que va de temporada suma ${j.points} puntos, a ${fmt(j.averagePoints)} por partido`, `📊 Con esto llega a ${j.points} puntos en la temporada y una media de ${fmt(j.averagePoints)}`], 'mvps'), prio: 6 });
     num.push(Number(j.points), ...partes(j.averagePoints));
     // con tweets largos (X Premium): lo que vale y cuándo vuelve a jugar, cada MVP contado a su manera. Lo de «más del doble de su media»
     // ya lo dice el tweet del final, que sale justo antes: aquí no se repite
