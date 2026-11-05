@@ -1345,7 +1345,10 @@
    "SPORT|136137325": 1793901641000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "SPORT|136138125": 1793904953000,
-   "SPORT|136139762": 1793910076000
+   "SPORT|136139762": 1793910076000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261105/1004247722/casado-quiere-seguir-pasos-aubameyang.html": 1793912507000,
+   "SPORT|136110344": 1793910379000
   },
   "hechos": [
    {
@@ -2057,7 +2060,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
