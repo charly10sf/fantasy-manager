@@ -4,19 +4,19 @@
 // bot-estado); la primera vez solo lo guarda. Fuera de horario (9 a 23 h) no mira nada, así los cambios se acumulan para el día.
 import { corto, fmt, partes, elegir, el, del, largo, rotar, turno } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, paraLa, cuando, aparte } from '../lib/redactar.mjs';
-import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
+import { tarjetaBajas, tarjetasNovedades } from '../lib/datos-tarjetas.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 
 const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
-const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
+import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 const ESTADO_DE = { lesion: 'injured', sancion: 'suspended', vuelve: 'ok' };
 const HORA = 36e5;
 
 export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido, soloSeguras = false, listaPartes = null, fichaDe = fichaLaLiga }) {
-  const [hD, hH] = config.horasNovedades || [9, 23];
+  const [hD, hH] = horas(config, 'horasNovedades', [9, 23], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   const actual = {};
   for (const j of jugadores || []) actual[j.id] = j.playerStatus || 'ok';
@@ -154,7 +154,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos
     const clave = `novedades|${xs.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`;
     return { tipo: 'novedades', clave, jornada, texto, numeros: [J, ...pps.map((p) => p.jornada), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...malos.flatMap((m) => [...numerosDe(m.parte), ...(m.motivoSan ? m.motivoSan.numeros : [])])],
-      tarjeta: tarjetaBajas({ jornada, filas: xs, pp: mismo ? xs[0].pp : null, clave }) };
+      // buenas y malas noticias juntas: dos tarjetas, la verde con los que vuelven y la de bajas con el resto (Carlos, 5 nov 07:08)
+      tarjeta: tarjetasNovedades({ jornada, filas: xs, clave, ppDe: (fs) => (fs.every((e) => e.equipo === fs[0].equipo) ? fs[0].pp : null) }) };
   };
 
   if (eventos.length === 1) { const t = solo(eventos[0]); return t ? [t] : []; }

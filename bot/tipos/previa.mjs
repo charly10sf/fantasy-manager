@@ -13,7 +13,7 @@ import { enElAire } from '../lib/aire.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
-const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
+import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
 const POS_ESPN = (a) => (/^G/.test(a) ? 'POR' : /^(CD|LB|RB|D|CB|LWB|RWB|SW)/.test(a) ? 'DEF' : /^(F|CF|ST|LF|RF|LW|RW)/.test(a) ? 'DEL' : 'MED');
 const ORDEN = { POR: 0, DEF: 1, MED: 2, DEL: 3 };
 const pct = (p) => Math.round(p * 100);
@@ -21,7 +21,7 @@ const pct = (p) => Math.round(p * 100);
 export async function generar({ semana, jugadores, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log, probarAcabados = false }) {
   const out = [];
   const jornadas = [...new Set([semana.weekNumber, semana.nextWeek].filter(Boolean))];
-  const [hD, hH] = config.horasPrevia || [9, 23];
+  const [hD, hH] = horas(config, 'horasPrevia', [9, 23], ahora);
   const enHora = !ventanas || forzar || (horaMadrid(ahora) >= hD && horaMadrid(ahora) < hH);
   // (se lee la lista de lesionados solo si hay alguna previa que escribir)
   let dudaParteSet = null;

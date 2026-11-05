@@ -20,12 +20,18 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     const v = validarTarjeta(svg, permitidos, PALABRAS_FIJAS);
     hechas.push({ nombre, svg, ok: v.ok, errores: v.errores, png: v.ok ? await aPng(svg) : null });
   };
-  // tarjetas que el propio tipo deja montadas (resumen de la jornada y onces de la previa): aquí solo se bajan las imágenes y se dibujan
-  if (t.tarjeta && (cfg[t.tipo] ?? cfg[t.tarjeta.tipo] ?? forzar)) {
+  // tarjetas que el propio tipo deja montadas (resumen de la jornada y onces de la previa): aquí solo se bajan las imágenes y se dibujan.
+  // `t.tarjeta` puede ser una lista: unas novedades con buenas y malas noticias llevan dos (la verde de los que vuelven y la de bajas)
+  const lista = t.tarjeta ? [].concat(t.tarjeta).filter(Boolean) : [];
+  if (lista.length && (cfg[t.tipo] ?? cfg[lista[0].tipo] ?? forzar)) {
+    for (const tj of lista) await montada(tj);
+    return hechas;
+  }
+  async function montada(tarjeta) {
     const img = (u) => (u ? fuentes.imagen(u).catch(() => null) : null);
-    const d = structuredClone(t.tarjeta.d);
-    if (t.tarjeta.tipo === 'resumen') for (const f of d.filas) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
-    if (t.tarjeta.tipo === 'onces') {
+    const d = structuredClone(tarjeta.d);
+    if (tarjeta.tipo === 'resumen') for (const f of d.filas) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
+    if (tarjeta.tipo === 'onces') {
       // las caras de los 22, de la lista de jugadores de LaLiga (Carlos, 3 nov 11:47: el once dibujado en el campo)
       const porId = new Map((jugadores || []).map((j) => [String(j.id), j]));
       for (const k of ['local', 'visitante']) {
@@ -34,24 +40,23 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
         for (const j of d[k].once) { j.cara = await caraDe(j); if (j.alt) j.alt.cara = await caraDe(j.alt); }
       }
     }
-    if (t.tarjeta.tipo === 'bajas') {
+    if (tarjeta.tipo === 'bajas') {
       for (const f of d.filas) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
       if (d.equipo) d.equipo.escudo = await img(d.equipo.escudoUrl);
       if (d.rival) d.rival.escudo = await img(d.rival.escudoUrl);
     }
-    let permitidos = t.tarjeta.permitidos;
+    let permitidos = tarjeta.permitidos;
     // la de un solo jugador va en carta: con sus últimas jornadas y su valor, como la del MVP (Carlos, 3 nov 11:24)
-    if (t.tarjeta.tipo === 'bajas' && d.filas.length === 1) {
+    if (tarjeta.tipo === 'bajas' && d.filas.length === 1) {
       const j = (jugadores || []).find((x) => String(x.id) === String(d.filas[0].id));
       if (j) {
         const h = await historialJugador(j, { jornada, fuentes }).catch(() => null);
         if (h) { Object.assign(d.filas[0], h.d); permitidos = { ...permitidos, numeros: [...(permitidos.numeros || []), ...h.numeros] }; }
       }
     }
-    if (t.tarjeta.tipo === 'mercado') for (const f of [...d.suben, ...d.bajan]) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
-    const dibujo = { resumen: svgResumen, onces: svgOnces, mercado: svgMercado, bajas: svgBajas }[t.tarjeta.tipo] || svgOnces;
-    await hacer(t.tarjeta.nombre, { d, permitidos }, dibujo(d));
-    return hechas;
+    if (tarjeta.tipo === 'mercado') for (const f of [...d.suben, ...d.bajan]) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
+    const dibujo = { resumen: svgResumen, onces: svgOnces, mercado: svgMercado, bajas: svgBajas }[tarjeta.tipo] || svgOnces;
+    await hacer(tarjeta.nombre, { d, permitidos }, dibujo(d));
   }
   const m = stats.find((x) => String(x.id) === String(t.partido));
   if (!m) return [];

@@ -9,6 +9,7 @@
   "horasCaidas": [9, 21],
   "horasMercado": [[0, 1], [8, 12]],
   "horasSilencio": [1, 8],
+  "inicioEntreSemana": 7,
   "separacionBajasMin": 75,
   "separaciones": { "caidas": { "novedades": 75, "noticias": 45 }, "novedades": { "caidas": 75, "noticias": 45 }, "noticias": { "caidas": 45, "novedades": 45, "noticias": 30 }, "sancionados": { "caidas": 45, "novedades": 45, "noticias": 30, "sancionados": 60 }, "lloros": { "caidas": 30, "novedades": 30, "noticias": 30, "sancionados": 30 }, "liga": { "liga": 20 } },
   "horasNoticias": [9, 23],
