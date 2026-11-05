@@ -3,14 +3,14 @@
 // de Madrid): el último punto es el de hoy. Lleva el cierre de «Fantasy Manager · enlace en la bio».
 import { valorMercado } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
-import { cierre, corto, fmt, partes, del, largo, hash } from '../lib/texto.mjs';
+import { cierre, corto, fmt, partes, del, largo, hash, dineroTxt } from '../lib/texto.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t));
 const puntos = (h) => (Array.isArray(h) ? h : []).map((v) => ({ t: Date.parse(v.date), v: Number(v.marketValue) })).filter((x) => x.t && x.v > 0).sort((a, b) => a.t - b.t);
 /** 1 234 567 -> «1,2 M»; por debajo del millón, en miles: «640 K» */
-const dinero = (x) => (x >= 1e6 ? `${fmt(x / 1e6)} M` : `${Math.round(x / 1e3)} K`);
+const dinero = (x) => dineroTxt(x).t;
 /** las cifras que escribe `dinero` (para el validador): 2,1 M → [2, 1]; 640 K → [640] (5 nov: con [639, 6] el tweet no pasaba) */
-const cifrasDinero = (x) => (Math.abs(x) >= 1e6 ? partes(Math.abs(x) / 1e6) : [Math.round(Math.abs(x) / 1e3)]);
+const cifrasDinero = (x) => dineroTxt(x).numeros;
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
 /**

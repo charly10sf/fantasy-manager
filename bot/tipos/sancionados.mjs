@@ -70,8 +70,15 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {},
       const cab = n === 1 ? `🟥 ${xs[0].nombre} se pierde la jornada ${jornada} por sanción` : `🟥 ${mayus(enLetra(n))} sancionados para la jornada ${jornada}`;
       // (con tweets largos, contra quién no estará cada uno, dicho de otra forma en cada línea: no la misma coletilla en todas)
       const cola = [(r) => ` y se pierde el partido contra ${el(r.rival)}`, (r) => `, así que no estará contra ${el(r.rival)}`, (r) => `: no jugará contra ${el(r.rival)}`];
-      const lineas = xs.map((x, i) => { const l = lineaSancion(x, { solo: n === 1 }), r = pp[String(x.teamId)];
-        return L && n > 1 && r ? `${l}${(l.includes(':') ? cola.slice(0, 2) : cola)[i % (l.includes(':') ? 2 : 3)](r)}` : l; });
+      // (cada línea, la primera forma que aún no ha salido en el tweet; si ya salieron todas, otra que la de la línea anterior. Con
+      // `i % 2` para las líneas con «:», la 1.ª y la 3.ª acababan igual; auditoría del 5 nov)
+      const usadas = [];
+      const lineas = xs.map((x) => { const l = lineaSancion(x, { solo: n === 1 }), r = pp[String(x.teamId)];
+        if (!(L && n > 1 && r)) return l;
+        const ok = l.includes(':') ? [0, 1] : [0, 1, 2], ult = usadas[usadas.length - 1];
+        const f = ok.find((i) => !usadas.includes(i)) ?? ok.find((i) => i !== ult) ?? ok[0];
+        usadas.push(f);
+        return `${l}${cola[f](r)}`; });
       const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
       const pr = n === 1 ? pp[String(xs[0].teamId)] : null;
       const etiqueta = n === 1 ? `❌ Baja Fantasy ${paraLa(pr, jornada)}` : `❌ Bajas Fantasy para la jornada ${jornada}`;

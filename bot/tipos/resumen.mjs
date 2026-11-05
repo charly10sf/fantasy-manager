@@ -1,8 +1,9 @@
 // Mejores y peores de la jornada, con los puntos oficiales de LaLiga Fantasy (weekPoints de stats/week/{n}). Los 6 van en la tarjeta;
 // el texto cuenta solo lo llamativo (guía de estilo del 3 nov): el primero, los dos siguientes y quién se sale de su media o qué
 // equipo domina la lista.
-import { corto, elegir, fmt, partes, del, largo } from '../lib/texto.mjs';
+import { corto, elegir, fmt, partes, del, largo, dineroTxt } from '../lib/texto.mjs';
 import { tweet, aparte } from '../lib/redactar.mjs';
+import { enLetra, mayus } from '../lib/agrupar.mjs';
 
 export async function generar({ stats, jornada, jugadores = [], completo = true, dazn = null }) {
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
@@ -39,7 +40,7 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
     const conEq = (xs) => { const eqs = new Set(xs.map((f) => f.equipo)); return eqs.size === 1 ? `${lista(xs.map((f) => f.nombre))} (${xs[0].equipo})` : lista(xs.map((f) => `${f.nombre} (${f.equipo})`)); };
     const a = ord[0];
     const arriba = ord.filter((f) => f.pts === a.pts);
-    if (arriba.length > 1) ideas.push({ t: bueno ? `🥇 ${arriba.length === 2 ? '' : `${arriba.length} empatados: `}${conEq(arriba)}, ${a.pts} puntos cada uno` : `🔻 ${arriba.length === 2 ? '' : `${arriba.length} se quedan en ${a.pts}: `}${conEq(arriba)}${arriba.length === 2 ? `, ${a.pts} cada uno` : ''}`, prio: 9 });
+    if (arriba.length > 1) ideas.push({ t: bueno ? `🥇 ${arriba.length === 2 ? '' : `${mayus(enLetra(arriba.length))} empatados: `}${conEq(arriba)}, ${a.pts} puntos cada uno` : `🔻 ${arriba.length === 2 ? '' : `${mayus(enLetra(arriba.length))} se quedan en ${a.pts}: `}${conEq(arriba)}${arriba.length === 2 ? `, ${a.pts} cada uno` : ''}`, prio: 9 });
     else ideas.push({ t: bueno ? elegir([`🥇 ${conEq([a])} se va a ${a.pts} puntos`, `🥇 Nadie saca más que ${conEq([a])}: ${a.pts} puntos`], `top${jornada}`) : `🔻 ${conEq([a])} se queda en ${a.pts}`, prio: 9 });
     num.push(a.pts, arriba.length);
     const det = ord.slice(arriba.length, arriba.length + 2);
@@ -51,7 +52,8 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
     const porEquipo = {};
     for (const f of ord) porEquipo[f.equipo] = (porEquipo[f.equipo] || 0) + 1;
     const [eq, n] = Object.entries(porEquipo).sort((x, y) => y[1] - x[1])[0];
-    if (n >= 3) { const cuantos = n === ord.length ? `Los ${n}` : `${n} de los ${ord.length}`; ideas.push({ t: bueno ? `💥 ${cuantos} mejores son ${del(eq)}` : `⚠️ ${cuantos} peores son ${del(eq)}`, prio: 7 }); num.push(n); }
+    if (n >= 3) { // (en letra: una frase que empieza por cifra se lee mal; auditoría del 5 nov)
+      const cuantos = n === ord.length ? `Los ${enLetra(n)}` : `${mayus(enLetra(n))} de los ${enLetra(ord.length)}`; ideas.push({ t: bueno ? `💥 ${cuantos} mejores son ${del(eq)}` : `⚠️ ${cuantos} peores son ${del(eq)}`, prio: 7 }); num.push(n); }
     // con tweets largos (X Premium): el resto de los seis, todos los que doblan su media y, en los mejores, el más barato
     if (largo()) {
       const ya = new Set([...arriba, ...(arriba.length < 4 && det.length === 2 ? det : [])].map((f) => String(f.id)));
@@ -63,14 +65,18 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
       const salen = bueno ? ord.filter((f) => f.media >= 3 && f.pts >= 2 * f.media && f !== sale).slice(0, 3) : [];
       if (salen.length) {
         const varios = salen.length > 1;
-        ideas.push({ t: `📈 ${lista(salen.map((f) => f.nombre))} también ${varios ? 'doblan' : 'dobla'} su media: ${varios ? 'suelen' : 'suele'} sacar ${lista(salen.map((f) => fmt(f.media)))}`, prio: 2 });
+        // (con la misma media, «3 cada uno», no «3, 3 y 3»; con medias distintas, cada una con su nombre: «4,1, 5,2 y 6» no se lee)
+        const iguales = salen.every((f) => fmt(f.media) === fmt(salen[0].media));
+        const quienes = iguales ? `${lista(salen.map((f) => f.nombre))}, que ${varios ? 'van' : 'va'} a ${fmt(salen[0].media)}${varios ? ' cada uno' : ''}`
+          : salen.map((f) => `${f.nombre}, que va a ${fmt(f.media)}`).reduce((t, x, i, xs) => (i === 0 ? x : i === xs.length - 1 ? `${t}, y ${x}` : `${t}, ${x}`), '');
+        ideas.push({ t: `📈 También ${varios ? 'doblan' : 'dobla'} su media ${quienes}`, prio: 2 });
         num.push(...salen.flatMap((f) => partes(f.media)));
       }
       const barato = bueno ? [...ord].filter((f) => f.valor > 0).sort((x, y) => x.valor - y.valor)[0] : null;
       if (barato && barato.valor <= 15e6) {
         // en M con un decimal; por debajo del millón, en K enteros (como el mercado: «640 K»)
-        const M = barato.valor >= 1e6, v = M ? barato.valor / 1e6 : Math.round(barato.valor / 1e3);
-        ideas.push({ t: aparte(`💸 El más barato de los seis es ${barato.nombre}: vale ${M ? fmt(v) : v} ${M ? 'M' : 'K'} en el mercado`), prio: 2 }); num.push(...(M ? partes(v) : [v]));
+        const dv = dineroTxt(barato.valor);
+        ideas.push({ t: aparte(`💸 El más barato de los seis es ${barato.nombre}: vale ${dv.t} en el mercado`), prio: 2 }); num.push(...dv.numeros);
       }
     }
     const { usadas, texto } = tweet(cab, ideas);
