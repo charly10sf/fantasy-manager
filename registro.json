@@ -2899,7 +2899,8 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
    "SPORT|136122379": 1793879661000,
    "SPORT|136122725": 1793885037000,
-   "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000
+   "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000
   },
   "hechos": [
    {
@@ -3266,7 +3267,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 25
+   "n": 26
   }
  }
 }
