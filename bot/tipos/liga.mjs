@@ -249,7 +249,13 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
   // «el Valencia-Real Madrid se jugará» sobra, y «se estudia suspender el Málaga-Racing» también (auditoría del 5 nov)
   // (solo una jornada que sale de verdad: oficial o con dos medios y reciente; o publicada en las últimas 36 h. Y de la misma jornada
   // que el partido: «suspendida la J13» no tapa un aplazamiento de la J12; auditoría del 5 nov)
-  const sale = (g) => !!g && (g.hs.some((h) => h.oficial) || new Set(g.hs.map((h) => h.medio)).size >= 2) && ahora - Math.max(...g.hs.map((h) => h.t)) <= 12 * HORA;
+  // lo contrario de la misma historia («se suspende» y «se jugará»): manda lo oficial y, si no, lo que cuentan más medios y al menos tres;
+  // si no, ninguno (espero a más noticias). El 5 nov Gemini leyó como «se suspende la jornada» una de SPORT sobre la muerte de Jesús de
+  // Miguel, con LaLiga y la RFEF ya decididas a jugarla (COPE): con una segunda noticia mal leída salía «Se suspende» antes que «se jugará»
+  const medN = (x) => new Set(x.hs.map((h) => h.medio)).size, ofi = (x) => x.hs.some((h) => h.oficial);
+  const rivalDe = (g) => ({ confirmado: grupos.get(`${g.tema}|descartado`), descartado: grupos.get(`${g.tema}|confirmado`) })[g.estado];
+  const gana = (g) => { const r = rivalDe(g); return !r || (ofi(g) !== ofi(r) ? ofi(g) : medN(g) > medN(r) && (ofi(g) || medN(g) >= 3)); };
+  const sale = (g) => !!g && gana(g) && (g.hs.some((h) => h.oficial) || new Set(g.hs.map((h) => h.medio)).size >= 2) && ahora - Math.max(...g.hs.map((h) => h.t)) <= 12 * HORA;
   const recientes = (registro && registro.todos ? registro.todos() : []).filter((e) => e && e.t && ahora - Date.parse(e.t) < 36 * HORA).map((e) => e.clave);
   const aireJ = (tp) => Number((((registro && registro.datos && registro.datos.aire) || {})[`${tp}|j|J${jornada}`] || {}).jornada) || jornada;
   const deJ = (e, jP) => ['suspension', 'aplazamiento'].some((tp) => {
@@ -277,6 +283,7 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     const medios = [...new Set(hs.map((h) => h.medio))].sort((a, b) => GRANDES.indexOf(b) - GRANDES.indexOf(a));
     const oficial = hs.some((h) => h.oficial);
     if (!oficial && medios.length < 2) { log(`  (liga) ${g.tema} (${g.estado}): solo ${medios.join(', ')}, espero a una segunda fuente`); continue; }
+    if (!gana(g)) { const r = rivalDe(g); log(`  (liga) ${g.tema} (${g.estado}): ${medN(r)} ${medN(r) === 1 ? 'medio dice' : 'medios dicen'} lo contrario${ofi(r) ? ' (oficial)' : ''}, espero a más`); continue; }
     const mejor = (k) => (hs.filter((h) => h[k]).sort((a, b) => b[k].length - a[k].length)[0] || {})[k] || '';
     const luto = hs.some((h) => h.luto);
     const texto = redactar({ tipo: g.tipo, estado: g.estado, obj: g.obj, luto, contexto: mejor('contexto'), detalle: mejor('detalle'), medios, oficial });

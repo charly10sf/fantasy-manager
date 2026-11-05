@@ -178,6 +178,23 @@ R['Aplazados el Sevilla-Barça y el Alavés-Athletic'] = { tipo: 'aplazamiento',
     ok(!tt.some((t) => /jornada/.test(t.texto)) && tt.some((t) => /Sevilla-Alavés/.test(t.texto)), `«${tit}»: el partido (${tt.map((t) => t.texto).join(' | ')})`);
   }
 }
+// 10) lo contrario de la misma historia: manda lo oficial o lo que cuentan más medios; con el mismo peso, nada (5 nov: SPORT mal leído)
+{
+  const cf = (oficial = false) => ({ tipo: 'suspension', estado: 'confirmado', primera: true, segunda: true, jornada: 12, equipos: [], luto: true, oficial, contexto: '', detalle: '' });
+  R['Se para el fútbol por el luto'] = cf();
+  R['LaLiga suspende la jornada 12, comunicado oficial'] = cf(true);
+  R['Se jugará la jornada 12'] = { tipo: 'suspension', estado: 'descartado', primera: true, segunda: true, jornada: 12, equipos: [], luto: true, oficial: false, contexto: '', detalle: '' };
+  const va = (xs) => generar({ ...base, registro: new Registro(config), leer: async () => xs });
+  const si = ['Se para el fútbol por el luto', 'No habrá jornada este fin de semana'], no = ['Se jugará la jornada 12', 'Habrá Liga el fin de semana'];
+  const a = await va([n('SPORT', si[0], si[1]), n('COPE', no[0], no[1]), n('MARCA', no[0], no[1]), n('AS', no[0], no[1])]);
+  ok(a.length === 1 && /se jugará/.test(a[0].texto) && !a.some((t) => /Se suspende/.test(t.texto)), `uno dice «se suspende» y tres «se jugará»: ${a.map((t) => t.texto).join(' | ')}`);
+  const a2 = await va([n('SPORT', si[0], si[1]), n('AS', si[0], si[1]), n('COPE', no[0], no[1])]);
+  ok(a2.length === 0, `dos contra uno, sin nada oficial: espero (${a2.map((t) => t.texto).join(' | ')})`);
+  const b = await va([n('SPORT', si[0], si[1]), n('AS', si[0], si[1]), n('COPE', no[0], no[1]), n('MARCA', no[0], no[1])]);
+  ok(b.length === 0, `dos contra dos: espero (${b.map((t) => t.texto).join(' | ')})`);
+  const c = await va([n('MARCA', 'LaLiga suspende la jornada 12, comunicado oficial', 'LaLiga ha decidido suspender la jornada 12'), n('COPE', no[0], no[1]), n('AS', no[0], no[1])]);
+  ok(c.length === 1 && /Se suspende la jornada 12/.test(c[0].texto) && /Es oficial/.test(c[0].texto), `lo oficial manda: ${c.map((t) => t.texto).join(' | ')}`);
+}
 // 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 13, jTxt: false }]) === 13 && numeroDe([{ jornada: 13, jTxt: false }, { jornada: 0 }]) === 0, 'el puesto, solo si todas lo traen igual');
