@@ -17,16 +17,17 @@ const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', '
  * ventanas: solo cuando el último valor de la lista es de HOY (Madrid) y aún no se ha publicado; sin ventanas (simulacro o forzado),
  * con el último día que haya. Pide el histórico de los 868 jugadores solo cuando el centinela (el más caro) ya trae el día nuevo.
  */
-const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
+import { horaMadrid, tramos } from '../lib/horario.mjs';
 
 export async function generar({ jugadores, equipos, stats = [], jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), esperarHasta = 0, log = console.log }) {
   const hoy = diaMadrid(ahora);
   // solo justo después de la actualización (hacia las 00:15): el punto de hoy existe desde esa hora, así que sin esta ventana el tweet
   // podía salir a cualquier hora del día con un cambio de hace casi 24 h (el 2 nov salió a las 23:27; Carlos, 23:29)
   // (Carlos, 3 nov 09:49: nada a las 5 de la mañana) de 0 a 1 h, que es cuando llega; si esa noche falla, de 8 a 12 h, no de madrugada
-  const tramos = Array.isArray((config.horasMercado || [])[0]) ? config.horasMercado : [config.horasMercado || [0, 1], [8, 12]];
+  // entre semana, el de la mañana desde las 7 (lib/horario.mjs)
+  const ventanasHora = tramos(config, 'horasMercado', [[0, 1], [8, 12]], ahora);
   const h = horaMadrid(ahora);
-  if (ventanas && !forzar && !tramos.some(([d, hh]) => h >= d && h < hh)) return [];
+  if (ventanas && !forzar && !ventanasHora.some(([d, hh]) => h >= d && h < hh)) return [];
   // un solo tweet por noche desde el 3 nov (antes, uno de subidas y otro de bajadas: sus claves cuentan como ya publicado)
   const clave = `mercado|${hoy}`;
   const viejas = [`mercado|${hoy}|suben`, `mercado|${hoy}|bajan`];

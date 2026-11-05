@@ -17,7 +17,7 @@ import { elQueMasPesa, enLetra, mayus, nombresPorClub, pesos, porClub, lista } f
 import { disciplina, casar, amarillasDe } from '../lib/disciplina.mjs';
 import { baseTitular } from './caidas.mjs';
 
-const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
+import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
 const HORA = 36e5;
 const ORDINAL = ['', 'primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'séptimo', 'octavo', 'noveno', 'décimo'];
 const con = (eq) => `con ${el(eq)}`;
@@ -128,7 +128,7 @@ export async function generar({ jugadores, equipos, jornada, stats = [], semana,
   const ob = await objetivo({ stats, semana, jornada, pedirSemana });
   if (!ob) { log('  (sancionados) la jornada está a medias: espero'); return []; }
   const J = ob.jornada;
-  const [hD, hH] = config.horasSancionados || [9, 23];
+  const [hD, hH] = horas(config, 'horasSancionados', [9, 23], ahora);
   const antes = (config.sancionadosAntesHoras ?? 54) * HORA;
   if (ventanas && !forzar) {
     if (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH) { log(`  (sancionados) fuera de horario (${hD} a ${hH} h)`); return []; }

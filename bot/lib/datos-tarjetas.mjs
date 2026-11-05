@@ -124,11 +124,15 @@ export async function historialJugador(j, { jornada, fuentes, ahora = Date.now()
 // Tarjeta de bajas y novedades (caídas y novedades). Recibe a los jugadores ya elegidos por el tipo, cada uno con
 // { id, nombre, teamId, pos, equipo (corto), club (largo), estado ('lesionado'|'sancionado'|'duda'|'disponible'|'vuelve'), pct, media, caraUrl, escudoUrl }.
 // Si todos son del mismo club, la tarjeta es la de ese equipo (con su próximo rival, pp de proximoPartido); si no, la lista.
-export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
+export const esBuena = (f) => f.estado === 'disponible' || f.estado === 'vuelve';
+export function tarjetaBajas({ jornada, filas: todas, pp = null, clave }) {
+  // (Carlos, 3 nov 10:25: «BAJAS» con jugadores «DISPONIBLE» no tiene sentido; 5 nov 07:08: y en «NOVEDADES», que va en verde, solo
+  // cosas buenas) una tarjeta lleva o solo buenas (NOVEDADES) o solo malas: si llegan mezcladas, se queda con las malas. Las novedades
+  // con buenas y malas noticias piden dos (tarjetasNovedades)
+  const filas = todas.every(esBuena) ? todas : todas.filter((f) => !esBuena(f));
   const mismo = filas.length && filas.every((f) => String(f.teamId) === String(filas[0].teamId));
   const conMedia = (f) => (f.media >= 3 && f.estado !== 'duda' ? num1(f.media) : null);
-  // (Carlos, 3 nov 10:25: «BAJAS» con jugadores «DISPONIBLE» no tiene sentido) si alguno vuelve, la tarjeta es de novedades
-  const titulo = filas.every((f) => f.estado === 'sancionado') && filas.length > 1 ? 'SANCIONADOS' : filas.some((f) => f.estado === 'disponible' || f.estado === 'vuelve') ? 'NOVEDADES'
+  const titulo = filas.every(esBuena) ? 'NOVEDADES' : filas.every((f) => f.estado === 'sancionado') && filas.length > 1 ? 'SANCIONADOS'
     : filas.some((f) => f.estado === 'duda') ? (filas.every((f) => f.estado === 'duda') ? 'DUDAS' : 'BAJAS Y DUDAS') : 'BAJAS';
   const fila = (f) => ({ id: f.id, nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
     estado: f.estado, leve: !!f.leve, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f), valor: f.valor || null });
@@ -141,4 +145,11 @@ export function tarjetaBajas({ jornada, filas, pp = null, clave }) {
       ...d.filas.flatMap((f) => [f.nombre, f.equipo, f.club]), ...(d.equipo ? [d.equipo.corto, d.equipo.nombre] : []), ...(d.rival ? [d.rival.corto] : [])],
   };
   return { tipo: 'bajas', nombre: `bajas-${clave.replace(/[^\w-]+/g, '_').slice(0, 80)}`, d, permitidos };
+}
+/** las de unas novedades: si hay buenas y malas noticias, dos tarjetas (la verde, solo con los que vuelven, y la de bajas); si no, una.
+    `ppDe(filas)` da el próximo partido si todas son del mismo club */
+export function tarjetasNovedades({ jornada, filas, ppDe = () => null, clave }) {
+  const buenas = filas.filter(esBuena), malas = filas.filter((f) => !esBuena(f));
+  if (!buenas.length || !malas.length) return tarjetaBajas({ jornada, filas, pp: ppDe(filas), clave });
+  return [tarjetaBajas({ jornada, filas: buenas, pp: ppDe(buenas), clave: `${clave}-buenas` }), tarjetaBajas({ jornada, filas: malas, pp: ppDe(malas), clave: `${clave}-malas` })];
 }

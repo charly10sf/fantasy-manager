@@ -23,7 +23,7 @@ const ahoraReal = () => Date.now();
 /** la fecha de la lista de lesionados («desde el 1/11») como hora: el año, el de ahora (o el anterior si saldría en el futuro) */
 const fechaParte = (p, ahora) => { const y = new Date(ahora).getUTCFullYear(); let t = Date.UTC(y, p.mes - 1, p.dia, 12); if (t > ahora + 2 * 864e5) t = Date.UTC(y - 1, p.mes - 1, p.dia, 12); return t; };
 export const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
-const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
+import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 // de qué tiene que hablar una noticia para que merezca preguntar a Gemini
 const TEMA = /lesi[oó]n|lesiona|baja|alta m[eé]dica|el alta|parte m[eé]dico|molesti|entren|convoca|viaj|descart|recuper|vuelve|regres|reaparec|duda|al margen|quir[oó]f|operad|rotura|se rompe|se ha roto|esguince|sobrecarga|fractura|tocado|disponible|se pierde|perder[aá]|no estar[aá]|no jugar[aá]|sancion/i;
@@ -162,7 +162,7 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
 
 export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),
   log = console.log, proximo = proximoPartido, listaPartes = null, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY }) {
-  const [hD, hH] = config.horasNoticias || [9, 23];
+  const [hD, hH] = horas(config, 'horasNoticias', [9, 23], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   // sin registro guardado (simulacro del cron) no se gasta cupo de Gemini en cada ejecución
   if (ventanas && !(registro && registro.fichero)) { log('  (noticias) sin registro guardado: no pregunto a Gemini'); return []; }
