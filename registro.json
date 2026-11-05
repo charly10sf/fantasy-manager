@@ -1338,7 +1338,8 @@
    "SPORT|136106483": 1793891666000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-segunda-revalida-luis-fuente-espana-seleccion-betis_0_2008430674.html": 1793895491000,
    "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
-   "SPORT|136122728": 1793893823000
+   "SPORT|136122728": 1793893823000,
+   "SPORT|136130480": 1793895763000
   },
   "hechos": [
    {
@@ -2043,11 +2044,26 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136130480",
+    "medio": "SPORT",
+    "t": 1793895763000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri causa baja durante un mes en el equipo",
+    "motivo": "contratiempo físico",
+    "plazo": "un mes",
+    "nums": [
+     4,
+     12
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
