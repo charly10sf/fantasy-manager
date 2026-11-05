@@ -151,9 +151,11 @@ for (const q of quienes) {
       const r = await publicar(t.texto, claves, { mediaIds });
       // una suspensión o un aplazamiento confirmado: la fecha que tenía cada partido, para que la previa espere a la nueva (lib/aire.mjs)
       if (t.tipo === 'liga' && /\|confirmado\|/.test(t.clave) && (r.ok || (r.estado === 403 && /duplicate/i.test(r.cuerpo)))) {
-        // la jornada de la decisión: la que dice la noticia (Gemini sabe cuál es esta y la siguiente); si no lo dice, esta mientras le
-        // queden partidos por jugar a los que toque, y si no, la siguiente. «Suspendida la J13» el domingo de la J12 apunta la J13
-        const jA = Number(t.jornadaAire) || (tocaPendiente(t.clave, stats) ? jornada : jornada + 1);
+        // la jornada de la decisión: la que dice la noticia (Gemini sabe cuál es esta y la siguiente). Si no la dice: la jornada entera,
+        // esta si aún no ha empezado y si no la siguiente («la próxima jornada» el domingo de la J12 es la J13); un partido o un club,
+        // esta mientras le quede un partido por jugar a los que toque, y si no la siguiente
+        const entera = t.clave.split('|')[2] === 'j';
+        const jA = Number(t.jornadaAire) || ((entera ? stats.every((x) => Number(x.matchState) === 1) : tocaPendiente(t.clave, stats)) ? jornada : jornada + 1);
         const n = apuntarDecision(registro, t.clave, jA === jornada ? stats : await statsSemana(jA).catch(() => []), jA);
         md(`Decisión ${t.clave}: apuntados ${n} partidos de la jornada ${jA}${n ? '' : ' (ninguno: la previa no esperará por esto)'}.`);
       }

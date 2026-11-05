@@ -3,7 +3,7 @@
 // Casos: con un solo medio espera; con dos sale «se estudia» con tono sobrio (luto); al confirmarse sale la decisión y lo que se
 // estudiaba no se repite; lo de Segunda sola no cuenta; un aplazamiento de un partido con sus dos clubes; lo que no habla de
 // suspensiones ni horarios no se pregunta a Gemini; el horario con «del».
-import { generar, clubesDe, objeto, TEMA, redactar } from '../tipos/liga.mjs';
+import { generar, clubesDe, objeto, TEMA, redactar, numeroDe } from '../tipos/liga.mjs';
 import { validar } from '../lib/validar.mjs';
 import { Registro } from '../lib/registro.mjs';
 
@@ -97,5 +97,22 @@ const p5 = [n('SPORT', 'Aplazado el Granada-Tenerife', 'Por el fallecimiento de 
   n('SPORT', 'Tras el aplazamiento del partido', 'El club informa del aplazamiento'), n('MARCA', 'Tras el aplazamiento del partido', 'Aplazado el encuentro')];
 const t5 = await generar({ ...base, registro: reg5, leer: async () => p5 });
 ok(t5.length === 0, `Segunda o sin clubes ni jornada: no sale «la jornada» (${t5.map((t) => t.texto).join(' | ')})`);
+// 6) suspensiones de la jornada entera dichas sin «jornada»: valen; un partido de Segunda con «fin de semana» y sin clubes: no
+const sus = { tipo: 'suspension', estado: 'confirmado', primera: true, segunda: true, jornada: 0, equipos: [], luto: true, oficial: false, contexto: '', detalle: '' };
+for (const [tit, ent, bien] of [['Suspendidos los partidos de Primera y Segunda', 'LaLiga aplaza los encuentros previstos del viernes al lunes', true],
+  ['Oficial: LaLiga suspende la J12', 'Comunicado', true], ['Se suspende el fútbol en España', 'Por el luto', true],
+  ['El Tenerife no jugará este fin de semana', 'Aplazado su partido ante el Granada', false]]) {
+  R[tit] = sus;
+  const r6 = new Registro(config);
+  const t6 = await generar({ ...base, registro: r6, leer: async () => [n('SPORT', tit, ent), n('AS', tit, ent)] });
+  ok(bien ? t6.length === 1 : t6.length === 0, `«${tit}»: ${bien ? 'sale' : 'no sale'} (${t6.map((t) => t.texto).join(' | ')})`);
+}
+// 7) «Deportivo» es el Dépor, no el Deportivo Alavés
+const eq7 = { 21: 'Deportivo Alavés', 26: 'RC Deportivo', 8: 'RCD Espanyol' };
+ok(JSON.stringify(clubesDe(['Deportivo', 'Espanyol'], eq7)) === '["26","8"]', `Deportivo: ${clubesDe(['Deportivo', 'Espanyol'], eq7)}`);
+ok(JSON.stringify(clubesDe(['Alavés'], eq7)) === '["21"]', 'Alavés');
+// 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
+ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');
+ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 13, jTxt: false }]) === 13 && numeroDe([{ jornada: 13, jTxt: false }, { jornada: 0 }]) === 0, 'el puesto, solo si todas lo traen igual');
 console.log(`\n${fallos} fallos`);
 process.exit(fallos ? 1 : 0);
