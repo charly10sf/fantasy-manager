@@ -29,7 +29,10 @@ export const CIERRES = [
   'Fantasy Manager · todo en el enlace de la bio',
   'Fantasy Manager · app en la bio',
 ];
-export const hash = (s) => [...String(s)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+// (con la mezcla del final: sin ella, semillas que solo cambian en un dígito, «mvp101» y «mvp107», sacaban la misma forma en todas
+// las elecciones de un partido y una jornada salía con tres esqueletos; auditoría del 5 nov)
+const mezcla = (h) => { h ^= h >>> 16; h = Math.imul(h, 0x7feb352d); h ^= h >>> 15; h = Math.imul(h, 0x846ca68b); h ^= h >>> 16; return h >>> 0; };
+export const hash = (s) => mezcla([...String(s)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7));
 export const cierre = (semilla) => CIERRES[hash(semilla) % CIERRES.length];
 
 /** el tweet con aire: titular, hueco, cuerpo, hueco, cierre */
@@ -60,14 +63,12 @@ export const elegir = (variantes, semilla) => variantes[hash(semilla) % variante
 /** Para una serie de tweets que salen seguidos (los finales y MVP de una jornada, por orden de partido): el número de forma del
  * k-ésimo. En cada tanda de n seguidos salen las n formas, barajadas con la semilla, y dos seguidos nunca repiten forma (tampoco
  * entre tandas). Así el final del Betis y el del Barça, que salen con minutos de diferencia, no se leen calcados (Carlos, 4 nov). */
-// revuelve los bits de un hash (el de arriba deja la paridad casi fija entre semillas que solo cambian en un dígito)
-const mezcla = (h) => { h ^= h >>> 16; h = Math.imul(h, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16; return h >>> 0; };
 export function turno(n, semilla, k) {
   if (n <= 1) return 0;
   if (n === 2) return (hash(semilla) + k) % 2;
   const baraja = (b) => {
     const p = [...Array(n).keys()];
-    for (let i = n - 1; i > 0; i--) { const j = mezcla(hash(`${semilla}:${b}:${i}`)) % (i + 1); [p[i], p[j]] = [p[j], p[i]]; }
+    for (let i = n - 1; i > 0; i--) { const j = hash(`${semilla}:${b}:${i}`) % (i + 1); [p[i], p[j]] = [p[j], p[i]]; }
     return p;
   };
   const b = Math.floor(k / n), p = baraja(b);
@@ -82,6 +83,9 @@ export const ordenJornada = (stats) => [...stats].sort((a, b) => (Date.parse(a.d
 export const fmt = (x) => (Math.round(Number(x) * 10) / 10).toString().replace('.', ',');
 /** los números que salen al escribir fmt(x): 7,3 -> [7, 3] (para el validador) */
 export const partes = (x) => { const r = Math.round(Math.abs(Number(x)) * 10) / 10; return [Math.trunc(r), Math.round((r % 1) * 10)]; };
+/** euros como los escribe la gente: «1,2 M» o «640 K». La unidad, después de redondear: 999.600 es «1 M», no «1000 K» (auditoría del 5 nov).
+    numeros, para el validador */
+export const dineroTxt = (x) => { const a = Math.abs(Number(x)) || 0, k = Math.round(a / 1e3); return k >= 1000 ? { t: `${fmt(a / 1e6)} M`, numeros: partes(a / 1e6) } : { t: `${k} K`, numeros: [k] }; };
 
 // Nombres de equipo para los tweets (los de la API son largos: «R. Racing Club», «C.A. Osasuna»)
 const CORTOS = [['atletico', 'Atlético'], ['athletic', 'Athletic'], ['barcelona', 'Barça'], ['betis', 'Betis'], ['celta', 'Celta'], ['elche', 'Elche'],

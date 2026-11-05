@@ -22,5 +22,6 @@ export function decidirLargo({ config = {}, registro = null, env = process.env, 
     no se sabe con qué texto exacto lo rechaza X sin Premium (auditoría del 5 nov) y lo peor que pasa así es pasar 24 h en 280. */
 export function rechazoPorLargo(r) {
   if (!r || (r.estado !== 400 && r.estado !== 403)) return false;
-  return !/duplicate/i.test(String(r.cuerpo || ''));
+  // (un 400 por la imagen, «Your media IDs are invalid», no es por el largo: no pasa 24 h a 280; auditoría del 5 nov)
+  return !/duplicate|media/i.test(String(r.cuerpo || ''));
 }

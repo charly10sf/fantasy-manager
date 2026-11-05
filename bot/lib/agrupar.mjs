@@ -39,6 +39,12 @@ export function lineaEstado(estado, xs, { club = false, ya = false } = {}) {
     if (n === 1) return `❌ ${x.nombre} se cae por lesión${club ? '' : ` ${en(x.equipo)}`}`;
     return `❌ Se caen por lesión ${club ? nombres : nombresPorClub(xs)}`;
   }
+  // lesionado para LaLiga, pero el parte lo da por duda (caídas agrupadas: «Se caen por lesión Foyth» y luego «es duda para la jornada
+  // 12» se contradecían; auditoría del 5 nov)
+  if (estado === 'tocado') {
+    if (n === 1) return `⁉️ ${x.nombre} está tocado${club ? '' : ` ${en(x.equipo)}`}, pero no descartado`;
+    return `⁉️ Tocados, pero sin descartar: ${club ? nombres : nombresPorClub(xs)}`;
+  }
   if (estado === 'sancionado') {
     if (n === 1) return `🟥 ${x.nombre} cumple sanción${club ? '' : ` ${en(x.equipo)}`}`;
     return `🟥 Cumplen sanción ${club ? nombres : nombresPorClub(xs)}`;
@@ -53,7 +59,7 @@ export function lineaEstado(estado, xs, { club = false, ya = false } = {}) {
   return `✅ Vuelven ${club ? nombres : nombresPorClub(xs, al)}`;
 }
 
-const ORDEN = ['lesionado', 'sancionado', 'duda', 'disponible'];
+const ORDEN = ['lesionado', 'tocado', 'sancionado', 'duda', 'disponible'];
 /** las líneas de todos los estados, de peor a mejor noticia */
 export function lineasPorEstado(xs, opciones) {
   return ORDEN.map((e) => xs.filter((x) => x.estado === e)).filter((g) => g.length).map((g) => lineaEstado(g[0].estado, g, opciones));
@@ -98,30 +104,39 @@ function formaLesion(l) {
   if (/^(golpe|esguince|edema|problema|pinchazo|tir[oó]n|desgarro|traumatismo|proceso|cuadro|virus|dolor|corte|hematoma|esguince)/i.test(l)) return { art: 'un ' };
   return { neutro: true };
 }
-/** el motivo de uno, contado de una de varias formas (v), para que una lista de bajas no suene a plantilla (Carlos, 4 nov 23:39) */
-function motivoVario(x, v) {
-  if (x.motivoSan) return motivoDe(x);
+/** el motivo de uno, contado de una de varias formas (v), para que una lista de bajas no suene a plantilla (Carlos, 4 nov 23:39).
+    `antes`: la forma del anterior en la misma frase (cada forma lleva su esqueleto `k`): si toca la misma, la siguiente («Lemar,
+    rotura fibrilar: baja hasta… Manu Sánchez, lesión en los isquiotibiales: duda…» salían calcadas; auditoría del 5 nov) */
+function motivoVario(x, v, antes = null) {
+  if (x.motivoSan) return { ...motivoDe(x), k: 'san' };
   const p = x.parte, les = p.lesion.replace(/^./, (c) => c.toLowerCase()), f = formaLesion(les), a = f.art || '';
   const nums = [p.jornada, ...(String(p.hasta || '').match(/\d+/g) || []).map(Number)].filter((n) => n != null);
-  const pick = (xs) => ({ t: xs[v % xs.length], numeros: nums });
+  // «Lo de Pepe son unas molestias», no «es unas»
+  const es = a === 'unas ' || a === 'unos ' ? 'son' : 'es';
+  const pick = (xs) => {
+    let i = v % xs.length;
+    if (antes && xs.length > 1 && xs[i][0] === antes) i = (i + 1) % xs.length;
+    return { t: xs[i][1], k: xs[i][0], numeros: nums };
+  };
   if (p.estado === 'baja' && p.hasta) {
-    if (f.neutro) return pick([`${x.nombre}, ${les}: baja hasta ${p.hasta}`]);
-    if (f.part) return pick([`${x.nombre}, ${les}: baja hasta ${p.hasta}`, `${x.nombre} fue ${les} y no volverá hasta ${p.hasta}`]);
-    return pick([`${x.nombre}, ${les}: baja hasta ${p.hasta}`, `${x.nombre} no volverá hasta ${p.hasta} por ${a}${les}`,
-      `${x.nombre} estará fuera hasta ${p.hasta} por ${a}${les}`, `Lo de ${x.nombre} es ${a}${les}, y no se le espera hasta ${p.hasta}`]);
+    if (f.neutro) return pick([['coma', `${x.nombre}, ${les}: baja hasta ${p.hasta}`]]);
+    if (f.part) return pick([['coma', `${x.nombre}, ${les}: baja hasta ${p.hasta}`], ['fue', `${x.nombre} fue ${les} y no volverá hasta ${p.hasta}`]]);
+    return pick([['coma', `${x.nombre}, ${les}: baja hasta ${p.hasta}`], ['vuelve', `${x.nombre} no volverá hasta ${p.hasta} por ${a}${les}`],
+      ['fuera', `${x.nombre} estará fuera hasta ${p.hasta} por ${a}${les}`], ['lode', `Lo de ${x.nombre} ${es} ${a}${les}, y no se le espera hasta ${p.hasta}`]]);
   }
   if (p.estado === 'duda' && p.jornada) {
-    if (f.neutro) return pick([`${x.nombre}, ${les}: duda para la jornada ${p.jornada}`]);
-    if (f.part) return pick([`${x.nombre}, ${les}: duda para la jornada ${p.jornada}`, `${x.nombre} fue ${les} y es duda para la jornada ${p.jornada}`]);
-    return pick([`${x.nombre}, ${les}: duda para la jornada ${p.jornada}`, `${x.nombre} arrastra ${a}${les} y es duda para la jornada ${p.jornada}`]);
+    if (f.neutro) return pick([['coma', `${x.nombre}, ${les}: duda para la jornada ${p.jornada}`]]);
+    if (f.part) return pick([['coma', `${x.nombre}, ${les}: duda para la jornada ${p.jornada}`], ['fue', `${x.nombre} fue ${les} y es duda para la jornada ${p.jornada}`]]);
+    return pick([['coma', `${x.nombre}, ${les}: duda para la jornada ${p.jornada}`], ['arrastra', `${x.nombre} arrastra ${a}${les} y es duda para la jornada ${p.jornada}`]]);
   }
-  if (f.neutro || p.estado === 'disponible') return pick([`${x.nombre}, ${les}`]);
-  return pick(f.part ? [`${x.nombre}, ${les}`, `${x.nombre} fue ${les}`] : [`${x.nombre}, ${les}`, `${x.nombre} tiene ${a}${les}`]);
+  if (f.neutro || p.estado === 'disponible') return pick([['comaSola', `${x.nombre}, ${les}`]]);
+  return pick(f.part ? [['comaSola', `${x.nombre}, ${les}`], ['fue', `${x.nombre} fue ${les}`]] : [['comaSola', `${x.nombre}, ${les}`], ['tiene', `${x.nombre} tiene ${a}${les}`]]);
 }
 /** con tweets largos (X Premium): el motivo de todos los que lo tienen, hasta `max`, cada uno contado de otra forma */
 export function detalles(xs, max = 5, semilla = '') {
   const h = hash(semilla);
-  const ms = conMotivo(xs).slice(0, max).map((x, i) => motivoVario(x, h + i));
+  const ms = [];
+  for (const [i, x] of conMotivo(xs).slice(0, max).entries()) ms.push(motivoVario(x, h + i, ms.length ? ms[ms.length - 1].k : null));
   if (!ms.length) return null;
   return { t: `⚠️ ${ms.map((m) => m.t).join('. ')}`, numeros: ms.flatMap((m) => m.numeros) };
 }
@@ -144,9 +159,12 @@ export function pesos(xs, semilla = '', { bajas = true } = {}) {
   const trozos = grupos.map((g) => (g.length > 1 ? `${lista(g.map((x) => x.nombre))}, con ${fmt(g[0].media)} cada uno` : `${g[0].nombre} con ${fmt(g[0].media)}`));
   // con un grupo de empatados en medio, «, y» antes del último («B y C, con 5,8 cada uno, y D con 4,1»)
   const det = trozos.length > 1 && grupos.some((g) => g.length > 1) ? `${trozos.slice(0, -1).join(', ')}, y ${trozos[trozos.length - 1]}` : lista(trozos);
-  const v = hash(semilla) % 2;
+  // (tres formas: con dos, «Por puntos, la que más duele…» salía en 2 de cada 3 caídas; auditoría del 5 nov)
+  const v = hash(semilla) % 3;
   // «la baja que más duele» solo si todos son bajas (en novedades van mezclados con los que vuelven)
-  const t = !resto.length ? [`‼️ El que más pesa es ${a.nombre}: ${fmt(a.media)} puntos de media`, bajas ? `‼️ La baja que más se nota es la de ${a.nombre}, que promedia ${fmt(a.media)} puntos` : `‼️ ${a.nombre} es el que más puntos da: ${fmt(a.media)} de media`][v]
-    : [`‼️ El que más pesa es ${a.nombre}, con ${fmt(a.media)} puntos de media; detrás, ${det}`, bajas ? `‼️ Por puntos, la que más duele es la de ${a.nombre}: ${fmt(a.media)} de media. ${resto.length > 1 ? 'Después van' : 'Después va'} ${det}` : `‼️ Por media manda ${a.nombre}, con ${fmt(a.media)}; luego, ${det}`][v];
+  const t = !resto.length ? [`‼️ El que más pesa es ${a.nombre}: ${fmt(a.media)} puntos de media`, bajas ? `‼️ La baja que más se nota es la de ${a.nombre}, que promedia ${fmt(a.media)} puntos` : `‼️ ${a.nombre} es el que más puntos da: ${fmt(a.media)} de media`,
+    `‼️ ${a.nombre} va a ${fmt(a.media)} puntos por partido`][v]
+    : [`‼️ El que más pesa es ${a.nombre}, con ${fmt(a.media)} puntos de media; detrás, ${det}`, bajas ? `‼️ Por puntos, la que más duele es la de ${a.nombre}: ${fmt(a.media)} de media. ${resto.length > 1 ? 'Después van' : 'Después va'} ${det}` : `‼️ Por media manda ${a.nombre}, con ${fmt(a.media)}; luego, ${det}`,
+      `‼️ Nadie pesa tanto como ${a.nombre}, que va a ${fmt(a.media)} de media. ${resto.length > 1 ? 'Le siguen' : 'Le sigue'} ${det}`][v];
   return { t, numeros: ys.flatMap((x) => partes(x.media)) };
 }

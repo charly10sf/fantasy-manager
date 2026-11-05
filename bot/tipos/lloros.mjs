@@ -70,7 +70,7 @@ const minTxt = (g) => (g.extra ? `${g.min}+${g.extra}'` : `${g.min}'`);
 const MINUTOS = [
   (q, a, x) => `${q} se quedó en ${x.min} minutos con ${el(x.equipo)} sin encajar: ${x.pierde} puntos menos`,
   (q, a, x) => `${q} jugó ${x.min} minutos y ${el(x.equipo)} acabó a cero. Por no llegar a 60, ${x.pierde} puntos menos`,
-  (q, a, x) => `${cap(a)} le faltaron ${60 - x.min} minutos: jugó ${x.min} con ${el(x.equipo)} a cero y se deja ${x.pierde} puntos`,
+  (q, a, x) => `${cap(a)} ${60 - x.min === 1 ? 'le faltó un minuto' : `le faltaron ${60 - x.min} minutos`}: jugó ${x.min} con ${el(x.equipo)} a cero y se deja ${x.pierde} puntos`,
 ];
 const GOL = [
   (q, a, x) => `${q}: ${el(x.equipo)} encajó en el ${minTxt(x.gol)} y se le van ${x.pierde} puntos`,
@@ -104,7 +104,22 @@ export function lineasLloros(xs, { solo = false, jornada = 0 } = {}) {
     const g = !solo && grupos.find((g) => g[0].caso === x.caso && g[0].equipo === x.equipo);
     if (g) g.push(x); else grupos.push([x]);
   }
-  return grupos.map((g) => (g.length > 1 ? lineaGrupo(g) : lineaLloro(g[0], solo, vez[g[0].caso]++)));
+  // con muchos (hasta 6 en un tweet largo), del cuarto en adelante van juntos por caso: con una frase por cabeza, cada forma salía dos
+  // veces y «puntos menos», cuatro (auditoría del 5 nov)
+  const sueltos = grupos.slice(3), lineas = grupos.slice(0, 3).map((g) => (g.length > 1 ? lineaGrupo(g) : lineaLloro(g[0], solo, vez[g[0].caso]++)));
+  for (const caso of ['minutos', 'gol']) {
+    const xs = sueltos.flat().filter((x) => x.caso === caso);
+    if (!xs.length) continue;
+    const ya = grupos.slice(0, 3).some((g) => g[0].caso === caso), n = xs.length;
+    const iguales = xs.every((x) => x.pierde === xs[0].pierde);
+    const pierden = n > 1 && iguales ? `${xs[0].pierde} puntos menos cada uno` : `${lista(xs.map((x) => x.pierde))} puntos menos`;
+    if (caso === 'minutos') {
+      lineas.push(`⚠️ ${lista(xs.map((x) => `${x.nombre} (${x.min})`))} ${ya ? 'tampoco' : 'no'} ${n > 1 ? 'llegaron' : 'llegó'} a los 60 con su equipo a cero: ${pierden}`);
+    } else {
+      lineas.push(`⚠️ A ${lista(xs.map((x) => `${x.nombre} (${minTxt(x.gol)})`))} ${ya ? 'también ' : ''}${n > 1 ? 'les' : 'le'} quitó la portería a cero un gol al final: ${pierden}`);
+    }
+  }
+  return lineas;
 }
 const numerosDe = (x) => [x.pierde, ...(x.caso === 'minutos' ? [x.min, 60, 60 - x.min] : [x.gol.min, x.gol.extra].filter(Boolean))];
 

@@ -75,7 +75,10 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   const out = [];
   const pp = new Map();
   for (const c of caidas) if (!pp.has(String(c.teamId))) pp.set(String(c.teamId), await proximo(c.teamId, { jornada, semana }).catch(() => null));
-  const seguro = (c) => c.estado !== 'duda';
+  // en los tweets de varios, el lesionado que el parte da por duda va como «tocado» (lib/agrupar.mjs): ni «se cae» ni «Baja Fantasy»
+  const est = (c) => (c.estado === 'lesionado' && c.parte && c.parte.estado === 'duda' ? 'tocado' : c.estado);
+  const comoVan = (xs) => xs.map((c) => ({ ...c, estado: est(c) }));
+  const seguro = (c) => est(c) !== 'duda' && est(c) !== 'tocado';
   // con tweets largos (X Premium): el motivo de todos, la media de todos y cuándo es el partido (lib/agrupar.mjs, lib/redactar.mjs)
   const L = largo();
   const motivo = (xs) => (L ? detalles(xs, 3, xs.map((x) => x.id).join('-')) : detalle(xs));
@@ -90,7 +93,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const xs = cs.slice(0, 4);
     const eq = xs[0].equipo, pr = pp.get(k);
     const cab = `🚨 ${cap(el(eq))} ${xs.every(seguro) ? 'se queda sin' : 'puede quedarse sin'} ${enLetra(xs.length)} titulares`;
-    const lineas = lineasPorEstado(xs, { club: true });
+    const lineas = lineasPorEstado(comoVan(xs), { club: true });
     const top = peso(xs.filter(seguro)), det = motivo(xs), hr = hora(pr);
     const ideas = [...lineas.map((t) => ({ t, prio: 9 })), hr && { t: hr.t, prio: 3 }, det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 5 },
       { t: `${xs.every(seguro) ? '❌ Baja' : '⁉️ Duda'} Fantasy ${paraLa(pr, jornada)}`, prio: 8 }];
@@ -116,7 +119,8 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       c.estado === 'duda' ? { t: `📊 ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,
       { t: `‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`, prio: 6 },
       // con tweets largos: cuánto juega y cuándo es el partido
-      L && c.n60 != null && c.ult ? { t: c.n60 === c.ult ? `📊 Ha jugado 60 minutos o más en sus ${c.ult} últimos partidos` : `📊 Ha jugado 60 minutos o más en ${c.n60} de sus ${c.ult} últimos partidos`, prio: 3 } : null,
+      // (solo con 3 partidos o más y 2 o más de 60: ni «en 0 de sus 5» con un titular habitual ni «en sus 1 últimos»)
+      L && c.n60 != null && c.ult >= 3 && c.n60 >= 2 ? { t: c.n60 === c.ult ? `📊 Ha jugado 60 minutos o más en sus ${c.ult} últimos partidos` : `📊 Ha jugado 60 minutos o más en ${c.n60} de sus ${c.ult} últimos partidos`, prio: 3 } : null,
       hora(pr) ? { t: hora(pr).t, prio: 2 } : null,
       // una baja larga (5 semanas o más según el parte): la etiqueta de Carrasco para las lesiones largas
       { t: venta ? '💸 Venta Fantasy Obligatoria' : `${c.estado === 'duda' || dudaWeb ? '⁉️ Duda' : '❌ Baja'} Fantasy ${paraLa(pr, jornada)}`, prio: 9 }];
@@ -124,7 +128,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     if (!usadas.length) return null;
     const clave = `caidas|${jornada}|${c.id}`;
     return { tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c), ...numerosDe(p), ...(c.motivoSan ? c.motivoSan.numeros : []),
-      ...(L && c.n60 != null ? [60, c.n60, c.ult] : []), ...(hora(pr) ? hora(pr).numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
+      ...(L && c.n60 != null && c.ult >= 3 && c.n60 >= 2 ? [60, c.n60, c.ult] : []), ...(hora(pr) ? hora(pr).numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
   };
   if (sueltos.length <= 2) {
     for (const c of sueltos) { const t = unSuelto(c); if (t) out.push(t); }
@@ -139,7 +143,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       const xs = resto.slice(0, n);
       const quien = `${enLetra(n)} ${n === 1 ? 'titular habitual' : 'titulares habituales'} ${xs.every(seguro) ? (n === 1 ? 'se cae' : 'se caen') : (n === 1 ? 'puede caerse' : 'pueden caerse')}`;
       const cab = elegir([`🚨 ${mayus(quien)} para la jornada ${jornada}`, `🚨 Ojo a tu once fantasy: ${quien} para la jornada ${jornada}`], `caidas${jornada}${k}`);
-      const lineas = lineasPorEstado(xs);
+      const lineas = lineasPorEstado(comoVan(xs));
       top = peso(xs.filter(seguro)); det = motivo(xs);
       const etiqueta = `${xs.every(seguro) ? '❌ Bajas' : '⁉️ Bajas y dudas'} Fantasy para la jornada ${jornada}`;
       const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
