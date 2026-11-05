@@ -78,7 +78,14 @@ prensa = [...prensa, n('Europa Press', 'Comunicado: suspendida la jornada', 'LaL
 ts = await generar({ ...base, leer: async () => prensa });
 ver('confirmaciones', ts);
 ok(ts.some((t) => /^📢 Se suspende la jornada 12 de Primera y Segunda/.test(t.texto) && /Es oficial/.test(t.texto)), 'sale la suspensión oficial');
-ok(ts.some((t) => /🚨 Se aplaza el Sevilla-Alavés/.test(t.texto) && /Atentos a cómo lo aplica LaLiga Fantasy/.test(t.texto)), 'sale el aplazamiento del partido');
+// (con la jornada entera suspendida, el aplazamiento de un partido no se repite: ya lo dice la jornada)
+ok(!ts.some((t) => /Se aplaza el Sevilla-Alavés/.test(t.texto)), 'con la jornada suspendida, el partido no sale aparte');
+{
+  const r3 = new Registro(config);
+  const t3 = await generar({ ...base, registro: r3, leer: async () => [n('MARCA', 'El Sevilla-Alavés se aplaza por el temporal', 'La lluvia obliga a mover el partido'),
+    n('Diario de Sevilla', 'Aplazado el Sevilla-Alavés', 'El fuerte temporal de lluvia obliga a aplazar el encuentro')] });
+  ok(t3.some((t) => /🚨 Se aplaza el Sevilla-Alavés/.test(t.texto) && /Atentos a cómo lo aplica LaLiga Fantasy/.test(t.texto)), 'sale el aplazamiento del partido (solo)');
+}
 ok(!ts.some((t) => /Segunda/.test(t.texto) && !/Primera/.test(t.texto)), 'lo de Segunda sola no sale');
 publicar(ts);
 ts = await generar({ ...base, leer: async () => prensa });
@@ -88,7 +95,7 @@ ok(ts.length === 0, `nada repetido después: ${ts.map((t) => t.clave)}`);
 const t4 = redactar({ tipo: 'horario', estado: 'confirmado', obj: 'el Barça-Osasuna', luto: false, contexto: '', detalle: '', medios: ['MARCA', 'AS'], oficial: false });
 ok(t4.startsWith('🕐 Cambia el horario del Barça-Osasuna'), `horario: ${t4}`);
 console.log(`\n--- horario\n${t4}`);
-ok(preguntas <= 3, `preguntas a Gemini: ${preguntas}`);
+ok(preguntas <= 4, `preguntas a Gemini: ${preguntas}`);
 // 5) un partido de Segunda que Gemini marca como de Primera, y un aplazamiento sin clubes ni jornada: ninguno es «la jornada»
 R['Aplazado el Granada-Tenerife'] = { tipo: 'aplazamiento', estado: 'confirmado', primera: true, segunda: true, jornada: 0, equipos: ['Granada', 'Tenerife'], luto: true, oficial: false, contexto: '', detalle: '' };
 R['Tras el aplazamiento del partido'] = { tipo: 'aplazamiento', estado: 'confirmado', primera: true, segunda: false, jornada: 0, equipos: [], luto: true, oficial: false, contexto: '', detalle: '' };
@@ -111,6 +118,16 @@ for (const [tit, ent, bien] of [['Suspendidos los partidos de Primera y Segunda'
 const eq7 = { 21: 'Deportivo Alavés', 26: 'RC Deportivo', 8: 'RCD Espanyol' };
 ok(JSON.stringify(clubesDe(['Deportivo', 'Espanyol'], eq7)) === '["26","8"]', `Deportivo: ${clubesDe(['Deportivo', 'Espanyol'], eq7)}`);
 ok(JSON.stringify(clubesDe(['Alavés'], eq7)) === '["21"]', 'Alavés');
+// 9) «la jornada se jugará» tapa «el Valencia-Real Madrid se jugará»; los descartados que no dicen suspender llegan a Gemini
+R['LaLiga mantiene la jornada'] = { tipo: 'suspension', estado: 'descartado', primera: true, segunda: true, jornada: 12, equipos: [], luto: true, oficial: false, contexto: '', detalle: '' };
+R['El Valencia prepara el partido'] = { tipo: 'suspension', estado: 'descartado', primera: true, segunda: false, jornada: 0, equipos: ['Sevilla', 'Alavés'], luto: false, oficial: false, contexto: '', detalle: '' };
+ok(TEMA.test('Habrá fútbol este fin de semana') && TEMA.test('LaLiga mantiene la jornada pese a la petición de la AFE'), 'TEMA: los descartados');
+{
+  const r9 = new Registro(config);
+  const t9 = await generar({ ...base, config: { ...config, ligaPorEjecucion: 3 }, registro: r9, leer: async () => [n('MARCA', 'LaLiga mantiene la jornada', 'La jornada 12 se jugará'), n('AS', 'LaLiga mantiene la jornada', 'Se jugará la jornada 12'),
+    n('SPORT', 'El Valencia prepara el partido', 'Suspender el partido'), n('Superdeporte', 'El Valencia prepara el partido', 'Suspender el partido')] });
+  ok(t9.length === 1 && /jornada 12/.test(t9[0].texto), `solo la jornada: ${t9.map((t) => t.texto).join(' | ')}`);
+}
 // 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 13, jTxt: false }]) === 13 && numeroDe([{ jornada: 13, jTxt: false }, { jornada: 0 }]) === 0, 'el puesto, solo si todas lo traen igual');
