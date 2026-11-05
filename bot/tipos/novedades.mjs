@@ -8,6 +8,7 @@ import { tarjetaBajas, tarjetasNovedades } from '../lib/datos-tarjetas.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
+import { ideasInfo, vecesHoy } from '../lib/info-jugador.mjs';
 
 const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
 import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
@@ -15,7 +16,7 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
 const ESTADO_DE = { lesion: 'injured', sancion: 'suspended', vuelve: 'ok' };
 const HORA = 36e5;
 
-export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido, soloSeguras = false, listaPartes = null, fichaDe = fichaLaLiga }) {
+export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, previos = null, ahora = Date.now(), log = console.log, proximo = proximoPartido, soloSeguras = false, listaPartes = null, fichaDe = fichaLaLiga, info = null }) {
   const [hD, hH] = horas(config, 'horasNovedades', [9, 23], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   const actual = {};
@@ -80,8 +81,10 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   // las novedades de uno salen a lo largo del día: cada forma rota por cuántas llevamos hoy (las del registro y las de esta vuelta),
   // para que dos seguidas no se lean calcadas cambiando el nombre (Carlos, 4 nov). Las etiquetas del final no cambian (guía de estilo)
   let vez = registro && registro.todos ? registro.todos().filter((x) => x && x.tipo === 'novedades' && x.t && diaMadrid(Date.parse(x.t)) === dia).length : 0;
-  const solo = (e) => {
-    const k = vez++;
+  // el % de titularidad y el rival (lib/info-jugador.mjs) rotan con los de noticias: por cuántos tweets de un jugador van hoy
+  let vezInfo = vecesHoy(registro, dia);
+  const solo = async (e) => {
+    const k = vez++, kI = vezInfo++;
     const R = (fs, slot) => rotar(fs, `nov${slot}${dia}`, k);
     const quien = `${cap(segunda(e.pos, e.nombre))} ${del(e.equipo)}`;
     const d = diaMadrid(e.desde);
@@ -112,12 +115,20 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       ideas = [{ t: `‼️ ${quien}${tras}`, prio: 8 }, e.media >= 3 ? { t: R([`📊 Llega con ${fmt(e.media)} puntos de media`, `📊 Es un jugador de ${fmt(e.media)} puntos de media`, `📊 Su media: ${fmt(e.media)} puntos`], 'mediaV'), prio: 5 } : null,
         { t: `✅ Disponible ${paraLa(e.pp, null)}`, prio: 9 }];
     }
+    const clave = `novedades|${e.id}:${e.que}|${d}`;
+    // (Carlos, 5 nov 13:33) el que vuelve: si pinta a titular y lo difícil que es el rival (solo si el tweet puede salir: se piden datos)
+    const conInfo = info && e.que === 'vuelve' && e.pp && (!registro || !registro.decidir || registro.decidir({ tipo: 'novedades', clave, jornada }) === 'ok');
+    let extra = { numeros: [] };
     const hr = hora(e.pp);
-    if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });
+    if (conInfo) {
+      const j = porId.get(String(e.id));
+      const tit = await info.titularidad(j, e.pp).catch(() => null), riv = await info.rival(e.pp).catch(() => null);
+      extra = ideasInfo({ posId: e.pos, equipo: e.equipo, pp: e.pp, tit, riv, tipo: 'vuelve', hr: L && e.pp && e.pp.fecha ? cuando(e.pp.fecha, ahora) : null, k: kI, dia, largo: L });
+      ideas.splice(ideas.length - 1, 0, ...extra.ideas);
+    } else if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
-    const clave = `novedades|${e.id}:${e.que}|${d}`;
-    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
+    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(conInfo ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
   };
 
   // Varios: agrupados por lo que pasa, con una cabecera que ya cuenta la noticia y la media solo del que más pesa (Carlos, 3 nov 12:06)
@@ -158,14 +169,14 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       tarjeta: tarjetasNovedades({ jornada, filas: xs, clave, ppDe: (fs) => (fs.every((e) => e.equipo === fs[0].equipo) ? fs[0].pp : null) }) };
   };
 
-  if (eventos.length === 1) { const t = solo(eventos[0]); return t ? [t] : []; }
+  if (eventos.length === 1) { const t = await solo(eventos[0]); return t ? [t] : []; }
   let i = 0, k = 0;
   while (i < eventos.length && out.length < 4) {
     const resto = eventos.slice(i, i + 5);
     let n = resto.length, t = null;
     for (; n >= 2 && !t; n--) { const ys = resto.slice(0, n); t = varios(ys, k) || varios(ys, k, true, false) || varios(ys, k, false); }   // si no cabe: el motivo sin los clubes de los que vuelven y, si aún no, sin motivo, antes que partirlo
     if (t) n++;
-    else { n = 1; t = solo(resto[0]); }
+    else { n = 1; t = await solo(resto[0]); }
     if (t) out.push(t);
     i += n; k++;
   }

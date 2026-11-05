@@ -10,13 +10,14 @@
 //   4. Un tweet por jugador con el formato de Carrasco (claude/estilo-tweets.md, «novedades / caídas»). Sin repetir a quien ya ha
 //      salido en novedades, caídas o noticias (cubiertos() del registro).
 // Solo se guardan en el registro (rama bot-estado, repo público) los datos sacados, nunca los titulares ni las entradillas.
-import { corto, fmt, partes, elegir, el, del, norm, largo as esLargo } from '../lib/texto.mjs';
+import { corto, fmt, partes, elegir, el, del, norm, turno, largo as esLargo } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, paraLa, cuando } from '../lib/redactar.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { lista as enLista } from '../lib/agrupar.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
 import { noticiasPrensaUnaVez, NOMBRES_MEDIOS } from '../lib/prensa.mjs';
 import { preguntarJson } from '../lib/gemini.mjs';
+import { ideasInfo, vecesHoy } from '../lib/info-jugador.mjs';
 
 const HORA = 36e5;
 const ahoraReal = () => Date.now();
@@ -160,8 +161,31 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
   return nt;
 }
 
+// con muchos medios, los dos primeros y cuántos más (en letra: una cifra suelta no estaría en los datos)
+const MAS = ['', '', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
+const listaMedios = (ms) => (ms.length <= 3 ? enLista(ms) : `${ms.slice(0, 2).join(', ')} y ${ms.length - 2 === 1 ? 'otro medio' : `${MAS[ms.length - 2] || 'muchos'} medios más`}`);
+const EST_TXT = { injured: 'lesionado', doubtful: 'duda', suspended: 'sancionado' };
+/**
+ * De dónde sale la noticia (Carlos, 5 nov 13:33: dudaba si poner siempre «según AS»). Lo que manda: si lo ha comunicado el club, eso;
+ * si LaLiga Fantasy ya le ha cambiado el estado a lo mismo que dice el tweet, eso, sin el medio; si solo lo da la prensa, el medio
+ * (da credibilidad). Tres formas que rotan y, según el tweet, detrás de la cabecera o detrás del motivo y el plazo (`arriba`),
+ * para que no salga siempre igual ni en el mismo sitio. { t, arriba, quien: 'club' | 'laliga' | 'prensa' }
+ */
+export function fuenteDe(c, { baja = false, k = 0, dia = '' } = {}) {
+  const lis = listaMedios(c.medios || []);
+  const f = turno(3, `fue${dia}`, k), arriba = turno(2, `fueP${dia}`, k) === 0;
+  if (c.oficial) return { t: ['🗞️ Lo ha comunicado el club', '🗞️ Es oficial: lo ha confirmado el club', '🗞️ El club ya lo ha hecho oficial'][f], arriba, quien: 'club' };
+  const confirma = c.laliga && (c.fam === 'buena' ? c.est === 'ok' : baja ? ['injured', 'suspended'].includes(c.est) : c.est === 'doubtful');
+  if (confirma && c.fam === 'buena') return { t: ['🗞️ LaLiga Fantasy ya lo da como disponible', '🗞️ En LaLiga Fantasy ya aparece disponible', '🗞️ LaLiga Fantasy también lo da ya por disponible'][f], arriba, quien: 'laliga' };
+  if (confirma) { const e = EST_TXT[c.est]; return { t: [`🗞️ En LaLiga Fantasy ya sale como ${e}`, `🗞️ LaLiga Fantasy ya lo marca como ${e}`, `🗞️ También sale ya como ${e} en LaLiga Fantasy`][f], arriba, quien: 'laliga' }; }
+  if ((c.medios || []).length >= 2) return { t: [`🗞️ Lo cuentan ${lis}`, `🗞️ ${lis} lo dan por hecho`, `🗞️ Lo publican ${lis}`][f], arriba, quien: 'prensa' };
+  // un medio y la lista de lesionados de las webs de previas (que no se nombra), o LaLiga con otro estado (baja en la prensa, duda en LaLiga)
+  const otro = c.laliga && c.fam === 'mala' && EST_TXT[c.est] ? `; en LaLiga Fantasy ya sale como ${EST_TXT[c.est]}` : '';
+  return { t: [`🗞️ Según ${lis}${otro}`, `🗞️ Lo adelanta ${lis}${otro}`, `🗞️ La información es de ${lis}${otro}`][f], arriba, quien: 'prensa' };
+}
+
 export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),
-  log = console.log, proximo = proximoPartido, listaPartes = null, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY }) {
+  log = console.log, proximo = proximoPartido, listaPartes = null, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY, info = null }) {
   const [hD, hH] = horas(config, 'horasNoticias', [9, 23], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   // sin registro guardado (simulacro del cron) no se gasta cupo de Gemini en cada ejecución
@@ -216,6 +240,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   const escudos = {};
   for (const m of stats || []) for (const lado of [m.local, m.visitor]) if (lado && lado.id != null && lado.badgeColor) escudos[String(lado.id)] = lado.badgeColor;
   const out = [];
+  const vez = vecesHoy(registro, dia);
   for (const c of cands.slice(0, config.noticiasPorEjecucion ?? 2)) {
     const { j } = c;
     const equipo = corto(equipos[String(j.teamId)] || '?');
@@ -223,16 +248,15 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const media = Number(j.averagePoints) || 0;
     const quien = `${cap(segunda(j.positionId, j.nickname))} ${del(equipo)}`;
     const sem = `not${j.id}${dia}`;
+    // las frases que rotan: por cuántos tweets de un jugador (noticias y novedades) llevamos hoy
+    const k = vez + out.length;
+    const clave = `noticias|${j.id}:${c.fam}|${dia}`;
     const cab = c.hecho ? `${c.fam === 'buena' ? '✅' : '🚨'} ${cap(c.hecho)}`
       : c.que === 'lesion' ? elegir([`🚨 ${j.nickname} se lesiona`, `🚨 Saltan las alarmas con ${j.nickname}`], sem)
         : c.que === 'descartado' ? `🚨 ${j.nickname} se queda fuera de la convocatoria`
           : c.que === 'molestias' ? `🚨 Saltan las alarmas con ${j.nickname}` : `✅ Buenas noticias con ${j.nickname}`;
-    // con muchos medios, los dos primeros y cuántos más (en letra: una cifra suelta no estaría en los datos)
-    const MAS = ['', '', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
-    const lis = c.medios.length <= 3 ? enLista(c.medios) : `${c.medios.slice(0, 2).join(', ')} y ${c.medios.length - 2 === 1 ? 'otro medio' : `${MAS[c.medios.length - 2] || 'muchos'} medios más`}`;
-    const fuente = c.oficial ? `🗞️ Lo ha comunicado el club, según ${lis}` : c.medios.length >= 2 ? `🗞️ Lo cuentan ${lis}`
-      : c.laliga && c.fam === 'mala' ? `🗞️ Según ${lis}; en LaLiga Fantasy ya sale como ${{ injured: 'lesionado', doubtful: 'duda', suspended: 'sancionado' }[c.est]}` : `🗞️ Según ${lis}`;
     const baja = c.que === 'descartado' || (c.que === 'lesion' && (c.est === 'injured' || (c.parte && c.parte.estado === 'baja') || !!c.plazo));
+    const fuente = fuenteDe(c, { baja, k, dia });
     // duda leve (Domy, 3 nov 22:15, con el tweet de Kike Salas): gestión de cargas, descanso o precaución, sin lesión
     const leve = c.fam === 'mala' && !baja && c.que !== 'lesion' && esLeve(`${c.motivo || ''} ${c.hecho || ''}`);
     const etiqueta = c.fam === 'buena' ? (c.est === 'ok' ? `✅ Disponible ${paraLa(pp, jornada)}` : `👀 Apunta a volver ${paraLa(pp, jornada)}`)
@@ -241,22 +265,30 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const motivo = c.fam === 'mala' && c.motivo && c.motivo.split(' ').length >= 2 && !copia(c.motivo, cab, 3) ? c.motivo : '';
     const plazo = c.fam === 'mala' && c.plazo && !copia(c.plazo, cab, 3) && !copia(c.plazo, motivo, 3) ? c.plazo : '';
     const hr = esLargo() && pp && pp.fecha ? cuando(pp.fecha, ahora) : null;
-    const ideas = [motivo ? { t: `⚠️ ${cap(motivo)}`, prio: 8 } : null,
+    // (Carlos, 5 nov 13:33) lo que le sirve al que lo tiene o lo quiere fichar: si pinta a titular y lo difícil que es el rival.
+    // Una baja no juega: ni % ni rival. El % solo si es el de la app (en LaLiga, disponible o duda); se pide solo si el tweet puede salir.
+    const conInfo = info && pp && !baja && (!registro || !registro.decidir || registro.decidir({ tipo: 'noticias', clave, jornada }) === 'ok');
+    const tit = conInfo && ((c.fam === 'buena' && c.est === 'ok') || (c.fam === 'mala' && c.est === 'doubtful')) ? await info.titularidad(j, pp).catch(() => null) : null;
+    const riv = conInfo ? await info.rival(pp).catch(() => null) : null;
+    const inf = ideasInfo({ posId: j.positionId, equipo, pp, tit, riv, tipo: c.fam === 'buena' ? 'vuelve' : 'duda', hr, k, dia, largo: esLargo() });
+    // de dónde sale la noticia: pegada a la noticia (detrás de la cabecera o del motivo y el plazo, según el tweet), nunca detrás de
+    // la media o del %, que no son del medio
+    const fu = { t: fuente.t, prio: 6 };
+    const ideas = [fuente.arriba ? fu : null,
+      motivo ? { t: `⚠️ ${cap(motivo)}`, prio: 8 } : null,
       plazo ? { t: `🗓️ ${cap(plazo)}`, prio: 7 } : null,
-      { t: fuente, prio: 6 },
+      fuente.arriba ? null : fu,
       leve ? { t: '👀 Es por precaución, no por una lesión', prio: 6 } : null,
       media >= 3 ? { t: `‼️ ${quien} suma ${fmt(media)} puntos de media`, prio: 5 } : null,
-      // con tweets largos (X Premium): cuándo es el partido
-      hr ? { t: `🗓️ El partido es ${hr.t}`, prio: 2 } : null,
+      ...inf.ideas,
       { t: etiqueta, prio: 9 }];
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.includes(etiqueta)) { log(`  (noticias) ${j.nickname}: no cabe la etiqueta`); continue; }
-    const clave = `noticias|${j.id}:${c.fam}|${dia}`;
     // (Carlos, 4 nov 12:43: De Galarreta salió sin carta) una vuelta aún sin el alta en el juego lleva carta «VUELVE»
     const estadoCarta = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';
     const fila = { id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo, club: equipos[String(j.teamId)] || '', caraUrl: j.image || null,
       escudoUrl: escudos[String(j.teamId)] || null, estado: estadoCarta, leve: estadoCarta === 'duda' && leve, media, valor: Number(j.marketValue) || 0, pct: null };
-    out.push({ tipo: 'noticias', clave, jornada, texto, numeros: [...(media >= 3 ? partes(media) : []), ...(pp ? [pp.jornada] : [jornada]), ...c.nums, ...(hr ? hr.numeros : [])],
+    out.push({ tipo: 'noticias', clave, jornada, texto, numeros: [...(media >= 3 ? partes(media) : []), ...(pp ? [pp.jornada] : [jornada]), ...c.nums, ...inf.numeros],
       tarjeta: estadoCarta ? tarjetaBajas({ jornada, filas: [fila], pp, clave }) : null });
   }
   return out;
