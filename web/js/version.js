@@ -14,7 +14,7 @@ export const VERSION = '0.7d';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.7d', f: '2026-11-05', h: 'HH:MM', t: 'Lo urgente, bien colocado',
+    v: '0.7d', f: '2026-11-05', h: '06:04', t: 'Lo urgente, bien colocado',
     cosas: [
       { tipo: 'arreglo', d: 'arreglo', t: 'Los avisos urgentes se leían en una columna', x: 'En «Ahora mismo», cuando el aviso decía cuándo con una frase larga («La jornada empieza mañana 21:00»), el título salía con una palabra por línea. Ahora esa frase va debajo del título.', ir: { v: 'hoy' } },
     ],
