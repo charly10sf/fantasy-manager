@@ -1323,7 +1323,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000,
    "SPORT|136106483": 1793891666000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-segunda-revalida-luis-fuente-espana-seleccion-betis_0_2008430674.html": 1793895491000,
-   "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000
+   "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
+   "SPORT|136122728": 1793893823000
   },
   "hechos": [
    {
@@ -2032,7 +2033,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
