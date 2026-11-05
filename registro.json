@@ -2688,7 +2688,13 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-suspende-badajoz-tenerife-copa-rey-20261104_3468865.html": 1793829147000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/04/valencia-cf-prepara-llenazo-mestalla-136098642.html": 1793829375000,
    "SPORT|136099578": 1793827319000,
-   "SPORT|136099994": 1793827587000
+   "SPORT|136099994": 1793827587000,
+   "SPORT|136102059": 1793851285000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/intencion-disputen-todos-partidos-laliga-salvo-aplazados-20261105_3468892.html": 1793833897000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247402/recuperan-dos-partidos-lliga-elit-victorias-prat-singuerlin.html": 1793833745000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247401/juegan-tres-encuentros-aplazados-primera-catalana.html": 1793833498000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261104/1004247277/cuti-romero-barca-mejor-ataque-laliga.html": 1793816802000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/ferrol/2026/11/04/objetivo-5000-personas-carrera-contra-cancer/00031793813128758851822.htm": 1793813941000
   },
   "hechos": [
    {
@@ -2869,11 +2875,43 @@
     "contexto": "",
     "detalle": "El club prepara el partido a la espera de la comunicacion oficial de LaLiga",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136102059",
+    "medio": "SPORT",
+    "t": 1793851285000,
+    "tipo": "suspension",
+    "estado": "confirmado",
+    "segunda": false,
+    "jornada": 0,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Trágico fallecimiento del delantero Jesús de Miguel",
+    "detalle": "",
+    "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/intencion-disputen-todos-partidos-laliga-salvo-aplazados-20261105_3468892.html",
+    "medio": "COPE",
+    "t": 1793833897000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Petición de la AFE tras el fallecimiento de un futbolista",
+    "detalle": "La Liga y la RFEF deciden que se dispute la jornada",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 1
+   "n": 2
   }
  }
 }
