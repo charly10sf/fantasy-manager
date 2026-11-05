@@ -2800,7 +2800,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/harry-kane-renueva-bayern-aplaza-sueno-nfl-2029-20261105_3469225.html": 1793872143000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/aplazado-el-castellon-eibar-por-el-fallecimiento-de-jesus-de-miguel-radio-castellon/": 1793873334000,
    "SPORT|136109970": 1793870391000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/laliga-tenerife-jesus-de-miguel-castellon-136112188.html": 1793877466000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/laliga-tenerife-jesus-de-miguel-castellon-136112188.html": 1793877466000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000
   },
   "hechos": [
    {
@@ -3053,7 +3054,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 12
+   "n": 13
   }
  }
 }
