@@ -1285,7 +1285,9 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/asi-nueva-camiseta-3-real-madrid-regresa-iconico-diseno-dragon.html": 1793871315000,
    "SPORT|136105785": 1793869239000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/revivo-convocado-con-israel-para-disputar-la-nations-league-radio-elche/": 1793873304000,
-   "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000
+   "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000,
+   "SPORT|136108626": 1793872201000,
+   "SPORT|136111415": 1793872197000
   },
   "hechos": [
    {
@@ -1865,11 +1867,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136111415",
+    "medio": "SPORT",
+    "t": 1793872197000,
+    "id": "2338",
+    "que": "lesion",
+    "oficial": true,
+    "hecho": "Aimar sufre una lesion muscular en el cuadriceps",
+    "motivo": "lesion en el cuadriceps",
+    "plazo": "estara varias semanas fuera",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
