@@ -170,6 +170,13 @@ R['Aplazados el Sevilla-Barça y el Alavés-Athletic'] = { tipo: 'aplazamiento',
   R['Se jugará la jornada 12'] = { tipo: 'suspension', estado: 'descartado', primera: true, segunda: true, jornada: 12, equipos: [], luto: true, oficial: false, contexto: '', detalle: '' };
   const t17 = await generar({ ...base, registro: new Registro(config), leer: async () => [n('COPE', 'La intención es que se disputen todos los partidos de LaLiga, salvo los ya aplazados', 'Han decidido que haya fútbol este fin de semana en Primera y Segunda'), n('MARCA', 'Se jugará la jornada 12', 'Habrá Liga')] });
   ok(t17.length === 1 && /se jugará/.test(t17[0].texto) && /COPE/.test(t17[0].texto), `COPE con clubes cuenta como la jornada: ${t17.map((t) => t.texto).join(' | ')}`);
+  // pero un partido aplazado o suspendido que nombra la jornada sigue siendo el partido, nunca «se suspende la jornada»
+  for (const [tit, ent, est] of [['No habrá fútbol en el Sánchez-Pizjuán: aplazado el Sevilla-Alavés', 'Por el temporal', 'confirmado'], ['LaLiga aplaza el Sevilla-Alavés y mantiene la jornada', 'El resto se juega', 'confirmado'],
+    ['Suspendido el Sevilla-Alavés; el resto de la jornada se jugará', 'Por el temporal', 'confirmado'], ['LaLiga estudia aplazar el Sevilla-Alavés', 'No suspende la jornada', 'se_estudia']]) {
+    R[tit] = { tipo: 'aplazamiento', estado: est, primera: true, segunda: false, jornada: 0, equipos: ['Sevilla', 'Alavés'], luto: false, oficial: false, contexto: '', detalle: '' };
+    const tt = await generar({ ...base, registro: new Registro(config), leer: async () => [n('MARCA', tit, ent), n('AS', tit, ent)] });
+    ok(!tt.some((t) => /jornada/.test(t.texto)) && tt.some((t) => /Sevilla-Alavés/.test(t.texto)), `«${tit}»: el partido (${tt.map((t) => t.texto).join(' | ')})`);
+  }
 }
 // 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');
