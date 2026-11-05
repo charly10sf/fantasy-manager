@@ -2717,7 +2717,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247424/apunta-habra-jornada-primera-segunda.html": 1793863093000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-suspenden-24-dias-empleo-sueldo-urbano-barcelona-negarse-hablar-catalan-20261105081514.html": 1793862914000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-mijas-las-lagunas-real-jaen-de-copa-del-rey-se-jugara-este-martes-10-de-noviembre-en-estepona-radio-jaen/": 1793866075000,
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/05/ultima-hora-choque-trenes-toledo-135852320.html": 1793862600000
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/05/ultima-hora-choque-trenes-toledo-135852320.html": 1793862600000,
+   "SPORT|135832403": 1793859000000
   },
   "hechos": [
    {
@@ -2950,7 +2951,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 6
+   "n": 7
   }
  }
 }
