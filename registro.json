@@ -2898,7 +2898,8 @@
    "Europa Press|https://www.europapress.es/madrid/noticia-profesores-huelga-encierran-direccion-general-rrhh-consejeria-educacion-forzar-reunion-20261105103009.html": 1793871009000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
    "SPORT|136122379": 1793879661000,
-   "SPORT|136122725": 1793885037000
+   "SPORT|136122725": 1793885037000,
+   "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000
   },
   "hechos": [
    {
@@ -3245,11 +3246,27 @@
     "contexto": "La AFE solicita la suspensión de la jornada por el fallecimiento de Jesús de Miguel",
     "detalle": "Los futbolistas consideran de forma unánime que no deben disputarse los encuentros",
     "nums": []
+   },
+   {
+    "guid": "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html",
+    "medio": "ABC",
+    "t": 1793891252000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "El sindicato de futbolistas solicita aplazar la jornada tras el fallecimiento de un jugador",
+    "detalle": "La petición ha sido presentada oficialmente por la AFE",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 24
+   "n": 25
   }
  }
 }
