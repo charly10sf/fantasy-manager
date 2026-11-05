@@ -1344,7 +1344,8 @@
    "SPORT|136104000": 1793898027000,
    "SPORT|136135887": 1793899739000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
-   "SPORT|136137325": 1793901641000
+   "SPORT|136137325": 1793901641000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000
   },
   "hechos": [
    {
@@ -2068,7 +2069,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
