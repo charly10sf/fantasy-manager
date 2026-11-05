@@ -19,7 +19,7 @@ import { frase, copia } from './noticias.mjs';
 
 const HORA = 36e5;
 const ahoraReal = () => Date.now();
-const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
+import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 // de qué tiene que hablar una noticia para preguntar a Gemini (estrecho a propósito: cada lote gasta una pregunta)
 export const TEMA = /suspend|suspensi[oó]n|aplaz|par(a|an|ar) (la )?competici[oó]n|no habr[aá] partidos|habr[aá] f[uú]tbol|mant(iene|ener|ienen) la (jornada|competici[oó]n)|puerta cerrada|sin p[uú]blico|(cambi\w*|nuevo|modifica\w*) (de |el )?horario|horario (nuevo|definitivo)|no se jugar[aá]|se (jugar|disputar)[aá]n? (el|la|los|las|a|sin|todos)|(jornada|partidos)( \d+)? se (jugar|disputar)[aá]n?|haya f[uú]tbol|habr[aá] liga|se (juegue|jueguen|dispute|disputen|juega|disputa) (la jornada|todos|toda)|habr[aá] (partidos|jornada)|huelga|paro de (los )?futbolistas|parar (el )?f[uú]tbol|sin f[uú]tbol (este|el) fin de semana|no habr[aá] f[uú]tbol/i;
@@ -218,7 +218,7 @@ export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, o
 
 export async function generar({ equipos, jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),
   log = console.log, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY, stats = null, statsDe = statsSemana }) {
-  const [hD, hH] = config.horasLiga || [8, 24];
+  const [hD, hH] = horas(config, 'horasLiga', [8, 24], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   if (ventanas && !(registro && registro.fichero)) { log('  (liga) sin registro guardado: no pregunto a Gemini'); return []; }
   const lg = await actualizar({ equipos, registro, ahora, config, log, leer, pedirIA, clave, jornada, stats, statsDe });

@@ -4,6 +4,7 @@
 //        [--estado=estado/registro.json] [--ventanas=1] [--forzar=1] [--comprobar=1]
 //        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
 // Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
+import { horaMadrid as horaHoy, horas, silencio } from './lib/horario.mjs';
 import { readFileSync, appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { semanaActual, jugadores as pedirJugadores, statsSemana, equiposDe, ficha as pedirFicha } from './lib/laliga.mjs';
 import { crearDazn } from './lib/dazn.mjs';
@@ -85,8 +86,9 @@ fijarLimite(dl.largo ? dl.max : config.tweetMax);
 console.log(dl.largo ? `# Tweets largos (X Premium): hasta ${limite()}` : `# Tweets de ${limite()}: ${dl.motivo}`);
 md(dl.largo ? `Tweets largos (X Premium), hasta ${limite()}.` : `Tweets de ${limite()}: ${dl.motivo}.`);
 // Las caídas se publican de día (en Madrid): al acabar el último partido de la noche no salen de madrugada, sino a las 9
-const horaMadrid = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date()));
-const [hDesde, hHasta] = config.horasCaidas || [0, 24];
+// (entre semana, desde las 7: lib/horario.mjs)
+const horaMadrid = horaHoy();
+const [hDesde, hHasta] = horas(config, 'horasCaidas', [0, 24]);
 const enHorarioCaidas = !ventanas || forzar || (horaMadrid >= hDesde && horaMadrid < hHasta);
 let abortar = false, subidaRota = false;   // si X rechaza una subida de imagen, no se intenta más en esta ejecución
 let generados = 0, fallos = 0, publicados = 0, previstos = 0;
@@ -98,7 +100,8 @@ for (const q of quienes) {
   // horas de silencio (Carlos, 3 nov 09:49: «publique a horas más activas, no a las 5 am»): de 1 a 8 h de Madrid no sale nada salvo
   // el directo (no hay partidos a esas horas) y el mercado (su propia ventana). Lo que toque se queda para las 8 (final y MVP aguantan
   // con ventanaFinalHoras = 13: un partido de las 21 h llega a las 10)
-  const [sD, sH] = config.horasSilencio || [24, 24];
+  // (entre semana, el silencio acaba a las 7: lib/horario.mjs)
+  const [sD, sH] = silencio(config);
   if (ventanas && !forzar && !['directo', 'mercado'].includes(q) && horaMadrid >= sD && horaMadrid < sH) { console.log(`\n## ${q}: horas de silencio (son las ${horaMadrid} h en Madrid; vuelve a las ${sH} h)`); continue; }
   if (q === 'caidas') {
     if (objetivoCaidas == null) { console.log(`\n## caidas: espero (quedan ${pendientes} partido(s) de la jornada ${jornada})`); continue; }

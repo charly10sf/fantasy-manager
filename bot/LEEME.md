@@ -19,7 +19,7 @@ claves sin publicar) y, si sale bien, poner `BOT_MODO` = `publicar`.
 `resumen` (mejores y peores de la jornada, al acabar), `final` (cada partido al acabar, solo los empezados en las últimas 10 h),
 `directo` (cada gol con su asistente y los puntos fantasy, rojas y penaltis fallados, de los partidos de hoy empezados hace menos
 de 3 h; el término medio de Domy, aceptado por Carlos el 2 nov), `mvp` (el MVP de cada partido con su tarjeta), `caidas` (lesionados y sancionados habituales de la jornada que viene, al acabar la actual o antes de que empiece; las dudas, no, hasta
-tener una segunda fuente), `mercado` (cada noche, tras la actualización de valores de hacia las 00:15, de 0 a 1 h y, si esa noche falla, de 8 a 12 h: un tweet con la tarjeta del top 5 que sube y baja), `previa` (posibles onces de cada partido con el % de titularidad de la app, de 36 h a 3 h antes, de 9 a 23 h; `lib/onces.mjs`), `onces` (onces confirmados en cuanto ESPN los publica, con las sorpresas frente al posible once) y `novedades` (cambios de estado en LaLiga Fantasy de los jugadores que importan: lesionado, sancionado, vuelve; de 9 a 23 h; el estado anterior se guarda en el registro, `estados`). El resumen de la jornada, la previa y los onces llevan tarjeta (`svgResumen` y `svgOnces` en `lib/tarjetas.mjs`). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Horas de silencio de 1 a 8 h (`horasSilencio`): no sale nada salvo el directo y el mercado; lo pendiente sale a partir de las 8 (`ventanaFinalHoras` = 13 para que el final y el MVP de un partido de las 21 h aguanten). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
+tener una segunda fuente), `mercado` (cada noche, tras la actualización de valores de hacia las 00:15, de 0 a 1 h y, si esa noche falla, de 8 a 12 h: un tweet con la tarjeta del top 5 que sube y baja), `previa` (posibles onces de cada partido con el % de titularidad de la app, de 36 h a 3 h antes, de 9 a 23 h; `lib/onces.mjs`), `onces` (onces confirmados en cuanto ESPN los publica, con las sorpresas frente al posible once) y `novedades` (cambios de estado en LaLiga Fantasy de los jugadores que importan: lesionado, sancionado, vuelve; de 9 a 23 h; el estado anterior se guarda en el registro, `estados`). El resumen de la jornada, la previa y los onces llevan tarjeta (`svgResumen` y `svgOnces` en `lib/tarjetas.mjs`). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Horas de silencio de 1 a 8 h (`horasSilencio`): no sale nada salvo el directo y el mercado; lo pendiente sale a partir de las 8. Entre semana (de lunes a viernes) todo arranca a las 7 (`inicioEntreSemana` en `config.json`, `lib/horario.mjs`; Carlos, 5 nov: «coincidiendo con la hora de trabajar»): el silencio acaba a las 7 y lo que empieza a las 8 o las 9 (previa, novedades, noticias, caídas, sancionados, lloros, liga y el mercado de la mañana) empieza a las 7; sábado y domingo, como siempre (`ventanaFinalHoras` = 13 para que el final y el MVP de un partido de las 21 h aguanten). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
 
 ### Cómo se escriben (3 nov: tweets más humanos)
 
@@ -61,7 +61,12 @@ Las piezas comunes están en `lib/redactar.mjs`:
 
 Tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov). Desde el 3 nov, las que hablan de UN jugador concreto (la de
 jugador y la de bajas o novedades de uno solo) van en carta de coleccionista (diseño propio, `lib/carta.mjs`, letra Barlow
-Condensed), con el metal según su valor de mercado: leyenda 90 M o más, oro 35-90 M, plata 10-35 M, bronce el resto. Las primeras fueron la de **final** (escudos, marcador y los 3 mejores y los 3
+Condensed), con el metal según su valor de mercado: leyenda 90 M o más, oro 35-90 M, plata 10-35 M, bronce el resto. Desde el 5 nov
+(Carlos: «que se parezcan en tipografía y estética a las de jugadores») todas las demás (final, resumen, mercado, posibles onces y
+bajas o novedades de varios) usan las piezas de la carta, en `lib/estilo.mjs`: Barlow Condensed, el fondo con rayos y el brillo de los
+clubes, titulares en cursiva con degradado (oro; rojo en los peores; el color del estado en bajas y novedades), filas en cajas
+inclinadas, los puntos del resumen en la caja de oro (roja en los peores), etiquetas de estado rellenas y la misma marca. Mismos
+textos que antes (o en mayúsculas): el validador y `PALABRAS_FIJAS` no cambian. Las primeras fueron la de **final** (escudos, marcador y los 3 mejores y los 3
 peores de cada equipo con su cara y sus puntos oficiales; «peores» = los que menos puntúan de los que jugaron 30' o más, con los
 minutos de la ficha de cada jugador, porque stats/week no los trae) y la de **jugador** (cara, escudo, puntos de la jornada, total,
 media, últimas 5 jornadas y valor de los últimos 30 días con su cambio). La de final va en el tweet `final`; la de jugador, en
@@ -69,7 +74,7 @@ un tweet `mvp` aparte por partido (tope 10 por jornada) y, en `directo`, una por
 
 - Se encienden en `config.json`: `"tarjetas": { "final": true, "jugador": true }`. Con las dos a false el bot hace lo mismo que sin
   esto (ni instala nada ni genera el tweet `mvp`).
-- Código: `lib/tarjetas.mjs` (dibujo SVG y PNG con @resvg/resvg-js, fuentes Inter y Barlow Condensed, OFL, en `fuentes/`), `lib/datos-tarjetas.mjs` (datos de la
+- Código: `lib/tarjetas.mjs` (dibujo SVG y PNG con @resvg/resvg-js, fuentes Inter y Barlow Condensed, OFL, en `fuentes/`), `lib/estilo.mjs` (las piezas comunes con `lib/carta.mjs`), `lib/datos-tarjetas.mjs` (datos de la
   API de LaLiga sin token: stats/week, player/{id} y player/{id}/market-value; fotos y escudos PNG de assets-fantasy),
   `lib/con-tarjetas.mjs` (qué tarjeta lleva cada tweet), `tipos/mvp.mjs`, y `subirImagen` en `lib/x.mjs` (POST /2/media/upload con
   la imagen en base64, categoría tweet_image; el tweet lleva luego `media.media_ids`).

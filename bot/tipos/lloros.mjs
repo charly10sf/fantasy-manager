@@ -16,7 +16,7 @@ import { lista, enLetra, mayus } from '../lib/agrupar.mjs';
 
 export const BONUS = { 1: 4, 2: 3, 3: 2, 4: 1 };
 const HORA = 36e5;
-const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
+import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
 const diaEspn = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
 const pesa = (j) => Number(j.averagePoints) >= 3 || Number(j.marketValue) >= 5e6;
 const val = (s, k) => (s && s[k] ? Number(s[k][0]) || 0 : 0);
@@ -142,7 +142,7 @@ export function escribir(cs, { jornada }) {
 export async function generar({ stats, jornada, jugadores, config = {}, ventanas = true, forzar = false, ahora = Date.now(), log = console.log, fichaDe = fichaLaLiga, espn = partidoEspn, registro = null }) {
   if (registro && registro.claves.has(`lloros|${jornada}`)) return [];
   if (!stats.length || !stats.every((m) => m.matchState === 7)) { log('  (lloros) la jornada no ha acabado'); return []; }
-  const [hD, hH] = config.horasLloros || [9, 23];
+  const [hD, hH] = horas(config, 'horasLloros', [9, 23], ahora);
   if (ventanas && !forzar) {
     if (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH) { log(`  (lloros) fuera de horario (${hD} a ${hH} h)`); return []; }
     const ultimo = Math.max(...stats.map((m) => Date.parse(m.date)).filter(Number.isFinite));
