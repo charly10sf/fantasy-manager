@@ -2803,7 +2803,8 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/laliga-tenerife-jesus-de-miguel-castellon-136112188.html": 1793877466000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/precioso-gesto-palmas-eldense-quieren-jesus-miguel-partido-domingo-20261105_3469397.html": 1793880286000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/ano-suspension-jugador-mando-hospital-arbitro-18-anos-vilagarcia/00031793878536009479432.htm": 1793880240000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/ano-suspension-jugador-mando-hospital-arbitro-18-anos-vilagarcia/00031793878536009479432.htm": 1793880240000,
+   "Cadena SER|https://cadenaser.com/baleares/2026/11/05/luis-garcia-deberia-haberse-aplazado-toda-la-jornada-radio-mallorca/": 1793881539000
   },
   "hechos": [
    {
@@ -3056,7 +3057,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 14
+   "n": 15
   }
  }
 }
