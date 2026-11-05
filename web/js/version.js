@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7d';
+export const VERSION = '0.7e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.7d';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7e', f: '2026-11-05', h: '07:00', t: 'Clubes sin relleno',
+    cosas: [
+      { tipo: 'arreglo', d: 'arreglo', t: 'Fuera los «Fuera de LaLiga» de cada club', x: 'La ficha de un club enseñaba en las bajas una lista larguísima de jugadores que ya no están en LaLiga (cedidos fuera, filiales, vendidos). Ya no salen ni en las bajas ni en la plantilla: solo los que juegan en LaLiga.', ir: { v: 'clubes' } },
+    ],
+  },
   {
     v: '0.7d', f: '2026-11-05', h: '06:04', t: 'Lo urgente, bien colocado',
     cosas: [

@@ -6,7 +6,10 @@ import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe } from './
 import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo } from './directo.js';
 
-const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Dudas', out_of_league: 'Fuera de LaLiga' };
+const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Dudas' };
+// los que están fuera de LaLiga (cedidos fuera, filiales, vendidos…) no salen en la ficha del club: ni en las bajas ni en la plantilla
+// (Carlos, 5 nov: era una lista interminable que no pinta nada en un club de LaLiga)
+const enLaLiga = (j) => j.estado !== 'out_of_league';
 
 /** cuántos jugadores de cada club hay en tu liga y cuántos son tuyos: { eqId: { liga, mios } } */
 function enTuLiga(S) {
@@ -172,7 +175,7 @@ function figurasHTML(S, suyos) {
 /** los lesionados, sancionados y dudas (de LaLiga y de futbolfantasy) y los que están a una amarilla de la sanción */
 function bajasHTML(S, suyos) {
   const { M } = S;
-  const grupos = { injured: [], suspended: [], doubtful: [], out_of_league: [] };
+  const grupos = { injured: [], suspended: [], doubtful: [] };
   const aper = [];
   for (const j of suyos) {
     let e = MALOS[j.estado] ? j.estado : null;
@@ -259,7 +262,7 @@ export function fichaClub(S, id) {
   const e = (D.equipos || {})[id];
   if (!e) return nada('No encuentro este club.');
   const t = M.equipoLiga(id), r = M.racha(id, 5);
-  const suyos = Object.values(D.maestro || {}).filter((j) => j.equipoId === id && j.pos >= 1 && j.pos <= 5);
+  const suyos = Object.values(D.maestro || {}).filter((j) => j.equipoId === id && j.pos >= 1 && j.pos <= 5 && enLaLiga(j));
   const l = enTuLiga(S)[id] || { liga: 0, mios: 0 };
   const libres = suyos.filter((j) => j.pos < 5 && !M.dueno[j.id]).length;
   let h = `<div class="club-hero"${estiloClub(id, e.nombre)}>${camisetaClub(id, e.nombre, 'ch-cam')}${escudo(D, id, 'club-g')}<div class="ch-t"><h2>${esc(e.nombre)}</h2>
