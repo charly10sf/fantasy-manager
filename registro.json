@@ -1343,7 +1343,8 @@
    "SPORT|136131477": 1793897298000,
    "SPORT|136104000": 1793898027000,
    "SPORT|136135887": 1793899739000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
+   "SPORT|136137325": 1793901641000
   },
   "hechos": [
    {
@@ -2067,7 +2068,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
