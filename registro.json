@@ -1320,7 +1320,8 @@
    "AS|https://as.com/futbol/primera/aznou-y-lucas-breton-primeras-bajas-del-paron-f202611-n/": 1793887252000,
    "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html": 1793893343000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000,
+   "SPORT|136106483": 1793891666000
   },
   "hechos": [
    {
@@ -2029,7 +2030,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
