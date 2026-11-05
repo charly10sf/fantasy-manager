@@ -2366,3 +2366,12 @@ div.pc { display: grid; gap: 18px; }
 /* «sinFotos» de limites.json: sin las imágenes de los servidores de LaLiga (caras, escudos, fotos de los mánagers);
    debajo quedan las iniciales y los colores (0.7a) */
 html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html.sin-fotos img[src*="%2Fllt-services"] { display: none !important; }
+
+/* Clubes → Jornada a jornada (0.7g) */
+.club-jchips { margin-top: 2px; }
+.cp-res-t { margin-left: 4px; padding: 1px 6px; border-radius: 6px; font: 700 13.5px 'Barlow'; background: var(--plano3); color: var(--texto2); }
+.cp-res-t.r-V { background: var(--sube-s); color: var(--sube); } .cp-res-t.r-E { background: var(--oro-s); color: var(--oro); } .cp-res-t.r-D { background: var(--baja-s); color: var(--baja); }
+.banquillo .club-ent { padding-left: 6px; padding-right: 6px; }
+.jor-cab .cp-res-t { display: inline; font: 700 13.5px 'Barlow'; text-transform: none; }
+.jor-cab .lado { display: inline-flex; margin: 0; gap: 0; }
+.qj-bien { color: var(--sube); } .qj-duda { color: var(--oro); } .qj-mal { color: var(--apagado); }

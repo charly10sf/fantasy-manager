@@ -12,7 +12,7 @@ const enJuego = (p) => p.st != null && p.st >= 2 && p.st < 7;
 /** ¿ha empezado? (por el estado que da LaLiga o, si no lo da, por la hora) */
 const empezo = (p, ahora = Date.now()) => (p.st != null ? p.st >= 2 : !!(p.fecha && p.fecha <= ahora));
 const acabado = (p, ahora = Date.now()) => p.st === 7 || (p.st == null && p.gl != null && p.fecha && ahora - p.fecha > 2 * HORA);
-const ptsCls = (v) => (v == null ? '' : v > 0 ? 'sube' : v < 0 ? 'baja' : 'cero');
+export const ptsCls = (v) => (v == null ? '' : v > 0 ? 'sube' : v < 0 ? 'baja' : 'cero');
 const eqDe = (D, id) => (D.equipos && D.equipos[id]) || {};
 export const escudo = (D, id, cls = '') => { const e = eqDe(D, id); return e.escudo ? `<img class="pt-esc ${cls}" src="${esc(e.escudo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : `<span class="pt-esc ${cls} sin"></span>`; };
 const nombreEq = (D, id) => eqDe(D, id).nombre || '¿?';
@@ -345,7 +345,7 @@ function eventosHTML(S, p) {
 }
 /* ---------------- el partido en el campo ---------------- */
 /** la etiqueta de arriba a la izquierda de cada cromo: de quién es en tu liga */
-function tagDe(S, pid) {
+export function tagDe(S, pid) {
   const d = duenoDe(S, pid);
   if (!d) return { txt: '' };
   if (d.yo) return { txt: 'TUYO', cls: 'tuyo' };
@@ -366,14 +366,14 @@ function marcaDe(x, j, ju) {
   return '';
 }
 /** el campo: de arriba abajo delanteros, medios, defensas y portero */
-function canchaHTML(os, crom, etiqueta = '') {
+export function canchaHTML(os, crom, etiqueta = '') {
   const lineas = [1, 2, 3, 4].map((pos) => os.filter((o) => o.j.pos === pos));
   const filas = [3, 2, 1, 0].filter((i) => lineas[i].length).map((i) => `<div class="linea-c${lineas[i].length >= 6 ? ' seis' : lineas[i].length >= 5 ? ' cinco' : ''}">${lineas[i].map(crom).join('')}</div>`);
   return `<div class="cancha cancha-vivo pf-c"><i class="l-borde"></i><i class="l-medio"></i><i class="l-circ"></i><i class="l-area arriba"></i><i class="l-area abajo"></i>
     ${etiqueta ? `<span class="cv-forma">${esc(etiqueta)}</span>` : ''}${filas.join('')}</div>`;
 }
 /** de una lista, el once: el portero con más de lo que sea y los 10 de campo con más; y el resto */
-function once11(os, f) {
+export function once11(os, f) {
   const xs = [...os].sort((a, b) => f(b) - f(a));
   const por = xs.find((o) => o.j.pos === 1);
   const campo = xs.filter((o) => o !== por && o.j.pos > 1).slice(0, 10);
