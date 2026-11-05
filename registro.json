@@ -2962,7 +2962,10 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677030/comite-aplaza-sancion-owono-jornada-liga-convertira-tributo-miguel.html": 1793896288000,
    "AS|https://as.com/futbol/segunda/laliga-no-para-el-futbol-aplaza-solo-el-granada-tenerife-andorra-mallorca-y-castellon-eibar-f202611-n/": 1793895587000,
    "SPORT|136130308": 1793892472000,
-   "SPORT|136129776": 1793892308000
+   "SPORT|136129776": 1793892308000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898360000,
+   "SPORT|136132177": 1793895290000,
+   "SPORT|136132157": 1793894248000
   },
   "hechos": [
    {
@@ -3421,14 +3424,62 @@
      9
     ],
     "regla": true
+   },
+   {
+    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm",
+    "medio": "La Voz de Galicia",
+    "t": 1793898360000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "La patronal y la RFEF proponen un homenaje en el minuto 9 de cada encuentro",
+    "nums": [
+     9
+    ]
+   },
+   {
+    "guid": "SPORT|136132177",
+    "medio": "SPORT",
+    "t": 1793895290000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "LaLiga y la RFEF han decidido mantener la jornada prevista",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136132157",
+    "medio": "SPORT",
+    "t": 1793894248000,
+    "tipo": "suspension",
+    "estado": "confirmado",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": true,
+    "contexto": "Tras el fallecimiento de Jesús de Miguel",
+    "detalle": "Se disputará la jornada con homenajes, salvo tres partidos específicos de Segunda",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 31
+   "n": 32
   },
-  "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898671822
-  }
+  "espera": {}
  }
 }
