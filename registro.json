@@ -1270,7 +1270,8 @@
    "SPORT|136099973": 1793829833000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/mijatovic-senala-el-motivo-detras-del-renacer-de-valverde-si-sienten-que-el-entrenador-tiene-respaldo-del-club-aceptan-todo-cadena-ser/": 1793834838000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-lesiones-perfilan-vuelta_0_2008425309.html": 1793854861000,
-   "SPORT|136100198": 1793856626000
+   "SPORT|136100198": 1793856626000,
+   "SPORT|136102945": 1793858165000
   },
   "hechos": [
    {
@@ -1830,7 +1831,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
