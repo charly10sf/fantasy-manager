@@ -128,6 +128,18 @@ ok(TEMA.test('Habrá fútbol este fin de semana') && TEMA.test('LaLiga mantiene 
     n('SPORT', 'El Valencia prepara el partido', 'Suspender el partido'), n('Superdeporte', 'El Valencia prepara el partido', 'Suspender el partido')] });
   ok(t9.length === 1 && /jornada 12/.test(t9[0].texto), `solo la jornada: ${t9.map((t) => t.texto).join(' | ')}`);
 }
+// 10) una jornada que no va a salir (un solo medio) no tapa un partido aplazado de verdad; dos partidos en una noticia, los dos
+R['Se suspende la jornada (rumor)'] = { tipo: 'suspension', estado: 'confirmado', primera: true, segunda: true, jornada: 12, equipos: [], luto: true, oficial: false, contexto: '', detalle: '' };
+R['Aplazados el Sevilla-Alavés y el Barça-Osasuna'] = { tipo: 'aplazamiento', estado: 'confirmado', primera: true, segunda: false, jornada: 0, equipos: ['Sevilla', 'Alavés', 'Barcelona', 'Osasuna'], luto: false, oficial: false, contexto: '', detalle: '' };
+{
+  const r10 = new Registro(config);
+  const t10 = await generar({ ...base, registro: r10, leer: async () => [n('Estadio Deportivo', 'Se suspende la jornada (rumor)', 'La jornada 12'),
+    n('MARCA', 'El Sevilla-Alavés se aplaza por el temporal', 'La lluvia obliga a mover el partido'), n('Diario de Sevilla', 'Aplazado el Sevilla-Alavés', 'El temporal obliga a aplazar el encuentro')] });
+  ok(t10.some((t) => /Se aplaza el Sevilla-Alavés/.test(t.texto)), `un solo medio de la jornada no tapa el partido: ${t10.map((t) => t.texto).join(' | ')}`);
+  const r11 = new Registro(config);
+  const t11 = await generar({ ...base, registro: r11, leer: async () => [n('MARCA', 'Aplazados el Sevilla-Alavés y el Barça-Osasuna', 'Por el temporal'), n('AS', 'Aplazados el Sevilla-Alavés y el Barça-Osasuna', 'Por el temporal')] });
+  ok(t11.length === 2 && t11.some((t) => /Sevilla-Alavés/.test(t.texto)) && t11.some((t) => /Barça-Osasuna/.test(t.texto)), `dos partidos en una noticia: ${t11.map((t) => t.texto).join(' | ')}`);
+}
 // 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 13, jTxt: false }]) === 13 && numeroDe([{ jornada: 13, jTxt: false }, { jornada: 0 }]) === 0, 'el puesto, solo si todas lo traen igual');
