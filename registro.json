@@ -2722,7 +2722,9 @@
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/05/ultima-hora-choque-trenes-toledo-135852320.html": 1793862600000,
    "SPORT|135832403": 1793859000000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/ultima-hora-valencia-real-madrid-decision-laliga-jugara-partido-jornada-dos-excepciones-136107273.html": 1793872392000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/harry-kane-renueva-bayern-aplaza-sueno-nfl-2029-20261105_3469225.html": 1793872143000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/harry-kane-renueva-bayern-aplaza-sueno-nfl-2029-20261105_3469225.html": 1793872143000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/aplazado-el-castellon-eibar-por-el-fallecimiento-de-jesus-de-miguel-radio-castellon/": 1793873334000,
+   "SPORT|136109970": 1793870391000
   },
   "hechos": [
    {
@@ -2975,7 +2977,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 10
+   "n": 11
   }
  }
 }
