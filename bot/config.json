@@ -15,7 +15,7 @@
   "horasNoticias": [9, 23],
   "horasLiga": [8, 24],
   "ligaPorEjecucion": 1,
-  "ligaGeminiDia": 30,
+  "ligaGeminiDia": 60,
   "horasSancionados": [9, 23],
   "sancionadosAntesHoras": 54,
   "horasLloros": [9, 23],
