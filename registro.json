@@ -1302,7 +1302,8 @@
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/05/luis-garcia-plaza-rentabilizar-momentos-superiores.html": 1793882703000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html": 1793883472000,
    "SPORT|136119456": 1793881394000,
-   "SPORT|136120803": 1793882025000
+   "SPORT|136120803": 1793882025000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-malaga-realiza-la-penultima-sesion-antes-de-recibir-este-sabado-al-racing-ser-malaga/": 1793886617000
   },
   "hechos": [
    {
@@ -1963,7 +1964,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
