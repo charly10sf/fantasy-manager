@@ -953,7 +953,7 @@
   "3119": "ok",
   "3120": "ok",
   "3121": "ok",
-  "3122": "ok",
+  "3122": "doubtful",
   "3123": "ok",
   "3124": "out_of_league",
   "3125": "ok",
@@ -2843,7 +2843,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247537/palmas-eldense-proponen-detener-juego-minuto-9-homenaje-miguel.html": 1793880966000,
    "SPORT|136117890": 1793879512000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000,
-   "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000
+   "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000
   },
   "hechos": [
    {
@@ -3140,11 +3141,27 @@
     "contexto": "",
     "detalle": "La decisión final sobre la disputa de la jornada está pendiente de valoración",
     "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html",
+    "medio": "COPE",
+    "t": 1793885219000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "La AFE pide no jugar",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 19
+   "n": 20
   }
  }
 }
