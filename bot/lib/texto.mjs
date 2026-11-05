@@ -57,6 +57,27 @@ export function quepa(cabecera, lineas, pie, max = limite()) {
 
 /** una variante de varias, siempre la misma para la misma semilla (así no suena igual en cada tweet, pero es repetible) */
 export const elegir = (variantes, semilla) => variantes[hash(semilla) % variantes.length];
+/** Para una serie de tweets que salen seguidos (los finales y MVP de una jornada, por orden de partido): el número de forma del
+ * k-ésimo. En cada tanda de n seguidos salen las n formas, barajadas con la semilla, y dos seguidos nunca repiten forma (tampoco
+ * entre tandas). Así el final del Betis y el del Barça, que salen con minutos de diferencia, no se leen calcados (Carlos, 4 nov). */
+// revuelve los bits de un hash (el de arriba deja la paridad casi fija entre semillas que solo cambian en un dígito)
+const mezcla = (h) => { h ^= h >>> 16; h = Math.imul(h, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16; return h >>> 0; };
+export function turno(n, semilla, k) {
+  if (n <= 1) return 0;
+  if (n === 2) return (hash(semilla) + k) % 2;
+  const baraja = (b) => {
+    const p = [...Array(n).keys()];
+    for (let i = n - 1; i > 0; i--) { const j = mezcla(hash(`${semilla}:${b}:${i}`)) % (i + 1); [p[i], p[j]] = [p[j], p[i]]; }
+    return p;
+  };
+  const b = Math.floor(k / n), p = baraja(b);
+  // la primera de una tanda no puede ser la última de la anterior (cambiar 0 y 1 no toca la última: vale para n ≥ 3)
+  if (b > 0 && p[0] === baraja(b - 1)[n - 1]) [p[0], p[1]] = [p[1], p[0]];
+  return p[k % n];
+}
+export const rotar = (variantes, semilla, k) => variantes[turno(variantes.length, semilla, k)];
+/** el orden de los partidos de una jornada (por hora y, a la misma hora, por id): k = su posición; -1 si no está */
+export const ordenJornada = (stats) => [...stats].sort((a, b) => (Date.parse(a.date) || 0) - (Date.parse(b.date) || 0) || Number(a.id) - Number(b.id)).map((m) => String(m.id));
 /** 7.25 -> «7,3» */
 export const fmt = (x) => (Math.round(Number(x) * 10) / 10).toString().replace('.', ',');
 /** los números que salen al escribir fmt(x): 7,3 -> [7, 3] (para el validador) */
