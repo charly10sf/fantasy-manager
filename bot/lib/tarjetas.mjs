@@ -296,6 +296,69 @@ export function svgBajas(d) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta de apercibidos: los jugadores separados por equipo (Carlos, 5 nov 08:14). Un bloque por equipo (escudo, nombre y sus
+// jugadores con cara, puesto y media) en dos columnas, en el orden en que llegan (de arriba abajo y de izquierda a derecha).
+// d = { jornada, equipos: [{ nombre, corto, escudo, jugadores: [{ nombre, posicion, media, cara }] }] }
+const AP = { y0: 172, alto: 446, x: [44, 612], w: 544, gap: 12, pad: 10 };
+const altoBloque = (e, R) => Math.round(R * 0.7) + e.jugadores.length * R + AP.pad;
+/** cómo se reparten los bloques: la fila más alta con la que caben las dos columnas, o null si no caben ni con la más baja */
+export function planApercibidos(equipos) {
+  if (!equipos || !equipos.length) return null;
+  for (const R of [66, 60, 54, 48]) {
+    const alto = (xs) => xs.reduce((s, e) => s + altoBloque(e, R), 0) + AP.gap * Math.max(0, xs.length - 1);
+    if (equipos.length === 1) { if (alto(equipos) <= AP.alto) return { R, cols: [equipos], max: alto(equipos) }; continue; }
+    // el corte que deja las dos columnas más parejas, sin cambiar el orden
+    let mejor = null;
+    for (let k = 1; k < equipos.length; k++) {
+      const cols = [equipos.slice(0, k), equipos.slice(k)], max = Math.max(...cols.map(alto));
+      if (!mejor || max < mejor.max) mejor = { R, cols, max };
+    }
+    if (mejor.max <= AP.alto) return mejor;
+  }
+  return null;
+}
+
+function bloqueEquipo(x, y, w, e, R, oro) {
+  const club = coloresClub(e.nombre || e.corto), H = Math.round(R * 0.7), h = altoBloque(e, R), k = 10;
+  let s = caja(x, y, w, h, { k })
+    + `<path d="M${x + k},${y} L${x + k + 7},${y} L${x + 7},${y + h} L${x},${y + h} Z" fill="${club.vivo}"/>`;
+  // cabecera del bloque: escudo y nombre del club
+  const eh = H - 8, xe = x + 26 + Math.round(eh * 78 / 105) / 2;
+  s += escudo(e.escudo, xe, y + 6 + eh / 2, eh)
+    + texto(e.escudo ? xe + eh * 0.5 + 10 : x + 26, y + 6 + eh / 2 + H * 0.2, mayus(e.corto), { px: Math.round(H * 0.56), peso: 800, espacio: 1.5, max: w - 80 });
+  e.jugadores.forEach((j, i) => {
+    const yy = y + H + i * R, cy = yy + R / 2, r = Math.round(R * 0.38), cx = x + 30 + r, tx = cx + r + 16;
+    const pxN = Math.round(R * 0.44), pxS = Math.round(R * 0.25), pxM = Math.round(R * 0.48);
+    s += `<rect x="${x + 22}" y="${yy}" width="${w - 44}" height="1.5" fill="${LINEA}"/>`
+      + caraCirculo(j.cara, cx, cy, r, { aro: club.vivo, grosor: 2.5 })
+      + texto(tx, j.posicion ? cy - 1 : cy + pxN * 0.35, mayus(j.nombre), { px: pxN, peso: 800, max: x + w - 92 - tx })
+      + (j.posicion ? texto(tx, cy + pxS * 1.15, mayus(j.posicion), { px: pxS, peso: 700, color: TENUE, espacio: 1, max: x + w - 92 - tx }) : '');
+    if (j.media) {
+      s += texto(x + w - 26, cy + pxM * 0.2, j.media, { px: pxM, peso: 900, color: `url(#${oro})`, ancla: 'end' })
+        + texto(x + w - 26, cy + pxM * 0.2 + 15, 'MEDIA', { px: 13, peso: 700, color: TENUE, ancla: 'end', espacio: 1 });
+    }
+  });
+  return s;
+}
+
+export function svgApercibidos(d) {
+  const plan = planApercibidos(d.equipos);
+  const tit = aColor(AMBAR), oro = dorado();
+  let s = tit.defs + oro.defs + fondo([[300, 40, 660, AMBAR, 0.2], [1050, 60, 520, AMBAR, 0.08]])
+    + cabecera('APERCIBIDOS', tit.g, `JORNADA ${d.jornada}`, 'A UNA AMARILLA DE LA SANCIÓN');
+  if (plan) {
+    const y0 = AP.y0 + (AP.alto - plan.max) / 2;
+    const una = plan.cols.length === 1;
+    plan.cols.forEach((col, c) => {
+      const x = una ? (ANCHO - AP.w) / 2 : AP.x[c];
+      let y = y0;
+      for (const e of col) { s += bloqueEquipo(x, y, AP.w, e, plan.R, oro.g); y += altoBloque(e, plan.R) + AP.gap; }
+    });
+  }
+  return marco(s + marca(600, 650, { ancla: 'middle' }));
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
 let Resvg = null;
 /** SVG -> PNG (Buffer). @resvg/resvg-js se carga solo si hace falta: el bot sin tarjetas no lo necesita */
 export async function aPng(svg) {

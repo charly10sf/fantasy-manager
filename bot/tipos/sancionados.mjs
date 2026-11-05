@@ -11,7 +11,8 @@ import { corto, fmt, partes, el, largo } from '../lib/texto.mjs';
 import { tweet, segunda, proximoPartido, paraLa, cap, aparte } from '../lib/redactar.mjs';
 import { statsSemana, ficha as fichaLaLiga } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
-import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
+import { tarjetaBajas, tarjetaApercibidos } from '../lib/datos-tarjetas.mjs';
+import { planApercibidos } from '../lib/tarjetas.mjs';
 import { motivoSancion } from '../lib/partes.mjs';
 import { elQueMasPesa, enLetra, mayus, nombresPorClub, pesos, porClub, lista } from '../lib/agrupar.mjs';
 import { disciplina, casar, amarillasDe } from '../lib/disciplina.mjs';
@@ -55,8 +56,9 @@ const mediaDe = (x) => (x.media >= 3 ? { t: `‼️ Suma ${fmt(x.media)} puntos 
 const partido = (eq, pr) => `el ${pr.enCasa ? `${eq}-${pr.rival}` : `${pr.rival}-${eq}`}`;
 
 /** los tweets a partir de los datos ya calculados (aparte para probarlo sin red: bot/prueba/sancionados-ejemplo.mjs).
-    pp: el próximo partido de cada equipo (la jornada de la sanción); pp2: el de la jornada siguiente (lo que se juegan los apercibidos) */
-export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {}, pp2 = {} }) {
+    pp: el próximo partido de cada equipo (la jornada de la sanción); pp2: el de la jornada siguiente (lo que se juegan los apercibidos);
+    yaApercibidos: el de apercibidos de esta jornada ya ha salido */
+export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {}, pp2 = {}, yaApercibidos = false }) {
   const out = [];
   // con tweets largos (X Premium): contra quién no estará cada sancionado, la media de todos y qué partido se jugaría cada apercibido
   const L = largo();
@@ -93,34 +95,54 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {},
     out.push(hecho);
     resto = resto.slice(hecho.n);
   }
-  // apercibidos: titulares habituales a una amarilla de la sanción
+  // apercibidos: titulares habituales a una amarilla de la sanción. Con dos o más va la tarjeta con todos separados por equipo
+  // (Carlos, 5 nov 08:14: el tweet los nombraba a todos seguidos, con sus equipos, y se veía todo junto) y el texto se queda con lo
+  // que importa: cuántos son, qué se juegan y los dos que más pesan. Si la tarjeta no sale (no pasa el validador o no se sube), sale el
+  // texto de siempre, con los nombres (`sinTarjeta`, en ejecutar.mjs). Uno por jornada: si ya ha salido, no se repite aunque la lista cambie
+  if (yaApercibidos) return out.map(({ n, ...t }) => t);
   const ap = [...apercibidos].sort((a, b) => b.media - a.media || b.valor - a.valor);
-  for (let n = Math.min(ap.length, 6); n >= 1; n--) {
-    const xs = ap.slice(0, n);
-    const cab = n === 1 ? `🟨 ${xs[0].nombre}, a una amarilla de la sanción` : `🟨 ${mayus(enLetra(n))} titulares habituales, a una amarilla de la sanción`;
-    const nombres = n === 1 ? `👀 Es titular habitual ${con(xs[0].equipo)}` : `👀 ${nombresPorClub(xs)}`;
-    const pr = n === 1 ? pp[String(xs[0].teamId)] : null;
-    const aviso = n === 1 && pr ? `⚠️ Si ve una amarilla contra ${el(pr.rival)}, se pierde la jornada ${jornada + 1}`
-      : `⚠️ Si ${n === 1 ? 've' : 'ven'} una amarilla en la jornada ${jornada}, ${n === 1 ? 'se pierde' : 'se pierden'} la ${jornada + 1}`;
-    const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
-    const etiqueta = `🟨 Apercibidos Fantasy de la jornada ${jornada}`;
-    // con tweets largos: el partido de la jornada siguiente que se perderían los dos que más pesan (de equipos distintos), contado
-    // como lo diría una persona y no como una lista (Carlos, 4 nov 23:39: nada que suene a plantilla)
-    let juego = null;
-    if (L && n > 1) {
-      const dos = [];
-      for (const x of xs) if (pp2[String(x.teamId)] && !dos.some((y) => y.teamId === x.teamId) && dos.length < 2) dos.push(x);
-      const [a, b] = dos;
-      if (a) juego = `⚠️ Ojo sobre todo con ${a.nombre}: con otra amarilla se pierde ${partido(a.equipo, pp2[String(a.teamId)])}`
-        + (b ? `. Y ${b.nombre} se quedaría sin ${partido(b.equipo, pp2[String(b.teamId)])}` : '');
-    }
-    // (si va el párrafo de «Ojo sobre todo con…», la media de todos sobra: nombraría otra vez a los mismos)
-    const r = tweet(cab, [{ t: nombres, prio: 9 }, { t: aviso, prio: 9 }, juego && { t: juego, prio: 3 }, !juego && top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
-    if (![nombres, aviso, etiqueta].every((l) => r.usadas.includes(l))) continue;
-    out.push({ tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, numeros: [jornada, jornada + 1, ...(top && !juego ? top.numeros : [])] });
-    break;
+  let viejo = null;
+  for (let n = Math.min(ap.length, 6); n >= 1 && !viejo; n--) viejo = textoApercibidos(ap.slice(0, n), { jornada, pp, pp2, peso, L });
+  let nuevo = null;
+  for (let n = Math.min(ap.length, MAX_AP_TARJETA); n >= 2 && !nuevo; n--) {
+    const xs = ap.slice(0, n), clave = `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`;
+    const tarjeta = tarjetaApercibidos({ jornada, filas: xs, clave });
+    if (!planApercibidos(tarjeta.d.equipos)) continue;
+    const r = textoApercibidos(xs, { jornada, pp, pp2, peso, L, conNombres: false });
+    if (r) nuevo = { ...r, tarjeta, sinTarjeta: viejo && { texto: viejo.texto, numeros: viejo.numeros } };
   }
+  if (nuevo || viejo) out.push(nuevo || viejo);
   return out.map(({ n, ...t }) => t);
+}
+
+const MAX_AP_TARJETA = 12;
+/** el tweet de unos apercibidos (null si no cabe lo que tiene que ir). conNombres: el de siempre, con todos los nombres por club en
+    el texto; sin ellos, para cuando los lleva la tarjeta */
+function textoApercibidos(xs, { jornada, pp, pp2, peso, L, conNombres = true }) {
+  const n = xs.length;
+  const cab = n === 1 ? `🟨 ${xs[0].nombre}, a una amarilla de la sanción` : `🟨 ${mayus(enLetra(n))} titulares habituales, a una amarilla de la sanción`;
+  const nombres = n === 1 ? `👀 Es titular habitual ${con(xs[0].equipo)}` : conNombres ? `👀 ${nombresPorClub(xs)}` : null;
+  const pr = n === 1 ? pp[String(xs[0].teamId)] : null;
+  // (sin la lista de nombres, la cabecera y el aviso van seguidos: «una más» para no decir «amarilla» dos veces en dos frases)
+  const aviso = n === 1 && pr ? `⚠️ Si ve una amarilla contra ${el(pr.rival)}, se pierde la jornada ${jornada + 1}`
+    : !nombres ? `⚠️ Si ven una más en la jornada ${jornada}, se pierden la ${jornada + 1}`
+    : `⚠️ Si ${n === 1 ? 've' : 'ven'} una amarilla en la jornada ${jornada}, ${n === 1 ? 'se pierde' : 'se pierden'} la ${jornada + 1}`;
+  const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
+  const etiqueta = `🟨 Apercibidos Fantasy de la jornada ${jornada}`;
+  // con tweets largos: el partido de la jornada siguiente que se perderían los dos que más pesan (de equipos distintos), contado
+  // como lo diría una persona y no como una lista (Carlos, 4 nov 23:39: nada que suene a plantilla)
+  let juego = null;
+  if (L && n > 1) {
+    const dos = [];
+    for (const x of xs) if (pp2[String(x.teamId)] && !dos.some((y) => y.teamId === x.teamId) && dos.length < 2) dos.push(x);
+    const [a, b] = dos;
+    if (a) juego = aparte(`⚠️ Ojo sobre todo con ${a.nombre}, que se perdería ${partido(a.equipo, pp2[String(a.teamId)])}`
+      + (b ? `. Y ${b.nombre} se quedaría sin ${partido(b.equipo, pp2[String(b.teamId)])}` : ''));
+  }
+  // (si va el párrafo de «Ojo sobre todo con…», la media de todos sobra: nombraría otra vez a los mismos)
+  const r = tweet(cab, [nombres && { t: nombres, prio: 9 }, { t: aviso, prio: 9 }, juego && { t: juego, prio: 3 }, !juego && top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
+  if (![nombres, aviso, etiqueta].filter(Boolean).every((l) => r.usadas.includes(l))) return null;
+  return { tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, numeros: [jornada, jornada + 1, ...(top && !juego ? top.numeros : [])] };
 }
 
 export async function generar({ jugadores, equipos, jornada, stats = [], semana, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log,
@@ -180,5 +202,7 @@ export async function generar({ jugadores, equipos, jornada, stats = [], semana,
   // con tweets largos, el partido de la jornada siguiente de cada apercibido (el que se perdería con una amarilla más)
   const pp2 = {};
   if (largo()) for (const x of apercibidos) if (!(String(x.teamId) in pp2)) pp2[String(x.teamId)] = await proximo(x.teamId, { jornada: J + 1 }).catch(() => null);
-  return escribir({ jornada: J, sancionados, apercibidos, pp, pp2 });
+  // (la clave lleva los ids: si la lista cambia en la semana, la clave nueva no frenaba un segundo tweet de apercibidos)
+  const yaApercibidos = !!(registro && registro.claves && [...registro.claves].some((c) => String(c).startsWith(`apercibidos|${J}|`)));
+  return escribir({ jornada: J, sancionados, apercibidos, pp, pp2, yaApercibidos });
 }
