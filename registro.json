@@ -2991,7 +2991,8 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/05/ya-es-oficial-aplazado-el-cd-tenerife-femenino-deportivo-alaves-radio-club-tenerife/": 1793904183000,
    "SPORT|136136691": 1793901372000,
    "AS|https://as.com/futbol/copa_del_rey/fechas-y-horarios-de-los-partidos-aplazados-de-la-copa-del-rey-y-de-la-reina-f202611-n/": 1793901223000,
-   "SPORT|136138671": 1793905242000
+   "SPORT|136138671": 1793905242000,
+   "SPORT|136138825": 1793905634000
   },
   "hechos": [
    {
@@ -3543,14 +3544,28 @@
      0,
      12
     ]
+   },
+   {
+    "guid": "SPORT|136138825",
+    "medio": "SPORT",
+    "t": 1793905634000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Tras un trágico accidente ferroviario y un fallecimiento",
+    "detalle": "Un sindicato de futbolistas pide aplazar los encuentros",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 39
+   "n": 40
   },
-  "espera": {
-   "SPORT|136138825": 1793909771054
-  }
+  "espera": {}
  }
 }
