@@ -21,7 +21,7 @@ const ahoraReal = () => Date.now();
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 // de qué tiene que hablar una noticia para preguntar a Gemini (estrecho a propósito: cada lote gasta una pregunta)
-export const TEMA = /suspend|suspensi[oó]n|aplaz|par(a|an|ar) (la )?competici[oó]n|no habr[aá] partidos|puerta cerrada|sin p[uú]blico|(cambi\w*|nuevo|modifica\w*) (de |el )?horario|horario (nuevo|definitivo)|no se jugar[aá]|se jugar[aá] (el|a|sin)|huelga|paro de (los )?futbolistas|parar (el )?f[uú]tbol|sin f[uú]tbol (este|el) fin de semana|no habr[aá] f[uú]tbol/i;
+export const TEMA = /suspend|suspensi[oó]n|aplaz|par(a|an|ar) (la )?competici[oó]n|no habr[aá] partidos|habr[aá] f[uú]tbol|mant(iene|ener|ienen) la (jornada|competici[oó]n)|puerta cerrada|sin p[uú]blico|(cambi\w*|nuevo|modifica\w*) (de |el )?horario|horario (nuevo|definitivo)|no se jugar[aá]|se jugar[aá] (el|a|sin)|huelga|paro de (los )?futbolistas|parar (el )?f[uú]tbol|sin f[uú]tbol (este|el) fin de semana|no habr[aá] f[uú]tbol/i;
 const TIPOS = ['suspension', 'aplazamiento', 'horario', 'puertaCerrada', 'nada'];
 // de qué tiene que hablar una noticia sin clubes para contar como la jornada entera (y lo que dice que es de un partido)
 const JORNADA = /jornada|\bj\d{1,2}\b|competici[oó]n|tod[oa]s (los|las) (partidos|encuentros)|(partidos|encuentros) de (primera|segunda|laliga)|primera y segunda|no habr[aá] (f[uú]tbol|liga|partidos)|f[uú]tbol (profesional|español|en españa)/i;
@@ -129,6 +129,9 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
     // (un partido de Segunda: «Granada-Tenerife») no puede acabar como «la jornada» por no tener clubes casados (auditoría del 5 nov)
     // (con más de dos equipos es la jornada entera que nombra partidos ya aplazados: «ya estaban aplazados el Granada-Tenerife y…»)
     if (a.equipos && a.equipos.length && a.equipos.length <= 2 && h.clubes.length < a.equipos.length) { log(`  (liga) ${x.medio}: ${a.tipo} de un partido sin casar sus clubes`); continue; }
+    // con más de dos equipos y alguno de Primera, ni un partido ni seguro la jornada: mejor otra noticia («LaLiga suspende la jornada 12»
+    // con Gemini dando Granada, Tenerife y Sevilla salía «Se suspende el partido del Sevilla»)
+    if (a.equipos && a.equipos.length > 2 && h.clubes.length) { log(`  (liga) ${x.medio}: ${a.tipo} con ${a.equipos.length} equipos: no sé si es un partido o la jornada`); continue; }
     // la jornada entera, solo si la noticia habla de la jornada, la competición o los partidos de Primera; «fin de semana» vale si no
     // habla de un partido («El Tenerife no jugará este fin de semana… su partido ante el Granada» no es la jornada)
     if (!h.clubes.length && !(JORNADA.test(fuente) || (/fin de semana/i.test(fuente) && !UNO.test(fuente)))) { log(`  (liga) ${x.medio}: ${a.tipo} sin clubes ni jornada: no lo cuento como la jornada`); continue; }
@@ -184,13 +187,22 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
   }
   const out = [];
   // lo decidido antes que lo que se estudia
-  const orden = [...grupos.values()].sort((a, b) => (a.estado === 'se_estudia') - (b.estado === 'se_estudia') || b.hs.length - a.hs.length);
+  // (y, con el mismo estado, la jornada entera antes que un partido)
+  const orden = [...grupos.values()].sort((a, b) => (a.estado === 'se_estudia') - (b.estado === 'se_estudia') || b.tema.endsWith('|j') - a.tema.endsWith('|j') || b.hs.length - a.hs.length);
+  // ¿la jornada entera ya tiene (o tiene ahora) ese estado? Un partido no repite lo que ya dice la jornada: con «la jornada se jugará»,
+  // «el Valencia-Real Madrid se jugará» sobra, y «se estudia suspender el Málaga-Racing» también (auditoría del 5 nov)
+  const deJ = (e) => ['suspension', 'aplazamiento'].some((tp) => grupos.has(`${tp}|j|${e}`) || hechas.includes(`liga|${tp}|j|${e}|J${jornada}`));
   for (const g of orden) {
     if (out.length >= (config.ligaPorEjecucion ?? 1)) break;
     const clave = `liga|${g.tema}|${g.estado}|J${jornada}`;
     if (hechas.includes(clave)) continue;
     // lo que se estudia ya no es noticia si ya salió (o sale ahora) la decisión
     if (g.estado === 'se_estudia' && (hechas.some((c) => c.startsWith(`liga|${g.tema}|`)) || grupos.has(`${g.tema}|confirmado`) || grupos.has(`${g.tema}|descartado`))) continue;
+    if (['suspension', 'aplazamiento'].includes(g.tipo) && !g.tema.endsWith('|j')) {
+      // lo que sigue saliendo: un partido suspendido con la jornada «se jugará» y uno que «se jugará» con la jornada suspendida
+      const tapa = { se_estudia: ['se_estudia', 'confirmado', 'descartado'], descartado: ['descartado', 'se_estudia'], confirmado: ['confirmado'] }[g.estado] || [];
+      if (tapa.some(deJ) && !(g.estado === 'descartado' && deJ('confirmado'))) { log(`  (liga) ${g.tema} (${g.estado}): ya lo dice la jornada`); continue; }
+    }
     const hs = g.hs.sort((a, b) => a.t - b.t);
     // una historia que sigue viva vale mientras haya noticias recientes: manda la última
     if (ahora - hs[hs.length - 1].t > 12 * HORA) { log(`  (liga) ${g.tema} (${g.estado}): la última noticia es de hace más de 12 h`); continue; }
