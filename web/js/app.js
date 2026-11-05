@@ -1728,8 +1728,9 @@ function volverHoja() {
   alAbrir(ant[0], ant[1]);
   return true;
 }
-/** al abrir un club: sus titulares de los últimos días (Google Noticias, 1 hora guardados) */
+/** al abrir un club: sus titulares de los últimos días (Google Noticias, 1 hora guardados) y lo que ha jugado cada uno */
 async function cargarClub(id) {
+  cargarJornadasClub(id);
   if (enDemo() || !S.D || (S.notClub && S.notClub[id] && Date.now() - S.notClub[id].t < 60 * MIN)) return;
   S.notClub = S.notClub || {};
   S.cargandoClub = id;
@@ -1737,6 +1738,39 @@ async function cargarClub(id) {
   try { l = await noticiasClub(S.D, id); } catch (e) { l = []; }
   S.notClub[id] = { t: Date.now(), l };
   if (S.cargandoClub === id) S.cargandoClub = null;
+  if (S.tipoHoja && S.tipoHoja[0] === 'c' && String(S.tipoHoja[1]) === String(id)) repintarHoja();
+}
+/**
+ * Clubes → Jornada a jornada: la ficha de LaLiga de cada jugador del club (minutos, puntos, goles, asistencias y tarjetas de
+ * cada jornada). Se guarda por club (los 8 últimos abiertos) y se vuelve a pedir a las 6 h, o a la media hora si hay una
+ * jornada en juego. Unos 25 jugadores, de 4 en 4: 5-10 s la primera vez
+ */
+async function cargarJornadasClub(id) {
+  if (enDemo() || !S.D || !haySesion() || !S.D.liga) return;
+  S.clubJor ||= LS.get('clubJor', {});
+  const g = S.clubJor[id];
+  const vale = S.M && S.M.enJuego ? 30 * MIN : 6 * HORA;
+  if (g && (g.cargando || Date.now() - g.t < vale)) return;
+  const pids = Object.values(S.D.maestro || {}).filter((j) => j.equipoId === id && j.pos >= 1 && j.pos <= 4 && j.estado !== 'out_of_league').map((j) => String(j.id));
+  if (!pids.length) return;
+  S.clubJor[id] = { ...(g || { porJug: {} }), cargando: true };
+  const porJug = {};
+  let fallos = 0;
+  await enParalelo(pids, 4, async (pid) => {
+    try {
+      const d = detalleJugador(await api.jugador(pid, S.D.liga.id));
+      porJug[pid] = d.stats.map((x) => [x.n, x.pts, x.min, x.gol, x.asis, x.am, x.roja]);
+    } catch (e) { if (e.sesion) throw e; fallos++; }
+  }).catch(() => {});
+  const ok = Object.keys(porJug).length;
+  S.clubJor[id] = ok ? { t: Date.now(), porJug } : { ...(g || { porJug: {} }), t: Date.now(), error: fallos ? 'sin fichas' : null };
+  if (ok) {
+    const todos = LS.get('clubJor', {});
+    todos[id] = S.clubJor[id];
+    const ids = Object.keys(todos).sort((a, b) => (todos[b].t || 0) - (todos[a].t || 0));
+    for (const k of ids.slice(8)) delete todos[k];
+    try { LS.set('clubJor', todos); } catch (e) { /* sin sitio: se queda en memoria */ }
+  }
   if (S.tipoHoja && S.tipoHoja[0] === 'c' && String(S.tipoHoja[1]) === String(id)) repintarHoja();
 }
 /** dibuja la tarjeta elegida y la pone en su hoja (si sigue abierta y no se ha cambiado mientras) */
@@ -2249,6 +2283,7 @@ document.addEventListener('click', async (ev) => {
     case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;
     case 'verJornada': S.jornadaSel = Number(d.n); pintar(); break;
     case 'ordenEq': S.ordenEq = d.o; LS.set('orden-equipo', d.o); pintar(); if (d.ver) { const o = $('#vista .eq2-orden'); if (o) o.scrollIntoView({ behavior: 'smooth', block: 'start' }); } break;
+    case 'jorClub': (S.jorClub ||= {})[d.id] = Number(d.n); repintarHoja(); break;
     case 'filtroClub': S.filtro.club = d.f; repintarHoja(); if (d.sel) bajarA(d.sel, S.hoja); break;
     // ir a lo que explica un dato (30 oct, Carlos: «el valor de los últimos 7 días debería llevarte a la pestaña adecuada»):
     // baja hasta el ancla (data-sel), en la ficha abierta o en la pestaña; con data-seg2, antes cambia de subpestaña
