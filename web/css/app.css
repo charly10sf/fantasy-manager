@@ -47,6 +47,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 input, select, textarea { font: inherit; color: inherit; }
 a { color: var(--rojo-l); text-decoration: none; }
 .ic { width: 22px; height: 22px; flex: none; }
+/* casa o avión delante del rival en las listas de partidos */
+.lado { display: inline-flex; vertical-align: -2px; margin-right: 5px; color: var(--texto2); }
+.lado .ic { width: 15px; height: 15px; }
+.lado.fuera { color: var(--apagado); }
 .oculto { display: none !important; }
 .sube { color: var(--sube); } .baja { color: var(--baja); } .apag { color: var(--apagado); } .t2 { color: var(--texto2); } .rojo { color: var(--rojo-l); } .oro { color: var(--oro); }
 b, strong { font-weight: 600; color: var(--texto); }
