@@ -1288,7 +1288,8 @@
    "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000,
    "SPORT|136108626": 1793872201000,
    "SPORT|136111415": 1793872197000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000
   },
   "hechos": [
    {
@@ -1898,7 +1899,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
