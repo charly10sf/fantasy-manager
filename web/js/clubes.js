@@ -3,8 +3,8 @@
    tu liga, y sus noticias. Sale todo de lo que la app ya tiene (LaLiga, futbolfantasy, Understat, SofaScore y Google
    Noticias); al abrir un club se piden sus titulares (noticiasClub en externas.js). */
 import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe } from './util.js';
-import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco } from './comunes.js';
-import { escudo, duenoDe, onceDeEquipo } from './directo.js';
+import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco, cromo } from './comunes.js';
+import { escudo, duenoDe, onceDeEquipo, ptsCls, tagDe, canchaHTML, once11 } from './directo.js';
 
 const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Dudas' };
 // los que están fuera de LaLiga (cedidos fuera, filiales, vendidos…) no salen en la ficha del club: ni en las bajas ni en la plantilla
@@ -257,6 +257,108 @@ function noticiasHTML(S, id, suyos) {
   return `<div class="sec"><h2>Noticias</h2><span class="sub">últimos días</span></div>${l.map(filaNoticia).join('')}`;
 }
 
+/* ---------- jornada a jornada: el once de cada jornada con sus puntos, los que entraron con sus minutos y quién juega ----------
+   (Carlos, 5 nov). Sale de la ficha de cada jugador del club en LaLiga Fantasy, que trae por jornada los minutos, los puntos,
+   los goles, las asistencias y las tarjetas (las estadísticas de la jornada solo dan los puntos). La carga va en app.js
+   (cargarJornadasClub): S.clubJor[id] = { t, porJug: { pid: [[n, pts, min, gol, asis, am, roja], …] } }. LaLiga no dice quién
+   salió de titular: el once son los 11 con más minutos (un portero y diez de campo), como en la ficha de un partido. */
+const DATO = ['n', 'pts', 'min', 'gol', 'asis', 'am', 'roja'];
+/** por jornada, los del club que jugaron: { jors: [n…] (de la más vieja a la última), porN: { n: [{ j, pts, min, gol, asis, am, roja }] } } */
+export function jugadoClub(S, id) {
+  const C = S.clubJor && S.clubJor[id];
+  if (!C || !C.porJug) return null;
+  const porN = {};
+  for (const [pid, filas] of Object.entries(C.porJug)) {
+    const j = S.D.maestro[pid];
+    if (!j || j.pos < 1 || j.pos > 4) continue;
+    for (const f of filas || []) {
+      const x = Object.fromEntries(DATO.map((k, i) => [k, f[i] == null ? null : Number(f[i])]));
+      if (!x.n || !(x.min > 0)) continue;
+      (porN[x.n] ||= []).push({ ...x, j });
+    }
+  }
+  // (una jornada con menos de 7 que jugaron es la que se está jugando o un hueco de LaLiga: fuera)
+  const jors = Object.keys(porN).map(Number).filter((n) => porN[n].length >= 7).sort((a, b) => a - b);
+  return { jors, porN };
+}
+/** de los que jugaron una jornada, el once (los 11 con más minutos) y los que entraron */
+const onceJornada = (l) => { const { tit, resto } = once11(l, (o) => o.min || 0); return { tit, entraron: resto.sort((a, b) => b.min - a.min) }; };
+/** arriba a la derecha del cromo: gol o tarjeta */
+const marcaJ = (o) => (o.gol ? `<span class="cr-est ev gol" title="${o.gol} gol${o.gol > 1 ? 'es' : ''}">${icono('balon')}${o.gol > 1 ? `<b>${o.gol}</b>` : ''}</span>`
+  : o.roja || o.am > 1 ? '<span class="cr-est ev" title="Roja"><i class="tarjeta roja"></i></span>' : o.am ? '<span class="cr-est ev" title="Amarilla"><i class="tarjeta amarilla"></i></span>' : '');
+const hizoTxt = (o) => [o.gol ? `${o.gol} gol${o.gol > 1 ? 'es' : ''}` : '', o.asis ? `${o.asis} asist.` : '', o.roja || o.am > 1 ? 'roja' : o.am ? 'amarilla' : ''].filter(Boolean).join(' · ');
+
+function jornadaClubHTML(S, id) {
+  const { D, M } = S;
+  const C = S.clubJor && S.clubJor[id];
+  const sec = '<div class="sec" id="club-jornadas"><h2>Jornada a jornada</h2><span class="sub">once, puntos y minutos</span></div>';
+  if (D.demo) return sec + nada('En la liga de ejemplo no hay fichas de LaLiga de cada jugador. Con tu liga, aquí sale el once de cada jornada con sus puntos y quién entró desde el banquillo.');
+  const J = jugadoClub(S, id);
+  if (!J || !J.jors.length) return sec + nada(C && C.cargando || !C ? 'Cargando lo que ha jugado cada uno…' : C && C.error ? 'LaLiga no ha dado las fichas de sus jugadores. Prueba a abrir el club otra vez en un rato.' : 'Aún no hay jornadas jugadas.');
+  const sel = S.jorClub && S.jorClub[id];
+  const n = J.jors.includes(sel) ? sel : J.jors[J.jors.length - 1];
+  const i = J.jors.indexOf(n);
+  const chips = `<div class="jor-chips club-jchips" role="tablist" aria-label="Jornadas">${[...J.jors].reverse().map((k) => `<button data-accion="jorClub" data-id="${esc(id)}" data-n="${k}" role="tab" aria-selected="${k === n}" class="${k === n ? 'activo' : ''}">J${k}</button>`).join('')}</div>`;
+  const t = M.equipoLiga(id);
+  const u = t && t.ult ? t.ult.find((x) => Number(x.jornada) === n) : null;
+  const rival = u ? (D.equipos[u.rid] || {}).nombre || '' : '';
+  const l = J.porN[n];
+  const { tit, entraron } = onceJornada(l);
+  const total = l.reduce((s, o) => s + (o.pts || 0), 0);
+  const mejor = [...l].sort((a, b) => (b.pts || 0) - (a.pts || 0))[0];
+  const forma = [2, 3, 4].map((p) => tit.filter((o) => o.j.pos === p).length).join('-');
+  const flecha = (m, ic, txt) => `<button class="jor-fl" ${m ? `data-accion="jorClub" data-id="${esc(id)}" data-n="${m}"` : 'disabled'} aria-label="${txt}">${icono(ic)}</button>`;
+  const sub = u ? `${ladoIco(u.casa)}${esc(rival)} <b class="cp-res-t r-${esc(u.r)}">${u.gf}-${u.gc}</b>` : '';
+  let h = sec + chips;
+  h += `<div class="jor-cab">${flecha(J.jors[i - 1], 'atras', 'Jornada anterior')}<div class="jor-t"><b>Jornada ${n}</b><span>${sub}</span></div>${flecha(J.jors[i + 1], 'flecha', 'Jornada siguiente')}
+    <div class="jor-pts"><b>${total}</b><small>pts</small><span>entre todos</span></div></div>`;
+  const crom = (o) => cromo(M, o.j, { tag: tagDe(S, o.j.id), marca: marcaJ(o), datoFijo: { txt: `${o.pts == null ? '–' : o.pts} pts`, cls: `vivo-p ${ptsCls(o.pts) || 'cero'}` } });
+  h += canchaHTML(tit, crom, forma);
+  if (entraron.length) {
+    h += `<div class="banquillo"><div class="banq-t">Entraron <span>${entraron.length}</span></div>${entraron.map((o) => {
+      const hizo = hizoTxt(o);
+      return `<button class="fila club-ent" data-j="${esc(o.j.id)}">${ava(o.j)}<div class="fila-c"><div class="fila-n"><span class="nom">${esc(o.j.nombre)}</span></div><div class="fila-s"><b>${o.min} min</b>${hizo ? ` · ${esc(hizo)}` : ''}</div></div>
+        <div class="fila-d"><div class="v pf-pts ${ptsCls(o.pts)}">${o.pts == null ? '–' : o.pts}</div></div></button>`;
+    }).join('')}</div>`;
+  }
+  const notas = [];
+  if (mejor && mejor.pts > 0) notas.push(`El mejor, ${mejor.j.nombre} con ${mejor.pts} pts.`);
+  if (tit.length < 11) notas.push(`Solo salen ${tit.length}: los demás ya no están en el club o LaLiga no da su ficha.`);
+  notas.push('LaLiga no dice quién salió de titular: en el campo van los 11 con más minutos, así que si uno se lesionó al principio puede salir en su sitio el que entró por él.');
+  h += `<p class="t2 peq">${esc(notas.join(' '))}</p>`;
+  return h + quienJuegaHTML(S, id, J);
+}
+
+/** quién juega en el club: cuántas veces ha salido de titular cada uno y qué parte de los minutos ha jugado */
+function quienJuegaHTML(S, id, J) {
+  const nJ = J.jors.length;
+  const por = {};
+  for (const n of J.jors) {
+    const { tit } = onceJornada(J.porN[n]);
+    const enOnce = new Set(tit.map((o) => o.j.id));
+    for (const o of J.porN[n]) {
+      const x = (por[o.j.id] ||= { j: o.j, tit: 0, jug: 0, min: 0, pts: 0 });
+      x.jug++; x.min += o.min || 0; x.pts += o.pts || 0;
+      if (enOnce.has(o.j.id)) x.tit++;
+    }
+  }
+  // (solo los que siguen en el club y en LaLiga)
+  const l = Object.values(por).filter((x) => x.j.equipoId === id && enLaLiga(x.j)).sort((a, b) => b.tit - a.tit || b.min - a.min);
+  if (!l.length) return '';
+  const fijos = l.filter((x) => x.tit / nJ >= 0.8).length;
+  const fila = (x) => {
+    const pm = Math.round((x.min / (90 * nJ)) * 100);
+    const [cls, txt] = x.tit / nJ >= 0.8 ? ['bien', 'Fijo'] : x.tit / nJ >= 0.35 ? ['duda', 'Rota'] : x.tit ? ['mal', 'Suplente'] : ['mal', 'Solo entra'];
+    const d = duenoDe(S, x.j.id);
+    const de = d ? (d.yo ? ' · <b class="rojo">tuyo</b>' : ` · de ${esc(d.txt)}`) : '';
+    return `<button class="fila" data-j="${esc(x.j.id)}">${ava(x.j)}<div class="fila-c"><div class="fila-n"><span class="nom">${esc(x.j.nombre)}</span></div>
+      <div class="fila-s"><b class="qj-${cls}">${txt}</b> · ${x.tit} de ${nJ} de titular${de}</div></div>
+      <div class="fila-d"><div class="v">${Math.min(100, pm)} %</div><div class="d apag">${x.min} min</div></div></button>`;
+  };
+  return `<div class="sec"><h2>Quién juega</h2><span class="sub">${fijos} fijo${fijos === 1 ? '' : 's'} en ${nJ} jornadas</span></div>${l.map(fila).join('')}
+    <p class="t2 peq">Fijo: titular en 8 de cada 10 jornadas o más; rota: entre 4 y 8 de cada 10. A la derecha, qué parte de los minutos de su equipo ha jugado.</p>`;
+}
+
 export function fichaClub(S, id) {
   const { D, M } = S;
   const e = (D.equipos || {})[id];
@@ -278,7 +380,7 @@ export function fichaClub(S, id) {
   const once = `<div class="sec"><h2>Su once</h2><span class="sub">${o ? `${o.conf ? 'confirmado' : 'probable'}, ${o.forma}` : 'probable'}</span></div>`
     + (o ? `${o.campo}<p class="t2 peq">Arriba, de quién es en tu liga. Debajo, lo probable que es que salga de titular.</p>` : nada(S.D.demo ? 'En la liga de ejemplo cada club trae solo sus 7 jugadores de más valor, así que no da para un once. Con tu liga, aquí sale el once probable del club en el campo.' : 'Aún no hay once probable de este club.'));
   // (en el ordenador la ficha va en un panel de 620 px: una sola columna, como en el móvil)
-  return h + figurasHTML(S, suyos) + once + bajasHTML(S, suyos) + partidosHTML(S, id) + plantillaHTML(S, suyos) + noticiasHTML(S, id, suyos);
+  return h + figurasHTML(S, suyos) + once + bajasHTML(S, suyos) + partidosHTML(S, id) + jornadaClubHTML(S, id) + plantillaHTML(S, suyos) + noticiasHTML(S, id, suyos);
 }
 
 /** el nombre del club, para el botón de volver */
