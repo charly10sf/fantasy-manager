@@ -2996,7 +2996,9 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mantienen-huelga-renfe-reunion-avances-cuerpo-cita-manana-20261105191500.html": 1793902500000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/copa-del-rey/20261105/1004247677/rfef-actualiza-calendario-partidos-aplazados-copa.html": 1793902180000,
-   "SPORT|136135192": 1793898370000
+   "SPORT|136135192": 1793898370000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-da-conocer-nuevas-fechas-horarios-partidos-aplazados-copa-rey-20261105_3469833.html": 1793904403000,
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/05/ya-es-oficial-aplazado-el-cd-tenerife-femenino-deportivo-alaves-radio-club-tenerife/": 1793904183000
   },
   "hechos": [
    {
@@ -3552,7 +3554,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 36
+   "n": 37
   },
   "espera": {}
  }
