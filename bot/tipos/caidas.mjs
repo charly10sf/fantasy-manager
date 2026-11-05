@@ -88,7 +88,8 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   const pesoR = (xs) => { if (!L) return elQueMasPesa(xs); const r = pesos(xs, `pesos${jornada}`, { k: kP++ }); return r && { ...r, t: aparte(r.t) }; };
   // con tweets largos (X Premium): el motivo de todos, la media de todos y cuándo es el partido (lib/agrupar.mjs, lib/redactar.mjs)
   const L = largo();
-  const motivo = (xs) => (L ? detalles(xs, 3, xs.map((x) => x.id).join('-')) : detalle(xs));
+  // (en largo, el motivo en su propio párrafo: si no, el corte a 190 caracteres partía la lista de quiénes se caen)
+  const motivo = (xs) => { if (!L) return detalle(xs); const d = detalles(xs, 3, xs.map((x) => x.id).join('-')); return d && { ...d, t: aparte(d.t) }; };
   const hora = (pr) => { const c = L && pr && pr.fecha ? cuando(pr.fecha, ahora) : null; return c ? { t: `🗓️ El partido es ${c.t}`, numeros: c.numeros } : null; };
   const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 ? partes(c.media) : [])];
   const porEquipo = new Map();
@@ -155,7 +156,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       const xs = resto.slice(0, n);
       // («no estarán», no «se caen»: la primera línea ya dice «Se caen por lesión…»)
       const quien = `${enLetra(n)} ${n === 1 ? 'titular habitual' : 'titulares habituales'} ${xs.every(seguro) ? (n === 1 ? 'no estará' : 'no estarán') : (n === 1 ? 'puede faltar' : 'pueden faltar')}`;
-      const cab = elegir([`🚨 ${mayus(quien)} en la jornada ${jornada}`, `🚨 Ojo a tu once fantasy: ${quien} en la jornada ${jornada}`], `caidas${jornada}${k}`);
+      const cab = rotar([`🚨 ${mayus(quien)} en la jornada ${jornada}`, `🚨 Ojo a tu once fantasy: ${quien} en la jornada ${jornada}`], `caidascab${jornada}`, vez + k);
       const lineas = lineasPorEstado(comoVan(xs));
       top = pesoR(xs.filter(seguro)); det = motivo(xs);
       const etiqueta = `${xs.every(seguro) ? '❌ Bajas' : '⁉️ Bajas y dudas'} Fantasy para la jornada ${jornada}`;
