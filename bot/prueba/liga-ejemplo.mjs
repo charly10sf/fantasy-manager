@@ -162,6 +162,14 @@ R['Aplazados el Sevilla-Barça y el Alavés-Athletic'] = { tipo: 'aplazamiento',
   const sig = [{ id: 3, local: { id: 1 }, visitor: { id: 3 } }, { id: 4, local: { id: 2 }, visitor: { id: 6 } }];
   const t15 = await generar({ ...base, stats: st, statsDe: async () => sig, registro: new Registro(config), leer: async () => [n('MARCA', 'Aplazados el Sevilla-Barça y el Alavés-Athletic', 'Por el temporal'), n('AS', 'Aplazados el Sevilla-Barça y el Alavés-Athletic', 'Por el temporal')] });
   ok(t15.length === 2 && t15.some((t) => /Sevilla-Barça/.test(t.texto)), `de la jornada siguiente: ${t15.map((t) => t.texto).join(' | ')}`);
+  // con la API de la siguiente caída, nada (no partidos inventados en el orden de Gemini)
+  const t16 = await generar({ ...base, stats: st, statsDe: async () => { throw new Error('caída'); }, registro: new Registro(config), leer: async () => [n('MARCA', 'Aplazados el Sevilla-Barça y el Alavés-Athletic', 'Por el temporal'), n('AS', 'Aplazados el Sevilla-Barça y el Alavés-Athletic', 'Por el temporal')] });
+  ok(t16.length === 0, `API caída: nada (${t16.map((t) => t.texto).join(' | ')})`);
+  // la de COPE con clubes puestos por Gemini: cuenta como la jornada
+  R['La intención es que se disputen todos los partidos de LaLiga, salvo los ya aplazados'] = { tipo: 'suspension', estado: 'descartado', primera: true, segunda: true, jornada: 0, equipos: ['Tenerife', 'Andorra'], luto: true, oficial: false, contexto: '', detalle: '' };
+  R['Se jugará la jornada 12'] = { tipo: 'suspension', estado: 'descartado', primera: true, segunda: true, jornada: 12, equipos: [], luto: true, oficial: false, contexto: '', detalle: '' };
+  const t17 = await generar({ ...base, registro: new Registro(config), leer: async () => [n('COPE', 'La intención es que se disputen todos los partidos de LaLiga, salvo los ya aplazados', 'Han decidido que haya fútbol este fin de semana en Primera y Segunda'), n('MARCA', 'Se jugará la jornada 12', 'Habrá Liga')] });
+  ok(t17.length === 1 && /se jugará/.test(t17[0].texto) && /COPE/.test(t17[0].texto), `COPE con clubes cuenta como la jornada: ${t17.map((t) => t.texto).join(' | ')}`);
 }
 // 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');

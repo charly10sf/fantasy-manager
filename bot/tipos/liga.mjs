@@ -137,6 +137,9 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
     if (!x || !TIPOS.includes(a.tipo) || a.tipo === 'nada' || !ESTADOS.includes(a.estado) || !a.primera) continue;
     const fuente = `${x.titulo} ${x.entradilla}`;
     const nums = [...new Set((fuente.match(/\d+/g) || []).map(Number))].slice(0, 30);
+    // si la jornada es el tema y los partidos que nombra son la excepción («se disputen todos los partidos… salvo los ya aplazados»),
+    // es de la jornada aunque Gemini ponga clubes (con ellos se tiraba entera; auditoría del 5 nov)
+    if (a.equipos && a.equipos.length && EXCEPCION.test(fuente)) a.equipos = [];
     // aplazar o suspender la jornada entera es lo mismo para quien juega: un solo tema
     const tipo = a.tipo === 'aplazamiento' && !(a.equipos && a.equipos.length) ? 'suspension' : a.tipo;
     const h = { guid: x.guid, medio: x.medio, t: x.t, tipo, estado: a.estado, segunda: !!a.segunda,
@@ -161,7 +164,11 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
       if (!EXCEPCION.test(fuente) && a.equipos.length % 2 === 0 && a.equipos.length <= 6 && todos.length === a.equipos.length) {
         // (si con los partidos de esta jornada no cuadra, con los de la siguiente: la noticia puede ser de la próxima)
         let parejas = emparejar(todos, stats);
-        if (!parejas && Array.isArray(stats) && stats.length && jornada) { siguiente ||= await statsDe(jornada + 1).catch(() => []); parejas = emparejar(todos, siguiente) || emparejar(todos, [...stats, ...siguiente]); }
+        // (si la API de la siguiente falla, nada: sin partidos, `emparejar` iría por el orden de Gemini y saldrían partidos que no existen)
+        if (!parejas && Array.isArray(stats) && stats.length && jornada) {
+          siguiente ||= await statsDe(jornada + 1).then((r) => (Array.isArray(r) ? r : []), () => []);
+          if (siguiente.length) parejas = emparejar(todos, siguiente) || emparejar(todos, [...stats, ...siguiente]);
+        }
         if (parejas) {
           for (const par of parejas) lg.hechos.push({ ...h, clubes: par });
           log(`  (liga) ${x.medio}: ${a.tipo} · ${a.estado} de ${parejas.length} partidos`);
