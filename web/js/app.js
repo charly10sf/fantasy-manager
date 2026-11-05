@@ -22,6 +22,7 @@ import { qrSVG } from './qr.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
 import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, muestraSemana, guardarMuestraVivo } from './vivo.js';
 import { jornadaElegida, estadoJornada } from './jornadas.js';
+import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
@@ -1753,25 +1754,34 @@ async function cargarJornadasClub(id) {
   if (g && (g.cargando || Date.now() - g.t < vale)) return;
   const pids = Object.values(S.D.maestro || {}).filter((j) => j.equipoId === id && j.pos >= 1 && j.pos <= 4 && j.estado !== 'out_of_league').map((j) => String(j.id));
   if (!pids.length) return;
-  S.clubJor[id] = { ...(g || { porJug: {} }), cargando: true };
+  const abierta = () => S.tipoHoja && S.tipoHoja[0] === 'c' && String(S.tipoHoja[1]) === String(id);
+  const prog = { n: 0, de: pids.length };
+  S.clubJor[id] = { ...(g || { porJug: {} }), cargando: true, prog };
   const porJug = {};
   let fallos = 0;
+  // los titulares y los cambios (ESPN), a la vez que las fichas; si falla, se queda lo de antes y van los minutos
+  const titulares = titularesClub(S.D, id, g && g.espn).catch((e) => { console.warn('titulares', e); return (g && g.espn) || null; });
   await enParalelo(pids, 4, async (pid) => {
     try {
       const d = detalleJugador(await api.jugador(pid, S.D.liga.id));
       porJug[pid] = d.stats.map((x) => [x.n, x.pts, x.min, x.gol, x.asis, x.am, x.roja]);
     } catch (e) { if (e.sesion) throw e; fallos++; }
+    // (cómo va, cada 6 fichas: la primera vez son 5-10 s)
+    if (++prog.n % 6 === 0 && abierta() && !(g && g.porJug && Object.keys(g.porJug).length)) repintarHoja();
   }).catch(() => {});
+  const espn = await titulares;
   const ok = Object.keys(porJug).length;
-  S.clubJor[id] = ok ? { t: Date.now(), porJug } : { ...(g || { porJug: {} }), t: Date.now(), error: fallos ? 'sin fichas' : null };
+  // si fallan unas pocas fichas, las de antes de esos jugadores (mejor eso que un hueco)
+  if (ok && g && g.porJug) for (const pid of pids) if (!porJug[pid] && g.porJug[pid]) porJug[pid] = g.porJug[pid];
+  S.clubJor[id] = ok ? { t: fallos > 3 ? Date.now() - vale + 15 * MIN : Date.now(), porJug, espn, fallos } : { ...(g || { porJug: {} }), espn: espn || (g && g.espn) || null, t: Date.now() - vale + 10 * MIN, error: 'sin fichas' };
   if (ok) {
     const todos = LS.get('clubJor', {});
     todos[id] = S.clubJor[id];
     const ids = Object.keys(todos).sort((a, b) => (todos[b].t || 0) - (todos[a].t || 0));
     for (const k of ids.slice(8)) delete todos[k];
-    try { LS.set('clubJor', todos); } catch (e) { /* sin sitio: se queda en memoria */ }
+    if (!LS.set('clubJor', todos)) { for (const k of ids.slice(3)) delete todos[k]; LS.set('clubJor', todos); }
   }
-  if (S.tipoHoja && S.tipoHoja[0] === 'c' && String(S.tipoHoja[1]) === String(id)) repintarHoja();
+  if (abierta()) repintarHoja();
 }
 /** dibuja la tarjeta elegida y la pone en su hoja (si sigue abierta y no se ha cambiado mientras) */
 let tarjetaN = 0;
