@@ -1148,7 +1148,6 @@
   "vistas": {
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/02/mensaje-caparros-pepe-mel-partido-vas-ganar-seguro.html": 1793657346000,
    "MARCA|https://www.marca.com/futbol/deportivo/2026/11/02/aubameyang-obra-milagro-alta-medica-listo-reaparecer-osasuna.html": 1793648838000,
-   "MARCA|https://www.marca.com/futbol/racing-santander/2026/11/02/mantilla-rotura-ligamento-cruzado-dice-adios-temporada.html": 1793621140000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/mourinho-da-descanso-gueler-tchouameni-llama-sergio-martinez.html": 1793708195000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/02/luz-verde-valverde.html": 1793621437000,
    "MARCA|https://www.marca.com/futbol/atletico/2026/11/03/lista-convocados-atletico-vs-bayern-munich-vuelve-koke-cuti-baja.html": 1793709326000,
@@ -2802,7 +2801,9 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/aplazado-el-castellon-eibar-por-el-fallecimiento-de-jesus-de-miguel-radio-castellon/": 1793873334000,
    "SPORT|136109970": 1793870391000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/laliga-tenerife-jesus-de-miguel-castellon-136112188.html": 1793877466000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/precioso-gesto-palmas-eldense-quieren-jesus-miguel-partido-domingo-20261105_3469397.html": 1793880286000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/ano-suspension-jugador-mando-hospital-arbitro-18-anos-vilagarcia/00031793878536009479432.htm": 1793880240000
   },
   "hechos": [
    {
@@ -3055,7 +3056,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 13
+   "n": 14
   }
  }
 }
