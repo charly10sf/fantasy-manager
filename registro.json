@@ -2990,7 +2990,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-da-conocer-nuevas-fechas-horarios-partidos-aplazados-copa-rey-20261105_3469833.html": 1793904403000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/05/ya-es-oficial-aplazado-el-cd-tenerife-femenino-deportivo-alaves-radio-club-tenerife/": 1793904183000,
    "SPORT|136136691": 1793901372000,
-   "AS|https://as.com/futbol/copa_del_rey/fechas-y-horarios-de-los-partidos-aplazados-de-la-copa-del-rey-y-de-la-reina-f202611-n/": 1793901223000
+   "AS|https://as.com/futbol/copa_del_rey/fechas-y-horarios-de-los-partidos-aplazados-de-la-copa-del-rey-y-de-la-reina-f202611-n/": 1793901223000,
+   "SPORT|136138671": 1793905242000
   },
   "hechos": [
    {
@@ -3546,7 +3547,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 38
+   "n": 39
   },
   "espera": {}
  }
