@@ -1339,7 +1339,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-segunda-revalida-luis-fuente-espana-seleccion-betis_0_2008430674.html": 1793895491000,
    "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
    "SPORT|136122728": 1793893823000,
-   "SPORT|136130480": 1793895763000
+   "SPORT|136130480": 1793895763000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000
   },
   "hechos": [
    {
@@ -2063,7 +2064,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -2981,7 +2982,10 @@
    "SPORT|136129776": 1793892308000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898360000,
    "SPORT|136132177": 1793895290000,
-   "SPORT|136132157": 1793894248000
+   "SPORT|136132157": 1793894248000,
+   "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html": 1793899045000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247648/oficial-laliga-aplaza-castellon-eibar-fallecimiento-jesus-miguel.html": 1793898608000
   },
   "hechos": [
    {
@@ -3490,11 +3494,54 @@
     "contexto": "Tras el fallecimiento de Jesús de Miguel",
     "detalle": "Se disputará la jornada con homenajes, salvo tres partidos específicos de Segunda",
     "nums": []
+   },
+   {
+    "guid": "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html",
+    "medio": "ABC",
+    "t": 1793899320000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Petición de aplazamiento por el fallecimiento del jugador Jesús de Miguel",
+    "detalle": "La jornada se disputará con homenajes en todos los encuentros",
+    "nums": [
+     6,
+     9
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793899045000,
+    "tipo": "horario",
+    "estado": "confirmado",
+    "segunda": false,
+    "jornada": 12,
+    "jTxt": true,
+    "clubes": [
+     "18",
+     "15"
+    ],
+    "luto": false,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "El partido se disputará este sábado a las 21:00 horas",
+    "nums": [
+     1971,
+     21,
+     0,
+     12
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 32
+   "n": 33
   },
   "espera": {}
  }
