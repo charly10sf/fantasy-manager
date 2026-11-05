@@ -77,6 +77,19 @@ for (const j of [9, 10, 11, 12, 13, 14]) {
 const g2 = [{ ...cs[1] }, { ...cs[1], nombre: 'Aidoo', id: 99 }];
 const lg = lineasLloros(g2, { jornada: 11 });
 if (lg.length !== 1 || !/El Celta encajó en el 90\+2' y lo pagan Djené y Aidoo: 3 puntos menos cada uno/.test(lg[0])) falla(`grupo del gol: ${lg}`);
+// seis en un tweet largo: del cuarto en adelante, juntos por caso; y «le faltó un minuto» con 59
+fijarLimite(1000);
+const seis = [
+  { nombre: 'Lejeune', caso: 'minutos', min: 59, pierde: 4, equipo: 'Rayo', pos: 2 }, { nombre: 'Kounde', caso: 'minutos', min: 54, pierde: 4, equipo: 'Barça', pos: 2 },
+  { nombre: 'Djené', caso: 'gol', gol: { min: 90, extra: 2 }, pierde: 3, equipo: 'Getafe', pos: 2 }, { nombre: 'Bartra', caso: 'minutos', min: 56, pierde: 4, equipo: 'Betis', pos: 2 },
+  { nombre: 'Catena', caso: 'minutos', min: 52, pierde: 4, equipo: 'Osasuna', pos: 2 }, { nombre: 'Parejo', caso: 'gol', gol: { min: 88, extra: 0 }, pierde: 2, equipo: 'Villarreal', pos: 3 }];
+const l6 = lineasLloros(seis, { jornada: 12 });
+if (l6.length !== 5 || !/Bartra \(56\) y Catena \(52\) tampoco llegaron a los 60 con su equipo a cero: 4 puntos menos cada uno/.test(l6[3]) || !/A Parejo \(88'\) también le quitó la portería a cero un gol al final: 2 puntos menos/.test(l6[4])) falla(`seis: ${l6.join(' | ')}`);
+const t6 = escribir(seis, { jornada: 12 })[0];
+const v6 = validar(t6.texto, { numeros: t6.numeros }); if (!v6.ok || !/Parejo/.test(t6.texto)) falla(`seis en el tweet: ${v6.errores.join('; ')} ${t6.texto}`);
+console.log(`--- seis · peso ${v6.peso}\n${t6.texto}`);
+for (let v = 0; v < 3; v++) { const l = lineaLloro({ ...seis[0] }, false, v); if (/1 minutos/.test(l)) falla(l); }
+if (!/le faltó un minuto/.test([0, 1, 2].map((v) => lineaLloro(seis[0], false, v)).join(' '))) falla('«le faltó un minuto»');
 fijarLimite(280);
 
 // el minuto del gol encajado, de los detalles de ESPN

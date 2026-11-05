@@ -46,7 +46,13 @@ const ARRANQUES = new Set(('el la los las lo un una unos unas en con sin pero y 
   + 'al del se su sus no si que quien a de otra otro nadie todo todos esta este eso esto mientras tras sale salen juega juegan vuelve vuelven '
   + 'llega llegan cae caen sigue siguen tampoco solo nada mas menos le les lleva suma suman saca sacan va van es son era fue tiene tienen '
   + 'segun cuidado atentos alerta asi entre sobre desde hasta cuando donde como muy bien mal menudo vaya gran buena buen mala mal noche tarde '
-  + 'dia partido jornada media puntos baja bajas duda dudas lesion vuelta vuelve nueva nuevo primera primero segunda segundo mejor peor ahi alli').split(' '));
+  + 'dia partido jornada media puntos baja bajas duda dudas lesion vuelta vuelve nueva nuevo primera primero segunda segundo mejor peor ahi alli '
+  // (auditoría del 5 nov: tumbaba 7 de 13 reescrituras buenas por empezar frase con «Encima», «Ahora», «Ambos», «Luego», «Pese»…)
+  + 'ahora luego encima ambos ambas pese gana ganan pierde pierden marca marcan firma firman estara estaran queda quedan falta faltan cada '
+  + 'ni incluso apenas casi antes ayer manana pronto nunca siempre todavia aun igual otros otras uno una dos tres cuatro cinco seis ningun '
+  + 'ninguno ninguna algo alguno alguna habra sera seran podria puede pueden deberia debe parece pinta seguro vale cuesta sube suben baja '
+  + 'bajan entra entran mucho mucha muchos pocos poco final empate victoria derrota goleada remontada gol goles titular titulares suplente '
+  + 'banquillo once mercado precio valor racha y lo').split(' '));
 const mayusculas = (s) => {
   const out = new Set();
   for (const l of lineas(s)) {
