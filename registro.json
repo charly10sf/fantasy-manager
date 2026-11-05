@@ -1321,7 +1321,8 @@
    "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html": 1793893343000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000,
-   "SPORT|136106483": 1793891666000
+   "SPORT|136106483": 1793891666000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-segunda-revalida-luis-fuente-espana-seleccion-betis_0_2008430674.html": 1793895491000
   },
   "hechos": [
    {
@@ -2030,7 +2031,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -2935,7 +2936,11 @@
    "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html": 1793891979000,
-   "SPORT|136128445": 1793891692000
+   "SPORT|136128445": 1793891692000,
+   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html": 1793896084000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261105/1004247619/comunicado-laliga.html": 1793895137000,
+   "SPORT|136129236": 1793892468000,
+   "SPORT|136129351": 1793892151000
   },
   "hechos": [
    {
@@ -3318,7 +3323,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 29
+   "n": 30
   }
  }
 }
