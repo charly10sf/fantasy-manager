@@ -15,6 +15,7 @@ import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs'
 import { fijarLimite, limite, largo } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
+import { crearInfo } from './lib/info-jugador.mjs';
 
 /** AAAAMMDD de hoy en Madrid (y de ayer, entre las 0 y las 3) */
 function diasEspn() {
@@ -80,6 +81,8 @@ const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn, ve
   fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
 const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
 ctx.registro = registro;
+// el % de titularidad y el rival para los tweets de un jugador (noticias y novedades; lib/info-jugador.mjs): se pide solo si hace falta
+ctx.info = config.infoJugador === false ? null : crearInfo({ jugadores, equipos, semana: sem, log: (s) => console.log(s) });
 // tweets largos con X Premium (lib/largo.mjs): el límite se fija antes de escribir nada
 const dl = decidirLargo({ config, registro });
 fijarLimite(dl.largo ? dl.max : config.tweetMax);

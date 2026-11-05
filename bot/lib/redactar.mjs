@@ -117,7 +117,7 @@ export async function proximoPartido(teamId, { stats = null, semana = null, jorn
     if (!m || m.matchState === 7) continue;
     const enCasa = String(m.local.id) === String(teamId);
     const r = enCasa ? m.visitor : m.local;
-    return { jornada: n, rival: corto(r.mainName), rivalNombre: r.mainName, rivalEscudo: r.badgeColor || null, enCasa, fecha: m.date || null };
+    return { jornada: n, rival: corto(r.mainName), rivalNombre: r.mainName, rivalId: r.id, rivalEscudo: r.badgeColor || null, enCasa, fecha: m.date || null };
   }
   return null;
 }

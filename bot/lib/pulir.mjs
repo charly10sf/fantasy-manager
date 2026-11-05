@@ -64,6 +64,8 @@ const mayusculas = (s) => {
   return out;
 };
 
+/** ¿alguna frase lleva «según…» detrás de una cifra? («…suma 5,9 puntos de media, según AS») */
+export const segunTrasCifra = (s) => String(s).split(/(?<=[.!?])\s+|\n+/).some((f) => /\d.*\bseg[uú]n\s/i.test(f));
 /** los nombres de jugadores y equipos de LaLiga que salen en un texto (por apodo o nombre corto de equipo, palabra entera) */
 export function nombresEn(texto, nombres) {
   const t = ` ${norm(texto)} `;
@@ -107,6 +109,8 @@ export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [
   const base = ` ${norm(orig)} `;
   const nuevas = [...mayusculas(nuevo)].filter((w) => w && !base.includes(` ${w} `));
   if (nuevas.length) e.push(`palabras nuevas con mayúscula: ${nuevas.join(', ')}`);
+  // (5 nov) «según AS» pegado detrás de la media, del % o de la hora le daría al medio un dato que no es suyo
+  if (segunTrasCifra(nuevo) && !segunTrasCifra(orig)) e.push('«según» detrás de una cifra');
   const eo = new Set(emojis(orig));
   const raros = emojis(nuevo).filter((x) => !eo.has(x) && !EMOJIS_GUIA.has(x));
   if (raros.length) e.push(`emojis nuevos: ${raros.join(' ')}`);
@@ -144,7 +148,7 @@ Reglas que no se pueden saltar:
 - No cambies lo que se dice de nadie: si es duda, sigue siendo duda; si es baja, baja; si está sancionado, sancionado (sin decir por qué si no lo dice); si es titular habitual, lo sigue diciendo. Las fechas y plazos se quedan.
 - No añadas datos, opiniones, motivos ni predicciones que no estén en el texto. Si una línea ya suena bien, déjala igual.
 - Si el último párrafo es la etiqueta («❌ Baja para la jornada…», «✅ Disponible para la jornada…», «💸 Venta obligatoria») o lleva la palabra «Fantasy», se queda exactamente igual, letra por letra: no le añadas «Fantasy» ni nada.
-- El párrafo que dice de dónde sale la noticia («Lo cuentan…», «Según…») se queda aparte y tal cual, aunque te pida el cuerpo unirlo.
+- La frase que dice de dónde sale la noticia (los medios, el club o LaLiga Fantasy) sigue diciendo lo mismo y pegada a la noticia: no cambies quién lo dice ni la juntes con otro dato que no sea suyo (un «según AS» nunca va detrás de la media, del % de titularidad, del rival ni de la hora).
 ${largo() ? '- Cada tweet trae su «max»: como mucho esos caracteres, contando cada emoji como 2. Puedes usar unas palabras más que la plantilla para que se lea como lo contaría una persona (unir frases, quitar la lista), pero sin datos nuevos y sin relleno: si sobra espacio, no hace falta gastarlo.' : '- Cada tweet trae su «max»: como mucho esos caracteres, contando cada emoji como 2. Si no cabe, quita palabras; nunca lo alargues.'}
 Devuelve cada tweet con su i.
 Tweets:
