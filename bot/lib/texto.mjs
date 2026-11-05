@@ -18,6 +18,11 @@ export function peso(s) {
 }
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 
+// La etiqueta final de bajas, dudas y novedades («❌ Baja para la jornada 12 contra el Sevilla», «💸 Venta obligatoria»). Desde el
+// 5 nov sin «Fantasy» detrás (Carlos: «disponible fantasy no tiene sentido; con poner disponible sería suficiente»); lo llevan
+// solo «Revisa tu once Fantasy», «Lloros Fantasy» y «Chollo Fantasy».
+export const esEtiquetaFinal = (s) => /^(✅|❌|⁉️|👀|💸|🟨|💔) .*(para la (jornada|próxima jornada)|de la jornada \d|Venta obligatoria)/u.test(String(s || ''));
+
 // Todos llevan «Fantasy» (Carlos, 2 nov 15:52) y ninguno lleva enlace: la dirección va en el campo «Sitio web» del perfil.
 export const CIERRES = [
   'Fantasy Manager · enlace en la bio',

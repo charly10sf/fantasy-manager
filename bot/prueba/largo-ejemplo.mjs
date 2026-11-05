@@ -1,7 +1,7 @@
 // Tweets largos con X Premium (lib/largo.mjs), sin red: cuándo se escriben largos, cuándo se vuelve a 280 y que con 280 las
 // plantillas salen igual que antes.  node bot/prueba/largo-ejemplo.mjs
 import { decidirLargo, rechazoPorLargo } from '../lib/largo.mjs';
-import { fijarLimite, limite, largo, peso } from '../lib/texto.mjs';
+import { fijarLimite, limite, largo, peso, esEtiquetaFinal } from '../lib/texto.mjs';
 import { tweet } from '../lib/redactar.mjs';
 import { maxDe, prompt } from '../lib/pulir.mjs';
 import { validar } from '../lib/validar.mjs';
@@ -38,7 +38,7 @@ const ideas = [
   { t: 'El que más pesa es I. Akhomach: 4,8 puntos de media', prio: 6 },
   { t: 'I. Akhomach había sido titular en 4 de los 5 últimos partidos y Foyth en los 5', prio: 2 },
   { t: 'El Villarreal juega el sábado a las 18:30 contra el Getafe, y luego el miércoles en Champions', prio: 1 },
-  { t: '❌ Baja Fantasy para la jornada 12 contra el Getafe', prio: 8 },
+  { t: '❌ Baja para la jornada 12 contra el Getafe', prio: 8 },
 ];
 fijarLimite(280);
 const corto = tweet(cab, ideas);
@@ -52,7 +52,7 @@ ok(lar.usadas.length === ideas.length, `con 1000 entran todas las ideas (${lar.u
 ok(peso(lar.texto) > 280 && peso(lar.texto) <= 1000, `el largo pasa de 280 (${peso(lar.texto)})`);
 ok(validar(lar.texto, { numeros: [12, 4, 8, 5, 18, 30], max: limite() }).ok, 'el largo pasa el validador con el límite largo');
 ok(!validar(lar.texto, { numeros: [12, 4, 8, 5, 18, 30], max: 280 }).ok, 'y no pasaría con 280');
-ok(lar.texto.split('\n\n').every((b, i) => i === 0 || /[.!?…:]$/.test(b) || /Fantasy/.test(b)), 'los párrafos de después del titular acaban en punto');
+ok(lar.texto.split('\n\n').every((b, i) => i === 0 || /[.!?…:]$/.test(b) || esEtiquetaFinal(b)), 'los párrafos de después del titular acaban en punto (menos la etiqueta)');
 console.log(`\n${lar.texto}\n`);
 
 // Gemini: con tweets largos puede alargar un poco (para unir frases), nunca pasar del límite
