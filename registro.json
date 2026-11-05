@@ -1301,7 +1301,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247531/numeros-vinicius-confirman-ocaso-regate-intentado-seis-ceros.html": 1793881800000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/05/luis-garcia-plaza-rentabilizar-momentos-superiores.html": 1793882703000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html": 1793883472000,
-   "SPORT|136119456": 1793881394000
+   "SPORT|136119456": 1793881394000,
+   "SPORT|136120803": 1793882025000
   },
   "hechos": [
    {
@@ -1943,11 +1944,26 @@
     "motivo": "molestias físicas",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136120803",
+    "medio": "SPORT",
+    "t": 1793882025000,
+    "id": "3207",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "P. Martínez avanza positivamente en su recuperación",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     14,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
