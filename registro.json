@@ -1342,7 +1342,8 @@
    "SPORT|136130480": 1793895763000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
    "SPORT|136131477": 1793897298000,
-   "SPORT|136104000": 1793898027000
+   "SPORT|136104000": 1793898027000,
+   "SPORT|136135887": 1793899739000
   },
   "hechos": [
    {
@@ -2066,7 +2067,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
