@@ -140,5 +140,18 @@ export function pildora(f, cx, cy, px, wMax) {
     + iconoEstado(f.estado, x + p * 0.95, cy, p * 0.9, '#120f16')
     + texto(x + p * 1.75, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1 });
 }
+/** el color de un % de titularidad, como en la tarjeta de los posibles onces: verde (75 o más), ámbar (50 o más) o rojo */
+export const colPct = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? AMBAR : MALO);
+// (Carlos, 5 nov 17:08: «si pones arriba en el título DUDA, no lo pongas abajo de nuevo; pon el porcentaje de titularidad abajo»)
+// la etiqueta del % de titularidad de la app, en el color del %, en vez de repetir el estado que ya dice el título
+const txtTit = (pct) => `${pct} % TITULARIDAD`;
+export function pildoraTit(pct, cx, cy, px, wMax) {
+  const txt = txtTit(pct);
+  let p = px; while (p > 12 && medir(txt, p, B, 1) + p * 1.8 > wMax) p--;
+  const w = medir(txt, p, B, 1) + p * 1.8, h = p * 1.75, x = cx - w / 2;
+  return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${colPct(pct)}"/>`
+    + texto(cx, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1, ancla: 'middle' });
+}
+export const anchoPildoraTit = (pct, px) => medir(txtTit(pct), px, B, 1) + px * 1.8;
 /** ancho de la etiqueta del estado (para colocarla a la derecha) */
 export const anchoPildora = (f, px) => medir(txtEstado(f), px, B, 1) + px * 2.6;
