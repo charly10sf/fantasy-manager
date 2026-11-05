@@ -16,7 +16,7 @@ export const NOVEDADES = [
   {
     v: '0.7g', f: '2026-11-05', h: '', t: 'Cada club, jornada a jornada',
     cosas: [
-      { tipo: 'nuevo', d: 'campo', t: 'El once de cada jornada, con sus puntos', x: 'En la ficha de cada club, «Jornada a jornada»: eliges la jornada y sale su once en el campo con los puntos de cada uno, el rival y el resultado, y debajo los que entraron desde el banquillo con sus minutos.', ir: { v: 'clubes' } },
+      { tipo: 'nuevo', d: 'campo', t: 'El once de cada jornada, con sus puntos', x: 'En la ficha de cada club, «Jornada a jornada»: eliges la jornada y sale el once que salió de verdad, en el campo y con los puntos de cada uno, el rival y el resultado. Debajo, los que entraron desde el banquillo: en qué minuto, cuántos jugaron y sus puntos.', ir: { v: 'clubes' } },
       { tipo: 'nuevo', d: 'lupa', t: 'Quién es fijo y quién rota', x: 'Debajo, «Quién juega»: cuántas veces ha salido de titular cada jugador y qué parte de los minutos de su equipo ha jugado. Fijo, rota o suplente, de un vistazo antes de fichar.', ir: { v: 'clubes' } },
     ],
   },
