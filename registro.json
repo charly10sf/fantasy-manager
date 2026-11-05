@@ -1222,7 +1222,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/el-gran-problema-de-vinicius-tras-la-explosion-de-diomande-tengo-muchas-dudas-de-que-lo-vaya-a-conseguir-cadena-ser/": 1793687467000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/02/el-chip-del-balon-del-athletic-club-real-sociedad-fallo-la-rfef-reconoce-que-pudo-no-haber-penalti-a-nico-williams-cadena-ser/": 1793658047000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cta-investiga-chip-balon-polemico-penalti-nico-williams-derbi-vasco-20261102_3467125.html": 1793654507000,
    "ABC|https://www.abc.es/deportes/futbol/clasificacion-laliga-dos-puntos-separan-barcelona-atletico-20261103090959-nt.html": 1793693400000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/03/pedro-martinez-quiere-recuperar-eli-ndiaye-136041146.html": 1793717014000,
@@ -1345,7 +1344,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
    "SPORT|136137325": 1793901641000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
-   "SPORT|136138125": 1793904953000
+   "SPORT|136138125": 1793904953000,
+   "SPORT|136139762": 1793910076000
   },
   "hechos": [
    {
@@ -2057,7 +2057,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 42
+   "n": 43
   },
   "desde": {
    "67": {
