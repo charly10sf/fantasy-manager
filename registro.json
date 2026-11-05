@@ -1272,7 +1272,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-lesiones-perfilan-vuelta_0_2008425309.html": 1793854861000,
    "SPORT|136100198": 1793856626000,
    "SPORT|136102945": 1793858165000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247419/vinicius.html": 1793862427000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247419/vinicius.html": 1793862427000,
+   "SPORT|136071805": 1793862034000
   },
   "hechos": [
    {
@@ -1832,7 +1833,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
