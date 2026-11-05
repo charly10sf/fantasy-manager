@@ -1273,7 +1273,8 @@
    "SPORT|136100198": 1793856626000,
    "SPORT|136102945": 1793858165000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247419/vinicius.html": 1793862427000,
-   "SPORT|136071805": 1793862034000
+   "SPORT|136071805": 1793862034000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247446/reconquista-bellingham.html": 1793869200000
   },
   "hechos": [
    {
@@ -1833,7 +1834,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
