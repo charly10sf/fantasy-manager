@@ -21,8 +21,11 @@ const ahoraReal = () => Date.now();
 const horaMadrid = (t) => Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Madrid' }).format(new Date(t)));
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 // de qué tiene que hablar una noticia para preguntar a Gemini (estrecho a propósito: cada lote gasta una pregunta)
-export const TEMA = /suspend|suspensi[oó]n|aplaz|puerta cerrada|sin p[uú]blico|(cambi\w*|nuevo|modifica\w*) (de |el )?horario|horario (nuevo|definitivo)|no se jugar[aá]|se jugar[aá] (el|a|sin)|huelga|paro de (los )?futbolistas|parar (el )?f[uú]tbol|sin f[uú]tbol (este|el) fin de semana|no habr[aá] f[uú]tbol/i;
+export const TEMA = /suspend|suspensi[oó]n|aplaz|par(a|an|ar) (la )?competici[oó]n|no habr[aá] partidos|puerta cerrada|sin p[uú]blico|(cambi\w*|nuevo|modifica\w*) (de |el )?horario|horario (nuevo|definitivo)|no se jugar[aá]|se jugar[aá] (el|a|sin)|huelga|paro de (los )?futbolistas|parar (el )?f[uú]tbol|sin f[uú]tbol (este|el) fin de semana|no habr[aá] f[uú]tbol/i;
 const TIPOS = ['suspension', 'aplazamiento', 'horario', 'puertaCerrada', 'nada'];
+// de qué tiene que hablar una noticia sin clubes para contar como la jornada entera (y lo que dice que es de un partido)
+const JORNADA = /jornada|\bj\d{1,2}\b|competici[oó]n|tod[oa]s (los|las) (partidos|encuentros)|(partidos|encuentros) de (primera|segunda|laliga)|primera y segunda|no habr[aá] (f[uú]tbol|liga|partidos)|f[uú]tbol (profesional|español|en españa)/i;
+const UNO = /\b(el|su) (partido|encuentro|duelo)\b/i;
 const ESTADOS = ['se_estudia', 'confirmado', 'descartado'];
 const GRANDES = ['COPE', 'Cadena SER', 'SPORT', 'Mundo Deportivo', 'AS', 'MARCA'];
 const OFICIAL = /comunicado|oficial|ha anunciado|anuncia(do)? (laliga|la rfef|la federaci[oó]n|el csd)|(laliga|la rfef|la federaci[oó]n|el csd|el comit[eé]) (ha )?(decidido|confirmado|anunciado|comunicado)/i;
@@ -56,10 +59,21 @@ export function clubesDe(nombres, equipos) {
   for (const n of nombres || []) {
     const k = norm(n);
     if (k.length < 4) continue;
-    const id = Object.keys(equipos).find((t) => { const a = norm(corto(equipos[t])), b = norm(equipos[t]); return a === k || b === k || (k.length >= 5 && (b.includes(k) || k.includes(a))); });
+    // primero la coincidencia exacta, después el nombre corto que lo contiene y por último el largo («Deportivo» es el Dépor, no el
+    // Deportivo Alavés, que salía antes por estar antes en la lista; auditoría del 5 nov)
+    const ks = Object.keys(equipos), na = (t) => norm(corto(equipos[t])), nb = (t) => norm(equipos[t]);
+    const id = ks.find((t) => na(t) === k || nb(t) === k) || (k.length >= 5 && (ks.find((t) => na(t).includes(k)) || ks.find((t) => nb(t).includes(k) || k.includes(na(t)))));
     if (id && !ids.includes(id)) ids.push(id);
   }
   return ids;
+}
+/** el número de jornada de un grupo de noticias: el que sale en el texto si solo hay uno; si ninguna lo trae, el que ha puesto Gemini
+    por la fecha si todas coinciden; si no, 0 («la próxima jornada») */
+export function numeroDe(hs) {
+  const enTexto = [...new Set(hs.filter((h) => h.jTxt && h.jornada).map((h) => h.jornada))];
+  if (enTexto.length) return enTexto.length === 1 ? enTexto[0] : 0;
+  const puestos = [...new Set(hs.filter((h) => h.jornada).map((h) => h.jornada))];
+  return puestos.length === 1 && hs.every((h) => h.jornada) ? puestos[0] : 0;
 }
 /** de qué se habla: la jornada (de Primera, o de Primera y Segunda) o un partido; y la clave para juntar noticias de lo mismo */
 export function objeto(h, equipos) {
@@ -106,14 +120,18 @@ async function actualizar({ equipos, registro, ahora, config, log, leer, pedirIA
     const tipo = a.tipo === 'aplazamiento' && !(a.equipos && a.equipos.length) ? 'suspension' : a.tipo;
     const h = { guid: x.guid, medio: x.medio, t: x.t, tipo, estado: a.estado, segunda: !!a.segunda,
       // el número: el que sale en la noticia o, si Gemini lo saca de «este fin de semana» / «la próxima jornada», esta o la siguiente
-      jornada: a.jornada > 0 && a.jornada <= 38 && (nums.includes(a.jornada) || (jornada && (a.jornada === jornada || a.jornada === jornada + 1))) ? a.jornada : 0, clubes: clubesDe(a.equipos, equipos).slice(0, 2),
+      jornada: a.jornada > 0 && a.jornada <= 38 && (nums.includes(a.jornada) || (jornada && (a.jornada === jornada || a.jornada === jornada + 1))) ? a.jornada : 0,
+      // si el número sale en la noticia o lo ha puesto Gemini por la fecha (para quedarse con el del texto si los hay)
+      jTxt: a.jornada > 0 && nums.includes(a.jornada), clubes: clubesDe(a.equipos, equipos).slice(0, 2),
       luto: !!a.luto, oficial: !!a.oficial && OFICIAL.test(fuente),
       contexto: frase(a.contexto, { fuente, max: 100 }), detalle: frase(a.detalle, { fuente, max: 100 }), nums };
     // un partido de un solo club no se entiende sin el rival; mejor esperar a otra noticia que lo diga. Y un club que no es de Primera
     // (un partido de Segunda: «Granada-Tenerife») no puede acabar como «la jornada» por no tener clubes casados (auditoría del 5 nov)
-    if (a.equipos && a.equipos.length && h.clubes.length < Math.min(2, a.equipos.length)) { log(`  (liga) ${x.medio}: ${a.tipo} de un partido sin casar sus clubes`); continue; }
-    // la jornada entera, solo si la noticia habla de la jornada o del fin de semana (no de «el partido» a secas)
-    if (!h.clubes.length && !/jornada|fin de semana|competici[oó]n|todos los partidos|f[uú]tbol profesional/i.test(fuente)) { log(`  (liga) ${x.medio}: ${a.tipo} sin clubes ni jornada: no lo cuento como la jornada`); continue; }
+    // (con más de dos equipos es la jornada entera que nombra partidos ya aplazados: «ya estaban aplazados el Granada-Tenerife y…»)
+    if (a.equipos && a.equipos.length && a.equipos.length <= 2 && h.clubes.length < a.equipos.length) { log(`  (liga) ${x.medio}: ${a.tipo} de un partido sin casar sus clubes`); continue; }
+    // la jornada entera, solo si la noticia habla de la jornada, la competición o los partidos de Primera; «fin de semana» vale si no
+    // habla de un partido («El Tenerife no jugará este fin de semana… su partido ante el Granada» no es la jornada)
+    if (!h.clubes.length && !(JORNADA.test(fuente) || (/fin de semana/i.test(fuente) && !UNO.test(fuente)))) { log(`  (liga) ${x.medio}: ${a.tipo} sin clubes ni jornada: no lo cuento como la jornada`); continue; }
     log(`  (liga) ${x.medio}: ${a.tipo} · ${a.estado}${h.oficial ? ' (oficial)' : ''}${h.luto ? ' (luto)' : ''}`);
     lg.hechos.push(h);
   }
@@ -153,6 +171,8 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
   const grupos = new Map();
   for (const h of lg.hechos) {
     if (ahora - h.t > 36 * HORA) continue;
+    // un «aplazamiento» sin clubes casados es un partido de otra categoría guardado antes del 5 nov (los nuevos ya no entran)
+    if (h.tipo === 'aplazamiento' && !(h.clubes && h.clubes.length)) continue;
     const o = objeto(h, equipos);
     const tema = `${h.tipo}|${o.clave}`;
     const k = `${tema}|${h.estado}`;
@@ -160,7 +180,7 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     const g = grupos.get(k);
     g.hs.push(h);
     // de la jornada entera, el texto con el número y con «Primera y Segunda» si alguno lo dice
-    if (o.clave === 'j') g.obj = objeto({ clubes: [], jornada: Math.max(...g.hs.map((x) => x.jornada || 0)), segunda: g.hs.some((x) => x.segunda) }, equipos).texto;
+    if (o.clave === 'j') g.obj = objeto({ clubes: [], jornada: numeroDe(g.hs), segunda: g.hs.some((x) => x.segunda) }, equipos).texto;
   }
   const out = [];
   // lo decidido antes que lo que se estudia
@@ -180,7 +200,8 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     const mejor = (k) => (hs.filter((h) => h[k]).sort((a, b) => b[k].length - a[k].length)[0] || {})[k] || '';
     const luto = hs.some((h) => h.luto);
     const texto = redactar({ tipo: g.tipo, estado: g.estado, obj: g.obj, luto, contexto: mejor('contexto'), detalle: mejor('detalle'), medios, oficial });
-    const jn = hs.find((h) => h.jornada) ? hs.find((h) => h.jornada).jornada : null;
+    // el mismo número para el texto y para lib/aire.mjs
+    const jn = numeroDe(hs) || null;
     // jornadaAire: la jornada de la que habla la noticia, si la dice (lib/aire.mjs apunta con ella las fechas de sus partidos)
     out.push({ tipo: 'liga', clave, jornada, jornadaAire: jn, texto, numeros: [...new Set([jornada, ...(jn ? [jn] : []), ...hs.flatMap((h) => h.nums || [])])], tarjeta: null });
   }
