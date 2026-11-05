@@ -135,13 +135,13 @@ export function tarjetaBajas({ jornada, filas: todas, pp = null, clave }) {
   const titulo = filas.every(esBuena) ? 'NOVEDADES' : filas.every((f) => f.estado === 'sancionado') && filas.length > 1 ? 'SANCIONADOS'
     : filas.some((f) => f.estado === 'duda') ? (filas.every((f) => f.estado === 'duda') ? 'DUDAS' : 'BAJAS Y DUDAS') : 'BAJAS';
   const fila = (f) => ({ id: f.id, nombre: f.nombre, equipo: f.equipo, club: f.club, teamId: f.teamId, posicion: POS[f.pos] || '', caraUrl: f.caraUrl || null, escudoUrl: f.escudoUrl || null,
-    estado: f.estado, leve: !!f.leve, pct: f.estado === 'duda' ? f.pct : null, media: conMedia(f), valor: f.valor || null });
+    estado: f.estado, leve: !!f.leve, pct: f.estado === 'duda' || esBuena(f) ? (f.pct ?? null) : null, media: conMedia(f), valor: f.valor || null });
   const d = { jornada: pp ? pp.jornada : jornada, titulo, filas: filas.slice(0, mismo ? 4 : 6).map(fila),
     equipo: mismo ? { nombre: filas[0].club, corto: filas[0].equipo, escudoUrl: filas[0].escudoUrl || null } : null,
     rival: mismo && pp ? { nombre: pp.rivalNombre || pp.rival, corto: pp.rival, escudoUrl: pp.rivalEscudo || null } : null };
   const permitidos = {
     numeros: [d.jornada, ...d.filas.flatMap((f) => [f.pct, f.media].filter((x) => x != null))].map(String),
-    palabras: ['BAJAS', 'Y', 'DUDAS', 'NOVEDADES', 'SANCIONADOS', 'DUDA LEVE', 'LEVE', 'LESIONADO', 'SANCIONADO', 'DISPONIBLE', 'VUELVE', 'PRÓXIMO', 'RIVAL',
+    palabras: ['BAJAS', 'Y', 'DUDAS', 'NOVEDADES', 'SANCIONADOS', 'DUDA LEVE', 'LEVE', 'LESIONADO', 'SANCIONADO', 'DISPONIBLE', 'VUELVE', 'PRÓXIMO', 'RIVAL', 'TITULARIDAD',
       ...d.filas.flatMap((f) => [f.nombre, f.equipo, f.club]), ...(d.equipo ? [d.equipo.corto, d.equipo.nombre] : []), ...(d.rival ? [d.rival.corto] : [])],
   };
   return { tipo: 'bajas', nombre: `bajas-${clave.replace(/[^\w-]+/g, '_').slice(0, 80)}`, d, permitidos };
