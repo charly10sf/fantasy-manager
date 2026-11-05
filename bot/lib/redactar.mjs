@@ -30,12 +30,17 @@ function parrafo(frases) {
   for (const f of frases) {
     if (!out) { out = f; continue; }
     const previa = out.replace(/[.]$/, '');
-    if (/^seg[uú]n /i.test(f) && !/:$/.test(out)) out = `${previa}, ${f[0].toLowerCase()}${f.slice(1)}`;
+    // «¦»: va pegada a la frase de antes con una coma («…tras un mes, según AS»; Carlos, 5 nov 17:42: menos puntos y frases más largas)
+    if (f.startsWith(PEGA)) out = `${previa}, ${f.slice(1)}`;
+    else if (/^seg[uú]n /i.test(f) && !/:$/.test(out)) out = `${previa}, ${f[0].toLowerCase()}${f.slice(1)}`;
     else if (SIGUE.test(f) && !/[.:!?]$/.test(out)) out = `${out} ${f[0].toLowerCase()}${f.slice(1)}`;
     else out = `${cierra(out)} ${f}`;
   }
   return out;
 }
+/** marca de «va pegada a la frase de antes, con una coma» (no sale en el texto): `pegar('según AS')` */
+export const PEGA = '¦';
+export const pegar = (s) => `${PEGA}${s}`;
 /** marca de párrafo aparte para armarAire (no sale en el texto): `aparte('En el Sevilla…')` */
 export const APARTE = '¶';
 export const aparte = (s) => `${APARTE}${s}`;
@@ -55,7 +60,7 @@ export function armarAire(cab, ideas, pie) {
     const f = sinEmoji(x);
     if (!f) continue;
     // un párrafo largo se parte en dos (más fácil de leer en el móvil)
-    if (frases.length >= 3 && parrafo([...frases, f]).length > 190) volcar();
+    if (frases.length >= 3 && parrafo([...frases, f]).length > 190 && !f.startsWith(PEGA)) volcar();   // lo pegado no empieza párrafo
     frases.push(f);
   }
   volcar();

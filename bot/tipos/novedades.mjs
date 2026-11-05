@@ -111,25 +111,27 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       const les = p && p.lesion && /(lesi[oó]n|rotura|molestia|sobrecarga|contusi[oó]n|esguince|fractura|elongaci[oó]n|tendinitis|luxaci[oó]n|distensi[oó]n|edema|fascitis|pubalgia|golpe|problema|dolencia|tobillo|rodilla|isquio|gemelo|aductor|s[oó]leo|cu[aá]driceps|hombro|espalda)/i.test(p.lesion) ? lesionTxt(p) : '';
       const art = /^(lesi[oó]n|rotura|sobrecarga|contusi[oó]n|elongaci[oó]n|tendinitis|fractura|fascitis|distensi[oó]n|luxaci[oó]n|pubalgia)/.test(les) ? 'la ' : /^(golpe|esguince|edema|problema)/.test(les) ? 'el ' : '';
       const tras = les ? ` deja atrás ${art}${les}` : e.antes === 'injured' ? ' ya está recuperado' : e.antes === 'suspended' ? ' ya ha cumplido la sanción' : ' deja de estar en duda';
-      cab = R([`✅ ${e.nombre} vuelve a estar disponible`, `✅ ${e.nombre}, de nuevo disponible`, `✅ Buenas noticias: vuelve ${e.nombre}`], 'cabV');
-      ideas = [{ t: `‼️ ${quien}${tras}`, prio: 8 }, e.media >= 3 ? { t: R([`📊 Llega con ${fmt(e.media)} puntos de media`, `📊 Es un jugador de ${fmt(e.media)} puntos de media`, `📊 Su media: ${fmt(e.media)} puntos`], 'mediaV'), prio: 5 } : null,
-        { t: `✅ Disponible ${paraLa(e.pp, null)}`, prio: 9 }];
+      // (Carlos, 5 nov 17:42: frases más largas) de dónde viene, en la misma frase que la noticia («Buenas noticias: vuelve Natan, que ya
+      // está recuperado»); la media, el % y el partido, en las frases de lib/info-jugador.mjs
+      const fC = turno(3, `novcabV${dia}`, k);
+      cab = fC === 2 ? `✅ Buenas noticias: vuelve ${e.nombre}, que${tras}` : `${[`✅ ${e.nombre} vuelve a estar disponible`, `✅ ${e.nombre}, de nuevo disponible`][fC]}:${tras}`;
+      ideas = [{ t: `✅ Disponible ${paraLa(e.pp, null)}`, prio: 9 }];
     }
     const clave = `novedades|${e.id}:${e.que}|${d}`;
     // (Carlos, 5 nov 13:33) el que vuelve: si pinta a titular y lo difícil que es el rival (solo si el tweet puede salir: se piden datos)
     const conInfo = info && e.que === 'vuelve' && e.pp && (!registro || !registro.decidir || registro.decidir({ tipo: 'novedades', clave, jornada }) === 'ok');
     let extra = { numeros: [] };
     const hr = hora(e.pp);
-    if (conInfo) {
+    if (e.que === 'vuelve') {
       const j = porId.get(String(e.id));
-      const tit = await info.titularidad(j, e.pp).catch(() => null), riv = await info.rival(e.pp).catch(() => null);
-      e.pct = tit ? tit.pct : null;   // (5 nov 16:39) también en la carta
-      extra = ideasInfo({ posId: e.pos, equipo: e.equipo, pp: e.pp, tit, riv, tipo: 'vuelve', hr: L && e.pp && e.pp.fecha ? cuando(e.pp.fecha, ahora) : null, k: kI, dia, largo: L });
+      const tit = conInfo ? await info.titularidad(j, e.pp).catch(() => null) : null, riv = conInfo ? await info.rival(e.pp).catch(() => null) : null;
+      if (conInfo) e.pct = tit ? tit.pct : null;   // (5 nov 16:39) también en la carta
+      extra = ideasInfo({ posId: e.pos, equipo: e.equipo, pp: e.pp, quien, media: e.media, tit, riv, tipo: 'vuelve', hr: L && e.pp && e.pp.fecha ? cuando(e.pp.fecha, ahora) : null, k: kI, dia, largo: L });
       ideas.splice(ideas.length - 1, 0, ...extra.ideas);
     } else if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
-    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(conInfo ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
+    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(e.que === 'vuelve' ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
   };
 
   // Varios: agrupados por lo que pasa, con una cabecera que ya cuenta la noticia y la media solo del que más pesa (Carlos, 3 nov 12:06)
