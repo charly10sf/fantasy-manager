@@ -2898,7 +2898,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "Europa Press|https://www.europapress.es/madrid/noticia-profesores-huelga-encierran-direccion-general-rrhh-consejeria-educacion-forzar-reunion-20261105103009.html": 1793871009000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
-   "SPORT|136122379": 1793879661000
+   "SPORT|136122379": 1793879661000,
+   "SPORT|136122725": 1793885037000
   },
   "hechos": [
    {
@@ -3249,7 +3250,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 23
+   "n": 24
   }
  }
 }
