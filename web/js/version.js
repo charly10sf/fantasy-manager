@@ -14,7 +14,7 @@ export const VERSION = '0.7f';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.7f', f: '2026-11-05', h: '', t: 'Casa o fuera, de un vistazo',
+    v: '0.7f', f: '2026-11-05', h: '22:25', t: 'Casa o fuera, de un vistazo',
     cosas: [
       { tipo: 'mejora', d: 'camiseta', t: 'Una casa o un avión en cada partido', x: 'En el calendario de cada jugador y en los partidos de cada club, delante del rival sale una casa si se juega en casa y un avión si es fuera, en vez de «vs» o «en casa del».', ir: { v: 'clubes' } },
     ],
