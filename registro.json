@@ -1312,7 +1312,8 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-malaga-realiza-la-penultima-sesion-antes-de-recibir-este-sabado-al-racing-ser-malaga/": 1793886617000,
    "SPORT|136120104": 1793882738000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-real-madrid-no-salir-relajado-partido-hemos-visto-recuperado-gen-competitivo-siempre-tenido-ultimamente-habia-perdido-20261105_3468903.html": 1793887133000,
-   "AS|https://as.com/futbol/primera/aznou-y-lucas-breton-primeras-bajas-del-paron-f202611-n/": 1793887252000
+   "AS|https://as.com/futbol/primera/aznou-y-lucas-breton-primeras-bajas-del-paron-f202611-n/": 1793887252000,
+   "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000
   },
   "hechos": [
    {
@@ -1997,7 +1998,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -2900,7 +2901,8 @@
    "SPORT|136122379": 1793879661000,
    "SPORT|136122725": 1793885037000,
    "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html": 1793891979000
   },
   "hechos": [
    {
@@ -3263,11 +3265,27 @@
     "contexto": "El sindicato de futbolistas solicita aplazar la jornada tras el fallecimiento de un jugador",
     "detalle": "La petición ha sido presentada oficialmente por la AFE",
     "nums": []
+   },
+   {
+    "guid": "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html",
+    "medio": "La Vanguardia",
+    "t": 1793891979000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": false,
+    "oficial": false,
+    "contexto": "El sindicato de jugadores solicita el aplazamiento de la jornada",
+    "detalle": "La decisión depende de las autoridades competentes",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 27
+   "n": 28
   }
  }
 }
