@@ -114,6 +114,8 @@ export function delta(t, { largo = false } = {}) {
 
 /** el rival de un partido fuera, sin que «en Alavés» parezca un sitio: «en casa del Alavés», «en casa de la Real Sociedad» */
 export const enCasaDe = (rival) => `en casa ${/^(Real Sociedad|Real$|Ud |UD )/i.test(String(rival || '')) ? 'de la' : 'del'}`;
+/** en las listas de partidos, una casa si juega en casa y un avión si juega fuera, en vez de «vs» o «en casa del» */
+export const ladoIco = (casa) => (casa == null ? '' : `<span class="lado ${casa ? 'en-casa' : 'fuera'}" role="img" aria-label="${casa ? 'en casa' : 'fuera'}" title="${casa ? 'En casa' : 'Fuera'}">${icono(casa ? 'casa' : 'avion')}</span>`);
 export const partidoTxt = (p) => (p ? `${p.casa ? 'vs' : enCasaDe(p.rival)} ${esc(p.rival)} · ${cuando(p.fecha)}` : '');
 
 /* ---------- lo difícil que es el próximo rival ---------- */
@@ -158,7 +160,7 @@ export function calendarioHTML(M, j, mio = false) {
   // dos líneas por partido: el rival con sus puntos y su titularidad; debajo, su puesto y nivel y, a la derecha, cómo llega
   const filas = c.partidos.map((p) => `<${p.rivalId ? `button data-club="${esc(p.rivalId)}"` : 'div'} class="cr-p ${nivelCls(p.nivel)}">
       <span class="cr-j">J${p.jornada}<small>${p.sinFecha ? 'sin fecha' : esc(cuando(p.fecha, { hora: false }))}</small></span>
-      <b class="cr-rv2">${p.casa ? 'vs' : 'en'} ${esc(p.rival)}</b>
+      <b class="cr-rv2">${ladoIco(p.casa)}${esc(p.rival)}</b>
       <span class="cr-pt"><b>~${d1(p.pts)}</b> pts</span>
       <span class="cr-ti"><b>${p.pTit == null ? '–' : `${Math.round(p.pTit * 100)}%`}</b> tit.</span>
       <small class="cr-nv">${p.pos ? `${p.pos}º · ` : ''}${p.nivel || 'sin datos'}${p.rot ? ` · ${esc(p.rot.join(' y '))} cerca` : ''}</small>

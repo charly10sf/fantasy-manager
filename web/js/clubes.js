@@ -3,7 +3,7 @@
    tu liga, y sus noticias. Sale todo de lo que la app ya tiene (LaLiga, futbolfantasy, Understat, SofaScore y Google
    Noticias); al abrir un club se piden sus titulares (noticiasClub en externas.js). */
 import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe } from './util.js';
-import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe } from './comunes.js';
+import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo } from './directo.js';
 
 const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Dudas' };
@@ -211,12 +211,12 @@ function partidosHTML(S, id) {
   if (!vienen.length && !ult.length) return '';
   const filaV = (c) => `<button class="club-p ${nivelCls(c.nivel)}" data-club="${esc(c.rivalId)}">
       <span class="cp-j">J${c.jornada}<small>${esc(cuando(c.fecha, { hora: false }))}</small></span>${escudo(D, c.rivalId)}
-      <span class="cp-n"><b>${c.casa ? 'vs' : enCasaDe(c.rival)} ${esc(c.rival)}</b><small>${c.pos ? `${c.pos}º, ` : ''}${esc(c.nivel === 'media' ? 'nivel medio' : c.nivel || 'sin datos')}</small></span></button>`;
+      <span class="cp-n"><b>${ladoIco(c.casa)}${esc(c.rival)}</b><small>${c.pos ? `${c.pos}º, ` : ''}${esc(c.nivel === 'media' ? 'nivel medio' : c.nivel || 'sin datos')}</small></span></button>`;
   const filaU = (u) => {
     const nom = (D.equipos[u.rid] || {}).nombre || '¿?';
     return `<button class="club-p" data-club="${esc(u.rid)}">
       <span class="cp-j">J${u.jornada || '?'}</span>${escudo(D, u.rid)}
-      <span class="cp-n"><b>${u.casa ? 'vs' : enCasaDe(nom)} ${esc(nom)}</b></span>
+      <span class="cp-n"><b>${ladoIco(u.casa)}${esc(nom)}</b></span>
       <span class="cp-res r-${esc(u.r)}">${u.gf}-${u.gc}</span></button>`;
   };
   const a = vienen.length ? `<div class="grupo"><span>Le vienen</span><span>${vienen.length}</span></div>${vienen.map(filaV).join('')}` : '';
