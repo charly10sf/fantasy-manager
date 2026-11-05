@@ -5,14 +5,14 @@
 //   - frase corta de periodista: sujeto, verbo y dato;
 //   - la segunda vez que sale un jugador, por su puesto («el delantero»);
 //   - dudar con palabras según el % («en principio juega», «está en el aire»…), con el número al lado;
-//   - siempre la jornada y el rival, y una etiqueta final con «Fantasy» («Duda Fantasy para la jornada 12 contra el Valencia»).
+//   - siempre la jornada y el rival, y una etiqueta final («⁉️ Duda para la jornada 12 contra el Valencia»; sin «Fantasy» desde el 5 nov).
 // El validador de siempre sigue mandando: cada número tiene que estar en los datos y el largo, 280 (o el de X Premium, `limite()`).
 import { peso, el, corto, limite } from './texto.mjs';
 import { statsSemana } from './laliga.mjs';
 
 // Desde el 4 nov (Carlos, 13:42: «que suene más humano; no hace falta una frase distinta por línea»): texto corrido. La cabecera y
 // las ideas van en un párrafo, como frases seguidas, sin su emoji; solo la cabecera lleva emoji. Aparte, cada una en su línea: las
-// listas (una línea con « · » o con más de un emoji, como el podio del final), la etiqueta final («❌ Baja Fantasy para la
+// listas (una línea con « · » o con más de un emoji, como el podio del final), la etiqueta final («❌ Baja para la
 // jornada 12…», «👀 Revisa tu once…») y el cierre. «Según MARCA» se pega a la frase de antes («…, según MARCA») y lo que
 // empieza por «tras», «por», «después de»… sigue la frase («Se estudia suspender la jornada tras el fallecimiento de…»).
 const EMO = /^(?:\p{Extended_Pictographic}|\p{Regional_Indicator})[\p{Extended_Pictographic}\p{Regional_Indicator}\uFE0F\u200D\u20E3]*\s*/u;
@@ -20,8 +20,8 @@ const EMO_DENTRO = /\p{Extended_Pictographic}/u;
 const empiezaEmoji = (s) => EMO.test(s);
 const sinEmoji = (s) => String(s).replace(EMO, '').trim();
 const esLista = (s) => / · /.test(s) || EMO_DENTRO.test(sinEmoji(s));
-// la etiqueta final: «Fantasy» con mayúscula («Duda Fantasy…», «LaLiga Fantasy») o un emoji de veredicto al principio
-const esEtiqueta = (s) => empiezaEmoji(s) && !esLista(s) && (/Fantasy/.test(s) || /^(✅|❌|⁉️|👀|💔|🟨|🟥)/u.test(s));
+// la etiqueta final: un emoji de veredicto al principio («⁉️ Duda para…», «💸 Venta obligatoria») o «Fantasy» con mayúscula («Lloros Fantasy…»)
+const esEtiqueta = (s) => empiezaEmoji(s) && !esLista(s) && (/Fantasy/.test(s) || /^(✅|❌|⁉️|👀|💔|🟨|🟥|💸)/u.test(s));
 const cierra = (s) => (/[.!?…:]$/.test(s) ? s : `${s}.`);
 const SIGUE = /^(tras|por|despu[eé]s de|debido a|a ra[ií]z de|ante|para)\s/i;
 /** junta las frases de un párrafo */

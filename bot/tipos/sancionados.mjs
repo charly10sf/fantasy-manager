@@ -84,7 +84,7 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {},
         return `${l}${cola[f](r)}`; });
       const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
       const pr = n === 1 ? pp[String(xs[0].teamId)] : null;
-      const etiqueta = n === 1 ? `❌ Baja Fantasy ${paraLa(pr, jornada)}` : `❌ Bajas Fantasy para la jornada ${jornada}`;
+      const etiqueta = n === 1 ? `❌ Baja ${paraLa(pr, jornada)}` : `❌ Bajas para la jornada ${jornada}`;
       const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
       if (![...lineas, etiqueta].every((l) => r.usadas.includes(l))) continue;
       const clave = `sancionados|${jornada}|${xs.map((x) => x.id).join('-')}`;
@@ -128,7 +128,7 @@ function textoApercibidos(xs, { jornada, pp, pp2, peso, L, conNombres = true }) 
     : !nombres ? `⚠️ Si ven una más en la jornada ${jornada}, se pierden la ${jornada + 1}`
     : `⚠️ Si ${n === 1 ? 've' : 'ven'} una amarilla en la jornada ${jornada}, ${n === 1 ? 'se pierde' : 'se pierden'} la ${jornada + 1}`;
   const top = n === 1 ? mediaDe(xs[0]) : peso(xs);
-  const etiqueta = `🟨 Apercibidos Fantasy de la jornada ${jornada}`;
+  const etiqueta = `🟨 Apercibidos de la jornada ${jornada}`;
   // con tweets largos: el partido de la jornada siguiente que se perderían los dos que más pesan (de equipos distintos), contado
   // como lo diría una persona y no como una lista (Carlos, 4 nov 23:39: nada que suene a plantilla)
   let juego = null;

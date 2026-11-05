@@ -19,7 +19,7 @@ const orig = `🚨 El Celta se queda sin dos titulares
 
 ‼️ El que más pesa es Aspas: 6,1 puntos de media
 
-❌ Baja Fantasy para la jornada 12 contra el Sevilla`;
+❌ Baja para la jornada 12 contra el Sevilla`;
 const numeros = [6, 1, 12];
 const bueno = `🚨 El Celta pierde a dos titulares
 
@@ -29,7 +29,7 @@ const bueno = `🚨 El Celta pierde a dos titulares
 
 ‼️ Aspas es el que más pesa: 6,1 puntos de media
 
-❌ Baja Fantasy para la jornada 12 contra el Sevilla`;
+❌ Baja para la jornada 12 contra el Sevilla`;
 const r = (n) => revisar(orig, n, { numeros, nombres });
 ok(r(bueno).length === 0, `bueno: ${r(bueno)}`);
 ok(r(bueno.replace('6,1', '6,2')).length > 0, 'cifra cambiada');
@@ -38,7 +38,7 @@ ok(r(bueno.replace('🟥 Mingueza está sancionado\n\n', '')).length > 0, 'pierd
 ok(r(bueno.replace('Mingueza está sancionado', 'Mingueza cumple ciclo de sanción')).length > 0, 'añade «ciclo»');
 ok(r(bueno.replace('El Celta pierde a dos titulares', 'Aspas y Mingueza son baja en el Celta')).length > 0, 'mueve nombres a otra línea');
 ok(r(bueno.replace('Aspas, lesionado', 'Aspas, duda')).length > 0, 'lesionado → duda');
-ok(revisar('❌ Aspas se cae por lesión\n\n❌ Baja Fantasy', '❌ Aspas, baja por lesión\n\n❌ Baja Fantasy', { nombres }).length === 0, 'se cae = baja');
+ok(revisar('❌ Aspas se cae por lesión\n\n❌ Baja para la próxima jornada', '❌ Aspas, baja por lesión\n\n❌ Baja para la próxima jornada', { nombres }).length === 0, 'se cae = baja');
 ok(r(bueno.replace('El Celta pierde a dos titulares', 'El Celta pierde a dos')).length > 0, 'pierde «titulares»');
 ok(r(bueno.replace('El Celta pierde a dos titulares', 'El Celta se queda sin dos')).length > 0, 'pierde «titulares» (2)');
 ok(r(bueno.replace('Aspas, lesionado', 'Aspas y Kubo, lesionados')).length > 0, 'añade a Kubo');
@@ -48,7 +48,10 @@ ok(r(bueno.replace('Aspas, lesionado', 'Aspas, lesionado 🤕')).length > 0, 'em
 ok(r(bueno.replace('Aspas, lesionado', 'Aspas, lesionado según Iago')).length > 0, 'palabra nueva con mayúscula');
 ok(r(bueno.replace('pierde a dos titulares', 'pierde a dos titulares, mi lectura')).length > 0, 'primera persona');
 ok(r(bueno.replace('🚨 El Celta pierde', '🚨 El Celta, @RCCelta, pierde')).length > 0, 'mención');
-ok(r(bueno.replace('Baja Fantasy', 'Baja')).length > 0, 'sin fantasy');
+ok(r(bueno.replace('Baja para', 'Baja Fantasy para')).length > 0, 'etiqueta con «Fantasy» añadido');
+ok(r(bueno.replace('❌ Baja para', '❌ No estará para')).length > 0, 'etiqueta reescrita');
+ok(revisar('🚑 Lemar, fuera dos meses\n\n💸 Venta obligatoria', '🚑 Lemar estará fuera dos meses\n\n💸 Venta obligatoria ya', { nombres }).length > 0, 'venta obligatoria cambiada');
+ok(revisar('🚑 Lemar, fuera dos meses\n\n💸 Venta obligatoria', '🚑 Lemar estará fuera dos meses\n\n💸 Venta obligatoria', { nombres }).length === 0, 'venta obligatoria igual');
 
 // el ciclo con un Gemini falso
 const dir = mkdtempSync(`${tmpdir()}/pulir-`);

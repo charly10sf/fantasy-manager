@@ -4,10 +4,10 @@
 //   - las mismas cifras (ni una más ni una menos) y el validador de siempre (280, «fantasy», sin enlaces, cifras de los datos);
 //   - los mismos jugadores y equipos: ninguno nuevo y ninguno perdido (se buscan los de LaLiga en los dos textos);
 //   - ninguna palabra con mayúscula que no esté en la plantilla (salvo al principio de una línea);
-//   - la misma última línea (la etiqueta «Baja Fantasy…» o el cierre «Fantasy Manager · enlace en la bio»);
+//   - la misma última línea (la etiqueta «❌ Baja para la jornada…» o el cierre «Fantasy Manager · enlace en la bio»);
 //   - solo emojis de la plantilla o de la guía de estilo, un emoji al principio de cada línea y nada de @, # ni primera persona.
 // Una pregunta a Gemini por tipo y ejecución, con todos los tweets de ese tipo que van a salir. Tope diario propio (`pulir.porDia`).
-import { norm, corto, peso, limite, largo } from './texto.mjs';
+import { norm, corto, peso, limite, largo, esEtiquetaFinal } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntarJson } from './gemini.mjs';
 
@@ -84,8 +84,9 @@ export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [
   if (!v.ok) e.push(...v.errores);
   if (cifras(orig).join(' ') !== cifras(nuevo).join(' ')) e.push(`cifras distintas (${cifras(orig).join(' ')} → ${cifras(nuevo).join(' ')})`);
   const lo = lineas(orig), ln = lineas(nuevo);
-  // la etiqueta («Baja Fantasy…») o el cierre, igual letra por letra
-  if (/fantasy/i.test(lo[lo.length - 1] || '') && lo[lo.length - 1] !== ln[ln.length - 1]) e.push('cambia la última línea');
+  // la etiqueta («❌ Baja para la jornada 12…») o el cierre («Fantasy Manager · enlace en la bio»), igual letra por letra
+  const ult = lo[lo.length - 1] || '';
+  if ((/fantasy/i.test(ult) || esEtiquetaFinal(ult)) && ult !== ln[ln.length - 1]) e.push('cambia la última línea');
   // línea a línea (3 nov, primera prueba: «cumple ciclo de sanción» sin que la plantilla dijera ciclo, y Foyth «baja» siendo duda):
   // mismas líneas, en el mismo orden, con el mismo emoji, las mismas cifras, los mismos nombres y las mismas palabras de estado
   if (ln.length !== lo.length) e.push(`líneas: ${lo.length} → ${ln.length}`);
@@ -142,7 +143,7 @@ Reglas que no se pueden saltar:
 - Los mismos párrafos (separados por una línea en blanco), en el mismo orden y con el mismo emoji al principio: cambia las palabras DENTRO de cada párrafo, pero no muevas información de un párrafo a otro, no juntes párrafos, no quites ninguno y no añadas ninguno.
 - No cambies lo que se dice de nadie: si es duda, sigue siendo duda; si es baja, baja; si está sancionado, sancionado (sin decir por qué si no lo dice); si es titular habitual, lo sigue diciendo. Las fechas y plazos se quedan.
 - No añadas datos, opiniones, motivos ni predicciones que no estén en el texto. Si una línea ya suena bien, déjala igual.
-- Si el último párrafo lleva la palabra «Fantasy», se queda exactamente igual, letra por letra.
+- Si el último párrafo es la etiqueta («❌ Baja para la jornada…», «✅ Disponible para la jornada…», «💸 Venta obligatoria») o lleva la palabra «Fantasy», se queda exactamente igual, letra por letra: no le añadas «Fantasy» ni nada.
 - El párrafo que dice de dónde sale la noticia («Lo cuentan…», «Según…») se queda aparte y tal cual, aunque te pida el cuerpo unirlo.
 ${largo() ? '- Cada tweet trae su «max»: como mucho esos caracteres, contando cada emoji como 2. Puedes usar unas palabras más que la plantilla para que se lea como lo contaría una persona (unir frases, quitar la lista), pero sin datos nuevos y sin relleno: si sobra espacio, no hace falta gastarlo.' : '- Cada tweet trae su «max»: como mucho esos caracteres, contando cada emoji como 2. Si no cabe, quita palabras; nunca lo alargues.'}
 Devuelve cada tweet con su i.
