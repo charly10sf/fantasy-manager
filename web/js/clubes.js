@@ -3,7 +3,7 @@
    tu liga, y sus noticias. Sale todo de lo que la app ya tiene (LaLiga, futbolfantasy, Understat, SofaScore y Google
    Noticias); al abrir un club se piden sus titulares (noticiasClub en externas.js). */
 import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe } from './util.js';
-import { ava, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco, cromo } from './comunes.js';
+import { ava, posTag, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco, cromo } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo, ptsCls, tagDe, canchaHTML, once11 } from './directo.js';
 
 const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Dudas' };
@@ -258,31 +258,88 @@ function noticiasHTML(S, id, suyos) {
 }
 
 /* ---------- jornada a jornada: el once de cada jornada con sus puntos, los que entraron con sus minutos y quién juega ----------
-   (Carlos, 5 nov). Sale de la ficha de cada jugador del club en LaLiga Fantasy, que trae por jornada los minutos, los puntos,
-   los goles, las asistencias y las tarjetas (las estadísticas de la jornada solo dan los puntos). La carga va en app.js
-   (cargarJornadasClub): S.clubJor[id] = { t, porJug: { pid: [[n, pts, min, gol, asis, am, roja], …] } }. LaLiga no dice quién
-   salió de titular: el once son los 11 con más minutos (un portero y diez de campo), como en la ficha de un partido. */
+   (Carlos, 5 nov). Los puntos, los minutos, los goles, las asistencias y las tarjetas, de la ficha de LaLiga de cada jugador del
+   club (las estadísticas de la jornada solo dan los puntos). Quién salió de titular y en qué minuto entró cada uno, de ESPN
+   (espn.js); si ESPN no lo da para una jornada, el once son los 11 con más minutos (y se avisa debajo). La carga va en app.js
+   (cargarJornadasClub): S.clubJor[id] = { t, porJug: { pid: [[n, pts, min, gol, asis, am, roja], …] }, espn: { porN: { n: {
+   tit, ent: [[pid, minuto]], sin } } } }.
+   Casos previstos: un titular que se lesiona pronto (con ESPN sale bien; sin ESPN, se avisa); uno que llegó o se fue a mitad de
+   temporada (con ESPN solo cuenta en las jornadas en que jugó con este club); la ficha de un jugador que no llega (sus puntos, de
+   la lista de LaLiga, sin minutos); la jornada que se está jugando (solo las acabadas); un jugador que ya no está en el club o
+   en LaLiga (no sale: se dice cuántos faltan). */
 const DATO = ['n', 'pts', 'min', 'gol', 'asis', 'am', 'roja'];
-/** por jornada, los del club que jugaron: { jors: [n…] (de la más vieja a la última), porN: { n: [{ j, pts, min, gol, asis, am, roja }] } } */
-export function jugadoClub(S, id) {
-  const C = S.clubJor && S.clubJor[id];
-  if (!C || !C.porJug) return null;
-  const porN = {};
-  for (const [pid, filas] of Object.entries(C.porJug)) {
+/** lo que hizo cada uno del club en una jornada: { pid: { j, n, pts, min, gol, asis, am, roja } } */
+function filasDe(S, id, C, n) {
+  const out = {};
+  for (const [pid, filas] of Object.entries(C.porJug || {})) {
     const j = S.D.maestro[pid];
     if (!j || j.pos < 1 || j.pos > 4) continue;
-    for (const f of filas || []) {
-      const x = Object.fromEntries(DATO.map((k, i) => [k, f[i] == null ? null : Number(f[i])]));
-      if (!x.n || !(x.min > 0)) continue;
-      (porN[x.n] ||= []).push({ ...x, j });
-    }
+    const f = (filas || []).find((x) => Number(x[0]) === n);
+    if (f) out[pid] = { ...Object.fromEntries(DATO.map((k, i) => [k, f[i] == null ? null : Number(f[i])])), j };
   }
-  // (una jornada con menos de 7 que jugaron es la que se está jugando o un hueco de LaLiga: fuera)
-  const jors = Object.keys(porN).map(Number).filter((n) => porN[n].length >= 7).sort((a, b) => a - b);
-  return { jors, porN };
+  return out;
 }
-/** de los que jugaron una jornada, el once (los 11 con más minutos) y los que entraron */
-const onceJornada = (l) => { const { tit, resto } = once11(l, (o) => o.min || 0); return { tit, entraron: resto.sort((a, b) => b.min - a.min) }; };
+/** si su ficha no ha llegado: los puntos de la lista de jugadores de LaLiga, sin minutos */
+function sinFicha(S, pid, n) {
+  const j = S.D.maestro[pid];
+  if (!j) return null;
+  const w = (j.semanas || []).find((x) => Number(x.n) === n);
+  return { j, n, pts: w ? w.pts : null, min: null, gol: 0, asis: 0, am: 0, roja: 0, sinFicha: true };
+}
+/** las jornadas acabadas del club: { n: { rid, casa, gf, gc, r } } (de los resultados de LaLiga) */
+function acabadas(S, id) {
+  const out = {};
+  for (const p of S.D.resultados || []) {
+    if (p.gl == null || p.gv == null) continue;
+    const casa = p.localId === id;
+    if (!casa && p.visitanteId !== id) continue;
+    const gf = casa ? p.gl : p.gv, gc = casa ? p.gv : p.gl;
+    out[p.jornada] = { rid: casa ? p.visitanteId : p.localId, casa, gf, gc, r: gf > gc ? 'V' : gf < gc ? 'D' : 'E' };
+  }
+  return out;
+}
+/**
+ * una jornada del club: { tit: [o], entraron: [o], espn (si los titulares son de ESPN), relleno (cuántos titulares van por
+ * minutos), faltan (los que jugaron y no salen) } con o = { j, pts, min, …, entra? }
+ */
+function jornadaDe(S, id, C, n) {
+  const filas = filasDe(S, id, C, n);
+  const E = C.espn && C.espn.porN && C.espn.porN[n];
+  const fila = (pid) => filas[pid] || sinFicha(S, pid, n);
+  if (E && E.tit && E.tit.length >= 7) {
+    const tit = E.tit.map(fila).filter(Boolean);
+    const entraron = (E.ent || []).map(([pid, m]) => { const o = fila(pid); return o ? { ...o, entra: m } : null; }).filter(Boolean);
+    const dentro = new Set([...tit, ...entraron].map((o) => o.j.id));
+    // los que ESPN no ha sabido casar: con los minutos de LaLiga, solo si ESPN dice que faltan y el jugador es de los que no se
+    // casaron con nadie (si no, el que jugó esa jornada con otro club, antes de fichar, se colaría)
+    const nc = new Set(E.nc || []);
+    const resto = E.sin ? Object.values(filas).filter((o) => !dentro.has(o.j.id) && nc.has(o.j.id) && o.min > 0).sort((a, b) => b.min - a.min) : [];
+    let relleno = 0;
+    while (tit.length < 11 && resto.length) {
+      const hayPor = tit.some((o) => o.j.pos === 1);
+      const i = resto.findIndex((o) => (o.j.pos === 1) === !hayPor || (hayPor && o.j.pos > 1));
+      if (i < 0) break;
+      tit.push(resto.splice(i, 1)[0]); relleno++;
+    }
+    for (const o of resto) entraron.push(o);
+    entraron.sort((a, b) => (a.entra == null ? 999 : a.entra) - (b.entra == null ? 999 : b.entra) || (b.min || 0) - (a.min || 0));
+    return { tit, entraron, espn: true, relleno, faltan: Math.max(0, 11 - tit.length) + Math.max(0, (E.sin || 0) - relleno) };
+  }
+  const jugaron = Object.values(filas).filter((o) => o.min > 0);
+  if (jugaron.length < 7) return null;
+  const { tit, resto } = once11(jugaron, (o) => o.min || 0);
+  return { tit, entraron: resto.sort((a, b) => b.min - a.min), espn: false, relleno: tit.length, faltan: Math.max(0, 11 - tit.length) };
+}
+/** las jornadas que se pueden enseñar, de la más vieja a la última */
+function jornadasClub(S, id, C) {
+  const ac = acabadas(S, id);
+  const hayRes = Object.keys(ac).length > 0;
+  const ns = new Set();
+  for (const filas of Object.values(C.porJug || {})) for (const f of filas || []) if (Number(f[2]) > 0) ns.add(Number(f[0]));
+  for (const k of Object.keys((C.espn && C.espn.porN) || {})) ns.add(Number(k));
+  // (solo las acabadas: la que se juega aún no tiene todos los minutos)
+  return [...ns].filter((n) => (!hayRes || ac[n]) && jornadaDe(S, id, C, n)).sort((a, b) => a - b);
+}
 /** arriba a la derecha del cromo: gol o tarjeta */
 const marcaJ = (o) => (o.gol ? `<span class="cr-est ev gol" title="${o.gol} gol${o.gol > 1 ? 'es' : ''}">${icono('balon')}${o.gol > 1 ? `<b>${o.gol}</b>` : ''}</span>`
   : o.roja || o.am > 1 ? '<span class="cr-est ev" title="Roja"><i class="tarjeta roja"></i></span>' : o.am ? '<span class="cr-est ev" title="Amarilla"><i class="tarjeta amarilla"></i></span>' : '');
@@ -293,52 +350,59 @@ function jornadaClubHTML(S, id) {
   const C = S.clubJor && S.clubJor[id];
   const sec = '<div class="sec" id="club-jornadas"><h2>Jornada a jornada</h2><span class="sub">once, puntos y minutos</span></div>';
   if (D.demo) return sec + nada('En la liga de ejemplo no hay fichas de LaLiga de cada jugador. Con tu liga, aquí sale el once de cada jornada con sus puntos y quién entró desde el banquillo.');
-  const J = jugadoClub(S, id);
-  if (!J || !J.jors.length) return sec + nada(C && C.cargando || !C ? 'Cargando lo que ha jugado cada uno…' : C && C.error ? 'LaLiga no ha dado las fichas de sus jugadores. Prueba a abrir el club otra vez en un rato.' : 'Aún no hay jornadas jugadas.');
+  const jors = C && C.porJug ? jornadasClub(S, id, C) : [];
+  if (!jors.length) {
+    if (!C || C.cargando) return sec + nada(`Cargando lo que ha jugado cada uno${C && C.prog && C.prog.n ? ` (${C.prog.n} de ${C.prog.de})` : ''}… La primera vez tarda unos segundos.`);
+    return sec + nada(C.error ? 'LaLiga no ha dado las fichas de sus jugadores. Se vuelve a probar sola en unos minutos.' : 'Aún no hay jornadas acabadas.');
+  }
   const sel = S.jorClub && S.jorClub[id];
-  const n = J.jors.includes(sel) ? sel : J.jors[J.jors.length - 1];
-  const i = J.jors.indexOf(n);
-  const chips = `<div class="jor-chips club-jchips" role="tablist" aria-label="Jornadas">${[...J.jors].reverse().map((k) => `<button data-accion="jorClub" data-id="${esc(id)}" data-n="${k}" role="tab" aria-selected="${k === n}" class="${k === n ? 'activo' : ''}">J${k}</button>`).join('')}</div>`;
-  const t = M.equipoLiga(id);
-  const u = t && t.ult ? t.ult.find((x) => Number(x.jornada) === n) : null;
+  const n = jors.includes(sel) ? sel : jors[jors.length - 1];
+  const i = jors.indexOf(n);
+  const J = jornadaDe(S, id, C, n);
+  const chips = `<div class="jor-chips club-jchips" role="tablist" aria-label="Jornadas">${[...jors].reverse().map((k) => `<button data-accion="jorClub" data-id="${esc(id)}" data-n="${k}" role="tab" aria-selected="${k === n}" class="${k === n ? 'activo' : ''}">J${k}</button>`).join('')}</div>`;
+  const u = acabadas(S, id)[n];
   const rival = u ? (D.equipos[u.rid] || {}).nombre || '' : '';
-  const l = J.porN[n];
-  const { tit, entraron } = onceJornada(l);
-  const total = l.reduce((s, o) => s + (o.pts || 0), 0);
-  const mejor = [...l].sort((a, b) => (b.pts || 0) - (a.pts || 0))[0];
-  const forma = [2, 3, 4].map((p) => tit.filter((o) => o.j.pos === p).length).join('-');
+  const todos = [...J.tit, ...J.entraron];
+  const total = todos.reduce((s, o) => s + (o.pts || 0), 0);
+  const mejor = [...todos].sort((a, b) => (b.pts || 0) - (a.pts || 0))[0];
+  const forma = [2, 3, 4].map((p) => J.tit.filter((o) => o.j.pos === p).length).join('-');
   const flecha = (m, ic, txt) => `<button class="jor-fl" ${m ? `data-accion="jorClub" data-id="${esc(id)}" data-n="${m}"` : 'disabled'} aria-label="${txt}">${icono(ic)}</button>`;
   const sub = u ? `${ladoIco(u.casa)}${esc(rival)} <b class="cp-res-t r-${esc(u.r)}">${u.gf}-${u.gc}</b>` : '';
   let h = sec + chips;
-  h += `<div class="jor-cab">${flecha(J.jors[i - 1], 'atras', 'Jornada anterior')}<div class="jor-t"><b>Jornada ${n}</b><span>${sub}</span></div>${flecha(J.jors[i + 1], 'flecha', 'Jornada siguiente')}
+  h += `<div class="jor-cab">${flecha(jors[i - 1], 'atras', 'Jornada anterior')}<div class="jor-t"><b>Jornada ${n}</b><span>${sub}</span></div>${flecha(jors[i + 1], 'flecha', 'Jornada siguiente')}
     <div class="jor-pts"><b>${total}</b><small>pts</small><span>entre todos</span></div></div>`;
   const crom = (o) => cromo(M, o.j, { tag: tagDe(S, o.j.id), marca: marcaJ(o), datoFijo: { txt: `${o.pts == null ? '–' : o.pts} pts`, cls: `vivo-p ${ptsCls(o.pts) || 'cero'}` } });
-  h += canchaHTML(tit, crom, forma);
-  if (entraron.length) {
-    h += `<div class="banquillo"><div class="banq-t">Entraron <span>${entraron.length}</span></div>${entraron.map((o) => {
+  h += canchaHTML(J.tit, crom, forma);
+  if (J.entraron.length) {
+    h += `<div class="banquillo"><div class="banq-t">Entraron <span>${J.entraron.length}</span></div>${J.entraron.map((o) => {
       const hizo = hizoTxt(o);
-      return `<button class="fila club-ent" data-j="${esc(o.j.id)}">${ava(o.j)}<div class="fila-c"><div class="fila-n"><span class="nom">${esc(o.j.nombre)}</span></div><div class="fila-s"><b>${o.min} min</b>${hizo ? ` · ${esc(hizo)}` : ''}</div></div>
+      const cuando = o.entra != null ? `en el ${o.entra}'` : '';
+      const mins = o.min != null ? `${o.min} min` : '';
+      return `<button class="fila club-ent" data-j="${esc(o.j.id)}">${ava(o.j)}<div class="fila-c"><div class="fila-n">${posTag(o.j)}<span class="nom">${esc(o.j.nombre)}</span></div><div class="fila-s">${[cuando ? `Entró ${cuando}` : '', mins ? `<b>${mins}</b>` : '', esc(hizo)].filter(Boolean).join(' · ')}</div></div>
         <div class="fila-d"><div class="v pf-pts ${ptsCls(o.pts)}">${o.pts == null ? '–' : o.pts}</div></div></button>`;
     }).join('')}</div>`;
   }
   const notas = [];
   if (mejor && mejor.pts > 0) notas.push(`El mejor, ${mejor.j.nombre} con ${mejor.pts} pts.`);
-  if (tit.length < 11) notas.push(`Solo salen ${tit.length}: los demás ya no están en el club o LaLiga no da su ficha.`);
-  notas.push('LaLiga no dice quién salió de titular: en el campo van los 11 con más minutos, así que si uno se lesionó al principio puede salir en su sitio el que entró por él.');
+  if (J.faltan) notas.push(`Fal${J.faltan === 1 ? 'ta uno que jugó y no está' : `tan ${J.faltan} que jugaron y no están`} en LaLiga Fantasy (un canterano o alguien que ya se fue).`);
+  if (!J.espn) notas.push('Esta jornada no trae quién salió de titular: en el campo van los 11 con más minutos, así que si uno se lesionó al principio puede salir en su sitio el que entró por él.');
+  else if (J.relleno) notas.push(`${J.relleno === 1 ? 'Uno de los titulares sale' : `${J.relleno} de los titulares salen`} por sus minutos: no se ha podido saber con seguridad.`);
+  if (todos.some((o) => o.sinFicha)) notas.push(C.fallos ? 'A alguno le faltan los minutos: LaLiga no ha dado su ficha ahora; se vuelve a pedir en unas horas.' : 'A alguno LaLiga Fantasy no le da minutos en esta jornada (suele ser un canterano que han dado de alta después).');
   h += `<p class="t2 peq">${esc(notas.join(' '))}</p>`;
-  return h + quienJuegaHTML(S, id, J);
+  return h + quienJuegaHTML(S, id, C, jors);
 }
 
 /** quién juega en el club: cuántas veces ha salido de titular cada uno y qué parte de los minutos ha jugado */
-function quienJuegaHTML(S, id, J) {
-  const nJ = J.jors.length;
+function quienJuegaHTML(S, id, C, jors) {
+  const nJ = jors.length;
   const por = {};
-  for (const n of J.jors) {
-    const { tit } = onceJornada(J.porN[n]);
-    const enOnce = new Set(tit.map((o) => o.j.id));
-    for (const o of J.porN[n]) {
-      const x = (por[o.j.id] ||= { j: o.j, tit: 0, jug: 0, min: 0, pts: 0 });
-      x.jug++; x.min += o.min || 0; x.pts += o.pts || 0;
+  for (const n of jors) {
+    const J = jornadaDe(S, id, C, n);
+    if (!J) continue;
+    const enOnce = new Set(J.tit.map((o) => o.j.id));
+    for (const o of [...J.tit, ...J.entraron]) {
+      const x = (por[o.j.id] ||= { j: o.j, tit: 0, jug: 0, min: 0 });
+      x.jug++; x.min += o.min || 0;
       if (enOnce.has(o.j.id)) x.tit++;
     }
   }
@@ -351,11 +415,11 @@ function quienJuegaHTML(S, id, J) {
     const [cls, txt] = x.tit / nJ >= 0.8 ? ['bien', 'Fijo'] : x.tit / nJ >= 0.35 ? ['duda', 'Rota'] : x.tit ? ['mal', 'Suplente'] : ['mal', 'Solo entra'];
     const d = duenoDe(S, x.j.id);
     const de = d ? (d.yo ? ' · <b class="rojo">tuyo</b>' : ` · de ${esc(d.txt)}`) : '';
-    return `<button class="fila" data-j="${esc(x.j.id)}">${ava(x.j)}<div class="fila-c"><div class="fila-n"><span class="nom">${esc(x.j.nombre)}</span></div>
+    return `<button class="fila" data-j="${esc(x.j.id)}">${ava(x.j)}<div class="fila-c"><div class="fila-n">${posTag(x.j)}<span class="nom">${esc(x.j.nombre)}</span></div>
       <div class="fila-s"><b class="qj-${cls}">${txt}</b> · ${x.tit} de ${nJ} de titular${de}</div></div>
       <div class="fila-d"><div class="v">${Math.min(100, pm)} %</div><div class="d apag">${x.min} min</div></div></button>`;
   };
-  return `<div class="sec"><h2>Quién juega</h2><span class="sub">${fijos} fijo${fijos === 1 ? '' : 's'} en ${nJ} jornadas</span></div>${l.map(fila).join('')}
+  return `<div class="sec"><h2>Quién juega</h2><span class="sub">${fijos} fijo${fijos === 1 ? '' : 's'} en ${nJ} jornada${nJ === 1 ? '' : 's'}</span></div>${l.map(fila).join('')}
     <p class="t2 peq">Fijo: titular en 8 de cada 10 jornadas o más; rota: entre 4 y 8 de cada 10. A la derecha, qué parte de los minutos de su equipo ha jugado.</p>`;
 }
 
