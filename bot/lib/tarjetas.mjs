@@ -39,7 +39,7 @@ function cajaCifra(x, y, w, h, valor, etiqueta, { relleno, tinta = OSCURO, tenue
     `derecha` es lo que va al final (la caja de los puntos o la etiqueta del estado) y `wDer`, lo que ocupa */
 function filaJugador(x, y, w, h, j, { puesto = null, derecha = '', wDer = 0, sub = null } = {}) {
   const k = Math.round(h * 0.12), club = coloresClub(j.club || j.equipo);
-  const r = Math.round(h * 0.34), cx = x + (puesto != null ? 40 : 30) + r, cy = y + h / 2, tx = cx + r + 22;
+  const r = Math.round(h * 0.4), cx = x + (puesto != null ? 40 : 30) + r, cy = y + h / 2, tx = cx + r + 22;
   const maxT = x + w - k - 20 - wDer - 18 - tx;
   return caja(x, y, w, h, { k })
     + (puesto != null ? texto(x + k + 12, y + 34, String(puesto), { px: 26, peso: 900, color: TENUE }) : '')
@@ -57,22 +57,22 @@ function filaJugador(x, y, w, h, j, { puesto = null, derecha = '', wDer = 0, sub
 
 /** una fila de la lista de un equipo: cara pequeña, nombre y puntos */
 function fila(x, y, w, j, bueno, club) {
-  const h = 52, k = 6, r = 19, cx = x + k + 14 + r, cy = y + h / 2;
+  const h = 56, k = 7, r = 25, cx = x + k + 10 + r, cy = y + h / 2;
   return caja(x, y, w, h, { k })
     + caraCirculo(j.cara, cx, cy, r, { aro: club.vivo, grosor: 2.5 })
-    + texto(cx + r + 16, cy + 10, mayus(j.nombre), { px: 29, peso: 700, max: w - (cx + r + 16 - x) - 116 })
-    + texto(x + w - 66, cy + 15, String(j.pts), { px: 44, peso: 900, color: bueno ? VERDE : MALO, ancla: 'end' })
-    + texto(x + w - 22, cy + 13, 'PTS', { px: 17, peso: 700, color: TENUE, ancla: 'end', espacio: 1 });
+    + texto(cx + r + 16, cy + 11, mayus(j.nombre), { px: 31, peso: 700, max: w - (cx + r + 16 - x) - 116 })
+    + texto(x + w - 66, cy + 16, String(j.pts), { px: 46, peso: 900, color: bueno ? VERDE : MALO, ancla: 'end' })
+    + texto(x + w - 22, cy + 14, 'PTS', { px: 17, peso: 700, color: TENUE, ancla: 'end', espacio: 1 });
 }
 
 /** la columna de un equipo: MEJORES (hasta 3) y PEORES (hasta 3) */
 function columna(x, y, w, lado, club) {
   let s = texto(x + 8, y + 18, 'MEJORES', { px: 20, peso: 700, color: VERDE, espacio: 3 });
-  lado.mejores.forEach((j, i) => { s += fila(x, y + 28 + i * 58, w, j, true, club); });
-  const y2 = y + 28 + 3 * 58 + 10;
+  lado.mejores.forEach((j, i) => { s += fila(x, y + 26 + i * 62, w, j, true, club); });
+  const y2 = y + 26 + 3 * 62 + 4;
   if (lado.peores.length) {
     s += texto(x + 8, y2 + 18, 'PEORES', { px: 20, peso: 700, color: MALO, espacio: 3 });
-    lado.peores.forEach((j, i) => { s += fila(x, y2 + 28 + i * 58, w, j, false, club); });
+    lado.peores.forEach((j, i) => { s += fila(x, y2 + 26 + i * 62, w, j, false, club); });
   }
   return s;
 }
@@ -82,13 +82,13 @@ export function svgFinal(d) {
   const cL = coloresClub(L.nombre), cV = coloresClub(V.nombre);
   const oro = dorado();
   let s = oro.defs + fondo([[200, 110, 580, cL.vivo, 0.6], [1000, 110, 580, cV.vivo, 0.6]])
-    + texto(600, 44, `LALIGA FANTASY · JORNADA ${d.jornada} · FINAL`, { px: 22, peso: 700, color: TENUE, ancla: 'middle', espacio: 3 })
-    + escudo(L.escudo, 102, 118, 96) + escudo(V.escudo, 1098, 118, 96)
-    + texto(168, 136, mayus(L.corto), { px: 54, peso: 800, max: 270 })
-    + texto(1032, 136, mayus(V.corto), { px: 54, peso: 800, ancla: 'end', max: 270 })
-    + texto(600, 170, `${L.goles}-${V.goles}`, { px: 150, peso: 800, italica: true, color: `url(#${oro.g})`, ancla: 'middle' })
-    + `<rect x="44" y="190" width="1112" height="1.5" fill="${LINEA}"/>`;
-  s += columna(44, 198, 544, L, cL) + columna(612, 198, 544, V, cV);
+    + texto(600, 40, `LALIGA FANTASY · JORNADA ${d.jornada} · FINAL`, { px: 22, peso: 700, color: TENUE, ancla: 'middle', espacio: 3 })
+    + escudo(L.escudo, 102, 110, 90) + escudo(V.escudo, 1098, 110, 90)
+    + texto(166, 128, mayus(L.corto), { px: 54, peso: 800, max: 270 })
+    + texto(1034, 128, mayus(V.corto), { px: 54, peso: 800, ancla: 'end', max: 270 })
+    + texto(600, 160, `${L.goles}-${V.goles}`, { px: 140, peso: 800, italica: true, color: `url(#${oro.g})`, ancla: 'middle' })
+    + `<rect x="44" y="178" width="1112" height="1.5" fill="${LINEA}"/>`;
+  s += columna(44, 184, 544, L, cL) + columna(612, 184, 544, V, cV);
   return marco(s + marca(600, 652, { ancla: 'middle' }));
 }
 
@@ -166,18 +166,18 @@ function campo(x, y, w, h, lado, club, confirmados) {
           : `<circle cx="${cxx}" cy="${cy}" r="${Math.round(r * 0.6)}" fill="${club.vivo}" stroke="${jj.duda ? AMBAR : '#ffffff'}" stroke-width="2.5"/>`);
       if (j.alt && !confirmados) {
         // dos opciones para el mismo puesto: las dos caras y debajo cada nombre con su %
-        s += chapa(j.alt, cx + 21, 18) + chapa(j, cx - 21, 18)
-          + texto(cx, cy + 38, mayus(`${j.nombre} ${j.pct} %`), { px: 18, peso: 700, color: pctCol, ancla: 'middle', max: maxN })
-          + texto(cx, cy + 58, mayus(`${j.alt.nombre} ${j.alt.pct} %`), { px: 18, peso: 700, color: colPct(j.alt.pct), ancla: 'middle', max: maxN });
+        s += chapa(j.alt, cx + 24, 22) + chapa(j, cx - 24, 22)
+          + texto(cx, cy + 42, mayus(`${j.nombre} ${j.pct} %`), { px: 18, peso: 700, color: pctCol, ancla: 'middle', max: maxN })
+          + texto(cx, cy + 62, mayus(`${j.alt.nombre} ${j.alt.pct} %`), { px: 18, peso: 700, color: colPct(j.alt.pct), ancla: 'middle', max: maxN });
         return;
       }
-      s += chapa(j, cx, 23)
-        + texto(cx, cy + 45, mayus(j.nombre), { px: 21, peso: 700, ancla: 'middle', max: maxN });
+      s += chapa(j, cx, 28)
+        + texto(cx, cy + 49, mayus(j.nombre), { px: 21, peso: 700, ancla: 'middle', max: maxN });
       if (pctCol && !confirmados) {
         // el %, en una etiqueta rellena con la letra oscura (como la del estado en la carta)
         const t = `${j.pct} %`, wp = medir(t, 17, B, 0.5) + 20;
-        s += `<rect x="${cx - wp / 2}" y="${cy + 52}" width="${wp}" height="22" rx="11" fill="${pctCol}"/>`
-          + texto(cx, cy + 69, t, { px: 17, peso: 800, color: '#120f16', ancla: 'middle', espacio: 0.5 });
+        s += `<rect x="${cx - wp / 2}" y="${cy + 55}" width="${wp}" height="22" rx="11" fill="${pctCol}"/>`
+          + texto(cx, cy + 72, t, { px: 17, peso: 800, color: '#120f16', ancla: 'middle', espacio: 0.5 });
       }
     });
   });
@@ -212,13 +212,13 @@ export function svgMercado(d) {
     let t = `<rect x="${x + 4}" y="${y0 - 36}" width="6" height="22" rx="2" fill="${acento}"/>`
       + texto(x + 18, y0 - 17, bueno ? 'SUBEN' : 'BAJAN', { px: 22, peso: 700, color: acento, espacio: 3 });
     lista.slice(0, 5).forEach((f, i) => {
-      const y = y0 + i * (h + gap), cy = y + h / 2, r = 26, cx = x + 46 + r;
+      const y = y0 + i * (h + gap), cy = y + h / 2, r = 32, cx = x + 42 + r;
       const club = coloresClub(f.club || f.equipo);
       const xd = x + w - k - 16;
       t += caja(x, y, w, h, { k })
         + texto(x + k + 10, cy + 9, String(i + 1), { px: 26, peso: 900, color: TENUE })
         + caraCirculo(f.cara, cx, cy, r, { aro: club.vivo, grosor: 2.5 })
-        + texto(cx + r + 16, cy - 2, mayus(f.nombre), { px: 32, peso: 800, max: 230 })
+        + texto(cx + r + 16, cy - 2, mayus(f.nombre), { px: 32, peso: 800, max: 220 })
         + escudo(f.escudo, cx + r + 26, cy + 21, 20)
         + texto(cx + r + (f.escudo ? 42 : 16), cy + 28, mayus(f.equipo), { px: 19, peso: 700, color: TENUE, espacio: 1, max: 180 })
         + texto(xd, cy + 6, f.dif, { px: 42, peso: 900, color: acento, ancla: 'end' })
@@ -266,7 +266,7 @@ export function svgBajas(d) {
     const w = 1112, x = 44;
     filas.forEach((f, i) => {
       const y = y0 + i * (h + gap), cy = y + h / 2, k = Math.round(h * 0.12);
-      const r = Math.round(h * 0.36), cx = x + k + 20 + r;
+      const r = Math.round(h * 0.4), cx = x + k + 18 + r;
       const pxN = Math.round(Math.min(50, h * 0.38)), pxS = Math.round(Math.min(25, h * 0.2)), pxP = Math.round(Math.min(26, h * 0.21));
       const sub = [f.posicion, f.media ? `${f.media} pts de media` : null].filter(Boolean).join(' · ');
       const wp = anchoPildora(f, pxP);

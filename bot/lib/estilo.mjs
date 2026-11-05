@@ -56,11 +56,13 @@ export function escudo(buf, cx, cy, h) {
   const w = Math.round(h * 78 / 105);
   return `<image href="${uri(buf)}" x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet"/>`;
 }
-/** cara en círculo con aro */
+/** cara en círculo con aro. Las fotos de LaLiga (256x256) van del pelo (y ≈ 45) a la barbilla (y ≈ 210) con el cuello debajo: la foto se
+    dibuja a 2,8 veces el radio con el centro de la cara (y ≈ 130) en el del círculo, para que la cara lo llene y se vea bien en pequeño
+    (Carlos, 5 nov 07:04: «que su cara se vea bien y esté bien visible»; antes, a 2,16 veces, salían medio cuello y camiseta) */
 export function caraCirculo(buf, cx, cy, r, { aro = '#fff', grosor = 3 } = {}) {
-  const c = id('cc');
+  const c = id('cc'), S = r * 2.8;
   return `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs><circle cx="${cx}" cy="${cy}" r="${r}" fill="#1f1c27"/>`
-    + (buf ? `<image href="${uri(buf)}" x="${cx - r * 1.08}" y="${cy - r * 0.92}" width="${r * 2.16}" height="${r * 2.16}" clip-path="url(#${c})" preserveAspectRatio="xMidYMin slice"/>` : '')
+    + (buf ? `<image href="${uri(buf)}" x="${cx - S / 2}" y="${cy - S * 130 / 256}" width="${S}" height="${S}" clip-path="url(#${c})" preserveAspectRatio="xMidYMid meet"/>` : '')
     + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${aro}" stroke-width="${grosor}"/>`;
 }
 /** la cara suelta (256x256 sin fondo) que se funde hacia abajo, sin corte duro donde acaba la foto */
