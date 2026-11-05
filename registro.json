@@ -1225,7 +1225,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cta-investiga-chip-balon-polemico-penalti-nico-williams-derbi-vasco-20261102_3467125.html": 1793654507000,
    "ABC|https://www.abc.es/deportes/futbol/clasificacion-laliga-dos-puntos-separan-barcelona-atletico-20261103090959-nt.html": 1793693400000,
-   "ABC|https://www.abc.es/deportes/futbol/mourinho-sabelotodo-20261102153531-nt.html": 1793644578000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/03/pedro-martinez-quiere-recuperar-eli-ndiaye-136041146.html": 1793717014000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-verdugo-dortmund-busqueda-mejor_0_2008412408.html": 1793703773000,
@@ -1343,7 +1342,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
    "SPORT|136131477": 1793897298000,
    "SPORT|136104000": 1793898027000,
-   "SPORT|136135887": 1793899739000
+   "SPORT|136135887": 1793899739000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000
   },
   "hechos": [
    {
@@ -2067,7 +2067,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
