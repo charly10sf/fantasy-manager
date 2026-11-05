@@ -146,6 +146,26 @@ export function tarjetaBajas({ jornada, filas: todas, pp = null, clave }) {
   };
   return { tipo: 'bajas', nombre: `bajas-${clave.replace(/[^\w-]+/g, '_').slice(0, 80)}`, d, permitidos };
 }
+// ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta de apercibidos (Carlos, 5 nov 08:14: el tweet los nombraba a todos seguidos y se veía todo junto; mejor una imagen con los
+// jugadores separados por equipo). Recibe a los apercibidos que ha elegido sancionados.mjs, de más a menos importantes, cada uno con
+// { id, nombre, teamId, pos, equipo (corto), club (largo), media, caraUrl, escudoUrl }. Los equipos salen en el orden de su primer jugador.
+export function tarjetaApercibidos({ jornada, filas, clave }) {
+  const equipos = [];
+  for (const f of filas) {
+    let e = equipos.find((x) => String(x.teamId) === String(f.teamId));
+    if (!e) equipos.push(e = { teamId: f.teamId, nombre: f.club, corto: f.equipo, escudoUrl: f.escudoUrl || null, jugadores: [] });
+    e.jugadores.push({ id: f.id, nombre: f.nombre, posicion: POS[f.pos] || '', media: f.media > 0 ? num1(f.media) : null, caraUrl: f.caraUrl || null });
+  }
+  const d = { jornada, equipos };
+  const permitidos = {
+    numeros: [jornada, ...equipos.flatMap((e) => e.jugadores.map((j) => j.media).filter((x) => x != null))].map(String),
+    palabras: ['APERCIBIDOS', 'A', 'UNA', 'AMARILLA', 'DE', 'LA', 'SANCIÓN', 'MEDIA', ...Object.values(POS),
+      ...equipos.flatMap((e) => [e.corto, e.nombre, ...e.jugadores.map((j) => j.nombre)])],
+  };
+  return { tipo: 'apercibidos', nombre: clave.replace(/[^\w-]+/g, '_').slice(0, 80), d, permitidos };
+}
+
 /** las de unas novedades: si hay buenas y malas noticias, dos tarjetas (la verde, solo con los que vuelven, y la de bajas); si no, una.
     `ppDe(filas)` da el próximo partido si todas son del mismo club */
 export function tarjetasNovedades({ jornada, filas, ppDe = () => null, clave }) {
