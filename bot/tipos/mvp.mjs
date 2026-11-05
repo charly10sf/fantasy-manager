@@ -1,12 +1,14 @@
 // MVP de cada partido acabado: un tweet aparte con la tarjeta de jugador. Solo existe con la tarjeta de jugador encendida
 // (config.tarjetas.jugador): sin imagen repetiría lo que ya dice el tweet del final, así que ejecutar.mjs no lo publica sin ella.
-import { corto, elegir, fmt, partes, del, el, largo, hash } from '../lib/texto.mjs';
+import { corto, fmt, partes, del, el, largo, rotar, turno, ordenJornada } from '../lib/texto.mjs';
+import { formaMejor } from './final.mjs';
 import { tweet, segunda, cap, proximoPartido, cuando } from '../lib/redactar.mjs';
 
 export async function generar({ stats, jornada, jugadores, config, desdeFinal = 0, forzarTarjetas = false, dazn = null }) {
   if (!(config.tarjetas && config.tarjetas.jugador) && !forzarTarjetas) return [];
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
   const out = [];
+  const K = ordenJornada(stats);
   for (const m of stats.filter((x) => x.matchState === 7 && Date.parse(x.date) >= desdeFinal)) {
     if (dazn && !(await dazn(m)).listo) continue;   // aún sin los puntos DAZN
     const ps = [m.local, m.visitor].flatMap((l) => (l.players || []).filter((p) => p.weekPoints != null).map((p) => ({ p, eq: l })));
@@ -23,12 +25,19 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     // el partido ya está arriba: sin el equipo entre paréntesis; la segunda vez, por su puesto (guía de estilo del 3 nov)
     // la forma del final del mismo partido (tipos/final.mjs, semilla `mvp${id}`: «el mejor fantasy», «se va a», «N puntos para») no se repite
     // aquí: los dos tweets salen seguidos (auditoría del 5 nov: «Cabrera se va a 16 puntos fantasy» y, justo después, «Cabrera se va a 16 puntos»)
-    const enFinal = hash(`mvp${m.id}`) % 3;
+    // como en el final, cada forma rota por el orden del partido en la jornada (los MVP salen casi seguidos)
+    const k = Math.max(0, K.indexOf(String(m.id)));
+    const R = (fs, slot) => rotar(fs, `${slot}${jornada}`, k);
+    const enFinal = formaMejor(jornada, k);
     const formas = [`🔥 ${nombre} se va a ${pts} puntos`, `🔥 ${pts} puntos para ${nombre}`, `🔥 ${nombre} se lleva el partido con ${pts} puntos`];
-    const ideas = [{ t: enFinal === 1 ? elegir([formas[1], formas[2]], `mvpt${m.id}`) : enFinal === 2 ? elegir([formas[0], formas[2]], `mvpt${m.id}`) : elegir(formas, `mvpt${m.id}`), prio: 9 }];
+    // la que no puede salir: «se va a» si el final dijo «se va a»; «N puntos para» si dijo «N puntos fantasy para»
+    const fuera = enFinal === 1 ? 0 : enFinal === 2 ? 1 : -1;
+    let f = turno(3, `mvpt${jornada}`, k);
+    if (f === fuera) f = (f + 1) % 3;
+    const ideas = [{ t: formas[f], prio: 9 }];
     if (otro) ideas.push({ t: `🤝 Empata con él ${otro.p.nickname || otro.p.name}`, prio: 7 });
-    ideas.push({ t: largo() ? elegir([`📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`,
-      `📊 En lo que va de temporada suma ${j.points} puntos, a ${fmt(j.averagePoints)} por partido`, `📊 Con esto llega a ${j.points} puntos en la temporada y una media de ${fmt(j.averagePoints)}`], `mvps${m.id}`)
+    ideas.push({ t: largo() ? R([`📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`,
+      `📊 En lo que va de temporada suma ${j.points} puntos, a ${fmt(j.averagePoints)} por partido`, `📊 Con esto llega a ${j.points} puntos en la temporada y una media de ${fmt(j.averagePoints)}`], 'mvps')
       : `📊 ${cap(segunda(j.positionId, nombre))} ${del(equipo)} lleva ${j.points} puntos en la temporada y ${fmt(j.averagePoints)} de media`, prio: 6 });
     num.push(Number(j.points), ...partes(j.averagePoints));
     // con tweets largos (X Premium): lo que vale y cuándo vuelve a jugar, cada MVP contado a su manera. Lo de «más del doble de su media»
@@ -41,9 +50,9 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
       const cuandoTxt = pp ? (c ? c.t : `en la jornada ${pp.jornada}`) : null;
       if (pp) num.push(...(c ? c.numeros : [pp.jornada]));
       if (valor > 0) num.push(...(u === 'M' ? partes(v) : [v]));
-      const t = valor > 0 && pp ? elegir([`💸 Vale ${fmt(v)} ${u} en el mercado y vuelve a jugar ${cuandoTxt}, contra ${el(pp.rival)}`,
+      const t = valor > 0 && pp ? R([`💸 Vale ${fmt(v)} ${u} en el mercado y vuelve a jugar ${cuandoTxt}, contra ${el(pp.rival)}`,
         `💸 En el mercado está a ${fmt(v)} ${u}. Su próximo partido, ${cuandoTxt} ante ${el(pp.rival)}`,
-        `🗓️ El siguiente, ${cuandoTxt} contra ${el(pp.rival)}. Por si alguien se lo piensa: vale ${fmt(v)} ${u}`], `mvpl${m.id}`)
+        `🗓️ El siguiente, ${cuandoTxt} contra ${el(pp.rival)}. Por si alguien se lo piensa: vale ${fmt(v)} ${u}`], 'mvpl')
         : valor > 0 ? `💸 Vale ${fmt(v)} ${u} en el mercado` : pp ? `🗓️ Vuelve a jugar ${cuandoTxt}, contra ${el(pp.rival)}` : null;
       if (t) ideas.push({ t, prio: 2 });
     }

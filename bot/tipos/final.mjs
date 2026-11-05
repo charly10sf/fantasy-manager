@@ -2,7 +2,7 @@
 // una línea de cómo fue, el mejor con sus puntos, quien puntúa aunque pierde, quien lo pasa mal y, si hay una noche grande, una lectura
 // para el mánager. Una idea por línea con su emoji delante. Los puntos salen de LaLiga (jornada, media y racha); la secuencia de goles,
 // de ESPN, solo si cuadra con el marcador.
-import { cierre, corto, elegir, fmt, partes, el, del, al, largo, hash } from '../lib/texto.mjs';
+import { CIERRES, corto, elegir, fmt, partes, el, del, al, largo, rotar, turno, ordenJornada } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, cuando } from '../lib/redactar.mjs';
 import { rachaDe } from '../lib/laliga.mjs';
 import { partidoEspn, reconstruir, minutoDe } from '../lib/relato.mjs';
@@ -16,7 +16,12 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
  * y de goles en el último minuto; sin ella, solo del resultado. Devuelve { linea, num, goleadores } (goleadores: ids de LaLiga de
  * los que marcaron, si se ha podido casar con ESPN).
  */
-export async function relato(m, semilla) {
+/** la forma de «el mejor» del final del k-ésimo partido de la jornada (0 «el mejor fantasy», 1 «se va a», 2 «N puntos para») */
+export const formaMejor = (jornada, k) => turno(3, `mvp${jornada}`, k);
+
+export async function relato(m, semilla, k = null) {
+  // con k (su puesto en la jornada), la forma rota entre los partidos seguidos en vez de salir del hash del partido
+  const E = (fs) => (k == null ? elegir(fs, semilla) : rotar(fs, semilla, k));
   const gl = Number(m.localScore), gv = Number(m.visitorScore);
   const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
   const dif = Math.abs(gl - gv), total = gl + gv;
@@ -58,9 +63,9 @@ export async function relato(m, semilla) {
       const p = a ? casarJugador(a.displayName, lado) : null;
       const quien = a ? (p ? p.nickname || p.name : a.displayName) : null;
       const num = [mn.min, mn.extra];
-      if (detras && quien) return sal(elegir([`🔄 Remontada ${del(G)} con gol de ${quien} en el ${mt(mn)}`, `🔄 ${cap(el(G))} le da la vuelta y ${quien} marca el bueno en el ${mt(mn)}`], semilla), num);
+      if (detras && quien) return sal(E([`🔄 Remontada ${del(G)} con gol de ${quien} en el ${mt(mn)}`, `🔄 ${cap(el(G))} le da la vuelta y ${quien} marca el bueno en el ${mt(mn)}`]), num);
       if (detras) return sal(`🔄 Remontada ${del(G)}, que se pone por delante en el ${mt(mn)}`, num);
-      if (mn.min >= 80 && dif === 1 && quien) return sal(elegir([`⏱️ ${quien} lo decide en el ${mt(mn)}`, `⏱️ Partido cerrado hasta el ${mt(mn)}, cuando marca ${quien}`], semilla), num);
+      if (mn.min >= 80 && dif === 1 && quien) return sal(E([`⏱️ ${quien} lo decide en el ${mt(mn)}`, `⏱️ Partido cerrado hasta el ${mt(mn)}, cuando marca ${quien}`]), num);
       if (mn.min >= 80 && dif === 1) return sal(`⏱️ Se decide en el ${mt(mn)}, a favor ${del(G)}`, num);
     }
   }
@@ -69,16 +74,17 @@ export async function relato(m, semilla) {
     const mn = ult ? minutoDe(ult) : null;
     if (mn && mn.min >= 85) return sal(`🤝 Empate en el ${mt(mn)} y un punto para cada uno`, [mn.min, mn.extra]);
   }
-  if (total === 0) return sal(elegir(['🤝 Sin goles y un punto para cada uno', '🤝 Ni un gol en todo el partido'], semilla));
-  if (dif === 0) return sal(elegir([`🤝 Empate a ${gl} y reparto de puntos`, '🤝 Marcan los dos y se reparten los puntos'], semilla));
-  if (dif >= 3) return sal(elegir([`🔥 Goleada ${del(G)}`, `🔥 ${cap(el(G))} le pasa por encima ${al(P)}`], semilla));
-  if (dif === 2) return sal(elegir([`✅ ${cap(el(G))} gana por dos goles`, `✅ Victoria ${del(G)} sin muchos apuros`], semilla));
-  return sal(elegir([`✅ ${cap(el(G))} gana por la mínima`, `✅ Victoria por la mínima ${del(G)}`, `✅ ${cap(el(G))} se lleva los tres puntos por un gol`], semilla));
+  if (total === 0) return sal(E(['🤝 Sin goles y un punto para cada uno', '🤝 Ni un gol en todo el partido']));
+  if (dif === 0) return sal(E([`🤝 Empate a ${gl} y reparto de puntos`, '🤝 Marcan los dos y se reparten los puntos']));
+  if (dif >= 3) return sal(E([`🔥 Goleada ${del(G)}`, `🔥 ${cap(el(G))} le pasa por encima ${al(P)}`]));
+  if (dif === 2) return sal(E([`✅ ${cap(el(G))} gana por dos goles`, `✅ Victoria ${del(G)} sin muchos apuros`]));
+  return sal(E([`✅ ${cap(el(G))} gana por la mínima`, `✅ Victoria por la mínima ${del(G)}`, `✅ ${cap(el(G))} se lleva los tres puntos por un gol`]));
 }
 
 export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn = null, config = {} }) {
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
   const out = [];
+  const K = ordenJornada(stats);
   // con ventanas, solo los partidos que empezaron hace poco: al activar el bot no se sueltan los de días atrás
   for (const m of stats.filter((x) => x.matchState === 7 && Date.parse(x.date) >= desdeFinal)) {
     if (dazn && !(await dazn(m)).listo) continue;   // aún sin los puntos DAZN: los de ahora irían cortos
@@ -97,7 +103,10 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     const gl = Number(m.localScore), gv = Number(m.visitorScore);
     const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
     const cab = `🏁 ${L} ${gl}-${gv} ${V}`;
-    const pie = cierre(`final${m.id}`);
+    // cada forma rota por el orden del partido en la jornada: los finales salen casi seguidos y dos seguidos no se leen igual
+    const k = Math.max(0, K.indexOf(String(m.id)));
+    const R = (fs, slot) => rotar(fs, `${slot}${jornada}`, k);
+    const pie = R(CIERRES, 'cierre');
     const num = [gl, gv];
     const ideas = [];
     const LG = largo();
@@ -108,22 +117,32 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
       const fs = igual ? [`🥈 Detrás, ${det[0].nombre} y ${det[1].nombre}, con ${det[0].pts} cada uno`, `🥈 ${det[0].nombre} y ${det[1].nombre} completan el podio con ${det[0].pts} cada uno`]
         : [`🥈 Detrás, ${det[0].nombre} con ${det[0].pts} y ${det[1].nombre} con ${det[1].pts}`, `🥈 Le siguen ${det[0].nombre}, con ${det[0].pts}, y ${det[1].nombre}, con ${det[1].pts}`,
           `🥈 ${det[0].nombre} y ${det[1].nombre} completan el podio con ${det[0].pts} y ${det[1].pts}`];
-      return elegir(empate ? fs.slice(0, 1) : fs, `det${m.id}`);
+      return empate ? fs[0] : R(fs, 'det');
     };
     // 1) cómo ha sido el partido
-    const r = await relato(m, `relato${m.id}`);
+    const r = await relato(m, `relato${jornada}`, k);
     ideas.push({ t: r.linea, prio: 8 }); num.push(...r.num);
+    const nombrado = r.linea.includes(top.nombre);
     // 2) el mejor (o los dos, si empatan). El partido ya está arriba: sin el equipo entre paréntesis.
     if (empate) ideas.push({ t: `⭐ ${top.nombre} y ${empate.nombre}, los mejores fantasy: ${top.pts} puntos cada uno`, prio: 9 });
     else if (gl !== gv && String(top.ladoId) === String(gl > gv ? m.visitor.id : m.local.id)) ideas.push({ t: `⭐ ${top.nombre}, el mejor fantasy aunque ${el(gl > gv ? V : L)} pierde: ${top.pts} puntos`, prio: 9 });
-    else ideas.push({ t: elegir([`⭐ ${top.nombre}, el mejor fantasy: ${top.pts} puntos`, `⭐ ${top.nombre} se va a ${top.pts} puntos fantasy`, `⭐ ${top.pts} puntos fantasy para ${top.nombre}`], `mvp${m.id}`), prio: 9 });
+    else {
+      // si el relato ya lo nombra («Remontada del Getafe con gol de Satriano»), aquí va por su puesto: «El delantero se va a 14…».
+      // La forma es la misma que mira tipos/mvp.mjs (`formaMejor`) para no repetirla en el tweet del MVP, que sale justo después
+      const q = nombrado ? segunda(top.pos, top.nombre) : top.nombre;
+      ideas.push({ t: [`⭐ ${cap(q)}, el mejor fantasy: ${top.pts} puntos`, `⭐ ${cap(q)} se va a ${top.pts} puntos fantasy`, `⭐ ${top.pts} puntos fantasy para ${q}`][formaMejor(jornada, k)], prio: 9 });
+    }
     num.push(top.pts);
     // 3) un dato con miga del mejor, ya por su puesto: el doble de su media o una racha
     const racha = (() => { const j = porId.get(String(top.id)); const rr = j ? rachaDe(j, 3) : []; return rr.length === 3 && rr.every(([, p]) => p >= 8) ? rr.map(([, p]) => p) : null; })();
     if (!empate && top.media && top.media >= 3 && top.pts >= 2 * top.media) {
       // con tweets largos, cada final con su forma (Carlos, 4 nov 23:39: que no se note que es una plantilla)
-      ideas.push({ t: LG ? elegir([`📈 ${cap(segunda(top.pos, top.nombre))} suele sacar ${fmt(top.media)} de media: hoy, más del doble`, `📈 Más del doble de lo que suele: ${fmt(top.media)} de media`,
-        `📈 Su media es de ${fmt(top.media)}, así que hoy ha doblado`], `miga${m.id}`) : `📈 ${cap(segunda(top.pos, top.nombre))} suele sacar ${fmt(top.media)} de media: hoy, más del doble`, prio: 5, fija: true });
+      // (si el mejor ya va por su puesto, sin la forma que lo repite)
+      // «más del triple» si llega (De Frutos, 15 con 4,7 de media, no «ha doblado»)
+      const veces = top.pts >= 3 * top.media ? 'triple' : 'doble';
+      const migas = [`📈 ${cap(segunda(top.pos, top.nombre))} suele sacar ${fmt(top.media)} de media: hoy, más del ${veces}`, `📈 Más del ${veces} de lo que suele: ${fmt(top.media)} de media`,
+        `📈 Su media es de ${fmt(top.media)}, así que hoy ha sacado más del ${veces}`, `📈 Va a ${fmt(top.media)} por partido y hoy ha hecho más del ${veces}`];
+      ideas.push({ t: LG ? R(nombrado ? migas.slice(1) : migas, 'miga') : migas[0], prio: 5, fija: true });
       num.push(...partes(top.media));
     }
     // la racha, si no ha salido el doble de su media (con tweets largos, las dos)
@@ -146,8 +165,8 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
       // con tweets largos (X Premium), el podio también, pegado al mejor (antes del que se salva aunque pierde)
       const det = LG ? ord.filter((f) => !ya.has(String(f.id))).slice(0, 2) : [];
       if (det.length === 2 && det[1].pts > 0) { ideas.push({ t: detras(det), prio: 2 }); num.push(det[0].pts, det[1].pts); }
-      ideas.push({ t: LG ? elegir([`‼️ ${pierde.nombre}${marco ? ' marcó y' : ''} se va a ${pierde.pts} aunque ${el(eqP)} pierde`, `‼️ En ${el(eqP)} se salva ${pierde.nombre}${marco ? ', que marcó' : ''}: ${pierde.pts} puntos`,
-        `‼️ ${pierde.nombre} saca ${pierde.pts} puntos${marco ? ', con gol incluido,' : ''} pese a la derrota ${del(eqP)}`], `pierde${m.id}`)
+      ideas.push({ t: LG ? R([`‼️ ${pierde.nombre}${marco ? ' marcó y' : ''} se va a ${pierde.pts} aunque ${el(eqP)} pierde`, `‼️ En ${el(eqP)} se salva ${pierde.nombre}${marco ? ', que marcó' : ''}: ${pierde.pts} puntos`,
+        `‼️ ${pierde.nombre} saca ${pierde.pts} puntos${marco ? ', con gol incluido,' : ''} pese a la derrota ${del(eqP)}`], 'pierde')
         : `‼️ ${pierde.nombre}${marco ? ' marcó y' : ''} se va a ${pierde.pts} aunque ${el(eqP)} pierde`, prio: 7, rota: true });
       num.push(pierde.pts);
     } else {
@@ -158,14 +177,15 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     if (peor && !ya.has(String(peor.id))) {
       const encajo = peor.equipo === L ? gv : gl;
       const ptsP = `${peor.pts} ${Math.abs(peor.pts) === 1 ? 'punto' : 'puntos'}`, enc = encajo >= 3 ? ` y ${encajo} goles encajados por su equipo` : '';
-      ideas.push({ t: LG ? elegir([`❌ Noche para olvidar de ${peor.nombre}: ${ptsP}${enc}`, `❌ Lo peor se lo lleva ${peor.nombre}: ${ptsP}${enc}`, `❌ A ${peor.nombre} se le atraganta el partido: ${ptsP}${enc}`], `peor${m.id}`)
+      ideas.push({ t: LG ? R([`❌ Noche para olvidar de ${peor.nombre}: ${ptsP}${enc}`, `❌ Lo peor se lo lleva ${peor.nombre}: ${ptsP}${enc}`, `❌ A ${peor.nombre} se le atraganta el partido: ${ptsP}${enc}`], 'peor')
         : `❌ Noche para olvidar de ${peor.nombre}: ${ptsP}${enc}`, prio: 3, rota: true });
       num.push(peor.pts); if (encajo >= 3) num.push(encajo);
     }
     // 6) la lectura para el mánager, solo en una noche grande (y no en todos: depende del partido)
     // (sin dos «Noche…» seguidos si el peor ya lo lleva)
-    const lects = [`✅ Quien lleve a ${top.nombre}, buena noche`, `✅ Si tienes a ${top.nombre}, hoy sonríes`, `✅ Noche redonda para quien tenga a ${top.nombre}`];
-    if (!empate && top.pts >= 12) ideas.push({ t: elegir(LG && ideas.some((x) => /Noche/.test(x.t)) ? lects.slice(0, 2) : lects, `lect${m.id}`), prio: 2, ultima: true });
+    const lects = [`✅ Quien lleve a ${top.nombre}, buena noche`, `✅ Si tienes a ${top.nombre}, hoy sonríes`, `✅ Acertó quien alineó a ${top.nombre}`,
+      `✅ Premio para quien confió en ${top.nombre}`, `✅ Noche redonda para quien tenga a ${top.nombre}`];
+    if (!empate && top.pts >= 12) ideas.push({ t: R(LG && ideas.some((x) => /Noche/.test(x.t)) ? lects.slice(0, 4) : lects, 'lect'), prio: 2, ultima: true });
     // con tweets largos: el próximo partido del mejor (lo que mira el mánager que lo tiene)
     // (no si sale el tweet del MVP con su tarjeta: ya lo cuenta él y serían dos tweets seguidos diciendo lo mismo)
     if (LG && !empate && top.pts >= 8 && !(config.tarjetas && config.tarjetas.jugador)) {
@@ -178,7 +198,7 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     // La lectura para el mánager, siempre al final, y el próximo partido, justo antes
     if (LG) {
       const pos = ideas.map((x, i) => (x.rota ? i : -1)).filter((i) => i >= 0);
-      if (pos.length === 2 && hash(`orden${m.id}`) % 2) { const a = ideas[pos[0]]; ideas[pos[0]] = ideas[pos[1]]; ideas[pos[1]] = a; }
+      if (pos.length === 2 && turno(2, `orden${jornada}`, k)) { const a = ideas[pos[0]]; ideas[pos[0]] = ideas[pos[1]]; ideas[pos[1]] = a; }
       const fin = [...ideas.filter((x) => x.antes), ...ideas.filter((x) => x.ultima)];
       const resto = ideas.filter((x) => !x.antes && !x.ultima);
       ideas.splice(0, ideas.length, ...resto, ...fin);
