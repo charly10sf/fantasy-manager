@@ -1312,7 +1312,8 @@
    "SPORT|136120803": 1793882025000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-malaga-realiza-la-penultima-sesion-antes-de-recibir-este-sabado-al-racing-ser-malaga/": 1793886617000,
    "SPORT|136120104": 1793882738000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-real-madrid-no-salir-relajado-partido-hemos-visto-recuperado-gen-competitivo-siempre-tenido-ultimamente-habia-perdido-20261105_3468903.html": 1793887133000
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-real-madrid-no-salir-relajado-partido-hemos-visto-recuperado-gen-competitivo-siempre-tenido-ultimamente-habia-perdido-20261105_3468903.html": 1793887133000,
+   "AS|https://as.com/futbol/primera/aznou-y-lucas-breton-primeras-bajas-del-paron-f202611-n/": 1793887252000
   },
   "hechos": [
    {
@@ -1997,7 +1998,7 @@
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -2896,7 +2897,8 @@
    "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "Europa Press|https://www.europapress.es/madrid/noticia-profesores-huelga-encierran-direccion-general-rrhh-consejeria-educacion-forzar-reunion-20261105103009.html": 1793871009000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
+   "SPORT|136122379": 1793879661000
   },
   "hechos": [
    {
@@ -3227,11 +3229,27 @@
     "nums": [
      5
     ]
+   },
+   {
+    "guid": "SPORT|136122379",
+    "medio": "SPORT",
+    "t": 1793879661000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "La AFE solicita la suspensión de la jornada por el fallecimiento de Jesús de Miguel",
+    "detalle": "Los futbolistas consideran de forma unánime que no deben disputarse los encuentros",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 22
+   "n": 23
   }
  }
 }
