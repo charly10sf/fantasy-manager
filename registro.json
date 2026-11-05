@@ -1289,7 +1289,8 @@
    "SPORT|136108626": 1793872201000,
    "SPORT|136111415": 1793872197000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000,
+   "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/": 1793877225000
   },
   "hechos": [
    {
@@ -1895,11 +1896,23 @@
     "nums": [
      30
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/",
+    "medio": "AS",
+    "t": 1793877225000,
+    "id": "3197",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "baja médica",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
