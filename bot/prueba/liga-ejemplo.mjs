@@ -151,6 +151,18 @@ R['Aplazados los partidos del Sevilla y del Barça'] = { tipo: 'aplazamiento', e
   ok(t13.length === 2 && t13.some((t) => /Sevilla-Alavés/.test(t.texto)) && t13.some((t) => /Barça-Osasuna/.test(t.texto)), `con stats, cada uno con su rival: ${t13.map((t) => t.texto).join(' | ')}`);
 }
 ok(TEMA.test('Se jugará la jornada 12') && TEMA.test('La jornada 12 se jugará') && TEMA.test('Han decidido que haya fútbol'), 'TEMA: «se jugará la jornada»');
+ok(TEMA.test('LaLiga decide que se juegue la jornada 12') && TEMA.test('Habrá partidos este fin de semana'), 'TEMA: subjuntivo y presente');
+// 12) dos partidos «de la jornada 12» son dos partidos; y si son de la siguiente, con sus partidos
+R['LaLiga aplaza el Sevilla-Alavés y el Barça-Osasuna de la jornada 12'] = { tipo: 'aplazamiento', estado: 'confirmado', primera: true, segunda: false, jornada: 12, equipos: ['Sevilla', 'Alavés', 'Barcelona', 'Osasuna'], luto: false, oficial: false, contexto: '', detalle: '' };
+R['Aplazados el Sevilla-Barça y el Alavés-Athletic'] = { tipo: 'aplazamiento', estado: 'confirmado', primera: true, segunda: false, jornada: 0, equipos: ['Sevilla', 'Barcelona', 'Alavés', 'Athletic'], luto: false, oficial: false, contexto: '', detalle: '' };
+{
+  const st = [{ id: 1, local: { id: 1 }, visitor: { id: 2 } }, { id: 2, local: { id: 3 }, visitor: { id: 5 } }];
+  const t14 = await generar({ ...base, stats: st, registro: new Registro(config), leer: async () => [n('MARCA', 'LaLiga aplaza el Sevilla-Alavés y el Barça-Osasuna de la jornada 12', 'Por el temporal'), n('AS', 'LaLiga aplaza el Sevilla-Alavés y el Barça-Osasuna de la jornada 12', 'Por el temporal')] });
+  ok(t14.length === 2, `«de la jornada 12»: dos partidos (${t14.map((t) => t.texto).join(' | ')})`);
+  const sig = [{ id: 3, local: { id: 1 }, visitor: { id: 3 } }, { id: 4, local: { id: 2 }, visitor: { id: 6 } }];
+  const t15 = await generar({ ...base, stats: st, statsDe: async () => sig, registro: new Registro(config), leer: async () => [n('MARCA', 'Aplazados el Sevilla-Barça y el Alavés-Athletic', 'Por el temporal'), n('AS', 'Aplazados el Sevilla-Barça y el Alavés-Athletic', 'Por el temporal')] });
+  ok(t15.length === 2 && t15.some((t) => /Sevilla-Barça/.test(t.texto)), `de la jornada siguiente: ${t15.map((t) => t.texto).join(' | ')}`);
+}
 // 8) el número de jornada: el del texto; el puesto por Gemini solo si todas coinciden
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 12, jTxt: true }]) === 12, 'el del texto manda');
 ok(numeroDe([{ jornada: 13, jTxt: false }, { jornada: 13, jTxt: false }]) === 13 && numeroDe([{ jornada: 13, jTxt: false }, { jornada: 0 }]) === 0, 'el puesto, solo si todas lo traen igual');
