@@ -1287,7 +1287,8 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/revivo-convocado-con-israel-para-disputar-la-nations-league-radio-elche/": 1793873304000,
    "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000,
    "SPORT|136108626": 1793872201000,
-   "SPORT|136111415": 1793872197000
+   "SPORT|136111415": 1793872197000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000
   },
   "hechos": [
    {
@@ -1879,11 +1880,25 @@
     "motivo": "lesion en el cuadriceps",
     "plazo": "estara varias semanas fuera",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793875872000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri sufre una lesión en el bíceps femoral",
+    "motivo": "lesión en el bíceps femoral",
+    "plazo": "estará fuera entre tres y cuatro semanas",
+    "nums": [
+     30
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-05",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
