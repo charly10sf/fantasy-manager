@@ -10,6 +10,7 @@ import { preguntar, conClaude } from './ia.mjs';
 import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
 import { ARRANQUES, VAGAS, PROHIBIDO, EMOJIS_GUIA, segunTrasCifra, nombresEn, nombresDe } from './pulir.mjs';
 import { NOMBRES_MEDIOS } from './prensa.mjs';
+import { ESTADIOS } from './hechos.mjs';
 
 const EMOJI = /\p{Extended_Pictographic}/gu;
 const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
@@ -65,8 +66,10 @@ function vocabulario(hechos, cronicas) {
     que sea un nombre */
 export function esqueleto(texto, nombres = []) {
   let t = ` ${norm(texto.replace(EMOJI, ' '))} `;
+  // (los estadios también cuentan como nombre: «La Rosaleda recibe…» y «El Sadar recibe…» son la misma entrada; 6 nov)
+  nombres = [...nombres, ...Object.values(ESTADIOS).map((x) => norm(x).replace(/^(el|la) /, ''))];
   for (const n of [...nombres].sort((a, b) => b.length - a.length)) if (n.length >= 3) t = t.split(` ${n} `).join(' X ');
-  return t.replace(/\b\d+\b/g, 'N').replace(/\s+/g, ' ').trim();
+  return t.replace(/\b\d+\b/g, 'N').replace(/\b(el|la|los|las|del|al)\b/g, 'A').replace(/\s+/g, ' ').trim();
 }
 const gramas = (t, n = 4) => { const w = t.split(' '); const s = new Set(); for (let i = 0; i + n <= w.length; i++) s.add(w.slice(i, i + n).join(' ')); return s; };
 /** cuánto se parecen dos tuits (0 a 1): grupos de 4 palabras en común sobre los del más corto, sin nombres ni cifras */
