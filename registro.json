@@ -3170,7 +3170,8 @@
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793888400000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
-   "SPORT|136162605": 1793984430000
+   "SPORT|136162605": 1793984430000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988650000
   },
   "hechos": [
    {
@@ -3834,11 +3835,22 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 12,
+   "n": 13,
    "fallos": 0
   },
-  "espera": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988976541
-  }
+  "espera": {}
+ },
+ "ia": {
+  "dia": "2026-11-06",
+  "llamadas": {
+   "clasificar": 1,
+   "redactar": 0
+  },
+  "fallos": 0,
+  "entrada": 1752,
+  "salida": 167,
+  "cacheLee": 0,
+  "cacheEscribe": 0,
+  "dolares": 0.000259
  }
 }
