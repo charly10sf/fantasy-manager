@@ -60,8 +60,9 @@ export function tamano(s, px, max, espacio = 0) { let p = px; const min = Math.r
 let n = 0;
 export const id = (p) => `${p}${++n}`;
 export const lineal = (g, paradas, { x1 = 0, y1 = 0, x2 = 0, y2 = 1 } = {}) => `<linearGradient id="${g}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}">${paradas.map(([o, c, op = 1]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${op}"/>`).join('')}</linearGradient>`;
-export const radial = (cx, cy, r, color, op) => { const g = id('r'); return `<defs><radialGradient id="${g}" cx="${cx}" cy="${cy}" r="${r}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${color}" stop-opacity="${op}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient></defs><rect width="${ANCHO}" height="${ALTO}" fill="url(#${g})"/>`; };
-export const marco = (cuerpo) => `<svg xmlns="http://www.w3.org/2000/svg" width="${ANCHO}" height="${ALTO}" viewBox="0 0 ${ANCHO} ${ALTO}"><rect width="${ANCHO}" height="${ALTO}" fill="${FONDO}"/>${cuerpo}<rect width="${ANCHO}" height="6" fill="${ROJO}"/></svg>`;
+// `alto`: las tarjetas son de 1200x675 salvo la de los onces, que va en vertical (6 nov) para que las caras se vean grandes
+export const radial = (cx, cy, r, color, op, alto = ALTO) => { const g = id('r'); return `<defs><radialGradient id="${g}" cx="${cx}" cy="${cy}" r="${r}" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${color}" stop-opacity="${op}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient></defs><rect width="${ANCHO}" height="${alto}" fill="url(#${g})"/>`; };
+export const marco = (cuerpo, alto = ALTO) => `<svg xmlns="http://www.w3.org/2000/svg" width="${ANCHO}" height="${alto}" viewBox="0 0 ${ANCHO} ${alto}"><rect width="${ANCHO}" height="${alto}" fill="${FONDO}"/>${cuerpo}<rect width="${ANCHO}" height="6" fill="${ROJO}"/></svg>`;
 
 /** el escudo (78x105 en LaLiga) encajado en una caja de alto h, centrado en (cx, cy) */
 export function escudo(buf, cx, cy, h) {
@@ -94,14 +95,14 @@ export function caraFundida(buf, x, y, lado, { desde = 0.7 } = {}) {
 
 /** fondo común: casi negro, el brillo de los clubes que salen, una malla de puntos muy fina y un viñeteado que oscurece las esquinas.
     (6 nov, segunda vuelta: fuera los rayos en diagonal, que ensuciaban el fondo; la malla da textura sin competir con lo que se lee) */
-export function fondo(brillos = []) {
-  let s = brillos.map(([cx, cy, r, color, op]) => radial(cx, cy, r, color, op)).join('');
+export function fondo(brillos = [], alto = ALTO) {
+  let s = brillos.map(([cx, cy, r, color, op]) => radial(cx, cy, r, color, op, alto)).join('');
   const v = id('vg'), l = id('vl'), p = id('dp');
   s += `<defs><pattern id="${p}" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#fff" fill-opacity="0.06"/></pattern>`
-    + `<radialGradient id="${v}" cx="${ANCHO / 2}" cy="${ALTO * 0.46}" r="${Math.round(ANCHO * 0.66)}" gradientUnits="userSpaceOnUse"><stop offset="0.5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.62"/></radialGradient>`
+    + `<radialGradient id="${v}" cx="${ANCHO / 2}" cy="${alto * 0.46}" r="${Math.round(Math.max(ANCHO, alto) * 0.66)}" gradientUnits="userSpaceOnUse"><stop offset="0.5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.62"/></radialGradient>`
     + lineal(l, [[0, '#fff', 0.06], [1, '#fff', 0]]) + `</defs>`
-    + `<rect width="${ANCHO}" height="${ALTO}" fill="url(#${p})"/>`
-    + `<rect width="${ANCHO}" height="${ALTO}" fill="url(#${v})"/><rect width="${ANCHO}" height="150" fill="url(#${l})"/>`;
+    + `<rect width="${ANCHO}" height="${alto}" fill="url(#${p})"/>`
+    + `<rect width="${ANCHO}" height="${alto}" fill="url(#${v})"/><rect width="${ANCHO}" height="150" fill="url(#${l})"/>`;
   return s;
 }
 

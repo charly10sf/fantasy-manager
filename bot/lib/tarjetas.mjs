@@ -152,71 +152,83 @@ function lineasDe(lado) {
   }
   return ['POR', 'DEF', 'MED', 'DEL'].map((p) => once.filter((j) => j.pos === p)).filter((l) => l.length);   // sin formación que cuadre, por puestos
 }
+// 6 nov (Carlos, con el Sevilla-Alavés: «el diseño es horrible y apenas se ven las caras»): la tarjeta pasa a vertical (1200x1420) con un
+// campo alto por equipo. Arriba de cada campo, una franja con el escudo, el nombre y el dibujo; en el césped, cada línea con caras de
+// hasta 62 de radio (antes 32: el doble de grande en pantalla) y el nombre en una pastilla. Líneas del campo muy suaves, para que no
+// compitan con las caras. El orden de cada línea es el que llega (con los confirmados de ESPN, de izquierda a derecha según se mira).
+export const ALTO_ONCES = 1420;
 function campo(x, y, w, h, lado, club, confirmados) {
-  const g = id('cp'), gs = id('cs'), gv = id('cv'), cl = id('cc');
-  const lc = 'stroke="#ffffff" stroke-opacity="0.5" stroke-width="2.5" fill="none"';
-  // césped de verdad (verde oscuro con franjas) y, encima, un velo del color del club; el marco, también de su color
-  let s = `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="20"/></clipPath>${lineal(g, [[0, '#23744a'], [1, '#124a2b']])}${lineal(gv, [[0, club.vivo, 0.26], [0.6, club.vivo, 0]])}${lineal(gs, [[0, '#fff', 0.07], [1, '#fff', 0]])}</defs>`
-    + `<rect x="${x}" y="${y + 5}" width="${w}" height="${h}" rx="20" fill="#000" opacity="0.4"/>`
+  const g = id('cp'), gv = id('cv'), gb = id('cb'), cl = id('cc');
+  const lc = 'stroke="#ffffff" stroke-opacity="0.2" stroke-width="2.5" fill="none"';
+  const HB = 104;                                    // la franja del club, arriba
+  let s = `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="26"/></clipPath>${lineal(g, [[0, '#1f6a43'], [1, '#0f3f26']])}`
+    + `${lineal(gv, [[0, club.vivo, 0.22], [0.5, club.vivo, 0]])}${lineal(gb, [[0, club.vivo, 0.95], [1, club.vivo, 0.55]], { x1: 0, y1: 0, x2: 1, y2: 0 })}</defs>`
+    + `<rect x="${x}" y="${y + 8}" width="${w}" height="${h}" rx="26" fill="#000" opacity="0.45"/>`
     + `<g clip-path="url(#${cl})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>`;
-  for (let k = 0; k < 8; k++) if (k % 2) s += `<rect x="${x}" y="${y + k * h / 8}" width="${w}" height="${h / 8}" fill="#000" opacity="0.1"/>`;
-  s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${gv})"/><rect x="${x}" y="${y}" width="${w}" height="${h * 0.3}" fill="url(#${gs})"/></g>`
-    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="20" fill="none" stroke="${club.vivo}" stroke-width="3"/>`;
-  // líneas: borde, medio campo arriba con su círculo, área grande, área pequeña y punto de penalti abajo
-  s += `<rect x="${x + 14}" y="${y + 14}" width="${w - 28}" height="${h - 28}" rx="10" ${lc}/>`
-    + `<path d="M${x + w * 0.34},${y + 14} A${w * 0.16},${w * 0.16} 0 0 0 ${x + w * 0.66},${y + 14}" ${lc}/>`
-    + `<rect x="${x + w * 0.2}" y="${y + h - 14 - 96}" width="${w * 0.6}" height="96" ${lc}/>`
-    + `<rect x="${x + w * 0.36}" y="${y + h - 14 - 36}" width="${w * 0.28}" height="36" ${lc}/>`
-    + `<path d="M${x + w * 0.4},${y + h - 110} A${w * 0.11},${w * 0.07} 0 0 1 ${x + w * 0.6},${y + h - 110}" ${lc}/>`;
+  const yc = y + HB, hc = h - HB;
+  for (let k = 0; k < 10; k++) if (k % 2) s += `<rect x="${x}" y="${yc + k * hc / 10}" width="${w}" height="${hc / 10}" fill="#000" opacity="0.08"/>`;
+  s += `<rect x="${x}" y="${yc}" width="${w}" height="${hc}" fill="url(#${gv})"/>`
+    // líneas: medio campo con su círculo arriba, área grande y pequeña abajo
+    + `<path d="M${x + w * 0.32},${yc} A${w * 0.18},${w * 0.18} 0 0 0 ${x + w * 0.68},${yc}" ${lc}/>`
+    + `<rect x="${x + w * 0.2}" y="${y + h - 150}" width="${w * 0.6}" height="170" ${lc}/>`
+    + `<rect x="${x + w * 0.35}" y="${y + h - 62}" width="${w * 0.3}" height="80" ${lc}/>`
+    + `<path d="M${x + w * 0.39},${y + h - 150} A${w * 0.12},${w * 0.08} 0 0 1 ${x + w * 0.61},${y + h - 150}" ${lc}/>`
+    // la franja del club: su color, el escudo, el nombre y el dibujo
+    + `<rect x="${x}" y="${y}" width="${w}" height="${HB}" fill="#0b0d11"/><rect x="${x}" y="${y}" width="${w}" height="${HB}" fill="url(#${gb})" opacity="0.5"/>`
+    + `<rect x="${x}" y="${y + HB - 3}" width="${w}" height="3" fill="${club.vivo}"/></g>`
+    + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="25" fill="none" stroke="#fff" stroke-opacity="0.14" stroke-width="2"/>`;
+  const fch = lado.formacion ? chip(lado.formacion, 0, 0, 26, { relleno: TINTA, pad: 1.6, espacio: 2 }) : null;
+  const xNom = x + 24 + (lado.escudo ? 70 : 0), maxNom = w - (xNom - x) - 24 - (fch ? fch.w + 16 : 0);
+  s += escudo(lado.escudo, x + 54, y + HB / 2, 66)
+    + texto(xNom, y + HB / 2 + 17, mayus(lado.corto || lado.nombre), { px: 50, peso: 800, max: maxNom });
+  if (fch) s += chip(lado.formacion, x + w - 22 - fch.w / 2, y + HB / 2, 26, { relleno: TINTA, pad: 1.6, espacio: 2 }).s;
+  // los jugadores, línea a línea (la delantera arriba)
   const lineas = lineasDe(lado).reverse();
-  const alto = (h - 36) / lineas.length;
-  const R = confirmados ? 32 : 30, PXN = confirmados ? 24 : 22;
-  // el nombre va en una pastilla oscura, para que se lea sobre el césped; el % de titularidad, en una chapa en la esquina de la cara
+  const arriba = yc + 22, abajo = y + h - 34;
+  const alto = (abajo - arriba) / lineas.length;
   const pastilla = (txt, cx, cy, px, wMax, color = TINTA) => {
-    const t = nombreAjustado(txt, px, wMax), wt = Math.min(wMax, medir(t, tamano(t, px, wMax), B)) * 0.94 + 18;
-    return `<rect x="${cx - wt / 2}" y="${cy - px * 0.98}" width="${wt}" height="${px * 1.55}" rx="${px * 0.78}" fill="#06080a" fill-opacity="0.82"/>`
-      + texto(cx, cy, t, { px, peso: 700, color, ancla: 'middle', max: wMax });
+    const t = nombreAjustado(txt, px, wMax - 16), pp = tamano(t, px, wMax - 16), wt = Math.min(wMax, medir(t, pp, B) + 22);
+    return `<rect x="${cx - wt / 2}" y="${cy - px * 1.02}" width="${wt}" height="${px * 1.5}" rx="${px * 0.75}" fill="#06080a" fill-opacity="0.86"/>`
+      + texto(cx, cy, t, { px, peso: 700, color, ancla: 'middle', max: wMax - 16 });
   };
+  // cada línea, repartida por pesos: un puesto con dos opciones (posibles onces) ocupa 1,7 huecos, para que quepan sus dos caras y nombres
   lineas.forEach((ls, i) => {
-    const cy = y + 22 + alto * i + alto * 0.36;
+    const pesos = ls.map((j) => (j.alt && !confirmados ? 1.7 : 1)), W = pesos.reduce((a, b) => a + b, 0);
+    const U = W >= 4 ? w - 24 : w * W / (W + 1), x0 = x + (w - U) / 2, hueco = U / W;
+    const R = Math.max(26, Math.min(62, hueco / 2 - 9, (alto - 60) / 2));
+    const cy = arriba + alto * i + R + 6, yN = cy + R + 30;
+    let acum = 0;
     ls.forEach((j, k) => {
-      const n = ls.length, paso = n >= 4 ? (w - 40) / n : w / (n + 1);
-      const cx = n >= 4 ? x + 20 + paso * (k + 0.5) : x + paso * (k + 1);
-      const maxN = Math.min(150, paso - 6);
+      const ancho = hueco * pesos[k], cx = x0 + acum + ancho / 2; acum += ancho;
+      const maxN = Math.min(200, ancho - 4);
       const pctCol = colPct(j.pct);
-      const chapa = (jj, cxx, r) => `<circle cx="${cxx}" cy="${cy + 3}" r="${r + 1}" fill="#000" opacity="0.4"/>`
-        + (jj.cara ? caraCirculo(jj.cara, cxx, cy, r, { aro: jj.duda ? AMBAR : club.vivo, grosor: 3.5 })
-          : `<circle cx="${cxx}" cy="${cy}" r="${Math.round(r * 0.6)}" fill="${club.vivo}" stroke="${jj.duda ? AMBAR : '#ffffff'}" stroke-width="2.5"/>`);
+      const chapa = (jj, cxx, r) => (jj.cara ? caraCirculo(jj.cara, cxx, cy, r, { aro: jj.duda ? AMBAR : club.vivo, grosor: Math.max(3.5, r * 0.08), fondoColor: club.vivo })
+        : `<circle cx="${cxx}" cy="${cy + 3}" r="${r + 1}" fill="#000" opacity="0.4"/><circle cx="${cxx}" cy="${cy}" r="${Math.round(r * 0.62)}" fill="${club.vivo}" stroke="${jj.duda ? AMBAR : '#ffffff'}" stroke-width="3"/>`);
       if (j.alt && !confirmados) {
-        // dos opciones para el mismo puesto: las dos caras y debajo cada nombre con su %
-        s += chapa(j.alt, cx + 22, 21) + chapa(j, cx - 22, 21)
-          + pastilla(`${nombreAjustado(j.nombre, 18, maxN - 50, 0, { apellido: true })} ${j.pct} %`, cx, cy + 44, 18, maxN, pctCol)
-          + pastilla(`${nombreAjustado(j.alt.nombre, 18, maxN - 50, 0, { apellido: true })} ${j.alt.pct} %`, cx, cy + 72, 18, maxN, colPct(j.alt.pct));
+        // dos opciones para el mismo puesto: las dos caras, algo más pequeñas, y debajo cada nombre con su % (la primera, a la altura
+        // de los nombres de su línea)
+        const r2 = Math.max(22, Math.min(R * 0.8, ancho / 4 - 5)), dx = r2 + 3;
+        s += chapa(j.alt, cx + dx, r2) + chapa(j, cx - dx, r2)
+          + pastilla(`${nombreAjustado(j.nombre, 20, maxN - 60, 0, { apellido: true })} ${j.pct} %`, cx, yN - (R - r2), 20, maxN, pctCol)
+          + pastilla(`${nombreAjustado(j.alt.nombre, 20, maxN - 60, 0, { apellido: true })} ${j.alt.pct} %`, cx, yN - (R - r2) + 32, 20, maxN, colPct(j.alt.pct));
         return;
       }
-      s += chapa(j, cx, R) + pastilla(j.nombre, cx, cy + R + 24, PXN, maxN);
-      if (pctCol && !confirmados) s += chip(`${j.pct} %`, cx + R * 0.82, cy - R * 0.78, 18, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
+      s += chapa(j, cx, R) + pastilla(j.nombre, cx, yN, 24, maxN);
+      if (pctCol && !confirmados) s += chip(`${j.pct} %`, cx + R * 0.78, cy - R * 0.8, 20, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
     });
   });
-  // la formación, en una etiqueta blanca abajo a la izquierda
-  if (lado.formacion) s += chip(lado.formacion, x + 62, y + h - 32, 24, { relleno: TINTA, pad: 1.7, espacio: 2 }).s;
   return s;
 }
 export function svgOnces(d) {
-  const L = d.local, V = d.visitante;
+  const L = d.local, V = d.visitante, H = ALTO_ONCES;
   const cL = coloresClub(L.nombre), cV0 = coloresClub(V.nombre);
   const cV = { ...cV0, vivo: distinto(cV0, cL) };
   const tit = d.confirmados ? aColor(VERDE) : dorado();
-  const yM = 22, hM = 100, cy = yM + hM / 2;
-  let s = tit.defs + fondo([[200, 70, 560, cL.vivo, 0.3], [1000, 70, 560, cV.vivo, 0.3]])
-    + marcador(yM, hM, cL.vivo, cV.vivo)
-    + escudo(L.escudo, 104, cy, 78) + escudo(V.escudo, 1096, cy, 78)
-    + texto(156, cy + 17, mayus(L.corto), { px: 50, peso: 800, max: 230 })
-    + texto(1044, cy + 17, mayus(V.corto), { px: 50, peso: 800, ancla: 'end', max: 230 })
-    + texto(600, cy + 8, d.confirmados ? 'ONCES CONFIRMADOS' : 'POSIBLES ONCES', { px: 58, peso: 800, italica: true, color: `url(#${tit.g})`, ancla: 'middle', max: 400 })
-    + texto(600, cy + 38, `JORNADA ${d.jornada}`, { px: 22, peso: 700, color: TENUE, ancla: 'middle', espacio: 3 });
-  s += campo(44, 138, 544, 490, L, cL, d.confirmados) + campo(612, 138, 544, 490, V, cV, d.confirmados);
-  return marco(s + marca(600, 660, { ancla: 'middle' }));
+  let s = tit.defs + fondo([[250, 120, 700, cL.vivo, 0.28], [950, 120, 700, cV.vivo, 0.28]], H)
+    + texto(600, 86, d.confirmados ? 'ONCES CONFIRMADOS' : 'POSIBLES ONCES', { px: 72, peso: 800, italica: true, color: `url(#${tit.g})`, ancla: 'middle', max: 900 })
+    + texto(600, 124, `JORNADA ${d.jornada}`, { px: 24, peso: 700, color: TENUE, ancla: 'middle', espacio: 4 });
+  s += campo(32, 150, 560, H - 222, L, cL, d.confirmados) + campo(608, 150, 560, H - 222, V, cV, d.confirmados);
+  return marco(s + marca(600, H - 26, { ancla: 'middle' }), H);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
