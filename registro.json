@@ -370,6 +370,20 @@
    "jornada": 12,
    "id": "2118780841488773502",
    "t": "2026-11-06T19:01:32.601Z"
+  },
+  {
+   "clave": "final|113",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2118826138701316267",
+   "t": "2026-11-06T22:01:32.249Z"
+  },
+  {
+   "clave": "mvp|113",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2118826167302324367",
+   "t": "2026-11-06T22:01:39.057Z"
   }
  ],
  "estados": {
@@ -3824,20 +3838,32 @@
   "dia": "2026-11-06",
   "llamadas": {
    "clasificar": 8,
-   "redactar": 0
+   "redactar": 4
   },
   "fallos": 0,
-  "entrada": 14368,
-  "salida": 2425,
+  "entrada": 35776,
+  "salida": 3091,
   "cacheLee": 0,
   "cacheEscribe": 0,
-  "dolares": 0.00265
+  "dolares": 0.052126
  },
  "recientes": {
   "onces": [
    {
     "t": "2026-11-06T19:01:32.602Z",
     "texto": "ℹ️ Sevilla y Alavés ya tienen onces confirmados sin sorpresas en ninguno de los dos bandos. El Sevilla sale con 4-2-3 y el Alavés con 4-4-2 para el partido de hoy a las 21:00.\n\n👀 Revisa tu once fantasy antes del pitido"
+   }
+  ],
+  "final": [
+   {
+    "t": "2026-11-06T22:01:32.250Z",
+    "texto": "🏁 0-0 en el Sánchez-Pizjuán y la noche fue de Sivera. Cuenta COPE que el portero del Alavés le paró un penalti a Vargas en la primera parte.\n\nSe lleva 10 puntos, muy por encima de su media de 7, y es el mejor del partido. Del Sevilla se salva Félix Correia con 7. En el Alavés, T. Martínez se queda en -2, lo peor de la noche."
+   }
+  ],
+  "mvp": [
+   {
+    "t": "2026-11-06T22:01:39.058Z",
+    "texto": "⭐ Sivera, el mejor del Sevilla-Alavés con 10 puntos.\n\nSegún COPE, le paró un penalti a Vargas en la primera parte y el Alavés se llevó un 0-0 del Sánchez-Pizjuán. Con una media de 7 y 84 puntos en la temporada, si lo tienes de portero, no se toca. Su siguiente partido es contra el Deportivo."
    }
   ]
  }
