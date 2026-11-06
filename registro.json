@@ -1241,14 +1241,7 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2315",
-   "que": "lesion",
-   "antes": "doubtful",
-   "t": 1793971871471
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "SPORT|136041677": 1793713371000,
@@ -1452,7 +1445,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261106/1004247911/pellegrini-suma-ocho-bajas-copa-convocatorias-espana.html": 1793968808000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247912/valverde-convocado-amistosos-uruguay-debutar-diego-forlan.html": 1793968555000,
    "SPORT|136163736": 1793966627000,
-   "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/": 1793970261000
+   "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/": 1793970261000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247932/fuente-sobre-barrene-no-ninguna-apuesta-reconocimiento-labor.html": 1793970654000,
+   "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000
   },
   "hechos": [
    {
@@ -2164,7 +2159,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -3115,7 +3110,8 @@
    "SPORT|136149880": 1793959104000,
    "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000,
    "SPORT|136163733": 1793966682000,
-   "SPORT|136157637": 1793966510000
+   "SPORT|136157637": 1793966510000,
+   "SPORT|136164914": 1793968169000
   },
   "hechos": [
    {
@@ -3792,7 +3788,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
   "espera": {}
