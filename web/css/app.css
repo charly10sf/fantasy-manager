@@ -918,6 +918,8 @@ a.btn { text-decoration: none; }
 .sin-app > summary::-webkit-details-marker { display: none; }
 .sin-app p, .sin-app li { color: var(--texto2); font-size: 14px; }
 .sin-app ol { padding-left: 20px; margin: 6px 0 10px; }
+.sin-app .en-dib { margin: 0 0 10px; }
+.sin-app .en-dib a { color: var(--rojo-l); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .sin-app textarea { display: block; width: 100%; margin: 10px 0 8px; background: var(--plano2); border: 1px solid var(--linea); border-radius: 10px; padding: 10px; font: 13px ui-monospace, monospace; color: var(--texto); resize: vertical; }
 .sin-app .btn { margin-bottom: 12px; }
 .pantalla a { color: var(--rojo-l); }

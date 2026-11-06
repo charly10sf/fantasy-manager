@@ -214,6 +214,7 @@ function entrarWebHTML() {
         <li>En <b>Red</b>, la última fila (cancelada) empieza por <b>?state=…&amp;code=…</b>: botón derecho → <b>Copiar → Copiar dirección del enlace</b>.</li>
         <li>Pégala aquí debajo y pulsa Entrar.</li>
       </ol>
+      <p class="en-dib"><a href="instalar.html#sin-app" target="_blank" rel="noopener">Ver estos pasos con dibujos</a></p>
       <button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>
       <textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea>
       <button class="btn chico" data-accion="pegarVuelta">Entrar</button>
