@@ -1244,7 +1244,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136041677": 1793713371000,
    "SPORT|136042531": 1793714741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246788/guruzeta-empieza-cuenta-hoy-sido-operado-rodilla-izquierda.html": 1793722204000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/03/antiviolencia-propone-sancionar-youtuber-inaki-angulo-60-001-euros-insultar-bellerin.html": 1793723901000,
@@ -1450,18 +1449,6 @@
    "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136041677",
-    "medio": "SPORT",
-    "t": 1793713371000,
-    "id": "3073",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/bardeli-de-regreso-f202611-n/",
     "medio": "AS",
