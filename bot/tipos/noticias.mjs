@@ -16,7 +16,8 @@ import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { lista as enLista } from '../lib/agrupar.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
 import { noticiasPrensaUnaVez, NOMBRES_MEDIOS } from '../lib/prensa.mjs';
-import { preguntarJson } from '../lib/gemini.mjs';
+import { clasificador, claveClasificar } from '../lib/ia.mjs';
+import { clubes, partido, jugador, fuente as fuenteH } from '../lib/hechos.mjs';
 import { ideasInfo, vecesHoy } from '../lib/info-jugador.mjs';
 
 const HORA = 36e5;
@@ -56,12 +57,9 @@ function nombrados(txt, jugadores, equipos) {
   return out;
 }
 
-/** ¿copia 6 palabras seguidas de la fuente? */
-export function copia(s, fuente, n = 6) {
-  const w = norm(s).split(' ').filter(Boolean), src = ` ${norm(fuente)} `;
-  for (let i = 0; i + n <= w.length; i++) if (src.includes(` ${w.slice(i, i + n).join(' ')} `)) return true;
-  return false;
-}
+// ¿copia 6 palabras seguidas de la fuente? (vive en lib/texto.mjs desde el 6 nov: también lo usa lib/redaccion.mjs)
+export { copia } from '../lib/texto.mjs';
+import { copia } from '../lib/texto.mjs';
 /** lo que escribe Gemini, limpio y comprobado; '' si no vale */
 export function frase(s, { fuente = '', max = 90, debeLlevar = null } = {}) {
   s = String(s || '').replace(/["«»“”]/g, '').replace(/\s+/g, ' ').trim().replace(/[.;:,]+$/, '');
@@ -120,7 +118,7 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
   const prim = !nt.desde;
   nt.desde ||= {};
   for (const j of importan) { const e = j.playerStatus || 'ok', d = nt.desde[j.id]; if (!d || d.e !== e) nt.desde[j.id] = { e, t: prim || !d ? 0 : ahora }; }
-  if (!clave) { log('  (noticias) sin GEMINI_API_KEY: no leo la prensa'); return nt; }
+  if (!clave) { log('  (noticias) sin clave de la IA (GEMINI_API_KEY o ANTHROPIC_API_KEY): no leo la prensa'); return nt; }
   const todas = await leer({ log });
   const nuevas = [];
   for (const n of todas) {
@@ -188,7 +186,7 @@ export function fuenteDe(c, { baja = false, k = 0, dia = '' } = {}) {
 }
 
 export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),
-  log = console.log, proximo = proximoPartido, listaPartes = null, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY, info = null }) {
+  log = console.log, proximo = proximoPartido, listaPartes = null, leer = noticiasPrensaUnaVez, pedirIA = clasificador({ registro, config }), clave = claveClasificar(config), info = null }) {
   const [hD, hH] = horas(config, 'horasNoticias', [9, 23], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   // sin registro guardado (simulacro del cron) no se gasta cupo de Gemini en cada ejecución
@@ -293,7 +291,13 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const estadoCarta = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';
     const fila = { id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo, club: equipos[String(j.teamId)] || '', caraUrl: j.image || null,
       escudoUrl: escudos[String(j.teamId)] || null, estado: estadoCarta, leve: estadoCarta === 'duda' && leve, media, valor: Number(j.marketValue) || 0, pct: tit ? tit.pct : null };
-    out.push({ tipo: 'noticias', clave, jornada, texto, numeros: [...(media >= 3 ? partes(media) : []), ...(pp ? [pp.jornada] : [jornada]), ...c.nums, ...inf.numeros],
+    // los hechos para la IA que redacta (lib/redaccion.mjs): lo mismo que usa la plantilla, sin frases hechas
+    const estadoH = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : baja ? (c.que === 'lesion' ? 'lesionado' : 'baja') : 'duda';
+    const hechos = { tipo: 'noticias', noticia: c.hecho || null, ...(leve ? { matiz: 'duda leve: es por precaución o gestión de cargas, no por una lesión' } : {}),
+      fuente: fuenteH({ oficial: c.oficial, medios: c.medios }),
+      jugadores: [jugador(j, { equipos, estado: estadoH, motivo: c.fam === 'mala' ? c.motivo : '', plazo: c.fam === 'mala' ? c.plazo : '', tit })],
+      ...(pp ? { partido: partido(pp, { equipo, riv, posId: j.positionId, ahora }) } : {}), clubes: clubes(equipo, pp && pp.rival), etiqueta };
+    out.push({ tipo: 'noticias', clave, jornada, texto, hechos, numeros: [...(media >= 3 ? partes(media) : []), ...(pp ? [pp.jornada] : [jornada]), ...c.nums, ...inf.numeros],
       tarjeta: estadoCarta ? tarjetaBajas({ jornada, filas: [fila], pp, clave }) : null });
   }
   return out;

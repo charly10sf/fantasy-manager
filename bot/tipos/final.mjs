@@ -6,6 +6,7 @@ import { CIERRES, corto, elegir, fmt, partes, el, del, al, largo, rotar, turno, 
 import { tweet, cap, segunda, proximoPartido, cuando } from '../lib/redactar.mjs';
 import { rachaDe } from '../lib/laliga.mjs';
 import { partidoEspn, reconstruir, minutoDe } from '../lib/relato.mjs';
+import { clubes as clubesH } from '../lib/hechos.mjs';
 import { casarJugador } from './directo.mjs';
 import { lista, mayus, enLetra } from '../lib/agrupar.mjs';
 
@@ -45,6 +46,7 @@ export async function relato(m, semilla, k = null) {
   const dif = Math.abs(gl - gv), total = gl + gv;
   const [G, P] = gl >= gv ? [L, V] : [V, L];
   const goleadores = new Set();
+  const goles = [];   // para la IA que redacta (lib/redaccion.mjs): cada gol con su minuto, quién y para quién
   let sec = null;
   try {
     const e = await partidoEspn(m, diaMadrid(Date.parse(m.date)));
@@ -59,13 +61,23 @@ export async function relato(m, semilla, k = null) {
           const p = casarJugador(a.displayName, lado);
           if (p) goleadores.add(String(p.id));
         }
+        for (const d of rel.orden) {
+          if (!d.scoringPlay) continue;
+          const a = (d.athletesInvolved || [])[0];
+          const casa = String(d.team && d.team.id) === String(e.casa.team.id);
+          const p = a ? casarJugador(a.displayName, casa ? m.local : m.visitor) : null;
+          const mn = minutoDe(d), mom = rel.tras.get(d);
+          goles.push({ minuto: mn.extra ? `${mn.min}+${mn.extra}'` : `${mn.min}'`, para: corto((casa ? m.local : m.visitor).mainName),
+            ...(d.ownGoal ? { enPropia: a ? a.displayName : true } : { goleador: p ? p.nickname || p.name : a ? a.displayName : null }),
+            ...(d.penaltyKick || /penal/i.test((d.type && d.type.text) || '') ? { penalti: true } : {}), ...(mom ? { marcador: mom.marcador.join('-') } : {}) });
+        }
       }
     }
   } catch { /* sin relato de ESPN: solo el resultado */ }
   const mt = (mn) => (mn.extra ? `${mn.min}+${mn.extra}'` : `${mn.min}'`);
   // nombra: el id (LaLiga) del goleador que sale en la frase, para no repetirlo en la del mejor (comparar el texto fallaba con
   // «Rodri» dentro de «Rodrigo Gamón»; auditoría del 5 nov)
-  const sal = (linea, num = [], nombra = null) => ({ linea, num, goleadores, nombra });
+  const sal = (linea, num = [], nombra = null) => ({ linea, num, goleadores, nombra, goles });
   if (sec && dif >= 1) {
     const casaGana = gl > gv;
     const lado = casaGana ? m.local : m.visitor;
@@ -150,6 +162,7 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     const num = [gl, gv];
     const ideas = [];
     const LG = largo();
+    let tablaAntes = null, proximoTop = null;   // para los hechos de la IA que redacta
     // el podio: siempre tres formas en el mismo orden (con listas de largo distinto, la rotación repetía); «completan el podio» solo si
     // lo es de verdad (los dos siguientes de la clasificación, sin empate arriba); si no, «Tras él». Si el relato ya nombra a uno,
     // «el propio» («Bil Nsongo marca el bueno… el propio Bil Nsongo y Adama Traoré…»)
@@ -257,12 +270,14 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
       const tp = await info.tablaSin(m.id).catch(() => null);
       const v = tp && valoracionFinal({ gl, gv, L, V, rl: tp.porId[String(m.local.id)], rv: tp.porId[String(m.visitor.id)], f: turno(2, `valFinal${jornada}`, k) });
       if (v) { ideas.push({ t: `👀 ${v.t}`, prio: 4 }); num.push(...v.num); }
+      if (tp) tablaAntes = { [L]: tp.porId[String(m.local.id)], [V]: tp.porId[String(m.visitor.id)] };
     }
     // con tweets largos: el próximo partido del mejor (lo que mira el mánager que lo tiene)
     // (no si sale el tweet del MVP con su tarjeta: ya lo cuenta él y serían dos tweets seguidos diciendo lo mismo)
     if (LG && !empate && top.pts >= 8 && !(config.tarjetas && config.tarjetas.jugador)) {
       const pp = await proximoPartido(top.ladoId, { jornada: jornada + 1 }).catch(() => null);
       const c = pp && pp.fecha ? cuando(pp.fecha) : null;
+      if (pp) proximoTop = { club: pp.rival, rival: el(pp.rival), ...(c ? { cuando: c.t } : { jornada: pp.jornada }) };
       if (pp) { ideas.push({ t: `🗓️ ${cap(segunda(top.pos, top.nombre))} vuelve a jugar ${c ? `${c.t}, ` : `en la jornada ${pp.jornada}, `}contra ${el(pp.rival)}`, prio: 1, antes: true }); num.push(...(c ? c.numeros : [pp.jornada])); }
     }
     // con tweets largos, «el que se salva aunque pierde» y «el peor» cambian de orden entre sí según el partido (solo esas dos: el podio
@@ -277,7 +292,20 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     }
     const { usadas, texto } = tweet(cab, ideas.map(({ fija, ultima, antes, rota, ...x }) => x), { pie });
     if (!usadas.length) continue;
-    out.push({ tipo: 'final', clave: `final|${m.id}`, jornada, texto, numeros: num, partido: m.id });
+    // los hechos para la IA que redacta (lib/redaccion.mjs): el marcador, los goles de ESPN, los puntos de cada uno y el contexto
+    const fila = (f, extra = {}) => ({ nombre: f.nombre, club: f.equipo, puntos: f.pts, ...(f.media != null && f.media >= 1 ? { mediaPuntos: fmt(f.media) } : {}), principal: false, ...extra });
+    const jugH = [fila(top, { papel: 'el mejor del partido', principal: true, ...(dobla ? { hoy: `más del ${top.pts > 3 * mediaR ? 'triple' : 'doble'} de su media` } : {}),
+      ...(racha ? { racha: `3 jornadas seguidas con 8 o más: ${racha.join(', ')}` } : {}), ...(proximoTop ? { proximoPartido: proximoTop } : {}) })];
+    if (empate) jugH.push(fila(empate, { papel: 'empatado con el mejor', principal: true }));
+    for (const f of ord.filter((x) => ![top.id, empate && empate.id].includes(x.id)).slice(0, 2)) jugH.push(fila(f, { papel: 'detrás del mejor' }));
+    if (pierde && !jugH.some((x) => x.nombre === pierde.nombre)) jugH.push(fila(pierde, { papel: 'puntúa aunque su equipo pierde' }));
+    for (const f of peores.length ? peores.slice(0, 3) : peor ? [peor] : []) if (!jugH.some((x) => x.nombre === f.nombre)) jugH.push(fila(f, { papel: 'el peor del partido' }));
+    const hechos = { tipo: 'final', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, marcador: `${gl}-${gv}`, fecha: m.date || null },
+      goles: r.goles || [], jugadores: jugH,
+      ...(tablaAntes && tablaAntes[L] && tablaAntes[V] ? { antesDelPartido: { [L]: `${tablaAntes[L].pos}º`, [V]: `${tablaAntes[V].pos}º` } } : {}),
+      clubes: clubesH(L, V, proximoTop ? proximoTop.club : null), etiqueta: pie };
+    if (proximoTop) delete proximoTop.club;
+    out.push({ tipo: 'final', clave: `final|${m.id}`, jornada, texto, hechos, numeros: num, partido: m.id });
   }
   return out;
 }

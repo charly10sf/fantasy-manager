@@ -1,0 +1,53 @@
+// Los hechos de un tuit para la IA que redacta (lib/redaccion.mjs): lo que ya está comprobado (de LaLiga, de la app, de la prensa
+// clasificada), en un objeto sencillo. Todo lo que va aquí puede salir en el texto; lo que no está aquí, no (el validador lo mira).
+// Cada tipo arma los suyos con estas piezas y los deja en `t.hechos`, junto a la plantilla de siempre, que queda de respaldo.
+import { fmt, corto, el } from './texto.mjs';
+import { puesto, cuando } from './redactar.mjs';
+import { nombresClub } from './redaccion.mjs';
+
+/** { [club]: { nombres: [...], emoji } } de los clubes que salen en el tuit */
+export function clubes(...eqs) {
+  const o = {};
+  for (const e of eqs.flat().filter(Boolean)) { const c = corto(e); if (!o[c]) o[c] = nombresClub(c); }
+  return o;
+}
+
+/** lo que marca o encaja el rival y si le viene bien o mal a ese puesto (solo si está entre los 4 primeros o los 4 últimos) */
+export function golesRival(riv, posId, rival) {
+  if (!riv) return null;
+  const atras = Number(posId) <= 2;
+  const k = atras ? 'gf' : 'gc', rk = riv[`r${k}`];
+  const mucho = rk <= 4, poco = rk >= riv.n - 3;
+  if (!mucho && !poco) return null;
+  const que = atras ? (mucho ? 'de los que más marcan' : 'de los que menos marcan') : (mucho ? 'de los que más encajan' : 'de los que menos encajan');
+  const bueno = atras ? poco : mucho;
+  return { rival: el(rival), dato: `${que}: ${fmt(riv[k])} ${atras ? 'marcados' : 'encajados'} por partido`, paraEste: bueno ? 'le viene bien' : 'le viene mal' };
+}
+
+/** el partido que viene: rival, casa o fuera, cuándo, puesto y dificultad del rival (y sus goles si destacan) */
+export function partido(pp, { equipo, riv = null, posId = null, ahora = Date.now() } = {}) {
+  if (!pp) return null;
+  const c = pp.fecha ? cuando(pp.fecha, ahora) : null;
+  const local = pp.enCasa ? equipo : pp.rival, visitante = pp.enCasa ? pp.rival : equipo;
+  return {
+    jornada: pp.jornada, partido: `${local}-${visitante}`, local, visitante, juega: pp.enCasa ? 'en casa' : 'fuera', rival: el(pp.rival),
+    ...(c ? { cuando: c.t } : {}), fecha: pp.fecha || null,
+    ...(riv ? { rivalVa: `${riv.pos}º de ${riv.n}`, dificultad: riv.nivel } : {}),
+    ...(riv && posId ? (() => { const g = golesRival(riv, posId, pp.rival); return g ? { golesRival: g } : {}; })() : {}),
+  };
+}
+
+/** un jugador: nombre, puesto, club, estado (disponible, vuelve, duda, baja, lesionado, sancionado), media y % de la app */
+export function jugador(j, { equipos = {}, estado = null, motivo = '', plazo = '', tit = null, principal = true, extra = {} } = {}) {
+  const media = Number(j.averagePoints ?? j.media) || 0;
+  return {
+    nombre: j.nickname || j.nombre, puesto: puesto(j.positionId ?? j.pos) || undefined, club: corto(equipos[String(j.teamId)] || j.equipo || ''),
+    ...(estado ? { estado } : {}), ...(motivo ? { motivo } : {}), ...(plazo ? { plazo } : {}),
+    ...(media >= 1 ? { mediaPuntos: fmt(media) } : {}),
+    ...(tit && tit.pct != null ? { titularidadFantasyManager: `${tit.pct} %` } : {}),
+    ...extra, principal,
+  };
+}
+
+/** la fuente de una noticia: el club o los medios (sin LaLiga Fantasy: el estado ya va en la etiqueta) */
+export const fuente = ({ oficial = false, medios = [] } = {}) => (oficial ? 'lo ha comunicado el club' : medios.length ? `prensa: ${medios.join(', ')}` : null);

@@ -15,8 +15,8 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
 const CIFRAS = /\d+(?:[.,]\d+)?/g;
 const EMOJI = /\p{Extended_Pictographic}/gu;
 // los emojis de la guía de estilo (claude/estilo-tweets.md) y los que ya usan las plantillas
-const EMOJIS_GUIA = new Set([...'🚨⚠‼👀⁉✅❌🗣🗞🗓⭐📊🔥🏁⚽🟥🟨📈📉💸🔄ℹ💔🤕🚑🥇🥈🥉'.matchAll(EMOJI)].map((m) => m[0]));
-const PROHIBIDO = /@|#|https?:|www\.|\b(mi|mis|nuestro|nuestra|nosotros|bot|brutal|espectacular|incre[ií]ble|no te lo pierdas)\b/i;
+export const EMOJIS_GUIA = new Set([...'🚨⚠‼👀⁉✅❌🗣🗞🗓⭐📊🔥🏁⚽🟥🟨📈📉💸🔄ℹ💔🤕🚑🥇🥈🥉'.matchAll(EMOJI)].map((m) => m[0]));
+export const PROHIBIDO = /@|#|https?:|www\.|\b(mi|mis|nuestro|nuestra|nosotros|bot|brutal|espectacular|incre[ií]ble|no te lo pierdas)\b/i;
 
 const cifras = (s) => [...new Set(String(s).replace(/[0-9#*]️?⃣/g, '').match(CIFRAS) || [])].sort();
 const lineas = (s) => String(s).split('\n').map((l) => l.trim()).filter(Boolean);
@@ -42,7 +42,7 @@ const estado = (s) => {
     lleva varias frases: la primera palabra de cada una («Su media…», «Tarde…») no cuenta como nombre nuevo */
 // las palabras corrientes con las que puede empezar una frase sin ser un nombre (auditoría del 5 nov: si no se mira la primera palabra,
 // Gemini podía colar «Corberán no lo duda.»); una primera palabra que no esté aquí ni en la plantilla cuenta como nueva
-const ARRANQUES = new Set(('el la los las lo un una unos unas en con sin pero y e o hay por para ya hoy ojo aunque tambien ademas detras despues '
+export const ARRANQUES = new Set(('el la los las lo un una unos unas en con sin pero y e o hay por para ya hoy ojo aunque tambien ademas detras despues '
   + 'al del se su sus no si que quien a de otra otro nadie todo todos esta este eso esto mientras tras sale salen juega juegan vuelve vuelven '
   + 'llega llegan cae caen sigue siguen tampoco solo nada mas menos le les lleva suma suman saca sacan va van es son era fue tiene tienen '
   + 'segun cuidado atentos alerta asi entre sobre desde hasta cuando donde como muy bien mal menudo vaya gran buena buen mala mal noche tarde '
@@ -65,7 +65,7 @@ const mayusculas = (s) => {
 };
 
 // palabras que dejan al lector adivinando de quién se habla
-const VAGAS = /\b(enfrente|(?:el|al|del|este|ese|dicho) (?:equipo|club|conjunto|rival)|(?:su|al|del) rival|a este equipo|dicho (?:equipo|club))\b/giu;
+export const VAGAS = /\b(enfrente|(?:el|al|del|este|ese|dicho) (?:equipo|club|conjunto|rival)|(?:su|al|del) rival|a este equipo|dicho (?:equipo|club))\b/giu;
 /** ¿alguna frase lleva «según…» detrás de una cifra? («…suma 5,9 puntos de media, según AS») */
 export const segunTrasCifra = (s) => String(s).split(/(?<=[.!?])\s+|\n+/).some((f) => /\d.*\bseg[uú]n\s/i.test(f));
 /** los nombres de jugadores y equipos de LaLiga que salen en un texto (por apodo o nombre corto de equipo, palabra entera) */

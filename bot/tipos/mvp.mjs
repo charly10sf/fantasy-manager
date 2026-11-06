@@ -2,7 +2,8 @@
 // (config.tarjetas.jugador): sin imagen repetiría lo que ya dice el tweet del final, así que ejecutar.mjs no lo publica sin ella.
 import { corto, fmt, partes, del, el, largo, rotar, ordenJornada, dineroTxt } from '../lib/texto.mjs';
 import { formaMvp, chocaConFinal } from './final.mjs';
-import { tweet, segunda, cap, proximoPartido, cuando } from '../lib/redactar.mjs';
+import { tweet, segunda, cap, proximoPartido, cuando, puesto } from '../lib/redactar.mjs';
+import { clubes as clubesH } from '../lib/hechos.mjs';
 
 export async function generar({ stats, jornada, jugadores, config, desdeFinal = 0, forzarTarjetas = false, dazn = null }) {
   if (!(config.tarjetas && config.tarjetas.jugador) && !forzarTarjetas) return [];
@@ -45,6 +46,7 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     num.push(Number(j.points), ...partes(j.averagePoints));
     // con tweets largos (X Premium): lo que vale y cuándo vuelve a jugar, cada MVP contado a su manera. Lo de «más del doble de su media»
     // ya lo dice el tweet del final, que sale justo antes: aquí no se repite
+    let proximoH = null, valorH = null;
     if (largo()) {
       const valor = Number(j.marketValue) || 0;
       const dv = dineroTxt(valor);
@@ -58,10 +60,22 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
         `🗓️ El siguiente, ${cuandoTxt} contra ${el(pp.rival)}. Ahora mismo vale ${dv.t}`], 'mvpl')
         : valor > 0 ? `💸 Vale ${dv.t} en el mercado` : pp ? `🗓️ Vuelve a jugar ${cuandoTxt}, contra ${el(pp.rival)}` : null;
       if (t) ideas.push({ t, prio: 2 });
+      if (pp) proximoH = { club: pp.rival, rival: el(pp.rival), ...(c ? { cuando: c.t } : { jornada: pp.jornada }) };
+      if (valor > 0) valorH = dv.t;
     }
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) continue;
-    out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });
+    // los hechos para la IA que redacta (lib/redaccion.mjs). El tuit del final del mismo partido sale justo antes: no tiene que repetirlo
+    const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
+    const hechos = { tipo: 'mvp', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, marcador: `${m.localScore}-${m.visitorScore}`, fecha: m.date || null },
+      nota: 'el tuit del final de este partido acaba de salir: este va del mejor jugador y de lo que significa para el mánager',
+      jugadores: [{ nombre, puesto: puesto(j.positionId) || undefined, club: equipo, puntosHoy: pts, puntosTemporada: Number(j.points) || 0,
+        ...(mediaR >= 1 ? { mediaPuntos: fmt(j.averagePoints) } : {}), ...(yaMedia ? { hoy: `más del ${pts > 3 * mediaR ? 'triple' : 'doble'} de su media` } : {}),
+        ...(valorH ? { valorMercado: valorH } : {}), ...(proximoH ? { proximoPartido: proximoH } : {}), principal: true },
+        ...(otro ? [{ nombre: otro.p.nickname || otro.p.name, club: corto(otro.eq.mainName), puntosHoy: pts, papel: 'empata con él', principal: true }] : [])],
+      clubes: clubesH(L, V, proximoH ? proximoH.club : null), etiqueta: '' };
+    if (proximoH) delete proximoH.club;
+    out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, hechos, numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });
   }
   return out;
 }
