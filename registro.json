@@ -1378,7 +1378,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247816/racing-santander-multado-lanzamiento-menchero.html": 1793953993000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/china-esta-en-conversaciones-con-laliga-tras-la-polemica-con-mbappe-pero-pide-tiempo-para-digerir-cadena-ser/": 1793956187000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/china-reconoce-contactos-madrid-reconciliacion-polemica-mbappe.html": 1793956448000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247823/premio-obed-vargas-mexico.html": 1793955978000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247823/premio-obed-vargas-mexico.html": 1793955978000,
+   "MARCA|https://www.marca.com/futbol/bundesliga/2026/11/06/makaay-ficharon-aubameyang-gimenez-deportivo-pertenece-primera.html": 1793957412000
   },
   "hechos": [
    {
@@ -2065,7 +2066,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
