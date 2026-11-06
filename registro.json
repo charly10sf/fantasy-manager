@@ -1234,18 +1234,9 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2772",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1793970671255
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
-   "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/": 1793711635000,
    "SPORT|136041677": 1793713371000,
    "SPORT|136042531": 1793714741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246788/guruzeta-empieza-cuenta-hoy-sido-operado-rodilla-izquierda.html": 1793722204000,
@@ -1446,36 +1437,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247919/koke-apunta-titular-barca-pisa-talones-messi-xavi.html": 1793969368000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261106/1004247911/pellegrini-suma-ocho-bajas-copa-convocatorias-espana.html": 1793968808000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247912/valverde-convocado-amistosos-uruguay-debutar-diego-forlan.html": 1793968555000,
-   "SPORT|136163736": 1793966627000
+   "SPORT|136163736": 1793966627000,
+   "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/": 1793970261000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/",
-    "medio": "AS",
-    "t": 1793711657000,
-    "id": "3073",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Andrés Martín se rompe y estará varias semanas fuera",
-    "motivo": "",
-    "plazo": "estará varias semanas fuera",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/",
-    "medio": "AS",
-    "t": 1793711635000,
-    "id": "3108",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "lesión",
-    "plazo": "",
-    "nums": [
-     2,
-     1
-    ]
-   },
    {
     "guid": "SPORT|136041677",
     "medio": "SPORT",
@@ -2169,11 +2134,23 @@
     "motivo": "lesión",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/",
+    "medio": "AS",
+    "t": 1793970261000,
+    "id": "2315",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Paredes se pierde el partido por lesión",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
