@@ -3145,7 +3145,8 @@
    "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000,
    "SPORT|136163733": 1793966682000,
    "SPORT|136157637": 1793966510000,
-   "SPORT|136164914": 1793968169000
+   "SPORT|136164914": 1793968169000,
+   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000
   },
   "hechos": [
    {
@@ -3818,15 +3819,33 @@
     "detalle": "",
     "nums": [],
     "regla": true
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html",
+    "medio": "MARCA",
+    "t": 1793980463000,
+    "tipo": "horario",
+    "estado": "confirmado",
+    "segunda": false,
+    "jornada": 14,
+    "jTxt": true,
+    "clubes": [],
+    "luto": false,
+    "oficial": false,
+    "contexto": "Publicación oficial de los horarios de la jornada 14",
+    "detalle": "Los partidos se disputarán en sábado y domingo",
+    "nums": [
+     14,
+     18,
+     30
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980875726
-  }
+  "espera": {}
  }
 }
