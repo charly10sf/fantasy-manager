@@ -1382,7 +1382,8 @@
    "AS|https://as.com/futbol/primera/hidalgo-casado-puede-venir-convocado-esta-con-ganas-y-la-cabeza-empuja-f202611-n/": 1793957214000,
    "AS|https://as.com/futbol/primera/china-esta-en-conversaciones-con-laliga-pero-pide-tiempo-para-digerir-el-tema-mbappe-f202611-n/": 1793957399000,
    "SPORT|136149096": 1793954520000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000
   },
   "hechos": [
    {
@@ -2069,7 +2070,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -2922,7 +2923,6 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-respalda-hijos-nacionalizados-puedan-votar-advierte-inseguridad-si-impide-20261103113539.html": 1793702139000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/la-rfef-suspende-la-jornada-de-futbol-de-este-3-de-noviembre-por-el-fallecimiento-de-jesus-de-miguel-cadena-ser/": 1793701247000,
    "ABC|https://www.abc.es/deportes/futbol/rfef-suspende-jornada-futbol-martes-muestra-respeto-20261103111522-nt.html": 1793700923000,
-   "AS|https://as.com/futbol/se-suspende-la-jornada-de-futbol-tras-el-fallecimiento-de-jesus-de-miguel-f202611-n/": 1793699827000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
    "SPORT|136080803": 1793795045000,
