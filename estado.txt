@@ -1,0 +1,22 @@
+run 437 firma buena 2026-11-06T22:45:58Z
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/apk/github/release/:
+total 1656
+drwxr-xr-x 3 runner runner    4096 Nov  6 22:44 .
+drwxr-xr-x 3 runner runner    4096 Nov  6 22:44 ..
+-rw-r--r-- 1 runner runner 1676594 Nov  6 22:44 app-github-release.apk
+drwxr-xr-x 4 runner runner    4096 Nov  6 22:44 baselineProfiles
+-rw-r--r-- 1 runner runner     739 Nov  6 22:44 output-metadata.json
+
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/apk/play/release/:
+total 3580
+drwxr-xr-x 3 runner runner    4096 Nov  6 22:45 .
+drwxr-xr-x 3 runner runner    4096 Nov  6 22:45 ..
+-rw-r--r-- 1 runner runner 3647966 Nov  6 22:45 app-play-release.apk
+drwxr-xr-x 4 runner runner    4096 Nov  6 22:45 baselineProfiles
+-rw-r--r-- 1 runner runner     731 Nov  6 22:45 output-metadata.json
+
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/bundle/playRelease/:
+total 6076
+drwxr-xr-x 2 runner runner    4096 Nov  6 22:45 .
+drwxr-xr-x 3 runner runner    4096 Nov  6 22:45 ..
+-rw-r--r-- 1 runner runner 6212124 Nov  6 22:45 app-play-release.aab
