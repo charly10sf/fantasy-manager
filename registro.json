@@ -1384,7 +1384,8 @@
    "SPORT|136149096": 1793954520000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
+   "SPORT|136149474": 1793956100000
   },
   "hechos": [
    {
@@ -2071,7 +2072,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3631,7 +3632,8 @@
    "fallos": 0
   },
   "espera": {
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-homenajes-haran-campos-primera-segunda-division-jesus-miguel-tendran-repercusion-hecho-suspender-jornada-20261106_3469893.html": 1793958673341
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-homenajes-haran-campos-primera-segunda-division-jesus-miguel-tendran-repercusion-hecho-suspender-jornada-20261106_3469893.html": 1793958673341,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959872122
   }
  }
 }
