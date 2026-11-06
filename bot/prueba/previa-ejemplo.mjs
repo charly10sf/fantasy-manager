@@ -66,21 +66,29 @@ ok(!s3 && !s4, 'empate o poca diferencia: nada que valorar');
     const t = variarEquipos(base, { semilla: `previa108:${k}`, max: 1000 });
     textos.push(t);
     ok(validar(t, { numeros: r.num, max: 1000 }).ok, `k=${k} con apodos y emojis pasa el validador`);
-    ok(/🐂|🔴/.test(t) && /🦁/.test(t), `k=${k} lleva el emoji de cada equipo`);
+    ok(!/[🟢🟡🔴🟠]/u.test(t), `k=${k} sin círculos de semáforo`);
     ok(!/undefined|NaN/.test(t) && !/\b(a|de) el\b/i.test(t), `k=${k} apodos sin undefined ni «a el»`);
-    // por párrafo, un emoji de cada equipo como mucho
-    ok(t.split('\n\n').every((p) => (p.match(/🦁/g) || []).length <= 1), `k=${k} un solo 🦁 por párrafo`);
+    // un emoji de cada equipo como mucho en todo el tweet
+    ok((t.match(/🦁/g) || []).length <= 1 && (t.match(/🐂/g) || []).length <= 1, `k=${k} un solo emoji por equipo`);
     for (const x of t.match(/(?:el|al|del) (?:Athletic(?: Club)?|conjunto bilbaíno)/gi) || []) nombresAth.add(x.toLowerCase().replace(/^(el|al|del) /, ''));
     // lo que no cabe con emojis sale sin ellos, y lo que no cabe de ninguna forma, como estaba
     ok(peso(variarEquipos(base, { semilla: 'x', max: peso(base) })) <= peso(base), `k=${k} nunca pasa del máximo`);
   }
   ok(nombresAth.size >= 2, `el Athletic se llama de ${nombresAth.size} formas: ${[...nombresAth].join(', ')}`);
-  // el Madrid y el Valencia: el balón blanco y el murciélago (los dos ejemplos de Carlos); y la Real Sociedad con su artículo
-  const vm = variarEquipos('🗓️ Posibles onces\n\nEl Real Madrid no tendrá a Vini Jr. y el Valencia tampoco a Elliott. El Real Madrid parte como favorito frente al Valencia.\n\nLa Real Sociedad visita al Real Madrid y viene del Valencia.', { semilla: 'a', max: 1000 });
-  console.log(`\n${vm}`);
-  ok(/Madrid ⚪/.test(vm) || /conjunto (blanco|merengue) ⚪/.test(vm), 'el Madrid lleva el emoji blanco');
-  ok(/Valencia( CF)? 🦇|conjunto valencianista 🦇/.test(vm), 'el Valencia lleva el murciélago');
-  ok(/La Real(?: Sociedad)? 🔵|El conjunto donostiarra 🔵/.test(vm) && !/al la |del la |el la /i.test(vm), 'la Real Sociedad, con su artículo');
+  // el emoji va a veces, no siempre; cuando va, es el del club (⚪ el Madrid, 🦇 el Valencia) y nunca un círculo de semáforo
+  const base2 = '🗓️ Posibles onces\n\nEl Real Madrid no tendrá a Vini Jr. y el Valencia tampoco a Elliott. El Real Madrid parte como favorito frente al Valencia.\n\nLa Real Sociedad visita al Real Madrid y viene del Valencia.';
+  let conMad = 0, sinMad = 0, conVal = 0, sinVal = 0;
+  for (let i = 0; i < 40; i++) {
+    const vm = variarEquipos(base2, { semilla: `s${i}`, max: 1000 });
+    ok(!/[🟢🟡🔴🟠]/u.test(vm), `s${i} sin círculos de semáforo`);
+    ok((vm.match(/⚪/g) || []).length <= 1 && (vm.match(/🦇/g) || []).length <= 1, `s${i} un emoji por equipo como mucho`);
+    ok(!/\bde el\b|\ba el\b|\bel el\b/i.test(vm) && !/al la |del la |el la /i.test(vm), `s${i} artículos bien`);
+    if (/⚪/.test(vm)) { conMad++; ok(/(Madrid|conjunto (blanco|merengue)) ⚪/.test(vm), `s${i} el ⚪ va detrás del Madrid`); } else sinMad++;
+    if (/🦇/.test(vm)) { conVal++; ok(/(Valencia( CF)?|conjunto valencianista) 🦇/.test(vm), `s${i} el 🦇 va detrás del Valencia`); } else sinVal++;
+  }
+  ok(conMad > 0 && sinMad > 0 && conVal > 0 && sinVal > 0, `el emoji va a veces y a veces no (Madrid ${conMad}/${sinMad}, Valencia ${conVal}/${sinVal})`);
+  console.log(`\n${variarEquipos(base2, { semilla: 's3', max: 1000 })}`);
+  const vm = variarEquipos(base2, { semilla: 'a', max: 1000 });
   ok(!/\bde el\b|\ba el\b|\bel el\b/i.test(vm), 'sin «de el» ni «a el»');
   ok(variarEquipos('Fichaje del Valencia-Real Madrid', { semilla: 'a', max: 1000 }) === 'Fichaje del Valencia-Real Madrid', 'el nombre del partido sin artículo no se toca');
 }

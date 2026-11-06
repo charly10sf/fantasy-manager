@@ -115,28 +115,30 @@ export const al = (eq) => (SIN_ARTICULO.has(eq) ? `a ${eq}` : eq === 'Real Socie
 // Madrid o los blancos… tiene que sonar menos robótico»). Todos van en singular, con su artículo, para que el verbo de la frase siga
 // valiendo («el conjunto blanco no tendrá a…»; con «los blancos» habría que concordar cada verbo de cada plantilla). Y cada equipo
 // con su emoji (el balón blanco del Madrid, el murciélago del Valencia): la primera opción, y otra si el rival ya lleva la misma.
+// Nada de círculos rojo, verde, amarillo o naranja: se leen como un semáforo de estado, no como el color del club (Carlos, 6 nov 12:08:
+// «el punto verde al final no tiene sentido, puede confundir»). Y el emoji no va siempre: ver variarEquipos.
 const APODOS = {
   'Real Madrid': { e: ['⚪', '👑'], a: ['el Real Madrid', 'el Madrid', 'el conjunto blanco', 'el conjunto merengue'] },
-  'Barça': { e: ['🔵', '🔴'], a: ['el Barça', 'el Barcelona', 'el conjunto azulgrana', 'el equipo culé'] },
-  'Atlético': { e: ['🔴', '🐻'], a: ['el Atlético', 'el Atleti', 'el conjunto colchonero'] },
+  'Barça': { e: ['🔵', '🔷'], a: ['el Barça', 'el Barcelona', 'el conjunto azulgrana', 'el equipo culé'] },
+  'Atlético': { e: ['🐻'], a: ['el Atlético', 'el Atleti', 'el conjunto colchonero'] },
   'Athletic': { e: ['🦁', '⚪'], a: ['el Athletic', 'el Athletic Club', 'el conjunto bilbaíno'] },
-  'Valencia': { e: ['🦇', '🟠'], a: ['el Valencia', 'el Valencia CF', 'el conjunto valencianista'] },
-  'Sevilla': { e: ['🔴', '⚪'], a: ['el Sevilla', 'el Sevilla FC', 'el conjunto sevillista'] },
-  'Betis': { e: ['💚', '🟢'], a: ['el Betis', 'el Real Betis', 'el conjunto bético'] },
+  'Valencia': { e: ['🦇'], a: ['el Valencia', 'el Valencia CF', 'el conjunto valencianista'] },
+  'Sevilla': { e: ['⚪'], a: ['el Sevilla', 'el Sevilla FC', 'el conjunto sevillista'] },
+  'Betis': { e: ['💚'], a: ['el Betis', 'el Real Betis', 'el conjunto bético'] },
   'Real Sociedad': { e: ['🔵', '⚪'], a: ['la Real Sociedad', 'la Real', 'el conjunto donostiarra'] },
-  'Villarreal': { e: ['🟡', '🚢'], a: ['el Villarreal', 'el Submarino Amarillo', 'el conjunto amarillo'] },
+  'Villarreal': { e: ['🚢'], a: ['el Villarreal', 'el Submarino Amarillo', 'el conjunto amarillo'] },
   'Celta': { e: ['🩵', '🔵'], a: ['el Celta', 'el Celta de Vigo', 'el conjunto celeste'] },
-  'Osasuna': { e: ['🔴', '🐂'], a: ['el Osasuna', 'el conjunto rojillo', 'el equipo navarro'] },
+  'Osasuna': { e: ['🐂'], a: ['el Osasuna', 'el conjunto rojillo', 'el equipo navarro'] },
   'Getafe': { e: ['🔵', '🟦'], a: ['el Getafe', 'el conjunto azulón'] },
-  'Rayo': { e: ['⚡', '🔴'], a: ['el Rayo', 'el Rayo Vallecano', 'el conjunto vallecano'] },
+  'Rayo': { e: ['⚡'], a: ['el Rayo', 'el Rayo Vallecano', 'el conjunto vallecano'] },
   'Espanyol': { e: ['🦜', '🔵'], a: ['el Espanyol', 'el conjunto perico', 'el equipo blanquiazul'] },
   'Levante': { e: ['🐸', '🔵'], a: ['el Levante', 'el conjunto granota'] },
-  'Elche': { e: ['🟢', '💚'], a: ['el Elche', 'el conjunto franjiverde'] },
+  'Elche': { e: ['🌴', '💚'], a: ['el Elche', 'el conjunto franjiverde'] },
   'Alavés': { e: ['🔵', '⚪'], a: ['el Alavés', 'el conjunto babazorro', 'el equipo albiazul'] },
-  'Mallorca': { e: ['🔴', '🏝️'], a: ['el Mallorca', 'el conjunto mallorquinista'] },
-  'Girona': { e: ['🔴', '⚪'], a: ['el Girona', 'el conjunto gerundense'] },
+  'Mallorca': { e: ['🏝️'], a: ['el Mallorca', 'el conjunto mallorquinista'] },
+  'Girona': { e: ['⚪'], a: ['el Girona', 'el conjunto gerundense'] },
   'Oviedo': { e: ['🔵', '⚪'], a: ['el Oviedo', 'el Real Oviedo', 'el conjunto carbayón'] },
-  'Racing': { e: ['🟢', '⚪'], a: ['el Racing', 'el Racing de Santander', 'el conjunto cántabro'] },
+  'Racing': { e: ['⚓', '⚪'], a: ['el Racing', 'el Racing de Santander', 'el conjunto cántabro'] },
   'Deportivo': { e: ['🔵', '⚪'], a: ['el Deportivo', 'el Dépor', 'el conjunto herculino'] },
   'Málaga': { e: ['🐟', '🔵'], a: ['el Málaga', 'el Málaga CF', 'el conjunto malaguista'] },
 };
@@ -152,14 +154,15 @@ const conArticulo = (alias, art) => {
 };
 /**
  * Los equipos del texto con otro nombre cada vez que salen (el primero, el nombre normal; los siguientes, el corto, el apodo…)
- * y con su emoji detrás de la primera mención de cada párrafo. Si con los emojis no cabe, sin ellos; si ni así, el texto de antes.
+ * y, a veces, con su emoji detrás de la primera mención del equipo en el tweet (no en todos los equipos ni en todos los tweets:
+ * lo decide la semilla). Si con los emojis no cabe, sin ellos; si ni así, el texto de antes.
  */
 export function variarEquipos(texto, { semilla = '', max = limite(), emojis = true } = {}) {
-  const veces = new Map(), emo = new Map(), vistos = new Set();
+  const veces = new Map(), vistos = new Set();
   const usados = new Set();
   const paso = (conEmoji) => {
-    veces.clear(); emo.clear(); vistos.clear(); usados.clear();
-    return String(texto).replace(RE_EQ, (todo, art, eq, off, whole) => {
+    veces.clear(); vistos.clear(); usados.clear();
+    return String(texto).replace(RE_EQ, (todo, art, eq) => {
       const clave = Object.keys(APODOS).find((k) => k.toLowerCase() === eq.toLowerCase());
       const ap = APODOS[clave];
       const n = veces.get(clave) || 0;
@@ -169,12 +172,10 @@ export function variarEquipos(texto, { semilla = '', max = limite(), emojis = tr
       let s = conArticulo(ap.a[idx], art);
       if (/^[A-ZÁÉÍÓÚ]/.test(art)) s = s.charAt(0).toUpperCase() + s.slice(1);
       if (conEmoji) {
-        const par = whole.slice(0, off).split('\n\n').length;
-        const kp = `${clave}|${par}`;
-        if (!vistos.has(kp)) {
-          vistos.add(kp);
-          if (!emo.has(clave)) emo.set(clave, ap.e.find((x) => !usados.has(x)) || null);
-          const e = emo.get(clave);
+        // solo la primera vez que sale el equipo, y solo si la semilla dice que toca (más o menos la mitad de los equipos)
+        if (!vistos.has(clave)) {
+          vistos.add(clave);
+          const e = hash(`${semilla}:${clave}:emoji`) % 2 === 0 ? ap.e.find((x) => !usados.has(x)) : null;
           if (e) { usados.add(e); s += ` ${e}`; }
         }
       }
