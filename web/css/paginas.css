@@ -101,3 +101,25 @@ th { color: var(--texto); font-weight: 600; }
 .instalar .ayuda ul { margin: 0; padding-left: 20px; font-size: 15.5px; }
 .instalar .ayuda li { margin: 0 0 6px; }
 .instalar a:focus-visible, .instalar .btn:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
+
+/* instalar.html: pasos con dibujos (esquemas, no capturas) */
+.instalar .con-dib { list-style: none; padding: 0; margin: 0 0 6px; counter-reset: p; }
+.instalar .con-dib > li { counter-increment: p; display: grid; gap: 12px; margin: 0; padding: 16px 0; border-top: 1px solid var(--linea); }
+.instalar .con-dib > li:first-child { border-top: 0; padding-top: 4px; }
+.instalar .p-txt { position: relative; padding-left: 40px; min-height: 28px; }
+.instalar .p-txt::before { content: counter(p); position: absolute; left: 0; top: -1px; width: 28px; height: 28px; border-radius: 50%; background: var(--rojo); color: #fff; font: 700 15px/28px 'Barlow', sans-serif; text-align: center; }
+.instalar .p-figs { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.instalar .p-figs:empty { display: none; }
+.instalar figure { margin: 0; }
+.instalar .f-v { width: 100%; max-width: 440px; }
+.instalar .f-m { width: 100%; max-width: 230px; }
+.instalar .dib { display: block; width: 100%; height: auto; }
+.instalar .dib .pulso { animation: pulso 1.7s ease-in-out infinite; }
+@keyframes pulso { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .instalar .dib .pulso { animation: none; } }
+@media (min-width: 760px) {
+  .instalar .con-dib > li { grid-template-columns: minmax(0, 1fr) auto; column-gap: 28px; align-items: center; }
+  .instalar .con-dib > li:has(.p-figs:empty) { grid-template-columns: 1fr; }
+  .instalar .p-figs { width: 390px; }
+  .instalar .p-m .p-figs { width: 210px; }
+}
