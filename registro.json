@@ -861,7 +861,7 @@
   "2920": "out_of_league",
   "2922": "ok",
   "2923": "ok",
-  "2924": "ok",
+  "2924": "doubtful",
   "2925": "out_of_league",
   "2926": "ok",
   "2929": "out_of_league",
@@ -1446,7 +1446,9 @@
    "SPORT|136163736": 1793966627000,
    "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/": 1793970261000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247932/fuente-sobre-barrene-no-ninguna-apuesta-reconocimiento-labor.html": 1793970654000,
-   "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000
+   "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000,
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/frenkie-de-jong-mai-canvia-un-partit-no-es-transcendent-sercat/": 1793972676000,
+   "El Correo|https://www.elcorreo.com/athletic/terzic-marcos-hablado-supone-jugar-sadar-20261106143832-nt.html": 1793972652000
   },
   "hechos": [
    {
@@ -2142,11 +2144,23 @@
     "motivo": "lesión",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "El Correo|https://www.elcorreo.com/athletic/terzic-marcos-hablado-supone-jugar-sadar-20261106143832-nt.html",
+    "medio": "El Correo",
+    "t": 1793972652000,
+    "id": "2315",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Paredes se pierde el duelo ante Osasuna",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -2626,8 +2640,8 @@
     "t": 0
    },
    "2924": {
-    "e": "ok",
-    "t": 1793791870909
+    "e": "doubtful",
+    "t": 1793973084590
    },
    "2929": {
     "e": "out_of_league",
