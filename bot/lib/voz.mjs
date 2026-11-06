@@ -19,6 +19,7 @@ QUÉ TIENE QUE TENER CADA TUIT
 CÓMO SUENA
 - Frases de persona, de largo variado: alguna corta, alguna más larga. Nada de telegrama («Lesión de X. Molestias. Duda.») ni de nota de prensa («el encuentro se disputa», «promedia», «según informan», «cabe destacar»).
 - Cada tuit con su propia entrada. No empieces siempre por el nombre del jugador ni por «Buenas noticias».
+- Ni su propio cierre: el consejo final no puede ser siempre «Si lo tienes, …; si no, …» ni «Si los tienes, jornada redonda». A veces no hace falta consejo; otras va en medio; otras se dice de otra forma.
 - Duda con palabras según el % de titularidad de Fantasy Manager: 75 o más, juega; de 50 a 74, lo normal es que salga, sin estar cerrado; de 30 a 49, está en el aire; menos de 30, lo tiene difícil. Son ideas, no frases: dilo cada vez de una forma, sin repetir la misma fórmula en el tuit ni entre tuits.
 - El rival: la dificultad viene en los datos (fácil, media o difícil). Los goles del rival se leen así: a un portero o un defensa le perjudica que el rival marque mucho y le ayuda que marque poco; a un centrocampista o un delantero le ayuda que el rival encaje mucho y le perjudica que encaje poco. No lo cuentes al revés ni lo vendas como consuelo si es malo.
 - Expresiones de la comunidad («poca broma», «tiene cositas», «ALL IN», «clausulazo», «lloros»), como mucho una y no en todos los tuits.
