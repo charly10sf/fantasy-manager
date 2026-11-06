@@ -199,6 +199,15 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   for (const x of EJEMPLOS) if (copia(t, x.texto, 8)) { e.push('copia un ejemplo de la guía'); break; }
   // variedad: ni la misma entrada ni el mismo esqueleto que los últimos del tipo
   const nom = [...permitidos];
+  // ni una muletilla que ya va en dos de los últimos («es el seguro bajo palos», «si dudas, mejor esperar a los onces»; 6 nov): un grupo de
+  // 4 palabras (sin nombres ni cifras, con al menos dos palabras de verdad) que se repite en 2 o más de los recientes
+  if (recientes.length >= 2) {
+    const real = (g) => g.split(' ').filter((w) => !['X', 'N', 'A'].includes(w) && w.length > 2).length >= 2;
+    const gr = [...gramas(esqueleto(t, nom))].filter(real);
+    const rg = recientes.map((r) => gramas(esqueleto(r, nom)));
+    const mul = gr.find((g) => rg.filter((x) => x.has(g)).length >= 2);
+    if (mul) e.push(`repite una muletilla que ya va en varios tuits recientes («${mul.replace(/\bX\b/g, '…').replace(/\bA\b/g, 'el').replace(/\bN\b/g, 'n')}»): dilo de otra forma`);
+  }
   for (const r of recientes) {
     if (entrada(t, nom) && entrada(t, nom) === entrada(r, nom)) { e.push(`empieza igual que un tuit reciente («${r.split('\n')[0].slice(0, 60)}…»)`); break; }
     const p = parecido(t, r, nom);
