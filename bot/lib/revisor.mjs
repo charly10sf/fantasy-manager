@@ -29,7 +29,9 @@ Un tuit NO se publica si tiene cualquiera de estas cosas:
    - contexto inventado: rachas, historia, ascensos, derbis, el entrenador, motivos, lesiones, sensaciones del partido («muy igualado», «dominó», «salvó al equipo») que no vienen;
    - una cifra puesta a quien no es, o distinta de la de los datos;
    - un suceso del partido (gol, penalti, parada, roja, VAR) que no viene en los datos.
-   Una valoración para el mánager («si lo tienes, al once», «mejor esperar a los onces», «puede salir barato») sí vale si se sigue de los datos; una predicción como si fuera un hecho, no.
+   Una valoración para el mánager («si lo tienes, al once», «mejor esperar a los onces», «puede salir barato», «buena jornada para quien lo tenga») sí vale si se sigue de los datos; una predicción como si fuera un hecho, no.
+   Lo que viene en PRENSA (si te la paso) también es un dato, pero solo con su medio pegado («según AS…») y solo en noticias y previas.
+   Las cifras dichas con palabras valen con esta escala (es la de la cuenta): titularidad de 75 % o más, «fijo», «juega», «tiene el puesto»; de 50 a 74, «lo normal es que salga», «apunta a titular»; de 30 a 49, «en el aire», «duda»; menos de 30, «lo tiene difícil». Una media de puntos de 8 o más, «de los que más puntos dan»; de 6 a 8, «buena media». Los puntos de hoy frente a su media: usa lo que diga «hoyFrenteASuMedia» si viene; si no, haz tú la cuenta. Las etiquetas de los datos («papel», «alcance», «horario», «cruce», «dificultad») son datos.
 
 2. ALGO QUE SE CONTRADICE O ESTÁ AL REVÉS. Por ejemplo: «partido asequible» y a la vez «eso sí, el rival es de los que menos encajan» sin explicar; «lesión» y «no está descartado» en frases sueltas; quién juega en casa y quién fuera cambiado; leer al revés los goles del rival (a un portero o defensa le viene mal que el rival marque mucho; a un medio o delantero le viene bien que el rival encaje mucho).
 
@@ -45,10 +47,11 @@ Devuelve publicable (true o false) y, si es false, cada problema con la frase ex
 
 const sinFecha = (k, v) => (k === 'fecha' || k === 'etiqueta' ? undefined : v);
 
-export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '' }) {
+export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [] }) {
   return [
     `Tuit de tipo «${tipo || (hechos && hechos.tipo) || '?'}».`,
     hechos ? `DATOS (lo único que se sabe):\n${JSON.stringify(hechos, sinFecha, 1)}` : '',
+    cronicas.length ? `PRENSA (también vale, con el medio pegado al hecho):\n${cronicas.map((c) => `- ${c.medio}: ${c.titulo}. ${c.entradilla || ''}`).join('\n')}` : '',
     fuenteTexto ? `DATOS (el texto de partida, sacado de los datos; lo único que se sabe):\n"""${fuenteTexto}"""` : '',
     `TUIT:\n"""${texto}"""`,
   ].filter(Boolean).join('\n\n');
@@ -58,11 +61,11 @@ export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '' }) {
  * Lee un tuit con sus datos. Devuelve { ok, problemas: ['«frase»: motivo'], revisado: bool, modelo }.
  * `hechos` (redactados) o `fuenteTexto` (pulidos: la plantilla). Sin Claude o si no contesta: { ok: true, revisado: false }.
  */
-export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tipo = '', registro = null, config = {}, log = () => {}, pedir = preguntar }) {
+export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [], registro = null, config = {}, log = () => {}, pedir = preguntar }) {
   if ((config.revisor || {}).activo === false) return { ok: true, problemas: [], revisado: false };
   if (pedir === preguntar && !conClaude(config)) return { ok: true, problemas: [], revisado: false };
   const r = await pedir({ uso: 'revisar', registro, config, sistema: SISTEMA, cache: true, esquema: ESQUEMA, log,
-    prompt: prompt({ texto, hechos, fuenteTexto, tipo }), tiempo: 30000, hasta: Date.now() + ((config.revisor || {}).segundos ?? 40) * 1000 });
+    prompt: prompt({ texto, hechos, fuenteTexto, tipo, cronicas }), tiempo: 30000, hasta: Date.now() + ((config.revisor || {}).segundos ?? 40) * 1000 });
   if (!r.ok || !r.datos) { log(`  (revisor) no contesta (${r.error || 'sin datos'}): sigue sin revisar`); return { ok: true, problemas: [], revisado: false }; }
   const problemas = (Array.isArray(r.datos.problemas) ? r.datos.problemas : [])
     .map((p) => (p && typeof p === 'object' ? `«${String(p.frase || '').slice(0, 140)}»: ${String(p.motivo || '').slice(0, 220)}` : String(p)))

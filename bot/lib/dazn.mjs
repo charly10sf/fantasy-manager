@@ -73,13 +73,15 @@ export function crearDazn({ ficha, jornada, registro = null, esperaHoras = 6, mi
     if (cambio && registro && registro.fichero) registro.guardar();
     // si el bot lo vio acabado muy tarde (estaba parado, en silencio…), el final se estima a las 2 h del saque
     const saque = Date.parse(m.date) || t;
-    const fin = st.fin - saque > 3.5 * 3600e3 ? saque + 2 * 3600e3 : st.fin;
+    // sin registro (las respuestas de Telegram) no hay historia entre ejecuciones: el final, a los 115 min del saque, y sin la prueba
+    // de los puntos quietos
+    const fin = !registro ? saque + 115 * 60e3 : st.fin - saque > 3.5 * 3600e3 ? saque + 2 * 3600e3 : st.fin;
     const trasFinal = (t - fin) / 60e3, estable = (t - st.desde) / 60e3;
     const porPlazo = t - fin > esperaHoras * 3600e3;
 
     const faltan = [];
     if (trasFinal < minTrasFinal) faltan.push(`${Math.round(trasFinal)} de ${minTrasFinal} min desde el final`);
-    if (estable < minEstable) faltan.push(`puntos sin cambiar ${Math.round(estable)} de ${minEstable} min`);
+    if (registro && estable < minEstable) faltan.push(`puntos sin cambiar ${Math.round(estable)} de ${minEstable} min`);
     // las fichas solo se piden si lo de arriba ya se cumple (son llamadas a LaLiga)
     let con = 0, de = 0;
     if (!faltan.length) {

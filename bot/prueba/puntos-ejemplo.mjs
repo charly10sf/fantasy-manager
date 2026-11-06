@@ -77,7 +77,15 @@ const correr = async ({ registro, m, cero, min }) => crearDazn({ ficha: fichas(c
   ok(!r1.listo && /sin cambiar/.test(r1.motivo) && !/desde el final/.test(r1.motivo), `visto 5 h tras el saque: solo espera a ver los puntos quietos (${r1.motivo})`);
 }
 
-// 7. piezas
+// 7. sin registro (Telegram): el final a los 115 min del saque y sin la prueba de los puntos quietos
+{
+  const sin = (min, cero) => crearDazn({ ficha: fichas(cero), jornada: 12, minTrasFinal: 90, ahora: () => SAQUE + min * 60e3, log: () => {} })(partido(definitivo));
+  ok(!(await sin(150, true)).listo, 'Telegram, a los 35 min del final: espera');
+  ok((await sin(210, true)).listo, 'Telegram, a los 95 min del final y con todo sumado: listo');
+  ok(!(await sin(210, false)).listo, 'Telegram, sin la portería a cero: espera');
+}
+
+// 8. piezas
 ok(huellaPartido(partido(provisional)) !== huellaPartido(partido(definitivo)), 'la huella cambia si cambia un punto');
 ok(faltaPorteriaCero({ mins_played: [90, 2], goals_conceded: [0, 0] }) && !faltaPorteriaCero({ mins_played: [90, 2], goals_conceded: [0, 4] }), 'portería a cero: con y sin los puntos');
 ok(!faltaPorteriaCero({ mins_played: [45, 1], goals_conceded: [0, 0] }), 'portero que jugó menos de 60 min: no cuenta');

@@ -4,7 +4,7 @@
 // Disponible para la jornada 12 contra el Valencia», el cierre…) la pone el código debajo. El validador ya no compara con la plantilla
 // (ni líneas, ni orden): comprueba que lo que dice cuadra con los hechos. Lo que no pasa se pregunta otra vez con los errores; si
 // tampoco, sale la plantilla. Con Claude (lib/ia.mjs, uso «redactar»); sin Claude, no hace nada.
-import { norm, peso, limite, copia, APODOS, corto, esEtiquetaFinal, CIERRES } from './texto.mjs';
+import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal, CIERRES } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntar, conClaude } from './ia.mjs';
 import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
@@ -240,7 +240,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (hechos.sobrio && em.length) e.push('tono sobrio: sin emojis');
   // nada copiado: ni de las crónicas (6 palabras seguidas, como en tipos/noticias.mjs) ni de los ejemplos de la guía (8)
   for (const c of cronicas) if (copia(t, `${c.titulo} ${c.entradilla}`, 6)) e.push(`copia 6 palabras seguidas de ${c.medio}`);
-  for (const x of EJEMPLOS) if (copia(t, x.texto, 8)) { e.push('copia un ejemplo de la guía'); break; }
+  for (const x of EJEMPLOS) { const g = trozoCopiado(t, x.texto, 8); if (g) { e.push(`copia un ejemplo de la guía («${g}…»): dilo con tus palabras`); break; } }
   // variedad: ni la misma entrada ni el mismo esqueleto que los últimos del tipo
   const nom = [...permitidos];
   // ni una muletilla que ya va en dos de los últimos («es el seguro bajo palos», «si dudas, mejor esperar a los onces»; 6 nov): un grupo de
@@ -326,7 +326,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
       if (!malos.length) {
-        const rv = await revisor({ texto, hechos: t.hechos, tipo, registro, config, log });
+        const rv = await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, tipo, registro, config, log });
         if (rv.ok) { final = { texto, modelo: r.modelo, usadas, revisado: rv.revisado ? rv.modelo : null }; continue; }
         log(`  (redactar) ${t.clave}, intento ${intento + 1}: el revisor no lo publicaría: ${rv.problemas.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`);
         errores = rv.problemas.map((p) => `un editor lo ha leído con los hechos al lado y no lo publicaría: ${p}`); anterior = texto;
