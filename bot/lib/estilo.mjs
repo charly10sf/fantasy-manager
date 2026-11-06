@@ -3,6 +3,10 @@
 // usan también las de final, resumen, mercado, onces y bajas (tarjetas.mjs): letra Barlow Condensed (OFL, en fuentes/; tarjetas.mjs la
 // carga en aPng), fondo casi negro con el brillo de los clubes y rayos en diagonal, titulares en cursiva con degradado (oro, rojo o el
 // color del estado), cajas inclinadas como las de las últimas jornadas de la carta, etiquetas de estado rellenas y la misma marca.
+// 6 nov (Carlos: «un reworkeo y una mejora visual de todas las tarjetas, más claras y con más calidad percibida»): textos de 21-22 px o más
+// (se ven en el móvil), paneles con degradado, filo de luz y sombra, viñeteado en el fondo, caras con sombra y doble aro, medallas del 1 al 3,
+// flechas de subida y bajada, etiquetas redondas (`chip`), colores distintos para dos clubes parecidos (`distinto`) y nombres que no caben
+// con la inicial del nombre de pila (`nombreAjustado`) en vez de encogidos a la mitad. Prueba con todas: bot/prueba/tarjetas-todas.mjs.
 // Aquí solo están las piezas; cada tarjeta se monta en carta.mjs o en tarjetas.mjs.
 
 export const ANCHO = 1200, ALTO = 675;
@@ -39,6 +43,15 @@ export function texto(x, y, s, { px = 24, peso = 700, color = TINTA, ancla = 'st
   return `<text x="${x}" y="${y}" font-family="${fam}" font-weight="${peso}" font-size="${p}" fill="${color}" text-anchor="${ancla}"`
     + `${espacio ? ` letter-spacing="${espacio}"` : ''}${opacidad < 1 ? ` opacity="${opacidad}"` : ''}${italica ? ' font-style="italic"' : ''}>${esc(s)}</text>`;
 }
+/** un nombre en mayúsculas que quepa en `max` a un tamaño legible: si no cabe a un 88 % de `px`, el nombre de pila pasa a su inicial
+    («MARCOS LLORENTE» -> «M. LLORENTE»), que se lee mejor que el mismo nombre encogido a la mitad */
+export function nombreAjustado(nombre, px, max, espacio = 0, { apellido = false } = {}) {
+  const n = String(nombre).toUpperCase(), partes = n.split(' ');
+  if (medir(n, px * 0.88, B, espacio) <= max || partes.length < 2) return n;
+  const ini = partes[0].length <= 2 || /\.$/.test(partes[0]) ? n : `${partes[0][0]}. ${partes.slice(1).join(' ')}`;
+  // con muy poco sitio (dos opciones en una línea de cinco), solo el apellido
+  return apellido && medir(ini, px * 0.88, B, espacio) > max ? partes[partes.length - 1] : ini;
+}
 /** el tamaño al que se queda un texto con `max` (para colocar algo justo detrás) */
 export function tamano(s, px, max, espacio = 0) { let p = px; const min = Math.round(px * 0.5); while (p > min && medir(s, p, B, espacio) > max) p--; return p; }
 
@@ -58,11 +71,17 @@ export function escudo(buf, cx, cy, h) {
 }
 /** cara en círculo con aro. Las fotos de LaLiga (256x256) van del pelo (y ≈ 45) a la barbilla (y ≈ 210) con el cuello debajo: la foto se
     dibuja a 2,8 veces el radio con el centro de la cara (y ≈ 130) en el del círculo, para que la cara lo llene y se vea bien en pequeño
-    (Carlos, 5 nov 07:04: «que su cara se vea bien y esté bien visible»; antes, a 2,16 veces, salían medio cuello y camiseta) */
-export function caraCirculo(buf, cx, cy, r, { aro = '#fff', grosor = 3 } = {}) {
-  const c = id('cc'), S = r * 2.8;
-  return `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs><circle cx="${cx}" cy="${cy}" r="${r}" fill="#1f1c27"/>`
+    (Carlos, 5 nov 07:04: «que su cara se vea bien y esté bien visible»; antes, a 2,16 veces, salían medio cuello y camiseta).
+    6 nov (rediseño de las tarjetas): fondo con un degradado del color del club, sombra debajo y un segundo filo oscuro por dentro del aro,
+    para que la cara se despegue del panel y se lea mejor en pequeño */
+export function caraCirculo(buf, cx, cy, r, { aro = '#fff', grosor = 3, fondoColor = null } = {}) {
+  const c = id('cc'), g = id('cf'), S = r * 2.8;
+  return `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath>`
+    + `<radialGradient id="${g}" cx="0.5" cy="0.35" r="0.75"><stop offset="0" stop-color="${fondoColor || aro}" stop-opacity="0.55"/><stop offset="1" stop-color="#1a1721" stop-opacity="1"/></radialGradient></defs>`
+    + `<circle cx="${cx}" cy="${cy + Math.max(2, r * 0.08)}" r="${r + grosor * 0.5}" fill="#000" opacity="0.4"/>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${g})"/>`
     + (buf ? `<image href="${uri(buf)}" x="${cx - S / 2}" y="${cy - S * 130 / 256}" width="${S}" height="${S}" clip-path="url(#${c})" preserveAspectRatio="xMidYMid meet"/>` : '')
+    + `<circle cx="${cx}" cy="${cy}" r="${r - grosor * 0.5}" fill="none" stroke="#000" stroke-opacity="0.35" stroke-width="${Math.max(1, grosor * 0.5)}"/>`
     + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${aro}" stroke-width="${grosor}"/>`;
 }
 /** la cara suelta (256x256 sin fondo) que se funde hacia abajo, sin corte duro donde acaba la foto */
@@ -73,10 +92,16 @@ export function caraFundida(buf, x, y, lado, { desde = 0.7 } = {}) {
     + `<image href="${uri(buf)}" x="${x}" y="${y}" width="${lado}" height="${lado}" preserveAspectRatio="xMidYMax meet" mask="url(#${mk})"/>`;
 }
 
-/** fondo común: casi negro, el brillo de los clubes que salen y rayos en diagonal */
+/** fondo común: casi negro, el brillo de los clubes que salen, una malla de puntos muy fina y un viñeteado que oscurece las esquinas.
+    (6 nov, segunda vuelta: fuera los rayos en diagonal, que ensuciaban el fondo; la malla da textura sin competir con lo que se lee) */
 export function fondo(brillos = []) {
   let s = brillos.map(([cx, cy, r, color, op]) => radial(cx, cy, r, color, op)).join('');
-  for (let k = 0; k < 9; k++) s += `<polygon points="${120 + k * 150},0 ${200 + k * 150},0 ${-80 + k * 150},${ALTO} ${-160 + k * 150},${ALTO}" fill="#fff" opacity="${(0.018 + (k % 3) * 0.008).toFixed(3)}"/>`;
+  const v = id('vg'), l = id('vl'), p = id('dp');
+  s += `<defs><pattern id="${p}" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.2" fill="#fff" fill-opacity="0.06"/></pattern>`
+    + `<radialGradient id="${v}" cx="${ANCHO / 2}" cy="${ALTO * 0.46}" r="${Math.round(ANCHO * 0.66)}" gradientUnits="userSpaceOnUse"><stop offset="0.5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.62"/></radialGradient>`
+    + lineal(l, [[0, '#fff', 0.06], [1, '#fff', 0]]) + `</defs>`
+    + `<rect width="${ANCHO}" height="${ALTO}" fill="url(#${p})"/>`
+    + `<rect width="${ANCHO}" height="${ALTO}" fill="url(#${v})"/><rect width="${ANCHO}" height="150" fill="url(#${l})"/>`;
   return s;
 }
 
@@ -95,19 +120,66 @@ export function aColor(color) {
   return { g, defs: `<defs>${lineal(g, [[0, '#ffffff'], [0.45, color], [1, color]], { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs>` };
 }
 
-/** caja inclinada, como las de las últimas jornadas de la carta: arriba corrida `k` px a la derecha */
-export function caja(x, y, w, h, { relleno = PANEL, borde = LINEA, k = Math.round(h * 0.12), grosor = 1.5 } = {}) {
-  return `<path d="M${x + k},${y} L${x + w},${y} L${x + w - k},${y + h} L${x},${y + h} Z" fill="${relleno}"${borde ? ` stroke="${borde}" stroke-width="${grosor}"` : ''}/>`;
+/** panel redondeado (6 nov, segunda vuelta: antes inclinado). Sin `relleno`, un degradado oscuro con un filo de luz arriba y una sombra suave
+    debajo; `tinte` le da al panel el color de un club o de un estado (de arriba a la izquierda, se apaga hacia el otro lado). Con `relleno`
+    se pinta tal cual (el oro de una cifra, el rojo de una caja de malos). `borde`: un color (a tope), false/null con relleno (sin borde) o,
+    si no se pasa, un filete blanco muy suave. `k` se ignora (era la inclinación) */
+export function caja(x, y, w, h, { relleno = null, borde, rx = null, grosor = 1.5, sombra = true, tinte = null, tinteOp = 0.34 } = {}) {
+  const r = rx ?? Math.min(20, Math.round(h * 0.22));
+  let s = '', fill = relleno;
+  if (sombra) s += `<rect x="${x}" y="${y + Math.max(3, Math.round(h * 0.05))}" width="${w}" height="${h}" rx="${r}" fill="#000" opacity="0.34"/>`;
+  if (!fill) { const g = id('cj'); s += `<defs>${lineal(g, [[0, '#1d2028'], [1, '#12141a']], { x1: 0, y1: 0, x2: 0.3, y2: 1 })}</defs>`; fill = `url(#${g})`; }
+  s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}"/>`;
+  if (tinte && !relleno) { const g = id('ct'); s += `<defs>${lineal(g, [[0, tinte, tinteOp], [0.75, tinte, 0]], { x1: 0, y1: 0, x2: 1, y2: 0.4 })}</defs><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="url(#${g})"/>`; }
+  if (typeof borde === 'string') s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="none" stroke="${borde}" stroke-width="${grosor}"/>`;
+  else if (borde === undefined && !relleno) s += `<rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="${r}" fill="none" stroke="#fff" stroke-opacity="0.1" stroke-width="1"/>`;
+  if (!relleno) s += `<path d="M${x + r},${y + 1.2} L${x + w - r},${y + 1.2}" stroke="#fff" stroke-opacity="0.12" stroke-width="1.5"/>`;
+  return s;
 }
 
-/** la marca de la app: barra roja, «FANTASY MANAGER» y la cuenta */
+/** una etiqueta redonda rellena (la del estado, el % de titularidad, la formación…), centrada en cx; devuelve { s, w } */
+export function chip(txt, cx, cy, px, { relleno = TINTA, tinta = '#120f16', pad = 1.8, espacio = 1, peso = 800 } = {}) {
+  const w = medir(txt, px, B, espacio) + px * pad, h = px * 1.75;
+  return { w, h, s: `<rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${relleno}"/>`
+    + texto(cx, cy + px * 0.36, txt, { px, peso, color: tinta, espacio, ancla: 'middle' }) };
+}
+/** triángulo hacia arriba (sube) o hacia abajo (baja): el sentido, que no dependa solo del color */
+export function flecha(sube, cx, cy, s, color) {
+  const a = s * 0.5, b = s * 0.42;
+  return sube ? `<path d="M${cx} ${cy - b} L${cx + a} ${cy + b} L${cx - a} ${cy + b} Z" fill="${color}"/>`
+    : `<path d="M${cx} ${cy + b} L${cx + a} ${cy - b} L${cx - a} ${cy - b} Z" fill="${color}"/>`;
+}
+/** el puesto de una lista: medalla de oro, plata y bronce para los tres primeros (`premio`) y un círculo apagado para el resto */
+export function medalla(n, cx, cy, r, { premio = true } = {}) {
+  const g = id('md'), P = { 1: ['#fbe9a6', '#b88a2c', '#2a1c04'], 2: ['#f3f5f8', '#8b94a1', '#1a1e25'], 3: ['#f0c9a0', '#86522a', '#2b1607'] }[n];
+  if (!premio || !P) return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#26222e" stroke="${LINEA}" stroke-width="1.5"/>` + texto(cx, cy + r * 0.38, String(n), { px: Math.round(r * 1.15), peso: 800, color: TENUE, ancla: 'middle' });
+  return `<defs>${lineal(g, [[0, P[0]], [1, P[1]]], { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs><circle cx="${cx}" cy="${cy + 2}" r="${r}" fill="#000" opacity="0.35"/>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${g})"/>` + texto(cx, cy + r * 0.38, String(n), { px: Math.round(r * 1.15), peso: 900, color: P[2], ancla: 'middle' });
+}
+
+// --- colores de dos clubes que no se confundan (Levante y Atlético, los dos rojos, salían idénticos en la tarjeta del partido)
+const rgb = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+const dist = (a, b) => { const x = rgb(a), y = rgb(b); return Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]); };
+/** aclara un color hacia el blanco (t de 0 a 1) */
+export const aclarar = (h, t) => '#' + rgb(h).map((c) => Math.round(c + (255 - c) * t).toString(16).padStart(2, '0')).join('');
+/** sube el brillo de un color oscuro sin quitarle el tono (el azul marino del Atlético pasa a un azul vivo, no a un gris) */
+export const avivar = (h, tope = 205) => { const c = rgb(h), m = Math.max(...c); return m >= tope ? h : '#' + c.map((v) => Math.min(255, Math.round(v * tope / m)).toString(16).padStart(2, '0')).join(''); };
+/** el color del segundo club, cambiado por otro suyo si el primero y él se parecen demasiado */
+export function distinto(club, otro) {
+  if (dist(club.vivo, otro.vivo) > 110) return club.vivo;
+  const alt = [club.c1, club.c2, club.c3].filter(Boolean).map((c) => { const n = rgb(c); return { c, l: (0.2126 * n[0] + 0.7152 * n[1] + 0.0722 * n[2]) / 255 }; })
+    .filter(({ c, l }) => l > 0.1 && l < 0.85 && dist(c, otro.vivo) > 110).sort((a, b) => dist(b.c, otro.vivo) - dist(a.c, otro.vivo))[0];
+  return alt ? (alt.l < 0.4 ? avivar(alt.c) : alt.c) : club.vivo;
+}
+
+/** la marca de la app: barra roja, «FANTASY MANAGER» y la cuenta, entre dos filetes finos */
 export function marca(x, y, { ancla = 'start' } = {}) {
-  const w1 = medir('FANTASY MANAGER', 24, B, 2), w2 = medir('@Fantasyman_app', 22, B);
-  const total = 16 + w1 + 18 + w2;
+  const w1 = medir('FANTASY MANAGER', 26, B, 3), w2 = medir('@Fantasyman_app', 23, B);
+  const total = 18 + w1 + 20 + w2;
   const x0 = ancla === 'middle' ? x - total / 2 : x;
-  return `<rect x="${x0}" y="${y - 17}" width="6" height="22" rx="2" fill="${ROJO}"/>`
-    + texto(x0 + 16, y, 'FANTASY MANAGER', { px: 24, peso: 800, espacio: 2 })
-    + texto(x0 + 16 + w1 + 18, y, '@Fantasyman_app', { px: 22, peso: 600, color: TENUE });
+  return `<rect x="${x0}" y="${y - 19}" width="6" height="24" rx="2" fill="${ROJO}"/>`
+    + texto(x0 + 18, y, 'FANTASY MANAGER', { px: 26, peso: 800, espacio: 3 })
+    + texto(x0 + 18 + w1 + 20, y, '@Fantasyman_app', { px: 23, peso: 600, color: TENUE });
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -134,7 +206,7 @@ export const txtEstado = (f) => (f.estado === 'duda' && f.leve ? 'DUDA LEVE' : f
 /** la etiqueta del estado, centrada en cx, en el color del estado y con la letra oscura */
 export function pildora(f, cx, cy, px, wMax) {
   const e = ESTADO_TARJETA[f.estado], txt = txtEstado(f);
-  let p = px; while (p > 12 && medir(txt, p, B, 1) + p * 2.6 > wMax) p--;
+  let p = px; while (p > 16 && medir(txt, p, B, 1) + p * 2.6 > wMax) p--;
   const w = medir(txt, p, B, 1) + p * 2.6, h = p * 1.75, x = cx - w / 2;
   return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${e.color}"/>`
     + iconoEstado(f.estado, x + p * 0.95, cy, p * 0.9, '#120f16')
@@ -147,7 +219,7 @@ export const colPct = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? AMB
 const txtTit = (pct) => `${pct} % TITULARIDAD`;
 export function pildoraTit(pct, cx, cy, px, wMax) {
   const txt = txtTit(pct);
-  let p = px; while (p > 12 && medir(txt, p, B, 1) + p * 1.8 > wMax) p--;
+  let p = px; while (p > 16 && medir(txt, p, B, 1) + p * 1.8 > wMax) p--;
   const w = medir(txt, p, B, 1) + p * 1.8, h = p * 1.75, x = cx - w / 2;
   return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${colPct(pct)}"/>`
     + texto(cx, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1, ancla: 'middle' });

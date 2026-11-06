@@ -7,7 +7,7 @@
 // Las piezas comunes (letra, fondo, degradados, marca, etiquetas de estado) están en estilo.mjs, compartidas con tarjetas.mjs.
 import { coloresClub } from './colores.mjs';
 import { ANCHO, ROJO, VERDE, MALO, TINTA, TENUE, FONDO, PANEL, LINEA, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
-  escudo, caraFundida, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit } from './estilo.mjs';
+  escudo, caraFundida, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja } from './estilo.mjs';
 
 const ABREV = { Portero: 'POR', Defensa: 'DEF', Centrocampista: 'MED', Delantero: 'DEL', Entrenador: 'ENT' };
 
@@ -74,7 +74,7 @@ function carta(x, y, w, h, o) {
 /** cifra grande con su etiqueta debajo, centradas en cx */
 function cifra(cx, y, valor, etiqueta, { px = 40, color = TINTA, tenue = TENUE, max = null } = {}) {
   return texto(cx, y, valor, { px, peso: 800, color, ancla: 'middle', max })
-    + texto(cx, y + px * 0.62, etiqueta, { px: Math.round(px * 0.46), peso: 700, color: tenue, ancla: 'middle', espacio: 1, max });
+    + texto(cx, y + px * 0.66, etiqueta, { px: Math.max(21, Math.round(px * 0.5)), peso: 700, color: tenue, ancla: 'middle', espacio: 1, max });
 }
 
 
@@ -83,9 +83,9 @@ function miniJornadas(x, y, ultimas, gOro) {
   const w = 98, h = 116, paso = 112;
   ultimas.forEach(([jn, p], i) => {
     const x0 = x + i * paso, ult = i === ultimas.length - 1;
-    s += `<path d="M${x0 + 14},${y} L${x0 + w},${y} L${x0 + w - 14},${y + h} L${x0},${y + h} Z" fill="${ult ? `url(#${gOro})` : PANEL}" stroke="${ult ? 'none' : LINEA}" stroke-width="1.5"/>`
-      + texto(x0 + w / 2, y + 64, String(p), { px: 54, peso: 900, color: ult ? '#2a1c04' : p < 0 ? MALO : TINTA, ancla: 'middle' })
-      + texto(x0 + w / 2, y + 96, `J${jn}`, { px: 20, peso: 700, color: ult ? '#5a420f' : TENUE, ancla: 'middle', espacio: 1 });
+    s += caja(x0, y, w, h, { rx: 18, relleno: ult ? `url(#${gOro})` : null, sombra: true })
+      + texto(x0 + w / 2, y + 66, String(p), { px: 58, peso: 900, color: ult ? '#2a1c04' : p < 0 ? MALO : TINTA, ancla: 'middle' })
+      + texto(x0 + w / 2, y + 98, `J${jn}`, { px: 24, peso: 700, color: ult ? '#5a420f' : TENUE, ancla: 'middle', espacio: 1 });
   });
   return s;
 }
@@ -98,6 +98,7 @@ function graficaValor(x, y, w, h, valor, color) {
   const g = id('gv');
   const [ux, uy] = [px(t1), py(vs[vs.length - 1])];
   return `<defs>${lineal(g, [[0, color, 0.35], [1, color, 0]])}</defs>`
+    + [0, 0.5, 1].map((f) => `<rect x="${x}" y="${(y + h * f).toFixed(1)}" width="${w}" height="1" fill="#fff" opacity="0.08"/>`).join('')
     + `<polygon points="${x},${y + h} ${pts} ${ux},${y + h}" fill="url(#${g})"/>`
     + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`
     + `<circle cx="${ux}" cy="${uy}" r="6.5" fill="${color}" stroke="${FONDO}" stroke-width="3"/>`;
@@ -123,7 +124,7 @@ export function svgJugadorCarta(d) {
   const [motivo, ...resto] = d.etiqueta.split(' · ');
   s += texto(x0 - 4, 158, motivo.toUpperCase(), { px: 150, peso: 800, italica: true, color: `url(#${oro.g})`, max: wd })
     + texto(x0, 206, resto.join(' · ').toUpperCase(), { px: 34, peso: 700, espacio: 1.5, max: wd })
-    + texto(x0, 238, `LALIGA FANTASY · JORNADA ${d.jornada}`, { px: 20, peso: 600, color: TENUE, espacio: 3 })
+    + texto(x0, 240, `LALIGA FANTASY · JORNADA ${d.jornada}`, { px: 22, peso: 600, color: TENUE, espacio: 3 })
     + historial(x0, wd, d, oro.g);
   s += marca(x0, 636);
   return marco(s);
@@ -134,13 +135,14 @@ export function svgJugadorCarta(d) {
 /** un solo jugador: la carta grande a la izquierda y, a la derecha, su estado en grande, el equipo y el próximo rival */
 /** a la derecha de una carta: los puntos de las últimas jornadas y el valor de los últimos días con su gráfica */
 function historial(x0, wd, d, gOro) {
-  const yv = 478, colV = d.cambio > 0 ? VERDE : d.cambio < 0 ? MALO : TENUE;
-  return texto(x0, 296, 'PUNTOS EN LAS ÚLTIMAS JORNADAS', { px: 20, peso: 700, color: TENUE, espacio: 3 })
-    + miniJornadas(x0, 312, d.ultimas, gOro)
-    + texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 20, peso: 700, color: TENUE, espacio: 3 })
-    + texto(x0, yv + 50, millones(d.valorHoy), { px: 52, peso: 800 })
-    + texto(x0 + 170, yv + 46, `${signo(d.cambio)} %`, { px: 34, peso: 800, color: colV })
-    + graficaValor(x0 + 290, yv + 6, wd - 290, 62, d.valor, d.cambio < 0 ? MALO : '#e2bd5a');
+  const yv = 480, colV = d.cambio > 0 ? VERDE : d.cambio < 0 ? MALO : TENUE;
+  const pct = chip(`${signo(d.cambio)} %`, 0, 0, 30, { relleno: colV, pad: 1.5, espacio: 0.5 });
+  return texto(x0, 298, 'PUNTOS EN LAS ÚLTIMAS JORNADAS', { px: 23, peso: 700, color: TENUE, espacio: 3 })
+    + miniJornadas(x0, 314, d.ultimas, gOro)
+    + texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 23, peso: 700, color: TENUE, espacio: 3 })
+    + texto(x0, yv + 54, millones(d.valorHoy), { px: 56, peso: 800 })
+    + chip(`${signo(d.cambio)} %`, x0 + 184 + pct.w / 2, yv + 40, 30, { relleno: colV, pad: 1.5, espacio: 0.5 }).s
+    + graficaValor(x0 + 184 + pct.w + 22, yv + 6, wd - 184 - pct.w - 22, 66, d.valor, d.cambio < 0 ? MALO : '#e2bd5a');
 }
 
 // Baja o novedad de un solo jugador: la carta (media, puntos totales, valor y su estado) y, a la derecha, el estado en grande, el
@@ -172,18 +174,18 @@ export function svgBajaSola(d) {
       + abajo(yc + 70, 26, w - 80);
     // el próximo rival, en una línea
     if (d.rival) {
-      const wr = medir('PRÓXIMO RIVAL', 20, B, 3);
-      s += texto(x0, 240, 'PRÓXIMO RIVAL', { px: 20, peso: 700, color: TENUE, espacio: 3 })
+      const wr = medir('PRÓXIMO RIVAL', 22, B, 3);
+      s += texto(x0, 240, 'PRÓXIMO RIVAL', { px: 22, peso: 700, color: TENUE, espacio: 3 })
         + escudo(d.rival.escudo, x0 + wr + 22, 233, 30)
         + texto(x0 + wr + (d.rival.escudo ? 44 : 14), 241, d.rival.corto.toUpperCase(), { px: 26, peso: 800, max: wd - wr - 50 });
-    } else s += texto(x0, 238, 'LALIGA FANTASY', { px: 20, peso: 600, color: TENUE, espacio: 3 });
+    } else s += texto(x0, 240, 'LALIGA FANTASY', { px: 22, peso: 600, color: TENUE, espacio: 3 });
     s += historial(x0, wd, f, oro.g);
     return marco(s + marca(x0, 636));
   }
   const C = carta(x, y, w, h, { metal, club, cara: f.cara, escudo: f.escudo || (d.equipo && d.equipo.escudo),
     grande: media || null, bajoGrande: media ? 'MEDIA' : (ABREV[f.posicion] || null), nombre: f.nombre, lineas: [f.posicion].filter(Boolean), yNombre: 0.7 });
   s += C.s + abajo(C.yNombre + 112, 30, w - 60)
-    + texto(x0, 238, 'LALIGA FANTASY', { px: 20, peso: 600, color: TENUE, espacio: 3 });
+    + texto(x0, 240, 'LALIGA FANTASY', { px: 22, peso: 600, color: TENUE, espacio: 3 });
   if (d.rival) {
     const cR = coloresClub(d.rival.nombre || d.rival.corto);
     s += radial(1000, 440, 320, cR.vivo, 0.35)
