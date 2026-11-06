@@ -110,6 +110,9 @@ ok(revisar('El Levante, colista, recibe al Celta.', { hechos: { tipo: 'previa', 
 ok(rv('Eric vuelve, según AS. Tiene un 37 % y antes un 37 %.').some((x) => /porcentajes/.test(x)), 'en noticias, un solo porcentaje');
 ok(rv('Eric vuelve, según AS. Si dudas, mejor esperar a los onces.', { recientes: ['Pedri juega. Si dudas, mejor esperar a los onces del sábado.', 'Koke no está. Si dudas, mejor esperar a los onces.', 'Budimir juega. Si dudas, mejor esperar a los onces de mañana.'] }).some((x) => /muletilla/.test(x)), 'una muletilla que ya va en dos recientes, fuera');
 ok(rv('Eric vuelve, según AS. Fantasy Manager le da un 37 %.').some((x) => /de titularidad/.test(x)), 'un % sin «de titularidad», fuera');
+const h2 = { ...hechos, tipo: 'previa', jugadores: [...hechos.jugadores, { nombre: 'Pedri', club: 'Barça', titularidadFantasyManager: '52 %', principal: false }] };
+ok(revisar('Eric vuelve, según AS, con un 37 % de titularidad. Pedri, con un 52 %, tampoco lo tiene cerrado.', { hechos: h2, todos }).length === 0, 'el primer % con «de titularidad» y el segundo sin él, vale');
+ok(revisar('Eric vuelve, según AS, con un 37 % de titularidad. Pedri, con un 52 % de titularidad, tampoco.', { hechos: h2, todos }).some((x) => /solo con el primer/.test(x)), '«de titularidad» repetido en el segundo %, fuera');
 ok(rv('Eric ya no es baja y vuelve, según AS.').length === 0, '«ya no es baja» no es llamarle baja');
 const cron = [{ medio: 'MARCA', titulo: 'El Barça recupera a Eric para el Metropolitano', entradilla: 'El central vuelve a la lista de Flick tras superar sus molestias en el tobillo derecho' }];
 ok(rv('Eric vuelve a la lista de Flick tras superar sus molestias en el tobillo derecho.', { cronicas: cron }).some((x) => /copia 6/.test(x)), 'copiar 6 palabras de una crónica, fuera');

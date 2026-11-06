@@ -162,7 +162,15 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const tope = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro;
   const nPct = (t.match(/\d\s?%/g) || []).length, nMedia = (t.match(/\bde media\b|\bpuntos por partido\b|\bmedia de \d/gi) || []).length;
   // (Carlos, 6 nov, con «Fantasy Manager le da un 97 %»: «falta DE TITULARIDAD») un % sin decir de qué no se entiende
-  if (nPct && !/titularidad/i.test(t)) e.push('un porcentaje sin decir que es de titularidad: escribe «un 97 % de titularidad» (al menos la primera vez)');
+  // y solo el primero (Carlos, 6 nov: «si pones varios porcentajes, que solo sea en el primero, que se entienda humano»): la frase del
+  // primer % lleva «titularidad» detrás de él; los demás, sin repetirlo
+  const pcts = [...t.matchAll(/\d\s?%/g)];
+  if (pcts.length) {
+    const resto = t.slice(pcts[0].index).split(/(?<=[.!?])\s|\n/)[0];
+    if (!/titularidad/i.test(resto)) e.push('el primer porcentaje va con «de titularidad» («un 97 % de titularidad»): un «97 %» suelto no se entiende');
+    const repes = pcts.slice(1).filter((m) => /^\s?%\s+de\s+titularidad/i.test(t.slice(m.index + 1)));
+    if (repes.length) e.push('«de titularidad» solo con el primer porcentaje; en los demás, el número solo («Ramon, con un 51 %»)');
+  }
   if (nPct > tope.pct) e.push(`${nPct} porcentajes: como mucho ${tope.pct}; el resto, con palabras («fijo», «lo tiene difícil», «en el aire»)`);
   if (nMedia > tope.media) e.push(`${nMedia} medias: como mucho ${tope.media}`);
   if (VAGAS.test(t)) { VAGAS.lastIndex = 0; e.push(`nombra un club o un jugador con una palabra vaga («${(t.match(VAGAS) || [])[0]}»)`); }
