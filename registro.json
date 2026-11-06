@@ -1466,7 +1466,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000,
    "SPORT|136181983": 1793990642000,
    "AS|https://as.com/futbol/videos/llegara-la-redencion-definitiva-de-julian-contra-el-barca-f202611-v/": 1793995579000,
-   "MARCA|https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html": 1793997151000
+   "MARCA|https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html": 1793997151000,
+   "SPORT|136149850": 1793995933000
   },
   "hechos": [
    {
@@ -2204,7 +2205,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 50
+   "n": 51
   },
   "desde": {
    "67": {
@@ -3153,7 +3154,9 @@
    "SPORT|136162605": 1793984430000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988650000,
    "SPORT|136180863": 1793989306000,
-   "SPORT|136180917": 1793988049000
+   "SPORT|136180917": 1793988049000,
+   "SPORT|136185088": 1793995104000,
+   "SPORT|136184849": 1793994104000
   },
   "hechos": [
    {
@@ -3817,26 +3820,23 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 14,
+   "n": 15,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136184849": 1793998272570,
-   "SPORT|136185088": 1793999170964
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-06",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 8,
    "redactar": 0
   },
   "fallos": 0,
-  "entrada": 10631,
-  "salida": 1380,
+  "entrada": 14368,
+  "salida": 2425,
   "cacheLee": 0,
   "cacheEscribe": 0,
-  "dolares": 0.001754
+  "dolares": 0.00265
  },
  "recientes": {
   "onces": [
