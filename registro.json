@@ -1418,7 +1418,9 @@
    "Cadena SER|https://cadenaser.com/galicia/2026/11/06/david-mella-convocado-con-espana-sub-21-para-jugar-ante-japon-y-albania-yeremay-se-queda-fuera-de-la-lista-de-la-seleccion-absoluta-radio-coruna/": 1793965657000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/thiago-pitarch-da-salto-sub-21-vuelve-dar-portazo-marruecos-20261106_3470218.html": 1793965395000,
    "AS|https://as.com/futbol/primera/jose-alberto-le-echa-un-cable-a-funes-el-malaga-ha-tenido-un-calendario-muy-duro-f202611-n/": 1793965403000,
-   "AS|https://as.com/futbol/primera/san-jose-me-ha-sorprendido-mucho-que-oyarzabal-no-estuviera-en-la-lista-del-balon-de-oro-f202611-n/": 1793966372000
+   "AS|https://as.com/futbol/primera/san-jose-me-ha-sorprendido-mucho-que-oyarzabal-no-estuviera-en-la-lista-del-balon-de-oro-f202611-n/": 1793966372000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/06/alvaro-valles-llamada-fuente-llore-vergueenza.html": 1793968127000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247891/christensen-eric-siguen-evolucion-dias-atleti.html": 1793966557000
   },
   "hechos": [
    {
@@ -2111,11 +2113,25 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247891/christensen-eric-siguen-evolucion-dias-atleti.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793966557000,
+    "id": "2354",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Eric sigue con su proceso de recuperación física",
+    "motivo": "lesión pendiente de evolución",
+    "plazo": "",
+    "nums": [
+     8
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
