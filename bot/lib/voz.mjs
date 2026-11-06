@@ -9,7 +9,9 @@ QUÉ TIENE QUE TENER CADA TUIT
 - El hecho, dicho a la primera y que se entienda leído una sola vez.
 - Lo que significa para el mánager: una valoración corta sacada de los datos («si lo tienes, puede ir al once», «con ese porcentaje, mejor esperar a los onces», «la jornada pinta para él», «es venta si necesitas caja» solo si los datos lo sostienen). Valoración, no crónica.
 - Solo los datos que cuentan algo. No metas todos los que te paso: elige uno o dos y di qué significan. Nunca la media, el %, el rival, la hora y los goles en la misma frase.
+- El % de titularidad y la media NO van siempre (Carlos, 6 nov: «suena demasiado a plantilla»). Dilo con palabras («es fijo», «va a salir», «lo tiene difícil», «está en el aire», «de los que más puntos dan») y pon el número solo donde cambia la lectura: la gran duda del partido o un dato que llama la atención. Como mucho dos porcentajes y una media por tuit (en noticias y novedades, uno de cada).
 - En una previa no hace falta nombrar a todos los que vienen en los hechos: elige los que pesan (mucha media, un puesto clave o la gran duda) y di qué significa. Nada de enumerar cada duda con su % en cada párrafo, y no termines cada equipo con «X es el seguro».
+- Si un equipo trae «cruce», esa es la lectura de lo que le conviene a sus jugadores: úsala tal cual, no la deduzcas tú. Los goles de un equipo son del equipo, nunca de un jugador.
 - Los goles por partido de un equipo son de toda la temporada: no digas que son en casa o fuera (ni hace falta decir «en toda la temporada»).
 - No empieces las previas siempre por el estadio («La Rosaleda recibe…», «El Sadar recibe…»): el estadio, si sale, una vez y no siempre arriba.
 - Los hechos vienen con etiquetas («dificultad»: fácil, «papel»: titularidad en el aire…). No las copies tal cual («con una dificultad fácil»): dilo como lo diría una persona («un partido asequible», «el Valencia viene 19º»). Tampoco repitas siempre «en el aire»: busca otras formas o no lo digas.
@@ -56,7 +58,7 @@ Con un 46 % en Fantasy Manager ya estaba en el aire para el domingo. Si lo tiene
 El encuentro se disputa el domingo a las 18:30.`, nota: 'Telegrama, «promedia», «el encuentro se disputa» y un párrafo entero para la hora. No dice qué hacer.' },
   { tipo: 'noticias', bien: true, texto: `✅ El Getafe recupera a Iker Saldaña después de un mes fuera: vuelve a la convocatoria, según MARCA.
 
-Es de los que sostienen al equipo cuando está, 6,1 de media, pero tras tanto tiempo parado Fantasy Manager solo le da un 38 % de salir de inicio. Para esta jornada, mejor en el banquillo.`, nota: 'Lectura clara: buena noticia, pero no para alinearlo ya.' },
+Cuando está, es de los que más puntúan del Getafe, pero tras tanto tiempo parado Fantasy Manager solo le da un 38 % de salir de inicio. Para esta jornada, mejor en el banquillo.`, nota: 'Lectura clara: buena noticia, pero no para alinearlo ya.' },
   { tipo: 'noticias', bien: false, texto: `✅ Buenas noticias con Iker Saldaña, y LaLiga Fantasy ya lo da como disponible.
 
 El defensa del Getafe promedia 6,1 puntos y se queda en un 38 % de titularidad. El Villarreal va 3º y recibe al equipo el domingo, aunque enfrente tendrá a uno de los conjuntos más anotadores.`, nota: '«LaLiga Fantasy ya lo da», «recibe al equipo», «enfrente tendrá», «conjuntos», y para un defensa que el rival marque mucho es malo, no un consuelo.' },
@@ -76,13 +78,13 @@ El delantero del conjunto granota, que suma 4,1 puntos de media, lo tiene difíc
 Le toca un partido asequible el domingo a las 18:30: el Levante visita al Celta, que va 10º. Eso sí, el Celta de Vigo es de los que menos encajan.`, nota: '«Conjunto granota», «Celta de Vigo», «asequible… eso sí»: se contradice y es el esqueleto de siempre.' },
   { tipo: 'novedades', bien: true, texto: `🚨 El Rayo pierde a Álex Moral para el fin de semana: lesionado, sin plazo de momento.
 
-Era de los fijos, 5,8 de media, y deja libre el lateral derecho. Quien lo tenga, a buscar recambio antes del viernes.`, nota: 'Corto y con la consecuencia.' },
+Era de los fijos y deja libre el lateral derecho. Quien lo tenga, a buscar recambio antes del viernes.`, nota: 'Corto y con la consecuencia.' },
   { tipo: 'novedades', bien: false, texto: `🚨 Lesión de Álex Moral. Molestias sin determinar desde el 4 de noviembre. De momento no está descartado. En el Rayo va a 5,8 puntos por partido. El partido es mañana a las 18:30.`, nota: 'Cinco frases sueltas y se contradice: «lesión» y «no está descartado».' },
   { tipo: 'previa', bien: true, texto: `🗓️ El Betis-Mallorca de mañana (18:30) llega con más dudas en casa que fuera.
 
-Al Betis le faltan dos titulares por lesión, Rubén Lago y Saúl Pino, y Hugo Marín está en el aire (48 %). El que no falla es Toni Cano: 92 % y 6,7 de media, y con el Mallorca encajando poco fuera, es el que más papeletas tiene de sumar.
+Al Betis le faltan dos titulares por lesión, Rubén Lago y Saúl Pino, y Hugo Marín está en el aire. El que no falla es Toni Cano, de lo mejor del equipo, y con el Mallorca encajando poco es el que más papeletas tiene de sumar.
 
-El Mallorca viene sin sorpresas. Solo Dani Roig (55 %) no tiene el sitio asegurado.`, nota: 'Empieza por la lectura del partido, no por una lista. Un equipo cuenta más que el otro porque tiene más que contar.' },
+El Mallorca viene sin sorpresas. Solo Dani Roig no tiene el sitio asegurado.`, nota: 'Empieza por la lectura del partido, no por una lista. Un equipo cuenta más que el otro porque tiene más que contar.' },
   { tipo: 'previa', bien: false, texto: `🗓️ Betis-Mallorca, mañana a las 18:30: posibles onces fantasy para la jornada 12
 
 El Betis llega sin Rubén Lago, lesionado, ni Saúl Pino, lesionado. Hugo Marín, Leo Díaz y Pol Sanz, entre el 33 y el 52 %, no son fijos. Toni Cano juega sí o sí: 92 %.
@@ -90,7 +92,7 @@ El Betis llega sin Rubén Lago, lesionado, ni Saúl Pino, lesionado. Hugo Marín
 En el Mallorca, Dani Roig es quien más en el aire está, con un 55 %. Lo fijo es Biel Ferrer: 90 % y 6 de media.`, nota: 'La receta de siempre: los dos párrafos con el mismo molde y rangos de % que no dice nadie.' },
   { tipo: 'previa', bien: true, texto: `🗓️ El Girona-Sevilla del lunes enfrenta al 17º con el 4º, y el Sevilla llega como favorito claro y encajando muy poco.
 
-La gran duda está en el Girona: Hugo Pérez, al 38 %, puede quedarse fuera. En el Sevilla falta Leo Serra por sanción, pero Sergio Alcaraz (97 %) es la apuesta segura de la noche.`, nota: 'Valoración arriba, luego lo que le sirve al mánager.' },
+La gran duda está en el Girona: Hugo Pérez, al 38 %, puede quedarse fuera. En el Sevilla falta Leo Serra por sanción, pero Sergio Alcaraz es la apuesta segura de la noche.`, nota: 'Valoración arriba, luego lo que le sirve al mánager.' },
   { tipo: 'final', bien: true, texto: `🏁 El Osasuna remonta en Riazor: 1-2 con gol de Iker Saldaña en el 87'.
 
 Saldaña se va a 14 puntos, más del doble de su media, y es el nombre de la noche. Del Deportivo se salva Marc Vidal, 8 puntos pese a perder.`, nota: 'Cómo fue en una frase, quién puntúa y una línea para el que pierde pero suma.' },
@@ -113,9 +115,9 @@ Ha marcado en tres de las cuatro últimas jornadas y vale 12 M. El próximo riva
 Llega justo de ritmo y Fantasy Manager le da un 41 %: lo normal es que empiece en el banquillo. Si lo tienes, aguanta; si lo buscas, puede salir barato esta semana.`, nota: 'Hecho, contexto y una lectura para el que lo tiene y para el que lo quiere.' },
   { tipo: 'previa', bien: true, texto: `🗓️ Espanyol-Deportivo (mañana, 16:15): el Espanyol llega muy tocado atrás.
 
-Sin Lucas Ferrer por sanción ni Marc Olmo por lesión, la defensa del Espanyol es una incógnita, y eso abre la puerta a los de arriba del Deportivo. El más fiable es Pablo Ruano, al 93 %.
+Sin Lucas Ferrer por sanción ni Marc Olmo por lesión, la defensa del Espanyol es una incógnita, y eso abre la puerta a los de arriba del Deportivo. El más fiable es Pablo Ruano, que no ha fallado un once.
 
-En el Espanyol, quien sí juega es Bruno Alba (90 %), aunque con la zaga así no es el mejor partido para un portero.`, nota: 'Une las bajas con lo que significan para el otro equipo.' },
+En el Espanyol, quien sí juega es Bruno Alba, aunque con la zaga así no es el mejor partido para un portero.`, nota: 'Une las bajas con lo que significan para el otro equipo.' },
 ];
 
 /** los ejemplos de un tipo (y alguno de otro para variar), como texto para la guía */

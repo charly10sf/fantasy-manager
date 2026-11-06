@@ -107,6 +107,7 @@ ok(rv('Eric vuelve, según AS, y el domingo le espera un Atlético que marca muc
 ok(rv('Eric vuelve, según AS, y el domingo juega en Mestalla.').some((x) => /mayúscula/.test(x)), 'un estadio que no está en los hechos, fuera');
 ok(rv('Eric vuelve, según AS. Y el Atlético es duro. 🦁').some((x) => /emoji|guía/.test(x)), 'un emoji suelto, fuera');
 ok(revisar('El Levante, colista, recibe al Celta.', { hechos: { tipo: 'previa', jugadores: [], equipos: [{ club: 'Levante', va: '18º de 20' }], clubes: clubes('Levante', 'Celta') }, todos }).some((x) => /colista/.test(x)), '«colista» solo si va último');
+ok(rv('Eric vuelve, según AS. Tiene un 37 % y antes un 37 %.').some((x) => /porcentajes/.test(x)), 'en noticias, un solo porcentaje');
 ok(rv('Eric ya no es baja y vuelve, según AS.').length === 0, '«ya no es baja» no es llamarle baja');
 const cron = [{ medio: 'MARCA', titulo: 'El Barça recupera a Eric para el Metropolitano', entradilla: 'El central vuelve a la lista de Flick tras superar sus molestias en el tobillo derecho' }];
 ok(rv('Eric vuelve a la lista de Flick tras superar sus molestias en el tobillo derecho.', { cronicas: cron }).some((x) => /copia 6/.test(x)), 'copiar 6 palabras de una crónica, fuera');

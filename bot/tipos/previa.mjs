@@ -192,7 +192,19 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const jugH = [], eqH = [];
       for (const [k, eq, mm] of [['L', L, m.local], ['V', V, m.visitor]]) {
         const t = tablaH && tablaH.porId[String(mm.id)];
-        eqH.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', ...(t && t.pj ? { va: `${t.pos}º de ${tablaH.n}`, golesMarcadosPorPartido: fmt(t.gf / t.pj), golesEncajadosPorPartido: fmt(t.gc / t.pj) } : {}) });
+        // la lectura del cruce, ya hecha (6 nov, primera tanda: la IA atribuía los goles de un equipo a un jugador o leía al revés lo que
+        // le conviene a los de arriba): lo que encaja el rival es para sus delanteros y medios; lo que marca, para su portero y defensas
+        const r = tablaH && tablaH.porId[String((k === 'L' ? m.visitor : m.local).id)], rivalEq = k === 'L' ? V : L;
+        const cruce = [];
+        if (r && r.pj && tablaH) {
+          const n = tablaH.n;
+          if (r.rgc <= 4) cruce.push(`bueno para sus delanteros y medios: ${el(rivalEq)} es de los que más encajan`);
+          else if (r.rgc >= n - 3) cruce.push(`malo para sus delanteros y medios: ${el(rivalEq)} es de los que menos encajan`);
+          if (r.rgf <= 4) cruce.push(`malo para su portero y sus defensas: ${el(rivalEq)} es de los que más marcan`);
+          else if (r.rgf >= n - 3) cruce.push(`bueno para su portero y sus defensas: ${el(rivalEq)} es de los que menos marcan`);
+        }
+        eqH.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', ...(t && t.pj ? { va: `${t.pos}º de ${tablaH.n}`, golesMarcadosPorPartido: fmt(t.gf / t.pj), golesEncajadosPorPartido: fmt(t.gc / t.pj) } : {}),
+          ...(cruce.length ? { cruce } : {}) });
         // (pocos y los que pesan: con tres dudas, tres bajas y dos fijos por equipo la IA los enumeraba todos; 6 nov)
         for (const x of pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'titularidad en el aire', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, principal: false });
         for (const x of Object.values(probs[k]).filter(esBaja).sort((a, b) => md(b) - md(a)).filter((x, i) => i === 0 || md(x) >= 3).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'baja', estado: x.estado === 'suspended' ? 'sancionado' : 'lesionado', ...(md(x) >= 1 ? { mediaPuntos: fmt(md(x)) } : {}), principal: false });

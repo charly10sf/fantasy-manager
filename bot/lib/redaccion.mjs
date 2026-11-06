@@ -17,6 +17,7 @@ const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
 const CIRCULOS = /[🔴🟠🟡🟢🔵🟣🟤⚫]/u;
 // lo que no se le pasa a la IA ni cuenta para las cifras (la fecha del partido va como «cuando»)
 const sinFecha = (k, v) => (k === 'fecha' || k === 'etiqueta' ? undefined : v);
+const TOPES_CIFRAS = { previa: { pct: 2, media: 1 }, noticias: { pct: 1, media: 1 }, novedades: { pct: 1, media: 1 }, otro: { pct: 2, media: 1 } };
 const COMUNES = new Set(['blanco', 'moreno', 'rubio', 'bueno', 'leal', 'santos', 'alba', 'luna']);
 const frases = (s) => String(s).split(/(?<=[.!?:;])\s+|\n+/).map((x) => x.trim()).filter(Boolean);
 
@@ -148,6 +149,11 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const puestos = (hechos.equipos || []).map((x) => String(x.va || '').match(/^(\d+)º de (\d+)/)).filter(Boolean);
   if (/\bcolista\b/i.test(t) && !puestos.some((m) => m[1] === m[2])) e.push('dice «colista» y ningún equipo de los hechos va último');
   if (/\bl[ií]der\b/i.test(t) && !puestos.some((m) => m[1] === '1')) e.push('dice «líder» y ningún equipo de los hechos va primero');
+  // (Carlos, 6 nov: «lo de poner el % de titularidad siempre y los puntos medios no haría falta, suena demasiado a plantilla»)
+  const tope = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro;
+  const nPct = (t.match(/\d\s?%/g) || []).length, nMedia = (t.match(/\bde media\b|\bpuntos por partido\b|\bmedia de \d/gi) || []).length;
+  if (nPct > tope.pct) e.push(`${nPct} porcentajes: como mucho ${tope.pct}; el resto, con palabras («fijo», «lo tiene difícil», «en el aire»)`);
+  if (nMedia > tope.media) e.push(`${nMedia} medias: como mucho ${tope.media}`);
   if (VAGAS.test(t)) { VAGAS.lastIndex = 0; e.push(`nombra un club o un jugador con una palabra vaga («${(t.match(VAGAS) || [])[0]}»)`); }
   VAGAS.lastIndex = 0;
   if (/conjunto\s+\p{Ll}/u.test(t)) e.push('«el conjunto…» en vez del nombre del club');
