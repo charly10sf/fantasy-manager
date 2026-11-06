@@ -131,9 +131,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       }
       // --- posibles onces ---
       if (!(quierePos && !yaPos) || aire.espera) continue;
-      // en los puestos con más duda (menos del 60 %), también el otro que se lo puede jugar, con su % (Carlos, 3 nov 11:52: «como
-      // dos opciones y poner el porcentaje de cada uno»): el mejor del mismo puesto que no está en el once y tiene 25 % o más,
-      // hasta 3 por equipo
+      // en los puestos con más duda (menos del 60 %), se mira el otro que se lo puede jugar (el mejor del mismo puesto que no está en
+      // el once y tiene 25 % o más, hasta 3 por equipo) y se queda el de más %. Hasta el 6 nov salían los dos con su % (Carlos, 3 nov
+      // 11:52); desde las 20:19 de ese día, solo uno
       const lado = (k, mm) => {
         const once = pos[k].once.map((x) => ({ id: x.id, nombre: x.nombre, pos: x.pos, pct: pct(x.p), duda: x.duda, p: x.p }));
         const fuera = new Set(once.map((x) => String(x.id)));
@@ -142,9 +142,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             .sort((a, b) => b.p - a.p)[0];
           if (!alt) continue;
           fuera.add(String(alt.id));
-          // arriba, el de más % (el titular de la web puede quedar por debajo del otro con los minutos de LaLiga)
-          if (alt.p > x.p) { const yo = { id: x.id, nombre: x.nombre, pct: x.pct, duda: x.duda }; Object.assign(x, { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda, p: alt.p }); x.alt = yo; }
-          else x.alt = { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda };
+          // solo sale el de más % (Carlos, 6 nov 20:19: «en los onces posibles, que solo salga el que tenga mayor %»; antes iban los dos
+          // con su %): el titular de la web puede quedar por debajo del otro con los minutos de LaLiga, y entonces entra el otro
+          if (alt.p > x.p) Object.assign(x, { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda, p: alt.p });
         }
         return { nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion, once: once.map(({ p, ...x }) => x) };
       };

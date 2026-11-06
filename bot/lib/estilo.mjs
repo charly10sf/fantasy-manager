@@ -75,8 +75,10 @@ export function escudo(buf, cx, cy, h) {
     (Carlos, 5 nov 07:04: «que su cara se vea bien y esté bien visible»; antes, a 2,16 veces, salían medio cuello y camiseta).
     6 nov (rediseño de las tarjetas): fondo con un degradado del color del club, sombra debajo y un segundo filo oscuro por dentro del aro,
     para que la cara se despegue del panel y se lea mejor en pequeño */
-export function caraCirculo(buf, cx, cy, r, { aro = '#fff', grosor = 3, fondoColor = null } = {}) {
-  const c = id('cc'), g = id('cf'), S = r * 2.8;
+// `zoom`: veces el radio a las que se dibuja la foto (2,8 llena el círculo con la cara; con 2,25 cabe la cabeza entera, sin cortar pelo
+// ni barbilla: lo usa la tarjeta de onces desde el 6 nov, «que no se corten tanto»)
+export function caraCirculo(buf, cx, cy, r, { aro = '#fff', grosor = 3, fondoColor = null, zoom = 2.8 } = {}) {
+  const c = id('cc'), g = id('cf'), S = r * zoom;
   return `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath>`
     + `<radialGradient id="${g}" cx="0.5" cy="0.35" r="0.75"><stop offset="0" stop-color="${fondoColor || aro}" stop-opacity="0.55"/><stop offset="1" stop-color="#1a1721" stop-opacity="1"/></radialGradient></defs>`
     + `<circle cx="${cx}" cy="${cy + Math.max(2, r * 0.08)}" r="${r + grosor * 0.5}" fill="#000" opacity="0.4"/>`

@@ -156,6 +156,7 @@ function lineasDe(lado) {
 // campo alto por equipo. Arriba de cada campo, una franja con el escudo, el nombre y el dibujo; en el césped, cada línea con caras de
 // hasta 62 de radio (antes 32: el doble de grande en pantalla) y el nombre en una pastilla. Líneas del campo muy suaves, para que no
 // compitan con las caras. El orden de cada línea es el que llega (con los confirmados de ESPN, de izquierda a derecha según se mira).
+// 20:19: la cara a 2,25 veces el radio (cabeza entera, sin cortar) y en los posibles onces un solo jugador por puesto, el de más %.
 export const ALTO_ONCES = 1420;
 function campo(x, y, w, h, lado, club, confirmados) {
   const g = id('cp'), gv = id('cv'), gb = id('cb'), cl = id('cc');
@@ -186,35 +187,25 @@ function campo(x, y, w, h, lado, club, confirmados) {
   const lineas = lineasDe(lado).reverse();
   const arriba = yc + 22, abajo = y + h - 34;
   const alto = (abajo - arriba) / lineas.length;
-  const pastilla = (txt, cx, cy, px, wMax, color = TINTA) => {
-    const t = nombreAjustado(txt, px, wMax - 16), pp = tamano(t, px, wMax - 16), wt = Math.min(wMax, medir(t, pp, B) + 22);
-    return `<rect x="${cx - wt / 2}" y="${cy - px * 1.02}" width="${wt}" height="${px * 1.5}" rx="${px * 0.75}" fill="#06080a" fill-opacity="0.86"/>`
-      + texto(cx, cy, t, { px, peso: 700, color, ancla: 'middle', max: wMax - 16 });
+  // el nombre (6 nov 20:19, Carlos: «el nombre más legible»): a 30, en negrita gruesa sobre una pastilla casi opaca. Si no cabe en su
+  // hueco, antes que encoger la letra se acorta: inicial y apellido («J. IGLESIAS») y, si aun así no cabe, solo el apellido
+  const PXN = 30;
+  const pastilla = (t, cx, cy, wMax) => {
+    const pp = tamano(t, PXN, wMax - 18), wt = Math.min(wMax, medir(t, pp, B, 0.5) + 26);
+    return `<rect x="${cx - wt / 2}" y="${cy - PXN * 1.0}" width="${wt}" height="${PXN * 1.42}" rx="${PXN * 0.71}" fill="#05070a" fill-opacity="0.93" stroke="#fff" stroke-opacity="0.1"/>`
+      + texto(cx, cy, t, { px: PXN, peso: 800, color: '#ffffff', ancla: 'middle', max: wMax - 18, espacio: 0.5 });
   };
-  // cada línea, repartida por pesos: un puesto con dos opciones (posibles onces) ocupa 1,7 huecos, para que quepan sus dos caras y nombres
   lineas.forEach((ls, i) => {
-    const pesos = ls.map((j) => (j.alt && !confirmados ? 1.7 : 1)), W = pesos.reduce((a, b) => a + b, 0);
-    const U = W >= 4 ? w - 24 : w * W / (W + 1), x0 = x + (w - U) / 2, hueco = U / W;
+    const n = ls.length, U = n >= 4 ? w - 12 : w * n / (n + 1), x0 = x + (w - U) / 2, hueco = U / n;
     const R = Math.max(26, Math.min(62, hueco / 2 - 9, (alto - 60) / 2));
-    const cy = arriba + alto * i + R + 6, yN = cy + R + 30;
-    let acum = 0;
+    const cy = arriba + alto * i + R + 6, yN = cy + R + 32, ancho = hueco - 4;
     ls.forEach((j, k) => {
-      const ancho = hueco * pesos[k], cx = x0 + acum + ancho / 2; acum += ancho;
-      const maxN = Math.min(200, ancho - 4);
+      const cx = x0 + hueco * (k + 0.5);
       const pctCol = colPct(j.pct);
-      const chapa = (jj, cxx, r) => (jj.cara ? caraCirculo(jj.cara, cxx, cy, r, { aro: jj.duda ? AMBAR : club.vivo, grosor: Math.max(3.5, r * 0.08), fondoColor: club.vivo })
-        : `<circle cx="${cxx}" cy="${cy + 3}" r="${r + 1}" fill="#000" opacity="0.4"/><circle cx="${cxx}" cy="${cy}" r="${Math.round(r * 0.62)}" fill="${club.vivo}" stroke="${jj.duda ? AMBAR : '#ffffff'}" stroke-width="3"/>`);
-      if (j.alt && !confirmados) {
-        // dos opciones para el mismo puesto: las dos caras, algo más pequeñas, y debajo cada nombre con su % (la primera, a la altura
-        // de los nombres de su línea)
-        const r2 = Math.max(22, Math.min(R * 0.8, ancho / 4 - 5)), dx = r2 + 3;
-        s += chapa(j.alt, cx + dx, r2) + chapa(j, cx - dx, r2)
-          + pastilla(`${nombreAjustado(j.nombre, 20, maxN - 60, 0, { apellido: true })} ${j.pct} %`, cx, yN - (R - r2), 20, maxN, pctCol)
-          + pastilla(`${nombreAjustado(j.alt.nombre, 20, maxN - 60, 0, { apellido: true })} ${j.alt.pct} %`, cx, yN - (R - r2) + 32, 20, maxN, colPct(j.alt.pct));
-        return;
-      }
-      s += chapa(j, cx, R) + pastilla(j.nombre, cx, yN, 24, maxN);
-      if (pctCol && !confirmados) s += chip(`${j.pct} %`, cx + R * 0.78, cy - R * 0.8, 20, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
+      s += (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: j.duda ? AMBAR : club.vivo, grosor: Math.max(3.5, R * 0.08), fondoColor: club.vivo, zoom: 2.25 })
+        : `<circle cx="${cx}" cy="${cy + 3}" r="${R + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="${j.duda ? AMBAR : '#ffffff'}" stroke-width="3"/>`)
+        + pastilla(nombreAjustado(j.nombre, PXN, ancho - 18, 0.5, { apellido: true }), cx, yN, ancho);
+      if (pctCol && !confirmados) s += chip(`${j.pct} %`, cx + R * 0.78, cy - R * 0.8, 21, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
     });
   });
   return s;
@@ -227,7 +218,7 @@ export function svgOnces(d) {
   let s = tit.defs + fondo([[250, 120, 700, cL.vivo, 0.28], [950, 120, 700, cV.vivo, 0.28]], H)
     + texto(600, 86, d.confirmados ? 'ONCES CONFIRMADOS' : 'POSIBLES ONCES', { px: 72, peso: 800, italica: true, color: `url(#${tit.g})`, ancla: 'middle', max: 900 })
     + texto(600, 124, `JORNADA ${d.jornada}`, { px: 24, peso: 700, color: TENUE, ancla: 'middle', espacio: 4 });
-  s += campo(32, 150, 560, H - 222, L, cL, d.confirmados) + campo(608, 150, 560, H - 222, V, cV, d.confirmados);
+  s += campo(22, 150, 570, H - 222, L, cL, d.confirmados) + campo(608, 150, 570, H - 222, V, cV, d.confirmados);
   return marco(s + marca(600, H - 26, { ancla: 'middle' }), H);
 }
 
