@@ -31,7 +31,7 @@ Carlos, 6 nov: que no se note que es automático. En vez de pulir la plantilla, 
 - Encendida (Carlos, 6 nov 19:02: «sin A/B, quiero que hable de forma humana y como en los medios deportivos; hazlo todo tú»): `redactar.activo` true e `ia.proveedor` «claude» en config.json, y `ANTHROPIC_API_KEY` en el env de .github/workflows/bot.yml. Para apagarla: `redactar.activo` a false (vuelve la plantilla con pulir) y, si hace falta, `ia.proveedor` a «gemini» (Gemini clasifica otra vez). Sin el secreto, todo como antes.
 - Claude (`lib/claude.mjs`): misma interfaz que lib/gemini.mjs, salida estructurada (`output_config.format`, json_schema), sin temperatura (los 5.5 no la admiten), sin pensar antes de contestar (`thinking: between_tools`; con el razonamiento por defecto cada tuit costaba 0,027 $) y esfuerzo medio para redactar y bajo para clasificar (`ia.esfuerzo`). Haiku 5.5 no admite between_tools: se reintenta sin él. Las instrucciones fijas van en caché solo si salen dos o más tuits del mismo tipo en la ejecución (la caché dura 5 min y el bot corre cada 5).
 - Con `BOT_IA=claude`, noticias y liga clasifican con Haiku 5.5 (Gemini de respaldo si Claude falla o no hay cupo).
-- Gasto: tope diario propio (`ia.topeDolaresDia`, 0,70 $, y `ia.porDia`: 150 para clasificar, 60 para redactar); pasado el tope, clasificar vuelve a Gemini y redactar deja la plantilla. Cada día va al registro (`ia`: llamadas, tokens de entrada, salida, caché leída y escrita, dólares; `iaDias`: los 30 últimos) y sale al final del log de cada ejecución («(ia) gasto de hoy…»). Medido el 6 nov: unos 0,012 $ por tuit redactado (35 al día, unos 13 $/mes).
+- Gasto: tope diario propio (`ia.topeDolaresDia`, 1,5 $ desde el 7 nov, y `ia.porDia`: 150 para clasificar, 60 para redactar, 150 para revisar y 80 para pulir); pasado el tope, clasificar vuelve a Gemini y redactar deja la plantilla. Cada día va al registro (`ia`: llamadas, tokens de entrada, salida, caché leída y escrita, dólares; `iaDias`: los 30 últimos) y sale al final del log de cada ejecución («(ia) gasto de hoy…»). Medido el 6 nov: unos 0,012 $ por tuit redactado (35 al día, unos 13 $/mes).
 - Pruebas sin red: `node bot/prueba/redaccion-ejemplo.mjs`. Con datos reales: rama `pruebas-redaccion` (su workflow «Bot pruebas redaccion» solo vive ahí: simulacro, sin claves de X, con el registro de bot-estado de hace 30 h de solo lectura). En simulacro, `--estado=<archivo>` carga un registro para leerlo sin guardarlo; `--hechos=1` enseña los hechos de cada tuit. La comparación a ciegas: `gh run view <id> --log > log.txt` y `node bot/prueba/comparar.mjs --log=log.txt --casos=10 --salida=<carpeta>` (comparacion.md y clave.md).
 - Los apodos de equipo (`APODOS` en lib/texto.mjs) ya no llevan «el conjunto + gentilicio» ni nombres oficiales largos («el Málaga CF», «el Celta de Vigo»): era lo que más sonaba a máquina en los tuits del 4 al 6 nov.
 - Rigor con lo que pasa en el partido (Carlos, 6 nov 23:1x, final del Sevilla-Alavés: el tuit decía «Cuenta COPE que Sivera ha parado un penalti»). Causa: la guía mandaba decir de qué medio sale un hecho de las crónicas y su propio ejemplo «BIEN» era «Cuenta MARCA que el segundo llegó tras…», así que la IA ponía un medio delante de un suceso del campo, como si nadie lo hubiera comprobado. Ahora: (1) los hechos de final y MVP llevan `incidencias` (penaltis parados o fallados y rojas) sacadas del `summary` de ESPN (`incidenciasDe` y `incidenciasPartido`, lib/relato.mjs; el `scoreboard` no las trae), con el minuto, el lanzador y el portero; (2) la guía dice que lo que pasa en el partido es un hecho, se cuenta sin medio delante y solo si viene en los hechos; (3) el validador, en final y MVP, tira cualquier medio o «cuenta/informa… que» y cualquier suceso (penalti, parada, expulsión, autogol, VAR) que no esté en los hechos (`sucesosSinHechos`, lib/redaccion.mjs), sea de quien sea; (4) `redactar.prensa` queda solo en `previa` (en un final o un MVP ya no se pasan titulares: lo del campo sale de ESPN). Si se quisiera volver a dar prensa a los finales, el validador seguiría tirando lo que atribuya o cuente sin hechos. Prueba: prueba/redaccion-ejemplo.mjs (el penalti parado real del Sevilla-Alavés y el «Cuenta COPE»).
@@ -73,11 +73,42 @@ Las piezas comunes están en `lib/redactar.mjs`:
   ha sido (`lib/relato.mjs`, `tipos/directo.mjs`, `relato()` en `tipos/final.mjs`).
 - El cierre «Fantasy Manager · enlace en la bio» va solo en `final` y `mercado` (Carlos, 2 nov 23:11). El resto va sin cierre (`sinCierre` en `lib/texto.mjs`).
   «fantasy» ya no es obligatoria (Carlos, 4 nov 13:00): las etiquetas la llevan cuando encaja y nunca se añade #LaLigaFantasy de relleno. Las respuestas de Telegram para los clubes siguen con cierre.
-- **Puntos DAZN** (`lib/dazn.mjs`): llegan después del final del partido. `final`, `mvp`, `resumen`, los tweets de `directo` de un partido ya acabado y las
-  respuestas de Telegram esperan a que los jugadores que más puntúan del partido tengan `marca_points` en su ficha (player/{id}); si pasan
-  `daznEsperaHoras` (6, en `config.json`) desde el saque sin verlo, salen igual.
+- **Puntos definitivos** (`lib/dazn.mjs`, rehecho el 7 nov). `final`, `mvp`, `resumen`, los tweets de `directo` de un partido ya acabado y las
+  respuestas de Telegram esperan a que los puntos del partido sean los definitivos. Hasta el 6 nov solo se esperaba a la valoración DAZN
+  (`marca_points` en la ficha de los que más puntúan), y no bastaba: en el Sevilla-Alavés (J12) estaba a los 6 minutos del pitido y el
+  final salió con Sivera 10 (acabó con 15), Vlachodimos 0 (10) y Kike Salas 3 (8); faltaba todo lo de la portería a cero. Ahora un
+  partido está listo solo si (1) han pasado `puntosFinales.minTrasFinal` minutos (90) desde que el bot lo vio acabado, (2) los puntos de
+  todos sus jugadores no han cambiado en `puntosFinales.minEstable` minutos (40; la huella va en el registro, `puntosPartido`), (3) la
+  mayoría de los que más puntúan tiene la valoración DAZN y (4) el portero de un equipo que no ha encajado, si jugó 60' o más, ya tiene
+  sumada la portería a cero. Si el bot lo ve acabado muy tarde, el final se cuenta desde las 2 h del saque. Pasadas
+  `puntosFinales.esperaHoras` (6) desde el final, sale con lo que haya. En el log: «(puntos) partido N: espero: …» o «puntos definitivos ·
+  listo». Prueba: `node bot/prueba/puntos-ejemplo.mjs` (la noche del Sevilla-Alavés, minuto a minuto).
+
+### El revisor (7 nov)
+
+Carlos, 7 nov: «hoy he tenido que borrar y editar bastantes tweets porque no tenían sentido, tenían cosas erróneas o se notaba que estaba
+hecho con una IA mal». El validador de código no ve lo que solo se ve leyendo, así que cada tuit redactado o pulido pasa por una segunda
+lectura con IA (`lib/revisor.mjs`, uso «revisar» en lib/ia.mjs, Sonnet 5.5 con esfuerzo bajo): un editor con los hechos (o la plantilla,
+si es un pulido) al lado decide si se publica. Lo tira si dice algo que no sale de los datos (comparaciones con la jornada cuando solo
+hay un partido, rachas, contexto inventado, sucesos del partido), si se contradice o lee al revés los goles del rival, si una frase no se
+entiende a la primera o si suena a IA, a traducción o a plantilla. Sus motivos vuelven a la redacción como errores (hasta
+`redactar.intentos`, 3); si no publicaría ninguna versión, sale la plantilla. En un pulido que no aprueba, se queda la plantilla. Si
+Claude no contesta, el tuit sigue (ya pasó el validador): el revisor nunca bloquea por estar caído. `revisor.activo` a false lo apaga.
+En el log: «(redactar) …: el revisor no lo publicaría: …» y «(redactado por …, revisado por …)».
+
+Pulir (`lib/pulir.mjs`, caídas, sancionados, lloros, resumen, liga, onces y lo que no se redacta) va desde el 7 nov con Claude (uso
+«pulir»; Gemini solo si no hay Claude): el flash-lite de Gemini, el que quedaba cuando se gastaba el cupo del flash, era el que enredaba
+los textos («16º clasificado en un duelo asequible ante uno de los rivales que más encajan»).
+
+La guía (`lib/voz.mjs`) suma «Solo lo que sabes» (nada de comparar con lo que no viene en los hechos; en un final o un MVP solo se
+conoce ese partido) y «Lo que delata a una IA», con dos ejemplos MAL sacados de los tuits del 6 nov.
+
+Gasto: el revisor suma unos 0,008 $ por tuit y pulir con Claude unos 0,01 $ por tanda. Tope diario subido a 1,5 $ (`ia.topeDolaresDia`);
+`ia.porDia` con 150 para revisar y 80 para pulir.
 
 ## Tarjetas con imagen (encendidas desde el 2 nov)
+
+Desde el 7 nov se dibujan al doble (2400 de ancho; `aPng` en lib/tarjetas.mjs baja a 1,6 o a 1 si el PNG pasa de 4,8 MB): a 1200, X las enseñaba borrosas. La de final mide 1200x880 (antes 675) para que las caras pasen de 24 a 36 de radio (Carlos, 7 nov).
 
 Tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov). Desde el 3 nov, las que hablan de UN jugador concreto (la de
 jugador y la de bajas o novedades de uno solo) van en carta de coleccionista (diseño propio, `lib/carta.mjs`, letra Barlow
