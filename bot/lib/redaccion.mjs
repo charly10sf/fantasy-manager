@@ -318,8 +318,14 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     // lo que se le pide (más corto: «no tienen por qué ser muy largos», Carlos, 4 nov) y el máximo de verdad, que el validador mira
     const pide = Math.min(max - 40, ((cfg.largo || {})[tipo]) || max - 40);
     const cronicas = (await Promise.resolve(cronicasDe(t)).catch(() => [])) || [];
-    let anterior = '', errores = [], final = null;
-    for (let intento = 0; intento < (cfg.intentos ?? 3) && !final; intento++) {
+    let anterior = '', errores = [], final = null, rechazos = 0;
+    // presupuesto de tiempo de la ejecución (el trabajo de Actions tiene un tope de 10 min): pasado, sale la plantilla
+    if (process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo en esta ejecución (${Math.round(process.uptime())} s), sale la plantilla`); continue; }
+    // `intentos` versiones como mucho que lleguen al revisor, y una más si alguna se cae antes, en el validador de código (es gratis
+    // y casi siempre es un porcentaje de más o un «enfrente»)
+    const intentos = cfg.intentos ?? 3;
+    for (let intento = 0; intento < intentos + 1 && rechazos < intentos && !final; intento++) {
+      if (intento > 0 && process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo para otro intento`); break; }
       const r = await pedir({ uso: 'redactar', registro, config, sistema, cache, esquema: ESQUEMA, log,
         prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); break; }
@@ -328,8 +334,9 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
       if (!malos.length) {
-        const rv = await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, tipo, registro, config, log });
+        const rv = await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, tipo, registro, config, log });
         if (rv.ok) { final = { texto, modelo: r.modelo, usadas, revisado: rv.revisado ? rv.modelo : null }; continue; }
+        rechazos++;
         log(`  (redactar) ${t.clave}, intento ${intento + 1}: el revisor no lo publicaría: ${rv.problemas.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`);
         errores = rv.problemas.map((p) => `un editor lo ha leído con los hechos al lado y no lo publicaría: ${p}`); anterior = texto;
       } else { log(`  (redactar) ${t.clave}, intento ${intento + 1}: ${malos.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`); errores = malos; anterior = texto; }

@@ -31,7 +31,7 @@ Un tuit NO se publica si tiene cualquiera de estas cosas:
    - un suceso del partido (gol, penalti, parada, roja, VAR) que no viene en los datos.
    Una valoración para el mánager («si lo tienes, al once», «mejor esperar a los onces», «puede salir barato», «buena jornada para quien lo tenga») sí vale si se sigue de los datos; una predicción como si fuera un hecho, no.
    Lo que viene en PRENSA (si te la paso) también es un dato, pero solo con su medio pegado («según AS…») y solo en noticias y previas.
-   Las cifras dichas con palabras valen si cuadran a grandes rasgos con esta escala de la cuenta (es orientativa: no marques un matiz cerca del límite, solo lo que esté claramente mal, como llamar «fijo» a uno con un 40 %): titularidad de 75 % o más, «fijo», «juega», «seguro»; de 50 a 74, «lo normal es que salga»; de 30 a 49, «en el aire», «duda»; menos de 30, «lo tiene difícil». Una media de puntos alta (7 o más), «de los que más puntos dan». Los puntos de hoy frente a su media: lo que diga «hoyFrenteASuMedia» si viene. Una lectura razonable de la tabla también vale («el 4º parte como favorito ante el 17º»). Las etiquetas de los datos («papel», «alcance», «horario», «cruce», «dificultad», «valoracion») son datos.
+   Las cifras dichas con palabras valen si cuadran con el «papel» o el estado que traen los datos («titularidad en el aire», «fijo», «duda»…) o, a grandes rasgos, con esta escala de la cuenta (orientativa: no marques un matiz cerca del límite ni algo que coincida con el papel de los datos; solo lo que esté claramente mal, como llamar «fijo» a uno con un 40 %): titularidad de 75 % o más, «fijo», «juega», «seguro»; de 50 a 74, «lo normal es que salga»; de 30 a 49, «en el aire», «duda»; menos de 30, «lo tiene difícil». Una media de puntos alta (7 o más), «de los que más puntos dan». Los puntos de hoy frente a su media: lo que diga «hoyFrenteASuMedia» si viene. Una lectura razonable de la tabla también vale («el 4º parte como favorito ante el 17º»). Las etiquetas de los datos («papel», «alcance», «horario», «cruce», «dificultad», «valoracion») son datos.
 
 2. ALGO QUE SE CONTRADICE O ESTÁ AL REVÉS. Por ejemplo: «partido asequible» y a la vez «eso sí, el rival es de los que menos encajan» sin explicar; «lesión» y «no está descartado» en frases sueltas; quién juega en casa y quién fuera cambiado; leer al revés los goles del rival (a un portero o defensa le viene mal que el rival marque mucho; a un medio o delantero le viene bien que el rival encaje mucho).
 
@@ -39,7 +39,9 @@ Un tuit NO se publica si tiene cualquiera de estas cosas:
 
 4. QUE SUENE A IA, A TRADUCCIÓN O A PLANTILLA. Un aficionado de España que escribe bien no diría: frases de relleno sin información o grandilocuentes («deja su sello», «firma una actuación», «una noche para el recuerdo», «es de los que sostienen una plantilla»), castellano raro o calcado del inglés, «16º clasificado», «promedia», «el encuentro», «duelo» a cada rato, «conjunto + gentilicio», cierres moralizantes o de anuncio, telegrama de frases de tres palabras, enumerar datos sin decir qué significan. Una expresión normal del fútbol («la noche fue de Sivera», «se salva», «no se toca») NO es un problema.
 
-5. UN DATO CONTADO A MEDIAS QUE LLEVA A ERROR (un porcentaje suelto sin decir de qué, una media sin decir que es de puntos si no se entiende).
+5. QUE REPITA A LOS ANTERIORES. Si te paso los últimos tuits del mismo tipo y este sigue su mismo esqueleto o cierra con la misma fórmula (por ejemplo, todos acaban en «Si lo tienes, …; si no, …» o en «Si los tienes, jornada redonda»), no se publica: la cuenta no puede sonar a plantilla. Que dos tuits compartan una palabra o un dato no es repetir.
+
+6. UN DATO CONTADO A MEDIAS QUE LLEVA A ERROR (un porcentaje suelto sin decir de qué, una media sin decir que es de puntos si no se entiende).
 
 Marca solo lo GRAVE, lo que un lector notaría como falso, contradictorio, incomprensible o hecho por una máquina. No marques gustos ni matices: si una frase es verdad, se entiende y suena natural, no la toques aunque tú la escribirías de otra forma. No pidas añadir datos. Si dudas, es publicable. La etiqueta final del tuit (✅ Disponible…, ❌ Baja…, «Fantasy Manager · enlace en la bio») la pone el sistema: no la juzgues.
 
@@ -47,12 +49,13 @@ Devuelve publicable (true o false). Si es true, problemas va vacío: no apuntes 
 
 const sinFecha = (k, v) => (k === 'fecha' || k === 'etiqueta' ? undefined : v);
 
-export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [] }) {
+export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [], recientes = [] }) {
   return [
     `Tuit de tipo «${tipo || (hechos && hechos.tipo) || '?'}».`,
     hechos ? `DATOS (lo único que se sabe):\n${JSON.stringify(hechos, sinFecha, 1)}` : '',
     cronicas.length ? `PRENSA (también vale, con el medio pegado al hecho):\n${cronicas.map((c) => `- ${c.medio}: ${c.titulo}. ${c.entradilla || ''}`).join('\n')}` : '',
     fuenteTexto ? `DATOS (el texto de partida, sacado de los datos; lo único que se sabe):\n"""${fuenteTexto}"""` : '',
+    recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (ya publicados; solo para ver si este los repite):\n${recientes.slice(-4).map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     `TUIT:\n"""${texto}"""`,
   ].filter(Boolean).join('\n\n');
 }
@@ -61,11 +64,11 @@ export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '', cron
  * Lee un tuit con sus datos. Devuelve { ok, problemas: ['«frase»: motivo'], revisado: bool, modelo }.
  * `hechos` (redactados) o `fuenteTexto` (pulidos: la plantilla). Sin Claude o si no contesta: { ok: true, revisado: false }.
  */
-export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [], registro = null, config = {}, log = () => {}, pedir = preguntar }) {
+export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [], recientes = [], registro = null, config = {}, log = () => {}, pedir = preguntar }) {
   if ((config.revisor || {}).activo === false) return { ok: true, problemas: [], revisado: false };
   if (pedir === preguntar && !conClaude(config)) return { ok: true, problemas: [], revisado: false };
   const r = await pedir({ uso: 'revisar', registro, config, sistema: SISTEMA, cache: true, esquema: ESQUEMA, log,
-    prompt: prompt({ texto, hechos, fuenteTexto, tipo, cronicas }), tiempo: 30000, hasta: Date.now() + ((config.revisor || {}).segundos ?? 40) * 1000 });
+    prompt: prompt({ texto, hechos, fuenteTexto, tipo, cronicas, recientes }), tiempo: 30000, hasta: Date.now() + ((config.revisor || {}).segundos ?? 40) * 1000 });
   if (!r.ok || !r.datos) { log(`  (revisor) no contesta (${r.error || 'sin datos'}): sigue sin revisar`); return { ok: true, problemas: [], revisado: false }; }
   const problemas = (Array.isArray(r.datos.problemas) ? r.datos.problemas : [])
     .map((p) => (p && typeof p === 'object' ? `«${String(p.frase || '').slice(0, 140)}»: ${String(p.motivo || '').slice(0, 220)}` : String(p)))
