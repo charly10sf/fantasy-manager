@@ -34,6 +34,7 @@ import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './t
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
 import { seccionMoviles, ponerCarasPortada, activarPortada } from './portada.js';
+import { PASOS_SIN_APP } from './guiadib.js';
 import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
@@ -206,18 +207,9 @@ function entrarWebHTML() {
       </div>
       </div>
       <details class="sin-app"><summary>No tengo la app en el móvil<span class="en-dib-tag">con dibujos</span></summary>
-      <a class="en-dib-btn" href="instalar.html#sin-app" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg><span><b>Ver los pasos con dibujos</b><small>El F12 se entiende mucho mejor viéndolo</small></span><i aria-hidden="true">›</i></a>
       <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un QR (para la cámara del iPhone) o un código para escribirlo aquí en el iPhone. Si tienes la app en un Android, no hace falta nada de esto: usa su QR.</p>
-      <ol>
-        <li>Pulsa <b>Abrir la página de LaLiga</b>: se abre en otra pestaña.</li>
-        <li>En esa pestaña, antes de entrar, abre las herramientas del navegador (<b>F12</b>), ve a <b>Red</b> y marca <b>Conservar registro</b>.</li>
-        <li>Entra como siempre. Al acabar la página se queda en blanco: es lo normal.</li>
-        <li>En <b>Red</b>, la última fila (cancelada) empieza por <b>?state=…&amp;code=…</b>: botón derecho → <b>Copiar → Copiar dirección del enlace</b>.</li>
-        <li>Pégala aquí debajo y pulsa Entrar.</li>
-      </ol>
-      <button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>
-      <textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea>
-      <button class="btn chico" data-accion="pegarVuelta">Entrar</button>
+      <ol class="gd-lista">${PASOS_SIN_APP.map(([t, s], k) => `<li><div class="gd-t"><span class="gd-n">${k + 1}</span><span>${t}</span></div>${k === 0 ? '<button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>' : ''}<figure>${s}</figure>${k === 4 ? '<textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea><button class="btn chico" data-accion="pegarVuelta">Entrar</button>' : ''}</li>`).join('')}</ol>
+      <p class="gd-aparte"><a href="instalar.html#sin-app" target="_blank" rel="noopener">Verlo en una página aparte</a></p>
     </details>
     </section>
   </div>
