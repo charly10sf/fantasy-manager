@@ -158,31 +158,37 @@ function lineasDe(lado) {
 // compitan con las caras. El orden de cada línea es el que llega (con los confirmados de ESPN, de izquierda a derecha según se mira).
 // 20:19: la cara a 2,25 veces el radio (cabeza entera, sin cortar) y en los posibles onces un solo jugador por puesto, el de más %.
 export const ALTO_ONCES = 1420;
+// 20:27 (Carlos: «que sean más modernas»): campo casi negro con el brillo del club arriba y una rejilla de puntos, líneas finas, sin
+// franjas de césped; cabecera limpia (escudo, nombre y el dibujo en una etiqueta con filo), un filete de luz del color del club debajo,
+// halo suave detrás de cada cara y nombres en pastilla translúcida.
 function campo(x, y, w, h, lado, club, confirmados) {
-  const g = id('cp'), gv = id('cv'), gb = id('cb'), cl = id('cc');
-  const lc = 'stroke="#ffffff" stroke-opacity="0.2" stroke-width="2.5" fill="none"';
-  const HB = 104;                                    // la franja del club, arriba
-  let s = `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="26"/></clipPath>${lineal(g, [[0, '#1f6a43'], [1, '#0f3f26']])}`
-    + `${lineal(gv, [[0, club.vivo, 0.22], [0.5, club.vivo, 0]])}${lineal(gb, [[0, club.vivo, 0.95], [1, club.vivo, 0.55]], { x1: 0, y1: 0, x2: 1, y2: 0 })}</defs>`
-    + `<rect x="${x}" y="${y + 8}" width="${w}" height="${h}" rx="26" fill="#000" opacity="0.45"/>`
-    + `<g clip-path="url(#${cl})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>`;
-  const yc = y + HB, hc = h - HB;
-  for (let k = 0; k < 10; k++) if (k % 2) s += `<rect x="${x}" y="${yc + k * hc / 10}" width="${w}" height="${hc / 10}" fill="#000" opacity="0.08"/>`;
-  s += `<rect x="${x}" y="${yc}" width="${w}" height="${hc}" fill="url(#${gv})"/>`
-    // líneas: medio campo con su círculo arriba, área grande y pequeña abajo
-    + `<path d="M${x + w * 0.32},${yc} A${w * 0.18},${w * 0.18} 0 0 0 ${x + w * 0.68},${yc}" ${lc}/>`
-    + `<rect x="${x + w * 0.2}" y="${y + h - 150}" width="${w * 0.6}" height="170" ${lc}/>`
-    + `<rect x="${x + w * 0.35}" y="${y + h - 62}" width="${w * 0.3}" height="80" ${lc}/>`
+  const g = id('cp'), gv = id('cv'), gb = id('cb'), cl = id('cc'), pt = id('pt');
+  const lc = 'stroke="#ffffff" stroke-opacity="0.11" stroke-width="2" fill="none"';
+  const HB = 104;                                    // la cabecera del club
+  let s = `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="30"/></clipPath>${lineal(g, [[0, '#13221b'], [0.55, '#0c1612'], [1, '#090f0c']])}`
+    + `<radialGradient id="${gv}" cx="0.5" cy="0" r="0.75"><stop offset="0" stop-color="${club.vivo}" stop-opacity="0.38"/><stop offset="1" stop-color="${club.vivo}" stop-opacity="0"/></radialGradient>`
+    + `${lineal(gb, [[0, club.vivo, 0], [0.5, club.vivo, 1], [1, club.vivo, 0]], { x1: 0, y1: 0, x2: 1, y2: 0 })}`
+    + `<pattern id="${pt}" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="12" cy="12" r="1.1" fill="#fff" fill-opacity="0.05"/></pattern></defs>`
+    + `<rect x="${x}" y="${y + 10}" width="${w}" height="${h}" rx="30" fill="#000" opacity="0.5"/>`
+    + `<g clip-path="url(#${cl})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h * 0.7}" fill="url(#${gv})"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pt})"/>`;
+  const yc = y + HB;
+  // líneas: medio campo con su círculo arriba, área grande y pequeña abajo
+  s += `<path d="M${x + w * 0.3},${yc} A${w * 0.2},${w * 0.2} 0 0 0 ${x + w * 0.7},${yc}" ${lc}/>`
+    + `<rect x="${x + w * 0.2}" y="${y + h - 150}" width="${w * 0.6}" height="170" rx="6" ${lc}/>`
+    + `<rect x="${x + w * 0.35}" y="${y + h - 62}" width="${w * 0.3}" height="80" rx="4" ${lc}/>`
     + `<path d="M${x + w * 0.39},${y + h - 150} A${w * 0.12},${w * 0.08} 0 0 1 ${x + w * 0.61},${y + h - 150}" ${lc}/>`
-    // la franja del club: su color, el escudo, el nombre y el dibujo
-    + `<rect x="${x}" y="${y}" width="${w}" height="${HB}" fill="#0b0d11"/><rect x="${x}" y="${y}" width="${w}" height="${HB}" fill="url(#${gb})" opacity="0.5"/>`
-    + `<rect x="${x}" y="${y + HB - 3}" width="${w}" height="3" fill="${club.vivo}"/></g>`
-    + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="25" fill="none" stroke="#fff" stroke-opacity="0.14" stroke-width="2"/>`;
-  const fch = lado.formacion ? chip(lado.formacion, 0, 0, 26, { relleno: TINTA, pad: 1.6, espacio: 2 }) : null;
-  const xNom = x + 24 + (lado.escudo ? 70 : 0), maxNom = w - (xNom - x) - 24 - (fch ? fch.w + 16 : 0);
-  s += escudo(lado.escudo, x + 54, y + HB / 2, 66)
+    + `<rect x="${x}" y="${yc - 1}" width="${w}" height="2" fill="url(#${gb})"/></g>`
+    + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="29" fill="none" stroke="#fff" stroke-opacity="0.09" stroke-width="2"/>`;
+  const fw = lado.formacion ? medir(lado.formacion, 26, B, 2) + 30 : 0;
+  const xNom = x + 26 + (lado.escudo ? 70 : 0), maxNom = w - (xNom - x) - 26 - (fw ? fw + 14 : 0);
+  s += escudo(lado.escudo, x + 58, y + HB / 2, 64)
     + texto(xNom, y + HB / 2 + 17, mayus(lado.corto || lado.nombre), { px: 50, peso: 800, max: maxNom });
-  if (fch) s += chip(lado.formacion, x + w - 22 - fch.w / 2, y + HB / 2, 26, { relleno: TINTA, pad: 1.6, espacio: 2 }).s;
+  if (fw) {
+    const fx = x + w - 24 - fw;
+    s += `<rect x="${fx}" y="${y + HB / 2 - 23}" width="${fw}" height="46" rx="23" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.32" stroke-width="1.5"/>`
+      + texto(fx + fw / 2, y + HB / 2 + 9, lado.formacion, { px: 26, peso: 800, ancla: 'middle', espacio: 2 });
+  }
   // los jugadores, línea a línea (la delantera arriba)
   const lineas = lineasDe(lado).reverse();
   const arriba = yc + 22, abajo = y + h - 34;
@@ -192,7 +198,8 @@ function campo(x, y, w, h, lado, club, confirmados) {
   const PXN = 30;
   const pastilla = (t, cx, cy, wMax) => {
     const pp = tamano(t, PXN, wMax - 18), wt = Math.min(wMax, medir(t, pp, B, 0.5) + 26);
-    return `<rect x="${cx - wt / 2}" y="${cy - PXN * 1.0}" width="${wt}" height="${PXN * 1.42}" rx="${PXN * 0.71}" fill="#05070a" fill-opacity="0.93" stroke="#fff" stroke-opacity="0.1"/>`
+    return `<rect x="${cx - wt / 2}" y="${cy - PXN * 1.0}" width="${wt}" height="${PXN * 1.42}" rx="${PXN * 0.71}" fill="#0b0f0d" fill-opacity="0.82"/>`
+      + `<rect x="${cx - wt / 2 + 0.75}" y="${cy - PXN * 1.0 + 0.75}" width="${wt - 1.5}" height="${PXN * 1.42 - 1.5}" rx="${PXN * 0.71}" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>`
       + texto(cx, cy, t, { px: PXN, peso: 800, color: '#ffffff', ancla: 'middle', max: wMax - 18, espacio: 0.5 });
   };
   lineas.forEach((ls, i) => {
@@ -202,7 +209,9 @@ function campo(x, y, w, h, lado, club, confirmados) {
     ls.forEach((j, k) => {
       const cx = x0 + hueco * (k + 0.5);
       const pctCol = colPct(j.pct);
-      s += (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: j.duda ? AMBAR : club.vivo, grosor: Math.max(3.5, R * 0.08), fondoColor: club.vivo, zoom: 2.25 })
+      const hl = id('hl');
+      s += `<defs><radialGradient id="${hl}"><stop offset="0.55" stop-color="${club.vivo}" stop-opacity="0.32"/><stop offset="1" stop-color="${club.vivo}" stop-opacity="0"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${R * 1.45}" fill="url(#${hl})"/>`;
+      s += (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: j.duda ? AMBAR : club.vivo, grosor: Math.max(3, R * 0.06), fondoColor: club.vivo, zoom: 2.25 })
         : `<circle cx="${cx}" cy="${cy + 3}" r="${R + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="${j.duda ? AMBAR : '#ffffff'}" stroke-width="3"/>`)
         + pastilla(nombreAjustado(j.nombre, PXN, ancho - 18, 0.5, { apellido: true }), cx, yN, ancho);
       if (pctCol && !confirmados) s += chip(`${j.pct} %`, cx + R * 0.78, cy - R * 0.8, 21, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
