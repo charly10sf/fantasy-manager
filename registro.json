@@ -711,7 +711,7 @@
   "2768": "ok",
   "2770": "ok",
   "2771": "ok",
-  "2772": "ok",
+  "2772": "doubtful",
   "2773": "out_of_league",
   "2774": "ok",
   "2775": "out_of_league",
@@ -1404,7 +1404,8 @@
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/06/barrenetxea-vuelve-a-la-lista-de-luis-de-la-fuente-para-el-paron-de-noviembre-radio-san-sebastian/": 1793962860000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-llama-alvaro-valles-marc-roca-jacobo-ramon-recupera-pablo-barrios-barrenetxea-20261106_3470127.html": 1793961935000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000,
-   "SPORT|136125660": 1793959209000
+   "SPORT|136125660": 1793959209000,
+   "SPORT|136153368": 1793959980000
   },
   "hechos": [
    {
@@ -2077,7 +2078,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -2529,8 +2530,8 @@
     "t": 0
    },
    "2772": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1793963776475
    },
    "2782": {
     "e": "out_of_league",
