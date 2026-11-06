@@ -1223,7 +1223,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/atletico/2026/11/03/lista-convocados-atletico-vs-bayern-munich-vuelve-koke-cuti-baja.html": 1793709326000,
    "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
    "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/": 1793711635000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246691/orian-goren-principal-novedad-convocatoria-aston-villa.html": 1793711167000,
@@ -1243,7 +1242,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/03/pedro-martinez-quiere-recuperar-eli-ndiaye-136041146.html": 1793717014000,
-   "Diario Sur|https://www.diariosur.es/malagacf/joaquin-recuperacion-malaga-futbol-racing-20261103132330-nt.html": 1793709234000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
    "SPORT|136055935": 1793734147000,
@@ -1420,7 +1418,10 @@
    "AS|https://as.com/futbol/primera/jose-alberto-le-echa-un-cable-a-funes-el-malaga-ha-tenido-un-calendario-muy-duro-f202611-n/": 1793965403000,
    "AS|https://as.com/futbol/primera/san-jose-me-ha-sorprendido-mucho-que-oyarzabal-no-estuviera-en-la-lista-del-balon-de-oro-f202611-n/": 1793966372000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/06/alvaro-valles-llamada-fuente-llore-vergueenza.html": 1793968127000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247891/christensen-eric-siguen-evolucion-dias-atleti.html": 1793966557000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247891/christensen-eric-siguen-evolucion-dias-atleti.html": 1793966557000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247910/tchouameni-vuelve-vinicius-descansa-ultimo-entrenamiento-real-madrid-valencia.html": 1793967950000,
+   "SPORT|136161977": 1793964440000,
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/eric-i-christensen-apunten-al-metropolitano-sercat/": 1793968183000
   },
   "hechos": [
    {
@@ -2127,11 +2128,27 @@
     "nums": [
      8
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247910/tchouameni-vuelve-vinicius-descansa-ultimo-entrenamiento-real-madrid-valencia.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793967950000,
+    "id": "1480",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Tchouaméni vuelve a entrenar con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     7,
+     21,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
