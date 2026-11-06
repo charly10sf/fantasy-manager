@@ -1254,7 +1254,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246831/cuti-romero-queda-argentina.html": 1793729269000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/03/mourinho-se-desmarca-de-la-mistica-de-roma-antes-de-su-gran-reto-en-la-champions-no-creo-en-puntos-de-inflexion-cadena-ser/": 1793728400000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
@@ -1459,7 +1458,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247991/soler-ejercita-suplentes-espera-oyarzabal-zakharyan-esten-ultima-sesion.html": 1793981155000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/nueve-bajas-betis-navalcarnero_0_2008438147.html": 1793982315000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html": 1793985142000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000,
+   "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000
   },
   "hechos": [
    {
@@ -2221,7 +2221,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
