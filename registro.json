@@ -1459,7 +1459,8 @@
    "SPORT|136173086": 1793976867000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247994/galarreta-alista-paredes-causa-baja.html": 1793981520000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247991/soler-ejercita-suplentes-espera-oyarzabal-zakharyan-esten-ultima-sesion.html": 1793981155000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/nueve-bajas-betis-navalcarnero_0_2008438147.html": 1793982315000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/nueve-bajas-betis-navalcarnero_0_2008438147.html": 1793982315000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html": 1793985142000
   },
   "hechos": [
    {
@@ -2217,11 +2218,23 @@
     "motivo": "virus estomacal",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html",
+    "medio": "MARCA",
+    "t": 1793985142000,
+    "id": "1480",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Tchouaméni vuelve directo al once tras recuperarse",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 41
+   "n": 42
   },
   "desde": {
    "67": {
