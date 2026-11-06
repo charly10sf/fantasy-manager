@@ -219,6 +219,30 @@ function campo(x, y, w, h, lado, club, confirmados) {
   });
   return s;
 }
+// el banquillo de los posibles onces (Carlos, 6 nov 20:34): el suplente con más % de delantero, medio y defensa, en un panel bajo el campo
+const ALTO_BANCO = 214;
+const PUESTO_BANCO = { DEL: 'DELANTERO', MED: 'MEDIO', DEF: 'DEFENSA', POR: 'PORTERO' };
+function banco(x, y, w, sup, club) {
+  const h = ALTO_BANCO, gb = id('bk');
+  let s = `<defs>${lineal(gb, [[0, '#121c17'], [1, '#0a100d']])}</defs><rect x="${x}" y="${y + 8}" width="${w}" height="${h}" rx="26" fill="#000" opacity="0.45"/>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="26" fill="url(#${gb})"/>`
+    + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="25" fill="none" stroke="#fff" stroke-opacity="0.09" stroke-width="2"/>`
+    + texto(x + 26, y + 34, 'SUPLENTES', { px: 22, peso: 800, color: '#ffffff', espacio: 4 })
+    + `<rect x="${x + 26}" y="${y + 42}" width="${w - 52}" height="1.5" fill="#ffffff" fill-opacity="0.08"/>`;
+  const hueco = (w - 20) / 3, R = 44, cy = y + 114;
+  sup.slice(0, 3).forEach((j, k) => {
+    const cx = x + 10 + hueco * (k + 0.5), hl = id('hl'), pctCol = colPct(j.pct);
+    s += `<defs><radialGradient id="${hl}"><stop offset="0.55" stop-color="${club.vivo}" stop-opacity="0.3"/><stop offset="1" stop-color="${club.vivo}" stop-opacity="0"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${R * 1.45}" fill="url(#${hl})"/>`
+      + (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: j.duda ? AMBAR : club.vivo, grosor: 3, fondoColor: club.vivo, zoom: 2.25 })
+        : `<circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="#ffffff" stroke-width="3"/>`)
+      + texto(cx, y + 60, PUESTO_BANCO[j.pos] || j.pos, { px: 17, peso: 700, color: TENUE, ancla: 'middle', espacio: 2.5 });
+    if (pctCol) s += chip(`${j.pct} %`, cx + R * 0.82, cy - R * 0.78, 19, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
+    const ancho = hueco - 8, t = nombreAjustado(j.nombre, 26, ancho - 18, 0.5, { apellido: true }), pp = tamano(t, 26, ancho - 18), wt = Math.min(ancho, medir(t, pp, B, 0.5) + 24);
+    s += `<rect x="${cx - wt / 2}" y="${cy + R + 34 - 26}" width="${wt}" height="37" rx="18.5" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>`
+      + texto(cx, cy + R + 34, t, { px: 26, peso: 800, ancla: 'middle', max: ancho - 18, espacio: 0.5 });
+  });
+  return s;
+}
 export function svgOnces(d) {
   const L = d.local, V = d.visitante, H = ALTO_ONCES;
   const cL = coloresClub(L.nombre), cV0 = coloresClub(V.nombre);
@@ -227,7 +251,9 @@ export function svgOnces(d) {
   let s = tit.defs + fondo([[250, 120, 700, cL.vivo, 0.28], [950, 120, 700, cV.vivo, 0.28]], H)
     + texto(600, 86, d.confirmados ? 'ONCES CONFIRMADOS' : 'POSIBLES ONCES', { px: 72, peso: 800, italica: true, color: `url(#${tit.g})`, ancla: 'middle', max: 900 })
     + texto(600, 124, `JORNADA ${d.jornada}`, { px: 24, peso: 700, color: TENUE, ancla: 'middle', espacio: 4 });
-  s += campo(22, 150, 570, H - 222, L, cL, d.confirmados) + campo(608, 150, 570, H - 222, V, cV, d.confirmados);
+  const conBanco = !d.confirmados && [L, V].some((x) => x.suplentes && x.suplentes.length), hc = H - 222 - (conBanco ? ALTO_BANCO + 16 : 0);
+  s += campo(22, 150, 570, hc, L, cL, d.confirmados) + campo(608, 150, 570, hc, V, cV, d.confirmados);
+  if (conBanco) s += banco(22, 150 + hc + 16, 570, L.suplentes || [], cL) + banco(608, 150 + hc + 16, 570, V.suplentes || [], cV);
   return marco(s + marca(600, H - 26, { ancla: 'middle' }), H);
 }
 
