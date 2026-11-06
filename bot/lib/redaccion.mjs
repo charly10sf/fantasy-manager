@@ -4,13 +4,14 @@
 // Disponible para la jornada 12 contra el Valencia», el cierre…) la pone el código debajo. El validador ya no compara con la plantilla
 // (ni líneas, ni orden): comprueba que lo que dice cuadra con los hechos. Lo que no pasa se pregunta otra vez con los errores; si
 // tampoco, sale la plantilla. Con Claude (lib/ia.mjs, uso «redactar»); sin Claude, no hace nada.
-import { norm, peso, limite, copia, APODOS, corto, esEtiquetaFinal, CIERRES } from './texto.mjs';
+import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal, CIERRES } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntar, conClaude } from './ia.mjs';
 import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
 import { ARRANQUES, VAGAS, PROHIBIDO, EMOJIS_GUIA, segunTrasCifra, nombresEn, nombresDe } from './pulir.mjs';
 import { NOMBRES_MEDIOS } from './prensa.mjs';
 import { ESTADIOS } from './hechos.mjs';
+import { revisarConIA } from './revisor.mjs';
 
 const EMOJI = /\p{Extended_Pictographic}/gu;
 const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
@@ -238,8 +239,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (em.filter((x) => EMOJIS_GUIA.has(x)).length > 1) e.push('más de un emoji de la guía (solo uno, al principio)');
   if (hechos.sobrio && em.length) e.push('tono sobrio: sin emojis');
   // nada copiado: ni de las crónicas (6 palabras seguidas, como en tipos/noticias.mjs) ni de los ejemplos de la guía (8)
-  for (const c of cronicas) if (copia(t, `${c.titulo} ${c.entradilla}`, 6)) e.push(`copia 6 palabras seguidas de ${c.medio}`);
-  for (const x of EJEMPLOS) if (copia(t, x.texto, 8)) { e.push('copia un ejemplo de la guía'); break; }
+  for (const c of cronicas) { const g = trozoCopiado(t, `${c.titulo} ${c.entradilla}`, 6); if (g) e.push(`copia 6 palabras seguidas de ${c.medio} («${g}»): cuéntalo con tus palabras`); }
+  for (const x of EJEMPLOS) { const g = trozoCopiado(t, x.texto, 8); if (g) { e.push(`copia un ejemplo de la guía («${g}…»): dilo con tus palabras`); break; } }
   // variedad: ni la misma entrada ni el mismo esqueleto que los últimos del tipo
   const nom = [...permitidos];
   // ni una muletilla que ya va en dos de los últimos («es el seguro bajo palos», «si dudas, mejor esperar a los onces»; 6 nov): un grupo de
@@ -263,6 +264,8 @@ export const sistemaDe = (tipo) => `${GUIA}\n\nEJEMPLOS (jugadores inventados: s
 export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [], anterior = '', gastadas = [] }) {
   return [`Escribe el tuit de tipo «${hechos.tipo}» con estos hechos. Como mucho ${max} caracteres, mejor menos (sin contar la etiqueta, que va aparte: «${hechos.etiqueta || '(ninguna)'}»).`,
     `HECHOS:\n${JSON.stringify(hechos, sinFecha, 1)}`,
+    // lo que más tumbaba los borradores en la prueba del 7 nov (19 previas): se recuerda justo antes de escribir
+    (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ninguna comparación con el resto de la jornada.`; })(),
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     gastadas.length ? `FRASES YA GASTADAS (salen en varios de esos tuits; no las uses): ${gastadas.map((g) => `«${g.txt}»`).join(', ')}` : '',
     cronicas.length ? `PRENSA DE ESTE PARTIDO (hasta dos hechos, con tus palabras y con el medio pegado al hecho; nada de lo que pasa en el campo, eso solo si está en los hechos):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
@@ -295,7 +298,7 @@ export function cuerpoDe(texto) {
  * `cronicasDe(t)` da la prensa del partido de un tweet (o []). Devuelve cuántos ha redactado.
  */
 export async function redactar(tweets, { tipo, registro = null, config = {}, jugadores = [], equipos = {}, log = console.log, ahora = Date.now(),
-  pedir = preguntar, cronicasDe = () => [], forzar = false } = {}) {
+  pedir = preguntar, cronicasDe = () => [], forzar = false, revisor = revisarConIA } = {}) {
   const cfg = config.redactar || {};
   const activo = forzar || process.env.BOT_REDACTAR === '1' || cfg.activo === true;
   const xs = tweets.filter((t) => t && t.hechos);
@@ -315,22 +318,35 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     // lo que se le pide (más corto: «no tienen por qué ser muy largos», Carlos, 4 nov) y el máximo de verdad, que el validador mira
     const pide = Math.min(max - 40, ((cfg.largo || {})[tipo]) || max - 40);
     const cronicas = (await Promise.resolve(cronicasDe(t)).catch(() => [])) || [];
-    let anterior = '', errores = [], final = null;
-    for (let intento = 0; intento < (cfg.intentos ?? 2) && !final; intento++) {
+    let anterior = '', errores = [], final = null, rechazos = 0;
+    // presupuesto de tiempo de la ejecución (el trabajo de Actions tiene un tope de 10 min): pasado, sale la plantilla
+    if (process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo en esta ejecución (${Math.round(process.uptime())} s), sale la plantilla`); continue; }
+    // `intentos` versiones como mucho que lleguen al revisor, y una más si alguna se cae antes, en el validador de código (es gratis
+    // y casi siempre es un porcentaje de más o un «enfrente»)
+    const intentos = cfg.intentos ?? 3;
+    for (let intento = 0; intento < intentos + 1 && rechazos < intentos && !final; intento++) {
+      if (intento > 0 && process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo para otro intento`); break; }
       const r = await pedir({ uso: 'redactar', registro, config, sistema, cache, esquema: ESQUEMA, log,
         prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); break; }
       const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
-      if (!malos.length) final = { texto, modelo: r.modelo, usadas };
-      else { log(`  (redactar) ${t.clave}, intento ${intento + 1}: ${malos.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`); errores = malos; anterior = texto; }
+      // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
+      if (!malos.length) {
+        const rv = await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, tipo, registro, config, log });
+        if (rv.ok) { final = { texto, modelo: r.modelo, usadas, revisado: rv.revisado ? rv.modelo : null }; continue; }
+        rechazos++;
+        log(`  (redactar) ${t.clave}, intento ${intento + 1}: el revisor no lo publicaría: ${rv.problemas.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`);
+        errores = rv.problemas.map((p) => `un editor lo ha leído con los hechos al lado y no lo publicaría: ${p}`); anterior = texto;
+      } else { log(`  (redactar) ${t.clave}, intento ${intento + 1}: ${malos.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`); errores = malos; anterior = texto; }
     }
     if (!final) { log(`  (redactar) ${t.clave}: sale la plantilla`); continue; }
     t.plantilla = t.texto;
     t.texto = etiqueta ? `${final.texto}\n\n${etiqueta}` : final.texto;
     t.numeros = [...new Set([...(t.numeros || []), ...cifrasDe(t.hechos, final.usadas)])];
     t.redactado = final.modelo;
+    if (final.revisado) t.revisado = final.revisado;
     if (final.usadas.length) t.prensa = final.usadas.map((c) => c.medio);
     recientes.push(final.texto);
     hechos++;

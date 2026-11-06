@@ -18,9 +18,13 @@ export function peso(s) {
 }
 /** ¿copia `n` palabras seguidas de la fuente? (las noticias de prensa: 6) */
 export function copia(s, fuente, n = 6) {
+  return !!trozoCopiado(s, fuente, n);
+}
+/** el primer trozo de n palabras de `s` que está en `fuente` (normalizado), o '' */
+export function trozoCopiado(s, fuente, n = 6) {
   const w = norm(s).split(' ').filter(Boolean), src = ` ${norm(fuente)} `;
-  for (let i = 0; i + n <= w.length; i++) if (src.includes(` ${w.slice(i, i + n).join(' ')} `)) return true;
-  return false;
+  for (let i = 0; i + n <= w.length; i++) { const g = w.slice(i, i + n).join(' '); if (src.includes(` ${g} `)) return g; }
+  return '';
 }
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 

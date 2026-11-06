@@ -1,9 +1,9 @@
 // MVP de cada partido acabado: un tweet aparte con la tarjeta de jugador. Solo existe con la tarjeta de jugador encendida
 // (config.tarjetas.jugador): sin imagen repetiría lo que ya dice el tweet del final, así que ejecutar.mjs no lo publica sin ella.
 import { corto, fmt, partes, del, el, largo, rotar, ordenJornada, dineroTxt } from '../lib/texto.mjs';
-import { formaMvp, chocaConFinal } from './final.mjs';
+import { formaMvp, chocaConFinal, relato } from './final.mjs';
 import { tweet, segunda, cap, proximoPartido, cuando, puesto } from '../lib/redactar.mjs';
-import { clubes as clubesH, estadio as estadioH } from '../lib/hechos.mjs';
+import { clubes as clubesH, estadio as estadioH, frenteMedia, franja } from '../lib/hechos.mjs';
 import { incidenciasPartido } from '../lib/relato.mjs';
 import { casarJugador } from './directo.mjs';
 
@@ -62,7 +62,7 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
         `🗓️ El siguiente, ${cuandoTxt} contra ${el(pp.rival)}. Ahora mismo vale ${dv.t}`], 'mvpl')
         : valor > 0 ? `💸 Vale ${dv.t} en el mercado` : pp ? `🗓️ Vuelve a jugar ${cuandoTxt}, contra ${el(pp.rival)}` : null;
       if (t) ideas.push({ t, prio: 2 });
-      if (pp) proximoH = { club: pp.rival, rival: el(pp.rival), ...(c ? { cuando: c.t } : { jornada: pp.jornada }) };
+      if (pp) proximoH = { club: pp.rival, rival: el(pp.rival), ...(pp.enCasa != null ? { juega: pp.enCasa ? 'en casa' : 'fuera' } : {}), ...(c ? { cuando: c.t } : { jornada: pp.jornada }) };
       if (valor > 0) valorH = dv.t;
     }
     const { usadas, texto } = tweet(cab, ideas);
@@ -71,11 +71,15 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
     // los sucesos comprobados del partido (penaltis parados o fallados, rojas): si el MVP es un portero que para un penalti, sale de aquí
     const incidencias = await incidenciasPartido(m, (n, lado, o) => casarJugador(n, lado === 'local' ? m.local : m.visitor, o));
-    const hechos = { tipo: 'mvp', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), marcador: `${m.localScore}-${m.visitorScore}`, fecha: m.date || null },
-      ...(incidencias.length ? { incidencias } : {}),
+    // y los goles (7 nov: sin ellos escribía «marcó en el Coliseum» o «decidió el 2-1» sin dato, y el revisor lo tiraba)
+    const goles = await relato(m, `mvp${jornada}`).then((r) => (r && r.goles) || []).catch(() => []);
+    const hechos = { tipo: 'mvp', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), marcador: `${m.localScore}-${m.visitorScore}`, ...(franja(m.date) ? { horario: franja(m.date) } : {}), fecha: m.date || null },
+      alcance: 'datos de este partido y de este jugador: del resto de la jornada no se sabe nada',
+      goles, ...(incidencias.length ? { incidencias } : {}),
       nota: 'el tuit del final de este partido acaba de salir: este va del mejor jugador y de lo que significa para el mánager',
-      jugadores: [{ nombre, puesto: puesto(j.positionId) || undefined, club: equipo, puntosHoy: pts, puntosTemporada: Number(j.points) || 0,
-        ...(mediaR >= 1 ? { mediaPuntos: fmt(j.averagePoints) } : {}), ...(yaMedia ? { hoy: `más del ${pts > 3 * mediaR ? 'triple' : 'doble'} de su media` } : {}),
+      jugadores: [{ nombre, puesto: puesto(j.positionId) || undefined, club: equipo, papel: otro ? 'empatado como el que más puntos ha sacado del partido' : 'el que más puntos ha sacado del partido (de los dos equipos)',
+        puntosHoy: pts, puntosTemporada: Number(j.points) || 0,
+        ...(mediaR >= 1 ? { mediaPuntos: fmt(j.averagePoints), hoyFrenteASuMedia: frenteMedia(pts, j.averagePoints) } : {}),
         ...(valorH ? { valorMercado: valorH } : {}), ...(proximoH ? { proximoPartido: proximoH } : {}), principal: true },
         ...(otro ? [{ nombre: otro.p.nickname || otro.p.name, club: corto(otro.eq.mainName), puntosHoy: pts, papel: 'empata con él', principal: true }] : [])],
       clubes: clubesH(L, V, proximoH ? proximoH.club : null), etiqueta: '' };

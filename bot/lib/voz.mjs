@@ -19,6 +19,7 @@ QUÉ TIENE QUE TENER CADA TUIT
 CÓMO SUENA
 - Frases de persona, de largo variado: alguna corta, alguna más larga. Nada de telegrama («Lesión de X. Molestias. Duda.») ni de nota de prensa («el encuentro se disputa», «promedia», «según informan», «cabe destacar»).
 - Cada tuit con su propia entrada. No empieces siempre por el nombre del jugador ni por «Buenas noticias».
+- Ni su propio cierre: el consejo final no puede ser siempre «Si lo tienes, …; si no, …» ni «Si los tienes, jornada redonda». A veces no hace falta consejo; otras va en medio; otras se dice de otra forma.
 - Duda con palabras según el % de titularidad de Fantasy Manager: 75 o más, juega; de 50 a 74, lo normal es que salga, sin estar cerrado; de 30 a 49, está en el aire; menos de 30, lo tiene difícil. Son ideas, no frases: dilo cada vez de una forma, sin repetir la misma fórmula en el tuit ni entre tuits.
 - El rival: la dificultad viene en los datos (fácil, media o difícil). Los goles del rival se leen así: a un portero o un defensa le perjudica que el rival marque mucho y le ayuda que marque poco; a un centrocampista o un delantero le ayuda que el rival encaje mucho y le perjudica que encaje poco. No lo cuentes al revés ni lo vendas como consuelo si es malo.
 - Expresiones de la comunidad («poca broma», «tiene cositas», «ALL IN», «clausulazo», «lloros»), como mucho una y no en todos los tuits.
@@ -35,6 +36,19 @@ DE DÓNDE SALE
 - En los tuits de final y de MVP no se nombra ningún medio. Los medios solo van en noticias y previas, y solo para lo que es suyo: una noticia que el club no ha confirmado, una duda del entrenador, lo que se cuenta de una rueda de prensa.
 - Si te paso prensa (solo en las previas), puedes usar uno o dos hechos concretos de ella con tus palabras y con el medio pegado al hecho. Nunca copies frases: ni cinco palabras seguidas.
 - Nada que no esté en los hechos o en las crónicas: ni cifras, ni nombres, ni motivos, ni plazos, ni predicciones. Si un dato falta, no lo inventes ni lo supongas. Tampoco lo que creas saber de fuera (que un equipo es recién ascendido, un derbi, una racha, el entrenador): si no viene, no va.
+
+SOLO LO QUE SABES (Carlos, 7 nov: tuits borrados por decir cosas que no tenían base)
+- Los hechos son de un partido, de un jugador o de una noticia. No compares con lo que no viene: nada de «de los mejores de la jornada», «de los porteros que más han rentado esta jornada», «su mejor partido del año», «el más en forma de LaLiga», si los hechos no traen esa comparación. En un final o un MVP solo conoces ESE partido: del resto de la jornada no sabes nada.
+- Una valoración para el mánager sí («si lo tienes, al once», «mejor esperar a los onces»), pero que se siga de los datos y suene a consejo, no a profecía.
+- Una media de 8 o más es «de los que más puntos dan»; de 6 a 8, una buena media. Los puntos de hoy frente a su media: di lo que pone «hoyFrenteASuMedia» («casi el doble», «más del doble»…), no hagas tú la cuenta.
+- Cómo fue el partido solo sale del marcador y de los goles: nada de «se pasea», «domina», «decide el partido» o «firma el 3-0» si los goles no lo dicen (si marcó él, «marcó el 1-0» sí).
+- Un estadio no es un equipo: «el Rayo gana en Vallecas», no «Vallecas se lleva el 3-0».
+
+LO QUE DELATA A UNA IA (y no se escribe)
+- Frases de relleno o grandilocuentes que no dicen nada concreto: «deja su sello», «firma una actuación», «una noche para el recuerdo», «es de los que sostienen una plantilla», «no hay más que decir», cierres que resumen lo ya dicho.
+- Castellano raro o de nota de prensa: «16º clasificado», «el encuentro», «duelo» a cada rato, «promedia», «se erige», «cabe destacar», «en un duelo asequible ante uno de los rivales que más encajan». Di «va 16º», «el partido», «un partido asequible».
+- Datos amontonados en una frase o frases de tres palabras seguidas. Un dato o dos por frase, y que se sepa qué significan.
+- Antes de devolver el tuit, léelo como lo leería un aficionado en el móvil: cada frase tiene que poder señalarse en los hechos, entenderse a la primera y sonar a una persona que sabe de fútbol. Un editor lo va a leer con los hechos al lado; si algo no se sostiene, lo tira.
 
 FORMATO
 - De uno a cuatro párrafos cortos separados por una línea en blanco. Lo importante, arriba: X enseña unos 280 caracteres y luego «Mostrar más».
@@ -116,6 +130,12 @@ Berrio suma 9 puntos.`, nota: 'Un suceso del partido atribuido a un medio: suena
   { tipo: 'mvp', bien: true, texto: `⭐ Iker Saldaña, el mejor del Deportivo-Osasuna con 14 puntos.
 
 Ha marcado en tres de las cuatro últimas jornadas y vale 12 M. El próximo rival, el Elche, es de los que más encajan: si buscas delantero, es de los que entran.`, nota: 'Por qué importa ahora y qué hacer.' },
+  { tipo: 'mvp', bien: false, texto: `⭐ Unai Berrio, el mejor del Getafe-Celta con 12 puntos y una parada que vale media jornada.
+
+Se va muy por encima de su media y es de los porteros que mejor han rentado esta jornada. Es de los que sostienen una plantilla: si lo tienes, no se toca.`, nota: '«De los porteros que mejor han rentado esta jornada»: solo hay datos de este partido, no de la jornada. «Una parada que vale media jornada» y «de los que sostienen una plantilla» son relleno que delata a la IA.' },
+  { tipo: 'novedades', bien: false, texto: `✅ Buenas noticias con Álex Moral, que ya no es duda y vuelve.
+
+El lateral del Rayo promedia 5,1 puntos, aunque de momento solo cuenta con un 29 % de titularidad en Fantasy Manager. Mañana recibe al Elche, 16º clasificado en un duelo asequible ante uno de los rivales que más encajan, con 2,6 goles por encuentro.`, nota: 'La última frase amontona puesto, dificultad y goles y no se entiende; «16º clasificado», «duelo», «encuentro», «promedia». Y a un lateral le importa lo que marca el rival, no lo que encaja.' },
   { tipo: 'mvp', bien: false, texto: `⭐ MVP fantasy del Deportivo-Osasuna: Iker Saldaña con 14 puntos. Dobla su media de 6. Vale 12 M. Vuelve a jugar el sábado.`, nota: 'Datos apilados en frases de tres palabras.' },
   { tipo: 'noticias', bien: false, texto: `✅ Saúl Pino vuelve a la convocatoria del Betis para medirse al Mallorca, según AS. El delantero promedia 5,9 puntos y el encuentro se disputa este sábado a las 18:30.`, nota: 'Tres datos que no tienen que ver, unidos con «y».' },
   { tipo: 'noticias', bien: true, texto: `✅ Saúl Pino entra en la convocatoria del Betis para el sábado, según AS.

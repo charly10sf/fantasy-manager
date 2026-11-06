@@ -67,23 +67,27 @@ if (arg('tarjetas')) {
   }
 }
 
-// --- espera a los puntos DAZN: sin valoración en la ficha no sale el final ni el MVP; con ella, sí; y pasado el plazo, sale igual ---
+// --- espera a los puntos definitivos (lib/dazn.mjs; el detalle, en prueba/puntos-ejemplo.mjs): recién acabado no sale; con los
+// puntos quietos el tiempo pedido, la valoración DAZN y la portería a cero sumada, sí; pasado el plazo, sale igual ---
 {
   const { crearDazn } = await import('../lib/dazn.mjs');
   const m = stats[0];
-  const ficha = (con) => async () => ({ playerStats: [{ weekNumber: 11, stats: { marca_points: con == null ? [0, 0] : [-1, con] } }] });
-  const caso = async (nombre, f, ahora, esperado) => {
-    const d = crearDazn({ ficha: f, jornada: 11, esperaHoras: 6, ahora: () => ahora, log: () => {} });
+  const ficha = (con) => async () => ({ playerStats: [{ weekNumber: 11, stats: { mins_played: [90, 2], goals_conceded: [0, 4], marca_points: con == null ? [0, 0] : [-1, con] } }] });
+  const caso = async (nombre, f, desdeFinal, esperado) => {
+    const t0 = Date.parse(m.date) + 2 * 3600e3;   // visto acabado a las 2 h del saque
+    const registro = { datos: {} };
+    await crearDazn({ ficha: f, jornada: 11, registro, ahora: () => t0, log: () => {} })(m);   // la ejecución que lo ve acabar
+    const d = crearDazn({ ficha: f, jornada: 11, registro, esperaHoras: 6, minTrasFinal: 90, minEstable: 40, ahora: () => t0 + desdeFinal * 60e3, log: () => {} });
     const r = await d(m); const f1 = await final({ stats: [m], jornada: 11, jugadores, desdeFinal: 0, dazn: d });
     const ok = r.listo === esperado && (f1.length === 1) === esperado;
     if (!ok) fallos++;
-    console.log(`DAZN ${nombre}: listo=${r.listo} (${r.con}/${r.de}) tweets de final=${f1.length} ${ok ? 'ok' : 'FALLA'}`);
+    console.log(`puntos ${nombre}: listo=${r.listo} (${r.motivo || 'nada pendiente'}) tweets de final=${f1.length} ${ok ? 'ok' : 'FALLA'}`);
   };
-  const saque = Date.parse(m.date);
-  await caso('sin valoración, hace 1 h', ficha(null), saque + 3600e3, false);
-  await caso('valoración puesta', ficha(4), saque + 3600e3, true);
-  await caso('sin valoración, pasadas 7 h', ficha(null), saque + 7 * 3600e3, true);
-  await caso('la ficha falla, hace 2 h', async () => { throw new Error('caído'); }, saque + 2 * 3600e3, false);
+  await caso('recién acabado, con valoración', ficha(4), 6, false);
+  await caso('a los 95 min, con valoración', ficha(4), 95, true);
+  await caso('a los 95 min, sin valoración', ficha(null), 95, false);
+  await caso('sin valoración, pasadas 7 h', ficha(null), 7 * 60, true);
+  await caso('la ficha falla, a los 120 min', async () => { throw new Error('caído'); }, 120, false);
 }
 srv.close();
 process.exit(fallos ? 1 : 0);

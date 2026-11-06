@@ -49,36 +49,41 @@ function marcador(y, h, cL, cV) {
 // d = { jornada, local, visitante } con cada lado { nombre, corto, goles, escudo (PNG), mejores: [{nombre, pts, cara}] (3),
 //       peores: [...] (hasta 3, de más a menos malo: el primero es el que menos puntos ha sacado) }
 
+// 7 nov (Carlos: «que se vean un poco mejor las caras de los jugadores, se ven muy mal»): la tarjeta crece de 675 a 880 de alto para
+// que cada fila mida 80 (antes 58) y la cara pase de 24 a 36 de radio, dibujada a 2,4 veces (cabe la cabeza entera, como en la de onces).
+export const ALTO_FINAL = 880;
+const FILA_H = 80, FILA_PASO = 88, CARA_R = 36;
+
 /** una fila de la lista de un equipo: panel con un tinte verde o rojo, cara, nombre y los puntos en una pastilla */
 function fila(x, y, w, j, bueno, club) {
-  const h = 58, r = 24, cx = x + 24 + r, cy = y + h / 2, acento = bueno ? VERDE : MALO, maxN = w - (cx + r + 16 - x) - 150;
-  return caja(x, y, w, h, { rx: 16, sombra: false, tinte: acento, tinteOp: 0.2 })
-    + caraCirculo(j.cara, cx, cy, r, { aro: club.vivo, grosor: 2.5 })
-    + texto(cx + r + 16, cy + 12, nombreAjustado(j.nombre, 36, maxN), { px: 36, peso: 700, max: maxN })
-    + `<rect x="${x + w - 128}" y="${y + 8}" width="116" height="${h - 16}" rx="12" fill="${acento}" fill-opacity="0.16"/>`
-    + texto(x + w - 68, cy + 15, String(j.pts), { px: 44, peso: 900, color: acento, ancla: 'end' })
-    + texto(x + w - 24, cy + 14, 'PTS', { px: 21, peso: 700, color: TENUE, ancla: 'end', espacio: 1 });
+  const h = FILA_H, r = CARA_R, cx = x + 16 + r, cy = y + h / 2, acento = bueno ? VERDE : MALO, maxN = w - (cx + r + 18 - x) - 156;
+  return caja(x, y, w, h, { rx: 18, sombra: false, tinte: acento, tinteOp: 0.2 })
+    + caraCirculo(j.cara, cx, cy, r, { aro: club.vivo, grosor: 3, fondoColor: club.vivo, zoom: 2.4 })
+    + texto(cx + r + 18, cy + 13, nombreAjustado(j.nombre, 40, maxN), { px: 40, peso: 700, max: maxN })
+    + `<rect x="${x + w - 134}" y="${y + 12}" width="122" height="${h - 24}" rx="14" fill="${acento}" fill-opacity="0.16"/>`
+    + texto(x + w - 72, cy + 17, String(j.pts), { px: 50, peso: 900, color: acento, ancla: 'end' })
+    + texto(x + w - 24, cy + 15, 'PTS', { px: 22, peso: 700, color: TENUE, ancla: 'end', espacio: 1 });
 }
 
 /** la columna de un equipo: MEJORES (hasta 3) y PEORES (hasta 3), con sitio fijo para que las dos columnas queden a la par */
 function columna(x, y, w, lado, club) {
   let s = rotulo(x, y + 21, 'MEJORES', VERDE, true);
-  lado.mejores.forEach((j, i) => { s += fila(x, y + 30 + i * 64, w, j, true, club); });
-  const y2 = y + 30 + 3 * 64 + 8;
+  lado.mejores.forEach((j, i) => { s += fila(x, y + 34 + i * FILA_PASO, w, j, true, club); });
+  const y2 = y + 34 + 3 * FILA_PASO + 14;
   if (lado.peores.length) {
     s += rotulo(x, y2 + 21, 'PEORES', MALO, false);
-    lado.peores.forEach((j, i) => { s += fila(x, y2 + 30 + i * 64, w, j, false, club); });
+    lado.peores.forEach((j, i) => { s += fila(x, y2 + 34 + i * FILA_PASO, w, j, false, club); });
   }
   return s;
 }
 
 export function svgFinal(d) {
-  const L = d.local, V = d.visitante;
+  const L = d.local, V = d.visitante, H = ALTO_FINAL;
   const cL = coloresClub(L.nombre), cV0 = coloresClub(V.nombre);
   const cV = { ...cL, ...cV0, vivo: distinto(cV0, cL) };                     // dos clubes rojos no salen idénticos
   const oro = dorado();
   const yM = 52, hM = 120, cy = yM + hM / 2;
-  let s = oro.defs + fondo([[200, 100, 600, cL.vivo, 0.34], [1000, 100, 600, cV.vivo, 0.34]])
+  let s = oro.defs + fondo([[200, 100, 640, cL.vivo, 0.34], [1000, 100, 640, cV.vivo, 0.34]], H)
     + texto(600, 36, `LALIGA FANTASY · JORNADA ${d.jornada} · FINAL`, { px: 22, peso: 700, color: TENUE, ancla: 'middle', espacio: 3 })
     + marcador(yM, hM, cL.vivo, cV.vivo)
     + escudo(L.escudo, 112, cy, 100) + escudo(V.escudo, 1088, cy, 100)
@@ -86,8 +91,8 @@ export function svgFinal(d) {
     + texto(1024, cy + 20, mayus(V.corto), { px: 58, peso: 800, ancla: 'end', max: 250 })
     + `<rect x="478" y="${yM + 14}" width="244" height="${hM - 28}" rx="22" fill="#07080b" fill-opacity="0.72" stroke="${ORO_TXT}" stroke-opacity="0.45" stroke-width="1.5"/>`
     + texto(600, cy + 38, `${L.goles}-${V.goles}`, { px: 112, peso: 800, italica: true, color: `url(#${oro.g})`, ancla: 'middle' });
-  s += columna(44, 184, 544, L, cL) + columna(612, 184, 544, V, cV);
-  return marco(s + marca(600, 656, { ancla: 'middle' }));
+  s += columna(36, 192, 556, L, cL) + columna(608, 192, 556, V, cV);
+  return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -503,10 +508,19 @@ export function svgApercibidos(d) {
 
 // ---------------------------------------------------------------------------------------------------------------------------
 let Resvg = null;
+// Se dibujan al DOBLE (2400 de ancho): a 1200, X las enseñaba borrosas (Carlos, 7 nov: «salen muy borrosas, que salgan en HD»). X las
+// pasa a JPEG y las sirve hasta 2048 de ancho, así que con 2400 baja de tamaño en vez de estirarlas. Si el PNG pasa de 4,8 MB (X no
+// acepta más de 5), se prueba a 1,6 y, si aun así no, al tamaño original.
+const ESCALAS = [2, 1.6, 1], MAX_BYTES = 4.8 * 1024 * 1024;
 /** SVG -> PNG (Buffer). @resvg/resvg-js se carga solo si hace falta: el bot sin tarjetas no lo necesita */
-export async function aPng(svg) {
+export async function aPng(svg, { escalas = ESCALAS } = {}) {
   if (!Resvg) ({ Resvg } = await import('@resvg/resvg-js'));
-  const r = new Resvg(svg, { font: { fontFiles: FUENTES, loadSystemFonts: false, defaultFontFamily: 'Inter' }, fitTo: { mode: 'original' } });
-  return Buffer.from(r.render().asPng());
+  let png = null;
+  for (const z of escalas) {
+    const r = new Resvg(svg, { font: { fontFiles: FUENTES, loadSystemFonts: false, defaultFontFamily: 'Inter' }, fitTo: z === 1 ? { mode: 'original' } : { mode: 'zoom', value: z }, imageRendering: 0, shapeRendering: 2, textRendering: 2 });
+    png = Buffer.from(r.render().asPng());
+    if (png.length <= MAX_BYTES) return png;
+  }
+  return png;
 }
 export { luz };

@@ -71,12 +71,10 @@ if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
 
 // la prensa de cada partido para los tuits redactados (lib/cronicas.mjs)
 const cronicas = crearCronicas({ config, log: (s) => console.log(s) });
-// los puntos DAZN llegan después del final: final, MVP y resumen esperan a que estén (lib/dazn.mjs)
-const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: config.daznEsperaHoras ?? 6, log: (s) => console.log(s) });
 // solo mercado (lo lanza el Worker cada minuto de 00:13 a 00:30): espera dentro de la misma ejecución a que llegue el valor de hoy,
 // como mucho 7 min (el trabajo tiene un tope de 10); si no llega, sigue la siguiente ejecución
 const esperarHasta = ventanas && quienes.length === 1 && quienes[0] === 'mercado' ? Date.now() + 7 * 60e3 : 0;
-const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn, ventanas, semana: sem, probarAcabados: arg('previa-acabados') === '1', ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
+const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn: null, ventanas, semana: sem, probarAcabados: arg('previa-acabados') === '1', ahora: Date.now(), soloSeguras: publica, forzar, forzarTarjetas,
   completo: !ventanas || pendientes === 0,
   desdeFinal: ventanas ? Date.now() - config.ventanaFinalHoras * 3600e3 : 0,
   // directo: con ventanas, el marcador de ESPN de hoy (y de ayer de madrugada) y solo partidos empezados hace menos de 3 h;
@@ -91,6 +89,11 @@ if (!publica && arg('estado')) {
   catch (e) { console.log(`# No pude leer el registro ${arg('estado')}: ${e.message}`); }
 }
 ctx.registro = registro;
+// los puntos de un partido acabado no son definitivos hasta un buen rato después: final, MVP, resumen y el directo de un partido
+// acabado esperan (lib/dazn.mjs: tiempo desde el final, puntos sin cambiar entre ejecuciones, DAZN y portería a cero)
+const pf = config.puntosFinales || {};
+ctx.dazn = crearDazn({ ficha: pedirFicha, jornada, registro, esperaHoras: pf.esperaHoras ?? config.daznEsperaHoras ?? 6,
+  minTrasFinal: pf.minTrasFinal ?? 20, minEstable: pf.minEstable ?? 10, log: (s) => console.log(s) });
 // el % de titularidad y el rival para los tweets de un jugador (noticias y novedades; lib/info-jugador.mjs): se pide solo si hace falta
 ctx.info = config.infoJugador === false ? null : crearInfo({ jugadores, equipos, semana: sem, log: (s) => console.log(s) });
 // tweets largos con X Premium (lib/largo.mjs): el límite se fija antes de escribir nada
@@ -212,7 +215,7 @@ for (const q of quienes) {
     console.log(`\n--- ${t.clave} · peso ${v.peso} · ${v.ok ? 'válido' : 'FALLA: ' + v.errores.join('; ')} · ${estado}${t.casado === false ? ' · jugador sin casar con LaLiga' : ''}`);
     console.log(t.texto);
     if (arg('hechos') === '1' && t.hechos) console.log(`   (hechos) ${JSON.stringify(t.hechos)}`);
-    if (t.plantilla) console.log(`   (${t.redactado ? `redactado por ${t.redactado}${t.prensa ? ` con prensa de ${t.prensa.join(', ')}` : ''}` : `pulido por ${t.pulido}`}; la plantilla decía:)\n${t.plantilla.replace(/^/gm, '   | ')}`);
+    if (t.plantilla) console.log(`   (${t.redactado ? `redactado por ${t.redactado}${t.prensa ? ` con prensa de ${t.prensa.join(', ')}` : ''}` : `pulido por ${t.pulido}`}${t.revisado ? `, revisado por ${t.revisado}` : ``}; la plantilla decía:)\n${t.plantilla.replace(/^/gm, '   | ')}`);
     md(`<details><summary>${estado} · ${t.clave} · peso ${v.peso}${t.redactado ? ' · redactado' : t.pulido ? ' · pulido' : ''}</summary>\n\n\`\`\`\n${t.texto}\n\`\`\`${t.plantilla ? `\n\nPlantilla:\n\`\`\`\n${t.plantilla}\n\`\`\`` : ''}\n</details>`);
   }
 }
