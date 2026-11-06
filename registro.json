@@ -1465,7 +1465,8 @@
    "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000,
    "AS|https://as.com/futbol/primera/roberto-y-en-el-proximo-paron-dos-internacionales-mas-f202611-n/": 1793987444000,
    "SPORT|136175696": 1793983934000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000,
+   "SPORT|136181983": 1793990642000
   },
   "hechos": [
    {
@@ -2227,7 +2228,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 47
+   "n": 48
   },
   "desde": {
    "67": {
@@ -3849,15 +3850,15 @@
  "ia": {
   "dia": "2026-11-06",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 0
   },
   "fallos": 0,
-  "entrada": 5471,
-  "salida": 1099,
+  "entrada": 7249,
+  "salida": 1175,
   "cacheLee": 0,
   "cacheEscribe": 0,
-  "dolares": 0.001097
+  "dolares": 0.001313
  },
  "recientes": {
   "onces": [
