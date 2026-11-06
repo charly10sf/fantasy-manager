@@ -74,10 +74,11 @@ const info = crearInfo({ jugadores, equipos, semana: { weekNumber: 12 }, pedirSe
 {
   const R = (pos, nivel, extra = {}) => ({ pos, n: 20, nivel, gf: 2.4, gc: 0.6, rgf: 2, rgc: 19, ...extra });
   const d = { equipo: 'Getafe', rival: 'Barça', casa: false };
-  ok(frasePartido(R(1, 'difícil'), { ...d, cuando: 'el sábado a las 21:00' }, 0) === '📉 El sábado a las 21:00 visita al Barça, el líder, y es un partido duro', frasePartido(R(1, 'difícil'), { ...d, cuando: 'el sábado a las 21:00' }, 0));
+  ok(frasePartido(R(1, 'difícil'), { ...d, cuando: 'el sábado a las 21:00' }, 0) === '📉 El sábado a las 21:00, el Getafe visita al Barça, el líder, y es un partido duro', frasePartido(R(1, 'difícil'), { ...d, cuando: 'el sábado a las 21:00' }, 0));
   ok(frasePartido(R(9, 'media'), { equipo: 'Getafe', rival: 'Villarreal', casa: true }, 1) === 'ℹ️ Le toca un partido de nivel medio: el Getafe recibe al Villarreal, que va 9º', frasePartido(R(9, 'media'), { equipo: 'Getafe', rival: 'Villarreal', casa: true }, 1));
-  ok(frasePartido(R(20, 'fácil'), { equipo: 'Getafe', rival: 'Málaga', casa: false }, 2) === '📈 El Málaga, su rival, es el colista, así que pinta bien para puntuar', frasePartido(R(20, 'fácil'), { equipo: 'Getafe', rival: 'Málaga', casa: false }, 2));
-  ok(/marca 2,4 goles/.test(fraseGoles(R(1, 'difícil'), 2, 0).t) && fraseGoles(R(1, 'difícil'), 4, 0) && /menos encajan|solo encaja/.test(fraseGoles(R(1, 'difícil'), 4, 0).t), 'goles: al defensa lo que marca; al delantero lo que encaja');
+  ok(frasePartido(R(20, 'fácil'), { equipo: 'Getafe', rival: 'Málaga', casa: false }, 2) === '📈 El Málaga, el rival del Getafe, es el colista, así que el partido pinta bien para puntuar', frasePartido(R(20, 'fácil'), { equipo: 'Getafe', rival: 'Málaga', casa: false }, 2));
+  ok(/marca 2,4 goles/.test(fraseGoles(R(1, 'difícil'), 2, 1, 'Barça').t) && /el Barça marca/.test(fraseGoles(R(1, 'difícil'), 2, 1, 'Barça').t) && fraseGoles(R(1, 'difícil'), 4, 0, 'Barça') && /menos encajan|solo encaja/.test(fraseGoles(R(1, 'difícil'), 4, 0, 'Barça').t), 'goles: al defensa lo que marca; al delantero lo que encaja; con el nombre del rival');
+  ok(!/el rival/.test(fraseGoles(R(1, 'difícil'), 2, 0, 'Barça').t) && !/el rival/.test(fraseGoles(R(1, 'difícil'), 2, 1, 'Barça').t), 'goles: «el rival» a secas no sale si se sabe cuál es');
   ok(fraseGoles(R(9, 'media', { rgf: 8, rgc: 10 }), 2, 0) === null, 'goles: nada si está en mitad de tabla');
   const q = 'El defensa del Getafe';
   ok(fraseJugador({ quien: q, media: 5.9, tit: { p: 0.72, pct: 72 }, f: 0 }).t === '📊 El defensa del Getafe suma 5,9 puntos de media y Fantasy Manager le da un 72 % de titularidad', fraseJugador({ quien: q, media: 5.9, tit: { p: 0.72, pct: 72 }, f: 0 }).t);
@@ -92,7 +93,7 @@ const info = crearInfo({ jugadores, equipos, semana: { weekNumber: 12 }, pedirSe
 // 4) la fuente: club > LaLiga (si dice lo mismo que el tweet) > prensa
 {
   const C = (x) => ({ medios: ['AS'], oficial: false, laliga: false, fam: 'buena', est: 'ok', ...x });
-  ok(fuenteDe(C({ laliga: true })).quien === 'laliga' && !/AS/.test(fuenteDe(C({ laliga: true })).t), 'vuelve, un medio y LaLiga disponible: LaLiga, sin el medio');
+  ok(fuenteDe(C({ laliga: true })).quien === 'prensa' && /AS/.test(fuenteDe(C({ laliga: true })).t) && !/LaLiga/.test(fuenteDe(C({ laliga: true })).t), 'vuelve, un medio y LaLiga disponible: el medio, sin «LaLiga Fantasy ya lo da como disponible» (6 nov)');
   ok(fuenteDe(C({ oficial: true, medios: ['AS', 'MARCA'] })).quien === 'club' && !/AS|MARCA/.test(fuenteDe(C({ oficial: true })).t), 'oficial: el club');
   ok(fuenteDe(C({ medios: ['AS', 'MARCA'] })).quien === 'prensa' && /AS y MARCA/.test(fuenteDe(C({ medios: ['AS', 'MARCA'] })).t) && fuenteDe(C({ medios: ['AS', 'MARCA'] })).t.startsWith('¦'), 'solo prensa: los medios, pegados a la frase de antes');
   ok(fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true })).quien === 'laliga' && /duda/.test(fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true })).t), 'duda en la prensa y en LaLiga: LaLiga');
@@ -141,7 +142,7 @@ for (const lim of [280, 1000]) {
   for (const t of ts) { const v = validar(t.texto, { numeros: t.numeros, max: lim }); if (!v.ok) falla(`${t.clave} (${lim}): ${v.errores.join('; ')}`); console.log(`--- ${t.clave} · peso ${v.peso}\n${t.texto}`); sinSegunTrasCifra(t); }
   const de = (id) => ts.find((t) => t.clave.includes(`|${id}:`));
   const z = de('500'), m = de('501'), u = de('503'), a = de('502');
-  ok(z && /LaLiga Fantasy/.test(z.texto) && !/\bAS\b/.test(z.texto) && /✅ Disponible para la jornada 12 contra el Villarreal/.test(z.texto), `Zaid (${lim}): la fuente es LaLiga, no AS`);
+  ok(z && !/LaLiga Fantasy ya|ya lo da|ya aparece como disponible|dándolo ya/.test(z.texto) && /\bAS\b/.test(z.texto) && /✅ Disponible para la jornada 12 contra el Villarreal/.test(z.texto), `Zaid (${lim}): la fuente es el medio, sin «LaLiga ya lo da como disponible»`);
   ok(z && /72 %/.test(z.texto), `Zaid (${lim}): con su % de titularidad`);
   ok(z && (z.texto.split('\n\n').slice(0, -1).join(' ').match(/\. |\.$/g) || []).length <= 4, `Zaid (${lim}): frases largas, pocos puntos`);
   if (lim > 280) ok(z && /9º/.test(z.texto) && /\n\n.*72 %/s.test(z.texto), `Zaid (largo): el rival y lo del partido en su párrafo`);

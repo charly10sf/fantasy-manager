@@ -177,8 +177,10 @@ export function fuenteDe(c, { baja = false, k = 0, dia = '' } = {}) {
   // (Carlos, 5 nov 17:42: menos puntos y frases más largas) va pegada con una coma a la frase de antes (`pegar`): «…tras un mes, según AS»
   if (c.oficial) return { t: pegar(['según ha comunicado el club', 'como ha confirmado el club', 'y así lo ha comunicado el club'][f]), arriba, quien: 'club' };
   const confirma = c.laliga && (c.fam === 'buena' ? c.est === 'ok' : baja ? ['injured', 'suspended'].includes(c.est) : c.est === 'doubtful');
-  if (confirma && c.fam === 'buena') return { t: pegar(['y LaLiga Fantasy ya lo da como disponible', 'y en LaLiga Fantasy ya aparece como disponible', 'con LaLiga Fantasy dándolo ya como disponible'][f]), arriba, quien: 'laliga' };
-  if (confirma) { const e = EST_TXT[c.est]; return { t: pegar([`y en LaLiga Fantasy ya sale como ${e}`, `y LaLiga Fantasy ya lo marca como ${e}`, `con LaLiga Fantasy marcándolo ya como ${e}`][f]), arriba, quien: 'laliga' }; }
+  // (Carlos, 6 nov 12:58, con el tweet de Eric: «lo de que LaLiga Fantasy ya lo da como disponible no tiene mucho sentido»: repetía la
+  // etiqueta de abajo, «✅ Disponible para la jornada 12», y no decía quién lo cuenta.) Una vuelta confirmada por LaLiga se cuenta con
+  // el medio o el club, como cualquier otra; el estado del juego ya sale en la etiqueta y en la carta.
+  if (confirma && c.fam !== 'buena') { const e = EST_TXT[c.est]; return { t: pegar([`y en LaLiga Fantasy ya sale como ${e}`, `y LaLiga Fantasy ya lo marca como ${e}`, `con LaLiga Fantasy marcándolo ya como ${e}`][f]), arriba, quien: 'laliga' }; }
   if ((c.medios || []).length >= 2) return { t: pegar([`según cuentan ${lis}`, `como publican ${lis}`, `según ${lis}`][f]), arriba, quien: 'prensa' };
   // un medio y la lista de lesionados de las webs de previas (que no se nombra), o LaLiga con otro estado (baja en la prensa, duda en LaLiga)
   const otro = c.laliga && c.fam === 'mala' && EST_TXT[c.est] ? `; en LaLiga Fantasy ya sale como ${EST_TXT[c.est]}` : '';
@@ -255,7 +257,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const cab = c.hecho ? `${c.fam === 'buena' ? '✅' : '🚨'} ${cap(c.hecho)}`
       : c.que === 'lesion' ? elegir([`🚨 ${j.nickname} se lesiona`, `🚨 Saltan las alarmas con ${j.nickname}`], sem)
         : c.que === 'descartado' ? `🚨 ${j.nickname} se queda fuera de la convocatoria`
-          : c.que === 'molestias' ? `🚨 Saltan las alarmas con ${j.nickname}` : `✅ Buenas noticias con ${j.nickname}`;
+          : c.que === 'molestias' ? `🚨 Saltan las alarmas con ${j.nickname}` : elegir([`✅ ${j.nickname} está de vuelta`, `✅ ${j.nickname} vuelve`], sem);
     const baja = c.que === 'descartado' || (c.que === 'lesion' && (c.est === 'injured' || (c.parte && c.parte.estado === 'baja') || !!c.plazo));
     const fuente = fuenteDe(c, { baja, k, dia });
     // duda leve (Domy, 3 nov 22:15, con el tweet de Kike Salas): gestión de cargas, descanso o precaución, sin lesión

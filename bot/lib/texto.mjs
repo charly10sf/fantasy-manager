@@ -117,30 +117,33 @@ export const al = (eq) => (SIN_ARTICULO.has(eq) ? `a ${eq}` : eq === 'Real Socie
 // con su emoji (el balón blanco del Madrid, el murciélago del Valencia): la primera opción, y otra si el rival ya lleva la misma.
 // Nada de círculos rojo, verde, amarillo o naranja: se leen como un semáforo de estado, no como el color del club (Carlos, 6 nov 12:08:
 // «el punto verde al final no tiene sentido, puede confundir»). Y el emoji no va siempre: ver variarEquipos.
+// 6 nov 12:58, con el tweet de Eric: «el emoji del Barça y del Atleti son malos». Quedan solo los que se reconocen sin saber el club (un
+// animal o un objeto: 🦇 Valencia, 🦁 Athletic, 🐟 Málaga…) y el ⚪ del Madrid, que pidió Carlos. Los clubes sin ninguno claro (círculos de
+// colores, el oso, el corazón verde…) van sin emoji: una lista vacía no pone nada.
 const APODOS = {
   'Real Madrid': { e: ['⚪', '👑'], a: ['el Real Madrid', 'el Madrid', 'el conjunto blanco', 'el conjunto merengue'] },
-  'Barça': { e: ['🔵', '🔷'], a: ['el Barça', 'el Barcelona', 'el conjunto azulgrana', 'el equipo culé'] },
-  'Atlético': { e: ['🐻'], a: ['el Atlético', 'el Atleti', 'el conjunto colchonero'] },
-  'Athletic': { e: ['🦁', '⚪'], a: ['el Athletic', 'el Athletic Club', 'el conjunto bilbaíno'] },
+  'Barça': { e: [], a: ['el Barça', 'el Barcelona', 'el conjunto azulgrana', 'el equipo culé'] },
+  'Atlético': { e: [], a: ['el Atlético', 'el Atleti', 'el conjunto colchonero'] },
+  'Athletic': { e: ['🦁'], a: ['el Athletic', 'el Athletic Club', 'el conjunto bilbaíno'] },
   'Valencia': { e: ['🦇'], a: ['el Valencia', 'el Valencia CF', 'el conjunto valencianista'] },
-  'Sevilla': { e: ['⚪'], a: ['el Sevilla', 'el Sevilla FC', 'el conjunto sevillista'] },
-  'Betis': { e: ['💚'], a: ['el Betis', 'el Real Betis', 'el conjunto bético'] },
-  'Real Sociedad': { e: ['🔵', '⚪'], a: ['la Real Sociedad', 'la Real', 'el conjunto donostiarra'] },
+  'Sevilla': { e: [], a: ['el Sevilla', 'el Sevilla FC', 'el conjunto sevillista'] },
+  'Betis': { e: [], a: ['el Betis', 'el Real Betis', 'el conjunto bético'] },
+  'Real Sociedad': { e: [], a: ['la Real Sociedad', 'la Real', 'el conjunto donostiarra'] },
   'Villarreal': { e: ['🚢'], a: ['el Villarreal', 'el Submarino Amarillo', 'el conjunto amarillo'] },
-  'Celta': { e: ['🩵', '🔵'], a: ['el Celta', 'el Celta de Vigo', 'el conjunto celeste'] },
+  'Celta': { e: [], a: ['el Celta', 'el Celta de Vigo', 'el conjunto celeste'] },
   'Osasuna': { e: ['🐂'], a: ['el Osasuna', 'el conjunto rojillo', 'el equipo navarro'] },
-  'Getafe': { e: ['🔵', '🟦'], a: ['el Getafe', 'el conjunto azulón'] },
+  'Getafe': { e: [], a: ['el Getafe', 'el conjunto azulón'] },
   'Rayo': { e: ['⚡'], a: ['el Rayo', 'el Rayo Vallecano', 'el conjunto vallecano'] },
-  'Espanyol': { e: ['🦜', '🔵'], a: ['el Espanyol', 'el conjunto perico', 'el equipo blanquiazul'] },
-  'Levante': { e: ['🐸', '🔵'], a: ['el Levante', 'el conjunto granota'] },
-  'Elche': { e: ['🌴', '💚'], a: ['el Elche', 'el conjunto franjiverde'] },
-  'Alavés': { e: ['🔵', '⚪'], a: ['el Alavés', 'el conjunto babazorro', 'el equipo albiazul'] },
+  'Espanyol': { e: ['🦜'], a: ['el Espanyol', 'el conjunto perico', 'el equipo blanquiazul'] },
+  'Levante': { e: ['🐸'], a: ['el Levante', 'el conjunto granota'] },
+  'Elche': { e: ['🌴'], a: ['el Elche', 'el conjunto franjiverde'] },
+  'Alavés': { e: [], a: ['el Alavés', 'el conjunto babazorro', 'el equipo albiazul'] },
   'Mallorca': { e: ['🏝️'], a: ['el Mallorca', 'el conjunto mallorquinista'] },
-  'Girona': { e: ['⚪'], a: ['el Girona', 'el conjunto gerundense'] },
-  'Oviedo': { e: ['🔵', '⚪'], a: ['el Oviedo', 'el Real Oviedo', 'el conjunto carbayón'] },
-  'Racing': { e: ['⚓', '⚪'], a: ['el Racing', 'el Racing de Santander', 'el conjunto cántabro'] },
-  'Deportivo': { e: ['🔵', '⚪'], a: ['el Deportivo', 'el Dépor', 'el conjunto herculino'] },
-  'Málaga': { e: ['🐟', '🔵'], a: ['el Málaga', 'el Málaga CF', 'el conjunto malaguista'] },
+  'Girona': { e: [], a: ['el Girona', 'el conjunto gerundense'] },
+  'Oviedo': { e: [], a: ['el Oviedo', 'el Real Oviedo', 'el conjunto carbayón'] },
+  'Racing': { e: ['⚓'], a: ['el Racing', 'el Racing de Santander', 'el conjunto cántabro'] },
+  'Deportivo': { e: [], a: ['el Deportivo', 'el Dépor', 'el conjunto herculino'] },
+  'Málaga': { e: ['🐟'], a: ['el Málaga', 'el Málaga CF', 'el conjunto malaguista'] },
 };
 const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const ART = '(?:el|del|al|la|de la|a la)';
