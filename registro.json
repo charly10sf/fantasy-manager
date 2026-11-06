@@ -335,6 +335,13 @@
    "jornada": 12,
    "id": "2118671362642338001",
    "t": "2026-11-06T11:46:30.778Z"
+  },
+  {
+   "clave": "novedades|3164:vuelve|2026-11-06",
+   "tipo": "novedades",
+   "jornada": 12,
+   "id": "2118690293469925614",
+   "t": "2026-11-06T13:01:44.231Z"
   }
  ],
  "estados": {
@@ -1072,7 +1079,7 @@
   "3161": "ok",
   "3162": "suspended",
   "3163": "ok",
-  "3164": "injured",
+  "3164": "ok",
   "3165": "ok",
   "3166": "ok",
   "3167": "ok",
@@ -1220,7 +1227,14 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3164",
+   "que": "vuelve",
+   "antes": "injured",
+   "t": 1793970074314
+  }
+ ],
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
@@ -2872,8 +2886,8 @@
     "t": 0
    },
    "3164": {
-    "e": "injured",
-    "t": 0
+    "e": "ok",
+    "t": 1793970074314
    },
    "3182": {
     "e": "injured",
@@ -2947,9 +2961,9 @@
  },
  "pulido": {
   "dia": "2026-11-06",
-  "n": 4,
+  "n": 5,
   "ok": 2,
-  "mal": 4
+  "mal": 5
  },
  "liga": {
   "vistas": {
