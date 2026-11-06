@@ -80,6 +80,15 @@ export function parecido(a, b, nombres = []) {
   let c = 0; for (const x of ga) if (gb.has(x)) c++;
   return c / Math.min(ga.size, gb.size);
 }
+/** las muletillas de los recientes: grupos de 5 palabras (sin nombres ni cifras, con al menos tres palabras de verdad) que se repiten en
+    3 o más de ellos. [{ esq, txt }] (txt, para decírselo a la IA) */
+export function muletillas(recientes, nombres = []) {
+  if (recientes.length < 3) return [];
+  const real = (g) => g.split(' ').filter((w) => !['X', 'N', 'A'].includes(w) && w.length > 2).length >= 3;
+  const cuenta = new Map();
+  for (const r of recientes) for (const g of gramas(esqueleto(r, nombres), 5)) if (real(g)) cuenta.set(g, (cuenta.get(g) || 0) + 1);
+  return [...cuenta].filter(([, n]) => n >= 3).map(([esq]) => ({ esq, txt: esq.replace(/\bX\b/g, '…').replace(/\bA\b/g, 'el').replace(/\bN\b/g, 'n') }));
+}
 const entrada = (t, nombres) => esqueleto(t, nombres).split(' ').slice(0, 3).join(' ');
 
 /**
@@ -201,13 +210,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const nom = [...permitidos];
   // ni una muletilla que ya va en dos de los últimos («es el seguro bajo palos», «si dudas, mejor esperar a los onces»; 6 nov): un grupo de
   // 4 palabras (sin nombres ni cifras, con al menos dos palabras de verdad) que se repite en 2 o más de los recientes
-  if (recientes.length >= 2) {
-    const real = (g) => g.split(' ').filter((w) => !['X', 'N', 'A'].includes(w) && w.length > 2).length >= 2;
-    const gr = [...gramas(esqueleto(t, nom))].filter(real);
-    const rg = recientes.map((r) => gramas(esqueleto(r, nom)));
-    const mul = gr.find((g) => rg.filter((x) => x.has(g)).length >= 2);
-    if (mul) e.push(`repite una muletilla que ya va en varios tuits recientes («${mul.replace(/\bX\b/g, '…').replace(/\bA\b/g, 'el').replace(/\bN\b/g, 'n')}»): dilo de otra forma`);
-  }
+  const mul = muletillas(recientes, nom).find((g) => gramas(esqueleto(t, nom), 5).has(g.esq));
+  if (mul) e.push(`repite una muletilla que ya va en varios tuits recientes («${mul.txt}»): dilo de otra forma`);
   for (const r of recientes) {
     if (entrada(t, nom) && entrada(t, nom) === entrada(r, nom)) { e.push(`empieza igual que un tuit reciente («${r.split('\n')[0].slice(0, 60)}…»)`); break; }
     const p = parecido(t, r, nom);
@@ -222,15 +226,17 @@ const ESQUEMA = { type: 'OBJECT', required: ['texto'], properties: { texto: { ty
 
 export const sistemaDe = (tipo) => `${GUIA}\n\nEJEMPLOS (jugadores inventados: sirven por la forma; no copies frases ni datos):\n\n${ejemplosPara(tipo)}`;
 
-export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [], anterior = '' }) {
+export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [], anterior = '', gastadas = [] }) {
   return [`Escribe el tuit de tipo «${hechos.tipo}» con estos hechos. Como mucho ${max} caracteres, mejor menos (sin contar la etiqueta, que va aparte: «${hechos.etiqueta || '(ninguna)'}»).`,
     `HECHOS:\n${JSON.stringify(hechos, sinFecha, 1)}`,
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
+    gastadas.length ? `FRASES YA GASTADAS (salen en varios de esos tuits; no las uses): ${gastadas.map((g) => `«${g.txt}»`).join(', ')}` : '',
     cronicas.length ? `PRENSA DE ESTE PARTIDO (puedes usar uno o dos hechos, con tus palabras):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
     errores.length ? `Tu versión anterior no vale:\n"""${anterior}"""\nPor esto: ${errores.join('; ')}. Escríbela otra vez arreglando eso.` : '',
   ].filter(Boolean).join('\n\n');
 }
 
+const nombresHechos = (h) => [...(h.jugadores || []).map((j) => norm(j.nombre)), ...Object.keys(h.clubes || {}).map(norm)];
 /** los últimos textos publicados de un tipo (registro.datos.recientes, sin la etiqueta) y los de esta misma ejecución */
 export function recientesDe(registro, tipo, n = 5) {
   const r = ((registro && registro.datos && registro.datos.recientes) || {})[tipo] || [];
@@ -278,7 +284,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     let anterior = '', errores = [], final = null;
     for (let intento = 0; intento < (cfg.intentos ?? 2) && !final; intento++) {
       const r = await pedir({ uso: 'redactar', registro, config, sistema, cache, esquema: ESQUEMA, log,
-        prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
+        prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); break; }
       const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
