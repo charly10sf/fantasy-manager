@@ -1227,19 +1227,11 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3164",
-   "que": "vuelve",
-   "antes": "injured",
-   "t": 1793970074314
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
    "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/": 1793711635000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246691/orian-goren-principal-novedad-convocatoria-aston-villa.html": 1793711167000,
    "SPORT|136041677": 1793713371000,
    "SPORT|136042531": 1793714741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246788/guruzeta-empieza-cuenta-hoy-sido-operado-rodilla-izquierda.html": 1793722204000,
@@ -1435,7 +1427,11 @@
    "SPORT|136161977": 1793964440000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/eric-i-christensen-apunten-al-metropolitano-sercat/": 1793968183000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/06/javier-aguirre-mbappe-indefendible.html": 1793969318000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tuchel-apuesta-menor-bellingham-repita-polemica-cole-palmer-20261106_3470347.html": 1793969284000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tuchel-apuesta-menor-bellingham-repita-polemica-cole-palmer-20261106_3470347.html": 1793969284000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247917/cancelo-bernardo-silva-primera-lista-portugal-cristiano.html": 1793969369000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247919/koke-apunta-titular-barca-pisa-talones-messi-xavi.html": 1793969368000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261106/1004247911/pellegrini-suma-ocho-bajas-copa-convocatorias-espana.html": 1793968808000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247912/valverde-convocado-amistosos-uruguay-debutar-diego-forlan.html": 1793968555000
   },
   "hechos": [
    {
@@ -2146,11 +2142,23 @@
      21,
      0
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247919/koke-apunta-titular-barca-pisa-talones-messi-xavi.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793969368000,
+    "id": "2326",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Koke vuelve a los terrenos de juego tras superar una lesión",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -3746,6 +3754,8 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136157637": 1793970372826
+  }
  }
 }
