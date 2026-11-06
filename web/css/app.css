@@ -2438,8 +2438,8 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .ent-paso .entrar-qr, .ent-paso .entrar-codigo { background: none; border: 0; padding: 0; margin: 0; }
 .ent-paso .eq-t > span:first-child { margin-top: 0; }
 .ent-paso .entrar-codigo > span { margin-top: 0; }
-.ent-op { margin: 0; padding: 16px; border-radius: 12px; border: 1px solid var(--linea); background: var(--plano); text-align: left; display: grid; gap: 14px; min-width: 0; }
-.ent-oc { display: flex; align-items: center; gap: 12px; }
+.ent-op { margin: 0; padding: 16px; border-radius: 12px; border: 1px solid var(--linea); background: var(--plano); text-align: left; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.ent-oc { display: flex; align-items: flex-start; gap: 12px; }
 .ent-logo { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--plano3); }
 .ent-logo svg { width: 26px; height: 26px; display: block; }
 .ent-and .ent-logo { color: #3ddc84; }
@@ -2452,6 +2452,15 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .ent-sn { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--plano3); color: var(--texto); font: 700 13px var(--cond); }
 .ent-op .en-apk { display: flex; gap: 14px; align-items: center; }
 .ent-op .btn { margin: 0; }
+.ent-op > .btn, .ent-op > .en-ios-b { margin-top: auto; }
 .en-ios .btn { background: #f4f2f3; color: #101014; box-shadow: none; }
 .ent-op .en-ios-g { color: var(--rojo-l); }
 .ent-paso .sin-app { margin: 0; }
+
+/* en el ordenador, el panel de entrar es más ancho y Android e iPhone van uno al lado del otro */
+.escritorio .portada.web .pantalla { grid-template-columns: minmax(0, 1fr) clamp(520px, 52vw, 600px); column-gap: 56px; }
+.ent-dos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.escritorio .ent-dos { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+.escritorio .ent-and .en-apk { flex-direction: column; align-items: flex-start; gap: 12px; }
+.escritorio .ent-and .en-apk-qr { width: 104px; height: 104px; }
+.escritorio .ent-and .en-apk-qr svg.qr { width: 104px; height: 104px; }
