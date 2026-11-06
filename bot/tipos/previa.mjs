@@ -8,6 +8,7 @@ import { lista, mayus } from '../lib/agrupar.mjs';
 import { tweet, enPalabras, cuando, aparte, cap, puesto } from '../lib/redactar.mjs';
 import { ESPN, partidoEspn } from '../lib/relato.mjs';
 import { casarJugador } from './directo.mjs';
+import { lineasEspn } from '../lib/formacion.mjs';
 import { probabilidades, elegirOnce } from '../lib/onces.mjs';
 import { enElAire } from '../lib/aire.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
@@ -75,12 +76,22 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
           const palabras = [];
           for (const [k, r, eqId] of [['L', rl, m.local.id], ['V', rv, m.visitor.id]]) {
             const plantilla = { players: jugadores.filter((j) => String(j.teamId) === String(eqId) && Number(j.positionId) >= 1 && Number(j.positionId) <= 4).map((j) => ({ ...j, name: j.nickname })) };
-            const once = tit(r).map((x) => {
+            const titulares = tit(r);
+            let once = titulares.map((x) => {
               const nom = x.athlete && x.athlete.displayName;
-              const p = casarJugador(nom, plantilla);
+              const abr = (x.position && x.position.abbreviation) || '', posEspn = POS_ESPN(abr);
+              const p = casarJugador(nom, plantilla, { portero: !abr || abr === 'SUB' ? null : posEspn === 'POR' });
               palabras.push(nom);
-              return { id: p ? p.id : null, nombre: p ? p.nickname : nom, pos: (p && ({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' })[p.positionId]) || POS_ESPN((x.position && x.position.abbreviation) || ''), pct: null, duda: false };
-            }).sort((a, b) => ORDEN[a.pos] - ORDEN[b.pos]);
+              return { id: p ? p.id : null, nombre: p ? p.nickname : nom, pos: (p && ({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' })[p.positionId]) || posEspn, posEspn, pct: null, duda: false };
+            });
+            // el dibujo de ESPN con cada uno en su línea (lib/formacion.mjs); si no cuadra, por las posiciones de LaLiga como antes
+            const lin = lineasEspn(titulares, r.formation);
+            if (lin) once = lin.filas.flat().map((i) => once[i]);
+            else {
+              if (once.filter((x) => x.pos === 'POR').length !== 1) once.forEach((x) => { x.pos = x.posEspn; });   // nunca dos porteros
+              once.sort((a, b) => ORDEN[a.pos] - ORDEN[b.pos]);
+            }
+            once.forEach((x) => { delete x.posEspn; });
             const dentro = new Set(once.map((x) => String(x.id)));
             // si alguno de los 11 de ESPN no casa con LaLiga, no se dice quién se queda fuera (podría ser ese mismo con otro nombre)
             const todosCasan = once.every((x) => x.id);
@@ -88,8 +99,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             // sorpresa: menos del 25 % (con el 40 % salían titulares de siempre, como Julián Alvarez, porque el % solo lleva minutos de LaLiga)
             const sorpresa = once.filter((x) => x.id && probs[k][x.id] && probs[k][x.id].p < 0.25);
             // la formación, contada con las posiciones de LaLiga de la lista (la de ESPN, «4-2-3-1», no cuadraba con las filas)
+            // (6 nov: si ESPN trae el dibujo y los puestos, manda el suyo, que es el que dan los medios)
             const cuenta = (q) => once.filter((x) => x.pos === q).length;
-            conf[k] = { once, formacion: `${cuenta('DEF')}-${cuenta('MED')}-${cuenta('DEL')}`, fuera, sorpresa };
+            conf[k] = { once, formacion: lin ? lin.formacion : `${cuenta('DEF')}-${cuenta('MED')}-${cuenta('DEL')}`, fuera, sorpresa };
           }
           // como los cuenta @JoseCarrasco_98 (guía de estilo del 3 nov): el partido arriba y una línea por cada sorpresa
           const cab = `ℹ️ Onces confirmados del ${L}-${V}`;
@@ -119,9 +131,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       }
       // --- posibles onces ---
       if (!(quierePos && !yaPos) || aire.espera) continue;
-      // en los puestos con más duda (menos del 60 %), también el otro que se lo puede jugar, con su % (Carlos, 3 nov 11:52: «como
-      // dos opciones y poner el porcentaje de cada uno»): el mejor del mismo puesto que no está en el once y tiene 25 % o más,
-      // hasta 3 por equipo
+      // en los puestos con más duda (menos del 60 %), se mira el otro que se lo puede jugar (el mejor del mismo puesto que no está en
+      // el once y tiene 25 % o más, hasta 3 por equipo) y se queda el de más %. Hasta el 6 nov salían los dos con su % (Carlos, 3 nov
+      // 11:52); desde las 20:19 de ese día, solo uno
       const lado = (k, mm) => {
         const once = pos[k].once.map((x) => ({ id: x.id, nombre: x.nombre, pos: x.pos, pct: pct(x.p), duda: x.duda, p: x.p }));
         const fuera = new Set(once.map((x) => String(x.id)));
@@ -130,11 +142,14 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             .sort((a, b) => b.p - a.p)[0];
           if (!alt) continue;
           fuera.add(String(alt.id));
-          // arriba, el de más % (el titular de la web puede quedar por debajo del otro con los minutos de LaLiga)
-          if (alt.p > x.p) { const yo = { id: x.id, nombre: x.nombre, pct: x.pct, duda: x.duda }; Object.assign(x, { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda, p: alt.p }); x.alt = yo; }
-          else x.alt = { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda };
+          // solo sale el de más % (Carlos, 6 nov 20:19: «en los onces posibles, que solo salga el que tenga mayor %»; antes iban los dos
+          // con su %): el titular de la web puede quedar por debajo del otro con los minutos de LaLiga, y entonces entra el otro
+          if (alt.p > x.p) Object.assign(x, { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda, p: alt.p });
         }
-        return { nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion, once: once.map(({ p, ...x }) => x) };
+        // debajo del campo, el suplente con más % de cada puesto: delantero, medio y defensa (Carlos, 6 nov 20:34; uno por puesto)
+        const suplentes = ['DEL', 'MED', 'DEF'].map((q) => Object.values(probs[k]).filter((y) => y.pos === q && !fuera.has(String(y.id)) && y.p >= 0.05 && y.estado !== 'injured' && y.estado !== 'suspended')
+          .sort((a, b) => b.p - a.p)[0]).filter(Boolean).map((y) => ({ id: y.id, nombre: y.nombre, pos: y.pos, pct: pct(y.p), duda: y.duda }));
+        return { nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion, once: once.map(({ p, ...x }) => x), suplentes };
       };
       const d = { jornada, confirmados: false, local: lado('L', m.local), visitante: lado('V', m.visitor) };
       // el texto: las dudas del once (titulares con menos del 65 %) y las bajas de titulares habituales
@@ -215,8 +230,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), etiqueta: '📊 Los % de titularidad son de Fantasy Manager' };
       out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, hechos, numeros: num, partido: null,
         tarjeta: { tipo: 'onces', nombre: `previa-${m.id}`, d,
-          permitidos: { numeros: [jornada, ...fm(d.local.formacion), ...fm(d.visitante.formacion), ...[...d.local.once, ...d.visitante.once].flatMap((x) => [x.pct, x.alt ? x.alt.pct : null]).filter((x) => x != null)].map(String),
-            palabras: [L, V, m.local.mainName, m.visitor.mainName, ...[...d.local.once, ...d.visitante.once].flatMap((x) => [x.nombre, x.alt ? x.alt.nombre : null]).filter(Boolean)] } } });
+          permitidos: { numeros: [jornada, ...fm(d.local.formacion), ...fm(d.visitante.formacion), ...[...d.local.once, ...d.visitante.once, ...d.local.suplentes, ...d.visitante.suplentes].flatMap((x) => [x.pct, x.alt ? x.alt.pct : null]).filter((x) => x != null)].map(String),
+            palabras: [L, V, m.local.mainName, m.visitor.mainName, 'SUPLENTES', 'DELANTERO', 'MEDIO', 'DEFENSA', ...[...d.local.once, ...d.visitante.once, ...d.local.suplentes, ...d.visitante.suplentes].flatMap((x) => [x.nombre, x.alt ? x.alt.nombre : null]).filter(Boolean)] } } });
     }
   }
   return out;

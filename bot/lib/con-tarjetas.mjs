@@ -40,6 +40,7 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
         d[k].escudo = await img(d[k].escudoUrl);
         const caraDe = async (j) => { const p = j.id != null && porId.get(String(j.id)); return p ? img(p.image || (p.images && p.images.transparent && p.images.transparent['256x256'])) : null; };
         for (const j of d[k].once) { j.cara = await caraDe(j); if (j.alt) j.alt.cara = await caraDe(j.alt); }
+        for (const j of d[k].suplentes || []) j.cara = await caraDe(j);
       }
     }
     if (tarjeta.tipo === 'bajas') {

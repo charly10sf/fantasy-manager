@@ -152,71 +152,109 @@ function lineasDe(lado) {
   }
   return ['POR', 'DEF', 'MED', 'DEL'].map((p) => once.filter((j) => j.pos === p)).filter((l) => l.length);   // sin formación que cuadre, por puestos
 }
+// 6 nov (Carlos, con el Sevilla-Alavés: «el diseño es horrible y apenas se ven las caras»): la tarjeta pasa a vertical (1200x1420) con un
+// campo alto por equipo. Arriba de cada campo, una franja con el escudo, el nombre y el dibujo; en el césped, cada línea con caras de
+// hasta 62 de radio (antes 32: el doble de grande en pantalla) y el nombre en una pastilla. Líneas del campo muy suaves, para que no
+// compitan con las caras. El orden de cada línea es el que llega (con los confirmados de ESPN, de izquierda a derecha según se mira).
+// 20:19: la cara a 2,25 veces el radio (cabeza entera, sin cortar) y en los posibles onces un solo jugador por puesto, el de más %.
+export const ALTO_ONCES = 1420;
+// 20:27 (Carlos: «que sean más modernas»): campo casi negro con el brillo del club arriba y una rejilla de puntos, líneas finas, sin
+// franjas de césped; cabecera limpia (escudo, nombre y el dibujo en una etiqueta con filo), un filete de luz del color del club debajo,
+// halo suave detrás de cada cara y nombres en pastilla translúcida.
 function campo(x, y, w, h, lado, club, confirmados) {
-  const g = id('cp'), gs = id('cs'), gv = id('cv'), cl = id('cc');
-  const lc = 'stroke="#ffffff" stroke-opacity="0.5" stroke-width="2.5" fill="none"';
-  // césped de verdad (verde oscuro con franjas) y, encima, un velo del color del club; el marco, también de su color
-  let s = `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="20"/></clipPath>${lineal(g, [[0, '#23744a'], [1, '#124a2b']])}${lineal(gv, [[0, club.vivo, 0.26], [0.6, club.vivo, 0]])}${lineal(gs, [[0, '#fff', 0.07], [1, '#fff', 0]])}</defs>`
-    + `<rect x="${x}" y="${y + 5}" width="${w}" height="${h}" rx="20" fill="#000" opacity="0.4"/>`
-    + `<g clip-path="url(#${cl})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>`;
-  for (let k = 0; k < 8; k++) if (k % 2) s += `<rect x="${x}" y="${y + k * h / 8}" width="${w}" height="${h / 8}" fill="#000" opacity="0.1"/>`;
-  s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${gv})"/><rect x="${x}" y="${y}" width="${w}" height="${h * 0.3}" fill="url(#${gs})"/></g>`
-    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="20" fill="none" stroke="${club.vivo}" stroke-width="3"/>`;
-  // líneas: borde, medio campo arriba con su círculo, área grande, área pequeña y punto de penalti abajo
-  s += `<rect x="${x + 14}" y="${y + 14}" width="${w - 28}" height="${h - 28}" rx="10" ${lc}/>`
-    + `<path d="M${x + w * 0.34},${y + 14} A${w * 0.16},${w * 0.16} 0 0 0 ${x + w * 0.66},${y + 14}" ${lc}/>`
-    + `<rect x="${x + w * 0.2}" y="${y + h - 14 - 96}" width="${w * 0.6}" height="96" ${lc}/>`
-    + `<rect x="${x + w * 0.36}" y="${y + h - 14 - 36}" width="${w * 0.28}" height="36" ${lc}/>`
-    + `<path d="M${x + w * 0.4},${y + h - 110} A${w * 0.11},${w * 0.07} 0 0 1 ${x + w * 0.6},${y + h - 110}" ${lc}/>`;
+  const g = id('cp'), gv = id('cv'), gb = id('cb'), cl = id('cc'), pt = id('pt');
+  const lc = 'stroke="#ffffff" stroke-opacity="0.11" stroke-width="2" fill="none"';
+  const HB = 104;                                    // la cabecera del club
+  let s = `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="30"/></clipPath>${lineal(g, [[0, '#13221b'], [0.55, '#0c1612'], [1, '#090f0c']])}`
+    + `<radialGradient id="${gv}" cx="0.5" cy="0" r="0.75"><stop offset="0" stop-color="${club.vivo}" stop-opacity="0.38"/><stop offset="1" stop-color="${club.vivo}" stop-opacity="0"/></radialGradient>`
+    + `${lineal(gb, [[0, club.vivo, 0], [0.5, club.vivo, 1], [1, club.vivo, 0]], { x1: 0, y1: 0, x2: 1, y2: 0 })}`
+    + `<pattern id="${pt}" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="12" cy="12" r="1.1" fill="#fff" fill-opacity="0.05"/></pattern></defs>`
+    + `<rect x="${x}" y="${y + 10}" width="${w}" height="${h}" rx="30" fill="#000" opacity="0.5"/>`
+    + `<g clip-path="url(#${cl})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h * 0.7}" fill="url(#${gv})"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pt})"/>`;
+  const yc = y + HB;
+  // líneas: medio campo con su círculo arriba, área grande y pequeña abajo
+  s += `<path d="M${x + w * 0.3},${yc} A${w * 0.2},${w * 0.2} 0 0 0 ${x + w * 0.7},${yc}" ${lc}/>`
+    + `<rect x="${x + w * 0.2}" y="${y + h - 150}" width="${w * 0.6}" height="170" rx="6" ${lc}/>`
+    + `<rect x="${x + w * 0.35}" y="${y + h - 62}" width="${w * 0.3}" height="80" rx="4" ${lc}/>`
+    + `<path d="M${x + w * 0.39},${y + h - 150} A${w * 0.12},${w * 0.08} 0 0 1 ${x + w * 0.61},${y + h - 150}" ${lc}/>`
+    + `<rect x="${x}" y="${yc - 1}" width="${w}" height="2" fill="url(#${gb})"/></g>`
+    + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="29" fill="none" stroke="#fff" stroke-opacity="0.09" stroke-width="2"/>`;
+  const fw = lado.formacion ? medir(lado.formacion, 26, B, 2) + 30 : 0;
+  const xNom = x + 26 + (lado.escudo ? 70 : 0), maxNom = w - (xNom - x) - 26 - (fw ? fw + 14 : 0);
+  s += escudo(lado.escudo, x + 58, y + HB / 2, 64)
+    + texto(xNom, y + HB / 2 + 17, mayus(lado.corto || lado.nombre), { px: 50, peso: 800, max: maxNom });
+  if (fw) {
+    const fx = x + w - 24 - fw;
+    s += `<rect x="${fx}" y="${y + HB / 2 - 23}" width="${fw}" height="46" rx="23" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.32" stroke-width="1.5"/>`
+      + texto(fx + fw / 2, y + HB / 2 + 9, lado.formacion, { px: 26, peso: 800, ancla: 'middle', espacio: 2 });
+  }
+  // los jugadores, línea a línea (la delantera arriba)
   const lineas = lineasDe(lado).reverse();
-  const alto = (h - 36) / lineas.length;
-  const R = confirmados ? 32 : 30, PXN = confirmados ? 24 : 22;
-  // el nombre va en una pastilla oscura, para que se lea sobre el césped; el % de titularidad, en una chapa en la esquina de la cara
-  const pastilla = (txt, cx, cy, px, wMax, color = TINTA) => {
-    const t = nombreAjustado(txt, px, wMax), wt = Math.min(wMax, medir(t, tamano(t, px, wMax), B)) * 0.94 + 18;
-    return `<rect x="${cx - wt / 2}" y="${cy - px * 0.98}" width="${wt}" height="${px * 1.55}" rx="${px * 0.78}" fill="#06080a" fill-opacity="0.82"/>`
-      + texto(cx, cy, t, { px, peso: 700, color, ancla: 'middle', max: wMax });
+  const arriba = yc + 22, abajo = y + h - 34;
+  const alto = (abajo - arriba) / lineas.length;
+  // el nombre (6 nov 20:19, Carlos: «el nombre más legible»): a 30, en negrita gruesa sobre una pastilla casi opaca. Si no cabe en su
+  // hueco, antes que encoger la letra se acorta: inicial y apellido («J. IGLESIAS») y, si aun así no cabe, solo el apellido
+  const PXN = 30;
+  const pastilla = (t, cx, cy, wMax) => {
+    const pp = tamano(t, PXN, wMax - 18), wt = Math.min(wMax, medir(t, pp, B, 0.5) + 26);
+    return `<rect x="${cx - wt / 2}" y="${cy - PXN * 1.0}" width="${wt}" height="${PXN * 1.42}" rx="${PXN * 0.71}" fill="#0b0f0d" fill-opacity="0.82"/>`
+      + `<rect x="${cx - wt / 2 + 0.75}" y="${cy - PXN * 1.0 + 0.75}" width="${wt - 1.5}" height="${PXN * 1.42 - 1.5}" rx="${PXN * 0.71}" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>`
+      + texto(cx, cy, t, { px: PXN, peso: 800, color: '#ffffff', ancla: 'middle', max: wMax - 18, espacio: 0.5 });
   };
   lineas.forEach((ls, i) => {
-    const cy = y + 22 + alto * i + alto * 0.36;
+    const n = ls.length, U = n >= 4 ? w - 12 : w * n / (n + 1), x0 = x + (w - U) / 2, hueco = U / n;
+    const R = Math.max(26, Math.min(62, hueco / 2 - 9, (alto - 60) / 2));
+    const cy = arriba + alto * i + R + 6, yN = cy + R + 32, ancho = hueco - 4;
     ls.forEach((j, k) => {
-      const n = ls.length, paso = n >= 4 ? (w - 40) / n : w / (n + 1);
-      const cx = n >= 4 ? x + 20 + paso * (k + 0.5) : x + paso * (k + 1);
-      const maxN = Math.min(150, paso - 6);
+      const cx = x0 + hueco * (k + 0.5);
       const pctCol = colPct(j.pct);
-      const chapa = (jj, cxx, r) => `<circle cx="${cxx}" cy="${cy + 3}" r="${r + 1}" fill="#000" opacity="0.4"/>`
-        + (jj.cara ? caraCirculo(jj.cara, cxx, cy, r, { aro: jj.duda ? AMBAR : club.vivo, grosor: 3.5 })
-          : `<circle cx="${cxx}" cy="${cy}" r="${Math.round(r * 0.6)}" fill="${club.vivo}" stroke="${jj.duda ? AMBAR : '#ffffff'}" stroke-width="2.5"/>`);
-      if (j.alt && !confirmados) {
-        // dos opciones para el mismo puesto: las dos caras y debajo cada nombre con su %
-        s += chapa(j.alt, cx + 22, 21) + chapa(j, cx - 22, 21)
-          + pastilla(`${nombreAjustado(j.nombre, 18, maxN - 50, 0, { apellido: true })} ${j.pct} %`, cx, cy + 44, 18, maxN, pctCol)
-          + pastilla(`${nombreAjustado(j.alt.nombre, 18, maxN - 50, 0, { apellido: true })} ${j.alt.pct} %`, cx, cy + 72, 18, maxN, colPct(j.alt.pct));
-        return;
-      }
-      s += chapa(j, cx, R) + pastilla(j.nombre, cx, cy + R + 24, PXN, maxN);
-      if (pctCol && !confirmados) s += chip(`${j.pct} %`, cx + R * 0.82, cy - R * 0.78, 18, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
+      const hl = id('hl');
+      s += `<defs><radialGradient id="${hl}"><stop offset="0.55" stop-color="${club.vivo}" stop-opacity="0.32"/><stop offset="1" stop-color="${club.vivo}" stop-opacity="0"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${R * 1.45}" fill="url(#${hl})"/>`;
+      s += (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: j.duda ? AMBAR : club.vivo, grosor: Math.max(3, R * 0.06), fondoColor: club.vivo, zoom: 2.25 })
+        : `<circle cx="${cx}" cy="${cy + 3}" r="${R + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="${j.duda ? AMBAR : '#ffffff'}" stroke-width="3"/>`)
+        + pastilla(nombreAjustado(j.nombre, PXN, ancho - 18, 0.5, { apellido: true }), cx, yN, ancho);
+      if (pctCol && !confirmados) s += chip(`${j.pct} %`, cx + R * 0.78, cy - R * 0.8, 21, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
     });
   });
-  // la formación, en una etiqueta blanca abajo a la izquierda
-  if (lado.formacion) s += chip(lado.formacion, x + 62, y + h - 32, 24, { relleno: TINTA, pad: 1.7, espacio: 2 }).s;
+  return s;
+}
+// el banquillo de los posibles onces (Carlos, 6 nov 20:34): el suplente con más % de delantero, medio y defensa, en un panel bajo el campo
+const ALTO_BANCO = 214;
+const PUESTO_BANCO = { DEL: 'DELANTERO', MED: 'MEDIO', DEF: 'DEFENSA', POR: 'PORTERO' };
+function banco(x, y, w, sup, club) {
+  const h = ALTO_BANCO, gb = id('bk');
+  let s = `<defs>${lineal(gb, [[0, '#121c17'], [1, '#0a100d']])}</defs><rect x="${x}" y="${y + 8}" width="${w}" height="${h}" rx="26" fill="#000" opacity="0.45"/>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="26" fill="url(#${gb})"/>`
+    + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="25" fill="none" stroke="#fff" stroke-opacity="0.09" stroke-width="2"/>`
+    + texto(x + 26, y + 34, 'SUPLENTES', { px: 22, peso: 800, color: '#ffffff', espacio: 4 })
+    + `<rect x="${x + 26}" y="${y + 42}" width="${w - 52}" height="1.5" fill="#ffffff" fill-opacity="0.08"/>`;
+  const hueco = (w - 20) / 3, R = 44, cy = y + 114;
+  sup.slice(0, 3).forEach((j, k) => {
+    const cx = x + 10 + hueco * (k + 0.5), hl = id('hl'), pctCol = colPct(j.pct);
+    s += `<defs><radialGradient id="${hl}"><stop offset="0.55" stop-color="${club.vivo}" stop-opacity="0.3"/><stop offset="1" stop-color="${club.vivo}" stop-opacity="0"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${R * 1.45}" fill="url(#${hl})"/>`
+      + (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: j.duda ? AMBAR : club.vivo, grosor: 3, fondoColor: club.vivo, zoom: 2.25 })
+        : `<circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="#ffffff" stroke-width="3"/>`)
+      + texto(cx, y + 60, PUESTO_BANCO[j.pos] || j.pos, { px: 17, peso: 700, color: TENUE, ancla: 'middle', espacio: 2.5 });
+    if (pctCol) s += chip(`${j.pct} %`, cx + R * 0.82, cy - R * 0.78, 19, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
+    const ancho = hueco - 8, t = nombreAjustado(j.nombre, 26, ancho - 18, 0.5, { apellido: true }), pp = tamano(t, 26, ancho - 18), wt = Math.min(ancho, medir(t, pp, B, 0.5) + 24);
+    s += `<rect x="${cx - wt / 2}" y="${cy + R + 34 - 26}" width="${wt}" height="37" rx="18.5" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>`
+      + texto(cx, cy + R + 34, t, { px: 26, peso: 800, ancla: 'middle', max: ancho - 18, espacio: 0.5 });
+  });
   return s;
 }
 export function svgOnces(d) {
-  const L = d.local, V = d.visitante;
+  const L = d.local, V = d.visitante, H = ALTO_ONCES;
   const cL = coloresClub(L.nombre), cV0 = coloresClub(V.nombre);
   const cV = { ...cV0, vivo: distinto(cV0, cL) };
   const tit = d.confirmados ? aColor(VERDE) : dorado();
-  const yM = 22, hM = 100, cy = yM + hM / 2;
-  let s = tit.defs + fondo([[200, 70, 560, cL.vivo, 0.3], [1000, 70, 560, cV.vivo, 0.3]])
-    + marcador(yM, hM, cL.vivo, cV.vivo)
-    + escudo(L.escudo, 104, cy, 78) + escudo(V.escudo, 1096, cy, 78)
-    + texto(156, cy + 17, mayus(L.corto), { px: 50, peso: 800, max: 230 })
-    + texto(1044, cy + 17, mayus(V.corto), { px: 50, peso: 800, ancla: 'end', max: 230 })
-    + texto(600, cy + 8, d.confirmados ? 'ONCES CONFIRMADOS' : 'POSIBLES ONCES', { px: 58, peso: 800, italica: true, color: `url(#${tit.g})`, ancla: 'middle', max: 400 })
-    + texto(600, cy + 38, `JORNADA ${d.jornada}`, { px: 22, peso: 700, color: TENUE, ancla: 'middle', espacio: 3 });
-  s += campo(44, 138, 544, 490, L, cL, d.confirmados) + campo(612, 138, 544, 490, V, cV, d.confirmados);
-  return marco(s + marca(600, 660, { ancla: 'middle' }));
+  let s = tit.defs + fondo([[250, 120, 700, cL.vivo, 0.28], [950, 120, 700, cV.vivo, 0.28]], H)
+    + texto(600, 86, d.confirmados ? 'ONCES CONFIRMADOS' : 'POSIBLES ONCES', { px: 72, peso: 800, italica: true, color: `url(#${tit.g})`, ancla: 'middle', max: 900 })
+    + texto(600, 124, `JORNADA ${d.jornada}`, { px: 24, peso: 700, color: TENUE, ancla: 'middle', espacio: 4 });
+  const conBanco = !d.confirmados && [L, V].some((x) => x.suplentes && x.suplentes.length), hc = H - 222 - (conBanco ? ALTO_BANCO + 16 : 0);
+  s += campo(22, 150, 570, hc, L, cL, d.confirmados) + campo(608, 150, 570, hc, V, cV, d.confirmados);
+  if (conBanco) s += banco(22, 150 + hc + 16, 570, L.suplentes || [], cL) + banco(608, 150 + hc + 16, 570, V.suplentes || [], cV);
+  return marco(s + marca(600, H - 26, { ancla: 'middle' }), H);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------

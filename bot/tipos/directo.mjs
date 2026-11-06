@@ -10,11 +10,21 @@ const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la
 const fichas = (s) => new Set(norm(s).split(' ').filter((t) => t && !VACIAS.has(t)));
 const comparten = (a, b) => { const A = fichas(a), B = fichas(b); for (const t of A) if (B.has(t)) return true; return false; };
 
-export function casarJugador(nombreEspn, lado) {
+// `portero`: true si ESPN dice que es portero, false si dice que no, null si no se sabe. Un portero nunca casa con uno de campo ni al
+// revés (6 nov: «Isaac Romero», delantero del Sevilla, casó con Rafa Romero, su portero, y la tarjeta salió con dos porteros).
+export function casarJugador(nombreEspn, lado, { portero = null } = {}) {
   const toks = norm(nombreEspn).split(' ').filter(Boolean);
   if (!toks.length) return null;
-  const ps = lado.players || [];
+  const ps = (lado.players || []).filter((p) => portero == null || !p.positionId || (Number(p.positionId) === 1) === portero);
   const de = (p) => new Set([...norm(p.name).split(' '), ...norm(p.nickname).split(' ')].filter(Boolean));
+  // 0) el que lleva en LaLiga un nombre que está entero en el de ESPN («Isaac» en «Isaac Romero», «C. Romero» en «Cristian Romero»):
+  //    va antes que el apellido suelto, que en el Sevilla daba «Rafa Romero» para «Isaac Romero» (Isaac sale en LaLiga sin apellido)
+  const cabe = (p) => {
+    const ns = norm(p.nickname).split(' ').filter(Boolean);
+    return ns.length > 0 && ns.every((t) => toks.includes(t) || (/^[a-z]\.?$/.test(t) && toks.some((u) => u[0] === t[0])));
+  };
+  const enteros = ps.filter(cabe);
+  if (enteros.length === 1) return enteros[0];
   // 1) por el apellido (el último nombre de ESPN) y, si hay varios, por el resto
   const ape = toks[toks.length - 1];
   const cand = ps.filter((p) => de(p).has(ape));
