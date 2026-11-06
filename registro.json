@@ -1418,7 +1418,8 @@
    "SPORT|136156868": 1793961748000,
    "Diario Sur|https://www.diariosur.es/malagacf/rafita-seleccion-sub21-espana-futbol-20261106122218-nt.html": 1793964954000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/06/david-mella-convocado-con-espana-sub-21-para-jugar-ante-japon-y-albania-yeremay-se-queda-fuera-de-la-lista-de-la-seleccion-absoluta-radio-coruna/": 1793965657000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/thiago-pitarch-da-salto-sub-21-vuelve-dar-portazo-marruecos-20261106_3470218.html": 1793965395000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/thiago-pitarch-da-salto-sub-21-vuelve-dar-portazo-marruecos-20261106_3470218.html": 1793965395000,
+   "AS|https://as.com/futbol/primera/jose-alberto-le-echa-un-cable-a-funes-el-malaga-ha-tenido-un-calendario-muy-duro-f202611-n/": 1793965403000
   },
   "hechos": [
    {
@@ -2099,11 +2100,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/jose-alberto-le-echa-un-cable-a-funes-el-malaga-ha-tenido-un-calendario-muy-duro-f202611-n/",
+    "medio": "AS",
+    "t": 1793965403000,
+    "id": "3073",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Andres Martin es baja para el proximo partido",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
