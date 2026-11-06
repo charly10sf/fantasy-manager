@@ -2438,15 +2438,20 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .ent-paso .entrar-qr, .ent-paso .entrar-codigo { background: none; border: 0; padding: 0; margin: 0; }
 .ent-paso .eq-t > span:first-child { margin-top: 0; }
 .ent-paso .entrar-codigo > span { margin-top: 0; }
-.ent-op { margin: 0; padding: 14px; border-radius: 12px; border: 1px solid var(--linea); background: var(--plano); text-align: left; }
-.ent-op.en-ios { background: var(--plano); border: 1px solid var(--linea); }
-.ent-op.en-apk { display: flex; gap: 14px; align-items: center; }
-.ent-ot { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; font: 700 19px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
-.ent-ot .ap { width: 20px; height: 20px; flex: none; color: #fff; }
-.ent-op.en-apk .en-apk-t > span { margin: 0 0 10px; font-size: 13.5px; }
-.ent-op.en-apk .btn { padding: 0 10px; font-size: 14.5px; gap: 6px; }
-@media (min-width: 520px) { .ent-op.en-apk .btn { white-space: nowrap; } }
-.ent-op.en-ios > span { margin: 0 0 12px; }
-.ent-op.en-ios .btn { background: #f4f2f3; color: #101014; }
-.ent-op.en-ios .en-ios-g { color: var(--rojo-l); }
+.ent-op { margin: 0; padding: 16px; border-radius: 12px; border: 1px solid var(--linea); background: var(--plano); text-align: left; display: grid; gap: 14px; min-width: 0; }
+.ent-oc { display: flex; align-items: center; gap: 12px; }
+.ent-logo { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--plano3); }
+.ent-logo svg { width: 26px; height: 26px; display: block; }
+.ent-and .ent-logo { color: #3ddc84; }
+.en-ios .ent-logo { color: #fff; }
+.ent-ot { display: block; font: 700 21px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.ent-os { display: block; margin-top: 3px; font-size: 13.5px; line-height: 1.4; color: var(--texto2); }
+.ent-pasos { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.ent-pasos li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 14px; line-height: 1.4; color: var(--texto2); }
+.ent-pasos li b { color: var(--texto); }
+.ent-sn { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--plano3); color: var(--texto); font: 700 13px var(--cond); }
+.ent-op .en-apk { display: flex; gap: 14px; align-items: center; }
+.ent-op .btn { margin: 0; }
+.en-ios .btn { background: #f4f2f3; color: #101014; box-shadow: none; }
+.ent-op .en-ios-g { color: var(--rojo-l); }
 .ent-paso .sin-app { margin: 0; }
