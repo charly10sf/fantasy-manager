@@ -293,6 +293,27 @@
    "jornada": 12,
    "id": "2118482294042144813",
    "t": "2026-11-05T23:15:13.275Z"
+  },
+  {
+   "clave": "previa|116",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118584661119017440",
+   "t": "2026-11-06T06:01:59.487Z"
+  },
+  {
+   "clave": "previa|117",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118584665946661179",
+   "t": "2026-11-06T06:02:00.642Z"
+  },
+  {
+   "clave": "previa|115",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118584670853976539",
+   "t": "2026-11-06T06:02:01.876Z"
   }
  ],
  "estados": {
@@ -1012,7 +1033,7 @@
   "3143": "ok",
   "3144": "injured",
   "3145": "ok",
-  "3146": "ok",
+  "3146": "doubtful",
   "3147": "ok",
   "3148": "ok",
   "3149": "injured",
@@ -1178,26 +1199,16 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3197",
-   "que": "lesion",
-   "antes": "ok",
-   "t": 1793811974660
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/02/mensaje-caparros-pepe-mel-partido-vas-ganar-seguro.html": 1793657346000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/mourinho-da-descanso-gueler-tchouameni-llama-sergio-martinez.html": 1793708195000,
    "MARCA|https://www.marca.com/futbol/atletico/2026/11/03/lista-convocados-atletico-vs-bayern-munich-vuelve-koke-cuti-baja.html": 1793709326000,
    "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
    "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/": 1793711635000,
    "AS|https://as.com/futbol/videos/la-clara-explicacion-de-munuera-montero-a-jose-alberto-de-por-que-pito-el-penalti-a-mbappe-f202611-v/": 1793697658000,
-   "AS|https://as.com/futbol/primera/soriano-y-nsongo-derriban-la-resistencia-de-herrera-f202611-n/": 1793659158000,
    "AS|https://as.com/futbol/primera/hierro-prolonga-el-mal-fario-de-los-delanteros-del-athletic-f202611-n/": 1793703983000,
    "AS|https://as.com/futbol/peque-descartado-ante-el-alaves-kike-salas-duda-f202611-n/": 1793703492000,
-   "AS|https://as.com/futbol/primera/ruibal-el-otro-nueve-f202611-n/": 1793661155000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246691/orian-goren-principal-novedad-convocatoria-aston-villa.html": 1793711167000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246669/simeone-da-lista-bayern-cuti-romero.html": 1793708697000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246637/delantero-filial-asier-hierro-sufre-lesion-rodilla.html": 1793705184000,
@@ -1218,16 +1229,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246831/cuti-romero-queda-argentina.html": 1793729269000,
    "SPORT|136052781": 1793727424000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000,
-   "MARCA|https://www.marca.com/futbol/deportivo/2026/11/02/aubameyang-vuelve.html": 1793657650000,
    "MARCA|https://www.marca.com/futbol/levante/2026/11/03/enzo-bardeli-regresa-grupo.html": 1793717987000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246138/flick-tres-frentes-abiertos.html": 1793685000000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/mourinho-se-desmarca-de-la-mistica-de-roma-antes-de-su-gran-reto-en-la-champions-no-creo-en-puntos-de-inflexion-cadena-ser/": 1793728400000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/03/antonio-hidalgo-celebra-la-remontada-del-depor-ante-osasuna-ha-sido-un-subidon-grande-mas-que-merecido-radio-coruna/": 1793696700000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/02/el-depor-busca-reencontrarse-con-la-victoria-ante-osasuna-con-la-incognita-de-aubameyang-radio-coruna/": 1793696110000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/lemar-regresara-despues-del-paron-de-selecciones-radio-elche/": 1793709589000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/03/andres-martin-tiene-una-rotura-de-fibras-radio-santander/": 1793710117000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/el-gran-problema-de-vinicius-tras-la-explosion-de-diomande-tengo-muchas-dudas-de-que-lo-vaya-a-conseguir-cadena-ser/": 1793687467000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/02/el-chip-del-balon-del-athletic-club-real-sociedad-fallo-la-rfef-reconoce-que-pudo-no-haber-penalti-a-nico-williams-cadena-ser/": 1793658047000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
    "ABC|https://www.abc.es/deportes/futbol/clasificacion-laliga-dos-puntos-separan-barcelona-atletico-20261103090959-nt.html": 1793693400000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
@@ -1355,7 +1363,16 @@
    "SPORT|136139762": 1793910076000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261105/1004247722/casado-quiere-seguir-pasos-aubameyang.html": 1793912507000,
-   "SPORT|136110344": 1793910379000
+   "SPORT|136110344": 1793910379000,
+   "AS|https://as.com/futbol/primera/el-atletico-piensa-en-beltran-como-heredero-de-oblak-f202611-n/": 1793920109000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247697/flick-pendiente-sensaciones-eric-garcia.html": 1793944800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247701/asi-entro-farinas-familia-lamine.html": 1793943900000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247781/portada-md-bizkaia-araba-hoy-viernes.html": 1793920156000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247753/confesion-rashford-sobre-lamine-yamal.html": 1793915904000,
+   "SPORT|136135795": 1793940005000,
+   "SPORT|136131753": 1793939436000,
+   "SPORT|136145842": 1793937667000,
+   "SPORT|136145830": 1793937662000
   },
   "hechos": [
    {
@@ -1386,18 +1403,6 @@
     ]
    },
    {
-    "guid": "AS|https://as.com/futbol/primera/soriano-y-nsongo-derriban-la-resistencia-de-herrera-f202611-n/",
-    "medio": "AS",
-    "t": 1793659158000,
-    "id": "3108",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aubameyang reaparece en su regreso tras la lesión",
-    "motivo": "lesión",
-    "plazo": "",
-    "nums": []
-   },
-   {
     "guid": "AS|https://as.com/futbol/peque-descartado-ante-el-alaves-kike-salas-duda-f202611-n/",
     "medio": "AS",
     "t": 1793703492000,
@@ -1406,18 +1411,6 @@
     "oficial": false,
     "hecho": "Kike Salas es duda por gestión de cargas",
     "motivo": "gestión de cargas",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/ruibal-el-otro-nueve-f202611-n/",
-    "medio": "AS",
-    "t": 1793661155000,
-    "id": "2217",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Cucho Hernández causa baja por lesión",
-    "motivo": "lesión",
     "plazo": "",
     "nums": []
    },
@@ -1458,21 +1451,6 @@
     "motivo": "recuperación de lesión",
     "plazo": "su evolución marcará su disponibilidad",
     "nums": []
-   },
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/deportivo/2026/11/02/aubameyang-vuelve.html",
-    "medio": "MARCA",
-    "t": 1793657650000,
-    "id": "3108",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aubameyang vuelve a jugar tras su lesión",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     24,
-     20
-    ]
    },
    {
     "guid": "MARCA|https://www.marca.com/futbol/levante/2026/11/03/enzo-bardeli-regresa-grupo.html",
@@ -2066,8 +2044,8 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-05",
-   "n": 44
+   "dia": "2026-11-06",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -2877,10 +2855,10 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-05",
-  "n": 7,
-  "ok": 4,
-  "mal": 4
+  "dia": "2026-11-06",
+  "n": 1,
+  "ok": 0,
+  "mal": 3
  },
  "liga": {
   "vistas": {
@@ -3002,7 +2980,15 @@
    "SPORT|136136691": 1793901372000,
    "AS|https://as.com/futbol/copa_del_rey/fechas-y-horarios-de-los-partidos-aplazados-de-la-copa-del-rey-y-de-la-reina-f202611-n/": 1793901223000,
    "SPORT|136138671": 1793905242000,
-   "SPORT|136138825": 1793905634000
+   "SPORT|136138825": 1793905634000,
+   "SPORT|136145827": 1793937662000,
+   "SPORT|136145828": 1793937661000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/comunicado-oficial-afe-insiste-solicita-aplazamiento-jornada-completa-segunda-liga-hypermotion-136142110.html": 1793922998000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/2a-parte-05-nov-2026-partidazo-cope-20261106_3469895.html": 1793922529000,
+   "AS|https://as.com/futbol/alineacion-posible-del-alaves-ante-el-sevilla-en-laliga-ea-sports-f202611-n/": 1793919492000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-aplazamiento-jornada-segunda-division-juez-unico-competicion-20261105_3469885.html": 1793918409000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247765/capitanes-segunda-piden-rfef-aplazar-jornada.html": 1793918307000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/05/afe-solicita-al-juez-unico-de-competiciones-que-aplace-todos-los-partidos-de-segunda-cadena-ser/": 1793918199000
   },
   "hechos": [
    {
@@ -3573,12 +3559,10 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-05",
-   "n": 40
+   "dia": "2026-11-06",
+   "n": 1,
+   "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/05/afe-solicita-al-juez-unico-de-competiciones-que-aplace-todos-los-partidos-de-segunda-cadena-ser/": 1793918773063,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-aplazamiento-jornada-segunda-division-juez-unico-competicion-20261105_3469885.html": 1793918773063
-  }
+  "espera": {}
  }
 }
