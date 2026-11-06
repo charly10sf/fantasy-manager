@@ -176,7 +176,7 @@ async function actualizar0({ equipos, registro, ahora, config, log, leer, pedirI
   if (!r.ok) { lg.gemini.fallos = (lg.gemini.fallos || 0) + 1; log(`  (liga) Gemini no contesta: ${r.error}. Lo vuelvo a intentar en la próxima ejecución`); return lg; }
   lg.gemini.n++;
   for (const x of lote) delete lg.espera[x.guid];
-  log(`  (liga) Gemini (${r.modelo}) ha leído ${lote.length}`);
+  log(`  (liga) La IA (${r.modelo}) ha leído ${lote.length}`);
   for (const x of lote) lg.vistas[x.guid] = x.t;
   for (const a of (r.datos && r.datos.noticias) || []) {
     const x = lote[a.i];
