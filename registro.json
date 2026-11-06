@@ -384,6 +384,13 @@
    "jornada": 12,
    "id": "2118826167302324367",
    "t": "2026-11-06T22:01:39.057Z"
+  },
+  {
+   "clave": "mercado|2026-11-07",
+   "tipo": "mercado",
+   "jornada": 12,
+   "id": "2118844771628421401",
+   "t": "2026-11-06T23:15:34.667Z"
   }
  ],
  "estados": {
@@ -3864,6 +3871,12 @@
    {
     "t": "2026-11-06T22:01:39.058Z",
     "texto": "⭐ Sivera, el mejor del Sevilla-Alavés con 10 puntos.\n\nSegún COPE, le paró un penalti a Vargas en la primera parte y el Alavés se llevó un 0-0 del Sánchez-Pizjuán. Con una media de 7 y 84 puntos en la temporada, si lo tienes de portero, no se toca. Su siguiente partido es contra el Deportivo."
+   }
+  ],
+  "mercado": [
+   {
+    "t": "2026-11-06T23:15:34.668Z",
+    "texto": "💸 Subidas y bajadas del mercado fantasy de hoy, 7/11\n\n📈 Aubameyang del Dépor es el que más sube: +1,9 M (+3,8 %), hasta los 50,9 M.\n\n📉 En el otro lado, Rodri del Barcelona pierde 2,2 M en un día y se queda en 84,1 M (-2,5 %).\n\n🛒 Chollo Fantasy: Thiago del Levante 🐸 vale 1,5 M, suma 4,1 de media y hoy sube un 2,4 %"
    }
   ]
  }
