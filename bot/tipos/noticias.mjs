@@ -141,7 +141,7 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
     if (ahoraReal() > hasta - 10000) { log('  (noticias) sin tiempo para más preguntas en esta ejecución'); break; }
     const r = await pedirIA({ clave, prompt: prompt(lote), esquema: ESQUEMA, log, hasta });
     if (!r.ok) { log(`  (noticias) Gemini no contesta: ${r.error}. Lo vuelvo a intentar en la próxima ejecución`); break; }
-    log(`  (noticias) Gemini (${r.modelo}) ha leído ${lote.length}`);
+    log(`  (noticias) La IA (${r.modelo}) ha leído ${lote.length}`);
     for (const x of lote) nt.vistas[x.n.guid] = x.n.t;
     for (const a of (r.datos && r.datos.noticias) || []) {
       const x = lote[a.i];
