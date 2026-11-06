@@ -31,7 +31,7 @@ Un tuit NO se publica si tiene cualquiera de estas cosas:
    - un suceso del partido (gol, penalti, parada, roja, VAR) que no viene en los datos.
    Una valoración para el mánager («si lo tienes, al once», «mejor esperar a los onces», «puede salir barato», «buena jornada para quien lo tenga») sí vale si se sigue de los datos; una predicción como si fuera un hecho, no.
    Lo que viene en PRENSA (si te la paso) también es un dato, pero solo con su medio pegado («según AS…») y solo en noticias y previas.
-   Las cifras dichas con palabras valen con esta escala (es la de la cuenta): titularidad de 75 % o más, «fijo», «juega», «tiene el puesto»; de 50 a 74, «lo normal es que salga», «apunta a titular»; de 30 a 49, «en el aire», «duda»; menos de 30, «lo tiene difícil». Una media de puntos de 8 o más, «de los que más puntos dan»; de 6 a 8, «buena media». Los puntos de hoy frente a su media: usa lo que diga «hoyFrenteASuMedia» si viene; si no, haz tú la cuenta. Las etiquetas de los datos («papel», «alcance», «horario», «cruce», «dificultad») son datos.
+   Las cifras dichas con palabras valen si cuadran a grandes rasgos con esta escala de la cuenta (es orientativa: no marques un matiz cerca del límite, solo lo que esté claramente mal, como llamar «fijo» a uno con un 40 %): titularidad de 75 % o más, «fijo», «juega», «seguro»; de 50 a 74, «lo normal es que salga»; de 30 a 49, «en el aire», «duda»; menos de 30, «lo tiene difícil». Una media de puntos alta (7 o más), «de los que más puntos dan». Los puntos de hoy frente a su media: lo que diga «hoyFrenteASuMedia» si viene. Una lectura razonable de la tabla también vale («el 4º parte como favorito ante el 17º»). Las etiquetas de los datos («papel», «alcance», «horario», «cruce», «dificultad», «valoracion») son datos.
 
 2. ALGO QUE SE CONTRADICE O ESTÁ AL REVÉS. Por ejemplo: «partido asequible» y a la vez «eso sí, el rival es de los que menos encajan» sin explicar; «lesión» y «no está descartado» en frases sueltas; quién juega en casa y quién fuera cambiado; leer al revés los goles del rival (a un portero o defensa le viene mal que el rival marque mucho; a un medio o delantero le viene bien que el rival encaje mucho).
 
@@ -41,9 +41,9 @@ Un tuit NO se publica si tiene cualquiera de estas cosas:
 
 5. UN DATO CONTADO A MEDIAS QUE LLEVA A ERROR (un porcentaje suelto sin decir de qué, una media sin decir que es de puntos si no se entiende).
 
-No marques gustos: si una frase es verdad, se entiende y suena natural, no la toques aunque tú la escribirías de otra forma. No pidas añadir datos. La etiqueta final del tuit (✅ Disponible…, ❌ Baja…, «Fantasy Manager · enlace en la bio») la pone el sistema: no la juzgues.
+Marca solo lo GRAVE, lo que un lector notaría como falso, contradictorio, incomprensible o hecho por una máquina. No marques gustos ni matices: si una frase es verdad, se entiende y suena natural, no la toques aunque tú la escribirías de otra forma. No pidas añadir datos. Si dudas, es publicable. La etiqueta final del tuit (✅ Disponible…, ❌ Baja…, «Fantasy Manager · enlace en la bio») la pone el sistema: no la juzgues.
 
-Devuelve publicable (true o false) y, si es false, cada problema con la frase exacta del tuit (o el trozo) y el motivo en una línea, dicho para que quien lo reescriba sepa qué cambiar.`;
+Devuelve publicable (true o false). Si es true, problemas va vacío: no apuntes lo que está bien. Si es false, cada problema grave con la frase exacta del tuit (o el trozo) y el motivo en una línea, dicho para que quien lo reescriba sepa qué cambiar.`;
 
 const sinFecha = (k, v) => (k === 'fecha' || k === 'etiqueta' ? undefined : v);
 
@@ -70,6 +70,7 @@ export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tip
   const problemas = (Array.isArray(r.datos.problemas) ? r.datos.problemas : [])
     .map((p) => (p && typeof p === 'object' ? `«${String(p.frase || '').slice(0, 140)}»: ${String(p.motivo || '').slice(0, 220)}` : String(p)))
     .filter((p) => p.length > 6);
-  const ok = r.datos.publicable === true && !problemas.length;
+  // manda el «publicable»: si lo da por bueno, lo que apunte de más no bloquea (el 7 nov listaba hasta lo que estaba bien)
+  const ok = r.datos.publicable === true;
   return { ok, problemas: ok ? [] : (problemas.length ? problemas : ['el editor no lo publicaría (sin motivo concreto): reescríbelo más claro y solo con los datos']), revisado: true, modelo: r.modelo };
 }

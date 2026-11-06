@@ -235,7 +235,9 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a
   let rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: true, problemas: [] }) });
   ok(rr.ok && rr.revisado, 'revisarConIA: publicable sin problemas, vale');
   rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: true, problemas: [{ frase: 'Es de los que sostienen una plantilla', motivo: 'relleno' }] }) });
-  ok(!rr.ok && /sostienen/.test(rr.problemas[0]), 'revisarConIA: «publicable» con problemas no vale (manda el problema)');
+  ok(rr.ok, 'revisarConIA: manda «publicable» (lo que apunte de más no bloquea)');
+  rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: false, problemas: [{ frase: 'Es de los que sostienen una plantilla', motivo: 'relleno' }] }) });
+  ok(!rr.ok && /sostienen/.test(rr.problemas[0]), 'revisarConIA: no publicable, con su motivo');
   rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: false, problemas: [] }) });
   ok(!rr.ok && rr.problemas.length === 1, 'revisarConIA: no publicable sin motivo, con un motivo genérico para reescribir');
   rr = await revisarConIA({ texto: 'x', hechos, config, pedir: async () => ({ ok: false, error: '529' }) });
