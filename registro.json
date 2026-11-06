@@ -3076,8 +3076,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246888/grada-d-animacio-vuelve-suspension.html": 1793736587000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/la-federacion-aplaza-la-jornada-de-copa-en-senal-de-luto-y-el-tarancon-levante-se-reprograma-para-una-tercera-fecha-radio-valencia/": 1793731464000,
    "ABC|https://www.abc.es/deportes/futbol/futbol-espanol-detiene-jesus-miguel-europa-limita-20261103183701-nt.html": 1793727422000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793726418000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261103/11674781/jesus-de-miguel-muere-owono-jugador-tenerife-portero-anodorra-en-directo.html": 1793726204000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3182,7 +3180,8 @@
    "SPORT|136163733": 1793966682000,
    "SPORT|136157637": 1793966510000,
    "SPORT|136164914": 1793968169000,
-   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000
+   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793888400000
   },
   "hechos": [
    {
@@ -3846,7 +3845,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
   "espera": {}
