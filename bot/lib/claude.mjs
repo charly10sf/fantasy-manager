@@ -1,7 +1,8 @@
 // La API de Claude para el bot, con la misma interfaz que lib/gemini.mjs (`preguntarJson`). Secreto ANTHROPIC_API_KEY, solo del bot y
 // solo en Actions: la clave va en la cabecera x-api-key, nunca en la URL ni en los logs. La crea Carlos en platform.claude.com.
 // La respuesta en JSON se pide con salida estructurada (output_config.format, json_schema) y el mismo esquema que se le pasa a Gemini.
-// (Primera prueba, 6 nov: Sonnet 5.5 no admite tool_choice obligatorio y los modelos 5.5 ya no admiten la temperatura.)
+// (Primera prueba, 6 nov: Sonnet 5.5 no admite tool_choice obligatorio y los modelos 5.5 ya no admiten la temperatura. Segunda: con el
+// razonamiento por defecto, 27 tuits costaron 0,73 $ porque cada uno pensaba unos 2.000 tokens; ahora, sin pensar y con esfuerzo medio.)
 // Las instrucciones fijas (`sistema`) pueden ir en caché: solo compensa si en la misma ejecución salen varias preguntas con el mismo
 // sistema (la escritura cuesta 1,25 veces la entrada y la lectura 0,05 en Sonnet 5.5 y 0,1 en Haiku 5.5; la caché dura 5 min y el bot
 // corre cada 5 min en una Action nueva, así que entre ejecuciones casi nunca se lee).
@@ -42,12 +43,12 @@ export const usoDe = (u = {}) => ({ entrada: u.input_tokens || 0, salida: u.outp
  * `sistema`: las instrucciones fijas (guía, ejemplos); `cache`: ponerlas en caché. pedir(url, opciones) es fetch (se cambia en las pruebas).
  */
 export async function preguntarJson({ clave, prompt, esquema, sistema = '', cache = false, modelos = null, modelo = SONNET, maxTokens = 4000,
-  temperatura = null, pedir = fetch, log = () => {}, tiempo = 40000, hasta = Date.now() + 90000 }) {
+  temperatura = null, esfuerzo = null, pensar = true, pedir = fetch, log = () => {}, tiempo = 40000, hasta = Date.now() + 90000 }) {
   if (!clave) return { ok: false, error: 'sin clave' };
   const lista = modelos || [modelo];
   const uso = { entrada: 0, salida: 0, cacheLee: 0, cacheEscribe: 0 };
-  let dolares = 0, ultimo = '', conTemp = temperatura != null;
-  const formato = { format: { type: 'json_schema', schema: esquemaJson(esquema) } };
+  let dolares = 0, ultimo = '', conTemp = temperatura != null, conEsfuerzo = !!esfuerzo, conPensar = !pensar;
+  const esquemaJ = esquemaJson(esquema);
   for (const m of lista) {
     // un 529 (saturado) o un 5xx se reintenta una vez con el mismo modelo
     for (let intento = 0; intento < 2; intento++) {
@@ -60,7 +61,9 @@ export async function preguntarJson({ clave, prompt, esquema, sistema = '', cach
           body: JSON.stringify({
             model: m, max_tokens: maxTokens, ...(conTemp ? { temperature: temperatura } : {}),
             ...(sistema ? { system: [{ type: 'text', text: sistema, ...(cache ? { cache_control: { type: 'ephemeral' } } : {}) }] } : {}),
-            output_config: formato,
+            output_config: { format: { type: 'json_schema', schema: esquemaJ }, ...(conEsfuerzo ? { effort: esfuerzo } : {}) },
+            // sin pensar antes de contestar (between_tools: sin herramientas, no piensa): el razonamiento se cobra como salida
+            ...(conPensar ? { thinking: { type: 'between_tools' } } : {}),
             messages: [{ role: 'user', content: prompt }],
           }),
         });
@@ -72,6 +75,9 @@ export async function preguntarJson({ clave, prompt, esquema, sistema = '', cach
         if (r.status === 401 || r.status === 403) return { ok: false, error: ultimo, uso, dolares };      // la clave no vale
         // si un modelo no admite la temperatura, se pregunta otra vez sin ella
         if (r.status === 400 && /temperature/i.test(msg) && conTemp) { conTemp = false; intento--; continue; }
+        // y lo mismo con el esfuerzo o el modo de pensar, si un modelo no los admite
+        if (r.status === 400 && /effort/i.test(msg) && conEsfuerzo) { conEsfuerzo = false; intento--; continue; }
+        if (r.status === 400 && /thinking/i.test(msg) && conPensar) { conPensar = false; intento--; continue; }
         if (r.status === 400 && !/model/i.test(msg)) return { ok: false, error: ultimo, uso, dolares };    // la pregunta está mal
         if ((r.status === 529 || r.status >= 500) && intento === 0) { await new Promise((ok) => setTimeout(ok, 1500)); continue; }
         break;

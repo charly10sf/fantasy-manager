@@ -94,7 +94,9 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   for (const c of Object.values(hechos.clubes || {})) for (const n of c.nombres || []) { const x = norm(n).replace(/^(el|la) /, ''); permitidos.add(x); }
   for (const c of Object.keys(hechos.clubes || {})) permitidos.add(norm(c));
   for (const c of cronicas) for (const w of norm(`${c.titulo} ${c.entradilla}`).split(' ')) permitidos.add(w);
-  const fuera = nombresEn(t, todos).filter((n) => !permitidos.has(n) && !n.split(' ').every((w) => permitidos.has(w)));
+  // (sin los nombres de los medios: «Mundo Deportivo» no es el Deportivo; primera prueba del 6 nov)
+  const sinMedios = NOMBRES_MEDIOS.reduce((x, m) => x.split(m).join('·'.repeat(m.length)), t);
+  const fuera = nombresEn(sinMedios, todos).filter((n) => !permitidos.has(n) && !n.split(' ').every((w) => permitidos.has(w)));
   if (fuera.length) e.push(`nombra a quien no está en los hechos: ${fuera.join(', ')}`);
   for (const j of (hechos.jugadores || []).filter((x) => x.principal)) {
     const ws = norm(j.nombre).split(' ').filter((w) => w.length >= 3);
@@ -127,8 +129,6 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const estados = new Set((hechos.jugadores || []).map((j) => j.estado));
   if (PALABRAS.baja.test(t) && !negada(t, PALABRAS.baja) && ![...estados].some((x) => ['baja', 'lesionado', 'sancionado'].includes(x))) e.push(`dice «${t.match(PALABRAS.baja)[0]}» y nadie está de baja`);
   // los equipos, con artículo (Carlos, 6 nov: «no es Osasuna, es el Osasuna»); en un marcador o un «Betis-Mallorca», no
-  // (sin los nombres de los medios: «Mundo Deportivo» no es el Deportivo)
-  const sinMedios = NOMBRES_MEDIOS.reduce((x, m) => x.split(m).join('·'.repeat(m.length)), t);
   for (const c of Object.keys(APODOS)) {
     const re = new RegExp(`(^|[^\\p{L}-])(${c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![\\p{L}-])`, 'gu');
     for (const m of sinMedios.matchAll(re)) {
@@ -146,7 +146,10 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (/LaLiga Fantasy ya lo da/i.test(t)) e.push('«LaLiga Fantasy ya lo da…»');
   if (/\b(disponible|duda|baja|sancionado|lesionado)s? fantasy\b/i.test(t)) e.push('«Fantasy» pegado a un estado');
   if (/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i.test(t)) e.push(`muletilla de nota de prensa («${t.match(/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i)[0]}»)`);
-  if (segunTrasCifra(t)) e.push('«según» detrás de una cifra (la fuente va con la noticia, no con la media, el % o la hora)');
+  if (segunTrasCifra(t)) {
+    const f = frases(t).find((x) => /\d.*\bseg[uú]n\s/i.test(x)) || '';
+    e.push(`en la frase «${f.slice(0, 90)}» hay una cifra antes de «según»: el medio solo puede ir en una frase sin cifras (la media, el % o la hora no son suyos)`);
+  }
   if (PROHIBIDO.test(t)) e.push('@, #, enlace, primera persona o adjetivo de anuncio');
   if ((t.match(/¡/g) || []).length > 1) e.push('demasiados «¡»');
   // los medios que nombra tienen que estar en los hechos o en las crónicas usadas
@@ -183,7 +186,7 @@ const ESQUEMA = { type: 'OBJECT', required: ['texto'], properties: { texto: { ty
 export const sistemaDe = (tipo) => `${GUIA}\n\nEJEMPLOS (jugadores inventados: sirven por la forma; no copies frases ni datos):\n\n${ejemplosPara(tipo)}`;
 
 export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [], anterior = '' }) {
-  return [`Escribe el tuit de tipo «${hechos.tipo}» con estos hechos. Como mucho ${max} caracteres (sin contar la etiqueta, que va aparte: «${hechos.etiqueta || '(ninguna)'}»).`,
+  return [`Escribe el tuit de tipo «${hechos.tipo}» con estos hechos. Como mucho ${max} caracteres, mejor menos (sin contar la etiqueta, que va aparte: «${hechos.etiqueta || '(ninguna)'}»).`,
     `HECHOS:\n${JSON.stringify(hechos, sinFecha, 1)}`,
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     cronicas.length ? `PRENSA DE ESTE PARTIDO (puedes usar uno o dos hechos, con tus palabras):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
@@ -231,18 +234,20 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   for (const t of xs) {
     const etiqueta = t.hechos.etiqueta || '';
     const sep = etiqueta ? 2 : 0;
-    const max = Math.min(cfg.max ?? limite(), limite()) - (etiqueta ? peso(etiqueta) + sep : 0);
+    const max = limite() - (etiqueta ? peso(etiqueta) + sep : 0);
+    // lo que se le pide (más corto: «no tienen por qué ser muy largos», Carlos, 4 nov) y el máximo de verdad, que el validador mira
+    const pide = Math.min(max - 40, ((cfg.largo || {})[tipo]) || max - 40);
     const cronicas = (await Promise.resolve(cronicasDe(t)).catch(() => [])) || [];
     let anterior = '', errores = [], final = null;
     for (let intento = 0; intento < (cfg.intentos ?? 2) && !final; intento++) {
       const r = await pedir({ uso: 'redactar', registro, config, sistema, cache, esquema: ESQUEMA, log,
-        prompt: prompt({ hechos: t.hechos, max, recientes, cronicas, errores, anterior }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
+        prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); break; }
       const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
       if (!malos.length) final = { texto, modelo: r.modelo, usadas };
-      else { log(`  (redactar) ${t.clave}, intento ${intento + 1}: ${malos.slice(0, 4).join('; ')}`); errores = malos; anterior = texto; }
+      else { log(`  (redactar) ${t.clave}, intento ${intento + 1}: ${malos.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`); errores = malos; anterior = texto; }
     }
     if (!final) { log(`  (redactar) ${t.clave}: sale la plantilla`); continue; }
     t.plantilla = t.texto;

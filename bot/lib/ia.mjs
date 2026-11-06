@@ -53,8 +53,11 @@ export async function preguntar({ uso = 'clasificar', registro = null, config = 
     const motivo = sinCupo(uso, { registro, config, ahora });
     if (motivo) log(`  (ia) ${motivo}`);
     else {
-      const modelo = ((config.ia || {}).modelos || {})[uso] || MODELOS[uso];
-      const r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, modelo, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
+      const ci = config.ia || {};
+      const modelo = (ci.modelos || {})[uso] || MODELOS[uso];
+      const esfuerzo = (ci.esfuerzo || { clasificar: 'low', redactar: 'medium' })[uso] || null;
+      const pensar = ((ci.pensar || {})[uso]) === true;
+      const r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, modelo, esfuerzo, pensar, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
         ...(uso === 'clasificar' ? { maxTokens: 16000 } : {}), ...(pedir ? { pedir } : {}) });
       apuntar(cuentaHoy(registro, ahora), uso, r);
       if (r.ok) return { ...r, proveedor: 'claude' };

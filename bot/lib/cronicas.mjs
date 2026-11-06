@@ -27,7 +27,8 @@ export function elegir(noticias, { partido, tipo, ahora = Date.now(), n = 4 }) {
     const txt = ` ${norm(`${x.titulo} ${x.entradilla}`)} `;
     const dos = nombra(txt, partido.local) && nombra(txt, partido.visitante);
     const uno = nombra(txt, partido.local) || nombra(txt, partido.visitante);
-    if (!(dos || (uno && DEL_PARTIDO.test(txt)))) continue;
+    // en la previa, solo lo que nombra a los dos (la crónica del partido de antes de un club colaba hechos de otro rival; 6 nov)
+    if (!(dos || (tipo !== 'previa' && uno && DEL_PARTIDO.test(txt)))) continue;
     const k = `${x.medio}|${norm(x.titulo).slice(0, 40)}`;
     if (vistos.has(k)) continue;
     vistos.add(k);
