@@ -1381,7 +1381,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247823/premio-obed-vargas-mexico.html": 1793955978000,
    "MARCA|https://www.marca.com/futbol/bundesliga/2026/11/06/makaay-ficharon-aubameyang-gimenez-deportivo-pertenece-primera.html": 1793957412000,
    "AS|https://as.com/futbol/primera/hidalgo-casado-puede-venir-convocado-esta-con-ganas-y-la-cabeza-empuja-f202611-n/": 1793957214000,
-   "AS|https://as.com/futbol/primera/china-esta-en-conversaciones-con-laliga-pero-pide-tiempo-para-digerir-el-tema-mbappe-f202611-n/": 1793957399000
+   "AS|https://as.com/futbol/primera/china-esta-en-conversaciones-con-laliga-pero-pide-tiempo-para-digerir-el-tema-mbappe-f202611-n/": 1793957399000,
+   "SPORT|136149096": 1793954520000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000
   },
   "hechos": [
    {
@@ -2068,7 +2070,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3628,6 +3630,8 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-homenajes-haran-campos-primera-segunda-division-jesus-miguel-tendran-repercusion-hecho-suspender-jornada-20261106_3469893.html": 1793958673341
+  }
  }
 }
