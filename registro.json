@@ -321,6 +321,13 @@
    "jornada": 12,
    "id": "2118614763445817513",
    "t": "2026-11-06T08:01:36.453Z"
+  },
+  {
+   "clave": "novedades|3207:vuelve|2026-11-06",
+   "tipo": "novedades",
+   "jornada": 12,
+   "id": "2118658813456978274",
+   "t": "2026-11-06T10:56:38.786Z"
   }
  ],
  "estados": {
@@ -949,7 +956,7 @@
   "3052": "out_of_league",
   "3053": "ok",
   "3054": "ok",
-  "3055": "ok",
+  "3055": "injured",
   "3056": "out_of_league",
   "3057": "ok",
   "3058": "out_of_league",
@@ -1101,7 +1108,7 @@
   "3204": "ok",
   "3205": "ok",
   "3206": "ok",
-  "3207": "doubtful",
+  "3207": "ok",
   "3208": "injured",
   "3209": "ok",
   "3210": "ok",
@@ -1206,7 +1213,14 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3207",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1793962572977
+  }
+ ],
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/mourinho-da-descanso-gueler-tchouameni-llama-sergio-martinez.html": 1793708195000,
@@ -1238,7 +1252,6 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/03/pedro-martinez-quiere-recuperar-eli-ndiaye-136041146.html": 1793717014000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-verdugo-dortmund-busqueda-mejor_0_2008412408.html": 1793703773000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-confirma-lesion-peque_0_2008411945.html": 1793703145000,
    "Diario Sur|https://www.diariosur.es/malagacf/joaquin-recuperacion-malaga-futbol-racing-20261103132330-nt.html": 1793709234000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
@@ -1390,7 +1403,9 @@
    "SPORT|136147732": 1793957547000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-lista-seleccion_0_2008435471.html": 1793961354000,
    "ABC|https://www.abc.es/deportes/futbol/jacobo-ramon-marc-roca-alvaro-valles-estrenan-20261106114733-nt.html": 1793962206000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/06/6aed9130e4d4d8a7398b4572.html": 1793961998000
+   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/06/6aed9130e4d4d8a7398b4572.html": 1793961998000,
+   "SPORT|136150734": 1793958701000,
+   "SPORT|136153992": 1793958441000
   },
   "hechos": [
    {
@@ -1478,18 +1493,6 @@
     "hecho": "Andrés Martín sufre una lesión muscular",
     "motivo": "",
     "plazo": "varias semanas",
-    "nums": []
-   },
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-confirma-lesion-peque_0_2008411945.html",
-    "medio": "Diario de Sevilla",
-    "t": 1793703145000,
-    "id": "2479",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "gestión de cargas",
-    "plazo": "",
     "nums": []
    },
    {
@@ -2063,7 +2066,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -2815,8 +2818,8 @@
     "t": 1793811974660
    },
    "3207": {
-    "e": "doubtful",
-    "t": 1793796972106
+    "e": "ok",
+    "t": 1793962572977
    },
    "3208": {
     "e": "injured",
@@ -2874,8 +2877,8 @@
  },
  "pulido": {
   "dia": "2026-11-06",
-  "n": 2,
-  "ok": 0,
+  "n": 3,
+  "ok": 1,
   "mal": 4
  },
  "liga": {
