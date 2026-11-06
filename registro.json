@@ -1377,7 +1377,8 @@
    "AS|https://as.com/futbol/elliott-descarto-al-madrid-por-ramos-f202611-n/": 1793920238000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247816/racing-santander-multado-lanzamiento-menchero.html": 1793953993000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/china-esta-en-conversaciones-con-laliga-tras-la-polemica-con-mbappe-pero-pide-tiempo-para-digerir-cadena-ser/": 1793956187000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/china-reconoce-contactos-madrid-reconciliacion-polemica-mbappe.html": 1793956448000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/china-reconoce-contactos-madrid-reconciliacion-polemica-mbappe.html": 1793956448000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247823/premio-obed-vargas-mexico.html": 1793955978000
   },
   "hechos": [
    {
@@ -2064,7 +2065,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3007,7 +3008,10 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-aplazamiento-jornada-segunda-division-juez-unico-competicion-20261105_3469885.html": 1793918409000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247765/capitanes-segunda-piden-rfef-aplazar-jornada.html": 1793918307000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/05/afe-solicita-al-juez-unico-de-competiciones-que-aplace-todos-los-partidos-de-segunda-cadena-ser/": 1793918199000,
-   "Cadena SER|https://cadenaser.com/andorra/2026/11/06/pique-vilaseca-i-nogues-encapcalen-la-representacio-de-lfc-andorra-al-multitudinari-funeral-de-jesus-de-miguel-radio-ser-principat-d-andorra/": 1793951972000
+   "Cadena SER|https://cadenaser.com/andorra/2026/11/06/pique-vilaseca-i-nogues-encapcalen-la-representacio-de-lfc-andorra-al-multitudinari-funeral-de-jesus-de-miguel-radio-ser-principat-d-andorra/": 1793951972000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/": 1793957388000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247829/rfef-juez-unico-no-competencias-aplazar-jornada-segunda.html": 1793957172000,
+   "SPORT|136150472": 1793953274000
   },
   "hechos": [
    {
@@ -3575,15 +3579,52 @@
     "contexto": "Tras un trágico accidente ferroviario y un fallecimiento",
     "detalle": "Un sindicato de futbolistas pide aplazar los encuentros",
     "nums": []
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/",
+    "medio": "Cadena SER",
+    "t": 1793957388000,
+    "tipo": "suspension",
+    "estado": "se_estudia",
+    "segunda": false,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": false,
+    "oficial": false,
+    "contexto": "Situación difícil durante la semana de entrenamientos",
+    "detalle": "Pendiente de la decisión de LaLiga",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136150472",
+    "medio": "SPORT",
+    "t": 1793953274000,
+    "tipo": "horario",
+    "estado": "confirmado",
+    "segunda": false,
+    "jornada": 12,
+    "jTxt": true,
+    "clubes": [
+     "7",
+     "5"
+    ],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Homenaje a un jugador fallecido",
+    "detalle": "",
+    "nums": [
+     12,
+     2026,
+     8
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/sociedad/noticia-irene-montero-carga-contra-ayuso-no-negociar-docentes-huelga-contra-gobierno-pegarles-palos-20261106101324.html": 1793956871968
-  }
+  "espera": {}
  }
 }
