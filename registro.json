@@ -1459,7 +1459,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/nueve-bajas-betis-navalcarnero_0_2008438147.html": 1793982315000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html": 1793985142000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000,
-   "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000
+   "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000,
+   "AS|https://as.com/futbol/primera/roberto-y-en-el-proximo-paron-dos-internacionales-mas-f202611-n/": 1793987444000
   },
   "hechos": [
    {
@@ -2221,7 +2222,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
