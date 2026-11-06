@@ -918,8 +918,16 @@ a.btn { text-decoration: none; }
 .sin-app > summary::-webkit-details-marker { display: none; }
 .sin-app p, .sin-app li { color: var(--texto2); font-size: 14px; }
 .sin-app ol { padding-left: 20px; margin: 6px 0 10px; }
-.sin-app .en-dib { margin: 0 0 10px; }
-.sin-app .en-dib a { color: var(--rojo-l); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.sin-app > summary { display: flex; align-items: center; gap: 8px; }
+.en-dib-tag { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: var(--rojo); color: #fff; font: 700 11px 'Barlow'; letter-spacing: .5px; text-transform: uppercase; }
+.sin-app .en-dib-btn { display: flex; align-items: center; gap: 12px; margin: 4px 0 12px; padding: 12px 14px; border-radius: 12px; background: rgba(238,28,60,.12); border: 1.5px solid var(--rojo); color: var(--texto); text-decoration: none; }
+.sin-app .en-dib-btn svg { flex: none; width: 26px; height: 26px; color: var(--rojo-l); }
+.sin-app .en-dib-btn span { flex: 1; min-width: 0; }
+.sin-app .en-dib-btn b { display: block; font: 700 15px 'Barlow'; color: var(--texto); }
+.sin-app .en-dib-btn small { display: block; margin-top: 1px; font: 500 12.5px 'Barlow'; color: var(--texto2); }
+.sin-app .en-dib-btn i { flex: none; font-style: normal; font-size: 26px; line-height: 1; color: var(--rojo-l); }
+.sin-app .en-dib-btn:active { background: rgba(238,28,60,.22); }
+.sin-app .en-dib-btn:focus-visible { outline: 3px solid var(--texto); outline-offset: 2px; }
 .sin-app textarea { display: block; width: 100%; margin: 10px 0 8px; background: var(--plano2); border: 1px solid var(--linea); border-radius: 10px; padding: 10px; font: 13px ui-monospace, monospace; color: var(--texto); resize: vertical; }
 .sin-app .btn { margin-bottom: 12px; }
 .pantalla a { color: var(--rojo-l); }
