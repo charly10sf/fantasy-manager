@@ -1222,10 +1222,8 @@
    "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/": 1793711635000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246691/orian-goren-principal-novedad-convocatoria-aston-villa.html": 1793711167000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246669/simeone-da-lista-bayern-cuti-romero.html": 1793708697000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246637/delantero-filial-asier-hierro-sufre-lesion-rodilla.html": 1793705184000,
    "SPORT|136034478": 1793705687000,
    "SPORT|136032764": 1793705626000,
-   "SPORT|136028553": 1793705366000,
    "SPORT|136041677": 1793713371000,
    "SPORT|136042531": 1793714741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246788/guruzeta-empieza-cuenta-hoy-sido-operado-rodilla-izquierda.html": 1793722204000,
@@ -1405,7 +1403,12 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-llama-alvaro-valles-marc-roca-jacobo-ramon-recupera-pablo-barrios-barrenetxea-20261106_3470127.html": 1793961935000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000,
    "SPORT|136125660": 1793959209000,
-   "SPORT|136153368": 1793959980000
+   "SPORT|136153368": 1793959980000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247885/barrios-vuelve-espana-completar-cuarteto-colchonero-roja.html": 1793964233000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247867/cholo-prueba-once-saldra-barcelona.html": 1793963088000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247870/barrenetxea-vuelve-planes-luis-fuente-acompanara-oyarzabal-espana.html": 1793962904000,
+   "SPORT|136156979": 1793961021000,
+   "SPORT|136158048": 1793960729000
   },
   "hechos": [
    {
@@ -2074,11 +2077,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247867/cholo-prueba-once-saldra-barcelona.html",
+    "medio": "Mundo Deportivo",
+    "t": 1793963088000,
+    "id": "3197",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Cuti Romero es la única ausencia en el entrenamiento",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
