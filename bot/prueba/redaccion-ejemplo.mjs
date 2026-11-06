@@ -16,16 +16,16 @@ fijarLimite(1000);
 
 // --- lib/claude.mjs ---
 const e = esquemaJson({ type: 'OBJECT', required: ['a'], properties: { a: { type: 'STRING' }, b: { type: 'ARRAY', items: { type: 'INTEGER' } } } });
-ok(e.type === 'object' && e.properties.a.type === 'string' && e.properties.b.items.type === 'integer', 'el esquema de Gemini pasa a JSON Schema');
+ok(e.type === 'object' && e.additionalProperties === false && e.properties.a.type === 'string' && e.properties.b.items.type === 'integer', 'el esquema de Gemini pasa a JSON Schema');
 ok(Math.abs(coste(SONNET, { input_tokens: 6000, output_tokens: 450 }) - 0.0165) < 1e-9, 'Sonnet: 6.000 de entrada y 450 de salida, 0,0165 $');
 ok(Math.abs(coste(HAIKU, { input_tokens: 2000, output_tokens: 500 }) - 0.00045) < 1e-9, 'Haiku: 2.000 y 500, 0,00045 $');
 const resp = (status, cuerpo) => ({ status, text: async () => JSON.stringify(cuerpo) });
-const bien = (datos, u = { input_tokens: 100, output_tokens: 20 }) => resp(200, { content: [{ type: 'tool_use', name: 'responder', input: datos }], usage: u, stop_reason: 'tool_use' });
+const bien = (datos, u = { input_tokens: 100, output_tokens: 20 }) => resp(200, { content: [{ type: 'thinking', thinking: '…' }, { type: 'text', text: JSON.stringify(datos) }], usage: u, stop_reason: 'end_turn' });
 let vistos = [];
 let r = await preguntarJson({ clave: 'k', prompt: 'hola', esquema: { type: 'OBJECT' }, sistema: 'guía', cache: true,
   pedir: async (url, op) => { vistos.push(JSON.parse(op.body)); return bien({ texto: 'ok' }); } });
-ok(r.ok && r.datos.texto === 'ok' && r.modelo === SONNET, 'contesta con el JSON de la herramienta');
-ok(vistos[0].system[0].cache_control && vistos[0].tool_choice.name === 'responder', 'el sistema va en caché y la herramienta es obligatoria');
+ok(r.ok && r.datos.texto === 'ok' && r.modelo === SONNET, 'contesta con el JSON del bloque de texto (salida estructurada)');
+ok(vistos[0].system[0].cache_control && vistos[0].output_config.format.type === 'json_schema' && !('temperature' in vistos[0]) && !vistos[0].tool_choice, 'el sistema va en caché, la salida es json_schema y sin temperatura ni tool_choice');
 ok(!JSON.stringify(vistos[0]).includes('"k"'), 'la clave no va en el cuerpo');
 let n = 0;
 r = await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, pedir: async () => (++n === 1 ? resp(529, { error: { message: 'Overloaded' } }) : bien({ texto: 'otra vez' })) });
@@ -33,7 +33,7 @@ ok(r.ok && n === 2, 'un 529 se reintenta una vez');
 r = await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, pedir: async () => resp(401, { error: { message: 'invalid x-api-key' } }) });
 ok(!r.ok && /401/.test(r.error), 'un 401 no se reintenta');
 vistos = [];
-r = await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, pedir: async (u, op) => { const b = JSON.parse(op.body); vistos.push(b); return 'temperature' in b ? resp(400, { error: { message: 'temperature is not supported for this model' } }) : bien({ texto: 'sin temp' }); } });
+r = await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, temperatura: 0.2, pedir: async (u, op) => { const b = JSON.parse(op.body); vistos.push(b); return 'temperature' in b ? resp(400, { error: { message: 'temperature is not supported for this model' } }) : bien({ texto: 'sin temp' }); } });
 ok(r.ok && vistos.length === 2 && !('temperature' in vistos[1]), 'si el modelo no admite la temperatura, se pregunta sin ella');
 r = await preguntarJson({ clave: '', prompt: 'x', esquema: {} });
 ok(!r.ok, 'sin clave no pregunta');

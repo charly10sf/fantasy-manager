@@ -55,7 +55,7 @@ export async function preguntar({ uso = 'clasificar', registro = null, config = 
     else {
       const modelo = ((config.ia || {}).modelos || {})[uso] || MODELOS[uso];
       const r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, modelo, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
-        ...(uso === 'clasificar' ? { temperatura: 0.2, maxTokens: 4000 } : {}), ...(pedir ? { pedir } : {}) });
+        ...(uso === 'clasificar' ? { maxTokens: 6000 } : {}), ...(pedir ? { pedir } : {}) });
       apuntar(cuentaHoy(registro, ahora), uso, r);
       if (r.ok) return { ...r, proveedor: 'claude' };
       log(`  (ia) Claude no contesta (${r.error})`);

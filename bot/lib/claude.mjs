@@ -1,6 +1,7 @@
 // La API de Claude para el bot, con la misma interfaz que lib/gemini.mjs (`preguntarJson`). Secreto ANTHROPIC_API_KEY, solo del bot y
 // solo en Actions: la clave va en la cabecera x-api-key, nunca en la URL ni en los logs. La crea Carlos en platform.claude.com.
-// La respuesta en JSON se pide con una herramienta obligatoria (tool_choice) cuyo esquema es el mismo que se le pasa a Gemini.
+// La respuesta en JSON se pide con salida estructurada (output_config.format, json_schema) y el mismo esquema que se le pasa a Gemini.
+// (Primera prueba, 6 nov: Sonnet 5.5 no admite tool_choice obligatorio y los modelos 5.5 ya no admiten la temperatura.)
 // Las instrucciones fijas (`sistema`) pueden ir en caché: solo compensa si en la misma ejecución salen varias preguntas con el mismo
 // sistema (la escritura cuesta 1,25 veces la entrada y la lectura 0,05 en Sonnet 5.5 y 0,1 en Haiku 5.5; la caché dura 5 min y el bot
 // corre cada 5 min en una Action nueva, así que entre ejecuciones casi nunca se lee).
@@ -19,7 +20,7 @@ export function esquemaJson(e) {
   if (!e || typeof e !== 'object') return e;
   const out = {};
   for (const [k, v] of Object.entries(e)) {
-    if (k === 'type' && typeof v === 'string') out.type = v.toLowerCase();
+    if (k === 'type' && typeof v === 'string') { out.type = v.toLowerCase(); if (out.type === 'object') out.additionalProperties = false; }
     else if (k === 'properties') out.properties = Object.fromEntries(Object.entries(v).map(([p, s]) => [p, esquemaJson(s)]));
     else if (k === 'items') out.items = esquemaJson(v);
     else if (k === 'nullable') continue;
@@ -40,13 +41,13 @@ export const usoDe = (u = {}) => ({ entrada: u.input_tokens || 0, salida: u.outp
  * Pregunta y devuelve el JSON de la respuesta. { ok, datos, modelo, uso, dolares } o { ok: false, error, uso, dolares }.
  * `sistema`: las instrucciones fijas (guía, ejemplos); `cache`: ponerlas en caché. pedir(url, opciones) es fetch (se cambia en las pruebas).
  */
-export async function preguntarJson({ clave, prompt, esquema, sistema = '', cache = false, modelos = null, modelo = SONNET, maxTokens = 1500,
-  temperatura = 0.7, pedir = fetch, log = () => {}, tiempo = 40000, hasta = Date.now() + 90000 }) {
+export async function preguntarJson({ clave, prompt, esquema, sistema = '', cache = false, modelos = null, modelo = SONNET, maxTokens = 4000,
+  temperatura = null, pedir = fetch, log = () => {}, tiempo = 40000, hasta = Date.now() + 90000 }) {
   if (!clave) return { ok: false, error: 'sin clave' };
   const lista = modelos || [modelo];
   const uso = { entrada: 0, salida: 0, cacheLee: 0, cacheEscribe: 0 };
-  let dolares = 0, ultimo = '', conTemp = true;
-  const herramienta = { name: 'responder', description: 'Devuelve la respuesta con este formato.', input_schema: esquemaJson(esquema) };
+  let dolares = 0, ultimo = '', conTemp = temperatura != null;
+  const formato = { format: { type: 'json_schema', schema: esquemaJson(esquema) } };
   for (const m of lista) {
     // un 529 (saturado) o un 5xx se reintenta una vez con el mismo modelo
     for (let intento = 0; intento < 2; intento++) {
@@ -59,7 +60,7 @@ export async function preguntarJson({ clave, prompt, esquema, sistema = '', cach
           body: JSON.stringify({
             model: m, max_tokens: maxTokens, ...(conTemp ? { temperature: temperatura } : {}),
             ...(sistema ? { system: [{ type: 'text', text: sistema, ...(cache ? { cache_control: { type: 'ephemeral' } } : {}) }] } : {}),
-            tools: [herramienta], tool_choice: { type: 'tool', name: 'responder' },
+            output_config: formato,
             messages: [{ role: 'user', content: prompt }],
           }),
         });
@@ -80,9 +81,11 @@ export async function preguntarJson({ clave, prompt, esquema, sistema = '', cach
       const u = usoDe(j.usage);
       for (const k of Object.keys(uso)) uso[k] += u[k];
       dolares += coste(m, j.usage);
-      const bloque = (j.content || []).find((b) => b.type === 'tool_use' && b.name === 'responder');
-      if (!bloque || !bloque.input || typeof bloque.input !== 'object') { ultimo = `${m}: sin respuesta con formato (${j.stop_reason || '?'})`; log(`  (claude) ${ultimo}`); break; }
-      return { ok: true, datos: bloque.input, modelo: m, uso, dolares };
+      const texto = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text || '').join('');
+      let datos = null;
+      try { datos = JSON.parse(texto); } catch { /* abajo */ }
+      if (!datos || typeof datos !== 'object') { ultimo = `${m}: sin respuesta con formato (${j.stop_reason || '?'})`; log(`  (claude) ${ultimo}`); break; }
+      return { ok: true, datos, modelo: m, uso, dolares };
     }
   }
   return { ok: false, error: ultimo || 'ningún modelo contestó', uso, dolares };
