@@ -1,13 +1,15 @@
 {
   "umbralCaida": 0.5,
   "onceProbable": true,
-  "topes": { "resumen": 2, "final": 10, "mvp": 10, "caidas": 9, "directo": 40, "mercado": 8, "previa": 10, "onces": 10, "novedades": 20, "noticias": 15, "sancionados": 3, "lloros": 1, "liga": 6 },
+  "topes": { "resumen": 2, "final": 10, "mvp": 10, "caidas": 9, "directo": 40, "mercado": 8, "previa": 10, "onceideal": 1, "onces": 10, "novedades": 20, "noticias": 15, "sancionados": 3, "lloros": 1, "liga": 6 },
   "topeDiario": 40,
   "maxPorEjecucion": 6,
   "ventanaFinalHoras": 13,
   "daznEsperaHoras": 6,
   "horasCaidas": [9, 21],
   "horasMercado": [[0, 1], [8, 12]],
+  "horasOnceIdeal": [9, 23],
+  "onceIdeal": { "activo": true, "desdeHoras": 36, "hastaHoras": 24, "margenHoras": 6, "maxPorClub": 3, "minTitularidad": 0.6 },
   "horasSilencio": [1, 8],
   "inicioEntreSemana": 7,
   "separacionBajasMin": 75,
@@ -26,6 +28,6 @@
   "tweetMax": 280,
   "largo": { "activo": true, "max": 1000, "reintentarHoras": 24 },
   "hashtag": "",
-  "tarjetas": { "final": true, "jugador": true, "resumen": true, "previa": true, "onces": true, "mercado": true, "caidas": true, "novedades": true, "noticias": true, "sancionados": true },
+  "tarjetas": { "final": true, "jugador": true, "resumen": true, "previa": true, "onceideal": true, "onces": true, "mercado": true, "caidas": true, "novedades": true, "noticias": true, "sancionados": true },
   "telegram": { "topes": { "respuestas": 10 }, "topeDiario": 20, "maxPorEjecucion": 5, "avisosDia": 3, "minJugadoresConPuntos": 12, "cuentasX": {"Real Madrid": "realmadrid", "Barça": "FCBarcelona_es", "Atlético": "Atleti", "Athletic": "AthleticClub", "Villarreal": "VillarrealCF", "Betis": "RealBetis", "Real Sociedad": "RealSociedad", "Celta": "RCCelta", "Osasuna": "Osasuna", "Alavés": "Alaves", "Rayo": "RayoVallecano", "Sevilla": "SevillaFC", "Valencia": "valenciacf", "Málaga": "MalagaCF", "Espanyol": "RCDEspanyol", "Getafe": "GetafeCF", "Elche": "elchecf", "Levante": "LevanteUD", "Deportivo": "RCDeportivo", "Racing": "realracingclub"} }
 }

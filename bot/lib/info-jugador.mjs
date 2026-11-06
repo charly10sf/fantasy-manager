@@ -75,14 +75,19 @@ export function crearInfo({ jugadores = [], equipos = {}, semana = null, log = (
       if (!nivel) return null;
       return { pos: r.pos, n: t.n, nivel, gf: r.gf / r.pj, gc: r.gc / r.pj, rgf: r.rgf, rgc: r.rgc };
     },
-    /** { p, pct } del % de titularidad de la app para su próximo partido, o null (0 % o sin datos) */
-    async titularidad(j, pp) {
-      const k = String(j.teamId);
+    /** { [idJugador]: { id, nombre, pos, p, duda, estado, tit } } de todo un equipo (lo de `probabilidades`), o null si falla: una
+     * sola vez por equipo y ejecución, la misma que usa `titularidad` (el once ideal necesita a todos los equipos) */
+    probsDe(teamId, pp) {
+      const k = String(teamId);
       if (!porEquipo.has(k)) {
         const ult = (pp ? pp.jornada : Number(semana && semana.weekNumber) || 1) - 1;
-        porEquipo.set(k, probs(j.teamId, jugadores, ult, { equipo: equipos[k] || null, log }).catch((e) => { log(`  (info) titularidad de ${equipos[k] || k}: ${e.message || e}`); return null; }));
+        porEquipo.set(k, probs(teamId, jugadores, ult, { equipo: equipos[k] || null, log }).catch((e) => { log(`  (info) titularidad de ${equipos[k] || k}: ${e.message || e}`); return null; }));
       }
-      const x = ((await porEquipo.get(k)) || {})[j.id];
+      return porEquipo.get(k);
+    },
+    /** { p, pct } del % de titularidad de la app para su próximo partido, o null (0 % o sin datos) */
+    async titularidad(j, pp) {
+      const x = ((await this.probsDe(j.teamId, pp)) || {})[j.id];
       if (!x || !(x.p > 0)) return null;
       return { p: x.p, pct: Math.round(x.p * 100) };
     },

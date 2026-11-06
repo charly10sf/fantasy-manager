@@ -220,6 +220,63 @@ export function svgOnces(d) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
+// Tarjeta del once ideal de la jornada (Carlos, 6 nov 08:45): los 11 en un solo campo, cada uno con su cara, el escudo de su club, el
+// nombre y los puntos que Fantasy Manager espera de él (chapa dorada). Aro dorado grueso: la apuesta (el que más puntos se espera);
+// aro verde: el chollo (el barato que más da).
+// d = { jornada, formacion: '4-3-3', valor: '387 M', apuesta: bool, chollo: bool, once: [{ pos, nombre, club, pts: '7,4', rol: 'apuesta'|'chollo'|null,
+//       cara (PNG), escudo (PNG) }] (11, de portero a delanteros) }
+const AURO = '#fbe9a6';
+export function svgOnceIdeal(d) {
+  const oro = dorado();
+  const x = 44, y = 134, w = 1112, h = 462, g = id('cp'), gs = id('cs'), cl = id('cc');
+  const lc = 'stroke="#ffffff" stroke-opacity="0.45" stroke-width="2.5" fill="none"';
+  let s = oro.defs + fondo([[260, 60, 640, '#e2bd5a', 0.14], [980, 60, 640, VERDE, 0.12]])
+    + cabecera('ONCE IDEAL', oro.g, `JORNADA ${d.jornada}`, `PUNTOS ESPERADOS · ${d.formacion}`, { px: 100, y: 114, maxTitulo: 640 });
+  // el césped, con franjas, y sus líneas (las mismas de los posibles onces, con el campo entero para un solo equipo)
+  s += `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="22"/></clipPath>${lineal(g, [[0, '#23744a'], [1, '#124a2b']])}${lineal(gs, [[0, '#fff', 0.08], [1, '#fff', 0]])}</defs>`
+    + `<rect x="${x}" y="${y + 5}" width="${w}" height="${h}" rx="22" fill="#000" opacity="0.4"/>`
+    + `<g clip-path="url(#${cl})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>`;
+  for (let k = 0; k < 10; k++) if (k % 2) s += `<rect x="${x}" y="${y + k * h / 10}" width="${w}" height="${h / 10}" fill="#000" opacity="0.1"/>`;
+  s += `<rect x="${x}" y="${y}" width="${w}" height="${h * 0.3}" fill="url(#${gs})"/></g>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="22" fill="none" stroke="#e2bd5a" stroke-opacity="0.8" stroke-width="3"/>`
+    + `<rect x="${x + 14}" y="${y + 14}" width="${w - 28}" height="${h - 28}" rx="12" ${lc}/>`
+    + `<path d="M${x + w * 0.43},${y + 14} A${w * 0.07},${w * 0.07} 0 0 0 ${x + w * 0.57},${y + 14}" ${lc}/>`
+    + `<rect x="${x + w * 0.3}" y="${y + h - 14 - 92}" width="${w * 0.4}" height="92" ${lc}/>`
+    + `<rect x="${x + w * 0.4}" y="${y + h - 14 - 34}" width="${w * 0.2}" height="34" ${lc}/>`;
+  // las líneas de jugadores: delanteros arriba y portero abajo
+  const once = d.once.slice(0, 11);
+  const f = String(d.formacion || '').split('-').map(Number).filter((n) => n > 0);
+  const lineas = [once.slice(0, 1)]; let i = 1;
+  for (const c of f) { lineas.push(once.slice(i, i + c)); i += c; }
+  lineas.reverse();
+  const alto = (h - 30) / lineas.length;
+  const R = 29;
+  lineas.forEach((ls, fila) => {
+    const cy = y + 18 + alto * fila + alto * 0.33;
+    ls.forEach((j, k) => {
+      const n = ls.length, paso = w / (n + 1), cx = x + paso * (k + 1), maxN = Math.min(200, paso - 14);
+      const club = coloresClub(j.club || '');
+      const aro = j.rol === 'apuesta' ? AURO : j.rol === 'chollo' ? VERDE : club.vivo, grosor = j.rol ? 6 : 3.5;
+      const nom = nombreAjustado(j.nombre, 24, maxN), pw = Math.min(maxN, medir(nom, tamano(nom, 24, maxN), B)) * 0.94 + 20;
+      s += `<circle cx="${cx}" cy="${cy + 3}" r="${R + 1}" fill="#000" opacity="0.4"/>`
+        + (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro, grosor, fondoColor: club.vivo })
+          : `<circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.6)}" fill="${club.vivo}" stroke="${aro}" stroke-width="3"/>`)
+        + escudo(j.escudo, cx - R * 0.95, cy + R * 0.7, 28)
+        + `<rect x="${cx - pw / 2}" y="${cy + R + 4}" width="${pw}" height="35" rx="17.5" fill="#06080a" fill-opacity="0.82"/>`
+        + texto(cx, cy + R + 29, nom, { px: 24, peso: 700, ancla: 'middle', max: maxN })
+        + chip(j.pts, cx + R * 0.95, cy - R * 0.62, 21, { relleno: '#e2bd5a', tinta: OSCURO, pad: 1.5, espacio: 0.5, peso: 900 }).s;
+    });
+  });
+  // el pie: qué es el aro dorado y el verde, y lo que vale el once
+  let lx = 48;
+  const leyenda = (color, txt) => { s += `<circle cx="${lx + 8}" cy="623" r="8" fill="${color}"/>` + texto(lx + 24, 631, txt, { px: 23, peso: 700, color: TENUE, espacio: 2 }); lx += 24 + medir(txt, 23, B, 2) + 28; };
+  if (d.apuesta) leyenda(AURO, 'APUESTA');
+  if (d.chollo) leyenda(VERDE, 'CHOLLO');
+  s += texto(1152, 631, `VALOR DEL ONCE ${d.valor}`, { px: 23, peso: 700, color: TENUE, ancla: 'end', espacio: 2 });
+  return marco(s + marca(600, 662, { ancla: 'middle' }));
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
 // Tarjeta del mercado de cada noche (Carlos, 3 nov 06:56: «top 5 subidas y bajadas»): dos paneles, SUBEN en verde y BAJAN en rojo,
 // cada uno con su cabecera de color y cinco filas.
 // d = { fecha: '3 de noviembre', suben: [fila] (5), bajan: [fila] (5) } con fila = { nombre, equipo, club, cara (PNG), escudo (PNG),
