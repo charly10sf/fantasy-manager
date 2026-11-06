@@ -1385,7 +1385,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
    "SPORT|136149474": 1793956100000,
-   "Cadena SER|https://cadenaser.com/castillayleon/2026/11/06/el-embajador-de-china-confirma-en-salamanca-conversaciones-entre-el-gobierno-de-pekin-y-la-liga-para-reconducir-la-situacion-tras-la-polemica-provocada-por-mbappe-radio-salamanca/": 1793959856000
+   "Cadena SER|https://cadenaser.com/castillayleon/2026/11/06/el-embajador-de-china-confirma-en-salamanca-conversaciones-entre-el-gobierno-de-pekin-y-la-liga-para-reconducir-la-situacion-tras-la-polemica-provocada-por-mbappe-radio-salamanca/": 1793959856000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247854/china-conversaciones-laliga-pide-digerir-tema-mbappe.html": 1793960809000
   },
   "hechos": [
    {
@@ -2058,7 +2059,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -3617,6 +3618,8 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793961071753
+  }
  }
 }
