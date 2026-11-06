@@ -342,6 +342,13 @@
    "jornada": 12,
    "id": "2118690293469925614",
    "t": "2026-11-06T13:01:44.231Z"
+  },
+  {
+   "clave": "novedades|2772:vuelve|2026-11-06",
+   "tipo": "novedades",
+   "jornada": 12,
+   "id": "2118692740745543768",
+   "t": "2026-11-06T13:11:27.677Z"
   }
  ],
  "estados": {
@@ -725,7 +732,7 @@
   "2768": "ok",
   "2770": "ok",
   "2771": "ok",
-  "2772": "doubtful",
+  "2772": "ok",
   "2773": "out_of_league",
   "2774": "ok",
   "2775": "out_of_league",
@@ -1061,7 +1068,7 @@
   "3143": "ok",
   "3144": "injured",
   "3145": "ok",
-  "3146": "doubtful",
+  "3146": "injured",
   "3147": "ok",
   "3148": "ok",
   "3149": "injured",
@@ -1227,7 +1234,14 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2772",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1793970671255
+  }
+ ],
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
@@ -1431,7 +1445,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247917/cancelo-bernardo-silva-primera-lista-portugal-cristiano.html": 1793969369000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247919/koke-apunta-titular-barca-pisa-talones-messi-xavi.html": 1793969368000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261106/1004247911/pellegrini-suma-ocho-bajas-copa-convocatorias-espana.html": 1793968808000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247912/valverde-convocado-amistosos-uruguay-debutar-diego-forlan.html": 1793968555000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247912/valverde-convocado-amistosos-uruguay-debutar-diego-forlan.html": 1793968555000,
+   "SPORT|136163736": 1793966627000
   },
   "hechos": [
    {
@@ -2158,7 +2173,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -2610,8 +2625,8 @@
     "t": 0
    },
    "2772": {
-    "e": "doubtful",
-    "t": 1793963776475
+    "e": "ok",
+    "t": 1793970671255
    },
    "2782": {
     "e": "out_of_league",
@@ -2969,9 +2984,9 @@
  },
  "pulido": {
   "dia": "2026-11-06",
-  "n": 5,
+  "n": 6,
   "ok": 2,
-  "mal": 5
+  "mal": 6
  },
  "liga": {
   "vistas": {
@@ -3107,7 +3122,9 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261106/1004247862/juez-competiciones-profesionales-inadmite-peticion-afe.html": 1793962289000,
    "SPORT|136149880": 1793959104000,
-   "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000
+   "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000,
+   "SPORT|136163733": 1793966682000,
+   "SPORT|136157637": 1793966510000
   },
   "hechos": [
    {
@@ -3747,15 +3764,46 @@
     "detalle": "",
     "nums": [],
     "regla": true
+   },
+   {
+    "guid": "SPORT|136157637",
+    "medio": "SPORT",
+    "t": 1793966510000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": true,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "Petición de suspensión por el fallecimiento de Jesús de Miguel",
+    "detalle": "El Juez Único de Competición inadmite la solicitud de la AFE",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136163733",
+    "medio": "SPORT",
+    "t": 1793966682000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": false,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": false,
+    "contexto": "",
+    "detalle": "",
+    "nums": [],
+    "regla": true
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136157637": 1793970372826
-  }
+  "espera": {}
  }
 }
