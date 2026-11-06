@@ -1,0 +1,15 @@
+{
+  "name": "Fantasy Manager",
+  "short_name": "Fantasy Manager",
+  "description": "Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular en tu liga de LaLiga Fantasy.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#08080a",
+  "theme_color": "#08080a",
+  "icons": [
+    { "src": "img/icono-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "img/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

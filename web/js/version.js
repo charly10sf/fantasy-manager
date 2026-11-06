@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7h';
+export const VERSION = '0.7i';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.7h';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7i', f: '2026-11-06', h: '22:41', t: 'La portada y el iPhone, más claros',
+    cosas: [
+      { tipo: 'mejora', d: 'camiseta', t: 'Se nota que hay más al bajar', x: 'En la portada de la web sale un botón «Baja: hay mucho más» abajo del todo mientras no has hecho scroll, para que no parezca que solo existe la primera pantalla.', para: 'web', menor: true },
+      { tipo: 'nuevo', d: 'camiseta', t: 'Guía para iPhone, paso a paso', x: 'La web explica en tres pasos cómo entrar desde un iPhone y cómo dejarla en la pantalla de inicio como una app, con un icono y el nombre Fantasy Manager. Hay una guía más detallada en la página de instalar y, en Ajustes, un atajo.', para: 'web' },
+    ],
+  },
   {
     v: '0.7h', f: '2026-11-06', h: '22:38', t: 'Ventas que miran la cláusula abierta',
     cosas: [

@@ -1,6 +1,6 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
 import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
-import { enApp, enWeb, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
+import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
@@ -159,7 +159,18 @@ function entrarWebHTML() {
     <details class="sin-app"><summary>Ya tengo la app y quiero usar la web</summary><p>Entra con un código de la app:</p>${codigoWebHTML()}</details>`;
   }
   if (movil === 'iphone') {
-    return `<div class="entrar-movil"><b>${icono('info')}Estás en un iPhone</b><span>La primera vez hay que entrar desde un <b>ordenador</b>: LaLiga no deja hacerlo en el iPhone. En el ordenador abre esta misma web, pulsa «No tengo la app en el móvil» y sigue los pasos. Ya dentro, en <b>Ajustes → Abrir en otro dispositivo</b> te sale un código con su QR: escanea el QR con la cámara del iPhone y entras solo, o escribe el código aquí abajo. Si tienes la app en un Android, sale lo mismo en <b>Ajustes → Abrir en el ordenador → Código</b>. Solo se hace una vez.</span></div>
+    // dentro del icono de la pantalla de inicio ya no hace falta decir cómo ponerla; si no, el orden importa: la web del
+    // icono guarda su sesión aparte de la de Safari, así que hay que ponerla ANTES de escribir el código
+    const icono_ = enInicio();
+    const pasos = [
+      ['Saca un código en un ordenador', 'Abre <b>fantasymanagerapp.com</b>, pulsa «No tengo la app en el móvil» y entra con tu cuenta de LaLiga. Luego, <b>Ajustes → Abrir en otro dispositivo</b>: te da un código de 8 letras y números (dura 10 minutos). Si alguien tiene la app en un Android: <b>Ajustes → Abrir en el ordenador → Código</b>.'],
+      ...(icono_ ? [] : [['Ponla en tu pantalla de inicio', 'En <b>Safari</b>, toca <b>Compartir</b> (el cuadrado con la flecha hacia arriba) → <b>Añadir a pantalla de inicio</b> → <b>Añadir</b>. Hazlo antes de entrar: la app del icono guarda su sesión aparte de Safari. <a href="instalar.html#anadir">Cómo se hace, con detalle</a>']]),
+      [icono_ ? 'Escribe el código aquí' : 'Ábrela desde el icono y escribe el código', 'Pon el código en el cuadro de más abajo y toca <b>Entrar</b>. Solo se hace una vez: después la sesión se renueva sola.'],
+    ];
+    return `<div class="entrar-movil"><b>${icono('info')}Cómo usarla en iPhone</b>
+      <span class="em-intro">No hay app en la App Store: Fantasy Manager se usa desde la web y puedes dejarla en tu pantalla de inicio como una app más. LaLiga no deja entrar con tu cuenta desde el iPhone, así que la <b>primera vez</b> hace falta un código.</span>
+      <ol class="em-pasos">${pasos.map(([t, x], n) => `<li><span class="em-n">${n + 1}</span><span><b class="em-t">${t}</b>${x}</span></li>`).join('')}</ol>
+      <a class="btn sec ancho em-guia" href="instalar.html#iphone">${icono('nota')}Guía completa para iPhone</a></div>
     ${botonDemo('')}
     ${codigoWebHTML()}`;
   }

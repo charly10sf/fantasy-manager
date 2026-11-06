@@ -14,6 +14,10 @@ export const WORKER = (() => {
 })();
 /** la versión web de verdad (con tu liga), no la de ejemplo */
 export const enWeb = !N && !!WORKER;
+/** en un iPhone o iPad abriendo la web (no la app de Android) */
+export const enIPhone = !N && typeof navigator !== 'undefined' && (/iPhone|iPad|iPod/.test(navigator.userAgent || '') || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+/** abierta desde el icono de la pantalla de inicio, no desde Safari (guarda su sesión aparte de la de Safari) */
+export const enInicio = () => { try { return !N && !!(navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)); } catch (e) { return false; } };
 /**
  * El segundo intermediario, en Deno Deploy (repo fantasy-manager-proxy): con partidos, las operadoras cortan muchas IP de
  * Cloudflare (claude/BLOQUEO-LALIGA.md) y el Worker puede no contestar. Hace lo mismo que /p e /img del Worker; los
