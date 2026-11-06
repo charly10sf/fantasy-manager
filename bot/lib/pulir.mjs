@@ -10,6 +10,8 @@
 import { norm, corto, peso, limite, largo, esEtiquetaFinal } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntarJson } from './gemini.mjs';
+import { preguntar, conClaude } from './ia.mjs';
+import { revisarConIA } from './revisor.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 const CIFRAS = /\d+(?:[.,]\d+)?/g;
@@ -169,20 +171,23 @@ ${JSON.stringify(textos.map((texto, i) => ({ i, max: maxDe(texto), texto })))}`;
  * Devuelve cuántos ha cambiado. Sin clave, fuera de los tipos de config.pulir o con el tope del día gastado, no hace nada.
  */
 export async function pulir(tweets, { tipo, registro = null, config = {}, jugadores = [], equipos = {}, log = console.log,
-  clave = process.env.GEMINI_API_KEY, pedirIA = preguntarJson, ahora = Date.now(), forzar = false } = {}) {
+  clave = process.env.GEMINI_API_KEY, pedirIA = null, revisor = revisarConIA, ahora = Date.now(), forzar = false } = {}) {
   const cfg = config.pulir || {};
   if (!tweets.length || !(cfg.tipos || []).includes(tipo)) return 0;
-  if (!clave) { log(`  (pulir) sin GEMINI_API_KEY: ${tipo} sale con la plantilla`); return 0; }
+  // desde el 7 nov pule Claude (lib/ia.mjs, uso «pulir»; Gemini solo si no hay Claude): el flash-lite de Gemini, el que quedaba cuando
+  // se acababa el cupo del flash, enredaba los textos («16º clasificado en un duelo asequible ante uno de los rivales que más encajan»)
+  if (!clave && !conClaude(config)) { log(`  (pulir) sin Claude ni GEMINI_API_KEY: ${tipo} sale con la plantilla`); return 0; }
   // sin registro guardado (el simulacro del cron) no se gasta cupo, salvo que se fuerce
   if (!forzar && !(registro && registro.fichero)) return 0;
   const datos = (registro && registro.datos) || {};
   const hoy = diaMadrid(ahora);
   const cuenta = (datos.pulido && datos.pulido.dia === hoy) ? datos.pulido : (datos.pulido = { dia: hoy, n: 0, ok: 0, mal: 0 });
-  if (cuenta.n >= (cfg.porDia ?? 40)) { log(`  (pulir) tope de ${cfg.porDia ?? 40} preguntas a Gemini hoy: ${tipo} sale con la plantilla`); return 0; }
+  if (cuenta.n >= (cfg.porDia ?? 40)) { log(`  (pulir) tope de ${cfg.porDia ?? 40} preguntas hoy: ${tipo} sale con la plantilla`); return 0; }
   cuenta.n++;
-  const r = await pedirIA({ clave, prompt: prompt(tweets.map((t) => t.texto)), esquema: ESQUEMA, log, tiempo: 15000, hasta: Date.now() + (cfg.segundos ?? 45) * 1000 });
+  const pide = pedirIA || ((op) => preguntar({ ...op, uso: 'pulir', registro, config }));
+  const r = await pide({ clave, prompt: prompt(tweets.map((t) => t.texto)), esquema: ESQUEMA, log, tiempo: 30000, hasta: Date.now() + (cfg.segundos ?? 45) * 1000 });
   if (registro && registro.fichero) registro.guardar();
-  if (!r.ok) { log(`  (pulir) Gemini no contesta (${r.error}): ${tipo} sale con la plantilla`); return 0; }
+  if (!r.ok) { log(`  (pulir) la IA no contesta (${r.error}): ${tipo} sale con la plantilla`); return 0; }
   const nombres = nombresDe(jugadores, equipos);
   let cambiados = 0;
   for (const a of (r.datos && r.datos.tweets) || []) {
@@ -192,9 +197,12 @@ export async function pulir(tweets, { tipo, registro = null, config = {}, jugado
     if (nuevo === t.texto) continue;
     const malos = revisar(t.texto, nuevo, { numeros: t.numeros, max: limite(), nombres, tipo });
     if (malos.length) { cuenta.mal++; log(`  (pulir) ${t.clave}: me quedo la plantilla (${malos.slice(0, 3).join('; ')})`); continue; }
-    t.plantilla = t.texto; t.texto = nuevo; t.pulido = r.modelo; cuenta.ok++; cambiados++;
+    // la segunda lectura (lib/revisor.mjs): si el pulido no se entiende o mete algo que la plantilla no dice, se queda la plantilla
+    const rv = await revisor({ texto: nuevo, fuenteTexto: t.texto, tipo, registro, config, log });
+    if (!rv.ok) { cuenta.mal++; log(`  (pulir) ${t.clave}: el revisor no lo publicaría, me quedo la plantilla (${rv.problemas.slice(0, 3).join('; ')})`); continue; }
+    t.plantilla = t.texto; t.texto = nuevo; t.pulido = r.modelo; if (rv.revisado) t.revisado = rv.modelo; cuenta.ok++; cambiados++;
   }
-  log(`  (pulir) Gemini (${r.modelo}): ${cambiados} de ${tweets.length} tweets de ${tipo} pulidos`);
+  log(`  (pulir) ${r.proveedor === 'gemini' ? 'Gemini' : 'Claude'} (${r.modelo}): ${cambiados} de ${tweets.length} tweets de ${tipo} pulidos`);
   if (registro && registro.fichero) registro.guardar();
   return cambiados;
 }

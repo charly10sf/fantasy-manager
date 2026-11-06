@@ -11,6 +11,7 @@ import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
 import { ARRANQUES, VAGAS, PROHIBIDO, EMOJIS_GUIA, segunTrasCifra, nombresEn, nombresDe } from './pulir.mjs';
 import { NOMBRES_MEDIOS } from './prensa.mjs';
 import { ESTADIOS } from './hechos.mjs';
+import { revisarConIA } from './revisor.mjs';
 
 const EMOJI = /\p{Extended_Pictographic}/gu;
 const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
@@ -295,7 +296,7 @@ export function cuerpoDe(texto) {
  * `cronicasDe(t)` da la prensa del partido de un tweet (o []). Devuelve cuántos ha redactado.
  */
 export async function redactar(tweets, { tipo, registro = null, config = {}, jugadores = [], equipos = {}, log = console.log, ahora = Date.now(),
-  pedir = preguntar, cronicasDe = () => [], forzar = false } = {}) {
+  pedir = preguntar, cronicasDe = () => [], forzar = false, revisor = revisarConIA } = {}) {
   const cfg = config.redactar || {};
   const activo = forzar || process.env.BOT_REDACTAR === '1' || cfg.activo === true;
   const xs = tweets.filter((t) => t && t.hechos);
@@ -316,21 +317,27 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     const pide = Math.min(max - 40, ((cfg.largo || {})[tipo]) || max - 40);
     const cronicas = (await Promise.resolve(cronicasDe(t)).catch(() => [])) || [];
     let anterior = '', errores = [], final = null;
-    for (let intento = 0; intento < (cfg.intentos ?? 2) && !final; intento++) {
+    for (let intento = 0; intento < (cfg.intentos ?? 3) && !final; intento++) {
       const r = await pedir({ uso: 'redactar', registro, config, sistema, cache, esquema: ESQUEMA, log,
         prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); break; }
       const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
-      if (!malos.length) final = { texto, modelo: r.modelo, usadas };
-      else { log(`  (redactar) ${t.clave}, intento ${intento + 1}: ${malos.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`); errores = malos; anterior = texto; }
+      // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
+      if (!malos.length) {
+        const rv = await revisor({ texto, hechos: t.hechos, tipo, registro, config, log });
+        if (rv.ok) { final = { texto, modelo: r.modelo, usadas, revisado: rv.revisado ? rv.modelo : null }; continue; }
+        log(`  (redactar) ${t.clave}, intento ${intento + 1}: el revisor no lo publicaría: ${rv.problemas.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`);
+        errores = rv.problemas.map((p) => `un editor lo ha leído con los hechos al lado y no lo publicaría: ${p}`); anterior = texto;
+      } else { log(`  (redactar) ${t.clave}, intento ${intento + 1}: ${malos.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`); errores = malos; anterior = texto; }
     }
     if (!final) { log(`  (redactar) ${t.clave}: sale la plantilla`); continue; }
     t.plantilla = t.texto;
     t.texto = etiqueta ? `${final.texto}\n\n${etiqueta}` : final.texto;
     t.numeros = [...new Set([...(t.numeros || []), ...cifrasDe(t.hechos, final.usadas)])];
     t.redactado = final.modelo;
+    if (final.revisado) t.revisado = final.revisado;
     if (final.usadas.length) t.prensa = final.usadas.map((c) => c.medio);
     recientes.push(final.texto);
     hechos++;

@@ -205,6 +205,67 @@ ok(!EJEMPLOS.some((x) => x.bien && (x.tipo === 'final' || x.tipo === 'mvp') && /
 ok(EJEMPLOS.some((x) => !x.bien && /Cuenta COPE/.test(x.texto)), 'la guía trae el «Cuenta COPE» como ejemplo MAL');
 ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a la previa (en un final o un MVP lo que pasa en el campo sale de ESPN)');
 
+// --- el revisor (lib/revisor.mjs): segunda lectura con IA, con los hechos al lado ---
+{
+  const { revisarConIA, SISTEMA } = await import('../lib/revisor.mjs');
+  const { pulir } = await import('../lib/pulir.mjs');
+  const cfgR = { ...config, redactar: { ...config.redactar, activo: true } };
+  // 1. el revisor tira la primera versión; la segunda pregunta lleva sus motivos y sale la segunda
+  const textos = ['✅ El Barça recupera a Eric para el domingo, según AS y MARCA. Es de los defensas que mejor han rentado esta jornada.', bueno];
+  const preg = [];
+  const pedirR = async (op) => { preg.push(op); return { ok: true, datos: { texto: textos.shift(), cronicas: [] }, modelo: SONNET }; };
+  let lecturas = 0;
+  const revisorF = async ({ texto }) => { lecturas++; return /mejor han rentado/.test(texto) ? { ok: false, problemas: ['«Es de los defensas que mejor han rentado esta jornada»: los hechos no traen nada de la jornada'], revisado: true, modelo: SONNET } : { ok: true, problemas: [], revisado: true, modelo: SONNET }; };
+  const ta = { tipo: 'noticias', clave: 'rv1', texto: '✅ plantilla', numeros: [12], hechos };
+  const n1 = await redactar([ta], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {}, pedir: pedirR, revisor: revisorF });
+  ok(n1 === 1 && ta.texto.startsWith(bueno.split('\n')[0]) && ta.revisado === SONNET && lecturas === 2, 'revisor: tira la versión con una comparación sin base y sale la segunda, revisada');
+  ok(preg.length === 2 && /editor/.test(preg[1].prompt) && /mejor han rentado/.test(preg[1].prompt), 'revisor: la segunda pregunta lleva lo que dijo el editor');
+  // 2. si el revisor tira las tres, sale la plantilla
+  const tb = { tipo: 'noticias', clave: 'rv2', texto: '✅ plantilla tres', numeros: [12], hechos };
+  const n2 = await redactar([tb], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {},
+    pedir: async () => ({ ok: true, datos: { texto: bueno }, modelo: SONNET }), revisor: async () => ({ ok: false, problemas: ['«x»: no se entiende'], revisado: true }) });
+  ok(n2 === 0 && tb.texto === '✅ plantilla tres', 'revisor: si no publicaría ninguna de las tres, sale la plantilla');
+  // 3. revisor caído: el tuit sigue (ya pasó el validador de código)
+  const tc = { tipo: 'noticias', clave: 'rv3', texto: '✅ plantilla', numeros: [12], hechos };
+  const n3 = await redactar([tc], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {},
+    pedir: async () => ({ ok: true, datos: { texto: bueno }, modelo: SONNET }), revisor: async () => ({ ok: true, problemas: [], revisado: false }) });
+  ok(n3 === 1 && !tc.revisado, 'revisor caído: sale redactado, sin la marca de revisado');
+  // 4. revisarConIA: lo que contesta la IA
+  const contesta = (datos) => async (op) => ({ ok: true, datos, modelo: SONNET, op });
+  let rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: true, problemas: [] }) });
+  ok(rr.ok && rr.revisado, 'revisarConIA: publicable sin problemas, vale');
+  rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: true, problemas: [{ frase: 'Es de los que sostienen una plantilla', motivo: 'relleno' }] }) });
+  ok(!rr.ok && /sostienen/.test(rr.problemas[0]), 'revisarConIA: «publicable» con problemas no vale (manda el problema)');
+  rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: false, problemas: [] }) });
+  ok(!rr.ok && rr.problemas.length === 1, 'revisarConIA: no publicable sin motivo, con un motivo genérico para reescribir');
+  rr = await revisarConIA({ texto: 'x', hechos, config, pedir: async () => ({ ok: false, error: '529' }) });
+  ok(rr.ok && !rr.revisado, 'revisarConIA: si no contesta, no bloquea');
+  rr = await revisarConIA({ texto: 'x', hechos, config: { ...config, revisor: { activo: false } }, pedir: contesta({ publicable: false, problemas: [] }) });
+  ok(rr.ok && !rr.revisado, 'revisarConIA: con revisor.activo a false no pregunta');
+  let vistoR = null;
+  await revisarConIA({ texto: 'el tuit', hechos, config, pedir: async (op) => { vistoR = op; return { ok: true, datos: { publicable: true, problemas: [] } }; } });
+  ok(vistoR.uso === 'revisar' && /el tuit/.test(vistoR.prompt) && /Eric vuelve/.test(vistoR.prompt) && !/"fecha"/.test(vistoR.prompt) && vistoR.sistema === SISTEMA, 'revisarConIA: pregunta con uso «revisar», el tuit y los hechos sin la fecha cruda');
+  ok(/resto de la jornada/.test(SISTEMA) && /16º clasificado/.test(SISTEMA), 'el revisor trae los fallos del 6 nov (comparación con la jornada, «16º clasificado»)');
+  // 5. pulir: si el revisor no publicaría el pulido, se queda la plantilla
+  const pl = '🚨 Budimir, baja para la jornada 12: lesión muscular.\n\n❌ Baja para la jornada 12';
+  const tp = { tipo: 'caidas', clave: 'p1', texto: pl, numeros: [12] };
+  const nP = await pulir([tp], { tipo: 'caidas', registro: { datos: {}, fichero: null }, config, jugadores, equipos, forzar: true, clave: 'x', log: () => {},
+    pedirIA: async () => ({ ok: true, proveedor: 'claude', modelo: SONNET, datos: { tweets: [{ i: 0, texto: '🚨 Budimir se cae para la jornada 12: lesión muscular.\n\n❌ Baja para la jornada 12' }] } }),
+    revisor: async () => ({ ok: false, problemas: ['«x»: no se entiende'], revisado: true }) });
+  ok(nP === 0 && tp.texto === pl, 'pulir: si el revisor no lo publicaría, se queda la plantilla');
+  const tq = { tipo: 'caidas', clave: 'p2', texto: pl, numeros: [12] };
+  const nQ = await pulir([tq], { tipo: 'caidas', registro: { datos: {}, fichero: null }, config, jugadores, equipos, forzar: true, clave: 'x', log: () => {},
+    pedirIA: async () => ({ ok: true, proveedor: 'claude', modelo: SONNET, datos: { tweets: [{ i: 0, texto: '🚨 Budimir se cae para la jornada 12: lesión muscular.\n\n❌ Baja para la jornada 12' }] } }),
+    revisor: async () => ({ ok: true, problemas: [], revisado: true, modelo: SONNET }) });
+  ok(nQ === 1 && tq.revisado === SONNET, 'pulir: con el visto bueno del revisor, sale pulido y revisado');
+}
+// la guía trae lo del 7 nov
+{
+  const { GUIA } = await import('../lib/voz.mjs');
+  ok(/SOLO LO QUE SABES/.test(GUIA) && /DELATA A UNA IA/.test(GUIA), 'la guía trae «solo lo que sabes» y «lo que delata a una IA»');
+  ok(EJEMPLOS.some((x) => !x.bien && /rentado esta jornada/.test(x.texto)), 'la guía trae como MAL la comparación con la jornada');
+}
+
 process.env = viejo;
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);
 process.exit(fallos ? 1 : 0);
