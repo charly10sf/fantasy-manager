@@ -363,6 +363,13 @@
    "jornada": 12,
    "id": "2118720430550724939",
    "t": "2026-11-06T15:01:29.482Z"
+  },
+  {
+   "clave": "onces|113",
+   "tipo": "onces",
+   "jornada": 12,
+   "id": "2118780841488773502",
+   "t": "2026-11-06T19:01:32.601Z"
   }
  ],
  "estados": {
@@ -1252,7 +1259,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
    "SPORT|136055935": 1793734147000,
@@ -1459,7 +1465,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000,
    "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000,
    "AS|https://as.com/futbol/primera/roberto-y-en-el-proximo-paron-dos-internacionales-mas-f202611-n/": 1793987444000,
-   "SPORT|136175696": 1793983934000
+   "SPORT|136175696": 1793983934000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000
   },
   "hechos": [
    {
@@ -2221,7 +2228,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 46
+   "n": 47
   },
   "desde": {
    "67": {
@@ -3032,8 +3039,8 @@
  },
  "pulido": {
   "dia": "2026-11-06",
-  "n": 8,
-  "ok": 2,
+  "n": 9,
+  "ok": 3,
   "mal": 8
  },
  "liga": {
@@ -3841,14 +3848,22 @@
  "ia": {
   "dia": "2026-11-06",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 0
   },
   "fallos": 0,
-  "entrada": 1752,
-  "salida": 167,
+  "entrada": 3509,
+  "salida": 907,
   "cacheLee": 0,
   "cacheEscribe": 0,
-  "dolares": 0.000259
+  "dolares": 0.000805
+ },
+ "recientes": {
+  "onces": [
+   {
+    "t": "2026-11-06T19:01:32.602Z",
+    "texto": "ℹ️ Sevilla y Alavés ya tienen onces confirmados sin sorpresas en ninguno de los dos bandos. El Sevilla sale con 4-2-3 y el Alavés con 4-4-2 para el partido de hoy a las 21:00.\n\n👀 Revisa tu once fantasy antes del pitido"
+   }
+  ]
  }
 }
