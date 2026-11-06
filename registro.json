@@ -1261,7 +1261,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
-   "SPORT|136055935": 1793734147000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/alineaciones-probables-aek-real-madrid.html": 1793741534000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/preocupacion-con-rodri-a-cinco-dias-de-enfrentarse-al-atletico-de-madrid-cadena-ser/": 1793741974000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-laimer-atletico-0-bayern-2-20261103_3467972.html": 1793741963000,
@@ -3176,7 +3175,9 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793888400000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
    "SPORT|136162605": 1793984430000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988650000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988650000,
+   "SPORT|136180863": 1793989306000,
+   "SPORT|136180917": 1793988049000
   },
   "hechos": [
    {
@@ -3840,25 +3841,23 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 13,
+   "n": 14,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136180917": 1793992271318
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-06",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 0
   },
   "fallos": 0,
-  "entrada": 3509,
-  "salida": 907,
+  "entrada": 5471,
+  "salida": 1099,
   "cacheLee": 0,
   "cacheEscribe": 0,
-  "dolares": 0.000805
+  "dolares": 0.001097
  },
  "recientes": {
   "onces": [
