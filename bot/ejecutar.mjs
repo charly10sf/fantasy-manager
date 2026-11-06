@@ -93,7 +93,7 @@ ctx.registro = registro;
 // acabado esperan (lib/dazn.mjs: tiempo desde el final, puntos sin cambiar entre ejecuciones, DAZN y portería a cero)
 const pf = config.puntosFinales || {};
 ctx.dazn = crearDazn({ ficha: pedirFicha, jornada, registro, esperaHoras: pf.esperaHoras ?? config.daznEsperaHoras ?? 6,
-  minTrasFinal: pf.minTrasFinal ?? 75, minEstable: pf.minEstable ?? 30, log: (s) => console.log(s) });
+  minTrasFinal: pf.minTrasFinal ?? 20, minEstable: pf.minEstable ?? 10, log: (s) => console.log(s) });
 // el % de titularidad y el rival para los tweets de un jugador (noticias y novedades; lib/info-jugador.mjs): se pide solo si hace falta
 ctx.info = config.infoJugador === false ? null : crearInfo({ jugadores, equipos, semana: sem, log: (s) => console.log(s) });
 // tweets largos con X Premium (lib/largo.mjs): el límite se fija antes de escribir nada

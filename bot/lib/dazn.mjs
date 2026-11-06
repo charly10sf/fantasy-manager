@@ -6,6 +6,9 @@
 // Kike Salas 3 (8), Vlachodimos 0 (10) y T. Martínez -2 (1). Faltaba, entre otras cosas, todo lo de la portería a cero: la ficha de
 // Sivera trae hoy `goals_conceded: [0, 4]` y aquella noche no. La valoración DAZN llega en directo; lo que llega tarde es el resto.
 //
+// Carlos (7 nov, 00:55): a los 10-15 min del pitido Sivera ya tenía sus 15 en la app y otras cuentas ya lo tuiteaban. Así que la espera
+// es corta (20 min desde que el bot lo ve acabado y 10 min con los puntos quietos: dos ejecuciones seguidas sin cambios), y lo que
+// de verdad protege es que los puntos no se muevan y la portería a cero esté sumada.
 // Ahora un partido está listo solo si se cumplen LAS CUATRO:
 //   1. han pasado `minTrasFinal` minutos desde que el bot lo vio acabado (matchState 7);
 //   2. los puntos de TODOS los jugadores del partido (stats/week) no han cambiado en los últimos `minEstable` minutos (huella guardada
@@ -52,7 +55,7 @@ export function faltaPorteriaCero(st) {
  * Devuelve una función (partido de stats/week) => { listo, motivo, porPlazo }. Guarda el resultado de cada partido listo en la
  * ejecución y la huella de los puntos en el registro (`registro.datos.puntosPartido`) para la siguiente.
  */
-export function crearDazn({ ficha, jornada, registro = null, esperaHoras = 6, minTrasFinal = 75, minEstable = 30, ahora = () => Date.now(), log = () => {} }) {
+export function crearDazn({ ficha, jornada, registro = null, esperaHoras = 6, minTrasFinal = 20, minEstable = 10, ahora = () => Date.now(), log = () => {} }) {
   const listos = new Map();
   const vistos = new Map();
   const datos = registro ? (registro.datos ||= {}) : {};

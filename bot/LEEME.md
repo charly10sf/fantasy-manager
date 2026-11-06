@@ -77,12 +77,13 @@ Las piezas comunes están en `lib/redactar.mjs`:
   respuestas de Telegram esperan a que los puntos del partido sean los definitivos. Hasta el 6 nov solo se esperaba a la valoración DAZN
   (`marca_points` en la ficha de los que más puntúan), y no bastaba: en el Sevilla-Alavés (J12) estaba a los 6 minutos del pitido y el
   final salió con Sivera 10 (acabó con 15), Vlachodimos 0 (10) y Kike Salas 3 (8); faltaba todo lo de la portería a cero. Ahora un
-  partido está listo solo si (1) han pasado `puntosFinales.minTrasFinal` minutos (90) desde que el bot lo vio acabado, (2) los puntos de
-  todos sus jugadores no han cambiado en `puntosFinales.minEstable` minutos (40; la huella va en el registro, `puntosPartido`), (3) la
+  partido está listo solo si (1) han pasado `puntosFinales.minTrasFinal` minutos (20) desde que el bot lo vio acabado, (2) los puntos de
+  todos sus jugadores no han cambiado en `puntosFinales.minEstable` minutos (10, dos ejecuciones seguidas; Carlos, 7 nov: a los 10-15 min
+  del pitido Sivera ya tenía sus 15 en la app y otras cuentas lo tuiteaban; la huella va en el registro, `puntosPartido`), (3) la
   mayoría de los que más puntúan tiene la valoración DAZN y (4) el portero de un equipo que no ha encajado, si jugó 60' o más, ya tiene
   sumada la portería a cero. Si el bot lo ve acabado muy tarde, el final se cuenta desde las 2 h del saque. Pasadas
   `puntosFinales.esperaHoras` (6) desde el final, sale con lo que haya. En el log: «(puntos) partido N: espero: …» o «puntos definitivos ·
-  listo». Prueba: `node bot/prueba/puntos-ejemplo.mjs` (la noche del Sevilla-Alavés, minuto a minuto).
+  listo». Prueba: `node bot/prueba/puntos-ejemplo.mjs` (la noche del Sevilla-Alavés, minuto a minuto: sale a los ~26 min del pitido).
 
 ### El revisor (7 nov)
 

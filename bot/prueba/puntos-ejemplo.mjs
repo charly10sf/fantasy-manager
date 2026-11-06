@@ -17,20 +17,21 @@ const partido = (pts) => ({ id: 113, date: '2026-11-06T20:00:00.000Z', matchStat
 // fichas: la valoración DAZN siempre puesta; la portería a cero, según `cero`
 const fichas = (cero) => async (id) => ({ playerStats: [{ weekNumber: 12, stats: { mins_played: [90, 2], marca_points: [-1, 3], goals_conceded: [0, cero ? 4 : 0] } }] });
 
-const correr = async ({ registro, m, cero, min }) => crearDazn({ ficha: fichas(cero), jornada: 12, registro, minTrasFinal: 90, minEstable: 40, esperaHoras: 6,
+const correr = async ({ registro, m, cero, min }) => crearDazn({ ficha: fichas(cero), jornada: 12, registro, minTrasFinal: 20, minEstable: 10, esperaHoras: 6,
   ahora: () => FIN + min * 60e3, log: () => {} })(m);
 
-// 1. la noche del 6 nov: cada 5 min, puntos provisionales y sin la portería a cero hasta el minuto 50; definitivos desde entonces
+// 1. la noche del 6 nov: cada 5 min, puntos provisionales y sin la portería a cero hasta el minuto 12 (Carlos los vio bien a los
+// 10-15 min del pitido); definitivos desde entonces
 {
   const registro = { datos: {} };
   let primero = null;
   for (let min = 6; min <= 200; min += 5) {
-    const def = min >= 50;
+    const def = min >= 13;
     const r = await correr({ registro, m: partido(def ? definitivo : provisional), cero: def, min });
     if (r.listo && primero == null) primero = min;
   }
-  ok(primero != null && primero >= 90, `el Sevilla-Alavés sale a los ${primero} min del final (antes salía a los 6, con los puntos a medias)`);
-  ok(primero <= 100, 'y no mucho más tarde de los 90 min con los puntos quietos');
+  ok(primero != null && primero >= 20, `el Sevilla-Alavés sale a los ${primero} min del final (antes salía a los 6, con los puntos a medias)`);
+  ok(primero <= 30, 'y no más tarde de la media hora');
 }
 
 // 2. a los 6 min no está listo aunque la valoración DAZN ya esté (el fallo de aquella noche)
@@ -44,20 +45,20 @@ const correr = async ({ registro, m, cero, min }) => crearDazn({ ficha: fichas(c
   const registro = { datos: {} };
   const m = partido(provisional);
   await correr({ registro, m, cero: false, min: 0 });
-  const r = await correr({ registro, m, cero: false, min: 120 });
+  const r = await correr({ registro, m, cero: false, min: 40 });
   ok(!r.listo && /portería a cero/.test(r.motivo), `sin la portería a cero: espera (${r.motivo})`);
-  const r2 = await correr({ registro, m, cero: true, min: 125 });
+  const r2 = await correr({ registro, m, cero: true, min: 45 });
   ok(r2.listo, 'con la portería a cero sumada: sale');
 }
 
-// 4. un cambio de puntos a los 100 min vuelve a contar la espera de 40 min
+// 4. un cambio de puntos a los 30 min vuelve a contar la espera de 10 min
 {
   const registro = { datos: {} };
   await correr({ registro, m: partido(provisional), cero: true, min: 0 });
-  const a = await correr({ registro, m: partido(definitivo), cero: true, min: 100 });
+  const a = await correr({ registro, m: partido(definitivo), cero: true, min: 30 });
   ok(!a.listo && /sin cambiar/.test(a.motivo), `los puntos acaban de cambiar: espera (${a.motivo})`);
-  const b = await correr({ registro, m: partido(definitivo), cero: true, min: 141 });
-  ok(b.listo, '40 min después sin cambios: sale');
+  const b = await correr({ registro, m: partido(definitivo), cero: true, min: 41 });
+  ok(b.listo, '10 min después sin cambios: sale');
 }
 
 // 5. pasadas 6 h sale aunque falte algo (y lo dice)
@@ -72,17 +73,17 @@ const correr = async ({ registro, m, cero, min }) => crearDazn({ ficha: fichas(c
 {
   const registro = { datos: {} };
   const m = partido(definitivo);
-  const tarde = crearDazn({ ficha: fichas(true), jornada: 12, registro, minTrasFinal: 90, minEstable: 40, ahora: () => SAQUE + 5 * 3600e3, log: () => {} });
+  const tarde = crearDazn({ ficha: fichas(true), jornada: 12, registro, minTrasFinal: 20, minEstable: 10, ahora: () => SAQUE + 5 * 3600e3, log: () => {} });
   const r1 = await tarde(m);
   ok(!r1.listo && /sin cambiar/.test(r1.motivo) && !/desde el final/.test(r1.motivo), `visto 5 h tras el saque: solo espera a ver los puntos quietos (${r1.motivo})`);
 }
 
 // 7. sin registro (Telegram): el final a los 115 min del saque y sin la prueba de los puntos quietos
 {
-  const sin = (min, cero) => crearDazn({ ficha: fichas(cero), jornada: 12, minTrasFinal: 90, ahora: () => SAQUE + min * 60e3, log: () => {} })(partido(definitivo));
-  ok(!(await sin(150, true)).listo, 'Telegram, a los 35 min del final: espera');
-  ok((await sin(210, true)).listo, 'Telegram, a los 95 min del final y con todo sumado: listo');
-  ok(!(await sin(210, false)).listo, 'Telegram, sin la portería a cero: espera');
+  const sin = (min, cero) => crearDazn({ ficha: fichas(cero), jornada: 12, minTrasFinal: 20, ahora: () => SAQUE + min * 60e3, log: () => {} })(partido(definitivo));
+  ok(!(await sin(125, true)).listo, 'Telegram, a los 10 min del final: espera');
+  ok((await sin(140, true)).listo, 'Telegram, a los 25 min del final y con todo sumado: listo');
+  ok(!(await sin(140, false)).listo, 'Telegram, sin la portería a cero: espera');
 }
 
 // 8. piezas

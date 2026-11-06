@@ -6,7 +6,7 @@
   "maxPorEjecucion": 6,
   "ventanaFinalHoras": 13,
   "daznEsperaHoras": 6,
-  "puntosFinales": { "minTrasFinal": 90, "minEstable": 40, "esperaHoras": 6 },
+  "puntosFinales": { "minTrasFinal": 20, "minEstable": 10, "esperaHoras": 6 },
   "horasCaidas": [9, 21],
   "horasMercado": [[0, 1], [8, 12]],
   "horasOnceIdeal": [9, 23],

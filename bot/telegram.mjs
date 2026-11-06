@@ -64,7 +64,7 @@ const desdeFinal = ventanas ? Date.now() - (config.ventanaFinalHoras ?? 10) * 36
 // los puntos DAZN llegan después del final: un partido sin ellos no se trata como acabado todavía (lib/dazn.mjs)
 if (!arg('datos')) {
   const pf = config.puntosFinales || {};
-  const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: pf.esperaHoras ?? config.daznEsperaHoras ?? 6, minTrasFinal: pf.minTrasFinal ?? 75, log: (s) => console.log(s) });
+  const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: pf.esperaHoras ?? config.daznEsperaHoras ?? 6, minTrasFinal: pf.minTrasFinal ?? 20, log: (s) => console.log(s) });
   stats = await Promise.all(stats.map(async (m) => (m.matchState === 7 && Date.parse(m.date) >= desdeFinal && !(await dazn(m)).listo ? { ...m, matchState: 6 } : m)));
 }
 const items = generar({ stats, jornada, config, desdeFinal, log: (s) => console.log(s) });
