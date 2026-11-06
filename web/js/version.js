@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7k';
+export const VERSION = '0.7l';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.7k';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7l', f: '2026-11-06', h: '23:40', t: 'Entrar desde el iPhone y sin la app, con dibujos',
+    cosas: [
+      { tipo: 'mejora', d: 'movil', t: 'La portada de la web, más clara', x: 'En el ordenador, el panel de entrar tiene dos pestañas («Soy nuevo» y «Ya tengo la app») y pasos numerados, con Android y iPhone uno al lado del otro y el logo de cada uno. La columna de la izquierda se queda fija al desplegar cosas en la derecha.', para: 'web' },
+      { tipo: 'nuevo', d: 'compartir', t: 'Las guías de entrar, con dibujos', x: 'La guía de iPhone, «Añadir a la pantalla de inicio» y los pasos del F12 de «No tengo la app en el móvil» llevan un dibujo por paso, con un aro rojo en lo que hay que tocar. En el F12 salen los nombres en español y en inglés (Red / Network, Conservar registro / Preserve log).', para: 'web' },
+    ],
+  },
   {
     v: '0.7k', f: '2026-11-06', h: '23:03', t: 'Mejor tener dos delanteros',
     cosas: [
