@@ -129,15 +129,15 @@ function movilDe() {
 const APPLE = '<svg class="ap" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>';
 const botonDemo = (clase) => `<button class="btn ${clase} ancho" data-accion="entrarDemo" style="margin:6px 0 12px">Ver con una liga de ejemplo</button>`;
 /** en el navegador: LaLiga solo devuelve la sesión a su app del móvil, así que se entra con un código de la app */
-const codigoWebHTML = () => `<div class="entrar-codigo">
-      <b>${icono('usuario')}${!enApp && !movilDe() ? 'O con el código de la app' : 'Entra con el código de la app'}</b>
+const codigoWebHTML = (tit = true) => `<div class="entrar-codigo">
+      ${tit ? `<b>${icono('usuario')}${!enApp && !movilDe() ? 'O con el código de la app' : 'Entra con el código de la app'}</b>` : ''}
       <span>${!enApp && !movilDe() ? 'Si no puedes escanear: en la app, <b>Ajustes → Abrir en el ordenador → Código</b>; en otra web donde ya has entrado, <b>Ajustes → Abrir en otro dispositivo</b>. Dura 10 minutos.' : 'En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. O, si ya has entrado en la web de un ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código de 8 letras y números que dura 10 minutos.'}</span>
       <div class="codigo-in"><input id="codigoWeb" maxlength="9" placeholder="ABCD2345" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="usarCodigo"><button class="btn" data-accion="usarCodigo">Entrar</button></div>
     </div>`;
 /** en el ordenador: el QR que se escanea con la app del móvil (0.6.12). El dibujo y la espera, en iniciarQR */
-const qrEntrarHTML = () => `<div class="entrar-qr">
+const qrEntrarHTML = (tit = true) => `<div class="entrar-qr">
       <div class="eq-qr" id="eqQR"></div>
-      <div class="eq-t"><b>${icono('usuario')}Escanea con la app</b>
+      <div class="eq-t">${tit ? `<b>${icono('usuario')}Escanea con la app</b>` : ''}
       <span>En la app del móvil: <b>Ajustes → Abrir en el ordenador → Escanear QR</b>, y apunta aquí. Entras solo, sin escribir nada.</span>
       <span class="eq-est" id="eqEst">Esperando al móvil…</span></div>
     </div>`;
@@ -176,23 +176,29 @@ function entrarWebHTML() {
     ${botonDemo('')}
     ${codigoWebHTML()}`;
   }
-  // en el ordenador, primero lo de quien llega nuevo (qué es, la liga de ejemplo y descargar la app) y debajo, para
-  // quien ya la tiene, el QR y el código de siempre (lo que hacen igual que antes: solo cambia el orden)
-  return `<div class="entrar-nuevo">
-      <b>${icono('rayo')}¿Es tu primera vez?</b>
-      <span>Mira todo lo que hace con una liga de ejemplo, sin cuenta y sin instalar nada. Para seguir tu liga, descarga la app en el móvil y entra con tu cuenta de LaLiga.</span>
-      <button class="btn ancho" data-accion="entrarDemo">Ver con una liga de ejemplo</button>
-      <div class="en-apk">
+  // en el ordenador, dos pestañas: «Soy nuevo» (probarla con la liga de ejemplo y descargar la app) y «Ya tengo la app»
+  // (el QR y el código de siempre); cada una en pasos numerados con la misma tarjeta. Los pasos para copiar la vuelta a
+  // mano (con F12) siguen plegados en «No tengo la app en el móvil», dentro de «Soy nuevo»
+  const tabApp = LS.get('entTab') === 'app';
+  return `<div class="ent-tabs" role="tablist" aria-label="Cómo quieres empezar">
+    <button type="button" role="tab" id="entTabNuevo" aria-selected="${!tabApp}" aria-controls="entPanNuevo" data-accion="entTab" data-tab="nuevo">Soy nuevo</button>
+    <button type="button" role="tab" id="entTabApp" aria-selected="${tabApp}" aria-controls="entPanApp" data-accion="entTab" data-tab="app">Ya tengo la app</button></div>
+  <div class="ent-pan" id="entPanNuevo" role="tabpanel" aria-labelledby="entTabNuevo"${tabApp ? ' hidden' : ''}>
+    <section class="ent-paso"><div class="ent-ca"><span class="ent-n">1</span><h2>Pruébala</h2></div>
+      <p>Mira todo lo que hace con una liga de ejemplo, sin cuenta y sin instalar nada.</p>
+      <button class="btn ancho" data-accion="entrarDemo">Ver con una liga de ejemplo</button></section>
+    <section class="ent-paso"><div class="ent-ca"><span class="ent-n">2</span><h2>Descárgala</h2></div>
+      <div class="ent-op en-apk">
         <div class="en-apk-qr" title="Escanéalo con la cámara del móvil">${qrSVG(APK_WEB)}</div>
-        <div class="en-apk-t"><a class="btn sec ancho" href="${APK_WEB}">${icono('descargar')}Descargar para Android</a>
-        <span>O escanea el QR con la cámara del móvil y se descarga allí. Es gratis.</span></div>
+        <div class="en-apk-t"><b class="ent-ot">Android</b><span>Gratis. Escanea el QR con la cámara del móvil o usa el botón.</span>
+        <a class="btn sec ancho" href="${APK_WEB}">${icono('descargar')}Descargar para Android</a></div>
       </div>
-    <div class="en-ios">
-      <div class="en-ios-c">${APPLE}<b>¿Tienes iPhone?</b></div>
-      <span>No hay app en la App Store, pero funciona desde Safari y puedes dejarla en la pantalla de inicio. Entras tú aquí, en el ordenador, y pasas la sesión al iPhone con un QR (Ajustes → Abrir en otro dispositivo).</span>
-      <div class="en-ios-b"><button class="btn chico" data-accion="abrirSinApp">Entrar desde el ordenador</button><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone</a></div>
-    </div>
-    <details class="sin-app"><summary>No tengo la app en el móvil</summary>
+      <div class="ent-op en-ios">
+        <b class="ent-ot">${APPLE}iPhone</b>
+        <span>No hay app en la App Store, pero funciona desde Safari y puedes dejarla en la pantalla de inicio. Entras tú aquí, en el ordenador, y pasas la sesión al iPhone con un QR (Ajustes → Abrir en otro dispositivo).</span>
+        <div class="en-ios-b"><button class="btn chico" data-accion="abrirSinApp">Entrar desde el ordenador</button><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone</a></div>
+      </div>
+      <details class="sin-app"><summary>No tengo la app en el móvil</summary>
       <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un QR (para la cámara del iPhone) o un código para escribirlo aquí en el iPhone. Si tienes la app en un Android, no hace falta nada de esto: usa su QR.</p>
       <ol>
         <li>Pulsa <b>Abrir la página de LaLiga</b>: se abre en otra pestaña.</li>
@@ -205,9 +211,12 @@ function entrarWebHTML() {
       <textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea>
       <button class="btn chico" data-accion="pegarVuelta">Entrar</button>
     </details>
-    </div>
-    <div class="entrar-ya"><h2>¿Ya tienes la app en el móvil?</h2>
-    ${qrEntrarHTML()}${codigoWebHTML()}</div>`;
+    </section>
+  </div>
+  <div class="ent-pan" id="entPanApp" role="tabpanel" aria-labelledby="entTabApp"${tabApp ? '' : ' hidden'}>
+    <section class="ent-paso"><div class="ent-ca"><span class="ent-n">1</span><h2>Escanea con la app</h2></div>${qrEntrarHTML(false)}</section>
+    <section class="ent-paso"><div class="ent-ca"><span class="ent-n">2</span><h2>O con el código</h2></div>${codigoWebHTML(false)}</section>
+  </div>`;
 }
 /**
  * El QR del ordenador (0.6.12): un id al azar de 128 bits en un enlace a la web (si alguien lo escanea con la cámara
@@ -2336,7 +2345,17 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'entrar': try { contar('l'); await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
-    case 'abrirSinApp': { const x = document.querySelector('.entrar-nuevo details.sin-app'); if (x) { x.open = true; x.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break; }
+    case 'entTab': {
+      const t = d.tab === 'app' ? 'app' : 'nuevo';
+      LS.set('entTab', t);
+      document.querySelectorAll('.ent-tabs [data-tab]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === t)));
+      const pn = $('#entPanNuevo'), pa = $('#entPanApp');
+      if (pn) pn.hidden = t !== 'nuevo';
+      if (pa) pa.hidden = t !== 'app';
+      if (t === 'app') { const c = $('#codigoWeb'); if (c) c.focus({ preventScroll: true }); }
+      break;
+    }
+    case 'abrirSinApp': { const x = document.querySelector('#entPanNuevo details.sin-app'); if (x) { x.open = true; x.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break; }
     case 'entrarDemo': { const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
       const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');

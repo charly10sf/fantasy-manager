@@ -436,6 +436,10 @@ export function activarPortada() {
 
   if (pista && col) {
     col.appendChild(pista); pista.classList.add('en-col'); pista.removeAttribute('aria-hidden'); pista.removeAttribute('tabindex');
+    // bajar B: ratón con la rueda, hilo con un punto que baja y los tres pasos que hay debajo
+    pista.innerHTML = `<span class="pb-izq" aria-hidden="true"><span class="pb-raton"><i></i></span><span class="pb-hilo"><i></i></span></span>
+      <span class="pb-t"><span class="pb-tit">Baja con la rueda</span><span class="pb-txt">Debajo hay tres pantallas que cambian según bajas. Se ven en un minuto.</span>
+      <span class="pb-chips">${PIES.map(([a, p, t], i) => `<span class="pb-chip"><b>${String(i + 1).padStart(2, '0')}</b>${t}</span>`).join('')}</span></span>`;
     escuchar(pista, 'click', (ev) => { ev.preventDefault(); const el = raiz.querySelector('#pAsi'); if (el) scrollTo({ top: el.getBoundingClientRect().top + scrollY - (barra.offsetHeight || 56) - 8, behavior: sinMovimiento() ? 'auto' : 'smooth' }); });
   }
 
