@@ -43,7 +43,7 @@ jobs:
       - name: Simulacro con la redacción nueva
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
-          echo "=== J11: finales y MVP (revisor) ==="
-          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=final,mvp --jornada=11 --estado=/tmp/registro.json --redactar=1 || true
+          echo "=== J11: MVP (revisor) ==="
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=mvp --jornada=11 --estado=/tmp/registro.json --redactar=1 || true
           echo "=== Lo de las últimas horas: previa, noticias, novedades (redactar) y caídas, sancionados (pulir con Claude) ==="
           node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos="$TIPOS" --estado=/tmp/registro.json --redactar=1 --pulir=1 || true
