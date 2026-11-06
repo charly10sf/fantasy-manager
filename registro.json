@@ -1259,8 +1259,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/alineaciones-probables-aek-real-madrid.html": 1793741534000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/preocupacion-con-rodri-a-cinco-dias-de-enfrentarse-al-atletico-de-madrid-cadena-ser/": 1793741974000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gol-laimer-atletico-0-bayern-2-20261103_3467972.html": 1793741963000,
@@ -1469,30 +1467,6 @@
    "SPORT|136181983": 1793990642000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793736327000,
-    "id": "3073",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793736181000,
-    "id": "3182",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Lemar causa baja por una lesion leve",
-    "motivo": "lesion leve en el abductor",
-    "plazo": "hasta despues del proximo paron",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004246941/positivo-barca-metropolitano.html",
     "medio": "Mundo Deportivo",
