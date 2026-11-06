@@ -1227,7 +1227,6 @@
    "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
    "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/": 1793711635000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246691/orian-goren-principal-novedad-convocatoria-aston-villa.html": 1793711167000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246669/simeone-da-lista-bayern-cuti-romero.html": 1793708697000,
    "SPORT|136041677": 1793713371000,
    "SPORT|136042531": 1793714741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246788/guruzeta-empieza-cuenta-hoy-sido-operado-rodilla-izquierda.html": 1793722204000,
@@ -3064,7 +3063,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261106/1004247862/juez-competiciones-profesionales-inadmite-peticion-afe.html": 1793962289000,
-   "SPORT|136149880": 1793959104000
+   "SPORT|136149880": 1793959104000,
+   "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000
   },
   "hechos": [
    {
@@ -3708,7 +3708,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
   "espera": {}
