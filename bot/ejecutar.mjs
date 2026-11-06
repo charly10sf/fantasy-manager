@@ -12,7 +12,7 @@ import { validar } from './lib/validar.mjs';
 import { pulir } from './lib/pulir.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
-import { fijarLimite, limite, largo } from './lib/texto.mjs';
+import { fijarLimite, limite, largo, variarEquipos } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
 import { crearInfo } from './lib/info-jugador.mjs';
@@ -114,6 +114,9 @@ for (const q of quienes) {
   let tweets = [];
   try { tweets = await mod.generar(c); } catch (e) { console.log(`\n## ${q}: ERROR ${e.stack || e}`); fallos++; continue; }
   console.log(`\n## ${q}: ${tweets.length} tweets`);
+  // los equipos con otro nombre cada vez y con su emoji (Carlos, 6 nov 09:19: «el Madrid, los blancos…, menos robótico»); lo que ya
+  // no cabe con ellos sale como estaba (lib/texto.mjs, variarEquipos). Los tweets del directo, tal cual: llevan prisa.
+  if (q !== 'directo' && config.apodos !== false) for (const t of tweets) if (t && t.texto) t.texto = variarEquipos(t.texto, { semilla: String(t.clave || q) });
   // Gemini pule el texto de los que van a salir en esta ejecución (lib/pulir.mjs); lo que no pasa la revisión sale con la plantilla
   const aPulir = tweets.filter((t) => validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok')
     .slice(0, Math.max(0, (config.maxPorEjecucion ?? 4) - registro.enEstaEjecucion));

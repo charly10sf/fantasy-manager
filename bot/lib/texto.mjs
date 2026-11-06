@@ -110,3 +110,80 @@ const SIN_ARTICULO = new Set();
 export const el = (eq) => (SIN_ARTICULO.has(eq) ? eq : eq === 'Real Sociedad' ? 'la Real Sociedad' : `el ${eq}`);
 export const del = (eq) => (SIN_ARTICULO.has(eq) ? `de ${eq}` : eq === 'Real Sociedad' ? 'de la Real Sociedad' : `del ${eq}`);
 export const al = (eq) => (SIN_ARTICULO.has(eq) ? `a ${eq}` : eq === 'Real Sociedad' ? 'a la Real Sociedad' : `al ${eq}`);
+
+// Cómo se llama a cada equipo dentro de un tweet (Carlos, 6 nov 09:19: «no tiene que decir siempre el Real Madrid, puede decir el
+// Madrid o los blancos… tiene que sonar menos robótico»). Todos van en singular, con su artículo, para que el verbo de la frase siga
+// valiendo («el conjunto blanco no tendrá a…»; con «los blancos» habría que concordar cada verbo de cada plantilla). Y cada equipo
+// con su emoji (el balón blanco del Madrid, el murciélago del Valencia): la primera opción, y otra si el rival ya lleva la misma.
+const APODOS = {
+  'Real Madrid': { e: ['⚪', '👑'], a: ['el Real Madrid', 'el Madrid', 'el conjunto blanco', 'el conjunto merengue'] },
+  'Barça': { e: ['🔵', '🔴'], a: ['el Barça', 'el Barcelona', 'el conjunto azulgrana', 'el equipo culé'] },
+  'Atlético': { e: ['🔴', '🐻'], a: ['el Atlético', 'el Atleti', 'el conjunto colchonero'] },
+  'Athletic': { e: ['🦁', '⚪'], a: ['el Athletic', 'el Athletic Club', 'el conjunto bilbaíno'] },
+  'Valencia': { e: ['🦇', '🟠'], a: ['el Valencia', 'el Valencia CF', 'el conjunto valencianista'] },
+  'Sevilla': { e: ['🔴', '⚪'], a: ['el Sevilla', 'el Sevilla FC', 'el conjunto sevillista'] },
+  'Betis': { e: ['💚', '🟢'], a: ['el Betis', 'el Real Betis', 'el conjunto bético'] },
+  'Real Sociedad': { e: ['🔵', '⚪'], a: ['la Real Sociedad', 'la Real', 'el conjunto donostiarra'] },
+  'Villarreal': { e: ['🟡', '🚢'], a: ['el Villarreal', 'el Submarino Amarillo', 'el conjunto amarillo'] },
+  'Celta': { e: ['🩵', '🔵'], a: ['el Celta', 'el Celta de Vigo', 'el conjunto celeste'] },
+  'Osasuna': { e: ['🔴', '🐂'], a: ['el Osasuna', 'el conjunto rojillo', 'el equipo navarro'] },
+  'Getafe': { e: ['🔵', '🟦'], a: ['el Getafe', 'el conjunto azulón'] },
+  'Rayo': { e: ['⚡', '🔴'], a: ['el Rayo', 'el Rayo Vallecano', 'el conjunto vallecano'] },
+  'Espanyol': { e: ['🦜', '🔵'], a: ['el Espanyol', 'el conjunto perico', 'el equipo blanquiazul'] },
+  'Levante': { e: ['🐸', '🔵'], a: ['el Levante', 'el conjunto granota'] },
+  'Elche': { e: ['🟢', '💚'], a: ['el Elche', 'el conjunto franjiverde'] },
+  'Alavés': { e: ['🔵', '⚪'], a: ['el Alavés', 'el conjunto babazorro', 'el equipo albiazul'] },
+  'Mallorca': { e: ['🔴', '🏝️'], a: ['el Mallorca', 'el conjunto mallorquinista'] },
+  'Girona': { e: ['🔴', '⚪'], a: ['el Girona', 'el conjunto gerundense'] },
+  'Oviedo': { e: ['🔵', '⚪'], a: ['el Oviedo', 'el Real Oviedo', 'el conjunto carbayón'] },
+  'Racing': { e: ['🟢', '⚪'], a: ['el Racing', 'el Racing de Santander', 'el conjunto cántabro'] },
+  'Deportivo': { e: ['🔵', '⚪'], a: ['el Deportivo', 'el Dépor', 'el conjunto herculino'] },
+  'Málaga': { e: ['🐟', '🔵'], a: ['el Málaga', 'el Málaga CF', 'el conjunto malaguista'] },
+};
+const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const ART = '(?:el|del|al|la|de la|a la)';
+const RE_EQ = new RegExp(`(?<![\\p{L}\\p{N}])(${ART})\\s+(${Object.keys(APODOS).sort((a, b) => b.length - a.length).map(escRe).join('|')})(?![\\p{L}\\p{N}]|-\\p{L})`, 'giu');
+// «el Madrid» → «del Madrid», «al Madrid»; «la Real» → «de la Real», «a la Real»
+const conArticulo = (alias, art) => {
+  const [a, ...n] = alias.split(' '), nom = n.join(' ');
+  const fem = a === 'la';
+  const x = art.toLowerCase();
+  return x === 'del' || x === 'de la' ? (fem ? `de la ${nom}` : `del ${nom}`) : x === 'al' || x === 'a la' ? (fem ? `a la ${nom}` : `al ${nom}`) : `${a} ${nom}`;
+};
+/**
+ * Los equipos del texto con otro nombre cada vez que salen (el primero, el nombre normal; los siguientes, el corto, el apodo…)
+ * y con su emoji detrás de la primera mención de cada párrafo. Si con los emojis no cabe, sin ellos; si ni así, el texto de antes.
+ */
+export function variarEquipos(texto, { semilla = '', max = limite(), emojis = true } = {}) {
+  const veces = new Map(), emo = new Map(), vistos = new Set();
+  const usados = new Set();
+  const paso = (conEmoji) => {
+    veces.clear(); emo.clear(); vistos.clear(); usados.clear();
+    return String(texto).replace(RE_EQ, (todo, art, eq, off, whole) => {
+      const clave = Object.keys(APODOS).find((k) => k.toLowerCase() === eq.toLowerCase());
+      const ap = APODOS[clave];
+      const n = veces.get(clave) || 0;
+      veces.set(clave, n + 1);
+      // el primero, uno de los dos nombres normales (el completo o el corto); luego sigue la lista, sin repetir uno detrás de otro
+      const idx = (hash(`${semilla}:${clave}`) % Math.min(2, ap.a.length) + n) % ap.a.length;
+      let s = conArticulo(ap.a[idx], art);
+      if (/^[A-ZÁÉÍÓÚ]/.test(art)) s = s.charAt(0).toUpperCase() + s.slice(1);
+      if (conEmoji) {
+        const par = whole.slice(0, off).split('\n\n').length;
+        const kp = `${clave}|${par}`;
+        if (!vistos.has(kp)) {
+          vistos.add(kp);
+          if (!emo.has(clave)) emo.set(clave, ap.e.find((x) => !usados.has(x)) || null);
+          const e = emo.get(clave);
+          if (e) { usados.add(e); s += ` ${e}`; }
+        }
+      }
+      return s;
+    });
+  };
+  for (const conEmoji of emojis ? [true, false] : [false]) {
+    const t = paso(conEmoji);
+    if (peso(t) <= max) return t;
+  }
+  return String(texto);
+}

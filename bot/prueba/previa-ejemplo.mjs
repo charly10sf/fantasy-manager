@@ -1,6 +1,6 @@
 // La previa en tweet largo, sin red: con los datos del Osasuna-Athletic de la J12 (6 nov) sale una forma distinta según el orden del
 // partido en la jornada, todas pasan el validador y ninguna se cuenta siempre «un párrafo por equipo».  node bot/prueba/previa-ejemplo.mjs
-import { fijarLimite } from '../lib/texto.mjs';
+import { fijarLimite, variarEquipos, peso } from '../lib/texto.mjs';
 import { validar } from '../lib/validar.mjs';
 import { tweet } from '../lib/redactar.mjs';
 import { previaLarga } from '../tipos/previa.mjs';
@@ -37,7 +37,7 @@ for (let k = 0; k < 8; k++) {
   ok(/Budimir/.test(texto) && /Gerenabarrena/.test(texto), `k=${k} sigue diciendo a Budimir y Gerenabarrena`);
   // con artículo, como se habla: «el Osasuna», no «Osasuna» (Carlos, 6 nov), salvo en el nombre del partido («Osasuna-Athletic»)
   ok(!/(\b(en|de|a|con|ante|sin)|[.:;] ?|^) ?Osasuna(?!-)/m.test(texto.replace(/\n/g, ' ').replace(/^🗓️[^\n]*\n/, '')) || /el Osasuna/.test(texto), `k=${k} «el Osasuna» con artículo`);
-  ok(!/(^|[ ,.;:])Athletic(?!-)/.test(texto.split('\n\n').slice(1).join(' ').replace(/el Athletic/gi, '')), `k=${k} «el Athletic» con artículo`);
+  ok(!/(^|[ ,.;:])Athletic(?!-)/.test(texto.split('\n\n').slice(1).join(' ').replace(/(el|al|del) Athletic/gi, '')), `k=${k} «el Athletic» con artículo`);
   formas.add(texto.split('\n\n').slice(1).map((p) => p.split(/[ ,:;]/)[0]).join('|')); cabs.add(r.cab);
 }
 ok(formas.size >= 5, `8 previas seguidas, ${formas.size} esqueletos distintos`);
@@ -48,6 +48,42 @@ const s1 = f(2, 0, 14, 3), s2 = f(0, 2, 14, 3), s3 = f(1, 1, 14, 3), s4 = f(1, 0
 ok(s1 && /Sorpresa|inesperado/.test(s1.t) && /el Osasuna/.test(s1.t) && /al Athletic|ante el Athletic/.test(s1.t) && validar(s1.t, { numeros: s1.num }).ok, `sorpresa: ${s1 && s1.t}`);
 ok(s2 && /favorito|normal/.test(s2.t) && validar(s2.t, { numeros: s2.num }).ok, `cumple el favorito: ${s2 && s2.t}`);
 ok(!s3 && !s4, 'empate o poca diferencia: nada que valorar');
+// partido igualado: la frase de la tabla no escribe «a el»
+{
+  const tIg = { n: 20, mediaPts: 1.4, mediaGoles: 1.3, porId: { 10: fila('10', 5, 14, 11, 12, 9, 9), 20: fila('20', 6, 22, 12, 10, 9, 9) } };
+  for (let k = 0; k < 4; k++) {
+    const r = previaLarga({ L: 'Osasuna', V: 'Athletic', m, pos, probs, jugadores, jornada: 12, ahora, sem: 'previa108', k, tabla: tIg });
+    const t = tweet(r.cab, r.ideas).texto;
+    ok(!/\b(a|de) el\b/i.test(t), `igualado k=${k} sin «a el»`);
+  }
+}
+// los nombres de los equipos y sus emojis (Carlos, 6 nov 09:19: «el Madrid, los blancos…» y un emoji por equipo)
+{
+  const textos = []; const nombresAth = new Set();
+  for (let k = 0; k < 8; k++) {
+    const r = previaLarga({ L: 'Osasuna', V: 'Athletic', m, pos, probs, jugadores, jornada: 12, ahora, sem: 'previa108', k, tabla });
+    const base = tweet(r.cab, r.ideas).texto;
+    const t = variarEquipos(base, { semilla: `previa108:${k}`, max: 1000 });
+    textos.push(t);
+    ok(validar(t, { numeros: r.num, max: 1000 }).ok, `k=${k} con apodos y emojis pasa el validador`);
+    ok(/🐂|🔴/.test(t) && /🦁/.test(t), `k=${k} lleva el emoji de cada equipo`);
+    ok(!/undefined|NaN/.test(t) && !/\b(a|de) el\b/i.test(t), `k=${k} apodos sin undefined ni «a el»`);
+    // por párrafo, un emoji de cada equipo como mucho
+    ok(t.split('\n\n').every((p) => (p.match(/🦁/g) || []).length <= 1), `k=${k} un solo 🦁 por párrafo`);
+    for (const x of t.match(/(?:el|al|del) (?:Athletic(?: Club)?|conjunto bilbaíno)/gi) || []) nombresAth.add(x.toLowerCase().replace(/^(el|al|del) /, ''));
+    // lo que no cabe con emojis sale sin ellos, y lo que no cabe de ninguna forma, como estaba
+    ok(peso(variarEquipos(base, { semilla: 'x', max: peso(base) })) <= peso(base), `k=${k} nunca pasa del máximo`);
+  }
+  ok(nombresAth.size >= 2, `el Athletic se llama de ${nombresAth.size} formas: ${[...nombresAth].join(', ')}`);
+  // el Madrid y el Valencia: el balón blanco y el murciélago (los dos ejemplos de Carlos); y la Real Sociedad con su artículo
+  const vm = variarEquipos('🗓️ Posibles onces\n\nEl Real Madrid no tendrá a Vini Jr. y el Valencia tampoco a Elliott. El Real Madrid parte como favorito frente al Valencia.\n\nLa Real Sociedad visita al Real Madrid y viene del Valencia.', { semilla: 'a', max: 1000 });
+  console.log(`\n${vm}`);
+  ok(/Madrid ⚪/.test(vm) || /conjunto (blanco|merengue) ⚪/.test(vm), 'el Madrid lleva el emoji blanco');
+  ok(/Valencia( CF)? 🦇|conjunto valencianista 🦇/.test(vm), 'el Valencia lleva el murciélago');
+  ok(/La Real(?: Sociedad)? 🔵|El conjunto donostiarra 🔵/.test(vm) && !/al la |del la |el la /i.test(vm), 'la Real Sociedad, con su artículo');
+  ok(!/\bde el\b|\ba el\b|\bel el\b/i.test(vm), 'sin «de el» ni «a el»');
+  ok(variarEquipos('Fichaje del Valencia-Real Madrid', { semilla: 'a', max: 1000 }) === 'Fichaje del Valencia-Real Madrid', 'el nombre del partido sin artículo no se toca');
+}
 // sin Premium (280): no se usa previaLarga, nada que probar aquí
 console.log(fallos ? `\n${fallos} FALLOS` : '\nTodo bien');
 process.exit(fallos ? 1 : 0);

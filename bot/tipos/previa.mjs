@@ -287,7 +287,7 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
       const dif = otro.pos - fav.pos;
       if (dif >= 6) { num.push(fav.pos, otro.pos); fr.push(pick([`Sobre el papel, ${el(ef)} lo tiene más fácil: va ${fav.pos}º y ${el(eo)}, ${otro.pos}º`,
         `El partido pinta mejor para ${el(ef)} (${fav.pos}º) que para ${el(eo)} (${otro.pos}º)`, `${mayus(el(ef))}, ${fav.pos}º, parte como favorito frente ${al(eo)}, que es ${otro.pos}º`], 'vPos')); }
-      else if (dif <= 3) { num.push(rl.pos, rv.pos); fr.push(pick([`En la tabla hay poco que separe a ${el(L)} (${rl.pos}º) y ${el(V)} (${rv.pos}º)`,
+      else if (dif <= 3) { num.push(rl.pos, rv.pos); fr.push(pick([`En la tabla hay poco que separe ${al(L)} (${rl.pos}º) y ${al(V)} (${rv.pos}º)`,
         `Partido igualado: ${el(L)} va ${rl.pos}º y ${el(V)}, ${rv.pos}º`], 'vPos')); }
       // goles: el que más marca contra el que más encaja (o los dos de pocos goles)
       const n = tabla.n;
@@ -315,19 +315,24 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   // cuenta por temas y no por equipos: bajas de los dos, lo seguro de los dos y las dudas de los dos, en un orden que cambia, o
   // empezando por la mayor duda del partido. La de siempre (un párrafo por equipo) sale una vez de cada cuatro.
   const forma = k == null ? hash(`${sem}:forma`) % 4 : turno(4, `previa${jornada}:forma`, k);
-  const dudasTxt = (xs) => {
+  // (Carlos, 6 nov 09:19, con un tweet que apilaba cinco porcentajes: los dos más claros llevan su %, el resto solo el nombre; la
+  // tarjeta ya trae el de todos. conPct: a cuántos se les dice el %)
+  const dudasTxt = (xs, conPct = 2) => {
     const grupos = [];
+    const con = new Set(xs.slice(0, conPct));
     for (const d of [A, B]) {
       const ys = xs.filter((x) => d.dudas.includes(x));
-      if (ys.length) grupos.push(`${lista(ys.map((x) => `${x.nombre} (${P(x)} %)`))} en ${el(d.eq)}`);
+      if (ys.length) grupos.push(`${lista(ys.map((x) => (con.has(x) ? `${x.nombre} (${P(x)} %)` : x.nombre)))} en ${el(d.eq)}`);
     }
-    return grupos.join('; ');
+    return grupos.join(pick(['; ', ', y '], 'dUne'));
   };
   const bajasTema = () => {
     const [ba, bb] = [A.bajas, B.bajas];
     if (ba.length && bb.length) return pick([`${mayus(el(A.eq))} no tendrá a ${bajasDe(ba, 'ni')}, y ${el(B.eq)} tampoco a ${bajasDe(bb, 'ni')}`,
       `Los dos llegan con bajas. ${mayus(el(A.eq))} no tendrá a ${bajasDe(ba, 'ni')}, y ${el(B.eq)} tampoco a ${bajasDe(bb, 'ni')}`,
-      `Bajas: ${bajasDe(ba, 'y')} en ${el(A.eq)}; ${bajasDe(bb, 'y')} en ${el(B.eq)}`], 'tBaja2');
+      `Bajas: ${bajasDe(ba, 'y')} en ${el(A.eq)}; ${bajasDe(bb, 'y')} en ${el(B.eq)}`,
+      `${cap(al(A.eq))} le ${pl(ba.length, 'falta', 'faltan')} ${bajasDe(ba, 'y')}. ${cap(al(B.eq))}, ${bajasDe(bb, 'y')}`,
+      `Bajas en los dos lados: en ${el(A.eq)} no estarán ${bajasDe(ba, 'ni')}, y en ${el(B.eq)}, ${bajasDe(bb, 'ni')}`], 'tBaja2');
     const [d, bs] = ba.length ? [A, ba] : bb.length ? [B, bb] : [null, []];
     if (!d) return '';
     return pick([`${mayus(el(d.eq))} no tendrá a ${bajasDe(bs, 'ni')}`, `${cap(al(d.eq))} le ${pl(bs.length, 'falta', 'faltan')} ${bajasDe(bs, 'y')}`], 'tBaja1');
@@ -348,7 +353,7 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
       const resto = todas.slice(1), e = el(eqDe(gran));
       const abre = pick([`${gran.nombre} es la gran duda de este partido: ${P(gran)} % de titularidad en ${e}`, `Lo que menos claro está es ${gran.nombre} en ${e}, con un ${P(gran)} %`,
         `${gran.nombre}, en ${e}, es quien más en el aire está: ${P(gran)} %`], 'tGran');
-      const sigue = resto.length ? pick([`También con dudas: ${dudasTxt(resto)}`, `Detrás vienen ${dudasTxt(resto)}`], 'tResto') : '';
+      const sigue = resto.length ? pick([`También con dudas: ${dudasTxt(resto, 0)}`, `Detrás vienen ${dudasTxt(resto, 0)}`], 'tResto') : '';
       ps = [[abre, sigue], [bajasTema(), fijosTema()]];
     } else {
       // el orden de los temas: bajas primero (si las hay), los seguros primero o las dudas primero
