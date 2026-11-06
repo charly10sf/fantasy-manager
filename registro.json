@@ -1465,7 +1465,8 @@
    "SPORT|136175696": 1793983934000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000,
    "SPORT|136181983": 1793990642000,
-   "AS|https://as.com/futbol/videos/llegara-la-redencion-definitiva-de-julian-contra-el-barca-f202611-v/": 1793995579000
+   "AS|https://as.com/futbol/videos/llegara-la-redencion-definitiva-de-julian-contra-el-barca-f202611-v/": 1793995579000,
+   "MARCA|https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html": 1793997151000
   },
   "hechos": [
    {
@@ -2203,7 +2204,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 49
+   "n": 50
   },
   "desde": {
    "67": {
@@ -3824,15 +3825,15 @@
  "ia": {
   "dia": "2026-11-06",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 0
   },
   "fallos": 0,
-  "entrada": 9009,
-  "salida": 1280,
+  "entrada": 10631,
+  "salida": 1380,
   "cacheLee": 0,
   "cacheEscribe": 0,
-  "dolares": 0.001542
+  "dolares": 0.001754
  },
  "recientes": {
   "onces": [
