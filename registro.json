@@ -1243,7 +1243,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/03/pedro-martinez-quiere-recuperar-eli-ndiaye-136041146.html": 1793717014000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-verdugo-dortmund-busqueda-mejor_0_2008412408.html": 1793703773000,
    "Diario Sur|https://www.diariosur.es/malagacf/joaquin-recuperacion-malaga-futbol-racing-20261103132330-nt.html": 1793709234000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/elche-cf/20261103/1004246885/lemar-baja-lesion-paron.html": 1793736181000,
@@ -1405,7 +1404,8 @@
    "SPORT|136156104": 1793958804000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/06/barrenetxea-vuelve-a-la-lista-de-luis-de-la-fuente-para-el-paron-de-noviembre-radio-san-sebastian/": 1793962860000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-llama-alvaro-valles-marc-roca-jacobo-ramon-recupera-pablo-barrios-barrenetxea-20261106_3470127.html": 1793961935000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000,
+   "SPORT|136125660": 1793959209000
   },
   "hechos": [
    {
@@ -2078,7 +2078,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
