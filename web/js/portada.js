@@ -398,6 +398,8 @@ export function activarPortada() {
   const secciones = MENU.map(([id]) => raiz.querySelector(`#${id}`)).filter(Boolean);
   const menu = barra.querySelector('.pt-menu');
   const pista = raiz.querySelector('.pt-pista'), baja = raiz.querySelector('.pt-baja');
+  // en el ordenador la pista va en la columna de la izquierda, debajo de los textos (fija abajo tapaba el panel de entrar)
+  const col = document.documentElement.classList.contains('escritorio') ? portada.querySelector('.pant-i') : null;
   let pedido = false, ultimaSec = null;
   const alBajar = () => {
     pedido = false;
@@ -408,7 +410,7 @@ export function activarPortada() {
     barra.classList.toggle('on', fuera);
     // la pista fija de abajo («Baja: hay mucho más»): solo arriba del todo y si los botones de «Mira cómo funciona»
     // no se ven ya en la primera pantalla (en una ventana baja o con zoom se quedan debajo y parece que no hay más)
-    if (pista) { const bj = baja ? baja.getBoundingClientRect().bottom : 0; pista.classList.toggle('on', y < 60 && bj > innerHeight - 8); }
+    if (pista && !pista.classList.contains('en-col')) { const bj = baja ? baja.getBoundingClientRect().bottom : 0; pista.classList.toggle('on', y < 60 && bj > innerHeight - 8); }
     barra.querySelectorAll('a').forEach((a) => (a.tabIndex = fuera ? 0 : -1));
     barra.setAttribute('aria-hidden', String(!fuera));
     prog.style.transform = `scaleX(${h > 0 ? Math.min(1, y / h) : 0})`;
@@ -424,13 +426,18 @@ export function activarPortada() {
   escuchar(window, 'scroll', () => { if (!pedido) { pedido = true; requestAnimationFrame(alBajar); } }, { passive: true });
   alBajar();
   // los enlaces de dentro: suaves y sin dejar el # en la dirección (la app usa el hash para sus pestañas)
-  raiz.querySelectorAll('a[href^="#"]').forEach((a) => escuchar(a, 'click', (ev) => {
+  [...raiz.querySelectorAll('a[href^="#"]')].forEach((a) => escuchar(a, 'click', (ev) => {
     ev.preventDefault();
     const id = a.getAttribute('href').slice(1);
     const el = id && raiz.querySelector(`#${id}`);
     const top = el ? el.getBoundingClientRect().top + scrollY - (barra.offsetHeight || 56) - 8 : 0;
     scrollTo({ top, behavior: sinMovimiento() ? 'auto' : 'smooth' });
   }));
+
+  if (pista && col) {
+    col.appendChild(pista); pista.classList.add('en-col'); pista.removeAttribute('aria-hidden'); pista.removeAttribute('tabindex');
+    escuchar(pista, 'click', (ev) => { ev.preventDefault(); const el = raiz.querySelector('#pAsi'); if (el) scrollTo({ top: el.getBoundingClientRect().top + scrollY - (barra.offsetHeight || 56) - 8, behavior: sinMovimiento() ? 'auto' : 'smooth' }); });
+  }
 
   // «Cómo funciona»: el paso que está en el centro de la pantalla manda en el móvil fijo
   const pasos = [...raiz.querySelectorAll('.ph-paso')];

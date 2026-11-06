@@ -125,6 +125,8 @@ function movilDe() {
   if (/iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'iphone';
   return null;
 }
+/** el logo de Apple (Simple Icons, CC0), para señalar lo de iPhone */
+const APPLE = '<svg class="ap" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>';
 const botonDemo = (clase) => `<button class="btn ${clase} ancho" data-accion="entrarDemo" style="margin:6px 0 12px">Ver con una liga de ejemplo</button>`;
 /** en el navegador: LaLiga solo devuelve la sesión a su app del móvil, así que se entra con un código de la app */
 const codigoWebHTML = () => `<div class="entrar-codigo">
@@ -167,7 +169,7 @@ function entrarWebHTML() {
       ...(icono_ ? [] : [['Ponla en tu pantalla de inicio', 'En <b>Safari</b>, toca <b>Compartir</b> (el cuadrado con la flecha hacia arriba) → <b>Añadir a pantalla de inicio</b> → <b>Añadir</b>. Hazlo antes de entrar: la app del icono guarda su sesión aparte de Safari. <a href="instalar.html#anadir">Cómo se hace, con detalle</a>']]),
       [icono_ ? 'Escribe el código aquí' : 'Ábrela desde el icono y escribe el código', 'Pon el código en el cuadro de más abajo y toca <b>Entrar</b>. Solo se hace una vez: después la sesión se renueva sola.'],
     ];
-    return `<div class="entrar-movil"><b>${icono('info')}Cómo usarla en iPhone</b>
+    return `<div class="entrar-movil"><b>${APPLE}Cómo usarla en iPhone</b>
       <span class="em-intro">No hay app en la App Store: Fantasy Manager se usa desde la web y puedes dejarla en tu pantalla de inicio como una app más. LaLiga no deja entrar con tu cuenta desde el iPhone, así que la <b>primera vez</b> hace falta un código.</span>
       <ol class="em-pasos">${pasos.map(([t, x], n) => `<li><span class="em-n">${n + 1}</span><span><b class="em-t">${t}</b>${x}</span></li>`).join('')}</ol>
       <a class="btn sec ancho em-guia" href="instalar.html#iphone">${icono('nota')}Guía completa para iPhone</a></div>
@@ -185,8 +187,13 @@ function entrarWebHTML() {
         <div class="en-apk-t"><a class="btn sec ancho" href="${APK_WEB}">${icono('descargar')}Descargar para Android</a>
         <span>O escanea el QR con la cámara del móvil y se descarga allí. Es gratis.</span></div>
       </div>
+    <div class="en-ios">
+      <div class="en-ios-c">${APPLE}<b>¿Tienes iPhone?</b></div>
+      <span>No hay app en la App Store, pero funciona desde Safari y puedes dejarla en la pantalla de inicio. Entras tú aquí, en el ordenador, y pasas la sesión al iPhone con un QR (Ajustes → Abrir en otro dispositivo).</span>
+      <div class="en-ios-b"><button class="btn chico" data-accion="abrirSinApp">Entrar desde el ordenador</button><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone</a></div>
+    </div>
     <details class="sin-app"><summary>No tengo la app en el móvil</summary>
-      <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un código para escribirlo aquí en el iPhone.</p>
+      <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un QR (para la cámara del iPhone) o un código para escribirlo aquí en el iPhone. Si tienes la app en un Android, no hace falta nada de esto: usa su QR.</p>
       <ol>
         <li>Pulsa <b>Abrir la página de LaLiga</b>: se abre en otra pestaña.</li>
         <li>En esa pestaña, antes de entrar, abre las herramientas del navegador (<b>F12</b>), ve a <b>Red</b> y marca <b>Conservar registro</b>.</li>
@@ -2329,6 +2336,7 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'entrar': try { contar('l'); await empezarLogin(); } catch (e) { pantallaEntrar(e.message); } break;
+    case 'abrirSinApp': { const x = document.querySelector('.entrar-nuevo details.sin-app'); if (x) { x.open = true; x.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break; }
     case 'entrarDemo': { const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
       const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
