@@ -224,6 +224,13 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
     bajas: Object.values(probs[k]).filter((x) => (x.estado === 'injured' && !dudaParte.has(String(x.id))) || x.estado === 'suspended').sort((a, b) => med(b) - med(a)).slice(0, 3),
     fijo: pos[k].once.filter((x) => x.p >= 0.8 && med(x) >= 4).sort((a, b) => med(b) - med(a))[0] || null,
   });
+  const cab = cu ? pick([`🗓️ ${L}-${V}, ${cu.t}: posibles onces fantasy para la jornada ${jornada}`,
+    `🗓️ ${cap(cu.t)} juegan ${el(L)} y ${el(V)}: posibles onces fantasy de la jornada ${jornada}`,
+    `🗓️ Jornada ${jornada} de LaLiga Fantasy: ${L}-${V}, ${cu.t}`,
+    `🗓️ ${L}-${V} (${cu.t}): así llegan los dos a la jornada ${jornada}`,
+    `🗓️ Posibles onces fantasy de ${L}-${V}, ${cu.t}`], 'cab')
+    : `🗓️ ${L}-${V}: posibles onces fantasy para la jornada ${jornada}`;
+
   const eqs = [datos('L', L), datos('V', V)];
   const cands = [];
   for (const d of eqs) {
@@ -268,6 +275,57 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
         : [pl(n, 'no tiene el sitio asegurado', 'no tienen el sitio asegurado'), sinFijo ? pl(n, 'tiene el puesto en el aire', 'tienen el puesto en el aire') : pl(n, 'no es fijo', 'no son fijos'), pl(n, 'está pendiente de la decisión del entrenador', 'están pendientes de la decisión del entrenador'), pl(n, 'no lo tiene ganado', 'no lo tienen ganado')];
     return pickL(fs, `v${caso}`, lado);
   };
+
+  // --- la forma del tweet (Carlos, 6 nov 08:08: «todos con la estructura así tan idéntica»): hasta ahora siempre «un párrafo por equipo»
+  // (el fijo o la baja gorda, las dudas, y lo mismo del otro lado). Ahora, en tres de cada cuatro partidos seguidos, el tweet se
+  // cuenta por temas y no por equipos: bajas de los dos, lo seguro de los dos y las dudas de los dos, en un orden que cambia, o
+  // empezando por la mayor duda del partido. La de siempre (un párrafo por equipo) sale una vez de cada cuatro.
+  const forma = k == null ? hash(`${sem}:forma`) % 4 : turno(4, `previa${jornada}:forma`, k);
+  const dudasTxt = (xs) => {
+    const grupos = [];
+    for (const d of [A, B]) {
+      const ys = xs.filter((x) => d.dudas.includes(x));
+      if (ys.length) grupos.push(`${lista(ys.map((x) => `${x.nombre} (${P(x)} %)`))} en ${el(d.eq)}`);
+    }
+    return grupos.join('; ');
+  };
+  const bajasTema = () => {
+    const [ba, bb] = [A.bajas, B.bajas];
+    if (ba.length && bb.length) return pick([`${mayus(el(A.eq))} no tendrá a ${bajasDe(ba, 'ni')}, y ${el(B.eq)} tampoco a ${bajasDe(bb, 'ni')}`,
+      `Los dos llegan con bajas. ${mayus(el(A.eq))} no tendrá a ${bajasDe(ba, 'ni')}, y ${el(B.eq)} tampoco a ${bajasDe(bb, 'ni')}`,
+      `Bajas: ${bajasDe(ba, 'y')} (${A.eq}) y ${bajasDe(bb, 'y')} (${B.eq})`], 'tBaja2');
+    const [d, bs] = ba.length ? [A, ba] : bb.length ? [B, bb] : [null, []];
+    if (!d) return '';
+    return pick([`${mayus(el(d.eq))} no tendrá a ${bajasDe(bs, 'ni')}`, `${cap(al(d.eq))} le ${pl(bs.length, 'falta', 'faltan')} ${bajasDe(bs, 'y')}`], 'tBaja1');
+  };
+  const fijosTema = () => {
+    const fs = [A.fijo, B.fijo].filter(Boolean).sort((a, b) => med(b) - med(a));
+    if (!fs.length) return '';
+    if (fs.length === 1) return pick([`Con ${fs[0].nombre} se puede contar: ${P(fs[0])} % y ${M(fs[0])} de media`, `Lo seguro es ${fs[0].nombre}, al ${P(fs[0])} %`], 'tFijo1');
+    const l = `${fs[0].nombre} (${P(fs[0])} %, ${M(fs[0])} de media) y ${fs[1].nombre} (${P(fs[1])} %)`;
+    return pick([`Lo seguro: ${l}`, `Sin discusión, ${l}`, `Los que no fallan: ${l}`], 'tFijo2');
+  };
+  const todas = [...A.dudas, ...B.dudas].sort((a, b) => a.p - b.p);
+  const gran = todas[0] && todas[0].p < 0.55 ? todas[0] : null;
+  if (forma !== 0) {
+    const eqDe = (x) => (A.dudas.includes(x) ? A.eq : B.eq);
+    let ps;   // los párrafos, cada uno con sus frases
+    if (forma === 3 && gran) {
+      const resto = todas.slice(1), e = el(eqDe(gran));
+      const abre = pick([`${gran.nombre} es la gran duda de este partido: ${P(gran)} % de titularidad en ${e}`, `Lo que menos claro está es ${gran.nombre} en ${e}, con un ${P(gran)} %`,
+        `${gran.nombre}, en ${e}, es quien más en el aire está: ${P(gran)} %`], 'tGran');
+      const sigue = resto.length ? pick([`También con dudas: ${dudasTxt(resto)}`, `Detrás vienen ${dudasTxt(resto)}`], 'tResto') : '';
+      ps = [[abre, sigue], [bajasTema(), fijosTema()]];
+    } else {
+      // el orden de los temas: bajas primero (si las hay), los seguros primero o las dudas primero
+      const orden = pick([['b', 'f', 'd'], ['d', 'b', 'f'], ['f', 'd', 'b']], 'tOrden');
+      const t = { b: bajasTema(), f: fijosTema(), d: todas.length ? pick([`Dudas: ${dudasTxt(todas)}`, `Donde hay más duda: ${dudasTxt(todas)}`, `Lo que no está claro: ${dudasTxt(todas)}`], 'tDudas') : pick(['Entre los habituales no hay dudas', 'El resto del once, sin dudas'], 'tSin') };
+      const q = orden.map((c) => t[c]).filter(Boolean);
+      ps = q.length > 1 ? [q.slice(0, 2), q.slice(2)] : [q];
+    }
+    const ideas = ps.map((fr) => fr.filter(Boolean)).filter((fr) => fr.length).map((fr) => ({ t: aparte(fr.join('. ')), prio: 9 }));
+    if (ideas.length) return { cab, ideas, num };
+  }
 
   // el primer equipo: el titular con su contraste, y sus dudas
   const fa = [];
@@ -336,10 +394,6 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   const fb = [];
   for (const [i, q] of ordenB.entries()) { const t = q === 'd' ? bD(i === 0) : q === 'b' ? bB(i === 0) : bF(fb.join(' ')); if (t) fb.push(t); }
 
-  const cab = cu ? pick([`🗓️ ${L}-${V}, ${cu.t}: posibles onces fantasy para la jornada ${jornada}`,
-    `🗓️ ${cap(cu.t)} juegan ${el(L)} y ${el(V)}: posibles onces fantasy de la jornada ${jornada}`,
-    `🗓️ Jornada ${jornada} de LaLiga Fantasy: ${L}-${V}, ${cu.t}`], 'cab')
-    : `🗓️ ${L}-${V}: posibles onces fantasy para la jornada ${jornada}`;
   const ideas = [
     { t: aparte(fa.join('. ')), prio: 9 },
     { t: aparte(fb.join('. ')), prio: 9 },
