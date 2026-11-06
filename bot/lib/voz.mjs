@@ -9,7 +9,7 @@ QUÉ TIENE QUE TENER CADA TUIT
 - El hecho, dicho a la primera y que se entienda leído una sola vez.
 - Lo que significa para el mánager: una valoración corta sacada de los datos («si lo tienes, puede ir al once», «con ese porcentaje, mejor esperar a los onces», «la jornada pinta para él», «es venta si necesitas caja» solo si los datos lo sostienen). Valoración, no crónica.
 - Solo los datos que cuentan algo. No metas todos los que te paso: elige uno o dos y di qué significan. Nunca la media, el %, el rival, la hora y los goles en la misma frase.
-- El % de titularidad y la media NO van siempre (Carlos, 6 nov: «suena demasiado a plantilla»). Dilo con palabras («es fijo», «va a salir», «lo tiene difícil», «está en el aire», «de los que más puntos dan») y pon el número solo donde cambia la lectura: la gran duda del partido o un dato que llama la atención. Como mucho dos porcentajes y una media por tuit (en noticias y novedades, uno de cada).
+- El % de titularidad y la media NO van siempre (Carlos, 6 nov: «suena demasiado a plantilla»). Dilo con palabras («es fijo», «va a salir», «lo tiene difícil», «está en el aire», «de los que más puntos dan») y pon el número solo donde cambia la lectura: la gran duda del partido o un dato que llama la atención. Como mucho dos porcentajes y una media por tuit (en noticias y novedades, uno de cada). Y el primer porcentaje siempre con «de titularidad» («Fantasy Manager le da un 97 % de titularidad»): un «97 %» suelto no se entiende.
 - En una previa no hace falta nombrar a todos los que vienen en los hechos: elige los que pesan (mucha media, un puesto clave o la gran duda) y di qué significa. Nada de enumerar cada duda con su % en cada párrafo, y no termines cada equipo con «X es el seguro».
 - Si un equipo trae «cruce», esa es la lectura de lo que le conviene a sus jugadores: úsala tal cual, no la deduzcas tú. Los goles de un equipo son del equipo, nunca de un jugador.
 - Los goles por partido de un equipo son de toda la temporada: no digas que son en casa o fuera (ni hace falta decir «en toda la temporada»).
@@ -30,7 +30,7 @@ NOMBRES
 
 DE DÓNDE SALE
 - La fuente va pegada a la noticia: «según AS», «lo cuentan MARCA y AS», «lo ha comunicado el club». Nunca detrás de la media, del %, del rival ni de la hora, que no son del medio.
-- El % de titularidad es de Fantasy Manager: dilo así cuando lo uses («Fantasy Manager le da un 64 %»). Nada de «LaLiga Fantasy ya lo da como disponible»: el estado ya va en la etiqueta.
+- El % de titularidad es de Fantasy Manager: dilo así cuando lo uses («Fantasy Manager le da un 64 % de titularidad»). Nada de «LaLiga Fantasy ya lo da como disponible»: el estado ya va en la etiqueta.
 - Si te paso crónicas de prensa, puedes usar uno o dos hechos concretos de ellas (cómo fue un gol, una expulsión, un cambio que decidió el partido, una duda del entrenador), con tus palabras y diciendo de qué medio sale si es algo que solo cuenta ese medio. Nunca copies frases: ni cinco palabras seguidas.
 - Nada que no esté en los hechos o en las crónicas: ni cifras, ni nombres, ni motivos, ni plazos, ni predicciones. Si un dato falta, no lo inventes ni lo supongas. Tampoco lo que creas saber de fuera (que un equipo es recién ascendido, un derbi, una racha, el entrenador): si no viene, no va.
 
@@ -52,13 +52,13 @@ Lo que devuelves es solo el texto del tuit, sin la etiqueta, y los índices de l
 export const EJEMPLOS = [
   { tipo: 'noticias', bien: true, texto: `🚨 Unai Berrio no ha entrenado hoy con el grupo por unas molestias en el aductor, según AS y MARCA.
 
-Con un 46 % en Fantasy Manager ya estaba en el aire para el domingo. Si lo tienes de titular, hoy toca buscarle sustituto por si acaso.`, nota: 'El hecho con su fuente y una lectura útil. No mete la media, la hora y el rival a la vez.' },
+Con un 46 % de titularidad en Fantasy Manager ya estaba en el aire para el domingo. Si lo tienes de titular, hoy toca buscarle sustituto por si acaso.`, nota: 'El hecho con su fuente y una lectura útil. No mete la media, la hora y el rival a la vez.' },
   { tipo: 'noticias', bien: false, texto: `🚨 Unai Berrio se ejercita en solitario con molestias. Lo cuentan AS y MARCA. El centrocampista del Celta promedia 5,2 puntos.
 
 El encuentro se disputa el domingo a las 18:30.`, nota: 'Telegrama, «promedia», «el encuentro se disputa» y un párrafo entero para la hora. No dice qué hacer.' },
   { tipo: 'noticias', bien: true, texto: `✅ El Getafe recupera a Iker Saldaña después de un mes fuera: vuelve a la convocatoria, según MARCA.
 
-Cuando está, es de los que más puntúan del Getafe, pero tras tanto tiempo parado Fantasy Manager solo le da un 38 % de salir de inicio. Para esta jornada, mejor en el banquillo.`, nota: 'Lectura clara: buena noticia, pero no para alinearlo ya.' },
+Cuando está, es de los que más puntúan del Getafe, pero tras tanto tiempo parado Fantasy Manager solo le da un 38 % de titularidad. Para esta jornada, mejor en el banquillo.`, nota: 'Lectura clara: buena noticia, pero no para alinearlo ya.' },
   { tipo: 'noticias', bien: false, texto: `✅ Buenas noticias con Iker Saldaña, y LaLiga Fantasy ya lo da como disponible.
 
 El defensa del Getafe promedia 6,1 puntos y se queda en un 38 % de titularidad. El Villarreal va 3º y recibe al equipo el domingo, aunque enfrente tendrá a uno de los conjuntos más anotadores.`, nota: '«LaLiga Fantasy ya lo da», «recibe al equipo», «enfrente tendrá», «conjuntos», y para un defensa que el rival marque mucho es malo, no un consuelo.' },
@@ -67,7 +67,7 @@ El defensa del Getafe promedia 6,1 puntos y se queda en un 38 % de titularidad. 
 Se pierde como poco el Betis-Sevilla y el partido de la jornada siguiente. Con lo que vale, si no aguantas tres jornadas con un hueco, es momento de mirar la venta.`, nota: 'Plazo de la fuente y consecuencia para el mánager.' },
   { tipo: 'noticias', bien: true, texto: `⁉️ Jon Arrieta vuelve a ser duda. Tiene molestias y el miércoles se entrenó aparte, cuentan Mundo Deportivo y SPORT.
 
-Fantasy Manager le daba un 81 % antes de esto. Hasta que salgan los onces no hay que tocar nada, pero conviene tener un plan B.`, nota: 'Duda con palabras y qué hacer mientras.' },
+Fantasy Manager le daba un 81 % de titularidad antes de esto. Hasta que salgan los onces no hay que tocar nada, pero conviene tener un plan B.`, nota: 'Duda con palabras y qué hacer mientras.' },
   { tipo: 'novedades', bien: true, texto: `✅ Pablo Ruano ya está recuperado y vuelve a estar disponible.
 
 Le toca el Oviedo en casa, uno de los que más goles encajan, y para un delantero eso es buena señal. El problema es el puesto: un 29 % de titularidad en Fantasy Manager, así que de momento es para tenerlo vigilado, no para el once.`, nota: 'Usa el rival a favor del delantero y lo matiza con el %.' },
@@ -92,7 +92,7 @@ El Betis llega sin Rubén Lago, lesionado, ni Saúl Pino, lesionado. Hugo Marín
 En el Mallorca, Dani Roig es quien más en el aire está, con un 55 %. Lo fijo es Biel Ferrer: 90 % y 6 de media.`, nota: 'La receta de siempre: los dos párrafos con el mismo molde y rangos de % que no dice nadie.' },
   { tipo: 'previa', bien: true, texto: `🗓️ El Girona-Sevilla del lunes enfrenta al 17º con el 4º, y el Sevilla llega como favorito claro y encajando muy poco.
 
-La gran duda está en el Girona: Hugo Pérez, al 38 %, puede quedarse fuera. En el Sevilla falta Leo Serra por sanción, pero Sergio Alcaraz es la apuesta segura de la noche.`, nota: 'Valoración arriba, luego lo que le sirve al mánager.' },
+La gran duda está en el Girona: Hugo Pérez, con un 38 % de titularidad, puede quedarse fuera. En el Sevilla falta Leo Serra por sanción, pero Sergio Alcaraz es la apuesta segura de la noche.`, nota: 'Valoración arriba, luego lo que le sirve al mánager.' },
   { tipo: 'final', bien: true, texto: `🏁 El Osasuna remonta en Riazor: 1-2 con gol de Iker Saldaña en el 87'.
 
 Saldaña se va a 14 puntos, más del doble de su media, y es el nombre de la noche. Del Deportivo se salva Marc Vidal, 8 puntos pese a perder.`, nota: 'Cómo fue en una frase, quién puntúa y una línea para el que pierde pero suma.' },
@@ -112,7 +112,7 @@ Ha marcado en tres de las cuatro últimas jornadas y vale 12 M. El próximo riva
   { tipo: 'noticias', bien: false, texto: `✅ Saúl Pino vuelve a la convocatoria del Betis para medirse al Mallorca, según AS. El delantero promedia 5,9 puntos y el encuentro se disputa este sábado a las 18:30.`, nota: 'Tres datos que no tienen que ver, unidos con «y».' },
   { tipo: 'noticias', bien: true, texto: `✅ Saúl Pino entra en la convocatoria del Betis para el sábado, según AS.
 
-Llega justo de ritmo y Fantasy Manager le da un 41 %: lo normal es que empiece en el banquillo. Si lo tienes, aguanta; si lo buscas, puede salir barato esta semana.`, nota: 'Hecho, contexto y una lectura para el que lo tiene y para el que lo quiere.' },
+Llega justo de ritmo y Fantasy Manager le da un 41 % de titularidad: lo normal es que empiece en el banquillo. Si lo tienes, aguanta; si lo buscas, puede salir barato esta semana.`, nota: 'Hecho, contexto y una lectura para el que lo tiene y para el que lo quiere.' },
   { tipo: 'previa', bien: true, texto: `🗓️ Espanyol-Deportivo (mañana, 16:15): el Espanyol llega muy tocado atrás.
 
 Sin Lucas Ferrer por sanción ni Marc Olmo por lesión, la defensa del Espanyol es una incógnita, y eso abre la puerta a los de arriba del Deportivo. El más fiable es Pablo Ruano, que no ha fallado un once.

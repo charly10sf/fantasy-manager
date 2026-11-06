@@ -80,7 +80,7 @@ const hechos = { tipo: 'noticias', noticia: 'Eric vuelve a la convocatoria', fue
 ok(hechos.partido.golesRival.paraEste === 'le viene mal', 'a un defensa le viene mal un rival que marca mucho');
 const bueno = `✅ El Barça recupera a Eric para el domingo, según AS y MARCA.
 
-Pero el Atleti, 2º y de los que más marcan, no es el mejor partido para un defensa, y Fantasy Manager solo le da un 37 %. Si lo tienes, mejor esperar a los onces.`;
+Pero el Atleti, 2º y de los que más marcan, no es el mejor partido para un defensa, y Fantasy Manager solo le da un 37 % de titularidad. Si lo tienes, mejor esperar a los onces.`;
 const rv = (t, extra = {}) => revisar(t, { hechos, todos, numeros: [], ...extra });
 ok(rv(bueno).length === 0, `un texto bueno pasa (${rv(bueno).join('; ')})`);
 const malos = [
@@ -109,6 +109,7 @@ ok(rv('Eric vuelve, según AS. Y el Atlético es duro. 🦁').some((x) => /emoji
 ok(revisar('El Levante, colista, recibe al Celta.', { hechos: { tipo: 'previa', jugadores: [], equipos: [{ club: 'Levante', va: '18º de 20' }], clubes: clubes('Levante', 'Celta') }, todos }).some((x) => /colista/.test(x)), '«colista» solo si va último');
 ok(rv('Eric vuelve, según AS. Tiene un 37 % y antes un 37 %.').some((x) => /porcentajes/.test(x)), 'en noticias, un solo porcentaje');
 ok(rv('Eric vuelve, según AS. Si dudas, mejor esperar a los onces.', { recientes: ['Pedri juega. Si dudas, mejor esperar a los onces del sábado.', 'Koke no está. Si dudas, mejor esperar a los onces.', 'Budimir juega. Si dudas, mejor esperar a los onces de mañana.'] }).some((x) => /muletilla/.test(x)), 'una muletilla que ya va en dos recientes, fuera');
+ok(rv('Eric vuelve, según AS. Fantasy Manager le da un 37 %.').some((x) => /de titularidad/.test(x)), 'un % sin «de titularidad», fuera');
 ok(rv('Eric ya no es baja y vuelve, según AS.').length === 0, '«ya no es baja» no es llamarle baja');
 const cron = [{ medio: 'MARCA', titulo: 'El Barça recupera a Eric para el Metropolitano', entradilla: 'El central vuelve a la lista de Flick tras superar sus molestias en el tobillo derecho' }];
 ok(rv('Eric vuelve a la lista de Flick tras superar sus molestias en el tobillo derecho.', { cronicas: cron }).some((x) => /copia 6/.test(x)), 'copiar 6 palabras de una crónica, fuera');
