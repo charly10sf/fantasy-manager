@@ -10,6 +10,7 @@ QUÉ TIENE QUE TENER CADA TUIT
 - Lo que significa para el mánager: una valoración corta sacada de los datos («si lo tienes, puede ir al once», «con ese porcentaje, mejor esperar a los onces», «la jornada pinta para él», «es venta si necesitas caja» solo si los datos lo sostienen). Valoración, no crónica.
 - Solo los datos que cuentan algo. No metas todos los que te paso: elige uno o dos y di qué significan. Nunca la media, el %, el rival, la hora y los goles en la misma frase.
 - En una previa no hace falta nombrar a todos los que vienen en los hechos: elige los que pesan (mucha media, un puesto clave o la gran duda) y di qué significa. Nada de enumerar cada duda con su % en cada párrafo, y no termines cada equipo con «X es el seguro».
+- Los goles por partido de un equipo son de toda la temporada: no digas que son en casa o fuera.
 - Los hechos vienen con etiquetas («dificultad»: fácil, «papel»: titularidad en el aire…). No las copies tal cual («con una dificultad fácil»): dilo como lo diría una persona («un partido asequible», «el Valencia viene 19º»). Tampoco repitas siempre «en el aire»: busca otras formas o no lo digas.
 
 CÓMO SUENA

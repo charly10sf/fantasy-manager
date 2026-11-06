@@ -170,6 +170,15 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const raros = em.filter((x) => !EMOJIS_GUIA.has(x) && !deClub.has(x) && !CIRCULOS.test(x));
   if (raros.length) e.push(`emojis que no están en la guía: ${raros.join(' ')}`);
   if (em.filter((x) => deClub.has(x)).length > 1) e.push('más de un emoji de club');
+  // el de un club, justo detrás de su nombre (en la prueba del 6 nov quedaban sueltos al final del párrafo: «…no es lo más apetecible. 🐟»)
+  for (const [c, d] of Object.entries(hechos.clubes || {})) {
+    if (!d.emoji) continue;
+    for (const m of t.matchAll(new RegExp(d.emoji.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gu'))) {
+      const antes = ` ${norm(t.slice(Math.max(0, m.index - 40), m.index))} `;
+      const nombres = [c, ...(d.nombres || [])].map((n) => norm(n).replace(/^(el|la) /, ''));
+      if (!nombres.some((n) => antes.endsWith(` ${n} `))) e.push(`el emoji ${d.emoji} va justo detrás del nombre de su club, no suelto`);
+    }
+  }
   if (em.filter((x) => EMOJIS_GUIA.has(x)).length > 1) e.push('más de un emoji de la guía (solo uno, al principio)');
   if (hechos.sobrio && em.length) e.push('tono sobrio: sin emojis');
   // nada copiado: ni de las crónicas (6 palabras seguidas, como en tipos/noticias.mjs) ni de los ejemplos de la guía (8)
