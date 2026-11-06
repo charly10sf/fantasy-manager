@@ -1459,7 +1459,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/06/javier-aguirre-da-razones-rinde-sadiq-136166220.html": 1793973720000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-pierde-paredes-leve-lesion-muscular-espera-20261106145848-nt.html": 1793973528000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/vuelven-gueler-tchouameni.html": 1793976866000,
-   "SPORT|136164075": 1793973656000
+   "SPORT|136164075": 1793973656000,
+   "SPORT|136173086": 1793976867000
   },
   "hechos": [
    {
@@ -2195,7 +2196,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -3826,6 +3827,8 @@
    "n": 9,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980875726
+  }
  }
 }
