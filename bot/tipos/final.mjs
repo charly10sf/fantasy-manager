@@ -5,7 +5,7 @@
 import { CIERRES, corto, elegir, fmt, partes, el, del, al, largo, rotar, turno, ordenJornada } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, cuando } from '../lib/redactar.mjs';
 import { rachaDe } from '../lib/laliga.mjs';
-import { partidoEspn, reconstruir, minutoDe } from '../lib/relato.mjs';
+import { partidoEspn, reconstruir, minutoDe, incidenciasDe, sumarioEspn } from '../lib/relato.mjs';
 import { clubes as clubesH, estadio as estadioH } from '../lib/hechos.mjs';
 import { casarJugador } from './directo.mjs';
 import { lista, mayus, enLetra } from '../lib/agrupar.mjs';
@@ -47,10 +47,13 @@ export async function relato(m, semilla, k = null) {
   const [G, P] = gl >= gv ? [L, V] : [V, L];
   const goleadores = new Set();
   const goles = [];   // para la IA que redacta (lib/redaccion.mjs): cada gol con su minuto, quién y para quién
+  let incidencias = [];   // y los penaltis parados o fallados y las rojas (del summary de ESPN): lo único que no es un gol y se puede contar
   let sec = null;
   try {
     const e = await partidoEspn(m, diaMadrid(Date.parse(m.date)));
     if (e) {
+      incidencias = incidenciasDe(await sumarioEspn(e.ev), { casaId: e.casa.team.id, fueraId: e.fuera.team.id, L, V,
+        casar: (n, lado, o) => casarJugador(n, lado === 'local' ? m.local : m.visitor, o) });
       const rel = reconstruir(e.c.details || [], e.casa.team.id, e.fuera.team.id, gl, gv);
       if (rel.ok) {
         sec = { rel, casa: e.casa, fuera: e.fuera };
@@ -77,7 +80,7 @@ export async function relato(m, semilla, k = null) {
   const mt = (mn) => (mn.extra ? `${mn.min}+${mn.extra}'` : `${mn.min}'`);
   // nombra: el id (LaLiga) del goleador que sale en la frase, para no repetirlo en la del mejor (comparar el texto fallaba con
   // «Rodri» dentro de «Rodrigo Gamón»; auditoría del 5 nov)
-  const sal = (linea, num = [], nombra = null) => ({ linea, num, goleadores, nombra, goles });
+  const sal = (linea, num = [], nombra = null) => ({ linea, num, goleadores, nombra, goles, incidencias });
   if (sec && dif >= 1) {
     const casaGana = gl > gv;
     const lado = casaGana ? m.local : m.visitor;
@@ -301,7 +304,7 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     if (pierde && !jugH.some((x) => x.nombre === pierde.nombre)) jugH.push(fila(pierde, { papel: 'puntúa aunque su equipo pierde' }));
     for (const f of peores.length ? peores.slice(0, 3) : peor ? [peor] : []) if (!jugH.some((x) => x.nombre === f.nombre)) jugH.push(fila(f, { papel: 'el peor del partido' }));
     const hechos = { tipo: 'final', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), marcador: `${gl}-${gv}`, fecha: m.date || null },
-      goles: r.goles || [], jugadores: jugH,
+      goles: r.goles || [], incidencias: r.incidencias || [], jugadores: jugH,
       ...(tablaAntes && tablaAntes[L] && tablaAntes[V] ? { antesDelPartido: { [L]: `${tablaAntes[L].pos}º`, [V]: `${tablaAntes[V].pos}º` } } : {}),
       clubes: clubesH(L, V, proximoTop ? proximoTop.club : null), etiqueta: pie };
     if (proximoTop) delete proximoTop.club;

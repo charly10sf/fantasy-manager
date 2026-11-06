@@ -95,6 +95,22 @@ const entrada = (t, nombres) => esqueleto(t, nombres).split(' ').slice(0, 3).joi
  * ¿vale el texto redactado? [] si sí; si no, los motivos (se le devuelven a la IA para que lo arregle).
  * `todos`: los nombres de todos los jugadores y clubes de LaLiga (nombresDe); `recientes`: los últimos textos del mismo tipo.
  */
+// atribuir a un medio con un verbo («cuenta que», «informa el…»): en un final o un MVP no hay medio al que atribuir nada
+const ATRIBUYE = /\b(cuenta|cuentan|informa|informan|asegura|aseguran|avanza|avanzan|desvela|desvelan|revela|revelan|apunta|apuntan)\s+(que|el|la|los|las)\b/i;
+// sucesos de un partido que solo pueden salir si están en los hechos: [lo que dice el texto, lo que tiene que haber en los hechos, cómo se llama]
+const SUCESOS = [
+  [/\bpenalt(?:i|is|y)\b/, /\bpenalti\b/, 'penalti'],
+  [/\b(?:parad[ao]s?|paro|paraba|paraban|detuvo|detuvieron|detiene|ataj\w+)\b/, /\bpenalti parado\b/, 'una parada'],
+  [/\b(?:expuls\w+|roja|rojas)\b/, /\b(?:roja|expuls\w+)\b/, 'una expulsión'],
+  [/\b(?:autogol\w*|propia puerta)\b/, /\b(?:enpropia|autogol)\b/, 'un autogol'],
+  [/\bvar\b/, /\bvar\b/, 'el VAR'],
+];
+/** los sucesos que cuenta el texto y no están en los hechos (vacío si todo lo que cuenta está) */
+export function sucesosSinHechos(texto, hechos) {
+  const t = norm(texto), h = norm(JSON.stringify(hechos, sinFecha));
+  return SUCESOS.filter(([dice, hay]) => dice.test(t) && !hay.test(h)).map((x) => x[2]);
+}
+
 export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = [], max = limite(), numeros = [] } = {}) {
   const e = [];
   const t = String(texto || '').trim();
@@ -195,6 +211,14 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const fuentes = ` ${norm(JSON.stringify(hechos.fuente || '') + ' ' + cronicas.map((c) => c.medio).join(' '))} `;
   const sinFuente = medios.filter((m) => !fuentes.includes(` ${norm(m)} `));
   if (sinFuente.length) e.push(`nombra un medio que no es la fuente: ${sinFuente.join(', ')}`);
+  // rigor (Carlos, 6 nov, final del Sevilla-Alavés: «Cuenta COPE que Sivera ha parado un penalti»): lo que pasa en un partido es un hecho y
+  // no se le pone un medio delante (suena a que nadie lo ha comprobado), y un suceso (penalti, parada, roja, autogol, VAR) solo sale si está
+  // en los hechos (goles o incidencias, de ESPN). Solo en finales y MVP: en noticias y previas el medio sí es la fuente.
+  if (hechos.tipo === 'final' || hechos.tipo === 'mvp') {
+    if (medios.length || ATRIBUYE.test(t)) e.push('en un final o un MVP no se atribuye nada a un medio («cuenta COPE», «según MARCA»…): lo que pasa en el partido es un hecho y se cuenta tal cual');
+    const sucesos = sucesosSinHechos(t, hechos);
+    if (sucesos.length) e.push(`cuenta sucesos que no están en los hechos (${sucesos.join(', ')}): no lo insinúes, ni siquiera atribuido a un medio`);
+  }
   // emojis: uno de la guía al principio del primer párrafo, el de un club de los hechos detrás de su nombre (uno) y nada más
   const em = emojis(t);
   const deClub = new Set(Object.values(hechos.clubes || {}).map((c) => c.emoji).filter(Boolean));
@@ -241,7 +265,7 @@ export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [
     `HECHOS:\n${JSON.stringify(hechos, sinFecha, 1)}`,
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     gastadas.length ? `FRASES YA GASTADAS (salen en varios de esos tuits; no las uses): ${gastadas.map((g) => `«${g.txt}»`).join(', ')}` : '',
-    cronicas.length ? `PRENSA DE ESTE PARTIDO (puedes usar uno o dos hechos, con tus palabras):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
+    cronicas.length ? `PRENSA DE ESTE PARTIDO (hasta dos hechos, con tus palabras y con el medio pegado al hecho; nada de lo que pasa en el campo, eso solo si está en los hechos):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
     errores.length ? `Tu versión anterior no vale:\n"""${anterior}"""\nPor esto: ${errores.join('; ')}. Escríbela otra vez arreglando eso.` : '',
   ].filter(Boolean).join('\n\n');
 }
