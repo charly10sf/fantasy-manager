@@ -328,6 +328,13 @@
    "jornada": 12,
    "id": "2118658813456978274",
    "t": "2026-11-06T10:56:38.786Z"
+  },
+  {
+   "clave": "noticias|2354:buena|2026-11-06",
+   "tipo": "noticias",
+   "jornada": 12,
+   "id": "2118671362642338001",
+   "t": "2026-11-06T11:46:30.778Z"
   }
  ],
  "estados": {
@@ -1406,7 +1413,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247867/cholo-prueba-once-saldra-barcelona.html": 1793963088000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247870/barrenetxea-vuelve-planes-luis-fuente-acompanara-oyarzabal-espana.html": 1793962904000,
    "SPORT|136156979": 1793961021000,
-   "SPORT|136158048": 1793960729000
+   "SPORT|136158048": 1793960729000,
+   "AS|https://as.com/futbol/primera/koke-al-once-y-kang-in-lee-ayudara-a-julian-en-ataque-f202611-n/": 1793964715000,
+   "SPORT|136156868": 1793961748000,
+   "Diario Sur|https://www.diariosur.es/malagacf/rafita-seleccion-sub21-espana-futbol-20261106122218-nt.html": 1793964954000
   },
   "hechos": [
    {
@@ -2091,7 +2101,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -2902,8 +2912,8 @@
  },
  "pulido": {
   "dia": "2026-11-06",
-  "n": 3,
-  "ok": 1,
+  "n": 4,
+  "ok": 2,
   "mal": 4
  },
  "liga": {
