@@ -5,7 +5,7 @@
 // Las frases rotan (`turno`) por cuántos tweets de un jugador llevamos hoy, para que dos seguidos no salgan con el mismo esqueleto.
 import { statsSemana } from './laliga.mjs';
 import { probabilidades } from './onces.mjs';
-import { fmt, partes, el, al, turno } from './texto.mjs';
+import { fmt, partes, el, del, al, turno } from './texto.mjs';
 import { cap, aparte } from './redactar.mjs';
 
 /**
@@ -134,26 +134,29 @@ export function frasePartido(r, { equipo, rival, casa, cuando = null }, f = 0) {
   const que = r.pos === 1 ? 'el líder' : r.pos === r.n ? 'el colista' : `que va ${r.pos}º`;
   const va = r.pos === 1 ? 'es el líder' : r.pos === r.n ? 'es el colista' : `va ${r.pos}º`;
   const N = { 'difícil': 'un partido duro', 'fácil': 'un partido asequible', media: 'un partido de nivel medio' }[r.nivel];
-  const pred = { 'difícil': 'el partido se pone cuesta arriba', 'fácil': 'pinta bien para puntuar', media: 'no es ni fácil ni difícil' }[r.nivel];
+  const pred = { 'difícil': 'el partido se pone cuesta arriba', 'fácil': 'el partido pinta bien para puntuar', media: 'el partido es de nivel medio' }[r.nivel];
   const emo = r.nivel === 'difícil' ? '📉' : r.nivel === 'fácil' ? '📈' : 'ℹ️';
-  return [`${emo} ${cuando ? `${cap(cuando)} ${vs}` : cap(vs)}, ${que}, y es ${N}`,
+  // (Carlos, 6 nov 12:58, con el tweet de Eric: «hay partes que no se entienden apenas») siempre con los dos nombres a la vista:
+  // quién juega contra quién, sin «el equipo» ni un sujeto que haya que adivinar
+  return [`${emo} ${cuando ? `${cap(cuando)}, ${el(equipo)} ${vs}` : `${cap(el(equipo))} ${vs}`}, ${que}, y es ${N}`,
     `${emo} Le toca ${N}${cuando ? ` ${cuando}` : ''}: ${el(equipo)} ${vs}, ${que}`,
-    `${emo} ${cap(el(rival))}, su rival${cuando ? ` ${cuando}` : ''}, ${va}, así que ${pred}`][f];
+    `${emo} ${cap(el(rival))}, el rival ${del(equipo)}${cuando ? ` ${cuando}` : ''}, ${va}, así que ${pred}`][f];
 }
 
 /** lo que marca o encaja el rival, solo si está entre los 4 primeros o los 4 últimos (lo que le importa a un portero o defensa: lo que
- * marca; a un centrocampista o delantero: lo que encaja) */
-export function fraseGoles(r, posId, f) {
+ * marca; a un centrocampista o delantero: lo que encaja). Con el nombre del rival (6 nov, Carlos: «el rival» a secas no se entendía) */
+export function fraseGoles(r, posId, f, rival = null) {
   const atras = Number(posId) <= 2;
   const k = atras ? 'gf' : 'gc', g = r[k], rk = r[`r${k}`];
   const mucho = rk <= 4, poco = rk >= r.n - 3;
   if (!mucho && !poco) return null;
   const G = fmt(g), goles = G === '1' ? 'gol' : 'goles';
+  const rv = rival ? el(rival) : 'el rival', Rv = cap(rv);
   const t = atras
-    ? (mucho ? [`⚠️ Ojo con la portería a cero, porque el rival marca ${G} ${goles} por partido`, `⚠️ Eso sí, el rival es de los que más marcan, con ${G} ${goles} por partido`]
-      : [`📈 Buena pinta para la portería a cero, porque el rival solo marca ${G} ${goles} por partido`, `📈 Además, el rival es de los que menos marcan, con ${G} ${goles} por partido`])
-    : (mucho ? [`📈 Además, el rival es de los que más encajan, con ${G} ${goles} por partido`, `📈 Y hay sitio para el gol, porque el rival encaja ${G} por partido`]
-      : [`⚠️ Eso sí, el rival es de los que menos encajan, con ${G} ${goles} por partido`, `⚠️ Ojo, que el rival solo encaja ${G} ${goles} por partido`]);
+    ? (mucho ? [`⚠️ Ojo con la portería a cero: ${rv} es de los que más marcan, con ${G} ${goles} por partido`, `⚠️ Dejar la portería a cero se complica: ${rv} marca ${G} ${goles} por partido`]
+      : [`📈 Buena pinta para la portería a cero: ${rv} solo marca ${G} ${goles} por partido`, `📈 ${Rv} es de los que menos marcan, con ${G} ${goles} por partido, así que hay opciones de portería a cero`])
+    : (mucho ? [`📈 ${Rv} es de los que más encajan, con ${G} ${goles} por partido`, `📈 Hay sitio para el gol: ${rv} encaja ${G} ${goles} por partido`]
+      : [`⚠️ Eso sí, ${rv} es de los que menos encajan, con ${G} ${goles} por partido`, `⚠️ Ojo, que ${rv} solo encaja ${G} ${goles} por partido`]);
   return { t: t[f % 2], numeros: partes(g) };
 }
 
@@ -168,9 +171,11 @@ export function ideasInfo({ posId, equipo, pp, quien, media = 0, tit = null, riv
   const A = quien ? fraseJugador({ quien, media, tit, tipo, f: turno(3, `infA${dia}`, k) }) : null;
   if (A) { ideas.push({ t: A.t, prio: 5 }); numeros.push(...A.numeros); }
   if (riv && pp) {
-    ideas.push({ t: frasePartido(riv, { equipo, rival: pp.rival, casa: !!pp.enCasa, cuando: hr ? hr.t : null }, turno(3, `infB${dia}`, k)), prio: 4 });
+    const P = frasePartido(riv, { equipo, rival: pp.rival, casa: !!pp.enCasa, cuando: hr ? hr.t : null }, turno(3, `infB${dia}`, k));
+    // con tweets largos, el jugador en un párrafo y el partido (con los goles del rival) en otro: tres frases en uno solo se leían como un bloque
+    ideas.push({ t: largo && A ? aparte(P) : P, prio: 4 });
     numeros.push(riv.pos, ...(hr ? hr.numeros : []));
-    const g = fraseGoles(riv, posId, turno(2, `infG${dia}`, k));
+    const g = fraseGoles(riv, posId, turno(2, `infG${dia}`, k), pp.rival);
     if (g) { ideas.push({ t: g.t, prio: 3 }); numeros.push(...g.numeros); }
   } else if (hr) { ideas.push({ t: `🗓️ El partido es ${hr.t}`, prio: 2 }); numeros.push(...hr.numeros); }
   // con tweets largos, lo que le sirve al mánager en su párrafo (la noticia arriba)

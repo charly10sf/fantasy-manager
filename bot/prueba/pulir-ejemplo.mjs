@@ -90,5 +90,16 @@ const finBueno = fin.replace('⭐ Mario Soriano, el mejor fantasy: 13 puntos', '
 ok(revisar(fin, finBueno, { numeros: [2, 1, 13, 11], nombres }).length === 0, `final: ${revisar(fin, finBueno, { numeros: [2, 1, 13, 11], nombres })}`);
 ok(revisar(fin, finBueno.replace('Mario Soriano se va', 'Soriano se va').replace('🥉 Mario Soriano 13', '🥉 Soriano 13'), { numeros: [2, 1, 13, 11], nombres }).length > 0, 'final: pierde el nombre entero');
 
+// (6 nov, Carlos, con el tweet de Eric: «hay partes que no se entienden apenas») el pulido no puede cambiar un club por «el equipo» ni meter «enfrente»
+{
+  const nom = nombresDe([{ nickname: 'Eric' }], { 6: 'FC Barcelona', 7: 'Atlético de Madrid' });
+  const o = '✅ Eric está de vuelta, según AS.\n\nEl defensa del Barça suma 5,6 puntos de media y Fantasy Manager le da un 37 % de titularidad.\n\nEl Barça visita al Atlético, que va 2º, y es un partido duro. Ojo con la portería a cero: el Atlético es de los que más marcan, con 2 goles por partido.\n\n✅ Disponible para la jornada 12 contra el Atlético';
+  const malo = '✅ Eric está de vuelta, según AS.\n\nEl defensa del Barça promedia 5,6 puntos y se queda de momento en un 37 %.\n\nEl Atlético va 2º y recibe al equipo en un encuentro complicado, aunque enfrente tendrá a uno de los conjuntos más anotadores con 2 goles por partido.\n\n✅ Disponible para la jornada 12 contra el Atlético';
+  const bueno = '✅ Eric está de vuelta, según AS.\n\nEl defensa del Barça suma 5,6 puntos de media y Fantasy Manager le da un 37 % de titularidad.\n\nEl Barça visita al Atlético, que va 2º, y es un partido duro. Ojo con la portería a cero: el Atlético es de los que más marcan, con 2 goles por partido.\n\n✅ Disponible para la jornada 12 contra el Atlético';
+  const m = revisar(o, malo, { numeros: [5, 6, 37, 12, 2], nombres: nom, tipo: 'noticias', max: 1000 });
+  ok(m.some((x) => /vagas/.test(x)), `«al equipo» y «enfrente» se rechazan (${m})`);
+  ok(revisar(o, bueno.replace('suma 5,6 puntos de media y', 'suma 5,6 puntos de media, y'), { numeros: [5, 6, 37, 12, 2], nombres: nom, tipo: 'noticias', max: 1000 }).length === 0, 'una reescritura que mantiene los nombres vale');
+  ok(revisar('El Osasuna perdió al equipo rival', 'El Osasuna perdió al equipo rival', { nombres: nom }).length === 0, 'lo que ya traía la plantilla no cuenta como nuevo');
+}
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);
 process.exit(fallos ? 1 : 0);

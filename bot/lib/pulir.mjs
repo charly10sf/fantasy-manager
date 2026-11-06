@@ -64,6 +64,8 @@ const mayusculas = (s) => {
   return out;
 };
 
+// palabras que dejan al lector adivinando de quién se habla
+const VAGAS = /\b(enfrente|(?:el|al|del|este|ese|dicho) (?:equipo|club|conjunto|rival)|(?:su|al|del) rival|a este equipo|dicho (?:equipo|club))\b/giu;
 /** ¿alguna frase lleva «según…» detrás de una cifra? («…suma 5,9 puntos de media, según AS») */
 export const segunTrasCifra = (s) => String(s).split(/(?<=[.!?])\s+|\n+/).some((f) => /\d.*\bseg[uú]n\s/i.test(f));
 /** los nombres de jugadores y equipos de LaLiga que salen en un texto (por apodo o nombre corto de equipo, palabra entera) */
@@ -109,6 +111,11 @@ export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [
   const base = ` ${norm(orig)} `;
   const nuevas = [...mayusculas(nuevo)].filter((w) => w && !base.includes(` ${w} `));
   if (nuevas.length) e.push(`palabras nuevas con mayúscula: ${nuevas.join(', ')}`);
+  // (6 nov, Carlos, con el tweet de Eric: «hay partes que no se entienden apenas») Gemini cambió «el Barça visita al Atlético» por «el Atleti
+  // recibe al equipo» y metió «enfrente tendrá a…»: un club o un jugador no se sustituye por «el equipo», «el club», «el rival» ni «enfrente»
+  const vagas = (t) => new Set((String(t).match(VAGAS) || []).map((x) => norm(x)));
+  const vo = vagas(orig), vn = [...vagas(nuevo)].filter((x) => !vo.has(x));
+  if (vn.length) e.push(`palabras vagas nuevas: ${vn.join(', ')}`);
   // (5 nov) «según AS» pegado detrás de la media, del % o de la hora le daría al medio un dato que no es suyo
   if (segunTrasCifra(nuevo) && !segunTrasCifra(orig)) e.push('«según» detrás de una cifra');
   const eo = new Set(emojis(orig));
@@ -141,6 +148,8 @@ Cómo se escribe en la cuenta:
 - Dudas con palabras («en principio», «todo apunta a que», «de momento»).
 - Que no se note que es automático: si dos párrafos o dos frases tienen el mismo esqueleto y solo cambian los nombres, dale otra forma a uno (otro orden, otro verbo, otra entrada). No repitas la misma muletilla dentro del tweet.
 - Nada de tono de anuncio: sin «¡» en cada frase, sin adjetivos grandes, sin primera persona, sin «bot», sin @ ni #.
+- Lo primero es que se entienda a la primera, leído en el móvil: cada frase con su sujeto claro y los clubes y jugadores por su nombre. Prohibido sustituirlos por «el equipo», «el club», «el conjunto», «el rival» o «enfrente», y no cambies quién visita y quién recibe sin decir los dos nombres. Si una frase ya se entiende, déjala igual.
+- Une dos frases con «y», «pero» o «aunque» solo si dicen cosas que van juntas o se contradicen de verdad; si la frase resultante es más larga y más difícil de leer, deja las dos como estaban. Nunca metas en una sola frase la media, el %, el rival y los goles.
 Reglas que no se pueden saltar:
 - Las mismas cifras, ni una más ni una menos, escritas igual («5,5» sigue siendo «5,5»). Nada de cifras en letra.
 - Los mismos jugadores y equipos, con el nombre escrito igual. Ni uno nuevo, ni uno menos.
