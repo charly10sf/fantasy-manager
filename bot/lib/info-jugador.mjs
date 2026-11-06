@@ -46,17 +46,26 @@ export function nivelDe(r, tabla) {
  * Va en el contexto de ejecutar.mjs (`ctx.info`); sin él (las pruebas sin red), los tweets salen como antes.
  */
 export function crearInfo({ jugadores = [], equipos = {}, semana = null, log = () => {}, pedirSemana = statsSemana, probs = probabilidades } = {}) {
-  let tabla = null;
-  const tablaP = () => (tabla ||= (async () => {
+  let tabla = null, planos = null;
+  // los partidos de las jornadas 1 a la actual, una sola vez (la tabla y `tablaSin` salen de aquí)
+  const planosP = () => (planos ||= (async () => {
     const n = Number(semana && semana.weekNumber) || 0;
-    if (!n) return null;
+    if (!n) return [];
     const ws = await Promise.all(Array.from({ length: n }, (_, i) => pedirSemana(i + 1).catch(() => [])));
-    const t = tablaDe(ws.flat());
+    return ws.flat();
+  })());
+  const tablaP = () => (tabla ||= (async () => {
+    if (!Number(semana && semana.weekNumber)) return null;
+    const t = tablaDe(await planosP());
     if (t.n < 10) { log(`  (info) la tabla sale con ${t.n} equipos: no la uso`); return null; }
     return t;
   })().catch((e) => { log(`  (info) tabla: ${e.message || e}`); return null; }));
   const porEquipo = new Map();
   return {
+    /** la clasificación entera (`tablaDe`), o null si no sale con 10 equipos o más (la previa la usa para valorar el partido) */
+    tabla: () => tablaP(),
+    /** la clasificación SIN un partido (como estaba antes de jugarlo: la usa el final para ver si fue una sorpresa), o null */
+    async tablaSin(id) { const t = tablaDe((await planosP()).filter((x) => String(x.id) !== String(id))); return t.n >= 10 ? t : null; },
     /** { pos, n, nivel, gf, gc, rgf, rgc } del rival del próximo partido, o null */
     async rival(pp) {
       if (!pp || pp.rivalId == null) return null;

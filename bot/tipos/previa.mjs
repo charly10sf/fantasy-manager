@@ -18,7 +18,7 @@ const POS_ESPN = (a) => (/^G/.test(a) ? 'POR' : /^(CD|LB|RB|D|CB|LWB|RWB|SW)/.te
 const ORDEN = { POR: 0, DEF: 1, MED: 2, DEL: 3 };
 const pct = (p) => Math.round(p * 100);
 
-export async function generar({ semana, jugadores, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log, probarAcabados = false }) {
+export async function generar({ semana, jugadores, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log, probarAcabados = false, info = null }) {
   const out = [];
   const jornadas = [...new Set([semana.weekNumber, semana.nextWeek].filter(Boolean))];
   const [hD, hH] = horas(config, 'horasPrevia', [9, 23], ahora);
@@ -143,8 +143,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const bajas = [...Object.values(probs.L).map((x) => ({ ...x, eq: L })), ...Object.values(probs.V).map((x) => ({ ...x, eq: V }))].filter((x) => ((x.estado === 'injured' && !dudaParte.has(String(x.id))) || x.estado === 'suspended')).slice(0, 4);
       // el texto, con frases y no en lista (Carlos, 3 nov 19:29, «sigue aquí»; antes «⁉️ Youssef (Alavés), en el aire: 33 %» una línea
       // por jugador): las dudas agrupadas por equipo y tramo con el % al lado, y las bajas de cada equipo en su línea
-      const cab = Rp([`🗓️ ${L}-${V}: posibles onces fantasy para la jornada ${jornada}`,
-        `🗓️ Así pueden salir ${el(L)} y ${el(V)} en la jornada ${jornada} de LaLiga Fantasy`], 'cabC');
+      const cab = Rp([`🗓️ ${L}-${V}: posibles onces para la jornada ${jornada}`,
+        `🗓️ Así pueden salir ${el(L)} y ${el(V)} en la jornada ${jornada}`], 'cabC');
       const ideas = [];
       const num = [jornada];
       const tramos = new Map();
@@ -174,7 +174,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       if (!dudas.length && !bajas.length) ideas.push({ t: '✅ Sin dudas ni bajas entre los habituales', prio: 8 });
       ideas.push({ t: Rp(['📊 Los % de titularidad son de Fantasy Manager', '📊 % de titularidad de Fantasy Manager, con los minutos y el estado de cada uno'], 'pieC'), prio: 5 });
       // con tweets largos (X Premium), un párrafo por equipo (lib/redactar.mjs, `aparte`): sus dudas, sus bajas y el fijo que más da
-      const r = largo() ? previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora, sem, k: kOrden, dudaParte }) : null;
+      const tabla = largo() && info && info.tabla ? await info.tabla().catch(() => null) : null;
+      const r = largo() ? previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora, sem, k: kOrden, dudaParte, tabla }) : null;
       const { usadas, texto } = r ? tweet(r.cab, r.ideas) : tweet(cab, ideas);
       if (r) num.push(...r.num);
       if (!usadas.length) continue;
@@ -199,7 +200,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
  *     dónde están («en el centro del campo»).
  * Solo con datos de la app (los %) y de LaLiga; cada cifra va a `num` para el validador.
  */
-export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = Date.now(), sem = '', k = null, dudaParte = new Set() }) {
+export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = Date.now(), sem = '', k = null, dudaParte = new Set(), tabla = null }) {
   const media = new Map(jugadores.map((j) => [String(j.id), Number(j.averagePoints) || 0]));
   const med = (x) => media.get(String(x.id)) || 0;
   const num = [jornada];
@@ -224,12 +225,12 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
     bajas: Object.values(probs[k]).filter((x) => (x.estado === 'injured' && !dudaParte.has(String(x.id))) || x.estado === 'suspended').sort((a, b) => med(b) - med(a)).slice(0, 3),
     fijo: pos[k].once.filter((x) => x.p >= 0.8 && med(x) >= 4).sort((a, b) => med(b) - med(a))[0] || null,
   });
-  const cab = cu ? pick([`🗓️ ${L}-${V}, ${cu.t}: posibles onces fantasy para la jornada ${jornada}`,
-    `🗓️ ${cap(cu.t)} juegan ${el(L)} y ${el(V)}: posibles onces fantasy de la jornada ${jornada}`,
-    `🗓️ Jornada ${jornada} de LaLiga Fantasy: ${L}-${V}, ${cu.t}`,
+  const cab = cu ? pick([`🗓️ ${L}-${V}, ${cu.t}: posibles onces para la jornada ${jornada}`,
+    `🗓️ ${cap(cu.t)} juegan ${el(L)} y ${el(V)}: posibles onces de la jornada ${jornada}`,
+    `🗓️ Jornada ${jornada}: ${L}-${V}, ${cu.t}`,
     `🗓️ ${L}-${V} (${cu.t}): así llegan los dos a la jornada ${jornada}`,
-    `🗓️ Posibles onces fantasy de ${L}-${V}, ${cu.t}`], 'cab')
-    : `🗓️ ${L}-${V}: posibles onces fantasy para la jornada ${jornada}`;
+    `🗓️ Posibles onces de ${L}-${V}, ${cu.t}`], 'cab')
+    : `🗓️ ${L}-${V}: posibles onces para la jornada ${jornada}`;
 
   const eqs = [datos('L', L), datos('V', V)];
   const cands = [];
@@ -276,6 +277,39 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
     return pickL(fs, `v${caso}`, lado);
   };
 
+  // --- la valoración del partido (Carlos, 6 nov 08:39: «quién lo tiene más fácil, quién no, qué se prevé, quién destaca; no la típica
+  // crónica»): solo con la tabla de LaLiga (puesto, goles a favor y en contra por partido) y las medias de la app. Una o dos frases.
+  const valoracion = () => {
+    const rl = tabla && m.local && tabla.porId[String(m.local.id)], rv = tabla && m.visitor && tabla.porId[String(m.visitor.id)];
+    const fr = [];
+    if (rl && rv && rl.pj >= 3 && rv.pj >= 3) {
+      const [fav, otro, ef, eo] = rl.pos < rv.pos ? [rl, rv, L, V] : [rv, rl, V, L];
+      const dif = otro.pos - fav.pos;
+      if (dif >= 6) { num.push(fav.pos, otro.pos); fr.push(pick([`Sobre el papel, ${el(ef)} lo tiene más fácil: va ${fav.pos}º y ${el(eo)}, ${otro.pos}º`,
+        `El partido pinta mejor para ${el(ef)} (${fav.pos}º) que para ${el(eo)} (${otro.pos}º)`, `${mayus(el(ef))}, ${fav.pos}º, parte como favorito frente ${al(eo)}, que es ${otro.pos}º`], 'vPos')); }
+      else if (dif <= 3) { num.push(rl.pos, rv.pos); fr.push(pick([`En la tabla hay poco que separe a ${el(L)} (${rl.pos}º) y ${el(V)} (${rv.pos}º)`,
+        `Partido igualado: ${el(L)} va ${rl.pos}º y ${el(V)}, ${rv.pos}º`], 'vPos')); }
+      // goles: el que más marca contra el que más encaja (o los dos de pocos goles)
+      const n = tabla.n;
+      const gol = [[rl, rv, L, V], [rv, rl, V, L]].find(([a, b]) => a.rgf <= 4 && b.rgc <= 4);
+      if (gol) { const [a, b, ea, eb] = gol, ga = a.gf / a.pj, gb = b.gc / b.pj; num.push(...partes(ga), ...partes(gb));
+        fr.push(pick([`Ojo a los goles: ${el(ea)} marca ${fmt(ga)} por partido y ${el(eb)} encaja ${fmt(gb)}`,
+          `${mayus(el(ea))} es de los que más marcan (${fmt(ga)} por partido) y ${el(eb)} de los que más encajan (${fmt(gb)})`], 'vGol')); }
+      else {
+        const poco = [[rl, rv, L, V], [rv, rl, V, L]].find(([a, b]) => a.rgc >= n - 3 && b.rgf >= n - 3);
+        if (poco) { const [a, b, ea, eb] = poco, ga = a.gc / a.pj, gb = b.gf / b.pj; num.push(...partes(ga), ...partes(gb));
+          fr.push(pick([`Pocos goles a la vista: ${el(ea)} encaja solo ${fmt(ga)} por partido y ${el(eb)} marca ${fmt(gb)}`,
+            `${mayus(el(ea))} es de los que menos encajan (${fmt(ga)} por partido) y ${el(eb)} de los que menos marcan (${fmt(gb)})`], 'vPoco')); }
+      }
+    }
+    // quién destaca: el titular probable con más media de los dos, si no lo nombra ya otro párrafo como el fijo
+    if (fr.length < 2) {
+      const est = [...pos.L.once, ...pos.V.once].filter((x) => x.p >= 0.6 && med(x) > 0).sort((a, b) => med(b) - med(a))[0];
+      if (est && !eqs.some((d) => d.fijo === est)) fr.push(pick([`El que más suele dar de los dos es ${est.nombre}, con ${M(est)} de media`, `${est.nombre} es quien más destaca: ${M(est)} de media`], 'vEst'));
+    }
+    return fr.slice(0, 2);
+  };
+
   // --- la forma del tweet (Carlos, 6 nov 08:08: «todos con la estructura así tan idéntica»): hasta ahora siempre «un párrafo por equipo»
   // (el fijo o la baja gorda, las dudas, y lo mismo del otro lado). Ahora, en tres de cada cuatro partidos seguidos, el tweet se
   // cuenta por temas y no por equipos: bajas de los dos, lo seguro de los dos y las dudas de los dos, en un orden que cambia, o
@@ -293,7 +327,7 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
     const [ba, bb] = [A.bajas, B.bajas];
     if (ba.length && bb.length) return pick([`${mayus(el(A.eq))} no tendrá a ${bajasDe(ba, 'ni')}, y ${el(B.eq)} tampoco a ${bajasDe(bb, 'ni')}`,
       `Los dos llegan con bajas. ${mayus(el(A.eq))} no tendrá a ${bajasDe(ba, 'ni')}, y ${el(B.eq)} tampoco a ${bajasDe(bb, 'ni')}`,
-      `Bajas: ${bajasDe(ba, 'y')} (${A.eq}) y ${bajasDe(bb, 'y')} (${B.eq})`], 'tBaja2');
+      `Bajas: ${bajasDe(ba, 'y')} en ${el(A.eq)}; ${bajasDe(bb, 'y')} en ${el(B.eq)}`], 'tBaja2');
     const [d, bs] = ba.length ? [A, ba] : bb.length ? [B, bb] : [null, []];
     if (!d) return '';
     return pick([`${mayus(el(d.eq))} no tendrá a ${bajasDe(bs, 'ni')}`, `${cap(al(d.eq))} le ${pl(bs.length, 'falta', 'faltan')} ${bajasDe(bs, 'y')}`], 'tBaja1');
@@ -324,6 +358,8 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
       ps = q.length > 1 ? [q.slice(0, 2), q.slice(2)] : [q];
     }
     const ideas = ps.map((fr) => fr.filter(Boolean)).filter((fr) => fr.length).map((fr) => ({ t: aparte(fr.join('. ')), prio: 9 }));
+    const vs = valoracion();
+    if (vs.length) ideas.push({ t: aparte(vs.join('. ')), prio: 8 });
     if (ideas.length) return { cab, ideas, num };
   }
 
@@ -394,10 +430,11 @@ export function previaLarga({ L, V, m, pos, probs, jugadores, jornada, ahora = D
   const fb = [];
   for (const [i, q] of ordenB.entries()) { const t = q === 'd' ? bD(i === 0) : q === 'b' ? bB(i === 0) : bF(fb.join(' ')); if (t) fb.push(t); }
 
+  const vsA = valoracion();
   const ideas = [
     { t: aparte(fa.join('. ')), prio: 9 },
     { t: aparte(fb.join('. ')), prio: 9 },
-    { t: pick(['📊 Los % de titularidad son de Fantasy Manager', '📊 % de titularidad de Fantasy Manager', '📊 Porcentajes de Fantasy Manager, con los minutos y el estado de cada uno'], 'pie'), prio: 5 },
+    ...(vsA.length ? [{ t: aparte(vsA.join('. ')), prio: 8 }] : []),
   ];
   return { cab, ideas, num };
 }

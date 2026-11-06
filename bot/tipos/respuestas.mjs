@@ -1,7 +1,7 @@
 // Respuestas para los tuits de resultado final que sube cada club. NO se publican: X no deja responder por API a quien no te ha
 // mencionado antes, y el bot nunca responde. El bot solo prepara el texto de cada club y se lo manda a Carlos por Telegram para
 // que lo copie y lo ponga él a mano (bot/LEEME.md). Todo sale de los datos de LaLiga (stats/week/{n}, puntos oficiales).
-import { cierre, corto, elegir } from '../lib/texto.mjs';
+import { cierre, corto, elegir, el, del } from '../lib/texto.mjs';
 import { esc } from '../lib/telegram.mjs';
 
 const nombreDe = (p) => p.nickname || p.name;
@@ -24,18 +24,18 @@ function textoDe({ club, rival, g, c, mejor, semilla }) {
   if (g === c) {
     t = mejor
       ? elegir([
-        `Empate ${g}-${c} con ${rival}: un punto para cada uno. En LaLiga Fantasy, ${n} fue lo mejor de ${club} con ${pts} puntos.`,
-        `Reparto de puntos (${g}-${c}) con ${rival}. ${n} puntúa ${pts} en LaLiga Fantasy, lo mejor de ${club}.`,
+        `Empate ${g}-${c} con ${el(rival)}: un punto para cada uno. En LaLiga Fantasy, ${n} fue lo mejor ${del(club)} con ${pts} puntos.`,
+        `Reparto de puntos (${g}-${c}) con ${el(rival)}. ${n} puntúa ${pts} en LaLiga Fantasy, lo mejor ${del(club)}.`,
       ], semilla)
-      : `Empate ${g}-${c} con ${rival}, ${club}. En LaLiga Fantasy no hay mucho que rascar.`;
+      : `Empate ${g}-${c} con ${el(rival)}, ${club}. En LaLiga Fantasy no hay mucho que rascar.`;
   } else if (g > c) {
     t = mejor
       ? elegir([
-        `Enhorabuena, ${club}: ${g}-${c} contra ${rival}. En LaLiga Fantasy, ${n} fue el que más puntuó de los vuestros: ${pts}.`,
+        `Enhorabuena, ${club}: ${g}-${c} contra ${el(rival)}. En LaLiga Fantasy, ${n} fue el que más puntuó de los vuestros: ${pts}.`,
         `${g}-${c} y tres puntos para ${club}. En LaLiga Fantasy, ${n} puntúa ${pts}, lo mejor de su equipo.`,
-        `¡Victoria ante ${rival}, ${g}-${c}! ${n} manda en LaLiga Fantasy con ${pts} puntos.`,
+        `¡Victoria ante ${el(rival)}, ${g}-${c}! ${n} manda en LaLiga Fantasy con ${pts} puntos.`,
       ], semilla)
-      : `Enhorabuena, ${club}: ${g}-${c} contra ${rival}. Tres puntos importantes.`;
+      : `Enhorabuena, ${club}: ${g}-${c} contra ${el(rival)}. Tres puntos importantes.`;
   } else {
     t = mejor
       ? elegir([
@@ -43,8 +43,8 @@ function textoDe({ club, rival, g, c, mejor, semilla }) {
         `Día para olvidar el ${g}-${c}. Lo mejor de ${club} en LaLiga Fantasy: ${n}, ${pts} puntos.`,
       ], semilla)
       : elegir([
-        `Ánimo, ${club}: ${g}-${c} contra ${rival}. Toca pasar página y pensar ya en la próxima jornada de LaLiga Fantasy.`,
-        `Un ${g}-${c} ante ${rival} no es lo que queríais, ${club}. A pasar página, que en LaLiga Fantasy hay otra jornada por delante.`,
+        `Ánimo, ${club}: ${g}-${c} contra ${el(rival)}. Toca pasar página y pensar ya en la próxima jornada de LaLiga Fantasy.`,
+        `Un ${g}-${c} ante ${el(rival)} no es lo que queríais, ${club}. A pasar página, que en LaLiga Fantasy hay otra jornada por delante.`,
       ], semilla);
   }
   return `${t}\n\n${cierre(semilla)}`;
