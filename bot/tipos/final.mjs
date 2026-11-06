@@ -104,7 +104,21 @@ export async function relato(m, semilla, k = null) {
   return sal(E([`✅ ${cap(el(G))} gana por la mínima`, `✅ Victoria por la mínima ${del(G)}`, `✅ ${cap(el(G))} se lleva los tres puntos por un gol`]));
 }
 
-export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn = null, config = {} }) {
+/**
+ * La valoración del resultado contra la tabla de antes del partido (Carlos, 6 nov 08:39: «también al fin de un partido, quién lo
+ * tenía más fácil, qué se preveía… no la típica crónica»): sorpresa si gana el que iba 6 puestos o más por debajo, y «cumple el
+ * favorito» si gana el de arriba por la misma diferencia. null si no hay nada que valorar. { t, num } con las cifras para el validador.
+ */
+export function valoracionFinal({ gl, gv, L, V, rl, rv, f = 0 }) {
+  if (!rl || !rv || rl.pj < 3 || rv.pj < 3 || gl === gv) return null;
+  const [gana, pierde, eg, ep] = gl > gv ? [rl, rv, L, V] : [rv, rl, V, L];
+  const dif = gana.pos - pierde.pos;   // positivo: ganó el de más abajo
+  if (dif >= 6) return { num: [gana.pos, pierde.pos], t: [`Sorpresa: ${el(eg)}, que iba ${gana.pos}º, gana ${al(ep)}, ${pierde.pos}º`, `Resultado inesperado: ${el(eg)} (${gana.pos}º) se lleva el partido ante ${el(ep)}, que iba ${pierde.pos}º`][f % 2] };
+  if (dif <= -6) return { num: [gana.pos, pierde.pos], t: [`Cumple el favorito: ${el(eg)}, ${gana.pos}º, gana ${al(ep)}, ${pierde.pos}º`, `Lo normal en la tabla: ${el(eg)} (${gana.pos}º) se impone ${al(ep)}, que iba ${pierde.pos}º`][f % 2] };
+  return null;
+}
+
+export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn = null, config = {}, info = null }) {
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
   const out = [];
   const K = ordenJornada(stats);
@@ -238,6 +252,12 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     const lects = [`✅ Si tienes a ${top.nombre}, hoy sonríes`, `✅ Acertó quien alineó a ${top.nombre}`, `✅ Premio para quien confió en ${top.nombre}`,
       yaFranja ? `✅ Partido redondo para quien tenga a ${top.nombre}` : `✅ ${Franja} redonda para quien tenga a ${top.nombre}`, `✅ Quien lleve a ${top.nombre}, de celebración`];
     if (!empate && top.pts >= 12) ideas.push({ t: R(lects, 'lect'), prio: 2, ultima: true });
+    // con tweets largos: la valoración del resultado contra la tabla de antes del partido (una sorpresa, o que cumple el favorito)
+    if (LG && info && info.tablaSin) {
+      const tp = await info.tablaSin(m.id).catch(() => null);
+      const v = tp && valoracionFinal({ gl, gv, L, V, rl: tp.porId[String(m.local.id)], rv: tp.porId[String(m.visitor.id)], f: turno(2, `valFinal${jornada}`, k) });
+      if (v) { ideas.push({ t: `👀 ${v.t}`, prio: 4 }); num.push(...v.num); }
+    }
     // con tweets largos: el próximo partido del mejor (lo que mira el mánager que lo tiene)
     // (no si sale el tweet del MVP con su tarjeta: ya lo cuenta él y serían dos tweets seguidos diciendo lo mismo)
     if (LG && !empate && top.pts >= 8 && !(config.tarjetas && config.tarjetas.jugador)) {
