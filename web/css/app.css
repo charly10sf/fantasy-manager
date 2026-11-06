@@ -462,7 +462,7 @@ main { padding: 16px 16px 120px; }
 .pz { padding: 4px 9px; border-radius: 8px; background: var(--plano2); font: 600 13px 'Barlow'; color: var(--texto2); }
 .pz b { margin-right: 2px; font: 700 13.5px var(--cond); color: var(--texto); }
 .pz.p1 b { color: var(--por); } .pz.p2 b { color: var(--def); } .pz.p3 b { color: var(--med); } .pz.p4 b { color: var(--del); }
-.pz.falta { background: var(--rojo-s); color: var(--rojo-l); } .pz.sobra { color: var(--oro); }
+.pz.falta { background: var(--rojo-s); color: var(--rojo-l); } .pz.sobra { color: var(--oro); } .pz.conviene { color: var(--oro); box-shadow: inset 0 0 0 1px var(--oro); }
 .leyenda { white-space: normal; } .leyenda i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin: 0 4px 0 2px; vertical-align: -1px; }
 .leyenda i + i, .leyenda i:not(:first-child) { margin-left: 8px; }
 .leyenda i.facil { background: #1d9a63; } .leyenda i.media { background: #b98314; } .leyenda i.dificil { background: #cf2537; }

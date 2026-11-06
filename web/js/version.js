@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7j';
+export const VERSION = '0.7k';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.7j';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7k', f: '2026-11-06', h: '23:03', t: 'Mejor tener dos delanteros',
+    cosas: [
+      { tipo: 'mejora', d: 'campo', t: 'Un segundo delantero, si te conviene', x: 'Con un solo delantero sano se puede jugar (4-5-1 o 5-4-1), pero si se lesiona o no juega te quedas sin nadie. Ahora, en Puestos, DEL sale con «mejor 2» y la IA y las puntuaciones del mercado tienen en cuenta que un delantero bueno y barato de recambio suma. No es obligatorio y nunca pasa por delante de tapar un hueco de verdad.' },
+    ],
+  },
   {
     v: '0.7j', f: '2026-11-06', h: '23:05', t: 'Novedades con más dibujos',
     cosas: [
