@@ -31,7 +31,9 @@ NOMBRES
 DE DÓNDE SALE
 - La fuente va pegada a la noticia: «según AS», «lo cuentan MARCA y AS», «lo ha comunicado el club». Nunca detrás de la media, del %, del rival ni de la hora, que no son del medio.
 - El % de titularidad es de Fantasy Manager: dilo así cuando lo uses («Fantasy Manager le da un 64 % de titularidad»). Nada de «LaLiga Fantasy ya lo da como disponible»: el estado ya va en la etiqueta.
-- Si te paso crónicas de prensa, puedes usar uno o dos hechos concretos de ellas (cómo fue un gol, una expulsión, un cambio que decidió el partido, una duda del entrenador), con tus palabras y diciendo de qué medio sale si es algo que solo cuenta ese medio. Nunca copies frases: ni cinco palabras seguidas.
+- RIGOR: lo que pasa en un partido (goles, penaltis y paradas, expulsiones, el resultado) es un hecho, no una noticia de un medio. Se cuenta tal cual, sin «cuenta COPE», «según MARCA», «informa AS» ni «lo cuentan» delante, porque eso suena a que nadie lo ha comprobado. Un suceso solo puede salir si viene en los hechos (en «goles» o en «incidencias», con su minuto y sus protagonistas) y entonces se cuenta con seguridad. Si no viene, no lo cuentes ni lo insinúes, aunque creas saberlo: ni un penalti, ni una parada, ni una expulsión, ni un VAR, ni una lesión en pleno partido, ni «el portero salvó al equipo».
+- En los tuits de final y de MVP no se nombra ningún medio. Los medios solo van en noticias y previas, y solo para lo que es suyo: una noticia que el club no ha confirmado, una duda del entrenador, lo que se cuenta de una rueda de prensa.
+- Si te paso prensa (solo en las previas), puedes usar uno o dos hechos concretos de ella con tus palabras y con el medio pegado al hecho. Nunca copies frases: ni cinco palabras seguidas.
 - Nada que no esté en los hechos o en las crónicas: ni cifras, ni nombres, ni motivos, ni plazos, ni predicciones. Si un dato falta, no lo inventes ni lo supongas. Tampoco lo que creas saber de fuera (que un equipo es recién ascendido, un derbi, una racha, el entrenador): si no viene, no va.
 
 FORMATO
@@ -104,7 +106,13 @@ Detrás, Marc Vidal con 8 y Jon Arrieta con 5.`, nota: 'Ficha técnica, no tuit:
 Lo único salvable: los dos porteros, con la portería a cero. Unai Berrio, 7 puntos, sigue siendo de lo más fiable del Getafe en casa.`, nota: 'Un 0-0 también tiene lectura.' },
   { tipo: 'final', bien: true, texto: `🏁 El Betis gana 3-0 al Alavés y Toni Cano firma su mejor partido de la temporada: dos goles y 19 puntos.
 
-Cuenta MARCA que el segundo llegó tras robar él mismo en la salida del Alavés. Con el Betis jugando así en casa, quien lo tenga puede estar tranquilo.`, nota: 'Un hecho de la crónica con sus palabras y atribuido, y una lectura.' },
+El segundo fue de penalti, en el minuto 61. Con el Betis jugando así en casa, quien lo tenga puede estar tranquilo.`, nota: 'Un suceso de los hechos (el gol de penalti, con su minuto) contado como lo que es, un hecho, y una lectura.' },
+  { tipo: 'final', bien: true, texto: `🏁 Sin goles en el Coliseum, pero con un penalti parado: Unai Berrio detuvo en el minuto 32 el que lanzaba Marc Vidal.
+
+Con 9 puntos, Berrio es lo mejor de una noche sin goles. Si lo tienes, ya te ha salvado la jornada.`, nota: 'El penalti parado viene en los hechos (incidencias) y se cuenta como un hecho, con su minuto y sin medio delante.' },
+  { tipo: 'final', bien: false, texto: `🏁 Empate a cero en Getafe. Cuenta COPE que Unai Berrio ha parado un penalti y que el partido fue muy igualado.
+
+Berrio suma 9 puntos.`, nota: 'Un suceso del partido atribuido a un medio: suena a que nadie lo ha comprobado, y «muy igualado» no está en los hechos. Se cuenta como hecho, sin medio, y solo si viene en los hechos.' },
   { tipo: 'mvp', bien: true, texto: `⭐ Iker Saldaña, el mejor del Deportivo-Osasuna con 14 puntos.
 
 Ha marcado en tres de las cuatro últimas jornadas y vale 12 M. El próximo rival, el Elche, es de los que más encajan: si buscas delantero, es de los que entran.`, nota: 'Por qué importa ahora y qué hacer.' },
