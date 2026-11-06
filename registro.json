@@ -1252,7 +1252,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246831/cuti-romero-queda-argentina.html": 1793729269000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html": 1793736327000,
@@ -3169,7 +3168,9 @@
    "SPORT|136157637": 1793966510000,
    "SPORT|136164914": 1793968169000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793888400000
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793888400000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
+   "SPORT|136162605": 1793984430000
   },
   "hechos": [
    {
@@ -3833,11 +3834,9 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 11,
+   "n": 12,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136162605": 1793988373508
-  }
+  "espera": {}
  }
 }
