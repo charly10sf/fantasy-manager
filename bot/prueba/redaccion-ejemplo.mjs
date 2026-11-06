@@ -103,6 +103,8 @@ for (const [t, re] of malos) {
   if (re) ok(errs.some((x) => re.test(x)), `tira «${t.slice(0, 50)}…» (${errs.slice(0, 2).join('; ')})`);
 }
 ok(rv('Vuelve, según AS, al once del Barça.').some((x) => /no nombra a Eric/.test(x)), 'el protagonista tiene que salir');
+ok(rv('Eric vuelve, según AS, y el domingo le espera un Atlético que marca mucho.').length === 0, '«un Atlético» también lleva artículo');
+ok(rv('Eric vuelve, según AS, y el domingo juega en Mestalla.').some((x) => /mayúscula/.test(x)), 'un estadio que no está en los hechos, fuera');
 ok(rv('Eric ya no es baja y vuelve, según AS.').length === 0, '«ya no es baja» no es llamarle baja');
 const cron = [{ medio: 'MARCA', titulo: 'El Barça recupera a Eric para el Metropolitano', entradilla: 'El central vuelve a la lista de Flick tras superar sus molestias en el tobillo derecho' }];
 ok(rv('Eric vuelve a la lista de Flick tras superar sus molestias en el tobillo derecho.', { cronicas: cron }).some((x) => /copia 6/.test(x)), 'copiar 6 palabras de una crónica, fuera');

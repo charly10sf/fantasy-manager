@@ -11,7 +11,7 @@ import { casarJugador } from './directo.mjs';
 import { probabilidades, elegirOnce } from '../lib/onces.mjs';
 import { enElAire } from '../lib/aire.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
-import { clubes as clubesH } from '../lib/hechos.mjs';
+import { clubes as clubesH, estadio as estadioH } from '../lib/hechos.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
 import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
@@ -198,7 +198,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         for (const x of pos[k].once.filter((y) => y.p >= 0.8 && md(y) >= 4).sort((a, b) => md(b) - md(a)).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'fijo', estado: 'disponible', titularidadFantasyManager: `${pct(x.p)} %`, mediaPuntos: fmt(md(x)), principal: false });
       }
       const cuH = cuando(m.date, ahora);
-      const hechos = { tipo: 'previa', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...(cuH ? { cuando: cuH.t } : {}), fecha: m.date || null },
+      const hechos = { tipo: 'previa', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuH ? { cuando: cuH.t } : {}), fecha: m.date || null },
         equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), etiqueta: '📊 Los % de titularidad son de Fantasy Manager' };
       out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, hechos, numeros: num, partido: null,
         tarjeta: { tipo: 'onces', nombre: `previa-${m.id}`, d,

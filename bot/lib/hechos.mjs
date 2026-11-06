@@ -5,6 +5,14 @@ import { fmt, corto, el } from './texto.mjs';
 import { puesto, cuando } from './redactar.mjs';
 import { nombresClub } from './redaccion.mjs';
 
+// el campo de cada club (solo los seguros: el del Betis cambia mientras se reforma el Villamarín y no va). La IA solo puede nombrar el
+// del que juega en casa (el validador no deja pasar un nombre propio que no esté en los hechos)
+export const ESTADIOS = { 'Real Madrid': 'el Santiago Bernabéu', 'Atlético': 'el Metropolitano', 'Athletic': 'San Mamés', 'Valencia': 'Mestalla',
+  'Sevilla': 'el Sánchez-Pizjuán', 'Real Sociedad': 'Anoeta', 'Villarreal': 'La Cerámica', 'Celta': 'Balaídos', 'Osasuna': 'El Sadar', 'Getafe': 'el Coliseum',
+  'Rayo': 'Vallecas', 'Levante': 'el Ciutat de València', 'Elche': 'el Martínez Valero', 'Alavés': 'Mendizorroza', 'Mallorca': 'Son Moix', 'Girona': 'Montilivi',
+  'Oviedo': 'el Carlos Tartiere', 'Racing': 'El Sardinero', 'Deportivo': 'Riazor', 'Málaga': 'La Rosaleda' };
+export const estadio = (local) => { const e = ESTADIOS[corto(local || '')]; return e ? { estadio: e } : {}; };
+
 /** { [club]: { nombres: [...], emoji } } de los clubes que salen en el tuit */
 export function clubes(...eqs) {
   const o = {};
@@ -30,7 +38,7 @@ export function partido(pp, { equipo, riv = null, posId = null, ahora = Date.now
   const c = pp.fecha ? cuando(pp.fecha, ahora) : null;
   const local = pp.enCasa ? equipo : pp.rival, visitante = pp.enCasa ? pp.rival : equipo;
   return {
-    jornada: pp.jornada, partido: `${local}-${visitante}`, local, visitante, juega: pp.enCasa ? 'en casa' : 'fuera', rival: el(pp.rival),
+    jornada: pp.jornada, partido: `${local}-${visitante}`, local, visitante, ...estadio(local), juega: pp.enCasa ? 'en casa' : 'fuera', rival: el(pp.rival),
     ...(c ? { cuando: c.t } : {}), fecha: pp.fecha || null,
     ...(riv ? { rivalVa: `${riv.pos}º de ${riv.n}`, dificultad: riv.nivel } : {}),
     ...(riv && posId ? (() => { const g = golesRival(riv, posId, pp.rival); return g ? { golesRival: g } : {}; })() : {}),

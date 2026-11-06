@@ -132,9 +132,9 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   for (const c of Object.keys(APODOS)) {
     const re = new RegExp(`(^|[^\\p{L}-])(${c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![\\p{L}-])`, 'gu');
     for (const m of sinMedios.matchAll(re)) {
-      const antes = t.slice(Math.max(0, m.index - 6), m.index + m[1].length);
+      const antes = t.slice(Math.max(0, m.index - 7), m.index + m[1].length);
       const despues = t.slice(m.index + m[0].length, m.index + m[0].length + 4);
-      if (/(\bel|\bla|\bdel|\bal|\bEl|\bLa|\bDel|\bAl)\s$/u.test(antes) || /-\s?$/.test(antes) || /^\s?(-|\d)/.test(despues) || /\d\s$/.test(antes)) continue;
+      if (/(\bel|\bla|\bdel|\bal|\bun|\buna|\bEl|\bLa|\bDel|\bAl|\bUn|\bUna)\s$/u.test(antes) || /-\s?$/.test(antes) || /^\s?(-|\d)/.test(despues) || /\d\s$/.test(antes)) continue;
       if (/\bReal\s$/.test(antes)) continue;
       e.push(`«${c}» sin artículo`);
       break;

@@ -6,7 +6,7 @@ import { CIERRES, corto, elegir, fmt, partes, el, del, al, largo, rotar, turno, 
 import { tweet, cap, segunda, proximoPartido, cuando } from '../lib/redactar.mjs';
 import { rachaDe } from '../lib/laliga.mjs';
 import { partidoEspn, reconstruir, minutoDe } from '../lib/relato.mjs';
-import { clubes as clubesH } from '../lib/hechos.mjs';
+import { clubes as clubesH, estadio as estadioH } from '../lib/hechos.mjs';
 import { casarJugador } from './directo.mjs';
 import { lista, mayus, enLetra } from '../lib/agrupar.mjs';
 
@@ -300,7 +300,7 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     for (const f of ord.filter((x) => ![top.id, empate && empate.id].includes(x.id)).slice(0, 2)) jugH.push(fila(f, { papel: 'detrás del mejor' }));
     if (pierde && !jugH.some((x) => x.nombre === pierde.nombre)) jugH.push(fila(pierde, { papel: 'puntúa aunque su equipo pierde' }));
     for (const f of peores.length ? peores.slice(0, 3) : peor ? [peor] : []) if (!jugH.some((x) => x.nombre === f.nombre)) jugH.push(fila(f, { papel: 'el peor del partido' }));
-    const hechos = { tipo: 'final', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, marcador: `${gl}-${gv}`, fecha: m.date || null },
+    const hechos = { tipo: 'final', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), marcador: `${gl}-${gv}`, fecha: m.date || null },
       goles: r.goles || [], jugadores: jugH,
       ...(tablaAntes && tablaAntes[L] && tablaAntes[V] ? { antesDelPartido: { [L]: `${tablaAntes[L].pos}º`, [V]: `${tablaAntes[V].pos}º` } } : {}),
       clubes: clubesH(L, V, proximoTop ? proximoTop.club : null), etiqueta: pie };
