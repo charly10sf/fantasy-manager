@@ -1376,7 +1376,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247763/sube-baja-lateral-diestro-athletic.html": 1793945100000,
    "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/": 1793952909000,
    "AS|https://as.com/futbol/elliott-descarto-al-madrid-por-ramos-f202611-n/": 1793920238000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247816/racing-santander-multado-lanzamiento-menchero.html": 1793953993000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247816/racing-santander-multado-lanzamiento-menchero.html": 1793953993000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/06/china-esta-en-conversaciones-con-laliga-tras-la-polemica-con-mbappe-pero-pide-tiempo-para-digerir-cadena-ser/": 1793956187000
   },
   "hechos": [
    {
@@ -2063,7 +2064,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
