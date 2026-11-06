@@ -25,7 +25,7 @@
   "noticiasLotesEjecucion": 2,
   "geminiDia": 60,
   "ia": { "proveedor": "claude", "topeDolaresDia": 0.7, "porDia": { "clasificar": 150, "redactar": 60 }, "esfuerzo": { "clasificar": "low", "redactar": "medium" }, "pensar": { "clasificar": false, "redactar": false }, "geminiRedacta": false },
-  "redactar": { "activo": true, "tipos": ["noticias", "novedades", "previa", "final", "mvp"], "prensa": ["final", "mvp", "previa"], "intentos": 2, "segundos": 60, "largo": { "previa": 620, "noticias": 480, "novedades": 480, "final": 560, "mvp": 420 } },
+  "redactar": { "activo": true, "tipos": ["noticias", "novedades", "previa", "final", "mvp"], "prensa": ["previa"], "intentos": 2, "segundos": 60, "largo": { "previa": 620, "noticias": 480, "novedades": 480, "final": 560, "mvp": 420 } },
   "pulir": { "tipos": ["final", "mvp", "resumen", "caidas", "novedades", "previa", "noticias", "sancionados", "lloros", "liga"], "porDia": 60, "segundos": 45 },
   "tweetMax": 280,
   "largo": { "activo": true, "max": 1000, "reintentarHoras": 24 },

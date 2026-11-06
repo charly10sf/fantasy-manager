@@ -1235,12 +1235,16 @@ export function analizar(D, H, c, extra = {}) {
   };
   // por puesto: cuántos tienes sanos, cuántos necesitas en tu mejor formación y si te sobran
   const MAXIMO = { 1: 1, 2: 5, 3: 5, 4: 3, 5: 1 };
+  const DEL_IDEAL = 2;
   M.puestos = [1, 2, 3, 4].map((p) => {
     const sanos = misJs.filter((j) => j.pos === p && !MALOS.has(j.estado)).length;
     const total = misJs.filter((j) => j.pos === p).length;
     const necesita = M.once.formacion ? (p === 1 ? 1 : M.once.formacion[p - 2]) : 0;
     const minimo = p === 1 ? 1 : Math.min(...M.formaciones.map((f) => f[p - 2]));
-    return { pos: p, sanos, total, necesita, faltan: Math.max(0, minimo - sanos), sobran: Math.max(0, sanos - (MAXIMO[p] + 1)) };
+    const faltan = Math.max(0, minimo - sanos);
+    // no obligatorio: con 1 delantero se puede jugar (4-5-1, 5-4-1), pero conviene tener 2 por si se lesiona o no juega
+    const conviene = p === 4 && !faltan ? Math.max(0, DEL_IDEAL - sanos) : 0;
+    return { pos: p, sanos, total, necesita, faltan, conviene, sobran: Math.max(0, sanos - (MAXIMO[p] + 1)) };
   });
 
   /**
@@ -1389,6 +1393,7 @@ export function analizar(D, H, c, extra = {}) {
       const gana = M.mejora(j);
       const puesto = M.puestos.find((p) => p.pos === j.pos);
       if (gana >= 0.3) { once = clamp(gana * 5, 4, 25); partes.push(puesto && puesto.faltan ? `te tapa un hueco en ${NOMBRE_POS[j.pos]} (+${dec1(gana)} pts/jornada)` : `mejora tu once +${dec1(gana)} pts/jornada`); }
+      else if (puesto && puesto.conviene) { once = 3; partes.push('te da un segundo delantero de recambio (no entra de titular)'); }
       else { once = puesto && puesto.sobran ? -18 : -6; partes.push(puesto && puesto.sobran ? `te sobran ${NOMBRE_POS[j.pos]}` : 'no entraría en tu once'); }
     }
     return { n: Math.round(clamp(rend + momentum + barato + 12 - pen - fueraOnce + once + rival - caro, 0, 100)), por: partes, once };

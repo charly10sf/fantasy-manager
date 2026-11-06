@@ -46,4 +46,35 @@ export const DIBUJOS = {
     <text class="d-t" x="80" y="82" style="fill:var(--acc);font-size:30px">11</text>`,
   especular: `<path class="d-l" d="M20 104h120"/><path class="d-al" d="M28 88l30-30 18 14 40-42"/><path class="d-al" d="M100 30h16v16"/><circle class="d-a" cx="28" cy="88" r="6"/>
     <text class="d-t d-tl" x="128" y="92" style="font-size:26px">€</text>`,
+  balon: `<circle class="d-s" cx="80" cy="60" r="46"/><circle class="d-l" cx="80" cy="60" r="46"/><path class="d-a" d="M80 41l17 12-6 19H69l-6-19z"/>
+    <path class="d-l" d="M80 41V15M97 53l26-9M91 72l17 21M69 72L52 93M63 53L37 44"/>`,
+  trofeo: `<path class="d-s" d="M52 16h56v30c0 17-12 28-28 28S52 63 52 46z"/><path class="d-l" d="M52 16h56v30c0 17-12 28-28 28S52 63 52 46zM52 26H34c0 18 8 27 20 29M108 26h18c0 18-8 27-20 29M80 74v16M66 90h28v18H66zM56 108h48"/>
+    <path class="d-a" d="M80 28l4 9 10 1-7.500 6.500 2.500 10-9-5.500-9 5.500 2.500-10L66 38l10-1z"/>`,
+  reloj: `<circle class="d-s" cx="80" cy="66" r="42"/><circle class="d-l" cx="80" cy="66" r="42"/><path class="d-l" d="M68 14h24M80 14v10M80 30v6M80 96v6M42 66h6M112 66h6"/>
+    <path class="d-al" d="M80 66V42M80 66l17 10"/><circle class="d-a" cx="80" cy="66" r="5"/><path class="d-al" d="M120 28l8-8M40 28l-8-8"/>`,
+  calendario: `<rect class="d-s" x="26" y="24" width="108" height="86" rx="10"/><rect class="d-l" x="26" y="24" width="108" height="86" rx="10"/><path class="d-a" d="M26 36a12 12 0 0 1 12-12h84a12 12 0 0 1 12 12v12H26z"/>
+    <path class="d-l" d="M54 14v18M106 14v18M42 66h8M66 66h8M90 66h8M114 66h8M42 82h8M66 82h8M114 82h8M42 98h8M66 98h8"/><circle class="d-a" cx="94" cy="82" r="10"/>`,
+  candado: `<path class="d-l" d="M52 54V42a28 28 0 0 1 56 0v12"/><rect class="d-a" x="38" y="54" width="84" height="58" rx="12"/><circle class="d-w" cx="80" cy="78" r="8"/><path class="d-w" d="M80 86v14"/>`,
+  estrella: `<path class="d-s" d="M80 12L93 44L128 47L101 69L109 102L80 84L51 102L59 69L32 47L67 44z"/><path class="d-l" d="M80 12L93 44L128 47L101 69L109 102L80 84L51 102L59 69L32 47L67 44z"/><path class="d-al" d="M132 20l3 8 8 3-8 3-3 8-3-8-8-3 8-3zM26 90l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>`,
+  porteria: `<rect class="d-s" x="24" y="30" width="112" height="76"/><path class="d-l" d="M24 106V30h112v76"/><path class="d-l" style="stroke-width:1.5;opacity:.5" d="M24 49h112M24 68h112M24 87h112M52 30v76M80 30v76M108 30v76"/>
+    <circle class="d-a" cx="104" cy="88" r="13"/><path class="d-w" d="M104 81l5 4-2 6h-6l-2-6z"/><path class="d-l" d="M12 106h136"/>`,
+  pizarra: `<rect class="d-s" x="18" y="12" width="124" height="88" rx="8"/><rect class="d-l" x="18" y="12" width="124" height="88" rx="8"/><path class="d-al" d="M40 34l14 14M54 34L40 48M98 70l14 14M112 70L98 84"/>
+    <circle class="d-l" cx="112" cy="40" r="8"/><circle class="d-l" cx="46" cy="76" r="8"/><path class="d-al" style="stroke-dasharray:5 6" d="M60 40c20-10 34 0 38 22"/><path class="d-l" d="M56 112h48"/>`,
+  regalo: `<rect class="d-s" x="32" y="56" width="96" height="54" rx="6"/><rect class="d-l" x="32" y="56" width="96" height="54" rx="6"/><rect class="d-a" x="26" y="40" width="108" height="20" rx="5"/><path class="d-l" d="M80 40v70"/>
+    <path class="d-al" d="M80 40c-6-18-32-20-30-6 2 8 18 6 30 6zM80 40c6-18 32-20 30-6-2 8-18 6-30 6z"/>`,
+  cohete: `<path class="d-a" d="M80 8c20 14 26 40 19 68H61C54 48 60 22 80 8z"/><circle class="d-w" cx="80" cy="42" r="9"/><path class="d-l" d="M62 58L44 76l4 18 16-8M98 58l18 18-4 18-16-8"/><path class="d-al" d="M71 86v18M80 86v26M89 86v18"/>`,
+  movil: `<rect class="d-l" x="44" y="6" width="72" height="108" rx="14"/><rect class="d-s" x="55" y="20" width="16" height="16" rx="5"/><rect class="d-s" x="78" y="20" width="16" height="16" rx="5"/><rect class="d-s" x="55" y="44" width="16" height="16" rx="5"/>
+    <rect class="d-a" x="78" y="44" width="16" height="16" rx="5"/><rect class="d-s" x="55" y="68" width="16" height="16" rx="5"/><rect class="d-s" x="78" y="68" width="16" height="16" rx="5"/><path class="d-l" d="M68 102h24"/>
+    <circle class="d-a" cx="122" cy="28" r="15"/><path class="d-w" d="M122 20v16M114 28h16"/>`,
+  compartir: `<path class="d-l" d="M56 54H44a6 6 0 0 0-6 6v46a6 6 0 0 0 6 6h72a6 6 0 0 0 6-6V60a6 6 0 0 0-6-6h-12"/><rect class="d-s" x="38" y="54" width="84" height="58" rx="6"/><path class="d-al" d="M80 82V12M62 30l18-18 18 18"/>`,
+  balanza: `<path class="d-l" d="M80 14v86M50 104h60M30 34h100"/><path class="d-s" d="M30 34L12 70a18 11 0 0 0 36 0z"/><path class="d-l" d="M30 34L12 70a18 11 0 0 0 36 0zM130 34l-18 36a18 11 0 0 0 36 0z"/><path class="d-a" d="M130 34l-18 36a18 11 0 0 0 36 0z"/><circle class="d-a" cx="80" cy="14" r="6"/>`,
+  bandera: `<path class="d-l" d="M42 8v104"/><path class="d-s" d="M42 18h74l-16 26 16 26H42z"/><path class="d-a" d="M42 18h74l-16 26 16 26H42z" style="opacity:.9"/><circle class="d-w" cx="68" cy="44" r="8"/>`,
+  rayo: `<path class="d-s" d="M94 8L42 72h34l-8 40 52-66H84z"/><path class="d-l" d="M94 8L42 72h34l-8 40 52-66H84z"/><path class="d-al" d="M26 34h14M18 52h12M126 86h14M132 70h12"/>`,
+  portatil: `<rect class="d-s" x="28" y="16" width="104" height="70" rx="8"/><rect class="d-l" x="28" y="16" width="104" height="70" rx="8"/><path class="d-l" d="M14 102h132M58 102l4-16h36l4 16"/>
+    <path class="d-al" d="M46 68l20-18 16 10 28-28"/><circle class="d-a" cx="110" cy="32" r="6"/>`,
+  corona: `<path class="d-s" d="M24 92l-6-56 34 28 28-46 28 46 34-28-6 56z"/><path class="d-l" d="M24 92l-6-56 34 28 28-46 28 46 34-28-6 56zM24 104h112"/><circle class="d-a" cx="80" cy="30" r="7"/><circle class="d-a" cx="18" cy="34" r="5"/><circle class="d-a" cx="142" cy="34" r="5"/>`,
+  tarjetas: `<rect x="40" y="20" width="52" height="74" rx="7" fill="#d9a21b" transform="rotate(-10 66 57)"/><rect class="d-l" x="40" y="20" width="52" height="74" rx="7" transform="rotate(-10 66 57)"/>
+    <rect x="76" y="26" width="52" height="74" rx="7" fill="#cf2537" transform="rotate(9 102 63)"/><rect class="d-l" x="76" y="26" width="52" height="74" rx="7" transform="rotate(9 102 63)"/>`,
+  hucha: `<ellipse class="d-s" cx="78" cy="70" rx="46" ry="34"/><ellipse class="d-l" cx="78" cy="70" rx="46" ry="34"/><path class="d-l" d="M54 98v12h14V100M88 100v10h14V96M124 62h10l4-8M100 38l4-14 14 12"/>
+    <path class="d-l" d="M64 54h22"/><circle class="d-l" cx="106" cy="62" r="2"/><path class="d-l" d="M32 66c-10-4-16 4-10 12"/><circle class="d-a" cx="76" cy="14" r="11"/>`,
 };

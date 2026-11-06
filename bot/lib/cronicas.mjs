@@ -1,7 +1,7 @@
 // La prensa de un partido para dar color a los tuits redactados (lib/redaccion.mjs): titulares y entradillas de los RSS de MARCA, AS,
 // Mundo Deportivo, SPORT y el resto de lib/prensa.mjs (la misma lectura que noticias y liga: una vez por ejecución). Solo titular y
 // entradilla (hasta 400 caracteres), nunca el artículo: de ahí la IA saca uno o dos hechos con sus palabras y el validador tira lo que
-// copie 6 palabras seguidas. Solo para los tipos de `redactar.prensa` (final, mvp, previa) y solo si el tweet trae `hechos.partido`.
+// copie 6 palabras seguidas. Solo para los tipos de `redactar.prensa` (desde el 6 nov, solo la previa: en un final o un MVP lo que pasa en el campo viene de ESPN, no de un titular) y solo si el tweet trae `hechos.partido`.
 // En el registro (repo público) no se guarda nada de esto.
 import { noticiasPrensaUnaVez } from './prensa.mjs';
 import { norm, corto } from './texto.mjs';
@@ -41,7 +41,7 @@ export function elegir(noticias, { partido, tipo, ahora = Date.now(), n = 4 }) {
 
 /** `de(t)`: la prensa del partido de un tweet, si su tipo lleva prensa (config.redactar.prensa) */
 export function crearCronicas({ config = {}, leer = noticiasPrensaUnaVez, log = () => {}, ahora = () => Date.now() } = {}) {
-  const tipos = (config.redactar && config.redactar.prensa) || ['final', 'mvp', 'previa'];
+  const tipos = (config.redactar && config.redactar.prensa) || ['previa'];
   return {
     async de(t) {
       if (!t || !t.hechos || !t.hechos.partido || !tipos.includes(t.tipo)) return [];

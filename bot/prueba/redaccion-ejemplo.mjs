@@ -2,7 +2,9 @@
 // lib/redaccion.mjs (el validador y el bucle de redactar), lib/cronicas.mjs (qué prensa es de un partido) y los apodos sin «conjunto».
 import { preguntarJson, esquemaJson, coste, SONNET, HAIKU } from '../lib/claude.mjs';
 import { preguntar, sinCupo, cuentaHoy } from '../lib/ia.mjs';
-import { revisar, redactar, parecido, cuerpoDe, apuntarReciente, recientesDe } from '../lib/redaccion.mjs';
+import { revisar, redactar, parecido, cuerpoDe, apuntarReciente, recientesDe, sucesosSinHechos } from '../lib/redaccion.mjs';
+import { incidenciasDe } from '../lib/relato.mjs';
+import { EJEMPLOS } from '../lib/voz.mjs';
 import { elegir } from '../lib/cronicas.mjs';
 import { APODOS, variarEquipos, fijarLimite } from '../lib/texto.mjs';
 import { nombresDe } from '../lib/pulir.mjs';
@@ -158,6 +160,50 @@ const noticias = [
 ];
 const cs = elegir(noticias, { partido: { local: 'Osasuna', visitante: 'Alavés', fecha: new Date(ahora - 2.5 * 3600e3).toISOString() }, tipo: 'final', ahora });
 ok(cs.length === 2 && cs[0].medio === 'MARCA' && !cs.some((c) => c.medio === 'SPORT'), `crónicas del partido: las de los dos clubes primero y nada de otros partidos ni de antes (${cs.map((c) => c.medio).join(', ')})`);
+
+// --- rigor con lo que pasa en el partido (6 nov, final del Sevilla-Alavés: «Cuenta COPE que Sivera ha parado un penalti») ---
+// keyEvents reales del summary de ESPN de ese partido (recortados) y dos inventados (un penalti fallado y una roja)
+const ke = (tipo, min, equipoId, equipo, jugador, texto) => ({ type: { text: tipo }, text: texto, clock: { displayValue: min }, team: { id: String(equipoId), displayName: equipo }, participants: [{ athlete: { displayName: jugador } }] });
+const sumario = { keyEvents: [
+  { type: { text: 'Yellow Card' }, clock: { displayValue: "30'" }, team: { id: '96' }, participants: [{ athlete: { displayName: 'Pablo Ibáñez' } }] },
+  ke('Penalty - Saved', "32'", 243, 'Sevilla', 'Rubén Vargas', 'Penalty saved. Rubén Vargas (Sevilla) right footed shot saved in the bottom left corner by Antonio Sivera (Alaves).'),
+  ke('Penalty - Missed', "45+2'", 96, 'Alavés', 'Kike García', 'Penalty missed! Kike García (Alaves) hits the bar.'),
+  ke('Red Card', "80'", 243, 'Sevilla', 'Kike Salas', 'Kike Salas (Sevilla) is shown the red card.'),
+  ke('Penalty - Scored', "60'", 243, 'Sevilla', 'Isaac Romero', 'Goal! Isaac Romero scores from the penalty spot.'),
+  { type: { text: 'Substitution' }, clock: { displayValue: "59'" }, team: { id: '243' } },
+] };
+const inc = incidenciasDe(sumario, { casaId: 243, fueraId: 96, L: 'Sevilla', V: 'Alavés' });
+ok(inc.length === 3, `sucesos del summary: penalti parado, penalti fallado y roja; ni tarjetas, ni cambios ni el penalti marcado (${inc.length})`);
+ok(inc[0].suceso === 'penalti parado' && inc[0].minuto === "32'" && inc[0].lanzador === 'Rubén Vargas' && inc[0].equipoQueLoLanza === 'Sevilla'
+  && inc[0].porteroQueLoPara === 'Antonio Sivera' && inc[0].equipoDelPortero === 'Alavés', `el penalti parado del Sevilla-Alavés: lanza Vargas, lo para Sivera, minuto 32 (${JSON.stringify(inc[0])})`);
+ok(inc[1].suceso === 'penalti fallado' && inc[1].equipoQueLoLanza === 'Alavés' && !('porteroQueLoPara' in inc[1]), 'un penalti fallado no inventa portero');
+ok(inc[2].suceso === 'roja' && inc[2].equipo === 'Sevilla' && inc[2].jugador === 'Kike Salas', 'la roja con su equipo y su jugador');
+ok(incidenciasDe(null, { casaId: 1, fueraId: 2 }).length === 0 && incidenciasDe({}, { casaId: 1, fueraId: 2 }).length === 0, 'sin summary, sin sucesos (y sin romper)');
+const casarF = (n, lado) => (/Sivera/.test(n) && lado === 'visitante' ? { nickname: 'Sivera' } : null);
+ok(incidenciasDe(sumario, { casaId: 243, fueraId: 96, L: 'Sevilla', V: 'Alavés', casar: casarF })[0].porteroQueLoPara === 'Sivera', 'el portero sale con su nombre de LaLiga si se casa (el del otro equipo)');
+
+const hFinal = { tipo: 'final', partido: { partido: 'Sevilla-Alavés', local: 'Sevilla', visitante: 'Alavés', marcador: '0-0' }, goles: [], incidencias: inc.slice(0, 1).map((x) => ({ ...x, porteroQueLoPara: 'Sivera', lanzador: 'Rubén Vargas' })),
+  jugadores: [{ nombre: 'Sivera', puesto: 'portero', club: 'Alavés', puntosHoy: 9, principal: true }], clubes: clubes('Sevilla', 'Alavés'), etiqueta: '' };
+const rf = (t, h = hFinal) => revisar(t, { hechos: h, todos, numeros: [] });
+const cuenta = 'Cuenta COPE que Sivera ha parado un penalti. El Alavés empató sin goles en el Sevilla.';
+ok(rf(cuenta).some((x) => /no se atribuye nada a un medio/.test(x)), `«Cuenta COPE que Sivera ha parado un penalti» en un final: fuera (${rf(cuenta).slice(0, 2).join('; ')})`);
+ok(rf('Según MARCA, Sivera ha parado un penalti.').some((x) => /no se atribuye/.test(x)), '«según MARCA» en un final, fuera');
+ok(rf('Informa que Sivera ha parado un penalti en el Sevilla.').length >= 0 && rf('Cuentan que Sivera paró un penalti.').some((x) => /no se atribuye/.test(x)), '«cuentan que» sin medio, también fuera');
+const buenoF = '🏁 Sevilla y Alavés empatan sin goles, con un penalti parado: Sivera detuvo en el minuto 32 el que lanzó Rubén Vargas.';
+ok(rf(buenoF).filter((x) => /atribuye|sucesos/.test(x)).length === 0, `el penalti parado, como hecho y con los datos de ESPN: vale (${rf(buenoF).join('; ')})`);
+const sinInc = { ...hFinal, incidencias: [] };
+ok(rf(buenoF, sinInc).some((x) => /sucesos que no están en los hechos \(penalti, una parada\)/.test(x)), 'el mismo texto sin el suceso en los hechos: fuera, sea de quien sea');
+ok(sucesosSinHechos('Lo expulsaron y el VAR anuló un gol de penalti', sinInc).join() === 'penalti,una expulsión,el VAR', 'expulsión, VAR y penalti sin hechos, los tres sucesos');
+ok(sucesosSinHechos('Sivera hizo tres paradas', sinInc).join() === 'una parada', 'unas paradas que no vienen en los hechos tampoco valen');
+ok(sucesosSinHechos('Sevilla y Alavés empatan sin goles', sinInc).length === 0 && sucesosSinHechos('Gana de penalti', { ...sinInc, goles: [{ goleador: 'X', penalti: true }] }).length === 0, 'un gol de penalti en `goles` sí permite hablar del penalti');
+const hMvp = { ...hFinal, tipo: 'mvp' };
+ok(revisar('⭐ Según AS, Sivera es el mejor del partido con 9 puntos.', { hechos: hMvp, todos, numeros: [] }).some((x) => /no se atribuye/.test(x)), 'en un MVP tampoco se atribuye a un medio');
+// en noticias y previas el medio sí es la fuente: nada cambia
+ok(rv(bueno).length === 0 && rv('Eric vuelve, según AS y MARCA.').filter((x) => /atribuye|sucesos/.test(x)).length === 0, 'en una noticia, «según AS» sigue valiendo');
+// la guía y la prensa
+ok(!EJEMPLOS.some((x) => x.bien && (x.tipo === 'final' || x.tipo === 'mvp') && /\b(cuenta|cuentan|según|informa)\s+(MARCA|AS|COPE|SPORT|SER)\b/i.test(x.texto)), 'ningún ejemplo BIEN de final o MVP atribuye nada a un medio (en noticias y previas sí vale)');
+ok(EJEMPLOS.some((x) => !x.bien && /Cuenta COPE/.test(x.texto)), 'la guía trae el «Cuenta COPE» como ejemplo MAL');
+ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a la previa (en un final o un MVP lo que pasa en el campo sale de ESPN)');
 
 process.env = viejo;
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);

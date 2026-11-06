@@ -462,7 +462,7 @@ main { padding: 16px 16px 120px; }
 .pz { padding: 4px 9px; border-radius: 8px; background: var(--plano2); font: 600 13px 'Barlow'; color: var(--texto2); }
 .pz b { margin-right: 2px; font: 700 13.5px var(--cond); color: var(--texto); }
 .pz.p1 b { color: var(--por); } .pz.p2 b { color: var(--def); } .pz.p3 b { color: var(--med); } .pz.p4 b { color: var(--del); }
-.pz.falta { background: var(--rojo-s); color: var(--rojo-l); } .pz.sobra { color: var(--oro); }
+.pz.falta { background: var(--rojo-s); color: var(--rojo-l); } .pz.sobra { color: var(--oro); } .pz.conviene { color: var(--oro); box-shadow: inset 0 0 0 1px var(--oro); }
 .leyenda { white-space: normal; } .leyenda i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin: 0 4px 0 2px; vertical-align: -1px; }
 .leyenda i + i, .leyenda i:not(:first-child) { margin-left: 8px; }
 .leyenda i.facil { background: #1d9a63; } .leyenda i.media { background: #b98314; } .leyenda i.dificil { background: #cf2537; }
@@ -918,6 +918,22 @@ a.btn { text-decoration: none; }
 .sin-app > summary::-webkit-details-marker { display: none; }
 .sin-app p, .sin-app li { color: var(--texto2); font-size: 14px; }
 .sin-app ol { padding-left: 20px; margin: 6px 0 10px; }
+.sin-app > summary { display: flex; align-items: center; gap: 8px; }
+.en-dib-tag { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: var(--rojo); color: #fff; font: 700 11px 'Barlow'; letter-spacing: .5px; text-transform: uppercase; }
+.sin-app .gd-lista { list-style: none; padding: 0; margin: 10px 0 6px; }
+.sin-app .gd-lista > li { margin: 0; padding: 14px 0; border-top: 1px solid var(--linea); }
+.sin-app .gd-lista > li:first-child { border-top: 0; padding-top: 4px; }
+.sin-app .gd-t { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; color: var(--texto); font-size: 14.5px; line-height: 1.4; }
+.sin-app .gd-t b { color: var(--texto); }
+.sin-app .gd-n { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--rojo); color: #fff; font: 700 13px/24px 'Barlow'; text-align: center; }
+.sin-app .gd-lista figure { margin: 0; max-width: 440px; }
+.sin-app .gd-lista .btn { margin: 0 0 10px; }
+.sin-app .dib { display: block; width: 100%; height: auto; }
+.sin-app .dib .pulso { animation: gd-pulso 1.7s ease-in-out infinite; }
+@keyframes gd-pulso { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .sin-app .dib .pulso { animation: none; } }
+.sin-app .gd-aparte { margin: 4px 0 12px; font-size: 13px; }
+.sin-app .gd-aparte a { color: var(--texto2); text-decoration: underline; text-underline-offset: 3px; }
 .sin-app textarea { display: block; width: 100%; margin: 10px 0 8px; background: var(--plano2); border: 1px solid var(--linea); border-radius: 10px; padding: 10px; font: 13px ui-monospace, monospace; color: var(--texto); resize: vertical; }
 .sin-app .btn { margin-bottom: 12px; }
 .pantalla a { color: var(--rojo-l); }
@@ -1230,6 +1246,19 @@ body.en-tour { overflow: hidden; }
 .entrar-movil .em-t { display: block; margin-bottom: 2px; font: 700 17px var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
 .entrar-movil .em-pasos li a { color: var(--rojo-l); }
 .entrar-movil .em-guia { margin-top: 6px; }
+/* lo de iPhone, en azul y con el logo de Apple para que se distinga de lo de Android (rojo) */
+.entrar-movil { background: rgba(88, 166, 255, 0.1); border-color: rgba(88, 166, 255, 0.5); }
+.entrar-movil > b .ap { width: 20px; height: 20px; flex: none; color: #fff; }
+.entrar-movil .em-n { background: var(--azul); color: #0b1220; }
+.entrar-movil .em-pasos li a, .entrar-movil .em-pie a { color: var(--azul); }
+.en-ios { text-align: left; margin: 12px 0 0; padding: 14px; border-radius: 14px; background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.5); }
+.en-ios-c { display: flex; align-items: center; gap: 9px; font: 700 18px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.en-ios-c .ap { width: 20px; height: 20px; flex: none; color: #fff; }
+.en-ios > span { display: block; margin: 6px 0 12px; color: var(--texto2); font-size: 14px; line-height: 1.45; }
+.en-ios-b { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
+.en-ios .btn { background: #f4f2f3; color: #101014; box-shadow: none; }
+.en-ios .btn:hover { background: #fff; }
+.en-ios-g { color: var(--azul); font: 600 14px 'Barlow'; text-decoration: underline; text-underline-offset: 3px; }
 .entrar-o { margin: 4px 0 8px; font-size: 13.5px; color: var(--apagado); text-align: left; }
 .entrar-movil a.btn { color: #fff; }
 .entrar-movil a.btn .ic { color: #fff; }
@@ -2071,6 +2100,26 @@ button.cr-p:active { background: var(--plano); }
 .pt-pista .ic { width: 19px; height: 19px; animation: pt-bota 1.8s ease-in-out infinite; }
 .pt-pista.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 .portada .pt-pista, .portada .pt-pista .ic { color: #fff; }
+/* en el ordenador va en la columna de la izquierda, bajo la lista, más grande y sin flotar sobre el panel */
+/* bajar B (ordenador): un ratón con la rueda, un hilo con un punto que baja y, al lado, qué hay debajo; los tres pasos van apareciendo */
+.pt-pista.en-col { position: static; transform: none; opacity: 1; pointer-events: auto; display: flex; align-items: flex-start; gap: 20px; margin-top: 24px; min-height: 0; padding: 0; border-radius: 0; background: none; box-shadow: none; font: inherit; text-transform: none; letter-spacing: 0; white-space: normal; transition: none; }
+.pb-izq { flex: none; width: 34px; display: flex; flex-direction: column; align-items: center; }
+.pb-raton { position: relative; display: block; width: 30px; height: 48px; border: 2px solid var(--texto); border-radius: 16px; }
+.pb-raton i { position: absolute; left: 12px; top: 9px; width: 4px; height: 10px; border-radius: 3px; background: var(--rojo); animation: pb-rueda 1.7s ease-in-out infinite; }
+.pb-hilo { position: relative; display: block; width: 2px; height: 76px; margin-top: 8px; background: linear-gradient(var(--rojo), rgba(238, 28, 60, 0)); }
+.pb-hilo i { position: absolute; left: -3px; top: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--rojo-l); animation: pb-viaja 2.2s ease-in infinite; }
+.pb-t { display: block; padding-top: 2px; }
+.pb-tit { display: block; font: 700 26px/1.05 var(--cond); text-transform: uppercase; color: var(--texto); }
+.pb-txt { display: block; margin-top: 6px; max-width: 380px; font-size: 15.5px; line-height: 1.45; color: var(--texto2); }
+.pb-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.pb-chip { display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 14px; border-radius: 12px; border: 1px solid rgba(238, 28, 60, 0.32); background: var(--rojo-s); font: 600 15px 'Barlow'; color: var(--texto); opacity: 0; animation: pb-chip 6s ease-out infinite; }
+.pb-chip b { font: 700 20px var(--cond); color: var(--rojo-l); }
+.pb-chip:nth-child(2) { animation-delay: 0.35s; }
+.pb-chip:nth-child(3) { animation-delay: 0.7s; }
+.pt-pista.en-col:hover .pb-tit { color: var(--rojo-l); }
+@keyframes pb-rueda { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(15px); } }
+@keyframes pb-viaja { 0% { top: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: 64px; opacity: 0; } }
+@keyframes pb-chip { 0%, 4% { opacity: 0; transform: translateY(16px); } 16%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
 @keyframes pt-bota { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 /* la barra de arriba */
 .pt-bar { position: fixed; z-index: 30; top: 0; left: 0; right: 0; transform: translateY(-110%); transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); background: rgba(8, 8, 10, 0.8); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border-bottom: 1px solid var(--linea); }
@@ -2334,7 +2383,8 @@ div.pc { display: grid; gap: 18px; }
 .pm-fin { padding: 36px 0 56px; }
 .portada-m .pm-fin .pm-nota, .portada-m .pm-fin .pm-pie { margin-top: 10px; }
 @media (prefers-reduced-motion: reduce) {
-  .pt-baja .ic, .pt-pista .ic, .pd-chips button i, .ph-desliza .ic { animation: none; }
+  .pt-baja .ic, .pt-pista .ic, .pd-chips button i, .ph-desliza .ic, .pb-raton i, .pb-hilo i { animation: none; }
+  .pb-chip { animation: none; opacity: 1; }
   .ph-pant, .pc-campo, .pt-bar, .escritorio .ph-paso { transition: none; }
 }
 .pt-cta.btn { white-space: nowrap; }
@@ -2387,3 +2437,48 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .jor-cab .cp-res-t { display: inline; font: 700 13.5px 'Barlow'; text-transform: none; }
 .jor-cab .lado { display: inline-flex; margin: 0; gap: 0; }
 .qj-bien { color: var(--sube); } .qj-duda { color: var(--oro); } .qj-mal { color: var(--apagado); }
+
+/* panel de entrar de la web en el ordenador: pestañas «Soy nuevo» / «Ya tengo la app» y pasos numerados con la misma tarjeta */
+.ent-tabs { display: flex; gap: 4px; padding: 4px; margin: 0 0 18px; border-radius: 14px; background: var(--fondo); border: 1px solid var(--linea); }
+.ent-tabs button { flex: 1; min-height: 46px; text-align: center; border: 0; border-radius: 10px; background: transparent; color: var(--texto2); font: 700 18px var(--cond); text-transform: uppercase; letter-spacing: 0.6px; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.ent-tabs button:hover { color: var(--texto); }
+.ent-tabs button[aria-selected="true"] { background: var(--rojo); color: #fff; }
+.ent-pan { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; text-align: left; }
+.ent-pan[hidden] { display: none; }
+.ent-paso { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; padding: 16px; border-radius: 14px; border: 1px solid var(--linea); background: rgba(255, 255, 255, 0.03); }
+.ent-ca { display: flex; align-items: center; gap: 12px; }
+.ent-n { flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--rojo-s); color: var(--rojo-l); font: 700 18px var(--cond); }
+.ent-ca h2 { margin: 0; font: 700 22px/1.1 var(--cond); text-transform: uppercase; color: var(--texto); }
+.ent-paso > p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--texto2); }
+.ent-paso > .btn { margin: 0; }
+.ent-paso .entrar-qr, .ent-paso .entrar-codigo { background: none; border: 0; padding: 0; margin: 0; }
+.ent-paso .eq-t > span:first-child { margin-top: 0; }
+.ent-paso .entrar-codigo > span { margin-top: 0; }
+.ent-op { margin: 0; padding: 16px; border-radius: 12px; border: 1px solid var(--linea); background: var(--plano); text-align: left; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.ent-oc { display: flex; align-items: flex-start; gap: 12px; }
+.ent-logo { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--plano3); }
+.ent-logo svg { width: 26px; height: 26px; display: block; }
+.ent-and .ent-logo { color: #3ddc84; }
+.en-ios .ent-logo { color: #fff; }
+.ent-ot { display: block; font: 700 21px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }
+.ent-os { display: block; margin-top: 3px; font-size: 13.5px; line-height: 1.4; color: var(--texto2); }
+.ent-pasos { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.ent-pasos li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 14px; line-height: 1.4; color: var(--texto2); }
+.ent-pasos li b { color: var(--texto); }
+.ent-sn { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--plano3); color: var(--texto); font: 700 13px var(--cond); }
+.ent-op .en-apk { display: flex; gap: 14px; align-items: center; }
+.ent-op .btn { margin: 0; }
+.ent-op > .btn, .ent-op > .en-ios-b { margin-top: auto; }
+.en-ios .btn { background: #f4f2f3; color: #101014; box-shadow: none; }
+.ent-op .en-ios-g { color: var(--rojo-l); }
+.ent-paso .sin-app { margin: 0; }
+
+/* en el ordenador, el panel de entrar es más ancho y Android e iPhone van uno al lado del otro */
+.escritorio .portada.web .pantalla { grid-template-columns: minmax(0, 1fr) clamp(520px, 52vw, 600px); column-gap: 56px; align-items: start; }
+/* si el panel de la derecha se alarga (desplegables con dibujos), el texto de la izquierda baja con la página en vez de dejar el hueco; solo si cabe entero en la ventana */
+@media (min-height: 900px) { .escritorio .portada.web .pant-i { position: sticky; top: 76px; } }
+.ent-dos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.escritorio .ent-dos { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+.escritorio .ent-and .en-apk { flex-direction: column; align-items: flex-start; gap: 12px; }
+.escritorio .ent-and .en-apk-qr { width: 104px; height: 104px; }
+.escritorio .ent-and .en-apk-qr svg.qr { width: 104px; height: 104px; }
