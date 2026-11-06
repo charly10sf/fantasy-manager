@@ -5,12 +5,13 @@ import { json } from '../lib/http.mjs';
 import { statsSemana } from '../lib/laliga.mjs';
 import { corto, elegir, el, del, al, fmt, partes, largo, hash, rotar, turno, ordenJornada } from '../lib/texto.mjs';
 import { lista, mayus } from '../lib/agrupar.mjs';
-import { tweet, enPalabras, cuando, aparte, cap } from '../lib/redactar.mjs';
+import { tweet, enPalabras, cuando, aparte, cap, puesto } from '../lib/redactar.mjs';
 import { ESPN, partidoEspn } from '../lib/relato.mjs';
 import { casarJugador } from './directo.mjs';
 import { probabilidades, elegirOnce } from '../lib/onces.mjs';
 import { enElAire } from '../lib/aire.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
+import { clubes as clubesH, estadio as estadioH } from '../lib/hechos.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
 import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
@@ -180,7 +181,39 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       if (r) num.push(...r.num);
       if (!usadas.length) continue;
       const fm = (f) => f.match(/\d/g);
-      out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, numeros: num, partido: null,
+      // los hechos para la IA que redacta (lib/redaccion.mjs): cada equipo con su puesto y sus goles, y los jugadores que importan
+      // (las dudas del once, las bajas y los fijos que más dan), cada uno con su club, su papel y su %
+      const tablaH = tabla || (info && info.tabla ? await info.tabla().catch(() => null) : null);
+      const mediaDe = new Map((jugadores || []).map((j) => [String(j.id), Number(j.averagePoints) || 0]));
+      const md = (x) => mediaDe.get(String(x.id)) || 0;
+      const posDe = new Map((jugadores || []).map((j) => [String(j.id), j.positionId]));
+      const pu = (x) => { const p = puesto(posDe.get(String(x.id))); return p ? { puesto: p } : {}; };
+      const esBaja = (x) => (x.estado === 'injured' && !dudaParte.has(String(x.id))) || x.estado === 'suspended';
+      const jugH = [], eqH = [];
+      for (const [k, eq, mm] of [['L', L, m.local], ['V', V, m.visitor]]) {
+        const t = tablaH && tablaH.porId[String(mm.id)];
+        // la lectura del cruce, ya hecha (6 nov, primera tanda: la IA atribuía los goles de un equipo a un jugador o leía al revés lo que
+        // le conviene a los de arriba): lo que encaja el rival es para sus delanteros y medios; lo que marca, para su portero y defensas
+        const r = tablaH && tablaH.porId[String((k === 'L' ? m.visitor : m.local).id)], rivalEq = k === 'L' ? V : L;
+        const cruce = [];
+        if (r && r.pj && tablaH) {
+          const n = tablaH.n;
+          if (r.rgc <= 4) cruce.push(`bueno para sus delanteros y medios: ${el(rivalEq)} es de los que más encajan`);
+          else if (r.rgc >= n - 3) cruce.push(`malo para sus delanteros y medios: ${el(rivalEq)} es de los que menos encajan`);
+          if (r.rgf <= 4) cruce.push(`malo para su portero y sus defensas: ${el(rivalEq)} es de los que más marcan`);
+          else if (r.rgf >= n - 3) cruce.push(`bueno para su portero y sus defensas: ${el(rivalEq)} es de los que menos marcan`);
+        }
+        eqH.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', ...(t && t.pj ? { va: `${t.pos}º de ${tablaH.n}`, golesMarcadosPorPartido: fmt(t.gf / t.pj), golesEncajadosPorPartido: fmt(t.gc / t.pj) } : {}),
+          ...(cruce.length ? { cruce } : {}) });
+        // (pocos y los que pesan: con tres dudas, tres bajas y dos fijos por equipo la IA los enumeraba todos; 6 nov)
+        for (const x of pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'titularidad en el aire', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, principal: false });
+        for (const x of Object.values(probs[k]).filter(esBaja).sort((a, b) => md(b) - md(a)).filter((x, i) => i === 0 || md(x) >= 3).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'baja', estado: x.estado === 'suspended' ? 'sancionado' : 'lesionado', ...(md(x) >= 1 ? { mediaPuntos: fmt(md(x)) } : {}), principal: false });
+        for (const x of pos[k].once.filter((y) => y.p >= 0.8 && md(y) >= 4).sort((a, b) => md(b) - md(a)).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'fijo', titularidadFantasyManager: `${pct(x.p)} %`, mediaPuntos: fmt(md(x)), principal: false });
+      }
+      const cuH = cuando(m.date, ahora);
+      const hechos = { tipo: 'previa', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuH ? { cuando: cuH.t } : {}), fecha: m.date || null },
+        equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), etiqueta: '📊 Los % de titularidad son de Fantasy Manager' };
+      out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, hechos, numeros: num, partido: null,
         tarjeta: { tipo: 'onces', nombre: `previa-${m.id}`, d,
           permitidos: { numeros: [jornada, ...fm(d.local.formacion), ...fm(d.visitante.formacion), ...[...d.local.once, ...d.visitante.once].flatMap((x) => [x.pct, x.alt ? x.alt.pct : null]).filter((x) => x != null)].map(String),
             palabras: [L, V, m.local.mainName, m.visitor.mainName, ...[...d.local.once, ...d.visitante.once].flatMap((x) => [x.nombre, x.alt ? x.alt.nombre : null]).filter(Boolean)] } } });

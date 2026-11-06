@@ -16,6 +16,12 @@ export function peso(s) {
   }
   return n;
 }
+/** ¿copia `n` palabras seguidas de la fuente? (las noticias de prensa: 6) */
+export function copia(s, fuente, n = 6) {
+  const w = norm(s).split(' ').filter(Boolean), src = ` ${norm(fuente)} `;
+  for (let i = 0; i + n <= w.length; i++) if (src.includes(` ${w.slice(i, i + n).join(' ')} `)) return true;
+  return false;
+}
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 
 // La etiqueta final de bajas, dudas y novedades («❌ Baja para la jornada 12 contra el Sevilla», «💸 Venta obligatoria»). Desde el
@@ -120,30 +126,33 @@ export const al = (eq) => (SIN_ARTICULO.has(eq) ? `a ${eq}` : eq === 'Real Socie
 // 6 nov 12:58, con el tweet de Eric: «el emoji del Barça y del Atleti son malos». Quedan solo los que se reconocen sin saber el club (un
 // animal o un objeto: 🦇 Valencia, 🦁 Athletic, 🐟 Málaga…) y el ⚪ del Madrid, que pidió Carlos. Los clubes sin ninguno claro (círculos de
 // colores, el oso, el corazón verde…) van sin emoji: una lista vacía no pone nada.
-const APODOS = {
-  'Real Madrid': { e: ['⚪', '👑'], a: ['el Real Madrid', 'el Madrid', 'el conjunto blanco', 'el conjunto merengue'] },
-  'Barça': { e: [], a: ['el Barça', 'el Barcelona', 'el conjunto azulgrana', 'el equipo culé'] },
-  'Atlético': { e: [], a: ['el Atlético', 'el Atleti', 'el conjunto colchonero'] },
-  'Athletic': { e: ['🦁'], a: ['el Athletic', 'el Athletic Club', 'el conjunto bilbaíno'] },
-  'Valencia': { e: ['🦇'], a: ['el Valencia', 'el Valencia CF', 'el conjunto valencianista'] },
-  'Sevilla': { e: [], a: ['el Sevilla', 'el Sevilla FC', 'el conjunto sevillista'] },
-  'Betis': { e: [], a: ['el Betis', 'el Real Betis', 'el conjunto bético'] },
-  'Real Sociedad': { e: [], a: ['la Real Sociedad', 'la Real', 'el conjunto donostiarra'] },
-  'Villarreal': { e: ['🚢'], a: ['el Villarreal', 'el Submarino Amarillo', 'el conjunto amarillo'] },
-  'Celta': { e: [], a: ['el Celta', 'el Celta de Vigo', 'el conjunto celeste'] },
-  'Osasuna': { e: ['🐂'], a: ['el Osasuna', 'el conjunto rojillo', 'el equipo navarro'] },
-  'Getafe': { e: [], a: ['el Getafe', 'el conjunto azulón'] },
-  'Rayo': { e: ['⚡'], a: ['el Rayo', 'el Rayo Vallecano', 'el conjunto vallecano'] },
-  'Espanyol': { e: ['🦜'], a: ['el Espanyol', 'el conjunto perico', 'el equipo blanquiazul'] },
-  'Levante': { e: ['🐸'], a: ['el Levante', 'el conjunto granota'] },
-  'Elche': { e: ['🌴'], a: ['el Elche', 'el conjunto franjiverde'] },
-  'Alavés': { e: [], a: ['el Alavés', 'el conjunto babazorro', 'el equipo albiazul'] },
-  'Mallorca': { e: ['🏝️'], a: ['el Mallorca', 'el conjunto mallorquinista'] },
-  'Girona': { e: [], a: ['el Girona', 'el conjunto gerundense'] },
-  'Oviedo': { e: [], a: ['el Oviedo', 'el Real Oviedo', 'el conjunto carbayón'] },
-  'Racing': { e: ['⚓'], a: ['el Racing', 'el Racing de Santander', 'el conjunto cántabro'] },
-  'Deportivo': { e: [], a: ['el Deportivo', 'el Dépor', 'el conjunto herculino'] },
-  'Málaga': { e: ['🐟'], a: ['el Málaga', 'el Málaga CF', 'el conjunto malaguista'] },
+// (6 nov, tarde) Fuera los «el conjunto + gentilicio» y los nombres oficiales largos («el Málaga CF», «el Celta de Vigo»): salían hasta tres
+// por tuit y era lo que más sonaba a máquina (diagnóstico de los 20 últimos tuits). Quedan el nombre corto y, si lo hay, el otro nombre
+// con el que se le llama de verdad («el Atleti», «la Real», «el Dépor»), siempre en singular.
+export const APODOS = {
+  'Real Madrid': { e: ['⚪'], a: ['el Real Madrid', 'el Madrid'] },
+  'Barça': { e: [], a: ['el Barça', 'el Barcelona'] },
+  'Atlético': { e: [], a: ['el Atlético', 'el Atleti'] },
+  'Athletic': { e: ['🦁'], a: ['el Athletic', 'el Athletic Club'] },
+  'Valencia': { e: ['🦇'], a: ['el Valencia'] },
+  'Sevilla': { e: [], a: ['el Sevilla'] },
+  'Betis': { e: [], a: ['el Betis'] },
+  'Real Sociedad': { e: [], a: ['la Real Sociedad', 'la Real'] },
+  'Villarreal': { e: ['🚢'], a: ['el Villarreal', 'el Submarino Amarillo'] },
+  'Celta': { e: [], a: ['el Celta'] },
+  'Osasuna': { e: ['🐂'], a: ['el Osasuna'] },
+  'Getafe': { e: [], a: ['el Getafe'] },
+  'Rayo': { e: ['⚡'], a: ['el Rayo', 'el Rayo Vallecano'] },
+  'Espanyol': { e: ['🦜'], a: ['el Espanyol'] },
+  'Levante': { e: ['🐸'], a: ['el Levante'] },
+  'Elche': { e: ['🌴'], a: ['el Elche'] },
+  'Alavés': { e: [], a: ['el Alavés'] },
+  'Mallorca': { e: ['🏝️'], a: ['el Mallorca'] },
+  'Girona': { e: [], a: ['el Girona'] },
+  'Oviedo': { e: [], a: ['el Oviedo', 'el Real Oviedo'] },
+  'Racing': { e: ['⚓'], a: ['el Racing'] },
+  'Deportivo': { e: [], a: ['el Deportivo', 'el Dépor'] },
+  'Málaga': { e: ['🐟'], a: ['el Málaga'] },
 };
 const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const ART = '(?:el|del|al|la|de la|a la)';

@@ -14,7 +14,7 @@ import { statsSemana } from '../lib/laliga.mjs';
 import { tweet, cap } from '../lib/redactar.mjs';
 import { lista as enLista } from '../lib/agrupar.mjs';
 import { noticiasPrensaUnaVez } from '../lib/prensa.mjs';
-import { preguntarJson } from '../lib/gemini.mjs';
+import { clasificador, claveClasificar } from '../lib/ia.mjs';
 import { frase, copia } from './noticias.mjs';
 
 const HORA = 36e5;
@@ -149,7 +149,7 @@ async function actualizar0({ equipos, registro, ahora, config, log, leer, pedirI
   const lg = (datos.liga ||= { vistas: {}, hechos: [], gemini: { dia: '', n: 0 } });
   for (const [g, t] of Object.entries(lg.vistas)) if (ahora - t > 72 * HORA) delete lg.vistas[g];
   lg.hechos = lg.hechos.filter((h) => ahora - h.t < 72 * HORA);
-  if (!clave) { log('  (liga) sin GEMINI_API_KEY: no leo la prensa'); return lg; }
+  if (!clave) { log('  (liga) sin clave de la IA (GEMINI_API_KEY o ANTHROPIC_API_KEY): no leo la prensa'); return lg; }
   const nuevas = [];
   for (const n of await leer({ log })) {
     if (lg.vistas[n.guid]) continue;
@@ -261,7 +261,7 @@ export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, o
 }
 
 export async function generar({ equipos, jornada, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),
-  log = console.log, leer = noticiasPrensaUnaVez, pedirIA = preguntarJson, clave = process.env.GEMINI_API_KEY, stats = null, statsDe = statsSemana }) {
+  log = console.log, leer = noticiasPrensaUnaVez, pedirIA = clasificador({ registro, config }), clave = claveClasificar(config), stats = null, statsDe = statsSemana }) {
   const [hD, hH] = horas(config, 'horasLiga', [8, 24], ahora);
   if (ventanas && !forzar && (horaMadrid(ahora) < hD || horaMadrid(ahora) >= hH)) return [];
   if (ventanas && !(registro && registro.fichero)) { log('  (liga) sin registro guardado: no pregunto a Gemini'); return []; }

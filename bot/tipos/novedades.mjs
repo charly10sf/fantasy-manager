@@ -6,6 +6,7 @@ import { corto, fmt, partes, elegir, el, del, largo, rotar, turno } from '../lib
 import { tweet, cap, segunda, proximoPartido, paraLa, cuando, aparte } from '../lib/redactar.mjs';
 import { tarjetaBajas, tarjetasNovedades } from '../lib/datos-tarjetas.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
+import { clubes as clubesH, partido as partidoH, jugador as jugadorH } from '../lib/hechos.mjs';
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 import { ideasInfo, vecesHoy } from '../lib/info-jugador.mjs';
@@ -120,18 +121,30 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const clave = `novedades|${e.id}:${e.que}|${d}`;
     // (Carlos, 5 nov 13:33) el que vuelve: si pinta a titular y lo difícil que es el rival (solo si el tweet puede salir: se piden datos)
     const conInfo = info && e.que === 'vuelve' && e.pp && (!registro || !registro.decidir || registro.decidir({ tipo: 'novedades', clave, jornada }) === 'ok');
-    let extra = { numeros: [] };
+    let extra = { numeros: [] }, titH = null, rivH = null;
     const hr = hora(e.pp);
     if (e.que === 'vuelve') {
       const j = porId.get(String(e.id));
       const tit = conInfo ? await info.titularidad(j, e.pp).catch(() => null) : null, riv = conInfo ? await info.rival(e.pp).catch(() => null) : null;
+      titH = tit; rivH = riv;
       if (conInfo) e.pct = tit ? tit.pct : null;   // (5 nov 16:39) también en la carta
       extra = ideasInfo({ posId: e.pos, equipo: e.equipo, pp: e.pp, quien, media: e.media, tit, riv, tipo: 'vuelve', hr: L && e.pp && e.pp.fecha ? cuando(e.pp.fecha, ahora) : null, k: kI, dia, largo: L });
       ideas.splice(ideas.length - 1, 0, ...extra.ideas);
     } else if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
-    return { tipo: 'novedades', clave, jornada, texto, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(e.que === 'vuelve' ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
+    // los hechos para la IA que redacta (lib/redaccion.mjs)
+    const etiquetaH = ideas[ideas.length - 1].t;
+    const estadoH = e.que === 'lesion' ? (p && p.estado === 'duda' ? 'duda' : 'lesionado') : e.que === 'sancion' ? 'sancionado' : 'disponible';
+    const jH = porId.get(String(e.id));
+    const hechos = { tipo: 'novedades', noticia: e.que === 'vuelve' ? `LaLiga Fantasy le cambia el estado a disponible: ${e.antes === 'injured' ? 'estaba lesionado' : e.antes === 'suspended' ? 'estaba sancionado' : 'estaba en duda'}`
+      : e.que === 'lesion' ? `LaLiga Fantasy le pone como ${estadoH === 'duda' ? 'duda' : 'lesionado'}` : 'LaLiga Fantasy le pone como sancionado',
+      jugadores: [jugadorH(jH, { equipos, estado: estadoH, tit: titH,
+        motivo: e.que === 'sancion' ? (e.motivoSan ? e.motivoSan.txt : '') : p && p.lesion ? `${lesionTxt(p)}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}` : '',
+        plazo: e.que === 'lesion' && p && p.estado === 'baja' && p.hasta ? `no se le espera hasta ${p.hasta}` : '',
+        extra: e.que === 'lesion' && ventaObligatoria(p, ahora) ? { aviso: 'tanto tiempo fuera que es venta obligatoria' } : {} })],
+      ...(e.pp ? { partido: partidoH(e.pp, { equipo: e.equipo, riv: rivH, posId: e.pos, ahora }) } : {}), clubes: clubesH(e.equipo, e.pp && e.pp.rival), etiqueta: etiquetaH };
+    return { tipo: 'novedades', clave, jornada, texto, hechos, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(e.que === 'vuelve' ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
   };
 
   // Varios: agrupados por lo que pasa, con una cabecera que ya cuenta la noticia y la media solo del que más pesa (Carlos, 3 nov 12:06)
@@ -167,7 +180,13 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos
     const clave = `novedades|${xs.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`;
-    return { tipo: 'novedades', clave, jornada, texto, numeros: [J, ...pps.map((p) => p.jornada), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...malos.flatMap((m) => [...numerosDe(m.parte), ...(m.motivoSan ? m.motivoSan.numeros : [])])],
+    const hechos = { tipo: 'novedades', noticia: 'cambios de estado en LaLiga Fantasy de varios jugadores',
+      jugadores: xs.map((e) => jugadorH(porId.get(String(e.id)), { equipos, principal: true,
+        estado: e.que === 'lesion' ? (e.parte && e.parte.estado === 'duda' ? 'duda' : 'lesionado') : e.que === 'sancion' ? 'sancionado' : 'disponible',
+        motivo: e.que === 'sancion' ? (e.motivoSan ? e.motivoSan.txt : '') : e.que === 'lesion' && e.parte && e.parte.lesion ? lesionTxt(e.parte) : '',
+        extra: e.pp ? { proximoRival: el(e.pp.rival) } : {} })),
+      clubes: clubesH(xs.map((e) => e.equipo), xs.map((e) => e.pp && e.pp.rival)), etiqueta };
+    return { tipo: 'novedades', clave, jornada, texto, hechos, numeros: [J, ...pps.map((p) => p.jornada), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...malos.flatMap((m) => [...numerosDe(m.parte), ...(m.motivoSan ? m.motivoSan.numeros : [])])],
       // buenas y malas noticias juntas: dos tarjetas, la verde con los que vuelven y la de bajas con el resto (Carlos, 5 nov 07:08)
       tarjeta: tarjetasNovedades({ jornada, filas: xs, clave, ppDe: (fs) => (fs.every((e) => e.equipo === fs[0].equipo) ? fs[0].pp : null) }) };
   };
