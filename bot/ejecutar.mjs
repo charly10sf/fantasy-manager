@@ -84,6 +84,12 @@ const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn, ve
   desdeDirecto: ventanas ? Date.now() - 3 * 3600e3 : 0,
   fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
 const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
+// en simulacro, --estado=<copia> carga un registro para leerlo (los estados de antes, los pendientes, lo publicado) sin guardarlo nunca:
+// así la prueba de la redacción (rama pruebas-redaccion) ve las mismas novedades que vio el bot de verdad
+if (!publica && arg('estado')) {
+  try { registro.datos = JSON.parse(readFileSync(arg('estado'), 'utf8')); registro.claves = new Set((registro.datos.enviados || []).map((e) => e.clave)); console.log(`# Registro de solo lectura: ${arg('estado')}`); }
+  catch (e) { console.log(`# No pude leer el registro ${arg('estado')}: ${e.message}`); }
+}
 ctx.registro = registro;
 // el % de titularidad y el rival para los tweets de un jugador (noticias y novedades; lib/info-jugador.mjs): se pide solo si hace falta
 ctx.info = config.infoJugador === false ? null : crearInfo({ jugadores, equipos, semana: sem, log: (s) => console.log(s) });

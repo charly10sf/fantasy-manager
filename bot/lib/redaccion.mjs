@@ -94,6 +94,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   for (const c of Object.values(hechos.clubes || {})) for (const n of c.nombres || []) { const x = norm(n).replace(/^(el|la) /, ''); permitidos.add(x); }
   for (const c of Object.keys(hechos.clubes || {})) permitidos.add(norm(c));
   for (const c of cronicas) for (const w of norm(`${c.titulo} ${c.entradilla}`).split(' ')) permitidos.add(w);
+  for (const w of norm(JSON.stringify(hechos, sinFecha)).split(' ')) if (w.length >= 3) permitidos.add(w);
   // (sin los nombres de los medios: «Mundo Deportivo» no es el Deportivo; primera prueba del 6 nov)
   const sinMedios = NOMBRES_MEDIOS.reduce((x, m) => x.split(m).join('·'.repeat(m.length)), t);
   const fuera = nombresEn(sinMedios, todos).filter((n) => !permitidos.has(n) && !n.split(' ').every((w) => permitidos.has(w)));
@@ -146,9 +147,14 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (/LaLiga Fantasy ya lo da/i.test(t)) e.push('«LaLiga Fantasy ya lo da…»');
   if (/\b(disponible|duda|baja|sancionado|lesionado)s? fantasy\b/i.test(t)) e.push('«Fantasy» pegado a un estado');
   if (/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i.test(t)) e.push(`muletilla de nota de prensa («${t.match(/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i)[0]}»)`);
-  if (segunTrasCifra(t)) {
-    const f = frases(t).find((x) => /\d.*\bseg[uú]n\s/i.test(x)) || '';
-    e.push(`en la frase «${f.slice(0, 90)}» hay una cifra antes de «según»: el medio solo puede ir en una frase sin cifras (la media, el % o la hora no son suyos)`);
+  // «según X» pegado a una cifra nuestra (la media, el %, la hora, el puesto): el trozo de frase justo antes del «según» (desde la última
+  // coma, dos puntos o punto) no puede llevar una cifra de los hechos que no esté también en la prensa (el «0-6 ante el PSG, según la
+  // SER» es del medio y vale)
+  const deLosHechos = new Set(cifrasDe(hechos).map(String)), deLaPrensa = new Set(cifrasDe(cronicas).map(String));
+  for (const m of t.matchAll(/\bseg[uú]n\s/gi)) {
+    const antes = t.slice(0, m.index).replace(/[\s,]+$/, '').split(/[,.;:!?\n(]/).pop();
+    const nuestras = (antes.match(/\d+/g) || []).filter((d) => deLosHechos.has(String(Number(d))) && !deLaPrensa.has(String(Number(d))));
+    if (nuestras.length) { e.push(`«${antes.trim().slice(-60)}, según…»: el medio va pegado a una cifra que no es suya (la media, el %, la hora o el puesto son de los hechos); pon la fuente en otra frase o delante`); break; }
   }
   if (PROHIBIDO.test(t)) e.push('@, #, enlace, primera persona o adjetivo de anuncio');
   if ((t.match(/¡/g) || []).length > 1) e.push('demasiados «¡»');
@@ -174,7 +180,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   for (const r of recientes) {
     if (entrada(t, nom) && entrada(t, nom) === entrada(r, nom)) { e.push(`empieza igual que un tuit reciente («${r.split('\n')[0].slice(0, 60)}…»)`); break; }
     const p = parecido(t, r, nom);
-    if (p >= 0.3) { e.push(`se parece demasiado a un tuit reciente (${Math.round(p * 100)} %: «${r.split('\n')[0].slice(0, 60)}…»)`); break; }
+    if (p >= 0.35) { e.push(`se parece demasiado a un tuit reciente (${Math.round(p * 100)} %: «${r.split('\n')[0].slice(0, 60)}…»)`); break; }
   }
   return [...new Set(e)];
 }

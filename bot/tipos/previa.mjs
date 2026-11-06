@@ -193,8 +193,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       for (const [k, eq, mm] of [['L', L, m.local], ['V', V, m.visitor]]) {
         const t = tablaH && tablaH.porId[String(mm.id)];
         eqH.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', ...(t && t.pj ? { va: `${t.pos}º de ${tablaH.n}`, marcaPorPartido: fmt(t.gf / t.pj), encajaPorPartido: fmt(t.gc / t.pj) } : {}) });
-        for (const x of pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => a.p - b.p).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'titularidad en el aire', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, principal: false });
-        for (const x of Object.values(probs[k]).filter(esBaja).sort((a, b) => md(b) - md(a)).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'baja', estado: x.estado === 'suspended' ? 'sancionado' : 'lesionado', ...(md(x) >= 1 ? { mediaPuntos: fmt(md(x)) } : {}), principal: false });
+        // (pocos y los que pesan: con tres dudas, tres bajas y dos fijos por equipo la IA los enumeraba todos; 6 nov)
+        for (const x of pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'titularidad en el aire', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, principal: false });
+        for (const x of Object.values(probs[k]).filter(esBaja).sort((a, b) => md(b) - md(a)).filter((x, i) => i === 0 || md(x) >= 3).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'baja', estado: x.estado === 'suspended' ? 'sancionado' : 'lesionado', ...(md(x) >= 1 ? { mediaPuntos: fmt(md(x)) } : {}), principal: false });
         for (const x of pos[k].once.filter((y) => y.p >= 0.8 && md(y) >= 4).sort((a, b) => md(b) - md(a)).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'fijo', titularidadFantasyManager: `${pct(x.p)} %`, mediaPuntos: fmt(md(x)), principal: false });
       }
       const cuH = cuando(m.date, ahora);
