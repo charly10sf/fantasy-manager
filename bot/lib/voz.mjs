@@ -39,6 +39,9 @@ DE DÓNDE SALE
 SOLO LO QUE SABES (Carlos, 7 nov: tuits borrados por decir cosas que no tenían base)
 - Los hechos son de un partido, de un jugador o de una noticia. No compares con lo que no viene: nada de «de los mejores de la jornada», «de los porteros que más han rentado esta jornada», «su mejor partido del año», «el más en forma de LaLiga», si los hechos no traen esa comparación. En un final o un MVP solo conoces ESE partido: del resto de la jornada no sabes nada.
 - Una valoración para el mánager sí («si lo tienes, al once», «mejor esperar a los onces»), pero que se siga de los datos y suene a consejo, no a profecía.
+- Una media de 8 o más es «de los que más puntos dan»; de 6 a 8, una buena media. Los puntos de hoy frente a su media: di lo que pone «hoyFrenteASuMedia» («casi el doble», «más del doble»…), no hagas tú la cuenta.
+- Cómo fue el partido solo sale del marcador y de los goles: nada de «se pasea», «domina», «decide el partido» o «firma el 3-0» si los goles no lo dicen (si marcó él, «marcó el 1-0» sí).
+- Un estadio no es un equipo: «el Rayo gana en Vallecas», no «Vallecas se lleva el 3-0».
 
 LO QUE DELATA A UNA IA (y no se escribe)
 - Frases de relleno o grandilocuentes que no dicen nada concreto: «deja su sello», «firma una actuación», «una noche para el recuerdo», «es de los que sostienen una plantilla», «no hay más que decir», cierres que resumen lo ya dicho.

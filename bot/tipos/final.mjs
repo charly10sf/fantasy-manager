@@ -6,7 +6,7 @@ import { CIERRES, corto, elegir, fmt, partes, el, del, al, largo, rotar, turno, 
 import { tweet, cap, segunda, proximoPartido, cuando } from '../lib/redactar.mjs';
 import { rachaDe } from '../lib/laliga.mjs';
 import { partidoEspn, reconstruir, minutoDe, incidenciasDe, sumarioEspn } from '../lib/relato.mjs';
-import { clubes as clubesH, estadio as estadioH } from '../lib/hechos.mjs';
+import { clubes as clubesH, estadio as estadioH, frenteMedia, franja } from '../lib/hechos.mjs';
 import { casarJugador } from './directo.mjs';
 import { lista, mayus, enLetra } from '../lib/agrupar.mjs';
 
@@ -280,7 +280,7 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     if (LG && !empate && top.pts >= 8 && !(config.tarjetas && config.tarjetas.jugador)) {
       const pp = await proximoPartido(top.ladoId, { jornada: jornada + 1 }).catch(() => null);
       const c = pp && pp.fecha ? cuando(pp.fecha) : null;
-      if (pp) proximoTop = { club: pp.rival, rival: el(pp.rival), ...(c ? { cuando: c.t } : { jornada: pp.jornada }) };
+      if (pp) proximoTop = { club: pp.rival, rival: el(pp.rival), ...(pp.enCasa != null ? { juega: pp.enCasa ? 'en casa' : 'fuera' } : {}), ...(c ? { cuando: c.t } : { jornada: pp.jornada }) };
       if (pp) { ideas.push({ t: `🗓️ ${cap(segunda(top.pos, top.nombre))} vuelve a jugar ${c ? `${c.t}, ` : `en la jornada ${pp.jornada}, `}contra ${el(pp.rival)}`, prio: 1, antes: true }); num.push(...(c ? c.numeros : [pp.jornada])); }
     }
     // con tweets largos, «el que se salva aunque pierde» y «el peor» cambian de orden entre sí según el partido (solo esas dos: el podio
@@ -296,14 +296,15 @@ export async function generar({ stats, jornada, jugadores, desdeFinal = 0, dazn 
     const { usadas, texto } = tweet(cab, ideas.map(({ fija, ultima, antes, rota, ...x }) => x), { pie });
     if (!usadas.length) continue;
     // los hechos para la IA que redacta (lib/redaccion.mjs): el marcador, los goles de ESPN, los puntos de cada uno y el contexto
-    const fila = (f, extra = {}) => ({ nombre: f.nombre, club: f.equipo, puntos: f.pts, ...(f.media != null && f.media >= 1 ? { mediaPuntos: fmt(f.media) } : {}), principal: false, ...extra });
-    const jugH = [fila(top, { papel: 'el mejor del partido', principal: true, ...(dobla ? { hoy: `más del ${top.pts > 3 * mediaR ? 'triple' : 'doble'} de su media` } : {}),
+    const fila = (f, extra = {}) => ({ nombre: f.nombre, club: f.equipo, puntos: f.pts, ...(f.media != null && f.media >= 1 ? { mediaPuntos: fmt(f.media), hoyFrenteASuMedia: frenteMedia(f.pts, f.media) } : {}), principal: false, ...extra });
+    const jugH = [fila(top, { papel: 'el que más puntos ha sacado de los dos equipos', principal: true,
       ...(racha ? { racha: `3 jornadas seguidas con 8 o más: ${racha.join(', ')}` } : {}), ...(proximoTop ? { proximoPartido: proximoTop } : {}) })];
     if (empate) jugH.push(fila(empate, { papel: 'empatado con el mejor', principal: true }));
     for (const f of ord.filter((x) => ![top.id, empate && empate.id].includes(x.id)).slice(0, 2)) jugH.push(fila(f, { papel: 'detrás del mejor' }));
     if (pierde && !jugH.some((x) => x.nombre === pierde.nombre)) jugH.push(fila(pierde, { papel: 'puntúa aunque su equipo pierde' }));
     for (const f of peores.length ? peores.slice(0, 3) : peor ? [peor] : []) if (!jugH.some((x) => x.nombre === f.nombre)) jugH.push(fila(f, { papel: 'el peor del partido' }));
-    const hechos = { tipo: 'final', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), marcador: `${gl}-${gv}`, fecha: m.date || null },
+    const hechos = { tipo: 'final', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), marcador: `${gl}-${gv}`, ...(franja(m.date) ? { horario: franja(m.date) } : {}), fecha: m.date || null },
+      alcance: 'datos de este partido: los jugadores de la lista son una selección (los que más y los que menos puntos han sacado); del resto de la jornada no se sabe nada',
       goles: r.goles || [], incidencias: r.incidencias || [], jugadores: jugH,
       ...(tablaAntes && tablaAntes[L] && tablaAntes[V] ? { antesDelPartido: { [L]: `${tablaAntes[L].pos}º`, [V]: `${tablaAntes[V].pos}º` } } : {}),
       clubes: clubesH(L, V, proximoTop ? proximoTop.club : null), etiqueta: pie };
