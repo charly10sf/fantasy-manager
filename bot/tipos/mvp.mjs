@@ -1,7 +1,7 @@
 // MVP de cada partido acabado: un tweet aparte con la tarjeta de jugador. Solo existe con la tarjeta de jugador encendida
 // (config.tarjetas.jugador): sin imagen repetiría lo que ya dice el tweet del final, así que ejecutar.mjs no lo publica sin ella.
 import { corto, fmt, partes, del, el, largo, rotar, ordenJornada, dineroTxt } from '../lib/texto.mjs';
-import { formaMvp, chocaConFinal } from './final.mjs';
+import { formaMvp, chocaConFinal, relato } from './final.mjs';
 import { tweet, segunda, cap, proximoPartido, cuando, puesto } from '../lib/redactar.mjs';
 import { clubes as clubesH, estadio as estadioH, frenteMedia, franja } from '../lib/hechos.mjs';
 import { incidenciasPartido } from '../lib/relato.mjs';
@@ -71,9 +71,11 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
     // los sucesos comprobados del partido (penaltis parados o fallados, rojas): si el MVP es un portero que para un penalti, sale de aquí
     const incidencias = await incidenciasPartido(m, (n, lado, o) => casarJugador(n, lado === 'local' ? m.local : m.visitor, o));
+    // y los goles (7 nov: sin ellos escribía «marcó en el Coliseum» o «decidió el 2-1» sin dato, y el revisor lo tiraba)
+    const goles = await relato(m, `mvp${jornada}`).then((r) => (r && r.goles) || []).catch(() => []);
     const hechos = { tipo: 'mvp', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), marcador: `${m.localScore}-${m.visitorScore}`, ...(franja(m.date) ? { horario: franja(m.date) } : {}), fecha: m.date || null },
       alcance: 'datos de este partido y de este jugador: del resto de la jornada no se sabe nada',
-      ...(incidencias.length ? { incidencias } : {}),
+      goles, ...(incidencias.length ? { incidencias } : {}),
       nota: 'el tuit del final de este partido acaba de salir: este va del mejor jugador y de lo que significa para el mánager',
       jugadores: [{ nombre, puesto: puesto(j.positionId) || undefined, club: equipo, papel: otro ? 'empatado como el que más puntos ha sacado del partido' : 'el que más puntos ha sacado del partido (de los dos equipos)',
         puntosHoy: pts, puntosTemporada: Number(j.points) || 0,

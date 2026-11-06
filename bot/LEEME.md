@@ -96,6 +96,22 @@ entiende a la primera o si suena a IA, a traducción o a plantilla. Sus motivos 
 Claude no contesta, el tuit sigue (ya pasó el validador): el revisor nunca bloquea por estar caído. `revisor.activo` a false lo apaga.
 En el log: «(redactar) …: el revisor no lo publicaría: …» y «(redactado por …, revisado por …)».
 
+Cómo lee el revisor: los hechos, la prensa que se le pasó a la redacción (en las previas; si no, tomaba por inventado lo que salía de
+ella) y los últimos tuits del tipo (tira el que repite su esqueleto o su cierre: en la prueba del 7 nov todos los MVP acababan en «Si lo
+tienes, …; si no, …»). Marca solo lo grave y manda su «publicable». Las cifras con palabras valen si cuadran con el «papel» de los
+hechos o, a grandes rasgos, con la escala de la cuenta. Cada tuit tiene hasta `redactar.intentos` (3) versiones que lleguen al revisor y
+una más si alguna se cae antes en el validador de código; y un presupuesto por ejecución (`redactar.segundosEjecucion`, 330 s: el
+trabajo de Actions corta a los 10 min) pasado el cual sale la plantilla.
+
+Hechos nuevos (7 nov) para que ni la redacción ni el revisor tengan que suponer: en final y MVP, `alcance` (solo ese partido; la lista
+de jugadores es una selección), `partido.horario` (mediodía, tarde o noche), `papel` del MVP (el que más puntos ha sacado de los dos
+equipos), `hoyFrenteASuMedia` de cada jugador («casi el doble de su media», «más del triple»…; `frenteMedia` en lib/hechos.mjs: con 17 y
+10 de media escribía «casi el doble») y si el próximo partido es en casa o fuera.
+
+Prueba con datos reales y Claude de verdad: rama `pruebas-revisor` (workflow «Bot pruebas revisor», solo vive ahí, como el de
+`pruebas-redaccion`). Tres vueltas el 7 nov: con el revisor, los finales de la J11 pasaron de 5 de 9 a 9 de 9 redactados y los MVP a 6-7
+de 9; las previas, de 3 a 5 de 19 (el resto, plantilla pulida por Claude).
+
 Pulir (`lib/pulir.mjs`, caídas, sancionados, lloros, resumen, liga, onces y lo que no se redacta) va desde el 7 nov con Claude (uso
 «pulir»; Gemini solo si no hay Claude): el flash-lite de Gemini, el que quedaba cuando se gastaba el cupo del flash, era el que enredaba
 los textos («16º clasificado en un duelo asequible ante uno de los rivales que más encajan»).
