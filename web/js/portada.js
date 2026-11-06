@@ -435,7 +435,9 @@ export function activarPortada() {
   }));
 
   if (pista && col) {
-    col.appendChild(pista); pista.classList.add('en-col'); pista.removeAttribute('aria-hidden'); pista.removeAttribute('tabindex');
+    // en la web, el texto va arriba, el panel de entrar debajo y esta pista al final; si no, dentro de la columna
+    const pant = portada.classList.contains('web') ? portada.querySelector('.pantalla') : null;
+    (pant || col).appendChild(pista); pista.classList.add('en-col'); pista.removeAttribute('aria-hidden'); pista.removeAttribute('tabindex');
     // bajar B: ratón con la rueda, hilo con un punto que baja y los tres pasos que hay debajo
     pista.innerHTML = `<span class="pb-izq" aria-hidden="true"><span class="pb-raton"><i></i></span><span class="pb-hilo"><i></i></span></span>
       <span class="pb-t"><span class="pb-tit">Baja con la rueda</span><span class="pb-txt">Debajo hay tres pantallas que cambian según bajas. Se ven en un minuto.</span>
