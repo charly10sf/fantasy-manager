@@ -1213,14 +1213,7 @@
   "3309": "out_of_league",
   "3310": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3207",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1793962572977
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/03/mourinho-da-descanso-gueler-tchouameni-llama-sergio-martinez.html": 1793708195000,
@@ -1228,7 +1221,6 @@
    "AS|https://as.com/futbol/primera/andres-martin-se-ha-roto-f202611-n/": 1793711657000,
    "AS|https://as.com/futbol/primera/aubameyang-el-cid-del-depor-f202611-n/": 1793711635000,
    "AS|https://as.com/futbol/primera/hierro-prolonga-el-mal-fario-de-los-delanteros-del-athletic-f202611-n/": 1793703983000,
-   "AS|https://as.com/futbol/peque-descartado-ante-el-alaves-kike-salas-duda-f202611-n/": 1793703492000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246691/orian-goren-principal-novedad-convocatoria-aston-villa.html": 1793711167000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246669/simeone-da-lista-bayern-cuti-romero.html": 1793708697000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246637/delantero-filial-asier-hierro-sufre-lesion-rodilla.html": 1793705184000,
@@ -1405,7 +1397,15 @@
    "ABC|https://www.abc.es/deportes/futbol/jacobo-ramon-marc-roca-alvaro-valles-estrenan-20261106114733-nt.html": 1793962206000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/06/6aed9130e4d4d8a7398b4572.html": 1793961998000,
    "SPORT|136150734": 1793958701000,
-   "SPORT|136153992": 1793958441000
+   "SPORT|136153992": 1793958441000,
+   "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/": 1793962556000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247866/tripleta-athletic-mantiene-espana.html": 1793962306000,
+   "SPORT|136156390": 1793958981000,
+   "SPORT|136156103": 1793958863000,
+   "SPORT|136156104": 1793958804000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/06/barrenetxea-vuelve-a-la-lista-de-luis-de-la-fuente-para-el-paron-de-noviembre-radio-san-sebastian/": 1793962860000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-llama-alvaro-valles-marc-roca-jacobo-ramon-recupera-pablo-barrios-barrenetxea-20261106_3470127.html": 1793961935000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000
   },
   "hechos": [
    {
@@ -1434,18 +1434,6 @@
      2,
      1
     ]
-   },
-   {
-    "guid": "AS|https://as.com/futbol/peque-descartado-ante-el-alaves-kike-salas-duda-f202611-n/",
-    "medio": "AS",
-    "t": 1793703492000,
-    "id": "2479",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Kike Salas es duda por gestión de cargas",
-    "motivo": "gestión de cargas",
-    "plazo": "",
-    "nums": []
    },
    {
     "guid": "SPORT|136041677",
@@ -2062,11 +2050,35 @@
     "nums": [
      100
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/",
+    "medio": "AS",
+    "t": 1793962556000,
+    "id": "2354",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/",
+    "medio": "AS",
+    "t": 1793962556000,
+    "id": "2355",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -3011,7 +3023,10 @@
    "SPORT|136150472": 1793953274000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959519000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-homenajes-haran-campos-primera-segunda-division-jesus-miguel-tendran-repercusion-hecho-suspender-jornada-20261106_3469893.html": 1793945073000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261106/1004247862/juez-competiciones-profesionales-inadmite-peticion-afe.html": 1793962289000,
+   "SPORT|136149880": 1793959104000
   },
   "hechos": [
    {
@@ -3634,11 +3649,28 @@
     "contexto": "Tras el fallecimiento de Jesús De Miguel",
     "detalle": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136149880",
+    "medio": "SPORT",
+    "t": 1793959104000,
+    "tipo": "suspension",
+    "estado": "descartado",
+    "segunda": false,
+    "jornada": 12,
+    "jTxt": false,
+    "clubes": [],
+    "luto": true,
+    "oficial": true,
+    "contexto": "",
+    "detalle": "",
+    "nums": [],
+    "regla": true
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
   "espera": {}
