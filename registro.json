@@ -1252,9 +1252,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/bardeli-de-regreso-f202611-n/": 1793727567000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246831/cuti-romero-queda-argentina.html": 1793729269000,
-   "SPORT|136052781": 1793727424000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/mourinho-se-desmarca-de-la-mistica-de-roma-antes-de-su-gran-reto-en-la-champions-no-creo-en-puntos-de-inflexion-cadena-ser/": 1793728400000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
@@ -1464,18 +1462,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/bardeli-de-regreso-f202611-n/",
-    "medio": "AS",
-    "t": 1793727567000,
-    "id": "3164",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "recuperación de lesión",
-    "plazo": "su evolución marcará su disponibilidad",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261103/1004246887/andres-martin-sufre-rotura-fibras.html",
     "medio": "Mundo Deportivo",
@@ -3076,7 +3062,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261103/1004246870/sant-cugat-remonta-figueres.html": 1793741132000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246888/grada-d-animacio-vuelve-suspension.html": 1793736587000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/la-federacion-aplaza-la-jornada-de-copa-en-senal-de-luto-y-el-tarancon-levante-se-reprograma-para-una-tercera-fecha-radio-valencia/": 1793731464000,
-   "ABC|https://www.abc.es/deportes/futbol/futbol-espanol-detiene-jesus-miguel-europa-limita-20261103183701-nt.html": 1793727422000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
