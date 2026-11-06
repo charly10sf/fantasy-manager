@@ -190,6 +190,7 @@ function entrarWebHTML() {
       <p>Mira todo lo que hace con una liga de ejemplo, sin cuenta y sin instalar nada.</p>
       <button class="btn ancho" data-accion="entrarDemo">Ver con una liga de ejemplo</button></section>
     <section class="ent-paso"><div class="ent-ca"><span class="ent-n">2</span><h2>Descárgala</h2></div>
+      <div class="ent-dos">
       <div class="ent-op ent-and">
         <div class="ent-oc"><span class="ent-logo">${ANDROID}</span><div><b class="ent-ot">Android</b><span class="ent-os">Descarga la app e instálala. Es gratis.</span></div></div>
         <div class="en-apk">
@@ -202,6 +203,7 @@ function entrarWebHTML() {
         <div class="ent-oc"><span class="ent-logo">${APPLE}</span><div><b class="ent-ot">iPhone</b><span class="ent-os">No hay app en la App Store: se usa desde Safari y se deja en la pantalla de inicio.</span></div></div>
         <ol class="ent-pasos"><li><span class="ent-sn">1</span><span>Entra aquí, en el ordenador, con tu cuenta de LaLiga.</span></li><li><span class="ent-sn">2</span><span>Ve a <b>Ajustes → Abrir en otro dispositivo</b>: te sale un QR.</span></li><li><span class="ent-sn">3</span><span>Escanéalo con la cámara del iPhone.</span></li></ol>
         <div class="en-ios-b"><button class="btn chico" data-accion="abrirSinApp">Entrar desde el ordenador</button><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone</a></div>
+      </div>
       </div>
       <details class="sin-app"><summary>No tengo la app en el móvil</summary>
       <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un QR (para la cámara del iPhone) o un código para escribirlo aquí en el iPhone. Si tienes la app en un Android, no hace falta nada de esto: usa su QR.</p>
