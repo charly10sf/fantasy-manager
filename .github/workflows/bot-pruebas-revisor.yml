@@ -23,7 +23,7 @@ jobs:
       BOT_IA: claude
       BOT_REDACTAR: '1'
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      TIPOS: noticias,novedades,previa,caidas,sancionados
+      TIPOS: noticias,novedades,previa
       HORAS: '30'
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
           echo "Registro de $(git -C /tmp/estado show -s --format=%ci "$C")"
       - name: Sin topes para la prueba (solo en esta copia del runner)
         run: |
-          node -e "const f='bot/config.json',c=require('./'+f);c.maxPorEjecucion=40;c.topeDiario=200;for(const k of Object.keys(c.topes))c.topes[k]=50;require('fs').writeFileSync(f,JSON.stringify(c,null,1))"
+          node -e "const f='bot/config.json',c=require('./'+f);c.maxPorEjecucion=40;c.redactar.segundosEjecucion=3000;c.topeDiario=200;for(const k of Object.keys(c.topes))c.topes[k]=50;require('fs').writeFileSync(f,JSON.stringify(c,null,1))"
       - name: Simulacro con la redacción nueva
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
