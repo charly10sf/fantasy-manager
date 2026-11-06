@@ -1253,7 +1253,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/bardeli-de-regreso-f202611-n/": 1793727567000,
-   "SPORT|136045584": 1793725567000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246831/cuti-romero-queda-argentina.html": 1793729269000,
    "SPORT|136052781": 1793727424000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000,
@@ -3066,8 +3065,6 @@
    "ABC|https://www.abc.es/deportes/futbol/futbol-espanol-detiene-jesus-miguel-europa-limita-20261103183701-nt.html": 1793727422000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793726418000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261103/11674781/jesus-de-miguel-muere-owono-jugador-tenerife-portero-anodorra-en-directo.html": 1793726204000,
-   "AS|https://as.com/futbol/primera/afe-pide-suspender-todos-los-partidos-en-espana-f202611-n/": 1793725462000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/03/afe-solicita-a-rfef-laliga-y-uefa-la-suspension-de-todos-los-partidos-de-futbol-en-espana-del-3-al-9-de-noviembre-cadena-ser/": 1793725318000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3257,39 +3254,6 @@
     "contexto": "Por la muerte del delantero Jesús de Miguel",
     "detalle": "LaLiga medita la decisión",
     "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/afe-pide-suspender-todos-los-partidos-en-espana-f202611-n/",
-    "medio": "AS",
-    "t": 1793725462000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Petición del sindicato de futbolistas",
-    "detalle": "Reclamada una semana de luto",
-    "nums": []
-   },
-   {
-    "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/03/afe-solicita-a-rfef-laliga-y-uefa-la-suspension-de-todos-los-partidos-de-futbol-en-espana-del-3-al-9-de-noviembre-cadena-ser/",
-    "medio": "Cadena SER",
-    "t": 1793725318000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Solicitud de la AFE",
-    "detalle": "",
-    "nums": [
-     3,
-     9
-    ]
    },
    {
     "guid": "SPORT|136078404",
