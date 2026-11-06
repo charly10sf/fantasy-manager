@@ -202,10 +202,11 @@ function entrarWebHTML() {
       <div class="ent-op en-ios">
         <div class="ent-oc"><span class="ent-logo">${APPLE}</span><div><b class="ent-ot">iPhone</b><span class="ent-os">No hay app en la App Store: se usa desde Safari y se deja en la pantalla de inicio.</span></div></div>
         <ol class="ent-pasos"><li><span class="ent-sn">1</span><span>Entra aquí, en el ordenador, con tu cuenta de LaLiga.</span></li><li><span class="ent-sn">2</span><span>Ve a <b>Ajustes → Abrir en otro dispositivo</b>: te sale un QR.</span></li><li><span class="ent-sn">3</span><span>Escanéalo con la cámara del iPhone.</span></li></ol>
-        <div class="en-ios-b"><button class="btn chico" data-accion="abrirSinApp">Entrar desde el ordenador</button><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone</a></div>
+        <div class="en-ios-b"><button class="btn chico" data-accion="abrirSinApp">Entrar desde el ordenador</button><a class="en-ios-g" href="instalar.html#iphone">Guía para iPhone, con dibujos</a></div>
       </div>
       </div>
-      <details class="sin-app"><summary>No tengo la app en el móvil</summary>
+      <details class="sin-app"><summary>No tengo la app en el móvil<span class="en-dib-tag">con dibujos</span></summary>
+      <a class="en-dib-btn" href="instalar.html#sin-app" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg><span><b>Ver los pasos con dibujos</b><small>El F12 se entiende mucho mejor viéndolo</small></span><i aria-hidden="true">›</i></a>
       <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un QR (para la cámara del iPhone) o un código para escribirlo aquí en el iPhone. Si tienes la app en un Android, no hace falta nada de esto: usa su QR.</p>
       <ol>
         <li>Pulsa <b>Abrir la página de LaLiga</b>: se abre en otra pestaña.</li>
@@ -214,7 +215,6 @@ function entrarWebHTML() {
         <li>En <b>Red</b>, la última fila (cancelada) empieza por <b>?state=…&amp;code=…</b>: botón derecho → <b>Copiar → Copiar dirección del enlace</b>.</li>
         <li>Pégala aquí debajo y pulsa Entrar.</li>
       </ol>
-      <p class="en-dib"><a href="instalar.html#sin-app" target="_blank" rel="noopener">Ver estos pasos con dibujos</a></p>
       <button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>
       <textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea>
       <button class="btn chico" data-accion="pegarVuelta">Entrar</button>
