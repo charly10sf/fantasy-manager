@@ -144,6 +144,10 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
       break;
     }
   }
+  // «colista» y «líder» solo si hay un equipo en los hechos que lo es (6 nov: «el Levante, colista de hecho (18º)»)
+  const puestos = (hechos.equipos || []).map((x) => String(x.va || '').match(/^(\d+)º de (\d+)/)).filter(Boolean);
+  if (/\bcolista\b/i.test(t) && !puestos.some((m) => m[1] === m[2])) e.push('dice «colista» y ningún equipo de los hechos va último');
+  if (/\bl[ií]der\b/i.test(t) && !puestos.some((m) => m[1] === '1')) e.push('dice «líder» y ningún equipo de los hechos va primero');
   if (VAGAS.test(t)) { VAGAS.lastIndex = 0; e.push(`nombra un club o un jugador con una palabra vaga («${(t.match(VAGAS) || [])[0]}»)`); }
   VAGAS.lastIndex = 0;
   if (/conjunto\s+\p{Ll}/u.test(t)) e.push('«el conjunto…» en vez del nombre del club');
