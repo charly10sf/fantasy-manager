@@ -1244,7 +1244,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136042531": 1793714741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261103/1004246788/guruzeta-empieza-cuenta-hoy-sido-operado-rodilla-izquierda.html": 1793722204000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/03/antiviolencia-propone-sancionar-youtuber-inaki-angulo-60-001-euros-insultar-bellerin.html": 1793723901000,
    "AS|https://as.com/futbol/primera/bardeli-de-regreso-f202611-n/": 1793727567000,
@@ -1449,7 +1448,10 @@
    "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/frenkie-de-jong-mai-canvia-un-partit-no-es-transcendent-sercat/": 1793972676000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-marcos-hablado-supone-jugar-sadar-20261106143832-nt.html": 1793972652000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/06/eric-garcia-y-christensen-apuntan-al-metropolitano-cadena-ser/": 1793973431000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/06/eric-garcia-y-christensen-apuntan-al-metropolitano-cadena-ser/": 1793973431000,
+   "MARCA|https://www.marca.com/futbol/athletic/2026/11/06/terzic-tira-marcos-encarar-visita-sabado-osasuna.html": 1793973914000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/06/javier-aguirre-da-razones-rinde-sadiq-136166220.html": 1793973720000,
+   "El Correo|https://www.elcorreo.com/athletic/terzic-pierde-paredes-leve-lesion-muscular-espera-20261106145848-nt.html": 1793973528000
   },
   "hechos": [
    {
@@ -2157,11 +2159,35 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/06/terzic-tira-marcos-encarar-visita-sabado-osasuna.html",
+    "medio": "MARCA",
+    "t": 1793973914000,
+    "id": "2315",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Paredes es baja para el partido ante Osasuna",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "El Correo|https://www.elcorreo.com/athletic/terzic-pierde-paredes-leve-lesion-muscular-espera-20261106145848-nt.html",
+    "medio": "El Correo",
+    "t": 1793973528000,
+    "id": "2315",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Paredes sufre una leve lesión muscular",
+    "motivo": "lesión muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
