@@ -1237,7 +1237,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000,
    "MARCA|https://www.marca.com/futbol/levante/2026/11/03/enzo-bardeli-regresa-grupo.html": 1793717987000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/mourinho-se-desmarca-de-la-mistica-de-roma-antes-de-su-gran-reto-en-la-champions-no-creo-en-puntos-de-inflexion-cadena-ser/": 1793728400000,
-   "Cadena SER|https://cadenaser.com/cantabria/2026/11/03/andres-martin-tiene-una-rotura-de-fibras-radio-santander/": 1793710117000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
    "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/03/pedro-martinez-quiere-recuperar-eli-ndiaye-136041146.html": 1793717014000,
@@ -1420,7 +1419,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247891/christensen-eric-siguen-evolucion-dias-atleti.html": 1793966557000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247910/tchouameni-vuelve-vinicius-descansa-ultimo-entrenamiento-real-madrid-valencia.html": 1793967950000,
    "SPORT|136161977": 1793964440000,
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/eric-i-christensen-apunten-al-metropolitano-sercat/": 1793968183000
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/eric-i-christensen-apunten-al-metropolitano-sercat/": 1793968183000,
+   "MARCA|https://www.marca.com/futbol/valencia/2026/11/06/javier-aguirre-mbappe-indefendible.html": 1793969318000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tuchel-apuesta-menor-bellingham-repita-polemica-cole-palmer-20261106_3470347.html": 1793969284000
   },
   "hechos": [
    {
@@ -1484,18 +1485,6 @@
     "hecho": "Enzo Bardeli regresa a los entrenamientos grupales",
     "motivo": "",
     "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Cadena SER|https://cadenaser.com/cantabria/2026/11/03/andres-martin-tiene-una-rotura-de-fibras-radio-santander/",
-    "medio": "Cadena SER",
-    "t": 1793710117000,
-    "id": "3073",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Andrés Martín sufre una lesión muscular",
-    "motivo": "",
-    "plazo": "varias semanas",
     "nums": []
    },
    {
@@ -2147,7 +2136,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
