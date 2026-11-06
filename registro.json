@@ -1460,7 +1460,8 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html": 1793985142000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000,
    "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000,
-   "AS|https://as.com/futbol/primera/roberto-y-en-el-proximo-paron-dos-internacionales-mas-f202611-n/": 1793987444000
+   "AS|https://as.com/futbol/primera/roberto-y-en-el-proximo-paron-dos-internacionales-mas-f202611-n/": 1793987444000,
+   "SPORT|136175696": 1793983934000
   },
   "hechos": [
    {
@@ -2222,7 +2223,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -3835,6 +3836,8 @@
    "n": 11,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136162605": 1793988373508
+  }
  }
 }
