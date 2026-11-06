@@ -356,6 +356,13 @@
    "jornada": 12,
    "id": "2118697752536207625",
    "t": "2026-11-06T13:31:22.634Z"
+  },
+  {
+   "clave": "noticias|1480:buena|2026-11-06",
+   "tipo": "noticias",
+   "jornada": 12,
+   "id": "2118720430550724939",
+   "t": "2026-11-06T15:01:29.482Z"
   }
  ],
  "estados": {
@@ -1252,7 +1259,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246831/cuti-romero-queda-argentina.html": 1793729269000,
    "SPORT|136052781": 1793727424000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261103/1004246856/atletico-once-medirse-bayern-sorpresa-ataque.html": 1793732109000,
-   "MARCA|https://www.marca.com/futbol/levante/2026/11/03/enzo-bardeli-regresa-grupo.html": 1793717987000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/mourinho-se-desmarca-de-la-mistica-de-roma-antes-de-su-gran-reto-en-la-champions-no-creo-en-puntos-de-inflexion-cadena-ser/": 1793728400000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/andorra-traslada-nuestro-sincero-pesame-familia-jesus-miguel-tenerife-todas-personas-cercanas-ninguna-palabra-aliviar-dolor-asi-queremos-sepan-lado-compartimos-profundamente-tristeza-20261103_3467862.html": 1793722316000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/santiago/2026/11/03/pepe-casal-lesion-chuck-verderber-marco-despues-obradoiro-estreno-primera-division/00031793731940323564930.htm": 1793732236000,
@@ -1451,7 +1457,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/eric-garcia-y-christensen-apuntan-al-metropolitano-cadena-ser/": 1793973431000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/06/terzic-tira-marcos-encarar-visita-sabado-osasuna.html": 1793973914000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/06/javier-aguirre-da-razones-rinde-sadiq-136166220.html": 1793973720000,
-   "El Correo|https://www.elcorreo.com/athletic/terzic-pierde-paredes-leve-lesion-muscular-espera-20261106145848-nt.html": 1793973528000
+   "El Correo|https://www.elcorreo.com/athletic/terzic-pierde-paredes-leve-lesion-muscular-espera-20261106145848-nt.html": 1793973528000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/vuelven-gueler-tchouameni.html": 1793976866000
   },
   "hechos": [
    {
@@ -1464,18 +1471,6 @@
     "hecho": "",
     "motivo": "recuperación de lesión",
     "plazo": "su evolución marcará su disponibilidad",
-    "nums": []
-   },
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/levante/2026/11/03/enzo-bardeli-regresa-grupo.html",
-    "medio": "MARCA",
-    "t": 1793717987000,
-    "id": "3164",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Enzo Bardeli regresa a los entrenamientos grupales",
-    "motivo": "",
-    "plazo": "",
     "nums": []
    },
    {
@@ -2183,11 +2178,23 @@
     "motivo": "lesión muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/vuelven-gueler-tchouameni.html",
+    "medio": "MARCA",
+    "t": 1793976866000,
+    "id": "1480",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Tchouaméni vuelve a la convocatoria del Real Madrid",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -2998,9 +3005,9 @@
  },
  "pulido": {
   "dia": "2026-11-06",
-  "n": 7,
+  "n": 8,
   "ok": 2,
-  "mal": 7
+  "mal": 8
  },
  "liga": {
   "vistas": {
