@@ -1385,7 +1385,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
-   "SPORT|136149474": 1793956100000
+   "SPORT|136149474": 1793956100000,
+   "Cadena SER|https://cadenaser.com/castillayleon/2026/11/06/el-embajador-de-china-confirma-en-salamanca-conversaciones-entre-el-gobierno-de-pekin-y-la-liga-para-reconducir-la-situacion-tras-la-polemica-provocada-por-mbappe-radio-salamanca/": 1793959856000
   },
   "hechos": [
    {
@@ -2072,7 +2073,7 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -2924,7 +2925,6 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/03/suspendidos-partidos-copa-rey-copa-reina-muerte-jesus-miguel/00031793714469910192824.htm": 1793718900000,
    "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-respalda-hijos-nacionalizados-puedan-votar-advierte-inseguridad-si-impide-20261103113539.html": 1793702139000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/03/la-rfef-suspende-la-jornada-de-futbol-de-este-3-de-noviembre-por-el-fallecimiento-de-jesus-de-miguel-cadena-ser/": 1793701247000,
-   "ABC|https://www.abc.es/deportes/futbol/rfef-suspende-jornada-futbol-martes-muestra-respeto-20261103111522-nt.html": 1793700923000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
    "SPORT|136080803": 1793795045000,
@@ -3017,7 +3017,9 @@
    "Cadena SER|https://cadenaser.com/andorra/2026/11/06/pique-vilaseca-i-nogues-encapcalen-la-representacio-de-lfc-andorra-al-multitudinari-funeral-de-jesus-de-miguel-radio-ser-principat-d-andorra/": 1793951972000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/": 1793957388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247829/rfef-juez-unico-no-competencias-aplazar-jornada-segunda.html": 1793957172000,
-   "SPORT|136150472": 1793953274000
+   "SPORT|136150472": 1793953274000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959519000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-homenajes-haran-campos-primera-segunda-division-jesus-miguel-tendran-repercusion-hecho-suspender-jornada-20261106_3469893.html": 1793945073000
   },
   "hechos": [
    {
@@ -3628,12 +3630,9 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-homenajes-haran-campos-primera-segunda-division-jesus-miguel-tendran-repercusion-hecho-suspender-jornada-20261106_3469893.html": 1793958673341,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959872122
-  }
+  "espera": {}
  }
 }
