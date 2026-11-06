@@ -1375,7 +1375,8 @@
    "SPORT|136131753": 1793939436000,
    "SPORT|136145842": 1793937667000,
    "SPORT|136145830": 1793937662000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247763/sube-baja-lateral-diestro-athletic.html": 1793945100000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247763/sube-baja-lateral-diestro-athletic.html": 1793945100000,
+   "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/": 1793952909000
   },
   "hechos": [
    {
@@ -2044,11 +2045,25 @@
      4,
      12
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/",
+    "medio": "AS",
+    "t": 1793952909000,
+    "id": "3208",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Rodri causa baja para el partido del domingo",
+    "motivo": "baja",
+    "plazo": "",
+    "nums": [
+     100
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -2991,7 +3006,8 @@
    "AS|https://as.com/futbol/alineacion-posible-del-alaves-ante-el-sevilla-en-laliga-ea-sports-f202611-n/": 1793919492000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-aplazamiento-jornada-segunda-division-juez-unico-competicion-20261105_3469885.html": 1793918409000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247765/capitanes-segunda-piden-rfef-aplazar-jornada.html": 1793918307000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/05/afe-solicita-al-juez-unico-de-competiciones-que-aplace-todos-los-partidos-de-segunda-cadena-ser/": 1793918199000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/05/afe-solicita-al-juez-unico-de-competiciones-que-aplace-todos-los-partidos-de-segunda-cadena-ser/": 1793918199000,
+   "Cadena SER|https://cadenaser.com/andorra/2026/11/06/pique-vilaseca-i-nogues-encapcalen-la-representacio-de-lfc-andorra-al-multitudinari-funeral-de-jesus-de-miguel-radio-ser-principat-d-andorra/": 1793951972000
   },
   "hechos": [
    {
@@ -3563,11 +3579,9 @@
   ],
   "gemini": {
    "dia": "2026-11-06",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/andorra/2026/11/06/pique-vilaseca-i-nogues-encapcalen-la-representacio-de-lfc-andorra-al-multitudinari-funeral-de-jesus-de-miguel-radio-ser-principat-d-andorra/": 1793952374159
-  }
+  "espera": {}
  }
 }
