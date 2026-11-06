@@ -3,10 +3,11 @@
 //   final   -> tarjeta de final de partido (si tarjetas.final)
 //   mvp     -> tarjeta de jugador del MVP (si tarjetas.jugador)
 //   caidas y novedades -> tarjeta de bajas (de un equipo o en lista), montada por el tipo (si tarjetas.caidas / tarjetas.novedades)
+//   onceideal -> la tarjeta del once ideal de la jornada, montada por el tipo (si tarjetas.onceideal)
 //   sancionados -> la de bajas de los sancionados y la de apercibidos, separados por equipo (si tarjetas.sancionados)
 //   directo -> tarjeta de cada jugador implicado: goleador, asistente, expulsado o el que falla el penalti (si tarjetas.jugador)
 // Lo que no pasa el validador no sale: el tweet del final se publica entonces sin imagen y el del MVP no se publica.
-import { svgFinal, svgJugador, svgResumen, svgOnces, svgMercado, svgBajas, svgApercibidos, aPng } from './tarjetas.mjs';
+import { svgFinal, svgJugador, svgResumen, svgOnces, svgOnceIdeal, svgMercado, svgBajas, svgApercibidos, aPng } from './tarjetas.mjs';
 import { datosFinal, datosJugador, historialJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
 import { validarTarjeta } from './validar.mjs';
 import * as LL from './laliga.mjs';
@@ -39,6 +40,7 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
         d[k].escudo = await img(d[k].escudoUrl);
         const caraDe = async (j) => { const p = j.id != null && porId.get(String(j.id)); return p ? img(p.image || (p.images && p.images.transparent && p.images.transparent['256x256'])) : null; };
         for (const j of d[k].once) { j.cara = await caraDe(j); if (j.alt) j.alt.cara = await caraDe(j.alt); }
+        for (const j of d[k].suplentes || []) j.cara = await caraDe(j);
       }
     }
     if (tarjeta.tipo === 'bajas') {
@@ -56,8 +58,9 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
       }
     }
     if (tarjeta.tipo === 'apercibidos') for (const e of d.equipos) { e.escudo = await img(e.escudoUrl); for (const j of e.jugadores) j.cara = await img(j.caraUrl); }
+    if (tarjeta.tipo === 'onceideal') for (const j of d.once) { j.cara = await img(j.caraUrl); j.escudo = await img(j.escudoUrl); }
     if (tarjeta.tipo === 'mercado') for (const f of [...d.suben, ...d.bajan]) { f.cara = await img(f.caraUrl); f.escudo = await img(f.escudoUrl); }
-    const dibujo = { resumen: svgResumen, onces: svgOnces, mercado: svgMercado, bajas: svgBajas, apercibidos: svgApercibidos }[tarjeta.tipo] || svgOnces;
+    const dibujo = { resumen: svgResumen, onces: svgOnces, onceideal: svgOnceIdeal, mercado: svgMercado, bajas: svgBajas, apercibidos: svgApercibidos }[tarjeta.tipo] || svgOnces;
     await hacer(tarjeta.nombre, { d, permitidos }, dibujo(d));
   }
   const m = stats.find((x) => String(x.id) === String(t.partido));

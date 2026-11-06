@@ -48,6 +48,9 @@ jobs:
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       # Noticias de prensa (bot/tipos/noticias.mjs): clave de Google AI Studio solo del bot. Sin ella, ese tipo no hace nada
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      # Claude (bot/lib/claude.mjs y lib/ia.mjs): Haiku clasifica las noticias y Sonnet redacta los tweets desde los hechos (6 nov). Sin ella,
+      # todo vuelve a Gemini y a la plantilla. La crea Carlos en platform.claude.com; tope propio de gasto en bot/config.json («ia»)
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       TIPOS: ${{ inputs.tipos }}
     steps:
       - uses: actions/checkout@v4

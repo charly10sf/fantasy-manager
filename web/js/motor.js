@@ -961,6 +961,24 @@ export function analizar(D, H, c, extra = {}) {
   // los días de cláusula que le quedan, lo que ha subido el último día y cuándo juega. Devuelve el motivo para esperar
   // (y la nota con los días de cláusula, que sale siempre) o null si se puede vender ya. Con la cláusula protegida
   // (14 días de fichaje o blindaje) nadie lo clausula: no hay prisa por ese lado, pero tampoco cobras cláusula
+  // Qué dice la cláusula ABIERTA de uno tuyo frente a venderlo a LaLiga (aviso de Domy, 6 nov: «cuando te recomiende una
+  // venta, tiene que tener en cuenta en qué valor se encuentra la cláusula abierta»). Antes solo salía «su cláusula está
+  // abierta» sin cifras. Ahora dice cuánto es, cuánto sobre su valor, cuánto daría LaLiga y qué sale mejor. `espera`: la
+  // cláusula está por encima de LaLiga y a algún rival le llega (si te lo clausulan cobras más que vendiéndolo)
+  M.ventaClausula = (x) => {
+    if (!x || !x.j || !x.abierta || !x.clausula || !x.j.valor) return null;
+    const vLiga = M.ofertaLiga && !M.ofertaLiga.poco ? Math.max(0, M.ofertaLiga.med) : 0.05;
+    const liga = x.j.valor * (1 + vLiga), sobre = x.clausula / x.j.valor - 1;
+    const pg = x.pagan, llega = !!(pg && pg.seguro && pg.seguro.length), nadie = !!(pg && pg.hayDatos && !llega && !(pg.quiza && pg.quiza.length));
+    const cab = `Su cláusula está abierta en ${eur(x.clausula)} (${sobre >= 0.005 ? `${pct(sobre * 100, 0, false)} sobre su valor` : 'a su valor'}) y LaLiga te daría unos ${eur(liga)}`;
+    if (x.clausula >= liga) {
+      if (llega && ['medio', 'alto'].includes(x.riesgo)) return { tipo: 'clausula', espera: true, txt: `${cab}: la cláusula paga más y a algún rival le llega, así que si te lo clausulan cobras más que vendiéndolo.` };
+      if (nadie) return { tipo: 'nadie', espera: false, txt: `${cab}: la cláusula paga más, pero no le llega a ningún rival, así que no te lo van a quitar y no hay prisa por ese lado.` };
+      return { tipo: 'alta', espera: false, txt: `${cab}: la cláusula paga más, pero no es seguro que algún rival la pague.` };
+    }
+    if (x.riesgo && x.riesgo !== 'ninguno') return { tipo: 'baja', espera: false, txt: `${cab}: te lo pueden clausular por menos de lo que te da LaLiga, así que si lo vas a vender, mejor a LaLiga.` };
+    return { tipo: 'baja', espera: false, txt: `${cab}.` };
+  };
   M.esperarVenta = (x) => {
     // (de baja no hay nada que esperar; con una sanción de un partido, como cualquier otro. Antes devolvía null y quien
     // miraba .tipo de uno de baja fallaba)
@@ -968,7 +986,7 @@ export function analizar(D, H, c, extra = {}) {
     const diasProt = x.abreEn > 0 ? Math.max(1, Math.ceil(x.abreEn / DIA)) : 0;
     const notaClausula = diasProt
       ? `Su cláusula sigue protegida ${diasProt} día${diasProt > 1 ? 's' : ''} más: nadie te lo puede clausular hasta entonces.`
-      : x.clausula ? `Su cláusula (${eur(x.clausula)}) está abierta.` : '';
+      : (M.ventaClausula(x) || {}).txt || (x.clausula ? `Su cláusula (${eur(x.clausula)}) está abierta.` : '');
     // 1. juega pronto y es titular: lo normal es esperar a ver cómo puntúa antes de venderlo a LaLiga
     const p = M.proximoPartido(x.j.equipoId);
     const tit = M.titularidad(x.j);
@@ -980,10 +998,8 @@ export function analizar(D, H, c, extra = {}) {
       return { tipo: 'sube', nota: notaClausula, texto: `Hoy ha subido ${pct(x.tend.p1, 1, false)}: la bajada de la semana se está frenando, mejor esperar un día.` };
     }
     // 3. cláusula abierta, por encima de lo que da LaLiga y con quien pueda pagarla: si te lo clausulan cobras más
-    const vLiga = M.ofertaLiga && !M.ofertaLiga.poco ? Math.max(0, M.ofertaLiga.med) : 0.05;
-    if (x.abierta && x.clausula && x.ratio >= 1 + vLiga && ['medio', 'alto'].includes(x.riesgo) && x.pagan && x.pagan.seguro && x.pagan.seguro.length) {
-      return { tipo: 'clausula', nota: notaClausula, texto: `Su cláusula (${eur(x.clausula)}) está abierta, por encima de lo que te da LaLiga, y a algún rival le llega: si te lo clausulan cobras más que vendiéndolo.` };
-    }
+    const vc = M.ventaClausula(x);
+    if (vc && vc.espera) return { tipo: 'clausula', nota: notaClausula, texto: vc.txt };
     return { tipo: null, nota: notaClausula, texto: '' };
   };
 
@@ -1981,12 +1997,13 @@ function acciones(D, M, c) {
 
   // la inercia: lo que ha girado a la baja se vende ya; lo que está a punto de girar, antes de que gire
   // (los que ya están en venta no: ahí manda la oferta que tengan, en «Tus jugadores en venta»)
-  M.mias.filter((x) => x.ventaInercia && !M.vendeBaja(x) && !M.enVenta.has(x.pid)).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
+  // (si la cláusula está abierta por encima de LaLiga y a algún rival le llega, y aún no ha girado, no se manda vender: espera a que te la paguen)
+  M.mias.filter((x) => x.ventaInercia && !M.vendeBaja(x) && !M.enVenta.has(x.pid) && !(x.ventaInercia.urgencia !== 'ya' && M.esperarVenta(x).tipo === 'clausula')).sort((a, b) => b.ventaInercia.perder - a.ventaInercia.perder).slice(0, 3).forEach((x, k) => {
     const vi = x.ventaInercia, pierde = M.perdida(x.pid);
     add({
       tipo: 'vender', prio: (vi.urgencia === 'ya' ? 86 : 68) - k, icono: 'hucha', pid: x.pid, cuando: vi.urgencia === 'ya' ? 'Hoy' : 'Antes de que gire',
       titulo: vi.urgencia === 'ya' ? `Vende a ${x.j.nombre}: ha girado a la baja` : `Vende a ${x.j.nombre} antes de que gire`,
-      texto: `${vi.texto}${pierde >= 0.3 ? ` Es titular en tu once (${String(Math.round(pierde * 10) / 10).replace('.', ',')} pts por jornada): busca quién lo sustituya.` : ' No es imprescindible en tu once.'}${x.compra ? ` Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}).` : ''}`,
+      texto: `${vi.texto}${pierde >= 0.3 ? ` Es titular en tu once (${String(Math.round(pierde * 10) / 10).replace('.', ',')} pts por jornada): busca quién lo sustituya.` : ' No es imprescindible en tu once.'}${x.compra ? ` Lo pagaste a ${eur(x.compra)} y vale ${eur(x.j.valor)} (${eur(x.ganado, { signo: true })}).` : ''}${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`,
     });
   });
 
@@ -2110,9 +2127,10 @@ export function planAuto(D, M, c) {
   for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ventaInercia && y.j.pos !== 5 && !M.enVenta.has(y.pid))) {
     const vi = x.ventaInercia;
     if (vi.urgencia !== 'ya' && M.perdida(x.pid) >= 1.5) continue;
+    if (vi.urgencia !== 'ya' && M.esperarVenta(x).tipo === 'clausula') continue;
     if (dejaHueco(x)) continue;
     op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
-      motivo: `${vi.texto}${M.perdida(x.pid) >= 0.3 ? ` Te quita unos ${String(Math.round(M.perdida(x.pid) * 10) / 10).replace('.', ',')} pts por jornada: ficha a quien lo sustituya.` : ''}`, confianza: vi.urgencia === 'ya' ? 'alta' : 'media' });
+      motivo: `${vi.texto}${M.perdida(x.pid) >= 0.3 ? ` Te quita unos ${String(Math.round(M.perdida(x.pid) * 10) / 10).replace('.', ',')} pts por jornada: ficha a quien lo sustituya.` : ''}${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`, confianza: vi.urgencia === 'ya' ? 'alta' : 'media' });
     saldo += x.j.valor; vendidos.add(x.pid);
   }
 

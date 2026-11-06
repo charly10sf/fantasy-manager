@@ -1223,6 +1223,13 @@ body.en-tour { overflow: hidden; }
 .entrar-movil > span { font-size: 14.5px; line-height: 1.5; color: var(--texto2); }
 .entrar-movil > span b { color: var(--texto); }
 .entrar-movil .btn { margin-top: 4px; }
+.entrar-movil .em-pasos { list-style: none; margin: 4px 0 2px; padding: 0; display: grid; gap: 10px; counter-reset: none; }
+.entrar-movil .em-pasos li { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; font-size: 14.5px; line-height: 1.45; color: var(--texto2); }
+.entrar-movil .em-pasos li b { color: var(--texto); }
+.entrar-movil .em-n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--rojo); color: #fff; font: 700 15px var(--cond); }
+.entrar-movil .em-t { display: block; margin-bottom: 2px; font: 700 17px var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
+.entrar-movil .em-pasos li a { color: var(--rojo-l); }
+.entrar-movil .em-guia { margin-top: 6px; }
 .entrar-o { margin: 4px 0 8px; font-size: 13.5px; color: var(--apagado); text-align: left; }
 .entrar-movil a.btn { color: #fff; }
 .entrar-movil a.btn .ic { color: #fff; }
@@ -2059,6 +2066,11 @@ button.cr-p:active { background: var(--plano); }
 .pt-baja-g .ic { color: var(--rojo-l); }
 .pt-baja-g:hover { border-color: var(--rojo3); background: var(--rojo-s); }
 .portada .pt-baja a.pt-baja-a, .portada .pt-baja a.pt-baja-a .ic { color: #fff; }
+/* la pista fija de abajo: mientras estás arriba del todo y los botones de debajo no caben en la pantalla */
+.pt-pista { position: fixed; z-index: 20; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translate(-50%, 12px); display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 999px; background: var(--rojo); border: 0; box-shadow: 0 10px 30px rgba(238, 28, 60, 0.45), 0 0 0 6px rgba(8, 8, 10, 0.55); font: 700 15px var(--cond); text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; text-decoration: none; opacity: 0; pointer-events: none; transition: opacity 0.35s, transform 0.35s; }
+.pt-pista .ic { width: 19px; height: 19px; animation: pt-bota 1.8s ease-in-out infinite; }
+.pt-pista.on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.portada .pt-pista, .portada .pt-pista .ic { color: #fff; }
 @keyframes pt-bota { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 /* la barra de arriba */
 .pt-bar { position: fixed; z-index: 30; top: 0; left: 0; right: 0; transform: translateY(-110%); transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); background: rgba(8, 8, 10, 0.8); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border-bottom: 1px solid var(--linea); }
@@ -2322,7 +2334,7 @@ div.pc { display: grid; gap: 18px; }
 .pm-fin { padding: 36px 0 56px; }
 .portada-m .pm-fin .pm-nota, .portada-m .pm-fin .pm-pie { margin-top: 10px; }
 @media (prefers-reduced-motion: reduce) {
-  .pt-baja .ic, .pd-chips button i, .ph-desliza .ic { animation: none; }
+  .pt-baja .ic, .pt-pista .ic, .pd-chips button i, .ph-desliza .ic { animation: none; }
   .ph-pant, .pc-campo, .pt-bar, .escritorio .ph-paso { transition: none; }
 }
 .pt-cta.btn { white-space: nowrap; }

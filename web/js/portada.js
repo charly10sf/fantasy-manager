@@ -297,6 +297,7 @@ function comoFunciona() {
 export function seccionMoviles() {
   return `<div class="portada-m">
   <div class="pt-baja"><a class="pt-baja-a" href="#pAsi"><span>Mira cómo funciona</span>${icono('abajo')}</a><a class="pt-baja-g" href="#pGuias">${icono('nota')}<span>Guías del juego</span></a></div>
+  <a class="pt-pista" href="#pAsi" aria-hidden="true" tabindex="-1"><span>Baja: hay mucho más</span>${icono('abajo')}</a>
   <div class="pt-bar" aria-hidden="true"><div class="pt-in">
     <a class="pt-marca" href="#" data-arriba>${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
     <nav class="pt-menu" aria-label="Secciones">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
@@ -396,6 +397,7 @@ export function activarPortada() {
   const entrada = portada.querySelector('.pantalla');
   const secciones = MENU.map(([id]) => raiz.querySelector(`#${id}`)).filter(Boolean);
   const menu = barra.querySelector('.pt-menu');
+  const pista = raiz.querySelector('.pt-pista'), baja = raiz.querySelector('.pt-baja');
   let pedido = false, ultimaSec = null;
   const alBajar = () => {
     pedido = false;
@@ -404,6 +406,9 @@ export function activarPortada() {
     const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
     const fuera = entrada ? entrada.getBoundingClientRect().bottom < 40 : y > 300;
     barra.classList.toggle('on', fuera);
+    // la pista fija de abajo («Baja: hay mucho más»): solo arriba del todo y si los botones de «Mira cómo funciona»
+    // no se ven ya en la primera pantalla (en una ventana baja o con zoom se quedan debajo y parece que no hay más)
+    if (pista) { const bj = baja ? baja.getBoundingClientRect().bottom : 0; pista.classList.toggle('on', y < 60 && bj > innerHeight - 8); }
     barra.querySelectorAll('a').forEach((a) => (a.tabIndex = fuera ? 0 : -1));
     barra.setAttribute('aria-hidden', String(!fuera));
     prog.style.transform = `scaleX(${h > 0 ? Math.min(1, y / h) : 0})`;

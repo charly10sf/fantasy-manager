@@ -1,6 +1,6 @@
 // El bot de la cuenta de X. Por defecto NO publica: genera los tweets con datos reales, los valida y dice cuáles publicaría.
 // Publica solo con --modo=publicar (en el workflow, la variable de repositorio BOT_MODO) y con las cuatro claves de X.
-//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas,mercado,liga,previa,novedades,noticias,sancionados,lloros] [--jornada=11] [--fechas-espn=20261101,…]
+//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros] [--jornada=11] [--fechas-espn=20261101,…]
 //        [--estado=estado/registro.json] [--ventanas=1] [--forzar=1] [--comprobar=1]
 //        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
 // Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
@@ -10,9 +10,11 @@ import { semanaActual, jugadores as pedirJugadores, statsSemana, equiposDe, fich
 import { crearDazn } from './lib/dazn.mjs';
 import { validar } from './lib/validar.mjs';
 import { pulir } from './lib/pulir.mjs';
+import { redactar, apuntarReciente } from './lib/redaccion.mjs';
+import { crearCronicas } from './lib/cronicas.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
-import { fijarLimite, limite, largo } from './lib/texto.mjs';
+import { fijarLimite, limite, largo, variarEquipos } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
 import { crearInfo } from './lib/info-jugador.mjs';
@@ -49,7 +51,7 @@ if (arg('comprobar') === '1') {
 if (publica && faltan.length) { console.log(`# Modo publicar sin los secretos ${faltan.join(', ')}: no publico nada.`); md(`Modo publicar sin los secretos ${faltan.join(', ')}.`); process.exit(1); }
 
 // (liga antes que previa: una decisión sobre la jornada la ve la previa en la misma ejecución, no 5 min después)
-const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas,mercado,liga,previa,novedades,noticias,sancionados,lloros').split(',');
+const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros').split(',');
 // las tarjetas: encendidas en config.json, o forzadas con --tarjetas=1 en simulacro (para verlas sin tocar lo que se publica)
 const forzarTarjetas = !publica && arg('tarjetas') === '1';
 const conTarjetas = forzarTarjetas || !!(config.tarjetas && (config.tarjetas.final || config.tarjetas.jugador));
@@ -67,6 +69,8 @@ if (pendientes === 0) objetivoCaidas = sem.nextWeek;
 else if (stats.every((m) => m.matchState === 1)) objetivoCaidas = jornada;
 if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
 
+// la prensa de cada partido para los tuits redactados (lib/cronicas.mjs)
+const cronicas = crearCronicas({ config, log: (s) => console.log(s) });
 // los puntos DAZN llegan después del final: final, MVP y resumen esperan a que estén (lib/dazn.mjs)
 const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: config.daznEsperaHoras ?? 6, log: (s) => console.log(s) });
 // solo mercado (lo lanza el Worker cada minuto de 00:13 a 00:30): espera dentro de la misma ejecución a que llegue el valor de hoy,
@@ -80,6 +84,12 @@ const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn, ve
   desdeDirecto: ventanas ? Date.now() - 3 * 3600e3 : 0,
   fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
 const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
+// en simulacro, --estado=<copia> carga un registro para leerlo (los estados de antes, los pendientes, lo publicado) sin guardarlo nunca:
+// así la prueba de la redacción (rama pruebas-redaccion) ve las mismas novedades que vio el bot de verdad
+if (!publica && arg('estado')) {
+  try { registro.datos = JSON.parse(readFileSync(arg('estado'), 'utf8')); registro.claves = new Set((registro.datos.enviados || []).map((e) => e.clave)); console.log(`# Registro de solo lectura: ${arg('estado')}`); }
+  catch (e) { console.log(`# No pude leer el registro ${arg('estado')}: ${e.message}`); }
+}
 ctx.registro = registro;
 // el % de titularidad y el rival para los tweets de un jugador (noticias y novedades; lib/info-jugador.mjs): se pide solo si hace falta
 ctx.info = config.infoJugador === false ? null : crearInfo({ jugadores, equipos, semana: sem, log: (s) => console.log(s) });
@@ -114,8 +124,19 @@ for (const q of quienes) {
   let tweets = [];
   try { tweets = await mod.generar(c); } catch (e) { console.log(`\n## ${q}: ERROR ${e.stack || e}`); fallos++; continue; }
   console.log(`\n## ${q}: ${tweets.length} tweets`);
+  // los equipos con otro nombre cada vez y con su emoji (Carlos, 6 nov 09:19: «el Madrid, los blancos…, menos robótico»); lo que ya
+  // no cabe con ellos sale como estaba (lib/texto.mjs, variarEquipos). Los tweets del directo, tal cual: llevan prisa.
+  if (q !== 'directo' && config.apodos !== false) for (const t of tweets) if (t && t.texto) t.texto = variarEquipos(t.texto, { semilla: String(t.clave || q) });
+  // la IA redacta desde los hechos los que van a salir en esta ejecución (lib/redaccion.mjs; solo con Claude y `redactar.activo` o
+  // BOT_REDACTAR=1); lo que no pasa su validador sale con la plantilla
+  const vanASalir = (t) => validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok';
+  const aRedactar = tweets.filter((t) => t && t.hechos && vanASalir(t)).slice(0, Math.max(0, (config.maxPorEjecucion ?? 4) - registro.enEstaEjecucion));
+  if (aRedactar.length) {
+    try { await redactar(aRedactar, { tipo: q, registro, config, jugadores, equipos, log: (s) => console.log(s), cronicasDe: cronicas.de, forzar: arg('redactar') === '1' }); }
+    catch (e) { console.log(`  (redactar) ERROR ${e.message || e}: salen con la plantilla`); }
+  }
   // Gemini pule el texto de los que van a salir en esta ejecución (lib/pulir.mjs); lo que no pasa la revisión sale con la plantilla
-  const aPulir = tweets.filter((t) => validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok')
+  const aPulir = tweets.filter((t) => !t.redactado && validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok')
     .slice(0, Math.max(0, (config.maxPorEjecucion ?? 4) - registro.enEstaEjecucion));
   if (aPulir.length) {
     try { await pulir(aPulir, { tipo: q, registro, config, jugadores, equipos, log: (s) => console.log(s), forzar: arg('pulir') === '1' }); }
@@ -157,7 +178,7 @@ for (const q of quienes) {
     // sin imagen (la tarjeta no pasa el validador, están apagadas o no se ha subido), el tweet que dejaba la lista para la tarjeta sale
     // con el texto de siempre (`sinTarjeta`: los apercibidos, con todos los nombres en el texto)
     if (d === 'ok' && t.sinTarjeta && !(publica ? mediaIds.length : pngs.length)) {
-      t.texto = t.sinTarjeta.texto; t.numeros = t.sinTarjeta.numeros; delete t.plantilla; delete t.pulido;
+      t.texto = t.sinTarjeta.texto; t.numeros = t.sinTarjeta.numeros; delete t.plantilla; delete t.pulido; delete t.redactado;
       v = validar(t.texto, { numeros: t.numeros, max: limite() });
       if (!v.ok) { d = 'no pasa el validador'; estado = `omitido: ${d}`; fallos++; }
       else if (!publica) estado += ' (sin tarjeta: con el texto de siempre)';
@@ -174,7 +195,7 @@ for (const q of quienes) {
         const n = apuntarDecision(registro, t.clave, jA === jornada ? stats : await statsSemana(jA).catch(() => []), jA);
         md(`Decisión ${t.clave}: apuntados ${n} partidos de la jornada ${jA}${n ? '' : ' (ninguno: la previa no esperará por esto)'}.`);
       }
-      if (r.ok) { registro.marcar(t, r.id); publicados++; estado = `PUBLICADO (id ${r.id})${mediaIds.length ? ` con ${mediaIds.length} imagen(es)` : ''}`; }
+      if (r.ok) { registro.marcar(t, r.id); apuntarReciente(registro, t.tipo, t.texto); registro.guardar(); publicados++; estado = `PUBLICADO (id ${r.id})${mediaIds.length ? ` con ${mediaIds.length} imagen(es)` : ''}`; }
       else if (r.estado === 403 && /duplicate/i.test(r.cuerpo)) { registro.marcar(t, null); estado = 'X dice que ya estaba publicado: lo apunto y sigo'; }
       else if (largo() && v.peso > 280 && rechazoPorLargo(r)) {
         // X no deja tweets largos (¿se ha acabado el Premium?): se apunta, se vuelve a 280 y este sale corto en la próxima ejecución
@@ -187,13 +208,16 @@ for (const q of quienes) {
         break;
       }
       else { estado = `ERROR al publicar: HTTP ${r.estado} ${r.cuerpo}`; fallos++; abortar = true; console.log(`\n--- ${t.clave} · ${estado}\n${t.texto}`); md(`**Error al publicar** ${t.clave}: HTTP ${r.estado} ${r.cuerpo}. Paro esta ejecución; no se vuelve a intentar hasta la siguiente.`); break; }
-    } else if (d === 'ok') { registro.reservar(t); previstos++; }
+    } else if (d === 'ok') { registro.reservar(t); apuntarReciente(registro, t.tipo, t.texto); previstos++; }
     console.log(`\n--- ${t.clave} · peso ${v.peso} · ${v.ok ? 'válido' : 'FALLA: ' + v.errores.join('; ')} · ${estado}${t.casado === false ? ' · jugador sin casar con LaLiga' : ''}`);
     console.log(t.texto);
-    if (t.plantilla) console.log(`   (pulido por ${t.pulido}; la plantilla decía:)\n${t.plantilla.replace(/^/gm, '   | ')}`);
-    md(`<details><summary>${estado} · ${t.clave} · peso ${v.peso}${t.pulido ? ' · pulido' : ''}</summary>\n\n\`\`\`\n${t.texto}\n\`\`\`${t.plantilla ? `\n\nPlantilla:\n\`\`\`\n${t.plantilla}\n\`\`\`` : ''}\n</details>`);
+    if (arg('hechos') === '1' && t.hechos) console.log(`   (hechos) ${JSON.stringify(t.hechos)}`);
+    if (t.plantilla) console.log(`   (${t.redactado ? `redactado por ${t.redactado}${t.prensa ? ` con prensa de ${t.prensa.join(', ')}` : ''}` : `pulido por ${t.pulido}`}; la plantilla decía:)\n${t.plantilla.replace(/^/gm, '   | ')}`);
+    md(`<details><summary>${estado} · ${t.clave} · peso ${v.peso}${t.redactado ? ' · redactado' : t.pulido ? ' · pulido' : ''}</summary>\n\n\`\`\`\n${t.texto}\n\`\`\`${t.plantilla ? `\n\nPlantilla:\n\`\`\`\n${t.plantilla}\n\`\`\`` : ''}\n</details>`);
   }
 }
+// lo que lleva gastado hoy la IA (lib/ia.mjs): llamadas, tokens y dólares, en el log y en el registro
+{ const ia = registro.datos && registro.datos.ia; if (ia && ia.dia) console.log(`  (ia) gasto de hoy: ${ia.llamadas.clasificar} para clasificar y ${ia.llamadas.redactar} para redactar (${ia.fallos} fallos), ${ia.entrada} tokens de entrada, ${ia.salida} de salida, ${ia.cacheLee} leídos de caché y ${ia.cacheEscribe} escritos, ${ia.dolares.toFixed(4)} $`); }
 console.log(`\n# Total: ${generados} generados, ${publica ? publicados + ' publicados' : previstos + ' los publicaría'}, ${fallos} fallos · ${((Date.now() - t0) / 1000).toFixed(1)} s`);
 md(`**${generados}** generados · ${publica ? `**${publicados}** publicados` : `**${previstos}** los publicaría`} · ${fallos} fallos`);
 process.exit(fallos ? 1 : 0);

@@ -15,8 +15,8 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
 const CIFRAS = /\d+(?:[.,]\d+)?/g;
 const EMOJI = /\p{Extended_Pictographic}/gu;
 // los emojis de la guía de estilo (claude/estilo-tweets.md) y los que ya usan las plantillas
-const EMOJIS_GUIA = new Set([...'🚨⚠‼👀⁉✅❌🗣🗞🗓⭐📊🔥🏁⚽🟥🟨📈📉💸🔄ℹ💔🤕🚑🥇🥈🥉'.matchAll(EMOJI)].map((m) => m[0]));
-const PROHIBIDO = /@|#|https?:|www\.|\b(mi|mis|nuestro|nuestra|nosotros|bot|brutal|espectacular|incre[ií]ble|no te lo pierdas)\b/i;
+export const EMOJIS_GUIA = new Set([...'🚨⚠‼👀⁉✅❌🗣🗞🗓⭐📊🔥🏁⚽🟥🟨📈📉💸🔄ℹ💔🤕🚑🥇🥈🥉'.matchAll(EMOJI)].map((m) => m[0]));
+export const PROHIBIDO = /@|#|https?:|www\.|\b(mi|mis|nuestro|nuestra|nosotros|bot|brutal|espectacular|incre[ií]ble|no te lo pierdas)\b/i;
 
 const cifras = (s) => [...new Set(String(s).replace(/[0-9#*]️?⃣/g, '').match(CIFRAS) || [])].sort();
 const lineas = (s) => String(s).split('\n').map((l) => l.trim()).filter(Boolean);
@@ -42,7 +42,7 @@ const estado = (s) => {
     lleva varias frases: la primera palabra de cada una («Su media…», «Tarde…») no cuenta como nombre nuevo */
 // las palabras corrientes con las que puede empezar una frase sin ser un nombre (auditoría del 5 nov: si no se mira la primera palabra,
 // Gemini podía colar «Corberán no lo duda.»); una primera palabra que no esté aquí ni en la plantilla cuenta como nueva
-const ARRANQUES = new Set(('el la los las lo un una unos unas en con sin pero y e o hay por para ya hoy ojo aunque tambien ademas detras despues '
+export const ARRANQUES = new Set(('el la los las lo un una unos unas en con sin pero y e o hay por para ya hoy ojo aunque tambien ademas detras despues '
   + 'al del se su sus no si que quien a de otra otro nadie todo todos esta este eso esto mientras tras sale salen juega juegan vuelve vuelven '
   + 'llega llegan cae caen sigue siguen tampoco solo nada mas menos le les lleva suma suman saca sacan va van es son era fue tiene tienen '
   + 'segun cuidado atentos alerta asi entre sobre desde hasta cuando donde como muy bien mal menudo vaya gran buena buen mala mal noche tarde '
@@ -64,6 +64,8 @@ const mayusculas = (s) => {
   return out;
 };
 
+// palabras que dejan al lector adivinando de quién se habla
+export const VAGAS = /\b(enfrente|(?:el|al|del|este|ese|dicho) (?:equipo|club|conjunto|rival)|(?:su|al|del) rival|a este equipo|dicho (?:equipo|club))\b/giu;
 /** ¿alguna frase lleva «según…» detrás de una cifra? («…suma 5,9 puntos de media, según AS») */
 export const segunTrasCifra = (s) => String(s).split(/(?<=[.!?])\s+|\n+/).some((f) => /\d.*\bseg[uú]n\s/i.test(f));
 /** los nombres de jugadores y equipos de LaLiga que salen en un texto (por apodo o nombre corto de equipo, palabra entera) */
@@ -109,6 +111,11 @@ export function revisar(orig, nuevo, { numeros = [], max = limite(), nombres = [
   const base = ` ${norm(orig)} `;
   const nuevas = [...mayusculas(nuevo)].filter((w) => w && !base.includes(` ${w} `));
   if (nuevas.length) e.push(`palabras nuevas con mayúscula: ${nuevas.join(', ')}`);
+  // (6 nov, Carlos, con el tweet de Eric: «hay partes que no se entienden apenas») Gemini cambió «el Barça visita al Atlético» por «el Atleti
+  // recibe al equipo» y metió «enfrente tendrá a…»: un club o un jugador no se sustituye por «el equipo», «el club», «el rival» ni «enfrente»
+  const vagas = (t) => new Set((String(t).match(VAGAS) || []).map((x) => norm(x)));
+  const vo = vagas(orig), vn = [...vagas(nuevo)].filter((x) => !vo.has(x));
+  if (vn.length) e.push(`palabras vagas nuevas: ${vn.join(', ')}`);
   // (5 nov) «según AS» pegado detrás de la media, del % o de la hora le daría al medio un dato que no es suyo
   if (segunTrasCifra(nuevo) && !segunTrasCifra(orig)) e.push('«según» detrás de una cifra');
   const eo = new Set(emojis(orig));
@@ -141,6 +148,8 @@ Cómo se escribe en la cuenta:
 - Dudas con palabras («en principio», «todo apunta a que», «de momento»).
 - Que no se note que es automático: si dos párrafos o dos frases tienen el mismo esqueleto y solo cambian los nombres, dale otra forma a uno (otro orden, otro verbo, otra entrada). No repitas la misma muletilla dentro del tweet.
 - Nada de tono de anuncio: sin «¡» en cada frase, sin adjetivos grandes, sin primera persona, sin «bot», sin @ ni #.
+- Lo primero es que se entienda a la primera, leído en el móvil: cada frase con su sujeto claro y los clubes y jugadores por su nombre. Prohibido sustituirlos por «el equipo», «el club», «el conjunto», «el rival» o «enfrente», y no cambies quién visita y quién recibe sin decir los dos nombres. Si una frase ya se entiende, déjala igual.
+- Une dos frases con «y», «pero» o «aunque» solo si dicen cosas que van juntas o se contradicen de verdad; si la frase resultante es más larga y más difícil de leer, deja las dos como estaban. Nunca metas en una sola frase la media, el %, el rival y los goles.
 Reglas que no se pueden saltar:
 - Las mismas cifras, ni una más ni una menos, escritas igual («5,5» sigue siendo «5,5»). Nada de cifras en letra.
 - Los mismos jugadores y equipos, con el nombre escrito igual. Ni uno nuevo, ni uno menos.

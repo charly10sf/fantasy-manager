@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7g';
+export const VERSION = '0.7i';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,19 @@ export const VERSION = '0.7g';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7i', f: '2026-11-06', h: '22:41', t: 'La portada y el iPhone, más claros',
+    cosas: [
+      { tipo: 'mejora', d: 'camiseta', t: 'Se nota que hay más al bajar', x: 'En la portada de la web sale un botón «Baja: hay mucho más» abajo del todo mientras no has hecho scroll, para que no parezca que solo existe la primera pantalla.', para: 'web', menor: true },
+      { tipo: 'nuevo', d: 'camiseta', t: 'Guía para iPhone, paso a paso', x: 'La web explica en tres pasos cómo entrar desde un iPhone y cómo dejarla en la pantalla de inicio como una app, con un icono y el nombre Fantasy Manager. Hay una guía más detallada en la página de instalar y, en Ajustes, un atajo.', para: 'web' },
+    ],
+  },
+  {
+    v: '0.7h', f: '2026-11-06', h: '22:38', t: 'Ventas que miran la cláusula abierta',
+    cosas: [
+      { tipo: 'mejora', d: 'lupa', t: 'Cada venta dice a cuánto está su cláusula', x: 'Cuando te sugiere vender a uno tuyo con la cláusula abierta, ahora te dice a cuánto está, cuánto sobre su valor y cuánto te daría LaLiga. Si la cláusula paga más y a algún rival le llega, no te manda vender con prisa: si te lo clausulan cobras más. Si está por debajo de lo que da LaLiga, te dice que mejor vendas a LaLiga. Vale en Hoy, en el plan y en lo que lee la IA.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.7g', f: '2026-11-05', h: '23:13', t: 'Cada club, jornada a jornada',
     cosas: [

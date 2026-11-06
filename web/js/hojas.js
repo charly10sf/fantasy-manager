@@ -7,7 +7,7 @@ import { linea, barra, barras, mini } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
-import { nativo, enApp, enWeb, estadoProxy } from './puente.js';
+import { nativo, enApp, enWeb, enIPhone, enInicio, estadoProxy } from './puente.js';
 import { hayAnunciosWeb } from './anuncios-web.js';
 import { registro } from './api.js';
 import { qrSVG } from './qr.js';
@@ -543,6 +543,8 @@ export function ajustes(S) {
     const qr = enApp && nativo.hayQR();
     h += `<div class="ajuste"><div class="c"><b>${enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo'}</b><span>${qr ? 'Escanea el QR de fantasymanagerapp.com en el ordenador. El código, para el iPhone' : enApp ? 'Te da un código para entrar en la versión web con tu liga, tu clave de la IA y lo que has apuntado' : 'Te da un código (y un QR para la cámara del móvil) para entrar con tu cuenta en el iPhone u otro ordenador, sin volver a hacer lo del F12'}</span></div>${qr ? '<button class="btn chico" data-accion="escanearQR">Escanear QR</button><button class="btn chico sec" data-accion="vincularWeb">Código</button>' : '<button class="btn chico" data-accion="vincularWeb">Código</button>'}</div>`;
   }
+  // en el iPhone, desde Safari: cómo dejarla en la pantalla de inicio (desde el icono ya no sale)
+  if (enIPhone && !enApp && !enInicio()) h += `<div class="ajuste"><div class="c"><b>Tenerla como una app</b><span>En Safari: Compartir → Añadir a pantalla de inicio. Abre con su icono, a pantalla completa</span></div><a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a></div>`;
   if (S.D && S.D.ligas && S.D.ligas.length > 1) h += `<div class="ajuste"><div class="c"><b>Liga</b></div><select data-cambia="liga">${S.D.ligas.map((l) => `<option value="${esc(l.id)}" ${S.D.liga.id === l.id ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('')}</select></div>`;
 
   h += `<div class="grupo"><span>La IA (gratis)</span></div>`;

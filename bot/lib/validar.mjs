@@ -24,10 +24,12 @@ export function validarTarjeta(svg, { numeros = [], palabras = [] } = {}, fijas 
   if (!textos.length) e.push('la tarjeta no lleva texto');
   const okNum = new Set(numeros.flatMap((n) => String(n).replace('.', ',').match(/\d+(?:,\d+)?/g) || []));
   const okPal = new Set([...fijas, ...palabras, 'J'].flatMap((p) => String(p).match(/[\p{L}_]+/gu) || []).map(minus));
+  // una letra suelta vale si es la inicial de alguna palabra permitida: «M. LLORENTE» por «Marcos Llorente» (nombreAjustado, estilo.mjs)
+  const inicial = new Set([...okPal].map((p) => p[0]));
   for (const t of textos) {
     if (/https?:|www\.|\.(com|es|net|org|io|app)\b/i.test(t)) e.push(`enlace en la imagen: «${t}»`);
     for (const c of t.match(/\d+(?:,\d+)?/g) || []) if (!okNum.has(c)) e.push(`cifra ${c} que no está en los datos («${t}»)`);
-    for (const w of t.match(/[\p{L}_]+/gu) || []) if (!okPal.has(minus(w))) e.push(`palabra «${w}» que no está en los datos («${t}»)`);
+    for (const w of t.match(/[\p{L}_]+/gu) || []) if (!okPal.has(minus(w)) && !(w.length === 1 && inicial.has(minus(w)))) e.push(`palabra «${w}» que no está en los datos («${t}»)`);
   }
   return { ok: e.length === 0, errores: [...new Set(e)], textos };
 }
