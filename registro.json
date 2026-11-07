@@ -3227,7 +3227,8 @@
    "SPORT|136209574": 1794080057000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/07/inclemencias-meteorologicas-obligan-a-aplazar-el-las-palmas-eldense-de-segunda-division-cadena-ser/": 1794085701000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/07/la-borrasca-bruna-obliga-a-suspender-el-ud-las-palmas-eldense-ser-las-palmas/": 1794085110000,
-   "SPORT|136210297": 1794082357000
+   "SPORT|136210297": 1794082357000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/despedida-jesus-miguel-tenerife-estadio_0_2008446228.html": 1794086542000
   },
   "hechos": [
    {
@@ -3793,7 +3794,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 13,
+   "n": 14,
    "fallos": 0
   },
   "espera": {}
@@ -3801,17 +3802,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 53,
    "redactar": 79,
    "revisar": 43,
    "pulir": 3
   },
   "fallos": 0,
-  "entrada": 905494,
-  "salida": 45392,
+  "entrada": 907182,
+  "salida": 45838,
   "cacheLee": 147067,
   "cacheEscribe": 39425,
-  "dolares": 1.996902
+  "dolares": 1.997294
  },
  "recientes": {
   "onces": [
