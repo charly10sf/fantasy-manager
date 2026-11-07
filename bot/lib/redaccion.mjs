@@ -267,7 +267,19 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (em.some((x) => CIRCULOS.test(x))) e.push('círculos de colores');
   const raros = em.filter((x) => !EMOJIS_GUIA.has(x) && !deClub.has(x) && !CIRCULOS.test(x));
   if (raros.length) e.push(`emojis que no están en la guía: ${raros.join(' ')}`);
-  if (em.filter((x) => deClub.has(x)).length > 1) e.push('más de un emoji de club');
+  // emojis de club: o ninguno o el de cada club nombrado que tenga uno, una vez cada uno (Carlos, 7 nov 18:01: el Osasuna llevó 🐂 y el
+  // Athletic se quedó sin 🦁; antes valía uno solo por tuit)
+  const usados = em.filter((x) => deClub.has(x));
+  if (usados.length) {
+    const tn = ` ${norm(t)} `;
+    for (const [c, d] of Object.entries(hechos.clubes || {})) {
+      if (!d.emoji) continue;
+      const n = usados.filter((x) => x === d.emoji).length;
+      const nombrado = [c, ...(d.nombres || [])].some((x) => tn.includes(` ${norm(x).replace(/^(el|la|los|las) /, '')} `));
+      if (n > 1) e.push(`el emoji ${d.emoji} sale más de una vez (una sola, la primera vez que nombras a ${c})`);
+      else if (!n && nombrado) e.push(`si pones emojis de club, pon también el de ${c} (${d.emoji}) detrás de su nombre, o ninguno`);
+    }
+  }
   // el de un club, justo detrás de su nombre (en la prueba del 6 nov quedaban sueltos al final del párrafo: «…no es lo más apetecible. 🐟»)
   for (const [c, d] of Object.entries(hechos.clubes || {})) {
     if (!d.emoji) continue;
