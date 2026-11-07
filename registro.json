@@ -3112,7 +3112,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/04/valencia-cf-prepara-llenazo-mestalla-136098642.html": 1793829375000,
    "SPORT|136102059": 1793851285000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/intencion-disputen-todos-partidos-laliga-salvo-aplazados-20261105_3468892.html": 1793833897000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247402/recuperan-dos-partidos-lliga-elit-victorias-prat-singuerlin.html": 1793833745000,
@@ -3231,24 +3230,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/despedida-jesus-miguel-tenerife-estadio_0_2008446228.html": 1794086542000
   },
   "hechos": [
-   {
-    "guid": "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/04/valencia-cf-prepara-llenazo-mestalla-136098642.html",
-    "medio": "Superdeporte",
-    "t": 1793829375000,
-    "tipo": "suspension",
-    "estado": "descartado",
-    "segunda": false,
-    "jornada": 0,
-    "clubes": [
-     "18",
-     "15"
-    ],
-    "luto": false,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "El club prepara el partido a la espera de la comunicacion oficial de LaLiga",
-    "nums": []
-   },
    {
     "guid": "SPORT|136102059",
     "medio": "SPORT",
@@ -3960,6 +3941,11 @@
    "h": "56af51032406",
    "desde": 1794080773416,
    "fin": 1794079572335
+  },
+  "12|112": {
+   "h": "e0f43b72f912",
+   "desde": 1794088871346,
+   "fin": 1794088871346
   }
  },
  "iaDias": [
