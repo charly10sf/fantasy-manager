@@ -1529,7 +1529,8 @@
    "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
    "SPORT|136195917": 1794050824000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248252/miedo-factor-raphinha-cholo-detallo-cambio-tactico-barca-destroza-rivales.html": 1794053748000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000
   },
   "hechos": [
    {
@@ -2176,11 +2177,23 @@
     "motivo": "molestias en los isquiotibiales",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html",
+    "medio": "COPE",
+    "t": 1794055463000,
+    "id": "2354",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Eric vuelve a la convocatoria del Barça para el Metropolitano",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3719,17 +3732,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 16,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 132596,
-  "salida": 18397,
+  "entrada": 134350,
+  "salida": 19107,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.31721
+  "dolares": 0.31774
  },
  "recientes": {
   "onces": [
