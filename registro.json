@@ -1322,11 +1322,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antiviolencia-pide-60-001-euros_0_2008420320.html": 1793786458000,
    "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/": 1793787223000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247073/brian-farinas-avalado-registro-nivel-barca.html": 1793787503000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261104/1004247114/galarreta-regresa-trabajo-grupo-tres-dias-visitar-osasuna.html": 1793789547000,
-   "SPORT|136067986": 1793786278000,
    "SPORT|136070467": 1793787476000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/04/kike-salas-reincorpora-grupo.html": 1793791579000,
    "SPORT|136073953": 1793787858000,
@@ -1553,22 +1551,6 @@
     "plazo": "",
     "nums": [
      28
-    ]
-   },
-   {
-    "guid": "SPORT|136067986",
-    "medio": "SPORT",
-    "t": 1793786278000,
-    "id": "3197",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     0,
-     2,
-     8
     ]
    },
    {
