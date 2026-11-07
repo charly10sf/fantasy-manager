@@ -7,7 +7,7 @@ import { corto, elegir, el, del, al, fmt, partes, largo, hash, rotar, turno, ord
 import { lista, mayus } from '../lib/agrupar.mjs';
 import { tweet, enPalabras, cuando, aparte, cap, puesto } from '../lib/redactar.mjs';
 import { ESPN, partidoEspn } from '../lib/relato.mjs';
-import { casarJugador } from './directo.mjs';
+import { casarJugador, casarJugadorFlojo } from './directo.mjs';
 import { lineasEspn } from '../lib/formacion.mjs';
 import { probabilidades, elegirOnce } from '../lib/onces.mjs';
 import { enElAire } from '../lib/aire.mjs';
@@ -94,8 +94,20 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
               const abr = (x.position && x.position.abbreviation) || '', posEspn = POS_ESPN(abr);
               const p = casarJugador(nom, plantilla, { portero: !abr || abr === 'SUB' ? null : posEspn === 'POR' });
               palabras.push(nom);
-              return { id: p ? p.id : null, nombre: p ? p.nickname : nom, pos: (p && ({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' })[p.positionId]) || posEspn, posEspn, pct: null, duda: false };
+              return { id: p ? p.id : null, espn: nom, nombre: p ? p.nickname : nom, pos: (p && ({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' })[p.positionId]) || posEspn, posEspn, pct: null, duda: false };
             });
+            // los que no han casado (en LaLiga llevan un nombre de guerra: «Rafita» por Rafa Garrido, «Chupe» por Chupete; 7 nov, Málaga-Racing,
+            // salían sin cara): segunda pasada por el parecido del nombre, con el mismo puesto y sin repetir a nadie
+            const usados = new Set(once.filter((x) => x.id).map((x) => String(x.id)));
+            once.forEach((x, i) => {
+              if (x.id) return;
+              const abr = (titulares[i].position && titulares[i].position.abbreviation) || '';
+              const p = casarJugadorFlojo(x.espn, plantilla, { pos: POS_ESPN(abr), usados });
+              if (!p) return;
+              usados.add(String(p.id));
+              Object.assign(x, { id: p.id, nombre: p.nickname, pos: ({ 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' })[p.positionId] || x.pos });
+            });
+            once.forEach((x) => { delete x.espn; });
             // el dibujo de ESPN con cada uno en su línea (lib/formacion.mjs); si no cuadra, por las posiciones de LaLiga como antes
             const lin = lineasEspn(titulares, r.formation);
             if (lin) once = lin.filas.flat().map((i) => once[i]);
@@ -147,7 +159,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             for (const x of c.sorpresa.slice(0, 5)) jugOnce.push({ nombre: x.nombre, ...puOnce(x), club: eq, papel: 'es titular aunque no suele serlo', principal: false });
           }
           const cuO = cuando(m.date, ahora);
-          const hechosOnces = { tipo: 'onces', jornada, noticia: 'ESPN ya da los dos onces confirmados', partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuO ? { cuando: cuO.t } : {}), fecha: m.date || null },
+          const hechosOnces = { tipo: 'onces', jornada, noticia: 'Los dos onces ya están confirmados', partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuO ? { cuando: cuO.t } : {}), fecha: m.date || null },
             equipos: eqOnce, ...(conf.L.fuera.length || conf.V.fuera.length || conf.L.sorpresa.length || conf.V.sorpresa.length ? {} : { sinSorpresas: true }),
             jugadores: jugOnce, clubes: clubesH(L, V), etiqueta: '👀 Revisa tu once fantasy antes del pitido' };
           out.push({ tipo: 'onces', clave: `onces|${m.id}`, jornada, texto, hechos: hechosOnces, caduca: saque, numeros: numConf.map(Number), partido: null,

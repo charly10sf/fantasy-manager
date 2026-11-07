@@ -211,6 +211,11 @@ ok(sucesosSinHechos('Sivera hizo tres paradas', sinInc).join() === 'una parada',
 ok(sucesosSinHechos('Sevilla y Alavés empatan sin goles', sinInc).length === 0 && sucesosSinHechos('Gana de penalti', { ...sinInc, goles: [{ goleador: 'X', penalti: true }] }).length === 0, 'un gol de penalti en `goles` sí permite hablar del penalti');
 const hMvp = { ...hFinal, tipo: 'mvp' };
 ok(revisar('⭐ Según AS, Sivera es el mejor del partido con 9 puntos.', { hechos: hMvp, todos, numeros: [] }).some((x) => /no se atribuye/.test(x)), 'en un MVP tampoco se atribuye a un medio');
+// onces confirmados (7 nov, Málaga-Racing: «Ya hay onces confirmados en La Rosaleda, según ESPN»): sin fuente
+const hOnces = { ...hFinal, tipo: 'onces', goles: [], incidencias: [], partido: { partido: 'Málaga-Racing', local: 'Málaga', visitante: 'Racing' }, noticia: 'Los dos onces ya están confirmados' };
+const ro = (t) => revisar(t, { hechos: hOnces, todos, numeros: [] });
+ok(ro('👀 Ya hay onces confirmados en La Rosaleda, según ESPN: el Málaga sale con cinco atrás.').some((x) => /no se nombra ninguna fuente/.test(x)), '«según ESPN» en unos onces, fuera');
+ok(ro('👀 Onces confirmados en La Rosaleda: el Málaga sale con cinco atrás.').filter((x) => /fuente/.test(x)).length === 0, 'los onces sin fuente valen');
 // en noticias y previas el medio sí es la fuente: nada cambia
 ok(rv(bueno).length === 0 && rv('Eric vuelve, según AS y MARCA.').filter((x) => /atribuye|sucesos/.test(x)).length === 0, 'en una noticia, «según AS» sigue valiendo');
 // la guía y la prensa

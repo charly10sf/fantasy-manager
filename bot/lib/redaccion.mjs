@@ -225,6 +225,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // rigor (Carlos, 6 nov, final del Sevilla-Alavés: «Cuenta COPE que Sivera ha parado un penalti»): lo que pasa en un partido es un hecho y
   // no se le pone un medio delante (suena a que nadie lo ha comprobado), y un suceso (penalti, parada, roja, autogol, VAR) solo sale si está
   // en los hechos (goles o incidencias, de ESPN). Solo en finales y MVP: en noticias y previas el medio sí es la fuente.
+  // los onces confirmados tampoco llevan medio (7 nov, Málaga-Racing: «Ya hay onces confirmados en La Rosaleda, según ESPN»)
+  if (hechos.tipo === 'onces' && (medios.length || ATRIBUYE.test(t) || /\bESPN\b|\bseg[uú]n\b/i.test(t))) e.push('en unos onces confirmados no se nombra ninguna fuente («según ESPN», «según MARCA»…): la alineación es un hecho y se cuenta tal cual');
   if (hechos.tipo === 'final' || hechos.tipo === 'mvp' || hechos.tipo === 'directo') {
     if (medios.length || ATRIBUYE.test(t)) e.push('en un final o un MVP no se atribuye nada a un medio («cuenta COPE», «según MARCA»…): lo que pasa en el partido es un hecho y se cuenta tal cual');
     const sucesos = sucesosSinHechos(t, hechos);
