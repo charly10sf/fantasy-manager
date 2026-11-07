@@ -552,6 +552,13 @@
    "jornada": 12,
    "id": "2119164671395864926",
    "t": "2026-11-07T20:26:44.875Z"
+  },
+  {
+   "clave": "directo|112|Federico Valverde|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119165818537714037",
+   "t": "2026-11-07T20:31:18.383Z"
   }
  ],
  "estados": {
@@ -3783,16 +3790,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 48,
-   "redactar": 77,
+   "redactar": 78,
    "revisar": 43,
    "pulir": 3
   },
   "fallos": 0,
-  "entrada": 878711,
-  "salida": 42924,
+  "entrada": 888393,
+  "salida": 43036,
   "cacheLee": 147067,
   "cacheEscribe": 39425,
-  "dolares": 1.953832
+  "dolares": 1.974316
  },
  "recientes": {
   "onces": [
@@ -3893,10 +3900,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T14:16:22.054Z",
-    "texto": "⚽ Iker Luque empata para el Racing en el 50'. Málaga 1-1 Racing. Asistencia de Pablo Ramón, que ya suma 4 puntos. Ya suma 4 puntos fantasy."
-   },
-   {
     "t": "2026-11-07T14:26:16.890Z",
     "texto": "⚽ Zabiri marca en el 60' y el Racing le da la vuelta al partido: 1-2 ante el Málaga.\n\nEl delantero ya suma 6 puntos, justo su media. Si lo tienes, la jornada le está saliendo bien."
    },
@@ -3911,6 +3914,10 @@
    {
     "t": "2026-11-07T19:21:18.664Z",
     "texto": "⚽ Catena marca en el 90' y el Osasuna 🐂 recorta distancias: 0-1 ante el Athletic 🦁.\n\nEl defensa se mete en el partido justo al final, con el marcador todavía en juego. Si lo tienes, buen premio para tu jornada."
+   },
+   {
+    "t": "2026-11-07T20:31:18.385Z",
+    "texto": "⚽ Gol de Valverde y el Real Madrid se adelanta en el 28'. Valencia 0-1 Real Madrid. Ya suma 6 puntos fantasy."
    }
   ],
   "novedades": [
