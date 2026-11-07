@@ -304,7 +304,16 @@ export function pildora(f, cx, cy, px, wMax) {
     + texto(x + p * 1.75, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1 });
 }
 /** el color de un % de titularidad, como en la tarjeta de los posibles onces: verde (75 o más), ámbar (50 o más) o rojo */
-export const colPct = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? AMBAR : MALO);
+// el color del % de titularidad (Carlos, 7 nov 15:58): 85-100 verde oscuro, 75-85 verde claro, 60-75 amarillo, 40-60 naranja tirando a
+// rojo y menos de 40 rojo
+export const PCT_COLORES = [[85, '#1fb860'], [75, '#8fe39a'], [60, '#f5d33d'], [40, '#ff8a3d'], [0, '#ff4d5e']];
+export const colPct = (q) => (q == null ? null : (PCT_COLORES.find(([min]) => Number(q) >= min) || PCT_COLORES[PCT_COLORES.length - 1])[1]);
+/** una cifra en una chapa oscura con el filo y el texto en su color (los puntos del final y los % de titularidad; 7 nov) */
+export function chipContorno(txt, cx, cy, px, color, { grosor = 2.5 } = {}) {
+  const w = medir(txt, px, B, 0.5) + px * 1.3, h = px * 1.4, x0 = cx - w / 2, y0 = cy - h / 2;
+  return `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="${h / 2}" fill="#0b0a0f" fill-opacity="0.92" stroke="${color}" stroke-width="${grosor}"/>`
+    + texto(cx, y0 + h / 2 + px * 0.36, txt, { px, peso: 900, color, ancla: 'middle', espacio: 0.5 });
+}
 // (Carlos, 5 nov 17:08: «si pones arriba en el título DUDA, no lo pongas abajo de nuevo; pon el porcentaje de titularidad abajo»)
 // la etiqueta del % de titularidad de la app, en el color del %, en vez de repetir el estado que ya dice el título
 const txtTit = (pct) => `${pct} % TITULARIDAD`;
@@ -312,8 +321,9 @@ export function pildoraTit(pct, cx, cy, px, wMax) {
   const txt = txtTit(pct);
   let p = px; while (p > 16 && medir(txt, p, B, 1) + p * 1.8 > wMax) p--;
   const w = medir(txt, p, B, 1) + p * 1.8, h = p * 1.75, x = cx - w / 2;
-  return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${colPct(pct)}"/>`
-    + texto(cx, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1, ancla: 'middle' });
+  // con el mismo estilo que los % de los onces: fondo oscuro, filo y letra en el color del % (7 nov)
+  return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="#0b0a0f" fill-opacity="0.92" stroke="${colPct(pct)}" stroke-width="2.5"/>`
+    + texto(cx, cy + p * 0.36, txt, { px: p, peso: 800, color: colPct(pct), espacio: 1, ancla: 'middle' });
 }
 export const anchoPildoraTit = (pct, px) => medir(txtTit(pct), px, B, 1) + px * 1.8;
 /** ancho de la etiqueta del estado (para colocarla a la derecha) */
