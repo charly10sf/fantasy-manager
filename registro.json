@@ -1519,7 +1519,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248129/real-letal-rival-categoria-me-sorprende-oyarzabal-no-balon-oro.html": 1794041366000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248132/alvaro-garcia-valentin-cinco-bajas-notables-rayo.html": 1794041216000,
    "SPORT|136054540": 1794038967000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html": 1794043154000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html": 1794043154000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000
   },
   "hechos": [
    {
@@ -2178,11 +2180,31 @@
      30,
      12
     ]
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html",
+    "medio": "COPE",
+    "t": 1794047630000,
+    "id": "2315",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Paredes mantiene diez fechas de sanción tras la apelación",
+    "motivo": "",
+    "plazo": "diez fechas de suspensión",
+    "nums": [
+     2026,
+     7,
+     4,
+     10,
+     90,
+     0,
+     60
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -3129,7 +3151,9 @@
    "SPORT|136188205": 1794024096000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/nunca-buscamos-soluciones-solo-buscamos-culpables-ramon-besa-en-contra-de-la-no-suspension-de-la-jornada-de-liga-tras-la-muerte-de-jesus-de-miguel-cadena-ser/": 1794009476000,
    "AS|https://as.com/futbol/el-betis-afrontara-en-cuadro-su-eliminatoria-de-la-copa-del-rey-f202611-n/": 1794006110000,
-   "SPORT|136192571": 1794041056000
+   "SPORT|136192571": 1794041056000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html": 1793982666000
   },
   "hechos": [
    {
@@ -3759,11 +3783,41 @@
      18,
      30
     ]
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html",
+    "medio": "COPE",
+    "t": 1793982666000,
+    "tipo": "aplazamiento",
+    "estado": "confirmado",
+    "segunda": false,
+    "jornada": 23,
+    "jTxt": true,
+    "clubes": [
+     "4",
+     "2"
+    ],
+    "luto": false,
+    "oficial": false,
+    "contexto": "Partido aplazado por la Supercopa de España",
+    "detalle": "",
+    "nums": [
+     14,
+     2,
+     21,
+     30,
+     19,
+     0,
+     23,
+     7,
+     2027,
+     202
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
   "espera": {}
@@ -3771,17 +3825,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 9,
    "redactar": 15,
    "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 96085,
-  "salida": 12924,
+  "entrada": 100048,
+  "salida": 14043,
   "cacheLee": 97572,
   "cacheEscribe": 10770,
-  "dolares": 0.280983
+  "dolares": 0.281939
  },
  "recientes": {
   "onces": [
