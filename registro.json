@@ -1329,7 +1329,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/04/rodri-hernandez-baja-para-el-barca-en-el-metropolitano-tiene-una-pequena-lesion-en-el-biceps-femoral-de-su-pierna-derecha-cadena-ser/": 1793793689000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html": 1793794237000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/manu-hernando-duda-por-un-proceso-gripal-radio-santander/": 1793796850000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/04/el-futuro-de-inigo-perez-empieza-a-generar-dudas-en-la-directiva-del-villarreal-radio-castellon/": 1793796793000,
@@ -1530,18 +1529,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248236/barca-no-recupera-efectivos-visita-madrid-cff.html": 1794051959000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/04/rodri-hernandez-baja-para-el-barca-en-el-metropolitano-tiene-una-pequena-lesion-en-el-biceps-femoral-de-su-pierna-derecha-cadena-ser/",
-    "medio": "Cadena SER",
-    "t": 1793793689000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "lesión en el bíceps femoral",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html",
     "medio": "COPE",
@@ -3037,7 +3024,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/aplazados-el-granada-tenerife-y-el-andorra-mallorca-de-segunda-division-por-el-fallecimiento-de-jesus-de-miguel-cadena-ser/": 1793794190000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
-   "SPORT|136078404": 1793793682000,
    "SPORT|136080803": 1793795045000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/entrenamiento-voluntario-owono-andorra-minuto-silencio-jesus-miguel-20261104_3468574.html": 1793800216000,
    "SPORT|136082717": 1793797745000,
@@ -3158,21 +3144,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html": 1793982666000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136078404",
-    "medio": "SPORT",
-    "t": 1793793682000,
-    "tipo": "aplazamiento",
-    "estado": "confirmado",
-    "segunda": true,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Tras el aplazamiento del partido del fin de semana",
-    "detalle": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136082717",
     "medio": "SPORT",
