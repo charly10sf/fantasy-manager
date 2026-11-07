@@ -231,11 +231,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const posDe = new Map((jugadores || []).map((j) => [String(j.id), j.positionId]));
       const pu = (x) => { const p = puesto(posDe.get(String(x.id))); return p ? { puesto: p } : {}; };
       const esBaja = (x) => (x.estado === 'injured' && !dudaParte.has(String(x.id))) || x.estado === 'suspended';
-      // cómo decir cada duda, ya elegido con su tramo de %: con el mismo tramo que el revisor (7 nov, prueba: «lo tiene difícil» con un 33 %,
-      // «puede quedarse fuera» con un 53 %) y rotando entre partidos, para que no salga siempre la misma fórmula
-      const dilo = (p, i) => (p >= 0.5 ? Rp(['lo normal es que salga, sin estar cerrado', 'tiene más papeletas de salir que de quedarse fuera', 'apunta a titular, sin garantías'], `dA${i}`)
-        : p >= 0.3 ? Rp(['no tiene el puesto asegurado', 'puede quedarse fuera', 'hay que esperar al once para saber si juega', 'está en el aire'], `dB${i}`)
-          : Rp(['lo tiene difícil para jugar', 'va camino del banquillo'], `dC${i}`));
+      // cómo está cada duda según su %, con el mismo tramo que el revisor (7 nov, prueba: «lo tiene difícil» con un 33 %, «puede quedarse
+      // fuera» con un 53 %). Es el sentido, no la frase: con la frase hecha la IA la pegaba tal cual y sonaba a plantilla
+      const dilo = (p) => (p >= 0.5 ? 'más probable que juegue que no' : p >= 0.3 ? 'a medias: puede jugar o quedarse fuera' : 'más probable que no juegue');
       const jugH = [], eqH = [];
       for (const [k, eq, mm] of [['L', L, m.local], ['V', V, m.visitor]]) {
         const t = tablaH && tablaH.porId[String(mm.id)];
@@ -253,7 +251,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         eqH.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', ...(t && t.pj ? { va: `${t.pos}º de ${tablaH.n}`, golesMarcadosPorPartido: fmt(t.gf / t.pj), golesEncajadosPorPartido: fmt(t.gc / t.pj) } : {}),
           ...(cruce.length ? { cruce } : {}) });
         // (pocos y los que pesan: con tres dudas, tres bajas y dos fijos por equipo la IA los enumeraba todos; 6 nov)
-        pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2).forEach((x, i) => jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'duda de titularidad', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, comoDecirlo: dilo(x.p, i), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false }));
+        pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2).forEach((x) => jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'duda de titularidad', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, lectura: dilo(x.p), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false }));
         for (const x of Object.values(probs[k]).filter(esBaja).sort((a, b) => md(b) - md(a)).filter((x, i) => i === 0 || md(x) >= 3).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'baja', estado: x.estado === 'suspended' ? 'sancionado' : 'lesionado', ...(md(x) >= 1 ? { mediaPuntos: fmt(md(x)) } : {}), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false });
         for (const x of pos[k].once.filter((y) => y.p >= 0.8 && md(y) >= 4).sort((a, b) => md(b) - md(a)).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'fijo', titularidadFantasyManager: `${pct(x.p)} %`, mediaPuntos: fmt(md(x)), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false });
       }
