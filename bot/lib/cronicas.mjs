@@ -1,7 +1,10 @@
 // La prensa de un partido para dar color a los tuits redactados (lib/redaccion.mjs): titulares y entradillas de los RSS de MARCA, AS,
 // Mundo Deportivo, SPORT y el resto de lib/prensa.mjs (la misma lectura que noticias y liga: una vez por ejecución). Solo titular y
 // entradilla (hasta 400 caracteres), nunca el artículo: de ahí la IA saca uno o dos hechos con sus palabras y el validador tira lo que
-// copie 6 palabras seguidas. Solo para los tipos de `redactar.prensa` (desde el 6 nov, solo la previa: en un final o un MVP lo que pasa en el campo viene de ESPN, no de un titular) y solo si el tweet trae `hechos.partido`.
+// copie 6 palabras seguidas. Solo para los tipos de `redactar.prensa` y solo si el tweet trae `hechos.partido`. Desde el 6 nov la previa; desde el 7 nov
+// también el final y el MVP, con dos condiciones (Carlos): solo si al menos DOS medios distintos hablan del partido (lo que cuente el tuit tiene que
+// salir de lo que dicen dos, nunca de uno solo; `fuentesDe`) y, en el MVP, solo si el MVP ha marcado (`marcoElMvp`). En esos dos tipos el tuit no nombra
+// ningún medio (lo vigila lib/redaccion.mjs): lo que pasa en el campo sigue viniendo de ESPN, la prensa solo da lo que se dice después (el porqué, las palabras del entrenador…).
 // En el registro (repo público) no se guarda nada de esto.
 import { noticiasPrensaUnaVez } from './prensa.mjs';
 import { norm, corto } from './texto.mjs';
@@ -39,6 +42,17 @@ export function elegir(noticias, { partido, tipo, ahora = Date.now(), n = 4 }) {
   return out.sort((a, b) => Number(b.dos) - Number(a.dos)).slice(0, n).map(({ dos, ...c }) => c);
 }
 
+/** cuántos medios distintos hay en una lista de noticias */
+export const fuentesDe = (xs) => new Set((xs || []).map((x) => norm(x.medio))).size;
+
+/** ¿ha marcado alguno de los jugadores principales de los hechos de un MVP? (compara por nombre; también por el apellido, que es lo que trae ESPN) */
+export function marcoElMvp(hechos) {
+  const goles = ((hechos && hechos.goles) || []).filter((g) => g.goleador && !g.enPropia);
+  const mvps = ((hechos && hechos.jugadores) || []).filter((j) => j.nombre).map((j) => norm(j.nombre));
+  const ult = (n) => n.split(' ').filter(Boolean).pop();
+  return goles.some((g) => { const n = norm(g.goleador); return mvps.some((m) => m === n || m.includes(n) || n.includes(m) || (ult(m) && ult(m) === ult(n) && ult(m).length > 3)); });
+}
+
 /** `de(t)`: la prensa del partido de un tweet, si su tipo lleva prensa (config.redactar.prensa) */
 export function crearCronicas({ config = {}, leer = noticiasPrensaUnaVez, log = () => {}, ahora = () => Date.now() } = {}) {
   const tipos = (config.redactar && config.redactar.prensa) || ['previa'];
@@ -47,7 +61,10 @@ export function crearCronicas({ config = {}, leer = noticiasPrensaUnaVez, log = 
       if (!t || !t.hechos || !t.hechos.partido || !tipos.includes(t.tipo)) return [];
       const noticias = await leer({ log }).catch(() => []);
       const p = t.hechos.partido;
-      return elegir(noticias, { partido: { local: p.local, visitante: p.visitante, fecha: p.fecha }, tipo: t.tipo, ahora: ahora() });
+      if (t.tipo === 'mvp' && !marcoElMvp(t.hechos)) return [];
+      const cs = elegir(noticias, { partido: { local: p.local, visitante: p.visitante, fecha: p.fecha }, tipo: t.tipo, ahora: ahora() });
+      // en el final y el MVP, con menos de dos medios no hay prensa: un solo titular no basta para contar nada
+      return (t.tipo === 'final' || t.tipo === 'mvp') && fuentesDe(cs) < 2 ? [] : cs;
     },
   };
 }

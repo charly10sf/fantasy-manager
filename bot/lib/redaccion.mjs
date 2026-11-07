@@ -64,7 +64,7 @@ export function conApodos(hechos) {
 const SIGLAS = new Set(['var', 'mvp', 'rcd', 'ud', 'cf', 'ca', 'fc', 'sd', 'cd', 'rc', 'ad', 'pts', 'j']);
 const GRITOS = new Set(['golazo', 'gol', 'golito', 'que', 'en', 'el', 'la', 'lo', 'los', 'las', 'de', 'del', 'al', 'a', 'y', 'su', 'se', 'le', 'da', 'con', 'por', 'sobre', 'ultimo', 'ultima',
   'minuto', 'descuento', 'bocina', 'final', 'falta', 'volea', 'cabeza', 'vuelta', 'remontada', 'remonta', 'triplete', 'doblete', 'empata', 'empate', 'gana', 'locura', 'tremendo',
-  'brutal', 'toma', 'vaya', 'ojo', 'agonico', 'agonica', 'clava', 'mete', 'joya', 'obra', 'arte', 'tiro', 'zapatazo']);
+  'brutal', 'lejos', 'toma', 'vaya', 'ojo', 'agonico', 'agonica', 'clava', 'mete', 'joya', 'obra', 'arte', 'tiro', 'zapatazo']);
 /** las palabras con mayúscula que pueden salir: las de los hechos, las crónicas usadas, los medios y unas fijas */
 function vocabulario(hechos, cronicas) {
   const s = new Set(['laliga', 'fantasy', 'manager', 'primera', 'segunda', 'champions', 'copa', 'europa', 'conference', 'liga', 'rey', 'var', 'mvp',
@@ -323,7 +323,9 @@ export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [
     (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ${hechos.tipo === 'resumen' ? 'lo que sí puedes contar es el ranking de los hechos (quién va primero, a cuánto de la media)' : 'ninguna comparación con el resto de la jornada'}.`; })(),
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     gastadas.length ? `FRASES YA GASTADAS (salen en varios de esos tuits; no las uses): ${gastadas.map((g) => `«${g.txt}»`).join(', ')}` : '',
-    cronicas.length ? `PRENSA DE ESTE PARTIDO (hasta dos hechos, con tus palabras y con el medio pegado al hecho; nada de lo que pasa en el campo, eso solo si está en los hechos):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
+    cronicas.length ? (hechos.tipo === 'final' || hechos.tipo === 'mvp'
+      ? `PRENSA DE ESTE PARTIDO (opcional). Solo puedes usar algo que digan AL MENOS DOS de estas noticias, de medios distintos; si un dato sale en una sola, no lo uses. Con tus palabras y SIN nombrar ningún medio (ni «según», ni «cuentan»): se dice como un hecho. Nada de lo que pasa en el campo que no esté en los hechos. Si usas algo, apunta en «cronicas» los números de las noticias que lo dicen (mínimo dos):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}`
+      : `PRENSA DE ESTE PARTIDO (hasta dos hechos, con tus palabras y con el medio pegado al hecho; nada de lo que pasa en el campo, eso solo si está en los hechos):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}`) : '',
     errores.length ? `Tu versión anterior no vale:\n"""${anterior}"""\nPor esto: ${errores.join('; ')}. Escríbela otra vez arreglando eso.` : '',
   ].filter(Boolean).join('\n\n');
 }
@@ -380,6 +382,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     if (sinPrensa) log(`  (redactar) ${t.clave}: sin prensa (ya ha fallado ${fallosPrevios} ${fallosPrevios === 1 ? 'vez' : 'veces'})`);
     const cronicas = sinPrensa ? [] : ((await Promise.resolve(cronicasDe(t)).catch(() => [])) || []);
     let anterior = '', errores = [], final = null, rechazos = 0, causa = 'rechazada';
+    const inicioTuit = Date.now();
     // presupuesto de tiempo de la ejecución (el trabajo de Actions tiene un tope de 10 min): pasado, sale la plantilla
     if (process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo en esta ejecución (${Math.round(process.uptime())} s)`); t.redaccion = 'sin-tiempo'; continue; }
     // `intentos` versiones como mucho que lleguen al revisor, y una más si alguna se cae antes, en el validador de código (es gratis
@@ -389,12 +392,16 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       if (intento > 0 && process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo para otro intento`); break; }
       // (el directo lleva prisa: una sola llamada, sin reintentos; `redactar.intentosPorTipo`)
       if (intento >= ((cfg.intentosPorTipo || {})[tipo] ?? Infinity)) break;
+      // otro intento solo si el primero fue rápido (7 nov, el «baja» de Iker Luque: un fallo del validador en el directo tiraba el tuit a la plantilla)
+      if (intento > 0 && cfg.reintentoSegundos && cfg.reintentoSegundos[tipo] != null && Date.now() - inicioTuit > cfg.reintentoSegundos[tipo] * 1000) { log(`  (redactar) ${t.clave}: el primer intento tardó demasiado para otro`); break; }
       const r = await pedir({ uso: 'redactar', registro, config, sistema, cache, esquema: ESQUEMA, log,
         prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (((cfg.segundosPorTipo || {})[tipo]) ?? cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); causa = /^(tope|sin Claude)/.test(String(r.error)) ? 'sin-ia' : 'ia-no'; break; }
       const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
+      // final y MVP: lo que sale de la prensa tiene que decirlo al menos dos medios distintos (Carlos, 7 nov); sin dos, no vale como fuente
+      if ((tipo === 'final' || tipo === 'mvp') && usadas.length && new Set(usadas.map((c) => norm(c.medio))).size < 2) malos.push('has usado la prensa con una sola noticia o un solo medio: en un final o un MVP solo vale lo que dicen al menos dos medios distintos (apunta las dos en «cronicas»); si no hay dos que lo digan, quítalo');
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
       if (!malos.length) {
         // (el directo no espera a un segundo editor: lo del validador de código basta, la jugada caduca en minutos)

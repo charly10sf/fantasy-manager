@@ -5,6 +5,11 @@ import { norm, corto, fmt, partes, elegir, el, del, al } from '../lib/texto.mjs'
 import { tweet, cap, segunda } from '../lib/redactar.mjs';
 import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
 import { clubes as clubesH, jugador as jugadorH, frenteMedia, estadio } from '../lib/hechos.mjs';
+import { crearFotmob, casarPartido, casarGol, mismoNombre } from '../lib/fotmob.mjs';
+import { golazoFotmob, golazoEspn, textoGolEspn } from '../lib/golazo.mjs';
+import { ponerAlDia as ponerAlDiaRasgos, contadorDe, ajustarGoles, conGolesEspn, yaContado, hechosDeTemporada, cifrasDeTemporada } from '../lib/rasgos.mjs';
+import { rasgosDe } from '../lib/apodos-jugadores.mjs';
+import { apuntarVista, completa, lineaMedida, apuntarSalud } from '../lib/fuentes-medida.mjs';
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
 const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la', 'del', 'el', 'y', 'sd', 'ad']);
@@ -153,14 +158,20 @@ const VERBO = { abre: 'se adelanta', empata: 'empata', adelanta: 'se pone por de
   recorta: 'recorta', amplia: 'amplía la ventaja', sentencia: 'sentencia el partido' };
 /** cómo fue el gol según ESPN («Goal - Free-kick», «Goal - Volley», «Goal - Header») y si es un momento para celebrarlo a lo grande
     (Carlos, 7 nov 15:35: «lenguaje más coloquial y mayúsculas si hay un golazo o un gol en los últimos instantes o algún evento que lo
-    merezca»). Solo con datos: un gol de falta directa, uno en el descuento o los últimos minutos que empata, adelanta o da la vuelta,
-    una remontada y un triplete. Un «golazo» que no sea de falta no se puede saber (ESPN no lo dice): no sale. */
-export function momentoEspecial({ tipoEspn = '', min = 0, extra = 0, sit = null, clase = 'gol', penalti = false } = {}) {
+    merezca»). Solo con datos: un golazo, un gol en el descuento o los últimos minutos que empata, adelanta o da la vuelta, una remontada
+    y un triplete. `golazo` lo calcula lib/golazo.mjs (7 nov, 22:43): falta directa o disparo de 22 m o más sin penalti con los datos de
+    FotMob; sin FotMob, la regla C con el texto de ESPN. Sin `golazo`, solo la falta directa que dice el tipo de ESPN. */
+export function momentoEspecial({ tipoEspn = '', min = 0, extra = 0, sit = null, clase = 'gol', penalti = false, golazo = null } = {}) {
   const t = String(tipoEspn || '');
-  const forma = penalti ? null : /free.?kick/i.test(t) ? 'de falta directa' : /volley/i.test(t) ? 'de volea' : /header/i.test(t) ? 'de cabeza' : null;
+  let forma = penalti ? null : /free.?kick/i.test(t) ? 'de falta directa' : /volley/i.test(t) ? 'de volea' : /header/i.test(t) ? 'de cabeza' : null;
   const cambia = ['empata', 'adelanta', 'voltea'].includes(sit);
   const motivos = [];
-  if (forma === 'de falta directa') motivos.push('golazo de falta directa');
+  const g = penalti ? null : golazo || (forma === 'de falta directa' ? { motivo: 'falta directa' } : null);
+  if (g) {
+    if (g.motivo === 'falta directa') { forma = 'de falta directa'; motivos.push('golazo de falta directa'); }
+    else if (g.motivo === 'de volea') motivos.push('golazo de volea');
+    else motivos.push('golazo de lejos');
+  }
   if (cambia && min >= 90) motivos.push(`gol en el descuento (${min}${extra ? `+${extra}` : ''}') que ${VERBO[sit] === 'empata' ? 'empata el partido' : VERBO[sit] === 'le da la vuelta' ? 'le da la vuelta al partido' : 'pone por delante a su equipo'}`);
   else if (cambia && min >= 85) motivos.push(`gol en los últimos minutos que ${sit === 'empata' ? 'empata el partido' : sit === 'voltea' ? 'le da la vuelta al partido' : 'pone por delante a su equipo'}`);
   else if (sit === 'voltea') motivos.push('remontada: le da la vuelta al partido');
@@ -183,15 +194,53 @@ function titularGol(sit, n, eq, min, semilla) {
   return elegir(v, semilla);
 }
 
+const claveDirecto = (m, d) => `directo|${m.id}|${d.jugador}|${d.n ? `gol${d.n}` : d.clase}`;
+const totalMin = (mn) => mn.min + mn.extra;
+const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
+
+/** los goles que ESPN dice en el comentario del partido que ha anulado el VAR («Deleted After Review»): [{ jugador, t (minuto con el añadido) }].
+    En 114 partidos acabados de LaLiga el gol anulado ya no estaba en los `details` ni en los `keyEvents`, solo aquí; se mira por si en directo
+    aún convive con el aviso del VAR. */
+export function anuladosEspn(sumario) {
+  const out = [];
+  for (const k of (sumario && sumario.commentary) || []) {
+    const pl = k.play || {};
+    if (!(pl.type && /deleted after review/i.test(pl.type.text || '')) && !/GOAL OVERTURNED BY VAR/i.test(String(k.text || ''))) continue;
+    const a = ((pl.participants || [])[0] || {}).athlete;
+    const mn = minutoDe({ clock: pl.clock || k.time });
+    if (a && a.displayName) out.push({ jugador: a.displayName, t: totalMin(mn) });
+  }
+  return out;
+}
+/** ¿es esta jugada de ESPN uno de los goles anulados? (mismo goleador y a menos de un minuto; `lado`: true si es del local, o null si no se sabe) */
+const esAnulado = (d, anulados, casaId) => d.scoringPlay && !d.ownGoal && anulados.some((a) => {
+  const g = (d.athletesInvolved || [])[0];
+  return g && mismoNombre(g.displayName, a.jugador) && Math.abs(totalMin(minutoDe(d)) - a.t) <= 1 && (a.esLocal == null || a.esLocal === (String(d.team && d.team.id) === String(casaId)));
+});
+/** la hora a la que ESPN apuntó la jugada de un gol (el `wallclock` de su comentario), para medir el retraso; null si no está */
+function horaGolEspn(sumario, jugador, minuto) {
+  for (const k of (sumario && sumario.commentary) || []) {
+    const pl = k.play || {};
+    if (!/^(goal|penalty - scored)/i.test((pl.type && pl.type.text) || '')) continue;
+    const a = ((pl.participants || [])[0] || {}).athlete;
+    if (a && a.displayName === jugador && String((pl.clock && pl.clock.displayValue) || '') === String(minuto) && pl.wallclock) return pl.wallclock;
+  }
+  return null;
+}
+
 /**
  * ventanas: en directo solo los partidos en juego o empezados hace menos de 3 h (al activar no se sueltan goles viejos).
  * fechasEspn: días del marcador de ESPN (AAAAMMDD); con ventanas, hoy en Madrid.
  * Cada tweet lleva el marcador del momento de la jugada (reconstruido de ESPN), una frase de cómo ha sido, y las tarjetas de los
  * jugadores implicados (goleador y asistente, el expulsado, el que falla el penalti) en `tarjetas`.
  */
-export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDirecto = 0, ahora = Date.now(), dazn = null }) {
+export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDirecto = 0, ahora = Date.now(), dazn = null, config = {}, registro = null, fotmob = null }) {
   const porId = new Map((jugadores || []).map((j) => [String(j.id), j]));
   const out = [];
+  const log = (s) => console.log(s);
+  // FotMob, fuente extra (lib/fotmob.mjs): nunca retrasa un tuit y, si no contesta, todo sale con ESPN. Se apaga con config.fotmob = false o BOT_FOTMOB=0
+  const fm = fotmob || (config.fotmob === false || process.env.BOT_FOTMOB === '0' ? null : crearFotmob({ log }));
+  if (fm && registro) await ponerAlDiaRasgos({ fm, registro, fechas: fechasEspn, log, max: registro.fichero ? 60 : 200 }).catch((e) => log(`  (rasgos) ERROR ${e.message || e}`));
   for (const f of fechasEspn) {
     const sb = await json(`${ESPN}/scoreboard?dates=${f}`).catch(() => null);
     for (const ev of (sb && sb.events) || []) {
@@ -202,20 +251,83 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       const casa = c.competitors.find((x) => x.homeAway === 'home'), fuera = c.competitors.find((x) => x.homeAway === 'away');
       const m = stats.find((x) => comparten(x.local.mainName, casa.team.displayName) && comparten(x.visitor.mainName, fuera.team.displayName));
       if (!m) { console.log(`  (directo) sin casar ${ev.shortName} con LaLiga`); continue; }
-      const dsps = disparadores(c.details || []);
-      // el resumen del partido (una petición por partido y ejecución): los penaltis parados y los asistentes que falten
-      const sumario = await json(`${ESPN}/summary?event=${ev.id}`).catch(() => null);
+      let dsps = disparadores(c.details || []);
+      const claveDe = (d) => claveDirecto(m, d);
+      const yaSalio = (d) => !!(registro && registro.claves.has(claveDe(d)));
+      const medidas = registro ? (registro.datos.medidaFuentes || {}) : {};
+      // FotMob se pide si el partido está en juego (para medir quién ve antes cada gol) o si algún gol aún no ha salido o no se ha medido
+      const quiereFm = !!fm && (st.state === 'in' || dsps.some((d) => d.n && (!yaSalio(d) || !completa(medidas[claveDe(d)]))));
+      const traerFm = async () => {
+        let pm = null;
+        for (const dia of [...new Set([f, diaMadrid(ev.date)])]) { pm = casarPartido(await fm.partidosDelDia(dia), casa.team.displayName, fuera.team.displayName, { fecha: ev.date }); if (pm) break; }
+        if (!pm) { log(`  (fotmob) ${ev.shortName}: sin casar con un partido de FotMob`); return null; }
+        const d = await fm.detalle(pm.id);
+        return d ? { ...d, partidoId: String(pm.id) } : null;
+      };
+      // el resumen del partido de ESPN (una petición por partido y ejecución: penaltis parados, asistentes y goles anulados) y, a la vez, FotMob
+      const [sumario, det] = await Promise.all([json(`${ESPN}/summary?event=${ev.id}`).catch(() => null), quiereFm ? traerFm().catch(() => null) : null]);
+      // goles anulados por el VAR: ESPN los quita de sus jugadas al anularlos, pero mientras dura la revisión puede convivir con el aviso (comentario de ESPN o `VAR` de FotMob)
+      const anulados = [...anuladosEspn(sumario), ...((det && det.anulados) || []).map((a) => ({ jugador: a.jugador, t: a.min + a.extra, esLocal: a.esLocal }))];
+      const detalles = anulados.length ? (c.details || []).filter((d) => !esAnulado(d, anulados, casa.team.id)) : (c.details || []);
+      if (detalles.length !== (c.details || []).length) {
+        log(`  (directo) ${ev.shortName}: gol anulado por el VAR, no sale (${(c.details || []).filter((d) => esAnulado(d, anulados, casa.team.id)).map((d) => `${((d.athletesInvolved || [])[0] || {}).displayName} ${(d.clock || {}).displayValue}`).join(', ')})`);
+        dsps = disparadores(detalles);
+      }
       dsps.push(...penaltisParados(sumario));
+      // un gol que ya salió y que ahora no está (lo ha anulado el VAR después): no se puede deshacer, pero se avisa en el log
+      if (registro) for (const e of registro.datos.enviados || []) {
+        if (!e.clave.startsWith(`directo|${m.id}|`) || !/\|gol\d+$/.test(e.clave) || dsps.some((d) => claveDe(d) === e.clave)) continue;
+        const avisos = (registro.datos.golesAnulados ||= {});
+        if (!avisos[e.clave]) { avisos[e.clave] = new Date(ahora).toISOString(); log(`  (directo) ⚠ el gol ${e.clave} ya salió en X (id ${e.id || '?'}) y ya no está en ESPN: ¿anulado por el VAR? Revisar y, si hace falta, borrarlo a mano`); }
+      }
+      // VAR pendiente en FotMob: los goles que aún no han salido esperan hasta que se resuelva (como mucho `directo.varEsperaMin`, 10 por defecto,
+      // por si el aviso se queda puesto). Es lo ÚNICO por lo que se espera a FotMob, y solo si dice que hay una revisión en curso, nunca porque no vea el gol
+      let retenerVar = false;
+      if (det && det.varPendiente && dsps.some((d) => d.n && !yaSalio(d))) {
+        const tabla = registro ? (registro.datos.varEspera ||= {}) : {};
+        const desde = tabla[m.id] || (tabla[m.id] = new Date(ahora).toISOString());
+        const espera = (ahora - Date.parse(desde)) / 6e4;
+        retenerVar = espera < ((config.directo || {}).varEsperaMin ?? 10);
+        log(`  (directo) ${ev.shortName}: VAR en revisión (FotMob) desde hace ${Math.round(espera)} min; ${retenerVar ? 'los goles esperan' : 'paso de esperar y sigo'}`);
+      } else if (registro && registro.datos.varEspera && registro.datos.varEspera[m.id]) delete registro.datos.varEspera[m.id];
       // con el partido ya acabado, los puntos solo valen cuando están los DAZN: antes, los tweets esperan (los de durante el partido ya salieron)
       if (st.state === 'post' && dsps.length && dazn && !(await dazn(m)).listo) { console.log(`  (directo) ${ev.shortName}: acabado, espero a los puntos DAZN para sus ${dsps.length} tweets`); continue; }
       console.log(`  (directo) ${ev.shortName} · ${st.state === 'in' ? `en juego, ${(ev.status.displayClock || '')}` : 'acabado'} · ${casa.score}-${fuera.score} · ${dsps.length} cosas que contar`);
       const asis = dsps.some((d) => d.n && !d.asistente) ? asistencias(sumario) : {};
       // el marcador de ESPN, que va al momento (el de LaLiga puede ir por detrás)
       const gl = Number(casa.score), gv = Number(fuera.score);
-      const rel = reconstruir(c.details || [], casa.team.id, fuera.team.id, gl, gv, { vivo: true });
+      const rel = reconstruir(detalles, casa.team.id, fuera.team.id, gl, gv, { vivo: true });
       if (rel.desfase && dsps.length) console.log(`  (directo) ${ev.shortName}: el marcador de ESPN (${gl}-${gv}) va por detrás de sus jugadas; uso el de las jugadas`);
       if (!rel.ok && dsps.length) console.log(`  (directo) ${ev.shortName}: la secuencia de ESPN no cuadra con ${gl}-${gv}; los goles esperan a la siguiente vuelta`);
+      // FotMob: casa cada gol de ESPN con el suyo (distancia, situación…) y apunta quién ve antes cada gol (lib/fuentes-medida.mjs)
+      const golesFm = det ? det.goles : [];
+      const golFm = new Map();
+      const usadosFm = new Set();
       for (const dsp of dsps) {
+        if (!dsp.n) continue;
+        const mnD = minutoDe(dsp.ref), mom0 = rel.ok ? rel.tras.get(dsp.ref) : null;
+        const g = casarGol(golesFm, { esCasa: String(dsp.equipo) === String(casa.team.id), jugador: dsp.jugador, min: mnD.min, extra: mnD.extra, marcador: mom0 ? mom0.marcador : null }, usadosFm);
+        if (g) { golFm.set(dsp, g); usadosFm.add(g); }
+      }
+      if (registro) {
+        const tabla = () => registro.datos.medidaFuentes || {};
+        for (const g of golesFm) if (!g.propia) apuntarVista(registro, `fm|${m.id}|${g.jugadorId}|${g.min}`, { jugador: g.jugador, minuto: `${g.min}'`, vio: { fotmob: true }, reloj: { fotmob: det.reloj }, ahora });
+        for (const dsp of dsps.filter((d) => d.n)) {
+          const g = golFm.get(dsp);
+          const r = apuntarVista(registro, claveDe(dsp), { jugador: dsp.jugador, minuto: dsp.min, vio: { espn: true, fotmob: !!g }, reloj: { espn: ev.status.displayClock, fotmob: det && det.reloj }, espnWall: horaGolEspn(sumario, dsp.jugador, dsp.min), ahora });
+          let nuevo = r.nuevo;
+          const fe = g ? tabla()[`fm|${m.id}|${g.jugadorId}|${g.min}`] : null;
+          if (fe) { fe.casado = true; if (fe.f && (!r.ficha.f || fe.f < r.ficha.f)) { r.ficha.f = fe.f; r.ficha.rf = fe.rf; nuevo = true; } }
+          if (nuevo) log(lineaMedida(ev.shortName, r.ficha));
+        }
+        for (const g of golesFm) {
+          const fe = !g.propia && tabla()[`fm|${m.id}|${g.jugadorId}|${g.min}`];
+          if (fe && !fe.casado && !fe.avisado) { fe.avisado = true; log(lineaMedida(ev.shortName, fe)); }
+        }
+      }
+      for (const dsp of dsps) {
+        // el VAR de FotMob dice que hay una revisión en curso: los goles que no han salido esperan (arriba)
+        if (retenerVar && dsp.n && !yaSalio(dsp)) continue;
         // un gol sin su marcador seguro no sale: con el actual de ESPN podía decir «0-1» de un gol que era el 1-1 (7 nov)
         if (!rel.ok && dsp.n) continue;
         const esCasa = String(dsp.equipo) === String(casa.team.id);
@@ -230,7 +342,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         let ptsEstimado = false;
         if (dsp.n && p) {
           const jp0 = porId.get(String(p.id));
-          const r = puntosConGol(p.weekPoints, (jp0 && jp0.positionId) || p.positionId, { goles: dsp.n, asis: asistenciasDe(c.details || [], dsp.jugador, dsp.ref), accion: 'gol' });
+          const r = puntosConGol(p.weekPoints, (jp0 && jp0.positionId) || p.positionId, { goles: dsp.n, asis: asistenciasDe(detalles, dsp.jugador, dsp.ref), accion: 'gol' });
           if (r.pts != null) { pts = r.pts; ptsEstimado = r.estimado; }
         }
         const mn = minutoDe(dsp.ref);
@@ -318,7 +430,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
             const na = pa ? pa.nickname || pa.name : an;
             if (pa) {
               const jpa = porId.get(String(pa.id));
-              ptsA = puntosConGol(pa.weekPoints, (jpa && jpa.positionId) || pa.positionId, { goles: golesDe(c.details || [], an, dsp.ref), asis: Math.max(1, asistenciasDe(c.details || [], an, dsp.ref)), accion: 'asistencia' }).pts;
+              ptsA = puntosConGol(pa.weekPoints, (jpa && jpa.positionId) || pa.positionId, { goles: golesDe(detalles, an, dsp.ref), asis: Math.max(1, asistenciasDe(detalles, an, dsp.ref)), accion: 'asistencia' }).pts;
             }
             if (ptsA != null) num.push(ptsA);
             ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
@@ -326,13 +438,32 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           }
           if (pts != null) ideas.push(puntos(pts, true, !!an));
           const sobre = pts != null && media >= 3 && pts >= 1.5 * media;
+          // golazo (7 nov, 22:43): falta directa o disparo de 22 m o más sin penalti con FotMob; sin FotMob, la regla C con el texto de ESPN
+          const gFm = golFm.get(dsp) || null;
+          const tipoEspn = dsp.ref && dsp.ref.type && dsp.ref.type.text;
+          const golazo = dsp.penalti ? null : gFm ? golazoFotmob(gFm) : golazoEspn({ tipo: tipoEspn, texto: textoGolEspn(sumario, dsp.jugador, dsp.min), penalti: dsp.penalti });
+          if (golazo && golazo.metros != null) num.push(golazo.metros);
+          // cómo marca este jugador: lo que se ha contado del curso (con este gol) y lo apuntado a mano (lib/rasgos.mjs, lib/apodos-jugadores.mjs)
+          // (un partido en juego aún no está en los contadores: se le suman sus goles hasta este; uno acabado ya está, y se le restan los posteriores)
+          const delJugador = gFm ? golesFm.filter((g) => !g.propia && g.jugadorId === gFm.jugadorId) : [];
+          const hasta = delJugador.filter((g) => g.min + g.extra <= gFm.min + gFm.extra), despues = delJugador.filter((g) => g.min + g.extra > gFm.min + gFm.extra);
+          const cont0 = contadorDe(registro, { id: gFm ? gFm.jugadorId : null, nombre: dsp.jugador, equipo: lado.mainName });
+          const contado = det ? yaContado(registro, det.partidoId) : st.state === 'post';
+          const cont = !cont0 ? null : contado ? (det ? ajustarGoles(cont0, despues, -1) : null)
+            : hasta.length && hasta.length === dsp.n ? ajustarGoles(cont0, hasta, 1) : conGolesEspn(cont0, dsp.n);
+          const temporada = hechosDeTemporada(cont);
+          const estilo = p ? rasgosDe(p.nickname || p.name) : [];
+          if (temporada) num.push(...cifrasDeTemporada(temporada));
+          log(`  (directo) gol de ${dsp.jugador} ${dsp.min}: ${golazo ? `GOLAZO ${golazo.motivo} (${[golazo.metros != null ? `${golazo.metros} m` : null, golazo.fuente].filter(Boolean).join(', ')})` : 'sin golazo'} · FotMob ${gFm ? `sí (${gFm.situacion || '?'}${gFm.distancia != null ? `, ${gFm.distancia.toFixed(1)} m` : ''})` : det ? 'no ve este gol' : fm ? 'sin datos' : 'apagado'}${temporada ? ` · temporada ${JSON.stringify(temporada).slice(0, 160)}` : ''}${estilo.length ? ' · con rasgos a mano' : ''}`);
           jugH.push(jH(nombre, pos, media, { queLePasa: `${dsp.clase === 'doblete' ? 'marca su segundo gol' : dsp.clase === 'triplete' ? 'marca su tercer gol' : 'marca'}${dsp.penalti ? ' de penalti' : ''}`,
-            ...(pts != null ? { puntosFantasyAhora: pts } : {}), ...(sobre ? { frenteASuMedia: frenteMedia(pts, media) } : {}) }));
+            ...(pts != null ? { puntosFantasyAhora: pts } : {}), ...(sobre ? { frenteASuMedia: frenteMedia(pts, media) } : {}),
+            ...(estilo.length ? { suEstilo: estilo } : {}), ...(temporada ? { suTemporada: temporada } : {}) }));
           if (an) { const paH = casarJugador(an, lado); const ptsAH = ptsA;
             jugH.push(jH(paH ? paH.nickname || paH.name : an, paH ? paH.positionId : null, paH && porId.get(String(paH.id)) ? Number(porId.get(String(paH.id)).averagePoints) || 0 : 0,
               { queLePasa: 'da el pase del gol', ...(ptsAH != null ? { puntosFantasyAhora: ptsAH } : {}) })); }
-          const esp = momentoEspecial({ tipoEspn: dsp.ref && dsp.ref.type && dsp.ref.type.text, min: mn.min, extra: mn.extra, sit, clase: dsp.clase, penalti: dsp.penalti });
+          const esp = momentoEspecial({ tipoEspn, min: mn.min, extra: mn.extra, sit, clase: dsp.clase, penalti: dsp.penalti, golazo });
           extraH = { ...(esp.forma ? { comoFueElGol: esp.forma } : {}), ...(esp.motivos.length ? { momentoParaCelebrar: esp.motivos } : {}),
+            ...(golazo && golazo.metros != null ? { distanciaDelDisparo: `a unos ${golazo.metros} metros de la portería` } : {}),
             ...(sit ? { loQueSuponeElGol: `${equipo} ${VERBO[sit]}` } : {}), ...(sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85 ? { tramo: mn.min >= 88 ? 'casi sobre la bocina' : 'ya en el tramo final' } : {}),
             ...(sit === 'abre' && mn.min <= 6 ? { tramo: 'apenas habían pasado unos minutos' } : {}) };
         }
@@ -350,6 +481,8 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       }
     }
   }
+  // cómo ha ido FotMob en esta ejecución (peticiones bien y mal, tiempo medio): el registro acumula la fiabilidad desde Actions
+  if (fm && registro && fm.salud) { apuntarSalud(registro, fm.salud, ahora); if (registro.fichero) registro.guardar(); }
   // en el orden en que pasaron (si en una ejecución salen varios, el primero el más antiguo)
   return out.sort((a, b) => a.minuto - b.minuto);
 }
