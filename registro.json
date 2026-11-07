@@ -1525,7 +1525,8 @@
    "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/": 1794050162000,
    "SPORT|136195361": 1794048547000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248236/barca-no-recupera-efectivos-visita-madrid-cff.html": 1794051959000,
-   "SPORT|136192275": 1794049544000
+   "SPORT|136192275": 1794049544000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/atletico-de-madrid/20261107/11678726/simeone-mas-complejo-defender-barca-raphinha-nueve-lewandowski.html": 1794052790000
   },
   "hechos": [
    {
@@ -2176,7 +2177,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -3710,22 +3711,24 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136195921": 1794053782360
+  }
  },
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 16,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 125261,
-  "salida": 17675,
+  "entrada": 126892,
+  "salida": 17775,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.316115
+  "dolares": 0.316328
  },
  "recientes": {
   "onces": [
