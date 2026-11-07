@@ -1427,8 +1427,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247324/valverde-merito-equipo-confiar-final.html": 1793822086000,
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/04/aek-real-madrid-champions-league-resumen-resultado-136097281.html": 1793821880000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/04/mourinho-hay-centrocampista-mundo-bellingham-unico.html": 1793823656000,
    "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/": 1793829352000,
    "SPORT|136102061": 1793851297000,
@@ -3765,7 +3763,9 @@
    "n": 10,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794081373058
+  }
  },
  "ia": {
   "dia": "2026-11-07",
