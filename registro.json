@@ -1331,7 +1331,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/manu-hernando-duda-por-un-proceso-gripal-radio-santander/": 1793796850000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/04/el-futuro-de-inigo-perez-empieza-a-generar-dudas-en-la-directiva-del-villarreal-radio-castellon/": 1793796793000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261104/1004247170/kike-salas-vuelve-grupo-e-isaac-sigue-margen.html": 1793796150000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247165/opciones-flick-cubrir-ko-lesion-rodri.html": 1793797556000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html": 1793798837000,
    "SPORT|136070967": 1793797171000,
@@ -1533,18 +1532,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261104/1004247170/kike-salas-vuelve-grupo-e-isaac-sigue-margen.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793796150000,
-    "id": "2479",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Kike Salas vuelve a entrenar con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247165/opciones-flick-cubrir-ko-lesion-rodri.html",
     "medio": "Mundo Deportivo",
