@@ -278,7 +278,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           ...(dsp.clase === 'doblete' || dsp.clase === 'triplete' ? { golNumeroDelJugador: dsp.n } : {}), ...extraH,
           jugadores: jugH, clubes: clubesH(m.local.mainName, m.visitor.mainName), etiqueta: '' };
         out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto, hechos,
-          numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra,
+          numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra, minutoTxt: minTxt,
           // para las tarjetas de jugador (cada jugador implicado que case con LaLiga) y su marcador del momento
           partido: m.id, marcador: [sl, sv], tarjetas });
       }

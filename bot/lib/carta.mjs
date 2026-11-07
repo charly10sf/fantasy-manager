@@ -6,7 +6,7 @@
 // Mismos datos que antes (datos-tarjetas.mjs) y mismo validador: las palabras nuevas están en PALABRAS_FIJAS.
 // Las piezas comunes (letra, fondo, degradados, marca, etiquetas de estado) están en estilo.mjs, compartidas con tarjetas.mjs.
 import { coloresClub } from './colores.mjs';
-import { ANCHO, VERDE, MALO, TINTA, TENUE, FONDO, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
+import { ANCHO, ROJO, VERDE, MALO, TINTA, TENUE, FONDO, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
   escudo, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja, caraHD, panel, R_MAX } from './estilo.mjs';
 
 const ABREV = { Portero: 'POR', Defensa: 'DEF', Centrocampista: 'MED', Delantero: 'DEL', Entrenador: 'ENT' };
@@ -71,11 +71,21 @@ function placa(valor, etiqueta, gOro) {
     + (etiqueta ? texto(x + w / 2, y + 170, etiqueta, { px: 28, peso: 800, color: '#5a420f', ancla: 'middle', espacio: 3 }) : '');
 }
 
-function miniJornadas(x, y, ultimas, gOro) {
+/** la placa de un partido en juego: el minuto grande y «EN JUEGO» con el punto rojo de directo (sin oro: no es un dato del jugador) */
+function placaVivo(minuto, { x = 950, y = 44, w = 206, h = 196 } = {}) {
+  const wt = medir('EN JUEGO', 26, B, 3), x0 = x + w / 2 - (wt + 26) / 2;
+  return `<rect x="${x}" y="${y + 6}" width="${w}" height="${h}" rx="30" fill="#000" opacity="0.4"/>`
+    + caja(x, y, w, h, { rx: 30, relleno: '#16141c', borde: ROJO, grosor: 2.5, sombra: false })
+    + texto(x + w / 2, y + 120, minuto, { px: 96, peso: 900, ancla: 'middle', max: w - 30 })
+    + `<circle cx="${x0 + 8}" cy="${y + 160}" r="8" fill="${ROJO}"/>`
+    + texto(x0 + 26, y + 169, 'EN JUEGO', { px: 26, peso: 800, color: ROJO, espacio: 3 });
+}
+
+function miniJornadas(x, y, ultimas, gOro, { sinHoy = false } = {}) {
   let s = '';
   const n = ultimas.length || 1, paso = 566 / Math.max(5, n), w = paso - 14, h = 132;
   ultimas.forEach(([jn, p], i) => {
-    const x0 = x + i * paso, ult = i === ultimas.length - 1;
+    const x0 = x + i * paso, ult = !sinHoy && i === ultimas.length - 1;   // sin puntos aún en directo, ninguna en oro
     s += caja(x0, y, w, h, { rx: 20, relleno: ult ? `url(#${gOro})` : null, sombra: true })
       + texto(x0 + w / 2, y + 76, String(p), { px: 66, peso: 900, color: ult ? '#2a1c04' : p < 0 ? MALO : TINTA, ancla: 'middle', max: w - 12 })
       + texto(x0 + w / 2, y + 112, `J${jn}`, { px: 26, peso: 700, color: ult ? '#5a420f' : TENUE, ancla: 'middle', espacio: 1 });
@@ -102,7 +112,7 @@ function historial(x0, y0, d, gOro) {
   const val = millones(d.valorHoy), wv = medir(val, 64, B);
   const pc = chip(`${signo(d.cambio)} %`, 0, 0, 30, { relleno: colV, pad: 1.5, espacio: 0.5 });
   return texto(x0, y0 + 24, 'PUNTOS EN LAS ÚLTIMAS JORNADAS', { px: 25, peso: 700, color: TENUE, espacio: 3, max: wd })
-    + miniJornadas(x0, y0 + 44, d.ultimas, gOro)
+    + miniJornadas(x0, y0 + 44, d.ultimas, gOro, { sinHoy: !!d.sinPuntos })
     + texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 25, peso: 700, color: TENUE, espacio: 3 })
     + texto(x0, yv + 62, val, { px: 64, peso: 800 })
     + chip(`${signo(d.cambio)} %`, x0 + wv + 24 + pc.w / 2, yv + 44, 30, { relleno: colV, pad: 1.5, espacio: 0.5 }).s
@@ -121,8 +131,9 @@ export function svgJugadorCarta(d) {
   const oro = dorado(), metal = METAL[metalDe(d.valorHoy)];
   const [motivo, ...resto] = d.etiqueta.split(' · ');
   let s = oro.defs + fondo([[300, 520, 640, c.vivo, 0.6], [1000, 80, 560, c.vivo, 0.2]], H)
-    + cabeceraCarta(motivo.toUpperCase(), oro.g, resto.join(' · ').toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
-    + placa(String(d.ptsJornada), 'PTS', oro.g)
+    + cabeceraCarta(motivo.toUpperCase(), oro.g, [...resto, ...(d.minuto && !d.sinPuntos ? [d.minuto] : [])].join(' · ').toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
+    // en directo y sin puntos todavía (LaLiga no ha sumado la jugada): arriba el minuto «EN JUEGO» en vez de un «0 PTS»
+    + (d.sinPuntos ? (d.minuto ? placaVivo(d.minuto) : '') : placa(String(d.ptsJornada), 'PTS', oro.g))
     + panelJugador(44, 284, 500, 490, { metal, club: c, cara: d.cara, escudo: d.club.escudo, puesto: ABREV[d.posicion] || d.posicion, nombre: d.nombre,
       cifras: [[num1(d.media), 'PUNTOS DE MEDIA'], [String(d.total), 'PUNTOS TOTALES']] })
     + historial(590, 300, d, oro.g);
@@ -171,5 +182,55 @@ export function svgBajaSola(d) {
       + escudo(d.rival.escudo, 650, 480, 120)
       + texto(600 + (d.rival.escudo ? 120 : 0), 506, d.rival.corto.toUpperCase(), { px: 76, peso: 800, max: 556 - (d.rival.escudo ? 120 : 0) });
   }
+  return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
+}
+
+// Gol y asistencia en una sola tarjeta (Carlos, 7 nov 14:53: «no tiene sentido dos»). Arriba, el GOL (o ¡DOBLETE!) con el marcador
+// y el minuto; a la derecha, en directo, la placa del minuto «EN JUEGO». Debajo, dos paneles iguales: el goleador (filo de su metal y
+// chip dorado GOL) y el asistente (chip blanco ASISTENCIA), con cara, nombre, sus puntos en la jornada (si LaLiga ya los ha sumado),
+// la media, el valor y sus 5 últimas jornadas. 1200 x 1010.
+export const ALTO_GOL_ASIS = 1010;
+function panelDuo(x, y, w, h, j, rol, gOro) {
+  const t = METAL[metalDe(j.valorHoy)], gm = gradMetal(t), c = coloresClub(j.club.nombre), cx = x + w / 2, cy = y + 150, R = R_MAX;
+  let s = gm.defs + panel(x, y, w, h, c.vivo, { rx: 32, brillo: 0.5, borde: `url(#${gm.g})` })
+    + caraHD(j.cara, cx, cy, R, c.vivo, { aro: `url(#${gm.g})`, grosor: 6, halo: 1.9, haloOp: 0.5 });
+  if (j.club.escudo) s += escudo(j.club.escudo, x + 58, y + 62, 70);
+  const pu = ABREV[j.posicion] || j.posicion;
+  if (pu) s += chip(pu, x + w - 58, y + 58, 26, { relleno: '#ffffff', tinta: '#120f16', pad: 1.6, espacio: 1.5 }).s;
+  const yN = cy + R + 74;
+  s += texto(cx, yN, String(j.nombre).toUpperCase(), { px: 56, peso: 800, ancla: 'middle', max: w - 48, espacio: 0.5 });
+  const esGol = rol !== 'ASISTENCIA';
+  const ch = chip(rol, cx, yN + 44, 26, esGol ? { relleno: '#e2bd5a', tinta: '#2a1c04', pad: 1.8, espacio: 2 } : { relleno: '#ffffff', tinta: '#120f16', pad: 1.8, espacio: 2 });
+  s += ch.s + `<rect x="${x + 40}" y="${yN + 82}" width="${w - 80}" height="1.5" fill="#fff" fill-opacity="0.12"/>`;
+  // las cifras: puntos en la jornada (solo si ya los hay), media y valor
+  const cifras = [];
+  if (!j.sinPuntos) cifras.push([String(j.ptsJornada), 'EN LA JORNADA', j.ptsJornada < 0 ? MALO : '#e2bd5a']);
+  cifras.push([num1(j.media), 'DE MEDIA'], [millones(j.valorHoy), 'VALOR']);
+  const yc = yN + 160, paso = w / cifras.length;
+  cifras.forEach(([v, et, color], k) => {
+    const xc = x + paso * (k + 0.5);
+    s += texto(xc, yc, v, { px: 50, peso: 900, color: color || TINTA, ancla: 'middle', max: paso - 24 })
+      + texto(xc, yc + 32, et, { px: 20, peso: 700, color: TENUE, ancla: 'middle', espacio: 1.5, max: paso - 16 });
+    if (k) s += `<rect x="${x + paso * k - 0.75}" y="${yc - 48}" width="1.5" height="86" fill="#fff" fill-opacity="0.12"/>`;
+  });
+  // sus últimas jornadas, pequeñas (la de hoy en oro si ya tiene puntos)
+  const yM = yc + 70, n = j.ultimas.length || 1, pasoM = (w - 64) / Math.max(5, n), wm = pasoM - 10, hm = 96;
+  j.ultimas.forEach(([jn, p], i) => {
+    const x0 = x + 32 + i * pasoM, hoy = !j.sinPuntos && jn === j.jornada;
+    s += caja(x0, yM, wm, hm, { rx: 16, relleno: hoy ? `url(#${gOro})` : null, sombra: true })
+      + texto(x0 + wm / 2, yM + 56, String(p), { px: 46, peso: 900, color: hoy ? '#2a1c04' : p < 0 ? MALO : TINTA, ancla: 'middle', max: wm - 10 })
+      + texto(x0 + wm / 2, yM + 84, `J${jn}`, { px: 20, peso: 700, color: hoy ? '#5a420f' : TENUE, ancla: 'middle', espacio: 1 });
+  });
+  return s;
+}
+export function svgGolAsistencia(d) {
+  const H = ALTO_GOL_ASIS, oro = dorado();
+  const cg = coloresClub(d.gol.club.nombre);
+  let s = oro.defs + fondo([[320, 560, 620, cg.vivo, 0.5], [900, 560, 620, cg.vivo, 0.35]], H)
+    // el minuto, en la placa si está en juego; si no, junto al marcador (una sola vez)
+    + cabeceraCarta(d.titulo, oro.g, [d.marcador, ...(d.minuto && !d.enJuego ? [d.minuto] : [])].join(' · ').toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
+    + (d.enJuego && d.minuto ? placaVivo(d.minuto) : '')
+    + panelDuo(44, 290, 540, 640, d.gol, d.titulo.replace(/[¡!]/g, ''), oro.g)
+    + panelDuo(616, 290, 540, 640, d.asis, 'ASISTENCIA', oro.g);
   return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
 }
