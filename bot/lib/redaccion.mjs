@@ -319,7 +319,12 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     const max = limite() - (etiqueta ? peso(etiqueta) + sep : 0);
     // lo que se le pide (más corto: «no tienen por qué ser muy largos», Carlos, 4 nov) y el máximo de verdad, que el validador mira
     const pide = Math.min(max - 40, ((cfg.largo || {})[t.hechos.tipo] || (cfg.largo || {})[tipo]) || max - 40);
-    const cronicas = (await Promise.resolve(cronicasDe(t)).catch(() => [])) || [];
+    // la prensa es un adorno: si ya ha fallado la redacción de este tuit `sinPrensaTrasFallos` ejecuciones, se prueba sin ella (la
+    // mayoría de los rechazos de la previa eran por copiar al medio o por contar mal lo que dice; 7 nov)
+    const fallosPrevios = ((registro && registro.datos && registro.datos.fallosRedaccion) || {})[t.clave]?.n || 0;
+    const sinPrensa = (cfg.sinPrensaTrasFallos || 0) > 0 && fallosPrevios >= cfg.sinPrensaTrasFallos;
+    if (sinPrensa) log(`  (redactar) ${t.clave}: sin prensa (ya ha fallado ${fallosPrevios} ${fallosPrevios === 1 ? 'vez' : 'veces'})`);
+    const cronicas = sinPrensa ? [] : ((await Promise.resolve(cronicasDe(t)).catch(() => [])) || []);
     let anterior = '', errores = [], final = null, rechazos = 0, causa = 'rechazada';
     // presupuesto de tiempo de la ejecución (el trabajo de Actions tiene un tope de 10 min): pasado, sale la plantilla
     if (process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo en esta ejecución (${Math.round(process.uptime())} s)`); t.redaccion = 'sin-tiempo'; continue; }
