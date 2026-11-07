@@ -566,6 +566,13 @@
    "jornada": 12,
    "id": "2119168327398338894",
    "t": "2026-11-07T20:41:16.568Z"
+  },
+  {
+   "clave": "directo|112|Kylian Mbappé|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119183455322091924",
+   "t": "2026-11-07T21:41:23.300Z"
   }
  ],
  "estados": {
@@ -3803,16 +3810,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 53,
-   "redactar": 79,
+   "redactar": 80,
    "revisar": 43,
    "pulir": 3
   },
   "fallos": 0,
-  "entrada": 907182,
-  "salida": 45838,
+  "entrada": 916947,
+  "salida": 45947,
   "cacheLee": 147067,
   "cacheEscribe": 39425,
-  "dolares": 1.997294
+  "dolares": 2.017914
  },
  "recientes": {
   "onces": [
@@ -3913,10 +3920,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T14:31:18.640Z",
-    "texto": "🟥 Roja para Aznou en el 64': el Málaga se queda con diez y pierde 1-2 contra el Racing.\n\nEl defensa se va con -4 puntos. Si lo tienes, esta jornada ya la has perdido con él, y el Málaga tendrá difícil sumar con un jugador menos."
-   },
-   {
     "t": "2026-11-07T19:16:18.122Z",
     "texto": "⚽ Nico Williams abre el marcador en el 84'. Osasuna 0-1 Athletic."
    },
@@ -3931,6 +3934,10 @@
    {
     "t": "2026-11-07T20:41:16.569Z",
     "texto": "⚽ Arda Güler amplía la ventaja del Real Madrid en el 36'. Valencia 0-2 Real Madrid. Lleva 10 puntos fantasy de momento."
+   },
+   {
+    "t": "2026-11-07T21:41:23.301Z",
+    "texto": "⚽ Mbappé la mete en el 75' y el Madrid ⚪ pone el 0-3 en Mestalla. Ya suma 5 puntos.\n\nEl pase es de Arda Güler, que se lleva 9. Si tienes a los dos, buena tarde para el mánager."
    }
   ],
   "novedades": [
