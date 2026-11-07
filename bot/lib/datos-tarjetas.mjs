@@ -126,6 +126,15 @@ export async function datosGolAsistencia(jg, ja, m, { jornada, motivo = 'gol', f
   return { d, permitidos };
 }
 
+/** MVP compartido: los datos de los dos (datosJugador, motivo 'mvp') y los permitidos de los dos juntos */
+export async function datosMvpDoble(ja, jb, m, { jornada, fuentes, ahora = Date.now() }) {
+  const a = await datosJugador(ja, m, { jornada, motivo: 'mvp', fuentes, ahora });
+  const b = await datosJugador(jb, m, { jornada, motivo: 'mvp', fuentes, ahora });
+  const d = { jornada, marcador: a.d.marcador, a: a.d, b: b.d };
+  const permitidos = { numeros: [...a.permitidos.numeros, ...b.permitidos.numeros], palabras: [...a.permitidos.palabras, ...b.permitidos.palabras, 'COMPARTIDO'] };
+  return { d, permitidos };
+}
+
 /**
  * Lo que la carta de un jugador enseña además de su estado (Carlos, 3 nov 11:24: en la de un lesionado, «sus últimas jornadas y el
  * valor que tiene»): las 5 últimas jornadas que ya tienen puntos (hasta `jornada`), total, media y valor de los últimos 30 días.

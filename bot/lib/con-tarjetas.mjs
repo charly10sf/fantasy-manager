@@ -7,8 +7,8 @@
 //   sancionados -> la de bajas de los sancionados y la de apercibidos, separados por equipo (si tarjetas.sancionados)
 //   directo -> tarjeta de cada jugador implicado: gol con asistente en una sola (los dos), expulsado o el que falla el penalti (si tarjetas.jugador)
 // Lo que no pasa el validador no sale: el tweet del final se publica entonces sin imagen y el del MVP no se publica.
-import { svgFinal, svgJugador, svgGolAsistencia, svgResumen, svgOnces, svgOnceIdeal, svgMercado, svgBajas, svgApercibidos, aPng } from './tarjetas.mjs';
-import { datosFinal, datosJugador, datosGolAsistencia, historialJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
+import { svgFinal, svgJugador, svgGolAsistencia, svgMvpDoble, svgResumen, svgOnces, svgOnceIdeal, svgMercado, svgBajas, svgApercibidos, aPng } from './tarjetas.mjs';
+import { datosFinal, datosJugador, datosGolAsistencia, datosMvpDoble, historialJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
 import { validarTarjeta } from './validar.mjs';
 import * as LL from './laliga.mjs';
 
@@ -69,6 +69,15 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
   if (t.tipo === 'final' && (cfg.final || forzar)) {
     const x = await datosFinal(m, { jornada, fuentes });
     await hacer(`final-${m.id}`, x, svgFinal(x.d));
+  }
+  // MVP compartido (empate a puntos): una tarjeta con los dos (Carlos, 7 nov 21:07)
+  if (t.tipo === 'mvp' && t.jugadorId2 != null && (cfg.jugador || forzar)) {
+    const ja = jugadores.find((x) => String(x.id) === String(t.jugadorId)), jb = jugadores.find((x) => String(x.id) === String(t.jugadorId2));
+    if (ja && jb) {
+      const x = await datosMvpDoble(ja, jb, m, { jornada, fuentes });
+      await hacer(`mvp-${m.id}-${ja.id}-${jb.id}-doble`, x, svgMvpDoble(x.d));
+      return hechas;
+    }
   }
   // tarjetas de jugador: la del MVP, o las de cada jugador implicado en un tweet del directo (goleador, asistente, expulsado…)
   const quienes = t.tipo === 'mvp' ? (t.jugadorId != null ? [{ jugadorId: t.jugadorId, motivo: t.motivo || 'mvp' }] : [])
