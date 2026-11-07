@@ -573,6 +573,13 @@
    "jornada": 12,
    "id": "2119183455322091924",
    "t": "2026-11-07T21:41:23.300Z"
+  },
+  {
+   "clave": "directo|112|José Gayà|roja",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119184687398552039",
+   "t": "2026-11-07T21:46:17.075Z"
   }
  ],
  "estados": {
@@ -1229,7 +1236,7 @@
   "3080": "ok",
   "3081": "ok",
   "3082": "ok",
-  "3083": "ok",
+  "3083": "doubtful",
   "3084": "ok",
   "3085": "ok",
   "3086": "ok",
@@ -2893,8 +2900,8 @@
     "t": 0
    },
    "3083": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1794087973944
    },
    "3084": {
     "e": "ok",
@@ -3920,10 +3927,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T19:16:18.122Z",
-    "texto": "⚽ Nico Williams abre el marcador en el 84'. Osasuna 0-1 Athletic."
-   },
-   {
     "t": "2026-11-07T19:21:18.664Z",
     "texto": "⚽ Catena marca en el 90' y el Osasuna 🐂 recorta distancias: 0-1 ante el Athletic 🦁.\n\nEl defensa se mete en el partido justo al final, con el marcador todavía en juego. Si lo tienes, buen premio para tu jornada."
    },
@@ -3938,6 +3941,10 @@
    {
     "t": "2026-11-07T21:41:23.301Z",
     "texto": "⚽ Mbappé la mete en el 75' y el Madrid ⚪ pone el 0-3 en Mestalla. Ya suma 5 puntos.\n\nEl pase es de Arda Güler, que se lleva 9. Si tienes a los dos, buena tarde para el mánager."
+   },
+   {
+    "t": "2026-11-07T21:46:17.076Z",
+    "texto": "🟥 Roja para Gayá en el 79'. Valencia 0-3 Real Madrid. El Valencia se queda con diez y encima va perdiendo. Se queda en -5 puntos fantasy."
    }
   ],
   "novedades": [
