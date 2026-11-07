@@ -158,7 +158,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   }
   // un estado que no es de nadie: «baja» sin ningún jugador de baja en los hechos
   const estados = new Set((hechos.jugadores || []).map((j) => j.estado));
-  if (PALABRAS.baja.test(t) && !negada(t, PALABRAS.baja) && ![...estados].some((x) => ['baja', 'lesionado', 'sancionado', 'apercibido'].includes(x))) e.push(`dice «${t.match(PALABRAS.baja)[0]}» y nadie está de baja`);
+  // (en el mercado «baja» es lo que baja de precio)
+  if (hechos.tipo !== 'mercado' && PALABRAS.baja.test(t) && !negada(t, PALABRAS.baja) && ![...estados].some((x) => ['baja', 'lesionado', 'sancionado', 'apercibido'].includes(x))) e.push(`dice «${t.match(PALABRAS.baja)[0]}» y nadie está de baja`);
   // los equipos, con artículo (Carlos, 6 nov: «no es Osasuna, es el Osasuna»); en un marcador o un «Betis-Mallorca», no
   for (const c of Object.keys(APODOS)) {
     const re = new RegExp(`(^|[^\\p{L}-])(${c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(?![\\p{L}-])`, 'gu');
