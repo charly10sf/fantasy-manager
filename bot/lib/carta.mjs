@@ -204,8 +204,8 @@ export function svgBajaSola(d) {
 
 // Gol y asistencia en una sola tarjeta (Carlos, 7 nov 14:53: «no tiene sentido dos»). Arriba, el GOL (o ¡DOBLETE!) con el marcador
 // y el minuto; a la derecha, en directo, la placa del minuto «EN JUEGO». Debajo, dos paneles iguales: el goleador (filo de su metal y
-// chip dorado GOL) y el asistente (chip blanco ASISTENCIA), con cara, nombre, sus puntos en la jornada (si LaLiga ya los ha sumado),
-// la media, el valor y sus 5 últimas jornadas. 1200 x 1010.
+// chip dorado GOL) y el asistente (chip blanco ASISTENCIA), con cara, nombre, la media, el valor y sus 5 últimas jornadas (la de hoy en
+// oro si LaLiga ya ha sumado los puntos). 1200 x 1010.
 export const ALTO_GOL_ASIS = 1010;
 function panelDuo(x, y, w, h, j, rol, gOro) {
   const t = METAL[metalDe(j.valorHoy)], gm = gradMetal(t), c = coloresClub(j.club.nombre), cx = x + w / 2, cy = y + 150, R = R_MAX;
@@ -220,10 +220,8 @@ function panelDuo(x, y, w, h, j, rol, gOro) {
   const esGol = rol !== 'ASISTENCIA';
   s += chipIcono(rol, esGol ? 'gol' : 'asistencia', cx, yN + 46, 26, esGol ? { relleno: '#e2bd5a', tinta: '#2a1c04' } : { relleno: '#ffffff', tinta: '#120f16' })
     + `<rect x="${x + 40}" y="${yN + 82}" width="${w - 80}" height="1.5" fill="#fff" fill-opacity="0.12"/>`;
-  // las cifras: puntos en la jornada (solo si ya los hay), media y valor
-  const cifras = [];
-  if (!j.sinPuntos) cifras.push([String(j.ptsJornada), 'EN LA JORNADA', j.ptsJornada < 0 ? MALO : '#e2bd5a']);
-  cifras.push([num1(j.media), 'DE MEDIA'], [millones(j.valorHoy), 'VALOR']);
+  // las cifras: media y valor. Los puntos de hoy van solo en la casilla dorada de la jornada (Carlos, 7 nov 15:06: salían dos veces)
+  const cifras = [[num1(j.media), 'DE MEDIA'], [millones(j.valorHoy), 'VALOR']];
   const yc = yN + 160, paso = w / cifras.length;
   cifras.forEach(([v, et, color], k) => {
     const xc = x + paso * (k + 0.5);
