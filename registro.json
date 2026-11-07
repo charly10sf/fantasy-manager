@@ -468,6 +468,13 @@
    "jornada": 12,
    "id": "2119073957189947735",
    "t": "2026-11-07T14:26:16.888Z"
+  },
+  {
+   "clave": "directo|116|Adam Aznou|roja",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119075223031136475",
+   "t": "2026-11-07T14:31:18.639Z"
   }
  ],
  "estados": {
@@ -1082,7 +1089,7 @@
   "3038": "ok",
   "3039": "ok",
   "3040": "ok",
-  "3041": "ok",
+  "3041": "injured",
   "3042": "ok",
   "3043": "out_of_league",
   "3044": "ok",
@@ -3732,16 +3739,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 30,
-   "redactar": 22,
+   "redactar": 23,
    "revisar": 16,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 207077,
-  "salida": 22881,
+  "entrada": 215239,
+  "salida": 22999,
   "cacheLee": 100177,
   "cacheEscribe": 15980,
-  "dolares": 0.454783
+  "dolares": 0.472287
  },
  "recientes": {
   "onces": [
@@ -3816,6 +3823,10 @@
    {
     "t": "2026-11-07T14:26:16.890Z",
     "texto": "⚽ Zabiri marca en el 60' y el Racing le da la vuelta al partido: 1-2 ante el Málaga.\n\nEl delantero ya suma 6 puntos, justo su media. Si lo tienes, la jornada le está saliendo bien."
+   },
+   {
+    "t": "2026-11-07T14:31:18.640Z",
+    "texto": "🟥 Roja para Aznou en el 64': el Málaga se queda con diez y pierde 1-2 contra el Racing.\n\nEl defensa se va con -4 puntos. Si lo tienes, esta jornada ya la has perdido con él, y el Málaga tendrá difícil sumar con un jugador menos."
    }
   ]
  },
