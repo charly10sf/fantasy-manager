@@ -7451,13 +7451,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 156,
+   "ok": 157,
    "fallos": 0,
-   "ejecuciones": 3,
+   "ejecuciones": 4,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 367,
-   "ultima": "2026-11-07T22:31:15.206Z"
+   "ultima": "2026-11-07T22:36:11.494Z"
   }
  }
 }
