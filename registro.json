@@ -1385,7 +1385,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/cuti-descartado-simeone-entre-le-normand-o-un-medio-f202611-n/": 1793812964000,
    "ABC|https://www.abc.es/deportes/futbol/raphinha-renueva-barca-2030-rodri-mes-baja-20261104183435-nt.html": 1793813675000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247282/bellingham-empata-partido-genialidad.html": 1793816728000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html": 1793816929000,
@@ -1588,7 +1587,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000,
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-del-malaga-ruina-tras-el-descanso-f202611-n/": 1794070433000,
    "SPORT|136204290": 1794066951000,
-   "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000
+   "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000,
+   "SPORT|136204471": 1794068559000
   },
   "hechos": [
    {
@@ -2228,7 +2228,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -3739,17 +3739,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 34,
    "revisar": 23,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 364141,
-  "salida": 28113,
+  "entrada": 365911,
+  "salida": 28503,
   "cacheLee": 110597,
   "cacheEscribe": 23795,
-  "dolares": 0.790623
+  "dolares": 0.790995
  },
  "recientes": {
   "onces": [
@@ -3859,8 +3859,8 @@
    "fin": 1794063674070
   },
   "12|117": {
-   "h": "c5ce63c47a59",
-   "desde": 1794071774918,
+   "h": "f7029baf4897",
+   "desde": 1794072375726,
    "fin": 1794071774918
   }
  },
