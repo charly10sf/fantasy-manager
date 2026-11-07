@@ -1520,7 +1520,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000,
+   "SPORT|136194101": 1794045757000
   },
   "hechos": [
    {
@@ -2197,11 +2198,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136194101",
+    "medio": "SPORT",
+    "t": 1794045757000,
+    "id": "2354",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Eric completa por primera vez una sesión con el grupo",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3779,17 +3792,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 15,
    "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 103445,
-  "salida": 14646,
+  "entrada": 105179,
+  "salida": 15125,
   "cacheLee": 97572,
   "cacheEscribe": 10770,
-  "dolares": 0.28258
+  "dolares": 0.282993
  },
  "recientes": {
   "onces": [
