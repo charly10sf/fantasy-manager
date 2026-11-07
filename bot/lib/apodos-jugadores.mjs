@@ -4,6 +4,9 @@
 //   completo: el nombre con el que sale en la prensa («Borja Iglesias»)
 //   corto: la forma corta para la tarjeta cuando el nombre no cabe, en vez de la inicial («Cuti»)
 //   otros: apodos que la IA puede usar alguna vez («el Panda»)
+//   rasgos: cómo juega o cómo marca, a mano y SOLO con fuente (un comentario con ella al lado) y aprobado por Carlos; van a los hechos de
+//     un gol como `suEstilo` y la IA puede decirlo con sus palabras («vuelve a hacer una de las suyas»). Las cifras de la temporada no van
+//     aquí: se calculan (lib/rasgos.mjs).
 // Solo los que se conocen sin duda: el resto de nicknames con inicial dejan además usar el apellido solo («Musso» por «J. Musso»).
 // Para añadir uno: su nickname EXACTO de LaLiga (bot/prueba o la app lo enseñan) y lo que se sepa.
 export const APODOS_JUGADORES = {
@@ -24,6 +27,11 @@ export const APODOS_JUGADORES = {
   'Y. Zabiri': { completo: 'Yassir Zabiri', corto: 'Zabiri' },
   'Vini Jr.': { completo: 'Vinícius', corto: 'Vini', otros: ['Vinícius Júnior'] },
   'Lamine Yamal': { corto: 'Lamine', otros: ['Lamine'] },
+  // Valverde (nickname «Valverde», id 2430 en LaLiga Fantasy). Fuentes (7 nov): «el Pajarito», en la prensa uruguaya (p. ej. El Observador);
+  // «el Halcón», en ESPN Deportes y otros medios; en dic. 2024 dijo, tras el 4-2 al Sevilla, que siempre intenta disparar desde fuera del área
+  // porque se le da bien (ESPN Deportes), y ESPN contó entonces que era el jugador de las cinco grandes ligas con más goles desde fuera
+  // del área esa temporada (5).
+  'Valverde': { completo: 'Federico Valverde', corto: 'Valverde', otros: ['el Pajarito', 'el Halcón'], rasgos: ['dispara muy bien desde fuera del área'] },
 };
 // apellidos que, solos, no dicen quién es (hay varios en la liga)
 const AMBIGUOS = new Set(['martínez', 'martinez', 'romero', 'rodríguez', 'rodriguez', 'gonzález', 'gonzalez', 'santiago', 'garcía', 'garcia', 'pérez', 'perez',
@@ -41,6 +49,9 @@ export function comoLeLlaman(nickname) {
   if (m && !AMBIGUOS.has(m[1].toLowerCase())) out.push(m[1]);
   return [...new Set(out)].filter((x) => x !== n);
 }
+
+/** los rasgos a mano de un jugador (por su nickname de LaLiga), o [] */
+export const rasgosDe = (nickname) => ((APODOS_JUGADORES[String(nickname || '').trim()] || {}).rasgos || []).slice();
 
 /** la forma corta para la tarjeta (en vez de la inicial), o null */
 export const cortoTarjeta = (nombre) => { const a = APODOS_JUGADORES[String(nombre || '').trim()]; return a && a.corto ? a.corto : null; };

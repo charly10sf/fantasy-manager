@@ -2,10 +2,10 @@
 // lib/redaccion.mjs (el validador y el bucle de redactar), lib/cronicas.mjs (qué prensa es de un partido) y los apodos sin «conjunto».
 import { preguntarJson, esquemaJson, coste, SONNET, HAIKU } from '../lib/claude.mjs';
 import { preguntar, sinCupo, cuentaHoy } from '../lib/ia.mjs';
-import { revisar, redactar, parecido, cuerpoDe, apuntarReciente, recientesDe, sucesosSinHechos } from '../lib/redaccion.mjs';
+import { revisar, redactar, prompt, parecido, cuerpoDe, apuntarReciente, recientesDe, sucesosSinHechos } from '../lib/redaccion.mjs';
 import { incidenciasDe } from '../lib/relato.mjs';
 import { EJEMPLOS } from '../lib/voz.mjs';
-import { elegir } from '../lib/cronicas.mjs';
+import { elegir, crearCronicas, marcoElMvp, fuentesDe } from '../lib/cronicas.mjs';
 import { APODOS, variarEquipos, fijarLimite } from '../lib/texto.mjs';
 import { nombresDe } from '../lib/pulir.mjs';
 import { clubes, golesRival } from '../lib/hechos.mjs';
@@ -221,7 +221,51 @@ ok(rv(bueno).length === 0 && rv('Eric vuelve, según AS y MARCA.').filter((x) =>
 // la guía y la prensa
 ok(!EJEMPLOS.some((x) => x.bien && (x.tipo === 'final' || x.tipo === 'mvp') && /\b(cuenta|cuentan|según|informa)\s+(MARCA|AS|COPE|SPORT|SER)\b/i.test(x.texto)), 'ningún ejemplo BIEN de final o MVP atribuye nada a un medio (en noticias y previas sí vale)');
 ok(EJEMPLOS.some((x) => !x.bien && /Cuenta COPE/.test(x.texto)), 'la guía trae el «Cuenta COPE» como ejemplo MAL');
-ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a la previa (en un final o un MVP lo que pasa en el campo sale de ESPN)');
+ok(JSON.stringify(config.redactar.prensa) === '["previa","final","mvp"]', 'la prensa va a la previa, el final y el MVP');
+// prensa en final y MVP (Carlos, 7 nov): al menos dos medios distintos, y en el MVP solo si el MVP ha marcado
+{
+  const f0 = Date.parse('2026-11-07T18:30:00Z');
+  const noticias = (xs) => xs.map(([medio, titulo], i) => ({ medio, titulo, entradilla: 'Gana el Sevilla al Alavés con un gol de Vargas', t: f0 + (120 + i) * 60e3 }));
+  const dos = noticias([['MARCA', 'El Sevilla gana al Alavés con gol de Vargas'], ['AS', 'Victoria del Sevilla ante el Alavés']]);
+  const uno = noticias([['MARCA', 'El Sevilla gana al Alavés con gol de Vargas'], ['MARCA', 'Victoria del Sevilla ante el Alavés']]);
+  const hF = { ...hFinal, partido: { ...hFinal.partido, fecha: '2026-11-07T18:30:00Z' } };
+  const de = (noti, t) => crearCronicas({ config, leer: async () => noti, ahora: () => f0 + 150 * 60e3 }).de(t);
+  ok((await de(dos, { tipo: 'final', hechos: hF })).length === 2, 'final con dos medios distintos: lleva prensa');
+  ok((await de(uno, { tipo: 'final', hechos: hF })).length === 0, 'final con un solo medio: sin prensa');
+  const hM = { ...hF, tipo: 'mvp', goles: [{ minuto: "10'", para: 'Sevilla', goleador: 'Vargas' }], jugadores: [{ nombre: 'Rubén Vargas', principal: true }] };
+  ok(marcoElMvp(hM) && (await de(dos, { tipo: 'mvp', hechos: hM })).length === 2, 'MVP que ha marcado, con dos medios: lleva prensa');
+  const hM2 = { ...hM, goles: [{ minuto: "10'", para: 'Alavés', goleador: 'Otro Jugador' }] };
+  ok(!marcoElMvp(hM2) && (await de(dos, { tipo: 'mvp', hechos: hM2 })).length === 0, 'MVP que no ha marcado: sin prensa');
+  ok(!marcoElMvp({ ...hM, goles: [{ minuto: "10'", para: 'Sevilla', enPropia: 'Vargas' }] }), 'un autogol no cuenta como marcar');
+  ok(fuentesDe(dos) === 2 && fuentesDe(uno) === 1, 'fuentesDe cuenta medios distintos');
+  // el bucle: si usa la prensa con un solo medio, se rechaza; con dos, vale (y sin nombrar medios)
+  const reg = { datos: { enviados: [] }, fichero: null, guardar() {} };
+  const cfgF = { ...config, redactar: { ...config.redactar, activo: true } };
+  const intenta = async (ids) => { const t = { tipo: 'final', clave: `f${ids.join('')}`, texto: '✅ plantilla', numeros: [], hechos: hF };
+    let n = 0; const r = await redactar([t], { tipo: 'final', registro: reg, config: cfgF, jugadores, equipos, log: () => {}, cronicasDe: () => dos, revisor: async () => ({ ok: true, revisado: false }),
+      pedir: async () => { n++; return { ok: true, datos: { texto: 'Sivera se llevó 9 puntos en el 0-0 del Alavés ante el Sevilla.', cronicas: ids }, modelo: SONNET }; } });
+    return { r, n, t }; };
+  const a = await intenta([0]); ok(a.r === 0 && a.n >= 1, 'final: prensa con una sola noticia, rechazado');
+  const b = await intenta([0, 1]); ok(b.r === 1 && /AS|MARCA/.test((b.t.prensa || []).join(' ')), 'final: prensa con dos medios, vale');
+  ok(/AL MENOS DOS/.test(prompt({ hechos: hF, max: 300, cronicas: dos })) && !/pegado al hecho/.test(prompt({ hechos: hF, max: 300, cronicas: dos })), 'el prompt del final pide dos medios y no pide el medio pegado al hecho');
+}
+
+// directo: segundo intento si el primero fue rápido y lo tiró el validador (7 nov, «baja» de Iker Luque)
+{
+  const hD = { ...hFinal, tipo: 'directo', etiqueta: '' };
+  const cfgD = { ...config, redactar: { ...config.redactar, activo: true } };
+  ok(cfgD.redactar.intentosPorTipo.directo === 2, 'el directo tiene dos intentos');
+  const respD = ['Sivera ha parado un penalti según AS.', 'Sivera se lleva 9 puntos en el 0-0 del Alavés ante el Sevilla.'];
+  const t = { tipo: 'directo', clave: 'd-reintento', texto: '⚽ plantilla', numeros: [], hechos: hD };
+  const r = await redactar([t], { tipo: 'directo', registro: { datos: { enviados: [] }, fichero: null, guardar() {} }, config: cfgD, jugadores, equipos, log: () => {},
+    pedir: async () => ({ ok: true, datos: { texto: respD.shift() }, modelo: SONNET }) });
+  ok(r === 1 && t.redaccion === 'ok' && !respD.length, 'directo: el primero lo tira el validador y el segundo sale');
+  const lento = { ...cfgD, redactar: { ...cfgD.redactar, reintentoSegundos: { directo: 0 } } };
+  const t2 = { tipo: 'directo', clave: 'd-lento', texto: '⚽ plantilla', numeros: [], hechos: hD };
+  const r2 = await redactar([t2], { tipo: 'directo', registro: { datos: { enviados: [] }, fichero: null, guardar() {} }, config: lento, jugadores, equipos, log: () => {},
+    pedir: async () => { await new Promise((x) => setTimeout(x, 20)); return { ok: true, datos: { texto: 'Sivera ha parado un penalti según AS.' }, modelo: SONNET }; } });
+  ok(r2 === 0 && t2.texto === '⚽ plantilla', 'directo: si el primero tardó más del tope, no hay segundo y sale la plantilla');
+}
 
 // --- el revisor (lib/revisor.mjs): segunda lectura con IA, con los hechos al lado ---
 {
