@@ -231,8 +231,10 @@ function campo(x, y, w, h, lado, club, confirmados) {
   const geo = lineas.map((ls) => { const n = ls.length, U = n >= 4 ? w - 12 : w * n / (n + 1); return U / n - 4; });
   const nom = new Map();
   lineas.forEach((ls, i) => ls.forEach((j) => nom.set(j, nombreAjustado(j.nombre, PXN, geo[i] - 18, 0.5, { apellido: true }))));
-  const veces = {}; for (const t of nom.values()) veces[t] = (veces[t] || 0) + 1;
-  lineas.forEach((ls, i) => ls.forEach((j) => { if (veces[nom.get(j)] > 1) nom.set(j, nombreAjustado(j.nombre, PXN, geo[i] - 18, 0.5)); }));
+  // (por la última palabra: con sitio, «IÑAKI WILLIAMS» salía entero y Nico se quedaba en «WILLIAMS»; 7 nov, Osasuna-Athletic)
+  const ult = (t) => String(t).trim().split(/\s+/).pop().toUpperCase();
+  const veces = {}; for (const t of nom.values()) veces[ult(t)] = (veces[ult(t)] || 0) + 1;
+  lineas.forEach((ls, i) => ls.forEach((j) => { if (veces[ult(nom.get(j))] > 1 && !/\s/.test(nom.get(j).trim())) nom.set(j, nombreAjustado(j.nombre, PXN, geo[i] - 18, 0.5)); }));
   lineas.forEach((ls, i) => {
     const n = ls.length, U = n >= 4 ? w - 12 : w * n / (n + 1), x0 = x + (w - U) / 2, hueco = U / n;
     const R = Math.max(26, Math.min(62, hueco / 2 - 9, (alto - 60) / 2));
@@ -246,7 +248,7 @@ function campo(x, y, w, h, lado, club, confirmados) {
         : `<circle cx="${cx}" cy="${cy + 3}" r="${R + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="#ffffff" stroke-width="3"/>`)
         + pastilla(nom.get(j), cx, yN, ancho);
       if (pctCol && !confirmados) s += chipContorno(`${j.pct} %`, cx + R * 0.8, cy - R * 0.82, 21, pctCol);
-      s += chipPuesto(j.pos, cx + R * 0.86, cy + R * 0.74, Math.max(15, Math.round(R * 0.31)));
+      // sin la chapa del puesto en el campo (Carlos, 7 nov 17:42: un medio puede jugar de delantero y queda raro; solo la alineación)
     });
   });
   return s;

@@ -13,15 +13,21 @@ const comparten = (a, b) => { const A = fichas(a), B = fichas(b); for (const t o
 
 // `portero`: true si ESPN dice que es portero, false si dice que no, null si no se sabe. Un portero nunca casa con uno de campo ni al
 // revés (6 nov: «Isaac Romero», delantero del Sevilla, casó con Rafa Romero, su portero, y la tarjeta salió con dos porteros).
+// abreviaturas de apellidos que usa LaLiga («Aitor Fdez», «Rafa Fdez.»; 7 nov, Osasuna-Athletic: el portero salió sin cara porque
+// ESPN lo llama «Aitor Fernández»): al casar nombres, se leen enteras
+const ABREV = { fdez: 'fernandez', fdz: 'fernandez', fndez: 'fernandez', glez: 'gonzalez', gzlez: 'gonzalez', gonz: 'gonzalez', hdez: 'hernandez', hndez: 'hernandez',
+  mtnez: 'martinez', mtez: 'martinez', rdguez: 'rodriguez', rguez: 'rodriguez', rodz: 'rodriguez', sdez: 'sanchez', snchez: 'sanchez', fdo: 'fernando', fco: 'francisco', jco: 'jose' };
+const nToks = (s) => norm(s).split(' ').filter(Boolean).map((t) => ABREV[t] || t);
+
 export function casarJugador(nombreEspn, lado, { portero = null } = {}) {
-  const toks = norm(nombreEspn).split(' ').filter(Boolean);
+  const toks = nToks(nombreEspn);
   if (!toks.length) return null;
   const ps = (lado.players || []).filter((p) => portero == null || !p.positionId || (Number(p.positionId) === 1) === portero);
-  const de = (p) => new Set([...norm(p.name).split(' '), ...norm(p.nickname).split(' ')].filter(Boolean));
+  const de = (p) => new Set([...nToks(p.name), ...nToks(p.nickname)]);
   // 0) el que lleva en LaLiga un nombre que está entero en el de ESPN («Isaac» en «Isaac Romero», «C. Romero» en «Cristian Romero»):
   //    va antes que el apellido suelto, que en el Sevilla daba «Rafa Romero» para «Isaac Romero» (Isaac sale en LaLiga sin apellido)
   const cabe = (p) => {
-    const ns = norm(p.nickname).split(' ').filter(Boolean);
+    const ns = nToks(p.nickname);
     return ns.length > 0 && ns.every((t) => toks.includes(t) || (/^[a-z]\.?$/.test(t) && toks.some((u) => u[0] === t[0])));
   };
   const enteros = ps.filter(cabe);
@@ -45,14 +51,14 @@ export function casarJugador(nombreEspn, lado, { portero = null } = {}) {
     (empiezan igual, 3 letras como poco) y que quede uno solo. «Dani Sánchez» no casa con «Daniel Pérez»: Sánchez no aparece. */
 export function casarJugadorFlojo(nombreEspn, lado, { pos = null, usados = new Set() } = {}) {
   const clase = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
-  const et = norm(nombreEspn).split(' ').filter((t) => t.length >= 3);
+  const et = nToks(nombreEspn).filter((t) => t.length >= 3);
   if (!et.length) return null;
   const k = (a, b) => { let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++; return i; };
   const parecen = (a, b) => { const c = k(a, b); return c >= 3 && c >= Math.min(a.length, b.length) - 2; };
   const cand = (lado.players || []).filter((p) => {
     if (usados.has(String(p.id))) return false;
     if (pos && p.positionId && clase[p.positionId] !== pos) return false;
-    const nt = norm(p.nickname).split(' ').filter((t) => t.length >= 3);
+    const nt = nToks(p.nickname).filter((t) => t.length >= 3);
     return nt.length > 0 && nt.every((t) => et.some((u) => parecen(t, u)));
   });
   return cand.length === 1 ? cand[0] : null;

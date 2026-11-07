@@ -253,6 +253,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // no se le pone un medio delante (suena a que nadie lo ha comprobado), y un suceso (penalti, parada, roja, autogol, VAR) solo sale si está
   // en los hechos (goles o incidencias, de ESPN). Solo en finales y MVP: en noticias y previas el medio sí es la fuente.
   // los onces confirmados tampoco llevan medio (7 nov, Málaga-Racing: «Ya hay onces confirmados en La Rosaleda, según ESPN»)
+  if (hechos.tipo === 'onces' && /\b(?:a las|sobre las|hacia las)\s+\d{1,2}(?::\d{2})?\b|\b\d{1,2}:\d{2}\b/i.test(t)) e.push('en unos onces confirmados no va la hora del reloj («a las 18:30»): si los hechos traen «empiezaEn», di lo que falta con esas palabras; si no, nada de la hora');
+  if (hechos.tipo === 'onces' && /^\W*Ya hay onces\b/i.test(t) && recientes.some((r) => /^\W*Ya hay onces\b/i.test(r))) e.push('empieza por «Ya hay onces…» como otro tuit reciente: empieza por donde dice «abreCon», con tus palabras');
   if (hechos.tipo === 'onces' && (medios.length || ATRIBUYE.test(t) || /\bESPN\b|\bseg[uú]n\b/i.test(t))) e.push('en unos onces confirmados no se nombra ninguna fuente («según ESPN», «según MARCA»…): la alineación es un hecho y se cuenta tal cual');
   if (hechos.tipo === 'final' || hechos.tipo === 'mvp' || hechos.tipo === 'directo') {
     if (medios.length || ATRIBUYE.test(t)) e.push('en un final o un MVP no se atribuye nada a un medio («cuenta COPE», «según MARCA»…): lo que pasa en el partido es un hecho y se cuenta tal cual');

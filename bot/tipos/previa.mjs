@@ -21,6 +21,19 @@ const POS_ESPN = (a) => (/^G/.test(a) ? 'POR' : /^(CD|LB|RB|D|CB|LWB|RWB|SW)/.te
 const ORDEN = { POR: 0, DEF: 1, MED: 2, DEL: 3 };
 const pct = (p) => Math.round(p * 100);
 
+/** lo que falta para el saque, en palabras y redondeado («en una hora o así»); null si no se sabe o falta más de dos horas */
+export function faltaEnPalabras(ms) {
+  if (!Number.isFinite(ms) || ms <= 0) return null;
+  const min = ms / 60000;
+  if (min <= 20) return 'en nada';
+  if (min <= 40) return 'en media hora o así';
+  if (min <= 55) return 'en menos de una hora';
+  if (min <= 75) return 'en una hora o así';
+  if (min <= 100) return 'en algo más de una hora';
+  if (min <= 125) return 'en un par de horas';
+  return null;
+}
+
 export async function generar({ semana, jugadores, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log, probarAcabados = false, info = null }) {
   const out = [];
   const jornadas = [...new Set([semana.weekNumber, semana.nextWeek].filter(Boolean))];
@@ -157,10 +170,22 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             for (const x of c.fuera.slice(0, 5)) jugOnce.push({ nombre: x.nombre, ...puOnce(x), club: eq, papel: 'titular habitual que se queda fuera del once', titularidadFantasyManager: `${Math.round(x.p * 100)} %`, principal: false });
             for (const x of c.sorpresa.slice(0, 5)) jugOnce.push({ nombre: x.nombre, ...puOnce(x), club: eq, papel: 'es titular aunque no suele serlo', principal: false });
           }
-          const cuO = cuando(m.date, ahora);
-          const hechosOnces = { tipo: 'onces', jornada, noticia: 'Los dos onces ya están confirmados', partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuO ? { cuando: cuO.t } : {}), fecha: m.date || null },
-            equipos: eqOnce, ...(conf.L.fuera.length || conf.V.fuera.length || conf.L.sorpresa.length || conf.V.sorpresa.length ? {} : { sinSorpresas: true }),
-            jugadores: jugOnce, clubes: clubesH(L, V) };
+          // la hora (Carlos, 7 nov 17:33: «no hace falta lo de y a las 18:30 arranca el partido, pon en 1h o así, y no siempre»): nada de la
+          // hora del reloj; lo que falta, en palabras, y solo en uno de cada tres tuits de onces
+          const enCuanto = Rp([faltaEnPalabras(Date.parse(m.date) - ahora), null, null], 'horaOnces');
+          // por dónde abrir (los tres primeros del 7 nov abrían con «Ya hay onces en…: el X sale con… y el Y con…»)
+          const sinSorpresas = !(conf.L.fuera.length || conf.V.fuera.length || conf.L.sorpresa.length || conf.V.sorpresa.length);
+          // el titular que más da de cada equipo (con media de 5 o más), para tener de qué hablar cuando no hay sorpresas
+          const mediaOnce = new Map(jugadores.map((j) => [String(j.id), Number(j.averagePoints) || 0]));
+          for (const [k, eq] of [['L', L], ['V', V]]) {
+            const top = conf[k].once.filter((x) => x.id && (mediaOnce.get(String(x.id)) || 0) >= 5).sort((a, b) => mediaOnce.get(String(b.id)) - mediaOnce.get(String(a.id)))[0];
+            if (top && !jugOnce.some((x) => x.nombre === top.nombre)) jugOnce.push({ nombre: top.nombre, ...puOnce(top), club: eq, papel: 'titular hoy, el que más puntos da de su equipo', mediaPuntos: fmt(mediaOnce.get(String(top.id))), principal: false });
+          }
+          const abreOnces = [sinSorpresas ? null : 'la sorpresa o la ausencia que más pese, con su nombre', 'el dibujo de uno de los dos, con lo que significa', jugOnce.some((x) => x.mediaPuntos) ? 'un titular que da muchos puntos, con su nombre' : null,
+            'lo que significa para el mánager que tenga jugadores de este partido'].filter(Boolean);
+          const hechosOnces = { tipo: 'onces', jornada, noticia: 'Los dos onces ya están confirmados', partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(enCuanto ? { empiezaEn: enCuanto } : {}), fecha: m.date || null },
+            equipos: eqOnce, ...(sinSorpresas ? { sinSorpresas: true } : {}),
+            jugadores: jugOnce, clubes: clubesH(L, V), abreCon: Rp(abreOnces, 'abreOnces') };
           out.push({ tipo: 'onces', clave: `onces|${m.id}`, jornada, texto, hechos: hechosOnces, caduca: saque, numeros: numConf.map(Number), partido: null,
             tarjeta: { tipo: 'onces', nombre: `onces-${m.id}`,
               d: { jornada, confirmados: true, local: { nombre: m.local.mainName, corto: L, escudoUrl: m.local.badgeColor, formacion: conf.L.formacion, once: conf.L.once }, visitante: { nombre: m.visitor.mainName, corto: V, escudoUrl: m.visitor.badgeColor, formacion: conf.V.formacion, once: conf.V.once } },
@@ -184,9 +209,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
           // con su %): el titular de la web puede quedar por debajo del otro con los minutos de LaLiga, y entonces entra el otro
           if (alt.p > x.p) Object.assign(x, { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda, p: alt.p });
         }
-        // debajo del campo, el suplente con más % de cada puesto: delantero, medio y defensa (Carlos, 6 nov 20:34; uno por puesto)
-        const suplentes = ['DEL', 'MED', 'DEF'].map((q) => Object.values(probs[k]).filter((y) => y.pos === q && !fuera.has(String(y.id)) && y.p >= 0.05 && y.estado !== 'injured' && y.estado !== 'suspended')
-          .sort((a, b) => b.p - a.p)[0]).filter(Boolean).map((y) => ({ id: y.id, nombre: y.nombre, pos: y.pos, pct: pct(y.p), duda: y.duda }));
+        // sin suplentes debajo del campo (Carlos, 7 nov 17:45: «quita los suplentes de los posibles onces»; desde el 6 nov iba uno por puesto)
+        const suplentes = [];
         return { nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion, once: once.map(({ p, ...x }) => x), suplentes };
       };
       const d = { jornada, confirmados: false, local: lado('L', m.local), visitante: lado('V', m.visitor) };
