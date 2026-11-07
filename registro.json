@@ -1519,7 +1519,8 @@
    "AS|https://as.com/futbol/videos/es-un-portento-fisico-y-este-video-lo-demuestra-el-brutal-entrenamiento-de-diomande-f202611-v/": 1794038839000,
    "AS|https://as.com/futbol/valverde-vuelve-al-lateral-f202611-n/": 1794038070000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248129/real-letal-rival-categoria-me-sorprende-oyarzabal-no-balon-oro.html": 1794041366000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248132/alvaro-garcia-valentin-cinco-bajas-notables-rayo.html": 1794041216000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248132/alvaro-garcia-valentin-cinco-bajas-notables-rayo.html": 1794041216000,
+   "SPORT|136054540": 1794038967000
   },
   "hechos": [
    {
@@ -2236,7 +2237,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3829,17 +3830,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 13,
    "revisar": 12,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 74951,
-  "salida": 11372,
+  "entrada": 76720,
+  "salida": 11839,
   "cacheLee": 97572,
   "cacheEscribe": 8334,
-  "dolares": 0.238735
+  "dolares": 0.239145
  },
  "recientes": {
   "onces": [
