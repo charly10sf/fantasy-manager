@@ -25,3 +25,7 @@ Dudas:
 - Segunda tanda (7 nov, noche): Grimaldo, Bartra, Fermín y Bellingham van sin id porque se ponen por su nickname exacto de LaLiga al meterlos en el código (se sacan con `jugadores()` de `lib/laliga.mjs`).
 - Grimaldo: dos de sus cuatro goles de este año son de penalti, pero no he encontrado fuente que diga que los lanza él en el Atlético, así que no propongo «lanza los penaltis».
 - Sin propuesta por falta de fuente: Aubameyang (la búsqueda solo trajo traspasos y cifras), Gabriel Jesus (solo una nota vieja de Sopitas, de su fichaje por el Arsenal, que dice que no depende del área: floja), Mbappé (fuentes flojas) y el resto de goleadores. Los contadores de temporada de todos están en `claude/rasgos-contadores.md`.
+
+## Motes (7 nov, 23:30, a petición de Carlos)
+
+Con fuente y ya en el código: Isco, «el Mago» (Vavel, 17 mar 2026; El Gol Digital lo llama «el Mago de Arroyo de la Miel»); Bellingham, «Bellingol» (Fox Sports México, 7 nov 2023: mote de la afición por sus goles; el audio viral es de un narrador brasileño); Budimir, «el cisne de los Balcanes» (El Gol Digital, 2025: se lo puso la afición del Crotone, no la de Osasuna). Sin mote encontrado: Grimaldo, Raphinha, Baena, Bartra y Fermín. Yamal: «El Rey» / «O Rei» (Fox Sports, mayo y julio de 2025; el club publicó lo de «O Rei»), pero parte de la afición lo critica: no está en el código hasta que Carlos lo diga. También sale «Lord Bellingham» (AFP, 2023), que fue de una crónica y no se ha quedado.

@@ -26,7 +26,20 @@ export const APODOS_JUGADORES = {
   'J. Musso': { completo: 'Juan Musso', corto: 'Musso' },
   'Y. Zabiri': { completo: 'Yassir Zabiri', corto: 'Zabiri' },
   'Vini Jr.': { completo: 'Vinícius', corto: 'Vini', otros: ['Vinícius Júnior'] },
-  'Lamine Yamal': { corto: 'Lamine', otros: ['Lamine'] },
+  // Rasgos y motes aprobados por Carlos el 7 nov (23:30). Fuentes de cada uno en claude/rasgos-propuesta.md; los motes, aquí.
+  // Yamal: sin mote «oficial». «El Rey» / «O Rei» (Fox Sports, 2025) tiene detractores: no se usa hasta que Carlos lo diga.
+  'Lamine Yamal': { corto: 'Lamine', otros: ['Lamine'], rasgos: ['recorta hacia la zurda y dispara desde fuera del área, a segundo palo'] },
+  'Álex Baena': { corto: 'Baena', rasgos: ['marca de falta directa'] },
+  'Raphinha': { rasgos: ['es un buen lanzador de faltas'] },
+  // Isco: «el Mago» (Vavel, 17 mar 2026; El Gol Digital: «el Mago de Arroyo de la Miel»)
+  'Isco': { completo: 'Isco Alarcón', otros: ['el Mago'], rasgos: ['lanza los penaltis del Betis', 'saca las faltas del Betis'] },
+  // Budimir: «el cisne de los Balcanes», que le puso la afición del Crotone (El Gol Digital, 2025)
+  'Budimir': { completo: 'Ante Budimir', otros: ['el cisne de los Balcanes'], rasgos: ['es uno de los grandes rematadores de cabeza de LaLiga', 'lanza los penaltis de Osasuna'] },
+  'Grimaldo': { completo: 'Alejandro Grimaldo', rasgos: ['es especialista en balón parado, con faltas directas y centros precisos', 'llega al área desde el lateral y golpea con precisión'] },
+  'Bartra': { completo: 'Marc Bartra', rasgos: ['es un central que remata de cabeza a balón parado'] },
+  'Fermín': { completo: 'Fermín López', corto: 'Fermín', rasgos: ['llega desde segunda línea a posiciones de remate'] },
+  // Bellingham: «Bellingol», el mote de la afición en 2023 por sus goles (Fox Sports México, 7 nov 2023)
+  'Bellingham': { completo: 'Jude Bellingham', otros: ['Bellingol'], rasgos: ['llega al área desde segunda línea'] },
   // Valverde (nickname «Valverde», id 2430 en LaLiga Fantasy). Fuentes (7 nov): «el Pajarito», en la prensa uruguaya (p. ej. El Observador);
   // «el Halcón», en ESPN Deportes y otros medios; en dic. 2024 dijo, tras el 4-2 al Sevilla, que siempre intenta disparar desde fuera del área
   // porque se le da bien (ESPN Deportes), y ESPN contó entonces que era el jugador de las cinco grandes ligas con más goles desde fuera
