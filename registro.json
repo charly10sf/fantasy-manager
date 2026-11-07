@@ -440,6 +440,13 @@
    "jornada": 12,
    "id": "2119037522101571878",
    "t": "2026-11-07T12:01:30.247Z"
+  },
+  {
+   "clave": "directo|116|Carlos Dotor|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119060157233533328",
+   "t": "2026-11-07T13:31:26.801Z"
   }
  ],
  "estados": {
@@ -1329,7 +1336,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html": 1793798837000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/zabiri-repite-con-marruecos-y-no-jugara-con-el-racing-en-libia-radio-santander/": 1793801780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261104/1004247173/eder-sarabia-mi-equipo-espanyol-defender-muerte.html": 1793802316000,
    "SPORT|136085152": 1793801859000,
@@ -1530,21 +1536,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
    "SPORT|136195491": 1794053530000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000,
+   "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000
   },
   "hechos": [
-   {
-    "guid": "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html",
-    "medio": "El Mundo",
-    "t": 1793798837000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri se pierde el partido por una lesión",
-    "motivo": "",
-    "plazo": "entre tres y cuatro semanas",
-    "nums": []
-   },
    {
     "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm",
     "medio": "La Voz de Galicia",
@@ -2196,7 +2191,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -3130,7 +3125,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html": 1793982666000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
-   "SPORT|136195921": 1794049583000
+   "SPORT|136195921": 1794049583000,
+   "SPORT|136198293": 1794054087000
   },
   "hechos": [
    {
@@ -3711,7 +3707,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
   "espera": {}
@@ -3719,17 +3715,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 25,
-   "redactar": 16,
+   "clasificar": 27,
+   "redactar": 17,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 139784,
-  "salida": 19516,
+  "entrada": 151116,
+  "salida": 20425,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.318489
+  "dolares": 0.336157
  },
  "recientes": {
   "onces": [
@@ -3786,6 +3782,12 @@
    {
     "t": "2026-11-07T09:31:34.045Z",
     "texto": "✅ Mundo Deportivo cuenta que De Galarreta vuelve a la convocatoria del Athletic para el partido de hoy en El Sadar.\n\nEl Osasuna es de los que más goles encajan, y eso le viene bien a un centrocampista. Aun así, Fantasy Manager le da un 30 % de titularidad: no es un fijo, así que mejor esperar a los onces antes de tocar nada."
+   }
+  ],
+  "directo": [
+   {
+    "t": "2026-11-07T13:31:26.801Z",
+    "texto": "⚽ Gol de Dotor en el 28': el Málaga se adelanta 1-0 contra el Racing.\n\nEl pase es de Niño, que tiene una buena media de 5,9. Si tienes a alguno de los dos, buen arranque para tu jornada."
    }
   ]
  },
