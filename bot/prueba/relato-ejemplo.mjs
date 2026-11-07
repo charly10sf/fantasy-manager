@@ -117,5 +117,17 @@ if (arg('tarjetas')) {
   const ok = r.ok && r.desfase && c === 1 && f === 1 && situacion(c, f) === 'empata' && !reconstruir(d, '97', '93', 0, 1).ok && !conAutogol.ok;
   console.log(`${ok ? 'OK ' : 'MAL'} marcador de ESPN por detrás: ${c}-${f}`); if (!ok) fallos++;
 }
+// puntos de un gol cuando LaLiga aún no los ha sumado (Carlos, 7 nov 20:54: «súmalos tú sabiendo la posición»)
+{
+  const { puntosConGol } = await import('../tipos/directo.mjs');
+  const c = (lal, pos, o, esp) => { const r = puntosConGol(lal, pos, o); const ok = r.pts === esp; console.log(`${ok ? 'OK ' : 'MAL'} puntos con gol: LaLiga ${lal}, puesto ${pos} → ${r.pts} (esperado ${esp})`); if (!ok) fallos++; };
+  c(0, 2, { goles: 1 }, 7);                            // defensa, LaLiga a 0: 1 por jugar + 6
+  c(3, 2, { goles: 1 }, 9);                            // defensa, LaLiga sin el gol: 3 + 6
+  c(11, 2, { goles: 1 }, 11);                          // ya lo cuenta: lo de LaLiga
+  c(null, 4, { goles: 1 }, 5);                         // delantero sin dato: 1 + 4
+  c(2, 3, { asis: 1, accion: 'asistencia' }, 5);       // asistencia: 2 + 3
+  c(7, 4, { goles: 2 }, 11);                           // doblete con solo el primero sumado
+  c(-1, 1, { goles: 1 }, 7);                           // portero con amarilla y gol: 1 + 6
+}
 srv.close();
 process.exit(fallos ? 1 : 0);
