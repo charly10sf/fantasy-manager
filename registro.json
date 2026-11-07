@@ -531,6 +531,13 @@
    "jornada": 12,
    "id": "2119148203711062218",
    "t": "2026-11-07T19:21:18.663Z"
+  },
+  {
+   "clave": "novedades|2924:lesion|2026-11-07",
+   "tipo": "novedades",
+   "jornada": 12,
+   "id": "2119150787104518406",
+   "t": "2026-11-07T19:31:34.522Z"
   }
  ],
  "estados": {
@@ -1036,7 +1043,7 @@
   "2920": "out_of_league",
   "2922": "ok",
   "2923": "ok",
-  "2924": "doubtful",
+  "2924": "injured",
   "2925": "out_of_league",
   "2926": "ok",
   "2929": "out_of_league",
@@ -1417,7 +1424,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2924",
+   "que": "lesion",
+   "antes": "doubtful",
+   "t": 1794079874618
+  }
+ ],
  "noticias": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/04/andres-garcia-multiusos-jose-bordalas-136093338.html": 1793821391000,
@@ -1620,7 +1634,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-espanyol-deportivo-coruna-primera-division-jornada-doce-07-20261107_3470813.html": 1794073014000,
    "SPORT|136205658": 1794069974000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
-   "AS|https://as.com/futbol/primera/hidalgo-estoy-contento-por-el-punto-la-porteria-a-cero-y-por-leo-roman-f202611-n/": 1794074651000
+   "AS|https://as.com/futbol/primera/hidalgo-estoy-contento-por-el-punto-la-porteria-a-cero-y-por-leo-roman-f202611-n/": 1794074651000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248379/eder-sarabia-le-espera-brazos-abiertos-me-parecido-siempre-futbolista-maravilloso-he-transmitido.html": 1794078040000
   },
   "hechos": [
    {
@@ -2249,7 +2264,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -2733,8 +2748,8 @@
     "t": 0
    },
    "2924": {
-    "e": "doubtful",
-    "t": 1793973084590
+    "e": "injured",
+    "t": 1794079874618
    },
    "2929": {
     "e": "out_of_league",
@@ -3760,17 +3775,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 46,
-   "redactar": 58,
-   "revisar": 34,
+   "clasificar": 47,
+   "redactar": 60,
+   "revisar": 35,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 664987,
-  "salida": 37249,
+  "entrada": 686289,
+  "salida": 37694,
   "cacheLee": 131437,
-  "cacheEscribe": 31610,
-  "dolares": 1.456921
+  "cacheEscribe": 34215,
+  "dolares": 1.506147
  },
  "recientes": {
   "onces": [
@@ -3878,6 +3893,12 @@
     "t": "2026-11-07T19:21:18.664Z",
     "texto": "⚽ Catena marca en el 90' y el Osasuna 🐂 recorta distancias: 0-1 ante el Athletic 🦁.\n\nEl defensa se mete en el partido justo al final, con el marcador todavía en juego. Si lo tienes, buen premio para tu jornada."
    }
+  ],
+  "novedades": [
+   {
+    "t": "2026-11-07T19:31:34.523Z",
+    "texto": "❌ LaLiga Fantasy pone a Zaid Romero como lesionado: arrastra una lesión en el cuádriceps desde el 10 de octubre.\n\nEl defensa del Getafe viene con 5,9 de media, así que su baja pesa. Mañana a las 18:30 el Getafe visita al Villarreal 🚢 en La Cerámica y no cuentes con él: si lo tienes, toca buscar recambio."
+   }
   ]
  },
  "puntosPartido": {
@@ -3897,8 +3918,8 @@
    "fin": 1794071774918
   },
   "12|115": {
-   "h": "87949740658c",
-   "desde": 1794079572335,
+   "h": "d9f72d5ae4c1",
+   "desde": 1794079875004,
    "fin": 1794079572335
   }
  },
