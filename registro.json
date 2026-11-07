@@ -524,6 +524,13 @@
    "jornada": 12,
    "id": "2119147070741458995",
    "t": "2026-11-07T19:16:48.593Z"
+  },
+  {
+   "clave": "directo|115|Alejandro Catena|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119148203711062218",
+   "t": "2026-11-07T19:21:18.663Z"
   }
  ],
  "estados": {
@@ -3754,16 +3761,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 46,
-   "redactar": 57,
+   "redactar": 58,
    "revisar": 34,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 655483,
-  "salida": 37139,
+  "entrada": 664987,
+  "salida": 37249,
   "cacheLee": 131437,
   "cacheEscribe": 31610,
-  "dolares": 1.436813
+  "dolares": 1.456921
  },
  "recientes": {
   "onces": [
@@ -3852,10 +3859,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T13:31:26.801Z",
-    "texto": "⚽ Gol de Dotor en el 28': el Málaga se adelanta 1-0 contra el Racing.\n\nEl pase es de Niño, que tiene una buena media de 5,9. Si tienes a alguno de los dos, buen arranque para tu jornada."
-   },
-   {
     "t": "2026-11-07T14:16:22.054Z",
     "texto": "⚽ Iker Luque empata para el Racing en el 50'. Málaga 1-1 Racing. Asistencia de Pablo Ramón, que ya suma 4 puntos. Ya suma 4 puntos fantasy."
    },
@@ -3870,6 +3873,10 @@
    {
     "t": "2026-11-07T19:16:18.122Z",
     "texto": "⚽ Nico Williams abre el marcador en el 84'. Osasuna 0-1 Athletic."
+   },
+   {
+    "t": "2026-11-07T19:21:18.664Z",
+    "texto": "⚽ Catena marca en el 90' y el Osasuna 🐂 recorta distancias: 0-1 ante el Athletic 🦁.\n\nEl defensa se mete en el partido justo al final, con el marcador todavía en juego. Si lo tienes, buen premio para tu jornada."
    }
   ]
  },
