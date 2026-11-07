@@ -1399,7 +1399,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html": 1793816929000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/04/andres-garcia-multiusos-jose-bordalas-136093338.html": 1793821391000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247324/valverde-merito-equipo-confiar-final.html": 1793822086000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/04/aek-real-madrid-champions-league-resumen-resultado-136097281.html": 1793821880000,
@@ -1604,18 +1603,6 @@
    "AS|https://as.com/futbol/primera/hidalgo-estoy-contento-por-el-punto-la-porteria-a-cero-y-por-leo-roman-f202611-n/": 1794074651000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html",
-    "medio": "COPE",
-    "t": 1793816929000,
-    "id": "3197",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Cuti Romero es baja contra el Barcelona por lesión",
-    "motivo": "lesion",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/",
     "medio": "AS",
@@ -3075,7 +3062,6 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/intencion-disputen-todos-partidos-laliga-salvo-aplazados-20261105_3468892.html": 1793833897000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247402/recuperan-dos-partidos-lliga-elit-victorias-prat-singuerlin.html": 1793833745000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247401/juegan-tres-encuentros-aplazados-primera-catalana.html": 1793833498000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261104/1004247277/cuti-romero-barca-mejor-ataque-laliga.html": 1793816802000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/el-villena-cf-pierde-4-2-en-novelda-radio-villena/": 1793862273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247424/apunta-habra-jornada-primera-segunda.html": 1793863093000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-suspenden-24-dias-empleo-sueldo-urbano-barcelona-negarse-hablar-catalan-20261105081514.html": 1793862914000,
