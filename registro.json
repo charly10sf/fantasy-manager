@@ -1520,7 +1520,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html": 1794043154000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000,
-   "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000
+   "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000
   },
   "hechos": [
    {
@@ -2201,7 +2202,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -3024,8 +3025,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/sentido-recuerdo-jesus-miguel-partidos-champions-equipos-espanoles-dia-duro-mundo-futbol-20261104_3468235.html": 1793790845000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261104/11675852/de-miguel-owono-granada-tenerife-liga-hypermotion.html": 1793790838000,
    "SPORT|136076483": 1793790357000,
-   "SPORT|136075899": 1793790003000,
-   "SPORT|136075239": 1793789929000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3164,27 +3163,6 @@
     "detalle": "LaLiga sopesa opciones de calendario",
     "nums": [
      6
-    ]
-   },
-   {
-    "guid": "SPORT|136075899",
-    "medio": "SPORT",
-    "t": 1793790003000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "clubes": [
-     "12",
-     "49"
-    ],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "LaLiga debe tomar una decisión",
-    "nums": [
-     12,
-     13
     ]
    },
    {
@@ -3803,17 +3781,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 15,
    "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 101709,
-  "salida": 14537,
+  "entrada": 103445,
+  "salida": 14646,
   "cacheLee": 97572,
   "cacheEscribe": 10770,
-  "dolares": 0.282352
+  "dolares": 0.28258
  },
  "recientes": {
   "onces": [
