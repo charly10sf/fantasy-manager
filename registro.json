@@ -1537,7 +1537,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
    "SPORT|136195491": 1794053530000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000,
-   "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000
+   "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000
   },
   "hechos": [
    {
@@ -2191,7 +2192,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3700,17 +3701,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 28,
    "redactar": 17,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 151116,
-  "salida": 20425,
+  "entrada": 152894,
+  "salida": 21097,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.336157
+  "dolares": 0.336671
  },
  "recientes": {
   "onces": [
