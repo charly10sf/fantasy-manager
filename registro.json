@@ -545,6 +545,13 @@
    "jornada": 12,
    "id": "2119158368615202874",
    "t": "2026-11-07T20:01:42.145Z"
+  },
+  {
+   "clave": "mvp|115",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119164671395864926",
+   "t": "2026-11-07T20:26:44.875Z"
   }
  ],
  "estados": {
@@ -3082,9 +3089,9 @@
  },
  "pulido": {
   "dia": "2026-11-07",
-  "n": 2,
+  "n": 3,
   "ok": 3,
-  "mal": 0
+  "mal": 1
  },
  "liga": {
   "vistas": {
@@ -3776,16 +3783,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 48,
-   "redactar": 73,
-   "revisar": 42,
-   "pulir": 2
+   "redactar": 77,
+   "revisar": 43,
+   "pulir": 3
   },
   "fallos": 0,
-  "entrada": 833916,
-  "salida": 41730,
-  "cacheLee": 144462,
+  "entrada": 878711,
+  "salida": 42924,
+  "cacheLee": 147067,
   "cacheEscribe": 39425,
-  "dolares": 1.852041
+  "dolares": 1.953832
  },
  "recientes": {
   "onces": [
@@ -3844,6 +3851,10 @@
    {
     "t": "2026-11-07T20:01:53.130Z",
     "texto": "⭐ Catena y Nico Williams comparten el mejor puesto del 1-1 entre el Osasuna 🐂 y el Athletic 🦁: 11 puntos cada uno.\n\nNico Williams adelantó al Athletic en el 84' y Catena, defensa, empató en el 90'. Con más del doble de su media de 4,5 y a 20,2 M, si lo tienes, se queda. El Osasuna recibe al Málaga 🐟 en la jornada 13."
+   },
+   {
+    "t": "2026-11-07T20:26:44.876Z",
+    "texto": "⭐ MVP fantasy del Osasuna 1-1 Athletic. Catena se va a 11 puntos. Empata con él Nico Williams. El defensa del Osasuna lleva 54 puntos en la temporada y 4,5 de media.\n\n💸 En el mercado está a 20,2 M. Su próximo partido, en la jornada 13 ante el Málaga"
    }
   ],
   "mercado": [
@@ -3946,11 +3957,5 @@
    "dolares": 0.052126
   }
  ],
- "fallosRedaccion": {
-  "mvp|115": {
-   "n": 2,
-   "t": "2026-11-07T20:16:38.145Z",
-   "ultima": "2026-11-07T20:21:33.669Z"
-  }
- }
+ "fallosRedaccion": {}
 }
