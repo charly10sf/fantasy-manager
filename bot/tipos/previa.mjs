@@ -123,7 +123,22 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
           ideas.push({ t: '👀 Revisa tu once fantasy antes del pitido', prio: 7 });
           const { usadas, texto } = tweet(cab, ideas);
           const fm = (f) => (f || '').match(/\d/g) || [];
-          out.push({ tipo: 'onces', clave: `onces|${m.id}`, jornada, texto, numeros: numConf.map(Number), partido: null,
+          // los hechos para la IA que redacta (lib/redaccion.mjs): la formación de cada equipo, quién se queda fuera y quién es sorpresa
+          const posOnce = new Map(jugadores.map((j) => [String(j.id), j.positionId]));
+          const puOnce = (x) => { const q = puesto(posOnce.get(String(x.id))); return q ? { puesto: q } : {}; };
+          const eqOnce = [], jugOnce = [];
+          for (const [k, eq] of [['L', L], ['V', V]]) {
+            const c = conf[k];
+            eqOnce.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', formacion: c.formacion,
+              ...(c.fuera.length ? { quedanFuera: c.fuera.slice(0, 5).map((x) => x.nombre) } : {}), ...(c.sorpresa.length ? { titularesSorpresa: c.sorpresa.slice(0, 5).map((x) => x.nombre) } : {}) });
+            for (const x of c.fuera.slice(0, 5)) jugOnce.push({ nombre: x.nombre, ...puOnce(x), club: eq, papel: 'titular habitual que se queda fuera del once', titularidadFantasyManager: `${Math.round(x.p * 100)} %`, principal: false });
+            for (const x of c.sorpresa.slice(0, 5)) jugOnce.push({ nombre: x.nombre, ...puOnce(x), club: eq, papel: 'es titular aunque no suele serlo', principal: false });
+          }
+          const cuO = cuando(m.date, ahora);
+          const hechosOnces = { tipo: 'onces', jornada, noticia: 'ESPN ya da los dos onces confirmados', partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuO ? { cuando: cuO.t } : {}), fecha: m.date || null },
+            equipos: eqOnce, ...(conf.L.fuera.length || conf.V.fuera.length || conf.L.sorpresa.length || conf.V.sorpresa.length ? {} : { sinSorpresas: true }),
+            jugadores: jugOnce, clubes: clubesH(L, V), etiqueta: '👀 Revisa tu once fantasy antes del pitido' };
+          out.push({ tipo: 'onces', clave: `onces|${m.id}`, jornada, texto, hechos: hechosOnces, caduca: saque, numeros: numConf.map(Number), partido: null,
             tarjeta: { tipo: 'onces', nombre: `onces-${m.id}`,
               d: { jornada, confirmados: true, local: { nombre: m.local.mainName, corto: L, escudoUrl: m.local.badgeColor, formacion: conf.L.formacion, once: conf.L.once }, visitante: { nombre: m.visitor.mainName, corto: V, escudoUrl: m.visitor.badgeColor, formacion: conf.V.formacion, once: conf.V.once } },
               permitidos: { numeros: [jornada, ...fm(conf.L.formacion), ...fm(conf.V.formacion)].map(String), palabras: [L, V, m.local.mainName, m.visitor.mainName, ...conf.L.once.map((x) => x.nombre), ...conf.V.once.map((x) => x.nombre), ...palabras] } } });
@@ -228,7 +243,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const cuH = cuando(m.date, ahora);
       const hechos = { tipo: 'previa', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuH ? { cuando: cuH.t } : {}), fecha: m.date || null },
         equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), etiqueta: '📊 Los % de titularidad son de Fantasy Manager' };
-      out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, hechos, numeros: num, partido: null,
+      out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, hechos, caduca: saque, numeros: num, partido: null,
         tarjeta: { tipo: 'onces', nombre: `previa-${m.id}`, d,
           permitidos: { numeros: [jornada, ...fm(d.local.formacion), ...fm(d.visitante.formacion), ...[...d.local.once, ...d.visitante.once, ...d.local.suplentes, ...d.visitante.suplentes].flatMap((x) => [x.pct, x.alt ? x.alt.pct : null]).filter((x) => x != null)].map(String),
             palabras: [L, V, m.local.mainName, m.visitor.mainName, 'SUPLENTES', 'DELANTERO', 'MEDIO', 'DEFENSA', ...[...d.local.once, ...d.visitante.once, ...d.local.suplentes, ...d.visitante.suplentes].flatMap((x) => [x.nombre, x.alt ? x.alt.nombre : null]).filter(Boolean)] } } });
