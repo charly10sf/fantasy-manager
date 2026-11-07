@@ -259,7 +259,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           if (sobre) num.push(...partes(media));
           if (valor <= 0) return { t: `📉 Se queda en ${valor} puntos fantasy`, prio: 8 };
           // con asistente en el mismo tuit, el goleador va por su nombre: «Ya suma 4 puntos» a secas se leía como del asistente (7 nov)
-          const base = conNombre ? `📊 ${nombre} ya suma ${valor} puntos fantasy` : elegir([`📊 Ya suma ${valor} puntos fantasy`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos fantasy`, `📊 Lleva ${valor} puntos fantasy de momento`], sem + 'p');
+          const base = conNombre ? `📊 ${nombre} ya suma ${valor} puntos` : elegir([`📊 Ya suma ${valor} puntos`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos`, `📊 Lleva ${valor} puntos de momento`], sem + 'p');
           return { t: `${base}${sobre ? `, con una media de ${fmt(media)}` : ''}`, prio: 8 };
         };
         if (dsp.clase === 'roja') {
@@ -284,7 +284,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           cab = nomP ? `🧤 ${nomP} le para un penalti a ${nombre} en el ${minTxt}` : `🧤 Penalti parado a ${nombre} en el ${minTxt}`;
           ideas.push({ t: marcador, prio: 9 });
           ideas.push({ t: `⚠️ ${pudoTxt(propio, rival, equipo)}`, prio: 6 });
-          if (ptsP != null && nomP) { num.push(ptsP); ideas.push({ t: `📊 ${nomP} ya suma ${ptsP} puntos fantasy`, prio: 8 }); }
+          if (ptsP != null && nomP) { num.push(ptsP); ideas.push({ t: `📊 ${nomP} ya suma ${ptsP} puntos`, prio: 8 }); }
           if (pPor) tarjetas.push({ jugadorId: pPor.id, motivo: 'parada' });
           if (nomP) jugH.push(jH(nomP, 1, mediaP, { queLePasa: `le para un penalti a ${nombre}`, ...(ptsP != null ? { puntosFantasyAhora: ptsP } : {}) }, equipoP));
           jugH.push(jH(nombre, pos, media, { queLePasa: 'lanza el penalti y se lo paran' }));
