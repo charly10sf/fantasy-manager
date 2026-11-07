@@ -1364,7 +1364,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm": 1793805420000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247209/raphina-records-corazon-encogido.html": 1793806789000,
    "SPORT|136087097": 1793805717000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/gerard-lopez-no-me-preocupa-defiende-barca-juega-tumba-abierta-20261104_3467993.html": 1793810443000,
@@ -1568,18 +1567,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000
   },
   "hechos": [
-   {
-    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm",
-    "medio": "La Voz de Galicia",
-    "t": 1793805420000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri sufre una lesión muscular y es baja",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136087097",
     "medio": "SPORT",
@@ -3067,7 +3054,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/canarias/2026/11/04/competicion-da-por-finalizado-el-tenerife-andorra-radio-club-tenerife/": 1793806981000,
-   "SPORT|136088236": 1793805509000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261104/1004247252/juez-competicion-da-concluido-tenerife-andorra.html": 1793810877000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-suspende-badajoz-tenerife-copa-rey-20261104_3468865.html": 1793829147000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/04/valencia-cf-prepara-llenazo-mestalla-136098642.html": 1793829375000,
@@ -3852,8 +3838,8 @@
    "fin": 1794034875147
   },
   "12|116": {
-   "h": "961f12386775",
-   "desde": 1794064273626,
+   "h": "a52be5a07adc",
+   "desde": 1794064876250,
    "fin": 1794063674070
   }
  },
