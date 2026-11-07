@@ -4,7 +4,7 @@ import { json } from '../lib/http.mjs';
 import { norm, corto, fmt, partes, elegir, el, del, al } from '../lib/texto.mjs';
 import { tweet, cap, segunda } from '../lib/redactar.mjs';
 import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
-import { clubes as clubesH, jugador as jugadorH, frenteMedia } from '../lib/hechos.mjs';
+import { clubes as clubesH, jugador as jugadorH, frenteMedia, estadio } from '../lib/hechos.mjs';
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
 const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la', 'del', 'el', 'y', 'sd', 'ad']);
@@ -339,7 +339,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const { usadas, texto } = tweet(cab, ideas);
         if (!usadas.length) continue;
         const hechos = { tipo: 'directo', subtipo: dsp.clase, jornada, noticia: `${dsp.clase === 'gol' ? 'gol' : dsp.clase} en el ${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`,
-          minuto: minTxt, partido: { partido: `${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`, local: corto(m.local.mainName), visitante: corto(m.visitor.mainName), marcadorEnEseMomento: `${sl}-${sv}`,
+          minuto: minTxt, partido: { partido: `${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`, local: corto(m.local.mainName), visitante: corto(m.visitor.mainName), ...estadio(m.local.mainName), marcadorEnEseMomento: `${sl}-${sv}`,
             estadoDelPartido: st.state === 'in' ? 'en juego' : 'acabado' },
           ...(dsp.clase === 'doblete' || dsp.clase === 'triplete' ? { golNumeroDelJugador: dsp.n } : {}), ...extraH,
           jugadores: jugH, clubes: clubesH(m.local.mainName, m.visitor.mainName), etiqueta: '' };
