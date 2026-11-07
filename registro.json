@@ -1602,7 +1602,8 @@
    "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000,
    "SPORT|136204471": 1794068559000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248350/espanyol-merece-debut-eder-sarabia.html": 1794071621000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-espanyol-deportivo-coruna-primera-division-jornada-doce-07-20261107_3470813.html": 1794073014000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-espanyol-deportivo-coruna-primera-division-jornada-doce-07-20261107_3470813.html": 1794073014000,
+   "SPORT|136205658": 1794069974000
   },
   "hechos": [
    {
@@ -2226,7 +2227,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -3736,17 +3737,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 44,
    "revisar": 29,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 481979,
-  "salida": 31883,
+  "entrada": 483733,
+  "salida": 31959,
   "cacheLee": 123622,
   "cacheEscribe": 26400,
-  "dolares": 1.056221
+  "dolares": 1.056434
  },
  "recientes": {
   "onces": [
