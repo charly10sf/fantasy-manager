@@ -3195,7 +3195,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004247878/aprender-tragedia.html": 1794024600000,
    "SPORT|136188205": 1794024096000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/nunca-buscamos-soluciones-solo-buscamos-culpables-ramon-besa-en-contra-de-la-no-suspension-de-la-jornada-de-liga-tras-la-muerte-de-jesus-de-miguel-cadena-ser/": 1794009476000,
-   "AS|https://as.com/futbol/el-betis-afrontara-en-cuadro-su-eliminatoria-de-la-copa-del-rey-f202611-n/": 1794006110000
+   "AS|https://as.com/futbol/el-betis-afrontara-en-cuadro-su-eliminatoria-de-la-copa-del-rey-f202611-n/": 1794006110000,
+   "SPORT|136192571": 1794041056000
   },
   "hechos": [
    {
@@ -3829,7 +3830,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
   "espera": {}
@@ -3837,17 +3838,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 15,
    "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 94299,
-  "salida": 12554,
+  "entrada": 96085,
+  "salida": 12924,
   "cacheLee": 97572,
   "cacheEscribe": 10770,
-  "dolares": 0.280619
+  "dolares": 0.280983
  },
  "recientes": {
   "onces": [
