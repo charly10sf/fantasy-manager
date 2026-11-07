@@ -304,9 +304,9 @@ export function pildora(f, cx, cy, px, wMax) {
     + texto(x + p * 1.75, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1 });
 }
 /** el color de un % de titularidad, como en la tarjeta de los posibles onces: verde (75 o más), ámbar (50 o más) o rojo */
-// el color del % de titularidad (Carlos, 7 nov 15:58): 85-100 verde oscuro, 75-85 verde claro, 60-75 amarillo, 40-60 naranja tirando a
+// el color del % de titularidad (Carlos, 7 nov 15:58 y 16:02): 85-100 verde oscuro, 70-85 verde claro, 60-70 amarillo, 40-60 naranja tirando a
 // rojo y menos de 40 rojo
-export const PCT_COLORES = [[85, '#1fb860'], [75, '#8fe39a'], [60, '#f5d33d'], [40, '#ff8a3d'], [0, '#ff4d5e']];
+export const PCT_COLORES = [[85, '#1fb860'], [70, '#8fe39a'], [60, '#f5d33d'], [40, '#ff8a3d'], [0, '#ff4d5e']];
 export const colPct = (q) => (q == null ? null : (PCT_COLORES.find(([min]) => Number(q) >= min) || PCT_COLORES[PCT_COLORES.length - 1])[1]);
 /** una cifra en una chapa oscura con el filo y el texto en su color (los puntos del final y los % de titularidad; 7 nov) */
 export function chipContorno(txt, cx, cy, px, color, { grosor = 2.5 } = {}) {
