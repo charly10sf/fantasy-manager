@@ -538,6 +538,20 @@
    "jornada": 12,
    "id": "2119150787104518406",
    "t": "2026-11-07T19:31:34.522Z"
+  },
+  {
+   "clave": "final|115",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119158368615202874",
+   "t": "2026-11-07T20:01:42.145Z"
+  },
+  {
+   "clave": "mvp|115",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119158414819602872",
+   "t": "2026-11-07T20:01:53.129Z"
   }
  ],
  "estados": {
@@ -3771,16 +3785,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 47,
-   "redactar": 60,
-   "revisar": 35,
+   "redactar": 65,
+   "revisar": 37,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 686289,
-  "salida": 37694,
-  "cacheLee": 131437,
-  "cacheEscribe": 34215,
-  "dolares": 1.506147
+  "entrada": 741360,
+  "salida": 38695,
+  "cacheLee": 134042,
+  "cacheEscribe": 36820,
+  "dolares": 1.633073
  },
  "recientes": {
   "onces": [
@@ -3817,6 +3831,10 @@
    {
     "t": "2026-11-07T17:41:32.839Z",
     "texto": "🏁 Sin goles entre el Espanyol y el Deportivo, y los puntos se reparten entre cuatro nombres.\n\nGiménez y Leo Román, del Dépor, se van a 12 cada uno, más del doble de su media. Fortuño, del Espanyol, suma 11 y El Hilali 9, casi el doble de lo que suele dar.\n\nEl Deportivo, 8º antes del partido, se lleva un punto de casa del Espanyol, que era 15º."
+   },
+   {
+    "t": "2026-11-07T20:01:42.147Z",
+    "texto": "🏁 Punto para el Osasuna 🐂 en El Sadar: el Athletic 🦁 ganaba con gol de Nico Williams en el 84' y Catena empató en el 90'. Final 1-1.\n\nCatena y Nico Williams cierran con 11 puntos cada uno. Para Catena es más del doble de su media; Nico Williams, con 6,4 de media, también se sale.\n\nVivian, del Athletic, suma 9, y Rubén García, del Osasuna, 8. Noche buena para quien tuviera a cualquiera de los cuatro."
    }
   ],
   "mvp": [
@@ -3831,6 +3849,10 @@
    {
     "t": "2026-11-07T17:36:48.966Z",
     "texto": "⭐ Giménez y Leo Román, los dos con 12 puntos en el Espanyol-Deportivo: los mejores del 0-0.\n\nEl defensa hace más del doble de su media de 4,3 y vale 26,1 M. En la jornada 13 el Deportivo visita al Alavés: si lo tienes, buen momento para mantenerlo."
+   },
+   {
+    "t": "2026-11-07T20:01:53.130Z",
+    "texto": "⭐ Catena y Nico Williams comparten el mejor puesto del 1-1 entre el Osasuna 🐂 y el Athletic 🦁: 11 puntos cada uno.\n\nNico Williams adelantó al Athletic en el 84' y Catena, defensa, empató en el 90'. Con más del doble de su media de 4,5 y a 20,2 M, si lo tienes, se queda. El Osasuna recibe al Málaga 🐟 en la jornada 13."
    }
   ],
   "mercado": [
