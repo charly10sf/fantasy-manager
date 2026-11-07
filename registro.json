@@ -447,6 +447,20 @@
    "jornada": 12,
    "id": "2119060157233533328",
    "t": "2026-11-07T13:31:26.801Z"
+  },
+  {
+   "clave": "directo|116|Iker Luque|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119071462221099436",
+   "t": "2026-11-07T14:16:22.053Z"
+  },
+  {
+   "clave": "onces|117",
+   "tipo": "onces",
+   "jornada": 12,
+   "id": "2119071545062785063",
+   "t": "2026-11-07T14:16:41.825Z"
   }
  ],
  "estados": {
@@ -3701,16 +3715,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 29,
-   "redactar": 17,
-   "revisar": 14,
+   "redactar": 21,
+   "revisar": 16,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 154547,
-  "salida": 21183,
-  "cacheLee": 97572,
-  "cacheEscribe": 13375,
-  "dolares": 0.336879
+  "entrada": 197339,
+  "salida": 21967,
+  "cacheLee": 100177,
+  "cacheEscribe": 15980,
+  "dolares": 0.437077
  },
  "recientes": {
   "onces": [
@@ -3721,6 +3735,10 @@
    {
     "t": "2026-11-07T12:01:30.248Z",
     "texto": "👀 Ya hay onces confirmados en La Rosaleda, según ESPN: el Málaga sale con cinco atrás, en un 5-3-2, y el Racing con un 4-2-3-1.\n\nNo hay sorpresas respecto a lo esperado, así que quien tenga jugadores de uno u otro lado puede dejar el once como lo tenía pensado. Hoy a las 14:00 empieza el Málaga-Racing."
+   },
+   {
+    "t": "2026-11-07T14:16:41.826Z",
+    "texto": "👀 Ya hay onces confirmados en el Espanyol 🦜-Deportivo, que empieza hoy a las 16:15: el Espanyol juega con cinco atrás, en un 5-4-1, y el Dépor sale con un 4-4-2.\n\nLos dos onces vienen sin sorpresas respecto a lo esperado."
    }
   ],
   "final": [
@@ -3773,6 +3791,10 @@
    {
     "t": "2026-11-07T13:31:26.801Z",
     "texto": "⚽ Gol de Dotor en el 28': el Málaga se adelanta 1-0 contra el Racing.\n\nEl pase es de Niño, que tiene una buena media de 5,9. Si tienes a alguno de los dos, buen arranque para tu jornada."
+   },
+   {
+    "t": "2026-11-07T14:16:22.054Z",
+    "texto": "⚽ Iker Luque empata para el Racing en el 50'. Málaga 1-1 Racing. Asistencia de Pablo Ramón, que ya suma 4 puntos. Ya suma 4 puntos fantasy."
    }
   ]
  },
@@ -3797,5 +3819,6 @@
    "cacheEscribe": 0,
    "dolares": 0.052126
   }
- ]
+ ],
+ "fallosRedaccion": {}
 }
