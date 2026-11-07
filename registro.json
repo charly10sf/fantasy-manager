@@ -1528,7 +1528,9 @@
    "SPORT|136192275": 1794049544000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/atletico-de-madrid/20261107/11678726/simeone-mas-complejo-defender-barca-raphinha-nueve-lewandowski.html": 1794052790000,
    "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
-   "SPORT|136195917": 1794050824000
+   "SPORT|136195917": 1794050824000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248252/miedo-factor-raphinha-cholo-detallo-cambio-tactico-barca-destroza-rivales.html": 1794053748000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000
   },
   "hechos": [
    {
@@ -2191,7 +2193,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -3008,7 +3010,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/entrenamiento-voluntario-owono-andorra-minuto-silencio-jesus-miguel-20261104_3468574.html": 1793800216000,
    "SPORT|136082717": 1793797745000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-suspenda-futbol-espanol-semana-20261104_3468659.html": 1793804394000,
@@ -3125,7 +3126,9 @@
    "AS|https://as.com/futbol/el-betis-afrontara-en-cuadro-su-eliminatoria-de-la-copa-del-rey-f202611-n/": 1794006110000,
    "SPORT|136192571": 1794041056000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html": 1793982666000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html": 1793982666000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
+   "SPORT|136195921": 1794049583000
   },
   "hechos": [
    {
@@ -3721,27 +3724,25 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136195921": 1794053782360
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 21,
    "redactar": 16,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 128855,
-  "salida": 17996,
+  "entrada": 132596,
+  "salida": 18397,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.316635
+  "dolares": 0.31721
  },
  "recientes": {
   "onces": [
