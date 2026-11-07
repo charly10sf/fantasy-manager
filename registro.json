@@ -1318,7 +1318,7 @@
   "3267": "ok",
   "3268": "ok",
   "3269": "out_of_league",
-  "3270": "ok",
+  "3270": "suspended",
   "3271": "ok",
   "3272": "ok",
   "3273": "ok",
@@ -1365,7 +1365,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247209/raphina-records-corazon-encogido.html": 1793806789000,
-   "SPORT|136087097": 1793805717000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/gerard-lopez-no-me-preocupa-defiende-barca-juega-tumba-abierta-20261104_3467993.html": 1793810443000,
    "SPORT|136073862": 1793807921000,
    "AS|https://as.com/futbol/primera/cuti-descartado-simeone-entre-le-normand-o-un-medio-f202611-n/": 1793812964000,
@@ -1564,23 +1563,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000,
+   "SPORT|136201148": 1794061401000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136087097",
-    "medio": "SPORT",
-    "t": 1793805717000,
-    "id": "3092",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Olmo sufre una lesión y estará fuera varias semanas",
-    "motivo": "lesión del aductor",
-    "plazo": "",
-    "nums": [
-     100
-    ]
-   },
    {
     "guid": "SPORT|136073862",
     "medio": "SPORT",
@@ -2232,7 +2218,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -3739,17 +3725,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 23,
    "revisar": 16,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 217170,
-  "salida": 23187,
+  "entrada": 218950,
+  "salida": 23282,
   "cacheLee": 100177,
   "cacheEscribe": 15980,
-  "dolares": 0.472574
+  "dolares": 0.4728
  },
  "recientes": {
   "onces": [
