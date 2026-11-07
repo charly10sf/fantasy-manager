@@ -1517,7 +1517,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248109/test-fermin-sobre-150-partidos-barca.html": 1794007800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248142/portada-md-bizkaia-araba-hoy-sabado.html": 1794007387000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261107/1004248138/garcia-plaza-esto-meterla-porteria.html": 1794006507000,
-   "SPORT|136188211": 1794024086000
+   "SPORT|136188211": 1794024086000,
+   "AS|https://as.com/futbol/videos/es-un-portento-fisico-y-este-video-lo-demuestra-el-brutal-entrenamiento-de-diomande-f202611-v/": 1794038839000,
+   "AS|https://as.com/futbol/valverde-vuelve-al-lateral-f202611-n/": 1794038070000
   },
   "hechos": [
    {
@@ -2219,7 +2221,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3829,17 +3831,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 13,
    "revisar": 12,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 71122,
-  "salida": 11030,
+  "entrada": 72896,
+  "salida": 11172,
   "cacheLee": 97572,
   "cacheEscribe": 8334,
-  "dolares": 0.238181
+  "dolares": 0.238429
  },
  "recientes": {
   "onces": [
