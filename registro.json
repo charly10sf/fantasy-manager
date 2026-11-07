@@ -3011,7 +3011,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-suspenda-futbol-espanol-semana-20261104_3468659.html": 1793804394000,
    "SPORT|136085422": 1793801821000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/04/competicion-da-por-finalizado-el-tenerife-andorra-radio-club-tenerife/": 1793806981000,
-   "AS|https://as.com/futbol/uefa/entenderiamos-que-se-suspendiese-la-jornada-de-liga-f202611-n/": 1793800276000,
    "SPORT|136087043": 1793803935000,
    "SPORT|136086862": 1793804539000,
    "SPORT|136088236": 1793805509000,
@@ -3128,21 +3127,6 @@
    "SPORT|136198293": 1794054087000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/uefa/entenderiamos-que-se-suspendiese-la-jornada-de-liga-f202611-n/",
-    "medio": "AS",
-    "t": 1793800276000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": false,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Se valora la posible suspensión de la jornada tras el fallecimiento de De Miguel",
-    "detalle": "La decisión final sobre la celebración de los partidos está pendiente",
-    "nums": []
-   },
    {
     "guid": "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/04/valencia-cf-prepara-llenazo-mestalla-136098642.html",
     "medio": "Superdeporte",
