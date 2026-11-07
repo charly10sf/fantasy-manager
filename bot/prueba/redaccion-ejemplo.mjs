@@ -327,6 +327,13 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a
   ok(!revisar('🚑 Borja Iglesias se pierde el partido del Celta contra el Elche.', { hechos: hi, todos }).some((x) => /no nombra|nombra a quien/.test(x)), 'apodos: con el nombre completo cuenta como nombrado');
 }
 
+// emojis de club: o los dos o ninguno (Carlos, 7 nov 18:01)
+{
+  const h2 = { tipo: 'onces', jornada: 12, partido: { partido: 'Osasuna-Athletic' }, equipos: [], jugadores: [], sinSorpresas: true, clubes: { Osasuna: { nombres: ['el Osasuna'], emoji: '🐂' }, Athletic: { nombres: ['el Athletic'], emoji: '🦁' } } };
+  ok(revisar('👀 El Osasuna 🐂 y el Athletic salen sin sorpresas en El Sadar.', { hechos: h2 }).some((x) => x.includes('también el de Athletic')), 'emojis de club: uno sí y otro no, fuera');
+  ok(!revisar('👀 El Osasuna 🐂 y el Athletic 🦁 salen sin sorpresas en El Sadar.', { hechos: h2 }).some((x) => /emoji/.test(x)), 'emojis de club: los dos, vale');
+  ok(!revisar('👀 El Osasuna y el Athletic salen sin sorpresas en El Sadar.', { hechos: h2 }).some((x) => /emoji/.test(x)), 'emojis de club: ninguno, vale');
+}
 process.env = viejo;
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);
 process.exit(fallos ? 1 : 0);

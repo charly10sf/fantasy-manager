@@ -170,8 +170,8 @@ const conArticulo = (alias, art) => {
 };
 /**
  * Los equipos del texto con otro nombre cada vez que salen (el primero, el nombre normal; los siguientes, el corto, el apodo…)
- * y, a veces, con su emoji detrás de la primera mención del equipo en el tweet (no en todos los equipos ni en todos los tweets:
- * lo decide la semilla). Si con los emojis no cabe, sin ellos; si ni así, el texto de antes.
+ * y, en más o menos la mitad de los tweets (lo decide la semilla), cada equipo con su emoji detrás de su primera mención: todos los que
+ * tengan uno, nunca uno sí y otro no. Si con los emojis no cabe, sin ellos; si ni así, el texto de antes.
  */
 export function variarEquipos(texto, { semilla = '', max = limite(), emojis = true } = {}) {
   const veces = new Map(), vistos = new Set();
@@ -188,10 +188,11 @@ export function variarEquipos(texto, { semilla = '', max = limite(), emojis = tr
       let s = conArticulo(ap.a[idx], art);
       if (/^[A-ZÁÉÍÓÚ]/.test(art)) s = s.charAt(0).toUpperCase() + s.slice(1);
       if (conEmoji) {
-        // solo la primera vez que sale el equipo, y solo si la semilla dice que toca (más o menos la mitad de los equipos)
+        // solo la primera vez que sale el equipo; la semilla decide por tweet (más o menos la mitad) y, si toca, van TODOS los equipos que
+        // tengan emoji (Carlos, 7 nov 18:01: el Osasuna con 🐂 y el Athletic sin 🦁 no; antes se decidía equipo a equipo)
         if (!vistos.has(clave)) {
           vistos.add(clave);
-          const e = hash(`${semilla}:${clave}:emoji`) % 2 === 0 ? ap.e.find((x) => !usados.has(x)) : null;
+          const e = hash(`${semilla}:emoji`) % 2 === 0 ? ap.e.find((x) => !usados.has(x)) : null;
           if (e) { usados.add(e); s += ` ${e}`; }
         }
       }
