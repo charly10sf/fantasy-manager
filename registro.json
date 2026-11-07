@@ -1563,7 +1563,9 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000,
    "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000
   },
   "hechos": [
    {
@@ -2227,11 +2229,23 @@
     "nums": [
      24
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794063095000,
+    "id": "2217",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Cucho Hernández se pierde el partido del Elche por lesión",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -3048,7 +3062,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-suspenda-futbol-espanol-semana-20261104_3468659.html": 1793804394000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/04/competicion-da-por-finalizado-el-tenerife-andorra-radio-club-tenerife/": 1793806981000,
    "SPORT|136086862": 1793804539000,
    "SPORT|136088236": 1793805509000,
@@ -3737,17 +3750,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 23,
    "revisar": 16,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 215239,
-  "salida": 22999,
+  "entrada": 217170,
+  "salida": 23187,
   "cacheLee": 100177,
   "cacheEscribe": 15980,
-  "dolares": 0.472287
+  "dolares": 0.472574
  },
  "recientes": {
   "onces": [
@@ -3834,6 +3847,11 @@
    "h": "812b3d5d0171",
    "desde": 1794034875147,
    "fin": 1794034875147
+  },
+  "12|116": {
+   "h": "2b03b172918a",
+   "desde": 1794063674070,
+   "fin": 1794063674070
   }
  },
  "iaDias": [
