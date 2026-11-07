@@ -37,6 +37,9 @@ const srv = http.createServer((req, res) => {
   const u = new URL(req.url, 'http://x');
   res.writeHead(200, { 'Content-Type': 'application/json' });
   if (u.pathname.endsWith('/scoreboard')) return res.end(JSON.stringify({ events: todos.map((t) => t.espn) }));
+  // un penalti PARADO en el Getafe-Elche (0-0), que el scoreboard no trae y el summary sí (el de Sivera del 6 nov no salió por eso)
+  if (u.searchParams.get('event') === '9003') return res.end(JSON.stringify({ keyEvents: [{ type: { text: 'Penalty - Saved' }, clock: { displayValue: "32'" }, team: { id: '20' },
+    text: 'Penalty saved! Borja Mayoral (Getafe CF) fails to score. Saved by Iker Muñoz (Elche CF) (bottom left corner).', participants: [{ athlete: { displayName: 'Borja Mayoral' } }, { athlete: { displayName: 'Iker Muñoz' } }] }] }));
   res.end(JSON.stringify({ keyEvents: [] }));
 }).listen(puerto, '127.0.0.1');
 
@@ -51,6 +54,17 @@ const mostrar = (t) => {
 console.log('=== DIRECTO ===');
 const dir = await directo({ stats: stats.map((s) => ({ ...s, local: { ...s.local, players: s.local.players.map((p) => ({ ...p })) } })), jornada: 11, fechasEspn: ['20261101'], jugadores, desdeDirecto: 0, ahora: Date.parse('2026-11-02T00:00:00Z') });
 dir.forEach(mostrar);
+{
+  const par = dir.find((t) => t.hechos && t.hechos.subtipo === 'penalti parado');
+  if (!par) { fallos++; console.log('FALLA: el penalti parado del Getafe-Elche no sale en el directo'); }
+  else {
+    const h = par.hechos;
+    const ok = /le para un penalti a/.test(par.texto) && /Iker Muñoz/.test(par.texto) && h.partido.marcadorEnEseMomento === '0-0' && h.minuto === "32'" && h.jugadores.length === 2 && h.jugadores[0].principal && h.etiqueta === '';
+    if (!ok) { fallos++; console.log(`FALLA: penalti parado mal contado: ${par.texto} ${JSON.stringify(h)}`); } else console.log('ok: el penalti parado sale del summary, con minuto, marcador y el portero');
+  }
+  const gol = dir.find((t) => t.hechos && t.hechos.subtipo === 'gol' && t.hechos.jugadores.length === 2);
+  if (!gol || !/pase del gol/.test(JSON.stringify(gol.hechos.jugadores[1]))) { fallos++; console.log('FALLA: un gol con asistente no lleva al asistente en los hechos'); } else console.log('ok: el gol con asistente lleva los dos en los hechos');
+}
 console.log('\n=== FINAL ===');
 const fin = await final({ stats, jornada: 11, jugadores, desdeFinal: 0 });
 fin.forEach(mostrar);

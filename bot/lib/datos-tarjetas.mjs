@@ -12,7 +12,7 @@ export const DIAS_CAMBIO = 30;          // y el cambio, en esos mismos 30 días
 const POS = { 1: 'Portero', 2: 'Defensa', 3: 'Centrocampista', 4: 'Delantero', 5: 'Entrenador' };
 // palabras fijas de las tarjetas (todo lo demás tiene que salir de los datos)
 export const PALABRAS_FIJAS = ['LALIGA', 'FANTASY', 'JORNADA', 'FINAL', 'MEJORES', 'PEORES', 'pts', 'MANAGER', 'Fantasyman_app', 'MVP', 'DOBLETE',
-  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', 'ENT', ...Object.values(POS)];
+  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'PARADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', 'ENT', ...Object.values(POS)];
 
 const caraDe = (p) => p && p.images && p.images.transparent && p.images.transparent['256x256'];
 const minutosEn = (ficha, n) => { const s = (ficha && ficha.playerStats || []).find((x) => Number(x.weekNumber) === Number(n)); return s ? Number((s.stats.mins_played || [0])[0]) : 0; };
@@ -56,7 +56,7 @@ export async function datosFinal(m, { jornada, fuentes, maxFichas = 25 }) {
 
 /**
  * Tarjeta de un jugador. j: el jugador de la lista de LaLiga (players); m: el partido de stats/week/{n} del que se habla;
- * motivo: 'mvp' | 'doblete' | 'triplete' | 'gol' | 'asistencia' | 'roja' | 'penalti'. fuentes: { valor(id) -> lista de market-value, imagen(url) }
+ * motivo: 'mvp' | 'doblete' | 'triplete' | 'gol' | 'asistencia' | 'roja' | 'penalti' | 'parada'. fuentes: { valor(id) -> lista de market-value, imagen(url) }
  */
 export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, ahora = Date.now(), marcador: goles = null }) {
   // en directo, el marcador de ESPN (va al momento); si no, el de LaLiga
@@ -65,7 +65,7 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
   const club = String(m.local.id) === String(j.teamId) ? m.local : m.visitor;
   const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
   const marcador = `${L} ${gl}-${gv} ${V}`;
-  const etiqueta = `${{ mvp: 'MVP', doblete: '¡DOBLETE!', triplete: '¡TRIPLETE!', gol: 'GOL', asistencia: 'ASISTENCIA', roja: 'ROJA', penalti: 'PENALTI FALLADO' }[motivo] || 'MVP'} · ${marcador}`;
+  const etiqueta = `${{ mvp: 'MVP', doblete: '¡DOBLETE!', triplete: '¡TRIPLETE!', gol: 'GOL', asistencia: 'ASISTENCIA', roja: 'ROJA', penalti: 'PENALTI FALLADO', parada: 'PENALTI PARADO' }[motivo] || 'MVP'} · ${marcador}`;
   const wp = new Map((j.weekPoints || []).map((w) => [Number(w.weekNumber), Number(w.points)]));
   const ultimas = [];
   for (let k = Math.max(1, jornada - 4); k <= jornada; k++) ultimas.push([k, wp.has(k) ? wp.get(k) : 0]);

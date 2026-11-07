@@ -8,6 +8,7 @@ import { enParalelo } from '../lib/http.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { onceProbable, pOnce } from '../lib/ff.mjs';
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
+import { clubes as clubesH, partido as partidoH, jugador as jugadorH } from '../lib/hechos.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
 
 export function baseTitular(playerStats, hasta) {
@@ -91,6 +92,24 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   // (en largo, el motivo en su propio párrafo: si no, el corte a 190 caracteres partía la lista de quiénes se caen)
   const motivo = (xs) => { if (!L) return detalle(xs); const d = detalles(xs, 3, xs.map((x) => x.id).join('-')); return d && { ...d, t: aparte(d.t) }; };
   const hora = (pr) => { const c = L && pr && pr.fecha ? cuando(pr.fecha, ahora) : null; return c ? { t: `🗓️ El partido es ${c.t}`, numeros: c.numeros } : null; };
+  // los hechos para la IA que redacta (lib/redaccion.mjs): los mismos jugadores y el mismo partido que usa la plantilla, sin sus frases
+  const estadoH = (c) => (est(c) === 'tocado' || c.estado === 'duda' ? 'duda' : c.estado === 'sancionado' ? 'sancionado' : 'lesionado');
+  const jugadorDe = (c) => {
+    const p = c.parte;
+    return jugadorH({ nickname: c.nombre, positionId: c.pos, teamId: c.teamId, equipo: c.equipo, averagePoints: c.media },
+      { estado: estadoH(c), tit: c.estado === 'duda' && c.pct != null ? { pct: c.pct } : null,
+        motivo: c.estado === 'sancionado' ? (c.motivoSan ? c.motivoSan.txt : '') : p && p.lesion ? `${lesionTxt(p)}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}` : '',
+        plazo: c.estado === 'lesionado' && p && p.estado === 'baja' && p.hasta ? `no se le espera hasta ${p.hasta}` : '',
+        extra: { titularHabitual: true, ...(c.estado === 'lesionado' && ventaObligatoria(p, ahora) ? { aviso: 'tanto tiempo fuera que es venta obligatoria' } : {}),
+          ...(L && c.n60 != null && c.ult >= 3 && c.n60 >= 2 ? { minutos: c.n60 === c.ult ? `60 minutos o más en sus ${c.ult} últimos partidos` : `60 minutos o más en ${c.n60} de sus ${c.ult} últimos partidos` } : {}) } });
+  };
+  const hechosDe = (xs, etiqueta) => {
+    const prs = [...new Map(xs.map((c) => [String(c.teamId), c])).values()].map((c) => ({ c, pr: pp.get(String(c.teamId)) })).filter((x) => x.pr);
+    const partidos = prs.map((x) => partidoH(x.pr, { equipo: x.c.equipo, posId: prs.length === 1 && xs.length === 1 ? x.c.pos : null, ahora }));
+    return { tipo: 'caidas', noticia: 'titulares habituales que se pierden el próximo partido o están en duda',
+      jugadores: xs.map(jugadorDe), ...(partidos.length === 1 ? { partido: partidos[0] } : partidos.length ? { partidos } : {}),
+      clubes: clubesH(...xs.map((c) => c.equipo), ...prs.map((x) => x.pr.rival)), etiqueta };
+  };
   const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 ? partes(c.media) : [])];
   const porEquipo = new Map();
   for (const c of caidas) { const k = String(c.teamId); if (!porEquipo.has(k)) porEquipo.set(k, []); porEquipo.get(k).push(c); }
@@ -107,7 +126,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const { usadas, texto } = tweet(cab, ideas);
     if (!lineas.every((l) => usadas.includes(l))) continue;
     const clave = `caidas|${jornada}|${xs.map((c) => c.id).join('-')}`;
-    out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...xs.filter((c) => c.estado === 'duda').map((c) => c.pct), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...(hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: aTarjeta(xs), pp: pr, clave }) });
+    out.push({ tipo: 'caidas', clave, jornada, texto, hechos: hechosDe(xs, ideas[ideas.length - 1].t), numeros: [jornada, pr ? pr.jornada : jornada, ...xs.filter((c) => c.estado === 'duda').map((c) => c.pct), ...(top ? top.numeros : []), ...(det ? det.numeros : []), ...(hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: aTarjeta(xs), pp: pr, clave }) });
   }
   // uno suelto: su propio tweet con la etiqueta final (formato Carrasco)
   let kS = vez + out.length;
@@ -140,7 +159,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) return null;
     const clave = `caidas|${jornada}|${c.id}`;
-    return { tipo: 'caidas', clave, jornada, texto, numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c), ...numerosDe(p), ...(c.motivoSan ? c.motivoSan.numeros : []),
+    return { tipo: 'caidas', clave, jornada, texto, hechos: hechosDe([c], ideas[ideas.length - 1].t), numeros: [jornada, pr ? pr.jornada : jornada, ...numDe(c), ...numerosDe(p), ...(c.motivoSan ? c.motivoSan.numeros : []),
       ...(L && c.n60 != null && c.ult >= 3 && c.n60 >= 2 ? [60, c.n60, c.ult] : []), ...(hora(pr) ? hora(pr).numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [c], pp: pr, clave }) };
   };
   if (sueltos.length <= 2) {
@@ -169,7 +188,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
     if (n === 1) { const t = unSuelto(resto[0]); if (t) out.push(t); i += 1; k++; continue; }   // si sobra uno, va con el formato de uno solo
     const quienes = resto.slice(0, n);
     const clave = `caidas|${jornada}|${quienes.map((c) => c.id).join('-')}`;
-    out.push({ tipo: 'caidas', clave, jornada, texto, numeros: [jornada, ...quienes.flatMap((c) => (c.estado === 'duda' ? [c.pct] : [])), ...(top ? top.numeros : []), ...(det ? det.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: aTarjeta(quienes), pp: quienes.every((c) => String(c.teamId) === String(quienes[0].teamId)) ? pp.get(String(quienes[0].teamId)) : null, clave }) });
+    out.push({ tipo: 'caidas', clave, jornada, texto, hechos: hechosDe(quienes, `${quienes.every(seguro) ? '❌ Bajas' : '⁉️ Bajas y dudas'} para la jornada ${jornada}`), numeros: [jornada, ...quienes.flatMap((c) => (c.estado === 'duda' ? [c.pct] : [])), ...(top ? top.numeros : []), ...(det ? det.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: aTarjeta(quienes), pp: quienes.every((c) => String(c.teamId) === String(quienes[0].teamId)) ? pp.get(String(quienes[0].teamId)) : null, clave }) });
     i += n; k++;
   }
   return out;

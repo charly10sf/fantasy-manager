@@ -4,6 +4,7 @@
 import { corto, elegir, fmt, partes, del, largo, dineroTxt } from '../lib/texto.mjs';
 import { tweet, aparte } from '../lib/redactar.mjs';
 import { enLetra, mayus } from '../lib/agrupar.mjs';
+import { clubes as clubesH, jugador as jugadorH, frenteMedia } from '../lib/hechos.mjs';
 
 export async function generar({ stats, jornada, jugadores = [], completo = true, dazn = null }) {
   const porId = new Map(jugadores.map((j) => [String(j.id), j]));
@@ -84,7 +85,16 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
     // la tarjeta con los 6 (Carlos, 2 nov 23:28: «algún grafismo chulo para los 6 mejores y peores»)
     const tarjeta = { tipo: 'resumen', nombre: `resumen-${jornada}-${clave}`, d: { jornada, clave, filas: ord },
       permitidos: { numeros: [jornada, 1, 2, 3, 4, 5, 6, ...ord.map((f) => f.pts)].map(String), palabras: ord.flatMap((f) => [f.nombre, f.equipo, f.club]) } };
-    out.push({ tipo: 'resumen', clave: `resumen|${jornada}|${clave}|${acabados.length}`, jornada, texto, numeros: num, tarjeta });
+    // los hechos para la IA que redacta (lib/redaccion.mjs): la clasificación de los seis (los puntos son los oficiales de la jornada)
+    const hechos = { tipo: 'resumen', subtipo: clave, jornada, noticia: bueno ? `los seis que más puntos han sacado en la jornada ${jornada} de LaLiga Fantasy` : `los seis que menos puntos han sacado (negativos) en la jornada ${jornada} de LaLiga Fantasy`,
+      aviso: 'la imagen adjunta lista los seis con su cara y su equipo: el texto cuenta lo llamativo, no los enumera todos',
+      ...(faltan ? { provisional: `faltan ${faltan} partidos de la jornada` } : {}), ...(arriba.length > 1 ? { empatadosEnLoAlto: arriba.length } : {}),
+      ...(n >= 3 ? { clubQueMasPone: `${eq} (${n} de los ${ord.length})` } : {}),
+      clasificacion: ord.map((f, i) => ({ puesto: i + 1, nombre: f.nombre, club: f.equipo, puntos: f.pts })),
+      jugadores: ord.map((f) => jugadorH({ nickname: f.nombre, equipo: f.equipo, averagePoints: f.media }, { principal: arriba.includes(f),
+        extra: { puntosDeLaJornada: f.pts, ...(bueno && f.media >= 3 ? { frenteASuMedia: frenteMedia(f.pts, f.media) } : {}) } })),
+      clubes: clubesH(...ord.map((f) => f.equipo)), etiqueta: '' };
+    out.push({ tipo: 'resumen', clave: `resumen|${jornada}|${clave}|${acabados.length}`, jornada, texto, hechos, numeros: num, tarjeta });
   }
   return out;
 }
