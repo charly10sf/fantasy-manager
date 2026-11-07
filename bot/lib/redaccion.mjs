@@ -19,7 +19,7 @@ const CIRCULOS = /[🔴🟠🟡🟢🔵🟣🟤⚫]/u;
 // lo que no se le pasa a la IA ni cuenta para las cifras (la fecha del partido va como «cuando»)
 const sinFecha = (k, v) => (k === 'fecha' || k === 'etiqueta' ? undefined : v);
 const TOPES_CIFRAS = { previa: { pct: 2, media: 1 }, noticias: { pct: 1, media: 1 }, novedades: { pct: 1, media: 1 }, mercado: { pct: 4, media: 1 }, otro: { pct: 2, media: 1 } };
-const COMUNES = new Set(['blanco', 'moreno', 'rubio', 'bueno', 'leal', 'santos', 'alba', 'luna']);
+const COMUNES = new Set(['blanco', 'moreno', 'rubio', 'bueno', 'leal', 'santos', 'alba', 'luna', 'redondo', 'redonda']);
 const frases = (s) => String(s).split(/(?<=[.!?:;])\s+|\n+/).map((x) => x.trim()).filter(Boolean);
 
 /** los nombres con los que se puede llamar a un club en el tuit (y su emoji, si tiene uno que se entienda) */
@@ -249,10 +249,12 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // 4 palabras (sin nombres ni cifras, con al menos dos palabras de verdad) que se repite en 2 o más de los recientes
   const mul = muletillas(recientes, nom).find((g) => gramas(esqueleto(t, nom), 5).has(g.esq));
   if (mul) e.push(`repite una muletilla que ya va en varios tuits recientes («${mul.txt}»): dilo de otra forma`);
+  // (los goles en directo se parecen por naturaleza y solo hay una llamada: sin la regla de la entrada y con un umbral más alto)
+  const directo = hechos.tipo === 'directo';
   for (const r of recientes) {
-    if (entrada(t, nom) && entrada(t, nom) === entrada(r, nom)) { e.push(`empieza igual que un tuit reciente («${r.split('\n')[0].slice(0, 60)}…»)`); break; }
+    if (!directo && entrada(t, nom) && entrada(t, nom) === entrada(r, nom)) { e.push(`empieza igual que un tuit reciente («${r.split('\n')[0].slice(0, 60)}…»)`); break; }
     const p = parecido(t, r, nom);
-    if (p >= 0.35) { e.push(`se parece demasiado a un tuit reciente (${Math.round(p * 100)} %: «${r.split('\n')[0].slice(0, 60)}…»)`); break; }
+    if (p >= (directo ? 0.5 : 0.35)) { e.push(`se parece demasiado a un tuit reciente (${Math.round(p * 100)} %: «${r.split('\n')[0].slice(0, 60)}…»)`); break; }
   }
   return [...new Set(e)];
 }

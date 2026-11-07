@@ -64,6 +64,13 @@ EN DIRECTO (goles, rojas, penaltis)
 - El asistente va en el mismo tuit, con una frase («el pase es de X, que ya suma N»). Si hay doblete o triplete, dilo.
 - Solo lo que viene en los hechos: nada de que dos jugadores sean hermanos, compañeros de selección ni de «una remontada histórica», aunque lo sepas. Tampoco «la tarde se arregla», «lo tiene todo encarrilado» ni parecidos: son predicciones.
 - Un gol no «sentencia» un partido si los hechos no dicen que queda poco o que la diferencia es grande.
+- No cierres cada gol con un «si lo tienes…»: a veces basta el hecho y los puntos; otras, una lectura corta que no sea siempre la misma.
+
+CAÍDAS, SANCIONADOS Y NOVEDADES (varios jugadores en un tuit)
+- Cuenta solo el estado que traen los hechos: un «lesionado» no es «duda», una duda no es una baja, y un sancionado no «se pierde» más partidos de los que dicen los hechos. Plazos y motivos, tal cual vienen.
+- Nada de «es titular habitual», «es fijo» o «le echarán de menos» si el jugador no trae ese dato; «una buena media» solo de 7 en adelante; nada de «se queda sin delantero» ni de lo que le pasa al equipo.
+- Si hay muchos jugadores, nombra los que pesan y di que el resto va en la imagen; no hace falta un párrafo por cada uno. Cada equipo con su artículo.
+- El partido de hoy y la jornada de la que hablan los hechos pueden no ser el mismo: no los mezcles.
 
 VARIEDAD
 - Te paso los últimos tuits de este tipo. El tuyo no puede empezar igual que ninguno ni seguir el mismo orden de ideas (por ejemplo: noticia, media, %, rival). Cambia la entrada, el orden y los verbos. Si en la misma tanda hay varios del mismo tipo, cada uno con su forma.
@@ -117,7 +124,7 @@ En el Mallorca, Dani Roig es quien más en el aire está, con un 55 %. Lo fijo e
 La gran duda está en el Girona: Hugo Pérez, con un 38 % de titularidad, puede quedarse fuera. En el Sevilla falta Leo Serra por sanción, pero Sergio Alcaraz es la apuesta segura de la noche.`, nota: 'Valoración arriba, luego lo que le sirve al mánager.' },
   { tipo: 'final', bien: true, texto: `🏁 El Osasuna remonta en Riazor: 1-2 con gol de Iker Saldaña en el 87'.
 
-Saldaña se va a 14 puntos, más del doble de su media, y es el nombre de la noche. Del Deportivo se salva Marc Vidal, 8 puntos pese a perder.`, nota: 'Cómo fue en una frase, quién puntúa y una línea para el que pierde pero suma.' },
+Saldaña termina con 14 puntos, muy por encima de su media, y es el nombre de la noche. Del Deportivo se salva Marc Vidal, 8 puntos pese a perder.`, nota: 'Cómo fue en una frase, quién puntúa y una línea para el que pierde pero suma.' },
   { tipo: 'final', bien: false, texto: `🏁 Deportivo 1-2 Osasuna. El Osasuna remonta y lo cierra Iker Saldaña en el 87'. 14 puntos fantasy para el goleador. Va a 6 por partido y hoy ha hecho más del doble.
 
 Detrás, Marc Vidal con 8 y Jon Arrieta con 5.`, nota: 'Ficha técnica, no tuit: «para el goleador», «va a 6 por partido», «Detrás,».' },
