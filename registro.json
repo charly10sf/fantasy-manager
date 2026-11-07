@@ -1378,7 +1378,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247209/raphina-records-corazon-encogido.html": 1793806789000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/gerard-lopez-no-me-preocupa-defiende-barca-juega-tumba-abierta-20261104_3467993.html": 1793810443000,
    "SPORT|136073862": 1793807921000,
    "AS|https://as.com/futbol/primera/cuti-descartado-simeone-entre-le-normand-o-un-medio-f202611-n/": 1793812964000,
@@ -1578,7 +1577,9 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000,
-   "SPORT|136201148": 1794061401000
+   "SPORT|136201148": 1794061401000,
+   "SPORT|136202042": 1794062312000,
+   "SPORT|136176192": 1794062219000
   },
   "hechos": [
    {
@@ -2232,7 +2233,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3734,22 +3735,24 @@
    "n": 6,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136202042": 1794066074307
+  }
  },
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 27,
    "revisar": 19,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 263864,
-  "salida": 24254,
+  "entrada": 265909,
+  "salida": 25106,
   "cacheLee": 105387,
   "cacheEscribe": 18585,
-  "dolares": 0.579382
+  "dolares": 0.580012
  },
  "recientes": {
   "onces": [
