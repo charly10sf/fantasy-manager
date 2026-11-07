@@ -15,8 +15,8 @@ for (let i = 0; i < preguntas.length; i++) {
   const cuerpo = { systemInstruction: { parts: [{ text: sinWeb(sistemas[i]) }] }, contents, generationConfig: { maxOutputTokens: 16000, temperature: 0.4, ...(/gemini-3/.test(modelo) ? { thinkingConfig: { thinkingLevel: 'low' } } : {}) } };
   let j;
   for (let n = 0; n < 4; n++) {
-    const r = await fetch(`${G}/models/${modelo}:generateContent?key=${K}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(cuerpo) });
-    j = await r.json();
+    let r;
+    try { r = await fetch(`${G}/models/${modelo}:generateContent?key=${K}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(cuerpo), signal: AbortSignal.timeout(150000) }); j = await r.json(); } catch (e) { console.log('reintento', e.message); continue; }
     if (r.ok) break;
     console.log('reintento', r.status, JSON.stringify(j).slice(0, 300));
     await new Promise((x) => setTimeout(x, 15000));
