@@ -1521,7 +1521,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000,
-   "SPORT|136194101": 1794045757000
+   "SPORT|136194101": 1794045757000,
+   "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/": 1794049173000
   },
   "hechos": [
    {
@@ -2210,11 +2211,35 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/",
+    "medio": "AS",
+    "t": 1794049173000,
+    "id": "2354",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Eric recibe el alta y entra en la convocatoria",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/",
+    "medio": "AS",
+    "t": 1794049173000,
+    "id": "2355",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Kounde se queda fuera un partido más",
+    "motivo": "problemas en el tobillo",
+    "plazo": "se queda fuera un partido más",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3034,8 +3059,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/aplazados-el-granada-tenerife-y-el-andorra-mallorca-de-segunda-division-por-el-fallecimiento-de-jesus-de-miguel-cadena-ser/": 1793794190000,
    "SPORT|136078371": 1793792395000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247141/posibles-fechas-aplaza-jornada-primera-segunda-todas-opciones.html": 1793791797000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/sentido-recuerdo-jesus-miguel-partidos-champions-equipos-espanoles-dia-duro-mundo-futbol-20261104_3468235.html": 1793790845000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261104/11675852/de-miguel-owono-granada-tenerife-liga-hypermotion.html": 1793790838000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3792,17 +3815,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 12,
+   "clasificar": 13,
    "redactar": 15,
    "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 105179,
-  "salida": 15125,
+  "entrada": 106850,
+  "salida": 16065,
   "cacheLee": 97572,
   "cacheEscribe": 10770,
-  "dolares": 0.282993
+  "dolares": 0.28363
  },
  "recientes": {
   "onces": [
