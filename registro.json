@@ -3125,7 +3125,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html": 1793982666000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "SPORT|136195921": 1794049583000,
-   "SPORT|136198293": 1794054087000
+   "SPORT|136198293": 1794054087000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-montero-rufian-animan-votar-memoria-conciencia-obviando-voto-util-psoe-si-puede-te-come-20261107134413.html": 1794055453000
   },
   "hechos": [
    {
@@ -3691,27 +3692,25 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-montero-rufian-animan-votar-memoria-conciencia-obviando-voto-util-psoe-si-puede-te-come-20261107134413.html": 1794059172102
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 28,
+   "clasificar": 29,
    "redactar": 17,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 152894,
-  "salida": 21097,
+  "entrada": 154547,
+  "salida": 21183,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.336671
+  "dolares": 0.336879
  },
  "recientes": {
   "onces": [
