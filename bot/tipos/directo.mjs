@@ -39,6 +39,25 @@ export function casarJugador(nombreEspn, lado, { portero = null } = {}) {
   return null;
 }
 
+/** Segunda pasada para el que `casarJugador` no encuentra porque LaLiga lo llama por un nombre de guerra («Rafita» para Rafa Garrido,
+    «Chupe» para Chupete; 7 nov, Málaga-Racing: salían sin cara). Es más flojo, así que pide todo esto a la vez: el mismo puesto (`pos`:
+    'POR' | 'DEF' | 'MED' | 'DEL'), que nadie lo tenga ya (`usados`), que TODAS las palabras del nombre de LaLiga se parezcan a alguna del de ESPN
+    (empiezan igual, 3 letras como poco) y que quede uno solo. «Dani Sánchez» no casa con «Daniel Pérez»: Sánchez no aparece. */
+export function casarJugadorFlojo(nombreEspn, lado, { pos = null, usados = new Set() } = {}) {
+  const clase = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
+  const et = norm(nombreEspn).split(' ').filter((t) => t.length >= 3);
+  if (!et.length) return null;
+  const k = (a, b) => { let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++; return i; };
+  const parecen = (a, b) => { const c = k(a, b); return c >= 3 && c >= Math.min(a.length, b.length) - 2; };
+  const cand = (lado.players || []).filter((p) => {
+    if (usados.has(String(p.id))) return false;
+    if (pos && p.positionId && clase[p.positionId] !== pos) return false;
+    const nt = norm(p.nickname).split(' ').filter((t) => t.length >= 3);
+    return nt.length > 0 && nt.every((t) => et.some((u) => parecen(t, u)));
+  });
+  return cand.length === 1 ? cand[0] : null;
+}
+
 // Lo que se tuitea en directo (término medio que propuso Domy y aceptó Carlos el 2 nov): cada gol, con su asistente y los puntos
 // fantasy; las rojas; los penaltis fallados. Sin amarillas (Domy: solo tendrían sentido para los apercibidos, y esa lista aún no
 // se lee) ni cambios (irían en el tweet del final, salvo los forzados por lesión, que ESPN no distingue).
