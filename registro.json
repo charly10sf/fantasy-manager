@@ -3058,7 +3058,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261104/1004247067/sabadell-descansa-no-pierde-vista-liga.html": 1793784767000,
    "MARCA|https://www.marca.com/futbol/elche/2026/11/04/version-completa-victor-chust-he-mejorado-balon.html": 1793783141000,
    "Europa Press|https://www.europapress.es/madrid/noticia-huelga-universitaria-arranca-menos-alumnos-aulas-piquetes-ciu-ayuso-escucha-uni-lucha-20261104093827.html": 1793781507000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247035/laliga-plantea-suspender-jornada-semana-primera-segunda.html": 1793778293000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3245,21 +3244,6 @@
     "oficial": false,
     "contexto": "",
     "detalle": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247035/laliga-plantea-suspender-jornada-semana-primera-segunda.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793778293000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Por la muerte del delantero Jesús de Miguel",
-    "detalle": "LaLiga medita la decisión",
     "nums": []
    },
    {
