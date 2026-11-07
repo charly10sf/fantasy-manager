@@ -21,8 +21,11 @@ export function minutoDe(d) {
  * Recorre los detalles en orden de tiempo y apunta, para cada uno, el marcador en ese momento ([local, visitante], ya con el gol
  * si es un gol) y cuántas rojas llevaba su equipo (con la suya). Un autogol se atribuye al equipo que dice ESPN o al contrario:
  * se prueban las dos y se queda la que cuadra con el marcador final.
+ * `vivo` (directo): el `score` de ESPN puede ir por detrás de sus `details` (el gol de Catena del 7 nov, 90', salió «0-1» cuando
+ * era el 1-1: el detalle ya estaba y el marcador no). Sin autogoles, cada gol suma a su equipo sin dudas, así que la secuencia vale
+ * aunque no cuadre con el marcador de ese momento (`desfase: true`); con autogoles hace falta que cuadre.
  */
-export function reconstruir(detalles, casaId, fueraId, golesCasa, golesFuera) {
+export function reconstruir(detalles, casaId, fueraId, golesCasa, golesFuera, { vivo = false } = {}) {
   const orden = detalles.map((d, i) => ({ d, i })).sort((a, b) => segs(a.d) - segs(b.d) || a.i - b.i).map((x) => x.d);
   for (const propia of ['igual', 'contrario']) {
     let c = 0, f = 0; const tras = new Map(); const rojas = {};
@@ -38,6 +41,7 @@ export function reconstruir(detalles, casaId, fueraId, golesCasa, golesFuera) {
       } else tras.set(d, { marcador: [c, f] });
     }
     if (c === Number(golesCasa) && f === Number(golesFuera)) return { ok: true, tras, orden };
+    if (vivo && propia === 'igual' && !orden.some((d) => d.scoringPlay && d.ownGoal)) return { ok: true, tras, orden, desfase: true };
   }
   return { ok: false, tras: new Map(), orden };
 }

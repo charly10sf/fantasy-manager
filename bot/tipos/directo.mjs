@@ -185,9 +185,12 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       const asis = dsps.some((d) => d.n && !d.asistente) ? asistencias(sumario) : {};
       // el marcador de ESPN, que va al momento (el de LaLiga puede ir por detrás)
       const gl = Number(casa.score), gv = Number(fuera.score);
-      const rel = reconstruir(c.details || [], casa.team.id, fuera.team.id, gl, gv);
-      if (!rel.ok && dsps.length) console.log(`  (directo) ${ev.shortName}: la secuencia de ESPN no cuadra con ${gl}-${gv}; escribo sin relato`);
+      const rel = reconstruir(c.details || [], casa.team.id, fuera.team.id, gl, gv, { vivo: true });
+      if (rel.desfase && dsps.length) console.log(`  (directo) ${ev.shortName}: el marcador de ESPN (${gl}-${gv}) va por detrás de sus jugadas; uso el de las jugadas`);
+      if (!rel.ok && dsps.length) console.log(`  (directo) ${ev.shortName}: la secuencia de ESPN no cuadra con ${gl}-${gv}; los goles esperan a la siguiente vuelta`);
       for (const dsp of dsps) {
+        // un gol sin su marcador seguro no sale: con el actual de ESPN podía decir «0-1» de un gol que era el 1-1 (7 nov)
+        if (!rel.ok && dsp.n) continue;
         const esCasa = String(dsp.equipo) === String(casa.team.id);
         const lado = esCasa ? m.local : String(dsp.equipo) === String(fuera.team.id) ? m.visitor : null;
         if (!lado) continue;

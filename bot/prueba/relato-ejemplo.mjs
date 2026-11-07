@@ -107,5 +107,15 @@ if (arg('tarjetas')) {
   await caso('sin valoración, pasadas 7 h', ficha(null), 7 * 60, true);
   await caso('la ficha falla, a los 120 min', async () => { throw new Error('caído'); }, 120, false);
 }
+// marcador de ESPN por detrás de sus jugadas (Catena, 7 nov: salió «0-1» cuando era el 1-1)
+{
+  const { reconstruir, situacion } = await import('../lib/relato.mjs');
+  const d = [{ clock: { value: 5037 }, scoringPlay: true, team: { id: '93' } }, { clock: { value: 5393 }, scoringPlay: true, team: { id: '97' } }];
+  const r = reconstruir(d, '97', '93', 0, 1, { vivo: true });
+  const [c, f] = r.ok ? r.tras.get(d[1]).marcador : [];
+  const conAutogol = reconstruir([...d, { clock: { value: 5400 }, scoringPlay: true, ownGoal: true, team: { id: '93' } }], '97', '93', 1, 1, { vivo: true });
+  const ok = r.ok && r.desfase && c === 1 && f === 1 && situacion(c, f) === 'empata' && !reconstruir(d, '97', '93', 0, 1).ok && !conAutogol.ok;
+  console.log(`${ok ? 'OK ' : 'MAL'} marcador de ESPN por detrás: ${c}-${f}`); if (!ok) fallos++;
+}
 srv.close();
 process.exit(fallos ? 1 : 0);
