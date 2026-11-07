@@ -9,12 +9,20 @@ QUÉ TIENE QUE TENER CADA TUIT
 - El hecho, dicho a la primera y que se entienda leído una sola vez.
 - Lo que significa para el mánager: una valoración corta sacada de los datos («si lo tienes, puede ir al once», «con ese porcentaje, mejor esperar a los onces», «la jornada pinta para él», «es venta si necesitas caja» solo si los datos lo sostienen). Valoración, no crónica.
 - Solo los datos que cuentan algo. No metas todos los que te paso: elige uno o dos y di qué significan. Nunca la media, el %, el rival, la hora y los goles en la misma frase.
-- El % de titularidad y la media NO van siempre (Carlos, 6 nov: «suena demasiado a plantilla»). Dilo con palabras («es fijo», «va a salir», «lo tiene difícil», «está en el aire», «de los que más puntos dan») y pon el número solo donde cambia la lectura: la gran duda del partido o un dato que llama la atención. Como mucho dos porcentajes y una media por tuit (en noticias y novedades, uno de cada). El primer porcentaje del tuit, con «de titularidad» («Fantasy Manager le da un 97 % de titularidad»); los siguientes, solo el número («y Ramon, con un 51 %»), sin repetirlo, como lo diría una persona.
+- El % de titularidad y la media NO van siempre (Carlos, 6 nov: «suena demasiado a plantilla»). Dilo con palabras («es fijo», «va a salir», «lo tiene difícil», «está en el aire», «de los que más puntos dan») y pon el número solo donde cambia la lectura: la gran duda del partido o un dato que llama la atención. Como mucho dos porcentajes y una media por tuit (en noticias y novedades, uno de cada). El primer porcentaje del tuit, con «de titularidad» («con un 97 % de titularidad», «tiene un 64 % de titularidad en Fantasy Manager»; no abras siempre con «Fantasy Manager le da…», que suena a plantilla); los siguientes, solo el número («y Ramon, con un 51 %»), sin repetirlo, como lo diría una persona.
 - En una previa no hace falta nombrar a todos los que vienen en los hechos: elige los que pesan (mucha media, un puesto clave o la gran duda) y di qué significa. Nada de enumerar cada duda con su % en cada párrafo, y no termines cada equipo con «X es el seguro».
 - Si un equipo trae «cruce», esa es la lectura de lo que le conviene a sus jugadores: úsala tal cual, no la deduzcas tú. Los goles de un equipo son del equipo, nunca de un jugador.
 - Los goles por partido de un equipo son de toda la temporada: no digas que son en casa o fuera (ni hace falta decir «en toda la temporada»).
 - No empieces las previas siempre por el estadio («La Rosaleda recibe…», «El Sadar recibe…»): el estadio, si sale, una vez y no siempre arriba.
 - Los hechos vienen con etiquetas («dificultad»: fácil, «papel»: titularidad en el aire…). No las copies tal cual («con una dificultad fácil»): dilo como lo diría una persona («un partido asequible», «el Valencia viene 19º»). Tampoco repitas siempre «en el aire»: busca otras formas o no lo digas.
+
+PREVIAS (lo que falló el 7 nov en los cinco tuits de las 9:02; Carlos: que suenen normal)
+- El cruce se dice con «delanteros y medios» y «portero y defensas», o con nombres. Nunca «los de arriba», «los de atrás» ni «los de abajo»: no se entiende a la primera. Un equipo puede traer dos líneas de cruce: si las dos son malas, di que el cruce es malo para toda la plantilla. «Al revés» o «al contrario» solo si lo que sigue es de verdad lo contrario (bueno donde antes era malo). Si de un equipo no te paso cruce, no opines de su cruce.
+- Las bajas gordas salen siempre: de cada equipo, la baja con más media (5 o más) se nombra y se dice por qué falta; con tres o más bajas de media alta, di cuántas y nombra las dos mayores. No las dejes fuera por contar una duda.
+- La prensa va en una frase propia, con el medio pegado al hecho (la rueda de prensa, el parte médico), no en la primera frase. Un resultado ya jugado («el 0-6 ante el PSG») es un hecho: se cuenta sin «según» nadie.
+- La primera frase, corta (de 12 a 25 palabras) y con una sola idea: lo que más importa del partido. No metas en ella la hora, el estadio, la clasificación y una noticia a la vez. No abras siempre con «mañana a las HH:MM»: la hora puede ir en medio o no ir.
+- Un jugador por frase y qué significa para el mánager. No escribas «el portero con 9 de media es de los que más puntos dan»: elige una de las dos cosas.
+- «En el aire» como mucho una vez por tuit. Otras formas: «no tiene el puesto asegurado», «puede quedarse fuera», «duda», «hay que esperar al once».
 
 CÓMO SUENA
 - Frases de persona, de largo variado: alguna corta, alguna más larga. Nada de telegrama («Lesión de X. Molestias. Duda.») ni de nota de prensa («el encuentro se disputa», «promedia», «según informan», «cabe destacar»).
@@ -31,7 +39,7 @@ NOMBRES
 
 DE DÓNDE SALE
 - La fuente va pegada a la noticia: «según AS», «lo cuentan MARCA y AS», «lo ha comunicado el club». Nunca detrás de la media, del %, del rival ni de la hora, que no son del medio.
-- El % de titularidad es de Fantasy Manager: dilo así cuando lo uses («Fantasy Manager le da un 64 % de titularidad»). Nada de «LaLiga Fantasy ya lo da como disponible»: el estado ya va en la etiqueta.
+- El % de titularidad es de Fantasy Manager: dilo así cuando lo uses y el tuit no cierre ya con su etiqueta («64 % de titularidad según Fantasy Manager»); si cierra con ella, no lo repitas en el texto. Nada de «LaLiga Fantasy ya lo da como disponible»: el estado ya va en la etiqueta.
 - RIGOR: lo que pasa en un partido (goles, penaltis y paradas, expulsiones, el resultado) es un hecho, no una noticia de un medio. Se cuenta tal cual, sin «cuenta COPE», «según MARCA», «informa AS» ni «lo cuentan» delante, porque eso suena a que nadie lo ha comprobado. Un suceso solo puede salir si viene en los hechos (en «goles» o en «incidencias», con su minuto y sus protagonistas) y entonces se cuenta con seguridad. Si no viene, no lo cuentes ni lo insinúes, aunque creas saberlo: ni un penalti, ni una parada, ni una expulsión, ni un VAR, ni una lesión en pleno partido, ni «el portero salvó al equipo».
 - En los tuits de final y de MVP no se nombra ningún medio. Los medios solo van en noticias y previas, y solo para lo que es suyo: una noticia que el club no ha confirmado, una duda del entrenador, lo que se cuenta de una rueda de prensa.
 - Si te paso prensa (solo en las previas), puedes usar uno o dos hechos concretos de ella con tus palabras y con el medio pegado al hecho. Nunca copies frases: ni cinco palabras seguidas.
@@ -149,7 +157,7 @@ El lateral del Rayo promedia 5,1 puntos, aunque de momento solo cuenta con un 29
 Llega justo de ritmo y Fantasy Manager le da un 41 % de titularidad: lo normal es que empiece en el banquillo. Si lo tienes, aguanta; si lo buscas, puede salir barato esta semana.`, nota: 'Hecho, contexto y una lectura para el que lo tiene y para el que lo quiere.' },
   { tipo: 'previa', bien: true, texto: `🗓️ Espanyol-Deportivo (mañana, 16:15): el Espanyol llega muy tocado atrás.
 
-Sin Lucas Ferrer por sanción ni Marc Olmo por lesión, la defensa del Espanyol es una incógnita, y eso abre la puerta a los de arriba del Deportivo. El más fiable es Pablo Ruano, que no ha fallado un once.
+Sin Lucas Ferrer por sanción ni Marc Olmo por lesión, la defensa del Espanyol es una incógnita, y eso abre la puerta a los delanteros del Deportivo. El más fiable es Pablo Ruano, que no ha fallado un once.
 
 En el Espanyol, quien sí juega es Bruno Alba, aunque con la zaga así no es el mejor partido para un portero.`, nota: 'Une las bajas con lo que significan para el otro equipo.' },
   // ---- tipos que antes salían de plantilla ----

@@ -48,7 +48,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
     if (ventanas && !forzar && enHora && stats.some((x) => x.matchState === 1) && !(esObjetivo && toca.ok))
       log(`  (previa) posibles onces de la J${jornada}: ${esObjetivo ? `esperan (${toca.motivo})` : objetivo === null ? 'no salen: la jornada ya ha empezado' : 'no salen aún: hay otra jornada antes'}`);
     // probarAcabados (solo pruebas, --previa-acabados=1): trata los partidos ya jugados como si fueran a empezar, para ver los onces de ESPN
-    for (const m of stats.filter((x) => x.matchState === 1 || (probarAcabados && x.matchState === 7)).sort((a, b) => Date.parse(a.date) - Date.parse(b.date))) {
+    // (si la redacción de uno falla, pasa al final: con un tuit por ejecución, uno atascado no frena a los demás; lib/respaldo.mjs)
+    const fallosDe = (m) => ((registro && registro.datos.fallosRedaccion) || {})[`previa|${m.id}`]?.n || 0;
+    for (const m of stats.filter((x) => x.matchState === 1 || (probarAcabados && x.matchState === 7)).sort((a, b) => fallosDe(a) - fallosDe(b) || Date.parse(a.date) - Date.parse(b.date))) {
       const saque = Date.parse(m.date);
       const falta = saque - ahora;
       const quiereConf = !ventanas || forzar ? true : falta > 0 && falta < 3 * 3600e3;
@@ -252,7 +254,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       }
       const cuH = cuando(m.date, ahora);
       const hechos = { tipo: 'previa', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuH ? { cuando: cuH.t } : {}), fecha: m.date || null },
-        equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), etiqueta: '📊 Los % de titularidad son de Fantasy Manager' };
+        equipos: eqH, jugadores: jugH, clubes: clubesH(L, V),
+        // el pie cambia de un partido a otro (7 nov: los cinco tuits cerraban con la misma frase)
+        etiqueta: Rp(['📊 Los % de titularidad son de Fantasy Manager', '📊 % de titularidad según Fantasy Manager', '📊 Titularidad: los porcentajes son de Fantasy Manager'], 'pieH') };
       if (ventanas && !forzar) hechaPos = true;   // uno por ejecución: el siguiente, tras la separación (lib/escalonar.mjs)
       out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, hechos, caduca: saque, numeros: num, partido: null,
         tarjeta: { tipo: 'onces', nombre: `previa-${m.id}`, d,
