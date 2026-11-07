@@ -426,6 +426,13 @@
    "jornada": 12,
    "id": "2118977487623356666",
    "t": "2026-11-07T08:02:56.904Z"
+  },
+  {
+   "clave": "noticias|1070:buena|2026-11-07",
+   "tipo": "noticias",
+   "jornada": 12,
+   "id": "2118999789962711130",
+   "t": "2026-11-07T09:31:34.043Z"
   }
  ],
  "estados": {
@@ -1315,7 +1322,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247063/eric-christensen-esperan-llegar-metropolitano.html": 1793784669000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-avisa-hansi-flick-gestion-rodri-lesion-jugar-atletico-madrid-jugado-minutos-seguro-seguidores-no-entienden-20261104_3467990.html": 1793784789000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antiviolencia-pide-60-001-euros_0_2008420320.html": 1793786458000,
    "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/": 1793787223000,
@@ -1520,7 +1526,8 @@
    "AS|https://as.com/futbol/valverde-vuelve-al-lateral-f202611-n/": 1794038070000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248129/real-letal-rival-categoria-me-sorprende-oyarzabal-no-balon-oro.html": 1794041366000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248132/alvaro-garcia-valentin-cinco-bajas-notables-rayo.html": 1794041216000,
-   "SPORT|136054540": 1794038967000
+   "SPORT|136054540": 1794038967000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html": 1794043154000
   },
   "hechos": [
    {
@@ -2233,11 +2240,28 @@
      3,
      0
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794043154000,
+    "id": "1070",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "De Galarreta regresa a la convocatoria del Athletic para Osasuna",
+    "motivo": "lesión muscular de carácter moderado",
+    "plazo": "",
+    "nums": [
+     23,
+     18,
+     30,
+     12
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -3830,17 +3854,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 5,
-   "redactar": 13,
-   "revisar": 12,
+   "clasificar": 6,
+   "redactar": 15,
+   "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 76720,
-  "salida": 11839,
+  "entrada": 94299,
+  "salida": 12554,
   "cacheLee": 97572,
-  "cacheEscribe": 8334,
-  "dolares": 0.239145
+  "cacheEscribe": 10770,
+  "dolares": 0.280619
  },
  "recientes": {
   "onces": [
@@ -3887,6 +3911,12 @@
    {
     "t": "2026-11-07T08:02:56.905Z",
     "texto": "🗓️ Atlético-Barça, mañana a las 21:00 en el Metropolitano: el 2º contra el 1º, y un cruce poco amable para los dos por detrás.\n\nOblak y Grimaldo son fijos, pero el Barça mete mucho y eso les pesa. Lo mismo para la zaga del Barça con el Atlético marcando tanto. Arriba pasa al revés: los delanteros y medios del Barça se topan con un Atlético que casi no encaja, aunque Raphinha (14,3 de media) y Lamine Yamal son fijos igualmente.\n\nJulián Alvarez está en el aire, con un 53 % de titularidad, y AS recuerda que le ha marcado cuatro goles al Barça en nueve partidos."
+   }
+  ],
+  "noticias": [
+   {
+    "t": "2026-11-07T09:31:34.045Z",
+    "texto": "✅ Mundo Deportivo cuenta que De Galarreta vuelve a la convocatoria del Athletic para el partido de hoy en El Sadar.\n\nEl Osasuna es de los que más goles encajan, y eso le viene bien a un centrocampista. Aun así, Fantasy Manager le da un 30 % de titularidad: no es un fijo, así que mejor esperar a los onces antes de tocar nada."
    }
   ]
  },
