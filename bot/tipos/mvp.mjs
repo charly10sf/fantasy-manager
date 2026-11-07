@@ -67,6 +67,26 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     }
     const { usadas, texto } = tweet(cab, ideas);
     if (!usadas.length) continue;
+    // MVP compartido (Carlos, 7 nov 21:28: «debería hablar de los 2»): el otro, con los mismos datos que el primero
+    let otroH = null;
+    if (otro) {
+      const jo = porId.get(String(otro.p.id)) || {};
+      const mediaO = Math.round(Number(jo.averagePoints) * 10) / 10;
+      let valorO = null, proximoO = null;
+      if (largo()) {
+        const vo = Number(jo.marketValue) || 0;
+        if (vo > 0) { const dvo = dineroTxt(vo); valorO = dvo.t; num.push(...dvo.numeros); }
+        const ppo = await proximoPartido(otro.eq.id, { jornada: jornada + 1 }).catch(() => null);
+        const co = ppo && ppo.fecha ? cuando(ppo.fecha) : null;
+        if (ppo) { num.push(...(co ? co.numeros : [ppo.jornada])); proximoO = { rival: el(ppo.rival), ...(ppo.enCasa != null ? { juega: ppo.enCasa ? 'en casa' : 'fuera' } : {}), ...(co ? { cuando: co.t } : { jornada: ppo.jornada }) }; }
+      }
+      if (jo.points != null) num.push(Number(jo.points));
+      if (mediaO >= 1) num.push(...partes(jo.averagePoints));
+      otroH = { nombre: otro.p.nickname || otro.p.name, puesto: puesto(otro.p.positionId || jo.positionId) || undefined, club: corto(otro.eq.mainName),
+        papel: 'MVP compartido: empata con el otro como el que más puntos ha sacado del partido', puntosHoy: pts, ...(jo.points != null ? { puntosTemporada: Number(jo.points) } : {}),
+        ...(mediaO >= 1 ? { mediaPuntos: fmt(jo.averagePoints), hoyFrenteASuMedia: frenteMedia(pts, jo.averagePoints) } : {}),
+        ...(valorO ? { valorMercado: valorO } : {}), ...(proximoO ? { proximoPartido: proximoO } : {}), principal: true };
+    }
     // los hechos para la IA que redacta (lib/redaccion.mjs). El tuit del final del mismo partido sale justo antes: no tiene que repetirlo
     const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
     // los sucesos comprobados del partido (penaltis parados o fallados, rojas): si el MVP es un portero que para un penalti, sale de aquí
@@ -76,15 +96,16 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
     const hechos = { tipo: 'mvp', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), marcador: `${m.localScore}-${m.visitorScore}`, ...(franja(m.date) ? { horario: franja(m.date) } : {}), fecha: m.date || null },
       alcance: 'datos de este partido y de este jugador: del resto de la jornada no se sabe nada',
       goles, ...(incidencias.length ? { incidencias } : {}),
-      nota: 'el tuit del final de este partido acaba de salir: este va del mejor jugador y de lo que significa para el mánager',
-      jugadores: [{ nombre, puesto: puesto(j.positionId) || undefined, club: equipo, papel: otro ? 'empatado como el que más puntos ha sacado del partido' : 'el que más puntos ha sacado del partido (de los dos equipos)',
+      nota: otro ? 'el tuit del final de este partido acaba de salir. MVP COMPARTIDO: los dos han sacado los mismos puntos y el tuit habla de los dos por igual, con lo de cada uno (qué hizo, su media, su valor, su próximo partido si viene) y lo que significa para quien tenga a uno u otro; ninguno es el principal ni el otro un añadido del final'
+        : 'el tuit del final de este partido acaba de salir: este va del mejor jugador y de lo que significa para el mánager',
+      jugadores: [{ nombre, puesto: puesto(j.positionId) || undefined, club: equipo, papel: otro ? 'MVP compartido: empata con el otro como el que más puntos ha sacado del partido' : 'el que más puntos ha sacado del partido (de los dos equipos)',
         puntosHoy: pts, puntosTemporada: Number(j.points) || 0,
         ...(mediaR >= 1 ? { mediaPuntos: fmt(j.averagePoints), hoyFrenteASuMedia: frenteMedia(pts, j.averagePoints) } : {}),
         ...(valorH ? { valorMercado: valorH } : {}), ...(proximoH ? { proximoPartido: proximoH } : {}), principal: true },
-        ...(otro ? [{ nombre: otro.p.nickname || otro.p.name, club: corto(otro.eq.mainName), puntosHoy: pts, papel: 'empata con él', principal: true }] : [])],
+        ...(otroH ? [otroH] : [])],
       clubes: clubesH(L, V, proximoH ? proximoH.club : null), etiqueta: '' };
     if (proximoH) delete proximoH.club;
-    out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, hechos, numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });
+    out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, hechos, numeros: num, partido: m.id, jugadorId: p.id, ...(otro && porId.get(String(otro.p.id)) ? { jugadorId2: otro.p.id } : {}), motivo: 'mvp', soloConImagen: true });
   }
   return out;
 }

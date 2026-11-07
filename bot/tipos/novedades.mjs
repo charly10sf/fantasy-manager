@@ -137,8 +137,9 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const etiquetaH = ideas[ideas.length - 1].t;
     const estadoH = e.que === 'lesion' ? (p && p.estado === 'duda' ? 'duda' : 'lesionado') : e.que === 'sancion' ? 'sancionado' : 'disponible';
     const jH = porId.get(String(e.id));
-    const hechos = { tipo: 'novedades', noticia: e.que === 'vuelve' ? `LaLiga Fantasy le cambia el estado a disponible: ${e.antes === 'injured' ? 'estaba lesionado' : e.antes === 'suspended' ? 'estaba sancionado' : 'estaba en duda'}`
-      : e.que === 'lesion' ? `LaLiga Fantasy le pone como ${estadoH === 'duda' ? 'duda' : 'lesionado'}` : 'LaLiga Fantasy le pone como sancionado',
+    // la noticia es lo que le pasa al jugador, no quién lo marca (Carlos, 7 nov: «¿cómo que LaLiga Fantasy pone? Será que está lesionado»)
+    const hechos = { tipo: 'novedades', noticia: e.que === 'vuelve' ? `vuelve a estar disponible: ${e.antes === 'injured' ? 'estaba lesionado' : e.antes === 'suspended' ? 'estaba sancionado' : 'estaba en duda'}`
+      : e.que === 'lesion' ? (estadoH === 'duda' ? 'es duda' : 'está lesionado') : 'está sancionado',
       jugadores: [jugadorH(jH, { equipos, estado: estadoH, tit: titH,
         motivo: e.que === 'sancion' ? (e.motivoSan ? e.motivoSan.txt : '') : p && p.lesion ? `${lesionTxt(p)}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}` : '',
         plazo: e.que === 'lesion' && p && p.estado === 'baja' && p.hasta ? `no se le espera hasta ${p.hasta}` : '',
@@ -180,7 +181,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos
     const clave = `novedades|${xs.map((e) => `${e.id}:${e.que}`).join(',')}|${dia}`;
-    const hechos = { tipo: 'novedades', noticia: 'cambios de estado en LaLiga Fantasy de varios jugadores',
+    const hechos = { tipo: 'novedades', noticia: 'novedades de varios jugadores: lesiones, sanciones o vueltas',
       jugadores: xs.map((e) => jugadorH(porId.get(String(e.id)), { equipos, principal: true,
         estado: e.que === 'lesion' ? (e.parte && e.parte.estado === 'duda' ? 'duda' : 'lesionado') : e.que === 'sancion' ? 'sancionado' : 'disponible',
         motivo: e.que === 'sancion' ? (e.motivoSan ? e.motivoSan.txt : '') : e.que === 'lesion' && e.parte && e.parte.lesion ? lesionTxt(e.parte) : '',

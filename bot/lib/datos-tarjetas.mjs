@@ -63,7 +63,7 @@ export async function datosFinal(m, { jornada, fuentes, maxFichas = 25 }) {
  * Tarjeta de un jugador. j: el jugador de la lista de LaLiga (players); m: el partido de stats/week/{n} del que se habla;
  * motivo: 'mvp' | 'doblete' | 'triplete' | 'gol' | 'asistencia' | 'roja' | 'penalti' | 'parada'. fuentes: { valor(id) -> lista de market-value, imagen(url) }
  */
-export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, ahora = Date.now(), marcador: goles = null, minuto = null }) {
+export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, ahora = Date.now(), marcador: goles = null, minuto = null, pts = null }) {
   // en directo, el marcador de ESPN (va al momento); si no, el de LaLiga
   const [gl, gv] = goles || [m.localScore, m.visitorScore];
   const enPartido = [...(m.local.players || []), ...(m.visitor.players || [])].find((p) => String(p.id) === String(j.id));
@@ -72,12 +72,13 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
   const marcador = `${L} ${gl}-${gv} ${V}`;
   const etiqueta = `${{ mvp: 'MVP', doblete: '¡DOBLETE!', triplete: '¡TRIPLETE!', gol: 'GOL', asistencia: 'ASISTENCIA', roja: 'ROJA', penalti: 'PENALTI FALLADO', parada: 'PENALTI PARADO' }[motivo] || 'MVP'} · ${marcador}`;
   const wp = new Map((j.weekPoints || []).map((w) => [Number(w.weekNumber), Number(w.points)]));
-  const ptsJornada = enPartido && enPartido.weekPoints != null ? Number(enPartido.weekPoints) : (wp.get(jornada) || 0);
+  // `pts`: los del tuit del directo cuando LaLiga aún no ha sumado el gol o la asistencia (los suma el bot por el puesto; 7 nov, 20:54)
+  const ptsJornada = pts != null ? Number(pts) : enPartido && enPartido.weekPoints != null ? Number(enPartido.weekPoints) : (wp.get(jornada) || 0);
   // 7 nov (Carlos, con el gol de Dotor: la tarjeta salió con «0 PTS» arriba y un 0 en la J12): con el partido en juego LaLiga tarda en
   // sumar lo que acaba de pasar, así que un 0 en directo no es un dato. Sin puntos todavía: ni la placa de PTS ni la casilla de esta
   // jornada (las 5 anteriores) y, si llega el minuto, arriba va el minuto «EN JUEGO». Un negativo en directo sí vale (una roja).
   const enJuego = m.matchState != null && Number(m.matchState) !== 7;
-  const sinPuntos = enJuego && ptsJornada === 0;
+  const sinPuntos = enJuego && ptsJornada === 0 && pts == null;
   // las casillas: las 5 jornadas ANTERIORES; lo de hoy va solo en la placa de arriba (Carlos, 7 nov 15:35)
   const hasta = jornada - 1;
   const ultimas = [];
@@ -105,7 +106,7 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
   const vAntes = antes ? antes[1] : null;
   const permitidos = {
     numeros: [jornada, gl, gv, 0, j.points, num1(j.averagePoints), ...(j.weekPoints || []).map((w) => w.points), ...semanas,
-      millones(vHoy).replace(' M', ''), vAntes ? Math.abs(Math.round((vHoy - vAntes) / vAntes * 100)) : 0, DIAS_VALOR, enPartido ? enPartido.weekPoints : 0,
+      millones(vHoy).replace(' M', ''), vAntes ? Math.abs(Math.round((vHoy - vAntes) / vAntes * 100)) : 0, DIAS_VALOR, enPartido ? enPartido.weekPoints : 0, ptsJornada,
       ...(d.minuto ? String(d.minuto).match(/\d+/g) : []), ...numerosEscala(valor)].map(String),
     palabras: [j.nickname, club.mainName, corto(club.mainName), L, V, POS[j.positionId] || ''],
   };
@@ -116,12 +117,21 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
  * Gol y asistencia en una sola tarjeta (Carlos, 7 nov: «no tiene sentido dos»): los datos de cada uno (datosJugador) y los permitidos
  * de los dos juntos. motivo: el del goleador ('gol' | 'doblete' | 'triplete').
  */
-export async function datosGolAsistencia(jg, ja, m, { jornada, motivo = 'gol', fuentes, ahora = Date.now(), marcador = null, minuto = null }) {
-  const g = await datosJugador(jg, m, { jornada, motivo, fuentes, ahora, marcador, minuto });
-  const a = await datosJugador(ja, m, { jornada, motivo: 'asistencia', fuentes, ahora, marcador, minuto });
+export async function datosGolAsistencia(jg, ja, m, { jornada, motivo = 'gol', fuentes, ahora = Date.now(), marcador = null, minuto = null, ptsGol = null, ptsAsis = null }) {
+  const g = await datosJugador(jg, m, { jornada, motivo, fuentes, ahora, marcador, minuto, pts: ptsGol });
+  const a = await datosJugador(ja, m, { jornada, motivo: 'asistencia', fuentes, ahora, marcador, minuto, pts: ptsAsis });
   const d = { jornada, titulo: { doblete: '¡DOBLETE!', triplete: '¡TRIPLETE!' }[motivo] || 'GOL', marcador: g.d.marcador,
     minuto: g.d.minuto, enJuego: g.d.enJuego, gol: g.d, asis: a.d };
   const permitidos = { numeros: [...g.permitidos.numeros, ...a.permitidos.numeros], palabras: [...g.permitidos.palabras, ...a.permitidos.palabras] };
+  return { d, permitidos };
+}
+
+/** MVP compartido: los datos de los dos (datosJugador, motivo 'mvp') y los permitidos de los dos juntos */
+export async function datosMvpDoble(ja, jb, m, { jornada, fuentes, ahora = Date.now() }) {
+  const a = await datosJugador(ja, m, { jornada, motivo: 'mvp', fuentes, ahora });
+  const b = await datosJugador(jb, m, { jornada, motivo: 'mvp', fuentes, ahora });
+  const d = { jornada, marcador: a.d.marcador, a: a.d, b: b.d };
+  const permitidos = { numeros: [...a.permitidos.numeros, ...b.permitidos.numeros], palabras: [...a.permitidos.palabras, ...b.permitidos.palabras, 'COMPARTIDO'] };
   return { d, permitidos };
 }
 

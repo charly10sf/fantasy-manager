@@ -9,7 +9,7 @@
 // (radio de hasta 64: la foto de LaLiga, de 256 px, no pasa de ~300 px en el PNG a 2400) y alto según lo que lleve cada una.
 // Aquí solo se dibuja: los datos llegan ya montados (datos-tarjetas.mjs) y validar.mjs comprueba que todo lo escrito esté en ellos.
 import { coloresClub, luz } from './colores.mjs';
-import { svgJugadorCarta, svgBajaSola, svgGolAsistencia } from './carta.mjs';
+import { svgJugadorCarta, svgBajaSola, svgGolAsistencia, svgMvpDoble } from './carta.mjs';
 import { ANCHO, ALTO, VERDE, MALO, AMBAR, TENUE, TINTA, PANEL, LINEA, num1, millones, medir, B, texto, id, lineal, radial, marco,
   escudo, caraCirculo, fondo, dorado, rojizo, aColor, caja, marca, pildora, anchoPildora, pildoraTit, anchoPildoraTit, colPct, chipContorno, ESTADO_TARJETA,
   chip, flecha, medalla, distinto, nombreAjustado, tamano, caraHD, pastilla, panel, titular, R_MAX, chipPuesto, abrevPuesto, colorPuesto, PUESTOS } from './estilo.mjs';
@@ -132,7 +132,7 @@ export function svgFinal(d) {
 // d = { jornada, etiqueta ('MVP · Barça 6-1 Alavés' o '¡DOBLETE! · …'), nombre, posicion, club: {nombre, corto, escudo},
 //       cara, ptsJornada, total, media, ultimas: [[jornada, pts], …] (5), valor: [[ms, €], …] (30 días), valorHoy, cambio (% en 30 días) }
 export const svgJugador = (d) => svgJugadorCarta(d);
-export { svgGolAsistencia };
+export { svgGolAsistencia, svgMvpDoble };
 
 // ---------------------------------------------------------------------------------------------------------------------------
 // Tarjeta del resumen de la jornada (Carlos, 2 nov 23:28): los 6 mejores o los 6 peores.

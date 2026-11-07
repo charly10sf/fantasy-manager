@@ -4,7 +4,7 @@ import { json } from '../lib/http.mjs';
 import { norm, corto, fmt, partes, elegir, el, del, al } from '../lib/texto.mjs';
 import { tweet, cap, segunda } from '../lib/redactar.mjs';
 import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
-import { clubes as clubesH, jugador as jugadorH, frenteMedia } from '../lib/hechos.mjs';
+import { clubes as clubesH, jugador as jugadorH, frenteMedia, estadio } from '../lib/hechos.mjs';
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
 const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la', 'del', 'el', 'y', 'sd', 'ad']);
@@ -67,6 +67,33 @@ export function casarJugadorFlojo(nombreEspn, lado, { pos = null, usados = new S
 // Lo que se tuitea en directo (término medio que propuso Domy y aceptó Carlos el 2 nov): cada gol, con su asistente y los puntos
 // fantasy; las rojas; los penaltis fallados. Sin amarillas (Domy: solo tendrían sentido para los apercibidos, y esa lista aún no
 // se lee) ni cambios (irían en el tweet del final, salvo los forzados por lesión, que ESPN no distingue).
+// Puntos de LaLiga Fantasy por acción (sistema oficial): gol de portero o defensa 6, de medio 5, de delantero 4; asistencia 3; jugar, 1
+// (2 con más de 60 min, que en directo no se sabe). Carlos (7 nov, 20:54): el tuit del gol sale con los puntos aunque LaLiga aún no los
+// haya sumado («súmalos tú sabiendo la posición»).
+export const PTS_GOL = { 1: 6, 2: 6, 3: 5, 4: 4 };
+export const PTS_ASIS = 3;
+/**
+ * Los puntos de un jugador en el momento de un gol: los de LaLiga si ya cuentan lo que ha hecho; si no, los suma el bot.
+ * lal: weekPoints de LaLiga (o null); pos: positionId; goles y asis: los que lleva según ESPN contando esta jugada; accion: 'gol' | 'asistencia'.
+ * LaLiga «ya lo cuenta» si va por encima del mínimo que dan esas acciones más el punto de jugar. Si no: lo de LaLiga (o el punto de
+ * jugar si aún está a 0) más lo de esta jugada, y nunca menos que ese mínimo. { pts, estimado }
+ */
+export function puntosConGol(lal, pos, { goles = 0, asis = 0, accion = 'gol' } = {}) {
+  const g = PTS_GOL[Number(pos)];
+  if (!g) return { pts: lal != null && Number(lal) > 0 ? Number(lal) : null, estimado: false };
+  const minimo = 1 + goles * g + asis * PTS_ASIS;
+  const base = lal != null ? Number(lal) : null;
+  if (base != null && base >= minimo) return { pts: base, estimado: false };
+  const est = (base != null && base > 0 ? base : 1) + (accion === 'gol' ? g : PTS_ASIS);
+  return { pts: Math.max(est, minimo), estimado: true };
+}
+const mismo = (a, b) => norm(a || '') === norm(b || '');
+const hasta = (detalles, ref) => { const i = detalles.indexOf(ref); return i < 0 ? detalles : detalles.slice(0, i + 1); };
+/** goles (sin autogoles) de un jugador en los `details` de ESPN hasta la jugada `ref` incluida */
+export const golesDe = (detalles, nombre, ref) => hasta(detalles, ref).filter((d) => d.scoringPlay && !d.ownGoal && mismo(((d.athletesInvolved || [])[0] || {}).displayName, nombre)).length;
+/** asistencias de un jugador en los `details` de ESPN hasta la jugada `ref` incluida */
+export const asistenciasDe = (detalles, nombre, ref) => hasta(detalles, ref).filter((d) => d.scoringPlay && mismo(((d.athletesInvolved || [])[1] || {}).displayName, nombre)).length;
+
 export function disparadores(detalles) {
   const goles = new Map(); const out = [];
   for (const d of detalles) {
@@ -185,9 +212,12 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       const asis = dsps.some((d) => d.n && !d.asistente) ? asistencias(sumario) : {};
       // el marcador de ESPN, que va al momento (el de LaLiga puede ir por detrás)
       const gl = Number(casa.score), gv = Number(fuera.score);
-      const rel = reconstruir(c.details || [], casa.team.id, fuera.team.id, gl, gv);
-      if (!rel.ok && dsps.length) console.log(`  (directo) ${ev.shortName}: la secuencia de ESPN no cuadra con ${gl}-${gv}; escribo sin relato`);
+      const rel = reconstruir(c.details || [], casa.team.id, fuera.team.id, gl, gv, { vivo: true });
+      if (rel.desfase && dsps.length) console.log(`  (directo) ${ev.shortName}: el marcador de ESPN (${gl}-${gv}) va por detrás de sus jugadas; uso el de las jugadas`);
+      if (!rel.ok && dsps.length) console.log(`  (directo) ${ev.shortName}: la secuencia de ESPN no cuadra con ${gl}-${gv}; los goles esperan a la siguiente vuelta`);
       for (const dsp of dsps) {
+        // un gol sin su marcador seguro no sale: con el actual de ESPN podía decir «0-1» de un gol que era el 1-1 (7 nov)
+        if (!rel.ok && dsp.n) continue;
         const esCasa = String(dsp.equipo) === String(casa.team.id);
         const lado = esCasa ? m.local : String(dsp.equipo) === String(fuera.team.id) ? m.visitor : null;
         if (!lado) continue;
@@ -196,6 +226,13 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         // los puntos solo si LaLiga ya los ha movido (un gol nunca deja 0 o menos: si sale eso, aún no se han actualizado)
         let pts = p && p.weekPoints != null ? Number(p.weekPoints) : null;
         if (dsp.n && pts != null && pts <= 0) pts = null;
+        // en un gol, si LaLiga aún no ha sumado lo suyo, los suma el bot por su puesto (7 nov, 20:54)
+        let ptsEstimado = false;
+        if (dsp.n && p) {
+          const jp0 = porId.get(String(p.id));
+          const r = puntosConGol(p.weekPoints, (jp0 && jp0.positionId) || p.positionId, { goles: dsp.n, asis: asistenciasDe(c.details || [], dsp.jugador, dsp.ref), accion: 'gol' });
+          if (r.pts != null) { pts = r.pts; ptsEstimado = r.estimado; }
+        }
         const mn = minutoDe(dsp.ref);
         const minTxt = mn.extra ? `${mn.min}+${mn.extra}'` : `${mn.min}'`;
         const media = p && porId.get(String(p.id)) ? Number(porId.get(String(p.id)).averagePoints) || 0 : 0;
@@ -222,7 +259,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           if (sobre) num.push(...partes(media));
           if (valor <= 0) return { t: `📉 Se queda en ${valor} puntos fantasy`, prio: 8 };
           // con asistente en el mismo tuit, el goleador va por su nombre: «Ya suma 4 puntos» a secas se leía como del asistente (7 nov)
-          const base = conNombre ? `📊 ${nombre} ya suma ${valor} puntos fantasy` : elegir([`📊 Ya suma ${valor} puntos fantasy`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos fantasy`, `📊 Lleva ${valor} puntos fantasy de momento`], sem + 'p');
+          const base = conNombre ? `📊 ${nombre} ya suma ${valor} puntos` : elegir([`📊 Ya suma ${valor} puntos`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos`, `📊 Lleva ${valor} puntos de momento`], sem + 'p');
           return { t: `${base}${sobre ? `, con una media de ${fmt(media)}` : ''}`, prio: 8 };
         };
         if (dsp.clase === 'roja') {
@@ -247,7 +284,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           cab = nomP ? `🧤 ${nomP} le para un penalti a ${nombre} en el ${minTxt}` : `🧤 Penalti parado a ${nombre} en el ${minTxt}`;
           ideas.push({ t: marcador, prio: 9 });
           ideas.push({ t: `⚠️ ${pudoTxt(propio, rival, equipo)}`, prio: 6 });
-          if (ptsP != null && nomP) { num.push(ptsP); ideas.push({ t: `📊 ${nomP} ya suma ${ptsP} puntos fantasy`, prio: 8 }); }
+          if (ptsP != null && nomP) { num.push(ptsP); ideas.push({ t: `📊 ${nomP} ya suma ${ptsP} puntos`, prio: 8 }); }
           if (pPor) tarjetas.push({ jugadorId: pPor.id, motivo: 'parada' });
           if (nomP) jugH.push(jH(nomP, 1, mediaP, { queLePasa: `le para un penalti a ${nombre}`, ...(ptsP != null ? { puntosFantasyAhora: ptsP } : {}) }, equipoP));
           jugH.push(jH(nombre, pos, media, { queLePasa: 'lanza el penalti y se lo paran' }));
@@ -273,21 +310,25 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           }
           if (sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85) ideas.push({ t: mn.min >= 88 ? '⏱️ Casi sobre la bocina' : '⏱️ Ya en el tramo final', prio: 4 });
           else if (sit === 'abre' && mn.min <= 6) ideas.push({ t: '⏱️ Apenas habían pasado unos minutos', prio: 3 });
-          if (p) tarjetas.push({ jugadorId: p.id, motivo: dsp.clase === 'doblete' ? 'doblete' : dsp.clase === 'triplete' ? 'triplete' : 'gol' });
+          if (p) tarjetas.push({ jugadorId: p.id, motivo: dsp.clase === 'doblete' ? 'doblete' : dsp.clase === 'triplete' ? 'triplete' : 'gol', ...(pts != null ? { pts } : {}) });
           const an = dsp.asistente || asis[`${dsp.jugador}|${dsp.min}`] || null;
+          let ptsA = null;
           if (an) {
             const pa = casarJugador(an, lado);
             const na = pa ? pa.nickname || pa.name : an;
-            const ptsA = pa && pa.weekPoints != null && Number(pa.weekPoints) > 0 ? Number(pa.weekPoints) : null;
+            if (pa) {
+              const jpa = porId.get(String(pa.id));
+              ptsA = puntosConGol(pa.weekPoints, (jpa && jpa.positionId) || pa.positionId, { goles: golesDe(c.details || [], an, dsp.ref), asis: Math.max(1, asistenciasDe(c.details || [], an, dsp.ref)), accion: 'asistencia' }).pts;
+            }
             if (ptsA != null) num.push(ptsA);
             ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
-            if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia' });
+            if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia', ...(ptsA != null ? { pts: ptsA } : {}) });
           }
           if (pts != null) ideas.push(puntos(pts, true, !!an));
           const sobre = pts != null && media >= 3 && pts >= 1.5 * media;
           jugH.push(jH(nombre, pos, media, { queLePasa: `${dsp.clase === 'doblete' ? 'marca su segundo gol' : dsp.clase === 'triplete' ? 'marca su tercer gol' : 'marca'}${dsp.penalti ? ' de penalti' : ''}`,
             ...(pts != null ? { puntosFantasyAhora: pts } : {}), ...(sobre ? { frenteASuMedia: frenteMedia(pts, media) } : {}) }));
-          if (an) { const paH = casarJugador(an, lado); const ptsAH = paH && paH.weekPoints != null && Number(paH.weekPoints) > 0 ? Number(paH.weekPoints) : null;
+          if (an) { const paH = casarJugador(an, lado); const ptsAH = ptsA;
             jugH.push(jH(paH ? paH.nickname || paH.name : an, paH ? paH.positionId : null, paH && porId.get(String(paH.id)) ? Number(porId.get(String(paH.id)).averagePoints) || 0 : 0,
               { queLePasa: 'da el pase del gol', ...(ptsAH != null ? { puntosFantasyAhora: ptsAH } : {}) })); }
           const esp = momentoEspecial({ tipoEspn: dsp.ref && dsp.ref.type && dsp.ref.type.text, min: mn.min, extra: mn.extra, sit, clase: dsp.clase, penalti: dsp.penalti });
@@ -298,7 +339,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const { usadas, texto } = tweet(cab, ideas);
         if (!usadas.length) continue;
         const hechos = { tipo: 'directo', subtipo: dsp.clase, jornada, noticia: `${dsp.clase === 'gol' ? 'gol' : dsp.clase} en el ${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`,
-          minuto: minTxt, partido: { partido: `${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`, local: corto(m.local.mainName), visitante: corto(m.visitor.mainName), marcadorEnEseMomento: `${sl}-${sv}`,
+          minuto: minTxt, partido: { partido: `${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`, local: corto(m.local.mainName), visitante: corto(m.visitor.mainName), ...estadio(m.local.mainName), marcadorEnEseMomento: `${sl}-${sv}`,
             estadoDelPartido: st.state === 'in' ? 'en juego' : 'acabado' },
           ...(dsp.clase === 'doblete' || dsp.clase === 'triplete' ? { golNumeroDelJugador: dsp.n } : {}), ...extraH,
           jugadores: jugH, clubes: clubesH(m.local.mainName, m.visitor.mainName), etiqueta: '' };

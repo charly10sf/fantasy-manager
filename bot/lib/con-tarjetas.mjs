@@ -7,8 +7,8 @@
 //   sancionados -> la de bajas de los sancionados y la de apercibidos, separados por equipo (si tarjetas.sancionados)
 //   directo -> tarjeta de cada jugador implicado: gol con asistente en una sola (los dos), expulsado o el que falla el penalti (si tarjetas.jugador)
 // Lo que no pasa el validador no sale: el tweet del final se publica entonces sin imagen y el del MVP no se publica.
-import { svgFinal, svgJugador, svgGolAsistencia, svgResumen, svgOnces, svgOnceIdeal, svgMercado, svgBajas, svgApercibidos, aPng } from './tarjetas.mjs';
-import { datosFinal, datosJugador, datosGolAsistencia, historialJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
+import { svgFinal, svgJugador, svgGolAsistencia, svgMvpDoble, svgResumen, svgOnces, svgOnceIdeal, svgMercado, svgBajas, svgApercibidos, aPng } from './tarjetas.mjs';
+import { datosFinal, datosJugador, datosGolAsistencia, datosMvpDoble, historialJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
 import { validarTarjeta } from './validar.mjs';
 import * as LL from './laliga.mjs';
 
@@ -70,6 +70,15 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     const x = await datosFinal(m, { jornada, fuentes });
     await hacer(`final-${m.id}`, x, svgFinal(x.d));
   }
+  // MVP compartido (empate a puntos): una tarjeta con los dos (Carlos, 7 nov 21:07)
+  if (t.tipo === 'mvp' && t.jugadorId2 != null && (cfg.jugador || forzar)) {
+    const ja = jugadores.find((x) => String(x.id) === String(t.jugadorId)), jb = jugadores.find((x) => String(x.id) === String(t.jugadorId2));
+    if (ja && jb) {
+      const x = await datosMvpDoble(ja, jb, m, { jornada, fuentes });
+      await hacer(`mvp-${m.id}-${ja.id}-${jb.id}-doble`, x, svgMvpDoble(x.d));
+      return hechas;
+    }
+  }
   // tarjetas de jugador: la del MVP, o las de cada jugador implicado en un tweet del directo (goleador, asistente, expulsado…)
   const quienes = t.tipo === 'mvp' ? (t.jugadorId != null ? [{ jugadorId: t.jugadorId, motivo: t.motivo || 'mvp' }] : [])
     : t.tipo === 'directo' ? (t.tarjetas || []) : [];
@@ -79,7 +88,7 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     const qg = quienes.find((q) => ['gol', 'doblete', 'triplete'].includes(q.motivo)), qa = quienes.find((q) => q.motivo === 'asistencia');
     const jg = qg && jugadores.find((x) => String(x.id) === String(qg.jugadorId)), ja = qa && jugadores.find((x) => String(x.id) === String(qa.jugadorId));
     if (t.tipo === 'directo' && jg && ja && String(jg.id) !== String(ja.id)) {
-      const x = await datosGolAsistencia(jg, ja, m, { jornada, motivo: qg.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null });
+      const x = await datosGolAsistencia(jg, ja, m, { jornada, motivo: qg.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null, ptsGol: qg.pts, ptsAsis: qa.pts });
       await hacer(`${t.tipo}-${m.id}-${jg.id}-${ja.id}-golasis`, x, svgGolAsistencia(x.d));
       vistos.add(String(jg.id)); vistos.add(String(ja.id));
     }
@@ -87,7 +96,7 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
       if (vistos.has(String(q.jugadorId))) continue; vistos.add(String(q.jugadorId));
       const j = jugadores.find((x) => String(x.id) === String(q.jugadorId));
       if (!j) continue;
-      const x = await datosJugador(j, m, { jornada, motivo: q.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null });
+      const x = await datosJugador(j, m, { jornada, motivo: q.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null, pts: q.pts });
       await hacer(`${t.tipo}-${m.id}-${j.id}-${q.motivo}`, x, svgJugador(x.d));
     }
   }
