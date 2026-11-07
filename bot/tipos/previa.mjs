@@ -258,8 +258,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       // por dónde abrir el tuit: uno distinto de un partido a otro (7 nov: los cinco abrían y seguían con el mismo esqueleto)
       const bajaGorda = jugH.filter((x) => x.papel === 'baja' && Number(String(x.mediaPuntos || '0').replace(',', '.')) >= 5).length;
       const fijoGordo = jugH.filter((x) => x.papel === 'fijo' && Number(String(x.mediaPuntos || '0').replace(',', '.')) >= 6).length;
-      const aperturas = [bajaGorda ? 'la baja más importante de los dos equipos' : null, eqH.some((x) => x.cruce) ? 'el cruce' : null, fijoGordo ? 'el fijo con más media' : null,
-        jugH.some((x) => x.papel === 'duda de titularidad') ? 'la duda más grande' : null, eqH.every((x) => x.va) ? 'cómo llega cada uno a este partido' : null].filter(Boolean);
+      const aperturas = [bajaGorda ? 'una baja que pese (la de más media)' : null, eqH.some((x) => x.cruce) ? 'el cruce' : null, fijoGordo ? 'un fijo con mucha media' : null,
+        jugH.some((x) => x.papel === 'duda de titularidad') ? 'un jugador en duda, con su nombre' : null, eqH.every((x) => x.va) ? 'cómo llega cada uno a este partido' : null].filter(Boolean);
       const cuH = cuando(m.date, ahora);
       const hechos = { tipo: 'previa', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuH ? { cuando: cuH.t } : {}), fecha: m.date || null },
         equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), ...(aperturas.length ? { abreCon: Rp(aperturas, 'abre') } : {}),

@@ -198,9 +198,10 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (/LaLiga Fantasy ya lo da/i.test(t)) e.push('«LaLiga Fantasy ya lo da…»');
   // la previa (7 nov): primera frase corta y «en el aire» una sola vez
   if (hechos.tipo === 'previa') {
-    const f1 = frases(t.replace(EMOJI, ' ').replace(/[\uFE0F\u200D]/g, ''))[0] || '';
+    const f1 = (t.replace(EMOJI, ' ').replace(/[\uFE0F\u200D]/g, '').trim().split(/(?<=[.!?])\s|\n/)[0]) || '';   // hasta el punto: los dos puntos no cortan
     const n1 = f1.split(/\s+/).filter(Boolean).length;
-    if (n1 > 30) e.push(`la primera frase tiene ${n1} palabras: que sean 25 como mucho y con una sola idea (parte la hora, el estadio, la clasificación o la noticia en otra frase)`);
+    if (n1 > 32) e.push(`la primera frase tiene ${n1} palabras: que sean 25 como mucho y con una sola idea (parte la hora, el estadio, la clasificación o la noticia en otra frase)`);
+    if (/^\W*La (gran duda|duda más grande|mayor duda|clave)\b/i.test(f1)) e.push('abre con «La gran duda del X-Y» (o «la clave»): fórmula de plantilla; empieza por el jugador, el cruce o la baja, con tus palabras');
     if ((t.match(/\ben el aire\b/gi) || []).length > 1) e.push('«en el aire» más de una vez: solo una, y las demás con otras palabras («no tiene el puesto asegurado», «puede quedarse fuera»)');
   }
   if (/\b(disponible|duda|baja|sancionado|lesionado)s? fantasy\b/i.test(t)) e.push('«Fantasy» pegado a un estado');
