@@ -11,4 +11,5 @@ jobs:
         with: { node-version: 22 }
       - run: node pruebas-chat/correr.mjs
         env:
+          MODELO: gemini-3.5-flash
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
