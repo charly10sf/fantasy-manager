@@ -598,6 +598,14 @@ function avanzadoTxt(M, j) {
   }
   return l.length ? l.join(' · ') : null;
 }
+// el estado de LaLiga, en castellano y con lo que supone (la IA leía «doubtful» y no lo tenía en cuenta: Nico Williams
+// con molestias, 8 nov)
+const ESTADO_TXT = {
+  doubtful: 'EN DUDA (molestias o un golpe: puede no jugar el próximo partido; si se confirma la lesión, suele bajar de valor, y más con un parón por delante)',
+  injured: 'LESIONADO (no juega hasta que se recupere; baja de valor mientras tanto)',
+  suspended: 'SANCIONADO',
+  out_of_league: 'FUERA DE LA LIGA (ya no está en LaLiga)',
+};
 const lineaJ = (M, j, x = {}) => [
   POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
   (() => { const ine = M.inercia ? M.inercia(j.id) : null; if (ine && ine.fase !== 'plano') return null; return x.tend && x.tend.d1 != null ? `hoy ${eur(x.tend.d1, { signo: true })}` : null; })(),
@@ -615,7 +623,7 @@ const lineaJ = (M, j, x = {}) => [
   j.pos < 5 ? previaTxt(M, j) : null,
   j.pos < 5 ? esperadosTxt(M, j) : null,
   j.pos < 5 ? rivalTxt(M, j) : null,
-  j.estado && j.estado !== 'ok' ? `ESTADO: ${j.estado}${j.estado === 'suspended' && M.sancion ? (M.sancion(j).larga ? ' (sanción de más de un partido: su equipo ya ha jugado sin él y sigue sancionado)' : ' (sanción de un partido: se pierde la próxima jornada y vuelve a la siguiente; por eso solo no se vende)') : ''}` : null,
+  j.estado && j.estado !== 'ok' ? `ESTADO: ${ESTADO_TXT[j.estado] || j.estado}${j.estado === 'suspended' && M.sancion ? (M.sancion(j).larga ? ' (sanción de más de un partido: su equipo ya ha jugado sin él y sigue sancionado)' : ' (sanción de un partido: se pierde la próxima jornada y vuelve a la siguiente; por eso solo no se vende)') : ''}` : null,
 ].filter(Boolean).join(' | ');
 function onceTxt(M, j) {
   if (!j || j.pos === 5) return null;
@@ -1008,7 +1016,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   return L.join('\n');
 }
 
-const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. Nada de chascarrillos ni expresiones de colega de bar («tururú», «que se lo pida a su abuela», «si tiene huevos»), y no le atribuyas al manager ganas, miedos ni decisiones que no te ha dicho («si tanto lo quieres»): si necesitas saberlo, pregúntaselo.
+const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} No le atribuyas al manager ganas, miedos ni decisiones que no te ha dicho («si tanto lo quieres»): si necesitas saberlo, pregúntaselo.
 Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla pagando (pagar X la sube 2X) o blindarla gratis un rato (mira BLINDAJES). En el mercado hay DOS cosas muy distintas que no debes mezclar: (1) jugadores LIBRES de LaLiga, que no son de nadie: el mercado cambia cada día, se puja a ciegas desde su precio y se los lleva la puja más alta; (2) jugadores que OTRO MANAGER de la liga ha puesto a la venta: siguen siendo suyos, el precio lo pone él y solo pasan a ser del manager si el dueño acepta su oferta, así que no se pueden conseguir «más baratos en el mercado». Si el dueño es un amigo que se lo deja a un precio, es un trato entre los dos: valóralo por su valor, lo que sube al día, lo que le da a su once y si le llega el dinero, no comparándolo con el mercado de la liga. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
 Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador y titulares de prensa recientes: úsalos. Cuando hables de lo que te paso (el once probable, su nota, su xG), no digas de qué web sale: «el once probable», «su nota». No nombres nunca webs de fantasy ni de onces (futbolfantasy, Analítica Fantasy, Jornada Perfecta, Comuniate, Biwenger, Futmondo…) ni las pongas como fuente o con un «según»: di «la prensa» o «los onces probables». Si un jugador lleva ALINEACIÓN CONFIRMADA (sale una hora antes de su partido), eso manda sobre el once probable y la prensa: si está de SUPLENTE o NO CONVOCADO, lo tengo en el once y la jornada aún no ha empezado, dime que lo cambie por uno que juegue antes del primer partido de la jornada (después ya no se puede). Si tienes la búsqueda de Google, úsala para lo que pueda cambiar una decisión: lesiones, sanciones, convocatorias, onces de última hora, rotaciones por Champions o Copa y cambios de entrenador de los jugadores que vas a recomendar o a alinear. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Para REVENDER da igual que no lo vaya a alinear o que ya tenga a otro en su puesto (otro portero, por ejemplo): NUNCA lo descartes por eso ni lo llames «dinero parado» si está subiendo; cuenta lo que gana hasta venderlo, el dinero y el límite de jugadores de la plantilla. Una CLÁUSULA solo se puede pagar con el saldo que tiene: LaLiga no deja clausular quedándose en negativo (ni con el dinero de lo que pone en venta, que no entra hasta que acepta una oferta). Quedarse en negativo solo se puede pujando o comprando en el mercado. Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa. Los marcados VUELVE (valían mucho más esta temporada, se hundieron por una lesión o por no jugar y ahora juegan otra vez y suben varios días seguidos) son la especulación más clara: si hay dinero o margen de deuda para él, recomiéndalo SIEMPRE para revender aunque no le haga falta para el once, y di cuánto valía y por qué le queda recorrido. Que lleve mucho sin jugar no es motivo para descartarlo: es justo por lo que está barato.
@@ -1068,7 +1076,14 @@ function reglasBloqueo() {
   const como = topConAnuncio() ? 'se abren viendo anuncios cortos: tocando su candado; las de los rivales (su dinero, lo que venden, cómo juegan y quién puede pagar tus cláusulas) con dos anuncios, un rato y unas pocas veces por jornada, y cuándo gira un jugador con uno, hasta medianoche' : 'se desbloquearán viendo un anuncio, más adelante';
   return `\n\nFUNCIONES BLOQUEADAS EN ESTA CUENTA (${como}): ${b.map((k) => SOBRE_BLOQUEO[k]).join('; ')}. Úsalo para decidir bien, pero no lo cuentes. Si te lo pide, dile en una frase que es una función top y que ${como}.`;
 }
-const sistemaIA = () => SISTEMA.replace('{{PULLITAS}}', PULLITAS[cfgIA().pullitas] || PULLITAS.normal) + reglasBloqueo();
+const CHISTES = {
+  serio: 'Nada de chascarrillos ni expresiones de colega de bar («tururú», «que se lo pida a su abuela», «si tiene huevos»).',
+  broma: 'Puedes tener chispa y soltar alguna broma (mira PULLITAS), pero las cifras y el consejo van en serio; nada de palabrotas ni de expresiones de caricatura («tururú», «que se lo pida a su abuela», «si tiene huevos»).',
+};
+const sistemaIA = () => {
+  const p = cfgIA().pullitas || 'normal';
+  return SISTEMA.replace('{{CHISTES}}', CHISTES[p === 'normal' || p === 'saco' ? 'broma' : 'serio']).replace('{{PULLITAS}}', PULLITAS[p] || PULLITAS.normal) + reglasBloqueo();
+};
 
 /* ---------------- el plan del día ---------------- */
 export const planes = () => LS.get(K('planes'), []);
@@ -1803,7 +1818,13 @@ export function cuentasTxt(D, M, js) {
     if (a.cl && a.cl.clausula) {
       const r = (M.rivales || []).find((y) => y.e.teamId === b.tid);
       const din = r && r.dinero && r.dinero.v != null ? r.dinero.v : null;
-      if (din != null) L.push(`- La cláusula de ${a.j.nombre} (${eur(a.cl.clausula)}) ${din >= a.cl.clausula ? `SÍ le llega a ${nombreTid(M, b.tid)} (tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)}): ${a.cl.abierta ? 'se lo puede llevar ya' : `se lo puede llevar ${cuandoF(a.cl.protegidoHasta)}, en el mismo minuto en que se abra, sin negociar nada y quizá antes de que me dé tiempo a blindarlo. Eso pesa en cualquier negociación con él: no va a pagar mucho más que la cláusula`}` : `no le llega a ${nombreTid(M, b.tid)} (tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)})`}.`);
+      if (din != null) L.push(`- La cláusula de ${a.j.nombre} (${eur(a.cl.clausula)}) ${din >= a.cl.clausula ? `SÍ le llega a ${nombreTid(M, b.tid)} (tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)}): ${a.cl.abierta ? 'se lo puede llevar ya' : `se lo puede llevar ${cuandoF(a.cl.protegidoHasta)}, en el mismo minuto en que se abra, sin negociar nada y quizá antes de que me dé tiempo a blindarlo. Eso pesa en cualquier negociación con él: no va a pagar mucho más que la cláusula. Si se lo lleva así, cobro yo los ${eur(a.cl.clausula)}${a.cl.clausula > b.j.valor ? ` (más de lo que vale ${b.j.nombre})` : ""}`}` : `no le llega a ${nombreTid(M, b.tid)} (tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)})`}.`);
+    }
+    // si el mío está tocado: cuánto tendría que caer para que el cambio a pelo compense y la otra salida (venderlo a
+    // LaLiga, que ofrece cerca de su valor). Sin esto la IA repetía el «no» sin decir nada de las molestias (8 nov)
+    if ((a.j.estado === 'doubtful' || a.j.estado === 'injured') && dif > 0) {
+      const ol = M.ofertaLiga && !M.ofertaLiga.poco ? M.ofertaLiga.med : null;
+      L.push(`- ${a.j.nombre} está ${a.j.estado === 'doubtful' ? 'EN DUDA' : 'LESIONADO'}: tenlo en cuenta y dilo en la respuesta, con números. Para que darlo a pelo por ${b.j.nombre} compense, ${a.j.nombre} tendría que caer de ${eur(a.j.valor)} a ${eur(b.j.valor)} (${pct(-dif / a.j.valor * 100)}) y no recuperarse. Si lo que preocupa es que baje, la otra salida es venderlo a LaLiga${ol != null ? `, que en esta liga ofrece de normal ${pct(ol * 100)} sobre el valor (≈ ${eur(a.j.valor * (1 + ol))})` : ', que ofrece cerca de su valor'}, y con ese dinero ${b.cl && b.cl.clausula ? `pagar la cláusula de ${b.j.nombre} (${eur(b.cl.clausula)})${b.cl.abierta ? '' : b.cl.protegidoHasta ? ` ${cuandoF(b.cl.protegidoHasta)}` : ''}` : `ir a por ${b.j.nombre}`} si lo quiere.`);
     }
     if (b.cl && b.cl.clausula) L.push(`- La cláusula de ${b.j.nombre} (${eur(b.cl.clausula)}) ${b.cl.clausula <= num(D.dinero) ? `SÍ me llega con mi saldo (${eur(num(D.dinero))})` : `no me llega con mi saldo (${eur(num(D.dinero))}; faltan ${eur(b.cl.clausula - num(D.dinero))})`}${b.cl.abierta ? ': está abierta' : b.cl.protegidoHasta ? `: se abre ${cuandoF(b.cl.protegidoHasta)}` : ''}.`);
   }
@@ -1818,7 +1839,17 @@ EN EL CHAT:
 - FECHAS Y HORAS: cópialas de los datos, con su día («mañana 20:00 (8 nov)»). No pases algo de «mañana» a «hoy» ni cambies una hora de un mensaje a otro.
 - CLÁUSULAS: las de sus jugadores también las tienes (en «MIS JUGADORES» y en «JUGADORES QUE NOMBRA»), con la hora a la que se abren: úsalas sin que te las tenga que decir.
 - Si te falta un dato para aconsejar (qué quiere hacer, hasta dónde está dispuesto a llegar), pregúntaselo en vez de suponerlo.
-- TONO: el de un director deportivo serio y cercano. Las pullitas, solo con una noticia extradeportiva; nunca cuando hablas de una operación, de una oferta o de un manager con el que está negociando.`;
+- SI TE DA UN DATO NUEVO (molestias, una lesión, una oferta, lo que le ha dicho un rival) o te vuelve a preguntar lo mismo, no repitas la respuesta de antes con otras palabras: empieza por lo que cambia ese dato y lo que no, con números (cuánto tendría que pasar para que cambie tu consejo). Si el dato no está en los datos, dalo por bueno y úsalo. Si tu consejo sigue siendo el mismo, explica por qué en una frase y dale la mejor alternativa para lo que le preocupa.
+{{TONO}}`;
+// el tono del chat, según Ajustes > Pullitas de la IA: con «Sin pullitas» o «Suaves», serio (0.7o); con «Normales» o
+// «A saco», con bromas y pullas como antes, pero sin tocar las cuentas (Domy, 8 nov: «quiero que me siga hablando con
+// pullas y bromas»)
+const TONO_CHAT = {
+  serio: '- TONO: el de un director deportivo serio y cercano. Las pullitas, solo con una noticia extradeportiva; nunca cuando hablas de una operación, de una oferta o de un manager con el que está negociando.',
+  normal: '- TONO: director deportivo con chispa: puedes soltar una broma o una pullita por respuesta (a los rivales por lo que hacen, a una noticia extradeportiva, o un vacile de colega al propio manager), siempre aparte de las cuentas y del consejo, que van en serio. Sin palabrotas ni expresiones de caricatura («tururú», «que se lo pida a su abuela»), y sin atribuirle ganas ni decisiones que no te ha dicho.',
+  saco: '- TONO: director deportivo con mucha guasa: dos o tres bromas o pullas por respuesta (a los rivales sin cortarte, a las noticias extradeportivas, y algún vacile de colega al propio manager), siempre aparte de las cuentas y del consejo, que van en serio. Sin palabrotas ni crueldad, y sin atribuirle ganas ni decisiones que no te ha dicho.',
+};
+const tonoChat = () => { const p = cfgIA().pullitas || 'normal'; return TONO_CHAT[p === 'saco' ? 'saco' : p === 'normal' ? 'normal' : 'serio']; };
 
 /** lo que va a la IA en el chat (sin la conversación): se exporta para probarlo con la demo */
 export function montarChat(pregunta, D, M, c, { fotos = false, hist = [] } = {}) {
@@ -1852,7 +1883,7 @@ export function montarChat(pregunta, D, M, c, { fotos = false, hist = [] } = {})
       ? `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`
       : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
   }
-  return `${sistemaIA()}${fotos ? SOBRE_FOTOS : ''}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${REGLAS_CHAT}\n${NOTAS_CHAT}\n${BUSCAR_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { chat: true })}${extra}${plan}`;
+  return `${sistemaIA()}${fotos ? SOBRE_FOTOS : ''}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${REGLAS_CHAT.replace('{{TONO}}', tonoChat())}\n${NOTAS_CHAT}\n${BUSCAR_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { chat: true })}${extra}${plan}`;
 }
 
 export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null) {
