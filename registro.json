@@ -1434,7 +1434,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/04/mourinho-hay-centrocampista-mundo-bellingham-unico.html": 1793823656000,
    "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/": 1793829352000,
    "SPORT|136102061": 1793851297000,
    "SPORT|136099973": 1793829833000,
@@ -3201,7 +3200,8 @@
    "SPORT|136202042": 1794062312000,
    "SPORT|136204292": 1794067195000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
-   "SPORT|136206834": 1794072635000
+   "SPORT|136206834": 1794072635000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794080725000
   },
   "hechos": [
    {
@@ -3767,27 +3767,25 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794081373058
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 47,
-   "redactar": 69,
-   "revisar": 40,
+   "clasificar": 48,
+   "redactar": 73,
+   "revisar": 42,
    "pulir": 2
   },
   "fallos": 0,
-  "entrada": 787646,
-  "salida": 40283,
-  "cacheLee": 139252,
+  "entrada": 833916,
+  "salida": 41730,
+  "cacheLee": 144462,
   "cacheEscribe": 39425,
-  "dolares": 1.74856
+  "dolares": 1.852041
  },
  "recientes": {
   "onces": [
@@ -3950,9 +3948,9 @@
  ],
  "fallosRedaccion": {
   "mvp|115": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-07T20:16:38.145Z",
-   "ultima": "2026-11-07T20:16:38.145Z"
+   "ultima": "2026-11-07T20:21:33.669Z"
   }
  }
 }
