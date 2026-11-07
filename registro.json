@@ -1526,7 +1526,9 @@
    "SPORT|136195361": 1794048547000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248236/barca-no-recupera-efectivos-visita-madrid-cff.html": 1794051959000,
    "SPORT|136192275": 1794049544000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/atletico-de-madrid/20261107/11678726/simeone-mas-complejo-defender-barca-raphinha-nueve-lewandowski.html": 1794052790000
+   "La Vanguardia|https://www.lavanguardia.com/deportes/atletico-de-madrid/20261107/11678726/simeone-mas-complejo-defender-barca-raphinha-nueve-lewandowski.html": 1794052790000,
+   "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
+   "SPORT|136195917": 1794050824000
   },
   "hechos": [
    {
@@ -2173,11 +2175,23 @@
     "motivo": "sanción ante el Bayern",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136195917",
+    "medio": "SPORT",
+    "t": 1794050824000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri sufre una lesión en los isquiotibiales y estará de baja",
+    "motivo": "molestias en los isquiotibiales",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -3717,17 +3731,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 16,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 126892,
-  "salida": 17775,
+  "entrada": 128855,
+  "salida": 17996,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.316328
+  "dolares": 0.316635
  },
  "recientes": {
   "onces": [
