@@ -3795,19 +3795,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-07",
+  "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 53,
-   "redactar": 80,
-   "revisar": 43,
-   "pulir": 3
+   "clasificar": 0,
+   "redactar": 4,
+   "revisar": 2,
+   "pulir": 0
   },
   "fallos": 0,
-  "entrada": 916947,
-  "salida": 45947,
-  "cacheLee": 147067,
-  "cacheEscribe": 39425,
-  "dolares": 2.017914
+  "entrada": 44209,
+  "salida": 1422,
+  "cacheLee": 2605,
+  "cacheEscribe": 2605,
+  "dolares": 0.109412
  },
  "recientes": {
   "onces": [
@@ -3979,9 +3979,30 @@
    "cacheLee": 0,
    "cacheEscribe": 0,
    "dolares": 0.052126
+  },
+  {
+   "dia": "2026-11-07",
+   "llamadas": {
+    "clasificar": 53,
+    "redactar": 80,
+    "revisar": 43,
+    "pulir": 3
+   },
+   "fallos": 0,
+   "entrada": 916947,
+   "salida": 45947,
+   "cacheLee": 147067,
+   "cacheEscribe": 39425,
+   "dolares": 2.017914
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "mercado|2026-11-08": {
+   "n": 1,
+   "t": "2026-11-07T23:15:51.460Z",
+   "ultima": "2026-11-07T23:15:51.460Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
