@@ -1331,7 +1331,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247165/opciones-flick-cubrir-ko-lesion-rodri.html": 1793797556000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html": 1793798837000,
-   "SPORT|136070967": 1793797171000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/zabiri-repite-con-marruecos-y-no-jugara-con-el-racing-en-libia-radio-santander/": 1793801780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261104/1004247173/eder-sarabia-mi-equipo-espanyol-defender-muerte.html": 1793802316000,
    "SPORT|136085152": 1793801859000,
@@ -1528,7 +1527,8 @@
    "SPORT|136195917": 1794050824000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248252/miedo-factor-raphinha-cholo-detallo-cambio-tactico-barca-destroza-rivales.html": 1794053748000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000
   },
   "hechos": [
    {
@@ -1553,18 +1553,6 @@
     "hecho": "Rodri se pierde el partido por una lesión",
     "motivo": "",
     "plazo": "entre tres y cuatro semanas",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136070967",
-    "medio": "SPORT",
-    "t": 1793797171000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "lesión en el bíceps femoral",
-    "plazo": "",
     "nums": []
    },
    {
@@ -2187,11 +2175,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794055644000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri no estará disponible por una lesión en el bíceps femoral",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -3730,17 +3730,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 16,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 134350,
-  "salida": 19107,
+  "entrada": 136055,
+  "salida": 19229,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.31774
+  "dolares": 0.317972
  },
  "recientes": {
   "onces": [
