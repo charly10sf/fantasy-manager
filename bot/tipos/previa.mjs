@@ -144,7 +144,6 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             ideas.push({ t: `📋 ${mayus(el(L))} sale con ${conf.L.formacion} y ${el(V)} con ${conf.V.formacion}${c ? `. Empieza ${c.t}` : ''}`, prio: 2 });
             numConf.push(...(conf.L.formacion.match(/\d/g) || []), ...(conf.V.formacion.match(/\d/g) || []), ...(c ? c.numeros : []));
           }
-          ideas.push({ t: '👀 Revisa tu once fantasy antes del pitido', prio: 7 });
           const { usadas, texto } = tweet(cab, ideas);
           const fm = (f) => (f || '').match(/\d/g) || [];
           // los hechos para la IA que redacta (lib/redaccion.mjs): la formación de cada equipo, quién se queda fuera y quién es sorpresa
@@ -161,7 +160,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
           const cuO = cuando(m.date, ahora);
           const hechosOnces = { tipo: 'onces', jornada, noticia: 'Los dos onces ya están confirmados', partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuO ? { cuando: cuO.t } : {}), fecha: m.date || null },
             equipos: eqOnce, ...(conf.L.fuera.length || conf.V.fuera.length || conf.L.sorpresa.length || conf.V.sorpresa.length ? {} : { sinSorpresas: true }),
-            jugadores: jugOnce, clubes: clubesH(L, V), etiqueta: '👀 Revisa tu once fantasy antes del pitido' };
+            jugadores: jugOnce, clubes: clubesH(L, V) };
           out.push({ tipo: 'onces', clave: `onces|${m.id}`, jornada, texto, hechos: hechosOnces, caduca: saque, numeros: numConf.map(Number), partido: null,
             tarjeta: { tipo: 'onces', nombre: `onces-${m.id}`,
               d: { jornada, confirmados: true, local: { nombre: m.local.mainName, corto: L, escudoUrl: m.local.badgeColor, formacion: conf.L.formacion, once: conf.L.once }, visitante: { nombre: m.visitor.mainName, corto: V, escudoUrl: m.visitor.badgeColor, formacion: conf.V.formacion, once: conf.V.once } },
