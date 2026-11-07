@@ -1322,8 +1322,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/sevilla/2026/11/04/kike-salas-reincorpora-grupo.html": 1793791579000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html": 1793791758000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/rodri-hernandez-baja-para-el-barca-en-el-metropolitano-tiene-una-pequena-lesion-en-el-biceps-femoral-de-su-pierna-derecha-cadena-ser/": 1793793689000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html": 1793794237000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261104/11675899/niko-mihic-medico-real-madrid-estalla-horarios-toman-consideracion-salud-dano-jugador-lol.html": 1793793661000,
@@ -1522,33 +1520,10 @@
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000,
    "SPORT|136194101": 1794045757000,
-   "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/": 1794049173000
+   "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/": 1794049173000,
+   "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/": 1794050162000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/sevilla/2026/11/04/kike-salas-reincorpora-grupo.html",
-    "medio": "MARCA",
-    "t": 1793791579000,
-    "id": "2479",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Kike Salas vuelve a ejercitarse con normalidad",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793791758000,
-    "id": "2354",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Eric continúa al margen del grupo en la sesión",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/04/rodri-hernandez-baja-para-el-barca-en-el-metropolitano-tiene-una-pequena-lesion-en-el-biceps-femoral-de-su-pierna-derecha-cadena-ser/",
     "medio": "Cadena SER",
@@ -2235,11 +2210,23 @@
     "motivo": "problemas en el tobillo",
     "plazo": "se queda fuera un partido más",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/",
+    "medio": "AS",
+    "t": 1794050162000,
+    "id": "3114",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Hjulmand recupera la disponibilidad tras cumplir sanción",
+    "motivo": "sanción ante el Bayern",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -3058,7 +3045,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/aplazados-el-granada-tenerife-y-el-andorra-mallorca-de-segunda-division-por-el-fallecimiento-de-jesus-de-miguel-cadena-ser/": 1793794190000,
    "SPORT|136078371": 1793792395000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247141/posibles-fechas-aplaza-jornada-primera-segunda-todas-opciones.html": 1793791797000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3182,23 +3168,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html": 1793982666000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247141/posibles-fechas-aplaza-jornada-primera-segunda-todas-opciones.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793791797000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "LaLiga sopesa opciones de calendario",
-    "nums": [
-     6
-    ]
-   },
    {
     "guid": "SPORT|136078404",
     "medio": "SPORT",
@@ -3815,17 +3784,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 15,
    "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 106850,
-  "salida": 16065,
+  "entrada": 108501,
+  "salida": 16634,
   "cacheLee": 97572,
   "cacheEscribe": 10770,
-  "dolares": 0.28363
+  "dolares": 0.28408
  },
  "recientes": {
   "onces": [
