@@ -556,7 +556,7 @@ function inerciaTxt(M, j) {
 }
 function inerciaLinea(M, j, x) {
   const F = { giro: 'HA GIRADO A LA BAJA', baja: 'BAJANDO', parado: 'ESTANCADO TRAS SUBIR', frena: 'FRENANDO', acelera: 'acelerando', sube: 'subiendo', rebote: `REBOTE PEQUEÑO TRAS CAER UN ${x.rebote ? Math.round(x.rebote.caida * 100) : '?'} % EN UN MES (cerca de su mínimo; pararse aquí NO es girar ni motivo para vender)` }[x.fase] || x.fase;
-  return `INERCIA ${F}: cada día ${x.R.map((r) => eur(r, { signo: true })).join(' → ')}${x.fase === 'frena' ? ` (deja de subir en ~${Math.max(1, Math.round(x.giroEn))} d)` : ''}${['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; hasta la jornada ${eur(x.proyJ, { signo: true })}` : ''}`;
+  return `INERCIA ${F}: cada día ${x.R.map((r) => eur(r, { signo: true })).join(' → ')}${x.fase === 'frena' ? ` (deja de subir en ~${Math.max(1, Math.round(x.giroEn))} d)` : ''}${['giro', 'baja', 'parado', 'frena'].includes(x.fase) ? `; hasta la jornada ${eur(x.proyJ, { signo: true })}` : ''}${x.vuelve ? `; VUELVE: llegó a valer ${eur(x.vuelve.max)}, juega otra vez y lleva ${x.vuelve.racha} días subiendo: mientras siga subiendo NO es momento de venderlo ni de descartarlo por la inercia` : ''}`;
 }
 
 /** los puntos esperados por partes, la titularidad juntando fuentes y el riesgo de rotación (en corto) */
@@ -602,6 +602,8 @@ const lineaJ = (M, j, x = {}) => [
   POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
   (() => { const ine = M.inercia ? M.inercia(j.id) : null; if (ine && ine.fase !== 'plano') return null; return x.tend && x.tend.d1 != null ? `hoy ${eur(x.tend.d1, { signo: true })}` : null; })(),
   x.tend && x.tend.p7 != null ? `7d ${pct(x.tend.p7)}` : null,
+  // (la de 7 días lleva dentro los días de bajada: con el que acaba de empezar a subir, lo que sube estos días)
+  x.tend && x.tend.rRec != null && x.tend.p7 != null && x.tend.p7 < 2 ? `lleva ${x.tend.racha} días subiendo (${pct(x.tend.rRec / 0.9 * 100)}/día)` : null,
   inerciaTxt(M, j),
   j.pos === 5 ? 'ENTRENADOR: no se alinea ni puntúa en la versión gratis' : null,
   j.media ? `media ${String(j.media).replace('.', ',')}` : null, `${j.puntos} pts`,
@@ -1414,6 +1416,16 @@ export function cuadrarPlan(P, D, M) {
     if (pagaCaja(o)) o.aviso = `${o.aviso ? `${o.aviso} ` : ''}No hace falta venderlo: sin esta venta acabarías con ${eur(final - o.importe)}. ${v.porque}`;
     else quitarVenta(o, `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(final - o.importe)}). ${v.porque}`);
   }
+  // el que vuelve y sigue subiendo (se hundió y ahora juega y sube varios días seguidos): no se manda vender mientras
+  // siga subiendo, salvo que haga falta el dinero o sea uno comprado para revender (0.7n, el caso De Jong)
+  for (const o of ops) {
+    if (o.accion !== 'vender' || !o.pid || o.ya || o.descartada || !M.inercia) continue;
+    const ine = M.inercia(o.pid);
+    if (!ine || !ine.vuelve || (M.paraRevender || []).some((x) => x.pid === o.pid)) continue;
+    const txt = `vuelve y sigue subiendo (un ${pct(ine.vuelve.ritmo * 100, 1, false)} al día; llegó a valer ${eur(ine.vuelve.max)}): cada día que lo aguantes vale más.`;
+    if (o.hoy && o.importe && final != null && final - o.importe >= 0 && !pagaCaja(o)) quitarVenta(o, `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(final - o.importe)}) y ${txt}`);
+    else o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${txt} Véndelo solo si necesitas el dinero.`;
+  }
   // lo que pagaste por él: cuánto ganas o pierdes con la venta. Perder dinero sin necesidad (no hace falta el dinero
   // y no está bajando) se avisa; si está bajando, lo que pagaste no cambia nada: lo perdido ya no vuelve
   for (const o of ops) {
@@ -1426,7 +1438,7 @@ export function cuadrarPlan(P, D, M) {
     o.compra = { precio: x.compra, gana: precio - x.compra, con: o.importe ? 'venta' : 'valor' };
     if (o.descartada || o.compra.gana >= 0 || !o.hoy || final == null || final - (o.importe || 0) < 0) continue;
     const t = M.tend(o.pid);
-    const bajando = ((M.partidazo && M.partidazo(o.pid)) || {}).nivel !== 3 && (x.ventaInercia || (t.p1 != null && t.p1 < -1) || (t.p7 != null && t.p7 < -3) || (M.vendeBaja ? M.vendeBaja(x) : ['injured', 'suspended'].includes(x.j.estado)));
+    const bajando = ((M.partidazo && M.partidazo(o.pid)) || {}).nivel !== 3 && (x.ventaInercia || (t.p1 != null && t.p1 < -1) || ((t.p7e !== undefined ? t.p7e : t.p7) != null && (t.p7e !== undefined ? t.p7e : t.p7) < -3) || (M.vendeBaja ? M.vendeBaja(x) : ['injured', 'suspended'].includes(x.j.estado)));
     if (bajando || /No hace falta venderlo/.test(o.aviso || '')) continue;
     const perder = `Lo venderías por ${eur(-o.compra.gana)} menos de lo que pagaste, no te hace falta el dinero y no está bajando: puede esperar a una oferta mejor.`;
     // y si además la oferta no llega a su valor, ni se propone

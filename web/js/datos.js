@@ -404,6 +404,17 @@ export async function completar(D, M, alListo = () => {}) {
   M.clausulas.filter((x) => x.abierta || x.abreEn < 3 * DIA).slice(0, 16).forEach((x) => add(x.pid));
   M.suben.slice(0, 6).forEach((x) => add(x.j.id));
   (M.especular || []).slice(0, 8).forEach((e) => add(e.pid));
+  // los que pueden estar volviendo (3 días o más subiendo, un 1,2 % al día o más): con su ficha se sabe lo que valían a
+  // principio de temporada (el histórico de aquí guarda 60 días) y el radar de subidas los puede marcar con «Vuelve» (0.7n)
+  if (M.tend) {
+    const posibles = [];
+    for (const j of Object.values(D.maestro || {})) {
+      if (!j || !j.valor || det[j.id]) continue;
+      const t = M.tend(j.id);
+      if (t && t.racha >= 3 && t.rRec != null && t.rRec >= 0.0108) posibles.push([j.id, t.rRec]);
+    }
+    posibles.sort((a, b) => b[1] - a[1]).slice(0, 8).forEach(([pid]) => add(pid));
+  }
   // los de los rivales de los que no se sabe con qué cláusula empezaron (para la cuenta de su dinero): con su ficha
   // se sabe lo que valían al empezar la liga
   (M.sinBase || []).slice(0, 30).forEach(add);

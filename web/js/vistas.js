@@ -1116,11 +1116,11 @@ function radarHTML(S) {
   const quien = (x) => (x.mio ? '<span class="rojo">Tuyo</span>' : x.tid ? `de ${esc((M.equipo[x.tid] || {}).manager || (M.equipo[x.tid] || {}).nombre || 'un rival')}` : 'sin dueño');
   const hoy = (x) => x.mio ? '' : x.mercado ? `<span class="pill abierta">${x.mercado.tipo === 'manager' ? 'A la venta' : 'En el mercado'} · ${eur(x.mercado.precio)}</span>` : x.cl ? clausulaPill(x.cl) : '';
   const fila = (x, derecha, extra = '') => filaJugador({ j: x.j, tend: x.tend }, { sub: `${esc(x.j.equipo || '')} · ${quien(x)}`, pills: [extra, hoy(x), estadoPill(x.j)], derecha, op: S.opPorPid[x.pid] });
-  const sube = (x) => fila(x, `<div class="v sube">${eur(x.proy3, { signo: true })}</div><div class="d apag">${pct(x.pct3 * 100)} en 3 días</div>`, x.fase === 'acelera' ? '<span class="pill bien">Acelera</span>' : '');
+  const sube = (x) => fila(x, `<div class="v sube">${eur(x.proy3, { signo: true })}</div><div class="d apag">${pct(x.pct3 * 100)} en 3 días</div>`, `${x.vuelve ? `<span class="pill bien" title="Llegó a valer ${eur(x.vuelve.max)} esta temporada y lleva ${x.vuelve.racha} días subiendo">Vuelve · valía ${eur(x.vuelve.max)}</span>` : ''}${x.fase === 'acelera' ? '<span class="pill bien">Acelera</span>' : ''}`);
   const VISTOS = 4;
   let h = `<details class="radar" open><summary>${icono('sube', 'rojo')}Radar de subidas<span class="sub">${R.suben.length + R.partidazos.length}</span></summary>`;
   if (R.suben.length) {
-    h += `<p class="t2 peq">Los que más van a subir los próximos 3 días si siguen al ritmo de ahora (su inercia). Es una proyección, no una promesa.</p>`;
+    h += `<p class="t2 peq">Los que más van a subir los próximos 3 días si siguen al ritmo de ahora (su inercia). Es una proyección, no una promesa.${R.suben.some((x) => x.vuelve) ? ' Primero, los que <b>vuelven</b>: valían mucho más esta temporada, juegan otra vez y suben varios días seguidos.' : ''}</p>`;
     h += R.suben.slice(0, VISTOS).map(sube).join('');
     if (R.suben.length > VISTOS) h += `<details class="mas-radar"><summary>Ver los ${R.suben.length}</summary>${R.suben.slice(VISTOS).map(sube).join('')}</details>`;
   }
