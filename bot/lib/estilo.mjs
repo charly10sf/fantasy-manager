@@ -9,6 +9,7 @@
 // con la inicial del nombre de pila (`nombreAjustado`) en vez de encogidos a la mitad. Prueba con todas: bot/prueba/tarjetas-todas.mjs.
 // Aquí solo están las piezas; cada tarjeta se monta en carta.mjs o en tarjetas.mjs.
 
+import { cortoTarjeta } from './apodos-jugadores.mjs';
 export const ANCHO = 1200, ALTO = 675;
 export const ROJO = '#ee1c3c', VERDE = '#2fd27f', MALO = '#ff4d5e', AMBAR = '#f2b33d';
 export const TINTA = '#f4f2f3', TENUE = '#8c869a', FONDO = '#0b0a0f', PANEL = '#17151d', LINEA = '#2c2834';
@@ -48,6 +49,9 @@ export function texto(x, y, s, { px = 24, peso = 700, color = TINTA, ancla = 'st
 export function nombreAjustado(nombre, px, max, espacio = 0, { apellido = false } = {}) {
   const n = String(nombre).toUpperCase(), partes = n.split(' ');
   if (medir(n, px * 0.88, B, espacio) <= max || partes.length < 2) return n;
+  // si tiene una forma corta conocida («Cuti Romero» -> «CUTI», 7 nov), esa antes que la inicial
+  const ct = cortoTarjeta(nombre);
+  if (ct && medir(ct.toUpperCase(), px * 0.88, B, espacio) <= max) return ct.toUpperCase();
   const ini = partes[0].length <= 2 || /\.$/.test(partes[0]) ? n : `${partes[0][0]}. ${partes.slice(1).join(' ')}`;
   // con muy poco sitio (dos opciones en una línea de cinco), solo el apellido
   return apellido && medir(ini, px * 0.88, B, espacio) > max ? partes[partes.length - 1] : ini;
@@ -175,15 +179,54 @@ export function distinto(club, otro) {
   return alt ? (alt.l < 0.4 ? avivar(alt.c) : alt.c) : club.vivo;
 }
 
-/** la marca de la app: barra roja, «FANTASY MANAGER» y la cuenta, entre dos filetes finos */
+/** la marca de la app: barra roja, «FANTASY MANAGER», la cuenta y (Carlos, 7 nov 15:31: «que abajo de todas ponga algo como para
+    descargar la app») una pastilla roja con un móvil: «DESCARGA LA APP GRATIS · ENLACE EN LA BIO». Sin dominio: el validador no deja
+    enlaces en la imagen, igual que en los tuits */
+export const PIE_DESCARGA = 'DESCARGA LA APP GRATIS · ENLACE EN LA BIO';
 export function marca(x, y, { ancla = 'start' } = {}) {
   const w1 = medir('FANTASY MANAGER', 26, B, 3), w2 = medir('@Fantasyman_app', 23, B);
-  const total = 18 + w1 + 20 + w2;
-  const x0 = ancla === 'middle' ? x - total / 2 : x;
+  const pxD = 21, wd = medir(PIE_DESCARGA, pxD, B, 1.5), wp = wd + 70, hp = 40;
+  const total = 18 + w1 + 18 + w2 + 30 + wp;
+  const x0 = ancla === 'middle' ? x - total / 2 : x, xp = x0 + total - wp, yc = y - 8;
+  // el móvil: un rectángulo redondeado con la pantalla y la flecha de descarga dentro
+  const xm = xp + 26;
+  const movil = `<rect x="${xm - 9}" y="${yc - 14}" width="18" height="28" rx="4" fill="none" stroke="#fff" stroke-width="2.6"/>`
+    + `<path d="M${xm},${yc - 7} V${yc + 4} M${xm - 4.5},${yc} L${xm},${yc + 5} L${xm + 4.5},${yc}" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
   return `<rect x="${x0}" y="${y - 19}" width="6" height="24" rx="2" fill="${ROJO}"/>`
     + texto(x0 + 18, y, 'FANTASY MANAGER', { px: 26, peso: 800, espacio: 3 })
-    + texto(x0 + 18 + w1 + 20, y, '@Fantasyman_app', { px: 23, peso: 600, color: TENUE });
+    + texto(x0 + 18 + w1 + 18, y, '@Fantasyman_app', { px: 23, peso: 600, color: TENUE })
+    + `<rect x="${xp}" y="${yc - hp / 2}" width="${wp}" height="${hp}" rx="${hp / 2}" fill="${ROJO}"/>` + movil
+    + texto(xp + 48, yc + pxD * 0.36, PIE_DESCARGA, { px: pxD, peso: 800, color: '#fff', espacio: 1.5 });
 }
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// El puesto del jugador con el color de la app (web/css/app.css: --por, --def, --med, --del, --ent), como en LaLiga Fantasy
+// (Carlos, 7 nov 15:31: «distinciones por portero, defensa, medio… por colores, como los del propio fantasy»)
+export const PUESTOS = {
+  POR: { color: '#ffc547', tinta: '#1f1603', largo: 'PORTERO' }, DEF: { color: '#58a6ff', tinta: '#04121f', largo: 'DEFENSA' },
+  MED: { color: '#2fd18f', tinta: '#03170d', largo: 'MEDIO' }, DEL: { color: '#ee1c3c', tinta: '#ffffff', largo: 'DELANTERO' },
+  ENT: { color: '#9a96a0', tinta: '#120f16', largo: 'ENTRENADOR' },
+};
+const A_PUESTO = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL', 5: 'ENT', portero: 'POR', defensa: 'DEF', centrocampista: 'MED', medio: 'MED', delantero: 'DEL', entrenador: 'ENT' };
+/** 'POR' | 'DEF' | 'MED' | 'DEL' | 'ENT' | null, venga como venga (1-5, '3', 'Centrocampista', 'MED') */
+export function abrevPuesto(p) {
+  if (p == null || p === '') return null;
+  const s = String(p).trim();
+  if (PUESTOS[s.toUpperCase()]) return s.toUpperCase();
+  return A_PUESTO[s.toLowerCase()] || null;
+}
+/** el color del puesto (o null) */
+export const colorPuesto = (p) => { const a = abrevPuesto(p); return a ? PUESTOS[a].color : null; };
+/** la chapa del puesto, centrada en cx, cy, con un filo oscuro para que se separe de la cara */
+export function chipPuesto(p, cx, cy, px = 20, { largo = false } = {}) {
+  const a = abrevPuesto(p);
+  if (!a) return '';
+  const P = PUESTOS[a], t = largo ? P.largo : a, w = medir(t, px, B, 1.2) + px * 1.1, h = px * 1.38;
+  return `<rect x="${cx - w / 2 - 2}" y="${cy - h / 2 - 2}" width="${w + 4}" height="${h + 4}" rx="${h / 2 + 2}" fill="#0b0a0f"/>`
+    + `<rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${P.color}"/>`
+    + texto(cx, cy + px * 0.36, t, { px, peso: 900, color: P.tinta, ancla: 'middle', espacio: 1.2 });
+}
+export const anchoChipPuesto = (p, px = 20, { largo = false } = {}) => { const a = abrevPuesto(p); return a ? medir(largo ? PUESTOS[a].largo : a, px, B, 1.2) + px * 1.1 + 4 : 0; };
 
 // ---------------------------------------------------------------------------------------------------------------------------
 // Piezas HD (7 nov, rediseño de todas las tarjetas con el estilo de la de onces, PR #74). Las tarjetas se dibujan a 2400 de ancho
@@ -261,7 +304,16 @@ export function pildora(f, cx, cy, px, wMax) {
     + texto(x + p * 1.75, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1 });
 }
 /** el color de un % de titularidad, como en la tarjeta de los posibles onces: verde (75 o más), ámbar (50 o más) o rojo */
-export const colPct = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? AMBAR : MALO);
+// el color del % de titularidad (Carlos, 7 nov 15:58 y 16:02): 85-100 verde oscuro, 70-85 verde claro, 60-70 amarillo, 40-60 naranja tirando a
+// rojo y menos de 40 rojo
+export const PCT_COLORES = [[85, '#1fb860'], [70, '#8fe39a'], [60, '#f5d33d'], [40, '#ff8a3d'], [0, '#ff4d5e']];
+export const colPct = (q) => (q == null ? null : (PCT_COLORES.find(([min]) => Number(q) >= min) || PCT_COLORES[PCT_COLORES.length - 1])[1]);
+/** una cifra en una chapa oscura con el filo y el texto en su color (los puntos del final y los % de titularidad; 7 nov) */
+export function chipContorno(txt, cx, cy, px, color, { grosor = 2.5 } = {}) {
+  const w = medir(txt, px, B, 0.5) + px * 1.3, h = px * 1.4, x0 = cx - w / 2, y0 = cy - h / 2;
+  return `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="${h / 2}" fill="#0b0a0f" fill-opacity="0.92" stroke="${color}" stroke-width="${grosor}"/>`
+    + texto(cx, y0 + h / 2 + px * 0.36, txt, { px, peso: 900, color, ancla: 'middle', espacio: 0.5 });
+}
 // (Carlos, 5 nov 17:08: «si pones arriba en el título DUDA, no lo pongas abajo de nuevo; pon el porcentaje de titularidad abajo»)
 // la etiqueta del % de titularidad de la app, en el color del %, en vez de repetir el estado que ya dice el título
 const txtTit = (pct) => `${pct} % TITULARIDAD`;
@@ -269,8 +321,9 @@ export function pildoraTit(pct, cx, cy, px, wMax) {
   const txt = txtTit(pct);
   let p = px; while (p > 16 && medir(txt, p, B, 1) + p * 1.8 > wMax) p--;
   const w = medir(txt, p, B, 1) + p * 1.8, h = p * 1.75, x = cx - w / 2;
-  return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${colPct(pct)}"/>`
-    + texto(cx, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1, ancla: 'middle' });
+  // con el mismo estilo que los % de los onces: fondo oscuro, filo y letra en el color del % (7 nov)
+  return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="#0b0a0f" fill-opacity="0.92" stroke="${colPct(pct)}" stroke-width="2.5"/>`
+    + texto(cx, cy + p * 0.36, txt, { px: p, peso: 800, color: colPct(pct), espacio: 1, ancla: 'middle' });
 }
 export const anchoPildoraTit = (pct, px) => medir(txtTit(pct), px, B, 1) + px * 1.8;
 /** ancho de la etiqueta del estado (para colocarla a la derecha) */

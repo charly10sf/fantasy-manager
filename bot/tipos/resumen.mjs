@@ -17,7 +17,7 @@ export async function generar({ stats, jornada, jugadores = [], completo = true,
   const filas = [];
   for (const m of acabados) for (const lado of [m.local, m.visitor]) for (const p of lado.players || []) {
     if (p.weekPoints == null) continue;
-    filas.push({ id: p.id, nombre: p.nickname || p.name, equipo: corto(lado.mainName), club: lado.mainName, pts: Number(p.weekPoints), media: porId.has(String(p.id)) ? Number(porId.get(String(p.id)).averagePoints) || 0 : 0,
+    filas.push({ id: p.id, pos: p.positionId, nombre: p.nickname || p.name, equipo: corto(lado.mainName), club: lado.mainName, pts: Number(p.weekPoints), media: porId.has(String(p.id)) ? Number(porId.get(String(p.id)).averagePoints) || 0 : 0,
       valor: porId.has(String(p.id)) ? Number(porId.get(String(p.id)).marketValue) || 0 : 0,
       caraUrl: p.images && p.images.transparent && p.images.transparent['256x256'], escudoUrl: lado.badgeColor });
   }

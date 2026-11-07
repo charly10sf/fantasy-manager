@@ -163,6 +163,19 @@ un tweet `mvp` aparte por partido (tope 10 por jornada) y, en `directo`, una por
   sale sin imagen y el del MVP no sale; tras un rechazo de subida no se vuelve a intentar en esa ejecución.
 - En Actions, la instalación (`npm ci --prefix bot`) solo corre con alguna tarjeta encendida, y las PNG de cada ejecución quedan como
   artefacto `tarjetas-<id>` 7 días.
+- 7 nov (tarde): en TODAS, el puesto en su color (los de la app: POR amarillo, DEF azul, MED verde, DEL rojo; `PUESTOS` y `chipPuesto`
+  en lib/estilo.mjs), abajo a la derecha de cada cara; en la carta y en la de gol y asistencia, arriba a la derecha del panel. Pie
+  común (`marca`): «FANTASY MANAGER · @Fantasyman_app» y una pastilla roja con un móvil «DESCARGA LA APP GRATIS · ENLACE EN LA BIO»
+  (sin dominio: el validador no deja enlaces). En la carta y en la de gol y asistencia, las casillas son las 5 jornadas ANTERIORES y
+  los puntos de hoy van solo arriba y en grande: en oro si el partido ha acabado y, en juego, oscuros con filo rojo y «● EN JUEGO»
+  (`placaJuego`; en la de gol y asistencia, «PTS HOY» como primera cifra de cada panel). En la baja de un jugador, la jornada en juego
+  no sale en las casillas. Banco del directo con datos reales: `node bot/prueba/tarjetas-directo.mjs --salida=/tmp/d --jornada=12
+  [--vivo=0] [--cero=1]`.
+- Directo con «subidón» (7 nov): `momentoEspecial` (tipos/directo.mjs) mira el tipo de gol de ESPN («Goal - Free-kick», «Volley»,
+  «Header») y el momento; los hechos llevan `comoFueElGol` y `momentoParaCelebrar` (falta directa, gol en el descuento o desde el 85
+  que empata, adelanta o da la vuelta, remontada, triplete). Solo entonces la guía deja abrir con un grito corto en mayúsculas
+  («¡EN EL 93!») y `revisar` lo comprueba (sin momento, ninguna palabra entera en mayúsculas salvo siglas y las que ya vienen así en
+  los hechos o los medios; con momento, 4 como mucho y de la lista `GRITOS` o de los hechos; nunca «¡¡»).
 
 ## Reglas
 

@@ -118,6 +118,22 @@ function asistencias(r) {
 // va arriba como titular («⚽ Gol de Budimir y Osasuna se adelanta en el 32'»), el marcador debajo y los puntos en su línea.
 const VERBO = { abre: 'se adelanta', empata: 'empata', adelanta: 'se pone por delante', voltea: 'le da la vuelta',
   recorta: 'recorta', amplia: 'amplía la ventaja', sentencia: 'sentencia el partido' };
+/** cómo fue el gol según ESPN («Goal - Free-kick», «Goal - Volley», «Goal - Header») y si es un momento para celebrarlo a lo grande
+    (Carlos, 7 nov 15:35: «lenguaje más coloquial y mayúsculas si hay un golazo o un gol en los últimos instantes o algún evento que lo
+    merezca»). Solo con datos: un gol de falta directa, uno en el descuento o los últimos minutos que empata, adelanta o da la vuelta,
+    una remontada y un triplete. Un «golazo» que no sea de falta no se puede saber (ESPN no lo dice): no sale. */
+export function momentoEspecial({ tipoEspn = '', min = 0, extra = 0, sit = null, clase = 'gol', penalti = false } = {}) {
+  const t = String(tipoEspn || '');
+  const forma = penalti ? null : /free.?kick/i.test(t) ? 'de falta directa' : /volley/i.test(t) ? 'de volea' : /header/i.test(t) ? 'de cabeza' : null;
+  const cambia = ['empata', 'adelanta', 'voltea'].includes(sit);
+  const motivos = [];
+  if (forma === 'de falta directa') motivos.push('golazo de falta directa');
+  if (cambia && min >= 90) motivos.push(`gol en el descuento (${min}${extra ? `+${extra}` : ''}') que ${VERBO[sit] === 'empata' ? 'empata el partido' : VERBO[sit] === 'le da la vuelta' ? 'le da la vuelta al partido' : 'pone por delante a su equipo'}`);
+  else if (cambia && min >= 85) motivos.push(`gol en los últimos minutos que ${sit === 'empata' ? 'empata el partido' : sit === 'voltea' ? 'le da la vuelta al partido' : 'pone por delante a su equipo'}`);
+  else if (sit === 'voltea') motivos.push('remontada: le da la vuelta al partido');
+  if (clase === 'triplete') motivos.push('triplete');
+  return { forma, motivos };
+}
 /** lo que habría supuesto el penalti (fallado o parado), desde el punto de vista de quien lo lanza */
 const pudoTxt = (propio, rival, equipo) => (propio === rival ? `Habría adelantado ${al(equipo)}` : propio < rival ? (rival - propio === 1 ? 'Habría empatado el partido' : 'Habría recortado distancias') : `Habría ampliado la ventaja ${del(equipo)}`);
 function titularGol(sit, n, eq, min, semilla) {
@@ -184,7 +200,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const [sl, sv] = mom ? mom.marcador : [gl, gv];
         const mar = `${corto(m.local.mainName)} ${sl}-${sv} ${corto(m.visitor.mainName)}`;
         const [propio, rival] = esCasa ? [sl, sv] : [sv, sl];
-        const num = [mn.min, mn.extra, sl, sv, propio, rival].filter((x) => x != null);
+        const num = [mn.min, mn.extra, mn.extra ? mn.min + mn.extra : null, sl, sv, propio, rival].filter((x) => x != null);   // «¡EN EL 93!» (90+3)
         const sem = `directo${m.id}${dsp.jugador}${dsp.clase}${dsp.n || ''}`;
         const tarjetas = [];
         const jp = p ? porId.get(String(p.id)) : null;
@@ -268,7 +284,9 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           if (an) { const paH = casarJugador(an, lado); const ptsAH = paH && paH.weekPoints != null && Number(paH.weekPoints) > 0 ? Number(paH.weekPoints) : null;
             jugH.push(jH(paH ? paH.nickname || paH.name : an, paH ? paH.positionId : null, paH && porId.get(String(paH.id)) ? Number(porId.get(String(paH.id)).averagePoints) || 0 : 0,
               { queLePasa: 'da el pase del gol', ...(ptsAH != null ? { puntosFantasyAhora: ptsAH } : {}) })); }
-          extraH = { ...(sit ? { loQueSuponeElGol: `${equipo} ${VERBO[sit]}` } : {}), ...(sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85 ? { tramo: mn.min >= 88 ? 'casi sobre la bocina' : 'ya en el tramo final' } : {}),
+          const esp = momentoEspecial({ tipoEspn: dsp.ref && dsp.ref.type && dsp.ref.type.text, min: mn.min, extra: mn.extra, sit, clase: dsp.clase, penalti: dsp.penalti });
+          extraH = { ...(esp.forma ? { comoFueElGol: esp.forma } : {}), ...(esp.motivos.length ? { momentoParaCelebrar: esp.motivos } : {}),
+            ...(sit ? { loQueSuponeElGol: `${equipo} ${VERBO[sit]}` } : {}), ...(sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85 ? { tramo: mn.min >= 88 ? 'casi sobre la bocina' : 'ya en el tramo final' } : {}),
             ...(sit === 'abre' && mn.min <= 6 ? { tramo: 'apenas habían pasado unos minutos' } : {}) };
         }
         const { usadas, texto } = tweet(cab, ideas);

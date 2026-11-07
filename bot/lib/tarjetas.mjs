@@ -11,8 +11,8 @@
 import { coloresClub, luz } from './colores.mjs';
 import { svgJugadorCarta, svgBajaSola, svgGolAsistencia } from './carta.mjs';
 import { ANCHO, ALTO, VERDE, MALO, AMBAR, TENUE, TINTA, PANEL, LINEA, num1, millones, medir, B, texto, id, lineal, radial, marco,
-  escudo, caraCirculo, fondo, dorado, rojizo, aColor, caja, marca, pildora, anchoPildora, pildoraTit, anchoPildoraTit, colPct, ESTADO_TARJETA,
-  chip, flecha, medalla, distinto, nombreAjustado, tamano, caraHD, pastilla, panel, titular, R_MAX } from './estilo.mjs';
+  escudo, caraCirculo, fondo, dorado, rojizo, aColor, caja, marca, pildora, anchoPildora, pildoraTit, anchoPildoraTit, colPct, chipContorno, ESTADO_TARJETA,
+  chip, flecha, medalla, distinto, nombreAjustado, tamano, caraHD, pastilla, panel, titular, R_MAX, chipPuesto, abrevPuesto, colorPuesto, PUESTOS } from './estilo.mjs';
 
 export { ANCHO, ALTO, num1, millones };
 const FUENTES = ['Inter-Regular.otf', 'Inter-SemiBold.otf', 'Inter-Bold.otf', 'InterDisplay-Black.otf',
@@ -53,10 +53,15 @@ const centros = (x, w, n, hueco) => { const x0 = x + (w - n * hueco) / 2; return
 /** base del nombre bajo una cara de radio R */
 const bajoCara = (cy, R, pxN) => cy + R + pxN + 14;
 /** un jugador como en la tarjeta de onces: halo, cara con la cabeza entera, una etiqueta en la esquina (puntos, %) y el nombre en pastilla */
-function jugadorHD(j, cx, cy, R, club, { aro = null, wN, pxN = 30, etiqueta = null, escudoBuf = null } = {}) {
+function jugadorHD(j, cx, cy, R, club, { aro = null, wN, pxN = 30, etiqueta = null, escudoBuf = null, puesto = null } = {}) {
   let s = caraHD(j.cara, cx, cy, R, club.vivo, { aro: aro || club.vivo, grosor: aro && aro !== club.vivo ? Math.max(5, Math.round(R * 0.09)) : null });
   if (escudoBuf) s += escudo(escudoBuf, cx - R * 0.84, cy + R * 0.7, Math.round(R * 0.52));
-  if (etiqueta) s += chip(etiqueta.txt, cx + R * 0.96, cy - R * 0.9, etiqueta.px || 24, { relleno: etiqueta.relleno, tinta: etiqueta.tinta || '#120f16', pad: 1.4, espacio: 0.5, peso: 900 }).s;
+  // (final, 7 nov 15:47: los puntos en verde o rojo rellenos chocaban con la chapa del puesto, que también es de color) oscura con
+  // el filo y la cifra en el color
+  if (etiqueta && etiqueta.contorno) s += chipContorno(etiqueta.txt, cx + R * 0.96, cy - R * 0.9, etiqueta.px || 24, etiqueta.relleno);
+  else if (etiqueta) s += chip(etiqueta.txt, cx + R * 0.96, cy - R * 0.9, etiqueta.px || 24, { relleno: etiqueta.relleno, tinta: etiqueta.tinta || '#120f16', pad: 1.4, espacio: 0.5, peso: 900 }).s;
+  // el puesto en su color, abajo a la derecha de la cara (7 nov 15:31): arriba va la etiqueta (puntos, %) y abajo a la izquierda el escudo
+  if (puesto !== false) s += chipPuesto(puesto || j.pos || j.posicion, cx + R * 0.86, cy + R * 0.74, Math.max(16, Math.round(R * 0.32)));
   return s + pastilla(nombreAjustado(j.nombre, pxN, wN - pxN * 0.6, 0.5, { apellido: true }), cx, bajoCara(cy, R, pxN), pxN, wN);
 }
 /** rótulo de una sección: el triángulo del sentido (o una barra) y el texto, en el color */
@@ -94,7 +99,7 @@ function columnaFinal(x, y, w, lado, club, nPeores) {
     let t = rotuloHD(x + 26, ys + 30, bueno ? 'MEJORES' : 'PEORES', acento, bueno);
     centros(x, w, lista.length, hueco).forEach((cx, k) => {
       const j = lista[k];
-      t += jugadorHD(j, cx, cy, RF, club, { wN: hueco - 8, pxN: PXF, etiqueta: { txt: `${j.pts} PTS`, relleno: acento, px: 25 } });
+      t += jugadorHD(j, cx, cy, RF, club, { wN: hueco - 8, pxN: PXF, etiqueta: { txt: `${j.pts} PTS`, relleno: acento, px: 25, contorno: true } });
     });
     return t;
   };
@@ -222,6 +227,12 @@ function campo(x, y, w, h, lado, club, confirmados) {
       + `<rect x="${cx - wt / 2 + 0.75}" y="${cy - PXN * 1.0 + 0.75}" width="${wt - 1.5}" height="${PXN * 1.42 - 1.5}" rx="${PXN * 0.71}" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>`
       + texto(cx, cy, t, { px: PXN, peso: 800, color: '#ffffff', ancla: 'middle', max: wMax - 18, espacio: 0.5 });
   };
+  // el nombre de cada uno; si al quedarse en el apellido dos coinciden («WILLIAMS» y «WILLIAMS», Athletic), esos llevan la inicial
+  const geo = lineas.map((ls) => { const n = ls.length, U = n >= 4 ? w - 12 : w * n / (n + 1); return U / n - 4; });
+  const nom = new Map();
+  lineas.forEach((ls, i) => ls.forEach((j) => nom.set(j, nombreAjustado(j.nombre, PXN, geo[i] - 18, 0.5, { apellido: true }))));
+  const veces = {}; for (const t of nom.values()) veces[t] = (veces[t] || 0) + 1;
+  lineas.forEach((ls, i) => ls.forEach((j) => { if (veces[nom.get(j)] > 1) nom.set(j, nombreAjustado(j.nombre, PXN, geo[i] - 18, 0.5)); }));
   lineas.forEach((ls, i) => {
     const n = ls.length, U = n >= 4 ? w - 12 : w * n / (n + 1), x0 = x + (w - U) / 2, hueco = U / n;
     const R = Math.max(26, Math.min(62, hueco / 2 - 9, (alto - 60) / 2));
@@ -231,17 +242,17 @@ function campo(x, y, w, h, lado, club, confirmados) {
       const pctCol = colPct(j.pct);
       const hl = id('hl');
       s += `<defs><radialGradient id="${hl}"><stop offset="0.55" stop-color="${club.vivo}" stop-opacity="0.32"/><stop offset="1" stop-color="${club.vivo}" stop-opacity="0"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${R * 1.45}" fill="url(#${hl})"/>`;
-      s += (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: j.duda ? AMBAR : club.vivo, grosor: Math.max(3, R * 0.06), fondoColor: club.vivo, zoom: 2.25 })
-        : `<circle cx="${cx}" cy="${cy + 3}" r="${R + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="${j.duda ? AMBAR : '#ffffff'}" stroke-width="3"/>`)
-        + pastilla(nombreAjustado(j.nombre, PXN, ancho - 18, 0.5, { apellido: true }), cx, yN, ancho);
-      if (pctCol && !confirmados) s += chip(`${j.pct} %`, cx + R * 0.78, cy - R * 0.8, 21, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
+      s += (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: club.vivo, grosor: Math.max(3, R * 0.06), fondoColor: club.vivo, zoom: 2.25 })
+        : `<circle cx="${cx}" cy="${cy + 3}" r="${R + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="#ffffff" stroke-width="3"/>`)
+        + pastilla(nom.get(j), cx, yN, ancho);
+      if (pctCol && !confirmados) s += chipContorno(`${j.pct} %`, cx + R * 0.8, cy - R * 0.82, 21, pctCol);
+      s += chipPuesto(j.pos, cx + R * 0.86, cy + R * 0.74, Math.max(15, Math.round(R * 0.31)));
     });
   });
   return s;
 }
 // el banquillo de los posibles onces (Carlos, 6 nov 20:34): el suplente con más % de delantero, medio y defensa, en un panel bajo el campo
 const ALTO_BANCO = 214;
-const PUESTO_BANCO = { DEL: 'DELANTERO', MED: 'MEDIO', DEF: 'DEFENSA', POR: 'PORTERO' };
 function banco(x, y, w, sup, club) {
   const h = ALTO_BANCO, gb = id('bk');
   let s = `<defs>${lineal(gb, [[0, '#121c17'], [1, '#0a100d']])}</defs><rect x="${x}" y="${y + 8}" width="${w}" height="${h}" rx="26" fill="#000" opacity="0.45"/>`
@@ -253,10 +264,10 @@ function banco(x, y, w, sup, club) {
   sup.slice(0, 3).forEach((j, k) => {
     const cx = x + 10 + hueco * (k + 0.5), hl = id('hl'), pctCol = colPct(j.pct);
     s += `<defs><radialGradient id="${hl}"><stop offset="0.55" stop-color="${club.vivo}" stop-opacity="0.3"/><stop offset="1" stop-color="${club.vivo}" stop-opacity="0"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${R * 1.45}" fill="url(#${hl})"/>`
-      + (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: j.duda ? AMBAR : club.vivo, grosor: 3, fondoColor: club.vivo, zoom: 2.25 })
+      + (j.cara ? caraCirculo(j.cara, cx, cy, R, { aro: club.vivo, grosor: 3, fondoColor: club.vivo, zoom: 2.25 })
         : `<circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="#ffffff" stroke-width="3"/>`)
-      + texto(cx, y + 60, PUESTO_BANCO[j.pos] || j.pos, { px: 17, peso: 700, color: TENUE, ancla: 'middle', espacio: 2.5 });
-    if (pctCol) s += chip(`${j.pct} %`, cx + R * 0.82, cy - R * 0.78, 19, { relleno: pctCol, pad: 1.4, espacio: 0.5 }).s;
+      + chipPuesto(j.pos, cx, y + 62, 16, { largo: true });
+    if (pctCol) s += chipContorno(`${j.pct} %`, cx + R * 0.84, cy - R * 0.8, 19, pctCol);
     const ancho = hueco - 8, t = nombreAjustado(j.nombre, 26, ancho - 18, 0.5, { apellido: true }), pp = tamano(t, 26, ancho - 18), wt = Math.min(ancho, medir(t, pp, B, 0.5) + 24);
     s += `<rect x="${cx - wt / 2}" y="${cy + R + 34 - 26}" width="${wt}" height="37" rx="18.5" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>`
       + texto(cx, cy + R + 34, t, { px: 26, peso: 800, ancla: 'middle', max: ancho - 18, espacio: 0.5 });
@@ -417,7 +428,7 @@ export function svgBajas(d) {
       const f = filas[k], yb = bajoCara(cy, R, pxN);
       // el puesto y, debajo, la media en oro (antes en una línea: «CENTROCAMPISTA · 5,5 PTS DE MEDIA» no cabía a un tamaño legible)
       s += jugadorHD(f, cx, cy, R, club, { wN: hueco - 12, pxN })
-        + (f.posicion ? texto(cx, yb + 40, mayus(f.posicion), { px: 25, peso: 700, color: TENUE, ancla: 'middle', espacio: 1.5, max: hueco - 20 }) : '')
+        + (f.posicion ? texto(cx, yb + 40, mayus(f.posicion), { px: 25, peso: 700, color: colorPuesto(f.posicion) || TENUE, ancla: 'middle', espacio: 1.5, max: hueco - 20 }) : '')
         + (f.media ? cifraUnidad(cx, yb + 86, f.media, 'PTS DE MEDIA', 40, ORO_TXT, { pu: 22 }) : '')
         + derecha(f, cx, yb + 136, 28, hueco - 16);
     });
@@ -479,7 +490,6 @@ export function planApercibidos(equipos) {
 }
 export const altoApercibidos = (plan) => Math.max(ALTO, AP.y0 + (plan ? plan.max : 0) + 80);
 
-const ABV = { Portero: 'POR', Defensa: 'DEF', Centrocampista: 'MED', Delantero: 'DEL', Entrenador: 'ENT' };
 function bloqueEquipo(x, y, e, o, oro) {
   const club = coloresClub(e.nombre || e.corto), w = o.w, h = altoBloque(e, o);
   let s = panel(x, y, w, h, club.vivo, { rx: 26, brillo: 0.34, linea: AP.cab });
@@ -490,11 +500,10 @@ function bloqueEquipo(x, y, e, o, oro) {
   for (let r = 0; r < filas; r++) {
     const ls = e.jugadores.slice(r * o.porFila, r * o.porFila + o.porFila), cy = y + AP.cab + r * o.filaH + 30 + o.R;
     centros(x, w, ls.length, Math.min(o.hueco, 210)).forEach((cx, k) => {
-      const j = ls[k], abv = ABV[j.posicion] || j.posicion, yb = bajoCara(cy, o.R, o.pxN) + 40;
+      const j = ls[k], yb = bajoCara(cy, o.R, o.pxN) + 40;
       s += jugadorHD(j, cx, cy, o.R, club, { wN: Math.min(o.hueco, 210) - 8, pxN: o.pxN });
-      const wa = abv ? medir(abv, 22, B, 1) : 0, wm = j.media ? medir(j.media, 32, B) : 0, sep = abv && j.media ? 12 : 0, x0 = cx - (wa + sep + wm) / 2;
-      if (abv) s += texto(x0, yb, abv, { px: 22, peso: 700, color: TENUE, espacio: 1 });
-      if (j.media) s += texto(x0 + wa + sep, yb + 1, j.media, { px: 32, peso: 900, color: `url(#${oro})` });
+      // el puesto va en su chapa de color sobre la cara; debajo, solo la media
+      if (j.media) s += texto(cx, yb + 1, j.media, { px: 32, peso: 900, color: `url(#${oro})`, ancla: 'middle' });
     });
   }
   return s;

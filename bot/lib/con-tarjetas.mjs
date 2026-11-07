@@ -53,7 +53,8 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     if (tarjeta.tipo === 'bajas' && d.filas.length === 1) {
       const j = (jugadores || []).find((x) => String(x.id) === String(d.filas[0].id));
       if (j) {
-        const h = await historialJugador(j, { jornada, fuentes }).catch(() => null);
+        const partido = (stats || []).find((x) => [x.local && x.local.id, x.visitor && x.visitor.id].map(String).includes(String(j.teamId))) || null;
+        const h = await historialJugador(j, { jornada, fuentes, partido }).catch(() => null);
         if (h) { Object.assign(d.filas[0], h.d); permitidos = { ...permitidos, numeros: [...(permitidos.numeros || []), ...h.numeros] }; }
       }
     }

@@ -300,6 +300,33 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a
   ok(!revisar(largo, { hechos: { ...hp, tipo: 'caidas' }, todos }).some((x) => /primera frase/.test(x)), 'solo la previa tiene tope de primera frase');
 }
 
+// mayúsculas solo en un momento que lo merezca (7 nov, Carlos: golazo, gol en los últimos instantes…)
+{
+  const { momentoEspecial } = await import('../tipos/directo.mjs');
+  ok(momentoEspecial({ tipoEspn: 'Goal - Free-kick', min: 64, sit: 'amplia' }).motivos.includes('golazo de falta directa'), 'momento: gol de falta directa');
+  ok(momentoEspecial({ tipoEspn: 'Goal', min: 90, extra: 3, sit: 'voltea' }).motivos.some((x) => /descuento/.test(x)), 'momento: gol en el descuento que da la vuelta');
+  ok(!momentoEspecial({ tipoEspn: 'Goal - Header', min: 30, sit: 'abre' }).motivos.length, 'momento: un gol de cabeza en el 30, nada especial');
+  ok(!momentoEspecial({ tipoEspn: 'Goal', min: 88, sit: 'amplia' }).motivos.length, 'momento: ampliar en el 88 no es para gritar');
+  const hg = { tipo: 'directo', subtipo: 'gol', jugadores: [{ nombre: 'Budimir', club: 'Osasuna', principal: true }], clubes: clubes('Osasuna', 'Athletic') };
+  const grito = '⚽ ¡EN EL 93! Budimir empata para el Osasuna contra el Athletic.';
+  ok(revisar(grito, { hechos: hg, todos }).some((x) => /mayúsculas sin un momento/.test(x)), 'directo: mayúsculas sin momentoParaCelebrar, fuera');
+  ok(!revisar(grito, { hechos: { ...hg, momentoParaCelebrar: ['gol en el descuento'] }, todos }).some((x) => /mayúsculas/.test(x)), 'directo: mayúsculas con momentoParaCelebrar, vale');
+  ok(revisar('⚽ ¡GOLAZO DE PEPE! Budimir empata.', { hechos: { ...hg, momentoParaCelebrar: ['gol en el descuento'] }, todos }).some((x) => /no salen de los hechos/.test(x)), 'directo: un nombre inventado en mayúsculas, fuera');
+  ok(!revisar('⚽ Budimir empata tras revisarlo el VAR.', { hechos: hg, todos }).some((x) => /mayúsculas/.test(x)), 'directo: una sigla (VAR) no cuenta como grito');
+}
+
+// los nombres como los llama la gente (7 nov: «el Cuti», «Borja Iglesias» y no «B. Iglesias»)
+{
+  const { comoLeLlaman } = await import('../lib/apodos-jugadores.mjs');
+  const { conApodos } = await import('../lib/redaccion.mjs');
+  ok(comoLeLlaman('Cuti Romero').includes('el Cuti'), 'apodos: el Cuti');
+  ok(comoLeLlaman('B. Iglesias').includes('Borja Iglesias'), 'apodos: Borja Iglesias por B. Iglesias');
+  ok(comoLeLlaman('J. Musso').includes('Musso'), 'apodos: el apellido solo de un nickname con inicial');
+  ok(!comoLeLlaman('D. Martínez').length, 'apodos: un apellido que se repite no vale solo');
+  const hi = conApodos({ tipo: 'caidas', jugadores: [{ nombre: 'B. Iglesias', club: 'Celta', estado: 'lesionado', principal: true }], clubes: clubes('Celta', 'Elche') });
+  ok(!revisar('🚑 Borja Iglesias se pierde el partido del Celta contra el Elche.', { hechos: hi, todos }).some((x) => /no nombra|nombra a quien/.test(x)), 'apodos: con el nombre completo cuenta como nombrado');
+}
+
 process.env = viejo;
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);
 process.exit(fallos ? 1 : 0);

@@ -4,6 +4,7 @@
 import { fmt, corto, el } from './texto.mjs';
 import { puesto, cuando } from './redactar.mjs';
 import { nombresClub } from './redaccion.mjs';
+import { comoLeLlaman } from './apodos-jugadores.mjs';
 
 // el campo de cada club (solo los seguros: el del Betis cambia mientras se reforma el Villamarín y no va). La IA solo puede nombrar el
 // del que juega en casa (el validador no deja pasar un nombre propio que no esté en los hechos)
@@ -53,9 +54,11 @@ export function jugador(j, { equipos = {}, estado = null, motivo = '', plazo = '
     ...(estado ? { estado } : {}), ...(motivo ? { motivo } : {}), ...(plazo ? { plazo } : {}),
     ...(media >= 1 ? { mediaPuntos: fmt(media) } : {}),
     ...(tit && tit.pct != null ? { titularidadFantasyManager: `${tit.pct} %` } : {}),
-    ...extra, principal,
+    ...(otrosNombres(j.nickname || j.nombre)), ...extra, principal,
   };
 }
+// otros nombres con los que se le conoce («Borja Iglesias» por «B. Iglesias», «el Cuti»; Carlos, 7 nov): la IA puede usarlos
+const otrosNombres = (n) => { const xs = comoLeLlaman(n); return xs.length ? { tambienSeLeLlama: xs } : {}; };
 
 /** la fuente de una noticia: el club o los medios (sin LaLiga Fantasy: el estado ya va en la etiqueta) */
 export const fuente = ({ oficial = false, medios = [] } = {}) => (oficial ? 'lo ha comunicado el club' : medios.length ? `prensa: ${medios.join(', ')}` : null);

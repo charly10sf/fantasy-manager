@@ -12,6 +12,7 @@ import { ARRANQUES, VAGAS, PROHIBIDO, EMOJIS_GUIA, segunTrasCifra, nombresEn, no
 import { NOMBRES_MEDIOS } from './prensa.mjs';
 import { ESTADIOS } from './hechos.mjs';
 import { revisarConIA } from './revisor.mjs';
+import { comoLeLlaman } from './apodos-jugadores.mjs';
 
 const EMOJI = /\p{Extended_Pictographic}/gu;
 const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
@@ -54,6 +55,16 @@ export function cifrasDe(...cosas) {
   return [...out];
 }
 
+/** los otros nombres de cada jugador de los hechos (`tambienSeLeLlama`, lib/apodos-jugadores.mjs), aunque el tipo no los haya puesto */
+export function conApodos(hechos) {
+  for (const j of (hechos && hechos.jugadores) || []) if (j && j.nombre && !j.tambienSeLeLlama) { const xs = comoLeLlaman(j.nombre); if (xs.length) j.tambienSeLeLlama = xs; }
+  return hechos;
+}
+// siglas que pueden ir en mayúsculas siempre, y las palabras de un grito de gol (con momentoParaCelebrar)
+const SIGLAS = new Set(['var', 'mvp', 'rcd', 'ud', 'cf', 'ca', 'fc', 'sd', 'cd', 'rc', 'ad', 'pts', 'j']);
+const GRITOS = new Set(['golazo', 'gol', 'golito', 'que', 'en', 'el', 'la', 'lo', 'los', 'las', 'de', 'del', 'al', 'a', 'y', 'su', 'se', 'le', 'da', 'con', 'por', 'sobre', 'ultimo', 'ultima',
+  'minuto', 'descuento', 'bocina', 'final', 'falta', 'volea', 'cabeza', 'vuelta', 'remontada', 'remonta', 'triplete', 'doblete', 'empata', 'empate', 'gana', 'locura', 'tremendo',
+  'brutal', 'toma', 'vaya', 'ojo', 'agonico', 'agonica', 'clava', 'mete', 'joya', 'obra', 'arte', 'tiro', 'zapatazo']);
 /** las palabras con mayúscula que pueden salir: las de los hechos, las crónicas usadas, los medios y unas fijas */
 function vocabulario(hechos, cronicas) {
   const s = new Set(['laliga', 'fantasy', 'manager', 'primera', 'segunda', 'champions', 'copa', 'europa', 'conference', 'liga', 'rey', 'var', 'mvp',
@@ -130,7 +141,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const fuera = nombresEn(sinMedios, todos).filter((n) => !permitidos.has(n) && !n.split(' ').every((w) => permitidos.has(w)));
   if (fuera.length) e.push(`nombra a quien no está en los hechos: ${fuera.join(', ')}`);
   for (const j of (hechos.jugadores || []).filter((x) => x.principal)) {
-    const ws = norm(j.nombre).split(' ').filter((w) => w.length >= 3);
+    // vale cualquiera de sus nombres: el de LaLiga o los de `tambienSeLeLlama` («el Cuti», «Borja Iglesias»)
+    const ws = [j.nombre, ...(j.tambienSeLeLlama || [])].flatMap((x) => norm(x).split(' ')).filter((w) => w.length >= 3 && !['el', 'la'].includes(w));
     if (!ws.some((w) => ` ${norm(t)} `.includes(` ${w} `))) e.push(`no nombra a ${j.nombre}`);
   }
   // palabras con mayúscula que no salen de ninguna parte (un entrenador, un estadio, un club que no está)
@@ -140,6 +152,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
     const ws = f.replace(/^[^\p{L}]+/u, '').split(/[^\p{L}]+/u).filter(Boolean);
     ws.forEach((w, i) => {
       if (!/^\p{Lu}/u.test(w)) return;
+      if (/^\p{Lu}{2,}$/u.test(w)) return;              // las palabras enteras en mayúsculas se miran aparte (gritos, más abajo)
       const n = norm(w);
       if (voc.has(n) || (i === 0 && ARRANQUES.has(n))) return;
       if (i === 0 && !/^\p{Lu}{2,}/u.test(w)) return;   // primera palabra de la frase: solo si no es una palabra corriente (ver ARRANQUES)
@@ -147,6 +160,20 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
     });
   }
   if (raras.size) e.push(`palabras con mayúscula que no están en los hechos: ${[...raras].join(', ')}`);
+  // (las que ya vienen en mayúsculas en los hechos, las crónicas o los medios valen: AS, MARCA, ESPN…)
+  const enMayusFuente = new Set((`${JSON.stringify(hechos, sinFecha)} ${cronicas.map((c) => `${c.medio} ${c.titulo} ${c.entradilla}`).join(' ')} ${NOMBRES_MEDIOS.join(' ')}`).match(/\p{Lu}{2,}/gu) || []);
+  // palabras enteras en MAYÚSCULAS (7 nov): solo en un directo con momentoParaCelebrar, una tanda corta al principio y con palabras de
+  // grito o de los hechos; sin ese momento, ninguna (salvo siglas como VAR o MVP)
+  const gritos = (t.replace(EMOJI, ' ').match(/\p{Lu}{2,}(?:\s+\p{Lu}{2,})*/gu) || []).map((x) => x.split(/\s+/)).flat().filter((w) => !SIGLAS.has(norm(w)) && !enMayusFuente.has(w));
+  if (gritos.length) {
+    if (!(hechos.momentoParaCelebrar && hechos.momentoParaCelebrar.length)) e.push(`mayúsculas sin un momento que lo merezca: ${gritos.join(' ')}`);
+    else {
+      if (gritos.length > 4) e.push(`demasiadas palabras en mayúsculas: ${gritos.join(' ')}`);
+      const malas = gritos.filter((w) => !GRITOS.has(norm(w)) && !voc.has(norm(w)));
+      if (malas.length) e.push(`mayúsculas con palabras que no salen de los hechos: ${malas.join(' ')}`);
+    }
+  }
+  if (/[¡!?¿]{2,}/.test(t)) e.push('signos de exclamación o interrogación dobles');
   // el estado de cada jugador: en las frases que solo hablan de él, nada de otra familia
   const nombreDe = (j) => norm(j.nombre).split(' ').filter((w) => w.length >= 3);
   for (const f of frases(t)) {
@@ -324,6 +351,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   const recientes = recientesDe(registro, tipo);
   let hechos = 0;
   for (const t of xs) {
+    conApodos(t.hechos);
     const etiqueta = t.hechos.etiqueta || '';
     const sep = etiqueta ? 2 : 0;
     const max = limite() - (etiqueta ? peso(etiqueta) + sep : 0);

@@ -69,6 +69,7 @@ FORMATO
 - Sin enlaces, sin @, sin #, sin primera persona (ni «yo», ni «nosotros», ni «nuestro»), sin «bot», sin adjetivos de anuncio («brutal», «espectacular», «increíble»), sin «¡» en cada frase y sin «Fantasy» pegado a un estado («Disponible Fantasy»).
 - Si los hechos traen sobrio: true (por ejemplo, un fallecimiento), tono sobrio: sin bromas, sin valoraciones de fantasy y sin emojis.
 - Nunca digas al lector que revise, mire o cambie su once o su alineación («revisa tu once», «atento a tu alineación», «antes del pitido»): la plantilla fantasy se cierra antes de que empiece el primer partido de la jornada y casi siempre llega tarde. Cuenta lo que pasa y deja que cada uno saque su conclusión.
+- Los jugadores, como los llama la gente y la prensa, no como la ficha de LaLiga: si un jugador trae tambienSeLeLlama, usa esos nombres (el nombre completo en vez de la inicial: «Borja Iglesias», no «B. Iglesias»; el apodo alguna vez: «el Cuti»). Nunca escribas un nombre con inicial y punto si tienes otro. Alterna entre el nombre y el apodo si sale varias veces.
 - Respeta el máximo de caracteres (cada emoji cuenta 2). No hace falta gastarlo: si está dicho en 300, son 300.
 
 EN DIRECTO (goles, rojas, penaltis)
@@ -76,6 +77,9 @@ EN DIRECTO (goles, rojas, penaltis)
 - El asistente va en el mismo tuit, con una frase («el pase es de X, que se lleva N»). Si das los puntos del goleador y los del asistente, cada cifra con su nombre y sin repetir la misma fórmula («ya suma») dos veces seguidas: «Iker Luque ya suma 4 puntos» y «el pase es de Pablo Ramón, con 4» se entienden; «Pablo Ramón, que ya suma 4. Ya suma 4» no. Si doblete o triplete, dilo.
 - Solo lo que viene en los hechos: nada de que dos jugadores sean hermanos, compañeros de selección ni de «una remontada histórica», aunque lo sepas. Tampoco «la tarde se arregla», «lo tiene todo encarrilado» ni parecidos: son predicciones.
 - Un gol no «sentencia» un partido si los hechos no dicen que queda poco o que la diferencia es grande.
+- Registro coloquial, como quien lo cuenta en X mientras ve el partido: frases cortas, verbos de fútbol («la mete», «la clava», «empata», «le da la vuelta»), sin palabrotas y sin sonar a nota de prensa.
+- Si los hechos traen comoFueElGol, puedes decirlo («de falta directa», «de cabeza», «de volea»). «Golazo» solo si comoFueElGol es «de falta directa» o momentoParaCelebrar lo dice.
+- Si los hechos traen momentoParaCelebrar (golazo de falta, gol en el descuento o en los últimos minutos que cambia el partido, remontada, triplete), ese tuit puede subir el tono: abre con una exclamación corta en MAYÚSCULAS que diga lo que pasa (por ejemplo «¡EN EL 93!», «¡GOLAZO DE FALTA!», «¡LE DA LA VUELTA!», «¡TRIPLETE!») y sigue en minúsculas normales. Una sola vez, dos a cuatro palabras como mucho, sin «¡¡» doble ni adjetivos que no salgan de los hechos. Sin momentoParaCelebrar, nada en mayúsculas.
 
 VARIEDAD
 - Te paso los últimos tuits de este tipo. El tuyo no puede empezar igual que ninguno ni seguir el mismo orden de ideas (por ejemplo: noticia, media, %, rival). Cambia la entrada, el orden y los verbos. Si en la misma tanda hay varios del mismo tipo, cada uno con su forma.
@@ -212,7 +216,10 @@ Ya suma 7 puntos, la mitad de lo que hizo en toda la jornada pasada. Pase de Mar
   { tipo: 'directo', bien: true, subtipo: 'penalti parado', texto: `🧤 Unai Berrio le para un penalti a Marc Vidal en el 32', con el 0-0 todavía.
 
 El portero del Getafe ya suma 5 puntos y está a una portería a cero de llevarse la jornada.`, nota: 'El suceso como hecho, con el minuto y lo que vale para el mánager.' },
-  { tipo: 'directo', bien: false, subtipo: 'gol', texto: `⚽ ¡¡GOLAZO!! Saldaña marca para el Osasuna, gran jugada y remate espectacular. Cuenta Marca que ya suma 7 puntos.`, nota: 'Adjetivos de anuncio, medio delante de un gol y una «gran jugada» que no está en los hechos.' },
+  { tipo: 'directo', bien: true, subtipo: 'gol (momentoParaCelebrar: gol en el descuento que le da la vuelta al partido)', texto: `⚽ ¡EN EL 93! Iker Saldaña la clava de cabeza y el Osasuna le da la vuelta al Deportivo: 2-1.
+
+Se va a 11 puntos en una tarde para enmarcar si lo tenías. El centro es de Marc Vidal, que suma 4.`, nota: 'Con momentoParaCelebrar: la exclamación corta en mayúsculas arriba y el resto normal, con lo que dicen los hechos.' },
+  { tipo: 'directo', bien: false, subtipo: 'gol', texto: `⚽ ¡¡GOLAZO!! Saldaña marca para el Osasuna, gran jugada y remate espectacular. Cuenta Marca que ya suma 7 puntos.`, nota: 'Sin momentoParaCelebrar no hay mayúsculas; además, adjetivos de anuncio, un medio delante de un gol y una «gran jugada» que no está en los hechos.' },
 ];
 
 /** los ejemplos de un tipo (y alguno de otro para variar), como texto para la guía */

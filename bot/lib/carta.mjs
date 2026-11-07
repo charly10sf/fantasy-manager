@@ -8,7 +8,7 @@
 import { coloresClub } from './colores.mjs';
 import { fechaCorta } from './datos-tarjetas.mjs';
 import { ANCHO, ROJO, VERDE, MALO, TINTA, TENUE, FONDO, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
-  escudo, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja, caraHD, panel, R_MAX, iconoBalon, iconoRoja, iconoPase, insignia } from './estilo.mjs';
+  escudo, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja, caraHD, panel, R_MAX, iconoBalon, iconoRoja, iconoPase, insignia, chipPuesto } from './estilo.mjs';
 
 const ABREV = { Portero: 'POR', Defensa: 'DEF', Centrocampista: 'MED', Delantero: 'DEL', Entrenador: 'ENT' };
 // el icono de lo que ha hecho el jugador (Carlos, 7 nov 14:58): balón si marca, el pase si asiste, tarjeta roja si lo expulsan
@@ -58,7 +58,7 @@ function panelJugador(x, y, w, h, o) {
     + caraHD(o.cara, cx, cy, R, o.club.vivo, { aro: `url(#${gm.g})`, grosor: 6, halo: 1.9, haloOp: 0.5 });
   if (o.insignia) s += insignia(o.insignia, cx + R * 0.78, cy + R * 0.78, 24);
   if (o.escudo) s += escudo(o.escudo, x + 58, y + 62, 70);
-  if (o.puesto) s += chip(o.puesto, x + w - 58, y + 58, 26, { relleno: '#ffffff', tinta: '#120f16', pad: 1.6, espacio: 1.5 }).s;
+  if (o.puesto) s += chipPuesto(o.puesto, x + w - 60, y + 58, 26);           // en el color de su puesto (7 nov 15:31)
   const yN = cy + R + 76;
   s += texto(cx, yN, String(o.nombre).toUpperCase(), { px: 56, peso: 800, ancla: 'middle', max: w - 48, espacio: 0.5 })
     + (o.linea ? texto(cx, yN + 40, o.linea, { px: 26, peso: 700, color: TENUE, ancla: 'middle', espacio: 1.5, max: w - 48 }) : '')
@@ -95,14 +95,16 @@ function pildoraVivo(cx, cy, px) {
     + `<circle cx="${x0 + px * 0.75 + r}" cy="${cy}" r="${r}" fill="#fff"/>`
     + texto(x0 + px * 0.75 + r * 2 + px * 0.35, cy + px * 0.36, 'EN JUEGO', { px, peso: 800, color: '#fff', espacio: 1.5 });
 }
-/** la casilla de la jornada de hoy con el partido en juego: oscura, filo rojo, la cifra en blanco, la J en rojo y la píldora encima */
-function casillaVivo(x0, y, w, h, p, jn, { rx, pxN, pxJ, yN, yJ, pxP }) {
-  return caja(x0, y, w, h, { rx, relleno: '#1d1218', borde: ROJO, grosor: 2.5, sombra: true })
-    + texto(x0 + w / 2, y + yN, String(p), { px: pxN, peso: 900, color: p < 0 ? MALO : TINTA, ancla: 'middle', max: w - 12 })
-    + texto(x0 + w / 2, y + yJ, `J${jn}`, { px: pxJ, peso: 700, color: ROJO, ancla: 'middle', espacio: 1 })
-    + pildoraVivo(x0 + w / 2, y, pxP);
+/** la placa de los puntos de hoy con el partido en juego (Carlos, 7 nov 15:35: «al estar en juego, arriba no debería estar dorado»):
+    oscura con filo rojo, la cifra en blanco (en rojo si es negativa), «PTS» en rojo y la píldora «● EN JUEGO» encima */
+function placaJuego(valor, { x = 950, y = 44, w = 206, h = 196 } = {}) {
+  const neg = Number(valor) < 0;
+  return `<rect x="${x}" y="${y + 6}" width="${w}" height="${h}" rx="30" fill="#000" opacity="0.4"/>`
+    + caja(x, y, w, h, { rx: 30, relleno: '#1d1218', borde: ROJO, grosor: 3, sombra: false })
+    + texto(x + w / 2, y + 128, String(valor), { px: 120, peso: 900, color: neg ? MALO : TINTA, ancla: 'middle', max: w - 30 })
+    + texto(x + w / 2, y + 170, 'PTS', { px: 28, peso: 800, color: ROJO, ancla: 'middle', espacio: 3 })
+    + pildoraVivo(x + w / 2, y, 22);
 }
-
 /** la placa de un partido en juego: el minuto grande y «EN JUEGO» con el punto rojo de directo (sin oro: no es un dato del jugador) */
 function placaVivo(minuto, { x = 950, y = 44, w = 206, h = 196 } = {}) {
   const wt = medir('EN JUEGO', 26, B, 3), x0 = x + w / 2 - (wt + 26) / 2;
@@ -113,31 +115,19 @@ function placaVivo(minuto, { x = 950, y = 44, w = 206, h = 196 } = {}) {
     + texto(x0 + 26, y + 169, 'EN JUEGO', { px: 26, peso: 800, color: ROJO, espacio: 3 });
 }
 
-function miniJornadas(x, y, ultimas, gOro, { sinHoy = false, vivo = false } = {}) {
+// las 5 jornadas ANTERIORES a la de la tarjeta, todas iguales (Carlos, 7 nov 15:35: «que salgan las 5 últimas y arriba más en grande el
+// directo y lo de esta jornada»): los puntos de hoy van solo en la placa de arriba, en oro si el partido ha acabado y con filo rojo y
+// «EN JUEGO» si no
+function miniJornadas(x, y, ultimas) {
   let s = '';
   const n = ultimas.length || 1, paso = 566 / Math.max(5, n), w = paso - 14, h = 132;
   ultimas.forEach(([jn, p], i) => {
-    const x0 = x + i * paso, ult = !sinHoy && i === ultimas.length - 1;   // sin puntos aún en directo, ninguna en oro
-    if (ult && vivo) { s += casillaVivo(x0, y, w, h, p, jn, { rx: 20, pxN: 66, pxJ: 26, yN: 76, yJ: 112, pxP: 17 }); return; }
-    s += caja(x0, y, w, h, { rx: 20, relleno: ult ? `url(#${gOro})` : null, sombra: true })
-      + texto(x0 + w / 2, y + 76, String(p), { px: 66, peso: 900, color: ult ? '#2a1c04' : p < 0 ? MALO : TINTA, ancla: 'middle', max: w - 12 })
-      + texto(x0 + w / 2, y + 112, `J${jn}`, { px: 26, peso: 700, color: ult ? '#5a420f' : TENUE, ancla: 'middle', espacio: 1 });
+    const x0 = x + i * paso;
+    s += caja(x0, y, w, h, { rx: 20, sombra: true })
+      + texto(x0 + w / 2, y + 76, String(p), { px: 66, peso: 900, color: p < 0 ? MALO : TINTA, ancla: 'middle', max: w - 12 })
+      + texto(x0 + w / 2, y + 112, `J${jn}`, { px: 26, peso: 700, color: TENUE, ancla: 'middle', espacio: 1 });
   });
   return s;
-}
-function graficaValor(x, y, w, h, valor, color) {
-  if (!valor || valor.length < 2) return texto(x, y + h / 2, 'Sin histórico de valor', { px: 26, peso: 600, color: TENUE });
-  const vs = valor.map(([, v]) => v), min = Math.min(...vs), max = Math.max(...vs), rango = max - min || 1;
-  const t0 = valor[0][0], t1 = valor[valor.length - 1][0];
-  const px = (t) => x + (t - t0) / ((t1 - t0) || 1) * w, py = (v) => y + h - (v - min) / rango * h;
-  const pts = valor.map(([t, v]) => `${px(t).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
-  const g = id('gv');
-  const [ux, uy] = [px(t1), py(vs[vs.length - 1])];
-  return `<defs>${lineal(g, [[0, color, 0.35], [1, color, 0]])}</defs>`
-    + [0, 0.5, 1].map((f) => `<rect x="${x}" y="${(y + h * f).toFixed(1)}" width="${w}" height="1" fill="#fff" opacity="0.08"/>`).join('')
-    + `<polygon points="${x},${y + h} ${pts} ${ux},${y + h}" fill="url(#${g})"/>`
-    + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`
-    + `<circle cx="${ux}" cy="${uy}" r="8" fill="${color}" stroke="${FONDO}" stroke-width="3"/>`;
 }
 /** a la derecha del panel: los puntos de las últimas jornadas y el valor de los últimos días con su gráfica */
 function historial(x0, y0, d, gOro) {
@@ -145,11 +135,12 @@ function historial(x0, y0, d, gOro) {
   const val = millones(d.valorHoy), wv = medir(val, 64, B);
   const pc = chip(`${signo(d.cambio)} %`, 0, 0, 30, { relleno: colV, pad: 1.5, espacio: 0.5 });
   return texto(x0, y0 + 24, 'PUNTOS EN LAS ÚLTIMAS JORNADAS', { px: 25, peso: 700, color: TENUE, espacio: 3, max: wd })
-    + miniJornadas(x0, y0 + 44, d.ultimas, gOro, { sinHoy: !!d.sinPuntos, vivo: !!d.enJuego })
+    + miniJornadas(x0, y0 + 44, d.ultimas)
     + texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 25, peso: 700, color: TENUE, espacio: 3 })
     + texto(x0, yv + 62, val, { px: 64, peso: 800 })
     + chip(`${signo(d.cambio)} %`, x0 + wv + 24 + pc.w / 2, yv + 44, 30, { relleno: colV, pad: 1.5, espacio: 0.5 }).s
-    + graficaValor(x0, yv + 100, wd, 130, d.valor, d.cambio < 0 ? MALO : '#e2bd5a');
+    // con la escala de la de gol y asistencia: máximo, mínimo y fechas (Carlos, 7 nov 15:47)
+    + graficaEscala(x0, yv + 92, wd, 150, d.valor, d.cambio < 0 ? MALO : d.cambio > 0 ? VERDE : '#e2bd5a');
 }
 
 /** cabecera de la carta: el motivo en grande (MVP, ¡DOBLETE!, PENALTI PARADO, LESIONADO…) y dos líneas debajo */
@@ -166,7 +157,7 @@ export function svgJugadorCarta(d) {
   let s = oro.defs + fondo([[300, 520, 640, c.vivo, 0.6], [1000, 80, 560, c.vivo, 0.2]], H)
     + cabeceraCarta(motivo.toUpperCase(), oro.g, [...resto, ...(d.minuto && !d.sinPuntos ? [d.minuto] : [])].join(' · ').toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
     // en directo y sin puntos todavía (LaLiga no ha sumado la jugada): arriba el minuto «EN JUEGO» en vez de un «0 PTS»
-    + (d.sinPuntos ? (d.minuto ? placaVivo(d.minuto) : '') : placa(String(d.ptsJornada), 'PTS', oro.g) + (d.enJuego ? pildoraVivo(950 + 103, 44, 22) : ''))
+    + (d.sinPuntos ? (d.minuto ? placaVivo(d.minuto) : '') : d.enJuego ? placaJuego(d.ptsJornada) : placa(String(d.ptsJornada), 'PTS', oro.g))
     + iconoTitulo(ICONO[d.motivo], motivo.toUpperCase())
     + panelJugador(44, 284, 500, 490, { metal, club: c, cara: d.cara, escudo: d.club.escudo, puesto: ABREV[d.posicion] || d.posicion, nombre: d.nombre, insignia: ICONO[d.motivo],
       cifras: [[num1(d.media), 'PUNTOS DE MEDIA'], [String(d.total), 'PUNTOS TOTALES']] })
@@ -253,35 +244,42 @@ function panelDuo(x, y, w, h, j, rol, gOro) {
     + insignia(rol === 'ASISTENCIA' ? 'asistencia' : 'gol', cx + R * 0.78, cy + R * 0.78, 24);
   if (j.club.escudo) s += escudo(j.club.escudo, x + 58, y + 62, 70);
   const pu = ABREV[j.posicion] || j.posicion;
-  if (pu) s += chip(pu, x + w - 58, y + 58, 26, { relleno: '#ffffff', tinta: '#120f16', pad: 1.6, espacio: 1.5 }).s;
+  if (pu) s += chipPuesto(pu, x + w - 60, y + 58, 26);
   const yN = cy + R + 74;
   s += texto(cx, yN, String(j.nombre).toUpperCase(), { px: 56, peso: 800, ancla: 'middle', max: w - 48, espacio: 0.5 });
   const esGol = rol !== 'ASISTENCIA';
   s += chipIcono(rol, esGol ? 'gol' : 'asistencia', cx, yN + 46, 26, esGol ? { relleno: '#e2bd5a', tinta: '#2a1c04' } : { relleno: '#ffffff', tinta: '#120f16' })
     + `<rect x="${x + 40}" y="${yN + 82}" width="${w - 80}" height="1.5" fill="#fff" fill-opacity="0.12"/>`;
-  // las cifras: media y valor. Los puntos de hoy van solo en la casilla dorada de la jornada (Carlos, 7 nov 15:06: salían dos veces)
+  // las cifras: los puntos de hoy (en grande y los primeros, Carlos 7 nov 15:35), la media y el valor. Con el partido en juego, los de
+  // hoy en blanco con la píldora «EN JUEGO» encima (no en oro: aún subirán o bajarán); sin puntos todavía, «EN JUEGO» y «SIN PUNTOS AÚN»
+  const xc0 = x + w / 6;
+  if (j.sinPuntos) s += pildoraVivo(xc0, yN + 160 - 30, 22) + texto(xc0, yN + 160 + 32, 'SIN PUNTOS AÚN', { px: 18, peso: 700, color: TENUE, ancla: 'middle', espacio: 1 });
+  else {
+    const neg = j.ptsJornada < 0;
+    s += texto(xc0, yN + 160 + 4, String(j.ptsJornada), { px: 72, peso: 900, color: neg ? MALO : j.enJuego ? TINTA : `url(#${gOro})`, ancla: 'middle', max: w / 3 - 20 })
+      + texto(xc0, yN + 160 + 34, 'PTS HOY', { px: 20, peso: 800, color: j.enJuego ? ROJO : '#e2bd5a', ancla: 'middle', espacio: 1.5 })
+      + (j.enJuego ? pildoraVivo(xc0, yN + 160 - 66, 16) : '');
+  }
   const cifras = [[num1(j.media), 'DE MEDIA'], [millones(j.valorHoy), 'VALOR']];
-  const yc = yN + 160, paso = w / cifras.length;
+  const yc = yN + 160, paso = w / 3;
   cifras.forEach(([v, et, color], k) => {
-    const xc = x + paso * (k + 0.5);
+    const xc = x + paso * (k + 1.5);
     s += texto(xc, yc, v, { px: 50, peso: 900, color: color || TINTA, ancla: 'middle', max: paso - 24 })
       + texto(xc, yc + 32, et, { px: 20, peso: 700, color: TENUE, ancla: 'middle', espacio: 1.5, max: paso - 16 });
-    if (k) s += `<rect x="${x + paso * k - 0.75}" y="${yc - 48}" width="1.5" height="86" fill="#fff" fill-opacity="0.12"/>`;
+    s += `<rect x="${x + paso * (k + 1) - 0.75}" y="${yc - 48}" width="1.5" height="86" fill="#fff" fill-opacity="0.12"/>`;
   });
   // el valor de los últimos 30 días en una minigráfica, con el % de cambio (Carlos, 7 nov 15:07)
   const yS = yc + 78, colV = j.cambio > 0 ? VERDE : j.cambio < 0 ? MALO : TENUE;
   s += texto(x + 32, yS, `VALOR · ${j.dias} DÍAS`, { px: 20, peso: 700, color: TENUE, espacio: 1.5 })
     + texto(x + w - 32, yS, `${signo(j.cambio)} %`, { px: 24, peso: 800, color: colV, ancla: 'end' })
     + graficaEscala(x + 32, yS + 22, w - 64, 84, j.valor, j.cambio < 0 ? MALO : j.cambio > 0 ? VERDE : '#e2bd5a');
-  // sus últimas jornadas, pequeñas (la de hoy en oro si ya tiene puntos)
+  // sus 5 jornadas anteriores, pequeñas y todas iguales (lo de hoy va arriba, en grande)
   const yM = yS + 138, n = j.ultimas.length || 1, pasoM = (w - 64) / Math.max(5, n), wm = pasoM - 10, hm = 96;
   j.ultimas.forEach(([jn, p], i) => {
-    const x0 = x + 32 + i * pasoM, hoy = !j.sinPuntos && jn === j.jornada;
-    // con el partido en juego, la de hoy no va en oro: filo rojo y «EN JUEGO» (Carlos, 7 nov 15:10: que se entienda que subirán)
-    if (hoy && j.enJuego) { s += casillaVivo(x0, yM, wm, hm, p, jn, { rx: 16, pxN: 46, pxJ: 20, yN: 56, yJ: 84, pxP: 13 }); return; }
-    s += caja(x0, yM, wm, hm, { rx: 16, relleno: hoy ? `url(#${gOro})` : null, sombra: true })
-      + texto(x0 + wm / 2, yM + 56, String(p), { px: 46, peso: 900, color: hoy ? '#2a1c04' : p < 0 ? MALO : TINTA, ancla: 'middle', max: wm - 10 })
-      + texto(x0 + wm / 2, yM + 84, `J${jn}`, { px: 20, peso: 700, color: hoy ? '#5a420f' : TENUE, ancla: 'middle', espacio: 1 });
+    const x0 = x + 32 + i * pasoM;
+    s += caja(x0, yM, wm, hm, { rx: 16, sombra: true })
+      + texto(x0 + wm / 2, yM + 56, String(p), { px: 46, peso: 900, color: p < 0 ? MALO : TINTA, ancla: 'middle', max: wm - 10 })
+      + texto(x0 + wm / 2, yM + 84, `J${jn}`, { px: 20, peso: 700, color: TENUE, ancla: 'middle', espacio: 1 });
   });
   return s;
 }
