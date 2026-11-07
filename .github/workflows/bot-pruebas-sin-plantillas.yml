@@ -1,0 +1,52 @@
+# SOLO EN LA RAMA pruebas-sin-plantillas: no va a main. Simulacro del bot con la redacción nueva (bot/lib/redaccion.mjs) y la API de
+# Claude, con datos reales y el registro de bot-estado de hace HORAS horas (para que lo publicado desde entonces vuelva a salir y se
+# pueda comparar con la plantilla). NUNCA publica: no tiene las claves de X y va con --modo=simulacro. El registro es una copia en
+# /tmp: no se guarda nada en bot-estado. Sin GEMINI_API_KEY a propósito: no gasta el cupo del bot de verdad (sin ella, pulir no hace nada). Se lanza con cada push a la rama; los tipos y las horas, en las variables de abajo.
+name: Bot pruebas sin plantillas
+
+on:
+  push:
+    branches: [pruebas-sin-plantillas]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bot-pruebas-sin-plantillas
+  cancel-in-progress: true
+
+jobs:
+  simulacro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BOT_IA: claude
+      BOT_REDACTAR: '1'
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      TIPOS: noticias,novedades,previa,caidas,sancionados,lloros,resumen,liga,mercado,onceideal
+      HORAS: '30'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: Registro de hace unas horas (copia, solo lectura)
+        run: |
+          git clone -q --branch bot-estado --shallow-since="4 days ago" "https://github.com/${GITHUB_REPOSITORY}.git" /tmp/estado
+          C=$(git -C /tmp/estado rev-list -1 --before="${HORAS} hours ago" HEAD)
+          git -C /tmp/estado show "$C:registro.json" > /tmp/registro.json
+          echo "Registro de $(git -C /tmp/estado show -s --format=%ci "$C")"
+      - name: Sin topes para la prueba (solo en esta copia del runner)
+        run: |
+          node -e "const f='bot/config.json',c=require('./'+f);c.maxPorEjecucion=40;c.redactar.segundosEjecucion=3000;c.topeDiario=200;for(const k of Object.keys(c.topes))c.topes[k]=50;require('fs').writeFileSync(f,JSON.stringify(c,null,1))"
+      - name: Simulacro con la redacción nueva
+        run: |
+          test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
+          echo "=== Todos los tipos con plantilla, redactados ==="
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos="$TIPOS" --jornada=11 --estado=/tmp/registro.json --redactar=1 || true
+          echo "=== Directo (J11: 31 oct y 1 nov) ==="
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=directo --jornada=11 --fechas-espn=20261031,20261101 --estado=/tmp/registro.json --redactar=1 || true
+      - name: Gasto y fallos de esta prueba
+        run: |
+          node -e "const r=require('/tmp/registro.json');console.log('ia hoy:',JSON.stringify(r.ia||{}));console.log('fallosRedaccion:',JSON.stringify(r.fallosRedaccion||{}))"
