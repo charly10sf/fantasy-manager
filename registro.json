@@ -1528,7 +1528,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
+   "SPORT|136195491": 1794053530000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000
   },
   "hechos": [
    {
@@ -2175,11 +2177,26 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136195491",
+    "medio": "SPORT",
+    "t": 1794053530000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri aparece lesionado y deja un hueco en el pivote",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     21,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -3702,17 +3719,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 16,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 137827,
-  "salida": 19328,
+  "entrada": 139784,
+  "salida": 19516,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.318199
+  "dolares": 0.318489
  },
  "recientes": {
   "onces": [
