@@ -216,7 +216,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // rigor (Carlos, 6 nov, final del Sevilla-Alavés: «Cuenta COPE que Sivera ha parado un penalti»): lo que pasa en un partido es un hecho y
   // no se le pone un medio delante (suena a que nadie lo ha comprobado), y un suceso (penalti, parada, roja, autogol, VAR) solo sale si está
   // en los hechos (goles o incidencias, de ESPN). Solo en finales y MVP: en noticias y previas el medio sí es la fuente.
-  if (hechos.tipo === 'final' || hechos.tipo === 'mvp') {
+  if (hechos.tipo === 'final' || hechos.tipo === 'mvp' || hechos.tipo === 'directo') {
     if (medios.length || ATRIBUYE.test(t)) e.push('en un final o un MVP no se atribuye nada a un medio («cuenta COPE», «según MARCA»…): lo que pasa en el partido es un hecho y se cuenta tal cual');
     const sucesos = sucesosSinHechos(t, hechos);
     if (sucesos.length) e.push(`cuenta sucesos que no están en los hechos (${sucesos.join(', ')}): no lo insinúes, ni siquiera atribuido a un medio`);
@@ -266,7 +266,7 @@ export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [
   return [`Escribe el tuit de tipo «${hechos.tipo}» con estos hechos. Como mucho ${max} caracteres, mejor menos (sin contar la etiqueta, que va aparte: «${hechos.etiqueta || '(ninguna)'}»).`,
     `HECHOS:\n${JSON.stringify(hechos, sinFecha, 1)}`,
     // lo que más tumbaba los borradores en la prueba del 7 nov (19 previas): se recuerda justo antes de escribir
-    (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ninguna comparación con el resto de la jornada.`; })(),
+    (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ${hechos.tipo === 'resumen' ? 'lo que sí puedes contar es el ranking de los hechos (quién va primero, a cuánto de la media)' : 'ninguna comparación con el resto de la jornada'}.`; })(),
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     gastadas.length ? `FRASES YA GASTADAS (salen en varios de esos tuits; no las uses): ${gastadas.map((g) => `«${g.txt}»`).join(', ')}` : '',
     cronicas.length ? `PRENSA DE ESTE PARTIDO (hasta dos hechos, con tus palabras y con el medio pegado al hecho; nada de lo que pasa en el campo, eso solo si está en los hechos):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
@@ -317,7 +317,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     const sep = etiqueta ? 2 : 0;
     const max = limite() - (etiqueta ? peso(etiqueta) + sep : 0);
     // lo que se le pide (más corto: «no tienen por qué ser muy largos», Carlos, 4 nov) y el máximo de verdad, que el validador mira
-    const pide = Math.min(max - 40, ((cfg.largo || {})[tipo]) || max - 40);
+    const pide = Math.min(max - 40, ((cfg.largo || {})[t.hechos.tipo] || (cfg.largo || {})[tipo]) || max - 40);
     const cronicas = (await Promise.resolve(cronicasDe(t)).catch(() => [])) || [];
     let anterior = '', errores = [], final = null, rechazos = 0, causa = 'rechazada';
     // presupuesto de tiempo de la ejecución (el trabajo de Actions tiene un tope de 10 min): pasado, sale la plantilla
@@ -330,14 +330,15 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       // (el directo lleva prisa: una sola llamada, sin reintentos; `redactar.intentosPorTipo`)
       if (intento >= ((cfg.intentosPorTipo || {})[tipo] ?? Infinity)) break;
       const r = await pedir({ uso: 'redactar', registro, config, sistema, cache, esquema: ESQUEMA, log,
-        prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
+        prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (((cfg.segundosPorTipo || {})[tipo]) ?? cfg.segundos ?? 60) * 1000 });
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); causa = /^(tope|sin Claude)/.test(String(r.error)) ? 'sin-ia' : 'ia-no'; break; }
       const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
       if (!malos.length) {
-        const rv = await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, tipo, registro, config, log });
+        // (el directo no espera a un segundo editor: lo del validador de código basta, la jugada caduca en minutos)
+        const rv = (cfg.sinRevisor || []).includes(tipo) ? { ok: true, revisado: false } : await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, tipo, registro, config, log });
         if (rv.ok) { final = { texto, modelo: r.modelo, usadas, revisado: rv.revisado ? rv.modelo : null }; continue; }
         rechazos++;
         log(`  (redactar) ${t.clave}, intento ${intento + 1}: el revisor no lo publicaría: ${rv.problemas.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`);

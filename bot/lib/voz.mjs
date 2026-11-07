@@ -146,11 +146,55 @@ Llega justo de ritmo y Fantasy Manager le da un 41 % de titularidad: lo normal e
 Sin Lucas Ferrer por sanción ni Marc Olmo por lesión, la defensa del Espanyol es una incógnita, y eso abre la puerta a los de arriba del Deportivo. El más fiable es Pablo Ruano, que no ha fallado un once.
 
 En el Espanyol, quien sí juega es Bruno Alba, aunque con la zaga así no es el mejor partido para un portero.`, nota: 'Une las bajas con lo que significan para el otro equipo.' },
+  // ---- tipos que antes salían de plantilla ----
+  { tipo: 'caidas', bien: true, texto: `❌ Tres bajas fijas para la jornada 12: Marc Vidal (Betis) se lesionó en el isquiotibial, y Iker Saldaña (Getafe) y Pol Sanz (Rayo) no se recuperan a tiempo.
+
+El que más duele es Vidal, que jugaba siempre. Los otros dos eran de los que rotaban, así que se nota menos. Si tienes a alguno, hoy toca mirar el mercado.`, nota: 'Qué pasa, quién pesa más y qué hacer. No enumera plazos ni minutos que no importan.' },
+  { tipo: 'caidas', bien: false, texto: `🚨 Bajas jornada 12. Marc Vidal: lesionado. Iker Saldaña: lesionado. Pol Sanz: duda. Revisa tu once antes del viernes.`, nota: 'Lista de telegrama, sin decir quién importa ni por qué.' },
+  { tipo: 'sancionados', bien: true, texto: `🟥 Se quedan sin jugar esta jornada Jon Arrieta (Celta), por acumulación de amarillas, y Unai Berrio (Getafe), por la roja del domingo.
+
+Arrieta era de los fijos del once, así que si lo tienes hay que buscarle recambio. Berrio, con el Getafe jugando fuera, no es tan grave.`, nota: 'El motivo de cada uno como viene en los hechos y qué significa para el mánager.' },
+  { tipo: 'sancionados', bien: true, subtipo: 'apercibidos', texto: `🟨 Dos titulares fijos están a una amarilla de perderse la jornada 13: Toni Cano (Betis) y Hugo Marín (Mallorca).
+
+No cambia nada para este fin de semana, pero si ven otra, de golpe se quedan sin jugar. Para quien los tenga: mirar quién les cubre en el banquillo.`, nota: 'Apercibidos: se avisa de lo que pueden perder, sin dar nada por hecho.' },
+  { tipo: 'sancionados', bien: false, texto: `🟥 Sancionados jornada 12: Jon Arrieta, Unai Berrio. Ambos se pierden el partido. Atentos a tu once.`, nota: 'Sin motivo, sin lectura y con la etiqueta repetida a mano.' },
+  { tipo: 'lloros', bien: true, texto: `😭 La portería a cero se escapó por muy poco: Unai Berrio se quedó sin los 4 puntos porque el gol llegó en el 88'.
+
+Jon Arrieta lo mismo: salió en el 60' y el gol llegó tras su cambio. Dos de los que más duelen esta jornada.`, nota: 'Cada lloro con su porqué, tal como viene en los hechos.' },
+  { tipo: 'lloros', bien: false, texto: `😭 Lloros de la jornada 12: Berrio y Arrieta. No suman la portería a cero por poco. Mala suerte.`, nota: 'Sin el minuto ni la razón. Es un titular, no una historia.' },
+  { tipo: 'resumen', bien: true, subtipo: 'mejores', texto: `⭐ Iker Saldaña manda en la jornada 12 con 17 puntos, más del doble de su media, por delante de Marc Vidal (14) y Toni Cano (13).
+
+El Osasuna es el club que más mete en el once: dos de los seis. Por ahí fue la jornada.`, nota: 'El ranking tal cual viene en los hechos, con una lectura de qué club puso más.' },
+  { tipo: 'resumen', bien: false, subtipo: 'peores', texto: `📉 Los peores de la jornada 12: Berrio, Arrieta, Vidal, Saldaña, Cano y Sanz, todos con menos de 2 puntos. Para olvidar.`, nota: 'Lista sin orden ni contexto; «para olvidar» es relleno.' },
+  { tipo: 'liga', bien: true, texto: `📣 LaLiga ha pedido a los clubes que de aquí a enero adelanten los cierres de plantilla, según el comunicado de la Liga.
+
+Para el fantasy es poco más que un aviso: de momento no cambia fechas de mercado. Si lo cambian, ya se verá cuándo.`, nota: 'Qué se plantea, sin darlo por hecho y con lo que significa (o no) para el mánager.' },
+  { tipo: 'liga', bien: false, texto: `📣 Gran novedad en LaLiga: cambia todo el mercado de invierno. Revoluciona el fantasy.`, nota: 'Exagera, no dice quién lo ha dicho y afirma lo que los hechos solo plantean.' },
+  { tipo: 'onces', bien: true, texto: `👀 El Betis sale con Toni Cano y Hugo Marín arriba, y con Rubén Lago por fin de vuelta en el lateral. La gran sorpresa: Saúl Pino empieza en el banquillo.
+
+En el Mallorca, once sin sorpresas.`, nota: 'Lo que cambia respecto a lo esperado, sin repetir los once enteros.' },
+  { tipo: 'onces', bien: false, texto: `👀 Onces confirmados Betis-Mallorca: Betis con 4-3-3, Mallorca con 4-4-2. Titulares: Cano, Marín, Lago, Díaz, Sanz, Ruano... Revisa tu once.`, nota: 'Alineación recitada: lo que importa es lo que sorprende.' },
+  { tipo: 'mercado', bien: true, texto: `📈 El mercado se movió esta noche: Iker Saldaña sube casi 1 M y Marc Vidal baja 600.000 €.
+
+El chollo del día es Pol Sanz, que vale 4 M y ya lleva dos jornadas en el once. Quien necesite un defensa barato, aquí tiene una opción.`, nota: 'Las dos subidas y bajadas que cuentan y un chollo con su razón.' },
+  { tipo: 'mercado', bien: false, texto: `📈 Mercado actualizado. Suben 34 jugadores, bajan 51. El mercado fantasy está muy movido hoy. Mira la tarjeta.`, nota: 'Cifras sin sentido y «muy movido» no dice nada.' },
+  { tipo: 'onceideal', bien: true, texto: `🧩 El once ideal de la jornada 12 sale con un 3-4-3: Unai Berrio bajo palos, con Toni Cano y Marc Vidal como los que más puntos esperan.
+
+Cano juega en casa contra uno de los que más encajan. Si buscas un delantero para ese once, es de los primeros que entrarían.`, nota: 'La idea del once y quién destaca, con su razón.' },
+  { tipo: 'onceideal', bien: false, texto: `🧩 Once ideal J12: Berrio; Arrieta, Vidal, Sanz; Cano, Marín, Lago, Díaz; Saldaña, Ruano, Pino. Revisa tu once Fantasy.`, nota: 'Una lista de nombres sin lectura. Para eso ya está la imagen.' },
+  { tipo: 'directo', bien: true, subtipo: 'gol', texto: `⚽ Gol de Iker Saldaña en el 34': el Osasuna se pone 1-0 contra el Deportivo.
+
+Ya suma 7 puntos, la mitad de lo que hizo en toda la jornada pasada. Pase de Marc Vidal, que se lleva 2.`, nota: 'Corto, con minuto, marcador y lo que pasa con los puntos.' },
+  { tipo: 'directo', bien: true, subtipo: 'penalti parado', texto: `🧤 Unai Berrio le para un penalti a Marc Vidal en el 32', con el 0-0 todavía.
+
+El portero del Getafe ya suma 5 puntos y está a una portería a cero de llevarse la jornada.`, nota: 'El suceso como hecho, con el minuto y lo que vale para el mánager.' },
+  { tipo: 'directo', bien: false, subtipo: 'gol', texto: `⚽ ¡¡GOLAZO!! Saldaña marca para el Osasuna, gran jugada y remate espectacular. Cuenta Marca que ya suma 7 puntos.`, nota: 'Adjetivos de anuncio, medio delante de un gol y una «gran jugada» que no está en los hechos.' },
 ];
 
 /** los ejemplos de un tipo (y alguno de otro para variar), como texto para la guía */
 export function ejemplosPara(tipo) {
-  const mios = EJEMPLOS.filter((e) => e.tipo === tipo);
-  const otros = EJEMPLOS.filter((e) => e.tipo !== tipo && e.bien).slice(0, 3);
+  // (las plantillas de onces confirmados salen del módulo de las previas)
+  const mios = EJEMPLOS.filter((e) => e.tipo === tipo || (tipo === 'previa' && e.tipo === 'onces'));
+  const otros = EJEMPLOS.filter((e) => !mios.includes(e) && e.bien).slice(0, 3);
   return [...mios, ...otros].map((e) => `${e.bien ? 'BIEN' : 'MAL'} (${e.tipo}): ${e.nota}\n"""\n${e.texto}\n"""`).join('\n\n');
 }
