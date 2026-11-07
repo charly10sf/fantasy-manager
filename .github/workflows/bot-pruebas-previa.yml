@@ -33,4 +33,6 @@ jobs:
       - name: Previa con la redacción
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
-          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=previa --jornada=12 --redactar=1
+          # registro con un fallo previo en cada previa: se redactan sin prensa (sinPrensaTrasFallos)
+          node -e "const f={};for(let i=100;i<140;i++)f['previa|'+i]={n:1};require('fs').writeFileSync('/tmp/registro.json',JSON.stringify({enviados:[],fallosRedaccion:f}))"
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=previa --jornada=12 --redactar=1 --estado=/tmp/registro.json
