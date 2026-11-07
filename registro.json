@@ -391,6 +391,41 @@
    "jornada": 12,
    "id": "2118844771628421401",
    "t": "2026-11-06T23:15:34.667Z"
+  },
+  {
+   "clave": "previa|118",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118977438239650162",
+   "t": "2026-11-07T08:02:45.113Z"
+  },
+  {
+   "clave": "previa|114",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118977450809917947",
+   "t": "2026-11-07T08:02:48.145Z"
+  },
+  {
+   "clave": "previa|111",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118977462038151453",
+   "t": "2026-11-07T08:02:50.799Z"
+  },
+  {
+   "clave": "previa|119",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118977474625220658",
+   "t": "2026-11-07T08:02:53.808Z"
+  },
+  {
+   "clave": "previa|120",
+   "tipo": "previa",
+   "jornada": 12,
+   "id": "2118977487623356666",
+   "t": "2026-11-07T08:02:56.904Z"
   }
  ],
  "estados": {
@@ -668,7 +703,7 @@
   "2619": "out_of_league",
   "2620": "out_of_league",
   "2621": "ok",
-  "2622": "ok",
+  "2622": "injured",
   "2623": "ok",
   "2624": "injured",
   "2626": "ok",
@@ -1280,18 +1315,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/barcelona/2026/11/03/rodri-duda-partido-frente-atletico-madrid.html": 1793745516000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261104/1004247031/antiviolencia-propone-multar-youtuber-inaki-angulo-insultos-homofobos-hector-bellerin.html": 1793776524000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261104/1004246341/luka-sucic-muta-bombardero-gracias-gran-eclosion-le-convierte-lider-real.html": 1793771700000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004246941/positivo-barca-metropolitano.html": 1793770200000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246929/rodri-sustituido-molestias-isquiotibial-derecho.html": 1793744582000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/villarreal/20261103/1004246925/moleiro-no-salido.html": 1793743759000,
-   "SPORT|136063405": 1793774247000,
-   "SPORT|136063348": 1793772228000,
-   "SPORT|136056334": 1793766655000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rodri-retiro-partido-frente-aston-villa-molestias-musculares-pendiente-pruebas-20261103_3467985.html": 1793745630000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/03/6aea107621efa0c3758b4599.html": 1793746141000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/03/barca-vuelve-ganar-europa-acaba-invicto-aston-villa/00031793744143964451858.htm": 1793744280000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247042/flick-pendiente-pruebas-hoy-rodri.html": 1793781166000,
    "AS|https://as.com/futbol/primera/el-calvario-de-quique-y-mariano-en-nervion-hubo-un-desgaste-terrible-f202611-n/": 1793783139000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247063/eric-christensen-esperan-llegar-metropolitano.html": 1793784669000,
@@ -1484,57 +1507,19 @@
    "SPORT|136181983": 1793990642000,
    "AS|https://as.com/futbol/videos/llegara-la-redencion-definitiva-de-julian-contra-el-barca-f202611-v/": 1793995579000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html": 1793997151000,
-   "SPORT|136149850": 1793995933000
+   "SPORT|136149850": 1793995933000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/jj-gabriel-marca-mi-sueno-ganar-balon-oro.html": 1794004223000,
+   "AS|https://as.com/futbol/alineacion-posible-de-osasuna-contra-el-athletic-en-laliga-ea-sports-f202611-n/": 1794006243000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248086/roberto-proximo-paron-dos-internacionales.html": 1794031200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248015/hoy-decision-final-eric-christensen.html": 1794031200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248080/gavi-opcion-sustituir-rodri.html": 1794020700000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248022/doble-pivote.html": 1794016800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248109/test-fermin-sobre-150-partidos-barca.html": 1794007800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248142/portada-md-bizkaia-araba-hoy-sabado.html": 1794007387000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261107/1004248138/garcia-plaza-esto-meterla-porteria.html": 1794006507000,
+   "SPORT|136188211": 1794024086000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004246941/positivo-barca-metropolitano.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793770200000,
-    "id": "3208",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Rodri arrastra molestias físicas previas al próximo encuentro",
-    "motivo": "molestias físicas",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261103/1004246929/rodri-sustituido-molestias-isquiotibial-derecho.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793744582000,
-    "id": "3208",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Rodri sufre molestias y queda pendiente de evolución",
-    "motivo": "molestias en el isquiotibial derecho",
-    "plazo": "próximos días",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136063405",
-    "medio": "SPORT",
-    "t": 1793774247000,
-    "id": "3208",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Rodri se retira del entrenamiento con molestias musculares",
-    "motivo": "molestias en el gemelo derecho",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rodri-retiro-partido-frente-aston-villa-molestias-musculares-pendiente-pruebas-20261103_3467985.html",
-    "medio": "COPE",
-    "t": 1793745630000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri se retira lesionado y pendiente de pruebas médicas",
-    "motivo": "molestias musculares en el gemelo",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-avisa-hansi-flick-gestion-rodri-lesion-jugar-atletico-madrid-jugado-minutos-seguro-seguidores-no-entienden-20261104_3467990.html",
     "medio": "COPE",
@@ -2218,11 +2203,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248142/portada-md-bizkaia-araba-hoy-sabado.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794007387000,
+    "id": "2315",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Paredes se queda en casa para el partido en Osasuna",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-06",
-   "n": 51
+   "dia": "2026-11-07",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -3032,10 +3029,10 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-06",
-  "n": 9,
-  "ok": 3,
-  "mal": 8
+  "dia": "2026-11-07",
+  "n": 1,
+  "ok": 2,
+  "mal": 0
  },
  "liga": {
   "vistas": {
@@ -3832,17 +3829,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 1,
-   "redactar": 0,
-   "revisar": 0,
-   "pulir": 0
+   "clasificar": 2,
+   "redactar": 13,
+   "revisar": 12,
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 2369,
-  "salida": 1465,
-  "cacheLee": 0,
-  "cacheEscribe": 0,
-  "dolares": 0.000969
+  "entrada": 71122,
+  "salida": 11030,
+  "cacheLee": 97572,
+  "cacheEscribe": 8334,
+  "dolares": 0.238181
  },
  "recientes": {
   "onces": [
@@ -3867,6 +3864,28 @@
    {
     "t": "2026-11-06T23:15:34.668Z",
     "texto": "💸 Subidas y bajadas del mercado fantasy de hoy, 7/11\n\n📈 Aubameyang del Dépor es el que más sube: +1,9 M (+3,8 %), hasta los 50,9 M.\n\n📉 En el otro lado, Rodri del Barcelona pierde 2,2 M en un día y se queda en 84,1 M (-2,5 %).\n\n🛒 Chollo Fantasy: Thiago del Levante 🐸 vale 1,5 M, suma 4,1 de media y hoy sube un 2,4 %"
+   }
+  ],
+  "previa": [
+   {
+    "t": "2026-11-07T08:02:45.114Z",
+    "texto": "🗓️ El Betis visita al Elche mañana a las 14:00 en el Martínez Valero, un 4º contra un 17º.\n\nEl portero Á. Valles es de los que más puntos dan, con 9 de media, y Fantasy Manager le da un 97 % de titularidad: al once sin pensarlo. En defensa hay una duda: Bartra está en torno al 50 % para Fantasy Manager, aunque Diario de Sevilla lo mete en el once probable de Pellegrini. Cucho, delantero, está lesionado.\n\nEn el Elche, Lemar no juega y Villar y Buonanotte, centrocampistas, tienen la titularidad en el aire."
+   },
+   {
+    "t": "2026-11-07T08:02:48.147Z",
+    "texto": "🗓️ Real Sociedad-Rayo, mañana a las 16:15: posibles onces para la jornada 12\n\nLa duda está en Tsitaishvili (29 %) y Pedro Díaz en el Rayo Vallecano, y en Kubo (36 %), Zubeldia y Turrientes en la Real. Al Rayo le faltan A. Batalla, Álvaro García y Óscar Valentín, lesionados, y a la Real Sociedad, Odriozola, también lesionado.\n\nUnai Lopez (82 %, 5,5 de media) y Sucic (80 %) son los que no fallan.\n\nLa Real, 5º, parte como favorito frente al Rayo Vallecano, que es 12º. La Real Sociedad es de los que más marcan (1,8 por partido), mientras que el Rayo es de los que más encajan (2)."
+   },
+   {
+    "t": "2026-11-07T08:02:50.801Z",
+    "texto": "🗓️ El Villarreal recibe al Getafe mañana a las 18:30 en La Cerámica, tras el 0-6 ante el PSG, según Cadena SER, y con Íñigo Pérez pidiendo reacción al vestuario.\n\nEl cruce le sienta bien a Gulácsi y a la zaga amarilla: el Getafe es de los que menos marcan. Arriba hay bajas, Akhomach y Gerard, y Mikautadze está en el aire, con un 50 % de titularidad en Fantasy Manager.\n\nEn el Getafe, David Soria y Satriano son fijos, y Mangala tiene el sitio por decidir."
+   },
+   {
+    "t": "2026-11-07T08:02:53.809Z",
+    "texto": "🗓️ Posibles onces de Celta-Levante, mañana a las 18:30\n\nIonut Radu es el fijo del Celta: 97 % y 8,8 de media. No estarán M. Román, Álvaro Núñez y Starfelt, lesionados, e Iago Aspas, H. González y Carreira, entre el 27 y el 45 %, no lo tienen ganado.\n\nEn el Levante, el más en el aire es Etta Eyong, con un 34 %. Ryan sí es fijo: 97 % y 6,1 de media.\n\nSobre el papel, el Celta lo tiene más fácil: va 11º y el Levante, 18º."
+   },
+   {
+    "t": "2026-11-07T08:02:56.905Z",
+    "texto": "🗓️ Atlético-Barça, mañana a las 21:00 en el Metropolitano: el 2º contra el 1º, y un cruce poco amable para los dos por detrás.\n\nOblak y Grimaldo son fijos, pero el Barça mete mucho y eso les pesa. Lo mismo para la zaga del Barça con el Atlético marcando tanto. Arriba pasa al revés: los delanteros y medios del Barça se topan con un Atlético que casi no encaja, aunque Raphinha (14,3 de media) y Lamine Yamal son fijos igualmente.\n\nJulián Alvarez está en el aire, con un 53 % de titularidad, y AS recuerda que le ha marcado cuatro goles al Barça en nueve partidos."
    }
   ]
  },
