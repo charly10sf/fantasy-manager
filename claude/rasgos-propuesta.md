@@ -28,4 +28,33 @@ Dudas:
 
 ## Motes (7 nov, 23:30, a petición de Carlos)
 
-Con fuente y ya en el código: Isco, «el Mago» (Vavel, 17 mar 2026; El Gol Digital lo llama «el Mago de Arroyo de la Miel»); Bellingham, «Bellingol» (Fox Sports México, 7 nov 2023: mote de la afición por sus goles; el audio viral es de un narrador brasileño); Budimir, «el cisne de los Balcanes» (El Gol Digital, 2025: se lo puso la afición del Crotone, no la de Osasuna). Sin mote encontrado: Grimaldo, Raphinha, Baena, Bartra y Fermín. Yamal: «El Rey» / «O Rei» (Fox Sports, mayo y julio de 2025; el club publicó lo de «O Rei»), pero parte de la afición lo critica: no está en el código hasta que Carlos lo diga. También sale «Lord Bellingham» (AFP, 2023), que fue de una crónica y no se ha quedado.
+Con fuente y ya en el código: Isco, «el Mago» (Vavel, 17 mar 2026; El Gol Digital lo llama «el Mago de Arroyo de la Miel»); Bellingham, «Bellingol» (Fox Sports México, 7 nov 2023: mote de la afición por sus goles; el audio viral es de un narrador brasileño); Budimir, «el cisne de los Balcanes» (El Gol Digital, 2025: se lo puso la afición del Crotone, no la de Osasuna). Sin mote encontrado: Grimaldo, Raphinha, Baena, Bartra y Fermín. Yamal: «O Rei» (Fox Sports, 15 may 2025: el club lo publicó así). Carlos lo aprobó a las 23:33 y ya está en el código; «El Rey» (31 jul 2025) no, porque parte de la afición lo critica. También sale «Lord Bellingham» (AFP, 2023), que fue de una crónica y no se ha quedado.
+
+## Segunda tanda (7 nov, 23:5x, «amplía a más»), pendiente del OK de Carlos
+
+Ya en la rama, pero no se fusiona hasta que Carlos diga. Nickname exacto de LaLiga Fantasy entre « ».
+
+| Jugador | Rasgo / nombre | Fuente |
+|---|---|---|
+| «Adeyemi» (Barcelona) | es de los futbolistas más rápidos de Europa y ataca los espacios a la espalda de la defensa | El Debate, 24 jul 2026 («uno de los jugadores más rápidos de Europa»); Soccerway («se siente cómodo atacando los espacios»); Comuniate cita a Opta: 3,60 s en 30 m |
+| «Iñaki Williams» (Athletic) | es uno de los jugadores más rápidos de LaLiga | laliga.com, «Nacidos para marcar», 15 sep 2021 (el artículo es viejo; la velocidad no ha cambiado) |
+| «Arda Güler» (Real Madrid) | es un zurdo que corta hacia dentro para chutar o dar el último pase | Wikipedia (zurdo, mediapunta o extremo por la derecha); buscabiografias.com |
+| «Chupe» (Málaga) | lanza los penaltis del Málaga | asesoriasfantasy.com/jugador/chupe («lanza penaltis»); FotMob: 3 goles de penalti en 2025/26; Flashscore, crónica de la J4 26/27: falló uno ante el Levante |
+| «Giuliano» (Atlético) | nombre completo Giuliano Simeone; no da un balón por perdido y lucha hasta el final | OKDiario («no dar nunca un balón por perdido y luchar hasta el final»); Flashscore («la prolongación de Simeone en el campo») |
+| «Gordon» (Barcelona) | nombre completo Anthony Gordon; es explosivo y ataca los espacios con mucha intensidad | beIN Sports, 27 may 2026 |
+| «Lucas Boyé» (Alavés) | dispara con potencia desde fuera del área | fichajes.net, 8 sep 2026 y Misiones Online, 6 sep 2026: en el hat-trick al Osasuna, dos disparos desde fuera del área. Lleva 2 goles de lejos este año en el registro |
+| «Roberto» (Espanyol) | nombre completo Roberto Fernández; marca goles de pícaro dentro del área | Ara, 3 may 2025 (entrevista sobre «sus goles de pícaro»; el artículo lo compara con Tamudo por su estilo pícaro) |
+| «Raúl» (Osasuna) | nombre completo Raúl García; es un nueve de 1,92 m que vive dentro del área | LaLiga (192 cm); Noticias de Navarra, 18 dic 2025 («cada balón en el área como una invitación al gol»); osasuna.es, 5 jun 2026 (14 goles la temporada pasada: 7 en Liga y 7 en Copa) |
+| «Ez Abde» (Betis) | nombres Abde Ezzalzouli y «Abde»; extremo izquierdo de pierna derecha, rápido y de mucha percusión | EFE vía Infobae, 30 oct 2024 («Abde renueva hasta 2029»); Wikipedia («sometimes known as Ez Abde»); FotMob (extremo izquierdo, diestro); foot-africa.com (velocidad y percusión) |
+
+### Buscados y no incluidos (sin fuente suficiente)
+
+- Mikautadze: El Gol Digital (2025) habla de un «plus tremendo en los penaltis», pero FotMob no le da goles de penalti en 2025/26 en Villarreal; no se pone que los lance. El club dice solo que es potente y que ve portería.
+- Berenguer: ESPN tiene vídeos suyos de penaltis, sin fecha, y futbolfantasy le apunta 1 penalti en la Europa League 24/25 (fallado). No hay una fuente que diga que los lanza ahora.
+- Mariano: OKDiario lo llamó «rematador fiable» en 2021, demasiado viejo para fiarse.
+- Camello: ninguna fuente de su estilo. El Corriere dello Sport lo llama «il centravanti del pueblo» (25 oct 2026), una etiqueta suelta de un medio italiano; no se usa como mote.
+- Güler: CNN (8 jul 2023) lo llamó «el Messi turco» al fichar. Es una etiqueta de la presentación, no un mote que se haya quedado.
+- Sucic: Goal lo ve como posible sucesor de Modric (zurdo, buen control). Es una comparación, no un rasgo de gol ni un mote.
+- Zabiri: nada sobre su estilo en lo que he leído (hat-trick al Elche, campeón del mundo sub-20).
+- Sin buscar todavía: Mbappé (sin fuente en la primera búsqueda), Fer Niño, Adrián Nino, Brugué, Diomande, Espí, Juan Hernández.
+
