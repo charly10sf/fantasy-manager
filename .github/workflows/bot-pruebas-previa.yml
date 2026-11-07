@@ -1,0 +1,36 @@
+# SOLO EN LA RAMA pruebas-previa-humana: no va a main. Simulacro de la previa con la redacción real (Claude) y datos reales de la J12.
+# NUNCA publica: va con --modo=simulacro y sin las claves de X. Registro vacío en memoria; no se guarda nada en bot-estado.
+name: Bot pruebas previa humana
+
+on:
+  push:
+    branches: [pruebas-previa-humana]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bot-pruebas-previa-humana
+  cancel-in-progress: true
+
+jobs:
+  simulacro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      BOT_IA: claude
+      BOT_REDACTAR: '1'
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - name: Sin topes para la prueba (solo en esta copia del runner)
+        run: |
+          node -e "const f='bot/config.json',c=require('./'+f);c.maxPorEjecucion=9;c.redactar.segundosEjecucion=3000;c.topeDiario=200;for(const k of Object.keys(c.topes))c.topes[k]=50;require('fs').writeFileSync(f,JSON.stringify(c,null,1))"
+      - name: Previa con la redacción
+        run: |
+          test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=previa --jornada=12 --redactar=1
