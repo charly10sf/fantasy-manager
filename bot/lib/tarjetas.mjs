@@ -248,7 +248,7 @@ function campo(x, y, w, h, lado, club, confirmados) {
         : `<circle cx="${cx}" cy="${cy + 3}" r="${R + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${Math.round(R * 0.62)}" fill="${club.vivo}" stroke="#ffffff" stroke-width="3"/>`)
         + pastilla(nom.get(j), cx, yN, ancho);
       if (pctCol && !confirmados) s += chipContorno(`${j.pct} %`, cx + R * 0.8, cy - R * 0.82, 21, pctCol);
-      s += chipPuesto(j.pos, cx + R * 0.86, cy + R * 0.74, Math.max(15, Math.round(R * 0.31)));
+      // sin la chapa del puesto en el campo (Carlos, 7 nov 17:42: un medio puede jugar de delantero y queda raro; solo la alineación)
     });
   });
   return s;
