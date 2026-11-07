@@ -1326,7 +1326,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-pierde-rodri-lesion-metropolitano-20261104_3468381.html": 1793794237000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261104/11675899/niko-mihic-medico-real-madrid-estalla-horarios-toman-consideracion-salud-dano-jugador-lol.html": 1793793661000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247143/rodri.html": 1793793602000,
-   "SPORT|136079233": 1793793125000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/manu-hernando-duda-por-un-proceso-gripal-radio-santander/": 1793796850000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/04/el-futuro-de-inigo-perez-empieza-a-generar-dudas-en-la-directiva-del-villarreal-radio-castellon/": 1793796793000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261104/1004247170/kike-salas-vuelve-grupo-e-isaac-sigue-margen.html": 1793796150000,
@@ -1521,7 +1520,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000,
    "SPORT|136194101": 1794045757000,
    "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/": 1794049173000,
-   "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/": 1794050162000
+   "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/": 1794050162000,
+   "SPORT|136195361": 1794048547000
   },
   "hechos": [
    {
@@ -2226,7 +2226,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3782,17 +3782,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 15,
    "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 108501,
-  "salida": 16634,
+  "entrada": 110327,
+  "salida": 16729,
   "cacheLee": 97572,
   "cacheEscribe": 10770,
-  "dolares": 0.28408
+  "dolares": 0.28431
  },
  "recientes": {
   "onces": [
