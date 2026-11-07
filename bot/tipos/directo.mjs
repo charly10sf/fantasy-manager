@@ -4,6 +4,7 @@ import { json } from '../lib/http.mjs';
 import { norm, corto, fmt, partes, elegir, el, del, al } from '../lib/texto.mjs';
 import { tweet, cap, segunda } from '../lib/redactar.mjs';
 import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
+import { clubes as clubesH, jugador as jugadorH, frenteMedia } from '../lib/hechos.mjs';
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
 const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la', 'del', 'el', 'y', 'sd', 'ad']);
@@ -57,9 +58,32 @@ export function disparadores(detalles) {
   return out;
 }
 
+/** los penaltis PARADOS de un partido, del `summary` de ESPN (el `scoreboard` no los trae; el de Sivera del 6 nov no salió por eso). Son
+    disparadores como los demás: { ref, clase: 'penalti parado', jugador (el lanzador), portero, min, equipo (el del lanzador) } */
+export function penaltisParados(sumario) {
+  const out = [];
+  for (const k of (sumario && sumario.keyEvents) || []) {
+    const tipo = String((k.type && k.type.text) || '');
+    if (!/^penalty/i.test(tipo) || !/saved/i.test(tipo) || /scored|goal/i.test(tipo)) continue;
+    const a = ((k.participants || [])[0] || {}).athlete;
+    if (!a || !k.team) continue;
+    const portero = ((String(k.text || '').match(/\bby ([^()]+?) \(/) || [])[1] || '').trim();
+    out.push({ ref: k, clase: 'penalti parado', jugador: a.displayName, portero: portero || null, min: (k.clock && k.clock.displayValue) || '', equipo: k.team.id });
+  }
+  return out;
+}
+/** el marcador [local, visitante] justo antes (o en el momento) de un minuto, con la secuencia reconstruida de ESPN; null si no cuadra */
+export function marcadorEn(rel, ref) {
+  if (!rel || !rel.ok) return null;
+  const t = (d) => { const m = minutoDe(d); return m.min + m.extra / 100; };
+  const tp = t(ref);
+  let ult = [0, 0];
+  for (const d of rel.orden) { if (t(d) > tp) break; const mom = rel.tras.get(d); if (mom) ult = mom.marcador; }
+  return ult;
+}
+
 /** asistentes de cada gol, del resumen del partido de ESPN (keyEvents: «Assisted by X.»): { 'goleador|minuto': asistente } */
-async function asistencias(evId) {
-  const r = await json(`${ESPN}/summary?event=${evId}`).catch(() => null);
+function asistencias(r) {
   const m = {};
   for (const k of (r && r.keyEvents) || []) {
     if (!(k.scoringPlay || /goal/i.test((k.type && k.type.text) || ''))) continue;
@@ -75,6 +99,8 @@ async function asistencias(evId) {
 // va arriba como titular («⚽ Gol de Budimir y Osasuna se adelanta en el 32'»), el marcador debajo y los puntos en su línea.
 const VERBO = { abre: 'se adelanta', empata: 'empata', adelanta: 'se pone por delante', voltea: 'le da la vuelta',
   recorta: 'recorta', amplia: 'amplía la ventaja', sentencia: 'sentencia el partido' };
+/** lo que habría supuesto el penalti (fallado o parado), desde el punto de vista de quien lo lanza */
+const pudoTxt = (propio, rival, equipo) => (propio === rival ? `Habría adelantado ${al(equipo)}` : propio < rival ? (rival - propio === 1 ? 'Habría empatado el partido' : 'Habría recortado distancias') : `Habría ampliado la ventaja ${del(equipo)}`);
 function titularGol(sit, n, eq, min, semilla) {
   const E = { el: el(eq), del: del(eq), al: al(eq) };
   const v = {
@@ -109,10 +135,13 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       const m = stats.find((x) => comparten(x.local.mainName, casa.team.displayName) && comparten(x.visitor.mainName, fuera.team.displayName));
       if (!m) { console.log(`  (directo) sin casar ${ev.shortName} con LaLiga`); continue; }
       const dsps = disparadores(c.details || []);
+      // el resumen del partido (una petición por partido y ejecución): los penaltis parados y los asistentes que falten
+      const sumario = await json(`${ESPN}/summary?event=${ev.id}`).catch(() => null);
+      dsps.push(...penaltisParados(sumario));
       // con el partido ya acabado, los puntos solo valen cuando están los DAZN: antes, los tweets esperan (los de durante el partido ya salieron)
       if (st.state === 'post' && dsps.length && dazn && !(await dazn(m)).listo) { console.log(`  (directo) ${ev.shortName}: acabado, espero a los puntos DAZN para sus ${dsps.length} tweets`); continue; }
       console.log(`  (directo) ${ev.shortName} · ${st.state === 'in' ? `en juego, ${(ev.status.displayClock || '')}` : 'acabado'} · ${casa.score}-${fuera.score} · ${dsps.length} cosas que contar`);
-      const asis = dsps.some((d) => d.n && !d.asistente) ? await asistencias(ev.id) : {};
+      const asis = dsps.some((d) => d.n && !d.asistente) ? asistencias(sumario) : {};
       // el marcador de ESPN, que va al momento (el de LaLiga puede ir por detrás)
       const gl = Number(casa.score), gv = Number(fuera.score);
       const rel = reconstruir(c.details || [], casa.team.id, fuera.team.id, gl, gv);
@@ -131,7 +160,8 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const media = p && porId.get(String(p.id)) ? Number(porId.get(String(p.id)).averagePoints) || 0 : 0;
         const equipo = corto(lado.mainName);
         // marcador en el momento de la jugada (si la secuencia cuadra) o el actual de ESPN
-        const mom = rel.ok && rel.tras.get(dsp.ref);
+        // (un penalti parado viene del `summary`, no de los `details`: su marcador sale de la secuencia, por el minuto)
+        const mom = (rel.ok && rel.tras.get(dsp.ref)) || (dsp.clase === 'penalti parado' && rel.ok ? { marcador: marcadorEn(rel, dsp.ref) } : null);
         const [sl, sv] = mom ? mom.marcador : [gl, gv];
         const mar = `${corto(m.local.mainName)} ${sl}-${sv} ${corto(m.visitor.mainName)}`;
         const [propio, rival] = esCasa ? [sl, sv] : [sv, sl];
@@ -141,6 +171,9 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const jp = p ? porId.get(String(p.id)) : null;
         const pos = jp ? jp.positionId : p && p.positionId;
         let cab; const ideas = [];
+        // los hechos para la IA que redacta (lib/redaccion.mjs): lo mismo que dice la plantilla, sin sus frases
+        const jugH = []; let extraH = {};
+        const jH = (nom, posId, med, extra, eq = equipo, principal = true) => jugadorH({ nickname: nom, positionId: posId, equipo: eq, averagePoints: med }, { principal, extra });
         const marcador = `📍 ${mar}`;
         const puntos = (valor, conMedia) => {
           num.push(valor);
@@ -159,11 +192,31 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           ideas.push({ t: quedan ? `⚠️ ${cap(el(equipo))} se queda con ${quedan}${estado}` : `⚠️ ${cap(el(equipo))} se queda con un jugador menos`, prio: 7 });
           if (pts != null) ideas.push(puntos(pts, false));
           if (p) tarjetas.push({ jugadorId: p.id, motivo: 'roja' });
+          jugH.push(jH(nombre, pos, media, { queLePasa: 'es expulsado', ...(pts != null ? { puntosFantasyAhora: pts } : {}) }));
+          extraH = { suEquipoSeQuedaCon: quedan || 'un jugador menos', suEquipoVa: propio < rival ? 'perdiendo' : propio > rival ? 'ganando' : 'empatando' };
+        } else if (dsp.clase === 'penalti parado') {
+          // el portero es del otro equipo (con ESPN dicho: `portero`); su carta, como segunda imagen
+          const ladoP = esCasa ? m.visitor : m.local;
+          const pPor = dsp.portero ? casarJugador(dsp.portero, ladoP, { portero: true }) : null;
+          const nomP = pPor ? pPor.nickname || pPor.name : dsp.portero;
+          const ptsP = pPor && pPor.weekPoints != null && Number(pPor.weekPoints) > 0 ? Number(pPor.weekPoints) : null;
+          const mediaP = pPor && porId.get(String(pPor.id)) ? Number(porId.get(String(pPor.id)).averagePoints) || 0 : 0;
+          const equipoP = corto(ladoP.mainName);
+          cab = nomP ? `🧤 ${nomP} le para un penalti a ${nombre} en el ${minTxt}` : `🧤 Penalti parado a ${nombre} en el ${minTxt}`;
+          ideas.push({ t: marcador, prio: 9 });
+          ideas.push({ t: `⚠️ ${pudoTxt(propio, rival, equipo)}`, prio: 6 });
+          if (ptsP != null && nomP) { num.push(ptsP); ideas.push({ t: `📊 ${nomP} ya suma ${ptsP} puntos fantasy`, prio: 8 }); }
+          if (pPor) tarjetas.push({ jugadorId: pPor.id, motivo: 'parada' });
+          if (nomP) jugH.push(jH(nomP, 1, mediaP, { queLePasa: `le para un penalti a ${nombre}`, ...(ptsP != null ? { puntosFantasyAhora: ptsP } : {}) }, equipoP));
+          jugH.push(jH(nombre, pos, media, { queLePasa: 'lanza el penalti y se lo paran' }));
+          extraH = { quePudoSerElPenalti: pudoTxt(propio, rival, equipo) };
         } else if (dsp.clase === 'penalti fallado') {
           cab = `❌ ${nombre} falla un penalti en el ${minTxt}`;
           ideas.push({ t: marcador, prio: 9 });
-          const pudo = propio === rival ? `Habría adelantado ${al(equipo)}` : propio < rival ? (rival - propio === 1 ? `Habría empatado el partido` : `Habría recortado distancias`) : `Habría ampliado la ventaja ${del(equipo)}`;
+          const pudo = pudoTxt(propio, rival, equipo);
           ideas.push({ t: `⚠️ ${pudo}`, prio: 6 });
+          jugH.push(jH(nombre, pos, media, { queLePasa: 'falla un penalti', ...(pts != null ? { puntosFantasyAhora: pts } : {}) }));
+          extraH = { quePudoSerElPenalti: pudo };
           if (pts != null) ideas.push(puntos(pts, false));
           if (p) tarjetas.push({ jugadorId: p.id, motivo: 'penalti' });
         } else {
@@ -189,10 +242,23 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
             if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia' });
           }
           if (pts != null) ideas.push(puntos(pts, true));
+          const sobre = pts != null && media >= 3 && pts >= 1.5 * media;
+          jugH.push(jH(nombre, pos, media, { queLePasa: `${dsp.clase === 'doblete' ? 'marca su segundo gol' : dsp.clase === 'triplete' ? 'marca su tercer gol' : 'marca'}${dsp.penalti ? ' de penalti' : ''}`,
+            ...(pts != null ? { puntosFantasyAhora: pts } : {}), ...(sobre ? { frenteASuMedia: frenteMedia(pts, media) } : {}) }));
+          if (an) { const paH = casarJugador(an, lado); const ptsAH = paH && paH.weekPoints != null && Number(paH.weekPoints) > 0 ? Number(paH.weekPoints) : null;
+            jugH.push(jH(paH ? paH.nickname || paH.name : an, paH ? paH.positionId : null, paH && porId.get(String(paH.id)) ? Number(porId.get(String(paH.id)).averagePoints) || 0 : 0,
+              { queLePasa: 'da el pase del gol', ...(ptsAH != null ? { puntosFantasyAhora: ptsAH } : {}) })); }
+          extraH = { ...(sit ? { loQueSuponeElGol: `${equipo} ${VERBO[sit]}` } : {}), ...(sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85 ? { tramo: mn.min >= 88 ? 'casi sobre la bocina' : 'ya en el tramo final' } : {}),
+            ...(sit === 'abre' && mn.min <= 6 ? { tramo: 'apenas habían pasado unos minutos' } : {}) };
         }
         const { usadas, texto } = tweet(cab, ideas);
         if (!usadas.length) continue;
-        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto,
+        const hechos = { tipo: 'directo', subtipo: dsp.clase, jornada, noticia: `${dsp.clase === 'gol' ? 'gol' : dsp.clase} en el ${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`,
+          minuto: minTxt, partido: { partido: `${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`, local: corto(m.local.mainName), visitante: corto(m.visitor.mainName), marcadorEnEseMomento: `${sl}-${sv}`,
+            estadoDelPartido: st.state === 'in' ? 'en juego' : 'acabado' },
+          ...(dsp.clase === 'doblete' || dsp.clase === 'triplete' ? { golNumeroDelJugador: dsp.n } : {}), ...extraH,
+          jugadores: jugH, clubes: clubesH(m.local.mainName, m.visitor.mainName), etiqueta: '' };
+        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto, hechos,
           numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra,
           // para las tarjetas de jugador (cada jugador implicado que case con LaLiga) y su marcador del momento
           partido: m.id, marcador: [sl, sv], tarjetas });
