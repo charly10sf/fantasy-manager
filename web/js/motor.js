@@ -142,15 +142,19 @@ export function analizar(D, H, c, extra = {}) {
     if (dv && dv.length > s.length) s = dv.map(([t, v]) => [diaDe(t), v]);
     const ff = (D.tendencias || {})[pid] || {};
     const valor = J(pid).valor;
-    const hace = (dias) => {
-      const objetivo = otroDia(diaDe(ahora), -dias);
+    // el valor de hace n días, solo si hay un dato de esos días (con margen): con un histórico que acaba en agosto (uno
+    // que se fue de LaLiga), «hace 1 día» era el de agosto y salía subiendo 1,2 M hoy (Arriaga, aviso de Domy, 8 nov)
+    const hace = (dias, margen) => {
+      const objetivo = otroDia(diaDe(ahora), -dias), minimo = otroDia(diaDe(ahora), -dias - margen);
       let mejor = null;
-      for (const [d, v] of s) if (d <= objetivo) mejor = v;
+      for (const [d, v] of s) if (d <= objetivo) mejor = d >= minimo ? v : null;
       return mejor;
     };
-    const v1 = hace(1), v7 = hace(7), v30 = hace(30);
-    const d1 = ff.d1 != null ? ff.d1 : v1 ? valor - v1 : null;
-    const p1 = ff.p1 != null ? ff.p1 : v1 ? (valor / v1 - 1) * 100 : null;
+    const v1 = hace(1, 1), v7 = hace(7, 3), v30 = hace(30, 7);
+    // lo de hoy, con el histórico si lo hay (va con el mismo valor que se enseña); la página de mercado de fuera, solo
+    // si no: de madrugada puede traer aún las subidas de ayer o no traer a alguno (Aubameyang, mismo aviso)
+    const d1 = v1 ? valor - v1 : ff.d1 != null ? ff.d1 : null;
+    const p1 = v1 ? (valor / v1 - 1) * 100 : ff.p1 != null ? ff.p1 : null;
     const d7 = v7 ? valor - v7 : ff.d7 != null ? ff.d7 : null;
     const p7 = v7 ? (valor / v7 - 1) * 100 : ff.p7 != null ? ff.p7 : null;
     const serie = s.map(([d, v]) => [Date.parse(d + 'T12:00:00'), v]);
@@ -1746,7 +1750,8 @@ export function analizar(D, H, c, extra = {}) {
   M.enVenta = new Set(M.misVentas.map((v) => v.pid));
 
   /* ---------- quién sube y quién baja en toda LaLiga ---------- */
-  const todos = Object.values(D.maestro).filter((j) => j && j.valor && j.pos && j.pos < 5);
+  // (sin los que ya no están en LaLiga)
+  const todos = Object.values(D.maestro).filter((j) => j && j.valor && j.pos && j.pos < 5 && j.estado !== 'out_of_league');
   const conT = todos.map((j) => ({ j, t: M.tend(j.id), dueno: M.dueno[j.id] || null })).filter((x) => x.t.d1 != null || x.t.d7 != null);
   const clave = (x) => (x.t.d1 != null ? x.t.d1 : x.t.d7 / 7);
   M.suben = [...conT].sort((a, b) => clave(b) - clave(a)).slice(0, 40);

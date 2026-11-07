@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7p';
+export const VERSION = '0.7q';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.7p';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7q', f: '2026-11-08', h: '00:42', t: 'Tendencias: lo que sube hoy, bien contado',
+    cosas: [
+      { tipo: 'arreglo', d: 'grafica', t: 'Suben y Bajan, con lo de hoy de verdad', x: 'A un jugador sin datos de valor recientes (como Arriaga, que ya no está en LaLiga) le salía que subía 1,2 M hoy comparando con su valor de agosto. Ahora lo de hoy se cuenta con el valor de ayer y, si no lo hay, no se inventa. Los que se han ido de LaLiga ya no salen, y lo que sube cada uno hoy se cuenta con el valor que ves, aunque de madrugada la página de mercado de fuera aún traiga lo de ayer.', ir: { v: 'mercado', seg: 'mercado:tendencias' } },
+    ],
+  },
   {
     v: '0.7p', f: '2026-11-08', h: '00:38', t: 'Puntos uno a uno y la IA con chispa otra vez',
     cosas: [
