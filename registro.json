@@ -1396,7 +1396,6 @@
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/04/aek-real-madrid-champions-league-resumen-resultado-136097281.html": 1793821880000,
    "SPORT|136097342": 1793819410000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/04/mourinho-hay-centrocampista-mundo-bellingham-unico.html": 1793823656000,
-   "SPORT|136094019": 1793813454000,
    "SPORT|136086757": 1793821382000,
    "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/": 1793829352000,
    "SPORT|136102061": 1793851297000,
@@ -1588,7 +1587,8 @@
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-del-malaga-ruina-tras-el-descanso-f202611-n/": 1794070433000,
    "SPORT|136204290": 1794066951000,
    "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000,
-   "SPORT|136204471": 1794068559000
+   "SPORT|136204471": 1794068559000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248350/espanyol-merece-debut-eder-sarabia.html": 1794071621000
   },
   "hechos": [
    {
@@ -2228,7 +2228,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -3739,17 +3739,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 39,
+   "clasificar": 40,
    "redactar": 34,
    "revisar": 23,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 365911,
-  "salida": 28503,
+  "entrada": 367664,
+  "salida": 28599,
   "cacheLee": 110597,
   "cacheEscribe": 23795,
-  "dolares": 0.790995
+  "dolares": 0.791218
  },
  "recientes": {
   "onces": [
