@@ -3059,7 +3059,6 @@
    "MARCA|https://www.marca.com/futbol/elche/2026/11/04/version-completa-victor-chust-he-mejorado-balon.html": 1793783141000,
    "Europa Press|https://www.europapress.es/madrid/noticia-huelga-universitaria-arranca-menos-alumnos-aulas-piquetes-ciu-ayuso-escucha-uni-lucha-20261104093827.html": 1793781507000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261104/1004247035/laliga-plantea-suspender-jornada-semana-primera-segunda.html": 1793778293000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/04/la-federacion-suspende-los-partidos-del-ontinyent-1931-y-el-atzeneta-ue-por-la-muerte-de-jesus-de-miguel-radio-ontinyent/": 1793774809000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3172,7 +3171,12 @@
    "SPORT|136180863": 1793989306000,
    "SPORT|136180917": 1793988049000,
    "SPORT|136185088": 1793995104000,
-   "SPORT|136184849": 1793994104000
+   "SPORT|136184849": 1793994104000,
+   "SPORT|136188215": 1794024610000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004247878/aprender-tragedia.html": 1794024600000,
+   "SPORT|136188205": 1794024096000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/06/nunca-buscamos-soluciones-solo-buscamos-culpables-ramon-besa-en-contra-de-la-no-suspension-de-la-jornada-de-liga-tras-la-muerte-de-jesus-de-miguel-cadena-ser/": 1794009476000,
+   "AS|https://as.com/futbol/el-betis-afrontara-en-cuadro-su-eliminatoria-de-la-copa-del-rey-f202611-n/": 1794006110000
   },
   "hechos": [
    {
@@ -3835,24 +3839,26 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-06",
-   "n": 15,
+   "dia": "2026-11-07",
+   "n": 1,
    "fallos": 0
   },
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-06",
+  "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 8,
-   "redactar": 4
+   "clasificar": 1,
+   "redactar": 0,
+   "revisar": 0,
+   "pulir": 0
   },
   "fallos": 0,
-  "entrada": 35776,
-  "salida": 3091,
+  "entrada": 2369,
+  "salida": 1465,
   "cacheLee": 0,
   "cacheEscribe": 0,
-  "dolares": 0.052126
+  "dolares": 0.000969
  },
  "recientes": {
   "onces": [
@@ -3879,5 +3885,27 @@
     "texto": "💸 Subidas y bajadas del mercado fantasy de hoy, 7/11\n\n📈 Aubameyang del Dépor es el que más sube: +1,9 M (+3,8 %), hasta los 50,9 M.\n\n📉 En el otro lado, Rodri del Barcelona pierde 2,2 M en un día y se queda en 84,1 M (-2,5 %).\n\n🛒 Chollo Fantasy: Thiago del Levante 🐸 vale 1,5 M, suma 4,1 de media y hoy sube un 2,4 %"
    }
   ]
- }
+ },
+ "puntosPartido": {
+  "12|113": {
+   "h": "812b3d5d0171",
+   "desde": 1794034875147,
+   "fin": 1794034875147
+  }
+ },
+ "iaDias": [
+  {
+   "dia": "2026-11-06",
+   "llamadas": {
+    "clasificar": 8,
+    "redactar": 4
+   },
+   "fallos": 0,
+   "entrada": 35776,
+   "salida": 3091,
+   "cacheLee": 0,
+   "cacheEscribe": 0,
+   "dolares": 0.052126
+  }
+ ]
 }
