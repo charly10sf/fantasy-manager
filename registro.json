@@ -461,6 +461,13 @@
    "jornada": 12,
    "id": "2119071545062785063",
    "t": "2026-11-07T14:16:41.825Z"
+  },
+  {
+   "clave": "directo|116|Yassir Zabiri|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119073957189947735",
+   "t": "2026-11-07T14:26:16.888Z"
   }
  ],
  "estados": {
@@ -1350,9 +1357,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261104/1004247173/eder-sarabia-mi-equipo-espanyol-defender-muerte.html": 1793802316000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm": 1793805420000,
-   "SPORT|136085204": 1793802237000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247209/raphina-records-corazon-encogido.html": 1793806789000,
    "SPORT|136087097": 1793805717000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/gerard-lopez-no-me-preocupa-defiende-barca-juega-tumba-abierta-20261104_3467993.html": 1793810443000,
@@ -3727,16 +3732,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 30,
-   "redactar": 21,
+   "redactar": 22,
    "revisar": 16,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 199006,
-  "salida": 22782,
+  "entrada": 207077,
+  "salida": 22881,
   "cacheLee": 100177,
   "cacheEscribe": 15980,
-  "dolares": 0.437651
+  "dolares": 0.454783
  },
  "recientes": {
   "onces": [
@@ -3807,6 +3812,10 @@
    {
     "t": "2026-11-07T14:16:22.054Z",
     "texto": "⚽ Iker Luque empata para el Racing en el 50'. Málaga 1-1 Racing. Asistencia de Pablo Ramón, que ya suma 4 puntos. Ya suma 4 puntos fantasy."
+   },
+   {
+    "t": "2026-11-07T14:26:16.890Z",
+    "texto": "⚽ Zabiri marca en el 60' y el Racing le da la vuelta al partido: 1-2 ante el Málaga.\n\nEl delantero ya suma 6 puntos, justo su media. Si lo tienes, la jornada le está saliendo bien."
    }
   ]
  },
