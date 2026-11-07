@@ -510,6 +510,20 @@
    "jornada": 12,
    "id": "2119123097127157958",
    "t": "2026-11-07T17:41:32.837Z"
+  },
+  {
+   "clave": "directo|115|Nico Williams|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119146943159079072",
+   "t": "2026-11-07T19:16:18.121Z"
+  },
+  {
+   "clave": "onces|112",
+   "tipo": "onces",
+   "jornada": 12,
+   "id": "2119147070741458995",
+   "t": "2026-11-07T19:16:48.593Z"
   }
  ],
  "estados": {
@@ -3047,8 +3061,8 @@
  },
  "pulido": {
   "dia": "2026-11-07",
-  "n": 1,
-  "ok": 2,
+  "n": 2,
+  "ok": 3,
   "mal": 0
  },
  "liga": {
@@ -3740,23 +3754,19 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 46,
-   "redactar": 52,
-   "revisar": 32,
-   "pulir": 1
+   "redactar": 57,
+   "revisar": 34,
+   "pulir": 2
   },
   "fallos": 0,
-  "entrada": 593274,
-  "salida": 35876,
-  "cacheLee": 128832,
-  "cacheEscribe": 29005,
-  "dolares": 1.292991
+  "entrada": 655483,
+  "salida": 37139,
+  "cacheLee": 131437,
+  "cacheEscribe": 31610,
+  "dolares": 1.436813
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-06T19:01:32.602Z",
-    "texto": "ℹ️ Sevilla y Alavés ya tienen onces confirmados sin sorpresas en ninguno de los dos bandos. El Sevilla sale con 4-2-3 y el Alavés con 4-4-2 para el partido de hoy a las 21:00.\n\n👀 Revisa tu once fantasy antes del pitido"
-   },
    {
     "t": "2026-11-07T12:01:30.248Z",
     "texto": "👀 Ya hay onces confirmados en La Rosaleda, según ESPN: el Málaga sale con cinco atrás, en un 5-3-2, y el Racing con un 4-2-3-1.\n\nNo hay sorpresas respecto a lo esperado, así que quien tenga jugadores de uno u otro lado puede dejar el once como lo tenía pensado. Hoy a las 14:00 empieza el Málaga-Racing."
@@ -3772,6 +3782,10 @@
    {
     "t": "2026-11-07T16:56:39.992Z",
     "texto": "👀 Budimir y Unai Simón, que son los que más puntos dan de sus equipos, con 7,5 de media cada uno, salen de titulares en El Sadar.\n\nNo hay sorpresas en el 4-3-3 del Osasuna 🐂 ni en el 4-2-3-1 del Athletic: quien tenga jugadores de este partido se encuentra con los onces que esperaba."
+   },
+   {
+    "t": "2026-11-07T19:16:48.594Z",
+    "texto": "ℹ️ Onces confirmados del Valencia-Real Madrid y sin sorpresas: salen los que se esperaban. El Valencia 🦇 juega con 5-3-2 y el Real Madrid ⚪ con 4-2-3-1. Empieza hoy a las 21:00."
    }
   ],
   "final": [
@@ -3852,6 +3866,10 @@
    {
     "t": "2026-11-07T14:31:18.640Z",
     "texto": "🟥 Roja para Aznou en el 64': el Málaga se queda con diez y pierde 1-2 contra el Racing.\n\nEl defensa se va con -4 puntos. Si lo tienes, esta jornada ya la has perdido con él, y el Málaga tendrá difícil sumar con un jugador menos."
+   },
+   {
+    "t": "2026-11-07T19:16:18.122Z",
+    "texto": "⚽ Nico Williams abre el marcador en el 84'. Osasuna 0-1 Athletic."
    }
   ]
  },
@@ -3887,11 +3905,5 @@
    "dolares": 0.052126
   }
  ],
- "fallosRedaccion": {
-  "onces|112": {
-   "n": 2,
-   "t": "2026-11-07T19:06:42.135Z",
-   "ultima": "2026-11-07T19:11:33.338Z"
-  }
- }
+ "fallosRedaccion": {}
 }
