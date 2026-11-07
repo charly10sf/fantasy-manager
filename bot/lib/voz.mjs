@@ -191,6 +191,12 @@ Para el fantasy es poco más que un aviso: de momento no cambia fechas de mercad
 
 En el Mallorca, once sin sorpresas.`, nota: 'Lo que cambia respecto a lo esperado, sin repetir los once enteros.' },
   { tipo: 'onces', bien: false, texto: `👀 Onces confirmados Betis-Mallorca: Betis con 4-3-3, Mallorca con 4-4-2. Titulares: Cano, Marín, Lago, Díaz, Sanz, Ruano... Revisa tu once.`, nota: 'Alineación recitada: lo que importa es lo que sorprende.' },
+  { tipo: 'onces', bien: true, texto: `👀 Ya hay onces confirmados en La Rosaleda: el Málaga sale con cinco atrás, en un 5-3-2, y el Racing con un 4-2-3-1.
+
+No hay sorpresas respecto a lo esperado, así que quien tenga jugadores de uno u otro lado puede estar tranquilo. A las 14:00 empieza el partido.`, nota: 'Sin fuente (los onces son un hecho), el consejo en una sola frase corta y la hora sin repetir los dos equipos. Así lo dejó Carlos a mano el 7 nov.' },
+  { tipo: 'onces', bien: false, texto: `👀 Ya hay onces confirmados en La Rosaleda, según ESPN: el Málaga sale con cinco atrás, en un 5-3-2, y el Racing con un 4-2-3-1.
+
+No hay sorpresas respecto a lo esperado, así que quien tenga jugadores de uno u otro lado puede dejar el once como lo tenía pensado. Hoy a las 14:00 empieza el Málaga-Racing.`, nota: 'Cita una fuente para un hecho, el consejo se alarga y el cierre repite los dos equipos (Carlos lo recortó a mano el 7 nov).' },
   { tipo: 'mercado', bien: true, texto: `📈 El mercado se movió esta noche: Iker Saldaña sube casi 1 M y Marc Vidal baja 600.000 €.
 
 El chollo del día es Pol Sanz, que vale 4 M y ya lleva dos jornadas en el once. Quien necesite un defensa barato, aquí tiene una opción.`, nota: 'Las dos subidas y bajadas que cuentan y un chollo con su razón.' },
