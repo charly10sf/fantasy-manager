@@ -489,6 +489,13 @@
    "jornada": 12,
    "id": "2119091397710037241",
    "t": "2026-11-07T15:35:35.017Z"
+  },
+  {
+   "clave": "onces|115",
+   "tipo": "onces",
+   "jornada": 12,
+   "id": "2119105472678576243",
+   "t": "2026-11-07T16:31:30.913Z"
   }
  ],
  "estados": {
@@ -1578,7 +1585,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000,
    "SPORT|136201148": 1794061401000,
    "SPORT|136202042": 1794062312000,
-   "SPORT|136176192": 1794062219000
+   "SPORT|136176192": 1794062219000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000
   },
   "hechos": [
    {
@@ -2218,7 +2226,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -3725,17 +3733,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 34,
-   "redactar": 27,
-   "revisar": 19,
+   "clasificar": 35,
+   "redactar": 30,
+   "revisar": 21,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 267705,
-  "salida": 25192,
-  "cacheLee": 105387,
-  "cacheEscribe": 18585,
-  "dolares": 0.580235
+  "entrada": 306814,
+  "salida": 26033,
+  "cacheLee": 107992,
+  "cacheEscribe": 21190,
+  "dolares": 0.669544
  },
  "recientes": {
   "onces": [
@@ -3750,6 +3758,10 @@
    {
     "t": "2026-11-07T14:16:41.826Z",
     "texto": "👀 Ya hay onces confirmados en el Espanyol 🦜-Deportivo, que empieza hoy a las 16:15: el Espanyol juega con cinco atrás, en un 5-4-1, y el Dépor sale con un 4-4-2.\n\nLos dos onces vienen sin sorpresas respecto a lo esperado."
+   },
+   {
+    "t": "2026-11-07T16:31:30.914Z",
+    "texto": "👀 Ya hay onces en El Sadar: el Osasuna sale con un 4-3-3 y el Athletic con un 4-2-3-1, y a las 18:30 arranca el partido.\n\nSin sorpresas en ninguno de los dos onces, así que quien tenga jugadores del Osasuna o del Athletic puede estar tranquilo."
    }
   ],
   "final": [
