@@ -10,9 +10,14 @@ export const MIN_MINUTOS_PEOR = 30;     // «peores»: los que menos puntúan de
 export const DIAS_VALOR = 30;           // la gráfica enseña los últimos 30 días de valor (Carlos, 2 nov 23:00: mejor 30 que 60)
 export const DIAS_CAMBIO = 30;          // y el cambio, en esos mismos 30 días
 const POS = { 1: 'Portero', 2: 'Defensa', 3: 'Centrocampista', 4: 'Delantero', 5: 'Entrenador' };
+// la escala de la minigráfica del valor (Carlos, 7 nov 15:09): fechas de inicio y fin en hora de Madrid («8 OCT») y el máximo y el mínimo
+export const MESES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+export const fechaCorta = (t) => { const [d, m] = new Date(t).toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid', day: 'numeric', month: 'numeric' }).split('/').map(Number); return `${d} ${MESES[m - 1]}`; };
+/** lo que la escala de la gráfica puede escribir: máximo, mínimo y las dos fechas */
+export const numerosEscala = (valor) => (valor && valor.length >= 2 ? [millones(Math.max(...valor.map((v) => v[1]))), millones(Math.min(...valor.map((v) => v[1]))), fechaCorta(valor[0][0]), fechaCorta(valor[valor.length - 1][0])].flatMap((x) => x.match(/\d+(?:,\d+)?/g)) : []);
 // palabras fijas de las tarjetas (todo lo demás tiene que salir de los datos)
 export const PALABRAS_FIJAS = ['LALIGA', 'FANTASY', 'JORNADA', 'FINAL', 'MEJORES', 'PEORES', 'pts', 'MANAGER', 'Fantasyman_app', 'MVP', 'DOBLETE',
-  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'PARADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', 'ENT', 'JUEGO', 'Y', ...Object.values(POS)];
+  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'PARADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', 'ENT', 'JUEGO', 'Y', ...MESES, ...Object.values(POS)];
 
 const caraDe = (p) => p && p.images && p.images.transparent && p.images.transparent['256x256'];
 const minutosEn = (ficha, n) => { const s = (ficha && ficha.playerStats || []).find((x) => Number(x.weekNumber) === Number(n)); return s ? Number((s.stats.mins_played || [0])[0]) : 0; };
@@ -100,7 +105,7 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
   const permitidos = {
     numeros: [jornada, gl, gv, 0, j.points, num1(j.averagePoints), ...(j.weekPoints || []).map((w) => w.points), ...semanas,
       millones(vHoy).replace(' M', ''), vAntes ? Math.abs(Math.round((vHoy - vAntes) / vAntes * 100)) : 0, DIAS_VALOR, enPartido ? enPartido.weekPoints : 0,
-      ...(d.minuto ? String(d.minuto).match(/\d+/g) : [])].map(String),
+      ...(d.minuto ? String(d.minuto).match(/\d+/g) : []), ...numerosEscala(valor)].map(String),
     palabras: [j.nickname, club.mainName, corto(club.mainName), L, V, POS[j.positionId] || ''],
   };
   return { d, permitidos };
