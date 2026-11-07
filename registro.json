@@ -1329,7 +1329,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247165/opciones-flick-cubrir-ko-lesion-rodri.html": 1793797556000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html": 1793798837000,
    "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/zabiri-repite-con-marruecos-y-no-jugara-con-el-racing-en-libia-radio-santander/": 1793801780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261104/1004247173/eder-sarabia-mi-equipo-espanyol-defender-muerte.html": 1793802316000,
@@ -1531,18 +1530,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247165/opciones-flick-cubrir-ko-lesion-rodri.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793797556000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri sufre una lesión en el bíceps femoral",
-    "motivo": "lesión en el bíceps femoral",
-    "plazo": "unas tres semanas",
-    "nums": []
-   },
    {
     "guid": "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/04/6aeb31f8e85eceac3b8b4585.html",
     "medio": "El Mundo",
