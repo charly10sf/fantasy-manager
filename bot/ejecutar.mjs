@@ -11,6 +11,7 @@ import { crearDazn } from './lib/dazn.mjs';
 import { validar } from './lib/validar.mjs';
 import { pulir } from './lib/pulir.mjs';
 import { redactar, apuntarReciente } from './lib/redaccion.mjs';
+import { aplicaRedaccion, decidirRespaldo, olvidarFallos, porFallos } from './lib/respaldo.mjs';
 import { crearCronicas } from './lib/cronicas.mjs';
 import { Registro } from './lib/registro.mjs';
 import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
@@ -133,13 +134,27 @@ for (const q of quienes) {
   // la IA redacta desde los hechos los que van a salir en esta ejecución (lib/redaccion.mjs; solo con Claude y `redactar.activo` o
   // BOT_REDACTAR=1); lo que no pasa su validador sale con la plantilla
   const vanASalir = (t) => validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok';
-  const aRedactar = tweets.filter((t) => t && t.hechos && vanASalir(t)).slice(0, Math.max(0, (config.maxPorEjecucion ?? 4) - registro.enEstaEjecucion));
+  const redacta = aplicaRedaccion(q, config, { forzar: arg('redactar') === '1' });
+  const aRedactar = porFallos(tweets.filter((t) => t && t.hechos && vanASalir(t)), registro).slice(0, Math.max(0, (config.maxPorEjecucion ?? 4) - registro.enEstaEjecucion));
   if (aRedactar.length) {
     try { await redactar(aRedactar, { tipo: q, registro, config, jugadores, equipos, log: (s) => console.log(s), cronicasDe: cronicas.de, forzar: arg('redactar') === '1' }); }
     catch (e) { console.log(`  (redactar) ERROR ${e.message || e}: salen con la plantilla`); }
   }
-  // Gemini pule el texto de los que van a salir en esta ejecución (lib/pulir.mjs); lo que no pasa la revisión sale con la plantilla
-  const aPulir = tweets.filter((t) => !t.redactado && validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok')
+  // la plantilla, solo como último recurso (lib/respaldo.mjs): un tuit de un tipo que se redacta y que no ha pasado la redacción no
+  // sale en esta ejecución (no se marca en el registro) y se vuelve a probar en la siguiente; solo sale con la plantilla pulida tras
+  // varias ejecuciones fallidas, si caduca o si no hay Claude
+  const espera = new Map();
+  if (redacta) {
+    for (const t of tweets) {
+      if (!t || !t.hechos || t.redactado || !vanASalir(t)) continue;
+      const r = decidirRespaldo(t, { registro, config });
+      console.log(`  (respaldo) ${t.clave}: ${r.motivo}`);
+      if (!r.sale) espera.set(t, r.motivo);
+    }
+    if (registro.fichero) registro.guardar();
+  }
+  // Claude pule el texto de los que van a salir con la plantilla en esta ejecución (lib/pulir.mjs); lo que no pasa la revisión sale tal cual
+  const aPulir = tweets.filter((t) => !espera.has(t) && !t.redactado && validar(t.texto, { numeros: t.numeros, max: limite() }).ok && registro.decidir(t) === 'ok')
     .slice(0, Math.max(0, (config.maxPorEjecucion ?? 4) - registro.enEstaEjecucion));
   if (aPulir.length) {
     try { await pulir(aPulir, { tipo: q, registro, config, jugadores, equipos, log: (s) => console.log(s), forzar: arg('pulir') === '1' }); }
@@ -151,6 +166,7 @@ for (const q of quienes) {
     let v = validar(t.texto, { numeros: t.numeros, max: limite() });
     let d = v.ok ? registro.decidir(t) : 'no pasa el validador';
     if (!v.ok) fallos++;
+    if (d === 'ok' && espera.has(t)) d = espera.get(t);
     // tarjetas con imagen (solo si están encendidas): se dibujan y validan; las que no pasan no salen
     let pngs = [];
     if (d === 'ok' && conTarjetas && (t.partido != null || t.tarjeta)) {
@@ -198,7 +214,7 @@ for (const q of quienes) {
         const n = apuntarDecision(registro, t.clave, jA === jornada ? stats : await statsSemana(jA).catch(() => []), jA);
         md(`Decisión ${t.clave}: apuntados ${n} partidos de la jornada ${jA}${n ? '' : ' (ninguno: la previa no esperará por esto)'}.`);
       }
-      if (r.ok) { registro.marcar(t, r.id); apuntarReciente(registro, t.tipo, t.texto); registro.guardar(); publicados++; estado = `PUBLICADO (id ${r.id})${mediaIds.length ? ` con ${mediaIds.length} imagen(es)` : ''}`; }
+      if (r.ok) { registro.marcar(t, r.id); olvidarFallos(registro, t.clave); apuntarReciente(registro, t.tipo, t.texto); registro.guardar(); publicados++; estado = `PUBLICADO (id ${r.id})${mediaIds.length ? ` con ${mediaIds.length} imagen(es)` : ''}`; }
       else if (r.estado === 403 && /duplicate/i.test(r.cuerpo)) { registro.marcar(t, null); estado = 'X dice que ya estaba publicado: lo apunto y sigo'; }
       else if (largo() && v.peso > 280 && rechazoPorLargo(r)) {
         // X no deja tweets largos (¿se ha acabado el Premium?): se apunta, se vuelve a 280 y este sale corto en la próxima ejecución

@@ -50,9 +50,10 @@ function apuntar(c, uso, r) {
  */
 export async function preguntar({ uso = 'clasificar', registro = null, config = {}, prompt, esquema, sistema = '', cache = false, log = () => {},
   tiempo, hasta, ahora = Date.now(), claude = claudeJson, gemini = geminiJson, pedir }) {
+  let sinCupoMotivo = '';
   if (conClaude(config)) {
     const motivo = sinCupo(uso, { registro, config, ahora });
-    if (motivo) log(`  (ia) ${motivo}`);
+    if (motivo) { sinCupoMotivo = motivo; log(`  (ia) ${motivo}`); }
     else {
       const ci = config.ia || {};
       const modelo = (ci.modelos || {})[uso] || MODELOS[uso];
@@ -68,7 +69,8 @@ export async function preguntar({ uso = 'clasificar', registro = null, config = 
   // redactar con Gemini solo si se pide (`ia.geminiRedacta`): si no, la plantilla
   // revisar, solo con Claude (sin él, el tuit sigue sin revisar: lib/revisor.mjs)
   if (uso === 'revisar') return { ok: false, error: conClaude(config) ? 'Claude no contesta o sin cupo' : 'sin Claude', proveedor: 'claude' };
-  if (uso === 'redactar' && !(config.ia || {}).geminiRedacta) return { ok: false, error: conClaude(config) ? 'Claude no contesta o sin cupo' : 'sin Claude', proveedor: 'claude' };
+  // (con el tope de gasto, el error empieza por «tope»: lib/respaldo.mjs no espera en ese caso, esperar no lo arreglaría)
+  if (uso === 'redactar' && !(config.ia || {}).geminiRedacta) return { ok: false, error: sinCupoMotivo || (conClaude(config) ? 'Claude no contesta' : 'sin Claude'), proveedor: 'claude' };
   const clave = process.env.GEMINI_API_KEY;
   const r = await gemini({ clave, prompt: sistema ? `${sistema}\n\n${prompt}` : prompt, esquema, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}), ...(pedir ? { pedir } : {}) });
   return { ...r, proveedor: 'gemini' };

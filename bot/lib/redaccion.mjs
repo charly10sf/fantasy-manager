@@ -303,7 +303,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   const activo = forzar || process.env.BOT_REDACTAR === '1' || cfg.activo === true;
   const xs = tweets.filter((t) => t && t.hechos);
   if (!activo || !xs.length || !(cfg.tipos || []).includes(tipo)) return 0;
-  if (!conClaude(config) && !(config.ia || {}).geminiRedacta) { log(`  (redactar) sin Claude: ${tipo} sale con la plantilla`); return 0; }
+  if (!conClaude(config) && !(config.ia || {}).geminiRedacta) { for (const t of xs) t.redaccion = 'sin-ia'; log(`  (redactar) sin Claude: ${tipo} sale con la plantilla`); return 0; }
   // (los apodos que son palabras corrientes no cuentan como nombre: Blanco, del Alavés, y «el Madrid, el equipo blanco»)
   const todos = nombresDe(jugadores, equipos).filter((n) => !COMUNES.has(n));
   const sistema = sistemaDe(tipo);
@@ -318,17 +318,19 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     // lo que se le pide (más corto: «no tienen por qué ser muy largos», Carlos, 4 nov) y el máximo de verdad, que el validador mira
     const pide = Math.min(max - 40, ((cfg.largo || {})[tipo]) || max - 40);
     const cronicas = (await Promise.resolve(cronicasDe(t)).catch(() => [])) || [];
-    let anterior = '', errores = [], final = null, rechazos = 0;
+    let anterior = '', errores = [], final = null, rechazos = 0, causa = 'rechazada';
     // presupuesto de tiempo de la ejecución (el trabajo de Actions tiene un tope de 10 min): pasado, sale la plantilla
-    if (process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo en esta ejecución (${Math.round(process.uptime())} s), sale la plantilla`); continue; }
+    if (process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo en esta ejecución (${Math.round(process.uptime())} s)`); t.redaccion = 'sin-tiempo'; continue; }
     // `intentos` versiones como mucho que lleguen al revisor, y una más si alguna se cae antes, en el validador de código (es gratis
     // y casi siempre es un porcentaje de más o un «enfrente»)
     const intentos = cfg.intentos ?? 3;
     for (let intento = 0; intento < intentos + 1 && rechazos < intentos && !final; intento++) {
       if (intento > 0 && process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo para otro intento`); break; }
+      // (el directo lleva prisa: una sola llamada, sin reintentos; `redactar.intentosPorTipo`)
+      if (intento >= ((cfg.intentosPorTipo || {})[tipo] ?? Infinity)) break;
       const r = await pedir({ uso: 'redactar', registro, config, sistema, cache, esquema: ESQUEMA, log,
         prompt: prompt({ hechos: t.hechos, max: pide, recientes, cronicas, errores, anterior, gastadas: muletillas(recientes, nombresHechos(t.hechos)) }), tiempo: 40000, hasta: Date.now() + (cfg.segundos ?? 60) * 1000 });
-      if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); break; }
+      if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); causa = /^(tope|sin Claude)/.test(String(r.error)) ? 'sin-ia' : 'ia-no'; break; }
       const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
@@ -341,7 +343,8 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
         errores = rv.problemas.map((p) => `un editor lo ha leído con los hechos al lado y no lo publicaría: ${p}`); anterior = texto;
       } else { log(`  (redactar) ${t.clave}, intento ${intento + 1}: ${malos.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`); errores = malos; anterior = texto; }
     }
-    if (!final) { log(`  (redactar) ${t.clave}: sale la plantilla`); continue; }
+    if (!final) { t.redaccion = causa; log(`  (redactar) ${t.clave}: no ha pasado la redacción (${causa})`); continue; }
+    t.redaccion = 'ok';
     t.plantilla = t.texto;
     t.texto = etiqueta ? `${final.texto}\n\n${etiqueta}` : final.texto;
     t.numeros = [...new Set([...(t.numeros || []), ...cifrasDe(t.hechos, final.usadas)])];
