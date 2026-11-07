@@ -223,6 +223,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   VAGAS.lastIndex = 0;
   if (/conjunto\s+\p{Ll}/u.test(t)) e.push('«el conjunto…» en vez del nombre del club');
   if (/LaLiga Fantasy ya lo da/i.test(t)) e.push('«LaLiga Fantasy ya lo da…»');
+  // (Carlos, 7 nov, con el de Zaid Romero: «LaLiga Fantasy pone a X como lesionado»… «nunca más digas eso») el estado es del jugador
+  if (/LaLiga Fantasy\s+(?:ya\s+)?(?:le\s+|lo\s+|la\s+|los\s+|las\s+)?(?:pone|marca|da|deja|tiene|considera|cambia|saca|coloca|actualiza|incluye)\b[^.\n]{0,40}?\b(?:como|en duda|de baja|disponible|lesionad|sancionad)|LaLiga Fantasy\s+pone\s+a\b|(?:en|para)\s+LaLiga Fantasy\s+(?:ya\s+)?(?:sale|aparece|figura|está|lo\s+marcan|lo\s+dan)|(?:sale|aparece|figura|marcado)\s+(?:ya\s+)?como\s+\w+\s+en\s+LaLiga Fantasy/i.test(t)) e.push('el estado se atribuye a LaLiga Fantasy («LaLiga Fantasy pone a X como lesionado»): di lo que le pasa al jugador («está lesionado»)');
   // la previa (7 nov): primera frase corta y «en el aire» una sola vez
   if (hechos.tipo === 'previa') {
     const f1 = (t.replace(EMOJI, ' ').replace(/[\uFE0F\u200D]/g, '').trim().split(/(?<=[.!?])\s|\n/)[0]) || '';   // hasta el punto: los dos puntos no cortan

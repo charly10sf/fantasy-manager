@@ -178,11 +178,12 @@ export function fuenteDe(c, { baja = false, k = 0, dia = '' } = {}) {
   // (Carlos, 6 nov 12:58, con el tweet de Eric: «lo de que LaLiga Fantasy ya lo da como disponible no tiene mucho sentido»: repetía la
   // etiqueta de abajo, «✅ Disponible para la jornada 12», y no decía quién lo cuenta.) Una vuelta confirmada por LaLiga se cuenta con
   // el medio o el club, como cualquier otra; el estado del juego ya sale en la etiqueta y en la carta.
-  if (confirma && c.fam !== 'buena') { const e = EST_TXT[c.est]; return { t: pegar([`y en LaLiga Fantasy ya sale como ${e}`, `y LaLiga Fantasy ya lo marca como ${e}`, `con LaLiga Fantasy marcándolo ya como ${e}`][f]), arriba, quien: 'laliga' }; }
+  // (Carlos, 7 nov: «¿cómo que LaLiga Fantasy pone? Será que está lesionado, nunca más digas eso») nada de «LaLiga Fantasy lo marca
+  // como…»: con medios, el medio; sin ninguno, que ya está confirmado, sin decir dónde
+  if (confirma && c.fam !== 'buena' && !(c.medios || []).length) return { t: pegar(['y ya está confirmado', 'ya confirmado', 'y ya es seguro'][f]), arriba, quien: 'laliga' };
   if ((c.medios || []).length >= 2) return { t: pegar([`según cuentan ${lis}`, `como publican ${lis}`, `según ${lis}`][f]), arriba, quien: 'prensa' };
   // un medio y la lista de lesionados de las webs de previas (que no se nombra), o LaLiga con otro estado (baja en la prensa, duda en LaLiga)
-  const otro = c.laliga && c.fam === 'mala' && EST_TXT[c.est] ? `; en LaLiga Fantasy ya sale como ${EST_TXT[c.est]}` : '';
-  return { t: pegar([`según ${lis}${otro}`, `como adelanta ${lis}${otro}`, `según publica ${lis}${otro}`][f]), arriba, quien: 'prensa' };
+  return { t: pegar([`según ${lis}`, `como adelanta ${lis}`, `según publica ${lis}`][f]), arriba, quien: 'prensa' };
 }
 
 export async function generar({ jugadores, equipos, jornada, stats = null, semana = null, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(),

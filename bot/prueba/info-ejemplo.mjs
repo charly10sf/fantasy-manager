@@ -96,9 +96,11 @@ const info = crearInfo({ jugadores, equipos, semana: { weekNumber: 12 }, pedirSe
   ok(fuenteDe(C({ laliga: true })).quien === 'prensa' && /AS/.test(fuenteDe(C({ laliga: true })).t) && !/LaLiga/.test(fuenteDe(C({ laliga: true })).t), 'vuelve, un medio y LaLiga disponible: el medio, sin «LaLiga Fantasy ya lo da como disponible» (6 nov)');
   ok(fuenteDe(C({ oficial: true, medios: ['AS', 'MARCA'] })).quien === 'club' && !/AS|MARCA/.test(fuenteDe(C({ oficial: true })).t), 'oficial: el club');
   ok(fuenteDe(C({ medios: ['AS', 'MARCA'] })).quien === 'prensa' && /AS y MARCA/.test(fuenteDe(C({ medios: ['AS', 'MARCA'] })).t) && fuenteDe(C({ medios: ['AS', 'MARCA'] })).t.startsWith('¦'), 'solo prensa: los medios, pegados a la frase de antes');
-  ok(fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true })).quien === 'laliga' && /duda/.test(fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true })).t), 'duda en la prensa y en LaLiga: LaLiga');
+  // (7 nov) nunca «LaLiga Fantasy lo marca como…»: con medio, el medio; sin medios, «ya está confirmado» sin decir dónde
+  ok(fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true })).quien === 'prensa' && !/LaLiga/.test(fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true })).t), 'duda en la prensa y en LaLiga: el medio, sin nombrar LaLiga Fantasy');
+  ok(fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true, medios: [] })).quien === 'laliga' && !/LaLiga/.test(fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true, medios: [] })).t), 'duda sin medios y en LaLiga: confirmado, sin nombrar LaLiga Fantasy');
   const m = fuenteDe(C({ fam: 'mala', est: 'doubtful', laliga: true }), { baja: true });
-  ok(m.quien === 'prensa' && /AS; en LaLiga Fantasy ya sale como duda/.test(m.t), `baja en la prensa y duda en LaLiga: el medio y lo de LaLiga (${m.t})`);
+  ok(m.quien === 'prensa' && /AS/.test(m.t) && !/LaLiga/.test(m.t), `baja en la prensa y duda en LaLiga: el medio, sin nombrar LaLiga Fantasy (${m.t})`);
   const ts = Array.from({ length: 6 }, (_, k) => fuenteDe(C({ medios: ['AS', 'MARCA'] }), { k, dia: 'd' }));
   for (let k = 1; k < ts.length; k++) ok(ts[k].t !== ts[k - 1].t, `la fuente rota (${k})`);
   ok(new Set(ts.map((x) => x.arriba)).size === 2, 'y cambia de sitio');
@@ -146,7 +148,7 @@ for (const lim of [280, 1000]) {
   ok(z && /72 %/.test(z.texto), `Zaid (${lim}): con su % de titularidad`);
   ok(z && (z.texto.split('\n\n').slice(0, -1).join(' ').match(/\. |\.$/g) || []).length <= 4, `Zaid (${lim}): frases largas, pocos puntos`);
   if (lim > 280) ok(z && /9º/.test(z.texto) && /\n\n.*72 %/s.test(z.texto), `Zaid (largo): el rival y lo del partido en su párrafo`);
-  ok(m && /LaLiga Fantasy/.test(m.texto) && /⁉️ Duda para/.test(m.texto), `Mayoral (${lim}): duda con su fuente`);
+  ok(m && !/LaLiga Fantasy (?:ya )?(?:lo |le )?(?:marca|sale|pone|da)|en LaLiga Fantasy/.test(m.texto) && /⁉️ Duda para/.test(m.texto), `Mayoral (${lim}): duda sin atribuírsela a LaLiga Fantasy`);
   ok(m && /33 %/.test(m.texto), `Mayoral (${lim}): duda en LaLiga, con el % de la app`);
   // (Carlos, 5 nov 16:39) el % también en la carta: el que vuelve, en la carta; la duda, en el estado; la baja, sin %
   const fc = (t) => t && t.tarjeta && t.tarjeta.d.filas[0];

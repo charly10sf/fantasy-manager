@@ -79,7 +79,7 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     const qg = quienes.find((q) => ['gol', 'doblete', 'triplete'].includes(q.motivo)), qa = quienes.find((q) => q.motivo === 'asistencia');
     const jg = qg && jugadores.find((x) => String(x.id) === String(qg.jugadorId)), ja = qa && jugadores.find((x) => String(x.id) === String(qa.jugadorId));
     if (t.tipo === 'directo' && jg && ja && String(jg.id) !== String(ja.id)) {
-      const x = await datosGolAsistencia(jg, ja, m, { jornada, motivo: qg.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null });
+      const x = await datosGolAsistencia(jg, ja, m, { jornada, motivo: qg.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null, ptsGol: qg.pts, ptsAsis: qa.pts });
       await hacer(`${t.tipo}-${m.id}-${jg.id}-${ja.id}-golasis`, x, svgGolAsistencia(x.d));
       vistos.add(String(jg.id)); vistos.add(String(ja.id));
     }
@@ -87,7 +87,7 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
       if (vistos.has(String(q.jugadorId))) continue; vistos.add(String(q.jugadorId));
       const j = jugadores.find((x) => String(x.id) === String(q.jugadorId));
       if (!j) continue;
-      const x = await datosJugador(j, m, { jornada, motivo: q.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null });
+      const x = await datosJugador(j, m, { jornada, motivo: q.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null, pts: q.pts });
       await hacer(`${t.tipo}-${m.id}-${j.id}-${q.motivo}`, x, svgJugador(x.d));
     }
   }
