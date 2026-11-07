@@ -1527,7 +1527,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248252/miedo-factor-raphinha-cholo-detallo-cambio-tactico-barca-destroza-rivales.html": 1794053748000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000
   },
   "hechos": [
    {
@@ -2178,7 +2179,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -2996,7 +2997,6 @@
  "liga": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/entrenamiento-voluntario-owono-andorra-minuto-silencio-jesus-miguel-20261104_3468574.html": 1793800216000,
-   "SPORT|136082717": 1793797745000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-suspenda-futbol-espanol-semana-20261104_3468659.html": 1793804394000,
    "SPORT|136085422": 1793801821000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/04/competicion-da-por-finalizado-el-tenerife-andorra-radio-club-tenerife/": 1793806981000,
@@ -3116,21 +3116,6 @@
    "SPORT|136195921": 1794049583000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136082717",
-    "medio": "SPORT",
-    "t": 1793797745000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Tras el fallecimiento de un jugador",
-    "detalle": "La AFE pide la suspensión y el Celta la respalda",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/uefa/entenderiamos-que-se-suspendiese-la-jornada-de-liga-f202611-n/",
     "medio": "AS",
@@ -3717,17 +3702,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 16,
    "revisar": 14,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 136055,
-  "salida": 19229,
+  "entrada": 137827,
+  "salida": 19328,
   "cacheLee": 97572,
   "cacheEscribe": 13375,
-  "dolares": 0.317972
+  "dolares": 0.318199
  },
  "recientes": {
   "onces": [
