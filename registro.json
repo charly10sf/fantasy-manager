@@ -1424,14 +1424,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2924",
-   "que": "lesion",
-   "antes": "doubtful",
-   "t": 1794079874618
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/04/andres-garcia-multiusos-jose-bordalas-136093338.html": 1793821391000,
@@ -2420,6 +2413,10 @@
     "t": 0
    },
    "2303": {
+    "e": "ok",
+    "t": 0
+   },
+   "2314": {
     "e": "ok",
     "t": 0
    },
@@ -3918,8 +3915,8 @@
    "fin": 1794071774918
   },
   "12|115": {
-   "h": "d9f72d5ae4c1",
-   "desde": 1794079875004,
+   "h": "57e4a58af285",
+   "desde": 1794080179811,
    "fin": 1794079572335
   }
  },
