@@ -30,6 +30,12 @@ Dudas:
 
 Con fuente y ya en el código: Isco, «el Mago» (Vavel, 17 mar 2026; El Gol Digital lo llama «el Mago de Arroyo de la Miel»); Bellingham, «Bellingol» (Fox Sports México, 7 nov 2023: mote de la afición por sus goles; el audio viral es de un narrador brasileño); Budimir, «el cisne de los Balcanes» (El Gol Digital, 2025: se lo puso la afición del Crotone, no la de Osasuna). Sin mote encontrado: Grimaldo, Raphinha, Baena, Bartra y Fermín. Yamal: «O Rei» (Fox Sports, 15 may 2025: el club lo publicó así). Carlos lo aprobó a las 23:33 y ya está en el código; «El Rey» (31 jul 2025) no, porque parte de la afición lo critica. También sale «Lord Bellingham» (AFP, 2023), que fue de una crónica y no se ha quedado.
 
+Mbappé, «la Tortuga» (Carlos lo dio por bueno el 7 nov, 23:40; fuentes: Soccerway, «De la 'Tortuga' al 'Panda'…», y Fox Sports México, 9 ago 2023; viene de la careta de Tortuga Ninja que le regaló Thiago Silva en 2018). Va por su nickname «Mbappé», sin rasgo (sigue sin fuente).
+
+## Nacionalidad en vez del nombre (7 nov, 23:40)
+
+Carlos: si el tuit repite un nombre, vale «el francés», «el uruguayo»… El país sale de las alineaciones de FotMob (`countryCode`), porque la API de LaLiga no lo trae; por eso de momento solo está en el directo (goleador y asistente, campo `suNacionalidad`). Reglas: sin España, sin países que no conocemos (`lib/nacionalidad.mjs`) y, si goleador y asistente son del mismo país, ninguno lo lleva. La IA solo lo usa en una segunda mención, una vez como mucho (`lib/voz.mjs`). Final y MVP no lo tienen aún: harían falta las alineaciones de FotMob en esos tipos.
+
 ## Segunda tanda (7 nov, 23:5x, «amplía a más»), pendiente del OK de Carlos
 
 Ya en la rama, pero no se fusiona hasta que Carlos diga. Nickname exacto de LaLiga Fantasy entre « ».
