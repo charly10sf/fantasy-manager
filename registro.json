@@ -580,6 +580,20 @@
    "jornada": 12,
    "id": "2119184687398552039",
    "t": "2026-11-07T21:46:17.075Z"
+  },
+  {
+   "clave": "final|112",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119193705496137969",
+   "t": "2026-11-07T22:22:07.172Z"
+  },
+  {
+   "clave": "mvp|112",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119193847980794230",
+   "t": "2026-11-07T22:22:41.118Z"
   }
  ],
  "estados": {
@@ -3106,9 +3120,9 @@
  },
  "pulido": {
   "dia": "2026-11-07",
-  "n": 3,
-  "ok": 3,
-  "mal": 1
+  "n": 5,
+  "ok": 4,
+  "mal": 2
  },
  "liga": {
   "vistas": {
@@ -3834,13 +3848,13 @@
    {
     "t": "2026-11-07T20:01:42.147Z",
     "texto": "🏁 Punto para el Osasuna 🐂 en El Sadar: el Athletic 🦁 ganaba con gol de Nico Williams en el 84' y Catena empató en el 90'. Final 1-1.\n\nCatena y Nico Williams cierran con 11 puntos cada uno. Para Catena es más del doble de su media; Nico Williams, con 6,4 de media, también se sale.\n\nVivian, del Athletic, suma 9, y Rubén García, del Osasuna, 8. Noche buena para quien tuviera a cualquiera de los cuatro."
+   },
+   {
+    "t": "2026-11-07T22:22:07.173Z",
+    "texto": "🏁 Valencia 0-3 Real Madrid. Goleada del Madrid. 19 puntos fantasy para Arda Güler. Va lanzado: 8, 15 y 19 en las 3 últimas jornadas. Le siguen Valverde, con 13, y Mbappé, con 12.\n\nNoche para olvidar de Gayá: -3 puntos, con 3 goles en contra. Dimitrievski suma 7 aunque el Valencia pierde. Cumple el favorito: el Real Madrid, 3º, gana al Valencia, 19º.\n\n✅ Partido redondo para quien tenga a Arda Güler"
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-06T22:01:39.058Z",
-    "texto": "⭐ Sivera, el mejor del Sevilla-Alavés con 10 puntos.\n\nSegún COPE, le paró un penalti a Vargas en la primera parte y el Alavés se llevó un 0-0 del Sánchez-Pizjuán. Con una media de 7 y 84 puntos en la temporada, si lo tienes de portero, no se toca. Su siguiente partido es contra el Deportivo."
-   },
    {
     "t": "2026-11-07T15:35:35.019Z",
     "texto": "⭐ Yassir Zabiri, el mejor del Málaga-Racing con 12 puntos.\n\nMarcó el 1-2 en el minuto 60, el gol que le dio la victoria al Racing ⚓ en La Rosaleda, y casi dobla su media de 6,5. Vale 46,4 M y en la jornada 13 recibe en casa a la Real Sociedad: si lo tienes, de los que se quedan en el once."
@@ -3856,6 +3870,10 @@
    {
     "t": "2026-11-07T20:26:44.876Z",
     "texto": "⭐ MVP fantasy del Osasuna 1-1 Athletic. Catena se va a 11 puntos. Empata con él Nico Williams. El defensa del Osasuna lleva 54 puntos en la temporada y 4,5 de media.\n\n💸 En el mercado está a 20,2 M. Su próximo partido, en la jornada 13 ante el Málaga"
+   },
+   {
+    "t": "2026-11-07T22:22:41.119Z",
+    "texto": "⭐ Arda Güler brilla como el MVP fantasy del Valencia 0-3 Real Madrid con 19 puntos y ya alcanza 125 puntos en el curso, a una media de 10,4 por encuentro.\n\nEl siguiente, en la jornada 13 contra el Celta. Ahora mismo vale 129,3 M."
    }
   ],
   "mercado": [
@@ -3963,5 +3981,1449 @@
    "dolares": 0.052126
   }
  ],
- "fallosRedaccion": {}
+ "fallosRedaccion": {},
+ "rasgos": {
+  "vistos": [
+   "5868011",
+   "5868019",
+   "5868017",
+   "5868015",
+   "5868014",
+   "5868012",
+   "5868029",
+   "5868023",
+   "5868021",
+   "5868030",
+   "5868025",
+   "5868022",
+   "5868026",
+   "5868024",
+   "5868028",
+   "5868027",
+   "5868020",
+   "5868018",
+   "5868013",
+   "5868016",
+   "5868037",
+   "5868031",
+   "5868035",
+   "5868039",
+   "5868040",
+   "5868038",
+   "5868033",
+   "5868032",
+   "5868036",
+   "5868034",
+   "5868070",
+   "5868043",
+   "5868042",
+   "5868048",
+   "5868050",
+   "5868049",
+   "5868041",
+   "5868047",
+   "5868045",
+   "5868046",
+   "5868044",
+   "5868059",
+   "5868056",
+   "5868055",
+   "5868051",
+   "5868057",
+   "5868052",
+   "5868054",
+   "5868053",
+   "5868058",
+   "5868060",
+   "5868069",
+   "5868061",
+   "5868065",
+   "5868062",
+   "5868064",
+   "5868066",
+   "5868063",
+   "5868068",
+   "5868075"
+  ],
+  "equipos": [
+   "9866",
+   "8305",
+   "8302",
+   "8370",
+   "8696",
+   "10205",
+   "8558",
+   "8581",
+   "9783",
+   "10268",
+   "9906",
+   "9864",
+   "8603",
+   "8560",
+   "8315",
+   "10267",
+   "9910",
+   "8633",
+   "8634",
+   "8371"
+  ],
+  "base": false,
+  "jugadores": {
+   "150565": {
+    "n": "Pierre-Emerick Aubameyang",
+    "e": "Deportivo A Coruña",
+    "g": {
+     "liga": [
+      5,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "150649": {
+    "n": "Sergio Canales",
+    "e": "Racing Santander",
+    "g": {
+     "liga": [
+      1,
+      1,
+      1,
+      0,
+      0
+     ]
+    }
+   },
+   "174472": {
+    "n": "Iago Aspas",
+    "e": "Celta Vigo",
+    "g": {
+     "liga": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "195305": {
+    "n": "Marc Bartra",
+    "e": "Real Betis",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "246438": {
+    "n": "Gerard Moreno",
+    "e": "Villarreal",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "251269": {
+    "n": "Ante Budimir",
+    "e": "Osasuna",
+    "g": {
+     "liga": [
+      4,
+      0,
+      0,
+      3,
+      1
+     ]
+    }
+   },
+   "288406": {
+    "n": "Alejandro Grimaldo",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "361757": {
+    "n": "João Cancelo",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "464486": {
+    "n": "Enes Ünal",
+    "e": "Getafe",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "468931": {
+    "n": "Thomas Lemar",
+    "e": "Elche",
+    "g": {
+     "liga": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "474658": {
+    "n": "Álvaro Garcia",
+    "e": "Rayo Vallecano",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "497662": {
+    "n": "Carl Starfelt",
+    "e": "Celta Vigo",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "518525": {
+    "n": "Mariano Díaz",
+    "e": "Deportivo Alavés",
+    "g": {
+     "liga": [
+      3,
+      2,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "561164": {
+    "n": "Lucas Boyé",
+    "e": "Deportivo Alavés",
+    "g": {
+     "liga": [
+      4,
+      2,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "574624": {
+    "n": "Enrique Barja",
+    "e": "Osasuna",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "574629": {
+    "n": "Alex Berenguer",
+    "e": "Athletic Club",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "575735": {
+    "n": "Nicolas Pépé",
+    "e": "Villarreal",
+    "g": {
+     "liga": [
+      2,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "576165": {
+    "n": "Gabriel Jesus",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "590494": {
+    "n": "Umar Sadiq",
+    "e": "Valencia",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "604105": {
+    "n": "Iñaki Williams",
+    "e": "Athletic Club",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "609516": {
+    "n": "Robin Le Normand",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "638070": {
+    "n": "Luis Rioja",
+    "e": "Valencia",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "678192": {
+    "n": "Jon Guridi",
+    "e": "Sevilla",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "690516": {
+    "n": "Ademola Lookman",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "696679": {
+    "n": "Raphinha",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      9,
+      0,
+      0,
+      3,
+      0
+     ]
+    }
+   },
+   "701154": {
+    "n": "Kylian Mbappé",
+    "e": "Real Madrid",
+    "g": {
+     "liga": [
+      7,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "730901": {
+    "n": "Yangel Herrera",
+    "e": "Real Sociedad",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "837270": {
+    "n": "Chidera Ejuke",
+    "e": "Sevilla",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "844544": {
+    "n": "Pape Gueye",
+    "e": "Villarreal",
+    "g": {
+     "liga": [
+      3,
+      1,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "846033": {
+    "n": "Vinícius Júnior",
+    "e": "Real Madrid",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "852071": {
+    "n": "Juan Hernández",
+    "e": "Real Betis",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "860314": {
+    "n": "Nahuel Tenaglia",
+    "e": "Deportivo Alavés",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "899195": {
+    "n": "Andrés Martin",
+    "e": "Racing Santander",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "927646": {
+    "n": "Adrià Pedrosa",
+    "e": "Rayo Vallecano",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "939569": {
+    "n": "Jonathan David",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "940976": {
+    "n": "Kang-In Lee",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "942365": {
+    "n": "Troy Parrott",
+    "e": "Real Betis",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "942372": {
+    "n": "Álex Baena",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
+      4,
+      2,
+      1,
+      0,
+      0
+     ]
+    }
+   },
+   "950545": {
+    "n": "Oihan Sancet",
+    "e": "Athletic Club",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "952528": {
+    "n": "Adrián De La Fuente",
+    "e": "Levante",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "959594": {
+    "n": "Karim Adeyemi",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "959597": {
+    "n": "Luka Sucic",
+    "e": "Real Sociedad",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "970578": {
+    "n": "Andrei Rațiu",
+    "e": "Rayo Vallecano",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "980422": {
+    "n": "Sergio Camello",
+    "e": "Rayo Vallecano",
+    "g": {
+     "liga": [
+      6,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1002618": {
+    "n": "Ander Barrenetxea",
+    "e": "Real Sociedad",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1011117": {
+    "n": "Robert Navarro",
+    "e": "Athletic Club",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1029029": {
+    "n": "Zakaria Eddahchouri",
+    "e": "Deportivo A Coruña",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1056461": {
+    "n": "Ville Koski",
+    "e": "Deportivo Alavés",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1072200": {
+    "n": "Rodrigo Riquelme",
+    "e": "Real Betis",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1077894": {
+    "n": "Jude Bellingham",
+    "e": "Real Madrid",
+    "g": {
+     "liga": [
+      3,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1083323": {
+    "n": "Pedri",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1097229": {
+    "n": "Orri Óskarsson",
+    "e": "Real Sociedad",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1102289": {
+    "n": "Juan Iglesias",
+    "e": "Sevilla",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1102708": {
+    "n": "Germán Valera",
+    "e": "Elche",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1102732": {
+    "n": "Ferrán Jutglà",
+    "e": "Celta Vigo",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1117069": {
+    "n": "Georges Mikautadze",
+    "e": "Villarreal",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "1127224": {
+    "n": "Fer Niño",
+    "e": "Elche",
+    "g": {
+     "liga": [
+      5,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1130991": {
+    "n": "Isaac Romero",
+    "e": "Sevilla",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1131957": {
+    "n": "Jon Olasagasti",
+    "e": "Levante",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1132607": {
+    "n": "Peque Fernández",
+    "e": "Sevilla",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "1181101": {
+    "n": "Tyrhys Dolan",
+    "e": "Espanyol",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1184694": {
+    "n": "Alberto Moleiro",
+    "e": "Villarreal",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1188375": {
+    "n": "Natan",
+    "e": "Real Betis",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1190025": {
+    "n": "Alvaro Carreras",
+    "e": "Real Madrid",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1191407": {
+    "n": "Aitor Paredes",
+    "e": "Athletic Club",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1197039": {
+    "n": "Martín Satriano",
+    "e": "Getafe",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1202110": {
+    "n": "Nico Williams",
+    "e": "Athletic Club",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1202587": {
+    "n": "Ramón Terrats",
+    "e": "Getafe",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1204447": {
+    "n": "Luismi Cruz",
+    "e": "Deportivo A Coruña",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1209399": {
+    "n": "Abdessamad Ezzalzouli",
+    "e": "Real Betis",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1209421": {
+    "n": "Carlos Dotor",
+    "e": "Málaga",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1209441": {
+    "n": "Iván Romero",
+    "e": "Levante",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1226147": {
+    "n": "Giuliano Simeone",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1238154": {
+    "n": "Pablo Ibánez",
+    "e": "Deportivo Alavés",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1252373": {
+    "n": "Roberto Fernández",
+    "e": "Espanyol",
+    "g": {
+     "liga": [
+      6,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1253890": {
+    "n": "Arda Güler",
+    "e": "Real Madrid",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1286471": {
+    "n": "Roger Brugué",
+    "e": "Levante",
+    "g": {
+     "liga": [
+      3,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1300457": {
+    "n": "Álex Calatrava",
+    "e": "Espanyol",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1323897": {
+    "n": "Marc Pubill",
+    "e": "Atlético Madrid",
+    "g": {
+     "liga": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1332540": {
+    "n": "Enzo Bardeli",
+    "e": "Levante",
+    "g": {
+     "liga": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1336566": {
+    "n": "Facundo Buonanotte",
+    "e": "Elche",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "1343195": {
+    "n": "Abiel Osorio",
+    "e": "Elche",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1363232": {
+    "n": "Maguette Gueye",
+    "e": "Racing Santander",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1392232": {
+    "n": "Marc Aguado",
+    "e": "Elche",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1398377": {
+    "n": "Lucas Stassin",
+    "e": "Sevilla",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1403695": {
+    "n": "Adrián Nino",
+    "e": "Málaga",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1404415": {
+    "n": "Fermín López",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      4,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1407741": {
+    "n": "Marcos Fernández",
+    "e": "Espanyol",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      1
+     ]
+    }
+   },
+   "1426189": {
+    "n": "Mikel Rodríguez",
+    "e": "Deportivo Alavés",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1467236": {
+    "n": "Lamine Yamal",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      7,
+      1,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "1575945": {
+    "n": "Oso",
+    "e": "Sevilla",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1583872": {
+    "n": "Buba Sangaré",
+    "e": "Elche",
+    "g": {
+     "liga": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1610744": {
+    "n": "Carlos Espí",
+    "e": "Real Madrid",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1640985": {
+    "n": "Yassir Zabiri",
+    "e": "Racing Santander",
+    "g": {
+     "liga": [
+      6,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1662379": {
+    "n": "Pablo García",
+    "e": "Real Betis",
+    "g": {
+     "liga": [
+      2,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1669622": {
+    "n": "Chupe",
+    "e": "Málaga",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      1,
+      0
+     ]
+    }
+   },
+   "1724551": {
+    "n": "Job Ochieng",
+    "e": "Real Sociedad",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1791769": {
+    "n": "Sergio Martínez",
+    "e": "Racing Santander",
+    "g": {
+     "liga": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1797904": {
+    "n": "Miguel Sierra",
+    "e": "Sevilla",
+    "g": {
+     "liga": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1815149": {
+    "n": "Xavi Espart",
+    "e": "Barcelona",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   }
+  }
+ },
+ "medidaFuentes": {
+  "fm|112|743533|28": {
+   "j": "Federico Valverde",
+   "m": "28'",
+   "f": "2026-11-07T22:21:15.816Z",
+   "casado": true
+  },
+  "fm|112|1253890|36": {
+   "j": "Arda Güler",
+   "m": "36'",
+   "f": "2026-11-07T22:21:15.816Z",
+   "casado": true
+  },
+  "fm|112|701154|75": {
+   "j": "Kylian Mbappé",
+   "m": "75'",
+   "f": "2026-11-07T22:21:15.816Z",
+   "casado": true
+  },
+  "directo|112|Federico Valverde|gol1": {
+   "j": "Federico Valverde",
+   "m": "28'",
+   "e": "2026-11-07T22:21:15.816Z",
+   "re": "90'+4'",
+   "w": "2026-11-07T20:29:33Z",
+   "f": "2026-11-07T22:21:15.816Z"
+  },
+  "directo|112|Arda Güler|gol1": {
+   "j": "Arda Güler",
+   "m": "36'",
+   "e": "2026-11-07T22:21:15.816Z",
+   "re": "90'+4'",
+   "w": "2026-11-07T20:37:47Z",
+   "f": "2026-11-07T22:21:15.816Z"
+  },
+  "directo|112|Kylian Mbappé|gol1": {
+   "j": "Kylian Mbappé",
+   "m": "75'",
+   "e": "2026-11-07T22:21:15.816Z",
+   "re": "90'+4'",
+   "w": "2026-11-07T21:38:22Z",
+   "f": "2026-11-07T22:21:15.816Z"
+  }
+ },
+ "fuentesSalud": {
+  "fotmob": {
+   "ok": 65,
+   "fallos": 0,
+   "ejecuciones": 1,
+   "ejecucionesConFallo": 0,
+   "desde": "2026-11-07T22:21:15.816Z",
+   "mediaMs": 225,
+   "ultima": "2026-11-07T22:21:15.816Z"
+  }
+ }
 }
