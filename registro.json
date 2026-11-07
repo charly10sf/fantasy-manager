@@ -594,6 +594,13 @@
    "jornada": 12,
    "id": "2119193847980794230",
    "t": "2026-11-07T22:22:41.118Z"
+  },
+  {
+   "clave": "mercado|2026-11-08",
+   "tipo": "mercado",
+   "jornada": 12,
+   "id": "2119207411198341495",
+   "t": "2026-11-07T23:16:34.850Z"
   }
  ],
  "estados": {
@@ -3798,16 +3805,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 0,
-   "redactar": 4,
-   "revisar": 2,
+   "redactar": 8,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 44209,
-  "salida": 1422,
-  "cacheLee": 2605,
+  "entrada": 88427,
+  "salida": 2569,
+  "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.109412
+  "dolares": 0.20984
  },
  "recientes": {
   "onces": [
@@ -3880,6 +3887,10 @@
    {
     "t": "2026-11-06T23:15:34.668Z",
     "texto": "💸 Subidas y bajadas del mercado fantasy de hoy, 7/11\n\n📈 Aubameyang del Dépor es el que más sube: +1,9 M (+3,8 %), hasta los 50,9 M.\n\n📉 En el otro lado, Rodri del Barcelona pierde 2,2 M en un día y se queda en 84,1 M (-2,5 %).\n\n🛒 Chollo Fantasy: Thiago del Levante 🐸 vale 1,5 M, suma 4,1 de media y hoy sube un 2,4 %"
+   },
+   {
+    "t": "2026-11-07T23:16:34.852Z",
+    "texto": "📈 Aubameyang es el que más sube del mercado: +2,5 M y se planta en 53,4 M con el Deportivo, casi un 5 % en una noche.\n\nEn el lado contrario, Rodri pierde 2 M en el Barça y se queda en 82,2 M.\n\nSi buscas algo barato, Redondo del Elche 🌴 cuesta 1,9 M y mete 4,3 de media. La imagen trae las cinco mayores subidas y las cinco mayores bajadas."
    }
   ],
   "previa": [
@@ -3996,13 +4007,7 @@
    "dolares": 2.017914
   }
  ],
- "fallosRedaccion": {
-  "mercado|2026-11-08": {
-   "n": 1,
-   "t": "2026-11-07T23:15:51.460Z",
-   "ultima": "2026-11-07T23:15:51.460Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
