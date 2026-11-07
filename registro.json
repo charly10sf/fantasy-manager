@@ -559,6 +559,13 @@
    "jornada": 12,
    "id": "2119165818537714037",
    "t": "2026-11-07T20:31:18.383Z"
+  },
+  {
+   "clave": "directo|112|Arda Güler|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119168327398338894",
+   "t": "2026-11-07T20:41:16.568Z"
   }
  ],
  "estados": {
@@ -3215,7 +3222,9 @@
    "SPORT|136204292": 1794067195000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
    "SPORT|136206834": 1794072635000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794080725000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794080725000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/alerta-meteorologica-obliga-suspender-partido-palmas-eldense-20261107_3470867.html": 1794083561000,
+   "SPORT|136209574": 1794080057000
   },
   "hechos": [
    {
@@ -3781,7 +3790,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 11,
+   "n": 12,
    "fallos": 0
   },
   "espera": {}
@@ -3789,17 +3798,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 48,
-   "redactar": 78,
+   "clasificar": 49,
+   "redactar": 79,
    "revisar": 43,
    "pulir": 3
   },
   "fallos": 0,
-  "entrada": 888393,
-  "salida": 43036,
+  "entrada": 900021,
+  "salida": 43760,
   "cacheLee": 147067,
   "cacheEscribe": 39425,
-  "dolares": 1.974316
+  "dolares": 1.995538
  },
  "recientes": {
   "onces": [
@@ -3900,10 +3909,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T14:26:16.890Z",
-    "texto": "⚽ Zabiri marca en el 60' y el Racing le da la vuelta al partido: 1-2 ante el Málaga.\n\nEl delantero ya suma 6 puntos, justo su media. Si lo tienes, la jornada le está saliendo bien."
-   },
-   {
     "t": "2026-11-07T14:31:18.640Z",
     "texto": "🟥 Roja para Aznou en el 64': el Málaga se queda con diez y pierde 1-2 contra el Racing.\n\nEl defensa se va con -4 puntos. Si lo tienes, esta jornada ya la has perdido con él, y el Málaga tendrá difícil sumar con un jugador menos."
    },
@@ -3918,6 +3923,10 @@
    {
     "t": "2026-11-07T20:31:18.385Z",
     "texto": "⚽ Gol de Valverde y el Real Madrid se adelanta en el 28'. Valencia 0-1 Real Madrid. Ya suma 6 puntos fantasy."
+   },
+   {
+    "t": "2026-11-07T20:41:16.569Z",
+    "texto": "⚽ Arda Güler amplía la ventaja del Real Madrid en el 36'. Valencia 0-2 Real Madrid. Lleva 10 puntos fantasy de momento."
    }
   ],
   "novedades": [
