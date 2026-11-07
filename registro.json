@@ -1322,7 +1322,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261104/1004247114/galarreta-regresa-trabajo-grupo-tres-dias-visitar-osasuna.html": 1793789547000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/04/kike-salas-reincorpora-grupo.html": 1793791579000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247137/sesion-recuperacion-dos-futbolistas-margen.html": 1793791758000,
    "SPORT|136069863": 1793790101000,
@@ -1520,23 +1519,10 @@
    "SPORT|136054540": 1794038967000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html": 1794043154000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000,
+   "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261104/1004247114/galarreta-regresa-trabajo-grupo-tres-dias-visitar-osasuna.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793789547000,
-    "id": "1070",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     28
-    ]
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/sevilla/2026/11/04/kike-salas-reincorpora-grupo.html",
     "medio": "MARCA",
@@ -2199,11 +2185,23 @@
      0,
      60
     ]
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/",
+    "medio": "Cadena SER",
+    "t": 1794048613000,
+    "id": "3108",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Aubameyang regresa al equipo para visitar al Espanyol",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3028,8 +3026,6 @@
    "SPORT|136076483": 1793790357000,
    "SPORT|136075899": 1793790003000,
    "SPORT|136075239": 1793789929000,
-   "SPORT|136072261": 1793789758000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261104/1004247120/oficial-aplazado-granada-tenerife.html": 1793789649000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3190,21 +3186,6 @@
      12,
      13
     ]
-   },
-   {
-    "guid": "SPORT|136072261",
-    "medio": "SPORT",
-    "t": 1793789758000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "Petición oficial de la AFE a RFEF, LaLiga y UEFA",
-    "nums": []
    },
    {
     "guid": "SPORT|136078404",
@@ -3822,17 +3803,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 15,
    "revisar": 13,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 100048,
-  "salida": 14043,
+  "entrada": 101709,
+  "salida": 14537,
   "cacheLee": 97572,
   "cacheEscribe": 10770,
-  "dolares": 0.281939
+  "dolares": 0.282352
  },
  "recientes": {
   "onces": [
