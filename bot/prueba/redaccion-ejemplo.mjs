@@ -290,6 +290,8 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a
   ok(!revisar(corto, { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: una primera frase corta, vale');
   ok(revisar('El Osasuna recibe hoy al Athletic. Budimir está en el aire y Herrera también está en el aire.', { hechos: hp, todos }).some((x) => /en el aire/.test(x)), 'previa: «en el aire» dos veces, fuera');
   ok(!revisar('El Osasuna recibe hoy al Athletic. Budimir está en el aire y Herrera no tiene el puesto asegurado.', { hechos: hp, todos }).some((x) => /en el aire/.test(x)), 'previa: «en el aire» una vez, vale');
+  ok(revisar('La gran duda del Osasuna-Athletic está en Budimir. Es fijo.', { hechos: hp, todos }).some((x) => /fórmula de plantilla/.test(x)), 'previa: abrir con «La gran duda del X-Y», fuera');
+  ok(revisar('El Osasuna recibe hoy a las seis y media en El Sadar al Athletic, que llega quinto, con un cruce que a los delanteros y medios de casa les viene bastante mal: Budimir es fijo.', { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: los dos puntos no cortan la primera frase');
   ok(!revisar(largo, { hechos: { ...hp, tipo: 'caidas' }, todos }).some((x) => /primera frase/.test(x)), 'solo la previa tiene tope de primera frase');
 }
 
