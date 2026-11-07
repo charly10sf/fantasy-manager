@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7n';
+export const VERSION = '0.7o';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,19 @@ export const VERSION = '0.7n';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7o', f: '2026-11-07', h: '22:47', t: 'El chat de la IA, más serio y con las cuentas bien',
+    cosas: [
+      { tipo: 'mejora', d: 'ia', t: 'Habla como un director deportivo', x: 'Cercano pero serio: sin chascarrillos cuando habla de una operación o de un rival con el que negocias, y sin suponer lo que quieres. Si le falta saber algo, te lo pregunta. Las pullitas, para las noticias de fuera del campo.' },
+      { tipo: 'arreglo', d: 'nota', t: 'Solo apunta lo que decides tú', x: 'Si preguntas por una oferta o estás negociando, apunta la oferta tal cual, no que la has rechazado o aceptado. Una decisión solo se apunta cuando la dices tú, y nunca como si fuera por su consejo.' },
+      { tipo: 'arreglo', d: 'reloj', t: 'Sabe cuándo se abre la cláusula de los tuyos', x: 'Cuando nombras a uno de tus jugadores, la IA tiene su cláusula, la hora a la que se abre y desde cuándo lo puedes blindar. Antes, de los tuyos nombrados no le llegaba la cláusula.' },
+      { tipo: 'arreglo', d: 'escudo', t: 'El blindaje, con su hora de verdad', x: 'El escudo de LaLiga solo se puede poner con la cláusula ya abierta y protege 24 h. La IA ya no dice que lo puedes poner antes ni cambia la hora de un mensaje a otro.' },
+      { tipo: 'arreglo', d: 'bandera', t: 'Tiene en cuenta el parón', x: 'Sabe cuándo empieza y cuándo acaba, que en esos días nadie suma puntos y que las subidas se moderan.' },
+      { tipo: 'arreglo', d: 'balanza', t: 'Las cuentas de un cambio, hechas', x: 'Si hablas de cambiar a uno tuyo por uno de un rival, le llegan hechas la diferencia de valor, las dos cláusulas, cuándo se abren y a quién le llega cada una, y las mantiene en las preguntas siguientes. Así no cambia las cifras de un mensaje a otro.' },
+      { tipo: 'arreglo', d: 'plan', t: 'No repite el plan del día en cada respuesta', x: 'Solo lo saca si lo que preguntas va del plan o de sus jugadores.' },
+      { tipo: 'arreglo', d: 'lupa', t: 'Nico Williams ya no trae a Iñaki', x: 'Al nombrar a un jugador por su nombre entero, la IA recibía también los datos de otro con el mismo apellido.', menor: true },
+    ],
+  },
   {
     v: '0.7n', f: '2026-11-07', h: '20:36', t: 'Los que vuelven, también en el Radar de subidas',
     cosas: [

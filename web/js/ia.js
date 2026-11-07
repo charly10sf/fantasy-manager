@@ -5,7 +5,7 @@
    Prueba todos los modelos gratuitos que tenga tu clave antes de rendirse, y si se acaba la búsqueda en
    Google, sigue sin ella. Cada intento queda apuntado para el diagnóstico. */
 import { leer, guardar, http, enApp, despues } from './puente.js';
-import { LS, eur, pct, cuando, dura, POS, DIA, MIN, diaDe, norm, num, esWebFantasy, sinWebs } from './util.js';
+import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta } from './util.js';
 import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo } from './operaciones.js';
@@ -310,8 +310,8 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
     const cont = !web && contentsSinWeb ? contentsSinWeb : contents;
     const sis = !web && sistemaSinWeb ? sistemaSinWeb : sistema;
     return esGemma(modelo)
-      ? { contents: [{ role: 'user', parts: [{ text: `${sis}\n\n---\n\n${cont.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).filter(Boolean).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: 0.6 } }
-      : { systemInstruction: { parts: [{ text: sis }] }, contents: cont, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
+      ? { contents: [{ role: 'user', parts: [{ text: `${sis}\n\n---\n\n${cont.map((c) => `${c.role === 'model' ? 'ASISTENTE' : 'MANAGER'}: ${c.parts.map((p) => p.text).filter(Boolean).join('\n')}`).join('\n\n')}` }] }], generationConfig: { maxOutputTokens: 8192, temperature: op.temperatura ?? 0.6 } }
+      : { systemInstruction: { parts: [{ text: sis }] }, contents: cont, ...(web ? { tools: [{ google_search: {} }] } : {}), generationConfig: { maxOutputTokens: op.maxTokens || 16000, temperature: op.temperatura ?? 0.6, ...(pensar ? { thinkingConfig: { thinkingLevel: nivel } } : {}) } };
   };
   // cada petición con su propio «parar», que también salta si paras la pregunta: así la que pierde la carrera se corta
   const ramal = () => {
@@ -628,6 +628,12 @@ function onceTxt(M, j) {
   return 'once probable: suplente';
 }
 const mejoraTxt = (M, j) => { const g = M.mejora ? M.mejora(j) : 0; return g >= 0.3 ? `entraría en mi once (+${String(Math.round(g * 10) / 10).replace('.', ',')} pts/jornada)` : 'NO entraría en mi once'; };
+// uno de los míos: si es titular y lo que pierde mi once sin él («NO entraría en mi once» salía con los míos)
+const onceMioTxt = (M, j) => {
+  const tit = M.once && M.once.lineas && M.once.lineas.flat().some((x) => x.id === j.id);
+  const pp = M.perdida ? M.perdida(j.id) : 0;
+  return `${tit ? 'TITULAR en mi once' : 'suplente en mi once'}${pp >= 0.3 ? `; sin él, mi once pierde ${String(Math.round(pp * 10) / 10).replace('.', ',')} pts/jornada` : ''}`;
+};
 let CORTO = false;
 /**
  * el calendario de riesgo: sus próximos 5 partidos (o los de sus 14 días con la cláusula protegida), con el
@@ -670,12 +676,43 @@ export function jugadoresEn(texto, D) {
   const porApellido = {};
   for (const j of Object.values(D.maestro || {})) {
     const n = norm(j.nombre);
-    if (n.length >= 4 && t.includes(` ${n} `)) { out.push(j); continue; }
+    // (el apellido se cuenta también para el que sale entero: con «Nico Williams» en el texto, Iñaki Williams se colaba
+    // como el único «Williams»; 7 nov)
     const ult = n.split(' ').pop();
     if (ult.length >= 5) (porApellido[ult] ||= []).push(j);
+    if (n.length >= 4 && t.includes(` ${n} `)) out.push(j);
   }
   for (const [ap, js] of Object.entries(porApellido)) if (js.length === 1 && t.includes(` ${ap} `) && !out.includes(js[0])) out.push(js[0]);
   return out.slice(0, 6);
+}
+
+/** «mañana 20:00 (8 nov)»: con «hoy», «mañana» o «ayer», también la fecha (en un chat largo la IA pasaba de «mañana» a «hoy») */
+function cuandoF(t, op) {
+  const c = cuando(t, op);
+  return /^(hoy|mañana|ayer)/.test(c) ? `${c} (${fechaCorta(t)})` : c;
+}
+
+/**
+ * la cláusula de uno de los míos, entera: cuánto, si está a su valor (y por qué), cuándo se abre y qué se puede hacer
+ * con el blindaje (el escudo de LaLiga: solo con la cláusula ya abierta). Antes, en «JUGADORES QUE NOMBRA», uno mío
+ * salía sin cláusula (M.clausulas solo lleva las de los rivales) y la IA no sabía que la de Nico se abría al día
+ * siguiente (Carlos, 7 nov); y se inventaba la hora del escudo («mañana antes de las 20:00», luego «hoy»).
+ */
+function clausulaMiaTxt(M, x) {
+  if (!x || !x.clausula) return 'cláusula: no la sé';
+  const ES = M.escudosMios || { quedan: 0 }, H = M.ESCUDO_H || 24;
+  const aSuValor = x.j && x.j.valor && Math.abs(x.clausula - x.j.valor) < Math.max(1e4, x.j.valor * 0.002);
+  const cuanto = `cláusula ${eur(x.clausula)}${aSuValor ? ' (IGUAL A SU VALOR: cuando el valor pasa la cláusula, LaLiga la sube sola hasta el valor, así que mientras suba irá pegada a su valor; cuando se abra costará lo que valga en ese momento)' : x.ratio != null ? ` (${pct((x.ratio - 1) * 100, 0)} sobre su valor)` : ''}`;
+  let estado, escudo;
+  if (x.abierta) {
+    estado = 'ABIERTA YA: cualquiera con saldo me lo puede quitar';
+    escudo = x.escudo ? `ya blindado hasta ${cuandoF(x.escudo)}` : ES.quedan ? `se puede blindar ya (gratis, viendo un anuncio): queda protegida ${H} h, hasta ${cuandoF(Date.now() + H * HORA)}` : 'no me quedan blindajes esta jornada';
+  } else {
+    const abre = x.protegidoHasta;
+    estado = x.veda ? `cerrada por el cierre de cláusulas: se abre cuando empiece la jornada ${x.veda.n}, ${cuandoF(abre)}` : `${x.escudo ? 'BLINDADA' : 'protegida'} hasta ${cuandoF(abre)}: hasta esa hora nadie me lo puede clausular; desde esa hora, sí`;
+    escudo = x.escudo ? 'ya lleva el blindaje puesto' : ES.quedan ? `el blindaje NO se puede poner antes de ${cuandoF(abre)} (solo vale con la cláusula ya abierta); puesto a esa hora, la protege ${H} h más, hasta ${cuandoF(abre + H * HORA)}. OJO: en ese mismo minuto un rival con saldo ya puede pagar la cláusula, así que el blindaje solo le salva si lo pongo antes de que nadie la pague; a salvo desde antes, solo subiendo la cláusula` : 'no me quedan blindajes esta jornada';
+  }
+  return `${cuanto} · ${estado} · blindaje: ${escudo}`;
 }
 
 /** todo lo que se sabe de un jugador: lo de siempre más de quién es, su cláusula o si está en el mercado */
@@ -690,7 +727,8 @@ function lineaCompleta(D, M, j) {
   const hace = (d) => { const x = [...serie].reverse().find(([ts]) => ts <= Date.now() - d * DIA); return x ? x[1] : null; };
   const v7 = hace(7), v30 = hace(30);
   const como = comoConseguir(D, M, j.id, catDe(D, M));
-  return `${lineaJ(M, j, { tend: t })} | ${de}${cl ? ` | cláusula ${eur(cl.clausula)} ${cl.abierta ? 'ABIERTA' : cl.veda ? `CERRADA hasta que empiece la jornada ${cl.veda.n}: se puede clausular ${cuando(cl.protegidoHasta)}, no antes` : cl.escudo ? `BLINDADA por su dueño hasta ${cuando(cl.protegidoHasta)} (hasta entonces no se puede clausular)` : `se abre ${cuando(cl.protegidoHasta)}`}` : ''} | CÓMO CONSEGUIRLO: ${como}${prensaTxt(M, j.id)}${v7 ? ` | hace 7 días valía ${eur(v7)}` : ''}${v30 ? `, hace 30 días ${eur(v30)}` : ''} | ${mejoraTxt(M, j)}`;
+  const mia = tid && tid === D.yo.teamId ? (M.mias || []).find((x) => x.pid === j.id) : null;
+  return `${lineaJ(M, j, { tend: t })} | ${de}${mia ? ` | ${clausulaMiaTxt(M, mia)}` : ''}${cl ? ` | cláusula ${eur(cl.clausula)} ${cl.abierta ? 'ABIERTA' : cl.veda ? `CERRADA hasta que empiece la jornada ${cl.veda.n}: se puede clausular ${cuandoF(cl.protegidoHasta)}, no antes` : cl.escudo ? `BLINDADA por su dueño hasta ${cuandoF(cl.protegidoHasta)} (hasta entonces no se puede clausular)` : `se abre ${cuandoF(cl.protegidoHasta)} (hasta esa hora no se puede clausular; su dueño puede blindarla en cuanto se abra)`}` : ''} | CÓMO CONSEGUIRLO: ${como}${prensaTxt(M, j.id)}${v7 ? ` | hace 7 días valía ${eur(v7)}` : ''}${v30 ? `, hace 30 días ${eur(v30)}` : ''} | ${mia ? onceMioTxt(M, j) : mejoraTxt(M, j)}`;
 }
 
 /** el catálogo de operaciones posibles, uno por análisis */
@@ -797,7 +835,13 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   if (M.proxima) L.push(`PRÓXIMA JORNADA: ${M.proxima.n}, primer partido ${cuando(M.proxima.ini)} (en ${dura(M.proxima.ini - Date.now())}).`);
   if (M.vedaAhora) L.push(`CLÁUSULAS CERRADAS: desde ${cuando(M.vedaAhora.ini)} (24 h antes del primer partido de la jornada ${M.vedaAhora.n}) LaLiga no deja clausular a nadie, ni a mí me pueden clausular, hasta que empiece la jornada (${cuando(M.vedaAhora.fin)}). Un clausulazo, a esa hora y no antes; blindar tampoco hace falta hasta entonces. Un jugador clausulado a esa hora NO llega a la alineación de esa jornada (el once se cierra con el primer partido): no lo pongas en el once ni cuentes con sus puntos hasta la siguiente.`);
   else if (M.proxima) L.push(`LAS CLÁUSULAS SE CIERRAN ${cuando(M.proxima.ini - M.VEDA_H * 3600e3)} (24 h antes del primer partido) y se reabren cuando empieza la jornada (${cuando(M.proxima.ini)}): un clausulazo, antes del cierre o a partir de esa hora. Si es a partir de esa hora, el jugador NO llega a la alineación de esa jornada (el once se cierra con el primer partido): cuenta para la siguiente.`);
-  if (M.paron) L.push(`PARÓN DE SELECCIONES: del ${cuando(M.paron.ini, { hora: false })} al ${cuando(M.paron.fin, { hora: false })}${M.enParon ? ' (estamos en él)' : ''}.`);
+  // el parón, con lo que supone: la IA lo tenía en una línea y seguía hablando de uno que «sube como la espuma»
+  // (Carlos, 7 nov: «teniendo en cuenta el parón» y ni lo nombró)
+  if (M.paron) {
+    const cerca = M.enParon || M.paron.ini - Date.now() < 7 * DIA;
+    const vuelta = M.proxima && M.proxima.ini > M.paron.ini ? M.proxima : null;
+    L.push(`PARÓN DE SELECCIONES: del ${cuandoF(M.paron.ini, { hora: false })} al ${cuandoF(M.paron.fin, { hora: false })}${M.enParon ? ' (ESTAMOS EN ÉL)' : ` (empieza en ${dura(M.paron.ini - Date.now())})`}.${cerca ? ` Lo que supone: ${M.enParon ? 'no hay' : 'durante el parón no habrá'} partidos de LaLiga, así que nadie suma puntos${vuelta ? ` hasta la jornada ${vuelta.n} (${cuandoF(vuelta.ini)})` : ''}; las rachas de valor se frenan y las subidas se moderan (lo que subió uno la semana pasada no tiene por qué seguir: no lo vendas como que «sube como la espuma» por su 7d), y los que van con su selección pueden volver tocados o cansados. Si te pregunta por el parón o te dice «teniendo en cuenta el parón», nómbralo con estas fechas y di cómo cambia lo que le aconsejas.` : ''}`);
+  }
   if (M.cierreMercado) {
     // lo que se gana en la subasta es tuyo al cambiar el mercado y se puede alinear hasta el primer partido de la jornada:
     // con el mercado a las 20:00 y el primer partido a las 21:00 hay una hora (la IA decía que lo que se fichara hoy no
@@ -844,7 +888,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     const pp = M.perdida ? M.perdida(x.pid) : 0;
     return pp >= 0.3 ? ` | si lo vendo, mi once pierde ${d1(pp)} pts/jornada` : ' | venderlo no quita nada a mi once';
   };
-  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuando(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuando(x.protegidoHasta)}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}${M.esperarVenta && M.esperarVenta(x).tipo ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}`);
+  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (el blindaje, no antes de esa hora)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}${M.esperarVenta && M.esperarVenta(x).tipo ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}`);
   if (M.enJuego && M.vivo && M.vivo.n === M.enJuego.n && Array.isArray(M.vivo.once) && M.vivo.once.length) {
     const ahoraT = Date.now();
     const est = (pid) => {
@@ -856,7 +900,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     };
     L.push(`MI ONCE EN LALIGA PARA LA JORNADA ${M.enJuego.n} (EN JUEGO): ${M.vivo.once.map(est).filter(Boolean).join(', ')}. Ya no se puede cambiar (LaLiga cierra el once con el primer partido): no me propongas alineación ni el paso de alinear.`);
   }
-  if (M.escudosMios) L.push(`BLINDAJES (el escudo de LaLiga, gratis viendo un anuncio): me quedan ${M.escudosMios.quedan} de 2 esta jornada; protegen la cláusula ${M.escudosMios.horas} h y solo se pueden poner a jugadores con la cláusula abierta.`);
+  if (M.escudosMios) L.push(`BLINDAJES (el escudo de LaLiga, gratis viendo un anuncio): me quedan ${M.escudosMios.quedan} de 2 hasta que acabe la jornada ${(M.enJuego || M.proxima || {}).n || 'siguiente'}; cada uno protege la cláusula ${M.escudosMios.horas} h desde que se pone y SOLO se puede poner a un jugador con la cláusula ya abierta: a uno con la cláusula protegida o cerrada no se le puede poner hasta la hora en que se abre (te la paso con cada uno). No hay otra protección gratis ni otra forma de alargarla: no te inventes horas ni plazos distintos de los que te paso.`);
   if (M.vendidos && M.vendidos.length) {
     L.push('\nYA NO SON MÍOS (vendidos o clausulados estos días; NO cuentes con ellos para nada: ni para vender, ni para el once, ni para el dinero):');
     for (const v of M.vendidos) L.push(`- ${v.j.nombre}: ${v.como} ${cuando(v.t)}${v.importe ? ` por ${eur(v.importe)}` : ''}`);
@@ -964,7 +1008,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   return L.join('\n');
 }
 
-const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España, directo, como un colega que sabe mucho del juego.
+const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. Nada de chascarrillos ni expresiones de colega de bar («tururú», «que se lo pida a su abuela», «si tiene huevos»), y no le atribuyas al manager ganas, miedos ni decisiones que no te ha dicho («si tanto lo quieres»): si necesitas saberlo, pregúntaselo.
 Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla pagando (pagar X la sube 2X) o blindarla gratis un rato (mira BLINDAJES). En el mercado hay DOS cosas muy distintas que no debes mezclar: (1) jugadores LIBRES de LaLiga, que no son de nadie: el mercado cambia cada día, se puja a ciegas desde su precio y se los lleva la puja más alta; (2) jugadores que OTRO MANAGER de la liga ha puesto a la venta: siguen siendo suyos, el precio lo pone él y solo pasan a ser del manager si el dueño acepta su oferta, así que no se pueden conseguir «más baratos en el mercado». Si el dueño es un amigo que se lo deja a un precio, es un trato entre los dos: valóralo por su valor, lo que sube al día, lo que le da a su once y si le llega el dinero, no comparándolo con el mercado de la liga. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
 Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador y titulares de prensa recientes: úsalos. Cuando hables de lo que te paso (el once probable, su nota, su xG), no digas de qué web sale: «el once probable», «su nota». No nombres nunca webs de fantasy ni de onces (futbolfantasy, Analítica Fantasy, Jornada Perfecta, Comuniate, Biwenger, Futmondo…) ni las pongas como fuente o con un «según»: di «la prensa» o «los onces probables». Si un jugador lleva ALINEACIÓN CONFIRMADA (sale una hora antes de su partido), eso manda sobre el once probable y la prensa: si está de SUPLENTE o NO CONVOCADO, lo tengo en el once y la jornada aún no ha empezado, dime que lo cambie por uno que juegue antes del primer partido de la jornada (después ya no se puede). Si tienes la búsqueda de Google, úsala para lo que pueda cambiar una decisión: lesiones, sanciones, convocatorias, onces de última hora, rotaciones por Champions o Copa y cambios de entrenador de los jugadores que vas a recomendar o a alinear. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Para REVENDER da igual que no lo vaya a alinear o que ya tenga a otro en su puesto (otro portero, por ejemplo): NUNCA lo descartes por eso ni lo llames «dinero parado» si está subiendo; cuenta lo que gana hasta venderlo, el dinero y el límite de jugadores de la plantilla. Una CLÁUSULA solo se puede pagar con el saldo que tiene: LaLiga no deja clausular quedándose en negativo (ni con el dinero de lo que pone en venta, que no entra hasta que acepta una oferta). Quedarse en negativo solo se puede pujando o comprando en el mercado. Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa. Los marcados VUELVE (valían mucho más esta temporada, se hundieron por una lesión o por no jugar y ahora juegan otra vez y suben varios días seguidos) son la especulación más clara: si hay dinero o margen de deuda para él, recomiéndalo SIEMPRE para revender aunque no le haga falta para el once, y di cuánto valía y por qué le queda recorrido. Que lleve mucho sin jugar no es motivo para descartarlo: es justo por lo que está barato.
@@ -1655,14 +1699,33 @@ export function cuentaConVendido(texto, nombre) {
 }
 
 /** pregunta en el chat; alTexto(texto) se llama según va llegando la respuesta */
-const NOTAS_CHAT = `Si en su último mensaje el manager te cuenta algo que tiene que contar a partir de ahora (una oferta o un trato con otro manager, algo que ya ha hecho, lo que piensa hacer, un jugador que no quiere vender, una preferencia), apúntalo para no olvidarlo. Al final de tu respuesta, y solo entonces, añade este bloque (no lo menciones en el texto):
+// Lo que se apunta, SOLO lo que él cuenta como hecho o como decidido. El 7 nov apuntó dos veces «rechazó el trueque»
+// cuando Carlos solo preguntaba y luego estaba negociando: además de decírselo, aplicarNotas lo comprueba.
+const NOTAS_CHAT = `APUNTAR: solo lo que el manager te CUENTA en su último mensaje como un hecho o como algo que ya ha decidido: una oferta o un trato que le ha hecho otro manager (que exista la oferta es un hecho, aunque él no haya decidido nada), algo que ya ha hecho, algo que ha decidido hacer, un jugador que dice que no quiere vender, una preferencia. NUNCA apuntes una decisión que no te haya dicho él con sus palabras («lo he rechazado», «acepto», «voy a…»): si pregunta («¿lo acepto?», «¿qué hago?») o está negociando, no ha decidido nada; como mucho apunta la oferta tal cual («Rival 2 le ofrece A por B») o en qué va la negociación. Y nunca escribas que hizo algo por tu consejo. Al final de tu respuesta, y solo entonces, añade este bloque (no lo menciones en el texto):
 \`\`\`notas
 {"apuntar": [{"texto": "frase corta en tercera persona con nombres y cifras", "jugador": "nombre exacto del jugador o null", "tipo": "trato|hecho|intencion|preferencia|otro", "importe": número en euros o null, "dias": días que sigue valiendo (1 a 30) o null si no caduca}], "olvidar": ["id entre corchetes de una nota que ya no vale"]}
 \`\`\`
 Si no hay nada nuevo que apuntar ni que olvidar, no pongas el bloque. Si te cuenta una oferta o un trato, contesta además si le conviene, con cifras (precio frente a valor, lo que sube o baja al día, en cuántos días lo recupera, si entra en su once, si le llega el dinero y qué tendría que vender).`;
 
+// ¿su mensaje dice que ha hecho o decidido algo? (no vale una pregunta)
+const DECIDE = /\b(he|hemos) (rechazado|aceptado|decidido|vendido|fichado|clausulado|comprado|blindado|dicho que (si|no)|cerrado)\b|\b(lo|la|los) (rechazo|acepto|vendo|dejo|cierro)\b|\b(rechazo|acepto|vendo|descarto)\b|\bno (lo |la )?(acepto|vendo|quiero|voy)\b|\b(voy|vamos) a\b|\bme quedo con\b|\bpaso de\b|\bya (lo |la )?(he|hice)\b|\ble he (dicho|ofrecido|pedido)\b|\btrato hecho\b/;
+const DUDA = /\bno (lo |la )?(he|tengo|hemos) decidid|\bno (lo )?se\b|\b(todavia|aun) no\b|\bnegocian|\bpensando|\bme lo (estoy )?pensando\b|\bsi (lo )?acepto\b/;
+const DECISION_NOTA = /rechaz|acept|decid|descart|cerr[oó]|dijo que (si|no)|no (lo )?quiso|consejo|recomend|aconsej/;
+/** lo que se puede apuntar de lo que dice: una decisión, solo si él la ha dicho; lo de «por tu consejo», fuera */
+export function notaValida(a, pregunta) {
+  const t = norm(a && a.texto);
+  if (!t) return false;
+  const q = norm(pregunta);
+  const pregunta_ = /\?\s*$/.test(String(pregunta || '').trim()) || /^(que|como|cuanto|cuando|me interesa|deberia|lo acepto|acepto|hago)\b/.test(q);
+  const decide = DECIDE.test(q) && !DUDA.test(q) && !pregunta_;
+  if (/consejo|recomend|aconsej/.test(t)) return false;
+  if (decide) return true;
+  // sin decisión suya: solo la oferta o el trato tal cual, sin decir qué hace con él
+  return ['trato', 'otro'].includes(String(a.tipo || 'otro')) && !DECISION_NOTA.test(t);
+}
+
 /** saca el bloque de notas de la respuesta y lo aplica: lo que hay que apuntar y lo que hay que olvidar */
-function aplicarNotas(texto, D) {
+export function aplicarNotas(texto, D, pregunta = null) {
   const m = String(texto || '').match(/```notas\s*([\s\S]*?)(```|$)/);
   if (!m) return { texto, apuntadas: [], olvidadas: 0 };
   const limpio = texto.replace(m[0], '').trim();
@@ -1677,6 +1740,7 @@ function aplicarNotas(texto, D) {
   const apuntadas = [];
   for (const a of j.apuntar || []) {
     if (!a || !a.texto) continue;
+    if (pregunta != null && !notaValida(a, pregunta)) continue;
     const dias = num(a.dias);
     const tipo = String(a.tipo || 'otro');
     apuntadas.push({
@@ -1715,6 +1779,82 @@ const SOBRE_FOTOS = `\nFOTOS: si te manda una captura o una foto, léela entera 
 
 // en el chat, Google solo cuando hace falta: cada búsqueda son unos segundos más de espera
 const BUSCAR_CHAT = 'EN EL CHAT, BUSCA EN GOOGLE SOLO SI HACE FALTA: si la pregunta se contesta con los datos que te paso, contesta sin buscar. Busca cuando necesites algo de hoy que no esté aquí (una lesión, una rueda de prensa, un once, una noticia) o te lo pida.';
+/**
+ * las cuentas de los jugadores que nombra, hechas: valores, cláusulas, diferencias y quién puede pagar cada cláusula.
+ * El 7 nov la IA dio «Berenguer + 33-35 M» y luego «+ 26 M», y sumó «107 + 35 = 75»: si las cifras le llegan hechas,
+ * no se las inventa.
+ */
+export function cuentasTxt(D, M, js) {
+  if (!js || js.length < 2) return '';
+  const yo = D.yo && D.yo.teamId;
+  const info = js.map((j) => {
+    const tid = M.dueno[j.id];
+    const mia = tid && tid === yo ? (M.mias || []).find((x) => x.pid === j.id) : null;
+    const cl = mia || (M.clausulas || []).find((x) => x.pid === j.id) || null;
+    const t = M.tend(j.id) || {};
+    return { j, tid, mia: !!mia, cl, d1: t.d1 };
+  });
+  const L = ['\nCUENTAS HECHAS (las cifras de estos jugadores salen de aquí; no las cambies de un mensaje a otro sin un dato nuevo):'];
+  for (const x of info) L.push(`- ${x.j.nombre}: vale ${eur(x.j.valor)}${x.d1 != null ? ` (hoy ${eur(x.d1, { signo: true })})` : ''}${x.cl && x.cl.clausula ? `, cláusula ${eur(x.cl.clausula)}${x.cl.abierta ? ' abierta' : x.cl.protegidoHasta ? `, se abre ${cuandoF(x.cl.protegidoHasta)}` : ''}` : ''}; ${x.mia ? 'es mío' : x.tid ? `es de ${nombreTid(M, x.tid)}` : 'libre'}`);
+  const mios = info.filter((x) => x.mia), suyos = info.filter((x) => !x.mia && x.tid);
+  for (const a of mios) for (const b of suyos) {
+    const dif = a.j.valor - b.j.valor;
+    L.push(`- ${a.j.nombre} por ${b.j.nombre}: ${eur(a.j.valor)} − ${eur(b.j.valor)} = ${eur(dif, { signo: true })} de valor a favor de ${dif >= 0 ? a.j.nombre : b.j.nombre}. Para que el cambio sea a la par de valor, quien se lleva a ${dif >= 0 ? a.j.nombre : b.j.nombre} tiene que dar a ${dif >= 0 ? b.j.nombre : a.j.nombre} más ${eur(Math.abs(dif))}; si propones otra cifra, dila como lo que se aparta de esos ${eur(Math.abs(dif))} y explica por qué.`);
+    if (a.cl && a.cl.clausula) {
+      const r = (M.rivales || []).find((y) => y.e.teamId === b.tid);
+      const din = r && r.dinero && r.dinero.v != null ? r.dinero.v : null;
+      if (din != null) L.push(`- La cláusula de ${a.j.nombre} (${eur(a.cl.clausula)}) ${din >= a.cl.clausula ? `SÍ le llega a ${nombreTid(M, b.tid)} (tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)}): ${a.cl.abierta ? 'se lo puede llevar ya' : `se lo puede llevar ${cuandoF(a.cl.protegidoHasta)}, en el mismo minuto en que se abra, sin negociar nada y quizá antes de que me dé tiempo a blindarlo. Eso pesa en cualquier negociación con él: no va a pagar mucho más que la cláusula`}` : `no le llega a ${nombreTid(M, b.tid)} (tiene ${r.dinero.exacto ? '' : '≈ '}${eur(din)})`}.`);
+    }
+    if (b.cl && b.cl.clausula) L.push(`- La cláusula de ${b.j.nombre} (${eur(b.cl.clausula)}) ${b.cl.clausula <= num(D.dinero) ? `SÍ me llega con mi saldo (${eur(num(D.dinero))})` : `no me llega con mi saldo (${eur(num(D.dinero))}; faltan ${eur(b.cl.clausula - num(D.dinero))})`}${b.cl.abierta ? ': está abierta' : b.cl.protegidoHasta ? `: se abre ${cuandoF(b.cl.protegidoHasta)}` : ''}.`);
+  }
+  return L.join('\n');
+}
+
+// cómo se habla en el chat: al grano, sin repetir el plan y con las cifras de los datos (Carlos, 7 nov)
+const REGLAS_CHAT = `
+EN EL CHAT:
+- Contesta a lo que te pregunta y nada más. NO repitas el plan del día ni operaciones que no ha preguntado (si ya se lo dijiste, no se lo vuelvas a decir); sácalo solo si cambia la respuesta a su pregunta, y entonces en una línea.
+- CIFRAS: salen de los datos o de «CUENTAS HECHAS». Si haces una cuenta, escribe la operación con sus cifras («52,68 M − 26,69 M = 25,99 M») y comprueba el resultado antes de escribirlo. No des horquillas («33-35 M») sin decir de dónde salen. Si en este chat ya diste una cifra y ahora das otra, di por qué ha cambiado.
+- FECHAS Y HORAS: cópialas de los datos, con su día («mañana 20:00 (8 nov)»). No pases algo de «mañana» a «hoy» ni cambies una hora de un mensaje a otro.
+- CLÁUSULAS: las de sus jugadores también las tienes (en «MIS JUGADORES» y en «JUGADORES QUE NOMBRA»), con la hora a la que se abren: úsalas sin que te las tenga que decir.
+- Si te falta un dato para aconsejar (qué quiere hacer, hasta dónde está dispuesto a llegar), pregúntaselo en vez de suponerlo.
+- TONO: el de un director deportivo serio y cercano. Las pullitas, solo con una noticia extradeportiva; nunca cuando hablas de una operación, de una oferta o de un manager con el que está negociando.`;
+
+/** lo que va a la IA en el chat (sin la conversación): se exporta para probarlo con la demo */
+export function montarChat(pregunta, D, M, c, { fotos = false, hist = [] } = {}) {
+  const p = ultimoPlan();
+  // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
+  // también los de sus últimos mensajes («¿y con Nico qué hago?» tras hablar del trueque) y los suyos por el nombre de
+  // pila si solo hay uno («Nico»): sin eso, a la segunda pregunta ya no llevaba las cuentas ni la cláusula
+  const nombrados = [];
+  const meter = (j) => { if (j && !nombrados.some((x) => x.id === j.id) && nombrados.length < 6) nombrados.push(j); };
+  const q0 = ` ${norm(pregunta)} `;
+  for (const j of jugadoresEn(pregunta, D)) meter(j);
+  // (el de pila, solo si no ha salido nadie por su nombre: «Fran me ofrece a Berenguer» no es Fran García)
+  if (!nombrados.length) {
+    const pila = {};
+    for (const x of M.mias || []) { const n = norm(x.j && x.j.nombre).split(' '); if (n.length > 1 && n[0].length >= 4) (pila[n[0]] ||= []).push(x.j); }
+    for (const [n, js] of Object.entries(pila)) if (js.length === 1 && q0.includes(` ${n} `)) meter(js[0]);
+  }
+  const deAhora = nombrados.length;
+  const antes = (hist || []).filter((m) => m.r === 'yo').slice(-4, -1).map((m) => m.t || '').join(' \n ');
+  if (antes) for (const j of jugadoresEn(antes, D)) meter(j);
+  const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}${cuentasTxt(D, M, nombrados)}` : '';
+  // el plan, entero solo si la pregunta va de él o de sus jugadores; si no, que sepa que existe y poco más
+  // (lo repetía en cada respuesta: vender a Natan, Gulácsi y Macià en un chat sobre un trueque)
+  let plan = '';
+  if (p) {
+    const ops = p.operaciones || [];
+    const q = norm(pregunta);
+    const vaDelPlan = /\b(plan|operaciones|hoy)\b/.test(q) || (!deAhora && /\b(que hago|que hacer|que me recomiendas|vend|compr|fich|puj|alin)/.test(q)) || ops.some((o) => o.jugador && q.includes(norm(o.jugador).split(' ').pop()));
+    const cab = `${diaDe(p.t) === diaDe() ? 'EL PLAN DE HOY' : 'EL ÚLTIMO PLAN'} QUE LE DISTE (${cuando(p.t)})`;
+    plan = vaDelPlan
+      ? `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`
+      : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
+  }
+  return `${sistemaIA()}${fotos ? SOBRE_FOTOS : ''}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${REGLAS_CHAT}\n${NOTAS_CHAT}\n${BUSCAR_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { chat: true })}${extra}${plan}`;
+}
+
 export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null) {
   const hist = conversacion();
   const nuevas = Object.fromEntries((fotos || []).map((f) => [f.id, f.b64]));
@@ -1722,16 +1862,12 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
   LS.set(K('chat'), hist.slice(-40));
   for (const f of fotos || []) guardarFoto(f).catch(() => {});
   const contents = await contenidosChat(hist, nuevas);
-  const p = ultimoPlan();
-  // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
-  const nombrados = jugadoresEn(pregunta, D);
-  const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}` : '';
-  const sistema = `${sistemaIA()}${fotos && fotos.length || hist.some((m) => m.fotos) ? SOBRE_FOTOS : ''}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${NOTAS_CHAT}\n${BUSCAR_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { chat: true })}${extra}${p ? `\n\n${diaDe(p.t) === diaDe() ? 'EL PLAN DE HOY' : 'EL ÚLTIMO PLAN'} QUE LE DISTE (${cuando(p.t)}): ${p.titular} → ${(p.operaciones || []).map((o) => `${o.accion} ${o.jugador}`).join('; ')}` : ''}`;
+  const sistema = montarChat(pregunta, D, M, c, { fotos: !!(fotos && fotos.length) || hist.some((m) => m.fotos), hist });
   const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();
   // sin búsqueda (apagada, cupo gastado o en el relevo) no se le manda buscar: si se le manda, a veces contesta vacío
   const sistemaSinWeb = sistema.replace(BUSCAR_CHAT, 'EN EL CHAT NO TIENES BÚSQUEDA EN GOOGLE: contesta con los datos que te paso y, si para contestar falta algo de hoy (una lesión, un once), dilo.');
-  const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal, alPaso: alPaso || undefined, nivel: 'low', seudo: seudonimos(D) });
-  const n = aplicarNotas(r.texto, D);
+  const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal, alPaso: alPaso || undefined, nivel: 'low', temperatura: 0.4, seudo: seudonimos(D) });
+  const n = aplicarNotas(r.texto, D, pregunta);
   const vend = (M.vendidos || []).filter((v) => cuentaConVendido(n.texto, v.j && v.j.nombre));
   if (vend.length) n.texto += `\n\n> Ojo: ${vend.map((v) => `**${v.j.nombre}** ya no es tuyo (${v.como} ${cuando(v.t)})`).join('; ')}. No cuenta para lo de arriba.`;
   const h2 = conversacion();
