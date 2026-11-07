@@ -1350,9 +1350,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/cantabria/2026/11/04/zabiri-repite-con-marruecos-y-no-jugara-con-el-racing-en-libia-radio-santander/": 1793801780000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261104/1004247173/eder-sarabia-mi-equipo-espanyol-defender-muerte.html": 1793802316000,
-   "SPORT|136085152": 1793801859000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/rodri-sera-baja-atletico-barca-lesion-muscular/00031793804463171265723.htm": 1793805420000,
    "SPORT|136085204": 1793802237000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247209/raphina-records-corazon-encogido.html": 1793806789000,
@@ -1552,7 +1550,8 @@
    "SPORT|136195491": 1794053530000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000,
    "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000
   },
   "hechos": [
    {
@@ -2202,11 +2201,25 @@
      21,
      0
     ]
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html",
+    "medio": "Diario de Sevilla",
+    "t": 1794060273000,
+    "id": "2217",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Cucho se queda fuera de la convocatoria del Betis",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     24
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -3024,7 +3037,6 @@
  "liga": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-suspenda-futbol-espanol-semana-20261104_3468659.html": 1793804394000,
-   "SPORT|136085422": 1793801821000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/04/competicion-da-por-finalizado-el-tenerife-andorra-radio-club-tenerife/": 1793806981000,
    "SPORT|136087043": 1793803935000,
    "SPORT|136086862": 1793804539000,
@@ -3714,17 +3726,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 21,
    "revisar": 16,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 197339,
-  "salida": 21967,
+  "entrada": 199006,
+  "salida": 22782,
   "cacheLee": 100177,
   "cacheEscribe": 15980,
-  "dolares": 0.437077
+  "dolares": 0.437651
  },
  "recientes": {
   "onces": [
