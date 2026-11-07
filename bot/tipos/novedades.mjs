@@ -175,7 +175,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const pps = xs.map((e) => e.pp).filter(Boolean);
     const J = pps.length ? Math.min(...pps.map((p) => p.jornada)) : jornada;
     const para = mismo && xs[0].pp ? paraLa(xs[0].pp, J) : `para la jornada ${J}`;
-    const etiqueta = !buenos.length ? `❌ Bajas ${para}` : !malos.length ? `✅ Disponibles ${para}` : `👀 Revisa tu once Fantasy ${para}`;
+    const etiqueta = !buenos.length ? `❌ Bajas ${para}` : !malos.length ? `✅ Disponibles ${para}` : `👀 Novedades ${para}`;
     const det = buenos.length && malos.length === 1 && !mismo ? null : L ? detalles(xs, 3, `${dia}${k}`) : detalle(xs);   // en el caso de arriba el motivo ya va en su línea
     const { usadas, texto } = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), det && { t: det.t, prio: 6 }, top && { t: top.t, prio: 4 }, { t: etiqueta, prio: 8 }]);
     if (![...lineas, etiqueta].every((l) => usadas.includes(l))) return null;   // la etiqueta tiene que caber: si no, van menos

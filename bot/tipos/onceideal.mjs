@@ -104,7 +104,6 @@ export function montar({ jornada, r, cands = [], minP = AJUSTES.minP }) {
   // lo que vale
   num.push(...tot.numeros);
   ideas.push({ t: aparte(V([`El once completo vale ${tot.t}`, `Entre los once suman ${tot.t} de valor`], 'f')), prio: 3 });
-  ideas.push({ t: '👀 Revisa tu once Fantasy antes del primer partido de la jornada', prio: 6 });
 
   const { texto } = tweet(cab, ideas);
 
@@ -133,7 +132,7 @@ export function montar({ jornada, r, cands = [], minP = AJUSTES.minP }) {
     formacion: form, valorDelOnce: tot.t, aviso: 'el once entero va en la imagen adjunta: el texto no lo enumera, cuenta por qué y destaca a unos pocos',
     jugadores: [jug(M, 'la gran apuesta', true), ...(chollo ? [jug(chollo, 'el chollo')] : []), ...(fav ? [jug(fav, 'el mejor cruce')] : []), ...(racha ? [jug(racha, 'en racha')] : []),
       ...(fuera ? [{ ...jug(fuera, 'se queda fuera por la duda'), estado: undefined }] : [])],
-    clubes: clubesH(...[M, chollo, fav, racha, fuera].filter(Boolean).flatMap((x) => [x.equipo, x.rival])), etiqueta: '👀 Revisa tu once Fantasy antes del primer partido de la jornada' };
+    clubes: clubesH(...[M, chollo, fav, racha, fuera].filter(Boolean).flatMap((x) => [x.equipo, x.rival])) };
   return { tipo: 'onceideal', clave: `onceideal|${jornada}`, jornada, texto, hechos, numeros: num, partido: null, tarjeta, ...(sinTarjeta ? { sinTarjeta } : {}),
     elegidos: { mejor: M.nombre, chollo: chollo && chollo.nombre, fav: fav && fav.nombre, racha: racha && racha.nombre, fuera: fuera && fuera.nombre } };
 }

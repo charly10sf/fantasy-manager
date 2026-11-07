@@ -194,12 +194,13 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const jugH = []; let extraH = {};
         const jH = (nom, posId, med, extra, eq = equipo, principal = true) => jugadorH({ nickname: nom, positionId: posId, equipo: eq, averagePoints: med }, { principal, extra });
         const marcador = `📍 ${mar}`;
-        const puntos = (valor, conMedia) => {
+        const puntos = (valor, conMedia, conNombre = false) => {
           num.push(valor);
           const sobre = conMedia && media >= 3 && valor >= 1.5 * media;
           if (sobre) num.push(...partes(media));
           if (valor <= 0) return { t: `📉 Se queda en ${valor} puntos fantasy`, prio: 8 };
-          const base = elegir([`📊 Ya suma ${valor} puntos fantasy`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos fantasy`, `📊 Lleva ${valor} puntos fantasy de momento`], sem + 'p');
+          // con asistente en el mismo tuit, el goleador va por su nombre: «Ya suma 4 puntos» a secas se leía como del asistente (7 nov)
+          const base = conNombre ? `📊 ${nombre} ya suma ${valor} puntos fantasy` : elegir([`📊 Ya suma ${valor} puntos fantasy`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos fantasy`, `📊 Lleva ${valor} puntos fantasy de momento`], sem + 'p');
           return { t: `${base}${sobre ? `, con una media de ${fmt(media)}` : ''}`, prio: 8 };
         };
         if (dsp.clase === 'roja') {
@@ -257,10 +258,10 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
             const na = pa ? pa.nickname || pa.name : an;
             const ptsA = pa && pa.weekPoints != null && Number(pa.weekPoints) > 0 ? Number(pa.weekPoints) : null;
             if (ptsA != null) num.push(ptsA);
-            ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, que ya suma ${ptsA} puntos` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
+            ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
             if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia' });
           }
-          if (pts != null) ideas.push(puntos(pts, true));
+          if (pts != null) ideas.push(puntos(pts, true, !!an));
           const sobre = pts != null && media >= 3 && pts >= 1.5 * media;
           jugH.push(jH(nombre, pos, media, { queLePasa: `${dsp.clase === 'doblete' ? 'marca su segundo gol' : dsp.clase === 'triplete' ? 'marca su tercer gol' : 'marca'}${dsp.penalti ? ' de penalti' : ''}`,
             ...(pts != null ? { puntosFantasyAhora: pts } : {}), ...(sobre ? { frenteASuMedia: frenteMedia(pts, media) } : {}) }));

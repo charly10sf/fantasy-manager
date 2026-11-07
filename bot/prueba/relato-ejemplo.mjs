@@ -64,6 +64,10 @@ dir.forEach(mostrar);
   }
   const gol = dir.find((t) => t.hechos && t.hechos.subtipo === 'gol' && t.hechos.jugadores.length === 2);
   if (!gol || !/pase del gol/.test(JSON.stringify(gol.hechos.jugadores[1]))) { fallos++; console.log('FALLA: un gol con asistente no lleva al asistente en los hechos'); } else console.log('ok: el gol con asistente lleva los dos en los hechos');
+  // 7 nov: «Asistencia de X, que ya suma 4 puntos. Ya suma 4 puntos fantasy» (dos «ya suma» seguidos, el segundo sin nombre)
+  const conAsis = dir.filter((t) => t.hechos && t.hechos.jugadores.length === 2 && /Asistencia de/.test(t.texto));
+  const malo = conAsis.find((t) => (t.texto.match(/ya suma/gi) || []).length > 1 || /\. Ya suma/.test(t.texto) || !t.texto.includes(`${t.hechos.jugadores[0].nombre} ya suma`));
+  if (!conAsis.length || malo) { fallos++; console.log(`FALLA: gol con asistente con los puntos mal atribuidos: ${malo ? malo.texto : 'ninguno'}`); } else console.log('ok: gol con asistente: cada cifra con su nombre y sin «ya suma» repetido');
 }
 console.log('\n=== FINAL ===');
 const fin = await final({ stats, jornada: 11, jugadores, desdeFinal: 0 });
