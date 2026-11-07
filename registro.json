@@ -1587,7 +1587,8 @@
    "SPORT|136176192": 1794062219000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000,
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-del-malaga-ruina-tras-el-descanso-f202611-n/": 1794070433000,
-   "SPORT|136204290": 1794066951000
+   "SPORT|136204290": 1794066951000,
+   "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000
   },
   "hechos": [
    {
@@ -2227,7 +2228,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -3734,17 +3735,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 34,
    "revisar": 23,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 362540,
-  "salida": 28037,
+  "entrada": 364141,
+  "salida": 28113,
   "cacheLee": 110597,
   "cacheEscribe": 23795,
-  "dolares": 0.790425
+  "dolares": 0.790623
  },
  "recientes": {
   "onces": [
@@ -3852,6 +3853,11 @@
    "h": "a52be5a07adc",
    "desde": 1794064876250,
    "fin": 1794063674070
+  },
+  "12|117": {
+   "h": "c5ce63c47a59",
+   "desde": 1794071774918,
+   "fin": 1794071774918
   }
  },
  "iaDias": [
