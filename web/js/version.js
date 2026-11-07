@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7m';
+export const VERSION = '0.7n';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.7m';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7n', f: '2026-11-07', h: '20:36', t: 'Los que vuelven, también en el Radar de subidas',
+    cosas: [
+      { tipo: 'mejora', d: 'grafica', t: '«Vuelve» en el Radar de subidas', x: 'El Radar de subidas marca a los que vuelven (valían el doble o más esta temporada, juegan otra vez y suben varios días seguidos) con «Vuelve · valía…» y los pone primero. Antes se quedaban fuera porque uno de 9 M nunca sube tantos euros como uno de 60 M.', ir: { v: 'mercado', seg: 'mercado:venta' } },
+      { tipo: 'arreglo', d: 'cohete', t: 'A uno que vuelve no se le manda vender mientras siga subiendo', x: 'Si un día subía algo menos que el anterior, su ficha decía «No es momento de comprarlo», la salida lo daba como que se tuerce y el plan podía mandarlo vender. Ahora, mientras siga subiendo, la ficha dice cuánto valía y que es de los más claros para revender, y si es tuyo, que lo aguantes.' },
+      { tipo: 'arreglo', d: 'grafica', t: 'El que empezó a subir hace 2 o 3 días ya no sale como que baja', x: 'La tendencia de 7 días metía los días de bajada de antes. En el mercado, las ofertas y las ventas por bajada ahora cuenta lo que sube estos días.', menor: true },
+    ],
+  },
   {
     v: '0.7m', f: '2026-11-07', h: '20:11', t: 'Especular también con la jornada en juego',
     cosas: [
