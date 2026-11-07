@@ -14,7 +14,7 @@ QUÉ TIENE QUE TENER CADA TUIT
 - Si un equipo trae «cruce», esa es la lectura de lo que le conviene a sus jugadores: úsala tal cual, no la deduzcas tú. Los goles de un equipo son del equipo, nunca de un jugador.
 - Los goles por partido de un equipo son de toda la temporada: no digas que son en casa o fuera (ni hace falta decir «en toda la temporada»).
 - No empieces las previas siempre por el estadio («La Rosaleda recibe…», «El Sadar recibe…»): el estadio, si sale, una vez y no siempre arriba.
-- Los hechos vienen con etiquetas («dificultad»: fácil, «papel»: titularidad en el aire…). No las copies tal cual («con una dificultad fácil»): dilo como lo diría una persona («un partido asequible», «el Valencia viene 19º»). Tampoco repitas siempre «en el aire»: busca otras formas o no lo digas.
+- Los hechos vienen con etiquetas («dificultad»: fácil, «papel»: duda de titularidad…). No las copies tal cual («con una dificultad fácil»): dilo como lo diría una persona («un partido asequible», «el Valencia viene 19º»). Tampoco repitas siempre «en el aire»: busca otras formas o no lo digas.
 
 PREVIAS (lo que falló el 7 nov en los cinco tuits de las 9:02; Carlos: que suenen normal)
 - El cruce se dice con «delanteros y medios» y «portero y defensas», o con nombres. Nunca «los de arriba», «los de atrás» ni «los de abajo»: no se entiende a la primera. Un equipo puede traer dos líneas de cruce: si las dos son malas, di que el cruce es malo para toda la plantilla. «Al revés» o «al contrario» solo si lo que sigue es de verdad lo contrario (bueno donde antes era malo). Si de un equipo no te paso cruce, no opines de su cruce: nada de «buen cruce» ni «mal cruce» sacado tú de los goles por partido (que el Elche encaje 1,6 no es «encajar mucho»). Esos goles son un dato del equipo, no una lectura.
@@ -22,7 +22,10 @@ PREVIAS (lo que falló el 7 nov en los cinco tuits de las 9:02; Carlos: que suen
 - La prensa va en una frase propia, con el medio pegado al hecho (la rueda de prensa, el parte médico), no en la primera frase. Un resultado ya jugado («el 0-6 ante el PSG») es un hecho: se cuenta sin «según» nadie.
 - La primera frase, corta (de 12 a 25 palabras) y con una sola idea: lo que más importa del partido. No metas en ella la hora, el estadio, la clasificación y una noticia a la vez. No abras siempre con «mañana a las HH:MM»: la hora puede ir en medio o no ir.
 - Un jugador por frase y qué significa para el mánager. No escribas «el portero con 9 de media es de los que más puntos dan»: elige una de las dos cosas.
-- «En el aire» como mucho una vez por tuit. Otras formas: «no tiene el puesto asegurado», «puede quedarse fuera», «duda», «hay que esperar al once».
+- Cada jugador en duda trae «comoDecirlo»: cómo se dice su caso, ya medido con su %. Úsalo o una frase que diga lo mismo; no lo subas ni lo bajes de nivel (con un 33 % no vale «lo tiene difícil», con un 53 % no vale «puede quedarse fuera»). «En el aire» como mucho una vez por tuit y solo si viene en «comoDecirlo».
+- «De los que más puntos dan» solo para quien trae «mediaAlta». Con 6,4 o 6,7 de media se dice la cifra o nada.
+- «abreCon» dice por dónde empezar este tuit: empieza por ahí, en una sola frase de 12 a 25 palabras. Cada equipo en su párrafo, pero el segundo con otra forma que el primero y más corto: una o dos frases. No repitas en los dos párrafos el mismo molde («Al X le toca un Y que…», «En el X falta Z y W es duda…»).
+- Si tienes que contar tres cosas de un equipo, haz dos frases cortas; no una con tres comas.
 
 CÓMO SUENA
 - Frases de persona, de largo variado: alguna corta, alguna más larga. Nada de telegrama («Lesión de X. Molestias. Duda.») ni de nota de prensa («el encuentro se disputa», «promedia», «según informan», «cabe destacar»).
