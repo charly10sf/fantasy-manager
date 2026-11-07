@@ -209,9 +209,8 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
           // con su %): el titular de la web puede quedar por debajo del otro con los minutos de LaLiga, y entonces entra el otro
           if (alt.p > x.p) Object.assign(x, { id: alt.id, nombre: alt.nombre, pct: pct(alt.p), duda: alt.duda, p: alt.p });
         }
-        // debajo del campo, el suplente con más % de cada puesto: delantero, medio y defensa (Carlos, 6 nov 20:34; uno por puesto)
-        const suplentes = ['DEL', 'MED', 'DEF'].map((q) => Object.values(probs[k]).filter((y) => y.pos === q && !fuera.has(String(y.id)) && y.p >= 0.05 && y.estado !== 'injured' && y.estado !== 'suspended')
-          .sort((a, b) => b.p - a.p)[0]).filter(Boolean).map((y) => ({ id: y.id, nombre: y.nombre, pos: y.pos, pct: pct(y.p), duda: y.duda }));
+        // sin suplentes debajo del campo (Carlos, 7 nov 17:45: «quita los suplentes de los posibles onces»; desde el 6 nov iba uno por puesto)
+        const suplentes = [];
         return { nombre: mm.mainName, corto: corto(mm.mainName), escudoUrl: mm.badgeColor, formacion: pos[k].formacion, once: once.map(({ p, ...x }) => x), suplentes };
       };
       const d = { jornada, confirmados: false, local: lado('L', m.local), visitante: lado('V', m.visitor) };
