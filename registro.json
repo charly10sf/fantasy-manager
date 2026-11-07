@@ -1427,11 +1427,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/04/andres-garcia-multiusos-jose-bordalas-136093338.html": 1793821391000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247324/valverde-merito-equipo-confiar-final.html": 1793822086000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/04/aek-real-madrid-champions-league-resumen-resultado-136097281.html": 1793821880000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/04/mourinho-hay-centrocampista-mundo-bellingham-unico.html": 1793823656000,
-   "SPORT|136086757": 1793821382000,
    "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/": 1793829352000,
    "SPORT|136102061": 1793851297000,
    "SPORT|136099973": 1793829833000,
@@ -3915,8 +3913,8 @@
    "fin": 1794071774918
   },
   "12|115": {
-   "h": "57e4a58af285",
-   "desde": 1794080179811,
+   "h": "56af51032406",
+   "desde": 1794080773416,
    "fin": 1794079572335
   }
  },
