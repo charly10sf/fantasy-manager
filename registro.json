@@ -1401,7 +1401,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247282/bellingham-empata-partido-genialidad.html": 1793816728000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html": 1793816929000,
-   "SPORT|136095117": 1793816354000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/04/andres-garcia-multiusos-jose-bordalas-136093338.html": 1793821391000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247324/valverde-merito-equipo-confiar-final.html": 1793822086000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/04/aek-real-madrid-champions-league-resumen-resultado-136097281.html": 1793821880000,
@@ -3180,7 +3179,8 @@
    "SPORT|136198293": 1794054087000,
    "Europa Press|https://www.europapress.es/nacional/noticia-montero-rufian-animan-votar-memoria-conciencia-obviando-voto-util-psoe-si-puede-te-come-20261107134413.html": 1794055453000,
    "SPORT|136202042": 1794062312000,
-   "SPORT|136204292": 1794067195000
+   "SPORT|136204292": 1794067195000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000
   },
   "hechos": [
    {
@@ -3746,27 +3746,25 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794074473970
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 45,
    "redactar": 44,
    "revisar": 29,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 487109,
-  "salida": 32910,
+  "entrada": 488818,
+  "salida": 33065,
   "cacheLee": 123622,
   "cacheEscribe": 26400,
-  "dolares": 1.057247
+  "dolares": 1.057495
  },
  "recientes": {
   "onces": [
