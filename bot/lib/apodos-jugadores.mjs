@@ -45,6 +45,9 @@ export const APODOS_JUGADORES = {
   // porque se le da bien (ESPN Deportes), y ESPN contó entonces que era el jugador de las cinco grandes ligas con más goles desde fuera
   // del área esa temporada (5).
   'Valverde': { completo: 'Federico Valverde', corto: 'Valverde', otros: ['el Pajarito', 'el Halcón'], rasgos: ['dispara muy bien desde fuera del área'] },
+  // Mbappé: «la Tortuga», su mote; Carlos lo confirmó el 7 nov (23:40). Viene de la careta de Tortuga Ninja que le regaló Thiago Silva en 2018
+  // (Soccerway, «De la 'Tortuga' al 'Panda'…»; Fox Sports México, 9 ago 2023).
+  'Mbappé': { completo: 'Kylian Mbappé', otros: ['la Tortuga'] },
   // Segunda tanda (7 nov, ~00:10), pendiente del OK de Carlos. Fuentes en claude/rasgos-propuesta.md.
   // Adeyemi: 3,60 s en 30 m según Opta (Comuniate); «uno de los jugadores más rápidos de Europa», atacando espacios (El Debate, 24 jul 2026; Soccerway)
   'Adeyemi': { completo: 'Karim Adeyemi', rasgos: ['es de los futbolistas más rápidos de Europa y ataca los espacios a la espalda de la defensa'] },

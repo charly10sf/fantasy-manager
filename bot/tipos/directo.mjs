@@ -9,6 +9,7 @@ import { crearFotmob, casarPartido, casarGol, mismoNombre } from '../lib/fotmob.
 import { golazoFotmob, golazoEspn, textoGolEspn } from '../lib/golazo.mjs';
 import { ponerAlDia as ponerAlDiaRasgos, contadorDe, ajustarGoles, conGolesEspn, yaContado, hechosDeTemporada, cifrasDeTemporada } from '../lib/rasgos.mjs';
 import { rasgosDe } from '../lib/apodos-jugadores.mjs';
+import { nacionalidadFm, sinRepetidas } from '../lib/nacionalidad.mjs';
 import { apuntarVista, completa, lineaMedida, apuntarSalud } from '../lib/fuentes-medida.mjs';
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
@@ -455,12 +456,15 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           const estilo = p ? rasgosDe(p.nickname || p.name) : [];
           if (temporada) num.push(...cifrasDeTemporada(temporada));
           log(`  (directo) gol de ${dsp.jugador} ${dsp.min}: ${golazo ? `GOLAZO ${golazo.motivo} (${[golazo.metros != null ? `${golazo.metros} m` : null, golazo.fuente].filter(Boolean).join(', ')})` : 'sin golazo'} · FotMob ${gFm ? `sí (${gFm.situacion || '?'}${gFm.distancia != null ? `, ${gFm.distancia.toFixed(1)} m` : ''})` : det ? 'no ve este gol' : fm ? 'sin datos' : 'apagado'}${temporada ? ` · temporada ${JSON.stringify(temporada).slice(0, 160)}` : ''}${estilo.length ? ' · con rasgos a mano' : ''}`);
+          // de qué país es cada uno (de las alineaciones de FotMob), para que la IA diga «el francés» en vez de repetir el nombre (Carlos, 7 nov, 23:40);
+          // si goleador y asistente son del mismo país, ninguno lo lleva (no distingue) y sin España ni países desconocidos (lib/nacionalidad.mjs)
+          const [paisG, paisA] = sinRepetidas(nacionalidadFm(det, { id: gFm ? gFm.jugadorId : null, nombre: dsp.jugador }), an ? nacionalidadFm(det, { nombre: an }) : null);
           jugH.push(jH(nombre, pos, media, { queLePasa: `${dsp.clase === 'doblete' ? 'marca su segundo gol' : dsp.clase === 'triplete' ? 'marca su tercer gol' : 'marca'}${dsp.penalti ? ' de penalti' : ''}`,
             ...(pts != null ? { puntosFantasyAhora: pts } : {}), ...(sobre ? { frenteASuMedia: frenteMedia(pts, media) } : {}),
-            ...(estilo.length ? { suEstilo: estilo } : {}), ...(temporada ? { suTemporada: temporada } : {}) }));
+            ...(estilo.length ? { suEstilo: estilo } : {}), ...(temporada ? { suTemporada: temporada } : {}), ...(paisG ? { suNacionalidad: paisG } : {}) }));
           if (an) { const paH = casarJugador(an, lado); const ptsAH = ptsA;
             jugH.push(jH(paH ? paH.nickname || paH.name : an, paH ? paH.positionId : null, paH && porId.get(String(paH.id)) ? Number(porId.get(String(paH.id)).averagePoints) || 0 : 0,
-              { queLePasa: 'da el pase del gol', ...(ptsAH != null ? { puntosFantasyAhora: ptsAH } : {}) })); }
+              { queLePasa: 'da el pase del gol', ...(ptsAH != null ? { puntosFantasyAhora: ptsAH } : {}), ...(paisA ? { suNacionalidad: paisA } : {}) })); }
           const esp = momentoEspecial({ tipoEspn, min: mn.min, extra: mn.extra, sit, clase: dsp.clase, penalti: dsp.penalti, golazo });
           extraH = { ...(esp.forma ? { comoFueElGol: esp.forma } : {}), ...(esp.motivos.length ? { momentoParaCelebrar: esp.motivos } : {}),
             ...(golazo && golazo.metros != null ? { distanciaDelDisparo: `a unos ${golazo.metros} metros de la portería` } : {}),
