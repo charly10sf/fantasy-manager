@@ -503,6 +503,13 @@
    "jornada": 12,
    "id": "2119121906687246727",
    "t": "2026-11-07T17:36:48.965Z"
+  },
+  {
+   "clave": "final|117",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119123097127157958",
+   "t": "2026-11-07T17:41:32.837Z"
   }
  ],
  "estados": {
@@ -1594,7 +1601,8 @@
    "SPORT|136204290": 1794066951000,
    "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000,
    "SPORT|136204471": 1794068559000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248350/espanyol-merece-debut-eder-sarabia.html": 1794071621000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248350/espanyol-merece-debut-eder-sarabia.html": 1794071621000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-espanyol-deportivo-coruna-primera-division-jornada-doce-07-20261107_3470813.html": 1794073014000
   },
   "hechos": [
    {
@@ -2218,7 +2226,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -3052,7 +3060,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247402/recuperan-dos-partidos-lliga-elit-victorias-prat-singuerlin.html": 1793833745000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261105/1004247401/juegan-tres-encuentros-aplazados-primera-catalana.html": 1793833498000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261104/1004247277/cuti-romero-barca-mejor-ataque-laliga.html": 1793816802000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/ferrol/2026/11/04/objetivo-5000-personas-carrera-contra-cancer/00031793813128758851822.htm": 1793813941000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/el-villena-cf-pierde-4-2-en-novelda-radio-villena/": 1793862273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247424/apunta-habra-jornada-primera-segunda.html": 1793863093000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-suspenden-24-dias-empleo-sueldo-urbano-barcelona-negarse-hablar-catalan-20261105081514.html": 1793862914000,
@@ -3729,17 +3736,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 40,
-   "redactar": 40,
-   "revisar": 27,
+   "clasificar": 41,
+   "redactar": 44,
+   "revisar": 29,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 435134,
-  "salida": 30739,
-  "cacheLee": 118412,
+  "entrada": 481979,
+  "salida": 31883,
+  "cacheLee": 123622,
   "cacheEscribe": 26400,
-  "dolares": 0.954853
+  "dolares": 1.056221
  },
  "recientes": {
   "onces": [
@@ -3772,6 +3779,10 @@
    {
     "t": "2026-11-07T15:35:28.135Z",
     "texto": "🏁 Remontada del Racing en La Rosaleda: el Málaga se adelantó en el 28' con gol de Dotor, pero Iker Luque empató en el 50' y Zabiri le dio la vuelta en el 60'. Final 1-2.\n\nZabiri se lleva 12 puntos, casi el doble de su media, y es el mejor del partido. Agirrezabala suma 11 y Pablo Ramón 10, así que quien tenga jugadores del Racing sale ganando.\n\nEl Málaga se quedó con diez desde el 64' por la roja a Aznou, que acaba en -2. Larrubia, con 9, puntúa aunque su equipo pierde."
+   },
+   {
+    "t": "2026-11-07T17:41:32.839Z",
+    "texto": "🏁 Sin goles entre el Espanyol y el Deportivo, y los puntos se reparten entre cuatro nombres.\n\nGiménez y Leo Román, del Dépor, se van a 12 cada uno, más del doble de su media. Fortuño, del Espanyol, suma 11 y El Hilali 9, casi el doble de lo que suele dar.\n\nEl Deportivo, 8º antes del partido, se lleva un punto de casa del Espanyol, que era 15º."
    }
   ],
   "mvp": [
@@ -3873,11 +3884,5 @@
    "dolares": 0.052126
   }
  ],
- "fallosRedaccion": {
-  "final|117": {
-   "n": 1,
-   "t": "2026-11-07T17:36:37.200Z",
-   "ultima": "2026-11-07T17:36:37.200Z"
-  }
- }
+ "fallosRedaccion": {}
 }
