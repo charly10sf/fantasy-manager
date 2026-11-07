@@ -129,20 +129,6 @@ function miniJornadas(x, y, ultimas) {
   });
   return s;
 }
-function graficaValor(x, y, w, h, valor, color) {
-  if (!valor || valor.length < 2) return texto(x, y + h / 2, 'Sin histórico de valor', { px: 26, peso: 600, color: TENUE });
-  const vs = valor.map(([, v]) => v), min = Math.min(...vs), max = Math.max(...vs), rango = max - min || 1;
-  const t0 = valor[0][0], t1 = valor[valor.length - 1][0];
-  const px = (t) => x + (t - t0) / ((t1 - t0) || 1) * w, py = (v) => y + h - (v - min) / rango * h;
-  const pts = valor.map(([t, v]) => `${px(t).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
-  const g = id('gv');
-  const [ux, uy] = [px(t1), py(vs[vs.length - 1])];
-  return `<defs>${lineal(g, [[0, color, 0.35], [1, color, 0]])}</defs>`
-    + [0, 0.5, 1].map((f) => `<rect x="${x}" y="${(y + h * f).toFixed(1)}" width="${w}" height="1" fill="#fff" opacity="0.08"/>`).join('')
-    + `<polygon points="${x},${y + h} ${pts} ${ux},${y + h}" fill="url(#${g})"/>`
-    + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`
-    + `<circle cx="${ux}" cy="${uy}" r="8" fill="${color}" stroke="${FONDO}" stroke-width="3"/>`;
-}
 /** a la derecha del panel: los puntos de las últimas jornadas y el valor de los últimos días con su gráfica */
 function historial(x0, y0, d, gOro) {
   const wd = 566, colV = d.cambio > 0 ? VERDE : d.cambio < 0 ? MALO : TENUE, yv = y0 + 240;
@@ -153,7 +139,8 @@ function historial(x0, y0, d, gOro) {
     + texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 25, peso: 700, color: TENUE, espacio: 3 })
     + texto(x0, yv + 62, val, { px: 64, peso: 800 })
     + chip(`${signo(d.cambio)} %`, x0 + wv + 24 + pc.w / 2, yv + 44, 30, { relleno: colV, pad: 1.5, espacio: 0.5 }).s
-    + graficaValor(x0, yv + 100, wd, 130, d.valor, d.cambio < 0 ? MALO : '#e2bd5a');
+    // con la escala de la de gol y asistencia: máximo, mínimo y fechas (Carlos, 7 nov 15:47)
+    + graficaEscala(x0, yv + 92, wd, 150, d.valor, d.cambio < 0 ? MALO : d.cambio > 0 ? VERDE : '#e2bd5a');
 }
 
 /** cabecera de la carta: el motivo en grande (MVP, ¡DOBLETE!, PENALTI PARADO, LESIONADO…) y dos líneas debajo */

@@ -69,6 +69,7 @@ FORMATO
 - Sin enlaces, sin @, sin #, sin primera persona (ni «yo», ni «nosotros», ni «nuestro»), sin «bot», sin adjetivos de anuncio («brutal», «espectacular», «increíble»), sin «¡» en cada frase y sin «Fantasy» pegado a un estado («Disponible Fantasy»).
 - Si los hechos traen sobrio: true (por ejemplo, un fallecimiento), tono sobrio: sin bromas, sin valoraciones de fantasy y sin emojis.
 - Nunca digas al lector que revise, mire o cambie su once o su alineación («revisa tu once», «atento a tu alineación», «antes del pitido»): la plantilla fantasy se cierra antes de que empiece el primer partido de la jornada y casi siempre llega tarde. Cuenta lo que pasa y deja que cada uno saque su conclusión.
+- Los jugadores, como los llama la gente y la prensa, no como la ficha de LaLiga: si un jugador trae tambienSeLeLlama, usa esos nombres (el nombre completo en vez de la inicial: «Borja Iglesias», no «B. Iglesias»; el apodo alguna vez: «el Cuti»). Nunca escribas un nombre con inicial y punto si tienes otro. Alterna entre el nombre y el apodo si sale varias veces.
 - Respeta el máximo de caracteres (cada emoji cuenta 2). No hace falta gastarlo: si está dicho en 300, son 300.
 
 EN DIRECTO (goles, rojas, penaltis)

@@ -9,6 +9,7 @@
 // con la inicial del nombre de pila (`nombreAjustado`) en vez de encogidos a la mitad. Prueba con todas: bot/prueba/tarjetas-todas.mjs.
 // Aquí solo están las piezas; cada tarjeta se monta en carta.mjs o en tarjetas.mjs.
 
+import { cortoTarjeta } from './apodos-jugadores.mjs';
 export const ANCHO = 1200, ALTO = 675;
 export const ROJO = '#ee1c3c', VERDE = '#2fd27f', MALO = '#ff4d5e', AMBAR = '#f2b33d';
 export const TINTA = '#f4f2f3', TENUE = '#8c869a', FONDO = '#0b0a0f', PANEL = '#17151d', LINEA = '#2c2834';
@@ -48,6 +49,9 @@ export function texto(x, y, s, { px = 24, peso = 700, color = TINTA, ancla = 'st
 export function nombreAjustado(nombre, px, max, espacio = 0, { apellido = false } = {}) {
   const n = String(nombre).toUpperCase(), partes = n.split(' ');
   if (medir(n, px * 0.88, B, espacio) <= max || partes.length < 2) return n;
+  // si tiene una forma corta conocida («Cuti Romero» -> «CUTI», 7 nov), esa antes que la inicial
+  const ct = cortoTarjeta(nombre);
+  if (ct && medir(ct.toUpperCase(), px * 0.88, B, espacio) <= max) return ct.toUpperCase();
   const ini = partes[0].length <= 2 || /\.$/.test(partes[0]) ? n : `${partes[0][0]}. ${partes.slice(1).join(' ')}`;
   // con muy poco sitio (dos opciones en una línea de cinco), solo el apellido
   return apellido && medir(ini, px * 0.88, B, espacio) > max ? partes[partes.length - 1] : ini;

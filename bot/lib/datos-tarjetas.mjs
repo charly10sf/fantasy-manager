@@ -145,7 +145,7 @@ export async function historialJugador(j, { jornada, fuentes, ahora = Date.now()
   const antes = [...serie].reverse().find(([t]) => t <= hoy[0] - DIAS_CAMBIO * 864e5) || valor[0];
   const cambio = antes ? Math.round((hoy[1] - antes[1]) / antes[1] * 100) : 0;
   const d = { ultimas, total: Number(j.points), media: Number(j.averagePoints), valor, valorHoy: hoy[1], cambio, dias: DIAS_VALOR };
-  const numeros = [0, j.points, num1(j.averagePoints), ...ultimas.flat(), millones(hoy[1]).replace(' M', ''), Math.abs(cambio), DIAS_VALOR].map(String);
+  const numeros = [0, j.points, num1(j.averagePoints), ...ultimas.flat(), millones(hoy[1]).replace(' M', ''), Math.abs(cambio), DIAS_VALOR, ...numerosEscala(valor)].map(String);
   return { d, numeros };
 }
 

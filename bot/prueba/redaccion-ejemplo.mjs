@@ -315,6 +315,18 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a
   ok(!revisar('⚽ Budimir empata tras revisarlo el VAR.', { hechos: hg, todos }).some((x) => /mayúsculas/.test(x)), 'directo: una sigla (VAR) no cuenta como grito');
 }
 
+// los nombres como los llama la gente (7 nov: «el Cuti», «Borja Iglesias» y no «B. Iglesias»)
+{
+  const { comoLeLlaman } = await import('../lib/apodos-jugadores.mjs');
+  const { conApodos } = await import('../lib/redaccion.mjs');
+  ok(comoLeLlaman('Cuti Romero').includes('el Cuti'), 'apodos: el Cuti');
+  ok(comoLeLlaman('B. Iglesias').includes('Borja Iglesias'), 'apodos: Borja Iglesias por B. Iglesias');
+  ok(comoLeLlaman('J. Musso').includes('Musso'), 'apodos: el apellido solo de un nickname con inicial');
+  ok(!comoLeLlaman('D. Martínez').length, 'apodos: un apellido que se repite no vale solo');
+  const hi = conApodos({ tipo: 'caidas', jugadores: [{ nombre: 'B. Iglesias', club: 'Celta', estado: 'lesionado', principal: true }], clubes: clubes('Celta', 'Elche') });
+  ok(!revisar('🚑 Borja Iglesias se pierde el partido del Celta contra el Elche.', { hechos: hi, todos }).some((x) => /no nombra|nombra a quien/.test(x)), 'apodos: con el nombre completo cuenta como nombrado');
+}
+
 process.env = viejo;
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);
 process.exit(fallos ? 1 : 0);

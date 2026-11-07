@@ -12,6 +12,7 @@ import { ARRANQUES, VAGAS, PROHIBIDO, EMOJIS_GUIA, segunTrasCifra, nombresEn, no
 import { NOMBRES_MEDIOS } from './prensa.mjs';
 import { ESTADIOS } from './hechos.mjs';
 import { revisarConIA } from './revisor.mjs';
+import { comoLeLlaman } from './apodos-jugadores.mjs';
 
 const EMOJI = /\p{Extended_Pictographic}/gu;
 const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
@@ -54,6 +55,11 @@ export function cifrasDe(...cosas) {
   return [...out];
 }
 
+/** los otros nombres de cada jugador de los hechos (`tambienSeLeLlama`, lib/apodos-jugadores.mjs), aunque el tipo no los haya puesto */
+export function conApodos(hechos) {
+  for (const j of (hechos && hechos.jugadores) || []) if (j && j.nombre && !j.tambienSeLeLlama) { const xs = comoLeLlaman(j.nombre); if (xs.length) j.tambienSeLeLlama = xs; }
+  return hechos;
+}
 // siglas que pueden ir en mayúsculas siempre, y las palabras de un grito de gol (con momentoParaCelebrar)
 const SIGLAS = new Set(['var', 'mvp', 'rcd', 'ud', 'cf', 'ca', 'fc', 'sd', 'cd', 'rc', 'ad', 'pts', 'j']);
 const GRITOS = new Set(['golazo', 'gol', 'golito', 'que', 'en', 'el', 'la', 'lo', 'los', 'las', 'de', 'del', 'al', 'a', 'y', 'su', 'se', 'le', 'da', 'con', 'por', 'sobre', 'ultimo', 'ultima',
@@ -135,7 +141,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const fuera = nombresEn(sinMedios, todos).filter((n) => !permitidos.has(n) && !n.split(' ').every((w) => permitidos.has(w)));
   if (fuera.length) e.push(`nombra a quien no está en los hechos: ${fuera.join(', ')}`);
   for (const j of (hechos.jugadores || []).filter((x) => x.principal)) {
-    const ws = norm(j.nombre).split(' ').filter((w) => w.length >= 3);
+    // vale cualquiera de sus nombres: el de LaLiga o los de `tambienSeLeLlama` («el Cuti», «Borja Iglesias»)
+    const ws = [j.nombre, ...(j.tambienSeLeLlama || [])].flatMap((x) => norm(x).split(' ')).filter((w) => w.length >= 3 && !['el', 'la'].includes(w));
     if (!ws.some((w) => ` ${norm(t)} `.includes(` ${w} `))) e.push(`no nombra a ${j.nombre}`);
   }
   // palabras con mayúscula que no salen de ninguna parte (un entrenador, un estadio, un club que no está)
@@ -344,6 +351,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   const recientes = recientesDe(registro, tipo);
   let hechos = 0;
   for (const t of xs) {
+    conApodos(t.hechos);
     const etiqueta = t.hechos.etiqueta || '';
     const sep = etiqueta ? 2 : 0;
     const max = limite() - (etiqueta ? peso(etiqueta) + sep : 0);

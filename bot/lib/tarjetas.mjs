@@ -56,7 +56,13 @@ const bajoCara = (cy, R, pxN) => cy + R + pxN + 14;
 function jugadorHD(j, cx, cy, R, club, { aro = null, wN, pxN = 30, etiqueta = null, escudoBuf = null, puesto = null } = {}) {
   let s = caraHD(j.cara, cx, cy, R, club.vivo, { aro: aro || club.vivo, grosor: aro && aro !== club.vivo ? Math.max(5, Math.round(R * 0.09)) : null });
   if (escudoBuf) s += escudo(escudoBuf, cx - R * 0.84, cy + R * 0.7, Math.round(R * 0.52));
-  if (etiqueta) s += chip(etiqueta.txt, cx + R * 0.96, cy - R * 0.9, etiqueta.px || 24, { relleno: etiqueta.relleno, tinta: etiqueta.tinta || '#120f16', pad: 1.4, espacio: 0.5, peso: 900 }).s;
+  if (etiqueta && etiqueta.contorno) {
+    // (final, 7 nov 15:47: los puntos en verde o rojo rellenos chocaban con la chapa del puesto, que también es de color) oscura con
+    // el filo y la cifra en el color
+    const px = etiqueta.px || 24, w = medir(etiqueta.txt, px, B, 0.5) + px * 1.3, h = px * 1.4, x0 = cx + R * 0.96 - w / 2, y0 = cy - R * 0.9 - h / 2;
+    s += `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="${h / 2}" fill="#0b0a0f" fill-opacity="0.92" stroke="${etiqueta.relleno}" stroke-width="2.5"/>`
+      + texto(cx + R * 0.96, y0 + h / 2 + px * 0.36, etiqueta.txt, { px, peso: 900, color: etiqueta.relleno, ancla: 'middle', espacio: 0.5 });
+  } else if (etiqueta) s += chip(etiqueta.txt, cx + R * 0.96, cy - R * 0.9, etiqueta.px || 24, { relleno: etiqueta.relleno, tinta: etiqueta.tinta || '#120f16', pad: 1.4, espacio: 0.5, peso: 900 }).s;
   // el puesto en su color, abajo a la derecha de la cara (7 nov 15:31): arriba va la etiqueta (puntos, %) y abajo a la izquierda el escudo
   if (puesto !== false) s += chipPuesto(puesto || j.pos || j.posicion, cx + R * 0.86, cy + R * 0.74, Math.max(16, Math.round(R * 0.32)));
   return s + pastilla(nombreAjustado(j.nombre, pxN, wN - pxN * 0.6, 0.5, { apellido: true }), cx, bajoCara(cy, R, pxN), pxN, wN);
@@ -96,7 +102,7 @@ function columnaFinal(x, y, w, lado, club, nPeores) {
     let t = rotuloHD(x + 26, ys + 30, bueno ? 'MEJORES' : 'PEORES', acento, bueno);
     centros(x, w, lista.length, hueco).forEach((cx, k) => {
       const j = lista[k];
-      t += jugadorHD(j, cx, cy, RF, club, { wN: hueco - 8, pxN: PXF, etiqueta: { txt: `${j.pts} PTS`, relleno: acento, px: 25 } });
+      t += jugadorHD(j, cx, cy, RF, club, { wN: hueco - 8, pxN: PXF, etiqueta: { txt: `${j.pts} PTS`, relleno: acento, px: 25, contorno: true } });
     });
     return t;
   };
@@ -273,6 +279,11 @@ export function svgOnces(d) {
   let s = tit.defs + fondo([[250, 120, 700, cL.vivo, 0.28], [950, 120, 700, cV.vivo, 0.28]], H)
     + texto(600, 86, d.confirmados ? 'ONCES CONFIRMADOS' : 'POSIBLES ONCES', { px: 72, peso: 800, italica: true, color: `url(#${tit.g})`, ancla: 'middle', max: 900 })
     + texto(600, 124, `JORNADA ${d.jornada}`, { px: 24, peso: 700, color: TENUE, ancla: 'middle', espacio: 4 });
+  // el aro amarillo es una duda (LaLiga lo da como dudoso): sin leyenda no se entendía (Carlos, 7 nov 15:47)
+  if ([L, V].some((x) => [...(x.once || []), ...(x.suplentes || [])].some((j) => j.duda))) {
+    const wd = medir('DUDA', 22, B, 2);
+    s += `<circle cx="${1178 - wd - 20}" cy="${117}" r="10" fill="none" stroke="${AMBAR}" stroke-width="4.5"/>` + texto(1178, 125, 'DUDA', { px: 22, peso: 800, color: AMBAR, ancla: 'end', espacio: 2 });
+  }
   const conBanco = !d.confirmados && [L, V].some((x) => x.suplentes && x.suplentes.length), hc = H - 222 - (conBanco ? ALTO_BANCO + 16 : 0);
   s += campo(22, 150, 570, hc, L, cL, d.confirmados) + campo(608, 150, 570, hc, V, cV, d.confirmados);
   if (conBanco) s += banco(22, 150 + hc + 16, 570, L.suplentes || [], cL) + banco(608, 150 + hc + 16, 570, V.suplentes || [], cV);
