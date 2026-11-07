@@ -196,6 +196,13 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   VAGAS.lastIndex = 0;
   if (/conjunto\s+\p{Ll}/u.test(t)) e.push('«el conjunto…» en vez del nombre del club');
   if (/LaLiga Fantasy ya lo da/i.test(t)) e.push('«LaLiga Fantasy ya lo da…»');
+  // la previa (7 nov): primera frase corta y «en el aire» una sola vez
+  if (hechos.tipo === 'previa') {
+    const f1 = frases(t.replace(EMOJI, ' ').replace(/[\uFE0F\u200D]/g, ''))[0] || '';
+    const n1 = f1.split(/\s+/).filter(Boolean).length;
+    if (n1 > 30) e.push(`la primera frase tiene ${n1} palabras: que sean 25 como mucho y con una sola idea (parte la hora, el estadio, la clasificación o la noticia en otra frase)`);
+    if ((t.match(/\ben el aire\b/gi) || []).length > 1) e.push('«en el aire» más de una vez: solo una, y las demás con otras palabras («no tiene el puesto asegurado», «puede quedarse fuera»)');
+  }
   if (/\b(disponible|duda|baja|sancionado|lesionado)s? fantasy\b/i.test(t)) e.push('«Fantasy» pegado a un estado');
   if (/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i.test(t)) e.push(`muletilla de nota de prensa («${t.match(/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i)[0]}»)`);
   // «según X» pegado a una cifra nuestra (la media, el %, la hora, el puesto): el trozo de frase justo antes del «según» (desde la última

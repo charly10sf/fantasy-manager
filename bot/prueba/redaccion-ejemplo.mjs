@@ -281,6 +281,18 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a
   ok(EJEMPLOS.some((x) => !x.bien && /rentado esta jornada/.test(x.texto)), 'la guía trae como MAL la comparación con la jornada');
 }
 
+// la previa: primera frase corta y «en el aire» una sola vez (7 nov)
+{
+  const hp = { tipo: 'previa', jugadores: [{ nombre: 'Budimir', club: 'Osasuna', papel: 'fijo', estado: 'fijo' }], equipos: [{ club: 'Osasuna', va: '12º de 20' }, { club: 'Athletic', va: '5º de 20' }], clubes: clubes('Osasuna', 'Athletic') };
+  const largo = 'El Osasuna recibe hoy a las seis y media en El Sadar al Athletic, que llega quinto, con un cruce que a sus delanteros y medios les viene mal porque el Osasuna encaja poco en casa. Budimir es fijo.';
+  const corto = 'El Osasuna recibe hoy al Athletic y a los delanteros rojillos les toca un cruce cómodo. Budimir es fijo.';
+  ok(revisar(largo, { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: una primera frase de más de 30 palabras, fuera');
+  ok(!revisar(corto, { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: una primera frase corta, vale');
+  ok(revisar('El Osasuna recibe hoy al Athletic. Budimir está en el aire y Herrera también está en el aire.', { hechos: hp, todos }).some((x) => /en el aire/.test(x)), 'previa: «en el aire» dos veces, fuera');
+  ok(!revisar('El Osasuna recibe hoy al Athletic. Budimir está en el aire y Herrera no tiene el puesto asegurado.', { hechos: hp, todos }).some((x) => /en el aire/.test(x)), 'previa: «en el aire» una vez, vale');
+  ok(!revisar(largo, { hechos: { ...hp, tipo: 'caidas' }, todos }).some((x) => /primera frase/.test(x)), 'solo la previa tiene tope de primera frase');
+}
+
 process.env = viejo;
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);
 process.exit(fallos ? 1 : 0);
