@@ -160,9 +160,9 @@ El que más duele es Vidal, que jugaba siempre. Los otros dos eran de los que ro
   { tipo: 'sancionados', bien: true, texto: `🟥 Se quedan sin jugar esta jornada Jon Arrieta (Celta), por acumulación de amarillas, y Unai Berrio (Getafe), por la roja del domingo.
 
 Arrieta era de los fijos del once, así que si lo tienes hay que buscarle recambio. Berrio, con el Getafe jugando fuera, no es tan grave.`, nota: 'El motivo de cada uno como viene en los hechos y qué significa para el mánager.' },
-  { tipo: 'sancionados', bien: true, subtipo: 'apercibidos', texto: `🟨 Dos titulares fijos están a una amarilla de perderse la jornada 13: Toni Cano (Betis) y Hugo Marín (Mallorca).
+  { tipo: 'sancionados', bien: true, subtipo: 'apercibidos', texto: `🟨 Toni Cano (Betis) y Hugo Marín (Mallorca), titulares habituales, van con ciclo de amarillas al límite de cara a la 13.
 
-No cambia nada para este fin de semana, pero si ven otra, de golpe se quedan sin jugar. Para quien los tenga: mirar quién les cubre en el banquillo.`, nota: 'Apercibidos: se avisa de lo que pueden perder, sin dar nada por hecho.' },
+Este fin de semana juegan sin problema; si ven otra, el siguiente partido lo ven desde la grada. Quien los tenga, que mire quién les cubre.`, nota: 'Apercibidos: se avisa de lo que pueden perder, sin dar nada por hecho.' },
   { tipo: 'sancionados', bien: false, texto: `🟥 Sancionados jornada 12: Jon Arrieta, Unai Berrio. Ambos se pierden el partido. Atentos a tu once.`, nota: 'Sin motivo, sin lectura y con la etiqueta repetida a mano.' },
   { tipo: 'lloros', bien: true, texto: `💔 La portería a cero se escapó por muy poco: Unai Berrio se quedó sin los 4 puntos porque el gol llegó en el 88'.
 
