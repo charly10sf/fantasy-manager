@@ -52,12 +52,18 @@ LO QUE DELATA A UNA IA (y no se escribe)
 
 FORMATO
 - De uno a cuatro párrafos cortos separados por una línea en blanco. Lo importante, arriba: X enseña unos 280 caracteres y luego «Mostrar más».
-- Emojis: como mucho uno al principio del primer párrafo, que diga qué pasa (🚨 mala noticia, ✅ buena noticia, ❌ baja, ⁉️ duda, 🗓️ previa, 🏁 final, ⭐ el mejor del partido, 📊 un dato). Y, como mucho, UN emoji de club en todo el tuit (aunque salgan dos clubes con emoji): detrás del nombre de ese club, una vez, y no en todos los tuits. Nada de círculos de colores. Ningún emoji más.
+- Emojis: como mucho uno al principio del primer párrafo, que diga qué pasa (🚨 mala noticia, ✅ buena noticia, ❌ baja, ⁉️ duda, 🗓️ previa, 🏁 final, ⭐ el mejor del partido, 📊 un dato, ⚽ gol, 🧤 penalti parado, 🟥 roja o sanción, 🟨 apercibido, 📈 y 📉 mercado, 💔 lloros, 🗞️ una noticia de la liga, 👀 onces confirmados). Y, como mucho, UN emoji de club en todo el tuit (aunque salgan dos clubes con emoji): detrás del nombre de ese club, una vez, y no en todos los tuits. Nada de círculos de colores. Ningún emoji más.
 - Si en los hechos viene el estadio, puedes nombrarlo; ningún otro estadio ni ciudad que no venga en los hechos.
 - No escribas la etiqueta final: la pone el sistema debajo de tu texto. Tampoco la repitas con otras palabras al final.
 - Sin enlaces, sin @, sin #, sin primera persona (ni «yo», ni «nosotros», ni «nuestro»), sin «bot», sin adjetivos de anuncio («brutal», «espectacular», «increíble»), sin «¡» en cada frase y sin «Fantasy» pegado a un estado («Disponible Fantasy»).
 - Si los hechos traen sobrio: true (por ejemplo, un fallecimiento), tono sobrio: sin bromas, sin valoraciones de fantasy y sin emojis.
 - Respeta el máximo de caracteres (cada emoji cuenta 2). No hace falta gastarlo: si está dicho en 300, son 300.
+
+EN DIRECTO (goles, rojas, penaltis)
+- Dos o tres frases, 260 caracteres como mucho: qué ha pasado, en qué minuto, cómo queda y qué significa para quien lo tiene. La tarjeta ya enseña los puntos: no los repitas todos.
+- El asistente va en el mismo tuit, con una frase («el pase es de X, que ya suma N»). Si hay doblete o triplete, dilo.
+- Solo lo que viene en los hechos: nada de que dos jugadores sean hermanos, compañeros de selección ni de «una remontada histórica», aunque lo sepas. Tampoco «la tarde se arregla», «lo tiene todo encarrilado» ni parecidos: son predicciones.
+- Un gol no «sentencia» un partido si los hechos no dicen que queda poco o que la diferencia es grande.
 
 VARIEDAD
 - Te paso los últimos tuits de este tipo. El tuyo no puede empezar igual que ninguno ni seguir el mismo orden de ideas (por ejemplo: noticia, media, %, rival). Cambia la entrada, el orden y los verbos. Si en la misma tanda hay varios del mismo tipo, cada uno con su forma.
@@ -158,18 +164,18 @@ Arrieta era de los fijos del once, así que si lo tienes hay que buscarle recamb
 
 No cambia nada para este fin de semana, pero si ven otra, de golpe se quedan sin jugar. Para quien los tenga: mirar quién les cubre en el banquillo.`, nota: 'Apercibidos: se avisa de lo que pueden perder, sin dar nada por hecho.' },
   { tipo: 'sancionados', bien: false, texto: `🟥 Sancionados jornada 12: Jon Arrieta, Unai Berrio. Ambos se pierden el partido. Atentos a tu once.`, nota: 'Sin motivo, sin lectura y con la etiqueta repetida a mano.' },
-  { tipo: 'lloros', bien: true, texto: `😭 La portería a cero se escapó por muy poco: Unai Berrio se quedó sin los 4 puntos porque el gol llegó en el 88'.
+  { tipo: 'lloros', bien: true, texto: `💔 La portería a cero se escapó por muy poco: Unai Berrio se quedó sin los 4 puntos porque el gol llegó en el 88'.
 
 Jon Arrieta lo mismo: salió en el 60' y el gol llegó tras su cambio. Dos de los que más duelen esta jornada.`, nota: 'Cada lloro con su porqué, tal como viene en los hechos.' },
-  { tipo: 'lloros', bien: false, texto: `😭 Lloros de la jornada 12: Berrio y Arrieta. No suman la portería a cero por poco. Mala suerte.`, nota: 'Sin el minuto ni la razón. Es un titular, no una historia.' },
+  { tipo: 'lloros', bien: false, texto: `💔 Lloros de la jornada 12: Berrio y Arrieta. No suman la portería a cero por poco. Mala suerte.`, nota: 'Sin el minuto ni la razón. Es un titular, no una historia.' },
   { tipo: 'resumen', bien: true, subtipo: 'mejores', texto: `⭐ Iker Saldaña manda en la jornada 12 con 17 puntos, más del doble de su media, por delante de Marc Vidal (14) y Toni Cano (13).
 
 El Osasuna es el club que más mete en el once: dos de los seis. Por ahí fue la jornada.`, nota: 'El ranking tal cual viene en los hechos, con una lectura de qué club puso más.' },
   { tipo: 'resumen', bien: false, subtipo: 'peores', texto: `📉 Los peores de la jornada 12: Berrio, Arrieta, Vidal, Saldaña, Cano y Sanz, todos con menos de 2 puntos. Para olvidar.`, nota: 'Lista sin orden ni contexto; «para olvidar» es relleno.' },
-  { tipo: 'liga', bien: true, texto: `📣 LaLiga ha pedido a los clubes que de aquí a enero adelanten los cierres de plantilla, según el comunicado de la Liga.
+  { tipo: 'liga', bien: true, texto: `🗞️ LaLiga ha pedido a los clubes que de aquí a enero adelanten los cierres de plantilla, según el comunicado de la Liga.
 
 Para el fantasy es poco más que un aviso: de momento no cambia fechas de mercado. Si lo cambian, ya se verá cuándo.`, nota: 'Qué se plantea, sin darlo por hecho y con lo que significa (o no) para el mánager.' },
-  { tipo: 'liga', bien: false, texto: `📣 Gran novedad en LaLiga: cambia todo el mercado de invierno. Revoluciona el fantasy.`, nota: 'Exagera, no dice quién lo ha dicho y afirma lo que los hechos solo plantean.' },
+  { tipo: 'liga', bien: false, texto: `🗞️ Gran novedad en LaLiga: cambia todo el mercado de invierno. Revoluciona el fantasy.`, nota: 'Exagera, no dice quién lo ha dicho y afirma lo que los hechos solo plantean.' },
   { tipo: 'onces', bien: true, texto: `👀 El Betis sale con Toni Cano y Hugo Marín arriba, y con Rubén Lago por fin de vuelta en el lateral. La gran sorpresa: Saúl Pino empieza en el banquillo.
 
 En el Mallorca, once sin sorpresas.`, nota: 'Lo que cambia respecto a lo esperado, sin repetir los once enteros.' },
@@ -178,10 +184,10 @@ En el Mallorca, once sin sorpresas.`, nota: 'Lo que cambia respecto a lo esperad
 
 El chollo del día es Pol Sanz, que vale 4 M y ya lleva dos jornadas en el once. Quien necesite un defensa barato, aquí tiene una opción.`, nota: 'Las dos subidas y bajadas que cuentan y un chollo con su razón.' },
   { tipo: 'mercado', bien: false, texto: `📈 Mercado actualizado. Suben 34 jugadores, bajan 51. El mercado fantasy está muy movido hoy. Mira la tarjeta.`, nota: 'Cifras sin sentido y «muy movido» no dice nada.' },
-  { tipo: 'onceideal', bien: true, texto: `🧩 El once ideal de la jornada 12 sale con un 3-4-3: Unai Berrio bajo palos, con Toni Cano y Marc Vidal como los que más puntos esperan.
+  { tipo: 'onceideal', bien: true, texto: `⭐ El once ideal de la jornada 12 sale con un 3-4-3: Unai Berrio bajo palos, con Toni Cano y Marc Vidal como los que más puntos esperan.
 
 Cano juega en casa contra uno de los que más encajan. Si buscas un delantero para ese once, es de los primeros que entrarían.`, nota: 'La idea del once y quién destaca, con su razón.' },
-  { tipo: 'onceideal', bien: false, texto: `🧩 Once ideal J12: Berrio; Arrieta, Vidal, Sanz; Cano, Marín, Lago, Díaz; Saldaña, Ruano, Pino. Revisa tu once Fantasy.`, nota: 'Una lista de nombres sin lectura. Para eso ya está la imagen.' },
+  { tipo: 'onceideal', bien: false, texto: `⭐ Once ideal J12: Berrio; Arrieta, Vidal, Sanz; Cano, Marín, Lago, Díaz; Saldaña, Ruano, Pino. Revisa tu once Fantasy.`, nota: 'Una lista de nombres sin lectura. Para eso ya está la imagen.' },
   { tipo: 'directo', bien: true, subtipo: 'gol', texto: `⚽ Gol de Iker Saldaña en el 34': el Osasuna se pone 1-0 contra el Deportivo.
 
 Ya suma 7 puntos, la mitad de lo que hizo en toda la jornada pasada. Pase de Marc Vidal, que se lleva 2.`, nota: 'Corto, con minuto, marcador y lo que pasa con los puntos.' },
