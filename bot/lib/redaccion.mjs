@@ -196,6 +196,14 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   VAGAS.lastIndex = 0;
   if (/conjunto\s+\p{Ll}/u.test(t)) e.push('«el conjunto…» en vez del nombre del club');
   if (/LaLiga Fantasy ya lo da/i.test(t)) e.push('«LaLiga Fantasy ya lo da…»');
+  // la previa (7 nov): primera frase corta y «en el aire» una sola vez
+  if (hechos.tipo === 'previa') {
+    const f1 = (t.replace(EMOJI, ' ').replace(/[\uFE0F\u200D]/g, '').trim().split(/(?<=[.!?])\s|\n/)[0]) || '';   // hasta el punto: los dos puntos no cortan
+    const n1 = f1.split(/\s+/).filter(Boolean).length;
+    if (n1 > 35) e.push(`la primera frase tiene ${n1} palabras: que sean 25 como mucho y con una sola idea (parte la hora, el estadio, la clasificación o la noticia en otra frase)`);
+    if (/^\W*La (gran duda|duda más grande|mayor duda|clave)\b/i.test(f1)) e.push('abre con «La gran duda del X-Y» (o «la clave»): fórmula de plantilla; empieza por el jugador, el cruce o la baja, con tus palabras');
+    if ((t.match(/\ben el aire\b/gi) || []).length > 1) e.push('«en el aire» más de una vez: solo una, y las demás con otras palabras («no tiene el puesto asegurado», «puede quedarse fuera»)');
+  }
   if (/\b(disponible|duda|baja|sancionado|lesionado)s? fantasy\b/i.test(t)) e.push('«Fantasy» pegado a un estado');
   if (/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i.test(t)) e.push(`muletilla de nota de prensa («${t.match(/\b(promedia|el encuentro se disputa|seg[uú]n informan|cabe destacar)\b/i)[0]}»)`);
   // «según X» pegado a una cifra nuestra (la media, el %, la hora, el puesto): el trozo de frase justo antes del «según» (desde la última
@@ -319,7 +327,12 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     const max = limite() - (etiqueta ? peso(etiqueta) + sep : 0);
     // lo que se le pide (más corto: «no tienen por qué ser muy largos», Carlos, 4 nov) y el máximo de verdad, que el validador mira
     const pide = Math.min(max - 40, ((cfg.largo || {})[t.hechos.tipo] || (cfg.largo || {})[tipo]) || max - 40);
-    const cronicas = (await Promise.resolve(cronicasDe(t)).catch(() => [])) || [];
+    // la prensa es un adorno: si ya ha fallado la redacción de este tuit `sinPrensaTrasFallos` ejecuciones, se prueba sin ella (la
+    // mayoría de los rechazos de la previa eran por copiar al medio o por contar mal lo que dice; 7 nov)
+    const fallosPrevios = ((registro && registro.datos && registro.datos.fallosRedaccion) || {})[t.clave]?.n || 0;
+    const sinPrensa = (cfg.sinPrensaTrasFallos || 0) > 0 && fallosPrevios >= cfg.sinPrensaTrasFallos;
+    if (sinPrensa) log(`  (redactar) ${t.clave}: sin prensa (ya ha fallado ${fallosPrevios} ${fallosPrevios === 1 ? 'vez' : 'veces'})`);
+    const cronicas = sinPrensa ? [] : ((await Promise.resolve(cronicasDe(t)).catch(() => [])) || []);
     let anterior = '', errores = [], final = null, rechazos = 0, causa = 'rechazada';
     // presupuesto de tiempo de la ejecución (el trabajo de Actions tiene un tope de 10 min): pasado, sale la plantilla
     if (process.uptime() > (cfg.segundosEjecucion ?? 330)) { log(`  (redactar) ${t.clave}: sin tiempo en esta ejecución (${Math.round(process.uptime())} s)`); t.redaccion = 'sin-tiempo'; continue; }

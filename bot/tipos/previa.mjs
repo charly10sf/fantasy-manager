@@ -48,7 +48,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
     if (ventanas && !forzar && enHora && stats.some((x) => x.matchState === 1) && !(esObjetivo && toca.ok))
       log(`  (previa) posibles onces de la J${jornada}: ${esObjetivo ? `esperan (${toca.motivo})` : objetivo === null ? 'no salen: la jornada ya ha empezado' : 'no salen aún: hay otra jornada antes'}`);
     // probarAcabados (solo pruebas, --previa-acabados=1): trata los partidos ya jugados como si fueran a empezar, para ver los onces de ESPN
-    for (const m of stats.filter((x) => x.matchState === 1 || (probarAcabados && x.matchState === 7)).sort((a, b) => Date.parse(a.date) - Date.parse(b.date))) {
+    // (si la redacción de uno falla, pasa al final: con un tuit por ejecución, uno atascado no frena a los demás; lib/respaldo.mjs)
+    const fallosDe = (m) => ((registro && registro.datos.fallosRedaccion) || {})[`previa|${m.id}`]?.n || 0;
+    for (const m of stats.filter((x) => x.matchState === 1 || (probarAcabados && x.matchState === 7)).sort((a, b) => fallosDe(a) - fallosDe(b) || Date.parse(a.date) - Date.parse(b.date))) {
       const saque = Date.parse(m.date);
       const falta = saque - ahora;
       const quiereConf = !ventanas || forzar ? true : falta > 0 && falta < 3 * 3600e3;
@@ -229,6 +231,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const posDe = new Map((jugadores || []).map((j) => [String(j.id), j.positionId]));
       const pu = (x) => { const p = puesto(posDe.get(String(x.id))); return p ? { puesto: p } : {}; };
       const esBaja = (x) => (x.estado === 'injured' && !dudaParte.has(String(x.id))) || x.estado === 'suspended';
+      // cómo está cada duda según su %, con el mismo tramo que el revisor (7 nov, prueba: «lo tiene difícil» con un 33 %, «puede quedarse
+      // fuera» con un 53 %). Es el sentido, no la frase: con la frase hecha la IA la pegaba tal cual y sonaba a plantilla
+      const dilo = (p) => (p >= 0.5 ? 'más probable que juegue que no' : p >= 0.3 ? 'a medias: puede jugar o quedarse fuera' : 'más probable que no juegue');
       const jugH = [], eqH = [];
       for (const [k, eq, mm] of [['L', L, m.local], ['V', V, m.visitor]]) {
         const t = tablaH && tablaH.porId[String(mm.id)];
@@ -246,13 +251,20 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         eqH.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', ...(t && t.pj ? { va: `${t.pos}º de ${tablaH.n}`, golesMarcadosPorPartido: fmt(t.gf / t.pj), golesEncajadosPorPartido: fmt(t.gc / t.pj) } : {}),
           ...(cruce.length ? { cruce } : {}) });
         // (pocos y los que pesan: con tres dudas, tres bajas y dos fijos por equipo la IA los enumeraba todos; 6 nov)
-        for (const x of pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'titularidad en el aire', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, principal: false });
-        for (const x of Object.values(probs[k]).filter(esBaja).sort((a, b) => md(b) - md(a)).filter((x, i) => i === 0 || md(x) >= 3).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'baja', estado: x.estado === 'suspended' ? 'sancionado' : 'lesionado', ...(md(x) >= 1 ? { mediaPuntos: fmt(md(x)) } : {}), principal: false });
-        for (const x of pos[k].once.filter((y) => y.p >= 0.8 && md(y) >= 4).sort((a, b) => md(b) - md(a)).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'fijo', titularidadFantasyManager: `${pct(x.p)} %`, mediaPuntos: fmt(md(x)), principal: false });
+        pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2).forEach((x) => jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'duda de titularidad', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, lectura: dilo(x.p), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false }));
+        for (const x of Object.values(probs[k]).filter(esBaja).sort((a, b) => md(b) - md(a)).filter((x, i) => i === 0 || md(x) >= 3).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'baja', estado: x.estado === 'suspended' ? 'sancionado' : 'lesionado', ...(md(x) >= 1 ? { mediaPuntos: fmt(md(x)) } : {}), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false });
+        for (const x of pos[k].once.filter((y) => y.p >= 0.8 && md(y) >= 4).sort((a, b) => md(b) - md(a)).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'fijo', titularidadFantasyManager: `${pct(x.p)} %`, mediaPuntos: fmt(md(x)), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false });
       }
+      // por dónde abrir el tuit: uno distinto de un partido a otro (7 nov: los cinco abrían y seguían con el mismo esqueleto)
+      const bajaGorda = jugH.filter((x) => x.papel === 'baja' && Number(String(x.mediaPuntos || '0').replace(',', '.')) >= 5).length;
+      const fijoGordo = jugH.filter((x) => x.papel === 'fijo' && Number(String(x.mediaPuntos || '0').replace(',', '.')) >= 6).length;
+      const aperturas = [bajaGorda ? 'una baja que pese (la de más media)' : null, eqH.some((x) => x.cruce) ? 'el cruce' : null, fijoGordo ? 'un fijo con mucha media' : null,
+        jugH.some((x) => x.papel === 'duda de titularidad') ? 'un jugador en duda, con su nombre' : null, eqH.every((x) => x.va) ? 'cómo llega cada uno a este partido' : null].filter(Boolean);
       const cuH = cuando(m.date, ahora);
       const hechos = { tipo: 'previa', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuH ? { cuando: cuH.t } : {}), fecha: m.date || null },
-        equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), etiqueta: '📊 Los % de titularidad son de Fantasy Manager' };
+        equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), ...(aperturas.length ? { abreCon: Rp(aperturas, 'abre') } : {}),
+        // el pie cambia de un partido a otro (7 nov: los cinco tuits cerraban con la misma frase)
+        etiqueta: Rp(['📊 Los % de titularidad son de Fantasy Manager', '📊 % de titularidad según Fantasy Manager', '📊 Titularidad: los porcentajes son de Fantasy Manager'], 'pieH') };
       if (ventanas && !forzar) hechaPos = true;   // uno por ejecución: el siguiente, tras la separación (lib/escalonar.mjs)
       out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, hechos, caduca: saque, numeros: num, partido: null,
         tarjeta: { tipo: 'onces', nombre: `previa-${m.id}`, d,

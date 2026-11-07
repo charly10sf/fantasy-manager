@@ -141,6 +141,19 @@ const t2 = { tipo: 'noticias', clave: 'n2', texto: '✅ plantilla dos', numeros:
 hechosN = await redactar([t2], { tipo: 'noticias', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {},
   pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }) });
 ok(hechosN === 0 && t2.texto === '✅ plantilla dos' && !t2.redactado, 'si las dos versiones fallan, sale la plantilla');
+// la prensa es un adorno: si la redacción de ese tuit ya ha fallado, se prueba sin ella (`sinPrensaTrasFallos`)
+let pedidasPrensa = 0;
+const prensaEspia = () => { pedidasPrensa++; return cron; };
+const cfgPrensa = { ...config, redactar: { ...config.redactar, activo: true, sinPrensaTrasFallos: 1 } };
+const salePrensa = async (clave, fallosPrevios) => {
+  const regP = { datos: { enviados: [], fallosRedaccion: fallosPrevios ? { [clave]: { n: fallosPrevios } } : {} }, fichero: null, guardar() {} };
+  pedidasPrensa = 0;
+  await redactar([{ tipo: 'noticias', clave, texto: '✅ plantilla', numeros: [12], hechos }], { tipo: 'noticias', registro: regP, config: cfgPrensa, jugadores, equipos, log: () => {}, cronicasDe: prensaEspia,
+    pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }) });
+  return pedidasPrensa;
+};
+ok(await salePrensa('p1', 0) === 1, 'sin fallos previos, el tuit se redacta con la prensa');
+ok(await salePrensa('p2', 1) === 0, 'con un fallo previo, se redacta sin pedir la prensa');
 hechosN = await redactar([{ ...t2 }], { tipo: 'noticias', registro: reg2, config, jugadores, equipos, log: () => {}, pedir: pedirF });
 ok(hechosN === 0, 'con redactar.activo a false no hace nada');
 hechosN = await redactar([{ ...t2 }], { tipo: 'mercado', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {}, pedir: pedirF });
@@ -266,6 +279,20 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a
   const { GUIA } = await import('../lib/voz.mjs');
   ok(/SOLO LO QUE SABES/.test(GUIA) && /DELATA A UNA IA/.test(GUIA), 'la guía trae «solo lo que sabes» y «lo que delata a una IA»');
   ok(EJEMPLOS.some((x) => !x.bien && /rentado esta jornada/.test(x.texto)), 'la guía trae como MAL la comparación con la jornada');
+}
+
+// la previa: primera frase corta y «en el aire» una sola vez (7 nov)
+{
+  const hp = { tipo: 'previa', jugadores: [{ nombre: 'Budimir', club: 'Osasuna', papel: 'fijo', estado: 'fijo' }], equipos: [{ club: 'Osasuna', va: '12º de 20' }, { club: 'Athletic', va: '5º de 20' }], clubes: clubes('Osasuna', 'Athletic') };
+  const largo = 'El Osasuna recibe hoy a las seis y media en El Sadar al Athletic, que llega quinto, con un cruce que a sus delanteros y medios les viene mal porque el Osasuna encaja poco en casa. Budimir es fijo.';
+  const corto = 'El Osasuna recibe hoy al Athletic y a los delanteros rojillos les toca un cruce cómodo. Budimir es fijo.';
+  ok(revisar(largo, { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: una primera frase de más de 30 palabras, fuera');
+  ok(!revisar(corto, { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: una primera frase corta, vale');
+  ok(revisar('El Osasuna recibe hoy al Athletic. Budimir está en el aire y Herrera también está en el aire.', { hechos: hp, todos }).some((x) => /en el aire/.test(x)), 'previa: «en el aire» dos veces, fuera');
+  ok(!revisar('El Osasuna recibe hoy al Athletic. Budimir está en el aire y Herrera no tiene el puesto asegurado.', { hechos: hp, todos }).some((x) => /en el aire/.test(x)), 'previa: «en el aire» una vez, vale');
+  ok(revisar('La gran duda del Osasuna-Athletic está en Budimir. Es fijo.', { hechos: hp, todos }).some((x) => /fórmula de plantilla/.test(x)), 'previa: abrir con «La gran duda del X-Y», fuera');
+  ok(revisar('El Osasuna recibe hoy a las seis y media en El Sadar al Athletic, que llega quinto, con un cruce que a los delanteros y medios de casa les viene bastante mal y por eso el Osasuna lo tiene más difícil: Budimir es fijo.', { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: los dos puntos no cortan la primera frase');
+  ok(!revisar(largo, { hechos: { ...hp, tipo: 'caidas' }, todos }).some((x) => /primera frase/.test(x)), 'solo la previa tiene tope de primera frase');
 }
 
 process.env = viejo;
