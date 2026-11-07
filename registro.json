@@ -1585,7 +1585,9 @@
    "SPORT|136201148": 1794061401000,
    "SPORT|136202042": 1794062312000,
    "SPORT|136176192": 1794062219000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000,
+   "AS|https://as.com/futbol/primera/aprobados-y-suspensos-del-malaga-ruina-tras-el-descanso-f202611-n/": 1794070433000,
+   "SPORT|136204290": 1794066951000
   },
   "hechos": [
    {
@@ -2225,7 +2227,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3157,7 +3159,8 @@
    "SPORT|136195921": 1794049583000,
    "SPORT|136198293": 1794054087000,
    "Europa Press|https://www.europapress.es/nacional/noticia-montero-rufian-animan-votar-memoria-conciencia-obviando-voto-util-psoe-si-puede-te-come-20261107134413.html": 1794055453000,
-   "SPORT|136202042": 1794062312000
+   "SPORT|136202042": 1794062312000,
+   "SPORT|136204292": 1794067195000
   },
   "hechos": [
    {
@@ -3723,7 +3726,7 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
   "espera": {}
@@ -3731,17 +3734,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 37,
    "redactar": 34,
    "revisar": 23,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 358815,
-  "salida": 26952,
+  "entrada": 362540,
+  "salida": 28037,
   "cacheLee": 110597,
   "cacheEscribe": 23795,
-  "dolares": 0.78951
+  "dolares": 0.790425
  },
  "recientes": {
   "onces": [
