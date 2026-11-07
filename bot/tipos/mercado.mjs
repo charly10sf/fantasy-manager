@@ -3,6 +3,7 @@
 // de Madrid): el último punto es el de hoy. Lleva el cierre de «Fantasy Manager · enlace en la bio».
 import { valorMercado } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
+import { clubes as clubesH, jugador as jugadorH } from '../lib/hechos.mjs';
 import { cierre, corto, fmt, partes, del, largo, hash, dineroTxt } from '../lib/texto.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t));
@@ -95,7 +96,17 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   const tarjeta = { tipo: 'mercado', nombre: `mercado-${dia}`, d,
     permitidos: { numeros: [dd, 1, 2, 3, 4, 5, ...todas.flatMap((f) => [f.dif, f.pct, f.valor])].map(String),
       palabras: ['MERCADO', 'SUBEN', 'BAJAN', 'Y', 'de', 'M', 'K', MESES[mes - 1], ...todas.flatMap((f) => [f.nombre, f.equipo])] } };
-  return [{ tipo: 'mercado', clave, jornada, texto, numeros: num, tarjeta, soloConImagen: true }];
+  // los hechos para la IA que redacta (lib/redaccion.mjs): lo que sube y baja más, y el chollo si lo hay; el cierre de siempre va debajo
+  const jug = (f, extra) => jugadorH({ nickname: f.nombre, equipo: f.equipo, averagePoints: f.media }, { principal: false, extra });
+  const sH = suben[0], bH = bajan[0];
+  const hechos = { tipo: 'mercado', noticia: `LaLiga ha actualizado esta noche los valores de mercado fantasy (hoy es ${dd} de ${MESES[mes - 1]})`,
+    aviso: 'la imagen adjunta lista los 5 que más suben y los 5 que más bajan: el texto no los enumera, cuenta el que más sube, el que más baja y lo que se ve en el conjunto',
+    queMasSube: { nombre: sH.nombre, club: sH.equipo, cambio: `+${dinero(sH.dif)}`, porcentaje: `+${fmt(sH.pct)} %`, valorAhora: dinero(sH.nuevo) },
+    queMasBaja: { nombre: bH.nombre, club: bH.equipo, cambio: `-${dinero(-bH.dif)}`, porcentaje: `-${fmt(-bH.pct)} %`, valorAhora: dinero(bH.nuevo) },
+    ...(ch ? { chollo: { nombre: ch.nombre, club: ch.equipo, valor: dinero(ch.nuevo), mediaPuntos: fmt(ch.media), sube: `${fmt(ch.pct)} %` } } : {}),
+    jugadores: [jug(sH, { cambioHoy: 'el que más sube' }), jug(bH, { cambioHoy: 'el que más baja' }), ...(ch && ch.id !== sH.id ? [jug(ch, { cambioHoy: 'el chollo del día' })] : [])],
+    clubes: clubesH(sH.equipo, bH.equipo, ...(ch ? [ch.equipo] : [])), etiqueta: cierre(`mercado${dia}`) };
+  return [{ tipo: 'mercado', clave, jornada, texto, hechos, numeros: num, tarjeta, soloConImagen: true }];
 }
 
 /** el chollo de los que suben hoy (null si no hay ninguno que cumpla) */

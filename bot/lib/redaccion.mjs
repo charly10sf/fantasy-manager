@@ -18,7 +18,7 @@ const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
 const CIRCULOS = /[🔴🟠🟡🟢🔵🟣🟤⚫]/u;
 // lo que no se le pasa a la IA ni cuenta para las cifras (la fecha del partido va como «cuando»)
 const sinFecha = (k, v) => (k === 'fecha' || k === 'etiqueta' ? undefined : v);
-const TOPES_CIFRAS = { previa: { pct: 2, media: 1 }, noticias: { pct: 1, media: 1 }, novedades: { pct: 1, media: 1 }, otro: { pct: 2, media: 1 } };
+const TOPES_CIFRAS = { previa: { pct: 2, media: 1 }, noticias: { pct: 1, media: 1 }, novedades: { pct: 1, media: 1 }, mercado: { pct: 4, media: 1 }, otro: { pct: 2, media: 1 } };
 const COMUNES = new Set(['blanco', 'moreno', 'rubio', 'bueno', 'leal', 'santos', 'alba', 'luna']);
 const frases = (s) => String(s).split(/(?<=[.!?:;])\s+|\n+/).map((x) => x.trim()).filter(Boolean);
 
@@ -182,7 +182,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // y solo el primero (Carlos, 6 nov: «si pones varios porcentajes, que solo sea en el primero, que se entienda humano»): la frase del
   // primer % lleva «titularidad» detrás de él; los demás, sin repetirlo
   const pcts = [...t.matchAll(/\d\s?%/g)];
-  if (pcts.length) {
+  // (solo si los hechos traen un % de titularidad: en el mercado los % son lo que sube o baja un valor)
+  if (pcts.length && /titularidadFantasyManager/.test(JSON.stringify(hechos))) {
     const resto = t.slice(pcts[0].index).split(/(?<=[.!?])\s|\n/)[0];
     if (!/titularidad/i.test(resto)) e.push('el primer porcentaje va con «de titularidad» («un 97 % de titularidad»): un «97 %» suelto no se entiende');
     const repes = pcts.slice(1).filter((m) => /^\s?%\s+de\s+titularidad/i.test(t.slice(m.index + 1)));
