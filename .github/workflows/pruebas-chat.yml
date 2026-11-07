@@ -1,0 +1,14 @@
+name: Pruebas chat IA
+on:
+  push:
+    branches: [pruebas-chat-ia]
+jobs:
+  chat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node pruebas-chat/correr.mjs
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
