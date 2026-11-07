@@ -175,15 +175,54 @@ export function distinto(club, otro) {
   return alt ? (alt.l < 0.4 ? avivar(alt.c) : alt.c) : club.vivo;
 }
 
-/** la marca de la app: barra roja, «FANTASY MANAGER» y la cuenta, entre dos filetes finos */
+/** la marca de la app: barra roja, «FANTASY MANAGER», la cuenta y (Carlos, 7 nov 15:31: «que abajo de todas ponga algo como para
+    descargar la app») una pastilla roja con un móvil: «DESCARGA LA APP GRATIS · ENLACE EN LA BIO». Sin dominio: el validador no deja
+    enlaces en la imagen, igual que en los tuits */
+export const PIE_DESCARGA = 'DESCARGA LA APP GRATIS · ENLACE EN LA BIO';
 export function marca(x, y, { ancla = 'start' } = {}) {
   const w1 = medir('FANTASY MANAGER', 26, B, 3), w2 = medir('@Fantasyman_app', 23, B);
-  const total = 18 + w1 + 20 + w2;
-  const x0 = ancla === 'middle' ? x - total / 2 : x;
+  const pxD = 21, wd = medir(PIE_DESCARGA, pxD, B, 1.5), wp = wd + 70, hp = 40;
+  const total = 18 + w1 + 18 + w2 + 30 + wp;
+  const x0 = ancla === 'middle' ? x - total / 2 : x, xp = x0 + total - wp, yc = y - 8;
+  // el móvil: un rectángulo redondeado con la pantalla y la flecha de descarga dentro
+  const xm = xp + 26;
+  const movil = `<rect x="${xm - 9}" y="${yc - 14}" width="18" height="28" rx="4" fill="none" stroke="#fff" stroke-width="2.6"/>`
+    + `<path d="M${xm},${yc - 7} V${yc + 4} M${xm - 4.5},${yc} L${xm},${yc + 5} L${xm + 4.5},${yc}" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
   return `<rect x="${x0}" y="${y - 19}" width="6" height="24" rx="2" fill="${ROJO}"/>`
     + texto(x0 + 18, y, 'FANTASY MANAGER', { px: 26, peso: 800, espacio: 3 })
-    + texto(x0 + 18 + w1 + 20, y, '@Fantasyman_app', { px: 23, peso: 600, color: TENUE });
+    + texto(x0 + 18 + w1 + 18, y, '@Fantasyman_app', { px: 23, peso: 600, color: TENUE })
+    + `<rect x="${xp}" y="${yc - hp / 2}" width="${wp}" height="${hp}" rx="${hp / 2}" fill="${ROJO}"/>` + movil
+    + texto(xp + 48, yc + pxD * 0.36, PIE_DESCARGA, { px: pxD, peso: 800, color: '#fff', espacio: 1.5 });
 }
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// El puesto del jugador con el color de la app (web/css/app.css: --por, --def, --med, --del, --ent), como en LaLiga Fantasy
+// (Carlos, 7 nov 15:31: «distinciones por portero, defensa, medio… por colores, como los del propio fantasy»)
+export const PUESTOS = {
+  POR: { color: '#ffc547', tinta: '#1f1603', largo: 'PORTERO' }, DEF: { color: '#58a6ff', tinta: '#04121f', largo: 'DEFENSA' },
+  MED: { color: '#2fd18f', tinta: '#03170d', largo: 'MEDIO' }, DEL: { color: '#ee1c3c', tinta: '#ffffff', largo: 'DELANTERO' },
+  ENT: { color: '#9a96a0', tinta: '#120f16', largo: 'ENTRENADOR' },
+};
+const A_PUESTO = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL', 5: 'ENT', portero: 'POR', defensa: 'DEF', centrocampista: 'MED', medio: 'MED', delantero: 'DEL', entrenador: 'ENT' };
+/** 'POR' | 'DEF' | 'MED' | 'DEL' | 'ENT' | null, venga como venga (1-5, '3', 'Centrocampista', 'MED') */
+export function abrevPuesto(p) {
+  if (p == null || p === '') return null;
+  const s = String(p).trim();
+  if (PUESTOS[s.toUpperCase()]) return s.toUpperCase();
+  return A_PUESTO[s.toLowerCase()] || null;
+}
+/** el color del puesto (o null) */
+export const colorPuesto = (p) => { const a = abrevPuesto(p); return a ? PUESTOS[a].color : null; };
+/** la chapa del puesto, centrada en cx, cy, con un filo oscuro para que se separe de la cara */
+export function chipPuesto(p, cx, cy, px = 20, { largo = false } = {}) {
+  const a = abrevPuesto(p);
+  if (!a) return '';
+  const P = PUESTOS[a], t = largo ? P.largo : a, w = medir(t, px, B, 1.2) + px * 1.1, h = px * 1.38;
+  return `<rect x="${cx - w / 2 - 2}" y="${cy - h / 2 - 2}" width="${w + 4}" height="${h + 4}" rx="${h / 2 + 2}" fill="#0b0a0f"/>`
+    + `<rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${P.color}"/>`
+    + texto(cx, cy + px * 0.36, t, { px, peso: 900, color: P.tinta, ancla: 'middle', espacio: 1.2 });
+}
+export const anchoChipPuesto = (p, px = 20, { largo = false } = {}) => { const a = abrevPuesto(p); return a ? medir(largo ? PUESTOS[a].largo : a, px, B, 1.2) + px * 1.1 + 4 : 0; };
 
 // ---------------------------------------------------------------------------------------------------------------------------
 // Piezas HD (7 nov, rediseño de todas las tarjetas con el estilo de la de onces, PR #74). Las tarjetas se dibujan a 2400 de ancho

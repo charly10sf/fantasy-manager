@@ -17,7 +17,7 @@ export const fechaCorta = (t) => { const [d, m] = new Date(t).toLocaleDateString
 export const numerosEscala = (valor) => (valor && valor.length >= 2 ? [millones(Math.max(...valor.map((v) => v[1]))), millones(Math.min(...valor.map((v) => v[1]))), fechaCorta(valor[0][0]), fechaCorta(valor[valor.length - 1][0])].flatMap((x) => x.match(/\d+(?:,\d+)?/g)) : []);
 // palabras fijas de las tarjetas (todo lo demás tiene que salir de los datos)
 export const PALABRAS_FIJAS = ['LALIGA', 'FANTASY', 'JORNADA', 'FINAL', 'MEJORES', 'PEORES', 'pts', 'MANAGER', 'Fantasyman_app', 'MVP', 'DOBLETE',
-  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'PARADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', 'ENT', 'JUEGO', 'Y', ...MESES, ...Object.values(POS)];
+  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'PARADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', 'ENT', 'JUEGO', 'Y', 'DESCARGA', 'APP', 'GRATIS', 'ENLACE', 'BIO', 'MEDIO', 'HOY', 'AÚN', ...MESES, ...Object.values(POS)];
 
 const caraDe = (p) => p && p.images && p.images.transparent && p.images.transparent['256x256'];
 const minutosEn = (ficha, n) => { const s = (ficha && ficha.playerStats || []).find((x) => Number(x.weekNumber) === Number(n)); return s ? Number((s.stats.mins_played || [0])[0]) : 0; };
@@ -45,7 +45,7 @@ export async function datosFinal(m, { jornada, fuentes, maxFichas = 25 }) {
       else if (min > 0) cortos.push({ ...p, min });
     }
     const peores = [...largos, ...cortos].slice(0, CUANTOS).sort((a, b) => a.pts - b.pts);
-    const ficha = async (p) => ({ id: p.id, nombre: p.nickname || p.name, pts: p.pts, cara: await fuentes.imagen(caraDe(p)).catch(() => null), min: p.min });
+    const ficha = async (p) => ({ id: p.id, nombre: p.nickname || p.name, pos: p.positionId, pts: p.pts, cara: await fuentes.imagen(caraDe(p)).catch(() => null), min: p.min });
     return { nombre: eq.mainName, corto: corto(eq.mainName), goles, escudo: await fuentes.imagen(eq.badgeColor).catch(() => null),
       mejores: await Promise.all(mejores.map(ficha)), peores: await Promise.all(peores.map(ficha)) };
   };
@@ -78,7 +78,8 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
   // jornada (las 5 anteriores) y, si llega el minuto, arriba va el minuto «EN JUEGO». Un negativo en directo sí vale (una roja).
   const enJuego = m.matchState != null && Number(m.matchState) !== 7;
   const sinPuntos = enJuego && ptsJornada === 0;
-  const hasta = sinPuntos ? jornada - 1 : jornada;
+  // las casillas: las 5 jornadas ANTERIORES; lo de hoy va solo en la placa de arriba (Carlos, 7 nov 15:35)
+  const hasta = jornada - 1;
   const ultimas = [];
   for (let k = Math.max(1, hasta - 4); k <= hasta; k++) ultimas.push([k, wp.has(k) ? wp.get(k) : 0]);
   // valor: un punto por día, los últimos 30; el cambio, entre el primer y el último punto de esa ventana
@@ -129,9 +130,11 @@ export async function datosGolAsistencia(jg, ja, m, { jornada, motivo = 'gol', f
  * valor que tiene»): las 5 últimas jornadas que ya tienen puntos (hasta `jornada`), total, media y valor de los últimos 30 días.
  * Devuelve { d, numeros } (numeros: lo que la imagen puede escribir, sacado de los datos crudos).
  */
-export async function historialJugador(j, { jornada, fuentes, ahora = Date.now() }) {
+export async function historialJugador(j, { jornada, fuentes, ahora = Date.now(), partido = null }) {
   const wp = new Map((j.weekPoints || []).map((w) => [Number(w.weekNumber), Number(w.points)]));
-  const conDatos = [...wp.keys()].filter((k) => k <= jornada);
+  // con su partido de esta jornada en juego, sus puntos aún no son los de la jornada: esa casilla no sale (7 nov)
+  const enJuego = partido && ![1, 7].includes(Number(partido.matchState));
+  const conDatos = [...wp.keys()].filter((k) => k < jornada || (k === jornada && !enJuego));
   const hasta = conDatos.length ? Math.max(...conDatos) : jornada;
   const ultimas = [];
   for (let k = Math.max(1, hasta - 4); k <= hasta; k++) ultimas.push([k, wp.has(k) ? wp.get(k) : 0]);

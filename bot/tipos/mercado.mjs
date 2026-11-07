@@ -58,7 +58,7 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
     const h = puntos(hist[i]);
     if (h.length < 2 || diaMadrid(h[h.length - 1].t) !== dia) return;
     const nuevo = h[h.length - 1].v, antes = h[h.length - 2].v;
-    filas.push({ media: Number(j.averagePoints) || 0, puntos: Number(j.points) || 0, ok: !j.playerStatus || j.playerStatus === 'ok', id: j.id, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, nuevo, antes, dif: nuevo - antes, pct: (nuevo - antes) / antes * 100 });
+    filas.push({ media: Number(j.averagePoints) || 0, puntos: Number(j.points) || 0, ok: !j.playerStatus || j.playerStatus === 'ok', id: j.id, pos: j.positionId, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, nuevo, antes, dif: nuevo - antes, pct: (nuevo - antes) / antes * 100 });
   });
   if (filas.length < 100) { log(`  (mercado) solo ${filas.length} jugadores con el valor de ${dia}: espero`); return []; }
   const suben = [...filas].filter((f) => f.dif > 0).sort((a, b) => b.dif - a.dif);
@@ -89,7 +89,7 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   const texto = `💸 Subidas y bajadas del mercado fantasy de hoy, ${dd}/${mes}${lectura}${linea}\n\n${cierre(`mercado${dia}`)}`;
   // la tarjeta: top 5 de cada lado con cara, escudo, lo que cambia, el % y el valor
   const N = 5;
-  const fila = (f) => ({ nombre: f.nombre, equipo: f.equipo, club: f.club, caraUrl: f.caraUrl, escudoUrl: f.escudoUrl,
+  const fila = (f) => ({ nombre: f.nombre, pos: f.pos, equipo: f.equipo, club: f.club, caraUrl: f.caraUrl, escudoUrl: f.escudoUrl,
     dif: `${f.dif > 0 ? '+' : '-'}${dinero(Math.abs(f.dif))}`, pct: `${f.dif > 0 ? '+' : '-'}${fmt(Math.abs(f.pct))} %`, valor: dinero(f.nuevo) });
   const d = { fecha, suben: suben.slice(0, N).map(fila), bajan: bajan.slice(0, N).map(fila) };
   const todas = [...d.suben, ...d.bajan];
