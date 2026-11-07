@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7l';
+export const VERSION = '0.7m';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.7l';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7m', f: '2026-11-07', h: '20:11', t: 'Especular también con la jornada en juego',
+    cosas: [
+      { tipo: 'mejora', d: 'cohete', t: 'Los que vuelven, primero para revender', x: 'Si un jugador llegó a valer el doble o más esta temporada, se hundió por una lesión o por no jugar y ahora vuelve a sumar minutos y sube varios días seguidos, sale en Especular con «Vuelve · valía…» y la IA te lo recomienda para revender aunque no te haga falta en el once. Como De Jong: de 44,5 M en julio a 5,6 M, y ahora subiendo un 5 % al día.', ir: { v: 'mercado', seg: 'mercado:especular' } },
+      { tipo: 'arreglo', d: 'especular', t: 'Especular no se apaga con la jornada en juego', x: 'Mientras se jugaba una jornada, Especular se quedaba vacío y el plan no proponía nada para revender, aunque detrás hubiera un parón y dos semanas por delante. Ahora se puede comprar ya y vender antes de la siguiente jornada, y la subida cuenta todos los días hasta venderlo. Con uno que empezó a subir hace poco, cuenta lo de los últimos 3 días y no la semana entera con los días de bajada.' },
+    ],
+  },
   {
     v: '0.7l', f: '2026-11-06', h: '23:40', t: 'Entrar desde el iPhone y sin la app, con dibujos',
     cosas: [
