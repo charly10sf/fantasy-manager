@@ -9,6 +9,7 @@
   "puntosFinales": { "minTrasFinal": 20, "minEstable": 10, "esperaHoras": 6 },
   "horasCaidas": [9, 21],
   "horasMercado": [[0, 1], [8, 12]],
+  "previaPosibles": { "abreHoras": 84, "separacionMin": 120, "porDia": 3, "sinTopeHoras": 24 },
   "horasOnceIdeal": [9, 23],
   "onceIdeal": { "activo": true, "desdeHoras": 36, "hastaHoras": 24, "margenHoras": 6, "maxPorClub": 3, "minTitularidad": 0.6 },
   "horasSilencio": [1, 8],

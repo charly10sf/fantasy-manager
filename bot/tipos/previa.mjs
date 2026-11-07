@@ -1,5 +1,5 @@
-// Previa de cada partido (Carlos, 2 nov 23:28): «posibles onces» con el % de titularidad de la app (desde 36 h antes del partido, de 9
-// a 23 h) y «onces confirmados» en cuanto ESPN publica las alineaciones (suelen salir ~1 h antes). Cada uno lleva su tarjeta con los
+// Previa de cada partido (Carlos, 2 nov 23:28): «posibles onces» con el % de titularidad de la app (repartidos durante la semana
+// previa a la jornada, de 9 a 23 h, de uno en uno y solo mientras la jornada no ha empezado: lib/escalonar.mjs) y «onces confirmados» en cuanto ESPN publica las alineaciones (suelen salir ~1 h antes). Cada uno lleva su tarjeta con los
 // dos onces. En el confirmado se cuentan las sorpresas: titulares habituales que se quedan fuera y los que entran sin esperarlo.
 import { json } from '../lib/http.mjs';
 import { statsSemana } from '../lib/laliga.mjs';
@@ -13,6 +13,7 @@ import { probabilidades, elegirOnce } from '../lib/onces.mjs';
 import { enElAire } from '../lib/aire.mjs';
 import { lesionados, parteDe } from '../lib/partes.mjs';
 import { clubes as clubesH, estadio as estadioH } from '../lib/hechos.mjs';
+import { tocaPosible } from '../lib/escalonar.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t)).replace(/-/g, '');
 import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
@@ -33,16 +34,25 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
     dudaParteSet = new Set(jugadores.filter((j) => j.playerStatus === 'injured' && (parteDe(j, lista) || {}).estado === 'duda').map((j) => String(j.id)));
     return dudaParteSet;
   };
+  // los posibles onces (7 nov, Carlos): solo de la primera jornada que aún no ha empezado, repartidos durante la semana y de uno en uno
+  // (lib/escalonar.mjs). Con el primer partido de la jornada empezado, las alineaciones fantasy están cerradas y no sirven de nada.
+  let objetivo = null, hechaPos = false;
   for (const jornada of jornadas) {
     const stats = await statsSemana(jornada).catch(() => []);
     // las previas salen casi seguidas: cada forma rota por el orden del partido en la jornada (tipos/final.mjs igual)
     const K = ordenJornada(stats);
+    const primero = Math.min(...stats.map((x) => Date.parse(x.date)).filter(Number.isFinite));
+    const esObjetivo = objetivo === null && Number.isFinite(primero) && primero > ahora;
+    if (esObjetivo) objetivo = jornada;
+    const toca = tocaPosible({ primero, ahora, config, salidos: registro ? registro.todos().filter((e) => e.tipo === 'previa').map((e) => e.t) : [] });
+    if (ventanas && !forzar && enHora && stats.some((x) => x.matchState === 1) && !(esObjetivo && toca.ok))
+      log(`  (previa) posibles onces de la J${jornada}: ${esObjetivo ? `esperan (${toca.motivo})` : objetivo === null ? 'no salen: la jornada ya ha empezado' : 'no salen aún: hay otra jornada antes'}`);
     // probarAcabados (solo pruebas, --previa-acabados=1): trata los partidos ya jugados como si fueran a empezar, para ver los onces de ESPN
-    for (const m of stats.filter((x) => x.matchState === 1 || (probarAcabados && x.matchState === 7))) {
+    for (const m of stats.filter((x) => x.matchState === 1 || (probarAcabados && x.matchState === 7)).sort((a, b) => Date.parse(a.date) - Date.parse(b.date))) {
       const saque = Date.parse(m.date);
       const falta = saque - ahora;
       const quiereConf = !ventanas || forzar ? true : falta > 0 && falta < 3 * 3600e3;
-      const quierePos = !ventanas || forzar ? true : enHora && falta > 3 * 3600e3 && falta < 36 * 3600e3;
+      const quierePos = !ventanas || forzar ? true : enHora && esObjetivo && toca.ok && !hechaPos && falta > 3 * 3600e3;
       const yaConf = registro && registro.claves.has(`onces|${m.id}`), yaPos = registro && registro.claves.has(`previa|${m.id}`);
       if (!(quiereConf && !yaConf) && !(quierePos && !yaPos)) continue;
       const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
@@ -243,6 +253,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
       const cuH = cuando(m.date, ahora);
       const hechos = { tipo: 'previa', jornada, partido: { partido: `${L}-${V}`, local: L, visitante: V, ...estadioH(L), ...(cuH ? { cuando: cuH.t } : {}), fecha: m.date || null },
         equipos: eqH, jugadores: jugH, clubes: clubesH(L, V), etiqueta: '📊 Los % de titularidad son de Fantasy Manager' };
+      if (ventanas && !forzar) hechaPos = true;   // uno por ejecución: el siguiente, tras la separación (lib/escalonar.mjs)
       out.push({ tipo: 'previa', clave: `previa|${m.id}`, jornada, texto, hechos, caduca: saque, numeros: num, partido: null,
         tarjeta: { tipo: 'onces', nombre: `previa-${m.id}`, d,
           permitidos: { numeros: [jornada, ...fm(d.local.formacion), ...fm(d.visitante.formacion), ...[...d.local.once, ...d.visitante.once, ...d.local.suplentes, ...d.visitante.suplentes].flatMap((x) => [x.pct, x.alt ? x.alt.pct : null]).filter((x) => x != null)].map(String),
