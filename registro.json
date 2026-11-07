@@ -3165,7 +3165,8 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-montero-rufian-animan-votar-memoria-conciencia-obviando-voto-util-psoe-si-puede-te-come-20261107134413.html": 1794055453000,
    "SPORT|136202042": 1794062312000,
    "SPORT|136204292": 1794067195000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
+   "SPORT|136206834": 1794072635000
   },
   "hechos": [
    {
@@ -3731,27 +3732,25 @@
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136206834": 1794076873748
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 45,
-   "redactar": 44,
-   "revisar": 29,
+   "clasificar": 46,
+   "redactar": 48,
+   "revisar": 30,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 488818,
-  "salida": 33065,
+  "entrada": 540826,
+  "salida": 34674,
   "cacheLee": 123622,
-  "cacheEscribe": 26400,
-  "dolares": 1.057495
+  "cacheEscribe": 29005,
+  "dolares": 1.175553
  },
  "recientes": {
   "onces": [
@@ -3889,5 +3888,11 @@
    "dolares": 0.052126
   }
  ],
- "fallosRedaccion": {}
+ "fallosRedaccion": {
+  "onces|112": {
+   "n": 1,
+   "t": "2026-11-07T19:06:42.135Z",
+   "ultima": "2026-11-07T19:06:42.135Z"
+  }
+ }
 }
