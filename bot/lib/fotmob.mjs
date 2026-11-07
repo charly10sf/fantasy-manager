@@ -63,9 +63,15 @@ export function leerDetalle(d) {
       if ((dec.key || []).some((k) => /goal_cancelled/.test(k))) anulados.push({ jugador: e.nameStr || (e.player && e.player.name) || '', min: Number(e.time) || 0, extra: Number(e.overloadTime) || 0, esLocal: !!e.isHome, motivo: (dec.value || [])[1] || null });
     }
   }
+  // de dónde es cada jugador de las alineaciones (lib/nacionalidad.mjs)
+  const lu = (((d || {}).content || {}).lineup) || {};
+  const paises = [];
+  for (const lado of [lu.homeTeam, lu.awayTeam]) for (const p of [...((lado && lado.starters) || []), ...((lado && lado.subs) || [])]) {
+    if (p && p.id != null && p.name && p.countryCode) paises.push({ id: String(p.id), nombre: p.name, codigo: p.countryCode });
+  }
   const st = (d && d.header && d.header.status) || {};
   return { id: String((d && d.general && d.general.matchId) || ''), enJuego: !!st.ongoing || (!!st.started && !st.finished), acabado: !!st.finished,
-    reloj: (st.liveTime && st.liveTime.long) || null, varPendiente, goles, anulados };
+    reloj: (st.liveTime && st.liveTime.long) || null, varPendiente, goles, anulados, paises };
 }
 
 const total = (g) => g.min + (g.extra || 0);

@@ -1,7 +1,9 @@
 // Pruebas sin red de lo que añade FotMob al directo (7 nov): la regla del golazo, el casado de goles, los anulados de ESPN, los contadores
 // de rasgos, la medida de fuentes y que FotMob caído no rompa nada (lib/golazo.mjs, fotmob.mjs, rasgos.mjs, fuentes-medida.mjs).
 import { golazoFotmob, golazoEspn, textoGolEspn } from '../lib/golazo.mjs';
-import { casarGol, crearFotmob, mismoNombre, distanciaM } from '../lib/fotmob.mjs';
+import { casarGol, crearFotmob, mismoNombre, distanciaM, leerDetalle } from '../lib/fotmob.mjs';
+import { gentilicio, nacionalidadFm, sinRepetidas } from '../lib/nacionalidad.mjs';
+import { comoLeLlaman } from '../lib/apodos-jugadores.mjs';
 import { ajustarGoles, conGolesEspn, hechosDeTemporada, cifrasDeTemporada, yaContado } from '../lib/rasgos.mjs';
 import { apuntarVista, apuntarSalud, resumenMedidas, lineaMedida } from '../lib/fuentes-medida.mjs';
 import { anuladosEspn, momentoEspecial } from '../tipos/directo.mjs';
@@ -60,6 +62,20 @@ apuntarVista(reg, 'directo|112|Otro|gol1', { jugador: 'Otro', minuto: "70'", vio
 apuntarSalud(reg, { ok: 8, fallos: 2, ultimoFallo: { t: 'x', motivo: '403' }, mediaMs: 420 }, t0);
 const rs = resumenMedidas(reg.datos);
 ok(rs.goles === 2 && rs.ambas === 1 && rs.soloEspn === 1 && rs.espnAntes === 1 && rs.salud.fallos === 2, `resumen: 2 goles, 1 con las dos fuentes, 1 solo ESPN (${JSON.stringify({ g: rs.goles, a: rs.ambas, s: rs.soloEspn })})`);
+
+// --- nacionalidad («el francés» en vez de repetir el nombre, 7 nov, 23:40) y el mote de Mbappé ---
+const dn = leerDetalle({ general: { matchId: 1 }, header: { status: {} }, content: { matchFacts: { events: { events: [] } }, lineup: {
+  homeTeam: { starters: [{ id: 10, name: 'Kylian Mbappé', countryCode: 'FRA' }, { id: 11, name: 'Federico Valverde', countryCode: 'URU' }, { id: 12, name: 'Dani Carvajal', countryCode: 'ESP' }], subs: [{ id: 13, name: 'Arda Güler', countryCode: 'TUR' }] },
+  awayTeam: { starters: [{ id: 20, name: 'Antoine Griezmann', countryCode: 'FRA' }, { id: 21, name: 'Rodrigo De Paul', countryCode: 'ARG' }], subs: [] } } } });
+ok(dn.paises.length === 6 && dn.paises[0].codigo === 'FRA', 'leerDetalle: saca el país de titulares y suplentes de los dos equipos');
+ok(nacionalidadFm(dn, { id: 10 }) === 'francés' && nacionalidadFm(dn, { id: '11' }) === 'uruguayo', 'nacionalidad por id de FotMob');
+ok(nacionalidadFm(dn, { nombre: 'Federico Valverde' }) === 'uruguayo' && nacionalidadFm(dn, { nombre: 'R. De Paul' }) === 'argentino' && nacionalidadFm(dn, { nombre: 'Arda Güler' }) === 'turco', 'por nombre, completo o con inicial');
+ok(nacionalidadFm(dn, { id: 12 }) === null && gentilicio('ESP') === null, 'los españoles no llevan nacionalidad');
+ok(nacionalidadFm(dn, { nombre: 'Nadie Conocido' }) === null && nacionalidadFm(null, { id: 10 }) === null && nacionalidadFm({ paises: [] }, { id: 10 }) === null, 'sin dato o sin FotMob: null, sin lanzar');
+ok(gentilicio('XXX') === null && gentilicio(undefined) === null && gentilicio('fra') === 'francés', 'código raro: null; en minúsculas vale');
+ok(nacionalidadFm(dn, { nombre: 'Griezmann' }) === 'francés' && nacionalidadFm({ paises: [{ id: '1', nombre: 'Juan Pérez', codigo: 'ARG' }, { id: '2', nombre: 'Ana Pérez', codigo: 'URU' }] }, { nombre: 'Pérez' }) === null, 'por apellido solo si apunta a uno; si hay dos con ese apellido, null');
+ok(JSON.stringify(sinRepetidas('francés', 'francés')) === '[null,null]' && JSON.stringify(sinRepetidas('francés', 'uruguayo')) === '["francés","uruguayo"]' && JSON.stringify(sinRepetidas('francés', null)) === '["francés",null]', 'si goleador y asistente son del mismo país, ninguno lo lleva');
+ok(comoLeLlaman('Mbappé').includes('la Tortuga') && comoLeLlaman('Mbappé').includes('Kylian Mbappé'), 'Mbappé: «la Tortuga» y su nombre completo');
 
 // --- FotMob caído: nada rompe, todo null o [] ---
 const caido = crearFotmob({ pedir: async () => { throw new Error('HTTP 403'); }, log: () => {} });
