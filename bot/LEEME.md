@@ -127,6 +127,18 @@ Gasto: el revisor suma unos 0,008 $ por tuit y pulir con Claude unos 0,01 $ por 
 
 Desde el 7 nov se dibujan al doble (2400 de ancho; `aPng` en lib/tarjetas.mjs baja a 1,6 o a 1 si el PNG pasa de 4,8 MB): a 1200, X las enseñaba borrosas. La de final mide 1200x880 (antes 675) para que las caras pasen de 24 a 36 de radio (Carlos, 7 nov).
 
+**Rediseño HD (7 nov, Carlos: «rediseña todas las tarjetas para HD»).** Todas llevan el estilo de la de onces (PR #74) con las piezas
+`caraHD`, `pastilla`, `panel` y `titular` de lib/estilo.mjs: fondo casi negro con el brillo del club, rejilla de puntos, halo del club
+tras cada cara, nombres en pastilla translúcida y cabecera sin banda. Caras con la cabeza entera (zoom 2,3) y radio de hasta 64
+(`R_MAX`): la foto de LaLiga es de 256 px y a más de ~300 px en el PNG a 2400 se ve blanda. Ancho lógico 1200 y alto según lo que lleve:
+final ~816 (MEJORES y PEORES en filas de tres caras con los puntos en la chapa), resumen 950 (seis fichas 3x2), mercado 1032 (suben y
+bajan en dos paneles de cinco), once ideal 1300 (vertical, campo como el de onces), bajas de un equipo 704 y de varios 620-940 (fichas),
+apercibidos hasta 1500 (un panel por club en 1, 2 o 3 columnas; `planApercibidos` elige la opción con las caras más grandes que quepa), y
+la carta de jugador 860 (MVP, directo, penalti parado y la baja de uno: panel con el filo del metal, la cara, el nombre, media y puntos
+totales, y a la derecha las últimas jornadas y el valor con su gráfica; sin historial, 820). Mismos textos: el validador no cambia. Todas,
+con antes y después: `node bot/prueba/tarjetas-todas.mjs --salida=/tmp/tarjetas --jornada=11` (23, con el once ideal y el penalti
+parado; `--estres=1` para los nombres largos).
+
 Tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov). Desde el 3 nov, las que hablan de UN jugador concreto (la de
 jugador y la de bajas o novedades de uno solo) van en carta de coleccionista (diseño propio, `lib/carta.mjs`, letra Barlow
 Condensed), con el metal según su valor de mercado: leyenda 90 M o más, oro 35-90 M, plata 10-35 M, bronce el resto. Desde el 5 nov

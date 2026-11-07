@@ -186,6 +186,51 @@ export function marca(x, y, { ancla = 'start' } = {}) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
+// Piezas HD (7 nov, rediseño de todas las tarjetas con el estilo de la de onces, PR #74). Las tarjetas se dibujan a 2400 de ancho
+// (`aPng`, el doble del lógico) y las caras de LaLiga son de 256x256 como mucho: a más de ~300 px de lado en el PNG se ven blandas.
+// Con la cabeza entera (zoom 2,3 veces el radio) la foto mide 2,3·R lógicos, 4,6·R en el PNG: R no pasa de 64 (294 px).
+export const ZOOM_HD = 2.3, R_MAX = 64;
+/** la cara con la cabeza entera, el halo del club detrás y el aro; sin foto, una silueta en el color del club */
+export function caraHD(buf, cx, cy, R, color, { aro = color, grosor = null, halo = 1.5, haloOp = 0.34 } = {}) {
+  const r = Math.min(R, R_MAX), gz = grosor ?? Math.max(3, Math.round(r * 0.06));
+  let s = '';
+  if (halo) { const h = id('hl'); s += `<defs><radialGradient id="${h}"><stop offset="0.5" stop-color="${color}" stop-opacity="${haloOp}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${r * halo}" fill="url(#${h})"/>`; }
+  if (buf) return s + caraCirculo(buf, cx, cy, r, { aro, grosor: gz, fondoColor: color, zoom: ZOOM_HD });
+  const c = id('sc');
+  return s + `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs>`
+    + `<circle cx="${cx}" cy="${cy + Math.max(2, r * 0.08)}" r="${r + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#1a1721"/>`
+    + `<g clip-path="url(#${c})" fill="${color}" fill-opacity="0.55"><circle cx="${cx}" cy="${cy - r * 0.18}" r="${r * 0.36}"/><ellipse cx="${cx}" cy="${cy + r * 0.86}" rx="${r * 0.72}" ry="${r * 0.6}"/></g>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${aro}" stroke-width="${gz}"/>`;
+}
+/** el nombre (u otro texto corto) en una pastilla translúcida con filo, como en la tarjeta de onces; centrada en cx con la base en cy */
+export function pastilla(t, cx, cy, px, wMax, { color = '#ffffff', peso = 800 } = {}) {
+  const pp = tamano(t, px, wMax - px * 0.6, 0.5), wt = Math.min(wMax, medir(t, pp, B, 0.5) + px * 0.9), h = px * 1.42;
+  return `<rect x="${cx - wt / 2}" y="${cy - px}" width="${wt}" height="${h}" rx="${h / 2}" fill="#0b0d10" fill-opacity="0.8"/>`
+    + `<rect x="${cx - wt / 2 + 0.75}" y="${cy - px + 0.75}" width="${wt - 1.5}" height="${h - 1.5}" rx="${h / 2}" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>`
+    + texto(cx, cy, t, { px, peso, color, ancla: 'middle', max: wMax - px * 0.6, espacio: 0.5 });
+}
+/** un panel moderno (el campo de la tarjeta de onces sin las líneas): casi negro, el brillo de un color arriba, la rejilla de puntos,
+    filo suave y sombra. `linea`: y (relativa al panel) de un filete de luz del color, bajo una cabecera */
+export function panel(x, y, w, h, color, { rx = 30, brillo = 0.36, linea = null, borde = null } = {}) {
+  const g = id('pg'), gv = id('pv'), pt = id('pp'), cl = id('pc'), gb = id('pb');
+  return `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}"/></clipPath>${lineal(g, [[0, '#15171d'], [0.55, '#0e1014'], [1, '#0a0b0e']])}`
+    + `<radialGradient id="${gv}" cx="0.5" cy="0" r="0.8"><stop offset="0" stop-color="${color}" stop-opacity="${brillo}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient>`
+    + lineal(gb, [[0, color, 0], [0.5, color, 1], [1, color, 0]], { x1: 0, y1: 0, x2: 1, y2: 0 })
+    + `<pattern id="${pt}" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="12" cy="12" r="1.1" fill="#fff" fill-opacity="0.05"/></pattern></defs>`
+    + `<rect x="${x}" y="${y + 10}" width="${w}" height="${h}" rx="${rx}" fill="#000" opacity="0.5"/>`
+    + `<g clip-path="url(#${cl})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${Math.min(h, Math.max(260, h * 0.7))}" fill="url(#${gv})"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pt})"/>`
+    + (linea != null ? `<rect x="${x}" y="${y + linea - 1}" width="${w}" height="2" fill="url(#${gb})"/>` : '') + `</g>`
+    + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="${rx - 1}" fill="none" stroke="${borde || '#fff'}" stroke-opacity="${borde ? 0.85 : 0.09}" stroke-width="${borde ? 2.5 : 2}"/>`;
+}
+/** cabecera sin banda, centrada: el titular en cursiva con su degradado y debajo una línea tenue espaciada (como «POSIBLES ONCES») */
+export function titular(titulo, grad, sub, { y = 86, px = 72, sub2 = null, max = 1000 } = {}) {
+  return texto(ANCHO / 2, y, titulo, { px, peso: 800, italica: true, color: `url(#${grad})`, ancla: 'middle', max })
+    + (sub ? texto(ANCHO / 2, y + 40, sub, { px: 26, peso: 700, color: TINTA, ancla: 'middle', espacio: 3, max: 1080 }) : '')
+    + (sub2 ? texto(ANCHO / 2, y + 74, sub2, { px: 22, peso: 700, color: TENUE, ancla: 'middle', espacio: 4, max: 1080 }) : '');
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
 // Estado de un jugador (bajas y novedades)
 export const ESTADO_TARJETA = {
   lesionado: { txt: 'LESIONADO', color: MALO },

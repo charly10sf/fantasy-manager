@@ -48,6 +48,10 @@ const mvpDe = (m) => [...m.local.players, ...m.visitor.players].sort((a, b) => b
 const partidoDe = (p) => stats.find((m) => [m.local.id, m.visitor.id].map(String).includes(String(p.teamId)) && m.matchState === 7);
 const casos = [['jugador-leyenda', 'Lamine Yamal', 'mvp'], ['jugador-oro', 'Grimaldo', 'doblete'], ['jugador-plata', 'Cabrera', 'gol'], ['jugador-bronce', 'Hinojo', 'roja']];
 for (const [n, nom, motivo] of casos) { const p = J(nom), m = partidoDe(p); if (!m) { console.log('sin partido', nom); continue; } await dibuja(n, { tipo: 'mvp', partido: m.id, jugadorId: p.id, motivo }); }
+// el portero que para un penalti (#77): el portero con más puntos de la jornada
+{ const por = stats.filter((m) => m.matchState === 7).flatMap((m) => [...m.local.players, ...m.visitor.players].map((p) => ({ p, m })))
+    .map(({ p, m }) => ({ m, pl: jugadores.find((x) => String(x.id) === String(p.id)), pts: p.weekPoints })).filter((x) => x.pl && x.pl.positionId === '1').sort((a, b) => b.pts - a.pts)[0];
+  if (por) await dibuja('jugador-parada', { tipo: 'mvp', partido: por.m.id, jugadorId: por.pl.id, motivo: 'parada' }); }
 // --- resumen
 const ordenados = [...stats.flatMap((m) => [...m.local.players, ...m.visitor.players])].filter((p) => p.weekPoints != null).sort((a, b) => b.weekPoints - a.weekPoints);
 const filasRes = (lista) => lista.map((p) => { const pl = jugadores.find((x) => String(x.id) === String(p.id)); const e = equipos[String(pl.teamId)];
@@ -102,6 +106,18 @@ for (const b of baj) await dibuja(b.nombre, { tipo: 'caidas', tarjeta: b.t });
 const ap = (nombres) => tarjetaApercibidos({ jornada: jornada + 1, filas: nombres.map((n) => fila(J(n), { estado: 'duda' })), clave: `ap-${nombres.length}` });
 await dibuja('apercibidos-2', { tipo: 'sancionados', tarjeta: ap(['Cabrera', 'Roberto', 'Bauza', 'Cardona']) });
 await dibuja('apercibidos-8', { tipo: 'sancionados', tarjeta: ap(['Cabrera', 'Roberto', 'Bauza', 'Cardona', 'Grimaldo', 'Bellingham', 'De Frutos', 'Fermín']) });
+
+// --- once ideal (3-4-3, con apuesta y chollo; los puntos esperados, inventados)
+{ const noms = ['Unai Simón', 'Cubarsí', 'Marcos Llorente', 'Grimaldo', 'Pedri', 'Fermín', 'Valverde', 'Cabrera', 'Lamine Yamal', 'Mbappé', 'Budimir'];
+  const posDe = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
+  const once = noms.map((n, i) => { let p; try { p = J(n); } catch { return null; } const e = equipos[String(p.teamId)] || {};
+    return { id: p.id, pos: posDe[Number(p.positionId)], nombre: p.nickname, equipo: e.corto, club: e.nombre, pts: fmt(Math.round((8.9 - i * 0.3) * 10) / 10), rol: i === 9 ? 'apuesta' : i === 7 ? 'chollo' : null, caraUrl: caraUrl(p), escudoUrl: e.badge }; }).filter(Boolean)
+    .sort((a, b) => ['POR', 'DEF', 'MED', 'DEL'].indexOf(a.pos) - ['POR', 'DEF', 'MED', 'DEL'].indexOf(b.pos));
+  const c = { 2: 0, 3: 0, 4: 0 }; for (const x of once) if (x.pos !== 'POR') c[{ DEF: 2, MED: 3, DEL: 4 }[x.pos]]++;
+  const form = `${c[2]}-${c[3]}-${c[4]}`;
+  if (once.length === 11) await dibuja('onceideal', { tipo: 'onceideal', tarjeta: { tipo: 'onceideal', nombre: 'onceideal-x', d: { jornada: jornada + 1, formacion: form, valor: '612 M', apuesta: true, chollo: true, once },
+    permitidos: { numeros: [jornada + 1, c[2], c[3], c[4], ...once.map((x) => x.pts), '612 M'].map(String), palabras: ['ONCE', 'IDEAL', 'FORMACIÓN', 'PUNTOS', 'ESPERADOS', 'APUESTA', 'CHOLLO', 'VALOR', 'M', ...once.map((x) => x.nombre)] } } });
+  else console.log('once ideal: faltan jugadores', once.length); }
 
 // ---------------- estrés: los nombres más largos de la liga
 if (arg('estres') === '1') {
