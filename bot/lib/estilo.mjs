@@ -275,3 +275,56 @@ export function pildoraTit(pct, cx, cy, px, wMax) {
 export const anchoPildoraTit = (pct, px) => medir(txtTit(pct), px, B, 1) + px * 1.8;
 /** ancho de la etiqueta del estado (para colocarla a la derecha) */
 export const anchoPildora = (f, px) => medir(txtEstado(f), px, B, 1) + px * 2.6;
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Iconos de lo que pasa (Carlos, 7 nov 14:58: «si es gol que haya un balón, que sea claramente quien marca y asiste, y en las de roja
+// una tarjeta roja»). Dibujados a mano, sin texto (el validador no los mira). Todos centrados en (cx, cy) con radio o alto s.
+/** balón clásico: blanco, el pentágono negro en el centro, costuras finas y los cinco pentágonos de alrededor asomando por el borde */
+export function iconoBalon(cx, cy, r) {
+  const c = id('bl'), pt = (rr, a, x0 = cx, y0 = cy) => [x0 + rr * Math.cos(a), y0 + rr * Math.sin(a)];
+  const pent = (x0, y0, rr, a0) => [0, 1, 2, 3, 4].map((k) => pt(rr, a0 + k * 2 * Math.PI / 5, x0, y0).map((v) => v.toFixed(1)).join(',')).join(' ');
+  const a0 = -Math.PI / 2, rc = r * 0.34, ro = r * 0.3, d = r * 1.0, sw = (r * 0.06).toFixed(1);
+  let s = `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs>`
+    + `<circle cx="${cx}" cy="${cy + r * 0.06}" r="${r}" fill="#000" opacity="0.35"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#f7f7f7"/><g clip-path="url(#${c})">`
+    + `<polygon points="${pent(cx, cy, rc, a0)}" fill="#15151a"/>`;
+  for (let k = 0; k < 5; k++) {
+    const a = a0 + k * 2 * Math.PI / 5, [ox, oy] = pt(d, a);
+    // el pentágono de fuera, en la dirección del vértice y con una punta hacia el centro, unido al del centro por una costura
+    s += `<polygon points="${pent(ox, oy, ro, a + Math.PI)}" fill="#15151a"/>`;
+    const [vx, vy] = pt(rc, a), [ix, iy] = pt(d - ro, a);
+    s += `<line x1="${vx.toFixed(1)}" y1="${vy.toFixed(1)}" x2="${ix.toFixed(1)}" y2="${iy.toFixed(1)}" stroke="#15151a" stroke-width="${sw}"/>`;
+    // costuras entre dos pentágonos de fuera (los lados de los hexágonos)
+    const [px, py] = pt(ro, a + Math.PI + 2 * Math.PI / 5, ox, oy), [qx, qy] = pt(r * 1.1, a + Math.PI / 5);
+    s += `<line x1="${px.toFixed(1)}" y1="${py.toFixed(1)}" x2="${qx.toFixed(1)}" y2="${qy.toFixed(1)}" stroke="#15151a" stroke-width="${sw}"/>`;
+  }
+  return s + `</g><circle cx="${cx - r * 0.32}" cy="${cy - r * 0.38}" r="${r * 0.28}" fill="#fff" opacity="0.3"/>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r - 0.75}" fill="none" stroke="#000" stroke-opacity="0.35" stroke-width="1.5"/>`;
+}
+/** tarjeta roja, algo inclinada, con brillo arriba; h es el alto */
+export function iconoRoja(cx, cy, h, { giro = 12 } = {}) {
+  const w = h * 0.7, g = id('tr');
+  return `<defs>${lineal(g, [[0, '#ff5a5f'], [0.5, '#e3202c'], [1, '#a90f1a']], { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs>`
+    + `<g transform="rotate(${giro} ${cx} ${cy})"><rect x="${cx - w / 2 + h * 0.04}" y="${cy - h / 2 + h * 0.06}" width="${w}" height="${h}" rx="${h * 0.09}" fill="#000" opacity="0.4"/>`
+    + `<rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h * 0.09}" fill="url(#${g})"/>`
+    + `<rect x="${cx - w / 2 + 1}" y="${cy - h / 2 + 1}" width="${w - 2}" height="${h - 2}" rx="${h * 0.09 - 1}" fill="none" stroke="#fff" stroke-opacity="0.35" stroke-width="2"/></g>`;
+}
+/** la asistencia: una bota de fútbol con sus tacos, mirando a la derecha; r es la mitad del ancho */
+export function iconoPase(cx, cy, r, color = '#120f16') {
+  const X = (v) => (cx + v * r).toFixed(1), Y = (v) => (cy + v * r).toFixed(1);
+  const bota = `M${X(-0.92)},${Y(0.22)} L${X(-0.92)},${Y(-0.5)} Q${X(-0.92)},${Y(-0.62)} ${X(-0.8)},${Y(-0.62)} L${X(-0.38)},${Y(-0.62)} Q${X(-0.27)},${Y(-0.62)} ${X(-0.24)},${Y(-0.52)}`
+    + ` L${X(-0.12)},${Y(-0.2)} Q${X(0.35)},${Y(-0.12)} ${X(0.78)},${Y(0.0)} Q${X(0.96)},${Y(0.06)} ${X(0.96)},${Y(0.22)} L${X(0.96)},${Y(0.3)} L${X(-0.92)},${Y(0.3)} Z`;
+  const tacos = [-0.76, -0.46, 0.22, 0.56].map((x) => `<rect x="${X(x)}" y="${Y(0.3)}" width="${(r * 0.16).toFixed(1)}" height="${(r * 0.16).toFixed(1)}" rx="${(r * 0.04).toFixed(1)}" fill="${color}"/>`).join('');
+  const cordones = [[-0.1, -0.14], [0.08, -0.1], [0.26, -0.06]].map(([x, y]) => `<line x1="${X(x)}" y1="${Y(y)}" x2="${X(x - 0.1)}" y2="${Y(y - 0.2)}" stroke="#fff" stroke-opacity="0.85" stroke-width="${(r * 0.06).toFixed(1)}" stroke-linecap="round"/>`).join('');
+  return `<path d="${bota}" fill="${color}"/>` + tacos + cordones
+    + `<rect x="${X(-0.92)}" y="${Y(0.08)}" width="${(r * 1.88).toFixed(1)}" height="${(r * 0.07).toFixed(1)}" fill="#fff" fill-opacity="0.35"/>`;
+}
+/** insignia redonda para poner sobre la cara (abajo a la derecha): el fondo, el aro y el icono ('gol' | 'asistencia' | 'roja') */
+export function insignia(tipo, cx, cy, r) {
+  const fondoI = tipo === 'asistencia' ? '#ffffff' : tipo === 'roja' ? '#1a1721' : '#1a1721';
+  let s = `<circle cx="${cx}" cy="${cy + 3}" r="${r + 4}" fill="#000" opacity="0.45"/><circle cx="${cx}" cy="${cy}" r="${r + 4}" fill="${tipo === 'gol' ? '#e2bd5a' : tipo === 'roja' ? '#e3202c' : '#d9dbe0'}"/>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fondoI}"/>`;
+  if (tipo === 'gol') s += iconoBalon(cx, cy, r * 0.78);
+  else if (tipo === 'roja') s += iconoRoja(cx, cy, r * 1.15, { giro: 10 });
+  else s += iconoPase(cx, cy, r * 0.8);
+  return s;
+}

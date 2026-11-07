@@ -7,9 +7,24 @@
 // Las piezas comunes (letra, fondo, degradados, marca, etiquetas de estado) están en estilo.mjs, compartidas con tarjetas.mjs.
 import { coloresClub } from './colores.mjs';
 import { ANCHO, ROJO, VERDE, MALO, TINTA, TENUE, FONDO, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
-  escudo, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja, caraHD, panel, R_MAX } from './estilo.mjs';
+  escudo, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja, caraHD, panel, R_MAX, iconoBalon, iconoRoja, iconoPase, insignia } from './estilo.mjs';
 
 const ABREV = { Portero: 'POR', Defensa: 'DEF', Centrocampista: 'MED', Delantero: 'DEL', Entrenador: 'ENT' };
+// el icono de lo que ha hecho el jugador (Carlos, 7 nov 14:58): balón si marca, el pase si asiste, tarjeta roja si lo expulsan
+const ICONO = { gol: 'gol', doblete: 'gol', triplete: 'gol', asistencia: 'asistencia', roja: 'roja' };
+/** el icono grande junto al titular (GOL, ROJA…), a la derecha del texto */
+function iconoTitulo(tipo, titulo) {
+  if (!tipo) return '';
+  const w = Math.min(880, medir(titulo, 140, B) * 1.04), x = 40 + w + 64, y = 100;
+  return tipo === 'gol' ? iconoBalon(x, y, 48) : tipo === 'roja' ? iconoRoja(x, y, 108) : `<circle cx="${x}" cy="${y}" r="50" fill="#e2bd5a"/>` + iconoPase(x, y, 40);
+}
+/** chip con el icono dentro, a la izquierda del texto (el GOL dorado con su balón, la ASISTENCIA blanca con el pase) */
+function chipIcono(txt, tipo, cx, cy, px, { relleno, tinta }) {
+  const r = px * 0.62, tw = medir(txt, px, B, 2), w = tw + px * 1.8 + r * 2 + px * 0.4, h = px * 1.75, x0 = cx - w / 2, xi = x0 + px * 0.9 + r;
+  return `<rect x="${x0}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${relleno}"/>`
+    + (tipo === 'gol' ? iconoBalon(xi, cy, r) : tipo === 'roja' ? iconoRoja(xi, cy, r * 2) : iconoPase(xi, cy, r, tinta))
+    + texto(xi + r + px * 0.4 + tw / 2, cy + px * 0.36, txt, { px, peso: 800, color: tinta, espacio: 2, ancla: 'middle' });
+}
 
 // --- metales -----------------------------------------------------------------------------------------------------------------
 const METAL = {
@@ -40,6 +55,7 @@ function panelJugador(x, y, w, h, o) {
   const t = o.metal, gm = gradMetal(t), cx = x + w / 2, cy = y + 150, R = R_MAX;
   let s = gm.defs + panel(x, y, w, h, o.club.vivo, { rx: 32, brillo: 0.5, borde: `url(#${gm.g})` })
     + caraHD(o.cara, cx, cy, R, o.club.vivo, { aro: `url(#${gm.g})`, grosor: 6, halo: 1.9, haloOp: 0.5 });
+  if (o.insignia) s += insignia(o.insignia, cx + R * 0.78, cy + R * 0.78, 24);
   if (o.escudo) s += escudo(o.escudo, x + 58, y + 62, 70);
   if (o.puesto) s += chip(o.puesto, x + w - 58, y + 58, 26, { relleno: '#ffffff', tinta: '#120f16', pad: 1.6, espacio: 1.5 }).s;
   const yN = cy + R + 76;
@@ -134,7 +150,8 @@ export function svgJugadorCarta(d) {
     + cabeceraCarta(motivo.toUpperCase(), oro.g, [...resto, ...(d.minuto && !d.sinPuntos ? [d.minuto] : [])].join(' · ').toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
     // en directo y sin puntos todavía (LaLiga no ha sumado la jugada): arriba el minuto «EN JUEGO» en vez de un «0 PTS»
     + (d.sinPuntos ? (d.minuto ? placaVivo(d.minuto) : '') : placa(String(d.ptsJornada), 'PTS', oro.g))
-    + panelJugador(44, 284, 500, 490, { metal, club: c, cara: d.cara, escudo: d.club.escudo, puesto: ABREV[d.posicion] || d.posicion, nombre: d.nombre,
+    + iconoTitulo(ICONO[d.motivo], motivo.toUpperCase())
+    + panelJugador(44, 284, 500, 490, { metal, club: c, cara: d.cara, escudo: d.club.escudo, puesto: ABREV[d.posicion] || d.posicion, nombre: d.nombre, insignia: ICONO[d.motivo],
       cifras: [[num1(d.media), 'PUNTOS DE MEDIA'], [String(d.total), 'PUNTOS TOTALES']] })
     + historial(590, 300, d, oro.g);
   return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
@@ -193,15 +210,16 @@ export const ALTO_GOL_ASIS = 1010;
 function panelDuo(x, y, w, h, j, rol, gOro) {
   const t = METAL[metalDe(j.valorHoy)], gm = gradMetal(t), c = coloresClub(j.club.nombre), cx = x + w / 2, cy = y + 150, R = R_MAX;
   let s = gm.defs + panel(x, y, w, h, c.vivo, { rx: 32, brillo: 0.5, borde: `url(#${gm.g})` })
-    + caraHD(j.cara, cx, cy, R, c.vivo, { aro: `url(#${gm.g})`, grosor: 6, halo: 1.9, haloOp: 0.5 });
+    + caraHD(j.cara, cx, cy, R, c.vivo, { aro: `url(#${gm.g})`, grosor: 6, halo: 1.9, haloOp: 0.5 })
+    + insignia(rol === 'ASISTENCIA' ? 'asistencia' : 'gol', cx + R * 0.78, cy + R * 0.78, 24);
   if (j.club.escudo) s += escudo(j.club.escudo, x + 58, y + 62, 70);
   const pu = ABREV[j.posicion] || j.posicion;
   if (pu) s += chip(pu, x + w - 58, y + 58, 26, { relleno: '#ffffff', tinta: '#120f16', pad: 1.6, espacio: 1.5 }).s;
   const yN = cy + R + 74;
   s += texto(cx, yN, String(j.nombre).toUpperCase(), { px: 56, peso: 800, ancla: 'middle', max: w - 48, espacio: 0.5 });
   const esGol = rol !== 'ASISTENCIA';
-  const ch = chip(rol, cx, yN + 44, 26, esGol ? { relleno: '#e2bd5a', tinta: '#2a1c04', pad: 1.8, espacio: 2 } : { relleno: '#ffffff', tinta: '#120f16', pad: 1.8, espacio: 2 });
-  s += ch.s + `<rect x="${x + 40}" y="${yN + 82}" width="${w - 80}" height="1.5" fill="#fff" fill-opacity="0.12"/>`;
+  s += chipIcono(rol, esGol ? 'gol' : 'asistencia', cx, yN + 46, 26, esGol ? { relleno: '#e2bd5a', tinta: '#2a1c04' } : { relleno: '#ffffff', tinta: '#120f16' })
+    + `<rect x="${x + 40}" y="${yN + 82}" width="${w - 80}" height="1.5" fill="#fff" fill-opacity="0.12"/>`;
   // las cifras: puntos en la jornada (solo si ya los hay), media y valor
   const cifras = [];
   if (!j.sinPuntos) cifras.push([String(j.ptsJornada), 'EN LA JORNADA', j.ptsJornada < 0 ? MALO : '#e2bd5a']);
@@ -229,7 +247,7 @@ export function svgGolAsistencia(d) {
   let s = oro.defs + fondo([[320, 560, 620, cg.vivo, 0.5], [900, 560, 620, cg.vivo, 0.35]], H)
     // el minuto, en la placa si está en juego; si no, junto al marcador (una sola vez)
     + cabeceraCarta(d.titulo, oro.g, [d.marcador, ...(d.minuto && !d.enJuego ? [d.minuto] : [])].join(' · ').toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
-    + (d.enJuego && d.minuto ? placaVivo(d.minuto) : '')
+    + (d.enJuego && d.minuto ? placaVivo(d.minuto) : '') + iconoTitulo('gol', d.titulo)
     + panelDuo(44, 290, 540, 640, d.gol, d.titulo.replace(/[¡!]/g, ''), oro.g)
     + panelDuo(616, 290, 540, 640, d.asis, 'ASISTENCIA', oro.g);
   return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
