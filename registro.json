@@ -1469,7 +1469,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/": 1793829352000,
    "SPORT|136102061": 1793851297000,
    "SPORT|136099973": 1793829833000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/04/mijatovic-senala-el-motivo-detras-del-renacer-de-valverde-si-sienten-que-el-entrenador-tiene-respaldo-del-club-aceptan-todo-cadena-ser/": 1793834838000,
@@ -1670,18 +1669,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maffeo-estalla-descanso-valencia-real-madrid-no-me-apetece-entrevista-20261107_3470873.html": 1794085302000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/zaid-romero-esta-de-vuelta-f202611-n/",
-    "medio": "AS",
-    "t": 1793829352000,
-    "id": "2924",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Zaid Romero vuelve a los planes tras un mes",
-    "motivo": "lesion",
-    "plazo": "un mes",
-    "nums": []
-   },
    {
     "guid": "SPORT|136099973",
     "medio": "SPORT",
@@ -3125,7 +3112,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-suspende-badajoz-tenerife-copa-rey-20261104_3468865.html": 1793829147000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/04/valencia-cf-prepara-llenazo-mestalla-136098642.html": 1793829375000,
    "SPORT|136102059": 1793851285000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/intencion-disputen-todos-partidos-laliga-salvo-aplazados-20261105_3468892.html": 1793833897000,
