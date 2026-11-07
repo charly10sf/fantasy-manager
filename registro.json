@@ -1315,7 +1315,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/el-calvario-de-quique-y-mariano-en-nervion-hubo-un-desgaste-terrible-f202611-n/": 1793783139000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247063/eric-christensen-esperan-llegar-metropolitano.html": 1793784669000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-avisa-hansi-flick-gestion-rodri-lesion-jugar-atletico-madrid-jugado-minutos-seguro-seguidores-no-entienden-20261104_3467990.html": 1793784789000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antiviolencia-pide-60-001-euros_0_2008420320.html": 1793786458000,
@@ -1518,7 +1517,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261107/1004248138/garcia-plaza-esto-meterla-porteria.html": 1794006507000,
    "SPORT|136188211": 1794024086000,
    "AS|https://as.com/futbol/videos/es-un-portento-fisico-y-este-video-lo-demuestra-el-brutal-entrenamiento-de-diomande-f202611-v/": 1794038839000,
-   "AS|https://as.com/futbol/valverde-vuelve-al-lateral-f202611-n/": 1794038070000
+   "AS|https://as.com/futbol/valverde-vuelve-al-lateral-f202611-n/": 1794038070000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248129/real-letal-rival-categoria-me-sorprende-oyarzabal-no-balon-oro.html": 1794041366000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248132/alvaro-garcia-valentin-cinco-bajas-notables-rayo.html": 1794041216000
   },
   "hechos": [
    {
@@ -2216,11 +2217,26 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248132/alvaro-garcia-valentin-cinco-bajas-notables-rayo.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794041216000,
+    "id": "1029",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Álvaro García no estará frente a la Real Sociedad",
+    "motivo": "lesión sufrida frente al Celta",
+    "plazo": "",
+    "nums": [
+     3,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-07",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -3054,7 +3070,6 @@
    "SPORT|136072311": 1793787078000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261104/1004247085/tenerife-pide-aplazar-partido-granada-hay-cosas-jugadores-no-tendrian-haber-visto.html": 1793786621000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261104/1004247067/sabadell-descansa-no-pierde-vista-liga.html": 1793784767000,
-   "MARCA|https://www.marca.com/futbol/elche/2026/11/04/version-completa-victor-chust-he-mejorado-balon.html": 1793783141000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
@@ -3226,21 +3241,6 @@
     "oficial": false,
     "contexto": "",
     "detalle": "Petición oficial de la AFE a RFEF, LaLiga y UEFA",
-    "nums": []
-   },
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/elche/2026/11/04/version-completa-victor-chust-he-mejorado-balon.html",
-    "medio": "MARCA",
-    "t": 1793783141000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 0,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "",
     "nums": []
    },
    {
@@ -3829,17 +3829,17 @@
  "ia": {
   "dia": "2026-11-07",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 13,
    "revisar": 12,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 72896,
-  "salida": 11172,
+  "entrada": 74951,
+  "salida": 11372,
   "cacheLee": 97572,
   "cacheEscribe": 8334,
-  "dolares": 0.238429
+  "dolares": 0.238735
  },
  "recientes": {
   "onces": [
