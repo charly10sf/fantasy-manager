@@ -209,6 +209,38 @@ export const EVENTOS = [
   ['second_yellow_card', 'am2', 'Segunda amarilla', 'Segundas amarillas'],
   ['red_card', 'roja', 'Roja', 'Rojas'],
 ];
+// los motivos de los puntos (las claves de playerStats de LaLiga Fantasy), en el orden en que se enseñan en el desglose
+// (lo pidió Domy el 8 nov: al acabar un partido, la lista de cada jugador con sus puntos y por qué)
+export const MOTIVOS = [
+  ['mins_played', (c) => `Jugar (${c}')`],
+  ['goals', (c) => (c > 1 ? `${c} goles` : 'Gol')],
+  ['goal_assist', (c) => (c > 1 ? `${c} asistencias` : 'Asistencia')],
+  ['offtarget_att_assist', (c) => (c > 1 ? `${c} asistencias sin gol` : 'Asistencia sin gol')],
+  ['penalty_won', () => 'Penalti provocado'],
+  ['penalty_save', (c) => (c > 1 ? `${c} penaltis parados` : 'Penalti parado')],
+  ['saves', (c) => `Paradas (${c})`],
+  ['goals_conceded', (c, pts) => (c || pts < 0 ? `Goles encajados (${c})` : 'Portería a cero')],
+  ['effective_clearance', (c) => `Despejes (${c})`],
+  ['ball_recovery', (c) => `Recuperaciones (${c})`],
+  ['pen_area_entries', (c) => `Balones al área (${c})`],
+  ['total_scoring_att', (c) => `Tiros (${c})`],
+  ['won_contest', (c) => `Regates (${c})`],
+  ['poss_lost_all', (c) => `Pérdidas (${c})`],
+  ['penalty_failed', () => 'Penalti fallado'],
+  ['penalty_conceded', () => 'Penalti cometido'],
+  ['own_goals', (c) => (c > 1 ? `${c} goles en propia` : 'Gol en propia')],
+  ['yellow_card', () => 'Amarilla'],
+  ['second_yellow_card', () => 'Segunda amarilla'],
+  ['red_card', () => 'Roja'],
+  ['marca_points', () => 'Nota de los medios'],
+];
+/** el texto de un motivo ([clave, cuántas, puntos]); una clave que no conocemos sale tal cual */
+export function motivoTxt([k, c, pts]) {
+  const m = MOTIVOS.find((x) => x[0] === k);
+  const t = m ? m[1](c, pts) : k.replace(/_/g, ' ');
+  return `${t} ${pts > 0 ? '+' : '−'}${String(Math.abs(pts)).replace('.', ',')}`;
+}
+export const ordenMotivo = (k) => { const i = MOTIVOS.findIndex((x) => x[0] === k); return i < 0 ? 99 : i; };
 /*
  * Para el diagnóstico: una muestra de lo que da LaLiga de verdad en una jornada, con las claves que trae cada cosa
  * (se guardan en `fm-muestra-vivo`, una por clave y como mucho cada 10 minutos). Así, con un partido en juego, el aviso
@@ -245,6 +277,13 @@ export function hechosSemana(r, n) {
   const par = (k) => { const v = s.stats[k]; if (v == null) return null; const a = Array.isArray(v) ? v : [v, null]; const c = Number(a[0]) || 0; return c ? [c, a[1] == null ? null : Number(a[1]) || 0] : null; };
   const ev = {};
   for (const [k, c] of EVENTOS) { const v = par(k); if (v) ev[c] = v; }
+  // todo lo que le ha dado o quitado puntos, para el desglose del partido acabado: [clave, cuántas, puntos]
+  const mot = [];
+  for (const [k, v] of Object.entries(s.stats)) {
+    if (!Array.isArray(v) || v[1] == null) continue;
+    const pts = Number(v[1]);
+    if (Number.isFinite(pts) && pts !== 0) mot.push([k, Number(v[0]) || 0, pts]);
+  }
   const m = s.stats.mins_played;
-  return { min: m == null ? null : Number(Array.isArray(m) ? m[0] : m) || 0, pts: s.totalPoints == null ? null : Number(s.totalPoints), ev };
+  return { min: m == null ? null : Number(Array.isArray(m) ? m[0] : m) || 0, pts: s.totalPoints == null ? null : Number(s.totalPoints), ev, mot };
 }

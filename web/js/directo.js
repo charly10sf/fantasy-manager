@@ -5,7 +5,7 @@
 import { esc, icono, cuando, rel, dura, MIN, HORA, horaDe, norm } from './util.js';
 import { ava, posTag, nada, campoVivo, filaJugador, cromo, caraManager } from './comunes.js';
 import { ancho, cols, tabs, puntosUltimaJornada } from './vistas.js';
-import { EVENTOS } from './vivo.js';
+import { EVENTOS, motivoTxt, ordenMotivo } from './vivo.js';
 
 const est = (x) => { if (x == null || x === '') return null; const v = Number(x); return Number.isFinite(v) ? v : null; };
 const enJuego = (p) => p.st != null && p.st >= 2 && p.st < 7;
@@ -318,7 +318,7 @@ function conHechos(S, n, p) {
   return { ...p, hechos: true, jug: p.jug.map((x) => {
     const h = H.porJug[x.id];
     if (!h) return x;
-    return { ...x, min: x.min != null ? x.min : h.min, gol: x.gol || c(h, 'gol'), asis: x.asis || c(h, 'asis'), am: x.am || c(h, 'am') + c(h, 'am2'), roja: x.roja || c(h, 'roja') || (c(h, 'am2') ? 1 : 0), ev: h.ev };
+    return { ...x, min: x.min != null ? x.min : h.min, gol: x.gol || c(h, 'gol'), asis: x.asis || c(h, 'asis'), am: x.am || c(h, 'am') + c(h, 'am2'), roja: x.roja || c(h, 'roja') || (c(h, 'am2') ? 1 : 0), ev: h.ev, mot: h.mot };
   }) };
 }
 /** los eventos del partido que dan o quitan puntos (sin minuto: LaLiga no lo da), de cada equipo y de quién es cada uno */
@@ -342,6 +342,34 @@ function eventosHTML(S, p) {
     return `<${j ? `button class="jg ev-f" data-j="${esc(j.id)}"` : 'div class="jg ev-f"'}>${escudo(D, it.x.l ? p.lid : p.vid, 'chico')}${ic(it.c)}<span class="jg-t"><b>${esc(j ? j.nombre : it.x.nom)}</b> ${esc(it.txt)}${quien}</span>${pts}</${j ? 'button' : 'div'}>`;
   };
   return `<div class="sec"><h2>Eventos</h2><span class="sub">lo que da o quita puntos</span></div><div class="pf-jug">${items.map(fila).join('')}</div>`;
+}
+/**
+ * el partido acabado, jugador a jugador: sus puntos y de dónde salen (lo pidió Domy el 8 nov). Los motivos vienen de la
+ * ficha de cada uno en LaLiga Fantasy (cargarHechos), que solo se pide a los que han sumado o restado algo
+ */
+function desgloseHTML(S, p) {
+  const { D } = S;
+  const H = S.hechos && S.hechos[`${p.n}:${p.id}`];
+  const lado = (l) => p.jug.filter((x) => x.l === l && x.pts != null && x.pts !== 0 && x.pos !== 5 && !(D.maestro[x.id] && D.maestro[x.id].pos === 5))
+    .sort((a, b) => b.pts - a.pts || String(a.nom).localeCompare(String(b.nom)));
+  const fila = (x) => {
+    const j = D.maestro[x.id] || null;
+    const d = j ? duenoDe(S, j.id) : null;
+    const quien = d ? (d.yo ? '<b class="rojo">Tuyo</b>' : `de ${esc(d.txt)}`) : '<span class="apag">sin dueño</span>';
+    const mot = (x.mot || []).slice().sort((a, b) => ordenMotivo(a[0]) - ordenMotivo(b[0]));
+    const suma = mot.reduce((t, m) => t + m[2], 0);
+    // si lo de la ficha no cuadra con sus puntos (LaLiga aún los está corrigiendo), se dice
+    const desc = mot.length ? `${mot.map(motivoTxt).map(esc).join(' · ')}${Math.round(suma * 10) !== Math.round(x.pts * 10) ? ` <span class="apag">(LaLiga aún está ajustando: suman ${String(suma).replace('.', ',')})</span>` : ''}` : `<span class="apag">${H && H.cargando ? 'Cargando los motivos…' : 'Sin el detalle de LaLiga'}</span>`;
+    const tag = j ? `button class="fila${d && d.yo ? ' yo-fila' : ''}" data-j="${esc(j.id)}"` : 'div class="fila"';
+    return `<${tag}>${ava(j || { nombre: x.nom, pos: x.pos })}<div class="fila-c"><div class="fila-n">${posTag(j || { pos: x.pos })}<span class="nom">${esc(j ? j.nombre : x.nom)}</span> <span class="apag peq">${quien}</span></div><div class="fila-s entero">${desc}</div></div>
+    <div class="fila-d"><div class="v pf-pts ${ptsCls(x.pts)}">${x.pts}</div></div></${j ? 'button' : 'div'}>`;
+  };
+  let h = '';
+  for (const l of [true, false]) {
+    const xs = lado(l);
+    if (xs.length) h += `<div class="sec"><h2>${escudo(D, l ? p.lid : p.vid, 'chico')} ${esc(nombreEq(D, l ? p.lid : p.vid))}</h2><span class="sub">puntos uno a uno y por qué</span></div>${xs.map(fila).join('')}`;
+  }
+  return h;
 }
 /* ---------------- el partido en el campo ---------------- */
 /** la etiqueta de arriba a la izquierda de cada cromo: de quién es en tu liga */
@@ -508,6 +536,7 @@ export function fichaPartido(S, clave) {
     // los que no se pueden poner en el campo (no están en la lista de jugadores de LaLiga Fantasy), en lista
     const sueltos = p.jug.filter((x) => !(D.maestro[x.id] && D.maestro[x.id].pos >= 1 && D.maestro[x.id].pos <= 4) && x.pts != null && x.pos !== 5 && !(D.maestro[x.id] && D.maestro[x.id].pos === 5));
     if (sueltos.length) h += `<div class="sec"><h2>Otros</h2></div>${sueltos.map((x) => filaPt(S, x, ju)).join('')}`;
+    if (e.cls === 'fin') h += desgloseHTML(S, { ...p, n });
     h += `<p class="t2 peq">Arriba de cada uno, de quién es en tu liga. Los puntos son los de LaLiga Fantasy${enJuego(p) ? ' y se ponen al día solos cada minuto' : ''}.${ju || !enJuego(p) ? '' : ' El minuto es aproximado: LaLiga solo dice en qué parte va.'} Toca a uno para ver su ficha.</p>`;
     return h;
   }

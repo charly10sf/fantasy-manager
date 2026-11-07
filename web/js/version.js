@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7o';
+export const VERSION = '0.7p';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.7o';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7p', f: '2026-11-08', h: '00:38', t: 'Puntos uno a uno y la IA con chispa otra vez',
+    cosas: [
+      { tipo: 'nuevo', d: 'pizarra', t: 'Los puntos de cada jugador y por qué', x: 'Al acabar un partido, en su ficha (Directo → toca el partido) sale la lista de cada equipo con los puntos de cada jugador y de dónde salen: jugar, goles, asistencias, paradas, portería a cero o goles encajados, recuperaciones, tarjetas, la nota de los medios… Si LaLiga aún está ajustando los puntos y no cuadran, te lo dice.', ir: { v: 'directo' } },
+      { tipo: 'mejora', d: 'ia', t: 'Las pullas vuelven al chat', x: 'Con las pullitas en «Normales» o «A saco» (Ajustes, en la parte de la IA), tu director deportivo vuelve a soltar bromas y pullas también en el chat, a los rivales y a ti. Las cuentas y el consejo siguen en serio. Si lo prefieres serio, pon «Suaves» o «Sin pullitas».' },
+      { tipo: 'arreglo', d: 'balanza', t: 'Tiene en cuenta si tu jugador está en duda', x: 'Si nombras a uno tuyo que está en duda o lesionado, la IA lo dice y echa las cuentas: cuánto tendría que bajar para que te compense un cambio y qué otra salida tienes (venderlo a LaLiga cerca de su valor). Y si le das un dato nuevo o le insistes, empieza por lo que cambia en vez de repetirte lo mismo.' },
+    ],
+  },
   {
     v: '0.7o', f: '2026-11-07', h: '22:47', t: 'El chat de la IA, más serio y con las cuentas bien',
     cosas: [
