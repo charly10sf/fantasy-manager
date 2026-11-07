@@ -13,6 +13,7 @@ import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 import { enParalelo } from '../lib/http.mjs';
 import { partidoEspn, reconstruir, minutoDe } from '../lib/relato.mjs';
 import { lista, enLetra, mayus } from '../lib/agrupar.mjs';
+import { clubes as clubesH, jugador as jugadorH } from '../lib/hechos.mjs';
 
 export const BONUS = { 1: 4, 2: 3, 3: 2, 4: 1 };
 const HORA = 36e5;
@@ -134,7 +135,15 @@ export function escribir(cs, { jornada }) {
     const r = tweet(cab, [...lineas.map((t) => ({ t, prio: 9 })), { t: etiqueta, prio: 9 }]);
     if (![...lineas, etiqueta].every((l) => r.usadas.includes(l))) continue;
     const numeros = [jornada, ...xs.flatMap(numerosDe)];
-    return [{ tipo: 'lloros', clave: `lloros|${jornada}`, jornada, texto: r.texto, numeros }];
+    // los hechos para la IA que redacta (lib/redaccion.mjs): quién pierde la portería a cero, por qué y cuántos puntos se lleva el golpe
+    const hechos = { tipo: 'lloros', jornada, noticia: 'jugadores que se quedan sin los puntos de la portería a cero por muy poco',
+      reglaDeLaPorteriaACero: 'da 4 puntos al portero, 3 al defensa y 2 al centrocampista; hace falta jugar 60 minutos o más sin que cuente un gol encajado; jugar de 1 a 59 minutos da 1 punto y 60 o más, 2',
+      jugadores: xs.map((x) => jugadorH({ nickname: x.nombre, positionId: x.pos, equipo: x.equipo, averagePoints: x.media }, { principal: true,
+        extra: x.caso === 'minutos'
+          ? { queLePasa: `jugó ${x.min} minutos y su equipo acabó sin encajar: por no llegar a 60 pierde la portería a cero`, minutosJugados: x.min, leFaltaron: 60 - x.min, puntosQuePierde: x.pierde }
+          : { queLePasa: `su equipo encajó un único gol, en el ${minTxt(x.gol)}, y le quita la portería a cero`, minutoDelGol: minTxt(x.gol), puntosQuePierde: x.pierde } })),
+      clubes: clubesH(...xs.map((x) => x.equipo)), etiqueta };
+    return [{ tipo: 'lloros', clave: `lloros|${jornada}`, jornada, texto: r.texto, hechos, numeros }];
   }
   return [];
 }
