@@ -1322,7 +1322,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-avisa-hansi-flick-gestion-rodri-lesion-jugar-atletico-madrid-jugado-minutos-seguro-seguidores-no-entienden-20261104_3467990.html": 1793784789000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antiviolencia-pide-60-001-euros_0_2008420320.html": 1793786458000,
    "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/": 1793787223000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247073/brian-farinas-avalado-registro-nivel-barca.html": 1793787503000,
@@ -1530,21 +1529,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html": 1794043154000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-avisa-hansi-flick-gestion-rodri-lesion-jugar-atletico-madrid-jugado-minutos-seguro-seguidores-no-entienden-20261104_3467990.html",
-    "medio": "COPE",
-    "t": 1793784789000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri sufre una lesión y es duda",
-    "motivo": "molestias físicas",
-    "plazo": "",
-    "nums": [
-     3,
-     0
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/",
     "medio": "AS",
@@ -3094,7 +3078,6 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/tenerife-pide-aplazar-proximo-partido-ante-granada-plantilla-despida-jesus-miguel/00031793786156436986545.htm": 1793787180000,
    "SPORT|136072311": 1793787078000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261104/1004247085/tenerife-pide-aplazar-partido-granada-hay-cosas-jugadores-no-tendrian-haber-visto.html": 1793786621000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sabadell/20261104/1004247067/sabadell-descansa-no-pierde-vista-liga.html": 1793784767000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
