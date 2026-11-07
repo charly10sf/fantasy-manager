@@ -332,6 +332,12 @@ export const anchoPildora = (f, px) => medir(txtEstado(f), px, B, 1) + px * 2.6;
 // ---------------------------------------------------------------------------------------------------------------------------
 // Iconos de lo que pasa (Carlos, 7 nov 14:58: «si es gol que haya un balón, que sea claramente quien marca y asiste, y en las de roja
 // una tarjeta roja»). Dibujados a mano, sin texto (el validador no los mira). Todos centrados en (cx, cy) con radio o alto s.
+/** estrella de cinco puntas (MVP), dorada; `tinta` cambia el color */
+export function iconoEstrella(cx, cy, r, tinta = '#e2bd5a') {
+  const pts = [];
+  for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * 0.45 : r; pts.push(`${(cx + rr * Math.cos(a)).toFixed(1)},${(cy + rr * Math.sin(a)).toFixed(1)}`); }
+  return `<polygon points="${pts.join(' ')}" fill="${tinta}" stroke-linejoin="round"/>`;
+}
 /** balón clásico: blanco, el pentágono negro en el centro, costuras finas y los cinco pentágonos de alrededor asomando por el borde */
 export function iconoBalon(cx, cy, r) {
   const c = id('bl'), pt = (rr, a, x0 = cx, y0 = cy) => [x0 + rr * Math.cos(a), y0 + rr * Math.sin(a)];
@@ -374,9 +380,10 @@ export function iconoPase(cx, cy, r, color = '#120f16') {
 /** insignia redonda para poner sobre la cara (abajo a la derecha): el fondo, el aro y el icono ('gol' | 'asistencia' | 'roja') */
 export function insignia(tipo, cx, cy, r) {
   const fondoI = tipo === 'asistencia' ? '#ffffff' : tipo === 'roja' ? '#1a1721' : '#1a1721';
-  let s = `<circle cx="${cx}" cy="${cy + 3}" r="${r + 4}" fill="#000" opacity="0.45"/><circle cx="${cx}" cy="${cy}" r="${r + 4}" fill="${tipo === 'gol' ? '#e2bd5a' : tipo === 'roja' ? '#e3202c' : '#d9dbe0'}"/>`
+  let s = `<circle cx="${cx}" cy="${cy + 3}" r="${r + 4}" fill="#000" opacity="0.45"/><circle cx="${cx}" cy="${cy}" r="${r + 4}" fill="${tipo === 'gol' || tipo === 'mvp' ? '#e2bd5a' : tipo === 'roja' ? '#e3202c' : '#d9dbe0'}"/>`
     + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fondoI}"/>`;
   if (tipo === 'gol') s += iconoBalon(cx, cy, r * 0.78);
+  else if (tipo === 'mvp') s += iconoEstrella(cx, cy, r * 0.8);
   else if (tipo === 'roja') s += iconoRoja(cx, cy, r * 1.15, { giro: 10 });
   else s += iconoPase(cx, cy, r * 0.8);
   return s;

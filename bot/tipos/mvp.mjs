@@ -84,7 +84,7 @@ export async function generar({ stats, jornada, jugadores, config, desdeFinal = 
         ...(otro ? [{ nombre: otro.p.nickname || otro.p.name, club: corto(otro.eq.mainName), puntosHoy: pts, papel: 'empata con él', principal: true }] : [])],
       clubes: clubesH(L, V, proximoH ? proximoH.club : null), etiqueta: '' };
     if (proximoH) delete proximoH.club;
-    out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, hechos, numeros: num, partido: m.id, jugadorId: p.id, motivo: 'mvp', soloConImagen: true });
+    out.push({ tipo: 'mvp', clave: `mvp|${m.id}`, jornada, texto, hechos, numeros: num, partido: m.id, jugadorId: p.id, ...(otro && porId.get(String(otro.p.id)) ? { jugadorId2: otro.p.id } : {}), motivo: 'mvp', soloConImagen: true });
   }
   return out;
 }

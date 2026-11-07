@@ -8,7 +8,7 @@
 import { coloresClub } from './colores.mjs';
 import { fechaCorta } from './datos-tarjetas.mjs';
 import { ANCHO, ROJO, VERDE, MALO, TINTA, TENUE, FONDO, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
-  escudo, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja, caraHD, panel, R_MAX, iconoBalon, iconoRoja, iconoPase, insignia, chipPuesto } from './estilo.mjs';
+  escudo, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja, caraHD, panel, R_MAX, iconoBalon, iconoRoja, iconoPase, iconoEstrella, insignia, chipPuesto } from './estilo.mjs';
 
 const ABREV = { Portero: 'POR', Defensa: 'DEF', Centrocampista: 'MED', Delantero: 'DEL', Entrenador: 'ENT' };
 // el icono de lo que ha hecho el jugador (Carlos, 7 nov 14:58): balón si marca, el pase si asiste, tarjeta roja si lo expulsan
@@ -17,13 +17,13 @@ const ICONO = { gol: 'gol', doblete: 'gol', triplete: 'gol', asistencia: 'asiste
 function iconoTitulo(tipo, titulo) {
   if (!tipo) return '';
   const w = Math.min(880, medir(titulo, 140, B) * 1.04), x = 40 + w + 64, y = 100;
-  return tipo === 'gol' ? iconoBalon(x, y, 48) : tipo === 'roja' ? iconoRoja(x, y, 108) : `<circle cx="${x}" cy="${y}" r="50" fill="#e2bd5a"/>` + iconoPase(x, y, 40);
+  return tipo === 'gol' ? iconoBalon(x, y, 48) : tipo === 'mvp' ? iconoEstrella(x, y, 52) : tipo === 'roja' ? iconoRoja(x, y, 108) : `<circle cx="${x}" cy="${y}" r="50" fill="#e2bd5a"/>` + iconoPase(x, y, 40);
 }
 /** chip con el icono dentro, a la izquierda del texto (el GOL dorado con su balón, la ASISTENCIA blanca con el pase) */
 function chipIcono(txt, tipo, cx, cy, px, { relleno, tinta }) {
   const r = px * 0.62, tw = medir(txt, px, B, 2), w = tw + px * 1.8 + r * 2 + px * 0.4, h = px * 1.75, x0 = cx - w / 2, xi = x0 + px * 0.9 + r;
   return `<rect x="${x0}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${relleno}"/>`
-    + (tipo === 'gol' ? iconoBalon(xi, cy, r) : tipo === 'roja' ? iconoRoja(xi, cy, r * 2) : iconoPase(xi, cy, r, tinta))
+    + (tipo === 'gol' ? iconoBalon(xi, cy, r) : tipo === 'mvp' ? iconoEstrella(xi, cy, r * 1.05, tinta) : tipo === 'roja' ? iconoRoja(xi, cy, r * 2) : iconoPase(xi, cy, r, tinta))
     + texto(xi + r + px * 0.4 + tw / 2, cy + px * 0.36, txt, { px, peso: 800, color: tinta, espacio: 2, ancla: 'middle' });
 }
 
@@ -241,14 +241,14 @@ function panelDuo(x, y, w, h, j, rol, gOro) {
   const t = METAL[metalDe(j.valorHoy)], gm = gradMetal(t), c = coloresClub(j.club.nombre), cx = x + w / 2, cy = y + 150, R = R_MAX;
   let s = gm.defs + panel(x, y, w, h, c.vivo, { rx: 32, brillo: 0.5, borde: `url(#${gm.g})` })
     + caraHD(j.cara, cx, cy, R, c.vivo, { aro: `url(#${gm.g})`, grosor: 6, halo: 1.9, haloOp: 0.5 })
-    + insignia(rol === 'ASISTENCIA' ? 'asistencia' : 'gol', cx + R * 0.78, cy + R * 0.78, 24);
+    + insignia(rol === 'ASISTENCIA' ? 'asistencia' : rol === 'MVP' ? 'mvp' : 'gol', cx + R * 0.78, cy + R * 0.78, 24);
   if (j.club.escudo) s += escudo(j.club.escudo, x + 58, y + 62, 70);
   const pu = ABREV[j.posicion] || j.posicion;
   if (pu) s += chipPuesto(pu, x + w - 60, y + 58, 26);
   const yN = cy + R + 74;
   s += texto(cx, yN, String(j.nombre).toUpperCase(), { px: 56, peso: 800, ancla: 'middle', max: w - 48, espacio: 0.5 });
   const esGol = rol !== 'ASISTENCIA';
-  s += chipIcono(rol, esGol ? 'gol' : 'asistencia', cx, yN + 46, 26, esGol ? { relleno: '#e2bd5a', tinta: '#2a1c04' } : { relleno: '#ffffff', tinta: '#120f16' })
+  s += chipIcono(rol, rol === 'MVP' ? 'mvp' : esGol ? 'gol' : 'asistencia', cx, yN + 46, 26, esGol ? { relleno: '#e2bd5a', tinta: '#2a1c04' } : { relleno: '#ffffff', tinta: '#120f16' })
     + `<rect x="${x + 40}" y="${yN + 82}" width="${w - 80}" height="1.5" fill="#fff" fill-opacity="0.12"/>`;
   // las cifras: los puntos de hoy (en grande y los primeros, Carlos 7 nov 15:35), la media y el valor. Con el partido en juego, los de
   // hoy en blanco con la píldora «EN JUEGO» encima (no en oro: aún subirán o bajarán); sin puntos todavía, «EN JUEGO» y «SIN PUNTOS AÚN»
@@ -292,5 +292,16 @@ export function svgGolAsistencia(d) {
     + (d.enJuego && d.minuto ? placaVivo(d.minuto) : '') + iconoTitulo('gol', d.titulo)
     + panelDuo(44, 290, 540, 786, d.gol, d.titulo.replace(/[¡!]/g, ''), oro.g)
     + panelDuo(616, 290, 540, 786, d.asis, 'ASISTENCIA', oro.g);
+  return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
+}
+/** MVP compartido (Carlos, 7 nov 21:07: Catena y Nico Williams, 11 cada uno, «deberían salir los dos como en una tarjeta especial») */
+export function svgMvpDoble(d) {
+  const H = ALTO_GOL_ASIS, oro = dorado();
+  const ca = coloresClub(d.a.club.nombre), cb = coloresClub(d.b.club.nombre);
+  let s = oro.defs + fondo([[320, 560, 620, ca.vivo, 0.5], [900, 560, 620, cb.vivo, 0.45]], H)
+    + cabeceraCarta('MVP', oro.g, `${d.marcador} · COMPARTIDO`.toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
+    + iconoTitulo('mvp', 'MVP')
+    + panelDuo(44, 290, 540, 786, d.a, 'MVP', oro.g)
+    + panelDuo(616, 290, 540, 786, d.b, 'MVP', oro.g);
   return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
 }
