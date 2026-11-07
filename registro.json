@@ -475,6 +475,20 @@
    "jornada": 12,
    "id": "2119075223031136475",
    "t": "2026-11-07T14:31:18.639Z"
+  },
+  {
+   "clave": "final|116",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119091368429568173",
+   "t": "2026-11-07T15:35:28.133Z"
+  },
+  {
+   "clave": "mvp|116",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119091397710037241",
+   "t": "2026-11-07T15:35:35.017Z"
   }
  ],
  "estados": {
@@ -3726,16 +3740,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 32,
-   "redactar": 23,
-   "revisar": 16,
+   "redactar": 27,
+   "revisar": 19,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 218950,
-  "salida": 23282,
-  "cacheLee": 100177,
-  "cacheEscribe": 15980,
-  "dolares": 0.4728
+  "entrada": 263864,
+  "salida": 24254,
+  "cacheLee": 105387,
+  "cacheEscribe": 18585,
+  "dolares": 0.579382
  },
  "recientes": {
   "onces": [
@@ -3756,12 +3770,20 @@
    {
     "t": "2026-11-06T22:01:32.250Z",
     "texto": "🏁 0-0 en el Sánchez-Pizjuán y la noche fue de Sivera. Cuenta COPE que el portero del Alavés le paró un penalti a Vargas en la primera parte.\n\nSe lleva 10 puntos, muy por encima de su media de 7, y es el mejor del partido. Del Sevilla se salva Félix Correia con 7. En el Alavés, T. Martínez se queda en -2, lo peor de la noche."
+   },
+   {
+    "t": "2026-11-07T15:35:28.135Z",
+    "texto": "🏁 Remontada del Racing en La Rosaleda: el Málaga se adelantó en el 28' con gol de Dotor, pero Iker Luque empató en el 50' y Zabiri le dio la vuelta en el 60'. Final 1-2.\n\nZabiri se lleva 12 puntos, casi el doble de su media, y es el mejor del partido. Agirrezabala suma 11 y Pablo Ramón 10, así que quien tenga jugadores del Racing sale ganando.\n\nEl Málaga se quedó con diez desde el 64' por la roja a Aznou, que acaba en -2. Larrubia, con 9, puntúa aunque su equipo pierde."
    }
   ],
   "mvp": [
    {
     "t": "2026-11-06T22:01:39.058Z",
     "texto": "⭐ Sivera, el mejor del Sevilla-Alavés con 10 puntos.\n\nSegún COPE, le paró un penalti a Vargas en la primera parte y el Alavés se llevó un 0-0 del Sánchez-Pizjuán. Con una media de 7 y 84 puntos en la temporada, si lo tienes de portero, no se toca. Su siguiente partido es contra el Deportivo."
+   },
+   {
+    "t": "2026-11-07T15:35:35.019Z",
+    "texto": "⭐ Yassir Zabiri, el mejor del Málaga-Racing con 12 puntos.\n\nMarcó el 1-2 en el minuto 60, el gol que le dio la victoria al Racing ⚓ en La Rosaleda, y casi dobla su media de 6,5. Vale 46,4 M y en la jornada 13 recibe en casa a la Real Sociedad: si lo tienes, de los que se quedan en el once."
    }
   ],
   "mercado": [
