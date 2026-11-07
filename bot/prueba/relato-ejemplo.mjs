@@ -37,6 +37,9 @@ const srv = http.createServer((req, res) => {
   const u = new URL(req.url, 'http://x');
   res.writeHead(200, { 'Content-Type': 'application/json' });
   if (u.pathname.endsWith('/scoreboard')) return res.end(JSON.stringify({ events: todos.map((t) => t.espn) }));
+  // un penalti PARADO en el Getafe-Elche (0-0), que el scoreboard no trae y el summary sí (el de Sivera del 6 nov no salió por eso)
+  if (u.searchParams.get('event') === '9003') return res.end(JSON.stringify({ keyEvents: [{ type: { text: 'Penalty - Saved' }, clock: { displayValue: "32'" }, team: { id: '20' },
+    text: 'Penalty saved! Borja Mayoral (Getafe CF) fails to score. Saved by Iker Muñoz (Elche CF) (bottom left corner).', participants: [{ athlete: { displayName: 'Borja Mayoral' } }, { athlete: { displayName: 'Iker Muñoz' } }] }] }));
   res.end(JSON.stringify({ keyEvents: [] }));
 }).listen(puerto, '127.0.0.1');
 
@@ -51,6 +54,21 @@ const mostrar = (t) => {
 console.log('=== DIRECTO ===');
 const dir = await directo({ stats: stats.map((s) => ({ ...s, local: { ...s.local, players: s.local.players.map((p) => ({ ...p })) } })), jornada: 11, fechasEspn: ['20261101'], jugadores, desdeDirecto: 0, ahora: Date.parse('2026-11-02T00:00:00Z') });
 dir.forEach(mostrar);
+{
+  const par = dir.find((t) => t.hechos && t.hechos.subtipo === 'penalti parado');
+  if (!par) { fallos++; console.log('FALLA: el penalti parado del Getafe-Elche no sale en el directo'); }
+  else {
+    const h = par.hechos;
+    const ok = /le para un penalti a/.test(par.texto) && /Iker Muñoz/.test(par.texto) && h.partido.marcadorEnEseMomento === '0-0' && h.minuto === "32'" && h.jugadores.length === 2 && h.jugadores[0].principal && h.etiqueta === '';
+    if (!ok) { fallos++; console.log(`FALLA: penalti parado mal contado: ${par.texto} ${JSON.stringify(h)}`); } else console.log('ok: el penalti parado sale del summary, con minuto, marcador y el portero');
+  }
+  const gol = dir.find((t) => t.hechos && t.hechos.subtipo === 'gol' && t.hechos.jugadores.length === 2);
+  if (!gol || !/pase del gol/.test(JSON.stringify(gol.hechos.jugadores[1]))) { fallos++; console.log('FALLA: un gol con asistente no lleva al asistente en los hechos'); } else console.log('ok: el gol con asistente lleva los dos en los hechos');
+  // 7 nov: «Asistencia de X, que ya suma 4 puntos. Ya suma 4 puntos fantasy» (dos «ya suma» seguidos, el segundo sin nombre)
+  const conAsis = dir.filter((t) => t.hechos && t.hechos.jugadores.length === 2 && /Asistencia de/.test(t.texto));
+  const malo = conAsis.find((t) => (t.texto.match(/ya suma/gi) || []).length > 1 || /\. Ya suma/.test(t.texto) || !t.texto.includes(`${t.hechos.jugadores[0].nombre} ya suma`));
+  if (!conAsis.length || malo) { fallos++; console.log(`FALLA: gol con asistente con los puntos mal atribuidos: ${malo ? malo.texto : 'ninguno'}`); } else console.log('ok: gol con asistente: cada cifra con su nombre y sin «ya suma» repetido');
+}
 console.log('\n=== FINAL ===');
 const fin = await final({ stats, jornada: 11, jugadores, desdeFinal: 0 });
 fin.forEach(mostrar);
@@ -67,23 +85,27 @@ if (arg('tarjetas')) {
   }
 }
 
-// --- espera a los puntos DAZN: sin valoración en la ficha no sale el final ni el MVP; con ella, sí; y pasado el plazo, sale igual ---
+// --- espera a los puntos definitivos (lib/dazn.mjs; el detalle, en prueba/puntos-ejemplo.mjs): recién acabado no sale; con los
+// puntos quietos el tiempo pedido, la valoración DAZN y la portería a cero sumada, sí; pasado el plazo, sale igual ---
 {
   const { crearDazn } = await import('../lib/dazn.mjs');
   const m = stats[0];
-  const ficha = (con) => async () => ({ playerStats: [{ weekNumber: 11, stats: { marca_points: con == null ? [0, 0] : [-1, con] } }] });
-  const caso = async (nombre, f, ahora, esperado) => {
-    const d = crearDazn({ ficha: f, jornada: 11, esperaHoras: 6, ahora: () => ahora, log: () => {} });
+  const ficha = (con) => async () => ({ playerStats: [{ weekNumber: 11, stats: { mins_played: [90, 2], goals_conceded: [0, 4], marca_points: con == null ? [0, 0] : [-1, con] } }] });
+  const caso = async (nombre, f, desdeFinal, esperado) => {
+    const t0 = Date.parse(m.date) + 2 * 3600e3;   // visto acabado a las 2 h del saque
+    const registro = { datos: {} };
+    await crearDazn({ ficha: f, jornada: 11, registro, ahora: () => t0, log: () => {} })(m);   // la ejecución que lo ve acabar
+    const d = crearDazn({ ficha: f, jornada: 11, registro, esperaHoras: 6, minTrasFinal: 90, minEstable: 40, ahora: () => t0 + desdeFinal * 60e3, log: () => {} });
     const r = await d(m); const f1 = await final({ stats: [m], jornada: 11, jugadores, desdeFinal: 0, dazn: d });
     const ok = r.listo === esperado && (f1.length === 1) === esperado;
     if (!ok) fallos++;
-    console.log(`DAZN ${nombre}: listo=${r.listo} (${r.con}/${r.de}) tweets de final=${f1.length} ${ok ? 'ok' : 'FALLA'}`);
+    console.log(`puntos ${nombre}: listo=${r.listo} (${r.motivo || 'nada pendiente'}) tweets de final=${f1.length} ${ok ? 'ok' : 'FALLA'}`);
   };
-  const saque = Date.parse(m.date);
-  await caso('sin valoración, hace 1 h', ficha(null), saque + 3600e3, false);
-  await caso('valoración puesta', ficha(4), saque + 3600e3, true);
-  await caso('sin valoración, pasadas 7 h', ficha(null), saque + 7 * 3600e3, true);
-  await caso('la ficha falla, hace 2 h', async () => { throw new Error('caído'); }, saque + 2 * 3600e3, false);
+  await caso('recién acabado, con valoración', ficha(4), 6, false);
+  await caso('a los 95 min, con valoración', ficha(4), 95, true);
+  await caso('a los 95 min, sin valoración', ficha(null), 95, false);
+  await caso('sin valoración, pasadas 7 h', ficha(null), 7 * 60, true);
+  await caso('la ficha falla, a los 120 min', async () => { throw new Error('caído'); }, 120, false);
 }
 srv.close();
 process.exit(fallos ? 1 : 0);

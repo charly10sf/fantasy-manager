@@ -10,9 +10,14 @@ export const MIN_MINUTOS_PEOR = 30;     // «peores»: los que menos puntúan de
 export const DIAS_VALOR = 30;           // la gráfica enseña los últimos 30 días de valor (Carlos, 2 nov 23:00: mejor 30 que 60)
 export const DIAS_CAMBIO = 30;          // y el cambio, en esos mismos 30 días
 const POS = { 1: 'Portero', 2: 'Defensa', 3: 'Centrocampista', 4: 'Delantero', 5: 'Entrenador' };
+// la escala de la minigráfica del valor (Carlos, 7 nov 15:09): fechas de inicio y fin en hora de Madrid («8 OCT») y el máximo y el mínimo
+export const MESES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+export const fechaCorta = (t) => { const [d, m] = new Date(t).toLocaleDateString('es-ES', { timeZone: 'Europe/Madrid', day: 'numeric', month: 'numeric' }).split('/').map(Number); return `${d} ${MESES[m - 1]}`; };
+/** lo que la escala de la gráfica puede escribir: máximo, mínimo y las dos fechas */
+export const numerosEscala = (valor) => (valor && valor.length >= 2 ? [millones(Math.max(...valor.map((v) => v[1]))), millones(Math.min(...valor.map((v) => v[1]))), fechaCorta(valor[0][0]), fechaCorta(valor[valor.length - 1][0])].flatMap((x) => x.match(/\d+(?:,\d+)?/g)) : []);
 // palabras fijas de las tarjetas (todo lo demás tiene que salir de los datos)
 export const PALABRAS_FIJAS = ['LALIGA', 'FANTASY', 'JORNADA', 'FINAL', 'MEJORES', 'PEORES', 'pts', 'MANAGER', 'Fantasyman_app', 'MVP', 'DOBLETE',
-  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', 'ENT', ...Object.values(POS)];
+  'TRIPLETE', 'PUNTOS', 'EN', 'LA', 'TEMPORADA', 'DE', 'MEDIA', 'ÚLTIMAS', 'JORNADAS', 'VALOR', 'DÍAS', 'M', 'Sin', 'histórico', 'valor', 'GOL', 'ASISTENCIA', 'ROJA', 'PENALTI', 'FALLADO', 'PARADO', 'LOS', 'DEL', 'POSIBLES', 'ONCES', 'CONFIRMADOS', 'VS', 'POR', 'DEF', 'MED', 'DUDA', 'PTS', 'TOTALES', 'LAS', 'ENT', 'JUEGO', 'Y', 'DESCARGA', 'APP', 'GRATIS', 'ENLACE', 'BIO', 'MEDIO', 'HOY', 'AÚN', ...MESES, ...Object.values(POS)];
 
 const caraDe = (p) => p && p.images && p.images.transparent && p.images.transparent['256x256'];
 const minutosEn = (ficha, n) => { const s = (ficha && ficha.playerStats || []).find((x) => Number(x.weekNumber) === Number(n)); return s ? Number((s.stats.mins_played || [0])[0]) : 0; };
@@ -40,7 +45,7 @@ export async function datosFinal(m, { jornada, fuentes, maxFichas = 25 }) {
       else if (min > 0) cortos.push({ ...p, min });
     }
     const peores = [...largos, ...cortos].slice(0, CUANTOS).sort((a, b) => a.pts - b.pts);
-    const ficha = async (p) => ({ id: p.id, nombre: p.nickname || p.name, pts: p.pts, cara: await fuentes.imagen(caraDe(p)).catch(() => null), min: p.min });
+    const ficha = async (p) => ({ id: p.id, nombre: p.nickname || p.name, pos: p.positionId, pts: p.pts, cara: await fuentes.imagen(caraDe(p)).catch(() => null), min: p.min });
     return { nombre: eq.mainName, corto: corto(eq.mainName), goles, escudo: await fuentes.imagen(eq.badgeColor).catch(() => null),
       mejores: await Promise.all(mejores.map(ficha)), peores: await Promise.all(peores.map(ficha)) };
   };
@@ -56,20 +61,27 @@ export async function datosFinal(m, { jornada, fuentes, maxFichas = 25 }) {
 
 /**
  * Tarjeta de un jugador. j: el jugador de la lista de LaLiga (players); m: el partido de stats/week/{n} del que se habla;
- * motivo: 'mvp' | 'doblete' | 'triplete' | 'gol' | 'asistencia' | 'roja' | 'penalti'. fuentes: { valor(id) -> lista de market-value, imagen(url) }
+ * motivo: 'mvp' | 'doblete' | 'triplete' | 'gol' | 'asistencia' | 'roja' | 'penalti' | 'parada'. fuentes: { valor(id) -> lista de market-value, imagen(url) }
  */
-export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, ahora = Date.now(), marcador: goles = null }) {
+export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, ahora = Date.now(), marcador: goles = null, minuto = null }) {
   // en directo, el marcador de ESPN (va al momento); si no, el de LaLiga
   const [gl, gv] = goles || [m.localScore, m.visitorScore];
   const enPartido = [...(m.local.players || []), ...(m.visitor.players || [])].find((p) => String(p.id) === String(j.id));
   const club = String(m.local.id) === String(j.teamId) ? m.local : m.visitor;
   const L = corto(m.local.mainName), V = corto(m.visitor.mainName);
   const marcador = `${L} ${gl}-${gv} ${V}`;
-  const etiqueta = `${{ mvp: 'MVP', doblete: '¡DOBLETE!', triplete: '¡TRIPLETE!', gol: 'GOL', asistencia: 'ASISTENCIA', roja: 'ROJA', penalti: 'PENALTI FALLADO' }[motivo] || 'MVP'} · ${marcador}`;
+  const etiqueta = `${{ mvp: 'MVP', doblete: '¡DOBLETE!', triplete: '¡TRIPLETE!', gol: 'GOL', asistencia: 'ASISTENCIA', roja: 'ROJA', penalti: 'PENALTI FALLADO', parada: 'PENALTI PARADO' }[motivo] || 'MVP'} · ${marcador}`;
   const wp = new Map((j.weekPoints || []).map((w) => [Number(w.weekNumber), Number(w.points)]));
-  const ultimas = [];
-  for (let k = Math.max(1, jornada - 4); k <= jornada; k++) ultimas.push([k, wp.has(k) ? wp.get(k) : 0]);
   const ptsJornada = enPartido && enPartido.weekPoints != null ? Number(enPartido.weekPoints) : (wp.get(jornada) || 0);
+  // 7 nov (Carlos, con el gol de Dotor: la tarjeta salió con «0 PTS» arriba y un 0 en la J12): con el partido en juego LaLiga tarda en
+  // sumar lo que acaba de pasar, así que un 0 en directo no es un dato. Sin puntos todavía: ni la placa de PTS ni la casilla de esta
+  // jornada (las 5 anteriores) y, si llega el minuto, arriba va el minuto «EN JUEGO». Un negativo en directo sí vale (una roja).
+  const enJuego = m.matchState != null && Number(m.matchState) !== 7;
+  const sinPuntos = enJuego && ptsJornada === 0;
+  // las casillas: las 5 jornadas ANTERIORES; lo de hoy va solo en la placa de arriba (Carlos, 7 nov 15:35)
+  const hasta = jornada - 1;
+  const ultimas = [];
+  for (let k = Math.max(1, hasta - 4); k <= hasta; k++) ultimas.push([k, wp.has(k) ? wp.get(k) : 0]);
   // valor: un punto por día, los últimos 30; el cambio, entre el primer y el último punto de esa ventana
   const crudo = await fuentes.valor(j.id).catch(() => null);
   const serie = (Array.isArray(crudo) ? crudo : []).map((v) => [Date.parse(v.date), Number(v.marketValue)]).filter(([t, v]) => t && v).sort((a, b) => a[0] - b[0]);
@@ -83,18 +95,33 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
     club: { nombre: club.mainName, corto: corto(club.mainName), escudo: await fuentes.imagen(club.badgeColor).catch(() => null) },
     cara: await fuentes.imagen(j.image || caraDe(enPartido)).catch(() => null),
     ptsJornada, total: Number(j.points), media: Number(j.averagePoints), ultimas, valor, valorHoy: hoy[1], cambio, dias: DIAS_VALOR,
+    enJuego, sinPuntos, minuto: enJuego && minuto ? minuto : null, marcador, motivo,
   };
   // permitidos, otra vez desde los datos crudos: sus puntos por jornada (y 0 para las que no tiene), total, media, el marcador,
   // la jornada y sus números, el valor de hoy y el cambio recalculado aquí
   const semanas = [];
-  for (let k = Math.max(1, jornada - 4); k <= jornada; k++) semanas.push(k);
+  for (let k = Math.max(1, hasta - 4); k <= jornada; k++) semanas.push(k);
   const vHoy = serie.length ? serie[serie.length - 1][1] : Number(j.marketValue);
   const vAntes = antes ? antes[1] : null;
   const permitidos = {
     numeros: [jornada, gl, gv, 0, j.points, num1(j.averagePoints), ...(j.weekPoints || []).map((w) => w.points), ...semanas,
-      millones(vHoy).replace(' M', ''), vAntes ? Math.abs(Math.round((vHoy - vAntes) / vAntes * 100)) : 0, DIAS_VALOR, enPartido ? enPartido.weekPoints : 0].map(String),
+      millones(vHoy).replace(' M', ''), vAntes ? Math.abs(Math.round((vHoy - vAntes) / vAntes * 100)) : 0, DIAS_VALOR, enPartido ? enPartido.weekPoints : 0,
+      ...(d.minuto ? String(d.minuto).match(/\d+/g) : []), ...numerosEscala(valor)].map(String),
     palabras: [j.nickname, club.mainName, corto(club.mainName), L, V, POS[j.positionId] || ''],
   };
+  return { d, permitidos };
+}
+
+/**
+ * Gol y asistencia en una sola tarjeta (Carlos, 7 nov: «no tiene sentido dos»): los datos de cada uno (datosJugador) y los permitidos
+ * de los dos juntos. motivo: el del goleador ('gol' | 'doblete' | 'triplete').
+ */
+export async function datosGolAsistencia(jg, ja, m, { jornada, motivo = 'gol', fuentes, ahora = Date.now(), marcador = null, minuto = null }) {
+  const g = await datosJugador(jg, m, { jornada, motivo, fuentes, ahora, marcador, minuto });
+  const a = await datosJugador(ja, m, { jornada, motivo: 'asistencia', fuentes, ahora, marcador, minuto });
+  const d = { jornada, titulo: { doblete: '¡DOBLETE!', triplete: '¡TRIPLETE!' }[motivo] || 'GOL', marcador: g.d.marcador,
+    minuto: g.d.minuto, enJuego: g.d.enJuego, gol: g.d, asis: a.d };
+  const permitidos = { numeros: [...g.permitidos.numeros, ...a.permitidos.numeros], palabras: [...g.permitidos.palabras, ...a.permitidos.palabras] };
   return { d, permitidos };
 }
 
@@ -103,9 +130,11 @@ export async function datosJugador(j, m, { jornada, motivo = 'mvp', fuentes, aho
  * valor que tiene»): las 5 últimas jornadas que ya tienen puntos (hasta `jornada`), total, media y valor de los últimos 30 días.
  * Devuelve { d, numeros } (numeros: lo que la imagen puede escribir, sacado de los datos crudos).
  */
-export async function historialJugador(j, { jornada, fuentes, ahora = Date.now() }) {
+export async function historialJugador(j, { jornada, fuentes, ahora = Date.now(), partido = null }) {
   const wp = new Map((j.weekPoints || []).map((w) => [Number(w.weekNumber), Number(w.points)]));
-  const conDatos = [...wp.keys()].filter((k) => k <= jornada);
+  // con su partido de esta jornada en juego, sus puntos aún no son los de la jornada: esa casilla no sale (7 nov)
+  const enJuego = partido && ![1, 7].includes(Number(partido.matchState));
+  const conDatos = [...wp.keys()].filter((k) => k < jornada || (k === jornada && !enJuego));
   const hasta = conDatos.length ? Math.max(...conDatos) : jornada;
   const ultimas = [];
   for (let k = Math.max(1, hasta - 4); k <= hasta; k++) ultimas.push([k, wp.has(k) ? wp.get(k) : 0]);
@@ -116,7 +145,7 @@ export async function historialJugador(j, { jornada, fuentes, ahora = Date.now()
   const antes = [...serie].reverse().find(([t]) => t <= hoy[0] - DIAS_CAMBIO * 864e5) || valor[0];
   const cambio = antes ? Math.round((hoy[1] - antes[1]) / antes[1] * 100) : 0;
   const d = { ultimas, total: Number(j.points), media: Number(j.averagePoints), valor, valorHoy: hoy[1], cambio, dias: DIAS_VALOR };
-  const numeros = [0, j.points, num1(j.averagePoints), ...ultimas.flat(), millones(hoy[1]).replace(' M', ''), Math.abs(cambio), DIAS_VALOR].map(String);
+  const numeros = [0, j.points, num1(j.averagePoints), ...ultimas.flat(), millones(hoy[1]).replace(' M', ''), Math.abs(cambio), DIAS_VALOR, ...numerosEscala(valor)].map(String);
   return { d, numeros };
 }
 

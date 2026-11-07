@@ -16,6 +16,7 @@ import { lista as enLista } from '../lib/agrupar.mjs';
 import { noticiasPrensaUnaVez } from '../lib/prensa.mjs';
 import { clasificador, claveClasificar } from '../lib/ia.mjs';
 import { frase, copia } from './noticias.mjs';
+import { clubes as clubesH } from '../lib/hechos.mjs';
 
 const HORA = 36e5;
 const ahoraReal = () => Date.now();
@@ -240,6 +241,14 @@ async function actualizar0({ equipos, registro, ahora, config, log, leer, pedirI
   return lg;
 }
 
+/** la línea final de siempre de un tweet de liga (null si no lleva: con un fallecimiento detrás, ninguna) */
+export const lecturaDe = ({ tipo, estado, luto }) => (luto ? null : estado === 'se_estudia' ? '👀 Pendientes de la decisión oficial'
+  : estado === 'confirmado' && (tipo === 'suspension' || tipo === 'aplazamiento') ? '👀 Atentos a cómo lo aplica LaLiga Fantasy' : null);
+const QUE_SE_PLANTEA = { suspension: { confirmado: 'se suspende', se_estudia: 'se estudia suspender', descartado: 'se jugará: no se suspende' },
+  aplazamiento: { confirmado: 'se aplaza', se_estudia: 'se estudia aplazar', descartado: 'no se aplaza' },
+  horario: { confirmado: 'cambia el horario', se_estudia: 'puede cambiar el horario', descartado: 'mantiene su horario' },
+  puertaCerrada: { confirmado: 'se jugará a puerta cerrada', se_estudia: 'se estudia jugarlo a puerta cerrada', descartado: 'se jugará con público' } };
+
 /** el tweet de un tema (lo de un partido o una jornada) y un estado */
 export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, oficial }) {
   const O = cap(obj), deO = obj.replace(/^el /, 'del ').replace(/^(?!del )/, 'de ');
@@ -251,8 +260,7 @@ export function redactar({ tipo, estado, obj, luto, contexto, detalle, medios, o
       : { suspension: `${alarma} Se suspende ${obj}`, aplazamiento: `${alarma} Se aplaza ${obj}`, horario: `🕐 Cambia el horario ${deO}`, puertaCerrada: `${alarma} ${O} se jugará a puerta cerrada` }[tipo];
   const lis = medios.length <= 3 ? enLista(medios) : `${medios.slice(0, 2).join(', ')} y otros medios`;
   const fuente = oficial ? `Es oficial, según ${lis}` : `Lo cuentan ${lis}`;
-  const lectura = luto ? null : estado === 'se_estudia' ? '👀 Pendientes de la decisión oficial'
-    : estado === 'confirmado' && (tipo === 'suspension' || tipo === 'aplazamiento') ? '👀 Atentos a cómo lo aplica LaLiga Fantasy' : null;
+  const lectura = lecturaDe({ tipo, estado, luto });
   // el contexto o el detalle que repiten la cabecera («Se aplaza el partido por…» bajo «Se aplaza el Sevilla-Alavés»), fuera
   if (contexto && copia(contexto, cab, 3)) contexto = '';
   if (detalle && copia(detalle, cab, 3)) detalle = '';
@@ -337,7 +345,14 @@ export async function generar({ equipos, jornada, config = {}, registro = null, 
     // el mismo número para el texto y para lib/aire.mjs
     const jn = numeroDe(hs) || null;
     // jornadaAire: la jornada de la que habla la noticia, si la dice (lib/aire.mjs apunta con ella las fechas de sus partidos)
-    out.push({ tipo: 'liga', clave, jornada, jornadaAire: jn, texto, numeros: [...new Set([jornada, ...(jn ? [jn] : []), ...hs.flatMap((h) => h.nums || [])])], tarjeta: null });
+    // los hechos para la IA que redacta (lib/redaccion.mjs): qué pasa con qué, en qué estado, quién lo cuenta y lo que dice la noticia
+    const lis = medios.length <= 3 ? enLista(medios) : `${medios.slice(0, 2).join(', ')} y otros medios`;
+    const lect = lecturaDe({ tipo: g.tipo, estado: g.estado, luto });
+    const hechos = { tipo: 'liga', noticia: `${g.obj}: ${(QUE_SE_PLANTEA[g.tipo] || {})[g.estado] || g.estado}`, de: g.obj, estado: g.estado, queSePlantea: (QUE_SE_PLANTEA[g.tipo] || {})[g.estado],
+      fuente: oficial ? `oficial, según ${lis}` : `prensa: ${medios.join(', ')}`,
+      ...(mejor('contexto') ? { contexto: mejor('contexto') } : {}), ...(mejor('detalle') ? { detalle: mejor('detalle') } : {}),
+      ...(luto ? { sobrio: true } : {}), clubes: clubesH(...hs.flatMap((h) => h.clubes || []).map((id) => equipos[id]).filter(Boolean)), etiqueta: lect || '' };
+    out.push({ tipo: 'liga', clave, jornada, jornadaAire: jn, texto, hechos, numeros: [...new Set([jornada, ...(jn ? [jn] : []), ...hs.flatMap((h) => h.nums || [])])], tarjeta: null });
   }
   return out;
 }

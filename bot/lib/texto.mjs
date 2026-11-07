@@ -18,16 +18,20 @@ export function peso(s) {
 }
 /** ¿copia `n` palabras seguidas de la fuente? (las noticias de prensa: 6) */
 export function copia(s, fuente, n = 6) {
+  return !!trozoCopiado(s, fuente, n);
+}
+/** el primer trozo de n palabras de `s` que está en `fuente` (normalizado), o '' */
+export function trozoCopiado(s, fuente, n = 6) {
   const w = norm(s).split(' ').filter(Boolean), src = ` ${norm(fuente)} `;
-  for (let i = 0; i + n <= w.length; i++) if (src.includes(` ${w.slice(i, i + n).join(' ')} `)) return true;
-  return false;
+  for (let i = 0; i + n <= w.length; i++) { const g = w.slice(i, i + n).join(' '); if (src.includes(` ${g} `)) return g; }
+  return '';
 }
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 
 // La etiqueta final de bajas, dudas y novedades («❌ Baja para la jornada 12 contra el Sevilla», «💸 Venta obligatoria»). Desde el
 // 5 nov sin «Fantasy» detrás (Carlos: «disponible fantasy no tiene sentido; con poner disponible sería suficiente»); lo llevan
 // solo «Revisa tu once Fantasy», «Lloros Fantasy» y «Chollo Fantasy».
-export const esEtiquetaFinal = (s) => /^(✅|❌|⁉️|👀|💸|🟨|💔) .*(para la (jornada|próxima jornada)|de la jornada \d|Venta obligatoria)/u.test(String(s || ''));
+export const esEtiquetaFinal = (s) => /^(✅|❌|⁉️|👀|💸|🟨|💔) .*(para la (jornada|próxima jornada)|de la jornada \d|Venta obligatoria|Novedades para la|Pendientes de la decisión|Atentos a cómo lo aplica)/u.test(String(s || ''));
 
 // Todos llevan «Fantasy» (Carlos, 2 nov 15:52) y ninguno lleva enlace: la dirección va en el campo «Sitio web» del perfil.
 export const CIERRES = [
@@ -143,7 +147,7 @@ export const APODOS = {
   'Osasuna': { e: ['🐂'], a: ['el Osasuna'] },
   'Getafe': { e: [], a: ['el Getafe'] },
   'Rayo': { e: ['⚡'], a: ['el Rayo', 'el Rayo Vallecano'] },
-  'Espanyol': { e: ['🦜'], a: ['el Espanyol'] },
+  'Espanyol': { e: [], a: ['el Espanyol'] },
   'Levante': { e: ['🐸'], a: ['el Levante'] },
   'Elche': { e: ['🌴'], a: ['el Elche'] },
   'Alavés': { e: [], a: ['el Alavés'] },
@@ -166,8 +170,8 @@ const conArticulo = (alias, art) => {
 };
 /**
  * Los equipos del texto con otro nombre cada vez que salen (el primero, el nombre normal; los siguientes, el corto, el apodo…)
- * y, a veces, con su emoji detrás de la primera mención del equipo en el tweet (no en todos los equipos ni en todos los tweets:
- * lo decide la semilla). Si con los emojis no cabe, sin ellos; si ni así, el texto de antes.
+ * y, en más o menos la mitad de los tweets (lo decide la semilla), cada equipo con su emoji detrás de su primera mención: todos los que
+ * tengan uno, nunca uno sí y otro no. Si con los emojis no cabe, sin ellos; si ni así, el texto de antes.
  */
 export function variarEquipos(texto, { semilla = '', max = limite(), emojis = true } = {}) {
   const veces = new Map(), vistos = new Set();
@@ -184,10 +188,11 @@ export function variarEquipos(texto, { semilla = '', max = limite(), emojis = tr
       let s = conArticulo(ap.a[idx], art);
       if (/^[A-ZÁÉÍÓÚ]/.test(art)) s = s.charAt(0).toUpperCase() + s.slice(1);
       if (conEmoji) {
-        // solo la primera vez que sale el equipo, y solo si la semilla dice que toca (más o menos la mitad de los equipos)
+        // solo la primera vez que sale el equipo; la semilla decide por tweet (más o menos la mitad) y, si toca, van TODOS los equipos que
+        // tengan emoji (Carlos, 7 nov 18:01: el Osasuna con 🐂 y el Athletic sin 🦁 no; antes se decidía equipo a equipo)
         if (!vistos.has(clave)) {
           vistos.add(clave);
-          const e = hash(`${semilla}:${clave}:emoji`) % 2 === 0 ? ap.e.find((x) => !usados.has(x)) : null;
+          const e = hash(`${semilla}:emoji`) % 2 === 0 ? ap.e.find((x) => !usados.has(x)) : null;
           if (e) { usados.add(e); s += ` ${e}`; }
         }
       }

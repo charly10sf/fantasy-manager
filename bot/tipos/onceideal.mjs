@@ -14,6 +14,7 @@ import { enParalelo } from '../lib/http.mjs';
 import { enElAire } from '../lib/aire.mjs';
 import { horaMadrid, horas } from '../lib/horario.mjs';
 import { crearInfo } from '../lib/info-jugador.mjs';
+import { clubes as clubesH, jugador as jugadorH } from '../lib/hechos.mjs';
 import { candidato, elegirIdeal, motivos, AJUSTES } from '../lib/once-ideal.mjs';
 
 const H = 36e5;
@@ -103,7 +104,6 @@ export function montar({ jornada, r, cands = [], minP = AJUSTES.minP }) {
   // lo que vale
   num.push(...tot.numeros);
   ideas.push({ t: aparte(V([`El once completo vale ${tot.t}`, `Entre los once suman ${tot.t} de valor`], 'f')), prio: 3 });
-  ideas.push({ t: '👀 Revisa tu once Fantasy antes del primer partido de la jornada', prio: 6 });
 
   const { texto } = tweet(cab, ideas);
 
@@ -121,7 +121,19 @@ export function montar({ jornada, r, cands = [], minP = AJUSTES.minP }) {
     `🧤 ${L('POR')[0]}`, `🛡️ ${lista(L('DEF'))}`, `⚙️ ${lista(L('MED'))}`, `🎯 ${lista(L('DEL'))}`].join('\n');
   const sinTarjeta = peso(sinT) <= limite() ? { texto: sinT, numeros: [jornada, ...fd] } : null;
 
-  return { tipo: 'onceideal', clave: `onceideal|${jornada}`, jornada, texto, numeros: num, partido: null, tarjeta, ...(sinTarjeta ? { sinTarjeta } : {}),
+  // los hechos para la IA que redacta (lib/redaccion.mjs): la apuesta, el chollo, el cruce, la racha y el que se queda fuera, cada uno con lo suyo;
+  // el once entero va en la tarjeta
+  const PUESTO = { POR: 'portero', DEF: 'defensa', MED: 'centrocampista', DEL: 'delantero' };
+  const jug = (x, rol, principal = false) => jugadorH({ nickname: x.nombre, equipo: x.equipo, averagePoints: x.media }, { tit: { pct: x.pct }, principal,
+    extra: { puesto: PUESTO[x.pos], rolEnElOnce: rol, ...(x.e != null ? { puntosEsperadosFantasyManager: fmt(x.e) } : {}), ...(x.valor > 0 ? { valor: dineroTxt(x.valor).t } : {}),
+      ...(x.riv && x.rival ? { partido: `${x.enCasa ? 'recibe' : 'visita'} ${al(x.rival)}`, rival: { va: puestoDe(x.riv), dificultad: x.riv.nivel, ...(golesDelRival(x) ? { dato: golesDelRival(x).t } : {}) } } : {}),
+      ...(rol === 'en racha' && racha ? { racha: `${fmt(racha.racha.media)} de media en sus últimos ${racha.racha.n} partidos` } : {}) } });
+  const hechos = { tipo: 'onceideal', jornada, noticia: `el once ideal de Fantasy Manager para la jornada ${jornada}, calculado con titularidad, media, racha, rival, casa o fuera y precio`,
+    formacion: form, valorDelOnce: tot.t, aviso: 'el once entero va en la imagen adjunta: el texto no lo enumera, cuenta por qué y destaca a unos pocos',
+    jugadores: [jug(M, 'la gran apuesta', true), ...(chollo ? [jug(chollo, 'el chollo')] : []), ...(fav ? [jug(fav, 'el mejor cruce')] : []), ...(racha ? [jug(racha, 'en racha')] : []),
+      ...(fuera ? [{ ...jug(fuera, 'se queda fuera por la duda'), estado: undefined }] : [])],
+    clubes: clubesH(...[M, chollo, fav, racha, fuera].filter(Boolean).flatMap((x) => [x.equipo, x.rival])) };
+  return { tipo: 'onceideal', clave: `onceideal|${jornada}`, jornada, texto, hechos, numeros: num, partido: null, tarjeta, ...(sinTarjeta ? { sinTarjeta } : {}),
     elegidos: { mejor: M.nombre, chollo: chollo && chollo.nombre, fav: fav && fav.nombre, racha: racha && racha.nombre, fuera: fuera && fuera.nombre } };
 }
 

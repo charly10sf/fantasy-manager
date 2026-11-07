@@ -9,7 +9,8 @@ import { preguntarJson as geminiJson } from './gemini.mjs';
 import { preguntarJson as claudeJson, SONNET, HAIKU } from './claude.mjs';
 import { diaMadrid } from './registro.mjs';
 
-export const MODELOS = { clasificar: HAIKU, redactar: SONNET };
+// revisar (lib/revisor.mjs) y pulir (lib/pulir.mjs, desde el 7 nov con Claude: el flash-lite de Gemini enredaba los textos) con Sonnet
+export const MODELOS = { clasificar: HAIKU, redactar: SONNET, revisar: SONNET, pulir: SONNET };
 
 export const proveedor = (config = {}) => String(process.env.BOT_IA || (config.ia && config.ia.proveedor) || 'gemini').toLowerCase();
 export const conClaude = (config = {}) => proveedor(config) === 'claude' && !!process.env.ANTHROPIC_API_KEY;
@@ -20,7 +21,7 @@ export function cuentaHoy(registro, ahora = Date.now()) {
   const hoy = diaMadrid(ahora);
   if (!d.ia || d.ia.dia !== hoy) {
     if (d.ia && d.ia.dia) d.iaDias = [...(d.iaDias || []).filter((x) => x.dia !== d.ia.dia), d.ia].slice(-30);
-    d.ia = { dia: hoy, llamadas: { clasificar: 0, redactar: 0 }, fallos: 0, entrada: 0, salida: 0, cacheLee: 0, cacheEscribe: 0, dolares: 0 };
+    d.ia = { dia: hoy, llamadas: { clasificar: 0, redactar: 0, revisar: 0, pulir: 0 }, fallos: 0, entrada: 0, salida: 0, cacheLee: 0, cacheEscribe: 0, dolares: 0 };
   }
   return d.ia;
 }
@@ -31,7 +32,7 @@ export function sinCupo(uso, { registro, config = {}, ahora = Date.now() } = {})
   const c = cuentaHoy(registro, ahora);
   const tope = cfg.topeDolaresDia ?? 0.7;
   if (c.dolares >= tope) return `tope de ${tope} $ hoy (${c.dolares.toFixed(3)} $ gastados)`;
-  const n = (cfg.porDia || {})[uso] ?? (uso === 'redactar' ? 60 : 150);
+  const n = (cfg.porDia || {})[uso] ?? ({ redactar: 60, revisar: 150, pulir: 80 }[uso] || 150);
   if ((c.llamadas[uso] || 0) >= n) return `tope de ${n} preguntas de ${uso} hoy`;
   return '';
 }
@@ -49,13 +50,14 @@ function apuntar(c, uso, r) {
  */
 export async function preguntar({ uso = 'clasificar', registro = null, config = {}, prompt, esquema, sistema = '', cache = false, log = () => {},
   tiempo, hasta, ahora = Date.now(), claude = claudeJson, gemini = geminiJson, pedir }) {
+  let sinCupoMotivo = '';
   if (conClaude(config)) {
     const motivo = sinCupo(uso, { registro, config, ahora });
-    if (motivo) log(`  (ia) ${motivo}`);
+    if (motivo) { sinCupoMotivo = motivo; log(`  (ia) ${motivo}`); }
     else {
       const ci = config.ia || {};
       const modelo = (ci.modelos || {})[uso] || MODELOS[uso];
-      const esfuerzo = (ci.esfuerzo || { clasificar: 'low', redactar: 'medium' })[uso] || null;
+      const esfuerzo = ({ clasificar: 'low', redactar: 'medium', revisar: 'low', pulir: 'low', ...(ci.esfuerzo || {}) })[uso] || null;
       const pensar = ((ci.pensar || {})[uso]) === true;
       const r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, modelo, esfuerzo, pensar, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
         ...(uso === 'clasificar' ? { maxTokens: 16000 } : {}), ...(pedir ? { pedir } : {}) });
@@ -65,7 +67,10 @@ export async function preguntar({ uso = 'clasificar', registro = null, config = 
     }
   }
   // redactar con Gemini solo si se pide (`ia.geminiRedacta`): si no, la plantilla
-  if (uso === 'redactar' && !(config.ia || {}).geminiRedacta) return { ok: false, error: conClaude(config) ? 'Claude no contesta o sin cupo' : 'sin Claude', proveedor: 'claude' };
+  // revisar, solo con Claude (sin él, el tuit sigue sin revisar: lib/revisor.mjs)
+  if (uso === 'revisar') return { ok: false, error: conClaude(config) ? 'Claude no contesta o sin cupo' : 'sin Claude', proveedor: 'claude' };
+  // (con el tope de gasto, el error empieza por «tope»: lib/respaldo.mjs no espera en ese caso, esperar no lo arreglaría)
+  if (uso === 'redactar' && !(config.ia || {}).geminiRedacta) return { ok: false, error: sinCupoMotivo || (conClaude(config) ? 'Claude no contesta' : 'sin Claude'), proveedor: 'claude' };
   const clave = process.env.GEMINI_API_KEY;
   const r = await gemini({ clave, prompt: sistema ? `${sistema}\n\n${prompt}` : prompt, esquema, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}), ...(pedir ? { pedir } : {}) });
   return { ...r, proveedor: 'gemini' };

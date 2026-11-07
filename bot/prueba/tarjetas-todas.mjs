@@ -48,10 +48,14 @@ const mvpDe = (m) => [...m.local.players, ...m.visitor.players].sort((a, b) => b
 const partidoDe = (p) => stats.find((m) => [m.local.id, m.visitor.id].map(String).includes(String(p.teamId)) && m.matchState === 7);
 const casos = [['jugador-leyenda', 'Lamine Yamal', 'mvp'], ['jugador-oro', 'Grimaldo', 'doblete'], ['jugador-plata', 'Cabrera', 'gol'], ['jugador-bronce', 'Hinojo', 'roja']];
 for (const [n, nom, motivo] of casos) { const p = J(nom), m = partidoDe(p); if (!m) { console.log('sin partido', nom); continue; } await dibuja(n, { tipo: 'mvp', partido: m.id, jugadorId: p.id, motivo }); }
+// el portero que para un penalti (#77): el portero con más puntos de la jornada
+{ const por = stats.filter((m) => m.matchState === 7).flatMap((m) => [...m.local.players, ...m.visitor.players].map((p) => ({ p, m })))
+    .map(({ p, m }) => ({ m, pl: jugadores.find((x) => String(x.id) === String(p.id)), pts: p.weekPoints })).filter((x) => x.pl && x.pl.positionId === '1').sort((a, b) => b.pts - a.pts)[0];
+  if (por) await dibuja('jugador-parada', { tipo: 'mvp', partido: por.m.id, jugadorId: por.pl.id, motivo: 'parada' }); }
 // --- resumen
 const ordenados = [...stats.flatMap((m) => [...m.local.players, ...m.visitor.players])].filter((p) => p.weekPoints != null).sort((a, b) => b.weekPoints - a.weekPoints);
 const filasRes = (lista) => lista.map((p) => { const pl = jugadores.find((x) => String(x.id) === String(p.id)); const e = equipos[String(pl.teamId)];
-  return { id: p.id, nombre: p.nickname || p.name, equipo: e.corto, club: e.nombre, pts: Number(p.weekPoints), media: Number(pl.averagePoints), valor: Number(pl.marketValue), caraUrl: caraUrl(pl), escudoUrl: e.badge }; });
+  return { id: p.id, pos: pl.positionId, nombre: p.nickname || p.name, equipo: e.corto, club: e.nombre, pts: Number(p.weekPoints), media: Number(pl.averagePoints), valor: Number(pl.marketValue), caraUrl: caraUrl(pl), escudoUrl: e.badge }; });
 const top = filasRes(ordenados.slice(0, 6)), bajos = filasRes(ordenados.filter((p) => { const pl = jugadores.find((x) => String(x.id) === String(p.id)); return pl && pl.positionId !== '1'; }).slice(-6).reverse());
 const resumen = (clave, filas) => ({ tipo: 'resumen', nombre: `resumen-${jornada}-${clave}`, d: { jornada, clave, filas }, permitidos: { numeros: [jornada, 1, 2, 3, 4, 5, 6, ...filas.map((f) => f.pts)].map(String), palabras: filas.flatMap((f) => [f.nombre, f.equipo, f.club]) } });
 await dibuja('resumen-mejores', { tipo: 'resumen', tarjeta: resumen('mejores', top) });
@@ -60,7 +64,7 @@ await dibuja('resumen-peores', { tipo: 'resumen', tarjeta: resumen('peores', baj
 const fmt = (x) => String(x).replace('.', ',');
 const mfila = (nom, dif, pct) => { const p = J(nom), e = equipos[String(p.teamId)]; const v = Number(p.marketValue);
   const d = Math.abs(dif); const din = d >= 1e6 ? `${fmt(Math.round(d / 1e5) / 10)} M` : `${Math.round(d / 1e3)} K`;
-  return { nombre: p.nickname, equipo: e.corto, club: e.nombre, caraUrl: caraUrl(p), escudoUrl: e.badge, dif: `${dif > 0 ? '+' : '-'}${din}`, pct: `${dif > 0 ? '+' : '-'}${fmt(pct)} %`, valor: `${fmt(Math.round(v / 1e5) / 10)} M` }; };
+  return { nombre: p.nickname, pos: p.positionId, equipo: e.corto, club: e.nombre, caraUrl: caraUrl(p), escudoUrl: e.badge, dif: `${dif > 0 ? '+' : '-'}${din}`, pct: `${dif > 0 ? '+' : '-'}${fmt(pct)} %`, valor: `${fmt(Math.round(v / 1e5) / 10)} M` }; };
 const suben = [['Lamine Yamal', 4.2e6, 2.3], ['Mbappé', 3.1e6, 2.1], ['Fermín', 2.4e6, 3.4], ['Cabrera', 1.1e6, 5.2], ['Grimaldo', 0.8e6, 2.4]].map((a) => mfila(...a));
 const bajan = [['Bellingham', -2.9e6, 2.8], ['De Frutos', -1.6e6, 2.6], ['Vini Jr.', -1.2e6, 1.1], ['Budimir', -0.9e6, 3.0], ['Roberto', -0.6e6, 4.4]].map((a) => mfila(...a));
 const todasM = [...suben, ...bajan];
@@ -102,6 +106,18 @@ for (const b of baj) await dibuja(b.nombre, { tipo: 'caidas', tarjeta: b.t });
 const ap = (nombres) => tarjetaApercibidos({ jornada: jornada + 1, filas: nombres.map((n) => fila(J(n), { estado: 'duda' })), clave: `ap-${nombres.length}` });
 await dibuja('apercibidos-2', { tipo: 'sancionados', tarjeta: ap(['Cabrera', 'Roberto', 'Bauza', 'Cardona']) });
 await dibuja('apercibidos-8', { tipo: 'sancionados', tarjeta: ap(['Cabrera', 'Roberto', 'Bauza', 'Cardona', 'Grimaldo', 'Bellingham', 'De Frutos', 'Fermín']) });
+
+// --- once ideal (3-4-3, con apuesta y chollo; los puntos esperados, inventados)
+{ const noms = ['Unai Simón', 'Cubarsí', 'Marcos Llorente', 'Grimaldo', 'Pedri', 'Fermín', 'Valverde', 'Cabrera', 'Lamine Yamal', 'Mbappé', 'Budimir'];
+  const posDe = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
+  const once = noms.map((n, i) => { let p; try { p = J(n); } catch { return null; } const e = equipos[String(p.teamId)] || {};
+    return { id: p.id, pos: posDe[Number(p.positionId)], nombre: p.nickname, equipo: e.corto, club: e.nombre, pts: fmt(Math.round((8.9 - i * 0.3) * 10) / 10), rol: i === 9 ? 'apuesta' : i === 7 ? 'chollo' : null, caraUrl: caraUrl(p), escudoUrl: e.badge }; }).filter(Boolean)
+    .sort((a, b) => ['POR', 'DEF', 'MED', 'DEL'].indexOf(a.pos) - ['POR', 'DEF', 'MED', 'DEL'].indexOf(b.pos));
+  const c = { 2: 0, 3: 0, 4: 0 }; for (const x of once) if (x.pos !== 'POR') c[{ DEF: 2, MED: 3, DEL: 4 }[x.pos]]++;
+  const form = `${c[2]}-${c[3]}-${c[4]}`;
+  if (once.length === 11) await dibuja('onceideal', { tipo: 'onceideal', tarjeta: { tipo: 'onceideal', nombre: 'onceideal-x', d: { jornada: jornada + 1, formacion: form, valor: '612 M', apuesta: true, chollo: true, once },
+    permitidos: { numeros: [jornada + 1, c[2], c[3], c[4], ...once.map((x) => x.pts), '612 M'].map(String), palabras: ['ONCE', 'IDEAL', 'FORMACIÓN', 'PUNTOS', 'ESPERADOS', 'APUESTA', 'CHOLLO', 'VALOR', 'M', ...once.map((x) => x.nombre)] } } });
+  else console.log('once ideal: faltan jugadores', once.length); }
 
 // ---------------- estrés: los nombres más largos de la liga
 if (arg('estres') === '1') {

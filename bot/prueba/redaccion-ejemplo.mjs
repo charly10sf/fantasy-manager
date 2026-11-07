@@ -141,6 +141,19 @@ const t2 = { tipo: 'noticias', clave: 'n2', texto: '✅ plantilla dos', numeros:
 hechosN = await redactar([t2], { tipo: 'noticias', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {},
   pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }) });
 ok(hechosN === 0 && t2.texto === '✅ plantilla dos' && !t2.redactado, 'si las dos versiones fallan, sale la plantilla');
+// la prensa es un adorno: si la redacción de ese tuit ya ha fallado, se prueba sin ella (`sinPrensaTrasFallos`)
+let pedidasPrensa = 0;
+const prensaEspia = () => { pedidasPrensa++; return cron; };
+const cfgPrensa = { ...config, redactar: { ...config.redactar, activo: true, sinPrensaTrasFallos: 1 } };
+const salePrensa = async (clave, fallosPrevios) => {
+  const regP = { datos: { enviados: [], fallosRedaccion: fallosPrevios ? { [clave]: { n: fallosPrevios } } : {} }, fichero: null, guardar() {} };
+  pedidasPrensa = 0;
+  await redactar([{ tipo: 'noticias', clave, texto: '✅ plantilla', numeros: [12], hechos }], { tipo: 'noticias', registro: regP, config: cfgPrensa, jugadores, equipos, log: () => {}, cronicasDe: prensaEspia,
+    pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }) });
+  return pedidasPrensa;
+};
+ok(await salePrensa('p1', 0) === 1, 'sin fallos previos, el tuit se redacta con la prensa');
+ok(await salePrensa('p2', 1) === 0, 'con un fallo previo, se redacta sin pedir la prensa');
 hechosN = await redactar([{ ...t2 }], { tipo: 'noticias', registro: reg2, config, jugadores, equipos, log: () => {}, pedir: pedirF });
 ok(hechosN === 0, 'con redactar.activo a false no hace nada');
 hechosN = await redactar([{ ...t2 }], { tipo: 'mercado', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {}, pedir: pedirF });
@@ -198,6 +211,11 @@ ok(sucesosSinHechos('Sivera hizo tres paradas', sinInc).join() === 'una parada',
 ok(sucesosSinHechos('Sevilla y Alavés empatan sin goles', sinInc).length === 0 && sucesosSinHechos('Gana de penalti', { ...sinInc, goles: [{ goleador: 'X', penalti: true }] }).length === 0, 'un gol de penalti en `goles` sí permite hablar del penalti');
 const hMvp = { ...hFinal, tipo: 'mvp' };
 ok(revisar('⭐ Según AS, Sivera es el mejor del partido con 9 puntos.', { hechos: hMvp, todos, numeros: [] }).some((x) => /no se atribuye/.test(x)), 'en un MVP tampoco se atribuye a un medio');
+// onces confirmados (7 nov, Málaga-Racing: «Ya hay onces confirmados en La Rosaleda, según ESPN»): sin fuente
+const hOnces = { ...hFinal, tipo: 'onces', goles: [], incidencias: [], partido: { partido: 'Málaga-Racing', local: 'Málaga', visitante: 'Racing' }, noticia: 'Los dos onces ya están confirmados' };
+const ro = (t) => revisar(t, { hechos: hOnces, todos, numeros: [] });
+ok(ro('👀 Ya hay onces confirmados en La Rosaleda, según ESPN: el Málaga sale con cinco atrás.').some((x) => /no se nombra ninguna fuente/.test(x)), '«según ESPN» en unos onces, fuera');
+ok(ro('👀 Onces confirmados en La Rosaleda: el Málaga sale con cinco atrás.').filter((x) => /fuente/.test(x)).length === 0, 'los onces sin fuente valen');
 // en noticias y previas el medio sí es la fuente: nada cambia
 ok(rv(bueno).length === 0 && rv('Eric vuelve, según AS y MARCA.').filter((x) => /atribuye|sucesos/.test(x)).length === 0, 'en una noticia, «según AS» sigue valiendo');
 // la guía y la prensa
@@ -205,6 +223,117 @@ ok(!EJEMPLOS.some((x) => x.bien && (x.tipo === 'final' || x.tipo === 'mvp') && /
 ok(EJEMPLOS.some((x) => !x.bien && /Cuenta COPE/.test(x.texto)), 'la guía trae el «Cuenta COPE» como ejemplo MAL');
 ok(JSON.stringify(config.redactar.prensa) === '["previa"]', 'la prensa solo va a la previa (en un final o un MVP lo que pasa en el campo sale de ESPN)');
 
+// --- el revisor (lib/revisor.mjs): segunda lectura con IA, con los hechos al lado ---
+{
+  const { revisarConIA, SISTEMA } = await import('../lib/revisor.mjs');
+  const { pulir } = await import('../lib/pulir.mjs');
+  const cfgR = { ...config, redactar: { ...config.redactar, activo: true } };
+  // 1. el revisor tira la primera versión; la segunda pregunta lleva sus motivos y sale la segunda
+  const textos = ['✅ El Barça recupera a Eric para el domingo, según AS y MARCA. Es de los defensas que mejor han rentado esta jornada.', bueno];
+  const preg = [];
+  const pedirR = async (op) => { preg.push(op); return { ok: true, datos: { texto: textos.shift(), cronicas: [] }, modelo: SONNET }; };
+  let lecturas = 0;
+  const revisorF = async ({ texto }) => { lecturas++; return /mejor han rentado/.test(texto) ? { ok: false, problemas: ['«Es de los defensas que mejor han rentado esta jornada»: los hechos no traen nada de la jornada'], revisado: true, modelo: SONNET } : { ok: true, problemas: [], revisado: true, modelo: SONNET }; };
+  const ta = { tipo: 'noticias', clave: 'rv1', texto: '✅ plantilla', numeros: [12], hechos };
+  const n1 = await redactar([ta], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {}, pedir: pedirR, revisor: revisorF });
+  ok(n1 === 1 && ta.texto.startsWith(bueno.split('\n')[0]) && ta.revisado === SONNET && lecturas === 2, 'revisor: tira la versión con una comparación sin base y sale la segunda, revisada');
+  ok(preg.length === 2 && /editor/.test(preg[1].prompt) && /mejor han rentado/.test(preg[1].prompt), 'revisor: la segunda pregunta lleva lo que dijo el editor');
+  // 2. si el revisor tira las tres, sale la plantilla
+  const tb = { tipo: 'noticias', clave: 'rv2', texto: '✅ plantilla tres', numeros: [12], hechos };
+  const n2 = await redactar([tb], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {},
+    pedir: async () => ({ ok: true, datos: { texto: bueno }, modelo: SONNET }), revisor: async () => ({ ok: false, problemas: ['«x»: no se entiende'], revisado: true }) });
+  ok(n2 === 0 && tb.texto === '✅ plantilla tres', 'revisor: si no publicaría ninguna de las tres, sale la plantilla');
+  // 3. revisor caído: el tuit sigue (ya pasó el validador de código)
+  const tc = { tipo: 'noticias', clave: 'rv3', texto: '✅ plantilla', numeros: [12], hechos };
+  const n3 = await redactar([tc], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {},
+    pedir: async () => ({ ok: true, datos: { texto: bueno }, modelo: SONNET }), revisor: async () => ({ ok: true, problemas: [], revisado: false }) });
+  ok(n3 === 1 && !tc.revisado, 'revisor caído: sale redactado, sin la marca de revisado');
+  // 4. revisarConIA: lo que contesta la IA
+  const contesta = (datos) => async (op) => ({ ok: true, datos, modelo: SONNET, op });
+  let rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: true, problemas: [] }) });
+  ok(rr.ok && rr.revisado, 'revisarConIA: publicable sin problemas, vale');
+  rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: true, problemas: [{ frase: 'Es de los que sostienen una plantilla', motivo: 'relleno' }] }) });
+  ok(rr.ok, 'revisarConIA: manda «publicable» (lo que apunte de más no bloquea)');
+  rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: false, problemas: [{ frase: 'Es de los que sostienen una plantilla', motivo: 'relleno' }] }) });
+  ok(!rr.ok && /sostienen/.test(rr.problemas[0]), 'revisarConIA: no publicable, con su motivo');
+  rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: false, problemas: [] }) });
+  ok(!rr.ok && rr.problemas.length === 1, 'revisarConIA: no publicable sin motivo, con un motivo genérico para reescribir');
+  rr = await revisarConIA({ texto: 'x', hechos, config, pedir: async () => ({ ok: false, error: '529' }) });
+  ok(rr.ok && !rr.revisado, 'revisarConIA: si no contesta, no bloquea');
+  rr = await revisarConIA({ texto: 'x', hechos, config: { ...config, revisor: { activo: false } }, pedir: contesta({ publicable: false, problemas: [] }) });
+  ok(rr.ok && !rr.revisado, 'revisarConIA: con revisor.activo a false no pregunta');
+  let vistoR = null;
+  await revisarConIA({ texto: 'el tuit', hechos, config, pedir: async (op) => { vistoR = op; return { ok: true, datos: { publicable: true, problemas: [] } }; } });
+  ok(vistoR.uso === 'revisar' && /el tuit/.test(vistoR.prompt) && /Eric vuelve/.test(vistoR.prompt) && !/"fecha"/.test(vistoR.prompt) && vistoR.sistema === SISTEMA, 'revisarConIA: pregunta con uso «revisar», el tuit y los hechos sin la fecha cruda');
+  ok(/resto de la jornada/.test(SISTEMA) && /16º clasificado/.test(SISTEMA), 'el revisor trae los fallos del 6 nov (comparación con la jornada, «16º clasificado»)');
+  // 5. pulir: si el revisor no publicaría el pulido, se queda la plantilla
+  const pl = '🚨 Budimir, baja para la jornada 12: lesión muscular.\n\n❌ Baja para la jornada 12';
+  const tp = { tipo: 'caidas', clave: 'p1', texto: pl, numeros: [12] };
+  const nP = await pulir([tp], { tipo: 'caidas', registro: { datos: {}, fichero: null }, config, jugadores, equipos, forzar: true, clave: 'x', log: () => {},
+    pedirIA: async () => ({ ok: true, proveedor: 'claude', modelo: SONNET, datos: { tweets: [{ i: 0, texto: '🚨 Budimir se cae para la jornada 12: lesión muscular.\n\n❌ Baja para la jornada 12' }] } }),
+    revisor: async () => ({ ok: false, problemas: ['«x»: no se entiende'], revisado: true }) });
+  ok(nP === 0 && tp.texto === pl, 'pulir: si el revisor no lo publicaría, se queda la plantilla');
+  const tq = { tipo: 'caidas', clave: 'p2', texto: pl, numeros: [12] };
+  const nQ = await pulir([tq], { tipo: 'caidas', registro: { datos: {}, fichero: null }, config, jugadores, equipos, forzar: true, clave: 'x', log: () => {},
+    pedirIA: async () => ({ ok: true, proveedor: 'claude', modelo: SONNET, datos: { tweets: [{ i: 0, texto: '🚨 Budimir se cae para la jornada 12: lesión muscular.\n\n❌ Baja para la jornada 12' }] } }),
+    revisor: async () => ({ ok: true, problemas: [], revisado: true, modelo: SONNET }) });
+  ok(nQ === 1 && tq.revisado === SONNET, 'pulir: con el visto bueno del revisor, sale pulido y revisado');
+}
+// la guía trae lo del 7 nov
+{
+  const { GUIA } = await import('../lib/voz.mjs');
+  ok(/SOLO LO QUE SABES/.test(GUIA) && /DELATA A UNA IA/.test(GUIA), 'la guía trae «solo lo que sabes» y «lo que delata a una IA»');
+  ok(EJEMPLOS.some((x) => !x.bien && /rentado esta jornada/.test(x.texto)), 'la guía trae como MAL la comparación con la jornada');
+}
+
+// la previa: primera frase corta y «en el aire» una sola vez (7 nov)
+{
+  const hp = { tipo: 'previa', jugadores: [{ nombre: 'Budimir', club: 'Osasuna', papel: 'fijo', estado: 'fijo' }], equipos: [{ club: 'Osasuna', va: '12º de 20' }, { club: 'Athletic', va: '5º de 20' }], clubes: clubes('Osasuna', 'Athletic') };
+  const largo = 'El Osasuna recibe hoy a las seis y media en El Sadar al Athletic, que llega quinto, con un cruce que a sus delanteros y medios les viene mal porque el Osasuna encaja poco en casa. Budimir es fijo.';
+  const corto = 'El Osasuna recibe hoy al Athletic y a los delanteros rojillos les toca un cruce cómodo. Budimir es fijo.';
+  ok(revisar(largo, { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: una primera frase de más de 30 palabras, fuera');
+  ok(!revisar(corto, { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: una primera frase corta, vale');
+  ok(revisar('El Osasuna recibe hoy al Athletic. Budimir está en el aire y Herrera también está en el aire.', { hechos: hp, todos }).some((x) => /en el aire/.test(x)), 'previa: «en el aire» dos veces, fuera');
+  ok(!revisar('El Osasuna recibe hoy al Athletic. Budimir está en el aire y Herrera no tiene el puesto asegurado.', { hechos: hp, todos }).some((x) => /en el aire/.test(x)), 'previa: «en el aire» una vez, vale');
+  ok(revisar('La gran duda del Osasuna-Athletic está en Budimir. Es fijo.', { hechos: hp, todos }).some((x) => /fórmula de plantilla/.test(x)), 'previa: abrir con «La gran duda del X-Y», fuera');
+  ok(revisar('El Osasuna recibe hoy a las seis y media en El Sadar al Athletic, que llega quinto, con un cruce que a los delanteros y medios de casa les viene bastante mal y por eso el Osasuna lo tiene más difícil: Budimir es fijo.', { hechos: hp, todos }).some((x) => /primera frase/.test(x)), 'previa: los dos puntos no cortan la primera frase');
+  ok(!revisar(largo, { hechos: { ...hp, tipo: 'caidas' }, todos }).some((x) => /primera frase/.test(x)), 'solo la previa tiene tope de primera frase');
+}
+
+// mayúsculas solo en un momento que lo merezca (7 nov, Carlos: golazo, gol en los últimos instantes…)
+{
+  const { momentoEspecial } = await import('../tipos/directo.mjs');
+  ok(momentoEspecial({ tipoEspn: 'Goal - Free-kick', min: 64, sit: 'amplia' }).motivos.includes('golazo de falta directa'), 'momento: gol de falta directa');
+  ok(momentoEspecial({ tipoEspn: 'Goal', min: 90, extra: 3, sit: 'voltea' }).motivos.some((x) => /descuento/.test(x)), 'momento: gol en el descuento que da la vuelta');
+  ok(!momentoEspecial({ tipoEspn: 'Goal - Header', min: 30, sit: 'abre' }).motivos.length, 'momento: un gol de cabeza en el 30, nada especial');
+  ok(!momentoEspecial({ tipoEspn: 'Goal', min: 88, sit: 'amplia' }).motivos.length, 'momento: ampliar en el 88 no es para gritar');
+  const hg = { tipo: 'directo', subtipo: 'gol', jugadores: [{ nombre: 'Budimir', club: 'Osasuna', principal: true }], clubes: clubes('Osasuna', 'Athletic') };
+  const grito = '⚽ ¡EN EL 93! Budimir empata para el Osasuna contra el Athletic.';
+  ok(revisar(grito, { hechos: hg, todos }).some((x) => /mayúsculas sin un momento/.test(x)), 'directo: mayúsculas sin momentoParaCelebrar, fuera');
+  ok(!revisar(grito, { hechos: { ...hg, momentoParaCelebrar: ['gol en el descuento'] }, todos }).some((x) => /mayúsculas/.test(x)), 'directo: mayúsculas con momentoParaCelebrar, vale');
+  ok(revisar('⚽ ¡GOLAZO DE PEPE! Budimir empata.', { hechos: { ...hg, momentoParaCelebrar: ['gol en el descuento'] }, todos }).some((x) => /no salen de los hechos/.test(x)), 'directo: un nombre inventado en mayúsculas, fuera');
+  ok(!revisar('⚽ Budimir empata tras revisarlo el VAR.', { hechos: hg, todos }).some((x) => /mayúsculas/.test(x)), 'directo: una sigla (VAR) no cuenta como grito');
+}
+
+// los nombres como los llama la gente (7 nov: «el Cuti», «Borja Iglesias» y no «B. Iglesias»)
+{
+  const { comoLeLlaman } = await import('../lib/apodos-jugadores.mjs');
+  const { conApodos } = await import('../lib/redaccion.mjs');
+  ok(comoLeLlaman('Cuti Romero').includes('el Cuti'), 'apodos: el Cuti');
+  ok(comoLeLlaman('B. Iglesias').includes('Borja Iglesias'), 'apodos: Borja Iglesias por B. Iglesias');
+  ok(comoLeLlaman('J. Musso').includes('Musso'), 'apodos: el apellido solo de un nickname con inicial');
+  ok(!comoLeLlaman('D. Martínez').length, 'apodos: un apellido que se repite no vale solo');
+  const hi = conApodos({ tipo: 'caidas', jugadores: [{ nombre: 'B. Iglesias', club: 'Celta', estado: 'lesionado', principal: true }], clubes: clubes('Celta', 'Elche') });
+  ok(!revisar('🚑 Borja Iglesias se pierde el partido del Celta contra el Elche.', { hechos: hi, todos }).some((x) => /no nombra|nombra a quien/.test(x)), 'apodos: con el nombre completo cuenta como nombrado');
+}
+
+// emojis de club: o los dos o ninguno (Carlos, 7 nov 18:01)
+{
+  const h2 = { tipo: 'onces', jornada: 12, partido: { partido: 'Osasuna-Athletic' }, equipos: [], jugadores: [], sinSorpresas: true, clubes: { Osasuna: { nombres: ['el Osasuna'], emoji: '🐂' }, Athletic: { nombres: ['el Athletic'], emoji: '🦁' } } };
+  ok(revisar('👀 El Osasuna 🐂 y el Athletic salen sin sorpresas en El Sadar.', { hechos: h2 }).some((x) => x.includes('también el de Athletic')), 'emojis de club: uno sí y otro no, fuera');
+  ok(!revisar('👀 El Osasuna 🐂 y el Athletic 🦁 salen sin sorpresas en El Sadar.', { hechos: h2 }).some((x) => /emoji/.test(x)), 'emojis de club: los dos, vale');
+  ok(!revisar('👀 El Osasuna y el Athletic salen sin sorpresas en El Sadar.', { hechos: h2 }).some((x) => /emoji/.test(x)), 'emojis de club: ninguno, vale');
+}
 process.env = viejo;
 console.log(`\n${fallos ? `${fallos} FALLOS` : '0 fallos'}`);
 process.exit(fallos ? 1 : 0);

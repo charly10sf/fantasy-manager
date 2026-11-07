@@ -5,10 +5,10 @@
 //   caidas y novedades -> tarjeta de bajas (de un equipo o en lista), montada por el tipo (si tarjetas.caidas / tarjetas.novedades)
 //   onceideal -> la tarjeta del once ideal de la jornada, montada por el tipo (si tarjetas.onceideal)
 //   sancionados -> la de bajas de los sancionados y la de apercibidos, separados por equipo (si tarjetas.sancionados)
-//   directo -> tarjeta de cada jugador implicado: goleador, asistente, expulsado o el que falla el penalti (si tarjetas.jugador)
+//   directo -> tarjeta de cada jugador implicado: gol con asistente en una sola (los dos), expulsado o el que falla el penalti (si tarjetas.jugador)
 // Lo que no pasa el validador no sale: el tweet del final se publica entonces sin imagen y el del MVP no se publica.
-import { svgFinal, svgJugador, svgResumen, svgOnces, svgOnceIdeal, svgMercado, svgBajas, svgApercibidos, aPng } from './tarjetas.mjs';
-import { datosFinal, datosJugador, historialJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
+import { svgFinal, svgJugador, svgGolAsistencia, svgResumen, svgOnces, svgOnceIdeal, svgMercado, svgBajas, svgApercibidos, aPng } from './tarjetas.mjs';
+import { datosFinal, datosJugador, datosGolAsistencia, historialJugador, PALABRAS_FIJAS } from './datos-tarjetas.mjs';
 import { validarTarjeta } from './validar.mjs';
 import * as LL from './laliga.mjs';
 
@@ -53,7 +53,8 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     if (tarjeta.tipo === 'bajas' && d.filas.length === 1) {
       const j = (jugadores || []).find((x) => String(x.id) === String(d.filas[0].id));
       if (j) {
-        const h = await historialJugador(j, { jornada, fuentes }).catch(() => null);
+        const partido = (stats || []).find((x) => [x.local && x.local.id, x.visitor && x.visitor.id].map(String).includes(String(j.teamId))) || null;
+        const h = await historialJugador(j, { jornada, fuentes, partido }).catch(() => null);
         if (h) { Object.assign(d.filas[0], h.d); permitidos = { ...permitidos, numeros: [...(permitidos.numeros || []), ...h.numeros] }; }
       }
     }
@@ -74,11 +75,19 @@ export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar 
     : t.tipo === 'directo' ? (t.tarjetas || []) : [];
   if (quienes.length && (cfg.jugador || forzar)) {
     const vistos = new Set();
+    // gol con asistente: una sola tarjeta con los dos (Carlos, 7 nov); el resto de implicados, cada uno la suya
+    const qg = quienes.find((q) => ['gol', 'doblete', 'triplete'].includes(q.motivo)), qa = quienes.find((q) => q.motivo === 'asistencia');
+    const jg = qg && jugadores.find((x) => String(x.id) === String(qg.jugadorId)), ja = qa && jugadores.find((x) => String(x.id) === String(qa.jugadorId));
+    if (t.tipo === 'directo' && jg && ja && String(jg.id) !== String(ja.id)) {
+      const x = await datosGolAsistencia(jg, ja, m, { jornada, motivo: qg.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null });
+      await hacer(`${t.tipo}-${m.id}-${jg.id}-${ja.id}-golasis`, x, svgGolAsistencia(x.d));
+      vistos.add(String(jg.id)); vistos.add(String(ja.id));
+    }
     for (const q of quienes.slice(0, 4)) {            // X admite hasta 4 imágenes por tweet
       if (vistos.has(String(q.jugadorId))) continue; vistos.add(String(q.jugadorId));
       const j = jugadores.find((x) => String(x.id) === String(q.jugadorId));
       if (!j) continue;
-      const x = await datosJugador(j, m, { jornada, motivo: q.motivo, fuentes, marcador: t.marcador || null });
+      const x = await datosJugador(j, m, { jornada, motivo: q.motivo, fuentes, marcador: t.marcador || null, minuto: t.minutoTxt || null });
       await hacer(`${t.tipo}-${m.id}-${j.id}-${q.motivo}`, x, svgJugador(x.d));
     }
   }

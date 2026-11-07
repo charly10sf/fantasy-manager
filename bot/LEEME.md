@@ -19,7 +19,7 @@ claves sin publicar) y, si sale bien, poner `BOT_MODO` = `publicar`.
 `resumen` (mejores y peores de la jornada, al acabar), `final` (cada partido al acabar, solo los empezados en las últimas 10 h),
 `directo` (cada gol con su asistente y los puntos fantasy, rojas y penaltis fallados, de los partidos de hoy empezados hace menos
 de 3 h; el término medio de Domy, aceptado por Carlos el 2 nov), `mvp` (el MVP de cada partido con su tarjeta), `caidas` (lesionados y sancionados habituales de la jornada que viene, al acabar la actual o antes de que empiece; las dudas, no, hasta
-tener una segunda fuente), `mercado` (cada noche, tras la actualización de valores de hacia las 00:15, de 0 a 1 h y, si esa noche falla, de 8 a 12 h: un tweet con la tarjeta del top 5 que sube y baja), `previa` (posibles onces de cada partido con el % de titularidad de la app, de 36 h a 3 h antes, de 9 a 23 h; `lib/onces.mjs`), `onceideal` (el once ideal de la jornada, con tarjeta, 24-36 h antes del primer partido; ver más abajo), `onces` (onces confirmados en cuanto ESPN los publica, con las sorpresas frente al posible once) y `novedades` (cambios de estado en LaLiga Fantasy de los jugadores que importan: lesionado, sancionado, vuelve; de 9 a 23 h; el estado anterior se guarda en el registro, `estados`). El resumen de la jornada, la previa y los onces llevan tarjeta (`svgResumen` y `svgOnces` en `lib/tarjetas.mjs`). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Horas de silencio de 1 a 8 h (`horasSilencio`): no sale nada salvo el directo y el mercado; lo pendiente sale a partir de las 8. Entre semana (de lunes a viernes) todo arranca a las 7 (`inicioEntreSemana` en `config.json`, `lib/horario.mjs`; Carlos, 5 nov: «coincidiendo con la hora de trabajar»): el silencio acaba a las 7 y lo que empieza a las 8 o las 9 (previa, novedades, noticias, caídas, sancionados, lloros, liga y el mercado de la mañana) empieza a las 7; sábado y domingo, como siempre (`ventanaFinalHoras` = 13 para que el final y el MVP de un partido de las 21 h aguanten). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
+tener una segunda fuente), `mercado` (cada noche, tras la actualización de valores de hacia las 00:15, de 0 a 1 h y, si esa noche falla, de 8 a 12 h: un tweet con la tarjeta del top 5 que sube y baja), `previa` (posibles onces de cada partido con el % de titularidad de la app, repartidos durante la semana previa a la jornada: solo de la primera jornada que no ha empezado, desde 84 h antes de su primer partido, de uno en uno, 2 h entre dos y 3 al día, de 9 a 23 h; `lib/onces.mjs` y `lib/escalonar.mjs`, ver más abajo), `onceideal` (el once ideal de la jornada, con tarjeta, 24-36 h antes del primer partido; ver más abajo), `onces` (onces confirmados en cuanto ESPN los publica, con las sorpresas frente al posible once) y `novedades` (cambios de estado en LaLiga Fantasy de los jugadores que importan: lesionado, sancionado, vuelve; de 9 a 23 h; el estado anterior se guarda en el registro, `estados`). El resumen de la jornada, la previa y los onces llevan tarjeta (`svgResumen` y `svgOnces` en `lib/tarjetas.mjs`). Las caídas solo se publican de 9 a 21 h (Madrid, `horasCaidas` en `config.json`). Horas de silencio de 1 a 8 h (`horasSilencio`): no sale nada salvo el directo y el mercado; lo pendiente sale a partir de las 8. Entre semana (de lunes a viernes) todo arranca a las 7 (`inicioEntreSemana` en `config.json`, `lib/horario.mjs`; Carlos, 5 nov: «coincidiendo con la hora de trabajar»): el silencio acaba a las 7 y lo que empieza a las 8 o las 9 (previa, novedades, noticias, caídas, sancionados, lloros, liga y el mercado de la mañana) empieza a las 7; sábado y domingo, como siempre (`ventanaFinalHoras` = 13 para que el final y el MVP de un partido de las 21 h aguanten). Si X responde «duplicado» (403) se apunta como publicado y se sigue; cualquier otro error de X para esa ejecución. Con el cron de 5 min del Worker, los goles salen con hasta 5 min de retraso (más lo que tarde la Action, ~30 s).
 
 ### Redactar desde los hechos con Claude (6 nov; ACTIVA desde el 6 nov a las 19:0x)
 
@@ -31,7 +31,7 @@ Carlos, 6 nov: que no se note que es automático. En vez de pulir la plantilla, 
 - Encendida (Carlos, 6 nov 19:02: «sin A/B, quiero que hable de forma humana y como en los medios deportivos; hazlo todo tú»): `redactar.activo` true e `ia.proveedor` «claude» en config.json, y `ANTHROPIC_API_KEY` en el env de .github/workflows/bot.yml. Para apagarla: `redactar.activo` a false (vuelve la plantilla con pulir) y, si hace falta, `ia.proveedor` a «gemini» (Gemini clasifica otra vez). Sin el secreto, todo como antes.
 - Claude (`lib/claude.mjs`): misma interfaz que lib/gemini.mjs, salida estructurada (`output_config.format`, json_schema), sin temperatura (los 5.5 no la admiten), sin pensar antes de contestar (`thinking: between_tools`; con el razonamiento por defecto cada tuit costaba 0,027 $) y esfuerzo medio para redactar y bajo para clasificar (`ia.esfuerzo`). Haiku 5.5 no admite between_tools: se reintenta sin él. Las instrucciones fijas van en caché solo si salen dos o más tuits del mismo tipo en la ejecución (la caché dura 5 min y el bot corre cada 5).
 - Con `BOT_IA=claude`, noticias y liga clasifican con Haiku 5.5 (Gemini de respaldo si Claude falla o no hay cupo).
-- Gasto: tope diario propio (`ia.topeDolaresDia`, 0,70 $, y `ia.porDia`: 150 para clasificar, 60 para redactar); pasado el tope, clasificar vuelve a Gemini y redactar deja la plantilla. Cada día va al registro (`ia`: llamadas, tokens de entrada, salida, caché leída y escrita, dólares; `iaDias`: los 30 últimos) y sale al final del log de cada ejecución («(ia) gasto de hoy…»). Medido el 6 nov: unos 0,012 $ por tuit redactado (35 al día, unos 13 $/mes).
+- Gasto: tope diario propio (`ia.topeDolaresDia`, 1,5 $ desde el 7 nov, y `ia.porDia`: 150 para clasificar, 60 para redactar, 150 para revisar y 80 para pulir); pasado el tope, clasificar vuelve a Gemini y redactar deja la plantilla. Cada día va al registro (`ia`: llamadas, tokens de entrada, salida, caché leída y escrita, dólares; `iaDias`: los 30 últimos) y sale al final del log de cada ejecución («(ia) gasto de hoy…»). Medido el 6 nov: unos 0,012 $ por tuit redactado (35 al día, unos 13 $/mes).
 - Pruebas sin red: `node bot/prueba/redaccion-ejemplo.mjs`. Con datos reales: rama `pruebas-redaccion` (su workflow «Bot pruebas redaccion» solo vive ahí: simulacro, sin claves de X, con el registro de bot-estado de hace 30 h de solo lectura). En simulacro, `--estado=<archivo>` carga un registro para leerlo sin guardarlo; `--hechos=1` enseña los hechos de cada tuit. La comparación a ciegas: `gh run view <id> --log > log.txt` y `node bot/prueba/comparar.mjs --log=log.txt --casos=10 --salida=<carpeta>` (comparacion.md y clave.md).
 - Los apodos de equipo (`APODOS` en lib/texto.mjs) ya no llevan «el conjunto + gentilicio» ni nombres oficiales largos («el Málaga CF», «el Celta de Vigo»): era lo que más sonaba a máquina en los tuits del 4 al 6 nov.
 - Rigor con lo que pasa en el partido (Carlos, 6 nov 23:1x, final del Sevilla-Alavés: el tuit decía «Cuenta COPE que Sivera ha parado un penalti»). Causa: la guía mandaba decir de qué medio sale un hecho de las crónicas y su propio ejemplo «BIEN» era «Cuenta MARCA que el segundo llegó tras…», así que la IA ponía un medio delante de un suceso del campo, como si nadie lo hubiera comprobado. Ahora: (1) los hechos de final y MVP llevan `incidencias` (penaltis parados o fallados y rojas) sacadas del `summary` de ESPN (`incidenciasDe` y `incidenciasPartido`, lib/relato.mjs; el `scoreboard` no las trae), con el minuto, el lanzador y el portero; (2) la guía dice que lo que pasa en el partido es un hecho, se cuenta sin medio delante y solo si viene en los hechos; (3) el validador, en final y MVP, tira cualquier medio o «cuenta/informa… que» y cualquier suceso (penalti, parada, expulsión, autogol, VAR) que no esté en los hechos (`sucesosSinHechos`, lib/redaccion.mjs), sea de quien sea; (4) `redactar.prensa` queda solo en `previa` (en un final o un MVP ya no se pasan titulares: lo del campo sale de ESPN). Si se quisiera volver a dar prensa a los finales, el validador seguiría tirando lo que atribuya o cuente sin hechos. Prueba: prueba/redaccion-ejemplo.mjs (el penalti parado real del Sevilla-Alavés y el «Cuenta COPE»).
@@ -73,11 +73,71 @@ Las piezas comunes están en `lib/redactar.mjs`:
   ha sido (`lib/relato.mjs`, `tipos/directo.mjs`, `relato()` en `tipos/final.mjs`).
 - El cierre «Fantasy Manager · enlace en la bio» va solo en `final` y `mercado` (Carlos, 2 nov 23:11). El resto va sin cierre (`sinCierre` en `lib/texto.mjs`).
   «fantasy» ya no es obligatoria (Carlos, 4 nov 13:00): las etiquetas la llevan cuando encaja y nunca se añade #LaLigaFantasy de relleno. Las respuestas de Telegram para los clubes siguen con cierre.
-- **Puntos DAZN** (`lib/dazn.mjs`): llegan después del final del partido. `final`, `mvp`, `resumen`, los tweets de `directo` de un partido ya acabado y las
-  respuestas de Telegram esperan a que los jugadores que más puntúan del partido tengan `marca_points` en su ficha (player/{id}); si pasan
-  `daznEsperaHoras` (6, en `config.json`) desde el saque sin verlo, salen igual.
+- **Puntos definitivos** (`lib/dazn.mjs`, rehecho el 7 nov). `final`, `mvp`, `resumen`, los tweets de `directo` de un partido ya acabado y las
+  respuestas de Telegram esperan a que los puntos del partido sean los definitivos. Hasta el 6 nov solo se esperaba a la valoración DAZN
+  (`marca_points` en la ficha de los que más puntúan), y no bastaba: en el Sevilla-Alavés (J12) estaba a los 6 minutos del pitido y el
+  final salió con Sivera 10 (acabó con 15), Vlachodimos 0 (10) y Kike Salas 3 (8); faltaba todo lo de la portería a cero. Ahora un
+  partido está listo solo si (1) han pasado `puntosFinales.minTrasFinal` minutos (20) desde que el bot lo vio acabado, (2) los puntos de
+  todos sus jugadores no han cambiado en `puntosFinales.minEstable` minutos (10, dos ejecuciones seguidas; Carlos, 7 nov: a los 10-15 min
+  del pitido Sivera ya tenía sus 15 en la app y otras cuentas lo tuiteaban; la huella va en el registro, `puntosPartido`), (3) la
+  mayoría de los que más puntúan tiene la valoración DAZN y (4) el portero de un equipo que no ha encajado, si jugó 60' o más, ya tiene
+  sumada la portería a cero. Si el bot lo ve acabado muy tarde, el final se cuenta desde las 2 h del saque. Pasadas
+  `puntosFinales.esperaHoras` (6) desde el final, sale con lo que haya. En el log: «(puntos) partido N: espero: …» o «puntos definitivos ·
+  listo». Prueba: `node bot/prueba/puntos-ejemplo.mjs` (la noche del Sevilla-Alavés, minuto a minuto: sale a los ~26 min del pitido).
+
+### El revisor (7 nov)
+
+Carlos, 7 nov: «hoy he tenido que borrar y editar bastantes tweets porque no tenían sentido, tenían cosas erróneas o se notaba que estaba
+hecho con una IA mal». El validador de código no ve lo que solo se ve leyendo, así que cada tuit redactado o pulido pasa por una segunda
+lectura con IA (`lib/revisor.mjs`, uso «revisar» en lib/ia.mjs, Sonnet 5.5 con esfuerzo bajo): un editor con los hechos (o la plantilla,
+si es un pulido) al lado decide si se publica. Lo tira si dice algo que no sale de los datos (comparaciones con la jornada cuando solo
+hay un partido, rachas, contexto inventado, sucesos del partido), si se contradice o lee al revés los goles del rival, si una frase no se
+entiende a la primera o si suena a IA, a traducción o a plantilla. Sus motivos vuelven a la redacción como errores (hasta
+`redactar.intentos`, 3); si no publicaría ninguna versión, sale la plantilla. En un pulido que no aprueba, se queda la plantilla. Si
+Claude no contesta, el tuit sigue (ya pasó el validador): el revisor nunca bloquea por estar caído. `revisor.activo` a false lo apaga.
+En el log: «(redactar) …: el revisor no lo publicaría: …» y «(redactado por …, revisado por …)».
+
+Cómo lee el revisor: los hechos, la prensa que se le pasó a la redacción (en las previas; si no, tomaba por inventado lo que salía de
+ella) y los últimos tuits del tipo (tira el que repite su esqueleto o su cierre: en la prueba del 7 nov todos los MVP acababan en «Si lo
+tienes, …; si no, …»). Marca solo lo grave y manda su «publicable». Las cifras con palabras valen si cuadran con el «papel» de los
+hechos o, a grandes rasgos, con la escala de la cuenta. Cada tuit tiene hasta `redactar.intentos` (3) versiones que lleguen al revisor y
+una más si alguna se cae antes en el validador de código; y un presupuesto por ejecución (`redactar.segundosEjecucion`, 330 s: el
+trabajo de Actions corta a los 10 min) pasado el cual sale la plantilla.
+
+Hechos nuevos (7 nov) para que ni la redacción ni el revisor tengan que suponer: en final y MVP, `alcance` (solo ese partido; la lista
+de jugadores es una selección), `partido.horario` (mediodía, tarde o noche), `papel` del MVP (el que más puntos ha sacado de los dos
+equipos), `hoyFrenteASuMedia` de cada jugador («casi el doble de su media», «más del triple»…; `frenteMedia` en lib/hechos.mjs: con 17 y
+10 de media escribía «casi el doble») y si el próximo partido es en casa o fuera.
+
+Prueba con datos reales y Claude de verdad: rama `pruebas-revisor` (workflow «Bot pruebas revisor», solo vive ahí, como el de
+`pruebas-redaccion`). Tres vueltas el 7 nov: con el revisor, los finales de la J11 pasaron de 5 de 9 a 9 de 9 redactados y los MVP a 6-7
+de 9; las previas, de 3 a 5 de 19 (el resto, plantilla pulida por Claude).
+
+Pulir (`lib/pulir.mjs`, caídas, sancionados, lloros, resumen, liga, onces y lo que no se redacta) va desde el 7 nov con Claude (uso
+«pulir»; Gemini solo si no hay Claude): el flash-lite de Gemini, el que quedaba cuando se gastaba el cupo del flash, era el que enredaba
+los textos («16º clasificado en un duelo asequible ante uno de los rivales que más encajan»).
+
+La guía (`lib/voz.mjs`) suma «Solo lo que sabes» (nada de comparar con lo que no viene en los hechos; en un final o un MVP solo se
+conoce ese partido) y «Lo que delata a una IA», con dos ejemplos MAL sacados de los tuits del 6 nov.
+
+Gasto: el revisor suma unos 0,008 $ por tuit y pulir con Claude unos 0,01 $ por tanda. Tope diario subido a 1,5 $ (`ia.topeDolaresDia`);
+`ia.porDia` con 150 para revisar y 80 para pulir.
 
 ## Tarjetas con imagen (encendidas desde el 2 nov)
+
+Desde el 7 nov se dibujan al doble (2400 de ancho; `aPng` en lib/tarjetas.mjs baja a 1,6 o a 1 si el PNG pasa de 4,8 MB): a 1200, X las enseñaba borrosas. La de final mide 1200x880 (antes 675) para que las caras pasen de 24 a 36 de radio (Carlos, 7 nov).
+
+**Rediseño HD (7 nov, Carlos: «rediseña todas las tarjetas para HD»).** Todas llevan el estilo de la de onces (PR #74) con las piezas
+`caraHD`, `pastilla`, `panel` y `titular` de lib/estilo.mjs: fondo casi negro con el brillo del club, rejilla de puntos, halo del club
+tras cada cara, nombres en pastilla translúcida y cabecera sin banda. Caras con la cabeza entera (zoom 2,3) y radio de hasta 64
+(`R_MAX`): la foto de LaLiga es de 256 px y a más de ~300 px en el PNG a 2400 se ve blanda. Ancho lógico 1200 y alto según lo que lleve:
+final ~816 (MEJORES y PEORES en filas de tres caras con los puntos en la chapa), resumen 950 (seis fichas 3x2), mercado 1032 (suben y
+bajan en dos paneles de cinco), once ideal 1300 (vertical, campo como el de onces), bajas de un equipo 704 y de varios 620-940 (fichas),
+apercibidos hasta 1500 (un panel por club en 1, 2 o 3 columnas; `planApercibidos` elige la opción con las caras más grandes que quepa), y
+la carta de jugador 860 (MVP, directo, penalti parado y la baja de uno: panel con el filo del metal, la cara, el nombre, media y puntos
+totales, y a la derecha las últimas jornadas y el valor con su gráfica; sin historial, 820). Mismos textos: el validador no cambia. Todas,
+con antes y después: `node bot/prueba/tarjetas-todas.mjs --salida=/tmp/tarjetas --jornada=11` (23, con el once ideal y el penalti
+parado; `--estres=1` para los nombres largos).
 
 Tarjetas de 1200x675, estilo «noche» (el elegido por Carlos el 2 nov). Desde el 3 nov, las que hablan de UN jugador concreto (la de
 jugador y la de bajas o novedades de uno solo) van en carta de coleccionista (diseño propio, `lib/carta.mjs`, letra Barlow
@@ -103,6 +163,19 @@ un tweet `mvp` aparte por partido (tope 10 por jornada) y, en `directo`, una por
   sale sin imagen y el del MVP no sale; tras un rechazo de subida no se vuelve a intentar en esa ejecución.
 - En Actions, la instalación (`npm ci --prefix bot`) solo corre con alguna tarjeta encendida, y las PNG de cada ejecución quedan como
   artefacto `tarjetas-<id>` 7 días.
+- 7 nov (tarde): en TODAS, el puesto en su color (los de la app: POR amarillo, DEF azul, MED verde, DEL rojo; `PUESTOS` y `chipPuesto`
+  en lib/estilo.mjs), abajo a la derecha de cada cara; en la carta y en la de gol y asistencia, arriba a la derecha del panel. Pie
+  común (`marca`): «FANTASY MANAGER · @Fantasyman_app» y una pastilla roja con un móvil «DESCARGA LA APP GRATIS · ENLACE EN LA BIO»
+  (sin dominio: el validador no deja enlaces). En la carta y en la de gol y asistencia, las casillas son las 5 jornadas ANTERIORES y
+  los puntos de hoy van solo arriba y en grande: en oro si el partido ha acabado y, en juego, oscuros con filo rojo y «● EN JUEGO»
+  (`placaJuego`; en la de gol y asistencia, «PTS HOY» como primera cifra de cada panel). En la baja de un jugador, la jornada en juego
+  no sale en las casillas. Banco del directo con datos reales: `node bot/prueba/tarjetas-directo.mjs --salida=/tmp/d --jornada=12
+  [--vivo=0] [--cero=1]`.
+- Directo con «subidón» (7 nov): `momentoEspecial` (tipos/directo.mjs) mira el tipo de gol de ESPN («Goal - Free-kick», «Volley»,
+  «Header») y el momento; los hechos llevan `comoFueElGol` y `momentoParaCelebrar` (falta directa, gol en el descuento o desde el 85
+  que empata, adelanta o da la vuelta, remontada, triplete). Solo entonces la guía deja abrir con un grito corto en mayúsculas
+  («¡EN EL 93!») y `revisar` lo comprueba (sin momento, ninguna palabra entera en mayúsculas salvo siglas y las que ya vienen así en
+  los hechos o los medios; con momento, 4 como mucho y de la lista `GRITOS` o de los hechos; nunca «¡¡»).
 
 ## Reglas
 
@@ -145,3 +218,14 @@ rechazo), y una copia de `bot/` con el host de `lib/laliga.mjs` cambiado a http:
 `X_API_BASE=http://127.0.0.1:8787 X_API_KEY=a X_API_SECRET=b X_ACCESS_TOKEN=c X_ACCESS_TOKEN_SECRET=d node bot/ejecutar.mjs
 --modo=publicar --ventanas=0 --tipos=final,mvp --estado=/tmp/registro.json`. En simulacro, `--tarjetas=1` las dibuja aunque estén
 apagadas.
+
+## Todo lo escrito por la IA y la plantilla como último recurso (7 nov, Carlos: «quitar plantillas»)
+
+- Todos los tipos llevan `t.hechos` y están en `redactar.tipos`: caídas, sancionados (y apercibidos), lloros, resumen, liga, onces confirmados (salen del módulo de las previas, `hechos.tipo` «onces»), mercado, once ideal y directo, además de los de antes. `redactar.largo` marca lo que se le pide a cada uno. Ejemplos BIEN/MAL de cada tipo y un apartado del directo y otro de caídas/sancionados/novedades en `lib/voz.mjs`.
+- La plantilla ya no es el plan B inmediato (`lib/respaldo.mjs`, prueba `prueba/respaldo-ejemplo.mjs`): si la redacción no pasa, ese tuit NO se publica ni se marca en el registro; se reintenta en la ejecución siguiente y se cuentan los fallos por clave (`fallosRedaccion` en el registro). Sale con la plantilla pulida solo si (a) ha fallado `redactar.ejecuciones` veces (3 por defecto; directo 1, mercado 6), (b) caduca (`t.caduca`: onces y previa en el saque; el mercado y el directo no llevan hora, los cubren sus pocas ejecuciones) con `redactar.margenCaducaMin` (5) de margen, o (c) no hay Claude o se ha pasado el tope de gasto (esperar no lo arregla). `t.redaccion` vale `ok`, `rechazada`, `ia-no`, `sin-ia` o `sin-tiempo`; las dos últimas no cuentan como fallo. El log dice `(respaldo) clave: motivo`.
+- Directo: gol (doblete, triplete; el asistente en el mismo tuit, con su tarjeta de segunda imagen), roja, penalti fallado y penalti PARADO (sale del `summary` de ESPN, `penaltisParados` en tipos/directo.mjs, con la tarjeta del portero, motivo «PENALTI PARADO»). Con prisa: una llamada (`redactar.intentosPorTipo.directo` 1), 25 s (`segundosPorTipo`), sin revisor con IA (`sinRevisor`), y el validador, en vez de la regla de «entrada igual», solo mira que no se parezca un 50 % a un tuit reciente. Si no llega, sale el texto de siempre.
+- Gasto (simulacro real en `pruebas-sin-plantillas`, 7 nov): 27 goles de directo redactados, 0,16-0,18 $; mercado 0,03 $; once ideal 0,02 $; caídas 4 tuits 0,13-0,22 $; la tanda de previa (19 tuits, con revisor y hasta 4 intentos) fue lo más caro, 1,11 $ en total esa ejecución. `ia.topeDolaresDia` sube a 2 $ y `ia.porDia` a 260 llamadas de redactar y 260 de revisar.
+- Lo que no se ha visto con Claude de verdad: resumen, lloros, liga y onces confirmados (no había datos nuevos en el registro de hace 3 o 7 días). Los hechos y el validador están probados solo con los datos de las pruebas.
+- Lo que sigue fallando en el simulacro (se queda esperando y, a la tercera, sale la plantilla): caídas con muchos jugadores (la IA añade conclusiones que no están, p. ej. «se queda sin delantero»), sancionados/apercibidos (confunde la jornada del partido de hoy con la de la sanción, y copia el ejemplo de apercibidos) y novedades con varios jugadores. Mejorar la guía con ejemplos de lo que rechaza el revisor, o simplificar los hechos de esos tipos (menos jugadores, sin el partido de hoy en las sanciones).
+
+- Reparto de los posibles onces (`lib/escalonar.mjs`; Carlos, 7 nov 10:41: «no tiene ningún sentido» sacarlos con la jornada ya empezada, y salieron 4 o 5 a la vez). Antes, cada partido sacaba el suyo entre 36 y 3 h antes del saque, así que a las 9 h del sábado salieron de golpe todos los de sábado y domingo de una J12 cuyas alineaciones se cerraron el viernes a las 21:00. Ahora: (1) solo de la primera jornada cuyo primer partido no ha empezado (`primero > ahora`); (2) desde `previaPosibles.abreHoras` (84) antes de ese primer partido (con el viernes a las 21:00 como inicio, desde el martes a las 9:00); (3) uno por ejecución, el del partido más próximo, con `separacionMin` (120) entre dos y `porDia` (3) al día de Madrid; (4) en las últimas `sinTopeHoras` (24) antes del primer partido no hay tope por día y la separación baja a 60 min, para que salgan todos antes del cierre. Los onces confirmados no cambian (1-3 h antes de cada partido). Todo en `previaPosibles` de config.json. En el log: «(previa) posibles onces de la J13: esperan (motivo)». Prueba sin red, con una semana simulada de 5 en 5 min: `node bot/prueba/escalonar-ejemplo.mjs`.

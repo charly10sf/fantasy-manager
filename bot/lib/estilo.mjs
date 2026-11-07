@@ -9,6 +9,7 @@
 // con la inicial del nombre de pila (`nombreAjustado`) en vez de encogidos a la mitad. Prueba con todas: bot/prueba/tarjetas-todas.mjs.
 // Aquí solo están las piezas; cada tarjeta se monta en carta.mjs o en tarjetas.mjs.
 
+import { cortoTarjeta } from './apodos-jugadores.mjs';
 export const ANCHO = 1200, ALTO = 675;
 export const ROJO = '#ee1c3c', VERDE = '#2fd27f', MALO = '#ff4d5e', AMBAR = '#f2b33d';
 export const TINTA = '#f4f2f3', TENUE = '#8c869a', FONDO = '#0b0a0f', PANEL = '#17151d', LINEA = '#2c2834';
@@ -48,6 +49,9 @@ export function texto(x, y, s, { px = 24, peso = 700, color = TINTA, ancla = 'st
 export function nombreAjustado(nombre, px, max, espacio = 0, { apellido = false } = {}) {
   const n = String(nombre).toUpperCase(), partes = n.split(' ');
   if (medir(n, px * 0.88, B, espacio) <= max || partes.length < 2) return n;
+  // si tiene una forma corta conocida («Cuti Romero» -> «CUTI», 7 nov), esa antes que la inicial
+  const ct = cortoTarjeta(nombre);
+  if (ct && medir(ct.toUpperCase(), px * 0.88, B, espacio) <= max) return ct.toUpperCase();
   const ini = partes[0].length <= 2 || /\.$/.test(partes[0]) ? n : `${partes[0][0]}. ${partes.slice(1).join(' ')}`;
   // con muy poco sitio (dos opciones en una línea de cinco), solo el apellido
   return apellido && medir(ini, px * 0.88, B, espacio) > max ? partes[partes.length - 1] : ini;
@@ -175,14 +179,98 @@ export function distinto(club, otro) {
   return alt ? (alt.l < 0.4 ? avivar(alt.c) : alt.c) : club.vivo;
 }
 
-/** la marca de la app: barra roja, «FANTASY MANAGER» y la cuenta, entre dos filetes finos */
+/** la marca de la app: barra roja, «FANTASY MANAGER», la cuenta y (Carlos, 7 nov 15:31: «que abajo de todas ponga algo como para
+    descargar la app») una pastilla roja con un móvil: «DESCARGA LA APP GRATIS · ENLACE EN LA BIO». Sin dominio: el validador no deja
+    enlaces en la imagen, igual que en los tuits */
+export const PIE_DESCARGA = 'DESCARGA LA APP GRATIS · ENLACE EN LA BIO';
 export function marca(x, y, { ancla = 'start' } = {}) {
   const w1 = medir('FANTASY MANAGER', 26, B, 3), w2 = medir('@Fantasyman_app', 23, B);
-  const total = 18 + w1 + 20 + w2;
-  const x0 = ancla === 'middle' ? x - total / 2 : x;
+  const pxD = 21, wd = medir(PIE_DESCARGA, pxD, B, 1.5), wp = wd + 70, hp = 40;
+  const total = 18 + w1 + 18 + w2 + 30 + wp;
+  const x0 = ancla === 'middle' ? x - total / 2 : x, xp = x0 + total - wp, yc = y - 8;
+  // el móvil: un rectángulo redondeado con la pantalla y la flecha de descarga dentro
+  const xm = xp + 26;
+  const movil = `<rect x="${xm - 9}" y="${yc - 14}" width="18" height="28" rx="4" fill="none" stroke="#fff" stroke-width="2.6"/>`
+    + `<path d="M${xm},${yc - 7} V${yc + 4} M${xm - 4.5},${yc} L${xm},${yc + 5} L${xm + 4.5},${yc}" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
   return `<rect x="${x0}" y="${y - 19}" width="6" height="24" rx="2" fill="${ROJO}"/>`
     + texto(x0 + 18, y, 'FANTASY MANAGER', { px: 26, peso: 800, espacio: 3 })
-    + texto(x0 + 18 + w1 + 20, y, '@Fantasyman_app', { px: 23, peso: 600, color: TENUE });
+    + texto(x0 + 18 + w1 + 18, y, '@Fantasyman_app', { px: 23, peso: 600, color: TENUE })
+    + `<rect x="${xp}" y="${yc - hp / 2}" width="${wp}" height="${hp}" rx="${hp / 2}" fill="${ROJO}"/>` + movil
+    + texto(xp + 48, yc + pxD * 0.36, PIE_DESCARGA, { px: pxD, peso: 800, color: '#fff', espacio: 1.5 });
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// El puesto del jugador con el color de la app (web/css/app.css: --por, --def, --med, --del, --ent), como en LaLiga Fantasy
+// (Carlos, 7 nov 15:31: «distinciones por portero, defensa, medio… por colores, como los del propio fantasy»)
+export const PUESTOS = {
+  POR: { color: '#ffc547', tinta: '#1f1603', largo: 'PORTERO' }, DEF: { color: '#58a6ff', tinta: '#04121f', largo: 'DEFENSA' },
+  MED: { color: '#2fd18f', tinta: '#03170d', largo: 'MEDIO' }, DEL: { color: '#ee1c3c', tinta: '#ffffff', largo: 'DELANTERO' },
+  ENT: { color: '#9a96a0', tinta: '#120f16', largo: 'ENTRENADOR' },
+};
+const A_PUESTO = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL', 5: 'ENT', portero: 'POR', defensa: 'DEF', centrocampista: 'MED', medio: 'MED', delantero: 'DEL', entrenador: 'ENT' };
+/** 'POR' | 'DEF' | 'MED' | 'DEL' | 'ENT' | null, venga como venga (1-5, '3', 'Centrocampista', 'MED') */
+export function abrevPuesto(p) {
+  if (p == null || p === '') return null;
+  const s = String(p).trim();
+  if (PUESTOS[s.toUpperCase()]) return s.toUpperCase();
+  return A_PUESTO[s.toLowerCase()] || null;
+}
+/** el color del puesto (o null) */
+export const colorPuesto = (p) => { const a = abrevPuesto(p); return a ? PUESTOS[a].color : null; };
+/** la chapa del puesto, centrada en cx, cy, con un filo oscuro para que se separe de la cara */
+export function chipPuesto(p, cx, cy, px = 20, { largo = false } = {}) {
+  const a = abrevPuesto(p);
+  if (!a) return '';
+  const P = PUESTOS[a], t = largo ? P.largo : a, w = medir(t, px, B, 1.2) + px * 1.1, h = px * 1.38;
+  return `<rect x="${cx - w / 2 - 2}" y="${cy - h / 2 - 2}" width="${w + 4}" height="${h + 4}" rx="${h / 2 + 2}" fill="#0b0a0f"/>`
+    + `<rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${P.color}"/>`
+    + texto(cx, cy + px * 0.36, t, { px, peso: 900, color: P.tinta, ancla: 'middle', espacio: 1.2 });
+}
+export const anchoChipPuesto = (p, px = 20, { largo = false } = {}) => { const a = abrevPuesto(p); return a ? medir(largo ? PUESTOS[a].largo : a, px, B, 1.2) + px * 1.1 + 4 : 0; };
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Piezas HD (7 nov, rediseño de todas las tarjetas con el estilo de la de onces, PR #74). Las tarjetas se dibujan a 2400 de ancho
+// (`aPng`, el doble del lógico) y las caras de LaLiga son de 256x256 como mucho: a más de ~300 px de lado en el PNG se ven blandas.
+// Con la cabeza entera (zoom 2,3 veces el radio) la foto mide 2,3·R lógicos, 4,6·R en el PNG: R no pasa de 64 (294 px).
+export const ZOOM_HD = 2.3, R_MAX = 64;
+/** la cara con la cabeza entera, el halo del club detrás y el aro; sin foto, una silueta en el color del club */
+export function caraHD(buf, cx, cy, R, color, { aro = color, grosor = null, halo = 1.5, haloOp = 0.34 } = {}) {
+  const r = Math.min(R, R_MAX), gz = grosor ?? Math.max(3, Math.round(r * 0.06));
+  let s = '';
+  if (halo) { const h = id('hl'); s += `<defs><radialGradient id="${h}"><stop offset="0.5" stop-color="${color}" stop-opacity="${haloOp}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient></defs><circle cx="${cx}" cy="${cy}" r="${r * halo}" fill="url(#${h})"/>`; }
+  if (buf) return s + caraCirculo(buf, cx, cy, r, { aro, grosor: gz, fondoColor: color, zoom: ZOOM_HD });
+  const c = id('sc');
+  return s + `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs>`
+    + `<circle cx="${cx}" cy="${cy + Math.max(2, r * 0.08)}" r="${r + 1}" fill="#000" opacity="0.4"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#1a1721"/>`
+    + `<g clip-path="url(#${c})" fill="${color}" fill-opacity="0.55"><circle cx="${cx}" cy="${cy - r * 0.18}" r="${r * 0.36}"/><ellipse cx="${cx}" cy="${cy + r * 0.86}" rx="${r * 0.72}" ry="${r * 0.6}"/></g>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${aro}" stroke-width="${gz}"/>`;
+}
+/** el nombre (u otro texto corto) en una pastilla translúcida con filo, como en la tarjeta de onces; centrada en cx con la base en cy */
+export function pastilla(t, cx, cy, px, wMax, { color = '#ffffff', peso = 800 } = {}) {
+  const pp = tamano(t, px, wMax - px * 0.6, 0.5), wt = Math.min(wMax, medir(t, pp, B, 0.5) + px * 0.9), h = px * 1.42;
+  return `<rect x="${cx - wt / 2}" y="${cy - px}" width="${wt}" height="${h}" rx="${h / 2}" fill="#0b0d10" fill-opacity="0.8"/>`
+    + `<rect x="${cx - wt / 2 + 0.75}" y="${cy - px + 0.75}" width="${wt - 1.5}" height="${h - 1.5}" rx="${h / 2}" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>`
+    + texto(cx, cy, t, { px, peso, color, ancla: 'middle', max: wMax - px * 0.6, espacio: 0.5 });
+}
+/** un panel moderno (el campo de la tarjeta de onces sin las líneas): casi negro, el brillo de un color arriba, la rejilla de puntos,
+    filo suave y sombra. `linea`: y (relativa al panel) de un filete de luz del color, bajo una cabecera */
+export function panel(x, y, w, h, color, { rx = 30, brillo = 0.36, linea = null, borde = null } = {}) {
+  const g = id('pg'), gv = id('pv'), pt = id('pp'), cl = id('pc'), gb = id('pb');
+  return `<defs><clipPath id="${cl}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}"/></clipPath>${lineal(g, [[0, '#15171d'], [0.55, '#0e1014'], [1, '#0a0b0e']])}`
+    + `<radialGradient id="${gv}" cx="0.5" cy="0" r="0.8"><stop offset="0" stop-color="${color}" stop-opacity="${brillo}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient>`
+    + lineal(gb, [[0, color, 0], [0.5, color, 1], [1, color, 0]], { x1: 0, y1: 0, x2: 1, y2: 0 })
+    + `<pattern id="${pt}" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="12" cy="12" r="1.1" fill="#fff" fill-opacity="0.05"/></pattern></defs>`
+    + `<rect x="${x}" y="${y + 10}" width="${w}" height="${h}" rx="${rx}" fill="#000" opacity="0.5"/>`
+    + `<g clip-path="url(#${cl})"><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${g})"/>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${Math.min(h, Math.max(260, h * 0.7))}" fill="url(#${gv})"/><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${pt})"/>`
+    + (linea != null ? `<rect x="${x}" y="${y + linea - 1}" width="${w}" height="2" fill="url(#${gb})"/>` : '') + `</g>`
+    + `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="${rx - 1}" fill="none" stroke="${borde || '#fff'}" stroke-opacity="${borde ? 0.85 : 0.09}" stroke-width="${borde ? 2.5 : 2}"/>`;
+}
+/** cabecera sin banda, centrada: el titular en cursiva con su degradado y debajo una línea tenue espaciada (como «POSIBLES ONCES») */
+export function titular(titulo, grad, sub, { y = 86, px = 72, sub2 = null, max = 1000 } = {}) {
+  return texto(ANCHO / 2, y, titulo, { px, peso: 800, italica: true, color: `url(#${grad})`, ancla: 'middle', max })
+    + (sub ? texto(ANCHO / 2, y + 40, sub, { px: 26, peso: 700, color: TINTA, ancla: 'middle', espacio: 3, max: 1080 }) : '')
+    + (sub2 ? texto(ANCHO / 2, y + 74, sub2, { px: 22, peso: 700, color: TENUE, ancla: 'middle', espacio: 4, max: 1080 }) : '');
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------
@@ -216,7 +304,16 @@ export function pildora(f, cx, cy, px, wMax) {
     + texto(x + p * 1.75, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1 });
 }
 /** el color de un % de titularidad, como en la tarjeta de los posibles onces: verde (75 o más), ámbar (50 o más) o rojo */
-export const colPct = (q) => (q == null ? null : q >= 75 ? VERDE : q >= 50 ? AMBAR : MALO);
+// el color del % de titularidad (Carlos, 7 nov 15:58 y 16:02): 85-100 verde oscuro, 70-85 verde claro, 60-70 amarillo, 40-60 naranja tirando a
+// rojo y menos de 40 rojo
+export const PCT_COLORES = [[85, '#1fb860'], [70, '#8fe39a'], [60, '#f5d33d'], [40, '#ff8a3d'], [0, '#ff4d5e']];
+export const colPct = (q) => (q == null ? null : (PCT_COLORES.find(([min]) => Number(q) >= min) || PCT_COLORES[PCT_COLORES.length - 1])[1]);
+/** una cifra en una chapa oscura con el filo y el texto en su color (los puntos del final y los % de titularidad; 7 nov) */
+export function chipContorno(txt, cx, cy, px, color, { grosor = 2.5 } = {}) {
+  const w = medir(txt, px, B, 0.5) + px * 1.3, h = px * 1.4, x0 = cx - w / 2, y0 = cy - h / 2;
+  return `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="${h / 2}" fill="#0b0a0f" fill-opacity="0.92" stroke="${color}" stroke-width="${grosor}"/>`
+    + texto(cx, y0 + h / 2 + px * 0.36, txt, { px, peso: 900, color, ancla: 'middle', espacio: 0.5 });
+}
 // (Carlos, 5 nov 17:08: «si pones arriba en el título DUDA, no lo pongas abajo de nuevo; pon el porcentaje de titularidad abajo»)
 // la etiqueta del % de titularidad de la app, en el color del %, en vez de repetir el estado que ya dice el título
 const txtTit = (pct) => `${pct} % TITULARIDAD`;
@@ -224,9 +321,63 @@ export function pildoraTit(pct, cx, cy, px, wMax) {
   const txt = txtTit(pct);
   let p = px; while (p > 16 && medir(txt, p, B, 1) + p * 1.8 > wMax) p--;
   const w = medir(txt, p, B, 1) + p * 1.8, h = p * 1.75, x = cx - w / 2;
-  return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${colPct(pct)}"/>`
-    + texto(cx, cy + p * 0.36, txt, { px: p, peso: 800, color: '#120f16', espacio: 1, ancla: 'middle' });
+  // con el mismo estilo que los % de los onces: fondo oscuro, filo y letra en el color del % (7 nov)
+  return `<rect x="${x}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="#0b0a0f" fill-opacity="0.92" stroke="${colPct(pct)}" stroke-width="2.5"/>`
+    + texto(cx, cy + p * 0.36, txt, { px: p, peso: 800, color: colPct(pct), espacio: 1, ancla: 'middle' });
 }
 export const anchoPildoraTit = (pct, px) => medir(txtTit(pct), px, B, 1) + px * 1.8;
 /** ancho de la etiqueta del estado (para colocarla a la derecha) */
 export const anchoPildora = (f, px) => medir(txtEstado(f), px, B, 1) + px * 2.6;
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Iconos de lo que pasa (Carlos, 7 nov 14:58: «si es gol que haya un balón, que sea claramente quien marca y asiste, y en las de roja
+// una tarjeta roja»). Dibujados a mano, sin texto (el validador no los mira). Todos centrados en (cx, cy) con radio o alto s.
+/** balón clásico: blanco, el pentágono negro en el centro, costuras finas y los cinco pentágonos de alrededor asomando por el borde */
+export function iconoBalon(cx, cy, r) {
+  const c = id('bl'), pt = (rr, a, x0 = cx, y0 = cy) => [x0 + rr * Math.cos(a), y0 + rr * Math.sin(a)];
+  const pent = (x0, y0, rr, a0) => [0, 1, 2, 3, 4].map((k) => pt(rr, a0 + k * 2 * Math.PI / 5, x0, y0).map((v) => v.toFixed(1)).join(',')).join(' ');
+  const a0 = -Math.PI / 2, rc = r * 0.34, ro = r * 0.3, d = r * 1.0, sw = (r * 0.06).toFixed(1);
+  let s = `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs>`
+    + `<circle cx="${cx}" cy="${cy + r * 0.06}" r="${r}" fill="#000" opacity="0.35"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#f7f7f7"/><g clip-path="url(#${c})">`
+    + `<polygon points="${pent(cx, cy, rc, a0)}" fill="#15151a"/>`;
+  for (let k = 0; k < 5; k++) {
+    const a = a0 + k * 2 * Math.PI / 5, [ox, oy] = pt(d, a);
+    // el pentágono de fuera, en la dirección del vértice y con una punta hacia el centro, unido al del centro por una costura
+    s += `<polygon points="${pent(ox, oy, ro, a + Math.PI)}" fill="#15151a"/>`;
+    const [vx, vy] = pt(rc, a), [ix, iy] = pt(d - ro, a);
+    s += `<line x1="${vx.toFixed(1)}" y1="${vy.toFixed(1)}" x2="${ix.toFixed(1)}" y2="${iy.toFixed(1)}" stroke="#15151a" stroke-width="${sw}"/>`;
+    // costuras entre dos pentágonos de fuera (los lados de los hexágonos)
+    const [px, py] = pt(ro, a + Math.PI + 2 * Math.PI / 5, ox, oy), [qx, qy] = pt(r * 1.1, a + Math.PI / 5);
+    s += `<line x1="${px.toFixed(1)}" y1="${py.toFixed(1)}" x2="${qx.toFixed(1)}" y2="${qy.toFixed(1)}" stroke="#15151a" stroke-width="${sw}"/>`;
+  }
+  return s + `</g><circle cx="${cx - r * 0.32}" cy="${cy - r * 0.38}" r="${r * 0.28}" fill="#fff" opacity="0.3"/>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r - 0.75}" fill="none" stroke="#000" stroke-opacity="0.35" stroke-width="1.5"/>`;
+}
+/** tarjeta roja, algo inclinada, con brillo arriba; h es el alto */
+export function iconoRoja(cx, cy, h, { giro = 12 } = {}) {
+  const w = h * 0.7, g = id('tr');
+  return `<defs>${lineal(g, [[0, '#ff5a5f'], [0.5, '#e3202c'], [1, '#a90f1a']], { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs>`
+    + `<g transform="rotate(${giro} ${cx} ${cy})"><rect x="${cx - w / 2 + h * 0.04}" y="${cy - h / 2 + h * 0.06}" width="${w}" height="${h}" rx="${h * 0.09}" fill="#000" opacity="0.4"/>`
+    + `<rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h * 0.09}" fill="url(#${g})"/>`
+    + `<rect x="${cx - w / 2 + 1}" y="${cy - h / 2 + 1}" width="${w - 2}" height="${h - 2}" rx="${h * 0.09 - 1}" fill="none" stroke="#fff" stroke-opacity="0.35" stroke-width="2"/></g>`;
+}
+/** la asistencia: una bota de fútbol con sus tacos, mirando a la derecha; r es la mitad del ancho */
+export function iconoPase(cx, cy, r, color = '#120f16') {
+  const X = (v) => (cx + v * r).toFixed(1), Y = (v) => (cy + v * r).toFixed(1);
+  const bota = `M${X(-0.92)},${Y(0.22)} L${X(-0.92)},${Y(-0.5)} Q${X(-0.92)},${Y(-0.62)} ${X(-0.8)},${Y(-0.62)} L${X(-0.38)},${Y(-0.62)} Q${X(-0.27)},${Y(-0.62)} ${X(-0.24)},${Y(-0.52)}`
+    + ` L${X(-0.12)},${Y(-0.2)} Q${X(0.35)},${Y(-0.12)} ${X(0.78)},${Y(0.0)} Q${X(0.96)},${Y(0.06)} ${X(0.96)},${Y(0.22)} L${X(0.96)},${Y(0.3)} L${X(-0.92)},${Y(0.3)} Z`;
+  const tacos = [-0.76, -0.46, 0.22, 0.56].map((x) => `<rect x="${X(x)}" y="${Y(0.3)}" width="${(r * 0.16).toFixed(1)}" height="${(r * 0.16).toFixed(1)}" rx="${(r * 0.04).toFixed(1)}" fill="${color}"/>`).join('');
+  const cordones = [[-0.1, -0.14], [0.08, -0.1], [0.26, -0.06]].map(([x, y]) => `<line x1="${X(x)}" y1="${Y(y)}" x2="${X(x - 0.1)}" y2="${Y(y - 0.2)}" stroke="#fff" stroke-opacity="0.85" stroke-width="${(r * 0.06).toFixed(1)}" stroke-linecap="round"/>`).join('');
+  return `<path d="${bota}" fill="${color}"/>` + tacos + cordones
+    + `<rect x="${X(-0.92)}" y="${Y(0.08)}" width="${(r * 1.88).toFixed(1)}" height="${(r * 0.07).toFixed(1)}" fill="#fff" fill-opacity="0.35"/>`;
+}
+/** insignia redonda para poner sobre la cara (abajo a la derecha): el fondo, el aro y el icono ('gol' | 'asistencia' | 'roja') */
+export function insignia(tipo, cx, cy, r) {
+  const fondoI = tipo === 'asistencia' ? '#ffffff' : tipo === 'roja' ? '#1a1721' : '#1a1721';
+  let s = `<circle cx="${cx}" cy="${cy + 3}" r="${r + 4}" fill="#000" opacity="0.45"/><circle cx="${cx}" cy="${cy}" r="${r + 4}" fill="${tipo === 'gol' ? '#e2bd5a' : tipo === 'roja' ? '#e3202c' : '#d9dbe0'}"/>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fondoI}"/>`;
+  if (tipo === 'gol') s += iconoBalon(cx, cy, r * 0.78);
+  else if (tipo === 'roja') s += iconoRoja(cx, cy, r * 1.15, { giro: 10 });
+  else s += iconoPase(cx, cy, r * 0.8);
+  return s;
+}

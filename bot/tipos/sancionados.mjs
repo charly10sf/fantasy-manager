@@ -14,6 +14,7 @@ import { enParalelo } from '../lib/http.mjs';
 import { tarjetaBajas, tarjetaApercibidos } from '../lib/datos-tarjetas.mjs';
 import { planApercibidos } from '../lib/tarjetas.mjs';
 import { motivoSancion } from '../lib/partes.mjs';
+import { clubes as clubesH, partido as partidoH, jugador as jugadorH } from '../lib/hechos.mjs';
 import { elQueMasPesa, enLetra, mayus, nombresPorClub, pesos, porClub, lista } from '../lib/agrupar.mjs';
 import { disciplina, casar, amarillasDe } from '../lib/disciplina.mjs';
 import { baseTitular } from './caidas.mjs';
@@ -50,6 +51,22 @@ export function lineaSancion(x, { solo = false } = {}) {
   if (x.motivoSan) return `❌ ${n} ${con(x.equipo)}: ${x.motivoSan.txt.replace(/^./, (c) => c.toLowerCase())}`;
   return `❌ ${n} cumple sanción ${con(x.equipo)}`;
 }
+// los hechos para la IA que redacta (lib/redaccion.mjs): lo mismo que dice la plantilla, sin sus frases
+const motivoH = (x) => {
+  const w = x.web;
+  if (w && w.motivo === 'roja') return 'vio la roja directa';
+  if (w && w.motivo === 'amarillas') return 'llegó a cinco amarillas';
+  if (w && w.motivo === 'disciplinaria' && w.partido && w.de && w.de > 1 && w.de <= 10) return w.partido === w.de ? `cumple el último de sus ${enLetra(w.de)} partidos de sanción` : `cumple el ${ORDINAL[w.partido]} de sus ${enLetra(w.de)} partidos de sanción`;
+  if (x.motivoSan) return x.motivoSan.txt;
+  return 'cumple sanción';
+};
+const jugadorSan = (x, estado, { principal = true, extra = {} } = {}) => jugadorH({ nickname: x.nombre, positionId: x.pos, teamId: x.teamId, equipo: x.equipo, averagePoints: x.media },
+  { estado, motivo: estado === 'sancionado' ? motivoH(x) : '', principal, extra: { titularHabitual: true, ...extra } });
+const partidosH = (xs, pp) => {
+  const prs = [...new Map(xs.map((x) => [String(x.teamId), x])).values()].map((x) => ({ x, pr: pp[String(x.teamId)] })).filter((o) => o.pr);
+  const ps = prs.map((o) => partidoH(o.pr, { equipo: o.x.equipo, posId: xs.length === 1 ? o.x.pos : null }));
+  return { ...(ps.length === 1 ? { partido: ps[0] } : ps.length ? { partidos: ps } : {}), prs };
+};
 const mediaDe = (x) => (x.media >= 3 ? { t: `‼️ Suma ${fmt(x.media)} puntos de media`, numeros: partes(x.media) } : null);
 
 /** «el Racing-Real Sociedad» (el partido de un equipo, con el de casa delante) */
@@ -89,7 +106,10 @@ export function escribir({ jornada, sancionados = [], apercibidos = [], pp = {},
       if (![...lineas, etiqueta].every((l) => r.usadas.includes(l))) continue;
       const clave = `sancionados|${jornada}|${xs.map((x) => x.id).join('-')}`;
       const numeros = [jornada, ...(pr ? [pr.jornada] : []), ...xs.flatMap((x) => (x.motivoSan ? x.motivoSan.numeros : [])), ...(top ? top.numeros : [])];
-      hecho = { tipo: 'sancionados', clave, jornada, texto: r.texto, numeros, tarjeta: tarjetaBajas({ jornada, filas: xs.map((x) => ({ ...x, estado: 'sancionado' })), clave }), n };
+      const ph = partidosH(xs, pp);
+      const hechos = { tipo: 'sancionados', noticia: `sancionados que se pierden la jornada ${jornada}`, jugadores: xs.map((x) => jugadorSan(x, 'sancionado')),
+        ...(ph.partido ? { partido: ph.partido } : ph.partidos ? { partidos: ph.partidos } : {}), clubes: clubesH(...xs.map((x) => x.equipo), ...ph.prs.map((o) => o.pr.rival)), etiqueta };
+      hecho = { tipo: 'sancionados', clave, jornada, texto: r.texto, hechos, numeros, tarjeta: tarjetaBajas({ jornada, filas: xs.map((x) => ({ ...x, estado: 'sancionado' })), clave }), n };
     }
     if (!hecho) break;
     out.push(hecho);
@@ -142,7 +162,16 @@ function textoApercibidos(xs, { jornada, pp, pp2, peso, L, conNombres = true }) 
   // (si va el párrafo de «Ojo sobre todo con…», la media de todos sobra: nombraría otra vez a los mismos)
   const r = tweet(cab, [nombres && { t: nombres, prio: 9 }, { t: aviso, prio: 9 }, juego && { t: juego, prio: 3 }, !juego && top && { t: top.t, prio: 5 }, { t: etiqueta, prio: 9 }]);
   if (![nombres, aviso, etiqueta].filter(Boolean).every((l) => r.usadas.includes(l))) return null;
-  return { tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, numeros: [jornada, jornada + 1, ...(top && !juego ? top.numeros : [])] };
+  // (con la tarjeta, los nombres van en la imagen: el texto cuenta cuántos son y qué se juegan, y solo nombra a los dos que más pesan)
+  const grandes = [...xs].sort((a, b) => b.media - a.media).filter((x, i, a) => a.findIndex((y) => y.teamId === x.teamId) === i).slice(0, 2);
+  const ph = n === 1 ? partidosH(xs, pp) : { prs: [] }, ph2 = partidosH(grandes, pp2);
+  const hechos = { tipo: 'sancionados', subtipo: 'apercibidos', noticia: `titulares habituales a una amarilla de la sanción: si ven otra, se pierden la jornada ${jornada + 1}`,
+    ...(n > 1 ? { cuantos: n } : {}), ...(!conNombres ? { aviso: 'los nombres de todos van en la imagen adjunta, agrupados por club: no hace falta nombrarlos a todos' } : {}),
+    jugadores: (conNombres ? xs : grandes).map((x) => jugadorSan(x, 'apercibido', { principal: conNombres || n === 1 })),
+    ...(n === 1 && ph.partido ? { partido: ph.partido } : {}),
+    ...(L && n > 1 && ph2.partidos ? { partidosQueSePerderian: ph2.partidos } : ph2.partido && n > 1 ? { partidosQueSePerderian: [ph2.partido] } : {}),
+    clubes: clubesH(...(conNombres ? xs : grandes).map((x) => x.equipo), ...ph.prs.map((o) => o.pr.rival), ...ph2.prs.map((o) => o.pr.rival)), etiqueta };
+  return { tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, hechos, numeros: [jornada, jornada + 1, ...(top && !juego ? top.numeros : [])] };
 }
 
 export async function generar({ jugadores, equipos, jornada, stats = [], semana, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log,

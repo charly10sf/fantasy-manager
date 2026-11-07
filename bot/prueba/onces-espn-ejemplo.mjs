@@ -35,4 +35,18 @@ for (const [f, filas] of Object.entries(OPTA)) {
   assert.deepEqual(filas.map((x) => x.length), f.split('-').map(Number), f);
   assert.deepEqual(filas.flat().sort((a, b) => a - b), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11], f);
 }
+// 7 nov, Osasuna-Athletic: LaLiga abrevia «Aitor Fdez» y ESPN dice «Aitor Fernández» (salió sin cara)
+{
+  const { casarJugador } = await import('../tipos/directo.mjs');
+  const { faltaEnPalabras } = await import('../tipos/previa.mjs');
+  const { revisar } = await import('../lib/redaccion.mjs');
+  const lado = { players: [{ id: 204, positionId: 1, name: 'Aitor Fdez', nickname: 'Aitor Fdez' }, { id: 644, positionId: 1, name: 'Sergio Herrera', nickname: 'Sergio Herrera' }] };
+  assert.equal(casarJugador('Aitor Fernández', lado, { portero: true }).id, 204);
+  assert.equal(casarJugador('Sergio Herrera', lado, { portero: true }).id, 644);
+  assert.equal(faltaEnPalabras(62 * 60000), 'en una hora o así');
+  assert.equal(faltaEnPalabras(5 * 3600000), null);
+  const h = { tipo: 'onces', jornada: 12, partido: { partido: 'Osasuna-Athletic', local: 'Osasuna', visitante: 'Athletic', estadio: 'El Sadar' }, equipos: [{ club: 'Osasuna', formacion: '4-3-3' }, { club: 'Athletic', formacion: '4-2-3-1' }], sinSorpresas: true, jugadores: [], clubes: { Osasuna: { nombres: ['el Osasuna'] }, Athletic: { nombres: ['el Athletic'] } } };
+  const e = revisar('👀 Ya hay onces en El Sadar: el Osasuna sale con un 4-3-3, y a las 18:30 arranca el partido.', { hechos: h, recientes: ['👀 Ya hay onces confirmados en La Rosaleda.'] });
+  assert.ok(e.some((x) => x.includes('hora del reloj')) && e.some((x) => x.includes('«Ya hay onces')), e.join(' | '));
+}
 console.log('onces-espn-ejemplo: bien');

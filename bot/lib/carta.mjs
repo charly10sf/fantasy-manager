@@ -1,4 +1,4 @@
-// La carta de coleccionista (diseño propio, Carlos, 3 nov 10:44-11:11) para las tarjetas que hablan de UN jugador concreto:
+// La carta (diseño propio, Carlos, 3 nov 10:44-11:11; en HD desde el 7 nov, más abajo) para las tarjetas que hablan de UN jugador concreto:
 // la de jugador (MVP y directo) y la de una baja o novedad de un solo jugador. Las demás (tarjetas.mjs) llevan desde el 5 nov su
 // misma letra y estética (estilo.mjs). Letra Barlow Condensed (OFL, en fuentes/; tarjetas.mjs la carga en aPng) y titulares en dorado.
 // El metal de la carta va por lo bueno que es el jugador, medido por su valor de mercado (`metalDe`): leyenda (negra con oro,
@@ -6,10 +6,26 @@
 // Mismos datos que antes (datos-tarjetas.mjs) y mismo validador: las palabras nuevas están en PALABRAS_FIJAS.
 // Las piezas comunes (letra, fondo, degradados, marca, etiquetas de estado) están en estilo.mjs, compartidas con tarjetas.mjs.
 import { coloresClub } from './colores.mjs';
-import { ANCHO, ROJO, VERDE, MALO, TINTA, TENUE, FONDO, PANEL, LINEA, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
-  escudo, caraFundida, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja } from './estilo.mjs';
+import { fechaCorta } from './datos-tarjetas.mjs';
+import { ANCHO, ROJO, VERDE, MALO, TINTA, TENUE, FONDO, B, num1, millones, signo, medir, texto, id, lineal, radial, marco,
+  escudo, fondo, dorado, marca, ESTADO_TARJETA, pildoraTit, chip, caja, caraHD, panel, R_MAX, iconoBalon, iconoRoja, iconoPase, insignia, chipPuesto } from './estilo.mjs';
 
 const ABREV = { Portero: 'POR', Defensa: 'DEF', Centrocampista: 'MED', Delantero: 'DEL', Entrenador: 'ENT' };
+// el icono de lo que ha hecho el jugador (Carlos, 7 nov 14:58): balón si marca, el pase si asiste, tarjeta roja si lo expulsan
+const ICONO = { gol: 'gol', doblete: 'gol', triplete: 'gol', asistencia: 'asistencia', roja: 'roja' };
+/** el icono grande junto al titular (GOL, ROJA…), a la derecha del texto */
+function iconoTitulo(tipo, titulo) {
+  if (!tipo) return '';
+  const w = Math.min(880, medir(titulo, 140, B) * 1.04), x = 40 + w + 64, y = 100;
+  return tipo === 'gol' ? iconoBalon(x, y, 48) : tipo === 'roja' ? iconoRoja(x, y, 108) : `<circle cx="${x}" cy="${y}" r="50" fill="#e2bd5a"/>` + iconoPase(x, y, 40);
+}
+/** chip con el icono dentro, a la izquierda del texto (el GOL dorado con su balón, la ASISTENCIA blanca con el pase) */
+function chipIcono(txt, tipo, cx, cy, px, { relleno, tinta }) {
+  const r = px * 0.62, tw = medir(txt, px, B, 2), w = tw + px * 1.8 + r * 2 + px * 0.4, h = px * 1.75, x0 = cx - w / 2, xi = x0 + px * 0.9 + r;
+  return `<rect x="${x0}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${relleno}"/>`
+    + (tipo === 'gol' ? iconoBalon(xi, cy, r) : tipo === 'roja' ? iconoRoja(xi, cy, r * 2) : iconoPase(xi, cy, r, tinta))
+    + texto(xi + r + px * 0.4 + tw / 2, cy + px * 0.36, txt, { px, peso: 800, color: tinta, espacio: 2, ancla: 'middle' });
+}
 
 // --- metales -----------------------------------------------------------------------------------------------------------------
 const METAL = {
@@ -23,176 +39,258 @@ const METAL = {
 export const METALES = [['leyenda', 90e6], ['oro', 35e6], ['plata', 10e6], ['bronce', 0]];
 export const metalDe = (valor) => (METALES.find(([, min]) => Number(valor) >= min) || METALES[METALES.length - 1])[0];
 
-/** silueta de la carta: esquinas de arriba con muesca en el centro, lados rectos y punta suave abajo (todo a escala del ancho) */
-function silueta(x, y, w, h) {
-  const k = w / 404, c = 26 * k, r = 34 * k, mu = 40 * k, pu = 30 * k;
-  return `M${x + c},${y} L${x + w / 2 - mu},${y} Q${x + w / 2},${y + 18 * k} ${x + w / 2 + mu},${y} L${x + w - c},${y} Q${x + w},${y} ${x + w},${y + c + 10 * k}`
-    + ` L${x + w},${y + h - 90 * k} Q${x + w},${y + h - 60 * k} ${x + w - r},${y + h - 44 * k} L${x + w / 2 + pu},${y + h - 6 * k} Q${x + w / 2},${y + h + 6 * k} ${x + w / 2 - pu},${y + h - 6 * k}`
-    + ` L${x + r},${y + h - 44 * k} Q${x},${y + h - 60 * k} ${x},${y + h - 90 * k} L${x},${y + c + 10 * k} Q${x},${y} ${x + c},${y} Z`;
-}
 
-/**
- * Una carta. o = { metal (objeto de METAL), club (coloresClub), cara, escudo, grande ('19'), bajoGrande ('DEL'),
- *   nombre, lineas: [texto] (bajo el nombre), pie (SVG extra, ya colocado), caraAlto (fracción del ancho), esquina (texto arriba a la derecha) }
- * Devuelve { s, yNombre } para que quien la usa pueda colocar más cosas.
- */
-function carta(x, y, w, h, o) {
-  const t = o.metal, k = w / 404;
-  const gF = id('cf'), gB = id('cb'), gS = id('cs'), gC = id('cg'), cl = id('cl');
-  const borde = Math.max(4, 9 * k);
-  const ruta = silueta(x, y, w, h), rutaIn = silueta(x + borde, y + borde, w - borde * 2, h - borde * 2);
-  let s = `<defs>${lineal(gF, t.fondo, { x1: 0, y1: 0, x2: 0.6, y2: 1 })}${lineal(gB, t.borde, { x1: 0, y1: 0, x2: 1, y2: 1 })}`
-    + lineal(gS, [[0, '#fff', 0], [0.45, '#fff', 0], [0.5, '#fff', t.brillo], [0.56, '#fff', 0], [1, '#fff', 0]], { x1: 0, y1: 0, x2: 1, y2: 0.55 })
-    + lineal(gC, [[0, (o.club || {}).vivo || '#6b6b78', t.halo], [1, (o.club || {}).vivo || '#6b6b78', 0]])
-    + `<clipPath id="${cl}"><path d="${rutaIn}"/></clipPath></defs>`
-    + `<path d="${ruta}" transform="translate(0 ${Math.round(14 * k + 4)})" fill="#000" opacity="0.45"/>`
-    + `<path d="${ruta}" fill="url(#${gB})"/><path d="${rutaIn}" fill="url(#${gF})"/>`;
-  let dentro = `<rect x="${x}" y="${y}" width="${w}" height="${h * 0.62}" fill="url(#${gC})"/>`;
-  for (let i = -6; i < 14; i++) dentro += `<rect x="${x + i * 44 * k}" y="${y - 40}" width="${Math.max(1, 2 * k)}" height="${h + 80}" fill="${t.tinta}" opacity="0.05" transform="rotate(28 ${x + i * 44 * k} ${y})"/>`;
-  const lado = w * (o.caraAlto || 0.86);
-  dentro += caraFundida(o.cara, x + w * (o.caraCx || 0.63) - lado / 2, y + 30 * k, lado, { desde: 0.68 });
-  dentro += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${gS})"/>`;
-  s += `<g clip-path="url(#${cl})">${dentro}</g>`;
-  // arriba a la izquierda: la cifra grande, lo que es y el escudo
-  const xi = x + 62 * k;
-  if (o.grande != null) s += texto(xi, y + 128 * k, o.grande, { px: Math.round(104 * k), peso: 900, color: t.tinta, ancla: 'middle', max: 92 * k });
-  if (o.bajoGrande) s += texto(xi, y + 162 * k, o.bajoGrande, { px: Math.round(30 * k), peso: 700, color: t.tinta, ancla: 'middle', espacio: 1 * k })
-    + `<rect x="${xi - 22 * k}" y="${y + 176 * k}" width="${44 * k}" height="${Math.max(1, 2 * k)}" fill="${t.linea}"/>`;
-  if (o.escudo) s += escudo(o.escudo, xi, y + 218 * k, 58 * k);
-  if (o.esquina) s += texto(x + w - 30 * k, y + 64 * k, o.esquina, { px: Math.round(40 * k), peso: 900, color: t.tinta, ancla: 'end', opacidad: 0.55 });
-  // nombre y líneas
-  const yN = y + (o.yNombre || 0.63) * h;
-  s += texto(x + w / 2, yN, String(o.nombre).toUpperCase(), { px: Math.round(Math.max(46 * k, 25)), peso: 800, color: t.tinta, ancla: 'middle', max: w - 40 * k, espacio: 0.5 * k })
-    + `<rect x="${x + 40 * k}" y="${yN + 16 * k}" width="${w - 80 * k}" height="${Math.max(1, 1.5 * k)}" fill="${t.linea}"/>`;
-  (o.lineas || []).forEach((l, i) => {
-    const [txt, color] = Array.isArray(l) ? l : [l, t.tenue];
-    s += texto(x + w / 2, yN + Math.max(54 * k, 30) + i * Math.max(38 * k, 24), txt, { px: Math.round(Math.max(30 * k, 19)), peso: 700, color, ancla: 'middle', max: w - 40 * k, espacio: 0.5 * k });
+// 7 nov (Carlos: «rediseña todas las tarjetas para HD»): la carta deja de ser una carta recortada con la foto a 350 lógicos (la foto de
+// LaLiga, de 256 px, salía a ~700 en el PNG a 2400 y se veía blanda) y pasa al estilo de la de onces: un panel con el brillo del club y
+// el filo del metal, la cara con la cabeza entera (radio 64, ~294 px en el PNG) y el halo del club, el nombre grande y las cifras debajo.
+// El metal (por el valor de mercado) sigue: es el filo del panel y el aro de la cara. El valor y su % van solo a la derecha, con la
+// gráfica (antes salían también en la carta). 1200 x 860.
+export const ALTO_CARTA = 860;
+const ALTO_CARTA_CORTA = 820;
+
+/** el degradado del metal (para el aro y el filo) */
+function gradMetal(t) { const g = id('mt'); return { g, defs: `<defs>${lineal(g, t.borde, { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs>` }; }
+
+/** el panel del jugador: escudo, puesto, la cara, el nombre y `cifras` ([[valor, etiqueta, color]] en filas de dos) o `abajo` (SVG) */
+function panelJugador(x, y, w, h, o) {
+  const t = o.metal, gm = gradMetal(t), cx = x + w / 2, cy = y + 150, R = R_MAX;
+  let s = gm.defs + panel(x, y, w, h, o.club.vivo, { rx: 32, brillo: 0.5, borde: `url(#${gm.g})` })
+    + caraHD(o.cara, cx, cy, R, o.club.vivo, { aro: `url(#${gm.g})`, grosor: 6, halo: 1.9, haloOp: 0.5 });
+  if (o.insignia) s += insignia(o.insignia, cx + R * 0.78, cy + R * 0.78, 24);
+  if (o.escudo) s += escudo(o.escudo, x + 58, y + 62, 70);
+  if (o.puesto) s += chipPuesto(o.puesto, x + w - 60, y + 58, 26);           // en el color de su puesto (7 nov 15:31)
+  const yN = cy + R + 76;
+  s += texto(cx, yN, String(o.nombre).toUpperCase(), { px: 56, peso: 800, ancla: 'middle', max: w - 48, espacio: 0.5 })
+    + (o.linea ? texto(cx, yN + 40, o.linea, { px: 26, peso: 700, color: TENUE, ancla: 'middle', espacio: 1.5, max: w - 48 }) : '')
+    + `<rect x="${x + 40}" y="${yN + (o.linea ? 62 : 24)}" width="${w - 80}" height="1.5" fill="#fff" fill-opacity="0.12"/>`;
+  const filas = [];
+  for (let i = 0; i < (o.cifras || []).length; i += 2) filas.push(o.cifras.slice(i, i + 2));
+  const y0 = yN + (o.linea ? 62 : 24) + 64;
+  filas.forEach((f, r) => {
+    const yc = y0 + r * 92;
+    f.forEach(([v, et, color], k) => {
+      const xc = f.length === 1 ? cx : x + w * (k ? 0.73 : 0.27);
+      s += texto(xc, yc, v, { px: 48, peso: 900, color: color || TINTA, ancla: 'middle', max: w / 2 - 30 })
+        + texto(xc, yc + 30, et, { px: 21, peso: 700, color: TENUE, ancla: 'middle', espacio: 1.5, max: w / 2 - 30 });
+    });
   });
-  return { s: s + (o.pie || ''), yNombre: yN, k };
+  if (filas.length) s += `<rect x="${cx - 0.75}" y="${y0 - 40}" width="1.5" height="${filas.length * 92 - 20}" fill="#fff" fill-opacity="0.12"/>`;
+  return s + (o.abajo ? o.abajo(filas.length ? y0 + filas.length * 92 - 50 : y0 - 58) : '');
 }
 
-/** cifra grande con su etiqueta debajo, centradas en cx */
-function cifra(cx, y, valor, etiqueta, { px = 40, color = TINTA, tenue = TENUE, max = null } = {}) {
-  return texto(cx, y, valor, { px, peso: 800, color, ancla: 'middle', max })
-    + texto(cx, y + px * 0.66, etiqueta, { px: Math.max(21, Math.round(px * 0.5)), peso: 700, color: tenue, ancla: 'middle', espacio: 1, max });
+/** la cifra grande de arriba a la derecha, en una placa de oro: los puntos de la jornada (PTS) o la media (MEDIA) */
+function placa(valor, etiqueta, gOro) {
+  const x = 950, y = 44, w = 206, h = 196;
+  return `<rect x="${x}" y="${y + 6}" width="${w}" height="${h}" rx="30" fill="#000" opacity="0.4"/>`
+    + `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="30" fill="url(#${gOro})"/>`
+    + `<rect x="${x + 1.5}" y="${y + 1.5}" width="${w - 3}" height="${h - 3}" rx="28.5" fill="none" stroke="#fff" stroke-opacity="0.45" stroke-width="2"/>`
+    + texto(x + w / 2, y + 128, valor, { px: 120, peso: 900, color: '#2a1c04', ancla: 'middle', max: w - 30 })
+    + (etiqueta ? texto(x + w / 2, y + 170, etiqueta, { px: 28, peso: 800, color: '#5a420f', ancla: 'middle', espacio: 3 }) : '');
 }
 
+/** píldora roja «● EN JUEGO» centrada en cx sobre el borde de arriba de una casilla (los puntos de hoy aún no son los finales) */
+function pildoraVivo(cx, cy, px) {
+  const wt = medir('EN JUEGO', px, B, 1.5), r = px * 0.32, w = wt + r * 2 + px * 1.6, h = px * 1.7, x0 = cx - w / 2;
+  return `<rect x="${x0}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${ROJO}"/>`
+    + `<circle cx="${x0 + px * 0.75 + r}" cy="${cy}" r="${r}" fill="#fff"/>`
+    + texto(x0 + px * 0.75 + r * 2 + px * 0.35, cy + px * 0.36, 'EN JUEGO', { px, peso: 800, color: '#fff', espacio: 1.5 });
+}
+/** la placa de los puntos de hoy con el partido en juego (Carlos, 7 nov 15:35: «al estar en juego, arriba no debería estar dorado»):
+    oscura con filo rojo, la cifra en blanco (en rojo si es negativa), «PTS» en rojo y la píldora «● EN JUEGO» encima */
+function placaJuego(valor, { x = 950, y = 44, w = 206, h = 196 } = {}) {
+  const neg = Number(valor) < 0;
+  return `<rect x="${x}" y="${y + 6}" width="${w}" height="${h}" rx="30" fill="#000" opacity="0.4"/>`
+    + caja(x, y, w, h, { rx: 30, relleno: '#1d1218', borde: ROJO, grosor: 3, sombra: false })
+    + texto(x + w / 2, y + 128, String(valor), { px: 120, peso: 900, color: neg ? MALO : TINTA, ancla: 'middle', max: w - 30 })
+    + texto(x + w / 2, y + 170, 'PTS', { px: 28, peso: 800, color: ROJO, ancla: 'middle', espacio: 3 })
+    + pildoraVivo(x + w / 2, y, 22);
+}
+/** la placa de un partido en juego: el minuto grande y «EN JUEGO» con el punto rojo de directo (sin oro: no es un dato del jugador) */
+function placaVivo(minuto, { x = 950, y = 44, w = 206, h = 196 } = {}) {
+  const wt = medir('EN JUEGO', 26, B, 3), x0 = x + w / 2 - (wt + 26) / 2;
+  return `<rect x="${x}" y="${y + 6}" width="${w}" height="${h}" rx="30" fill="#000" opacity="0.4"/>`
+    + caja(x, y, w, h, { rx: 30, relleno: '#16141c', borde: ROJO, grosor: 2.5, sombra: false })
+    + texto(x + w / 2, y + 120, minuto, { px: 96, peso: 900, ancla: 'middle', max: w - 30 })
+    + `<circle cx="${x0 + 8}" cy="${y + 160}" r="8" fill="${ROJO}"/>`
+    + texto(x0 + 26, y + 169, 'EN JUEGO', { px: 26, peso: 800, color: ROJO, espacio: 3 });
+}
 
-function miniJornadas(x, y, ultimas, gOro) {
+// las 5 jornadas ANTERIORES a la de la tarjeta, todas iguales (Carlos, 7 nov 15:35: «que salgan las 5 últimas y arriba más en grande el
+// directo y lo de esta jornada»): los puntos de hoy van solo en la placa de arriba, en oro si el partido ha acabado y con filo rojo y
+// «EN JUEGO» si no
+function miniJornadas(x, y, ultimas) {
   let s = '';
-  const w = 98, h = 116, paso = 112;
+  const n = ultimas.length || 1, paso = 566 / Math.max(5, n), w = paso - 14, h = 132;
   ultimas.forEach(([jn, p], i) => {
-    const x0 = x + i * paso, ult = i === ultimas.length - 1;
-    s += caja(x0, y, w, h, { rx: 18, relleno: ult ? `url(#${gOro})` : null, sombra: true })
-      + texto(x0 + w / 2, y + 66, String(p), { px: 58, peso: 900, color: ult ? '#2a1c04' : p < 0 ? MALO : TINTA, ancla: 'middle' })
-      + texto(x0 + w / 2, y + 98, `J${jn}`, { px: 24, peso: 700, color: ult ? '#5a420f' : TENUE, ancla: 'middle', espacio: 1 });
+    const x0 = x + i * paso;
+    s += caja(x0, y, w, h, { rx: 20, sombra: true })
+      + texto(x0 + w / 2, y + 76, String(p), { px: 66, peso: 900, color: p < 0 ? MALO : TINTA, ancla: 'middle', max: w - 12 })
+      + texto(x0 + w / 2, y + 112, `J${jn}`, { px: 26, peso: 700, color: TENUE, ancla: 'middle', espacio: 1 });
   });
   return s;
 }
-function graficaValor(x, y, w, h, valor, color) {
-  if (!valor || valor.length < 2) return texto(x, y + h / 2, 'Sin histórico de valor', { px: 22, peso: 600, color: TENUE });
-  const vs = valor.map(([, v]) => v), min = Math.min(...vs), max = Math.max(...vs), rango = max - min || 1;
-  const t0 = valor[0][0], t1 = valor[valor.length - 1][0];
-  const px = (t) => x + (t - t0) / ((t1 - t0) || 1) * w, py = (v) => y + h - (v - min) / rango * h;
-  const pts = valor.map(([t, v]) => `${px(t).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
-  const g = id('gv');
-  const [ux, uy] = [px(t1), py(vs[vs.length - 1])];
-  return `<defs>${lineal(g, [[0, color, 0.35], [1, color, 0]])}</defs>`
-    + [0, 0.5, 1].map((f) => `<rect x="${x}" y="${(y + h * f).toFixed(1)}" width="${w}" height="1" fill="#fff" opacity="0.08"/>`).join('')
-    + `<polygon points="${x},${y + h} ${pts} ${ux},${y + h}" fill="url(#${g})"/>`
-    + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`
-    + `<circle cx="${ux}" cy="${uy}" r="6.5" fill="${color}" stroke="${FONDO}" stroke-width="3"/>`;
+/** a la derecha del panel: los puntos de las últimas jornadas y el valor de los últimos días con su gráfica */
+function historial(x0, y0, d, gOro) {
+  const wd = 566, colV = d.cambio > 0 ? VERDE : d.cambio < 0 ? MALO : TENUE, yv = y0 + 240;
+  const val = millones(d.valorHoy), wv = medir(val, 64, B);
+  const pc = chip(`${signo(d.cambio)} %`, 0, 0, 30, { relleno: colV, pad: 1.5, espacio: 0.5 });
+  return texto(x0, y0 + 24, 'PUNTOS EN LAS ÚLTIMAS JORNADAS', { px: 25, peso: 700, color: TENUE, espacio: 3, max: wd })
+    + miniJornadas(x0, y0 + 44, d.ultimas)
+    + texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 25, peso: 700, color: TENUE, espacio: 3 })
+    + texto(x0, yv + 62, val, { px: 64, peso: 800 })
+    + chip(`${signo(d.cambio)} %`, x0 + wv + 24 + pc.w / 2, yv + 44, 30, { relleno: colV, pad: 1.5, espacio: 0.5 }).s
+    // con la escala de la de gol y asistencia: máximo, mínimo y fechas (Carlos, 7 nov 15:47)
+    + graficaEscala(x0, yv + 92, wd, 150, d.valor, d.cambio < 0 ? MALO : d.cambio > 0 ? VERDE : '#e2bd5a');
 }
+
+/** cabecera de la carta: el motivo en grande (MVP, ¡DOBLETE!, PENALTI PARADO, LESIONADO…) y dos líneas debajo */
+function cabeceraCarta(titulo, grad, linea1, linea2 = '') {
+  return texto(40, 150, titulo, { px: 140, peso: 800, italica: true, color: `url(#${grad})`, max: 880 })
+    + texto(44, 204, linea1, { px: 38, peso: 700, espacio: 1.5, max: 880 })
+    + (typeof linea2 === 'string' ? (linea2 ? texto(44, 244, linea2, { px: 24, peso: 700, color: TENUE, espacio: 3, max: 880 }) : '') : linea2.svg);
+}
+
 export function svgJugadorCarta(d) {
-  const c = coloresClub(d.club.nombre);
+  const c = coloresClub(d.club.nombre), H = ALTO_CARTA;
   const oro = dorado(), metal = METAL[metalDe(d.valorHoy)];
-  let s = oro.defs + fondo([[300, 330, 560, c.vivo, 0.75], [1050, 80, 500, c.vivo, 0.18]]);
-  // la carta: debajo del nombre, cuatro cifras con su etiqueta (Carlos, 3 nov 10:44: que se entienda qué es cada una)
-  const x = 96, y = 36, w = 404, h = 600;
-  const C = carta(x, y, w, h, { metal, club: c, cara: d.cara, escudo: d.club.escudo, grande: String(d.ptsJornada), bajoGrande: ABREV[d.posicion] || d.posicion, nombre: d.nombre });
-  s += C.s;
-  const oscuro = metal === METAL.leyenda;
-  const colC = d.cambio > 0 ? (oscuro ? VERDE : '#0f7a43') : d.cambio < 0 ? (oscuro ? MALO : '#a3172a') : metal.tenue;
-  const yc = C.yNombre + 66, xs = [x + w * 0.29, x + w * 0.71];
-  s += cifra(xs[0], yc, num1(d.media), 'PUNTOS DE MEDIA', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
-    + cifra(xs[1], yc, String(d.total), 'PUNTOS TOTALES', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
-    + cifra(xs[0], yc + 74, millones(d.valorHoy), 'VALOR', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
-    + cifra(xs[1], yc + 74, `${signo(d.cambio)} %`, `EN ${d.dias} DÍAS`, { px: 40, color: colC, tenue: metal.tenue, max: 160 })
-    + `<rect x="${x + w / 2 - 0.75}" y="${yc - 34}" width="1.5" height="128" fill="${metal.linea}"/>`;
-  // derecha
-  const x0 = 566, wd = ANCHO - x0 - 56;
   const [motivo, ...resto] = d.etiqueta.split(' · ');
-  s += texto(x0 - 4, 158, motivo.toUpperCase(), { px: 150, peso: 800, italica: true, color: `url(#${oro.g})`, max: wd })
-    + texto(x0, 206, resto.join(' · ').toUpperCase(), { px: 34, peso: 700, espacio: 1.5, max: wd })
-    + texto(x0, 240, `LALIGA FANTASY · JORNADA ${d.jornada}`, { px: 22, peso: 600, color: TENUE, espacio: 3 })
-    + historial(x0, wd, d, oro.g);
-  s += marca(x0, 636);
-  return marco(s);
+  let s = oro.defs + fondo([[300, 520, 640, c.vivo, 0.6], [1000, 80, 560, c.vivo, 0.2]], H)
+    + cabeceraCarta(motivo.toUpperCase(), oro.g, [...resto, ...(d.minuto && !d.sinPuntos ? [d.minuto] : [])].join(' · ').toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
+    // en directo y sin puntos todavía (LaLiga no ha sumado la jugada): arriba el minuto «EN JUEGO» en vez de un «0 PTS»
+    + (d.sinPuntos ? (d.minuto ? placaVivo(d.minuto) : '') : d.enJuego ? placaJuego(d.ptsJornada) : placa(String(d.ptsJornada), 'PTS', oro.g))
+    + iconoTitulo(ICONO[d.motivo], motivo.toUpperCase())
+    + panelJugador(44, 284, 500, 490, { metal, club: c, cara: d.cara, escudo: d.club.escudo, puesto: ABREV[d.posicion] || d.posicion, nombre: d.nombre, insignia: ICONO[d.motivo],
+      cifras: [[num1(d.media), 'PUNTOS DE MEDIA'], [String(d.total), 'PUNTOS TOTALES']] })
+    + historial(590, 300, d, oro.g);
+  return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
 }
 
-
-
-/** un solo jugador: la carta grande a la izquierda y, a la derecha, su estado en grande, el equipo y el próximo rival */
-/** a la derecha de una carta: los puntos de las últimas jornadas y el valor de los últimos días con su gráfica */
-function historial(x0, wd, d, gOro) {
-  const yv = 480, colV = d.cambio > 0 ? VERDE : d.cambio < 0 ? MALO : TENUE;
-  const pct = chip(`${signo(d.cambio)} %`, 0, 0, 30, { relleno: colV, pad: 1.5, espacio: 0.5 });
-  return texto(x0, 298, 'PUNTOS EN LAS ÚLTIMAS JORNADAS', { px: 23, peso: 700, color: TENUE, espacio: 3 })
-    + miniJornadas(x0, 314, d.ultimas, gOro)
-    + texto(x0, yv, `VALOR · ${d.dias} DÍAS`, { px: 23, peso: 700, color: TENUE, espacio: 3 })
-    + texto(x0, yv + 54, millones(d.valorHoy), { px: 56, peso: 800 })
-    + chip(`${signo(d.cambio)} %`, x0 + 184 + pct.w / 2, yv + 40, 30, { relleno: colV, pad: 1.5, espacio: 0.5 }).s
-    + graficaValor(x0 + 184 + pct.w + 22, yv + 6, wd - 184 - pct.w - 22, 66, d.valor, d.cambio < 0 ? MALO : '#e2bd5a');
-}
-
-// Baja o novedad de un solo jugador: la carta (media, puntos totales, valor y su estado) y, a la derecha, el estado en grande, el
-// equipo y la jornada, el próximo rival, los puntos de las últimas jornadas y el valor (Carlos, 3 nov 11:24). Si no llegan las
-// últimas jornadas (no se encontró al jugador), solo el estado y el próximo rival en grande.
+// Baja o novedad de un solo jugador (Carlos, 3 nov 11:24): el estado en grande, el equipo y la jornada, el próximo rival, el panel del
+// jugador (puntos totales, valor y, si lo hay, el % de titularidad) y a la derecha sus últimas jornadas y su valor. Si no llegan las
+// últimas jornadas (no se encontró al jugador), el panel y el próximo rival en grande, en una tarjeta más baja.
+// (Carlos, 5 nov 16:39 y 17:08) el estado, arriba y en grande, y una sola vez; abajo, el % de titularidad de la app (de uno que vuelve o
+// de una duda), en el color del %. Sin %, abajo no va nada
 export function svgBajaSola(d) {
   const f = d.filas[0];
   const e = ESTADO_TARJETA[f.estado], club = coloresClub(f.club || f.equipo);
   const g = id('ge'), oro = dorado();
   const metal = METAL[metalDe(f.valorHoy || f.valor)];
+  const H = f.ultimas ? ALTO_CARTA : ALTO_CARTA_CORTA;
   let s = oro.defs + `<defs>${lineal(g, [[0, '#ffffff'], [0.45, e.color], [1, e.color]], { x1: 0, y1: 0, x2: 1, y2: 1 })}</defs>`
-    + fondo([[300, 330, 560, club.vivo, 0.75], [1050, 80, 500, e.color, 0.16]]);
-  const x = 96, y = 36, w = 404, h = 600, x0 = 566, wd = ANCHO - x0 - 56;
+    + fondo([[300, 520, 640, club.vivo, 0.6], [1000, 80, 560, e.color, 0.16]], H);
   const media = f.ultimas ? num1(f.media) : f.media;
-  // (Carlos, 5 nov 16:39 y 17:08) el estado, arriba y en grande, y una sola vez; abajo, en la carta, el % de titularidad de la app
-  // (de uno que vuelve o de una duda), en el color del %. Sin %, abajo no va nada
   const grande = f.estado === 'duda' && f.leve ? 'DUDA LEVE' : e.txt;
-  const abajo = (cy, px, wMax) => (f.pct != null ? pildoraTit(f.pct, x + w / 2, cy, px, wMax) : '');
-  s += texto(x0 - 4, 158, grande, { px: 140, peso: 800, italica: true, color: `url(#${g})`, max: wd })
-    + texto(x0, 206, `${(f.equipo || '').toUpperCase()} · JORNADA ${d.jornada}`, { px: 34, peso: 700, espacio: 1.5, max: wd });
-  if (f.ultimas) {
-    const C = carta(x, y, w, h, { metal, club, cara: f.cara, escudo: f.escudo || (d.equipo && d.equipo.escudo),
-      grande: media, bajoGrande: 'MEDIA', nombre: f.nombre });
-    const yc = C.yNombre + 66, xs = [x + w * 0.29, x + w * 0.71];
-    s += C.s
-      + cifra(xs[0], yc, String(f.total), 'PUNTOS TOTALES', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
-      + cifra(xs[1], yc, millones(f.valorHoy), 'VALOR', { px: 40, color: metal.tinta, tenue: metal.tenue, max: 160 })
-      + `<rect x="${x + w / 2 - 0.75}" y="${yc - 34}" width="1.5" height="56" fill="${metal.linea}"/>`
-      + abajo(yc + 70, 26, w - 80);
-    // el próximo rival, en una línea
-    if (d.rival) {
-      const wr = medir('PRÓXIMO RIVAL', 22, B, 3);
-      s += texto(x0, 240, 'PRÓXIMO RIVAL', { px: 22, peso: 700, color: TENUE, espacio: 3 })
-        + escudo(d.rival.escudo, x0 + wr + 22, 233, 30)
-        + texto(x0 + wr + (d.rival.escudo ? 44 : 14), 241, d.rival.corto.toUpperCase(), { px: 26, peso: 800, max: wd - wr - 50 });
-    } else s += texto(x0, 240, 'LALIGA FANTASY', { px: 22, peso: 600, color: TENUE, espacio: 3 });
-    s += historial(x0, wd, f, oro.g);
-    return marco(s + marca(x0, 636));
+  const abajo = (yy) => (f.pct != null ? pildoraTit(f.pct, 44 + 250, yy + 34, 28, 420) : '');
+  // el próximo rival, en una línea bajo la cabecera
+  let rival = texto(44, 244, 'LALIGA FANTASY', { px: 24, peso: 700, color: TENUE, espacio: 3 });
+  if (d.rival && f.ultimas) {
+    const wr = medir('PRÓXIMO RIVAL', 24, B, 3);
+    rival = texto(44, 246, 'PRÓXIMO RIVAL', { px: 24, peso: 700, color: TENUE, espacio: 3 })
+      + escudo(d.rival.escudo, 44 + wr + 26, 237, 36)
+      + texto(44 + wr + (d.rival.escudo ? 52 : 16), 248, d.rival.corto.toUpperCase(), { px: 32, peso: 800, max: 860 - wr - 60 });
   }
-  const C = carta(x, y, w, h, { metal, club, cara: f.cara, escudo: f.escudo || (d.equipo && d.equipo.escudo),
-    grande: media || null, bajoGrande: media ? 'MEDIA' : (ABREV[f.posicion] || null), nombre: f.nombre, lineas: [f.posicion].filter(Boolean), yNombre: 0.7 });
-  s += C.s + abajo(C.yNombre + 112, 30, w - 60)
-    + texto(x0, 240, 'LALIGA FANTASY', { px: 22, peso: 600, color: TENUE, espacio: 3 });
+  s += cabeceraCarta(grande, g, `${(f.equipo || '').toUpperCase()} · JORNADA ${d.jornada}`, { svg: rival });
+  if (media) s += placa(String(media), 'MEDIA', oro.g);
+  const escudoF = f.escudo || (d.equipo && d.equipo.escudo);
+  if (f.ultimas) {
+    s += panelJugador(44, 284, 500, 490, { metal, club, cara: f.cara, escudo: escudoF, puesto: ABREV[f.posicion] || null, nombre: f.nombre,
+      cifras: [[String(f.total), 'PUNTOS TOTALES']], abajo })
+      + historial(590, 300, f, oro.g);
+    return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
+  }
+  s += panelJugador(44, 284, 500, 456, { metal, club, cara: f.cara, escudo: escudoF, puesto: ABREV[f.posicion] || null, nombre: f.nombre,
+    linea: f.posicion ? f.posicion.toUpperCase() : null, abajo });
   if (d.rival) {
     const cR = coloresClub(d.rival.nombre || d.rival.corto);
-    s += radial(1000, 440, 320, cR.vivo, 0.35)
-      + texto(x0, 360, 'PRÓXIMO RIVAL', { px: 22, peso: 700, color: TENUE, espacio: 3 })
-      + escudo(d.rival.escudo, x0 + 44, 444, 96)
-      + texto(x0 + (d.rival.escudo ? 110 : 0), 470, d.rival.corto.toUpperCase(), { px: 72, peso: 800, max: wd - 110 });
+    s += radial(880, 480, 340, cR.vivo, 0.32, H)
+      + texto(600, 380, 'PRÓXIMO RIVAL', { px: 26, peso: 700, color: TENUE, espacio: 3 })
+      + escudo(d.rival.escudo, 650, 480, 120)
+      + texto(600 + (d.rival.escudo ? 120 : 0), 506, d.rival.corto.toUpperCase(), { px: 76, peso: 800, max: 556 - (d.rival.escudo ? 120 : 0) });
   }
-  return marco(s + marca(x0, 636));
+  return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
 }
 
+// Gol y asistencia en una sola tarjeta (Carlos, 7 nov 14:53: «no tiene sentido dos»). Arriba, el GOL (o ¡DOBLETE!) con el marcador
+// y el minuto; a la derecha, en directo, la placa del minuto «EN JUEGO». Debajo, dos paneles iguales: el goleador (filo de su metal y
+// chip dorado GOL) y el asistente (chip blanco ASISTENCIA), con cara, nombre, la media, el valor con su gráfica de 30 días y sus 5 últimas jornadas (la de hoy en
+// oro si LaLiga ya ha sumado los puntos). 1200 x 1156.
+export const ALTO_GOL_ASIS = 1156;
+/** la minigráfica del valor con escala: el máximo y el mínimo a la derecha (con su línea), una línea discontinua en medio y las fechas
+    de inicio y fin debajo. w y h incluyen la columna de la escala y la fila de las fechas */
+function graficaEscala(x, y, w, h, valor, color) {
+  if (!valor || valor.length < 2) return texto(x, y + h / 2, 'Sin histórico de valor', { px: 22, peso: 600, color: TENUE });
+  const wE = 74, hF = 26, wg = w - wE, hg = h - hF;
+  const vs = valor.map(([, v]) => v), max = Math.max(...vs), min = Math.min(...vs), rango = max - min || 1;
+  const t0 = valor[0][0], t1 = valor[valor.length - 1][0];
+  const px = (t) => x + (t - t0) / ((t1 - t0) || 1) * wg, py = (v) => y + hg - (v - min) / rango * hg;
+  const pts = valor.map(([t, v]) => `${px(t).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
+  const g = id('ge'), [ux, uy] = [px(t1), py(vs[vs.length - 1])];
+  return `<defs>${lineal(g, [[0, color, 0.35], [1, color, 0]])}</defs>`
+    + `<rect x="${x}" y="${y}" width="${wg}" height="1.2" fill="#fff" opacity="0.16"/>`
+    + `<line x1="${x}" y1="${y + hg / 2}" x2="${x + wg}" y2="${y + hg / 2}" stroke="#fff" stroke-opacity="0.12" stroke-width="1.2" stroke-dasharray="5 6"/>`
+    + `<rect x="${x}" y="${y + hg}" width="${wg}" height="1.2" fill="#fff" opacity="0.16"/>`
+    + `<polygon points="${x},${y + hg} ${pts} ${ux},${y + hg}" fill="url(#${g})"/>`
+    + `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`
+    + `<circle cx="${ux}" cy="${uy}" r="6.5" fill="${color}" stroke="${FONDO}" stroke-width="2.5"/>`
+    + texto(x + w, y + 7, millones(max), { px: 19, peso: 700, color: TINTA, ancla: 'end' })
+    + texto(x + w, y + hg + 7, millones(min), { px: 19, peso: 700, color: TENUE, ancla: 'end' })
+    + texto(x, y + h, fechaCorta(t0), { px: 18, peso: 700, color: TENUE, espacio: 1 })
+    + texto(x + wg, y + h, fechaCorta(t1), { px: 18, peso: 700, color: TENUE, espacio: 1, ancla: 'end' });
+}
+function panelDuo(x, y, w, h, j, rol, gOro) {
+  const t = METAL[metalDe(j.valorHoy)], gm = gradMetal(t), c = coloresClub(j.club.nombre), cx = x + w / 2, cy = y + 150, R = R_MAX;
+  let s = gm.defs + panel(x, y, w, h, c.vivo, { rx: 32, brillo: 0.5, borde: `url(#${gm.g})` })
+    + caraHD(j.cara, cx, cy, R, c.vivo, { aro: `url(#${gm.g})`, grosor: 6, halo: 1.9, haloOp: 0.5 })
+    + insignia(rol === 'ASISTENCIA' ? 'asistencia' : 'gol', cx + R * 0.78, cy + R * 0.78, 24);
+  if (j.club.escudo) s += escudo(j.club.escudo, x + 58, y + 62, 70);
+  const pu = ABREV[j.posicion] || j.posicion;
+  if (pu) s += chipPuesto(pu, x + w - 60, y + 58, 26);
+  const yN = cy + R + 74;
+  s += texto(cx, yN, String(j.nombre).toUpperCase(), { px: 56, peso: 800, ancla: 'middle', max: w - 48, espacio: 0.5 });
+  const esGol = rol !== 'ASISTENCIA';
+  s += chipIcono(rol, esGol ? 'gol' : 'asistencia', cx, yN + 46, 26, esGol ? { relleno: '#e2bd5a', tinta: '#2a1c04' } : { relleno: '#ffffff', tinta: '#120f16' })
+    + `<rect x="${x + 40}" y="${yN + 82}" width="${w - 80}" height="1.5" fill="#fff" fill-opacity="0.12"/>`;
+  // las cifras: los puntos de hoy (en grande y los primeros, Carlos 7 nov 15:35), la media y el valor. Con el partido en juego, los de
+  // hoy en blanco con la píldora «EN JUEGO» encima (no en oro: aún subirán o bajarán); sin puntos todavía, «EN JUEGO» y «SIN PUNTOS AÚN»
+  const xc0 = x + w / 6;
+  if (j.sinPuntos) s += pildoraVivo(xc0, yN + 160 - 30, 22) + texto(xc0, yN + 160 + 32, 'SIN PUNTOS AÚN', { px: 18, peso: 700, color: TENUE, ancla: 'middle', espacio: 1 });
+  else {
+    const neg = j.ptsJornada < 0;
+    s += texto(xc0, yN + 160 + 4, String(j.ptsJornada), { px: 72, peso: 900, color: neg ? MALO : j.enJuego ? TINTA : `url(#${gOro})`, ancla: 'middle', max: w / 3 - 20 })
+      + texto(xc0, yN + 160 + 34, 'PTS HOY', { px: 20, peso: 800, color: j.enJuego ? ROJO : '#e2bd5a', ancla: 'middle', espacio: 1.5 })
+      + (j.enJuego ? pildoraVivo(xc0, yN + 160 - 66, 16) : '');
+  }
+  const cifras = [[num1(j.media), 'DE MEDIA'], [millones(j.valorHoy), 'VALOR']];
+  const yc = yN + 160, paso = w / 3;
+  cifras.forEach(([v, et, color], k) => {
+    const xc = x + paso * (k + 1.5);
+    s += texto(xc, yc, v, { px: 50, peso: 900, color: color || TINTA, ancla: 'middle', max: paso - 24 })
+      + texto(xc, yc + 32, et, { px: 20, peso: 700, color: TENUE, ancla: 'middle', espacio: 1.5, max: paso - 16 });
+    s += `<rect x="${x + paso * (k + 1) - 0.75}" y="${yc - 48}" width="1.5" height="86" fill="#fff" fill-opacity="0.12"/>`;
+  });
+  // el valor de los últimos 30 días en una minigráfica, con el % de cambio (Carlos, 7 nov 15:07)
+  const yS = yc + 78, colV = j.cambio > 0 ? VERDE : j.cambio < 0 ? MALO : TENUE;
+  s += texto(x + 32, yS, `VALOR · ${j.dias} DÍAS`, { px: 20, peso: 700, color: TENUE, espacio: 1.5 })
+    + texto(x + w - 32, yS, `${signo(j.cambio)} %`, { px: 24, peso: 800, color: colV, ancla: 'end' })
+    + graficaEscala(x + 32, yS + 22, w - 64, 84, j.valor, j.cambio < 0 ? MALO : j.cambio > 0 ? VERDE : '#e2bd5a');
+  // sus 5 jornadas anteriores, pequeñas y todas iguales (lo de hoy va arriba, en grande)
+  const yM = yS + 138, n = j.ultimas.length || 1, pasoM = (w - 64) / Math.max(5, n), wm = pasoM - 10, hm = 96;
+  j.ultimas.forEach(([jn, p], i) => {
+    const x0 = x + 32 + i * pasoM;
+    s += caja(x0, yM, wm, hm, { rx: 16, sombra: true })
+      + texto(x0 + wm / 2, yM + 56, String(p), { px: 46, peso: 900, color: p < 0 ? MALO : TINTA, ancla: 'middle', max: wm - 10 })
+      + texto(x0 + wm / 2, yM + 84, `J${jn}`, { px: 20, peso: 700, color: TENUE, ancla: 'middle', espacio: 1 });
+  });
+  return s;
+}
+export function svgGolAsistencia(d) {
+  const H = ALTO_GOL_ASIS, oro = dorado();
+  const cg = coloresClub(d.gol.club.nombre);
+  let s = oro.defs + fondo([[320, 560, 620, cg.vivo, 0.5], [900, 560, 620, cg.vivo, 0.35]], H)
+    // el minuto, en la placa si está en juego; si no, junto al marcador (una sola vez)
+    + cabeceraCarta(d.titulo, oro.g, [d.marcador, ...(d.minuto && !d.enJuego ? [d.minuto] : [])].join(' · ').toUpperCase(), `LALIGA FANTASY · JORNADA ${d.jornada}`)
+    + (d.enJuego && d.minuto ? placaVivo(d.minuto) : '') + iconoTitulo('gol', d.titulo)
+    + panelDuo(44, 290, 540, 786, d.gol, d.titulo.replace(/[¡!]/g, ''), oro.g)
+    + panelDuo(616, 290, 540, 786, d.asis, 'ASISTENCIA', oro.g);
+  return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
+}

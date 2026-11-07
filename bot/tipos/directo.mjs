@@ -4,6 +4,7 @@ import { json } from '../lib/http.mjs';
 import { norm, corto, fmt, partes, elegir, el, del, al } from '../lib/texto.mjs';
 import { tweet, cap, segunda } from '../lib/redactar.mjs';
 import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
+import { clubes as clubesH, jugador as jugadorH, frenteMedia } from '../lib/hechos.mjs';
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
 const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la', 'del', 'el', 'y', 'sd', 'ad']);
@@ -12,15 +13,21 @@ const comparten = (a, b) => { const A = fichas(a), B = fichas(b); for (const t o
 
 // `portero`: true si ESPN dice que es portero, false si dice que no, null si no se sabe. Un portero nunca casa con uno de campo ni al
 // revés (6 nov: «Isaac Romero», delantero del Sevilla, casó con Rafa Romero, su portero, y la tarjeta salió con dos porteros).
+// abreviaturas de apellidos que usa LaLiga («Aitor Fdez», «Rafa Fdez.»; 7 nov, Osasuna-Athletic: el portero salió sin cara porque
+// ESPN lo llama «Aitor Fernández»): al casar nombres, se leen enteras
+const ABREV = { fdez: 'fernandez', fdz: 'fernandez', fndez: 'fernandez', glez: 'gonzalez', gzlez: 'gonzalez', gonz: 'gonzalez', hdez: 'hernandez', hndez: 'hernandez',
+  mtnez: 'martinez', mtez: 'martinez', rdguez: 'rodriguez', rguez: 'rodriguez', rodz: 'rodriguez', sdez: 'sanchez', snchez: 'sanchez', fdo: 'fernando', fco: 'francisco', jco: 'jose' };
+const nToks = (s) => norm(s).split(' ').filter(Boolean).map((t) => ABREV[t] || t);
+
 export function casarJugador(nombreEspn, lado, { portero = null } = {}) {
-  const toks = norm(nombreEspn).split(' ').filter(Boolean);
+  const toks = nToks(nombreEspn);
   if (!toks.length) return null;
   const ps = (lado.players || []).filter((p) => portero == null || !p.positionId || (Number(p.positionId) === 1) === portero);
-  const de = (p) => new Set([...norm(p.name).split(' '), ...norm(p.nickname).split(' ')].filter(Boolean));
+  const de = (p) => new Set([...nToks(p.name), ...nToks(p.nickname)]);
   // 0) el que lleva en LaLiga un nombre que está entero en el de ESPN («Isaac» en «Isaac Romero», «C. Romero» en «Cristian Romero»):
   //    va antes que el apellido suelto, que en el Sevilla daba «Rafa Romero» para «Isaac Romero» (Isaac sale en LaLiga sin apellido)
   const cabe = (p) => {
-    const ns = norm(p.nickname).split(' ').filter(Boolean);
+    const ns = nToks(p.nickname);
     return ns.length > 0 && ns.every((t) => toks.includes(t) || (/^[a-z]\.?$/.test(t) && toks.some((u) => u[0] === t[0])));
   };
   const enteros = ps.filter(cabe);
@@ -36,6 +43,25 @@ export function casarJugador(nombreEspn, lado, { portero = null } = {}) {
   const pun = ps.map((p) => ({ p, n: toks.filter((t) => t.length > 2 && de(p).has(t)).length })).filter((x) => x.n >= 2).sort((a, b) => b.n - a.n);
   if (pun.length && !(pun[1] && pun[1].n === pun[0].n)) return pun[0].p;
   return null;
+}
+
+/** Segunda pasada para el que `casarJugador` no encuentra porque LaLiga lo llama por un nombre de guerra («Rafita» para Rafa Garrido,
+    «Chupe» para Chupete; 7 nov, Málaga-Racing: salían sin cara). Es más flojo, así que pide todo esto a la vez: el mismo puesto (`pos`:
+    'POR' | 'DEF' | 'MED' | 'DEL'), que nadie lo tenga ya (`usados`), que TODAS las palabras del nombre de LaLiga se parezcan a alguna del de ESPN
+    (empiezan igual, 3 letras como poco) y que quede uno solo. «Dani Sánchez» no casa con «Daniel Pérez»: Sánchez no aparece. */
+export function casarJugadorFlojo(nombreEspn, lado, { pos = null, usados = new Set() } = {}) {
+  const clase = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
+  const et = nToks(nombreEspn).filter((t) => t.length >= 3);
+  if (!et.length) return null;
+  const k = (a, b) => { let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++; return i; };
+  const parecen = (a, b) => { const c = k(a, b); return c >= 3 && c >= Math.min(a.length, b.length) - 2; };
+  const cand = (lado.players || []).filter((p) => {
+    if (usados.has(String(p.id))) return false;
+    if (pos && p.positionId && clase[p.positionId] !== pos) return false;
+    const nt = nToks(p.nickname).filter((t) => t.length >= 3);
+    return nt.length > 0 && nt.every((t) => et.some((u) => parecen(t, u)));
+  });
+  return cand.length === 1 ? cand[0] : null;
 }
 
 // Lo que se tuitea en directo (término medio que propuso Domy y aceptó Carlos el 2 nov): cada gol, con su asistente y los puntos
@@ -57,9 +83,32 @@ export function disparadores(detalles) {
   return out;
 }
 
+/** los penaltis PARADOS de un partido, del `summary` de ESPN (el `scoreboard` no los trae; el de Sivera del 6 nov no salió por eso). Son
+    disparadores como los demás: { ref, clase: 'penalti parado', jugador (el lanzador), portero, min, equipo (el del lanzador) } */
+export function penaltisParados(sumario) {
+  const out = [];
+  for (const k of (sumario && sumario.keyEvents) || []) {
+    const tipo = String((k.type && k.type.text) || '');
+    if (!/^penalty/i.test(tipo) || !/saved/i.test(tipo) || /scored|goal/i.test(tipo)) continue;
+    const a = ((k.participants || [])[0] || {}).athlete;
+    if (!a || !k.team) continue;
+    const portero = ((String(k.text || '').match(/\bby ([^()]+?) \(/) || [])[1] || '').trim();
+    out.push({ ref: k, clase: 'penalti parado', jugador: a.displayName, portero: portero || null, min: (k.clock && k.clock.displayValue) || '', equipo: k.team.id });
+  }
+  return out;
+}
+/** el marcador [local, visitante] justo antes (o en el momento) de un minuto, con la secuencia reconstruida de ESPN; null si no cuadra */
+export function marcadorEn(rel, ref) {
+  if (!rel || !rel.ok) return null;
+  const t = (d) => { const m = minutoDe(d); return m.min + m.extra / 100; };
+  const tp = t(ref);
+  let ult = [0, 0];
+  for (const d of rel.orden) { if (t(d) > tp) break; const mom = rel.tras.get(d); if (mom) ult = mom.marcador; }
+  return ult;
+}
+
 /** asistentes de cada gol, del resumen del partido de ESPN (keyEvents: «Assisted by X.»): { 'goleador|minuto': asistente } */
-async function asistencias(evId) {
-  const r = await json(`${ESPN}/summary?event=${evId}`).catch(() => null);
+function asistencias(r) {
   const m = {};
   for (const k of (r && r.keyEvents) || []) {
     if (!(k.scoringPlay || /goal/i.test((k.type && k.type.text) || ''))) continue;
@@ -75,6 +124,24 @@ async function asistencias(evId) {
 // va arriba como titular («⚽ Gol de Budimir y Osasuna se adelanta en el 32'»), el marcador debajo y los puntos en su línea.
 const VERBO = { abre: 'se adelanta', empata: 'empata', adelanta: 'se pone por delante', voltea: 'le da la vuelta',
   recorta: 'recorta', amplia: 'amplía la ventaja', sentencia: 'sentencia el partido' };
+/** cómo fue el gol según ESPN («Goal - Free-kick», «Goal - Volley», «Goal - Header») y si es un momento para celebrarlo a lo grande
+    (Carlos, 7 nov 15:35: «lenguaje más coloquial y mayúsculas si hay un golazo o un gol en los últimos instantes o algún evento que lo
+    merezca»). Solo con datos: un gol de falta directa, uno en el descuento o los últimos minutos que empata, adelanta o da la vuelta,
+    una remontada y un triplete. Un «golazo» que no sea de falta no se puede saber (ESPN no lo dice): no sale. */
+export function momentoEspecial({ tipoEspn = '', min = 0, extra = 0, sit = null, clase = 'gol', penalti = false } = {}) {
+  const t = String(tipoEspn || '');
+  const forma = penalti ? null : /free.?kick/i.test(t) ? 'de falta directa' : /volley/i.test(t) ? 'de volea' : /header/i.test(t) ? 'de cabeza' : null;
+  const cambia = ['empata', 'adelanta', 'voltea'].includes(sit);
+  const motivos = [];
+  if (forma === 'de falta directa') motivos.push('golazo de falta directa');
+  if (cambia && min >= 90) motivos.push(`gol en el descuento (${min}${extra ? `+${extra}` : ''}') que ${VERBO[sit] === 'empata' ? 'empata el partido' : VERBO[sit] === 'le da la vuelta' ? 'le da la vuelta al partido' : 'pone por delante a su equipo'}`);
+  else if (cambia && min >= 85) motivos.push(`gol en los últimos minutos que ${sit === 'empata' ? 'empata el partido' : sit === 'voltea' ? 'le da la vuelta al partido' : 'pone por delante a su equipo'}`);
+  else if (sit === 'voltea') motivos.push('remontada: le da la vuelta al partido');
+  if (clase === 'triplete') motivos.push('triplete');
+  return { forma, motivos };
+}
+/** lo que habría supuesto el penalti (fallado o parado), desde el punto de vista de quien lo lanza */
+const pudoTxt = (propio, rival, equipo) => (propio === rival ? `Habría adelantado ${al(equipo)}` : propio < rival ? (rival - propio === 1 ? 'Habría empatado el partido' : 'Habría recortado distancias') : `Habría ampliado la ventaja ${del(equipo)}`);
 function titularGol(sit, n, eq, min, semilla) {
   const E = { el: el(eq), del: del(eq), al: al(eq) };
   const v = {
@@ -109,10 +176,13 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       const m = stats.find((x) => comparten(x.local.mainName, casa.team.displayName) && comparten(x.visitor.mainName, fuera.team.displayName));
       if (!m) { console.log(`  (directo) sin casar ${ev.shortName} con LaLiga`); continue; }
       const dsps = disparadores(c.details || []);
+      // el resumen del partido (una petición por partido y ejecución): los penaltis parados y los asistentes que falten
+      const sumario = await json(`${ESPN}/summary?event=${ev.id}`).catch(() => null);
+      dsps.push(...penaltisParados(sumario));
       // con el partido ya acabado, los puntos solo valen cuando están los DAZN: antes, los tweets esperan (los de durante el partido ya salieron)
       if (st.state === 'post' && dsps.length && dazn && !(await dazn(m)).listo) { console.log(`  (directo) ${ev.shortName}: acabado, espero a los puntos DAZN para sus ${dsps.length} tweets`); continue; }
       console.log(`  (directo) ${ev.shortName} · ${st.state === 'in' ? `en juego, ${(ev.status.displayClock || '')}` : 'acabado'} · ${casa.score}-${fuera.score} · ${dsps.length} cosas que contar`);
-      const asis = dsps.some((d) => d.n && !d.asistente) ? await asistencias(ev.id) : {};
+      const asis = dsps.some((d) => d.n && !d.asistente) ? asistencias(sumario) : {};
       // el marcador de ESPN, que va al momento (el de LaLiga puede ir por detrás)
       const gl = Number(casa.score), gv = Number(fuera.score);
       const rel = reconstruir(c.details || [], casa.team.id, fuera.team.id, gl, gv);
@@ -131,23 +201,28 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         const media = p && porId.get(String(p.id)) ? Number(porId.get(String(p.id)).averagePoints) || 0 : 0;
         const equipo = corto(lado.mainName);
         // marcador en el momento de la jugada (si la secuencia cuadra) o el actual de ESPN
-        const mom = rel.ok && rel.tras.get(dsp.ref);
+        // (un penalti parado viene del `summary`, no de los `details`: su marcador sale de la secuencia, por el minuto)
+        const mom = (rel.ok && rel.tras.get(dsp.ref)) || (dsp.clase === 'penalti parado' && rel.ok ? { marcador: marcadorEn(rel, dsp.ref) } : null);
         const [sl, sv] = mom ? mom.marcador : [gl, gv];
         const mar = `${corto(m.local.mainName)} ${sl}-${sv} ${corto(m.visitor.mainName)}`;
         const [propio, rival] = esCasa ? [sl, sv] : [sv, sl];
-        const num = [mn.min, mn.extra, sl, sv, propio, rival].filter((x) => x != null);
+        const num = [mn.min, mn.extra, mn.extra ? mn.min + mn.extra : null, sl, sv, propio, rival].filter((x) => x != null);   // «¡EN EL 93!» (90+3)
         const sem = `directo${m.id}${dsp.jugador}${dsp.clase}${dsp.n || ''}`;
         const tarjetas = [];
         const jp = p ? porId.get(String(p.id)) : null;
         const pos = jp ? jp.positionId : p && p.positionId;
         let cab; const ideas = [];
+        // los hechos para la IA que redacta (lib/redaccion.mjs): lo mismo que dice la plantilla, sin sus frases
+        const jugH = []; let extraH = {};
+        const jH = (nom, posId, med, extra, eq = equipo, principal = true) => jugadorH({ nickname: nom, positionId: posId, equipo: eq, averagePoints: med }, { principal, extra });
         const marcador = `📍 ${mar}`;
-        const puntos = (valor, conMedia) => {
+        const puntos = (valor, conMedia, conNombre = false) => {
           num.push(valor);
           const sobre = conMedia && media >= 3 && valor >= 1.5 * media;
           if (sobre) num.push(...partes(media));
           if (valor <= 0) return { t: `📉 Se queda en ${valor} puntos fantasy`, prio: 8 };
-          const base = elegir([`📊 Ya suma ${valor} puntos fantasy`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos fantasy`, `📊 Lleva ${valor} puntos fantasy de momento`], sem + 'p');
+          // con asistente en el mismo tuit, el goleador va por su nombre: «Ya suma 4 puntos» a secas se leía como del asistente (7 nov)
+          const base = conNombre ? `📊 ${nombre} ya suma ${valor} puntos fantasy` : elegir([`📊 Ya suma ${valor} puntos fantasy`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos fantasy`, `📊 Lleva ${valor} puntos fantasy de momento`], sem + 'p');
           return { t: `${base}${sobre ? `, con una media de ${fmt(media)}` : ''}`, prio: 8 };
         };
         if (dsp.clase === 'roja') {
@@ -159,11 +234,31 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           ideas.push({ t: quedan ? `⚠️ ${cap(el(equipo))} se queda con ${quedan}${estado}` : `⚠️ ${cap(el(equipo))} se queda con un jugador menos`, prio: 7 });
           if (pts != null) ideas.push(puntos(pts, false));
           if (p) tarjetas.push({ jugadorId: p.id, motivo: 'roja' });
+          jugH.push(jH(nombre, pos, media, { queLePasa: 'es expulsado', ...(pts != null ? { puntosFantasyAhora: pts } : {}) }));
+          extraH = { suEquipoSeQuedaCon: quedan || 'un jugador menos', suEquipoVa: propio < rival ? 'perdiendo' : propio > rival ? 'ganando' : 'empatando' };
+        } else if (dsp.clase === 'penalti parado') {
+          // el portero es del otro equipo (con ESPN dicho: `portero`); su carta, como segunda imagen
+          const ladoP = esCasa ? m.visitor : m.local;
+          const pPor = dsp.portero ? casarJugador(dsp.portero, ladoP, { portero: true }) : null;
+          const nomP = pPor ? pPor.nickname || pPor.name : dsp.portero;
+          const ptsP = pPor && pPor.weekPoints != null && Number(pPor.weekPoints) > 0 ? Number(pPor.weekPoints) : null;
+          const mediaP = pPor && porId.get(String(pPor.id)) ? Number(porId.get(String(pPor.id)).averagePoints) || 0 : 0;
+          const equipoP = corto(ladoP.mainName);
+          cab = nomP ? `🧤 ${nomP} le para un penalti a ${nombre} en el ${minTxt}` : `🧤 Penalti parado a ${nombre} en el ${minTxt}`;
+          ideas.push({ t: marcador, prio: 9 });
+          ideas.push({ t: `⚠️ ${pudoTxt(propio, rival, equipo)}`, prio: 6 });
+          if (ptsP != null && nomP) { num.push(ptsP); ideas.push({ t: `📊 ${nomP} ya suma ${ptsP} puntos fantasy`, prio: 8 }); }
+          if (pPor) tarjetas.push({ jugadorId: pPor.id, motivo: 'parada' });
+          if (nomP) jugH.push(jH(nomP, 1, mediaP, { queLePasa: `le para un penalti a ${nombre}`, ...(ptsP != null ? { puntosFantasyAhora: ptsP } : {}) }, equipoP));
+          jugH.push(jH(nombre, pos, media, { queLePasa: 'lanza el penalti y se lo paran' }));
+          extraH = { quePudoSerElPenalti: pudoTxt(propio, rival, equipo) };
         } else if (dsp.clase === 'penalti fallado') {
           cab = `❌ ${nombre} falla un penalti en el ${minTxt}`;
           ideas.push({ t: marcador, prio: 9 });
-          const pudo = propio === rival ? `Habría adelantado ${al(equipo)}` : propio < rival ? (rival - propio === 1 ? `Habría empatado el partido` : `Habría recortado distancias`) : `Habría ampliado la ventaja ${del(equipo)}`;
+          const pudo = pudoTxt(propio, rival, equipo);
           ideas.push({ t: `⚠️ ${pudo}`, prio: 6 });
+          jugH.push(jH(nombre, pos, media, { queLePasa: 'falla un penalti', ...(pts != null ? { puntosFantasyAhora: pts } : {}) }));
+          extraH = { quePudoSerElPenalti: pudo };
           if (pts != null) ideas.push(puntos(pts, false));
           if (p) tarjetas.push({ jugadorId: p.id, motivo: 'penalti' });
         } else {
@@ -185,15 +280,30 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
             const na = pa ? pa.nickname || pa.name : an;
             const ptsA = pa && pa.weekPoints != null && Number(pa.weekPoints) > 0 ? Number(pa.weekPoints) : null;
             if (ptsA != null) num.push(ptsA);
-            ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, que ya suma ${ptsA} puntos` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
+            ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
             if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia' });
           }
-          if (pts != null) ideas.push(puntos(pts, true));
+          if (pts != null) ideas.push(puntos(pts, true, !!an));
+          const sobre = pts != null && media >= 3 && pts >= 1.5 * media;
+          jugH.push(jH(nombre, pos, media, { queLePasa: `${dsp.clase === 'doblete' ? 'marca su segundo gol' : dsp.clase === 'triplete' ? 'marca su tercer gol' : 'marca'}${dsp.penalti ? ' de penalti' : ''}`,
+            ...(pts != null ? { puntosFantasyAhora: pts } : {}), ...(sobre ? { frenteASuMedia: frenteMedia(pts, media) } : {}) }));
+          if (an) { const paH = casarJugador(an, lado); const ptsAH = paH && paH.weekPoints != null && Number(paH.weekPoints) > 0 ? Number(paH.weekPoints) : null;
+            jugH.push(jH(paH ? paH.nickname || paH.name : an, paH ? paH.positionId : null, paH && porId.get(String(paH.id)) ? Number(porId.get(String(paH.id)).averagePoints) || 0 : 0,
+              { queLePasa: 'da el pase del gol', ...(ptsAH != null ? { puntosFantasyAhora: ptsAH } : {}) })); }
+          const esp = momentoEspecial({ tipoEspn: dsp.ref && dsp.ref.type && dsp.ref.type.text, min: mn.min, extra: mn.extra, sit, clase: dsp.clase, penalti: dsp.penalti });
+          extraH = { ...(esp.forma ? { comoFueElGol: esp.forma } : {}), ...(esp.motivos.length ? { momentoParaCelebrar: esp.motivos } : {}),
+            ...(sit ? { loQueSuponeElGol: `${equipo} ${VERBO[sit]}` } : {}), ...(sit && ['empata', 'adelanta', 'voltea'].includes(sit) && mn.min >= 85 ? { tramo: mn.min >= 88 ? 'casi sobre la bocina' : 'ya en el tramo final' } : {}),
+            ...(sit === 'abre' && mn.min <= 6 ? { tramo: 'apenas habían pasado unos minutos' } : {}) };
         }
         const { usadas, texto } = tweet(cab, ideas);
         if (!usadas.length) continue;
-        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto,
-          numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra,
+        const hechos = { tipo: 'directo', subtipo: dsp.clase, jornada, noticia: `${dsp.clase === 'gol' ? 'gol' : dsp.clase} en el ${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`,
+          minuto: minTxt, partido: { partido: `${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`, local: corto(m.local.mainName), visitante: corto(m.visitor.mainName), marcadorEnEseMomento: `${sl}-${sv}`,
+            estadoDelPartido: st.state === 'in' ? 'en juego' : 'acabado' },
+          ...(dsp.clase === 'doblete' || dsp.clase === 'triplete' ? { golNumeroDelJugador: dsp.n } : {}), ...extraH,
+          jugadores: jugH, clubes: clubesH(m.local.mainName, m.visitor.mainName), etiqueta: '' };
+        out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto, hechos,
+          numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra, minutoTxt: minTxt,
           // para las tarjetas de jugador (cada jugador implicado que case con LaLiga) y su marcador del momento
           partido: m.id, marcador: [sl, sv], tarjetas });
       }

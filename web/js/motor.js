@@ -1777,31 +1777,72 @@ export function analizar(D, H, c, extra = {}) {
     const ultimo = cambios.length ? cambios[cambios.length - 1] : null;
     // se pone a la venta después del penúltimo cambio, para aceptar la oferta que llega en el último
     const ponerVenta = cambios.length >= 2 ? cambios[cambios.length - 2] + 5 * MIN : ahora;
-    M.ventanaEsp = { ponerVenta, limite: ultimo, ultimoMercado: ultimo, ciclos: cambios.length, cambios };
+    // los días que se mueve su valor hasta venderlo: todos, también los de la jornada en juego (el valor cambia cada día
+    // aunque esos cambios no valgan para vender)
+    const diasValor = ultimo ? clamp(Math.round((ultimo - ahora) / DIA), 1, 14) : 0;
+    M.ventanaEsp = { ponerVenta, limite: ultimo, ultimoMercado: ultimo, ciclos: cambios.length, cambios, diasValor };
   }
   M.reventa = extra.reventa || {};
-  const proyectar = (j, t, dias) => {
+  // lo que ha subido cada uno de los últimos días (en tanto por uno), del más viejo al de hoy
+  const subidasDiarias = (j, t) => {
+    const porDia = new Map();
+    for (const [ts, x] of t.serie || []) if (x) porDia.set(diaDe(ts), x);
+    porDia.set(diaDe(ahora), j.valor);
+    const d = [...porDia.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-8).map(([, x]) => x);
+    const r = [];
+    for (let i = 1; i < d.length; i++) r.push(d[i] / d[i - 1] - 1);
+    return r;
+  };
+  // VUELVE: uno que valía mucho más esta temporada, se hundió (lesión, sin jugar) y ahora juega otra vez y sube varios
+  // días seguidos. Es el chollo más claro para revender: le queda muchísimo recorrido y la subida no se frena enseguida.
+  // Lo pidió Carlos el 7 nov: De Jong, de 44,5 M en julio a 5,6 M, sumando minutos y subiendo un 5 % al día a 9 M, y el
+  // plan no lo propuso (la jornada estaba en juego y especular estaba apagado entero)
+  const vuelve = (j, t) => {
+    const serie = (t.serie || []).map(([, x]) => x).filter(Boolean);
+    if (serie.length < 10) return null;
+    const max = Math.max(...serie);
+    if (max < j.valor * 2) return null;
+    const sub = subidasDiarias(j, t);
+    let racha = 0; for (let i = sub.length - 1; i >= 0 && sub[i] > 0.004; i--) racha++;
+    if (racha < 3) return null;
+    const ritmo = sub.slice(-3).reduce((s, x) => s + x, 0) / 3;
+    if (ritmo < 0.012) return null;
+    // que esté jugando otra vez (si hay ficha con minutos): minutos en alguna de las 2 últimas jornadas
+    const st = det[j.id] && det[j.id].stats;
+    if (st && st.length && !st.slice(-2).some((x) => x.min >= 20)) return null;
+    return { max, racha, ritmo, techo: max / j.valor };
+  };
+  const proyectar = (j, t, dias, vu) => {
     // la subida diaria reciente (7 días si hay, si no la de hoy rebajada) y que se va frenando
     let r = t.p7 != null ? t.p7 / 100 / 7 : t.p1 != null ? (t.p1 / 100) * 0.5 : 0;
+    // si ha empezado a subir hace pocos días, la de 7 días lleva dentro los de bajada: vale lo de los últimos 3
+    const sub = subidasDiarias(j, t).slice(-3);
+    if (sub.length === 3 && sub.every((x) => x > 0)) r = Math.max(r, (sub.reduce((s, x) => s + x, 0) / 3) * 0.9);
     r = clamp(r, -0.03, 0.04);
+    // el que vuelve se frena más despacio (le queda mucho para su valor de antes)
+    const freno = vu ? 0.92 : 0.85;
     let v = j.valor;
-    for (let k = 0; k < dias; k++) v *= 1 + r * Math.pow(0.85, k);
+    for (let k = 0; k < dias; k++) v *= 1 + r * Math.pow(freno, k);
     return { r, v };
   };
   M.especular = [];
-  if (M.ventanaEsp && M.ventanaEsp.ciclos >= 1 && !M.enJuego) {
+  // (también con la jornada en juego: con un parón detrás hay dos semanas para revender; lo que no vale para vender
+  // son los cambios de mercado de mientras se juega, y esos ya no cuentan en `ciclos`)
+  if (M.ventanaEsp && M.ventanaEsp.ciclos >= 1) {
     const add = (j, t, origen, precio, extraInfo) => {
       if (MALOS.has(j.estado)) return;
       // para revender tiene que seguir subiendo hasta el día de vender: fuera lo que se frena o ya ha girado
       const ine = M.inercia(j.id);
       if (ine && (['giro', 'baja', 'parado'].includes(ine.fase) || (ine.fase === 'frena' && ine.giroEn != null && ine.giroEn < M.ventanaEsp.ciclos + 1))) return;
       // lo del mercado llega en el próximo cambio y luego hay que ponerlo a la venta: hacen falta 2 cambios
-      const dias = M.ventanaEsp.ciclos;
-      if (dias < (origen === 'mercado' ? 2 : 1)) return;
-      const { r, v } = proyectar(j, t, dias);
+      if (M.ventanaEsp.ciclos < (origen === 'mercado' ? 2 : 1)) return;
+      const dias = Math.max(M.ventanaEsp.ciclos, M.ventanaEsp.diasValor || 0);
+      const vu = vuelve(j, t);
+      const { r, v } = proyectar(j, t, dias, vu);
       const beneficio = v - precio;
       if (r <= 0.004 || beneficio < Math.max(250000, precio * 0.025)) return;
-      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVenta, confianza: t.p7 != null && r > 0.008 ? 'media' : 'baja', ...extraInfo });
+      const confianza = vu && r > 0.01 ? 'alta' : t.p7 != null && r > 0.008 ? 'media' : 'baja';
+      M.especular.push({ j, pid: j.id, tend: t, origen, precio, valorFuturo: v, beneficio, pct: beneficio / precio, r, dias, vender: M.ventanaEsp.ponerVenta, confianza, vuelve: vu, ...extraInfo });
     };
     // la puja es la misma que en Mercado → Fichar y en el plan (`m.puja`: lo que hace falta en tu liga para llevártelo).
     // Antes, para revender, se pujaba un 1,2 % más por puja sobre el precio, pero al cuadrar el plan se subía a `m.puja`
@@ -1809,7 +1850,9 @@ export function analizar(D, H, c, extra = {}) {
     // en Especular y 45,87 M en Hoy). Con la misma puja, el beneficio es el de verdad y si no compensa no sale
     for (const m of M.mercado) if (m.tipo === 'liga' && !m.miPuja && m.puja) add(m.j, m.tend, 'mercado', m.puja, { puja: m.puja, precioMercado: m.precio });
     for (const x of M.clausulas) if (x.abierta) add(x.j, x.tend, 'clausula', x.clausula, { rival: x.rival });
-    M.especular.sort((a, b) => b.beneficio - a.beneficio);
+    // el que vuelve va delante aunque el beneficio calculado sea algo menor (la tendencia se queda corta con él)
+    const peso = (e) => e.beneficio * (e.vuelve ? 1.5 : 1);
+    M.especular.sort((a, b) => peso(b) - peso(a));
   }
   // lo que compraste para revender y sigue en tu equipo
   M.paraRevender = M.mias.filter((x) => M.reventa[x.pid]).map((x) => ({ ...x, rev: M.reventa[x.pid], beneficioYa: x.j.valor - (M.reventa[x.pid].precio || x.compra || x.j.valor) }));
@@ -2213,11 +2256,12 @@ export function planAuto(D, M, c) {
 
   // 4c. especular: entre semana se puede bajar hasta el límite de deuda si lo que compras lo vendes antes de la jornada
   const especula = [];
-  if (ventana && ventana.ciclos >= 1 && !M.paraRevender.length) {
+  // (con algo ya comprado para revender, solo los que VUELVEN: no se deja pasar uno así por tener otro)
+  if (ventana && ventana.ciclos >= 1 && (!M.paraRevender.length || M.especular.some((e) => e.vuelve))) {
     const ya = new Set(ops.map((o) => o.pid));
     let espSaldo = saldo;
     for (const e of M.especular) {
-      if (especula.length >= 2 || ya.has(e.pid) || M.dueno[e.pid] === D.yo.teamId) continue;
+      if (especula.length >= 2 || ya.has(e.pid) || M.dueno[e.pid] === D.yo.teamId || (M.paraRevender.length && !e.vuelve)) continue;
       // nunca más allá del 90 % de la deuda permitida, y que al vender lo especulado se vuelva a positivo
       const tras = espSaldo - e.precio;
       if (tras < limite * 0.9) continue;
@@ -2232,7 +2276,7 @@ export function planAuto(D, M, c) {
         donde: e.origen === 'mercado' ? 'en el mercado' : `cláusula a ${e.rival.manager || e.rival.nombre}`, importe: e.origen === 'mercado' ? e.precioMercado : e.precio, puja_max: e.origen === 'mercado' ? e.puja : null,
         cuando: e.origen === 'mercado' ? (M.cierreMercado ? antesDe(M.cierreMercado) : 'hoy') : 'ahora',
         vender_el: diaVenta, beneficio_esperado: Math.round(e.beneficio),
-        motivo: `Para revender, no para tu once: sube un ${pct(e.r * 100, 1, false)} al día. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.`,
+        motivo: `Para revender, no para tu once: ${e.vuelve ? `llegó a valer ${eur(e.vuelve.max)} esta temporada, vuelve a jugar y lleva ${e.vuelve.racha} días subiendo (un ${pct(e.r * 100, 1, false)} al día)` : `sube un ${pct(e.r * 100, 1, false)} al día`}. Si sigue así, ${elDiaVenta} valdrá unos ${eur(e.valorFuturo)} (${eur(e.beneficio, { signo: true })}). Ponlo a la venta ${elDiaVenta} para estar en positivo antes de la jornada.`,
         confianza: e.confianza });
     }
     saldo = espSaldo;
