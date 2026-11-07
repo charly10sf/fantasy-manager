@@ -33,17 +33,24 @@ jobs:
       - run: npm ci --prefix bot --no-audit --no-fund
       - name: Registro de hace unas horas (copia, solo lectura)
         run: |
-          git clone -q --branch bot-estado --shallow-since="4 days ago" "https://github.com/${GITHUB_REPOSITORY}.git" /tmp/estado
+          git clone -q --branch bot-estado --shallow-since="10 days ago" "https://github.com/${GITHUB_REPOSITORY}.git" /tmp/estado
           C=$(git -C /tmp/estado rev-list -1 --before="${HORAS} hours ago" HEAD)
           git -C /tmp/estado show "$C:registro.json" > /tmp/registro.json
           echo "Registro de $(git -C /tmp/estado show -s --format=%ci "$C")"
+          C2=$(git -C /tmp/estado rev-list -1 --before="170 hours ago" HEAD)
+          git -C /tmp/estado show "$C2:registro.json" > /tmp/registro-viejo.json
+          echo "Registro viejo de $(git -C /tmp/estado show -s --format=%ci "$C2")"
       - name: Sin topes para la prueba (solo en esta copia del runner)
         run: |
           node -e "const f='bot/config.json',c=require('./'+f);c.maxPorEjecucion=40;c.redactar.segundosEjecucion=3000;c.topeDiario=200;for(const k of Object.keys(c.topes))c.topes[k]=50;require('fs').writeFileSync(f,JSON.stringify(c,null,1))"
       - name: Simulacro con la redacción nueva
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
-          for T in caidas sancionados lloros resumen liga mercado onceideal novedades; do
+          for T in lloros resumen liga; do
+            echo "=== $T (registro viejo) ==="
+            node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=$T --jornada=11 --estado=/tmp/registro-viejo.json --redactar=1 || true
+          done
+          for T in caidas sancionados novedades; do
             echo "=== $T ==="
             node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=$T --jornada=11 --estado=/tmp/registro.json --redactar=1 || true
           done
