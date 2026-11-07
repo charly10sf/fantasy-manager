@@ -496,6 +496,13 @@
    "jornada": 12,
    "id": "2119111801971576856",
    "t": "2026-11-07T16:56:39.990Z"
+  },
+  {
+   "clave": "mvp|117",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119121906687246727",
+   "t": "2026-11-07T17:36:48.965Z"
   }
  ],
  "estados": {
@@ -1385,7 +1392,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/raphinha-renueva-barca-2030-rodri-mes-baja-20261104183435-nt.html": 1793813675000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261104/1004247282/bellingham-empata-partido-genialidad.html": 1793816728000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html": 1793816929000,
    "SPORT|136094136": 1793814999000,
@@ -1591,22 +1597,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248350/espanyol-merece-debut-eder-sarabia.html": 1794071621000
   },
   "hechos": [
-   {
-    "guid": "ABC|https://www.abc.es/deportes/futbol/raphinha-renueva-barca-2030-rodri-mes-baja-20261104183435-nt.html",
-    "medio": "ABC",
-    "t": 1793813675000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "lesión",
-    "plazo": "un mes de baja",
-    "nums": [
-     2030,
-     30,
-     34
-    ]
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/cuti-romero-baja-barcelona-20261104_3468770.html",
     "medio": "COPE",
@@ -3740,16 +3730,16 @@
   "dia": "2026-11-07",
   "llamadas": {
    "clasificar": 40,
-   "redactar": 34,
-   "revisar": 23,
+   "redactar": 40,
+   "revisar": 27,
    "pulir": 1
   },
   "fallos": 0,
-  "entrada": 367664,
-  "salida": 28599,
-  "cacheLee": 110597,
-  "cacheEscribe": 23795,
-  "dolares": 0.791218
+  "entrada": 435134,
+  "salida": 30739,
+  "cacheLee": 118412,
+  "cacheEscribe": 26400,
+  "dolares": 0.954853
  },
  "recientes": {
   "onces": [
@@ -3792,6 +3782,10 @@
    {
     "t": "2026-11-07T15:35:35.019Z",
     "texto": "⭐ Yassir Zabiri, el mejor del Málaga-Racing con 12 puntos.\n\nMarcó el 1-2 en el minuto 60, el gol que le dio la victoria al Racing ⚓ en La Rosaleda, y casi dobla su media de 6,5. Vale 46,4 M y en la jornada 13 recibe en casa a la Real Sociedad: si lo tienes, de los que se quedan en el once."
+   },
+   {
+    "t": "2026-11-07T17:36:48.966Z",
+    "texto": "⭐ Giménez y Leo Román, los dos con 12 puntos en el Espanyol-Deportivo: los mejores del 0-0.\n\nEl defensa hace más del doble de su media de 4,3 y vale 26,1 M. En la jornada 13 el Deportivo visita al Alavés: si lo tienes, buen momento para mantenerlo."
    }
   ],
   "mercado": [
@@ -3879,5 +3873,11 @@
    "dolares": 0.052126
   }
  ],
- "fallosRedaccion": {}
+ "fallosRedaccion": {
+  "final|117": {
+   "n": 1,
+   "t": "2026-11-07T17:36:37.200Z",
+   "ultima": "2026-11-07T17:36:37.200Z"
+  }
+ }
 }
