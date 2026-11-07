@@ -1322,7 +1322,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/": 1793787223000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261104/1004247073/brian-farinas-avalado-registro-nivel-barca.html": 1793787503000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261104/1004247114/galarreta-regresa-trabajo-grupo-tres-dias-visitar-osasuna.html": 1793789547000,
    "SPORT|136070467": 1793787476000,
@@ -1527,18 +1526,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html": 1794043154000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/rodri-tocado-en-el-biceps-femoral-de-la-pierna-derecha-f202611-n/",
-    "medio": "AS",
-    "t": 1793787223000,
-    "id": "3208",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Rodri sufre molestias físicas en la pierna derecha",
-    "motivo": "biceps femoral",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261104/1004247114/galarreta-regresa-trabajo-grupo-tres-dias-visitar-osasuna.html",
     "medio": "Mundo Deportivo",
@@ -3057,8 +3044,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/tenerife-aplazar-proximo-partido-miguel_0_2008420807.html": 1793789085000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/aplazado-granada-tenerife-sabado-muerte-jesus-miguel-20261104_3468252.html": 1793788726000,
    "SPORT|136073584": 1793787466000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/04/tenerife-pide-aplazar-proximo-partido-ante-granada-plantilla-despida-jesus-miguel/00031793786156436986545.htm": 1793787180000,
-   "SPORT|136072311": 1793787078000,
    "SPORT|136078993": 1793792750000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261104/1004247167/oficial-andorra-mallorca-aplazado-muerte-jesus-miguel.html": 1793795665000,
    "SPORT|136078404": 1793793682000,
