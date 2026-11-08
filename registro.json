@@ -1746,7 +1746,8 @@
    "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
    "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-y-peligra-su-presencia-con-la-seleccion-f202611-n/": 1794157697000,
    "AS|https://as.com/futbol/primera/anoeta-vuelve-a-sonreir-tras-el-zarpazo-de-oskarsson-f202611-n/": 1794158806000,
-   "AS|https://as.com/futbol/primera/aprobados-y-suspensos-de-la-real-sociedad-oskarsson-sigue-poliki-poliki-f202611-n/": 1794157979000
+   "AS|https://as.com/futbol/primera/aprobados-y-suspensos-de-la-real-sociedad-oskarsson-sigue-poliki-poliki-f202611-n/": 1794157979000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000
   },
   "hechos": [
    {
@@ -2338,7 +2339,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3179,7 +3180,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/madrid/noticia-profesores-publica-tinen-verde-calles-madrid-si-no-hay-negociacion-movilizaciones-iran-mas-20261105183505.html": 1793900105000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/05/rfef-anuncia-nuevo-horario-tarancon-136133977.html": 1793901786000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mantienen-huelga-renfe-reunion-avances-cuerpo-cita-manana-20261105191500.html": 1793902500000,
@@ -3252,7 +3252,8 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/08/las-palmas-y-eldense-se-enfrentaran-este-lunes-a-las-2030-h-radio-elda/": 1794147139000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000,
-   "SPORT|136226466": 1794152883000
+   "SPORT|136226466": 1794152883000,
+   "SPORT|136227641": 1794155343000
   },
   "hechos": [
    {
@@ -3429,7 +3430,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
   "espera": {}
@@ -3437,17 +3438,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 26,
    "redactar": 37,
    "revisar": 21,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 457324,
-  "salida": 23158,
+  "entrada": 460898,
+  "salida": 23356,
   "cacheLee": 92340,
   "cacheEscribe": 26283,
-  "dolares": 1.013959
+  "dolares": 1.014415
  },
  "recientes": {
   "onces": [
@@ -7174,13 +7175,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 470,
+   "ok": 473,
    "fallos": 0,
-   "ejecuciones": 233,
+   "ejecuciones": 234,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 443,
-   "ultima": "2026-11-08T17:31:16.484Z"
+   "mediaMs": 441,
+   "ultima": "2026-11-08T17:36:13.204Z"
   }
  },
  "ptsDirecto": {
