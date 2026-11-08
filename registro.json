@@ -1683,7 +1683,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
    "AS|https://as.com/futbol/primera/el-atletico-piensa-en-beltran-como-heredero-de-oblak-f202611-n/": 1793920109000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247697/flick-pendiente-sensaciones-eric-garcia.html": 1793944800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247701/asi-entro-farinas-familia-lamine.html": 1793943900000,
@@ -7474,13 +7473,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 581,
+   "ok": 583,
    "fallos": 0,
-   "ejecuciones": 280,
+   "ejecuciones": 281,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 419,
-   "ultima": "2026-11-08T21:21:17.336Z"
+   "mediaMs": 418,
+   "ultima": "2026-11-08T21:26:11.131Z"
   }
  },
  "ptsDirecto": {
@@ -7576,27 +7575,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:22:02.127Z"
+   "ultimaBien": "2026-11-08T21:26:18.890Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:22:02.127Z"
+   "ultimaBien": "2026-11-08T21:26:18.890Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:22:02.127Z"
+   "ultimaBien": "2026-11-08T21:26:18.890Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:22:02.127Z"
+   "ultimaBien": "2026-11-08T21:26:18.890Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:22:02.127Z"
+   "ultimaBien": "2026-11-08T21:26:18.890Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:22:02.127Z"
+   "ultimaBien": "2026-11-08T21:26:18.890Z"
   }
  },
  "avisos": [
