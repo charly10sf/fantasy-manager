@@ -184,7 +184,7 @@ export async function pulir(tweets, { tipo, registro = null, config = {}, jugado
   const cuenta = (datos.pulido && datos.pulido.dia === hoy) ? datos.pulido : (datos.pulido = { dia: hoy, n: 0, ok: 0, mal: 0 });
   if (cuenta.n >= (cfg.porDia ?? 40)) { log(`  (pulir) tope de ${cfg.porDia ?? 40} preguntas hoy: ${tipo} sale con la plantilla`); return 0; }
   cuenta.n++;
-  const pide = pedirIA || ((op) => preguntar({ ...op, uso: 'pulir', registro, config }));
+  const pide = pedirIA || ((op) => preguntar({ ...op, uso: 'pulir', tipo, registro, config }));
   const r = await pide({ clave, prompt: prompt(tweets.map((t) => t.texto)), esquema: ESQUEMA, log, tiempo: 30000, hasta: Date.now() + (cfg.segundos ?? 45) * 1000 });
   if (registro && registro.fichero) registro.guardar();
   if (!r.ok) { log(`  (pulir) la IA no contesta (${r.error}): ${tipo} sale con la plantilla`); return 0; }

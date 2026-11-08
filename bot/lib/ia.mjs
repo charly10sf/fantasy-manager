@@ -26,12 +26,22 @@ export function cuentaHoy(registro, ahora = Date.now()) {
   return d.ia;
 }
 
-/** ¿queda cupo hoy para este uso? '' si sí; si no, el motivo */
-export function sinCupo(uso, { registro, config = {}, ahora = Date.now() } = {}) {
+// los tuits del partido (directo, final y MVP) tienen guardada una parte del tope (`ia.reservaPartidos`, en dólares): el resto
+// (previa, noticias, clasificar…) para antes. El 7 nov la tanda de previas y las noticias se comieron los 2 $ antes del final del
+// Valencia-Madrid y la roja de Gayá, el final y el MVP salieron con la plantilla.
+export const PRIORITARIOS = ['directo', 'final', 'mvp'];
+
+/** ¿queda cupo hoy para este uso? '' si sí; si no, el motivo. `tipo`: el tipo de tuit (directo, final, mvp… o vacío al clasificar) */
+export function sinCupo(uso, { registro, config = {}, ahora = Date.now(), tipo = '' } = {}) {
   const cfg = config.ia || {};
   const c = cuentaHoy(registro, ahora);
   const tope = cfg.topeDolaresDia ?? 0.7;
   if (c.dolares >= tope) return `tope de ${tope} $ hoy (${c.dolares.toFixed(3)} $ gastados)`;
+  const prioritario = (cfg.prioritarios || PRIORITARIOS).includes(String(tipo || ''));
+  const reserva = Math.min(Math.max(Number(cfg.reservaPartidos) || 0, 0), tope / 2);   // como mucho la mitad del tope
+  if (!prioritario && reserva > 0 && c.dolares >= tope - reserva) {
+    return `tope de ${Math.round((tope - reserva) * 100) / 100} $ hoy para ${tipo ? `«${tipo}»` : uso} (${c.dolares.toFixed(3)} $ gastados; ${reserva} $ guardados para directo, final y MVP)`;
+  }
   const n = (cfg.porDia || {})[uso] ?? ({ redactar: 60, revisar: 150, pulir: 80 }[uso] || 150);
   if ((c.llamadas[uso] || 0) >= n) return `tope de ${n} preguntas de ${uso} hoy`;
   return '';
@@ -49,10 +59,10 @@ function apuntar(c, uso, r) {
  * `sistema` y `cache`. Devuelve lo mismo, con `proveedor` ('claude' o 'gemini').
  */
 export async function preguntar({ uso = 'clasificar', registro = null, config = {}, prompt, esquema, sistema = '', cache = false, log = () => {},
-  tiempo, hasta, ahora = Date.now(), claude = claudeJson, gemini = geminiJson, pedir }) {
+  tiempo, hasta, ahora = Date.now(), claude = claudeJson, gemini = geminiJson, pedir, tipo = '' }) {
   let sinCupoMotivo = '';
   if (conClaude(config)) {
-    const motivo = sinCupo(uso, { registro, config, ahora });
+    const motivo = sinCupo(uso, { registro, config, ahora, tipo });
     if (motivo) { sinCupoMotivo = motivo; log(`  (ia) ${motivo}`); }
     else {
       const ci = config.ia || {};
