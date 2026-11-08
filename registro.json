@@ -3150,7 +3150,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html": 1793891979000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html": 1793896084000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261105/1004247619/comunicado-laliga.html": 1793895137000,
    "SPORT|136129236": 1793892468000,
@@ -3245,22 +3244,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000
   },
   "hechos": [
-   {
-    "guid": "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html",
-    "medio": "La Vanguardia",
-    "t": 1793891979000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": false,
-    "oficial": false,
-    "contexto": "El sindicato de jugadores solicita el aplazamiento de la jornada",
-    "detalle": "La decisión depende de las autoridades competentes",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html",
     "medio": "MARCA",
@@ -7327,13 +7310,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 418,
+   "ok": 420,
    "fallos": 0,
-   "ejecuciones": 205,
+   "ejecuciones": 206,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 461,
-   "ultima": "2026-11-08T15:16:13.696Z"
+   "mediaMs": 460,
+   "ultima": "2026-11-08T15:21:18.492Z"
   }
  },
  "ptsDirecto": {
