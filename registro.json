@@ -772,6 +772,13 @@
     "extra": 0,
     "jugador": "Giuliano Simeone"
    }
+  },
+  {
+   "clave": "novedades|3083:vuelve|2026-11-08",
+   "tipo": "novedades",
+   "jornada": 12,
+   "id": "2119528297088647310",
+   "t": "2026-11-08T20:31:39.969Z"
   }
  ],
  "estados": {
@@ -948,7 +955,7 @@
   "2448": "ok",
   "2449": "injured",
   "2450": "out_of_league",
-  "2452": "ok",
+  "2452": "suspended",
   "2453": "ok",
   "2454": "ok",
   "2455": "injured",
@@ -1428,7 +1435,7 @@
   "3080": "ok",
   "3081": "ok",
   "3082": "ok",
-  "3083": "doubtful",
+  "3083": "ok",
   "3084": "ok",
   "3085": "ok",
   "3086": "ok",
@@ -1658,12 +1665,18 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3083",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1794169874103
+  }
+ ],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261105/1004247722/casado-quiere-seguir-pasos-aubameyang.html": 1793912507000,
-   "SPORT|136110344": 1793910379000,
    "AS|https://as.com/futbol/primera/el-atletico-piensa-en-beltran-como-heredero-de-oblak-f202611-n/": 1793920109000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247697/flick-pendiente-sensaciones-eric-garcia.html": 1793944800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247701/asi-entro-farinas-familia-lamine.html": 1793943900000,
@@ -1855,7 +1868,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248772/konate-espanta-fantasmas-indispensable-mourinho.html": 1794167087000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html": 1794166775000,
    "SPORT|136231258": 1794164058000,
-   "SPORT|136231292": 1794164994000
+   "SPORT|136231292": 1794164994000,
+   "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-es-baja-en-la-seleccion-le-sustituye-jorge-de-frutos-f202611-n/": 1794157697000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000
   },
   "hechos": [
    {
@@ -2496,11 +2511,23 @@
     "nums": [
      70
     ]
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html",
+    "medio": "COPE",
+    "t": 1794169655000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea causa baja por una lesión muscular",
+    "motivo": "lesión muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3116,8 +3143,8 @@
     "t": 0
    },
    "3083": {
-    "e": "doubtful",
-    "t": 1794087973944
+    "e": "ok",
+    "t": 1794169874103
    },
    "3084": {
     "e": "ok",
@@ -3339,8 +3366,8 @@
  },
  "pulido": {
   "dia": "2026-11-08",
-  "n": 3,
-  "ok": 3,
+  "n": 4,
+  "ok": 4,
   "mal": 0
  },
  "liga": {
@@ -3728,6 +3755,10 @@
    {
     "t": "2026-11-08T17:06:33.315Z",
     "texto": "⁉️ Barrenetxea llega con dudas al partido de esta tarde: arrastra una lesión en los isquiotibiales desde el 8 de noviembre y no hay nada cerrado sobre si juega.\n\nLa Real Sociedad recibe al Rayo ⚡ en Anoeta a las 16:15. Con 4,2 de media, tampoco es un jugador por el que merezca la pena arriesgar: si lo tienes, mejor mirar otra opción."
+   },
+   {
+    "t": "2026-11-08T20:31:39.971Z",
+    "texto": "✅ Nico Williams supera sus calambres en los isquiotibiales y vuelve a estar disponible\n\nEl delantero del Athletic 🦁 promedia 6,4 puntos, pero su titularidad en Fantasy Manager se queda en un 47 %.\n\nTodo apunta a que el Athletic Club tendrá un encuentro cómodo recibiendo al Espanyol, clasificado 13º."
    }
   ]
  },
@@ -7417,13 +7448,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 557,
+   "ok": 559,
    "fallos": 0,
-   "ejecuciones": 268,
+   "ejecuciones": 269,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 421,
-   "ultima": "2026-11-08T20:26:13.567Z"
+   "ultima": "2026-11-08T20:31:14.103Z"
   }
  },
  "ptsDirecto": {
@@ -7513,27 +7544,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:26:25.469Z"
+   "ultimaBien": "2026-11-08T20:32:06.466Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:26:25.469Z"
+   "ultimaBien": "2026-11-08T20:32:06.466Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:26:25.469Z"
+   "ultimaBien": "2026-11-08T20:32:06.466Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:26:25.469Z"
+   "ultimaBien": "2026-11-08T20:32:06.466Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:26:25.469Z"
+   "ultimaBien": "2026-11-08T20:32:06.466Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:26:25.469Z"
+   "ultimaBien": "2026-11-08T20:32:06.466Z"
   }
  },
  "avisos": [
