@@ -714,6 +714,21 @@
     "extra": 0,
     "jugador": "Tajon Buchanan"
    }
+  },
+  {
+   "clave": "directo|111|Carlos Romero|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119510599596114008",
+   "t": "2026-11-08T19:21:20.683Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "111",
+    "equipo": "102",
+    "min": 90,
+    "extra": 1,
+    "jugador": "Carlos Romero"
+   }
   }
  ],
  "estados": {
@@ -1791,7 +1806,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html": 1794160570000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
-   "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000
+   "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000,
+   "SPORT|136230726": 1794161916000
   },
   "hechos": [
    {
@@ -2407,7 +2423,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3484,16 +3500,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 54,
+   "redactar": 55,
    "revisar": 28,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 680425,
-  "salida": 28281,
+  "entrada": 691381,
+  "salida": 28404,
   "cacheLee": 107970,
   "cacheEscribe": 28888,
-  "dolares": 1.510798,
+  "dolares": 1.53394,
   "reservado": 0
  },
  "recientes": {
@@ -3603,10 +3619,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-08T14:41:16.769Z",
-    "texto": "⚽ Riquelme la empalma de volea en el 81' y el Betis se adelanta en el Martínez Valero: 0-1 ante el Elche 🌴.\n\nSuma 6 puntos, muy por encima de su media. Es su tercer gol esta temporada entre Liga, Champions y Copa."
-   },
-   {
     "t": "2026-11-08T14:51:20.028Z",
     "texto": "⚽ Otro gol del Betis, de Bartra, en el 89'. Elche 0-2 Betis. Asistencia de Ceballos, con 6 puntos fantasy. Bartra ya suma 8 puntos, con una media de 4,8."
    },
@@ -3621,6 +3633,10 @@
    {
     "t": "2026-11-08T19:11:18.542Z",
     "texto": "⚽ Buchanan la empalma de volea en el 80' y el Villarreal 🚢 rompe el 0-0 en La Cerámica: 1-0 al Getafe.\n\nEl canadiense ya suma 6 puntos, más del doble de su media. Es su primer gol en Liga, Champions o Copa. El pase es de Pepe, que se lleva 4."
+   },
+   {
+    "t": "2026-11-08T19:21:20.685Z",
+    "texto": "⚽ Romero hace el 2-0 en el 90+1' y el Villarreal 🚢 cierra el partido en La Cerámica contra el Getafe.\n\nEl defensa se va a 8 puntos con su primer gol en Liga, Champions o Copa del Rey. El pase es de Ayoze, que se lleva 4."
    }
   ],
   "novedades": [
@@ -7239,17 +7255,33 @@
    "w": "2026-11-08T19:08:25Z",
    "f": "2026-11-08T19:11:12.125Z",
    "rf": "81:56"
+  },
+  "fm|111|1395964|90": {
+   "j": "Carlos Romero",
+   "m": "90'",
+   "f": "2026-11-08T19:21:13.479Z",
+   "rf": "91:59",
+   "casado": true
+  },
+  "directo|111|Carlos Romero|gol1": {
+   "j": "Carlos Romero",
+   "m": "90'+1'",
+   "e": "2026-11-08T19:21:13.479Z",
+   "re": "90'+2'",
+   "w": "2026-11-08T19:19:24Z",
+   "f": "2026-11-08T19:21:13.479Z",
+   "rf": "91:59"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 533,
+   "ok": 536,
    "fallos": 0,
-   "ejecuciones": 254,
+   "ejecuciones": 255,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 421,
-   "ultima": "2026-11-08T19:16:12.376Z"
+   "mediaMs": 422,
+   "ultima": "2026-11-08T19:21:13.479Z"
   }
  },
  "ptsDirecto": {
@@ -7300,6 +7332,18 @@
    "g": 0,
    "a": 1,
    "t": 1794165072125
+  },
+  "12|111|2614": {
+   "p": 8,
+   "g": 1,
+   "a": 0,
+   "t": 1794165673479
+  },
+  "12|111|2504": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1794165673479
   }
  },
  "golesAnulados": {
@@ -7307,7 +7351,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 10,
+   "n": 11,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7315,27 +7359,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:16:43.601Z"
+   "ultimaBien": "2026-11-08T19:21:54.948Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:16:43.601Z"
+   "ultimaBien": "2026-11-08T19:21:54.948Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:16:43.601Z"
+   "ultimaBien": "2026-11-08T19:21:54.948Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:16:43.601Z"
+   "ultimaBien": "2026-11-08T19:21:54.948Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:16:43.601Z"
+   "ultimaBien": "2026-11-08T19:21:54.948Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:16:43.601Z"
+   "ultimaBien": "2026-11-08T19:21:54.948Z"
   }
  },
  "avisos": [
