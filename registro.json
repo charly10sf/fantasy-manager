@@ -779,6 +779,21 @@
    "jornada": 12,
    "id": "2119528297088647310",
    "t": "2026-11-08T20:31:39.969Z"
+  },
+  {
+   "clave": "directo|120|Fermín López|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119533235415724212",
+   "t": "2026-11-08T20:51:17.361Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "120",
+    "equipo": "83",
+    "min": 45,
+    "extra": 0,
+    "jugador": "Fermín López"
+   }
   }
  ],
  "estados": {
@@ -3720,10 +3735,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-08T16:46:19.187Z",
-    "texto": "⚽ Oskarsson la mete en el 67' y la Real Sociedad se adelanta en Anoeta: 1-0 al Rayo ⚡.\n\nEl islandés ya suma 8 puntos, más del doble de su media. El pase es de Barrenetxea, que se lleva 5. Es el cuarto gol de Oskarsson entre Liga, Champions y Copa."
-   },
-   {
     "t": "2026-11-08T18:01:19.025Z",
     "texto": "⚽ Pablo Durán abre el marcador en Balaídos en el 26': el Celta se adelanta 1-0 al Levante 🐸.\n\nYa suma 5 puntos, casi el doble de su media de 2,8. Es su tercer gol esta temporada entre Liga, Champions y Copa."
    },
@@ -3738,6 +3749,10 @@
    {
     "t": "2026-11-08T20:16:19.888Z",
     "texto": "⚽ Giuliano abre el marcador en el 10'. Atlético 1-0 Barça. Asistencia de Julián Alvarez, con 5 puntos fantasy. Giuliano ya suma 8 puntos."
+   },
+   {
+    "t": "2026-11-08T20:51:17.362Z",
+    "texto": "⚽ Fermín empata para el Barça en el 45'. Atlético 1-1 Barça. Ya suma 10 puntos."
    }
   ],
   "novedades": [
@@ -7437,17 +7452,33 @@
    "w": "2026-11-08T20:10:38Z",
    "f": "2026-11-08T20:16:13.363Z",
    "rf": "14:41"
+  },
+  "fm|120|1404415|45": {
+   "j": "Fermín López",
+   "m": "45'",
+   "f": "2026-11-08T20:51:13.990Z",
+   "rf": "Half-Time",
+   "casado": true
+  },
+  "directo|120|Fermín López|gol1": {
+   "j": "Fermín López",
+   "m": "45'",
+   "e": "2026-11-08T20:51:13.990Z",
+   "re": "45'+4'",
+   "w": "2026-11-08T20:45:56Z",
+   "f": "2026-11-08T20:51:13.990Z",
+   "rf": "Half-Time"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 567,
+   "ok": 569,
    "fallos": 0,
-   "ejecuciones": 273,
+   "ejecuciones": 274,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 420,
-   "ultima": "2026-11-08T20:46:12.290Z"
+   "ultima": "2026-11-08T20:51:13.990Z"
   }
  },
  "ptsDirecto": {
@@ -7522,6 +7553,12 @@
    "g": 0,
    "a": 1,
    "t": 1794168973363
+  },
+  "12|120|1715": {
+   "p": 10,
+   "g": 1,
+   "a": 0,
+   "t": 1794171073990
   }
  },
  "golesAnulados": {
@@ -7537,27 +7574,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:46:23.754Z"
+   "ultimaBien": "2026-11-08T20:51:28.698Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:46:23.754Z"
+   "ultimaBien": "2026-11-08T20:51:28.698Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:46:23.754Z"
+   "ultimaBien": "2026-11-08T20:51:28.698Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:46:23.754Z"
+   "ultimaBien": "2026-11-08T20:51:28.698Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:46:23.754Z"
+   "ultimaBien": "2026-11-08T20:51:28.698Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:46:23.754Z"
+   "ultimaBien": "2026-11-08T20:51:28.698Z"
   }
  },
  "avisos": [
