@@ -3136,7 +3136,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247424/apunta-habra-jornada-primera-segunda.html": 1793863093000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-suspenden-24-dias-empleo-sueldo-urbano-barcelona-negarse-hablar-catalan-20261105081514.html": 1793862914000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-mijas-las-lagunas-real-jaen-de-copa-del-rey-se-jugara-este-martes-10-de-noviembre-en-estepona-radio-jaen/": 1793866075000,
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/05/ultima-hora-choque-trenes-toledo-135852320.html": 1793862600000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/ultima-hora-valencia-real-madrid-decision-laliga-jugara-partido-jornada-dos-excepciones-136107273.html": 1793872392000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/harry-kane-renueva-bayern-aplaza-sueno-nfl-2029-20261105_3469225.html": 1793872143000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/aplazado-el-castellon-eibar-por-el-fallecimiento-de-jesus-de-miguel-radio-castellon/": 1793873334000,
@@ -7442,13 +7441,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 295,
+   "ok": 296,
    "fallos": 0,
-   "ejecuciones": 106,
+   "ejecuciones": 107,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 462,
-   "ultima": "2026-11-08T07:06:14.172Z"
+   "mediaMs": 463,
+   "ultima": "2026-11-08T07:11:11.347Z"
   }
  },
  "ptsDirecto": {}
