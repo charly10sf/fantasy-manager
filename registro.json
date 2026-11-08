@@ -1707,7 +1707,9 @@
    "SPORT|136214539": 1794134669000,
    "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/": 1794141880000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248620/mensaje-vinicius-triunfo-real-madrid-mestalla.html": 1794148200000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248652/kubo-regresa-titularidad-rayo-oyarzabal-queda-fuera-convocatoria.html": 1794147246000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248652/kubo-regresa-titularidad-rayo-oyarzabal-queda-fuera-convocatoria.html": 1794147246000,
+   "AS|https://as.com/futbol/primera/elche-betis-hoy-en-directo-ultima-hora-de-laliga-ea-sports-en-vivo-f202611-d/": 1794149789000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248660/mourinho-no-supera-flick.html": 1794149597000
   },
   "hechos": [
    {
@@ -2297,7 +2299,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3104,6 +3106,10 @@
     "e": "ok",
     "t": 0
    },
+   "3264": {
+    "e": "ok",
+    "t": 0
+   },
    "3265": {
     "e": "ok",
     "t": 0
@@ -3611,17 +3617,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 18,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 251429,
-  "salida": 14674,
+  "entrada": 253304,
+  "salida": 14815,
   "cacheLee": 10420,
   "cacheEscribe": 7815,
-  "dolares": 0.506463
+  "dolares": 0.506721
  },
  "recientes": {
   "onces": [
@@ -3784,8 +3790,8 @@
    "fin": 1794088871346
   },
   "12|118": {
-   "h": "5c98cc267e28",
-   "desde": 1794149772293,
+   "h": "d43c23f7e126",
+   "desde": 1794150073584,
    "fin": 1794149772293
   }
  },
@@ -7322,13 +7328,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 414,
+   "ok": 415,
    "fallos": 0,
-   "ejecuciones": 201,
+   "ejecuciones": 202,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 460,
-   "ultima": "2026-11-08T14:56:11.727Z"
+   "ultima": "2026-11-08T15:01:13.016Z"
   }
  },
  "ptsDirecto": {
