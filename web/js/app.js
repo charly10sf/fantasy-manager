@@ -631,7 +631,10 @@ function ponerBanner(si) {
   // AdSense rechazó la web el 2 nov por anuncios en pantallas sin contenido. Por eso el script ya no se pone en la
   // entrada (antes iba sin bloques para que Google viera su código: la verificación va con la etiqueta
   // google-adsense-account de index.html y con ads.txt)
-  if (!enApp) { const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo && vistaConContenido(), V.ancho(), false, modo === 'prueba'); return; }
+  // En las dos (web y Google Play), solo con la sesión de tu liga iniciada (Carlos, 8 nov): ni antes de entrar, ni
+  // mientras carga, ni en la liga de ejemplo, ni en una pestaña vacía o cargando
+  si = si && !!S.D && !S.D.demo && !enDemo() && vistaConContenido();
+  if (!enApp) { const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo, V.ancho(), false, modo === 'prueba'); return; }
   if (si === bannerYa) return;
   bannerYa = si;
   nativo.banner(si);

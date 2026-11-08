@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7w';
+export const VERSION = '0.7x';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.7w';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7x', f: '2026-11-08', h: '12:50', t: 'Anuncios solo con tu liga',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'candado', t: 'Anuncios solo con la sesión de tu liga iniciada', x: 'El banner de abajo (Google Play) y los de la web ya no salen en la liga de ejemplo ni en una pestaña vacía o cargando: solo con tu liga cargada y con contenido en pantalla.', menor: true },
+    ],
+  },
   {
     v: '0.7w', f: '2026-11-08', h: '12:19', t: 'Dos funciones top, gratis',
     cosas: [
