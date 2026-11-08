@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7t';
+export const VERSION = '0.7u';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.7t';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7u', f: '2026-11-08', h: '11:59', t: 'Para los que llegan de fuera de la liga',
+    cosas: [
+      { tipo: 'mejora', d: 'candado', t: 'Funciones top: pronto en Google Play', x: 'Los candados dicen que las funciones top estarán disponibles muy pronto, con la salida a Google Play.', menor: true },
+      { tipo: 'mejora', d: 'campana', t: 'Aviso de «App en pruebas»', x: 'El aviso de arriba ahora dice «App en pruebas», con el botón para reportar un fallo.', menor: true },
+      { tipo: 'mejora', d: 'candado', t: 'Las novedades de cada versión, solo para la liga', x: 'A quien no es del dueño ni de la liga ya no se le abre solo la presentación de novedades al actualizar; la lista entera sigue en Ajustes.', menor: true },
+    ],
+  },
   {
     v: '0.7t', f: '2026-11-08', h: '02:13', t: 'Cuánto tiempo pasa cada uno en la app',
     cosas: [

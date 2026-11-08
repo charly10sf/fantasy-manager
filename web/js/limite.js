@@ -202,6 +202,13 @@ function enSusLigas(cfg, yo) {
   });
 }
 
+/** ¿es de las ligas de «ligas» (la de los amigos)? true / false; null si aún no se ha leído limites.json (no se sabe) */
+export function deSusLigas(yo) {
+  const g = LS.get('limites', null);
+  if (!g || !g.cfg) return null;
+  return enSusLigas(g.cfg, yo);
+}
+
 /** los minutos de un equipo (null: sin límite) */
 export function minutosDe(cfg, yo) {
   if (!cfg || !yo) return null;
