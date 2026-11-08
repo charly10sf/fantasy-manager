@@ -14,7 +14,7 @@ export const VERSION = '0.7r';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.7r', f: '2026-11-08', h: 'HH:MM', t: 'Los tratos con precio, bien contados',
+    v: '0.7r', f: '2026-11-08', h: '01:17', t: 'Los tratos con precio, bien contados',
     cosas: [
       { tipo: 'arreglo', d: 'balanza', t: 'Echa la cuenta del trato entero', x: 'Si le propones a un rival un trato con precios («le compro A por 30 M y le vendo B por 60 M»), la IA mira cómo acabas: con qué jugador y cuánto saldo, y lo compara con esperar a las cláusulas. Antes miraba cada precio por separado y decía que eran cifras inventadas.' },
       { tipo: 'arreglo', d: 'dinero', t: 'Saldo y valor, cada uno en su sitio', x: 'Un cambio de jugadores no toca tu saldo: lo que cambia es lo que vale tu equipo. La IA ya no dice que te quitan millones cuando es una diferencia de valor.' },
