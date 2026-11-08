@@ -202,10 +202,13 @@ function enSusLigas(cfg, yo) {
   });
 }
 
-/** ¿es de las ligas de «ligas» (la de los amigos)? true / false; null si aún no se ha leído limites.json (no se sabe) */
-export function deSusLigas(yo) {
+/** ¿puede ver las novedades de las versiones (el aviso al actualizar y la lista de Ajustes)? Los de las ligas de
+   «ligas» sí; los de fuera, no, salvo que limites.json lleve «novedadesTodos»: true. null si aún no se ha leído
+   limites.json (no se sabe). El dueño no pasa por aquí: lo ve todo (avisosGuardados().admin) */
+export function novedadesPara(yo) {
   const g = LS.get('limites', null);
   if (!g || !g.cfg) return null;
+  if (g.cfg.novedadesTodos === true) return true;
   return enSusLigas(g.cfg, yo);
 }
 

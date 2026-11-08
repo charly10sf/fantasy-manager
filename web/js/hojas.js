@@ -16,7 +16,7 @@ import { EVENTOS } from './eventos.js';
 import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
-import { estadoLimite, bloqueada, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
+import { estadoLimite, novedadesPara, bloqueada, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
@@ -588,7 +588,8 @@ export function ajustes(S) {
   if (estadoLimite.min != null) h += `<div class="ajuste"><div class="c"><b>Tiempo de hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min</b><span>Tienes un límite de ${estadoLimite.min} minutos al día con la app abierta. Se reinicia a las 00:00.</span></div></div>`;
   const ew = enApp ? nativo.estadoWeb() : null;
   h += `<div class="ajuste"><div class="c"><b>Versión ${VERSION}</b><span>${enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}${ew && ew.activa ? ' · puesta al día sola, sin reinstalar' : ''}` : enWeb ? 'En el navegador' : 'En el navegador (ejemplo)'}</span></div>${enApp ? '<button class="btn chico sec" data-accion="buscarVersion">Buscar nueva</button>' : '<button class="btn chico sec" data-accion="buscarWeb">Buscar nueva</button>'}</div>`;
-  h += `<div class="ajuste"><div class="c"><b>Novedades</b><span>Lo que trae cada versión y lo que arregla</span></div><button class="btn chico sec" data-accion="novedades">Ver</button></div>`;
+  // las novedades de cada versión, solo para el dueño y la liga (o todos con «novedadesTodos» en limites.json)
+  if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) h += `<div class="ajuste"><div class="c"><b>Novedades</b><span>Lo que trae cada versión y lo que arregla</span></div><button class="btn chico sec" data-accion="novedades">Ver</button></div>`;
   if (avisosGuardados().admin && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Quién usa la app</b><span>Solo lo ves tú: cuántos la usan, desde dónde, quién de tu liga la tiene y quién está dentro ahora</span></div><button class="btn chico" data-accion="quienUsa">Ver</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google en esta sesión</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;
   if ((enApp || enWeb) && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;

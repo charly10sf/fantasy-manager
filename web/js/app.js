@@ -24,7 +24,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, deSusLigas } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, novedadesPara } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -2472,7 +2472,7 @@ document.addEventListener('click', async (ev) => {
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;
     case 'repreguntar': { const ta = $('#pregunta'); const t = ta ? ta.value : (S.errorChat && S.errorChat.t) || ''; if (ta) ta.value = ''; S.errorChat = null; enviarPregunta(t); break; }
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
-    case 'novedades': listaVersiones(); break;
+    case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'guardarDicho': {
@@ -2750,11 +2750,11 @@ function novedades() {
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
-  // y a quien no es del dueño ni de las ligas de limites.json (los de fuera, la demo) no se le abre nada solo: las
-  // novedades de cada versión son para el dueño y para la liga. La lista entera sigue en Ajustes → Novedades
+  // y a quien no es del dueño ni de las ligas de limites.json (los de fuera, la demo) no se le abre nada solo ni se le
+  // enseña la lista de Ajustes: las novedades de cada versión son para el dueño y la liga (o para todos con «novedadesTodos»)
   if (!avisosGuardados().admin) {
     if (!S.D) return;
-    const mia = deSusLigas({ ligas: S.D.ligas || [] });
+    const mia = novedadesPara({ ligas: S.D.ligas || [] });
     if (mia === null) return; // aún no se sabe de qué liga es: se mira en el próximo arranque
     if (!mia) { LS.set('version-vista2', VERSION); return; }
   }
