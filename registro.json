@@ -729,6 +729,20 @@
     "extra": 1,
     "jugador": "Carlos Romero"
    }
+  },
+  {
+   "clave": "final|111",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119519591349317967",
+   "t": "2026-11-08T19:57:04.349Z"
+  },
+  {
+   "clave": "mvp|119",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119519722450674003",
+   "t": "2026-11-08T19:57:35.587Z"
   }
  ],
  "estados": {
@@ -3505,16 +3519,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 62,
-   "revisar": 33,
+   "redactar": 76,
+   "revisar": 41,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 790345,
-  "salida": 31297,
-  "cacheLee": 118390,
-  "cacheEscribe": 31493,
-  "dolares": 1.768353,
+  "entrada": 836527,
+  "salida": 35775,
+  "cacheLee": 252960,
+  "cacheEscribe": 50448,
+  "dolares": 1.966346,
   "reservado": 0
  },
  "recientes": {
@@ -3542,10 +3556,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-07T17:41:32.839Z",
-    "texto": "🏁 Sin goles entre el Espanyol y el Deportivo, y los puntos se reparten entre cuatro nombres.\n\nGiménez y Leo Román, del Dépor, se van a 12 cada uno, más del doble de su media. Fortuño, del Espanyol, suma 11 y El Hilali 9, casi el doble de lo que suele dar.\n\nEl Deportivo, 8º antes del partido, se lleva un punto de casa del Espanyol, que era 15º."
-   },
-   {
     "t": "2026-11-07T20:01:42.147Z",
     "texto": "🏁 Punto para el Osasuna 🐂 en El Sadar: el Athletic 🦁 ganaba con gol de Nico Williams en el 84' y Catena empató en el 90'. Final 1-1.\n\nCatena y Nico Williams cierran con 11 puntos cada uno. Para Catena es más del doble de su media; Nico Williams, con 6,4 de media, también se sale.\n\nVivian, del Athletic, suma 9, y Rubén García, del Osasuna, 8. Noche buena para quien tuviera a cualquiera de los cuatro."
    },
@@ -3560,13 +3570,13 @@
    {
     "t": "2026-11-08T17:51:31.938Z",
     "texto": "🏁 La Real Sociedad gana 1-0 al Rayo ⚡ en Anoeta y lo decide Oskarsson en el 67'.\n\nOskarsson se va a 13 puntos, más del triple de su media, y Barrenetxea llega a los mismos con más del doble de lo que suele dar. Remiro suma 12 bajo palos y Sucic 9: noche redonda para quien tenga realista.\n\nDel Rayo se salva Camello, que puntúa 6 aunque pierde, justo en su media."
+   },
+   {
+    "t": "2026-11-08T19:57:04.351Z",
+    "texto": "🏁 El Villarreal 🚢 se lleva el partido con dos goles en la recta final: Buchanan abrió en el 80' y C. Romero cerró en el 90+1'. 2-0 ante el Getafe en La Cerámica.\n\nRomero es el que más puntos ha sacado de los dos equipos: 16, más del triple de su media. Costa, con 13, también triplica la suya. Buchanan llega a esos mismos 13 con el gol del 1-0.\n\nDel Getafe se salva David Soria, 7 puntos pese a perder, en su media."
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-07T20:01:53.130Z",
-    "texto": "⭐ Catena y Nico Williams comparten el mejor puesto del 1-1 entre el Osasuna 🐂 y el Athletic 🦁: 11 puntos cada uno.\n\nNico Williams adelantó al Athletic en el 84' y Catena, defensa, empató en el 90'. Con más del doble de su media de 4,5 y a 20,2 M, si lo tienes, se queda. El Osasuna recibe al Málaga 🐟 en la jornada 13."
-   },
    {
     "t": "2026-11-07T20:26:44.876Z",
     "texto": "⭐ MVP fantasy del Osasuna 1-1 Athletic. Catena se va a 11 puntos. Empata con él Nico Williams. El defensa del Osasuna lleva 54 puntos en la temporada y 4,5 de media.\n\n💸 En el mercado está a 20,2 M. Su próximo partido, en la jornada 13 ante el Málaga"
@@ -3582,6 +3592,10 @@
    {
     "t": "2026-11-08T17:46:51.211Z",
     "texto": "⭐ Barrenetxea y Oskarsson comparten el MVP del 1-0 de la Real Sociedad al Rayo ⚡: 13 puntos para cada uno.\n\nOskarsson, delantero, marcó el único gol en el 67' y se va a más del triple de su media. Vale 3,8 M. Barrenetxea, centrocampista, hace más del doble de su media de 4,8 y cuesta 26,7 M.\n\nLos dos visitan al Racing ⚓ en la jornada 13: si tienes a uno u otro, ahí siguen."
+   },
+   {
+    "t": "2026-11-08T19:57:35.588Z",
+    "texto": "⭐ Ryan es el mejor del Celta-Levante 🐸, que acabó 0-0: 14 puntos para el portero, más del doble de su media de 6,8.\n\nCuesta 18,4 M y en la jornada 13 el Levante recibe al Elche 🌴. Si lo tienes, no se toca."
    }
   ],
   "mercado": [
@@ -3733,15 +3747,15 @@
   }
  ],
  "fallosRedaccion": {
-  "final|111": {
-   "n": 1,
-   "t": "2026-11-08T19:51:37.846Z",
-   "ultima": "2026-11-08T19:51:37.846Z"
-  },
   "mvp|111": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-08T19:51:53.961Z",
-   "ultima": "2026-11-08T19:51:53.961Z"
+   "ultima": "2026-11-08T19:57:33.421Z"
+  },
+  "final|119": {
+   "n": 1,
+   "t": "2026-11-08T19:56:54.445Z",
+   "ultima": "2026-11-08T19:56:54.445Z"
   }
  },
  "rasgos": {
@@ -7329,13 +7343,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 545,
+   "ok": 546,
    "fallos": 0,
-   "ejecuciones": 261,
+   "ejecuciones": 262,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 422,
-   "ultima": "2026-11-08T19:51:12.597Z"
+   "ultima": "2026-11-08T19:56:14.280Z"
   }
  },
  "ptsDirecto": {
@@ -7405,7 +7419,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 17,
+   "n": 18,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7413,27 +7427,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:51:54.726Z"
+   "ultimaBien": "2026-11-08T19:57:37.587Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:51:54.726Z"
+   "ultimaBien": "2026-11-08T19:57:37.587Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:51:54.726Z"
+   "ultimaBien": "2026-11-08T19:57:37.587Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:51:54.726Z"
+   "ultimaBien": "2026-11-08T19:57:37.587Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:51:54.726Z"
+   "ultimaBien": "2026-11-08T19:57:37.587Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:51:54.726Z"
+   "ultimaBien": "2026-11-08T19:57:37.587Z"
   }
  },
  "avisos": [
