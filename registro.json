@@ -1497,7 +1497,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html": 1793883472000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-malaga-realiza-la-penultima-sesion-antes-de-recibir-este-sabado-al-racing-ser-malaga/": 1793886617000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-real-madrid-no-salir-relajado-partido-hemos-visto-recuperado-gen-competitivo-siempre-tenido-ultimamente-habia-perdido-20261105_3468903.html": 1793887133000,
    "AS|https://as.com/futbol/primera/aznou-y-lucas-breton-primeras-bajas-del-paron-f202611-n/": 1793887252000,
@@ -1688,21 +1687,10 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000,
-   "SPORT|136214539": 1794134669000
+   "SPORT|136214539": 1794134669000,
+   "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/": 1794141880000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html",
-    "medio": "MARCA",
-    "t": 1793883472000,
-    "id": "1480",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Tchouaméni se ejercita en solitario antes del partido",
-    "motivo": "molestias físicas",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html",
     "medio": "Mundo Deportivo",
@@ -2274,11 +2262,23 @@
     "motivo": "lesión muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/",
+    "medio": "AS",
+    "t": 1794141880000,
+    "id": "3108",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Aubameyang llega en plenas condiciones para el Alavés",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -3644,17 +3644,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 14,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 194923,
-  "salida": 11606,
+  "entrada": 196622,
+  "salida": 11707,
   "cacheLee": 10420,
   "cacheEscribe": 5210,
-  "dolares": 0.397502
+  "dolares": 0.397722
  },
  "recientes": {
   "onces": [
@@ -7317,13 +7317,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 366,
+   "ok": 368,
    "fallos": 0,
-   "ejecuciones": 177,
+   "ejecuciones": 178,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 478,
-   "ultima": "2026-11-08T12:56:13.881Z"
+   "ultima": "2026-11-08T13:01:13.357Z"
   }
  },
  "ptsDirecto": {}
