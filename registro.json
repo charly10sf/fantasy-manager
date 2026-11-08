@@ -664,6 +664,13 @@
    "jornada": 12,
    "id": "2119471586302427521",
    "t": "2026-11-08T16:46:19.185Z"
+  },
+  {
+   "clave": "novedades|701:lesion|2026-11-08",
+   "tipo": "novedades",
+   "jornada": 12,
+   "id": "2119476679240253810",
+   "t": "2026-11-08T17:06:33.313Z"
   }
  ],
  "estados": {
@@ -690,7 +697,7 @@
   "652": "ok",
   "673": "out_of_league",
   "680": "ok",
-  "701": "ok",
+  "701": "injured",
   "856": "ok",
   "873": "ok",
   "886": "ok",
@@ -1550,7 +1557,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "701",
+   "que": "lesion",
+   "antes": "ok",
+   "t": 1794157573244
+  }
+ ],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
@@ -2357,8 +2371,8 @@
     "t": 0
    },
    "701": {
-    "e": "ok",
-    "t": 0
+    "e": "injured",
+    "t": 1794157573244
    },
    "886": {
     "e": "ok",
@@ -3138,7 +3152,6 @@
  },
  "liga": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898360000,
    "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html": 1793899045000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247648/oficial-laliga-aplaza-castellon-eibar-fallecimiento-jesus-miguel.html": 1793898608000,
@@ -3147,7 +3160,6 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mantienen-huelga-renfe-reunion-avances-cuerpo-cita-manana-20261105191500.html": 1793902500000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/copa-del-rey/20261105/1004247677/rfef-actualiza-calendario-partidos-aplazados-copa.html": 1793902180000,
-   "SPORT|136135192": 1793898370000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-da-conocer-nuevas-fechas-horarios-partidos-aplazados-copa-rey-20261105_3469833.html": 1793904403000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/05/ya-es-oficial-aplazado-el-cd-tenerife-femenino-deportivo-alaves-radio-club-tenerife/": 1793904183000,
    "SPORT|136136691": 1793901372000,
@@ -3219,24 +3231,6 @@
    "SPORT|136226466": 1794152883000
   },
   "hechos": [
-   {
-    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm",
-    "medio": "La Voz de Galicia",
-    "t": 1793898360000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "La patronal y la RFEF proponen un homenaje en el minuto 9 de cada encuentro",
-    "nums": [
-     9
-    ]
-   },
    {
     "guid": "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html",
     "medio": "ABC",
@@ -3463,16 +3457,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 22,
-   "redactar": 34,
-   "revisar": 19,
+   "redactar": 37,
+   "revisar": 21,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 419662,
-  "salida": 20459,
-  "cacheLee": 89735,
-  "cacheEscribe": 23678,
-  "dolares": 0.930563
+  "entrada": 453437,
+  "salida": 21231,
+  "cacheLee": 92340,
+  "cacheEscribe": 26283,
+  "dolares": 1.012607
  },
  "recientes": {
   "onces": [
@@ -3605,6 +3599,10 @@
    {
     "t": "2026-11-07T19:31:34.523Z",
     "texto": "❌ LaLiga Fantasy pone a Zaid Romero como lesionado: arrastra una lesión en el cuádriceps desde el 10 de octubre.\n\nEl defensa del Getafe viene con 5,9 de media, así que su baja pesa. Mañana a las 18:30 el Getafe visita al Villarreal 🚢 en La Cerámica y no cuentes con él: si lo tienes, toca buscar recambio."
+   },
+   {
+    "t": "2026-11-08T17:06:33.315Z",
+    "texto": "⁉️ Barrenetxea llega con dudas al partido de esta tarde: arrastra una lesión en los isquiotibiales desde el 8 de noviembre y no hay nada cerrado sobre si juega.\n\nLa Real Sociedad recibe al Rayo ⚡ en Anoeta a las 16:15. Con 4,2 de media, tampoco es un jugador por el que merezca la pena arriesgar: si lo tienes, mejor mirar otra opción."
    }
   ]
  },
@@ -7189,13 +7187,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 462,
+   "ok": 464,
    "fallos": 0,
-   "ejecuciones": 227,
+   "ejecuciones": 228,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 445,
-   "ultima": "2026-11-08T17:01:11.302Z"
+   "mediaMs": 444,
+   "ultima": "2026-11-08T17:06:13.244Z"
   }
  },
  "ptsDirecto": {
