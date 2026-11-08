@@ -3144,7 +3144,6 @@
    "AS|https://as.com/futbol/segunda/laliga-no-para-el-futbol-aplaza-solo-el-granada-tenerife-andorra-mallorca-y-castellon-eibar-f202611-n/": 1793895587000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898360000,
    "SPORT|136132177": 1793895290000,
-   "SPORT|136132157": 1793894248000,
    "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html": 1793899045000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247648/oficial-laliga-aplaza-castellon-eibar-fallecimiento-jesus-miguel.html": 1793898608000,
@@ -3317,22 +3316,6 @@
     "oficial": false,
     "contexto": "",
     "detalle": "LaLiga y la RFEF han decidido mantener la jornada prevista",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136132157",
-    "medio": "SPORT",
-    "t": 1793894248000,
-    "tipo": "suspension",
-    "estado": "confirmado",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": true,
-    "contexto": "Tras el fallecimiento de Jesús de Miguel",
-    "detalle": "Se disputará la jornada con homenajes, salvo tres partidos específicos de Segunda",
     "nums": []
    },
    {
@@ -7271,13 +7254,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 434,
+   "ok": 436,
    "fallos": 0,
-   "ejecuciones": 213,
+   "ejecuciones": 214,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 453,
-   "ultima": "2026-11-08T15:56:12.958Z"
+   "mediaMs": 452,
+   "ultima": "2026-11-08T16:01:14.003Z"
   }
  },
  "ptsDirecto": {
