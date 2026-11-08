@@ -3281,7 +3281,9 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000,
    "SPORT|136226466": 1794152883000,
-   "SPORT|136227641": 1794155343000
+   "SPORT|136227641": 1794155343000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160741000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794159878000
   },
   "hechos": [
    {
@@ -3458,13 +3460,10 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160872516,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794161171103
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-08",
@@ -7212,13 +7211,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 497,
+   "ok": 500,
    "fallos": 0,
-   "ejecuciones": 242,
+   "ejecuciones": 243,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 433,
-   "ultima": "2026-11-08T18:16:13.097Z"
+   "mediaMs": 432,
+   "ultima": "2026-11-08T18:21:13.553Z"
   }
  },
  "ptsDirecto": {
