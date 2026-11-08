@@ -5,22 +5,36 @@
       "ruta": "privacidad.html",
       "tipo": "legal",
       "titulo": "Política de privacidad · Fantasy Manager",
-      "descripcion": "Qué datos usa Fantasy Manager, dónde se guardan, qué hacen los anuncios de Google y cómo borrar tus datos.",
-      "fecha": "2026-11-04"
+      "descripcion": "Qué datos usa Fantasy Manager, quién es el responsable, dónde se guardan, qué hacen los anuncios de Google y cómo borrar tus datos.",
+      "fecha": "2026-11-08"
+    },
+    {
+      "ruta": "aviso-legal.html",
+      "tipo": "legal",
+      "titulo": "Aviso legal · Fantasy Manager",
+      "descripcion": "Quién es el titular de Fantasy Manager y de fantasymanagerapp.com: nombre, NIF, domicilio y correo de contacto.",
+      "fecha": "2026-11-08"
+    },
+    {
+      "ruta": "condiciones.html",
+      "tipo": "legal",
+      "titulo": "Condiciones de uso · Fantasy Manager",
+      "descripcion": "Las reglas para usar Fantasy Manager: app no oficial, tu cuenta de LaLiga, las recomendaciones no son garantía y la IA con tu propia clave.",
+      "fecha": "2026-11-08"
     },
     {
       "ruta": "quienes-somos.html",
       "tipo": "info",
       "titulo": "Quiénes somos · Fantasy Manager",
       "descripcion": "Quién hace Fantasy Manager, de dónde salen sus datos, cómo se financia y por qué no es una app oficial de LaLiga.",
-      "fecha": "2026-11-03"
+      "fecha": "2026-11-08"
     },
     {
       "ruta": "contacto.html",
       "tipo": "info",
       "titulo": "Contacto · Fantasy Manager",
       "descripcion": "Cómo escribir a Fantasy Manager: correo, avisos de fallo desde la app y la cuenta de X.",
-      "fecha": "2026-11-02"
+      "fecha": "2026-11-08"
     },
     {
       "ruta": "instalar.html",

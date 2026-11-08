@@ -597,6 +597,7 @@ export function ajustes(S) {
   if (!enDemo() && sesion()) h += `<div class="ajuste"><div class="c"><b>Invitar a tu liga</b><span>Un enlace para el grupo: al entrar, se les abre esta liga</span></div><button class="btn chico" data-accion="invitar">${icono('enviar')}Invitar</button></div>`;
   if (!enDemo() && sesion()) h += `<div class="ajuste"><div class="c"><b>Borrar mis datos del servidor</b><span>Lo que guarda Fantasy Manager de ti: que usas la app, cuánto rato y tus avisos de fallo</span></div><button class="btn chico sec" data-accion="borrarServidor">Borrar</button></div>`;
   h += `<div class="ajuste"><div class="c"><b>Privacidad</b><span>Qué datos usa la app y dónde se quedan</span></div><a class="btn chico sec" href="privacidad.html">Ver</a></div>`;
+  h += `<div class="ajuste"><div class="c"><b>Condiciones de uso</b><span>App no oficial: el riesgo con tu cuenta de LaLiga es tuyo y las recomendaciones no son una garantía</span></div><a class="btn chico sec" href="condiciones.html">Ver</a></div>`;
   // (en la versión de Google Play, si Google pide dejar cambiarlo: en la UE, sí; en la web, con los anuncios de AdSense)
   if ((enApp && nativo.hayPrivacidadAnuncios()) || (!enApp && hayAnunciosWeb())) h += `<div class="ajuste"><div class="c"><b>Privacidad de los anuncios</b><span>Cambia si los anuncios pueden usar tus datos para personalizarse</span></div><button class="btn chico sec" data-accion="privAnuncios">Cambiar</button></div>`;
   h += `<p class="peq apag" style="margin-top:16px">Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga. Lee tu liga con tu cuenta, como su app, y usa datos públicos de fútbol. Tu sesión y tu clave se quedan en ${enApp ? 'este móvil' : 'este navegador'}.</p>`;
@@ -832,9 +833,26 @@ function registradosHTML(reg, lista, ahora) {
 }
 
 /* ================= DIAGNÓSTICO ================= */
+/* los modelos de la IA, como «IA 1», «IA 2»… para quien no es el dueño (revisión total, B3: nunca nombres de modelos en la
+   app). El número es su sitio en la lista de tu clave; los que no están en ella, detrás. Tapa también los ids que vengan
+   dentro de un mensaje de Google («models/gemini-…»). */
+function nombresIA() {
+  if (avisosGuardados().admin) return { m: (x) => x || '', t: (x) => x || '' };
+  const orden = [...((((LS.get('ia-modelos', {}) || {}).lista) || []))];
+  const m = (x) => {
+    if (!x) return '';
+    const id = String(x).replace(/^models\//, '');
+    let i = orden.indexOf(id);
+    if (i < 0) { orden.push(id); i = orden.length - 1; }
+    return `IA ${i + 1}`;
+  };
+  const t = (x) => (x ? String(x).replace(/\b(?:models\/)?(?:gemini|gemma|learnlm|imagen)-[\w.-]*/gi, (y) => m(y)).replace(/\b(?:Gemini|Gemma)(?: [\d.]+)?(?: (?:Pro|Flash|Lite|Flash-Lite|Nano|Ultra|It|\(preview\)))*/g, 'la IA') : '');
+  return { m, t, lista: () => orden };
+}
 export function textoDiagnostico(S) {
   const s = sesion();
   const D = S.D;
+  const ia = nombresIA();
   const L = [
     `Fantasy Manager ${VERSION} · compilación ${nativo.version()} · ${enApp ? `app (${nativo.canal()})` : enWeb ? 'web' : 'navegador sin servidor'}${enDemo() ? ' · DEMO' : ''}`,
     `Cuenta de LaLiga: ${(D && D.yo && D.yo.userId) || (avisosGuardados().yo) || '¿?'}`,
@@ -874,13 +892,13 @@ export function textoDiagnostico(S) {
         }).join('');
     })(),
     S.M ? `Clausulazos: ${S.M.clausulazos ? `${S.M.clausulazos.n}, mediana ${pct(S.M.clausulazos.med * 100)}, p90 ${pct(S.M.clausulazos.p90 * 100)}` : 'ninguno medible'} · Ofertas de LaLiga: ${S.M.ofertaLiga ? `${S.M.ofertaLiga.n} ventas, mediana ${pct(S.M.ofertaLiga.med * 100)}${S.M.ofertaLiga.poco ? ' (pocas)' : ''}` : 'sin ventas a LaLiga medibles'} · Pujas de la liga: ${S.M.pujasLiga ? `${S.M.pujasLiga.n} compras, mediana ${pct(S.M.pujasLiga.med * 100)}${S.M.pujasLiga.poco ? ' (pocas)' : `, p25 ${pct(S.M.pujasLiga.p25 * 100)}, p75 ${pct(S.M.pujasLiga.p75 * 100)}${(S.M.pujasLiga.tramos || []).map((x) => ` · ${x.desde === 0 ? '<' : ''}${eur(x.desde === 0 ? x.hasta : x.desde, { dec: 0 })}${x.desde && x.hasta !== Infinity ? `-${eur(x.hasta, { dec: 0 })}` : x.hasta === Infinity ? '+' : ''}: ${x.n}, med ${pct(x.med * 100)}, p90 ${pct(x.p90 * 100)}`).join('')}`}` : 'sin compras al mercado medibles'} · aprendizaje: ${S.M.aprende && S.M.aprende.prev ? (S.M.aprende.prev.poco ? `${S.M.aprende.prev.pares} pares (pocos)` : `${S.M.aprende.prev.pares} pares, error ${S.M.aprende.prev.mae.final}, peso desglose ${S.M.aprende.prev.w}, sesgo ${JSON.stringify(S.M.aprende.prev.sesgo)}`) : 'sin jornadas evaluadas'}${S.M.aprende && S.M.aprende.planes ? ` · planes ${S.M.aprende.planes.bien}/${S.M.aprende.planes.n}` : ''}` : '',
-    `IA: clave ${hayClave() ? 'sí' : 'no'} · modelos ${(((LS.get('ia-modelos', {}) || {}).lista) || []).join(', ') || '¿?'}`,
-    ...intentosIA.slice(0, 20).map((x) => `  ${horaDe(x.t)} ${x.modelo}${x.web ? ' +web' : ''}${x.nivel ? ` ·${x.nivel}` : ''}${x.relevo ? ' (relevo)' : ''} ${x.ok ? `OK${x.fin && x.fin !== 'STOP' ? ` ${x.fin}` : ''}${x.car != null ? ` ${x.car} car.` : ''}${x.tok ? ` (tokens: ${x.tok.p} entran, ${x.tok.th} pensando, ${x.tok.r} escritos)` : ''}` : `✗ ${x.s} ${x.e}`}${x.google ? ` «${x.google}»` : ''} ${x.ms}ms`),
+    `IA: clave ${hayClave() ? 'sí' : 'no'} · modelos ${(((LS.get('ia-modelos', {}) || {}).lista) || []).map(ia.m).join(', ') || '¿?'}`,
+    ...intentosIA.slice(0, 20).map((x) => `  ${horaDe(x.t)} ${ia.m(x.modelo)}${x.web ? ' +web' : ''}${x.nivel ? ` ·${x.nivel}` : ''}${x.relevo ? ' (relevo)' : ''} ${x.ok ? `OK${x.fin && x.fin !== 'STOP' ? ` ${x.fin}` : ''}${x.car != null ? ` ${x.car} car.` : ''}${x.tok ? ` (tokens: ${x.tok.p} entran, ${x.tok.th} pensando, ${x.tok.r} escritos)` : ''}` : `✗ ${x.s} ${ia.t(x.e)}`}${x.google ? ` «${ia.t(x.google)}»` : ''} ${x.ms}ms`),
     (() => {
       const uf = ultimoFondo(), nf = nativo.estadoFondo() || {};
       return `Segundo plano: ${cfgFondo().on ? 'sí' : 'no'}${nf.ini ? ` · empezó ${new Date(nf.ini).toISOString()}` : ''}${nf.fin ? ` · acabó ${new Date(nf.fin).toISOString()}` : ''}${nf.prog ? ` · próxima tras el mercado ${new Date(nf.prog).toISOString()}` : ''}${nf.error ? ` · ✗ ${nf.error}` : ''}${uf ? ` · web: ${(uf.pasos || []).join(' / ')}${uf.error ? ` ✗ ${uf.error}` : ''} (${Math.round((uf.ms || 0) / 1000)} s${uf.avisos != null ? `, ${uf.avisos} avisos` : ''})` : ''}`;
     })(),
-    ...((ultimoFondo() || {}).ia || []).map((x) => `  [fondo] ${horaDe(x.t)} ${x.modelo}${x.web ? ' +web' : ''} ${x.ok ? 'OK' : `✗ ${x.s} ${x.e}`} ${x.ms}ms`),
+    ...((ultimoFondo() || {}).ia || []).map((x) => `  [fondo] ${horaDe(x.t)} ${ia.m(x.modelo)}${x.web ? ' +web' : ''} ${x.ok ? 'OK' : `✗ ${x.s} ${ia.t(x.e)}`} ${x.ms}ms`),
     '',
     ...registro.slice(0, 50).map((r) => `${horaDe(r.t)} ${r.s} ${r.ms}ms ${r.ruta}${r.e ? ' ✗ ' + r.e : ''}${r.forma ? ' → ' + r.forma : ''}${r.nota ? ' (' + r.nota + ')' : ''}`),
   ];

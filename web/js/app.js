@@ -65,7 +65,7 @@ function tostada(t, ms = 3200) {
 }
 
 /* ---------------- pantallas completas ---------------- */
-const PIE_ENTRAR = '<p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. Lee tu liga con tu propia cuenta, como su app, y la usas bajo tu responsabilidad; tu contraseña nunca la ve. <a href="privacidad.html">Privacidad</a></p>';
+const PIE_ENTRAR = '<p class="peq apag" style="margin-top:14px">App no oficial: no es de LaLiga ni tiene relación con LaLiga. Lee tu liga con tu propia cuenta, como su app, y la usas bajo tu responsabilidad; tu contraseña nunca la ve. <a href="privacidad.html">Privacidad</a> · <a href="condiciones.html">Condiciones</a></p>';
 function pantallaEntrar(error = '') {
   ponerBanner(false);
   // la portada de antes de entrar: en la web, con los móviles de abajo; dentro de la app, solo lo de entrar

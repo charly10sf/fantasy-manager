@@ -30,8 +30,14 @@ export const guardarClave = (k) => { guardar('gemini', (k || '').trim() || null)
 export const hayClave = () => !!clave();
 // web: la búsqueda en Google en el chat (solo cuando hace falta); webPlan: también al hacer el plan (hasta 8 búsquedas:
 // de 40 a 80 s en vez de 20 a 30, y es lo que más falla; apagada por defecto desde la 0.7c, las noticias y los onces ya van)
-export const cfgIA = () => ({ modelo: '', web: true, webPlan: false, auto: true, ...LS.get('cfg-ia', {}) });
-export const guardarCfgIA = (c) => LS.set('cfg-ia', { ...cfgIA(), ...c });
+// La del chat, apagada por defecto desde la 0.7zc (revisión total, A3: las condiciones de la búsqueda de Google piden
+// enseñar sus sugerencias tal cual y la app no lo hace). Quien la tenía guardada de antes pasa a apagada una vez (webV);
+// si la vuelve a encender en Ajustes, se respeta.
+export const cfgIA = () => {
+  const g = LS.get('cfg-ia', {}) || {};
+  return { modelo: '', web: false, webPlan: false, auto: true, ...g, ...(g.webV ? {} : { web: false }) };
+};
+export const guardarCfgIA = (c) => LS.set('cfg-ia', { ...cfgIA(), ...c, webV: 1 });
 
 /** nombre bonito: gemini-3.8-flash-lite → Gemini 3.8 Flash-Lite */
 export function nombreModelo(m) {
@@ -136,7 +142,8 @@ function errorDe(estado, j) {
     return new ErrorIA(busqueda ? 'Se ha acabado la búsqueda en Google gratis de hoy' : cero ? 'Este modelo no tiene cupo gratis' : minuto ? 'Demasiadas preguntas seguidas' : 'Cupo gratis del día gastado', 429, { ...info, busqueda, minuto, cero });
   }
   if (estado >= 500) return new ErrorIA('Google está saturado ahora mismo', estado, info);
-  return new ErrorIA(m || `Error ${estado} de Google`, estado, info);
+  // lo demás, con un mensaje nuestro: el de Google va solo al diagnóstico (info.google), que puede llevar el modelo
+  return new ErrorIA(`La IA de Google ha dado un error${estado ? ` (${estado})` : ''}. Prueba otra vez en un rato.`, estado, info);
 }
 
 /* el registro de intentos, para Ajustes → Diagnóstico */
@@ -405,7 +412,7 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
           if (r.deRelevo) {
             // ha contestado antes el relevo: el lento se salta un rato y el que ha contestado va el primero la próxima vez
             if (r.principal) apuntar({ modelo, web, s: r.principal.estado, e: r.principal.message, google: r.principal.google, ms: Date.now() - t0, nivel: pensar ? nivel : null });
-            else apuntar({ modelo, web, s: 'relevo', e: `sin contestar en ${Math.round((Date.now() - t0) / 1000)} s: ha contestado antes ${nombreModelo(r.deRelevo)}`, ms: Date.now() - t0, nivel: pensar ? nivel : null });
+            else apuntar({ modelo, web, s: 'relevo', e: `sin contestar en ${Math.round((Date.now() - t0) / 1000)} s: ha contestado antes ${r.deRelevo}`, ms: Date.now() - t0, nivel: pensar ? nivel : null });
             pausar(modelo, 600);
             recordarBueno(r.deRelevo);
             return { ...r, modelo: r.deRelevo, web: false, intentos: resumen };
@@ -756,15 +763,30 @@ function prensaTxt(M, pid, n = 2) {
 }
 const nombreTid = (M, tid) => { const e = M.equipo[tid]; return (e && (e.manager || e.nombre)) || '?'; };
 
+/* para comparar sin mayúsculas ni tildes sin mover las posiciones: cada carácter (en NFC) pasa a uno solo, en minúscula y
+   sin tilde («Á» → «a», «Ñ» → «n»), así lo que se encuentra en la copia doblada está en el mismo sitio en el texto */
+const DOBLADO = new Map();
+const doblar1 = (c) => {
+  const k = c.charCodeAt(0);
+  if (k < 128) return k >= 65 && k <= 90 ? String.fromCharCode(k + 32) : c;
+  let f = DOBLADO.get(c);
+  if (f == null) { f = ((c.normalize('NFD')[0] || c).toLowerCase()[0]) || c; DOBLADO.set(c, f); }
+  return f;
+};
+const doblar = (t) => { let o = ''; for (let i = 0; i < t.length; i++) o += doblar1(t[i]); return o; };
+
 /**
  * Alias para los de tu liga: lo que va a Google lleva «Rival 3» (el mánager) y «Equipo 3» (su equipo) en vez de sus
  * nombres, que son datos de otras personas; destapar() los vuelve a poner en lo que contesta. Tu nombre y el de tu
- * equipo sí van, y no se tocan. N es su puesto en la clasificación (si dos comparten puesto, su orden).
+ * equipo sí van, y no se tocan. N es su puesto en la clasificación (si dos comparten puesto, su orden). Los mánagers que
+ * salen en la actividad de la liga y ya no están en la clasificación (se fueron) van como «Exrival N».
+ * - Se tapa sin mirar tildes («Alex» por «Álex») ni mayúsculas («marcos», «RUBÉN»). Un nombre de 3 letras solo si
+ *   empieza por mayúscula: «leo» o «ana» en minúscula son palabras normales.
  * - Los nombres de jugadores, clubes y los tuyos que contienen el de un mánager («Hugo Duro» con un mánager «Hugo»)
- *   se apartan antes de tapar y se devuelven tal cual.
+ *   se dejan tal cual, también en minúsculas («hugo duro»).
  * - Un rival se queda sin tapar si su nombre es exactamente el de un jugador, un club o el tuyo, si no lleva letras o
  *   tiene menos de 3, o si es una palabra de las instrucciones de la IA («Mercado»): no se sabría cuál es cuál.
- * - Se tapa con las mayúsculas tal cual (así sale en los datos).
+ * - Lo que escribes tú pasa por aquí (el chat, las notas); las fotos que adjuntas, no: van tal cual.
  */
 export function seudonimos(D) {
   const yo = D && D.yo && D.yo.teamId;
@@ -779,34 +801,60 @@ export function seudonimos(D) {
   const rivales = ((D && D.clasif) || []).filter((e) => e && e.teamId !== yo).sort((a, b) => (a.pos || 99) - (b.pos || 99));
   const puestos = rivales.map((e) => e.pos);
   const porPuesto = puestos.every((x) => Number.isInteger(x) && x > 0) && new Set(puestos).size === puestos.length;
-  const pares = [], vuelta = {};
+  // nombre doblado → alias (el primero que llega se queda: dos rivales que se escriben igual no se pueden separar)
+  const alias = new Map(), vuelta = {};
+  const poner = (nombre, a) => {
+    const k = doblar(nombre.trim().normalize('NFC'));
+    if (alias.has(k)) return;
+    alias.set(k, a);
+    vuelta[a.toLowerCase()] = nombre.trim();
+  };
   rivales.forEach((e, i) => {
     const n = porPuesto ? e.pos : i + 1;
-    if (vale(e.manager)) { pares.push([e.manager.trim(), `Rival ${n}`]); vuelta[`rival ${n}`] = e.manager.trim(); }
-    if (e.nombre && e.nombre !== e.manager && vale(e.nombre)) { pares.push([e.nombre.trim(), `Equipo ${n}`]); vuelta[`equipo ${n}`] = e.nombre.trim(); }
+    if (vale(e.manager)) poner(e.manager, `Rival ${n}`);
+    if (e.nombre && e.nombre !== e.manager && vale(e.nombre)) poner(e.nombre, `Equipo ${n}`);
   });
+  // los que se fueron de la liga: salen en la actividad (de lo más nuevo a lo más viejo) y no en la clasificación
+  const ids = new Set(), nombres = new Set();
+  for (const e of (D && D.clasif) || []) { if (!e) continue; for (const x of [e.userId, e.managerId]) if (x) ids.add(String(x)); for (const x of [e.manager, e.nombre]) if (norm(x)) nombres.add(norm(x)); }
+  if (D && D.yo) { if (D.yo.userId) ids.add(String(D.yo.userId)); if (norm(D.yo.nombre)) nombres.add(norm(D.yo.nombre)); }
+  const actv = [...((D && D.actividad) || [])].sort((a, b) => (b.t || 0) - (a.t || 0));
+  let ex = 0;
+  for (const a of actv) for (const [nom, id] of [[a.quien, a.quienId], [a.otro, a.otroId]]) {
+    if (typeof nom !== 'string' || !nom.trim() || (id && ids.has(String(id))) || nombres.has(norm(nom)) || !vale(nom)) continue;
+    nombres.add(norm(nom));
+    poner(nom, `Exrival ${++ex}`);
+  }
   // los más largos primero («Los Pepes FC» antes que «Pepe»)
-  pares.sort((a, b) => b[0].length - a[0].length);
+  const claves = [...alias.keys()].sort((a, b) => b.length - a.length);
   const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const palabra = (lista) => new RegExp(`(?<![\\p{L}\\p{N}])(${lista.map(esc).join('|')})(?![\\p{L}\\p{N}])`, 'gu');
-  const re = pares.length ? palabra(pares.map((p) => p[0])) : null;
-  const alias = Object.fromEntries(pares);
-  // jugadores, clubes y lo tuyo que llevan dentro el nombre de un rival: se apartan antes de tapar
-  const aparte = re ? [...otros].filter((t) => { re.lastIndex = 0; return re.test(t); }).sort((a, b) => b.length - a.length) : [];
-  const reAparte = aparte.length ? palabra(aparte) : null;
-  const deVuelta = /(?<![\p{L}\p{N}])([Rr][Ii][Vv][Aa][Ll]|Equipo) (\d{1,3})(?![\p{L}\p{N}]|[.,]\d)/gu;
+  const reR = claves.length ? palabra(claves) : null;
+  // jugadores, clubes y lo tuyo que llevan dentro el nombre de un rival: se dejan tal cual
+  const aparte = reR ? [...new Set([...otros].map((t) => doblar(t.normalize('NFC'))))].filter((t) => { reR.lastIndex = 0; return reR.test(t) && !alias.has(t); }) : [];
+  // todo en una: lo de aparte y los rivales, de más largo a más corto; en cada sitio gana el que empieza antes y, ahí, el más largo
+  const todo = reR ? palabra([...new Set([...aparte, ...claves])].sort((a, b) => b.length - a.length)) : null;
+  const deVuelta = /(?<![\p{L}\p{N}])([Rr][Ii][Vv][Aa][Ll]|[Ee][Xx][Rr][Ii][Vv][Aa][Ll]|Equipo) (\d{1,3})(?![\p{L}\p{N}]|[.,]\d)/gu;
   return {
-    n: pares.length,
-    aviso: `\nLOS DE LA LIGA VAN CON ALIAS: cada rival sale como «Rival N» (el mánager) y su equipo como «Equipo N»${porPuesto ? ', con N su puesto en la clasificación' : ''}. Yo (el manager) voy con mi nombre. Escríbelos tal cual, sin inventar nombres: la app los cambia por los de verdad.`,
-    tapar: (t) => {
-      if (!re || typeof t !== 'string') return t;
-      const guardados = [];
-      let x = reAparte ? t.replace(reAparte, (m) => { guardados.push(m); return `\uE000${guardados.length - 1}\uE001`; }) : t;
-      x = x.replace(re, (m) => alias[m] || m);
-      return guardados.length ? x.replace(/\uE000(\d+)\uE001/g, (m, k) => guardados[+k]) : x;
+    n: alias.size,
+    aviso: `\nLOS DE LA LIGA VAN CON ALIAS: cada rival sale como «Rival N» (el mánager) y su equipo como «Equipo N»${porPuesto ? ', con N su puesto en la clasificación' : ''}${ex ? '; los que ya se fueron de la liga, como «Exrival N»' : ''}. Yo (el manager) voy con mi nombre. Escríbelos tal cual, sin inventar nombres: la app los cambia por los de verdad.`,
+    tapar: (t0) => {
+      if (!todo || typeof t0 !== 'string') return t0;
+      const t = t0.normalize('NFC'), d = doblar(t);
+      let o = '', ult = 0;
+      todo.lastIndex = 0;
+      for (const m of d.matchAll(todo)) {
+        const a = alias.get(m[0]);
+        if (!a) continue; // un jugador o un club con el nombre dentro: tal cual
+        const orig = t.slice(m.index, m.index + m[0].length);
+        if (m[0].length < 4 && orig[0] === orig[0].toLowerCase()) continue; // «leo», «ana»: palabras, no nombres
+        o += t.slice(ult, m.index) + a;
+        ult = m.index + m[0].length;
+      }
+      return ult ? o + t.slice(ult) : t0;
     },
     // json: lo que vuelve es un JSON (el plan): el nombre va escapado para que no lo rompa una comilla
-    destapar: (t, { json = false } = {}) => (pares.length && typeof t === 'string' ? t.replace(deVuelta, (m, q, d) => { const v = vuelta[`${q.toLowerCase()} ${d}`]; return v == null ? m : json ? JSON.stringify(v).slice(1, -1) : v; }) : t),
+    destapar: (t, { json = false } = {}) => (alias.size && typeof t === 'string' ? t.replace(deVuelta, (m, q, d) => { const v = vuelta[`${q.toLowerCase()} ${d}`]; return v == null ? m : json ? JSON.stringify(v).slice(1, -1) : v; }) : t),
   };
 }
 const rachaTxt = (M, id) => { const r = M.racha && M.racha(id); return r ? `${r.txt} (${r.gf}-${r.gc}, ${r.pts} de ${r.de * 3} pts)` : null; };
@@ -1016,7 +1064,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   return L.join('\n');
 }
 
-const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} No le atribuyas al manager ganas, miedos ni decisiones que no te ha dicho («si tanto lo quieres»): si necesitas saberlo, pregúntaselo.
+const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} Si te pregunta qué IA o qué modelo eres, di que eres el director deportivo de Fantasy Manager, sin decir el nombre ni la versión del modelo. No le atribuyas al manager ganas, miedos ni decisiones que no te ha dicho («si tanto lo quieres»): si necesitas saberlo, pregúntaselo.
 Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla pagando (pagar X la sube 2X) o blindarla gratis un rato (mira BLINDAJES). En el mercado hay DOS cosas muy distintas que no debes mezclar: (1) jugadores LIBRES de LaLiga, que no son de nadie: el mercado cambia cada día, se puja a ciegas desde su precio y se los lleva la puja más alta; (2) jugadores que OTRO MANAGER de la liga ha puesto a la venta: siguen siendo suyos, el precio lo pone él y solo pasan a ser del manager si el dueño acepta su oferta, así que no se pueden conseguir «más baratos en el mercado». Si el dueño es un amigo que se lo deja a un precio, es un trato entre los dos: valóralo por su valor, lo que sube al día, lo que le da a su once y si le llega el dinero, no comparándolo con el mercado de la liga. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
 Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador y titulares de prensa recientes: úsalos. Cuando hables de lo que te paso (el once probable, su nota, su xG), no digas de qué web sale: «el once probable», «su nota». No nombres nunca webs de fantasy ni de onces (futbolfantasy, Analítica Fantasy, Jornada Perfecta, Comuniate, Biwenger, Futmondo…) ni las pongas como fuente o con un «según»: di «la prensa» o «los onces probables». Si un jugador lleva ALINEACIÓN CONFIRMADA (sale una hora antes de su partido), eso manda sobre el once probable y la prensa: si está de SUPLENTE o NO CONVOCADO, lo tengo en el once y la jornada aún no ha empezado, dime que lo cambie por uno que juegue antes del primer partido de la jornada (después ya no se puede). Si tienes la búsqueda de Google, úsala para lo que pueda cambiar una decisión: lesiones, sanciones, convocatorias, onces de última hora, rotaciones por Champions o Copa y cambios de entrenador de los jugadores que vas a recomendar o a alinear. Ten en cuenta los parones de selecciones. Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
 Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Para REVENDER da igual que no lo vaya a alinear o que ya tenga a otro en su puesto (otro portero, por ejemplo): NUNCA lo descartes por eso ni lo llames «dinero parado» si está subiendo; cuenta lo que gana hasta venderlo, el dinero y el límite de jugadores de la plantilla. Una CLÁUSULA solo se puede pagar con el saldo que tiene: LaLiga no deja clausular quedándose en negativo (ni con el dinero de lo que pone en venta, que no entra hasta que acepta una oferta). Quedarse en negativo solo se puede pujando o comprando en el mercado. Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa. Los marcados VUELVE (valían mucho más esta temporada, se hundieron por una lesión o por no jugar y ahora juegan otra vez y suben varios días seguidos) son la especulación más clara: si hay dinero o margen de deuda para él, recomiéndalo SIEMPRE para revender aunque no le haga falta para el once, y di cuánto valía y por qué le queda recorrido. Que lleve mucho sin jugar no es motivo para descartarlo: es justo por lo que está barato.
@@ -1817,13 +1865,14 @@ async function contenidosChat(hist, nuevas) {
 const SOBRE_FOTOS = `\nFOTOS: si te manda una captura o una foto, léela entera antes de contestar (puede ser del mercado, de una oferta que le han hecho, de la plantilla o las cláusulas de un rival, de un chat con otro manager, de una noticia). Di lo que ves que importa con sus cifras y crúzalo con los datos que te paso; si en la captura sale algo que no cuadra con los datos o un jugador que no tengo, dilo. Si se lee mal o está cortada, dilo en vez de inventarte lo que pone.`;
 
 // en el chat, Google solo cuando hace falta: cada búsqueda son unos segundos más de espera
+const SIN_BUSCAR_CHAT = 'EN EL CHAT NO TIENES BÚSQUEDA EN GOOGLE: contesta con los datos que te paso y, si para contestar falta algo de hoy (una lesión, un once), dilo.';
 const BUSCAR_CHAT = 'EN EL CHAT, BUSCA EN GOOGLE SOLO SI HACE FALTA: si la pregunta se contesta con los datos que te paso, contesta sin buscar. Busca cuando necesites algo de hoy que no esté aquí (una lesión, una rueda de prensa, un once, una noticia) o te lo pida. Si pregunta por cambiar, vender o comprar a un jugador que está en duda o lesionado, busca siempre qué tiene y cuánto puede estar fuera.';
 /**
  * las cuentas de los jugadores que nombra, hechas: valores, cláusulas, diferencias y quién puede pagar cada cláusula.
  * El 7 nov la IA dio «Berenguer + 33-35 M» y luego «+ 26 M», y sumó «107 + 35 = 75»: si las cifras le llegan hechas,
  * no se las inventa.
  */
-export function cuentasTxt(D, M, js) {
+export function cuentasTxt(D, M, js, { web = true } = {}) {
   if (!js || js.length < 2) return '';
   const yo = D.yo && D.yo.teamId;
   const info = js.map((j) => {
@@ -1841,7 +1890,7 @@ export function cuentasTxt(D, M, js) {
     // un cambio entre managers son DOS COMPRAS, cada una a su valor (Carlos, 8 nov: «yo compro una cosa que vale 28 M por
     // 28 M y él una que vale 55 M por 55 M; nos quedamos igual, nadie pierde valor»). La IA lo contaba como un cambio sin
     // dinero y repetía que le regalaba 26 M: lo que decide es quién va a subir más y quién da más puntos
-    L.push(`- CAMBIO DE ${a.j.nombre.toUpperCase()} POR ${b.j.nombre.toUpperCase()}: en esta liga un cambio entre managers son DOS COMPRAS, cada una a su valor salvo que acuerden otros precios: yo le compro ${b.j.nombre} por ${eur(b.j.valor)} y él me compra ${a.j.nombre} por ${eur(a.j.valor)}. Acabo con ${b.j.nombre} y mi saldo ${dif >= 0 ? 'sube' : 'baja'} ${eur(Math.abs(dif))} (${eur(a.j.valor)} − ${eur(b.j.valor)}; de ${eur(num(D.dinero))} a ${eur(num(D.dinero) + dif)}). NADIE PIERDE VALOR: nunca digas que regalo, pierdo o le doy la diferencia. (Solo si el manager dice expresamente que es sin dinero de por medio sería otra cosa.) Lo que decide si me conviene es quién de los dos va a SUBIR MÁS de valor a partir de ahora y quién me dará MÁS PUNTOS: compara su tendencia (hoy, 7 días, inercia), su estado (lesión, duda, sanción), su forma, sus próximos partidos y el parón, y busca en Google noticias de los dos si alguno está tocado.`);
+    L.push(`- CAMBIO DE ${a.j.nombre.toUpperCase()} POR ${b.j.nombre.toUpperCase()}: en esta liga un cambio entre managers son DOS COMPRAS, cada una a su valor salvo que acuerden otros precios: yo le compro ${b.j.nombre} por ${eur(b.j.valor)} y él me compra ${a.j.nombre} por ${eur(a.j.valor)}. Acabo con ${b.j.nombre} y mi saldo ${dif >= 0 ? 'sube' : 'baja'} ${eur(Math.abs(dif))} (${eur(a.j.valor)} − ${eur(b.j.valor)}; de ${eur(num(D.dinero))} a ${eur(num(D.dinero) + dif)}). NADIE PIERDE VALOR: nunca digas que regalo, pierdo o le doy la diferencia. (Solo si el manager dice expresamente que es sin dinero de por medio sería otra cosa.) Lo que decide si me conviene es quién de los dos va a SUBIR MÁS de valor a partir de ahora y quién me dará MÁS PUNTOS: compara su tendencia (hoy, 7 días, inercia), su estado (lesión, duda, sanción), su forma, sus próximos partidos y el parón, ${web ? 'y busca en Google noticias de los dos si alguno está tocado' : 'y, si alguno está tocado, dilo con lo que sale en los datos'}.`);
     if (a.cl && a.cl.clausula) {
       const r = (M.rivales || []).find((y) => y.e.teamId === b.tid);
       const din = r && r.dinero && r.dinero.v != null ? r.dinero.v : null;
@@ -1858,8 +1907,8 @@ export function cuentasTxt(D, M, js) {
     }
     // si el mío está tocado, pesa A FAVOR de cambiarlo: si se confirma la lesión baja de valor, y en el cambio cobro su
     // valor de hoy. Que busque qué tiene antes de contestar
-    if (a.j.estado === 'doubtful' || a.j.estado === 'injured') L.push(`- ${a.j.nombre} está ${a.j.estado === 'doubtful' ? 'EN DUDA' : 'LESIONADO'}: pesa A FAVOR del cambio (si se confirma la lesión, su valor baja, y en el cambio cobro su valor de hoy, ${eur(a.j.valor)}). Busca en Google qué tiene y cuánto puede estar fuera antes de contestar, y dilo.`);
-    if (b.j.estado === 'doubtful' || b.j.estado === 'injured') L.push(`- ${b.j.nombre} está ${b.j.estado === 'doubtful' ? 'EN DUDA' : 'LESIONADO'}: pesa EN CONTRA del cambio. Busca en Google qué tiene antes de contestar.`);
+    if (a.j.estado === 'doubtful' || a.j.estado === 'injured') L.push(`- ${a.j.nombre} está ${a.j.estado === 'doubtful' ? 'EN DUDA' : 'LESIONADO'}: pesa A FAVOR del cambio (si se confirma la lesión, su valor baja, y en el cambio cobro su valor de hoy, ${eur(a.j.valor)}). ${web ? 'Busca en Google qué tiene y cuánto puede estar fuera antes de contestar, y dilo.' : 'Di lo que sale en los datos de qué tiene; si no se sabe cuánto estará fuera, dilo.'}`);
+    if (b.j.estado === 'doubtful' || b.j.estado === 'injured') L.push(`- ${b.j.nombre} está ${b.j.estado === 'doubtful' ? 'EN DUDA' : 'LESIONADO'}: pesa EN CONTRA del cambio.${web ? ' Busca en Google qué tiene antes de contestar.' : ''}`);
     // la vara de medir de cualquier trato con precio (le vendo A por X y le compro B por Y = dos ventas): con qué jugador
     // acabo y cuánto saldo, frente a esperar a las cláusulas. Sin esto la IA miraba cada precio por separado y llamaba
     // «cifras inventadas» a Berenguer por 30 M y Nico por 60 M, que deja 4 M más que las dos cláusulas (Carlos, 8 nov)
@@ -1896,7 +1945,7 @@ const TONO_CHAT = {
 const tonoChat = () => { const p = cfgIA().pullitas || 'normal'; return TONO_CHAT[p === 'saco' ? 'saco' : p === 'normal' ? 'normal' : 'serio']; };
 
 /** lo que va a la IA en el chat (sin la conversación): se exporta para probarlo con la demo */
-export function montarChat(pregunta, D, M, c, { fotos = false, hist = [] } = {}) {
+export function montarChat(pregunta, D, M, c, { fotos = false, hist = [], web = cfgIA().web } = {}) {
   const p = ultimoPlan();
   // los jugadores que nombra, con todos sus datos aunque no salgan en el resto del contexto
   // también los de sus últimos mensajes («¿y con Nico qué hago?» tras hablar del trueque) y los suyos por el nombre de
@@ -1914,7 +1963,7 @@ export function montarChat(pregunta, D, M, c, { fotos = false, hist = [] } = {})
   const deAhora = nombrados.length;
   const antes = (hist || []).filter((m) => m.r === 'yo').slice(-4, -1).map((m) => m.t || '').join(' \n ');
   if (antes) for (const j of jugadoresEn(antes, D)) meter(j);
-  const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}${cuentasTxt(D, M, nombrados)}` : '';
+  const extra = nombrados.length ? `\n\nJUGADORES QUE NOMBRA EN SU MENSAJE:\n${nombrados.map((j) => `- ${lineaCompleta(D, M, j)}`).join('\n')}${cuentasTxt(D, M, nombrados, { web })}` : '';
   // el plan, entero solo si la pregunta va de él o de sus jugadores; si no, que sepa que existe y poco más
   // (lo repetía en cada respuesta: vender a Natan, Gulácsi y Macià en un chat sobre un trueque)
   let plan = '';
@@ -1927,7 +1976,7 @@ export function montarChat(pregunta, D, M, c, { fotos = false, hist = [] } = {})
       ? `\n\n${cab}, solo de referencia (no lo repitas si no viene a cuento): ${p.titular} → ${ops.map((o) => `${o.accion} ${o.jugador}`).join('; ')}`
       : `\n\n${cab}: «${p.titular}». Esta pregunta no va del plan: no lo nombres.`;
   }
-  return `${sistemaIA()}${fotos ? SOBRE_FOTOS : ''}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${REGLAS_CHAT.replace('{{TONO}}', tonoChat())}\n${NOTAS_CHAT}\n${BUSCAR_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { chat: true })}${extra}${plan}`;
+  return `${sistemaIA()}${fotos ? SOBRE_FOTOS : ''}\nContesta a lo que te pregunta, al grano y con cifras; usa listas cortas solo si ayudan. Si recomiendas algo, di cuánto cuesta, cuánto pujar y cuándo hacerlo.\nLOS DATOS DE AHORA MANDAN: lo hablado antes en este chat o en planes de otros días puede estar superado. Sus jugadores son SOLO los de «MIS JUGADORES»; si uno del que hablasteis ya no está ahí (o sale en «YA NO SON MÍOS»), ya no es suyo: no lo cuentes para vender, para el once ni para el dinero. Lo mismo con el saldo: vale el de ahora.\n${REGLAS_CHAT.replace('{{TONO}}', tonoChat())}\n${NOTAS_CHAT}\n${web ? BUSCAR_CHAT : SIN_BUSCAR_CHAT}\n\nDATOS DE SU LIGA AHORA MISMO:\n${contexto(D, M, c, { chat: true })}${extra}${plan}`;
 }
 
 export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null) {
@@ -1941,10 +1990,11 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
     guardarMini(f.id, f.mini).then((ok) => { if (!ok) reponerMini(f.id, f.mini); }).catch(() => reponerMini(f.id, f.mini));
   }
   const contents = await contenidosChat(hist, nuevas);
-  const sistema = montarChat(pregunta, D, M, c, { fotos: !!(fotos && fotos.length) || hist.some((m) => m.fotos), hist });
+  const web = cfgIA().web, conFotos = !!(fotos && fotos.length) || hist.some((m) => m.fotos);
+  const sistema = montarChat(pregunta, D, M, c, { fotos: conFotos, hist, web });
   const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();
   // sin búsqueda (apagada, cupo gastado o en el relevo) no se le manda buscar: si se le manda, a veces contesta vacío
-  const sistemaSinWeb = sistema.replace(BUSCAR_CHAT, 'EN EL CHAT NO TIENES BÚSQUEDA EN GOOGLE: contesta con los datos que te paso y, si para contestar falta algo de hoy (una lesión, un once), dilo.');
+  const sistemaSinWeb = web ? montarChat(pregunta, D, M, c, { fotos: conFotos, hist, web: false }) : sistema;
   const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal, alPaso: alPaso || undefined, nivel: 'low', temperatura: 0.4, seudo: seudonimos(D) });
   const n = aplicarNotas(r.texto, D, pregunta);
   const vend = (M.vendidos || []).filter((v) => cuentaConVendido(n.texto, v.j && v.j.nombre));

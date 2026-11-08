@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7zb';
+export const VERSION = '0.7zc';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,16 @@ export const VERSION = '0.7zb';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7zc', f: '2026-11-08', h: '20:00', t: 'Privacidad, más clara',
+    cosas: [
+      { tipo: 'mejora', d: 'escudo', t: 'Los nombres de tus rivales, mejor tapados', x: 'Cuando la IA recibe los datos de tu liga, los demás mánagers van como «Rival N» también si su nombre sale en minúsculas, sin tilde o en mayúsculas («marcos», «Alex», «RUBÉN»), y los que ya se fueron de la liga, como «Exrival N». Los jugadores que llevan dentro el nombre de un rival («Hugo Duro») se quedan como están. Las capturas que adjuntas van tal cual.' },
+      { tipo: 'mejora', d: 'ia', t: 'El chat ya no busca en Google', x: 'La búsqueda en Google del chat viene apagada, como en el plan: contesta antes y con los datos de tu liga. Si la quieres, la enciendes en Ajustes → Buscar en Google en el chat.', ir: { v: 'ia' } },
+      { menor: true, tipo: 'nuevo', d: 'balanza', t: 'Aviso legal y condiciones de uso', x: 'La web tiene ya su aviso legal (quién está detrás de Fantasy Manager) y unas condiciones de uso: es una app no oficial, el riesgo de usarla con tu cuenta de LaLiga lo asumes tú y las recomendaciones no son una garantía. La política de privacidad dice quién es el responsable de tus datos.' },
+      { para: 'dueño', tipo: 'mejora', d: 'lupa', t: 'Sin nombres de modelos', x: 'En el Diagnóstico, quien no es el dueño ve las versiones de la IA como «IA 1», «IA 2», «IA 3» (también dentro de los mensajes de Google y en los avisos de fallo que manda). Un error de Google que la app no reconoce sale con un mensaje propio, y si le preguntan a la IA qué modelo es, dice que es el director deportivo de Fantasy Manager.' },
+      { para: 'dueño', tipo: 'mejora', d: 'ajustes', t: 'Seguridad de los datos de Play, preparada', x: 'En play/ficha.md está el formulario nuevo, con lo que va a la IA de Google (el chat, las capturas y los datos de la liga, también en segundo plano) y lo que guarda hoy el Worker, y los pasos para rellenarlo en Play Console.' },
+    ],
+  },
   {
     v: '0.7zb', f: '2026-11-08', h: '19:12', t: 'El intermediario de Deno, al día',
     cosas: [
