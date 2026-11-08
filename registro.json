@@ -3107,7 +3107,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000,
    "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
@@ -3206,22 +3205,6 @@
    "SPORT|136220730": 1794135619000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793883223000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "La asociación mantiene su postura tras consultar con los futbolistas",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html",
     "medio": "MARCA",
@@ -3654,7 +3637,9 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136221598": 1794142573881
+  }
  },
  "ia": {
   "dia": "2026-11-08",
@@ -7332,13 +7317,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 365,
+   "ok": 366,
    "fallos": 0,
-   "ejecuciones": 176,
+   "ejecuciones": 177,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 477,
-   "ultima": "2026-11-08T12:51:16.663Z"
+   "mediaMs": 478,
+   "ultima": "2026-11-08T12:56:13.881Z"
   }
  },
  "ptsDirecto": {}
