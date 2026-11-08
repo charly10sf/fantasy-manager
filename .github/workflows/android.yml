@@ -6,6 +6,15 @@ name: App Android
 # con una clave de prueba para comprobar que todo funciona, pero no publica nada.
 # El AAB de Google Play va con otra, la de subida, que no está en el repo: solo existe como secretos de Actions
 # (SUBIDA_P12 y SUBIDA_CLAVE). Sin ellos, también se firma con una de prueba y el AAB no vale para subirlo a Play.
+#
+# Tres trabajos (revisión total, M2 y B1):
+#  compilar: con los secretos de firma y solo permiso de lectura (contents: read). Compila y deja lo compilado y el
+#    registro como artefactos.
+#  publicar: sin ningún secreto de firma, con permiso de escritura. Desde pendiente sube el APK de prueba; desde main,
+#    el APK a la release «app» (fantasy-manager.apk y, aparte, fantasy-manager-<versión>-<código>.apk para poder volver
+#    atrás) y app.json.
+#  registro: el registro de la compilación a la rama android-registro (también si falla).
+# versionCode = run_number × 10 + run_attempt: al relanzar una ejecución sale otro número (Google Play no deja repetir).
 on:
   push:
     # en pendiente solo se compila (para probar lo que aún no se ha publicado); publicar, solo desde main
@@ -19,25 +28,32 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
+# en main no se corta nunca una a medias (podía quedarse el APK subido sin su app.json); en pendiente, la última manda
 concurrency:
   group: android-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  apk:
+  compilar:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: read
+    outputs:
+      firma: ${{ steps.datos.outputs.firma }}
+      version_name: ${{ steps.datos.outputs.version_name }}
+      version_code: ${{ steps.datos.outputs.version_code }}
+      nativo: ${{ steps.datos.outputs.nativo }}
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
         with:
           distribution: temurin
           java-version: "17"
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
         with:
           gradle-version: "8.11.1"
 
@@ -55,14 +71,11 @@ jobs:
             else
               # keytool pide 6 caracteres como mínimo: la contraseña es el secreto con un prefijo fijo
               PASS="fantasy-manager:$CLAVE"
+              # android/firma.p12 existe desde el principio (no se toca): este trabajo no puede escribir en el repo,
+              # así que ya no la crea si faltara
               if [ ! -f android/firma.p12 ]; then
-                keytool -genkeypair -keystore android/firma.p12 -storetype PKCS12 -alias fantasy -keyalg RSA -keysize 3072 -validity 20000 -storepass "$PASS" -keypass "$PASS" -dname "CN=Fantasy Manager"
-                git config user.name "github-actions[bot]"
-                git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                git add android/firma.p12
-                git commit -q -m "App: clave de firma, cifrada con el secreto ANDROID_CLAVE"
-                git pull -q --rebase origin main && git push -q origin HEAD:main
-                echo "Clave de firma creada y guardada"
+                echo "::error::Falta android/firma.p12: sin ella no se firma el APK de la liga"
+                exit 1
               fi
               keytool -list -keystore android/firma.p12 -storetype PKCS12 -storepass "$PASS" | head -3
               echo "FIRMA=buena" >> "$GITHUB_ENV"
@@ -98,11 +111,15 @@ jobs:
             fi
           } 2>&1 | tee -a "$GITHUB_WORKSPACE/firma.log"
 
+      # el código de versión: run_number × 10 + run_attempt (relanzar da otro número; Play no deja repetirlo). Va
+      # también en app.json, que las apps comparan con el suyo
       - name: Versión
         run: |
           v=$(grep -oP "VERSION = '\K[0-9.]+[a-z]*" web/js/version.js | head -1)
+          c=$(( ${{ github.run_number }} * 10 + ${{ github.run_attempt }} ))
           echo "VERSION_NAME=${v:-0.0.0}" >> "$GITHUB_ENV"
-          echo "Versión ${v:-0.0.0}, compilación ${{ github.run_number }}"
+          echo "VERSION_CODE=$c" >> "$GITHUB_ENV"
+          echo "Versión ${v:-0.0.0}, código $c (ejecución ${{ github.run_number }}, intento ${{ github.run_attempt }})"
 
       # las huellas de la web y de la parte Android (web/paquete.json va dentro del APK; NATIVO, en BuildConfig):
       # con ellas la app se pone al día sin reinstalar cuando solo cambia la web
@@ -114,7 +131,6 @@ jobs:
         env:
           CLAVE: ${{ secrets.ANDROID_CLAVE }}
           SUBIDA_PASS: ${{ secrets.SUBIDA_CLAVE }}
-          VERSION_CODE: ${{ github.run_number }}
         run: |
           set -o pipefail
           if [ "$FIRMA" = "buena" ]; then export FIRMA_CLAVE="fantasy-manager:$CLAVE"; else export FIRMA_CLAVE="prueba123"; fi
@@ -143,51 +159,32 @@ jobs:
           A=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)
           python3 .github/r8.py "$A/dexdump" android/app/build/outputs/apk/github/release/app-github-release.apk android/app/build/outputs/apk/play/release/app-play-release.apk --aab android/app/build/outputs/bundle/playRelease/app-play-release.aab 2>&1 | tee "$GITHUB_WORKSPACE/r8.txt"
 
-      # desde pendiente, el APK de GitHub con un enlace directo para probarlo en el móvil sin iniciar sesión ni descomprimir
-      # los artefactos: va a la pre-release «prueba», aparte de la release «app». No llega a nadie: app.json y las
-      # actualizaciones siguen apuntando a «app»
-      - name: APK de prueba
-        if: env.FIRMA == 'buena' && github.ref == 'refs/heads/pendiente'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cp android/app/build/outputs/apk/github/release/app-github-release.apk fantasy-manager-prueba.apk
-          gh release view prueba >/dev/null 2>&1 || gh release create prueba --prerelease --target pendiente --title "Prueba" --notes "APK de prueba de la rama pendiente, sin publicar. No es la app de la liga (esa es la release «app»): no la instales si Carlos no te lo ha pedido."
-          gh release upload prueba fantasy-manager-prueba.apk --clobber
-          gh release edit prueba --prerelease --title "Prueba $VERSION_NAME (compilación ${{ github.run_number }}), sin publicar" || true
-
-      # solo desde main: en otras ramas se compila para probar, sin publicar
-      - name: Publicar la app
-        if: env.FIRMA == 'buena' && github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cp android/app/build/outputs/apk/github/release/app-github-release.apk fantasy-manager.apk
-          gh release view app >/dev/null 2>&1 || gh release create app --title "App de Android" --notes "Fantasy Manager para Android. Descarga fantasy-manager.apk e instálala."
-          gh release upload app fantasy-manager.apk --clobber
-          gh release edit app --title "App de Android $VERSION_NAME" || true
-          printf '{"version": %s, "nombre": "%s", "nativo": "%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "${{ github.run_number }}" "$VERSION_NAME" "$NATIVO" "${{ github.repository }}" > app.json
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # paquete.py deja web/index.html con las huellas de los módulos: eso no se sube (en el repo va sin ellas)
-          git checkout -- web/index.html
-          git add app.json
-          git commit -q -m "App: versión ${{ github.run_number }} publicada" || true
-          git pull -q --rebase origin main && git push -q origin HEAD:main
-
-      # lo compilado, para descargarlo desde la ejecución (también en pendiente, sin publicar): el APK de GitHub y
-      # el AAB para subir a Google Play
       - name: Aviso si el AAB no vale para Google Play
         if: success() && env.SUBIDA != 'buena'
         run: |
           echo "Este AAB va firmado con una clave de prueba (faltan los secretos SUBIDA_P12 y SUBIDA_CLAVE): no lo subas a Google Play." > android/app/build/outputs/bundle/playRelease/NO-SUBIR-A-GOOGLE-PLAY.txt
 
+      # lo que necesita «publicar», sin secretos: si la firma es la buena, la versión, el código y la huella nativa
+      - name: Datos para publicar
+        id: datos
+        if: success()
+        run: |
+          {
+            echo "firma=$FIRMA"
+            echo "version_name=$VERSION_NAME"
+            echo "version_code=$VERSION_CODE"
+            echo "nativo=$NATIVO"
+          } >> "$GITHUB_OUTPUT"
+
+      # lo compilado, para descargarlo desde la ejecución (también en pendiente, sin publicar) y para «publicar»: el APK
+      # de GitHub y el AAB para subir a Google Play
       - name: Guardar lo compilado
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: fantasy-manager-${{ env.VERSION_NAME }}-${{ github.run_number }}
+          name: fantasy-manager-${{ env.VERSION_NAME }}-${{ env.VERSION_CODE }}
           retention-days: 14
+          if-no-files-found: error
           path: |
             android/app/build/outputs/apk/github/release/app-github-release.apk
             android/app/build/outputs/apk/play/release/app-play-release.apk
@@ -196,21 +193,106 @@ jobs:
             android/app/build/outputs/mapping/githubRelease/mapping.txt
             android/app/build/outputs/mapping/playRelease/mapping.txt
 
-      # el registro de la compilación, en la rama android-registro, para poder revisarlo si falla
-      - name: Guardar el registro
+      # fuera de RUNNER_TEMP la clave de subida antes de que acabe el trabajo (y de los pasos «post» de las acciones)
+      - name: Borrar la clave de subida
+        if: always()
+        run: rm -f "$RUNNER_TEMP/subida.p12"
+
+      - name: Juntar el registro
         if: always()
         run: |
-          mkdir -p /tmp/registro && cd /tmp/registro
+          mkdir -p "$RUNNER_TEMP/registro" && cd "$RUNNER_TEMP/registro"
           cp "$GITHUB_WORKSPACE/compilacion.log" . 2>/dev/null || echo "sin registro" > compilacion.log
           cp "$GITHUB_WORKSPACE/firma.log" . 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/permisos.txt" . 2>/dev/null || true
           cp "$GITHUB_WORKSPACE/r8.txt" . 2>/dev/null || true
           tail -c 60000 compilacion.log > ultimo.log
-          echo "run ${{ github.run_number }} firma ${FIRMA:-?} $(date -u +%FT%TZ)" > estado.txt
+          echo "run ${{ github.run_number }}.${{ github.run_attempt }} código ${VERSION_CODE:-?} firma ${FIRMA:-?} $(date -u +%FT%TZ)" > estado.txt
           ls -la "$GITHUB_WORKSPACE/android/app/build/outputs/apk/github/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/apk/play/release/" "$GITHUB_WORKSPACE/android/app/build/outputs/bundle/playRelease/" >> estado.txt 2>&1 || true
           rm compilacion.log
+
+      - name: Guardar el registro
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: registro
+          retention-days: 7
+          path: ${{ runner.temp }}/registro
+
+  # sin secretos de firma: solo lo ya compilado y el permiso de escribir (releases y app.json)
+  publicar:
+    needs: compilar
+    if: needs.compilar.outputs.firma == 'buena' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/pendiente')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      VERSION_NAME: ${{ needs.compilar.outputs.version_name }}
+      VERSION_CODE: ${{ needs.compilar.outputs.version_code }}
+      NATIVO: ${{ needs.compilar.outputs.nativo }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: fantasy-manager-${{ needs.compilar.outputs.version_name }}-${{ needs.compilar.outputs.version_code }}
+          path: ${{ runner.temp }}/compilado
+
+      # desde pendiente, el APK de GitHub con un enlace directo para probarlo en el móvil sin iniciar sesión ni descomprimir
+      # los artefactos: va a la pre-release «prueba», aparte de la release «app». No llega a nadie: app.json y las
+      # actualizaciones siguen apuntando a «app»
+      - name: APK de prueba
+        if: github.ref == 'refs/heads/pendiente'
+        run: |
+          cp "$RUNNER_TEMP/compilado/apk/github/release/app-github-release.apk" fantasy-manager-prueba.apk
+          gh release view prueba >/dev/null 2>&1 || gh release create prueba --prerelease --target pendiente --title "Prueba" --notes "APK de prueba de la rama pendiente, sin publicar. No es la app de la liga (esa es la release «app»): no la instales si Carlos no te lo ha pedido."
+          gh release upload prueba fantasy-manager-prueba.apk --clobber
+          gh release edit prueba --prerelease --title "Prueba $VERSION_NAME (código $VERSION_CODE), sin publicar" || true
+
+      # solo desde main. El APK va dos veces: fantasy-manager.apk (el enlace de siempre, se pisa) y
+      # fantasy-manager-<versión>-<código>.apk (se queda: para volver atrás). De estos se guardan los 20 últimos
+      - name: Publicar la app
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -e
+          apk="$RUNNER_TEMP/compilado/apk/github/release/app-github-release.apk"
+          cp "$apk" fantasy-manager.apk
+          cp "$apk" "fantasy-manager-$VERSION_NAME-$VERSION_CODE.apk"
+          gh release view app >/dev/null 2>&1 || gh release create app --title "App de Android" --notes "Fantasy Manager para Android. Descarga fantasy-manager.apk e instálala."
+          gh release upload app "fantasy-manager-$VERSION_NAME-$VERSION_CODE.apk" --clobber
+          gh release upload app fantasy-manager.apk --clobber
+          gh release edit app --title "App de Android $VERSION_NAME" || true
+          gh release view app --json assets -q '.assets[].name' | grep -E '^fantasy-manager-.+-[0-9]+\.apk$' \
+            | sort -t- -k4 -n | head -n -20 | while read -r viejo; do gh release delete-asset app "$viejo" -y || true; done
+          # app.json: «version» es el código de versión (las apps lo comparan con el suyo)
+          printf '{"version": %s, "nombre": "%s", "nativo": "%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "$VERSION_CODE" "$VERSION_NAME" "$NATIVO" "${{ github.repository }}" > app.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.json
+          git commit -q -m "App: versión $VERSION_CODE publicada" || true
+          git pull -q --rebase origin main && git push -q origin HEAD:main
+
+  # el registro de la compilación, en la rama android-registro, para poder revisarlo si falla
+  registro:
+    needs: compilar
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        continue-on-error: true
+        with:
+          name: registro
+          path: ${{ runner.temp }}/registro
+      - name: Guardar el registro
+        run: |
+          mkdir -p "$RUNNER_TEMP/registro" && cd "$RUNNER_TEMP/registro"
+          [ -n "$(ls -A)" ] || echo "sin registro (la compilación no llegó a empezar)" > estado.txt
           git init -q && git checkout -q -b android-registro
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A && git commit -q -m "Registro ${{ github.run_number }}"
+          git add -A && git commit -q -m "Registro ${{ github.run_number }}.${{ github.run_attempt }}"
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" android-registro

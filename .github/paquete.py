@@ -2,7 +2,7 @@
 """Las huellas para que la app se ponga al día sin reinstalar (android/.../AlDia.java).
 
 Escribe web/paquete.json con la versión de la web, la huella de cada archivo de web/ (sha-256), la huella de
-todo junto y la huella de la parte Android (android/app/src). Lo usan las dos Actions sobre el mismo commit, así
+todo junto y la huella de la parte Android (android/app/src y lo que decide cómo se compila: NATIVA_COMPILACION). Lo usan las dos Actions sobre el mismo commit, así
 que salen idénticas: la de la app lo mete en el APK (lo que trae dentro) y la de la web lo publica en GitHub
 Pages (lo último). La app compara las dos y baja solo lo que ha cambiado, y solo si la parte Android es la misma.
 
@@ -18,6 +18,11 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WEB = os.path.join(RAIZ, 'web')
 NATIVA = os.path.join(RAIZ, 'android', 'app', 'src')
+# lo que cambia el APK sin estar en src (revisión total, M2): la compilación, R8 y gradle.properties, donde va
+# fm.anunciosReales. Si cambia cualquiera, cambia la huella nativa y hace falta el APK nuevo
+NATIVA_COMPILACION = ('android/build.gradle', 'android/settings.gradle', 'android/gradle.properties',
+                      'android/app/build.gradle', 'android/app/reglas-r8.pro')
+FIRMA = 'paquete.json.sig'
 SOLO_WEB = ('guias/', 'sitemap.xml', 'google')
 
 
@@ -74,16 +79,25 @@ def main():
     # las páginas públicas de contenido (guias/ y el sitemap, de .github/paginas.py) solo se sirven en la web: la app
     # no las usa, así que no van en paquete.json y AlDia no las baja al cambiar
     archivos = {rel: sha(os.path.join(WEB, rel)) for rel in arbol(WEB)
-                if rel != 'paquete.json' and not rel.startswith(SOLO_WEB)}
+                if rel not in ('paquete.json', FIRMA) and not rel.startswith(SOLO_WEB)}
     raras = [r for r in archivos if not re.fullmatch(r'[A-Za-z0-9._/-]+', r)]
     if raras:
         sys.exit(f'Archivos con nombres que la app no bajaría: {raras}')
-    nativo = junta((rel, sha(os.path.join(NATIVA, rel))) for rel in arbol(NATIVA))
+    pares = [(rel, sha(os.path.join(NATIVA, rel))) for rel in arbol(NATIVA)]
+    for rel in NATIVA_COMPILACION:
+        ruta = os.path.join(RAIZ, rel)
+        if not os.path.isfile(ruta):
+            sys.exit(f'Falta {rel} (va en la huella nativa)')
+        pares.append((':' + rel, sha(ruta)))
+    nativo = junta(pares)
     with open(os.path.join(WEB, 'js', 'version.js'), encoding='utf-8') as f:
         version = re.search(r"VERSION = '([^']+)'", f.read()).group(1)
     paquete = {'version': version, 'nativo': nativo, 'huella': junta(archivos.items()), 'archivos': archivos}
     if '--parar' in sys.argv:
         paquete['parar'] = True
+    # la firma de una pasada anterior ya no vale para este paquete.json: la pone .github/firmar-paquete.sh
+    if os.path.exists(os.path.join(WEB, FIRMA)):
+        os.remove(os.path.join(WEB, FIRMA))
     with open(os.path.join(WEB, 'paquete.json'), 'w', encoding='utf-8') as f:
         json.dump(paquete, f, separators=(',', ':'), sort_keys=True)
     print(f'NATIVO={nativo}')

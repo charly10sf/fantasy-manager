@@ -34,12 +34,25 @@ import java.util.Set;
  * de los del APK. Si la parte Android ha cambiado no se baja nada: hace falta el APK nuevo (el aviso de siempre).
  * Si la web bajada no llega a arrancar (dos aperturas seguidas, o 20 segundos sin dar señal), se descarta y se
  * vuelve a la del APK. Con «parar» en el paquete.json se vuelve a la del APK en todos los móviles.
+ *
+ * Firmado (revisión total, A5): paquete.json va firmado con Ed25519 en la Action «Web» (paquete.json.sig, al lado:
+ * la firma en base64 de los bytes exactos de paquete.json; la clave privada solo existe como secreto de Actions,
+ * PAQUETE_FIRMA). Aquí se comprueba con la pública, CLAVE_PAQUETE, antes de hacer nada con él (ni bajar archivos ni
+ * hacer caso de «parar»). Sin firma o con firma mala no se baja nada y se sigue con la web que hay (la del APK o la
+ * última buena); no cuenta como web mala, así que la siguiente búsqueda lo vuelve a intentar desde cero. Como las
+ * huellas de cada archivo salen de ese paquete.json firmado, todo lo bajado queda cubierto por la firma.
  */
 final class AlDia {
     /** la web publicada (Cloudflare Pages, en el dominio de la app; antes, GitHub Pages en charly10sf.github.io) */
     static final String ORIGEN = "https://fantasymanagerapp.com/";
     /** de dónde se baja (siempre ORIGEN; las pruebas lo cambian por un servidor local) */
     static String origen = ORIGEN;
+    /**
+     * La clave pública Ed25519 (32 bytes, base64) que firma paquete.json. La generó Carlos (8 nov); la privada está
+     * solo en el secreto de Actions PAQUETE_FIRMA. .github/firmar-paquete.sh lee esta línea para comprobar en cada
+     * publicación que la firma casa con ella: si se cambia la clave, cambiarla aquí (y sacar APK nuevo) a la vez.
+     */
+    static final String CLAVE_PAQUETE = "dRa4pAlCCX1c+V4ek6gfNHDty6UhoMsrVCKCl2QRiCc=";
     private static final long MAX_ARCHIVO = 8L << 20, MAX_TOTAL = 40L << 20;
     private static final Object CERROJO = new Object();
     private static volatile boolean buscando;
@@ -227,7 +240,11 @@ final class AlDia {
         try {
             JSONObject propio = propio(c);
             if (propio == null) return "igual";
-            JSONObject remoto = new JSONObject(bajarTexto(origen + "paquete.json?t=" + System.currentTimeMillis()));
+            long t = System.currentTimeMillis();
+            byte[] bytes = bajarBytes(origen + "paquete.json?t=" + t, 4L << 20);
+            // antes de leerlo siquiera: que lo haya firmado la Action (si no, fuera, y la web de ahora se queda)
+            comprobarFirma(bytes, bajarBytes(origen + "paquete.json.sig?t=" + t, 1024));
+            JSONObject remoto = new JSONObject(new String(bytes, StandardCharsets.UTF_8));
             if (remoto.optBoolean("parar")) {
                 if (activa(c) != null) descartar(c, null);
                 return "parada";
@@ -300,6 +317,19 @@ final class AlDia {
         } finally {
             ultimaBusqueda = System.currentTimeMillis();
             buscando = false;
+        }
+    }
+
+    /** la firma de paquete.json: base64 de 64 bytes, válida con CLAVE_PAQUETE; si no, IOException (no se baja nada) */
+    static void comprobarFirma(byte[] paquete, byte[] sig) throws IOException {
+        byte[] firma;
+        try {
+            firma = java.util.Base64.getDecoder().decode(new String(sig, StandardCharsets.US_ASCII).trim());
+        } catch (IllegalArgumentException e) {
+            throw new IOException("paquete con firma ilegible");
+        }
+        if (!Ed25519.verificar(java.util.Base64.getDecoder().decode(CLAVE_PAQUETE), paquete, firma)) {
+            throw new IOException("paquete con firma mala");
         }
     }
 
@@ -378,10 +408,19 @@ final class AlDia {
         return con;
     }
 
-    private static String bajarTexto(String url) throws IOException {
+    private static byte[] bajarBytes(String url, long max) throws IOException {
         HttpURLConnection con = abrir(url);
-        try {
-            return leer(con.getInputStream(), 4L << 20);
+        try (InputStream in = con.getInputStream()) {
+            ByteArrayOutputStream o = new ByteArrayOutputStream();
+            byte[] b = new byte[16384];
+            int r;
+            long n = 0;
+            while ((r = in.read(b)) > 0) {
+                n += r;
+                if (n > max) throw new IOException("demasiado grande");
+                o.write(b, 0, r);
+            }
+            return o.toByteArray();
         } finally {
             con.disconnect();
         }

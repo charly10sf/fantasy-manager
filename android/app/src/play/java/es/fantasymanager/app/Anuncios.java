@@ -26,12 +26,15 @@ import org.json.JSONObject;
  * Los anuncios de la versión de Google Play (AdMob):
  * - El consentimiento de la UE (UMP) cada vez que se abre la app (si falla sin red, otra vez al volver a ella); sin él
  *   no se pide ningún anuncio. Se cambia desde Ajustes («Privacidad de los anuncios»).
- * - Un banner adaptativo debajo de la web, bajo la barra de pestañas y con aire entre medias. Su hueco se reserva en
- *   cuanto AdMob arranca, para que las pestañas no salten cuando llega o se va: la web dice si se ve (en todas las
- *   pestañas menos Pregunta, nunca en la carga, la entrada ni la pantalla del límite de minutos); si no, el hueco se
- *   queda vacío. Con el teclado abierto no hay hueco.
+ * - Un banner adaptativo debajo de la web, bajo la barra de pestañas y con aire entre medias. Anuncios solo con la
+ *   sesión de la liga iniciada (Carlos, 8 nov; revisión total, A1): hasta la primera vez que la web dice banner(true)
+ *   (que solo lo dice con tu liga cargada y una pestaña con contenido: nunca en la entrada, la carga, la demo, Pregunta
+ *   ni la pantalla del límite) no se crea el AdView, no se pide ningún banner y no se precarga el bonificado. Después,
+ *   mientras la web lo quiere, el hueco se reserva con la altura del banner (para que las pestañas no salten cuando
+ *   llega); cuando no lo quiere, el hueco va en GONE y el banner en pausa. Con el teclado abierto no hay hueco.
  * - Un bonificado para lo que la web quiera desbloquear («plan»: pedir otro plan a la IA). La web recibe
- *   anuncioVisto(para, visto, motivo) al acabar, pase lo que pase.
+ *   anuncioVisto(para, visto, motivo) al acabar, pase lo que pase. Si lo pide antes del primer banner(true), se carga
+ *   en ese momento (lo ha pedido el usuario con un botón), sin dejar otro precargado.
  * La versión de GitHub (src/github) no lleva nada de esto.
  */
 final class Anuncios {
@@ -47,6 +50,8 @@ final class Anuncios {
     private static AdView banner;
     private static int anchoBanner;
     private static boolean quiere, teclado, cargado, reintentar;
+    /** la web de esta pantalla ya ha pedido el banner alguna vez: hasta entonces no se crea ni se carga nada */
+    private static boolean activado;
     private static int fallos;
     private static RewardedAd bonificado;
     private static long bonificadoT;
@@ -63,14 +68,14 @@ final class Anuncios {
         if (act != null && act != a) soltar();
         act = a;
         hueco = h;
+        // pantalla nueva, web nueva: hasta que diga banner(true), nada (aunque AdMob ya estuviera arrancado)
+        quiere = false;
+        activado = false;
+        h.setVisibility(View.GONE);
         h.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
             // girar el móvil o abrir un plegable cambia el ancho: el banner se hace otra vez a su medida
             if (banner != null && Math.abs((r - l) - anchoBanner) > 2 && r - l > 0) v.post(Anuncios::rehacerBanner);
         });
-        if (listo) {
-            cargarBanner();
-            cargarBonificado();
-        }
         pedirConsentimiento();
     }
 
@@ -107,8 +112,11 @@ final class Anuncios {
             try {
                 MobileAds.initialize(a.getApplicationContext(), estado -> a.runOnUiThread(() -> {
                     listo = true;
-                    cargarBanner();
-                    cargarBonificado();
+                    // si la web ya lo había pedido mientras AdMob arrancaba; si no, se espera a su banner(true)
+                    if (activado) {
+                        cargarBanner();
+                        cargarBonificado();
+                    }
                 }));
             } catch (Throwable t) {
                 iniciado = false;
@@ -130,7 +138,7 @@ final class Anuncios {
     }
 
     private static void cargarBanner() {
-        if (act == null || hueco == null || !listo || BuildConfig.BANNER.isEmpty()) return;
+        if (act == null || hueco == null || !listo || !activado || BuildConfig.BANNER.isEmpty()) return;
         if (banner == null) {
             final AdView b = new AdView(act);
             AdSize s = tamano();
@@ -156,7 +164,7 @@ final class Anuncios {
                     if (hueco != null) hueco.postDelayed(Anuncios::probarOtraVez, espera);
                 }
             });
-            // el hueco se reserva ya, con la altura del banner: así las pestañas no se mueven cuando llega
+            // mientras la web lo quiera, el hueco va con la altura del banner: así las pestañas no se mueven cuando llega
             hueco.addView(b, new FrameLayout.LayoutParams(s.getWidthInPixels(act), s.getHeightInPixels(act), Gravity.CENTER_HORIZONTAL));
             banner = b;
             colocar();
@@ -181,7 +189,9 @@ final class Anuncios {
 
     private static void colocar() {
         if (hueco == null) return;
-        int v = banner == null || teclado ? View.GONE : quiere && cargado ? View.VISIBLE : View.INVISIBLE;
+        // sin banner, con el teclado o si la web no lo quiere: GONE (nada oculto ocupando sitio); si lo quiere y aún
+        // no ha llegado, el hueco reservado (INVISIBLE) para que no salten las pestañas
+        int v = banner == null || teclado || !quiere ? View.GONE : cargado ? View.VISIBLE : View.INVISIBLE;
         if (hueco.getVisibility() != v) hueco.setVisibility(v);
         if (banner != null) {
             if (v == View.VISIBLE) banner.resume();
@@ -195,9 +205,19 @@ final class Anuncios {
 
     /** la web dice si en la pantalla de ahora va el banner */
     static void banner(boolean si) {
-        quiere = si;
         Principal a = act;
-        if (a != null) a.runOnUiThread(Anuncios::colocar);
+        if (a == null) return;
+        a.runOnUiThread(() -> {
+            if (a != act) return;
+            quiere = si;
+            if (si && !activado) {
+                // la primera vez: ahora sí, el AdView, el primer banner y el bonificado precargado
+                activado = true;
+                cargarBanner();
+                cargarBonificado();
+            }
+            colocar();
+        });
     }
 
     /** con el teclado abierto, sin banner ni hueco (lo llama la pantalla, en su hilo) */
@@ -233,6 +253,8 @@ final class Anuncios {
         banner = null;
         cargado = false;
         reintentar = false;
+        quiere = false;
+        activado = false;
         pendiente = null;
         bonificado = null;
         ensenando = false;
@@ -241,7 +263,8 @@ final class Anuncios {
     /* ---------------- el bonificado ---------------- */
 
     private static void cargarBonificado() {
-        if (act == null || !listo || cargandoBonificado || BuildConfig.BONIFICADO.isEmpty()) return;
+        // precargado solo después del primer banner(true); antes, solo si lo acaba de pedir el usuario (ver)
+        if (act == null || !listo || cargandoBonificado || BuildConfig.BONIFICADO.isEmpty() || (!activado && pendiente == null)) return;
         if (bonificado != null && System.currentTimeMillis() - bonificadoT < CADUCA) return;
         bonificado = null;
         cargandoBonificado = true;

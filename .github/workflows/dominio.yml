@@ -37,11 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: main
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
 
@@ -63,9 +63,12 @@ jobs:
         if: steps.cf.outputs.ok == 'si'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAQUETE_FIRMA: ${{ secrets.PAQUETE_FIRMA }}
         run: |
           set -e
           python3 .github/paquete.py > /dev/null
+          # la firma de paquete.json (revisión total, A5), la misma que en «Web»: sin el secreto, no se publica
+          bash .github/firmar-paquete.sh web/paquete.json
           mkdir -p sitio/descargas
           cp -r web/. sitio/
           # el APK de GitHub (el de la liga), para bajarlo desde la web
@@ -91,6 +94,8 @@ jobs:
           /app.json
             Cache-Control: no-cache
           /paquete.json
+            Cache-Control: no-cache
+          /paquete.json.sig
             Cache-Control: no-cache
           /limites.json
             Cache-Control: no-cache
@@ -123,7 +128,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -o pipefail
-          if ! npx --yes wrangler@4 pages deploy sitio --project-name "$PROYECTO" --branch main --commit-dirty=true 2>&1 | tee salida.txt; then
+          if ! npx --yes wrangler@4.158.0 pages deploy sitio --project-name "$PROYECTO" --branch main --commit-dirty=true 2>&1 | tee salida.txt; then
             echo "::error::No se ha podido publicar: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
             exit 1
           fi
@@ -151,6 +156,6 @@ jobs:
             echo "::warning::El dominio está «$estado»: falta activarlo en Cloudflare > Workers & Pages > $PROYECTO > Custom domains"
           fi
           # lo que de verdad responde
-          for p in "" app.json paquete.json ads.txt app-ads.txt descargas/fantasy-manager.apk; do
+          for p in "" app.json paquete.json paquete.json.sig ads.txt app-ads.txt descargas/fantasy-manager.apk; do
             echo "::notice::https://$DOMINIO/$p → $(curl -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}' "https://$DOMINIO/$p" || echo fallo)"
           done
