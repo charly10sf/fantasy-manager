@@ -3105,7 +3105,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
    "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html": 1793891979000,
@@ -3202,24 +3201,6 @@
    "SPORT|136221598": 1794138326000
   },
   "hechos": [
-   {
-    "guid": "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html",
-    "medio": "Superdeporte",
-    "t": 1793886839000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": true,
-    "contexto": "",
-    "detalle": "La AFE ha solicitado la suspensión de la jornada",
-    "nums": [
-     5
-    ]
-   },
    {
     "guid": "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html",
     "medio": "ABC",
@@ -7280,13 +7261,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 388,
+   "ok": 390,
    "fallos": 0,
-   "ejecuciones": 188,
+   "ejecuciones": 189,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 470,
-   "ultima": "2026-11-08T13:51:15.432Z"
+   "mediaMs": 469,
+   "ultima": "2026-11-08T13:56:13.001Z"
   }
  },
  "ptsDirecto": {}
