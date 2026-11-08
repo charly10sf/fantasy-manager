@@ -11,6 +11,7 @@
    B  proteger a un jugador tuyo con la cláusula abierta o a punto: con el blindaje gratis de LaLiga (24 h, 2 por
       jornada) o subiéndole la cláusula */
 import { eur, pct, cuando, POS, DIA, HORA, num } from './util.js';
+import { bloqueada } from './limite.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const nombreDe = (M, tid) => { const e = tid && M.equipo[tid]; return (e && (e.manager || e.nombre)) || 'un rival'; };
@@ -113,10 +114,12 @@ export function textoOp(o, M = null) {
     case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})`;
     case 'B': {
       const p = o.pagan, b = o.blindaje;
-      const quien = p && (p.seguro.length || p.quiza.length || p.hayDatos) ? `; le llega a ${p.seguro.length ? p.seguro.map((x) => x.nombre).join(', ') : 'nadie seguro'}${p.quiza.length ? ` (quizá a ${p.quiza.map((x) => x.nombre).join(', ')})` : ''}${p.sinSaber.length ? ` (de ${p.sinSaber.length} no se sabe el dinero)` : ''}` : '';
-      const justo = b ? (b.yaVale ? '; ya está por encima de lo que se suele pagar en esta liga por una cláusula: no hace falta subirla' : b.caro ? `; dejarla fuera del alcance de todos costaría ${eur(b.coste)}: no compensa${b.parcial ? `; subirla a ${eur(b.parcial.objetivo)} (${eur(b.parcial.coste)}) deja fuera a todos menos a ${b.parcial.quedan.join(', ')}` : ''}` : `; subida justa: subirla a ${eur(b.objetivo)} cuesta ${eur(b.coste)} y ${b.porTecho ? 'quedaría por encima de lo que se suele pagar aquí por una cláusula' : 'no le llegaría a nadie'}`) : '';
+      // (revisión total, M4) con «quién puede pagar tu cláusula» cerrada, sin nombres: solo si a alguien le sobra o le llega justo
+      const quien = p && bloqueada('quienPaga') ? (p.seguro.length ? '; a algún rival le sobra el dinero para pagarla' : p.quiza.length ? '; a algún rival le llega justo' : p.hayDatos ? '; no le llega a ningún rival' : '')
+        : p && (p.seguro.length || p.quiza.length || p.hayDatos) ? `; le llega a ${p.seguro.length ? p.seguro.map((x) => x.nombre).join(', ') : 'nadie seguro'}${p.quiza.length ? ` (quizá a ${p.quiza.map((x) => x.nombre).join(', ')})` : ''}${p.sinSaber.length ? ` (de ${p.sinSaber.length} no se sabe el dinero)` : ''}` : '';
+      const justo = b ? (b.yaVale ? '; ya está por encima de lo que se suele pagar en esta liga por una cláusula: no hace falta subirla' : b.caro ? `; dejarla fuera del alcance de todos costaría ${eur(b.coste)}: no compensa${b.parcial ? `; subirla a ${eur(b.parcial.objetivo)} (${eur(b.parcial.coste)}) deja fuera a ${bloqueada('quienPaga') ? 'casi todos' : `todos menos a ${b.parcial.quedan.join(', ')}`}` : ''}` : `; subida justa: subirla a ${eur(b.objetivo)} cuesta ${eur(b.coste)} y ${b.porTecho ? 'quedaría por encima de lo que se suele pagar aquí por una cláusula' : 'no le llegaría a nadie'}`) : '';
       const gratis = o.escudo ? '; YA BLINDADO con el escudo' : o.escudoGratis ? `; se puede BLINDAR GRATIS con el escudo de LaLiga (anuncio, ${(M && M.ESCUDO_H) || 24} h)${o.sugerido ? ': CONVIENE HOY' : ''}` : '';
-      return `PROTEGER ${j.nombre}: su cláusula (${eur(o.clausula)}) ${o.abierta ? 'está ABIERTA' : `se abre ${cuando(o.abre)}`}, riesgo ${o.riesgo || '?'}${quien}${gratis}${justo.replace('subida justa: subirla', 'o pagando: subirla')}`;
+      return `PROTEGER ${j.nombre}: su cláusula (${eur(o.clausula)}) ${o.abierta ? 'está ABIERTA' : `se abre ${cuando(o.abre)}`}, riesgo de cláusula ${o.riesgo || '?'}${quien}${gratis}${justo.replace('subida justa: subirla', 'o pagando: subirla')}`;
     }
     default: return '';
   }
@@ -178,7 +181,7 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
   L.push('OPERACIONES POSIBLES HOY (las ÚNICAS que puedes recomendar; cada operación del plan lleva su "ref"):');
   g('ACEPTAR OFERTAS (lo que ya tengo en venta):', t('A'), 20);
   // (cada candidato va con su ficha entera: con más, la IA tarda mucho más y no decide mejor)
-  g('PUJAR (jugadores LIBRES de la liga, subasta a ciegas):', t('P').sort(por), chat ? 10 : corto ? 12 : 14);
+  g('PUJAR (jugadores LIBRES de la liga, subasta a ciegas):', t('P').sort(por), chat ? 10 : corto ? 7 : 14);
   // en el plan, solo los tratos: lo que un rival tiene a la venta casi siempre está solo para ver la oferta de LaLiga
   // (aviso de Domy, 29 oct); en el chat, si se pregunta por ellos, sí van
   if (chat) g('COMPRAR A OTRO MANAGER (solo lo que TIENE A LA VENTA o un TRATO que te conté; decide él):', [...t('T'), ...t('M').sort(por)], 8);
@@ -190,7 +193,7 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
     // con ficha, las que me llegan (o me llegan aceptando las ofertas de hoy); las demás, como mucho 4 y en una línea:
     // eran casi todo el bloque y no se pueden hacer hoy
     const cs = t('C').sort(por), llegan = cs.filter((o) => o.meLlega || o.conA), no = cs.filter((o) => !o.meLlega && !o.conA);
-    g('CLAUSULAR (cláusulas de rivales abiertas o que se abren antes de la jornada, que me llegan con mi saldo o aceptando antes las ofertas que tengo):', llegan, chat ? 10 : corto ? 12 : 14);
+    g('CLAUSULAR (cláusulas de rivales abiertas o que se abren antes de la jornada, que me llegan con mi saldo o aceptando antes las ofertas que tengo):', llegan, chat ? 10 : corto ? 7 : 14);
     if (no.length) L.push(`\nCLÁUSULAS QUE NO ME LLEGAN HOY (ni aceptando las ofertas que tengo; solo para saber que existen): ${no.slice(0, 4).map((o) => `[${o.ref}] ${o.j.nombre} (de ${o.de}) ${eur(o.precio)}, faltan ${eur(o.falta)}`).join('; ')}${no.length > 4 ? ` y ${no.length - 4} más` : ''}.`);
   }
   g('PROTEGER (mis cláusulas abiertas o a punto: blindar gratis con el escudo o subir la cláusula pagando):', t('B'), 12);
