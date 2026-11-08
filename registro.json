@@ -743,6 +743,20 @@
    "jornada": 12,
    "id": "2119519722450674003",
    "t": "2026-11-08T19:57:35.587Z"
+  },
+  {
+   "clave": "final|119",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119520705578475924",
+   "t": "2026-11-08T20:01:30.079Z"
+  },
+  {
+   "clave": "mvp|111",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119520849409540295",
+   "t": "2026-11-08T20:02:04.346Z"
   }
  ],
  "estados": {
@@ -1822,7 +1836,11 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
    "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000,
    "SPORT|136230726": 1794161916000,
-   "SPORT|136230583": 1794163027000
+   "SPORT|136230583": 1794163027000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248767/aficion-barca-entra-metropolitano-grito-julian-cule.html": 1794167743000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248772/konate-espanta-fantasmas-indispensable-mourinho.html": 1794167087000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html": 1794166775000,
+   "SPORT|136231258": 1794164058000
   },
   "hechos": [
    {
@@ -2434,11 +2452,26 @@
     "motivo": "baja",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794166775000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri es baja obligada por lesión para el partido",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": [
+     3,
+     0
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -3277,8 +3310,8 @@
  },
  "pulido": {
   "dia": "2026-11-08",
-  "n": 1,
-  "ok": 1,
+  "n": 3,
+  "ok": 3,
   "mal": 0
  },
  "liga": {
@@ -3519,16 +3552,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 76,
+   "redactar": 77,
    "revisar": 41,
-   "pulir": 0
+   "pulir": 1
   },
   "fallos": 0,
-  "entrada": 836527,
-  "salida": 35775,
+  "entrada": 850002,
+  "salida": 36093,
   "cacheLee": 252960,
   "cacheEscribe": 50448,
-  "dolares": 1.966346,
+  "dolares": 1.996476,
   "reservado": 0
  },
  "recientes": {
@@ -3556,10 +3589,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-07T20:01:42.147Z",
-    "texto": "🏁 Punto para el Osasuna 🐂 en El Sadar: el Athletic 🦁 ganaba con gol de Nico Williams en el 84' y Catena empató en el 90'. Final 1-1.\n\nCatena y Nico Williams cierran con 11 puntos cada uno. Para Catena es más del doble de su media; Nico Williams, con 6,4 de media, también se sale.\n\nVivian, del Athletic, suma 9, y Rubén García, del Osasuna, 8. Noche buena para quien tuviera a cualquiera de los cuatro."
-   },
-   {
     "t": "2026-11-07T22:22:07.173Z",
     "texto": "🏁 Valencia 0-3 Real Madrid. Goleada del Madrid. 19 puntos fantasy para Arda Güler. Va lanzado: 8, 15 y 19 en las 3 últimas jornadas. Le siguen Valverde, con 13, y Mbappé, con 12.\n\nNoche para olvidar de Gayá: -3 puntos, con 3 goles en contra. Dimitrievski suma 7 aunque el Valencia pierde. Cumple el favorito: el Real Madrid, 3º, gana al Valencia, 19º.\n\n✅ Partido redondo para quien tenga a Arda Güler"
    },
@@ -3574,13 +3603,13 @@
    {
     "t": "2026-11-08T19:57:04.351Z",
     "texto": "🏁 El Villarreal 🚢 se lleva el partido con dos goles en la recta final: Buchanan abrió en el 80' y C. Romero cerró en el 90+1'. 2-0 ante el Getafe en La Cerámica.\n\nRomero es el que más puntos ha sacado de los dos equipos: 16, más del triple de su media. Costa, con 13, también triplica la suya. Buchanan llega a esos mismos 13 con el gol del 1-0.\n\nDel Getafe se salva David Soria, 7 puntos pese a perder, en su media."
+   },
+   {
+    "t": "2026-11-08T20:01:30.080Z",
+    "texto": "🏁 Celta 0-0 Levante. Sin goles y un punto para cada uno. Ryan se va a 14 puntos fantasy, más del doble de su media de 6,8. Detrás, Carreira y Cáceres, con 10 cada uno.\n\n✅ Noche redonda para quien tenga a Ryan"
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-07T20:26:44.876Z",
-    "texto": "⭐ MVP fantasy del Osasuna 1-1 Athletic. Catena se va a 11 puntos. Empata con él Nico Williams. El defensa del Osasuna lleva 54 puntos en la temporada y 4,5 de media.\n\n💸 En el mercado está a 20,2 M. Su próximo partido, en la jornada 13 ante el Málaga"
-   },
    {
     "t": "2026-11-07T22:22:41.119Z",
     "texto": "⭐ Arda Güler brilla como el MVP fantasy del Valencia 0-3 Real Madrid con 19 puntos y ya alcanza 125 puntos en el curso, a una media de 10,4 por encuentro.\n\nEl siguiente, en la jornada 13 contra el Celta. Ahora mismo vale 129,3 M."
@@ -3596,6 +3625,10 @@
    {
     "t": "2026-11-08T19:57:35.588Z",
     "texto": "⭐ Ryan es el mejor del Celta-Levante 🐸, que acabó 0-0: 14 puntos para el portero, más del doble de su media de 6,8.\n\nCuesta 18,4 M y en la jornada 13 el Levante recibe al Elche 🌴. Si lo tienes, no se toca."
+   },
+   {
+    "t": "2026-11-08T20:02:04.347Z",
+    "texto": "⭐ C. Romero firma el MVP en el Submarino Amarillo 2-0 Getafe y se va a 16 puntos, alcanzando los 31 puntos en la temporada.\n\n💸 Vale 6,5 M en el mercado y vuelve a jugar en la jornada 13, contra el Barcelona"
    }
   ],
   "mercado": [
@@ -3746,18 +3779,7 @@
    "dolares": 2.017914
   }
  ],
- "fallosRedaccion": {
-  "mvp|111": {
-   "n": 2,
-   "t": "2026-11-08T19:51:53.961Z",
-   "ultima": "2026-11-08T19:57:33.421Z"
-  },
-  "final|119": {
-   "n": 1,
-   "t": "2026-11-08T19:56:54.445Z",
-   "ultima": "2026-11-08T19:56:54.445Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7343,13 +7365,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 546,
+   "ok": 547,
    "fallos": 0,
-   "ejecuciones": 262,
+   "ejecuciones": 263,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 422,
-   "ultima": "2026-11-08T19:56:14.280Z"
+   "ultima": "2026-11-08T20:01:11.566Z"
   }
  },
  "ptsDirecto": {
@@ -7419,7 +7441,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 18,
+   "n": 19,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7427,27 +7449,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:57:37.587Z"
+   "ultimaBien": "2026-11-08T20:02:14.811Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:57:37.587Z"
+   "ultimaBien": "2026-11-08T20:02:14.811Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:57:37.587Z"
+   "ultimaBien": "2026-11-08T20:02:14.811Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:57:37.587Z"
+   "ultimaBien": "2026-11-08T20:02:14.811Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:57:37.587Z"
+   "ultimaBien": "2026-11-08T20:02:14.811Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:57:37.587Z"
+   "ultimaBien": "2026-11-08T20:02:14.811Z"
   }
  },
  "avisos": [
