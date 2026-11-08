@@ -1560,7 +1560,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136135887": 1793899739000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
    "SPORT|136137325": 1793901641000,
    "SPORT|136138125": 1793904953000,
@@ -1743,7 +1742,11 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248660/mourinho-no-supera-flick.html": 1794149597000,
    "SPORT|136225173": 1794147961000,
    "SPORT|136226921": 1794151993000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000,
+   "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
+   "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-y-peligra-su-presencia-con-la-seleccion-f202611-n/": 1794157697000,
+   "AS|https://as.com/futbol/primera/anoeta-vuelve-a-sonreir-tras-el-zarpazo-de-oskarsson-f202611-n/": 1794158806000,
+   "AS|https://as.com/futbol/primera/aprobados-y-suspensos-de-la-real-sociedad-oskarsson-sigue-poliki-poliki-f202611-n/": 1794157979000
   },
   "hechos": [
    {
@@ -2304,11 +2307,38 @@
     "nums": [
      14
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/",
+    "medio": "AS",
+    "t": 1794158589000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea se marcha lesionado y podría perderse la Selección",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     1,
+     0
+    ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-y-peligra-su-presencia-con-la-seleccion-f202611-n/",
+    "medio": "AS",
+    "t": 1794157697000,
+    "id": "701",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Barrenetxea sale del campo por molestias musculares",
+    "motivo": "molestias musculares",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -3407,17 +3437,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 37,
    "revisar": 21,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 455070,
-  "salida": 21556,
+  "entrada": 457324,
+  "salida": 23158,
   "cacheLee": 92340,
   "cacheEscribe": 26283,
-  "dolares": 1.012933
+  "dolares": 1.013959
  },
  "recientes": {
   "onces": [
@@ -7144,13 +7174,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 469,
+   "ok": 470,
    "fallos": 0,
-   "ejecuciones": 232,
+   "ejecuciones": 233,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 443,
-   "ultima": "2026-11-08T17:26:14.067Z"
+   "ultima": "2026-11-08T17:31:16.484Z"
   }
  },
  "ptsDirecto": {
