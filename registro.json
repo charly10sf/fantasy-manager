@@ -685,6 +685,13 @@
    "jornada": 12,
    "id": "2119487997821292555",
    "t": "2026-11-08T17:51:31.936Z"
+  },
+  {
+   "clave": "directo|119|Pablo Durán|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119490460422983789",
+   "t": "2026-11-08T18:01:19.023Z"
   }
  ],
  "estados": {
@@ -1575,7 +1582,6 @@
  "noticias": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
-   "SPORT|136137325": 1793901641000,
    "SPORT|136138125": 1793904953000,
    "SPORT|136139762": 1793910076000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
@@ -1761,7 +1767,8 @@
    "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-y-peligra-su-presencia-con-la-seleccion-f202611-n/": 1794157697000,
    "AS|https://as.com/futbol/primera/anoeta-vuelve-a-sonreir-tras-el-zarpazo-de-oskarsson-f202611-n/": 1794158806000,
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-de-la-real-sociedad-oskarsson-sigue-poliki-poliki-f202611-n/": 1794157979000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html": 1794160570000
   },
   "hechos": [
    {
@@ -2349,11 +2356,23 @@
     "motivo": "molestias musculares",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794160570000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea sufre una lesion muscular tras acumular minutos",
+    "motivo": "sobrecarga por acumulacion de minutos",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -3200,7 +3219,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/copa-del-rey/20261105/1004247677/rfef-actualiza-calendario-partidos-aplazados-copa.html": 1793902180000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-da-conocer-nuevas-fechas-horarios-partidos-aplazados-copa-rey-20261105_3469833.html": 1793904403000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/05/ya-es-oficial-aplazado-el-cd-tenerife-femenino-deportivo-alaves-radio-club-tenerife/": 1793904183000,
-   "SPORT|136136691": 1793901372000,
    "SPORT|136138671": 1793905242000,
    "SPORT|136138825": 1793905634000,
    "SPORT|136145827": 1793937662000,
@@ -3447,23 +3465,23 @@
    "fallos": 0
   },
   "espera": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794160571410
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160872516
   }
  },
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 52,
+   "redactar": 53,
    "revisar": 28,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 658768,
-  "salida": 28030,
+  "entrada": 669476,
+  "salida": 28145,
   "cacheLee": 107970,
   "cacheEscribe": 28888,
-  "dolares": 1.464974
+  "dolares": 1.48754
  },
  "recientes": {
   "onces": [
@@ -3572,10 +3590,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T21:41:23.301Z",
-    "texto": "⚽ Mbappé la mete en el 75' y el Madrid ⚪ pone el 0-3 en Mestalla. Ya suma 5 puntos.\n\nEl pase es de Arda Güler, que se lleva 9. Si tienes a los dos, buena tarde para el mánager."
-   },
-   {
     "t": "2026-11-07T21:46:17.076Z",
     "texto": "🟥 Roja para Gayá en el 79'. Valencia 0-3 Real Madrid. El Valencia se queda con diez y encima va perdiendo. Se queda en -5 puntos fantasy."
    },
@@ -3590,6 +3604,10 @@
    {
     "t": "2026-11-08T16:46:19.187Z",
     "texto": "⚽ Oskarsson la mete en el 67' y la Real Sociedad se adelanta en Anoeta: 1-0 al Rayo ⚡.\n\nEl islandés ya suma 8 puntos, más del doble de su media. El pase es de Barrenetxea, que se lleva 5. Es el cuarto gol de Oskarsson entre Liga, Champions y Copa."
+   },
+   {
+    "t": "2026-11-08T18:01:19.025Z",
+    "texto": "⚽ Pablo Durán abre el marcador en Balaídos en el 26': el Celta se adelanta 1-0 al Levante 🐸.\n\nYa suma 5 puntos, casi el doble de su media de 2,8. Es su tercer gol esta temporada entre Liga, Champions y Copa."
    }
   ],
   "novedades": [
@@ -7186,17 +7204,23 @@
    "w": "2026-11-08T16:43:34Z",
    "f": "2026-11-08T16:46:12.776Z",
    "rf": "69:32"
+  },
+  "directo|119|Pablo Durán|gol1": {
+   "j": "Pablo Durán",
+   "m": "26'",
+   "e": "2026-11-08T18:01:12.516Z",
+   "re": "27'"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 485,
+   "ok": 488,
    "fallos": 0,
-   "ejecuciones": 238,
+   "ejecuciones": 239,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 439,
-   "ultima": "2026-11-08T17:56:11.410Z"
+   "mediaMs": 437,
+   "ultima": "2026-11-08T18:01:12.516Z"
   }
  },
  "ptsDirecto": {
@@ -7229,6 +7253,12 @@
    "g": 0,
    "a": 1,
    "t": 1794156372776
+  },
+  "12|119|2397": {
+   "p": 5,
+   "g": 1,
+   "a": 0,
+   "t": 1794160872516
   }
  }
 }
