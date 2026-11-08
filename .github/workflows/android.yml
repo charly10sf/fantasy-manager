@@ -126,6 +126,16 @@ jobs:
       - name: Huellas
         run: python3 .github/paquete.py >> "$GITHUB_ENV"
 
+      # en main, antes de compilar lo que se va a publicar: que paquete.json se pueda firmar con PAQUETE_FIRMA y que la
+      # clave case con CLAVE_PAQUETE de AlDia.java. Si no, este APK no podría bajar ninguna web: no se publica
+      - name: Firma del paquete (solo main)
+        if: github.ref == 'refs/heads/main'
+        env:
+          PAQUETE_FIRMA: ${{ secrets.PAQUETE_FIRMA }}
+        run: |
+          cp web/paquete.json "$RUNNER_TEMP/paquete.json"
+          bash .github/firmar-paquete.sh "$RUNNER_TEMP/paquete.json"
+
       - name: Compilar
         working-directory: android
         env:
