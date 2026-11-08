@@ -1685,7 +1685,8 @@
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/08/ultima-hora-choque-trenes-toledo-135852320.html": 1794122100000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000,
+   "SPORT|136214539": 1794134669000
   },
   "hechos": [
    {
@@ -2326,7 +2327,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3745,17 +3746,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 108598,
-  "salida": 9372,
+  "entrada": 110374,
+  "salida": 9760,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.215259
+  "dolares": 0.215631
  },
  "recientes": {
   "onces": [
@@ -7418,13 +7419,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 352,
+   "ok": 353,
    "fallos": 0,
-   "ejecuciones": 163,
+   "ejecuciones": 164,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 476,
-   "ultima": "2026-11-08T11:46:18.084Z"
+   "ultima": "2026-11-08T11:51:13.135Z"
   }
  },
  "ptsDirecto": {}
