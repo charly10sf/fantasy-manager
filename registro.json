@@ -1497,7 +1497,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-malaga-realiza-la-penultima-sesion-antes-de-recibir-este-sabado-al-racing-ser-malaga/": 1793886617000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-real-madrid-no-salir-relajado-partido-hemos-visto-recuperado-gen-competitivo-siempre-tenido-ultimamente-habia-perdido-20261105_3468903.html": 1793887133000,
    "AS|https://as.com/futbol/primera/aznou-y-lucas-breton-primeras-bajas-del-paron-f202611-n/": 1793887252000,
    "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000,
@@ -7281,13 +7280,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 386,
+   "ok": 388,
    "fallos": 0,
-   "ejecuciones": 187,
+   "ejecuciones": 188,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 471,
-   "ultima": "2026-11-08T13:46:16.523Z"
+   "mediaMs": 470,
+   "ultima": "2026-11-08T13:51:15.432Z"
   }
  },
  "ptsDirecto": {}
