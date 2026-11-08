@@ -7211,13 +7211,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 509,
+   "ok": 512,
    "fallos": 0,
-   "ejecuciones": 246,
+   "ejecuciones": 247,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 429,
-   "ultima": "2026-11-08T18:36:11.594Z"
+   "mediaMs": 428,
+   "ultima": "2026-11-08T18:41:12.011Z"
   }
  },
  "ptsDirecto": {
@@ -7263,7 +7263,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 2,
+   "n": 3,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7271,27 +7271,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:36:18.827Z"
+   "ultimaBien": "2026-11-08T18:41:19.262Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:36:18.827Z"
+   "ultimaBien": "2026-11-08T18:41:19.262Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:36:18.827Z"
+   "ultimaBien": "2026-11-08T18:41:19.262Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:36:18.827Z"
+   "ultimaBien": "2026-11-08T18:41:19.262Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:36:18.827Z"
+   "ultimaBien": "2026-11-08T18:41:19.262Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:36:18.827Z"
+   "ultimaBien": "2026-11-08T18:41:19.262Z"
   }
  },
  "avisos": [
