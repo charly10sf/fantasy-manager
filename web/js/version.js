@@ -14,7 +14,7 @@ export const VERSION = '0.7s';
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
   {
-    v: '0.7s', f: '2026-11-08', h: 'HH:MM', t: 'Los cambios entre managers, como son',
+    v: '0.7s', f: '2026-11-08', h: '01:39', t: 'Los cambios entre managers, como son',
     cosas: [
       { tipo: 'arreglo', d: 'balanza', t: 'Un cambio son dos compras', x: 'Si un rival te propone cambiar un jugador tuyo por uno suyo, la IA lo cuenta como lo que es: tú compras el suyo por su valor y él el tuyo por el suyo, y el que se lleva al que vale más paga la diferencia. Nadie pierde valor. Antes lo contaba como un cambio sin dinero y te decía que le regalabas millones.' },
       { tipo: 'arreglo', d: 'escudo', t: 'La protección de 14 días, en la cuenta', x: 'Cuando las cláusulas de los dos están a punto de abrirse, el cambio os deja a cada uno un jugador protegido 14 días. La IA lo pone en la balanza con lo que sube cada uno al día, además de los puntos, el estado y el calendario.' },
