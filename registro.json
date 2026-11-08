@@ -1532,7 +1532,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-segunda-revalida-luis-fuente-espana-seleccion-betis_0_2008430674.html": 1793895491000,
    "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
    "SPORT|136130480": 1793895763000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
@@ -3140,7 +3139,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-aplaza-decision-sobre-sancion-owono-20261105_3469777.html": 1793897285000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/asi-sera-homenaje-futbol-espanol-jesus-miguel-solemne-minuto-silencio-paron-memoria-9-20261105_3469770.html": 1793896697000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677030/comite-aplaza-sancion-owono-jornada-liga-convertira-tributo-miguel.html": 1793896288000,
-   "AS|https://as.com/futbol/segunda/laliga-no-para-el-futbol-aplaza-solo-el-granada-tenerife-andorra-mallorca-y-castellon-eibar-f202611-n/": 1793895587000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898360000,
    "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html": 1793899045000,
@@ -7215,13 +7213,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 442,
+   "ok": 444,
    "fallos": 0,
-   "ejecuciones": 217,
+   "ejecuciones": 218,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 450,
-   "ultima": "2026-11-08T16:16:11.820Z"
+   "mediaMs": 449,
+   "ultima": "2026-11-08T16:21:12.407Z"
   }
  },
  "ptsDirecto": {
