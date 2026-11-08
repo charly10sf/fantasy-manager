@@ -3214,7 +3214,6 @@
  "liga": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-da-conocer-nuevas-fechas-horarios-partidos-aplazados-copa-rey-20261105_3469833.html": 1793904403000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/05/ya-es-oficial-aplazado-el-cd-tenerife-femenino-deportivo-alaves-radio-club-tenerife/": 1793904183000,
    "SPORT|136138671": 1793905242000,
    "SPORT|136138825": 1793905634000,
    "SPORT|136145827": 1793937662000,
@@ -7211,13 +7210,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 512,
+   "ok": 515,
    "fallos": 0,
-   "ejecuciones": 247,
+   "ejecuciones": 248,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 428,
-   "ultima": "2026-11-08T18:41:12.011Z"
+   "ultima": "2026-11-08T18:46:14.980Z"
   }
  },
  "ptsDirecto": {
@@ -7263,7 +7262,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 3,
+   "n": 4,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7271,27 +7270,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:41:19.262Z"
+   "ultimaBien": "2026-11-08T18:46:26.631Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:41:19.262Z"
+   "ultimaBien": "2026-11-08T18:46:26.631Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:41:19.262Z"
+   "ultimaBien": "2026-11-08T18:46:26.631Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:41:19.262Z"
+   "ultimaBien": "2026-11-08T18:46:26.631Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:41:19.262Z"
+   "ultimaBien": "2026-11-08T18:46:26.631Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:41:19.262Z"
+   "ultimaBien": "2026-11-08T18:46:26.631Z"
   }
  },
  "avisos": [
