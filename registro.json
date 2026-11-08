@@ -3201,7 +3201,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-da-conocer-nuevas-fechas-horarios-partidos-aplazados-copa-rey-20261105_3469833.html": 1793904403000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/05/ya-es-oficial-aplazado-el-cd-tenerife-femenino-deportivo-alaves-radio-club-tenerife/": 1793904183000,
    "SPORT|136136691": 1793901372000,
-   "AS|https://as.com/futbol/copa_del_rey/fechas-y-horarios-de-los-partidos-aplazados-de-la-copa-del-rey-y-de-la-reina-f202611-n/": 1793901223000,
    "SPORT|136138671": 1793905242000,
    "SPORT|136138825": 1793905634000,
    "SPORT|136145827": 1793937662000,
@@ -3447,7 +3446,9 @@
    "n": 8,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794160571410
+  }
  },
  "ia": {
   "dia": "2026-11-08",
@@ -7189,13 +7190,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 482,
+   "ok": 485,
    "fallos": 0,
-   "ejecuciones": 237,
+   "ejecuciones": 238,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 440,
-   "ultima": "2026-11-08T17:51:13.564Z"
+   "mediaMs": 439,
+   "ultima": "2026-11-08T17:56:11.410Z"
   }
  },
  "ptsDirecto": {
