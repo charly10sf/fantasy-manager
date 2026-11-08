@@ -68,7 +68,7 @@ export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '', cron
 export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [], recientes = [], registro = null, config = {}, log = () => {}, pedir = preguntar }) {
   if ((config.revisor || {}).activo === false) return { ok: true, problemas: [], revisado: false };
   if (pedir === preguntar && !conClaude(config)) return { ok: true, problemas: [], revisado: false };
-  const r = await pedir({ uso: 'revisar', registro, config, sistema: SISTEMA, cache: true, esquema: ESQUEMA, log,
+  const r = await pedir({ uso: 'revisar', tipo, registro, config, sistema: SISTEMA, cache: true, esquema: ESQUEMA, log,
     prompt: prompt({ texto, hechos, fuenteTexto, tipo, cronicas, recientes }), tiempo: 30000, hasta: Date.now() + ((config.revisor || {}).segundos ?? 40) * 1000 });
   if (!r.ok || !r.datos) { log(`  (revisor) no contesta (${r.error || 'sin datos'}): sigue sin revisar`); return { ok: true, problemas: [], revisado: false }; }
   const problemas = (Array.isArray(r.datos.problemas) ? r.datos.problemas : [])

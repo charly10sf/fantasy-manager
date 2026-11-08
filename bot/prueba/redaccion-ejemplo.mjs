@@ -44,7 +44,7 @@ ok(!r.ok, 'sin clave no pregunta');
 const reg = { datos: { enviados: [] }, fichero: null, guardar() {} };
 const viejo = { ...process.env };
 process.env.ANTHROPIC_API_KEY = 'falsa'; process.env.BOT_IA = 'claude';
-const cfgIa = { ...config, ia: { ...config.ia, topeDolaresDia: 0.05 } };
+const cfgIa = { ...config, ia: { ...config.ia, topeDolaresDia: 0.05, reservaPartidos: 0 } };   // (la reserva del partido, aparte, más abajo)
 let quien = [];
 const claudeF = async (op) => { quien.push(['claude', op.modelo]); return { ok: true, datos: { x: 1 }, modelo: op.modelo, uso: { entrada: 1000, salida: 100, cacheLee: 0, cacheEscribe: 0 }, dolares: 0.03 }; };
 const geminiF = async () => { quien.push(['gemini']); return { ok: true, datos: { x: 2 }, modelo: 'gemini-x' }; };
@@ -54,6 +54,18 @@ r = await preguntar({ uso: 'redactar', registro: reg, config: cfgIa, prompt: 'p'
 ok(r.proveedor === 'claude' && quien[1][1] === SONNET, 'redactar va a Sonnet');
 ok(cuentaHoy(reg).dolares === 0.06 && cuentaHoy(reg).llamadas.redactar === 1 && cuentaHoy(reg).entrada === 2000, 'el gasto del día se apunta en el registro');
 ok(/tope/.test(sinCupo('redactar', { registro: reg, config: cfgIa })), 'pasado el tope de dólares del día, sin cupo');
+{ // reserva para el partido (8 nov): pasado el tope menos la reserva, solo directo, final y MVP
+  const r2 = { datos: {} }; const c2 = cuentaHoy(r2); c2.dolares = 1.5;
+  const cf = { ia: { topeDolaresDia: 2, reservaPartidos: 0.7 } };
+  ok(/^tope/.test(sinCupo('redactar', { registro: r2, config: cf, tipo: 'previa' })), 'con la reserva tocada, la previa ya no redacta (y el motivo empieza por «tope»)');
+  ok(/^tope/.test(sinCupo('clasificar', { registro: r2, config: cf })), 'con la reserva tocada, clasificar vuelve a Gemini');
+  ok(sinCupo('redactar', { registro: r2, config: cf, tipo: 'final' }) === '', 'el final sí tiene cupo con la reserva');
+  ok(sinCupo('revisar', { registro: r2, config: cf, tipo: 'directo' }) === '', 'el revisor del directo también');
+  c2.dolares = 1.2;
+  ok(sinCupo('redactar', { registro: r2, config: cf, tipo: 'previa' }) === '', 'por debajo de tope − reserva, la previa redacta');
+  c2.dolares = 2.01;
+  ok(/^tope/.test(sinCupo('redactar', { registro: r2, config: cf, tipo: 'mvp' })), 'pasado el tope entero, ni el MVP');
+}
 quien = [];
 r = await preguntar({ uso: 'clasificar', registro: reg, config: cfgIa, prompt: 'p', esquema: {}, claude: claudeF, gemini: geminiF });
 ok(quien.length === 1 && quien[0][0] === 'gemini', 'sin cupo, clasificar vuelve a Gemini');
