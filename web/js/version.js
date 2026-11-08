@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7v';
+export const VERSION = '0.7w';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.7v';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7w', f: '2026-11-08', h: '12:19', t: 'Dos funciones top, gratis',
+    cosas: [
+      { tipo: 'mejora', d: 'candado', t: 'Lo que venden los rivales y Cómo juega cada rival, abiertas', x: 'Ya no piden anuncio: las ves siempre. Siguen con candado el dinero de los rivales, quién puede pagar tu cláusula y cuándo gira un jugador.' },
+    ],
+  },
   {
     v: '0.7v', f: '2026-11-08', h: '12:01', t: 'Las novedades de cada versión, solo para la liga',
     cosas: [

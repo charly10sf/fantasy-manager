@@ -45,7 +45,7 @@ Lo que se cambia sin sacar versión. La app lo lee de raw de main y la web de Pa
 
 - Claves: `abre`, `mensajeApertura`, `ligas`, `minutosLiga`, `minutos`, `equipos`, `extra`, `sinLimite`, `bloqueadas`, `todoAbierto`, `anunciosWeb`, `anunciosWebDueno`, `sinFotos` y `top` (opcional: si no está, 2 usos y 60 min).
 - La cuenta atrás y los minutos, solo para las cuentas con alguna liga de `ligas` (ahora «Maulazzos»). `minutosLiga` está a 0 desde el 24 oct (sin límite). `minutos` está a 0 porque las versiones viejas se congelaban al contar el tiempo. `equipos` da minutos a un equipo concreto sea cual sea su liga, y `extra`, minutos de más a un equipo un día concreto.
-- `bloqueadas`: las funciones top (dineroRivales, quienPaga, inercia, ventasRivales, perfilRival), cerradas para todos menos `todoAbierto`. En `play` se abren con bonificados (cuántos y cuánto, en `top` y limite.js). Sin plan de pago, solo anuncios.
+- `bloqueadas`: las funciones top (dineroRivales, quienPaga, inercia; ventasRivales y perfilRival se abrieron para todos el 8 nov), cerradas para todos menos `todoAbierto`. En `play` se abren con bonificados (cuántos y cuánto, en `top` y limite.js). Sin plan de pago, solo anuncios.
 - `sinLimite` y `todoAbierto` van por id de cuenta (667015), nunca por nombre de equipo: un nombre lo puede copiar cualquiera.
 - `anunciosWeb` a false apaga AdSense en la web para todos; `anunciosWebDueno` deja a Carlos verlos de prueba.
 - `sinFotos` a true quita las caras, escudos y fotos de LaLiga en la app y la web (`html.sin-fotos` en app.css; tarjetas.js no las dibuja). Es el interruptor del roadmap por si llega una queja por fotos o escudos. No toca el bot de X.
