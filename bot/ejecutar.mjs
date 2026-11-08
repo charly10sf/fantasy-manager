@@ -3,6 +3,7 @@
 //   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros] [--jornada=11] [--fechas-espn=20261101,…]
 //        [--estado=estado/registro.json] [--ventanas=1] [--forzar=1] [--comprobar=1]
 //        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
+//        [--registro-nuevo=1] (publicando, empezar sin registro: solo si de verdad no existe la rama bot-estado; revisión total, C4)
 // Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
 import { horaMadrid as horaHoy, horas, silencio } from './lib/horario.mjs';
 import { readFileSync, appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -14,11 +15,12 @@ import { redactar, apuntarReciente } from './lib/redaccion.mjs';
 import { aplicaRedaccion, decidirRespaldo, olvidarFallos, porFallos } from './lib/respaldo.mjs';
 import { crearCronicas } from './lib/cronicas.mjs';
 import { Registro } from './lib/registro.mjs';
-import { publicar, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
+import { publicarSinRepetir, subirImagen, comprobar, clavesDelEntorno } from './lib/x.mjs';
 import { fijarLimite, limite, largo, variarEquipos } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
 import { crearInfo } from './lib/info-jugador.mjs';
+import { cerrarSalud, encolarAviso, hora as horaAviso, FUENTE_PARTIDOS } from './lib/salud.mjs';
 
 /** AAAAMMDD de hoy en Madrid (y de ayer, entre las 0 y las 3) */
 function diasEspn() {
@@ -50,6 +52,16 @@ if (arg('comprobar') === '1') {
   process.exit(r.ok ? 0 : 1);
 }
 if (publica && faltan.length) { console.log(`# Modo publicar sin los secretos ${faltan.join(', ')}: no publico nada.`); md(`Modo publicar sin los secretos ${faltan.join(', ')}.`); process.exit(1); }
+const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
+// publicando sin registro (no se ha podido traer, o está roto) el bot volvería a sacar goles, onces y noticias ya publicados, con los
+// topes y el gasto a 0 (revisión total, C4): no arranca, salvo con --registro-nuevo=1 (la rama bot-estado de verdad no existe)
+if (publica && (!registro.existe || registro.roto) && arg('registro-nuevo') !== '1') {
+  const por = registro.roto ? `está roto (${registro.fichero})` : `no está (${registro.fichero})`;
+  console.log(`# Modo publicar y el registro ${por}: no arranco para no republicar. Si de verdad empieza de cero, --registro-nuevo=1.`);
+  md(`**No arranco**: el registro ${por}. Publicar sin él repetiría lo ya publicado. Si la rama bot-estado de verdad no existe, lanza el bot con «registro nuevo».`);
+  process.exit(1);
+}
+if (publica && !registro.existe) console.log('# Registro nuevo (--registro-nuevo=1): empiezo de cero');
 
 // (liga antes que previa: una decisión sobre la jornada la ve la previa en la misma ejecución, no 5 min después)
 const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros').split(',');
@@ -82,7 +94,7 @@ const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn: nu
   // sin ventanas, los días que se pasen con --fechas-espn (para probar con partidos ya jugados)
   desdeDirecto: ventanas ? Date.now() - 3 * 3600e3 : 0,
   fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
-const registro = new Registro(config, publica ? (arg('estado') || 'estado/registro.json') : null);
+
 // en simulacro, --estado=<copia> carga un registro para leerlo (los estados de antes, los pendientes, lo publicado) sin guardarlo nunca:
 // así la prueba de la redacción (rama pruebas-redaccion) ve las mismas novedades que vio el bot de verdad
 if (!publica && arg('estado')) {
@@ -108,7 +120,8 @@ const horaMadrid = horaHoy();
 const [hDesde, hHasta] = horas(config, 'horasCaidas', [0, 24]);
 const enHorarioCaidas = !ventanas || forzar || (horaMadrid >= hDesde && horaMadrid < hHasta);
 let abortar = false, subidaRota = false;   // si X rechaza una subida de imagen, no se intenta más en esta ejecución
-let generados = 0, fallos = 0, publicados = 0, previstos = 0;
+// (rechazados: los que no pasan el validador; no son un fallo de la ejecución ni gastan los avisos de fallo de Telegram: M15)
+let generados = 0, fallos = 0, publicados = 0, previstos = 0, rechazados = 0;
 
 for (const q of quienes) {
   if (abortar) break;
@@ -165,7 +178,7 @@ for (const q of quienes) {
     generados++;
     let v = validar(t.texto, { numeros: t.numeros, max: limite() });
     let d = v.ok ? registro.decidir(t) : 'no pasa el validador';
-    if (!v.ok) fallos++;
+    if (!v.ok) rechazados++;
     if (d === 'ok' && espera.has(t)) d = espera.get(t);
     // tarjetas con imagen (solo si están encendidas): se dibujan y validan; las que no pasan no salen
     let pngs = [];
@@ -199,11 +212,18 @@ for (const q of quienes) {
     if (d === 'ok' && t.sinTarjeta && !(publica ? mediaIds.length : pngs.length)) {
       t.texto = t.sinTarjeta.texto; t.numeros = t.sinTarjeta.numeros; delete t.plantilla; delete t.pulido; delete t.redactado;
       v = validar(t.texto, { numeros: t.numeros, max: limite() });
-      if (!v.ok) { d = 'no pasa el validador'; estado = `omitido: ${d}`; fallos++; }
+      if (!v.ok) { d = 'no pasa el validador'; estado = `omitido: ${d}`; rechazados++; }
       else if (!publica) estado += ' (sin tarjeta: con el texto de siempre)';
     }
     if (d === 'ok' && publica) {
-      const r = await publicar(t.texto, claves, { mediaIds });
+      // con el tiempo agotado o sin red no se sabe si X lo ha creado: se apunta como dudoso y no se repite (si se reintentara y sí
+      // había salido, la IA lo redacta distinto y el «duplicate» de X no lo para; revisión total, A11). Se avisa a Telegram.
+      const r = await publicarSinRepetir(t, { registro, claves, mediaIds, encolar: encolarAviso });
+      if (r.dudoso) {
+        estado = `DUDOSO: ${r.que}; lo apunto para no repetirlo y aviso`;
+        fallos++; abortar = true; console.log(`\n--- ${t.clave} · ${estado}\n${t.texto}`); md(`**Tuit dudoso** ${t.clave}: ${r.que}. Apuntado para no repetirlo; aviso a Telegram. Paro esta ejecución.`);
+        break;
+      }
       // una suspensión o un aplazamiento confirmado: la fecha que tenía cada partido, para que la previa espere a la nueva (lib/aire.mjs)
       if (t.tipo === 'liga' && /\|confirmado\|/.test(t.clave) && (r.ok || (r.estado === 403 && /duplicate/i.test(r.cuerpo)))) {
         // la jornada de la decisión: la que dice la noticia (Gemini sabe cuál es esta y la siguiente). Si no la dice: la jornada entera,
@@ -235,8 +255,16 @@ for (const q of quienes) {
     md(`<details><summary>${estado} · ${t.clave} · peso ${v.peso}${t.redactado ? ' · redactado' : t.pulido ? ' · pulido' : ''}</summary>\n\n\`\`\`\n${t.texto}\n\`\`\`${t.plantilla ? `\n\nPlantilla:\n\`\`\`\n${t.plantilla}\n\`\`\`` : ''}\n</details>`);
   }
 }
+// la salud de cada fuente (lib/salud.mjs, M15): al registro, y los avisos a la cola de Telegram
+{
+  const textos = { [FUENTE_PARTIDOS]: (s) => `0 eventos de ESPN en día de partido desde hace ${s.seguidas} ejecuciones (desde las ${horaAviso(Date.parse(s.desde))}): LaLiga tiene partidos en juego` };
+  const avisos = publica ? cerrarSalud(registro, { config, textos }) : (cerrarSalud(null), []);
+  for (const a of avisos) { console.log(`# Aviso de salud: ${a}`); md(`Aviso de salud: ${a}`); }
+  for (const [f, s] of Object.entries((registro.datos && registro.datos.salud) || {})) if (s.seguidas) console.log(`  (salud) ${f}: sin contestar ${s.seguidas} ejecuciones seguidas (${s.error || '?'})`);
+}
 // lo que lleva gastado hoy la IA (lib/ia.mjs): llamadas, tokens y dólares, en el log y en el registro
 { const ia = registro.datos && registro.datos.ia; if (ia && ia.dia) console.log(`  (ia) gasto de hoy: ${ia.llamadas.clasificar} para clasificar y ${ia.llamadas.redactar} para redactar (${ia.fallos} fallos), ${ia.entrada} tokens de entrada, ${ia.salida} de salida, ${ia.cacheLee} leídos de caché y ${ia.cacheEscribe} escritos, ${ia.dolares.toFixed(4)} $`); }
-console.log(`\n# Total: ${generados} generados, ${publica ? publicados + ' publicados' : previstos + ' los publicaría'}, ${fallos} fallos · ${((Date.now() - t0) / 1000).toFixed(1)} s`);
-md(`**${generados}** generados · ${publica ? `**${publicados}** publicados` : `**${previstos}** los publicaría`} · ${fallos} fallos`);
+if (registro.fichero) registro.guardar();
+console.log(`\n# Total: ${generados} generados, ${publica ? publicados + ' publicados' : previstos + ' los publicaría'}, ${rechazados} no pasan el validador, ${fallos} fallos · ${((Date.now() - t0) / 1000).toFixed(1)} s`);
+md(`**${generados}** generados · ${publica ? `**${publicados}** publicados` : `**${previstos}** los publicaría`} · ${rechazados} no pasan el validador · ${fallos} fallos`);
 process.exit(fallos ? 1 : 0);

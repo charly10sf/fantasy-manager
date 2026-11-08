@@ -246,7 +246,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   for (const c of cands.slice(0, config.noticiasPorEjecucion ?? 2)) {
     const { j } = c;
     const equipo = corto(equipos[String(j.teamId)] || '?');
-    const pp = await proximo(j.teamId, { stats, semana, jornada }).catch(() => null);
+    const pp = await proximo(j.teamId, { stats, semana, jornada, ahora }).catch(() => null);
     const media = Number(j.averagePoints) || 0;
     const quien = `${cap(segunda(j.positionId, j.nickname))} ${del(equipo)}`;
     const sem = `not${j.id}${dia}`;

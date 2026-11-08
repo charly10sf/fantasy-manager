@@ -3,6 +3,9 @@
 // TELEGRAM_CHAT_ID no hace nada.
 //   node bot/telegram.mjs [--simulacro=1] [--ventanas=1] [--jornada=11] [--estado=estado/telegram.json] [--datos=fichero.json]
 //   node bot/telegram.mjs --aviso=fallo [--estado=estado/telegram.json]
+//   node bot/telegram.mjs --aviso=bot [--estado=estado/telegram.json] [--registro=estado/registro.json]
+//     los avisos que deja el bot de X en su registro (lib/salud.mjs: un gol o una roja ya tuiteados que ESPN quita, un tuit que no se
+//     sabe si ha salido, una fuente que no contesta). Tope propio (telegram.avisosBotDia, 12): no gasta los avisos de fallo.
 // --simulacro=1 enseña los mensajes sin mandarlos ni apuntarlos. --datos= (solo para pruebas) usa { semana, stats } de un fichero
 // en vez de la API de LaLiga. BOT_MODO=parado también lo para.
 import { readFileSync, appendFileSync } from 'node:fs';
@@ -43,6 +46,30 @@ if (arg('aviso') === 'fallo') {
   if (!r.ok) { console.log(`# Aviso de fallo: Telegram respondió HTTP ${r.estado} ${r.cuerpo}`); process.exit(0); }
   registro.marcar({ clave: `aviso|${id || Date.now()}`, tipo: 'aviso', jornada: 0 }, r.id);
   console.log(`# Aviso de fallo mandado (mensaje ${r.id})`);
+  process.exit(0);
+}
+
+// ---- Avisos del bot de X (revisión total, A11 y M15) ----
+if (arg('aviso') === 'bot') {
+  let datosX = null;
+  try { datosX = JSON.parse(readFileSync(arg('registro') || 'estado/registro.json', 'utf8')); } catch { datosX = null; }
+  const cola = (datosX && Array.isArray(datosX.avisos)) ? datosX.avisos : [];
+  const hoy = registro.hoy();
+  const tope = tg.avisosBotDia ?? 12;
+  let yaHoy = registro.datos.enviados.filter((e) => e.tipo === 'avisoBot' && diaMadrid(e.t) === hoy).length;
+  let mandados = 0;
+  for (const a of cola) {
+    const clave = `bot|${a.clave}`;
+    if (registro.claves.has(clave)) continue;
+    if (yaHoy >= tope) { console.log(`# Avisos del bot: ya van ${yaHoy} hoy (tope ${tope}); el resto, mañana`); break; }
+    const texto = esc(a.texto);
+    if (simulacro) { console.log(`# Aviso del bot (simulacro, no se manda):\n${texto}`); continue; }
+    const r = await enviar(texto, { token, chatId });
+    if (!r.ok) { console.log(`# Aviso del bot: Telegram respondió HTTP ${r.estado} ${r.cuerpo}`); break; }
+    registro.marcar({ clave, tipo: 'avisoBot', jornada: 0 }, r.id);
+    yaHoy++; mandados++;
+  }
+  console.log(`# Avisos del bot: ${mandados} mandados (${cola.length} en la cola)`);
   process.exit(0);
 }
 

@@ -108,21 +108,32 @@ export function enPalabras(p) {
 }
 
 /**
- * El próximo partido de un equipo: el de la jornada en curso si aún no lo ha jugado y, si no, el de la siguiente.
+ * El próximo partido de un equipo: el de la jornada en curso si aún no ha empezado y, si no, el de la siguiente.
  * Devuelve { jornada, rival (nombre corto), enCasa } o null. Guarda las jornadas pedidas durante la ejecución.
+ * Un partido que ya ha empezado (`date` <= `ahora`) se salta aunque LaLiga no lo dé por acabado (matchState 7): el 8 nov, a las 18:06,
+ * la novedad de Barrenetxea decía que «llega con dudas al partido de esta tarde» y que «la Real Sociedad recibe al Rayo a las 16:15»,
+ * con el partido ya jugado. Si el equipo ya ha jugado hoy, va en `hoy` ({ rival, fecha, jornada }), para no hablar de ese partido.
  */
 const jornadas = new Map();
 const semanaDe = (n) => { if (!jornadas.has(n)) jornadas.set(n, statsSemana(n).catch(() => [])); return jornadas.get(n); };
-export async function proximoPartido(teamId, { stats = null, semana = null, jornada = null } = {}) {
+const DIA_MAD = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+export async function proximoPartido(teamId, { stats = null, semana = null, jornada = null, ahora = Date.now() } = {}) {
   // la jornada que ya se tiene en memoria (la del contexto) no se vuelve a pedir
   if (stats && stats.length && (jornada || semana)) { const n = jornada || semana.weekNumber; if (!jornadas.has(n)) jornadas.set(n, Promise.resolve(stats)); }
   const candidatas = [...new Set([jornada, semana && semana.weekNumber, semana && semana.nextWeek].filter(Boolean))].sort((a, b) => a - b);
+  let hoy = null;
   for (const n of candidatas) {
     const m = (await semanaDe(n)).find((x) => String(x.local.id) === String(teamId) || String(x.visitor.id) === String(teamId));
-    if (!m || m.matchState === 7) continue;
+    if (!m) continue;
     const enCasa = String(m.local.id) === String(teamId);
     const r = enCasa ? m.visitor : m.local;
-    return { jornada: n, rival: corto(r.mainName), rivalNombre: r.mainName, rivalId: r.id, rivalEscudo: r.badgeColor || null, enCasa, fecha: m.date || null };
+    const t = Date.parse(m.date || '');
+    const empezado = Number.isFinite(t) && t <= ahora;
+    if (m.matchState === 7 || empezado) {
+      if (Number.isFinite(t) && t <= ahora && DIA_MAD.format(new Date(t)) === DIA_MAD.format(new Date(ahora))) hoy = { jornada: n, rival: corto(r.mainName), fecha: m.date, enCasa };
+      continue;
+    }
+    return { jornada: n, rival: corto(r.mainName), rivalNombre: r.mainName, rivalId: r.id, rivalEscudo: r.badgeColor || null, enCasa, fecha: m.date || null, ...(hoy ? { hoy } : {}) };
   }
   return null;
 }
@@ -136,7 +147,8 @@ const HORA_MIN = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', h
 const DIA_ISO = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
 export function cuando(fecha, ahora = Date.now()) {
   const t = Date.parse(fecha);
-  if (!Number.isFinite(t)) return null;
+  // (una fecha pasada no se dice: «hoy a las 16:15» de un partido ya jugado; 8 nov, Barrenetxea)
+  if (!Number.isFinite(t) || t <= ahora) return null;
   const hm = HORA_MIN.format(new Date(t));
   const [h, mi] = hm.split(':').map(Number);
   const dias = Math.round((Date.parse(DIA_ISO.format(new Date(t))) - Date.parse(DIA_ISO.format(new Date(ahora)))) / 864e5);

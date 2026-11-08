@@ -11,6 +11,47 @@ import { ponerAlDia as ponerAlDiaRasgos, contadorDe, ajustarGoles, conGolesEspn,
 import { rasgosDe } from '../lib/apodos-jugadores.mjs';
 import { nacionalidadFm, sinRepetidas } from '../lib/nacionalidad.mjs';
 import { apuntarVista, completa, lineaMedida, apuntarSalud } from '../lib/fuentes-medida.mjs';
+import { apuntarFuente, encolarAviso, FUENTE_PARTIDOS } from '../lib/salud.mjs';
+
+/* ---- lo ya publicado que ESPN corrige (revisión total, A11) ----
+   Cada gol y cada roja publicados llevan su huella en el registro (partido, equipo, minuto y añadido, jugador). Con ella:
+   - el mismo gol con otro goleador (ESPN corrige el nombre: la clave lleva el nombre de ESPN y saldría como tuit nuevo) no se publica
+     otra vez: se avisa a Carlos;
+   - un gol o una roja publicados que ESPN deja de dar dos ejecuciones seguidas (VAR tardío, autogol, roja quitada) se avisan a
+     Telegram con el id del tuit, para borrarlo o corregirlo a mano. Antes solo quedaba una línea en el log. */
+const enlace = (id) => (id ? `https://x.com/i/web/status/${id}` : '(sin id)');
+const minHuella = (h) => (h && h.min != null ? (h.extra ? `${h.min}+${h.extra}'` : `${h.min}'`) : '?');
+/** el gol publicado de este partido y equipo en el mismo minuto y añadido, con otra clave (otro goleador); null si no hay */
+export function mismoGolPublicado(registro, { partido, equipo, min, extra = 0, clave }) {
+  if (!registro || !registro.datos) return null;
+  return (registro.datos.enviados || []).find((e) => e.huella && e.huella.clase === 'gol' && e.clave !== clave && e.huella.partido === String(partido)
+    && e.huella.equipo === String(equipo) && e.huella.min === min && (e.huella.extra || 0) === (extra || 0)) || null;
+}
+/** mira lo publicado de un partido que ESPN ya no da; avisa a la segunda ejecución seguida sin verlo. `actuales`: las claves de ahora */
+export function vigilarPublicados(registro, { partidoId, nombre, actuales, dsps = [], ahora = Date.now(), log = () => {} }) {
+  if (!registro || !registro.datos) return [];
+  const tabla = (registro.datos.desaparecidos ||= {});
+  const nuevos = [];
+  for (const e of registro.datos.enviados || []) {
+    if (!e.clave.startsWith(`directo|${partidoId}|`) || !/\|(gol\d+|roja)$/.test(e.clave)) continue;
+    if (actuales.has(e.clave)) { delete tabla[e.clave]; continue; }
+    const x = (tabla[e.clave] ||= { n: 0, desde: new Date(ahora).toISOString() });
+    x.n++;
+    const jug = e.clave.split('|')[2], esRoja = /\|roja$/.test(e.clave), h = e.huella || {};
+    log(`  (directo) ⚠ ${esRoja ? 'la roja' : 'el gol'} ${e.clave} ya salió en X (id ${e.id || '?'}) y ESPN ya no lo da (${x.n}.ª vez)`);
+    if (x.n < 2 || x.avisado) continue;
+    x.avisado = true;
+    // ¿el mismo gol, con otro goleador?
+    const otro = !esRoja && h.min != null ? dsps.find((d) => d.n && String(d.equipo) === h.equipo && minutoDe(d.ref).min === h.min && (minutoDe(d.ref).extra || 0) === (h.extra || 0)) : null;
+    const txt = esRoja ? `⚠️ Roja ya tuiteada que ESPN ya no da: ${jug} en el ${minHuella(h)} del ${nombre}. ¿Se la han quitado? Tuit ${enlace(e.id)} — revísalo y, si hace falta, bórralo a mano.`
+      : otro ? `⚠️ ESPN ha cambiado el goleador del gol del ${minHuella(h)} del ${nombre}: antes ${jug}, ahora ${otro.jugador}. El tuit con ${jug} sigue publicado: ${enlace(e.id)} — corrígelo a mano. No publico otro.`
+        : `⚠️ Gol ya tuiteado que ESPN ya no da: ${jug} en el ${minHuella(h)} del ${nombre}. ¿Anulado por el VAR? Tuit ${enlace(e.id)} — revísalo y, si hace falta, bórralo a mano.`;
+    // (con otro goleador, la misma clave que el aviso de generar(): sale uno solo)
+    if (encolarAviso(registro, otro ? `mismoGol|${e.clave}|${claveDirecto({ id: partidoId }, otro)}` : `quitado|${e.clave}`, txt, ahora)) nuevos.push(txt);
+  }
+  return nuevos;
+}
+
 
 const ESPN = process.env.ESPN_BASE || 'https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1';
 const VACIAS = new Set(['de', 'fc', 'cf', 'club', 'real', 'ud', 'cd', 'rcd', 'la', 'del', 'el', 'y', 'sd', 'ad']);
@@ -262,12 +303,16 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
   // los puntos ya dichos en el directo de esta jornada (conSuelo): lo de otras jornadas se borra
   const tablaPts = registro && registro.datos ? (registro.datos.ptsDirecto ||= {}) : null;
   if (tablaPts) for (const k of Object.keys(tablaPts)) if (!k.startsWith(`${jornada}|`)) delete tablaPts[k];
+  // «0 eventos en día de partido» (M15): ESPN contesta pero no da ningún partido mientras LaLiga tiene alguno en juego
+  let eventosEspn = 0, marcadorOk = false;
   for (const f of fechasEspn) {
     const sb = await json(`${ESPN}/scoreboard?dates=${f}`).catch(() => null);
+    if (sb) marcadorOk = true;
     for (const ev of (sb && sb.events) || []) {
       const st = ev.status && ev.status.type;
       if (!st || !['in', 'post'].includes(st.state)) continue;
       if (Date.parse(ev.date) < desdeDirecto || Date.parse(ev.date) > ahora) continue;
+      eventosEspn++;
       const c = ev.competitions[0];
       const casa = c.competitors.find((x) => x.homeAway === 'home'), fuera = c.competitors.find((x) => x.homeAway === 'away');
       const m = stats.find((x) => comparten(x.local.mainName, casa.team.displayName) && comparten(x.visitor.mainName, fuera.team.displayName));
@@ -295,12 +340,9 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         dsps = disparadores(detalles);
       }
       dsps.push(...penaltisParados(sumario));
-      // un gol que ya salió y que ahora no está (lo ha anulado el VAR después): no se puede deshacer, pero se avisa en el log
-      if (registro) for (const e of registro.datos.enviados || []) {
-        if (!e.clave.startsWith(`directo|${m.id}|`) || !/\|gol\d+$/.test(e.clave) || dsps.some((d) => claveDe(d) === e.clave)) continue;
-        const avisos = (registro.datos.golesAnulados ||= {});
-        if (!avisos[e.clave]) { avisos[e.clave] = new Date(ahora).toISOString(); log(`  (directo) ⚠ el gol ${e.clave} ya salió en X (id ${e.id || '?'}) y ya no está en ESPN: ¿anulado por el VAR? Revisar y, si hace falta, borrarlo a mano`); }
-      }
+      // un gol o una roja que ya salieron y que ahora no están (VAR tardío, otro goleador, roja quitada): no se pueden deshacer, pero se
+      // avisa a Telegram con el id del tuit (A11)
+      vigilarPublicados(registro, { partidoId: m.id, nombre: `${corto(m.local.mainName)}-${corto(m.visitor.mainName)}`, actuales: new Set(dsps.map(claveDe)), dsps, ahora, log });
       // VAR pendiente en FotMob: los goles que aún no han salido esperan hasta que se resuelva (como mucho `directo.varEsperaMin`, 10 por defecto,
       // por si el aviso se queda puesto). Es lo ÚNICO por lo que se espera a FotMob, y solo si dice que hay una revisión en curso, nunca porque no vea el gol
       let retenerVar = false;
@@ -349,6 +391,16 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
       for (const dsp of dsps) {
         // el VAR de FotMob dice que hay una revisión en curso: los goles que no han salido esperan (arriba)
         if (retenerVar && dsp.n && !yaSalio(dsp)) continue;
+        // el mismo gol (partido, equipo, minuto y añadido) ya publicado con otro goleador: no sale otra vez (A11)
+        if (dsp.n && !yaSalio(dsp)) {
+          const mn0 = minutoDe(dsp.ref);
+          const previo = mismoGolPublicado(registro, { partido: m.id, equipo: dsp.equipo, min: mn0.min, extra: mn0.extra, clave: claveDe(dsp) });
+          if (previo) {
+            log(`  (directo) ${ev.shortName}: el gol de ${dsp.jugador} en el ${dsp.min} ya salió como ${previo.clave} (id ${previo.id || '?'}): no lo repito`);
+            encolarAviso(registro, `mismoGol|${previo.clave}|${claveDe(dsp)}`, `⚠️ ESPN ha cambiado el goleador del gol del ${minHuella(previo.huella)} del ${corto(m.local.mainName)}-${corto(m.visitor.mainName)}: antes ${previo.clave.split('|')[2]}, ahora ${dsp.jugador}. El tuit sigue publicado: ${enlace(previo.id)} — corrígelo a mano. No publico otro.`, ahora);
+            continue;
+          }
+        }
         // un gol sin su marcador seguro no sale: con el actual de ESPN podía decir «0-1» de un gol que era el 1-1 (7 nov)
         if (!rel.ok && dsp.n) continue;
         const esCasa = String(dsp.equipo) === String(casa.team.id);
@@ -506,10 +558,15 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         out.push({ tipo: 'directo', clave: `directo|${m.id}|${dsp.jugador}|${dsp.n ? `gol${dsp.n}` : dsp.clase}`, jornada, texto, hechos,
           numeros: num, casado: !!p, minuto: mn.min * 100 + mn.extra, minutoTxt: minTxt,
           // para las tarjetas de jugador (cada jugador implicado que case con LaLiga) y su marcador del momento
-          partido: m.id, marcador: [sl, sv], tarjetas });
+          partido: m.id, marcador: [sl, sv], tarjetas,
+          // la huella para reconocer este gol o esta roja aunque ESPN cambie el nombre (A11; Registro.marcar la guarda)
+          ...(dsp.n || dsp.clase === 'roja' ? { huella: { clase: dsp.n ? 'gol' : 'roja', partido: String(m.id), equipo: String(dsp.equipo), min: mn.min, extra: mn.extra || 0, jugador: dsp.jugador } } : {}) });
       }
     }
   }
+  // ¿ESPN da los partidos que LaLiga tiene en juego? (M15: solo si ESPN ha contestado; si no contesta, ya lo apunta lib/http.mjs)
+  const enJuego = (stats || []).filter((x) => { const t0 = Date.parse(x.date); return Number.isFinite(t0) && t0 <= ahora && ahora - t0 < 2.5 * 3600e3 && t0 >= desdeDirecto; }).length;
+  if (enJuego && marcadorOk) apuntarFuente(FUENTE_PARTIDOS, eventosEspn > 0, `ESPN no da ningún partido y LaLiga tiene ${enJuego} en juego`);
   // cómo ha ido FotMob en esta ejecución (peticiones bien y mal, tiempo medio): el registro acumula la fiabilidad desde Actions
   if (fm && registro && fm.salud) { apuntarSalud(registro, fm.salud, ahora); if (registro.fichero) registro.guardar(); }
   // en el orden en que pasaron (si en una ejecución salen varios, el primero el más antiguo)
