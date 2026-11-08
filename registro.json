@@ -1790,7 +1790,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html": 1794160570000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
+   "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000
   },
   "hechos": [
    {
@@ -2406,7 +2407,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -7242,13 +7243,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 530,
+   "ok": 533,
    "fallos": 0,
-   "ejecuciones": 253,
+   "ejecuciones": 254,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 422,
-   "ultima": "2026-11-08T19:11:12.125Z"
+   "mediaMs": 421,
+   "ultima": "2026-11-08T19:16:12.376Z"
   }
  },
  "ptsDirecto": {
@@ -7306,7 +7307,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 9,
+   "n": 10,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7314,27 +7315,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:11:25.117Z"
+   "ultimaBien": "2026-11-08T19:16:43.601Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:11:25.117Z"
+   "ultimaBien": "2026-11-08T19:16:43.601Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:11:25.117Z"
+   "ultimaBien": "2026-11-08T19:16:43.601Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:11:25.117Z"
+   "ultimaBien": "2026-11-08T19:16:43.601Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:11:25.117Z"
+   "ultimaBien": "2026-11-08T19:16:43.601Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:11:25.117Z"
+   "ultimaBien": "2026-11-08T19:16:43.601Z"
   }
  },
  "avisos": [
