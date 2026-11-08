@@ -1490,7 +1490,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/revivo-convocado-con-israel-para-disputar-la-nations-league-radio-elche/": 1793873304000,
    "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000,
@@ -1687,7 +1686,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248556/iker-casillas-enfada-saca-hijos-cantera-real-madrid.html": 1794127817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html": 1794130161000,
    "SPORT|136217036": 1794126576000,
-   "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/": 1794130478000
+   "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/": 1794130478000,
+   "SPORT|135832403": 1794118500000,
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/08/ultima-hora-choque-trenes-toledo-135852320.html": 1794122100000
   },
   "hechos": [
    {
@@ -2366,7 +2367,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -3195,7 +3196,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/aplazado-el-castellon-eibar-por-el-fallecimiento-de-jesus-de-miguel-radio-castellon/": 1793873334000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/laliga-tenerife-jesus-de-miguel-castellon-136112188.html": 1793877466000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/precioso-gesto-palmas-eldense-quieren-jesus-miguel-partido-domingo-20261105_3469397.html": 1793880286000,
@@ -3786,17 +3786,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 101397,
-  "salida": 8532,
+  "entrada": 103414,
+  "salida": 8673,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.214119
+  "dolares": 0.214391
  },
  "recientes": {
   "onces": [
@@ -7459,13 +7459,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 332,
+   "ok": 333,
    "fallos": 0,
-   "ejecuciones": 143,
+   "ejecuciones": 144,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 474,
-   "ultima": "2026-11-08T10:06:11.703Z"
+   "ultima": "2026-11-08T10:11:12.946Z"
   }
  },
  "ptsDirecto": {}
