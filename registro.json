@@ -1490,7 +1490,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000,
    "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/": 1793877225000,
    "Diario Sur|https://www.diariosur.es/malagacf/virus-fifa-malaga-aznou-marruecos-sub23-futbol-20261105123950-nt.html": 1793879095000,
    "SPORT|136113240": 1793877353000,
@@ -7434,13 +7433,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 342,
+   "ok": 343,
    "fallos": 0,
-   "ejecuciones": 153,
+   "ejecuciones": 154,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 476,
-   "ultima": "2026-11-08T10:56:14.327Z"
+   "ultima": "2026-11-08T11:01:13.518Z"
   }
  },
  "ptsDirecto": {}
