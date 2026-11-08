@@ -601,6 +601,13 @@
    "jornada": 12,
    "id": "2119207411198341495",
    "t": "2026-11-07T23:16:34.850Z"
+  },
+  {
+   "clave": "onces|118",
+   "tipo": "onces",
+   "jornada": 12,
+   "id": "2119403687734808652",
+   "t": "2026-11-08T12:16:30.957Z"
   }
  ],
  "estados": {
@@ -3157,7 +3164,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/baleares/2026/11/05/luis-garcia-deberia-haberse-aplazado-toda-la-jornada-radio-mallorca/": 1793881539000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247537/palmas-eldense-proponen-detener-juego-minuto-9-homenaje-miguel.html": 1793880966000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000,
    "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
@@ -3712,23 +3718,19 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 12,
-   "redactar": 12,
-   "revisar": 5,
+   "redactar": 14,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 165736,
-  "salida": 11203,
-  "cacheLee": 7815,
+  "entrada": 193164,
+  "salida": 11499,
+  "cacheLee": 10420,
   "cacheEscribe": 5210,
-  "dolares": 0.339196
+  "dolares": 0.397273
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-07T12:01:30.248Z",
-    "texto": "👀 Ya hay onces confirmados en La Rosaleda, según ESPN: el Málaga sale con cinco atrás, en un 5-3-2, y el Racing con un 4-2-3-1.\n\nNo hay sorpresas respecto a lo esperado, así que quien tenga jugadores de uno u otro lado puede dejar el once como lo tenía pensado. Hoy a las 14:00 empieza el Málaga-Racing."
-   },
    {
     "t": "2026-11-07T14:16:41.826Z",
     "texto": "👀 Ya hay onces confirmados en el Espanyol 🦜-Deportivo, que empieza hoy a las 16:15: el Espanyol juega con cinco atrás, en un 5-4-1, y el Dépor sale con un 4-4-2.\n\nLos dos onces vienen sin sorpresas respecto a lo esperado."
@@ -3744,6 +3746,10 @@
    {
     "t": "2026-11-07T19:16:48.594Z",
     "texto": "ℹ️ Onces confirmados del Valencia-Real Madrid y sin sorpresas: salen los que se esperaban. El Valencia 🦇 juega con 5-3-2 y el Real Madrid ⚪ con 4-2-3-1. Empieza hoy a las 21:00."
+   },
+   {
+    "t": "2026-11-08T12:16:30.959Z",
+    "texto": "👀 Cuatro atrás y tres delanteros para los dos: el Elche 🌴 y el Betis salen con un 4-3-3 en el Martínez Valero, y no hay sorpresas.\n\nEn las porterías juegan Dituro, por el Elche, y Valles, por el Betis, que lleva 9 de media y es de los que más puntos dan. Quien los tenga puede estar tranquilo."
    }
   ],
   "final": [
@@ -3914,13 +3920,7 @@
    "dolares": 2.017914
   }
  ],
- "fallosRedaccion": {
-  "onces|118": {
-   "n": 1,
-   "t": "2026-11-08T12:11:31.349Z",
-   "ultima": "2026-11-08T12:11:31.349Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7390,13 +7390,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 357,
+   "ok": 358,
    "fallos": 0,
-   "ejecuciones": 168,
+   "ejecuciones": 169,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 477,
-   "ultima": "2026-11-08T12:11:12.185Z"
+   "ultima": "2026-11-08T12:16:15.333Z"
   }
  },
  "ptsDirecto": {}
