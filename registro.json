@@ -3132,7 +3132,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-mijas-las-lagunas-real-jaen-de-copa-del-rey-se-jugara-este-martes-10-de-noviembre-en-estepona-radio-jaen/": 1793866075000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/ultima-hora-valencia-real-madrid-decision-laliga-jugara-partido-jornada-dos-excepciones-136107273.html": 1793872392000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/harry-kane-renueva-bayern-aplaza-sueno-nfl-2029-20261105_3469225.html": 1793872143000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/aplazado-el-castellon-eibar-por-el-fallecimiento-de-jesus-de-miguel-radio-castellon/": 1793873334000,
@@ -7421,13 +7420,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 307,
+   "ok": 308,
    "fallos": 0,
-   "ejecuciones": 118,
+   "ejecuciones": 119,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 466,
-   "ultima": "2026-11-08T08:06:13.601Z"
+   "mediaMs": 467,
+   "ultima": "2026-11-08T08:11:13.195Z"
   }
  },
  "ptsDirecto": {}
