@@ -3156,7 +3156,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/precioso-gesto-palmas-eldense-quieren-jesus-miguel-partido-domingo-20261105_3469397.html": 1793880286000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/ano-suspension-jugador-mando-hospital-arbitro-18-anos-vilagarcia/00031793878536009479432.htm": 1793880240000,
    "Cadena SER|https://cadenaser.com/baleares/2026/11/05/luis-garcia-deberia-haberse-aplazado-toda-la-jornada-radio-mallorca/": 1793881539000,
@@ -7418,13 +7417,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 347,
+   "ok": 348,
    "fallos": 0,
-   "ejecuciones": 158,
+   "ejecuciones": 159,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 476,
-   "ultima": "2026-11-08T11:21:18.408Z"
+   "ultima": "2026-11-08T11:26:12.773Z"
   }
  },
  "ptsDirecto": {}
