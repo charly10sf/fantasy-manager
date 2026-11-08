@@ -3214,7 +3214,6 @@
  "liga": {
   "vistas": {
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mantienen-huelga-renfe-reunion-avances-cuerpo-cita-manana-20261105191500.html": 1793902500000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rfef-da-conocer-nuevas-fechas-horarios-partidos-aplazados-copa-rey-20261105_3469833.html": 1793904403000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/05/ya-es-oficial-aplazado-el-cd-tenerife-femenino-deportivo-alaves-radio-club-tenerife/": 1793904183000,
    "SPORT|136138671": 1793905242000,
@@ -7213,13 +7212,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 494,
+   "ok": 497,
    "fallos": 0,
-   "ejecuciones": 241,
+   "ejecuciones": 242,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 435,
-   "ultima": "2026-11-08T18:11:12.856Z"
+   "mediaMs": 433,
+   "ultima": "2026-11-08T18:16:13.097Z"
   }
  },
  "ptsDirecto": {
