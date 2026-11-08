@@ -3160,12 +3160,10 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/ano-suspension-jugador-mando-hospital-arbitro-18-anos-vilagarcia/00031793878536009479432.htm": 1793880240000,
    "Cadena SER|https://cadenaser.com/baleares/2026/11/05/luis-garcia-deberia-haberse-aplazado-toda-la-jornada-radio-mallorca/": 1793881539000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247537/palmas-eldense-proponen-detener-juego-minuto-9-homenaje-miguel.html": 1793880966000,
-   "SPORT|136117890": 1793879512000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000,
    "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
-   "SPORT|136122379": 1793879661000,
    "SPORT|136122725": 1793885037000,
    "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
@@ -3256,25 +3254,10 @@
    "SPORT|136210297": 1794082357000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/despedida-jesus-miguel-tenerife-estadio_0_2008446228.html": 1794086542000,
    "SPORT|136207802": 1794117638000,
-   "SPORT|136213162": 1794110512000
+   "SPORT|136213162": 1794110512000,
+   "SPORT|136220224": 1794133655000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136117890",
-    "medio": "SPORT",
-    "t": 1793879512000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "La decisión final sobre la disputa de los partidos está pendiente de resolución",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html",
     "medio": "Mundo Deportivo",
@@ -3340,22 +3323,6 @@
     "nums": [
      5
     ]
-   },
-   {
-    "guid": "SPORT|136122379",
-    "medio": "SPORT",
-    "t": 1793879661000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "La AFE solicita la suspensión de la jornada por el fallecimiento de Jesús de Miguel",
-    "detalle": "Los futbolistas consideran de forma unánime que no deben disputarse los encuentros",
-    "nums": []
    },
    {
     "guid": "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html",
@@ -3736,27 +3703,25 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136220224": 1794137771455
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 110374,
-  "salida": 9760,
+  "entrada": 112118,
+  "salida": 10264,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.215631
+  "dolares": 0.216057
  },
  "recientes": {
   "onces": [
@@ -7419,13 +7384,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 353,
+   "ok": 354,
    "fallos": 0,
-   "ejecuciones": 164,
+   "ejecuciones": 165,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 476,
-   "ultima": "2026-11-08T11:51:13.135Z"
+   "mediaMs": 477,
+   "ultima": "2026-11-08T11:56:14.661Z"
   }
  },
  "ptsDirecto": {}
