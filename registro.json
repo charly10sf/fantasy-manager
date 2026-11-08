@@ -678,6 +678,13 @@
    "jornada": 12,
    "id": "2119486820585218484",
    "t": "2026-11-08T17:46:51.210Z"
+  },
+  {
+   "clave": "final|114",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119487997821292555",
+   "t": "2026-11-08T17:51:31.936Z"
   }
  ],
  "estados": {
@@ -3446,16 +3453,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 51,
-   "revisar": 27,
+   "redactar": 52,
+   "revisar": 28,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 644814,
-  "salida": 27823,
-  "cacheLee": 105365,
+  "entrada": 658768,
+  "salida": 28030,
+  "cacheLee": 107970,
   "cacheEscribe": 28888,
-  "dolares": 1.434735
+  "dolares": 1.464974
  },
  "recientes": {
   "onces": [
@@ -3482,10 +3489,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-07T15:35:28.135Z",
-    "texto": "🏁 Remontada del Racing en La Rosaleda: el Málaga se adelantó en el 28' con gol de Dotor, pero Iker Luque empató en el 50' y Zabiri le dio la vuelta en el 60'. Final 1-2.\n\nZabiri se lleva 12 puntos, casi el doble de su media, y es el mejor del partido. Agirrezabala suma 11 y Pablo Ramón 10, así que quien tenga jugadores del Racing sale ganando.\n\nEl Málaga se quedó con diez desde el 64' por la roja a Aznou, que acaba en -2. Larrubia, con 9, puntúa aunque su equipo pierde."
-   },
-   {
     "t": "2026-11-07T17:41:32.839Z",
     "texto": "🏁 Sin goles entre el Espanyol y el Deportivo, y los puntos se reparten entre cuatro nombres.\n\nGiménez y Leo Román, del Dépor, se van a 12 cada uno, más del doble de su media. Fortuño, del Espanyol, suma 11 y El Hilali 9, casi el doble de lo que suele dar.\n\nEl Deportivo, 8º antes del partido, se lleva un punto de casa del Espanyol, que era 15º."
    },
@@ -3500,6 +3503,10 @@
    {
     "t": "2026-11-08T15:16:39.030Z",
     "texto": "🏁 El Betis gana 0-2 al Elche 🌴 en el Martínez Valero con dos goles en los últimos diez minutos: Riquelme en el 81' y Bartra en el 89'.\n\nBartra cierra con 17 puntos, más del triple de lo que suele dar, y es el que más suma de los dos equipos. Ceballos pone 11, más del doble de su media, y Valles otros 11: gran noche para quien tenga bético.\n\nEn el Elche, Revivo se lleva 10 puntos aunque pierde, y R.P. Bigas se queda en -1, lo peor del partido."
+   },
+   {
+    "t": "2026-11-08T17:51:31.938Z",
+    "texto": "🏁 La Real Sociedad gana 1-0 al Rayo ⚡ en Anoeta y lo decide Oskarsson en el 67'.\n\nOskarsson se va a 13 puntos, más del triple de su media, y Barrenetxea llega a los mismos con más del doble de lo que suele dar. Remiro suma 12 bajo palos y Sucic 9: noche redonda para quien tenga realista.\n\nDel Rayo se salva Camello, que puntúa 6 aunque pierde, justo en su media."
    }
   ],
   "mvp": [
@@ -3662,13 +3669,7 @@
    "dolares": 2.017914
   }
  ],
- "fallosRedaccion": {
-  "final|114": {
-   "n": 2,
-   "t": "2026-11-08T17:41:34.468Z",
-   "ultima": "2026-11-08T17:46:38.972Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7188,13 +7189,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 479,
+   "ok": 482,
    "fallos": 0,
-   "ejecuciones": 236,
+   "ejecuciones": 237,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 441,
-   "ultima": "2026-11-08T17:46:13.816Z"
+   "mediaMs": 440,
+   "ultima": "2026-11-08T17:51:13.564Z"
   }
  },
  "ptsDirecto": {
