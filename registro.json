@@ -3790,8 +3790,8 @@
    "fin": 1794088871346
   },
   "12|118": {
-   "h": "d43c23f7e126",
-   "desde": 1794150073584,
+   "h": "485c17982f8a",
+   "desde": 1794150374132,
    "fin": 1794149772293
   }
  },
@@ -7328,13 +7328,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 415,
+   "ok": 416,
    "fallos": 0,
-   "ejecuciones": 202,
+   "ejecuciones": 203,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 460,
-   "ultima": "2026-11-08T15:01:13.016Z"
+   "ultima": "2026-11-08T15:06:13.550Z"
   }
  },
  "ptsDirecto": {
