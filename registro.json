@@ -1742,7 +1742,8 @@
    "AS|https://as.com/futbol/primera/elche-betis-hoy-en-directo-ultima-hora-de-laliga-ea-sports-en-vivo-f202611-d/": 1794149789000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248660/mourinho-no-supera-flick.html": 1794149597000,
    "SPORT|136225173": 1794147961000,
-   "SPORT|136226921": 1794151993000
+   "SPORT|136226921": 1794151993000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000
   },
   "hechos": [
    {
@@ -2307,7 +2308,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -2551,6 +2552,10 @@
     "t": 0
    },
    "2444": {
+    "e": "ok",
+    "t": 0
+   },
+   "2448": {
     "e": "ok",
     "t": 0
    },
@@ -3145,7 +3150,6 @@
  "liga": {
   "vistas": {
    "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html": 1793899045000,
    "Europa Press|https://www.europapress.es/madrid/noticia-profesores-publica-tinen-verde-calles-madrid-si-no-hay-negociacion-movilizaciones-iran-mas-20261105183505.html": 1793900105000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/05/rfef-anuncia-nuevo-horario-tarancon-136133977.html": 1793901786000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
@@ -3239,30 +3243,6 @@
     "nums": [
      6,
      9
-    ]
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793899045000,
-    "tipo": "horario",
-    "estado": "confirmado",
-    "segunda": false,
-    "jornada": 12,
-    "jTxt": true,
-    "clubes": [
-     "18",
-     "15"
-    ],
-    "luto": false,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "El partido se disputará este sábado a las 21:00 horas",
-    "nums": [
-     1971,
-     21,
-     0,
-     12
     ]
    },
    {
@@ -3447,17 +3427,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 37,
    "revisar": 21,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 453437,
-  "salida": 21231,
+  "entrada": 455070,
+  "salida": 21556,
   "cacheLee": 92340,
   "cacheEscribe": 26283,
-  "dolares": 1.012607
+  "dolares": 1.012933
  },
  "recientes": {
   "onces": [
@@ -3629,8 +3609,8 @@
    "fin": 1794149772293
   },
   "12|114": {
-   "h": "869a0b15ae4f",
-   "desde": 1794158174970,
+   "h": "96c20ff03af5",
+   "desde": 1794158473403,
    "fin": 1794158174970
   }
  },
@@ -7184,13 +7164,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 467,
+   "ok": 468,
    "fallos": 0,
-   "ejecuciones": 230,
+   "ejecuciones": 231,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 443,
-   "ultima": "2026-11-08T17:16:14.525Z"
+   "ultima": "2026-11-08T17:21:12.873Z"
   }
  },
  "ptsDirecto": {
