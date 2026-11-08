@@ -90,3 +90,17 @@ ok(JSON.stringify(m).length <= 1000 && Object.keys(m.ev).length <= 6, `metadatos
 r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, ADMINS: '4242' }, {});
 const todos = await r.json();
 ok(todos.registro && todos.registro[0].tot, 'en /hola/todos sale con sus eventos');
+// tiempo de uso (0.7t): hasta 10 min de golpe, nunca más de un día, y en /hola/todos los 7 últimos días
+const W2 = await import('../src/index.js');
+const dias = W2.diasAtras('2026-03-30', 7);
+ok(dias.length === 7 && dias[0] === '2026-03-30' && dias[1] === '2026-03-29' && dias[6] === '2026-03-24', `diasAtras con cambio de hora: ${dias.join(',')}`);
+r = await pedir('POST', '/uso', { seg: 300 });
+ok(r.s === 200 && r.j.seg === 300, `/uso suma 300 s (${r.t})`);
+r = await pedir('POST', '/uso', { seg: 5000 });
+ok(r.j.seg === 300 + W2.MAX_USO, `/uso no suma más de ${W2.MAX_USO} s de golpe (${r.t})`);
+const hoyM = r.j.dia, ayerM = W2.diasAtras(hoyM, 2)[1], antesM = W2.diasAtras(hoyM, 8)[7];
+await KV.put(`u:4242:${ayerM}`, '2400'); await KV.put(`u:4242:${antesM}`, '999');
+r = await W.fetch(new Request('https://w.dev/hola/todos', { headers: { Origin: ORI, Authorization: 'Bearer ' + 'x'.repeat(30) } }), { ...env, ADMINS: '4242' }, {});
+const t2 = await r.json(), yo = t2.lista.find((x) => String(x.uid) === '4242');
+ok(yo && yo.segHoy === 900 && yo.segDias[hoyM] === 900 && yo.segDias[ayerM] === 2400 && !(antesM in yo.segDias), `/hola/todos con hoy, ayer y sin el de hace 8 días (${JSON.stringify(yo && yo.segDias)})`);
+ok(Array.isArray(t2.dias) && t2.dias[0] === hoyM && t2.dias.length === 7, '/hola/todos devuelve los 7 días');

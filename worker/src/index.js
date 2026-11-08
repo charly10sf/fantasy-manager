@@ -25,13 +25,16 @@
  *   El dueño es la cuenta de LaLiga cuyo número está en ADMINS (lo pone la Action desde el secreto FM_ADMINS).
  *
  *   POST /uso                 { seg }: suma esos segundos al tiempo de hoy de quien llama (hora de Madrid) y devuelve el
- *                             total, para que el límite diario de minutos cuente igual en la app y en la web.
+ *                             total, para que el límite diario de minutos cuente igual en la app y en la web. Desde la
+ *                             0.7t lo manda todo el mundo (con límite, cada minuto; sin límite, cada 5 minutos o al
+ *                             salir), para que el dueño vea en «Quién usa la app» cuánto tiempo pasa cada uno al día.
  *
  *   Quién usa la app (para que el dueño vea quién de su liga la tiene y quién está dentro):
  *   POST /hola                { v, canal, app, liga, equipo }: la app avisa de que está abierta (al abrirla y cada 10
  *                             minutos a la vista). Se apunta como mucho cada 9 minutos por cuenta.
- *   GET  /hola/todos          (el dueño) cada cuenta con su nombre, equipo, versión, primera y última vez y sus minutos
- *                             de hoy. Se borra a los 90 días sin abrir la app. Además, `registro`: todas las cuentas
+ *   GET  /hola/todos          (el dueño) cada cuenta con su nombre, equipo, versión, primera y última vez, sus segundos
+ *                             de hoy (segHoy) y, de los que han entrado en los últimos 7 días, los de cada uno de esos
+ *                             días (segDias: { 'AAAA-MM-DD': seg }, solo los días con algo). Se borra a los 90 días sin abrir la app. Además, `registro`: todas las cuentas
  *                             que han entrado alguna vez (r:<uid>, sin nombre ni equipo y sin caducidad), para contar
  *                             usuarios. /hola contesta { ok, admin } (admin: si quien llama es el dueño).
  *
@@ -403,17 +406,27 @@ async function fallos(req, env, c, ruta) {
 
 /* ---------- el tiempo de uso de hoy, por cuenta (para el límite diario de minutos) ---------- */
 const hoyMadrid = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date());
+export const MAX_USO = 600, VIVE_USO = 9 * 86400;
+/** los n días hasta hoy (hoy el primero), en AAAA-MM-DD, contados desde el día de Madrid (sin líos con el cambio de hora) */
+export function diasAtras(hoy, n) {
+  const t = new Date(`${hoy}T12:00:00Z`), out = [];
+  for (let i = 0; i < n; i++) { out.push(t.toISOString().slice(0, 10)); t.setUTCDate(t.getUTCDate() - 1); }
+  return out;
+}
 async function uso(req, env, c) {
   if (!env.VINCULOS) return json({ e: 'Sin almacén' }, 503, c);
   const u = await quienEs(req);
   if (!u) return json({ e: 'Hace falta tu sesión de LaLiga', sesion: true }, 401, c);
   const cuerpo = await req.json().catch(() => ({}));
-  const mas = Math.max(0, Math.min(120, Math.round(Number(cuerpo && cuerpo.seg) || 0)));
+  // (hasta 10 minutos de golpe: los que no tienen límite mandan lo de 5 minutos, o lo que quedó al salir)
+  const mas = Math.max(0, Math.min(MAX_USO, Math.round(Number(cuerpo && cuerpo.seg) || 0)));
   const dia = hoyMadrid(), k = `u:${u.uid}:${dia}`;
   const antes = Number(await env.VINCULOS.get(k)) || 0;
-  const seg = antes + mas;
+  // un día tiene 86 400 segundos: más de eso es que alguien manda de más
+  const seg = Math.min(86400, antes + mas);
   // (si el almacén no deja escribir, se sigue: el tiempo de uso no es para tanto)
-  if (mas) { try { await env.VINCULOS.put(k, String(seg), { expirationTtl: 3 * 86400 }); } catch (e) { /* nada */ } }
+  // se guarda 9 días: el dueño ve hoy, ayer y la media de los 7 últimos
+  if (mas) { try { await env.VINCULOS.put(k, String(seg), { expirationTtl: VIVE_USO }); } catch (e) { /* nada */ } }
   return json({ dia, seg }, 200, c);
 }
 
@@ -547,8 +560,20 @@ async function hola(req, env, c, ruta) {
   if (ruta === '/hola/todos' && req.method === 'GET') {
     const dia = hoyMadrid();
     const ks = (await listar(env, 'p:', 500)).filter((k) => k.metadata);
-    const seg = await Promise.all(ks.slice(0, 100).map((k) => env.VINCULOS.get(`u:${k.metadata.uid}:${dia}`)));
-    const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: Number(seg[i]) || 0 })).sort((a, b) => b.ultima - a.ultima);
+    ks.sort((a, b) => (b.metadata.ultima || 0) - (a.metadata.ultima || 0));
+    // hoy, de los 100 últimos; los 6 días de antes, solo de los 40 últimos que han entrado esta semana (cada lectura
+    // cuenta para el tope de operaciones por petición del plan gratis, que es de mil)
+    const dias = diasAtras(dia, 7), hace7 = Date.now() - 7 * 86400e3;
+    const segDe = (uid, d) => env.VINCULOS.get(`u:${uid}:${d}`).then((v) => Number(v) || 0).catch(() => 0);
+    const usos = await Promise.all(ks.map(async (k, i) => {
+      if (i >= 100) return {};
+      const semana = i < 40 && (k.metadata.ultima || 0) >= hace7;
+      const vals = await Promise.all((semana ? dias : [dia]).map((d) => segDe(k.metadata.uid, d)));
+      const o = {};
+      (semana ? dias : [dia]).forEach((d, j) => { if (vals[j]) o[d] = vals[j]; });
+      return o;
+    }));
+    const lista = ks.map((k, i) => ({ ...k.metadata, segHoy: usos[i][dia] || 0, segDias: usos[i] }));
     // todas las cuentas que han entrado alguna vez: la ficha de r:, y quien aún no la tiene (no ha abierto la app desde
     // que existe), con lo de p:
     const reg = new Map((await listar(env, 'r:', 5000)).filter((k) => k.metadata).map((k) => [String(k.metadata.uid), k.metadata]));
@@ -557,7 +582,7 @@ async function hola(req, env, c, ruta) {
       if (!r) reg.set(String(x.uid), { uid: x.uid, primera: x.primera, ultima: x.ultima, canales: x.canal || '', dias: 0 });
       else if ((x.ultima || 0) > (r.ultima || 0)) reg.set(String(x.uid), { ...r, ultima: x.ultima });
     }
-    return json({ lista, registro: [...reg.values()], ahora: Date.now() }, 200, c);
+    return json({ lista, registro: [...reg.values()], ahora: Date.now(), dias }, 200, c);
   }
   return json({ e: 'No existe' }, 404, c);
 }

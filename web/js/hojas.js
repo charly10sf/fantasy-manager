@@ -704,7 +704,7 @@ export function quienUsaHTML(S) {
     const donde = x ? (x.canal === 'web' ? 'web' : x.canal === 'play' ? 'Google Play' : 'Android') : '';
     const fallo = x && / !$/.test(x.v || '');
     const sub = !x ? 'Aún no ha entrado'
-      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(String(x.v || '').replace(/ !$/, ''))}${fallo ? ' · <b class="rojo">no le carga la liga</b>' : ''}${x.segHoy ? ` · ${Math.round(x.segHoy / 60)} min hoy` : ''}`;
+      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(String(x.v || '').replace(/ !$/, ''))}${fallo ? ' · <b class="rojo">no le carga la liga</b>' : ''}${x.segHoy ? ` · ${tiempoTxt(x.segHoy)} hoy` : ''}`;
     return `<div class="quien-f ${x ? (dentro ? 'dentro' : 'si') : 'no'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${sub}</span></div>${x && x.primera ? `<small>desde ${esc(cuando(x.primera, { hora: false }))}</small>` : ''}</div>`;
   };
   let filas = '';
@@ -721,12 +721,47 @@ export function quienUsaHTML(S) {
   }
   const conApp = deLiga.size;
   const dentro = lista.filter((x) => ahora - x.ultima < DENTRO).length;
-  if (Q.registro) h += registradosHTML(Q.registro, lista, ahora) + `<div class="grupo"><span>Tu liga</span></div>`;
+  if (Q.registro) h += registradosHTML(Q.registro, lista, ahora);
+  h += tiempoHTML(lista, Q.dias);
+  if (Q.registro) h += `<div class="grupo"><span>Tu liga</span></div>`;
   h += `<p class="quien-res"><b>${conApp} de ${tabla.length}</b> de tu liga han entrado en la app${dentro ? ` · <b>${dentro}</b> dentro ahora` : ''}.</p>`;
   h += `<div class="quien-l">${filas}</div>`;
   const fuera = lista.filter((x) => !deLiga.has(String(x.uid)));
   if (fuera.length) h += `<div class="grupo"><span>De fuera de tu liga</span></div><div class="quien-l">${fuera.map((x) => fila(x.nombre || 'Sin nombre', x.equipo, x)).join('')}</div>`;
   h += `<p class="peq apag" style="margin-top:14px">«Dentro ahora» es que ha tenido la app abierta en los últimos 12 minutos. Se apunta al abrirla con su cuenta de LaLiga: quien solo ha visto la liga de ejemplo, o tiene una versión anterior a la 0.4.4, no sale.</p>`;
+  return h;
+}
+
+/** segundos de app en horas y minutos: «menos de 1 min», «25 min», «1 h 05 min» */
+export function tiempoTxt(seg) {
+  const m = Math.floor((Number(seg) || 0) / 60);
+  if (m < 1) return 'menos de 1 min';
+  if (m < 60) return `${m} min`;
+  return `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')} min`;
+}
+/** (el dueño, 0.7t) cuánto tiempo pasa cada uno en la app al día: hoy, ayer, la media de los días que entra y los 7
+    últimos días en barras. Lo manda la app al Worker (/uso); /hola/todos trae los 7 días de los que han entrado esta
+    semana */
+function tiempoHTML(lista, dias) {
+  const ds = Array.isArray(dias) && dias.length ? dias : [diaDe()];
+  const hoy = ds[0], ayer = ds[1];
+  const filas = lista.map((x) => {
+    const sd = x.segDias || (x.segHoy ? { [hoy]: x.segHoy } : {});
+    const vals = ds.map((d) => Number(sd[d]) || 0);
+    const conUso = vals.filter((v) => v > 0);
+    const total = conUso.reduce((a, b) => a + b, 0);
+    return { x, vals, hoy: vals[0], ayer: ayer ? vals[1] : 0, media: conUso.length ? total / conUso.length : 0, nd: conUso.length, total };
+  }).filter((f) => f.total > 0).sort((a, b) => b.hoy - a.hoy || b.media - a.media);
+  let h = `<div class="grupo"><span>Tiempo en la app</span></div>`;
+  if (!filas.length) return `${h}<p class="quien-res">Aún no hay tiempo contado. Se cuenta para todos desde la 0.7t: sale cuando cada uno abra la app con esa versión.</p>`;
+  const max = Math.max(60, ...filas.flatMap((f) => f.vals));
+  const sumaHoy = filas.reduce((a, f) => a + f.hoy, 0), hoyN = filas.filter((f) => f.hoy > 0).length;
+  const corto = (seg) => (seg ? tiempoTxt(seg).replace('menos de 1 min', '<1 min') : '—');
+  const fd = (d) => fechaCorta(Date.parse(`${d}T12:00:00Z`));
+  const barritas = (f) => `<span class="uso-b" role="img" aria-label="${esc(ds.slice().reverse().map((d, i) => `${fd(d)}: ${corto(f.vals[ds.length - 1 - i])}`).join(', '))}">${f.vals.slice().reverse().map((v, i) => `<i title="${esc(fd(ds[ds.length - 1 - i]))}: ${esc(corto(v))}" style="height:${v ? Math.max(8, Math.round((v / max) * 100)) : 0}%"></i>`).join('')}</span>`;
+  h += `<p class="quien-res">Hoy han estado dentro <b>${hoyN}</b>, entre todos <b>${tiempoTxt(sumaHoy)}</b>.</p>`;
+  h += `<table class="tabla reg-ev uso-t"><tr><th></th><th>Hoy</th><th>Ayer</th><th>Media</th><th>7 días</th></tr>${filas.map((f) => `<tr><td><b>${esc(f.x.nombre || 'Sin nombre')}</b>${f.x.equipo ? `<small>${esc(f.x.equipo)}</small>` : ''}</td><td><b>${corto(f.hoy)}</b></td><td>${corto(f.ayer)}</td><td>${corto(f.media)}<small>${f.nd} ${f.nd === 1 ? 'día' : 'días'}</small></td><td>${barritas(f)}</td></tr>`).join('')}</table>`;
+  h += `<p class="peq apag">Solo cuenta el tiempo con la app a la vista, entre la app y la web, y el día va de 00:00 a 00:00 en Madrid. La media es de los días que ha entrado de los 7 últimos; las barras van del más antiguo (izquierda) a hoy. Desde la 0.7t se cuenta para todos (antes, solo a los que tienen límite de minutos) y lo de quien no la tiene a la vista puede tardar hasta 5 minutos en llegar.</p>`;
   return h;
 }
 

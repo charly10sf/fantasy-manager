@@ -1408,7 +1408,7 @@ function repintarAvisos() {
 async function abrirQuien() {
   S.quien = { cargando: true };
   hoja('quien');
-  try { const r = await quienUsa(); S.quien = { lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now() }; }
+  try { const r = await quienUsa(); S.quien = { lista: r.lista || [], registro: r.registro || null, ahora: r.ahora || Date.now(), dias: r.dias || null }; }
   catch (e) { S.quien = { error: e.estado === 403 ? 'Esto solo lo ve el dueño de la app.' : e.message || String(e) }; }
   if (S.tipoHoja && S.tipoHoja[0] === 'quien') repintarHoja();
 }

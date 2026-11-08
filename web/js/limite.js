@@ -248,17 +248,24 @@ const hoy = () => diaDe();
 export const usoHoy = () => { const u = LS.get('uso', null); return u && u.dia === hoy() ? u.seg : 0; };
 function sumar(seg) { const d = hoy(); const u = LS.get('uso', null); LS.set('uso', { dia: d, seg: (u && u.dia === d ? u.seg : 0) + seg }); }
 
-/* el total de hoy entre todos tus dispositivos, según el Worker (más lo de aquí que aún no se ha mandado) */
-let porMandar = 0, sincronizando = false, ultimoSync = 0;
+/* el total de hoy entre todos tus dispositivos, según el Worker (más lo de aquí que aún no se ha mandado)
+   Desde la 0.7t se manda para todos (el dueño ve en «Quién usa la app» cuánto pasa cada uno al día): con límite, cada
+   minuto, como antes; sin límite, cada 5 minutos y al dejar la app (lo que no llega se guarda y va en la siguiente),
+   para no gastar las escrituras gratis del servidor. */
+const SIN_LIMITE_CADA = 300;
+const pendiente = () => { const x = LS.get('uso-pend', null); return x && x.dia === diaDe() ? Number(x.seg) || 0 : 0; };
+let porMandar = pendiente(), sincronizando = false, ultimoSync = 0;
+const guardarPendiente = () => LS.set('uso-pend', { dia: diaDe(), seg: porMandar });
 const enServidor = () => { const x = LS.get('uso-srv', null); return x && x.dia === hoy() ? x.seg : null; };
 function usadosHoy() { const l = usoHoy(), s = enServidor(); return s == null ? l : Math.max(l, s + porMandar); }
 async function sincronizar(forzar = false) {
   if (sincronizando || (!forzar && Date.now() - ultimoSync < 60e3)) return;
   sincronizando = true;
-  const mando = Math.min(120, porMandar);
+  const mando = Math.min(600, porMandar);
   try {
     const r = await pedirWorker('POST', '/uso', { seg: mando });
     porMandar = Math.max(0, porMandar - mando);
+    guardarPendiente();
     if (r && r.dia === hoy()) LS.set('uso-srv', { dia: r.dia, seg: Number(r.seg) || 0 });
   } catch (e) { /* sin conexión: se manda en la próxima */ }
   ultimoSync = Date.now();
@@ -386,12 +393,18 @@ export function iniciarLimite(quien, aviso = () => {}, alAbrir = () => {}, alCer
       const agotado = estadoLimite.min != null && estadoLimite.usados >= estadoLimite.min * 60;
       if (!q.demo && q.yo && !estadoLimite.cerrada && !agotado) {
         sumar(CADA);
-        if (estadoLimite.min != null) { porMandar += CADA; sincronizar(); }
+        porMandar += CADA; guardarPendiente();
+        if (estadoLimite.min != null) sincronizar();
+        else if (porMandar >= SIN_LIMITE_CADA) sincronizar(true);
       }
     }
     comprobar();
   }, CADA * 1000);
   // la configuración se vuelve a mirar cada media hora (por si el admin cambia los minutos)
   setInterval(() => leerLimites().then((c) => { if (c) cfg = c; comprobar(); }), 30 * 60e3);
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') comprobar(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') comprobar();
+    // al dejar la app, lo que falte por mandar (si no llega, sale en la siguiente)
+    else if (porMandar > 0 && !(quien() || {}).demo) sincronizar(true);
+  });
 }
