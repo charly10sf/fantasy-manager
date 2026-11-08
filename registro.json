@@ -1665,14 +1665,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3083",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1794169874103
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
@@ -7448,13 +7441,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 559,
+   "ok": 561,
    "fallos": 0,
-   "ejecuciones": 269,
+   "ejecuciones": 270,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 421,
-   "ultima": "2026-11-08T20:31:14.103Z"
+   "ultima": "2026-11-08T20:36:11.144Z"
   }
  },
  "ptsDirecto": {
@@ -7544,27 +7537,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:32:06.466Z"
+   "ultimaBien": "2026-11-08T20:36:22.047Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:32:06.466Z"
+   "ultimaBien": "2026-11-08T20:36:22.047Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:32:06.466Z"
+   "ultimaBien": "2026-11-08T20:36:22.047Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:32:06.466Z"
+   "ultimaBien": "2026-11-08T20:36:22.047Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:32:06.466Z"
+   "ultimaBien": "2026-11-08T20:36:22.047Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:32:06.466Z"
+   "ultimaBien": "2026-11-08T20:36:22.047Z"
   }
  },
  "avisos": [
