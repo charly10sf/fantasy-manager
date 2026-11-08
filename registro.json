@@ -1490,10 +1490,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247446/reconquista-bellingham.html": 1793869200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247434/raphinha-trabaja-brasileno-duradero-barca.html": 1793869772000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/asi-nueva-camiseta-3-real-madrid-regresa-iconico-diseno-dragon.html": 1793871315000,
-   "SPORT|136105785": 1793869239000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/revivo-convocado-con-israel-para-disputar-la-nations-league-radio-elche/": 1793873304000,
    "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000,
    "SPORT|136108626": 1793872201000,
@@ -7420,13 +7418,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 317,
+   "ok": 318,
    "fallos": 0,
-   "ejecuciones": 128,
+   "ejecuciones": 129,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 469,
-   "ultima": "2026-11-08T08:56:14.581Z"
+   "mediaMs": 471,
+   "ultima": "2026-11-08T09:01:13.642Z"
   }
  },
  "ptsDirecto": {}
