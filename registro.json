@@ -1497,8 +1497,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-real-madrid-no-salir-relajado-partido-hemos-visto-recuperado-gen-competitivo-siempre-tenido-ultimamente-habia-perdido-20261105_3468903.html": 1793887133000,
-   "AS|https://as.com/futbol/primera/aznou-y-lucas-breton-primeras-bajas-del-paron-f202611-n/": 1793887252000,
    "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html": 1793893343000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000,
@@ -7261,13 +7259,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 390,
+   "ok": 392,
    "fallos": 0,
-   "ejecuciones": 189,
+   "ejecuciones": 190,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 469,
-   "ultima": "2026-11-08T13:56:13.001Z"
+   "ultima": "2026-11-08T14:01:12.934Z"
   }
  },
  "ptsDirecto": {}
