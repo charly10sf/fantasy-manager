@@ -397,8 +397,8 @@ async function codigoDeMudanza() {
   }
 }
 /* el aviso de que la app sigue en desarrollo, arriba en todas las pestañas, en la web y en la app (lo pidió Carlos el
-   2 nov): lleva a «Reportar un fallo» y se cierra con la ×; vuelve a salir a los 7 días */
-const BETA_VUELVE = 7 * DIA;
+   2 nov): lleva a «Reportar un fallo» y se cierra con la ×; vuelve a salir a las 24 h de cerrarlo (Carlos, 8 nov; antes 7 días) */
+const BETA_VUELVE = DIA;
 // (con la liga de ejemplo, solo su banda: las dos juntas se apilaban arriba)
 const bandaBeta = () => (S.D && S.D.demo) || (Date.now() - (LS.get('beta-cerrada', 0) || 0) < BETA_VUELVE) ? ''
   : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo y en pruebas.</b> Cualquier fallo o idea de mejora, mándamelo con el botón Reportar: lo leo todo y lo tengo en cuenta.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
@@ -2794,8 +2794,8 @@ function novedades() {
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
-  // y a quien no es del dueño ni de las ligas de limites.json (los de fuera, la demo) no se le abre nada solo ni se le
-  // enseña la lista de Ajustes: las novedades de cada versión son para el dueño y la liga (o para todos con «novedadesTodos»)
+  // y a quien no es el dueño (ni los de la liga, desde la 0.7z) no se le abre nada solo ni se le enseña la lista de
+  // Ajustes: las novedades de cada versión son solo para el dueño (o para todos con «novedadesTodos»)
   if (!avisosGuardados().admin) {
     if (!S.D) return;
     const mia = novedadesPara({ ligas: S.D.ligas || [] });
