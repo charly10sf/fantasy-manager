@@ -699,6 +699,21 @@
    "jornada": 12,
    "id": "2119505698811736366",
    "t": "2026-11-08T19:01:52.270Z"
+  },
+  {
+   "clave": "directo|111|Tajon Buchanan|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119508074016764343",
+   "t": "2026-11-08T19:11:18.540Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "111",
+    "equipo": "102",
+    "min": 80,
+    "extra": 0,
+    "jugador": "Tajon Buchanan"
+   }
   }
  ],
  "estados": {
@@ -3232,7 +3247,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136138825": 1793905634000,
    "SPORT|136145827": 1793937662000,
    "SPORT|136145828": 1793937661000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/comunicado-oficial-afe-insiste-solicita-aplazamiento-jornada-completa-segunda-liga-hypermotion-136142110.html": 1793922998000,
@@ -3302,22 +3316,6 @@
    "SPORT|136229498": 1794158421000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136138825",
-    "medio": "SPORT",
-    "t": 1793905634000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Tras un trágico accidente ferroviario y un fallecimiento",
-    "detalle": "Un sindicato de futbolistas pide aplazar los encuentros",
-    "nums": []
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/",
     "medio": "Cadena SER",
@@ -3485,16 +3483,17 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 53,
+   "redactar": 54,
    "revisar": 28,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 669476,
-  "salida": 28145,
+  "entrada": 680425,
+  "salida": 28281,
   "cacheLee": 107970,
   "cacheEscribe": 28888,
-  "dolares": 1.48754
+  "dolares": 1.510798,
+  "reservado": 0
  },
  "recientes": {
   "onces": [
@@ -3603,10 +3602,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T21:46:17.076Z",
-    "texto": "🟥 Roja para Gayá en el 79'. Valencia 0-3 Real Madrid. El Valencia se queda con diez y encima va perdiendo. Se queda en -5 puntos fantasy."
-   },
-   {
     "t": "2026-11-08T14:41:16.769Z",
     "texto": "⚽ Riquelme la empalma de volea en el 81' y el Betis se adelanta en el Martínez Valero: 0-1 ante el Elche 🌴.\n\nSuma 6 puntos, muy por encima de su media. Es su tercer gol esta temporada entre Liga, Champions y Copa."
    },
@@ -3621,6 +3616,10 @@
    {
     "t": "2026-11-08T18:01:19.025Z",
     "texto": "⚽ Pablo Durán abre el marcador en Balaídos en el 26': el Celta se adelanta 1-0 al Levante 🐸.\n\nYa suma 5 puntos, casi el doble de su media de 2,8. Es su tercer gol esta temporada entre Liga, Champions y Copa."
+   },
+   {
+    "t": "2026-11-08T19:11:18.542Z",
+    "texto": "⚽ Buchanan la empalma de volea en el 80' y el Villarreal 🚢 rompe el 0-0 en La Cerámica: 1-0 al Getafe.\n\nEl canadiense ya suma 6 puntos, más del doble de su media. Es su primer gol en Liga, Champions o Copa. El pase es de Pepe, que se lleva 4."
    }
   ],
   "novedades": [
@@ -7223,17 +7222,33 @@
    "m": "26'",
    "e": "2026-11-08T18:01:12.516Z",
    "re": "27'"
+  },
+  "fm|111|1026135|80": {
+   "j": "Tajon Buchanan",
+   "m": "80'",
+   "f": "2026-11-08T19:11:12.125Z",
+   "rf": "81:56",
+   "casado": true
+  },
+  "directo|111|Tajon Buchanan|gol1": {
+   "j": "Tajon Buchanan",
+   "m": "80'",
+   "e": "2026-11-08T19:11:12.125Z",
+   "re": "82'",
+   "w": "2026-11-08T19:08:25Z",
+   "f": "2026-11-08T19:11:12.125Z",
+   "rf": "81:56"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 527,
+   "ok": 530,
    "fallos": 0,
-   "ejecuciones": 252,
+   "ejecuciones": 253,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 423,
-   "ultima": "2026-11-08T19:06:11.768Z"
+   "mediaMs": 422,
+   "ultima": "2026-11-08T19:11:12.125Z"
   }
  },
  "ptsDirecto": {
@@ -7272,6 +7287,18 @@
    "g": 1,
    "a": 0,
    "t": 1794160872516
+  },
+  "12|111|2556": {
+   "p": 6,
+   "g": 1,
+   "a": 0,
+   "t": 1794165072125
+  },
+  "12|111|3087": {
+   "p": 4,
+   "g": 0,
+   "a": 1,
+   "t": 1794165072125
   }
  },
  "golesAnulados": {
@@ -7279,7 +7306,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 8,
+   "n": 9,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7287,27 +7314,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:06:18.160Z"
+   "ultimaBien": "2026-11-08T19:11:25.117Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:06:18.160Z"
+   "ultimaBien": "2026-11-08T19:11:25.117Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:06:18.160Z"
+   "ultimaBien": "2026-11-08T19:11:25.117Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:06:18.160Z"
+   "ultimaBien": "2026-11-08T19:11:25.117Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:06:18.160Z"
+   "ultimaBien": "2026-11-08T19:11:25.117Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:06:18.160Z"
+   "ultimaBien": "2026-11-08T19:11:25.117Z"
   }
  },
  "avisos": [
