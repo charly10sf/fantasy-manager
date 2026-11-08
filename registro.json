@@ -3213,7 +3213,8 @@
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/tavernes-valencia-horario-ver-partido-copa-136222269.html": 1794143685000,
    "SPORT|136221598": 1794138326000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/08/las-palmas-y-eldense-se-enfrentaran-este-lunes-a-las-2030-h-radio-elda/": 1794147139000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000
   },
   "hechos": [
    {
@@ -3595,7 +3596,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
   "espera": {}
@@ -3603,17 +3604,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 16,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 227591,
-  "salida": 14237,
+  "entrada": 229338,
+  "salida": 14394,
   "cacheLee": 10420,
   "cacheEscribe": 7815,
-  "dolares": 0.459228
+  "dolares": 0.459481
  },
  "recientes": {
   "onces": [
@@ -7292,13 +7293,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 408,
+   "ok": 410,
    "fallos": 0,
-   "ejecuciones": 198,
+   "ejecuciones": 199,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 463,
-   "ultima": "2026-11-08T14:41:11.899Z"
+   "mediaMs": 462,
+   "ultima": "2026-11-08T14:46:13.503Z"
   }
  },
  "ptsDirecto": {
