@@ -1490,7 +1490,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000,
    "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/": 1793877225000,
@@ -1693,30 +1692,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/",
-    "medio": "AS",
-    "t": 1793874820000,
-    "id": "74",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Yuri reaparece en la convocatoria ante Osasuna",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/",
-    "medio": "AS",
-    "t": 1793874820000,
-    "id": "3083",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Nico Williams regresa a la convocatoria ante Osasuna",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html",
     "medio": "Mundo Deportivo",
@@ -7473,13 +7448,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 337,
+   "ok": 338,
    "fallos": 0,
-   "ejecuciones": 148,
+   "ejecuciones": 149,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 475,
-   "ultima": "2026-11-08T10:31:12.733Z"
+   "ultima": "2026-11-08T10:36:11.847Z"
   }
  },
  "ptsDirecto": {}
