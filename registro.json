@@ -1689,7 +1689,8 @@
    "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/": 1794130478000,
    "SPORT|135832403": 1794118500000,
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/08/ultima-hora-choque-trenes-toledo-135852320.html": 1794122100000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000
   },
   "hechos": [
    {
@@ -2380,7 +2381,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -3799,17 +3800,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 105144,
-  "salida": 9219,
+  "entrada": 106964,
+  "salida": 9295,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.214837
+  "dolares": 0.215057
  },
  "recientes": {
   "onces": [
@@ -7472,13 +7473,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 335,
+   "ok": 336,
    "fallos": 0,
-   "ejecuciones": 146,
+   "ejecuciones": 147,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 474,
-   "ultima": "2026-11-08T10:21:11.756Z"
+   "ultima": "2026-11-08T10:26:11.961Z"
   }
  },
  "ptsDirecto": {}
