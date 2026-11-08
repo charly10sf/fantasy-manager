@@ -1,5 +1,5 @@
-/* Los anuncios de la web (Google AdSense, desde la 0.6.8). En el móvil, un banner de 320×50 encima de las pestañas;
-   en el ordenador, si sobra sitio a la derecha, uno de 160×600. Solo en el navegador: dentro de la app de Android no,
+/* Los anuncios de la web (Google AdSense, desde la 0.6.8). Solo a los lados (desde la 0.7y): en el ordenador, si sobra
+   sitio a la derecha, uno de 160×600; en el móvil, ninguno (el bloque «movil» se queda sin usar). Solo en el navegador: dentro de la app de Android no,
    porque AdSense no deja anuncios en el navegador de una app (ahí van los de AdMob, en la versión de Google Play).
    Quién los ve lo decide limite.js (`anunciosWebModo`: «anunciosWeb» en limites.json; a los de «todoAbierto» o
    «sinLimite» —Carlos— solo con «anunciosWebDueno», y de prueba: data-adtest="on", que no cuentan); cuándo, app.js (`ponerBanner`: en las pestañas con contenido, nunca en Pregunta, una pestaña vacía,
@@ -56,7 +56,8 @@ const cabeLateral = () => window.innerWidth >= ANCHO_LATERAL && window.innerHeig
 
 /** enseña la barra que toca (o ninguna) y deja sitio para ella solo si ya lleva anuncio */
 function colocar() {
-  const tipo = !quiere ? null : escritorio ? (cabeLateral() ? 'lateral' : null) : 'movil';
+  // solo a los lados (Carlos, 8 nov): en la web nunca abajo; en el móvil o con la ventana estrecha, ninguno
+  const tipo = quiere && escritorio && cabeLateral() ? 'lateral' : null;
   if (tipo) caja(tipo);
   for (const t of Object.keys(cajas)) {
     const si = t === tipo && lleno(t);
