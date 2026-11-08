@@ -1514,7 +1514,6 @@
    "SPORT|136135887": 1793899739000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
    "SPORT|136137325": 1793901641000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "SPORT|136138125": 1793904953000,
    "SPORT|136139762": 1793910076000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
@@ -3107,7 +3106,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
    "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
@@ -3205,22 +3203,6 @@
    "SPORT|136221598": 1794138326000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html",
-    "medio": "COPE",
-    "t": 1793885219000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "La AFE pide no jugar",
-    "nums": []
-   },
    {
     "guid": "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html",
     "medio": "Superdeporte",
@@ -7299,13 +7281,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 378,
+   "ok": 380,
    "fallos": 0,
-   "ejecuciones": 183,
+   "ejecuciones": 184,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 473,
-   "ultima": "2026-11-08T13:26:12.782Z"
+   "ultima": "2026-11-08T13:31:13.580Z"
   }
  },
  "ptsDirecto": {}
