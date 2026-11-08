@@ -671,6 +671,13 @@
    "jornada": 12,
    "id": "2119476679240253810",
    "t": "2026-11-08T17:06:33.313Z"
+  },
+  {
+   "clave": "mvp|114",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119486820585218484",
+   "t": "2026-11-08T17:46:51.210Z"
   }
  ],
  "estados": {
@@ -3439,16 +3446,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 45,
-   "revisar": 22,
+   "redactar": 51,
+   "revisar": 27,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 563332,
-  "salida": 25701,
-  "cacheLee": 92340,
+  "entrada": 644814,
+  "salida": 27823,
+  "cacheLee": 105365,
   "cacheEscribe": 28888,
-  "dolares": 1.249246
+  "dolares": 1.434735
  },
  "recientes": {
   "onces": [
@@ -3497,10 +3504,6 @@
   ],
   "mvp": [
    {
-    "t": "2026-11-07T17:36:48.966Z",
-    "texto": "⭐ Giménez y Leo Román, los dos con 12 puntos en el Espanyol-Deportivo: los mejores del 0-0.\n\nEl defensa hace más del doble de su media de 4,3 y vale 26,1 M. En la jornada 13 el Deportivo visita al Alavés: si lo tienes, buen momento para mantenerlo."
-   },
-   {
     "t": "2026-11-07T20:01:53.130Z",
     "texto": "⭐ Catena y Nico Williams comparten el mejor puesto del 1-1 entre el Osasuna 🐂 y el Athletic 🦁: 11 puntos cada uno.\n\nNico Williams adelantó al Athletic en el 84' y Catena, defensa, empató en el 90'. Con más del doble de su media de 4,5 y a 20,2 M, si lo tienes, se queda. El Osasuna recibe al Málaga 🐟 en la jornada 13."
    },
@@ -3515,6 +3518,10 @@
    {
     "t": "2026-11-08T15:16:48.038Z",
     "texto": "⭐ Bartra se lleva el partido en el Martínez Valero: 17 puntos para el central del Betis, más del triple de su media de 5,6.\n\nSu gol en el 89' puso el 0-2 en el Elche 🌴, después de que Riquelme abriera el marcador en el 81'. Cuesta 21,7 M y el Betis visita al Sevilla en la jornada 13: si lo tienes, no se vende."
+   },
+   {
+    "t": "2026-11-08T17:46:51.211Z",
+    "texto": "⭐ Barrenetxea y Oskarsson comparten el MVP del 1-0 de la Real Sociedad al Rayo ⚡: 13 puntos para cada uno.\n\nOskarsson, delantero, marcó el único gol en el 67' y se va a más del triple de su media. Vale 3,8 M. Barrenetxea, centrocampista, hace más del doble de su media de 4,8 y cuesta 26,7 M.\n\nLos dos visitan al Racing ⚓ en la jornada 13: si tienes a uno u otro, ahí siguen."
    }
   ],
   "mercado": [
@@ -3657,14 +3664,9 @@
  ],
  "fallosRedaccion": {
   "final|114": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-08T17:41:34.468Z",
-   "ultima": "2026-11-08T17:41:34.468Z"
-  },
-  "mvp|114": {
-   "n": 1,
-   "t": "2026-11-08T17:41:56.443Z",
-   "ultima": "2026-11-08T17:41:56.443Z"
+   "ultima": "2026-11-08T17:46:38.972Z"
   }
  },
  "rasgos": {
@@ -7186,13 +7188,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 476,
+   "ok": 479,
    "fallos": 0,
-   "ejecuciones": 235,
+   "ejecuciones": 236,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-08T17:41:13.093Z"
+   "ultima": "2026-11-08T17:46:13.816Z"
   }
  },
  "ptsDirecto": {
