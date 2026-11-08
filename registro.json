@@ -643,6 +643,13 @@
    "jornada": 12,
    "id": "2119449058758815931",
    "t": "2026-11-08T15:16:48.036Z"
+  },
+  {
+   "clave": "onces|111",
+   "tipo": "onces",
+   "jornada": 12,
+   "id": "2119469243419029844",
+   "t": "2026-11-08T16:37:00.511Z"
   }
  ],
  "estados": {
@@ -1716,7 +1723,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248652/kubo-regresa-titularidad-rayo-oyarzabal-queda-fuera-convocatoria.html": 1794147246000,
    "AS|https://as.com/futbol/primera/elche-betis-hoy-en-directo-ultima-hora-de-laliga-ea-sports-en-vivo-f202611-d/": 1794149789000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248660/mourinho-no-supera-flick.html": 1794149597000,
-   "SPORT|136225173": 1794147961000
+   "SPORT|136225173": 1794147961000,
+   "SPORT|136226921": 1794151993000
   },
   "hechos": [
    {
@@ -2281,7 +2289,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -3120,7 +3128,6 @@
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-aplaza-decision-sobre-sancion-owono-20261105_3469777.html": 1793897285000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/asi-sera-homenaje-futbol-espanol-jesus-miguel-solemne-minuto-silencio-paron-memoria-9-20261105_3469770.html": 1793896697000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677030/comite-aplaza-sancion-owono-jornada-liga-convertira-tributo-miguel.html": 1793896288000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898360000,
    "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html": 1793899045000,
@@ -3465,24 +3472,20 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 20,
-   "redactar": 25,
-   "revisar": 12,
+   "clasificar": 21,
+   "redactar": 31,
+   "revisar": 17,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 352803,
-  "salida": 17088,
-  "cacheLee": 18235,
-  "cacheEscribe": 13025,
-  "dolares": 0.737924
+  "entrada": 377808,
+  "salida": 19704,
+  "cacheLee": 84525,
+  "cacheEscribe": 23678,
+  "dolares": 0.842946
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-07T16:31:30.914Z",
-    "texto": "👀 Ya hay onces en El Sadar: el Osasuna sale con un 4-3-3 y el Athletic con un 4-2-3-1, y a las 18:30 arranca el partido.\n\nSin sorpresas en ninguno de los dos onces, así que quien tenga jugadores del Osasuna o del Athletic puede estar tranquilo."
-   },
    {
     "t": "2026-11-07T16:56:39.992Z",
     "texto": "👀 Budimir y Unai Simón, que son los que más puntos dan de sus equipos, con 7,5 de media cada uno, salen de titulares en El Sadar.\n\nNo hay sorpresas en el 4-3-3 del Osasuna 🐂 ni en el 4-2-3-1 del Athletic: quien tenga jugadores de este partido se encuentra con los onces que esperaba."
@@ -3498,6 +3501,10 @@
    {
     "t": "2026-11-08T14:16:27.237Z",
     "texto": "👀 Tranquilidad en el Real Sociedad-Rayo: los dos onces vienen sin sorpresas, así que quien tenga jugadores de este partido puede dejarlo como estaba.\n\nCarlos Soler está de titular en la Real, con un 4-4-2, y Camello sale de inicio en el Rayo ⚡, que juega con un 4-3-3."
+   },
+   {
+    "t": "2026-11-08T16:37:00.513Z",
+    "texto": "👀 Moleiro está en el once del Villarreal 🚢, y es el que más puntos da de su equipo, con 7 de media. El Villarreal sale con un 4-4-2 en La Cerámica.\n\nEn el Getafe también juega David Soria, el portero, que es el que más puntos da de los suyos, con 6,4. Los dos onces no traen sorpresas y el partido empieza en menos de una hora."
    }
   ],
   "final": [
@@ -3675,9 +3682,9 @@
  ],
  "fallosRedaccion": {
   "onces|119": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-08T16:31:42.853Z",
-   "ultima": "2026-11-08T16:31:42.853Z"
+   "ultima": "2026-11-08T16:36:57.346Z"
   }
  },
  "rasgos": {
@@ -7182,13 +7189,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 450,
+   "ok": 452,
    "fallos": 0,
-   "ejecuciones": 221,
+   "ejecuciones": 222,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 448,
-   "ultima": "2026-11-08T16:31:14.349Z"
+   "ultima": "2026-11-08T16:36:14.242Z"
   }
  },
  "ptsDirecto": {
