@@ -25,8 +25,8 @@ jobs:
   publicar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
       - name: ¿Están las claves de Cloudflare?
@@ -48,10 +48,10 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          lista=$(npx --yes wrangler@4 kv namespace list 2>/dev/null || echo '[]')
+          lista=$(npx --yes wrangler@4.158.0 kv namespace list 2>/dev/null || echo '[]')
           id=$(echo "$lista" | jq -r '.[]? | select(.title=="VINCULOS" or .title=="fantasy-manager-VINCULOS") | .id' 2>/dev/null | head -1)
           if [ -z "$id" ]; then
-            salida=$(npx --yes wrangler@4 kv namespace create VINCULOS 2>&1 || true)
+            salida=$(npx --yes wrangler@4.158.0 kv namespace create VINCULOS 2>&1 || true)
             id=$(echo "$salida" | grep -oE '[0-9a-f]{32}' | head -1)
           fi
           if [ -n "$id" ]; then
@@ -72,7 +72,7 @@ jobs:
           extra=()
           adm=$(printf '%s' "$FM_ADMINS" | tr -cd '0-9,')
           if [ -n "$adm" ]; then extra=(--var "ADMINS:$adm"); echo "::notice::Avisos de fallos: con dueño"; else echo "::warning::Sin FM_ADMINS: los avisos de fallos se guardan, pero nadie los puede leer ni contestar desde la app"; fi
-          publicar() { npx --yes wrangler@4 deploy "${extra[@]}" 2>&1 | tee salida.txt; }
+          publicar() { npx --yes wrangler@4.158.0 deploy "${extra[@]}" 2>&1 | tee salida.txt; }
           fallo() { grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300; }
           if ! publicar; then
             # los frenos por minuto (revisión total, C1): si Cloudflare no los deja crear, se publica sin ellos y el Worker
@@ -120,7 +120,7 @@ jobs:
             echo "::warning::Sin el secreto BOT_DISPATCH_TOKEN: el cron del Worker no lanza «Bot X»"
             exit 0
           fi
-          if printf '%s' "$BOT_DISPATCH_TOKEN" | npx --yes wrangler@4 secret put BOT_DISPATCH_TOKEN > salida.txt 2>&1; then
+          if printf '%s' "$BOT_DISPATCH_TOKEN" | npx --yes wrangler@4.158.0 secret put BOT_DISPATCH_TOKEN > salida.txt 2>&1; then
             echo "::notice::Reloj del bot listo: el Worker lanza «Bot X» cada 5 min"
           else
             echo "::error::No se ha podido guardar BOT_DISPATCH_TOKEN en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"

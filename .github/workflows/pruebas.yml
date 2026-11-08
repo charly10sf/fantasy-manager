@@ -1,6 +1,9 @@
 # Las pruebas en cada push (revisión total, A13), en cualquier rama menos bot-estado (la escribe el bot cada 5 min):
 #   web: la misma prueba de la web que hace «Web» antes de publicar (.github/prueba-web.mjs);
 #   sin-red: worker/prueba/datos.mjs y las bot/prueba/*-ejemplo.mjs con la red cortada (.github/pruebas-sin-red.sh).
+#   firma: Ed25519.java (el que comprueba paquete.json en el APK) contra los vectores del RFC 8032 y, con el secreto
+#     PAQUETE_FIRMA, firma el paquete.json de esta rama y lo verifica con la clave pública de AlDia.java, igual que
+#     «Web» antes de publicar (revisión total, A5). Sin el secreto, falla: así se ve antes de llegar a main.
 # No publica nada.
 name: Pruebas
 
@@ -21,8 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
       - name: Playwright y Chromium
@@ -36,8 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
       - name: Dependencias del bot
@@ -45,3 +48,19 @@ jobs:
       # un espacio de red sin nada más que lo (127.0.0.1, para los servidores falsos de las pruebas)
       - name: Worker y bot, con la red cortada
         run: sudo unshare --net sh -c 'ip link set lo up && PATH="$0" sh .github/pruebas-sin-red.sh' "$PATH"
+
+  firma:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Ed25519.java con los vectores del RFC 8032
+        run: |
+          javac -nowarn -d "$RUNNER_TEMP/firma" android/app/src/main/java/es/fantasymanager/app/Ed25519.java android/prueba/PruebaFirma.java
+          java -cp "$RUNNER_TEMP/firma" es.fantasymanager.app.PruebaFirma
+      - name: Firmar y comprobar con la clave de verdad
+        env:
+          PAQUETE_FIRMA: ${{ secrets.PAQUETE_FIRMA }}
+        run: |
+          python3 .github/paquete.py > /dev/null
+          bash .github/firmar-paquete.sh web/paquete.json

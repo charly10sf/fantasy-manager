@@ -52,7 +52,7 @@ Lo que se cambia sin sacar versión. La app lo lee de raw de main y la web de Pa
 
 ### android/
 
-- WebView que sirve web/ desde el APK. AlDia.java baja la web nueva de Pages si la parte Android no ha cambiado (comparando huellas) y vuelve a la del APK si la nueva no arranca.
+- WebView que sirve web/ desde el APK. AlDia.java baja la web nueva de Pages si la parte Android no ha cambiado (comparando huellas) y vuelve a la del APK si la nueva no arranca. Desde la sesión 4 de la revisión total, solo si paquete.json viene firmado: paquete.json.sig (Ed25519) se comprueba con `CLAVE_PAQUETE` de AlDia.java (Ed25519.java, propio porque Android solo lo trae desde la API 33 y el minSdk es 26). La privada es el secreto de Actions `PAQUETE_FIRMA` (la generó Carlos); la firma la pone .github/firmar-paquete.sh en «Web» y «Dominio», y sin el secreto no se publica.
 - Sabores `github` (la liga, sin anuncios) y `play` (Google Play). Solo `play` lleva AdMob (`src/play/.../Anuncios.java`: consentimiento de la UE, banner bajo la web y bonificado; en `src/github`, un stub) y no lleva el servicio en primer plano (Google pide justificarlo con un vídeo). `fm.anunciosReales` en android/gradle.properties: true, anuncios de verdad; false, bloques de prueba de Google.
 - Que nadie de la liga ni los testers toquen anuncios: AdMob cierra cuentas por clics propios.
 - Play Console: play/ficha.md y play/prueba-cerrada.md.
@@ -65,8 +65,9 @@ Lo que se cambia sin sacar versión. La app lo lee de raw de main y la web de Pa
 
 ### .github/
 
-- android.yml (compila en main y pendiente, publica APK y app.json solo desde main; desde pendiente deja el APK de GitHub en la pre-release `prueba`, enlace directo para probarlo en el móvil: https://github.com/charly10sf/fantasy-manager/releases/download/prueba/fantasy-manager-prueba.apk; lo pidió Carlos el 31 oct), web.yml (GitHub Pages), dominio.yml (el respaldo en Cloudflare Pages, al acabar «Web» y «App Android» en main), worker.yml y fallos.yml (a mano: lee y contesta los avisos de Fallo). vista-previa.yml: cada push a una rama `web-…` sube web/ a Cloudflare Pages como vista previa, sin publicar nada, en https://<rama>.fantasy-manager-61v.pages.dev.
-- paquete.py genera paquete.json con las huellas y pone en web/index.html cada módulo con su huella (`js/x.js?v=…`): en el repo index.html va sin huellas, se ponen al publicar.
+- Las acciones van fijadas por SHA con su etiqueta en un comentario (Dependabot propone subirlas una vez al mes) y wrangler con versión exacta.
+- android.yml (tres trabajos: compilar, con los secretos de firma y solo lectura; publicar, sin secretos y con escritura; registro. versionCode = run_number × 10 + run_attempt, y es el «version» de app.json. En main sube también fantasy-manager-<versión>-<código>.apk a la release «app» (se guardan los 20 últimos) y no se cancela a medias. Compila en main y pendiente, publica APK y app.json solo desde main; desde pendiente deja el APK de GitHub en la pre-release `prueba`, enlace directo para probarlo en el móvil: https://github.com/charly10sf/fantasy-manager/releases/download/prueba/fantasy-manager-prueba.apk; lo pidió Carlos el 31 oct), web.yml (GitHub Pages), dominio.yml (el respaldo en Cloudflare Pages, al acabar «Web» y «App Android» en main), worker.yml y fallos.yml (a mano: lee y contesta los avisos de Fallo). vista-previa.yml: cada push a una rama `web-…` sube web/ a Cloudflare Pages como vista previa, sin publicar nada, en https://<rama>.fantasy-manager-61v.pages.dev.
+- paquete.py genera paquete.json con las huellas (la nativa cubre android/app/src más build.gradle, settings.gradle, gradle.properties y reglas-r8.pro) y pone en web/index.html cada módulo con su huella (`js/x.js?v=…`): en el repo index.html va sin huellas, se ponen al publicar.
 
 ## Avisos de Fallo
 
@@ -83,7 +84,7 @@ Revisarlos antes de cada versión y contestar solo con lo ya publicado. También
 2. Commit con los trailers de Claude.
 3. `git pull -q --rebase origin main && git push -q origin HEAD:main`.
 4. Esperar las Actions «Web» y «App Android» (y «Worker» si cambia worker/).
-5. `git pull` (la Action sube app.json), subir también a `pendiente` y comprobar https://fantasymanagerapp.com/paquete.json (GitHub Pages; github.io redirige ahí) y, tras la Action «Dominio», el respaldo https://fantasy-manager-61v.pages.dev/paquete.json.
+5. `git pull` (la Action sube app.json), subir también a `pendiente` y comprobar https://fantasymanagerapp.com/paquete.json y paquete.json.sig (GitHub Pages; github.io redirige ahí) y, tras la Action «Dominio», el respaldo https://fantasy-manager-61v.pages.dev/paquete.json.
 
 Si cambia algo en android/app/src cambia la huella nativa y los móviles necesitan el APK nuevo. Si no, la web les llega sola.
 

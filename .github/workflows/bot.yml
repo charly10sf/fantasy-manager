@@ -59,8 +59,8 @@ jobs:
       ANTHROPIC_API_KEY: ${{ vars.BOT_MODO == 'publicar' && secrets.ANTHROPIC_API_KEY || '' }}
       TIPOS: ${{ inputs.tipos }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
       # Las tarjetas con imagen (bot/lib/con-tarjetas.mjs) necesitan @resvg/resvg-js: solo se instala si alguna está encendida
@@ -116,7 +116,7 @@ jobs:
         run: node bot/telegram.mjs --aviso=fallo --estado=estado/telegram.json
       - name: Guardar las tarjetas de esta ejecución (para verlas en Actions)
         if: ${{ always() && !inputs.comprobar && hashFiles('tarjetas/*.png') != '' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: tarjetas-${{ github.run_id }}
           path: tarjetas/*.png

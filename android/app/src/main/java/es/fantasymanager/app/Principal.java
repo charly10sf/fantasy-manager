@@ -116,6 +116,9 @@ public class Principal extends Activity {
             @Override
             public void onPageStarted(WebView v, String url, android.graphics.Bitmap icono) {
                 AlDia.cargaT = System.currentTimeMillis();
+                // cada página empieza sin banner (al recargar, o al volver a la entrada): hasta que la web nueva lo
+                // pida, nada de anuncios encima de la carga
+                Anuncios.banner(false);
             }
 
             @Override
