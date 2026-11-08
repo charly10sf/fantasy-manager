@@ -3145,7 +3145,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247648/oficial-laliga-aplaza-castellon-eibar-fallecimiento-jesus-miguel.html": 1793898608000,
    "Europa Press|https://www.europapress.es/madrid/noticia-profesores-publica-tinen-verde-calles-madrid-si-no-hay-negociacion-movilizaciones-iran-mas-20261105183505.html": 1793900105000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/05/rfef-anuncia-nuevo-horario-tarancon-136133977.html": 1793901786000,
-   "SPORT|136134645": 1793897750000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mantienen-huelga-renfe-reunion-avances-cuerpo-cita-manana-20261105191500.html": 1793902500000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/copa-del-rey/20261105/1004247677/rfef-actualiza-calendario-partidos-aplazados-copa.html": 1793902180000,
@@ -7191,13 +7190,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 458,
+   "ok": 460,
    "fallos": 0,
-   "ejecuciones": 225,
+   "ejecuciones": 226,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 447,
-   "ultima": "2026-11-08T16:51:17.547Z"
+   "mediaMs": 446,
+   "ultima": "2026-11-08T16:56:12.574Z"
   }
  },
  "ptsDirecto": {
