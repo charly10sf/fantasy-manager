@@ -3149,7 +3149,6 @@
  },
  "liga": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
    "Europa Press|https://www.europapress.es/madrid/noticia-profesores-publica-tinen-verde-calles-madrid-si-no-hay-negociacion-movilizaciones-iran-mas-20261105183505.html": 1793900105000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/05/rfef-anuncia-nuevo-horario-tarancon-136133977.html": 1793901786000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
@@ -3226,25 +3225,6 @@
    "SPORT|136226466": 1794152883000
   },
   "hechos": [
-   {
-    "guid": "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html",
-    "medio": "ABC",
-    "t": 1793899320000,
-    "tipo": "suspension",
-    "estado": "descartado",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Petición de aplazamiento por el fallecimiento del jugador Jesús de Miguel",
-    "detalle": "La jornada se disputará con homenajes en todos los encuentros",
-    "nums": [
-     6,
-     9
-    ]
-   },
    {
     "guid": "SPORT|136138825",
     "medio": "SPORT",
@@ -7164,13 +7144,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 468,
+   "ok": 469,
    "fallos": 0,
-   "ejecuciones": 231,
+   "ejecuciones": 232,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 443,
-   "ultima": "2026-11-08T17:21:12.873Z"
+   "ultima": "2026-11-08T17:26:14.067Z"
   }
  },
  "ptsDirecto": {
