@@ -3167,7 +3167,6 @@
    "SPORT|136157637": 1793966510000,
    "SPORT|136164914": 1793968169000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/03/el-alcoyano-mallorca-es-nuevamente-aplazado-por-el-fallecimiento-de-jesus-de-miguel-radio-alcoy/": 1793888400000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
    "SPORT|136162605": 1793984430000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988650000,
@@ -3203,7 +3202,9 @@
    "SPORT|136220224": 1794133655000,
    "SPORT|136220730": 1794135619000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/tavernes-valencia-horario-ver-partido-copa-136222269.html": 1794143685000,
-   "SPORT|136221598": 1794138326000
+   "SPORT|136221598": 1794138326000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/08/las-palmas-y-eldense-se-enfrentaran-este-lunes-a-las-2030-h-radio-elda/": 1794147139000,
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000
   },
   "hechos": [
    {
@@ -3585,27 +3586,25 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146775163
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 213212,
-  "salida": 13076,
+  "entrada": 214943,
+  "salida": 13952,
   "cacheLee": 10420,
   "cacheEscribe": 7815,
-  "dolares": 0.435791
+  "dolares": 0.436402
  },
  "recientes": {
   "onces": [
@@ -7268,13 +7267,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 398,
+   "ok": 400,
    "fallos": 0,
-   "ejecuciones": 193,
+   "ejecuciones": 194,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 468,
-   "ultima": "2026-11-08T14:16:13.788Z"
+   "mediaMs": 467,
+   "ultima": "2026-11-08T14:21:12.367Z"
   }
  },
  "ptsDirecto": {}
