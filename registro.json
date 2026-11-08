@@ -1490,7 +1490,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario Sur|https://www.diariosur.es/malagacf/virus-fifa-malaga-aznou-marruecos-sub23-futbol-20261105123950-nt.html": 1793879095000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247531/numeros-vinicius-confirman-ocaso-regate-intentado-seis-ceros.html": 1793881800000,
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/05/luis-garcia-plaza-rentabilizar-momentos-superiores.html": 1793882703000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html": 1793883472000,
@@ -7419,13 +7418,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 351,
+   "ok": 352,
    "fallos": 0,
-   "ejecuciones": 162,
+   "ejecuciones": 163,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 476,
-   "ultima": "2026-11-08T11:41:12.331Z"
+   "ultima": "2026-11-08T11:46:18.084Z"
   }
  },
  "ptsDirecto": {}
