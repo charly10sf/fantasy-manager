@@ -12,6 +12,9 @@ workers_dev = true
 # que de verdad es esa cuenta. Si existe el secreto FM_ADMINS, manda el secreto.
 [vars]
 ADMINS = "667015"
+# El paso al ordenador con la sesión sin cerrar (la app antes de la 0.7a). Cuando en «Quién usa la app» no quede nadie por
+# debajo de la 0.7a, ponlo a "no" (revisión total, C6).
+FORMATO_VIEJO = "si"
 
 # Cada 5 min lanza el workflow «Bot X» en main (scheduled en src/index.js), porque el cron de GitHub Actions no dispara.
 # Necesita el secreto BOT_DISPATCH_TOKEN, que worker.yml copia del secreto de Actions del mismo nombre.
@@ -29,3 +32,16 @@ class_name = "Emparejar"
 [[migrations]]
 tag = "qr-1"
 new_sqlite_classes = ["Emparejar"]
+
+# Los frenos por minuto (revisión total, C1): el Rate Limiting de Workers, que entra en el plan gratis. Cuenta por centro de
+# Cloudflare y es aproximado; el Worker lleva además su contador en memoria y los topes por día en el Durable Object.
+# Si Cloudflare no deja crearlos, worker.yml los quita y publica sin ellos (el Worker sigue con los de memoria).
+[[ratelimits]]
+name = "FRENO_ESCRIBIR"
+namespace_id = "7101"
+simple = { limit = 6, period = 60 }
+
+[[ratelimits]]
+name = "FRENO_LEER"
+namespace_id = "7102"
+simple = { limit = 45, period = 60 }

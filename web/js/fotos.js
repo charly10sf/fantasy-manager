@@ -118,13 +118,14 @@ export const prepararB64 = (b64) => preparar(`data:image/jpeg;base64,${b64}`);
 
 /*
  * una captura para un aviso de Fallo: más pequeña que las del chat (el servidor del Worker las guarda tal cual y tiene
- * poco tiempo para cada petición): lado largo de 1400 px y, si aún pasa de unos 650 KB, más pequeña
+ * poco tiempo para cada petición): lado largo de 1400 px y, si aún pasa de unos 340 KB, más pequeña (el Worker no
+ * guarda las de más de 350 KB desde la revisión total, C1)
  */
+const MAX_CAPTURA = 340000;
 async function captura(src) {
   const im = await cargarImg(src);
   let g = dibujar(im, 1400, 0.72);
-  if (g.url.length > 650000) g = dibujar(im, 1100, 0.6);
-  if (g.url.length > 650000) g = dibujar(im, 900, 0.5);
+  for (const [lado, cal] of [[1100, 0.6], [900, 0.5], [720, 0.45], [560, 0.4]]) if (g.url.length > MAX_CAPTURA) g = dibujar(im, lado, cal);
   return { id: nuevoId(), url: g.url, mini: dibujar(im, 240, 0.6).url };
 }
 export async function capturaArchivo(file) {

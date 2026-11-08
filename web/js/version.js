@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7z';
+export const VERSION = '0.7za';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.7z';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7za', f: '2026-11-08', h: '18:49', t: 'El servidor de la web, con frenos',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'candado', t: 'Nadie puede agotar el servidor de la web', x: 'Límites por IP en el código de 8 letras, el QR y los avisos, y por cuenta en el tiempo de uso y en «Quién usa la app»: antes, unas mil peticiones sin cuenta dejaban sin el paso al ordenador y sin avisos a todos hasta el día siguiente. El tiempo de uso se guarda como mucho cada 4 minutos, 5 avisos al día por cuenta con capturas de hasta 350 KB, y si el servidor llega a su tope lo dice claro en vez de dar un código que no funciona.', menor: true },
+      { para: 'dueño', tipo: 'mejora', d: 'conexion', t: 'El Worker y Deno, cerrados', x: 'Cada sitio solo deja lo que usa la app: en login.laliga.es, pedir la sesión; en la API de LaLiga, leer con tu sesión; en el resto, leer. Sin puertos, /img solo con imágenes de LaLiga, y la dirección de Cloudflare Pages fijada a la nuestra. /caras solo da las fotos de una liga en la que estás, y la ficha para contar usuarios se borra a los 400 días sin abrir la app.', menor: true },
+    ],
+  },
   {
     v: '0.7z', f: '2026-11-08', h: '17:52', t: 'La app no se queda colgada',
     cosas: [

@@ -72,25 +72,37 @@ jobs:
           extra=()
           adm=$(printf '%s' "$FM_ADMINS" | tr -cd '0-9,')
           if [ -n "$adm" ]; then extra=(--var "ADMINS:$adm"); echo "::notice::Avisos de fallos: con dueño"; else echo "::warning::Sin FM_ADMINS: los avisos de fallos se guardan, pero nadie los puede leer ni contestar desde la app"; fi
-          if ! npx --yes wrangler@4 deploy "${extra[@]}" 2>&1 | tee salida.txt; then
-            # el QR va en un Durable Object (0.6.12): si Cloudflare no deja crearlo, se publica sin él y el QR va por el KV
-            if grep -q 'durable_objects' wrangler.toml; then
-              echo "::warning::Sin Durable Objects ($(grep -iE 'error|✘' salida.txt | head -2 | tr '\n' ' ' | cut -c1-200)): se publica sin ellos y el QR va por el KV (puede tardar hasta un minuto)"
+          publicar() { npx --yes wrangler@4 deploy "${extra[@]}" 2>&1 | tee salida.txt; }
+          fallo() { grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300; }
+          if ! publicar; then
+            # los frenos por minuto (revisión total, C1): si Cloudflare no los deja crear, se publica sin ellos y el Worker
+            # se queda con los de memoria y los topes por día del Durable Object
+            if grep -q '^\[\[ratelimits\]\]' wrangler.toml; then
+              echo "::warning::Sin Rate Limiting ($(fallo)): se prueba a publicar sin él"
               python3 - <<'PY'
+          import re
+          t = open('wrangler.toml').read()
+          t = re.sub(r'\n# Los frenos por minuto.*?namespace_id = "7102"\nsimple = \{[^}]*\}\n', '\n', t, flags=re.S)
+          open('wrangler.toml', 'w').write(t)
+          PY
+            fi
+            if ! publicar; then
+              # el QR va en un Durable Object (0.6.12): si Cloudflare no deja crearlo, se publica sin él y el QR va por el KV
+              if grep -q 'durable_objects' wrangler.toml; then
+                echo "::warning::Sin Durable Objects ($(fallo)): se publica sin ellos y el QR va por el KV (puede tardar hasta un minuto)"
+                python3 - <<'PY'
           import re
           t = open('wrangler.toml').read()
           t = re.sub(r'\n# El QR para entrar.*?new_sqlite_classes = \[[^\]]*\]\n', '\n', t, flags=re.S)
           open('wrangler.toml', 'w').write(t)
           PY
-              if ! npx --yes wrangler@4 deploy "${extra[@]}" 2>&1 | tee salida.txt; then
-                echo "::error::No se ha podido publicar: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
-                exit 1
+                if ! publicar; then echo "::error::No se ha podido publicar: $(fallo)"; exit 1; fi
+              else
+                echo "::error::No se ha podido publicar: $(fallo)"; exit 1
               fi
-            else
-              echo "::error::No se ha podido publicar: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
-              exit 1
             fi
           fi
+          if grep -q '^\[\[ratelimits\]\]' wrangler.toml; then echo "::notice::Frenos por minuto: con Rate Limiting"; fi
           if grep -q 'durable_objects' wrangler.toml; then echo "::notice::QR del ordenador: con Durable Object"; fi
           url=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' salida.txt | head -1)
           echo "::notice::Worker publicado en ${url:-(sin dirección workers.dev: actívala en Cloudflare > Workers)}"
