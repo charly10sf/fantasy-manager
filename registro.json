@@ -608,6 +608,13 @@
    "jornada": 12,
    "id": "2119403687734808652",
    "t": "2026-11-08T12:16:30.957Z"
+  },
+  {
+   "clave": "onces|114",
+   "tipo": "onces",
+   "jornada": 12,
+   "id": "2119433871632785884",
+   "t": "2026-11-08T14:16:27.235Z"
   }
  ],
  "estados": {
@@ -3589,23 +3596,19 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 15,
-   "redactar": 14,
-   "revisar": 6,
+   "redactar": 15,
+   "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 198612,
-  "salida": 12921,
+  "entrada": 213212,
+  "salida": 13076,
   "cacheLee": 10420,
-  "cacheEscribe": 5210,
-  "dolares": 0.398528
+  "cacheEscribe": 7815,
+  "dolares": 0.435791
  },
  "recientes": {
   "onces": [
-   {
-    "t": "2026-11-07T14:16:41.826Z",
-    "texto": "👀 Ya hay onces confirmados en el Espanyol 🦜-Deportivo, que empieza hoy a las 16:15: el Espanyol juega con cinco atrás, en un 5-4-1, y el Dépor sale con un 4-4-2.\n\nLos dos onces vienen sin sorpresas respecto a lo esperado."
-   },
    {
     "t": "2026-11-07T16:31:30.914Z",
     "texto": "👀 Ya hay onces en El Sadar: el Osasuna sale con un 4-3-3 y el Athletic con un 4-2-3-1, y a las 18:30 arranca el partido.\n\nSin sorpresas en ninguno de los dos onces, así que quien tenga jugadores del Osasuna o del Athletic puede estar tranquilo."
@@ -3621,6 +3624,10 @@
    {
     "t": "2026-11-08T12:16:30.959Z",
     "texto": "👀 Cuatro atrás y tres delanteros para los dos: el Elche 🌴 y el Betis salen con un 4-3-3 en el Martínez Valero, y no hay sorpresas.\n\nEn las porterías juegan Dituro, por el Elche, y Valles, por el Betis, que lleva 9 de media y es de los que más puntos dan. Quien los tenga puede estar tranquilo."
+   },
+   {
+    "t": "2026-11-08T14:16:27.237Z",
+    "texto": "👀 Tranquilidad en el Real Sociedad-Rayo: los dos onces vienen sin sorpresas, así que quien tenga jugadores de este partido puede dejarlo como estaba.\n\nCarlos Soler está de titular en la Real, con un 4-4-2, y Camello sale de inicio en el Rayo ⚡, que juega con un 4-3-3."
    }
   ],
   "final": [
@@ -7261,13 +7268,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 396,
+   "ok": 398,
    "fallos": 0,
-   "ejecuciones": 192,
+   "ejecuciones": 193,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 468,
-   "ultima": "2026-11-08T14:11:19.415Z"
+   "ultima": "2026-11-08T14:16:13.788Z"
   }
  },
  "ptsDirecto": {}
