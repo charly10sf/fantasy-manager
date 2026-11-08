@@ -615,6 +615,13 @@
    "jornada": 12,
    "id": "2119433871632785884",
    "t": "2026-11-08T14:16:27.235Z"
+  },
+  {
+   "clave": "directo|118|Rodrigo Riquelme|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119440119392321719",
+   "t": "2026-11-08T14:41:16.767Z"
   }
  ],
  "estados": {
@@ -3597,16 +3604,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 17,
-   "redactar": 15,
+   "redactar": 16,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 216893,
-  "salida": 14122,
+  "entrada": 227591,
+  "salida": 14237,
   "cacheLee": 10420,
   "cacheEscribe": 7815,
-  "dolares": 0.436682
+  "dolares": 0.459228
  },
  "recientes": {
   "onces": [
@@ -3715,10 +3722,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T19:21:18.664Z",
-    "texto": "⚽ Catena marca en el 90' y el Osasuna 🐂 recorta distancias: 0-1 ante el Athletic 🦁.\n\nEl defensa se mete en el partido justo al final, con el marcador todavía en juego. Si lo tienes, buen premio para tu jornada."
-   },
-   {
     "t": "2026-11-07T20:31:18.385Z",
     "texto": "⚽ Gol de Valverde y el Real Madrid se adelanta en el 28'. Valencia 0-1 Real Madrid. Ya suma 6 puntos fantasy."
    },
@@ -3733,6 +3736,10 @@
    {
     "t": "2026-11-07T21:46:17.076Z",
     "texto": "🟥 Roja para Gayá en el 79'. Valencia 0-3 Real Madrid. El Valencia se queda con diez y encima va perdiendo. Se queda en -5 puntos fantasy."
+   },
+   {
+    "t": "2026-11-08T14:41:16.769Z",
+    "texto": "⚽ Riquelme la empalma de volea en el 81' y el Betis se adelanta en el Martínez Valero: 0-1 ante el Elche 🌴.\n\nSuma 6 puntos, muy por encima de su media. Es su tercer gol esta temporada entre Liga, Champions y Copa."
    }
   ],
   "novedades": [
@@ -7265,18 +7272,41 @@
    "re": "90'+4'",
    "w": "2026-11-07T21:38:22Z",
    "f": "2026-11-07T22:21:15.816Z"
+  },
+  "fm|118|1072200|81": {
+   "j": "Rodrigo Riquelme",
+   "m": "81'",
+   "f": "2026-11-08T14:41:11.899Z",
+   "rf": "82:55",
+   "casado": true
+  },
+  "directo|118|Rodrigo Riquelme|gol1": {
+   "j": "Rodrigo Riquelme",
+   "m": "81'",
+   "e": "2026-11-08T14:41:11.899Z",
+   "re": "83'",
+   "w": "2026-11-08T14:38:19Z",
+   "f": "2026-11-08T14:41:11.899Z",
+   "rf": "82:55"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 406,
+   "ok": 408,
    "fallos": 0,
-   "ejecuciones": 197,
+   "ejecuciones": 198,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 464,
-   "ultima": "2026-11-08T14:36:13.245Z"
+   "mediaMs": 463,
+   "ultima": "2026-11-08T14:41:11.899Z"
   }
  },
- "ptsDirecto": {}
+ "ptsDirecto": {
+  "12|118|2548": {
+   "p": 6,
+   "g": 1,
+   "a": 0,
+   "t": 1794148871899
+  }
+ }
 }
