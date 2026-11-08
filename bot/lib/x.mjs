@@ -23,7 +23,7 @@ export function clavesDelEntorno(env = process.env) {
 
 /** publica un tweet (con imágenes ya subidas, si se pasan sus media_ids). Devuelve { ok, estado, id, cuerpo }.
     No reintenta: un fallo no debe duplicar el post. */
-export async function publicar(texto, claves, { base = process.env.X_API_BASE || 'https://api.x.com', mediaIds = [] } = {}) {
+export async function publicar(texto, claves, { base = process.env.X_API_BASE || 'https://api.x.com', mediaIds = [], tiempo = 20000 } = {}) {
   if ([...texto].length === 0) throw new Error('tweet vacío');
   const url = `${base}/2/tweets`;
   const oauth = firmar({ metodo: 'POST', url, claves, nonce: crypto.randomBytes(16).toString('hex'), marca: String(Math.floor(Date.now() / 1000)) });
@@ -32,11 +32,27 @@ export async function publicar(texto, claves, { base = process.env.X_API_BASE ||
     method: 'POST',
     headers: { Authorization: cabecera(oauth), 'Content-Type': 'application/json', 'User-Agent': 'FantasyManager/0.1' },
     body: JSON.stringify(cuerpoTweet),
-    signal: AbortSignal.timeout(20000),
+    signal: AbortSignal.timeout(tiempo),
   });
   const cuerpo = await r.text();
   let j = null; try { j = JSON.parse(cuerpo); } catch { /* texto */ }
   return { ok: r.status === 201, estado: r.status, id: j && j.data && j.data.id, cuerpo: cuerpo.slice(0, 400) };
+}
+
+/**
+ * publica y, si X no contesta a tiempo o falla la red, no se sabe si el tuit ha salido: se apunta en el registro como dudoso (no se
+ * vuelve a intentar: la IA lo redactaría distinto y el «duplicate» de X no lo pararía) y se avisa a Carlos por la cola de Telegram
+ * (revisión total, A11). Devuelve lo de publicar() o { dudoso: true, que }.
+ */
+export async function publicarSinRepetir(t, { registro, claves, mediaIds = [], encolar, pedir = publicar, tiempo } = {}) {
+  try { return await pedir(t.texto, claves, { mediaIds, ...(tiempo ? { tiempo } : {}) }); }
+  catch (e) {
+    const que = e && e.name === 'TimeoutError' ? 'X no ha contestado a tiempo' : `error de red (${(e && e.message) || e})`;
+    registro.marcar(t, null, { dudoso: true });
+    if (encolar) encolar(registro, `dudoso|${t.clave}`, `⚠️ No sé si ha salido un tuit (${que}): ${t.clave}. Míralo en la cuenta; no lo vuelvo a publicar.\n\n${String(t.texto).slice(0, 500)}`);
+    if (registro.fichero) registro.guardar();
+    return { ok: false, dudoso: true, que };
+  }
 }
 
 /** sube una imagen PNG para un tweet: POST /2/media/upload con cuerpo JSON (la imagen en base64, categoría tweet_image).

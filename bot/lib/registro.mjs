@@ -8,7 +8,10 @@ export class Registro {
   constructor(config, fichero = null) {
     this.config = config; this.fichero = fichero;
     this.datos = { enviados: [] };
-    if (fichero && existsSync(fichero)) { try { this.datos = JSON.parse(readFileSync(fichero, 'utf8')); } catch { /* vacío */ } }
+    // (roto: el archivo está pero no se puede leer; publicando, ejecutar.mjs no arranca con él: revisión total, C4)
+    this.existe = !!(fichero && existsSync(fichero));
+    if (this.existe) { try { this.datos = JSON.parse(readFileSync(fichero, 'utf8')); } catch { this.roto = true; } }
+    if (!this.datos || !Array.isArray(this.datos.enviados)) { this.datos = { ...(this.datos || {}), enviados: [] }; }
     this.claves = new Set(this.datos.enviados.map((e) => e.clave));
     this.enEstaEjecucion = 0;
   }
@@ -36,10 +39,12 @@ export class Registro {
     if (this.enEstaEjecucion >= (this.config.maxPorEjecucion ?? 4)) return `máximo de ${this.config.maxPorEjecucion ?? 4} por ejecución (sigue en la próxima)`;
     return 'ok';
   }
-  marcar(tw, id) {
+  /** `dudoso`: X no contestó (tiempo agotado o error de red) y no se sabe si salió: se apunta igual para no repetirlo (A11).
+      La huella de un gol o una roja del directo va con él (tipos/directo.mjs). */
+  marcar(tw, id, { dudoso = false } = {}) {
     this.claves.add(tw.clave);
     this.enEstaEjecucion++;
-    this.datos.enviados.push({ clave: tw.clave, tipo: tw.tipo, jornada: tw.jornada, id: id || null, t: new Date().toISOString() });
+    this.datos.enviados.push({ clave: tw.clave, tipo: tw.tipo, jornada: tw.jornada, id: id || null, t: new Date().toISOString(), ...(dudoso ? { dudoso: true } : {}), ...(tw.huella ? { huella: tw.huella } : {}) });
     this.guardar();
   }
   /** en simulacro solo se reservan en memoria (para que los topes se vean) */

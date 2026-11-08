@@ -123,10 +123,22 @@ export function sucesosSinHechos(texto, hechos) {
   return SUCESOS.filter(([dice, hay]) => dice.test(t) && !hay.test(h)).map((x) => x[2]);
 }
 
-export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = [], max = limite(), numeros = [] } = {}) {
+// «hoy», «esta tarde», «esta noche» de un partido que ya ha empezado (8 nov, Barrenetxea: «llega con dudas al partido de esta tarde» a las
+// 18:06 de un partido de las 16:15). Y si el equipo ya jugó hoy (`partido.yaJugoHoy`), nada de «esta tarde», «esta noche» ni «hoy a las».
+const HOY = /\b(hoy|esta tarde|esta noche|esta mañana)\b/i, HOY_HORA = /\b(esta tarde|esta noche|hoy a las)\b/i;
+export function deHoyMal(texto, hechos, ahora = Date.now()) {
+  const p = (hechos && hechos.partido) || {};
+  const f = Date.parse(p.fecha || '');
+  if (Number.isFinite(f) && f <= ahora && HOY.test(texto)) return `habla de «${texto.match(HOY)[0]}» de un partido que ya ha empezado`;
+  if (p.yaJugoHoy && HOY_HORA.test(texto)) return `dice «${texto.match(HOY_HORA)[0]}» y su equipo ya ha jugado hoy: el partido del que se habla es el siguiente`;
+  return null;
+}
+export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = [], max = limite(), numeros = [], ahora = Date.now() } = {}) {
   const e = [];
   const t = String(texto || '').trim();
   if (!t) return ['texto vacío'];
+  const hoyMal = deHoyMal(t, hechos, ahora);
+  if (hoyMal) e.push(hoyMal);
   const v = validar(t, { numeros: [...new Set([...numeros, ...cifrasDe(hechos, cronicas)])], max });
   if (!v.ok) e.push(...v.errores);
   // nombres: solo los de los hechos (jugadores y clubes, con los nombres permitidos de cada club)
@@ -361,6 +373,9 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   const xs = tweets.filter((t) => t && t.hechos);
   if (!activo || !xs.length || !(cfg.tipos || []).includes(tipo)) return 0;
   if (!conClaude(config) && !(config.ia || {}).geminiRedacta) { for (const t of xs) t.redaccion = 'sin-ia'; log(`  (redactar) sin Claude: ${tipo} sale con la plantilla`); return 0; }
+  // sin registro guardado (el simulacro del cron, o sin BOT_MODO) no se gasta cupo, salvo que se fuerce, como en pulir: el gasto arrancaba
+  // en 0 en cada ejecución y nada quedaba marcado, así que cada 5 min se redactaban otra vez los mismos tuits (revisión total, C5)
+  if (!forzar && !(registro && registro.fichero)) { for (const t of xs) t.redaccion = 'sin-ia'; log(`  (redactar) sin registro guardado (simulacro): ${tipo} sale con la plantilla, sin gastar IA`); return 0; }
   // (los apodos que son palabras corrientes no cuentan como nombre: Blanco, del Alavés, y «el Madrid, el equipo blanco»)
   const todos = nombresDe(jugadores, equipos).filter((n) => !COMUNES.has(n));
   const sistema = sistemaDe(tipo);
@@ -399,7 +414,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       if (!r.ok) { log(`  (redactar) ${t.clave}: ${r.error}`); causa = /^(tope|sin Claude)/.test(String(r.error)) ? 'sin-ia' : 'ia-no'; break; }
       const texto = String((r.datos && r.datos.texto) || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
-      const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [] });
+      const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [], ahora });
       // final y MVP: lo que sale de la prensa tiene que decirlo al menos dos medios distintos (Carlos, 7 nov); sin dos, no vale como fuente
       if ((tipo === 'final' || tipo === 'mvp') && usadas.length && new Set(usadas.map((c) => norm(c.medio))).size < 2) malos.push('has usado la prensa con una sola noticia o un solo medio: en un final o un MVP solo vale lo que dicen al menos dos medios distintos (apunta las dos en «cronicas»); si no hay dos que lo digan, quítalo');
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado

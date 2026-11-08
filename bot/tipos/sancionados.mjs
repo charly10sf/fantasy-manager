@@ -227,10 +227,10 @@ export async function generar({ jugadores, equipos, jornada, stats = [], semana,
   log(`  (sancionados) jornada ${J}: ${sancionados.length} sancionados que pesan, ${apercibidos.length} apercibidos titulares`);
   // el rival (solo hace falta cuando el tweet es de uno: «para la jornada 12 contra el Rayo»)
   const pp = {};
-  for (const x of [...sancionados, ...apercibidos]) if (!(String(x.teamId) in pp)) pp[String(x.teamId)] = await proximo(x.teamId, { jornada: J, semana, stats: ob.partidos }).catch(() => null);
+  for (const x of [...sancionados, ...apercibidos]) if (!(String(x.teamId) in pp)) pp[String(x.teamId)] = await proximo(x.teamId, { jornada: J, semana, stats: ob.partidos, ahora }).catch(() => null);
   // con tweets largos, el partido de la jornada siguiente de cada apercibido (el que se perdería con una amarilla más)
   const pp2 = {};
-  if (largo()) for (const x of apercibidos) if (!(String(x.teamId) in pp2)) pp2[String(x.teamId)] = await proximo(x.teamId, { jornada: J + 1 }).catch(() => null);
+  if (largo()) for (const x of apercibidos) if (!(String(x.teamId) in pp2)) pp2[String(x.teamId)] = await proximo(x.teamId, { jornada: J + 1, ahora }).catch(() => null);
   // (la clave lleva los ids: si la lista cambia en la semana, la clave nueva no frenaba un segundo tweet de apercibidos)
   const yaApercibidos = !!(registro && registro.claves && [...registro.claves].some((c) => String(c).startsWith(`apercibidos|${J}|`)));
   return escribir({ jornada: J, sancionados, apercibidos, pp, pp2, yaApercibidos });

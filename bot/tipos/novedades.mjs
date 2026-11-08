@@ -71,7 +71,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   if (!eventos.length) return [];
   log(`  (novedades) ${eventos.length} pendientes: ${eventos.map((e) => `${e.nombre} ${e.antes}→${e.que}`).join(', ')}`);
   eventos.sort((a, b) => b.media - a.media);
-  for (const e of eventos) e.pp = await proximo(e.teamId, { stats, semana, jornada }).catch(() => null);
+  for (const e of eventos) e.pp = await proximo(e.teamId, { stats, semana, jornada, ahora }).catch(() => null);
   const dia = diaMadrid(ahora);
   const out = [];
 

@@ -41,6 +41,8 @@ export function partido(pp, { equipo, riv = null, posId = null, ahora = Date.now
   return {
     jornada: pp.jornada, partido: `${local}-${visitante}`, local, visitante, ...estadio(local), juega: pp.enCasa ? 'en casa' : 'fuera', rival: el(pp.rival),
     ...(c ? { cuando: c.t } : {}), fecha: pp.fecha || null,
+    // el equipo ya ha jugado hoy (8 nov, Barrenetxea): de ese partido no se habla como si viniera; el que viene es este
+    ...(pp.hoy ? { yaJugoHoy: `contra ${el(pp.hoy.rival)}; ese partido ya se ha jugado: no digas que llega con dudas a él ni que es hoy. El que viene es este. Que se lesionó en el de hoy, solo si lo dice su motivo.` } : {}),
     ...(riv ? { rivalVa: `${riv.pos}º de ${riv.n}`, dificultad: riv.nivel } : {}),
     ...(riv && posId ? (() => { const g = golesRival(riv, posId, pp.rival); return g ? { golesRival: g } : {}; })() : {}),
   };
