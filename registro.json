@@ -858,7 +858,7 @@
   "2434": "injured",
   "2435": "ok",
   "2437": "out_of_league",
-  "2438": "ok",
+  "2438": "injured",
   "2439": "ok",
   "2442": "injured",
   "2443": "ok",
@@ -1581,7 +1581,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136138125": 1793904953000,
    "SPORT|136139762": 1793910076000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261105/1004247722/casado-quiere-seguir-pasos-aubameyang.html": 1793912507000,
@@ -7209,13 +7208,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 518,
+   "ok": 521,
    "fallos": 0,
-   "ejecuciones": 249,
+   "ejecuciones": 250,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 426,
-   "ultima": "2026-11-08T18:51:14.354Z"
+   "mediaMs": 425,
+   "ultima": "2026-11-08T18:56:11.834Z"
   }
  },
  "ptsDirecto": {
@@ -7261,7 +7260,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 5,
+   "n": 6,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7269,27 +7268,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:51:23.592Z"
+   "ultimaBien": "2026-11-08T18:56:20.261Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:51:23.592Z"
+   "ultimaBien": "2026-11-08T18:56:20.261Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:51:23.592Z"
+   "ultimaBien": "2026-11-08T18:56:20.261Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:51:23.592Z"
+   "ultimaBien": "2026-11-08T18:56:20.261Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:51:23.592Z"
+   "ultimaBien": "2026-11-08T18:56:20.261Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:51:23.592Z"
+   "ultimaBien": "2026-11-08T18:56:20.261Z"
   }
  },
  "avisos": [
