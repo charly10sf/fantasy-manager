@@ -2,6 +2,8 @@
    peticiones a LaLiga y a las webs de datos van por el Worker de Fantasy Manager (worker/), porque el navegador no
    deja llamarlas desde otra página. Sin Worker (abriendo la web en local, por ejemplo) solo hay liga de ejemplo. */
 
+import { guardarTexto } from './util.js';
+
 const N = typeof window !== 'undefined' && window.FantasyApp ? window.FantasyApp : null;
 export const enApp = !!N;
 /** el Worker publicado (lo usa la web para todo y la app para dejar la sesión con un código) */
@@ -196,13 +198,16 @@ export async function imagenDatos(url) {
   return await new Promise((ok, mal) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = mal; fr.readAsDataURL(blob); });
 }
 
-/* almacenamiento privado de la app (la sesión de LaLiga, la clave de Gemini). Fuera de la app, localStorage */
+/* almacenamiento privado de la app (la sesión de LaLiga, la clave de Gemini). Fuera de la app, localStorage: si está
+   lleno, se hace sitio y se vuelve a probar, y la sesión y la clave van antes que nada (guardarTexto con nivel 3, util.js;
+   antes se perdían sin avisar: revisión total, A8). Devuelve si se ha guardado */
 export function guardar(clave, valor) {
   const v = valor == null ? null : typeof valor === 'string' ? valor : JSON.stringify(valor);
   try {
-    if (N) { if (v == null) N.borrar(clave); else N.guardar(clave, v); return; }
-    if (v == null) localStorage.removeItem('fm-n-' + clave); else localStorage.setItem('fm-n-' + clave, v);
-  } catch (e) { /* nada */ }
+    if (N) { if (v == null) N.borrar(clave); else N.guardar(clave, v); return true; }
+    if (v == null) { localStorage.removeItem('fm-n-' + clave); return true; }
+  } catch (e) { return false; }
+  return guardarTexto('fm-n-' + clave, v, 3);
 }
 export function leer(clave, json = false) {
   let v = null;

@@ -29,27 +29,74 @@ export function forma(x, prof = 0) {
   return '{' + Object.keys(x).slice(0, 14).map((k) => `${k}${prof < 2 && x[k] && typeof x[k] === 'object' ? ':' + forma(x[k], prof + 1) : ''}`).join(', ') + (Object.keys(x).length > 14 ? ', …' : '') + '}';
 }
 
-async function pedir(ruta, { metodo = 'GET', otraVez = true, reintento = true } = {}) {
+/*
+ * La carga de la liga (actualizar, en datos.js) lleva su presupuesto de tiempo (revisión total, A7: con la red colgada
+ * tardaba 91-191 s sin salida). Lo imprescindible (la cuenta, las ligas, la clasificación) tiene IMPRESCINDIBLE_MS entre
+ * todo; cada paso blando, BLANDO_MS; tras dos tiempos agotados seguidos, los blandos se saltan (la app usa lo de la
+ * foto vieja). Una lectura que ya ha agotado su tiempo no se repite. `cancelada`: «Usar lo guardado» en la pantalla
+ * de carga. Fuera de una carga (el directo, las fichas…), todo como siempre (45 s).
+ */
+export const CARGA = { IMPRESCINDIBLE_MS: 25000, BLANDO_MS: 20000, SEGUIDOS: 2 };
+export function nuevaCarga() {
+  return { t0: Date.now(), imprescindible: true, agotados: 0, seguidos: 0, saltados: 0, cancelada: false };
+}
+const errorLento = (c) => Object.assign(new ErrorApi(`LaLiga no contesta: la conexión no ha respondido en ${Math.round((Date.now() - c.t0) / 1000)} s`, 0), { tipo: 'lento' });
+/** ¿se salta este paso blando? (dos tiempos agotados seguidos en esta carga) */
+export const saltarBlandos = (c) => !!c && !c.imprescindible && c.seguidos >= CARGA.SEGUIDOS;
+const errorSaltado = () => Object.assign(new ErrorApi('saltado: la conexión no responde (se usa lo guardado)', 0), { saltado: true });
+const errorCancelada = () => Object.assign(new ErrorApi('carga cancelada: se usa lo guardado', 0), { cancelada: true });
+/** el tiempo que le toca a una petición de la carga `c` (o lanza si ya no hay) */
+function tiempoDe(c) {
+  if (!c) return 45000;
+  if (c.cancelada) throw errorCancelada();
+  if (c.imprescindible) {
+    const queda = CARGA.IMPRESCINDIBLE_MS - (Date.now() - c.t0);
+    if (queda < 500) throw errorLento(c);
+    return queda;
+  }
+  if (saltarBlandos(c)) { c.saltados++; throw errorSaltado(); }
+  return CARGA.BLANDO_MS;
+}
+/** apunta en la carga cómo ha ido una petición */
+function cuenta(c, r) {
+  if (!c) return;
+  if (r.e === 'tiempo agotado') { c.agotados++; c.seguidos++; } else if (r.s > 0) c.seguidos = 0;
+}
+/** con presupuesto: la promesa o, si se acaba antes, el error de la carga lenta */
+function conTope(p, c) {
+  if (!c || !c.imprescindible) return p;
+  const queda = CARGA.IMPRESCINDIBLE_MS - (Date.now() - c.t0);
+  let t;
+  return Promise.race([p, new Promise((ok, mal) => { t = setTimeout(() => mal(errorLento(c)), Math.max(0, queda)); })]).finally(() => clearTimeout(t));
+}
+
+async function pedir(ruta, { metodo = 'GET', otraVez = true, reintento = true, carga = null } = {}) {
   const t0 = Date.now();
   // (las estadísticas de la jornada cuelgan de /stats, fuera de /api)
   const url = (ruta.startsWith('/stats/') ? HOST : BASE) + ruta + (ruta.includes('?') ? '&' : '?') + 'x-lang=es';
-  const tk = await token();
+  tiempoDe(carga);
+  const tk = await conTope(token(), carga);
   const r = await http(metodo, url, {
     cabeceras: { Authorization: `Bearer ${tk}`, 'x-app': '2', 'x-lang': 'es', Accept: 'application/json', 'User-Agent': UA },
+    tiempo: tiempoDe(carga),
   });
+  cuenta(carga, r);
+  if (carga && carga.cancelada) throw errorCancelada();
   const base = { ruta, s: r.s, ms: Date.now() - t0 };
   if (r.s === 401 && otraVez) {
     apuntar({ ...base, nota: 'sesión caducada, se renueva' });
-    await renovar();
-    return pedir(ruta, { metodo, otraVez: false });
+    await conTope(renovar(), carga);
+    return pedir(ruta, { metodo, otraVez: false, carga });
   }
   if (r.s === 401) { apuntar(base); throw new ErrorSesion('LaLiga no acepta la sesión: vuelve a entrar'); }
-  // sin conexión (con datos móviles a veces no llega a conectar): una lectura se prueba una vez más antes de darla por perdida
-  if (r.s === 0 && metodo === 'GET' && reintento) {
+  // sin conexión (con datos móviles a veces no llega a conectar): una lectura se prueba una vez más antes de darla por
+  // perdida, pero no si ya ha agotado su tiempo (antes, 45 s + 45 s), ni si en esta carga ya no queda presupuesto
+  if (r.s === 0 && metodo === 'GET' && reintento && r.e !== 'tiempo agotado') {
     apuntar({ ...base, e: r.e, nota: 'sin conexión: se prueba otra vez' });
     await new Promise((ok) => setTimeout(ok, 800));
-    return pedir(ruta, { metodo, otraVez, reintento: false });
+    return pedir(ruta, { metodo, otraVez, reintento: false, carga });
   }
+  if (r.s === 0 && carga && carga.imprescindible && r.e === 'tiempo agotado') { apuntar({ ...base, e: r.e }); throw errorLento(carga); }
   if (r.s === 0) { apuntar({ ...base, e: r.e }); throw new ErrorApi(`Sin conexión (${r.e})`, 0); }
   let j = null;
   const texto = r.b || '';
@@ -68,7 +115,7 @@ async function pedir(ruta, { metodo = 'GET', otraVez = true, reintento = true } 
   return j;
 }
 
-export const api = {
+const rutas = (pedir) => ({
   yo: () => pedir('/v4/user/me'),
   ligas: () => pedir(`${CMP}/leagues`),
   clasificacion: (liga) => pedir(`${CMP}/leagues/${liga}/standing`),
@@ -89,14 +136,19 @@ export const api = {
   miOnce: (eq) => pedir(`${CMP}/teams/${eq}/lineup`),
   onceSemana: (eq, n) => pedir(`${CMP}/teams/${eq}/lineup/week/${n}`),
   clasifSemana: (liga, n) => pedir(`${CMP}/leagues/${liga}/standing/${n}`),
-};
+});
+export const api = rutas((r) => pedir(r));
+/** las mismas rutas, dentro de la carga `c` (con su presupuesto de tiempo) */
+export const apiDeCarga = (c) => rutas((r) => pedir(r, { carga: c }));
 
 /** la página de mercado de futbolfantasy.com (valor y subida o bajada de cada jugador en el día) */
-export async function paginaMercado() {
+export async function paginaMercado(carga = null) {
   const t0 = Date.now();
   const r = await http('GET', 'https://www.futbolfantasy.com/analytics/laliga-fantasy/mercado', {
     cabeceras: { Accept: 'text/html,application/xhtml+xml', 'Accept-Language': 'es-ES,es;q=0.9', 'User-Agent': UA },
+    tiempo: tiempoDe(carga),
   });
+  cuenta(carga, r);
   apuntar({ ruta: 'futbolfantasy /mercado', s: r.s, ms: Date.now() - t0, e: r.e, forma: r.b ? `${Math.round(r.b.length / 1024)} KB` : '' });
   if (r.s !== 200 || !r.b) throw new ErrorApi(`futbolfantasy responde ${r.s || r.e}`, r.s);
   return r.b;

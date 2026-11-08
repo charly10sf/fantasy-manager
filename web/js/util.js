@@ -189,28 +189,86 @@ export const ESTADO = {
 };
 export const estadoDe = (e) => ESTADO[e] || (e && e !== 'ok' ? { t: e, c: 'duda' } : null);
 
-/* ---------- almacenamiento del navegador (lo que se puede volver a bajar) ---------- */
-/* Si el almacenamiento se llena (unos 5 MB en el navegador), fuera lo que la app vuelve a pedir sola —muestras,
-   noticias, onces, lo de SofaScore y Understat, las caras recortadas— y se prueba otra vez. Lo tuyo (la liga, el
-   histórico, los planes, el chat) no se toca. */
+/* ---------- almacenamiento del navegador ---------- */
+/* Si el almacenamiento se llena (unos 5 MB en el navegador), se hace sitio por niveles y se vuelve a probar
+   (revisión total, A8):
+   0. lo que la app vuelve a pedir sola: muestras, noticias, onces, lo de SofaScore y Understat, las caras recortadas;
+   1. la liga de ejemplo (si no es la que estás viendo: se vuelve a montar sola);
+   2. solo para lo importante (la sesión, la clave, la liga de ahora, su histórico, el chat, los planes, las notas):
+      las otras ligas de la cuenta (la que no estás viendo vuelve a bajar lo suyo al abrirla);
+   3. solo para la sesión y la clave de la IA (puente.guardar), que van antes que nada: lo de la liga de ahora que se
+      vuelve a bajar (la foto, las fichas, el directo).
+   Si ni así cabe, se avisa (evento «fm-lleno»: la banda de app.js) en vez de perderlo sin decir nada. */
 const TIRABLES = ['muestra-vivo', 'noticias', 'noticias-club', 'sofa-h2h', 'sofa-cal', 'sofa-ronda', 'ruta-valor', 'avanzadas', 'onces', 'alineaciones', 'caras'];
-function hacerSitio(k) {
+// lo de cada liga (datos.js, DE_LA_CUENTA) y el sufijo de la de ahora ('-demo', '' o '-l<id>'): lo pone datos.js
+let sitio = { sufijo: () => null, deLiga: [], importantes: ['datos', 'hist', 'chat', 'chats-viejos', 'planes', 'notas', 'notas-t', 'acthist', 'cfg'], rebajables: ['datos', 'det', 'vivo', 'hechos', 'previs', 'pts-jornadas'] };
+export function fijarSitio(o) { sitio = { ...sitio, ...o }; }
+const claves = () => { try { return Object.keys(localStorage); } catch (e) { return []; } };
+const quitar = (k) => { try { localStorage.removeItem(k); return true; } catch (e) { return false; } };
+const escRe = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** ¿es la clave k (sin «fm-») de una liga, y de cuál? → el sufijo ('-demo', '', '-l<id>') o null */
+function sufijoDe(k) {
+  for (const b of sitio.deLiga) {
+    const m = new RegExp(`^${escRe(b)}(-demo|-l[0-9A-Za-z_]+)?$`).exec(k);
+    if (m) return m[1] || '';
+  }
+  return null;
+}
+/** ¿es de lo que no se puede perder sin avisar? */
+function importante(k) {
+  if (k.startsWith('n-')) return true;
+  const suf = sitio.sufijo();
+  if (k === 'cfg' || k === 'cuenta' || k === 'liga-principal') return true;
+  const s0 = sufijoDe(k);
+  return s0 != null && s0 === suf && sitio.importantes.some((b) => k === b + s0);
+}
+function hacerSitio(k, nivel) {
   let hecho = false;
-  for (const t of TIRABLES) {
-    if (t === k) continue;
-    try { if (localStorage.getItem('fm-' + t) != null) { localStorage.removeItem('fm-' + t); hecho = true; } } catch (e) { /* nada */ }
+  const suf = sitio.sufijo();
+  if (nivel === 0) {
+    for (const t of TIRABLES) if (t !== k && localStorage.getItem('fm-' + t) != null && quitar('fm-' + t)) hecho = true;
+    return hecho;
+  }
+  for (const c of claves()) {
+    if (!c.startsWith('fm-') || c === 'fm-' + k || c.startsWith('fm-n-')) continue;
+    const s0 = sufijoDe(c.slice(3));
+    if (s0 == null) continue;
+    const base = c.slice(3, c.length - s0.length);
+    if (nivel === 1 && s0 === '-demo' && suf !== '-demo') hecho = quitar(c) || hecho;
+    else if (nivel === 2 && s0 !== '-demo' && suf != null && s0 !== suf) hecho = quitar(c) || hecho;
+    else if (nivel === 3 && s0 === suf && sitio.rebajables.includes(base)) hecho = quitar(c) || hecho;
   }
   return hecho;
+}
+let lleno = null;
+/** lo último que no ha cabido (para la banda), o null */
+export const almacenLleno = () => lleno;
+export const olvidarLleno = () => { lleno = null; };
+/**
+ * guarda texto en localStorage con la clave completa (con «fm-»), haciendo sitio si no cabe. Devuelve si ha cabido.
+ * `hasta`: el último nivel de hacerSitio que se puede usar (por defecto, según lo importante que es)
+ */
+export function guardarTexto(clave, txt, hasta = null) {
+  try { localStorage.setItem(clave, txt); if (lleno && lleno.k === clave) lleno = null; return true; } catch (e) { /* sin sitio */ }
+  const k = clave.replace(/^fm-/, '');
+  const imp = importante(k);
+  const tope = hasta != null ? hasta : imp ? 2 : 1;
+  for (let n = 0; n <= tope; n++) {
+    if (!hacerSitio(k, n)) continue;
+    try { localStorage.setItem(clave, txt); return true; } catch (e) { /* al siguiente nivel */ }
+  }
+  if (imp) {
+    lleno = { t: Date.now(), k };
+    try { window.dispatchEvent(new CustomEvent('fm-lleno', { detail: { k } })); } catch (e) { /* nada */ }
+  }
+  return false;
 }
 export const LS = {
   get(k, def = null) { try { const v = localStorage.getItem('fm-' + k); return v == null ? def : JSON.parse(v); } catch (e) { return def; } },
   set(k, v) {
     let txt;
     try { txt = JSON.stringify(v); } catch (e) { return false; }
-    try { localStorage.setItem('fm-' + k, txt); return true; } catch (e) {
-      if (!hacerSitio(k)) return false;
-      try { localStorage.setItem('fm-' + k, txt); return true; } catch (e2) { return false; }
-    }
+    return guardarTexto('fm-' + k, txt);
   },
   del(k) { try { localStorage.removeItem('fm-' + k); } catch (e) { /* nada */ } },
 };

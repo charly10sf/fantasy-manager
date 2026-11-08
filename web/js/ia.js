@@ -10,7 +10,7 @@ import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
 import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo } from './operaciones.js';
 import { recsDe, aprendeTxt } from './aprende.js';
-import { guardarFoto, leerFoto } from './fotos.js';
+import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio } from './limite.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
@@ -1668,6 +1668,30 @@ export function quitarUltimaPregunta(t) {
   if (h.length && h[h.length - 1].r === 'yo' && h[h.length - 1].t === t) { h.pop(); LS.set(K('chat'), h); }
 }
 export const borrarConversacion = () => LS.set(K('chat'), []);
+/** sin IndexedDB, la miniatura vuelve dentro del mensaje del chat (como antes de la 0.7z) */
+function reponerMini(id, mini) {
+  const h = conversacion();
+  let cambia = false;
+  for (const m of h) for (const f of m.fotos || []) if (f.id === id && !f.mini) { f.mini = mini; cambia = true; }
+  if (cambia) LS.set(K('chat'), h);
+}
+/** las miniaturas que iban dentro del chat (antes de la 0.7z) pasan a IndexedDB: el chat guardado ocupa mucho menos */
+export async function migrarMinis() {
+  const pasar = async (msgs) => {
+    let n = 0;
+    for (const m of msgs || []) for (const f of m.fotos || []) {
+      if (!f.mini || !/^data:/.test(f.mini)) continue;
+      if (await guardarMini(f.id, f.mini)) { delete f.mini; n++; }
+    }
+    return n;
+  };
+  const h = conversacion();
+  if (await pasar(h)) LS.set(K('chat'), h);
+  const l = chatsAnteriores();
+  let n = 0;
+  for (const c of l) n += await pasar(c.msgs);
+  if (n) guardarAnteriores(l);
+}
 
 /* ---------------- los chats anteriores ---------------- */
 // Al empezar uno nuevo, el de ahora se guarda (los 15 últimos) para poder volver a él. Lo que le has contado
@@ -1909,9 +1933,13 @@ export function montarChat(pregunta, D, M, c, { fotos = false, hist = [] } = {})
 export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], alPaso = null) {
   const hist = conversacion();
   const nuevas = Object.fromEntries((fotos || []).map((f) => [f.id, f.b64]));
-  hist.push({ r: 'yo', t: pregunta, ts: Date.now(), ...(fotos && fotos.length ? { fotos: fotos.map((f) => ({ id: f.id, mini: f.mini })) } : {}) });
+  // (la miniatura va a IndexedDB y en el chat solo su id; si IndexedDB no va, se vuelve a meter en el chat)
+  hist.push({ r: 'yo', t: pregunta, ts: Date.now(), ...(fotos && fotos.length ? { fotos: fotos.map((f) => ({ id: f.id })) } : {}) });
   LS.set(K('chat'), hist.slice(-40));
-  for (const f of fotos || []) guardarFoto(f).catch(() => {});
+  for (const f of fotos || []) {
+    guardarFoto(f).catch(() => {});
+    guardarMini(f.id, f.mini).then((ok) => { if (!ok) reponerMini(f.id, f.mini); }).catch(() => reponerMini(f.id, f.mini));
+  }
   const contents = await contenidosChat(hist, nuevas);
   const sistema = montarChat(pregunta, D, M, c, { fotos: !!(fotos && fotos.length) || hist.some((m) => m.fotos), hist });
   const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();

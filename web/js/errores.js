@@ -38,6 +38,14 @@ export function explicarError(e) {
       botones: ['recargar', 'mandarFallo'],
     };
   }
+  // la red no contesta (A7): tiempo agotado en lo imprescindible, o «Usar lo guardado»
+  if (e && e.tipo === 'lento' && !sinRed()) {
+    return {
+      tipo: 'lento', titulo: 'La conexión no responde',
+      texto: e.cancelada ? m : 'LaLiga no ha contestado a tiempo: la conexión va muy lenta o se ha cortado (con partidos, a veces la cortan las operadoras). Prueba en un rato o con otra red (wifi o datos).',
+      botones: ['recargar', 'entrarDemo'],
+    };
+  }
   if (sinRed() || estado === 0 || /sin conexi[oó]n|failed to fetch|network|timeout|timed out/i.test(m)) {
     return {
       tipo: 'red', titulo: 'Sin internet',
@@ -71,6 +79,7 @@ export function bandaError(x, edad) {
   const hace = !edad || edad === 'ahora' ? 'hace un momento' : edad;
   if (x.tipo === 'red') return `Sin internet: lo que ves es de ${hace}`;
   if (x.tipo === 'laliga') return `LaLiga no responde: lo que ves es de ${hace}`;
+  if (x.tipo === 'lento') return `La conexión no responde: lo que ves es de ${hace}`;
   if (x.tipo === 'cambio') return `LaLiga ha cambiado algo y no se puede actualizar: lo que ves es de ${hace}`;
   return `No se ha podido actualizar: lo que ves es de ${hace}`;
 }
