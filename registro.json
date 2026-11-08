@@ -1581,7 +1581,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
    "SPORT|136138125": 1793904953000,
    "SPORT|136139762": 1793910076000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
@@ -7212,13 +7211,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 506,
+   "ok": 509,
    "fallos": 0,
-   "ejecuciones": 245,
+   "ejecuciones": 246,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 430,
-   "ultima": "2026-11-08T18:31:12.493Z"
+   "mediaMs": 429,
+   "ultima": "2026-11-08T18:36:11.594Z"
   }
  },
  "ptsDirecto": {
@@ -7264,34 +7263,42 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 1,
-   "desde": "2026-11-08T18:31:12.493Z"
+   "n": 2,
+   "desde": "2026-11-08T18:31:12.493Z",
+   "avisado": true
   }
  },
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:31:22.108Z"
+   "ultimaBien": "2026-11-08T18:36:18.827Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:31:22.108Z"
+   "ultimaBien": "2026-11-08T18:36:18.827Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:31:22.108Z"
+   "ultimaBien": "2026-11-08T18:36:18.827Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:31:22.108Z"
+   "ultimaBien": "2026-11-08T18:36:18.827Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:31:22.108Z"
+   "ultimaBien": "2026-11-08T18:36:18.827Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:31:22.108Z"
+   "ultimaBien": "2026-11-08T18:36:18.827Z"
   }
- }
+ },
+ "avisos": [
+  {
+   "clave": "quitado|directo|119|Pablo Durán|gol1",
+   "texto": "⚠️ Gol ya tuiteado que ESPN ya no da: Pablo Durán en el ? del Celta-Levante. ¿Anulado por el VAR? Tuit https://x.com/i/web/status/2119490460422983789 — revísalo y, si hace falta, bórralo a mano.",
+   "t": "2026-11-08T18:36:11.594Z"
+  }
+ ]
 }

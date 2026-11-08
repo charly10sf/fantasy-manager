@@ -104,6 +104,13 @@
    "jornada": 12,
    "id": 18,
    "t": "2026-11-08T17:31:36.559Z"
+  },
+  {
+   "clave": "bot|quitado|directo|119|Pablo Durán|gol1",
+   "tipo": "avisoBot",
+   "jornada": 0,
+   "id": 19,
+   "t": "2026-11-08T18:36:19.544Z"
   }
  ]
 }
