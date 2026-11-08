@@ -809,6 +809,34 @@
     "extra": 0,
     "jugador": "Fermín López"
    }
+  },
+  {
+   "clave": "resumen|12|mejores|10",
+   "tipo": "resumen",
+   "jornada": 12,
+   "id": "2119559759854510239",
+   "t": "2026-11-08T22:36:41.271Z"
+  },
+  {
+   "clave": "resumen|12|peores|10",
+   "tipo": "resumen",
+   "jornada": 12,
+   "id": "2119559767379062953",
+   "t": "2026-11-08T22:36:43.135Z"
+  },
+  {
+   "clave": "final|120",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119559930793312499",
+   "t": "2026-11-08T22:37:22.091Z"
+  },
+  {
+   "clave": "mvp|120",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119559954629570708",
+   "t": "2026-11-08T22:37:27.683Z"
   }
  ],
  "estados": {
@@ -3389,9 +3417,9 @@
  },
  "pulido": {
   "dia": "2026-11-08",
-  "n": 4,
-  "ok": 4,
-  "mal": 0
+  "n": 7,
+  "ok": 6,
+  "mal": 2
  },
  "liga": {
   "vistas": {
@@ -3669,10 +3697,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-07T22:22:07.173Z",
-    "texto": "🏁 Valencia 0-3 Real Madrid. Goleada del Madrid. 19 puntos fantasy para Arda Güler. Va lanzado: 8, 15 y 19 en las 3 últimas jornadas. Le siguen Valverde, con 13, y Mbappé, con 12.\n\nNoche para olvidar de Gayá: -3 puntos, con 3 goles en contra. Dimitrievski suma 7 aunque el Valencia pierde. Cumple el favorito: el Real Madrid, 3º, gana al Valencia, 19º.\n\n✅ Partido redondo para quien tenga a Arda Güler"
-   },
-   {
     "t": "2026-11-08T15:16:39.030Z",
     "texto": "🏁 El Betis gana 0-2 al Elche 🌴 en el Martínez Valero con dos goles en los últimos diez minutos: Riquelme en el 81' y Bartra en el 89'.\n\nBartra cierra con 17 puntos, más del triple de lo que suele dar, y es el que más suma de los dos equipos. Ceballos pone 11, más del doble de su media, y Valles otros 11: gran noche para quien tenga bético.\n\nEn el Elche, Revivo se lleva 10 puntos aunque pierde, y R.P. Bigas se queda en -1, lo peor del partido."
    },
@@ -3687,13 +3711,13 @@
    {
     "t": "2026-11-08T20:01:30.080Z",
     "texto": "🏁 Celta 0-0 Levante. Sin goles y un punto para cada uno. Ryan se va a 14 puntos fantasy, más del doble de su media de 6,8. Detrás, Carreira y Cáceres, con 10 cada uno.\n\n✅ Noche redonda para quien tenga a Ryan"
+   },
+   {
+    "t": "2026-11-08T22:37:22.093Z",
+    "texto": "🏁 Atlético 1-2 Barça. Remontada del Barcelona con gol de Fermín en el 66'. El goleador es el mejor fantasy: 17 puntos tras él, Lamine Yamal con 11 y Julián Alvarez con 8.\n\nGiuliano marcó y suma 8 aunque el Atlético pierde.\n\n✅ Premio para quien confió en Fermín"
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-07T22:22:41.119Z",
-    "texto": "⭐ Arda Güler brilla como el MVP fantasy del Valencia 0-3 Real Madrid con 19 puntos y ya alcanza 125 puntos en el curso, a una media de 10,4 por encuentro.\n\nEl siguiente, en la jornada 13 contra el Celta. Ahora mismo vale 129,3 M."
-   },
    {
     "t": "2026-11-08T15:16:48.038Z",
     "texto": "⭐ Bartra se lleva el partido en el Martínez Valero: 17 puntos para el central del Betis, más del triple de su media de 5,6.\n\nSu gol en el 89' puso el 0-2 en el Elche 🌴, después de que Riquelme abriera el marcador en el 81'. Cuesta 21,7 M y el Betis visita al Sevilla en la jornada 13: si lo tienes, no se vende."
@@ -3709,6 +3733,10 @@
    {
     "t": "2026-11-08T20:02:04.347Z",
     "texto": "⭐ C. Romero firma el MVP en el Submarino Amarillo 2-0 Getafe y se va a 16 puntos, alcanzando los 31 puntos en la temporada.\n\n💸 Vale 6,5 M en el mercado y vuelve a jugar en la jornada 13, contra el Barcelona"
+   },
+   {
+    "t": "2026-11-08T22:37:27.685Z",
+    "texto": "⭐ Fermín brilla como MVP fantasy en el Atleti 1-2 Barça y se va a 17 puntos. El centrocampista del Barça suma 111 puntos esta temporada con una media de 9,3.\n\n💸 Vale 112,8 M en el mercado y vuelve a jugar en la jornada 13, contra el Villarreal"
    }
   ],
   "mercado": [
@@ -3783,6 +3811,16 @@
    {
     "t": "2026-11-08T20:31:39.971Z",
     "texto": "✅ Nico Williams supera sus calambres en los isquiotibiales y vuelve a estar disponible\n\nEl delantero del Athletic 🦁 promedia 6,4 puntos, pero su titularidad en Fantasy Manager se queda en un 47 %.\n\nTodo apunta a que el Athletic Club tendrá un encuentro cómodo recibiendo al Espanyol, clasificado 13º."
+   }
+  ],
+  "resumen": [
+   {
+    "t": "2026-11-08T22:36:41.273Z",
+    "texto": "🏆 Los mejores de la jornada 12 en LaLiga Fantasy. Nadie saca más que Arda Güler (Real Madrid): 19 puntos. Detrás, Bartra (Betis) con 17 y Fermín (Barça) con 17.\n\nBartra suele sacar 5,6 de media y esta vez 17.\n\nC. Romero con 16, Sivera con 15 y Ryan con 14 completan los seis. También doblan su media C. Romero, que va a 3,1, Sivera, que va a 7,4, y Ryan, que va a 6,8.\n\nEl más barato de los seis es C. Romero: vale 6,5 M en el mercado."
+   },
+   {
+    "t": "2026-11-08T22:36:43.136Z",
+    "texto": "📉 Los peores de la jornada 12 en LaLiga Fantasy. Gayá (Valencia) firma -3, mientras que Aznou (Málaga) suma -2 y Rioja (Valencia) -1. Cuatro de los seis peores juegan en el Valencia.\n\nDe Haas, Maffeo y Lunin también terminan en negativo con -1 cada uno."
    }
   ]
  },
@@ -7510,13 +7548,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 602,
+   "ok": 603,
    "fallos": 0,
-   "ejecuciones": 294,
+   "ejecuciones": 295,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 421,
-   "ultima": "2026-11-08T22:31:12.804Z"
+   "ultima": "2026-11-08T22:36:10.576Z"
   }
  },
  "ptsDirecto": {
@@ -7618,15 +7656,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:31:30.644Z"
+   "ultimaBien": "2026-11-08T22:37:27.757Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:31:30.644Z"
+   "ultimaBien": "2026-11-08T22:37:27.757Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:31:30.644Z"
+   "ultimaBien": "2026-11-08T22:37:27.757Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7634,7 +7672,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:31:30.644Z"
+   "ultimaBien": "2026-11-08T22:37:27.757Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
