@@ -1688,7 +1688,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248307/capitao.html": 1794111600000,
    "SPORT|136211823": 1794117643000,
    "SPORT|136208274": 1794117640000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-claro-pasara-vinicius-regrese-sancion-viene-tendra-esperar-momento-20261107_3470889.html": 1794090547000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-claro-pasara-vinicius-regrese-sancion-viene-tendra-esperar-momento-20261107_3470889.html": 1794090547000,
+   "SPORT|136086039": 1794121202000
   },
   "hechos": [
    {
@@ -2302,7 +2303,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3747,17 +3748,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 94149,
-  "salida": 6289,
+  "entrada": 95951,
+  "salida": 6365,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.212273
+  "dolares": 0.212491
  },
  "recientes": {
   "onces": [
@@ -7420,13 +7421,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 306,
+   "ok": 307,
    "fallos": 0,
-   "ejecuciones": 117,
+   "ejecuciones": 118,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 466,
-   "ultima": "2026-11-08T08:01:12.563Z"
+   "ultima": "2026-11-08T08:06:13.601Z"
   }
  },
  "ptsDirecto": {}
