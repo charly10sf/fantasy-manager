@@ -619,7 +619,7 @@
   "265": "ok",
   "270": "ok",
   "274": "ok",
-  "302": "ok",
+  "302": "suspended",
   "356": "injured",
   "581": "ok",
   "637": "ok",
@@ -1490,14 +1490,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136102061": 1793851297000,
-   "SPORT|136099973": 1793829833000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/04/mijatovic-senala-el-motivo-detras-del-renacer-de-valverde-si-sienten-que-el-entrenador-tiene-respaldo-del-club-aceptan-todo-cadena-ser/": 1793834838000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-lesiones-perfilan-vuelta_0_2008425309.html": 1793854861000,
-   "SPORT|136100198": 1793856626000,
-   "SPORT|136102945": 1793858165000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247419/vinicius.html": 1793862427000,
-   "SPORT|136071805": 1793862034000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247446/reconquista-bellingham.html": 1793869200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247434/raphinha-trabaja-brasileno-duradero-barca.html": 1793869772000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/asi-nueva-camiseta-3-real-madrid-regresa-iconico-diseno-dragon.html": 1793871315000,
@@ -1687,36 +1679,18 @@
    "AS|https://as.com/futbol/primera/hidalgo-estoy-contento-por-el-punto-la-porteria-a-cero-y-por-leo-roman-f202611-n/": 1794074651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248379/eder-sarabia-le-espera-brazos-abiertos-me-parecido-siempre-futbolista-maravilloso-he-transmitido.html": 1794078040000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248415/marc-casado-enciende-espanyolismo-recuerdo-celebraciones-barca.html": 1794084208000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maffeo-estalla-descanso-valencia-real-madrid-no-me-apetece-entrevista-20261107_3470873.html": 1794085302000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maffeo-estalla-descanso-valencia-real-madrid-no-me-apetece-entrevista-20261107_3470873.html": 1794085302000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248531/doble-palo-real-madrid-alarmas-linda-caicedo-cruzan-charco.html": 1794120828000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261108/1004248527/2-3-cruz-azul-nuevo-lider-mexico.html": 1794120346000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248425/causas-dejan-adeyemi-fuera-seleccion.html": 1794117600000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261108/1004248204/consuelo-sadar.html": 1794117600000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248453/posible-once-barca-atletico-metropolitano.html": 1794114000000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248307/capitao.html": 1794111600000,
+   "SPORT|136211823": 1794117643000,
+   "SPORT|136208274": 1794117640000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-claro-pasara-vinicius-regrese-sancion-viene-tendra-esperar-momento-20261107_3470889.html": 1794090547000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136099973",
-    "medio": "SPORT",
-    "t": 1793829833000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri se lesionan y estará un mes fuera",
-    "motivo": "lesión en el bíceps femoral",
-    "plazo": "un mes",
-    "nums": [
-     5,
-     2026
-    ]
-   },
-   {
-    "guid": "SPORT|136100198",
-    "medio": "SPORT",
-    "t": 1793856626000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri se lesionó en Champions y es baja un mes",
-    "motivo": "lesión en partido de Champions",
-    "plazo": "un mes de baja",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/",
     "medio": "AS",
@@ -2300,11 +2274,35 @@
      4,
      10
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248453/posible-once-barca-atletico-metropolitano.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794114000000,
+    "id": "3208",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Rodri no jugará en el Metropolitano por lesión",
+    "motivo": "lesión en el bíceps femoral derecho",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136211823",
+    "medio": "SPORT",
+    "t": 1794117643000,
+    "id": "3208",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Rodri sufre lesión en isquiotibiales y estará un mes fuera",
+    "motivo": "lesión en los isquiotibiales",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-07",
-   "n": 39
+   "dia": "2026-11-08",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -3749,17 +3747,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 90373,
-  "salida": 3345,
+  "entrada": 94149,
+  "salida": 6289,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.210423
+  "dolares": 0.212273
  },
  "recientes": {
   "onces": [
@@ -7422,13 +7420,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 305,
+   "ok": 306,
    "fallos": 0,
-   "ejecuciones": 116,
+   "ejecuciones": 117,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 466,
-   "ultima": "2026-11-08T07:56:13.916Z"
+   "ultima": "2026-11-08T08:01:12.563Z"
   }
  },
  "ptsDirecto": {}
