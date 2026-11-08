@@ -3213,7 +3213,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/05/rfef-anuncia-nuevo-horario-tarancon-136133977.html": 1793901786000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mantienen-huelga-renfe-reunion-avances-cuerpo-cita-manana-20261105191500.html": 1793902500000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/copa-del-rey/20261105/1004247677/rfef-actualiza-calendario-partidos-aplazados-copa.html": 1793902180000,
@@ -3465,7 +3464,8 @@
    "fallos": 0
   },
   "espera": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160872516
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160872516,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794161171103
   }
  },
  "ia": {
@@ -7214,13 +7214,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 488,
+   "ok": 491,
    "fallos": 0,
-   "ejecuciones": 239,
+   "ejecuciones": 240,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 437,
-   "ultima": "2026-11-08T18:01:12.516Z"
+   "mediaMs": 435,
+   "ultima": "2026-11-08T18:06:11.103Z"
   }
  },
  "ptsDirecto": {
@@ -7260,5 +7260,8 @@
    "a": 0,
    "t": 1794160872516
   }
+ },
+ "golesAnulados": {
+  "directo|119|Pablo Durán|gol1": "2026-11-08T18:06:11.103Z"
  }
 }
