@@ -629,6 +629,20 @@
    "jornada": 12,
    "id": "2119442648683491788",
    "t": "2026-11-08T14:51:20.027Z"
+  },
+  {
+   "clave": "final|118",
+   "tipo": "final",
+   "jornada": 12,
+   "id": "2119449020804616204",
+   "t": "2026-11-08T15:16:39.028Z"
+  },
+  {
+   "clave": "mvp|118",
+   "tipo": "mvp",
+   "jornada": 12,
+   "id": "2119449058758815931",
+   "t": "2026-11-08T15:16:48.036Z"
   }
  ],
  "estados": {
@@ -1392,7 +1406,7 @@
   "3187": "out_of_league",
   "3188": "ok",
   "3189": "ok",
-  "3190": "ok",
+  "3190": "injured",
   "3191": "ok",
   "3192": "out_of_league",
   "3193": "ok",
@@ -1521,7 +1535,6 @@
    "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html": 1793893343000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000,
-   "SPORT|136106483": 1793891666000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-segunda-revalida-luis-fuente-espana-seleccion-betis_0_2008430674.html": 1793895491000,
    "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
    "SPORT|136122728": 1793893823000,
@@ -3138,7 +3151,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html": 1793891979000,
-   "SPORT|136128445": 1793891692000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html": 1793896084000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261105/1004247619/comunicado-laliga.html": 1793895137000,
    "SPORT|136129236": 1793892468000,
@@ -3605,16 +3617,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 19,
-   "redactar": 18,
-   "revisar": 7,
+   "redactar": 22,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 253304,
-  "salida": 14815,
-  "cacheLee": 10420,
-  "cacheEscribe": 7815,
-  "dolares": 0.506721
+  "entrada": 306835,
+  "salida": 15625,
+  "cacheLee": 13025,
+  "cacheEscribe": 10420,
+  "dolares": 0.628657
  },
  "recientes": {
   "onces": [
@@ -3641,10 +3653,6 @@
   ],
   "final": [
    {
-    "t": "2026-11-06T22:01:32.250Z",
-    "texto": "🏁 0-0 en el Sánchez-Pizjuán y la noche fue de Sivera. Cuenta COPE que el portero del Alavés le paró un penalti a Vargas en la primera parte.\n\nSe lleva 10 puntos, muy por encima de su media de 7, y es el mejor del partido. Del Sevilla se salva Félix Correia con 7. En el Alavés, T. Martínez se queda en -2, lo peor de la noche."
-   },
-   {
     "t": "2026-11-07T15:35:28.135Z",
     "texto": "🏁 Remontada del Racing en La Rosaleda: el Málaga se adelantó en el 28' con gol de Dotor, pero Iker Luque empató en el 50' y Zabiri le dio la vuelta en el 60'. Final 1-2.\n\nZabiri se lleva 12 puntos, casi el doble de su media, y es el mejor del partido. Agirrezabala suma 11 y Pablo Ramón 10, así que quien tenga jugadores del Racing sale ganando.\n\nEl Málaga se quedó con diez desde el 64' por la roja a Aznou, que acaba en -2. Larrubia, con 9, puntúa aunque su equipo pierde."
    },
@@ -3659,13 +3667,13 @@
    {
     "t": "2026-11-07T22:22:07.173Z",
     "texto": "🏁 Valencia 0-3 Real Madrid. Goleada del Madrid. 19 puntos fantasy para Arda Güler. Va lanzado: 8, 15 y 19 en las 3 últimas jornadas. Le siguen Valverde, con 13, y Mbappé, con 12.\n\nNoche para olvidar de Gayá: -3 puntos, con 3 goles en contra. Dimitrievski suma 7 aunque el Valencia pierde. Cumple el favorito: el Real Madrid, 3º, gana al Valencia, 19º.\n\n✅ Partido redondo para quien tenga a Arda Güler"
+   },
+   {
+    "t": "2026-11-08T15:16:39.030Z",
+    "texto": "🏁 El Betis gana 0-2 al Elche 🌴 en el Martínez Valero con dos goles en los últimos diez minutos: Riquelme en el 81' y Bartra en el 89'.\n\nBartra cierra con 17 puntos, más del triple de lo que suele dar, y es el que más suma de los dos equipos. Ceballos pone 11, más del doble de su media, y Valles otros 11: gran noche para quien tenga bético.\n\nEn el Elche, Revivo se lleva 10 puntos aunque pierde, y R.P. Bigas se queda en -1, lo peor del partido."
    }
   ],
   "mvp": [
-   {
-    "t": "2026-11-07T15:35:35.019Z",
-    "texto": "⭐ Yassir Zabiri, el mejor del Málaga-Racing con 12 puntos.\n\nMarcó el 1-2 en el minuto 60, el gol que le dio la victoria al Racing ⚓ en La Rosaleda, y casi dobla su media de 6,5. Vale 46,4 M y en la jornada 13 recibe en casa a la Real Sociedad: si lo tienes, de los que se quedan en el once."
-   },
    {
     "t": "2026-11-07T17:36:48.966Z",
     "texto": "⭐ Giménez y Leo Román, los dos con 12 puntos en el Espanyol-Deportivo: los mejores del 0-0.\n\nEl defensa hace más del doble de su media de 4,3 y vale 26,1 M. En la jornada 13 el Deportivo visita al Alavés: si lo tienes, buen momento para mantenerlo."
@@ -3681,6 +3689,10 @@
    {
     "t": "2026-11-07T22:22:41.119Z",
     "texto": "⭐ Arda Güler brilla como el MVP fantasy del Valencia 0-3 Real Madrid con 19 puntos y ya alcanza 125 puntos en el curso, a una media de 10,4 por encuentro.\n\nEl siguiente, en la jornada 13 contra el Celta. Ahora mismo vale 129,3 M."
+   },
+   {
+    "t": "2026-11-08T15:16:48.038Z",
+    "texto": "⭐ Bartra se lleva el partido en el Martínez Valero: 17 puntos para el central del Betis, más del triple de su media de 5,6.\n\nSu gol en el 89' puso el 0-2 en el Elche 🌴, después de que Riquelme abriera el marcador en el 81'. Cuesta 21,7 M y el Betis visita al Sevilla en la jornada 13: si lo tienes, no se vende."
    }
   ],
   "mercado": [
@@ -7315,13 +7327,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 417,
+   "ok": 418,
    "fallos": 0,
-   "ejecuciones": 204,
+   "ejecuciones": 205,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 460,
-   "ultima": "2026-11-08T15:11:11.657Z"
+   "mediaMs": 461,
+   "ultima": "2026-11-08T15:16:13.696Z"
   }
  },
  "ptsDirecto": {
