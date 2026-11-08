@@ -3428,9 +3428,6 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/comunicado-oficial-afe-insiste-solicita-aplazamiento-jornada-completa-segunda-liga-hypermotion-136142110.html": 1793922998000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/2a-parte-05-nov-2026-partidazo-cope-20261106_3469895.html": 1793922529000,
    "AS|https://as.com/futbol/alineacion-posible-del-alaves-ante-el-sevilla-en-laliga-ea-sports-f202611-n/": 1793919492000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-pide-aplazamiento-jornada-segunda-division-juez-unico-competicion-20261105_3469885.html": 1793918409000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247765/capitanes-segunda-piden-rfef-aplazar-jornada.html": 1793918307000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/05/afe-solicita-al-juez-unico-de-competiciones-que-aplace-todos-los-partidos-de-segunda-cadena-ser/": 1793918199000,
    "Cadena SER|https://cadenaser.com/andorra/2026/11/06/pique-vilaseca-i-nogues-encapcalen-la-representacio-de-lfc-andorra-al-multitudinari-funeral-de-jesus-de-miguel-radio-ser-principat-d-andorra/": 1793951972000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/": 1793957388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247829/rfef-juez-unico-no-competencias-aplazar-jornada-segunda.html": 1793957172000,
@@ -7548,13 +7545,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 603,
+   "ok": 604,
    "fallos": 0,
-   "ejecuciones": 295,
+   "ejecuciones": 296,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 421,
-   "ultima": "2026-11-08T22:36:10.576Z"
+   "ultima": "2026-11-08T22:41:11.770Z"
   }
  },
  "ptsDirecto": {
@@ -7656,15 +7653,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:37:27.757Z"
+   "ultimaBien": "2026-11-08T22:41:24.786Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:37:27.757Z"
+   "ultimaBien": "2026-11-08T22:41:24.786Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:37:27.757Z"
+   "ultimaBien": "2026-11-08T22:41:24.786Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7672,7 +7669,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:37:27.757Z"
+   "ultimaBien": "2026-11-08T22:41:24.786Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
