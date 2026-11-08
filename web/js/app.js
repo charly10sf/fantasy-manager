@@ -2794,8 +2794,8 @@ function novedades() {
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
-  // y a quien no es del dueño ni de las ligas de limites.json (los de fuera, la demo) no se le abre nada solo ni se le
-  // enseña la lista de Ajustes: las novedades de cada versión son para el dueño y la liga (o para todos con «novedadesTodos»)
+  // y a quien no es el dueño (ni los de la liga, desde la 0.7z) no se le abre nada solo ni se le enseña la lista de
+  // Ajustes: las novedades de cada versión son solo para el dueño (o para todos con «novedadesTodos»)
   if (!avisosGuardados().admin) {
     if (!S.D) return;
     const mia = novedadesPara({ ligas: S.D.ligas || [] });
