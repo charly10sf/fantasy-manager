@@ -3201,7 +3201,9 @@
    "SPORT|136207802": 1794117638000,
    "SPORT|136213162": 1794110512000,
    "SPORT|136220224": 1794133655000,
-   "SPORT|136220730": 1794135619000
+   "SPORT|136220730": 1794135619000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/tavernes-valencia-horario-ver-partido-copa-136222269.html": 1794143685000,
+   "SPORT|136221598": 1794138326000
   },
   "hechos": [
    {
@@ -3617,27 +3619,25 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136221598": 1794142573881
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 14,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 196622,
-  "salida": 11707,
+  "entrada": 198612,
+  "salida": 12921,
   "cacheLee": 10420,
   "cacheEscribe": 5210,
-  "dolares": 0.397722
+  "dolares": 0.398528
  },
  "recientes": {
   "onces": [
@@ -7300,13 +7300,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 374,
+   "ok": 376,
    "fallos": 0,
-   "ejecuciones": 181,
+   "ejecuciones": 182,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 475,
-   "ultima": "2026-11-08T13:16:11.856Z"
+   "mediaMs": 474,
+   "ultima": "2026-11-08T13:21:12.490Z"
   }
  },
  "ptsDirecto": {}
