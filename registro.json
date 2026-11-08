@@ -1807,7 +1807,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
    "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000,
-   "SPORT|136230726": 1794161916000
+   "SPORT|136230726": 1794161916000,
+   "SPORT|136230583": 1794163027000
   },
   "hechos": [
    {
@@ -2423,7 +2424,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -7317,13 +7318,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 542,
+   "ok": 543,
    "fallos": 0,
-   "ejecuciones": 258,
+   "ejecuciones": 259,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 421,
-   "ultima": "2026-11-08T19:36:13.247Z"
+   "mediaMs": 422,
+   "ultima": "2026-11-08T19:41:14.934Z"
   }
  },
  "ptsDirecto": {
@@ -7393,7 +7394,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 14,
+   "n": 15,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7401,27 +7402,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:36:22.779Z"
+   "ultimaBien": "2026-11-08T19:41:51.130Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:36:22.779Z"
+   "ultimaBien": "2026-11-08T19:41:51.130Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:36:22.779Z"
+   "ultimaBien": "2026-11-08T19:41:51.130Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:36:22.779Z"
+   "ultimaBien": "2026-11-08T19:41:51.130Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:36:22.779Z"
+   "ultimaBien": "2026-11-08T19:41:51.130Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:36:22.779Z"
+   "ultimaBien": "2026-11-08T19:41:51.130Z"
   }
  },
  "avisos": [
