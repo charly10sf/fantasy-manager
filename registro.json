@@ -1490,7 +1490,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/asi-nueva-camiseta-3-real-madrid-regresa-iconico-diseno-dragon.html": 1793871315000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/revivo-convocado-con-israel-para-disputar-la-nations-league-radio-elche/": 1793873304000,
    "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000,
    "SPORT|136108626": 1793872201000,
@@ -7483,13 +7482,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 325,
+   "ok": 326,
    "fallos": 0,
-   "ejecuciones": 136,
+   "ejecuciones": 137,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 470,
-   "ultima": "2026-11-08T09:31:40.291Z"
+   "ultima": "2026-11-08T09:36:12.285Z"
   }
  },
  "ptsDirecto": {}
