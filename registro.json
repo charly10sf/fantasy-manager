@@ -1535,7 +1535,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-segunda-revalida-luis-fuente-espana-seleccion-betis_0_2008430674.html": 1793895491000,
    "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
-   "SPORT|136122728": 1793893823000,
    "SPORT|136130480": 1793895763000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
    "SPORT|136131477": 1793897298000,
@@ -7273,13 +7272,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 430,
+   "ok": 432,
    "fallos": 0,
-   "ejecuciones": 211,
+   "ejecuciones": 212,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 455,
-   "ultima": "2026-11-08T15:46:11.780Z"
+   "mediaMs": 454,
+   "ultima": "2026-11-08T15:51:13.140Z"
   }
  },
  "ptsDirecto": {
