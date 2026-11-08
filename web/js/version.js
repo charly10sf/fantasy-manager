@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7zc';
+export const VERSION = '0.7zd';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.7zc';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7zd', f: '2026-11-08', h: '23:41', t: 'La app de Android, más segura',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'candado', t: 'La web que baja la app, firmada', x: 'La app de Android solo usa una web nueva si viene firmada con nuestra clave (paquete.json.sig, Ed25519); si la firma falta o no cuadra, sigue con la que tiene. Los anuncios no se crean ni se piden hasta que la web los quiere en una pestaña con contenido. Las Actions van con versiones fijas y cada APK lleva su propio número de versión.', menor: true },
+    ],
+  },
   {
     v: '0.7zc', f: '2026-11-08', h: '20:00', t: 'Privacidad, más clara',
     cosas: [
