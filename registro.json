@@ -3627,6 +3627,11 @@
    "h": "485c17982f8a",
    "desde": 1794150374132,
    "fin": 1794149772293
+  },
+  "12|114": {
+   "h": "869a0b15ae4f",
+   "desde": 1794158174970,
+   "fin": 1794158174970
   }
  },
  "iaDias": [
@@ -7179,13 +7184,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 466,
+   "ok": 467,
    "fallos": 0,
-   "ejecuciones": 229,
+   "ejecuciones": 230,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 443,
-   "ultima": "2026-11-08T17:11:12.685Z"
+   "ultima": "2026-11-08T17:16:14.525Z"
   }
  },
  "ptsDirecto": {
