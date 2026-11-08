@@ -1532,8 +1532,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/suspiros-por-parrott-f202611-n/": 1793893287000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html": 1793893343000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/pablo-blanco-recuerda-muertes-futbolistas_0_2008430332.html": 1793894144000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-segunda-revalida-luis-fuente-espana-seleccion-betis_0_2008430674.html": 1793895491000,
    "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
@@ -1726,30 +1724,6 @@
    "SPORT|136225173": 1794147961000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793893343000,
-    "id": "74",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Yuri regresa a la dinámica grupal tras no estar ayer",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261105/1004247608/nico-williams-yuri-vuelven-grupo.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793893343000,
-    "id": "3083",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136130480",
     "medio": "SPORT",
@@ -7299,13 +7273,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 428,
+   "ok": 430,
    "fallos": 0,
-   "ejecuciones": 210,
+   "ejecuciones": 211,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 456,
-   "ultima": "2026-11-08T15:41:11.428Z"
+   "mediaMs": 455,
+   "ultima": "2026-11-08T15:46:11.780Z"
   }
  },
  "ptsDirecto": {
