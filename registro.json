@@ -1328,7 +1328,7 @@
   "3088": "ok",
   "3089": "ok",
   "3090": "ok",
-  "3091": "ok",
+  "3091": "doubtful",
   "3092": "injured",
   "3093": "ok",
   "3094": "ok",
@@ -1554,7 +1554,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
-   "SPORT|136104000": 1793898027000,
    "SPORT|136135887": 1793899739000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
    "SPORT|136137325": 1793901641000,
@@ -2942,8 +2941,8 @@
     "t": 0
    },
    "3091": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1794157271302
    },
    "3092": {
     "e": "injured",
@@ -7190,13 +7189,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 460,
+   "ok": 462,
    "fallos": 0,
-   "ejecuciones": 226,
+   "ejecuciones": 227,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 446,
-   "ultima": "2026-11-08T16:56:12.574Z"
+   "mediaMs": 445,
+   "ultima": "2026-11-08T17:01:11.302Z"
   }
  },
  "ptsDirecto": {
