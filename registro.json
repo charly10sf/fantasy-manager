@@ -1840,7 +1840,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248767/aficion-barca-entra-metropolitano-grito-julian-cule.html": 1794167743000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248772/konate-espanta-fantasmas-indispensable-mourinho.html": 1794167087000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html": 1794166775000,
-   "SPORT|136231258": 1794164058000
+   "SPORT|136231258": 1794164058000,
+   "SPORT|136231292": 1794164994000
   },
   "hechos": [
    {
@@ -2467,11 +2468,25 @@
      3,
      0
     ]
+   },
+   {
+    "guid": "SPORT|136231292",
+    "medio": "SPORT",
+    "t": 1794164994000,
+    "id": "701",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Barrenetxea sufre molestias en el muslo y se retira llorando",
+    "motivo": "molestias en el muslo",
+    "plazo": "",
+    "nums": [
+     70
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -7361,17 +7376,24 @@
    "w": "2026-11-08T19:19:24Z",
    "f": "2026-11-08T19:21:13.479Z",
    "rf": "91:59"
+  },
+  "fm|120|0|10": {
+   "j": "<TBD>",
+   "m": "10'",
+   "f": "2026-11-08T20:11:13.203Z",
+   "rf": "9:39",
+   "avisado": true
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 549,
+   "ok": 551,
    "fallos": 0,
-   "ejecuciones": 264,
+   "ejecuciones": 265,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 422,
-   "ultima": "2026-11-08T20:06:13.971Z"
+   "mediaMs": 421,
+   "ultima": "2026-11-08T20:11:13.203Z"
   }
  },
  "ptsDirecto": {
@@ -7441,7 +7463,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 20,
+   "n": 21,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7449,27 +7471,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:06:28.374Z"
+   "ultimaBien": "2026-11-08T20:11:48.818Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:06:28.374Z"
+   "ultimaBien": "2026-11-08T20:11:48.818Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:06:28.374Z"
+   "ultimaBien": "2026-11-08T20:11:48.818Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:06:28.374Z"
+   "ultimaBien": "2026-11-08T20:11:48.818Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:06:28.374Z"
+   "ultimaBien": "2026-11-08T20:11:48.818Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:06:28.374Z"
+   "ultimaBien": "2026-11-08T20:11:48.818Z"
   }
  },
  "avisos": [
