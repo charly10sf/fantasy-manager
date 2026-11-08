@@ -19,7 +19,8 @@ const J = (id, nickname, teamId, playerStatus, averagePoints, positionId = 3, ma
 const config = { topes: { novedades: 20, caidas: 9 }, topeDiario: 40, maxPorEjecucion: 6, separacionBajasMin: 75 };
 const reg = new Registro(config);   // sin fichero: todo en memoria
 reg.datos.estados = { 1: 'injured', 2: 'ok', 3: 'injured', 4: 'doubtful', 5: 'ok', 6: 'injured', 7: 'ok' };
-const ahora = Date.now();
+// hora fija (11:51 de Madrid): con Date.now() la prueba fallaba entre las 23:55 y las 00:00 de Madrid (+5 min cruza al día siguiente)
+const ahora = Date.parse('2026-11-03T10:51:00Z');
 // partes de ejemplo (la lista de lesionados de la web; aquí no hay red) y una ficha con la roja en la J11
 const listaPartes = [{ nombre: 'Thomas Lemar', slug: 'thomas-lemar', lesion: 'Rotura fibrilar en el aductor', dia: 1, mes: 11, dias: 2, estado: 'baja', hasta: 'finales de noviembre', jornada: null },
   { nombre: 'Pedro González', slug: 'pedri', lesion: 'Molestias en el isquiotibial', dia: 30, mes: 10, dias: 4, estado: 'duda', hasta: null, jornada: 12 },
