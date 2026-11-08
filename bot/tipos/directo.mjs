@@ -1,6 +1,7 @@
 // Directo: goles (con asistente), rojas y penaltis fallados de ESPN (con minuto) casados con los puntos oficiales de LaLiga.
 // Sin ventanas repite los partidos ya jugados de los días de fechasEspn (para probar); con ventanas, los de hoy en juego o recién acabados.
 import { json } from '../lib/http.mjs';
+import { ficha } from '../lib/laliga.mjs';
 import { norm, corto, fmt, partes, elegir, el, del, al } from '../lib/texto.mjs';
 import { tweet, cap, segunda } from '../lib/redactar.mjs';
 import { reconstruir, situacion, iba_perdiendo, minutoDe } from '../lib/relato.mjs';
@@ -122,17 +123,40 @@ export const PTS_ASIS = 3;
 /**
  * Los puntos de un jugador en el momento de un gol: los de LaLiga si ya cuentan lo que ha hecho; si no, los suma el bot.
  * lal: weekPoints de LaLiga (o null); pos: positionId; goles y asis: los que lleva según ESPN contando esta jugada; accion: 'gol' | 'asistencia'.
- * LaLiga «ya lo cuenta» si va por encima del mínimo que dan esas acciones más el punto de jugar. Si no: lo de LaLiga (o el punto de
- * jugar si aún está a 0) más lo de esta jugada, y nunca menos que ese mínimo. { pts, estimado }
+ * cuenta: lo que dice la ficha del jugador en LaLiga para esta jornada ({ pts, goles, asis }, de `cuentaLaLiga`), o null. Con ella se
+ * sabe seguro qué goles y pases tiene ya sumados LaLiga: solo se añade lo que falte. Sin ella, LaLiga «ya lo cuenta» si va por encima de
+ * lo que dan esas acciones. OJO: en directo LaLiga NO da el punto de jugar (llega al acabar) y resta por balones perdidos o la nota: el
+ * 8 nov Fermín (medio) iba con 5 con su gol ya sumado y el bot, que esperaba 1 + 5, dijo 10; Giuliano, 8 con 4 (Atlético-Barça).
+ * Si no lo cuenta: lo de LaLiga (o el punto de jugar si aún está a 0) más lo que falte, y nunca menos que 1 más esas acciones. { pts, estimado }
  */
-export function puntosConGol(lal, pos, { goles = 0, asis = 0, accion = 'gol' } = {}) {
+export function puntosConGol(lal, pos, { goles = 0, asis = 0, accion = 'gol', cuenta = null } = {}) {
   const g = PTS_GOL[Number(pos)];
   if (!g) return { pts: lal != null && Number(lal) > 0 ? Number(lal) : null, estimado: false };
-  const minimo = 1 + goles * g + asis * PTS_ASIS;
+  const acciones = goles * g + asis * PTS_ASIS;
+  // la ficha vale si va igual o por delante de los puntos de la jornada (si va por detrás, es más vieja: no se mezcla)
+  if (cuenta && cuenta.pts != null && (lal == null || Number(cuenta.pts) >= Number(lal))) {
+    const base = Number(cuenta.pts);
+    const falta = Math.max(0, goles - (cuenta.goles || 0)) * g + Math.max(0, asis - (cuenta.asis || 0)) * PTS_ASIS;
+    if (!falta) return { pts: base, estimado: false };
+    return { pts: Math.max((base > 0 ? base : 1) + falta, 1 + acciones), estimado: true };
+  }
   const base = lal != null ? Number(lal) : null;
-  if (base != null && base >= minimo) return { pts: base, estimado: false };
+  if (base != null && base >= acciones) return { pts: base, estimado: false };
   const est = (base != null && base > 0 ? base : 1) + (accion === 'gol' ? g : PTS_ASIS);
-  return { pts: Math.max(est, minimo), estimado: true };
+  return { pts: Math.max(est, 1 + acciones), estimado: true };
+}
+/**
+ * Lo que LaLiga ya tiene sumado a un jugador en una jornada, de su ficha (goles, asistencias y puntos de la misma foto): { pts, goles, asis }.
+ * null si no contesta en 6 s, si aún no tiene esa jornada o si algo falla: entonces puntosConGol tira de la regla de los puntos.
+ */
+export async function cuentaLaLiga(id, jornada, { pedir = ficha, espera = 6000 } = {}) {
+  try {
+    const f = await Promise.race([pedir(id), new Promise((r) => setTimeout(() => r(null), espera).unref?.())]);
+    const s = f && (f.playerStats || []).find((x) => Number(x.weekNumber) === Number(jornada));
+    if (!s || s.totalPoints == null) return null;
+    const n = (k) => Number(((s.stats || {})[k] || [])[0]) || 0;
+    return { pts: Number(s.totalPoints), goles: n('goals'), asis: n('goal_assist') };
+  } catch { return null; }
 }
 /**
  * Los puntos de un gol o una asistencia nunca por debajo de los de un tuit anterior del mismo partido más lo que el jugador ha hecho
@@ -416,7 +440,9 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         if (dsp.n && p) {
           const jp0 = porId.get(String(p.id));
           const pos0 = (jp0 && jp0.positionId) || p.positionId, asis0 = asistenciasDe(detalles, dsp.jugador, dsp.ref);
-          const r = puntosConGol(p.weekPoints, pos0, { goles: dsp.n, asis: asis0, accion: 'gol' });
+          const cuenta = yaSalio(dsp) ? null : await cuentaLaLiga(p.id, jornada);
+          const r = puntosConGol(p.weekPoints, pos0, { goles: dsp.n, asis: asis0, accion: 'gol', cuenta });
+          if (!yaSalio(dsp)) log(`  (puntos) ${nombre}: LaLiga ${p.weekPoints ?? '-'}${cuenta ? ` · ficha ${cuenta.pts} (${cuenta.goles} G, ${cuenta.asis} A)` : ' · sin ficha'} → ${r.pts}${r.estimado ? ' (estimado)' : ''}`);
           if (r.pts != null) {
             pts = conSuelo(tablaPts, `${jornada}|${m.id}|${p.id}`, r.pts, { goles: dsp.n, asis: asis0, pos: pos0, ahora, apuntar: !yaSalio(dsp) });
             ptsEstimado = r.estimado || pts !== r.pts;
@@ -508,7 +534,8 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
             if (pa) {
               const jpa = porId.get(String(pa.id));
               const posA = (jpa && jpa.positionId) || pa.positionId, golesA = golesDe(detalles, an, dsp.ref), asisA = Math.max(1, asistenciasDe(detalles, an, dsp.ref));
-              ptsA = conSuelo(tablaPts, `${jornada}|${m.id}|${pa.id}`, puntosConGol(pa.weekPoints, posA, { goles: golesA, asis: asisA, accion: 'asistencia' }).pts, { goles: golesA, asis: asisA, pos: posA, ahora, apuntar: !yaSalio(dsp) });
+              const cuentaA = yaSalio(dsp) ? null : await cuentaLaLiga(pa.id, jornada);
+              ptsA = conSuelo(tablaPts, `${jornada}|${m.id}|${pa.id}`, puntosConGol(pa.weekPoints, posA, { goles: golesA, asis: asisA, accion: 'asistencia', cuenta: cuentaA }).pts, { goles: golesA, asis: asisA, pos: posA, ahora, apuntar: !yaSalio(dsp) });
             }
             if (ptsA != null) num.push(ptsA);
             ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });

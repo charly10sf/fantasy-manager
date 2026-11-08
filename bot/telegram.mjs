@@ -91,8 +91,16 @@ const desdeFinal = ventanas ? Date.now() - (config.ventanaFinalHoras ?? 10) * 36
 // los puntos DAZN llegan después del final: un partido sin ellos no se trata como acabado todavía (lib/dazn.mjs)
 if (!arg('datos')) {
   const pf = config.puntosFinales || {};
-  const dazn = crearDazn({ ficha: pedirFicha, jornada, esperaHoras: pf.esperaHoras ?? config.daznEsperaHoras ?? 6, minTrasFinal: pf.minTrasFinal ?? 20, log: (s) => console.log(s) });
-  stats = await Promise.all(stats.map(async (m) => (m.matchState === 7 && Date.parse(m.date) >= desdeFinal && !(await dazn(m)).listo ? { ...m, matchState: 6 } : m)));
+  // La prueba de los puntos quietos la lleva el bot de X en su registro (paso anterior del mismo trabajo): aquí solo se lee, sin apuntar
+  // nada. Antes Telegram no miraba si los puntos se movían y soltaba el partido antes que X (8 nov: el Atlético-Barça a las 22:16 UTC,
+  // cinco minutos antes del último cambio de puntos). Sin registro de X (simulacro en local) se queda como antes: solo el tiempo.
+  const regX = new Registro({}, arg('registro') || 'estado/registro.json');
+  const conX = regX.existe && !regX.roto;
+  if (!conX) console.log(`# Telegram: sin el registro de X (${regX.roto ? 'roto' : 'no está'}): ${simulacro ? 'simulacro, solo cuenta el tiempo' : 'no doy ningún partido por definitivo'}`);
+  const dazn = crearDazn({ ficha: pedirFicha, jornada, registro: conX ? regX : null, soloLeer: conX, esperaHoras: pf.esperaHoras ?? config.daznEsperaHoras ?? 6,
+    minTrasFinal: pf.minTrasFinal ?? 20, minEstable: pf.minEstable ?? 10, log: (s) => console.log(s) });
+  const hayDazn = conX || simulacro;
+  stats = await Promise.all(stats.map(async (m) => (m.matchState === 7 && Date.parse(m.date) >= desdeFinal && (!hayDazn || !(await dazn(m)).listo) ? { ...m, matchState: 6 } : m)));
 }
 const items = generar({ stats, jornada, config, desdeFinal, log: (s) => console.log(s) });
 console.log(`# Jornada ${jornada} · ${stats.length} partidos, ${stats.filter((m) => m.matchState === 7).length} acabados · ${items.length} con respuestas listas`);

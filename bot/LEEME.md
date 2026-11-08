@@ -89,6 +89,14 @@ Las piezas comunes están en `lib/redactar.mjs`:
   sumada la portería a cero. Si el bot lo ve acabado muy tarde, el final se cuenta desde las 2 h del saque. Pasadas
   `puntosFinales.esperaHoras` (6) desde el final, sale con lo que haya. En el log: «(puntos) partido N: espero: …» o «puntos definitivos ·
   listo». Prueba: `node bot/prueba/puntos-ejemplo.mjs` (la noche del Sevilla-Alavés, minuto a minuto: sale a los ~26 min del pitido).
+  Medido el 7 y 8 nov (9 partidos de la J12, `node bot/prueba/puntos-espera-ejemplo.mjs`): LaLiga retoca los puntos en oleadas de ~10 min y la
+  última llega a los 5-25 min de que el bot ve el partido acabado (en 3 de 9 a los 20-25: el 116, el 115 y el Atlético-Barça); salen entre los
+  20 y los 40 min. No se pueden bajar `minEstable` ni `minTrasFinal` sin sacar puntos a medias (con 5 y 20 habría fallado el Atlético-Barça;
+  con 5 y 10 o 15, también el 116 y el 115). Lo único recortado el 8 nov: el suelo de `minTrasFinal` admite 30 s (las ejecuciones no caen
+  exactas y tres partidos esperaron 5 min de más por llevar 19,98 en vez de 20). Telegram (`soloLeer` en crearDazn): no lleva su propia cuenta,
+  lee la del registro de X (`estado/registro.json`) y no apunta nada; antes soltaba el partido a los 20 min de saque+115 sin mirar si los
+  puntos se movían (el Atlético-Barça salió a las 22:16 UTC y los puntos cambiaron otra vez a las 22:21). Sin el registro de X, en real no
+  da ningún partido por definitivo; en simulacro, solo cuenta el tiempo.
 
 ### El revisor (7 nov)
 

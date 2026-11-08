@@ -55,13 +55,13 @@ export function faltaPorteriaCero(st) {
  * Devuelve una función (partido de stats/week) => { listo, motivo, porPlazo }. Guarda el resultado de cada partido listo en la
  * ejecución y la huella de los puntos en el registro (`registro.datos.puntosPartido`) para la siguiente.
  */
-export function crearDazn({ ficha, jornada, registro = null, esperaHoras = 6, minTrasFinal = 20, minEstable = 10, ahora = () => Date.now(), log = () => {} }) {
+export function crearDazn({ ficha, jornada, registro = null, soloLeer = false, esperaHoras = 6, minTrasFinal = 20, minEstable = 10, ahora = () => Date.now(), log = () => {} }) {
   const listos = new Map();
   const vistos = new Map();
   const datos = registro ? (registro.datos ||= {}) : {};
   const est = (datos.puntosPartido ||= {});
-  // limpieza: lo de hace más de 4 días ya no sirve
-  for (const [k, v] of Object.entries(est)) if (ahora() - (v.fin || 0) > 4 * 864e5) delete est[k];
+  // limpieza: lo de hace más de 4 días ya no sirve (con `soloLeer` no se toca nada del registro)
+  if (!soloLeer) for (const [k, v] of Object.entries(est)) if (ahora() - (v.fin || 0) > 4 * 864e5) delete est[k];
 
   return async (m) => {
     if (listos.has(m.id)) return listos.get(m.id);
@@ -71,7 +71,15 @@ export function crearDazn({ ficha, jornada, registro = null, esperaHoras = 6, mi
     const h = huellaPartido(m);
     let st = est[clave];
     let cambio = false;
-    if (!st) { st = est[clave] = { h, desde: t, fin: t }; cambio = true; }
+    if (soloLeer) {
+      // Telegram (otro proceso del mismo trabajo, justo después del paso de X): mira lo que X ha ido apuntando del partido y no
+      // apunta nada. Si X aún no lo ha visto acabado o ha visto que los puntos cambian respecto a lo suyo, cuenta como «acaba de
+      // cambiar» (8 nov: sin esto, Telegram daba el partido por bueno a los 20 min del saque+115 sin mirar si los puntos se
+      // movían: el Atlético-Barça salió a las 22:16 UTC y los puntos cambiaron otra vez a las 22:21).
+      if (!st) st = { h, desde: t, fin: t };
+      else if (st.h !== h) st = { ...st, h, desde: t };
+    }
+    else if (!st) { st = est[clave] = { h, desde: t, fin: t }; cambio = true; }
     else if (st.h !== h) { st.h = h; st.desde = t; cambio = true; }
     if (cambio && registro && registro.fichero) registro.guardar();
     // si el bot lo vio acabado muy tarde (estaba parado, en silencio…), el final se estima a las 2 h del saque
@@ -83,7 +91,9 @@ export function crearDazn({ ficha, jornada, registro = null, esperaHoras = 6, mi
     const porPlazo = t - fin > esperaHoras * 3600e3;
 
     const faltan = [];
-    if (trasFinal < minTrasFinal) faltan.push(`${Math.round(trasFinal)} de ${minTrasFinal} min desde el final`);
+    // el suelo admite 30 s de margen: las ejecuciones no caen exactas cada 5 min y a las 17:36:13 del 8 nov el Real Sociedad-Rayo llevaba
+    // 19,98 min y esperó otros 5. Solo el suelo: la prueba de los puntos quietos (`minEstable`) se queda exacta, que es la que protege
+    if (trasFinal < minTrasFinal - 0.5) faltan.push(`${Math.round(trasFinal)} de ${minTrasFinal} min desde el final`);
     if (registro && estable < minEstable) faltan.push(`puntos sin cambiar ${Math.round(estable)} de ${minEstable} min`);
     // las fichas solo se piden si lo de arriba ya se cumple (son llamadas a LaLiga)
     let con = 0, de = 0;

@@ -128,6 +128,26 @@ if (arg('tarjetas')) {
   c(2, 3, { asis: 1, accion: 'asistencia' }, 5);       // asistencia: 2 + 3
   c(7, 4, { goles: 2 }, 11);                           // doblete con solo el primero sumado
   c(-1, 1, { goles: 1 }, 7);                           // portero con amarilla y gol: 1 + 6
+  // 8 nov, Atlético-Barça: en directo LaLiga no da el punto de jugar y resta por balones perdidos
+  c(5, 3, { goles: 1 }, 5);                            // Fermín, medio, con el gol ya sumado: 5 (el bot dijo 10)
+  c(4, 4, { goles: 1 }, 4);                            // Giuliano, delantero, con el gol ya sumado: 4 (el bot dijo 8)
+  // con la ficha de LaLiga: solo se suma lo que no tenga
+  c(5, 3, { goles: 1, cuenta: { pts: 5, goles: 1, asis: 0 } }, 5);          // ya lo tiene
+  c(3, 3, { goles: 1, cuenta: { pts: 3, goles: 0, asis: 0 } }, 8);          // aún no: 3 + 5
+  c(2, 3, { goles: 1, cuenta: { pts: 0, goles: 0, asis: 0 } }, 7);          // ficha más vieja que los puntos: regla sin ficha, 2 + 5
+  c(9, 4, { goles: 2, cuenta: { pts: 4, goles: 1, asis: 0 } }, 9);          // ficha por detrás de los puntos: 9 ya cuenta los dos
+  c(4, 4, { goles: 2, cuenta: { pts: 4, goles: 1, asis: 0 } }, 9);          // doblete, LaLiga con el primero: 4 + 4 (y nunca menos de 1 + 8)
+  c(3, 4, { asis: 1, accion: 'asistencia', cuenta: { pts: 3, goles: 0, asis: 1 } }, 3);   // pase ya sumado
+}
+{
+  const { cuentaLaLiga } = await import('../tipos/directo.mjs');
+  const fichaF = { playerStats: [{ weekNumber: 11, totalPoints: 2, stats: {} }, { weekNumber: 12, totalPoints: 5, stats: { goals: [1, 5], goal_assist: [0, 0] } }] };
+  const r1 = await cuentaLaLiga(1715, 12, { pedir: async () => fichaF });
+  const r2 = await cuentaLaLiga(1715, 13, { pedir: async () => fichaF });
+  const r3 = await cuentaLaLiga(1715, 12, { pedir: async () => { throw new Error('HTTP 503'); } });
+  const r4 = await cuentaLaLiga(1715, 12, { pedir: () => new Promise(() => {}), espera: 50 });
+  const ok = JSON.stringify(r1) === '{"pts":5,"goles":1,"asis":0}' && r2 === null && r3 === null && r4 === null;
+  console.log(`${ok ? 'OK ' : 'MAL'} ficha de LaLiga: ${JSON.stringify([r1, r2, r3, r4])}`); if (!ok) fallos++;
 }
 // los puntos del directo no bajan respecto a un tuit anterior (7 nov: Arda Güler «lleva 10» en el 36' y «se lleva 9» tras su pase del 75')
 {
