@@ -757,6 +757,21 @@
    "jornada": 12,
    "id": "2119520849409540295",
    "t": "2026-11-08T20:02:04.346Z"
+  },
+  {
+   "clave": "directo|120|Giuliano Simeone|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119524437972426996",
+   "t": "2026-11-08T20:16:19.886Z",
+   "huella": {
+    "clase": "gol",
+    "partido": "120",
+    "equipo": "1068",
+    "min": 10,
+    "extra": 0,
+    "jugador": "Giuliano Simeone"
+   }
   }
  ],
  "estados": {
@@ -3686,10 +3701,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-08T14:51:20.028Z",
-    "texto": "⚽ Otro gol del Betis, de Bartra, en el 89'. Elche 0-2 Betis. Asistencia de Ceballos, con 6 puntos fantasy. Bartra ya suma 8 puntos, con una media de 4,8."
-   },
-   {
     "t": "2026-11-08T16:46:19.187Z",
     "texto": "⚽ Oskarsson la mete en el 67' y la Real Sociedad se adelanta en Anoeta: 1-0 al Rayo ⚡.\n\nEl islandés ya suma 8 puntos, más del doble de su media. El pase es de Barrenetxea, que se lleva 5. Es el cuarto gol de Oskarsson entre Liga, Champions y Copa."
    },
@@ -3704,6 +3715,10 @@
    {
     "t": "2026-11-08T19:21:20.685Z",
     "texto": "⚽ Romero hace el 2-0 en el 90+1' y el Villarreal 🚢 cierra el partido en La Cerámica contra el Getafe.\n\nEl defensa se va a 8 puntos con su primer gol en Liga, Champions o Copa del Rey. El pase es de Ayoze, que se lleva 4."
+   },
+   {
+    "t": "2026-11-08T20:16:19.888Z",
+    "texto": "⚽ Giuliano abre el marcador en el 10'. Atlético 1-0 Barça. Asistencia de Julián Alvarez, con 5 puntos fantasy. Giuliano ya suma 8 puntos."
    }
   ],
   "novedades": [
@@ -7383,17 +7398,33 @@
    "f": "2026-11-08T20:11:13.203Z",
    "rf": "9:39",
    "avisado": true
+  },
+  "fm|120|1226147|10": {
+   "j": "Giuliano Simeone",
+   "m": "10'",
+   "f": "2026-11-08T20:16:13.363Z",
+   "rf": "14:41",
+   "casado": true
+  },
+  "directo|120|Giuliano Simeone|gol1": {
+   "j": "Giuliano Simeone",
+   "m": "10'",
+   "e": "2026-11-08T20:16:13.363Z",
+   "re": "15'",
+   "w": "2026-11-08T20:10:38Z",
+   "f": "2026-11-08T20:16:13.363Z",
+   "rf": "14:41"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 551,
+   "ok": 553,
    "fallos": 0,
-   "ejecuciones": 265,
+   "ejecuciones": 266,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 421,
-   "ultima": "2026-11-08T20:11:13.203Z"
+   "ultima": "2026-11-08T20:16:13.363Z"
   }
  },
  "ptsDirecto": {
@@ -7456,6 +7487,18 @@
    "g": 0,
    "a": 1,
    "t": 1794165673479
+  },
+  "12|120|1210": {
+   "p": 8,
+   "g": 1,
+   "a": 0,
+   "t": 1794168973363
+  },
+  "12|120|3088": {
+   "p": 5,
+   "g": 0,
+   "a": 1,
+   "t": 1794168973363
   }
  },
  "golesAnulados": {
@@ -7463,7 +7506,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 21,
+   "n": 22,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7471,27 +7514,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:11:48.818Z"
+   "ultimaBien": "2026-11-08T20:16:34.564Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:11:48.818Z"
+   "ultimaBien": "2026-11-08T20:16:34.564Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:11:48.818Z"
+   "ultimaBien": "2026-11-08T20:16:34.564Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:11:48.818Z"
+   "ultimaBien": "2026-11-08T20:16:34.564Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:11:48.818Z"
+   "ultimaBien": "2026-11-08T20:16:34.564Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:11:48.818Z"
+   "ultimaBien": "2026-11-08T20:16:34.564Z"
   }
  },
  "avisos": [
