@@ -692,6 +692,13 @@
    "jornada": 12,
    "id": "2119490460422983789",
    "t": "2026-11-08T18:01:19.023Z"
+  },
+  {
+   "clave": "onces|120",
+   "tipo": "onces",
+   "jornada": 12,
+   "id": "2119505698811736366",
+   "t": "2026-11-08T19:01:52.270Z"
   }
  ],
  "estados": {
@@ -1767,7 +1774,8 @@
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-de-la-real-sociedad-oskarsson-sigue-poliki-poliki-f202611-n/": 1794157979000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html": 1794160570000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000
   },
   "hechos": [
    {
@@ -2367,11 +2375,23 @@
     "motivo": "sobrecarga por acumulacion de minutos",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794163508000,
+    "id": "3208",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Rodri causa baja para el partido en el Metropolitano",
+    "motivo": "baja",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -3205,14 +3225,13 @@
   }
  },
  "pulido": {
-  "dia": "2026-11-07",
-  "n": 5,
-  "ok": 4,
-  "mal": 2
+  "dia": "2026-11-08",
+  "n": 1,
+  "ok": 1,
+  "mal": 0
  },
  "liga": {
   "vistas": {
-   "SPORT|136138671": 1793905242000,
    "SPORT|136138825": 1793905634000,
    "SPORT|136145827": 1793937662000,
    "SPORT|136145828": 1793937661000,
@@ -3480,10 +3499,6 @@
  "recientes": {
   "onces": [
    {
-    "t": "2026-11-07T19:16:48.594Z",
-    "texto": "ℹ️ Onces confirmados del Valencia-Real Madrid y sin sorpresas: salen los que se esperaban. El Valencia 🦇 juega con 5-3-2 y el Real Madrid ⚪ con 4-2-3-1. Empieza hoy a las 21:00."
-   },
-   {
     "t": "2026-11-08T12:16:30.959Z",
     "texto": "👀 Cuatro atrás y tres delanteros para los dos: el Elche 🌴 y el Betis salen con un 4-3-3 en el Martínez Valero, y no hay sorpresas.\n\nEn las porterías juegan Dituro, por el Elche, y Valles, por el Betis, que lleva 9 de media y es de los que más puntos dan. Quien los tenga puede estar tranquilo."
    },
@@ -3498,6 +3513,10 @@
    {
     "t": "2026-11-08T16:41:35.816Z",
     "texto": "👀 El Levante 🐸 sale con un 4-3-3 en Balaídos y el Celta con tres centrales y tres arriba, en un 3-4-3. Los dos onces vienen sin sorpresas.\n\nIonut Radu está en la portería del Celta y, con 8,8 de media, es de los que más puntos dan: quien lo tenga, tranquilo.\n\nRyan también es titular en el Levante, aunque su media es de 6,1."
+   },
+   {
+    "t": "2026-11-08T19:01:52.272Z",
+    "texto": "ℹ️ Ya hay onces confirmados del Atlético-Barça. Todo apunta a que no hay sorpresas y salen los onces que se esperaban, con 4-4-2 para el Atleti y 4-3-3 para el Barça. Empieza hoy a las 21:00."
    }
   ],
   "final": [
@@ -7208,13 +7227,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 521,
+   "ok": 524,
    "fallos": 0,
-   "ejecuciones": 250,
+   "ejecuciones": 251,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 425,
-   "ultima": "2026-11-08T18:56:11.834Z"
+   "mediaMs": 424,
+   "ultima": "2026-11-08T19:01:11.491Z"
   }
  },
  "ptsDirecto": {
@@ -7260,7 +7279,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 6,
+   "n": 7,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7268,27 +7287,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:56:20.261Z"
+   "ultimaBien": "2026-11-08T19:02:19.213Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:56:20.261Z"
+   "ultimaBien": "2026-11-08T19:02:19.213Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:56:20.261Z"
+   "ultimaBien": "2026-11-08T19:02:19.213Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:56:20.261Z"
+   "ultimaBien": "2026-11-08T19:02:19.213Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:56:20.261Z"
+   "ultimaBien": "2026-11-08T19:02:19.213Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T18:56:20.261Z"
+   "ultimaBien": "2026-11-08T19:02:19.213Z"
   }
  },
  "avisos": [
