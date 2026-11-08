@@ -3439,16 +3439,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 37,
-   "revisar": 21,
+   "redactar": 45,
+   "revisar": 22,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 460898,
-  "salida": 23356,
+  "entrada": 563332,
+  "salida": 25701,
   "cacheLee": 92340,
-  "cacheEscribe": 26283,
-  "dolares": 1.014415
+  "cacheEscribe": 28888,
+  "dolares": 1.249246
  },
  "recientes": {
   "onces": [
@@ -3655,7 +3655,18 @@
    "dolares": 2.017914
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "final|114": {
+   "n": 1,
+   "t": "2026-11-08T17:41:34.468Z",
+   "ultima": "2026-11-08T17:41:34.468Z"
+  },
+  "mvp|114": {
+   "n": 1,
+   "t": "2026-11-08T17:41:56.443Z",
+   "ultima": "2026-11-08T17:41:56.443Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7175,13 +7186,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 473,
+   "ok": 476,
    "fallos": 0,
-   "ejecuciones": 234,
+   "ejecuciones": 235,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 441,
-   "ultima": "2026-11-08T17:36:13.204Z"
+   "ultima": "2026-11-08T17:41:13.093Z"
   }
  },
  "ptsDirecto": {
