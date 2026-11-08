@@ -1688,7 +1688,8 @@
    "SPORT|136217036": 1794126576000,
    "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/": 1794130478000,
    "SPORT|135832403": 1794118500000,
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/08/ultima-hora-choque-trenes-toledo-135852320.html": 1794122100000
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/08/ultima-hora-choque-trenes-toledo-135852320.html": 1794122100000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000
   },
   "hechos": [
    {
@@ -2363,11 +2364,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html",
+    "medio": "COPE",
+    "t": 1794132313000,
+    "id": "2354",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Eric vuelve a la convocatoria del Barça contra el Atlético",
+    "motivo": "lesión muscular",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3786,17 +3799,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 8,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 103414,
-  "salida": 8673,
+  "entrada": 105144,
+  "salida": 9219,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.214391
+  "dolares": 0.214837
  },
  "recientes": {
   "onces": [
@@ -7459,13 +7472,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 333,
+   "ok": 334,
    "fallos": 0,
-   "ejecuciones": 144,
+   "ejecuciones": 145,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 474,
-   "ultima": "2026-11-08T10:11:12.946Z"
+   "ultima": "2026-11-08T10:16:11.305Z"
   }
  },
  "ptsDirecto": {}
