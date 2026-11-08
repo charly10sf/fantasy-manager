@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7q';
+export const VERSION = '0.7r';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,14 @@ export const VERSION = '0.7q';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7r', f: '2026-11-08', h: '01:17', t: 'Los tratos con precio, bien contados',
+    cosas: [
+      { tipo: 'arreglo', d: 'balanza', t: 'Echa la cuenta del trato entero', x: 'Si le propones a un rival un trato con precios («le compro A por 30 M y le vendo B por 60 M»), la IA mira cómo acabas: con qué jugador y cuánto saldo, y lo compara con esperar a las cláusulas. Antes miraba cada precio por separado y decía que eran cifras inventadas.' },
+      { tipo: 'arreglo', d: 'dinero', t: 'Saldo y valor, cada uno en su sitio', x: 'Un cambio de jugadores no toca tu saldo: lo que cambia es lo que vale tu equipo. La IA ya no dice que te quitan millones cuando es una diferencia de valor.' },
+      { tipo: 'arreglo', d: 'ia', t: 'Bromas en castellano', x: 'Las pullas, en español de España: sin «echá» ni «afanar».', menor: true },
+    ],
+  },
   {
     v: '0.7q', f: '2026-11-08', h: '00:42', t: 'Tendencias: lo que sube hoy, bien contado',
     cosas: [
