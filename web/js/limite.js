@@ -71,12 +71,13 @@ function esDe(yo) {
   return (k) => (norm(k) && norm(k) === n) || String(k) === id || (uid && String(k) === uid);
 }
 /* Las funciones top, bloqueadas.
-   limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas cuatro), y «todoAbierto», los equipos que las ven
+   limites.json: «bloqueadas», cuáles lo están (si no lo dice, estas tres), y «todoAbierto», los equipos que las ven
    todas (si no lo dice, los de «sinLimite»). En la liga de ejemplo, bloqueadas.
    En la versión de Google Play (la que lleva anuncios) se abren viendo anuncios bonificados (desde la 0.6.3a; lo
    decidió Carlos el 25 oct, tras decirle sus amigos que 1 anuncio por el dinero de los rivales era poco y que eso es
    demasiado fuerte para tenerlo siempre):
-   - Las de los rivales (dineroRivales, ventasRivales, quienPaga y, desde la 0.6.5, perfilRival: cómo juega cada uno),
+   - Las de los rivales (dineroRivales y quienPaga; ventasRivales y perfilRival se abrieron para todos el 8 nov, 0.7w, por
+     decisión de Carlos),
      cada una por su lado: 2 anuncios seguidos por vez y
      como mucho 2 veces por jornada (de una jornada a la siguiente), y cada vez abierta 1 hora. Se cambia en
      limites.json con «top»: { "usos": 2, "minutos": 60 }.
@@ -86,11 +87,11 @@ function esDe(yo) {
    liga de ejemplo (así las ve quien revisa la app en Google). En la de la liga, que no lleva anuncios, siguen como
    diga limites.json. Todo se guarda en el móvil: borrando los datos de la app se vuelve a empezar (no se puede evitar
    sin un servidor, y no compensa). */
-const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia', 'ventasRivales', 'perfilRival'];
+const BLOQUEADAS = ['dineroRivales', 'quienPaga', 'inercia'];
 /** las que van por veces a la jornada, con 2 anuncios cada vez */
-export const POR_JORNADA = ['dineroRivales', 'ventasRivales', 'quienPaga', 'perfilRival'];
+export const POR_JORNADA = ['dineroRivales', 'quienPaga'];
 /** las que no conoce un limites.json leído por una versión anterior: con ese, cerradas hasta volver a leerlo */
-const NUEVAS = ['perfilRival'];
+const NUEVAS = [];
 const porJornada = (clave) => POR_JORNADA.includes(clave);
 /** cuántos anuncios pide cada vez */
 export const anunciosPorVez = (clave) => (porJornada(clave) ? 2 : 1);
@@ -200,6 +201,16 @@ function enSusLigas(cfg, yo) {
     const n = norm(String(k));
     return n && mias.some((l) => String(l.id) === String(k) || norm(l.nombre || '') === n || (n.length >= 5 && norm(l.nombre || '').includes(n)));
   });
+}
+
+/** ¿puede ver las novedades de las versiones (el aviso al actualizar y la lista de Ajustes)? Los de las ligas de
+   «ligas» sí; los de fuera, no, salvo que limites.json lleve «novedadesTodos»: true. null si aún no se ha leído
+   limites.json (no se sabe). El dueño no pasa por aquí: lo ve todo (avisosGuardados().admin) */
+export function novedadesPara(yo) {
+  const g = LS.get('limites', null);
+  if (!g || !g.cfg) return null;
+  if (g.cfg.novedadesTodos === true) return true;
+  return enSusLigas(g.cfg, yo);
 }
 
 /** los minutos de un equipo (null: sin límite) */

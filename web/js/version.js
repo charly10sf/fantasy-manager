@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7t';
+export const VERSION = '0.7y';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,38 @@ export const VERSION = '0.7t';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7y', f: '2026-11-08', h: '12:54', t: 'Anuncios de la web, solo a los lados',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'candado', t: 'En la web, anuncios solo a los lados', x: 'Se quita el banner de abajo de la web en el móvil: los anuncios de la web solo salen en el lateral del ordenador, si cabe.', menor: true },
+    ],
+  },
+  {
+    v: '0.7x', f: '2026-11-08', h: '12:50', t: 'Anuncios solo con tu liga',
+    cosas: [
+      { para: 'dueño', tipo: 'mejora', d: 'candado', t: 'Anuncios solo con la sesión de tu liga iniciada', x: 'El banner de abajo (Google Play) y los de la web ya no salen en la liga de ejemplo ni en una pestaña vacía o cargando: solo con tu liga cargada y con contenido en pantalla.', menor: true },
+    ],
+  },
+  {
+    v: '0.7w', f: '2026-11-08', h: '12:19', t: 'Dos funciones top, gratis',
+    cosas: [
+      { tipo: 'mejora', d: 'candado', t: 'Lo que venden los rivales y Cómo juega cada rival, abiertas', x: 'Ya no piden anuncio: las ves siempre. Siguen con candado el dinero de los rivales, quién puede pagar tu cláusula y cuándo gira un jugador.' },
+    ],
+  },
+  {
+    v: '0.7v', f: '2026-11-08', h: '12:01', t: 'Las novedades de cada versión, solo para la liga',
+    cosas: [
+      { tipo: 'mejora', d: 'candado', t: 'Sin lista de novedades para los de fuera', x: 'Quien no es del dueño ni de las ligas de limites.json tampoco ve «Novedades» en Ajustes. Para enseñárselas a todos: «novedadesTodos»: true en limites.json.', menor: true },
+    ],
+  },
+  {
+    v: '0.7u', f: '2026-11-08', h: '11:59', t: 'Para los que llegan de fuera de la liga',
+    cosas: [
+      { tipo: 'mejora', d: 'candado', t: 'Funciones top: pronto en Google Play', x: 'Los candados dicen que las funciones top estarán disponibles muy pronto, con la salida a Google Play.', menor: true },
+      { tipo: 'mejora', d: 'campana', t: 'Aviso de «App en pruebas»', x: 'El aviso de arriba ahora dice «App en pruebas», con el botón para reportar un fallo.', menor: true },
+      { tipo: 'mejora', d: 'candado', t: 'Las novedades de cada versión, solo para la liga', x: 'A quien no es del dueño ni de la liga ya no se le abre solo la presentación de novedades al actualizar; la lista entera sigue en Ajustes.', menor: true },
+    ],
+  },
   {
     v: '0.7t', f: '2026-11-08', h: '02:13', t: 'Cuánto tiempo pasa cada uno en la app',
     cosas: [

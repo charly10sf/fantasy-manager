@@ -24,7 +24,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, novedadesPara } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -401,7 +401,7 @@ async function codigoDeMudanza() {
 const BETA_VUELVE = 7 * DIA;
 // (con la liga de ejemplo, solo su banda: las dos juntas se apilaban arriba)
 const bandaBeta = () => (S.D && S.D.demo) || (Date.now() - (LS.get('beta-cerrada', 0) || 0) < BETA_VUELVE) ? ''
-  : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo.</b> Si ves algo que falla o no cuadra, repórtalo y lo arreglo.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
+  : `<div class="banda beta">${icono('bicho')}<span><b>App en pruebas.</b> Si ves algo que falla o no cuadra, repórtalo y lo arreglo.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
 const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
 
 /* ---------------- la pantalla de carga ---------------- */
@@ -631,7 +631,10 @@ function ponerBanner(si) {
   // AdSense rechazó la web el 2 nov por anuncios en pantallas sin contenido. Por eso el script ya no se pone en la
   // entrada (antes iba sin bloques para que Google viera su código: la verificación va con la etiqueta
   // google-adsense-account de index.html y con ads.txt)
-  if (!enApp) { const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo && vistaConContenido(), V.ancho(), false, modo === 'prueba'); return; }
+  // En las dos (web y Google Play), solo con la sesión de tu liga iniciada (Carlos, 8 nov): ni antes de entrar, ni
+  // mientras carga, ni en la liga de ejemplo, ni en una pestaña vacía o cargando
+  si = si && !!S.D && !S.D.demo && !enDemo() && vistaConContenido();
+  if (!enApp) { const modo = S.D ? anunciosWebModo() : null; anunciosWeb(si && !!modo, V.ancho(), false, modo === 'prueba'); return; }
   if (si === bannerYa) return;
   bannerYa = si;
   nativo.banner(si);
@@ -2414,7 +2417,7 @@ document.addEventListener('click', async (ev) => {
       const [t, x] = BLOQUEO[d.como] || BLOQUEO[d.clave] || ['Función top', ''];
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
-        <p>Es una de las funciones top de Fantasy Manager. De momento está bloqueada: <b>muy pronto se desbloqueará viendo un anuncio corto</b>, gratis.</p>
+        <p>Es una de las funciones top de Fantasy Manager. De momento está bloqueada: <b>muy pronto estará disponible con la salida a Google Play</b>, gratis viendo un anuncio corto.</p>
         <button class="btn ancho" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
       break;
     }
@@ -2472,7 +2475,7 @@ document.addEventListener('click', async (ev) => {
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;
     case 'repreguntar': { const ta = $('#pregunta'); const t = ta ? ta.value : (S.errorChat && S.errorChat.t) || ''; if (ta) ta.value = ''; S.errorChat = null; enviarPregunta(t); break; }
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
-    case 'novedades': listaVersiones(); break;
+    case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'guardarDicho': {
@@ -2750,6 +2753,14 @@ function novedades() {
   // a quien acaba de llegar (aún no ha pasado el tutorial) no se le cuentan las novedades de cada versión que le llega
   // sola: le basta con el tutorial. Las de después, sí
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
+  // y a quien no es del dueño ni de las ligas de limites.json (los de fuera, la demo) no se le abre nada solo ni se le
+  // enseña la lista de Ajustes: las novedades de cada versión son para el dueño y la liga (o para todos con «novedadesTodos»)
+  if (!avisosGuardados().admin) {
+    if (!S.D) return;
+    const mia = novedadesPara({ ligas: S.D.ligas || [] });
+    if (mia === null) return; // aún no se sabe de qué liga es: se mira en el próximo arranque
+    if (!mia) { LS.set('version-vista2', VERSION); return; }
+  }
   // si desde la última que viste solo hay arreglos, no se abre nada: se juntan para la próxima con algo nuevo, que los
   // cuenta al final, numerados
   if (!hayNovedadesDesde(vista)) return;
