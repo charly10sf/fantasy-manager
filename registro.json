@@ -3505,16 +3505,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 26,
-   "redactar": 55,
-   "revisar": 28,
+   "redactar": 62,
+   "revisar": 33,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 691381,
-  "salida": 28404,
-  "cacheLee": 107970,
-  "cacheEscribe": 28888,
-  "dolares": 1.53394,
+  "entrada": 790345,
+  "salida": 31297,
+  "cacheLee": 118390,
+  "cacheEscribe": 31493,
+  "dolares": 1.768353,
   "reservado": 0
  },
  "recientes": {
@@ -3732,7 +3732,18 @@
    "dolares": 2.017914
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "final|111": {
+   "n": 1,
+   "t": "2026-11-08T19:51:37.846Z",
+   "ultima": "2026-11-08T19:51:37.846Z"
+  },
+  "mvp|111": {
+   "n": 1,
+   "t": "2026-11-08T19:51:53.961Z",
+   "ultima": "2026-11-08T19:51:53.961Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7318,13 +7329,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 544,
+   "ok": 545,
    "fallos": 0,
-   "ejecuciones": 260,
+   "ejecuciones": 261,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 422,
-   "ultima": "2026-11-08T19:46:11.282Z"
+   "ultima": "2026-11-08T19:51:12.597Z"
   }
  },
  "ptsDirecto": {
@@ -7394,7 +7405,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 16,
+   "n": 17,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7402,27 +7413,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:46:18.057Z"
+   "ultimaBien": "2026-11-08T19:51:54.726Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:46:18.057Z"
+   "ultimaBien": "2026-11-08T19:51:54.726Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:46:18.057Z"
+   "ultimaBien": "2026-11-08T19:51:54.726Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:46:18.057Z"
+   "ultimaBien": "2026-11-08T19:51:54.726Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:46:18.057Z"
+   "ultimaBien": "2026-11-08T19:51:54.726Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:46:18.057Z"
+   "ultimaBien": "2026-11-08T19:51:54.726Z"
   }
  },
  "avisos": [
