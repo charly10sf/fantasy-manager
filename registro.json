@@ -1687,7 +1687,8 @@
    "SPORT|136211823": 1794117643000,
    "SPORT|136208274": 1794117640000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-claro-pasara-vinicius-regrese-sancion-viene-tendra-esperar-momento-20261107_3470889.html": 1794090547000,
-   "SPORT|136086039": 1794121202000
+   "SPORT|136086039": 1794121202000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248556/iker-casillas-enfada-saca-hijos-cantera-real-madrid.html": 1794127817000
   },
   "hechos": [
    {
@@ -2301,7 +2302,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -3745,17 +3746,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 95951,
-  "salida": 6365,
+  "entrada": 97679,
+  "salida": 6587,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.212491
+  "dolares": 0.212775
  },
  "recientes": {
   "onces": [
@@ -7418,13 +7419,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 318,
+   "ok": 319,
    "fallos": 0,
-   "ejecuciones": 129,
+   "ejecuciones": 130,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 471,
-   "ultima": "2026-11-08T09:01:13.642Z"
+   "ultima": "2026-11-08T09:06:11.805Z"
   }
  },
  "ptsDirecto": {}
