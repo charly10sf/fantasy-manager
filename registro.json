@@ -3447,7 +3447,8 @@
    "SPORT|136227641": 1794155343000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160741000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794159878000,
-   "SPORT|136229498": 1794158421000
+   "SPORT|136229498": 1794158421000,
+   "SPORT|136233016": 1794168616000
   },
   "hechos": [
    {
@@ -3608,7 +3609,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
   "espera": {}
@@ -7473,13 +7474,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 579,
+   "ok": 581,
    "fallos": 0,
-   "ejecuciones": 279,
+   "ejecuciones": 280,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 419,
-   "ultima": "2026-11-08T21:16:11.439Z"
+   "ultima": "2026-11-08T21:21:17.336Z"
   }
  },
  "ptsDirecto": {
@@ -7575,27 +7576,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:16:24.660Z"
+   "ultimaBien": "2026-11-08T21:22:02.127Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:16:24.660Z"
+   "ultimaBien": "2026-11-08T21:22:02.127Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:16:24.660Z"
+   "ultimaBien": "2026-11-08T21:22:02.127Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:16:24.660Z"
+   "ultimaBien": "2026-11-08T21:22:02.127Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:16:24.660Z"
+   "ultimaBien": "2026-11-08T21:22:02.127Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:16:24.660Z"
+   "ultimaBien": "2026-11-08T21:22:02.127Z"
   }
  },
  "avisos": [
