@@ -3118,7 +3118,6 @@
  },
  "liga": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html": 1793896084000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-aplaza-decision-sobre-sancion-owono-20261105_3469777.html": 1793897285000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/asi-sera-homenaje-futbol-espanol-jesus-miguel-solemne-minuto-silencio-paron-memoria-9-20261105_3469770.html": 1793896697000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677030/comite-aplaza-sancion-owono-jornada-liga-convertira-tributo-miguel.html": 1793896288000,
@@ -3204,25 +3203,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html",
-    "medio": "MARCA",
-    "t": 1793896084000,
-    "tipo": "suspension",
-    "estado": "descartado",
-    "segunda": false,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "",
-    "nums": [
-     9
-    ],
-    "regla": true
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/asi-sera-homenaje-futbol-espanol-jesus-miguel-solemne-minuto-silencio-paron-memoria-9-20261105_3469770.html",
     "medio": "COPE",
@@ -3486,16 +3466,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 20,
-   "redactar": 22,
-   "revisar": 9,
+   "redactar": 25,
+   "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 308601,
-  "salida": 15728,
-  "cacheLee": 13025,
-  "cacheEscribe": 10420,
-  "dolares": 0.628885
+  "entrada": 352803,
+  "salida": 17088,
+  "cacheLee": 18235,
+  "cacheEscribe": 13025,
+  "dolares": 0.737924
  },
  "recientes": {
   "onces": [
@@ -3693,7 +3673,13 @@
    "dolares": 2.017914
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "onces|119": {
+   "n": 1,
+   "t": "2026-11-08T16:31:42.853Z",
+   "ultima": "2026-11-08T16:31:42.853Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7196,13 +7182,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 448,
+   "ok": 450,
    "fallos": 0,
-   "ejecuciones": 220,
+   "ejecuciones": 221,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 449,
-   "ultima": "2026-11-08T16:26:11.781Z"
+   "mediaMs": 448,
+   "ultima": "2026-11-08T16:31:14.349Z"
   }
  },
  "ptsDirecto": {
