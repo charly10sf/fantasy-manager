@@ -1691,7 +1691,9 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000,
    "SPORT|136214539": 1794134669000,
-   "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/": 1794141880000
+   "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/": 1794141880000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248620/mensaje-vinicius-triunfo-real-madrid-mestalla.html": 1794148200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248652/kubo-regresa-titularidad-rayo-oyarzabal-queda-fuera-convocatoria.html": 1794147246000
   },
   "hechos": [
    {
@@ -2281,7 +2283,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3594,17 +3596,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 15,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 214943,
-  "salida": 13952,
+  "entrada": 216893,
+  "salida": 14122,
   "cacheLee": 10420,
   "cacheEscribe": 7815,
-  "dolares": 0.436402
+  "dolares": 0.436682
  },
  "recientes": {
   "onces": [
@@ -7267,13 +7269,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 404,
+   "ok": 406,
    "fallos": 0,
-   "ejecuciones": 196,
+   "ejecuciones": 197,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 465,
-   "ultima": "2026-11-08T14:31:12.073Z"
+   "mediaMs": 464,
+   "ultima": "2026-11-08T14:36:13.245Z"
   }
  },
  "ptsDirecto": {}
