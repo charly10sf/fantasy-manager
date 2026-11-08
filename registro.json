@@ -1554,7 +1554,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
-   "SPORT|136131477": 1793897298000,
    "SPORT|136104000": 1793898027000,
    "SPORT|136135887": 1793899739000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
@@ -3140,7 +3139,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-aplaza-decision-sobre-sancion-owono-20261105_3469777.html": 1793897285000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898360000,
    "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html": 1793899045000,
@@ -3219,7 +3217,8 @@
    "SPORT|136221598": 1794138326000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/08/las-palmas-y-eldense-se-enfrentaran-este-lunes-a-las-2030-h-radio-elda/": 1794147139000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000,
+   "SPORT|136226466": 1794152883000
   },
   "hechos": [
    {
@@ -3457,7 +3456,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
   "espera": {}
@@ -3465,17 +3464,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 34,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 417901,
-  "salida": 20373,
+  "entrada": 419662,
+  "salida": 20459,
   "cacheLee": 89735,
   "cacheEscribe": 23678,
-  "dolares": 0.930344
+  "dolares": 0.930563
  },
  "recientes": {
   "onces": [
@@ -7192,13 +7191,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 456,
+   "ok": 458,
    "fallos": 0,
-   "ejecuciones": 224,
+   "ejecuciones": 225,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 446,
-   "ultima": "2026-11-08T16:46:12.776Z"
+   "mediaMs": 447,
+   "ultima": "2026-11-08T16:51:17.547Z"
   }
  },
  "ptsDirecto": {
