@@ -1532,8 +1532,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/revivo-y-cepeda-asentados-en-el-elche-y-en-sus-selecciones-f202611-n/": 1793895952000,
-   "SPORT|136130480": 1793895763000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
    "SPORT|136131477": 1793897298000,
    "SPORT|136104000": 1793898027000,
@@ -1721,21 +1719,6 @@
    "SPORT|136225173": 1794147961000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136130480",
-    "medio": "SPORT",
-    "t": 1793895763000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri causa baja durante un mes en el equipo",
-    "motivo": "contratiempo físico",
-    "plazo": "un mes",
-    "nums": [
-     4,
-     12
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/",
     "medio": "AS",
@@ -7213,13 +7196,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 446,
+   "ok": 448,
    "fallos": 0,
-   "ejecuciones": 219,
+   "ejecuciones": 220,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 450,
-   "ultima": "2026-11-08T16:22:24.101Z"
+   "mediaMs": 449,
+   "ultima": "2026-11-08T16:26:11.781Z"
   }
  },
  "ptsDirecto": {
