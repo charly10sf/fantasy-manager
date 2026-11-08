@@ -129,5 +129,20 @@ if (arg('tarjetas')) {
   c(7, 4, { goles: 2 }, 11);                           // doblete con solo el primero sumado
   c(-1, 1, { goles: 1 }, 7);                           // portero con amarilla y gol: 1 + 6
 }
+// los puntos del directo no bajan respecto a un tuit anterior (7 nov: Arda Güler «lleva 10» en el 36' y «se lleva 9» tras su pase del 75')
+{
+  const { conSuelo, puntosConGol } = await import('../tipos/directo.mjs');
+  const t = {}; const k = '12|112|1674';
+  const v = (x, esp, txt) => { const ok = x === esp; console.log(`${ok ? 'OK ' : 'MAL'} suelo de puntos: ${txt} → ${x} (esperado ${esp})`); if (!ok) fallos++; };
+  v(conSuelo(t, k, puntosConGol(10, 3, { goles: 1 }).pts, { goles: 1, asis: 0, pos: 3, ahora: 1 }), 10, 'gol del 36\', LaLiga 10');
+  v(conSuelo(t, k, puntosConGol(5, 3, { goles: 1 }).pts, { goles: 1, asis: 0, pos: 3, ahora: 2, apuntar: false }), 10, 'el mismo gol, ya publicado, otra vuelta con LaLiga a 5');
+  v(conSuelo(t, k, puntosConGol(null, 3, { goles: 1, asis: 1, accion: 'asistencia' }).pts, { goles: 1, asis: 1, pos: 3, ahora: 3 }), 13, 'su pase del 75\', LaLiga sin dato: 10 + 3');
+  v(conSuelo(t, k, puntosConGol(16, 3, { goles: 1, asis: 1, accion: 'asistencia' }).pts, { goles: 1, asis: 1, pos: 3, ahora: 4 }), 16, 'LaLiga ya va por encima: lo suyo');
+  // partido visto ya acabado: las dos jugadas en la misma vuelta, con los 19 definitivos (sin sumar el pase dos veces)
+  const t2 = {};
+  conSuelo(t2, k, puntosConGol(19, 3, { goles: 1 }).pts, { goles: 1, asis: 0, pos: 3, ahora: 9 });
+  v(conSuelo(t2, k, puntosConGol(19, 3, { goles: 1, asis: 1, accion: 'asistencia' }).pts, { goles: 1, asis: 1, pos: 3, ahora: 9 }), 19, 'gol y pase en la misma vuelta: los 19 de LaLiga');
+  v(conSuelo(null, k, 7, { goles: 1, pos: 4 }), 7, 'sin registro: tal cual');
+}
 srv.close();
 process.exit(fallos ? 1 : 0);

@@ -93,6 +93,23 @@ export function puntosConGol(lal, pos, { goles = 0, asis = 0, accion = 'gol' } =
   const est = (base != null && base > 0 ? base : 1) + (accion === 'gol' ? g : PTS_ASIS);
   return { pts: Math.max(est, minimo), estimado: true };
 }
+/**
+ * Los puntos de un gol o una asistencia nunca por debajo de los de un tuit anterior del mismo partido más lo que el jugador ha hecho
+ * desde entonces. El 7 nov Arda Güler «lleva 10» tras su gol del 36' y, en el 0-3 del 75', con su pase, «se lleva 9»: los puntos en
+ * vivo de LaLiga habían bajado y el bot sumaba desde ahí. `tabla`: registro.datos.ptsDirecto (o null); clave: jornada|partido|jugador.
+ * Solo vale lo apuntado en una ejecución anterior (`ahora` distinto): en la misma, todas las jugadas ven los mismos puntos de LaLiga y
+ * sumar daría dos veces lo mismo. `apuntar`: solo las jugadas que aún no han salido (una ya publicada, recalculada con los puntos de
+ * después, contaría acciones posteriores). Devuelve los puntos que van al tuit.
+ */
+export function conSuelo(tabla, clave, pts, { goles = 0, asis = 0, pos, ahora = Date.now(), apuntar = true } = {}) {
+  if (!tabla || pts == null) return pts;
+  const g = PTS_GOL[Number(pos)] || 0;
+  const prev = tabla[clave];
+  let out = pts;
+  if (prev && prev.t !== ahora && goles >= prev.g && asis >= prev.a) out = Math.max(pts, prev.p + (goles - prev.g) * g + (asis - prev.a) * PTS_ASIS);
+  if (apuntar && (!prev || (goles >= prev.g && asis >= prev.a))) tabla[clave] = { p: out, g: goles, a: asis, t: ahora };
+  return out;
+}
 const mismo = (a, b) => norm(a || '') === norm(b || '');
 const hasta = (detalles, ref) => { const i = detalles.indexOf(ref); return i < 0 ? detalles : detalles.slice(0, i + 1); };
 /** goles (sin autogoles) de un jugador en los `details` de ESPN hasta la jugada `ref` incluida */
@@ -242,6 +259,9 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
   // FotMob, fuente extra (lib/fotmob.mjs): nunca retrasa un tuit y, si no contesta, todo sale con ESPN. Se apaga con config.fotmob = false o BOT_FOTMOB=0
   const fm = fotmob || (config.fotmob === false || process.env.BOT_FOTMOB === '0' ? null : crearFotmob({ log }));
   if (fm && registro) await ponerAlDiaRasgos({ fm, registro, fechas: fechasEspn, log, max: registro.fichero ? 60 : 200 }).catch((e) => log(`  (rasgos) ERROR ${e.message || e}`));
+  // los puntos ya dichos en el directo de esta jornada (conSuelo): lo de otras jornadas se borra
+  const tablaPts = registro && registro.datos ? (registro.datos.ptsDirecto ||= {}) : null;
+  if (tablaPts) for (const k of Object.keys(tablaPts)) if (!k.startsWith(`${jornada}|`)) delete tablaPts[k];
   for (const f of fechasEspn) {
     const sb = await json(`${ESPN}/scoreboard?dates=${f}`).catch(() => null);
     for (const ev of (sb && sb.events) || []) {
@@ -343,8 +363,12 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         let ptsEstimado = false;
         if (dsp.n && p) {
           const jp0 = porId.get(String(p.id));
-          const r = puntosConGol(p.weekPoints, (jp0 && jp0.positionId) || p.positionId, { goles: dsp.n, asis: asistenciasDe(detalles, dsp.jugador, dsp.ref), accion: 'gol' });
-          if (r.pts != null) { pts = r.pts; ptsEstimado = r.estimado; }
+          const pos0 = (jp0 && jp0.positionId) || p.positionId, asis0 = asistenciasDe(detalles, dsp.jugador, dsp.ref);
+          const r = puntosConGol(p.weekPoints, pos0, { goles: dsp.n, asis: asis0, accion: 'gol' });
+          if (r.pts != null) {
+            pts = conSuelo(tablaPts, `${jornada}|${m.id}|${p.id}`, r.pts, { goles: dsp.n, asis: asis0, pos: pos0, ahora, apuntar: !yaSalio(dsp) });
+            ptsEstimado = r.estimado || pts !== r.pts;
+          }
         }
         const mn = minutoDe(dsp.ref);
         const minTxt = mn.extra ? `${mn.min}+${mn.extra}'` : `${mn.min}'`;
@@ -431,7 +455,8 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
             const na = pa ? pa.nickname || pa.name : an;
             if (pa) {
               const jpa = porId.get(String(pa.id));
-              ptsA = puntosConGol(pa.weekPoints, (jpa && jpa.positionId) || pa.positionId, { goles: golesDe(detalles, an, dsp.ref), asis: Math.max(1, asistenciasDe(detalles, an, dsp.ref)), accion: 'asistencia' }).pts;
+              const posA = (jpa && jpa.positionId) || pa.positionId, golesA = golesDe(detalles, an, dsp.ref), asisA = Math.max(1, asistenciasDe(detalles, an, dsp.ref));
+              ptsA = conSuelo(tablaPts, `${jornada}|${m.id}|${pa.id}`, puntosConGol(pa.weekPoints, posA, { goles: golesA, asis: asisA, accion: 'asistencia' }).pts, { goles: golesA, asis: asisA, pos: posA, ahora, apuntar: !yaSalio(dsp) });
             }
             if (ptsA != null) num.push(ptsA);
             ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
