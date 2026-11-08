@@ -3581,7 +3581,9 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146775163
+  }
  },
  "ia": {
   "dia": "2026-11-08",
@@ -7259,13 +7261,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 392,
+   "ok": 394,
    "fallos": 0,
-   "ejecuciones": 190,
+   "ejecuciones": 191,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 469,
-   "ultima": "2026-11-08T14:01:12.934Z"
+   "mediaMs": 468,
+   "ultima": "2026-11-08T14:06:15.163Z"
   }
  },
  "ptsDirecto": {}
