@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7za';
+export const VERSION = '0.7zb';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,12 @@ export const VERSION = '0.7za';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7zb', f: '2026-11-08', h: '19:12', t: 'El intermediario de Deno, al día',
+    cosas: [
+      { para: 'dueño', tipo: 'arreglo', d: 'conexion', t: 'La web usa el Deno de producción', x: 'La dirección de Deno que tenía la web era la de su primera compilación (30 oct) y no se actualizaba con los cambios: ahora va a la de producción, que sigue a main del intermediario, con las mismas reglas cerradas que el Worker.', menor: true },
+    ],
+  },
   {
     v: '0.7za', f: '2026-11-08', h: '18:49', t: 'El servidor de la web, con frenos',
     cosas: [
