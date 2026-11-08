@@ -2482,3 +2482,9 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .escritorio .ent-and .en-apk { flex-direction: column; align-items: flex-start; gap: 12px; }
 .escritorio .ent-and .en-apk-qr { width: 104px; height: 104px; }
 .escritorio .ent-and .en-apk-qr svg.qr { width: 104px; height: 104px; }
+/* Quién usa la app → Tiempo en la app (0.7t) */
+.uso-t td small { display: block; font-size: 11px; color: var(--apagado); font-weight: 400; }
+.uso-t td:first-child b { font-weight: 600; }
+.uso-b { border-bottom: 1px solid var(--linea); display: inline-flex; align-items: flex-end; gap: 2px; height: 22px; width: 54px; vertical-align: middle; }
+.uso-b i { flex: 1; background: var(--rojo, #e1001a); border-radius: 2px 2px 0 0; min-height: 0; }
+.uso-b i:last-child { background: var(--texto, #fff); }
