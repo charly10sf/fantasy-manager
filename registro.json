@@ -3109,7 +3109,6 @@
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
-   "SPORT|136122725": 1793885037000,
    "ABC|https://www.abc.es/deportes/futbol/futbolistas-insisten-jugar-companero-muerto-campo-mayor-20261105160658-nt.html": 1793891252000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677045/afe-insiste-jornada-futbol-aplazar.html": 1793891979000,
@@ -7300,13 +7299,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 376,
+   "ok": 378,
    "fallos": 0,
-   "ejecuciones": 182,
+   "ejecuciones": 183,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 474,
-   "ultima": "2026-11-08T13:21:12.490Z"
+   "mediaMs": 473,
+   "ultima": "2026-11-08T13:26:12.782Z"
   }
  },
  "ptsDirecto": {}
