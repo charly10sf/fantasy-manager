@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7y';
+export const VERSION = '0.7z';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,16 @@ export const VERSION = '0.7y';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7z', f: '2026-11-08', h: '17:52', t: 'La app no se queda colgada',
+    cosas: [
+      { tipo: 'arreglo', d: 'arreglo', t: 'Nunca más en «Abriendo…»', x: 'Si la liga guardada en el móvil no se puede abrir (por ejemplo, tras una actualización), la app lo apunta, la tira y vuelve a cargar tu liga de LaLiga. Antes se quedaba en «Abriendo…» hasta borrar los datos.' },
+      { tipo: 'arreglo', d: 'conexion', t: 'Con la conexión colgada, una salida en 25 segundos', x: 'Si LaLiga no contesta, la carga ya no espera minutos: a los 25 segundos te lo dice, y si lo que falta es secundario se usa lo de la última vez. A los 15 segundos sale «Usar lo guardado» si tienes la liga guardada.' },
+      { tipo: 'arreglo', d: 'movil', t: 'Con el almacenamiento lleno, tu sesión va primero', x: 'Si el navegador se queda sin sitio, la app hace hueco quitando la liga de ejemplo y lo de otras ligas antes que perder tu sesión, tu clave o el chat, y si ni así cabe te avisa arriba. Las miniaturas de las fotos del chat ya no ocupan ese sitio.' },
+      { tipo: 'mejora', d: 'bandera', t: 'Tu opinión cuenta', x: 'El aviso de arriba ahora dice que la app está en desarrollo y en pruebas, y que cualquier fallo o idea de mejora se manda con el botón Reportar: se lee todo y se tiene en cuenta.', menor: true },
+      { para: 'dueño', tipo: 'mejora', d: 'lupa', t: 'La web se prueba antes de publicarse', x: 'Antes de publicar, GitHub abre la liga de ejemplo y comprueba que arranca, que las 7 pestañas pintan sin error, que una liga guardada rota no bloquea, que la red colgada tiene salida y que el almacenamiento lleno no pierde la sesión. Si algo falla, no se publica. En cada subida corren también las pruebas del Worker y del bot sin red.', menor: true },
+    ],
+  },
   {
     v: '0.7y', f: '2026-11-08', h: '12:54', t: 'Anuncios de la web, solo a los lados',
     cosas: [

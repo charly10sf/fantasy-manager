@@ -1,9 +1,9 @@
 /* Baja todo lo de tu liga de una vez y lo guarda: la foto del momento (D) y el histórico (H) que se va
    llenando cada vez que abres la app (valores de cada jugador por día, valor y puntos de cada rival,
    y los cambios que se ven en sus plantillas aunque la actividad de la liga no los cuente). */
-import { api, paginaMercado, forma } from './api.js';
+import { api, apiDeCarga, nuevaCarga, saltarBlandos, paginaMercado, forma } from './api.js';
 import * as N from './normalizar.js';
-import { LS, diaDe, enParalelo, num, norm, DIA } from './util.js';
+import { LS, diaDe, enParalelo, num, norm, DIA, fijarSitio } from './util.js';
 import { enApp, enWeb, http } from './puente.js';
 import { demo, jugadoresDemo } from './demo.js';
 import * as CD from './caras-demo.js';
@@ -43,7 +43,15 @@ export function carasDemo() {
   }
   return g;
 }
-export const foto = () => LS.get(K('datos'), null);
+/* La versión del formato de la foto (D.esquema). Súbela cuando una versión cambie D de forma que la de antes no la
+   pueda leer: una web vieja (AlDia vuelve a la del APK si la nueva no arranca) no abre una foto de un esquema más
+   nuevo, la descarta y carga de LaLiga. Las fotos de antes de la 0.7z no llevan número: valen como la 1 */
+export const ESQUEMA = 1;
+export const foto = () => {
+  const D = LS.get(K('datos'), null);
+  if (!D || typeof D !== 'object' || Array.isArray(D)) return null;
+  return (+D.esquema || 1) > ESQUEMA ? null : D;
+};
 export const historico = () => LS.get(K('hist'), { v: {}, eq: {}, yo: [], mov: [] });
 
 /* ---------- el historial de movimientos de la liga, guardado aparte (para el dinero de los rivales) ---------- */
@@ -88,9 +96,10 @@ export const pasosCarga = PASOS;
  * Si falla algo imprescindible (la cuenta, la liga, la clasificación) lanza el error; lo demás se apunta
  * en D.avisos y la app sigue con lo que tenga.
  */
-export async function actualizar(alPaso = () => {}) {
+export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
+  const cancelada = () => { if (carga.cancelada) throw Object.assign(new Error('carga cancelada: se usa lo guardado'), { cancelada: true }); };
   if (enDemo()) {
-    for (let i = 0; i < PASOS.length; i++) { alPaso(i, PASOS[i]); await new Promise((r) => setTimeout(r, window.__lento || 90)); }
+    for (let i = 0; i < PASOS.length; i++) { alPaso(i, PASOS[i]); await new Promise((r) => setTimeout(r, window.__lento || 90)); cancelada(); }
     const { D, H } = demo();
     CD.poner(D, carasDemo());
     const h = historico();
@@ -100,10 +109,15 @@ export async function actualizar(alPaso = () => {}) {
   let c = cfg();
   const avisos = [];
   const muestras = {};
-  const blando = async (paso, f) => { try { return await f(); } catch (e) { if (e.sesion) throw e; avisos.push({ paso, e: e.message }); return null; } };
+  const A = apiDeCarga(carga);
+  // un paso blando que falla (o que se salta porque la red no contesta: api.js, A7) deja lo de la foto vieja
+  const blando = async (paso, f) => {
+    if (saltarBlandos(carga)) { avisos.push({ paso, e: 'saltado: la conexión no responde', leve: true }); return null; }
+    try { return await f(); } catch (e) { if (e.sesion || e.cancelada) throw e; avisos.push({ paso, e: e.message, ...(e.saltado ? { leve: true } : {}) }); return null; }
+  };
 
   alPaso(0, PASOS[0]);
-  const yo = await api.yo();
+  const yo = await A.yo();
   const yoD = yo && yo.data && typeof yo.data === 'object' ? yo.data : yo || {};
   const userId = String(yoD.id ?? yoD.userId ?? yoD.managerId ?? '');
   const miNombre = yoD.managerName || yoD.displayName || yoD.username || yoD.name || '';
@@ -116,7 +130,7 @@ export async function actualizar(alPaso = () => {}) {
   const viejo = foto();
 
   alPaso(1, PASOS[1]);
-  const ligasR = await api.ligas();
+  const ligasR = await A.ligas();
   const ligas = N.lista(ligasR).map((l) => ({ id: l && l.id != null ? String(l.id) : '', nombre: l.name || l.leagueName || `Liga ${l.id}`, premium: !!(l.isPremium || l.premium || (l.premiumLevel && l.premiumLevel !== 'none') || /premium/i.test(String(l.type || l.leagueType || ''))) })).filter((l) => l.id);
   if (!ligas.length && N.lista(ligasR).length) throw cambioDeFormato('ligas', ligasR);
   if (!ligas.length) throw Object.assign(new Error('Tu cuenta no tiene ninguna liga de LaLiga Fantasy'), { tipo: 'sinLigas' });
@@ -127,18 +141,25 @@ export async function actualizar(alPaso = () => {}) {
   // la primera liga que se carga es «la de siempre» (guarda con las claves de antes); si la elegida ya no está, la que toca
   if (!LS.get('liga-principal', null)) LS.set('liga-principal', liga.id);
   if (String(c.ligaId || '') !== liga.id) guardarCfg({ ligaId: liga.id });
+  // la clasificación es lo último imprescindible: se pide ya, antes de lo blando, para que lo blando no gaste el
+  // presupuesto de tiempo de lo imprescindible (A7)
+  const clasifR = await A.clasificacion(liga.id);
+  carga.imprescindible = false;
 
   // los equipos de LaLiga cambian poco: una vez al día
   let equipos = viejo && viejo.equiposT && Date.now() - viejo.equiposT < DIA && viejo.liga && viejo.equipos ? viejo.equipos : null;
-  if (!equipos) equipos = (await blando('equipos', async () => N.equiposLaLiga(await api.equiposLaLiga()))) || (viejo && viejo.equipos) || {};
-
   // las formaciones gratuitas cambian poco: una vez al día
   let formaciones = viejo && viejo.formaciones && viejo.formacionesT && Date.now() - viejo.formacionesT < DIA ? viejo.formaciones : null;
   let formacionesT = formaciones ? viejo.formacionesT : Date.now();
-  if (!formaciones) formaciones = (await blando('formaciones', async () => { const r = await api.formaciones(); muestras.formaciones = recorte(r); return N.formaciones(r); })) || (viejo && viejo.formaciones) || [];
+  // (las dos a la vez: con la red colgada, una sola espera en vez de dos)
+  const [eqN, foN] = await Promise.all([
+    equipos ? null : blando('equipos', async () => N.equiposLaLiga(await A.equiposLaLiga())),
+    formaciones ? null : blando('formaciones', async () => { const r = await A.formaciones(); muestras.formaciones = recorte(r); return N.formaciones(r); }),
+  ]);
+  if (!equipos) equipos = eqN || (viejo && viejo.equipos) || {};
+  if (!formaciones) formaciones = foN || (viejo && viejo.formaciones) || [];
 
   alPaso(2, PASOS[2]);
-  const clasifR = await api.clasificacion(liga.id);
   const clasif = N.clasificacion(clasifR);
   // (una muestra para el diagnóstico: qué trae cada equipo, por ejemplo si hay foto del mánager o escudo)
   { const l = N.lista(clasifR); if (l && l[0]) muestras.clasificacion = recorte(l.find((x) => x && x.team && x.team.manager && x.team.manager.avatar && !/default/.test(x.team.manager.avatar)) || l[0]); }
@@ -157,12 +178,17 @@ export async function actualizar(alPaso = () => {}) {
   muestras.fotos = `user/me: ${yoD.avatar || yoD.profileImage || 'sin foto'} · rivales con foto: ${clasif.filter((e) => !e.esYo && e.avatar).length}/${clasif.length - 1} (de la app: ${Object.keys((LS.get(K('fotos-rivales'), null) || {}).caras || {}).length})`;
 
   alPaso(3, PASOS[3]);
-  const maestro = (await blando('jugadores', async () => {
-    const r = await api.jugadores();
+  let maestro = await blando('jugadores', async () => {
+    const r = await A.jugadores();
     const l = N.lista(r);
     if (l[0]) muestras.jugador = recorte(l.find((x) => x && x.images) || l[0]);
     return N.jugadores(r, equipos);
-  })) || {};
+  });
+  // sin la lista de jugadores, la de la última vez (antes se quedaba vacía y la app sin jugadores); sus valores no
+  // entran en el histórico como si fueran de hoy (guardarFoto, maestroDe)
+  let maestroDe = null;
+  if (!maestro && viejo && !viejo.demo && viejo.maestro && Object.keys(viejo.maestro).length) { maestro = structuredClone(viejo.maestro); maestroDe = viejo.maestroDe || viejo.t || null; }
+  maestro ||= {};
 
   alPaso(4, PASOS[4]);
   const plantillas = {};
@@ -172,7 +198,7 @@ export async function actualizar(alPaso = () => {}) {
   const mismaLiga = viejo && !viejo.demo && viejo.liga && viejo.liga.id === liga.id && viejo.plantillas;
   const plantillasViejas = [];
   await enParalelo(clasif, 3, async (e) => {
-    const r = await blando(`plantilla ${e.nombre}`, () => api.equipo(liga.id, e.teamId));
+    const r = await blando(`plantilla ${e.nombre}`, () => A.equipo(liga.id, e.teamId));
     const anterior = mismaLiga ? viejo.plantillas[e.teamId] : null;
     if (!r) { if (anterior && anterior.length) { plantillas[e.teamId] = anterior; plantillasViejas.push(e.teamId); } return; }
     if (!muestras.plantilla) { const l = (r && (r.players || (r.data && r.data.players))) || N.lista(r); if (l && l[0]) muestras.plantilla = recorte(l[0]); }
@@ -193,7 +219,7 @@ export async function actualizar(alPaso = () => {}) {
     else if (inf && inf.dinero != null) dineros[e.teamId] = { v: inf.dinero, fuente: 'plantilla' };
   }
   if (mio) {
-    dinero = await blando('dinero', async () => N.dinero(await api.dinero(mio.teamId)));
+    dinero = await blando('dinero', async () => N.dinero(await A.dinero(mio.teamId)));
     if (dinero == null && dineros[mio.teamId]) dinero = dineros[mio.teamId].v;
     if (dinero != null) dineros[mio.teamId] = { v: dinero, fuente: 'tu cuenta' };
   } else {
@@ -204,13 +230,13 @@ export async function actualizar(alPaso = () => {}) {
   if (sinDinero.length) {
     const probar = async (e) => {
       try {
-        const r = await api.dinero(e.teamId);
+        const r = await A.dinero(e.teamId);
         if (!muestras.dineroRival) muestras.dineroRival = recorte(r);
         const v = N.dinero(r);
         if (v != null) dineros[e.teamId] = { v, fuente: 'API' };
         return v != null;
       } catch (err) {
-        if (err.sesion) throw err;
+        if (err.sesion || err.cancelada) throw err;
         if (!muestras.dineroRival) muestras.dineroRival = `no lo da: ${err.message}`;
         return false;
       }
@@ -231,7 +257,7 @@ export async function actualizar(alPaso = () => {}) {
   else if (mio && !(plantillas[mio.teamId] || []).length && !avisos.some((a) => a.paso === `plantilla ${mio.nombre}`)) avisos.push({ paso: 'tu plantilla', e: 'tu plantilla ha llegado vacía' });
 
   alPaso(6, PASOS[6]);
-  const mercado = (await blando('mercado', async () => { const r = await api.mercado(liga.id); const l = N.lista(r); if (l[0]) muestras.mercado = recorte(l[0]); const dm = l.find((x) => x && !/league/i.test(String(x.discr || ''))); if (dm) muestras.mercadoManager = recorte(dm); return N.mercado(r, equipos); })) || [];
+  const mercado = (await blando('mercado', async () => { const r = await A.mercado(liga.id); const l = N.lista(r); if (l[0]) muestras.mercado = recorte(l[0]); const dm = l.find((x) => x && !/league/i.test(String(x.discr || ''))); if (dm) muestras.mercadoManager = recorte(dm); return N.mercado(r, equipos); })) || [];
   for (const m of mercado) maestro[m.pid] = mezclar(maestro[m.pid], m.jugador);
 
   // tus jugadores en venta y las ofertas que tienes por ellos
@@ -243,11 +269,11 @@ export async function actualizar(alPaso = () => {}) {
       const ptId = m.ptId || ((plantillas[mio.teamId] || []).find((f) => f.pid === m.pid) || {}).ptId;
       if (!lista && ptId) {
         try {
-          const r = await api.ofertas(liga.id, ptId);
+          const r = await A.ofertas(liga.id, ptId);
           if (!muestras.ofertas) muestras.ofertas = recorte(r);
           lista = N.ofertas(r);
         } catch (e) {
-          if (e.sesion) throw e;
+          if (e.sesion || e.cancelada) throw e;
           // si falla (la conexión, casi siempre), las de la última vez: las ofertas no cambian hasta el cambio de mercado
           const antes = viejo && !viejo.demo && (viejo.misVentas || []).find((v) => v.pid === m.pid);
           if (antes && Array.isArray(antes.ofertas)) lista = antes.ofertas.filter((o) => !o.deLiga || o.id !== 'liga');
@@ -266,11 +292,11 @@ export async function actualizar(alPaso = () => {}) {
   alPaso(7, PASOS[7]);
   let jornada = null; let partidos = [];
   await blando('jornada', async () => {
-    jornada = N.semana(await api.semana());
+    jornada = N.semana(await A.semana());
     if (jornada == null) return;
     // la pasada, la actual y las 5 siguientes (el calendario de riesgo mira los próximos 5 partidos de cada uno)
     const semanas = [jornada - 1, jornada, jornada + 1, jornada + 2, jornada + 3, jornada + 4, jornada + 5].filter((n) => n >= 1 && n <= 38);
-    const listas = await enParalelo(semanas, 2, async (n) => N.partidos(await api.calendario(n), equipos, n));
+    const listas = await enParalelo(semanas, 2, async (n) => N.partidos(await A.calendario(n), equipos, n));
     partidos = listas.filter(Array.isArray).flat();
   });
   // sin calendario no se sabe cuándo se cierran las cláusulas: mejor el de la última vez que darlas todas por abiertas
@@ -286,7 +312,7 @@ export async function actualizar(alPaso = () => {}) {
     const tengo = new Set(resultados.map((p) => p.jornada));
     const faltan = [];
     for (let n = 1; n < jornada; n++) if (!tengo.has(n)) faltan.push(n);
-    const listas = await enParalelo(faltan.slice(0, 38), 3, async (n) => { const r = await api.calendario(n); if (!muestras.calendario) muestras.calendario = recorte(N.lista(r)[0]); return N.partidos(r, equipos, n); });
+    const listas = await enParalelo(faltan.slice(0, 38), 3, async (n) => { const r = await A.calendario(n); if (!muestras.calendario) muestras.calendario = recorte(N.lista(r)[0]); return N.partidos(r, equipos, n); });
     const nuevos = listas.filter(Array.isArray).flat();
     resultados = [...resultados, ...nuevos].filter((p) => p.gl != null && p.gv != null)
       .map(({ jornada: j, localId, visitanteId, gl, gv }) => ({ jornada: j, localId, visitanteId, gl, gv }));
@@ -311,7 +337,7 @@ export async function actualizar(alPaso = () => {}) {
     let i = 0;
     for (; i < 6; i++) {
       if (i > 3) await new Promise((ok) => setTimeout(ok, 250));
-      const r = await api.actividad(liga.id, i);
+      const r = await A.actividad(liga.id, i);
       if (i === 0) muestras.actividad = recorte(r);
       const pag = N.actividad(r);
       if (!pag.length) { llegoAlFinal = true; break; }
@@ -328,7 +354,7 @@ export async function actualizar(alPaso = () => {}) {
     const desde = Math.max(i, AH.pagina || 0);
     for (let p = desde; p < desde + 50; p++) {
       await new Promise((ok) => setTimeout(ok, 250));
-      const pag = N.actividad(await api.actividad(liga.id, p));
+      const pag = N.actividad(await A.actividad(liga.id, p));
       if (!pag.length) { llegoAlFinal = true; break; }
       act.push(...pag);
       AH.pagina = p + 1;
@@ -344,7 +370,7 @@ export async function actualizar(alPaso = () => {}) {
   // día (los valores cambian una vez al día), sin avisar; si no hay, el aviso de siempre, sin decir de dónde salen
   let tendencias = {}, tendenciasT = Date.now();
   let html = null;
-  try { html = await paginaMercado(); } catch (e) { if (e.sesion) throw e; }
+  if (!saltarBlandos(carga)) { try { html = await paginaMercado(carga); } catch (e) { if (e.sesion || e.cancelada) throw e; } }
   if (html) tendencias = N.unirTendencias(N.paginaMercado(html), maestro);
   if (!Object.keys(tendencias).length) {
     const vt = viejo && (viejo.tendenciasT || viejo.t);
@@ -362,8 +388,12 @@ export async function actualizar(alPaso = () => {}) {
     liga, ligas, equipos, equiposT: viejo && viejo.equiposT && equipos === viejo.equipos ? viejo.equiposT : Date.now(),
     clasif, plantillas, maestro, mercado, actividad: act.slice(0, 400),
     dinero, dineros, valorEquipo, jornada, partidos, resultados, tendencias, tendenciasT, avisos, muestras, misVentas, formaciones, formacionesT,
-    plantillasViejas,
+    plantillasViejas, ...(maestroDe ? { maestroDe } : {}),
   };
+  // con la red colgada se han saltado pasos: se dice una vez (y se usa lo guardado de lo que no ha llegado)
+  if (carga.saltados || avisos.some((x) => /saltado/.test(x.e))) { D.lento = true; avisos.unshift({ paso: 'conexión', e: 'la conexión no respondía: lo que no ha llegado es de la última vez', leve: true }); }
+  // «Usar lo guardado»: lo que llegue después no pisa la foto
+  cancelada();
   return guardarFoto(D, viejo);
 }
 
@@ -453,8 +483,8 @@ const sumarValor = (fichas, maestro) => (fichas || []).reduce((s, f) => s + num(
 function guardarFoto(D, viejo = foto()) {
   const H = historico();
   const hoy = diaDe(D.t);
-  // valor de cada jugador por día (60 días)
-  for (const j of Object.values(D.maestro)) {
+  // valor de cada jugador por día (60 días); no si la lista de jugadores es la de otra carga (no ha llegado: A7)
+  if (!D.maestroDe) for (const j of Object.values(D.maestro)) {
     if (!j || !j.valor) continue;
     const s = (H.v[j.id] ||= []);
     const u = s[s.length - 1];
@@ -495,6 +525,7 @@ function guardarFoto(D, viejo = foto()) {
     // las subidas de cláusula se guardan más tiempo: son dinero gastado y cuentan para el de cada rival
     H.mov = H.mov.filter((m) => D.t - m.t < (m.tipo === 'blinda' ? 300 : 45) * DIA).slice(-900);
   }
+  D.esquema = ESQUEMA;
   const hBien = LS.set(K('hist'), H);
   if (!LS.set(K('datos'), D) || !hBien) {
     // sin sitio: se recorta el histórico de valores a 30 días (y luego a 14) y se vuelve a probar
@@ -508,6 +539,8 @@ function guardarFoto(D, viejo = foto()) {
 
 /* lo que es de una cuenta (su liga, su histórico, sus planes, su chat, sus notas…), con las claves de cada liga (-l<id>) */
 const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det', 'dinero-dicho', 'favoritos', 'fotos-rivales', 'hechos', 'hist', 'ia', 'mi-once', 'mis-jornadas', 'notas', 'notas-t', 'planes', 'previs', 'pts-jornadas', 'reventa', 'urgentes-quitados', 'vivo', 'vivo-avisados'];
+// para hacer sitio con el almacenamiento lleno (util.js, A8): qué es de cada liga y cuál es la de ahora
+fijarSitio({ sufijo: () => K(''), deLiga: DE_LA_CUENTA });
 const borrarClaves = (lista) => {
   let ks = [];
   try { ks = Object.keys(localStorage); } catch (e) { return; }

@@ -6,6 +6,7 @@ import { bloqueada } from './limite.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
 import { md } from './texto.js';
+import { miniDe } from './fotos.js';
 import { enApp, nativo } from './puente.js';
 import { guiaClave } from './clave.js';
 import { K } from './datos.js';
@@ -1208,7 +1209,8 @@ export function adjuntosHTML(S) {
   return `${fs.map((f, i) => `<span class="adj"><img src="${f.mini}" alt="Foto ${i + 1}"><button data-accion="quitarFoto" data-i="${i}" aria-label="Quitar la foto ${i + 1}">${icono('cerrar')}</button></span>`).join('')}${S.preparandoFotos ? `<span class="adj cargando" aria-label="Preparando la foto"><i></i></span>` : ''}<span class="adj-txt">${fs.length ? `${fs.length} foto${fs.length > 1 ? 's' : ''} para mandar` : 'Preparando…'}</span>`;
 }
 /** las fotos de un mensaje del chat */
-const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img src="${f.mini}" alt=""></button>`).join('')}</div>` : '');
+// (la miniatura guardada está en IndexedDB: si aún no está en memoria, la pone app.js al pintar, por data-mini)
+const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => { const src = f.mini || miniDe(f.id); return `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img ${src ? `src="${esc(src)}"` : `data-mini="${esc(f.id)}"`} alt=""></button>`; }).join('')}</div>` : '');
 
 export function ia(S) {
   if (!hayClave()) return guiaClave();

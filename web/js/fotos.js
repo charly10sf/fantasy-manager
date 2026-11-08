@@ -1,33 +1,39 @@
 /* Las fotos y capturas que le mandas a la IA en el chat.
    Cada una se reduce (1600 px el lado largo, JPEG): así se lee bien una captura del móvil y no pesa. La foto
    entera se guarda en el navegador (IndexedDB, las 40 últimas) para volver a mandársela si sigues hablando de
-   ella; en el chat solo queda una miniatura. */
+   ella; en el chat solo queda una miniatura. Las miniaturas también van a IndexedDB (almacén «m», las 400 últimas) y
+   el chat guardado solo lleva su id: en localStorage ocupaban decenas de KB cada una y lo llenaban (revisión total,
+   A8). Las de antes de la 0.7z, que iban dentro del chat, se pasan solas (migrarMinis, en ia.js). */
 
 export const MAX_FOTOS = 4;
 const LADO = 1600, LADO_MINI = 360;
-const BD = 'fm-fotos', ALMACEN = 'f', GUARDAR = 40;
-const memoria = new Map();
+const BD = 'fm-fotos', ALMACEN = 'f', GUARDAR = 40, MINIS = 'm', GUARDAR_MINIS = 400;
+const memoria = new Map(), minis = new Map();
 
 let bd = null;
 function abrir() {
   if (bd) return bd;
   bd = new Promise((ok, mal) => {
     try {
-      const r = indexedDB.open(BD, 1);
-      r.onupgradeneeded = () => r.result.createObjectStore(ALMACEN, { keyPath: 'id' });
+      const r = indexedDB.open(BD, 2);
+      r.onupgradeneeded = () => {
+        const db = r.result;
+        if (!db.objectStoreNames.contains(ALMACEN)) db.createObjectStore(ALMACEN, { keyPath: 'id' });
+        if (!db.objectStoreNames.contains(MINIS)) db.createObjectStore(MINIS, { keyPath: 'id' });
+      };
       r.onsuccess = () => ok(r.result);
       r.onerror = () => mal(r.error);
     } catch (e) { mal(e); }
   }).catch(() => null);
   return bd;
 }
-async function tx(modo, f) {
+async function tx(modo, f, almacen = ALMACEN) {
   const db = await abrir();
   if (!db) return null;
   return new Promise((ok) => {
     try {
-      const t = db.transaction(ALMACEN, modo);
-      const r = f(t.objectStore(ALMACEN));
+      const t = db.transaction(almacen, modo);
+      const r = f(t.objectStore(almacen));
       t.oncomplete = () => ok(r && 'result' in r ? r.result : true);
       t.onerror = () => ok(null);
       t.onabort = () => ok(null);
@@ -51,6 +57,35 @@ export async function leerFoto(id) {
   const r = await tx('readonly', (s) => s.get(id));
   if (r && r.b64) { memoria.set(id, r.b64); return r.b64; }
   return null;
+}
+
+/** la miniatura de una foto del chat, si ya está en memoria (si no, null: cargarMinis la trae) */
+export const miniDe = (id) => minis.get(id) || null;
+/** guarda una miniatura (data:…). Devuelve si ha quedado en IndexedDB */
+export async function guardarMini(id, mini) {
+  if (!id || !mini) return false;
+  minis.set(id, mini);
+  const ok = await tx('readwrite', (s) => s.put({ id, t: Date.now(), mini }), MINIS);
+  if (!ok) return false;
+  // de vez en cuando, fuera las más viejas
+  if (Math.random() < 0.1) {
+    const todas = await tx('readonly', (s) => s.getAllKeys(), MINIS);
+    if (Array.isArray(todas) && todas.length > GUARDAR_MINIS) {
+      const filas = await tx('readonly', (s) => s.getAll(), MINIS);
+      const viejas = (filas || []).sort((a, b) => b.t - a.t).slice(GUARDAR_MINIS);
+      await tx('readwrite', (s) => viejas.forEach((v) => s.delete(v.id)), MINIS);
+    }
+  }
+  return true;
+}
+/** trae a memoria las miniaturas de esos ids (las que falten); devuelve cuántas ha traído */
+export async function cargarMinis(ids) {
+  const faltan = [...new Set(ids)].filter((id) => id && !minis.has(id));
+  if (!faltan.length) return 0;
+  const filas = await tx('readonly', (s) => s.getAll(), MINIS);
+  let n = 0;
+  for (const f of filas || []) if (f && f.mini && faltan.includes(f.id)) { minis.set(f.id, f.mini); n++; }
+  return n;
 }
 
 const cargarImg = (src) => new Promise((ok, mal) => {

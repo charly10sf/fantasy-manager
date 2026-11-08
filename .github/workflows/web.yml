@@ -10,7 +10,7 @@ on:
   push:
     branches: [main]
     # también cuando cambia la parte Android: así el paquete.json publicado lleva su huella nueva
-    paths: ['web/**', 'android/app/src/**', '.github/paquete.py', '.github/workflows/web.yml']
+    paths: ['web/**', 'android/app/src/**', '.github/paquete.py', '.github/prueba-web.mjs', '.github/workflows/web.yml']
   workflow_run:
     workflows: ["App Android"]
     types: [completed]
@@ -27,7 +27,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # antes de publicar, la web se abre de verdad (revisión total, A13): la demo arranca, las 7 pestañas pintan sin
+  # .error-c, una liga guardada rota no bloquea, la red colgada tiene salida y el almacenamiento lleno no pierde la
+  # sesión. Si falla, no se publica nada (.github/prueba-web.mjs)
+  probar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Playwright y Chromium
+        run: |
+          npm install --no-save --no-audit --no-fund --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Probar la web
+        run: PW_MODULO="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs" node .github/prueba-web.mjs
+
   publicar:
+    needs: probar
     runs-on: ubuntu-latest
     environment:
       name: github-pages

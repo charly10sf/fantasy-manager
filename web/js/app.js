@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
+import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
 import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -11,8 +11,8 @@ import * as Dr from './directo.js';
 import * as Cl from './clubes.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
-import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
-import { ultimaVersion, api, apuntarRegistro } from './api.js';
+import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
+import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
@@ -26,7 +26,7 @@ import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
 import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, novedadesPara } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
-import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64 } from './fotos.js';
+import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde } from './presentacion.js';
@@ -401,7 +401,20 @@ async function codigoDeMudanza() {
 const BETA_VUELVE = 7 * DIA;
 // (con la liga de ejemplo, solo su banda: las dos juntas se apilaban arriba)
 const bandaBeta = () => (S.D && S.D.demo) || (Date.now() - (LS.get('beta-cerrada', 0) || 0) < BETA_VUELVE) ? ''
-  : `<div class="banda beta">${icono('bicho')}<span><b>App en pruebas.</b> Si ves algo que falla o no cuadra, repórtalo y lo arreglo.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
+  : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo y en pruebas.</b> Cualquier fallo o idea de mejora, mándamelo con el botón Reportar: lo leo todo y lo tengo en cuenta.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
+/* el almacenamiento del navegador lleno: algo importante no se ha podido guardar ni haciendo sitio (util.js, A8) */
+const QUE_LLENO = [[/^n-sesion/, 'tu sesión de LaLiga (tendrás que volver a entrar)'], [/^n-gemini/, 'tu clave de la IA'], [/^chat/, 'el chat'], [/^hist/, 'el histórico de valores'], [/^datos/, 'tu liga'], [/^planes/, 'el plan'], [/^notas/, 'tus notas']];
+const queLleno = (k) => (QUE_LLENO.find(([re]) => re.test(k)) || [null, 'lo último'])[1];
+const bandaLleno = () => {
+  const x = almacenLleno();
+  return x ? `<div class="banda mal banda-lleno">${icono('alerta')}<span><b>Almacenamiento lleno.</b> No se ha podido guardar ${esc(queLleno(x.k))}. Borra los datos guardados (se vuelven a bajar) o haz sitio en el navegador.</span><button data-accion="borrarDatos">Borrar datos</button><button class="banda-x" data-accion="cerrarLleno" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>` : '';
+};
+let llenoAvisado = 0;
+window.addEventListener('fm-lleno', (e) => {
+  if (Date.now() - llenoAvisado > 60e3) { llenoAvisado = Date.now(); tostada(`Almacenamiento lleno: no se ha podido guardar ${queLleno((e.detail || {}).k || '')}`, 7000); }
+  const b = $('#banda');
+  if (b && !$('.banda-lleno', b)) b.insertAdjacentHTML('afterbegin', bandaLleno());
+});
 const bandaMudanza = () => (enWebVieja ? `<div class="banda">${icono('descargar')}<span>La web se ha mudado a <b>fantasymanagerapp.com</b>: llévate tu cuenta en un toque</span><button data-accion="mudarse">Llevarme</button></div>` : '');
 
 /* ---------------- la pantalla de carga ---------------- */
@@ -563,7 +576,8 @@ function pintarSup() {
   const p = S.cargando ? 'vivo' : edad < 30 * MIN ? 'vivo' : edad < 6 * 3600e3 ? 'viejo' : 'mal';
   $('#supEstado').innerHTML = S.errorCarga && D && !S.cargando
     ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin internet' : 'Sin actualizar'} · ${rel(D.t)}`
-    : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : `Actualizado ${rel(D.t)}`) : ''}`;
+    : D && D.lento && !S.cargando ? `<i class="punto viejo"></i>Conexión lenta · ${rel(D.t)}`
+      : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : `Actualizado ${rel(D.t)}`) : ''}`;
   $('#bRefrescar').classList.toggle('gira', S.cargando);
   pintarNumAvisos();
   const pend = S.plan ? V.cuentaPasos(S, S.plan).pend : 0;
@@ -590,7 +604,7 @@ function pintar({ arriba = false } = {}) {
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
     v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
   }
-  $('#banda').innerHTML = bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Recargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Recargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -1026,25 +1040,50 @@ async function cargar(op = {}) {
     if (f && !S.cargando) { S.pendiente = null; setTimeout(f, 0); }
   }
 }
+/* «Usar lo guardado»: a los 15 s de la pantalla de carga, si hay una liga guardada, un botón para dejar de esperar y
+   abrir esa (revisión total, A7). La carga sigue por detrás hasta su siguiente petición y no pisa nada */
+const ESPERA_GUARDADO = 15000;
+function botonGuardado(carga) {
+  const g = foto();
+  const der = $('.carga .carga-der');
+  if (!g || !der || S.carga !== carga || !S.cargando || $('#bGuardado')) return;
+  der.insertAdjacentHTML('beforeend', `<div class="carga-guardado"><p>LaLiga está tardando mucho en contestar.</p><button class="btn sec" id="bGuardado" data-accion="usarGuardado">Usar lo guardado (${esc(rel(g.t) === 'ahora' ? 'de hace un momento' : `de ${rel(g.t)}`)})</button></div>`);
+}
+function usarGuardado() {
+  const c = S.carga;
+  if (!c || c.cancelada || !S.cargando) return;
+  c.cancelada = true;
+  if (c.alCancelar) c.alCancelar();
+}
 async function cargar0({ silencio = false } = {}) {
   if (S.cargando) return;
   S.cargando = true;
   const conPantalla = !S.D;
   if (conPantalla) pantallaCarga(0); else if ($('#vista')) pintarSup();
+  const carga = nuevaCarga();
+  S.carga = carga;
+  const cancelar = new Promise((_, mal) => { carga.alCancelar = () => mal(Object.assign(new Error('Has dejado de esperar a LaLiga: lo que ves es lo guardado'), { cancelada: true, tipo: 'lento' })); });
+  const quitarBoton = conPantalla ? relojFijo(ESPERA_GUARDADO, () => botonGuardado(carga)) : () => {};
   try {
-    S.D = await actualizar((i) => { if (conPantalla) pantallaCarga(i); });
+    const actualizando = actualizar((i) => { if (conPantalla && !carga.cancelada) { pantallaCarga(i); if (Date.now() - carga.t0 >= ESPERA_GUARDADO) botonGuardado(carga); } }, carga);
+    actualizando.catch(() => {});
+    S.D = await Promise.race([actualizando, cancelar]);
+    quitarBoton();
     S.errorCarga = null;
     rehacer();
     if (!enDemo()) contar(S.M && S.M.enJuego ? 'A' : 'a');
     S.cargando = false;
     pintar();
+    if ($('#vista')) webVivaUnaVez();
     // la primera vez: el tutorial, que recorre la app para saber dónde está cada cosa
     if (conPantalla) quizaTutorial(900);
-    if (!silencio && !conPantalla) tostada(V.cambiosDesdePlan(S) ? 'Datos de LaLiga al día. Tu liga ha cambiado: mira el plan' : 'Datos de LaLiga al día');
+    if (S.D.lento) tostada('La conexión va muy lenta: lo que no ha llegado es de la última vez', 6000);
+    else if (!silencio && !conPantalla) tostada(V.cambiosDesdePlan(S) ? 'Datos de LaLiga al día. Tu liga ha cambiado: mira el plan' : 'Datos de LaLiga al día');
     despues();
   } catch (e) {
+    quitarBoton();
     S.cargando = false;
-    console.error(e);
+    if (!e.cancelada) console.error(e);
     if (e.sesion) { S.D = null; pantallaEntrar(e.message); return; }
     // ha entrado con su cuenta pero no le carga la liga: que el dueño lo vea en «Quién usa la app»
     if (!enDemo() && haySesion() && !document.hidden) saludar({ v: `${VERSION} !`, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: '', equipo: '' });
@@ -1057,7 +1096,7 @@ async function cargar0({ silencio = false } = {}) {
     // (si el fallo es del motor, la liga guardada vuelve a fallar al rehacerse: entonces, la pantalla de error, nunca
     // quedarse en la de carga; revisión del 29 oct)
     if (guardada) {
-      try { S.D = guardada; rehacer(); pintar(); return; } catch (e2) {
+      try { S.D = guardada; rehacer(); pintar(); webVivaUnaVez(); return; } catch (e2) {
         console.error(e2);
         apuntarError(e2.message, `al abrir la liga guardada${e2.stack ? ` · ${String(e2.stack).split('\n')[1] || ''}` : ''}`);
         S.D = null;
@@ -2404,9 +2443,11 @@ document.addEventListener('click', async (ev) => {
     case 'copiarEnlaceWeb': copiarY('https://fantasymanagerapp.com/', 'Enlace copiado'); break;
     case 'mudarse': mudarse(el); break;
     case 'cerrarBeta': LS.set('beta-cerrada', Date.now()); el.closest('.banda')?.remove(); break;
+    case 'cerrarLleno': olvidarLleno(); el.closest('.banda')?.remove(); break;
     case 'salirDemo': salirDemo(); break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
     case 'recargar': sinErrorPlan(); cargar(); break;
+    case 'usarGuardado': usarGuardado(); break;
     case 'ajustes': hoja('ajustes'); break;
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
@@ -2587,7 +2628,7 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'actualizarApp': if (S.nueva) { nativo.actualizar(S.nueva.apk); tostada('Descargando la versión nueva…'); } break;
-    case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
+    case 'borrarDatos': if (confirm('¿Borrar el histórico, las fichas y los planes guardados? Se vuelven a llenar solos.')) { borrarTodo(); olvidarLleno(); cerrarHoja(true); S.D = null; S.det = {}; cargar(); } break;
     case 'borrarServidor':
       if (!confirm('¿Borrar lo que guarda Fantasy Manager de ti en su servidor? Es que usas la app, cuánto rato y tus avisos de fallo con sus respuestas. Tu liga, tu sesión y tu clave están en este dispositivo y no se tocan. Si sigues usando la app, se volverá a apuntar que la usas.')) break;
       borrarMisDatos().then((r) => tostada(`Borrado${r.avisos ? ` (también ${r.avisos === 1 ? 'tu aviso' : `tus ${r.avisos} avisos`})` : ''}`, 6000)).catch((e) => tostada(e.message || 'No se ha podido borrar', 7000));
@@ -2622,7 +2663,7 @@ document.addEventListener('click', async (ev) => {
       const m = conversacion()[+d.m];
       const f = m && m.fotos && m.fotos[+d.i];
       const actual = !f && S.fotosActuales && S.fotosActuales[+d.i];
-      if (f) verFoto(f.id, f.mini); else if (actual) verFoto(actual.id, actual.mini);
+      if (f) verFoto(f.id, f.mini || miniDe(f.id)); else if (actual) verFoto(actual.id, actual.mini);
       break;
     }
     case 'preguntarJ': { const j = S.M.J(d.pid); cerrarHoja(true); enviarPregunta(preguntaJ(j)); break; }
@@ -2856,7 +2897,50 @@ function quizaTutorial(ms, intento = 0) {
   }, ms);
 }
 
+/* las miniaturas del chat guardadas en IndexedDB (fotos.js): se pintan con data-mini y aquí se les pone la imagen */
+let hidratando = false;
+async function hidratarMinis() {
+  if (hidratando) return;
+  hidratando = true;
+  try {
+    const imgs = [...document.querySelectorAll('img[data-mini]')];
+    if (!imgs.length) return;
+    await cargarMinis(imgs.map((im) => im.dataset.mini));
+    for (const im of imgs) { const m = miniDe(im.dataset.mini); im.removeAttribute('data-mini'); if (m) im.src = m; }
+  } catch (e) { /* sin miniatura: el hueco */ } finally {
+    hidratando = false;
+    if (document.querySelector('img[data-mini]')) setTimeout(hidratarMinis, 50);
+  }
+}
+if (!EN_FONDO && typeof MutationObserver !== 'undefined') new MutationObserver(() => { if (!hidratando && document.querySelector('img[data-mini]')) hidratarMinis(); }).observe(document.documentElement, { childList: true, subtree: true });
+
 /* ---------------- arranque ---------------- */
+/* La web se da por buena ante AlDia (webViva) solo después del primer pintar() bueno: si una web nueva no consigue
+   abrir la liga guardada, AlDia vuelve a la del APK a los 20 s (revisión total, C2). */
+let webDadaPorViva = false, fotoRota = false;
+function webVivaUnaVez() {
+  if (webDadaPorViva) return;
+  webDadaPorViva = true;
+  nativo.webViva();
+}
+/* Abre la liga guardada. Si el motor o el pintado fallan con ella (un campo que esta versión no espera, una foto de
+   otra versión), antes se quedaba en «Abriendo…» para siempre: ahora se apunta el error, se tira la foto y se vuelve
+   a cargar de LaLiga (el histórico se queda). Devuelve si se ha podido abrir */
+function abrirGuardada() {
+  try {
+    rehacer();
+    pintar();
+    if (!$('#vista')) throw new Error('la liga guardada no se ha pintado');
+    return true;
+  } catch (e) {
+    console.error(e);
+    apuntarError(e.message, `al abrir la liga guardada (se vuelve a cargar)${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
+    fotoRota = true;
+    LS.del(K('datos'));
+    S.D = null; S.M = null;
+    return false;
+  }
+}
 async function arrancar() {
   const h = ALIAS[location.hash.slice(1)] || location.hash.slice(1);
   if (VISTAS[h]) S.vista = h;
@@ -2868,13 +2952,17 @@ async function arrancar() {
   comprobarFotos();
   if ((enApp || enWeb) && !enDemo() && !haySesion()) {
     pantallaEntrar();
+    webVivaUnaVez();
   } else {
     S.D = foto();
+    if (S.D && !abrirGuardada()) S.D = null;
     if (S.D) {
-      rehacer();
-      pintar();
+      webVivaUnaVez();
       if (Date.now() - S.D.t > 10 * MIN) cargar({ silencio: true }); else despues();
     } else {
+      // sin foto guardada no hay con qué probar la web antes de cargar (y la primera carga puede pasar de los 20 s que
+      // da AlDia): se da por buena ya. Si la foto había fallado (abrirGuardada), no: que la dé por buena la carga
+      if (!fotoRota) webVivaUnaVez();
       await cargar();
     }
     // venía de tocar la notificación de una respuesta a tu aviso de fallo
@@ -2897,6 +2985,8 @@ async function arrancar() {
   }, () => { if (S.D && S.M) programar(S.D, S.M, planAvisos()); });
   novedades();
   quizaTutorial(2500);
+  // las miniaturas del chat que aún van dentro de localStorage, a IndexedDB (A8)
+  setTimeout(() => migrarMinis().catch(() => {}), 5000);
   setTimeout(() => buscarVersion(false), 4000);
   // la IA con la app cerrada avisa con notificaciones: se pide el permiso una vez
   if (enApp && !enDemo() && haySesion() && cfgFondo().on && !nativo.avisosPermitidos() && !LS.get('permiso-fondo')) {
@@ -2945,7 +3035,8 @@ async function arrancar() {
   }, 3 * MIN);
 }
 
-// todos los módulos han cargado: la web arranca bien (si era una bajada sin reinstalar, la app se la queda)
-nativo.webViva();
+// en segundo plano no hay nada que pintar: con que hayan cargado todos los módulos, la web vale. Con la app a la vista,
+// webVivaUnaVez() tras el primer pintar() bueno (arrancar)
+if (EN_FONDO) nativo.webViva();
 if (!EN_FONDO) { const wp = LS.get('web-puesta', null); if (wp) { LS.del('web-puesta'); if (Date.now() - wp.t < 120000 && tourVisto()) setTimeout(() => tostada(`App al día: versión ${VERSION}`, 4000), 1800); } }
 if (EN_FONDO) trabajoFondo(); else arrancar();
