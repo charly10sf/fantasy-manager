@@ -1557,17 +1557,9 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "701",
-   "que": "lesion",
-   "antes": "ok",
-   "t": 1794157573244
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247650/soler-baja-ultima-hora-enfermedad-altera-convocatoria.html": 1793898651000,
    "SPORT|136135887": 1793899739000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/luis-rioja-explica-calvario-lesion-136135900.html": 1793903566000,
    "SPORT|136137325": 1793901641000,
@@ -3154,7 +3146,6 @@
   "vistas": {
    "ABC|https://www.abc.es/deportes/futbol/laliga-desoye-peticion-futbolistas-confirma-competicion-fin-20261105181542-nt.html": 1793899320000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261105/1004247654/iconica-imagen-barrachina-gento-1971-cartel-valencia-real-madrid.html": 1793899045000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247648/oficial-laliga-aplaza-castellon-eibar-fallecimiento-jesus-miguel.html": 1793898608000,
    "Europa Press|https://www.europapress.es/madrid/noticia-profesores-publica-tinen-verde-calles-madrid-si-no-hay-negociacion-movilizaciones-iran-mas-20261105183505.html": 1793900105000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/05/rfef-anuncia-nuevo-horario-tarancon-136133977.html": 1793901786000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/arbitro-18-anos-agredido-arousa-verle-levantar-puno-pense-ahi-me-quedo/00031793902128516899774.htm": 1793902920000,
@@ -3816,7 +3807,8 @@
    "6386046",
    "6386078",
    "6428918",
-   "5868123"
+   "5868123",
+   "5868127"
   ],
   "equipos": [
    "9866",
@@ -5457,7 +5449,7 @@
     "e": "Real Sociedad",
     "g": {
      "liga": [
-      3,
+      4,
       0,
       0,
       0,
@@ -7187,13 +7179,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 464,
+   "ok": 466,
    "fallos": 0,
-   "ejecuciones": 228,
+   "ejecuciones": 229,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 444,
-   "ultima": "2026-11-08T17:06:13.244Z"
+   "mediaMs": 443,
+   "ultima": "2026-11-08T17:11:12.685Z"
   }
  },
  "ptsDirecto": {
