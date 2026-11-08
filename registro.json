@@ -1878,7 +1878,9 @@
    "SPORT|136231258": 1794164058000,
    "SPORT|136231292": 1794164994000,
    "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-es-baja-en-la-seleccion-le-sustituye-jorge-de-frutos-f202611-n/": 1794157697000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000,
+   "SPORT|136231402": 1794167455000,
+   "SPORT|136231541": 1794167408000
   },
   "hechos": [
    {
@@ -2535,7 +2537,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -7472,13 +7474,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 569,
+   "ok": 571,
    "fallos": 0,
-   "ejecuciones": 274,
+   "ejecuciones": 275,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 420,
-   "ultima": "2026-11-08T20:51:13.990Z"
+   "ultima": "2026-11-08T20:56:11.569Z"
   }
  },
  "ptsDirecto": {
@@ -7574,27 +7576,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:51:28.698Z"
+   "ultimaBien": "2026-11-08T20:56:24.596Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:51:28.698Z"
+   "ultimaBien": "2026-11-08T20:56:24.596Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:51:28.698Z"
+   "ultimaBien": "2026-11-08T20:56:24.596Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:51:28.698Z"
+   "ultimaBien": "2026-11-08T20:56:24.596Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:51:28.698Z"
+   "ultimaBien": "2026-11-08T20:56:24.596Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:51:28.698Z"
+   "ultimaBien": "2026-11-08T20:56:24.596Z"
   }
  },
  "avisos": [
