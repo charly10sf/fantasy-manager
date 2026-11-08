@@ -7477,13 +7477,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 243,
+   "ok": 244,
    "fallos": 0,
-   "ejecuciones": 54,
+   "ejecuciones": 55,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 435,
-   "ultima": "2026-11-08T02:41:14.339Z"
+   "mediaMs": 436,
+   "ultima": "2026-11-08T02:46:15.442Z"
   }
  },
  "ptsDirecto": {}
