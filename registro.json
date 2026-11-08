@@ -1661,7 +1661,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136139762": 1793910076000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261105/1004247739/parte-medico-actualiza-matarazzo-soleo-fuerte-golpe-coronavirus.html": 1793913690000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/deportivo-coruna/20261105/1004247722/casado-quiere-seguir-pasos-aubameyang.html": 1793912507000,
    "SPORT|136110344": 1793910379000,
@@ -7418,13 +7417,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 555,
+   "ok": 557,
    "fallos": 0,
-   "ejecuciones": 267,
+   "ejecuciones": 268,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 422,
-   "ultima": "2026-11-08T20:21:12.023Z"
+   "mediaMs": 421,
+   "ultima": "2026-11-08T20:26:13.567Z"
   }
  },
  "ptsDirecto": {
@@ -7506,7 +7505,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 23,
+   "n": 24,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7514,27 +7513,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:21:27.275Z"
+   "ultimaBien": "2026-11-08T20:26:25.469Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:21:27.275Z"
+   "ultimaBien": "2026-11-08T20:26:25.469Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:21:27.275Z"
+   "ultimaBien": "2026-11-08T20:26:25.469Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:21:27.275Z"
+   "ultimaBien": "2026-11-08T20:26:25.469Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:21:27.275Z"
+   "ultimaBien": "2026-11-08T20:26:25.469Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T20:21:27.275Z"
+   "ultimaBien": "2026-11-08T20:26:25.469Z"
   }
  },
  "avisos": [
