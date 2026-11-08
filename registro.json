@@ -3156,8 +3156,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/precioso-gesto-palmas-eldense-quieren-jesus-miguel-partido-domingo-20261105_3469397.html": 1793880286000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/ano-suspension-jugador-mando-hospital-arbitro-18-anos-vilagarcia/00031793878536009479432.htm": 1793880240000,
    "Cadena SER|https://cadenaser.com/baleares/2026/11/05/luis-garcia-deberia-haberse-aplazado-toda-la-jornada-radio-mallorca/": 1793881539000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261105/1004247537/palmas-eldense-proponen-detener-juego-minuto-9-homenaje-miguel.html": 1793880966000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000,
@@ -7384,13 +7382,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 355,
+   "ok": 356,
    "fallos": 0,
-   "ejecuciones": 166,
+   "ejecuciones": 167,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 478,
-   "ultima": "2026-11-08T12:01:13.526Z"
+   "ultima": "2026-11-08T12:06:14.052Z"
   }
  },
  "ptsDirecto": {}
