@@ -3195,7 +3195,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/ultima-hora-valencia-real-madrid-decision-laliga-jugara-partido-jornada-dos-excepciones-136107273.html": 1793872392000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/aplazado-el-castellon-eibar-por-el-fallecimiento-de-jesus-de-miguel-radio-castellon/": 1793873334000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/laliga-tenerife-jesus-de-miguel-castellon-136112188.html": 1793877466000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000,
@@ -3302,26 +3301,6 @@
    "SPORT|136213162": 1794110512000
   },
   "hechos": [
-   {
-    "guid": "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/ultima-hora-valencia-real-madrid-decision-laliga-jugara-partido-jornada-dos-excepciones-136107273.html",
-    "medio": "Superdeporte",
-    "t": 1793872392000,
-    "tipo": "suspension",
-    "estado": "descartado",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": false,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "",
-    "nums": [
-     21,
-     0,
-     14
-    ]
-   },
    {
     "guid": "SPORT|136117890",
     "medio": "SPORT",
@@ -7480,13 +7459,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 329,
+   "ok": 330,
    "fallos": 0,
-   "ejecuciones": 140,
+   "ejecuciones": 141,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 471,
-   "ultima": "2026-11-08T09:51:11.441Z"
+   "mediaMs": 472,
+   "ultima": "2026-11-08T09:56:22.785Z"
   }
  },
  "ptsDirecto": {}
