@@ -1687,7 +1687,9 @@
    "SPORT|136208274": 1794117640000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-claro-pasara-vinicius-regrese-sancion-viene-tendra-esperar-momento-20261107_3470889.html": 1794090547000,
    "SPORT|136086039": 1794121202000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248556/iker-casillas-enfada-saca-hijos-cantera-real-madrid.html": 1794127817000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248556/iker-casillas-enfada-saca-hijos-cantera-real-madrid.html": 1794127817000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html": 1794130161000,
+   "SPORT|136217036": 1794126576000
   },
   "hechos": [
    {
@@ -2297,11 +2299,76 @@
     "motivo": "lesión en los isquiotibiales",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794130161000,
+    "id": "2354",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Eric viaja a Madrid y estaría disponible el domingo",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     25,
+     30,
+     21,
+     11
+    ]
+   },
+   {
+    "guid": "SPORT|136217036",
+    "medio": "SPORT",
+    "t": 1794126576000,
+    "id": "2355",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Kounde se pierde el partido ante el Atlético",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136217036",
+    "medio": "SPORT",
+    "t": 1794126576000,
+    "id": "2843",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Xavi Espart no viajará al Metropolitano con el Barça",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136217036",
+    "medio": "SPORT",
+    "t": 1794126576000,
+    "id": "3092",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Olmo se queda fuera de la convocatoria ante el Atlético",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136217036",
+    "medio": "SPORT",
+    "t": 1794126576000,
+    "id": "3208",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Rodri no está en la lista para el Metropolitano",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3143,7 +3210,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261105/1004247556/afe-insiste-suspender-jornada.html": 1793883223000,
    "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-profesores-huelga-encierran-direccion-general-rrhh-consejeria-educacion-forzar-reunion-20261105103009.html": 1793871009000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
    "SPORT|136122379": 1793879661000,
    "SPORT|136122725": 1793885037000,
@@ -3744,17 +3810,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 97679,
-  "salida": 6587,
+  "entrada": 99774,
+  "salida": 8168,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.212775
+  "dolares": 0.213775
  },
  "recientes": {
   "onces": [
@@ -7417,13 +7483,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 323,
+   "ok": 324,
    "fallos": 0,
-   "ejecuciones": 134,
+   "ejecuciones": 135,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 470,
-   "ultima": "2026-11-08T09:26:11.316Z"
+   "ultima": "2026-11-08T09:31:11.769Z"
   }
  },
  "ptsDirecto": {}
