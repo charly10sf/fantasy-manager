@@ -3156,7 +3156,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/laliga-tenerife-jesus-de-miguel-castellon-136112188.html": 1793877466000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/precioso-gesto-palmas-eldense-quieren-jesus-miguel-partido-domingo-20261105_3469397.html": 1793880286000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/ano-suspension-jugador-mando-hospital-arbitro-18-anos-vilagarcia/00031793878536009479432.htm": 1793880240000,
@@ -7419,13 +7418,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 346,
+   "ok": 347,
    "fallos": 0,
-   "ejecuciones": 157,
+   "ejecuciones": 158,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 477,
-   "ultima": "2026-11-08T11:16:17.678Z"
+   "mediaMs": 476,
+   "ultima": "2026-11-08T11:21:18.408Z"
   }
  },
  "ptsDirecto": {}
