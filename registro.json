@@ -837,6 +837,13 @@
    "jornada": 12,
    "id": "2119559954629570708",
    "t": "2026-11-08T22:37:27.683Z"
+  },
+  {
+   "clave": "mercado|2026-11-09",
+   "tipo": "mercado",
+   "jornada": 12,
+   "id": "2119569481840185716",
+   "t": "2026-11-08T23:15:19.279Z"
   }
  ],
  "estados": {
@@ -3654,19 +3661,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-08",
+  "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 26,
-   "redactar": 77,
-   "revisar": 41,
-   "pulir": 1
+   "clasificar": 0,
+   "redactar": 1,
+   "revisar": 1,
+   "pulir": 0
   },
   "fallos": 0,
-  "entrada": 850002,
-  "salida": 36093,
-  "cacheLee": 252960,
-  "cacheEscribe": 50448,
-  "dolares": 1.996476,
+  "entrada": 11828,
+  "salida": 203,
+  "cacheLee": 0,
+  "cacheEscribe": 2605,
+  "dolares": 0.032199,
   "reservado": 0
  },
  "recientes": {
@@ -3744,6 +3751,10 @@
    {
     "t": "2026-11-07T23:16:34.852Z",
     "texto": "📈 Aubameyang es el que más sube del mercado: +2,5 M y se planta en 53,4 M con el Deportivo, casi un 5 % en una noche.\n\nEn el lado contrario, Rodri pierde 2 M en el Barça y se queda en 82,2 M.\n\nSi buscas algo barato, Redondo del Elche 🌴 cuesta 1,9 M y mete 4,3 de media. La imagen trae las cinco mayores subidas y las cinco mayores bajadas."
+   },
+   {
+    "t": "2026-11-08T23:15:19.280Z",
+    "texto": "📈 Valverde, el Pajarito, lidera las subidas del mercado de esta noche: +2,3 M y se va a 68,1 M, un 3,6 % más.\n\nLa mayor bajada es la de Rodri, que se deja 2 M en el Barça y queda en 80,2 M.\n\nPara el que busque barato, Redondo del Elche 🌴 vale 2 M, tiene 4,5 de media y sube un 3,3 %. En la imagen van las cinco mayores subidas y bajadas."
    }
   ],
   "previa": [
@@ -3901,6 +3912,22 @@
    "cacheLee": 147067,
    "cacheEscribe": 39425,
    "dolares": 2.017914
+  },
+  {
+   "dia": "2026-11-08",
+   "llamadas": {
+    "clasificar": 26,
+    "redactar": 77,
+    "revisar": 41,
+    "pulir": 1
+   },
+   "fallos": 0,
+   "entrada": 850002,
+   "salida": 36093,
+   "cacheLee": 252960,
+   "cacheEscribe": 50448,
+   "dolares": 1.996476,
+   "reservado": 0
   }
  ],
  "fallosRedaccion": {},
@@ -7653,7 +7680,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T23:11:22.546Z"
+   "ultimaBien": "2026-11-08T23:15:19.282Z"
   },
   "FotMob": {
    "seguidas": 0,
