@@ -6,7 +6,7 @@
 // El gasto de cada día va al registro (`ia`: llamadas, tokens y dólares; `iaDias`: los 30 últimos días) y tiene tope propio
 // (`ia.topeDolaresDia`, `ia.porDia`): pasado el tope, clasificar vuelve a Gemini y redactar deja la plantilla.
 import { preguntarJson as geminiJson } from './gemini.mjs';
-import { preguntarJson as claudeJson, SONNET, HAIKU } from './claude.mjs';
+import { preguntarJson as claudeJson, SONNET, HAIKU, PRECIOS } from './claude.mjs';
 import { diaMadrid } from './registro.mjs';
 
 // revisar (lib/revisor.mjs) y pulir (lib/pulir.mjs, desde el 7 nov con Claude: el flash-lite de Gemini enredaba los textos) con Sonnet
@@ -31,15 +31,26 @@ export function cuentaHoy(registro, ahora = Date.now()) {
 // Valencia-Madrid y la roja de Gayá, el final y el MVP salieron con la plantilla.
 export const PRIORITARIOS = ['directo', 'final', 'mvp'];
 
-/** ¿queda cupo hoy para este uso? '' si sí; si no, el motivo. `tipo`: el tipo de tuit (directo, final, mvp… o vacío al clasificar) */
-export function sinCupo(uso, { registro, config = {}, ahora = Date.now(), tipo = '' } = {}) {
+// lo que se espera que salga de cada pregunta, en tokens (para la reserva de antes de llamar: M16). Se puede cambiar en config.ia.salidaEstimada
+const SALIDA = { clasificar: 2500, redactar: 700, revisar: 300, pulir: 500 };
+/** lo que se reserva antes de preguntar, en dólares: la entrada (unos 3,5 caracteres por token) y la salida esperada */
+export function estimarCoste({ modelo = SONNET, prompt = '', sistema = '', uso = 'redactar', config = {} } = {}) {
+  const p = PRECIOS[modelo] || PRECIOS[SONNET];
+  const entrada = Math.ceil((String(prompt).length + String(sistema).length) / 3.5);
+  const salida = ((config.ia || {}).salidaEstimada || {})[uso] ?? SALIDA[uso] ?? 800;
+  return Math.round(((entrada * p.entrada + salida * p.salida) / 1e6) * 1e6) / 1e6;
+}
+
+/** ¿queda cupo hoy para este uso? '' si sí; si no, el motivo. `tipo`: el tipo de tuit (directo, final, mvp… o vacío al clasificar).
+    `estimado`: lo que va a costar esta pregunta (con él, el tope no se pasa: el 7 nov acabó en 2,018 $ con un tope de 2 $) */
+export function sinCupo(uso, { registro, config = {}, ahora = Date.now(), tipo = '', estimado = 0 } = {}) {
   const cfg = config.ia || {};
   const c = cuentaHoy(registro, ahora);
   const tope = cfg.topeDolaresDia ?? 0.7;
-  if (c.dolares >= tope) return `tope de ${tope} $ hoy (${c.dolares.toFixed(3)} $ gastados)`;
+  if (c.dolares + estimado > tope || c.dolares >= tope) return `tope de ${tope} $ hoy (${c.dolares.toFixed(3)} $ gastados)`;
   const prioritario = (cfg.prioritarios || PRIORITARIOS).includes(String(tipo || ''));
   const reserva = Math.min(Math.max(Number(cfg.reservaPartidos) || 0, 0), tope / 2);   // como mucho la mitad del tope
-  if (!prioritario && reserva > 0 && c.dolares >= tope - reserva) {
+  if (!prioritario && reserva > 0 && c.dolares + estimado > tope - reserva) {
     return `tope de ${Math.round((tope - reserva) * 100) / 100} $ hoy para ${tipo ? `«${tipo}»` : uso} (${c.dolares.toFixed(3)} $ gastados; ${reserva} $ guardados para directo, final y MVP)`;
   }
   const n = (cfg.porDia || {})[uso] ?? ({ redactar: 60, revisar: 150, pulir: 80 }[uso] || 150);
@@ -47,11 +58,22 @@ export function sinCupo(uso, { registro, config = {}, ahora = Date.now(), tipo =
   return '';
 }
 
-function apuntar(c, uso, r) {
+/**
+ * La reserva (M16): antes de llamar se apunta la pregunta y lo que se espera que cueste, y se guarda el registro; al contestar se
+ * cambia lo reservado por lo de verdad. Antes se cobraba después: si la ejecución se cortaba a medias (tope de 10 min de Actions, un
+ * error), el gasto no quedaba apuntado. Si no llega a contestar, se queda lo reservado (mejor contar de más que de menos).
+ */
+function reservar(registro, c, uso, estimado) {
   c.llamadas[uso] = (c.llamadas[uso] || 0) + 1;
+  c.reservado = Math.round(((c.reservado || 0) + estimado) * 1e6) / 1e6;
+  c.dolares = Math.round((c.dolares + estimado) * 1e6) / 1e6;
+  if (registro && registro.fichero && typeof registro.guardar === 'function') registro.guardar();
+}
+function apuntar(c, r, estimado) {
   if (!r.ok) c.fallos++;
   for (const k of ['entrada', 'salida', 'cacheLee', 'cacheEscribe']) c[k] += (r.uso && r.uso[k]) || 0;
-  c.dolares = Math.round((c.dolares + (r.dolares || 0)) * 1e6) / 1e6;
+  c.reservado = Math.max(0, Math.round(((c.reservado || 0) - estimado) * 1e6) / 1e6);
+  c.dolares = Math.max(0, Math.round((c.dolares - estimado + (r.dolares || 0)) * 1e6) / 1e6);
 }
 
 /**
@@ -62,16 +84,22 @@ export async function preguntar({ uso = 'clasificar', registro = null, config = 
   tiempo, hasta, ahora = Date.now(), claude = claudeJson, gemini = geminiJson, pedir, tipo = '' }) {
   let sinCupoMotivo = '';
   if (conClaude(config)) {
-    const motivo = sinCupo(uso, { registro, config, ahora, tipo });
+    const ci = config.ia || {};
+    const modelo = (ci.modelos || {})[uso] || MODELOS[uso];
+    const estimado = estimarCoste({ modelo, prompt, sistema, uso, config });
+    const motivo = sinCupo(uso, { registro, config, ahora, tipo, estimado });
     if (motivo) { sinCupoMotivo = motivo; log(`  (ia) ${motivo}`); }
     else {
-      const ci = config.ia || {};
-      const modelo = (ci.modelos || {})[uso] || MODELOS[uso];
+      const cuenta = cuentaHoy(registro, ahora);
+      reservar(registro, cuenta, uso, estimado);
       const esfuerzo = ({ clasificar: 'low', redactar: 'medium', revisar: 'low', pulir: 'low', ...(ci.esfuerzo || {}) })[uso] || null;
       const pensar = ((ci.pensar || {})[uso]) === true;
-      const r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, modelo, esfuerzo, pensar, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
-        ...(uso === 'clasificar' ? { maxTokens: 16000 } : {}), ...(pedir ? { pedir } : {}) });
-      apuntar(cuentaHoy(registro, ahora), uso, r);
+      let r;
+      try {
+        r = await claude({ clave: process.env.ANTHROPIC_API_KEY, prompt, esquema, sistema, cache, modelo, esfuerzo, pensar, log, ...(tiempo ? { tiempo } : {}), ...(hasta ? { hasta } : {}),
+          ...(uso === 'clasificar' ? { maxTokens: 16000 } : {}), ...(pedir ? { pedir } : {}) });
+      } catch (e) { r = { ok: false, error: String((e && e.message) || e), dolares: estimado }; }
+      apuntar(cuenta, r, estimado);
       if (r.ok) return { ...r, proveedor: 'claude' };
       log(`  (ia) Claude no contesta (${r.error})`);
     }

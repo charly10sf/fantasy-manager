@@ -10,6 +10,11 @@ Sin dependencias (Node 22). Plan, tono, topes y coste: `claude/bot-x.md` del pro
 - `publicar`: publica de verdad y apunta lo publicado en la rama `bot-estado` (`registro.json`) para no repetir.
 - `parado`: no hace nada (el interruptor de emergencia: se cambia desde el móvil en Settings > Secrets and variables > Actions > Variables).
 
+Sin registro no se publica (revisión total, C4): si `git ls-remote` no puede mirar la rama `bot-estado` (red, un 5xx de GitHub, el
+token), el paso «Traer el registro» falla y el bot no arranca; si la rama de verdad no existe (código 2), el bot publicando solo
+arranca lanzándolo a mano con «registro nuevo» marcado. Un `registro.json` que no se puede leer, igual. La clave de Claude
+(`ANTHROPIC_API_KEY`) solo llega al bot con `BOT_MODO` = `publicar`, y en simulacro tampoco se redacta con IA (C5).
+
 Para pasar a publicar: crear los cuatro secretos `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET` (las claves
 OAuth 1.0a de la app en console.x.com, sin pegarlas nunca en un chat), lanzar «Bot X» a mano con «comprobar» marcado (prueba las
 claves sin publicar) y, si sale bien, poner `BOT_MODO` = `publicar`.
@@ -198,10 +203,21 @@ datos; topes por tipo y jornada (el `mvp` cuenta aparte), 25 al día y 4 por eje
 - **Cuentas de los clubes.** `telegram.cuentasX` de `config.json` lleva la cuenta de X en español de los 20 clubes de la 26/27 (comprobadas
   el 2 nov 2026 en su perfil de X; la clave es el nombre corto de los tweets) y el mensaje la enseña junto al club. Si cambia un club de
   categoría o de cuenta, se edita ahí. Celta, Deportivo y Espanyol publican sobre todo en gallego o catalán: no tienen otra cuenta en español.
-- **Aviso de fallo.** Si falla un paso del workflow, un mensaje con el enlace a la ejecución (máximo 3 al día, `avisosDia`).
+- **Aviso de fallo.** Si falla un paso del workflow, un mensaje con el enlace a la ejecución (máximo 3 al día, `avisosDia`). Un tuit que
+  no pasa el validador ya no es un fallo de la ejecución (M15).
+- **Avisos del bot** (`--aviso=bot`, revisión total, A11 y M15): lo que el bot deja en `avisos` de su `registro.json` (lib/salud.mjs),
+  con su propio tope (`avisosBotDia`, 12 al día) para no gastar los de fallo: un gol o una roja ya tuiteados que ESPN deja de dar dos
+  ejecuciones seguidas (con el enlace al tuit), el mismo gol con otro goleador (ese no se publica otra vez: el gol se reconoce por
+  partido, equipo y minuto), un tuit que no se sabe si ha salido (X no contestó a tiempo o sin red: queda apuntado como dudoso y no se
+  repite), una fuente (ESPN, futbolfantasy, FotMob, la prensa, LaLiga) que no contesta desde hace 6 ejecuciones (`salud.avisarTras`)
+  y cuando vuelve, y «0 eventos de ESPN en día de partido». La salud de cada fuente queda en `salud` del registro.
 - El token va en la URL de la API de Telegram: el bot lo borra de cualquier error que escriba en el registro.
 
 ## Pruebas
+
+`node bot/prueba/robustez-ejemplo.mjs` (sin red): registro que no se trae o roto, simulacro sin IA, reserva del gasto, tuit dudoso,
+gol con otro goleador o quitado, salud de las fuentes, avisos del bot y el partido ya jugado de Barrenetxea (8 nov). Corre en la
+Action «Pruebas» con las demás *-ejemplo.mjs.
 
 `node bot/prueba/firma.mjs` (firma OAuth). En la rama `pruebas-fuentes`, «Bot simulacro» prueba todo contra un servidor falso de X.
 `node bot/ejecutar.mjs --modo=simulacro` desde un entorno con red.

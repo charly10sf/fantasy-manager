@@ -77,7 +77,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   // con la media solo del que más pesa (lib/agrupar.mjs).
   const out = [];
   const pp = new Map();
-  for (const c of caidas) if (!pp.has(String(c.teamId))) pp.set(String(c.teamId), await proximo(c.teamId, { jornada, semana }).catch(() => null));
+  for (const c of caidas) if (!pp.has(String(c.teamId))) pp.set(String(c.teamId), await proximo(c.teamId, { jornada, semana, ahora }).catch(() => null));
   // en los tweets de varios, el lesionado que el parte da por duda va como «tocado» (lib/agrupar.mjs): ni «se cae» ni «Baja»
   const est = (c) => (c.estado === 'lesionado' && c.parte && c.parte.estado === 'duda' ? 'tocado' : c.estado);
   const comoVan = (xs) => xs.map((c) => ({ ...c, estado: est(c) }));

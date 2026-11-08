@@ -138,7 +138,7 @@ ok(parecido('A B C D E F', 'A B C D E F') === 1 && parecido('uno dos tres cuatro
 ok(cuerpoDe('Hola\n\nqué tal\n\n✅ Disponible para la jornada 12 contra el Atlético') === 'Hola\n\nqué tal', 'el cuerpo sin la etiqueta');
 
 // --- redactar (el bucle) ---
-const reg2 = { datos: { enviados: [], recientes: { noticias: [{ t: '', texto: 'Algo de antes' }] } }, fichero: null, guardar() {} };
+const reg2 = { datos: { enviados: [], recientes: { noticias: [{ t: '', texto: 'Algo de antes' }] } }, fichero: 'prueba.json', guardar() {} };
 process.env.BOT_IA = 'claude';
 const t1 = { tipo: 'noticias', clave: 'n1', texto: '✅ plantilla\n\n✅ Disponible para la jornada 12 contra el Atlético', numeros: [12], hechos };
 const respuestas = ['El Atleti va 2º y recibe al equipo. Eric vuelve.', bueno];
@@ -158,7 +158,7 @@ let pedidasPrensa = 0;
 const prensaEspia = () => { pedidasPrensa++; return cron; };
 const cfgPrensa = { ...config, redactar: { ...config.redactar, activo: true, sinPrensaTrasFallos: 1 } };
 const salePrensa = async (clave, fallosPrevios) => {
-  const regP = { datos: { enviados: [], fallosRedaccion: fallosPrevios ? { [clave]: { n: fallosPrevios } } : {} }, fichero: null, guardar() {} };
+  const regP = { datos: { enviados: [], fallosRedaccion: fallosPrevios ? { [clave]: { n: fallosPrevios } } : {} }, fichero: 'prueba.json', guardar() {} };
   pedidasPrensa = 0;
   await redactar([{ tipo: 'noticias', clave, texto: '✅ plantilla', numeros: [12], hechos }], { tipo: 'noticias', registro: regP, config: cfgPrensa, jugadores, equipos, log: () => {}, cronicasDe: prensaEspia,
     pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }) });
@@ -251,7 +251,7 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa","final","mvp"]', 'la pr
   ok(!marcoElMvp({ ...hM, goles: [{ minuto: "10'", para: 'Sevilla', enPropia: 'Vargas' }] }), 'un autogol no cuenta como marcar');
   ok(fuentesDe(dos) === 2 && fuentesDe(uno) === 1, 'fuentesDe cuenta medios distintos');
   // el bucle: si usa la prensa con un solo medio, se rechaza; con dos, vale (y sin nombrar medios)
-  const reg = { datos: { enviados: [] }, fichero: null, guardar() {} };
+  const reg = { datos: { enviados: [] }, fichero: 'prueba.json', guardar() {} };
   const cfgF = { ...config, redactar: { ...config.redactar, activo: true } };
   const intenta = async (ids) => { const t = { tipo: 'final', clave: `f${ids.join('')}`, texto: '✅ plantilla', numeros: [], hechos: hF };
     let n = 0; const r = await redactar([t], { tipo: 'final', registro: reg, config: cfgF, jugadores, equipos, log: () => {}, cronicasDe: () => dos, revisor: async () => ({ ok: true, revisado: false }),
@@ -269,12 +269,12 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa","final","mvp"]', 'la pr
   ok(cfgD.redactar.intentosPorTipo.directo === 2, 'el directo tiene dos intentos');
   const respD = ['Sivera ha parado un penalti según AS.', 'Sivera se lleva 9 puntos en el 0-0 del Alavés ante el Sevilla.'];
   const t = { tipo: 'directo', clave: 'd-reintento', texto: '⚽ plantilla', numeros: [], hechos: hD };
-  const r = await redactar([t], { tipo: 'directo', registro: { datos: { enviados: [] }, fichero: null, guardar() {} }, config: cfgD, jugadores, equipos, log: () => {},
+  const r = await redactar([t], { tipo: 'directo', registro: { datos: { enviados: [] }, fichero: 'prueba.json', guardar() {} }, config: cfgD, jugadores, equipos, log: () => {},
     pedir: async () => ({ ok: true, datos: { texto: respD.shift() }, modelo: SONNET }) });
   ok(r === 1 && t.redaccion === 'ok' && !respD.length, 'directo: el primero lo tira el validador y el segundo sale');
   const lento = { ...cfgD, redactar: { ...cfgD.redactar, reintentoSegundos: { directo: 0 } } };
   const t2 = { tipo: 'directo', clave: 'd-lento', texto: '⚽ plantilla', numeros: [], hechos: hD };
-  const r2 = await redactar([t2], { tipo: 'directo', registro: { datos: { enviados: [] }, fichero: null, guardar() {} }, config: lento, jugadores, equipos, log: () => {},
+  const r2 = await redactar([t2], { tipo: 'directo', registro: { datos: { enviados: [] }, fichero: 'prueba.json', guardar() {} }, config: lento, jugadores, equipos, log: () => {},
     pedir: async () => { await new Promise((x) => setTimeout(x, 20)); return { ok: true, datos: { texto: 'Sivera ha parado un penalti según AS.' }, modelo: SONNET }; } });
   ok(r2 === 0 && t2.texto === '⚽ plantilla', 'directo: si el primero tardó más del tope, no hay segundo y sale la plantilla');
 }
@@ -291,17 +291,17 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa","final","mvp"]', 'la pr
   let lecturas = 0;
   const revisorF = async ({ texto }) => { lecturas++; return /mejor han rentado/.test(texto) ? { ok: false, problemas: ['«Es de los defensas que mejor han rentado esta jornada»: los hechos no traen nada de la jornada'], revisado: true, modelo: SONNET } : { ok: true, problemas: [], revisado: true, modelo: SONNET }; };
   const ta = { tipo: 'noticias', clave: 'rv1', texto: '✅ plantilla', numeros: [12], hechos };
-  const n1 = await redactar([ta], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {}, pedir: pedirR, revisor: revisorF });
+  const n1 = await redactar([ta], { tipo: 'noticias', registro: { datos: {}, fichero: 'prueba.json', guardar() {} }, config: cfgR, jugadores, equipos, log: () => {}, pedir: pedirR, revisor: revisorF });
   ok(n1 === 1 && ta.texto.startsWith(bueno.split('\n')[0]) && ta.revisado === SONNET && lecturas === 2, 'revisor: tira la versión con una comparación sin base y sale la segunda, revisada');
   ok(preg.length === 2 && /editor/.test(preg[1].prompt) && /mejor han rentado/.test(preg[1].prompt), 'revisor: la segunda pregunta lleva lo que dijo el editor');
   // 2. si el revisor tira las tres, sale la plantilla
   const tb = { tipo: 'noticias', clave: 'rv2', texto: '✅ plantilla tres', numeros: [12], hechos };
-  const n2 = await redactar([tb], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {},
+  const n2 = await redactar([tb], { tipo: 'noticias', registro: { datos: {}, fichero: 'prueba.json', guardar() {} }, config: cfgR, jugadores, equipos, log: () => {},
     pedir: async () => ({ ok: true, datos: { texto: bueno }, modelo: SONNET }), revisor: async () => ({ ok: false, problemas: ['«x»: no se entiende'], revisado: true }) });
   ok(n2 === 0 && tb.texto === '✅ plantilla tres', 'revisor: si no publicaría ninguna de las tres, sale la plantilla');
   // 3. revisor caído: el tuit sigue (ya pasó el validador de código)
   const tc = { tipo: 'noticias', clave: 'rv3', texto: '✅ plantilla', numeros: [12], hechos };
-  const n3 = await redactar([tc], { tipo: 'noticias', registro: { datos: {}, fichero: null }, config: cfgR, jugadores, equipos, log: () => {},
+  const n3 = await redactar([tc], { tipo: 'noticias', registro: { datos: {}, fichero: 'prueba.json', guardar() {} }, config: cfgR, jugadores, equipos, log: () => {},
     pedir: async () => ({ ok: true, datos: { texto: bueno }, modelo: SONNET }), revisor: async () => ({ ok: true, problemas: [], revisado: false }) });
   ok(n3 === 1 && !tc.revisado, 'revisor caído: sale redactado, sin la marca de revisado');
   // 4. revisarConIA: lo que contesta la IA

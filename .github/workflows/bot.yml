@@ -25,6 +25,10 @@ on:
         description: 'Solo estos tipos, separados por comas (vacío = todos). El Worker lanza «mercado» cada minuto de 00:13 a 00:30'
         type: string
         default: ''
+      registro_nuevo:
+        description: 'Empezar el registro de cero (solo si la rama bot-estado de verdad no existe: si no, se republica lo ya publicado)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -49,8 +53,10 @@ jobs:
       # Noticias de prensa (bot/tipos/noticias.mjs): clave de Google AI Studio solo del bot. Sin ella, ese tipo no hace nada
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       # Claude (bot/lib/claude.mjs y lib/ia.mjs): Haiku clasifica las noticias y Sonnet redacta los tweets desde los hechos (6 nov). Sin ella,
-      # todo vuelve a Gemini y a la plantilla. La crea Carlos en platform.claude.com; tope propio de gasto en bot/config.json («ia»)
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      # todo vuelve a Gemini y a la plantilla. La crea Carlos en platform.claude.com; tope propio de gasto en bot/config.json («ia»).
+      # Solo publicando: en simulacro (o sin BOT_MODO) el registro no se guarda y el tope de gasto empezaba en 0 cada 5 min (revisión
+      # total, C5). El límite mensual de gasto se pone en la consola de Claude.
+      ANTHROPIC_API_KEY: ${{ vars.BOT_MODO == 'publicar' && secrets.ANTHROPIC_API_KEY || '' }}
       TIPOS: ${{ inputs.tipos }}
     steps:
       - uses: actions/checkout@v4
@@ -75,21 +81,36 @@ jobs:
         if: ${{ !inputs.comprobar && (env.BOT_MODO == 'publicar' || env.TELEGRAM_BOT_TOKEN != '') }}
         env:
           GH_TOKEN: ${{ github.token }}
+        # (revisión total, C4) el código de salida de ls-remote: 0, la rama está y se clona; 2, no existe y se empieza (el bot solo
+        # arranca así con «registro nuevo»); cualquier otro (red, un 5xx de GitHub, el token), error: antes se trataba como «no existe» y
+        # el bot arrancaba vacío y republicaba goles, onces y noticias, con los topes y el gasto a 0
         run: |
           rm -rf estado
           URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          if git ls-remote --exit-code --heads "$URL" bot-estado >/dev/null 2>&1; then
-            git clone -q --depth 1 --branch bot-estado "$URL" estado
-          else
-            mkdir estado && git -C estado init -q -b bot-estado && git -C estado remote add origin "$URL"
-          fi
+          codigo=0
+          git ls-remote --exit-code --heads "$URL" bot-estado >/dev/null 2>&1 || codigo=$?
+          case "$codigo" in
+            0) git clone -q --depth 1 --branch bot-estado "$URL" estado ;;
+            2)
+              echo "::warning::La rama bot-estado no existe: el registro empieza de cero (publicando, solo con «registro nuevo»)"
+              mkdir estado && git -C estado init -q -b bot-estado && git -C estado remote add origin "$URL"
+              echo "nuevo=1" >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::No he podido mirar la rama bot-estado (git ls-remote salió con $codigo): no arranco para no republicar"; exit 1 ;;
+          esac
       - name: Bot
         if: ${{ !inputs.comprobar }}
-        run: node bot/ejecutar.mjs --ventanas=1 --estado=estado/registro.json ${TIPOS:+--tipos=$TIPOS}
+        env:
+          REGISTRO_NUEVO: ${{ inputs.registro_nuevo && steps.traer.outputs.nuevo == '1' && '1' || '' }}
+        run: node bot/ejecutar.mjs --ventanas=1 --estado=estado/registro.json ${TIPOS:+--tipos=$TIPOS} ${REGISTRO_NUEVO:+--registro-nuevo=1}
       # Telegram corre aunque el paso de X falle, pero no si no se ha podido traer el registro (mandaría otra vez lo ya mandado)
       - name: Respuestas para los clubes (Telegram)
         if: ${{ !cancelled() && !inputs.comprobar && !inputs.tipos && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}
         run: node bot/telegram.mjs --ventanas=1 --estado=estado/telegram.json
+      # lo que el bot deja para Carlos en su registro (un gol o una roja ya tuiteados que ESPN quita, un tuit dudoso, una fuente caída):
+      # con su propio tope, sin gastar los avisos de fallo (revisión total, A11 y M15)
+      - name: Avisos del bot (Telegram)
+        if: ${{ !cancelled() && !inputs.comprobar && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}
+        run: node bot/telegram.mjs --aviso=bot --estado=estado/telegram.json --registro=estado/registro.json
       - name: Aviso de fallo (Telegram)
         if: ${{ failure() && !inputs.comprobar && env.TELEGRAM_BOT_TOKEN != '' && steps.traer.outcome == 'success' }}
         run: node bot/telegram.mjs --aviso=fallo --estado=estado/telegram.json
