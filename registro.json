@@ -1492,8 +1492,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/revivo-convocado-con-israel-para-disputar-la-nations-league-radio-elche/": 1793873304000,
    "AS|https://as.com/futbol/primera/nico-williams-y-yuri-berchiche-reaparecen-para-la-cita-ante-osasuna-f202611-n/": 1793874820000,
-   "SPORT|136108626": 1793872201000,
-   "SPORT|136111415": 1793872197000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000,
    "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/": 1793877225000,
@@ -1714,18 +1712,6 @@
     "hecho": "Nico Williams regresa a la convocatoria ante Osasuna",
     "motivo": "",
     "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136111415",
-    "medio": "SPORT",
-    "t": 1793872197000,
-    "id": "2338",
-    "que": "lesion",
-    "oficial": true,
-    "hecho": "Aimar sufre una lesion muscular en el cuadriceps",
-    "motivo": "lesion en el cuadriceps",
-    "plazo": "estara varias semanas fuera",
     "nums": []
    },
    {
@@ -3210,7 +3196,6 @@
  "liga": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/05/ultima-hora-valencia-real-madrid-decision-laliga-jugara-partido-jornada-dos-excepciones-136107273.html": 1793872392000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/harry-kane-renueva-bayern-aplaza-sueno-nfl-2029-20261105_3469225.html": 1793872143000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/05/aplazado-el-castellon-eibar-por-el-fallecimiento-de-jesus-de-miguel-radio-castellon/": 1793873334000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/laliga-tenerife-jesus-de-miguel-castellon-136112188.html": 1793877466000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/castellon/20261105/1004247508/laliga-atiende-peticion-castellon-aplaza-encuentro-eibar.html": 1793877877000,
@@ -7495,13 +7480,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 328,
+   "ok": 329,
    "fallos": 0,
-   "ejecuciones": 139,
+   "ejecuciones": 140,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 471,
-   "ultima": "2026-11-08T09:46:12.690Z"
+   "ultima": "2026-11-08T09:51:11.441Z"
   }
  },
  "ptsDirecto": {}
