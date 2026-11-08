@@ -88,9 +88,10 @@ def pie(raiz, hay_guias):
     guias = f'<a href="{raiz}guias/">Guías</a>' if hay_guias else ''
     return (f'<footer class="pie"><div class="pie-in">'
             f'<nav aria-label="Pie"><a href="{raiz or "./"}">Abrir la app</a>{guias}<a href="{raiz}quienes-somos.html">Quiénes somos</a>'
-            f'<a href="{raiz}contacto.html">Contacto</a><a href="{raiz}privacidad.html">Privacidad</a><a href="{raiz}instalar.html">Instalar</a></nav>'
+            f'<a href="{raiz}contacto.html">Contacto</a><a href="{raiz}privacidad.html">Privacidad</a><a href="{raiz}condiciones.html">Condiciones</a>'
+            f'<a href="{raiz}aviso-legal.html">Aviso legal</a><a href="{raiz}instalar.html">Instalar</a></nav>'
             f'<p>Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga, LaLiga Fantasy ni sus patrocinadores.</p>'
-            f'<p>© 2026 Fantasy Manager · <a href="mailto:contacto@fantasymanagerapp.com">contacto@fantasymanagerapp.com</a></p>'
+            f'<p>© 2026 Fantasy Manager · <a href="mailto:fantasymanager.web.app@gmail.com">fantasymanager.web.app@gmail.com</a></p>'
             f'</div></footer>')
 
 

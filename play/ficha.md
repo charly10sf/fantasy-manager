@@ -109,28 +109,63 @@ No hace falta dar usuario y contraseña.
 
 ## Seguridad de los datos (formulario)
 
-Para la versión con anuncios (0.6 y siguientes). Lo de AdMob sale de la guía de Google para la versión 25.5.0 de su librería: https://developers.google.com/admob/android/privacy/play-data-disclosure
+Rehecho el 8 nov 2026 (revisión total, A2) para la versión con anuncios y con la IA tal como está hoy, con lo que guarda el Worker tras la sesión 1 de la revisión. Lo de AdMob sale de la guía de Google para la versión 25.5.0 de su librería: https://developers.google.com/admob/android/privacy/play-data-disclosure
+
+Lo que cambia frente al del 25 oct: se declara lo que va a la IA de Google. Con la clave de cada usuario sigue siendo la app la que lo transmite fuera del móvil (y en Android también en segundo plano, sin tocar nada), así que cuenta como recogido y como compartido con un tercero (Google). Es opcional: sin clave de la IA no va nada.
+
+### Lo que sale del móvil hoy (para no perderse)
+
+| Adónde | Qué | Cuánto dura |
+| --- | --- | --- |
+| IA de Google (Gemini), con la clave del usuario, al pedir el plan, al usar el chat y, en Android con el segundo plano activado, cada pocas horas sin abrir la app | El texto que escribe en el chat; las capturas que adjunta (tal cual); los datos de su liga (plantilla, saldo, ofertas, mercado, lo que hacen los rivales); su nombre de mánager y el de su equipo (los rivales van como «Rival N» y su equipo como «Equipo N») | Lo que diga Google: con la clave gratuita lo puede guardar y usar para mejorar sus productos |
+| Worker, `p:<uid>` (/hola) | Número de cuenta de LaLiga, nombre de mánager, equipo, liga, versión, canal y la dirección de su foto de perfil de LaLiga (para enseñarla a los de su liga que usan la app) | 90 días sin abrir la app |
+| Worker, `u:` | Segundos de uso de cada día | 9 días |
+| Worker, `r:<uid>` | Número de cuenta, primera y última vez, días de uso, canales y cuántas veces por semana usa algunas partes (planes, preguntas, bonificados, funciones top, pasos de la entrada) | 400 días sin abrir la app |
+| Worker, `f:` y `fc:` (/fallos) | Texto del aviso, hasta 3 capturas, mánager, equipo, liga, versión y, con la casilla, el diagnóstico (rivales como «Rival N», modelos de la IA como «IA 1, 2, 3») | 180 días |
+| Worker, `v:` y `q:` (paso al ordenador) | Sesión, liga, clave de la IA y lo que han dicho los rivales, cifrado con una clave que el Worker no tiene | 10 minutos o al usarse |
+| AdMob (solo Play) | IP, ID de publicidad, ID de conjunto de apps, interacciones con anuncios, diagnóstico | Lo que diga Google |
+
+El paso al ordenador desde la app de Play va siempre cifrado (es de la 0.7a en adelante): no cuenta como recogido porque el desarrollador no puede leerlo. El Worker aún acepta el formato viejo sin cifrar (`FORMATO_VIEJO = "si"`), pero solo lo mandan APK de GitHub anteriores a la 0.7a, que no van a Play.
+
+### Primera pantalla
 
 | Pregunta | Respuesta |
 | --- | --- |
-| ¿Recoge o comparte datos? | Sí |
-| ¿Se cifran en tránsito? | Sí (todo va por https) |
-| ¿Puede el usuario pedir que se borren? | Sí: en la app, Ajustes → Borrar mis datos del servidor (desde la 0.7a); sin la app, escribiendo al correo de contacto. Enlace para Play: https://fantasymanagerapp.com/privacidad.html#borrar. Si no, los avisos se borran solos a los 180 días y el uso, a los 90 |
+| ¿Recoge o comparte alguno de los tipos de datos de usuario obligatorios? | Sí |
+| ¿Se cifran en tránsito todos los datos de usuario que recoge? | Sí (todo va por https) |
+| ¿Qué formas de pedir la eliminación de datos ofrece? | «Ofrecemos una forma de que los usuarios soliciten que se eliminen sus datos». En la app: Ajustes → Borrar mis datos del servidor; sin la app, escribiendo a fantasymanager.web.app@gmail.com. Enlace para Play: https://fantasymanagerapp.com/privacidad.html#borrar |
+| ¿Las cuentas se crean en la app? | No: se entra con la cuenta de LaLiga Fantasy, que no es nuestra |
 
-| Tipo de dato | Recogido | Compartido | Para qué | ¿Opcional? |
-| --- | --- | --- | --- | --- |
-| Ubicación → Ubicación aproximada (la IP, la usa AdMob) | Sí | Sí | Publicidad o marketing, Analítica, Prevención del fraude | No |
-| Información personal → Nombre (el nombre de mánager: «Quién usa la app» y avisos de fallo) | Sí | No | Funciones de la app, Analítica | No |
-| Información personal → ID de usuario (el número de cuenta de LaLiga, para lo mismo) | Sí | No | Funciones de la app, Analítica | No |
-| Actividad en la app → Interacciones con la app (AdMob: aperturas, toques, vídeos; los minutos de uso, donde hay límite; y desde la 0.7a, cuántos planes, preguntas, bonificados, funciones top y pasos de la entrada por semana) | Sí | Sí | Publicidad o marketing, Analítica, Funciones de la app, Prevención del fraude | No |
-| Mensajes → Otros mensajes en la app (el texto de un aviso de fallo) | Sí | No | Funciones de la app (soporte), Comunicaciones del desarrollador | Sí |
-| Fotos y vídeos → Fotos (hasta 3 capturas en un aviso de fallo, desde la 0.6.1b) | Sí | No | Funciones de la app (soporte), Comunicaciones del desarrollador | Sí |
-| Información y rendimiento de la app → Diagnóstico (AdMob; y el diagnóstico si marcas la casilla en un aviso de fallo) | Sí | Sí | Analítica, Publicidad o marketing, Prevención del fraude | No |
-| Dispositivo u otros identificadores (ID de publicidad e ID de conjunto de apps, AdMob) | Sí | Sí | Publicidad o marketing, Analítica, Prevención del fraude | No |
+### Tipos de datos
 
-Lo que no sale del móvil (no hace falta declararlo): la sesión de LaLiga, los datos de la liga, la clave de Gemini. Lo que se manda a Google Gemini lo manda el usuario con su propia clave, directo del móvil a Google, y desde la 0.7a sin los nombres de los rivales («Rival 1», «Rival 2»…). Al abrir la cuenta en el ordenador (QR o código), la sesión y la clave pasan por el Worker cifradas con una clave que el Worker no tiene (0.7a) y se borran al usarse o a los 10 minutos: en principio no cuenta como recogida, porque el desarrollador no puede leerlo.
+| Tipo de dato | Recogido | Compartido | Efímero | ¿Obligatorio? | Para qué |
+| --- | --- | --- | --- | --- | --- |
+| Ubicación → Ubicación aproximada (la IP; la usa AdMob) | Sí | Sí | No | Obligatorio | Publicidad o marketing, Analítica, Prevención del fraude, seguridad y cumplimiento |
+| Información personal → Nombre (el nombre de mánager: Worker y, con la IA, Google) | Sí | Sí | No | Obligatorio | Funciones de la app, Analítica |
+| Información personal → ID de usuario (el número de cuenta de LaLiga, en el Worker) | Sí | No | No | Obligatorio | Funciones de la app, Analítica |
+| Fotos y vídeos → Fotos (las capturas del chat van a Google; las de un aviso de fallo y la dirección de la foto de perfil, al Worker) | Sí | Sí | No | Opcional | Funciones de la app; además, para el aviso de fallo, Comunicaciones del desarrollador |
+| Mensajes → Otros mensajes en la app (el texto de un aviso de fallo y su respuesta) | Sí | No | No | Opcional | Funciones de la app, Comunicaciones del desarrollador |
+| Actividad en la app → Interacciones con la app (AdMob; minutos de uso; cuántos planes, preguntas, bonificados y funciones por semana) | Sí | Sí | No | Obligatorio | Publicidad o marketing, Analítica, Funciones de la app, Prevención del fraude, seguridad y cumplimiento |
+| Actividad en la app → Otro contenido generado por el usuario (lo que escribe en el chat de la IA; va a Google) | Sí | Sí | No | Opcional | Funciones de la app |
+| Actividad en la app → Otras acciones (los datos de su liga que van a la IA: plantilla, saldo, ofertas, mercado; su equipo y su liga en el Worker) | Sí | Sí | No | Opcional | Funciones de la app |
+| Información y rendimiento de la app → Diagnóstico (AdMob; y el diagnóstico si marca la casilla en un aviso de fallo) | Sí | Sí | No | Obligatorio | Analítica, Publicidad o marketing, Prevención del fraude, seguridad y cumplimiento |
+| Información y rendimiento de la app → Registros de fallos | No | No | | | (la app no manda informes de fallos sola: solo el aviso que escribe el usuario) |
+| Dispositivo u otros identificadores (ID de publicidad e ID de conjunto de apps, AdMob) | Sí | Sí | No | Obligatorio | Publicidad o marketing, Analítica, Prevención del fraude, seguridad y cumplimiento |
 
-Si Play pregunta por los datos de otras personas: los nombres de los mánagers de la liga no se guardan en el servidor (solo el del propio usuario) y no van a la IA.
+Lo que no sale del móvil (no se declara): la sesión de LaLiga (salvo cifrada en el paso al ordenador) y la clave de la IA (va en la cabecera de cada pregunta a Google, que es su dueño, y cifrada en el paso al ordenador).
+
+Si Play pregunta por los datos de otras personas: los nombres de los mánagers de la liga no se guardan en el servidor (solo el del propio usuario) y a la IA van como «Rival N».
+
+### Pasos en Play Console (lo hace Carlos)
+
+1. Play Console → Fantasy Manager → Política y programas → Contenido de la app → Seguridad de los datos → Gestionar (o Editar).
+2. Recogida y seguridad de datos: Sí recoge o comparte; Sí, cifrado en tránsito; marcar «Ofrecemos una forma de que los usuarios soliciten que se eliminen sus datos» y pegar https://fantasymanagerapp.com/privacidad.html#borrar. A «¿Las cuentas se crean en la app?», No. Siguiente.
+3. Tipos de datos: marcar los de la tabla de arriba con «Sí» en Recogido (Ubicación aproximada; Nombre; ID de usuario; Fotos; Otros mensajes en la app; Interacciones con la app; Otro contenido generado por el usuario; Otras acciones; Diagnóstico; ID de dispositivo u otros identificadores). Lo nuevo frente al del 25 oct: Otro contenido generado por el usuario y Otras acciones; Fotos y Nombre pasan a «compartido». Siguiente.
+4. Uso y gestión de datos: en cada tipo, «Gestionar» y copiar de la tabla Recogido/Compartido, «¿Se procesan de forma efímera?» (No en todos), Obligatorio u Opcional y las finalidades. Guardar cada uno.
+5. Vista previa: comprobar que salen «Datos compartidos: Información personal, Ubicación, Fotos y vídeos, Actividad en la app, Información y rendimiento de la app, IDs de dispositivo u otros» y Guardar.
+6. Contenido de la app → Política de privacidad: que siga https://fantasymanagerapp.com/privacidad.html (ya tiene el bloque «Responsable»).
+7. Publicar → Resumen de la publicación → Enviar cambios a revisión (si está la publicación gestionada, darle a publicar cuando la aprueben).
+8. No tocar «Estado de operador» todavía.
 
 ## Prueba cerrada
 

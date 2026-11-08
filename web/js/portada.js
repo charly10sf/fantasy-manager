@@ -227,7 +227,7 @@ const PRIVACIDAD = [
 ];
 
 /** las páginas públicas (HTML sin JavaScript, de .github/paginas.py). «Guías» entra cuando haya alguna publicada */
-const ENLACES = [['guias/', 'Guías'], ['quienes-somos.html', 'Quiénes somos'], ['contacto.html', 'Contacto'], ['privacidad.html', 'Privacidad'], ['instalar.html', 'Instalar']];
+const ENLACES = [['guias/', 'Guías'], ['quienes-somos.html', 'Quiénes somos'], ['contacto.html', 'Contacto'], ['privacidad.html', 'Privacidad'], ['condiciones.html', 'Condiciones'], ['aviso-legal.html', 'Aviso legal'], ['instalar.html', 'Instalar']];
 const APK = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk';
 
 // <guias>
