@@ -622,6 +622,13 @@
    "jornada": 12,
    "id": "2119440119392321719",
    "t": "2026-11-08T14:41:16.767Z"
+  },
+  {
+   "clave": "directo|118|Marc Bartra|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119442648683491788",
+   "t": "2026-11-08T14:51:20.027Z"
   }
  ],
  "estados": {
@@ -3605,16 +3612,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 18,
-   "redactar": 16,
+   "redactar": 18,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 229338,
-  "salida": 14394,
+  "entrada": 251429,
+  "salida": 14674,
   "cacheLee": 10420,
   "cacheEscribe": 7815,
-  "dolares": 0.459481
+  "dolares": 0.506463
  },
  "recientes": {
   "onces": [
@@ -3723,10 +3730,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T20:31:18.385Z",
-    "texto": "⚽ Gol de Valverde y el Real Madrid se adelanta en el 28'. Valencia 0-1 Real Madrid. Ya suma 6 puntos fantasy."
-   },
-   {
     "t": "2026-11-07T20:41:16.569Z",
     "texto": "⚽ Arda Güler amplía la ventaja del Real Madrid en el 36'. Valencia 0-2 Real Madrid. Lleva 10 puntos fantasy de momento."
    },
@@ -3741,6 +3744,10 @@
    {
     "t": "2026-11-08T14:41:16.769Z",
     "texto": "⚽ Riquelme la empalma de volea en el 81' y el Betis se adelanta en el Martínez Valero: 0-1 ante el Elche 🌴.\n\nSuma 6 puntos, muy por encima de su media. Es su tercer gol esta temporada entre Liga, Champions y Copa."
+   },
+   {
+    "t": "2026-11-08T14:51:20.028Z",
+    "texto": "⚽ Otro gol del Betis, de Bartra, en el 89'. Elche 0-2 Betis. Asistencia de Ceballos, con 6 puntos fantasy. Bartra ya suma 8 puntos, con una media de 4,8."
    }
   ],
   "novedades": [
@@ -7289,17 +7296,33 @@
    "w": "2026-11-08T14:38:19Z",
    "f": "2026-11-08T14:41:11.899Z",
    "rf": "82:55"
+  },
+  "fm|118|195305|89": {
+   "j": "Marc Bartra",
+   "m": "89'",
+   "f": "2026-11-08T14:51:11.828Z",
+   "rf": "92:55",
+   "casado": true
+  },
+  "directo|118|Marc Bartra|gol1": {
+   "j": "Marc Bartra",
+   "m": "89'",
+   "e": "2026-11-08T14:51:11.828Z",
+   "re": "90'+3'",
+   "w": "2026-11-08T14:46:24Z",
+   "f": "2026-11-08T14:51:11.828Z",
+   "rf": "92:55"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 410,
+   "ok": 412,
    "fallos": 0,
-   "ejecuciones": 199,
+   "ejecuciones": 200,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 462,
-   "ultima": "2026-11-08T14:46:13.503Z"
+   "mediaMs": 461,
+   "ultima": "2026-11-08T14:51:11.828Z"
   }
  },
  "ptsDirecto": {
@@ -7308,6 +7331,18 @@
    "g": 1,
    "a": 0,
    "t": 1794148871899
+  },
+  "12|118|121": {
+   "p": 8,
+   "g": 1,
+   "a": 0,
+   "t": 1794149471828
+  },
+  "12|118|3264": {
+   "p": 6,
+   "g": 0,
+   "a": 1,
+   "t": 1794149471828
   }
  }
 }
