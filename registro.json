@@ -1499,7 +1499,6 @@
   "vistas": {
    "MARCA|https://www.marca.com/futbol/sevilla/2026/11/05/luis-garcia-plaza-rentabilizar-momentos-superiores.html": 1793882703000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/05/madrid-vuelve-trabajo-gueler-tchouameni.html": 1793883472000,
-   "SPORT|136120803": 1793882025000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/05/el-malaga-realiza-la-penultima-sesion-antes-de-recibir-este-sabado-al-racing-ser-malaga/": 1793886617000,
    "SPORT|136120104": 1793882738000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-real-madrid-no-salir-relajado-partido-hemos-visto-recuperado-gen-competitivo-siempre-tenido-ultimamente-habia-perdido-20261105_3468903.html": 1793887133000,
@@ -1717,21 +1716,6 @@
     "motivo": "molestias físicas",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136120803",
-    "medio": "SPORT",
-    "t": 1793882025000,
-    "id": "3207",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "P. Martínez avanza positivamente en su recuperación",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     14,
-     0
-    ]
    },
    {
     "guid": "SPORT|136120104",
@@ -7386,13 +7370,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 361,
+   "ok": 362,
    "fallos": 0,
-   "ejecuciones": 172,
+   "ejecuciones": 173,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 476,
-   "ultima": "2026-11-08T12:31:13.210Z"
+   "ultima": "2026-11-08T12:36:10.751Z"
   }
  },
  "ptsDirecto": {}
