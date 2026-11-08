@@ -3685,6 +3685,11 @@
    "h": "96c20ff03af5",
    "desde": 1794158473403,
    "fin": 1794158174970
+  },
+  "12|111": {
+   "h": "b330a5b64939",
+   "desde": 1794165973660,
+   "fin": 1794165973660
   }
  },
  "iaDias": [
@@ -3866,7 +3871,8 @@
    "6386078",
    "6428918",
    "5868123",
-   "5868127"
+   "5868127",
+   "5868130"
   ],
   "equipos": [
    "9866",
@@ -5338,6 +5344,19 @@
      ]
     }
    },
+   "1026135": {
+    "n": "Tajon Buchanan",
+    "e": "Villarreal",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "1029029": {
     "n": "Zakaria Eddahchouri",
     "e": "Deportivo A Coruña",
@@ -6357,6 +6376,19 @@
      ]
     }
    },
+   "1395964": {
+    "n": "Carlos Romero",
+    "e": "Villarreal",
+    "g": {
+     "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "1398377": {
     "n": "Lucas Stassin",
     "e": "Sevilla",
@@ -7275,13 +7307,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 536,
+   "ok": 539,
    "fallos": 0,
-   "ejecuciones": 255,
+   "ejecuciones": 256,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 422,
-   "ultima": "2026-11-08T19:21:13.479Z"
+   "mediaMs": 421,
+   "ultima": "2026-11-08T19:26:12.856Z"
   }
  },
  "ptsDirecto": {
@@ -7351,7 +7383,7 @@
  },
  "desaparecidos": {
   "directo|119|Pablo Durán|gol1": {
-   "n": 11,
+   "n": 12,
    "desde": "2026-11-08T18:31:12.493Z",
    "avisado": true
   }
@@ -7359,27 +7391,27 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:21:54.948Z"
+   "ultimaBien": "2026-11-08T19:26:18.639Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:21:54.948Z"
+   "ultimaBien": "2026-11-08T19:26:18.639Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:21:54.948Z"
+   "ultimaBien": "2026-11-08T19:26:18.639Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:21:54.948Z"
+   "ultimaBien": "2026-11-08T19:26:18.639Z"
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:21:54.948Z"
+   "ultimaBien": "2026-11-08T19:26:18.639Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T19:21:54.948Z"
+   "ultimaBien": "2026-11-08T19:26:18.639Z"
   }
  },
  "avisos": [
