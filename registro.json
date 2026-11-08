@@ -3149,15 +3149,12 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/barca-goles/20261105/1004247602/unico-doblete-xavi-exquisito-demoledor.html": 1793892614000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/05/futbol-espanol-unira-homenaje-jesus-miguel-juega-jornada-parara-minuto-9.html": 1793896084000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261105/1004247619/comunicado-laliga.html": 1793895137000,
-   "SPORT|136129236": 1793892468000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-aplaza-decision-sobre-sancion-owono-20261105_3469777.html": 1793897285000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/asi-sera-homenaje-futbol-espanol-jesus-miguel-solemne-minuto-silencio-paron-memoria-9-20261105_3469770.html": 1793896697000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261105/11677030/comite-aplaza-sancion-owono-jornada-liga-convertira-tributo-miguel.html": 1793896288000,
    "AS|https://as.com/futbol/segunda/laliga-no-para-el-futbol-aplaza-solo-el-granada-tenerife-andorra-mallorca-y-castellon-eibar-f202611-n/": 1793895587000,
-   "SPORT|136130308": 1793892472000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/05/incertidumbre-suspension-jornada-primera-division-causa-fallecimiento-jesus-miguel/00031793897049744212278.htm": 1793898360000,
    "SPORT|136132177": 1793895290000,
    "SPORT|136132157": 1793894248000,
@@ -3279,27 +3276,6 @@
      12,
      13,
      10
-    ],
-    "regla": true
-   },
-   {
-    "guid": "SPORT|136130308",
-    "medio": "SPORT",
-    "t": 1793892472000,
-    "tipo": "suspension",
-    "estado": "descartado",
-    "segunda": false,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "",
-    "nums": [
-     13,
-     18,
-     30
     ],
     "regla": true
    },
@@ -7308,13 +7284,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 422,
+   "ok": 424,
    "fallos": 0,
-   "ejecuciones": 207,
+   "ejecuciones": 208,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 459,
-   "ultima": "2026-11-08T15:26:11.639Z"
+   "mediaMs": 458,
+   "ultima": "2026-11-08T15:31:12.911Z"
   }
  },
  "ptsDirecto": {
