@@ -3107,7 +3107,6 @@
  },
  "liga": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html": 1793883719000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html": 1793885219000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/05/comunicado-oficial-afe-opone-dispute-jornada-laliga-muerte-jesus-de-miguel-136121078.html": 1793886839000,
    "SPORT|136122725": 1793885037000,
@@ -3205,22 +3204,6 @@
    "SPORT|136220730": 1794135619000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/2026/11/05/afe-traslada-sentir-futbolistas-adecuado-seria-suspender-jornada.html",
-    "medio": "MARCA",
-    "t": 1793883719000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "La decisión final sobre la disputa de la jornada está pendiente de valoración",
-    "nums": []
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/afe-sigue-pidiendo-suspenda-jornada-semana-raphinha-contesta-quiere-jugar-mejor-manera-respetar-seguir-trabajando-20261105_3469550.html",
     "medio": "COPE",
@@ -7317,13 +7300,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 368,
+   "ok": 370,
    "fallos": 0,
-   "ejecuciones": 178,
+   "ejecuciones": 179,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 478,
-   "ultima": "2026-11-08T13:01:13.357Z"
+   "mediaMs": 477,
+   "ultima": "2026-11-08T13:06:11.890Z"
   }
  },
  "ptsDirecto": {}
