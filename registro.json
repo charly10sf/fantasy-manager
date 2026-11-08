@@ -1490,7 +1490,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html": 1793875872000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261105/1004247488/real-madrid-recupera-camiseta-iconica.html": 1793876400000,
    "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/": 1793877225000,
    "Diario Sur|https://www.diariosur.es/malagacf/virus-fifa-malaga-aznou-marruecos-sub23-futbol-20261105123950-nt.html": 1793879095000,
@@ -1689,23 +1688,10 @@
    "SPORT|135832403": 1794118500000,
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/08/ultima-hora-choque-trenes-toledo-135852320.html": 1794122100000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247495/gestion-rodri-respiro-partido-partido.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793875872000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri sufre una lesión en el bíceps femoral",
-    "motivo": "lesión en el bíceps femoral",
-    "plazo": "estará fuera entre tres y cuatro semanas",
-    "nums": [
-     30
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/cardoso-se-apunta-al-barcelona-f202611-n/",
     "medio": "AS",
@@ -2356,7 +2342,7 @@
   ],
   "gemini": {
    "dia": "2026-11-08",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3775,17 +3761,17 @@
  "ia": {
   "dia": "2026-11-08",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 8,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 106964,
-  "salida": 9295,
+  "entrada": 108598,
+  "salida": 9372,
   "cacheLee": 7815,
   "cacheEscribe": 2605,
-  "dolares": 0.215057
+  "dolares": 0.215259
  },
  "recientes": {
   "onces": [
@@ -7448,13 +7434,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 341,
+   "ok": 342,
    "fallos": 0,
-   "ejecuciones": 152,
+   "ejecuciones": 153,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 476,
-   "ultima": "2026-11-08T10:51:11.730Z"
+   "ultima": "2026-11-08T10:56:14.327Z"
   }
  },
  "ptsDirecto": {}
