@@ -657,6 +657,13 @@
    "jornada": 12,
    "id": "2119470397905145910",
    "t": "2026-11-08T16:41:35.814Z"
+  },
+  {
+   "clave": "directo|114|Orri Óskarsson|gol1",
+   "tipo": "directo",
+   "jornada": 12,
+   "id": "2119471586302427521",
+   "t": "2026-11-08T16:46:19.185Z"
   }
  ],
  "estados": {
@@ -3459,16 +3466,16 @@
   "dia": "2026-11-08",
   "llamadas": {
    "clasificar": 21,
-   "redactar": 33,
+   "redactar": 34,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 407059,
-  "salida": 20232,
+  "entrada": 417901,
+  "salida": 20373,
   "cacheLee": 89735,
   "cacheEscribe": 23678,
-  "dolares": 0.90725
+  "dolares": 0.930344
  },
  "recientes": {
   "onces": [
@@ -3577,10 +3584,6 @@
   ],
   "directo": [
    {
-    "t": "2026-11-07T20:41:16.569Z",
-    "texto": "⚽ Arda Güler amplía la ventaja del Real Madrid en el 36'. Valencia 0-2 Real Madrid. Lleva 10 puntos fantasy de momento."
-   },
-   {
     "t": "2026-11-07T21:41:23.301Z",
     "texto": "⚽ Mbappé la mete en el 75' y el Madrid ⚪ pone el 0-3 en Mestalla. Ya suma 5 puntos.\n\nEl pase es de Arda Güler, que se lleva 9. Si tienes a los dos, buena tarde para el mánager."
    },
@@ -3595,6 +3598,10 @@
    {
     "t": "2026-11-08T14:51:20.028Z",
     "texto": "⚽ Otro gol del Betis, de Bartra, en el 89'. Elche 0-2 Betis. Asistencia de Ceballos, con 6 puntos fantasy. Bartra ya suma 8 puntos, con una media de 4,8."
+   },
+   {
+    "t": "2026-11-08T16:46:19.187Z",
+    "texto": "⚽ Oskarsson la mete en el 67' y la Real Sociedad se adelanta en Anoeta: 1-0 al Rayo ⚡.\n\nEl islandés ya suma 8 puntos, más del doble de su media. El pase es de Barrenetxea, que se lleva 5. Es el cuarto gol de Oskarsson entre Liga, Champions y Copa."
    }
   ],
   "novedades": [
@@ -7165,17 +7172,33 @@
    "w": "2026-11-08T14:46:24Z",
    "f": "2026-11-08T14:51:11.828Z",
    "rf": "92:55"
+  },
+  "fm|114|1097229|67": {
+   "j": "Orri Óskarsson",
+   "m": "67'",
+   "f": "2026-11-08T16:46:12.776Z",
+   "rf": "69:32",
+   "casado": true
+  },
+  "directo|114|Orri Óskarsson|gol1": {
+   "j": "Orri Óskarsson",
+   "m": "67'",
+   "e": "2026-11-08T16:46:12.776Z",
+   "re": "70'",
+   "w": "2026-11-08T16:43:34Z",
+   "f": "2026-11-08T16:46:12.776Z",
+   "rf": "69:32"
   }
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 454,
+   "ok": 456,
    "fallos": 0,
-   "ejecuciones": 223,
+   "ejecuciones": 224,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 447,
-   "ultima": "2026-11-08T16:41:12.993Z"
+   "mediaMs": 446,
+   "ultima": "2026-11-08T16:46:12.776Z"
   }
  },
  "ptsDirecto": {
@@ -7196,6 +7219,18 @@
    "g": 0,
    "a": 1,
    "t": 1794149471828
+  },
+  "12|114|2448": {
+   "p": 8,
+   "g": 1,
+   "a": 0,
+   "t": 1794156372776
+  },
+  "12|114|701": {
+   "p": 5,
+   "g": 0,
+   "a": 1,
+   "t": 1794156372776
   }
  }
 }
