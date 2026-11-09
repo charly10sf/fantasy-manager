@@ -1964,7 +1964,8 @@
    "SPORT|136248722": 1794225294000,
    "SPORT|136249887": 1794225247000,
    "AS|https://as.com/futbol/cuatro-internacionales-se-marchan-con-sus-selecciones-f202611-n/": 1794228363000,
-   "SPORT|136250143": 1794225334000
+   "SPORT|136250143": 1794225334000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-pierden-partido-praga-victor-munoz-seleccion_0_2008456929.html": 1794229502000
   },
   "hechos": [
    {
@@ -2505,7 +2506,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3401,7 +3402,9 @@
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-habilita-canal-atencion-resolver-incidencias-huelga-general-20261109111108.html": 1794219068000,
    "SPORT|136233790": 1794218790000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-defiende-atletico-madrid-resta-importancia-derrotas-bayern-barcelona-son-dos-cinco-mejores-equipos-europa-20261109_3471055.html": 1794225339000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-defiende-atletico-madrid-resta-importancia-derrotas-bayern-barcelona-son-dos-cinco-mejores-equipos-europa-20261109_3471055.html": 1794225339000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229164000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilina-despliega-lona-gran-via-madrid-llamar-huelga-general-20261109123809.html": 1794224289000
   },
   "hechos": [
    {
@@ -3457,28 +3460,25 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229272243,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilina-despliega-lona-gran-via-madrid-llamar-huelga-general-20261109123809.html": 1794229873691
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 34,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 229270,
-  "salida": 23787,
+  "entrada": 232815,
+  "salida": 24810,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.503283,
+  "dolares": 0.504149,
   "reservado": 0
  },
  "recientes": {
@@ -7403,13 +7403,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 817,
+   "ok": 818,
    "fallos": 0,
-   "ejecuciones": 472,
+   "ejecuciones": 473,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T13:16:14.797Z"
+   "ultima": "2026-11-09T13:21:16.258Z"
   }
  },
  "ptsDirecto": {},
@@ -7426,15 +7426,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:16:19.535Z"
+   "ultimaBien": "2026-11-09T13:21:27.705Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:16:19.535Z"
+   "ultimaBien": "2026-11-09T13:21:27.705Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:16:19.535Z"
+   "ultimaBien": "2026-11-09T13:21:27.705Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7442,11 +7442,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:16:19.535Z"
+   "ultimaBien": "2026-11-09T13:21:27.705Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:16:19.535Z"
+   "ultimaBien": "2026-11-09T13:21:27.705Z"
   }
  },
  "avisos": [
