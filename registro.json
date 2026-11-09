@@ -1963,7 +1963,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261109/1004249169/premier-league.html": 1794248219000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotivo-homenaje-seleccion-espanola-jesus-miguel-rozas-20261109_3471751.html": 1794249704000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gran-duda-manolo-lama-once-ideal-mundo-fifpro-me-gusta-20261109_3471749.html": 1794250042000,
-   "SPORT|136243106": 1794246969000
+   "SPORT|136243106": 1794246969000,
+   "SPORT|136256607": 1794248338000
   },
   "hechos": [
    {
@@ -2418,7 +2419,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -3327,17 +3328,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 54,
+   "clasificar": 55,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 269760,
-  "salida": 28659,
+  "entrada": 271655,
+  "salida": 28741,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.509767,
+  "dolares": 0.509998,
   "reservado": 0
  },
  "recientes": {
@@ -7262,13 +7263,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 891,
+   "ok": 892,
    "fallos": 0,
-   "ejecuciones": 546,
+   "ejecuciones": 547,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T19:21:15.274Z"
+   "ultima": "2026-11-09T19:26:13.667Z"
   }
  },
  "ptsDirecto": {},
@@ -7285,15 +7286,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:21:19.084Z"
+   "ultimaBien": "2026-11-09T19:26:19.805Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:21:19.084Z"
+   "ultimaBien": "2026-11-09T19:26:19.805Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:21:19.084Z"
+   "ultimaBien": "2026-11-09T19:26:19.805Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7301,11 +7302,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:21:19.084Z"
+   "ultimaBien": "2026-11-09T19:26:19.805Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:21:19.084Z"
+   "ultimaBien": "2026-11-09T19:26:19.805Z"
   }
  },
  "avisos": [
