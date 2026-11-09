@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247932/fuente-sobre-barrene-no-ninguna-apuesta-reconocimiento-labor.html": 1793970654000,
    "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/frenkie-de-jong-mai-canvia-un-partit-no-es-transcendent-sercat/": 1793972676000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-marcos-hablado-supone-jugar-sadar-20261106143832-nt.html": 1793972652000,
@@ -3462,7 +3461,8 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229272243
+   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229272243,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilina-despliega-lona-gran-via-madrid-llamar-huelga-general-20261109123809.html": 1794229873691
   }
  },
  "ia": {
@@ -7403,13 +7403,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 815,
+   "ok": 816,
    "fallos": 0,
-   "ejecuciones": 470,
+   "ejecuciones": 471,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T13:06:15.551Z"
+   "ultima": "2026-11-09T13:11:13.691Z"
   }
  },
  "ptsDirecto": {},
@@ -7426,15 +7426,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:06:23.473Z"
+   "ultimaBien": "2026-11-09T13:11:18.505Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:06:23.473Z"
+   "ultimaBien": "2026-11-09T13:11:18.505Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:06:23.473Z"
+   "ultimaBien": "2026-11-09T13:11:18.505Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7442,11 +7442,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:06:23.473Z"
+   "ultimaBien": "2026-11-09T13:11:18.505Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:06:23.473Z"
+   "ultimaBien": "2026-11-09T13:11:18.505Z"
   }
  },
  "avisos": [
