@@ -1783,7 +1783,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/betis/2026/11/06/alvaro-valles-llamada-fuente-llore-vergueenza.html": 1793968127000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247891/christensen-eric-siguen-evolucion-dias-atleti.html": 1793966557000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247910/tchouameni-vuelve-vinicius-descansa-ultimo-entrenamiento-real-madrid-valencia.html": 1793967950000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/eric-i-christensen-apunten-al-metropolitano-sercat/": 1793968183000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/06/javier-aguirre-mbappe-indefendible.html": 1793969318000,
@@ -1792,7 +1791,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247919/koke-apunta-titular-barca-pisa-talones-messi-xavi.html": 1793969368000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261106/1004247911/pellegrini-suma-ocho-bajas-copa-convocatorias-espana.html": 1793968808000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247912/valverde-convocado-amistosos-uruguay-debutar-diego-forlan.html": 1793968555000,
-   "SPORT|136163736": 1793966627000,
    "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/": 1793970261000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247932/fuente-sobre-barrene-no-ninguna-apuesta-reconocimiento-labor.html": 1793970654000,
    "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000,
@@ -1971,20 +1969,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261109/1004249018/preocupacion-sevilla-forma-fofana.html": 1794223973000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247891/christensen-eric-siguen-evolucion-dias-atleti.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793966557000,
-    "id": "2354",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Eric sigue con su proceso de recuperación física",
-    "motivo": "lesión pendiente de evolución",
-    "plazo": "",
-    "nums": [
-     8
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247910/tchouameni-vuelve-vinicius-descansa-ultimo-entrenamiento-real-madrid-valencia.html",
     "medio": "Mundo Deportivo",
@@ -3409,8 +3393,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000,
-   "SPORT|136163733": 1793966682000,
-   "SPORT|136157637": 1793966510000,
    "SPORT|136164914": 1793968169000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
@@ -3461,42 +3443,10 @@
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794210480000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-habilita-canal-atencion-resolver-incidencias-huelga-general-20261109111108.html": 1794219068000,
-   "SPORT|136233790": 1794218790000
+   "SPORT|136233790": 1794218790000,
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136157637",
-    "medio": "SPORT",
-    "t": 1793966510000,
-    "tipo": "suspension",
-    "estado": "descartado",
-    "segunda": true,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Petición de suspensión por el fallecimiento de Jesús de Miguel",
-    "detalle": "El Juez Único de Competición inadmite la solicitud de la AFE",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136163733",
-    "medio": "SPORT",
-    "t": 1793966682000,
-    "tipo": "suspension",
-    "estado": "descartado",
-    "segunda": false,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": false,
-    "contexto": "",
-    "detalle": "",
-    "nums": [],
-    "regla": true
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html",
     "medio": "MARCA",
@@ -3550,7 +3500,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
   "espera": {}
@@ -3558,17 +3508,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 213065,
-  "salida": 21376,
+  "entrada": 214744,
+  "salida": 21894,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.500456,
+  "dolares": 0.500883,
   "reservado": 0
  },
  "recientes": {
@@ -7493,13 +7443,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 802,
+   "ok": 803,
    "fallos": 0,
-   "ejecuciones": 457,
+   "ejecuciones": 458,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T12:01:12.837Z"
+   "ultima": "2026-11-09T12:06:15.143Z"
   }
  },
  "ptsDirecto": {},
@@ -7516,15 +7466,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:01:19.197Z"
+   "ultimaBien": "2026-11-09T12:06:21.891Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:01:19.197Z"
+   "ultimaBien": "2026-11-09T12:06:21.891Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:01:19.197Z"
+   "ultimaBien": "2026-11-09T12:06:21.891Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7532,11 +7482,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:01:19.197Z"
+   "ultimaBien": "2026-11-09T12:06:21.891Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:01:19.197Z"
+   "ultimaBien": "2026-11-09T12:06:21.891Z"
   }
  },
  "avisos": [
