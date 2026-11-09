@@ -10,6 +10,7 @@ import { clubes as clubesH, partido as partidoH, jugador as jugadorH } from '../
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { ficha as fichaLaLiga } from '../lib/laliga.mjs';
 import { ideasInfo, vecesHoy } from '../lib/info-jugador.mjs';
+import { prepararDatos, datoPlantilla } from '../lib/datos-jugador.mjs';
 
 const IMPORTA = (j) => Number(j.positionId) >= 1 && Number(j.positionId) <= 4 && (Number(j.averagePoints) >= 4 || Number(j.marketValue) >= 10e6);
 import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
@@ -71,6 +72,8 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
   if (!eventos.length) return [];
   log(`  (novedades) ${eventos.length} pendientes: ${eventos.map((e) => `${e.nombre} ${e.antes}→${e.que}`).join(', ')}`);
   eventos.sort((a, b) => b.media - a.media);
+  // la ficha y el histórico de valor de los que pueden salir, para su dato (lib/datos-jugador.mjs; Carlos, 9 nov: no siempre la media)
+  await prepararDatos(eventos.slice(0, 8).map((e) => e.id)).catch(() => {});
   for (const e of eventos) e.pp = await proximo(e.teamId, { stats, semana, jornada, ahora }).catch(() => null);
   const dia = diaMadrid(ahora);
   const out = [];
@@ -90,7 +93,10 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const quien = `${cap(segunda(e.pos, e.nombre))} ${del(e.equipo)}`;
     const d = diaMadrid(e.desde);
     const p = e.parte;
-    const mediaT = e.media >= 3 ? { t: R([`‼️ ${quien} suma ${fmt(e.media)} puntos de media`, `‼️ Es de los que pesan en ${el(e.equipo)}: ${fmt(e.media)} puntos de media`, `‼️ En ${el(e.equipo)} va a ${fmt(e.media)} puntos por partido`], 'media'), prio: 5 } : null;
+    // el dato del jugador (racha, valor, goles…; la media solo si no hay otro: Carlos, 9 nov)
+    const dato = datoPlantilla({ id: e.id, nickname: e.nombre, teamId: e.teamId });
+    const mediaT = dato && dato.que !== 'media' ? { t: `‼️ ${quien} ${dato.dice}`, prio: 5 }
+      : e.media >= 3 ? { t: R([`‼️ ${quien} suma ${fmt(e.media)} puntos de media`, `‼️ Es de los que pesan en ${el(e.equipo)}: ${fmt(e.media)} puntos de media`, `‼️ En ${el(e.equipo)} va a ${fmt(e.media)} puntos por partido`], 'media'), prio: 5 } : null;
     let cab, ideas;
     if (e.que === 'lesion') {
       const dudaWeb = p && p.estado === 'duda';
@@ -128,7 +134,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       const tit = conInfo ? await info.titularidad(j, e.pp).catch(() => null) : null, riv = conInfo ? await info.rival(e.pp).catch(() => null) : null;
       titH = tit; rivH = riv;
       if (conInfo) e.pct = tit ? tit.pct : null;   // (5 nov 16:39) también en la carta
-      extra = ideasInfo({ posId: e.pos, equipo: e.equipo, pp: e.pp, quien, media: e.media, tit, riv, tipo: 'vuelve', hr: L && e.pp && e.pp.fecha ? cuando(e.pp.fecha, ahora) : null, k: kI, dia, largo: L });
+      extra = ideasInfo({ posId: e.pos, equipo: e.equipo, pp: e.pp, quien, media: e.media, tit, riv, tipo: 'vuelve', hr: L && e.pp && e.pp.fecha ? cuando(e.pp.fecha, ahora) : null, k: kI, dia, largo: L, dato });
       ideas.splice(ideas.length - 1, 0, ...extra.ideas);
     } else if (hr) ideas.splice(ideas.length - 1, 0, { t: hr.t, prio: 2 });
     const { usadas, texto } = tweet(cab, ideas);
@@ -145,7 +151,7 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
         plazo: e.que === 'lesion' && p && p.estado === 'baja' && p.hasta ? `no se le espera hasta ${p.hasta}` : '',
         extra: e.que === 'lesion' && ventaObligatoria(p, ahora) ? { aviso: 'tanto tiempo fuera que es venta obligatoria' } : {} })],
       ...(e.pp ? { partido: partidoH(e.pp, { equipo: e.equipo, riv: rivH, posId: e.pos, ahora }) } : {}), clubes: clubesH(e.equipo, e.pp && e.pp.rival), etiqueta: etiquetaH };
-    return { tipo: 'novedades', clave, jornada, texto, hechos, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(e.que === 'vuelve' ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
+    return { tipo: 'novedades', clave, jornada, texto, hechos, numeros: [...(e.media >= 3 ? partes(e.media) : []), ...(dato ? dato.numeros : []), ...(e.pp ? [e.pp.jornada] : []), ...numerosDe(p), ...(e.motivoSan ? e.motivoSan.numeros : []), ...(e.que === 'vuelve' ? extra.numeros : hr ? hr.numeros : [])], tarjeta: tarjetaBajas({ jornada, filas: [e], pp: e.pp, clave }) };
   };
 
   // Varios: agrupados por lo que pasa, con una cabecera que ya cuenta la noticia y la media solo del que más pesa (Carlos, 3 nov 12:06)

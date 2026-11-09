@@ -1,8 +1,9 @@
 // El bot de la cuenta de X. Por defecto NO publica: genera los tweets con datos reales, los valida y dice cuáles publicaría.
 // Publica solo con --modo=publicar (en el workflow, la variable de repositorio BOT_MODO) y con las cuatro claves de X.
-//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros] [--jornada=11] [--fechas-espn=20261101,…]
+//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros,balance,revalorizaciones,calendario,selecciones] [--jornada=11] [--fechas-espn=20261101,…]
 //        [--estado=estado/registro.json] [--ventanas=1] [--forzar=1] [--comprobar=1]
 //        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
+//        [--fechas-selecciones=AAAAMMDD,…] (tipos/selecciones.mjs: los días de partidos de selecciones que mira, para probar)
 //        [--registro-nuevo=1] (publicando, empezar sin registro: solo si de verdad no existe la rama bot-estado; revisión total, C4)
 // Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
 import { horaMadrid as horaHoy, horas, silencio } from './lib/horario.mjs';
@@ -19,8 +20,9 @@ import { publicarSinRepetir, subirImagen, comprobar, clavesDelEntorno } from './
 import { fijarLimite, limite, largo, variarEquipos } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
-import { esperaParon } from './lib/paron.mjs';
+import { esperaParon, paronActual } from './lib/paron.mjs';
 import { crearInfo } from './lib/info-jugador.mjs';
+import { fijarDatos } from './lib/datos-jugador.mjs';
 import { cerrarSalud, encolarAviso, hora as horaAviso, FUENTE_PARTIDOS } from './lib/salud.mjs';
 
 /** AAAAMMDD de hoy en Madrid (y de ayer, entre las 0 y las 3) */
@@ -65,7 +67,7 @@ if (publica && (!registro.existe || registro.roto) && arg('registro-nuevo') !== 
 if (publica && !registro.existe) console.log('# Registro nuevo (--registro-nuevo=1): empiezo de cero');
 
 // (liga antes que previa: una decisión sobre la jornada la ve la previa en la misma ejecución, no 5 min después)
-const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros').split(',');
+const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros,balance,revalorizaciones,calendario,selecciones').split(',');
 // las tarjetas: encendidas en config.json, o forzadas con --tarjetas=1 en simulacro (para verlas sin tocar lo que se publica)
 const forzarTarjetas = !publica && arg('tarjetas') === '1';
 const conTarjetas = forzarTarjetas || !!(config.tarjetas && (config.tarjetas.final || config.tarjetas.jugador));
@@ -75,6 +77,19 @@ const jornada = Number(arg('jornada')) || sem.weekNumber;
 const [stats, jugadores] = await Promise.all([statsSemana(jornada), pedirJugadores()]);
 const equipos = equiposDe(stats);
 const pendientes = stats.filter((m) => m.matchState !== 7).length;
+// el parón de selecciones en el que estamos (lib/paron.mjs): los tuits del parón (balance, revalorizaciones, calendario y selecciones)
+// solo salen entonces. La jornada recién jugada es esta si ya ha acabado o la anterior si esta aún no ha empezado (con el parón,
+// LaLiga pasa enseguida a la semana siguiente)
+let paron = null;
+{
+  const cp = config.paron || {};
+  const empezada = stats.some((m) => m.matchState !== 1);
+  const [jugada, ant, sig] = pendientes === 0 ? [jornada, stats, await statsSemana(jornada + 1).catch(() => [])]
+    : !empezada ? [jornada - 1, await statsSemana(jornada - 1).catch(() => []), stats] : [null, null, null];
+  if (jugada) paron = paronActual({ anterior: ant, siguiente: sig, jugada, dias: cp.dias ?? 9, horasAntes: cp.horasAntes ?? 72 });
+  if (paron) Object.assign(paron, { statsAnterior: ant, statsSiguiente: sig });
+  if (paron) console.log(`# Parón: ${paron.hueco.toFixed(1)} días entre la J${paron.jugada} y la J${paron.siguiente}${paron.activo ? ' (estamos en él)' : ''}`);
+}
 console.log(`# Semana ${sem.weekNumber} (isLive=${sem.isLive}) · siguiente ${sem.nextWeek} · ${stats.length} partidos, ${stats.length - pendientes} acabados · ${jugadores.length} jugadores`);
 
 // Caídas: se escriben cuando acaba la jornada (la siguiente) o antes de que empiece la actual; nunca con partidos a medias.
@@ -105,7 +120,9 @@ const ctx = { esperarHasta, stats, jugadores, equipos, jornada, config, dazn: nu
   // directo: con ventanas, el marcador de ESPN de hoy (y de ayer de madrugada) y solo partidos empezados hace menos de 3 h;
   // sin ventanas, los días que se pasen con --fechas-espn (para probar con partidos ya jugados)
   desdeDirecto: ventanas ? Date.now() - 3 * 3600e3 : 0,
-  fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn() };
+  fechasEspn: arg('fechas-espn') ? arg('fechas-espn').split(',') : diasEspn(),
+  // los días de partidos de selecciones que mira tipos/selecciones.mjs (sin esto, los del parón hasta hoy): para probar con otro parón
+  fechasSelecciones: arg('fechas-selecciones') ? arg('fechas-selecciones').split(',') : null };
 
 // en simulacro, --estado=<copia> carga un registro para leerlo (los estados de antes, los pendientes, lo publicado) sin guardarlo nunca:
 // así la prueba de la redacción (rama pruebas-redaccion) ve las mismas novedades que vio el bot de verdad
@@ -114,6 +131,10 @@ if (!publica && arg('estado')) {
   catch (e) { console.log(`# No pude leer el registro ${arg('estado')}: ${e.message}`); }
 }
 ctx.registro = registro;
+ctx.paron = paron;
+// los datos de cada jugador para los tuits (racha, mejor jornada, valor, goles…; lib/datos-jugador.mjs): hasta la última jornada
+// acabada (con una a medias, la anterior), y los últimos tuits del registro para no repetir el tipo de dato (Carlos, 9 nov)
+fijarDatos({ jugadores, equipos, hasta: pendientes === 0 ? jornada : jornada - 1, registro });
 // los puntos de un partido acabado no son definitivos hasta un buen rato después: final, MVP, resumen y el directo de un partido
 // acabado esperan (lib/dazn.mjs: tiempo desde el final, puntos sin cambiar entre ejecuciones, DAZN y portería a cero)
 const pf = config.puntosFinales || {};

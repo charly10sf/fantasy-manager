@@ -9,6 +9,7 @@ QUÉ TIENE QUE TENER CADA TUIT
 - El hecho, dicho a la primera y que se entienda leído una sola vez.
 - Lo que significa para el mánager: una valoración corta sacada de los datos («si lo tienes, puede ir al once», «con ese porcentaje, mejor esperar a los onces», «la jornada pinta para él», «es venta si necesitas caja» solo si los datos lo sostienen). Valoración, no crónica.
 - Solo los datos que cuentan algo. No metas todos los que te paso: elige uno o dos y di qué significan. Nunca la media, el %, el rival, la hora y los goles en la misma frase.
+- La media de puntos NO es el dato de siempre (Carlos, 9 nov: «lo de que siempre diga los puntos de media no es bueno tampoco»). Un jugador puede traer «datoDestacado»: lo que mejor cuenta de él ahora mismo (una racha, su mejor jornada, lo que vale o lo que ha subido, sus goles y asistencias, sus porterías a cero, los minutos que juega, su puesto entre los de su posición). Ese es su dato: dilo con tus palabras y no le añadas la media. Si no trae «mediaPuntos», no hay media que dar.
 - El % de titularidad y la media NO van siempre (Carlos, 6 nov: «suena demasiado a plantilla»). Dilo con palabras («es fijo», «va a salir», «lo tiene difícil», «está en el aire», «de los que más puntos dan») y pon el número solo donde cambia la lectura: la gran duda del partido o un dato que llama la atención. Como mucho dos porcentajes y una media por tuit (en noticias y novedades, uno de cada). El primer porcentaje del tuit, con «de titularidad» («con un 97 % de titularidad», «tiene un 64 % de titularidad en Fantasy Manager»; no abras siempre con «Fantasy Manager le da…», que suena a plantilla); los siguientes, solo el número («y Ramon, con un 51 %»), sin repetirlo, como lo diría una persona.
 - En una previa no hace falta nombrar a todos los que vienen en los hechos: elige los que pesan (mucha media, un puesto clave o la gran duda) y di qué significa. Nada de enumerar cada duda con su % en cada párrafo, y no termines cada equipo con «X es el seguro».
 - Si un equipo trae «cruce», esa es la lectura de lo que le conviene a sus jugadores: úsala tal cual, no la deduzcas tú. Los goles de un equipo son del equipo, nunca de un jugador.
@@ -197,6 +198,27 @@ El Osasuna es el club que más mete en el once: dos de los seis. Por ahí fue la
 
 Para el fantasy es poco más que un aviso: de momento no cambia fechas de mercado. Si lo cambian, ya se verá cuándo.`, nota: 'Qué se plantea, sin darlo por hecho y con lo que significa (o no) para el mánager.' },
   { tipo: 'liga', bien: false, texto: `🗞️ Gran novedad en LaLiga: cambia todo el mercado de invierno. Revoluciona el fantasy.`, nota: 'Exagera, no dice quién lo ha dicho y afirma lo que los hechos solo plantean.' },
+  // los tuits del parón de selecciones (9 nov): balance, revalorizaciones, calendario y selecciones
+  { tipo: 'balance', bien: true, texto: `📊 Doce jornadas y un parón: buen momento para mirar atrás. Iker Saldaña es el que más puntos lleva, 141, y entre los porteros nadie se acerca a Unai Berrio.
+
+Lo más jugoso está abajo: Pol Sanz vale 1,8 M y ya suma 72 puntos, el mejor chollo de la temporada con diferencia.
+
+El once de la temporada, en la imagen.`, nota: 'Quién manda, el dato que sorprende y lo que significa (el chollo); el once entero va en la imagen.' },
+  { tipo: 'balance', bien: false, texto: `📊 Balance de la temporada. Porteros: Berrio 110. Defensas: Lago 95, Vidal 88. Medios: Cano 125. Delanteros: Saldaña 141. Chollos: Sanz, Marín, Pino.`, nota: 'Lista de telegrama: copia la tabla y no cuenta nada.' },
+  { tipo: 'revalorizaciones', bien: true, texto: `💸 Hay fichajes que se pagan solos. Toni Cano costaba 18 M en verano y hoy vale 61,4 M: +43,4 M en doce jornadas, y sus 118 puntos lo explican.
+
+En el otro lado, Marc Vidal ha perdido 38 M desde el inicio y se queda en 24 M.
+
+Los cinco que más suben y bajan, en la imagen.`, nota: 'El que más sube con el porqué de los hechos (sus puntos), el que más baja, y la lista en la imagen.' },
+  { tipo: 'revalorizaciones', bien: false, texto: `💸 Revalorizaciones: Cano +43,4 M, Saldaña +30 M, Lago +25 M, Vidal -38 M, Pino -20 M. Así está el mercado.`, nota: 'Enumera lo que ya va en la imagen y no dice nada de nadie.' },
+  { tipo: 'calendario', bien: true, texto: `🗓️ Para fichar con calma en el parón: el Osasuna tiene el mejor calendario de las cuatro jornadas que vienen. Recibe al 18º y al 15º y solo sale a campos de la zona baja.
+
+El Celta, en cambio, tiene la vuelta más dura: visita al líder y al 2º antes de que acabe el mes.`, nota: 'El mejor y el peor con el dato que lo explica, pensado para fichar; nada de revisar el once.' },
+  { tipo: 'calendario', bien: false, texto: `🗓️ Calendario: Osasuna fácil, Celta difícil. Revisa tu once antes de la jornada 13.`, nota: 'Sin artículos ni datos, y manda revisar el once (prohibido).' },
+  { tipo: 'selecciones', bien: true, texto: `🌍 Iker Saldaña no ha parado en el parón: dos goles con Marruecos ante Ghana.
+
+El susto lo dio Marc Vidal, que se retiró lesionado en el minuto 57 con España. Habrá que ver qué tiene.`, nota: 'Lo que hizo cada uno, con su selección y su rival tal como vienen en los hechos; la lesión, solo como se cuenta en los hechos, sin inventar gravedad.' },
+  { tipo: 'selecciones', bien: false, texto: `🌍 Marc Vidal se rompe con España y estará un mes fuera. Saldaña, convocado otra vez, marca dos.`, nota: 'Inventa el plazo de la lesión y una convocatoria que no viene en los hechos.' },
   { tipo: 'onces', bien: true, texto: `👀 El Betis sale con Toni Cano y Hugo Marín arriba, y con Rubén Lago por fin de vuelta en el lateral. La gran sorpresa: Saúl Pino empieza en el banquillo.
 
 En el Mallorca, once sin sorpresas.`, nota: 'Lo que cambia respecto a lo esperado, sin repetir los once enteros.' },

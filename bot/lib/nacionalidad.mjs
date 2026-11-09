@@ -43,3 +43,23 @@ export function nacionalidadFm(det, { id = null, nombre = '' } = {}) {
 
 /** si dos jugadores del mismo tuit son de la misma nacionalidad, «el francés» no distingue: ninguno la lleva */
 export const sinRepetidas = (a, b) => (a && b && a === b ? [null, null] : [a, b]);
+
+// el país (la selección) en castellano, por el código de FotMob: lo usan los tuits del parón (tipos/selecciones.mjs). Lo que no está
+// aquí sale con el nombre que da FotMob (en inglés), así que conviene ir añadiendo los que salgan.
+const PAISES = {
+  ESP: 'España', FRA: 'Francia', ARG: 'Argentina', BRA: 'Brasil', URU: 'Uruguay', ENG: 'Inglaterra', SCO: 'Escocia', WAL: 'Gales', IRL: 'Irlanda',
+  NIR: 'Irlanda del Norte', GER: 'Alemania', POR: 'Portugal', ITA: 'Italia', NED: 'Países Bajos', BEL: 'Bélgica', CRO: 'Croacia', SRB: 'Serbia',
+  TUR: 'Turquía', MAR: 'Marruecos', SEN: 'Senegal', NGA: 'Nigeria', GHA: 'Ghana', COL: 'Colombia', CHI: 'Chile', MEX: 'México', USA: 'Estados Unidos',
+  CAN: 'Canadá', JPN: 'Japón', KOR: 'Corea del Sur', GEO: 'Georgia', ISL: 'Islandia', NOR: 'Noruega', SWE: 'Suecia', DEN: 'Dinamarca', FIN: 'Finlandia',
+  SUI: 'Suiza', AUT: 'Austria', POL: 'Polonia', UKR: 'Ucrania', CZE: 'Chequia', SVK: 'Eslovaquia', SVN: 'Eslovenia', HUN: 'Hungría', ROU: 'Rumanía',
+  BUL: 'Bulgaria', GRE: 'Grecia', ISR: 'Israel', MKD: 'Macedonia del Norte', BIH: 'Bosnia', MNE: 'Montenegro', ALB: 'Albania', KVX: 'Kosovo', ALG: 'Argelia',
+  TUN: 'Túnez', EGY: 'Egipto', CIV: 'Costa de Marfil', CMR: 'Camerún', MLI: 'Malí', GUI: 'Guinea', GNB: 'Guinea-Bisáu', GAM: 'Gambia', LBR: 'Liberia',
+  COD: 'RD del Congo', ANG: 'Angola', CPV: 'Cabo Verde', GAB: 'Gabón', BFA: 'Burkina Faso', TOG: 'Togo', BEN: 'Benín', ECU: 'Ecuador', PAR: 'Paraguay',
+  PER: 'Perú', VEN: 'Venezuela', BOL: 'Bolivia', DOM: 'República Dominicana', CUB: 'Cuba', PAN: 'Panamá', CRC: 'Costa Rica', HON: 'Honduras',
+  AUS: 'Australia', NZL: 'Nueva Zelanda', IRN: 'Irán', CHN: 'China', LUX: 'Luxemburgo', EQG: 'Guinea Ecuatorial', ARM: 'Armenia', AZE: 'Azerbaiyán',
+  KAZ: 'Kazajistán', LVA: 'Letonia', LTU: 'Lituania', EST: 'Estonia', CYP: 'Chipre', MLT: 'Malta', AND: 'Andorra', FRO: 'Islas Feroe', MDA: 'Moldavia',
+  BLR: 'Bielorrusia', JAM: 'Jamaica', HAI: 'Haití', SLV: 'El Salvador', GUA: 'Guatemala', KSA: 'Arabia Saudí', QAT: 'Catar', IRQ: 'Irak', RSA: 'Sudáfrica',
+  ZAM: 'Zambia', MTN: 'Mauritania', SUR: 'Surinam', CUW: 'Curazao',
+};
+/** «España», «Francia»… o null */
+export const pais = (codigo) => PAISES[String(codigo || '').trim().toUpperCase()] || null;

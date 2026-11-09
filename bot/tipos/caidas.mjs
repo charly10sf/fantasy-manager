@@ -9,6 +9,7 @@ import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { onceProbable, pOnce } from '../lib/ff.mjs';
 import { lesionados, parteDe, motivoSancion, desdeTxt, lesionTxt, numerosDe, ventaObligatoria } from '../lib/partes.mjs';
 import { clubes as clubesH, partido as partidoH, jugador as jugadorH } from '../lib/hechos.mjs';
+import { guardarFicha, prepararDatos, datoPlantilla } from '../lib/datos-jugador.mjs';
 import { lineasPorEstado, elQueMasPesa, enLetra, mayus, detalle, detalles, pesos } from '../lib/agrupar.mjs';
 
 export function baseTitular(playerStats, hasta) {
@@ -36,6 +37,7 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
     .sort((a, b) => Number(b.marketValue) - Number(a.marketValue))
     .slice(0, 36);
   const fichas = await enParalelo(malos, 5, (j) => ficha(j.id));
+  malos.forEach((j, i) => guardarFicha(j.id, fichas[i]));
   // el once probable de los equipos con alguna duda (lib/ff.mjs): da el % como la app y sirve de segunda fuente para la duda
   const ffs = new Map();
   if (config.onceProbable !== false) {
@@ -66,6 +68,8 @@ export async function generar({ jugadores, equipos, jornada, ultimaJugada, confi
   });
   // cuántas caídas llevamos esta jornada (para que las formas roten entre los tweets que salen a lo largo de los días)
   const vez = registro && registro.todos ? registro.todos().filter((x) => x && x.tipo === 'caidas' && Number(x.jornada) === Number(jornada)).length : 0;
+  // el histórico de valor de los que salen, para el dato del jugador (lib/datos-jugador.mjs: lo que ha subido o bajado)
+  await prepararDatos(caidas.map((c) => c.id), { ficha: false }).catch(() => {});
   return escribir(caidas, { jornada, semana, ahora, vez });
 }
 
@@ -96,7 +100,7 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
   const estadoH = (c) => (est(c) === 'tocado' || c.estado === 'duda' ? 'duda' : c.estado === 'sancionado' ? 'sancionado' : 'lesionado');
   const jugadorDe = (c) => {
     const p = c.parte;
-    return jugadorH({ nickname: c.nombre, positionId: c.pos, teamId: c.teamId, equipo: c.equipo, averagePoints: c.media },
+    return jugadorH({ id: c.id, nickname: c.nombre, positionId: c.pos, teamId: c.teamId, equipo: c.equipo, averagePoints: c.media },
       { estado: estadoH(c), tit: c.estado === 'duda' && c.pct != null ? { pct: c.pct } : null,
         motivo: c.estado === 'sancionado' ? (c.motivoSan ? c.motivoSan.txt : '') : p && p.lesion ? `${lesionTxt(p)}${desdeTxt(p) ? ` ${desdeTxt(p)}` : ''}` : '',
         plazo: c.estado === 'lesionado' && p && p.estado === 'baja' && p.hasta ? `no se le espera hasta ${p.hasta}` : '',
@@ -110,7 +114,9 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       jugadores: xs.map(jugadorDe), ...(partidos.length === 1 ? { partido: partidos[0] } : partidos.length ? { partidos } : {}),
       clubes: clubesH(...xs.map((c) => c.equipo), ...prs.map((x) => x.pr.rival)), etiqueta };
   };
-  const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(c.media >= 3 ? partes(c.media) : [])];
+  // el dato del jugador en la plantilla: el de lib/datos-jugador.mjs (racha, valor, goles…) y la media solo si no hay otro (9 nov)
+  const datoDe = (c) => { const d = datoPlantilla({ id: c.id, nickname: c.nombre, teamId: c.teamId }); return d && d.que !== 'media' ? d : c.media >= 3 ? { que: 'media', dice: `suma ${fmt(c.media)} de media`, numeros: partes(c.media) } : null; };
+  const numDe = (c) => [...(c.estado === 'duda' ? [c.pct] : []), ...(datoDe(c) ? datoDe(c).numeros : [])];
   const porEquipo = new Map();
   for (const c of caidas) { const k = String(c.teamId); if (!porEquipo.has(k)) porEquipo.set(k, []); porEquipo.get(k).push(c); }
   const sueltos = [];
@@ -147,9 +153,9 @@ export async function escribir(caidas, { jornada, semana = null, proximo = proxi
       p && p.estado === 'baja' && p.hasta ? { t: R([`🗓️ No se le espera hasta ${p.hasta}`, `🗓️ Estará fuera hasta ${p.hasta}`], 'hasta'), prio: venta ? 9 : 7 } : dudaWeb ? { t: R(['⁉️ Aún no está descartado del todo', '⁉️ De momento no está descartado'], 'desc'), prio: 7 } : null,
       c.motivoSan ? { t: `⚠️ ${c.motivoSan.txt} y cumple sanción`, prio: 9 } : null,
       c.estado === 'duda' ? { t: `📊 ${cap(enPalabras(c.p))}: ${c.pct} % de titularidad`, prio: 8 } : null,
-      { t: R([`‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${c.media >= 3 ? ` y suma ${fmt(c.media)} de media` : ''}`,
-        c.media >= 3 ? `‼️ Suele ser titular y va a ${fmt(c.media)} puntos por partido` : `‼️ Suele ser titular`,
-        `‼️ ${cap(segunda(c.pos, c.nombre))} sale casi siempre de inicio${c.media >= 3 ? `: ${fmt(c.media)} de media` : ''}`], 'tit'), prio: 6 },
+      { t: R([`‼️ ${cap(segunda(c.pos, c.nombre))} es titular habitual${datoDe(c) ? ` y ${datoDe(c).dice}` : ''}`,
+        `‼️ Suele ser titular${datoDe(c) ? ` y ${datoDe(c).dice}` : ''}`,
+        `‼️ ${cap(segunda(c.pos, c.nombre))} sale casi siempre de inicio${datoDe(c) ? ` y ${datoDe(c).dice}` : ''}`], 'tit'), prio: 6 },
       // con tweets largos: cuánto juega y cuándo es el partido
       // (solo con 3 partidos o más y 2 o más de 60: ni «en 0 de sus 5» con un titular habitual ni «en sus 1 últimos»)
       L && c.n60 != null && c.ult >= 3 && c.n60 >= 2 ? { t: c.n60 === c.ult ? `📊 Ha jugado 60 minutos o más en sus ${c.ult} últimos partidos` : `📊 Ha jugado 60 minutos o más en ${c.n60} de sus ${c.ult} últimos partidos`, prio: 3 } : null,
