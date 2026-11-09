@@ -2438,6 +2438,8 @@ document.addEventListener('click', async (ev) => {
   switch (d.accion) {
     case 'verPartido': cargarPartido(Number(d.n), d.id); hoja('p', `${d.n}:${d.id}`, pilaDesde(el, 'p', `${d.n}:${d.id}`)); break;
     case 'volverHoja': volverHoja(); break;
+    // (Carlos, 9 nov 12:29) plegar una fase del plan: el <details> se abre o cierra solo; aquí se recuerda
+    case 'plegarFase': { const det = el.closest('details'); if (det && S.plan) V.plegarFase(S.plan, d.f, !det.open); break; }
     case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }
     case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;
     case 'verJornada': S.jornadaSel = Number(d.n); pintar(); break;
