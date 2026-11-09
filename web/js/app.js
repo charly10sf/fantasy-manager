@@ -2449,6 +2449,8 @@ document.addEventListener('click', async (ev) => {
     case 'volverHoja': volverHoja(); break;
     // (Carlos, 9 nov 12:29) plegar una fase del plan: el <details> se abre o cierra solo; aquí se recuerda
     // (21) plegar una sección de la pestaña Parón: igual, se recuerda mientras dura el parón
+    // (el selector Suben / Bajan de la pestaña Parón: sin repintar, para no saltar arriba)
+    case 'pnzLado': { const m = el.closest('.pnz-mer'); S.seg.pnzliga = d.f; if (m) { m.classList.toggle('lado-sube', d.f !== 'baja'); m.classList.toggle('lado-baja', d.f === 'baja'); m.querySelectorAll('.pnz-mer-sel button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.f === d.f))); } break; }
     case 'plegarParon': { const det = el.closest('details'); if (det && S.M) Pz.plegarParon(S.M, d.f, !det.open); break; }
     case 'plegarFase': { const det = el.closest('details'); if (det && S.plan) V.plegarFase(S.plan, d.f, !det.open); break; }
     case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }

@@ -82,3 +82,40 @@ export function campo(formacion, lineas) {
     <path d="M${W / 2 - 70} 2v52h140V2M${W / 2 - 70} ${H - 2}v-52h140v52" class="c-linea"/>
     ${jug}</svg>`;
 }
+
+/** la pestaña Parón: el valor de estos días en línea y lo que se espera hasta la vuelta a trazos, con «hoy» en medio.
+    pas y fut = [[t, v], ...]; fut empieza en hoy. */
+export function trayecto(pas, fut, { sube = true, alto = 92, fin = '' } = {}) {
+  const ok = ([t, v]) => Number.isFinite(t) && Number.isFinite(v) && v > 0;
+  const a = (pas || []).filter(ok), b = (fut || []).filter(ok);
+  if (a.length + b.length < 3) return '';
+  const W = 340, H = alto, mx = 6, arr = 18, aba = 17;
+  const todo = [...a, ...b], ts = todo.map((x) => x[0]), vs = todo.map((x) => x[1]);
+  const t0 = Math.min(...ts), t1 = Math.max(...ts), v0 = Math.min(...vs), v1 = Math.max(...vs);
+  const rango = v1 - v0 || v1 * 0.04 || 1;
+  const X = (t) => mx + ((t - t0) / (t1 - t0 || 1)) * (W - 2 * mx);
+  // (si baja, la cifra del final va debajo del punto: se deja hueco abajo para que no pise la fecha)
+  const pb = sube ? 0 : 15;
+  const Y = (v) => arr + (1 - (v - v0) / rango) * (H - arr - aba - pb);
+  const camino = (p) => p.map(([t, v], i) => `${i ? 'L' : 'M'}${X(t).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+  const color = sube ? 'var(--sube)' : 'var(--baja)', id = `t${++uid}`;
+  const hoy = b.length ? b[0] : a[a.length - 1], hx = X(hoy[0]);
+  const ult = b.length ? b[b.length - 1] : hoy, ux = X(ult[0]), uy = Y(ult[1]);
+  const base = H - aba;
+  const areaF = b.length > 1 ? `${camino(b)} L${ux.toFixed(1)},${base} L${hx.toFixed(1)},${base} Z` : '';
+  const areaP = a.length > 1 ? `${camino(a)} L${X(a[a.length - 1][0]).toFixed(1)},${base} L${X(a[0][0]).toFixed(1)},${base} Z` : '';
+  return `<svg class="graf tray" viewBox="0 0 ${W} ${H}" role="img">
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".34"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+    ${areaP ? `<path d="${areaP}" fill="var(--texto2)" opacity=".07"/>` : ''}
+    ${areaF ? `<path d="${areaF}" fill="url(#${id})"/>` : ''}
+    <path d="M${hx.toFixed(1)},${arr - 6} V${base}" class="tr-hoy"/>
+    ${a.length > 1 ? `<path d="${camino(a)}" fill="none" stroke="var(--texto2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>` : ''}
+    ${b.length > 1 ? `<path d="${camino(b)}" fill="none" stroke="${color}" stroke-width="2.6" stroke-dasharray="5 4" stroke-linecap="round"/>` : ''}
+    <circle cx="${hx.toFixed(1)}" cy="${Y(hoy[1]).toFixed(1)}" r="3.5" fill="var(--texto)"/>
+    <circle cx="${ux.toFixed(1)}" cy="${uy.toFixed(1)}" r="4.5" fill="${color}"/><circle cx="${ux.toFixed(1)}" cy="${uy.toFixed(1)}" r="9" fill="${color}" opacity=".2"/>
+    <text x="${(ux - 2).toFixed(1)}" y="${(sube ? uy - 9 : uy + 16).toFixed(1)}" text-anchor="end" class="tr-v" fill="${color}">${esc(eur(ult[1], { dec: 1 }))}</text>
+    ${a.length ? `<text x="${mx}" y="${H - 4}" class="g-eje">${esc(fechaCorta(a[0][0]))}</text>` : ''}
+    <text x="${hx.toFixed(1)}" y="${H - 4}" text-anchor="middle" class="g-eje tr-h">hoy</text>
+    <text x="${W - mx}" y="${H - 4}" text-anchor="end" class="g-eje">${esc(fin || fechaCorta(ult[0]))}</text>
+  </svg>`;
+}
