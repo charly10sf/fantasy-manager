@@ -1985,7 +1985,8 @@
    "SPORT|136233003": 1794171354000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/la-dupla-fermin-lamine-suple-a-raphinha-y-sostiene-a-un-barca-tocado-en-lo-defensivo-cadena-ser/": 1794175233000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gonzalo-miro-senala-culpables-atletico-derrota-barcelona-gestion-entrenador-peor-todavia-20261108_3471046.html": 1794177066000,
-   "ABC|https://www.abc.es/deportes/futbol/pegada-condena-atletico-lanza-barca-20261108225722-nt.html": 1794183248000
+   "ABC|https://www.abc.es/deportes/futbol/pegada-condena-atletico-lanza-barca-20261108225722-nt.html": 1794183248000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261109/1004248718/inaki-williams-vive-momento-dulce-athletic.html": 1794205800000
   },
   "hechos": [
    {
@@ -2642,7 +2643,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3714,17 +3715,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 20,
    "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 62567,
-  "salida": 8534,
+  "entrada": 64312,
+  "salida": 8631,
   "cacheLee": 188230,
   "cacheEscribe": 14220,
-  "dolares": 0.229317,
+  "dolares": 0.22954,
   "reservado": 0
  },
  "recientes": {
@@ -7645,13 +7646,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 734,
+   "ok": 735,
    "fallos": 0,
-   "ejecuciones": 389,
+   "ejecuciones": 390,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T06:26:11.400Z"
+   "ultima": "2026-11-09T06:31:13.271Z"
   }
  },
  "ptsDirecto": {},
@@ -7668,15 +7669,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:26:14.975Z"
+   "ultimaBien": "2026-11-09T06:31:22.856Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:26:14.975Z"
+   "ultimaBien": "2026-11-09T06:31:22.856Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:26:14.975Z"
+   "ultimaBien": "2026-11-09T06:31:22.856Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7684,11 +7685,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:26:14.975Z"
+   "ultimaBien": "2026-11-09T06:31:22.856Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:26:14.975Z"
+   "ultimaBien": "2026-11-09T06:31:22.856Z"
   }
  },
  "avisos": [
