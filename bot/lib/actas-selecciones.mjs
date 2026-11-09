@@ -14,7 +14,7 @@
 import { json, enParalelo } from './http.mjs';
 import { FOTMOB, mismoNombre } from './fotmob.mjs';
 import { corto, norm } from './texto.mjs';
-import { pais, bandera, banderaUrl } from './nacionalidad.mjs';
+import { pais, bandera, banderaUrl, coloresPais } from './nacionalidad.mjs';
 
 const DIA = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
 export const aaaammdd = (t) => DIA.format(new Date(t)).replace(/-/g, '');
@@ -92,7 +92,7 @@ export function leerActa(det, clubesLiga) {
 }
 
 /** la selección de un equipo del acta: { nombre (en castellano si se sabe), bandera (emoji o null), banderaUrl } */
-export const seleccion = (e) => ({ nombre: pais(e.codigo) || e.nombre, bandera: bandera(e.codigo), banderaUrl: banderaUrl(e.idFm) });
+export const seleccion = (e) => ({ nombre: pais(e.codigo) || e.nombre, codigo: e.codigo || null, bandera: bandera(e.codigo), banderaUrl: banderaUrl(e.idFm), colores: coloresPais(e.codigo) });
 
 /**
  * Las actas de los partidos de selecciones acabados de esos días: [{ id, fecha, liga, casa, fuera, jugadores }] (solo con algún jugador de
@@ -156,7 +156,7 @@ export function porJugador(actas, jugadores, equipos) {
     const r = por.get(k) || { j, sel: seleccion(yo), partidos: [], min: 0, jugados: 0 };
     const marcador = yo.goles != null && otro.goles != null ? `${yo.goles}-${otro.goles}` : null;
     const resultado = marcador ? (yo.goles > otro.goles ? 'ganó' : yo.goles < otro.goles ? 'perdió' : 'empató') : null;
-    r.partidos.push({ fecha: a.fecha, rival: seleccion(otro), marcador, resultado, titular: x.titular, min: x.min, nota: x.nota, goles: x.goles, asist: x.asist, roja: x.roja, lesion: x.lesion, mejor: x.mejor });
+    r.partidos.push({ fecha: a.fecha, idPartido: a.id, rival: seleccion(otro), marcador, resultado, titular: x.titular, min: x.min, nota: x.nota, goles: x.goles, asist: x.asist, roja: x.roja, lesion: x.lesion, mejor: x.mejor });
     r.min += x.min; if (x.min > 0) r.jugados++;
     por.set(k, r);
   }

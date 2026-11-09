@@ -311,6 +311,14 @@ y en el texto) y los minutos y la carga de cada uno; frecuencia elegida: uno al 
   bandera, rival, marcador, minutos y nota; la carga (150 minutos o más en el parón) y los de 20 M o más que ayer se quedaron sin jugar.
   Tarjeta: la del mercado con LOS MEJORES, LOS PEORES y MÁS MINUTOS EN EL PARÓN, con la bandera redonda arriba a la izquierda de cada
   cara (`banderaRedonda` en lib/tarjetas.mjs). Sale si ayer jugaron 3 o más de LaLiga y hay al menos un mejor y otro (mejor o peor).
+- La nota de FotMob sirve para elegir a los mejores y a los peores, pero en los hechos solo va la que llama la atención (9 o más, 5,5 o
+  menos) y la IA la usa como mucho una vez: lo que más cuenta es lo que vale cada uno, lo que ha subido o bajado en el parón y los
+  minutos (Carlos, 9 nov 11:01: «al jugador fantasy promedio le importa que un jugador se valorice, valga y que salga titular»). En la
+  tarjeta, lo grande son los goles y las asistencias (si no hay, la nota) y debajo los minutos y lo que vale.
+- Tarjetas por país (Carlos, 9 nov 11:03: «con los colores del país»): además de la general, una por cada selección de ayer con 3 o
+  más de LaLiga que jugaron (España primero; como mucho 2): la franja y el brillo con los colores de su bandera (`coloresPais` en
+  lib/nacionalidad.mjs), la bandera grande, el resultado con la del rival y sus jugadores de LaLiga con lo que hicieron, los minutos y
+  lo que valen (`svgSeleccion` en lib/tarjetas.mjs). El tuit sale con hasta 3 imágenes.
 - Cuándo (`ventanaSeleccionesDia` en lib/paron-tuits.mjs): solo en el parón y antes de las caídas de la jornada siguiente; de
   `horasSeleccionesDia` (9-14; entre semana desde las 7); uno por día de partidos (clave `selecciones-dia|J|AAAAMMDD` con la fecha de ayer;
   tope 7 por jornada); separado 2 h de los cuatro del parón; el día que sale `selecciones` (el de todo el parón, martes 17 a las 07:00)
