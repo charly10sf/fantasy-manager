@@ -441,7 +441,8 @@ function pasoOp(S, P, o) {
     o.aviso && !(o.descartada && porque === o.aviso) ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : '',
     `<div class="op-pie">${o.confianza && !o.sugerencia ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`,
   ].join('');
-  const acc = esc(o.etiqueta || ACCION[o.accion] || o.accion);
+  // (en la fila corta, «Aceptar oferta» se queda en «Aceptar»: en un móvil de 360 se comía el nombre; dentro va entero)
+  const acc = esc(o.etiqueta === 'Aceptar oferta' ? 'Aceptar' : o.etiqueta || ACCION[o.accion] || o.accion);
   const cara = j ? `<button class="pp-j" data-j="${esc(j.id)}" aria-label="Ficha de ${esc(nombre)}">${ava(j, 'm')}</button>` : `<span class="pp-ic">${icono(o.accion === 'alinear' ? 'campo' : o.accion === 'esperar' ? 'reloj' : 'lista')}</span>`;
   return `<details class="paso2 paso3 ${esc(o.accion)} ${est}"><summary>
       <span class="pp-num" aria-hidden="true">${curso ? icono('reloj') : ok ? icono('ok') : o.descartada ? icono('cerrar') : ''}</span>
@@ -628,8 +629,8 @@ function paronHTML(S) {
   const ventas = ops.filter((o) => o.accion === 'vender' && !o.sugerencia && o.hoy !== false).length;
   const cierra = v.ini - M.VEDA_H * HORA;
   const celdas = lejos
-    ? [['Para revender', esp.length ? `${esp.length}${gana > 0 ? ` · +${eur(gana)}` : ''}` : 'nada hoy'], ['Vender en lo alto', ventas ? `${ventas} hoy` : 'nada hoy'], ['El once, desde', cuando(v.ini - PARON_VUELTA, { hora: false })]]
-    : [['Cláusulas, hasta', cuando(cierra)], ['Lo de revender', 'véndelo ya'], ['Jornada', `${v.n} · ${cuando(v.ini)}`]];
+    ? [['Para revender', esp.length ? `${esp.length}${gana > 0 ? ` · +${eur(gana)}` : ''}` : 'nada hoy'], ['Ventas de hoy', ventas ? `${ventas}` : 'ninguna'], ['El once, desde', cuando(v.ini - PARON_VUELTA, { hora: false })]]
+    : [['Cláusulas, hasta', cuando(cierra)], (M.paraRevender || []).length ? ['Lo de revender', 'véndelo ya'] : ['Tu once', 'revísalo'], ['Jornada', `${v.n} · ${cuando(v.ini)}`]];
   return `<div class="paron-t ${lejos ? '' : 'vuelta'}"><div class="pt-top">${icono('bandera')}<span>Parón de selecciones</span><em>${dura(v.ini - ahora)} para la J${v.n}</em></div>
     <b class="pt-t">${lejos ? `Nadie puntúa hasta el ${cuando(v.ini, { hora: false })}: hoy manda el dinero` : `Vuelve LaLiga ${cuando(v.ini)}: ahora sí, prepara el once`}</b>
     <div class="pt-cols">${celdas.map(([a, b]) => `<div><small>${esc(a)}</small><b>${esc(b)}</b></div>`).join('')}</div>${P && P.paron ? `<p class="pt-ia">${conEnlaces(S, P.paron)}</p>` : ''}</div>`;
