@@ -1782,8 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/": 1793962556000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247866/tripleta-athletic-mantiene-espana.html": 1793962306000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/06/barrenetxea-vuelve-a-la-lista-de-luis-de-la-fuente-para-el-paron-de-noviembre-radio-san-sebastian/": 1793962860000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247885/barrios-vuelve-espana-completar-cuarteto-colchonero-roja.html": 1793964233000,
@@ -1967,30 +1965,6 @@
    "SPORT|136239475": 1794217216000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/",
-    "medio": "AS",
-    "t": 1793962556000,
-    "id": "2354",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/",
-    "medio": "AS",
-    "t": 1793962556000,
-    "id": "2355",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247867/cholo-prueba-once-saldra-barcelona.html",
     "medio": "Mundo Deportivo",
@@ -3453,7 +3427,6 @@
  "liga": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261106/1004247862/juez-competiciones-profesionales-inadmite-peticion-afe.html": 1793962289000,
    "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000,
    "SPORT|136163733": 1793966682000,
    "SPORT|136157637": 1793966510000,
@@ -3503,7 +3476,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160741000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794159878000,
    "SPORT|136229498": 1794158421000,
-   "SPORT|136233016": 1794168616000
+   "SPORT|136233016": 1794168616000,
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794210480000
   },
   "hechos": [
    {
@@ -3592,27 +3566,25 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794220271747
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 12,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 190372,
-  "salida": 14104,
+  "entrada": 192144,
+  "salida": 14190,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.494552,
+  "dolares": 0.494772,
   "reservado": 0
  },
  "recientes": {
@@ -7537,13 +7509,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 788,
+   "ok": 789,
    "fallos": 0,
-   "ejecuciones": 443,
+   "ejecuciones": 444,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T10:51:11.678Z"
+   "ultima": "2026-11-09T10:56:18.805Z"
   }
  },
  "ptsDirecto": {},
@@ -7560,15 +7532,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:51:14.626Z"
+   "ultimaBien": "2026-11-09T10:56:25.560Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:51:14.626Z"
+   "ultimaBien": "2026-11-09T10:56:25.560Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:51:14.626Z"
+   "ultimaBien": "2026-11-09T10:56:25.560Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7576,11 +7548,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:51:14.626Z"
+   "ultimaBien": "2026-11-09T10:56:25.560Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:51:14.626Z"
+   "ultimaBien": "2026-11-09T10:56:25.560Z"
   }
  },
  "avisos": [
