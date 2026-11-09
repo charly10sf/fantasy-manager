@@ -1960,7 +1960,8 @@
    "AS|https://as.com/futbol/primera/luis-garcia-anora-a-miguel-sierra-f202611-n/": 1794220234000,
    "SPORT|136239475": 1794217216000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261109/1004248967/mbappe-hereda-balon-playa-vinicius.html": 1794222000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248970/rodri-pedri-cogio-mando-grande.html": 1794220890000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248970/rodri-pedri-cogio-mando-grande.html": 1794220890000,
+   "SPORT|136244057": 1794218612000
   },
   "hechos": [
    {
@@ -2567,7 +2568,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3462,7 +3463,10 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794159878000,
    "SPORT|136229498": 1794158421000,
    "SPORT|136233016": 1794168616000,
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794210480000
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794210480000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-habilita-canal-atencion-resolver-incidencias-huelga-general-20261109111108.html": 1794219068000,
+   "SPORT|136233790": 1794218790000
   },
   "hechos": [
    {
@@ -3551,28 +3555,25 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794222377337,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-habilita-canal-atencion-resolver-incidencias-huelga-general-20261109111108.html": 1794222377337
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 15,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 194138,
-  "salida": 15130,
+  "entrada": 197976,
+  "salida": 15491,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.495441,
+  "dolares": 0.496005,
   "reservado": 0
  },
  "recientes": {
@@ -7497,13 +7498,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 791,
+   "ok": 792,
    "fallos": 0,
-   "ejecuciones": 446,
+   "ejecuciones": 447,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T11:06:17.337Z"
+   "ultima": "2026-11-09T11:11:17.351Z"
   }
  },
  "ptsDirecto": {},
@@ -7520,15 +7521,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:06:26.236Z"
+   "ultimaBien": "2026-11-09T11:11:27.042Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:06:26.236Z"
+   "ultimaBien": "2026-11-09T11:11:27.042Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:06:26.236Z"
+   "ultimaBien": "2026-11-09T11:11:27.042Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7536,11 +7537,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:06:26.236Z"
+   "ultimaBien": "2026-11-09T11:11:27.042Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:06:26.236Z"
+   "ultimaBien": "2026-11-09T11:11:27.042Z"
   }
  },
  "avisos": [
