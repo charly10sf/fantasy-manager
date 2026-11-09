@@ -1958,7 +1958,8 @@
    "SPORT|136256483": 1794234804000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249130/pellegrini-contar-copa-cuatro-porteros.html": 1794239934000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/manolo-lama-senala-cuatro-decisiones-mourinho-han-llevado-exito-real-madrid-importante-gran-merito-entrenador-20261109_3471059.html": 1794241484000,
-   "SPORT|136258178": 1794241328000
+   "SPORT|136258178": 1794241328000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000
   },
   "hechos": [
    {
@@ -2413,7 +2414,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -3258,10 +3259,8 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988650000,
    "SPORT|136180863": 1793989306000,
-   "SPORT|136180917": 1793988049000,
    "SPORT|136185088": 1793995104000,
    "SPORT|136184849": 1793994104000,
    "SPORT|136188215": 1794024610000,
@@ -3326,17 +3325,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 48,
+   "clasificar": 49,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 258123,
-  "salida": 27434,
+  "entrada": 259945,
+  "salida": 27537,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.507991,
+  "dolares": 0.508225,
   "reservado": 0
  },
  "recientes": {
@@ -7261,13 +7260,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 874,
+   "ok": 875,
    "fallos": 0,
-   "ejecuciones": 529,
+   "ejecuciones": 530,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T17:56:14.025Z"
+   "ultima": "2026-11-09T18:01:15.431Z"
   }
  },
  "ptsDirecto": {},
@@ -7284,15 +7283,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:56:18.107Z"
+   "ultimaBien": "2026-11-09T18:01:23.245Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:56:18.107Z"
+   "ultimaBien": "2026-11-09T18:01:23.245Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:56:18.107Z"
+   "ultimaBien": "2026-11-09T18:01:23.245Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7300,11 +7299,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:56:18.107Z"
+   "ultimaBien": "2026-11-09T18:01:23.245Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:56:18.107Z"
+   "ultimaBien": "2026-11-09T18:01:23.245Z"
   }
  },
  "avisos": [
