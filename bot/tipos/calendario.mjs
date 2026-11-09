@@ -84,12 +84,12 @@ export async function generar(ctx) {
   const hechos = { tipo: 'calendario', noticia: `los calendarios de la jornada ${J1} a la ${JN}, las que vienen después del parón de selecciones: qué equipos lo tienen más fácil y más difícil`,
     paraQuien: 'para el que planifica fichajes de cara a la vuelta de la liga: a qué equipos les conviene tener jugadores y de cuáles cuesta más sacar puntos. Nada de revisar o cambiar el once: es para fichar',
     comoSeMide: 'la fuerza de cada rival por sus puntos por partido en la clasificación, y si se juega en casa o fuera',
-    aviso: 'la imagen adjunta lleva los cinco calendarios más fáciles y los cinco más difíciles con cada rival: el texto no los enumera todos; cuenta el mejor, el peor y lo que significa',
-    mejorCalendario: mejor.slice(0, 3).map((e, i) => equipoH(e, i === 0 ? 'el más fácil' : 'de los más fáciles')),
-    peorCalendario: peor.slice(0, 3).map((e, i) => equipoH(e, i === 0 ? 'el más difícil' : 'de los más difíciles')),
+    aviso: 'la imagen adjunta lleva los cinco calendarios más fáciles y los cinco más difíciles con cada rival: el texto habla del más fácil y del más difícil (los primeros de cada lista) con su recuento y lo que significa para fichar; de los segundos, como mucho el nombre',
+    mejorCalendario: mejor.slice(0, 2).map((e, i) => equipoH(e, i === 0 ? 'el más fácil' : 'de los más fáciles')),
+    peorCalendario: peor.slice(0, 2).map((e, i) => equipoH(e, i === 0 ? 'el más difícil' : 'de los más difíciles')),
     // sin emojis de club: con tantos clubes, la IA ponía uno y se dejaba los demás (y los rechazaba el validador; simulacro del 9 nov)
     emojis: 'sin emojis de club en este tuit',
-    clubes: Object.fromEntries(Object.entries(clubesH(...[...mejor.slice(0, 3), ...peor.slice(0, 3)].flatMap((e) => [e.equipo, ...e.partidos.map((p) => p.rival)]))).map(([k, c]) => [k, { ...c, emoji: null }])) };
+    clubes: Object.fromEntries(Object.entries(clubesH(...[...mejor.slice(0, 2), ...peor.slice(0, 2)].flatMap((e) => [e.equipo, ...e.partidos.map((p) => p.rival)]))).map(([k, c]) => [k, { ...c, emoji: null }])) };
   log(`  (calendario) J${J1}-J${JN}: fácil ${mejor.map((e) => `${e.equipo} ${e.d.toFixed(2)}`).join(', ')} · difícil ${peor.map((e) => `${e.equipo} ${e.d.toFixed(2)}`).join(', ')}`);
   return [{ tipo: 'calendario', clave: `calendario|${v.jugada}`, jornada: v.jugada, texto, hechos, numeros: num, partido: null, tarjeta }];
 }
