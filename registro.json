@@ -1782,8 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/06/barrenetxea-vuelve-a-la-lista-de-luis-de-la-fuente-para-el-paron-de-noviembre-radio-san-sebastian/": 1793962860000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247885/barrios-vuelve-espana-completar-cuarteto-colchonero-roja.html": 1793964233000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247867/cholo-prueba-once-saldra-barcelona.html": 1793963088000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247870/barrenetxea-vuelve-planes-luis-fuente-acompanara-oyarzabal-espana.html": 1793962904000,
@@ -3426,7 +3424,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
    "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000,
    "SPORT|136163733": 1793966682000,
    "SPORT|136157637": 1793966510000,
@@ -7509,13 +7506,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 789,
+   "ok": 790,
    "fallos": 0,
-   "ejecuciones": 444,
+   "ejecuciones": 445,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T10:56:18.805Z"
+   "ultima": "2026-11-09T11:01:15.883Z"
   }
  },
  "ptsDirecto": {},
@@ -7532,15 +7529,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:56:25.560Z"
+   "ultimaBien": "2026-11-09T11:01:18.085Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:56:25.560Z"
+   "ultimaBien": "2026-11-09T11:01:18.085Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:56:25.560Z"
+   "ultimaBien": "2026-11-09T11:01:18.085Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7548,11 +7545,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:56:25.560Z"
+   "ultimaBien": "2026-11-09T11:01:18.085Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:56:25.560Z"
+   "ultimaBien": "2026-11-09T11:01:18.085Z"
   }
  },
  "avisos": [
