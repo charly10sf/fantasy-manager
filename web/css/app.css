@@ -2010,7 +2010,7 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pnz-lista { border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); overflow: hidden; }
 .pnz-f { width: 100%; text-align: left; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border-top: 1px solid var(--linea); color: var(--texto); }
 .pnz-f:first-child { border-top: 0; } .pnz-f .ava { width: 38px; height: 38px; } .pnz-f .ava .ini { font-size: 13px; }
-.pnz-f .n { font-size: 16px; } .pnz-f .s b { font-weight: 600; } .pnz-f .s b.baja { color: var(--baja); } .pnz-f .s b.oro { color: var(--oro); } .pnz-f .s { font-size: 12.5px; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pnz-f .n { font-size: 16px; } .pnz-f .s b { font-weight: 600; } .pnz-f .s b.baja { color: var(--baja); } .pnz-f .s b.oro { color: var(--oro); } .pnz-f .s.dos { white-space: normal; line-height: 1.3; } .pnz-f .s b.ok { color: var(--sube); } .pnz-f .s b.tuyo { color: var(--azul); } .pnz-f .s { font-size: 12.5px; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pnz-f .g { font: 700 17px var(--cond); text-align: right; white-space: nowrap; } .pnz-f .g small { display: block; font: 500 11px 'Barlow'; color: var(--apagado); }
 .pnz-f .g.mas { color: var(--sube); } .pnz-f .g.menos { color: var(--baja); } .pnz-f .g.oro { color: var(--oro); font-size: 15px; }
 .pnz-nota { border-radius: 14px; padding: 12px 14px; background: var(--plano); border: 1px dashed var(--plano3); margin-top: 22px; font-size: 14px; color: var(--texto2); line-height: 1.45; }

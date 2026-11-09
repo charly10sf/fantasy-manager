@@ -51,6 +51,9 @@ export function cuentasParon(S) {
   const vender = ventana.ponerVenta && ventana.ponerVenta > ahora ? ventana.ponerVenta : null;
   const cierre = v.ini - M.VEDA_H * HORA, once = v.ini - PARON_VUELTA;
   const enPlan = (pid) => !!(S.opPorPid && S.opPorPid[pid]);
+  // lo que se espera que cambie su valor hasta la vuelta, como mucho un 20 % arriba o abajo: a 10 o más días, seguir la
+  // racha de hoy sin tope daba caídas del 30 % (con los datos de un día raro), y en el parón los valores se moderan
+  const proyV = (ine, j) => Math.max(-0.2 * j.valor, Math.min(0.2 * j.valor, ine.proy(diasV)));
   // 1 · compra y revende (lo del mercado y las cláusulas que la app ve subiendo hasta el día de venderlo)
   const esp = (M.especular || []).slice(0, 5);
   const gana = esp.slice(0, 3).reduce((s, e) => s + e.beneficio, 0);
@@ -60,7 +63,7 @@ export function cuentasParon(S) {
     const ine = M.inercia(x.pid);
     if (!ine || !['giro', 'baja', 'parado', 'frena'].includes(ine.fase)) return null;
     if (((M.partidazo(x.pid) || {}).nivel || 0) >= 3) return null;
-    const pierde = ine.proy(diasV);
+    const pierde = proyV(ine, x.j);
     if (!(pierde < -Math.max(150000, x.j.valor * 0.012))) return null;
     return { x, ine, pierde, pts: M.perdida ? M.perdida(x.pid) : 0, plan: enPlan(x.pid) };
   }).filter(Boolean).sort((a, b) => a.pierde - b.pierde).slice(0, 6);
@@ -72,9 +75,35 @@ export function cuentasParon(S) {
     if (vendePlan(x.pid)) return null;
     const ine = M.inercia(x.pid);
     if (!ine || !['sube', 'acelera'].includes(ine.fase)) return null;
-    const g = ine.proy(diasV);
+    const g = proyV(ine, x.j);
     return g >= Math.max(150000, x.j.valor * 0.01) ? { x, ine, gana: g } : null;
   }).filter(Boolean).sort((a, b) => b.gana - a.gana).slice(0, 6);
+  // (Carlos, 14:21: «tener en cuenta a los jugadores que se pueden revalorizar durante el parón… y evitar los que se van
+  // a devaluar mucho») toda la liga, no solo lo que se puede comprar hoy: lo que se espera que suba o baje cada uno hasta la
+  // vuelta con su inercia (la misma cuenta que lo tuyo), y cómo conseguirlo
+  const yoT = (S.D.yo || {}).teamId;
+  const como = (j) => {
+    const tid = M.dueno[j.id];
+    if (tid && tid === yoT) return { t: 'Tuyo', cls: 'tuyo' };
+    if (!tid) {
+      const m = M.mercado.find((x) => x.pid === j.id && x.tipo === 'liga');
+      return m ? { t: `Libre: en el mercado, puja ${eur(m.puja || m.precio)}`, cls: 'ya' } : { t: 'Libre: hoy no está en el mercado', cls: '' };
+    }
+    const cl = M.clausulas.find((x) => x.pid === j.id);
+    const de = (M.equipo[tid] && (M.equipo[tid].manager || M.equipo[tid].nombre)) || 'un rival';
+    if (cl && cl.abierta) return { t: `Cláusula abierta: ${eur(cl.clausula)} (de ${de})`, cls: 'ya' };
+    if (cl && cl.protegidoHasta && cl.protegidoHasta < cierre) return { t: `Su cláusula se abre ${cuando(cl.protegidoHasta)} (de ${de})`, cls: 'pronto' };
+    return { t: `Protegido hasta después de la vuelta (de ${de})`, cls: '' };
+  };
+  const toda = sinI ? [] : Object.values(S.D.maestro).filter((j) => j && j.valor && j.pos && j.pos < 5).map((j) => {
+    const ine = M.inercia(j.id);
+    return ine ? { j, ine, d: proyV(ine, j), pz: ((M.partidazo(j.id) || {}).nivel || 0) >= 2 } : null;
+  }).filter(Boolean);
+  const umbral = (j) => Math.max(300000, j.valor * 0.03);
+  const ligaSube = toda.filter((o) => ['sube', 'acelera'].includes(o.ine.fase) && !['injured', 'suspended', 'out_of_league'].includes(o.j.estado) && o.d >= umbral(o.j))
+    .sort((a, b) => b.d - a.d).slice(0, 8).map((o) => ({ ...o, como: como(o.j) }));
+  const ligaBaja = toda.filter((o) => ['giro', 'baja', 'parado', 'frena'].includes(o.ine.fase) && o.d <= -umbral(o.j) && !(o.pz && o.ine.fase !== 'baja'))
+    .sort((a, b) => a.d - b.d).slice(0, 8).map((o) => ({ ...o, como: como(o.j) }));
   // 4 · el once de la vuelta: chollos que ya se pueden pagar y cláusulas que se abren los días de antes de la vuelta
   const chollos = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !(M.dueno[x.pid] === (S.D.yo || {}).teamId) && cholloParon(M, x.j, x.clausula)).sort((a, b) => b.interes - a.interes).slice(0, 3);
   const seAbren = M.clausulas.filter((x) => x.interes >= 55 && !x.abierta && x.protegidoHasta > Math.min(once, ahora + DIA) - DIA && x.protegidoHasta < cierre).sort((a, b) => a.protegidoHasta - b.protegidoHasta).slice(0, 4);
@@ -83,7 +112,7 @@ export function cuentasParon(S) {
   // que no te los quiten: cláusula abierta y riesgo alto
   const peligro = M.mias.filter((x) => x.abierta && x.riesgo === 'alto').slice(0, 4);
   const escudos = (M.escudosMios || {}).quedan || 0;
-  return { v, lejos, sinI, diasV, vender, cierre, once, esp, gana, yaRevender, altos, evita, suben, chollos, seAbren, paraOnce, peligro, escudos, enPlan };
+  return { v, lejos, sinI, diasV, vender, cierre, once, esp, gana, yaRevender, altos, evita, suben, ligaSube, ligaBaja, chollos, seAbren, paraOnce, peligro, escudos, enPlan };
 }
 
 function paron(S) {
@@ -147,9 +176,21 @@ function paron(S) {
   }
 
   // 2 · vende en lo alto y 3 · aguanta, que sube (con la inercia cerrada, su candado)
+  // los que más van a subir y bajar en toda la liga (con la inercia cerrada, su candado va en «vende en lo alto»)
+  let sL = '', sB = '';
+  // (lo de cómo conseguirlo, en dos líneas si hace falta: cortado se perdía la fecha)
+  const filaLiga = (o, signo) => fila(o.j, o.j.nombre,
+    `<b class="${o.como.cls === 'ya' ? 'ok' : o.como.cls === 'pronto' ? 'oro' : o.como.cls === 'tuyo' ? 'tuyo' : ''}">${esc(o.como.t)}</b>${o.j.estado === 'international' ? ' · con su selección' : ''}`,
+    `${signo > 0 ? '+' : '−'}${eur(Math.abs(o.d))}`, signo > 0 ? 'mas' : 'menos', `${pctTxt((o.d / o.j.valor) * 100, 0)} hasta la vuelta`,
+    `${signo > 0 && o.ine.vuelve ? ' <span class="pnz-t vu">Vuelve</span>' : ''}${signo > 0 && o.pz ? ' <span class="pnz-t alta">Partidazo</span>' : ''}${o.j.estado === 'injured' ? ' <span class="pnz-t ya">Lesionado</span>' : ''}${planTag(o.j.id)}`).replace('<span class="s">', '<span class="s dos">');
+  if (c.lejos && !c.sinI) {
+    sL = sec('liga-sube', nxt(), 'Los que más se van a revalorizar', 'En toda la liga, no solo lo que puedes comprar hoy: lo que se espera que suba cada uno hasta la vuelta si sigue como estos días. Los que no puedes fichar aún, vigila su cláusula o el mercado.', '', '')
+      + (c.ligaSube.length ? `<div class="pnz-lista">${c.ligaSube.map((o) => filaLiga(o, 1)).join('')}</div>` : vacio('Ahora mismo nadie de la liga sube con fuerza.'));
+  }
+
   let s2 = '', s3 = '';
   if (c.lejos) {
-    if (c.sinI) s2 = sec('alto', nxt(), 'Vende en lo alto', 'Lo tuyo que ya ha tocado techo y lo que sigue subiendo hasta la vuelta.', '', '') + candado('inercia');
+    if (c.sinI) s2 = sec('alto', nxt(), 'Vende en lo alto', 'Lo tuyo que ya ha tocado techo, lo que sigue subiendo y quién se va a revalorizar o devaluar en toda la liga hasta la vuelta.', '', '') + candado('inercia');
     else {
       s2 = sec('alto', nxt(), 'Vende en lo alto', `Tuyos que ya han tocado techo. Quedan ${dias} días para reponerlos: lo que bajen hasta la vuelta lo pierdes.`, c.altos.length ? `−${eur(c.evita)}` : '', 'menos')
         + (c.altos.length ? `<div class="pnz-lista">${c.altos.map(({ x, ine, pierde, pts }) => fila(x.j, x.j.nombre,
@@ -160,6 +201,12 @@ function paron(S) {
         + (c.suben.length ? `<div class="pnz-lista">${c.suben.map(({ x, gana: g }) => fila(x.j, x.j.nombre, `Vale ${eur(x.j.valor)}${x.tend && x.tend.p7 != null ? ` · ${pctTxt(x.tend.p7)} en 7 días` : ''}`, `+${eur(g)}`, 'mas', 'hasta la vuelta')).join('')}</div>` : vacio('Ninguno de los tuyos está subiendo ahora.'));
     }
   }
+
+  if (c.lejos && !c.sinI) {
+    sB = sec('liga-baja', nxt(), 'Los que más se van a devaluar', 'Ni los compres ni te quedes con ellos: lo que se espera que pierdan hasta la vuelta. Si alguno es tuyo, está también en «Vende en lo alto».', '', '')
+      + (c.ligaBaja.length ? `<div class="pnz-lista">${c.ligaBaja.map((o) => filaLiga(o, -1)).join('')}</div>` : vacio('Nadie de la liga se está hundiendo ahora mismo.'));
+  }
+
 
   // 4 · el once de la vuelta
   const filasOnce = [
@@ -176,7 +223,7 @@ function paron(S) {
 
   const nota = `<div class="pnz-nota"><b>Las reglas del parón.</b> Puedes bajar hasta −${eur(M.deuda)} pujando en el mercado; las cláusulas, solo con saldo. Lo único obligatorio es empezar la jornada ${v.n} en positivo: vende lo de revender ${esc(vendeDia)} y acepta las ofertas antes de que empiece (${esc(cuando(v.ini))}). Los que van con su selección pueden volver tocados: mira las noticias antes de pensar en el once.</div>`;
   void num;
-  const [b1, b2, b3, b4, b5] = [s1, s2, s3, s4, s5].map((x) => (x ? x + FIN : ''));
-  if (ancho()) return cols(hero + b1 + b2, b3 + b4 + b5 + nota);
-  return `<div class="pnz">${hero}${b1}${b2}${b3}${b4}${b5}${nota}</div>`;
+  const [b1, bL, b2, b3, bB, b4, b5] = [s1, sL, s2, s3, sB, s4, s5].map((x) => (x ? x + FIN : ''));
+  if (ancho()) return cols(hero + b1 + bL + b2, b3 + bB + b4 + b5 + nota);
+  return `<div class="pnz">${hero}${b1}${bL}${b2}${b3}${bB}${b4}${b5}${nota}</div>`;
 }
