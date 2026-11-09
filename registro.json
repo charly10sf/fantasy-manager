@@ -1782,10 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/valencia/2026/11/06/javier-aguirre-mbappe-indefendible.html": 1793969318000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tuchel-apuesta-menor-bellingham-repita-polemica-cole-palmer-20261106_3470347.html": 1793969284000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247917/cancelo-bernardo-silva-primera-lista-portugal-cristiano.html": 1793969369000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247919/koke-apunta-titular-barca-pisa-talones-messi-xavi.html": 1793969368000,
    "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/": 1793970261000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247932/fuente-sobre-barrene-no-ninguna-apuesta-reconocimiento-labor.html": 1793970654000,
    "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000,
@@ -1965,21 +1961,10 @@
    "SPORT|136247384": 1794222069000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249041/marc-roca-rumbo-primera-cita-espana-betis-no-limite.html": 1794226163000,
    "COPE|https://www.cope.es/emisoras/pais-vasco/deportes-guipuzcoa/noticias/barrenetxea-lesion-baja-seleccion-jorge-frutos-real-sociedad-20261109_3471153.html": 1794212241000,
-   "AS|https://as.com/futbol/primera/un-deportivo-de-presente-y-de-mucho-mas-futuro-f202611-n/": 1794227206000
+   "AS|https://as.com/futbol/primera/un-deportivo-de-presente-y-de-mucho-mas-futuro-f202611-n/": 1794227206000,
+   "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247919/koke-apunta-titular-barca-pisa-talones-messi-xavi.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793969368000,
-    "id": "2326",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Koke vuelve a los terrenos de juego tras superar una lesión",
-    "motivo": "lesión",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/",
     "medio": "AS",
@@ -2530,7 +2515,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -3490,17 +3475,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 28,
+   "clasificar": 29,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 222176,
-  "salida": 22357,
+  "entrada": 223797,
+  "salida": 22433,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.501858,
+  "dolares": 0.502058,
   "reservado": 0
  },
  "recientes": {
@@ -7425,13 +7410,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 811,
+   "ok": 812,
    "fallos": 0,
-   "ejecuciones": 466,
+   "ejecuciones": 467,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T12:46:11.792Z"
+   "ultima": "2026-11-09T12:51:15.127Z"
   }
  },
  "ptsDirecto": {},
@@ -7448,15 +7433,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:46:17.101Z"
+   "ultimaBien": "2026-11-09T12:51:22.868Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:46:17.101Z"
+   "ultimaBien": "2026-11-09T12:51:22.868Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:46:17.101Z"
+   "ultimaBien": "2026-11-09T12:51:22.868Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7464,11 +7449,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:46:17.101Z"
+   "ultimaBien": "2026-11-09T12:51:22.868Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:46:17.101Z"
+   "ultimaBien": "2026-11-09T12:51:22.868Z"
   }
  },
  "avisos": [
