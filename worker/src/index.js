@@ -30,13 +30,14 @@
  *                             salir), para que el dueño vea en «Quién usa la app» cuánto tiempo pasa cada uno al día.
  *
  *   Quién usa la app (para que el dueño vea quién de su liga la tiene y quién está dentro):
- *   POST /hola                { v, canal, app, liga, equipo }: la app avisa de que está abierta (al abrirla y cada 10
+ *   POST /hola                { v, canal, app, liga, equipo, bv }: la app avisa de que está abierta (al abrirla y cada 10
  *                             minutos a la vista). Se apunta como mucho cada 9 minutos por cuenta.
  *   GET  /hola/todos          (el dueño) cada cuenta con su nombre, equipo, versión, primera y última vez, sus segundos
  *                             de hoy (segHoy) y, de los que han entrado en los últimos 7 días, los de cada uno de esos
  *                             días (segDias: { 'AAAA-MM-DD': seg }, solo los días con algo). Se borra a los 90 días sin abrir la app. Además, `registro`: todas las cuentas
  *                             que han entrado alguna vez (r:<uid>, sin nombre ni equipo; se borra a los 400 días sin abrir la app), para contar
- *                             usuarios. /hola contesta { ok, admin } (admin: si quien llama es el dueño).
+ *                             usuarios. /hola contesta { ok, admin, bv } (admin: si quien llama es el dueño; bv: cuándo vio la
+ *                             pantalla de bienvenida, si ya la vio; con `bv: true` en el cuerpo se apunta que la acaba de ver).
  *
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
@@ -670,6 +671,8 @@ async function hola(req, env, c, ruta) {
       canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
       primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
       foto: u.foto || '',
+      // la pantalla de bienvenida ya vista (Carlos, 9 nov 10:20: una vez por cuenta, también en otro dispositivo): cuándo
+      ...(((m && m.bv) || b.bv) ? { bv: (m && m.bv) || ahora } : {}),
     };
     // (Cloudflare deja unas mil escrituras al día gratis y las comparte con los códigos de entrar y los avisos: cada cuenta,
     // como mucho una por hora, salvo que cambie la versión o el equipo; alternar app y web ya no escribe cada vez, y si
@@ -677,13 +680,15 @@ async function hola(req, env, c, ruta) {
     // (y los cambios, como mucho CAMBIOS_DIA al día por cuenta: antes, alternar la versión escribía cada vez; revisión
     // total, C1. Con más, el cambio entra en la escritura de cada hora)
     const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto);
+    // (la bienvenida vista se escribe siempre, aunque no quepan más cambios hoy: es una vez por cuenta)
+    const bvNueva = !!nuevo.bv && !(m && m.bv);
     const dia = hoyMadrid(), cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
     const cabeCambio = cambia && cambiosHoy < CAMBIOS_DIA;
     if (cambiosHoy || cabeCambio) { nuevo.dc = dia; nuevo.nc = cambiosHoy + (cabeCambio ? 1 : 0); }
-    if (!m || cabeCambio || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
+    if (!m || cabeCambio || bvNueva || ahora - (m.ultima || 0) > 60 * 60e3) { try { await env.VINCULOS.put(k, '1', { expirationTtl: VIVE_HOLA, metadata: nuevo }); } catch (e) { /* nada */ } }
     const evOk = await registrar(env, u.uid, nuevo.canal, (m && m.primera) || ahora, ahora, b.ev);
     // (admin: para que la web enseñe al dueño «Quién usa la app» sin haber abierto antes los avisos de fallo)
-    return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: evOk }, 200, c);
+    return json({ ok: true, admin: adminsDe(env).includes(u.uid), ev: evOk, ...(nuevo.bv ? { bv: nuevo.bv } : {}) }, 200, c);
   }
   // las fotos de los de tu liga que usan la app: que la liga es tuya lo dice LaLiga (su clasificación, pedida con tu
   // sesión), y de ahí salen también quiénes están; de cada uno, la foto que guardó /hola. Nada de lo que mande la app

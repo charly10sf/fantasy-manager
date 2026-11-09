@@ -5,16 +5,20 @@
    M  comprar a otro manager un jugador que TIENE A LA VENTA (decide él si acepta)
    T  un trato con otro manager que le has contado a la IA
    C  clausular a un rival (cláusula abierta ya o que se puede pagar antes de la jornada o justo al empezar: LaLiga
-      cierra las cláusulas las 24 h antes del primer partido y las reabre a esa hora)
+      cierra las cláusulas las 24 h antes del primer partido y las reabre a esa hora; y siempre en las próximas 48 h,
+      LIMITE_C: lo de dentro de varios días no se planea hoy)
    A  aceptar la mejor oferta por un jugador tuyo que ya tienes en venta
    V  poner a la venta (o vender) un jugador tuyo
    B  proteger a un jugador tuyo con la cláusula abierta o a punto: con el blindaje gratis de LaLiga (24 h, 2 por
       jornada) o subiéndole la cláusula */
-import { eur, pct, cuando, POS, DIA, HORA, num } from './util.js';
+import { eur, pct, cuando, POS, DIA, HORA, num, dura } from './util.js';
 import { bloqueada } from './limite.js';
 
 const MALOS = new Set(['injured', 'suspended', 'out_of_league']);
 const nombreDe = (M, tid) => { const e = tid && M.equipo[tid]; return (e && (e.manager || e.nombre)) || 'un rival'; };
+
+/** hasta dónde se miran las cláusulas que aún no se han abierto: hoy y mañana (48 h) */
+export const LIMITE_C = 2 * DIA;
 
 /** el catálogo de hoy: { lista, ref: { 'C-123': op } } */
 export function catalogo(D, M, notas = []) {
@@ -22,8 +26,10 @@ export function catalogo(D, M, notas = []) {
   const add = (op) => { if (op.j) lista.push(op); };
   const yo = D.yo && D.yo.teamId;
   const ahora = Date.now();
-  // hasta el primer partido de la jornada (lo que se abre en las 24 h de antes ya viene con la hora del primer partido)
-  const limiteC = M.proxima ? M.proxima.ini : ahora + 3 * DIA;
+  // hasta el primer partido de la jornada (lo que se abre en las 24 h de antes ya viene con la hora del primer partido), pero
+  // nunca más allá de LIMITE_C: en un parón la jornada queda a 11 días y la app recomendaba clausular a Huijsen el 19 nov
+  // estando a 9 (Carlos, 9 nov 10:17: «no tiene sentido que me recomiende que clausule un jugador que se libera dentro de 10 días»)
+  const limiteC = Math.min(M.proxima ? M.proxima.ini : Infinity, ahora + LIMITE_C);
 
   // A y V: lo tuyo
   for (const v of M.misVentas || []) {
@@ -152,6 +158,7 @@ export function porQueNo(D, M, o, pid, j) {
       const ya = x.veda.cierra <= Date.now();
       return `Las cláusulas ${ya ? 'están cerradas desde' : 'se cierran'} ${cuando(x.veda.cierra)} (24 h antes del primer partido de la jornada ${x.veda.n}) y no se puede clausular a nadie hasta que empiece: la de ${x.j.nombre}, ${cuando(x.protegidoHasta)}`;
     }
+    if (!x.abierta && x.protegidoHasta - Date.now() > LIMITE_C && !(M.proxima && x.protegidoHasta > M.proxima.ini)) return `Para más adelante: su cláusula no se abre hasta ${cuando(x.protegidoHasta)}, dentro de ${dura(x.protegidoHasta - Date.now())}. Hoy no se puede hacer nada; cuando falten un par de días, el plan lo tendrá en cuenta`;
     return `Su cláusula no se abre hasta ${cuando(x.protegidoHasta)}, después de la próxima jornada`;
   }
   const venta = (M.mercado || []).find((m) => m.pid === pid && m.tipo === 'manager' && m.noVende);
@@ -193,7 +200,7 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
     // con ficha, las que me llegan (o me llegan aceptando las ofertas de hoy); las demás, como mucho 4 y en una línea:
     // eran casi todo el bloque y no se pueden hacer hoy
     const cs = t('C').sort(por), llegan = cs.filter((o) => o.meLlega || o.conA), no = cs.filter((o) => !o.meLlega && !o.conA);
-    g('CLAUSULAR (cláusulas de rivales abiertas o que se abren antes de la jornada, que me llegan con mi saldo o aceptando antes las ofertas que tengo):', llegan, chat ? 10 : corto ? 7 : 14);
+    g('CLAUSULAR (cláusulas de rivales abiertas o que se abren en las próximas 48 h y antes de la jornada, que me llegan con mi saldo o aceptando antes las ofertas que tengo):', llegan, chat ? 10 : corto ? 7 : 14);
     if (no.length) L.push(`\nCLÁUSULAS QUE NO ME LLEGAN HOY (ni aceptando las ofertas que tengo; solo para saber que existen): ${no.slice(0, 4).map((o) => `[${o.ref}] ${o.j.nombre} (de ${o.de}) ${eur(o.precio)}, faltan ${eur(o.falta)}`).join('; ')}${no.length > 4 ? ` y ${no.length - 4} más` : ''}.`);
   }
   g('PROTEGER (mis cláusulas abiertas o a punto: blindar gratis con el escudo o subir la cláusula pagando):', t('B'), 12);

@@ -1259,7 +1259,7 @@ Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato, en es
  "titular": "8 a 16 palabras con lo más importante de hoy"
 }
 Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 a 6 candidatos que has mirado y no convienen. Entre 2 y 5 días en proximos_dias.
-"pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager la acción es "comprar", con el precio en "importe" y sin puja_max, y SOLO si lo tiene a la venta o es un trato que te he contado; si no, no lo pongas. Para quitárselo pagando su cláusula, "clausular" (solo si la cláusula está abierta o se abre pronto).`;
+"pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager la acción es "comprar", con el precio en "importe" y sin puja_max, y SOLO si lo tiene a la venta o es un trato que te he contado; si no, no lo pongas. Para quitárselo pagando su cláusula, "clausular", SOLO con su ref C- de OPERACIONES POSIBLES HOY (abierta o que se abre en las próximas 48 h). Una cláusula que se abre dentro de varios días (en un parón, por ejemplo) NO va en el plan: hoy no se puede hacer nada con ella; como mucho, una frase en el resumen («la de X se abre el día tal»).`;
   // pensando poco: con «medium» tardaba un par de minutos y el plan salía igual (la app comprueba cada paso)
   const sinBuscar = (t) => [{ role: 'user', parts: [{ text: t.replace(BUSCAR_PLAN, SIN_BUSCAR_PLAN) }] }];
   // todo el plan, con la segunda vuelta si el primero llega roto, no pasa de 4 minutos
@@ -1496,7 +1496,10 @@ export function cuadrarPlan(P, D, M) {
     else if (OPERA.includes(accion) && !opC) {
       descartada = true;
       const pq = porQueNo(D, M, o, pid, j);
-      aviso = `La app lo descarta: ${pq.charAt(0).toLowerCase()}${pq.slice(1)}.`;
+      // (una cláusula que se abre dentro de varios días, como la de Huijsen en el parón: no es un error de la IA que haya que
+      // corregir, es que hoy no toca; Carlos, 9 nov)
+      aviso = /^Para más adelante/.test(pq) ? `${pq}.` : `La app lo descarta: ${pq.charAt(0).toLowerCase()}${pq.slice(1)}.`;
+      if (/^Para más adelante/.test(pq)) o.masAdelante = true;
       signo = accion === 'vender' ? 1 : -1;
     } else if (opC && !({ A: ['vender'], V: ['vender'], P: ['pujar', 'comprar'], M: ['comprar', 'pujar'], T: ['comprar', 'pujar'], C: ['clausular'], B: ['blindar'] }[opC.ref[0]] || [accion]).includes(accion)) {
       // la ref dice una cosa y la acción otra (p. ej. «pujar» con la ref de una venta): no se adivina cuál quería
