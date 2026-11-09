@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.1';
+export const VERSION = '0.7.1a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,12 @@ export const VERSION = '0.7.1';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.1a', f: '2026-11-09', h: '16:31', t: 'La pestaña Parón, al grano',
+    cosas: [
+      { tipo: 'mejora', d: 'bandera', t: 'Arriba, lo justo', x: 'La cabecera de la pestaña Parón ocupa menos de la mitad: el título en una línea, tus tres cifras (lo que puedes ganar, lo que evitas perder y lo que puedes gastar) en una franja y los días que cuentan en píldoras. Sin el texto de guía, así quién se revaloriza y quién se hunde sale en la primera pantalla.', ir: { v: 'directo' } },
+    ],
+  },
   {
     v: '0.7.1', f: '2026-11-09', h: '13:44', t: 'Hoy, más clara, y el parón para hacer dinero', todos: true,
     cosas: [
