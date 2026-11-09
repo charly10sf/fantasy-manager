@@ -1782,9 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/bundesliga/2026/11/06/makaay-ficharon-aubameyang-gimenez-deportivo-pertenece-primera.html": 1793957412000,
-   "AS|https://as.com/futbol/primera/hidalgo-casado-puede-venir-convocado-esta-con-ganas-y-la-cabeza-empuja-f202611-n/": 1793957214000,
-   "AS|https://as.com/futbol/primera/china-esta-en-conversaciones-con-laliga-pero-pide-tiempo-para-digerir-el-tema-mbappe-f202611-n/": 1793957399000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
@@ -3467,7 +3464,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/": 1793957388000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959519000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
@@ -3525,22 +3521,6 @@
    "SPORT|136233016": 1794168616000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/",
-    "medio": "Cadena SER",
-    "t": 1793957388000,
-    "tipo": "suspension",
-    "estado": "se_estudia",
-    "segunda": false,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": false,
-    "oficial": false,
-    "contexto": "Situación difícil durante la semana de entrenamientos",
-    "detalle": "Pendiente de la decisión de LaLiga",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html",
     "medio": "Mundo Deportivo",
@@ -7603,13 +7583,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 771,
+   "ok": 772,
    "fallos": 0,
-   "ejecuciones": 426,
+   "ejecuciones": 427,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T09:26:14.124Z"
+   "ultima": "2026-11-09T09:31:14.074Z"
   }
  },
  "ptsDirecto": {},
@@ -7626,15 +7606,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:26:19.048Z"
+   "ultimaBien": "2026-11-09T09:31:17.083Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:26:19.048Z"
+   "ultimaBien": "2026-11-09T09:31:17.083Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:26:19.048Z"
+   "ultimaBien": "2026-11-09T09:31:17.083Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7642,11 +7622,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:26:19.048Z"
+   "ultimaBien": "2026-11-09T09:31:17.083Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:26:19.048Z"
+   "ultimaBien": "2026-11-09T09:31:17.083Z"
   }
  },
  "avisos": [
