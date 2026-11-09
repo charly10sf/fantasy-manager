@@ -3301,7 +3301,6 @@
  },
  "liga": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
    "SPORT|136162605": 1793984430000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988650000,
@@ -3360,26 +3359,6 @@
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-industrias-carnicas-registra-seguimiento-90-primera-jornada-ugt-fica-20261109162232.html": 1794237752000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html",
-    "medio": "MARCA",
-    "t": 1793980463000,
-    "tipo": "horario",
-    "estado": "confirmado",
-    "segunda": false,
-    "jornada": 14,
-    "jTxt": true,
-    "clubes": [],
-    "luto": false,
-    "oficial": false,
-    "contexto": "Publicación oficial de los horarios de la jornada 14",
-    "detalle": "Los partidos se disputarán en sábado y domingo",
-    "nums": [
-     14,
-     18,
-     30
-    ]
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html",
     "medio": "COPE",
@@ -7356,13 +7335,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 848,
+   "ok": 849,
    "fallos": 0,
-   "ejecuciones": 503,
+   "ejecuciones": 504,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T15:51:14.859Z"
+   "ultima": "2026-11-09T15:56:16.013Z"
   }
  },
  "ptsDirecto": {},
@@ -7379,15 +7358,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:51:20.711Z"
+   "ultimaBien": "2026-11-09T15:56:19.644Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:51:20.711Z"
+   "ultimaBien": "2026-11-09T15:56:19.644Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:51:20.711Z"
+   "ultimaBien": "2026-11-09T15:56:19.644Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7395,11 +7374,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:51:20.711Z"
+   "ultimaBien": "2026-11-09T15:56:19.644Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:51:20.711Z"
+   "ultimaBien": "2026-11-09T15:56:19.644Z"
   }
  },
  "avisos": [
