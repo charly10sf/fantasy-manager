@@ -1782,8 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/koke-al-once-y-kang-in-lee-ayudara-a-julian-en-ataque-f202611-n/": 1793964715000,
-   "Diario Sur|https://www.diariosur.es/malagacf/rafita-seleccion-sub21-espana-futbol-20261106122218-nt.html": 1793964954000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/06/david-mella-convocado-con-espana-sub-21-para-jugar-ante-japon-y-albania-yeremay-se-queda-fuera-de-la-lista-de-la-seleccion-absoluta-radio-coruna/": 1793965657000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/thiago-pitarch-da-salto-sub-21-vuelve-dar-portazo-marruecos-20261106_3470218.html": 1793965395000,
    "AS|https://as.com/futbol/primera/jose-alberto-le-echa-un-cable-a-funes-el-malaga-ha-tenido-un-calendario-muy-duro-f202611-n/": 1793965403000,
@@ -1968,7 +1966,9 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/lamine-yamal-sera-baixa-en-el-primer-partit-de-la-selecio-espanyola-davant-la-republica-txeca-sercat/": 1794223492000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/09/6af1ac9fe9cf4a77498b4590.html": 1794223447000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261109/1004249001/oyarzabal-baja-temporal-perdera-minimo-partido-chequia-duda-inglaterra.html": 1794222644000,
-   "SPORT|136245345": 1794219973000
+   "SPORT|136245345": 1794219973000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/09/oyarzabal-retrasa-su-incorporacion-con-la-seleccion-debido-a-su-proceso-gripal-radio-san-sebastian/": 1794223969000,
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/lamine-yamal-es-baixa-pel-primer-partit-de-la-selecio-espanyola-contra-republica-txeca-sercat/": 1794223492000
   },
   "hechos": [
    {
@@ -2575,7 +2575,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3570,17 +3570,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 205944,
-  "salida": 20088,
+  "entrada": 207722,
+  "salida": 20996,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.4991,
+  "dolares": 0.499732,
   "reservado": 0
  },
  "recientes": {
@@ -7505,13 +7505,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 796,
+   "ok": 797,
    "fallos": 0,
-   "ejecuciones": 451,
+   "ejecuciones": 452,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T11:31:11.949Z"
+   "ultima": "2026-11-09T11:36:12.727Z"
   }
  },
  "ptsDirecto": {},
@@ -7528,15 +7528,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:31:15.929Z"
+   "ultimaBien": "2026-11-09T11:36:21.754Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:31:15.929Z"
+   "ultimaBien": "2026-11-09T11:36:21.754Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:31:15.929Z"
+   "ultimaBien": "2026-11-09T11:36:21.754Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7544,11 +7544,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:31:15.929Z"
+   "ultimaBien": "2026-11-09T11:36:21.754Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:31:15.929Z"
+   "ultimaBien": "2026-11-09T11:36:21.754Z"
   }
  },
  "avisos": [
