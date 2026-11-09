@@ -1966,7 +1966,8 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/el-barca-reafirma-el-liderat-recupera-laqui-catalunya-del-dilluns-9-de-novembre-la-tertulia-esportiva-amb-danae-boronat-sique-rodriguez-i-tomas-roncero-sercat/": 1794224320000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/emotivo-mensaje-iris-padre-pepe-mel-betis_0_2008455745.html": 1794223825000,
    "ABC|https://www.abc.es/deportes/futbol/alarma-lamine-viaja-espana-republica-checa-20261109124059-nt.html": 1794224460000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261109/1004249018/preocupacion-sevilla-forma-fofana.html": 1794223973000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261109/1004249018/preocupacion-sevilla-forma-fofana.html": 1794223973000,
+   "SPORT|136247384": 1794222069000
   },
   "hechos": [
    {
@@ -2547,7 +2548,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -3508,17 +3509,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 214744,
-  "salida": 21894,
+  "entrada": 216542,
+  "salida": 21992,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.500883,
+  "dolares": 0.501112,
   "reservado": 0
  },
  "recientes": {
@@ -7443,13 +7444,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 803,
+   "ok": 804,
    "fallos": 0,
-   "ejecuciones": 458,
+   "ejecuciones": 459,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T12:06:15.143Z"
+   "ultima": "2026-11-09T12:11:17.568Z"
   }
  },
  "ptsDirecto": {},
@@ -7466,15 +7467,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:06:21.891Z"
+   "ultimaBien": "2026-11-09T12:11:25.832Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:06:21.891Z"
+   "ultimaBien": "2026-11-09T12:11:25.832Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:06:21.891Z"
+   "ultimaBien": "2026-11-09T12:11:25.832Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7482,11 +7483,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:06:21.891Z"
+   "ultimaBien": "2026-11-09T12:11:25.832Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:06:21.891Z"
+   "ultimaBien": "2026-11-09T12:11:25.832Z"
   }
  },
  "avisos": [
