@@ -1783,7 +1783,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html": 1793997151000,
-   "SPORT|136149850": 1793995933000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/jj-gabriel-marca-mi-sueno-ganar-balon-oro.html": 1794004223000,
    "AS|https://as.com/futbol/alineacion-posible-de-osasuna-contra-el-athletic-en-laliga-ea-sports-f202611-n/": 1794006243000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248086/roberto-proximo-paron-dos-internacionales.html": 1794031200000,
@@ -1966,7 +1965,8 @@
    "SPORT|136256607": 1794248338000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-seleccion-espana-republica-checa_0_2008459539.html": 1794252831000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/homenaje-seleccion-espanola-jesus-miguel_0_2008459621.html": 1794253239000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000,
+   "AS|https://as.com/futbol/primera/paron-de-reflexion-y-exodo-masivo-el-atleti-se-queda-sin-18-jugadores-f202611-n/": 1794252073000
   },
   "hechos": [
    {
@@ -2421,7 +2421,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 49
+   "n": 50
   },
   "desde": {
    "67": {
@@ -3329,17 +3329,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 59,
+   "clasificar": 60,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 278856,
-  "salida": 30746,
+  "entrada": 280660,
+  "salida": 31366,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.511721,
+  "dolares": 0.512211,
   "reservado": 0
  },
  "recientes": {
@@ -7264,13 +7264,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 901,
+   "ok": 902,
    "fallos": 0,
-   "ejecuciones": 556,
+   "ejecuciones": 557,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T20:11:12.992Z"
+   "ultima": "2026-11-09T20:16:14.197Z"
   }
  },
  "ptsDirecto": {},
@@ -7287,15 +7287,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:11:19.496Z"
+   "ultimaBien": "2026-11-09T20:16:23.293Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:11:19.496Z"
+   "ultimaBien": "2026-11-09T20:16:23.293Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:11:19.496Z"
+   "ultimaBien": "2026-11-09T20:16:23.293Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7303,11 +7303,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:11:19.496Z"
+   "ultimaBien": "2026-11-09T20:16:23.293Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:11:19.496Z"
+   "ultimaBien": "2026-11-09T20:16:23.293Z"
   }
  },
  "avisos": [
