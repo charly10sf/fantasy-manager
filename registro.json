@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000,
    "SPORT|136181983": 1793990642000,
    "AS|https://as.com/futbol/videos/llegara-la-redencion-definitiva-de-julian-contra-el-barca-f202611-v/": 1793995579000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html": 1793997151000,
@@ -7261,13 +7260,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 881,
+   "ok": 882,
    "fallos": 0,
-   "ejecuciones": 536,
+   "ejecuciones": 537,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T18:31:14.612Z"
+   "ultima": "2026-11-09T18:36:16.706Z"
   }
  },
  "ptsDirecto": {},
@@ -7284,15 +7283,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:31:18.557Z"
+   "ultimaBien": "2026-11-09T18:36:19.793Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:31:18.557Z"
+   "ultimaBien": "2026-11-09T18:36:19.793Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:31:18.557Z"
+   "ultimaBien": "2026-11-09T18:36:19.793Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7300,11 +7299,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:31:18.557Z"
+   "ultimaBien": "2026-11-09T18:36:19.793Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:31:18.557Z"
+   "ultimaBien": "2026-11-09T18:36:19.793Z"
   }
  },
  "avisos": [
