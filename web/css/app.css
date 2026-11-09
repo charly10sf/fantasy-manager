@@ -800,6 +800,20 @@ body.con-nv { overflow: hidden; }
 .inercia .in-b span { font: 600 11.5px var(--cond); color: var(--texto); }
 .inercia .in-b em { font: 500 10.5px 'Barlow'; color: var(--apagado); font-style: normal; text-transform: uppercase; }
 .inercia p { margin: 6px 0 0; font-size: 14px; color: var(--texto2); }
+/* lo que cambia cada día, debajo de la gráfica del valor: arriba lo que sube, abajo lo que baja */
+.dias7 { margin: 4px 0 12px; padding: 10px 12px 8px; border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); }
+.d7-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 600 13px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto2); }
+.d7-cab .t2 { font: 500 12px 'Barlow'; text-transform: none; letter-spacing: 0; }
+.d7-b { display: flex; gap: 6px; margin-top: 8px; }
+.d7 { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.d7-v { font: 600 12px var(--cond); color: var(--texto2); white-space: nowrap; }
+.d7-v.sube { color: var(--sube); } .d7-v.baja { color: var(--baja); }
+.d7-z { width: 100%; max-width: 32px; height: 64px; display: flex; flex-direction: column; }
+.d7-up, .d7-dw { flex: 1; display: flex; flex-direction: column; }
+.d7-up { justify-content: flex-end; border-bottom: 1px solid var(--linea); }
+.d7-up i, .d7-dw i { display: block; height: var(--h); border-radius: 4px 4px 0 0; background: var(--sube); }
+.d7-dw i { border-radius: 0 0 4px 4px; background: var(--baja); }
+.d7 em { font: 500 10.5px 'Barlow'; color: var(--apagado); font-style: normal; text-transform: uppercase; white-space: nowrap; }
 .inercia p b { color: var(--texto); }
 /* 0.2.2: el chat */
 .chat-cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px 10px; flex-wrap: wrap; }
@@ -2491,3 +2505,27 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 /* «Usar lo guardado» en la pantalla de carga (0.7z, A7) */
 .carga-guardado { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
 .carga-guardado p { margin: 0; font-size: 15px; color: var(--texto2); }
+
+/* Directo → Por jornada: los puntos de cada mánager en cada jornada, con la columna del nombre fija */
+.cara-m.p { width: 24px; height: 24px; } .cara-m.p .ini { font-size: 10px; }
+.rk-caja { overflow-x: auto; margin: 0 -16px 8px; padding: 0 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.rk-caja::-webkit-scrollbar { display: none; }
+.rk { border-collapse: separate; border-spacing: 0; font: 600 14px var(--cond); white-space: nowrap; }
+.rk th, .rk td { padding: 0; text-align: center; border-bottom: 1px solid var(--linea); }
+.rk td { min-width: 40px; padding: 8px 6px; color: var(--texto); }
+.rk thead th { font: 600 12px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--apagado); }
+.rk thead button { padding: 8px 6px; font: inherit; color: inherit; background: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.rk thead th.rk-on { color: var(--texto); }
+.rk thead th.rk-on button { box-shadow: inset 0 -2px 0 var(--rojo); }
+.rk .rk-q { position: sticky; left: 0; z-index: 2; background: var(--fondo); text-align: left; box-shadow: 1px 0 0 var(--linea); }
+.rk thead .rk-q { padding: 8px 8px 8px 0; }
+.rk tbody .rk-q button { display: flex; align-items: center; gap: 6px; padding: 6px 8px 6px 0; width: 132px; background: none; border: 0; color: var(--texto); font: 600 14px var(--cond); text-align: left; cursor: pointer; }
+.rk .rk-p { width: 16px; flex: none; text-align: right; color: var(--apagado); font-size: 12px; }
+.rk .rk-nom { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.rk tr.rk-yo td, .rk tr.rk-yo .rk-q { background: var(--rojo-s); }
+.rk tr.rk-yo .rk-q { background: linear-gradient(var(--rojo-s), var(--rojo-s)), var(--fondo); }
+.rk tr td.rk-top { color: var(--sube); background: var(--sube-s); }
+.rk tr td.rk-min { color: var(--baja); }
+.rk td.rk-vivo { color: var(--texto); }
+.rk td.apag { color: var(--apagado); }
+@media (min-width: 900px) { .rk-caja { margin: 0 0 8px; padding: 0; } .rk tbody .rk-q button { width: 170px; } }
