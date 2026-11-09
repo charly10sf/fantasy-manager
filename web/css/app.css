@@ -2748,3 +2748,9 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .rk td.rk-vivo { color: var(--texto); }
 .rk td.apag { color: var(--apagado); }
 @media (min-width: 900px) { .rk-caja { margin: 0 0 8px; padding: 0; } .rk tbody .rk-q button { width: 170px; } }
+
+/* al deslizar de lado a la pestaña de abajo de al lado, la nueva entra desde ese lado (Carlos, 9 nov 15:24) */
+@keyframes entra-d { from { transform: translateX(28px); opacity: 0.4; } to { transform: none; opacity: 1; } }
+@keyframes entra-i { from { transform: translateX(-28px); opacity: 0.4; } to { transform: none; opacity: 1; } }
+#vista.entra-d { animation: entra-d 0.18s ease-out; } #vista.entra-i { animation: entra-i 0.18s ease-out; }
+@media (prefers-reduced-motion: reduce) { #vista.entra-d, #vista.entra-i { animation: none; } }
