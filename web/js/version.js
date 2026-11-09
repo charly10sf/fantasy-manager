@@ -24,6 +24,7 @@ export const NOVEDADES = [
       { tipo: 'nuevo', d: 'especular', t: 'En el parón, a por el dinero', x: 'Durante el parón de selecciones nadie puntúa, así que el plan cambia: compra lo que sube para venderlo antes de la vuelta, vende en lo alto lo que va a bajar y protege lo tuyo. Clausular para el once solo sale si es un chollo (a su valor y sin bajar) o en los dos o tres días antes de la jornada de vuelta.', ir: { v: 'hoy' } },
       { tipo: 'nuevo', d: 'calendario', t: 'El aviso del parón', x: 'Mientras dura el parón, arriba de Hoy, un aviso en amarillo con lo que falta para la jornada. Tócalo y vas a la pestaña Parón, donde está todo.', ir: { v: 'hoy' } },
       { menor: true, tipo: 'mejora', d: 'ia', t: 'La IA sabe qué cláusulas y pujas valen en el parón', x: 'Cada cláusula y puja le llega marcada como chollo, para revender o no; si propone fichar para el once algo que no es un chollo, la app lo descarta y dice por qué. Lo que se puede ganar revendiendo se calcula algo más prudente en el parón.' },
+      { tipo: 'mejora', d: 'scroll', t: 'Desliza para cambiar de pestaña', x: 'En el móvil, desliza el dedo a la izquierda o a la derecha: pasas a la subpestaña de al lado y, cuando no quedan más, a la pestaña de abajo siguiente o anterior. Sin tocar la barra de abajo.' },
       { menor: true, tipo: 'mejora', d: 'campana', t: 'Lo urgente, dentro del plan', x: '«Ahora mismo» ya no va aparte: lo urgente que el plan no recoge sale arriba, en «Antes de nada».' },
     ],
   },
