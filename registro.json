@@ -1779,20 +1779,7 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "3091",
-   "que": "vuelve",
-   "antes": "doubtful",
-   "t": 1794204073390
-  },
-  {
-   "id": "3102",
-   "que": "vuelve",
-   "antes": "suspended",
-   "t": 1794204073390
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/": 1793952909000,
@@ -7659,13 +7646,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 749,
+   "ok": 750,
    "fallos": 0,
-   "ejecuciones": 404,
+   "ejecuciones": 405,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T07:36:11.712Z"
+   "ultima": "2026-11-09T07:41:10.946Z"
   }
  },
  "ptsDirecto": {},
@@ -7682,15 +7669,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:36:33.459Z"
+   "ultimaBien": "2026-11-09T07:41:16.847Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:36:33.459Z"
+   "ultimaBien": "2026-11-09T07:41:16.847Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:36:33.459Z"
+   "ultimaBien": "2026-11-09T07:41:16.847Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7698,11 +7685,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:36:33.459Z"
+   "ultimaBien": "2026-11-09T07:41:16.847Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:36:33.459Z"
+   "ultimaBien": "2026-11-09T07:41:16.847Z"
   }
  },
  "avisos": [
