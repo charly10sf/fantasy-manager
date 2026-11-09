@@ -1968,7 +1968,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261109/1004249001/oyarzabal-baja-temporal-perdera-minimo-partido-chequia-duda-inglaterra.html": 1794222644000,
    "SPORT|136245345": 1794219973000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/09/oyarzabal-retrasa-su-incorporacion-con-la-seleccion-debido-a-su-proceso-gripal-radio-san-sebastian/": 1794223969000,
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/lamine-yamal-es-baixa-pel-primer-partit-de-la-selecio-espanyola-contra-republica-txeca-sercat/": 1794223492000
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/lamine-yamal-es-baixa-pel-primer-partit-de-la-selecio-espanyola-contra-republica-txeca-sercat/": 1794223492000,
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/el-barca-reafirma-el-liderat-recupera-laqui-catalunya-del-dilluns-9-de-novembre-la-tertulia-esportiva-amb-danae-boronat-sique-rodriguez-i-tomas-roncero-sercat/": 1794224320000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/emotivo-mensaje-iris-padre-pepe-mel-betis_0_2008455745.html": 1794223825000
   },
   "hechos": [
    {
@@ -2575,7 +2577,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -3570,17 +3572,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 207722,
-  "salida": 20996,
+  "entrada": 209586,
+  "salida": 21178,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.499732,
+  "dolares": 0.500009,
   "reservado": 0
  },
  "recientes": {
@@ -7505,13 +7507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 797,
+   "ok": 798,
    "fallos": 0,
-   "ejecuciones": 452,
+   "ejecuciones": 453,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T11:36:12.727Z"
+   "ultima": "2026-11-09T11:41:16.547Z"
   }
  },
  "ptsDirecto": {},
@@ -7528,15 +7530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:36:21.754Z"
+   "ultimaBien": "2026-11-09T11:41:22.563Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:36:21.754Z"
+   "ultimaBien": "2026-11-09T11:41:22.563Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:36:21.754Z"
+   "ultimaBien": "2026-11-09T11:41:22.563Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7544,11 +7546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:36:21.754Z"
+   "ultimaBien": "2026-11-09T11:41:22.563Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:36:21.754Z"
+   "ultimaBien": "2026-11-09T11:41:22.563Z"
   }
  },
  "avisos": [
