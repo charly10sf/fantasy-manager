@@ -24,7 +24,7 @@ export const NOVEDADES = [
       { tipo: 'nuevo', d: 'especular', t: 'En el parón, a por el dinero', x: 'Durante el parón de selecciones nadie puntúa, así que el plan cambia: compra lo que sube para venderlo antes de la vuelta, vende en lo alto lo que va a bajar y protege lo tuyo. Clausular para el once solo sale si es un chollo (a su valor y sin bajar) o en los dos o tres días antes de la jornada de vuelta.', ir: { v: 'hoy' } },
       { tipo: 'nuevo', d: 'calendario', t: 'El aviso del parón', x: 'Mientras dura el parón, arriba de Hoy, un aviso en amarillo con lo que falta para la jornada. Tócalo y vas a la pestaña Parón, donde está todo.', ir: { v: 'hoy' } },
       { menor: true, tipo: 'mejora', d: 'ia', t: 'La IA sabe qué cláusulas y pujas valen en el parón', x: 'Cada cláusula y puja le llega marcada como chollo, para revender o no; si propone fichar para el once algo que no es un chollo, la app lo descarta y dice por qué. Lo que se puede ganar revendiendo se calcula algo más prudente en el parón.' },
-      { tipo: 'mejora', d: 'scroll', t: 'Desliza para cambiar de pestaña', x: 'En el móvil, desliza el dedo a la izquierda o a la derecha: pasas a la subpestaña de al lado y, cuando no quedan más, a la pestaña de abajo siguiente o anterior. Sin tocar la barra de abajo.' },
+      { tipo: 'mejora', d: 'scroll', t: 'Desliza para cambiar de pestaña', x: 'En el móvil, desliza el dedo a la izquierda o a la derecha y pasas a la pestaña de abajo siguiente o anterior, sin tocar la barra.' },
       { menor: true, tipo: 'mejora', d: 'campana', t: 'Lo urgente, dentro del plan', x: '«Ahora mismo» ya no va aparte: lo urgente que el plan no recoge sale arriba, en «Antes de nada».' },
     ],
   },
@@ -734,7 +734,7 @@ export const NOVEDADES = [
   {
     v: '0.6.2d', f: '2026-10-24', h: '23:43', t: 'La web, al día',
     cosas: [
-      { para: 'web', tipo: 'mejora', d: 'versiones', t: 'Aviso de versión nueva en la web', x: 'En la web (iPhone y ordenador), cuando sale una versión nueva aparece una banda arriba con «Recargar»: un toque y la tienes, sin esperar a que el navegador suelte la de antes.' },
+      { para: 'web', tipo: 'mejora', d: 'versiones', t: 'Aviso de versión nueva en la web', x: 'En la web (iPhone y ordenador), cuando sale una versión nueva aparece una banda arriba con «Descargar»: un toque y la tienes, sin esperar a que el navegador suelte la de antes.' },
     ],
   },
   {
@@ -1005,7 +1005,7 @@ export const NOVEDADES = [
   {
     v: '0.4.2', f: '2026-10-23', h: '04:28', t: 'Se pone al día sola',
     cosas: [
-      { tipo: 'nuevo', d: 'versiones', t: 'Los arreglos llegan solos', x: 'Al abrir la app (y cada rato mientras la usas, y aunque esté cerrada hasta la hora de apertura) mira si hay arreglos nuevos, se los descarga y se los pone sin reinstalar nada: nada más abrirla, al volver a ella o con el botón «Ponerla» si estabas en medio de algo. Si un arreglo saliera mal, vuelve sola a la versión de antes.' },
+      { tipo: 'nuevo', d: 'versiones', t: 'Los arreglos llegan solos', x: 'Al abrir la app (y cada rato mientras la usas, y aunque esté cerrada hasta la hora de apertura) mira si hay arreglos nuevos, se los descarga y se los pone sin reinstalar nada: nada más abrirla, al volver a ella o con el botón «Descargar» si estabas en medio de algo. Si un arreglo saliera mal, vuelve sola a la versión de antes.' },
       { tipo: 'mejora', d: 'campana', t: 'Actualizar también con la app cerrada', x: 'Solo cuando cambie la parte de Android hará falta instalar una versión nueva. Su botón sale arriba y también en la cuenta atrás y en la pantalla de minutos agotados. En Ajustes, «Buscar nueva» mira las dos cosas.' },
     ],
   },
