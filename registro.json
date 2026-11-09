@@ -865,6 +865,27 @@
    "jornada": 13,
    "id": "2119672074272956700",
    "t": "2026-11-09T06:02:59.097Z"
+  },
+  {
+   "clave": "caidas|13|2939-3182",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2119673022483235324",
+   "t": "2026-11-09T06:06:45.202Z"
+  },
+  {
+   "clave": "caidas|13|3037",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2119673030418862248",
+   "t": "2026-11-09T06:06:47.112Z"
+  },
+  {
+   "clave": "caidas|13|2999",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2119673037402341423",
+   "t": "2026-11-09T06:06:48.773Z"
   }
  ],
  "estados": {
@@ -1767,7 +1788,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247763/sube-baja-lateral-diestro-athletic.html": 1793945100000,
    "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/": 1793952909000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247816/racing-santander-multado-lanzamiento-menchero.html": 1793953993000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/china-esta-en-conversaciones-con-laliga-tras-la-polemica-con-mbappe-pero-pide-tiempo-para-digerir-cadena-ser/": 1793956187000,
@@ -3472,7 +3492,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247829/rfef-juez-unico-no-competencias-aplazar-jornada-segunda.html": 1793957172000,
    "SPORT|136150472": 1793953274000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959519000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-homenajes-haran-campos-primera-segunda-division-jesus-miguel-tendran-repercusion-hecho-suspender-jornada-20261106_3469893.html": 1793945073000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261106/1004247862/juez-competiciones-profesionales-inadmite-peticion-afe.html": 1793962289000,
@@ -3696,16 +3715,16 @@
   "dia": "2026-11-09",
   "llamadas": {
    "clasificar": 1,
-   "redactar": 12,
-   "revisar": 7,
+   "redactar": 20,
+   "revisar": 12,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 41663,
-  "salida": 6657,
-  "cacheLee": 103125,
+  "entrada": 62567,
+  "salida": 8534,
+  "cacheLee": 188230,
   "cacheEscribe": 14220,
-  "dolares": 0.160226,
+  "dolares": 0.229317,
   "reservado": 0
  },
  "recientes": {
@@ -3865,16 +3884,24 @@
   ],
   "caidas": [
    {
-    "t": "2026-11-09T06:02:55.430Z",
-    "texto": "⁉️ Dos titulares del Getafe llegan tocados al partido contra el Atlético en el Coliseum.\n\nGudelj no juega: se fue a cinco amarillas en la jornada 12 y cumple sanción. Era fijo en la zaga, aunque su media es de 1,9.\n\nLa duda es Zaid Romero, que arrastra el cuádriceps desde el 10 de octubre y juega mucho cuando está bien. Si lo tienes, mejor esperar a ver si entra en la convocatoria."
-   },
-   {
     "t": "2026-11-09T06:02:57.715Z",
     "texto": "⁉️ Para la jornada 13 caen seis titulares, y el más gordo es Miguel Sierra: luxación acromioclavicular y hasta enero fuera. Si lo tienes en el Sevilla, es venta obligatoria.\n\nRodri, del Barça, y Álvaro García, del Rayo ⚡, no vuelven hasta principios de diciembre. Cucho, del Betis, hasta finales de noviembre. Gayá cumple sanción por la roja de la jornada 12.\n\nFoyth, del Villarreal 🚢, es la única duda: molestias musculares desde el 30 de octubre."
    },
    {
     "t": "2026-11-09T06:02:59.098Z",
     "texto": "⁉️ Dos titulares habituales llegan en duda a la jornada 13, los dos con problemas en los isquiotibiales.\n\nAimar, del Osasuna 🐂, arrastra la lesión desde el 10 de octubre y recibe al Málaga 🐟 en El Sadar. Manu Sánchez, del Levante 🐸, se lesionó el 31 de octubre y juega en casa contra el Elche 🌴, aunque su media es de 2,6. Con los dos, mejor esperar a ver si entran en la convocatoria."
+   },
+   {
+    "t": "2026-11-09T06:06:45.205Z",
+    "texto": "⁉️ El Elche 🌴 visita al Levante 🐸 en el Ciutat de València con dos medios tocados.\n\nLemar es baja: rotura fibrilar en el aductor desde el 1 de noviembre y no se le espera hasta finales de mes. Con 5,5 de media, es el que más duele.\n\nVillar es duda y tiene un 46 % de titularidad en Fantasy Manager, así que puede quedarse fuera. Si lo tienes, mejor esperar a ver la convocatoria."
+   },
+   {
+    "t": "2026-11-09T06:06:47.113Z",
+    "texto": "⁉️ El Málaga 🐟 viaja a El Sadar con una duda en defensa: Puga, que ha jugado 60 minutos o más en tres de sus cinco últimos partidos.\n\nCon un 39 % de titularidad en Fantasy Manager, tiene el puesto en el aire para visitar al Osasuna 🐂. Su media de 2,3 tampoco da para hacer ruido, así que la duda pesa poco."
+   },
+   {
+    "t": "2026-11-09T06:06:48.775Z",
+    "texto": "❌ Mantilla, defensa del Racing ⚓, lleva lesionado desde el 1 de noviembre por una rotura de ligamento cruzado anterior y no se le espera hasta junio.\n\nEra titular habitual, con 60 minutos o más en cuatro de sus cinco últimos partidos, y se pierde el Racing-Real Sociedad en El Sardinero. Si lo tienes, no hay nada que esperar: es venta obligatoria."
    }
   ]
  },
@@ -3976,13 +4003,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "caidas|13|2939-3182": {
-   "n": 1,
-   "t": "2026-11-09T06:02:53.601Z",
-   "ultima": "2026-11-09T06:02:53.601Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7624,13 +7645,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 729,
+   "ok": 730,
    "fallos": 0,
-   "ejecuciones": 384,
+   "ejecuciones": 385,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T06:01:13.390Z"
+   "ultima": "2026-11-09T06:06:11.710Z"
   }
  },
  "ptsDirecto": {},
@@ -7647,15 +7668,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:03:32.515Z"
+   "ultimaBien": "2026-11-09T06:06:52.235Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:03:32.515Z"
+   "ultimaBien": "2026-11-09T06:06:52.235Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:03:32.515Z"
+   "ultimaBien": "2026-11-09T06:06:52.235Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7663,11 +7684,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:03:32.515Z"
+   "ultimaBien": "2026-11-09T06:06:52.235Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T06:03:32.515Z"
+   "ultimaBien": "2026-11-09T06:06:52.235Z"
   }
  },
  "avisos": [
