@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/06/el-embajador-de-china-confirma-en-salamanca-conversaciones-entre-el-gobierno-de-pekin-y-la-liga-para-reconducir-la-situacion-tras-la-polemica-provocada-por-mbappe-radio-salamanca/": 1793959856000,
@@ -1791,7 +1790,6 @@
    "ABC|https://www.abc.es/deportes/futbol/jacobo-ramon-marc-roca-alvaro-valles-estrenan-20261106114733-nt.html": 1793962206000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/06/6aed9130e4d4d8a7398b4572.html": 1793961998000,
    "SPORT|136150734": 1793958701000,
-   "SPORT|136153992": 1793958441000,
    "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/": 1793962556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247866/tripleta-athletic-mantiene-espana.html": 1793962306000,
    "SPORT|136156390": 1793958981000,
@@ -7583,13 +7581,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 775,
+   "ok": 776,
    "fallos": 0,
-   "ejecuciones": 430,
+   "ejecuciones": 431,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T09:46:16.427Z"
+   "ultima": "2026-11-09T09:51:11.155Z"
   }
  },
  "ptsDirecto": {},
@@ -7606,15 +7604,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:46:26.765Z"
+   "ultimaBien": "2026-11-09T09:51:14.812Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:46:26.765Z"
+   "ultimaBien": "2026-11-09T09:51:14.812Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:46:26.765Z"
+   "ultimaBien": "2026-11-09T09:51:14.812Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7622,11 +7620,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:46:26.765Z"
+   "ultimaBien": "2026-11-09T09:51:14.812Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:46:26.765Z"
+   "ultimaBien": "2026-11-09T09:51:14.812Z"
   }
  },
  "avisos": [
