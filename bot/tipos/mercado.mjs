@@ -97,7 +97,7 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
     permitidos: { numeros: [dd, 1, 2, 3, 4, 5, ...todas.flatMap((f) => [f.dif, f.pct, f.valor])].map(String),
       palabras: ['MERCADO', 'SUBEN', 'BAJAN', 'Y', 'de', 'M', 'K', MESES[mes - 1], ...todas.flatMap((f) => [f.nombre, f.equipo])] } };
   // los hechos para la IA que redacta (lib/redaccion.mjs): lo que sube y baja más, y el chollo si lo hay; el cierre de siempre va debajo
-  const jug = (f, extra) => jugadorH({ nickname: f.nombre, equipo: f.equipo, averagePoints: f.media }, { principal: false, extra });
+  const jug = (f, extra) => jugadorH({ nickname: f.nombre, equipo: f.equipo, averagePoints: f.media }, { principal: false, extra, sinDatos: ['valor'] });
   const sH = suben[0], bH = bajan[0];
   const hechos = { tipo: 'mercado', noticia: `LaLiga ha actualizado esta noche los valores de mercado fantasy (hoy es ${dd} de ${MESES[mes - 1]})`,
     aviso: 'la imagen adjunta lista los 5 que más suben y los 5 que más bajan: el texto no los enumera, cuenta el que más sube, el que más baja y lo que se ve en el conjunto',

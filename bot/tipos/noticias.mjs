@@ -19,6 +19,7 @@ import { noticiasPrensaUnaVez, NOMBRES_MEDIOS } from '../lib/prensa.mjs';
 import { clasificador, claveClasificar } from '../lib/ia.mjs';
 import { clubes, partido, jugador, fuente as fuenteH } from '../lib/hechos.mjs';
 import { ideasInfo, vecesHoy } from '../lib/info-jugador.mjs';
+import { prepararDatos, datoPlantilla } from '../lib/datos-jugador.mjs';
 
 const HORA = 36e5;
 const ahoraReal = () => Date.now();
@@ -272,7 +273,10 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const conInfo = info && pp && !baja && (!registro || !registro.decidir || registro.decidir({ tipo: 'noticias', clave, jornada }) === 'ok');
     const tit = conInfo && ((c.fam === 'buena' && c.est === 'ok') || (c.fam === 'mala' && c.est === 'doubtful')) ? await info.titularidad(j, pp).catch(() => null) : null;
     const riv = conInfo ? await info.rival(pp).catch(() => null) : null;
-    const inf = ideasInfo({ posId: j.positionId, equipo, pp, quien, media, tit, riv, tipo: c.fam === 'buena' ? 'vuelve' : 'duda', hr, k, dia, largo: esLargo() });
+    // su dato (racha, valor, goles…; lib/datos-jugador.mjs): la ficha y el valor, solo de los que pueden salir (Carlos, 9 nov: no siempre la media)
+    if (conInfo || !registro) await prepararDatos([j.id]).catch(() => {});
+    const dato = datoPlantilla(j);
+    const inf = ideasInfo({ posId: j.positionId, equipo, pp, quien, media, tit, riv, tipo: c.fam === 'buena' ? 'vuelve' : 'duda', hr, k, dia, largo: esLargo(), dato });
     // (Carlos, 5 nov 17:42: «no hace falta que haya tantos puntos») la noticia en una frase con el motivo entre paréntesis y, pegada con
     // una coma, de dónde sale (detrás de la cabecera o detrás del plazo, según el tweet; nunca detrás de la media o del %, que no son
     // del medio); luego, el jugador y el partido en dos frases (lib/info-jugador.mjs)

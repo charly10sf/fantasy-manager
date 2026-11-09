@@ -5,6 +5,7 @@ import { fmt, corto, el } from './texto.mjs';
 import { puesto, cuando } from './redactar.mjs';
 import { nombresClub } from './redaccion.mjs';
 import { comoLeLlaman } from './apodos-jugadores.mjs';
+import { conCandidatos } from './datos-jugador.mjs';
 
 // el campo de cada club (solo los seguros: el del Betis cambia mientras se reforma el Villamarín y no va). La IA solo puede nombrar el
 // del que juega en casa (el validador no deja pasar un nombre propio que no esté en los hechos)
@@ -48,16 +49,19 @@ export function partido(pp, { equipo, riv = null, posId = null, ahora = Date.now
   };
 }
 
-/** un jugador: nombre, puesto, club, estado (disponible, vuelve, duda, baja, lesionado, sancionado), media y % de la app */
-export function jugador(j, { equipos = {}, estado = null, motivo = '', plazo = '', tit = null, principal = true, extra = {} } = {}) {
+/** un jugador: nombre, puesto, club, estado (disponible, vuelve, duda, baja, lesionado, sancionado), media y % de la app.
+    Con la lista de LaLiga fijada (lib/datos-jugador.mjs), lleva además sus datos posibles (racha, mejor jornada, valor, goles…): la
+    redacción elige uno y quita la media si hay algo mejor (Carlos, 9 nov). `sinDatos`: tipos de dato que no van en este tuit. */
+export function jugador(j, { equipos = {}, estado = null, motivo = '', plazo = '', tit = null, principal = true, extra = {}, sinDatos = [], datos = true } = {}) {
   const media = Number(j.averagePoints ?? j.media) || 0;
-  return {
+  const h = {
     nombre: j.nickname || j.nombre, puesto: puesto(j.positionId ?? j.pos) || undefined, club: corto(equipos[String(j.teamId)] || j.equipo || ''),
     ...(estado ? { estado } : {}), ...(motivo ? { motivo } : {}), ...(plazo ? { plazo } : {}),
     ...(media >= 1 ? { mediaPuntos: fmt(media) } : {}),
     ...(tit && tit.pct != null ? { titularidadFantasyManager: `${tit.pct} %` } : {}),
     ...(otrosNombres(j.nickname || j.nombre)), ...extra, principal,
   };
+  return datos ? conCandidatos(h, { id: j.id, nickname: j.nickname || j.nombre, teamId: j.teamId, equipo: h.club }, { sin: sinDatos }) : h;
 }
 // otros nombres con los que se le conoce («Borja Iglesias» por «B. Iglesias», «el Cuti»; Carlos, 7 nov): la IA puede usarlos
 const otrosNombres = (n) => { const xs = comoLeLlaman(n); return xs.length ? { tambienSeLeLlama: xs } : {}; };

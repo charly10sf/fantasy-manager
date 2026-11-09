@@ -466,7 +466,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
         let cab; const ideas = [];
         // los hechos para la IA que redacta (lib/redaccion.mjs): lo mismo que dice la plantilla, sin sus frases
         const jugH = []; let extraH = {};
-        const jH = (nom, posId, med, extra, eq = equipo, principal = true) => jugadorH({ nickname: nom, positionId: posId, equipo: eq, averagePoints: med }, { principal, extra });
+        const jH = (nom, posId, med, extra, eq = equipo, principal = true) => jugadorH({ nickname: nom, positionId: posId, equipo: eq, averagePoints: med }, { principal, extra, sinDatos: ['total', 'goles', 'minutos', 'porterias'] });   // (en juego, lo que se cuenta hasta la jornada anterior: nada que cambie con este partido)
         const marcador = `📍 ${mar}`;
         const puntos = (valor, conMedia, conNombre = false) => {
           num.push(valor);

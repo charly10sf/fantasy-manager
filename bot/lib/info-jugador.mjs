@@ -114,11 +114,19 @@ const tramo = (tit, tipo) => (tipo === 'duda' ? 'duda' : tit.p >= 0.65 ? 'alta' 
  * quien: «El defensa del Athletic». media: su media (sale si es 3 o más). tit: { p, pct } o null. f: el esqueleto (0, 1 o 2).
  * { t, numeros } o null si no hay nada que decir.
  */
-export function fraseJugador({ quien, media = 0, tit = null, tipo = 'vuelve', f = 0 }) {
+export function fraseJugador({ quien, media = 0, tit = null, tipo = 'vuelve', f = 0, dato = null }) {
+  // (Carlos, 9 nov: no siempre la media) con otro dato del jugador (lib/datos-jugador.mjs: racha, valor, goles…), ese en vez de la media
+  if (dato && dato.que !== 'media') {
+    const numeros = [...(dato.numeros || []), ...(tit ? [tit.pct] : [])];
+    if (!tit) return { t: `‼️ ${quien} ${dato.dice}`, numeros };
+    const pct = tit.pct, T = tramo(tit, tipo);
+    const cola = { alta: `y tiene un ${pct} % de titularidad en Fantasy Manager`, media: `y tiene un ${pct} % de titularidad, así que no es fijo`, baja: `aunque de momento solo tiene un ${pct} % de titularidad`, duda: `y con la duda se queda en un ${pct} % de titularidad` }[T];
+    return { t: `📊 ${quien} ${dato.dice} ${cola}`, numeros };
+  }
   const m = media >= 3 ? fmt(media) : null, ql = quien.replace(/^./, (c) => c.toLowerCase());
   const numeros = [...(m ? partes(media) : []), ...(tit ? [tit.pct] : [])];
   if (!tit && !m) return null;
-  if (!tit) return { t: `‼️ ${[`${quien} suma ${m} puntos de media`, `${quien} lleva ${m} puntos de media`, `${quien} promedia ${m} puntos por partido`][f]}`, numeros };
+  if (!tit) return { t: `‼️ ${[`${quien} suma ${m} puntos de media`, `${quien} lleva ${m} puntos de media`, `${quien} va a ${m} puntos por partido`][f]}`, numeros };
   const pct = tit.pct;
   const P = {
     alta: [` y Fantasy Manager le da un ${pct} % de titularidad`, `pinta a titular: tiene un ${pct} % en Fantasy Manager`, `tiene un ${pct} % de titularidad en Fantasy Manager`],
@@ -171,9 +179,9 @@ export function fraseGoles(r, posId, f, rival = null) {
  * Sin rival, la hora sola («El partido es…»). quien: «El defensa del Athletic». tit, riv: lo que dan titularidad() y rival() (o null).
  * hr: lo que da cuando() (o null). k: cuántos tweets de un jugador van hoy. Devuelve { ideas, numeros }.
  */
-export function ideasInfo({ posId, equipo, pp, quien, media = 0, tit = null, riv = null, tipo = 'vuelve', hr = null, k = 0, dia = '', largo = false }) {
+export function ideasInfo({ posId, equipo, pp, quien, media = 0, tit = null, riv = null, tipo = 'vuelve', hr = null, k = 0, dia = '', largo = false, dato = null }) {
   const ideas = [], numeros = [];
-  const A = quien ? fraseJugador({ quien, media, tit, tipo, f: turno(3, `infA${dia}`, k) }) : null;
+  const A = quien ? fraseJugador({ quien, media, tit, tipo, f: turno(3, `infA${dia}`, k), dato }) : null;
   if (A) { ideas.push({ t: A.t, prio: 5 }); numeros.push(...A.numeros); }
   if (riv && pp) {
     const P = frasePartido(riv, { equipo, rival: pp.rival, casa: !!pp.enCasa, cuando: hr ? hr.t : null }, turno(3, `infB${dia}`, k));

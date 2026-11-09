@@ -30,10 +30,12 @@ export const rachaDe = (j, k = 3) => (j.weekPoints || []).slice().sort((a, b) =>
 /** histórico de valor de un jugador: [{ marketValue, date }, …], un punto por día desde el 29 jun (sin token, probado el 2 nov) */
 export const valorMercado = (id) => json(`${H}/api/v1/competition/1/player/${id}/market-value?x-lang=es&_=${ya()}`, CAB);
 
-/** una foto o un escudo de LaLiga (PNG); solo de su servidor de imágenes. Guarda lo bajado durante la ejecución. */
+/** una foto o un escudo de LaLiga (PNG); solo de su servidor de imágenes, y las banderas de las selecciones de FotMob (su escudo; los
+    tuits de selecciones del parón, 9 nov). Guarda lo bajado durante la ejecución. */
 const imagenes = new Map();
+const IMAGENES_OK = /^https:\/\/(?:assets-fantasy\.llt-services\.com\/|images\.fotmob\.com\/image_resources\/logo\/teamlogo\/\d+\.png$)/;
 export async function imagen(url) {
-  if (!url || !/^https:\/\/assets-fantasy\.llt-services\.com\//.test(url)) return null;
+  if (!url || !IMAGENES_OK.test(url)) return null;
   if (!imagenes.has(url)) imagenes.set(url, (async () => {
     const r = await fetch(url, { signal: AbortSignal.timeout(20000) });
     const b = Buffer.from(await r.arrayBuffer());

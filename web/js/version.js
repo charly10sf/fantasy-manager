@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7ze';
+export const VERSION = '0.7zf';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,16 @@ export const VERSION = '0.7ze';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7zf', f: '2026-11-09', h: '11:35', t: 'La IA, más fina con el plan',
+    cosas: [
+      { tipo: 'mejora', d: 'ia', t: 'Un plan que cuadra con lo que se puede hacer', x: 'La app comprueba cada paso que propone la IA y lo pasa a una operación que existe de verdad (pujar, comprar, clausular, vender, blindar). Si propone revender, el beneficio es el que calcula la app; si propone subir una cláusula, como mucho la subida justa y sin pasarte de la caja. Con las funciones de los rivales cerradas, la IA solo sabe si tienen mucho, algo o poco dinero.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'reloj', t: 'Nada de clausular para dentro de diez días', x: 'En un parón la IA te podía proponer hoy una cláusula que no se abre hasta dentro de una semana o más. Ahora solo planea las que se abren en las próximas 48 horas; las demás salen como «Para más adelante» y vuelven al plan cuando falten un par de días.', ir: { v: 'hoy' } },
+      { tipo: 'nuevo', d: 'cara', t: 'Un saludo de bienvenida', x: 'La primera vez que alguien entra con su liga le sale un mensaje tuyo: quién hace la app y que cualquier fallo o idea se manda con Reportar. Sale una vez por cuenta, aunque entre desde otro dispositivo.' },
+      { menor: true, tipo: 'mejora', d: 'campana', t: 'El aviso de arriba, cada tres días', x: 'El aviso de que la app está en pruebas vuelve a salir 72 horas después de cerrarlo (antes, 24).' },
+      { tipo: 'arreglo', d: 'arreglo', t: 'El lunes del parón', x: 'La IA decía «fin de semana sin partidos» justo después de una jornada recién jugada: ahora sabe cuál fue la última jornada y que viene un parón.' },
+    ],
+  },
   {
     v: '0.7ze', f: '2026-11-09', h: '06:20', t: 'Cada día y cada jornada',
     cosas: [
