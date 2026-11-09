@@ -16,7 +16,7 @@ export const VERSION = '0.7.1e';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.1e', f: '2026-11-10', h: 'HH:MM', t: 'Cada club, por pestañas',
+    v: '0.7.1e', f: '2026-11-10', h: '00:15', t: 'Cada club, por pestañas',
     cosas: [
       { tipo: 'nuevo', d: 'grafica', t: 'Suben y bajan, club a club', x: 'En la ficha de cada club, la pestaña Suben y bajan pone a toda su plantilla del que más sube arriba al que más baja abajo, con cuánto sube o baja cada uno (en euros y en %), su valor y de quién es en tu liga. Arriba, lo que se mueve el club entre todos, hoy o en 7 días.', ir: { v: 'clubes' } },
       { tipo: 'mejora', d: 'escudo', t: 'La ficha del club, por partes', x: 'Lo que antes iba todo seguido en una lista larga va ahora en cuatro pestañas: Resumen (el próximo partido, su once, las bajas y las noticias), Suben y bajan, Plantilla (con cuántos hay libres y en tu liga) y Partidos (los que le vienen, los últimos y jornada a jornada). Siempre se abre en Resumen.', ir: { v: 'clubes' } },
