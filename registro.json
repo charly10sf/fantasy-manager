@@ -1964,7 +1964,8 @@
    "AS|https://as.com/futbol/primera/un-deportivo-de-presente-y-de-mucho-mas-futuro-f202611-n/": 1794227206000,
    "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000,
    "SPORT|136248722": 1794225294000,
-   "SPORT|136249887": 1794225247000
+   "SPORT|136249887": 1794225247000,
+   "AS|https://as.com/futbol/cuatro-internacionales-se-marchan-con-sus-selecciones-f202611-n/": 1794228363000
   },
   "hechos": [
    {
@@ -2517,7 +2518,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3472,22 +3473,24 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229272243
+  }
  },
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 225823,
-  "salida": 23280,
+  "entrada": 227489,
+  "salida": 23356,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.502684,
+  "dolares": 0.502889,
   "reservado": 0
  },
  "recientes": {
@@ -7412,13 +7415,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 813,
+   "ok": 814,
    "fallos": 0,
-   "ejecuciones": 468,
+   "ejecuciones": 469,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T12:56:11.931Z"
+   "ultima": "2026-11-09T13:01:12.243Z"
   }
  },
  "ptsDirecto": {},
@@ -7435,15 +7438,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:56:20.900Z"
+   "ultimaBien": "2026-11-09T13:01:18.254Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:56:20.900Z"
+   "ultimaBien": "2026-11-09T13:01:18.254Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:56:20.900Z"
+   "ultimaBien": "2026-11-09T13:01:18.254Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7451,11 +7454,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:56:20.900Z"
+   "ultimaBien": "2026-11-09T13:01:18.254Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:56:20.900Z"
+   "ultimaBien": "2026-11-09T13:01:18.254Z"
   }
  },
  "avisos": [
