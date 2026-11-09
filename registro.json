@@ -1784,7 +1784,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/china-esta-en-conversaciones-con-laliga-tras-la-polemica-con-mbappe-pero-pide-tiempo-para-digerir-cadena-ser/": 1793956187000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/china-reconoce-contactos-madrid-reconciliacion-polemica-mbappe.html": 1793956448000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247823/premio-obed-vargas-mexico.html": 1793955978000,
    "MARCA|https://www.marca.com/futbol/bundesliga/2026/11/06/makaay-ficharon-aubameyang-gimenez-deportivo-pertenece-primera.html": 1793957412000,
    "AS|https://as.com/futbol/primera/hidalgo-casado-puede-venir-convocado-esta-con-ganas-y-la-cabeza-empuja-f202611-n/": 1793957214000,
    "AS|https://as.com/futbol/primera/china-esta-en-conversaciones-con-laliga-pero-pide-tiempo-para-digerir-el-tema-mbappe-f202611-n/": 1793957399000,
@@ -7607,13 +7606,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 766,
+   "ok": 767,
    "fallos": 0,
-   "ejecuciones": 421,
+   "ejecuciones": 422,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T09:01:18.190Z"
+   "ultima": "2026-11-09T09:06:18.453Z"
   }
  },
  "ptsDirecto": {},
@@ -7630,15 +7629,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:01:23.064Z"
+   "ultimaBien": "2026-11-09T09:06:21.435Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:01:23.064Z"
+   "ultimaBien": "2026-11-09T09:06:21.435Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:01:23.064Z"
+   "ultimaBien": "2026-11-09T09:06:21.435Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7646,11 +7645,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:01:23.064Z"
+   "ultimaBien": "2026-11-09T09:06:21.435Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:01:23.064Z"
+   "ultimaBien": "2026-11-09T09:06:21.435Z"
   }
  },
  "avisos": [
