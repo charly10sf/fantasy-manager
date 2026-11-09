@@ -1782,8 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/vuelven-gueler-tchouameni.html": 1793976866000,
-   "SPORT|136173086": 1793976867000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247994/galarreta-alista-paredes-causa-baja.html": 1793981520000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247991/soler-ejercita-suplentes-espera-oyarzabal-zakharyan-esten-ultima-sesion.html": 1793981155000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/nueve-bajas-betis-navalcarnero_0_2008438147.html": 1793982315000,
@@ -1965,18 +1963,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/vuelven-gueler-tchouameni.html",
-    "medio": "MARCA",
-    "t": 1793976866000,
-    "id": "1480",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Tchouaméni vuelve a la convocatoria del Real Madrid",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247994/galarreta-alista-paredes-causa-baja.html",
     "medio": "Mundo Deportivo",
@@ -7366,13 +7352,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 836,
+   "ok": 837,
    "fallos": 0,
-   "ejecuciones": 491,
+   "ejecuciones": 492,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T14:51:16.685Z"
+   "ultima": "2026-11-09T14:56:15.384Z"
   }
  },
  "ptsDirecto": {},
@@ -7389,15 +7375,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:51:20.225Z"
+   "ultimaBien": "2026-11-09T14:56:19.715Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:51:20.225Z"
+   "ultimaBien": "2026-11-09T14:56:19.715Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:51:20.225Z"
+   "ultimaBien": "2026-11-09T14:56:19.715Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7405,11 +7391,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:51:20.225Z"
+   "ultimaBien": "2026-11-09T14:56:19.715Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:51:20.225Z"
+   "ultimaBien": "2026-11-09T14:56:19.715Z"
   }
  },
  "avisos": [
