@@ -87,7 +87,9 @@ export async function generar(ctx) {
     aviso: 'la imagen adjunta lleva los cinco calendarios más fáciles y los cinco más difíciles con cada rival: el texto no los enumera todos; cuenta el mejor, el peor y lo que significa',
     mejorCalendario: mejor.slice(0, 3).map((e, i) => equipoH(e, i === 0 ? 'el más fácil' : 'de los más fáciles')),
     peorCalendario: peor.slice(0, 3).map((e, i) => equipoH(e, i === 0 ? 'el más difícil' : 'de los más difíciles')),
-    clubes: clubesH(...[...mejor.slice(0, 3), ...peor.slice(0, 3)].flatMap((e) => [e.equipo, ...e.partidos.map((p) => p.rival)])) };
+    // sin emojis de club: con tantos clubes, la IA ponía uno y se dejaba los demás (y los rechazaba el validador; simulacro del 9 nov)
+    emojis: 'sin emojis de club en este tuit',
+    clubes: Object.fromEntries(Object.entries(clubesH(...[...mejor.slice(0, 3), ...peor.slice(0, 3)].flatMap((e) => [e.equipo, ...e.partidos.map((p) => p.rival)]))).map(([k, c]) => [k, { ...c, emoji: null }])) };
   log(`  (calendario) J${J1}-J${JN}: fácil ${mejor.map((e) => `${e.equipo} ${e.d.toFixed(2)}`).join(', ')} · difícil ${peor.map((e) => `${e.equipo} ${e.d.toFixed(2)}`).join(', ')}`);
   return [{ tipo: 'calendario', clave: `calendario|${v.jugada}`, jornada: v.jugada, texto, hechos, numeros: num, partido: null, tarjeta }];
 }
