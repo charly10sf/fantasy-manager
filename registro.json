@@ -1966,7 +1966,8 @@
    "SPORT|136243106": 1794246969000,
    "SPORT|136256607": 1794248338000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-seleccion-espana-republica-checa_0_2008459539.html": 1794252831000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/homenaje-seleccion-espanola-jesus-miguel_0_2008459621.html": 1794253239000
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/homenaje-seleccion-espanola-jesus-miguel_0_2008459621.html": 1794253239000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000
   },
   "hechos": [
    {
@@ -2421,7 +2422,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 48
+   "n": 49
   },
   "desde": {
    "67": {
@@ -3266,7 +3267,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136185088": 1793995104000,
    "SPORT|136188215": 1794024610000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004247878/aprender-tragedia.html": 1794024600000,
    "SPORT|136188205": 1794024096000,
@@ -3329,17 +3329,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 57,
+   "clasificar": 58,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 275328,
-  "salida": 30382,
+  "entrada": 277123,
+  "salida": 30660,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.511186,
+  "dolares": 0.511505,
   "reservado": 0
  },
  "recientes": {
@@ -7264,13 +7264,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 898,
+   "ok": 899,
    "fallos": 0,
-   "ejecuciones": 553,
+   "ejecuciones": 554,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T19:56:17.562Z"
+   "ultima": "2026-11-09T20:01:12.979Z"
   }
  },
  "ptsDirecto": {},
@@ -7287,15 +7287,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:56:25.402Z"
+   "ultimaBien": "2026-11-09T20:01:19.358Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:56:25.402Z"
+   "ultimaBien": "2026-11-09T20:01:19.358Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:56:25.402Z"
+   "ultimaBien": "2026-11-09T20:01:19.358Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7303,11 +7303,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:56:25.402Z"
+   "ultimaBien": "2026-11-09T20:01:19.358Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:56:25.402Z"
+   "ultimaBien": "2026-11-09T20:01:19.358Z"
   }
  },
  "avisos": [
