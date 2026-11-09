@@ -1964,7 +1964,8 @@
    "SPORT|136249887": 1794225247000,
    "AS|https://as.com/futbol/cuatro-internacionales-se-marchan-con-sus-selecciones-f202611-n/": 1794228363000,
    "SPORT|136250143": 1794225334000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-pierden-partido-praga-victor-munoz-seleccion_0_2008456929.html": 1794229502000
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-pierden-partido-praga-victor-munoz-seleccion_0_2008456929.html": 1794229502000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000
   },
   "hechos": [
    {
@@ -2505,7 +2506,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -3467,17 +3468,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 232815,
-  "salida": 24810,
+  "entrada": 234484,
+  "salida": 25177,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.504149,
+  "dolares": 0.504499,
   "reservado": 0
  },
  "recientes": {
@@ -7402,13 +7403,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 821,
+   "ok": 822,
    "fallos": 0,
-   "ejecuciones": 476,
+   "ejecuciones": 477,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T13:36:11.909Z"
+   "ultima": "2026-11-09T13:41:13.612Z"
   }
  },
  "ptsDirecto": {},
@@ -7425,15 +7426,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:36:16.721Z"
+   "ultimaBien": "2026-11-09T13:41:21.514Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:36:16.721Z"
+   "ultimaBien": "2026-11-09T13:41:21.514Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:36:16.721Z"
+   "ultimaBien": "2026-11-09T13:41:21.514Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7441,11 +7442,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:36:16.721Z"
+   "ultimaBien": "2026-11-09T13:41:21.514Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:36:16.721Z"
+   "ultimaBien": "2026-11-09T13:41:21.514Z"
   }
  },
  "avisos": [
