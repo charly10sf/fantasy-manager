@@ -403,13 +403,15 @@ const BETA_VUELVE = 3 * DIA;
 /* la pantalla de bienvenida (Carlos, 9 nov 10:20: «en vez del aviso de arriba»): la primera vez que alguien entra con su
    liga, una vez por cuenta (en local y en el Worker, para que no salga otra vez en otro dispositivo: soporte.js). Nunca en
    la liga de ejemplo ni antes de entrar, ni encima del tutorial, las novedades o el límite: espera a que no haya nada
-   delante (el tutorial, a su vez, espera a que se cierre). El texto es el de Carlos, tal cual */
+   delante (el tutorial, a su vez, espera a que se cierre). El texto es el de Carlos, tal cual (9 nov 11:28: «¡Hola!» de título, «Soy
+   Carlos» en el cuerpo y «Muchas gracias, y vigila las cláusulas» al final) */
 function bienvenidaHTML() {
   return `<div id="bienvenida" class="bv" role="dialog" aria-modal="true" aria-labelledby="bvTit"><div class="bv-caja">
     <div class="bv-logo">${LOGO_P}<span>Fantasy Manager</span></div>
-    <h2 id="bvTit">¡Hola! Soy Carlos.</h2>
-    <p>Fantasy Manager lo estoy haciendo yo solo, en los ratos que me dejan el trabajo y los estudios.</p>
+    <h2 id="bvTit">¡Hola!</h2>
+    <p>Soy Carlos. Fantasy Manager lo estoy haciendo yo solo, en los ratos que me dejan el trabajo y los estudios.</p>
     <p>Por eso me ayuda muchísimo que me cuentes cualquier fallo que veas o cualquier idea para mejorar algo: lo leo todo y lo tengo en cuenta.</p>
+    <p>Muchas gracias, y vigila las cláusulas.</p>
     <div class="bv-botones"><button class="btn ancho" data-accion="bienvenidaReportar">${icono('bicho')}Reportar un fallo o una idea</button>
     <button class="btn sec ancho" data-accion="bienvenidaOk">Entendido</button></div></div></div>`;
 }
