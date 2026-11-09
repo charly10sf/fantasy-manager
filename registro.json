@@ -3383,7 +3383,9 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136257629": 1794240672627
+  }
  },
  "ia": {
   "dia": "2026-11-09",
@@ -7323,13 +7325,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 851,
+   "ok": 852,
    "fallos": 0,
-   "ejecuciones": 506,
+   "ejecuciones": 507,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T16:06:16.793Z"
+   "ultima": "2026-11-09T16:11:12.627Z"
   }
  },
  "ptsDirecto": {},
@@ -7346,15 +7348,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:06:21.044Z"
+   "ultimaBien": "2026-11-09T16:11:17.236Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:06:21.044Z"
+   "ultimaBien": "2026-11-09T16:11:17.236Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:06:21.044Z"
+   "ultimaBien": "2026-11-09T16:11:17.236Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7362,11 +7364,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:06:21.044Z"
+   "ultimaBien": "2026-11-09T16:11:17.236Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:06:21.044Z"
+   "ultimaBien": "2026-11-09T16:11:17.236Z"
   }
  },
  "avisos": [
