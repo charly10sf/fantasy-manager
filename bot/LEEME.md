@@ -300,3 +300,41 @@ Carlos (9 nov 08:58-09:0x): cuatro tuits propios del parón, con tarjeta, solo d
 - Verlos fuera de su hora: `node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=balance,revalorizaciones,calendario,selecciones
   --tarjetas=1 --salida-tarjetas=/tmp/tj` (selecciones de otro parón: `--fechas-selecciones=AAAAMMDD,…`). Pruebas sin red:
   balance-, revalorizaciones-, calendario- y selecciones-ejemplo.mjs.
+
+## Selecciones cada día del parón, con banderas y minutos (9 nov, tarde)
+
+Carlos (9 nov 10:13): un resumen de los mejores y los peores de los jugadores de LaLiga con sus selecciones, con banderas (en la tarjeta
+y en el texto) y los minutos y la carga de cada uno; frecuencia elegida: uno al día.
+
+- `selecciones-dia` (tipos/selecciones-dia.mjs): cada mañana del parón, lo de AYER. Los mejores (nota de FotMob de 7,5 o más, goles,
+  asistencias o mejor del partido) y los peores (se retira lesionado, roja o nota de 6 o menos con 30 minutos o más), con selección,
+  bandera, rival, marcador, minutos y nota; la carga (150 minutos o más en el parón) y los de 20 M o más que ayer se quedaron sin jugar.
+  Tarjeta: la del mercado con LOS MEJORES, LOS PEORES y MÁS MINUTOS EN EL PARÓN, con la bandera redonda arriba a la izquierda de cada
+  cara (`banderaRedonda` en lib/tarjetas.mjs). Sale si ayer jugaron 3 o más de LaLiga y hay al menos un mejor y otro (mejor o peor).
+- La nota de FotMob sirve para elegir a los mejores y a los peores, pero en los hechos solo va la que llama la atención (9 o más, 5,5 o
+  menos) y la IA la usa como mucho una vez: lo que más cuenta es lo que vale cada uno, lo que ha subido o bajado en el parón y los
+  minutos (Carlos, 9 nov 11:01: «al jugador fantasy promedio le importa que un jugador se valorice, valga y que salga titular»). En la
+  tarjeta, lo grande son los goles y las asistencias (si no hay, la nota) y debajo los minutos y lo que vale.
+- Tarjetas por país (Carlos, 9 nov 11:03: «con los colores del país»): además de la general, una por cada selección de ayer con 3 o
+  más de LaLiga que jugaron (España primero; como mucho 2): la franja y el brillo con los colores de su bandera (`coloresPais` en
+  lib/nacionalidad.mjs), la bandera grande, el resultado con la del rival y sus jugadores de LaLiga con lo que hicieron, los minutos y
+  lo que valen (`svgSeleccion` en lib/tarjetas.mjs). El tuit sale con hasta 3 imágenes.
+- Cuándo (`ventanaSeleccionesDia` en lib/paron-tuits.mjs): solo en el parón y antes de las caídas de la jornada siguiente; de
+  `horasSeleccionesDia` (9-14; entre semana desde las 7); uno por día de partidos (clave `selecciones-dia|J|AAAAMMDD` con la fecha de ayer;
+  tope 7 por jornada); separado 2 h de los cuatro del parón; el día que sale `selecciones` (el de todo el parón, martes 17 a las 07:00)
+  el diario no sale, porque ese ya cuenta lo de ayer. En noviembre: del viernes 13 (lo del jueves 12) al lunes 16; `seleccionesDia.activo`
+  false lo apaga.
+- Las actas (lib/actas-selecciones.mjs, `leerActa`): de cada jugador, la nota (`performance.rating`), los minutos (90 por partido: el
+  titular hasta que sale o le echan, el suplente desde que entra; `performance.substitutionEvents` o, si no vienen, el `swap` de los
+  cambios), goles y asistencias (`performance.events` o los sucesos), roja (suceso `Card` con `Red`) y lesión (`injuredPlayerOut` o motivo
+  «injury»). Comprobado con el España-Croacia del 29 sep. Los días ya pasados se guardan en el registro (`actasSelecciones`, 14 días) y no
+  se vuelven a pedir.
+- `selecciones` (el de todo el parón) usa ahora las mismas actas: bandera en el texto y en la tarjeta, y en los hechos y en la tarjeta,
+  los que más minutos llevan (MÁS MINUTOS EN EL PARÓN) y los de 20 M o más que no han jugado nada.
+- Banderas: `bandera(codigo)` y `banderaUrl(idFm)` en lib/nacionalidad.mjs (FIFA → ISO; Inglaterra, Escocia y Gales con su bandera;
+  Irlanda del Norte, sin emoji). La imagen es el escudo de la selección en FotMob (`images.fotmob.com/image_resources/logo/teamlogo/<id>.png`,
+  redonda), que ya deja `imagen()` de lib/laliga.mjs. En el texto, solo en los dos tuits de selecciones: el validador (`erroresBanderas`
+  en lib/redaccion.mjs) pide que cada bandera sea de una selección de los hechos, vaya justo detrás de su nombre y salga una vez; no
+  cuentan como emojis de la guía (ni en lib/pulir.mjs). La guía (lib/voz.mjs) lo explica, con dos ejemplos de `selecciones-dia`.
+- Verlo fuera de su hora: `node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=selecciones-dia --fechas-selecciones=20260924,…,20260929
+  --tarjetas=1 --salida-tarjetas=/tmp/tj` (el último día es «ayer»). Prueba sin red: prueba/selecciones-dia-ejemplo.mjs.

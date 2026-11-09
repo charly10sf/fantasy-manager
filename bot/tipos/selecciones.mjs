@@ -5,10 +5,12 @@
 // se cruza con la lista de LaLiga por club y nombre. Una lesión solo si FotMob la marca (`injuredPlayerOut` en el cambio): nada de
 // lo que no venga en los datos (como `sucesosSinHechos` del final). Convocatorias: FotMob solo da los que van en el acta de cada
 // partido, no la lista de convocados; sin una fuente fiable, no se cuentan (Carlos lo sabe: 9 nov).
-// Un tuit por parón, el último de los cuatro (lib/paron-tuits.mjs), con tarjeta (la del mercado con otros paneles).
+// Un tuit por parón, el último de los cuatro (lib/paron-tuits.mjs), con tarjeta (la del mercado con otros paneles). Desde el 9 nov (10:13),
+// con la bandera de cada selección (en la tarjeta y en el texto) y los minutos: quién llega a la jornada de vuelta con más carga o sin
+// haber jugado. Las actas, de lib/actas-selecciones.mjs (las mismas que el diario, tipos/selecciones-dia.mjs, y con su caché).
 import { json } from '../lib/http.mjs';
-import { enParalelo } from '../lib/http.mjs';
-import { FOTMOB, mismoNombre } from '../lib/fotmob.mjs';
+import { mismoNombre } from '../lib/fotmob.mjs';
+import { actasDe, porJugador, seleccion, deSelecciones as deSel, fechaTxt, MESES as MESES_ACTAS, aaaammdd as aaaa } from '../lib/actas-selecciones.mjs';
 import { pais } from '../lib/nacionalidad.mjs';
 import { clubes as clubesH, jugador as jugadorH } from '../lib/hechos.mjs';
 import { corto, norm, hash, el } from '../lib/texto.mjs';
@@ -16,17 +18,11 @@ import { tweet, aparte, cap } from '../lib/redactar.mjs';
 import { lista as enLista } from '../lib/agrupar.mjs';
 import { ventanaParon, imagenesDe } from '../lib/paron-tuits.mjs';
 
-const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-const DIA = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
-const aaaammdd = (t) => DIA.format(new Date(t)).replace(/-/g, '');
+const MESES = MESES_ACTAS;
+const aaaammdd = aaaa;
 
-/** ¿es un partido de selecciones absolutas masculinas? (por la competición y por los equipos) */
-export function deSelecciones(liga, m) {
-  const n = `${liga.name || ''} ${liga.parentLeagueName || ''}`;
-  if (/women|\(w\)|u-?2[0-3]\b|u-?1\d\b|youth|olympic|club|copa del rey|copa de la reina|supercopa/i.test(n)) return false;
-  if (m && [m.home && m.home.name, m.away && m.away.name].some((x) => /\(w\)|\bU-?\d\d\b/i.test(String(x || '')))) return false;
-  return /nations league|friendl|world cup qual|qualification|euro\b|africa cup|asian cup|gold cup|copa am[eé]rica|concacaf|conmebol|afc\b|caf\b/i.test(n);
-}
+/** ¿es un partido de selecciones absolutas masculinas? (lib/actas-selecciones.mjs) */
+export const deSelecciones = deSel;
 
 /**
  * Lo de los jugadores de LaLiga en un partido de selecciones (el detalle de FotMob). clubesLiga: Set de los nombres cortos de LaLiga.
@@ -101,7 +97,7 @@ export function juntar(partidos, jugadores, equipos) {
 }
 
 export async function generar(ctx) {
-  const { jugadores = [], stats = [], equipos: equiposCtx = {}, log = console.log, ahora = Date.now(), paron = null, fechasSelecciones = null, pedir = json } = ctx;
+  const { jugadores = [], stats = [], equipos: equiposCtx = {}, log = console.log, ahora = Date.now(), paron = null, fechasSelecciones = null, pedir = json, registro = null } = ctx;
   const v = ventanaParon('selecciones', ctx);
   if (!v.ok) { log(`  (selecciones) ${v.motivo}`); return []; }
   const im = imagenesDe(jugadores, stats, paron && paron.statsAnterior, paron && paron.statsSiguiente);
@@ -115,22 +111,25 @@ export async function generar(ctx) {
     for (let t = desde; t <= ahora && dias.length < 12; t += 864e5) dias.push(aaaammdd(t));
     if (!dias.includes(aaaammdd(ahora))) dias.push(aaaammdd(ahora));
   }
-  const ua = { headers: { Accept: 'application/json' }, tiempo: 15000, reintentos: 1 };
-  const delDia = await enParalelo(dias, 3, (d) => pedir(`${FOTMOB}/matches?date=${d}&timezone=Europe%2FMadrid&ccode3=ESP`, ua).catch(() => null));
-  const ms = [];
-  delDia.forEach((r, i) => { for (const l of (r && r.leagues) || []) for (const m of l.matches || []) if (deSelecciones(l, m) && m.status && m.status.finished && !m.status.cancelled) ms.push({ id: m.id, fecha: dias[i], liga: l.name }); });
-  log(`  (selecciones) ${dias[0]}-${dias[dias.length - 1]}: ${ms.length} partidos de selecciones acabados`);
-  if (!ms.length) return [];
-  const dets = await enParalelo(ms, 4, (m) => pedir(`${FOTMOB}/matchDetails?matchId=${m.id}`, ua).catch(() => null));
-  const partidos = [];
-  dets.forEach((d, i) => { const p = leerPartido(d, clubesLiga); if (p && p.jugadores.size) partidos.push({ p, fecha: ms[i].fecha, liga: ms[i].liga }); });
-  const gente = juntar(partidos, jugadores, equipos);
+  const actas = await actasDe(dias, { clubesLiga, pedir, registro, ahora, log });
+  log(`  (selecciones) ${dias[0]}-${dias[dias.length - 1]}: ${actas.length} partidos de selecciones acabados con jugadores de LaLiga`);
+  if (!actas.length) return [];
+  const por = porJugador(actas, jugadores, equipos);
+  // lo de cada uno en todo el parón: goles, asistencias, la lesión (la última que marque FotMob) y los minutos
+  const gente = [...por.values()].map((r) => {
+    const l = r.partidos.filter((p) => p.lesion != null).pop();
+    return { ...r, seleccion: r.sel.nombre, goles: r.partidos.reduce((n, p) => n + p.goles, 0), asist: r.partidos.reduce((n, p) => n + p.asist, 0),
+      lesion: l ? { min: l.lesion, rival: l.rival.nombre, fecha: l.fecha } : null };
+  });
   const goleadores = gente.filter((x) => x.goles + x.asist > 0).sort((a, b) => (b.goles * 2 + b.asist) - (a.goles * 2 + a.asist) || Number(b.j.marketValue) - Number(a.j.marketValue));
   const tocados = gente.filter((x) => x.lesion).sort((a, b) => Number(b.j.marketValue) - Number(a.j.marketValue));
-  log(`  (selecciones) ${partidos.length} partidos con jugadores de LaLiga · goles o asistencias: ${goleadores.map((x) => `${x.j.nickname} ${x.goles}+${x.asist}`).join(', ') || 'nadie'} · tocados: ${tocados.map((x) => x.j.nickname).join(', ') || 'nadie'}`);
+  // la carga para la jornada de vuelta: los que más minutos llevan (150 o más) y los de más valor que estuvieron y no jugaron nada
+  const carga = gente.filter((x) => x.min >= 150).sort((a, b) => b.min - a.min || Number(b.j.marketValue) - Number(a.j.marketValue));
+  const sinJugar = gente.filter((x) => x.min === 0 && x.partidos.length && Number(x.j.marketValue) >= 20e6).sort((a, b) => Number(b.j.marketValue) - Number(a.j.marketValue));
+  log(`  (selecciones) goles o asistencias: ${goleadores.map((x) => `${x.j.nickname} ${x.goles}+${x.asist}`).join(', ') || 'nadie'} · tocados: ${tocados.map((x) => x.j.nickname).join(', ') || 'nadie'} · más minutos: ${carga.slice(0, 5).map((x) => `${x.j.nickname} ${x.min}'`).join(', ') || 'nadie'} · sin jugar: ${sinJugar.slice(0, 3).map((x) => x.j.nickname).join(', ') || 'nadie'}`);
   if (goleadores.length < 2 && !tocados.length) return [];
   const eq = (x) => corto(equipos[String(x.j.teamId)] || '?');
-  const fechaTxt = (d) => `${Number(d.slice(6))} de ${MESES[Number(d.slice(4, 6)) - 1]}`;
+  const conBandera = (x) => (x.sel.bandera ? `${x.seleccion} ${x.sel.bandera}` : x.seleccion);
   const ga = (x) => [x.goles ? `${x.goles} ${x.goles === 1 ? 'gol' : 'goles'}` : '', x.asist ? `${x.asist} ${x.asist === 1 ? 'asistencia' : 'asistencias'}` : ''].filter(Boolean).join(' y ');
   const V = (xs, k) => xs[hash(`sel${v.jugada}${k}`) % xs.length];
 
@@ -139,38 +138,46 @@ export async function generar(ctx) {
   const num = [];
   const cab = V(['🌍 Lo que han hecho los de LaLiga con sus selecciones en el parón', '🌍 Parón de selecciones: goles, asistencias y sustos de los jugadores de LaLiga'], 'cab');
   const ideas = [];
-  if (a) { ideas.push({ t: aparte(`⚽ ${a.j.nickname} ${eq(a) ? `(${eq(a)})` : ''} ha hecho ${ga(a)} con ${a.seleccion}`), prio: 9 }); num.push(a.goles, a.asist); }
+  if (a) { ideas.push({ t: aparte(`⚽ ${a.j.nickname} ${eq(a) ? `(${eq(a)})` : ''} ha hecho ${ga(a)} con ${conBandera(a)}`), prio: 9 }); num.push(a.goles, a.asist); }
   const otros = goleadores.slice(1, 5);
   if (otros.length) { ideas.push({ t: aparte(`También han marcado o dado un gol ${enLista(otros.map((x) => `${x.j.nickname} (${x.seleccion})`))}`), prio: 7 }); }
   for (const x of tocados.slice(0, 2)) { ideas.push({ t: aparte(`🚑 ${x.j.nickname} ${del2(eq(x))} se retiró lesionado en el minuto ${x.lesion.min} ante ${x.lesion.rival}`), prio: 8 }); num.push(x.lesion.min); }
+  if (carga[0]) { ideas.push({ t: aparte(`El que llega con más minutos: ${carga[0].j.nickname}, ${carga[0].min} en ${carga[0].jugados} ${carga[0].jugados === 1 ? 'partido' : 'partidos'}`), prio: 5 }); num.push(carga[0].min, carga[0].jugados); }
   const { texto } = tweet(cab, ideas);
 
-  // la tarjeta: la del mercado con un panel de goles y asistencias y, si los hay, otro de los que se retiran tocados
-  const fila = (x, dif, pct) => ({ nombre: x.j.nickname, pos: Number(x.j.positionId), equipo: eq(x), club: equipos[String(x.j.teamId)] || '', caraUrl: im.cara(x.j), escudoUrl: im.escudoDe(x.j.teamId), dif, pct, valor: x.seleccion.toUpperCase() });
+  // la tarjeta: la del mercado con un panel de goles y asistencias, otro de los que se retiran tocados (si los hay) y otro de los que más
+  // minutos llevan; la bandera de cada selección junto a cada cara
+  const fila = (x, dif, pct, valor = x.seleccion.toUpperCase()) => ({ nombre: x.j.nickname, pos: Number(x.j.positionId), equipo: eq(x), club: equipos[String(x.j.teamId)] || '', caraUrl: im.cara(x.j), escudoUrl: im.escudoDe(x.j.teamId), banderaUrl: x.sel.banderaUrl, dif, pct, valor });
   const grande = (x) => (x.goles ? `${x.goles} ${x.goles === 1 ? 'GOL' : 'GOLES'}` : `${x.asist} ${x.asist === 1 ? 'ASIST.' : 'ASIST.'}`);
-  const peque = (x) => (x.goles && x.asist ? `+${x.asist} ASIST.` : `${x.partidos.length} ${x.partidos.length === 1 ? 'PARTIDO' : 'PARTIDOS'}`);
+  const peque = (x) => (x.goles && x.asist ? `+${x.asist} ASIST.` : `${x.min} MIN`);
   const paneles = [];
   if (goleadores.length) paneles.push({ titulo: 'GOLES Y ASISTENCIAS', bueno: true, flecha: false, filas: goleadores.slice(0, 5).map((x) => fila(x, grande(x), peque(x))) });
   if (tocados.length) paneles.push({ titulo: 'SE RETIRAN TOCADOS', bueno: false, flecha: false, filas: tocados.slice(0, 5).map((x) => fila(x, `MIN. ${x.lesion.min}`, `ANTE ${String(x.lesion.rival).toUpperCase()}`)) });
-  else if (goleadores.length > 5) paneles.push({ titulo: 'Y TAMBIÉN', bueno: true, flecha: false, filas: goleadores.slice(5, 10).map((x) => fila(x, grande(x), peque(x))) });
+  if (carga.length >= 2) paneles.push({ titulo: 'MÁS MINUTOS EN EL PARÓN', bueno: true, flecha: false, filas: carga.slice(0, 5).map((x) => fila(x, `${x.min} MIN`, `${x.jugados} ${x.jugados === 1 ? 'PARTIDO' : 'PARTIDOS'}`)) });
+  else if (!tocados.length && goleadores.length > 5) paneles.push({ titulo: 'Y TAMBIÉN', bueno: true, flecha: false, filas: goleadores.slice(5, 10).map((x) => fila(x, grande(x), peque(x))) });
   const d1 = dias[0], d2 = dias[dias.length - 1];
   const d = { titulo: 'SELECCIONES', sub: 'JUGADORES DE LALIGA', sub2: `PARÓN · ${fechaTxt(d1).toUpperCase()} - ${fechaTxt(d2).toUpperCase()}`, paneles };
   const todas = paneles.flatMap((p) => p.filas);
   const tarjeta = { tipo: 'mercado', nombre: `selecciones-${v.jugada}`, d,
     permitidos: { numeros: [Number(d1.slice(6)), Number(d2.slice(6)), ...todas.flatMap((f) => [f.dif, f.pct])].map(String),
       palabras: ['SELECCIONES', 'JUGADORES', 'DE', 'LALIGA', 'PARÓN', 'GOLES', 'GOL', 'Y', 'ASISTENCIAS', 'ASIST', 'SE', 'RETIRAN', 'TOCADOS', 'TAMBIÉN', 'MIN', 'ANTE', 'PARTIDO', 'PARTIDOS',
-        ...MESES.map((m) => m.toUpperCase()), ...todas.flatMap((f) => [f.nombre, f.equipo, f.valor, f.pct])] } };
+        'MÁS', 'MINUTOS', 'EN', 'EL', ...MESES.map((m) => m.toUpperCase()), ...todas.flatMap((f) => [f.nombre, f.equipo, f.valor, f.pct])] } };
 
   // los hechos para la IA: cada uno con lo que hizo y contra quién; las lesiones, solo las que marca FotMob
   // (sin su media: la IA la convertía en «de los que más puntos dan», que aquí no pinta nada; simulacro del 9 nov)
-  const jug = (x, extra, principal = false) => { const h = jugadorH(x.j, { equipos, principal, datos: false, extra: { club: eq(x), seleccion: x.seleccion, ...extra } }); delete h.mediaPuntos; return h; };
-  const hechos = { tipo: 'selecciones', noticia: `lo que han hecho los jugadores de LaLiga con sus selecciones en el parón (del ${fechaTxt(d1)} al ${fechaTxt(d2)}): goles, asistencias y los que se han retirado lesionados`,
-    momento: `la liga vuelve con la jornada ${v.siguiente}`,
-    aviso: 'una lesión, solo la que está en «seRetiranTocados» y tal como está (se retiró lesionado en ese minuto): ni gravedad ni plazos, que no se saben. Nada de convocatorias ni de partidos que no estén aquí. La imagen adjunta lleva a los que han marcado o asistido.',
-    golesYAsistencias: goleadores.slice(0, 6).map((x) => ({ nombre: x.j.nickname, club: eq(x), seleccion: x.seleccion, loQueHizo: ga(x), partidos: x.partidos.filter((p) => p.goles || p.asist).map((p) => `ante ${p.rival}${p.marcador ? ` (${p.marcador})` : ''}, el ${fechaTxt(p.fecha)}`) })),
-    ...(tocados.length ? { seRetiranTocados: tocados.slice(0, 4).map((x) => ({ nombre: x.j.nickname, club: eq(x), seleccion: x.seleccion, queLePaso: `se retiró lesionado en el minuto ${x.lesion.min} ante ${x.lesion.rival}, el ${fechaTxt(x.lesion.fecha)}` })) } : {}),
-    jugadores: [...goleadores.slice(0, 3).map((x, i) => jug(x, { loQueHizo: ga(x) }, i === 0)), ...tocados.slice(0, 2).map((x) => jug(x, { estado: 'tocado con su selección' }, true))],
-    clubes: clubesH(...[...goleadores.slice(0, 6), ...tocados.slice(0, 4)].map(eq)) };
+  const sel = (x) => ({ seleccion: x.seleccion, ...(x.sel.bandera ? { bandera: x.sel.bandera } : {}) });
+  const jug = (x, extra, principal = false) => { const h = jugadorH(x.j, { equipos, principal, datos: false, extra: { club: eq(x), ...sel(x), ...extra } }); delete h.mediaPuntos; return h; };
+  const vuelta = paron && paron.ini ? new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(paron.ini)) : null;
+  const hechos = { tipo: 'selecciones', noticia: `lo que han hecho los jugadores de LaLiga con sus selecciones en el parón (del ${fechaTxt(d1)} al ${fechaTxt(d2)}): goles, asistencias, los que se han retirado lesionados y los minutos que llevan`,
+    momento: `la liga vuelve con la jornada ${v.siguiente}${vuelta ? ` el ${vuelta}` : ''}`,
+    aviso: 'una lesión, solo la que está en «seRetiranTocados» y tal como está (se retiró lesionado en ese minuto): ni gravedad ni plazos, que no se saben. Nada de convocatorias ni de partidos que no estén aquí. La bandera va justo detrás del nombre de su selección y solo la que trae cada una. La carga (minutos en el parón) es un dato para la jornada de vuelta, sin dar por hecho que vaya a descansar. La imagen adjunta lleva a los que han marcado o asistido y a los que más minutos llevan.',
+    golesYAsistencias: goleadores.slice(0, 6).map((x) => ({ nombre: x.j.nickname, club: eq(x), ...sel(x), loQueHizo: ga(x), partidos: x.partidos.filter((p) => p.goles || p.asist).map((p) => `ante ${p.rival.nombre}${p.marcador ? ` (${p.marcador})` : ''}, el ${fechaTxt(p.fecha)}`) })),
+    ...(tocados.length ? { seRetiranTocados: tocados.slice(0, 4).map((x) => ({ nombre: x.j.nickname, club: eq(x), ...sel(x), queLePaso: `se retiró lesionado en el minuto ${x.lesion.min} ante ${x.lesion.rival}, el ${fechaTxt(x.lesion.fecha)}` })) } : {}),
+    ...(carga.length ? { masMinutosEnElParon: carga.slice(0, 4).map((x) => ({ nombre: x.j.nickname, club: eq(x), ...sel(x), minutosEnElParon: x.min, partidosJugados: x.jugados })) } : {}),
+    ...(sinJugar.length ? { sinJugarEnElParon: sinJugar.slice(0, 3).map((x) => ({ nombre: x.j.nickname, club: eq(x), ...sel(x), queLePaso: 'estuvo con su selección y no jugó ningún minuto' })) } : {}),
+    jugadores: [...goleadores.slice(0, 3).map((x, i) => jug(x, { loQueHizo: ga(x) }, i === 0)), ...tocados.slice(0, 2).map((x) => jug(x, { estado: 'tocado con su selección' }, true)),
+      ...carga.slice(0, 2).filter((x) => !goleadores.slice(0, 3).includes(x) && !tocados.slice(0, 2).includes(x)).map((x) => jug(x, {}))],
+    clubes: clubesH(...[...goleadores.slice(0, 6), ...tocados.slice(0, 4), ...carga.slice(0, 4), ...sinJugar.slice(0, 3)].map(eq)) };
   return [{ tipo: 'selecciones', clave: `selecciones|${v.jugada}`, jornada: v.jugada, texto, hechos, numeros: num, partido: null, tarjeta }];
 }
 const del2 = (eq) => (eq ? `(${eq})` : '');
