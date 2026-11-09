@@ -3393,7 +3393,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000,
    "SPORT|136164914": 1793968169000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
@@ -7444,13 +7443,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 805,
+   "ok": 806,
    "fallos": 0,
-   "ejecuciones": 460,
+   "ejecuciones": 461,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T12:16:18.011Z"
+   "ultima": "2026-11-09T12:21:14.779Z"
   }
  },
  "ptsDirecto": {},
@@ -7467,15 +7466,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:16:20.992Z"
+   "ultimaBien": "2026-11-09T12:21:19.861Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:16:20.992Z"
+   "ultimaBien": "2026-11-09T12:21:19.861Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:16:20.992Z"
+   "ultimaBien": "2026-11-09T12:21:19.861Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7483,11 +7482,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:16:20.992Z"
+   "ultimaBien": "2026-11-09T12:21:19.861Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:16:20.992Z"
+   "ultimaBien": "2026-11-09T12:21:19.861Z"
   }
  },
  "avisos": [
