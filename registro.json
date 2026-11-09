@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/nueve-bajas-betis-navalcarnero_0_2008438147.html": 1793982315000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html": 1793985142000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000,
    "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000,
@@ -7310,13 +7309,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 854,
+   "ok": 855,
    "fallos": 0,
-   "ejecuciones": 509,
+   "ejecuciones": 510,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T16:21:12.648Z"
+   "ultima": "2026-11-09T16:26:18.561Z"
   }
  },
  "ptsDirecto": {},
@@ -7333,15 +7332,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:21:16.809Z"
+   "ultimaBien": "2026-11-09T16:26:23.932Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:21:16.809Z"
+   "ultimaBien": "2026-11-09T16:26:23.932Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:21:16.809Z"
+   "ultimaBien": "2026-11-09T16:26:23.932Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7349,11 +7348,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:21:16.809Z"
+   "ultimaBien": "2026-11-09T16:26:23.932Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:21:16.809Z"
+   "ultimaBien": "2026-11-09T16:26:23.932Z"
   }
  },
  "avisos": [
