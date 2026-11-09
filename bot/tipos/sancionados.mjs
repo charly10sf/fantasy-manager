@@ -173,7 +173,7 @@ function textoApercibidos(xs, { jornada, pp, pp2, peso, L, conNombres = true }) 
     ...(n === 1 && ph.partido ? { partido: ph.partido } : {}),
     ...(L && n > 1 && ph2.partidos ? { partidosQueSePerderian: ph2.partidos } : ph2.partido && n > 1 ? { partidosQueSePerderian: [ph2.partido] } : {}),
     clubes: clubesH(...(conNombres ? xs : grandes).map((x) => x.equipo), ...ph.prs.map((o) => o.pr.rival), ...ph2.prs.map((o) => o.pr.rival)), etiqueta };
-  return { tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, hechos, numeros: [jornada, jornada + 1, ...(top && !juego ? top.numeros : [])] };
+  return { tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, hechos, numeros: [jornada, jornada + 1, n, ...(top && !juego ? top.numeros : [])] };   // (n: con 11 o más va en cifra: «11 titulares habituales»; 9 nov)
 }
 
 export async function generar({ jugadores, equipos, jornada, stats = [], semana, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log,

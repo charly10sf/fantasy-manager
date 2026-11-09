@@ -41,7 +41,7 @@ export async function generar(ctx) {
   if (!v.ok) { log(`  (calendario) ${v.motivo}`); return []; }
   const K = (config.paronTuits || {}).jornadasCalendario ?? 4;
   const numeros = Array.from({ length: K }, (_, i) => v.siguiente + i);
-  const semanas = await Promise.all(numeros.map((n) => (ctx.paron && n === ctx.paron.siguiente && ctx.paron.statsSiguiente ? ctx.paron.statsSiguiente : statsSemana(n).catch(() => []))));
+  const semanas = await Promise.all(numeros.map((n) => (ctx.paron && n === ctx.paron.siguiente && ctx.paron.statsSiguiente ? ctx.paron.statsSiguiente : pedirSemana(n).catch(() => []))));
   if (semanas.filter((s) => s.length).length < 2) { log('  (calendario) no hay partidos de las jornadas que vienen'); return []; }
   // la tabla de ahora: la de lib/info-jugador.mjs (jornadas 1 a la actual) o, sin ella, la de las jornadas jugadas
   let tabla = info ? await info.tabla().catch(() => null) : null;
@@ -76,7 +76,11 @@ export async function generar(ctx) {
       palabras: ['º', 'CALENDARIO', 'JORNADAS', 'A', 'DESPUÉS', 'DEL', 'PARÓN', 'LOS', 'MÁS', 'FÁCILES', 'DIFÍCILES', 'CASA', 'FUERA', ...todas.map((f) => f.equipo.toUpperCase())] } };
 
   // los hechos para la IA
-  const equipoH = (e, lectura) => ({ club: e.equipo, lectura, partidos: e.partidos.map((p) => ({ jornada: p.jornada, rival: el(p.rival), juega: p.casa ? 'en casa' : 'fuera', rivalVa: `${p.pos}º de ${tabla.n}`, dificultad: p.nivel })) });
+  // el recuento ya hecho (la IA contaba mal: «tres de cuatro asequibles» con uno de dificultad media; simulacro del 9 nov)
+  const enLetra = (n) => ['ninguno', 'uno', 'dos', 'tres', 'cuatro', 'cinco'][n] || String(n);
+  const resumenDe = (e) => { const casa = e.partidos.filter((p) => p.casa).length, arriba = e.partidos.filter((p) => p.pos <= 6).length, abajo = e.partidos.filter((p) => p.pos > tabla.n - 6).length;
+    return `${enLetra(casa)} en casa y ${enLetra(e.partidos.length - casa)} fuera; contra los seis primeros, ${enLetra(arriba)}; contra los seis últimos, ${enLetra(abajo)}`; };
+  const equipoH = (e, lectura) => ({ club: e.equipo, lectura, recuento: resumenDe(e), partidos: e.partidos.map((p) => ({ jornada: p.jornada, rival: el(p.rival), juega: p.casa ? 'en casa' : 'fuera', rivalVa: `${p.pos}º de ${tabla.n}`, dificultad: p.nivel })) });
   const hechos = { tipo: 'calendario', noticia: `los calendarios de la jornada ${J1} a la ${JN}, las que vienen después del parón de selecciones: qué equipos lo tienen más fácil y más difícil`,
     paraQuien: 'para el que planifica fichajes de cara a la vuelta de la liga: a qué equipos les conviene tener jugadores y de cuáles cuesta más sacar puntos. Nada de revisar o cambiar el once: es para fichar',
     comoSeMide: 'la fuerza de cada rival por sus puntos por partido en la clasificación, y si se juega en casa o fuera',
