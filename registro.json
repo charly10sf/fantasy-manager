@@ -900,6 +900,13 @@
    "jornada": 13,
    "id": "2119907031536787714",
    "t": "2026-11-09T21:36:37.277Z"
+  },
+  {
+   "clave": "mercado|2026-11-10",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2119931962106249421",
+   "t": "2026-11-09T23:15:41.344Z"
   }
  ],
  "estados": {
@@ -3351,19 +3358,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-09",
+  "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 66,
-   "redactar": 31,
-   "revisar": 20,
+   "clasificar": 0,
+   "redactar": 4,
+   "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 315277,
-  "salida": 32530,
-  "cacheLee": 203860,
-  "cacheEscribe": 19728,
-  "dolares": 0.572747,
+  "entrada": 51769,
+  "salida": 1421,
+  "cacheLee": 5806,
+  "cacheEscribe": 2903,
+  "dolares": 0.125586,
   "reservado": 0
  },
  "recientes": {
@@ -3445,6 +3452,10 @@
    {
     "t": "2026-11-08T23:15:19.280Z",
     "texto": "📈 Valverde, el Pajarito, lidera las subidas del mercado de esta noche: +2,3 M y se va a 68,1 M, un 3,6 % más.\n\nLa mayor bajada es la de Rodri, que se deja 2 M en el Barça y queda en 80,2 M.\n\nPara el que busque barato, Redondo del Elche 🌴 vale 2 M, tiene 4,5 de media y sube un 3,3 %. En la imagen van las cinco mayores subidas y bajadas."
+   },
+   {
+    "t": "2026-11-09T23:15:41.346Z",
+    "texto": "📈 Rodri es el que más baja en el mercado de esta noche: pierde 2 M en el Barça y se queda en 78,2 M.\n\nEn el lado bueno, Federico Valverde sube 3 M con el Real Madrid ⚪ y se va a 71 M, un 4,3 % más.\n\nUn chollo para mirar: Redondo, del Elche 🌴, vale 2 M y ha sumado 24 puntos en las tres últimas jornadas. Las cinco mayores subidas y bajadas, en la imagen."
    }
   ],
   "previa": [
@@ -3647,6 +3658,22 @@
    "cacheLee": 252960,
    "cacheEscribe": 50448,
    "dolares": 1.996476,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-09",
+   "llamadas": {
+    "clasificar": 66,
+    "redactar": 31,
+    "revisar": 20,
+    "pulir": 0
+   },
+   "fallos": 0,
+   "entrada": 315277,
+   "salida": 32530,
+   "cacheLee": 203860,
+   "cacheEscribe": 19728,
+   "dolares": 0.572747,
    "reservado": 0
   }
  ],
@@ -7315,7 +7342,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T23:11:14.298Z"
+   "ultimaBien": "2026-11-09T23:15:41.348Z"
   },
   "FotMob": {
    "seguidas": 0,
