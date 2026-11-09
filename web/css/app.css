@@ -1867,6 +1867,93 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .paso2 .op-pie { flex-wrap: wrap; row-gap: 6px; }
 .paso2 .op-pie .conf, .paso2 .op-pie .saldo { white-space: nowrap; }
 
+/* ---------- Hoy por fases (18, 9 nov: «que se entienda todo mejor») ---------- */
+.marcador.corto { padding: 10px 12px 11px; }
+.marcador.corto .fila-j { font-size: 12px; }
+.marcador.corto .cols { margin-top: 7px; }
+.marcador.corto .col .et { font-size: 11px; }
+.marcador.corto .col .v { font-size: 23px; }
+.marcador.corto .col .v small { font-size: 14px; }
+.marcador.corto .col .d { font-size: 12.5px; }
+.marcador.corto .col .dist { font-size: 11.5px; margin-top: 1px; }
+.marcador.corto .col .d + .dist { display: none; }
+.marcador.corto + .tiempos { margin-top: 8px; }
+.plan-prog { display: flex; align-items: center; gap: 10px; margin: 10px 2px 4px; font: 600 13.5px 'Barlow'; color: var(--texto2); }
+.plan-prog i { flex: 1; height: 6px; border-radius: 3px; background: var(--plano3); position: relative; overflow: hidden; }
+.plan-prog i::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--p, 0%); background: var(--sube); border-radius: 3px; }
+.plan-prog span { flex: none; }
+.fase { margin-top: 14px; }
+.fase-t { display: flex; align-items: center; gap: 10px; margin: 0 2px 7px; }
+.fase-n { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; flex: none; font: 700 14px var(--cond); background: var(--rojo); color: #fff; }
+.f-urg .fase-n { background: var(--baja); color: #120406; } .f-luego .fase-n { background: var(--plano3); color: var(--texto2); }
+.fase-tx { display: flex; align-items: baseline; gap: 8px; min-width: 0; flex-wrap: wrap; }
+.fase-tx b { font: 700 18px/1 var(--cond); text-transform: uppercase; letter-spacing: 0.5px; }
+.fase-tx small { font-size: 13px; color: var(--apagado); }
+.f-urg .fase-tx b { color: var(--baja); }
+.fase-tot { margin-left: auto; flex: none; font: 700 17px var(--cond); }
+.fase-tot.mas { color: var(--sube); } .fase-tot.menos { color: var(--rojo-l); }
+.fase-saldo { display: flex; justify-content: center; margin-top: 8px; }
+.fase-saldo span { font: 600 13px 'Barlow'; color: var(--texto2); background: var(--plano2); border: 1px solid var(--linea); padding: 4px 12px; border-radius: 999px; }
+.fase-saldo b { color: var(--texto); } .fase-saldo b.neg { color: var(--baja); }
+.pasos3 { border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); overflow: hidden; }
+.f-urg .pasos3 { border-color: rgba(255, 111, 97, 0.35); background: var(--baja-s); }
+.f-luego .pasos3 { opacity: 0.8; }
+.pasos3 > .paso3 { border: 0; border-radius: 0; background: none; border-top: 1px solid var(--linea); }
+.pasos3 > .paso3:first-child { border-top: 0; }
+.paso3 > summary { grid-template-columns: 22px 40px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 10px 12px 10px 10px; }
+.paso3 .pp-num { width: 22px; height: 22px; background: none; border: 2px solid var(--plano3); }
+.paso3 .pp-num .ic { width: 13px; height: 13px; }
+.paso3.hecho .pp-num { border-color: var(--sube); } .paso3.curso .pp-num { border-color: var(--oro); background: var(--oro-s); }
+.paso3.urg .pp-num { border: 0; color: var(--baja); } .paso3.urg .pp-num .ic { width: 18px; height: 18px; }
+.paso3.descartada .pp-num { border-color: var(--baja-s); color: var(--baja); }
+.paso3 .pp-j { flex: none; } .paso3 .ava { width: 40px; height: 40px; } .paso3 .ava .ini { font-size: 14px; }
+.paso3 .pp-ic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--plano2); color: var(--texto2); }
+.paso3 .pp-ic .ic { width: 19px; height: 19px; }
+.paso3 .pp-c { gap: 3px; }
+.paso3 .pp-l1 { gap: 7px; }
+.paso3 .pp-l1 .accion-t { font-size: 10.5px; padding: 2px 6px; flex: none; letter-spacing: 0.8px; }
+.accion-t.urg { background: var(--baja); color: #120406; }
+.pp-nom { font: 700 17px/1.1 var(--cond); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-l2s { display: flex; align-items: baseline; gap: 5px; min-width: 0; font-size: 13.5px; color: var(--apagado); white-space: nowrap; overflow: hidden; }
+.pp-l2s i { font-style: normal; flex: none; }
+.pp-l2s .pp-cu, .pp-l2s .pp-est { flex: none; font-size: 13px; max-width: 70%; }
+.pp-l2s .pp-porque { display: block; -webkit-line-clamp: unset; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; font-size: 13.5px; color: var(--apagado); }
+.paso3[open] .pp-l2s .pp-porque { display: none; } .paso3[open] .pp-l2s i { display: none; }
+.paso3 .pp-imp { font-size: 17px; }
+.paso3 > .pp-d { padding: 0 14px 14px 14px; }
+.pp-sub { margin: 0; font-size: 13px; color: var(--apagado); }
+.pp-mot1 { color: var(--texto); }
+.paso3.descartada .pp-mot1 { color: var(--baja); }
+/* la situación, en el móvil, en tres líneas: tocándola se lee entera */
+.plan-sit-d > summary { list-style: none; cursor: pointer; }
+.plan-sit-d > summary::-webkit-details-marker { display: none; }
+.plan-sit-d:not([open]) > .plan-sit { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+/* lo de después del plan, plegado */
+.pleg { margin-top: 10px; border-radius: 12px; background: var(--plano); border: 1px solid var(--linea); }
+.pleg > summary { list-style: none; display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 10px 14px; cursor: pointer; }
+.pleg > summary::-webkit-details-marker { display: none; }
+.pleg > summary > .ic { width: 18px; height: 18px; color: var(--rojo-l); flex: none; }
+.pleg > summary b { font: 700 16px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; }
+.pleg > summary span { margin-left: auto; font-size: 14px; color: var(--apagado); }
+.pleg > summary .pleg-ab { width: 16px; height: 16px; color: var(--apagado); transform: rotate(90deg); transition: transform 0.15s; flex: none; }
+.pleg > summary b + .pleg-ab { margin-left: auto; }
+.pleg[open] > summary .pleg-ab { transform: rotate(270deg); }
+.pleg-d { padding: 2px 12px 10px; }
+.pleg-d .dias { margin-top: 6px; }
+.pleg.pasos-fuera { margin-top: 14px; }
+.pleg.pasos-fuera > .pasos3 { margin: 0 8px 8px; }
+/* la tarjeta del parón (solo durante el parón) */
+.paron-t { border-radius: 16px; padding: 12px 14px; margin: 12px 0 0; background: linear-gradient(135deg, rgba(255, 197, 71, 0.16), rgba(255, 197, 71, 0.04)); border: 1px solid rgba(255, 197, 71, 0.35); }
+.paron-t .pt-top { display: flex; align-items: center; gap: 8px; font: 700 12.5px 'Barlow'; letter-spacing: 1.2px; text-transform: uppercase; color: var(--oro); }
+.paron-t .pt-top .ic { width: 16px; height: 16px; flex: none; }
+.paron-t .pt-top em { margin-left: auto; font-style: normal; color: var(--texto2); letter-spacing: 0; text-transform: none; white-space: nowrap; }
+.paron-t .pt-t { display: block; font: 700 20px/1.12 var(--cond); margin: 6px 0 10px; }
+.paron-t .pt-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.paron-t .pt-cols div { background: rgba(0, 0, 0, 0.25); border-radius: 10px; padding: 7px 9px; min-width: 0; }
+.paron-t small { display: block; font-size: 11.5px; color: var(--apagado); }
+.paron-t .pt-cols b { font: 700 16px/1.15 var(--cond); }
+.paron-t .pt-ia { margin: 10px 0 0; font-size: 14px; line-height: 1.4; color: var(--texto2); }
+
 /* ---------- la cara de cada mánager (0.6.9): su foto o el escudo de su equipo; si no, sus iniciales en su color ---------- */
 .cara-m { position: relative; flex: none; width: 38px; height: 38px; border-radius: 50%; overflow: hidden; display: grid; place-items: center;
   background: linear-gradient(145deg, hsl(var(--h, 0) 55% 34%), hsl(var(--h, 0) 50% 20%)); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.14); }

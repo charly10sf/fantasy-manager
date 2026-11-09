@@ -2057,7 +2057,9 @@ function acciones(D, M, c) {
   const clausulable = (x) => x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado)
     && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30
     && (M.mejora(x.j) >= 0.5 || (x.ratio != null && x.ratio <= 1.05))
-    && M.compraCal(x.j, x.clausula).ok && M.conSalida(x.j, x.clausula, x.tend);
+    && M.compraCal(x.j, x.clausula).ok && M.conSalida(x.j, x.clausula, x.tend)
+    // (19) en el parón, con la vuelta lejos, solo los chollos claros: si no, «Clausula a X» salía como urgente
+    && (!paronLejos(M, ahora) || cholloParon(M, x.j, x.clausula));
   const abiertas = M.clausulas.filter((x) => x.abierta && clausulable(x))
     .sort((a, b) => (b.interes + (b.teQueda >= 0 ? 8 : 0)) - (a.interes + (a.teQueda >= 0 ? 8 : 0)));
   abiertas.slice(0, 3).forEach((x, k) => add({

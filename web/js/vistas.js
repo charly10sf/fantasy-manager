@@ -12,6 +12,7 @@ import { guiaClave } from './clave.js';
 import { K } from './datos.js';
 import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
+import { paronLejos, PARON_VUELTA } from './operaciones.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -46,7 +47,7 @@ export function filaActividad(a, { dentroDe = null } = {}) {
 }
 
 /* ================= EL MARCADOR (arriba de Hoy) ================= */
-function marcador(S) {
+function marcador(S, { corto = false } = {}) {
   const { D, M } = S;
   const yo = M.yo || {};
   const ahora = Date.now();
@@ -56,7 +57,7 @@ function marcador(S) {
   else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${dura(M.proxima.ini - ahora)}</span>`;
   else fila = `<span>${esc(D.liga.nombre)}</span>`;
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
-  let h = `<div class="marcador" data-accion="resumen" role="button" tabindex="0" aria-label="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
+  let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" aria-label="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
     <div class="cols">
       <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">gastas hasta ${eur(M.pujaMax)}</div></div>
       <div class="col"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
@@ -206,7 +207,8 @@ export function llevasHTML(S) {
 /** cada cosa urgente se puede quitar hasta mañana (aviso de Domy, 27 oct): se guarda por liga con el día */
 export const claveUrgente = (a) => `${a.tipo}|${a.pid || a.titulo}`;
 export const urgentesQuitados = () => { const q = LS.get(K('urgentes-quitados'), {}), d = diaDe(); return new Set(Object.keys(q).filter((k) => q[k] === d)); };
-function ahoraHTML(S) {
+/** lo urgente que no está en el plan (como mucho tres) y la nota de cada cláusula abierta después del plan */
+function urgentesDe(S) {
   const { M } = S;
   // lo que ya está en el plan no se repite aquí, ni lo que has quitado hoy
   const enPlan = new Set(Object.keys(S.opPorPid || {}));
@@ -228,11 +230,18 @@ function ahoraHTML(S) {
     return false;
   };
   const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a)).slice(0, 3);
-  if (!urg.length && S.plan) return '';
+  return { urg, nota, fuera };
+}
+/** a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto */
+const conSustituto = (S, a) => a.pid && S.M.dueno[a.pid] === (S.D && S.D.yo && S.D.yo.teamId) && (a.tipo === 'vender' || ['injured', 'suspended'].includes((S.M.J(a.pid) || {}).estado));
+/** «Ahora mismo»: solo sin plan. Con plan, lo urgente va arriba de sus pasos, en «Antes de nada» (18, 9 nov) */
+function ahoraHTML(S) {
+  const { M } = S;
+  if (S.plan) return '';
+  const { urg, nota, fuera } = urgentesDe(S);
   if (!urg.length) return `<div class="ahora-ok">${icono('ok')}<span><b>Nada urgente ahora mismo.</b> ${fuera.size ? 'Lo que has quitado vuelve mañana si sigue igual.' : 'Ninguna cláusula tuya en peligro ni nada que vender ya.'}</span></div>`;
-  const yo = S.D && S.D.yo && S.D.yo.teamId;
-  // a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto
-  const conSust = (a) => a.pid && M.dueno[a.pid] === yo && (a.tipo === 'vender' || ['injured', 'suspended'].includes((M.J(a.pid) || {}).estado));
+  const conSust = (a) => conSustituto(S, a);
+  void M;
   // el «cuando» largo («La jornada empieza mañana 21:00», «Antes de que baje más») va debajo del título: a la derecha y sin
   // partir, dejaba el título en una columna de una palabra por línea (Carlos, 5 nov 05:34, con captura)
   const largoCu = (t) => !!t && t.length > 14;
@@ -413,16 +422,18 @@ function pasoOp(S, P, o) {
   const liga = hechoEnLiga(S, P, o);
   const curso = liga && liga.estado === 'curso';
   const est = o.descartada ? 'descartada' : curso ? 'curso' : ok ? 'hecho' : o.sugerencia ? 'sugerencia' : '';
-  // el importe es el dinero que entra o sale, no lo que ganas: se dice dentro
-  const imp = o.importe ? `<span class="pp-imp ${o.signo > 0 ? 'mas' : ''}">${o.signo > 0 ? '+' : o.signo < 0 ? '−' : ''}${eur(o.importe)}<small>${o.signo > 0 ? 'te entran' : o.signo < 0 ? 'pagas' : ''}</small></span>` : '';
+  // el importe es el dinero que entra o sale, no lo que ganas: se dice dentro (en verde lo que entra)
+  const imp = o.importe ? `<span class="pp-imp ${o.signo > 0 ? 'mas' : ''}">${o.signo > 0 ? '+' : o.signo < 0 ? '−' : ''}${eur(o.importe)}</span>` : '';
   const sub = [j && j.equipo, o.donde].filter(Boolean).map(esc).join(' · ');
   const nombre = j ? j.nombre : o.jugador || '';
   // la cara y el nombre abren su ficha (30 oct, Carlos: sin tener que ir a buscarlo al mercado); el resto de la
   // tarjeta la sigue abriendo y cerrando
-  const quien = `${j ? ava(j, 'm') : ''}<span class="pp-n"><b>${esc(nombre)}</b>${sub ? `<small>${sub}</small>` : ''}</span>`;
-  const estadoTxt = o.descartada ? '' : o.sugerencia && !liga && !ok ? '<span class="pill">Sugerencia · sin prisa</span>' : liga ? `<span class="pp-est ${liga.estado}">${icono(curso ? 'reloj' : 'ok')}${esc(liga.texto)}</span>` : ok ? `<span class="pp-est hecho">${icono('ok')}Hecho</span>` : o.cuando ? `<span class="pp-cu">${icono('reloj')}${esc(o.cuando)}</span>` : '';
+  // (18, 9 nov) cerrado, una fila: la acción, quién, el dinero y, debajo, cuándo y el porqué en una línea
+  const estadoTxt = o.descartada ? '' : liga ? `<span class="pp-est ${liga.estado}">${esc(liga.texto)}</span>` : ok ? '<span class="pp-est hecho">Hecho</span>' : o.sugerencia ? '<span class="pp-cu">Sin prisa</span>' : o.cuando ? `<span class="pp-cu">${esc(String(o.cuando).replace(/^(hoy|esta noche|esta tarde|mañana) antes de las /i, 'antes de las '))}</span>` : '';
   const porque = o.descartada && o.aviso ? o.aviso : o.motivo;
   const dentro = [
+    sub ? `<p class="pp-sub">${sub}</p>` : '',
+    porque ? `<p class="pp-mot pp-mot1">${esc(porque)}</p>` : '',
     objetivoPill(o) || o.accion === 'pujar' && o.puja_max ? `<div class="pp-pills">${objetivoPill(o)}${o.accion === 'pujar' && o.puja_max ? `<span class="pill">Puja hasta ${eur(o.puja_max)}</span>` : ''}</div>` : '',
     o.motivo && porque !== o.motivo ? `<p class="pp-mot">${esc(o.motivo)}</p>` : '',
     o.compra && !o.descartada ? `<p class="paso-compra">${o.compra.desconocida ? 'Lo que pagaste por él no sale en los movimientos de la liga, así que no se sabe si con esta venta ganas o pierdes.' : `${o.compra.inicial ? `Venía en tu equipo inicial: al empezar la liga valía ${eur(o.compra.precio)}` : `Lo pagaste a ${eur(o.compra.precio)}`}: ${o.compra.con === 'venta' ? 'con esta venta' : 'hoy'} ${o.compra.gana >= 0 ? 'ganas' : 'pierdes'} <b class="${clase(o.compra.gana)}">${eur(Math.abs(o.compra.gana))}</b>.`}</p>` : '',
@@ -430,14 +441,16 @@ function pasoOp(S, P, o) {
     o.aviso && !(o.descartada && porque === o.aviso) ? `<div class="aviso-op ${o.descartada ? 'mal' : ''}">${icono(o.descartada ? 'alerta' : 'info')}${esc(o.aviso)}</div>` : '',
     `<div class="op-pie">${o.confianza && !o.sugerencia ? `<span class="conf ${esc(o.confianza)}">Confianza ${esc(o.confianza)}</span>` : ''}${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : ''}${liga || o.descartada ? '' : `<button data-accion="hecho" data-n="${o.n}">${icono(ok ? 'cerrar' : 'ok')}${ok ? 'Deshacer' : 'Hecho'}</button>`}${o.saldo != null ? `<span class="saldo ${o.saldo < 0 ? 'neg' : ''}">saldo ${eur(o.saldo)}</span>` : ''}</div>`,
   ].join('');
-  return `<details class="paso2 ${esc(o.accion)} ${est}"><summary>
-      <span class="pp-num">${curso ? icono('reloj') : ok ? icono('ok') : o.n}</span>
+  const acc = esc(o.etiqueta || ACCION[o.accion] || o.accion);
+  const cara = j ? `<button class="pp-j" data-j="${esc(j.id)}" aria-label="Ficha de ${esc(nombre)}">${ava(j, 'm')}</button>` : `<span class="pp-ic">${icono(o.accion === 'alinear' ? 'campo' : o.accion === 'esperar' ? 'reloj' : 'lista')}</span>`;
+  return `<details class="paso2 paso3 ${esc(o.accion)} ${est}"><summary>
+      <span class="pp-num" aria-hidden="true">${curso ? icono('reloj') : ok ? icono('ok') : o.descartada ? icono('cerrar') : ''}</span>
+      ${cara}
       <span class="pp-c">
-        <span class="pp-l1">${o.descartada ? `<span class="accion-t descartada">Descartado</span><span class="pp-cu">${esc(o.etiqueta || ACCION[o.accion] || o.accion)}</span>` : `<span class="accion-t ${esc(o.accion)}">${esc(o.etiqueta || ACCION[o.accion] || o.accion)}</span>`}${estadoTxt}</span>
-        ${nombre ? `<span class="pp-l2">${j ? `<button class="pp-j" data-j="${esc(j.id)}" aria-label="Ficha de ${esc(nombre)}">${quien}</button>` : quien}${imp}</span>` : imp ? `<span class="pp-l2">${imp}</span>` : ''}
-        ${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}
+        <span class="pp-l1">${o.descartada ? '<span class="accion-t descartada">Descartado</span>' : `<span class="accion-t ${esc(o.accion)}">${acc}</span>`}<b class="pp-nom">${esc(nombre || (o.descartada ? acc : o.accion === 'alinear' ? 'Tu once' : ''))}</b></span>
+        <span class="pp-l2s">${estadoTxt}${estadoTxt && porque ? '<i>·</i>' : ''}${porque ? `<span class="pp-porque">${esc(porque)}</span>` : ''}</span>
       </span>
-      <span class="pp-ab" aria-hidden="true">${icono('flecha')}</span>
+      ${imp || '<span></span>'}
     </summary><div class="pp-d">${dentro}</div></details>`;
 }
 
@@ -464,6 +477,67 @@ export function cambiosDesdePlan(S) {
   return [fuera.length ? `Se ${fuera.length > 1 ? 'han ido' : 'ha ido'} ${lista(fuera)}.` : '', dentro.length ? `${dentro.length > 1 ? 'Han llegado' : 'Ha llegado'} ${lista(dentro)}.` : ''].filter(Boolean).join(' ');
 }
 
+/**
+ * (18, 9 nov: «que se entienda todo mejor») los pasos del plan por fases, en el orden en que cuadra el dinero: lo urgente
+ * que no está en el plan, hacer caja, fichar, proteger y alinear; lo de otro día o sin prisa, aparte, y lo descartado,
+ * plegado al final. Cada fase con lo que entra o sale y el saldo con el que te deja. Arriba, cuántos llevas hechos
+ */
+const FASES = [
+  ['caja', 'Haz caja', 'lo que vendes o aceptas'],
+  ['fichar', 'Ficha', 'pujas, compras y cláusulas'],
+  ['proteger', 'Protege', 'tus cláusulas abiertas'],
+  ['once', 'Alinea', 'antes de la jornada'],
+];
+function faseDe(o) {
+  if (o.sugerencia || o.hoy === false || o.accion === 'esperar') return 'luego';
+  if (o.accion === 'vender') return 'caja';
+  if (['clausular', 'pujar', 'comprar'].includes(o.accion)) return 'fichar';
+  if (o.accion === 'blindar') return 'proteger';
+  return 'once';
+}
+function urgenteFila(S, a, nota) {
+  const j = a.pid ? S.M.J(a.pid) : null;
+  const largo = a.cuando && a.cuando.length > 14;
+  const cara = j ? `<button class="pp-j" data-j="${esc(j.id)}" aria-label="Ficha de ${esc(j.nombre)}">${ava(j, 'm')}</button>` : `<span class="pp-ic">${icono(a.icono || 'alerta')}</span>`;
+  return `<details class="paso2 paso3 urg t-${esc(a.tipo)}"><summary>
+      <span class="pp-num" aria-hidden="true">${icono('alerta')}</span>${cara}
+      <span class="pp-c"><span class="pp-l1"><span class="accion-t urg">Urgente</span><b class="pp-nom">${esc(a.titulo)}</b></span>
+      <span class="pp-l2s">${a.cuando && !largo ? `<span class="pp-cu">${esc(a.cuando)}</span><i>·</i>` : ''}<span class="pp-porque">${esc(a.texto)}</span></span></span><span></span>
+    </summary><div class="pp-d">${largo ? `<p class="pp-sub">${esc(a.cuando)}</p>` : ''}<p class="pp-mot pp-mot1">${esc(a.texto)}</p>${nota ? `<div class="aviso-op">${icono('info')}${esc(nota)}</div>` : ''}
+      <div class="op-pie">${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : a.hash ? `<button data-ir="${esc(a.hash)}">${icono('flecha')}Ver</button>` : ''}${conSustituto(S, a) ? `<button data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}<button data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}">${icono('cerrar')}Quitar hasta mañana</button></div></div></details>`;
+}
+function fasesHTML(S, P) {
+  const { urg, nota } = urgentesDe(S);
+  const vivos = P.ops.filter((o) => !o.descartada), fuera = P.ops.filter((o) => o.descartada);
+  if (!vivos.length && !fuera.length && !urg.length) return '';
+  const cp = cuentaPasos(S, P);
+  const total = cp.pend + cp.hechos;
+  let h = '';
+  if (total) h += `<div class="plan-prog" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${cp.hechos}"><i style="--p:${Math.round((cp.hechos / total) * 100)}%"></i><span>${cp.hechos ? `${cp.hechos} de ${total} hechos` : `${total} ${total > 1 ? 'pasos' : 'paso'} por hacer`}${cp.luego ? ` · ${cp.luego} para luego` : ''}</span></div>`;
+  let k = 0;
+  const caja = (titulo, sub, filas, { tot = null, saldo = null, cls = '' } = {}) => {
+    k++;
+    return `<div class="fase ${cls}"><div class="fase-t"><span class="fase-n">${cls === 'f-urg' ? '!' : cls === 'f-luego' ? '·' : k - (urg.length ? 1 : 0)}</span><span class="fase-tx"><b>${titulo}</b><small>${sub}</small></span>${tot ? `<span class="fase-tot ${tot > 0 ? 'mas' : 'menos'}">${tot > 0 ? '+' : '−'}${eur(Math.abs(tot))}</span>` : ''}</div>
+      <div class="pasos3">${filas}</div>${saldo != null ? `<div class="fase-saldo"><span>Te quedan <b class="${saldo < 0 ? 'neg' : ''}">${eur(saldo)}</b></span></div>` : ''}</div>`;
+  };
+  if (urg.length) h += caja('Antes de nada', 'urgente y fuera del plan', urg.map((a) => urgenteFila(S, a, nota[a.pid])).join(''), { cls: 'f-urg' });
+  const conDinero = FASES.filter(([f]) => vivos.some((o) => faseDe(o) === f));
+  conDinero.forEach(([f, titulo, sub], i) => {
+    const ops = vivos.filter((o) => faseDe(o) === f);
+    const tot = ops.reduce((s2, o) => s2 + (o.importe && o.signo ? o.signo * o.importe : 0), 0);
+    // el saldo tras la fase: el del último paso con saldo (cuadrarPlan lo cuenta paso a paso); en la última, ya lo dice el cierre
+    const ult = [...ops].reverse().find((o) => o.saldo != null);
+    h += caja(titulo, sub, ops.map((o) => pasoOp(S, P, o)).join(''), { tot: Math.round(tot) || null, saldo: ult && i < conDinero.length - 1 ? ult.saldo : null });
+  });
+  const luego = vivos.filter((o) => faseDe(o) === 'luego');
+  if (luego.length) h += caja('Para luego', 'sin prisa u otro día', luego.map((o) => pasoOp(S, P, o)).join(''), { cls: 'f-luego' });
+  if (fuera.length) h += `<details class="pleg pasos-fuera"><summary>${icono('cerrar')}<b>${fuera.length > 1 ? 'Descartados por la app' : 'Descartado por la app'}</b><span>${fuera.length}</span>${icono('flecha', 'pleg-ab')}</summary><div class="pasos3">${fuera.map((o) => pasoOp(S, P, o)).join('')}</div></details>`;
+  return h;
+}
+
+/** plegable con su título y cuántos hay (lo de después del plan: próximos días, vigila, noticias, rivales) */
+const plegado = (ic, titulo, n, cuerpo, abierto = false, cls = '') => (cuerpo ? `<details class="pleg ${cls}" ${abierto ? 'open' : ''}><summary>${icono(ic)}<b>${titulo}</b>${n ? `<span>${n}</span>` : ''}${icono('flecha', 'pleg-ab')}</summary><div class="pleg-d">${cuerpo}</div></details>` : '');
+
 function planHTML(S) {
   const { M } = S;
   const P = S.plan;
@@ -487,17 +561,8 @@ function planHTML(S) {
   const cambios = !E.cargando && !(esIA && P.dia && P.viejo) ? cambiosDesdePlan(S) : null;
   if (esIA && P.dia && P.viejo) h += `<div class="banda">${icono('reloj')}<span>Este plan es de ${cuando(P.t)}.</span>${hayClave() && !E.cargando ? '<button data-accion="plan">Hacer el de hoy</button>' : ''}</div>`;
   else if (cambios) h += `<div class="banda plan-cambio">${icono('cambio')}<span>${esc(cambios)} El plan es de antes.</span>${hayClave() ? '<button data-accion="planYa">Rehacer el plan</button>' : ''}</div>`;
-  h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? `<p class="plan-sit">${conEnlaces(S, P.situacion)}</p>` : ''}`;
-  // los pasos, todos, en corto: cuántos quedan arriba
-  const cp = cuentaPasos(S, P);
-  const pl = (n, uno, varios) => `${n} ${n > 1 ? varios : uno}`;
-  // con todo por hacer, «10 pasos por hacer» (no «10 pasos · 10 por hacer»)
-  const todos = cp.pend === P.ops.length;
-  if (P.ops.length) h += `<div class="pasos-cab"><b>${pl(P.ops.length, 'paso', 'pasos')}${todos ? ' por hacer' : ''}</b><span>${todos ? '' : [cp.pend ? `${cp.pend} por hacer` : 'nada por hacer', cp.hechos ? pl(cp.hechos, 'hecho', 'hechos') : '', cp.luego ? `${cp.luego} para luego` : '', cp.descartados ? pl(cp.descartados, 'descartado', 'descartados') : ''].filter(Boolean).join(' · ')}</span><span class="pasos-tip">toca uno para ver el detalle</span></div>`;
-  // los descartados, al final y separados de los demás
-  const vivos = P.ops.filter((o) => !o.descartada), fuera = P.ops.filter((o) => o.descartada);
-  h += `<div class="pasos2">${vivos.map((o) => pasoOp(S, P, o)).join('')}</div>`;
-  if (fuera.length) h += `<div class="pasos-fuera-t">${fuera.length > 1 ? 'Descartados por la app' : 'Descartado por la app'}</div><div class="pasos2 pasos-fuera">${fuera.map((o) => pasoOp(S, P, o)).join('')}</div>`;
+  h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? (ancho() ? `<p class="plan-sit">${conEnlaces(S, P.situacion)}</p>` : `<details class="plan-sit-d"><summary class="plan-sit">${conEnlaces(S, P.situacion)}</summary></details>`) : ''}`;
+  h += fasesHTML(S, P);
   if (P.final != null && P.ops.some((o) => o.signo && o.importe)) h += `<div class="cierre ${P.avisoTipo === 'mal' ? 'mal' : P.avisoTipo === 'plan' ? 'oro' : ''}">${icono(P.avisoTipo === 'mal' ? 'alerta' : P.avisoTipo === 'plan' ? 'cambio' : 'euro')}<span>${P.avisoSaldo ? esc(P.avisoSaldo) : 'Te quedas con'}</span><span class="v">${eur(P.final)}</span></div>`;
   // lo que el plan te deja: las pujas que ya tienes hechas cuentan como gastadas, el once tras las ventas y si la
   // alineación de la IA no valía
@@ -505,10 +570,8 @@ function planHTML(S) {
   if (P.avisoOnce) h += `<div class="cierre mal">${icono('campo')}<span>${esc(P.avisoOnce)}</span></div>`;
   if (P.avisoAlin) h += `<div class="cierre oro">${icono('alerta')}<span>${esc(P.avisoAlin)}</span></div>`;
   h += llevasHTML(S);
-  if (Array.isArray(P.descartes) && P.descartes.length) h += `<details class="descartes"><summary>${icono('buscar')}Mirados y descartados (${P.descartes.length})</summary>${P.descartes.map((d) => notaJugador(S, d.jugador, d.motivo)).join('')}</details>`;
-  if (!hayClave()) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Pregunta</button></div>`;
-  // (en el ordenador, los próximos días van a la derecha, con los tiempos)
-  if (!ancho()) h += diasHTML(S);
+  // (en el ordenador, los próximos días van a la derecha, con los tiempos; en el móvil, plegados con lo demás)
+  if (!ancho()) h += diasHTML(S, { plegar: true });
   // el once, abierto cuando la jornada está cerca; si no, plegado. Con la jornada en juego, nada: LaLiga lo cierra con el
   // primer partido y Hoy ya piensa en la siguiente (aviso de Domy, 31 oct); el que puntúa se ve en Directo
   const onceH = M.enJuego ? '' : onceHTML(S, P.alineacion, { sinCab: true });
@@ -517,9 +580,12 @@ function planHTML(S) {
     const abrir = !!M.enJuego || (M.proxima && M.proxima.ini - Date.now() < 2 * DIA);
     h += `<details class="once-pleg" ${abrir ? 'open' : ''}><summary>${icono('campo')}<b>Tu once</b><span>${M.enJuego ? `jornada ${M.enJuego.n} · en juego` : M.proxima ? `jornada ${M.proxima.n} · ${cuando(M.proxima.ini)}` : ''}</span></summary>${onceH}</details>`;
   }
-  if (Array.isArray(P.vigilar) && P.vigilar.length) h += `<div class="sec"><h2>Vigila</h2></div>${P.vigilar.map((v) => notaJugador(S, v.jugador, v.texto)).join('')}`;
-  if (Array.isArray(P.noticias) && P.noticias.length) h += `<div class="sec"><h2>Noticias que te afectan</h2></div>${P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join('')}`;
-  if (Array.isArray(P.rivales) && P.rivales.length) h += `<div class="sec"><h2>Tus rivales</h2></div>${P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); const e = tid && S.D.clasif.find((x) => x.teamId === tid); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}>${e ? caraManager(e) : `<span class="ic-act">${icono('rivales')}</span>`}<div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s entero">${esc(r.texto || '')}</div></div></button>`; }).join('')}`;
+  const abrir = ancho();
+  if (Array.isArray(P.vigilar) && P.vigilar.length) h += plegado('ojo', 'Vigila', P.vigilar.length, P.vigilar.map((v) => notaJugador(S, v.jugador, v.texto)).join(''), abrir);
+  if (Array.isArray(P.noticias) && P.noticias.length) h += plegado('info', 'Noticias que te afectan', P.noticias.length, P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join(''), abrir);
+  if (Array.isArray(P.rivales) && P.rivales.length) h += plegado('rivales', 'Tus rivales', P.rivales.length, P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); const e = tid && S.D.clasif.find((x) => x.teamId === tid); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}>${e ? caraManager(e) : `<span class="ic-act">${icono('rivales')}</span>`}<div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s entero">${esc(r.texto || '')}</div></div></button>`; }).join(''), abrir);
+  if (Array.isArray(P.descartes) && P.descartes.length) h += plegado('buscar', 'Mirados y descartados', P.descartes.length, P.descartes.map((d) => notaJugador(S, d.jugador, d.motivo)).join(''));
+  if (!hayClave()) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Pregunta</button></div>`;
   h += aciertosHTML(M);
   const fuentesP = (P.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u));
   if (fuentesP.length) h += `<div class="sec"><h2>Fuentes</h2></div><div class="fuentes">${fuentesP.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>`;
@@ -527,13 +593,36 @@ function planHTML(S) {
 }
 
 /** lo que el plan dice de los próximos días y del parón */
-function diasHTML(S) {
+function diasHTML(S, { plegar = false } = {}) {
   const P = S.plan;
   if (!P) return '';
   let h = '';
-  if (Array.isArray(P.proximos_dias) && P.proximos_dias.length) h += `<div class="sec"><h2>Los próximos días</h2></div><div class="dias">${P.proximos_dias.map((d) => `<div class="dia"><b>${esc(d.dia)}</b><span>${conEnlaces(S, d.texto)}</span></div>`).join('')}</div>`;
-  if (P.paron) h += `<div class="caja">${icono('bandera', 'oro')} <b>El parón.</b> <span class="t2">${conEnlaces(S, P.paron)}</span></div>`;
+  if (Array.isArray(P.proximos_dias) && P.proximos_dias.length) {
+    const dias = `<div class="dias">${P.proximos_dias.map((d) => `<div class="dia"><b>${esc(d.dia)}</b><span>${conEnlaces(S, d.texto)}</span></div>`).join('')}</div>`;
+    h += plegar ? plegado('calendario', 'Los próximos días', P.proximos_dias.length, dias) : `<div class="sec"><h2>Los próximos días</h2></div>${dias}`;
+  }
+  // (con la tarjeta del parón arriba, lo que dice la IA del parón va en ella)
+  if (P.paron && !hayTarjetaParon(S)) h += `<div class="caja">${icono('bandera', 'oro')} <b>El parón.</b> <span class="t2">${conEnlaces(S, P.paron)}</span></div>`;
   return h;
+}
+
+/** (18 y 19, 9 nov) la tarjeta del parón, arriba de Hoy y solo durante el parón: cuándo vuelve LaLiga y qué toca */
+const hayTarjetaParon = (S) => !!(S.M && S.M.enParon && S.M.proxima && S.M.paron && S.M.proxima.ini >= S.M.paron.ini);
+function paronHTML(S) {
+  if (!hayTarjetaParon(S)) return '';
+  const { M } = S, P = S.plan, v = M.proxima, ahora = Date.now();
+  const lejos = paronLejos(M, ahora);
+  const ops = (P && P.ops ? P.ops : []).filter((o) => !o.descartada);
+  const esp = ops.filter((o) => String(o.objetivo || '').startsWith('revend') && o.signo < 0);
+  const gana = esp.reduce((s2, o) => s2 + num(o.beneficio_esperado), 0);
+  const ventas = ops.filter((o) => o.accion === 'vender' && !o.sugerencia && o.hoy !== false).length;
+  const cierra = v.ini - M.VEDA_H * HORA;
+  const celdas = lejos
+    ? [['Para revender', esp.length ? `${esp.length}${gana > 0 ? ` · +${eur(gana)}` : ''}` : 'nada hoy'], ['Vender en lo alto', ventas ? `${ventas} hoy` : 'nada hoy'], ['El once, desde', cuando(v.ini - PARON_VUELTA, { hora: false })]]
+    : [['Cláusulas, hasta', cuando(cierra)], ['Lo de revender', 'véndelo ya'], ['Jornada', `${v.n} · ${cuando(v.ini)}`]];
+  return `<div class="paron-t ${lejos ? '' : 'vuelta'}"><div class="pt-top">${icono('bandera')}<span>Parón de selecciones</span><em>${dura(v.ini - ahora)} para la J${v.n}</em></div>
+    <b class="pt-t">${lejos ? `Nadie puntúa hasta el ${cuando(v.ini, { hora: false })}: hoy manda el dinero` : `Vuelve LaLiga ${cuando(v.ini)}: ahora sí, prepara el once`}</b>
+    <div class="pt-cols">${celdas.map(([a, b]) => `<div><small>${esc(a)}</small><b>${esc(b)}</b></div>`).join('')}</div>${P && P.paron ? `<p class="pt-ia">${conEnlaces(S, P.paron)}</p>` : ''}</div>`;
 }
 
 /** cómo van las recomendaciones de la IA y los puntos esperados de la app (de aprende.js) */
@@ -661,12 +750,13 @@ export function hoy(S) {
   const { D, M } = S;
   let h = '';
   h += bandasHoy(S);
-  h += saludoHTML(S);
-  h += marcador(S);
+  // (18, 9 nov) en el móvil, el marcador en una franja y el plan en la primera pantalla; sin saludo
+  h += marcador(S, { corto: true });
   h += tiemposHTML(S);
+  h += paronHTML(S);
   h += ahoraHTML(S);
   h += planHTML(S);
-  h += noticiasHTML(S);
+  h += noticiasHTML(S, { plegar: true });
   void D; void M;
   return h;
 }
@@ -674,7 +764,7 @@ export function hoy(S) {
 /** Hoy en el ordenador: el plan en grande a la izquierda y la liga de un vistazo a la derecha */
 function hoyAncho(S) {
   const { M } = S;
-  let izq = saludoHTML(S) + ahoraHTML(S) + planHTML(S);
+  let izq = saludoHTML(S) + paronHTML(S) + ahoraHTML(S) + planHTML(S);
   izq += noticiasHTML(S);
   void M;
   const der = marcador(S) + tiemposHTML(S) + diasHTML(S) + aTiroHTML(S) + movimientosHTML(S, 5);
@@ -704,9 +794,15 @@ function aTiroHTML(S) {
       <div class="gr">${eur(x.clausula)}</div>
       <div class="cuenta ${x.abierta ? 'ya' : ''}">${icono(x.abierta ? 'abierto' : 'reloj')}${x.abierta ? 'Abierta' : cuando(x.protegidoHasta)}</div></button>`).join('')}</div>`;
 }
-function noticiasHTML(S) {
+function noticiasHTML(S, { plegar = false } = {}) {
   const { M } = S;
   if (!M.noticias.length) return '';
+  if (plegar) {
+    const mios = new Set(M.mias.map((x) => x.pid));
+    const tuyas = M.noticias.filter((n) => (n.pids || []).some((p) => mios.has(p)));
+    const resto = M.noticias.filter((n) => !tuyas.includes(n));
+    return plegado('info', 'Noticias', tuyas.length ? `${tuyas.length} de los tuyos` : M.noticias.length, `<div class="noticias-l">${[...tuyas.slice(0, 4), ...resto.slice(0, 6 - Math.min(4, tuyas.length))].map(filaNoticia).join('')}</div>`);
+  }
   const mios = new Set(M.mias.map((x) => x.pid));
   const tuyas = M.noticias.filter((n) => (n.pids || []).some((p) => mios.has(p)));
   const resto = M.noticias.filter((n) => !tuyas.includes(n));
