@@ -1782,12 +1782,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/06/eric-garcia-y-christensen-apuntan-al-metropolitano-cadena-ser/": 1793973431000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/06/terzic-tira-marcos-encarar-visita-sabado-osasuna.html": 1793973914000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/06/javier-aguirre-da-razones-rinde-sadiq-136166220.html": 1793973720000,
-   "El Correo|https://www.elcorreo.com/athletic/terzic-pierde-paredes-leve-lesion-muscular-espera-20261106145848-nt.html": 1793973528000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/vuelven-gueler-tchouameni.html": 1793976866000,
-   "SPORT|136164075": 1793973656000,
    "SPORT|136173086": 1793976867000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247994/galarreta-alista-paredes-causa-baja.html": 1793981520000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247991/soler-ejercita-suplentes-espera-oyarzabal-zakharyan-esten-ultima-sesion.html": 1793981155000,
@@ -1964,7 +1961,9 @@
    "SPORT|136250143": 1794225334000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-pierden-partido-praga-victor-munoz-seleccion_0_2008456929.html": 1794229502000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000,
-   "SPORT|136228021": 1794228611000
+   "SPORT|136228021": 1794228611000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261109/1004249073/raul.html": 1794231423000,
+   "SPORT|136252960": 1794228768000
   },
   "hechos": [
    {
@@ -1976,18 +1975,6 @@
     "oficial": false,
     "hecho": "Paredes es baja para el partido ante Osasuna",
     "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "El Correo|https://www.elcorreo.com/athletic/terzic-pierde-paredes-leve-lesion-muscular-espera-20261106145848-nt.html",
-    "medio": "El Correo",
-    "t": 1793973528000,
-    "id": "2315",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Paredes sufre una leve lesión muscular",
-    "motivo": "lesión muscular",
     "plazo": "",
     "nums": []
    },
@@ -2493,7 +2480,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -3455,17 +3442,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 36,
+   "clasificar": 37,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 236229,
-  "salida": 25274,
+  "entrada": 238178,
+  "salida": 25416,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.504722,
+  "dolares": 0.504988,
   "reservado": 0
  },
  "recientes": {
@@ -7390,13 +7377,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 825,
+   "ok": 826,
    "fallos": 0,
-   "ejecuciones": 480,
+   "ejecuciones": 481,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T13:56:14.657Z"
+   "ultima": "2026-11-09T14:01:14.449Z"
   }
  },
  "ptsDirecto": {},
@@ -7413,15 +7400,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:56:20.545Z"
+   "ultimaBien": "2026-11-09T14:01:21.869Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:56:20.545Z"
+   "ultimaBien": "2026-11-09T14:01:21.869Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:56:20.545Z"
+   "ultimaBien": "2026-11-09T14:01:21.869Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7429,11 +7416,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:56:20.545Z"
+   "ultimaBien": "2026-11-09T14:01:21.869Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:56:20.545Z"
+   "ultimaBien": "2026-11-09T14:01:21.869Z"
   }
  },
  "avisos": [
