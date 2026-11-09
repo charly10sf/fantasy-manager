@@ -1787,13 +1787,11 @@
    "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/": 1793962556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247866/tripleta-athletic-mantiene-espana.html": 1793962306000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/06/barrenetxea-vuelve-a-la-lista-de-luis-de-la-fuente-para-el-paron-de-noviembre-radio-san-sebastian/": 1793962860000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-llama-alvaro-valles-marc-roca-jacobo-ramon-recupera-pablo-barrios-barrenetxea-20261106_3470127.html": 1793961935000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247885/barrios-vuelve-espana-completar-cuarteto-colchonero-roja.html": 1793964233000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247867/cholo-prueba-once-saldra-barcelona.html": 1793963088000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247870/barrenetxea-vuelve-planes-luis-fuente-acompanara-oyarzabal-espana.html": 1793962904000,
    "AS|https://as.com/futbol/primera/koke-al-once-y-kang-in-lee-ayudara-a-julian-en-ataque-f202611-n/": 1793964715000,
-   "SPORT|136156868": 1793961748000,
    "Diario Sur|https://www.diariosur.es/malagacf/rafita-seleccion-sub21-espana-futbol-20261106122218-nt.html": 1793964954000,
    "Cadena SER|https://cadenaser.com/galicia/2026/11/06/david-mella-convocado-con-espana-sub-21-para-jugar-ante-japon-y-albania-yeremay-se-queda-fuera-de-la-lista-de-la-seleccion-absoluta-radio-coruna/": 1793965657000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/thiago-pitarch-da-salto-sub-21-vuelve-dar-portazo-marruecos-20261106_3470218.html": 1793965395000,
@@ -1966,7 +1964,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004248955/julian-alvarez-confianza-ciega-simeone-desesperacion-grada.html": 1794217554000,
    "SPORT|136241522": 1794214605000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/09/julian-calero-oviedo-fichaje-raul-136241022.html": 1794218306000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotiva-carta-dedica-hija-pepe-mel-padre-no-me-dejes-sola-lucha-20261109_3471266.html": 1794219924000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotiva-carta-dedica-hija-pepe-mel-padre-no-me-dejes-sola-lucha-20261109_3471266.html": 1794219924000,
+   "AS|https://as.com/futbol/primera/luis-garcia-anora-a-miguel-sierra-f202611-n/": 1794220234000,
+   "SPORT|136239475": 1794217216000
   },
   "hechos": [
    {
@@ -2609,7 +2609,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -3604,17 +3604,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 188480,
-  "salida": 13911,
+  "entrada": 190372,
+  "salida": 14104,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.494266,
+  "dolares": 0.494552,
   "reservado": 0
  },
  "recientes": {
@@ -7539,13 +7539,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 786,
+   "ok": 787,
    "fallos": 0,
-   "ejecuciones": 441,
+   "ejecuciones": 442,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T10:41:13.134Z"
+   "ultima": "2026-11-09T10:46:13.592Z"
   }
  },
  "ptsDirecto": {},
@@ -7562,15 +7562,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:41:17.673Z"
+   "ultimaBien": "2026-11-09T10:46:19.609Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:41:17.673Z"
+   "ultimaBien": "2026-11-09T10:46:19.609Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:41:17.673Z"
+   "ultimaBien": "2026-11-09T10:46:19.609Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7578,11 +7578,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:41:17.673Z"
+   "ultimaBien": "2026-11-09T10:46:19.609Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:41:17.673Z"
+   "ultimaBien": "2026-11-09T10:46:19.609Z"
   }
  },
  "avisos": [
