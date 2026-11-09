@@ -1963,7 +1963,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248970/rodri-pedri-cogio-mando-grande.html": 1794220890000,
    "SPORT|136244057": 1794218612000,
    "AS|https://as.com/futbol/primera/psicosis-con-raphinha-tres-viajes-con-brasil-en-2026-tres-lesiones-f202611-n/": 1794222470000,
-   "AS|https://as.com/futbol/primera/gimenez-comandante-en-jefe-del-depor-f202611-n/": 1794222096000
+   "AS|https://as.com/futbol/primera/gimenez-comandante-en-jefe-del-depor-f202611-n/": 1794222096000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/09/lamine-yamal-y-oyarzabal-retrasan-su-incorporacion-a-la-concentracion-de-la-seleccion-en-madrid-cadena-ser/": 1794222823000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-perderan-partido-republica-checa-espera-lleguen-encuentro-inglaterra-20261109_3471298.html": 1794222744000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/09/6af1a885e85ece28168b457d.html": 1794222898000
   },
   "hechos": [
    {
@@ -2570,7 +2573,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -3565,17 +3568,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 199874,
-  "salida": 15677,
+  "entrada": 202071,
+  "salida": 18395,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.496288,
+  "dolares": 0.497867,
   "reservado": 0
  },
  "recientes": {
@@ -7500,13 +7503,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 793,
+   "ok": 794,
    "fallos": 0,
-   "ejecuciones": 448,
+   "ejecuciones": 449,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T11:16:14.123Z"
+   "ultima": "2026-11-09T11:21:12.125Z"
   }
  },
  "ptsDirecto": {},
@@ -7523,15 +7526,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:16:19.265Z"
+   "ultimaBien": "2026-11-09T11:21:29.553Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:16:19.265Z"
+   "ultimaBien": "2026-11-09T11:21:29.553Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:16:19.265Z"
+   "ultimaBien": "2026-11-09T11:21:29.553Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7539,11 +7542,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:16:19.265Z"
+   "ultimaBien": "2026-11-09T11:21:29.553Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:16:19.265Z"
+   "ultimaBien": "2026-11-09T11:21:29.553Z"
   }
  },
  "avisos": [
