@@ -203,13 +203,14 @@ function paron(S) {
       if (!l.length) return vacio(sb ? 'Ahora mismo nadie de la liga sube con fuerza. Con el mercado de mañana se vuelve a mirar.' : 'Nadie de la liga se está hundiendo ahora mismo.');
       // (ordenados por millones, que es lo que se gana: la barra y la cifra, en millones; el % va en cada tarjeta)
       const maxP = Math.max(...l.map((o) => Math.abs(o.d)), 1);
-      const rank = `<div class="pnz-rank">${l.map((o, i) => `<button class="pnz-rk" data-j="${esc(o.j.id)}"><span class="i">${i + 1}</span><span class="n">${esc(o.j.nombre)}</span><span class="b"><i style="width:${Math.max(8, Math.round((Math.abs(o.d) / maxP) * 100))}%"></i></span><span class="p">${sb ? '+' : '−'}${eur(Math.abs(o.d), { dec: 1 })}</span></button>`).join('')}</div>`;
-      const tarjetas = l.map((o, i) => `<button class="pnz-j" data-j="${esc(o.j.id)}">
-        <span class="pnz-j-cab"><span class="pnz-j-i">${i + 1}</span>${ava(o.j, 'm')}<span class="pnz-cc"><span class="n">${esc(o.j.nombre)}</span><span class="s">${esc(o.j.equipo || '')} · vale ${eur(o.j.valor)}</span></span>
-          <span class="g"><b>${sb ? '+' : '−'}${eur(Math.abs(o.d))}</b><small>${pctTxt(pctJ(o), 1)}</small></span></span>
+      // (Carlos, 14:53: las gráficas no salen todas a la vez: cada fila del ranking se abre tocándola, con su gráfica, cómo
+      // conseguirlo y el enlace a su ficha)
+      const filas = l.map((o, i) => `<details class="pnz-rk"><summary><span class="i">${i + 1}</span>${ava(o.j, 'm')}<span class="n"><span class="nt">${esc(o.j.nombre)}</span>${c.enPlan(o.j.id) ? '<i class="pl" title="En tu plan"></i>' : ''}</span><span class="b"><i style="width:${Math.max(8, Math.round((Math.abs(o.d) / maxP) * 100))}%"></i></span><span class="p">${sb ? '+' : '−'}${eur(Math.abs(o.d), { dec: 1 })}</span>${icono('flecha', 'ab')}</summary>
+        <div class="pnz-rk-bd"><div class="pnz-rk-s"><span>${esc(o.j.equipo || '')} · vale ${eur(o.j.valor)} → <b>${eur(o.fut[o.fut.length - 1][1])}</b></span><b class="pc">${pctTxt(pctJ(o), 1)}</b></div>
         ${trayecto(o.pas, o.fut, { sube: sb, fin: finEt })}
-        <span class="pnz-j-pie"><b class="${comoCls(o)}">${esc(o.como.t)}</b>${tags(o, sb)}</span></button>`).join('');
-      return rank + `<div class="pnz-js">${tarjetas}</div>`;
+        <div class="pnz-j-pie"><b class="${comoCls(o)}">${esc(o.como.t)}</b>${tags(o, sb)}</div>
+        <button class="pnz-rk-f" data-j="${esc(o.j.id)}">Ver su ficha ${icono('flecha')}</button></div></details>`).join('');
+      return `<div class="pnz-rank">${filas}</div>`;
     };
     const cab = `<div class="pnz-mer-cab"><span class="pnz-mer-et">${icono('bandera')}Lo que más cuenta en el parón</span>
       <h2>Quién se revaloriza y quién se hunde</h2>
