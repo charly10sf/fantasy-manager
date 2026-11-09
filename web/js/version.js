@@ -16,12 +16,13 @@ export const VERSION = '0.7.1';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.1', f: '2026-11-09', h: '13:04', t: 'Hoy, más clara, y el parón para hacer dinero', todos: true,
+    v: '0.7.1', f: '2026-11-09', h: '13:44', t: 'Hoy, más clara, y el parón para hacer dinero', todos: true,
     cosas: [
       { tipo: 'nuevo', d: 'plan', t: 'El plan, por fases', x: 'La pestaña Hoy enseña el plan en el orden en que cuadra el dinero: primero lo urgente, después «Haz caja» (lo que vendes o aceptas), «Ficha», «Protege» y «Alinea». Cada fase dice lo que entra o sale y con cuánto te quedas, y una barra cuenta los pasos que llevas hechos. Cada paso es una fila corta: tócala para ver el porqué y los datos.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'scroll', t: 'Pliega lo que ya tienes visto', x: 'Toca el título de una fase para plegarla; la app se acuerda mientras dure ese plan y pliega sola las que tienes hechas. Los próximos días, lo que hay que vigilar, las noticias y los rivales también van plegados en el móvil, para que lo primero que veas sea el plan.', ir: { v: 'hoy' } },
+      { tipo: 'nuevo', d: 'bandera', t: 'La pestaña Parón', x: 'Mientras dura el parón, Directo se convierte en Parón: qué comprar para revender antes de la vuelta y cuánto ganarías, qué tienes que vender antes de que baje, qué tuyos siguen subiendo, qué cláusulas mirar para el once de la vuelta y los días que cuentan. Arriba puedes volver a Directo, y cada sección se pliega tocando su título.', ir: { v: 'directo' } },
       { tipo: 'nuevo', d: 'especular', t: 'En el parón, a por el dinero', x: 'Durante el parón de selecciones nadie puntúa, así que el plan cambia: compra lo que sube para venderlo antes de la vuelta, vende en lo alto lo que va a bajar y protege lo tuyo. Clausular para el once solo sale si es un chollo (a su valor y sin bajar) o en los dos o tres días antes de la jornada de vuelta.', ir: { v: 'hoy' } },
-      { tipo: 'nuevo', d: 'bandera', t: 'La tarjeta del parón', x: 'Mientras dura el parón, arriba de Hoy: cuánto queda para la jornada, lo que puedes ganar revendiendo y desde qué día toca pensar en el once.', ir: { v: 'hoy' } },
+      { tipo: 'nuevo', d: 'calendario', t: 'La tarjeta del parón', x: 'Mientras dura el parón, arriba de Hoy: cuánto queda para la jornada, lo que puedes ganar revendiendo y desde qué día toca pensar en el once. Tócala para ir a la pestaña Parón.', ir: { v: 'hoy' } },
       { menor: true, tipo: 'mejora', d: 'ia', t: 'La IA sabe qué cláusulas y pujas valen en el parón', x: 'Cada cláusula y puja le llega marcada como chollo, para revender o no; si propone fichar para el once algo que no es un chollo, la app lo descarta y dice por qué. Lo que se puede ganar revendiendo se calcula algo más prudente en el parón.' },
       { menor: true, tipo: 'mejora', d: 'campana', t: 'Lo urgente, dentro del plan', x: '«Ahora mismo» ya no va aparte: lo urgente que el plan no recoge sale arriba, en «Antes de nada».' },
     ],
