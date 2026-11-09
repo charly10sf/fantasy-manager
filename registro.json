@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/06/china-esta-en-conversaciones-con-laliga-tras-la-polemica-con-mbappe-pero-pide-tiempo-para-digerir-cadena-ser/": 1793956187000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/china-reconoce-contactos-madrid-reconciliacion-polemica-mbappe.html": 1793956448000,
    "MARCA|https://www.marca.com/futbol/bundesliga/2026/11/06/makaay-ficharon-aubameyang-gimenez-deportivo-pertenece-primera.html": 1793957412000,
    "AS|https://as.com/futbol/primera/hidalgo-casado-puede-venir-convocado-esta-con-ganas-y-la-cabeza-empuja-f202611-n/": 1793957214000,
@@ -1790,7 +1789,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
-   "SPORT|136149474": 1793956100000,
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/06/el-embajador-de-china-confirma-en-salamanca-conversaciones-entre-el-gobierno-de-pekin-y-la-liga-para-reconducir-la-situacion-tras-la-polemica-provocada-por-mbappe-radio-salamanca/": 1793959856000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247854/china-conversaciones-laliga-pide-digerir-tema-mbappe.html": 1793960809000,
    "SPORT|136147732": 1793957547000,
@@ -1981,7 +1979,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248922/fermin.html": 1794208811000,
    "SPORT|136236561": 1794207418000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/se-que-vas-a-volver-el-mensaje-de-la-hija-de-pepe-mel-ser-almeria/": 1794211411000,
-   "SPORT|136238389": 1794210358000
+   "SPORT|136238389": 1794210358000,
+   "SPORT|136238901": 1794211477000
   },
   "hechos": [
    {
@@ -2624,7 +2623,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3671,17 +3670,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 180807,
-  "salida": 12660,
+  "entrada": 182553,
+  "salida": 12761,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.492873,
+  "dolares": 0.493098,
   "reservado": 0
  },
  "recientes": {
@@ -7606,13 +7605,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 767,
+   "ok": 768,
    "fallos": 0,
-   "ejecuciones": 422,
+   "ejecuciones": 423,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T09:06:18.453Z"
+   "ultima": "2026-11-09T09:11:15.287Z"
   }
  },
  "ptsDirecto": {},
@@ -7629,15 +7628,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:06:21.435Z"
+   "ultimaBien": "2026-11-09T09:11:23.200Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:06:21.435Z"
+   "ultimaBien": "2026-11-09T09:11:23.200Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:06:21.435Z"
+   "ultimaBien": "2026-11-09T09:11:23.200Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7645,11 +7644,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:06:21.435Z"
+   "ultimaBien": "2026-11-09T09:11:23.200Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:06:21.435Z"
+   "ultimaBien": "2026-11-09T09:11:23.200Z"
   }
  },
  "avisos": [
