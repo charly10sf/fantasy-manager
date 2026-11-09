@@ -12,7 +12,7 @@ import { guiaClave } from './clave.js';
 import { K } from './datos.js';
 import { jornadasHTML } from './jornadas.js';
 import { favoritos } from './favoritos.js';
-import { paronLejos, PARON_VUELTA } from './operaciones.js';
+import { paronLejos } from './operaciones.js';
 
 const ICO_ACT = { compra: 'mercado', clausula: 'diana', venta: 'euro', blindaje: 'escudo', premio: 'hucha', alineacion: 'alerta', entra: 'usuario', otro: 'cambio' };
 const VERBO = { compra: 'fichó a', clausula: 'clausuló a', venta: 'vendió a', blindaje: 'blindó a', premio: 'cobró por la jornada', alineacion: 'no puntuó por alineación incorrecta', entra: 'entró en la liga', otro: 'movió a' };
@@ -612,29 +612,18 @@ function diasHTML(S, { plegar = false } = {}) {
     const dias = `<div class="dias">${P.proximos_dias.map((d) => `<div class="dia"><b>${esc(d.dia)}</b><span>${conEnlaces(S, d.texto)}</span></div>`).join('')}</div>`;
     h += plegar ? plegado('calendario', 'Los próximos días', P.proximos_dias.length, dias) : `<div class="sec"><h2>Los próximos días</h2></div>${dias}`;
   }
-  // (con la tarjeta del parón arriba, lo que dice la IA del parón va en ella)
-  if (P.paron && !hayTarjetaParon(S)) h += `<div class="caja">${icono('bandera', 'oro')} <b>El parón.</b> <span class="t2">${conEnlaces(S, P.paron)}</span></div>`;
+  // (lo que dice la IA del parón va aquí: el aviso de arriba de Hoy solo lleva a la pestaña Parón)
+  if (P.paron) h += `<div class="caja">${icono('bandera', 'oro')} <b>El parón.</b> <span class="t2">${conEnlaces(S, P.paron)}</span></div>`;
   return h;
 }
 
-/** (18 y 19, 9 nov) la tarjeta del parón, arriba de Hoy y solo durante el parón: cuándo vuelve LaLiga y qué toca */
 const hayTarjetaParon = (S) => !!(S.M && S.M.enParon && S.M.proxima && S.M.paron && S.M.proxima.ini >= S.M.paron.ini);
+// (Carlos, 9 nov 15:17: en Hoy, solo un aviso pequeño en amarillo que lleve a la pestaña Parón, donde está todo)
 function paronHTML(S) {
   if (!hayTarjetaParon(S)) return '';
-  const { M } = S, P = S.plan, v = M.proxima, ahora = Date.now();
+  const { M } = S, v = M.proxima, ahora = Date.now();
   const lejos = paronLejos(M, ahora);
-  const ops = (P && P.ops ? P.ops : []).filter((o) => !o.descartada);
-  const esp = ops.filter((o) => String(o.objetivo || '').startsWith('revend') && o.signo < 0);
-  const gana = esp.reduce((s2, o) => s2 + num(o.beneficio_esperado), 0);
-  const ventas = ops.filter((o) => o.accion === 'vender' && !o.sugerencia && o.hoy !== false).length;
-  const cierra = v.ini - M.VEDA_H * HORA;
-  const celdas = lejos
-    ? [['Para revender', esp.length ? `${esp.length}${gana > 0 ? ` · +${eur(gana)}` : ''}` : 'nada hoy'], ['Ventas de hoy', ventas ? `${ventas}` : 'ninguna'], ['El once, desde', cuando(v.ini - PARON_VUELTA, { hora: false })]]
-    : [['Cláusulas, hasta', cuando(cierra)], (M.paraRevender || []).length ? ['Lo de revender', 'véndelo ya'] : ['Tu once', 'revísalo'], ['Jornada', `${v.n} · ${cuando(v.ini)}`]];
-  return `<div class="paron-t ${lejos ? '' : 'vuelta'}"><div class="pt-top">${icono('bandera')}<span>Parón de selecciones</span><em>${dura(v.ini - ahora)} para la J${v.n}</em></div>
-    <b class="pt-t">${lejos ? `Nadie puntúa hasta el ${cuando(v.ini, { hora: false })}: hoy manda el dinero` : `Vuelve LaLiga ${cuando(v.ini)}: ahora sí, prepara el once`}</b>
-    <div class="pt-cols">${celdas.map(([a, b]) => `<div><small>${esc(a)}</small><b>${esc(b)}</b></div>`).join('')}</div>${P && P.paron ? `<p class="pt-ia">${conEnlaces(S, P.paron)}</p>` : ''}
-    <button class="pt-ir" data-ir="directo" data-seg="paron:paron">${lejos ? 'Cómo sacar millones en el parón' : 'Todo lo del parón'}${icono('flecha')}</button></div>`;
+  return `<button class="paron-m ${lejos ? '' : 'vuelta'}" data-ir="directo" data-seg="paron:paron">${icono('bandera')}<b>Parón de selecciones</b><span>${lejos ? `J${v.n} en ${Math.max(1, Math.round((v.ini - ahora) / DIA))} días` : `vuelve la J${v.n} ${esc(cuando(v.ini))}`}</span>${icono('flecha', 'pm-f')}</button>`;
 }
 
 /** cómo van las recomendaciones de la IA y los puntos esperados de la app (de aprende.js) */

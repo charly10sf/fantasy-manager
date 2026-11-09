@@ -1938,20 +1938,15 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pleg-d .dias { margin-top: 6px; }
 .pleg.pasos-fuera { margin-top: 14px; }
 .pleg.pasos-fuera > .pasos3 { margin: 0 8px 8px; }
-/* la tarjeta del parón (solo durante el parón) */
-.paron-t { border-radius: 16px; padding: 12px 14px; margin: 12px 0 0; background: linear-gradient(135deg, rgba(255, 197, 71, 0.16), rgba(255, 197, 71, 0.04)); border: 1px solid rgba(255, 197, 71, 0.35); }
-.paron-t .pt-top { display: flex; align-items: center; gap: 8px; font: 700 12.5px 'Barlow'; letter-spacing: 1.2px; text-transform: uppercase; color: var(--oro); }
-.paron-t .pt-top .ic { width: 16px; height: 16px; flex: none; }
-.paron-t .pt-top em { margin-left: auto; font-style: normal; color: var(--texto2); letter-spacing: 0; text-transform: none; white-space: nowrap; }
-.paron-t .pt-t { display: block; font: 700 20px/1.12 var(--cond); margin: 6px 0 10px; }
-.paron-t .pt-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.paron-t .pt-cols div { background: rgba(0, 0, 0, 0.25); border-radius: 10px; padding: 7px 9px; min-width: 0; }
-.paron-t small { display: block; font-size: 11.5px; color: var(--apagado); }
-.paron-t .pt-cols b { font: 700 16px/1.15 var(--cond); }
-.paron-t .pt-ia { margin: 10px 0 0; font-size: 14px; line-height: 1.4; color: var(--texto2); }
-.paron-t .pt-ir { display: flex; align-items: center; gap: 6px; margin-top: 10px; font: 700 14px 'Barlow'; color: var(--oro); }
-.paron-t .pt-ir .ic { width: 15px; height: 15px; }
 
+/* el aviso del parón en Hoy (Carlos, 9 nov 15:17: «más chiquitillo… en amarillo… que te lleve a la pestaña del parón») */
+.paron-m { width: 100%; display: flex; align-items: center; gap: 8px; margin: 10px 0 2px; padding: 9px 12px; border-radius: 12px; background: var(--oro-s); border: 1px solid rgba(255, 197, 71, 0.4); color: var(--oro); text-align: left; min-width: 0; }
+.paron-m:active { opacity: 0.7; }
+.paron-m > .ic { width: 16px; height: 16px; flex: none; }
+.paron-m b { color: var(--oro); font: 700 14px 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; white-space: nowrap; flex: none; }
+.paron-m span { flex: 1; min-width: 0; font-size: 13px; color: var(--texto2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.paron-m .pm-f { width: 15px; height: 15px; flex: none; }
+.paron-m.vuelta { background: var(--rojo-s); border-color: var(--rojo2); color: var(--rojo-l); } .paron-m.vuelta b { color: var(--rojo-l); }
 /* ---------- la pestaña Parón (21, 9 nov: «que te indique cómo ganar millones»), en el sitio de Directo ---------- */
 .tabs.pnz-sel { position: relative; top: auto; z-index: 1; }
 .pnz-hero { border-radius: 18px; padding: 16px; margin-top: 4px; background: radial-gradient(120% 140% at 100% 0%, rgba(255, 197, 71, 0.22), transparent 55%), linear-gradient(160deg, #2b0a12, #121216 70%); border: 1px solid rgba(255, 197, 71, 0.35); }
