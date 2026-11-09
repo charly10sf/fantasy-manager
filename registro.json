@@ -844,6 +844,27 @@
    "jornada": 12,
    "id": "2119569481840185716",
    "t": "2026-11-08T23:15:19.279Z"
+  },
+  {
+   "clave": "caidas|13|2924-2452",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2119672058993103295",
+   "t": "2026-11-09T06:02:55.428Z"
+  },
+  {
+   "clave": "caidas|13|3208-2217-1029-2470-2746-302",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2119672068489064544",
+   "t": "2026-11-09T06:02:57.714Z"
+  },
+  {
+   "clave": "caidas|13|2338-2624",
+   "tipo": "caidas",
+   "jornada": 13,
+   "id": "2119672074272956700",
+   "t": "2026-11-09T06:02:59.097Z"
   }
  ],
  "estados": {
@@ -1508,7 +1529,7 @@
   "3088": "ok",
   "3089": "ok",
   "3090": "ok",
-  "3091": "doubtful",
+  "3091": "ok",
   "3092": "injured",
   "3093": "ok",
   "3094": "ok",
@@ -1519,7 +1540,7 @@
   "3099": "ok",
   "3100": "ok",
   "3101": "ok",
-  "3102": "suspended",
+  "3102": "ok",
   "3103": "ok",
   "3104": "ok",
   "3105": "ok",
@@ -1730,21 +1751,24 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3091",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1794204073390
+  },
+  {
+   "id": "3102",
+   "que": "vuelve",
+   "antes": "suspended",
+   "t": 1794204073390
+  }
+ ],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/el-atletico-piensa-en-beltran-como-heredero-de-oblak-f202611-n/": 1793920109000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247697/flick-pendiente-sensaciones-eric-garcia.html": 1793944800000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247701/asi-entro-farinas-familia-lamine.html": 1793943900000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247781/portada-md-bizkaia-araba-hoy-viernes.html": 1793920156000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261105/1004247753/confesion-rashford-sobre-lamine-yamal.html": 1793915904000,
-   "SPORT|136135795": 1793940005000,
-   "SPORT|136131753": 1793939436000,
-   "SPORT|136145842": 1793937667000,
-   "SPORT|136145830": 1793937662000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247763/sube-baja-lateral-diestro-athletic.html": 1793945100000,
    "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/": 1793952909000,
-   "AS|https://as.com/futbol/elliott-descarto-al-madrid-por-ramos-f202611-n/": 1793920238000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247816/racing-santander-multado-lanzamiento-menchero.html": 1793953993000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/china-esta-en-conversaciones-con-laliga-tras-la-polemica-con-mbappe-pero-pide-tiempo-para-digerir-cadena-ser/": 1793956187000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/china-reconoce-contactos-madrid-reconciliacion-polemica-mbappe.html": 1793956448000,
@@ -1928,7 +1952,20 @@
    "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-es-baja-en-la-seleccion-le-sustituye-jorge-de-frutos-f202611-n/": 1794157697000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000,
    "SPORT|136231402": 1794167455000,
-   "SPORT|136231541": 1794167408000
+   "SPORT|136231541": 1794167408000,
+   "AS|https://as.com/futbol/primera/dieng-y-diakhaby-tampoco-convenceran-a-aguirre-en-copa-f202611-n/": 1794183615000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248739/raphinha-goleador-inesperado.html": 1794204000000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261109/1004248714/primer-balance-athletic.html": 1794204000000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248899/laboratorio-flick-laterales-funciona.html": 1794181874000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248847/elogios-gavi-cubarsi-gran-reaccion-descanso.html": 1794178145000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261108/1004248852/esperaremos-julian-le-necesitamos-queremos-llegar-queremos-llegar.html": 1794178002000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248815/flick-olvida-eric-apuesta-dos-laterales-improvisados-partido.html": 1794173471000,
+   "SPORT|136233387": 1794198609000,
+   "SPORT|136233456": 1794171741000,
+   "SPORT|136233003": 1794171354000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/08/la-dupla-fermin-lamine-suple-a-raphinha-y-sostiene-a-un-barca-tocado-en-lo-defensivo-cadena-ser/": 1794175233000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gonzalo-miro-senala-culpables-atletico-derrota-barcelona-gestion-entrenador-peor-todavia-20261108_3471046.html": 1794177066000,
+   "ABC|https://www.abc.es/deportes/futbol/pegada-condena-atletico-lanza-barca-20261108225722-nt.html": 1794183248000
   },
   "hechos": [
    {
@@ -2584,8 +2621,8 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-08",
-   "n": 28
+   "dia": "2026-11-09",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -3233,8 +3270,8 @@
     "t": 0
    },
    "3091": {
-    "e": "doubtful",
-    "t": 1794157271302
+    "e": "ok",
+    "t": 1794204073390
    },
    "3092": {
     "e": "injured",
@@ -3253,8 +3290,8 @@
     "t": 0
    },
    "3102": {
-    "e": "suspended",
-    "t": 0
+    "e": "ok",
+    "t": 1794204073390
    },
    "3103": {
     "e": "ok",
@@ -3430,11 +3467,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136145827": 1793937662000,
-   "SPORT|136145828": 1793937661000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/comunicado-oficial-afe-insiste-solicita-aplazamiento-jornada-completa-segunda-liga-hypermotion-136142110.html": 1793922998000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/2a-parte-05-nov-2026-partidazo-cope-20261106_3469895.html": 1793922529000,
-   "AS|https://as.com/futbol/alineacion-posible-del-alaves-ante-el-sevilla-en-laliga-ea-sports-f202611-n/": 1793919492000,
    "Cadena SER|https://cadenaser.com/andorra/2026/11/06/pique-vilaseca-i-nogues-encapcalen-la-representacio-de-lfc-andorra-al-multitudinari-funeral-de-jesus-de-miguel-radio-ser-principat-d-andorra/": 1793951972000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/": 1793957388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247829/rfef-juez-unico-no-competencias-aplazar-jornada-segunda.html": 1793957172000,
@@ -3663,17 +3695,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 0,
-   "redactar": 1,
-   "revisar": 1,
+   "clasificar": 1,
+   "redactar": 12,
+   "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 11828,
-  "salida": 203,
-  "cacheLee": 0,
-  "cacheEscribe": 2605,
-  "dolares": 0.032199,
+  "entrada": 41663,
+  "salida": 6657,
+  "cacheLee": 103125,
+  "cacheEscribe": 14220,
+  "dolares": 0.160226,
   "reservado": 0
  },
  "recientes": {
@@ -3830,6 +3862,20 @@
     "t": "2026-11-08T22:36:43.136Z",
     "texto": "📉 Los peores de la jornada 12 en LaLiga Fantasy. Gayá (Valencia) firma -3, mientras que Aznou (Málaga) suma -2 y Rioja (Valencia) -1. Cuatro de los seis peores juegan en el Valencia.\n\nDe Haas, Maffeo y Lunin también terminan en negativo con -1 cada uno."
    }
+  ],
+  "caidas": [
+   {
+    "t": "2026-11-09T06:02:55.430Z",
+    "texto": "⁉️ Dos titulares del Getafe llegan tocados al partido contra el Atlético en el Coliseum.\n\nGudelj no juega: se fue a cinco amarillas en la jornada 12 y cumple sanción. Era fijo en la zaga, aunque su media es de 1,9.\n\nLa duda es Zaid Romero, que arrastra el cuádriceps desde el 10 de octubre y juega mucho cuando está bien. Si lo tienes, mejor esperar a ver si entra en la convocatoria."
+   },
+   {
+    "t": "2026-11-09T06:02:57.715Z",
+    "texto": "⁉️ Para la jornada 13 caen seis titulares, y el más gordo es Miguel Sierra: luxación acromioclavicular y hasta enero fuera. Si lo tienes en el Sevilla, es venta obligatoria.\n\nRodri, del Barça, y Álvaro García, del Rayo ⚡, no vuelven hasta principios de diciembre. Cucho, del Betis, hasta finales de noviembre. Gayá cumple sanción por la roja de la jornada 12.\n\nFoyth, del Villarreal 🚢, es la única duda: molestias musculares desde el 30 de octubre."
+   },
+   {
+    "t": "2026-11-09T06:02:59.098Z",
+    "texto": "⁉️ Dos titulares habituales llegan en duda a la jornada 13, los dos con problemas en los isquiotibiales.\n\nAimar, del Osasuna 🐂, arrastra la lesión desde el 10 de octubre y recibe al Málaga 🐟 en El Sadar. Manu Sánchez, del Levante 🐸, se lesionó el 31 de octubre y juega en casa contra el Elche 🌴, aunque su media es de 2,6. Con los dos, mejor esperar a ver si entran en la convocatoria."
+   }
   ]
  },
  "puntosPartido": {
@@ -3930,7 +3976,13 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "caidas|13|2939-3182": {
+   "n": 1,
+   "t": "2026-11-09T06:02:53.601Z",
+   "ultima": "2026-11-09T06:02:53.601Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7572,13 +7624,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 728,
+   "ok": 729,
    "fallos": 0,
-   "ejecuciones": 383,
+   "ejecuciones": 384,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T05:56:12.684Z"
+   "ultima": "2026-11-09T06:01:13.390Z"
   }
  },
  "ptsDirecto": {},
@@ -7595,15 +7647,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T05:56:13.340Z"
+   "ultimaBien": "2026-11-09T06:03:32.515Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T05:56:13.340Z"
+   "ultimaBien": "2026-11-09T06:03:32.515Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T05:56:13.340Z"
+   "ultimaBien": "2026-11-09T06:03:32.515Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7611,11 +7663,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T22:56:25.838Z"
+   "ultimaBien": "2026-11-09T06:03:32.515Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-08T21:56:28.148Z"
+   "ultimaBien": "2026-11-09T06:03:32.515Z"
   }
  },
  "avisos": [
