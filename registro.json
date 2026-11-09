@@ -1076,7 +1076,7 @@
   "2456": "ok",
   "2457": "ok",
   "2458": "ok",
-  "2461": "ok",
+  "2461": "injured",
   "2462": "out_of_league",
   "2464": "ok",
   "2465": "ok",
@@ -1218,7 +1218,7 @@
   "2679": "ok",
   "2680": "ok",
   "2682": "out_of_league",
-  "2687": "suspended",
+  "2687": "ok",
   "2692": "out_of_league",
   "2693": "injured",
   "2696": "ok",
@@ -1628,7 +1628,7 @@
   "3159": "ok",
   "3160": "ok",
   "3161": "ok",
-  "3162": "suspended",
+  "3162": "ok",
   "3163": "ok",
   "3164": "ok",
   "3165": "ok",
@@ -1665,7 +1665,7 @@
   "3196": "ok",
   "3197": "injured",
   "3198": "ok",
-  "3199": "suspended",
+  "3199": "ok",
   "3200": "ok",
   "3201": "ok",
   "3202": "out_of_league",
@@ -1716,7 +1716,7 @@
   "3247": "ok",
   "3248": "out_of_league",
   "3249": "ok",
-  "3250": "suspended",
+  "3250": "ok",
   "3251": "ok",
   "3252": "injured",
   "3253": "ok",
@@ -1760,7 +1760,7 @@
   "3291": "out_of_league",
   "3292": "out_of_league",
   "3293": "out_of_league",
-  "3294": "suspended",
+  "3294": "ok",
   "3295": "ok",
   "3296": "ok",
   "3297": "ok",
@@ -7607,13 +7607,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 761,
+   "ok": 762,
    "fallos": 0,
-   "ejecuciones": 416,
+   "ejecuciones": 417,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T08:36:17.883Z"
+   "ultima": "2026-11-09T08:41:18.995Z"
   }
  },
  "ptsDirecto": {},
@@ -7630,15 +7630,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:36:20.402Z"
+   "ultimaBien": "2026-11-09T08:41:23.966Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:36:20.402Z"
+   "ultimaBien": "2026-11-09T08:41:23.966Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:36:20.402Z"
+   "ultimaBien": "2026-11-09T08:41:23.966Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7646,11 +7646,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:36:20.402Z"
+   "ultimaBien": "2026-11-09T08:41:23.966Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:36:20.402Z"
+   "ultimaBien": "2026-11-09T08:41:23.966Z"
   }
  },
  "avisos": [
