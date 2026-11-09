@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/roberto-y-en-el-proximo-paron-dos-internacionales-mas-f202611-n/": 1793987444000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000,
    "SPORT|136181983": 1793990642000,
    "AS|https://as.com/futbol/videos/llegara-la-redencion-definitiva-de-julian-contra-el-barca-f202611-v/": 1793995579000,
@@ -7262,13 +7261,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 872,
+   "ok": 873,
    "fallos": 0,
-   "ejecuciones": 527,
+   "ejecuciones": 528,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T17:46:16.361Z"
+   "ultima": "2026-11-09T17:51:13.021Z"
   }
  },
  "ptsDirecto": {},
@@ -7285,15 +7284,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:46:21.989Z"
+   "ultimaBien": "2026-11-09T17:51:16.035Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:46:21.989Z"
+   "ultimaBien": "2026-11-09T17:51:16.035Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:46:21.989Z"
+   "ultimaBien": "2026-11-09T17:51:16.035Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7301,11 +7300,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:46:21.989Z"
+   "ultimaBien": "2026-11-09T17:51:16.035Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:46:21.989Z"
+   "ultimaBien": "2026-11-09T17:51:16.035Z"
   }
  },
  "avisos": [
