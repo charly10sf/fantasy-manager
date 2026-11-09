@@ -52,7 +52,7 @@ export function cerrarPresentacion() {
  * Abre la presentación. desde: la última versión que viste (salen las posteriores).
  * alIr(ir) lleva a donde está una novedad; alLista() abre la lista entera; alCerrar(), al terminar.
  */
-export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {}, alCerrar = () => {} } = {}) {
+export function presentarNovedades(desde, { alIr = () => {}, alLista = null, alCerrar = () => {} } = {}) {
   if (abierta) abierta(true);
   const quieta = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nuevas = versionesDesde(desde);
@@ -104,7 +104,7 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
         <h2>${resto ? 'Y más' : 'Eso es todo'}</h2>
         <p>${resto ? `Hay ${resto} novedad${resto > 1 ? 'es' : ''} más: están en la lista de versiones.` : 'Si algo no va como esperas, avísame desde Ajustes → Reportar un fallo.'}</p>
         <button type="button" class="btn" data-nv="fin">A mi liga</button>
-        <button type="button" class="nv-enlace" data-nv="lista">${resto ? 'Ver todo lo que ha cambiado' : 'Ver todas las versiones'}</button>
+        ${alLista ? `<button type="button" class="nv-enlace" data-nv="lista">${resto ? 'Ver todo lo que ha cambiado' : 'Ver todas las versiones'}</button>` : ''}
       </section>
     </div>`;
   document.body.appendChild(raiz);
@@ -171,7 +171,7 @@ export function presentarNovedades(desde, { alIr = () => {}, alLista = () => {},
     const b = e.target.closest('[data-nv]');
     if (!b) return;
     if (b.dataset.nv === 'fin') { quitar(); alCerrar(); }
-    else if (b.dataset.nv === 'lista') { quitar(); alCerrar(); alLista(); }
+    else if (b.dataset.nv === 'lista' && alLista) { quitar(); alCerrar(); alLista(); }
   });
   pinta();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(redim);
