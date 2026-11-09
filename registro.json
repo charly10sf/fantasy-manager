@@ -1782,8 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/frenkie-de-jong-mai-canvia-un-partit-no-es-transcendent-sercat/": 1793972676000,
-   "El Correo|https://www.elcorreo.com/athletic/terzic-marcos-hablado-supone-jugar-sadar-20261106143832-nt.html": 1793972652000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/eric-garcia-y-christensen-apuntan-al-metropolitano-cadena-ser/": 1793973431000,
    "MARCA|https://www.marca.com/futbol/athletic/2026/11/06/terzic-tira-marcos-encarar-visita-sabado-osasuna.html": 1793973914000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/06/javier-aguirre-da-razones-rinde-sadiq-136166220.html": 1793973720000,
@@ -1968,18 +1966,6 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000
   },
   "hechos": [
-   {
-    "guid": "El Correo|https://www.elcorreo.com/athletic/terzic-marcos-hablado-supone-jugar-sadar-20261106143832-nt.html",
-    "medio": "El Correo",
-    "t": 1793972652000,
-    "id": "2315",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Paredes se pierde el duelo ante Osasuna",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/06/terzic-tira-marcos-encarar-visita-sabado-osasuna.html",
     "medio": "MARCA",
@@ -7403,13 +7389,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 822,
+   "ok": 823,
    "fallos": 0,
-   "ejecuciones": 477,
+   "ejecuciones": 478,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T13:41:13.612Z"
+   "ultima": "2026-11-09T13:46:13.183Z"
   }
  },
  "ptsDirecto": {},
@@ -7426,15 +7412,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:41:21.514Z"
+   "ultimaBien": "2026-11-09T13:46:15.511Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:41:21.514Z"
+   "ultimaBien": "2026-11-09T13:46:15.511Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:41:21.514Z"
+   "ultimaBien": "2026-11-09T13:46:15.511Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7442,11 +7428,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:41:21.514Z"
+   "ultimaBien": "2026-11-09T13:46:15.511Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:41:21.514Z"
+   "ultimaBien": "2026-11-09T13:46:15.511Z"
   }
  },
  "avisos": [
