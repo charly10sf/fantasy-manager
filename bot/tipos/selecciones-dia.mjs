@@ -7,7 +7,7 @@
 // del mercado con hasta tres paneles y la bandera de cada uno junto a su cara).
 import { json } from '../lib/http.mjs';
 import { actasDe, porJugador, fechaTxt, diaSemana, MESES, aaaammdd } from '../lib/actas-selecciones.mjs';
-import { clubes as clubesH, jugador as jugadorH } from '../lib/hechos.mjs';
+import { clubes as clubesH, jugador as jugadorH, franja } from '../lib/hechos.mjs';
 import { corto, hash, dineroTxt } from '../lib/texto.mjs';
 import { prepararDatos, perfil, _ctx as datosCtx } from '../lib/datos-jugador.mjs';
 import { tweet, aparte } from '../lib/redactar.mjs';
@@ -149,17 +149,18 @@ export async function generar(ctx) {
 
   // los hechos para la IA: cada uno con lo que hizo, contra quién, el marcador, los minutos y la nota; las lesiones, solo las que marca FotMob
   const sel = (s) => ({ seleccion: s.nombre, ...(s.bandera ? { bandera: s.bandera } : {}) });
-  // la nota, solo la que llama la atención (9 o más, 5,5 o menos): el resto no la lleva
-  const partido = (p) => ({ rival: p.rival.nombre, ...(p.rival.bandera ? { banderaRival: p.rival.bandera } : {}), ...(p.marcador ? { marcador: p.marcador, resultado: p.resultado } : {}),
-    minutos: p.min, ...(p.titular ? {} : { entroDesdeElBanquillo: true }), ...(p.nota != null && (p.nota >= 9 || p.nota <= 5.5) ? { notaFotMob: nota1(p.nota) } : {}), ...(p.mejor ? { mejorDelPartido: true } : {}) });
+  // la nota, solo la que llama la atención (9 o más, 5,5 o menos) y la de los peores, que es su motivo: el resto no la lleva.
+  // `cuando`: mediodía, tarde o noche (el revisor tiraba «noche» sin el dato)
+  const partido = (p, { conNota = false } = {}) => ({ ...(p.hora && franja(p.hora) ? { cuando: franja(p.hora) } : {}), rival: p.rival.nombre, ...(p.rival.bandera ? { banderaRival: p.rival.bandera } : {}), ...(p.marcador ? { marcador: p.marcador, resultado: p.resultado } : {}),
+    minutos: p.min, ...(p.titular ? {} : { entroDesdeElBanquillo: true }), ...(p.nota != null && (conNota || p.nota >= 9 || p.nota <= 5.5) ? { notaFotMob: nota1(p.nota) } : {}), ...(p.mejor ? { mejorDelPartido: true } : {}) });
   const jug = (r, extra, principal = false) => { const h = jugadorH(r.j, { equipos, principal, datos: false, extra: { club: eq(r), ...sel(r.sel), ...extra } }); delete h.mediaPuntos; return h; };
   const vuelta = paron && paron.ini ? FECHA_VUELTA.format(new Date(paron.ini)) : null;
   const hechos = { tipo: 'selecciones-dia', noticia: `lo que hicieron ayer (${ayerTxt}) los jugadores de LaLiga con sus selecciones: los mejores, los peores y los minutos que llevan`,
     momento: `parón de selecciones; la liga vuelve con la jornada ${v.siguiente}${vuelta ? ` el ${vuelta}` : ''}`,
-    aviso: 'lo que más le importa al mánager es lo que vale cada uno, si se ha revalorizado o ha bajado y los minutos; la nota de FotMob (de 0 a 10) solo viene cuando llama la atención y, si la usas, como mucho una vez en todo el tuit («un 9,3»). No cuentes la nota de todos.' + '  Una lesión, solo la que viene en «losPeores» y tal como está: ni gravedad ni plazos. Nada de convocatorias ni de partidos que no estén aquí. La bandera va justo detrás del nombre de su selección y solo la que trae cada una. La carga (minutos en el parón) sirve para pensar en la jornada de vuelta, sin dar por hecho que vaya a descansar. La imagen adjunta lleva a los mejores, los peores y los que más minutos llevan.',
+    aviso: 'lo que más le importa al mánager es lo que vale cada uno, si se ha revalorizado o ha bajado y los minutos; la nota de FotMob (de 0 a 10) solo viene cuando llama la atención o explica por qué alguien está entre los peores: úsala como mucho dos veces en todo el tuit («un 9,3», «un 4,6»), nunca la de todos.' + '  Una lesión, solo la que viene en «losPeores» y tal como está: ni gravedad ni plazos. Nada de convocatorias ni de partidos que no estén aquí. La bandera va justo detrás del nombre de su selección y solo la que trae cada una. La carga (minutos en el parón) sirve para pensar en la jornada de vuelta, sin dar por hecho que vaya a descansar. La imagen adjunta lleva a los mejores, los peores y los que más minutos llevan.',
     losMejores: mejores.slice(0, 4).map(({ r, p }) => ({ nombre: r.j.nickname, club: eq(r), ...sel(r.sel), ...(ga(p) ? { loQueHizo: ga(p) } : {}), ...partido(p), ...valores.get(r) })),
     ...(peores.length ? { losPeores: peores.slice(0, 3).map(({ r, p }) => ({ nombre: r.j.nickname, club: eq(r), ...sel(r.sel),
-      queLePaso: p.lesion != null ? `se retiró lesionado en el minuto ${p.lesion}` : p.roja != null ? `le echaron con roja en el minuto ${p.roja}` : `jugó mal`, ...partido(p), ...valores.get(r) })) } : {}),
+      queLePaso: p.lesion != null ? `se retiró lesionado en el minuto ${p.lesion}` : p.roja != null ? `le echaron con roja en el minuto ${p.roja}` : 'una de las notas más bajas de ayer', ...partido(p, { conNota: p.lesion == null && p.roja == null }), ...valores.get(r) })) } : {}),
     ...(carga.length ? { masMinutosEnElParon: carga.slice(0, 4).map((r) => ({ nombre: r.j.nickname, club: eq(r), ...sel(r.sel), minutosEnElParon: r.min, partidosJugados: r.jugados, ...valores.get(r) })) } : {}),
     ...(sinJugar.length ? { ayerSinJugar: sinJugar.slice(0, 3).map(({ r }) => ({ nombre: r.j.nickname, club: eq(r), ...sel(r.sel), queLePaso: 'estuvo en el banquillo y no jugó' })) } : {}),
     jugadores: [...mejores.slice(0, 3).map((x, i) => jug(x.r, {}, i === 0)), ...peores.slice(0, 2).map((x) => jug(x.r, {}, true)), ...carga.slice(0, 2).filter((r) => ![...mejores.slice(0, 3), ...peores.slice(0, 2)].some((x) => x.r === r)).map((r) => jug(r, {}))],

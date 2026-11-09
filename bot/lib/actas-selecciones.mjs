@@ -110,7 +110,7 @@ export async function actasDe(dias, { clubesLiga, pedir = json, registro = null,
     let todosAcabados = true;
     for (const l of r.leagues) for (const m of l.matches || []) {
       if (!deSelecciones(l, m) || (m.status && m.status.cancelled)) continue;
-      if (m.status && m.status.finished) ms.push({ id: m.id, fecha: faltan[i], liga: l.name }); else todosAcabados = false;
+      if (m.status && m.status.finished) ms.push({ id: m.id, fecha: faltan[i], liga: l.name, hora: (m.status && m.status.utcTime) || m.time || null }); else todosAcabados = false;
     }
     if (todosAcabados && faltan[i] < hoy) completos.add(faltan[i]);
   });
@@ -119,7 +119,7 @@ export async function actasDe(dias, { clubesLiga, pedir = json, registro = null,
   dets.forEach((d, i) => {
     const a = leerActa(d, clubesLiga);
     if (!d) completos.delete(ms[i].fecha);          // un detalle que no llega: ese día no se guarda, se vuelve a pedir
-    if (a && a.jugadores.length) (nuevas[ms[i].fecha] ||= []).push({ id: ms[i].id, fecha: ms[i].fecha, liga: ms[i].liga, ...a });
+    if (a && a.jugadores.length) (nuevas[ms[i].fecha] ||= []).push({ id: ms[i].id, fecha: ms[i].fecha, liga: ms[i].liga, hora: ms[i].hora || (d.header && d.header.status && d.header.status.utcTime) || null, ...a });
   });
   if (faltan.length) log(`  (actas) pedidos a FotMob ${faltan.length} días, ${ms.length} partidos de selecciones acabados; ${Object.values(nuevas).flat().length} con jugadores de LaLiga`);
   if (registro && registro.datos && completos.size) {
@@ -156,7 +156,7 @@ export function porJugador(actas, jugadores, equipos) {
     const r = por.get(k) || { j, sel: seleccion(yo), partidos: [], min: 0, jugados: 0 };
     const marcador = yo.goles != null && otro.goles != null ? `${yo.goles}-${otro.goles}` : null;
     const resultado = marcador ? (yo.goles > otro.goles ? 'ganó' : yo.goles < otro.goles ? 'perdió' : 'empató') : null;
-    r.partidos.push({ fecha: a.fecha, idPartido: a.id, rival: seleccion(otro), marcador, resultado, titular: x.titular, min: x.min, nota: x.nota, goles: x.goles, asist: x.asist, roja: x.roja, lesion: x.lesion, mejor: x.mejor });
+    r.partidos.push({ fecha: a.fecha, hora: a.hora || null, idPartido: a.id, rival: seleccion(otro), marcador, resultado, titular: x.titular, min: x.min, nota: x.nota, goles: x.goles, asist: x.asist, roja: x.roja, lesion: x.lesion, mejor: x.mejor });
     r.min += x.min; if (x.min > 0) r.jugados++;
     por.set(k, r);
   }
