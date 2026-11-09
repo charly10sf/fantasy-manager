@@ -232,7 +232,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const estados = new Set((hechos.jugadores || []).map((j) => j.estado));
   // (en el mercado «baja» es lo que baja de precio)
   // (y tampoco cuando lo que baja es un valor: «su valor baja 1,5 M», «baja 6 M»; los tuits de selecciones hablan del valor, 9 nov)
-  const tBaja = t.replace(/\b(?:valor|precio)\b[^.\n]{0,30}?\bbaja\b/giu, ' ').replace(/\bbaja\s+(?:de\s+)?\d/giu, ' ');
+  const tBaja = t.replace(/\b(?:valor|valores|precio|precios|nota|notas)\b[^.\n]{0,30}?\bbajas?\b/giu, ' ').replace(/\bm[aá]s\s+bajas?\b/giu, ' ').replace(/\bbaja\s+(?:de\s+)?\d/giu, ' ');
   if (hechos.tipo !== 'mercado' && PALABRAS.baja.test(tBaja) && !negada(tBaja, PALABRAS.baja) && ![...estados].some((x) => ['baja', 'lesionado', 'sancionado', 'apercibido'].includes(x))) e.push(`dice «${tBaja.match(PALABRAS.baja)[0]}» y nadie está de baja`);
   // los equipos, con artículo (Carlos, 6 nov: «no es Osasuna, es el Osasuna»); en un marcador o un «Betis-Mallorca», no
   for (const c of Object.keys(APODOS)) {
