@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/06/el-embajador-de-china-confirma-en-salamanca-conversaciones-entre-el-gobierno-de-pekin-y-la-liga-para-reconducir-la-situacion-tras-la-polemica-provocada-por-mbappe-radio-salamanca/": 1793959856000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247854/china-conversaciones-laliga-pide-digerir-tema-mbappe.html": 1793960809000,
@@ -1791,11 +1790,9 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/06/6aed9130e4d4d8a7398b4572.html": 1793961998000,
    "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/": 1793962556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247866/tripleta-athletic-mantiene-espana.html": 1793962306000,
-   "SPORT|136156390": 1793958981000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/06/barrenetxea-vuelve-a-la-lista-de-luis-de-la-fuente-para-el-paron-de-noviembre-radio-san-sebastian/": 1793962860000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-llama-alvaro-valles-marc-roca-jacobo-ramon-recupera-pablo-barrios-barrenetxea-20261106_3470127.html": 1793961935000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/06/seleccion-espanola-despide-ano-estrella-novedades/00031793962460579798241.htm": 1793962620000,
-   "SPORT|136125660": 1793959209000,
    "SPORT|136153368": 1793959980000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247885/barrios-vuelve-espana-completar-cuarteto-colchonero-roja.html": 1793964233000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247867/cholo-prueba-once-saldra-barcelona.html": 1793963088000,
@@ -1971,7 +1968,11 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/se-que-vas-a-volver-el-mensaje-de-la-hija-de-pepe-mel-ser-almeria/": 1794211411000,
    "SPORT|136238389": 1794210358000,
    "SPORT|136238901": 1794211477000,
-   "AS|https://as.com/futbol/primera/el-athletic-apuesta-fuerte-por-monreal-f202611-n/": 1794216858000
+   "AS|https://as.com/futbol/primera/el-athletic-apuesta-fuerte-por-monreal-f202611-n/": 1794216858000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248942/flick-remontando-record.html": 1794218146000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004248955/julian-alvarez-confianza-ciega-simeone-desesperacion-grada.html": 1794217554000,
+   "SPORT|136241522": 1794214605000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/09/julian-calero-oviedo-fichaje-raul-136241022.html": 1794218306000
   },
   "hechos": [
    {
@@ -2614,7 +2615,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3463,7 +3464,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261106/1004247862/juez-competiciones-profesionales-inadmite-peticion-afe.html": 1793962289000,
-   "SPORT|136149880": 1793959104000,
    "Cadena SER|https://cadenaser.com/baleares/2026/11/06/13-dias-de-tragico-paron-radio-mallorca/": 1793967590000,
    "SPORT|136163733": 1793966682000,
    "SPORT|136157637": 1793966510000,
@@ -3531,23 +3531,6 @@
     "contexto": "Tras el fallecimiento de Jesús De Miguel",
     "detalle": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136149880",
-    "medio": "SPORT",
-    "t": 1793959104000,
-    "tipo": "suspension",
-    "estado": "descartado",
-    "segunda": false,
-    "jornada": 12,
-    "jTxt": false,
-    "clubes": [],
-    "luto": true,
-    "oficial": true,
-    "contexto": "",
-    "detalle": "",
-    "nums": [],
-    "regla": true
    },
    {
     "guid": "SPORT|136157637",
@@ -3643,17 +3626,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 184207,
-  "salida": 13312,
+  "entrada": 186728,
+  "salida": 13584,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.493539,
+  "dolares": 0.493927,
   "reservado": 0
  },
  "recientes": {
@@ -7578,13 +7561,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 777,
+   "ok": 778,
    "fallos": 0,
-   "ejecuciones": 432,
+   "ejecuciones": 433,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T09:56:11.862Z"
+   "ultima": "2026-11-09T10:01:16.656Z"
   }
  },
  "ptsDirecto": {},
@@ -7601,15 +7584,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:56:15.233Z"
+   "ultimaBien": "2026-11-09T10:01:22.755Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:56:15.233Z"
+   "ultimaBien": "2026-11-09T10:01:22.755Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:56:15.233Z"
+   "ultimaBien": "2026-11-09T10:01:22.755Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7617,11 +7600,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:56:15.233Z"
+   "ultimaBien": "2026-11-09T10:01:22.755Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:56:15.233Z"
+   "ultimaBien": "2026-11-09T10:01:22.755Z"
   }
  },
  "avisos": [
