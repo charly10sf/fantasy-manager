@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/san-jose-me-ha-sorprendido-mucho-que-oyarzabal-no-estuviera-en-la-lista-del-balon-de-oro-f202611-n/": 1793966372000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/06/alvaro-valles-llamada-fuente-llore-vergueenza.html": 1793968127000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004247891/christensen-eric-siguen-evolucion-dias-atleti.html": 1793966557000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247910/tchouameni-vuelve-vinicius-descansa-ultimo-entrenamiento-real-madrid-valencia.html": 1793967950000,
@@ -1968,7 +1967,8 @@
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/lamine-yamal-es-baixa-pel-primer-partit-de-la-selecio-espanyola-contra-republica-txeca-sercat/": 1794223492000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/el-barca-reafirma-el-liderat-recupera-laqui-catalunya-del-dilluns-9-de-novembre-la-tertulia-esportiva-amb-danae-boronat-sique-rodriguez-i-tomas-roncero-sercat/": 1794224320000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/emotivo-mensaje-iris-padre-pepe-mel-betis_0_2008455745.html": 1794223825000,
-   "ABC|https://www.abc.es/deportes/futbol/alarma-lamine-viaja-espana-republica-checa-20261109124059-nt.html": 1794224460000
+   "ABC|https://www.abc.es/deportes/futbol/alarma-lamine-viaja-espana-republica-checa-20261109124059-nt.html": 1794224460000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261109/1004249018/preocupacion-sevilla-forma-fofana.html": 1794223973000
   },
   "hechos": [
    {
@@ -2563,7 +2563,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -3558,17 +3558,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 211358,
-  "salida": 21275,
+  "entrada": 213065,
+  "salida": 21376,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.500235,
+  "dolares": 0.500456,
   "reservado": 0
  },
  "recientes": {
@@ -7493,13 +7493,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 801,
+   "ok": 802,
    "fallos": 0,
-   "ejecuciones": 456,
+   "ejecuciones": 457,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T11:56:15.512Z"
+   "ultima": "2026-11-09T12:01:12.837Z"
   }
  },
  "ptsDirecto": {},
@@ -7516,15 +7516,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:56:19.963Z"
+   "ultimaBien": "2026-11-09T12:01:19.197Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:56:19.963Z"
+   "ultimaBien": "2026-11-09T12:01:19.197Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:56:19.963Z"
+   "ultimaBien": "2026-11-09T12:01:19.197Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7532,11 +7532,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:56:19.963Z"
+   "ultimaBien": "2026-11-09T12:01:19.197Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T11:56:19.963Z"
+   "ultimaBien": "2026-11-09T12:01:19.197Z"
   }
  },
  "avisos": [
