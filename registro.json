@@ -1786,7 +1786,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000,
    "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000,
    "AS|https://as.com/futbol/primera/roberto-y-en-el-proximo-paron-dos-internacionales-mas-f202611-n/": 1793987444000,
-   "SPORT|136175696": 1793983934000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000,
    "SPORT|136181983": 1793990642000,
    "AS|https://as.com/futbol/videos/llegara-la-redencion-definitiva-de-julian-contra-el-barca-f202611-v/": 1793995579000,
@@ -7278,13 +7277,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 860,
+   "ok": 861,
    "fallos": 0,
-   "ejecuciones": 515,
+   "ejecuciones": 516,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T16:51:13.706Z"
+   "ultima": "2026-11-09T16:54:22.298Z"
   }
  },
  "ptsDirecto": {},
@@ -7301,15 +7300,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:51:17.942Z"
+   "ultimaBien": "2026-11-09T16:54:27.724Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:51:17.942Z"
+   "ultimaBien": "2026-11-09T16:54:27.724Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:51:17.942Z"
+   "ultimaBien": "2026-11-09T16:54:27.724Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7317,11 +7316,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:51:17.942Z"
+   "ultimaBien": "2026-11-09T16:54:27.724Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:51:17.942Z"
+   "ultimaBien": "2026-11-09T16:54:27.724Z"
   }
  },
  "avisos": [
