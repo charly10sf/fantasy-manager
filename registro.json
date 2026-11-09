@@ -1965,7 +1965,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gran-duda-manolo-lama-once-ideal-mundo-fifpro-me-gusta-20261109_3471749.html": 1794250042000,
    "SPORT|136243106": 1794246969000,
    "SPORT|136256607": 1794248338000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-seleccion-espana-republica-checa_0_2008459539.html": 1794252831000
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-seleccion-espana-republica-checa_0_2008459539.html": 1794252831000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/homenaje-seleccion-espanola-jesus-miguel_0_2008459621.html": 1794253239000
   },
   "hechos": [
    {
@@ -2420,7 +2421,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 47
+   "n": 48
   },
   "desde": {
    "67": {
@@ -3328,17 +3329,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 56,
+   "clasificar": 57,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 273484,
-  "salida": 29837,
+  "entrada": 275328,
+  "salida": 30382,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.510729,
+  "dolares": 0.511186,
   "reservado": 0
  },
  "recientes": {
@@ -7263,13 +7264,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 897,
+   "ok": 898,
    "fallos": 0,
-   "ejecuciones": 552,
+   "ejecuciones": 553,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T19:51:19.673Z"
+   "ultima": "2026-11-09T19:56:17.562Z"
   }
  },
  "ptsDirecto": {},
@@ -7286,15 +7287,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:51:25.295Z"
+   "ultimaBien": "2026-11-09T19:56:25.402Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:51:25.295Z"
+   "ultimaBien": "2026-11-09T19:56:25.402Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:51:25.295Z"
+   "ultimaBien": "2026-11-09T19:56:25.402Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7302,11 +7303,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:51:25.295Z"
+   "ultimaBien": "2026-11-09T19:56:25.402Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T19:51:25.295Z"
+   "ultimaBien": "2026-11-09T19:56:25.402Z"
   }
  },
  "avisos": [
