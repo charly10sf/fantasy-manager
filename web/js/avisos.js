@@ -3,6 +3,7 @@
 import { nativo, enApp } from './puente.js';
 import { LS, eur, cuando, MIN, HORA, DIA, diaDe, otroDia, horaDe } from './util.js';
 import { cerradaHasta } from './limite.js';
+import { esClausulable } from './motor.js';
 
 export const cfgAvisos = () => ({
   on: false, plan: true, alarma: true, rivales: true, mias: true, mercado: true, jornada: true, diario: true, hora: '13:30', interes: 55,
@@ -46,7 +47,7 @@ export function calcular(D, M, c = cfgAvisos(), plan = null) {
   }
 
   if (c.rivales) {
-    const vanAbrir = M.clausulas.filter((x) => !x.abierta && x.abreEn < 7 * DIA && x.meLlega && x.interes >= c.interes && x.j.estado !== 'injured')
+    const vanAbrir = M.clausulas.filter((x) => !x.abierta && x.abreEn < 7 * DIA && x.interes >= c.interes && esClausulable(M, x))
       .sort((a, b) => b.interes - a.interes).slice(0, 10);
     for (const xs of porVeda(vanAbrir)) {
       const v = xs[0].veda;
