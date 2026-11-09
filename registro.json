@@ -1962,7 +1962,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249041/marc-roca-rumbo-primera-cita-espana-betis-no-limite.html": 1794226163000,
    "COPE|https://www.cope.es/emisoras/pais-vasco/deportes-guipuzcoa/noticias/barrenetxea-lesion-baja-seleccion-jorge-frutos-real-sociedad-20261109_3471153.html": 1794212241000,
    "AS|https://as.com/futbol/primera/un-deportivo-de-presente-y-de-mucho-mas-futuro-f202611-n/": 1794227206000,
-   "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000
+   "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000,
+   "SPORT|136248722": 1794225294000,
+   "SPORT|136249887": 1794225247000
   },
   "hechos": [
    {
@@ -2515,7 +2517,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -3475,17 +3477,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 223797,
-  "salida": 22433,
+  "entrada": 225823,
+  "salida": 23280,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.502058,
+  "dolares": 0.502684,
   "reservado": 0
  },
  "recientes": {
@@ -7410,13 +7412,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 812,
+   "ok": 813,
    "fallos": 0,
-   "ejecuciones": 467,
+   "ejecuciones": 468,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T12:51:15.127Z"
+   "ultima": "2026-11-09T12:56:11.931Z"
   }
  },
  "ptsDirecto": {},
@@ -7433,15 +7435,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:51:22.868Z"
+   "ultimaBien": "2026-11-09T12:56:20.900Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:51:22.868Z"
+   "ultimaBien": "2026-11-09T12:56:20.900Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:51:22.868Z"
+   "ultimaBien": "2026-11-09T12:56:20.900Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7449,11 +7451,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:51:22.868Z"
+   "ultimaBien": "2026-11-09T12:56:20.900Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:51:22.868Z"
+   "ultimaBien": "2026-11-09T12:56:20.900Z"
   }
  },
  "avisos": [
