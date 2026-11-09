@@ -209,9 +209,9 @@ El once de la temporada, en la imagen.`, nota: 'Quién manda, el dato que sorpre
 
 En el otro lado, Marc Vidal ha perdido 38 M desde el inicio y se queda en 24 M.
 
-Los cinco que más suben y bajan, en la imagen.`, nota: 'El que más sube con el porqué de los hechos (sus puntos), el que más baja, y la lista en la imagen.' },
+El resto, en la imagen.`, nota: 'El que más sube con el porqué de los hechos (sus puntos), el que más baja, y la lista en la imagen.' },
   { tipo: 'revalorizaciones', bien: false, texto: `💸 Revalorizaciones: Cano +43,4 M, Saldaña +30 M, Lago +25 M, Vidal -38 M, Pino -20 M. Así está el mercado.`, nota: 'Enumera lo que ya va en la imagen y no dice nada de nadie.' },
-  { tipo: 'calendario', bien: true, texto: `🗓️ Para fichar con calma en el parón: el Osasuna tiene el mejor calendario de las cuatro jornadas que vienen. Recibe al 18º y al 15º y solo sale a campos de la zona baja.
+  { tipo: 'calendario', bien: true, texto: `🗓️ Ojo al Osasuna si buscas a quién fichar: recibe al 18º y al 15º y solo sale a campos de la zona baja hasta final de mes.
 
 El Celta, en cambio, tiene la vuelta más dura: visita al líder y al 2º antes de que acabe el mes.`, nota: 'El mejor y el peor con el dato que lo explica, pensado para fichar; nada de revisar el once.' },
   { tipo: 'calendario', bien: false, texto: `🗓️ Calendario: Osasuna fácil, Celta difícil. Revisa tu once antes de la jornada 13.`, nota: 'Sin artículos ni datos, y manda revisar el once (prohibido).' },

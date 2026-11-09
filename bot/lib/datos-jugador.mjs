@@ -20,6 +20,7 @@ import { ficha as pedirFicha, valorMercado as pedirValor } from './laliga.mjs';
 import { enParalelo } from './http.mjs';
 
 const CANDIDATOS = Symbol('candidatos');
+const MINIMO = 0.2;   // la fuerza mínima de un dato para que vaya en los hechos (la media, aparte)
 const PUESTO = { 1: 'portero', 2: 'defensa', 3: 'centrocampista', 4: 'delantero' };
 const PLURAL = { portero: 'porteros', defensa: 'defensas', centrocampista: 'centrocampistas', delantero: 'delanteros' };
 const LETRA = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco'];
@@ -233,7 +234,10 @@ export function limitarDatos(hechos, { n = 1 } = {}) {
   const js = ((hechos && hechos.jugadores) || []).filter(tieneCandidatos);
   if (!js.length) return [];
   const ev = evitar();
-  const elegidos = js.map((j) => ({ j, d: elegir(j[CANDIDATOS], { ev, semilla: `${j.nombre}${hoy()}` }) })).filter((x) => x.d);
+  // un dato flojo («vale 682 K», «946 minutos en 12 partidos») no aporta: por debajo de MINIMO no va; la media, solo al protagonista
+  // y si no tiene nada mejor (simulacro del 9 nov)
+  const vale = (j) => j[CANDIDATOS].filter((c) => c.fuerza >= MINIMO || (c.que === 'media' && j.principal));
+  const elegidos = js.map((j) => ({ j, d: elegir(vale(j), { ev, semilla: `${j.nombre}${hoy()}` }) })).filter((x) => x.d);
   // primero el protagonista; luego el dato más fuerte
   elegidos.sort((a, b) => Number(!!b.j.principal) - Number(!!a.j.principal) || b.d.fuerza - a.d.fuerza);
   const van = new Set();
@@ -256,7 +260,7 @@ export function limitarDatos(hechos, { n = 1 } = {}) {
 /** el dato para la plantilla de un jugador (sin apuntarlo: la plantilla es el último recurso), o null */
 export function datoPlantilla(j, { sin = [] } = {}) {
   if (!ctx.lista.length) return null;
-  const d = elegir(candidatos(perfil(j), { sin }), { semilla: `${(j && (j.nickname || j.nombre)) || ''}${hoy()}` });
+  const d = elegir(candidatos(perfil(j), { sin }).filter((c) => c.fuerza >= MINIMO || c.que === 'media'), { semilla: `${(j && (j.nickname || j.nombre)) || ''}${hoy()}` });
   if (!d) return null;
   return { ...d, numeros: (d.dice.match(/\d+/g) || []).map(Number) };
 }
