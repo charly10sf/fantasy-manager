@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
    "Cadena SER|https://cadenaser.com/castillayleon/2026/11/06/el-embajador-de-china-confirma-en-salamanca-conversaciones-entre-el-gobierno-de-pekin-y-la-liga-para-reconducir-la-situacion-tras-la-polemica-provocada-por-mbappe-radio-salamanca/": 1793959856000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247854/china-conversaciones-laliga-pide-digerir-tema-mbappe.html": 1793960809000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-lista-seleccion_0_2008435471.html": 1793961354000,
@@ -3460,7 +3459,6 @@
  },
  "liga": {
   "vistas": {
-   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959519000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261106/1004247862/juez-competiciones-profesionales-inadmite-peticion-afe.html": 1793962289000,
@@ -7561,13 +7559,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 778,
+   "ok": 779,
    "fallos": 0,
-   "ejecuciones": 433,
+   "ejecuciones": 434,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T10:01:16.656Z"
+   "ultima": "2026-11-09T10:06:12.739Z"
   }
  },
  "ptsDirecto": {},
@@ -7584,15 +7582,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:01:22.755Z"
+   "ultimaBien": "2026-11-09T10:06:16.515Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:01:22.755Z"
+   "ultimaBien": "2026-11-09T10:06:16.515Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:01:22.755Z"
+   "ultimaBien": "2026-11-09T10:06:16.515Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7600,11 +7598,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:01:22.755Z"
+   "ultimaBien": "2026-11-09T10:06:16.515Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:01:22.755Z"
+   "ultimaBien": "2026-11-09T10:06:16.515Z"
   }
  },
  "avisos": [
