@@ -3365,7 +3365,9 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-defiende-atletico-madrid-resta-importancia-derrotas-bayern-barcelona-son-dos-cinco-mejores-equipos-europa-20261109_3471055.html": 1794225339000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229164000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilina-despliega-lona-gran-via-madrid-llamar-huelga-general-20261109123809.html": 1794224289000
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilina-despliega-lona-gran-via-madrid-llamar-huelga-general-20261109123809.html": 1794224289000,
+   "SPORT|136251680": 1794230182000,
+   "SPORT|136241690": 1794229204000
   },
   "hechos": [
    {
@@ -3421,27 +3423,25 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136241690": 1794233174140
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 239846,
-  "salida": 25514,
+  "entrada": 241790,
+  "salida": 25716,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.505204,
+  "dolares": 0.505499,
   "reservado": 0
  },
  "recientes": {
@@ -7366,13 +7366,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 829,
+   "ok": 830,
    "fallos": 0,
-   "ejecuciones": 484,
+   "ejecuciones": 485,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T14:16:20.134Z"
+   "ultima": "2026-11-09T14:21:12.297Z"
   }
  },
  "ptsDirecto": {},
@@ -7389,15 +7389,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:16:24.714Z"
+   "ultimaBien": "2026-11-09T14:21:22.117Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:16:24.714Z"
+   "ultimaBien": "2026-11-09T14:21:22.117Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:16:24.714Z"
+   "ultimaBien": "2026-11-09T14:21:22.117Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7405,11 +7405,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:16:24.714Z"
+   "ultimaBien": "2026-11-09T14:21:22.117Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:16:24.714Z"
+   "ultimaBien": "2026-11-09T14:21:22.117Z"
   }
  },
  "avisos": [
