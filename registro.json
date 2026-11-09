@@ -1782,8 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/athletic/2026/11/06/terzic-tira-marcos-encarar-visita-sabado-osasuna.html": 1793973914000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/06/javier-aguirre-da-razones-rinde-sadiq-136166220.html": 1793973720000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/vuelven-gueler-tchouameni.html": 1793976866000,
    "SPORT|136173086": 1793976867000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247994/galarreta-alista-paredes-causa-baja.html": 1793981520000,
@@ -1963,21 +1961,10 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000,
    "SPORT|136228021": 1794228611000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261109/1004249073/raul.html": 1794231423000,
-   "SPORT|136252960": 1794228768000
+   "SPORT|136252960": 1794228768000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000
   },
   "hechos": [
-   {
-    "guid": "MARCA|https://www.marca.com/futbol/athletic/2026/11/06/terzic-tira-marcos-encarar-visita-sabado-osasuna.html",
-    "medio": "MARCA",
-    "t": 1793973914000,
-    "id": "2315",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Paredes es baja para el partido ante Osasuna",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/vuelven-gueler-tchouameni.html",
     "medio": "MARCA",
@@ -2480,7 +2467,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -3437,22 +3424,24 @@
    "n": 5,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136241690": 1794233174140
+  }
  },
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 238178,
-  "salida": 25416,
+  "entrada": 239846,
+  "salida": 25514,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.504988,
+  "dolares": 0.505204,
   "reservado": 0
  },
  "recientes": {
@@ -7377,13 +7366,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 826,
+   "ok": 827,
    "fallos": 0,
-   "ejecuciones": 481,
+   "ejecuciones": 482,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T14:01:14.449Z"
+   "ultima": "2026-11-09T14:06:14.140Z"
   }
  },
  "ptsDirecto": {},
@@ -7400,15 +7389,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:01:21.869Z"
+   "ultimaBien": "2026-11-09T14:06:20.497Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:01:21.869Z"
+   "ultimaBien": "2026-11-09T14:06:20.497Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:01:21.869Z"
+   "ultimaBien": "2026-11-09T14:06:20.497Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7416,11 +7405,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:01:21.869Z"
+   "ultimaBien": "2026-11-09T14:06:20.497Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T14:01:21.869Z"
+   "ultimaBien": "2026-11-09T14:06:20.497Z"
   }
  },
  "avisos": [
