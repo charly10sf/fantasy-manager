@@ -506,6 +506,13 @@ function urgenteFila(S, a, nota) {
     </summary><div class="pp-d">${largo ? `<p class="pp-sub">${esc(a.cuando)}</p>` : ''}<p class="pp-mot pp-mot1">${esc(a.texto)}</p>${nota ? `<div class="aviso-op">${icono('info')}${esc(nota)}</div>` : ''}
       <div class="op-pie">${j ? `<button data-j="${esc(j.id)}">${icono('usuario')}Ficha</button>` : a.hash ? `<button data-ir="${esc(a.hash)}">${icono('flecha')}Ver</button>` : ''}${conSustituto(S, a) ? `<button data-accion="sustituto" data-pid="${esc(a.pid)}">${icono('buscar')}Buscar sustituto</button>` : ''}<button data-accion="quitarUrgente" data-k="${esc(claveUrgente(a))}">${icono('cerrar')}Quitar hasta mañana</button></div></div></details>`;
 }
+/** las fases que has plegado o abierto a mano en este plan: { caja: 'plegada' | 'abierta', … } */
+export const fasesPlegadas = (P) => (P ? LS.get(K('fases'), {})[claveHechos(P)] || {} : {});
+export function plegarFase(P, f, abierta) {
+  const todas = LS.get(K('fases'), {}), k = claveHechos(P);
+  // solo el plan de ahora: lo de los planes viejos no sirve
+  LS.set(K('fases'), { [k]: { ...(todas[k] || {}), [f]: abierta ? 'abierta' : 'plegada' } });
+}
 function fasesHTML(S, P) {
   const { urg, nota } = urgentesDe(S);
   const vivos = P.ops.filter((o) => !o.descartada), fuera = P.ops.filter((o) => o.descartada);
@@ -515,22 +522,25 @@ function fasesHTML(S, P) {
   let h = '';
   if (total) h += `<div class="plan-prog" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${cp.hechos}"><i style="--p:${Math.round((cp.hechos / total) * 100)}%"></i><span>${cp.hechos ? `${cp.hechos} de ${total} hechos` : `${total} ${total > 1 ? 'pasos' : 'paso'} por hacer`}${cp.luego ? ` · ${cp.luego} para luego` : ''}</span></div>`;
   let k = 0;
-  const caja = (titulo, sub, filas, { tot = null, saldo = null, cls = '' } = {}) => {
+  // (Carlos, 9 nov 12:29) cada fase se pliega tocando su título; se recuerda por plan. Una fase con todo hecho sale plegada
+  const plegadas = fasesPlegadas(P);
+  const caja = (f, titulo, sub, filas, { tot = null, saldo = null, cls = '', n = 0, todoHecho = false } = {}) => {
     k++;
-    return `<div class="fase ${cls}"><div class="fase-t"><span class="fase-n">${cls === 'f-urg' ? '!' : cls === 'f-luego' ? '·' : k - (urg.length ? 1 : 0)}</span><span class="fase-tx"><b>${titulo}</b><small>${sub}</small></span>${tot ? `<span class="fase-tot ${tot > 0 ? 'mas' : 'menos'}">${tot > 0 ? '+' : '−'}${eur(Math.abs(tot))}</span>` : ''}</div>
-      <div class="pasos3">${filas}</div>${saldo != null ? `<div class="fase-saldo"><span>Te quedan <b class="${saldo < 0 ? 'neg' : ''}">${eur(saldo)}</b></span></div>` : ''}</div>`;
+    const abierta = plegadas[f] ? plegadas[f] === 'abierta' : !todoHecho;
+    return `<details class="fase ${cls}" ${abierta ? 'open' : ''}><summary class="fase-t" data-accion="plegarFase" data-f="${f}"><span class="fase-n">${cls === 'f-urg' ? '!' : cls === 'f-luego' ? '·' : k - (urg.length ? 1 : 0)}</span><span class="fase-tx"><b>${titulo}</b><small>${sub}</small><small class="fase-cuantos">${todoHecho ? 'hecho' : `${n} ${n === 1 ? 'paso' : 'pasos'}`}</small></span>${tot ? `<span class="fase-tot ${tot > 0 ? 'mas' : 'menos'}">${tot > 0 ? '+' : '−'}${eur(Math.abs(tot))}</span>` : ''}${icono('flecha', 'fase-ab')}</summary>
+      <div class="pasos3">${filas}</div>${saldo != null ? `<div class="fase-saldo"><span>Te quedan <b class="${saldo < 0 ? 'neg' : ''}">${eur(saldo)}</b></span></div>` : ''}</details>`;
   };
-  if (urg.length) h += caja('Antes de nada', 'urgente y fuera del plan', urg.map((a) => urgenteFila(S, a, nota[a.pid])).join(''), { cls: 'f-urg' });
+  if (urg.length) h += caja('urg', 'Antes de nada', 'urgente y fuera del plan', urg.map((a) => urgenteFila(S, a, nota[a.pid])).join(''), { cls: 'f-urg', n: urg.length });
   const conDinero = FASES.filter(([f]) => vivos.some((o) => faseDe(o) === f));
   conDinero.forEach(([f, titulo, sub], i) => {
     const ops = vivos.filter((o) => faseDe(o) === f);
     const tot = ops.reduce((s2, o) => s2 + (o.importe && o.signo ? o.signo * o.importe : 0), 0);
     // el saldo tras la fase: el del último paso con saldo (cuadrarPlan lo cuenta paso a paso); en la última, ya lo dice el cierre
     const ult = [...ops].reverse().find((o) => o.saldo != null);
-    h += caja(titulo, sub, ops.map((o) => pasoOp(S, P, o)).join(''), { tot: Math.round(tot) || null, saldo: ult && i < conDinero.length - 1 ? ult.saldo : null });
+    h += caja(f, titulo, sub, ops.map((o) => pasoOp(S, P, o)).join(''), { tot: Math.round(tot) || null, saldo: ult && i < conDinero.length - 1 ? ult.saldo : null, n: ops.length, todoHecho: ops.every((o) => hecho(S, P, o)) });
   });
   const luego = vivos.filter((o) => faseDe(o) === 'luego');
-  if (luego.length) h += caja('Para luego', 'sin prisa u otro día', luego.map((o) => pasoOp(S, P, o)).join(''), { cls: 'f-luego' });
+  if (luego.length) h += caja('luego', 'Para luego', 'sin prisa u otro día', luego.map((o) => pasoOp(S, P, o)).join(''), { cls: 'f-luego', n: luego.length });
   if (fuera.length) h += `<details class="pleg pasos-fuera"><summary>${icono('cerrar')}<b>${fuera.length > 1 ? 'Descartados por la app' : 'Descartado por la app'}</b><span>${fuera.length}</span>${icono('flecha', 'pleg-ab')}</summary><div class="pasos3">${fuera.map((o) => pasoOp(S, P, o)).join('')}</div></details>`;
   return h;
 }
