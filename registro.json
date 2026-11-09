@@ -1963,7 +1963,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004249096/agenda-11-internacionales-primer-equipo-barca.html": 1794235042000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/mensaje-antony-aficionados-betis-peor-momento-elche_0_2008457741.html": 1794235886000,
-   "SPORT|136256483": 1794234804000
+   "SPORT|136256483": 1794234804000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249130/pellegrini-contar-copa-cuatro-porteros.html": 1794239934000
   },
   "hechos": [
    {
@@ -2456,7 +2457,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -3400,17 +3401,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 248838,
-  "salida": 26917,
+  "entrada": 250749,
+  "salida": 27021,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.506804,
+  "dolares": 0.507047,
   "reservado": 0
  },
  "recientes": {
@@ -7335,13 +7336,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 849,
+   "ok": 850,
    "fallos": 0,
-   "ejecuciones": 504,
+   "ejecuciones": 505,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T15:56:16.013Z"
+   "ultima": "2026-11-09T16:01:12.647Z"
   }
  },
  "ptsDirecto": {},
@@ -7358,15 +7359,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:56:19.644Z"
+   "ultimaBien": "2026-11-09T16:01:18.051Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:56:19.644Z"
+   "ultimaBien": "2026-11-09T16:01:18.051Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:56:19.644Z"
+   "ultimaBien": "2026-11-09T16:01:18.051Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7374,11 +7375,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:56:19.644Z"
+   "ultimaBien": "2026-11-09T16:01:18.051Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:56:19.644Z"
+   "ultimaBien": "2026-11-09T16:01:18.051Z"
   }
  },
  "avisos": [
