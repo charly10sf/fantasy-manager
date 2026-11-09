@@ -1987,7 +1987,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gonzalo-miro-senala-culpables-atletico-derrota-barcelona-gestion-entrenador-peor-todavia-20261108_3471046.html": 1794177066000,
    "ABC|https://www.abc.es/deportes/futbol/pegada-condena-atletico-lanza-barca-20261108225722-nt.html": 1794183248000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261109/1004248718/inaki-williams-vive-momento-dulce-athletic.html": 1794205800000,
-   "SPORT|136234060": 1794204012000
+   "SPORT|136234060": 1794204012000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248922/fermin.html": 1794208811000
   },
   "hechos": [
    {
@@ -2644,7 +2645,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3716,17 +3717,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 3,
-   "redactar": 23,
-   "revisar": 15,
+   "clasificar": 4,
+   "redactar": 27,
+   "revisar": 18,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 103542,
-  "salida": 10249,
-  "cacheLee": 193440,
+  "entrada": 153933,
+  "salida": 12099,
+  "cacheLee": 201255,
   "cacheEscribe": 16825,
-  "dolares": 0.326877,
+  "dolares": 0.442728,
   "reservado": 0
  },
  "recientes": {
@@ -4007,9 +4008,9 @@
  ],
  "fallosRedaccion": {
   "novedades|3102:vuelve,3091:vuelve|2026-11-09": {
-   "n": 1,
+   "n": 2,
    "t": "2026-11-09T07:26:45.669Z",
-   "ultima": "2026-11-09T07:26:45.669Z"
+   "ultima": "2026-11-09T07:31:39.033Z"
   }
  },
  "rasgos": {
@@ -7653,13 +7654,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 747,
+   "ok": 748,
    "fallos": 0,
-   "ejecuciones": 402,
+   "ejecuciones": 403,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T07:26:16.532Z"
+   "ultima": "2026-11-09T07:31:15.221Z"
   }
  },
  "ptsDirecto": {},
@@ -7676,15 +7677,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:26:45.724Z"
+   "ultimaBien": "2026-11-09T07:31:40.711Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:26:45.724Z"
+   "ultimaBien": "2026-11-09T07:31:40.711Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:26:45.724Z"
+   "ultimaBien": "2026-11-09T07:31:40.711Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7692,11 +7693,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:26:45.724Z"
+   "ultimaBien": "2026-11-09T07:31:40.711Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:26:45.724Z"
+   "ultimaBien": "2026-11-09T07:31:40.711Z"
   }
  },
  "avisos": [
