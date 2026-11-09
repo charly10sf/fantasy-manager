@@ -3468,7 +3468,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/": 1793957388000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247829/rfef-juez-unico-no-competencias-aplazar-jornada-segunda.html": 1793957172000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959519000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
@@ -7604,13 +7603,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 770,
+   "ok": 771,
    "fallos": 0,
-   "ejecuciones": 425,
+   "ejecuciones": 426,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T09:21:13.505Z"
+   "ultima": "2026-11-09T09:26:14.124Z"
   }
  },
  "ptsDirecto": {},
@@ -7627,15 +7626,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:21:18.299Z"
+   "ultimaBien": "2026-11-09T09:26:19.048Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:21:18.299Z"
+   "ultimaBien": "2026-11-09T09:26:19.048Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:21:18.299Z"
+   "ultimaBien": "2026-11-09T09:26:19.048Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7643,11 +7642,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:21:18.299Z"
+   "ultimaBien": "2026-11-09T09:26:19.048Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:21:18.299Z"
+   "ultimaBien": "2026-11-09T09:26:19.048Z"
   }
  },
  "avisos": [
