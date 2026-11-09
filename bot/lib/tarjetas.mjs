@@ -10,7 +10,7 @@
 // Aquí solo se dibuja: los datos llegan ya montados (datos-tarjetas.mjs) y validar.mjs comprueba que todo lo escrito esté en ellos.
 import { coloresClub, luz } from './colores.mjs';
 import { svgJugadorCarta, svgBajaSola, svgGolAsistencia, svgMvpDoble } from './carta.mjs';
-import { ANCHO, ALTO, VERDE, MALO, AMBAR, TENUE, TINTA, PANEL, LINEA, num1, millones, medir, B, texto, id, lineal, radial, marco,
+import { uri, ANCHO, ALTO, VERDE, MALO, AMBAR, TENUE, TINTA, PANEL, LINEA, num1, millones, medir, B, texto, id, lineal, radial, marco,
   escudo, caraCirculo, fondo, dorado, rojizo, aColor, caja, marca, pildora, anchoPildora, pildoraTit, anchoPildoraTit, colPct, chipContorno, ESTADO_TARJETA,
   chip, flecha, medalla, distinto, nombreAjustado, tamano, caraHD, pastilla, panel, titular, R_MAX, chipPuesto, abrevPuesto, colorPuesto, PUESTOS } from './estilo.mjs';
 
@@ -369,10 +369,20 @@ function panelMercado(x, y, w, lista, bueno, { titulo = null, conFlecha = true }
   centros(x, w, n, hueco).forEach((cx, k) => {
     const f = lista[k], club = coloresClub(f.club || f.equipo), yb = bajoCara(cy, R, pxN);
     s += jugadorHD(f, cx, cy, R, club, { wN: hueco - 10, pxN, escudoBuf: f.escudo })
+      + (f.bandera ? banderaRedonda(f.bandera, cx - R * 0.86, cy - R * 0.74, Math.round(R * 0.34)) : '')
       + texto(cx, yb + 54, f.dif, { px: 48, peso: 900, color: acento, ancla: 'middle', max: hueco - 16 })
       + texto(cx, yb + 88, `${f.pct} · ${f.valor}`, { px: 24, peso: 700, color: TENUE, ancla: 'middle', max: hueco - 16 });
   });
   return s;
+}
+// la bandera de la selección (las de FotMob ya son redondas, 192 x 192) arriba a la izquierda de la cara, con un filo blanco y sombra
+// (los tuits de selecciones del parón; Carlos, 9 nov 10:13: «añadir banderas»)
+function banderaRedonda(buf, cx, cy, r) {
+  const c = id('bd');
+  return `<defs><clipPath id="${c}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath></defs>`
+    + `<circle cx="${cx}" cy="${cy + 2}" r="${r + 3}" fill="#000" opacity="0.45"/>`
+    + `<image href="${uri(buf)}" x="${cx - r}" y="${cy - r}" width="${2 * r}" height="${2 * r}" clip-path="url(#${c})" preserveAspectRatio="xMidYMid slice"/>`
+    + `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#fff" stroke-width="3"/>`;
 }
 // (el parón, 9 nov: la misma tarjeta para las revalorizaciones de la temporada y para las selecciones, con otro titular y otros paneles:
 //  d.titulo, d.sub, d.sub2 y d.paneles = [{ titulo, bueno, filas, flecha }], uno o dos)

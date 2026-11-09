@@ -1,9 +1,10 @@
 // El bot de la cuenta de X. Por defecto NO publica: genera los tweets con datos reales, los valida y dice cuáles publicaría.
 // Publica solo con --modo=publicar (en el workflow, la variable de repositorio BOT_MODO) y con las cuatro claves de X.
-//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros,balance,revalorizaciones,calendario,selecciones] [--jornada=11] [--fechas-espn=20261101,…]
+//   node bot/ejecutar.mjs [--modo=simulacro|publicar|parado] [--tipos=directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros,balance,revalorizaciones,calendario,selecciones,selecciones-dia] [--jornada=11] [--fechas-espn=20261101,…]
 //        [--estado=estado/registro.json] [--ventanas=1] [--forzar=1] [--comprobar=1]
 //        [--tarjetas=1] (solo en simulacro: dibuja las tarjetas aunque estén apagadas) [--salida-tarjetas=tarjetas]
-//        [--fechas-selecciones=AAAAMMDD,…] (tipos/selecciones.mjs: los días de partidos de selecciones que mira, para probar)
+//        [--fechas-selecciones=AAAAMMDD,…] (tipos/selecciones.mjs y selecciones-dia.mjs: los días de partidos de selecciones que miran,
+//        para probar; en el diario, el último es «ayer»)
 //        [--registro-nuevo=1] (publicando, empezar sin registro: solo si de verdad no existe la rama bot-estado; revisión total, C4)
 // Tarjetas con imagen: config.json → tarjetas.final y tarjetas.jugador (apagadas por defecto). Detalle en lib/con-tarjetas.mjs.
 import { horaMadrid as horaHoy, horas, silencio } from './lib/horario.mjs';
@@ -67,7 +68,7 @@ if (publica && (!registro.existe || registro.roto) && arg('registro-nuevo') !== 
 if (publica && !registro.existe) console.log('# Registro nuevo (--registro-nuevo=1): empiezo de cero');
 
 // (liga antes que previa: una decisión sobre la jornada la ve la previa en la misma ejecución, no 5 min después)
-const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros,balance,revalorizaciones,calendario,selecciones').split(',');
+const quienes = (arg('tipos') || 'directo,resumen,final,mvp,caidas,mercado,liga,previa,onceideal,novedades,noticias,sancionados,lloros,balance,revalorizaciones,calendario,selecciones,selecciones-dia').split(',');
 // las tarjetas: encendidas en config.json, o forzadas con --tarjetas=1 en simulacro (para verlas sin tocar lo que se publica)
 const forzarTarjetas = !publica && arg('tarjetas') === '1';
 const conTarjetas = forzarTarjetas || !!(config.tarjetas && (config.tarjetas.final || config.tarjetas.jugador));

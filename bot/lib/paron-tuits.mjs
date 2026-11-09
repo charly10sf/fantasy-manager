@@ -51,3 +51,31 @@ export function puntosHasta(j, hasta) {
   const ws = (j.weekPoints || []).filter((w) => w.weekNumber <= hasta);
   return { pts: ws.reduce((s, w) => s + (Number(w.points) || 0), 0), jugadas: ws.length };
 }
+
+// El resumen diario de selecciones (tipos/selecciones-dia.mjs; Carlos, 9 nov 10:13, frecuencia (1): uno al día). Cada mañana del parón,
+// lo que hicieron AYER los jugadores de LaLiga con sus selecciones: de `horasSeleccionesDia` (9 a 14 h; entre semana, desde las 7), uno
+// por día de partidos (clave con la fecha de ayer) y solo mientras dura el parón (hasta que empiezan las caídas de la jornada siguiente).
+// El día que sale el de selecciones de todo el parón (el último de los cuatro) ese ya cuenta lo de ayer: el diario no sale.
+const DIA_MAD = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+const ayerDe = (t) => DIA_MAD.format(new Date(t - 864e5)).replace(/-/g, '');
+/** ¿sale ahora el diario de selecciones? { ok, motivo, jugada, siguiente, ayer } */
+export function ventanaSeleccionesDia(ctx = {}) {
+  const { paron = null, ventanas = true, forzar = false, config = {}, ahora = Date.now(), registro = null, jornada, stats = [], fechasSelecciones = null } = ctx;
+  const cs = config.seleccionesDia || {};
+  if (cs.activo === false) return { ok: false, motivo: 'apagado (seleccionesDia.activo)' };
+  const acabada = stats.length && stats.every((m) => Number(m.matchState) === 7);
+  const jugada = paron && paron.jugada != null ? paron.jugada : acabada ? jornada : jornada - 1;
+  const ayer = fechasSelecciones && fechasSelecciones.length ? fechasSelecciones[fechasSelecciones.length - 1] : ayerDe(ahora);
+  const r = { jugada, siguiente: jugada + 1, ayer };
+  if (!ventanas || forzar) return { ok: true, motivo: '', ...r };
+  if (!paron) return { ok: false, motivo: 'no hay parón entre esta jornada y la siguiente', ...r };
+  if (!paron.activo || ahora >= paron.hasta) return { ok: false, motivo: ahora < paron.fin ? 'la jornada aún no ha acabado' : 'ya empiezan las caídas de la jornada siguiente', ...r };
+  if (ayer < DIA_MAD.format(new Date(paron.fin)).replace(/-/g, '')) return { ok: false, motivo: 'ayer aún no era parón', ...r };
+  if (registro && registro.claves && registro.claves.has(`selecciones-dia|${jugada}|${ayer}`)) return { ok: false, motivo: `el de ayer (${ayer}) ya ha salido`, ...r };
+  if (registro && registro.claves && registro.claves.has(`selecciones|${jugada}`)) return { ok: false, motivo: 'ya ha salido el de selecciones de todo el parón', ...r };
+  if (ventanaParon('selecciones', ctx).ok) return { ok: false, motivo: 'hoy sale el de selecciones de todo el parón, que ya cuenta lo de ayer', ...r };
+  const [d, h] = horas(config, 'horasSeleccionesDia', [9, 14], ahora);
+  const hm = horaMadrid(ahora);
+  if (!(hm >= d && hm < h)) return { ok: false, motivo: `fuera de horario (son las ${hm} h; de ${d} a ${h})`, ...r };
+  return { ok: true, motivo: '', ...r };
+}

@@ -26,7 +26,7 @@ const PLURAL = { portero: 'porteros', defensa: 'defensas', centrocampista: 'cent
 const LETRA = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco'];
 // los tipos de tuit cuyos últimos textos cuentan para no repetir el tipo de dato (el mercado habla siempre de valor y el directo,
 // de los puntos de hoy: no cuentan)
-const ROTAN = ['caidas', 'novedades', 'noticias', 'sancionados', 'lloros', 'onceideal', 'resumen', 'balance', 'revalorizaciones', 'calendario', 'selecciones'];
+const ROTAN = ['caidas', 'novedades', 'noticias', 'sancionados', 'lloros', 'onceideal', 'resumen', 'balance', 'revalorizaciones', 'calendario', 'selecciones', 'selecciones-dia'];
 
 const ctx = { lista: [], porId: new Map(), porNombre: new Map(), equipos: {}, hasta: Infinity, fichas: new Map(), valores: new Map(), recientes: [], usados: [], rangos: new Map(), pedir: { ficha: pedirFicha, valor: pedirValor } };
 
