@@ -1961,7 +1961,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004249096/agenda-11-internacionales-primer-equipo-barca.html": 1794235042000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/mensaje-antony-aficionados-betis-peor-momento-elche_0_2008457741.html": 1794235886000,
    "SPORT|136256483": 1794234804000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249130/pellegrini-contar-copa-cuatro-porteros.html": 1794239934000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249130/pellegrini-contar-copa-cuatro-porteros.html": 1794239934000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/manolo-lama-senala-cuatro-decisiones-mourinho-han-llevado-exito-real-madrid-importante-gran-merito-entrenador-20261109_3471059.html": 1794241484000
   },
   "hechos": [
    {
@@ -2428,7 +2429,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -3287,7 +3288,6 @@
    "AS|https://as.com/futbol/el-betis-afrontara-en-cuadro-su-eliminatoria-de-la-copa-del-rey-f202611-n/": 1794006110000,
    "SPORT|136192571": 1794041056000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html": 1793982666000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "SPORT|136195921": 1794049583000,
    "SPORT|136198293": 1794054087000,
@@ -3328,63 +3328,31 @@
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilina-despliega-lona-gran-via-madrid-llamar-huelga-general-20261109123809.html": 1794224289000,
    "SPORT|136251680": 1794230182000,
    "SPORT|136241690": 1794229204000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-industrias-carnicas-registra-seguimiento-90-primera-jornada-ugt-fica-20261109162232.html": 1794237752000
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-industrias-carnicas-registra-seguimiento-90-primera-jornada-ugt-fica-20261109162232.html": 1794237752000,
+   "SPORT|136257629": 1794236411000
   },
-  "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laliga-pone-fecha-barca-atletico-real-madrid-real-sociedad-aplazados-supercopa-14a-jornada-20261106_3470636.html",
-    "medio": "COPE",
-    "t": 1793982666000,
-    "tipo": "aplazamiento",
-    "estado": "confirmado",
-    "segunda": false,
-    "jornada": 23,
-    "jTxt": true,
-    "clubes": [
-     "4",
-     "2"
-    ],
-    "luto": false,
-    "oficial": false,
-    "contexto": "Partido aplazado por la Supercopa de España",
-    "detalle": "",
-    "nums": [
-     14,
-     2,
-     21,
-     30,
-     19,
-     0,
-     23,
-     7,
-     2027,
-     202
-    ]
-   }
-  ],
+  "hechos": [],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136257629": 1794240672627
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 46,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 250749,
-  "salida": 27021,
+  "entrada": 254450,
+  "salida": 27266,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.507047,
+  "dolares": 0.50754,
   "reservado": 0
  },
  "recientes": {
@@ -7309,13 +7277,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 855,
+   "ok": 856,
    "fallos": 0,
-   "ejecuciones": 510,
+   "ejecuciones": 511,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T16:26:18.561Z"
+   "ultima": "2026-11-09T16:31:17.811Z"
   }
  },
  "ptsDirecto": {},
@@ -7332,15 +7300,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:26:23.932Z"
+   "ultimaBien": "2026-11-09T16:31:25.184Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:26:23.932Z"
+   "ultimaBien": "2026-11-09T16:31:25.184Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:26:23.932Z"
+   "ultimaBien": "2026-11-09T16:31:25.184Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7348,11 +7316,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:26:23.932Z"
+   "ultimaBien": "2026-11-09T16:31:25.184Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:26:23.932Z"
+   "ultimaBien": "2026-11-09T16:31:25.184Z"
   }
  },
  "avisos": [
