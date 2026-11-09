@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/": 1793970261000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247932/fuente-sobre-barrene-no-ninguna-apuesta-reconocimiento-labor.html": 1793970654000,
    "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/frenkie-de-jong-mai-canvia-un-partit-no-es-transcendent-sercat/": 1793972676000,
@@ -1965,21 +1964,10 @@
    "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000,
    "SPORT|136248722": 1794225294000,
    "SPORT|136249887": 1794225247000,
-   "AS|https://as.com/futbol/cuatro-internacionales-se-marchan-con-sus-selecciones-f202611-n/": 1794228363000
+   "AS|https://as.com/futbol/cuatro-internacionales-se-marchan-con-sus-selecciones-f202611-n/": 1794228363000,
+   "SPORT|136250143": 1794225334000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/terzic-quiero-jugadores-preparados-para-ganar-los-duelos-f202611-n/",
-    "medio": "AS",
-    "t": 1793970261000,
-    "id": "2315",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Paredes se pierde el partido por lesión",
-    "motivo": "lesión",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "El Correo|https://www.elcorreo.com/athletic/terzic-marcos-hablado-supone-jugar-sadar-20261106143832-nt.html",
     "medio": "El Correo",
@@ -2518,7 +2506,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -3480,17 +3468,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 227489,
-  "salida": 23356,
+  "entrada": 229270,
+  "salida": 23787,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.502889,
+  "dolares": 0.503283,
   "reservado": 0
  },
  "recientes": {
@@ -7415,13 +7403,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 814,
+   "ok": 815,
    "fallos": 0,
-   "ejecuciones": 469,
+   "ejecuciones": 470,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T13:01:12.243Z"
+   "ultima": "2026-11-09T13:06:15.551Z"
   }
  },
  "ptsDirecto": {},
@@ -7438,15 +7426,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:01:18.254Z"
+   "ultimaBien": "2026-11-09T13:06:23.473Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:01:18.254Z"
+   "ultimaBien": "2026-11-09T13:06:23.473Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:01:18.254Z"
+   "ultimaBien": "2026-11-09T13:06:23.473Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7454,11 +7442,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:01:18.254Z"
+   "ultimaBien": "2026-11-09T13:06:23.473Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:01:18.254Z"
+   "ultimaBien": "2026-11-09T13:06:23.473Z"
   }
  },
  "avisos": [
