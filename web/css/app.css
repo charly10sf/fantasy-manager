@@ -2055,6 +2055,14 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pnz-rk-s span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .pnz-rk-s span b { color: var(--texto); }
 .pnz-rk-s .pc { font: 700 15px var(--cond); white-space: nowrap; }
 .pnz-rk-bd .tray { margin: 6px 0 4px; }
+.pnz-rank { counter-reset: rk; } .pnz-rk { counter-increment: rk; } .pnz-rk .i::before { content: counter(rk); }
+.pnz-mer-l.ver-tu .ver-liga, .pnz-mer-l.ver-liga .ver-tu { display: none; }
+.pnz-ver { display: inline-flex; margin: 12px 0 0; padding: 3px; border-radius: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--linea); }
+.pnz-ver button { padding: 6px 12px; border-radius: 8px; font: 600 13.5px 'Barlow'; color: var(--texto2); }
+.pnz-ver button[aria-selected="true"] { background: var(--sube-s); color: var(--sube); }
+.pnz-rk .n .nt.tuyo { color: var(--azul); }
+.pnz-rk .n .ch-ok { flex: none; display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--sube-s); color: var(--sube); } .pnz-rk .n .ch-ok .ic { width: 11px; height: 11px; stroke-width: 3; }
+.pnz-llega { flex: 1 1 100%; font-weight: 600; } .pnz-llega.ok { color: var(--sube); } .pnz-llega.no { color: var(--baja); }
 .pnz-rk-f { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font: 600 14px 'Barlow'; color: var(--rojo-l); }
 .pnz-rk-f .ic { width: 14px; height: 14px; }
 .tray .tr-hoy { stroke: var(--apagado); stroke-width: 1; stroke-dasharray: 2 3; }

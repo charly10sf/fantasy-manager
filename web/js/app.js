@@ -653,7 +653,7 @@ function pintar({ arriba = false } = {}) {
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
     v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
   }
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Recargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Versión nueva lista: se pone al volver a abrir la app</span><button data-accion="ponerWeb">Ponerla</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -2259,7 +2259,7 @@ window.webBuscada = (estado) => {
   if (estado === 'nueva') {
     S.webNueva = true;
     if (sePuedeRecargar()) ponerWebNueva();
-    else { if (S.D && !S.hoja) pintar(); if (avisar) tostada('Versión nueva lista: toca «Ponerla»'); }
+    else { if (S.D && !S.hoja) pintar(); if (avisar) tostada('Hay una versión nueva: toca «Descargar»'); }
     return;
   }
   if (!avisar) return;
@@ -2361,10 +2361,8 @@ const conScrollX = (el) => {
   }
   return false;
 };
-// deslizar de lado sobre la pantalla pasa a la pestaña de al lado (no desde los bordes: ahí está el «atrás» de Android).
-// Primero las subpestañas de la vista (las de más abajo, si hay dos barras: en Directo, la de Directo); al llegar a la
-// primera o la última, o si la vista no tiene, la pestaña de abajo de al lado (Carlos, 9 nov 15:24: «cambiar de pestañas
-// deslizando hacia la derecha o la izquierda, sin darle abajo»)
+// deslizar de lado sobre la pantalla pasa a la pestaña de abajo de al lado, sin pasar por las subpestañas (Carlos, 9 nov
+// 15:24 y 15:30: «solo las pestañas grandes»). No desde los bordes (ahí está el «atrás» de Android) ni en el ordenador
 let desliz = null;
 document.addEventListener('touchstart', (e) => {
   desliz = null;
@@ -2380,16 +2378,6 @@ document.addEventListener('touchend', (e) => {
   const dx = e.changedTouches[0].clientX - d0.x, dy = e.changedTouches[0].clientY - d0.y;
   if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 2 || Date.now() - d0.t > 700) return;
   const paso = dx < 0 ? 1 : -1;
-  const barras = $$('#vista .tabs');
-  const bs = barras.length ? [...barras[barras.length - 1].querySelectorAll('button[data-seg]')] : [];
-  const i = bs.findIndex((b) => b.classList.contains('activo'));
-  if (i >= 0 && bs[i + paso]) {
-    nativo.toque();
-    bs[i + paso].click();
-    const n = barras.length && barras[barras.length - 1].querySelector('button.activo');
-    if (n) n.scrollIntoView({ block: 'nearest', inline: 'center' });
-    return;
-  }
   const nav = $$('.nav button[data-ir]');
   const j = nav.findIndex((b) => b.dataset.ir === S.vista);
   if (j < 0 || !nav[j + paso]) return;
@@ -2464,6 +2452,7 @@ document.addEventListener('click', async (ev) => {
     // (21) plegar una sección de la pestaña Parón: igual, se recuerda mientras dura el parón
     // (el selector Suben / Bajan de la pestaña Parón: sin repintar, para no saltar arriba)
     case 'pnzLado': { const m = el.closest('.pnz-mer'); S.seg.pnzliga = d.f; if (m) { m.classList.toggle('lado-sube', d.f !== 'baja'); m.classList.toggle('lado-baja', d.f === 'baja'); m.querySelectorAll('.pnz-mer-sel button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.f === d.f))); } break; }
+    case 'pnzVer': { const l = el.closest('.pnz-mer-l'); S.seg.pnzver = d.f; if (l) { l.classList.toggle('ver-tu', d.f !== 'liga'); l.classList.toggle('ver-liga', d.f === 'liga'); l.querySelectorAll('.pnz-ver button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.f === d.f))); } break; }
     case 'plegarParon': { const det = el.closest('details'); if (det && S.M) Pz.plegarParon(S.M, d.f, !det.open); break; }
     case 'plegarFase': { const det = el.closest('details'); if (det && S.plan) V.plegarFase(S.plan, d.f, !det.open); break; }
     case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }
