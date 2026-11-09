@@ -3414,7 +3414,9 @@
    "n": 6,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-industrias-carnicas-registra-seguimiento-90-primera-jornada-ugt-fica-20261109162232.html": 1794237972624
+  }
  },
  "ia": {
   "dia": "2026-11-09",
@@ -7354,13 +7356,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 842,
+   "ok": 843,
    "fallos": 0,
-   "ejecuciones": 497,
+   "ejecuciones": 498,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T15:21:12.098Z"
+   "ultima": "2026-11-09T15:26:12.624Z"
   }
  },
  "ptsDirecto": {},
@@ -7377,15 +7379,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:21:16.432Z"
+   "ultimaBien": "2026-11-09T15:26:16.667Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:21:16.432Z"
+   "ultimaBien": "2026-11-09T15:26:16.667Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:21:16.432Z"
+   "ultimaBien": "2026-11-09T15:26:16.667Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7393,11 +7395,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:21:16.432Z"
+   "ultimaBien": "2026-11-09T15:26:16.667Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T15:21:16.432Z"
+   "ultimaBien": "2026-11-09T15:26:16.667Z"
   }
  },
  "avisos": [
