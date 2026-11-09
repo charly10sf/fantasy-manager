@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136181983": 1793990642000,
    "AS|https://as.com/futbol/videos/llegara-la-redencion-definitiva-de-julian-contra-el-barca-f202611-v/": 1793995579000,
    "MARCA|https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html": 1793997151000,
    "SPORT|136149850": 1793995933000,
@@ -7260,13 +7259,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 883,
+   "ok": 884,
    "fallos": 0,
-   "ejecuciones": 538,
+   "ejecuciones": 539,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T18:41:13.319Z"
+   "ultima": "2026-11-09T18:46:15.972Z"
   }
  },
  "ptsDirecto": {},
@@ -7283,15 +7282,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:41:17.627Z"
+   "ultimaBien": "2026-11-09T18:46:20.832Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:41:17.627Z"
+   "ultimaBien": "2026-11-09T18:46:20.832Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:41:17.627Z"
+   "ultimaBien": "2026-11-09T18:46:20.832Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7299,11 +7298,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:41:17.627Z"
+   "ultimaBien": "2026-11-09T18:46:20.832Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:41:17.627Z"
+   "ultimaBien": "2026-11-09T18:46:20.832Z"
   }
  },
  "avisos": [
