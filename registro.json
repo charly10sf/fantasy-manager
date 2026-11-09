@@ -1960,7 +1960,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000,
    "SPORT|136257166": 1794243633000,
    "SPORT|136262922": 1794244907000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261109/1004249169/premier-league.html": 1794248219000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261109/1004249169/premier-league.html": 1794248219000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotivo-homenaje-seleccion-espanola-jesus-miguel-rozas-20261109_3471751.html": 1794249704000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gran-duda-manolo-lama-once-ideal-mundo-fifpro-me-gusta-20261109_3471749.html": 1794250042000
   },
   "hechos": [
    {
@@ -2415,7 +2417,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -3324,17 +3326,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 53,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 265639,
-  "salida": 28133,
+  "entrada": 267875,
+  "salida": 28286,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.509092,
+  "dolares": 0.509392,
   "reservado": 0
  },
  "recientes": {
@@ -7259,13 +7261,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 884,
+   "ok": 885,
    "fallos": 0,
-   "ejecuciones": 539,
+   "ejecuciones": 540,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T18:46:15.972Z"
+   "ultima": "2026-11-09T18:51:14.710Z"
   }
  },
  "ptsDirecto": {},
@@ -7282,15 +7284,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:46:20.832Z"
+   "ultimaBien": "2026-11-09T18:51:20.672Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:46:20.832Z"
+   "ultimaBien": "2026-11-09T18:51:20.672Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:46:20.832Z"
+   "ultimaBien": "2026-11-09T18:51:20.672Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7298,11 +7300,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:46:20.832Z"
+   "ultimaBien": "2026-11-09T18:51:20.672Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:46:20.832Z"
+   "ultimaBien": "2026-11-09T18:51:20.672Z"
   }
  },
  "avisos": [
