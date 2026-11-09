@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/virus-fifa-amenaza-barca-indignacion-barcelona-marcha-20261106183946-nt.html": 1793986786000,
    "AS|https://as.com/futbol/primera/roberto-y-en-el-proximo-paron-dos-internacionales-mas-f202611-n/": 1793987444000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261106/1004248055/zidane-numerosas-ausencias-recupera-mbappe.html": 1793989906000,
    "SPORT|136181983": 1793990642000,
@@ -7263,13 +7262,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 870,
+   "ok": 871,
    "fallos": 0,
-   "ejecuciones": 525,
+   "ejecuciones": 526,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T17:36:12.328Z"
+   "ultima": "2026-11-09T17:41:15.013Z"
   }
  },
  "ptsDirecto": {},
@@ -7286,15 +7285,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:36:15.837Z"
+   "ultimaBien": "2026-11-09T17:41:19.384Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:36:15.837Z"
+   "ultimaBien": "2026-11-09T17:41:19.384Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:36:15.837Z"
+   "ultimaBien": "2026-11-09T17:41:19.384Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7302,11 +7301,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:36:15.837Z"
+   "ultimaBien": "2026-11-09T17:41:19.384Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T17:36:15.837Z"
+   "ultimaBien": "2026-11-09T17:41:19.384Z"
   }
  },
  "avisos": [
