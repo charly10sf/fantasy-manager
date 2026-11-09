@@ -16,13 +16,13 @@ export const VERSION = '0.7.1d';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.1d', f: '2026-11-09', h: 'HH:MM', t: 'Sin presentación al actualizar',
+    v: '0.7.1d', f: '2026-11-09', h: '23:56', t: 'Sin presentación al actualizar',
     cosas: [
       { tipo: 'mejora', d: 'versiones', t: 'Las novedades, solo en Ajustes', x: 'Al actualizar ya no se abre la presentación de novedades a nadie. Lo que cambia en cada versión sigue en Ajustes → Novedades, solo para ti.', ir: null },
     ],
   },
   {
-    v: '0.7.1c', f: '2026-11-09', h: 'HH:MM', t: 'El parón, sin el calendario de colores',
+    v: '0.7.1c', f: '2026-11-09', h: '23:56', t: 'El parón, sin el calendario de colores',
     cosas: [
       { tipo: 'mejora', d: 'bandera', t: 'Fuera las píldoras de los días', x: 'La cabecera de la pestaña Parón ya no lleva la fila de píldoras de colores con los días («Hoy Compra lo que sube», «Mié 18 Piensa en el once»…): solo el título y tus tres cifras, y debajo, directamente, quién se revaloriza y quién se hunde.', ir: { v: 'directo' } },
     ],

@@ -145,6 +145,24 @@ export const paraLa = (pp, jornada) => (pp ? `para la jornada ${pp.jornada} cont
 const DIA_SEM = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', weekday: 'long' });
 const HORA_MIN = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 const DIA_ISO = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+const DIA_MES = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', day: 'numeric' });
+const MES = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', month: 'long' });
+/**
+ * Un partido a más de `dias` (3) de ahora, sobre todo en un parón (Carlos, 9 nov: «lo normal es que salga contra el Villarreal» y
+ * «mejor esperar a los onces» con la J13 a 11 días): cuándo es, dicho con la fecha («el sábado 21 de noviembre») y, en el parón,
+ * con «tras el parón». null si es antes o no hay fecha. { faltanDias, fecha: «el sábado 21 de noviembre», t (para la plantilla),
+ * trasElParon, numeros }. paron: el de lib/paron.mjs (ctx.paron); vale si está activo y el partido es de la jornada de después.
+ */
+export function lejos(fecha, { ahora = Date.now(), paron = null, jornada = null, dias = 3 } = {}) {
+  const t = Date.parse(fecha);
+  if (!Number.isFinite(t) || t - ahora <= dias * 864e5) return null;
+  const faltanDias = Math.round((Date.parse(DIA_ISO.format(new Date(t))) - Date.parse(DIA_ISO.format(new Date(ahora)))) / 864e5);
+  const d = new Date(t), dia = Number(DIA_MES.format(d));
+  const f = `el ${DIA_SEM.format(d)} ${dia} de ${MES.format(d)}`;
+  const trasElParon = !!(paron && paron.activo && (jornada == null || paron.siguiente == null || Number(jornada) === Number(paron.siguiente)));
+  return { faltanDias, fecha: f, t: trasElParon ? `tras el parón, ${f}` : f, trasElParon, numeros: [dia] };
+}
+
 export function cuando(fecha, ahora = Date.now()) {
   const t = Date.parse(fecha);
   // (una fecha pasada no se dice: «hoy a las 16:15» de un partido ya jugado; 8 nov, Barrenetxea)

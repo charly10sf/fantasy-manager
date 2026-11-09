@@ -41,6 +41,19 @@ r = await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, temperatura: 0.2
 ok(r.ok && vistos.length === 2 && !('temperature' in vistos[1]), 'si el modelo no admite la temperatura, se pregunta sin ella');
 r = await preguntarJson({ clave: '', prompt: 'x', esquema: {} });
 ok(!r.ok, 'sin clave no pregunta');
+// (9 nov) Haiku no admite thinking between_tools: no se le manda (antes, un 400 en cada pregunta para clasificar y se repetía sin él)
+vistos = [];
+r = await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, modelo: HAIKU, pensar: false, pedir: async (u, op) => { const b = JSON.parse(op.body); vistos.push(b); return 'thinking' in b ? resp(400, { error: { message: '"thinking.type.between_tools" is not supported for this model.' } }) : bien({ texto: 'haiku' }); } });
+ok(r.ok && vistos.length === 1 && !('thinking' in vistos[0]), 'Haiku: una sola pregunta y sin thinking');
+vistos = [];
+r = await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, modelo: SONNET, pensar: false, pedir: async (u, op) => { vistos.push(JSON.parse(op.body)); return bien({ texto: 'sonnet' }); } });
+ok(r.ok && vistos[0].thinking && vistos[0].thinking.type === 'between_tools', 'Sonnet sigue con thinking between_tools');
+vistos = [];
+const nuevoM = 'claude-otro-de-prueba';
+const noPiensa = async (u, op) => { const b = JSON.parse(op.body); vistos.push(b); return 'thinking' in b ? resp(400, { error: { message: '"thinking.type.between_tools" is not supported for this model.' } }) : bien({ texto: 'ok' }); };
+await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, modelo: nuevoM, pensar: false, pedir: noPiensa });
+await preguntarJson({ clave: 'k', prompt: 'x', esquema: {}, modelo: nuevoM, pensar: false, pedir: noPiensa });
+ok(vistos.length === 3 && !('thinking' in vistos[2]), 'un modelo que no admite thinking solo falla la primera vez en la ejecución');
 
 // --- lib/ia.mjs ---
 const reg = { datos: { enviados: [] }, fichero: null, guardar() {} };
@@ -89,14 +102,14 @@ const jugadores = [{ nickname: 'Eric' }, { nickname: 'Pedri' }, { nickname: 'Kok
 const equipos = { 1: 'FC Barcelona', 2: 'Atlético de Madrid', 3: 'C.A. Osasuna', 4: 'Deportivo Alavés' };
 const todos = nombresDe(jugadores, equipos).filter((x) => x !== 'blanco');
 const hechos = { tipo: 'noticias', noticia: 'Eric vuelve a la convocatoria', fuente: 'prensa: AS, MARCA',
-  jugadores: [{ nombre: 'Eric', puesto: 'defensa', club: 'Barça', estado: 'disponible', mediaPuntos: '5,6', titularidadFantasyManager: '37 %', principal: true }],
+  jugadores: [{ nombre: 'Eric', puesto: 'defensa', club: 'Barça', estado: 'disponible', mediaPuntos: '5,6', titularidad: '37 %', principal: true }],
   partido: { jornada: 12, partido: 'Atlético-Barça', local: 'Atlético', visitante: 'Barça', juega: 'fuera', rival: 'el Atlético', cuando: 'el domingo a las 21:00', rivalVa: '2º de 20', dificultad: 'difícil',
     golesRival: golesRival({ gf: 2, gc: 0.8, rgf: 2, rgc: 18, n: 20 }, 2, 'Atlético') },
   clubes: clubes('Barça', 'Atlético'), etiqueta: '✅ Disponible para la jornada 12 contra el Atlético' };
 ok(hechos.partido.golesRival.paraEste === 'le viene mal', 'a un defensa le viene mal un rival que marca mucho');
 const bueno = `✅ El Barça recupera a Eric para el domingo, según AS y MARCA.
 
-Pero el Atleti, 2º y de los que más marcan, no es el mejor partido para un defensa, y Fantasy Manager solo le da un 37 % de titularidad. Si lo tienes, mejor esperar a los onces.`;
+Pero el Atleti, 2º y de los que más marcan, no es el mejor partido para un defensa, y solo tiene un 37 % de titularidad. Si lo tienes, mejor esperar a los onces.`;
 const rv = (t, extra = {}) => revisar(t, { hechos, todos, numeros: [], ...extra });
 ok(rv(bueno).length === 0, `un texto bueno pasa (${rv(bueno).join('; ')})`);
 const malos = [
@@ -126,7 +139,7 @@ ok(revisar('El Levante, colista, recibe al Celta.', { hechos: { tipo: 'previa', 
 ok(rv('Eric vuelve, según AS. Tiene un 37 % y antes un 37 %.').some((x) => /porcentajes/.test(x)), 'en noticias, un solo porcentaje');
 ok(rv('Eric vuelve, según AS. Si dudas, mejor esperar a los onces.', { recientes: ['Pedri juega. Si dudas, mejor esperar a los onces del sábado.', 'Koke no está. Si dudas, mejor esperar a los onces.', 'Budimir juega. Si dudas, mejor esperar a los onces de mañana.'] }).some((x) => /muletilla/.test(x)), 'una muletilla que ya va en dos recientes, fuera');
 ok(rv('Eric vuelve, según AS. Fantasy Manager le da un 37 %.').some((x) => /de titularidad/.test(x)), 'un % sin «de titularidad», fuera');
-const h2 = { ...hechos, tipo: 'previa', jugadores: [...hechos.jugadores, { nombre: 'Pedri', club: 'Barça', titularidadFantasyManager: '52 %', principal: false }] };
+const h2 = { ...hechos, tipo: 'previa', jugadores: [...hechos.jugadores, { nombre: 'Pedri', club: 'Barça', titularidad: '52 %', principal: false }] };
 ok(revisar('Eric vuelve, según AS, con un 37 % de titularidad. Pedri, con un 52 %, tampoco lo tiene cerrado.', { hechos: h2, todos }).length === 0, 'el primer % con «de titularidad» y el segundo sin él, vale');
 ok(revisar('Eric vuelve, según AS, con un 37 % de titularidad. Pedri, con un 52 % de titularidad, tampoco.', { hechos: h2, todos }).some((x) => /solo con el primer/.test(x)), '«de titularidad» repetido en el segundo %, fuera');
 ok(rv('Eric ya no es baja y vuelve, según AS.').length === 0, '«ya no es baja» no es llamarle baja');

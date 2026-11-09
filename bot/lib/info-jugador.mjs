@@ -110,7 +110,8 @@ export function vecesHoy(registro, dia, tipos = ['noticias', 'novedades']) {
 const tramo = (tit, tipo) => (tipo === 'duda' ? 'duda' : tit.p >= 0.65 ? 'alta' : tit.p >= 0.45 ? 'media' : 'baja');
 
 /**
- * La frase del jugador: «El defensa del Athletic suma 5,3 puntos de media y Fantasy Manager le da un 72 % de titularidad».
+ * La frase del jugador: «El defensa del Athletic suma 5,3 puntos de media y tiene un 72 % de titularidad». (Carlos, 9 nov: el % a secas,
+ * sin «en Fantasy Manager», que suena raro.)
  * quien: «El defensa del Athletic». media: su media (sale si es 3 o más). tit: { p, pct } o null. f: el esqueleto (0, 1 o 2).
  * { t, numeros } o null si no hay nada que decir.
  */
@@ -120,7 +121,7 @@ export function fraseJugador({ quien, media = 0, tit = null, tipo = 'vuelve', f 
     const numeros = [...(dato.numeros || []), ...(tit ? [tit.pct] : [])];
     if (!tit) return { t: `‼️ ${quien} ${dato.dice}`, numeros };
     const pct = tit.pct, T = tramo(tit, tipo);
-    const cola = { alta: `y tiene un ${pct} % de titularidad en Fantasy Manager`, media: `y tiene un ${pct} % de titularidad, así que no es fijo`, baja: `aunque de momento solo tiene un ${pct} % de titularidad`, duda: `y con la duda se queda en un ${pct} % de titularidad` }[T];
+    const cola = { alta: `y tiene un ${pct} % de titularidad`, media: `y tiene un ${pct} % de titularidad, así que no es fijo`, baja: `aunque de momento solo tiene un ${pct} % de titularidad`, duda: `y con la duda se queda en un ${pct} % de titularidad` }[T];
     return { t: `📊 ${quien} ${dato.dice} ${cola}`, numeros };
   }
   const m = media >= 3 ? fmt(media) : null, ql = quien.replace(/^./, (c) => c.toLowerCase());
@@ -129,12 +130,12 @@ export function fraseJugador({ quien, media = 0, tit = null, tipo = 'vuelve', f 
   if (!tit) return { t: `‼️ ${[`${quien} suma ${m} puntos de media`, `${quien} lleva ${m} puntos de media`, `${quien} va a ${m} puntos por partido`][f]}`, numeros };
   const pct = tit.pct;
   const P = {
-    alta: [` y Fantasy Manager le da un ${pct} % de titularidad`, `pinta a titular: tiene un ${pct} % en Fantasy Manager`, `tiene un ${pct} % de titularidad en Fantasy Manager`],
-    media: [` y Fantasy Manager le da un ${pct} % de titularidad, así que no es fijo`, `no es fijo en el once: un ${pct} % de titularidad en Fantasy Manager`, `tiene un ${pct} % de titularidad, así que el once está por ver`],
-    baja: [`, aunque de momento solo tiene un ${pct} % de titularidad en Fantasy Manager`, `lo tiene difícil para ser titular: un ${pct} % en Fantasy Manager`, `se queda de momento en un ${pct} % de titularidad`],
+    alta: [` y tiene un ${pct} % de titularidad`, `pinta a titular: tiene un ${pct} % de titularidad`, `cuenta con un ${pct} % de titularidad`],
+    media: [` y tiene un ${pct} % de titularidad, así que no es fijo`, `no es fijo en el once: un ${pct} % de titularidad`, `tiene un ${pct} % de titularidad, así que el once está por ver`],
+    baja: [`, aunque de momento solo tiene un ${pct} % de titularidad`, `lo tiene difícil para ser titular: un ${pct} % de titularidad`, `se queda de momento en un ${pct} % de titularidad`],
     duda: [` y con la duda se queda en un ${pct} % de titularidad`, `tiene un ${pct} % de titularidad con la duda`, `queda en un ${pct} % de titularidad por la duda`],
   }[tramo(tit, tipo)];
-  if (!m) return { t: `📊 ${[`${quien} tiene un ${pct} % de titularidad en Fantasy Manager`, `${quien} ${P[1]}`, `${quien} ${P[2]}`][f]}`, numeros };
+  if (!m) return { t: `📊 ${[`${quien} tiene un ${pct} % de titularidad`, `${quien} ${P[1]}`, `${quien} ${P[2]}`][f]}`, numeros };
   return { t: `📊 ${[`${quien} suma ${m} puntos de media${P[0]}`, `${quien}, que suma ${m} puntos de media, ${P[1]}`, `Con ${m} puntos de media, ${ql} ${P[2]}`][f]}`, numeros };
 }
 
@@ -186,11 +187,12 @@ export function ideasInfo({ posId, equipo, pp, quien, media = 0, tit = null, riv
   if (riv && pp) {
     const P = frasePartido(riv, { equipo, rival: pp.rival, casa: !!pp.enCasa, cuando: hr ? hr.t : null }, turno(3, `infB${dia}`, k));
     // con tweets largos, el jugador en un párrafo y el partido (con los goles del rival) en otro: tres frases en uno solo se leían como un bloque
-    ideas.push({ t: largo && A ? aparte(P) : P, prio: 4 });
+    // (9 nov) en el parón, cuándo vuelve la liga pesa más que la media o el %: en 280 no se cae
+    ideas.push({ t: largo && A ? aparte(P) : P, prio: hr && hr.trasElParon ? 6 : 4 });
     numeros.push(riv.pos, ...(hr ? hr.numeros : []));
     const g = fraseGoles(riv, posId, turno(2, `infG${dia}`, k), pp.rival);
     if (g) { ideas.push({ t: g.t, prio: 3 }); numeros.push(...g.numeros); }
-  } else if (hr) { ideas.push({ t: `🗓️ El partido es ${hr.t}`, prio: 2 }); numeros.push(...hr.numeros); }
+  } else if (hr) { ideas.push({ t: `🗓️ El partido es ${hr.t}`, prio: hr.trasElParon ? 6 : 2 }); numeros.push(...hr.numeros); }
   // con tweets largos, lo que le sirve al mánager en su párrafo (la noticia arriba)
   if (largo && ideas.length >= 2) ideas[0] = { ...ideas[0], t: aparte(ideas[0].t) };
   return { ideas, numeros };

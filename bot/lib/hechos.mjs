@@ -2,7 +2,7 @@
 // clasificada), en un objeto sencillo. Todo lo que va aquí puede salir en el texto; lo que no está aquí, no (el validador lo mira).
 // Cada tipo arma los suyos con estas piezas y los deja en `t.hechos`, junto a la plantilla de siempre, que queda de respaldo.
 import { fmt, corto, el } from './texto.mjs';
-import { puesto, cuando } from './redactar.mjs';
+import { puesto, cuando, lejos } from './redactar.mjs';
 import { nombresClub } from './redaccion.mjs';
 import { comoLeLlaman } from './apodos-jugadores.mjs';
 import { conCandidatos } from './datos-jugador.mjs';
@@ -35,18 +35,26 @@ export function golesRival(riv, posId, rival) {
 }
 
 /** el partido que viene: rival, casa o fuera, cuándo, puesto y dificultad del rival (y sus goles si destacan) */
-export function partido(pp, { equipo, riv = null, posId = null, ahora = Date.now() } = {}) {
+export function partido(pp, { equipo, riv = null, posId = null, ahora = Date.now(), paron = null } = {}) {
   if (!pp) return null;
   const c = pp.fecha ? cuando(pp.fecha, ahora) : null;
+  const lj = pp.fecha ? lejos(pp.fecha, { ahora, paron, jornada: pp.jornada }) : null;
   const local = pp.enCasa ? equipo : pp.rival, visitante = pp.enCasa ? pp.rival : equipo;
   return {
     jornada: pp.jornada, partido: `${local}-${visitante}`, local, visitante, ...estadio(local), juega: pp.enCasa ? 'en casa' : 'fuera', rival: el(pp.rival),
-    ...(c ? { cuando: c.t } : {}), fecha: pp.fecha || null,
+    ...(c ? { cuando: c.t } : {}), fecha: pp.fecha || null, ...(lj ? sinLiga(lj, pp.jornada) : {}),
     // el equipo ya ha jugado hoy (8 nov, Barrenetxea): de ese partido no se habla como si viniera; el que viene es este
     ...(pp.hoy ? { yaJugoHoy: `contra ${el(pp.hoy.rival)}; ese partido ya se ha jugado: no digas que llega con dudas a él ni que es hoy. El que viene es este. Que se lesionó en el de hoy, solo si lo dice su motivo.` } : {}),
     ...(riv ? { rivalVa: `${riv.pos}º de ${riv.n}`, dificultad: riv.nivel } : {}),
     ...(riv && posId ? (() => { const g = golesRival(riv, posId, pp.rival); return g ? { golesRival: g } : {}; })() : {}),
   };
+}
+
+/** lo que va en los hechos de un partido lejano (lib/redactar.mjs, lejos): la fecha, los días que faltan y lo que no se puede decir */
+export function sinLiga(lj, jornada) {
+  const J = jornada != null ? `la jornada ${jornada}` : 'el partido';
+  return { faltanDias: lj.faltanDias, fechaDelPartido: lj.fecha, ...(lj.trasElParon ? { trasElParon: true } : {}),
+    sinLigaHastaEntonces: `${lj.trasElParon ? 'Es el parón de selecciones: no' : 'No'} hay liga hasta ${J}, ${lj.fecha} (faltan ${lj.faltanDias} días). Si nombras el partido o al rival, di la fecha o «tras el parón»; no lo cuentes como si fuera ya. Nada de «esperar a los onces», «mirar el once», «este fin de semana» ni de qué hacer antes de la jornada: falta mucho. Si el plazo de la lesión lo deja claro, di si llega a ${J}; si no, no lo adivines.` };
 }
 
 /** un jugador: nombre, puesto, club, estado (disponible, vuelve, duda, baja, lesionado, sancionado), media y % de la app.
@@ -58,7 +66,7 @@ export function jugador(j, { equipos = {}, estado = null, motivo = '', plazo = '
     nombre: j.nickname || j.nombre, puesto: puesto(j.positionId ?? j.pos) || undefined, club: corto(equipos[String(j.teamId)] || j.equipo || ''),
     ...(estado ? { estado } : {}), ...(motivo ? { motivo } : {}), ...(plazo ? { plazo } : {}),
     ...(media >= 1 ? { mediaPuntos: fmt(media) } : {}),
-    ...(tit && tit.pct != null ? { titularidadFantasyManager: `${tit.pct} %` } : {}),
+    ...(tit && tit.pct != null ? { titularidad: `${tit.pct} %` } : {}),
     ...(otrosNombres(j.nickname || j.nombre)), ...extra, principal,
     // (M14) una ausencia por motivos personales o de salud (lib/partes.mjs, lesionTxt, la deja así): con respeto
     ...(/^motivos (?:personales|de salud)\b/.test(String(motivo)) ? { trato: 'no juega por motivos personales o de salud: sin detalles, sin bromas y sin consejo de fantasy sobre él' } : {}),

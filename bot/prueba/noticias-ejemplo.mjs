@@ -1,6 +1,6 @@
 // Prueba de las noticias de prensa sin red: RSS y Gemini falsos.
 //   node bot/prueba/noticias-ejemplo.mjs
-// Casos: una sola fuente espera; dos medios publican; un medio + LaLiga publica; lo de Champions no cuenta; una frase de Gemini que
+// Casos: una sola fuente espera; dos medios publican; un medio + LaLiga espera (9 nov); lo de Champions no cuenta; una frase de Gemini que
 // copia el titular se tira; quien ya salió en novedades no se repite; y novedades no repite a quien ya contó la prensa.
 import { generar as noticias, frase, candidatos, copia, yaJugo, esLeve } from '../tipos/noticias.mjs';
 import { generar as novedades } from '../tipos/novedades.mjs';
@@ -92,7 +92,7 @@ ok(!ts.some((t) => t.clave.includes('|14:')), 'Ayoze vuelve con un solo medio y 
 const gm = ts.find((t) => t.clave.includes('|12:'));
 ok(!gm, 'G. Moreno, ya lesionado en LaLiga: unas molestias no son noticia');
 ok(reg.datos.noticias.hechos.some((h) => h.id === '12' && h.hecho === ''), 'la frase que copia el titular se tira');
-ok(ts.some((t) => t.clave.includes('|13:') && /⁉️ Duda para/.test(t.texto)), 'Pedri: un medio + LaLiga en duda');
+ok(!ts.some((t) => t.clave.includes('|13:')), 'Pedri: un medio + LaLiga en duda ya no basta (9 nov, Lamine Yamal con La Voz de Galicia)');
 for (const t of ts) reg.marcar(t, 'x');
 
 // segunda vuelta: lo ya leído no se vuelve a preguntar; MARCA confirma lo de Andrés Martín
