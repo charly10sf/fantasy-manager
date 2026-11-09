@@ -1862,8 +1862,10 @@ export function analizar(D, H, c, extra = {}) {
     // esos días (`rRec` de M.tend)
     if (t.rRec != null) r = Math.max(r, t.rRec);
     r = clamp(r, -0.03, 0.04);
-    // el que vuelve se frena más despacio (le queda mucho para su valor de antes)
-    const freno = vu ? 0.92 : 0.85;
+    // el que vuelve se frena más despacio (le queda mucho para su valor de antes). En el parón, sin partidos, las subidas
+    // se apagan antes (lo que se le dice a la IA en el contexto): se frena algo más, para no prometer de más (19, 9 nov)
+    const enParonLejos = paronLejos(M, ahora);
+    const freno = vu ? (enParonLejos ? 0.89 : 0.92) : (enParonLejos ? 0.8 : 0.85);
     let v = j.valor;
     for (let k = 0; k < dias; k++) v *= 1 + r * Math.pow(freno, k);
     return { r, v };

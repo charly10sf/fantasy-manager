@@ -35,11 +35,12 @@ export function cholloParon(M, j, precio) {
   return !(t && t.p7 != null && t.p7 < -1);
 }
 
-/** lo que el catálogo le dice a la IA de cada cláusula en el parón: chollo para el once, solo para revender o nada */
-function paronC(M, o) {
+/** lo que el catálogo le dice a la IA de cada cláusula o puja en el parón: chollo para el once, solo para revender o nada */
+function paronC(M, o, precio = o.precio) {
   if (!paronLejos(M) || !o.j) return '';
-  if (cholloParon(M, o.j, o.precio)) return '; PARÓN: CHOLLO CLARO (a un 5 % de su valor y sin bajar), vale también para el once';
-  if ((M.especular || []).some((e) => e.pid === o.pid)) return '; PARÓN: para el once NO (son días sin puntuar con el dinero parado); solo PARA REVENDER, que la app lo ve subiendo hasta la vuelta';
+  const chollo = cholloParon(M, o.j, precio), sube = (M.especular || []).some((e) => e.pid === o.pid);
+  if (sube) return chollo ? '; PARÓN: PARA REVENDER (la app lo ve subiendo hasta la vuelta) y, como está a su valor, también vale para el once' : '; PARÓN: para el once NO (son días sin puntuar con el dinero parado); solo PARA REVENDER, que la app lo ve subiendo hasta la vuelta';
+  if (chollo) return '; PARÓN: CHOLLO CLARO (a un 5 % de su valor y sin bajar), vale también para el once';
   return '; PARÓN: NO LO PROPONGAS: ni es un chollo para el once ni sube lo bastante para revender';
 }
 
@@ -124,7 +125,7 @@ export function textoOp(o, M = null) {
       const PV = M && M.pagaLiga && j && j.valor ? M.pagaLiga(j.valor) : null;
       const enE = (s) => eur(j.valor * (1 + s));
       const pvTxt = PV ? `; en esta liga, por los libres de su valor (${PV.n} compras de ${eur(PV.desde)} a ${eur(PV.hasta)}) se paga de mediana un ${pct(PV.med * 100)} (para él, ${enE(PV.med)}), 3 de cada 4 hasta ${pct(PV.p75 * 100)} (${enE(PV.p75)}) y el 90 % hasta ${pct(PV.p90 * 100)} (${enE(PV.p90)})` : '';
-      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? ', recortada para no pagar de más por lo que aporta' : ''}`;
+      return `PUJAR por ${j.nombre}, LIBRE en el mercado de la liga${paronC(M, o, o.puja || o.precio)}: subasta a ciegas, puja mínima ${eur(o.precio)}${o.pujas ? `, lleva ${o.pujas} pujas` : ''}${o.cierra ? `, se resuelve ${cuando(o.cierra)}` : ''}${o.miPuja ? `; MI PUJA ACTUAL ${eur(o.miPuja)}` : ''}${pvTxt}; la app pujaría ${eur(o.puja)} (${pct((o.puja / o.precio - 1) * 100)})${o.recortada ? ', recortada para no pagar de más por lo que aporta' : ''}`;
     }
     case 'M': {
       const ol = o.ofertaLiga || (M && M.ofertaLigaDe ? M.ofertaLigaDe(j) : null);
