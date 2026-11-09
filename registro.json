@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247994/galarreta-alista-paredes-causa-baja.html": 1793981520000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/nueve-bajas-betis-navalcarnero_0_2008438147.html": 1793982315000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html": 1793985142000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000,
@@ -1966,20 +1965,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249130/pellegrini-contar-copa-cuatro-porteros.html": 1794239934000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247994/galarreta-alista-paredes-causa-baja.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793981520000,
-    "id": "2315",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Paredes causa baja para el partido ante Osasuna",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     100
-    ]
-   },
    {
     "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html",
     "medio": "MARCA",
@@ -7325,13 +7310,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 852,
+   "ok": 853,
    "fallos": 0,
-   "ejecuciones": 507,
+   "ejecuciones": 508,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T16:11:12.627Z"
+   "ultima": "2026-11-09T16:16:13.517Z"
   }
  },
  "ptsDirecto": {},
@@ -7348,15 +7333,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:11:17.236Z"
+   "ultimaBien": "2026-11-09T16:16:17.713Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:11:17.236Z"
+   "ultimaBien": "2026-11-09T16:16:17.713Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:11:17.236Z"
+   "ultimaBien": "2026-11-09T16:16:17.713Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7364,11 +7349,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:11:17.236Z"
+   "ultimaBien": "2026-11-09T16:16:17.713Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:11:17.236Z"
+   "ultimaBien": "2026-11-09T16:16:17.713Z"
   }
  },
  "avisos": [
