@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/athletic-perdera-seis-futbolistas-paron-selecciones-20261106142408-nt.html": 1793971530000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/frenkie-de-jong-mai-canvia-un-partit-no-es-transcendent-sercat/": 1793972676000,
    "El Correo|https://www.elcorreo.com/athletic/terzic-marcos-hablado-supone-jugar-sadar-20261106143832-nt.html": 1793972652000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/eric-garcia-y-christensen-apuntan-al-metropolitano-cadena-ser/": 1793973431000,
@@ -7403,13 +7402,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 818,
+   "ok": 819,
    "fallos": 0,
-   "ejecuciones": 473,
+   "ejecuciones": 474,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T13:21:16.258Z"
+   "ultima": "2026-11-09T13:26:12.819Z"
   }
  },
  "ptsDirecto": {},
@@ -7426,15 +7425,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:21:27.705Z"
+   "ultimaBien": "2026-11-09T13:26:16.435Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:21:27.705Z"
+   "ultimaBien": "2026-11-09T13:26:16.435Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:21:27.705Z"
+   "ultimaBien": "2026-11-09T13:26:16.435Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7442,11 +7441,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:21:27.705Z"
+   "ultimaBien": "2026-11-09T13:26:16.435Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T13:21:27.705Z"
+   "ultimaBien": "2026-11-09T13:26:16.435Z"
   }
  },
  "avisos": [
