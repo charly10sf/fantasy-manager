@@ -1783,7 +1783,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247994/galarreta-alista-paredes-causa-baja.html": 1793981520000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247991/soler-ejercita-suplentes-espera-oyarzabal-zakharyan-esten-ultima-sesion.html": 1793981155000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/nueve-bajas-betis-navalcarnero_0_2008438147.html": 1793982315000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html": 1793985142000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261106/1004248006/alemania-califican-gran-sorpresa-adeyemi-no-seleccion.html": 1793985547000,
@@ -1980,18 +1979,6 @@
     "nums": [
      100
     ]
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247991/soler-ejercita-suplentes-espera-oyarzabal-zakharyan-esten-ultima-sesion.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793981155000,
-    "id": "2772",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "C. Soler supera el virus y se ejercita con el grupo",
-    "motivo": "virus estomacal",
-    "plazo": "",
-    "nums": []
    },
    {
     "guid": "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/alineaciones-probables-valencia-real-madrid.html",
@@ -7336,13 +7323,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 850,
+   "ok": 851,
    "fallos": 0,
-   "ejecuciones": 505,
+   "ejecuciones": 506,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T16:01:12.647Z"
+   "ultima": "2026-11-09T16:06:16.793Z"
   }
  },
  "ptsDirecto": {},
@@ -7359,15 +7346,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:01:18.051Z"
+   "ultimaBien": "2026-11-09T16:06:21.044Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:01:18.051Z"
+   "ultimaBien": "2026-11-09T16:06:21.044Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:01:18.051Z"
+   "ultimaBien": "2026-11-09T16:06:21.044Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7375,11 +7362,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:01:18.051Z"
+   "ultimaBien": "2026-11-09T16:06:21.044Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:01:18.051Z"
+   "ultimaBien": "2026-11-09T16:06:21.044Z"
   }
  },
  "avisos": [
