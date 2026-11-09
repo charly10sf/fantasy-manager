@@ -2,6 +2,7 @@
    Cláusulas de los rivales y cuánto interesa cada una, el riesgo de las tuyas, el mercado, quién sube y
    quién baja, lo que has ganado con tus compras, cómo se mueve cada rival, la jornada, los parones y la
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
+import { paronLejos, cholloParon } from './operaciones.js';
 import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
@@ -2142,6 +2143,11 @@ function acciones(D, M, c) {
     texto: `Está a ${eur(m.precio)}${m.sobre <= 0.005 ? ', lo que vale' : ` (un ${Math.round(m.sobre * 100)} % sobre su valor)`}${m.por.length ? `: ${m.por.slice(0, 2).join(', ')}` : ''}.${m.pujas ? ` Lleva ${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : ''}${M.compraCal(m.j, m.puja || m.precio).txt ? ` ${M.compraCal(m.j, m.puja || m.precio).txt}` : ''}`,
   }));
 
+  if (paronLejos(M, ahora)) add({
+    tipo: 'paron', prio: 45, icono: 'bandera', cuando: `Hasta ${cuando(M.proxima.ini, { hora: false })}`,
+    titulo: 'Parón: toca sacar dinero',
+    texto: `No hay LaLiga hasta la jornada ${M.proxima.n} (${cuando(M.proxima.ini)}) y nadie puntúa, así que manda el dinero: compra lo que sube para venderlo antes de la vuelta y vende en lo alto lo que va a girar. Clausular para el once, solo un chollo o en los dos o tres días antes de la jornada.`,
+  });
   if (M.paron && M.paron.ini > ahora && M.paron.ini - ahora < 12 * DIA) add({
     tipo: 'paron', prio: 40, icono: 'bandera', cuando: `Desde ${cuando(M.paron.ini, { hora: false })}`,
     titulo: M.paron.nombre,
@@ -2229,7 +2235,9 @@ export function planAuto(D, M, c) {
   // 1b. la inercia: lo que ha girado a la baja, fuera ya; lo que está a punto de girar, si no es clave en el once
   for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.ventaInercia && y.j.pos !== 5 && !M.enVenta.has(y.pid))) {
     const vi = x.ventaInercia;
-    if (vi.urgencia !== 'ya' && M.perdida(x.pid) >= 1.5) continue;
+    // (19) en el parón, con la vuelta lejos, se vende en lo alto aunque juegue (salvo que sea muy importante): hay días
+    // de sobra para reponerlo y lo que baje hasta la vuelta se pierde
+    if (vi.urgencia !== 'ya' && M.perdida(x.pid) >= (paronLejos(M, ahora) ? 3 : 1.5)) continue;
     if (vi.urgencia !== 'ya' && M.esperarVenta(x).tipo === 'clausula') continue;
     if (dejaHueco(x)) continue;
     op({ accion: 'vender', pid: x.pid, jugador: x.j.nombre, donde: 'ponlo en venta', importe: x.j.valor, cuando: 'hoy',
@@ -2249,7 +2257,10 @@ export function planAuto(D, M, c) {
 
   // 2. clausular lo mejor que esté abierto y te llegue
   // nunca una cláusula mucho más cara de lo que vale el jugador (lo de más se pierde en el valor del equipo)
-  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30 && M.conSalida(x.j, x.clausula, x.tend)).slice(0, 8);
+  // (19) en el parón, con la vuelta lejos, para el once solo los chollos claros: el resto son días sin puntuar con el
+  // dinero parado (aviso de Domy, 9 nov). Lo que sube va por «especular», más abajo
+  const paron = paronLejos(M, ahora);
+  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30 && M.conSalida(x.j, x.clausula, x.tend) && (!paron || cholloParon(M, x.j, x.clausula))).slice(0, 8);
   let clausulas = 0;
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || x.clausula > caja || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;
@@ -2257,13 +2268,14 @@ export function planAuto(D, M, c) {
     if (!cc.ok) continue;
     const g = gana(x.j);
     op({ accion: 'clausular', objetivo: 'titular', pid: x.pid, jugador: x.j.nombre, donde: `cláusula a ${x.rival.manager || x.rival.nombre}`, importe: x.clausula, cuando: 'ahora',
-      motivo: `Vale ${eur(x.j.valor)} y su cláusula es ${eur(x.clausula)}. Entra en tu once (${M.mejorOnce([...plantilla, x.j]).nombre}) y suma unos ${String(Math.round(g * 10) / 10).replace('.', ',')} pts por jornada${x.por.length ? `; ${x.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${cc.txt ? ` ${cc.txt}` : ''}`, confianza: x.interes >= 70 && (!cc.cal || cc.cal.riesgo !== 'alto') ? 'alta' : 'media' });
+      motivo: `${paron ? 'En el parón solo merece la pena clausular para el once un chollo así, a su valor y sin bajar. ' : ''}Vale ${eur(x.j.valor)} y su cláusula es ${eur(x.clausula)}. Entra en tu once (${M.mejorOnce([...plantilla, x.j]).nombre}) y suma unos ${String(Math.round(g * 10) / 10).replace('.', ',')} pts por jornada${x.por.length ? `; ${x.por.filter((p) => !/once|hueco|sobran/.test(p)).slice(0, 2).join(', ')}` : ''}.${cc.txt ? ` ${cc.txt}` : ''}`, confianza: x.interes >= 70 && (!cc.cal || cc.cal.riesgo !== 'alto') ? 'alta' : 'media' });
     saldo -= x.clausula; caja -= x.clausula; clausulas++; yaHoy.add(x.j.pos); fichar(x.j);
   }
 
   // 3. pujar por los chollos del mercado
   let pujas = 0;
-  for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && (y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)))) {
+  // (19) en el parón, para el once nada del mercado que no sea un chollo claro: lo que sube va por «especular»
+  for (const m of M.mercado.filter((y) => !y.miPuja && !M.dueno[y.pid] && (y.veredicto === 'chollo' || (y.veredicto === 'sube' && y.interes >= 55)) && (!paron || cholloParon(M, y.j, y.puja || y.precio)))) {
     if (pujas >= 2 || m.puja > presupuesto() || yaHoy.has(m.j.pos) || !hueco(m.j)) continue;
     const cm = M.compraCal(m.j, m.puja);
     if (!cm.ok) continue;
@@ -2273,7 +2285,7 @@ export function planAuto(D, M, c) {
   }
   // lo mejor que no te llega todavía, para que sepas cuánto te falta
   const enPlan = new Set(ops.map((o) => o.pid));
-  const fuera = M.clausulas.find((x) => !enPlan.has(x.pid) && x.abierta && x.interes >= 70 && x.clausula > Math.min(saldo, caja) && x.clausula <= M.pujaMax && !MALOS.has(x.j.estado) && hueco(x.j) && M.compraCal(x.j, x.clausula).ok);
+  const fuera = paron ? null : M.clausulas.find((x) => !enPlan.has(x.pid) && x.abierta && x.interes >= 70 && x.clausula > Math.min(saldo, caja) && x.clausula <= M.pujaMax && !MALOS.has(x.j.estado) && hueco(x.j) && M.compraCal(x.j, x.clausula).ok);
   if (fuera && clausulas < 2) {
     // con lo que pones en venta te llegaría, pero ese dinero aún no ha entrado
     const conVentas = fuera.clausula <= saldo;
@@ -2312,11 +2324,12 @@ export function planAuto(D, M, c) {
   // 4c. especular: entre semana se puede bajar hasta el límite de deuda si lo que compras lo vendes antes de la jornada
   const especula = [];
   // (con algo ya comprado para revender, solo los que VUELVEN: no se deja pasar uno así por tener otro)
-  if (ventana && ventana.ciclos >= 1 && (!M.paraRevender.length || M.especular.some((e) => e.vuelve))) {
+  // (19) en el parón, el dinero manda: hasta 3 y aunque ya tengas algo para revender (el saldo y la deuda lo frenan igual)
+  if (ventana && ventana.ciclos >= 1 && (paron || !M.paraRevender.length || M.especular.some((e) => e.vuelve))) {
     const ya = new Set(ops.map((o) => o.pid));
     let espSaldo = saldo;
     for (const e of M.especular) {
-      if (especula.length >= 2 || ya.has(e.pid) || M.dueno[e.pid] === D.yo.teamId || (M.paraRevender.length && !e.vuelve)) continue;
+      if (especula.length >= (paron ? 3 : 2) || ya.has(e.pid) || M.dueno[e.pid] === D.yo.teamId || (!paron && M.paraRevender.length && !e.vuelve)) continue;
       // nunca más allá del 90 % de la deuda permitida, y que al vender lo especulado se vuelva a positivo
       const tras = espSaldo - e.precio;
       if (tras < limite * 0.9) continue;
@@ -2380,7 +2393,7 @@ export function planAuto(D, M, c) {
   return {
     auto: true, t: ahora, dia: diaDe(ahora),
     titular: titularAuto(ops),
-    situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`,
+    situacion: `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.${paron ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy toca sacar dinero (comprar lo que sube para venderlo antes de la jornada y vender en lo alto). Las cláusulas para el once, en los dos o tres días antes de la vuelta.' : ''}`,
     operaciones: ops, proximos_dias: proximosAuto(diasAuto), diasAuto,
     alineacion: onceAhora.formacion ? { formacion: onceAhora.nombre, titulares: onceAhora.lineas.flat().map((j) => j.nombre), dudas: onceAhora.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`) } : null,
   };

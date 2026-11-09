@@ -20,6 +20,29 @@ const nombreDe = (M, tid) => { const e = tid && M.equipo[tid]; return (e && (e.m
 /** hasta dónde se miran las cláusulas que aún no se han abierto: hoy y mañana (48 h) */
 export const LIMITE_C = 2 * DIA;
 
+/** (19, aviso de Domy, 9 nov) el parón con la jornada de vuelta a más de 3 días (o la última antes del parón en juego):
+ * nadie puntúa hasta la vuelta, así que el plan va de dinero (especular, revalorizar, vender en lo alto) y una cláusula
+ * para el once solo vale si es un chollo claro o se hace en los dos o tres días antes de la jornada de vuelta */
+export const PARON_VUELTA = 3 * DIA;
+export function paronLejos(M, ahora = Date.now()) {
+  return !!(M && M.paron && M.proxima && M.paron.ini <= M.proxima.ini && M.paron.fin > ahora && M.proxima.ini - ahora > PARON_VUELTA);
+}
+/** un chollo claro en el parón: a un 5 % de su valor como mucho y sin bajar (ni girado, ni parado, ni cayendo en 7 días) */
+export function cholloParon(M, j, precio) {
+  if (!j || !j.valor || !precio || precio > j.valor * 1.05) return false;
+  const ine = M.inercia ? M.inercia(j.id) : null, t = M.tend ? M.tend(j.id) : null;
+  if (ine && ['giro', 'baja', 'parado'].includes(ine.fase)) return false;
+  return !(t && t.p7 != null && t.p7 < -1);
+}
+
+/** lo que el catálogo le dice a la IA de cada cláusula en el parón: chollo para el once, solo para revender o nada */
+function paronC(M, o) {
+  if (!paronLejos(M) || !o.j) return '';
+  if (cholloParon(M, o.j, o.precio)) return '; PARÓN: CHOLLO CLARO (a un 5 % de su valor y sin bajar), vale también para el once';
+  if ((M.especular || []).some((e) => e.pid === o.pid)) return '; PARÓN: para el once NO (son días sin puntuar con el dinero parado); solo PARA REVENDER, que la app lo ve subiendo hasta la vuelta';
+  return '; PARÓN: NO LO PROPONGAS: ni es un chollo para el once ni sube lo bastante para revender';
+}
+
 /** el catálogo de hoy: { lista, ref: { 'C-123': op } } */
 export function catalogo(D, M, notas = []) {
   const lista = [];
@@ -115,7 +138,7 @@ export function textoOp(o, M = null) {
       return `COMPRAR ${j.nombre} a ${o.vendedor}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${pide}; es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
     }
     case 'T': return `COMPRAR ${j.nombre} a ${o.vendedor} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
-    case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}${(() => { const s = M && M.salida ? M.salida(j, o.precio) : null; return s ? `; SALIDA: ${s.txt}${s.ok ? '' : ' → NO LO PROPONGAS: sin salida y sin ser titular seguro'}` : ''; })()}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;
+    case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}${paronC(M, o)}${(() => { const s = M && M.salida ? M.salida(j, o.precio) : null; return s ? `; SALIDA: ${s.txt}${s.ok ? '' : ' → NO LO PROPONGAS: sin salida y sin ser titular seguro'}` : ''; })()}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;
     case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}`;
     case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})`;
     case 'B': {
