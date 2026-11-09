@@ -886,6 +886,13 @@
    "jornada": 13,
    "id": "2119673037402341423",
    "t": "2026-11-09T06:06:48.773Z"
+  },
+  {
+   "clave": "novedades|3102:vuelve,3091:vuelve|2026-11-09",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2119695622110347313",
+   "t": "2026-11-09T07:36:33.309Z"
   }
  ],
  "estados": {
@@ -3718,16 +3725,16 @@
   "dia": "2026-11-09",
   "llamadas": {
    "clasificar": 4,
-   "redactar": 27,
-   "revisar": 18,
+   "redactar": 29,
+   "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 153933,
-  "salida": 12099,
-  "cacheLee": 201255,
+  "entrada": 177136,
+  "salida": 12397,
+  "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.442728,
+  "dolares": 0.492375,
   "reservado": 0
  },
  "recientes": {
@@ -3873,6 +3880,10 @@
    {
     "t": "2026-11-08T20:31:39.971Z",
     "texto": "✅ Nico Williams supera sus calambres en los isquiotibiales y vuelve a estar disponible\n\nEl delantero del Athletic 🦁 promedia 6,4 puntos, pero su titularidad en Fantasy Manager se queda en un 47 %.\n\nTodo apunta a que el Athletic Club tendrá un encuentro cómodo recibiendo al Espanyol, clasificado 13º."
+   },
+   {
+    "t": "2026-11-09T07:36:33.330Z",
+    "texto": "✅ Buenas noticias para dos delanteros: Vini Jr. y Oyarzabal vuelven a estar disponibles.\n\nVinícius llega con 6,3 de media y el Real Madrid ⚪ se mide al Celta. Oyarzabal juega con la Real Sociedad contra el Racing ⚓. Si los tienes, ya puedes contar con los dos."
    }
   ],
   "resumen": [
@@ -4006,13 +4017,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "novedades|3102:vuelve,3091:vuelve|2026-11-09": {
-   "n": 2,
-   "t": "2026-11-09T07:26:45.669Z",
-   "ultima": "2026-11-09T07:31:39.033Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7654,13 +7659,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 748,
+   "ok": 749,
    "fallos": 0,
-   "ejecuciones": 403,
+   "ejecuciones": 404,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T07:31:15.221Z"
+   "ultima": "2026-11-09T07:36:11.712Z"
   }
  },
  "ptsDirecto": {},
@@ -7677,15 +7682,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:31:40.711Z"
+   "ultimaBien": "2026-11-09T07:36:33.459Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:31:40.711Z"
+   "ultimaBien": "2026-11-09T07:36:33.459Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:31:40.711Z"
+   "ultimaBien": "2026-11-09T07:36:33.459Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7693,11 +7698,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:31:40.711Z"
+   "ultimaBien": "2026-11-09T07:36:33.459Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:31:40.711Z"
+   "ultimaBien": "2026-11-09T07:36:33.459Z"
   }
  },
  "avisos": [
