@@ -1961,7 +1961,8 @@
    "SPORT|136258178": 1794241328000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000,
    "SPORT|136257166": 1794243633000,
-   "SPORT|136262922": 1794244907000
+   "SPORT|136262922": 1794244907000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261109/1004249169/premier-league.html": 1794248219000
   },
   "hechos": [
    {
@@ -2416,7 +2417,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 42
+   "n": 43
   },
   "desde": {
    "67": {
@@ -3325,17 +3326,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 52,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 263755,
-  "salida": 28051,
+  "entrada": 265639,
+  "salida": 28133,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.508863,
+  "dolares": 0.509092,
   "reservado": 0
  },
  "recientes": {
@@ -7260,13 +7261,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 880,
+   "ok": 881,
    "fallos": 0,
-   "ejecuciones": 535,
+   "ejecuciones": 536,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T18:26:18.631Z"
+   "ultima": "2026-11-09T18:31:14.612Z"
   }
  },
  "ptsDirecto": {},
@@ -7283,15 +7284,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:26:27.583Z"
+   "ultimaBien": "2026-11-09T18:31:18.557Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:26:27.583Z"
+   "ultimaBien": "2026-11-09T18:31:18.557Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:26:27.583Z"
+   "ultimaBien": "2026-11-09T18:31:18.557Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7299,11 +7300,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:26:27.583Z"
+   "ultimaBien": "2026-11-09T18:31:18.557Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:26:27.583Z"
+   "ultimaBien": "2026-11-09T18:31:18.557Z"
   }
  },
  "avisos": [
