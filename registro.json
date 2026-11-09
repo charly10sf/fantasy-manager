@@ -3339,32 +3339,31 @@
    "SPORT|136243267": 1794238864000,
    "SPORT|136260180": 1794250832000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004249203/graafschap.html": 1794254855000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261109/1004249234/susto-rocafonda-calella-grupo-6.html": 1794261509000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261109/1004249234/susto-rocafonda-calella-grupo-6.html": 1794261509000,
+   "Europa Press|https://www.europapress.es/sociedad/noticia-sanchez-no-descarta-suspender-tiktok-posibles-videos-abuso-sexual-infantil-me-parece-escandalo-20261109232101.html": 1794262861000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 12,
+   "n": 13,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/sociedad/noticia-sanchez-no-descarta-suspender-tiktok-posibles-videos-abuso-sexual-infantil-me-parece-escandalo-20261109232101.html": 1794263175335
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 65,
+   "clasificar": 66,
    "redactar": 31,
    "revisar": 20,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 313548,
-  "salida": 32444,
+  "entrada": 315277,
+  "salida": 32530,
   "cacheLee": 203860,
   "cacheEscribe": 19728,
-  "dolares": 0.572531,
+  "dolares": 0.572747,
   "reservado": 0
  },
  "recientes": {
@@ -7293,13 +7292,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 932,
+   "ok": 933,
    "fallos": 0,
-   "ejecuciones": 587,
+   "ejecuciones": 588,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T22:46:13.570Z"
+   "ultima": "2026-11-09T22:51:14.343Z"
   }
  },
  "ptsDirecto": {},
@@ -7316,15 +7315,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T22:46:15.802Z"
+   "ultimaBien": "2026-11-09T22:51:21.057Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T22:46:15.802Z"
+   "ultimaBien": "2026-11-09T22:51:21.057Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T22:46:15.802Z"
+   "ultimaBien": "2026-11-09T22:51:21.057Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7332,7 +7331,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T22:46:15.802Z"
+   "ultimaBien": "2026-11-09T22:51:21.057Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
