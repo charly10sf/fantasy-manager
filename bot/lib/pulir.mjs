@@ -7,6 +7,7 @@
 //   - la misma última línea (la etiqueta «❌ Baja para la jornada…» o el cierre «Fantasy Manager · enlace en la bio»);
 //   - solo emojis de la plantilla o de la guía de estilo, un emoji al principio de cada línea y nada de @, # ni primera persona.
 // Una pregunta a Gemini por tipo y ejecución, con todos los tweets de ese tipo que van a salir. Tope diario propio (`pulir.porDia`).
+import { banderasEn } from './nacionalidad.mjs';
 import { norm, corto, peso, limite, largo, esEtiquetaFinal } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntarJson } from './gemini.mjs';
@@ -23,7 +24,8 @@ export const PROHIBIDO = /@|#|https?:|www\.|\b(mi|mis|nuestro|nuestra|nosotros|b
 
 const cifras = (s) => [...new Set(String(s).replace(/[0-9#*]️?⃣/g, '').match(CIFRAS) || [])].sort();
 const lineas = (s) => String(s).split('\n').map((l) => l.trim()).filter(Boolean);
-const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
+// (las banderas de las selecciones no cuentan como emojis: la negra de Inglaterra, Escocia y Gales sí es un pictograma; lib/nacionalidad.mjs)
+const emojis = (s) => [...banderasEn(String(s)).reduce((x, b) => x.split(b).join(' '), String(s)).matchAll(EMOJI)].map((m) => m[0]);
 // las palabras que cambian lo que se cuenta de un jugador o un partido: cada línea pulida tiene que llevar las mismas (por raíz)
 const ESTADO = ['cae', 'caen', 'cayo', 'lesion', 'lesiona', 'sancion', 'baja', 'duda', 'molesti', 'vuelv', 'regres', 'recuper', 'reaparec', 'disponib', 'alta', 'titular',
   'suplent', 'banquillo', 'descart', 'convoca', 'rotaci', 'descans', 'habitual', 'roja', 'amarill', 'ciclo', 'expuls', 'gol', 'doblete', 'hat',

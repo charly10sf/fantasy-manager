@@ -1,3 +1,4 @@
+# (9 nov, tarde: selecciones cada día con banderas y minutos, tarea 15)
 # SOLO EN LA RAMA pruebas-paron: no va a main. Simulacro con la redacción de Claude de los datos variados del jugador (caídas, noticias,
 # novedades) y de los cuatro tuits del parón, con datos reales y una copia del registro de bot-estado (no se guarda nada). NUNCA
 # publica: sin claves de X y con --modo=simulacro. Selecciones mira el parón de septiembre-octubre (el de noviembre aún no se ha jugado).
@@ -38,9 +39,13 @@ jobs:
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
                     true
-      - name: Los cuatro tuits del parón
+      - name: Selecciones cada día (tarea 15), cuatro días del parón de septiembre-octubre, y el de todo el parón
         run: |
-          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=calendario --estado=/tmp/registro.json --redactar=1 --hechos=1 --tarjetas=1 --salida-tarjetas=/tmp/tj --fechas-selecciones=20260924,20260925,20260926,20260927,20260928,20260929,20261001,20261002,20261003,20261004,20261005,20261006 || true
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=selecciones-dia --estado=/tmp/registro.json --redactar=1 --hechos=1 --tarjetas=1 --salida-tarjetas=/tmp/tj --fechas-selecciones=20260924,20260925,20260926 || true
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=selecciones-dia --estado=/tmp/registro.json --redactar=1 --hechos=1 --tarjetas=1 --salida-tarjetas=/tmp/tj --fechas-selecciones=20260924,20260925,20260926,20260927,20260928,20260929 || true
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=selecciones-dia --estado=/tmp/registro.json --redactar=1 --hechos=1 --tarjetas=1 --salida-tarjetas=/tmp/tj --fechas-selecciones=20260924,20260925,20260926,20260927,20260928,20260929,20261001,20261002,20261003 || true
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=selecciones-dia --estado=/tmp/registro.json --redactar=1 --hechos=1 --tarjetas=1 --salida-tarjetas=/tmp/tj --fechas-selecciones=20260924,20260925,20260926,20260927,20260928,20260929,20261001,20261002,20261003,20261004,20261005,20261006 || true
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=selecciones --estado=/tmp/registro.json --redactar=1 --hechos=1 --tarjetas=1 --salida-tarjetas=/tmp/tj --fechas-selecciones=20260924,20260925,20260926,20260927,20260928,20260929,20261001,20261002,20261003,20261004,20261005,20261006 || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

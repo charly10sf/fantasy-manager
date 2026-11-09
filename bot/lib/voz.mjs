@@ -67,6 +67,7 @@ LO QUE DELATA A UNA IA (y no se escribe)
 FORMATO
 - De uno a cuatro párrafos cortos separados por una línea en blanco. Lo importante, arriba: X enseña unos 280 caracteres y luego «Mostrar más».
 - Emojis: como mucho uno al principio del primer párrafo, que diga qué pasa (🚨 mala noticia, ✅ buena noticia, ❌ baja, ⁉️ duda, 🗓️ previa, 🏁 final, ⭐ el mejor del partido, 📊 un dato, ⚽ gol, 🧤 penalti parado, 🟥 roja o sanción, 🟨 apercibido, 📈 y 📉 mercado, 💔 lloros, 🗞️ una noticia de la liga, 👀 onces confirmados). Emojis de club: en muchos tuits ninguno; si los pones, el de CADA club nombrado que tenga uno (si sale el Osasuna 🐂, también el Athletic 🦁), detrás de su nombre y una sola vez cada uno. Nunca uno sí y otro no. Nada de círculos de colores. Ningún emoji más.
+- Banderas, solo en los tuits de selecciones: la que trae cada selección en los hechos («bandera», «banderaRival»), justo detrás de su nombre («con España 🇪🇸 ante Croacia 🇭🇷») y solo la primera vez que la nombras. No cuentan como el emoji del principio. Nunca una bandera suelta, detrás del nombre de un jugador o de una selección que no la trae, y en ningún otro tipo de tuit.
 - Si en los hechos viene el estadio, puedes nombrarlo; ningún otro estadio ni ciudad que no venga en los hechos.
 - No escribas la etiqueta final: la pone el sistema debajo de tu texto. Tampoco la repitas con otras palabras al final.
 - Sin enlaces, sin @, sin #, sin primera persona (ni «yo», ni «nosotros», ni «nuestro»), sin «bot», sin adjetivos de anuncio («brutal», «espectacular», «increíble»), sin «¡» en cada frase y sin «Fantasy» pegado a un estado («Disponible Fantasy»).
@@ -215,9 +216,15 @@ El resto, en la imagen.`, nota: 'El que más sube con el porqué de los hechos (
 
 El Celta, en cambio, tiene la vuelta más dura: visita al líder y al 2º antes de que acabe el mes.`, nota: 'El mejor y el peor con el dato que lo explica, pensado para fichar; nada de revisar el once.' },
   { tipo: 'calendario', bien: false, texto: `🗓️ Calendario: Osasuna fácil, Celta difícil. Revisa tu once antes de la jornada 13.`, nota: 'Sin artículos ni datos, y manda revisar el once (prohibido).' },
-  { tipo: 'selecciones', bien: true, texto: `🌍 Iker Saldaña no ha parado en el parón: dos goles con Marruecos ante Ghana.
+  { tipo: 'selecciones', bien: true, texto: `🌍 Iker Saldaña no ha parado en el parón: dos goles con Marruecos 🇲🇦 ante Ghana 🇬🇭.
 
 El susto lo dio Marc Vidal, que se retiró lesionado en el minuto 57 con España. Habrá que ver qué tiene.`, nota: 'Lo que hizo cada uno, con su selección y su rival tal como vienen en los hechos; la lesión, solo como se cuenta en los hechos, sin inventar gravedad.' },
+  { tipo: 'selecciones-dia', bien: true, texto: `🌍 Noche grande de Toni Cano con Portugal 🇵🇹: gol y asistencia ante Noruega 🇳🇴 (3-1) y un 8,7 de nota en 78 minutos.
+
+El que salió peor parado fue Rubén Lago, que se retiró lesionado en el minuto 34 con Irlanda 🇮🇪. Habrá que esperar a ver qué tiene.
+
+Ojo a la carga: Unai Berrio ya lleva 180 minutos en dos partidos, y la liga vuelve el viernes.`, nota: 'El mejor con lo que hizo, el rival, el marcador, la nota y los minutos; el peor tal como viene; la carga como dato para la jornada de vuelta. Cada bandera detrás de su selección, una vez.' },
+  { tipo: 'selecciones-dia', bien: false, texto: `🌍🇵🇹 Cano 8,7, Saldaña 8,1, Marín 7,9. Lago 🇮🇪 lesionado, fuera un mes. Berrio 180 minutos, no jugará el viernes.`, nota: 'Lista de notas sin contar nada, banderas sueltas o detrás del jugador, un plazo de lesión inventado y una predicción que no sale de los hechos.' },
   { tipo: 'selecciones', bien: false, texto: `🌍 Marc Vidal se rompe con España y estará un mes fuera. Saldaña, convocado otra vez, marca dos.`, nota: 'Inventa el plazo de la lesión y una convocatoria que no viene en los hechos.' },
   { tipo: 'onces', bien: true, texto: `👀 El Betis sale con Toni Cano y Hugo Marín arriba, y con Rubén Lago por fin de vuelta en el lateral. La gran sorpresa: Saúl Pino empieza en el banquillo.
 

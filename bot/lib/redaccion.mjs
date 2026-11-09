@@ -14,6 +14,7 @@ import { NOMBRES_MEDIOS } from './prensa.mjs';
 import { ESTADIOS } from './hechos.mjs';
 import { revisarConIA } from './revisor.mjs';
 import { comoLeLlaman } from './apodos-jugadores.mjs';
+import { banderasEn } from './nacionalidad.mjs';
 
 const EMOJI = /\p{Extended_Pictographic}/gu;
 const emojis = (s) => [...String(s).matchAll(EMOJI)].map((m) => m[0]);
@@ -23,6 +24,37 @@ const sinFecha = (k, v) => (k === 'fecha' || k === 'etiqueta' ? undefined : v);
 const TOPES_CIFRAS = { previa: { pct: 2, media: 1 }, noticias: { pct: 1, media: 1 }, novedades: { pct: 1, media: 1 }, mercado: { pct: 4, media: 1 }, otro: { pct: 2, media: 1 } };
 const COMUNES = new Set(['blanco', 'moreno', 'rubio', 'bueno', 'leal', 'santos', 'alba', 'luna']);
 const frases = (s) => String(s).split(/(?<=[.!?:;])\s+|\n+/).map((x) => x.trim()).filter(Boolean);
+
+export const TIPOS_SELECCIONES = new Set(['selecciones', 'selecciones-dia']);
+/** las banderas de los hechos con el nombre de su selección: Map(bandera → nombre) (claves `bandera` con `seleccion` y `banderaRival` con `rival`) */
+export function banderasDe(hechos) {
+  const m = new Map();
+  const ver = (o) => {
+    if (Array.isArray(o)) { o.forEach(ver); return; }
+    if (!o || typeof o !== 'object') return;
+    if (o.bandera && o.seleccion) m.set(o.bandera, o.seleccion);
+    if (o.banderaRival && o.rival) m.set(o.banderaRival, o.rival);
+    Object.values(o).forEach(ver);
+  };
+  ver(hechos);
+  return m;
+}
+/** lo que está mal en las banderas de un tuit (lista vacía si nada) */
+export function erroresBanderas(t, hechos = {}) {
+  const bs = banderasEn(t);
+  if (!bs.length) return [];
+  if (!TIPOS_SELECCIONES.has(hechos.tipo)) return ['banderas de países: solo en los tuits de selecciones'];
+  const e = [], de = banderasDe(hechos), vistas = new Map();
+  for (const m of String(t).matchAll(/[\u{1F1E6}-\u{1F1FF}]{2}|\u{1F3F4}[\u{E0061}-\u{E007A}]+\u{E007F}/gu)) {
+    const b = m[0], nombre = de.get(b);
+    vistas.set(b, (vistas.get(b) || 0) + 1);
+    if (!nombre) { e.push(`la bandera ${b} no es de ninguna selección de los hechos`); continue; }
+    if (vistas.get(b) === 2) e.push(`la bandera de ${nombre} sale más de una vez (una sola, la primera vez que la nombras)`);
+    const antes = ` ${norm(String(t).slice(Math.max(0, m.index - 40), m.index))} `;
+    if (!antes.endsWith(` ${norm(nombre)} `)) e.push(`la bandera ${b} va justo detrás del nombre de su selección («${nombre} ${b}»), no suelta ni detrás de otra palabra`);
+  }
+  return e;
+}
 
 /** los nombres con los que se puede llamar a un club en el tuit (y su emoji, si tiene uno que se entienda) */
 export function nombresClub(eq) {
@@ -279,8 +311,11 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
     const sucesos = sucesosSinHechos(t, hechos);
     if (sucesos.length) e.push(`cuenta sucesos que no están en los hechos (${sucesos.join(', ')}): no lo insinúes, ni siquiera atribuido a un medio`);
   }
+  // banderas (Carlos, 9 nov 10:13): solo en los tuits de selecciones, la de una selección de los hechos, justo detrás de su nombre y una
+  // vez cada una. No cuentan como emojis de la guía ni de club (las dos letras regionales no son pictogramas; la negra de Inglaterra sí)
+  e.push(...erroresBanderas(t, hechos));
   // emojis: uno de la guía al principio del primer párrafo, el de un club de los hechos detrás de su nombre (uno) y nada más
-  const em = emojis(t);
+  const em = emojis(banderasEn(t).reduce((x, b) => x.split(b).join(' '), t));
   const deClub = new Set(Object.values(hechos.clubes || {}).map((c) => c.emoji).filter(Boolean));
   if (em.some((x) => CIRCULOS.test(x))) e.push('círculos de colores');
   const raros = em.filter((x) => !EMOJIS_GUIA.has(x) && !deClub.has(x) && !CIRCULOS.test(x));
