@@ -162,7 +162,8 @@ export async function generar(ctx) {
         ...MESES.map((m) => m.toUpperCase()), ...todas.flatMap((f) => [f.nombre, f.equipo, f.valor, f.pct])] } };
 
   // los hechos para la IA: cada uno con lo que hizo y contra quién; las lesiones, solo las que marca FotMob
-  const jug = (x, extra, principal = false) => jugadorH(x.j, { equipos, principal, datos: false, extra: { club: eq(x), seleccion: x.seleccion, ...extra } });
+  // (sin su media: la IA la convertía en «de los que más puntos dan», que aquí no pinta nada; simulacro del 9 nov)
+  const jug = (x, extra, principal = false) => { const h = jugadorH(x.j, { equipos, principal, datos: false, extra: { club: eq(x), seleccion: x.seleccion, ...extra } }); delete h.mediaPuntos; return h; };
   const hechos = { tipo: 'selecciones', noticia: `lo que han hecho los jugadores de LaLiga con sus selecciones en el parón (del ${fechaTxt(d1)} al ${fechaTxt(d2)}): goles, asistencias y los que se han retirado lesionados`,
     momento: `la liga vuelve con la jornada ${v.siguiente}`,
     aviso: 'una lesión, solo la que está en «seRetiranTocados» y tal como está (se retiró lesionado en ese minuto): ni gravedad ni plazos, que no se saben. Nada de convocatorias ni de partidos que no estén aquí. La imagen adjunta lleva a los que han marcado o asistido.',
