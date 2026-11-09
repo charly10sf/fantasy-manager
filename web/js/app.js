@@ -2361,11 +2361,14 @@ const conScrollX = (el) => {
   }
   return false;
 };
-// deslizar de lado sobre la pantalla pasa a la pestaña de al lado (no desde los bordes: ahí está el «atrás» de Android)
+// deslizar de lado sobre la pantalla pasa a la pestaña de al lado (no desde los bordes: ahí está el «atrás» de Android).
+// Primero las subpestañas de la vista (las de más abajo, si hay dos barras: en Directo, la de Directo); al llegar a la
+// primera o la última, o si la vista no tiene, la pestaña de abajo de al lado (Carlos, 9 nov 15:24: «cambiar de pestañas
+// deslizando hacia la derecha o la izquierda, sin darle abajo»)
 let desliz = null;
 document.addEventListener('touchstart', (e) => {
   desliz = null;
-  if (e.touches.length !== 1 || S.hoja || !$('#vista .tabs')) return;
+  if (e.touches.length !== 1 || S.hoja || !S.D || V.ancho()) return;
   const t = e.touches[0];
   if (t.clientX < 28 || t.clientX > window.innerWidth - 28) return;
   if (e.target.closest('.tabs, .filtros, .carril, .campo, .graf, .rangos, .campo-modo, input, textarea, select, .nav, [data-quieto]') || conScrollX(e.target)) return;
@@ -2376,14 +2379,24 @@ document.addEventListener('touchend', (e) => {
   if (!d0 || !e.changedTouches.length) return;
   const dx = e.changedTouches[0].clientX - d0.x, dy = e.changedTouches[0].clientY - d0.y;
   if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 2 || Date.now() - d0.t > 700) return;
-  const bs = $$('#vista .tabs button[data-seg]');
+  const paso = dx < 0 ? 1 : -1;
+  const barras = $$('#vista .tabs');
+  const bs = barras.length ? [...barras[barras.length - 1].querySelectorAll('button[data-seg]')] : [];
   const i = bs.findIndex((b) => b.classList.contains('activo'));
-  const k = i + (dx < 0 ? 1 : -1);
-  if (i < 0 || k < 0 || k >= bs.length) return;
+  if (i >= 0 && bs[i + paso]) {
+    nativo.toque();
+    bs[i + paso].click();
+    const n = barras.length && barras[barras.length - 1].querySelector('button.activo');
+    if (n) n.scrollIntoView({ block: 'nearest', inline: 'center' });
+    return;
+  }
+  const nav = $$('.nav button[data-ir]');
+  const j = nav.findIndex((b) => b.dataset.ir === S.vista);
+  if (j < 0 || !nav[j + paso]) return;
   nativo.toque();
-  bs[k].click();
-  const n = $('#vista .tabs button.activo');
-  if (n) n.scrollIntoView({ block: 'nearest', inline: 'center' });
+  nav[j + paso].click();
+  const v = $('#vista');
+  if (v) { v.classList.remove('entra-d', 'entra-i'); void v.offsetWidth; v.classList.add(paso > 0 ? 'entra-d' : 'entra-i'); }
 }, { passive: true });
 // tirar hacia abajo desde arriba del todo actualiza, como en cualquier app
 let tiron = null;
