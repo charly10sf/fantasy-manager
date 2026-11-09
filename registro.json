@@ -1783,7 +1783,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/betis/2026/11/06/alvaro-valles-llamada-fuente-llore-vergueenza.html": 1793968127000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247910/tchouameni-vuelve-vinicius-descansa-ultimo-entrenamiento-real-madrid-valencia.html": 1793967950000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/eric-i-christensen-apunten-al-metropolitano-sercat/": 1793968183000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/06/javier-aguirre-mbappe-indefendible.html": 1793969318000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tuchel-apuesta-menor-bellingham-repita-polemica-cole-palmer-20261106_3470347.html": 1793969284000,
@@ -1970,22 +1969,6 @@
    "SPORT|136247384": 1794222069000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247910/tchouameni-vuelve-vinicius-descansa-ultimo-entrenamiento-real-madrid-valencia.html",
-    "medio": "Mundo Deportivo",
-    "t": 1793967950000,
-    "id": "1480",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Tchouaméni vuelve a entrenar con el grupo",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     7,
-     21,
-     0
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261106/1004247919/koke-apunta-titular-barca-pisa-talones-messi-xavi.html",
     "medio": "Mundo Deportivo",
@@ -7443,13 +7426,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 806,
+   "ok": 807,
    "fallos": 0,
-   "ejecuciones": 461,
+   "ejecuciones": 462,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T12:21:14.779Z"
+   "ultima": "2026-11-09T12:26:12.994Z"
   }
  },
  "ptsDirecto": {},
@@ -7466,15 +7449,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:21:19.861Z"
+   "ultimaBien": "2026-11-09T12:26:15.552Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:21:19.861Z"
+   "ultimaBien": "2026-11-09T12:26:15.552Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:21:19.861Z"
+   "ultimaBien": "2026-11-09T12:26:15.552Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7482,11 +7465,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:21:19.861Z"
+   "ultimaBien": "2026-11-09T12:26:15.552Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:21:19.861Z"
+   "ultimaBien": "2026-11-09T12:26:15.552Z"
   }
  },
  "avisos": [
