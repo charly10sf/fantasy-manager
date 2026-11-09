@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/": 1793952909000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247816/racing-santander-multado-lanzamiento-menchero.html": 1793953993000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/06/china-esta-en-conversaciones-con-laliga-tras-la-polemica-con-mbappe-pero-pide-tiempo-para-digerir-cadena-ser/": 1793956187000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/china-reconoce-contactos-madrid-reconciliacion-polemica-mbappe.html": 1793956448000,
@@ -1987,20 +1986,6 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/se-que-vas-a-volver-el-mensaje-de-la-hija-de-pepe-mel-ser-almeria/": 1794211411000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/socio-nuevo-para-pedri-f202611-n/",
-    "medio": "AS",
-    "t": 1793952909000,
-    "id": "3208",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Rodri causa baja para el partido del domingo",
-    "motivo": "baja",
-    "plazo": "",
-    "nums": [
-     100
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/",
     "medio": "AS",
@@ -7647,13 +7632,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 756,
+   "ok": 757,
    "fallos": 0,
-   "ejecuciones": 411,
+   "ejecuciones": 412,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T08:11:13.868Z"
+   "ultima": "2026-11-09T08:16:16.010Z"
   }
  },
  "ptsDirecto": {},
@@ -7670,15 +7655,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:11:19.516Z"
+   "ultimaBien": "2026-11-09T08:16:21.424Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:11:19.516Z"
+   "ultimaBien": "2026-11-09T08:16:21.424Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:11:19.516Z"
+   "ultimaBien": "2026-11-09T08:16:21.424Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7686,11 +7671,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:11:19.516Z"
+   "ultimaBien": "2026-11-09T08:16:21.424Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:11:19.516Z"
+   "ultimaBien": "2026-11-09T08:16:21.424Z"
   }
  },
  "avisos": [
