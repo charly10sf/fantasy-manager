@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.1d';
+export const VERSION = '0.7.1e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,14 @@ export const VERSION = '0.7.1d';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.1e', f: '2026-11-10', h: 'HH:MM', t: 'Cada club, por pestañas',
+    cosas: [
+      { tipo: 'nuevo', d: 'grafica', t: 'Suben y bajan, club a club', x: 'En la ficha de cada club, la pestaña Suben y bajan pone a toda su plantilla del que más sube arriba al que más baja abajo, con cuánto sube o baja cada uno (en euros y en %), su valor y de quién es en tu liga. Arriba, lo que se mueve el club entre todos, hoy o en 7 días.', ir: { v: 'clubes' } },
+      { tipo: 'mejora', d: 'escudo', t: 'La ficha del club, por partes', x: 'Lo que antes iba todo seguido en una lista larga va ahora en cuatro pestañas: Resumen (el próximo partido, su once, las bajas y las noticias), Suben y bajan, Plantilla (con cuántos hay libres y en tu liga) y Partidos (los que le vienen, los últimos y jornada a jornada). Siempre se abre en Resumen.', ir: { v: 'clubes' } },
+      { tipo: 'mejora', d: 'camiseta', t: 'Tus clubes, con lo que se mueven', x: 'Las tarjetas de arriba de Clubes son más bajas, llevan lo que suben o bajan hoy tus jugadores de ese club y el escudo de su próximo rival.', ir: { v: 'clubes' } },
+    ],
+  },
   {
     v: '0.7.1d', f: '2026-11-09', h: '23:56', t: 'Sin presentación al actualizar',
     cosas: [

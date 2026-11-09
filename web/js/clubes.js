@@ -2,7 +2,7 @@
    su once probable en el campo, las bajas, sus partidos, su plantilla con lo que vale cada jugador y de quién es en
    tu liga, y sus noticias. Sale todo de lo que la app ya tiene (LaLiga, futbolfantasy, Understat, SofaScore y Google
    Noticias); al abrir un club se piden sus titulares (noticiasClub en externas.js). */
-import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe } from './util.js';
+import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe, pct, clase } from './util.js';
 import { ava, posTag, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco, cromo } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo, ptsCls, tagDe, canchaHTML, once11 } from './directo.js';
 
@@ -10,21 +10,6 @@ const MALOS = { injured: 'Lesionados', suspended: 'Sancionados', doubtful: 'Duda
 // los que están fuera de LaLiga (cedidos fuera, filiales, vendidos…) no salen en la ficha del club: ni en las bajas ni en la plantilla
 // (Carlos, 5 nov: era una lista interminable que no pinta nada en un club de LaLiga)
 const enLaLiga = (j) => j.estado !== 'out_of_league';
-
-/** cuántos jugadores de cada club hay en tu liga y cuántos son tuyos: { eqId: { liga, mios } } */
-function enTuLiga(S) {
-  const { D, M } = S;
-  const yo = M.yo ? String(M.yo.teamId) : '';
-  const out = {};
-  for (const [pid, t] of Object.entries(M.dueno || {})) {
-    const j = D.maestro[pid];
-    if (!j || !j.equipoId) continue;
-    const o = (out[j.equipoId] ||= { liga: 0, mios: 0 });
-    o.liga++;
-    if (String(t) === yo) o.mios++;
-  }
-  return out;
-}
 
 /** «vs Real Madrid (4º), mañana 16:15», con el rival en verde, ámbar o rojo según lo difícil que es */
 function proxTxt(S, id) {
@@ -77,12 +62,17 @@ function tusClubesHTML(S, ids, mios) {
   const tarjeta = (id) => {
     const e = D.equipos[id], t = M.equipoLiga(id), caras = mios[id].sort((a, b) => b.valor - a.valor);
     const p = M.proximoPartido ? M.proximoPartido(id) : null;
+    // lo que se mueven hoy tus jugadores de este club (Carlos, 9 nov: retoque pequeño de las tarjetas)
+    const ds = caras.map((j) => (M.tend(j.id) || {}).d1).filter((d) => d != null);
+    const hoy = ds.length ? ds.reduce((a, d) => a + d, 0) : null;
+    const mueve = hoy == null ? '' : `<span class="cc-hoy ${clase(hoy)}" title="Lo que suben o bajan hoy tus jugadores de este club">${hoy ? eur(hoy, { dec: 1, signo: true }) : '='}<small> hoy</small></span>`;
+    const k = mueve ? 3 : 4;
     return `<button class="club-card" data-club="${esc(id)}"${estiloClub(id, e.nombre)} aria-label="${esc(`${e.nombre}: ${caras.length} tuyo${caras.length > 1 ? 's' : ''}`)}">
       ${camisetaClub(id, e.nombre, 'cc-cam')}
       <span class="cc-cab">${escudo(D, id)}<span class="cc-n">${esc(e.nombre)}</span></span>
       <span class="cc-pos">${t ? `${t.pos}º · ${t.pts} pts` : 'LaLiga'}</span>
-      <span class="cc-caras">${caras.slice(0, 4).map((j) => ava(j, 'm')).join('')}${caras.length > 4 ? `<b>+${caras.length - 4}</b>` : ''}<small>${caras.length} tuyo${caras.length > 1 ? 's' : ''}</small></span>
-      ${p ? `<span class="cc-prox">${p.casa ? 'vs' : enCasaDe(p.rival)} ${esc(p.rival)}${p.fecha ? ` · ${esc(cuando(p.fecha))}` : ''}</span>` : ''}
+      <span class="cc-caras">${caras.slice(0, k).map((j) => ava(j, 'm')).join('')}${caras.length > k ? `<b>+${caras.length - k}</b>` : ''}${mueve}</span>
+      ${p ? `<span class="cc-prox">${p.rivalId ? escudo(D, p.rivalId) : ''}<span>${p.casa ? 'vs' : enCasaDe(p.rival)} ${esc(p.rival)}${p.fecha ? ` · ${esc(cuando(p.fecha))}` : ''}</span></span>` : ''}
     </button>`;
   };
   return `<div class="sec"><h2>Tus clubes</h2><span class="sub">${xs.length} con jugadores tuyos</span></div><div class="carril club-carril">${xs.map(tarjeta).join('')}</div>`;
@@ -163,15 +153,6 @@ function proximoHTML(S, id) {
   </div>`;
 }
 
-/** los que más puntúan, con su cara: de quién son, sus puntos y lo que valen */
-function figurasHTML(S, suyos) {
-  const fig = suyos.filter((j) => j.pos < 5 && j.puntos > 0).sort((a, b) => b.puntos - a.puntos).slice(0, 8);
-  if (fig.length < 3) return '';
-  return `<div class="sec"><h2>Los que más puntúan</h2></div><div class="carril">${fig.map((j) => `<button class="tj club-tj" data-j="${esc(j.id)}">${ava(j)}
-      <div class="n">${esc(j.nombre)}</div><div class="s">${duenoTxt(S, j.id)}</div>
-      <div class="gr">${j.puntos}<small> pts</small></div><div class="tj-v">${eur(j.valor)}</div></button>`).join('')}</div>`;
-}
-
 /** los lesionados, sancionados y dudas (de LaLiga y de futbolfantasy) y los que están a una amarilla de la sanción */
 function bajasHTML(S, suyos) {
   const { M } = S;
@@ -187,19 +168,15 @@ function bajasHTML(S, suyos) {
     const am = a && a.u ? num(a.u.am) : 0;
     if (am && am % 5 === 4 && j.pos < 5) aper.push({ j, am });
   }
-  const fila = (j, extra = '') => filaJugador({ j, tend: M.tend(j.id) }, { sub: duenoTxt(S, j.id), pills: [estadoPill(j) || extra] });
-  let h = '';
-  for (const [k, l] of Object.entries(grupos)) {
-    if (!l.length) continue;
-    h += `<div class="grupo"><span>${MALOS[k]}</span><span>${l.length}</span></div>`;
-    h += l.sort((a, b) => b.valor - a.valor).map((j) => fila(j, k === 'doubtful' ? '<span class="pill duda">Duda</span>' : '<span class="pill mal">Lesionado</span>')).join('');
-  }
-  if (aper.length) {
-    h += '<div class="grupo"><span>A una amarilla de la sanción</span><span>' + aper.length + '</span></div>';
-    h += aper.sort((a, b) => b.j.valor - a.j.valor).map((x) => filaJugador({ j: x.j, tend: M.tend(x.j.id) }, { sub: duenoTxt(S, x.j.id), pills: [`<span class="pill duda">${x.am} amarillas</span>`] })).join('');
-  }
-  const n = Object.values(grupos).reduce((t, l) => t + l.length, 0);
-  return `<div class="sec"><h2>Bajas</h2><span class="sub">${n ? `${n} ${n === 1 ? 'jugador' : 'jugadores'}` : 'ninguna'}</span></div>${h || '<p class="t2 peq club-nada">Sin lesionados, sancionados ni dudas ahora mismo.</p>'}`;
+  // una sola lista, de más a menos valor: la píldora ya dice qué le pasa a cada uno (Carlos, 9 nov: «más clara y limpia»)
+  const ORDEN = { injured: 0, suspended: 1, doubtful: 2 };
+  const l = Object.entries(grupos).flatMap(([k, xs]) => xs.map((j) => ({ j, k })))
+    .sort((a, b) => ORDEN[a.k] - ORDEN[b.k] || b.j.valor - a.j.valor);
+  const pill = (x) => estadoPill(x.j) || (x.k === 'doubtful' ? '<span class="pill duda">Duda</span>' : '<span class="pill mal">Lesionado</span>');
+  let h = l.map((x) => filaJugador({ j: x.j, tend: M.tend(x.j.id) }, { sub: duenoTxt(S, x.j.id), pills: [pill(x)] })).join('');
+  h += aper.sort((a, b) => b.j.valor - a.j.valor).map((x) => filaJugador({ j: x.j, tend: M.tend(x.j.id) }, { sub: duenoTxt(S, x.j.id), pills: [`<span class="pill duda">${x.am} amarillas: a una de la sanción</span>`] })).join('');
+  const n = l.length;
+  return `<div class="sec"><h2>Bajas</h2><span class="sub">${n ? `${n} ${n === 1 ? 'jugador' : 'jugadores'}` : 'ninguna'}${aper.length ? `, ${aper.length} apercibido${aper.length === 1 ? '' : 's'}` : ''}</span></div>${h || '<p class="t2 peq club-nada">Sin lesionados, sancionados ni dudas ahora mismo.</p>'}`;
 }
 
 /** lo que le viene (5 partidos) y lo último que ha jugado (5), cada uno con su color */
@@ -229,10 +206,12 @@ function plantillaHTML(S, suyos) {
   const { M } = S;
   const f = S.filtro.club || 'todos';
   const libres = suyos.filter((j) => !M.dueno[j.id]).length;
+  const yo = M.yo ? String(M.yo.teamId) : '';
+  const mios = suyos.filter((j) => M.dueno[j.id] && String(M.dueno[j.id]) === yo).length;
   const enMercado = new Set((M.mercado || []).map((m) => m.pid));
   const pasa = (j) => (f === 'libres' ? !M.dueno[j.id] : f === 'liga' ? !!M.dueno[j.id] : true);
-  let h = `<div class="sec" id="club-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${suyos.length} jugadores, ${libres} libre${libres === 1 ? '' : 's'}</span></div>`;
-  h += `<div class="filtros">${[['todos', 'Todos'], ['libres', 'Libres'], ['liga', 'De tu liga']].map(([k, t]) => `<button data-accion="filtroClub" data-f="${k}" class="${f === k ? 'activo' : ''}">${t}</button>`).join('')}</div>`;
+  let h = `<div class="sec" id="club-plantilla" data-ancla><h2>Plantilla</h2><span class="sub">${suyos.length} jugadores${mios ? `, ${mios} tuyo${mios === 1 ? '' : 's'}` : ''}</span></div>`;
+  h += `<div class="filtros">${[['todos', 'Todos', suyos.length], ['libres', 'Libres', libres], ['liga', 'De tu liga', suyos.length - libres]].map(([k, t, c]) => `<button data-accion="filtroClub" data-f="${k}" class="${f === k ? 'activo' : ''}">${t} <span class="apag">${c}</span></button>`).join('')}</div>`;
   let l = '';
   for (const p of [1, 2, 3, 4, 5]) {
     const xs = suyos.filter((j) => j.pos === p && pasa(j)).sort((a, b) => b.puntos - a.puntos || b.valor - a.valor);
@@ -423,28 +402,68 @@ function quienJuegaHTML(S, id, C, jors) {
     <p class="t2 peq">Fijo: titular en 8 de cada 10 jornadas o más; rota: entre 4 y 8 de cada 10. A la derecha, qué parte de los minutos de su equipo ha jugado.</p>`;
 }
 
+/* ---------- suben y bajan: toda la plantilla, del que más sube al que más baja (Carlos, 9 nov) ----------
+   Hoy es lo de la última actualización del mercado (`d1` de M.tend); 7 días, `d7`. Los que no tienen el dato de esos días
+   (recién llegados, sin histórico) van abajo, aparte. */
+const PERIODOS = [['hoy', 'Hoy'], ['7d', '7 días']];
+function subenBajanHTML(S, id, suyos) {
+  const { M } = S;
+  const per = S.perClub === '7d' ? '7d' : 'hoy';
+  const xs = suyos.filter((j) => j.valor > 0).map((j) => {
+    const t = M.tend(j.id) || {};
+    return { j, t, d: per === '7d' ? t.d7 : t.d1, p: per === '7d' ? t.p7 : t.p1 };
+  });
+  const con = xs.filter((x) => x.d != null).sort((a, b) => b.d - a.d || b.j.valor - a.j.valor);
+  const sin = xs.filter((x) => x.d == null).sort((a, b) => b.j.valor - a.j.valor);
+  const suben = con.filter((x) => x.d > 0), igual = con.filter((x) => x.d === 0), bajan = con.filter((x) => x.d < 0);
+  const total = con.reduce((a, x) => a + x.d, 0);
+  const cuandoTxt = per === '7d' ? 'en 7 días' : 'hoy';
+  let h = `<div class="sb-cab"><div class="sb-sel" role="tablist" aria-label="Periodo">${PERIODOS.map(([k, t]) => `<button data-accion="perClub" data-p="${k}" role="tab" aria-selected="${k === per}" class="${k === per ? 'activo' : ''}">${t}</button>`).join('')}</div>
+    ${con.length ? `<div class="sb-tot"><b class="${clase(total)}">${total ? eur(total, { dec: 1, signo: true }) : '='}</b><span>entre todos ${cuandoTxt}</span></div>` : ''}</div>`;
+  if (!xs.length) return h + nada('No tengo su plantilla.');
+  if (!con.length) return h + nada(`Aún no tengo lo que han cambiado de valor ${cuandoTxt}. Dale a Actualizar.`);
+  h += `<p class="sb-res"><span class="sube">${suben.length} suben</span> · <span class="baja">${bajan.length} bajan</span>${igual.length ? ` · ${igual.length} igual` : ''}</p>`;
+  // la barra va en proporción al que más se mueve del club, para que se vea de un vistazo quién tira y quién se hunde
+  const max = Math.max(...con.map((x) => Math.abs(x.d)), 1);
+  const fila = (x) => {
+    const cls = clase(x.d);
+    const der = `<div class="v sb-d ${cls}">${x.d ? eur(x.d, { dec: 1, signo: true }) : '='}</div><div class="d">${x.p != null && x.d ? `<span class="${cls}">${pct(x.p)}</span> · ` : ''}${eur(x.j.valor, { dec: 1 })}</div>`;
+    const barra = x.d ? `<span class="sb-barra ${cls}" style="--w:${Math.max(2, Math.round((Math.abs(x.d) / max) * 100))}%"></span>` : '';
+    return filaJugador({ j: x.j, tend: x.t }, { sub: `${duenoTxt(S, x.j.id)}${barra}`, pills: [estadoPill(x.j)], derecha: der });
+  };
+  const grupo = (txt, l) => (l.length ? `<div class="grupo"><span>${txt}</span><span>${l.length}</span></div>${l.map(fila).join('')}` : '');
+  h += grupo('Suben', suben) + grupo('Igual', igual) + grupo('Bajan', bajan);
+  if (sin.length) h += `<div class="grupo"><span>Sin datos ${cuandoTxt}</span><span>${sin.length}</span></div>${sin.map((x) => filaJugador({ j: x.j, tend: x.t }, { sub: duenoTxt(S, x.j.id), pills: [estadoPill(x.j)], derecha: `<div class="v">${eur(x.j.valor, { dec: 1 })}</div><div class="d apag">sin datos</div>` })).join('')}`;
+  return h;
+}
+
+/* la ficha va en pestañas (Carlos, 9 nov: «mucho más clara y limpia, menos cosas a la vez»). Siempre se abre en Resumen:
+   S.segClub = { id, seg } solo vale para el club que la eligió (app.js lo borra al abrir un club desde fuera) */
+const PESTANAS = [['resumen', 'Resumen'], ['suben', 'Suben y bajan'], ['plantilla', 'Plantilla'], ['partidos', 'Partidos']];
+export function segDeClub(S, id) {
+  const x = S.segClub;
+  return x && String(x.id) === String(id) && PESTANAS.some(([k]) => k === x.seg) ? x.seg : 'resumen';
+}
+
 export function fichaClub(S, id) {
   const { D, M } = S;
   const e = (D.equipos || {})[id];
   if (!e) return nada('No encuentro este club.');
   const t = M.equipoLiga(id), r = M.racha(id, 5);
   const suyos = Object.values(D.maestro || {}).filter((j) => j.equipoId === id && j.pos >= 1 && j.pos <= 5 && enLaLiga(j));
-  const l = enTuLiga(S)[id] || { liga: 0, mios: 0 };
-  const libres = suyos.filter((j) => j.pos < 5 && !M.dueno[j.id]).length;
+  const eu = europaDe(e.nombre);
   let h = `<div class="club-hero"${estiloClub(id, e.nombre)}>${camisetaClub(id, e.nombre, 'ch-cam')}${escudo(D, id, 'club-g')}<div class="ch-t"><h2>${esc(e.nombre)}</h2>
-    <div class="ch-s">${t ? `<span>${t.pos}º en LaLiga</span>` : ''}${europaDe(e.nombre) ? `<span class="ch-eu eu-${europaDe(e.nombre)}">${COMP[europaDe(e.nombre)]}</span>` : ''}${r ? rachaHTML(r, e.nombre) : ''}</div></div></div>`;
-  h += `<div class="club-num">
-    <button data-ir="clubes"><b>${t ? t.pts : '–'}</b><span>${t ? `puntos en ${t.pj}` : 'puntos'} ›</span></button>
-    <button data-ir="clubes"><b>${t ? `${t.gf}-${t.gc}` : '–'}</b><span>goles ›</span></button>
-    <button data-accion="filtroClub" data-f="liga" data-sel="#club-plantilla"><b>${l.liga}</b><span>${l.mios ? `en tu liga, ${l.mios} tuyo${l.mios > 1 ? 's' : ''}` : 'en tu liga'} ›</span></button>
-    <button data-accion="filtroClub" data-f="libres" data-sel="#club-plantilla"><b>${libres}</b><span>libre${libres === 1 ? '' : 's'} ›</span></button>
-  </div>`;
-  h += proximoHTML(S, id);
+    <div class="ch-s">${t ? `<span>${t.pos}º · ${t.pts} pts</span>` : ''}${eu ? `<span class="ch-eu eu-${eu}">${COMP[eu]}</span>` : ''}${r ? rachaHTML(r, e.nombre) : ''}</div></div></div>`;
+  const seg = segDeClub(S, id);
+  h += `<div class="tabs club-tabs"><div class="tabs-in" role="tablist" aria-label="Partes de la ficha del club">${PESTANAS.map(([k, txt]) => `<button data-accion="segClub" data-id="${esc(id)}" data-s="${k}" role="tab" aria-selected="${k === seg}" class="${k === seg ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
+  if (seg === 'suben') return h + subenBajanHTML(S, id, suyos);
+  if (seg === 'plantilla') return h + plantillaHTML(S, suyos);
+  if (seg === 'partidos') return h + (partidosHTML(S, id) || '') + jornadaClubHTML(S, id);
   const o = onceDeEquipo(S, id);
   const once = `<div class="sec"><h2>Su once</h2><span class="sub">${o ? `${o.conf ? 'confirmado' : 'probable'}, ${o.forma}` : 'probable'}</span></div>`
     + (o ? `${o.campo}<p class="t2 peq">Arriba, de quién es en tu liga. Debajo, lo probable que es que salga de titular.</p>` : nada(S.D.demo ? 'En la liga de ejemplo cada club trae solo sus 7 jugadores de más valor, así que no da para un once. Con tu liga, aquí sale el once probable del club en el campo.' : 'Aún no hay once probable de este club.'));
   // (en el ordenador la ficha va en un panel de 620 px: una sola columna, como en el móvil)
-  return h + figurasHTML(S, suyos) + once + bajasHTML(S, suyos) + partidosHTML(S, id) + jornadaClubHTML(S, id) + plantillaHTML(S, suyos) + noticiasHTML(S, id, suyos);
+  return h + proximoHTML(S, id) + once + bajasHTML(S, suyos) + noticiasHTML(S, id, suyos);
 }
 
 /** el nombre del club, para el botón de volver */

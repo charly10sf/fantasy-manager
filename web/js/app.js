@@ -2442,7 +2442,7 @@ document.addEventListener('click', async (ev) => {
   if (d.filtro) { const [k, f] = d.filtro.split(':'); S.filtro[k] = f; pintar(); return; }
   // dentro del resumen de una tarjeta que se despliega (los pasos del plan), abrir la ficha sin desplegarla
   if (d.j && S.D && !d.accion) { if (el.closest('summary')) ev.preventDefault(); hoja('j', d.j, pilaDesde(el, 'j', d.j)); cargarDetalle(d.j); return; }
-  if (d.club && S.D && !d.accion) { hoja('c', d.club, pilaDesde(el, 'c', d.club)); cargarClub(d.club); return; }
+  if (d.club && S.D && !d.accion) { S.segClub = null; hoja('c', d.club, pilaDesde(el, 'c', d.club)); cargarClub(d.club); return; }
   if (d.r && S.D) { hoja('r', d.r); cargarOnceRival(d.r); return; }
   if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }
   switch (d.accion) {
@@ -2460,6 +2460,14 @@ document.addEventListener('click', async (ev) => {
     case 'verJornada': S.jornadaSel = Number(d.n); pintar(); break;
     case 'ordenEq': S.ordenEq = d.o; LS.set('orden-equipo', d.o); pintar(); if (d.ver) { const o = $('#vista .eq2-orden'); if (o) o.scrollIntoView({ behavior: 'smooth', block: 'start' }); } break;
     case 'jorClub': (S.jorClub ||= {})[d.id] = Number(d.n); repintarHoja(); break;
+    // las pestañas de la ficha de un club (Carlos, 9 nov): al cambiar, si estabas más abajo, vuelve a ellas
+    case 'segClub': {
+      S.segClub = { id: d.id, seg: d.s }; repintarHoja();
+      const hero = S.hoja && S.hoja.querySelector('.club-hero');
+      if (hero) { const y = hero.offsetTop + hero.offsetHeight; if (S.hoja.scrollTop > y) S.hoja.scrollTop = y; }
+      break;
+    }
+    case 'perClub': S.perClub = d.p; repintarHoja(); break;
     case 'filtroClub': S.filtro.club = d.f; repintarHoja(); if (d.sel) bajarA(d.sel, S.hoja); break;
     // ir a lo que explica un dato (30 oct, Carlos: «el valor de los últimos 7 días debería llevarte a la pestaña adecuada»):
     // baja hasta el ancla (data-sel), en la ficha abierta o en la pestaña; con data-seg2, antes cambia de subpestaña
