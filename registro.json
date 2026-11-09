@@ -3484,7 +3484,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andorra/2026/11/06/pique-vilaseca-i-nogues-encapcalen-la-representacio-de-lfc-andorra-al-multitudinari-funeral-de-jesus-de-miguel-radio-ser-principat-d-andorra/": 1793951972000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/": 1793957388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247829/rfef-juez-unico-no-competencias-aplazar-jornada-segunda.html": 1793957172000,
    "SPORT|136150472": 1793953274000,
@@ -7646,13 +7645,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 753,
+   "ok": 754,
    "fallos": 0,
-   "ejecuciones": 408,
+   "ejecuciones": 409,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T07:56:11.155Z"
+   "ultima": "2026-11-09T08:01:12.202Z"
   }
  },
  "ptsDirecto": {},
@@ -7669,15 +7668,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:56:17.766Z"
+   "ultimaBien": "2026-11-09T08:01:19.129Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:56:17.766Z"
+   "ultimaBien": "2026-11-09T08:01:19.129Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:56:17.766Z"
+   "ultimaBien": "2026-11-09T08:01:19.129Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7685,11 +7684,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:56:17.766Z"
+   "ultimaBien": "2026-11-09T08:01:19.129Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T07:56:17.766Z"
+   "ultimaBien": "2026-11-09T08:01:19.129Z"
   }
  },
  "avisos": [
