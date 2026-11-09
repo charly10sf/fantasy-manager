@@ -319,7 +319,7 @@ function cesped(x, y, w, h, color) {
 export function svgOnceIdeal(d) {
   const H = ALTO_ONCE_IDEAL, oro = dorado();
   let s = oro.defs + fondo([[260, 80, 700, '#e2bd5a', 0.16], [940, 80, 700, VERDE, 0.12]], H)
-    + titular('ONCE IDEAL', oro.g, `JORNADA ${d.jornada}`, { px: 84, sub2: `PUNTOS ESPERADOS · ${d.formacion}` });
+    + titular(d.titulo || 'ONCE IDEAL', oro.g, d.sub || `JORNADA ${d.jornada}`, { px: 84, sub2: d.sub2 || `PUNTOS ESPERADOS · ${d.formacion}` });
   const x = 22, y = 196, w = 1156, h = H - y - 128;
   s += cesped(x, y, w, h, '#e2bd5a');
   // las líneas de jugadores: delanteros arriba y portero abajo
@@ -344,9 +344,10 @@ export function svgOnceIdeal(d) {
   const yl = y + h + 50;
   let lx = 40;
   const leyenda = (color, txt) => { s += `<circle cx="${lx + 11}" cy="${yl - 9}" r="11" fill="none" stroke="${color}" stroke-width="5"/>` + texto(lx + 32, yl, txt, { px: 26, peso: 800, color: TINTA, espacio: 2 }); lx += 32 + medir(txt, 26, B, 2) + 34; };
-  if (d.apuesta) leyenda(AURO, 'APUESTA');
-  if (d.chollo) leyenda(VERDE, 'CHOLLO');
-  s += texto(1160, yl, `VALOR DEL ONCE ${d.valor}`, { px: 26, peso: 800, color: TINTA, ancla: 'end', espacio: 2 });
+  // (el balance de la temporada en el parón: «MÁS PUNTOS» en vez de «APUESTA»; d.leyendas)
+  if (d.apuesta) leyenda(AURO, (d.leyendas && d.leyendas.apuesta) || 'APUESTA');
+  if (d.chollo) leyenda(VERDE, (d.leyendas && d.leyendas.chollo) || 'CHOLLO');
+  if (d.valor) s += texto(1160, yl, `VALOR DEL ONCE ${d.valor}`, { px: 26, peso: 800, color: TINTA, ancla: 'end', espacio: 2 });
   return marco(s + marca(600, H - 26, { ancla: 'middle' }), H);
 }
 
@@ -358,12 +359,12 @@ export function svgOnceIdeal(d) {
 //       dif: '+2,3 M', pct: '+2,3 %', valor: '102 M' }
 const MK = { y0: 196, h: 372, gap: 16, R: 60, pxN: 30 };
 export const ALTO_MERCADO = MK.y0 + 2 * MK.h + MK.gap + 76;
-function panelMercado(x, y, w, lista, bueno) {
+function panelMercado(x, y, w, lista, bueno, { titulo = null, conFlecha = true } = {}) {
   const acento = bueno ? VERDE : MALO, { R, pxN } = MK;
   let s = panel(x, y, w, MK.h, acento, { brillo: 0.22 });
-  const t = bueno ? 'SUBEN' : 'BAJAN', wc = medir(t, 30, B, 3) + 76;
+  const t = titulo || (bueno ? 'SUBEN' : 'BAJAN'), wc = medir(t, 30, B, 3) + (conFlecha ? 76 : 44);
   s += `<rect x="${x + 22}" y="${y + 20}" width="${wc}" height="46" rx="23" fill="${acento}"/>`
-    + flecha(bueno, x + 50, y + 43, 22, '#06130d') + texto(x + 72, y + 54, t, { px: 30, peso: 900, color: '#06130d', espacio: 3 });
+    + (conFlecha ? flecha(bueno, x + 50, y + 43, 22, '#06130d') : '') + texto(x + (conFlecha ? 72 : 44), y + 54, t, { px: 30, peso: 900, color: '#06130d', espacio: 3 });
   const n = Math.min(5, lista.length), hueco = (w - 24) / 5, cy = y + 96 + R;
   centros(x, w, n, hueco).forEach((cx, k) => {
     const f = lista[k], club = coloresClub(f.club || f.equipo), yb = bajoCara(cy, R, pxN);
@@ -373,12 +374,54 @@ function panelMercado(x, y, w, lista, bueno) {
   });
   return s;
 }
+// (el parón, 9 nov: la misma tarjeta para las revalorizaciones de la temporada y para las selecciones, con otro titular y otros paneles:
+//  d.titulo, d.sub, d.sub2 y d.paneles = [{ titulo, bueno, filas, flecha }], uno o dos)
 export function svgMercado(d) {
-  const oro = dorado(), H = ALTO_MERCADO;
-  let s = oro.defs + fondo([[260, 60, 700, VERDE, 0.16], [940, 60, 700, MALO, 0.16]], H)
-    + titular('MERCADO', oro.g, mayus(d.fecha), { px: 84, sub2: 'LALIGA FANTASY' })
-    + panelMercado(22, MK.y0, 1156, d.suben, true) + panelMercado(22, MK.y0 + MK.h + MK.gap, 1156, d.bajan, false);
+  const oro = dorado();
+  const ps = d.paneles || [{ filas: d.suben, bueno: true }, { filas: d.bajan, bueno: false }];
+  const H = MK.y0 + ps.length * MK.h + (ps.length - 1) * MK.gap + 76;
+  let s = oro.defs + fondo([[260, 60, 700, VERDE, 0.16], [940, 60, 700, ps.length > 1 ? MALO : VERDE, 0.16]], H)
+    + titular(d.titulo || 'MERCADO', oro.g, d.sub || mayus(d.fecha), { px: 84, sub2: d.sub2 || 'LALIGA FANTASY' });
+  ps.forEach((p, i) => { s += panelMercado(22, MK.y0 + i * (MK.h + MK.gap), 1156, p.filas, p.bueno, { titulo: p.titulo || null, conFlecha: p.flecha !== false }); });
   return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Calendario después del parón (Carlos, 9 nov): los equipos con el calendario más fácil y más difícil en las jornadas que vienen, para
+// planificar fichajes. Dos paneles (MEJOR en verde y PEOR en rojo) con una fila por equipo: su escudo y su nombre y, a la derecha, el
+// escudo de cada rival con «CASA» o «FUERA» y su puesto en la tabla, en el color de lo difícil que es (verde, ámbar, rojo).
+// d = { sub: 'JORNADAS 13 A 16', sub2, mejor: [fila], peor: [fila] } con fila = { equipo, club, escudo (PNG), rivales: [{ corto, escudo, casa, puesto: '4º', nivel }] }
+const CL = { y0: 196, fila: 92, cab: 84, gap: 16 };
+const altoPanelCal = (n) => CL.cab + n * CL.fila + 18;
+export const altoCalendario = (d) => CL.y0 + altoPanelCal(d.mejor.length) + CL.gap + altoPanelCal(d.peor.length) + 76;
+const NIVEL_COLOR = { 'fácil': VERDE, media: AMBAR, 'difícil': MALO };
+function panelCalendario(x, y, w, filas, bueno, titulo) {
+  const acento = bueno ? VERDE : MALO, h = altoPanelCal(filas.length);
+  let s = panel(x, y, w, h, acento, { brillo: 0.2 });
+  const wc = medir(titulo, 30, B, 3) + 44;
+  s += `<rect x="${x + 22}" y="${y + 20}" width="${wc}" height="46" rx="23" fill="${acento}"/>` + texto(x + 44, y + 54, titulo, { px: 30, peso: 900, color: '#06130d', espacio: 3 });
+  filas.forEach((f, i) => {
+    const cy = y + CL.cab + i * CL.fila + CL.fila / 2;
+    if (i) s += `<rect x="${x + 30}" y="${cy - CL.fila / 2}" width="${w - 60}" height="1" fill="#fff" fill-opacity="0.08"/>`;
+    s += (f.escudo ? escudo(f.escudo, x + 70, cy, 64) : '') + texto(x + 116, cy + 13, mayus(f.equipo), { px: 38, peso: 800, color: TINTA, max: 300 });
+    const n = f.rivales.length, paso = 150, x0 = x + w - 24 - n * paso;
+    f.rivales.forEach((r, k) => {
+      const cx = x0 + k * paso + paso / 2, col = NIVEL_COLOR[r.nivel] || TENUE;
+      s += `<rect x="${cx - 66}" y="${cy - 38}" width="132" height="76" rx="18" fill="${col}" fill-opacity="0.16" stroke="${col}" stroke-opacity="0.7" stroke-width="2"/>`
+        + (r.escudo ? escudo(r.escudo, cx - 34, cy - 4, 46) : '')
+        + texto(cx + 30, cy - 6, r.puesto || '', { px: 30, peso: 900, color: col, ancla: 'middle' })
+        + texto(cx + 30, cy + 24, r.casa ? 'CASA' : 'FUERA', { px: 18, peso: 800, color: TINTA, ancla: 'middle', espacio: 1.5, opacidad: 0.8 });
+    });
+  });
+  return { s, h };
+}
+export function svgCalendario(d) {
+  const oro = dorado(), H = altoCalendario(d);
+  let s = oro.defs + fondo([[260, 60, 700, VERDE, 0.16], [940, 60, 700, MALO, 0.16]], H)
+    + titular(d.titulo || 'CALENDARIO', oro.g, d.sub, { px: 84, sub2: d.sub2 || 'DESPUÉS DEL PARÓN' });
+  const a = panelCalendario(22, CL.y0, 1156, d.mejor, true, 'LOS MÁS FÁCILES');
+  const b = panelCalendario(22, CL.y0 + a.h + CL.gap, 1156, d.peor, false, 'LOS MÁS DIFÍCILES');
+  return marco(s + a.s + b.s + marca(600, H - 30, { ancla: 'middle' }), H);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------

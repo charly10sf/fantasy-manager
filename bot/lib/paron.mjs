@@ -28,3 +28,33 @@ export function esperaParon({ siguiente, anterior, ahora = Date.now(), dias = 9,
   const desde = ini - horasAntes * 36e5;
   return { espera: hueco > dias && ahora < desde, desde, hueco };
 }
+
+// Los tuits propios del parón (Carlos, 9 nov 08:58: balance de la temporada, revalorizaciones, calendario de después del parón y
+// selecciones): solo durante el parón y repartidos por sus días, no todos el lunes. Cada uno sale a partir de una fracción del hueco
+// que va desde que acaba la última jornada (más `margenHoras`) hasta que empiezan las caídas de la siguiente (`horasAntes` antes de
+// su primer partido): el parón de noviembre de 2026 va del lunes 9 a las 11:30 al martes 17 a las 21:00.
+
+/**
+ * El parón en el que estamos, o null si entre las dos jornadas no hay más de `dias`. jugada: la jornada que acaba de jugarse.
+ * { jugada, siguiente, fin (ms: ha acabado su último partido), ini (ms: primer partido de la siguiente), hasta (ms: empiezan las
+ *   caídas), hueco (días), activo }
+ */
+export function paronActual({ anterior, siguiente, jugada = null, ahora = Date.now(), dias = 9, horasAntes = 72 } = {}) {
+  const ini = inicio(siguiente), u = ultimo(anterior);
+  if (ini == null || u == null || ini <= u) return null;
+  const hueco = (ini - u) / 864e5;
+  if (hueco <= dias) return null;
+  const fin = u + 2.5 * 36e5;
+  return { jugada, siguiente: jugada != null ? jugada + 1 : null, fin, ini, hasta: ini - horasAntes * 36e5, hueco, activo: ahora >= fin && ahora < ini };
+}
+
+const FECHA = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+/** ¿le toca ya a este tuit del parón? fraccion: de 0 (al acabar la jornada) a 1 (cuando empiezan las caídas). { ok, motivo, desde } */
+export function tocaParon(p, { fraccion = 0, ahora = Date.now(), margenHoras = 12 } = {}) {
+  if (!p) return { ok: false, motivo: 'no hay parón entre esta jornada y la siguiente' };
+  if (!p.activo) return { ok: false, motivo: ahora < p.fin ? 'la jornada aún no ha acabado' : 'el parón ya ha terminado' };
+  const a = p.fin + margenHoras * 36e5, desde = a + Math.max(0, p.hasta - a) * Math.min(1, Math.max(0, fraccion));
+  if (ahora < desde) return { ok: false, motivo: `le toca desde el ${FECHA.format(new Date(desde))}`, desde };
+  if (ahora >= p.hasta) return { ok: false, motivo: 'ya empiezan las caídas de la jornada siguiente', desde };
+  return { ok: true, motivo: '', desde };
+}

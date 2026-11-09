@@ -4,6 +4,7 @@
 // Disponible para la jornada 12 contra el Valencia», el cierre…) la pone el código debajo. El validador ya no compara con la plantilla
 // (ni líneas, ni orden): comprueba que lo que dice cuadra con los hechos. Lo que no pasa se pregunta otra vez con los errores; si
 // tampoco, sale la plantilla. Con Claude (lib/ia.mjs, uso «redactar»); sin Claude, no hace nada.
+import { limitarDatos, apuntarTexto, MEDIA } from './datos-jugador.mjs';
 import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal, CIERRES } from './texto.mjs';
 import { validar } from './validar.mjs';
 import { preguntar, conClaude } from './ia.mjs';
@@ -218,6 +219,9 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // (Carlos, 6 nov: «lo de poner el % de titularidad siempre y los puntos medios no haría falta, suena demasiado a plantilla»)
   const tope = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro;
   const nPct = (t.match(/\d\s?%/g) || []).length, nMedia = (t.match(/\bde media\b|\bpuntos por partido\b|\bmedia de \d/gi) || []).length;
+  // (Carlos, 9 nov 09:12: «lo de que siempre diga los puntos de media no es bueno tampoco. Podría dar otros datos») dos tuits seguidos
+  // del mismo tipo no dan los dos la media: si el último la llevaba, este cuenta otra cosa (lib/datos-jugador.mjs)
+  if (nMedia && recientes.length && MEDIA.test(String(recientes[recientes.length - 1] || ''))) e.push('el último tuit de este tipo ya daba la media de puntos: cuenta otro dato del jugador (el de «datoDestacado») o dilo con palabras, sin la cifra de la media');
   // (Carlos, 6 nov, con «Fantasy Manager le da un 97 %»: «falta DE TITULARIDAD») un % sin decir de qué no se entiende
   // y solo el primero (Carlos, 6 nov: «si pones varios porcentajes, que solo sea en el primero, que se entienda humano»): la frase del
   // primer % lleva «titularidad» detrás de él; los demás, sin repetirlo
@@ -332,7 +336,7 @@ export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [
   return [`Escribe el tuit de tipo «${hechos.tipo}» con estos hechos. Como mucho ${max} caracteres, mejor menos (sin contar la etiqueta, que va aparte: «${hechos.etiqueta || '(ninguna)'}»).`,
     `HECHOS:\n${JSON.stringify(hechos, sinFecha, 1)}`,
     // lo que más tumbaba los borradores en la prueba del 7 nov (19 previas): se recuerda justo antes de escribir
-    (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ${hechos.tipo === 'resumen' ? 'lo que sí puedes contar es el ranking de los hechos (quién va primero, a cuánto de la media)' : 'ninguna comparación con el resto de la jornada'}.`; })(),
+    (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); si un jugador trae «datoDestacado», ese es SU dato: cuéntalo con tus palabras y no le pongas además la media; ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ${hechos.tipo === 'resumen' ? 'lo que sí puedes contar es el ranking de los hechos (quién va primero, a cuánto de la media)' : 'ninguna comparación con el resto de la jornada'}.`; })(),
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     gastadas.length ? `FRASES YA GASTADAS (salen en varios de esos tuits; no las uses): ${gastadas.map((g) => `«${g.txt}»`).join(', ')}` : '',
     cronicas.length ? (hechos.tipo === 'final' || hechos.tipo === 'mvp'
@@ -385,6 +389,9 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   let hechos = 0;
   for (const t of xs) {
     conApodos(t.hechos);
+    // un dato del jugador por tuit (dos en los largos), sin repetir el tipo de los últimos; la media, solo si no hay otro (9 nov)
+    const datos = limitarDatos(t.hechos, { n: limite() > 280 ? 2 : 1 });
+    if (datos.length) log(`  (datos) ${t.clave}: ${datos.map((d) => `${d.nombre}, ${d.que}`).join('; ')}`);
     const etiqueta = t.hechos.etiqueta || '';
     const sep = etiqueta ? 2 : 0;
     const max = limite() - (etiqueta ? peso(etiqueta) + sep : 0);
@@ -436,6 +443,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     if (final.revisado) t.revisado = final.revisado;
     if (final.usadas.length) t.prensa = final.usadas.map((c) => c.medio);
     recientes.push(final.texto);
+    apuntarTexto(final.texto, tipo);
     hechos++;
   }
   log(`  (redactar) ${hechos} de ${xs.length} tweets de ${tipo} redactados`);

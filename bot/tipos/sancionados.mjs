@@ -18,6 +18,7 @@ import { clubes as clubesH, partido as partidoH, jugador as jugadorH } from '../
 import { elQueMasPesa, enLetra, mayus, nombresPorClub, pesos, porClub, lista } from '../lib/agrupar.mjs';
 import { disciplina, casar, amarillasDe } from '../lib/disciplina.mjs';
 import { baseTitular } from './caidas.mjs';
+import { prepararDatos, datoPlantilla } from '../lib/datos-jugador.mjs';
 
 import { horaMadrid, horas } from '../lib/horario.mjs';   // entre semana, desde las 7 (lib/horario.mjs)
 const HORA = 36e5;
@@ -60,14 +61,15 @@ const motivoH = (x) => {
   if (x.motivoSan) return x.motivoSan.txt;
   return 'cumple sanción';
 };
-const jugadorSan = (x, estado, { principal = true, extra = {} } = {}) => jugadorH({ nickname: x.nombre, positionId: x.pos, teamId: x.teamId, equipo: x.equipo, averagePoints: x.media },
+const jugadorSan = (x, estado, { principal = true, extra = {} } = {}) => jugadorH({ id: x.id, nickname: x.nombre, positionId: x.pos, teamId: x.teamId, equipo: x.equipo, averagePoints: x.media },
   { estado, motivo: estado === 'sancionado' ? motivoH(x) : '', principal, extra: { titularHabitual: true, ...extra } });
 const partidosH = (xs, pp) => {
   const prs = [...new Map(xs.map((x) => [String(x.teamId), x])).values()].map((x) => ({ x, pr: pp[String(x.teamId)] })).filter((o) => o.pr);
   const ps = prs.map((o) => partidoH(o.pr, { equipo: o.x.equipo, posId: xs.length === 1 ? o.x.pos : null }));
   return { ...(ps.length === 1 ? { partido: ps[0] } : ps.length ? { partidos: ps } : {}), prs };
 };
-const mediaDe = (x) => (x.media >= 3 ? { t: `‼️ Suma ${fmt(x.media)} puntos de media`, numeros: partes(x.media) } : null);
+// el dato del jugador (lib/datos-jugador.mjs: racha, valor, goles…); la media solo si no hay otro (Carlos, 9 nov)
+const mediaDe = (x) => { const d = datoPlantilla({ id: x.id, nickname: x.nombre, teamId: x.teamId }); if (d && d.que !== 'media') return { t: `‼️ ${d.dice.replace(/^./, (c) => c.toUpperCase())}`, numeros: d.numeros }; return x.media >= 3 ? { t: `‼️ Suma ${fmt(x.media)} puntos de media`, numeros: partes(x.media) } : null; };
 
 /** «el Racing-Real Sociedad» (el partido de un equipo, con el de casa delante) */
 const partido = (eq, pr) => `el ${pr.enCasa ? `${eq}-${pr.rival}` : `${pr.rival}-${eq}`}`;
@@ -171,7 +173,7 @@ function textoApercibidos(xs, { jornada, pp, pp2, peso, L, conNombres = true }) 
     ...(n === 1 && ph.partido ? { partido: ph.partido } : {}),
     ...(L && n > 1 && ph2.partidos ? { partidosQueSePerderian: ph2.partidos } : ph2.partido && n > 1 ? { partidosQueSePerderian: [ph2.partido] } : {}),
     clubes: clubesH(...(conNombres ? xs : grandes).map((x) => x.equipo), ...ph.prs.map((o) => o.pr.rival), ...ph2.prs.map((o) => o.pr.rival)), etiqueta };
-  return { tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, hechos, numeros: [jornada, jornada + 1, ...(top && !juego ? top.numeros : [])] };
+  return { tipo: 'sancionados', clave: `apercibidos|${jornada}|${xs.map((x) => x.id).join('-')}`, jornada, texto: r.texto, hechos, numeros: [jornada, jornada + 1, n, ...(top && !juego ? top.numeros : [])] };   // (n: con 11 o más va en cifra: «11 titulares habituales»; 9 nov)
 }
 
 export async function generar({ jugadores, equipos, jornada, stats = [], semana, config = {}, registro = null, ventanas = true, forzar = false, ahora = Date.now(), log = console.log,
@@ -233,5 +235,6 @@ export async function generar({ jugadores, equipos, jornada, stats = [], semana,
   if (largo()) for (const x of apercibidos) if (!(String(x.teamId) in pp2)) pp2[String(x.teamId)] = await proximo(x.teamId, { jornada: J + 1, ahora }).catch(() => null);
   // (la clave lleva los ids: si la lista cambia en la semana, la clave nueva no frenaba un segundo tweet de apercibidos)
   const yaApercibidos = !!(registro && registro.claves && [...registro.claves].some((c) => String(c).startsWith(`apercibidos|${J}|`)));
+  await prepararDatos(sancionados.slice(0, 8).map((x) => x.id)).catch(() => {});
   return escribir({ jornada: J, sancionados, apercibidos, pp, pp2, yaApercibidos });
 }

@@ -4,6 +4,7 @@
 //   «✅ Vuelven Valverde al Real Madrid, Sadiq al Valencia y Gueye al Villarreal»
 // La media, solo la del que más pesa, en su propia línea. Lo usan caidas.mjs y novedades.mjs.
 import { el, al, fmt, partes, hash, turno } from './texto.mjs';
+import { datoPlantilla } from './datos-jugador.mjs';
 
 const NUM = ['ningún', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
 /** 3 → «tres» (para las cabeceras: «Tres titulares habituales se caen…») */
@@ -70,6 +71,9 @@ export function elQueMasPesa(xs) {
   if (xs.length < 2) return null;
   const top = [...xs].sort((a, b) => b.media - a.media)[0];
   if (!(top.media >= 3)) return null;
+  // (Carlos, 9 nov: no siempre la media) con otro dato suyo que destaque (lib/datos-jugador.mjs), ese
+  const d = datoPlantilla({ id: top.id, nickname: top.nombre, teamId: top.teamId });
+  if (d && d.que !== 'media') return { t: `‼️ El que más pesa es ${top.nombre}, que ${d.dice}`, numeros: d.numeros };
   return { t: `‼️ El que más pesa es ${top.nombre}: ${fmt(top.media)} puntos de media`, numeros: partes(top.media) };
 }
 
@@ -145,6 +149,8 @@ export function detalles(xs, max = 5, semilla = '') {
 export function pesos(xs, semilla = '', { bajas = true, k = null } = {}) {
   const ys = [...xs].filter((x) => x.media >= 3).sort((a, b) => b.media - a.media).slice(0, 4);
   if (xs.length < 2 || !ys.length) return null;
+  // (Carlos, 9 nov) si el que más pesa tiene otro dato que destaque, solo él y con ese dato, sin la lista de medias
+  { const d = datoPlantilla({ id: ys[0].id, nickname: ys[0].nombre, teamId: ys[0].teamId }); if (d && d.que !== 'media') return { t: `‼️ El que más pesa es ${ys[0].nombre}, que ${d.dice}`, numeros: d.numeros }; }
   // empatados con el primero: «Y. Zabiri y Yoel Lago, con 6 cada uno, son los que más pesan»
   const igual = ys.filter((x) => fmt(x.media) === fmt(ys[0].media));
   if (igual.length > 1) {
