@@ -1608,12 +1608,12 @@ body.limitado .tostada { z-index: 120; }
 .escritorio .club-f:hover { background-color: var(--plano); }
 /* tus clubes: tarjetas con los colores, la camiseta y tus caras */
 .club-carril { padding-bottom: 4px; }
-.club-card { position: relative; flex: none; width: 196px; min-height: 150px; padding: 13px 13px 12px; border-radius: 18px; overflow: hidden; text-align: left; display: flex; flex-direction: column; gap: 6px;
+.club-card { position: relative; flex: none; width: 196px; min-height: 124px; padding: 12px 13px 12px; border-radius: 18px; overflow: hidden; text-align: left; display: flex; flex-direction: column; gap: 5px;
   background: radial-gradient(130% 110% at 100% 0%, var(--cb, rgba(255, 255, 255, 0.1)), transparent 62%), linear-gradient(160deg, var(--ct, transparent), transparent 70%), var(--plano2);
   border: 1px solid var(--linea); }
 .club-card::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: repeating-linear-gradient(90deg, var(--c1, var(--plano3)) 0 12px, var(--c2, var(--plano2)) 12px 24px); }
 .club-card:active { transform: scale(0.98); }
-.cc-cam { position: absolute; right: -10px; top: 18px; width: 92px; height: 92px; opacity: 0.95; transform: rotate(10deg); filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5)); pointer-events: none; }
+.cc-cam { position: absolute; right: -10px; top: 14px; width: 80px; height: 80px; opacity: 0.95; transform: rotate(10deg); filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5)); pointer-events: none; }
 .cc-cab { position: relative; display: flex; align-items: center; gap: 8px; min-width: 0; padding-right: 54px; }
 .cc-cab .pt-esc { width: 26px; height: 26px; }
 .cc-n { font: 700 18px/1.05 var(--cond); text-transform: uppercase; overflow-wrap: anywhere; }
@@ -1622,27 +1622,45 @@ body.limitado .tostada { z-index: 120; }
 .cc-caras .ava-w + .ava-w { margin-left: -8px; }
 .cc-caras .ava { width: 30px; height: 30px; box-shadow: 0 0 0 2px var(--plano2); }
 .cc-caras b { margin-left: 5px; font: 700 13px 'Barlow'; }
-.cc-caras small { margin-left: 8px; font: 600 12.5px 'Barlow'; color: var(--texto2); }
-.cc-prox { position: relative; font-size: 13px; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cc-hoy { margin-left: auto; padding-left: 8px; font: 700 14px 'Barlow'; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cc-hoy:not(.sube):not(.baja) { color: var(--texto2); }
+.cc-hoy small { font-size: 12px; font-weight: 600; color: var(--apagado); }
+.cc-prox { position: relative; display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 13px; color: var(--apagado); }
+.cc-prox .pt-esc { flex: none; width: 18px; height: 18px; }
+.cc-prox span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .camiseta { display: block; }
-.club-hero { position: relative; display: flex; gap: 16px; align-items: center; margin: 0 -16px; padding: 22px 16px 26px; overflow: hidden;
+.club-hero { position: relative; display: flex; gap: 16px; align-items: center; margin: 0 -16px; padding: 16px 16px 20px; overflow: hidden;
   background: radial-gradient(120% 150% at 0% 0%, var(--cb, rgba(255, 255, 255, 0.08)), transparent 64%), linear-gradient(120deg, transparent 40%, var(--ct, transparent)), var(--plano); }
-.club-hero .ch-cam { position: absolute; right: -18px; top: 50%; width: 150px; height: 150px; transform: translateY(-50%) rotate(12deg); opacity: 0.9; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.55)); pointer-events: none; }
+.club-hero .ch-cam { position: absolute; right: -18px; top: 50%; width: 124px; height: 124px; transform: translateY(-50%) rotate(12deg); opacity: 0.9; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.55)); pointer-events: none; }
 .club-hero > .pt-esc, .club-hero .ch-t { position: relative; }
-.club-hero .ch-t { padding-right: 96px; }
+.club-hero .ch-t { padding-right: 84px; }
 .club-hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: repeating-linear-gradient(90deg, var(--c1, var(--plano3)) 0 16px, var(--c2, var(--plano2)) 16px 32px); }
-.club-hero .pt-esc.club-g { width: 76px; height: 76px; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5)); }
+.club-hero .pt-esc.club-g { width: 60px; height: 60px; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5)); }
 .club-hero .ch-t { min-width: 0; }
-.club-hero h2 { margin: 0; font: 700 34px/0.95 var(--cond); text-transform: uppercase; overflow-wrap: anywhere; }
+.club-hero h2 { margin: 0; font: 700 30px/0.95 var(--cond); text-transform: uppercase; overflow-wrap: anywhere; }
 .club-hero .ch-s { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 8px; color: var(--texto2); font-size: 15px; }
-.club-num { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0 -16px; border-bottom: 1px solid var(--linea); }
-.club-num > div { padding: 12px 8px 12px 16px; border-right: 1px solid var(--linea); min-width: 0; }
-.club-num > div:last-child { border-right: 0; }
-.club-num b { display: block; font: 700 25px/1 var(--cond); font-variant-numeric: tabular-nums; }
-.club-num span { display: block; margin-top: 4px; font-size: 12.5px; line-height: 1.25; color: var(--apagado); }
-.escritorio .club-hero, .escritorio .club-num { margin-left: -30px; margin-right: -30px; }
-.escritorio .club-hero { padding: 24px 30px 26px; }
-.escritorio .club-num > div:first-child { padding-left: 30px; }
+.escritorio .club-hero { margin-left: -30px; margin-right: -30px; padding: 18px 30px 20px; }
+/* las pestañas de la ficha de un club: pegadas arriba de la ficha (la hoja hace scroll ella sola) */
+.tabs.club-tabs { top: -8px; margin: 0 -16px 10px; padding: 10px 16px 8px; background: var(--plano); }
+.tabs.club-tabs .tabs-in { background: var(--plano2); }
+.tabs.club-tabs button { flex: 1 0 auto; }
+.escritorio .tabs.club-tabs { top: -8px; margin: 0 -30px 12px; padding: 12px 84px 10px 30px; }
+.escritorio .hoja:has(.club-tabs) .cerrar-flota { z-index: 16; }
+.escritorio .tabs.club-tabs .tabs-in { display: flex; }
+.escritorio .tabs.club-tabs button { flex: 1 0 auto; padding: 0 12px; font-size: 15.5px; }
+@media (max-width: 380px) { .tabs.club-tabs { padding: 10px 10px 8px; } .tabs.club-tabs button { padding: 0 4px; font-size: 13.5px; } }
+/* suben y bajan */
+.sb-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 6px 0 4px; }
+.sb-sel { display: inline-flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--plano2); border: 1px solid var(--linea); }
+.sb-sel button { min-height: 40px; padding: 0 14px; border-radius: 9px; font: 600 14.5px 'Barlow'; color: var(--texto2); }
+.sb-sel button.activo { background: var(--plano3); color: var(--texto); }
+.sb-tot { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+.sb-tot b { font: 700 24px/1 var(--cond); font-variant-numeric: tabular-nums; }
+.sb-tot span { margin-top: 3px; font-size: 12.5px; color: var(--apagado); }
+.sb-res { margin: 8px 0 0; font: 600 14px 'Barlow'; color: var(--apagado); }
+.fila .sb-d { font-variant-numeric: tabular-nums; }
+.sb-barra { display: block; width: var(--w, 0%); max-width: 100%; height: 3px; margin-top: 6px; border-radius: 2px; background: currentColor; opacity: 0.75; }
+.sb-barra.sube { color: var(--sube); } .sb-barra.baja { color: var(--baja); }
 .club-fx { margin: 18px 0 4px; padding: 14px 14px 10px; border-radius: 16px; background: var(--plano2); }
 .fx-t { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font: 600 14px 'Barlow'; color: var(--texto2); }
 .fx-t .niv { font-size: 13.5px; }
@@ -1663,10 +1681,6 @@ button.fx-eq:active { opacity: 0.7; }
 .cp-rot .ic { width: 17px; height: 17px; flex: none; }
 .fx-ir { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; padding: 6px 0; color: var(--rojo-l); font: 600 15px 'Barlow'; }
 .fx-ir .ic { width: 16px; height: 16px; }
-.club-tj { width: 140px; }
-.club-tj .s b.rojo { color: var(--rojo-l); }
-.club-tj .gr small { font: 600 14px 'Barlow'; color: var(--texto2); }
-.club-tj .tj-v { margin-top: 3px; font-size: 13.5px; color: var(--texto2); }
 .club-nada { margin: 0 0 4px; }
 .club-p { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 0 10px 10px; border-bottom: 1px solid var(--linea); border-left: 3px solid var(--plano3); }
 .club-p:active { opacity: 0.7; }
@@ -2159,18 +2173,14 @@ button.eq2-t { cursor: pointer; } button.eq2-t:active { background: var(--plano2
 .eq2-num > button { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 10px 9px 9px; background: var(--plano); text-align: left; }
 .eq2-num > button:active { background: var(--plano2); }
 .escritorio .eq2-num > button { padding: 12px 14px 11px; }
-.escritorio .eq2-num > button:hover, .escritorio button.dato:hover, .escritorio .club-num > button:hover { background: var(--plano2); }
+.escritorio .eq2-num > button:hover, .escritorio button.dato:hover { background: var(--plano2); }
 button.dato { display: block; width: 100%; text-align: left; border-radius: 10px; }
 button.dato:active { background: var(--plano); }
-.club-num > button { text-align: left; }
-.club-num > button:active { background: var(--plano2); }
 button.dt-yo, button.dt-once { text-align: left; }
 button.dt-yo:active, button.dt-once:active { opacity: 0.75; }
 button.cr-p { width: 100%; text-align: left; }
 button.cr-p:active { background: var(--plano); }
 .puestos-c button.pz:active { opacity: 0.7; }
-.club-num > button { padding: 12px 8px 12px 16px; border-right: 1px solid var(--linea); min-width: 0; }
-.club-num > button:last-child { border-right: 0; }
 
 /* las tarjetas para compartir (0.6.11, tarjetas.js) */
 /* (0.6.11a) quién y cuándo, debajo de la cabecera del plan: al lado de los botones se cortaba en el móvil */
