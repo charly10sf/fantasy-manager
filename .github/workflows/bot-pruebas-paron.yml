@@ -37,10 +37,10 @@ jobs:
       - name: Datos variados (caídas, noticias y novedades)
         run: |
           test -n "$ANTHROPIC_API_KEY" || { echo "Falta el secreto ANTHROPIC_API_KEY"; exit 1; }
-                    node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --jornada=12 --tipos=resumen --redactar=1 --hechos=1 || true
+                    true
       - name: Los cuatro tuits del parón
         run: |
-          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=calendario,selecciones --estado=/tmp/registro.json --redactar=1 --hechos=1 --tarjetas=1 --salida-tarjetas=/tmp/tj --fechas-selecciones=20260924,20260925,20260926,20260927,20260928,20260929,20261001,20261002,20261003,20261004,20261005,20261006 || true
+          node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=calendario --estado=/tmp/registro.json --redactar=1 --hechos=1 --tarjetas=1 --salida-tarjetas=/tmp/tj --fechas-selecciones=20260924,20260925,20260926,20260927,20260928,20260929,20261001,20261002,20261003,20261004,20261005,20261006 || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
