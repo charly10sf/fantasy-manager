@@ -259,3 +259,44 @@ apagadas.
 - El 7 nov se llegó al tope de 2 $ a las 22:41 (hora de Madrid): la roja de Gayá, el final y el MVP del Valencia-Madrid salieron con la plantilla. Desde ahora `ia.reservaPartidos` (0,7 $, como mucho la mitad del tope) queda guardado para directo, final y MVP (`PRIORITARIOS` en lib/ia.mjs, o `ia.prioritarios`): el resto (previa, noticias, novedades, clasificar…) para al llegar a `topeDolaresDia − reservaPartidos` (clasificar vuelve a Gemini y la redacción deja la plantilla, como con el tope). redactar, revisar y pulir pasan el `tipo` a `preguntar`.
 - Puntos del directo: `conSuelo` (tipos/directo.mjs) guarda en `registro.datos.ptsDirecto` (jornada|partido|jugador) los puntos de cada gol o asistencia que sale y, en una ejecución posterior, no deja bajar de eso más lo que ha hecho el jugador desde entonces (gol por puesto, asistencia 3). Caso: Arda Güler «lleva 10» en el 36' y «se lleva 9» con su pase del 75' (LaLiga había bajado sus puntos en vivo). En la misma ejecución no se suma (todas las jugadas ven los mismos puntos) y una jugada ya publicada no se vuelve a apuntar. Lo de otras jornadas se borra.
 
+
+## Datos variados del jugador, no siempre la media (9 nov)
+
+Carlos (9 nov 09:12): «lo de que siempre diga los puntos de media no es bueno tampoco. Podría dar otros datos». La media era el único
+número del jugador en los hechos y salía casi siempre.
+
+- `lib/datos-jugador.mjs`: de cada jugador, lo que se puede contar sacado de LaLiga: puntos de las tres últimas jornadas (racha buena o
+  mala), su mejor jornada (15 o más), lo que vale y lo que ha ganado o perdido en el último mes, goles y asistencias (medios y
+  delanteros), porterías a cero (porteros y defensas), minutos, su puesto entre los de su posición y los puntos de la temporada; la
+  media, la última. Cada dato con su fuerza (lo raro pesa más). La lista (`jugadores()`) la fija `ejecutar.mjs` con `fijarDatos` (hasta
+  la última jornada acabada); la ficha y el histórico de valor los piden caídas, novedades, noticias y sancionados con `prepararDatos`
+  solo para los que pueden salir.
+- `jugador()` de lib/hechos.mjs pega a cada jugador sus candidatos (no salen en el JSON). Justo antes de preguntar a la IA,
+  `limitarDatos` deja `datoDestacado` en uno (dos en los tuits largos), de tipos distintos, sin repetir el tipo de los dos últimos tuits
+  que rotan (los publicados, `recientes` del registro, y los de la ejecución), y quita `mediaPuntos` a los demás. El log: «(datos) clave:
+  jugador, tipo».
+- Validador (`revisar`): si el último tuit del mismo tipo llevaba la media, este no puede llevarla. Los topes de siempre no cambian.
+- Plantillas: caídas, novedades, noticias (`fraseJugador` de lib/info-jugador.mjs), sancionados y «el que más pesa» (lib/agrupar.mjs)
+  usan `datoPlantilla` (el mismo dato) y la media solo si no hay otro. En el directo, sin los datos que cambian con el partido (total,
+  goles, minutos); en el mercado, sin el valor.
+- Prueba sin red: `node bot/prueba/datos-ejemplo.mjs` (10 tuits seguidos: la media como mucho 3 veces y nunca dos seguidas).
+
+## Tuits del parón de selecciones (9 nov)
+
+Carlos (9 nov 08:58-09:0x): cuatro tuits propios del parón, con tarjeta, solo durante el parón y repartidos por los días.
+
+- `balance` (de la jornada 1 a la recién jugada: los que más llevan por puesto, el once de la temporada en la tarjeta del once ideal con
+  «MÁS PUNTOS» y «CHOLLO», y los chollos por puntos por millón con 2/3 de las jornadas jugadas y 40 puntos o más), `revalorizaciones`
+  (lo que más ha subido y bajado desde el primer valor de la temporada, con el histórico de todos de 25 en 25; tarjeta del mercado con
+  otro titular; solo con imagen), `calendario` (las 4 jornadas siguientes, `paronTuits.jornadasCalendario`: fuerza del rival por sus
+  puntos por partido y casa o fuera; tarjeta nueva `svgCalendario`; nada de revisar el once) y `selecciones` (de FotMob: partidos de
+  selecciones absolutas masculinas de los días del parón, el club de cada jugador en la alineación, cruzado con LaLiga por club y
+  nombre; goles, asistencias y los que se retiran lesionados según `injuredPlayerOut`; convocatorias no, sin fuente fiable).
+- Cuándo (`lib/paron-tuits.mjs` y `paronTuits` en config.json): solo con parón (`paronActual` de lib/paron.mjs: más de `paron.dias` entre
+  jornadas) y antes de que empiecen las caídas de la siguiente; cada uno desde su fracción del hueco (balance 0,1, revalorizaciones 0,3,
+  calendario 0,55, selecciones 0,9, contando desde 12 h después del último partido), de `horasParon` (9-23; entre semana desde las 7),
+  separados 3 h entre sí y uno por parón (topes 1 con la jornada jugada). En el parón de noviembre de 2026: martes 10 a las 07:40, jueves
+  12 a las 07:00, sábado 14 a las 09:00 y martes 17 a las 07:00 (prueba/paron-ejemplo.mjs).
+- Verlos fuera de su hora: `node bot/ejecutar.mjs --modo=simulacro --ventanas=0 --tipos=balance,revalorizaciones,calendario,selecciones
+  --tarjetas=1 --salida-tarjetas=/tmp/tj` (selecciones de otro parón: `--fechas-selecciones=AAAAMMDD,…`). Pruebas sin red:
+  balance-, revalorizaciones-, calendario- y selecciones-ejemplo.mjs.

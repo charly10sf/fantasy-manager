@@ -18,7 +18,7 @@ const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Ma
 const CIFRAS = /\d+(?:[.,]\d+)?/g;
 const EMOJI = /\p{Extended_Pictographic}/gu;
 // los emojis de la guía de estilo (claude/estilo-tweets.md) y los que ya usan las plantillas
-export const EMOJIS_GUIA = new Set([...'🚨⚠‼👀⁉✅❌🗣🗞🗓⭐📊🔥🏁⚽🟥🟨📈📉💸🔄ℹ💔🤕🚑🥇🥈🥉🧤'.matchAll(EMOJI)].map((m) => m[0]));
+export const EMOJIS_GUIA = new Set([...'🚨⚠‼👀⁉✅❌🗣🗞🗓⭐📊🔥🏁⚽🟥🟨📈📉💸🔄ℹ💔🤕🚑🥇🥈🥉🧤🌍'.matchAll(EMOJI)].map((m) => m[0]));
 export const PROHIBIDO = /@|#|https?:|www\.|\b(mi|mis|nuestro|nuestra|nosotros|bot|brutal|espectacular|incre[ií]ble|no te lo pierdas)\b/i;
 
 const cifras = (s) => [...new Set(String(s).replace(/[0-9#*]️?⃣/g, '').match(CIFRAS) || [])].sort();
