@@ -3473,7 +3473,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/06/garcia-pimienta-entenderiamos-que-se-suspendiese-la-jornada-pero-nos-debemos-a-laliga-ser-almeria/": 1793957388000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247829/rfef-juez-unico-no-competencias-aplazar-jornada-segunda.html": 1793957172000,
-   "SPORT|136150472": 1793953274000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/06/6aeda656fdddffd1478b45ac.html": 1793959519000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html": 1793960607000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/competicion-declara-incompetente-suspender-jornada-segunda-semana-20261106_3470157.html": 1793962630000,
@@ -3546,29 +3545,6 @@
     "contexto": "Situación difícil durante la semana de entrenamientos",
     "detalle": "Pendiente de la decisión de LaLiga",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136150472",
-    "medio": "SPORT",
-    "t": 1793953274000,
-    "tipo": "horario",
-    "estado": "confirmado",
-    "segunda": false,
-    "jornada": 12,
-    "jTxt": true,
-    "clubes": [
-     "7",
-     "5"
-    ],
-    "luto": true,
-    "oficial": false,
-    "contexto": "Homenaje a un jugador fallecido",
-    "detalle": "",
-    "nums": [
-     12,
-     2026,
-     8
-    ]
    },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247852/jose-mourinho-da-version-sobre-homenaje-jesus-miguel.html",
@@ -7632,13 +7608,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 757,
+   "ok": 758,
    "fallos": 0,
-   "ejecuciones": 412,
+   "ejecuciones": 413,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T08:16:16.010Z"
+   "ultima": "2026-11-09T08:21:15.380Z"
   }
  },
  "ptsDirecto": {},
@@ -7655,15 +7631,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:16:21.424Z"
+   "ultimaBien": "2026-11-09T08:21:18.008Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:16:21.424Z"
+   "ultimaBien": "2026-11-09T08:21:18.008Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:16:21.424Z"
+   "ultimaBien": "2026-11-09T08:21:18.008Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7671,11 +7647,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:16:21.424Z"
+   "ultimaBien": "2026-11-09T08:21:18.008Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:16:21.424Z"
+   "ultimaBien": "2026-11-09T08:21:18.008Z"
   }
  },
  "avisos": [
