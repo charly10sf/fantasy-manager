@@ -2041,6 +2041,17 @@ function compras(D, M, yoTid, historial = []) {
 }
 
 /** la lista de lo que toca, de más a menos urgente; cada cosa con su porqué en números */
+/** si una cláusula merece la pena (abierta o por abrir): la misma regla para el plan, el chip de «Hoy» y los avisos,
+ * para que la app no anuncie una cláusula que luego la IA desaconseja (Revivo, 9 nov) */
+export function esClausulable(M, x, ahora = Date.now()) {
+  return !!(x && x.j && x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado)
+    && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30
+    && (M.mejora(x.j) >= 0.5 || (x.ratio != null && x.ratio <= 1.05))
+    && M.compraCal(x.j, x.clausula).ok && M.conSalida(x.j, x.clausula, x.tend)
+    // (19) en el parón, con la vuelta lejos, solo los chollos claros: si no, «Clausula a X» salía como urgente
+    && (!paronLejos(M, ahora) || cholloParon(M, x.j, x.clausula)));
+}
+
 function acciones(D, M, c) {
   const out = [];
   const ahora = Date.now();
@@ -2058,12 +2069,7 @@ function acciones(D, M, c) {
 
   // las que merecen la pena (abiertas ya o que se abren pronto: los mismos filtros, para que al empezar el cierre no
   // salgan de golpe las caras que antes estaban descartadas)
-  const clausulable = (x) => x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado)
-    && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30
-    && (M.mejora(x.j) >= 0.5 || (x.ratio != null && x.ratio <= 1.05))
-    && M.compraCal(x.j, x.clausula).ok && M.conSalida(x.j, x.clausula, x.tend)
-    // (19) en el parón, con la vuelta lejos, solo los chollos claros: si no, «Clausula a X» salía como urgente
-    && (!paronLejos(M, ahora) || cholloParon(M, x.j, x.clausula));
+  const clausulable = (x) => esClausulable(M, x, ahora);
   const abiertas = M.clausulas.filter((x) => x.abierta && clausulable(x))
     .sort((a, b) => (b.interes + (b.teQueda >= 0 ? 8 : 0)) - (a.interes + (a.teQueda >= 0 ? 8 : 0)));
   abiertas.slice(0, 3).forEach((x, k) => add({

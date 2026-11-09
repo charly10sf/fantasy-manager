@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.1a';
+export const VERSION = '0.7.1b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,12 @@ export const VERSION = '0.7.1a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.1b', f: '2026-11-09', h: '22:36', t: 'Las cláusulas, sin contradicciones',
+    cosas: [
+      { tipo: 'arreglo', d: 'balanza', t: 'Hoy y la IA dicen lo mismo', x: 'El aviso de «Cláusula de…» en Hoy y la alarma de que se abre una cláusula solo miraban el interés del jugador, así que te ponían de objetivo cláusulas que la IA luego desaconsejaba (Revivo, a un +35 % de su valor en pleno parón). Ahora usan la misma regla que el plan: lo que pagas de más, su calendario, si se puede revender y, en el parón, que sea un chollo claro.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.7.1a', f: '2026-11-09', h: '16:31', t: 'La pestaña Parón, al grano',
     cosas: [

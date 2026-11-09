@@ -3,6 +3,7 @@
 import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, norm, esWebFantasy, sinWebs } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada } from './limite.js';
+import { esClausulable } from './motor.js';
 import { linea, barra } from './graficos.js';
 import { hayClave, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
 import { md } from './texto.js';
@@ -118,7 +119,7 @@ function tiemposHTML(S) {
   if (M.cierreMercado) c.push(['mercado', 'Mercado nuevo', `en ${dura(M.cierreMercado - ahora)}`, 'mercado']);
   const prot = M.mias.filter((x) => !x.abierta && x.abreEn < 3 * DIA && x.riesgo !== 'ninguno').sort((a, b) => a.abreEn - b.abreEn)[0];
   if (prot) c.push(['candado', `Se abre ${prot.j.nombre}`, `en ${dura(prot.abreEn)}`, `j:${prot.pid}`]);
-  const cl = M.clausulas.filter((x) => !x.abierta && x.meLlega && x.interes >= 60 && x.abreEn < 2 * DIA).sort((a, b) => a.abreEn - b.abreEn)[0];
+  const cl = M.clausulas.filter((x) => !x.abierta && x.abreEn < 2 * DIA && x.interes >= 60 && esClausulable(M, x, ahora)).sort((a, b) => a.abreEn - b.abreEn)[0];
   if (cl) c.push(['diana', `Cláusula de ${cl.j.nombre}`, `en ${dura(cl.abreEn)}`, `j:${cl.pid}`]);
   if (M.paron && !M.enParon && M.paron.ini - ahora < 21 * DIA) c.push(['bandera', 'Parón', `en ${dura(M.paron.ini - ahora)}`, 'accion:paron']);
   if (!c.length) return '';
