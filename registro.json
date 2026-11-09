@@ -1782,8 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/06/alvaro-valles-llamada-fuente-llore-vergueenza.html": 1793968127000,
-   "Cadena SER|https://cadenaser.com/cataluna/2026/11/06/eric-i-christensen-apunten-al-metropolitano-sercat/": 1793968183000,
    "MARCA|https://www.marca.com/futbol/valencia/2026/11/06/javier-aguirre-mbappe-indefendible.html": 1793969318000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tuchel-apuesta-menor-bellingham-repita-polemica-cole-palmer-20261106_3470347.html": 1793969284000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261106/1004247917/cancelo-bernardo-silva-primera-lista-portugal-cristiano.html": 1793969369000,
@@ -1966,7 +1964,9 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/emotivo-mensaje-iris-padre-pepe-mel-betis_0_2008455745.html": 1794223825000,
    "ABC|https://www.abc.es/deportes/futbol/alarma-lamine-viaja-espana-republica-checa-20261109124059-nt.html": 1794224460000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261109/1004249018/preocupacion-sevilla-forma-fofana.html": 1794223973000,
-   "SPORT|136247384": 1794222069000
+   "SPORT|136247384": 1794222069000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249041/marc-roca-rumbo-primera-cita-espana-betis-no-limite.html": 1794226163000,
+   "COPE|https://www.cope.es/emisoras/pais-vasco/deportes-guipuzcoa/noticias/barrenetxea-lesion-baja-seleccion-jorge-frutos-real-sociedad-20261109_3471153.html": 1794212241000
   },
   "hechos": [
    {
@@ -2531,7 +2531,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3376,7 +3376,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136164914": 1793968169000,
    "MARCA|https://www.marca.com/futbol/primera-division/2026/11/06/horarios-jornada-14-primera-real-madrid-alaves-sabado-depor-barca-domingo.html": 1793980463000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
    "SPORT|136162605": 1793984430000,
@@ -3427,7 +3426,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-habilita-canal-atencion-resolver-incidencias-huelga-general-20261109111108.html": 1794219068000,
    "SPORT|136233790": 1794218790000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-defiende-atletico-madrid-resta-importancia-derrotas-bayern-barcelona-son-dos-cinco-mejores-equipos-europa-20261109_3471055.html": 1794225339000
   },
   "hechos": [
    {
@@ -3483,7 +3483,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
   "espera": {}
@@ -3491,17 +3491,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 27,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 216542,
-  "salida": 21992,
+  "entrada": 220453,
+  "salida": 22281,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.501112,
+  "dolares": 0.501648,
   "reservado": 0
  },
  "recientes": {
@@ -7426,13 +7426,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 807,
+   "ok": 808,
    "fallos": 0,
-   "ejecuciones": 462,
+   "ejecuciones": 463,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T12:26:12.994Z"
+   "ultima": "2026-11-09T12:31:16.563Z"
   }
  },
  "ptsDirecto": {},
@@ -7449,15 +7449,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:26:15.552Z"
+   "ultimaBien": "2026-11-09T12:31:26.612Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:26:15.552Z"
+   "ultimaBien": "2026-11-09T12:31:26.612Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:26:15.552Z"
+   "ultimaBien": "2026-11-09T12:31:26.612Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7465,11 +7465,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:26:15.552Z"
+   "ultimaBien": "2026-11-09T12:31:26.612Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T12:26:15.552Z"
+   "ultimaBien": "2026-11-09T12:31:26.612Z"
   }
  },
  "avisos": [
