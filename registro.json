@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/china-reconoce-contactos-madrid-reconciliacion-polemica-mbappe.html": 1793956448000,
    "MARCA|https://www.marca.com/futbol/bundesliga/2026/11/06/makaay-ficharon-aubameyang-gimenez-deportivo-pertenece-primera.html": 1793957412000,
    "AS|https://as.com/futbol/primera/hidalgo-casado-puede-venir-convocado-esta-con-ganas-y-la-cabeza-empuja-f202611-n/": 1793957214000,
    "AS|https://as.com/futbol/primera/china-esta-en-conversaciones-con-laliga-pero-pide-tiempo-para-digerir-el-tema-mbappe-f202611-n/": 1793957399000,
@@ -7605,13 +7604,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 768,
+   "ok": 769,
    "fallos": 0,
-   "ejecuciones": 423,
+   "ejecuciones": 424,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T09:11:15.287Z"
+   "ultima": "2026-11-09T09:16:12.972Z"
   }
  },
  "ptsDirecto": {},
@@ -7628,15 +7627,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:11:23.200Z"
+   "ultimaBien": "2026-11-09T09:16:16.193Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:11:23.200Z"
+   "ultimaBien": "2026-11-09T09:16:16.193Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:11:23.200Z"
+   "ultimaBien": "2026-11-09T09:16:16.193Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7644,11 +7643,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:11:23.200Z"
+   "ultimaBien": "2026-11-09T09:16:16.193Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T09:11:23.200Z"
+   "ultimaBien": "2026-11-09T09:16:16.193Z"
   }
  },
  "avisos": [
