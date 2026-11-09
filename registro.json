@@ -3329,12 +3329,13 @@
    "SPORT|136251680": 1794230182000,
    "SPORT|136241690": 1794229204000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-industrias-carnicas-registra-seguimiento-90-primera-jornada-ugt-fica-20261109162232.html": 1794237752000,
-   "SPORT|136257629": 1794236411000
+   "SPORT|136257629": 1794236411000,
+   "SPORT|136243267": 1794238864000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
   "espera": {}
@@ -3342,17 +3343,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 46,
+   "clasificar": 47,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 254450,
-  "salida": 27266,
+  "entrada": 256193,
+  "salida": 27352,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.50754,
+  "dolares": 0.507757,
   "reservado": 0
  },
  "recientes": {
@@ -7277,13 +7278,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 858,
+   "ok": 859,
    "fallos": 0,
-   "ejecuciones": 513,
+   "ejecuciones": 514,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T16:41:12.715Z"
+   "ultima": "2026-11-09T16:46:12.979Z"
   }
  },
  "ptsDirecto": {},
@@ -7300,15 +7301,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:41:16.695Z"
+   "ultimaBien": "2026-11-09T16:46:17.732Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:41:16.695Z"
+   "ultimaBien": "2026-11-09T16:46:17.732Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:41:16.695Z"
+   "ultimaBien": "2026-11-09T16:46:17.732Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7316,11 +7317,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:41:16.695Z"
+   "ultimaBien": "2026-11-09T16:46:17.732Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:41:16.695Z"
+   "ultimaBien": "2026-11-09T16:46:17.732Z"
   }
  },
  "avisos": [
