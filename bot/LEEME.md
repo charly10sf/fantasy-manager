@@ -107,8 +107,31 @@ si es un pulido) al lado decide si se publica. Lo tira si dice algo que no sale 
 hay un partido, rachas, contexto inventado, sucesos del partido), si se contradice o lee al revés los goles del rival, si una frase no se
 entiende a la primera o si suena a IA, a traducción o a plantilla. Sus motivos vuelven a la redacción como errores (hasta
 `redactar.intentos`, 3); si no publicaría ninguna versión, sale la plantilla. En un pulido que no aprueba, se queda la plantilla. Si
-Claude no contesta, el tuit sigue (ya pasó el validador): el revisor nunca bloquea por estar caído. `revisor.activo` a false lo apaga.
-En el log: «(redactar) …: el revisor no lo publicaría: …» y «(redactado por …, revisado por …)».
+Claude no contesta, no tiene cupo o tarda más de `revisor.segundos`, el tuit NO sale (falla cerrado desde la revisión total, A10): queda
+como `revisor-no` y lib/respaldo.mjs lo vuelve a probar en la siguiente ejecución o, si caduca, saca la plantilla; un pulido sin revisor
+se queda en la plantilla. Antes de redactar se mira que quede cupo para redactar y revisar; si no, sale la plantilla sin gastar.
+`revisor.activo` a false lo apaga (y entonces sí sale sin segunda lectura).
+En el log: «(redactar) …: el revisor no lo publicaría: …», «…: el revisor no contesta (…): no sale sin segunda lectura» y «(redactado por …, revisado por …)».
+
+### El contenido (revisión total, sesión 7: A10, M12, M13 y M14)
+
+- El validador (`revisar` de lib/redaccion.mjs) mira además: los decimales enteros («3,6» no vale por un 6,3: `decimalesSinHechos`);
+  cada cifra con su jugador (`cifrasCambiadas`: la del último jugador nombrado antes en la frase, o el de la frase anterior; una lista
+  «Valverde y Arda suman…» vale para cualquiera); una lesión, solo si los hechos la traen; «sin marcar» de uno que marca; «es oficial» o
+  «lo ha comunicado el club» solo si la fuente es el club; faltas de respeto («entrada criminal», «carnicero», «atraco»…); la primera
+  palabra de una frase si es un nombre de LaLiga; en el directo, solo las cifras del tuit de partida, un doblete o triplete solo si lo es y,
+  con el partido en juego, los puntos «de momento» (la plantilla también: «De momento se queda en -5»).
+- Lo que ya no tira: «colista» y «líder» del final (con `antesDelPartido`), «lo ha comunicado el club» (la palabra vaga «el club»),
+  «baja los brazos» o «sin ninguna duda» (frases hechas), un apodo que es palabra corriente si va en minúscula («Partido redondo»).
+- La prensa, una sola regla (`reglaPrensa` y `PRENSA_SIN_MEDIO` de lib/prensa.mjs) para quien redacta y para el revisor: final y MVP,
+  solo lo que digan dos medios y sin nombrar ninguno; la previa, con el medio pegado. Qué tipos la reciben, `redactar.prensa`.
+- Ausencias personales (M14): si la noticia es de motivos personales, familiares o de salud (la IA lo marca con `personal` y, por si
+  acaso, `PERSONAL` de lib/texto.mjs), el tuit sale sobrio: «X no estará por motivos personales», sin detalles, sin emojis, sin el
+  consejo de fantasy y sin tarjeta. En los partes de lesionados, ese motivo se dice «motivos personales» o «motivos de salud» y el
+  jugador lleva `trato` en los hechos. El revisor y la guía de voz tienen una regla de respeto.
+- Sin fotos: la variable de repositorio `BOT_SIN_FOTOS` a `1` (o `sinFotos: true` en config.json) quita de las tarjetas las caras y
+  escudos de LaLiga; las banderas de FotMob se quedan. Es el interruptor por si llega una queja (el `sinFotos` de la app no toca el bot).
+- Prueba sin red: `node bot/prueba/contenido-ejemplo.mjs`.
 
 Cómo lee el revisor: los hechos, la prensa que se le pasó a la redacción (en las previas; si no, tomaba por inventado lo que salía de
 ella) y los últimos tuits del tipo (tira el que repite su esqueleto o su cierre: en la prueba del 7 nov todos los MVP acababan en «Si lo

@@ -34,6 +34,19 @@ export const FEEDS = [
 /** los nombres de todos los medios (para que Gemini no los cite) */
 export const NOMBRES_MEDIOS = [...new Set([...FEEDS.map((f) => f.medio), 'Relevo', 'El País', 'El Desmarque', 'Estadio Deportivo', '20minutos'])];
 
+// La regla de la prensa en los tuits redactados, una sola (revisión total, M12: había tres que no casaban: config.json, el pedido de
+// lib/redaccion.mjs y el sistema de lib/revisor.mjs, que decía «solo en noticias y previas» y tiraba los finales que la usaban bien).
+// Qué tipos reciben prensa lo dice config.json (`redactar.prensa`); cómo se usa, esto, y lo leen igual quien redacta y el revisor.
+//   - final y MVP: solo lo que digan al menos dos noticias de medios distintos, con palabras propias y SIN nombrar ningún medio;
+//   - el resto (la previa): hasta dos hechos, con palabras propias y con el medio pegado al hecho («según AS»);
+//   - y en todos: lo que pasa en el campo (goles, penaltis, rojas, lesiones) solo si viene en los hechos, nunca de la prensa.
+export const PRENSA_SIN_MEDIO = new Set(['final', 'mvp']);
+export function reglaPrensa(tipo) {
+  return PRENSA_SIN_MEDIO.has(tipo)
+    ? 'Solo vale lo que digan AL MENOS DOS de estas noticias, de medios distintos (lo que salga en una sola, fuera). Con palabras propias y SIN nombrar ningún medio (ni «según», ni «cuentan»): se dice como un hecho. Lo que pasa en el campo (goles, penaltis, rojas, lesiones), solo si está en los hechos.'
+    : 'Hasta dos hechos de estas noticias, con palabras propias y con el medio pegado al hecho («según AS…»). Lo que pasa en el campo (goles, penaltis, rojas, lesiones), solo si está en los hechos.';
+}
+
 const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', laquo: '«', raquo: '»', hellip: '…', ndash: '–', mdash: '—', iexcl: '¡', iquest: '¿',
   aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú', Ntilde: 'Ñ', uuml: 'ü', ccedil: 'ç' };
 const desEnt = (s) => s.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (m, k) => (k[0] === '#' ? String.fromCodePoint(k[1] === 'x' || k[1] === 'X' ? parseInt(k.slice(2), 16) : Number(k.slice(1))) : ENT[k] ?? m));

@@ -204,7 +204,8 @@ export async function pulir(tweets, { tipo, registro = null, config = {}, jugado
     if (malos.length) { cuenta.mal++; log(`  (pulir) ${t.clave}: me quedo la plantilla (${malos.slice(0, 3).join('; ')})`); continue; }
     // la segunda lectura (lib/revisor.mjs): si el pulido no se entiende o mete algo que la plantilla no dice, se queda la plantilla
     const rv = await revisor({ texto: nuevo, fuenteTexto: t.texto, tipo, registro, config, log });
-    if (!rv.ok) { cuenta.mal++; log(`  (pulir) ${t.clave}: el revisor no lo publicaría, me quedo la plantilla (${rv.problemas.slice(0, 3).join('; ')})`); continue; }
+    // (si el revisor no contesta, tampoco: sin segunda lectura sale la plantilla tal cual; A10)
+    if (!rv.ok) { cuenta.mal++; log(`  (pulir) ${t.clave}: ${rv.caido ? `el revisor no contesta (${rv.error || '?'})` : `el revisor no lo publicaría (${rv.problemas.slice(0, 3).join('; ')})`}, me quedo la plantilla`); continue; }
     t.plantilla = t.texto; t.texto = nuevo; t.pulido = r.modelo; if (rv.revisado) t.revisado = rv.modelo; cuenta.ok++; cambiados++;
   }
   log(`  (pulir) ${r.proveedor === 'gemini' ? 'Gemini' : 'Claude'} (${r.modelo}): ${cambiados} de ${tweets.length} tweets de ${tipo} pulidos`);

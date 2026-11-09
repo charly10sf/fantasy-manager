@@ -26,6 +26,14 @@ export function trozoCopiado(s, fuente, n = 6) {
   for (let i = 0; i + n <= w.length; i++) { const g = w.slice(i, i + n).join(' '); if (src.includes(` ${g} `)) return g; }
   return '';
 }
+// Una ausencia por motivos personales, familiares o de salud no es una lesión de fútbol (revisión total, M14): se cuenta sobria, sin
+// detalles y sin consejo de fantasy («toca buscar recambio»). La marca la IA al leer la noticia (`personal`, tipos/noticias.mjs) y, por
+// si acaso, estas palabras (también en el motivo de los partes de lesionados: lib/partes.mjs).
+export const PERSONAL = /motivos? personal|asuntos? personal|problemas? personal|motivos? familiar|asuntos? familiar|fallec|luto|defunci|paternidad|nacimiento de su hij|salud mental|depresi[oó]n|ansiedad|c[aá]ncer|tumor|leucemia|card[ií]ac|arritmia|enfermedad grave|hospitaliz|ingresad[oa] en/i;
+const SALUD = /salud mental|depresi[oó]n|ansiedad|c[aá]ncer|tumor|leucemia|card[ií]ac|arritmia|enfermedad|hospitaliz|ingresad/i;
+export const esPersonal = (s) => PERSONAL.test(String(s || ''));
+/** cómo se dice, sin detalles: «motivos de salud» o «motivos personales» */
+export const motivoPersonal = (s) => (SALUD.test(String(s || '')) ? 'motivos de salud' : 'motivos personales');
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
 
 // La etiqueta final de bajas, dudas y novedades («❌ Baja para la jornada 12 contra el Sevilla», «💸 Venta obligatoria»). Desde el

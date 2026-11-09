@@ -36,9 +36,9 @@ Mbappé, «la Tortuga» (Carlos lo dio por bueno el 7 nov, 23:40; fuentes: Socce
 
 Carlos: si el tuit repite un nombre, vale «el francés», «el uruguayo»… El país sale de las alineaciones de FotMob (`countryCode`), porque la API de LaLiga no lo trae; por eso de momento solo está en el directo (goleador y asistente, campo `suNacionalidad`). Reglas: sin España, sin países que no conocemos (`lib/nacionalidad.mjs`) y, si goleador y asistente son del mismo país, ninguno lo lleva. La IA solo lo usa en una segunda mención, una vez como mucho (`lib/voz.mjs`). Final y MVP no lo tienen aún: harían falta las alineaciones de FotMob en esos tipos.
 
-## Segunda tanda (7 nov, 23:5x, «amplía a más»), pendiente del OK de Carlos
+## Segunda tanda (7 nov, 23:5x, «amplía a más»), aprobada
 
-Ya en la rama, pero no se fusiona hasta que Carlos diga. Nickname exacto de LaLiga Fantasy entre « ».
+Carlos la aprobó el 7 nov a las 23:40 («está bien así») y entró con la PR #93. Nickname exacto de LaLiga Fantasy entre « ». Fuentes flojas que conviene cambiar cuando se pueda: buscabiografias.com (Arda Güler) y laliga.com de 2021 (Iñaki Williams).
 
 | Jugador | Rasgo / nombre | Fuente |
 |---|---|---|

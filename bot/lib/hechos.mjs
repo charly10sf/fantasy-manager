@@ -60,6 +60,8 @@ export function jugador(j, { equipos = {}, estado = null, motivo = '', plazo = '
     ...(media >= 1 ? { mediaPuntos: fmt(media) } : {}),
     ...(tit && tit.pct != null ? { titularidadFantasyManager: `${tit.pct} %` } : {}),
     ...(otrosNombres(j.nickname || j.nombre)), ...extra, principal,
+    // (M14) una ausencia por motivos personales o de salud (lib/partes.mjs, lesionTxt, la deja así): con respeto
+    ...(/^motivos (?:personales|de salud)\b/.test(String(motivo)) ? { trato: 'no juega por motivos personales o de salud: sin detalles, sin bromas y sin consejo de fantasy sobre él' } : {}),
   };
   return datos ? conCandidatos(h, { id: j.id, nickname: j.nickname || j.nombre, teamId: j.teamId, equipo: h.club }, { sin: sinDatos }) : h;
 }
