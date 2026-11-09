@@ -1788,7 +1788,6 @@
    "MARCA|https://www.marca.com/futbol/bundesliga/2026/11/06/makaay-ficharon-aubameyang-gimenez-deportivo-pertenece-primera.html": 1793957412000,
    "AS|https://as.com/futbol/primera/hidalgo-casado-puede-venir-convocado-esta-con-ganas-y-la-cabeza-empuja-f202611-n/": 1793957214000,
    "AS|https://as.com/futbol/primera/china-esta-en-conversaciones-con-laliga-pero-pide-tiempo-para-digerir-el-tema-mbappe-f202611-n/": 1793957399000,
-   "SPORT|136149096": 1793954520000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/real-madrid-laliga-intentan-volver-china-necesita-20261106_3470083.html": 1793958533000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261106/1004247843/kubo-vuelve-quedar-jugar-detras-marin-ochieng-matarazzo-le-pide.html": 1793958999000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247847/dardo-mourinho-retirada-seleccion-cristiano-ronaldo.html": 1793959390000,
@@ -7607,13 +7606,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 762,
+   "ok": 763,
    "fallos": 0,
-   "ejecuciones": 417,
+   "ejecuciones": 418,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T08:41:18.995Z"
+   "ultima": "2026-11-09T08:46:11.857Z"
   }
  },
  "ptsDirecto": {},
@@ -7630,15 +7629,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:41:23.966Z"
+   "ultimaBien": "2026-11-09T08:46:14.360Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:41:23.966Z"
+   "ultimaBien": "2026-11-09T08:46:14.360Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:41:23.966Z"
+   "ultimaBien": "2026-11-09T08:46:14.360Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7646,11 +7645,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:41:23.966Z"
+   "ultimaBien": "2026-11-09T08:46:14.360Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:41:23.966Z"
+   "ultimaBien": "2026-11-09T08:46:14.360Z"
   }
  },
  "avisos": [
