@@ -3347,7 +3347,9 @@
    "n": 12,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/sociedad/noticia-sanchez-no-descarta-suspender-tiktok-posibles-videos-abuso-sexual-infantil-me-parece-escandalo-20261109232101.html": 1794263175335
+  }
  },
  "ia": {
   "dia": "2026-11-09",
@@ -7291,13 +7293,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 927,
+   "ok": 928,
    "fallos": 0,
-   "ejecuciones": 582,
+   "ejecuciones": 583,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T22:21:14.607Z"
+   "ultima": "2026-11-09T22:26:15.335Z"
   }
  },
  "ptsDirecto": {},
@@ -7314,15 +7316,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T22:21:19.948Z"
+   "ultimaBien": "2026-11-09T22:26:19.895Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T22:21:19.948Z"
+   "ultimaBien": "2026-11-09T22:26:19.895Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T22:21:19.948Z"
+   "ultimaBien": "2026-11-09T22:26:19.895Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7330,7 +7332,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T22:21:19.948Z"
+   "ultimaBien": "2026-11-09T22:26:19.895Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
