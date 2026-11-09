@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/castillayleon/2026/11/06/el-embajador-de-china-confirma-en-salamanca-conversaciones-entre-el-gobierno-de-pekin-y-la-liga-para-reconducir-la-situacion-tras-la-polemica-provocada-por-mbappe-radio-salamanca/": 1793959856000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261106/1004247854/china-conversaciones-laliga-pide-digerir-tema-mbappe.html": 1793960809000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-lista-seleccion_0_2008435471.html": 1793961354000,
    "ABC|https://www.abc.es/deportes/futbol/jacobo-ramon-marc-roca-alvaro-valles-estrenan-20261106114733-nt.html": 1793962206000,
@@ -7559,13 +7558,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 779,
+   "ok": 780,
    "fallos": 0,
-   "ejecuciones": 434,
+   "ejecuciones": 435,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T10:06:12.739Z"
+   "ultima": "2026-11-09T10:11:15.947Z"
   }
  },
  "ptsDirecto": {},
@@ -7582,15 +7581,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:06:16.515Z"
+   "ultimaBien": "2026-11-09T10:11:21.616Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:06:16.515Z"
+   "ultimaBien": "2026-11-09T10:11:21.616Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:06:16.515Z"
+   "ultimaBien": "2026-11-09T10:11:21.616Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7598,11 +7597,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:06:16.515Z"
+   "ultimaBien": "2026-11-09T10:11:21.616Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:06:16.515Z"
+   "ultimaBien": "2026-11-09T10:11:21.616Z"
   }
  },
  "avisos": [
