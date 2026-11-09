@@ -8,6 +8,7 @@ import { analizar, planAuto, rematarAuto } from './motor.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import * as Dr from './directo.js';
+import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
 import * as Tj from './tarjetas.js';
 import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
@@ -45,7 +46,8 @@ window.S = S;
 // la app ha arrancado: el aviso de index.html («no ha podido abrirse») ya no sale, y si ya había salido se quita
 window.__fmArranco = true;
 try { const f = document.querySelector('.arranque-fallo'); if (f) f.remove(); } catch (e) { /* nada */ }
-const VISTAS = { hoy: V.hoy, equipo: V.equipo, directo: Dr.directo, rivales: V.rivales, mercado: V.mercado, clubes: Cl.clubes, ia: V.ia };
+// (21, 9 nov) en el parón, en el sitio de Directo va la pestaña Parón, con un selector para seguir viendo el Directo
+const VISTAS = { hoy: V.hoy, equipo: V.equipo, directo: Pz.vistaDirecto, rivales: V.rivales, mercado: V.mercado, clubes: Cl.clubes, ia: V.ia };
 const ALIAS = { inicio: 'hoy', analisis: 'ia', chat: 'ia', vivo: 'directo', equipos: 'clubes' };
 const NAV = [['hoy', 'rayo', 'Hoy'], ['equipo', 'equipo', 'Equipo'], ['directo', 'directo', 'Directo'], ['rivales', 'rivales', 'Rivales'], ['mercado', 'mercado', 'Mercado'], ['clubes', 'club', 'Clubes']];
 // Pregunta (la IA) no va en la barra de abajo: con 7 pestañas no cabían bien. Va arriba, en rojo (lo pidió Carlos el 25 oct)
@@ -624,6 +626,13 @@ function pintarSup() {
   const gh = $('#gl-hoy'); gh.textContent = pend; gh.classList.toggle('oculto', !pend);
   const ga = S.M.mias.filter((x) => x.riesgo === 'alto').length;
   const ge = $('#gl-equipo'); ge.textContent = ga; ge.classList.toggle('oculto', !ga);
+  // (21) en el parón, el botón de Directo es «Parón», con la bandera (la pestaña lleva dentro el Directo de siempre)
+  const modo = Pz.hayParon(S.M) ? 'paron' : 'directo';
+  for (const b of $$('.nav button[data-ir="directo"]')) {
+    if (b.dataset.modo === modo) continue;
+    b.dataset.modo = modo;
+    b.innerHTML = `${icono(modo === 'paron' ? 'bandera' : 'directo')}${modo === 'paron' ? 'Parón' : 'Directo'}<span class="gl oculto" id="gl-directo"></span>`;
+  }
   // Directo: un punto verde mientras se juega la jornada
   const gd = $('#gl-directo'); if (gd) { gd.classList.add('punto-v'); gd.classList.toggle('oculto', !S.M.enJuego); }
 }
@@ -2952,7 +2961,10 @@ function pasosTour() {
     { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta). También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
-    { v: 'directo', sel: '.nav [data-ir="directo"]', t: 'Directo', x: 'La jornada mientras se juega: los marcadores, los puntos de cada jugador y de quién es en tu liga, tu once con lo que lleva cada uno y cómo va tu liga. Toca un partido para verlo jugador a jugador.' },
+    // (21) en el parón, el mismo sitio es la pestaña Parón
+    Pz.hayParon(S.M)
+      ? { v: 'directo', sel: '.nav [data-ir="directo"]', t: 'Parón', x: 'Mientras dura el parón de selecciones: qué comprar para revender antes de la vuelta, qué vender antes de que baje y desde cuándo pensar en el once. Arriba puedes cambiar a Directo para ver los partidos de la vuelta.' }
+      : { v: 'directo', sel: '.nav [data-ir="directo"]', t: 'Directo', x: 'La jornada mientras se juega: los marcadores, los puntos de cada jugador y de quién es en tu liga, tu once con lo que lleva cada uno y cómo va tu liga. Toca un partido para verlo jugador a jugador.' },
     { v: 'rivales', sel: '.nav [data-ir="rivales"]', t: 'Rivales', x: 'Las cláusulas de los demás que te llegan con tu dinero, cuándo se abren las que están protegidas y lo que ha hecho cada uno.' },
     { v: 'mercado', sel: '.nav [data-ir="mercado"]', t: 'Mercado', x: 'Cuánto pujar por cada libre según lo que se paga en tu liga, qué ofrecer a otro mánager para que te venda y quién sube y quién baja.' },
     { v: 'clubes', sel: '.nav [data-ir="clubes"]', t: 'Clubes', x: 'Los 20 de LaLiga por la clasificación. En cada uno, su próximo partido, el once probable en el campo, las bajas, sus partidos y la plantilla con lo que vale cada jugador y de quién es en tu liga.' },

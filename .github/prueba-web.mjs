@@ -4,7 +4,8 @@
 //   2. que las 7 pestañas (las 6 de abajo y Pregunta) pintan sin «.error-c», en el móvil y en el ordenador;
 //   3. que una liga guardada rota (un campo que el motor no espera) no deja la app en «Abriendo…» (C2);
 //   4. que con el Worker y Deno colgados la carga acaba en una pantalla con salida en menos de 40 s (A7);
-//   5. que con el almacenamiento lleno de otras ligas y de la demo la sesión y el chat se siguen guardando (A8).
+//   5. que con el almacenamiento lleno de otras ligas y de la demo la sesión y el chat se siguen guardando (A8);
+//   6. que en el parón el sitio de Directo es la pestaña Parón y su selector vuelve a Directo (21).
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -136,6 +137,32 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   });
   if (r.sesion && r.clave && r.chat) bien('con el almacenamiento lleno se guardan la sesión, la clave y el chat');
   else mal(`con el almacenamiento lleno no se guarda: ${Object.entries(r).filter(([, v]) => !v).map(([k]) => k).join(', ')}`);
+  await ctx.close();
+}
+
+// 6: en el parón (la demo con la jornada 10 a 12 días), el sitio de Directo es la pestaña Parón, con sus cuentas, y su
+// selector vuelve al Directo de siempre (21, 9 nov)
+for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenador']]) {
+  const { ctx, page, errores } = await pagina({ ancho, alto });
+  await ctx.route('**/js/demo.js', async (r) => {
+    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,');
+    r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: cuerpo });
+  });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForSelector('#vista', { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(800);
+  const etiqueta = await page.evaluate(() => (document.querySelector('.nav button[data-ir="directo"]') || {}).textContent || '');
+  await page.evaluate(() => document.querySelector('.nav button[data-ir="directo"]').click());
+  await page.waitForTimeout(700);
+  const r = await page.evaluate(() => ({ hero: !!document.querySelector('#vista .pnz-hero'), secs: document.querySelectorAll('#vista .pnz-sec').length, err: !!document.querySelector('#vista .error-c') }));
+  await page.evaluate(() => document.querySelector('[data-seg="paron:directo"]').click());
+  await page.waitForTimeout(500);
+  const dir = await page.evaluate(() => !document.querySelector('#vista .pnz-hero') && !!document.querySelector('#vista .titulo'));
+  if (!/Parón/.test(etiqueta)) mal(`${nombre}: en el parón el botón de Directo no dice «Parón» (${etiqueta.trim()})`);
+  else if (!r.hero || r.secs < 2 || r.err) mal(`${nombre}: la pestaña Parón no pinta bien (${JSON.stringify(r)})`);
+  else if (!dir) mal(`${nombre}: el selector de la pestaña Parón no vuelve a Directo`);
+  else bien(`${nombre}: en el parón, pestaña Parón (${r.secs} secciones) y su selector a Directo`);
+  if (errores.length) mal(`${nombre} en el parón: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

@@ -633,7 +633,8 @@ function paronHTML(S) {
     : [['Cláusulas, hasta', cuando(cierra)], (M.paraRevender || []).length ? ['Lo de revender', 'véndelo ya'] : ['Tu once', 'revísalo'], ['Jornada', `${v.n} · ${cuando(v.ini)}`]];
   return `<div class="paron-t ${lejos ? '' : 'vuelta'}"><div class="pt-top">${icono('bandera')}<span>Parón de selecciones</span><em>${dura(v.ini - ahora)} para la J${v.n}</em></div>
     <b class="pt-t">${lejos ? `Nadie puntúa hasta el ${cuando(v.ini, { hora: false })}: hoy manda el dinero` : `Vuelve LaLiga ${cuando(v.ini)}: ahora sí, prepara el once`}</b>
-    <div class="pt-cols">${celdas.map(([a, b]) => `<div><small>${esc(a)}</small><b>${esc(b)}</b></div>`).join('')}</div>${P && P.paron ? `<p class="pt-ia">${conEnlaces(S, P.paron)}</p>` : ''}</div>`;
+    <div class="pt-cols">${celdas.map(([a, b]) => `<div><small>${esc(a)}</small><b>${esc(b)}</b></div>`).join('')}</div>${P && P.paron ? `<p class="pt-ia">${conEnlaces(S, P.paron)}</p>` : ''}
+    <button class="pt-ir" data-ir="directo" data-seg="paron:paron">${lejos ? 'Cómo sacar millones en el parón' : 'Todo lo del parón'}${icono('flecha')}</button></div>`;
 }
 
 /** cómo van las recomendaciones de la IA y los puntos esperados de la app (de aprende.js) */
