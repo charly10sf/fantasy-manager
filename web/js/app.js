@@ -629,6 +629,7 @@ function pintar({ arriba = false } = {}) {
   // en Directo, la clasificación de la jornada dice cuántos le quedan a cada rival: hacen falta sus onces
   if (S.vista === 'directo' && S.M.enJuego && S.M.vivo && (S.seg.directo === 'liga' || V.ancho())) cargarOncesRivales();
   if (S.vista === 'equipo' && S.seg.equipo === 'jornadas') cargarJornadaMia();
+  if (S.vista === 'directo' && (S.seg.directo === 'jornadas' || V.ancho())) cargarPtsJornadas();
   // el cierre hasta la hora de apertura y el límite de minutos, sin esperar a la próxima vuelta del reloj
   mirarLimite();
   // el banner de los anuncios (solo en la versión de Google Play): en las pestañas, nunca en Pregunta
@@ -1300,14 +1301,7 @@ async function cargarJornadaMia() {
     }
     if (faltanPts) {
       try {
-        const m = {};
-        for (const it of listaN(await api.clasifSemana(S.D.liga.id, n))) {
-          const t = (it && it.team) || {};
-          const id = it.teamId != null ? it.teamId : t.id != null ? t.id : it.id;
-          const v = it.points != null ? it.points : it.weekPoints != null ? it.weekPoints : t.weekPoints;
-          if (id != null && v != null && Number.isFinite(Number(v))) m[String(id)] = Number(v);
-        }
-        S.ptsJ[n] = m;
+        S.ptsJ[n] = ptsDeClasif(await api.clasifSemana(S.D.liga.id, n));
       } catch (e) { if (e.sesion) throw e; S.ptsJ[n] = {}; }
     }
   } catch (e) {
@@ -1319,8 +1313,51 @@ async function cargarJornadaMia() {
   const guardar = (o, ok) => Object.fromEntries(Object.entries(o).filter(([k, v]) => ok(Number(k), v)));
   LS.set(K('mis-jornadas'), guardar(S.misJ, (k, v) => v.acabada && v.ids));
   // (lo que falló se queda vacío en memoria para no pedirlo en bucle, pero no se guarda: si no, no se volvía a pedir nunca)
-  LS.set(K('pts-jornadas'), guardar(S.ptsJ, (k, v) => S.misJ[k] && S.misJ[k].acabada && v && Object.keys(v).length));
+  guardarPtsJ();
   if (S.vista === 'equipo' && S.seg.equipo === 'jornadas' && !S.hoja) pintar();
+}
+/** los puntos de cada equipo en una jornada, de /leagues/{liga}/standing/{n}: { teamId: pts } */
+function ptsDeClasif(r) {
+  const m = {};
+  for (const it of listaN(r)) {
+    const t = (it && it.team) || {};
+    const id = it.teamId != null ? it.teamId : t.id != null ? t.id : it.id;
+    const v = it.points != null ? it.points : it.weekPoints != null ? it.weekPoints : t.weekPoints;
+    if (id != null && v != null && Number.isFinite(Number(v))) m[String(id)] = Number(v);
+  }
+  return m;
+}
+/* se guardan los de las jornadas acabadas (no cambian); lo vacío no, para volver a pedirlo otro día */
+function guardarPtsJ() {
+  const ahora = Date.now();
+  const acabada = (k) => (S.M.jornadas || []).some((j) => j.n === k && j.fin < ahora) && estadoJornada(S.M, k) === 'acabada';
+  LS.set(K('pts-jornadas'), Object.fromEntries(Object.entries(S.ptsJ || {}).filter(([k, v]) => acabada(Number(k)) && v && Object.keys(v).length)));
+}
+/**
+ * Directo → Por jornada: los puntos de cada equipo en todas las jornadas acabadas (de 3 en 3; las que ya están
+ * guardadas no se piden; lo que falla, como mucho cada 3 minutos)
+ */
+async function cargarPtsJornadas() {
+  if (!S.D || !S.M || S.cargandoPtsJ || enDemo() || !haySesion()) return;
+  const deGuardado = !S.ptsJ;
+  S.ptsJ ||= LS.get(K('pts-jornadas'), {});
+  S.ptsJT ||= {};
+  const ahora = Date.now();
+  const faltan = (S.M.jornadas || []).filter((j) => j.fin < ahora && !(S.M.enJuego && S.M.enJuego.n === j.n) && !S.ptsJ[j.n] && ahora - (S.ptsJT[j.n] || 0) > 3 * MIN).map((j) => j.n);
+  // (si ya estaban todas guardadas, se repinta una vez con ellas)
+  if (!faltan.length) { if (deGuardado && S.vista === 'directo') pintarVivo({ forzar: true }); return; }
+  S.cargandoPtsJ = true;
+  try {
+    for (let i = 0; i < faltan.length; i += 3) {
+      await Promise.all(faltan.slice(i, i + 3).map(async (n) => {
+        S.ptsJT[n] = Date.now();
+        try { S.ptsJ[n] = ptsDeClasif(await api.clasifSemana(S.D.liga.id, n)); } catch (e) { if (e.sesion) throw e; }
+      }));
+    }
+  } catch (e) { /* la sesión ha caducado: se pide al volver a entrar */ }
+  S.cargandoPtsJ = false;
+  guardarPtsJ();
+  if (S.vista === 'directo') pintarVivo({ forzar: true });
 }
 async function cargarOnceRival(tid) {
   const n = S.M && S.M.enJuego && S.M.enJuego.n;
@@ -2543,6 +2580,7 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'rango': S.rango = +d.n; pintarGraf(d.pid); break;
+    case 'rkOrden': { const y = window.scrollY, x = ($('.rk-caja') || {}).scrollLeft || 0; S.rkCol = String(S.rkCol || 'total') === d.n ? 'total' : d.n; pintar(); window.scrollTo(0, y); const c = $('.rk-caja'); if (c) c.scrollLeft = x; break; }
     case 'hecho': {
       const P = S.plan; if (!P) break;
       const todos = LS.get(K('hechos'), {});

@@ -46,7 +46,30 @@ export function grafValor(serie, dias, cargando = false) {
   const vs = q.map((x) => x[1]);
   const span = Math.max(1, Math.round((q[q.length - 1][0] - q[0][0]) / DIA));
   return `${linea(q, { alto: 150, color: d >= 0 ? 'var(--sube)' : 'var(--baja)' })}
-    <div class="graf-pie"><b class="${clase(d)}">${eur(d, { signo: true })} (${pct((v1 / v0 - 1) * 100)})</b> en ${span} día${span > 1 ? 's' : ''} · máx ${eur(Math.max(...vs))} · mín ${eur(Math.min(...vs))}</div>`;
+    <div class="graf-pie"><b class="${clase(d)}">${eur(d, { signo: true })} (${pct((v1 / v0 - 1) * 100)})</b> en ${span} día${span > 1 ? 's' : ''} · máx ${eur(Math.max(...vs))} · mín ${eur(Math.min(...vs))}</div>${diasHTML(p)}`;
+}
+/** lo que ha cambiado su valor cada uno de los últimos días: [{ dia: 'AAAA-MM-DD', d }] (el último valor de cada día) */
+export function cambiosDiarios(serie, n = 7) {
+  const porDia = new Map();
+  for (const [t, v] of [...(serie || [])].sort((a, b) => a[0] - b[0])) if (Number.isFinite(t) && v > 0) porDia.set(diaDe(t), v);
+  const dias = [...porDia.keys()].sort();
+  const out = [];
+  for (let i = 1; i < dias.length; i++) out.push({ dia: dias[i], d: porDia.get(dias[i]) - porDia.get(dias[i - 1]) });
+  return out.slice(-n);
+}
+/* las barras de cada día, siempre debajo de la gráfica (Carlos, 9 nov: las de la inercia solo salían en algunos jugadores) */
+function diasHTML(serie) {
+  const c = cambiosDiarios(serie);
+  if (c.length < 2) return '';
+  const max = Math.max(...c.map((x) => Math.abs(x.d)), 1);
+  const corto = (r) => (Math.abs(r) < 5000 ? '0' : `${r > 0 ? '+' : '−'}${(Math.abs(r) / 1e6).toFixed(2).replace('.', ',')}`);
+  const fdia = (s) => { const f = new Date(s + 'T12:00:00'); return `${f.toLocaleDateString('es-ES', { weekday: 'narrow' })} ${f.getDate()}`; };
+  const barras = c.map((x) => {
+    const h = Math.abs(x.d) < 5000 ? 0 : Math.max(6, Math.round((Math.abs(x.d) / max) * 100));
+    const cls = x.d > 0 ? 'sube' : x.d < 0 ? 'baja' : '';
+    return `<div class="d7" title="${esc(eur(x.d, { signo: true }))}"><span class="d7-v ${cls}">${corto(x.d)}</span><div class="d7-z"><div class="d7-up">${x.d > 0 && h ? `<i style="--h:${h}%"></i>` : ''}</div><div class="d7-dw">${x.d < 0 && h ? `<i style="--h:${h}%"></i>` : ''}</div></div><em>${fdia(x.dia)}</em></div>`;
+  }).join('');
+  return `<div class="dias7"><div class="d7-cab"><span>Cada día</span><span class="t2">últimos ${c.length} días, en M</span></div><div class="d7-b">${barras}</div></div>`;
 }
 
 /* ---------- tu equipo hoy (al tocar el marcador de Hoy) ---------- */

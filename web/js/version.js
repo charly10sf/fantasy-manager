@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7zd';
+export const VERSION = '0.7ze';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -13,6 +13,13 @@ export const VERSION = '0.7zd';
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
 export const NOVEDADES = [
+  {
+    v: '0.7ze', f: '2026-11-09', h: '06:20', t: 'Cada día y cada jornada',
+    cosas: [
+      { tipo: 'nuevo', d: 'grafica', t: 'Lo que sube o baja cada día', x: 'En la ficha de cualquier jugador, debajo de la gráfica del valor, salen siempre unas barras con lo que ha subido o bajado cada uno de los últimos 7 días (arriba en verde lo que sube, abajo en rojo lo que baja). También en Tu equipo hoy, con el valor de tu plantilla.' },
+      { tipo: 'nuevo', d: 'trofeo', t: 'Los puntos de cada rival por jornada', x: 'En Directo → Por jornada tienes una tabla con lo que ha hecho cada mánager de tu liga en cada jornada, con su media, su mejor jornada y cuántas ha ganado. En verde el que más hizo cada jornada y en rojo el que menos. Toca una columna para ordenar por ella.', ir: { v: 'directo', seg: 'directo:jornadas' } },
+    ],
+  },
   {
     v: '0.7zd', f: '2026-11-08', h: '23:41', t: 'La app de Android, más segura',
     cosas: [

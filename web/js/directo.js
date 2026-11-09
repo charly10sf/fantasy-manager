@@ -236,6 +236,97 @@ function onceHTML(S, n, ps) {
   return h;
 }
 
+/* ---------------- Por jornada: lo que ha hecho cada uno en cada jornada (Carlos, 9 nov) ---------------- */
+const d1 = (v) => String(Math.round(v * 10) / 10).replace('.', ',');
+/* la liga de ejemplo no tiene /standing/{n}: unos puntos por jornada que sumen lo que lleva cada uno */
+function demoPorJornada(D, ns) {
+  const v = {};
+  for (const n of ns) v[n] = {};
+  for (const e of D.clasif) {
+    const t = String(e.teamId);
+    let k = 7;
+    for (const c of t) k = (k * 31 + c.charCodeAt(0)) % 9973;
+    const pesos = ns.map((n) => 0.55 + ((k * (n + 3) * 7919) % 1000) / 1000);
+    const suma = pesos.reduce((a, b) => a + b, 0) || 1;
+    let resto = e.puntos;
+    ns.forEach((n, i) => { const x = i === ns.length - 1 ? resto : Math.round((e.puntos * pesos[i]) / suma); v[n][t] = x; resto -= x; });
+  }
+  return v;
+}
+/** los puntos de cada equipo en cada jornada acabada: { cols (de la primera a la última), v: { n: { teamId: pts } }, faltan } */
+export function puntosPorJornada(S) {
+  const { M, D } = S;
+  const ahora = Date.now();
+  let ns = (M.jornadas || []).filter((j) => j.fin < ahora && !(M.enJuego && M.enJuego.n === j.n)).map((j) => j.n).sort((a, b) => a - b);
+  // (la liga de ejemplo solo trae los partidos de la jornada de ahora: las de antes, de la 1 a la anterior)
+  if (D.demo && !ns.length) { const n = (M.enJuego || M.proxima || {}).n || 1; ns = Array.from({ length: n - 1 }, (_, i) => i + 1); }
+  const tids = D.clasif.map((e) => String(e.teamId));
+  let v = {};
+  if (D.demo) v = demoPorJornada(D, ns);
+  else for (const n of ns) { const m = S.ptsJ && S.ptsJ[n]; if (m && Object.keys(m).length) v[n] = m; }
+  // fuera las de antes de que existiera la liga (todo a cero) y las que LaLiga no ha dado
+  const cols = ns.filter((n) => v[n] && tids.some((t) => Number(v[n][t]) !== 0));
+  // por si /standing/{n} diera lo acumulado y no lo de la jornada: entonces casi nunca baja y pasa de 200
+  if (cols.length >= 3) {
+    let pasos = 0, suben = 0;
+    for (let i = 1; i < cols.length; i++) for (const t of tids) { const a = v[cols[i - 1]][t], b = v[cols[i]][t]; if (a != null && b != null) { pasos++; if (b >= a) suben++; } }
+    const maxUlt = Math.max(...tids.map((t) => Number(v[cols[cols.length - 1]][t]) || 0));
+    if (pasos && suben / pasos > 0.95 && maxUlt > 200) {
+      const w = {};
+      cols.forEach((n, i) => {
+        w[n] = {};
+        for (const t of tids) { const b = v[n][t], a = i ? v[cols[i - 1]][t] : 0; if (b != null && a != null && (!i || cols[i - 1] === n - 1)) w[n][t] = b - a; }
+      });
+      v = w;
+    }
+  }
+  return { cols, v, faltan: ns.filter((n) => !v[n] && !(S.ptsJ && S.ptsJ[n])).length };
+}
+export function porJornadaHTML(S) {
+  const { M, D } = S;
+  const { cols, v, faltan } = puntosPorJornada(S);
+  const yo = M.yo ? String(M.yo.teamId) : '';
+  const tids = D.clasif.map((e) => String(e.teamId));
+  // la que se juega, con los puntos en directo (no cuenta para la media ni las ganadas)
+  const vivoN = M.enJuego && M.vivo && M.vivo.equipos && Object.keys(M.vivo.equipos).length ? M.enJuego.n : null;
+  let h = `<div class="sec"><h2>Puntos por jornada</h2><span class="sub">toca para ordenar</span></div>`;
+  if (!cols.length && !vivoN) return h + nada(S.cargandoPtsJ || faltan ? 'Pidiendo a LaLiga los puntos de cada jornada…' : 'Aún no hay jornadas acabadas en tu liga.');
+  const maxDe = (n) => Math.max(...tids.map((t) => (v[n][t] == null ? -1e9 : v[n][t])));
+  const minDe = (n) => Math.min(...tids.map((t) => (v[n][t] == null ? 1e9 : v[n][t])));
+  const tops = Object.fromEntries(cols.map((n) => [n, [maxDe(n), minDe(n)]]));
+  const filas = D.clasif.map((e) => {
+    const t = String(e.teamId);
+    const ps = cols.map((n) => v[n][t]).filter((x) => x != null);
+    return {
+      e, t, yo: t === yo, total: Number(e.puntos) || 0,
+      media: ps.length ? ps.reduce((a, b) => a + b, 0) / ps.length : null,
+      mejor: ps.length ? Math.max(...ps) : null,
+      ganadas: cols.filter((n) => v[n][t] != null && v[n][t] >= tops[n][0]).length,
+      vivo: vivoN ? M.vivo.equipos[t] : null,
+    };
+  });
+  const orden = S.rkCol || 'total';
+  const val = (f) => (orden === 'total' ? f.total : orden === 'vivo' ? f.vivo : orden === 'media' || orden === 'mejor' || orden === 'ganadas' ? f[orden] : v[orden] ? v[orden][f.t] : null);
+  filas.sort((a, b) => (orden === 'total' ? a.e.pos - b.e.pos : 0) || ((val(b) == null ? -1e9 : val(b)) - (val(a) == null ? -1e9 : val(a))) || a.e.pos - b.e.pos);
+  const th = (k, txt, cls = '') => `<th class="${cls}${String(orden) === String(k) ? ' rk-on' : ''}"><button data-accion="rkOrden" data-n="${esc(k)}">${txt}</button></th>`;
+  const js = [...cols].reverse();
+  let t = `<thead><tr><th class="rk-q">Mánager</th>${th('total', 'Total')}${th('media', 'Media')}${th('ganadas', 'Gan.')}${th('mejor', 'Mejor')}${vivoN ? th('vivo', `<span class="vivo-dot"></span>J${vivoN}`, 'rk-j') : ''}${js.map((n) => th(n, `J${n}`, 'rk-j')).join('')}</tr></thead><tbody>`;
+  filas.forEach((f, i) => {
+    const celda = (n) => {
+      const x = v[n][f.t];
+      if (x == null) return '<td class="rk-j apag">–</td>';
+      const cls = x >= tops[n][0] ? ' rk-top' : x <= tops[n][1] && tops[n][0] !== tops[n][1] ? ' rk-min' : '';
+      return `<td class="rk-j${cls}">${x}</td>`;
+    };
+    t += `<tr class="${f.yo ? 'rk-yo' : ''}"><th class="rk-q"><button ${f.yo ? 'data-ir="equipo"' : `data-r="${esc(f.t)}"`}><span class="rk-p">${orden === 'total' ? f.e.pos : i + 1}</span>${caraManager(f.e, 'p')}<span class="rk-nom">${esc(f.e.nombre)}</span></button></th>
+      <td><b>${f.total}</b></td><td>${f.media != null ? d1(f.media) : '–'}</td><td>${f.ganadas || '–'}</td><td>${f.mejor != null ? f.mejor : '–'}</td>${vivoN ? `<td class="rk-j rk-vivo">${f.vivo != null ? f.vivo : '–'}</td>` : ''}${js.map(celda).join('')}</tr>`;
+  });
+  t += '</tbody>';
+  h += `<div class="rk-caja" data-quieto><table class="rk">${t}</table></div>`;
+  h += `<p class="t2 peq">En verde, el que más hizo en cada jornada; en rojo, el que menos. «Gan.» son las jornadas que ha ganado (los empates cuentan para los dos)${vivoN ? `; la J${vivoN} va en directo y no cuenta en la media` : ''}.${faltan ? ` ${S.cargandoPtsJ ? 'Pidiendo' : 'Faltan'} ${faltan} jornada${faltan === 1 ? '' : 's'} a LaLiga.` : ''}</p>`;
+  return h;
+}
+
 /* ---------------- la pestaña ---------------- */
 export function directo(S) {
   const { M } = S;
@@ -249,10 +340,11 @@ export function directo(S) {
   h += `<p class="entradilla dt-ent">${vivos ? `<span class="vivo-dot"></span><b>${vivos}</b> jugándose · ` : ''}${fin} acabado${fin === 1 ? '' : 's'} · ${ps.length - vivos - fin} por jugar
     <button class="enlace dt-act" data-accion="vivoYa">${icono('refrescar')}${S.cargandoVivo ? 'Actualizando…' : V ? `Actualizado ${rel(V.t)}` : 'Actualizar'}</button></p>`;
   h += resumenHTML(S, n, ps);
-  if (ancho()) return h + cols(listaPartidos(S, n, ps), ligaHTML(S, n, ps) + onceHTML(S, n, ps));
-  h += tabs('directo', seg, [['partidos', 'Partidos', vivos, 'verde'], ['liga', 'Tu liga'], ['once', 'Tu once']]);
+  if (ancho()) return h + cols(listaPartidos(S, n, ps), ligaHTML(S, n, ps) + onceHTML(S, n, ps)) + porJornadaHTML(S);
+  h += tabs('directo', seg, [['partidos', 'Partidos', vivos, 'verde'], ['liga', 'Tu liga'], ['once', 'Tu once'], ['jornadas', 'Por jornada']]);
   if (seg === 'liga') h += ligaHTML(S, n, ps);
   else if (seg === 'once') h += onceHTML(S, n, ps);
+  else if (seg === 'jornadas') h += porJornadaHTML(S);
   else h += listaPartidos(S, n, ps);
   return h;
 }
@@ -274,7 +366,11 @@ function sinJornada(S) {
     b += listaPartidos(S, ult.n, partidosJornada(S, ult.n), { dias: false });
   }
   if (!a && !b) return h + nada('No hay jornadas a la vista.');
-  return h + (ancho() && a && b ? cols(a, b, 'mitades') : a + b);
+  if (ancho()) return h + (a && b ? cols(a, b, 'mitades') : a + b) + porJornadaHTML(S);
+  // sin jornada en juego, dos pestañas: los partidos (la próxima y la última) y los puntos de cada uno por jornada
+  const seg = S.seg.directo === 'jornadas' ? 'jornadas' : 'partidos';
+  h += tabs('directo', seg, [['partidos', 'Partidos'], ['jornadas', 'Por jornada']]);
+  return h + (seg === 'jornadas' ? porJornadaHTML(S) : a + b);
 }
 
 /* ---------------- la ficha de un partido ---------------- */
