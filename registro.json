@@ -1959,7 +1959,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249130/pellegrini-contar-copa-cuatro-porteros.html": 1794239934000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/manolo-lama-senala-cuatro-decisiones-mourinho-han-llevado-exito-real-madrid-importante-gran-merito-entrenador-20261109_3471059.html": 1794241484000,
    "SPORT|136258178": 1794241328000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000,
+   "SPORT|136257166": 1794243633000
   },
   "hechos": [
    {
@@ -2414,7 +2415,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -3325,17 +3326,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 259945,
-  "salida": 27537,
+  "entrada": 261844,
+  "salida": 27619,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.508225,
+  "dolares": 0.508456,
   "reservado": 0
  },
  "recientes": {
@@ -7260,13 +7261,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 875,
+   "ok": 876,
    "fallos": 0,
-   "ejecuciones": 530,
+   "ejecuciones": 531,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T18:01:15.431Z"
+   "ultima": "2026-11-09T18:06:15.136Z"
   }
  },
  "ptsDirecto": {},
@@ -7283,15 +7284,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:01:23.245Z"
+   "ultimaBien": "2026-11-09T18:06:21.123Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:01:23.245Z"
+   "ultimaBien": "2026-11-09T18:06:21.123Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:01:23.245Z"
+   "ultimaBien": "2026-11-09T18:06:21.123Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7299,11 +7300,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:01:23.245Z"
+   "ultimaBien": "2026-11-09T18:06:21.123Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T18:01:23.245Z"
+   "ultimaBien": "2026-11-09T18:06:21.123Z"
   }
  },
  "avisos": [
