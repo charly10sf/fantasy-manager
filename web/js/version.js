@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7zf';
+export const VERSION = '0.7.1';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -12,7 +12,20 @@ export const VERSION = '0.7zf';
 // A los que no son el dueño solo les sale lo que les cambia algo (el filtro, en app.js): ni los arreglos, ni lo que lleva
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
+// Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
+// novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.1', f: '2026-11-09', h: '13:04', t: 'Hoy, más clara, y el parón para hacer dinero', todos: true,
+    cosas: [
+      { tipo: 'nuevo', d: 'plan', t: 'El plan, por fases', x: 'La pestaña Hoy enseña el plan en el orden en que cuadra el dinero: primero lo urgente, después «Haz caja» (lo que vendes o aceptas), «Ficha», «Protege» y «Alinea». Cada fase dice lo que entra o sale y con cuánto te quedas, y una barra cuenta los pasos que llevas hechos. Cada paso es una fila corta: tócala para ver el porqué y los datos.', ir: { v: 'hoy' } },
+      { tipo: 'mejora', d: 'scroll', t: 'Pliega lo que ya tienes visto', x: 'Toca el título de una fase para plegarla; la app se acuerda mientras dure ese plan y pliega sola las que tienes hechas. Los próximos días, lo que hay que vigilar, las noticias y los rivales también van plegados en el móvil, para que lo primero que veas sea el plan.', ir: { v: 'hoy' } },
+      { tipo: 'nuevo', d: 'especular', t: 'En el parón, a por el dinero', x: 'Durante el parón de selecciones nadie puntúa, así que el plan cambia: compra lo que sube para venderlo antes de la vuelta, vende en lo alto lo que va a bajar y protege lo tuyo. Clausular para el once solo sale si es un chollo (a su valor y sin bajar) o en los dos o tres días antes de la jornada de vuelta.', ir: { v: 'hoy' } },
+      { tipo: 'nuevo', d: 'bandera', t: 'La tarjeta del parón', x: 'Mientras dura el parón, arriba de Hoy: cuánto queda para la jornada, lo que puedes ganar revendiendo y desde qué día toca pensar en el once.', ir: { v: 'hoy' } },
+      { menor: true, tipo: 'mejora', d: 'ia', t: 'La IA sabe qué cláusulas y pujas valen en el parón', x: 'Cada cláusula y puja le llega marcada como chollo, para revender o no; si propone fichar para el once algo que no es un chollo, la app lo descarta y dice por qué. Lo que se puede ganar revendiendo se calcula algo más prudente en el parón.' },
+      { menor: true, tipo: 'mejora', d: 'campana', t: 'Lo urgente, dentro del plan', x: '«Ahora mismo» ya no va aparte: lo urgente que el plan no recoge sale arriba, en «Antes de nada».' },
+    ],
+  },
   {
     v: '0.7zf', f: '2026-11-09', h: '11:35', t: 'La IA, más fina con el plan',
     cosas: [

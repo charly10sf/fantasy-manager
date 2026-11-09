@@ -2881,22 +2881,33 @@ function novedades() {
   if (!tourVisto() || !vista || cmpVer(vista, VERSION) >= 0) { LS.set('version-vista2', VERSION); return; }
   // y a quien no es el dueño (ni los de la liga, desde la 0.7z) no se le abre nada solo ni se le enseña la lista de
   // Ajustes: las novedades de cada versión son solo para el dueño (o para todos con «novedadesTodos»)
+  // (0.7.1) una versión con «todos: true» se presenta a todos; a quien no es el dueño, desde la de antes de la primera
+  // así que no haya visto (sin las viejas, que eran solo para el dueño)
+  let desde = vista;
   if (!avisosGuardados().admin) {
-    if (!S.D) return;
-    const mia = novedadesPara({ ligas: S.D.ligas || [] });
-    if (mia === null) return; // aún no se sabe de qué liga es: se mira en el próximo arranque
-    if (!mia) { LS.set('version-vista2', VERSION); return; }
+    const paraTodos = NOVEDADES.filter((n) => n.todos && cmpVer(n.v, vista) > 0);
+    if (paraTodos.length) {
+      const i = NOVEDADES.indexOf(paraTodos[paraTodos.length - 1]);
+      if (NOVEDADES[i + 1] && cmpVer(NOVEDADES[i + 1].v, vista) > 0) desde = NOVEDADES[i + 1].v;
+    } else {
+      if (!S.D) return;
+      const mia = novedadesPara({ ligas: S.D.ligas || [] });
+      if (mia === null) return; // aún no se sabe de qué liga es: se mira en el próximo arranque
+      if (!mia) { LS.set('version-vista2', VERSION); return; }
+    }
   }
   // si desde la última que viste solo hay arreglos, no se abre nada: se juntan para la próxima con algo nuevo, que los
   // cuenta al final, numerados
-  if (!hayNovedadesDesde(vista)) return;
+  if (!hayNovedadesDesde(desde)) return;
   LS.set('version-vista2', VERSION);
-  verNovedades(vista);
+  verNovedades(desde);
 }
 function verNovedades(desde) {
   presentarNovedades(desde, {
     alIr: (a) => { if (!a || !S.D) return; if (a.seg) { const [v, sg] = a.seg.split(':'); S.seg[v] = sg; } ir(a.v); },
-    alLista: () => listaVersiones(),
+    // (0.7.1) la lista de todas las versiones, solo a quien puede verla (el dueño o con «novedadesTodos»): a los demás,
+    // con una versión «para todos», solo esa
+    alLista: avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true ? () => listaVersiones() : null,
     alCerrar: () => quizaTutorial(700),
   });
 }
