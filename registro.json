@@ -1782,8 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/jacobo-ramon-marc-roca-alvaro-valles-estrenan-20261106114733-nt.html": 1793962206000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/06/6aed9130e4d4d8a7398b4572.html": 1793961998000,
    "AS|https://as.com/futbol/eric-y-christensen-se-apuntan-al-metropolitano-f202611-n/": 1793962556000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261106/1004247866/tripleta-athletic-mantiene-espana.html": 1793962306000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/06/barrenetxea-vuelve-a-la-lista-de-luis-de-la-fuente-para-el-paron-de-noviembre-radio-san-sebastian/": 1793962860000,
@@ -7539,13 +7537,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 787,
+   "ok": 788,
    "fallos": 0,
-   "ejecuciones": 442,
+   "ejecuciones": 443,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T10:46:13.592Z"
+   "ultima": "2026-11-09T10:51:11.678Z"
   }
  },
  "ptsDirecto": {},
@@ -7562,15 +7560,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:46:19.609Z"
+   "ultimaBien": "2026-11-09T10:51:14.626Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:46:19.609Z"
+   "ultimaBien": "2026-11-09T10:51:14.626Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:46:19.609Z"
+   "ultimaBien": "2026-11-09T10:51:14.626Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7578,11 +7576,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:46:19.609Z"
+   "ultimaBien": "2026-11-09T10:51:14.626Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T10:46:19.609Z"
+   "ultimaBien": "2026-11-09T10:51:14.626Z"
   }
  },
  "avisos": [
