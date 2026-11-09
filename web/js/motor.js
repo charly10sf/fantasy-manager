@@ -299,7 +299,9 @@ export function analizar(D, H, c, extra = {}) {
     else if (fase === 'acelera') texto = `Sube cada vez más (${Rs.slice(-3).map(fmt).join(', ')} al día).`;
     else if (fase === 'sube') texto = `Sube ${fmt(ult)} al día.`;
     if (vu && (fase === 'sube' || fase === 'acelera')) texto = `${texto ? `${texto} ` : ''}Llegó a valer ${eur(vu.max)} esta temporada, vuelve a jugar y lleva ${vu.racha} días subiendo (un ${pct(vu.ritmo * 100, 1, false)} al día de media los 3 últimos)${frenaba ? '; hoy algo menos que ayer, pero le queda mucho para su valor de antes' : ''}.`;
-    return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, texto, quieto, rebote, vuelve: vu && (fase === 'sube' || fase === 'acelera') ? vu : null });
+    // (21) `proy(k)`: lo que se espera que cambie su valor en k días, con la misma cuenta (la pestaña Parón la usa hasta la
+    // vuelta, que puede quedar a más de los 7 días de `proyJ`)
+    return (cacheI[pid] = { R: Rs, dias: F.slice(-7), ult, pend, fase, giroEn, subia, baja, proy3: proy(3), proyJ: proy(hastaJ), hastaJ, proy: (k) => proy(clamp(Math.round(k), 1, 14)), texto, quieto, rebote, vuelve: vu && (fase === 'sube' || fase === 'acelera') ? vu : null });
   };
   // la hora del partido de cada equipo en cada jornada, hecha una vez (M.partidazo se llama con cientos de jugadores
   // desde M.interes)
