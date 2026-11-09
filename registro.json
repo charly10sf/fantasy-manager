@@ -1982,7 +1982,9 @@
    "ABC|https://www.abc.es/deportes/futbol/pegada-condena-atletico-lanza-barca-20261108225722-nt.html": 1794183248000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261109/1004248718/inaki-williams-vive-momento-dulce-athletic.html": 1794205800000,
    "SPORT|136234060": 1794204012000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248922/fermin.html": 1794208811000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248922/fermin.html": 1794208811000,
+   "SPORT|136236561": 1794207418000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/se-que-vas-a-volver-el-mensaje-de-la-hija-de-pepe-mel-ser-almeria/": 1794211411000
   },
   "hechos": [
    {
@@ -2639,7 +2641,7 @@
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -3710,17 +3712,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 29,
    "revisar": 19,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 177136,
-  "salida": 12397,
+  "entrada": 179043,
+  "salida": 12584,
   "cacheLee": 203860,
   "cacheEscribe": 16825,
-  "dolares": 0.492375,
+  "dolares": 0.492659,
   "reservado": 0
  },
  "recientes": {
@@ -7645,13 +7647,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 754,
+   "ok": 755,
    "fallos": 0,
-   "ejecuciones": 409,
+   "ejecuciones": 410,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T08:01:12.202Z"
+   "ultima": "2026-11-09T08:06:16.296Z"
   }
  },
  "ptsDirecto": {},
@@ -7668,15 +7670,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:01:19.129Z"
+   "ultimaBien": "2026-11-09T08:06:26.011Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:01:19.129Z"
+   "ultimaBien": "2026-11-09T08:06:26.011Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:01:19.129Z"
+   "ultimaBien": "2026-11-09T08:06:26.011Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7684,11 +7686,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:01:19.129Z"
+   "ultimaBien": "2026-11-09T08:06:26.011Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T08:01:19.129Z"
+   "ultimaBien": "2026-11-09T08:06:26.011Z"
   }
  },
  "avisos": [
