@@ -13,7 +13,7 @@ import { validar } from './validar.mjs';
 import { preguntarJson } from './gemini.mjs';
 import { preguntar, conClaude } from './ia.mjs';
 import { revisarConIA } from './revisor.mjs';
-import { deHoyMal } from './redaccion.mjs';
+import { deHoyMal, erroresLejos } from './redaccion.mjs';
 
 const diaMadrid = (t) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date(t));
 const CIFRAS = /\d+(?:[.,]\d+)?/g;
@@ -201,6 +201,7 @@ export async function pulir(tweets, { tipo, registro = null, config = {}, jugado
     const malos = revisar(t.texto, nuevo, { numeros: t.numeros, max: limite(), nombres, tipo });
     // (8 nov, Barrenetxea) «hoy» o «esta tarde» de un partido que ya ha empezado, tampoco al pulir
     { const hm = t.hechos ? deHoyMal(nuevo, t.hechos) : null; if (hm) malos.push(hm); }
+    if (t.hechos) malos.push(...erroresLejos(nuevo, t.hechos));   // (9 nov) un partido del parón, como si fuera ya
     if (malos.length) { cuenta.mal++; log(`  (pulir) ${t.clave}: me quedo la plantilla (${malos.slice(0, 3).join('; ')})`); continue; }
     // la segunda lectura (lib/revisor.mjs): si el pulido no se entiende o mete algo que la plantilla no dice, se queda la plantilla
     const rv = await revisor({ texto: nuevo, fuenteTexto: t.texto, tipo, registro, config, log });

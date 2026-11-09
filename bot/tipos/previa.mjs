@@ -167,7 +167,7 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
             const c = conf[k];
             eqOnce.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', formacion: c.formacion,
               ...(c.fuera.length ? { quedanFuera: c.fuera.slice(0, 5).map((x) => x.nombre) } : {}), ...(c.sorpresa.length ? { titularesSorpresa: c.sorpresa.slice(0, 5).map((x) => x.nombre) } : {}) });
-            for (const x of c.fuera.slice(0, 5)) jugOnce.push({ nombre: x.nombre, ...puOnce(x), club: eq, papel: 'titular habitual que se queda fuera del once', titularidadFantasyManager: `${Math.round(x.p * 100)} %`, principal: false });
+            for (const x of c.fuera.slice(0, 5)) jugOnce.push({ nombre: x.nombre, ...puOnce(x), club: eq, papel: 'titular habitual que se queda fuera del once', titularidad: `${Math.round(x.p * 100)} %`, principal: false });
             for (const x of c.sorpresa.slice(0, 5)) jugOnce.push({ nombre: x.nombre, ...puOnce(x), club: eq, papel: 'es titular aunque no suele serlo', principal: false });
           }
           // la hora (Carlos, 7 nov 17:33: «no hace falta lo de y a las 18:30 arranca el partido, pon en 1h o así, y no siempre»): nada de la
@@ -286,9 +286,9 @@ export async function generar({ semana, jugadores, config = {}, registro = null,
         eqH.push({ club: eq, juega: k === 'L' ? 'en casa' : 'fuera', ...(t && t.pj ? { va: `${t.pos}º de ${tablaH.n}`, golesMarcadosPorPartido: fmt(t.gf / t.pj), golesEncajadosPorPartido: fmt(t.gc / t.pj) } : {}),
           ...(cruce.length ? { cruce } : {}) });
         // (pocos y los que pesan: con tres dudas, tres bajas y dos fijos por equipo la IA los enumeraba todos; 6 nov)
-        pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2).forEach((x) => jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'duda de titularidad', estado: 'duda', titularidadFantasyManager: `${pct(x.p)} %`, lectura: dilo(x.p), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false }));
+        pos[k].once.filter((y) => y.p < 0.65 && y.p >= 0.1).sort((a, b) => md(b) - md(a) || a.p - b.p).slice(0, 2).forEach((x) => jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'duda de titularidad', estado: 'duda', titularidad: `${pct(x.p)} %`, lectura: dilo(x.p), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false }));
         for (const x of Object.values(probs[k]).filter(esBaja).sort((a, b) => md(b) - md(a)).filter((x, i) => i === 0 || md(x) >= 3).slice(0, 3)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'baja', estado: x.estado === 'suspended' ? 'sancionado' : 'lesionado', ...(md(x) >= 1 ? { mediaPuntos: fmt(md(x)) } : {}), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false });
-        for (const x of pos[k].once.filter((y) => y.p >= 0.8 && md(y) >= 4).sort((a, b) => md(b) - md(a)).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'fijo', titularidadFantasyManager: `${pct(x.p)} %`, mediaPuntos: fmt(md(x)), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false });
+        for (const x of pos[k].once.filter((y) => y.p >= 0.8 && md(y) >= 4).sort((a, b) => md(b) - md(a)).slice(0, 2)) jugH.push({ nombre: x.nombre, ...pu(x), club: eq, papel: 'fijo', titularidad: `${pct(x.p)} %`, mediaPuntos: fmt(md(x)), ...(md(x) >= 8 ? { mediaAlta: true } : {}), principal: false });
       }
       // por dónde abrir el tuit: uno distinto de un partido a otro (7 nov: los cinco abrían y seguían con el mismo esqueleto)
       const bajaGorda = jugH.filter((x) => x.papel === 'baja' && Number(String(x.mediaPuntos || '0').replace(',', '.')) >= 5).length;

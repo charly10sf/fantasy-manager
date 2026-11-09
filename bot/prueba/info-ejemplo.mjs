@@ -81,8 +81,8 @@ const info = crearInfo({ jugadores, equipos, semana: { weekNumber: 12 }, pedirSe
   ok(!/el rival/.test(fraseGoles(R(1, 'difícil'), 2, 0, 'Barça').t) && !/el rival/.test(fraseGoles(R(1, 'difícil'), 2, 1, 'Barça').t), 'goles: «el rival» a secas no sale si se sabe cuál es');
   ok(fraseGoles(R(9, 'media', { rgf: 8, rgc: 10 }), 2, 0) === null, 'goles: nada si está en mitad de tabla');
   const q = 'El defensa del Getafe';
-  ok(fraseJugador({ quien: q, media: 5.9, tit: { p: 0.72, pct: 72 }, f: 0 }).t === '📊 El defensa del Getafe suma 5,9 puntos de media y Fantasy Manager le da un 72 % de titularidad', fraseJugador({ quien: q, media: 5.9, tit: { p: 0.72, pct: 72 }, f: 0 }).t);
-  ok(fraseJugador({ quien: q, media: 5.9, tit: { p: 0.34, pct: 34 }, f: 1 }).t === '📊 El defensa del Getafe, que suma 5,9 puntos de media, lo tiene difícil para ser titular: un 34 % en Fantasy Manager', fraseJugador({ quien: q, media: 5.9, tit: { p: 0.34, pct: 34 }, f: 1 }).t);
+  ok(fraseJugador({ quien: q, media: 5.9, tit: { p: 0.72, pct: 72 }, f: 0 }).t === '📊 El defensa del Getafe suma 5,9 puntos de media y tiene un 72 % de titularidad', fraseJugador({ quien: q, media: 5.9, tit: { p: 0.72, pct: 72 }, f: 0 }).t);
+  ok(fraseJugador({ quien: q, media: 5.9, tit: { p: 0.34, pct: 34 }, f: 1 }).t === '📊 El defensa del Getafe, que suma 5,9 puntos de media, lo tiene difícil para ser titular: un 34 % de titularidad', fraseJugador({ quien: q, media: 5.9, tit: { p: 0.34, pct: 34 }, f: 1 }).t);
   ok(/^📊 Con 4,6 puntos de media, el defensa del Getafe queda en un 33 % de titularidad por la duda$/.test(fraseJugador({ quien: q, media: 4.6, tit: { p: 0.33, pct: 33 }, tipo: 'duda', f: 2 }).t), 'duda');
   ok(/^‼️ El defensa del Getafe suma 5,9 puntos de media$/.test(fraseJugador({ quien: q, media: 5.9, f: 0 }).t) && fraseJugador({ quien: q, media: 2 }) === null, 'sin %: la media sola; sin media ni %: nada');
   // rotan: dos seguidos nunca con el mismo esqueleto
@@ -111,6 +111,7 @@ const ahora = Date.parse('2026-11-05T12:30:00Z');   // 13:30 en Madrid
 const N = (medio, guid, titulo, entradilla, h = 1) => ({ medio, guid: `${medio}|${guid}`, titulo, entradilla, url: guid, t: ahora - h * 36e5 });
 const prensa = [
   N('AS', 'z1', 'Zaid Romero vuelve a los planes del Getafe', 'El central recibe el alta tras un mes fuera'),
+  N('MARCA', 'z2', 'Zaid Romero, de nuevo con el grupo', 'El central del Getafe ya tiene el alta'),
   N('MARCA', 'm1', 'Mayoral, con molestias', 'El delantero del Getafe se entrena al margen'),
   N('AS', 'm2', 'Mayoral no se entrena con el grupo', 'Molestias en el gemelo para el delantero'),
   N('AS', 'u1', 'Parte médico del Getafe: Uche', 'El club informa en un parte médico de que Uche sufre una rotura y estará 4 semanas de baja'),
@@ -118,6 +119,7 @@ const prensa = [
 ];
 const R = {
   'Zaid Romero vuelve a los planes del Getafe': { que: 'vuelve', hecho: 'Zaid Romero vuelve a los planes tras un mes', motivo: '', plazo: '', oficial: false },
+  'Zaid Romero, de nuevo con el grupo': { que: 'vuelve', hecho: 'Zaid Romero ya entrena con el grupo', motivo: '', plazo: '', oficial: false },
   'Mayoral, con molestias': { que: 'molestias', hecho: 'Mayoral arrastra molestias', motivo: 'molestias en el gemelo', plazo: '' },
   'Mayoral no se entrena con el grupo': { que: 'molestias', hecho: 'Mayoral se entrena aparte', motivo: 'molestias en el gemelo', plazo: '' },
   'Parte médico del Getafe: Uche': { que: 'lesion', hecho: 'Uche se rompe y estará un mes fuera', motivo: 'rotura muscular', plazo: 'estará 4 semanas de baja', oficial: true },
@@ -129,7 +131,7 @@ const pedirIA = async ({ prompt }) => {
 };
 const proximo = async () => ({ jornada: 12, rival: 'Villarreal', rivalId: '9', enCasa: true, fecha: '2026-11-08T17:30:00Z' });
 const config = { topes: { noticias: 15, novedades: 20, caidas: 9 }, topeDiario: 40, maxPorEjecucion: 6, noticiasPorEjecucion: 6, geminiDia: 60 };
-// Arambarri: un medio y la lista de lesionados de las webs de previas (no se nombra) dice duda
+// Arambarri: un medio y la lista de lesionados de las webs de previas dice duda: desde el 9 nov no sale (la lista no es segunda fuente)
 const listaPartes = [{ nombre: 'Mauro Arambarri', slug: 'arambarri', estado: 'duda', lesion: 'Molestias musculares' }];
 const sinSegunTrasCifra = (t) => ok(!segunTrasCifra(t.texto), `${t.clave}: «según» detrás de una cifra\n${t.texto}`);
 
@@ -155,7 +157,7 @@ for (const lim of [280, 1000]) {
   ok(fc(z) && fc(z).estado === 'disponible' && fc(z).pct === 72 && fc(m) && fc(m).pct === 33 && fc(u) && fc(u).pct === null, `% en la carta (${lim}): ${[z, m, u].map((t) => fc(t) && fc(t).pct).join(', ')}`);
   ok(z && z.tarjeta.permitidos.numeros.includes('72') && z.tarjeta.permitidos.palabras.includes('TITULARIDAD'), 'la carta deja el % y «TITULARIDAD» al validador');
   ok(u && /club/.test(u.texto) && !/\bAS\b/.test(u.texto) && !/ %|º/.test(u.texto) && /❌ Baja/.test(u.texto), `Uche (${lim}): oficial, el club; baja sin % ni rival`);
-  ok(a && /\bAS\b/.test(a.texto) && !/LaLiga Fantasy/.test(a.texto) && !/ % de titularidad|en Fantasy Manager/.test(a.texto), `Arambarri (${lim}): un medio y el parte, el medio; en LaLiga «ok», sin %`);
+  ok(!a, `Arambarri (${lim}): un medio y la lista de lesionados no bastan (9 nov)`);
   // el % y el rival no se piden para un tweet que no va a salir
   const reg2 = new Registro({ ...config, topes: { noticias: 0 } });
   reg2.fichero = null;
