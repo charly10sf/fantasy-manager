@@ -893,6 +893,13 @@
    "jornada": 13,
    "id": "2119695622110347313",
    "t": "2026-11-09T07:36:33.309Z"
+  },
+  {
+   "clave": "noticias|3104:mala|2026-11-09",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2119907031536787714",
+   "t": "2026-11-09T21:36:37.277Z"
   }
  ],
  "estados": {
@@ -1967,7 +1974,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000,
    "AS|https://as.com/futbol/primera/paron-de-reflexion-y-exodo-masivo-el-atleti-se-queda-sin-18-jugadores-f202611-n/": 1794252073000,
    "AS|https://as.com/futbol/primera/radu-recupera-el-trono-f202611-n/": 1794250319000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/09/konate-mbappe-ganar-balon-oro-duro-dia-siguiente-tope.html": 1794257865000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/09/konate-mbappe-ganar-balon-oro-duro-dia-siguiente-tope.html": 1794257865000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/09/espana/00031794259204939368288.htm": 1794259980000
   },
   "hechos": [
    {
@@ -2418,11 +2426,23 @@
     "motivo": "lesión muscular",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/09/espana/00031794259204939368288.htm",
+    "medio": "La Voz de Galicia",
+    "t": 1794259980000,
+    "id": "3104",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Lamine Yamal se recupera en Barcelona de molestias en la rodilla",
+    "motivo": "molestias en la rodilla derecha",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-09",
-   "n": 52
+   "n": 53
   },
   "desde": {
    "67": {
@@ -3331,17 +3351,17 @@
  "ia": {
   "dia": "2026-11-09",
   "llamadas": {
-   "clasificar": 63,
-   "redactar": 29,
-   "revisar": 19,
+   "clasificar": 64,
+   "redactar": 31,
+   "revisar": 20,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 285950,
-  "salida": 31887,
+  "entrada": 311948,
+  "salida": 32358,
   "cacheLee": 203860,
-  "cacheEscribe": 16825,
-  "dolares": 0.513,
+  "cacheEscribe": 19728,
+  "dolares": 0.572328,
   "reservado": 0
  },
  "recientes": {
@@ -3451,6 +3471,10 @@
    {
     "t": "2026-11-07T09:31:34.045Z",
     "texto": "✅ Mundo Deportivo cuenta que De Galarreta vuelve a la convocatoria del Athletic para el partido de hoy en El Sadar.\n\nEl Osasuna es de los que más goles encajan, y eso le viene bien a un centrocampista. Aun así, Fantasy Manager le da un 30 % de titularidad: no es un fijo, así que mejor esperar a los onces antes de tocar nada."
+   },
+   {
+    "t": "2026-11-09T21:36:37.279Z",
+    "texto": "⁉️ Lamine Yamal se recupera en Barcelona de unas molestias en la rodilla derecha, según La Voz de Galicia.\n\nTiene 10 goles y 8 asistencias en la liga, así que merece la pena seguirle de cerca. Con un 58 % de titularidad en Fantasy Manager, lo normal es que salga contra el Villarreal 🚢, que va 8º. Si lo tienes, mejor esperar a los onces."
    }
   ],
   "directo": [
@@ -7266,13 +7290,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 917,
+   "ok": 918,
    "fallos": 0,
-   "ejecuciones": 572,
+   "ejecuciones": 573,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T21:31:14.318Z"
+   "ultima": "2026-11-09T21:36:13.127Z"
   }
  },
  "ptsDirecto": {},
@@ -7289,15 +7313,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:31:19.260Z"
+   "ultimaBien": "2026-11-09T21:36:37.303Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:31:19.260Z"
+   "ultimaBien": "2026-11-09T21:36:37.303Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:31:19.260Z"
+   "ultimaBien": "2026-11-09T21:36:37.303Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7305,11 +7329,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:31:19.260Z"
+   "ultimaBien": "2026-11-09T21:36:37.303Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:31:19.260Z"
+   "ultimaBien": "2026-11-09T21:36:37.303Z"
   }
  },
  "avisos": [
