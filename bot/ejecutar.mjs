@@ -19,6 +19,7 @@ import { publicarSinRepetir, subirImagen, comprobar, clavesDelEntorno } from './
 import { fijarLimite, limite, largo, variarEquipos } from './lib/texto.mjs';
 import { decidirLargo, rechazoPorLargo } from './lib/largo.mjs';
 import { apuntarDecision, tocaPendiente } from './lib/aire.mjs';
+import { esperaParon } from './lib/paron.mjs';
 import { crearInfo } from './lib/info-jugador.mjs';
 import { cerrarSalud, encolarAviso, hora as horaAviso, FUENTE_PARTIDOS } from './lib/salud.mjs';
 
@@ -81,6 +82,17 @@ let objetivoCaidas = null;
 if (pendientes === 0) objetivoCaidas = sem.nextWeek;
 else if (stats.every((m) => m.matchState === 1)) objetivoCaidas = jornada;
 if (objetivoCaidas == null && forzar) objetivoCaidas = sem.nextWeek;
+// tras un parón de selecciones, las caídas de la jornada que viene esperan a que falten `paron.horasAntes` (lib/paron.mjs; Domy y
+// Carlos, 9 nov: el lunes del parón salió «Bajas y dudas para la jornada 13»). Con el parón LaLiga ya da la semana siguiente.
+let paronCaidas = null;
+if (objetivoCaidas != null && ventanas && !forzar) {
+  const cp = config.paron || {};
+  const [siguiente, anterior] = objetivoCaidas === jornada
+    ? [stats, await statsSemana(jornada - 1).catch(() => [])]
+    : [await statsSemana(objetivoCaidas).catch(() => []), stats];
+  const p = esperaParon({ siguiente, anterior, dias: cp.dias ?? 9, horasAntes: cp.horasAntes ?? 72 });
+  if (p.espera) { paronCaidas = p; objetivoCaidas = null; }
+}
 
 // la prensa de cada partido para los tuits redactados (lib/cronicas.mjs)
 const cronicas = crearCronicas({ config, log: (s) => console.log(s) });
@@ -134,6 +146,7 @@ for (const q of quienes) {
   const [sD, sH] = silencio(config);
   if (ventanas && !forzar && !['directo', 'mercado'].includes(q) && horaMadrid >= sD && horaMadrid < sH) { console.log(`\n## ${q}: horas de silencio (son las ${horaMadrid} h en Madrid; vuelve a las ${sH} h)`); continue; }
   if (q === 'caidas') {
+    if (paronCaidas) { console.log(`\n## caidas: parón (${Math.round(paronCaidas.hueco)} días entre jornadas): espero hasta el ${new Date(paronCaidas.desde).toLocaleString('es-ES', { timeZone: 'Europe/Madrid', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`); continue; }
     if (objetivoCaidas == null) { console.log(`\n## caidas: espero (quedan ${pendientes} partido(s) de la jornada ${jornada})`); continue; }
     if (!enHorarioCaidas) { console.log(`\n## caidas: fuera de horario (son las ${horaMadrid} h en Madrid; publico de ${hDesde} a ${hHasta} h)`); continue; }
     c = { ...ctx, jornada: objetivoCaidas, ultimaJugada: objetivoCaidas - 1 };

@@ -22,6 +22,7 @@
   "ligaGeminiDia": 60,
   "horasSancionados": [9, 23],
   "sancionadosAntesHoras": 54,
+  "paron": { "dias": 9, "horasAntes": 72 },
   "horasLloros": [9, 23],
   "noticiasPorEjecucion": 2,
   "noticiasLotesEjecucion": 2,
