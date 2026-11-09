@@ -195,6 +195,19 @@ let seg = 0;
 for (let i = 0; i < 12; i++) { minuto(); r = await pide({ ruta: '/uso', cuerpo: { seg: 60 }, tk: 'y'.repeat(30) }); seg = r.j.seg; }
 ok(cuenta.escrituras === 3 && seg === 360 + 12 * 60, `/uso cada minuto durante 12 min: ${cuenta.escrituras} escrituras, total ${seg} s`);
 ok(Number(kv.get(`u:2222:${r.j.dia}`).v) <= seg, 'lo guardado no pasa de lo contado');
+// /hola: la pantalla de bienvenida, una vez por cuenta (9 nov): sin verla no hay bv; al verla se apunta y sigue en las siguientes
+{
+  const tk = 'b'.repeat(30);
+  let a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'web', app: 1 }, tk });
+  ok(a.s === 200 && !a.j.bv, `/hola sin bienvenida vista: sin bv (${a.t})`);
+  minuto();
+  a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'web', app: 1, bv: true }, tk });
+  const bv = a.j && a.j.bv;
+  ok(a.s === 200 && bv > 0, `/hola con bv: true la apunta (${a.t})`);
+  minuto();
+  a = await pide({ ruta: '/hola', cuerpo: { equipo: 'X', liga: '1', v: '0.7zf', canal: 'play', app: 1 }, tk });
+  ok(a.s === 200 && a.j.bv === bv, `desde otro dispositivo, ya vista (bv ${a.j && a.j.bv})`);
+}
 // /hola: alternar la versión no escribe cada vez
 kv.clear();
 cuenta.escrituras = 0;

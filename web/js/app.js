@@ -28,7 +28,7 @@ import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva,
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
-import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga } from './soporte.js';
+import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida } from './soporte.js';
 import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
@@ -397,8 +397,46 @@ async function codigoDeMudanza() {
   }
 }
 /* el aviso de que la app sigue en desarrollo, arriba en todas las pestañas, en la web y en la app (lo pidió Carlos el
-   2 nov): lleva a «Reportar un fallo» y se cierra con la ×; vuelve a salir a las 24 h de cerrarlo (Carlos, 8 nov; antes 7 días) */
-const BETA_VUELVE = DIA;
+   2 nov): lleva a «Reportar un fallo» y se cierra con la ×; vuelve a salir a las 72 h de cerrarlo (Carlos, 9 nov 10:32; antes
+   24 h y, antes, 7 días). Cerrar la pantalla de bienvenida cuenta como cerrarlo */
+const BETA_VUELVE = 3 * DIA;
+/* la pantalla de bienvenida (Carlos, 9 nov 10:20: «en vez del aviso de arriba»): la primera vez que alguien entra con su
+   liga, una vez por cuenta (en local y en el Worker, para que no salga otra vez en otro dispositivo: soporte.js). Nunca en
+   la liga de ejemplo ni antes de entrar, ni encima del tutorial, las novedades o el límite: espera a que no haya nada
+   delante (el tutorial, a su vez, espera a que se cierre). El texto es el de Carlos, tal cual */
+function bienvenidaHTML() {
+  return `<div id="bienvenida" class="bv" role="dialog" aria-modal="true" aria-labelledby="bvTit"><div class="bv-caja">
+    <div class="bv-logo">${LOGO_P}<span>Fantasy Manager</span></div>
+    <h2 id="bvTit">¡Hola! Soy Carlos.</h2>
+    <p>Fantasy Manager lo estoy haciendo yo solo, en los ratos que me dejan el trabajo y los estudios.</p>
+    <p>Por eso me ayuda muchísimo que me cuentes cualquier fallo que veas o cualquier idea para mejorar algo: lo leo todo y lo tengo en cuenta.</p>
+    <div class="bv-botones"><button class="btn ancho" data-accion="bienvenidaReportar">${icono('bicho')}Reportar un fallo o una idea</button>
+    <button class="btn sec ancho" data-accion="bienvenidaOk">Entendido</button></div></div></div>`;
+}
+const tocaBienvenida = () => !EN_FONDO && !!S.D && !enDemo() && haySesion() && !bienvenidaVista();
+function quizaBienvenida(ms, intento = 0) {
+  setTimeout(() => {
+    if (!tocaBienvenida() || $('#bienvenida')) { S.bienvenidaPendiente = false; return; }
+    if (estadoLimite.cerrada || $('.nv') || $('#limite') || S.hoja || tourAbierto() || (S.cargando && !S.D)) {
+      if (intento < 40) quizaBienvenida(3000, intento + 1); else S.bienvenidaPendiente = false;
+      return;
+    }
+    document.body.insertAdjacentHTML('beforeend', bienvenidaHTML());
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => $('#bienvenida')?.classList.add('on'));
+  }, ms);
+}
+function cerrarBienvenida() {
+  const b = $('#bienvenida');
+  const yo = S.M && S.M.yo;
+  apuntarBienvenida({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: (S.D && S.D.liga && S.D.liga.id) || '', equipo: yo ? yo.nombre : '' });
+  // el aviso de arriba dice lo mismo: no vuelve hasta dentro de 72 h
+  LS.set('beta-cerrada', Date.now());
+  $$('.banda.beta').forEach((x) => x.remove());
+  S.bienvenidaPendiente = false;
+  if (b) { b.classList.remove('on'); setTimeout(() => b.remove(), 220); }
+  if (!S.hoja) document.body.style.overflow = '';
+}
 // (con la liga de ejemplo, solo su banda: las dos juntas se apilaban arriba)
 const bandaBeta = () => (S.D && S.D.demo) || (Date.now() - (LS.get('beta-cerrada', 0) || 0) < BETA_VUELVE) ? ''
   : `<div class="banda beta">${icono('bicho')}<span><b>App en desarrollo y en pruebas.</b> Cualquier fallo o idea de mejora, mándamelo con el botón Reportar: lo leo todo y lo tengo en cuenta.</span><button data-accion="avisos">Reportar</button><button class="banda-x" data-accion="cerrarBeta" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>`;
@@ -1111,9 +1149,9 @@ async function cargar0({ silencio = false } = {}) {
 /** lo que va después de cargar, sin bloquear: las fichas de los jugadores (forma y caras) y el plan con IA */
 /** avisa al servidor de que la app está abierta (para la lista «Quién usa la app» del dueño); nada en la de ejemplo */
 function saludarSiToca() {
-  if (!S.D || enDemo() || !haySesion() || document.hidden) return;
+  if (!S.D || enDemo() || !haySesion() || document.hidden) return Promise.resolve();
   const yo = S.M && S.M.yo;
-  saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '' })
+  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '' })
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {});
 }
 setInterval(saludarSiToca, 10 * 60e3);
@@ -1449,7 +1487,10 @@ async function mirarMiOnce() {
   } catch (e) { /* sin red: el plan sigue con lo que sabía */ }
 }
 async function despues() {
-  saludarSiToca();
+  // la bienvenida, después del saludo al Worker (si ya la vio en otro dispositivo, el saludo lo dice) o a los 4 s como mucho
+  S.bienvenidaPendiente = tocaBienvenida();
+  const saludo = saludarSiToca();
+  if (S.bienvenidaPendiente) Promise.race([saludo, new Promise((r) => setTimeout(r, 4000))]).then(() => quizaBienvenida(300));
   mirarMiOnce();
   // (después del saludo: así tu foto ya está en el Worker la primera vez)
   setTimeout(cargarCaras, 3000);
@@ -2480,6 +2521,8 @@ document.addEventListener('click', async (ev) => {
     case 'copiarEnlaceWeb': copiarY('https://fantasymanagerapp.com/', 'Enlace copiado'); break;
     case 'mudarse': mudarse(el); break;
     case 'cerrarBeta': LS.set('beta-cerrada', Date.now()); el.closest('.banda')?.remove(); break;
+    case 'bienvenidaOk': cerrarBienvenida(); break;
+    case 'bienvenidaReportar': cerrarBienvenida(); abrirAvisos(); break;
     case 'cerrarLleno': olvidarLleno(); el.closest('.banda')?.remove(); break;
     case 'salirDemo': salirDemo(); break;
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
@@ -2930,7 +2973,7 @@ function quizaTutorial(ms, intento = 0) {
   setTimeout(() => {
     if (tourVisto() || tourAbierto() || !S.D || estadoLimite.cerrada || S.cargando && !S.D) return;
     // con la presentación de novedades o una ventana abierta, se espera
-    if ($('.nv') || S.hoja || $('#limite')) { if (intento < 20) quizaTutorial(3000, intento + 1); return; }
+    if ($('.nv') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente) { if (intento < 20) quizaTutorial(3000, intento + 1); return; }
     lanzarTutorial();
   }, ms);
 }

@@ -82,6 +82,8 @@ export async function saludar(datos) {
   const ev = pendientes();
   try { r = await pedirWorker('POST', '/hola', Object.keys(ev).length ? { ...datos, ev } : datos); } catch (e) { LS.set('hola-t', 0); return false; }
   if (r && r.ev === true) mandados(ev);
+  // la bienvenida ya vista en otro dispositivo con esta cuenta: aquí tampoco sale
+  if (r && r.bv && !LS.get('bienvenida', 0)) LS.set('bienvenida', r.bv);
   if (!r || typeof r.admin !== 'boolean') return false;
   const a = avisosGuardados();
   if (!!a.admin === r.admin) return false;
@@ -89,6 +91,13 @@ export async function saludar(datos) {
   return r.admin;
 }
 export const quienUsa = () => pedirWorker('GET', '/hola/todos');
+/* la pantalla de bienvenida (Carlos, 9 nov 10:20): una vez por cuenta. Se guarda aquí y en el Worker (/hola con bv), para que
+   no vuelva a salir en otro dispositivo con la misma cuenta */
+export const bienvenidaVista = () => !!LS.get('bienvenida', 0);
+export function apuntarBienvenida(datos) {
+  LS.set('bienvenida', Date.now());
+  return pedirWorker('POST', '/hola', { ...datos, bv: true }).then((r) => { if (r && r.bv) LS.set('bienvenida', r.bv); }).catch(() => {});
+}
 /** las fotos de los de tu liga que usan la app ({ id del mánager: foto }); el Worker comprueba con LaLiga que la liga es tuya */
 export const carasLiga = (liga) => pedirWorker('GET', `/caras?liga=${encodeURIComponent(liga)}`).then((r) => (r && r.caras) || {});
 export const unAviso = (id) => pedirWorker('GET', `/fallos/uno?id=${encodeURIComponent(id)}`);
