@@ -1782,7 +1782,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/nations-league/2026/11/06/zidane-mbappe-le-ponga-posicion-favorita.html": 1793997151000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/06/jj-gabriel-marca-mi-sueno-ganar-balon-oro.html": 1794004223000,
    "AS|https://as.com/futbol/alineacion-posible-de-osasuna-contra-el-athletic-en-laliga-ea-sports-f202611-n/": 1794006243000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248086/roberto-proximo-paron-dos-internacionales.html": 1794031200000,
@@ -7265,13 +7264,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 905,
+   "ok": 906,
    "fallos": 0,
-   "ejecuciones": 560,
+   "ejecuciones": 561,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T20:31:14.710Z"
+   "ultima": "2026-11-09T20:36:12.574Z"
   }
  },
  "ptsDirecto": {},
@@ -7288,15 +7287,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:31:19.116Z"
+   "ultimaBien": "2026-11-09T20:36:16.383Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:31:19.116Z"
+   "ultimaBien": "2026-11-09T20:36:16.383Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:31:19.116Z"
+   "ultimaBien": "2026-11-09T20:36:16.383Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7304,11 +7303,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:31:19.116Z"
+   "ultimaBien": "2026-11-09T20:36:16.383Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T20:31:19.116Z"
+   "ultimaBien": "2026-11-09T20:36:16.383Z"
   }
  },
  "avisos": [
