@@ -273,6 +273,8 @@ const FRASES_HECHAS = /\b(?:baj(?:a|an|ar|o|ó)\s+(?:los\s+brazos|el\s+ritmo|el\
 // faltar al respeto a una persona (M14: «entrada criminal» pasaba): se cuenta lo que pasa sin insultar ni descalificar a nadie
 const SIN_RESPETO = /\b(?:criminal(?:es)?|asesin[oa]s?|carnicer[oa]s?|mat[oó]n(?:es)?|salvajada|sinverg[uü]enzas?|vergonzos[oa]s?|payas[oa]s?|ladr[oó]n(?:es|a)?|tongo|atraco|robo arbitral|impresentables?|pat[eé]tic[oa]s?)\b/iu;
 // los puntos de un partido en juego son de momento (M12: «Roja para Gayá… se queda en -5 puntos» y en el final fueron -3)
+// un % de titularidad atribuido a la app: «58 % de titularidad en Fantasy Manager», «según Fantasy Manager», «Fantasy Manager le da un 72 %»
+export const FM_PCT = /\d\s?%[^.\n]{0,40}?\b(?:en|seg[uú]n|de)\s+Fantasy Manager\b|\bFantasy Manager\s+(?:solo\s+)?(?:le|lo|la)\s+(?:da|daba|otorga|concede|pone)\b[^.\n]{0,25}?\d\s?%/iu;
 const PROVISIONAL = /\b(?:de momento|por ahora|hasta ahora|ya suma|ya va por|ya lleva|lleva -?\d|provisional(?:es)?|a falta de|mientras tanto)\b/iu;
 
 // «hoy», «esta tarde», «esta noche» de un partido que ya ha empezado (8 nov, Barrenetxea: «llega con dudas al partido de esta tarde» a las
@@ -285,12 +287,43 @@ export function deHoyMal(texto, hechos, ahora = Date.now()) {
   if (p.yaJugoHoy && HOY_HORA.test(texto)) return `dice «${texto.match(HOY_HORA)[0]}» y su equipo ya ha jugado hoy: el partido del que se habla es el siguiente`;
   return null;
 }
+// (9 nov, Lamine Yamal con la J13 a 11 días) con la jornada a más de 3 días, nada de esperar o mirar los onces ni de «este finde»
+export const ONCES_YA = /\b(?:esperar?|espera|aguarda(?:r)?|aguanta(?:r)?\s+hasta|hasta\s+que\s+(?:salgan|se\s+conozcan|haya))\b[^.\n]{0,25}?\bonces?\b|\b(?:mira(?:r)?|revisa(?:r)?|consulta(?:r)?|ver|vigila(?:r)?|atento\s+a)\s+(?:a\s+)?(?:los|el|tu)\s+onces?\b|\bonces?\s+(?:probables|confirmados)\b|\bpendientes?\s+de(?:l|\s+los)\s+onces?\b|\beste\s+(?:fin\s+de\s+semana|finde)\b|\bantes\s+de\s+(?:cerrar|hacer|tocar)\s+(?:el|tu)\s+once\b/iu;
+// cuándo es el partido, dicho de alguna forma: una fecha, «tras el parón», «dentro de 11 días»…
+const FECHA_DICHA = /\b(?:tras|despu[eé]s\s+del?)\s+(?:el\s+)?par[oó]n\b|\ba\s+la\s+vuelta\b|\bcuando\s+vuelva\s+la\s+liga\b|\b\d{1,2}\s+de\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b|\b(?:lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|domingo)\s+\d{1,2}\b|\b(?:dentro\s+de|en|faltan|quedan)\s+(?:\d+|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince)\s+d[ií]as\b/iu;
+/** el partido del que hablan los hechos si está a más de 3 días, o null */
+export function partidoLejos(hechos, ahora = Date.now()) {
+  const p = (hechos && hechos.partido) || null, f = Date.parse((p && p.fecha) || '');
+  return p && Number.isFinite(f) && f - ahora > 3 * 864e5 ? p : null;
+}
+/** los fallos de un tuit que habla de un partido lejano (el parón) como si fuera ya */
+export function erroresLejos(t, hechos, ahora = Date.now()) {
+  const p = partidoLejos(hechos, ahora);
+  if (!p) return [];
+  // sin la etiqueta del final («⁉️ Duda para la jornada 13 contra el Villarreal»), que pone el sistema
+  t = cuerpoDe(t);
+  const e = [], dias = Math.round((Date.parse(p.fecha) - ahora) / 864e5), J = p.jornada != null ? `la jornada ${p.jornada}` : 'el partido';
+  const m = t.match(ONCES_YA);
+  if (m) e.push(`«${m[0]}» con ${J} a ${dias} días: no hay onces que esperar; di la fecha o «tras el parón» y nada de qué hacer antes de la jornada`);
+  // el rival sin decir cuándo («lo normal es que salga contra el Villarreal» a 11 días)
+  const mios = new Set((hechos.jugadores || []).map((j) => corto(j.club || '')));
+  const rivales = [p.local, p.visitante].filter((x) => x && !mios.has(corto(x)));
+  const nombres = rivales.flatMap((r) => [corto(r), ...((((hechos.clubes || {})[corto(r)]) || {}).nombres || [])]).map((n) => norm(n).replace(/^(?:el|la|los|las)\s+/, '')).filter((n) => n.length >= 3);
+  const nt = ` ${norm(t)} `;
+  // (solo en el parón o a más de 6 días: entre semana, «el sábado contra el Villarreal» ya se entiende sin fecha)
+  if ((p.trasElParon || dias > 6) && nombres.some((n) => nt.includes(` ${n} `)) && !FECHA_DICHA.test(t)) e.push(`nombra al rival de ${J} sin decir cuándo es: faltan ${dias} días, di la fecha («${p.fechaDelPartido || 'el día'}») o «tras el parón»`);
+  return e;
+}
+// lo de la selección («se pierde los partidos con su selección»): no es una baja para LaLiga (9 nov)
+const DE_SELECCION = /\b(?:se\s+pierde|se\s+perder[aá]|no\s+estar[aá]|no\s+jugar[aá]|se\s+cae\s+de|baja\s+(?:con|en|para))\s+[^.\n]{0,30}?\b(?:selecci[oó]n|concentraci[oó]n|par[oó]n)\b/giu;
+
 export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = [], max = limite(), numeros = [], ahora = Date.now() } = {}) {
   const e = [];
   const t = String(texto || '').trim();
   if (!t) return ['texto vacío'];
   const hoyMal = deHoyMal(t, hechos, ahora);
   if (hoyMal) e.push(hoyMal);
+  e.push(...erroresLejos(t, hechos, ahora));
   const v = validar(t, { numeros: [...new Set([...numeros, ...cifrasDe(hechos, cronicas)])], max });
   if (!v.ok) e.push(...v.errores);
   // los decimales, enteros («3,6» no es un 6,3) y cada cifra con su jugador (revisión total, A10)
@@ -357,7 +390,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // el estado de cada jugador: en las frases que solo hablan de él, nada de otra familia
   const nombreDe = (j) => norm(j.nombre).split(' ').filter((w) => w.length >= 3);
   for (const f0 of frases(t)) {
-    const f = f0.replace(FRASES_HECHAS, ' ');
+    const f = f0.replace(FRASES_HECHAS, ' ').replace(DE_SELECCION, ' ');
     const nf = ` ${norm(f)} `;
     const suyos = (hechos.jugadores || []).filter((j) => j.estado && nombreDe(j).some((w) => nf.includes(` ${w} `)));
     if (suyos.length !== 1) continue;
@@ -368,7 +401,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const estados = new Set((hechos.jugadores || []).map((j) => j.estado));
   // (en el mercado «baja» es lo que baja de precio)
   // (y tampoco cuando lo que baja es un valor: «su valor baja 1,5 M», «baja 6 M»; los tuits de selecciones hablan del valor, 9 nov)
-  const tBaja = t.replace(FRASES_HECHAS, ' ').replace(/\b(?:valor|valores|precio|precios|nota|notas)\b[^.\n]{0,30}?\bbajas?\b/giu, ' ').replace(/\bm[aá]s\s+bajas?\b/giu, ' ').replace(/\bbaja\s+(?:de\s+)?\d/giu, ' ');
+  const tBaja = t.replace(FRASES_HECHAS, ' ').replace(DE_SELECCION, ' ').replace(/\b(?:valor|valores|precio|precios|nota|notas)\b[^.\n]{0,30}?\bbajas?\b/giu, ' ').replace(/\bm[aá]s\s+bajas?\b/giu, ' ').replace(/\bbaja\s+(?:de\s+)?\d/giu, ' ');
   if (hechos.tipo !== 'mercado' && PALABRAS.baja.test(tBaja) && !negada(tBaja, PALABRAS.baja) && ![...estados].some((x) => ['baja', 'lesionado', 'sancionado', 'apercibido'].includes(x))) e.push(`dice «${tBaja.match(PALABRAS.baja)[0]}» y nadie está de baja`);
   // los equipos, con artículo (Carlos, 6 nov: «no es Osasuna, es el Osasuna»); en un marcador o un «Betis-Mallorca», no
   for (const c of Object.keys(APODOS)) {
@@ -399,12 +432,14 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   // primer % lleva «titularidad» detrás de él; los demás, sin repetirlo
   const pcts = [...t.matchAll(/\d\s?%/g)];
   // (solo si los hechos traen un % de titularidad: en el mercado los % son lo que sube o baja un valor)
-  if (pcts.length && /titularidadFantasyManager/.test(JSON.stringify(hechos))) {
+  if (pcts.length && /"titularidad":/.test(JSON.stringify(hechos))) {
     const resto = t.slice(pcts[0].index).split(/(?<=[.!?])\s|\n/)[0];
     if (!/titularidad/i.test(resto)) e.push('el primer porcentaje va con «de titularidad» («un 97 % de titularidad»): un «97 %» suelto no se entiende');
     const repes = pcts.slice(1).filter((m) => /^\s?%\s+de\s+titularidad/i.test(t.slice(m.index + 1)));
     if (repes.length) e.push('«de titularidad» solo con el primer porcentaje; en los demás, el número solo («Ramon, con un 51 %»)');
   }
+  // (Carlos, 9 nov, con Lamine Yamal: «58 % de titularidad en Fantasy Manager suena raro») el % a secas o nada
+  if (FM_PCT.test(t)) e.push('el % de titularidad va a secas («un 58 % de titularidad»), sin «en Fantasy Manager», «según Fantasy Manager» ni «Fantasy Manager le da»');
   if (nPct > tope.pct) e.push(`${nPct} porcentajes: como mucho ${tope.pct}; el resto, con palabras («fijo», «lo tiene difícil», «en el aire»)`);
   if (nMedia > tope.media) e.push(`${nMedia} medias: como mucho ${tope.media}`);
   const tVaga = t.replace(CLUB_FUENTE, ' ');

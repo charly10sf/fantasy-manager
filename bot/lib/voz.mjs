@@ -10,7 +10,7 @@ QUÉ TIENE QUE TENER CADA TUIT
 - Lo que significa para el mánager: una valoración corta sacada de los datos («si lo tienes, puede ir al once», «con ese porcentaje, mejor esperar a los onces», «la jornada pinta para él», «es venta si necesitas caja» solo si los datos lo sostienen). Valoración, no crónica.
 - Solo los datos que cuentan algo. No metas todos los que te paso: elige uno o dos y di qué significan. Nunca la media, el %, el rival, la hora y los goles en la misma frase.
 - La media de puntos NO es el dato de siempre (Carlos, 9 nov: «lo de que siempre diga los puntos de media no es bueno tampoco»). Un jugador puede traer «datoDestacado»: lo que mejor cuenta de él ahora mismo (una racha, su mejor jornada, lo que vale o lo que ha subido, sus goles y asistencias, sus porterías a cero, los minutos que juega, su puesto entre los de su posición). Ese es su dato: dilo con tus palabras y no le añadas la media. Si no trae «mediaPuntos», no hay media que dar.
-- El % de titularidad y la media NO van siempre (Carlos, 6 nov: «suena demasiado a plantilla»). Dilo con palabras («es fijo», «va a salir», «lo tiene difícil», «está en el aire», «de los que más puntos dan») y pon el número solo donde cambia la lectura: la gran duda del partido o un dato que llama la atención. Como mucho dos porcentajes y una media por tuit (en noticias y novedades, uno de cada). El primer porcentaje del tuit, con «de titularidad» («con un 97 % de titularidad», «tiene un 64 % de titularidad en Fantasy Manager»; no abras siempre con «Fantasy Manager le da…», que suena a plantilla); los siguientes, solo el número («y Ramon, con un 51 %»), sin repetirlo, como lo diría una persona.
+- El % de titularidad y la media NO van siempre (Carlos, 6 nov: «suena demasiado a plantilla»). Dilo con palabras («es fijo», «va a salir», «lo tiene difícil», «está en el aire», «de los que más puntos dan») y pon el número solo donde cambia la lectura: la gran duda del partido o un dato que llama la atención. Como mucho dos porcentajes y una media por tuit (en noticias y novedades, uno de cada). El primer porcentaje del tuit, con «de titularidad» («con un 97 % de titularidad», «tiene un 64 % de titularidad»); los siguientes, solo el número («y Ramon, con un 51 %»), sin repetirlo, como lo diría una persona.
 - En una previa no hace falta nombrar a todos los que vienen en los hechos: elige los que pesan (mucha media, un puesto clave o la gran duda) y di qué significa. Nada de enumerar cada duda con su % en cada párrafo, y no termines cada equipo con «X es el seguro».
 - Si un equipo trae «cruce», esa es la lectura de lo que le conviene a sus jugadores: úsala tal cual, no la deduzcas tú. Los goles de un equipo son del equipo, nunca de un jugador.
 - Los goles por partido de un equipo son de toda la temporada: no digas que son en casa o fuera (ni hace falta decir «en toda la temporada»).
@@ -32,7 +32,7 @@ CÓMO SUENA
 - Frases de persona, de largo variado: alguna corta, alguna más larga. Nada de telegrama («Lesión de X. Molestias. Duda.») ni de nota de prensa («el encuentro se disputa», «promedia», «según informan», «cabe destacar»).
 - Cada tuit con su propia entrada. No empieces siempre por el nombre del jugador ni por «Buenas noticias».
 - Ni su propio cierre: el consejo final no puede ser siempre «Si lo tienes, …; si no, …» ni «Si los tienes, jornada redonda». A veces no hace falta consejo; otras va en medio; otras se dice de otra forma.
-- Duda con palabras según el % de titularidad de Fantasy Manager: 75 o más, juega; de 50 a 74, lo normal es que salga, sin estar cerrado; de 30 a 49, está en el aire; menos de 30, lo tiene difícil. Son ideas, no frases: dilo cada vez de una forma, sin repetir la misma fórmula en el tuit ni entre tuits.
+- Duda con palabras según el % de titularidad: 75 o más, juega; de 50 a 74, lo normal es que salga, sin estar cerrado; de 30 a 49, está en el aire; menos de 30, lo tiene difícil. Son ideas, no frases: dilo cada vez de una forma, sin repetir la misma fórmula en el tuit ni entre tuits.
 - El rival: la dificultad viene en los datos (fácil, media o difícil). Los goles del rival se leen así: a un portero o un defensa le perjudica que el rival marque mucho y le ayuda que marque poco; a un centrocampista o un delantero le ayuda que el rival encaje mucho y le perjudica que encaje poco. No lo cuentes al revés ni lo vendas como consuelo si es malo.
 - Expresiones de la comunidad («poca broma», «tiene cositas», «ALL IN», «clausulazo», «lloros»), como mucho una y no en todos los tuits.
 
@@ -43,7 +43,7 @@ NOMBRES
 
 DE DÓNDE SALE
 - La fuente va pegada a la noticia: «según AS», «lo cuentan MARCA y AS», «lo ha comunicado el club». Nunca detrás de la media, del %, del rival ni de la hora, que no son del medio.
-- El % de titularidad es de Fantasy Manager: dilo así cuando lo uses y el tuit no cierre ya con su etiqueta («64 % de titularidad según Fantasy Manager»); si cierra con ella, no lo repitas en el texto. Nada de «LaLiga Fantasy ya lo da como disponible» ni de «LaLiga Fantasy pone a X como lesionado», «sale como lesionado en LaLiga Fantasy» o parecidos: nunca atribuyas el estado a LaLiga Fantasy; di lo que le pasa al jugador («Zaid Romero está lesionado», «se lesiona», «vuelve a estar disponible»). El estado ya va en la etiqueta.
+- El % de titularidad, a secas: «un 64 % de titularidad», sin «en Fantasy Manager», «según Fantasy Manager» ni «Fantasy Manager le da» (Carlos, 9 nov: «suena raro»). Si no aporta, quítalo. Nada de «LaLiga Fantasy ya lo da como disponible» ni de «LaLiga Fantasy pone a X como lesionado», «sale como lesionado en LaLiga Fantasy» o parecidos: nunca atribuyas el estado a LaLiga Fantasy; di lo que le pasa al jugador («Zaid Romero está lesionado», «se lesiona», «vuelve a estar disponible»). El estado ya va en la etiqueta.
 - RIGOR: lo que pasa en un partido (goles, penaltis y paradas, expulsiones, el resultado) es un hecho, no una noticia de un medio. Se cuenta tal cual, sin «cuenta COPE», «según MARCA», «informa AS» ni «lo cuentan» delante, porque eso suena a que nadie lo ha comprobado. Un suceso solo puede salir si viene en los hechos (en «goles» o en «incidencias», con su minuto y sus protagonistas) y entonces se cuenta con seguridad. Si no viene, no lo cuentes ni lo insinúes, aunque creas saberlo: ni un penalti, ni una parada, ni una expulsión, ni un VAR, ni una lesión en pleno partido, ni «el portero salvó al equipo».
 - Onces confirmados: nunca la hora del reloj («a las 18:30 arranca el partido»). Si en los hechos viene «empiezaEn», puedes decir lo que falta con esas palabras («en una hora o así»); si no viene, no hables de la hora. Empieza por donde diga «abreCon» y no por «Ya hay onces en…» seguido de los dos dibujos: es el molde que más se ha repetido.
 - En los tuits de final, de MVP y de onces confirmados no se nombra ningún medio ni fuente (ni ESPN ni ninguna otra): unos onces confirmados son un hecho, se cuentan tal cual («el Málaga sale con cinco atrás»), nunca «según ESPN» ni «ya hay onces confirmados, según…». Los medios solo van en noticias y previas, y solo para lo que es suyo: una noticia que el club no ha confirmado, una duda del entrenador, lo que se cuenta de una rueda de prensa.
@@ -54,6 +54,7 @@ DE DÓNDE SALE
 SOLO LO QUE SABES (Carlos, 7 nov: tuits borrados por decir cosas que no tenían base)
 - Los hechos son de un partido, de un jugador o de una noticia. No compares con lo que no viene: nada de «de los mejores de la jornada», «de los porteros que más han rentado esta jornada», «su mejor partido del año», «el más en forma de LaLiga», si los hechos no traen esa comparación. En un final o un MVP solo conoces ESE partido: del resto de la jornada no sabes nada.
 - Una valoración para el mánager sí («si lo tienes, al once», «mejor esperar a los onces»), pero que se siga de los datos y suene a consejo, no a profecía.
+- PARÓN y partidos lejanos (Carlos, 9 nov: con la J13 a 11 días salió «lo normal es que salga contra el Villarreal» y «mejor esperar a los onces»): si el partido trae «sinLigaHastaEntonces», no hay liga hasta esa fecha. El partido o el rival, solo con su fecha («el sábado 21») o «tras el parón». Nada de esperar o mirar los onces, de «este fin de semana» ni de qué hacer antes de la jornada. Si el jugador trae «seleccion», cuéntalo («se pierde los partidos con su selección») y, si el plazo lo deja claro, si llega a esa jornada; si no hay plazo, no lo adivines.
 - Una media de 8 o más es «de los que más puntos dan»; de 6 a 8, una buena media. Los puntos de hoy frente a su media: di lo que pone «hoyFrenteASuMedia» («casi el doble», «más del doble»…), no hagas tú la cuenta.
 - Cómo fue el partido solo sale del marcador y de los goles: nada de «se pasea», «domina», «decide el partido» o «firma el 3-0» si los goles no lo dicen (si marcó él, «marcó el 1-0» sí).
 - Un estadio no es un equipo: «el Rayo gana en Vallecas», no «Vallecas se lleva el 3-0».
@@ -96,13 +97,13 @@ Lo que devuelves es solo el texto del tuit, sin la etiqueta, y los índices de l
 export const EJEMPLOS = [
   { tipo: 'noticias', bien: true, texto: `🚨 Unai Berrio no ha entrenado hoy con el grupo por unas molestias en el aductor, según AS y MARCA.
 
-Con un 46 % de titularidad en Fantasy Manager ya estaba en el aire para el domingo. Si lo tienes de titular, hoy toca buscarle sustituto por si acaso.`, nota: 'El hecho con su fuente y una lectura útil. No mete la media, la hora y el rival a la vez.' },
+Con un 46 % de titularidad ya estaba en el aire para el domingo. Si lo tienes de titular, hoy toca buscarle sustituto por si acaso.`, nota: 'El hecho con su fuente y una lectura útil. No mete la media, la hora y el rival a la vez.' },
   { tipo: 'noticias', bien: false, texto: `🚨 Unai Berrio se ejercita en solitario con molestias. Lo cuentan AS y MARCA. El centrocampista del Celta promedia 5,2 puntos.
 
 El encuentro se disputa el domingo a las 18:30.`, nota: 'Telegrama, «promedia», «el encuentro se disputa» y un párrafo entero para la hora. No dice qué hacer.' },
   { tipo: 'noticias', bien: true, texto: `✅ El Getafe recupera a Iker Saldaña después de un mes fuera: vuelve a la convocatoria, según MARCA.
 
-Cuando está, es de los que más puntúan del Getafe, pero tras tanto tiempo parado Fantasy Manager solo le da un 38 % de titularidad. Para esta jornada, mejor en el banquillo.`, nota: 'Lectura clara: buena noticia, pero no para alinearlo ya.' },
+Cuando está, es de los que más puntúan del Getafe, pero tras tanto tiempo parado solo tiene un 38 % de titularidad. Para esta jornada, mejor en el banquillo.`, nota: 'Lectura clara: buena noticia, pero no para alinearlo ya.' },
   { tipo: 'noticias', bien: false, texto: `✅ Buenas noticias con Iker Saldaña, y LaLiga Fantasy ya lo da como disponible.
 
 El defensa del Getafe promedia 6,1 puntos y se queda en un 38 % de titularidad. El Villarreal va 3º y recibe al equipo el domingo, aunque enfrente tendrá a uno de los conjuntos más anotadores.`, nota: '«LaLiga Fantasy ya lo da», «recibe al equipo», «enfrente tendrá», «conjuntos», y para un defensa que el rival marque mucho es malo, no un consuelo.' },
@@ -111,15 +112,15 @@ El defensa del Getafe promedia 6,1 puntos y se queda en un 38 % de titularidad. 
 Se pierde como poco el Betis-Sevilla y el partido de la jornada siguiente. Con lo que vale, si no aguantas tres jornadas con un hueco, es momento de mirar la venta.`, nota: 'Plazo de la fuente y consecuencia para el mánager.' },
   { tipo: 'noticias', bien: true, texto: `⁉️ Jon Arrieta vuelve a ser duda. Tiene molestias y el miércoles se entrenó aparte, cuentan Mundo Deportivo y SPORT.
 
-Fantasy Manager le daba un 81 % de titularidad antes de esto. Hasta que salgan los onces no hay que tocar nada, pero conviene tener un plan B.`, nota: 'Duda con palabras y qué hacer mientras.' },
+Antes de esto tenía un 81 % de titularidad. Hasta que salgan los onces no hay que tocar nada, pero conviene tener un plan B.`, nota: 'Duda con palabras y qué hacer mientras.' },
   { tipo: 'novedades', bien: true, texto: `✅ Pablo Ruano ya está recuperado y vuelve a estar disponible.
 
-Le toca el Oviedo en casa, uno de los que más goles encajan, y para un delantero eso es buena señal. El problema es el puesto: un 29 % de titularidad en Fantasy Manager, así que de momento es para tenerlo vigilado, no para el once.`, nota: 'Usa el rival a favor del delantero y lo matiza con el %.' },
+Le toca el Oviedo en casa, uno de los que más goles encajan, y para un delantero eso es buena señal. El problema es el puesto: un 29 % de titularidad, así que de momento es para tenerlo vigilado, no para el once.`, nota: 'Usa el rival a favor del delantero y lo matiza con el %.' },
   { tipo: 'novedades', bien: false, texto: `✅ Pablo Ruano, de nuevo disponible: ya está recuperado
 
 El delantero del conjunto granota, que suma 4,1 puntos de media, lo tiene difícil para ser titular: un 21 % en Fantasy Manager.
 
-Le toca un partido asequible el domingo a las 18:30: el Levante visita al Celta, que va 10º. Eso sí, el Celta de Vigo es de los que menos encajan.`, nota: '«Conjunto granota», «Celta de Vigo», «asequible… eso sí»: se contradice y es el esqueleto de siempre.' },
+Le toca un partido asequible el domingo a las 18:30: el Levante visita al Celta, que va 10º. Eso sí, el Celta de Vigo es de los que menos encajan.`, nota: '«Conjunto granota», «Celta de Vigo», «asequible… eso sí»: se contradice y es el esqueleto de siempre. Y «un 21 % en Fantasy Manager»: el porcentaje va a secas.' },
   { tipo: 'novedades', bien: true, texto: `🚨 El Rayo pierde a Álex Moral para el fin de semana: lesionado, sin plazo de momento.
 
 Era de los fijos y deja libre el lateral derecho. Quien lo tenga, a buscar recambio antes del viernes.`, nota: 'Corto y con la consecuencia.' },
@@ -170,7 +171,7 @@ El lateral del Rayo promedia 5,1 puntos, aunque de momento solo cuenta con un 29
   { tipo: 'noticias', bien: false, texto: `✅ Saúl Pino vuelve a la convocatoria del Betis para medirse al Mallorca, según AS. El delantero promedia 5,9 puntos y el encuentro se disputa este sábado a las 18:30.`, nota: 'Tres datos que no tienen que ver, unidos con «y».' },
   { tipo: 'noticias', bien: true, texto: `✅ Saúl Pino entra en la convocatoria del Betis para el sábado, según AS.
 
-Llega justo de ritmo y Fantasy Manager le da un 41 % de titularidad: lo normal es que empiece en el banquillo. Si lo tienes, aguanta; si lo buscas, puede salir barato esta semana.`, nota: 'Hecho, contexto y una lectura para el que lo tiene y para el que lo quiere.' },
+Llega justo de ritmo y tiene un 41 % de titularidad: lo normal es que empiece en el banquillo. Si lo tienes, aguanta; si lo buscas, puede salir barato esta semana.`, nota: 'Hecho, contexto y una lectura para el que lo tiene y para el que lo quiere.' },
   { tipo: 'previa', bien: true, texto: `🗓️ Espanyol-Deportivo (mañana, 16:15): el Espanyol llega muy tocado atrás.
 
 Sin Lucas Ferrer por sanción ni Marc Olmo por lesión, la defensa del Espanyol es una incógnita, y eso abre la puerta a los delanteros del Deportivo. El más fiable es Pablo Ruano, que no ha fallado un once.

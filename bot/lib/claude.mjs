@@ -9,6 +9,10 @@
 const API = 'https://api.anthropic.com/v1/messages';
 export const SONNET = 'claude-sonnet-5-5';
 export const HAIKU = 'claude-haiku-5-5';
+// (9 nov) Haiku 5.5 no admite `thinking: between_tools`: daba un 400 en cada pregunta para clasificar y se repetía sin él (sin pensar
+// igual: unos 100-500 tokens de salida por lote). A estos modelos no se les manda; y si otro modelo dice que no lo admite, se apunta
+// aquí para el resto de la ejecución, así solo falla la primera pregunta.
+export const SIN_BETWEEN = new Set([HAIKU]);
 // dólares por millón de tokens (claude/coste-api-claude.md del proyecto, 6 nov 2026; caché de la doc de prompt caching)
 export const PRECIOS = {
   [SONNET]: { entrada: 2, salida: 10, cacheLee: 0.10, cacheEscribe: 2.5 },
@@ -50,6 +54,7 @@ export async function preguntarJson({ clave, prompt, esquema, sistema = '', cach
   let dolares = 0, ultimo = '', conTemp = temperatura != null, conEsfuerzo = !!esfuerzo, conPensar = !pensar;
   const esquemaJ = esquemaJson(esquema);
   for (const m of lista) {
+    let conPensarM = conPensar && !SIN_BETWEEN.has(m);
     // un 529 (saturado) o un 5xx se reintenta una vez con el mismo modelo
     for (let intento = 0; intento < 2; intento++) {
       if (Date.now() > hasta - 5000) return { ok: false, error: ultimo || 'sin tiempo', uso, dolares };
@@ -63,7 +68,7 @@ export async function preguntarJson({ clave, prompt, esquema, sistema = '', cach
             ...(sistema ? { system: [{ type: 'text', text: sistema, ...(cache ? { cache_control: { type: 'ephemeral' } } : {}) }] } : {}),
             output_config: { format: { type: 'json_schema', schema: esquemaJ }, ...(conEsfuerzo ? { effort: esfuerzo } : {}) },
             // sin pensar antes de contestar (between_tools: sin herramientas, no piensa): el razonamiento se cobra como salida
-            ...(conPensar ? { thinking: { type: 'between_tools' } } : {}),
+            ...(conPensarM ? { thinking: { type: 'between_tools' } } : {}),
             messages: [{ role: 'user', content: prompt }],
           }),
         });
@@ -77,7 +82,7 @@ export async function preguntarJson({ clave, prompt, esquema, sistema = '', cach
         if (r.status === 400 && /temperature/i.test(msg) && conTemp) { conTemp = false; intento--; continue; }
         // y lo mismo con el esfuerzo o el modo de pensar, si un modelo no los admite
         if (r.status === 400 && /effort/i.test(msg) && conEsfuerzo) { conEsfuerzo = false; intento--; continue; }
-        if (r.status === 400 && /thinking/i.test(msg) && conPensar) { conPensar = false; intento--; continue; }
+        if (r.status === 400 && /thinking/i.test(msg) && conPensarM) { conPensarM = false; SIN_BETWEEN.add(m); intento--; continue; }
         if (r.status === 400 && !/model/i.test(msg)) return { ok: false, error: ultimo, uso, dolares };    // la pregunta está mal
         if ((r.status === 529 || r.status >= 500) && intento === 0) { await new Promise((ok) => setTimeout(ok, 1500)); continue; }
         break;
