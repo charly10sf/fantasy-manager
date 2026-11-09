@@ -44,6 +44,8 @@ jobs:
     env:
       BOT_MODO: ${{ vars.BOT_MODO || 'simulacro' }}
       BOT_LARGO: ${{ vars.BOT_LARGO || '' }}
+      # sin caras ni escudos de LaLiga en las tarjetas (revisión total, M14): la variable de repositorio BOT_SIN_FOTOS a 1
+      BOT_SIN_FOTOS: ${{ vars.BOT_SIN_FOTOS || '' }}
       X_API_KEY: ${{ secrets.X_API_KEY }}
       X_API_SECRET: ${{ secrets.X_API_SECRET }}
       X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}

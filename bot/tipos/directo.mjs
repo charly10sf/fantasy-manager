@@ -472,7 +472,8 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
           num.push(valor);
           const sobre = conMedia && media >= 3 && valor >= 1.5 * media;
           if (sobre) num.push(...partes(media));
-          if (valor <= 0) return { t: `📉 Se queda en ${valor} puntos fantasy`, prio: 8 };
+          // (en juego, de momento: «se queda en -5» con una roja se leía como definitivo y acabó en -3; revisión total, M12)
+          if (valor <= 0) return { t: st.state === 'in' ? `📉 De momento se queda en ${valor} puntos fantasy` : `📉 Se queda en ${valor} puntos fantasy`, prio: 8 };
           // con asistente en el mismo tuit, el goleador va por su nombre: «Ya suma 4 puntos» a secas se leía como del asistente (7 nov)
           const base = conNombre ? `📊 ${nombre} ya suma ${valor} puntos` : elegir([`📊 Ya suma ${valor} puntos`, `📊 ${cap(segunda(pos, nombre))} ya va por ${valor} puntos`, `📊 Lleva ${valor} puntos de momento`], sem + 'p');
           return { t: `${base}${sobre ? `, con una media de ${fmt(media)}` : ''}`, prio: 8 };
@@ -538,7 +539,7 @@ export async function generar({ stats, jornada, fechasEspn, jugadores, desdeDire
               ptsA = conSuelo(tablaPts, `${jornada}|${m.id}|${pa.id}`, puntosConGol(pa.weekPoints, posA, { goles: golesA, asis: asisA, accion: 'asistencia', cuenta: cuentaA }).pts, { goles: golesA, asis: asisA, pos: posA, ahora, apuntar: !yaSalio(dsp) });
             }
             if (ptsA != null) num.push(ptsA);
-            ideas.push({ t: ptsA != null ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy` : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
+            ideas.push({ t: ptsA != null ? (st.state === 'in' ? `🅰️ Asistencia de ${na}, con ${ptsA} puntos de momento` : `🅰️ Asistencia de ${na}, con ${ptsA} puntos fantasy`) : elegir([`🅰️ Asistencia de ${na}`, `🅰️ El pase, de ${na}`], sem + 'a'), prio: 5 });
             if (pa) tarjetas.push({ jugadorId: pa.id, motivo: 'asistencia', ...(ptsA != null ? { pts: ptsA } : {}) });
           }
           if (pts != null) ideas.push(puntos(pts, true, !!an));

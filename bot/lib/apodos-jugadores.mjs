@@ -48,7 +48,7 @@ export const APODOS_JUGADORES = {
   // Mbappé: «la Tortuga», su mote; Carlos lo confirmó el 7 nov (23:40). Viene de la careta de Tortuga Ninja que le regaló Thiago Silva en 2018
   // (Soccerway, «De la 'Tortuga' al 'Panda'…»; Fox Sports México, 9 ago 2023).
   'Mbappé': { completo: 'Kylian Mbappé', otros: ['la Tortuga'] },
-  // Segunda tanda (7 nov, ~00:10), pendiente del OK de Carlos. Fuentes en claude/rasgos-propuesta.md.
+  // Segunda tanda (7 nov, ~00:10), aprobada por Carlos el 7 nov a las 23:40 («está bien así»; entró con la #93). Fuentes en claude/rasgos-propuesta.md.
   // Adeyemi: 3,60 s en 30 m según Opta (Comuniate); «uno de los jugadores más rápidos de Europa», atacando espacios (El Debate, 24 jul 2026; Soccerway)
   'Adeyemi': { completo: 'Karim Adeyemi', rasgos: ['es de los futbolistas más rápidos de Europa y ataca los espacios a la espalda de la defensa'] },
   // Iñaki Williams: «uno de los jugadores más rápidos de la competición» (laliga.com, 15 sep 2021)

@@ -167,10 +167,10 @@ function paron(S) {
 
   // la cabecera y los días del parón
   const kpis = c.lejos
-    ? [['Puedes ganar', c.gana > 0 ? `+${eur(c.gana)}` : '—', c.gana > 0 ? 'mas' : '', c.esp.length ? `revendiendo ${Math.min(3, c.esp.length)}` : 'nada que suba hoy'],
+    ? [['Puedes ganar', c.gana > 0 ? `+${eur(c.gana)}` : '—', c.gana > 0 ? 'mas' : '', c.esp.length ? `revendiendo ${Math.min(3, c.esp.length)}` : 'nada sube hoy'],
       ['Evitas perder', c.sinI ? icono('candado') : c.evita > 0 ? eur(c.evita) : '—', c.evita > 0 ? 'menos' : '', c.sinI ? 'función top' : c.altos.length ? `vendiendo ${c.altos.length}` : 'nada ha girado'],
-      ['Puedes gastar', eur(M.pujaMax), '', 'pujando, con la deuda que te dejan']]
-    : [['Cláusulas, hasta', cuando(c.cierre), '', 'luego, cerradas'], ['Para revender', c.yaRevender.length ? `${c.yaRevender.length}` : '—', '', c.yaRevender.length ? 'véndelo ya' : 'nada pendiente'], ['Jornada', `${v.n}`, '', cuando(v.ini)]];
+      ['Puedes gastar', eur(M.pujaMax), '', 'pujando']]
+    : [['Cláusulas', cuando(c.cierre), '', 'luego, cerradas'], ['Para revender', c.yaRevender.length ? `${c.yaRevender.length}` : '—', '', c.yaRevender.length ? 'véndelo ya' : 'nada pendiente'], ['Jornada', `${v.n}`, '', cuando(v.ini)]];
   const marcas = {};
   const marca = (t, cls, txt) => { if (t && t > ahora - DIA) { const k = diaClave(t); if (!marcas[k]) marcas[k] = [cls, txt]; } };
   marca(v.ini, 'd-vuelta', `Vuelve la J${v.n}`);
@@ -181,12 +181,14 @@ function paron(S) {
   const hoyK = diaClave(ahora);
   const dias2 = [[ahora, ...(marcas[hoyK] || ['', c.lejos ? 'Compra lo que sube' : 'Prepara el once'])]];
   for (let k = 1; k <= dias + 1 && k < 16; k++) { const t = ahora + k * DIA, m = marcas[diaClave(t)]; if (m) dias2.push([t, ...m]); }
-  const chips = dias2.map(([t, cls, txt], i) => `<div class="pnz-dia ${cls} ${i === 0 ? 'es-hoy' : ''}"><small>${i === 0 ? 'hoy' : esc(F_SEM.format(new Date(t)).replace('.', ''))}</small><b>${esc(F_DIA.format(new Date(t)))}</b><i>${esc(txt)}</i></div>`);
-  const hero = `<div class="pnz-hero"><div class="pnz-top">${icono('bandera')}<span>Parón de selecciones</span><em>vuelve ${esc(cuando(v.ini))}</em></div>
+  // (9 nov, 16:28, Carlos: la cabecera era un «tocho» que tapaba lo que importa, los jugadores: ahora es una franja corta con el título,
+  // las tres cifras en una línea y los días como píldoras; el texto de guía solo con la vuelta cerca, y en una frase)
+  const chips = dias2.map(([t, cls, txt], i) => `<div class="pnz-dia ${cls} ${i === 0 ? 'es-hoy' : ''}"><b>${i === 0 ? 'Hoy' : `${esc(F_SEM.format(new Date(t)).replace('.', ''))} ${esc(F_DIA.format(new Date(t)))}`}</b><i>${esc(txt)}</i></div>`);
+  const hero = `<div class="pnz-hero"><div class="pnz-top">${icono('bandera')}<span>Parón</span><em>vuelve ${esc(cuando(v.ini))}</em></div>
     <h1>${c.lejos ? `${dias} días sin LaLiga: a por los millones` : `Vuelve LaLiga en ${esc(dura(v.ini - ahora))}: prepara el once`}</h1>
-    <p>${c.lejos ? `Nadie puntúa hasta la jornada ${v.n}. Lo que hagas estos días se mide en dinero: compra lo que sube, véndelo antes de la vuelta y no te quedes con lo que va a bajar.` : `Las cláusulas se cierran ${esc(cuando(c.cierre))} y se reabren con el primer partido.${c.yaRevender.length ? ' Lo de revender, véndelo ya: tienes que empezar la jornada con saldo positivo.' : ' Empieza la jornada con saldo positivo o no puntúas.'}`}</p>
-    <div class="pnz-kpis">${kpis.map(([a, b, cls, s]) => `<div><small>${esc(a)}</small><b class="${cls}">${b}</b><span>${esc(s)}</span></div>`).join('')}</div></div>
-    <div class="pnz-cal" aria-label="Los días del parón">${chips.join('')}</div>`;
+    ${c.lejos ? '' : `<p>Cláusulas hasta ${esc(cuando(c.cierre))}. ${c.yaRevender.length ? 'Vende ya lo de revender y empieza' : 'Empieza'} con saldo positivo o no puntúas.</p>`}
+    <div class="pnz-kpis">${kpis.map(([a, b, cls, s]) => `<div><small>${esc(a)}</small><b class="${cls}">${b}</b><span>${esc(s)}</span></div>`).join('')}</div>
+    <div class="pnz-cal" aria-label="Los días del parón">${chips.join('')}</div></div>`;
 
   // cada sección se pliega tocando su título (como las fases de Hoy) y se acuerda mientras dura el parón; se cierra con
   // FIN al acabar su contenido. El enlace («Todos», «Tu once») va debajo del título: dentro del título también plegaba
@@ -254,7 +256,7 @@ function paron(S) {
     };
     const cab = `<div class="pnz-mer-cab"><span class="pnz-mer-et">${icono('bandera')}Lo que más cuenta en el parón</span>
       <h2>Quién se revaloriza y quién se hunde</h2>
-      <p>Lo que ganará o perderá cada uno hasta ${c.vender ? `el ${esc(cuando(c.vender, { hora: false }))} (el último mercado para vender antes de la vuelta)` : 'la vuelta'} si sigue como estos días. En gris, sus dos últimas semanas; a trazos, lo que se espera.</p></div>`;
+      <p>Lo que ganará o perderá cada uno hasta ${c.vender ? `el ${esc(cuando(c.vender, { hora: false }))}, último mercado antes de la vuelta,` : 'la vuelta'} si sigue así. En gris, sus dos semanas; a trazos, lo esperado.</p></div>`;
     if (c.sinI) mer = `<section class="pnz-mer">${cab}${candado('inercia')}</section>`;
     else {
       const sS = suma(c.ligaSube), sBj = suma(c.ligaBaja);

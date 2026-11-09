@@ -6,7 +6,8 @@
 //   - el tuit caduca (`t.caduca`, en ms: los onces antes del saque, la previa antes del partido, el mercado de la noche…), o
 //   - no hay Claude (sin clave o con el tope de gasto del día): esperar no arreglaría nada.
 // `t.redaccion` lo deja lib/redaccion.mjs: 'ok', 'rechazada', 'ia-no' (la API no contesta), 'sin-ia' (sin Claude o sin cupo),
-// 'sin-tiempo' (no se llegó a intentar en esta ejecución). Sin marca (más tuits de los que caben por ejecución) también espera.
+// 'sin-tiempo' (no se llegó a intentar en esta ejecución), 'revisor-no' (redactado, pero el revisor no ha contestado: cuenta como una
+// ejecución fallida, como 'ia-no'; revisión total, A10). Sin marca (más tuits de los que caben por ejecución) también espera.
 
 const HORA = 36e5;
 
@@ -35,7 +36,7 @@ export function decidirRespaldo(t, { registro, config = {}, ahora = Date.now() }
   if (t.caduca && ahora >= t.caduca - margen) return { sale: true, motivo: `caduca (${new Date(t.caduca).toISOString().slice(11, 16)} UTC) y no ha pasado la redacción: sale con la plantilla` };
   if (t.redaccion === 'sin-ia') return { sale: true, motivo: 'sin Claude o sin cupo hoy: sale con la plantilla' };
   if (t.redaccion === 'sin-tiempo' || !t.redaccion) return { sale: false, motivo: 'espero: no se ha llegado a redactar en esta ejecución' };
-  // 'rechazada' o 'ia-no': cuenta como una ejecución fallida
+  // 'rechazada', 'ia-no' o 'revisor-no': cuenta como una ejecución fallida
   const n = previo.n + 1, max = ejecucionesDe(t.tipo, config);
   tabla[t.clave] = { n, t: previo.t || new Date(ahora).toISOString(), ultima: new Date(ahora).toISOString() };
   if (n >= max) return { sale: true, motivo: `la redacción ha fallado en ${n} ejecuciones seguidas: sale con la plantilla` };
