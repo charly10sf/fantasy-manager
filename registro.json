@@ -3346,7 +3346,9 @@
    "n": 11,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261109/1004249234/susto-rocafonda-calella-grupo-6.html": 1794261673986
+  }
  },
  "ia": {
   "dia": "2026-11-09",
@@ -7290,13 +7292,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 922,
+   "ok": 923,
    "fallos": 0,
-   "ejecuciones": 577,
+   "ejecuciones": 578,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T21:56:14.118Z"
+   "ultima": "2026-11-09T22:01:13.986Z"
   }
  },
  "ptsDirecto": {},
@@ -7313,15 +7315,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:56:17.776Z"
+   "ultimaBien": "2026-11-09T22:01:17.232Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:56:17.776Z"
+   "ultimaBien": "2026-11-09T22:01:17.232Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:56:17.776Z"
+   "ultimaBien": "2026-11-09T22:01:17.232Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7329,7 +7331,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T21:56:17.776Z"
+   "ultimaBien": "2026-11-09T22:01:17.232Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
