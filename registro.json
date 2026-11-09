@@ -3274,7 +3274,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-valoran-cambio-talante-cuerpo-ven-insuficiente-desconvocar-huelga-20261106185853.html": 1793987933000,
-   "SPORT|136162605": 1793984430000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/06/federacion-incompetente-aplazar-jornada-fallecimiento-jesus-de-miguel-136178296.html": 1793988650000,
    "SPORT|136180863": 1793989306000,
    "SPORT|136180917": 1793988049000,
@@ -7277,13 +7276,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 862,
+   "ok": 863,
    "fallos": 0,
-   "ejecuciones": 517,
+   "ejecuciones": 518,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-09T16:56:12.422Z"
+   "ultima": "2026-11-09T17:01:15.405Z"
   }
  },
  "ptsDirecto": {},
@@ -7300,15 +7299,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:56:16.723Z"
+   "ultimaBien": "2026-11-09T17:01:20.321Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:56:16.723Z"
+   "ultimaBien": "2026-11-09T17:01:20.321Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:56:16.723Z"
+   "ultimaBien": "2026-11-09T17:01:20.321Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7316,11 +7315,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:56:16.723Z"
+   "ultimaBien": "2026-11-09T17:01:20.321Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-09T16:56:16.723Z"
+   "ultimaBien": "2026-11-09T17:01:20.321Z"
   }
  },
  "avisos": [
