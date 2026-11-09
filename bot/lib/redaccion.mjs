@@ -7,12 +7,12 @@
 import { limitarDatos, apuntarTexto, MEDIA } from './datos-jugador.mjs';
 import { norm, peso, limite, copia, trozoCopiado, APODOS, corto, esEtiquetaFinal, CIERRES } from './texto.mjs';
 import { validar } from './validar.mjs';
-import { preguntar, conClaude } from './ia.mjs';
+import { preguntar, conClaude, sinCupo, estimarCoste, MODELOS } from './ia.mjs';
 import { GUIA, EJEMPLOS, ejemplosPara } from './voz.mjs';
 import { ARRANQUES, VAGAS, PROHIBIDO, EMOJIS_GUIA, segunTrasCifra, nombresEn, nombresDe } from './pulir.mjs';
-import { NOMBRES_MEDIOS } from './prensa.mjs';
+import { NOMBRES_MEDIOS, PRENSA_SIN_MEDIO, reglaPrensa } from './prensa.mjs';
 import { ESTADIOS } from './hechos.mjs';
-import { revisarConIA } from './revisor.mjs';
+import { revisarConIA, SISTEMA as SISTEMA_REVISOR } from './revisor.mjs';
 import { comoLeLlaman } from './apodos-jugadores.mjs';
 import { banderasEn } from './nacionalidad.mjs';
 
@@ -98,12 +98,19 @@ const SIGLAS = new Set(['var', 'mvp', 'rcd', 'ud', 'cf', 'ca', 'fc', 'sd', 'cd',
 const GRITOS = new Set(['golazo', 'gol', 'golito', 'que', 'en', 'el', 'la', 'lo', 'los', 'las', 'de', 'del', 'al', 'a', 'y', 'su', 'se', 'le', 'da', 'con', 'por', 'sobre', 'ultimo', 'ultima',
   'minuto', 'descuento', 'bocina', 'final', 'falta', 'volea', 'cabeza', 'vuelta', 'remontada', 'remonta', 'triplete', 'doblete', 'empata', 'empate', 'gana', 'locura', 'tremendo',
   'brutal', 'lejos', 'toma', 'vaya', 'ojo', 'agonico', 'agonica', 'clava', 'mete', 'joya', 'obra', 'arte', 'tiro', 'zapatazo']);
+/** los textos de unos hechos (los valores, no las claves: «gol» o «pts» como clave no permiten un nombre; A10) */
+export function textosDe(o, out = []) {
+  if (Array.isArray(o)) o.forEach((x) => textosDe(x, out));
+  else if (o && typeof o === 'object') { for (const [k, v] of Object.entries(o)) if (k !== 'fecha' && k !== 'etiqueta') textosDe(v, out); }
+  else if (o != null) out.push(String(o));
+  return out;
+}
 /** las palabras con mayúscula que pueden salir: las de los hechos, las crónicas usadas, los medios y unas fijas */
 function vocabulario(hechos, cronicas) {
   const s = new Set(['laliga', 'fantasy', 'manager', 'primera', 'segunda', 'champions', 'copa', 'europa', 'conference', 'liga', 'rey', 'var', 'mvp',
     'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
     'septiembre', 'octubre', 'noviembre', 'diciembre', 'all', 'in']);
-  const txt = JSON.stringify(hechos, sinFecha) + ' ' + cronicas.map((c) => `${c.medio} ${c.titulo} ${c.entradilla}`).join(' ') + ' ' + NOMBRES_MEDIOS.join(' ');
+  const txt = textosDe(hechos).join(' ') + ' ' + cronicas.map((c) => `${c.medio} ${c.titulo} ${c.entradilla}`).join(' ') + ' ' + NOMBRES_MEDIOS.join(' ');
   for (const w of norm(txt).split(' ')) if (w) s.add(w);
   return s;
 }
@@ -142,6 +149,9 @@ const entrada = (t, nombres) => esqueleto(t, nombres).split(' ').slice(0, 3).joi
  */
 // atribuir a un medio con un verbo («cuenta que», «informa el…»): en un final o un MVP no hay medio al que atribuir nada
 const ATRIBUYE = /\b(cuenta|cuentan|informa|informan|asegura|aseguran|avanza|avanzan|desvela|desvelan|revela|revelan|apunta|apuntan)\s+(que|el|la|los|las)\b/i;
+// una lesión: solo si los hechos la traen (un jugador lesionado, unas molestias, un parte); en cualquier tipo de tuit
+const LESION_DICE = /\b(?:lesion|lesiones|lesionad[oa]s?|se lesiona\w*|molestias|en camilla|cojeando)\b/;
+const LESION_HAY = /\b(?:lesion\w*|molestias|tocad\w*|rotura|esguince|parte medico|retirad\w*|lesionad\w*|injured|doubtful|vuelve|vuelta|recuperad\w*|alta)\b/;
 // sucesos de un partido que solo pueden salir si están en los hechos: [lo que dice el texto, lo que tiene que haber en los hechos, cómo se llama]
 const SUCESOS = [
   [/\bpenalt(?:i|is|y)\b/, /\bpenalti\b/, 'penalti'],
@@ -149,12 +159,121 @@ const SUCESOS = [
   [/\b(?:expuls\w+|roja|rojas)\b/, /\b(?:roja|expuls\w+)\b/, 'una expulsión'],
   [/\b(?:autogol\w*|propia puerta)\b/, /\b(?:enpropia|autogol)\b/, 'un autogol'],
   [/\bvar\b/, /\bvar\b/, 'el VAR'],
+  // (revisión total, A10: «Mbappé se marchó lesionado» pasaba en un final sin ninguna lesión en los hechos)
+  [LESION_DICE, LESION_HAY, 'una lesión'],
 ];
+// el directo también mira el doblete y el triplete: solo si el gol lo es (subtipo, «golNumeroDelJugador»)
+const SUCESOS_DIRECTO = [[/\b(?:doblete|triplete|hat ?trick|su segundo gol|su tercer gol)\b/, /\b(?:doblete|triplete|golnumerodeljugador|segundo gol|tercer gol)\b/, 'un doblete o un triplete']];
 /** los sucesos que cuenta el texto y no están en los hechos (vacío si todo lo que cuenta está) */
 export function sucesosSinHechos(texto, hechos) {
   const t = norm(texto), h = norm(JSON.stringify(hechos, sinFecha));
-  return SUCESOS.filter(([dice, hay]) => dice.test(t) && !hay.test(h)).map((x) => x[2]);
+  const lista = (hechos && hechos.tipo) === 'directo' ? [...SUCESOS, ...SUCESOS_DIRECTO] : SUCESOS;
+  return lista.filter(([dice, hay]) => dice.test(t) && !hay.test(h)).map((x) => x[2]);
 }
+
+// --- las cifras, con sus decimales y con su jugador (revisión total, A10) ---------------------------------------------------
+// El validador de siempre (validar.mjs) parte «3,6» en 3 y 6, así que «3,6 de media» pasaba con un 6,3 en los hechos; y daba por buena
+// cualquier cifra que estuviera en algún sitio de los hechos, sin mirar de quién era: con el Valencia 0-3 Madrid del 7 nov, los puntos
+// de Valverde puestos a Arda Güler pasaban.
+const valorDe = (s) => String(Number(String(s).replace(',', '.')));
+/** los números de unos datos (objetos o textos), con sus decimales enteros: «6,3» y 6.3 → '6.3'; 30 → '30' */
+export function numerosDe(...cosas) {
+  const out = new Set();
+  for (const c of cosas) for (const m of (typeof c === 'string' ? c : JSON.stringify(c ?? '', sinFecha)).match(/\d+(?:[.,]\d+)?/g) || []) out.add(valorDe(m));
+  return out;
+}
+const sinTeclas = (s) => String(s).replace(/[0-9#*]️?⃣/g, ' ');
+/** los decimales del texto que no están en los hechos ni en la prensa (un «3,6» por un 6,3) */
+export function decimalesSinHechos(texto, hechos = {}, cronicas = []) {
+  const hay = numerosDe(hechos, ...cronicas.map((c) => `${c.titulo} ${c.entradilla}`));
+  return [...new Set(sinTeclas(texto).match(/\d+,\d+/g) || [])].filter((d) => !hay.has(valorDe(d)));
+}
+// el texto en minúsculas y sin tildes con el mismo largo (para buscar nombres y saber dónde caen)
+const plegar = (s) => [...String(s)].map((c) => { const x = c.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); return x.length === c.length ? x : c; }).join('');
+const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const palabraRe = (k) => new RegExp(`(?<![\\p{L}\\d])${escRe(k)}(?![\\p{L}\\d])`, 'gu');
+const PARTICULAS = new Set(['el', 'la', 'los', 'las', 'del', 'de', 'da', 'do', 'dos', 'van', 'von', 'der', 'den', 'ben']);
+/** con qué palabras se nombra a cada jugador (las que solo son suyas: dos «Williams» no cuentan) */
+function clavesDe(js) {
+  const de = js.map((j) => {
+    const ks = new Set();
+    for (const n of [j.nombre, ...(j.tambienSeLeLlama || [])]) {
+      const x = norm(n);
+      if (x.length >= 3) ks.add(x);
+      for (const w of x.split(' ')) if (w.length >= 3 && !PARTICULAS.has(w)) ks.add(w);
+    }
+    return ks;
+  });
+  const cuenta = new Map();
+  for (const ks of de) for (const k of ks) cuenta.set(k, (cuenta.get(k) || 0) + 1);
+  return de.map((ks) => [...ks].filter((k) => cuenta.get(k) === 1));
+}
+/** dónde se nombra a cada jugador en una frase: [{ ini, fin, i }] por orden, sin solapes (gana el nombre más largo) */
+function menciones(frase, claves) {
+  const f = plegar(frase), ms = [];
+  claves.forEach((ks, i) => { for (const k of ks) for (const m of f.matchAll(palabraRe(k))) ms.push({ ini: m.index, fin: m.index + m[0].length, i }); });
+  ms.sort((a, b) => a.ini - b.ini || b.fin - a.fin);
+  const out = [];
+  for (const m of ms) if (!out.length || m.ini >= out[out.length - 1].fin) out.push(m);
+  return { ms: out, f };
+}
+// una lista de nombres («Valverde y Arda suman…», «Mbappé, Vinícius y Bellingham»): lo que va con ellos vale para cualquiera
+const LISTA = /^[\s,]*(?:y|e)?[\s,]*$/;
+function grupo(ms, k, f) {
+  const g = new Set([ms[k].i]);
+  for (let a = k; a > 0 && LISTA.test(f.slice(ms[a - 1].fin, ms[a].ini)); a--) g.add(ms[a - 1].i);
+  for (let a = k; a < ms.length - 1 && LISTA.test(f.slice(ms[a].fin, ms[a + 1].ini)); a++) g.add(ms[a + 1].i);
+  return [...g];
+}
+/**
+ * Las cifras puestas a otro jugador: cada número que solo es de un jugador de los hechos (no del partido, de los clubes ni de la prensa)
+ * tiene que ir con él. Con quién va: el último jugador nombrado antes en la frase (o, si no hay, el primero de después; y si la frase no
+ * nombra a nadie, el de la frase de antes). Devuelve los motivos (vacío si todo cuadra).
+ */
+export function cifrasCambiadas(texto, hechos = {}, cronicas = []) {
+  const js = ((hechos && hechos.jugadores) || []).filter((j) => j && j.nombre);
+  if (js.length < 2) return [];
+  const { jugadores, ...resto } = hechos;
+  const general = numerosDe(resto, ...cronicas.map((c) => `${c.titulo} ${c.entradilla}`));
+  const suyas = js.map((j) => numerosDe(j));
+  const claves = clavesDe(js);
+  const e = [];
+  let antes = null;
+  for (const fr of frases(sinTeclas(texto))) {
+    const { ms, f } = menciones(fr, claves);
+    for (const m of fr.matchAll(/\d+(?:,\d+)?/g)) {
+      const x = valorDe(m[0]);
+      if (general.has(x)) continue;
+      const duenos = suyas.map((s, i) => (s.has(x) ? i : -1)).filter((i) => i >= 0);
+      if (!duenos.length) continue;
+      let k = -1;
+      for (let a = 0; a < ms.length && ms[a].fin <= m.index; a++) k = a;
+      if (k < 0 && ms.length) k = 0;
+      const con = k >= 0 ? grupo(ms, k, f) : antes;
+      if (!con || con.some((i) => duenos.includes(i))) continue;
+      e.push(`«${fr.slice(0, 90)}»: el ${m[0]} es de ${duenos.map((i) => js[i].nombre).join(' o ')}, no de ${con.map((i) => js[i].nombre).join(' ni ')}: cada cifra con su jugador`);
+    }
+    if (ms.length) antes = grupo(ms, ms.length - 1, f);
+  }
+  return [...new Set(e)];
+}
+/** ¿sale el nombre con mayúscula en algún sitio? («Partido redondo» no es Redondo, del Elche: M12) */
+export function conMayuscula(texto, nombre) {
+  const t = String(texto), f = plegar(t);
+  for (const m of f.matchAll(palabraRe(nombre))) if (/\p{Lu}/u.test(t[m.index])) return true;
+  return false;
+}
+
+// lo que es un hecho del club y no de un medio: «es oficial», «lo ha comunicado el club» (A10: «Es oficial» salía con solo AS)
+const OFICIAL = /\b(?:es oficial|ya es oficial|oficialmente|de forma oficial|comunicado oficial|parte medico oficial|(?:lo )?ha(?:n)? (?:comunicado|confirmado|anunciado|informado) el club|(?:confirma|comunica|anuncia|informa) el club|segun (?:ha comunicado )?el club)\b/;
+// «el club» de una fuente no es una palabra vaga (M12: «lo ha comunicado el club» se tiraba por «el club»)
+const CLUB_FUENTE = /\b(?:(?:lo |y así lo |como lo )?ha(?:n)? (?:comunicado|confirmado|anunciado|informado)|como ha (?:comunicado|confirmado|informado)|seg[uú]n (?:ha comunicado )?|(?:confirma|comunica|anuncia|informa))\s+el club\b|\bel club\s+(?:lo\s+)?ha\s+(?:comunicado|confirmado|anunciado|informado)\b/giu;
+// frases hechas que llevan «baja» o «duda» y no hablan del estado de nadie (M12: «baja los brazos», «sin ninguna duda»)
+const FRASES_HECHAS = /\b(?:baj(?:a|an|ar|o|ó)\s+(?:los\s+brazos|el\s+ritmo|el\s+pist[oó]n|la\s+guardia|el\s+nivel|de\s+(?:rendimiento|nivel|intensidad))|(?:sin|no hay|no cabe)\s+(?:ninguna\s+)?duda)\b/giu;
+// faltar al respeto a una persona (M14: «entrada criminal» pasaba): se cuenta lo que pasa sin insultar ni descalificar a nadie
+const SIN_RESPETO = /\b(?:criminal(?:es)?|asesin[oa]s?|carnicer[oa]s?|mat[oó]n(?:es)?|salvajada|sinverg[uü]enzas?|vergonzos[oa]s?|payas[oa]s?|ladr[oó]n(?:es|a)?|tongo|atraco|robo arbitral|impresentables?|pat[eé]tic[oa]s?)\b/iu;
+// los puntos de un partido en juego son de momento (M12: «Roja para Gayá… se queda en -5 puntos» y en el final fueron -3)
+const PROVISIONAL = /\b(?:de momento|por ahora|hasta ahora|ya suma|ya va por|ya lleva|lleva -?\d|provisional(?:es)?|a falta de|mientras tanto)\b/iu;
 
 // «hoy», «esta tarde», «esta noche» de un partido que ya ha empezado (8 nov, Barrenetxea: «llega con dudas al partido de esta tarde» a las
 // 18:06 de un partido de las 16:15). Y si el equipo ya jugó hoy (`partido.yaJugoHoy`), nada de «esta tarde», «esta noche» ni «hoy a las».
@@ -174,16 +293,30 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (hoyMal) e.push(hoyMal);
   const v = validar(t, { numeros: [...new Set([...numeros, ...cifrasDe(hechos, cronicas)])], max });
   if (!v.ok) e.push(...v.errores);
+  // los decimales, enteros («3,6» no es un 6,3) y cada cifra con su jugador (revisión total, A10)
+  const decs = decimalesSinHechos(t, hechos, cronicas);
+  if (decs.length) e.push(`decimales que no están en los hechos: ${decs.join(', ')} (¿le has dado la vuelta a una cifra?)`);
+  e.push(...cifrasCambiadas(t, hechos, cronicas));
+  // el directo no pasa por el revisor: solo las cifras del tuit de partida (marcador, minuto, puntos, su temporada) y la jornada
+  if (hechos.tipo === 'directo' && numeros.length) {
+    const deLaPlantilla = new Set([...numeros, hechos.jornada].filter((x) => x != null).map((x) => String(Math.abs(Number(x)))));
+    const nuevas = [...new Set((sinTeclas(t).match(/\d+/g) || []).map((x) => String(Number(x))))].filter((x) => !deLaPlantilla.has(x));
+    if (nuevas.length) e.push(`en directo solo van las cifras del tuit de partida: ${nuevas.join(', ')} no sale en él`);
+  }
+  const tn = norm(t), hn = norm(textosDe(hechos).join(' '));
   // nombres: solo los de los hechos (jugadores y clubes, con los nombres permitidos de cada club)
   const permitidos = new Set();
   for (const j of hechos.jugadores || []) { permitidos.add(norm(j.nombre)); for (const w of norm(j.nombre).split(' ')) if (w.length >= 4) permitidos.add(w); }
   for (const c of Object.values(hechos.clubes || {})) for (const n of c.nombres || []) { const x = norm(n).replace(/^(el|la) /, ''); permitidos.add(x); }
   for (const c of Object.keys(hechos.clubes || {})) permitidos.add(norm(c));
   for (const c of cronicas) for (const w of norm(`${c.titulo} ${c.entradilla}`).split(' ')) permitidos.add(w);
-  for (const w of norm(JSON.stringify(hechos, sinFecha)).split(' ')) if (w.length >= 3) permitidos.add(w);
+  // (de los demás textos de los hechos, las palabras de 4 letras o más: con las de 3, cualquier «Gil» o «Rui» pasaba; A10)
+  for (const x of textosDe(hechos)) { const nx = norm(x); if (nx.length >= 3) permitidos.add(nx); for (const w of nx.split(' ')) if (w.length >= 4) permitidos.add(w); }
+  for (const j of hechos.jugadores || []) for (const n of j.tambienSeLeLlama || []) { permitidos.add(norm(n)); for (const w of norm(n).split(' ')) if (w.length >= 3) permitidos.add(w); }
   // (sin los nombres de los medios: «Mundo Deportivo» no es el Deportivo; primera prueba del 6 nov)
   const sinMedios = NOMBRES_MEDIOS.reduce((x, m) => x.split(m).join('·'.repeat(m.length)), t);
-  const fuera = nombresEn(sinMedios, todos).filter((n) => !permitidos.has(n) && !n.split(' ').every((w) => permitidos.has(w)));
+  // (un apodo de una palabra, solo con mayúscula: «Partido redondo» no es Redondo, del Elche, ni «baja los brazos» es nadie; M12)
+  const fuera = nombresEn(sinMedios, todos).filter((n) => !permitidos.has(n) && !n.split(' ').every((w) => permitidos.has(w)) && (n.includes(' ') || conMayuscula(sinMedios, n)));
   if (fuera.length) e.push(`nombra a quien no está en los hechos: ${fuera.join(', ')}`);
   for (const j of (hechos.jugadores || []).filter((x) => x.principal)) {
     // vale cualquiera de sus nombres: el de LaLiga o los de `tambienSeLeLlama` («el Cuti», «Borja Iglesias»)
@@ -192,6 +325,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   }
   // palabras con mayúscula que no salen de ninguna parte (un entrenador, un estadio, un club que no está)
   const voc = vocabulario(hechos, cronicas);
+  // la primera palabra de una frase también, si es un nombre de LaLiga (A10: «Arda Güler, sin marcar» o un «Mendy» de arranque no se miraban)
+  const deLaLiga = new Set(todos.flatMap((n) => (n.includes(' ') ? n.split(' ').filter((w) => w.length >= 5) : [n])).filter((w) => w.length >= 3 && !ARRANQUES.has(w) && !COMUNES.has(w)));
   const raras = new Set();
   for (const f of frases(t.replace(EMOJI, ' ').replace(/[️‍]/g, ''))) {
     const ws = f.replace(/^[^\p{L}]+/u, '').split(/[^\p{L}]+/u).filter(Boolean);
@@ -200,7 +335,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
       if (/^\p{Lu}{2,}$/u.test(w)) return;              // las palabras enteras en mayúsculas se miran aparte (gritos, más abajo)
       const n = norm(w);
       if (voc.has(n) || (i === 0 && ARRANQUES.has(n))) return;
-      if (i === 0 && !/^\p{Lu}{2,}/u.test(w)) return;   // primera palabra de la frase: solo si no es una palabra corriente (ver ARRANQUES)
+      if (i === 0 && !/^\p{Lu}{2,}/u.test(w) && !deLaLiga.has(n)) return;   // primera palabra de la frase: solo si es un nombre de LaLiga
       raras.add(w);
     });
   }
@@ -221,7 +356,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   if (/[¡!?¿]{2,}/.test(t)) e.push('signos de exclamación o interrogación dobles');
   // el estado de cada jugador: en las frases que solo hablan de él, nada de otra familia
   const nombreDe = (j) => norm(j.nombre).split(' ').filter((w) => w.length >= 3);
-  for (const f of frases(t)) {
+  for (const f0 of frases(t)) {
+    const f = f0.replace(FRASES_HECHAS, ' ');
     const nf = ` ${norm(f)} `;
     const suyos = (hechos.jugadores || []).filter((j) => j.estado && nombreDe(j).some((w) => nf.includes(` ${w} `)));
     if (suyos.length !== 1) continue;
@@ -232,7 +368,7 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   const estados = new Set((hechos.jugadores || []).map((j) => j.estado));
   // (en el mercado «baja» es lo que baja de precio)
   // (y tampoco cuando lo que baja es un valor: «su valor baja 1,5 M», «baja 6 M»; los tuits de selecciones hablan del valor, 9 nov)
-  const tBaja = t.replace(/\b(?:valor|valores|precio|precios|nota|notas)\b[^.\n]{0,30}?\bbajas?\b/giu, ' ').replace(/\bm[aá]s\s+bajas?\b/giu, ' ').replace(/\bbaja\s+(?:de\s+)?\d/giu, ' ');
+  const tBaja = t.replace(FRASES_HECHAS, ' ').replace(/\b(?:valor|valores|precio|precios|nota|notas)\b[^.\n]{0,30}?\bbajas?\b/giu, ' ').replace(/\bm[aá]s\s+bajas?\b/giu, ' ').replace(/\bbaja\s+(?:de\s+)?\d/giu, ' ');
   if (hechos.tipo !== 'mercado' && PALABRAS.baja.test(tBaja) && !negada(tBaja, PALABRAS.baja) && ![...estados].some((x) => ['baja', 'lesionado', 'sancionado', 'apercibido'].includes(x))) e.push(`dice «${tBaja.match(PALABRAS.baja)[0]}» y nadie está de baja`);
   // los equipos, con artículo (Carlos, 6 nov: «no es Osasuna, es el Osasuna»); en un marcador o un «Betis-Mallorca», no
   for (const c of Object.keys(APODOS)) {
@@ -247,7 +383,9 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
     }
   }
   // «colista» y «líder» solo si hay un equipo en los hechos que lo es (6 nov: «el Levante, colista de hecho (18º)»)
-  const puestos = (hechos.equipos || []).map((x) => String(x.va || '').match(/^(\d+)º de (\d+)/)).filter(Boolean);
+  // (y en el final, el puesto de antes del partido, `antesDelPartido`: M12, «colista» y «líder» verdaderos se tiraban)
+  const puestos = [...(hechos.equipos || []).map((x) => String(x.va || '').match(/^(\d+)º de (\d+)/)),
+    ...Object.values(hechos.antesDelPartido || {}).map((x) => { const m = String(x).match(/^(\d+)º/); return m ? [m[0], m[1], '20'] : null; })].filter(Boolean);
   if (/\bcolista\b/i.test(t) && !puestos.some((m) => m[1] === m[2])) e.push('dice «colista» y ningún equipo de los hechos va último');
   if (/\bl[ií]der\b/i.test(t) && !puestos.some((m) => m[1] === '1')) e.push('dice «líder» y ningún equipo de los hechos va primero');
   // (Carlos, 6 nov: «lo de poner el % de titularidad siempre y los puntos medios no haría falta, suena demasiado a plantilla»)
@@ -269,7 +407,8 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
   }
   if (nPct > tope.pct) e.push(`${nPct} porcentajes: como mucho ${tope.pct}; el resto, con palabras («fijo», «lo tiene difícil», «en el aire»)`);
   if (nMedia > tope.media) e.push(`${nMedia} medias: como mucho ${tope.media}`);
-  if (VAGAS.test(t)) { VAGAS.lastIndex = 0; e.push(`nombra un club o un jugador con una palabra vaga («${(t.match(VAGAS) || [])[0]}»)`); }
+  const tVaga = t.replace(CLUB_FUENTE, ' ');
+  if (VAGAS.test(tVaga)) { VAGAS.lastIndex = 0; e.push(`nombra un club o un jugador con una palabra vaga («${(tVaga.match(VAGAS) || [])[0]}»)`); }
   VAGAS.lastIndex = 0;
   if (/conjunto\s+\p{Ll}/u.test(t)) e.push('«el conjunto…» en vez del nombre del club');
   if (/LaLiga Fantasy ya lo da/i.test(t)) e.push('«LaLiga Fantasy ya lo da…»');
@@ -313,6 +452,22 @@ export function revisar(texto, { hechos, cronicas = [], recientes = [], todos = 
     const sucesos = sucesosSinHechos(t, hechos);
     if (sucesos.length) e.push(`cuenta sucesos que no están en los hechos (${sucesos.join(', ')}): no lo insinúes, ni siquiera atribuido a un medio`);
   }
+  // «sin marcar» de uno que ha marcado en este partido (A10: «Arda Güler, sin marcar» con su gol en los hechos)
+  const goleadores = (hechos.goles || []).map((g) => norm(g.goleador || '')).filter(Boolean);
+  if (goleadores.length) for (const f of frases(t)) {
+    const nf = ` ${norm(f)} `;
+    if (!/\b(?:sin marcar|sin ver puerta|no marco|no vio puerta|se quedo sin marcar|se fue sin marcar)\b/.test(nf)) continue;
+    const g = goleadores.find((x) => x.split(' ').some((w) => w.length >= 4 && nf.includes(` ${w} `)));
+    if (g) e.push(`«${f.slice(0, 80)}»: dice que no marcó y en los hechos marca`);
+  }
+  // «es oficial» o «lo ha comunicado el club» solo si los hechos lo dan como del club (A10: «Es oficial» con solo AS)
+  if (OFICIAL.test(tn) && !/\b(?:oficial\w*|comunicad[oa]|comunicado el club|parte medico|confirmad[oa] por el club)\b/.test(hn)) e.push('dice que es oficial o que lo ha comunicado el club y los hechos no lo dan como oficial: di de dónde sale de verdad');
+  // respeto a las personas (M14)
+  if (SIN_RESPETO.test(t)) e.push(`falta al respeto a una persona («${t.match(SIN_RESPETO)[0]}»): cuenta lo que pasa sin insultar ni descalificar a nadie`);
+  // una lesión, solo si los hechos la traen (en final, MVP y directo lo mira sucesosSinHechos, más abajo)
+  if (!['final', 'mvp', 'directo'].includes(hechos.tipo) && LESION_DICE.test(tn) && !LESION_HAY.test(hn)) e.push('habla de una lesión y los hechos no traen ninguna');
+  // en juego, los puntos son de momento (M12)
+  if (hechos.tipo === 'directo' && (hechos.partido || {}).estadoDelPartido === 'en juego' && /-?\d+\s*(?:puntos|pts)\b/i.test(t) && !PROVISIONAL.test(t)) e.push('con el partido en juego los puntos son de momento: dilo («de momento», «ya suma», «por ahora»)');
   // banderas (Carlos, 9 nov 10:13): solo en los tuits de selecciones, la de una selección de los hechos, justo detrás de su nombre y una
   // vez cada una. No cuentan como emojis de la guía ni de club (las dos letras regionales no son pictogramas; la negra de Inglaterra sí)
   e.push(...erroresBanderas(t, hechos));
@@ -376,9 +531,10 @@ export function prompt({ hechos, max, recientes = [], cronicas = [], errores = [
     (() => { const tp = TOPES_CIFRAS[hechos.tipo] || TOPES_CIFRAS.otro; return `ANTES DE ESCRIBIR: como mucho ${tp.pct} porcentaje${tp.pct > 1 ? 's' : ''} y ${tp.media} media en todo el tuit (el resto, con palabras); si un jugador trae «datoDestacado», ese es SU dato: cuéntalo con tus palabras y no le pongas además la media; ni «el equipo», «el club», «el rival» ni «enfrente»: el nombre; nada que no esté en los hechos${cronicas.length ? ' o en la prensa (y de la prensa, con tus palabras: ni seis seguidas iguales)' : ''}; ${hechos.tipo === 'resumen' ? 'lo que sí puedes contar es el ranking de los hechos (quién va primero, a cuánto de la media)' : 'ninguna comparación con el resto de la jornada'}.`; })(),
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (no empieces igual ni sigas su orden):\n${recientes.map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     gastadas.length ? `FRASES YA GASTADAS (salen en varios de esos tuits; no las uses): ${gastadas.map((g) => `«${g.txt}»`).join(', ')}` : '',
-    cronicas.length ? (hechos.tipo === 'final' || hechos.tipo === 'mvp'
-      ? `PRENSA DE ESTE PARTIDO (opcional). Solo puedes usar algo que digan AL MENOS DOS de estas noticias, de medios distintos; si un dato sale en una sola, no lo uses. Con tus palabras y SIN nombrar ningún medio (ni «según», ni «cuentan»): se dice como un hecho. Nada de lo que pasa en el campo que no esté en los hechos. Si usas algo, apunta en «cronicas» los números de las noticias que lo dicen (mínimo dos):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}`
-      : `PRENSA DE ESTE PARTIDO (hasta dos hechos, con tus palabras y con el medio pegado al hecho; nada de lo que pasa en el campo, eso solo si está en los hechos):\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}`) : '',
+    // (la regla, la misma que lee el revisor: lib/prensa.mjs, reglaPrensa; M12)
+    cronicas.length ? `PRENSA DE ESTE PARTIDO (opcional). ${reglaPrensa(hechos.tipo)} Si usas algo, apunta en «cronicas» los números de las noticias que lo dicen${PRENSA_SIN_MEDIO.has(hechos.tipo) ? ' (mínimo dos)' : ''}:\n${cronicas.map((c, i) => `[${i}] ${c.medio}: ${c.titulo}. ${c.entradilla}`).join('\n')}` : '',
+    // los puntos del directo, de momento (M12)
+    hechos.tipo === 'directo' && (hechos.partido || {}).estadoDelPartido === 'en juego' ? 'EL PARTIDO SIGUE EN JUEGO: si das puntos, son de momento («ya suma», «de momento», «por ahora»), nunca como definitivos («se queda en»). Y ninguna cifra ni suceso que no venga en los hechos.' : '',
     errores.length ? `Tu versión anterior no vale:\n"""${anterior}"""\nPor esto: ${errores.join('; ')}. Escríbela otra vez arreglando eso.` : '',
   ].filter(Boolean).join('\n\n');
 }
@@ -423,6 +579,7 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
   // la caché solo compensa si hay más de una pregunta con el mismo sistema en esta ejecución (lib/claude.mjs)
   const cache = xs.length > 1 || cfg.cacheSiempre === true;
   const recientes = recientesDe(registro, tipo);
+  const conRevisor = !(cfg.sinRevisor || []).includes(tipo) && (config.revisor || {}).activo !== false;
   let hechos = 0;
   for (const t of xs) {
     conApodos(t.hechos);
@@ -440,6 +597,14 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
     const sinPrensa = (cfg.sinPrensaTrasFallos || 0) > 0 && fallosPrevios >= cfg.sinPrensaTrasFallos;
     if (sinPrensa) log(`  (redactar) ${t.clave}: sin prensa (ya ha fallado ${fallosPrevios} ${fallosPrevios === 1 ? 'vez' : 'veces'})`);
     const cronicas = sinPrensa ? [] : ((await Promise.resolve(cronicasDe(t)).catch(() => [])) || []);
+    // ¿queda cupo para redactar Y para la segunda lectura? Sin ella no sale, así que no se gasta en redactar (A10)
+    if (conRevisor && pedir === preguntar && conClaude(config)) {
+      const json = JSON.stringify(t.hechos, sinFecha);
+      const estimado = estimarCoste({ modelo: MODELOS.redactar, prompt: json, sistema, uso: 'redactar', config })
+        + estimarCoste({ modelo: MODELOS.revisar, prompt: json + ' '.repeat(900), sistema: SISTEMA_REVISOR, uso: 'revisar', config });
+      const motivo = sinCupo('revisar', { registro, config, tipo, estimado });
+      if (motivo) { t.redaccion = 'sin-ia'; log(`  (redactar) ${t.clave}: sin cupo para redactar y revisar (${motivo}): sale con la plantilla`); continue; }
+    }
     let anterior = '', errores = [], final = null, rechazos = 0, causa = 'rechazada';
     const inicioTuit = Date.now();
     // presupuesto de tiempo de la ejecución (el trabajo de Actions tiene un tope de 10 min): pasado, sale la plantilla
@@ -460,12 +625,14 @@ export async function redactar(tweets, { tipo, registro = null, config = {}, jug
       const usadas = ((r.datos && r.datos.cronicas) || []).map((i) => cronicas[i]).filter(Boolean);
       const malos = revisar(texto, { hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, todos, max, numeros: t.numeros || [], ahora });
       // final y MVP: lo que sale de la prensa tiene que decirlo al menos dos medios distintos (Carlos, 7 nov); sin dos, no vale como fuente
-      if ((tipo === 'final' || tipo === 'mvp') && usadas.length && new Set(usadas.map((c) => norm(c.medio))).size < 2) malos.push('has usado la prensa con una sola noticia o un solo medio: en un final o un MVP solo vale lo que dicen al menos dos medios distintos (apunta las dos en «cronicas»); si no hay dos que lo digan, quítalo');
+      if (PRENSA_SIN_MEDIO.has(tipo) && usadas.length && new Set(usadas.map((c) => norm(c.medio))).size < 2) malos.push('has usado la prensa con una sola noticia o un solo medio: en un final o un MVP solo vale lo que dicen al menos dos medios distintos (apunta las dos en «cronicas»); si no hay dos que lo digan, quítalo');
       // pasa el validador de código: segunda lectura con IA (lib/revisor.mjs), como un editor, con los hechos al lado
       if (!malos.length) {
         // (el directo no espera a un segundo editor: lo del validador de código basta, la jugada caduca en minutos)
         const rv = (cfg.sinRevisor || []).includes(tipo) ? { ok: true, revisado: false } : await revisor({ texto, hechos: t.hechos, cronicas: usadas.length ? usadas : cronicas, recientes, tipo, registro, config, log });
         if (rv.ok) { final = { texto, modelo: r.modelo, usadas, revisado: rv.revisado ? rv.modelo : null }; continue; }
+        // el revisor caído (no contesta, sin cupo, sin Claude) no deja pasar el tuit: espera a la siguiente ejecución (A10)
+        if (rv.caido) { causa = 'revisor-no'; log(`  (redactar) ${t.clave}: el revisor no contesta (${rv.error || '?'}): no sale sin segunda lectura`); break; }
         rechazos++;
         log(`  (redactar) ${t.clave}, intento ${intento + 1}: el revisor no lo publicaría: ${rv.problemas.slice(0, 4).join('; ')}\n     «${texto.replace(/\n+/g, ' / ').slice(0, 400)}»`);
         errores = rv.problemas.map((p) => `un editor lo ha leído con los hechos al lado y no lo publicaría: ${p}`); anterior = texto;

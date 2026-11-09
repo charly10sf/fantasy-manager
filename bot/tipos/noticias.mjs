@@ -10,7 +10,7 @@
 //   4. Un tweet por jugador con el formato de Carrasco (claude/estilo-tweets.md, «novedades / caídas»). Sin repetir a quien ya ha
 //      salido en novedades, caídas o noticias (cubiertos() del registro).
 // Solo se guardan en el registro (rama bot-estado, repo público) los datos sacados, nunca los titulares ni las entradillas.
-import { corto, fmt, partes, elegir, el, del, norm, turno, largo as esLargo } from '../lib/texto.mjs';
+import { corto, fmt, partes, elegir, el, del, norm, turno, largo as esLargo, esPersonal, motivoPersonal } from '../lib/texto.mjs';
 import { tweet, cap, segunda, proximoPartido, paraLa, cuando, pegar } from '../lib/redactar.mjs';
 import { tarjetaBajas } from '../lib/datos-tarjetas.mjs';
 import { lista as enLista } from '../lib/agrupar.mjs';
@@ -82,9 +82,9 @@ export function yaJugo(j, stats, t) {
 const llaves = (j) => { const a = norm(j.nickname), b = norm(j.name).split(' '); return [a, b[b.length - 1], b.length > 2 ? b[b.length - 2] : null].filter((x) => x && x.length >= 3); };
 
 const ESQUEMA = { type: 'OBJECT', required: ['noticias'], properties: { noticias: { type: 'ARRAY', items: { type: 'OBJECT',
-  required: ['i', 'jugadorId', 'que', 'otraCompeticion', 'seguro', 'oficial', 'hecho', 'motivo', 'plazo'],
+  required: ['i', 'jugadorId', 'que', 'otraCompeticion', 'seguro', 'oficial', 'personal', 'hecho', 'motivo', 'plazo'],
   properties: { i: { type: 'INTEGER' }, jugadorId: { type: 'INTEGER' }, que: { type: 'STRING', enum: QUE }, otraCompeticion: { type: 'BOOLEAN' },
-    seguro: { type: 'BOOLEAN' }, oficial: { type: 'BOOLEAN' }, hecho: { type: 'STRING' }, motivo: { type: 'STRING' }, plazo: { type: 'STRING' } } } } } };
+    seguro: { type: 'BOOLEAN' }, oficial: { type: 'BOOLEAN' }, personal: { type: 'BOOLEAN' }, hecho: { type: 'STRING' }, motivo: { type: 'STRING' }, plazo: { type: 'STRING' } } } } } };
 
 export function prompt(lote) {
   return `Eres redactor de una cuenta de LaLiga Fantasy. Te paso noticias de prensa (titular y entradilla) y, en cada una, los jugadores de LaLiga que podrían salir en ella. Para cada noticia di si cuenta una NOVEDAD sobre si ese jugador podrá jugar con su club en LaLiga:
@@ -98,6 +98,7 @@ Reglas:
 - otraCompeticion: true si solo afecta a un partido de Champions, Europa League, Conference, Copa o la selección (un descanso o una rotación para un partido europeo, una lesión con la selección que no le quita jugar en LaLiga). Una vuelta a la convocatoria tras una lesión NO es otraCompeticion.
 - seguro: true si la noticia lo da como un hecho; false si es una posibilidad («podría», «apunta a», «se teme», «preocupa»).
 - oficial: true solo si la noticia dice que lo ha comunicado el club (parte médico o comunicado).
+- personal: true si no juega por motivos personales o familiares, por un fallecimiento, por el nacimiento de un hijo o por un problema de salud que no es una lesión del fútbol (salud mental, una enfermedad grave); false si es una lesión, unas molestias, una gripe, una sanción o una decisión del entrenador.
 - hecho: una frase corta de periodista con TUS palabras, de 4 a 10 palabras, en presente, que empiece por el nombre del jugador tal como sale en los candidatos (por ejemplo «Andrés Martín se rompe y estará varias semanas fuera»). Sin comillas, sin nombrar al medio y sin copiar el titular.
 - motivo: la lesión o la causa en 2 a 8 palabras, con tus palabras («rotura de fibras en el isquiotibial»); vacío si la noticia no la da.
 - plazo: cuánto tiempo estará fuera, en una frase corta con tus palabras («estará fuera varias semanas»); vacío si la noticia no lo da. Cifras solo si están en la noticia.
@@ -151,6 +152,7 @@ async function actualizar({ jugadores, equipos, registro, ahora, config, log, le
       if (!j) continue;
       const fuente = `${x.n.titulo} ${x.n.entradilla}`;
       const h = { guid: x.n.guid, medio: x.n.medio, t: x.n.t, id: String(j.id), que: a.que, oficial: !!a.oficial && /parte m[eé]dico|comunicad|oficial|informa(do)? el club|ha informado/i.test(fuente),
+        ...(a.personal || esPersonal(fuente) ? { personal: true } : {}),
         hecho: frase(a.hecho, { fuente, max: 90, debeLlevar: llaves(j) }), motivo: frase(a.motivo, { fuente, max: 60 }), plazo: frase(a.plazo, { fuente, max: 60 }),
         nums: [...new Set((fuente.match(/\d+/g) || []).map(Number))].slice(0, 30) };
       log(`  (noticias) ${x.n.medio}: ${j.nickname} → ${a.que}${h.oficial ? ' (oficial)' : ''}${h.hecho ? '' : ' (frase descartada)'}`);
@@ -235,7 +237,10 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     const de = (k) => mis.filter((h) => h[k] && h.que === que).concat(mis.filter((h) => h[k]));
     const hecho = (de('hecho').reverse()[0] || {}).hecho || '';
     const largo = (k) => (de(k).sort((a, b) => b[k].length - a[k].length)[0] || {})[k] || '';
-    cands.push({ j, fam, que, medios, oficial, laliga, est, parte, hecho, motivo: largo('motivo'), plazo: largo('plazo'),
+    // (M14) una ausencia por motivos personales, familiares o de salud: sobria, sin detalles ni consejo
+    const personal = fam === 'mala' && mis.some((h) => h.personal || esPersonal(`${h.hecho} ${h.motivo}`));
+    cands.push({ j, fam, que, medios, oficial, laliga, est, parte, hecho, motivo: largo('motivo'), plazo: largo('plazo'), personal,
+      motivoSobrio: personal ? motivoPersonal(mis.map((h) => `${h.hecho} ${h.motivo}`).join(' ')) : '',
       nums: [...new Set(mis.flatMap((h) => h.nums || []))] });
   }
   if (!cands.length) return [];
@@ -254,19 +259,20 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
     // las frases que rotan: por cuántos tweets de un jugador (noticias y novedades) llevamos hoy
     const k = vez + out.length;
     const clave = `noticias|${j.id}:${c.fam}|${dia}`;
-    const cab = c.hecho ? `${c.fam === 'buena' ? '✅' : '🚨'} ${cap(c.hecho)}`
+    const cab = c.personal ? `${j.nickname} no estará por ${c.motivoSobrio}`
+      : c.hecho ? `${c.fam === 'buena' ? '✅' : '🚨'} ${cap(c.hecho)}`
       : c.que === 'lesion' ? elegir([`🚨 ${j.nickname} se lesiona`, `🚨 Saltan las alarmas con ${j.nickname}`], sem)
         : c.que === 'descartado' ? `🚨 ${j.nickname} se queda fuera de la convocatoria`
           : c.que === 'molestias' ? `🚨 Saltan las alarmas con ${j.nickname}` : elegir([`✅ ${j.nickname} está de vuelta`, `✅ ${j.nickname} vuelve`], sem);
-    const baja = c.que === 'descartado' || (c.que === 'lesion' && (c.est === 'injured' || (c.parte && c.parte.estado === 'baja') || !!c.plazo));
+    const baja = c.personal || c.que === 'descartado' || (c.que === 'lesion' && (c.est === 'injured' || (c.parte && c.parte.estado === 'baja') || !!c.plazo));
     const fuente = fuenteDe(c, { baja, k, dia });
     // duda leve (Domy, 3 nov 22:15, con el tweet de Kike Salas): gestión de cargas, descanso o precaución, sin lesión
     const leve = c.fam === 'mala' && !baja && c.que !== 'lesion' && esLeve(`${c.motivo || ''} ${c.hecho || ''}`);
     const etiqueta = c.fam === 'buena' ? (c.est === 'ok' ? `✅ Disponible ${paraLa(pp, jornada)}` : `👀 Apunta a volver ${paraLa(pp, jornada)}`)
       : baja ? `❌ Baja ${paraLa(pp, jornada)}` : leve ? `⁉️ Duda leve ${paraLa(pp, jornada)}` : `⁉️ Duda ${paraLa(pp, jornada)}`;
     // el motivo, si dice algo (no «lesión» a secas) y no lo dice ya la cabecera; el plazo, si no lo dice ya
-    const motivo = c.fam === 'mala' && c.motivo && c.motivo.split(' ').length >= 2 && !copia(c.motivo, cab, 3) ? c.motivo : '';
-    const plazo = c.fam === 'mala' && c.plazo && !copia(c.plazo, cab, 3) && !copia(c.plazo, motivo, 3) ? c.plazo : '';
+    const motivo = !c.personal && c.fam === 'mala' && c.motivo && c.motivo.split(' ').length >= 2 && !copia(c.motivo, cab, 3) ? c.motivo : '';
+    const plazo = !c.personal && c.fam === 'mala' && c.plazo && !copia(c.plazo, cab, 3) && !copia(c.plazo, motivo, 3) ? c.plazo : '';
     const hr = esLargo() && pp && pp.fecha ? cuando(pp.fecha, ahora) : null;
     // (Carlos, 5 nov 13:33) lo que le sirve al que lo tiene o lo quiere fichar: si pinta a titular y lo difícil que es el rival.
     // Una baja no juega: ni % ni rival. El % solo si es el de la app (en LaLiga, disponible o duda); se pide solo si el tweet puede salir.
@@ -288,17 +294,20 @@ export async function generar({ jugadores, equipos, jornada, stats = null, seman
       fuente.arriba ? fu : null,
       plazo ? { t: `🗓️ ${cap(plazo)}`, prio: 7 } : null,
       fuente.arriba ? null : fu,
-      ...inf.ideas,
+      ...(c.personal ? [] : inf.ideas),
       { t: etiqueta, prio: 9 }];
     const { usadas, texto } = tweet(cabM, ideas);
     if (!usadas.includes(etiqueta)) { log(`  (noticias) ${j.nickname}: no cabe la etiqueta`); continue; }
     // (Carlos, 4 nov 12:43: De Galarreta salió sin carta) una vuelta aún sin el alta en el juego lleva carta «VUELVE»
-    const estadoCarta = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';
+    const estadoCarta = c.personal ? null : c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : c.que === 'descartado' ? null : baja ? 'lesionado' : 'duda';
     const fila = { id: j.id, nombre: j.nickname, teamId: j.teamId, pos: j.positionId, equipo, club: equipos[String(j.teamId)] || '', caraUrl: j.image || null,
       escudoUrl: escudos[String(j.teamId)] || null, estado: estadoCarta, leve: estadoCarta === 'duda' && leve, media, valor: Number(j.marketValue) || 0, pct: tit ? tit.pct : null };
     // los hechos para la IA que redacta (lib/redaccion.mjs): lo mismo que usa la plantilla, sin frases hechas
     const estadoH = c.fam === 'buena' ? (c.est === 'ok' ? 'disponible' : 'vuelve') : baja ? (c.que === 'lesion' ? 'lesionado' : 'baja') : 'duda';
-    const hechos = { tipo: 'noticias', noticia: c.hecho || null, ...(leve ? { matiz: 'duda leve: es por precaución o gestión de cargas, no por una lesión' } : {}),
+    const hechos = c.personal ? { tipo: 'noticias', noticia: `${j.nickname} no estará por ${c.motivoSobrio}`, sobrio: true,
+      matiz: 'no juega por motivos personales, familiares o de salud: tono sobrio y respetuoso, sin detalles, sin bromas, sin emojis y sin consejos de fantasy («a buscar recambio», «a venderlo»)',
+      fuente: fuenteH({ oficial: c.oficial, medios: c.medios }), jugadores: [jugador(j, { equipos, estado: 'baja', motivo: c.motivoSobrio, datos: false })], clubes: clubes(equipo), etiqueta }
+      : { tipo: 'noticias', noticia: c.hecho || null, ...(leve ? { matiz: 'duda leve: es por precaución o gestión de cargas, no por una lesión' } : {}),
       fuente: fuenteH({ oficial: c.oficial, medios: c.medios }),
       jugadores: [jugador(j, { equipos, estado: estadoH, motivo: c.fam === 'mala' ? c.motivo : '', plazo: c.fam === 'mala' ? c.plazo : '', tit })],
       ...(pp ? { partido: partido(pp, { equipo, riv, posId: j.positionId, ahora }) } : {}), clubes: clubes(equipo, pp && pp.rival), etiqueta };

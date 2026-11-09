@@ -8,9 +8,12 @@
 // («es de los que sostienen una plantilla»). El revisor lee el tuit con los hechos al lado, como un editor exigente, y dice si se puede
 // publicar; si no, por qué, frase a frase, y la redacción lo vuelve a intentar con eso.
 //
-// Con Claude (lib/ia.mjs, uso «revisar»). Si no hay Claude o no contesta, el tuit sigue (ya ha pasado el validador de código): el revisor
-// suma, nunca bloquea por estar caído.
+// Con Claude (lib/ia.mjs, uso «revisar»). Falla CERRADO desde la revisión total (A10): si no hay Claude, no contesta, no tiene cupo o
+// tarda más de `revisor.segundos`, el tuit redactado no sale en esa ejecución (`caido: true`); lib/redaccion.mjs lo deja esperando y
+// lib/respaldo.mjs decide si se vuelve a probar en la siguiente o, si caduca, sale la plantilla. Antes salía sin revisar: con el revisor
+// devolviendo 529, «Mbappé se marchó lesionado» se publicaba. Solo con `revisor.activo` a false se publica sin segunda lectura.
 import { preguntar, conClaude } from './ia.mjs';
+import { reglaPrensa } from './prensa.mjs';
 
 const ESQUEMA = {
   type: 'OBJECT', required: ['publicable', 'problemas'],
@@ -30,7 +33,7 @@ Un tuit NO se publica si tiene cualquiera de estas cosas:
    - una cifra puesta a quien no es, o distinta de la de los datos;
    - un suceso del partido (gol, penalti, parada, roja, VAR) que no viene en los datos.
    Una valoración para el mánager («si lo tienes, al once», «mejor esperar a los onces», «puede salir barato», «buena jornada para quien lo tenga») sí vale si se sigue de los datos; una predicción como si fuera un hecho, no.
-   Lo que viene en PRENSA (si te la paso) también es un dato, pero solo con su medio pegado («según AS…») y solo en noticias y previas.
+   Lo que viene en PRENSA (si te la paso) también es un dato, usado como diga la REGLA DE LA PRENSA que va con el tuit (en finales y MVP, sin nombrar al medio y solo lo que digan dos; en el resto, con el medio pegado). En noticias, la fuente es la de los datos («fuente»).
    Las cifras dichas con palabras valen si cuadran con el «papel» o el estado que traen los datos («duda de titularidad», «fijo», «duda»…) y con la «lectura» que traiga cada jugador o, a grandes rasgos, con esta escala de la cuenta (orientativa: no marques un matiz cerca del límite ni algo que coincida con el papel de los datos; solo lo que esté claramente mal, como llamar «fijo» a uno con un 40 %): titularidad de 75 % o más, «fijo», «juega», «seguro»; de 50 a 74, «lo normal es que salga»; de 30 a 49, «en el aire», «duda»; menos de 30, «lo tiene difícil». Una media de puntos alta (8 o más, o si el jugador trae «mediaAlta»), «de los que más puntos dan». Los puntos de hoy frente a su media: lo que diga «hoyFrenteASuMedia» si viene. Una lectura razonable de la tabla también vale («el 4º parte como favorito ante el 17º»). Las etiquetas de los datos («papel», «alcance», «horario», «cruce», «dificultad», «valoracion») son datos.
    «con un 9 de media» o «6,3 de media» ya se entiende como puntos de media: no lo marques por no decir «de puntos». Un «portero y defensas» o «delanteros y medios» es la forma de hablar del cruce; «malo por los dos lados» vale si los datos traen las dos lecturas malas. Una frase corta de la hora o del estadio, suelta, no es un fallo.
 
@@ -44,6 +47,8 @@ Un tuit NO se publica si tiene cualquiera de estas cosas:
 
 6. UN DATO CONTADO A MEDIAS QUE LLEVA A ERROR (un porcentaje suelto sin decir de qué, una media sin decir que es de puntos si no se entiende).
 
+7. UNA FALTA DE RESPETO A UNA PERSONA. Insultos o descalificaciones a jugadores, árbitros, entrenadores o aficiones («entrada criminal», «un carnicero», «un atraco», «un payaso»), bromas o pullas con una lesión, una enfermedad, un problema personal o familiar o un fallecimiento, y el tono fantasy («a buscar recambio», «a venderlo») cuando alguien no juega por motivos personales, de salud o familiares: eso se cuenta sobrio, sin detalles y sin consejo. Contar con dureza una jugada o un mal partido («entrada muy dura», «se le vio perdido») sí vale.
+
 Marca solo lo GRAVE, lo que un lector notaría como falso, contradictorio, incomprensible o hecho por una máquina. No marques gustos ni matices: si una frase es verdad, se entiende y suena natural, no la toques aunque tú la escribirías de otra forma. No pidas añadir datos. Si dudas, es publicable. La etiqueta final del tuit (✅ Disponible…, ❌ Baja…, «Fantasy Manager · enlace en la bio») la pone el sistema: no la juzgues.
 
 Devuelve publicable (true o false). Si es true, problemas va vacío: no apuntes lo que está bien. Si es false, cada problema grave con la frase exacta del tuit (o el trozo) y el motivo en una línea, dicho para que quien lo reescriba sepa qué cambiar.`;
@@ -54,7 +59,7 @@ export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '', cron
   return [
     `Tuit de tipo «${tipo || (hechos && hechos.tipo) || '?'}».`,
     hechos ? `DATOS (lo único que se sabe):\n${JSON.stringify(hechos, sinFecha, 1)}` : '',
-    cronicas.length ? `PRENSA (también vale, con el medio pegado al hecho):\n${cronicas.map((c) => `- ${c.medio}: ${c.titulo}. ${c.entradilla || ''}`).join('\n')}` : '',
+    cronicas.length ? `PRENSA:\n${cronicas.map((c) => `- ${c.medio}: ${c.titulo}. ${c.entradilla || ''}`).join('\n')}\nREGLA DE LA PRENSA EN ESTE TUIT: ${reglaPrensa(tipo || (hechos && hechos.tipo) || '')}` : '',
     fuenteTexto ? `DATOS (el texto de partida, sacado de los datos; lo único que se sabe):\n"""${fuenteTexto}"""` : '',
     recientes.length ? `ÚLTIMOS TUITS DE ESTE TIPO (ya publicados; solo para ver si este los repite):\n${recientes.slice(-4).map((r, i) => `${i + 1}. """${r}"""`).join('\n')}` : '',
     `TUIT:\n"""${texto}"""`,
@@ -62,15 +67,16 @@ export function prompt({ texto, hechos = null, fuenteTexto = '', tipo = '', cron
 }
 
 /**
- * Lee un tuit con sus datos. Devuelve { ok, problemas: ['«frase»: motivo'], revisado: bool, modelo }.
- * `hechos` (redactados) o `fuenteTexto` (pulidos: la plantilla). Sin Claude o si no contesta: { ok: true, revisado: false }.
+ * Lee un tuit con sus datos. Devuelve { ok, problemas: ['«frase»: motivo'], revisado: bool, modelo, caido }.
+ * `hechos` (redactados) o `fuenteTexto` (pulidos: la plantilla). Sin Claude, sin cupo o si no contesta: { ok: false, caido: true }
+ * (no sale: A10). Con `revisor.activo` a false: { ok: true, revisado: false }.
  */
 export async function revisarConIA({ texto, hechos = null, fuenteTexto = '', tipo = '', cronicas = [], recientes = [], registro = null, config = {}, log = () => {}, pedir = preguntar }) {
   if ((config.revisor || {}).activo === false) return { ok: true, problemas: [], revisado: false };
-  if (pedir === preguntar && !conClaude(config)) return { ok: true, problemas: [], revisado: false };
+  if (pedir === preguntar && !conClaude(config)) { log('  (revisor) sin Claude: no sale sin segunda lectura'); return { ok: false, caido: true, problemas: [], revisado: false, error: 'sin Claude' }; }
   const r = await pedir({ uso: 'revisar', tipo, registro, config, sistema: SISTEMA, cache: true, esquema: ESQUEMA, log,
     prompt: prompt({ texto, hechos, fuenteTexto, tipo, cronicas, recientes }), tiempo: 30000, hasta: Date.now() + ((config.revisor || {}).segundos ?? 40) * 1000 });
-  if (!r.ok || !r.datos) { log(`  (revisor) no contesta (${r.error || 'sin datos'}): sigue sin revisar`); return { ok: true, problemas: [], revisado: false }; }
+  if (!r.ok || !r.datos) { log(`  (revisor) no contesta (${r.error || 'sin datos'}): no sale sin segunda lectura`); return { ok: false, caido: true, problemas: [], revisado: false, error: r.error || 'sin datos' }; }
   const problemas = (Array.isArray(r.datos.problemas) ? r.datos.problemas : [])
     .map((p) => (p && typeof p === 'object' ? `«${String(p.frase || '').slice(0, 140)}»: ${String(p.motivo || '').slice(0, 220)}` : String(p)))
     .filter((p) => p.length > 6);

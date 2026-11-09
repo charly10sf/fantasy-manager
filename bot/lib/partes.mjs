@@ -4,6 +4,7 @@
 // ficha de LaLiga (roja o amarillas de la última jornada). Se cuenta con palabras propias y sin nombrar la web.
 import { DOMParser } from 'linkedom';
 import { get } from './http.mjs';
+import { esPersonal, motivoPersonal } from './texto.mjs';
 
 const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
@@ -57,7 +58,8 @@ export function parteDe(j, lista) {
 /** «desde el 21 de octubre» */
 export const desdeTxt = (p) => (p && p.dia && p.mes ? `desde el ${p.dia} de ${MESES[p.mes - 1]}` : '');
 /** «rotura fibrilar en el aductor» */
-export const lesionTxt = (p) => (p && p.lesion ? minus(p.lesion) : '');
+// (un motivo personal, familiar o de salud, sin detalles: «motivos personales»; revisión total, M14)
+export const lesionTxt = (p) => (p && p.lesion ? (esPersonal(p.lesion) ? motivoPersonal(p.lesion) : minus(p.lesion)) : '');
 /** las cifras que el texto puede llevar (para el validador) */
 export const numerosDe = (p) => (p ? [p.dia, p.dias, p.jornada, ...(String(p.hasta || '').match(/\d+/g) || []).map(Number)].filter((x) => x != null) : []);
 

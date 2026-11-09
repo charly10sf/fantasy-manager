@@ -15,6 +15,8 @@ let fallos = 0;
 const ok = (c, m) => { if (!c) { fallos++; console.log(`FALLA: ${m}`); } else console.log(`ok: ${m}`); };
 const config = JSON.parse(readFileSync(new URL('../config.json', import.meta.url), 'utf8'));
 fijarLimite(1000);
+// el revisor, simulado: el de verdad llamaría a Anthropic (y desde la revisión total, A10, sin respuesta no deja salir el tuit)
+const revisorOk = async () => ({ ok: true, problemas: [], revisado: true, modelo: SONNET });
 
 // --- lib/claude.mjs ---
 const e = esquemaJson({ type: 'OBJECT', required: ['a'], properties: { a: { type: 'STRING' }, b: { type: 'ARRAY', items: { type: 'INTEGER' } } } });
@@ -144,14 +146,14 @@ const t1 = { tipo: 'noticias', clave: 'n1', texto: '✅ plantilla\n\n✅ Disponi
 const respuestas = ['El Atleti va 2º y recibe al equipo. Eric vuelve.', bueno];
 let preguntas = [];
 const pedirF = async (op) => { preguntas.push(op); return { ok: true, datos: { texto: respuestas.shift(), cronicas: [] }, modelo: SONNET }; };
-let hechosN = await redactar([t1], { tipo: 'noticias', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {}, pedir: pedirF });
+let hechosN = await redactar([t1], { tipo: 'noticias', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {}, pedir: pedirF, revisor: revisorOk });
 ok(hechosN === 1 && t1.texto.startsWith('✅ El Barça recupera') && t1.texto.endsWith(hechos.etiqueta), 'el primero no vale, se pregunta otra vez y sale el bueno con la etiqueta debajo');
 ok(preguntas.length === 2 && /no vale/.test(preguntas[1].prompt) && /vaga/.test(preguntas[1].prompt), 'la segunda pregunta lleva los errores de la primera');
 ok(/Algo de antes/.test(preguntas[0].prompt) && !/"fecha"/.test(preguntas[0].prompt) && preguntas[0].uso === 'redactar', 'la pregunta lleva los recientes y no la fecha cruda');
 ok(t1.plantilla.startsWith('✅ plantilla') && t1.redactado === SONNET, 'la plantilla queda guardada');
 const t2 = { tipo: 'noticias', clave: 'n2', texto: '✅ plantilla dos', numeros: [12], hechos };
 hechosN = await redactar([t2], { tipo: 'noticias', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {},
-  pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }) });
+  pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }), revisor: revisorOk });
 ok(hechosN === 0 && t2.texto === '✅ plantilla dos' && !t2.redactado, 'si las dos versiones fallan, sale la plantilla');
 // la prensa es un adorno: si la redacción de ese tuit ya ha fallado, se prueba sin ella (`sinPrensaTrasFallos`)
 let pedidasPrensa = 0;
@@ -161,14 +163,14 @@ const salePrensa = async (clave, fallosPrevios) => {
   const regP = { datos: { enviados: [], fallosRedaccion: fallosPrevios ? { [clave]: { n: fallosPrevios } } : {} }, fichero: 'prueba.json', guardar() {} };
   pedidasPrensa = 0;
   await redactar([{ tipo: 'noticias', clave, texto: '✅ plantilla', numeros: [12], hechos }], { tipo: 'noticias', registro: regP, config: cfgPrensa, jugadores, equipos, log: () => {}, cronicasDe: prensaEspia,
-    pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }) });
+    pedir: async () => ({ ok: true, datos: { texto: 'Eric sigue de baja.' }, modelo: SONNET }), revisor: revisorOk });
   return pedidasPrensa;
 };
 ok(await salePrensa('p1', 0) === 1, 'sin fallos previos, el tuit se redacta con la prensa');
 ok(await salePrensa('p2', 1) === 0, 'con un fallo previo, se redacta sin pedir la prensa');
-hechosN = await redactar([{ ...t2 }], { tipo: 'noticias', registro: reg2, config, jugadores, equipos, log: () => {}, pedir: pedirF });
+hechosN = await redactar([{ ...t2 }], { tipo: 'noticias', registro: reg2, config, jugadores, equipos, log: () => {}, pedir: pedirF, revisor: revisorOk });
 ok(hechosN === 0, 'con redactar.activo a false no hace nada');
-hechosN = await redactar([{ ...t2 }], { tipo: 'mercado', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {}, pedir: pedirF });
+hechosN = await redactar([{ ...t2 }], { tipo: 'mercado', registro: reg2, config: { ...config, redactar: { ...config.redactar, activo: true } }, jugadores, equipos, log: () => {}, pedir: pedirF, revisor: revisorOk });
 ok(hechosN === 0, 'el mercado no se redacta');
 apuntarReciente(reg2, 'noticias', t1.texto);
 ok(recientesDe(reg2, 'noticias').slice(-1)[0] === bueno, 'al publicar, el cuerpo queda entre los recientes del tipo (sin la etiqueta)');
@@ -303,7 +305,16 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa","final","mvp"]', 'la pr
   const tc = { tipo: 'noticias', clave: 'rv3', texto: '✅ plantilla', numeros: [12], hechos };
   const n3 = await redactar([tc], { tipo: 'noticias', registro: { datos: {}, fichero: 'prueba.json', guardar() {} }, config: cfgR, jugadores, equipos, log: () => {},
     pedir: async () => ({ ok: true, datos: { texto: bueno }, modelo: SONNET }), revisor: async () => ({ ok: true, problemas: [], revisado: false }) });
-  ok(n3 === 1 && !tc.revisado, 'revisor caído: sale redactado, sin la marca de revisado');
+  ok(n3 === 1 && !tc.revisado, 'revisor apagado (revisor.activo a false): sale redactado, sin la marca de revisado');
+  // 3b. revisor caído (A10): no sale, no se reintenta en la misma ejecución y queda como 'revisor-no' (lib/respaldo.mjs lo hace esperar)
+  const tcc = { tipo: 'noticias', clave: 'rv3b', texto: '✅ plantilla', numeros: [12], hechos };
+  let pedidas3 = 0;
+  const n3b = await redactar([tcc], { tipo: 'noticias', registro: { datos: {}, fichero: 'prueba.json', guardar() {} }, config: cfgR, jugadores, equipos, log: () => {},
+    pedir: async () => { pedidas3++; return { ok: true, datos: { texto: bueno }, modelo: SONNET }; }, revisor: async () => ({ ok: false, caido: true, problemas: [], revisado: false, error: '529' }) });
+  ok(n3b === 0 && tcc.texto === '✅ plantilla' && tcc.redaccion === 'revisor-no' && pedidas3 === 1, 'revisor caído: no sale redactado sin segunda lectura y espera a la siguiente ejecución');
+  const { decidirRespaldo } = await import('../lib/respaldo.mjs');
+  const rgR = { datos: {} };
+  ok(!decidirRespaldo(tcc, { registro: rgR, config }).sale && decidirRespaldo({ ...tcc, caduca: Date.now() }, { registro: rgR, config }).sale, 'revisor caído: espera; si caduca, sale la plantilla');
   // 4. revisarConIA: lo que contesta la IA
   const contesta = (datos) => async (op) => ({ ok: true, datos, modelo: SONNET, op });
   let rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: true, problemas: [] }) });
@@ -315,7 +326,7 @@ ok(JSON.stringify(config.redactar.prensa) === '["previa","final","mvp"]', 'la pr
   rr = await revisarConIA({ texto: 'x', hechos, config, pedir: contesta({ publicable: false, problemas: [] }) });
   ok(!rr.ok && rr.problemas.length === 1, 'revisarConIA: no publicable sin motivo, con un motivo genérico para reescribir');
   rr = await revisarConIA({ texto: 'x', hechos, config, pedir: async () => ({ ok: false, error: '529' }) });
-  ok(rr.ok && !rr.revisado, 'revisarConIA: si no contesta, no bloquea');
+  ok(!rr.ok && rr.caido && !rr.revisado, 'revisarConIA: si no contesta, falla cerrado (A10)');
   rr = await revisarConIA({ texto: 'x', hechos, config: { ...config, revisor: { activo: false } }, pedir: contesta({ publicable: false, problemas: [] }) });
   ok(rr.ok && !rr.revisado, 'revisarConIA: con revisor.activo a false no pregunta');
   let vistoR = null;

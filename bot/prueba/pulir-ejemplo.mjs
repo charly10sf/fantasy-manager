@@ -6,6 +6,8 @@ import { tmpdir } from 'node:os';
 
 let fallos = 0;
 const ok = (c, m) => { if (!c) { fallos++; console.log(`FALLA: ${m}`); } };
+// el revisor, simulado (el de verdad llamaría a Anthropic; sin respuesta, desde la revisión total, no deja salir el pulido)
+const revisorOk = async () => ({ ok: true, problemas: [], revisado: true });
 const config = JSON.parse((await import('node:fs')).readFileSync(new URL('../config.json', import.meta.url), 'utf8'));
 const jugadores = [{ nickname: 'Lemar' }, { nickname: 'Aspas' }, { nickname: 'Mingueza' }, { nickname: 'Kubo' }, { nickname: 'Budimir' }, { nickname: 'Mario Soriano' }];
 const equipos = { 1: 'Elche CF', 2: 'RC Celta', 3: 'Real Sociedad', 4: 'C.A. Osasuna', 5: 'RC Deportivo' };
@@ -59,23 +61,23 @@ const reg = new Registro(config, `${dir}/registro.json`);
 const tw = () => [{ tipo: 'caidas', clave: 'c1', jornada: 12, texto: orig, numeros }, { tipo: 'caidas', clave: 'c2', jornada: 12, texto: orig, numeros }];
 const falso = (respuestas) => async () => ({ ok: true, modelo: 'falso', datos: { tweets: respuestas.map((texto, i) => ({ i, texto })) } });
 let ts = tw();
-let n = await pulir(ts, { tipo: 'caidas', registro: reg, config, jugadores, equipos, clave: 'x', pedirIA: falso([bueno, bueno.replace('6,1', '7')]), log: () => {} });
+let n = await pulir(ts, { tipo: 'caidas', registro: reg, config, jugadores, equipos, clave: 'x', pedirIA: falso([bueno, bueno.replace('6,1', '7')]), log: () => {}, revisor: revisorOk });
 ok(n === 1 && ts[0].texto === bueno && ts[0].plantilla === orig && ts[1].texto === orig && !ts[1].plantilla, `ciclo: ${n}`);
 ts = tw();
-n = await pulir(ts, { tipo: 'directo', registro: reg, config, jugadores, equipos, clave: 'x', pedirIA: falso([bueno, bueno]), log: () => {} });
+n = await pulir(ts, { tipo: 'directo', registro: reg, config, jugadores, equipos, clave: 'x', pedirIA: falso([bueno, bueno]), log: () => {}, revisor: revisorOk });
 ok(n === 0 && ts[0].texto === orig, 'directo no se pule');
 ts = tw();
-n = await pulir(ts, { tipo: 'caidas', registro: reg, config, jugadores, equipos, clave: 'x', pedirIA: async () => ({ ok: false, error: '503' }), log: () => {} });
+n = await pulir(ts, { tipo: 'caidas', registro: reg, config, jugadores, equipos, clave: 'x', pedirIA: async () => ({ ok: false, error: '503' }), log: () => {}, revisor: revisorOk });
 ok(n === 0 && ts[0].texto === orig, 'Gemini caído: plantilla');
 ts = tw();
-n = await pulir(ts, { tipo: 'caidas', registro: reg, config, jugadores, equipos, clave: '', pedirIA: falso([bueno]), log: () => {} });
+n = await pulir(ts, { tipo: 'caidas', registro: reg, config, jugadores, equipos, clave: '', pedirIA: falso([bueno]), log: () => {}, revisor: revisorOk });
 ok(n === 0, 'sin clave');
 ts = tw();
-n = await pulir(ts, { tipo: 'caidas', registro: new Registro(config, null), config, jugadores, equipos, clave: 'x', pedirIA: falso([bueno]), log: () => {} });
+n = await pulir(ts, { tipo: 'caidas', registro: new Registro(config, null), config, jugadores, equipos, clave: 'x', pedirIA: falso([bueno]), log: () => {}, revisor: revisorOk });
 ok(n === 0, 'sin registro guardado no gasta');
 reg.datos.pulido.n = config.pulir.porDia;
 ts = tw();
-n = await pulir(ts, { tipo: 'caidas', registro: reg, config, jugadores, equipos, clave: 'x', pedirIA: falso([bueno]), log: () => {} });
+n = await pulir(ts, { tipo: 'caidas', registro: reg, config, jugadores, equipos, clave: 'x', pedirIA: falso([bueno]), log: () => {}, revisor: revisorOk });
 ok(n === 0, 'tope diario');
 
 // final con podio (emojis dentro de la línea en la plantilla)

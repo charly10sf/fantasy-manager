@@ -14,9 +14,18 @@ import * as LL from './laliga.mjs';
 
 const fuentesLaLiga = { ficha: LL.ficha, valor: LL.valorMercado, imagen: LL.imagen };
 
+// Sin fotos (revisión total, M14): con la variable del repo BOT_SIN_FOTOS=1 (o `sinFotos: true` en config.json) las tarjetas salen sin las
+// caras ni los escudos de LaLiga (assets-fantasy), con el hueco de siempre. Es el interruptor por si llega una queja, como `sinFotos` de
+// web/limites.json en la app (que no toca el bot). Las banderas de FotMob de los tuits de selecciones se quedan.
+export const sinFotos = (config = {}) => process.env.BOT_SIN_FOTOS === '1' || config.sinFotos === true;
+export function sinFotosDe(fuentes) {
+  return { ...fuentes, imagen: (u) => (/fotmob\.com/i.test(String(u || '')) ? fuentes.imagen(u) : Promise.resolve(null)) };
+}
+
 /** [{ nombre, png, svg, ok, errores }] para un tweet (vacío si no lleva tarjeta) */
-export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar = false, fuentes = fuentesLaLiga }) {
+export async function tarjetasDe(t, { stats, jugadores, jornada, config, forzar = false, fuentes: fuentes0 = fuentesLaLiga }) {
   const cfg = config.tarjetas || {};
+  const fuentes = sinFotos(config) ? sinFotosDe(fuentes0) : fuentes0;
   const hechas = [];
   const hacer = async (nombre, { d, permitidos }, svg) => {
     const v = validarTarjeta(svg, permitidos, PALABRAS_FIJAS);
