@@ -10,7 +10,7 @@
 // Aquí solo se dibuja: los datos llegan ya montados (datos-tarjetas.mjs) y validar.mjs comprueba que todo lo escrito esté en ellos.
 import { coloresClub, luz } from './colores.mjs';
 import { svgJugadorCarta, svgBajaSola, svgGolAsistencia, svgMvpDoble } from './carta.mjs';
-import { uri, ANCHO, ALTO, VERDE, MALO, AMBAR, TENUE, TINTA, PANEL, LINEA, num1, millones, medir, B, texto, id, lineal, radial, marco,
+import { uri, aclarar, ROJO as ROJO_FM, ANCHO, ALTO, VERDE, MALO, AMBAR, TENUE, TINTA, PANEL, LINEA, num1, millones, medir, B, texto, id, lineal, radial, marco,
   escudo, caraCirculo, fondo, dorado, rojizo, aColor, caja, marca, pildora, anchoPildora, pildoraTit, anchoPildoraTit, colPct, chipContorno, ESTADO_TARJETA,
   chip, flecha, medalla, distinto, nombreAjustado, tamano, caraHD, pastilla, panel, titular, R_MAX, chipPuesto, abrevPuesto, colorPuesto, PUESTOS } from './estilo.mjs';
 
@@ -393,6 +393,52 @@ export function svgMercado(d) {
   let s = oro.defs + fondo([[260, 60, 700, VERDE, 0.16], [940, 60, 700, ps.length > 1 ? MALO : VERDE, 0.16]], H)
     + titular(d.titulo || 'MERCADO', oro.g, d.sub || mayus(d.fecha), { px: 84, sub2: d.sub2 || 'LALIGA FANTASY' });
   ps.forEach((p, i) => { s += panelMercado(22, MK.y0 + i * (MK.h + MK.gap), 1156, p.filas, p.bueno, { titulo: p.titulo || null, conFlecha: p.flecha !== false }); });
+  return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
+}
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Una selección en el parón (Carlos, 9 nov 11:03: «gráficos más orientados en el país o con los colores del país», de las selecciones
+// más importantes con jugadores de LaLiga): los colores de su bandera (la franja de arriba y el brillo del fondo), la bandera grande, el
+// país, el resultado con la bandera del rival y sus jugadores de LaLiga (lo que hicieron, los minutos y lo que valen), de 4 en 4.
+// d = { pais: 'ESPAÑA', colores: ['#c60b1e', '#ffc400'], bandera (PNG), sub: 'LOS DE LALIGA', fecha: 'MARTES 29 DE SEPTIEMBRE',
+//       marcador: '4-1', rival: { nombre: 'CROACIA', bandera (PNG) }, filas: [{ nombre, club, pos, cara, escudo, dif, pct }] (hasta 8) }
+const SE = { y0: 262, fila: 330, R: 64, pxN: 30 };
+export const altoSeleccion = (d) => SE.y0 + Math.ceil(Math.min(8, d.filas.length) / 4) * SE.fila + 30 + 84;
+const blanco = (c) => /^#f{3,6}$/i.test(String(c));
+const oscuro = (c) => { const [r, g, b] = String(c).replace('#', '').match(/../g).map((x) => parseInt(x, 16)); return r * 0.3 + g * 0.59 + b * 0.11 < 40; };
+export function svgSeleccion(d) {
+  const H = altoSeleccion(d), cols = (d.colores && d.colores.length ? d.colores : [ROJO_FM, '#ffffff']);
+  const vivos = cols.filter((c) => !blanco(c) && !oscuro(c)), c1 = vivos[0] || cols[0], c2 = vivos[1] || vivos[0] || cols[1] || cols[0];
+  const tit = aColor(blanco(c1) ? '#e9e9ef' : aclarar(c1, 0.15));
+  let s = tit.defs + fondo([[170, 80, 760, c1, 0.34], [1060, 140, 620, c2, 0.26], [600, H - 60, 900, c1, 0.12]], H);
+  // la franja con los colores de la bandera, de lado a lado
+  const w = ANCHO / cols.length;
+  cols.forEach((c, i) => { s += `<rect x="${i * w}" y="6" width="${w + 1}" height="12" fill="${c}"/>`; });
+  // la bandera grande, el país y debajo «LOS DE LALIGA» y la fecha
+  if (d.bandera) s += banderaRedonda(d.bandera, 128, 140, 82);
+  const wTit = d.marcador ? 620 : 880;
+  s += texto(236, 150, d.pais, { px: 96, peso: 800, italica: true, color: `url(#${tit.g})`, max: wTit })
+    + texto(240, 192, d.sub || 'LOS DE LALIGA', { px: 26, peso: 700, color: TINTA, espacio: 3, max: wTit })
+    + (d.fecha ? texto(240, 226, d.fecha, { px: 21, peso: 700, color: TENUE, espacio: 3, max: wTit }) : '');
+  // el resultado: la cifra grande y, debajo, la bandera del rival y su nombre
+  if (d.marcador) {
+    s += texto(1156, 150, d.marcador.replace('-', ' - '), { px: 84, peso: 900, color: TINTA, ancla: 'end' });
+    const rv = `ANTE ${d.rival ? d.rival.nombre : ''}`, wr = medir(rv, 24, B, 2);
+    if (d.rival && d.rival.bandera) s += banderaRedonda(d.rival.bandera, 1156 - wr - 26, 196, 17);
+    s += texto(1156, 205, rv, { px: 24, peso: 700, color: TENUE, ancla: 'end', espacio: 2, max: 330 });
+  }
+  // los jugadores, de 4 en 4, en un panel con el brillo del país
+  const filas = d.filas.slice(0, 8), nF = Math.ceil(filas.length / 4);
+  s += panel(22, SE.y0, 1156, nF * SE.fila + 30, c1, { brillo: 0.24 });
+  for (let k = 0; k < nF; k++) {
+    const ls = filas.slice(k * 4, k * 4 + 4), hueco = (1156 - 24) / 4, cy = SE.y0 + 36 + k * SE.fila + SE.R;
+    centros(22, 1156, ls.length, hueco).forEach((cx, i) => {
+      const f = ls[i], club = coloresClub(f.club || f.equipo || ''), yb = bajoCara(cy, SE.R, SE.pxN);
+      s += jugadorHD(f, cx, cy, SE.R, club, { wN: hueco - 14, pxN: SE.pxN, escudoBuf: f.escudo })
+        + texto(cx, yb + 52, f.dif, { px: 44, peso: 900, color: f.bueno === false ? MALO : TINTA, ancla: 'middle', max: hueco - 20 })
+        + (f.pct ? texto(cx, yb + 86, f.pct, { px: 23, peso: 700, color: TENUE, ancla: 'middle', max: hueco - 20 }) : '');
+    });
+  }
   return marco(s + marca(600, H - 30, { ancla: 'middle' }), H);
 }
 

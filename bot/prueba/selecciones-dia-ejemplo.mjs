@@ -8,7 +8,7 @@ import { leerActa } from '../lib/actas-selecciones.mjs';
 import { ventanaSeleccionesDia } from '../lib/paron-tuits.mjs';
 import { erroresBanderas } from '../lib/redaccion.mjs';
 import { bandera } from '../lib/nacionalidad.mjs';
-import { svgMercado, aPng } from '../lib/tarjetas.mjs';
+import { svgMercado, svgSeleccion, aPng } from '../lib/tarjetas.mjs';
 import { validarTarjeta, validar } from '../lib/validar.mjs';
 import { PALABRAS_FIJAS } from '../lib/datos-tarjetas.mjs';
 
@@ -63,12 +63,13 @@ bien(de('Lamine Yamal').min === 75 && de('Lamine Yamal').goles === 2 && de('Lami
 bien(de('Dean Huijsen').lesion === 34 && a3.fuera.idFm === 6720, 'Huijsen se retira lesionado en el 34 (motivo «injury»); la bandera de España, del id de FotMob');
 
 const registro = { datos: { enviados: [] }, claves: new Set(), fichero: null };
-const base = { ahora: Date.parse('2026-11-14T08:00:00Z'), jugadores, stats, equipos, jornada: 13, config: {}, paron: { jugada: 12, siguiente: 13, ini: Date.parse('2026-11-20T20:00:00Z') }, pedir, registro, log: (s) => console.log(s) };
+const base = { conValor: false, ahora: Date.parse('2026-11-14T08:00:00Z'), jugadores, stats, equipos, jornada: 13, config: {}, paron: { jugada: 12, siguiente: 13, ini: Date.parse('2026-11-20T20:00:00Z') }, pedir, registro, log: (s) => console.log(s) };
 const [t] = await generar({ ...base, ventanas: false, fechasSelecciones: ['20261112', '20261113'] });
 bien(t && t.clave === 'selecciones-dia|12|20261113', `un tuit con la clave del día: ${t && t.clave}`);
 const h = t.hechos;
-bien(h.losMejores[0].nombre === 'Lamine Yamal' && h.losMejores[0].notaFotMob === '9,1' && h.losMejores[0].marcador === '3-1' && h.losMejores[0].resultado === 'ganó' && h.losMejores[0].bandera === bandera('ESP') && h.losMejores[0].banderaRival === bandera('TUR'),
+bien(h.losMejores[0].nombre === 'Lamine Yamal' && h.losMejores[0].notaFotMob === '9,1' && h.losMejores[0].valeAhora === '180 M' && !h.losMejores.slice(1).some((x) => x.notaFotMob) && h.losMejores[0].marcador === '3-1' && h.losMejores[0].resultado === 'ganó' && h.losMejores[0].bandera === bandera('ESP') && h.losMejores[0].banderaRival === bandera('TUR'),
   `el mejor: ${JSON.stringify(h.losMejores[0])}`);
+bien(!/\d,\d/.test(t.texto.split('\n')[2] || ''), `la plantilla sin notas: ${(t.texto.split('\n')[2] || '').slice(0, 80)}`);
 bien(h.losMejores.some((x) => x.nombre === 'Ez Abde') && !h.losMejores.some((x) => x.nombre === 'Huijsen'), 'Ez Abde (7,6) entre los mejores; Huijsen (lesionado) no');
 bien(h.losPeores[0].nombre === 'Huijsen' && /minuto 34/.test(h.losPeores[0].queLePaso) && h.losPeores.some((x) => x.nombre === 'Arda Güler') && h.losPeores.some((x) => x.nombre === 'Brahim'), `los peores: ${h.losPeores.map((x) => `${x.nombre} (${x.queLePaso})`).join(', ')}`);
 bien(h.masMinutosEnElParon && h.masMinutosEnElParon[0].nombre === 'Pedri' && h.masMinutosEnElParon[0].minutosEnElParon === 170, `la carga: ${JSON.stringify(h.masMinutosEnElParon)}`);
@@ -81,15 +82,24 @@ console.log(t.texto.replace(/^/gm, '     '));
 
 // la tarjeta, con la bandera de cada uno (un PNG de mentira: un cuadrado de color)
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFklEQVR4nGP8z8DAwMDAxMDAwMDAAAANHQEDasKb6QAAAABJRU5ErkJggg==', 'base64');
-const d = structuredClone(t.tarjeta.d);
+const [tj, ...paises] = t.tarjeta;
+const d = structuredClone(tj.d);
 for (const f of d.paneles.flatMap((p) => p.filas)) { f.bandera = f.banderaUrl ? PNG : null; }
 bien(d.paneles.map((p) => p.titulo).join(' · ') === 'LOS MEJORES · LOS PEORES · MÁS MINUTOS EN EL PARÓN', `paneles: ${d.paneles.map((p) => p.titulo).join(' · ')}`);
 bien(d.paneles[0].filas.every((f) => /teamlogo\/\d+\.png$/.test(f.banderaUrl)), 'cada fila con la bandera de FotMob');
 const svg = svgMercado(d);
-const vt = validarTarjeta(svg, t.tarjeta.permitidos, PALABRAS_FIJAS);
+const vt = validarTarjeta(svg, tj.permitidos, PALABRAS_FIJAS);
 bien(vt.ok, `la tarjeta pasa el validador${vt.ok ? '' : `: ${vt.errores.slice(0, 3).join('; ')}`}`);
 bien((svg.match(/clip-path="url\(#bd/g) || []).length === d.paneles.flatMap((p) => p.filas).length, 'una bandera por cara');
 if (arg('png')) { writeFileSync(arg('png'), await aPng(svg)); console.log(`     tarjeta en ${arg('png')}`); }
+// la tarjeta de España (la única de ayer con 3 o más de LaLiga que jugaron), con sus colores
+bien(paises.length === 1 && paises[0].tipo === 'seleccion' && paises[0].d.pais === 'ESPAÑA' && paises[0].d.colores[1] === '#ffc400' && paises[0].d.marcador === '3-1' && paises[0].d.rival.nombre === 'TURQUÍA',
+  `una tarjeta de selección: ${paises.map((x) => `${x.d.pais} ${x.d.marcador} ante ${x.d.rival.nombre}`).join(', ')}`);
+const dp = structuredClone(paises[0].d); dp.bandera = PNG; dp.rival.bandera = PNG;
+bien(dp.filas[0].nombre === 'Lamine Yamal' && dp.filas.some((f) => f.nombre === 'Huijsen' && f.dif === 'LESIÓN' && f.bueno === false) && dp.filas.some((f) => f.nombre === 'Olmo' && f.dif === 'SIN JUGAR'), `sus filas: ${dp.filas.map((f) => `${f.nombre} ${f.dif}${f.pct ? ` (${f.pct})` : ''}`).join(' · ')}`);
+const svgP = svgSeleccion(dp), vp = validarTarjeta(svgP, paises[0].permitidos, PALABRAS_FIJAS);
+bien(vp.ok, `la tarjeta de España pasa el validador${vp.ok ? '' : `: ${vp.errores.slice(0, 3).join('; ')}`}`);
+if (arg('png')) { writeFileSync(arg('png').replace(/\.png$/, '-pais.png'), await aPng(svgP)); }
 
 // la caché: los días pasados se guardan en el registro y no se vuelven a pedir
 const antes = pedidas;
