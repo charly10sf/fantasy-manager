@@ -1810,8 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-espanyol-deportivo-coruna-primera-division-jornada-doce-07-20261107_3470813.html": 1794073014000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
    "AS|https://as.com/futbol/primera/hidalgo-estoy-contento-por-el-punto-la-porteria-a-cero-y-por-leo-roman-f202611-n/": 1794074651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248379/eder-sarabia-le-espera-brazos-abiertos-me-parecido-siempre-futbolista-maravilloso-he-transmitido.html": 1794078040000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248415/marc-casado-enciende-espanyolismo-recuerdo-celebraciones-barca.html": 1794084208000,
@@ -2008,23 +2006,6 @@
    "SPORT|136289668": 1794326540000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794073202000,
-    "id": "2315",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Paredes seguirá diez partidos sancionado tras apelación",
-    "motivo": "",
-    "plazo": "estará fuera diez partidos",
-    "nums": [
-     2026,
-     7,
-     4,
-     10
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248453/posible-once-barca-atletico-metropolitano.html",
     "medio": "Mundo Deportivo",
@@ -3194,7 +3175,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794080725000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/alerta-meteorologica-obliga-suspender-partido-palmas-eldense-20261107_3470867.html": 1794083561000,
    "SPORT|136209574": 1794080057000,
@@ -7269,13 +7249,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1198,
+   "ok": 1199,
    "fallos": 0,
-   "ejecuciones": 816,
+   "ejecuciones": 817,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T17:36:14.366Z"
+   "ultima": "2026-11-10T17:41:14.385Z"
   }
  },
  "ptsDirecto": {},
@@ -7292,15 +7272,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:36:17.937Z"
+   "ultimaBien": "2026-11-10T17:41:18.542Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:36:17.937Z"
+   "ultimaBien": "2026-11-10T17:41:18.542Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:36:17.937Z"
+   "ultimaBien": "2026-11-10T17:41:18.542Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7308,11 +7288,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:36:17.937Z"
+   "ultimaBien": "2026-11-10T17:41:18.542Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:36:17.937Z"
+   "ultimaBien": "2026-11-10T17:41:18.542Z"
   }
  },
  "avisos": [
