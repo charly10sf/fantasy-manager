@@ -3240,7 +3240,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/07/inclemencias-meteorologicas-obligan-a-aplazar-el-las-palmas-eldense-de-segunda-division-cadena-ser/": 1794085701000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/despedida-jesus-miguel-tenerife-estadio_0_2008446228.html": 1794086542000,
    "SPORT|136207802": 1794117638000,
    "SPORT|136213162": 1794110512000,
@@ -7385,13 +7384,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1241,
+   "ok": 1242,
    "fallos": 0,
-   "ejecuciones": 858,
+   "ejecuciones": 859,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T21:06:19.471Z"
+   "ultima": "2026-11-10T21:11:13.004Z"
   }
  },
  "ptsDirecto": {},
@@ -7408,15 +7407,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:06:21.656Z"
+   "ultimaBien": "2026-11-10T21:11:15.887Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:06:21.656Z"
+   "ultimaBien": "2026-11-10T21:11:15.887Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:06:21.656Z"
+   "ultimaBien": "2026-11-10T21:11:15.887Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7424,11 +7423,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:06:21.656Z"
+   "ultimaBien": "2026-11-10T21:11:15.887Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:06:21.656Z"
+   "ultimaBien": "2026-11-10T21:11:15.887Z"
   }
  },
  "avisos": [
