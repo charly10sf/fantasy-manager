@@ -2001,7 +2001,8 @@
    "SPORT|136283172": 1794307885000,
    "SPORT|136280060": 1794308464000,
    "SPORT|136281831": 1794308810000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000,
+   "SPORT|136284333": 1794309130000
   },
   "hechos": [
    {
@@ -2365,11 +2366,25 @@
     "motivo": "proceso de recuperación",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136284333",
+    "medio": "SPORT",
+    "t": 1794309130000,
+    "id": "2217",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "Cucho baja por lesión y no está disponible para el Betis",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": [
+     26
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3310,17 +3325,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 169891,
-  "salida": 12805,
+  "entrada": 172015,
+  "salida": 12923,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.26704,
+  "dolares": 0.267311,
   "reservado": 0
  },
  "recientes": {
@@ -7279,13 +7294,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1133,
+   "ok": 1134,
    "fallos": 0,
-   "ejecuciones": 751,
+   "ejecuciones": 752,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:16:13.736Z"
+   "ultima": "2026-11-10T12:21:12.993Z"
   }
  },
  "ptsDirecto": {},
@@ -7302,15 +7317,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:16:18.542Z"
+   "ultimaBien": "2026-11-10T12:21:19.986Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:16:18.542Z"
+   "ultimaBien": "2026-11-10T12:21:19.986Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:16:18.542Z"
+   "ultimaBien": "2026-11-10T12:21:19.986Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7318,11 +7333,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:16:18.542Z"
+   "ultimaBien": "2026-11-10T12:21:19.986Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:16:18.542Z"
+   "ultimaBien": "2026-11-10T12:21:19.986Z"
   }
  },
  "avisos": [
