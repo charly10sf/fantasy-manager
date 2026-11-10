@@ -62,7 +62,7 @@ TU LIGA
 • Invita a los de tu liga con un enlace: al entrar con su cuenta se les abre esa liga.
 • Tarjetas del plan para mandar al grupo.
 
-Funciona en Android y también en el navegador del ordenador. Tu sesión y tu clave de la IA se quedan en tu móvil, la IA no ve los nombres de tus rivales y puedes borrar lo que guarda el servidor desde Ajustes.
+Funciona en Android y también en el navegador del ordenador. Tu sesión y tu clave de la IA se quedan en tu móvil, los nombres de tus rivales se cambian antes de mandar los datos de tu liga a la IA y puedes borrar lo que guarda el servidor desde Ajustes.
 
 Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relación con LaLiga ni con LaLiga Fantasy. Para usarla necesitas tu propia cuenta de LaLiga Fantasy: entras en la página oficial de LaLiga y la app nunca ve tu contraseña.
 
@@ -72,9 +72,9 @@ Fantasy Manager es una app no oficial: no está hecha por LaLiga ni tiene relaci
 | --- | --- | --- |
 | Icono | icono-512.png | 512 × 512 |
 | Gráfico destacado | grafico-destacado-1024x500.png | 1024 × 500 |
-| Capturas de teléfono (8 como mucho) | captura-1-hoy, 2-plan, 3-clausulas, 4-mercado, 6-chat, 7-ficha, 8-rivales y 9-directo (.png) | 1080 × 1920 |
+| Capturas de teléfono (8 como mucho) | captura-1-hoy, 2-clubes, 3-clausulas, 4-mercado, 6-chat, 7-ficha, 8-rivales y 9-jornadas (.png), en ese orden | 1080 × 1920 |
 
-Las capturas usan la liga de ejemplo (datos inventados) y salen sin caras ni escudos de LaLiga (iniciales). Rehechas el 4 nov con la app de la 0.7a (siete pestañas, saludo a «Lucas»), menos la 6 (el chat de la IA, del 25 oct, con la barra de antes: rehacerla con una respuesta de verdad de la IA). La 5 (Equipo) queda de repuesto. Se rehacen con `.github/capturas-play.py` (instrucciones arriba del archivo).
+Las capturas usan la liga de ejemplo (datos inventados) y salen sin caras ni escudos de LaLiga (iniciales). Rehechas las ocho el 10 nov con la app de la 0.7.1e (demo sin parón). Cambian dos: la 2 es ahora la ficha de un club en «Suben y bajan» (antes, el plan, que desde la 0.7.1 ya sale en la primera pantalla de Hoy) y la 9 es Equipo → Jornadas con los puntos de cada jugador (antes, Directo, que sin jornada en juego solo enseñaba el calendario). La 6, el chat, lleva una respuesta escrita a mano con las cifras de la demo y la cabecera dice «IA»: ninguna captura nombra modelos. La 5 (Equipo, tu once) queda de repuesto. Se rehacen con `.github/capturas-play.py` (instrucciones arriba del archivo; si cambia la demo, revisar las cifras de la respuesta del chat).
 
 ## Clasificación de contenido (cuestionario)
 

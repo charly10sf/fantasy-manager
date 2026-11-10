@@ -1,51 +1,110 @@
 """Las capturas de la ficha de Google Play (1080 x 1920) con la liga de ejemplo.
-Uso: en web/, `python3 -m http.server 8765`; desde la raíz del repo, `python3 .github/capturas-play.py`.
-Las deja en play/. Sin fotos de LaLiga: en local no cargan y salen las iniciales (lo que queremos en Play)."""
-import asyncio, base64
+Uso: en web/, `python3 -m http.server 8765`; desde la raíz del repo, `python3 .github/capturas-play.py [archivo…]`
+(PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers en el entorno de Claude). Las deja en play/; con nombres, solo esas.
+Sin fotos de LaLiga: todo lo que no es localhost se corta y salen las iniciales (lo que queremos en Play).
+El chat de la IA no gasta cuota: la respuesta de Google es la de RESPUESTA_IA, escrita a mano con los datos de la demo
+(si cambia la demo, revisar las cifras). La cabecera del mensaje dice «IA», sin nombre de modelo."""
+import asyncio, base64, json, os, sys
 from playwright.async_api import async_playwright
-# (archivo, título, subtítulo, cómo llegar)
+
+PREGUNTA_IA = '¿Clausulo hoy a Kang-In Lee o espero?'
+RESPUESTA_IA = """**Clausúlalo hoy, pero después de vender.** Su cláusula es de 55,32 M y vale 52,77 M: pagas 2,55 M de más (un 4,8 %).
+
+- Entra en tu once y te da unos **4,6 pts por jornada**. Lleva 6,8 de media y acaba de hacer 13 en la J9.
+- Con lo que sube, recuperas esos 2,55 M en **unos 27 días**.
+- Si se tuerce, se lo vendes a LaLiga por unos 54,73 M y casi no pierdes.
+
+Con 6,43 M de saldo no te llega: primero acepta lo de Álex Baena y vende a Raphinha. Después de clausular te quedan unos **154,6 M** para pujar por Unai Simón."""
+
+# la sección «Tu once» de Equipo, arriba (debajo de la cabecera)
+TU_ONCE = "(() => { const e = [...document.querySelectorAll('h2, h3, .sec-t, .titulo2, div, span')].find((x) => x.children.length === 0 && /^tu once$/i.test(x.textContent.trim())); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 150); })()"
+# (archivo, título, subtítulo, pasos). Pasos: ('ir', vista), ('seg', 'vista:seg'), ('clic', selector), ('js', código),
+# ('scroll', selector), ('chat', pregunta), ('espera', ms)
 PANTALLAS = [
-  ('captura-1-hoy', 'QUÉ HACER HOY', 'en tu liga, nada más abrirla', "ir:hoy"),
-  ('captura-2-plan', 'PASO A PASO', 'con el saldo después de cada operación', "ir:hoy|scroll:.plan"),
-  ('captura-7-ficha', 'CADA JUGADOR, A FONDO', 'forma, rival, valor y quién lo puede pagar', "ir:equipo|seg:equipo:plantilla|abrir:[data-j]"),
-  ('captura-3-clausulas', 'CLÁUSULAS A TU ALCANCE', 'cuáles te llegan y cuándo se abren', "ir:rivales|seg:rivales:clausulas"),
-  ('captura-4-mercado', 'CUÁNTO PUJAR', 'según lo que se paga en tu liga', "ir:mercado"),
-  ('captura-5-equipo', 'TU MEJOR ONCE', 'con el calendario de cada jugador', "ir:equipo|seg:equipo:plantilla"),
-  ('captura-8-rivales', 'LO QUE HACE CADA RIVAL', 'fichajes, ventas y clausulazos al momento', "ir:rivales|seg:rivales:movimientos"),
-  ('captura-9-directo', 'LA JORNADA EN DIRECTO', 'tus jugadores y sus puntos, al minuto', "ir:directo"),
+  ('captura-1-hoy', 'QUÉ HACER HOY', 'paso a paso, nada más abrirla', [('ir', 'hoy')]),
+  ('captura-2-clubes', 'CLUB A CLUB', 'quién sube y quién baja en cada equipo', [('ir', 'clubes'), ('clic', '.club-card[data-club]'), ('clic', '[data-accion="segClub"][data-s="suben"]')]),
+  ('captura-3-clausulas', 'CLÁUSULAS A TU ALCANCE', 'cuáles te llegan y cuándo se abren', [('ir', 'rivales'), ('seg', 'rivales:clausulas')]),
+  ('captura-4-mercado', 'CUÁNTO PUJAR', 'según lo que se paga en tu liga', [('ir', 'mercado')]),
+  ('captura-5-equipo', 'TU MEJOR ONCE', 'con el calendario de cada jugador', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('js', TU_ONCE)]),
+  ('captura-6-chat', 'PREGÚNTALE A LA IA', 'lo que quieras, gratis, también con capturas', [('chat', PREGUNTA_IA)]),
+  ('captura-7-ficha', 'CADA JUGADOR, A FONDO', 'forma, rival, valor y quién lo puede pagar', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('clic', '[data-j]')]),
+  ('captura-8-rivales', 'LO QUE HACE CADA RIVAL', 'fichajes, ventas y clausulazos al momento', [('ir', 'rivales'), ('seg', 'rivales:movimientos')]),
+  ('captura-9-jornadas', 'TU ONCE, PUNTO A PUNTO', 'lo que suma cada jugador, jornada a jornada', [('ir', 'directo'), ('clic', '[data-accion="irJornada"][data-n="9"]')]),
 ]
-async def main():
+
+async def google(route):
+    """La IA de Google, de mentira: la lista de modelos y una respuesta escrita a mano (en trozos, como de verdad)."""
+    url = route.request.url
+    if '/models?' in url:
+        return await route.fulfill(status=200, content_type='application/json', body=json.dumps({'models': [{'name': 'models/gemini-3.5-flash', 'supportedGenerationMethods': ['generateContent']}]}))
+    trozos = [RESPUESTA_IA[i:i + 120] for i in range(0, len(RESPUESTA_IA), 120)]
+    pieza = lambda t, fin=None: 'data: ' + json.dumps({'candidates': [{'content': {'role': 'model', 'parts': [{'text': t}]}, **({'finishReason': fin} if fin else {})}], 'usageMetadata': {'promptTokenCount': 9000, 'candidatesTokenCount': 220}}) + '\r\n\r\n'
+    cuerpo = ''.join(pieza(t, 'STOP' if i == len(trozos) - 1 else None) for i, t in enumerate(trozos))
+    if 'alt=sse' in url:
+        return await route.fulfill(status=200, content_type='text/event-stream', body=cuerpo)
+    return await route.fulfill(status=200, content_type='application/json', body=json.dumps({'candidates': [{'content': {'role': 'model', 'parts': [{'text': RESPUESTA_IA}]}, 'finishReason': 'STOP'}]}))
+
+async def red(route):
+    u = route.request.url
+    if u.startswith('http://localhost'): return await route.continue_()
+    if 'generativelanguage.googleapis.com' in u: return await google(route)
+    return await route.abort()
+
+async def cerrar_hoja(pg):
+    await pg.evaluate("(() => { const b = document.querySelector('[data-accion=\"cerrarHoja\"], .hoja-x, [aria-label=\"Cerrar\"]'); if (b) b.click(); })()")
+    await pg.keyboard.press('Escape'); await pg.wait_for_timeout(600)
+
+async def main(solo):
     async with async_playwright() as p:
         b = await p.chromium.launch()
         pg = await b.new_page(viewport={'width': 390, 'height': 770}, device_scale_factor=2)
+        await pg.route('**/*', red)
+        pg.on('pageerror', lambda e: print('ERROR en la página:', e))
         await pg.add_init_script("localStorage.setItem('fm-tour','1')")
+        # el escudo grande de la ficha del club, sin la foto de LaLiga, es un círculo vacío: fuera
+        await pg.add_init_script("addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '.pt-esc.sin.club-g{display:none}'; document.head.appendChild(s); })")
         await pg.goto('http://localhost:8765/')
         await pg.wait_for_timeout(7000)
-        for arch, tit, sub, como in PANTALLAS:
-            pasos = dict(x.split(':', 1) for x in como.split('|'))
-            if 'seg' in pasos:
-                v, s_ = pasos['seg'].split(':')
-                await pg.evaluate(f"window.S.seg['{v}'] = '{s_}'")
-            await pg.evaluate(f"document.querySelector('[data-ir=\"{pasos['ir']}\"]').click()")
-            await pg.wait_for_timeout(1200)
-            if 'seg' in pasos:
-                v, s = pasos['seg'].split(':')
-                await pg.evaluate(f"(() => {{ const b = document.querySelector('[data-seg=\"{v}:{s}\"]') || [...document.querySelectorAll('[data-seg]')].find((x) => x.dataset.seg.endsWith(':{s}')); if (b) b.click(); }})()")
-                await pg.wait_for_timeout(1000)
-            await pg.evaluate("window.scrollTo(0,0)")
-            if 'scroll' in pasos:
-                await pg.evaluate(f"(() => {{ const e = document.querySelector('{pasos['scroll']}'); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 70); }})()")
-                await pg.wait_for_timeout(500)
-            if 'abrir' in pasos:
-                await pg.evaluate(f"(() => {{ const e = [...document.querySelectorAll('{pasos['abrir']}')].find((x) => x.offsetParent); if (e) e.click(); }})()")
-                await pg.wait_for_timeout(1500)
+        for arch, tit, sub, pasos in PANTALLAS:
+            if solo and arch not in solo: continue
+            await cerrar_hoja(pg)
+            for tipo, x in pasos:
+                if tipo == 'ir':
+                    await pg.evaluate(f"document.querySelector('[data-ir=\"{x}\"]').click()")
+                    await pg.wait_for_timeout(1200)
+                    await pg.evaluate("window.scrollTo(0,0)")
+                elif tipo == 'seg':
+                    v, s = x.split(':')
+                    await pg.evaluate(f"(() => {{ window.S.seg['{v}'] = '{s}'; const b = document.querySelector('[data-seg=\"{v}:{s}\"]') || [...document.querySelectorAll('[data-seg]')].find((x) => x.dataset.seg.endsWith(':{s}')); if (b) b.click(); }})()")
+                    await pg.wait_for_timeout(1000)
+                    await pg.evaluate("window.scrollTo(0,0)")
+                elif tipo == 'clic':
+                    await pg.evaluate(f"(() => {{ const e = [...document.querySelectorAll('{x}')].find((y) => y.offsetParent); if (e) e.click(); }})()")
+                    await pg.wait_for_timeout(1500)
+                elif tipo == 'js':
+                    await pg.evaluate(x); await pg.wait_for_timeout(1500)
+                elif tipo == 'scroll':
+                    await pg.evaluate(f"(() => {{ const e = document.querySelector('{x}'); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 70); }})()")
+                    await pg.wait_for_timeout(500)
+                elif tipo == 'espera':
+                    await pg.wait_for_timeout(x)
+                elif tipo == 'chat':
+                    await pg.evaluate("(async () => { const m = await import('/js/puente.js'); m.guardar('gemini', 'AIzaSyDEMOdemoDEMOdemoDEMOdemoDEMOdem'); })()")
+                    await pg.evaluate("document.querySelector('[data-ir=\"ia\"]').click()")
+                    await pg.wait_for_timeout(1200)
+                    await pg.fill('#pregunta', x)
+                    await pg.click('[data-accion="enviar"]')
+                    await pg.wait_for_function("!window.S.charlando", timeout=30000)
+                    await pg.wait_for_timeout(1200)
+                    # la pregunta arriba, con la respuesta entera debajo
+                    await pg.evaluate("(() => { const e = document.querySelector('.msg.yo'); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 86); })()")
+                    await pg.wait_for_timeout(500)
+            await pg.evaluate("document.activeElement && document.activeElement.blur()")
             png = await pg.screenshot()
-            if 'abrir' in pasos:
-                await pg.evaluate("(() => { const b = document.querySelector('[data-accion=\"cerrarHoja\"], .hoja-x, [aria-label=\"Cerrar\"]'); if (b) b.click(); })()")
-                await pg.keyboard.press('Escape'); await pg.wait_for_timeout(600)
             await componer(b, arch, tit, sub, png)
             print('hecha', arch)
         await b.close()
+
 async def componer(b, arch, tit, sub, png):
     img = base64.b64encode(png).decode()
     fc = base64.b64encode(open('web/fonts/barlow-condensed-700.woff2','rb').read()).decode()
@@ -64,5 +123,6 @@ async def componer(b, arch, tit, sub, png):
     await pg.evaluate('document.fonts.ready'); await pg.wait_for_timeout(400)
     await pg.screenshot(path=f'play/{arch}.png')
     await pg.close()
-import os; os.makedirs('play', exist_ok=True)
-asyncio.run(main())
+
+os.makedirs('play', exist_ok=True)
+asyncio.run(main(set(sys.argv[1:])))
