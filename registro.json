@@ -3242,7 +3242,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/alerta-meteorologica-obliga-suspender-partido-palmas-eldense-20261107_3470867.html": 1794083561000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/07/inclemencias-meteorologicas-obligan-a-aplazar-el-las-palmas-eldense-de-segunda-division-cadena-ser/": 1794085701000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/07/la-borrasca-bruna-obliga-a-suspender-el-ud-las-palmas-eldense-ser-las-palmas/": 1794085110000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/despedida-jesus-miguel-tenerife-estadio_0_2008446228.html": 1794086542000,
@@ -3346,7 +3345,8 @@
    "fallos": 0
   },
   "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342673776
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342673776,
+   "SPORT|136307236": 1794342973671
   }
  },
  "ia": {
@@ -7388,13 +7388,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1234,
+   "ok": 1235,
    "fallos": 0,
-   "ejecuciones": 851,
+   "ejecuciones": 852,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T20:31:13.776Z"
+   "ultima": "2026-11-10T20:36:13.671Z"
   }
  },
  "ptsDirecto": {},
@@ -7411,15 +7411,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:31:20.354Z"
+   "ultimaBien": "2026-11-10T20:36:16.919Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:31:20.354Z"
+   "ultimaBien": "2026-11-10T20:36:16.919Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:31:20.354Z"
+   "ultimaBien": "2026-11-10T20:36:16.919Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7427,11 +7427,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:31:20.354Z"
+   "ultimaBien": "2026-11-10T20:36:16.919Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:31:20.354Z"
+   "ultimaBien": "2026-11-10T20:36:16.919Z"
   }
  },
  "avisos": [
