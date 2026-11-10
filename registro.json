@@ -1999,7 +1999,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000,
    "SPORT|136287679": 1794311497000,
    "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000
   },
   "hechos": [
    {
@@ -2369,7 +2370,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -3305,22 +3306,24 @@
    "n": 12,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794319275167
+  }
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 39,
+   "clasificar": 40,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 185377,
-  "salida": 14040,
+  "entrada": 187416,
+  "salida": 14889,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.269207,
+  "dolares": 0.269835,
   "reservado": 0
  },
  "recientes": {
@@ -7279,13 +7282,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1153,
+   "ok": 1154,
    "fallos": 0,
-   "ejecuciones": 771,
+   "ejecuciones": 772,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T13:56:14.640Z"
+   "ultima": "2026-11-10T14:01:15.167Z"
   }
  },
  "ptsDirecto": {},
@@ -7302,15 +7305,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:56:19.562Z"
+   "ultimaBien": "2026-11-10T14:01:24.877Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:56:19.562Z"
+   "ultimaBien": "2026-11-10T14:01:24.877Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:56:19.562Z"
+   "ultimaBien": "2026-11-10T14:01:24.877Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7318,11 +7321,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:56:19.562Z"
+   "ultimaBien": "2026-11-10T14:01:24.877Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:56:19.562Z"
+   "ultimaBien": "2026-11-10T14:01:24.877Z"
   }
  },
  "avisos": [
