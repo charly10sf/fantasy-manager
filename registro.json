@@ -3336,7 +3336,9 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-huelga-general-20261110082835.html": 1794295715000,
    "Europa Press|https://www.europapress.es/internacional/noticia-tribunal-supremo-eeuu-autoriza-trump-reanudar-construccion-tramo-muro-fronterizo-texas-20261110015458.html": 1794272098000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-huelga-maquinistas-recomienda-usar-otras-alternativas-transporte-20261110085547.html": 1794297347000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-tellado-denuncia-huelga-electoral-sindicatos-contra-pp-verdadero-partido-currantes-20261110103158.html": 1794303118000,
+   "SPORT|136277062": 1794300824000
   },
   "hechos": [
    {
@@ -3358,27 +3360,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-tellado-denuncia-huelga-electoral-sindicatos-contra-pp-verdadero-partido-currantes-20261110103158.html": 1794303374757
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 113366,
-  "salida": 9226,
+  "entrada": 115287,
+  "salida": 9387,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.199144,
+  "dolares": 0.199417,
   "reservado": 0
  },
  "recientes": {
@@ -7333,13 +7333,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1104,
+   "ok": 1105,
    "fallos": 0,
-   "ejecuciones": 722,
+   "ejecuciones": 723,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T09:51:14.488Z"
+   "ultima": "2026-11-10T09:56:15.290Z"
   }
  },
  "ptsDirecto": {},
@@ -7356,15 +7356,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:51:17.906Z"
+   "ultimaBien": "2026-11-10T09:56:22.463Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:51:17.906Z"
+   "ultimaBien": "2026-11-10T09:56:22.463Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:51:17.906Z"
+   "ultimaBien": "2026-11-10T09:56:22.463Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7372,11 +7372,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:51:17.906Z"
+   "ultimaBien": "2026-11-10T09:56:22.463Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:51:17.906Z"
+   "ultimaBien": "2026-11-10T09:56:22.463Z"
   }
  },
  "avisos": [
