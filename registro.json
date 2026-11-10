@@ -1811,7 +1811,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000,
    "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000,
@@ -7268,13 +7267,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1140,
+   "ok": 1141,
    "fallos": 0,
-   "ejecuciones": 758,
+   "ejecuciones": 759,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:51:13.925Z"
+   "ultima": "2026-11-10T12:56:18.263Z"
   }
  },
  "ptsDirecto": {},
@@ -7291,15 +7290,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:51:21.220Z"
+   "ultimaBien": "2026-11-10T12:56:22.613Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:51:21.220Z"
+   "ultimaBien": "2026-11-10T12:56:22.613Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:51:21.220Z"
+   "ultimaBien": "2026-11-10T12:56:22.613Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7307,11 +7306,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:51:21.220Z"
+   "ultimaBien": "2026-11-10T12:56:22.613Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:51:21.220Z"
+   "ultimaBien": "2026-11-10T12:56:22.613Z"
   }
  },
  "avisos": [
