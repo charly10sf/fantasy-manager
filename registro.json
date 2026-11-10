@@ -3195,7 +3195,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
-   "SPORT|136206834": 1794072635000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794080725000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/alerta-meteorologica-obliga-suspender-partido-palmas-eldense-20261107_3470867.html": 1794083561000,
    "SPORT|136209574": 1794080057000,
@@ -7268,13 +7267,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1196,
+   "ok": 1197,
    "fallos": 0,
-   "ejecuciones": 814,
+   "ejecuciones": 815,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T17:26:14.978Z"
+   "ultima": "2026-11-10T17:31:20.629Z"
   }
  },
  "ptsDirecto": {},
@@ -7291,15 +7290,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:26:20.212Z"
+   "ultimaBien": "2026-11-10T17:31:25.993Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:26:20.212Z"
+   "ultimaBien": "2026-11-10T17:31:25.993Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:26:20.212Z"
+   "ultimaBien": "2026-11-10T17:31:25.993Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7307,11 +7306,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:26:20.212Z"
+   "ultimaBien": "2026-11-10T17:31:25.993Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:26:20.212Z"
+   "ultimaBien": "2026-11-10T17:31:25.993Z"
   }
  },
  "avisos": [
