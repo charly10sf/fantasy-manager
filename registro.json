@@ -3318,7 +3318,9 @@
    "n": 10,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/madrid/noticia-ayuso-critica-use-impunidad-secuestro-cara-huelga-general-pide-acabar-basura-sindical-20261110110256.html": 1794314476052
+  }
  },
  "ia": {
   "dia": "2026-11-10",
@@ -7292,13 +7294,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1137,
+   "ok": 1138,
    "fallos": 0,
-   "ejecuciones": 755,
+   "ejecuciones": 756,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:36:13.988Z"
+   "ultima": "2026-11-10T12:41:16.052Z"
   }
  },
  "ptsDirecto": {},
@@ -7315,15 +7317,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:36:16.430Z"
+   "ultimaBien": "2026-11-10T12:41:20.868Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:36:16.430Z"
+   "ultimaBien": "2026-11-10T12:41:20.868Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:36:16.430Z"
+   "ultimaBien": "2026-11-10T12:41:20.868Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7331,11 +7333,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:36:16.430Z"
+   "ultimaBien": "2026-11-10T12:41:20.868Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:36:16.430Z"
+   "ultimaBien": "2026-11-10T12:41:20.868Z"
   }
  },
  "avisos": [
