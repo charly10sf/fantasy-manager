@@ -3816,7 +3816,8 @@
    "5868127",
    "5868130",
    "5868122",
-   "5868121"
+   "5868121",
+   "6386040"
   ],
   "equipos": [
    "9866",
@@ -3842,6 +3843,19 @@
   ],
   "base": true,
   "jugadores": {
+   "0": {
+    "n": "Carlos Juaristi",
+    "e": "Anaitasuna FT",
+    "g": {
+     "copa": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "80295": {
     "n": "Yuri Berchiche",
     "e": "Athletic Club",
@@ -4019,6 +4033,19 @@
      ]
     }
    },
+   "360918": {
+    "n": "Jonny Otto",
+    "e": "Deportivo Alavés",
+    "g": {
+     "copa": [
+      1,
+      1,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "361757": {
     "n": "João Cancelo",
     "e": "Barcelona",
@@ -4163,6 +4190,13 @@
      "liga": [
       4,
       2,
+      0,
+      0,
+      0
+     ],
+     "copa": [
+      2,
+      0,
       0,
       0,
       0
@@ -4401,6 +4435,19 @@
    "636555": {
     "n": "Andoni Ugarte",
     "e": "Sestao",
+    "g": {
+     "copa": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "637756": {
+    "n": "Carles Aleñá",
+    "e": "Deportivo Alavés",
     "g": {
      "copa": [
       1,
@@ -5674,6 +5721,19 @@
      ]
     }
    },
+   "1184663": {
+    "n": "Miguel Rodríguez",
+    "e": "Deportivo Alavés",
+    "g": {
+     "copa": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "1184694": {
     "n": "Alberto Moleiro",
     "e": "Villarreal",
@@ -6644,6 +6704,13 @@
       0,
       0,
       0
+     ],
+     "copa": [
+      1,
+      0,
+      0,
+      0,
+      0
      ]
     }
    },
@@ -7306,13 +7373,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1224,
+   "ok": 1226,
    "fallos": 0,
-   "ejecuciones": 842,
+   "ejecuciones": 843,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T19:46:13.756Z"
+   "ultima": "2026-11-10T19:51:13.717Z"
   }
  },
  "ptsDirecto": {},
@@ -7329,15 +7396,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:46:17.072Z"
+   "ultimaBien": "2026-11-10T19:51:17.726Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:46:17.072Z"
+   "ultimaBien": "2026-11-10T19:51:17.726Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:46:17.072Z"
+   "ultimaBien": "2026-11-10T19:51:17.726Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7345,11 +7412,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:46:17.072Z"
+   "ultimaBien": "2026-11-10T19:51:17.726Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:46:17.072Z"
+   "ultimaBien": "2026-11-10T19:51:17.726Z"
   }
  },
  "avisos": [
