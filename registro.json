@@ -3385,7 +3385,8 @@
    "fallos": 0
   },
   "espera": {
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/10/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794293773654
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/10/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794293773654,
+   "SPORT|134914783": 1794294073338
   }
  },
  "ia": {
@@ -7356,13 +7357,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1068,
+   "ok": 1069,
    "fallos": 0,
-   "ejecuciones": 686,
+   "ejecuciones": 687,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T06:56:13.654Z"
+   "ultima": "2026-11-10T07:01:13.338Z"
   }
  },
  "ptsDirecto": {},
@@ -7379,15 +7380,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:56:18.013Z"
+   "ultimaBien": "2026-11-10T07:01:15.846Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:56:18.013Z"
+   "ultimaBien": "2026-11-10T07:01:15.846Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:56:18.013Z"
+   "ultimaBien": "2026-11-10T07:01:15.846Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7395,11 +7396,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:56:18.013Z"
+   "ultimaBien": "2026-11-10T07:01:15.846Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:56:18.013Z"
+   "ultimaBien": "2026-11-10T07:01:15.846Z"
   }
  },
  "avisos": [
