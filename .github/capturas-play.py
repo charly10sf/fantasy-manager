@@ -23,6 +23,30 @@ TU_ONCE = "(() => { const e = [...document.querySelectorAll('h2, h3, .sec-t, .ti
 FICHA = "(() => { const e = [...document.querySelectorAll('[data-j]')].find((x) => x.offsetParent && /raphinha/i.test(x.textContent)); if (e) e.click(); })()"
 import re as _re
 RESPUESTA_IA = _re.sub(r'(\d) (M|mil|%|pts)', '\\1\u00a0\\2', RESPUESTA_IA)
+# la ficha de un rival (el más peligroso de la demo) y, en la segunda foto, su «Cómo juega»
+RIVAL = "(() => { const e = [...document.querySelectorAll('[data-r=\"511\"]')].find((x) => x.offsetParent); if (e) e.click(); })()"
+# hasta dónde se ve la primera foto (lo de debajo, «Cómo juega», ya sale en la segunda): la y de su título
+CORTE = "(() => { const h = [...document.querySelectorAll('.sec h2')].find((x) => /Cómo juega/.test(x.textContent)); return h ? h.getBoundingClientRect().top : 770; })()"
+COMO_JUEGA = "(() => { const h = [...document.querySelectorAll('.sec h2')].find((x) => /Cómo juega/.test(x.textContent)); if (!h) return; let p = h.parentElement; while (p && p.scrollHeight <= p.clientHeight + 2) p = p.parentElement; if (p) p.scrollTop += h.getBoundingClientRect().top - p.getBoundingClientRect().top - 24; })()"
+# solo para la captura 8: el rival 511 (Club Clausulazo, Mario) con toda una temporada de movimientos inventados, como
+# los de un rival de verdad (en la demo normal solo hay unos días): clausulazos (3 a ti), fichajes, ventas y escudos,
+# casi siempre de 20 a 23 h. Va dentro de demo.js, después de la actividad de la demo
+TEMPORADA_RIVAL = r'''
+  {
+    const R = clasif.find((e) => String(e.teamId) === '511'), Y = clasif.find((e) => e.esYo);
+    const otros = clasif.filter((e) => e !== R && e !== Y);
+    const hora = (d, k) => { const x = new Date(ahora - d * DIA); x.setHours(19 + (k % 4), (k * 17) % 60, 0, 0); return +x; };
+    const ev = (id, t, tipo, pid, otro) => actividad.push({ id, t, tipo, clase: { 31: 'compra', 32: 'clausula', 33: 'venta', 4: 'blindaje' }[tipo], quien: R.manager, quienId: R.userId, otro: otro ? otro.manager : '', otroId: otro ? otro.userId : '', pid, jugador: maestro[pid].nombre, importe: Math.round(maestro[pid].valor * (tipo === 31 ? 1.04 : tipo === 33 ? 0.98 : 1) / 1000) * 1000, texto: '' });
+    if (R && Y) {
+      const victimas = [Y, Y, Y, otros[0], otros[1], otros[1], otros[2], otros[3], otros[4], otros[5]];
+      // (lo que clausuló lo tiene ahora: de su plantilla, para no chocar con las de los demás)
+      const mios = plantillas[R.teamId] || [];
+      victimas.forEach((v, k) => { if (mios.length) ev('tr-c' + k, hora(9 + k * 9.3, k), 32, mios[k % mios.length].pid, v); });
+      for (let k = 0; k < 40; k++) ev('tr-f' + k, hora(4 + k * 2.4, k + 1), 31, libresDemo[(k * 7) % libresDemo.length]);
+      for (let k = 0; k < 34; k++) ev('tr-v' + k, hora(3 + k * 2.8, k + 2), 33, libresDemo[(k * 7 + 3) % libresDemo.length]);
+      for (let k = 0; k < 8; k++) if (mios.length) ev('tr-b' + k, hora(6 + k * 11, k), 4, mios[k % mios.length].pid);
+    }
+  }'''
 # (archivo, título, subtítulo, pasos[, modo]). Modo: 'normal' (como la ve cualquiera, con los candados), 'abierto'
 # (limites.json sin `bloqueadas`: las funciones de anuncio, abiertas) o 'paron' (abierto y la demo en el parón: la J10 a
 # 12 días, como en prueba-web). Pasos: ('ir', vista), ('seg', 'vista:seg'), ('clic', selector), ('js', código),
@@ -35,7 +59,7 @@ PANTALLAS = [
   ('captura-5-equipo', 'TU MEJOR ONCE', 'con el calendario de cada jugador', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('js', TU_ONCE)]),
   ('captura-6-chat', 'PREGÚNTALE A LA IA', 'lo que quieras, gratis, también con capturas', [('chat', PREGUNTA_IA)]),
   ('captura-7-ficha', 'CADA JUGADOR, A FONDO', 'valor, cláusula, rival y qué hacer con él', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('js', FICHA)]),
-  ('captura-8-dinero', 'EL DINERO DE CADA RIVAL', 'quién puede pagar tus cláusulas', [('ir', 'rivales'), ('seg', 'rivales:clasif')], 'abierto'),
+  ('captura-8-dinero', 'EL DINERO DE CADA RIVAL<br>Y CÓMO JUEGAN', 'quién puede pagar tus cláusulas y cómo te atacan', [('ir', 'rivales'), ('seg', 'rivales:clasif'), ('dicho', '511'), ('ir', 'rivales'), ('seg', 'rivales:clasif'), ('js', RIVAL), ('medir', CORTE), ('foto', None), ('js', COMO_JUEGA), ('foto', None)], 'abierto'),
   ('captura-9-paron', 'PARÓN DE SELECCIONES', 'qué comprar para revender antes de la vuelta', [('ir', 'directo'), ('scroll', '.pnz-hero')], 'paron'),
 ]
 
@@ -76,6 +100,10 @@ async def red(route):
         if MODO['v'] != 'normal' and u.split('?')[0].endswith('/limites.json'):
             r = await route.fetch(); d = await r.json(); d['bloqueadas'] = []
             return await route.fulfill(response=r, body=json.dumps(d))
+        if MODO['v'] == 'abierto' and u.split('?')[0].endswith('/js/demo.js'):
+            r = await route.fetch(); t = await r.text()
+            assert '  void nombres;' in t, 'demo.js ha cambiado: revisar TEMPORADA_RIVAL'
+            return await route.fulfill(response=r, body=t.replace('  void nombres;', TEMPORADA_RIVAL + '\n  void nombres;'))
         if MODO['v'] == 'paron' and u.split('?')[0].endswith('/js/demo.js'):
             r = await route.fetch(); t = await r.text()
             assert '9: base - 7 * DIA, 10: base,' in t, 'demo.js ha cambiado: revisar el truco del parón'
@@ -122,6 +150,7 @@ async def por_modo(b, modo, pantallas):
         await pg.reload(); await pg.wait_for_timeout(7000)
         for arch, tit, sub, pasos, *_ in pantallas:
             await cerrar_hoja(pg)
+            fotos, cortes = [], []
             for tipo, x in pasos:
                 if tipo == 'ir':
                     await pg.evaluate(f"document.querySelector('[data-ir=\"{x}\"]').click()")
@@ -140,6 +169,23 @@ async def por_modo(b, modo, pantallas):
                 elif tipo == 'scroll':
                     await pg.evaluate(f"(() => {{ const e = document.querySelector('{x}'); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 82); }})()")
                     await pg.wait_for_timeout(500)
+                elif tipo == 'medir':
+                    cortes.append(await pg.evaluate(x))
+                elif tipo == 'dicho':
+                    # «te ha dicho cuánto tiene» hace 16 días, con una cifra que deje su dinero en unos 48 M ahora
+                    await pg.evaluate(f"""(async () => {{ const {{ LS }} = await import('/js/util.js'), {{ K }} = await import('/js/datos.js');
+                      LS.set(K('dinero-dicho'), {{ '{x}': {{ v: 0, r: 0, min: 0, max: 0, t: Date.now() - 16 * 864e5, est: null }} }}); }})()""")
+                    await pg.reload(); await pg.wait_for_timeout(6000)
+                    await pg.evaluate(f"""(async () => {{ const {{ LS }} = await import('/js/util.js'), {{ K }} = await import('/js/datos.js');
+                      const d = window.S.M.dineroDe('{x}'); const v = Math.round((48e6 - d.desdeDicho) / 5e5) * 5e5;
+                      LS.set(K('dinero-dicho'), {{ '{x}': {{ v, r: 5e5, min: v - 5e5, max: v + 5e5, t: Date.now() - 16 * 864e5, est: v - 7.5e6 }} }}); }})()""")
+                    await pg.reload(); await pg.wait_for_timeout(6000)
+                elif tipo == 'foto':
+                    await pg.evaluate("document.activeElement && document.activeElement.blur()")
+                    try: await pg.wait_for_function("[...document.images].filter((i) => { const r = i.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width; }).every((i) => i.complete && i.naturalWidth)", timeout=20000)
+                    except Exception: print('OJO: alguna imagen sin cargar en', arch)
+                    await pg.wait_for_timeout(500)
+                    fotos.append(await pg.screenshot())
                 elif tipo == 'espera':
                     await pg.wait_for_timeout(x)
                 elif tipo == 'chat':
@@ -158,24 +204,37 @@ async def por_modo(b, modo, pantallas):
             try: await pg.wait_for_function("[...document.images].filter((i) => { const r = i.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width; }).every((i) => i.complete && i.naturalWidth)", timeout=20000)
             except Exception: print('OJO: alguna imagen sin cargar en', arch)
             await pg.wait_for_timeout(500)
-            png = await pg.screenshot()
-            await componer(b, arch, tit, sub, png)
+            fotos = fotos or [await pg.screenshot()]
+            await componer(b, arch, tit, sub, fotos, cortes)
             print('hecha', arch, f'({modo})')
         await ctx.close()
 
-async def componer(b, arch, tit, sub, png):
-    img = base64.b64encode(png).decode()
+async def componer(b, arch, tit, sub, fotos, cortes=()):
+    """Un móvil con la captura o, con dos fotos, dos móviles más pequeños, uno al lado del otro y escalonados."""
+    imgs = [base64.b64encode(x).decode() for x in fotos]
     fc = base64.b64encode(open('web/fonts/barlow-condensed-700.woff2','rb').read()).decode()
     fr = base64.b64encode(open('web/fonts/barlow-400.woff2','rb').read()).decode()
+    if len(imgs) == 1:
+        tels = f'<div class="tel"><img src="data:image/png;base64,{imgs[0]}"></div>'
+    else:
+        # la primera, fundida en negro donde empieza lo que ya enseña la segunda (cortes[0], en px de la pantalla de 770)
+        def fundido(i):
+            if i or not cortes: return ''
+            y = max(0, min(100, cortes[0] / 770 * 100))
+            return f'-webkit-mask-image:linear-gradient(#000 {y - 6:.1f}%, transparent {y:.1f}%);'
+        tels = ''.join(f'<div class="tel dos" style="left:{15 + i * 535}px;top:{350 + i * 310}px"><img style="{fundido(i)}" src="data:image/png;base64,{x}"></div>' for i, x in enumerate(imgs[:2]))
     html = f"""<html><head><style>
     @font-face {{ font-family: 'BC'; src: url(data:font/woff2;base64,{fc}); }}
     @font-face {{ font-family: 'B'; src: url(data:font/woff2;base64,{fr}); }}
-    body {{ margin:0; width:1080px; height:1920px; background: radial-gradient(120% 60% at 50% 0%, #4a0c18 0%, #160609 55%, #08080a 100%); color:#f4f2f3; font-family:'B', sans-serif; text-align:center; overflow:hidden }}
+    body {{ margin:0; width:1080px; height:1920px; position:relative; background: radial-gradient(120% 60% at 50% 0%, #4a0c18 0%, #160609 55%, #08080a 100%); color:#f4f2f3; font-family:'B', sans-serif; text-align:center; overflow:hidden }}
     h1 {{ font-family:'BC', sans-serif; font-size:104px; margin:92px 30px 0; letter-spacing:1px; line-height:1 }}
+    h1.dos {{ font-size:96px; margin-top:70px }}
     p {{ font-size:44px; margin:22px 0 0; color:#d8d3da }}
     .tel {{ margin:58px auto 0; width:820px; height:1600px; border-radius:64px; background:#1a1a1f; padding:20px; box-sizing:border-box; box-shadow:0 30px 80px rgba(0,0,0,.6) }}
     .tel img {{ width:780px; height:1540px; border-radius:46px; display:block; object-fit:cover; object-position:top }}
-    </style></head><body><h1>{tit}</h1><p>{sub}</p><div class="tel"><img src="data:image/png;base64,{img}"></div></body></html>"""
+    .tel.dos {{ position:absolute; margin:0; width:515px; height:1004px; border-radius:42px; padding:13px }}
+    .tel.dos img {{ width:489px; height:966px; border-radius:30px }}
+    </style></head><body><h1 class="{'dos' if '<br>' in tit else ''}">{tit}</h1><p>{sub}</p>{tels}</body></html>"""
     pg = await b.new_page(viewport={'width': 1080, 'height': 1920})
     await pg.set_content(html)
     await pg.evaluate('document.fonts.ready'); await pg.wait_for_timeout(400)

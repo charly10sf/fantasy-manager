@@ -409,7 +409,7 @@ function perfilHTML(S, tid) {
   h += dato('Vende', nV ? (P.ventas.dias != null ? `~${Math.max(1, Math.round(P.ventas.dias))} días` : nV) : '0', nV ? `${P.ventas.dias != null ? 'los tiene antes de vender' : nV === 1 ? 'venta' : 'ventas'} · ${desglose}` : 'no ha vendido');
   h += dato('Ficha', P.compras.liga + P.compras.manager, `${P.compras.liga} del mercado${P.compras.manager ? `, ${P.compras.manager} a managers` : ''}${P.compras.paga != null && P.compras.nPaga >= 2 ? ` · paga ${pct(P.compras.paga * 100)}` : ''}`);
   h += dato('Se protege', P.escudos + P.subidas, `${P.escudos} escudo${P.escudos === 1 ? '' : 's'}, ${P.subidas} subida${P.subidas === 1 ? '' : 's'} pagada${P.subidas === 1 ? '' : 's'}`);
-  if (P.franja) h += dato('Se mueve', `${P.franja.ini}–${P.franja.fin} h`, `${P.franja.n} de ${P.franja.de} (clausular, vender, proteger)`);
+  if (P.franja) h += dato('Se mueve', `${P.franja.ini}–${P.franja.fin || 24} h`, `${P.franja.n} de ${P.franja.de} (clausular, vender, proteger)`);
   h += `</div>`;
   const pu = Object.entries(P.puestos).filter(([, n]) => n).sort((a, b) => b[1] - a[1]);
   const POSC = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };
