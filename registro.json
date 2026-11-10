@@ -2001,7 +2001,9 @@
    "SPORT|136295857": 1794322600000,
    "SPORT|136295753": 1794322829000,
    "SPORT|136291420": 1794322822000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enzo-alves-hijo-marcelo-cae-lista-espana-mundial-sub-17-lesion-muscular-20261110_3472480.html": 1794326987000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enzo-alves-hijo-marcelo-cae-lista-espana-mundial-sub-17-lesion-muscular-20261110_3472480.html": 1794326987000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/bellingham-leccion-mourinho-sobre-medias-chaval-tienes-nueve-anos-tienes-gemelos.html": 1794328211000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/10/bruno-iribarne-da-el-salto-un-almeriense-entrena-con-las-estrellas-de-la-roja-ser-almeria/": 1794328207000
   },
   "hechos": [
    {
@@ -2345,7 +2347,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -3286,22 +3288,24 @@
    "n": 17,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-repercutira-la-huelga-general-en-el-deporte-en-bizkaia-radio-bilbao/": 1794328583327
+  }
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 53,
+   "clasificar": 54,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 212741,
-  "salida": 18916,
+  "entrada": 214856,
+  "salida": 19148,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.274383,
+  "dolares": 0.27471,
   "reservado": 0
  },
  "recientes": {
@@ -7260,13 +7264,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1185,
+   "ok": 1186,
    "fallos": 0,
-   "ejecuciones": 803,
+   "ejecuciones": 804,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T16:31:17.400Z"
+   "ultima": "2026-11-10T16:36:23.327Z"
   }
  },
  "ptsDirecto": {},
@@ -7283,15 +7287,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:31:21.028Z"
+   "ultimaBien": "2026-11-10T16:36:28.831Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:31:21.028Z"
+   "ultimaBien": "2026-11-10T16:36:28.831Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:31:21.028Z"
+   "ultimaBien": "2026-11-10T16:36:28.831Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7299,11 +7303,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:31:21.028Z"
+   "ultimaBien": "2026-11-10T16:36:28.831Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:31:21.028Z"
+   "ultimaBien": "2026-11-10T16:36:28.831Z"
   }
  },
  "avisos": [
