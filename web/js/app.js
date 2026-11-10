@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
+import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
 import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -616,10 +616,13 @@ function pintarSup() {
   sl.setAttribute('aria-label', varias ? `${D.liga.nombre}: cambiar de liga` : (D ? D.liga.nombre : 'Fantasy Manager'));
   const edad = D ? Date.now() - D.t : Infinity;
   const p = S.cargando ? 'vivo' : edad < 30 * MIN ? 'vivo' : edad < 6 * 3600e3 ? 'viejo' : 'mal';
+  // en el móvil, corto: «Actualizado hace 1 min» ocupaba dos o tres líneas a 390 px (0.7.1g)
+  const corto = innerWidth < 600, hace = D ? (corto ? dura(edad) : rel(D.t)) : '';
   $('#supEstado').innerHTML = S.errorCarga && D && !S.cargando
-    ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin internet' : 'Sin actualizar'} · ${rel(D.t)}`
-    : D && D.lento && !S.cargando ? `<i class="punto viejo"></i>Conexión lenta · ${rel(D.t)}`
-      : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : `Actualizado ${rel(D.t)}`) : ''}`;
+    ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin internet' : 'Sin actualizar'} · ${hace}`
+    : D && D.lento && !S.cargando ? `<i class="punto viejo"></i>Conexión lenta · ${hace}`
+      : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : corto ? `Hace ${hace}` : `Actualizado ${hace}`) : ''}`;
+  $('#supEstado').title = D ? `Actualizado ${rel(D.t)}` : '';
   $('#bRefrescar').classList.toggle('gira', S.cargando);
   pintarNumAvisos();
   const pend = S.plan ? V.cuentaPasos(S, S.plan).pend : 0;

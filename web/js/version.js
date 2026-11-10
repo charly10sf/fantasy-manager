@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.1f';
+export const VERSION = '0.7.1g';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,16 @@ export const VERSION = '0.7.1f';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.1g', f: '2026-11-10', h: '20:26', t: 'Retoques de pantalla',
+    cosas: [
+      { tipo: 'arreglo', d: 'reloj', t: 'La cabecera, en una línea', x: 'En el móvil, «Actualizado hace 1 min» ocupaba dos o tres líneas debajo del nombre de la liga: ahora dice «Hace 1 min».', menor: true },
+      { tipo: 'arreglo', d: 'bandera', t: 'La vuelta tras el parón, con la misma fecha', x: 'En el parón, la tarjeta de arriba de Hoy decía que LaLiga volvía el día que acaba el parón de selecciones y la franja de debajo contaba los días hasta la jornada, que es otro día. Las dos dicen ya la fecha de la jornada.', menor: true },
+      { tipo: 'arreglo', d: 'dinero', t: 'Lo que ha ingresado cada rival, con su nombre', x: 'En la ficha de un rival, debajo de lo gastado en 7 días salía un «+159,7 M» sin decir qué era: es lo que ha ingresado, y ahora lo pone.', menor: true },
+      { para: 'dueño', tipo: 'arreglo', d: 'candado', t: 'La cláusula de un jugador sin partir', x: 'En la ficha de un jugador, «65,15 M de más» se partía entre dos líneas.', menor: true },
+      { para: 'dueño', tipo: 'arreglo', d: 'campo', t: 'La liga de ejemplo cuadra sus puntos', x: 'En la liga de ejemplo, Directo decía «Hiciste 75 pts» en la última jornada y Equipo → Jornadas daba 66: ahora las dos dan la suma del once.', menor: true },
+    ],
+  },
   {
     v: '0.7.1f', f: '2026-11-10', h: '11:56', t: 'Lo que sube hoy cada jugador',
     cosas: [

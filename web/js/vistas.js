@@ -53,7 +53,7 @@ function marcador(S, { corto = false } = {}) {
   const yo = M.yo || {};
   const ahora = Date.now();
   let fila = '';
-  if (M.enParon) fila = `<span>${icono('bandera')} Parón de selecciones</span><span class="der">vuelve ${cuando(M.paron.fin, { hora: false })}</span>`;
+  if (M.enParon) fila = `<span>${icono('bandera')} Parón de selecciones</span><span class="der">vuelve ${cuando(M.proxima ? M.proxima.ini : M.paron.fin, { hora: false })}</span>`; // (26) la fecha de la jornada, no la del fin del parón: «J13 en 11 días» decía otra
   else if (M.enJuego) fila = `<span class="vivo">Jornada ${M.enJuego.n} en juego</span><span class="der">hasta ${cuando(M.enJuego.fin)}</span>`;
   else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${dura(M.proxima.ini - ahora)}</span>`;
   else fila = `<span>${esc(D.liga.nombre)}</span>`;
@@ -106,6 +106,11 @@ export function puntosUltimaJornada(S) {
   }
   // si no hay histórico, lo que dé LaLiga, pero solo si no está todo a cero (eso es la jornada que aún no ha empezado)
   if (!ptsJ && D.clasif.filter((e) => num(e.puntosJornada) > 0).length >= 2) ptsJ = Object.fromEntries(D.clasif.map((e) => [e.teamId, num(e.puntosJornada)]));
+  // en la liga de ejemplo, lo tuyo es la suma de tu once, como en Equipo → Jornadas (antes, 75 en Directo y 66 allí)
+  if (D.demo && ptsJ && M.once && ultJ) {
+    const campo = M.once.lineas.flat().map((j) => D.maestro[j.id]).filter((j) => j && j.pos < 5);
+    ptsJ = { ...ptsJ, [yo.teamId]: campo.reduce((t, j) => t + (((j.semanas || []).find((w) => w.n === ultJ.n) || {}).pts || 0), 0) };
+  }
   const pts = ptsJ ? ptsJ[yo.teamId] : null;
   if (pts == null) return null;
   return { n: ultJ ? ultJ.n : null, pts, puesto: Object.values(ptsJ).filter((v) => v > pts).length + 1 };
