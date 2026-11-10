@@ -1814,7 +1814,6 @@
    "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248350/espanyol-merece-debut-eder-sarabia.html": 1794071621000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-espanyol-deportivo-coruna-primera-division-jornada-doce-07-20261107_3470813.html": 1794073014000,
-   "SPORT|136205658": 1794069974000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
    "AS|https://as.com/futbol/primera/hidalgo-estoy-contento-por-el-punto-la-porteria-a-cero-y-por-leo-roman-f202611-n/": 1794074651000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248379/eder-sarabia-le-espera-brazos-abiertos-me-parecido-siempre-futbolista-maravilloso-he-transmitido.html": 1794078040000,
@@ -7265,13 +7264,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1187,
+   "ok": 1188,
    "fallos": 0,
-   "ejecuciones": 805,
+   "ejecuciones": 806,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T16:41:15.891Z"
+   "ultima": "2026-11-10T16:46:15.246Z"
   }
  },
  "ptsDirecto": {},
@@ -7288,15 +7287,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:41:21.220Z"
+   "ultimaBien": "2026-11-10T16:46:18.734Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:41:21.220Z"
+   "ultimaBien": "2026-11-10T16:46:18.734Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:41:21.220Z"
+   "ultimaBien": "2026-11-10T16:46:18.734Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7304,11 +7303,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:41:21.220Z"
+   "ultimaBien": "2026-11-10T16:46:18.734Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:41:21.220Z"
+   "ultimaBien": "2026-11-10T16:46:18.734Z"
   }
  },
  "avisos": [
