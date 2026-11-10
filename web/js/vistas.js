@@ -236,6 +236,15 @@ function urgentesDe(S) {
     return false;
   };
   const urg = (M.acciones || []).filter((a) => a.prio >= 78 && !(a.pid && enPlan.has(a.pid)) && !fuera.has(claveUrgente(a)) && !yaVista(a)).slice(0, 3);
+  // (sesión 8, M10) si el plan dice otra cosa de ese jugador, se dice por qué no está en el plan (antes, «Vende a Rodri»
+  // arriba y el plan de debajo sin Rodri, sin explicar nada)
+  const desc = conIA && Array.isArray(P.descartes) ? P.descartes : [];
+  for (const a of urg) {
+    if (!a.pid || nota[a.pid] || !P) continue;
+    const j = M.J(a.pid), d = j && desc.find((x) => x && norm(x.jugador) === norm(j.nombre));
+    if (d && d.motivo) nota[a.pid] = `El plan lo descartó: ${d.motivo}`;
+    else if (a.tipo === 'vender') nota[a.pid] = conIA ? 'El plan de la IA no lo vende: es un aviso de la app de ahora, decide tú.' : 'No entra en los pasos del plan de hoy: es un aviso aparte, decide tú.';
+  }
   return { urg, nota, fuera };
 }
 /** a uno tuyo que hay que vender o que no puede jugar se le puede buscar sustituto */
@@ -449,7 +458,9 @@ function pasoOp(S, P, o) {
   ].join('');
   // (en la fila corta, «Aceptar oferta» se queda en «Aceptar»: en un móvil de 360 se comía el nombre; dentro va entero)
   const acc = esc(o.etiqueta === 'Aceptar oferta' ? 'Aceptar' : o.etiqueta || ACCION[o.accion] || o.accion);
-  const cara = j ? `<button class="pp-j" data-j="${esc(j.id)}" aria-label="Ficha de ${esc(nombre)}">${ava(j, 'm')}</button>` : `<span class="pp-ic">${icono(o.accion === 'alinear' ? 'campo' : o.accion === 'esperar' ? 'reloj' : 'lista')}</span>`;
+  // (sesión 8, M9) un botón dentro de summary no se puede alcanzar bien: la cara es un span que abre la ficha al tocarla
+  // y, con el teclado, va el botón «Ficha» de dentro
+  const cara = j ? `<span class="pp-j" data-j="${esc(j.id)}" aria-hidden="true">${ava(j, 'm')}</span>` : `<span class="pp-ic">${icono(o.accion === 'alinear' ? 'campo' : o.accion === 'esperar' ? 'reloj' : 'lista')}</span>`;
   return `<details class="paso2 paso3 ${esc(o.accion)} ${est}"><summary>
       <span class="pp-num" aria-hidden="true">${curso ? icono('reloj') : ok ? icono('ok') : o.descartada ? icono('cerrar') : ''}</span>
       ${cara}
@@ -505,7 +516,7 @@ function faseDe(o) {
 function urgenteFila(S, a, nota) {
   const j = a.pid ? S.M.J(a.pid) : null;
   const largo = a.cuando && a.cuando.length > 14;
-  const cara = j ? `<button class="pp-j" data-j="${esc(j.id)}" aria-label="Ficha de ${esc(j.nombre)}">${ava(j, 'm')}</button>` : `<span class="pp-ic">${icono(a.icono || 'alerta')}</span>`;
+  const cara = j ? `<span class="pp-j" data-j="${esc(j.id)}" aria-hidden="true">${ava(j, 'm')}</span>` : `<span class="pp-ic">${icono(a.icono || 'alerta')}</span>`;
   return `<details class="paso2 paso3 urg t-${esc(a.tipo)}"><summary>
       <span class="pp-num" aria-hidden="true">${icono('alerta')}</span>${cara}
       <span class="pp-c"><span class="pp-l1"><span class="accion-t urg">Urgente</span><b class="pp-nom">${esc(a.titulo)}</b></span>
@@ -527,7 +538,7 @@ function fasesHTML(S, P) {
   const cp = cuentaPasos(S, P);
   const total = cp.pend + cp.hechos;
   let h = '';
-  if (total) h += `<div class="plan-prog" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${cp.hechos}"><i style="--p:${Math.round((cp.hechos / total) * 100)}%"></i><span>${cp.hechos ? `${cp.hechos} de ${total} hechos` : `${total} ${total > 1 ? 'pasos' : 'paso'} por hacer`}${cp.luego ? ` · ${cp.luego} para luego` : ''}</span></div>`;
+  if (total) h += `<div class="plan-prog" role="progressbar" aria-label="Pasos del plan hechos" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${cp.hechos}"><i style="--p:${Math.round((cp.hechos / total) * 100)}%"></i><span>${cp.hechos ? `${cp.hechos} de ${total} hechos` : `${total} ${total > 1 ? 'pasos' : 'paso'} por hacer`}${cp.luego ? ` · ${cp.luego} para luego` : ''}</span></div>`;
   let k = 0;
   // (Carlos, 9 nov 12:29) cada fase se pliega tocando su título; se recuerda por plan. Una fase con todo hecho sale plegada
   const plegadas = fasesPlegadas(P);
@@ -780,7 +791,12 @@ function hoyAncho(S) {
 function bandasHoy(S) {
   const { D } = S;
   let h = '';
-  if (D.demo) h += `<div class="banda">${icono('info')}<span>Liga de ejemplo con datos inventados.</span><button data-accion="salirDemo">Usar la mía</button></div>`;
+  if (D.demo) {
+    // (sesión 8, A9) en la web del móvil, con tu liga hace falta la app (Android) o pasar una vez por un ordenador (iPhone)
+    const ua = enApp ? '' : navigator.userAgent || '', mov = /Android/i.test(ua) ? 'android' : /iPhone|iPad|iPod/.test(ua) ? 'iphone' : null;
+    const conMia = mov === 'android' ? ' Para la tuya, en el móvil, hace falta la app de Android.' : mov === 'iphone' ? ' Para la tuya, en el iPhone, entra antes una vez desde un ordenador.' : '';
+    h += `<div class="banda">${icono('info')}<span>Liga de ejemplo con datos inventados.${conMia}</span><button data-accion="salirDemo">Usar la mía</button></div>`;
+  }
   // (lo que falla pero se ha tapado con lo de la última vez, como las ofertas, no se avisa: queda en el diagnóstico)
   const av = (D.avisos || []).filter((a) => !a.leve);
   if (av.length) {
@@ -856,7 +872,7 @@ function eqCabHTML(S) {
   const dv = con7.length ? con7.reduce((s, x) => s + num(x.tend.d7), 0) : null;
   const jug = M.mias.filter((x) => x.j.pos !== 5).length, ent = M.mias.length - jug;
   return `<div class="eq2-cab">
-    <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><div class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</div></div></div>
+    <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><h1 class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</h1></div></div>
     <div class="eq2-num">
       <button data-accion="ver" data-seg2="equipo:dinero" data-sel="#eq-valor" aria-label="Valor del equipo: ver Beneficio"><b>${eur(D.valorEquipo)}</b><span>valor ›</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</button>
       <button data-ir="rivales" data-seg="rivales:clasif" aria-label="Tu puesto: ver la clasificación"><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts ›` : 'en la liga ›'}</span></button>
@@ -1039,7 +1055,7 @@ const teLlega = (x) => x.meLlega && (x.abierta || x.abreEn < 2 * DIA);
 export function rivales(S) {
   const { M } = S;
   const seg = S.seg.rivales || 'clasif';
-  let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><div class="titulo">Rivales</div>`;
+  let h = `<div class="eti">${esc(S.D.liga.nombre)}</div><h1 class="titulo">Rivales</h1>`;
   // el número de «Cláusulas» es lo que sale al abrirla (el filtro «Te llegan»: abiertas o que se abren en 48 h)
   const llegan = M.clausulas.filter(teLlega).length;
   const movs7 = M.actividad.filter((a) => a.clase !== 'premio' && a.t && Date.now() - a.t < DIA).length;
@@ -1128,7 +1144,7 @@ export function mercado(S) {
   let seg = S.seg.mercado || 'venta';
   // las antiguas Suben / Bajan / Libres son ahora filtros de Tendencias
   if (['suben', 'bajan', 'libres'].includes(seg)) { S.filtro.tend = seg; seg = S.seg.mercado = 'tendencias'; }
-  let h = `<div class="eti">${M.cierreMercado ? `Cambia ${cuando(M.cierreMercado)} · en ${dura(M.cierreMercado - Date.now())}` : 'Mercado de hoy'}</div><div class="titulo">Mercado</div><p class="entradilla">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}.</p>`;
+  let h = `<div class="eti">${M.cierreMercado ? `Cambia ${cuando(M.cierreMercado)} · en ${dura(M.cierreMercado - Date.now())}` : 'Mercado de hoy'}</div><h1 class="titulo">Mercado</h1><p class="entradilla">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}.</p>`;
   h += `<div class="busca-j">${icono('buscar')}<input id="buscaJ" type="search" enterkeyhint="search" placeholder="Busca cualquier jugador o equipo" autocomplete="off" aria-label="Buscar jugador" value="${esc(S.busca || '')}"></div><div id="buscaRes">${buscaHTML(S)}</div>`;
   h += tabs('mercado', seg, [['venta', 'Fichar', M.mercado.filter((m) => !M.enVenta.has(m.pid)).length], ['especular', 'Especular', (M.especular || []).length, (M.especular || []).length ? 'verde' : ''], ['tendencias', 'Tendencias'], ['favoritos', `${icono('estrella')}Favoritos`, favoritos().filter((pid) => M.J(pid)).length]]);
   const tagV = { chollo: '<span class="pill chollo">Chollo</span>', sube: '<span class="pill bien">Subiendo</span>', caro: '<span class="pill duda">Caro</span>', evitar: '<span class="pill mal">Evitar</span>', baja: '<span class="pill mal">Bajando</span>', frena: '<span class="pill duda">Frenando</span>', normal: '' };
@@ -1319,7 +1335,7 @@ export function ia(S) {
   if (!hayClave()) return guiaClave();
   const msgs = conversacion();
   const viejos = chatsAnteriores();
-  let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><div class="titulo">Tu director deportivo</div></div>
+  let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1></div>
     <div class="chat-acc">${viejos.length ? `<button class="btn chico sec" data-accion="chatsViejos">${icono('lista')}Anteriores (${viejos.length})</button>` : ''}${msgs.length ? `<button class="btn chico" data-accion="nuevoChat">${icono('mas')}Nuevo chat</button>` : ''}</div></div>`;
   const ns = notasVigentes();
   if (ns.length) h += `<details class="notas"><summary>${icono('nota')}Recuerda ${ns.length} cosa${ns.length > 1 ? 's' : ''} que le has contado</summary>${ns.map((n) => `<div class="nota"><span>${esc(n.texto)}<small>${cuando(n.t)}${n.caduca ? ` · hasta ${cuando(n.caduca, { hora: false })}` : ''}</small></span><button data-accion="borrarNota" data-id="${esc(n.id)}" aria-label="Olvidar">${icono('cerrar')}</button></div>`).join('')}<p class="t2 peq" style="margin:6px 2px 2px">Lo recuerda aunque empieces un chat nuevo. Toca la × para que lo olvide.</p></details>`;

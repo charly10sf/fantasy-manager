@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.1g';
+export const VERSION = '0.7.2';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,18 @@ export const VERSION = '0.7.1g';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.2', f: '2026-11-10', h: '20:48', t: 'Más fácil de leer y de usar',
+    cosas: [
+      { tipo: 'mejora', d: 'cara', t: 'Una × en cada ficha', x: 'Las fichas de un jugador, un rival, un club o un partido llevan arriba a la derecha una × para cerrarlas, también en el móvil, y se queda a la vista al bajar. Antes solo se cerraban deslizando hacia abajo o con Atrás.' },
+      { tipo: 'mejora', d: 'lupa', t: 'Letra y botones más fáciles', x: 'Los botones rojos tienen más contraste, las letras pequeñas de los cromos y las etiquetas son algo más grandes y lo que se toca mide lo que pide un dedo.', menor: true },
+      { tipo: 'mejora', d: 'conexion', t: 'Los fallos de conexión, en castellano', x: 'Cuando se corta la conexión con la IA ya no sale «Failed to fetch»: dice que no hay conexión. Y si el código para entrar en la web está mal, el aviso sale debajo de la casilla sin borrar lo que has escrito.', menor: true },
+      { para: 'web', tipo: 'mejora', d: 'movil', t: 'Lo que hace falta para usar tu liga', x: 'En la web del móvil, la liga de ejemplo y el final del tutorial dicen lo que hace falta para ver la tuya: la app en Android y, en el iPhone, entrar una vez desde un ordenador. Los candados de las funciones top dicen dónde se abren.', menor: true },
+      { tipo: 'mejora', d: 'plan', t: 'Lo urgente explica por qué no está en el plan', x: 'Si arriba sale un aviso urgente de vender a alguien que el plan no vende, dice por qué (el motivo del plan, si lo descartó) para que no parezca que se contradicen.', menor: true },
+      { para: 'dueño', tipo: 'mejora', d: 'ajustes', t: 'Accesibilidad', x: 'Las fichas son diálogos (rol, título, foco dentro y de vuelta al cerrar, el fondo inerte), cada pestaña tiene su h1 y su título en el navegador, la tostada se anuncia y las gráficas llevan descripción. axe-core sin fallos en Hoy, Equipo, Rivales, Mercado y la ficha.', menor: true },
+      { para: 'dueño', tipo: 'mejora', d: 'oferta', t: 'Anuncios de la web, solo donde toca', x: 'El script de AdSense solo se pone en el ordenador con hueco para el lateral, las cajas se quitan al pasar a la demo o salir, y los de tus ligas no ven anuncios de verdad.', menor: true },
+    ],
+  },
   {
     v: '0.7.1g', f: '2026-11-10', h: '20:26', t: 'Retoques de pantalla',
     cosas: [

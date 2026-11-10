@@ -17,7 +17,7 @@ import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
 import { linea } from './graficos.js';
 import { md } from './texto.js';
-import { ponerEquipos, BLOQUEO, fijarMotor } from './comunes.js';
+import { ponerEquipos, BLOQUEO, fijarMotor, dondeTop } from './comunes.js';
 import { encuadrar } from './caras.js';
 import { qrSVG } from './qr.js';
 import { historialValor, alineaciones, faltaOnce, jugadasSofa, noticiasClub, ANTES_ONCE } from './externas.js';
@@ -61,7 +61,7 @@ function copiarY(t, bien = 'Copiado') {
 }
 function tostada(t, ms = 3200) {
   let el = $('.tostada');
-  if (!el) { el = document.createElement('div'); el.className = 'tostada'; document.body.appendChild(el); }
+  if (!el) { el = document.createElement('div'); el.className = 'tostada'; el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
   el.textContent = t; el.classList.add('on');
   clearTimeout(relojT); relojT = setTimeout(() => el.classList.remove('on'), ms);
 }
@@ -137,8 +137,17 @@ const botonDemo = (clase) => `<button class="btn ${clase} ancho" data-accion="en
 const codigoWebHTML = (tit = true) => `<div class="entrar-codigo">
       ${tit ? `<b>${icono('usuario')}${!enApp && !movilDe() ? 'O con el código de la app' : 'Entra con el código de la app'}</b>` : ''}
       <span>${!enApp && !movilDe() ? 'Si no puedes escanear: en la app, <b>Ajustes → Abrir en el ordenador → Código</b>; en otra web donde ya has entrado, <b>Ajustes → Abrir en otro dispositivo</b>. Dura 10 minutos.' : 'En la app del móvil: <b>Ajustes → Abrir en el ordenador</b>. O, si ya has entrado en la web de un ordenador: <b>Ajustes → Abrir en otro dispositivo</b>. Te da un código de 8 letras y números que dura 10 minutos.'}</span>
-      <div class="codigo-in"><input id="codigoWeb" maxlength="9" placeholder="ABCD2345" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="usarCodigo"><button class="btn" data-accion="usarCodigo">Entrar</button></div>
+      <div class="codigo-in"><input id="codigoWeb" maxlength="9" placeholder="ABCD2345" autocomplete="off" autocapitalize="characters" spellcheck="false" data-enter="usarCodigo" aria-label="Código de la app" aria-describedby="codigoErr"><button class="btn" data-accion="usarCodigo">Entrar</button></div>
+      <p class="codigo-err" id="codigoErr" role="alert" hidden></p>
     </div>`;
+/** (sesión 8, M9) el error del código, debajo del campo y sin borrar lo escrito (antes se repintaba la entrada entera) */
+function errorCodigo(t, boton) {
+  const p = $('#codigoErr'), inp = $('#codigoWeb');
+  if (boton) { boton.disabled = false; boton.textContent = 'Entrar'; }
+  if (!p) { tostada(t); return; }
+  p.textContent = t; p.hidden = false;
+  if (inp) { inp.setAttribute('aria-invalid', 'true'); inp.focus(); }
+}
 /** en el ordenador: el QR que se escanea con la app del móvil (0.6.12). El dibujo y la espera, en iniciarQR */
 const qrEntrarHTML = (tit = true) => `<div class="entrar-qr">
       <div class="eq-qr" id="eqQR"></div>
@@ -656,6 +665,10 @@ function pintar({ arriba = false } = {}) {
     apuntarError(e.message, `pintar ${S.vista}${e.stack ? ` · ${String(e.stack).split('\n')[1] || ''}` : ''}`);
     v.innerHTML = `<div class="error-c"><b>Algo ha fallado al pintar esta pantalla.</b> Las demás pestañas siguen funcionando. Manda el fallo para que se arregle.<div class="fallo-det">${esc(e.message)}</div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="mandarFallo">Mandar el fallo</button><button class="btn chico sec" data-accion="recargar">Volver a cargar</button></div></div>`;
   }
+  // (sesión 8, M9) cada pestaña con su h1 (si no lo trae a la vista, uno solo para lectores) y su título en el navegador
+  const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
+  if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
+  document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
   $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
@@ -1797,16 +1810,29 @@ async function generarPlan() {
 }
 
 /* ---------------- ventanas de abajo ---------------- */
-/** las fichas sin botón de cerrar (jugador, rival) lo llevan en el ordenador, donde no hay asa ni gesto de atrás */
+/** las fichas sin botón de cerrar (jugador, rival, club, partido, resumen) llevan una × que se queda arriba al bajar,
+    también en el móvil (sesión 8, A12: solo se cerraban deslizando o con Atrás, que no hay en el PWA del iPhone) */
 const conCerrar = (html) => (/data-accion="cerrarHoja"/.test(html) ? html : `<button class="b-ico cerrar-flota" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button>${html}`);
+/** la ficha es un diálogo: se anuncia con su título (el primer h2) y el foco entra en ella */
+function rotularHoja(hoja) {
+  const t = hoja.querySelector('h2');
+  if (t) { t.id ||= 'hojaTit'; hoja.setAttribute('aria-labelledby', t.id); hoja.removeAttribute('aria-label'); } else { hoja.removeAttribute('aria-labelledby'); hoja.setAttribute('aria-label', 'Ficha'); }
+}
 function abrirHoja(html) {
-  cerrarHoja(true);
+  // el foco vuelve al cerrar a lo que abrió la primera ficha (si se encadenan, a ese mismo)
+  const antes = S.hoja ? S.focoAntes : document.activeElement;
+  cerrarHoja(true, true);
+  S.focoAntes = antes;
   const velo = document.createElement('div'); velo.className = 'velo'; velo.dataset.accion = 'cerrarHoja';
   const hoja = document.createElement('div'); hoja.className = 'hoja';
+  hoja.setAttribute('role', 'dialog'); hoja.setAttribute('aria-modal', 'true'); hoja.tabIndex = -1;
   hoja.innerHTML = `<div class="asa"></div>${conCerrar(html)}`;
+  rotularHoja(hoja);
   document.body.append(velo, hoja);
   document.body.style.overflow = 'hidden';
-  requestAnimationFrame(() => { velo.classList.add('on'); hoja.classList.add('on'); });
+  // lo de detrás no se lee ni se alcanza con el tabulador mientras la ficha está abierta
+  const app = $('#app'); if (app) app.inert = true;
+  requestAnimationFrame(() => { velo.classList.add('on'); hoja.classList.add('on'); if (!hoja.contains(document.activeElement)) hoja.focus({ preventScroll: true }); });
   S.hoja = hoja;
   encuadrar(hoja);
   let y0 = null;
@@ -1815,13 +1841,18 @@ function abrirHoja(html) {
   hoja.addEventListener('touchend', (e) => { if (y0 == null) return; const d = e.changedTouches[0].clientY - y0; hoja.style.transform = ''; if (d > 110) cerrarHoja(); y0 = null; });
   return hoja;
 }
-function cerrarHoja(ya = false) {
+function cerrarHoja(ya = false, sigue = false) {
   const h = $('.hoja'), v = $('.velo');
   if (!h) return false;
   // si se estaba cargando un anuncio para esto, ya no se enseña
   if (S.tipoHoja && S.tipoHoja[0] === 'anuncio' && S.anuncio && S.anuncio.cargando) { nativo.cancelarAnuncio(); S.anuncio = null; }
   S.hoja = null; S.tipoHoja = null; S.pila = [];
   document.body.style.overflow = '';
+  if (!sigue) {
+    const app = $('#app'); if (app) app.inert = false;
+    const f = S.focoAntes; S.focoAntes = null;
+    if (f && f.isConnected && f.focus) f.focus({ preventScroll: true });
+  }
   if (ya) { h.remove(); v && v.remove(); return true; }
   quitarAtras();
   h.classList.remove('on'); v && v.classList.remove('on');
@@ -1959,8 +1990,11 @@ async function pintarTarjeta() {
 function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
   const sc = S.hoja.scrollTop;
+  const dentro = S.hoja.contains(document.activeElement);
   S.hoja.innerHTML = `<div class="asa"></div>${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
+  rotularHoja(S.hoja);
   S.hoja.scrollTop = sc;
+  if (dentro) S.hoja.focus({ preventScroll: true });
   encuadrar(S.hoja);
 }
 
@@ -2512,13 +2546,14 @@ document.addEventListener('click', async (ev) => {
     case 'entrarDemo': { const entrar = () => { cerrarHoja(true); LS.set('demo', true); S.D = null; S.planEstado = {}; cargar(); }; if (!trasCargar(entrar)) entrar(); break; }
     case 'usarCodigo': {
       const cod = (($('#codigoWeb') || {}).value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
-      if (cod.length !== 8) { tostada('El código tiene 8 letras y números'); break; }
+      if (cod.length !== 8) { errorCodigo(cod.length ? `El código tiene 8 letras y números (llevas ${cod.length})` : 'Escribe el código de 8 letras y números', el); break; }
       el.disabled = true; el.textContent = 'Entrando…';
+      const pe = $('#codigoErr'); if (pe) pe.hidden = true;
       try {
         const { r, j } = await traerConCodigo(cod);
         if (!r.ok || !j || !j.sesion) throw new Error((j && j.e) || `El servidor de la web responde ${r.status}`);
         await entrarConVinculo(j);
-      } catch (e) { pantallaEntrar(e.name === 'TypeError' ? `Sin conexión con el servidor de la web (${e.message})` : e.message || String(e)); }
+      } catch (e) { errorCodigo(e.name === 'TypeError' ? 'No hay conexión con el servidor de la web. Mira que tengas internet y vuelve a probar.' : e.message || String(e), el); }
       break;
     }
     case 'pegarVuelta': {
@@ -2571,7 +2606,7 @@ document.addEventListener('click', async (ev) => {
       const [t, x] = BLOQUEO[d.como] || BLOQUEO[d.clave] || ['Función top', ''];
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
-        <p>Es una de las funciones top de Fantasy Manager. De momento está bloqueada: <b>muy pronto estará disponible con la salida a Google Play</b>, gratis viendo un anuncio corto.</p>
+        <p>Es una de las funciones top de Fantasy Manager.${esc(dondeTop())}</p>
         <button class="btn ancho" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
       break;
     }
@@ -2960,7 +2995,13 @@ function salirDemo() {
 }
 /** lo que conviene hacer para empezar (al final del tutorial) */
 function itemsEmpezar() {
-  if (enDemo()) return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Entra con tu cuenta de LaLiga', x: 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga: la app nunca ve tu contraseña.', b: 'Entrar' }];
+  if (enDemo()) {
+    // (sesión 8, A9) lo que pasa de verdad en cada sitio: en el móvil, sin la app de Android no se entra con tu liga
+    const m = enApp ? null : movilDe();
+    if (m === 'android') return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Con tu liga, en la app', x: 'En el móvil, tu liga se ve con la app de Android, gratis. Entras con tu cuenta en la página oficial de LaLiga y la app nunca ve tu contraseña.', b: 'Ver cómo' }];
+    if (m === 'iphone') return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Con tu liga, desde un ordenador', x: 'En el iPhone no hay app: entras una vez con tu cuenta de LaLiga en un ordenador y desde ahí sacas un código para el iPhone. Luego ya no hace falta.', b: 'Ver cómo' }];
+    return [{ k: 'cuenta', ok: false, ic: 'usuario', t: 'Entra con tu cuenta de LaLiga', x: enApp ? 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga: la app nunca ve tu contraseña.' : 'Lo mismo, con tu liga de verdad. Entras en la página oficial de LaLiga (sin la app de Android son unos pasos, solo la primera vez) y la web nunca ve tu contraseña.', b: 'Entrar' }];
+  }
   const l = [{ k: 'clave', ok: hayClave(), ic: 'ia', t: 'La IA, gratis', x: 'Una clave gratis de Google en unos 3 minutos: el plan lee las noticias y puedes preguntarle lo que quieras.', b: 'Activar' }];
   if (enApp) l.push({ k: 'avisos', ok: nativo.avisosPermitidos() && cfgAvisos().on, ic: 'campana', t: 'Activa los avisos', x: 'Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando está tu plan.', b: 'Activar' });
   return l;

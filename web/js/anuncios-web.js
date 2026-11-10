@@ -58,7 +58,12 @@ const cabeLateral = () => window.innerWidth >= ANCHO_LATERAL && window.innerHeig
 function colocar() {
   // solo a los lados (Carlos, 8 nov): en la web nunca abajo; en el móvil o con la ventana estrecha, ninguno
   const tipo = quiere && escritorio && cabeLateral() ? 'lateral' : null;
-  if (tipo) caja(tipo);
+  if (tipo) { ponerScript(); caja(tipo); }
+  // (sesión 8, M8) sin anuncios que poner (has pasado a la demo, has salido, la ventana ya no cabe), fuera las cajas
+  else if (!quiere) {
+    for (const t of Object.keys(cajas)) { cajas[t].remove(); document.body.classList.remove(`con-aw-${t}`); delete cajas[t]; }
+    return;
+  }
   for (const t of Object.keys(cajas)) {
     const si = t === tipo && lleno(t);
     cajas[t].classList.toggle('on', si);
@@ -73,7 +78,9 @@ export function anunciosWeb(si, enEscritorio, script = false, dePrueba = false) 
   quiere = !!si;
   escritorio = !!enEscritorio;
   prueba = !!dePrueba;
-  if (quiere || script) ponerScript();
+  // (sesión 8, M8) el script solo cuando hay sitio para el lateral del ordenador (lo pone colocar): en el móvil no hay
+  // bloque y solo sacaba el mensaje de consentimiento
+  if (script) ponerScript();
   colocar();
 }
 /** ¿hay anuncios de la web en marcha? (para enseñar «Privacidad de los anuncios» en Ajustes) */

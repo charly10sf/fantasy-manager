@@ -29,7 +29,7 @@ export function linea(puntos, { alto = 150, color = 'var(--rojo)', etiquetas = t
     const anc = x < 40 ? 'start' : x > W - 40 ? 'end' : 'middle';
     return `<text x="${x.toFixed(1)}" y="${(arriba ? y - 6 : y + 14).toFixed(1)}" text-anchor="${anc}" class="g-et">${esc(formato(vs[i]))}</text>`;
   };
-  return `<svg class="graf" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img">
+  return `<svg class="graf" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(`Gráfica: de ${formato(vs[0])} a ${formato(vs[vs.length - 1])}; máximo ${formato(v1)}, mínimo ${formato(v0)}`)}">
     <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".32"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
     <path d="${area}" fill="url(#${id})"/>
     <path d="${d}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
@@ -55,7 +55,7 @@ export const barra = (n) => `<span class="barra" style="--n:${Math.max(0, Math.m
 export function barras(datos, { alto = 120, formato = (v) => String(v) } = {}) {
   if (!datos || !datos.length) return '';
   const W = 340, H = alto, max = Math.max(...datos.map((d) => d.v), 1), n = datos.length, ancho = (W - 8) / n;
-  return `<svg class="graf" viewBox="0 0 ${W} ${H}" role="img">${datos.map((d, i) => {
+  return `<svg class="graf" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(datos.map((d) => `${d.et}: ${formato(d.v)}`).join(', '))}">${datos.map((d, i) => {
     const h = Math.max(3, (d.v / max) * (H - 34)), x = 4 + i * ancho + ancho * 0.18, w = ancho * 0.64;
     return `<rect x="${x.toFixed(1)}" y="${(H - 18 - h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="4" class="${d.yo ? 'b-yo' : 'b'}"/>
       <text x="${(x + w / 2).toFixed(1)}" y="${(H - 22 - h).toFixed(1)}" text-anchor="middle" class="g-et">${esc(formato(d.v))}</text>
@@ -76,7 +76,7 @@ export function campo(formacion, lineas) {
       jug += `<g class="c-jug"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="15"/><text x="${x.toFixed(1)}" y="${(y + 5).toFixed(1)}" text-anchor="middle" class="c-ini">${esc(nom.split(' ').map((p) => p[0]).join('').slice(0, 2).toUpperCase())}</text><text x="${x.toFixed(1)}" y="${(y + 31).toFixed(1)}" text-anchor="middle" class="c-nom">${esc(nom.length > 13 ? nom.slice(0, 12) + '.' : nom)}</text></g>`;
     }
   });
-  return `<svg class="campo" viewBox="0 0 ${W} ${H}" role="img">
+  return `<svg class="campo" viewBox="0 0 ${W} ${H}" role="img" aria-label="Alineación en el campo">
     <rect x="2" y="2" width="${W - 4}" height="${H - 4}" rx="18" class="c-cesped"/>
     <path d="M2 ${H / 2}H${W - 2}" class="c-linea"/><circle cx="${W / 2}" cy="${H / 2}" r="42" class="c-linea"/>
     <path d="M${W / 2 - 70} 2v52h140V2M${W / 2 - 70} ${H - 2}v-52h140v52" class="c-linea"/>

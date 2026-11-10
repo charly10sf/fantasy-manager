@@ -46,7 +46,7 @@ export function explicarError(e) {
       botones: ['recargar', 'entrarDemo'],
     };
   }
-  if (sinRed() || estado === 0 || /sin conexi[oó]n|failed to fetch|network|timeout|timed out/i.test(m)) {
+  if (sinRed() || estado === 0 || /sin conexi[oó]n|no hay conexi[oó]n|failed to fetch|network|timeout|timed out/i.test(m)) {
     return {
       tipo: 'red', titulo: 'Sin internet',
       texto: 'No llego a los servidores de LaLiga. Mira que tengas datos o wifi; en cuanto vuelva la conexión, lo intento yo solo.',

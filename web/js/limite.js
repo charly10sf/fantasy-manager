@@ -185,6 +185,8 @@ export function anunciosWebModo() {
   const g = LS.get('limites', null), cfg = g && g.cfg;
   if (!cfg || cfg.anunciosWeb !== true || !yoB) return null;
   const dueno = [...(cfg.todoAbierto || []), ...(cfg.sinLimite || [])].some(esDe(yoB));
+  // (sesión 8, M8) los de sus ligas («ligas» de limites.json), sin anuncios de verdad: nadie de la liga toca anuncios
+  if (!dueno && Array.isArray(cfg.ligas) && enSusLigas(cfg, yoB)) return null;
   if (!dueno) return 'real';
   return cfg.anunciosWebDueno === true ? 'prueba' : null;
 }
