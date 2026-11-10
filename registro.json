@@ -907,6 +907,13 @@
    "jornada": 13,
    "id": "2119931962106249421",
    "t": "2026-11-09T23:15:41.344Z"
+  },
+  {
+   "clave": "balance|12",
+   "tipo": "balance",
+   "jornada": 12,
+   "id": "2120044150280110305",
+   "t": "2026-11-10T06:41:29.095Z"
   }
  ],
  "estados": {
@@ -3383,16 +3390,16 @@
   "dia": "2026-11-10",
   "llamadas": {
    "clasificar": 5,
-   "redactar": 4,
-   "revisar": 3,
+   "redactar": 6,
+   "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 63973,
-  "salida": 5791,
+  "entrada": 91247,
+  "salida": 6256,
   "cacheLee": 5806,
-  "cacheEscribe": 2903,
-  "dolares": 0.128991,
+  "cacheEscribe": 5806,
+  "dolares": 0.195447,
   "reservado": 0
  },
  "recientes": {
@@ -3582,6 +3589,12 @@
    {
     "t": "2026-11-09T06:06:48.775Z",
     "texto": "❌ Mantilla, defensa del Racing ⚓, lleva lesionado desde el 1 de noviembre por una rotura de ligamento cruzado anterior y no se le espera hasta junio.\n\nEra titular habitual, con 60 minutos o más en cuatro de sus cinco últimos partidos, y se pierde el Racing-Real Sociedad en El Sardinero. Si lo tienes, no hay nada que esperar: es venta obligatoria."
+   }
+  ],
+  "balance": [
+   {
+    "t": "2026-11-10T06:41:29.097Z",
+    "texto": "📊 Doce jornadas y la liga en pausa: toca repasar quién ha mandado. Lamine Yamal lleva 157 puntos y tuvo su mejor jornada en la 11, con 19. Mbappé le sigue a diez, y Arda Güler y Bellingham se reparten el medio del Madrid.\n\nEl chollo es Nacho Perez: el defensa del Levante cuesta 1,2 M, lleva 41 puntos y suma 18 en las últimas tres jornadas. Pablo Ramón, del Racing, también rinde por 1,6 M.\n\nLos once que más puntos llevan, en la imagen."
    }
   ]
  },
@@ -7341,13 +7354,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1064,
+   "ok": 1065,
    "fallos": 0,
-   "ejecuciones": 682,
+   "ejecuciones": 683,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T06:36:13.645Z"
+   "ultima": "2026-11-10T06:41:12.191Z"
   }
  },
  "ptsDirecto": {},
@@ -7364,15 +7377,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:36:18.115Z"
+   "ultimaBien": "2026-11-10T06:41:29.122Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:36:18.115Z"
+   "ultimaBien": "2026-11-10T06:41:29.122Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:36:18.115Z"
+   "ultimaBien": "2026-11-10T06:41:29.122Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7380,11 +7393,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:36:18.115Z"
+   "ultimaBien": "2026-11-10T06:41:29.122Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:36:18.115Z"
+   "ultimaBien": "2026-11-10T06:41:29.122Z"
   }
  },
  "avisos": [
