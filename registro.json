@@ -1803,7 +1803,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html": 1794043154000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
@@ -1996,23 +1995,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261110/1004249327/dos-requisitos-obligatorios-oviedo-fichar-raul.html": 1794299023000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248179/galarreta-djalo-regresan-convocatoria-athletic.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794043154000,
-    "id": "1070",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "De Galarreta regresa a la convocatoria del Athletic para Osasuna",
-    "motivo": "lesión muscular de carácter moderado",
-    "plazo": "",
-    "nums": [
-     23,
-     18,
-     30,
-     12
-    ]
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html",
     "medio": "COPE",
@@ -7347,13 +7329,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1097,
+   "ok": 1098,
    "fallos": 0,
-   "ejecuciones": 715,
+   "ejecuciones": 716,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T09:16:13.380Z"
+   "ultima": "2026-11-10T09:21:12.533Z"
   }
  },
  "ptsDirecto": {},
@@ -7370,15 +7352,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:16:16.684Z"
+   "ultimaBien": "2026-11-10T09:21:16.377Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:16:16.684Z"
+   "ultimaBien": "2026-11-10T09:21:16.377Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:16:16.684Z"
+   "ultimaBien": "2026-11-10T09:21:16.377Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7386,11 +7368,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:16:16.684Z"
+   "ultimaBien": "2026-11-10T09:21:16.377Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:16:16.684Z"
+   "ultimaBien": "2026-11-10T09:21:16.377Z"
   }
  },
  "avisos": [
