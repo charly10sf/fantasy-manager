@@ -1999,7 +1999,8 @@
    "SPORT|136281831": 1794308810000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000,
    "SPORT|136284333": 1794309130000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000,
+   "SPORT|136287679": 1794311497000
   },
   "hechos": [
    {
@@ -2353,11 +2354,23 @@
     "nums": [
      26
     ]
+   },
+   {
+    "guid": "SPORT|136287679",
+    "medio": "SPORT",
+    "t": 1794311497000,
+    "id": "3108",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Aubameyang se lesiona ante el Betis y queda de baja",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -3298,17 +3311,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 175933,
-  "salida": 13201,
+  "entrada": 177983,
+  "salida": 13641,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.267842,
+  "dolares": 0.268267,
   "reservado": 0
  },
  "recientes": {
@@ -7267,13 +7280,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1141,
+   "ok": 1142,
    "fallos": 0,
-   "ejecuciones": 759,
+   "ejecuciones": 760,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:56:18.263Z"
+   "ultima": "2026-11-10T13:01:13.839Z"
   }
  },
  "ptsDirecto": {},
@@ -7290,15 +7303,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:56:22.613Z"
+   "ultimaBien": "2026-11-10T13:01:19.311Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:56:22.613Z"
+   "ultimaBien": "2026-11-10T13:01:19.311Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:56:22.613Z"
+   "ultimaBien": "2026-11-10T13:01:19.311Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7306,11 +7319,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:56:22.613Z"
+   "ultimaBien": "2026-11-10T13:01:19.311Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:56:22.613Z"
+   "ultimaBien": "2026-11-10T13:01:19.311Z"
   }
  },
  "avisos": [
