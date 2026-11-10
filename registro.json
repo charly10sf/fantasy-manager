@@ -1993,7 +1993,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249318/sorpresa-caicedo-real-madrid-calla-sobre-lesion-visto-entrenando.html": 1794297190000,
    "SPORT|136272513": 1794295666000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261110/1004249327/dos-requisitos-obligatorios-oviedo-fichar-raul.html": 1794299023000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/10/lalcudia-de-crespins-remonta-ante-el-atletico-chella-1-2-y-se-lleva-un-duelo-directo-por-el-liderato-radio-xativa/": 1794302528000
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/10/lalcudia-de-crespins-remonta-ante-el-atletico-chella-1-2-y-se-lleva-un-duelo-directo-por-el-liderato-radio-xativa/": 1794302528000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/09-nov-2026-partidazo-cope-20261110_3471816.html": 1794271800000
   },
   "hechos": [
    {
@@ -2431,7 +2432,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3367,17 +3368,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 111297,
-  "salida": 8160,
+  "entrada": 113366,
+  "salida": 9226,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.198404,
+  "dolares": 0.199144,
   "reservado": 0
  },
  "recientes": {
@@ -7332,13 +7333,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1101,
+   "ok": 1102,
    "fallos": 0,
-   "ejecuciones": 719,
+   "ejecuciones": 720,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T09:36:14.757Z"
+   "ultima": "2026-11-10T09:41:13.666Z"
   }
  },
  "ptsDirecto": {},
@@ -7355,15 +7356,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:36:18.229Z"
+   "ultimaBien": "2026-11-10T09:41:24.399Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:36:18.229Z"
+   "ultimaBien": "2026-11-10T09:41:24.399Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:36:18.229Z"
+   "ultimaBien": "2026-11-10T09:41:24.399Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7371,11 +7372,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:36:18.229Z"
+   "ultimaBien": "2026-11-10T09:41:24.399Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:36:18.229Z"
+   "ultimaBien": "2026-11-10T09:41:24.399Z"
   }
  },
  "avisos": [
