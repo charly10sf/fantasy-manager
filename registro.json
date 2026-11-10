@@ -3283,7 +3283,8 @@
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-repercutira-la-huelga-general-en-el-deporte-en-bizkaia-radio-bilbao/": 1794328222000,
    "SPORT|136301935": 1794328294000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-tavernes-valencia-hora-partido-copa-rey-20261110151517-nt.html": 1794332853000,
-   "ABC|https://www.abc.es/deportes/futbol/ver-television-online-mijas-lagunas-real-jaen-copa-rey-20261110151232-nt.html": 1794332785000
+   "ABC|https://www.abc.es/deportes/futbol/ver-television-online-mijas-lagunas-real-jaen-copa-rey-20261110151232-nt.html": 1794332785000,
+   "SPORT|136266190": 1794331066000
   },
   "hechos": [
    {
@@ -3305,7 +3306,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 20,
+   "n": 21,
    "fallos": 0
   },
   "espera": {}
@@ -3313,17 +3314,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 64,
+   "clasificar": 65,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 236615,
-  "salida": 23047,
+  "entrada": 238409,
+  "salida": 23145,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.278836,
+  "dolares": 0.279064,
   "reservado": 0
  },
  "recientes": {
@@ -7282,13 +7283,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1206,
+   "ok": 1207,
    "fallos": 0,
-   "ejecuciones": 824,
+   "ejecuciones": 825,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T18:16:21.127Z"
+   "ultima": "2026-11-10T18:21:16.950Z"
   }
  },
  "ptsDirecto": {},
@@ -7305,15 +7306,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:16:28.876Z"
+   "ultimaBien": "2026-11-10T18:21:20.870Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:16:28.876Z"
+   "ultimaBien": "2026-11-10T18:21:20.870Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:16:28.876Z"
+   "ultimaBien": "2026-11-10T18:21:20.870Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7321,11 +7322,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:16:28.876Z"
+   "ultimaBien": "2026-11-10T18:21:20.870Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:16:28.876Z"
+   "ultimaBien": "2026-11-10T18:21:20.870Z"
   }
  },
  "avisos": [
