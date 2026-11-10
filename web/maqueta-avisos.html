@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Maqueta (37): avisos de la ficha</title>
+  <link rel="stylesheet" href="css/app.css">
+  <!-- TEMPORAL: no es parte de la app. Pinta la ficha de verdad (hojas.js) con la liga de ejemplo, en tres variantes de diseño. -->
+  <style>
+    html, body { height: auto !important; overflow: auto !important; position: static !important; }
+    #app { position: fixed; left: 0; top: 0; width: 390px; height: 800px; overflow: hidden; transform: translateX(-12000px); }
+    .maq-barra { position: sticky; top: 0; z-index: 5; background: var(--fondo); padding: 10px 12px 8px; border-bottom: 1px solid var(--linea); }
+    .maq-barra h1 { margin: 0 0 6px; font: 700 20px var(--cond); text-transform: uppercase; letter-spacing: .4px; }
+    .maq-fila { display: flex; gap: 6px; overflow-x: auto; padding: 3px 0; scrollbar-width: none; }
+    .maq-fila::-webkit-scrollbar { display: none; }
+    .maq-fila button { flex: none; padding: 7px 11px; border-radius: 99px; border: 1px solid var(--plano3); background: var(--plano); color: var(--texto2); font: 600 13.5px 'Barlow'; }
+    .maq-fila button[aria-pressed="true"] { background: var(--rojo-btn); border-color: var(--rojo-btn); color: #fff; }
+    .maq-et { font: 600 12px 'Barlow'; letter-spacing: .8px; text-transform: uppercase; color: var(--apagado); margin: 6px 0 0; }
+    .maq-cols { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; padding: 14px 8px 60px; }
+    .maq-col { width: 390px; max-width: 100%; }
+    .maq-col > h2 { margin: 0 0 8px; font: 700 18px var(--cond); text-transform: uppercase; letter-spacing: .4px; }
+    .maq-col > h2 small { font: 500 13px 'Barlow'; text-transform: none; letter-spacing: 0; color: var(--apagado); display: block; margin-top: 2px; }
+    .maq-hoja { background: var(--plano); border-radius: 22px; border-top: 3px solid var(--rojo); padding: 14px 16px 26px; }
+    .maq-nota { max-width: 760px; margin: 14px auto 0; padding: 0 14px; color: var(--texto2); font-size: 14px; line-height: 1.45; }
+
+    /* ---------- variante B: tarjeta neutra con barra de color (menos color en la ficha) ---------- */
+    .v-b .aviso-ficha.av { background: var(--plano2); border-left: 3px solid var(--rojo-l); border-radius: 10px; }
+    .v-b .aviso-ficha.av.verde { border-left-color: var(--sube); } .v-b .aviso-ficha.av.oro { border-left-color: var(--oro); } .v-b .aviso-ficha.av.azul { border-left-color: var(--azul); }
+    .v-b .av-pleg > summary { border-radius: 10px; }
+
+    /* ---------- variante C: con el dato clave en una pastilla a la derecha ---------- */
+    .v-c .av-chip { display: inline-flex; align-self: flex-start; flex: none; font: 700 13px 'Barlow'; padding: 3px 9px; border-radius: 99px; background: var(--plano3); color: var(--texto2); white-space: nowrap; }
+    .v-c .av-chip.baja { background: var(--baja-s); color: var(--baja); } .v-c .av-chip.sube { background: var(--sube-s); color: var(--sube); } .v-c .av-chip.oro { background: var(--oro-s); color: var(--oro); }
+    .v-c .av-l { font-size: 13.5px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div class="maq-barra">
+    <h1>Maqueta · avisos de la ficha</h1>
+    <div class="maq-et">Ficha de…</div>
+    <div class="maq-fila" id="m-casos"></div>
+    <div class="maq-et">Diseño</div>
+    <div class="maq-fila" id="m-vars"></div>
+  </div>
+  <div class="maq-cols" id="m-cols"><p class="t2">Cargando la liga de ejemplo…</p></div>
+  <p class="maq-nota">Es la ficha de verdad con la liga de ejemplo (la inercia abierta). Toca un aviso para desplegarlo. «Abrir todos» y «Cerrar todos» son solo para ver los dos estados; en la app van todos cerrados al entrar.</p>
+  <script>
+    /* solo en esta página: limites.json con «bloqueadas» vacío, para ver la inercia abierta con la liga de ejemplo */
+    const f0 = window.fetch.bind(window);
+    window.fetch = async (u, o) => {
+      const r = await f0(u, o);
+      if (!/limites\.json/.test(String(u && u.url || u))) return r;
+      try { const j = await r.clone().json(); j.bloqueadas = []; return new Response(JSON.stringify(j), { status: 200, headers: { 'content-type': 'application/json' } }); } catch (e) { return r; }
+    };
+  </script>
+  <script type="module" src="js/app.js"></script>
+  <script type="module">
+    const VARS = { a: ['A · Tarjeta de color', 'La de ahora, plegada: fondo de color, título, una línea y la flecha.'], b: ['B · Neutra con barra', 'Fondo gris y solo una barra de color a la izquierda: menos color si salen varias.'], c: ['C · Con pastilla', 'Como la A, más el dato clave en una pastilla a la derecha.'] };
+    let caso = null, vars = ['a'], abrirTodos = null;
+    const $ = (s) => document.querySelector(s);
+    const esperar = () => new Promise((ok) => { const t = setInterval(() => { if (window.S && window.S.M && window.S.plan && window.S.opPorPid) { clearInterval(t); ok(); } }, 200); });
+    await esperar();
+    const H = await import('./js/hojas.js');
+    const S = window.S, M = S.M;
+    S.avisosAbiertos = S.avisosAbiertos || {};
+
+    // qué avisos sale en cada jugador: se pinta la ficha y se mira qué data-k lleva
+    const pids = [...new Set([...M.mias.map((x) => x.pid), ...M.clausulas.map((x) => x.pid), ...M.mercado.map((x) => x.pid)])];
+    const lleva = {};
+    for (const pid of pids) { try { const h = H.fichaJugador(S, pid); lleva[pid] = [...h.matchAll(/data-k="[^:]*:([a-z0-9]+)"/g)].map((m) => m[1]); } catch (e) { lleva[pid] = []; } }
+    const nom = (pid) => (M.J(pid) || {}).nombre || pid;
+    const CASOS = [];
+    const quiero = [
+      ['inercia', 'Inercia + plan (Catena)', (p) => lleva[p].includes('inercia') && S.opPorPid[p] && S.opPorPid[p].accion === 'vender' && M.mias.some((x) => x.pid === p) && !['1020'].includes(p)],
+      ['tuyo', 'Es tuyo', (p) => lleva[p].includes('tuyo')],
+      ['llega', 'Le llega a rivales', (p) => lleva[p].includes('llega')],
+      ['calendario', 'Calendario', (p) => lleva[p].includes('calendario') && !M.mias.some((x) => x.pid === p)],
+      ['rotacion', 'Rotación', (p) => lleva[p].includes('rotacion')],
+      ['vende', 'Lo vende otro manager', (p) => lleva[p].includes('vende')],
+      ['libre', 'Libre en el mercado', (p) => lleva[p].includes('libre')],
+      ['clausular', 'Cláusula de un rival', (p) => lleva[p].includes('clausular')],
+      ['plan', 'Solo plan', (p) => lleva[p].includes('plan') && !lleva[p].includes('inercia')],
+    ];
+    for (const [k, et, f] of quiero) { const p = pids.find(f); if (p) CASOS.push({ k, et: `${et}`, pid: p }); }
+    caso = CASOS[0];
+
+    const hoja = (pid, cl) => `<div class="maq-hoja ${cl}">${H.fichaJugador(S, pid)}</div>`;
+    function pintar() {
+      const sel = vars.length ? vars : ['a'];
+      $('#m-cols').innerHTML = sel.map((v) => `<div class="maq-col"><h2>${VARS[v][0]}<small>${VARS[v][1]}</small></h2>${hoja(caso.pid, 'v-' + v)}</div>`).join('');
+      if (abrirTodos !== null) document.querySelectorAll('#m-cols details.av-pleg').forEach((d) => { d.open = abrirTodos; });
+    }
+    function barra() {
+      $('#m-casos').innerHTML = CASOS.map((c, i) => `<button aria-pressed="${c === caso}" data-i="${i}">${c.et} · ${nom(c.pid)}</button>`).join('');
+      $('#m-vars').innerHTML = Object.entries(VARS).map(([k, [t]]) => `<button aria-pressed="${vars.includes(k)}" data-v="${k}">${t.split(' · ')[0]}</button>`).join('')
+        + `<button aria-pressed="${vars.length === 3}" data-v="todas">Las tres</button><button aria-pressed="${abrirTodos === true}" data-ab="1">Abrir todos</button><button aria-pressed="${abrirTodos === false}" data-ab="0">Cerrar todos</button>`;
+    }
+    $('#m-casos').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; caso = CASOS[+b.dataset.i]; barra(); pintar(); });
+    $('#m-vars').addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.ab != null) abrirTodos = abrirTodos === (b.dataset.ab === '1') ? null : b.dataset.ab === '1';
+      else vars = b.dataset.v === 'todas' ? ['a', 'b', 'c'] : [b.dataset.v];
+      barra(); pintar();
+    });
+    barra(); pintar();
+    window.maqueta = { CASOS, lleva };
+  </script>
+</body>
+</html>

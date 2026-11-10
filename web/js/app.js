@@ -40,6 +40,7 @@ import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
+import { plegarAviso } from './avisos-ficha.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
@@ -2599,6 +2600,8 @@ document.addEventListener('click', async (ev) => {
     case 'pnzLado': { const m = el.closest('.pnz-mer'); S.seg.pnzliga = d.f; if (m) { m.classList.toggle('lado-sube', d.f !== 'baja'); m.classList.toggle('lado-baja', d.f === 'baja'); m.querySelectorAll('.pnz-mer-sel button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.f === d.f))); } break; }
     case 'pnzVer': { const l = el.closest('.pnz-mer-l'); S.seg.pnzver = d.f; if (l) { l.classList.toggle('ver-tu', d.f !== 'liga'); l.classList.toggle('ver-liga', d.f === 'liga'); l.querySelectorAll('.pnz-ver button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.f === d.f))); } break; }
     case 'plegarParon': { const det = el.closest('details'); if (det && S.M) Pz.plegarParon(S.M, d.f, !det.open); break; }
+    // (37) los avisos de la ficha del jugador: se recuerda cuáles has abierto para no cerrarlos al repintar
+    case 'plegarAviso': { const det = el.closest('details'); if (det) plegarAviso(S, d.k, !det.open); break; }
     case 'plegarFase': { const det = el.closest('details'); if (det && S.plan) V.plegarFase(S.plan, d.f, !det.open); break; }
     case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }
     case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;
