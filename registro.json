@@ -3278,7 +3278,9 @@
    "n": 14,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794324075763
+  }
  },
  "ia": {
   "dia": "2026-11-10",
@@ -7252,13 +7254,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1169,
+   "ok": 1170,
    "fallos": 0,
-   "ejecuciones": 787,
+   "ejecuciones": 788,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T15:16:20.578Z"
+   "ultima": "2026-11-10T15:21:15.763Z"
   }
  },
  "ptsDirecto": {},
@@ -7275,15 +7277,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:16:23.466Z"
+   "ultimaBien": "2026-11-10T15:21:21.134Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:16:23.466Z"
+   "ultimaBien": "2026-11-10T15:21:21.134Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:16:23.466Z"
+   "ultimaBien": "2026-11-10T15:21:21.134Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7291,11 +7293,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:16:23.466Z"
+   "ultimaBien": "2026-11-10T15:21:21.134Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:16:23.466Z"
+   "ultimaBien": "2026-11-10T15:21:21.134Z"
   }
  },
  "avisos": [
