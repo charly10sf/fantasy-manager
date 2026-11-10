@@ -1811,11 +1811,9 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248252/miedo-factor-raphinha-cholo-detallo-cambio-tactico-barca-destroza-rivales.html": 1794053748000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
-   "SPORT|136195491": 1794053530000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000,
    "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000,
@@ -2029,21 +2027,6 @@
     "motivo": "",
     "plazo": "",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136195491",
-    "medio": "SPORT",
-    "t": 1794053530000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri aparece lesionado y deja un hueco en el pivote",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     21,
-     0
-    ]
    },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html",
@@ -7296,13 +7279,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1132,
+   "ok": 1133,
    "fallos": 0,
-   "ejecuciones": 750,
+   "ejecuciones": 751,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:11:13.306Z"
+   "ultima": "2026-11-10T12:16:13.736Z"
   }
  },
  "ptsDirecto": {},
@@ -7319,15 +7302,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:11:19.048Z"
+   "ultimaBien": "2026-11-10T12:16:18.542Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:11:19.048Z"
+   "ultimaBien": "2026-11-10T12:16:18.542Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:11:19.048Z"
+   "ultimaBien": "2026-11-10T12:16:18.542Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7335,11 +7318,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:11:19.048Z"
+   "ultimaBien": "2026-11-10T12:16:18.542Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:11:19.048Z"
+   "ultimaBien": "2026-11-10T12:16:18.542Z"
   }
  },
  "avisos": [
