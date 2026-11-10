@@ -138,9 +138,16 @@ export function analizar(D, H, c, extra = {}) {
   const cacheT = {};
   M.tend = (pid) => {
     if (cacheT[pid]) return cacheT[pid];
+    // el histórico de la app (un valor por cada día que se abrió) y el de LaLiga (el de la ficha, sin huecos) juntos,
+    // mandando el de LaLiga. Antes se usaba el más largo: el de la app tiene huecos los días que no se abre, y con uno de
+    // esos huecos ayer no había «valor de ayer» y la ficha solo enseñaba lo de 7 días (aviso de Domy, 10 nov)
     let s = (H.v && H.v[pid]) || [];
     const dv = det[pid] && det[pid].valores;
-    if (dv && dv.length > s.length) s = dv.map(([t, v]) => [diaDe(t), v]);
+    if (dv && dv.length) {
+      const porDia = new Map(s);
+      for (const [t, v] of dv) if (v) porDia.set(diaDe(t), v);
+      s = [...porDia.entries()].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+    }
     const ff = (D.tendencias || {})[pid] || {};
     const valor = J(pid).valor;
     // el valor de hace n días, solo si hay un dato de esos días (con margen): con un histórico que acaba en agosto (uno
@@ -170,6 +177,8 @@ export function analizar(D, H, c, extra = {}) {
     const diaE = rRec != null ? Math.max(d7 != null ? d7 / 7 : -Infinity, valor * rRec) : null;
     return (cacheT[pid] = { d1, p1, d7, p7, p7e, diaE, sub, racha, rRec, d30: v30 ? valor - v30 : null, serie });
   };
+  /** al llegar el histórico de LaLiga de un jugador (al abrir su ficha), que su tendencia se vuelva a calcular con él */
+  M.olvidarTend = (pid) => { delete cacheT[pid]; };
   // lo que ha subido cada uno de los últimos días (en tanto por uno), del más viejo al de hoy (con el valor de ahora)
   function subidasDe(serie, valor) {
     const porDia = new Map();
