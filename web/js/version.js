@@ -20,6 +20,9 @@ export const NOVEDADES = [
     cosas: [
       { tipo: 'nuevo', d: 'movil', t: 'Fantasy Manager, en Google Play', x: 'La app de Android ya está en Google Play. En la web, los botones de descargar llevan a la tienda y la guía de instalar es la de cualquier app: buscarla e instalar.' },
       { para: 'dueño', tipo: 'mejora', d: 'bandera', t: 'Fuera el aviso de «en pruebas»', x: 'La banda de arriba «App en desarrollo y en pruebas…» ya no sale. Para avisar de un fallo sigue el botón de Ajustes y la bienvenida.', menor: true },
+    ],
+  },
+  {
     v: '0.7.2', f: '2026-11-10', h: '20:48', t: 'Más fácil de leer y de usar',
     cosas: [
       { tipo: 'mejora', d: 'cara', t: 'Una × en cada ficha', x: 'Las fichas de un jugador, un rival, un club o un partido llevan arriba a la derecha una × para cerrarlas, también en el móvil, y se queda a la vista al bajar. Antes solo se cerraban deslizando hacia abajo o con Atrás.' },
