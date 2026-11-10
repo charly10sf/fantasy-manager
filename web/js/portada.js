@@ -10,7 +10,7 @@
    6. Preguntas, privacidad y cierre.
    Las caras y los escudos son los de LaLiga, cargados al vuelo (caras-demo.js); las cifras son de la liga de ejemplo.
    Nada de esto sale dentro de la app de Android, que solo enseña lo de entrar. */
-import { icono, esc, LOGO_P, proxPlay } from './util.js';
+import { icono, esc, LOGO_P, PLAY_URL } from './util.js';
 import { jugadoresDemo } from './demo.js';
 
 const NF2 = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -213,10 +213,10 @@ function resultado(tipo, k) {
 /* ---------- 6. preguntas y privacidad ---------- */
 const PREGUNTAS = [
   ['¿Es la app oficial de LaLiga Fantasy?', 'No. Fantasy Manager no es de LaLiga ni tiene relación con LaLiga, LaLiga Fantasy ni sus patrocinadores. Lee tu liga con tu propia cuenta y hace las cuentas que el juego no te enseña.'],
-  ['¿Cuánto cuesta?', 'Nada. Se paga con anuncios de Google en esta web (y en la versión de Google Play, cuando salga). No hay plan de pago y no se venden datos de nadie.'],
+  ['¿Cuánto cuesta?', 'Nada. Se paga con anuncios de Google, en esta web y en la app de Google Play. No hay plan de pago y no se venden datos de nadie.'],
   ['¿La app ve mi contraseña?', 'No. Entras en la página oficial de LaLiga, como siempre (también con Google), y LaLiga le da a la app una sesión para leer tu liga.'],
   ['¿Dónde se guardan los datos de mi liga?', 'Solo en tu móvil o en tu navegador. Lo que se guarda y dónde está contado en la política de privacidad.'],
-  ['¿Funciona en iPhone y en el ordenador?', 'En Android, con la app, que se instala desde esta web. En el ordenador, desde esta web: con la app del móvil entras escaneando un QR, y sin ella la web te explica cómo entrar. En iPhone no hay app, pero la web funciona: la primera vez hay que entrar desde un ordenador, porque LaLiga no deja hacerlo en el iPhone; ya dentro, en Ajustes → Abrir en otro dispositivo sacas un código para el iPhone. Antes puedes verla con la liga de ejemplo.'],
+  ['¿Funciona en iPhone y en el ordenador?', 'En Android, con la app de Google Play. En el ordenador, desde esta web: con la app del móvil entras escaneando un QR, y sin ella la web te explica cómo entrar. En iPhone no hay app, pero la web funciona: la primera vez hay que entrar desde un ordenador, porque LaLiga no deja hacerlo en el iPhone; ya dentro, en Ajustes → Abrir en otro dispositivo sacas un código para el iPhone. Antes puedes verla con la liga de ejemplo.'],
   ['¿Qué hace la IA y qué necesito para usarla?', 'Lee lesiones, convocatorias y alineaciones antes de proponerte el plan o de contestar lo que le preguntes. Usa una clave gratuita tuya; la app te enseña a sacarla en un par de minutos. Lo que propone pasa antes por la app, que comprueba que las cuentas de dinero salen.'],
   ['¿De dónde salen los datos de fútbol?', 'Los de tu liga, de LaLiga Fantasy con tu sesión. Las alineaciones probables, lesiones, estadísticas y noticias, de páginas públicas.'],
 ];
@@ -228,7 +228,6 @@ const PRIVACIDAD = [
 
 /** las páginas públicas (HTML sin JavaScript, de .github/paginas.py). «Guías» entra cuando haya alguna publicada */
 const ENLACES = [['guias/', 'Guías'], ['quienes-somos.html', 'Quiénes somos'], ['contacto.html', 'Contacto'], ['privacidad.html', 'Privacidad'], ['condiciones.html', 'Condiciones'], ['aviso-legal.html', 'Aviso legal'], ['instalar.html', 'Instalar']];
-const APK = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk';
 
 // <guias>
 /** las guías publicadas, en orden: [archivo en guias/, nombre corto] (las escribe .github/paginas.py) */
@@ -302,7 +301,7 @@ export function seccionMoviles() {
     <a class="pt-marca" href="#" data-arriba>${LOGO_P}<span>Fantasy <b>Manager</b></span></a>
     <nav class="pt-menu" aria-label="Secciones">${MENU.map(([id, t]) => `<a href="#${id}" data-ir-a="${id}" tabindex="-1">${t}</a>`).join('')}</nav>
     <a class="btn sec pt-web" href="#" tabindex="-1" title="Fantasy Manager funciona también en el navegador, sin descargar nada"><span class="pt-largo">Usar en la web</span><span class="pt-corto">Web</span></a>
-    <a class="btn pt-cta" href="${APK}" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
+    <a class="btn pt-cta" href="${PLAY_URL}" target="_blank" rel="noopener" tabindex="-1">${icono('descargar')}<span>Descargar<span class="pt-largo"> la app</span></span></a></div><i class="pt-prog"></i></div>
 
   ${seccion('pAsi', 'La app', 'Cómo funciona', comoFunciona(), 'Fantasy Manager es una app para LaLiga Fantasy. Estas son las tres pantallas que vas a abrir cada día.', 'ph')}
 
@@ -333,8 +332,7 @@ export function seccionMoviles() {
 
   <section class="pz-fin rv" aria-labelledby="pzT"><h2 id="pzT">Empieza hoy</h2>
     <p class="ps-i">Gratis. En Android, con la app. En el ordenador se usa desde esta misma web, sin descargar nada, y en el iPhone también, después de entrar una vez desde un ordenador.</p>
-    <div class="pz-b"><a class="btn" href="${APK}">${icono('descargar')}Descargar la app para Android</a><a class="btn sec" href="#">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
-    ${proxPlay()}
+    <div class="pz-b"><a class="btn" href="${PLAY_URL}" target="_blank" rel="noopener">${icono('descargar')}Descargar en Google Play</a><a class="btn sec" href="#">Usar en la web</a><button class="btn sec" data-accion="entrarDemo">Ver con una liga de ejemplo</button></div>
     <p class="pz-x"><a href="https://x.com/Fantasyman_app" rel="noopener" target="_blank">@Fantasyman_app</a> en X: bajas, onces y los mejores de cada jornada.</p>
   </section>
 
