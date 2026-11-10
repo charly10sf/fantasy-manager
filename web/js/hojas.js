@@ -356,6 +356,13 @@ export function fichaJugador(S, pid) {
 }
 
 /** hacia dónde va su valor: lo que ha cambiado cada día y si se frena o ya ha girado */
+/** el texto del aviso sin el título repetido delante («Ha girado a la baja: venía…» → «Venía…») */
+const sinTitulo = (t, tit) => {
+  const s = String(t || '');
+  if (!tit || !s.toLowerCase().startsWith(tit.toLowerCase())) return s;
+  const r = s.slice(tit.length).replace(/^[\s:.,—-]+/, '');
+  return r ? r[0].toUpperCase() + r.slice(1) : s;
+};
 function inerciaHTML(M, pid, mio) {
   const x = M.inercia ? M.inercia(pid) : null;
   if (!x || !(['giro', 'baja', 'parado', 'frena', 'acelera', 'rebote'].includes(x.fase) || x.vuelve)) return '';
@@ -376,10 +383,8 @@ function inerciaHTML(M, pid, mio) {
     : (pz && (mal || ojo) ? pzTxt : '') + (x.fase === 'rebote' ? (mio ? ' Decide por sus puntos y su sitio en tu once.' : ' Si lo quieres, está cerca de su mínimo del mes, pero aún no ha demostrado que vaya a subir.')
     : mio ? (mal ? ' <b>Véndelo ya</b>, salvo que lo necesites sí o sí para la jornada.' : larga ? ` Aún sube: <b>véndelo en los próximos ${Math.max(1, Math.round(x.giroEn) - 1)} días</b>, antes de que gire.` : ojo ? ' <b>Véndelo antes de que gire.</b>' : '')
       : larga ? ` <b>Aún le quedan unos ${Math.round(x.giroEn)} días subiendo</b>${x.proy3 > 0 ? ` (unos ${eur(x.proy3, { signo: true })} en 3 días)` : ''}: para comprarlo y venderlo antes de que gire, todavía da; para quedártelo mucho tiempo, no.` : (mal || ojo ? ' No es momento de comprarlo.' : ''));
-  const max = Math.max(...x.R.map((r) => Math.abs(r)), 1);
-  const corto = (r) => `${r > 0 ? '+' : r < 0 ? '−' : ''}${String(Math.round(Math.abs(r) / 1e4) / 100).replace('.', ',')}`;
-  const barras = x.R.map((r, i) => `<div class="in-b"><i class="${r >= 0 ? 'up' : 'dw'}" style="--h:${Math.max(4, Math.round(Math.abs(r) / max * 100))}%"></i><span>${corto(r)}</span><em>${x.dias[i] ? new Date(x.dias[i] + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'narrow' }) : ''}</em></div>`).join('');
-  return `<div class="inercia ${mal ? 'mal' : ojo ? 'ojo' : x.fase === 'rebote' ? 'neutra' : 'bien'}"><div class="in-cab">${icono(mal ? 'baja' : ojo ? 'reloj' : x.fase === 'rebote' ? 'cambio' : 'sube')}<b>${vu ? `Vuelve: llegó a valer ${eur(vu.max)}` : tit}</b><span class="t2">lo que cambia cada día, en M</span></div><div class="in-barras">${barras}</div><p>${esc(x.texto)}${consejo}</p></div>`;
+  // (10 nov, Carlos) sin sus barras: lo de cada día ya sale en la tarjeta del valor; aquí, solo el aviso
+  return `<div class="inercia ${mal ? 'mal' : ojo ? 'ojo' : x.fase === 'rebote' ? 'neutra' : 'bien'}"><div class="in-cab">${icono(mal ? 'baja' : ojo ? 'reloj' : x.fase === 'rebote' ? 'cambio' : 'sube')}<b>${vu ? `Vuelve: llegó a valer ${eur(vu.max)}` : tit}</b></div><p>${esc(sinTitulo(x.texto, vu ? '' : tit))}${consejo}</p></div>`;
 }
 
 /** los puntos esperados de su próximo partido, por partes, con la titularidad y la rotación */
