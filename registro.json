@@ -3262,7 +3262,8 @@
    "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321213000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000,
-   "SPORT|136297086": 1794321674000
+   "SPORT|136297086": 1794321674000,
+   "Cadena SER|https://cadenaser.com/castillalamancha/2026/11/10/tertulia-conquense-el-conflicto-por-la-fecha-del-partido-aplazado-ser-cuenca/": 1794327316000
   },
   "hechos": [
    {
@@ -3284,7 +3285,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 16,
+   "n": 17,
    "fallos": 0
   },
   "espera": {}
@@ -3292,17 +3293,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 53,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 211094,
-  "salida": 18214,
+  "entrada": 212741,
+  "salida": 18916,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.273867,
+  "dolares": 0.274383,
   "reservado": 0
  },
  "recientes": {
@@ -7261,13 +7262,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1182,
+   "ok": 1183,
    "fallos": 0,
-   "ejecuciones": 800,
+   "ejecuciones": 801,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T16:17:34.760Z"
+   "ultima": "2026-11-10T16:21:13.256Z"
   }
  },
  "ptsDirecto": {},
@@ -7284,15 +7285,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:17:38.214Z"
+   "ultimaBien": "2026-11-10T16:21:22.196Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:17:38.214Z"
+   "ultimaBien": "2026-11-10T16:21:22.196Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:17:38.214Z"
+   "ultimaBien": "2026-11-10T16:21:22.196Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7300,11 +7301,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:17:38.214Z"
+   "ultimaBien": "2026-11-10T16:21:22.196Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:17:38.214Z"
+   "ultimaBien": "2026-11-10T16:21:22.196Z"
   }
  },
  "avisos": [
