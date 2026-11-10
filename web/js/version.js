@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.4';
+export const VERSION = '0.7.4d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,13 @@ export const VERSION = '0.7.4';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.4d', f: '2026-11-11', h: '00:00', t: 'El parón, con tu plantilla',
+    cosas: [
+      { tipo: 'mejora', d: 'bandera', t: 'El parón mira si te caben', x: 'En la pestaña Parón, «Compra y revende» cuenta cuántos jugadores tienes (con tus pujas) y, con la plantilla casi llena, te dice cuántos caben y qué vender para hacer sitio. «Puedes ganar» solo suma lo que te cabe.' },
+      { tipo: 'mejora', d: 'dinero', t: 'Lo que te llega vendiendo antes', x: 'Lo que sube y hoy no te llega sale marcado si te llegaría vendiendo antes lo que te dice la app (lo que ha tocado techo y lo comprado para revender), con lo que sacarías.' },
+    ],
+  },
   {
     v: '0.7.4', f: '2026-11-11', h: '00:14', t: 'Ajustes ordenados y alarmas a tu gusto',
     cosas: [
