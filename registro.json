@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248415/marc-casado-enciende-espanyolismo-recuerdo-celebraciones-barca.html": 1794084208000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maffeo-estalla-descanso-valencia-real-madrid-no-me-apetece-entrevista-20261107_3470873.html": 1794085302000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248531/doble-palo-real-madrid-alarmas-linda-caicedo-cruzan-charco.html": 1794120828000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261108/1004248527/2-3-cruz-azul-nuevo-lider-mexico.html": 1794120346000,
@@ -3319,7 +3318,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335197000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mueven-huelga-dia-12-23-aprobacion-decreto-dar-margen-negociacion-20261110184225.html": 1794332545000,
    "SPORT|136303483": 1794335556000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/10/la-federacion-tinerfena-de-futbol-aplaza-los-encuentros-oficiales-de-este-martes-y-miercoles-en-la-isla-de-tenerife-radio-club-tenerife/": 1794339274000
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/10/la-federacion-tinerfena-de-futbol-aplaza-los-encuentros-oficiales-de-este-martes-y-miercoles-en-la-isla-de-tenerife-radio-club-tenerife/": 1794339274000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342405000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-madrid-realiza-piquete-sede-central-alquiler-seguro-20261110204927.html": 1794340167000,
+   "SPORT|136307236": 1794339155000
   },
   "hechos": [
    {
@@ -3341,28 +3343,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 24,
+   "n": 25,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342673776,
-   "SPORT|136307236": 1794342973671
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 75,
+   "clasificar": 76,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 258062,
-  "salida": 26843,
+  "entrada": 260044,
+  "salida": 27723,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.282878,
+  "dolares": 0.283516,
   "reservado": 0
  },
  "recientes": {
@@ -7388,13 +7387,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1236,
+   "ok": 1237,
    "fallos": 0,
-   "ejecuciones": 853,
+   "ejecuciones": 854,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T20:41:13.047Z"
+   "ultima": "2026-11-10T20:46:17.333Z"
   }
  },
  "ptsDirecto": {},
@@ -7411,15 +7410,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:41:17.193Z"
+   "ultimaBien": "2026-11-10T20:46:27.250Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:41:17.193Z"
+   "ultimaBien": "2026-11-10T20:46:27.250Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:41:17.193Z"
+   "ultimaBien": "2026-11-10T20:46:27.250Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7427,11 +7426,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:41:17.193Z"
+   "ultimaBien": "2026-11-10T20:46:27.250Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:41:17.193Z"
+   "ultimaBien": "2026-11-10T20:46:27.250Z"
   }
  },
  "avisos": [
