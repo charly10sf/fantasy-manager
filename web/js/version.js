@@ -16,7 +16,7 @@ export const VERSION = '0.7.1f';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.1f', f: '2026-11-10', h: '11:40', t: 'Lo que sube hoy cada jugador',
+    v: '0.7.1f', f: '2026-11-10', h: '11:56', t: 'Lo que sube hoy cada jugador',
     cosas: [
       { tipo: 'arreglo', d: 'grafica', t: 'Lo de hoy, en la ficha del jugador', x: 'Al abrir un jugador, al lado de su valor sale lo que ha subido o bajado hoy y, aparte, lo de 7 días. Si la app no se había abierto ayer, en vez de lo de hoy salía solo lo acumulado de la semana: ahora lo saca del histórico de LaLiga. Lo avisó Domy.', ir: { v: 'equipo' } },
       { para: 'dueño', tipo: 'arreglo', d: 'reloj', t: '«Se mueve 21–24 h»', x: 'En «Cómo juega» de un rival, la franja que acaba a medianoche decía «21–0 h».', menor: true },
