@@ -3289,7 +3289,8 @@
    "fallos": 0
   },
   "espera": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-repercutira-la-huelga-general-en-el-deporte-en-bizkaia-radio-bilbao/": 1794328583327
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-repercutira-la-huelga-general-en-el-deporte-en-bizkaia-radio-bilbao/": 1794328583327,
+   "Europa Press|https://www.europapress.es/nacional/noticia-interior-ordena-actuar-contra-piquetes-violentos-huelga-11n-garantizar-seguridad-poligonos-mercados-20261110174507.html": 1794329474907
   }
  },
  "ia": {
@@ -7264,13 +7265,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1188,
+   "ok": 1189,
    "fallos": 0,
-   "ejecuciones": 806,
+   "ejecuciones": 807,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T16:46:15.246Z"
+   "ultima": "2026-11-10T16:51:14.907Z"
   }
  },
  "ptsDirecto": {},
@@ -7287,15 +7288,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:46:18.734Z"
+   "ultimaBien": "2026-11-10T16:51:20.071Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:46:18.734Z"
+   "ultimaBien": "2026-11-10T16:51:20.071Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:46:18.734Z"
+   "ultimaBien": "2026-11-10T16:51:20.071Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7303,11 +7304,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:46:18.734Z"
+   "ultimaBien": "2026-11-10T16:51:20.071Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:46:18.734Z"
+   "ultimaBien": "2026-11-10T16:51:20.071Z"
   }
  },
  "avisos": [
