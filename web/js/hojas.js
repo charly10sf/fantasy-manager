@@ -6,7 +6,7 @@ import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePi
 import { linea, barra, mini } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
-import { cfgAvisos, programados } from './avisos.js';
+import { cfgAvisos, programados, OPC_ANTES, antesTxt } from './avisos.js';
 import { nativo, enApp, enWeb, enIPhone, enInicio, estadoProxy } from './puente.js';
 import { hayAnunciosWeb } from './anuncios-web.js';
 import { registro } from './api.js';
@@ -241,7 +241,7 @@ export function fichaJugador(S, pid) {
   const op = S.opPorPid[pid];
   const est = estiloClub(j.equipoId);
   let h = `<div class="ficha-top${est ? ' con-club' : ''}"${est}>${ava(j, 'g')}<div style="min-width:0"><h2>${esc(j.nombre)}</h2>
-    <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${j.equipoId && S.D.equipos && S.D.equipos[j.equipoId] ? `<button class="enlace-j" data-club="${esc(j.equipoId)}">${esc(j.equipo || S.D.equipos[j.equipoId].nombre)}</button>` : esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div>${(() => { const f = esFav(pid); return `<button class="fav-btn${f ? ' on' : ''}" data-accion="fav" data-pid="${esc(pid)}" aria-pressed="${f}" aria-label="${f ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${icono('estrella')}<span>${f ? 'Favorito' : 'Seguir'}</span></button>`; })()}</div>`;
+    <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${j.equipoId && S.D.equipos && S.D.equipos[j.equipoId] ? `<button class="enlace-j" data-club="${esc(j.equipoId)}">${esc(j.equipo || S.D.equipos[j.equipoId].nombre)}</button>` : esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div>${(() => { const f = esFav(pid); return `<button class="fav-btn${f ? ' on' : ''}" data-accion="fav" data-pid="${esc(pid)}" aria-pressed="${f}">${icono('estrella')}<span>${f ? 'Favorito' : 'Seguir'}</span></button>`; })()}</div>`;
   h += valorFichaHTML(j, t);
   // con su partido de la jornada empezado: lo que lleva y lo que ha hecho (se pone al día solo)
   const vj = jornadaJugadorHTML(S, pid);
@@ -254,6 +254,14 @@ export function fichaJugador(S, pid) {
     ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` <span class="nw">· ${eur(f.clausula - j.valor)} de más</span>` : ''}` : ''}</small></div></button>` : ''}
     <${prox && prox.rivalId ? `button class="dato" data-club="${esc(prox.rivalId)}"` : 'div class="dato"'}><div class="et">Próximo partido${prox && prox.rivalId ? ' ›' : ''}</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : enCasaDe(prox.rival)} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></${prox && prox.rivalId ? 'button' : 'div'}>
   </div>`;
+  // (40) «Avisarme»: una alarma antes de que se abra su cláusula, con la antelación que elijas (solo en la app, que es la que avisa)
+  {
+    const aj = cfgAvisos().jugadores[pid];
+    if (enApp && !mia && (suya || aj)) {
+      const est = !suya ? 'Ahora no es de ningún rival' : suya.abierta ? 'Su cláusula ya está abierta' : `Se abre ${cuando(suya.veda ? suya.veda.abre : suya.protegidoHasta)}`;
+      h += `<div class="avisar-j${aj ? ' on' : ''}">${icono('campana')}<label for="avj-${esc(pid)}"><b>Avisarme de su cláusula</b><span>${esc(est)}</span></label><select id="avj-${esc(pid)}" data-cambia="avisoJ" data-pid="${esc(pid)}">${[['', 'No'], ...OPC_ANTES.jugador.map((m) => [m, antesTxt(m)])].map(([v, t]) => `<option value="${v}"${aj ? (String(aj.antes) === String(v) ? ' selected' : '') : v === '' ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></div>`;
+    }
+  }
   // las funciones top cerradas, juntas al final de la ficha
   const cerradas = [];
   // (37) la inercia y el plan de hoy: si dicen lo mismo, una sola tarjeta; todas plegadas, con título y una línea a la vista
@@ -604,90 +612,163 @@ function anuncioTopHTML(A) {
 }
 
 /* ================= AJUSTES ================= */
+/*
+ * (40, 10 nov) Ajustes en secciones plegables (<details>: título y una línea a la vista, sin botones en el summary) con un
+ * buscador arriba. Antes era una lista plana de ~30 filas y costaba encontrar las cosas. Lo abierto se guarda en
+ * S.ajAbiertas para no cerrarlo al repintar; lo que se busca, en S.ajBusca (filtrarAjustes hace lo mismo sin repintar).
+ */
 const interr = (on, accion, extra = '', nombre = '') => `<button class="interr ${on ? 'on' : ''}" data-accion="${accion}" ${extra} aria-pressed="${on}"${nombre ? ` aria-label="${esc(nombre)}"` : ''}></button>`;
+const btnA = (accion, txt, { sec = true, extra = '', ic = '' } = {}) => `<button class="btn chico${sec ? ' sec' : ''}" data-accion="${accion}" ${extra}>${ic ? icono(ic) : ''}${txt}</button>`;
+const enlA = (href, txt) => `<a class="btn chico sec" href="${href}">${txt}</a>`;
+/** una fila: título, una línea corta y lo de la derecha. q: palabras de más para el buscador */
+const fila = (t, s, der = '', q = '', cls = '') => `<div class="ajuste${cls ? ` ${cls}` : ''}" data-q="${esc(norm(`${t} ${s} ${q}`.replace(/<[^>]+>/g, ' ')))}"><div class="c"><b>${t}</b>${s ? `<span>${s}</span>` : ''}</div>${der}</div>`;
+const selA = (cambia, opts, val, nombre, extra = '') => `<select data-cambia="${cambia}" aria-label="${esc(nombre)}" ${extra}>${opts.map(([v, t]) => `<option value="${esc(v)}"${String(val) === String(v) ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>`;
+const antesOpts = (k) => OPC_ANTES[k].map((m) => [m, antesTxt(m)]);
+
+/** lo que busca: las filas que no casan se esconden y se abren las secciones que tienen alguna */
+export function filtrarAjustes(raiz, q) {
+  const b = norm(String(q || '').trim());
+  let hay = 0;
+  raiz.querySelectorAll('details.aj-sec').forEach((d) => {
+    let n = 0;
+    d.querySelectorAll('.ajuste[data-q]').forEach((f) => { const ok = !b || f.dataset.q.includes(b) || norm(d.dataset.t || '').includes(b); f.hidden = !ok; if (ok) n++; });
+    d.hidden = !!b && !n;
+    if (b) d.open = n > 0;
+    else d.open = !!(window.S && window.S.ajAbiertas && window.S.ajAbiertas[d.dataset.k]);
+    hay += n;
+  });
+  const v = raiz.querySelector('#aj-nada');
+  if (v) { v.hidden = !b || hay > 0; v.textContent = b && !hay ? `Nada con «${String(q).trim()}». Prueba con otra palabra (avisos, clave, versión, borrar…).` : ''; }
+}
+export function plegarAjuste(S, k, abierto) { S.ajAbiertas ||= {}; if (abierto) S.ajAbiertas[k] = 1; else delete S.ajAbiertas[k]; }
+
 export function ajustes(S) {
-  const c = S.c, ca = cfgAvisos(), ci = cfgIA();
+  const ca = cfgAvisos(), ci = cfgIA();
   const q = quien();
   const ses = sesion();
   const k = clave();
   const prog = programados();
+  const abiertas = S.ajAbiertas || {};
+  const dueno = avisosGuardados().admin;
   let h = `<div class="hoja-cab"><h2>Ajustes</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
-  // lo primero, avisar de un fallo (antes era un botón fijo arriba; lo pidió Carlos el 25 oct): con las respuestas sin
-  // leer y, para el dueño, los avisos sin contestar
+  // el buscador; debajo, avisar de un fallo y el tutorial (lo del fallo va arriba desde el 25 oct, lo pidió Carlos)
+  h += `<div class="aj-busca">${icono('buscar')}<input id="buscaAj" type="search" placeholder="Buscar en Ajustes" aria-label="Buscar en Ajustes" autocomplete="off" value="${esc(S.ajBusca || '')}"></div>`;
   {
     const av = avisosGuardados();
     const sinLeer = (av.lista || []).filter((x) => x.respuesta && !x.vista).length;
     const pend = av.admin ? av.pendientes || 0 : 0;
-    const sub = av.admin ? (pend ? `${pend} sin contestar${sinLeer ? ` · ${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : ''}` : 'Los avisos de tu liga y tus respuestas')
-      : sinLeer ? `Tienes ${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Si algo no funciona o no cuadra: me llega y te contesto aquí';
     const n = sinLeer + pend;
-    h += `<button class="ajuste-tour ajuste-fallo" data-accion="avisos">${icono('bicho')}<span><b>${av.admin ? 'Avisos de fallo' : 'Reportar un fallo'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}${icono('flecha')}</button>`;
+    const sub = av.admin ? (pend ? `${pend} sin contestar` : 'Los de tu liga') : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Te contesto aquí';
+    h += `<div class="aj-atajos"><button class="aj-atajo" data-accion="avisos">${icono('bicho')}<span><b>${av.admin ? 'Avisos de fallo' : 'Reportar un fallo'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}</button>`
+      + `<button class="aj-atajo" data-accion="tutorial">${icono('info')}<span><b>Tutorial</b><small>En un minuto</small></span></button></div>`;
   }
-  h += `<button class="ajuste-tour" data-accion="tutorial">${icono('info')}<span><b>Tutorial de la app</b><small>Dónde está cada cosa y para qué sirve, en un minuto</small></span>${icono('flecha')}</button>`;
 
-  h += `<div class="grupo"><span>Tu cuenta de LaLiga</span></div>`;
-  if (enDemo()) h += `<div class="ajuste"><div class="c"><b>Liga de ejemplo</b><span>Los datos son inventados</span></div>${enApp || enWeb ? '<button class="btn chico" data-accion="salirDemo">Usar la mía</button>' : ''}</div>`;
-  else h += `<div class="ajuste"><div class="c"><b>${esc((q && (q.nombre || q.correo)) || 'Conectado')}</b><span>${esc(q && q.correo ? q.correo : '')}${ses && ses.desde ? ` · desde ${cuando(ses.desde, { hora: false })}` : ''}</span></div><button class="btn chico sec" data-accion="salir">${icono('salir')}Salir</button></div>`;
-  // la misma liga en el ordenador: la app deja la sesión con un código de un solo uso
+  const sec = (kk, ic, t, l, cuerpo, qx = '') => (cuerpo ? `<details class="aj-sec" data-k="${kk}" data-t="${esc(`${t} ${qx}`)}"${abiertas[kk] ? ' open' : ''}><summary data-accion="plegarAjuste" data-k="${kk}">${icono(ic)}<span class="aj-tx"><b>${t}</b><span>${esc(l)}</span></span>${icono('abajo', 'av-fl')}</summary><div class="aj-cuerpo">${cuerpo}</div></details>` : '');
+
+  /* ---- cuenta y liga ---- */
+  let c1 = '';
+  const nombreCta = enDemo() ? 'Liga de ejemplo' : (q && (q.nombre || q.correo)) || 'Conectado';
+  if (enDemo()) c1 += fila('Liga de ejemplo', 'Los datos son inventados', enApp || enWeb ? btnA('salirDemo', 'Usar la mía', { sec: false }) : '', 'cuenta sesion');
+  else c1 += fila(esc(nombreCta), `${esc(q && q.correo ? q.correo : '')}${ses && ses.desde ? ` · desde ${cuando(ses.desde, { hora: false })}` : ''}`, btnA('salir', 'Salir', { ic: 'salir' }), 'cuenta sesion cerrar');
+  if (S.D && S.D.ligas && S.D.ligas.length > 1) c1 += fila('Liga', 'La que ves en la app', selA('liga', S.D.ligas.map((l) => [l.id, l.nombre]), S.D.liga.id, 'Liga'));
+  // la misma liga en el ordenador: la app deja la sesión con un código de un solo uso (y en la 0.6.12, el QR)
   if ((enApp || enWeb) && !enDemo() && ses) {
-    // en la app nueva (0.6.12), primero escanear el QR que enseña el ordenador; el código queda para el iPhone y los móviles sin el lector de Google
     const qr = enApp && nativo.hayQR();
-    h += `<div class="ajuste"><div class="c"><b>${enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo'}</b><span>${qr ? 'Escanea el QR de fantasymanagerapp.com en el ordenador. El código, para el iPhone' : enApp ? 'Te da un código para entrar en la versión web con tu liga, tu clave de la IA y lo que has apuntado' : 'Te da un código (y un QR para la cámara del móvil) para entrar con tu cuenta en el iPhone u otro ordenador, sin volver a hacer lo del F12'}</span></div>${qr ? '<button class="btn chico" data-accion="escanearQR">Escanear QR</button><button class="btn chico sec" data-accion="vincularWeb">Código</button>' : '<button class="btn chico" data-accion="vincularWeb">Código</button>'}</div>`;
+    c1 += fila(enApp ? 'Abrir en el ordenador' : 'Abrir en otro dispositivo', qr ? 'Escanea el QR de la web. El código, para el iPhone' : 'Con un código de un solo uso, sin el F12',
+      qr ? `<span class="aj-2">${btnA('escanearQR', 'QR', { sec: false })}${btnA('vincularWeb', 'Código')}</span>` : btnA('vincularWeb', 'Código', { sec: false }), 'ordenador iphone vincular qr codigo web');
   }
-  // en el iPhone, desde Safari: cómo dejarla en la pantalla de inicio (desde el icono ya no sale)
-  if (enIPhone && !enApp && !enInicio()) h += `<div class="ajuste"><div class="c"><b>Tenerla como una app</b><span>En Safari: Compartir → Añadir a pantalla de inicio. Abre con su icono, a pantalla completa</span></div><a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a></div>`;
-  if (S.D && S.D.ligas && S.D.ligas.length > 1) h += `<div class="ajuste"><div class="c"><b>Liga</b></div><select data-cambia="liga">${S.D.ligas.map((l) => `<option value="${esc(l.id)}" ${S.D.liga.id === l.id ? 'selected' : ''}>${esc(l.nombre)}</option>`).join('')}</select></div>`;
+  if (enIPhone && !enApp && !enInicio()) c1 += fila('Tenerla como una app', 'Safari: Compartir → Añadir a pantalla de inicio', '<a class="btn chico sec" href="instalar.html#anadir" target="_blank" rel="noopener">Cómo</a>', 'iphone instalar icono');
+  if (!enDemo() && ses) c1 += fila('Invitar a tu liga', 'Un enlace para el grupo', btnA('invitar', 'Invitar', { sec: false, ic: 'enviar' }), 'compartir amigos grupo');
+  h += sec('cuenta', 'usuario', 'Cuenta y liga', enDemo() ? 'Datos inventados' : `${nombreCta}${S.D && S.D.liga && S.D.liga.nombre ? ` · ${S.D.liga.nombre}` : ''}`, c1, 'sesion');
 
-  h += `<div class="grupo"><span>La IA (gratis)</span></div>`;
+  /* ---- avisos y alarmas ---- */
+  let c2 = '';
+  let l2;
+  if (!enApp) {
+    l2 = 'Solo en la app del móvil';
+    c2 += fila('Los avisos llegan en la app', 'Cláusulas que se abren, el mercado, el once y tus alarmas. En el navegador no', '', 'notificaciones alarmas');
+  } else {
+    const perm = nativo.avisosPermitidos(), nj = Object.keys(ca.jugadores).length;
+    // con la liga de ejemplo no se programa nada (serían datos inventados): programar() lo deja vacío
+    const cuantos = enDemo() ? 'Con la liga de ejemplo no se programan' : `${prog.length} programado${prog.length === 1 ? '' : 's'}`;
+    l2 = !ca.on ? 'Apagados' : !perm ? 'Falta el permiso de notificaciones' : `${enDemo() ? 'Encendidos' : cuantos}${nj ? ` · ${nj} jugador${nj === 1 ? '' : 'es'}` : ''}`;
+    c2 += fila('Avisos', ca.on ? (perm ? cuantos : '<b class="rojo">Falta el permiso de notificaciones</b>') : 'Apagados', interr(ca.on, 'avisosOn', '', 'Avisos'), `notificaciones activar${ca.on ? '' : ' alarmas once clausulas rivales mercado jugadores plan'}`);
+    if (ca.on) {
+      if (!nativo.alarmasExactas()) c2 += fila('Al minuto exacto', 'Sin este permiso pueden llegar tarde', btnA('exactas', 'Dar permiso', { sec: false }), 'permiso exactas');
+      // cada tipo: el interruptor y, encendido, cuánto antes
+      const tipo = (kk, t, s, qx = '', conAntes = true) => fila(t, s,
+        `${ca[kk] && conAntes ? selA('avisoAntes', antesOpts(kk), ca.antes[kk], `${t}: cuándo`, `data-k="${kk}"`) : ''}${interr(ca[kk], 'avisoTipo', `data-k="${kk}"`, t)}`, qx);
+      c2 += tipo('plan', 'Clausulazos del plan', '', 'alarma plan clausular cuando se abre la clausula');
+      if (ca.plan && nativo.hayAlarma()) c2 += fila('Que suene como alarma', 'Aunque estés en silencio', interr(ca.alarma, 'avisoTipo', 'data-k="alarma"', 'Que suene como alarma'), 'sonido silencio plan jugadores', 'sub');
+      c2 += tipo('rivales', 'Cláusulas de rivales', 'Y al abrirse', 'clausula rival');
+      if (ca.rivales) c2 += fila('Interés mínimo', 'Solo las que te interesan', selA('interes', [30, 40, 50, 55, 60, 70, 80].map((n) => [n, n]), ca.interes, 'Interés mínimo'), 'interes umbral rivales', 'sub');
+      c2 += tipo('mias', 'Tus cláusulas', '', 'mis clausulas proteccion blindar se abren');
+      if (ca.mias) c2 += fila('De cuáles', 'Baratas: menos de 1,6 veces su valor', selA('miasCuales', [['baratas', 'Las baratas'], ['todas', 'Todas']], ca.miasTodas ? 'todas' : 'baratas', 'De cuáles de tus cláusulas'), 'mis clausulas todas', 'sub');
+      c2 += tipo('mercado', 'Cambio de mercado', '', 'mercado pujas ofertas');
+      c2 += tipo('jornada', 'Poner el once', 'Antes de la jornada', 'once alineacion jornada recordatorio');
+      c2 += fila('Tu liga hoy', 'Un aviso al día', `${ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" aria-label="Hora del aviso diario">` : ''}${interr(ca.diario, 'avisoTipo', 'data-k="diario"', 'Tu liga hoy')}`, 'diario plan del dia hora');
+      // «Avisarme de este jugador» (desde la ficha): cada uno con cuándo y para quitarlo
+      const js = Object.entries(ca.jugadores);
+      c2 += `<div class="aj-sub" data-q="${esc(norm('mis avisos jugadores avisarme'))}">Tus jugadores</div>`;
+      if (!js.length) c2 += fila('Ninguno todavía', 'En la ficha de un jugador de un rival: «Avisarme»', '', 'mis avisos jugadores avisarme');
+      for (const [pid, a] of js) {
+        const x = S.M && S.M.clausulas.find((y) => y.pid === pid);
+        const nom = (S.M && S.M.J(pid) && S.M.J(pid).nombre) || a.nombre || 'Jugador';
+        const est = !x ? 'Ahora no es de ningún rival' : x.abierta ? 'Cláusula abierta ya' : `Se abre ${cuando(x.veda ? x.veda.abre : x.protegidoHasta)}`;
+        c2 += fila(esc(nom), esc(est), `${selA('avisoJ', antesOpts('jugador'), a.antes, `Aviso de ${nom}: cuándo`, `data-pid="${esc(pid)}"`)}<button class="b-ico aj-quitar" data-accion="quitarAvisoJ" data-pid="${esc(pid)}" aria-label="Quitar el aviso de ${esc(nom)}">${icono('cerrar')}</button>`, 'mis avisos jugadores avisarme');
+      }
+      const prox = prog.filter((a) => a.id !== 'diario').slice(0, 4);
+      if (prox.length) c2 += `<p class="aj-prox" data-q="${esc(norm('proximos programados'))}"><b>Próximos:</b> ${prox.map((a) => `${esc(a.titulo)} (${cuando(a.t)})`).join(' · ')}</p>`;
+      c2 += `<div class="aj-btns">${btnA('probarAviso', 'Probar un aviso')}${ca.alarma && nativo.hayAlarma() ? btnA('probarAlarma', 'Probar la alarma') : ''}</div>`;
+    }
+  }
+  h += sec('avisos', 'campana', 'Avisos y alarmas', l2, c2, 'notificaciones');
+
+  /* ---- la IA ---- */
+  let c3 = '';
+  c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
   if (enApp && !enDemo()) {
     const cf = cfgFondo(), uf = ultimoFondo();
-    const ult = uf ? `Última vez ${cuando(uf.t)}: ${uf.error ? `falló (${uf.error})` : (uf.pasos || []).slice(-1)[0] || 'bien'}` : 'Aún no ha trabajado sola';
-    h += `<div class="ajuste"><div class="c"><b>Trabaja con la app cerrada</b><span>${cf.on ? `Cada 3 horas y al cambiar el mercado pone tu liga al día, rehace el plan y te avisa de ofertas, cláusulas y fichajes; antes de tus partidos mira el once confirmado y te avisa si uno de tu alineación no es titular. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}.` : 'Apagado: solo trabaja cuando abres la app'}</span></div>${interr(cf.on, 'fondo', '', 'Trabaja con la app cerrada')}</div>`;
+    const ult = uf ? `${uf.error ? 'Falló' : 'Última'} ${cuando(uf.t)}` : 'Aún no ha trabajado sola';
+    c3 += fila('Con la app cerrada', cf.on ? `Cada 3 h y al cambiar el mercado. ${!nativo.avisosPermitidos() ? '<b class="rojo">Falta el permiso de notificaciones.</b> ' : ''}${esc(ult)}` : 'Apagado: solo al abrir la app', interr(cf.on, 'fondo', '', 'Trabajar con la app cerrada'), 'segundo plano fondo trabaja sola');
   }
-  h += `<div class="ajuste"><div class="c"><b>Clave de Google AI Studio</b><span>${k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : 'Sin clave: el plan sale sin noticias'}</span></div>${k ? '<button class="btn chico sec" data-accion="borrarClave">Quitar</button>' : '<button class="btn chico" data-accion="irIA">Poner</button>'}</div>`;
   if (k) {
     const lista = ((LS.get('ia-modelos', {}) || {}).lista) || [];
     const fuera = LS.get('ia-agotados', {}) || {};
     const hoyG = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
-    const agot = Object.entries(fuera).filter(([, v]) => v && v.d === hoyG).map(([m]) => m);
-    h += `<div class="ajuste"><div class="c"><b>Versiones de la IA</b><span>${lista.length ? `Tu clave de Google da acceso a ${lista.length} versiones de la IA, cada una con su cupo gratis diario${agot.length ? ` (${agot.length} lo han gastado hoy)` : ''}. Si una se agota, la app pasa sola a la siguiente.` : 'La app aún no ha comprobado qué versiones da tu clave'}</span></div><button class="btn chico sec" data-accion="probarIA">Comprobar</button></div>`;
-    h += `<div class="ajuste"><div class="c"><b>Plan automático al abrir</b><span>Lo rehace solo si es de otro día o ha cambiado el mercado</span></div>${interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir')}</div>`;
-    h += `<div class="ajuste"><div class="c"><b>Buscar en Google en el chat</b><span>Solo cuando a la IA le falta algo de hoy. Si se acaba su cupo, sigue sin búsqueda</span></div>${interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat')}</div>`;
-    h += `<div class="ajuste"><div class="c"><b>Buscar en Google al hacer el plan</b><span>Las noticias y los onces probables ya van con el plan; con la búsqueda tarda el doble (de 40 a 80 s en vez de 20 a 30) y falla más</span></div>${interr(!!ci.webPlan, 'iaWebPlan', '', 'Buscar en Google al hacer el plan')}</div>`;
-    const pu = ci.pullitas || 'normal';
-    h += `<div class="ajuste"><div class="c"><b>Pullitas de la IA</b><span>Las bromas sobre noticias de los jugadores y sobre lo que hacen tus rivales. Nunca deciden una compra ni una venta</span></div><select data-cambia="pullitas">${[['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']].map(([v, t]) => `<option value="${v}"${pu === v ? ' selected' : ''}>${t}</option>`).join('')}</select></div>`;
+    const agot = Object.entries(fuera).filter(([, v]) => v && v.d === hoyG).length;
+    c3 += fila('Plan automático al abrir', 'Si es de otro día o cambió el mercado', interr(ci.auto, 'iaAuto', '', 'Plan automático al abrir'), 'plan');
+    c3 += fila('Buscar en Google en el chat', 'Solo si le falta algo de hoy', interr(ci.web, 'iaWeb', '', 'Buscar en Google en el chat'), 'busqueda');
+    c3 += fila('Buscar en Google en el plan', 'Tarda el doble y falla más', interr(!!ci.webPlan, 'iaWebPlan', '', 'Buscar en Google en el plan'), 'busqueda');
+    c3 += fila('Pullitas', 'Bromas que nunca deciden nada', selA('pullitas', [['no', 'Sin pullitas'], ['suave', 'Suaves'], ['normal', 'Normales'], ['saco', 'A saco']], ci.pullitas || 'normal', 'Pullitas de la IA'), 'bromas humor');
+    c3 += fila('Versiones de la IA', lista.length ? `${lista.length} con tu clave${agot ? ` · ${agot} agotada${agot === 1 ? '' : 's'} hoy` : ''}` : 'Sin comprobar', btnA('probarIA', 'Comprobar'), 'cupo modelos');
   }
+  h += sec('ia', 'ia', 'La IA', k ? `Clave puesta${ci.auto ? ' · plan automático' : ''}` : 'Sin clave', c3, 'gemini');
 
-  h += `<div class="grupo"><span>Avisos en el móvil</span></div>`;
-  if (!enApp) h += `<p class="t2 peq" style="margin:4px 0 0">Los avisos (cláusulas que se abren, el cambio de mercado, el plan del día) y la IA trabajando sola llegan en la app del móvil. En el navegador no.</p>`;
-  else h += `<div class="ajuste"><div class="c"><b>Avisos</b><span>${ca.on ? (nativo.avisosPermitidos() || !enApp ? `${prog.length} programados` : 'Falta el permiso de notificaciones') : 'Apagados'}</span></div>${interr(ca.on, 'avisosOn', '', 'Avisos')}</div>`;
-  if (ca.on && enApp) {
-    if (!nativo.alarmasExactas()) h += `<div class="ajuste"><div class="c"><b>Al minuto exacto</b><span>Sin este permiso pueden llegar unos minutos tarde</span></div><button class="btn chico" data-accion="exactas">Dar permiso</button></div>`;
-    h += [['plan', 'Clausulazos de tu plan', '1 minuto antes de que se abra la cláusula'], ...(ca.plan && nativo.hayAlarma() ? [['alarma', 'Que suene como una alarma', 'Aunque tengas el móvil en silencio, hasta que la toques']] : []), ['rivales', 'Cláusulas de rivales que se abren', 'Las que te interesan y te llegan'], ['mias', 'Protección de los tuyos', '2 horas antes de que se acabe'], ['mercado', 'El mercado cambia', '1 hora antes'], ['jornada', 'Empieza la jornada', '3 horas antes'], ['diario', 'Plan del día', 'Un aviso para abrir la app y ver el plan']]
-      .map(([kk, t, s]) => `<div class="ajuste"><div class="c"><b>${t}</b><span>${s}</span></div>${kk === 'diario' && ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" style="margin-right:6px">` : ''}${interr(ca[kk], 'avisoTipo', `data-k="${kk}"`, t)}</div>`).join('');
-    h += `<div class="ajuste"><div class="c"><b>Interés mínimo</b><span>Solo cláusulas que te interesen al menos esto</span></div><select data-cambia="interes">${[30, 40, 50, 55, 60, 70, 80].map((n) => `<option value="${n}" ${+ca.interes === n ? 'selected' : ''}>${n}</option>`).join('')}</select></div>`;
-    const prox = prog.filter((a) => a.id !== 'diario').slice(0, 6);
-    if (prox.length) h += `<p class="t2 peq" style="margin:10px 0 0">Próximos: ${prox.map((a) => `${esc(a.titulo)} (${cuando(a.t)})`).join(' · ')}</p>`;
-    h += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn chico sec" data-accion="probarAviso">Probar un aviso</button>${ca.plan && ca.alarma && nativo.hayAlarma() ? '<button class="btn chico sec" data-accion="probarAlarma">Probar la alarma</button>' : ''}</div>`;
-  }
-
-  h += `<div class="grupo"><span>App</span></div>`;
-  if (estadoLimite.min != null) h += `<div class="ajuste"><div class="c"><b>Tiempo de hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min</b><span>Tienes un límite de ${estadoLimite.min} minutos al día con la app abierta. Se reinicia a las 00:00.</span></div></div>`;
+  /* ---- la app ---- */
+  let c4 = '';
   const ew = enApp ? nativo.estadoWeb() : null;
-  h += `<div class="ajuste"><div class="c"><b>Versión ${VERSION}</b><span>${enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}${ew && ew.activa ? ' · puesta al día sola, sin reinstalar' : ''}` : enWeb ? 'En el navegador' : 'En el navegador (ejemplo)'}</span></div>${enApp ? '<button class="btn chico sec" data-accion="buscarVersion">Buscar nueva</button>' : '<button class="btn chico sec" data-accion="buscarWeb">Buscar nueva</button>'}</div>`;
+  c4 += fila(`Versión ${VERSION}`, enApp ? `Compilación ${nativo.version()}${nativo.canal() === 'play' ? ' · Google Play' : ''}${ew && ew.activa ? ' · al día sin reinstalar' : ''}` : 'En el navegador', btnA(enApp ? 'buscarVersion' : 'buscarWeb', 'Buscar nueva'), 'actualizar version');
+  if (estadoLimite.min != null) c4 += fila(`Hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min`, 'Se reinicia a las 00:00', '', 'tiempo limite minutos');
   // las novedades de cada versión, solo para el dueño (o todos con «novedadesTodos» en limites.json)
-  if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) h += `<div class="ajuste"><div class="c"><b>Novedades</b><span>Lo que trae cada versión y lo que arregla</span></div><button class="btn chico sec" data-accion="novedades">Ver</button></div>`;
-  if (avisosGuardados().admin && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Quién usa la app</b><span>Solo lo ves tú: cuántos la usan, desde dónde, quién de tu liga la tiene y quién está dentro ahora</span></div><button class="btn chico" data-accion="quienUsa">Ver</button></div>`;
-  h += `<div class="ajuste"><div class="c"><b>Diagnóstico</b><span>Lo que han contestado LaLiga y Google en esta sesión</span></div><button class="btn chico sec" data-accion="diag">Ver</button></div>`;
-  if ((enApp || enWeb) && !enDemo()) h += `<div class="ajuste"><div class="c"><b>Ver la liga de ejemplo</b><span>Sin tocar tus datos</span></div><button class="btn chico sec" data-accion="entrarDemo">Ver</button></div>`;
-  h += `<div class="ajuste"><div class="c"><b>Borrar los datos guardados</b><span>Histórico, fichas y planes (tu sesión y tu clave no)</span></div><button class="btn chico sec" data-accion="borrarDatos">Borrar</button></div>`;
-  if (!enDemo() && sesion()) h += `<div class="ajuste"><div class="c"><b>Invitar a tu liga</b><span>Un enlace para el grupo: al entrar, se les abre esta liga</span></div><button class="btn chico" data-accion="invitar">${icono('enviar')}Invitar</button></div>`;
-  if (!enDemo() && sesion()) h += `<div class="ajuste"><div class="c"><b>Borrar mis datos del servidor</b><span>Lo que guarda Fantasy Manager de ti: que usas la app, cuánto rato y tus avisos de fallo</span></div><button class="btn chico sec" data-accion="borrarServidor">Borrar</button></div>`;
-  h += `<div class="ajuste"><div class="c"><b>Privacidad</b><span>Qué datos usa la app y dónde se quedan</span></div><a class="btn chico sec" href="privacidad.html">Ver</a></div>`;
-  h += `<div class="ajuste"><div class="c"><b>Condiciones de uso</b><span>App no oficial: el riesgo con tu cuenta de LaLiga es tuyo y las recomendaciones no son una garantía</span></div><a class="btn chico sec" href="condiciones.html">Ver</a></div>`;
-  // (en la versión de Google Play, si Google pide dejar cambiarlo: en la UE, sí; en la web, con los anuncios de AdSense)
-  if ((enApp && nativo.hayPrivacidadAnuncios()) || (!enApp && hayAnunciosWeb())) h += `<div class="ajuste"><div class="c"><b>Privacidad de los anuncios</b><span>Cambia si los anuncios pueden usar tus datos para personalizarse</span></div><button class="btn chico sec" data-accion="privAnuncios">Cambiar</button></div>`;
-  h += `<p class="peq apag" style="margin-top:16px">Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga. Lee tu liga con tu cuenta, como su app, y usa datos públicos de fútbol. Tu sesión y tu clave se quedan en ${enApp ? 'este móvil' : 'este navegador'}.</p>`;
+  if (dueno || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) c4 += fila('Novedades', 'Lo que trae y arregla cada versión', btnA('novedades', 'Ver'), 'cambios');
+  if (dueno && !enDemo()) c4 += fila('Quién usa la app', 'Solo lo ves tú', btnA('quienUsa', 'Ver', { sec: false }), 'usuarios');
+  if ((enApp || enWeb) && !enDemo()) c4 += fila('Liga de ejemplo', 'Sin tocar tus datos', btnA('entrarDemo', 'Ver'), 'demo');
+  c4 += fila('Diagnóstico', 'Lo que han contestado LaLiga y Google', btnA('diag', 'Ver'), 'errores fallos');
+  h += sec('app', 'info', 'La app', `Versión ${VERSION}`, c4, 'version');
+
+  /* ---- datos y privacidad ---- */
+  let c5 = '';
+  c5 += fila('Borrar los datos guardados', 'Histórico, fichas y planes', btnA('borrarDatos', 'Borrar'), 'limpiar cache');
+  if (!enDemo() && ses) c5 += fila('Borrar mis datos del servidor', 'Uso de la app y avisos de fallo', btnA('borrarServidor', 'Borrar'), 'eliminar cuenta rgpd');
+  // (en Google Play, si Google pide dejar cambiarlo: en la UE, sí; en la web, con los anuncios de AdSense)
+  if ((enApp && nativo.hayPrivacidadAnuncios()) || (!enApp && hayAnunciosWeb())) c5 += fila('Privacidad de los anuncios', 'Si pueden usar tus datos', btnA('privAnuncios', 'Cambiar'), 'consentimiento');
+  c5 += fila('Privacidad', 'Qué datos usa y dónde se quedan', enlA('privacidad.html', 'Ver'), 'politica');
+  c5 += fila('Condiciones de uso', 'App no oficial: el riesgo es tuyo', enlA('condiciones.html', 'Ver'), 'legal terminos');
+  h += sec('datos', 'escudo', 'Datos y privacidad', 'Borrar datos, privacidad y condiciones', c5, 'legal');
+
+  h += `<p id="aj-nada" class="t2 aj-nada" hidden></p>`;
+  h += `<p class="peq apag" style="margin-top:16px">Fantasy Manager es una app no oficial: no es de LaLiga ni tiene relación con LaLiga. Tu sesión y tu clave se quedan en ${enApp ? 'este móvil' : 'este navegador'}.</p>`;
   return h;
 }
 
