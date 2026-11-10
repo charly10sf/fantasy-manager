@@ -20,7 +20,7 @@ import sys
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WEB = os.path.join(RAIZ, 'web')
 DOMINIO = 'https://fantasymanagerapp.com/'
-APK = 'https://fantasymanagerapp.com/descargas/fantasy-manager.apk'
+PLAY = 'https://play.google.com/store/apps/details?id=es.fantasymanager.app'  # desde la 0.7.1h, con la app en la tienda
 CLIENTE_ADSENSE = 'ca-pub-3175956326240112'
 IMAGEN = DOMINIO + 'img/compartir.jpg'  # la de compartir (1200 × 630)
 MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre',
@@ -69,7 +69,7 @@ def menu(raiz, hay_guias):
     return (f'<header class="cab"><div class="cab-in">'
             f'<a class="marca" href="{raiz or "./"}"><img src="{raiz}img/logo.svg" alt="" width="30" height="30">Fantasy <b>Manager</b></a>'
             f'<nav class="menu" aria-label="Menú">{guias}<a href="{raiz}quienes-somos.html">Quiénes somos</a>'
-            f'<a href="{raiz}contacto.html">Contacto</a><a class="menu-web" href="{raiz or "./"}">Usar en la web</a><a class="menu-cta" href="{APK}">Descargar para Android</a></nav>'
+            f'<a href="{raiz}contacto.html">Contacto</a><a class="menu-web" href="{raiz or "./"}">Usar en la web</a><a class="menu-cta" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a></nav>'
             f'</div></header>')
 
 
@@ -77,10 +77,9 @@ def cta(raiz):
     return (f'<aside class="cta" aria-label="La app">'
             f'<p class="cta-t">Fantasy Manager hace estas cuentas por ti con los datos de tu liga</p>'
             f'<p>Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular. Gratis y sin registrarte: entras con tu cuenta de LaLiga.</p>'
-            f'<div class="cta-b"><a class="btn" href="{APK}">Descargar para Android</a>'
+            f'<div class="cta-b"><a class="btn" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a>'
             f'<a class="btn sec" href="{raiz or "./"}">Abrirla en el navegador</a></div>'
-            f'<span class="play-pronto"><svg class="play-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="#00a0ff" d="M3.6 1.6 13.4 12 3.6 22.4c-.4-.2-.6-.6-.6-1.1V2.7c0-.5.2-.9.6-1.1z"/><path fill="#00d95f" d="M3.6 1.6c.3-.2.8-.2 1.2.1L16.4 8.4 13.4 12z"/><path fill="#ff3a44" d="M3.6 22.4 13.4 12l3 3.6L4.8 22.3c-.4.3-.9.3-1.2.1z"/><path fill="#ffd500" d="m16.4 8.4 3.9 2.2c.9.5.9 1.8 0 2.4l-3.9 2.2-3-3.6z"/></svg><span><small>Próximamente en</small><b>Google Play</b></span></span>'
-            f'<p class="peq">En el ordenador se usa desde la web, sin descargar nada. En el iPhone también, después de entrar una vez desde un ordenador. Y puedes verla antes con una liga de ejemplo. <a href="{raiz}instalar.html">Cómo instalarla en Android</a></p>'
+            f'<p class="peq">En el ordenador se usa desde la web, sin descargar nada. En el iPhone también, después de entrar una vez desde un ordenador. Y puedes verla antes con una liga de ejemplo. <a href="{raiz}instalar.html">Cómo instalarla</a></p>'
             f'</aside>')
 
 
