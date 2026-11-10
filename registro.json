@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/aprobados-y-suspensos-del-malaga-ruina-tras-el-descanso-f202611-n/": 1794070433000,
    "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248350/espanyol-merece-debut-eder-sarabia.html": 1794071621000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-espanyol-deportivo-coruna-primera-division-jornada-doce-07-20261107_3470813.html": 1794073014000,
@@ -3263,7 +3262,11 @@
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000,
    "SPORT|136297086": 1794321674000,
-   "Cadena SER|https://cadenaser.com/castillalamancha/2026/11/10/tertulia-conquense-el-conflicto-por-la-fecha-del-partido-aplazado-ser-cuenca/": 1794327316000
+   "Cadena SER|https://cadenaser.com/castillalamancha/2026/11/10/tertulia-conquense-el-conflicto-por-la-fecha-del-partido-aplazado-ser-cuenca/": 1794327316000,
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/10/el-gran-canaria-registra-la-peor-asistencia-desde-el-ultimo-descenso-de-la-ud-las-palmas-ser-las-palmas/": 1794329652000,
+   "ABC|https://www.abc.es/deportes/futbol/ver-pamplona-eibar-hora-partido-copa-rey-20261110175048-nt.html": 1794329448000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-interior-ordena-actuar-contra-piquetes-violentos-huelga-11n-garantizar-seguridad-poligonos-mercados-20261110174507.html": 1794329107000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-repercutira-la-huelga-general-en-el-deporte-en-bizkaia-radio-bilbao/": 1794328222000
   },
   "hechos": [
    {
@@ -3285,28 +3288,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 17,
+   "n": 18,
    "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-repercutira-la-huelga-general-en-el-deporte-en-bizkaia-radio-bilbao/": 1794328583327,
-   "Europa Press|https://www.europapress.es/nacional/noticia-interior-ordena-actuar-contra-piquetes-violentos-huelga-11n-garantizar-seguridad-poligonos-mercados-20261110174507.html": 1794329474907
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 55,
+   "clasificar": 56,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 216894,
-  "salida": 19240,
+  "entrada": 219044,
+  "salida": 19752,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.27496,
+  "dolares": 0.275431,
   "reservado": 0
  },
  "recientes": {
@@ -7265,13 +7265,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1189,
+   "ok": 1190,
    "fallos": 0,
-   "ejecuciones": 807,
+   "ejecuciones": 808,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T16:51:14.907Z"
+   "ultima": "2026-11-10T16:56:20.618Z"
   }
  },
  "ptsDirecto": {},
@@ -7288,15 +7288,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:51:20.071Z"
+   "ultimaBien": "2026-11-10T16:56:28.575Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:51:20.071Z"
+   "ultimaBien": "2026-11-10T16:56:28.575Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:51:20.071Z"
+   "ultimaBien": "2026-11-10T16:56:28.575Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7304,11 +7304,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:51:20.071Z"
+   "ultimaBien": "2026-11-10T16:56:28.575Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:51:20.071Z"
+   "ultimaBien": "2026-11-10T16:56:28.575Z"
   }
  },
  "avisos": [
