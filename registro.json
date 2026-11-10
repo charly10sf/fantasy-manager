@@ -3310,7 +3310,9 @@
    "n": 21,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335474076
+  }
  },
  "ia": {
   "dia": "2026-11-10",
@@ -7284,13 +7286,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1208,
+   "ok": 1209,
    "fallos": 0,
-   "ejecuciones": 826,
+   "ejecuciones": 827,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T18:26:17.521Z"
+   "ultima": "2026-11-10T18:31:14.076Z"
   }
  },
  "ptsDirecto": {},
@@ -7307,15 +7309,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:26:25.622Z"
+   "ultimaBien": "2026-11-10T18:31:17.891Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:26:25.622Z"
+   "ultimaBien": "2026-11-10T18:31:17.891Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:26:25.622Z"
+   "ultimaBien": "2026-11-10T18:31:17.891Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7323,11 +7325,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:26:25.622Z"
+   "ultimaBien": "2026-11-10T18:31:17.891Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:26:25.622Z"
+   "ultimaBien": "2026-11-10T18:31:17.891Z"
   }
  },
  "avisos": [
