@@ -16,7 +16,7 @@ export const VERSION = '0.7.2b';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.2b', f: '2026-11-10', h: '00:00', t: 'El aviso de inercia, sin repetir',
+    v: '0.7.2b', f: '2026-11-10', h: '21:44', t: 'El aviso de inercia, sin repetir',
     cosas: [
       { tipo: 'mejora', d: 'grafica', t: 'El aviso de «se está frenando», solo el aviso', x: 'En la ficha de un jugador, el aviso de que se está frenando, está bajando o ha girado ya no lleva sus propias barras de cada día: salían también en la tarjeta del valor, justo debajo. Y el texto ya no repite el título al empezar.' },
     ],
