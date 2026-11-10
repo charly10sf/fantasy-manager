@@ -2016,7 +2016,9 @@
    "SPORT|136302339": 1794335294000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html": 1794341384000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/tchouameni-se-retira-del-entrenamiento-de-la-seleccion-francesa-por-una-molestia-cadena-ser/": 1794345150000,
-   "SPORT|136302363": 1794342099000
+   "SPORT|136302363": 1794342099000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249665/gerrard-lamine-avanzado-messi-cristiano-edad.html": 1794345817000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/10/aguirre-prueba-lateral-izquierdo-rayo-136308310.html": 1794345903000
   },
   "hechos": [
    {
@@ -2397,7 +2399,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 53
+   "n": 54
   },
   "desde": {
    "67": {
@@ -3349,17 +3351,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 78,
+   "clasificar": 79,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 264073,
-  "salida": 28334,
+  "entrada": 266337,
+  "salida": 28557,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.284225,
+  "dolares": 0.284563,
   "reservado": 0
  },
  "recientes": {
@@ -7385,13 +7387,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1245,
+   "ok": 1246,
    "fallos": 0,
-   "ejecuciones": 862,
+   "ejecuciones": 863,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T21:26:12.363Z"
+   "ultima": "2026-11-10T21:31:17.113Z"
   }
  },
  "ptsDirecto": {},
@@ -7408,15 +7410,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:26:19.580Z"
+   "ultimaBien": "2026-11-10T21:31:24.542Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:26:19.580Z"
+   "ultimaBien": "2026-11-10T21:31:24.542Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:26:19.580Z"
+   "ultimaBien": "2026-11-10T21:31:24.542Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7424,11 +7426,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:26:19.580Z"
+   "ultimaBien": "2026-11-10T21:31:24.542Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:26:19.580Z"
+   "ultimaBien": "2026-11-10T21:31:24.542Z"
   }
  },
  "avisos": [
