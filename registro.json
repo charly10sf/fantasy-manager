@@ -3242,7 +3242,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/07/inclemencias-meteorologicas-obligan-a-aplazar-el-las-palmas-eldense-de-segunda-division-cadena-ser/": 1794085701000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/07/la-borrasca-bruna-obliga-a-suspender-el-ud-las-palmas-eldense-ser-las-palmas/": 1794085110000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/despedida-jesus-miguel-tenerife-estadio_0_2008446228.html": 1794086542000,
    "SPORT|136207802": 1794117638000,
    "SPORT|136213162": 1794110512000,
@@ -7387,13 +7386,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1239,
+   "ok": 1240,
    "fallos": 0,
-   "ejecuciones": 856,
+   "ejecuciones": 857,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T20:56:12.088Z"
+   "ultima": "2026-11-10T21:01:14.979Z"
   }
  },
  "ptsDirecto": {},
@@ -7410,15 +7409,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:56:16.905Z"
+   "ultimaBien": "2026-11-10T21:01:19.897Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:56:16.905Z"
+   "ultimaBien": "2026-11-10T21:01:19.897Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:56:16.905Z"
+   "ultimaBien": "2026-11-10T21:01:19.897Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7426,11 +7425,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:56:16.905Z"
+   "ultimaBien": "2026-11-10T21:01:19.897Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:56:16.905Z"
+   "ultimaBien": "2026-11-10T21:01:19.897Z"
   }
  },
  "avisos": [
