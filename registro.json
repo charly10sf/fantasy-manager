@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000,
    "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000,
@@ -2000,21 +1999,10 @@
    "SPORT|136280060": 1794308464000,
    "SPORT|136281831": 1794308810000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000,
-   "SPORT|136284333": 1794309130000
+   "SPORT|136284333": 1794309130000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794055644000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri no estará disponible por una lesión en el bíceps femoral",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html",
     "medio": "Diario de Sevilla",
@@ -2370,7 +2358,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -3311,17 +3299,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 33,
+   "clasificar": 34,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 173842,
-  "salida": 13084,
+  "entrada": 175933,
+  "salida": 13201,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.267574,
+  "dolares": 0.267842,
   "reservado": 0
  },
  "recientes": {
@@ -7280,13 +7268,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1139,
+   "ok": 1140,
    "fallos": 0,
-   "ejecuciones": 757,
+   "ejecuciones": 758,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:46:14.083Z"
+   "ultima": "2026-11-10T12:51:13.925Z"
   }
  },
  "ptsDirecto": {},
@@ -7303,15 +7291,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:46:17.400Z"
+   "ultimaBien": "2026-11-10T12:51:21.220Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:46:17.400Z"
+   "ultimaBien": "2026-11-10T12:51:21.220Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:46:17.400Z"
+   "ultimaBien": "2026-11-10T12:51:21.220Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7319,11 +7307,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:46:17.400Z"
+   "ultimaBien": "2026-11-10T12:51:21.220Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:46:17.400Z"
+   "ultimaBien": "2026-11-10T12:51:21.220Z"
   }
  },
  "avisos": [
