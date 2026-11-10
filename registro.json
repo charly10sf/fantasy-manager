@@ -1807,7 +1807,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000,
-   "SPORT|136194101": 1794045757000,
    "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/": 1794049173000,
    "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/": 1794050162000,
    "SPORT|136195361": 1794048547000,
@@ -2027,18 +2026,6 @@
     "que": "vuelve",
     "oficial": false,
     "hecho": "Aubameyang regresa al equipo para visitar al Espanyol",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136194101",
-    "medio": "SPORT",
-    "t": 1794045757000,
-    "id": "2354",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Eric completa por primera vez una sesión con el grupo",
     "motivo": "",
     "plazo": "",
     "nums": []
@@ -7351,13 +7338,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1106,
+   "ok": 1107,
    "fallos": 0,
-   "ejecuciones": 724,
+   "ejecuciones": 725,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T10:01:13.334Z"
+   "ultima": "2026-11-10T10:06:13.787Z"
   }
  },
  "ptsDirecto": {},
@@ -7374,15 +7361,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:01:25.741Z"
+   "ultimaBien": "2026-11-10T10:06:16.956Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:01:25.741Z"
+   "ultimaBien": "2026-11-10T10:06:16.956Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:01:25.741Z"
+   "ultimaBien": "2026-11-10T10:06:16.956Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7390,11 +7377,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:01:25.741Z"
+   "ultimaBien": "2026-11-10T10:06:16.956Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:01:25.741Z"
+   "ultimaBien": "2026-11-10T10:06:16.956Z"
   }
  },
  "avisos": [
