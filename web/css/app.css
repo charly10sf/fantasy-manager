@@ -69,6 +69,7 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-liga { flex: 1; min-width: 0; }
 .sup-liga b { display: block; font: 700 17px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sup-liga span { font-size: 13.5px; color: var(--apagado); display: flex; align-items: center; gap: 6px; }
+#supEstado { white-space: nowrap; overflow: hidden; }
 .sup-liga .sup-queda { color: var(--oro); font-weight: 600; font-size: 12.5px; margin-top: 1px; }
 .sup-liga .sup-queda.poco { color: var(--baja); }
 .sup-liga .sup-queda[hidden] { display: none; }
@@ -356,6 +357,7 @@ main { padding: 16px 16px 120px; }
 .radar .mas-radar > summary::-webkit-details-marker { display: none; }
 .dato .et { color: var(--apagado); font: 600 13px 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; }
 .dato .v { font: 700 25px/1.1 var(--cond); margin-top: 3px; }
+.nw { white-space: nowrap; }
 .dato .v small { font-size: 15px; font-weight: 600; color: var(--texto2); margin-left: 3px; }
 .vacio { color: var(--texto2); text-align: center; padding: 24px 10px; font-size: 16px; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 18px; border-radius: 13px; background: var(--rojo); color: #fff; font: 700 15px 'Barlow'; letter-spacing: 0.5px; text-transform: uppercase; }

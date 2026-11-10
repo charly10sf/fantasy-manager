@@ -213,7 +213,7 @@ export function fichaJugador(S, pid) {
   h += `<div class="rejilla" style="margin:10px 0 4px">
     <button class="dato" data-accion="ver" data-sel="#j-puntua"><div class="et">Puntos ›</div><div class="v">${num(j.puntos)}<small>${j.media ? String(Math.round(j.media * 10) / 10).replace('.', ',') + ' de media' : ''}</small></div></button>
     <div class="dato"><div class="et">Interés</div><div class="v">${inter.n}<small>/100</small></div></div>
-    ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` · ${eur(f.clausula - j.valor)} de más` : ''}` : ''}</small></div></button>` : ''}
+    ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` <span class="nw">· ${eur(f.clausula - j.valor)} de más</span>` : ''}` : ''}</small></div></button>` : ''}
     <${prox && prox.rivalId ? `button class="dato" data-club="${esc(prox.rivalId)}"` : 'div class="dato"'}><div class="et">Próximo partido${prox && prox.rivalId ? ' ›' : ''}</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : enCasaDe(prox.rival)} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></${prox && prox.rivalId ? 'button' : 'div'}>
   </div>`;
   // las funciones top cerradas, juntas al final de la ficha
@@ -441,7 +441,7 @@ export function fichaRival(S, tid) {
   <div class="rejilla">
     <button class="dato" data-accion="ver" data-sel="#r-valor"><div class="et">Valor ›</div><div class="v">${eur(e.valor)}<small class="${clase(r.dValor)}">${r.dValor != null ? eur(r.dValor, { signo: true, dec: 1 }) + ' en 7 días' : ''}</small></div></button>
     <button class="dato" data-accion="ver" data-sel="#r-hace"><div class="et">Movimientos 7d ›</div><div class="v">${r.movs}</div></button>
-    <button class="dato" data-accion="ver" data-sel="#r-hace"><div class="et">Gastado 7d ›</div><div class="v">${eur(r.gastado)}<small>${r.ingresado ? `+${eur(r.ingresado, { dec: 1 })}` : ''}</small></div></button>
+    <button class="dato" data-accion="ver" data-sel="#r-hace"><div class="et">Gastado 7d ›</div><div class="v">${eur(r.gastado)}<small>${r.ingresado ? `<span class="nw">ingresó ${eur(r.ingresado, { dec: 1 })}</span>` : ''}</small></div></button>
     <button class="dato" data-accion="ver" data-sel="#r-hace"><div class="et">Cláusulas hechas ›</div><div class="v">${r.clausulazos}<small>14 d${r.contraMi ? `, ${r.contraMi} a ti` : ''}</small></div></button>
     ${bloqueada('dineroRivales') ? '' : `<div class="dato"><div class="et">Dinero</div><div class="v">${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}<small>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'exacto' : `± ${eur(r.dinero.margen)} · estimado`) : 'no se sabe'}</small></div></div>`}
     <div class="dato"><div class="et">Paga en el mercado</div><div class="v">${r.paga ? pct(r.paga.med * 100) : '–'}<small>${r.paga ? `sobre el valor · ${r.paga.n} compra${r.paga.n > 1 ? 's' : ''}` : 'sin compras al mercado'}</small></div></div>
