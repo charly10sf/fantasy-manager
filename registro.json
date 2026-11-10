@@ -1994,7 +1994,9 @@
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/10/lalcudia-de-crespins-remonta-ante-el-atletico-chella-1-2-y-se-lleva-un-duelo-directo-por-el-liderato-radio-xativa/": 1794302528000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/09-nov-2026-partidazo-cope-20261110_3471816.html": 1794271800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249354/cucurella-resuelve-duda-le-ayuda-defensa-vinicius-diomande.html": 1794304800000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html": 1794304285000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html": 1794304285000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249362/entiendo-alguien-quiera-vienen-barca-madrid-formas-molestaron.html": 1794305948000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000
   },
   "hechos": [
    {
@@ -2433,7 +2435,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -3373,17 +3375,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 121499,
-  "salida": 10749,
+  "entrada": 123764,
+  "salida": 10981,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.200719,
+  "dolares": 0.201062,
   "reservado": 0
  },
  "recientes": {
@@ -7338,13 +7340,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1111,
+   "ok": 1112,
    "fallos": 0,
-   "ejecuciones": 729,
+   "ejecuciones": 730,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T10:26:19.507Z"
+   "ultima": "2026-11-10T10:31:15.357Z"
   }
  },
  "ptsDirecto": {},
@@ -7361,15 +7363,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:26:23.279Z"
+   "ultimaBien": "2026-11-10T10:31:22.077Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:26:23.279Z"
+   "ultimaBien": "2026-11-10T10:31:22.077Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:26:23.279Z"
+   "ultimaBien": "2026-11-10T10:31:22.077Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7377,11 +7379,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:26:23.279Z"
+   "ultimaBien": "2026-11-10T10:31:22.077Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:26:23.279Z"
+   "ultimaBien": "2026-11-10T10:31:22.077Z"
   }
  },
  "avisos": [
