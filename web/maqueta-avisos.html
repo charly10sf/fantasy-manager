@@ -48,6 +48,7 @@
   <p class="maq-nota">Es la ficha de verdad con la liga de ejemplo (la inercia abierta). Toca un aviso para desplegarlo. «Abrir todos» y «Cerrar todos» son solo para ver los dos estados; en la app van todos cerrados al entrar.</p>
   <script>
     /* solo en esta página: limites.json con «bloqueadas» vacío, para ver la inercia abierta con la liga de ejemplo */
+    try { localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1'); } catch (e) { /* nada */ }
     const f0 = window.fetch.bind(window);
     window.fetch = async (u, o) => {
       const r = await f0(u, o);
