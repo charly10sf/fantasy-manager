@@ -1,7 +1,8 @@
 """Las capturas de la ficha de Google Play (1080 x 1920) con la liga de ejemplo.
 Uso: en web/, `python3 -m http.server 8765`; desde la raíz del repo, `python3 .github/capturas-play.py [archivo…]`
 (PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers en el entorno de Claude). Las deja en play/; con nombres, solo esas.
-Sin fotos de LaLiga: todo lo que no es localhost se corta y salen las iniciales (lo que queremos en Play).
+Con las caras y los escudos de LaLiga, como se ve la app (Carlos, 10 nov): se piden con curl y se sirven al navegador;
+lo demás que no es localhost se corta. Si no llegan, el script se para.
 El chat de la IA no gasta cuota: la respuesta de Google es la de RESPUESTA_IA, escrita a mano con los datos de la demo
 (si cambia la demo, revisar las cifras). La cabecera del mensaje dice «IA», sin nombre de modelo."""
 import asyncio, base64, json, os, sys
@@ -51,8 +52,26 @@ async def google(route):
     return await route.fulfill(status=200, content_type='application/json', body=json.dumps({'candidates': [{'content': {'role': 'model', 'parts': [{'text': RESPUESTA_IA}]}, 'finishReason': 'STOP'}]}))
 
 MODO = {'v': 'normal'}
+CACHE = {}
+async def de_fuera(route):
+    """Las caras y los escudos de LaLiga (como se ve la app): la lista de jugadores y de equipos y las imágenes,
+    pedidas con curl (que sale por el proxy del entorno) y servidas al navegador."""
+    u = route.request.url
+    if u not in CACHE:
+        pr = await asyncio.create_subprocess_exec('curl', '-sS', '--compressed', '-m', '30', '-H', 'x-app: 2', '-D', '-', u, stdout=asyncio.subprocess.PIPE)
+        out, _ = await pr.communicate()
+        cab, _, cuerpo = out.partition(b'\r\n\r\n')
+        while cuerpo.startswith(b'HTTP/'):  # 100 Continue o redirecciones
+            cab, _, cuerpo = cuerpo.partition(b'\r\n\r\n')
+        tipo = next((l.split(b':', 1)[1].strip().decode() for l in cab.split(b'\r\n') if l.lower().startswith(b'content-type:')), 'application/octet-stream')
+        estado = int(cab.split(b' ')[1]) if cab.startswith(b'HTTP/') else 502
+        CACHE[u] = (estado, tipo, cuerpo)
+    estado, tipo, cuerpo = CACHE[u]
+    return await route.fulfill(status=estado, content_type=tipo, body=cuerpo, headers={'access-control-allow-origin': '*'})
+
 async def red(route):
     u = route.request.url
+    if 'llt-services.com' in u: return await de_fuera(route)
     if u.startswith('http://localhost'):
         if MODO['v'] != 'normal' and u.split('?')[0].endswith('/limites.json'):
             r = await route.fetch(); d = await r.json(); d['bloqueadas'] = []
@@ -63,6 +82,7 @@ async def red(route):
             return await route.fulfill(response=r, body=t.replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,'))
         return await route.continue_()
     if 'generativelanguage.googleapis.com' in u: return await google(route)
+    print('cortado:', u[:120])
     return await route.abort()
 
 async def cerrar_hoja(pg):
@@ -74,7 +94,9 @@ async def main(solo):
         b = await p.chromium.launch()
         for modo in ('normal', 'abierto', 'paron'):
             hoy = [x for x in PANTALLAS if (x[4] if len(x) > 4 else 'normal') == modo and (not solo or x[0] in solo)]
-            if hoy: await por_modo(b, modo, hoy)
+            # una sesión nueva para cada captura: con más de un minuto abierta, la cabecera pasa de «Al día» a
+            # «Actualizado hace 1 min» (y a 390 px eso ocupa tres líneas); recargar no basta, la hora se guarda
+            for x in hoy: await por_modo(b, modo, [x])
         await b.close()
 
 async def por_modo(b, modo, pantallas):
@@ -84,10 +106,20 @@ async def por_modo(b, modo, pantallas):
         await pg.route('**/*', red)
         pg.on('pageerror', lambda e: print('ERROR en la página:', e))
         await pg.add_init_script("localStorage.setItem('fm-tour','1')")
-        # el escudo grande de la ficha del club, sin la foto de LaLiga, es un círculo vacío: fuera
-        await pg.add_init_script("addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '.pt-esc.sin.club-g{display:none}'; document.head.appendChild(s); })")
         await pg.goto('http://localhost:8765/')
         await pg.wait_for_timeout(7000)
+        # las caras y los escudos de LaLiga, como en la web publicada: en localhost la app no puede pedirlos (no hay
+        # Worker), así que se piden aquí con caras-demo.js y un http que va directo (lo sirve de_fuera con curl)
+        n = await pg.evaluate("""(async () => {
+          const CD = await import('/js/caras-demo.js'), { jugadoresDemo } = await import('/js/demo.js'), { LS } = await import('/js/util.js');
+          const http = async (m, url, { cabeceras } = {}) => { const r = await fetch(url, { headers: cabeceras }); return { s: r.status, b: await r.text() }; };
+          const n = await CD.traer(http, jugadoresDemo());
+          if (n.casados) { LS.set(CD.CLAVE, n); window.dispatchEvent(new CustomEvent('fm-caras', { detail: n })); }
+          return n.casados || 0;
+        })()""")
+        print('caras casadas:', n)
+        if not n: raise SystemExit('Sin caras de LaLiga: no valen las capturas')
+        await pg.reload(); await pg.wait_for_timeout(7000)
         for arch, tit, sub, pasos, *_ in pantallas:
             await cerrar_hoja(pg)
             for tipo, x in pasos:
@@ -122,6 +154,10 @@ async def por_modo(b, modo, pantallas):
                     await pg.evaluate("(() => { const e = document.querySelector('.msg.yo'); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 86); })()")
                     await pg.wait_for_timeout(500)
             await pg.evaluate("document.activeElement && document.activeElement.blur()")
+            # todas las fotos cargadas antes de la foto
+            try: await pg.wait_for_function("[...document.images].filter((i) => { const r = i.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width; }).every((i) => i.complete && i.naturalWidth)", timeout=20000)
+            except Exception: print('OJO: alguna imagen sin cargar en', arch)
+            await pg.wait_for_timeout(500)
             png = await pg.screenshot()
             await componer(b, arch, tit, sub, png)
             print('hecha', arch, f'({modo})')
