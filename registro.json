@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248379/eder-sarabia-le-espera-brazos-abiertos-me-parecido-siempre-futbolista-maravilloso-he-transmitido.html": 1794078040000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248415/marc-casado-enciende-espanyolismo-recuerdo-celebraciones-barca.html": 1794084208000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maffeo-estalla-descanso-valencia-real-madrid-no-me-apetece-entrevista-20261107_3470873.html": 1794085302000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248531/doble-palo-real-madrid-alarmas-linda-caicedo-cruzan-charco.html": 1794120828000,
@@ -7290,13 +7289,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1214,
+   "ok": 1215,
    "fallos": 0,
-   "ejecuciones": 832,
+   "ejecuciones": 833,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T18:56:12.761Z"
+   "ultima": "2026-11-10T19:01:19.821Z"
   }
  },
  "ptsDirecto": {},
@@ -7313,15 +7312,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:56:20.912Z"
+   "ultimaBien": "2026-11-10T19:01:24.727Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:56:20.912Z"
+   "ultimaBien": "2026-11-10T19:01:24.727Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:56:20.912Z"
+   "ultimaBien": "2026-11-10T19:01:24.727Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7329,11 +7328,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:56:20.912Z"
+   "ultimaBien": "2026-11-10T19:01:24.727Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:56:20.912Z"
+   "ultimaBien": "2026-11-10T19:01:24.727Z"
   }
  },
  "avisos": [
