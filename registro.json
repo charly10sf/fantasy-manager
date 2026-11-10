@@ -1804,7 +1804,6 @@
  "noticias": {
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/radiografia-quique-sanchez-flores-nuevo_0_2008442354.html": 1794046746000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000,
    "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/": 1794049173000,
@@ -7339,13 +7338,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1109,
+   "ok": 1110,
    "fallos": 0,
-   "ejecuciones": 727,
+   "ejecuciones": 728,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T10:16:12.905Z"
+   "ultima": "2026-11-10T10:21:23.565Z"
   }
  },
  "ptsDirecto": {},
@@ -7362,15 +7361,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:16:15.297Z"
+   "ultimaBien": "2026-11-10T10:21:29.263Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:16:15.297Z"
+   "ultimaBien": "2026-11-10T10:21:29.263Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:16:15.297Z"
+   "ultimaBien": "2026-11-10T10:21:29.263Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7378,11 +7377,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:16:15.297Z"
+   "ultimaBien": "2026-11-10T10:21:29.263Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:16:15.297Z"
+   "ultimaBien": "2026-11-10T10:21:29.263Z"
   }
  },
  "avisos": [
