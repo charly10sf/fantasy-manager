@@ -3310,7 +3310,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136192571": 1794041056000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "SPORT|136195921": 1794049583000,
@@ -7365,13 +7364,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1090,
+   "ok": 1091,
    "fallos": 0,
-   "ejecuciones": 708,
+   "ejecuciones": 709,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T08:41:13.576Z"
+   "ultima": "2026-11-10T08:46:13.276Z"
   }
  },
  "ptsDirecto": {},
@@ -7388,15 +7387,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:41:18.974Z"
+   "ultimaBien": "2026-11-10T08:46:16.591Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:41:18.974Z"
+   "ultimaBien": "2026-11-10T08:46:16.591Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:41:18.974Z"
+   "ultimaBien": "2026-11-10T08:46:16.591Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7404,11 +7403,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:41:18.974Z"
+   "ultimaBien": "2026-11-10T08:46:16.591Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:41:18.974Z"
+   "ultimaBien": "2026-11-10T08:46:16.591Z"
   }
  },
  "avisos": [
