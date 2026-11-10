@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/maffeo-estalla-descanso-valencia-real-madrid-no-me-apetece-entrevista-20261107_3470873.html": 1794085302000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248531/doble-palo-real-madrid-alarmas-linda-caicedo-cruzan-charco.html": 1794120828000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261108/1004248527/2-3-cruz-azul-nuevo-lider-mexico.html": 1794120346000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248425/causas-dejan-adeyemi-fuera-seleccion.html": 1794117600000,
@@ -7386,13 +7385,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1240,
+   "ok": 1241,
    "fallos": 0,
-   "ejecuciones": 857,
+   "ejecuciones": 858,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T21:01:14.979Z"
+   "ultima": "2026-11-10T21:06:19.471Z"
   }
  },
  "ptsDirecto": {},
@@ -7409,15 +7408,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:01:19.897Z"
+   "ultimaBien": "2026-11-10T21:06:21.656Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:01:19.897Z"
+   "ultimaBien": "2026-11-10T21:06:21.656Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:01:19.897Z"
+   "ultimaBien": "2026-11-10T21:06:21.656Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7425,11 +7424,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:01:19.897Z"
+   "ultimaBien": "2026-11-10T21:06:21.656Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:01:19.897Z"
+   "ultimaBien": "2026-11-10T21:06:21.656Z"
   }
  },
  "avisos": [
