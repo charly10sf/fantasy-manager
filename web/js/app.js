@@ -605,7 +605,21 @@ function ajustarTabs(raiz = document) {
     n.classList.remove('dos');
     if ([...n.querySelectorAll('b, span')].some((b) => b.scrollWidth > b.clientWidth + 1)) n.classList.add('dos');
   }
+  // los nombres de los clubes no se parten a media palabra (con la letra del móvil grande salía «BARCELON / A»):
+  // si la palabra más larga no cabe, se achica la letra hasta que quepa (como mucho, al 60 %)
+  for (const el of raiz.querySelectorAll(NOMBRES)) {
+    el.style.fontSize = '';
+    if (el.scrollWidth <= el.clientWidth + 1) continue;
+    const base = parseFloat(getComputedStyle(el).fontSize);
+    for (let f = base - 1; f >= base * 0.6; f -= 1) {
+      el.style.fontSize = f + 'px';
+      if (el.scrollWidth <= el.clientWidth + 1) break;
+    }
+  }
 }
+const NOMBRES = '.club-hero h2, .cc-n, .pf-eq span, .fx-nom';
+// la letra condensada llega después del primer pintado: al llegar, se vuelve a medir
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { try { ajustarTabs(); } catch (e) { /* nada */ } });
 let tamanoT = null;
 window.addEventListener('resize', () => {
   try { ajustarTabs(); } catch (e) { /* nada */ }
@@ -1850,6 +1864,7 @@ function abrirHoja(html) {
   requestAnimationFrame(() => { velo.classList.add('on'); hoja.classList.add('on'); if (!hoja.contains(document.activeElement)) hoja.focus({ preventScroll: true }); });
   S.hoja = hoja;
   encuadrar(hoja);
+  ajustarTabs(hoja);
   gestoHoja(hoja, velo);
   return hoja;
 }
@@ -2085,6 +2100,7 @@ function repintarHoja() {
   S.hoja.scrollTop = sc;
   if (dentro) S.hoja.focus({ preventScroll: true });
   encuadrar(S.hoja);
+  ajustarTabs(S.hoja);
 }
 
 window.atras = () => {

@@ -1544,7 +1544,7 @@ body.limitado .tostada { z-index: 120; }
 /* la ficha de un partido */
 .pf-mar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin: 4px 0 8px; padding: 16px 10px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
 .pf-eq { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; font: 700 16px/1.15 'Barlow'; text-align: center; }
-.pf-eq span { overflow-wrap: anywhere; }
+.pf-eq span { max-width: 100%; }
 .pf-res { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .pf-res b { font: 700 40px/1 var(--cond); letter-spacing: 1px; }
 .pf-res b i { font-style: normal; color: var(--apagado); margin: 0 6px; }
@@ -1648,7 +1648,7 @@ body.limitado .tostada { z-index: 120; }
 .cc-cam { position: absolute; right: -10px; top: 14px; width: 80px; height: 80px; opacity: 0.95; transform: rotate(10deg); filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5)); pointer-events: none; }
 .cc-cab { position: relative; display: flex; align-items: center; gap: 8px; min-width: 0; padding-right: 54px; }
 .cc-cab .pt-esc { width: 26px; height: 26px; }
-.cc-n { font: 700 18px/1.05 var(--cond); text-transform: uppercase; overflow-wrap: anywhere; }
+.cc-n { min-width: 0; font: 700 18px/1.05 var(--cond); text-transform: uppercase; }
 .cc-pos { position: relative; font: 600 13.5px 'Barlow'; color: var(--texto2); }
 .cc-caras { position: relative; display: flex; align-items: center; margin-top: auto; }
 .cc-caras .ava-w + .ava-w { margin-left: -8px; }
@@ -1669,7 +1669,7 @@ body.limitado .tostada { z-index: 120; }
 .club-hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: repeating-linear-gradient(90deg, var(--c1, var(--plano3)) 0 16px, var(--c2, var(--plano2)) 16px 32px); }
 .club-hero .pt-esc.club-g { width: 60px; height: 60px; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5)); }
 .club-hero .ch-t { min-width: 0; }
-.club-hero h2 { margin: 0; font: 700 30px/0.95 var(--cond); text-transform: uppercase; overflow-wrap: anywhere; }
+.club-hero h2 { margin: 0; font: 700 30px/0.95 var(--cond); text-transform: uppercase; }
 .club-hero .ch-s { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 8px; color: var(--texto2); font-size: 15px; }
 .escritorio .club-hero { margin-left: -30px; margin-right: -30px; padding: 18px 30px 20px; }
 /* las pestañas de la ficha de un club: pegadas arriba de la ficha (la hoja hace scroll ella sola) */
@@ -1701,7 +1701,7 @@ body.limitado .tostada { z-index: 120; }
 .fx-m { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: 8px; margin-top: 12px; }
 .fx-eq { display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 0; text-align: center; }
 .fx-eq .pt-esc.g { width: 50px; height: 50px; }
-.fx-nom { font: 700 15.5px/1.15 'Barlow'; overflow-wrap: anywhere; }
+.fx-nom { max-width: 100%; font: 700 15.5px/1.15 'Barlow'; }
 button.fx-eq .fx-nom { text-decoration: underline; text-decoration-color: var(--rojo); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
 button.fx-eq:active { opacity: 0.7; }
 .fx-eq .racha i { width: 13px; height: 13px; font-size: 8.5px; }
