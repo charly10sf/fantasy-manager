@@ -3280,7 +3280,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/navalcarnero-betis-horario-ver-tv_0_2008462707.html": 1794308704000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/10/betis-abre-proceso-solicitud-602-entradas-proximo-derbi-sanchez-pizjuan.html": 1794313574000,
    "SPORT|136280060": 1794308464000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-ayuso-critica-use-impunidad-secuestro-cara-huelga-general-pide-acabar-basura-sindical-20261110110256.html": 1794304976000
+   "Europa Press|https://www.europapress.es/madrid/noticia-ayuso-critica-use-impunidad-secuestro-cara-huelga-general-pide-acabar-basura-sindical-20261110110256.html": 1794304976000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794315238000
   },
   "hechos": [
    {
@@ -3302,27 +3303,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 11,
+   "n": 12,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794316595275
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 183657,
-  "salida": 13954,
+  "entrada": 185377,
+  "salida": 14040,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.268992,
+  "dolares": 0.269207,
   "reservado": 0
  },
  "recientes": {
@@ -7281,13 +7280,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1149,
+   "ok": 1150,
    "fallos": 0,
-   "ejecuciones": 767,
+   "ejecuciones": 768,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T13:36:14.300Z"
+   "ultima": "2026-11-10T13:41:15.629Z"
   }
  },
  "ptsDirecto": {},
@@ -7304,15 +7303,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:36:17.671Z"
+   "ultimaBien": "2026-11-10T13:41:22.391Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:36:17.671Z"
+   "ultimaBien": "2026-11-10T13:41:22.391Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:36:17.671Z"
+   "ultimaBien": "2026-11-10T13:41:22.391Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7320,11 +7319,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:36:17.671Z"
+   "ultimaBien": "2026-11-10T13:41:22.391Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:36:17.671Z"
+   "ultimaBien": "2026-11-10T13:41:22.391Z"
   }
  },
  "avisos": [
