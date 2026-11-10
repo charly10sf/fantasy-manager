@@ -2011,7 +2011,8 @@
    "SPORT|136304092": 1794330880000,
    "SPORT|136303943": 1794330466000,
    "SPORT|136304134": 1794331165000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/alarma-tchouameni.html": 1794335994000
   },
   "hechos": [
    {
@@ -2364,7 +2365,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 46
+   "n": 47
   },
   "desde": {
    "67": {
@@ -3319,17 +3320,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 67,
+   "clasificar": 68,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 242402,
-  "salida": 24204,
+  "entrada": 244298,
+  "salida": 24865,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.279993,
+  "dolares": 0.280513,
   "reservado": 0
  },
  "recientes": {
@@ -7288,13 +7289,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1211,
+   "ok": 1212,
    "fallos": 0,
-   "ejecuciones": 829,
+   "ejecuciones": 830,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T18:41:14.138Z"
+   "ultima": "2026-11-10T18:46:13.111Z"
   }
  },
  "ptsDirecto": {},
@@ -7311,15 +7312,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:41:18.726Z"
+   "ultimaBien": "2026-11-10T18:46:19.967Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:41:18.726Z"
+   "ultimaBien": "2026-11-10T18:46:19.967Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:41:18.726Z"
+   "ultimaBien": "2026-11-10T18:46:19.967Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7327,11 +7328,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:41:18.726Z"
+   "ultimaBien": "2026-11-10T18:46:19.967Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:41:18.726Z"
+   "ultimaBien": "2026-11-10T18:46:19.967Z"
   }
  },
  "avisos": [
