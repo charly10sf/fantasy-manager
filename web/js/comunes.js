@@ -4,6 +4,7 @@ import { enApp } from './puente.js';
 import { mini } from './graficos.js';
 import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 import { esFav } from './favoritos.js';
+import { aviso } from './avisos-ficha.js';
 
 let EQUIPOS = {};
 export const ponerEquipos = (m) => { EQUIPOS = m || {}; };
@@ -150,13 +151,11 @@ export function h2hHTML(h2h, rival = '') {
  * el calendario de riesgo en la ficha: sus próximos partidos (5, o los de sus 14 días protegido si son más), cada
  * uno con el rival, lo difícil que es para él, los puntos que se esperan y si será titular; y el veredicto
  */
-export function calendarioHTML(M, j, mio = false) {
+export function calendarioHTML(M, j, mio = false, S = {}) {
   const c = M && M.calendarioRiesgo ? M.calendarioRiesgo(j) : null;
   if (!c) return '';
   const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
   const titulo = c.tipo === 'duro' ? 'Calendario duro' : c.tipo === 'favorable' ? 'Calendario favorable' : 'Calendario normal';
-  // el riesgo es el de ficharlo: con los tuyos no pinta nada
-  const riesgo = mio ? '' : `<span class="cr-r ${c.riesgo}">Riesgo ${c.riesgo}</span>`;
   // cada rival, con cómo llega (sus últimos partidos); arriba, cómo llega su equipo
   // dos líneas por partido: el rival con sus puntos y su titularidad; debajo, su puesto y nivel y, a la derecha, cómo llega
   const filas = c.partidos.map((p) => `<${p.rivalId ? `button data-club="${esc(p.rivalId)}"` : 'div'} class="cr-p ${nivelCls(p.nivel)}">
@@ -190,14 +189,17 @@ export function calendarioHTML(M, j, mio = false) {
     }
   }
   const suya = M.racha ? M.racha(j.equipoId) : null;
-  return `<div class="cal-riesgo ${c.tipo}">
-    <div class="cr-cab"><b>${titulo}</b>${riesgo}</div>
-    <p class="cr-txt">${esc(c.texto)}</p>
+  // (37, 10 nov) plegado: a la vista el título y cuántos partidos hay y de qué nivel; dentro, el detalle de cada uno
+  const dentro = `<div class="cal-riesgo en-aviso ${c.tipo}">
+    <p class="cr-txt">${esc(/protegida/.test(c.texto) ? c.texto : `~${d1(c.pts / c.n)} pts por partido${j.media ? ` (su media es ${d1(Number(j.media))})` : ''}${c.pTit != null ? `, titular ~${Math.round(c.pTit * 100)} %` : ''}.`)}</p>
+    ${consejo ? `<p class="cr-consejo">${esc(consejo)}</p>` : ''}
     ${suya ? `<div class="cr-su"><span>Cómo llega ${esc(j.equipo || 'su equipo')}</span>${rachaHTML(suya, j.equipo)}</div>` : ''}
     <div class="cr-lista">${filas}</div>
     <p class="cr-ley">Las bolitas, los últimos partidos de cada equipo: <b class="ley-V">V</b> ganó, <b class="ley-E">E</b> empató, <b class="ley-D">D</b> perdió. La de la derecha es la más reciente.</p>
-    ${consejo ? `<p class="cr-consejo">${esc(consejo)}</p>` : ''}
   </div>`;
+  return aviso(S, { k: 'calendario', pid: j.id, cls: c.tipo === 'duro' ? '' : c.tipo === 'favorable' ? 'verde' : 'azul', ico: 'calendario', t: titulo,
+    l: `${c.n} partido${c.n === 1 ? '' : 's'}: ${esc(c.resumen)} · ~${d1(c.pts)} pts`, d: dentro,
+    chip: mio ? null : { t: `Riesgo ${c.riesgo}`, cls: c.riesgo === 'alto' ? 'baja' : c.riesgo === 'medio' ? 'oro' : 'sube' } });
 }
 
 const dec1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');

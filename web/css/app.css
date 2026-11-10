@@ -542,6 +542,25 @@ h1.titulo { font-weight: 700; }
 .aviso-ficha.verde { background: var(--sube-s); } .aviso-ficha.oro { background: var(--oro-s); } .aviso-ficha.azul { background: var(--azul-s); }
 .aviso-ficha .ic { color: var(--rojo-l); margin-top: 1px; }
 .aviso-ficha.verde .ic { color: var(--sube); } .aviso-ficha.oro .ic { color: var(--oro); } .aviso-ficha.azul .ic { color: var(--azul); }
+/* (37, 10 nov) avisos de la ficha plegados: título y una línea a la vista, lo demás dentro de un <details> (sin botones en el summary) */
+.aviso-ficha.av { align-items: flex-start; }
+.av-tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.av-t { font-weight: 700; line-height: 1.25; }
+.av-sub { font-weight: 500; color: var(--texto2); }
+.av-l { font-size: 14px; line-height: 1.35; color: var(--texto2); }
+.av-chip { display: none; }
+.av-pleg { display: block; padding: 0; }
+.av-pleg > summary { list-style: none; display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; cursor: pointer; border-radius: 14px; }
+.av-pleg > summary::-webkit-details-marker { display: none; }
+.av-pleg > summary:focus-visible { outline: 2px solid var(--rojo-l); outline-offset: -2px; }
+.av-fl { width: 18px; height: 18px; margin-top: 2px; transition: transform 0.15s; }
+.aviso-ficha .av-fl, .aviso-ficha.verde .av-fl, .aviso-ficha.oro .av-fl, .aviso-ficha.azul .av-fl { color: var(--apagado); }
+.av-pleg[open] > summary .av-fl { transform: rotate(180deg); }
+.av-d { padding: 0 14px 12px 46px; font-size: 14px; line-height: 1.45; color: var(--texto2); }
+.av-d p { margin: 8px 0 0; } .av-d p:first-child { margin-top: 0; } .av-d b { color: var(--texto); }
+.cal-riesgo.en-aviso { margin: 0; padding: 0; border: 0; background: none; }
+.cal-riesgo.en-aviso .cr-txt { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) { .av-fl { transition: none; } }
 .ajuste { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--linea); }
 .ajuste:last-child { border-bottom: 0; }
 .ajuste .c { flex: 1; min-width: 0; }
@@ -808,15 +827,6 @@ body.con-nv { overflow: hidden; }
 .pp-p b { text-align: right; color: var(--texto); font-family: var(--cond); font-size: 15px; }
 .pill.estim { background: var(--plano2); color: var(--texto2); border: 1px dashed var(--plano3); }
 .aciertos summary b { color: var(--texto); }
-/* 0.2.1: la inercia del valor */
-.inercia { margin: 10px 0 12px; padding: 12px 14px; border-radius: 14px; background: var(--plano); border: 1px solid var(--plano2); }
-.inercia.mal { background: var(--baja-s); border-color: rgba(255, 111, 97, 0.35); }
-.inercia.ojo { background: var(--oro-s); border-color: rgba(255, 197, 71, 0.35); }
-.inercia.bien { background: var(--sube-s); border-color: rgba(47, 209, 143, 0.3); }
-.inercia .in-cab { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.inercia .in-cab .ic { width: 18px; height: 18px; }
-.inercia.mal .in-cab .ic { color: var(--baja); } .inercia.ojo .in-cab .ic { color: var(--oro); } .inercia.bien .in-cab .ic { color: var(--sube); }
-.inercia p { margin: 6px 0 0; font-size: 14px; color: var(--texto2); }
 /* lo que cambia cada día, debajo de la gráfica del valor: arriba lo que sube, abajo lo que baja */
 .dias7 { margin: 4px 0 12px; padding: 10px 12px 8px; border-radius: 14px; background: var(--plano); border: 1px solid var(--linea); }
 .d7-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 600 13px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto2); }
@@ -855,7 +865,6 @@ body.con-nv { overflow: hidden; }
 .jt.medio { background: var(--oro-s); border-color: rgba(255, 197, 71, 0.3); } .jt.medio b { color: var(--oro); }
 .jt.mal { background: var(--baja-s); border-color: rgba(255, 111, 97, 0.3); } .jt.mal b { color: var(--baja); }
 .jt.nada b { color: var(--apagado); }
-.inercia p b { color: var(--texto); }
 /* 0.2.2: el chat */
 .chat-cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px 10px; flex-wrap: wrap; }
 .chat-acc { display: flex; gap: 8px; align-items: center; flex: none; padding-bottom: 6px; margin-left: auto; }
@@ -1285,8 +1294,6 @@ body.en-tour { overflow: hidden; }
 .bloq-hoja p { margin: 0 auto 12px; max-width: 32em; font-size: 15.5px; line-height: 1.5; color: var(--texto2); }
 .bloq-hoja p b { color: var(--texto); }
 .bloq-hoja .btn { margin-top: 6px; }
-.inercia.neutra { background: var(--plano2); border-color: var(--linea); }
-.inercia.neutra .in-cab .ic { color: var(--azul); }
 /* la web abierta desde un móvil: en Android, la app; en el iPhone, cómo entrar la primera vez */
 .entrar-movil { display: grid; gap: 8px; text-align: left; margin: 0 0 12px; padding: 14px; border-radius: 16px; background: var(--rojo-s); border: 1px solid rgba(238, 28, 60, 0.4); }
 .entrar-movil > b { display: flex; align-items: center; gap: 8px; font: 700 18px var(--cond); text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto); }

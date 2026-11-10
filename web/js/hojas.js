@@ -18,6 +18,7 @@ import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { estadoLimite, novedadesPara, bloqueada, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
+import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
 import { muestrasVivo } from './vivo.js';
 import { esFav } from './favoritos.js';
 
@@ -155,7 +156,6 @@ export function resumenEquipo(S) {
   const suben = mias.filter((x) => num(x.tend.d1) > 0).sort((a, b) => b.tend.d1 - a.tend.d1);
   const bajan = mias.filter((x) => num(x.tend.d1) < 0).sort((a, b) => a.tend.d1 - b.tend.d1);
   const quietos = mias.length - suben.length - bajan.length;
-  const rango = S.rango || 30;
   let h = `<div class="hoja-cab"><h2>Tu equipo hoy</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   h += `<div class="valor-g"><span class="v">${eur(D.valorEquipo)}</span><span class="d ${clase(d1)}">${d1 ? `${d1 > 0 ? '▲' : '▼'} ${eur(Math.abs(d1), { dec: 2 })}${base > 0 ? ` (${pct((d1 / base) * 100)})` : ''} hoy` : '= hoy'}</span>${d7 ? `<span class="d ${clase(d7)}">${eur(d7, { signo: true })} 7d</span>` : ''}</div>`;
   h += `<p class="t2 peq" style="margin:2px 0 0">${suben.length} suben · ${bajan.length} bajan · ${quietos} igual${suben[0] ? ` · el que más sube, <b class="sube">${esc(suben[0].j.nombre)} ${eur(suben[0].tend.d1, { signo: true })}</b>` : ''}${bajan[0] ? ` · el que más baja, <b class="baja">${esc(bajan[0].j.nombre)} ${eur(bajan[0].tend.d1, { signo: true })}</b>` : ''}</p>`;
@@ -256,36 +256,52 @@ export function fichaJugador(S, pid) {
   </div>`;
   // las funciones top cerradas, juntas al final de la ficha
   const cerradas = [];
-  if (M.inercia && M.inercia(pid)) { if (bloqueada('inercia')) cerradas.push('inercia'); else h += inerciaHTML(M, pid, !!mia); }
+  // (37) la inercia y el plan de hoy: si dicen lo mismo, una sola tarjeta; todas plegadas, con título y una línea a la vista
+  let planDentro = false;
+  if (M.inercia && M.inercia(pid)) { if (bloqueada('inercia')) cerradas.push('inercia'); else { const r = inerciaPlanHTML(S, pid, { mio: !!mia, op, mia }); h += r.html; planDentro = r.fundido; } }
   for (const n of notasDe(pid)) h += `<div class="aviso-ficha oro">${icono('nota')}<div><b>Le contaste a la IA:</b> ${esc(n.texto)} <span class="t2">(${cuando(n.t)})</span></div></div>`;
-  if (op) h += `<div class="aviso-ficha">${icono('rayo')}<div><b>Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max && eur(op.puja_max) !== eur(op.importe) ? ` (puja hasta ${eur(op.puja_max)})` : ''}.</b> ${esc(op.motivo || '')}</div></div>`;
+  if (op && !planDentro) h += avisoDeTexto(S, { k: 'plan', pid, ico: 'rayo', texto: op.motivo || '', t: `Plan de hoy: ${op.etiqueta || ACC[op.accion] || op.accion}${op.importe ? ` por ${eur(op.importe)}` : ''}${op.puja_max && eur(op.puja_max) !== eur(op.importe) ? ` (puja hasta ${eur(op.puja_max)})` : ''}` });
   // si el plan lo descarta (por dinero o por pagar de más), también aquí: la puja del mercado no es una recomendación
   const dpl = !op && descartePlan(S, pid);
-  if (dpl) h += `<div class="aviso-ficha oro">${icono('alerta')}<div><b>Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : 'pujes'}.</b> ${esc(dpl.aviso || '')}</div></div>`;
-  for (const n of notasPlan(S, { j })) h += notaPlanHTML(n);
+  if (dpl) h += avisoDeTexto(S, { k: 'descarte', pid, cls: 'oro', ico: 'alerta', t: `Plan de hoy: no ${dpl.accion === 'comprar' ? 'lo compres' : 'pujes'}`, texto: dpl.aviso || '' });
+  notasPlan(S, { j }).forEach(([et, t], n) => { h += avisoDeTexto(S, { k: `nota${n}`, pid, cls: 'azul', ico: 'ia', t: et, texto: t }); });
   const rango = S.rango || 30;
   h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   h += `<div id="graf-j">${grafValor(serieValor(S, pid), rango, cargandoValor(S, pid))}</div>`;
   h += `<div id="jor-j">${S.det && S.det[pid] ? jornadasFichaHTML(S.det[pid]) : '<div class="graf-vacio">Cargando sus jornadas…</div>'}</div>`;
 
   if (mia) {
-    h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}${mia.abierta ? `: <b>abierta</b>${mia.riesgo === 'ninguno' ? ', pero sin riesgo ahora' : `, te lo pueden quitar ya. Riesgo ${mia.riesgo}`}` : ', '}${mia.abierta ? '' : mia.veda ? `a salvo mientras las cláusulas estén cerradas, hasta que empiece la jornada ${mia.veda.n} (${cuando(mia.protegidoHasta)}, en ${cuenta(mia.protegidoHasta)})` : `${mia.escudo ? '<b>blindado</b>' : 'protegido'} hasta ${cuando(mia.protegidoHasta)} (${cuenta(mia.protegidoHasta)})`}.${mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? ` <b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido; te quedan ${S.M.escudosMios.quedan} esta jornada.` : ''}${mia.abierta ? '' : ` ${mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`}.`}${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : mia.inicial ? ` Venía en tu equipo inicial: al empezar la liga valía ${eur(mia.inicial)} (<b class="${clase(mia.ganadoIni)}">${eur(mia.ganadoIni, { signo: true })}</b>).` : ' Lo que pagaste por él no sale en los movimientos de la liga.'}${(() => {
-      // lo que le daría LaLiga si lo pones a la venta (lo que suele dar en tu liga sobre el valor)
-      const ol = S.M.ofertaLigaDe ? S.M.ofertaLigaDe(j) : null;
-      if (!ol || S.M.enVenta.has(pid)) return '';
-      const ref = mia.compra || mia.inicial || null;
-      const gana = ref ? ol.v - ref : null;
-      return ` Si lo pones a la venta, LaLiga te daría unos <b>${eur(ol.v)}</b>${ol.sinDatos ? ' (cerca de su valor: aún no hay ventas a LaLiga en tu liga para afinarlo)' : ` (en tu liga da entre ${eur(ol.min)} y ${eur(ol.max)}, de mediana un ${pct(ol.med * 100)} sobre el valor)`}${gana != null ? `: <b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'}` : ''}.`;
-    })()}</div></div>`;
+    // (37) «Es tuyo»: a la vista, hasta cuándo está a salvo la cláusula y el riesgo; dentro, lo que pagaste y lo que te daría LaLiga.
+    // El importe de la cláusula no se repite: ya sale en el dato de arriba
+    const rs = mia.riesgo === 'ninguno' ? 'sin riesgo' : `riesgo ${mia.riesgo}`;
+    const lineaT = mia.abierta
+      ? (mia.riesgo === 'ninguno' ? 'Cláusula abierta, pero sin riesgo ahora' : `Cláusula abierta: te lo pueden quitar ya · riesgo ${mia.riesgo}`)
+      : `${mia.veda ? `A salvo hasta que empiece la J${mia.veda.n}` : mia.escudo ? 'Blindado hasta' : 'Protegido hasta'} ${esc(cuando(mia.protegidoHasta))} (${mia.veda ? 'en ' : ''}${cuenta(mia.protegidoHasta)}) · ${rs}`;
+    const ol = S.M.ofertaLigaDe ? S.M.ofertaLigaDe(j) : null;
+    const ref = mia.compra || mia.inicial || null;
+    const gana = ol && ref ? ol.v - ref : null;
+    const gratis = mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido. Te quedan ${S.M.escudosMios.quedan} esta jornada.` : '';
+    const pagado = mia.compra ? `<b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b> sobre lo que pagaste (${eur(mia.compra)}).`
+      : mia.inicial ? `<b class="${clase(mia.ganadoIni)}">${eur(mia.ganadoIni, { signo: true })}</b> desde que empezó la liga: entonces valía ${eur(mia.inicial)}.`
+      : 'Lo que pagaste por él no sale en los movimientos de la liga.';
+    const liga = !ol || S.M.enVenta.has(pid) ? ''
+      : `Si lo pones a la venta, LaLiga te da unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}. ${ol.sinDatos ? 'Aún no hay ventas a LaLiga en tu liga: el cálculo va cerca de su valor.' : `En tu liga da entre ${eur(ol.min)} y ${eur(ol.max)}, de mediana un ${pct(ol.med * 100)} sobre el valor.`}`;
+    h += aviso(S, { k: 'tuyo', pid, cls: mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde', ico: 'escudo', t: 'Es tuyo', l: lineaT, d: parrafos(gratis, pagado, liga),
+      chip: { t: mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`, cls: mia.riesgo === 'alto' ? 'baja' : mia.riesgo === 'medio' ? 'oro' : 'sube' } });
     const pg = mia.pagan;
     if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) cerradas.push('quienPaga');
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
       const nadie = !pg.seguro.length && !pg.quiza.length;
       // solo a quién le llega, sin cuánto tiene (eso es «dinero de los rivales», que va aparte)
       const lista = [...pg.seguro.map((x) => `<b>${esc(x.nombre)}</b>`), ...pg.quiza.map((x) => `${esc(x.nombre)} (justo)`)];
+      const n = lista.length;
       const b = mia.blindaje;
-      const bl = !b || b.yaVale ? '' : b.caro ? ` Dejarla fuera del alcance de todos costaría ${eur(b.coste)}: no compensa para lo que vale.${b.parcial ? ` <b>Lo que sí compensa:</b> subirla a ${eur(b.parcial.objetivo)} (te cuesta ${eur(b.parcial.coste)}) y solo le llegaría a ${esc(b.parcial.quedan.join(', '))}.` : ''}` : ` <b>Para dejarla a salvo:</b> subirla a ${eur(b.objetivo)} te cuesta ${eur(b.coste)} y ${b.porTecho ? 'quedaría por encima de lo que se suele pagar en tu liga por una cláusula' : 'no le llegaría a nadie'}.`;
-      h += `<div class="aviso-ficha ${nadie ? 'verde' : pg.seguro.length ? '' : 'oro'}">${icono('rivales')}<div>${nadie ? '<b>Ahora mismo no le llega a ningún rival.</b> Podrían juntarlo vendiendo, pero hoy no.' : `<b>Les llega:</b> ${lista.join(', ')}.`}${pg.sinSaber.length ? ` <span class="t2">(De ${pg.sinSaber.length} no se sabe el dinero.)</span>` : ''}${bl}</div></div>`;
+      const bl = !b || b.yaVale ? '' : b.caro ? `Dejarla fuera del alcance de todos costaría ${eur(b.coste)}: no compensa para lo que vale.${b.parcial ? ` <b>Lo que sí compensa:</b> subirla a ${eur(b.parcial.objetivo)} (te cuesta ${eur(b.parcial.coste)}) y solo le llegaría a ${esc(b.parcial.quedan.join(', '))}.` : ''}` : `<b>Para dejarla a salvo:</b> subirla a ${eur(b.objetivo)} te cuesta ${eur(b.coste)} y ${b.porTecho ? 'quedaría por encima de lo que se suele pagar en tu liga por una cláusula' : 'no le llegaría a nadie'}.`;
+      h += aviso(S, { k: 'llega', pid, cls: nadie ? 'verde' : pg.seguro.length ? '' : 'oro', ico: 'rivales',
+        t: nadie ? 'No le llega a ningún rival' : `Le llega a ${n} rival${n > 1 ? 'es' : ''}`,
+        l: nadie ? 'Podrían juntarlo vendiendo, pero hoy no' : `${lista.slice(0, 3).join(', ')}${n > 3 ? ` y ${n - 3} más` : ''}`,
+        d: parrafos(nadie || n <= 3 ? '' : `<b>Les llega:</b> ${lista.join(', ')}.`, pg.sinSaber.length ? `De ${pg.sinSaber.length} no se sabe el dinero.` : '', bl),
+        chip: nadie ? null : { t: `${n}`, cls: 'baja' } });
     }
   } else {
     // en el mercado: libre de la liga (subasta a ciegas) o puesto a la venta por su dueño, otro manager
@@ -296,13 +312,40 @@ export function fichaJugador(S, pid) {
       // si el plan lo quiere para revender (o está en Especular), su calendario no cuenta: lo que se puja
       const espE = (M.especular || []).find((e) => e.pid === m.pid);
       const espX = m.tipo === 'manager' ? 0 : op && op.objetivo === 'revender' ? op.importe || m.puja : espE ? espE.precio || m.puja : 0;
-      if (m.tipo === 'manager') h += `<div class="aviso-ficha oro">${icono('usuario')}<div><b>Lo vende ${esc(m.vendedor || 'otro manager')}</b>, que lo ha puesto en el mercado y pide ${eur(m.precio)} (${pct((m.sobrePide || 0) * 100)} sobre su valor). Sigue siendo suyo: solo es tuyo si acepta tu oferta, no es un jugador libre de la liga.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''} (cuánto, solo lo ve él).` : ''}${m.ofertaLiga ? (m.ofertaLiga.sinDatos || vb ? ' LaLiga también le hace su oferta y se queda con la mejor, así que lo que pide no basta.' : ` LaLiga también le hace su oferta, que solo ve él: en tu liga suele rondar <b>${eur(m.ofertaLiga.v)}</b> (de mediana un ${pct(m.ofertaLiga.med * 100)} sobre el valor, en ${m.ofertaLiga.n} ventas), y se queda con la mejor${m.precio >= m.ofertaLiga.v ? '. Aquí pide más que eso, así que lo que manda es su precio' : ': por menos lo normal es que no te lo venda'}.`) : ''}${m.noVende ? ` <b>Pero ${esc(m.noVende)}:</b> si lo vendiera no podría alinear un once, así que lo normal es que no te lo venda (lo tendrá a la venta para ver qué le da LaLiga).` : ''}${m.ofertaMin && !m.noVende && !vb ? ` Para que te lo venda, ofrécele <b>${eur(m.puja || m.ofertaMin)}</b>${m.ofertaAlta > m.ofertaMin ? (m.puja === m.ofertaAlta ? ` (lo más probable; con ${eur(m.ofertaMin)} tienes opciones, pero puede que LaLiga le dé más)` : ` (con ${eur(m.ofertaAlta)} es muy probable)`) : ''}.` : ''}${m.miPuja ? ` Tu oferta: ${eur(m.miPuja)}${m.ofertaMin && m.miPuja < m.ofertaMin ? ', por debajo de lo que suele dar LaLiga: súbela o lo normal es que no la acepte' : ''}.` : ''}</div></div>${vb && m.ofertaMin && !m.noVende ? candado('ventasRivales') : ''}`;
-      else h += `<div class="aviso-ficha azul">${icono('mercado')}<div><b>Libre en el mercado de la liga</b> desde ${eur(m.precio)}. Subasta a ciegas${m.cierra ? ` hasta ${cuando(m.cierra)}` : ''}: se lo lleva la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}${m.miPuja ? ` Tu puja: ${eur(m.miPuja)}.` : cc && !cc.ok && espX ? ` Para revender da igual su calendario: la app pujaría ${eur(espX)}.` : cc && !cc.ok ? ` Con su calendario no pujaría por él${cc.parche ? `: sale ya a un ${pct(cc.sobre * 100)} sobre su valor y de parche no pagaría más de un ${pct(cc.cal.maxSobre * 100, 0, false)}` : ' salvo que te haga falta de parche'}.` : ` Para llevártelo, la app pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)}).`}${(() => { const PV = M.pagaLiga && m.j.valor ? M.pagaLiga(m.j.valor) : null; return PV ? ` Por los más parecidos que se han comprado en tu liga (de ${eur(PV.desde)} a ${eur(PV.hasta)}) se ha pagado de mediana un ${pct(PV.med * 100)} sobre su valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.` : M.pujasLiga && !M.pujasLiga.poco ? ` En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : ''; })()}${m.topeCal && (!cc || cc.ok) ? ` La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? ' La app la deja más baja para no pagar de más por lo que te aporta.' : ''}</div></div>`;
+      if (m.tipo === 'manager') {
+        // (37) «Lo vende…»: a la vista, lo que pide y lo que hay que ofrecerle; dentro, cómo funciona la venta
+        const sobre = `${pct((m.sobrePide || 0) * 100)} sobre su valor`;
+        const ofrece = m.ofertaMin && !m.noVende && !vb;
+        const oL = m.ofertaLiga;
+        const liga = !oL ? '' : oL.sinDatos || vb ? 'LaLiga también le hace su oferta y se queda con la mejor: lo que pide no basta.'
+          : `LaLiga también le hace su oferta, que solo ve él: en tu liga suele rondar <b>${eur(oL.v)}</b> (de mediana un ${pct(oL.med * 100)} sobre el valor, en ${oL.n} ventas). Se queda con la mejor${m.precio >= oL.v ? ': aquí pide más que eso, así que manda su precio' : ': por menos lo normal es que no te lo venda'}.`;
+        h += aviso(S, { k: 'vende', pid, cls: 'oro', ico: 'usuario', t: `Lo vende ${esc(m.vendedor || 'otro manager')}`,
+          l: m.noVende ? `Pide ${eur(m.precio)}, pero lo normal es que no te lo venda` : ofrece ? (eur(m.puja || m.ofertaMin) === eur(m.precio) ? `Pide ${eur(m.precio)} (${sobre}): ofrécele eso` : `Pide ${eur(m.precio)} (${sobre}) · ofrécele ${eur(m.puja || m.ofertaMin)}`) : `Pide ${eur(m.precio)} (${sobre})`,
+          d: parrafos(`Sigue siendo suyo: solo es tuyo si acepta tu oferta. No es un jugador libre de la liga.${m.ofertas ? ` Lleva ${m.ofertas} oferta${m.ofertas > 1 ? 's' : ''} (cuánto, solo lo ve él).` : ''}`,
+            liga,
+            m.noVende ? `<b>Pero ${esc(m.noVende)}:</b> si lo vendiera no podría alinear un once, así que lo normal es que no te lo venda (lo tendrá a la venta para ver qué le da LaLiga).` : '',
+            ofrece && m.ofertaAlta > m.ofertaMin ? (m.puja === m.ofertaAlta ? `Esa oferta es la más probable: con ${eur(m.ofertaMin)} tienes opciones, pero puede que LaLiga le dé más.` : `Con ${eur(m.ofertaAlta)} es muy probable que te lo venda.`) : '',
+            m.miPuja ? `Tu oferta: ${eur(m.miPuja)}${m.ofertaMin && m.miPuja < m.ofertaMin ? ', por debajo de lo que suele dar LaLiga: súbela o lo normal es que no la acepte' : ''}.` : '') });
+        if (vb && m.ofertaMin && !m.noVende) h += candado('ventasRivales');
+      } else {
+        // (37) «Libre en el mercado»: a la vista, desde cuánto y lo que haría la app; dentro, la subasta y lo que se paga en tu liga
+        const noPuja = cc && !cc.ok && !espX;
+        const PV = M.pagaLiga && m.j.valor ? M.pagaLiga(m.j.valor) : null;
+        const lineaL = m.miPuja ? `Desde ${eur(m.precio)} · tu puja: ${eur(m.miPuja)}` : cc && !cc.ok && espX ? `Desde ${eur(m.precio)} · para revender, la app pujaría ${eur(espX)}` : noPuja ? `Desde ${eur(m.precio)} · con su calendario, la app no pujaría` : `Desde ${eur(m.precio)} · la app pujaría ${eur(m.puja)} (${pct((m.puja / m.precio - 1) * 100)})`;
+        const cal = m.miPuja ? '' : cc && !cc.ok && espX ? 'Para revender da igual su calendario.' : noPuja ? `Con su calendario no pujaría por él${cc.parche ? `: sale ya a un ${pct(cc.sobre * 100)} sobre su valor y de parche no pagaría más de un ${pct(cc.cal.maxSobre * 100, 0, false)}` : ' salvo que te haga falta de parche'}.` : '';
+        const liga = PV ? `Por los más parecidos que se han comprado en tu liga (de ${eur(PV.desde)} a ${eur(PV.hasta)}) se ha pagado de mediana un ${pct(PV.med * 100)} sobre su valor, y el 90 % hasta un ${pct(PV.p90 * 100)}.` : M.pujasLiga && !M.pujasLiga.poco ? `En tu liga se paga de mediana un ${pct(M.pujasLiga.med * 100)} sobre el valor.` : '';
+        const tope = m.topeCal && (!cc || cc.ok) ? `La app la deja en un ${pct(((cc && cc.cal && cc.cal.maxSobre) || 0.05) * 100, 0, false)} sobre su valor como mucho por su calendario: es solo de parche.` : m.recortada ? 'La app la deja más baja para no pagar de más por lo que te aporta.' : '';
+        h += aviso(S, { k: 'libre', pid, cls: 'azul', ico: 'mercado', t: 'Libre en el mercado de la liga', l: lineaL,
+          d: parrafos(`Subasta a ciegas${m.cierra ? ` hasta ${esc(cuando(m.cierra))}` : ''}: gana la puja más alta. ${m.pujas ? `${m.pujas} puja${m.pujas > 1 ? 's' : ''}.` : 'Sin pujas.'}`, cal, liga, tope) });
+      }
     }
     if (suya) {
-      if (suya.abierta && suya.meLlega) h += `<div class="aviso-ficha verde">${icono('diana')}<div><b>Puedes clausularlo ya</b> a ${esc(suya.rival.manager || suya.rival.nombre)} por ${eur(suya.clausula)}. Te quedarías con ${eur(suya.teQueda)}.</div></div>`;
-      else if (suya.abierta) h += `<div class="aviso-ficha">${icono('candado')}<div>Su cláusula está abierta (${eur(suya.clausula)}, de ${esc(suya.rival.manager || suya.rival.nombre)}), pero te faltan <b>${eur(suya.clausula - num(S.D.dinero))}</b>: una cláusula solo se paga con saldo, sin deuda.</div></div>`;
-      else h += `<div class="aviso-ficha oro">${icono('reloj')}<div>Es de <b>${esc(suya.rival.manager || suya.rival.nombre)}</b>. ${suya.escudo ? 'Lo ha <b>blindado</b>. ' : ''}${suya.veda ? `Las cláusulas están cerradas hasta que empiece la jornada ${suya.veda.n}: la suya (${eur(suya.clausula)}) se puede pagar <b>${cuando(suya.protegidoHasta)}</b>, en ${cuenta(suya.protegidoHasta)}.` : `Su cláusula (${eur(suya.clausula)}) se abre <b>${cuando(suya.protegidoHasta)}</b>, en ${cuenta(suya.protegidoHasta)}.`}${suya.meLlega ? ' Te llega con tu saldo.' : ` Con tu saldo te faltan ${eur(suya.clausula - num(S.D.dinero))} (las cláusulas no se pueden pagar con deuda).`}</div></div>`;
+      const dueno = esc(suya.rival.manager || suya.rival.nombre);
+      if (suya.abierta && suya.meLlega) h += aviso(S, { k: 'clausular', pid, cls: 'verde', ico: 'diana', t: 'Puedes clausularlo ya', l: `${eur(suya.clausula)} a ${dueno}: te quedas con ${eur(suya.teQueda)}` });
+      else if (suya.abierta) h += aviso(S, { k: 'clausular', pid, ico: 'candado', t: 'Cláusula abierta, pero no te llega', l: `Te faltan ${eur(suya.clausula - num(S.D.dinero))}`, d: parrafos(`Es de ${dueno}. Una cláusula solo se paga con saldo, sin deuda.`) });
+      else h += aviso(S, { k: 'clausular', pid, cls: 'oro', ico: 'reloj', t: `Es de ${dueno}`,
+        l: `Su cláusula ${suya.veda ? 'se puede pagar' : 'se abre'} ${esc(cuando(suya.protegidoHasta))} (en ${cuenta(suya.protegidoHasta)})`,
+        d: parrafos(suya.escudo ? 'Lo ha <b>blindado</b>.' : '', suya.veda ? `Las cláusulas están cerradas hasta que empiece la jornada ${suya.veda.n}.` : '', suya.meLlega ? 'Te llega con tu saldo.' : `Con tu saldo te faltan ${eur(suya.clausula - num(S.D.dinero))}: las cláusulas no se pueden pagar con deuda.`) });
     } else if (!enMercado) {
       h += `<div class="aviso-ficha azul">${icono('info')}<div>No es de nadie en tu liga: puede salir en el mercado.</div></div>`;
     }
@@ -311,7 +354,7 @@ export function fichaJugador(S, pid) {
   const venta = M.misVentas.find((v) => v.pid === pid);
   if (venta) h += `<div class="sec"><h2>En venta</h2></div>${ventaHTML(venta)}`;
   if (j.pos < 5) {
-    h += calendarioHTML(M, j, !!mia);
+    h += calendarioHTML(M, j, !!mia, S);
     const v = M.previa && M.previa(j), r = M.rendimiento && M.rendimiento(j);
     const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
     // cómo puntúa según dónde y contra quién (puntos por partido), comparado con su media; y lo del próximo partido
@@ -326,7 +369,7 @@ export function fichaJugador(S, pid) {
     if (v && j.pos <= 2 && v.cero != null) tiles.push(tile(`Portería a cero vs ${esc(v.rival)}`, `~${Math.round(v.cero * 100)} %`, 'de probabilidad'));
     else if (v && v.golesFavor != null) tiles.push(tile(`Goles de su equipo vs ${esc(v.rival)}`, `~${d1(v.golesFavor)}`, 'esperados'));
     if (tiles.length) h += `<div class="sec" id="j-puntua" data-ancla><h2>Cómo puntúa</h2><span class="sub">${med ? `su media es ${d1(med)} pts` : 'puntos por partido'}</span></div><div class="rejilla rinde">${tiles.join('')}</div>`;
-    h += esperadosHTML(M, j);
+    h += esperadosHTML(S, M, j);
     // fuera del Fantasy: Understat y SofaScore
     const a = M.avanzado && M.avanzado(j.id);
     if (a) {
@@ -355,40 +398,8 @@ export function fichaJugador(S, pid) {
   return h;
 }
 
-/** hacia dónde va su valor: lo que ha cambiado cada día y si se frena o ya ha girado */
-/** el texto del aviso sin el título repetido delante («Ha girado a la baja: venía…» → «Venía…») */
-const sinTitulo = (t, tit) => {
-  const s = String(t || '');
-  if (!tit || !s.toLowerCase().startsWith(tit.toLowerCase())) return s;
-  const r = s.slice(tit.length).replace(/^[\s:.,—-]+/, '');
-  return r ? r[0].toUpperCase() + r.slice(1) : s;
-};
-function inerciaHTML(M, pid, mio) {
-  const x = M.inercia ? M.inercia(pid) : null;
-  if (!x || !(['giro', 'baja', 'parado', 'frena', 'acelera', 'rebote'].includes(x.fase) || x.vuelve)) return '';
-  const mal = x.fase === 'giro' || x.fase === 'baja', ojo = x.fase === 'parado' || x.fase === 'frena';
-  // frenando, pero con días de subida por delante: para comprar y vender pronto todavía vale (Carlos, 30 oct, con Gulácsi:
-  // +250 mil al día y 6 días hasta girar; antes decía «No es momento de comprarlo»)
-  const larga = x.fase === 'frena' && x.giroEn != null && x.giroEn >= 3;
-  const tit = { giro: 'Ha girado a la baja', baja: 'Está bajando', parado: 'Se ha estancado', frena: 'Se está frenando', acelera: 'Sube cada vez más', rebote: 'Rebota tras semanas bajando' }[x.fase];
-  // el que vuelve (se hundió y ahora juega y sube varios días seguidos): mientras siga subiendo, ni «No es momento de
-  // comprarlo» ni «véndelo» (0.7n, el caso De Jong); la inercia ya lo da como 'sube' o 'acelera'
-  const vu = x.vuelve;
-  // un partidazo de hace nada cambia el consejo: lo normal es que mañana suba (lo avisó Domy el 25 oct)
-  const pz = M.partidazo ? M.partidazo(pid) : null;
-  // por escalones: 6-7 solo se avisa, 8-9 sin prisa por vender, 10 o más lo normal es que suba
-  const pzTxt = pz ? [` <b>Ha hecho un buen partido (${pz.pts} puntos):</b> puede suavizar la bajada.`, ` <b>Ha hecho un partido muy bueno (${pz.pts} puntos):</b> lo normal es que la bajada se frene. ${mio ? 'Sin prisa: espera al cambio de mañana antes de venderlo.' : 'Si lo quieres, puede que mañana no esté más barato.'}`, ` <b>Ojo: acaba de hacer ${pz.pts} puntos.</b> Tras un partido así LaLiga suele subirle el valor los días siguientes, así que esta bajada puede frenarse o darse la vuelta. ${mio ? 'Espera a ver el cambio de mañana antes de venderlo.' : 'Si lo quieres, puede que mañana ya esté más caro.'}`][pz.nivel - 1] : '';
-  const consejo = vu ? (mio ? ' <b>Aguántalo mientras siga subiendo:</b> le queda mucho para lo que valía. Véndelo cuando deje de subir.' : ' <b>Para comprarlo y revenderlo es de los más claros:</b> le queda mucho recorrido. Mientras siga subiendo, compensa.')
-    : pz && pz.nivel >= 2 && (mal || ojo) ? pzTxt
-    : (pz && (mal || ojo) ? pzTxt : '') + (x.fase === 'rebote' ? (mio ? ' Decide por sus puntos y su sitio en tu once.' : ' Si lo quieres, está cerca de su mínimo del mes, pero aún no ha demostrado que vaya a subir.')
-    : mio ? (mal ? ' <b>Véndelo ya</b>, salvo que lo necesites sí o sí para la jornada.' : larga ? ` Aún sube: <b>véndelo en los próximos ${Math.max(1, Math.round(x.giroEn) - 1)} días</b>, antes de que gire.` : ojo ? ' <b>Véndelo antes de que gire.</b>' : '')
-      : larga ? ` <b>Aún le quedan unos ${Math.round(x.giroEn)} días subiendo</b>${x.proy3 > 0 ? ` (unos ${eur(x.proy3, { signo: true })} en 3 días)` : ''}: para comprarlo y venderlo antes de que gire, todavía da; para quedártelo mucho tiempo, no.` : (mal || ojo ? ' No es momento de comprarlo.' : ''));
-  // (10 nov, Carlos) sin sus barras: lo de cada día ya sale en la tarjeta del valor; aquí, solo el aviso
-  return `<div class="inercia ${mal ? 'mal' : ojo ? 'ojo' : x.fase === 'rebote' ? 'neutra' : 'bien'}"><div class="in-cab">${icono(mal ? 'baja' : ojo ? 'reloj' : x.fase === 'rebote' ? 'cambio' : 'sube')}<b>${vu ? `Vuelve: llegó a valer ${eur(vu.max)}` : tit}</b></div><p>${esc(sinTitulo(x.texto, vu ? '' : tit))}${consejo}</p></div>`;
-}
-
 /** los puntos esperados de su próximo partido, por partes, con la titularidad y la rotación */
-function esperadosHTML(M, j) {
+function esperadosHTML(S, M, j) {
   const P = M.ppDetalle ? M.ppDetalle(j) : null;
   if (!P) return '';
   const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
@@ -403,7 +414,13 @@ function esperadosHTML(M, j) {
   const T = P.T;
   if (T) h += `<div class="previa"><span>Titular <b>~${Math.round(T.p * 100)} %</b></span>${T.fuentes.map((f) => `<span>${esc(f.f)} <b>${Math.round(f.p * 100)} %</b></span>`).join('')}</div>`;
   if (T && T.rot && T.rot.cerca.length) {
-    h += `<div class="aviso-ficha oro">${icono('reloj')}<div><b>Riesgo de rotación${T.pRot ? ` (−${Math.round(T.pRot * 100)} % de titularidad)` : ''}.</b> Su equipo juega ${T.rot.cerca.map((x) => `${esc(x.comp)}${x.rival ? ` ${x.casa ? 'contra el' : 'en casa del'} ${esc(x.rival)}` : ''} ${cuando(x.t)} (${x.antes ? `${d1(x.dias)} días antes` : `${d1(x.dias)} días después`})`).join(' y ')}.</div></div>`;
+    // (37) a la vista el primer partido y cuántos son; dentro, todos y lo que quita de titularidad
+    const cerca = T.rot.cerca;
+    const part = (x) => `${esc(x.comp)}${x.rival ? ` ${x.casa ? 'contra el' : 'en casa del'} ${esc(x.rival)}` : ''}`;
+    const antes = (x) => `${d1(x.dias)} días ${x.antes ? 'antes' : 'después'}`;
+    h += aviso(S, { k: 'rotacion', pid: j.id, cls: 'oro', ico: 'reloj', t: 'Riesgo de rotación', chip: T.pRot ? { t: `−${Math.round(T.pRot * 100)} %`, cls: 'oro' } : null,
+      l: `${T.pRot ? `−${Math.round(T.pRot * 100)} % de titularidad · ` : ''}${esc(cerca[0].comp)}, ${antes(cerca[0])}${cerca.length > 1 ? ` y ${cerca.length - 1} más` : ''}`,
+      d: parrafos(...cerca.map((x) => `${part(x)}, ${esc(cuando(x.t))} (${antes(x)}).`)) });
   }
   return h;
 }
@@ -436,7 +453,6 @@ function notasPlan(S, { tid, j } = {}) {
   }
   return out.filter(([, t]) => t);
 }
-const notaPlanHTML = ([et, t]) => `<div class="aviso-ficha azul peq">${icono('ia')}<div><b>${esc(et)}:</b> ${esc(t)}</div></div>`;
 
 /** cómo juega un rival (M.perfil): sus clausulazos, cómo ficha y vende, si se protege y a qué hora se mueve */
 function perfilHTML(S, tid) {
@@ -479,7 +495,7 @@ export function fichaRival(S, tid) {
   const serie = r.serie.map(([d, v]) => [Date.parse(d + 'T12:00:00'), v]);
   let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></div>
   <p class="t2" style="margin:0 0 12px">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</p>
-  ${notasPlan(S, { tid }).map(notaPlanHTML).join('')}
+  ${notasPlan(S, { tid }).map(([et, t], n) => avisoDeTexto(S, { k: `nota${n}`, pid: `r${tid}`, cls: 'azul', ico: 'ia', t: et, texto: t })).join('')}
   <div class="rejilla">
     <button class="dato" data-accion="ver" data-sel="#r-valor"><div class="et">Valor ›</div><div class="v">${eur(e.valor)}<small class="${clase(r.dValor)}">${r.dValor != null ? eur(r.dValor, { signo: true, dec: 1 }) + ' en 7 días' : ''}</small></div></button>
     <button class="dato" data-accion="ver" data-sel="#r-hace"><div class="et">Movimientos 7d ›</div><div class="v">${r.movs}</div></button>
