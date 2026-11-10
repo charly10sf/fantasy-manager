@@ -67,7 +67,7 @@ b, strong { font-weight: 600; color: var(--texto); }
   position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px;
   padding: 10px 16px; background: var(--fondo); border-bottom: 1px solid var(--linea);
 }
-.sup .logo { width: 30px; height: 30px; flex: none; }
+.sup .logo { width: 36px; height: 36px; flex: none; }
 .sup-liga { flex: 1; min-width: 0; }
 .sup-liga b { display: block; font: 700 17px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sup-liga span { font-size: 13.5px; color: var(--apagado); display: flex; align-items: center; gap: 6px; }
@@ -522,7 +522,13 @@ h1.titulo { font-weight: 700; }
   padding: 8px 16px calc(26px + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); overscroll-behavior: contain;
 }
 .hoja.on { transform: none; }
-.asa { width: 40px; height: 4px; border-radius: 2px; background: var(--plano3); margin: 0 auto 10px; }
+/* el asa: se arrastra para cerrar y también cierra al tocarla; 44 px de alto para el dedo, la raya más visible ((32)) */
+.asa { display: block; width: calc(100% + 32px); height: 44px; margin: -8px -16px -8px; padding: 0; border: 0; background: none; color: inherit; cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.asa i { display: block; width: 44px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.34); margin: 12px auto 0; transition: background 0.15s, transform 0.15s; }
+.asa:active i, .hoja.arrastrando .asa i { background: rgba(255, 255, 255, 0.6); transform: scaleX(1.18); }
+.asa:focus-visible { outline: none; }
+.asa:focus-visible i { outline: 2px solid var(--texto); outline-offset: 3px; }
+.hoja.arrastrando { will-change: transform; }
 .hoja-cab { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 .hoja-cab h2 { flex: 1; margin: 0; font: 700 26px/1.05 var(--cond); text-transform: uppercase; }
 .ficha-top { display: flex; gap: 16px; align-items: center; margin: 4px 0 12px; }
@@ -623,7 +629,7 @@ body.soltando::after { content: 'Suelta la imagen para mandársela a la IA'; pos
 .pasos-c div.hecho .ic { color: var(--sube); }
 .pasos-c div.ahora { color: var(--texto); }
 .pasos-c div .ic { width: 18px; height: 18px; }
-.tostada { position: fixed; left: 50%; bottom: calc(80px + env(safe-area-inset-bottom) - var(--ios-dy, 0px)); transform: translate(-50%, 16px); z-index: 70; background: var(--plano3); color: var(--texto); padding: 11px 16px; border-radius: 12px; font-size: 14.5px; opacity: 0; transition: all 0.2s; max-width: calc(100% - 32px); text-align: center; }
+.tostada { position: fixed; left: 50%; bottom: calc(80px + env(safe-area-inset-bottom) - var(--ios-dy, 0px)); transform: translate(-50%, 16px); z-index: 70; background: var(--plano3); color: var(--texto); padding: 11px 16px; border-radius: 12px; font-size: 14.5px; opacity: 0; transition: opacity 0.2s, transform 0.2s; max-width: calc(100% - 32px); text-align: center; }
 .tostada.on { opacity: 1; transform: translate(-50%, 0); }
 /* (solo texto: que no tape lo de debajo, como el botón de enviar del chat en el ordenador) */
 .tostada { pointer-events: none; }
@@ -649,7 +655,7 @@ body.soltando::after { content: 'Suelta la imagen para mandársela a la IA'; pos
 /* ---------- novedades contadas bajando (presentacion.js) ---------- */
 body.con-nv { overflow: hidden; }
 .nv { --nv-acc: #ee1c3c; position: fixed; inset: 0; z-index: 200; background: var(--fondo); color: var(--texto); overflow: hidden; }
-.nv-luz { position: absolute; inset: -20% -30% auto; height: 80%; pointer-events: none; background: radial-gradient(closest-side, rgba(238, 28, 60, 0.3), transparent); background: radial-gradient(closest-side, color-mix(in srgb, var(--nv-acc) 34%, transparent), transparent); opacity: 0.55; transition: background 0.6s; filter: blur(10px); }
+.nv-luz { position: absolute; inset: -20% -30% auto; height: 80%; pointer-events: none; background: radial-gradient(closest-side, rgba(238, 28, 60, 0.3), transparent); background: radial-gradient(closest-side, color-mix(in srgb, var(--nv-acc) 34%, transparent), transparent); opacity: 0.55; transition: background 0.6s; }
 .nv-barra { position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 3; background: var(--nv-acc); transform-origin: left; transform: scaleX(0); transition: background 0.6s; }
 .nv-cab { position: absolute; top: 0; left: 0; right: 0; z-index: 2; display: flex; align-items: center; gap: 10px; padding: calc(14px + env(safe-area-inset-top)) 16px 12px; background: linear-gradient(var(--fondo) 55%, transparent); }
 .nv-cab .logo { width: 26px; height: 26px; }
@@ -752,7 +758,7 @@ body.con-nv { overflow: hidden; }
 .carga-t { margin: 10px 0 16px; font: 700 clamp(28px, 8vw, 38px)/1.02 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
 .carga-t span { display: block; color: var(--rojo-l); }
 .carga-barra { width: 100%; height: 8px; border-radius: 5px; background: var(--plano3); overflow: hidden; }
-.carga-barra i { display: block; height: 100%; border-radius: 5px; background: var(--rojo); transition: width 0.6s cubic-bezier(0.3, 0.8, 0.3, 1); }
+.carga-barra i { display: block; width: 100%; height: 100%; background: var(--rojo); transform: scaleX(var(--p, 0)); transform-origin: left; transition: transform 0.6s cubic-bezier(0.3, 0.8, 0.3, 1); }
 .carga-pct { width: 100%; display: flex; justify-content: space-between; margin-top: 8px; font: 600 15px var(--cond); color: var(--texto2); }
 .carga-pct b { color: var(--texto); font-weight: 700; }
 .carga-pasos { list-style: none; margin: 0; padding: 12px 14px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 14px; }
@@ -1430,9 +1436,9 @@ body.limitado .tostada { z-index: 120; }
 @media (prefers-reduced-motion: reduce) { .gc-dib .tap { animation: none; opacity: 0.25; } .gc-paso.resalta .gc-c { animation: none; } }
 /* 0.5.0a: el botón de cerrar de las fichas de jugador y rival, solo en el ordenador (en el móvil, el asa y atrás) */
 /* la × de las fichas que no traen la suya: pegada arriba al bajar, 44 × 44 (sesión 8, A12) */
-.cerrar-flota { display: grid; place-items: center; position: sticky; top: 0; float: right; width: 44px; min-width: 44px; height: 44px; padding: 0; margin: -4px -6px 0 8px; z-index: 3; border-radius: 50%; background: var(--plano2); border: 1px solid var(--linea); color: var(--texto); }
+.cerrar-flota { display: none; place-items: center; position: sticky; top: 0; float: right; width: 44px; min-width: 44px; height: 44px; padding: 0; margin: -4px -6px 0 8px; z-index: 3; border-radius: 50%; background: var(--plano2); border: 1px solid var(--linea); color: var(--texto); }
 .cerrar-flota svg { width: 20px; height: 20px; }
-.escritorio .cerrar-flota { width: 52px; min-width: 52px; height: 48px; border-radius: 14px; margin: -8px -12px 0 10px; }
+.escritorio .cerrar-flota { display: grid; width: 52px; min-width: 52px; height: 48px; border-radius: 14px; margin: -8px -12px 0 10px; }
 .hoja:focus { outline: none; }
 /* 0.5.0a: las etiquetas largas de una fila («No lo venderá: se quedaría con…») bajan de línea en vez de sacar la página de la pantalla */
 .fila-x .pill { max-width: 100%; white-space: normal; }
@@ -2386,11 +2392,11 @@ button.cr-p:active { background: var(--plano); }
 .pb-chip:nth-child(3) { animation-delay: 0.7s; }
 .pt-pista.en-col:hover .pb-tit { color: var(--rojo-l); }
 @keyframes pb-rueda { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(15px); } }
-@keyframes pb-viaja { 0% { top: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: 64px; opacity: 0; } }
+@keyframes pb-viaja { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translateY(64px); opacity: 0; } }
 @keyframes pb-chip { 0%, 4% { opacity: 0; transform: translateY(16px); } 16%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; transform: none; } }
 @keyframes pt-bota { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 /* la barra de arriba */
-.pt-bar { position: fixed; z-index: 30; top: 0; left: 0; right: 0; transform: translateY(-110%); transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); background: rgba(8, 8, 10, 0.8); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border-bottom: 1px solid var(--linea); }
+.pt-bar { position: fixed; z-index: 30; top: 0; left: 0; right: 0; transform: translateY(-110%); transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); background: rgba(8, 8, 10, 0.96); border-bottom: 1px solid var(--linea); }
 .pt-bar.on { transform: none; }
 .pt-in { display: flex; align-items: center; gap: 16px; max-width: 1120px; margin: 0 auto; padding: 9px 16px; }
 .escritorio .pt-in { padding: 10px 48px; }
@@ -2463,7 +2469,7 @@ button.cr-p:active { background: var(--plano); }
 .escritorio .ph-paso li { font-size: 16px; }
 .escritorio .ph-fijo { display: block; position: sticky; top: calc(50vh - 316px + 30px); align-self: start; }
 .ph-marco { position: relative; width: 320px; aspect-ratio: 9 / 16; }
-.ph-marco::before { content: ''; position: absolute; inset: 8% -18%; background: radial-gradient(closest-side, rgba(238, 28, 60, 0.32), transparent); filter: blur(10px); }
+.ph-marco::before { content: ''; position: absolute; inset: 8% -18%; background: radial-gradient(closest-side, rgba(238, 28, 60, 0.32), transparent); }
 .ph-pant { position: absolute; inset: 0; opacity: 0; transform: translateY(44px) scale(0.95); transition: opacity 0.55s, transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .ph-pant.antes { transform: translateY(-44px) scale(0.95); }
 .ph-pant.on { opacity: 1; transform: none; }
@@ -2680,7 +2686,7 @@ div.pc { display: grid; gap: 18px; }
 .escritorio .play-hero .play-ic { width: 36px; height: 36px; }
 .escritorio .play-hero b { font-size: 25px; }
 @keyframes play-entra { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
-@keyframes play-brillo { from { left: -60%; } to { left: 130%; } }
+@keyframes play-brillo { from { transform: translateX(0) skewX(-18deg); } to { transform: translateX(475%) skewX(-18deg); } }
 @media (prefers-reduced-motion: reduce) { .play-hero { animation: none; } .play-hero::after { display: none; } }
 /* (3 nov) la web ya deja hacer zoom: Safari del iPhone amplía la página al tocar un campo con letra de menos de 16 px. Solo en iOS
    (-webkit-touch-callout solo existe ahí), los campos van a 16 px como mínimo */
@@ -2791,3 +2797,21 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 @media (prefers-reduced-motion: reduce) { #vista.entra-d, #vista.entra-i { animation: none; } }
 /* (sesión 8, M9) el error del código de entrada, debajo del campo */
 .codigo-err { margin: 8px 0 0; color: var(--rojo-l); font-size: 14px; font-weight: 600; }
+
+/* ---------- fluidez ((33), 10 nov) ---------- */
+/* las filas de las listas largas que no se ven no se pintan hasta que se acercan (Mercado, Tendencias, plantillas) */
+#vista .fila { content-visibility: auto; contain-intrinsic-size: auto 70px; }
+/* con «reducir movimiento» en el móvil, sin animaciones ni transiciones en ningún sitio */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- Mercado → Movimientos (0.7.3): la cara del jugador con el tipo en la esquina ---------- */
+.act-cara { position: relative; flex: none; width: 44px; height: 44px; }
+.act-cara .ava-w, .act-cara .ava { width: 44px; height: 44px; }
+.ic-act.mini { position: absolute; right: -5px; bottom: -4px; width: 22px; height: 22px; border-radius: 7px; box-shadow: 0 0 0 2px var(--fondo, #08080a); }
+.ic-act.mini .ic { width: 12px; height: 12px; }
+.ic-act.mini.clausula { background: #3a0d16; } .ic-act.mini.compra { background: #0d3324; } .ic-act.mini.venta { background: #0e2440; } .ic-act.mini.blindaje { background: #3a2c08; }
+.filtros.mov-quien { margin-bottom: 6px; }
+.filtros.mov-quien button { flex: 1; justify-content: center; }
+.filtros button small { margin-left: 4px; opacity: 0.7; font-size: 11.5px; }

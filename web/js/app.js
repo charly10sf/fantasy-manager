@@ -1,5 +1,5 @@
 /* Fantasy Manager: arranque, navegación, carga de datos, el plan del día y todo lo que pasa al tocar algo. */
-import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
+import { esc, icono, proxPlayHero, LOGO, LOGO_P, LOGO_D, $, $$, LS, almacenLleno, olvidarLleno, eur, rel, dura, ponerCuentas, MIN, HORA, DIA, diaDe, enParalelo, cuando as cuandoT, horaDe, firmaDe } from './util.js';
 import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, despues as relojFijo } from './puente.js';
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
@@ -512,7 +512,7 @@ function cargaHTML(paso, error, liga) {
         ${camisetaCarga(pct / 100)}
         <div class="carga-wm">Fantasy <b>Manager</b></div>
         <h1 class="carga-t">${tituloCarga(liga, error)}</h1>
-        ${error ? '' : `<div class="carga-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div><div class="carga-pct"><span>${Math.max(0, Math.min(paso + 1, total))} de ${total}</span><b>${pct} %</b></div>`}
+        ${error ? '' : `<div class="carga-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="--p:${pct / 100}"></i></div><div class="carga-pct"><span>${Math.max(0, Math.min(paso + 1, total))} de ${total}</span><b>${pct} %</b></div>`}
       </div>
       <div class="carga-der">
         ${error ? `<div class="fallo"><p>${esc(error.texto)}</p>${error.detalle && error.detalle !== error.texto ? `<p class="fallo-det">${esc(error.detalle)}</p>` : ''}</div>
@@ -533,7 +533,7 @@ function pantallaCarga(paso = -1, error = null) {
   if (el && !error && $('.carga-pasos', el)) {
     const pct = pctCarga(paso, total);
     $('.cc-llena', el).style.transform = `translateY(${Math.round(190 - 168 * (pct / 100))}px)`;
-    $('.carga-barra i', el).style.width = `${pct}%`;
+    $('.carga-barra i', el).style.setProperty('--p', pct / 100);
     $('.carga-barra', el).setAttribute('aria-valuenow', pct);
     $('.carga-pct span', el).textContent = `${Math.max(0, Math.min(paso + 1, total))} de ${total}`;
     $('.carga-pct b', el).textContent = `${pct} %`;
@@ -584,7 +584,7 @@ function marco() {
   const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
     ${anchoYa ? '' : preg}
     <button class="b-ico" id="bAjustes" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}<span class="gl oculto" id="gl-avisos"></span></button></div>`;
-  const liga = `${LOGO_P}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
+  const liga = `${LOGO}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}<div class="sup-preg">${preg}</div>${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
@@ -628,7 +628,7 @@ function pintarSup() {
   // en el móvil, corto: «Actualizado hace 1 min» ocupaba dos o tres líneas a 390 px (0.7.1g)
   const corto = innerWidth < 600, hace = D ? (corto ? dura(edad) : rel(D.t)) : '';
   $('#supEstado').innerHTML = S.errorCarga && D && !S.cargando
-    ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin internet' : 'Sin actualizar'} · ${hace}`
+    ? `<i class="punto ${edad < 6 * 3600e3 ? 'viejo' : 'mal'}"></i>${S.errorCarga.tipo === 'red' ? 'Sin conexión' : 'Sin actualizar'} · ${diaDe(D.t) === diaDe() ? horaDe(D.t) : hace}`
     : D && D.lento && !S.cargando ? `<i class="punto viejo"></i>Conexión lenta · ${hace}`
       : `<i class="punto ${p}"></i>${S.cargando ? 'Actualizando…' : D ? (edad < MIN ? 'Al día' : corto ? `Hace ${hace}` : `Actualizado ${hace}`) : ''}`;
   $('#supEstado').title = D ? `Actualizado ${rel(D.t)}` : '';
@@ -669,7 +669,7 @@ function pintar({ arriba = false } = {}) {
   const nomV = S.vista === 'ia' ? 'Pregunta' : S.vista === 'directo' && Pz.hayParon(S.M) ? 'Parón' : (NAV.find(([k]) => k === S.vista) || [])[2] || 'Fantasy Manager';
   if (!v.querySelector('h1')) v.insertAdjacentHTML('afterbegin', `<h1 class="solo-lector">${esc(nomV)}</h1>`);
   document.title = `${nomV} · ${S.D.liga.nombre} · Fantasy Manager`;
-  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t)))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
+  $('#banda').innerHTML = bandaLleno() + bandaMudanza() + bandaBeta() + (S.errorCarga && S.D ? `<div class="banda mal">${icono('alerta')}<span>${esc(bandaError(S.errorCarga, rel(S.D.t), S.D.t))}</span><button data-accion="recargar">Reintentar</button></div>` : '') + (S.nueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva (${esc(S.nueva.nombre)})</span><button data-accion="actualizarApp">Actualizar</button></div>` : S.webNuevaWeb ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la web (${esc(S.webNuevaWeb.version)})</span><button data-accion="recargarWeb">Descargar</button></div>` : S.webNueva ? `<div class="banda">${icono('descargar')}<span>Hay una versión nueva de la app</span><button data-accion="ponerWeb">Descargar</button></div>` : '');
   if (arriba) window.scrollTo(0, 0);
   for (const [id, v, cur] of escrito) {
     const el = $(`#${id}`);
@@ -825,7 +825,17 @@ function yoReal() {
   const eq = real || (S.M && S.M.yo) || null;
   return eq ? { nombre: eq.nombre, teamId: eq.teamId, userId: yo && yo.userId, ligas: (S.D && S.D.ligas) || [] } : null;
 }
+/* lo que llega por su lado al arrancar (el directo, onces y noticias, las fichas, tu once) se junta en una sola pasada
+   del motor: antes eran de 3 a 5 seguidas en el primer minuto (revisión total, M7). rehacer() a secas lo hace ya y se
+   come lo que estuviera esperando */
+let rehacerT = 0;
+function rehacerLuego() {
+  clearTimeout(rehacerT);
+  rehacerT = setTimeout(() => { rehacerT = 0; if (!S.D) return; rehacer(); if (!S.hoja) pintar(); }, 300);
+}
+const rehacerSiFalta = () => { if (rehacerT && S.D) { rehacer(); if (!S.hoja) pintar(); } };
 function rehacer() {
+  clearTimeout(rehacerT); rehacerT = 0;
   S.c = cfg();
   S.H = historico();
   S.det = { ...detalles(), ...S.det };
@@ -1510,7 +1520,7 @@ async function mirarMiOnce() {
     if (ids.length < 5 || S.D !== D) return;
     const antes = ((g && g.ids) || []).join();
     apuntarMiOnce(ids);
-    if (antes !== ids.join()) { rehacer(); if (!S.hoja) pintar(); }
+    if (antes !== ids.join()) rehacerLuego();
   } catch (e) { /* sin red: el plan sigue con lo que sabía */ }
 }
 async function despues() {
@@ -1522,14 +1532,16 @@ async function despues() {
   // (después del saludo: así tu foto ya está en el Worker la primera vez)
   setTimeout(cargarCaras, 3000);
   mirarWebNueva();
-  if (S.M && S.M.enJuego) cargarVivo().then((ok) => { if (ok) { rehacer(); if (!S.hoja) pintar(); } });
+  if (S.M && S.M.enJuego) cargarVivo().then((ok) => { if (ok) rehacerLuego(); });
   // onces probables y noticias (de fuera de LaLiga) y, a la vez, las fichas de los jugadores
-  const fuentes = fuentesExternas(S.D, S.M).then((f) => { if (f) { S.fuentes = f; rehacer(); if (!S.hoja) pintar(); } }).catch((e) => console.warn('fuentes', e));
+  const fuentes = fuentesExternas(S.D, S.M).then((f) => { if (f) { S.fuentes = f; rehacerLuego(); } }).catch((e) => console.warn('fuentes', e));
   try {
     const det = await completar(S.D, S.M);
-    if (det) { S.det = { ...S.det, ...det }; rehacer(); if (!S.hoja) pintar(); }
+    if (det) { S.det = { ...S.det, ...det }; rehacerLuego(); }
   } catch (e) { console.warn('fichas', e); }
   await fuentes;
+  // (lo de arriba aún esperando: los avisos y el plan, con el motor ya al día)
+  rehacerSiFalta();
   comprobarAvisos();
   const ci = cfgIA();
   if (hayClave() && ci.auto && planViejo(S.M) && !S.planEstado.cargando && !S.planEstado.error) generarPlan();
@@ -1810,8 +1822,11 @@ async function generarPlan() {
 }
 
 /* ---------------- ventanas de abajo ---------------- */
-/** las fichas sin botón de cerrar (jugador, rival, club, partido, resumen) llevan una × que se queda arriba al bajar,
-    también en el móvil (sesión 8, A12: solo se cerraban deslizando o con Atrás, que no hay en el PWA del iPhone) */
+/** el asa de arriba de cada ficha: se arrastra hacia abajo para cerrar y, tocándola, también cierra (44 px de alto) */
+const ASA = '<button class="asa" data-accion="cerrarHoja" aria-label="Cerrar"><i></i></button>';
+/** las fichas sin botón de cerrar (jugador, rival, club, partido, resumen) llevan una × que se queda arriba al bajar.
+    Solo en el ordenador: en el móvil se cierran con el asa, arrastrando hacia abajo o con Atrás ((32), Carlos, 10 nov;
+    la puso la sesión 8 en todas, A12) */
 const conCerrar = (html) => (/data-accion="cerrarHoja"/.test(html) ? html : `<button class="b-ico cerrar-flota" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button>${html}`);
 /** la ficha es un diálogo: se anuncia con su título (el primer h2) y el foco entra en ella */
 function rotularHoja(hoja) {
@@ -1826,7 +1841,7 @@ function abrirHoja(html) {
   const velo = document.createElement('div'); velo.className = 'velo'; velo.dataset.accion = 'cerrarHoja';
   const hoja = document.createElement('div'); hoja.className = 'hoja';
   hoja.setAttribute('role', 'dialog'); hoja.setAttribute('aria-modal', 'true'); hoja.tabIndex = -1;
-  hoja.innerHTML = `<div class="asa"></div>${conCerrar(html)}`;
+  hoja.innerHTML = `${ASA}${conCerrar(html)}`;
   rotularHoja(hoja);
   document.body.append(velo, hoja);
   document.body.style.overflow = 'hidden';
@@ -1835,11 +1850,85 @@ function abrirHoja(html) {
   requestAnimationFrame(() => { velo.classList.add('on'); hoja.classList.add('on'); if (!hoja.contains(document.activeElement)) hoja.focus({ preventScroll: true }); });
   S.hoja = hoja;
   encuadrar(hoja);
-  let y0 = null;
-  hoja.addEventListener('touchstart', (e) => { y0 = hoja.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
-  hoja.addEventListener('touchmove', (e) => { if (y0 == null) return; const d = e.touches[0].clientY - y0; if (d > 0) hoja.style.transform = `translateY(${d}px)`; }, { passive: true });
-  hoja.addEventListener('touchend', (e) => { if (y0 == null) return; const d = e.changedTouches[0].clientY - y0; hoja.style.transform = ''; if (d > 110) cerrarHoja(); y0 = null; });
+  gestoHoja(hoja, velo);
   return hoja;
+}
+/* (32) En el móvil, la ficha se cierra arrastrándola hacia abajo, como las de Android e iOS (Carlos, 10 nov: sin ×).
+   Va pegada al dedo (sin transición mientras se arrastra, un cambio por fotograma), se cierra si baja más de un 25 % de
+   su altura o si se suelta con fuerza hacia abajo, y si no vuelve a su sitio. El velo se aclara según baja. Se puede
+   empezar desde el asa, desde arriba del todo o seguir el mismo gesto después de subir hasta arriba la ficha; un gesto
+   de lado (pestañas, carriles) o dentro de algo que aún tiene por subir no la mueve. Sin gesto: tocar el asa o el velo,
+   Atrás o Escape (WCAG 2.5.1) */
+let arrastreFin = 0;
+function gestoHoja(hoja, velo) {
+  let g = null, raf = 0;
+  const pintarG = () => {
+    raf = 0;
+    if (!g || !g.arrastra) return;
+    const d = Math.max(0, g.y - g.y0);
+    hoja.style.transform = `translateY(${d}px)`;
+    if (velo) velo.style.opacity = String(Math.max(0, 1 - (d / g.alto) * 1.1));
+  };
+  // ¿algo con scroll propio entre el dedo y la ficha que todavía puede subir?
+  const subePorDentro = (el) => {
+    for (let n = el; n && n !== hoja; n = n.parentElement) if (n.scrollTop > 0 && n.scrollHeight > n.clientHeight) return true;
+    return false;
+  };
+  const soltar = (cierra) => {
+    hoja.classList.remove('arrastrando');
+    hoja.style.transition = ''; hoja.style.transform = '';
+    if (velo) { velo.style.transition = ''; velo.style.opacity = ''; }
+    if (cierra) { nativo.toque(); cerrarHoja(); }
+  };
+  hoja.addEventListener('touchstart', (e) => {
+    g = null;
+    if (e.touches.length !== 1 || V.ancho()) return;
+    const t = e.touches[0];
+    if (e.target.closest('input, textarea, select, [data-quieto]')) return;
+    const desdeAsa = !!e.target.closest('.asa');
+    if (!desdeAsa && subePorDentro(e.target)) return;
+    g = { x0: t.clientX, y0: t.clientY, y: t.clientY, desdeAsa, arrastra: false, decidido: false, alto: hoja.offsetHeight || window.innerHeight, h: [[t.clientY, e.timeStamp]] };
+  }, { passive: true });
+  hoja.addEventListener('touchmove', (e) => {
+    if (!g) return;
+    const t = e.touches[0];
+    if (!g.decidido) {
+      const dx = Math.abs(t.clientX - g.x0), dy = t.clientY - g.y0;
+      if (dx < 8 && Math.abs(dy) < 8) return;
+      g.decidido = true;
+      // de lado: no es para cerrar
+      if (dx > Math.abs(dy)) { g = null; return; }
+    }
+    if (!g.arrastra) {
+      // empieza a arrastrar al tirar hacia abajo con la ficha arriba del todo (o desde el asa); si antes había que
+      // subirla, el gesto sigue desde donde llega arriba
+      if (t.clientY > g.y && (g.desdeAsa || hoja.scrollTop <= 0)) {
+        // (desde el principio del gesto, desde donde se tocó: va 1:1 con el dedo; tras subir la ficha, desde aquí)
+        g.arrastra = true; if (g.subio) g.y0 = t.clientY;
+        hoja.classList.add('arrastrando');
+        hoja.style.transition = 'none';
+        if (velo) velo.style.transition = 'none';
+      } else { g.y = t.clientY; g.subio = true; return; }
+    }
+    g.y = t.clientY;
+    g.h.push([t.clientY, e.timeStamp]); if (g.h.length > 6) g.h.shift();
+    // mientras se arrastra, que no haga scroll ni rebote por dentro
+    if (e.cancelable) e.preventDefault();
+    if (!raf) raf = requestAnimationFrame(pintarG);
+  }, { passive: false });
+  const fin = (e) => {
+    const x = g; g = null;
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    if (!x || !x.arrastra) return;
+    arrastreFin = Date.now();
+    const d = Math.max(0, x.y - x.y0);
+    // la velocidad de los últimos ~100 ms (px/ms): un tirón rápido cierra aunque baje poco
+    const ult = x.h[x.h.length - 1], ini = x.h.find((p) => ult[1] - p[1] <= 100) || x.h[0];
+    const vel = ult[1] > ini[1] ? (ult[0] - ini[0]) / (ult[1] - ini[1]) : 0;
+    soltar(e.type !== 'touchcancel' && (d > x.alto * 0.25 || (vel > 0.5 && d > 24)));
+  };
+  hoja.addEventListener('touchend', fin, { passive: true });
+  hoja.addEventListener('touchcancel', fin, { passive: true });
 }
 function cerrarHoja(ya = false, sigue = false) {
   const h = $('.hoja'), v = $('.velo');
@@ -1991,7 +2080,7 @@ function repintarHoja() {
   if (!S.hoja || !S.tipoHoja) return;
   const sc = S.hoja.scrollTop;
   const dentro = S.hoja.contains(document.activeElement);
-  S.hoja.innerHTML = `<div class="asa"></div>${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
+  S.hoja.innerHTML = `${ASA}${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
   rotularHoja(S.hoja);
   S.hoja.scrollTop = sc;
   if (dentro) S.hoja.focus({ preventScroll: true });
@@ -2638,7 +2727,8 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'cambiarClave': guardarClave(''); S.planEstado = {}; S.claveMal = false; rehacer(); ir('ia'); tostada('Pega la clave nueva'); break;
-    case 'cerrarHoja': cerrarHoja(); break;
+    // (el toque que acaba un arrastre que no llegó a cerrar no cuenta como tocar el asa)
+    case 'cerrarHoja': if (!(el && el.classList.contains('asa') && Date.now() - arrastreFin < 400)) cerrarHoja(); break;
     case 'paron': if (S.M && S.M.paron) tostada(`${S.M.paron.nombre || 'Parón de selecciones'}: del ${cuandoT(S.M.paron.ini, { hora: false })} al ${cuandoT(S.M.paron.fin, { hora: false })}. No hay jornada y los valores casi no se mueven: lo que vayas a vender, mejor antes.`, 7000); break;
     case 'irIA': cerrarHoja(); ir('ia'); break;
     // la estrella de la ficha: lo sigue en Mercado → Favoritos (y las listas lo marcan)
@@ -3166,11 +3256,17 @@ async function arrancar() {
     LS.set('permiso-fondo', Date.now());
     setTimeout(() => nativo.pedirPermisoAvisos(), 2500);
   }
-  // cada minuto se recalculan las cuentas atrás, si no estás tocando nada
+  // cada minuto, las cuentas atrás al día (sin repintar). El motor entero solo se rehace cuando pasa algo por la hora
+  // (S.M.proximoHito: se abre una cláusula, cierra el mercado, empieza un partido, cambia el día…) o, como mucho, cada
+  // 10 minutos, y si no estás tocando nada. Antes se rehacía y repintaba todo cada minuto (revisión total, M7)
   let toqueT = 0;
   for (const e of ['touchstart', 'pointerdown', 'scroll', 'keydown']) window.addEventListener(e, () => { toqueT = Date.now(); }, { passive: true });
   setInterval(() => {
-    if (!S.D || S.hoja || S.cargando || S.charlando || S.planEstado.cargando || S.vista === 'ia' || tourAbierto() || document.visibilityState !== 'visible' || Date.now() - toqueT < 30e3) return;
+    if (!S.D || document.visibilityState !== 'visible') return;
+    ponerCuentas();
+    if (S.hoja || S.cargando || S.charlando || S.planEstado.cargando || S.vista === 'ia' || tourAbierto() || Date.now() - toqueT < 30e3) return;
+    const ahora = Date.now();
+    if (S.M && ahora < (S.M.proximoHito || Infinity) && ahora - (S.M.t || 0) < 10 * MIN) return;
     const y = window.scrollY;
     const ap = S.M && S.M.aprende;
     S.M = analizar(S.D, S.H, S.c, extraM());
@@ -3213,3 +3309,21 @@ async function arrancar() {
 if (EN_FONDO) nativo.webViva();
 if (!EN_FONDO) { const wp = LS.get('web-puesta', null); if (wp) { LS.del('web-puesta'); if (Date.now() - wp.t < 120000 && tourVisto()) setTimeout(() => tostada(`App al día: versión ${VERSION}`, 4000), 1800); } }
 if (EN_FONDO) trabajoFondo(); else arrancar();
+
+/* el service worker (sw.js): que la web y el PWA del iPhone abran sin red con lo último guardado (revisión total, M11).
+   Solo en el navegador: en la app de Android la web la sirve AlDia desde el APK y no se mezclan. Se registra con la
+   app ya abierta, para no quitarle tiempo al arranque, y se le pasan los módulos del mapa de importaciones */
+function ponerSW() {
+  const sw = navigator.serviceWorker;
+  if (!sw) return;
+  if (enApp) { sw.getRegistrations().then((rs) => rs.forEach((r) => r.unregister())).catch(() => {}); return; }
+  if (!(location.protocol === 'https:' || location.hostname === 'localhost')) return;
+  sw.register('sw.js', { scope: './' }).then(() => sw.ready).then((reg) => {
+    let urls = [];
+    try { const m = JSON.parse((document.querySelector('script[type=importmap]') || {}).textContent || '{}'); urls = Object.values(m.imports || {}); } catch (e) { /* sin mapa (en pruebas) */ }
+    const css = document.querySelector('link[rel=stylesheet][href*="css/app.css"]');
+    if (css) urls.push(css.getAttribute('href'));
+    if (reg.active && urls.length) reg.active.postMessage({ tipo: 'guardar', urls });
+  }).catch((e) => console.warn('sw', e));
+}
+if (!EN_FONDO) { if (document.readyState === 'complete') setTimeout(ponerSW, 3000); else window.addEventListener('load', () => setTimeout(ponerSW, 3000), { once: true }); }
