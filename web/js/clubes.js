@@ -86,7 +86,7 @@ export function clubes(S) {
   // las caras de los tuyos en cada club
   const mios = {};
   for (const x of M.mias || []) if (x.j && x.j.equipoId) (mios[x.j.equipoId] ||= []).push(x.j);
-  let h = `<div class="eti">${M.enJuego ? `Jornada ${M.enJuego.n} en juego` : M.proxima ? `Jornada ${M.proxima.n}` : 'LaLiga'}</div><div class="titulo">Clubes</div>`;
+  let h = `<div class="eti">${M.enJuego ? `Jornada ${M.enJuego.n} en juego` : M.proxima ? `Jornada ${M.proxima.n}` : 'LaLiga'}</div><h1 class="titulo">Clubes</h1>`;
   if (!n) return h + nada('Aún no tengo los equipos de LaLiga. Dale a Actualizar.');
   h += tusClubesHTML(S, ids, mios);
   const filas = ids.map((id) => {

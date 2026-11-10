@@ -336,7 +336,7 @@ export function directo(S) {
   const ps = partidosJornada(S, n);
   const vivos = ps.filter((p) => estadoP(p).cls === 'vivo').length, fin = ps.filter((p) => estadoP(p).cls === 'fin').length;
   const seg = S.seg.directo || 'partidos';
-  let h = `<div class="eti">Jornada ${n}</div><div class="titulo">Directo</div>`;
+  let h = `<div class="eti">Jornada ${n}</div><h1 class="titulo">Directo</h1>`;
   h += `<p class="entradilla dt-ent">${vivos ? `<span class="vivo-dot"></span><b>${vivos}</b> jugándose · ` : ''}${fin} acabado${fin === 1 ? '' : 's'} · ${ps.length - vivos - fin} por jugar
     <button class="enlace dt-act" data-accion="vivoYa">${icono('refrescar')}${S.cargandoVivo ? 'Actualizando…' : V ? `Actualizado ${rel(V.t)}` : 'Actualizar'}</button></p>`;
   h += resumenHTML(S, n, ps);
@@ -353,7 +353,7 @@ function sinJornada(S) {
   const ahora = Date.now();
   const prox = M.proxima;
   const ult = (M.jornadas || []).filter((j) => j.fin < ahora).pop() || null;
-  let h = `<div class="eti">${prox ? `Jornada ${prox.n}` : 'LaLiga'}</div><div class="titulo">Directo</div>`;
+  let h = `<div class="eti">${prox ? `Jornada ${prox.n}` : 'LaLiga'}</div><h1 class="titulo">Directo</h1>`;
   const ini = prox ? cuando(prox.ini) : '';
   h += `<p class="entradilla">${prox ? `Empieza ${/^(lun|mar|mié|jue|vie|sáb|dom)/.test(ini) ? 'el ' : ''}${ini}${M.enParon ? ', tras el parón' : ''}. ` : ''}Aquí verás marcadores, puntos y tu liga al minuto.</p>`;
   // (en el móvil, sin otra cabecera «Jornada N»: ya está arriba; en el ordenador va en dos columnas y cada una lleva la suya)

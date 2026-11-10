@@ -151,12 +151,16 @@ function errorDe(estado, j) {
 export const intentosIA = [];
 const apuntar = (x) => { intentosIA.unshift({ t: Date.now(), ...x }); if (intentosIA.length > 60) intentosIA.length = 60; };
 
+/** (sesión 8, M9) el motivo de un corte, en castellano: el navegador lo da en inglés («Failed to fetch», «Load failed»…) */
+const motivoRed = (m) => (/failed to fetch|networkerror|load failed|network request failed|internet_disconnected|err_network|name_not_resolved/i.test(String(m || '')) ? 'no hay conexión'
+  : /time ?out|timed out/i.test(String(m || '')) ? 'tiempo agotado' : String(m || 'sin respuesta'));
+const SIN_RED = 'No hay conexión con Google';
 /**
  * Una petición a Google. En la app va por la parte nativa (el WebView corta los POST a Google con «Failed to fetch»);
  * en el navegador, con fetch. Devuelve { j } con el JSON o { r } con la respuesta en streaming (solo navegador).
  */
 async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, signal, limite = 150000 } = {}) {
-  const sinTiempo = (m) => new ErrorIA(`Sin conexión con Google (${m})`, 0, { red: true, tiempo: true });
+  const sinTiempo = (m) => new ErrorIA(`${SIN_RED} (${motivoRed(m)})`, 0, { red: true, tiempo: true });
   if (enApp) {
     const pet = http(metodo, url, { cabeceras: { 'content-type': 'application/json', 'x-goog-api-key': k }, cuerpo: cuerpo == null ? null : JSON.stringify(cuerpo), tiempo: limite });
     // el tiempo de la parte nativa es por lectura, no total: un 503 de Google llegó a tardar 150 s con un límite de 90.
@@ -172,7 +176,7 @@ async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, sign
     if (r.s === 0) {
       // (solo el tiempo máximo que cuenta la app; un «connect timed out» de la conexión es cobertura, no un modelo lento)
       if (r.e === 'tiempo agotado') throw sinTiempo('tiempo agotado');
-      throw new ErrorIA(`Sin conexión con Google (${r.e || 'sin respuesta'})`, 0, { red: true, dns: !!r.dns });
+      throw new ErrorIA(`${SIN_RED} (${motivoRed(r.e)})`, 0, { red: true, dns: !!r.dns });
     }
     let j = null;
     try { j = JSON.parse(r.b || 'null'); } catch (e) { j = null; }
@@ -192,7 +196,7 @@ async function peticion(metodo, url, cuerpo, k = clave(), { stream = false, sign
       r = await fetch(url, { method: metodo, signal: ctl.signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': k }, body: cuerpo == null ? undefined : JSON.stringify(cuerpo) });
     } catch (e) {
       if (e.name === 'AbortError') { if (vencido) throw sinTiempo('tiempo agotado'); throw e; }
-      throw new ErrorIA(`Sin conexión con Google (${e.message})`, 0, { red: true });
+      throw new ErrorIA(`${SIN_RED} (${motivoRed(e.message)})`, 0, { red: true });
     }
     if (!r.ok) { let j = null; try { j = await r.json(); } catch (e) { /* nada */ } throw errorDe(r.status, j); }
     // en directo, el cuerpo se sigue leyendo después (lo lee llamar): parar la pregunta lo sigue cortando y el tiempo
@@ -244,7 +248,7 @@ async function llamar(modelo, cuerpo, { stream = false, alTexto = null, signal, 
         }
       }
     } catch (e) {
-      if (e.name === 'AbortError' && (silencio || resp.vencido())) throw new ErrorIA('Sin conexión con Google (tiempo agotado)', 0, { red: true, tiempo: true });
+      if (e.name === 'AbortError' && (silencio || resp.vencido())) throw new ErrorIA(`${SIN_RED} (tiempo agotado)`, 0, { red: true, tiempo: true });
       if (e.name === 'AbortError') throw e;
       throw new ErrorIA(`Se ha cortado la respuesta de Google (${e.message})`, 0, { red: true });
     } finally { quitarS(); resp.fin(); }
@@ -500,7 +504,7 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
           if ((e.estado >= 500 || e.estado === 0 || e.estado == null) && intento < 2 && resta() > 2500 * (intento + 1) + 25000) { await espera(2.5 * (intento + 1), op.signal); continue; }
           if (e.red) {
             resumen.push(`sin conexión con Google (${e.message})`);
-            throw new ErrorIA(`Se ha cortado la conexión con Google ${cortes + 1} veces seguidas (${e.message.replace(/^Sin conexión con Google \((.*)\)$/, '$1')}). Mira que tengas internet (prueba con datos si estás con wifi) y vuelve a probar.`, 0, { red: true });
+            throw new ErrorIA(`Se ha cortado la conexión con Google ${cortes + 1} veces seguidas (${e.message.replace(/^No hay conexión con Google \((.*)\)$/, '$1')}). Mira que tengas internet (prueba con datos si estás con wifi) y vuelve a probar.`, 0, { red: true });
           }
           if (e.estado >= 500) pausar(modelo, 300);
           resumen.push(`${nombreModelo(modelo)}: ${e.message.toLowerCase()}`);
