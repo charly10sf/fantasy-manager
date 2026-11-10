@@ -8,6 +8,7 @@
 //   6. que en el parón el sitio de Directo es la pestaña Parón y su selector vuelve a Directo (21);
 //   7. Ajustes (40): las secciones plegadas, el buscador, la antelación de cada aviso y «Avisarme» en la ficha, y que
 //      calcular (avisos.js) usa la antelación elegida (rivales, tuyas, el once y un jugador concreto).
+//  10. el plan sin IA, la IA (cuadrarPlan) y Hoy usan la misma regla para clausular (mereceClausula).
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -248,6 +249,49 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     else bien('la ficha: «Avisarme de su cláusula» se guarda (15 min antes)');
   }
   if (errores.length) mal(`Ajustes: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 10: (11 nov) el plan sin IA (planAuto) y Hoy/las alarmas (esClausulable) dicen lo mismo de una cláusula: con un
+// hueco en su puesto y el dinero de sobra, el plan la manda si y solo si Hoy la da por clausulable (antes, con interés 52
+// Hoy sí y el plan no; sin `mejora` y a 2 veces su valor, el plan sí y Hoy no)
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const Mo = await import('./js/motor.js');
+    const { D, c } = window.S;
+    const M = Object.create(window.S.M);
+    const x = M.clausulas.find((y) => !['injured', 'suspended', 'out_of_league'].includes(y.j.estado));
+    if (!x) return { sin: true };
+    M.clausulas = [x]; x.abierta = true; x.meLlega = true; x.ratio = 2; D.dinero = Math.max(D.dinero, x.clausula * 2 + 1e6);
+    M.mias = M.mias.filter((y) => y.j.pos !== x.j.pos);
+    Object.assign(M, { sobrecoste: () => ({ indice: -100 }), tolerancia: () => 100, conSalida: () => true, compraCal: () => ({ ok: true }) });
+    const caso = (interes, mejora) => {
+      x.interes = interes; M.mejora = () => mejora;
+      return { plan: (Mo.planAuto(D, M, c).operaciones || []).some((o) => o.accion === 'clausular' && o.pid === x.pid), hoy: Mo.esClausulable(M, x) };
+    };
+    const res = { bueno: caso(80, 1), sinMejora: caso(80, 0), interes52: caso(52, 1), interes45: caso(45, 1) };
+    // y la IA: una cláusula para el once que Hoy no da por buena sale en descartes, con el motivo
+    const I = await import('./js/ia.js'), S0 = window.S.M, y = S0.clausulas.find((z) => z.pid === x.pid) || x;
+    const P = () => ({ t: Date.now(), operaciones: [{ accion: 'clausular', ref: `C-${y.pid}`, jugador: y.j.nombre, objetivo: 'titular', importe: y.clausula, motivo: 'prueba' }] });
+    const mej = S0.mejora, rat = y.ratio;
+    S0.mejora = () => 0; y.ratio = 2;
+    const op = (I.cuadrarPlan(P(), D, S0).ops || [])[0] || {};
+    S0.mejora = mej; y.ratio = rat;
+    res.ia = { plan: !op.descartada, hoy: false }; // Hoy no la enseña: el plan de la IA tampoco
+    res.iaMotivo = /no es una cláusula que la app recomiende/.test(op.aviso || '');
+    return res;
+  });
+  if (r.sin) mal('plan y Hoy: la liga de ejemplo no trae cláusulas para probar');
+  else if (!r.iaMotivo) mal(`la IA: una cláusula que Hoy no da por buena no se descarta (${JSON.stringify(r.ia)})`);
+  else {
+    const mal1 = Object.entries(r).filter(([k, v]) => k !== 'iaMotivo' && v.plan !== v.hoy).map(([k]) => k);
+    if (mal1.length || !r.bueno.plan || r.sinMejora.plan) mal(`plan y Hoy se contradicen en: ${mal1.join(', ') || JSON.stringify(r)}`);
+    else bien('plan sin IA, la IA y Hoy: la misma regla para clausular (4 casos y el descarte de la IA)');
+  }
+  if (errores.length) mal(`plan y Hoy: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

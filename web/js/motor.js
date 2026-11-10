@@ -1410,6 +1410,8 @@ export function analizar(D, H, c, extra = {}) {
     return { venta, pierde, dias, tuerce, seguro, margen, ok: margen || seguro, txt };
   };
   M.conSalida = (j, precio, t) => { const s = M.salida(j, precio, t); return !s || s.ok; };
+  // (11 nov) la regla de clausular de Hoy y las alarmas, para operaciones.js e ia.js (que no importan motor.js)
+  M.mereceClausula = (x, ahora) => mereceClausula(M, x, ahora);
 
   /* ---------- cuánto interesa un jugador (0 a 100) ---------- */
   M.interes = (j, precio, t = M.tend(j.id)) => {
@@ -2092,14 +2094,20 @@ function compras(D, M, yoTid, historial = []) {
 /** la lista de lo que toca, de más a menos urgente; cada cosa con su porqué en números */
 /** si una cláusula merece la pena (abierta o por abrir): la misma regla para el plan, el chip de «Hoy» y los avisos,
  * para que la app no anuncie una cláusula que luego la IA desaconseja (Revivo, 9 nov) */
-export function esClausulable(M, x, ahora = Date.now()) {
-  return !!(x && x.j && x.meLlega && x.interes >= 50 && !MALOS.has(x.j.estado)
+/* (11 nov) Si una cláusula merece la pena, sin mirar el dinero: la misma regla para Hoy, las alarmas (esClausulable,
+   que además pide que te llegue con el saldo de ahora) y el plan sin IA (planAuto, que mira el dinero con lo que vende
+   antes). Antes planAuto llevaba su propio filtro (interés 55, sin `mejora` ni el calendario) y podía mandar clausular a
+   uno que Hoy no enseñaba, o al revés. */
+export function mereceClausula(M, x, ahora = Date.now()) {
+  return !!(x && x.j && x.interes >= 50 && !MALOS.has(x.j.estado)
     && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30
     && (M.mejora(x.j) >= 0.5 || (x.ratio != null && x.ratio <= 1.05))
     && M.compraCal(x.j, x.clausula).ok && M.conSalida(x.j, x.clausula, x.tend)
     // (19) en el parón, con la vuelta lejos, solo los chollos claros: si no, «Clausula a X» salía como urgente
     && (!paronLejos(M, ahora) || cholloParon(M, x.j, x.clausula)));
 }
+/** la cláusula se puede y merece la pena clausular hoy: te llega con tu saldo y pasa mereceClausula */
+export const esClausulable = (M, x, ahora = Date.now()) => !!(x && x.meLlega && mereceClausula(M, x, ahora));
 
 function acciones(D, M, c) {
   const out = [];
@@ -2321,7 +2329,9 @@ export function planAuto(D, M, c) {
   // (19) en el parón, con la vuelta lejos, para el once solo los chollos claros: el resto son días sin puntuar con el
   // dinero parado (aviso de Domy, 9 nov). Lo que sube va por «especular», más abajo
   const paron = paronLejos(M, ahora);
-  const abiertas = M.clausulas.filter((x) => x.abierta && x.interes >= 55 && !MALOS.has(x.j.estado) && M.sobrecoste(x.j, x.clausula, x.tend).indice <= M.tolerancia(x.j) - 30 && M.conSalida(x.j, x.clausula, x.tend) && (!paron || cholloParon(M, x.j, x.clausula))).slice(0, 8);
+  // (11 nov) el filtro, el mismo que Hoy y las alarmas (mereceClausula); el dinero, con lo que vendes antes, abajo
+  const abiertas = M.clausulas.filter((x) => x.abierta && mereceClausula(M, x, ahora))
+    .sort((a, b) => (b.interes + (b.teQueda >= 0 ? 8 : 0)) - (a.interes + (a.teQueda >= 0 ? 8 : 0))).slice(0, 8);
   let clausulas = 0;
   for (const x of abiertas) {
     if (clausulas >= 2 || x.clausula > presupuesto() || x.clausula > caja || yaHoy.has(x.j.pos) || !hueco(x.j)) continue;

@@ -8,7 +8,7 @@ import { leer, guardar, http, enApp, despues } from './puente.js';
 import { LS, eur, pct, cuando, dura, POS, DIA, MIN, HORA, diaDe, norm, num, esWebFantasy, sinWebs, fechaCorta } from './util.js';
 import { K } from './datos.js';
 import { favoritos } from './favoritos.js';
-import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, PARON_VUELTA } from './operaciones.js';
+import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOfertas, esMalo, paronLejos, cholloParon, PARON_VUELTA, noMerece } from './operaciones.js';
 import { recsDe, aprendeTxt } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio } from './limite.js';
@@ -1587,6 +1587,13 @@ export function cuadrarPlan(P, D, M) {
       descartada = true;
       o.paron = true;
       aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: estamos en el parón y la jornada ${M.proxima.n} no empieza hasta ${cuando(M.proxima.ini)}. ${accion === 'clausular' ? 'Clausularlo' : 'Ficharlo'} ahora para el once son ${eur(importe)} parados ${Math.round((M.proxima.ini - Date.now()) / DIA)} días sin puntuar y su valor puede bajar. Para el once, mejor en los dos o tres días antes de la vuelta; hasta entonces el dinero rinde más especulando.`;
+    }
+    // (11 nov) Hoy, las alarmas y la IA no se contradicen sobre una cláusula: una para el once que no pasa la regla de
+    // Hoy (mereceClausula) se descarta, con el motivo; para revender sí puede ir (la cuenta del beneficio, arriba)
+    if (!ya && !descartada && accion === 'clausular' && !String(o.objetivo || '').startsWith('revend') && noMerece(M, { pid })
+      && !(opC && opC.trato) && !notasDe(pid).some((n) => /trato|hecho|intencion/.test(n.tipo || '') || n.importe)) {
+      descartada = true;
+      aviso = `${aviso ? `${aviso} ` : ''}La app lo descarta: con lo que pagas de más por su cláusula, su calendario o lo poco que mejora tu once, no es una cláusula que la app recomiende (por eso no sale en Hoy ni en las alarmas).`;
     }
     // (A6) subir la cláusula pagando: como mucho la subida justa de la app; si ya vale o no compensa, no se paga
     if (!ya && !descartada && accion === 'blindar' && importe) {

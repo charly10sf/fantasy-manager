@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.4';
+export const VERSION = '0.7.4c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,12 @@ export const VERSION = '0.7.4';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.4c', f: '2026-11-11', h: '00:00', t: 'Una sola regla para clausular',
+    cosas: [
+      { tipo: 'arreglo', d: 'balanza', t: 'El plan, Hoy y las alarmas, de acuerdo', x: 'El plan sin IA usaba su propia regla para clausular y podía mandarte a por una cláusula que Hoy no enseñaba (o al revés). Ahora los tres miran lo mismo, y si la IA propone para tu once una cláusula que la app no recomienda, sale en «Descartados» con el motivo.' },
+    ],
+  },
   {
     v: '0.7.4', f: '2026-11-11', h: '00:14', t: 'Ajustes ordenados y alarmas a tu gusto',
     cosas: [
