@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261107/11678727/hansi-flick-sobre-gestion-rodri-hemos-consensuado-minuto-jugador-previa-atletico-de-madrid-bajas-defensa-metropolitano.html": 1794056046000,
@@ -2004,18 +2003,6 @@
    "SPORT|136284333": 1794309130000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html",
-    "medio": "COPE",
-    "t": 1794055463000,
-    "id": "2354",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Eric vuelve a la convocatoria del Barça para el Metropolitano",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html",
     "medio": "Mundo Deportivo",
@@ -3228,7 +3215,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-montero-rufian-animan-votar-memoria-conciencia-obviando-voto-util-psoe-si-puede-te-come-20261107134413.html": 1794055453000,
    "SPORT|136202042": 1794062312000,
    "SPORT|136204292": 1794067195000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
@@ -7294,13 +7280,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1138,
+   "ok": 1139,
    "fallos": 0,
-   "ejecuciones": 756,
+   "ejecuciones": 757,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:41:16.052Z"
+   "ultima": "2026-11-10T12:46:14.083Z"
   }
  },
  "ptsDirecto": {},
@@ -7317,15 +7303,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:41:20.868Z"
+   "ultimaBien": "2026-11-10T12:46:17.400Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:41:20.868Z"
+   "ultimaBien": "2026-11-10T12:46:17.400Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:41:20.868Z"
+   "ultimaBien": "2026-11-10T12:46:17.400Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7333,11 +7319,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:41:20.868Z"
+   "ultimaBien": "2026-11-10T12:46:17.400Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:41:20.868Z"
+   "ultimaBien": "2026-11-10T12:46:17.400Z"
   }
  },
  "avisos": [
