@@ -1812,7 +1812,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248252/miedo-factor-raphinha-cholo-detallo-cambio-tactico-barca-destroza-rivales.html": 1794053748000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
@@ -2002,7 +2001,9 @@
    "La Vanguardia|https://www.lavanguardia.com/clic/20261110/11680703/cucurella-descubre-cara-mas-desconocida-mourinho-divertido-meme-le-envio-lol.html": 1794309043000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249417/real-quita-peso-ganar-liga-oyarzabal-tres-anos-hacerlo.html": 1794311814000,
    "SPORT|136283172": 1794307885000,
-   "SPORT|136280060": 1794308464000
+   "SPORT|136280060": 1794308464000,
+   "SPORT|136281831": 1794308810000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000
   },
   "hechos": [
    {
@@ -2385,7 +2386,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -3230,7 +3231,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "SPORT|136198293": 1794054087000,
    "Europa Press|https://www.europapress.es/nacional/noticia-montero-rufian-animan-votar-memoria-conciencia-obviando-voto-util-psoe-si-puede-te-come-20261107134413.html": 1794055453000,
    "SPORT|136202042": 1794062312000,
@@ -3327,17 +3327,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 167691,
-  "salida": 12591,
+  "entrada": 169891,
+  "salida": 12805,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.266713,
+  "dolares": 0.26704,
   "reservado": 0
  },
  "recientes": {
@@ -7296,13 +7296,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1131,
+   "ok": 1132,
    "fallos": 0,
-   "ejecuciones": 749,
+   "ejecuciones": 750,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:06:22.685Z"
+   "ultima": "2026-11-10T12:11:13.306Z"
   }
  },
  "ptsDirecto": {},
@@ -7319,15 +7319,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:06:27.744Z"
+   "ultimaBien": "2026-11-10T12:11:19.048Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:06:27.744Z"
+   "ultimaBien": "2026-11-10T12:11:19.048Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:06:27.744Z"
+   "ultimaBien": "2026-11-10T12:11:19.048Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7335,11 +7335,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:06:27.744Z"
+   "ultimaBien": "2026-11-10T12:11:19.048Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:06:27.744Z"
+   "ultimaBien": "2026-11-10T12:11:19.048Z"
   }
  },
  "avisos": [
