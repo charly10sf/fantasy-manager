@@ -404,7 +404,7 @@ async function codigoDeMudanza() {
     return false;
   }
 }
-/* (la banda «App en desarrollo y en pruebas…», de arriba, se quitó en la 0.7.1h, con la app ya en Google Play) */
+/* (la banda «App en desarrollo y en pruebas…», de arriba, se quitó en la 0.7.2a, con la app ya en Google Play) */
 /* la pantalla de bienvenida (Carlos, 9 nov 10:20: «en vez del aviso de arriba»): la primera vez que alguien entra con su
    liga, una vez por cuenta (en local y en el Worker, para que no salga otra vez en otro dispositivo: soporte.js). Nunca en
    la liga de ejemplo ni antes de entrar, ni encima del tutorial, las novedades o el límite: espera a que no haya nada
@@ -2595,7 +2595,7 @@ document.addEventListener('click', async (ev) => {
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>Es una de las funciones top de Fantasy Manager.${esc(dondeTop())}</p>
-        ${botonPlay()}
+        ${enApp ? '' : botonPlay()}
         <button class="btn ancho sec" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
       break;
     }

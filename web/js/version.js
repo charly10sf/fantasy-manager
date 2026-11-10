@@ -19,6 +19,8 @@ export const NOVEDADES = [
     v: '0.7.2a', f: '2026-11-10', h: '00:00', t: 'Ya en Google Play',
     cosas: [
       { tipo: 'nuevo', d: 'movil', t: 'Fantasy Manager, en Google Play', x: 'La app de Android ya está en Google Play. En la web, los botones de descargar llevan a la tienda y la guía de instalar es la de cualquier app: buscarla e instalar.' },
+      { para: 'dueño', tipo: 'arreglo', d: 'movil', t: 'La portada cabe en un móvil de 320 px', x: 'El dibujo del once de la portada medía más que la pantalla en los móviles más estrechos y la página se movía de lado.', menor: true },
+      { para: 'dueño', tipo: 'mejora', d: 'candado', t: 'Los candados, en la app de la liga', x: 'En la app de la liga los candados ya no mandan a Google Play: la de Play no se instala encima (va firmada con otra clave) y en la liga nadie toca anuncios.', menor: true },
       { para: 'dueño', tipo: 'mejora', d: 'bandera', t: 'Fuera el aviso de «en pruebas»', x: 'La banda de arriba «App en desarrollo y en pruebas…» ya no sale. Para avisar de un fallo sigue el botón de Ajustes y la bienvenida.', menor: true },
     ],
   },

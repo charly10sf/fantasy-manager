@@ -383,7 +383,9 @@ export function candado(clave, { como = null } = {}) {
   return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${colaCandado(clave)}</span></span></button>`;
 }
 /** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios) */
-export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren: sí en la de Google Play, gratis, viendo un anuncio corto.' : ' En la web no se abren: sí en la app de Android de Google Play, gratis, viendo un anuncio corto.');
+// (en la app de la liga, sin mandar a Google Play: la de Play no se instala encima, va firmada con otra clave, y los de
+//  la liga no tocan anuncios)
+export const dondeTop = () => (enApp ? ' En esta versión de la app no se abren.' : ' En la web no se abren: sí en la app de Android de Google Play, gratis, viendo un anuncio corto.');
 /** lo que dice un candado de cómo se abre */
 export function colaCandado(clave) {
   // (sesión 8, A9) sin promesas que en la web no se cumplen: aquí no se abre; en la app de Google Play, con un anuncio

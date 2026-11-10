@@ -2480,10 +2480,10 @@ button.cr-p:active { background: var(--plano); }
 .pg-todas .btn .ic { width: 20px; height: 20px; margin-right: 6px; }
 .pg-todas span { flex: 1 1 260px; font-size: 15px; line-height: 1.5; color: var(--texto2); }
 /* el once (div.pc: las caras también llevan la clase pc y, con estas columnas, las iniciales se iban a la izquierda) */
-div.pc { display: grid; gap: 18px; }
+div.pc { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
 .escritorio div.pc { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: center; gap: 56px; }
 .pc-campo-w { perspective: 1100px; }
-.pc-campo { position: relative; display: grid; gap: 14px; padding: 22px 8px 18px; border-radius: 22px; overflow: hidden;
+.pc-campo { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 22px 8px 18px; border-radius: 22px; overflow: hidden;
   background: repeating-linear-gradient(180deg, #0f3d26 0 46px, #0d361f 46px 92px); border: 1px solid #1d5a3a;
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), inset 0 0 120px rgba(0, 0, 0, 0.35);
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
@@ -2491,10 +2491,10 @@ div.pc { display: grid; gap: 18px; }
 .pc-campo::before { content: ''; position: absolute; left: 50%; top: -60px; width: 150px; height: 120px; transform: translateX(-50%); border: 2px solid rgba(255, 255, 255, 0.14); border-radius: 50%; }
 .pc-campo::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 46%; height: 64px; transform: translateX(-50%); border: 2px solid rgba(255, 255, 255, 0.14); border-bottom: 0; }
 .pc-linea { position: relative; z-index: 1; display: flex; justify-content: space-evenly; }
-.pc-j { display: grid; justify-items: center; gap: 6px; width: 76px; padding: 4px 0; border: 0; background: none; color: var(--texto); cursor: pointer; font: inherit; }
+.pc-j { display: grid; justify-items: center; gap: 6px; width: 76px; flex: 0 1 76px; min-width: 0; padding: 4px 0; border: 0; background: none; color: var(--texto); cursor: pointer; font: inherit; }
 .pc-j .mq-av { width: 48px; height: 48px; font-size: 15px; background: #0b2a1b; transition: transform 0.2s, box-shadow 0.2s; }
 .pc-j:hover .mq-av { transform: scale(1.07); }
-.escritorio .pc-j { width: 104px; }
+.escritorio .pc-j { width: 104px; flex-basis: 104px; }
 .escritorio .pc-j .mq-av { width: 64px; height: 64px; }
 .pc-j b { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 2px 7px; border-radius: 6px; background: rgba(0, 0, 0, 0.55); font: 600 12px var(--cond); letter-spacing: 0.2px; }
 .pc-j[aria-pressed="true"] .mq-av { transform: scale(1.14); box-shadow: 0 0 0 3px #0b2a1b, 0 0 0 5px var(--rojo), 0 6px 24px rgba(238, 28, 60, 0.65); }

@@ -79,7 +79,6 @@ def cta(raiz):
             f'<p>Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular. Gratis y sin registrarte: entras con tu cuenta de LaLiga.</p>'
             f'<div class="cta-b"><a class="btn" href="{PLAY}" target="_blank" rel="noopener">Descargar en Google Play</a>'
             f'<a class="btn sec" href="{raiz or "./"}">Abrirla en el navegador</a></div>'
-            f'<a class="play-badge" href="{PLAY}" target="_blank" rel="noopener"><img src="{raiz}img/google-play.png" alt="Disponible en Google Play" width="646" height="250"></a>'
             f'<p class="peq">En el ordenador se usa desde la web, sin descargar nada. En el iPhone también, después de entrar una vez desde un ordenador. Y puedes verla antes con una liga de ejemplo. <a href="{raiz}instalar.html">Cómo instalarla</a></p>'
             f'</aside>')
 
