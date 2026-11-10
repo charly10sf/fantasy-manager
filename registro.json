@@ -1812,8 +1812,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000,
-   "SPORT|136202042": 1794062312000,
-   "SPORT|136176192": 1794062219000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000,
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-del-malaga-ruina-tras-el-descanso-f202611-n/": 1794070433000,
    "SPORT|136204290": 1794066951000,
@@ -3199,7 +3197,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136202042": 1794062312000,
    "SPORT|136204292": 1794067195000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
    "SPORT|136206834": 1794072635000,
@@ -7268,13 +7265,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1161,
+   "ok": 1162,
    "fallos": 0,
-   "ejecuciones": 779,
+   "ejecuciones": 780,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T14:36:17.963Z"
+   "ultima": "2026-11-10T14:41:13.637Z"
   }
  },
  "ptsDirecto": {},
@@ -7291,15 +7288,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:36:22.526Z"
+   "ultimaBien": "2026-11-10T14:41:18.563Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:36:22.526Z"
+   "ultimaBien": "2026-11-10T14:41:18.563Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:36:22.526Z"
+   "ultimaBien": "2026-11-10T14:41:18.563Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7307,11 +7304,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:36:22.526Z"
+   "ultimaBien": "2026-11-10T14:41:18.563Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:36:22.526Z"
+   "ultimaBien": "2026-11-10T14:41:18.563Z"
   }
  },
  "avisos": [
