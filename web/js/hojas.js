@@ -180,6 +180,12 @@ export function resumenEquipo(S) {
   return h;
 }
 
+/** el valor de la ficha de un jugador: lo de hoy (si se sabe; si no, «hoy sin dato», nunca lo de 7 días en su sitio) y
+ * lo de 7 días. Se vuelve a pintar cuando llega el histórico de LaLiga (aviso de Domy, 10 nov: solo veía el acumulado) */
+export function valorFichaHTML(j, t) {
+  const hoy = t && t.d1 != null ? (Math.abs(t.d1) > 0 ? `${delta({ d1: t.d1, p1: t.p1 }, { largo: true })} <span class="apag">hoy</span>` : '<span class="apag">= hoy</span>') : '<span class="apag">hoy sin dato</span>';
+  return `<div class="valor-g" id="valor-j"><span class="v">${eur(j.valor)}</span><span class="d">${hoy}</span>${t && t.d7 != null ? `<span class="d ${clase(t.d7)}">${eur(t.d7, { signo: true })} 7d</span>` : ''}</div>`;
+}
 export function fichaJugador(S, pid) {
   const { M } = S;
   const j = M.J(pid), t = M.tend(pid);
@@ -198,7 +204,7 @@ export function fichaJugador(S, pid) {
   const est = estiloClub(j.equipoId);
   let h = `<div class="ficha-top${est ? ' con-club' : ''}"${est}>${ava(j, 'g')}<div style="min-width:0"><h2>${esc(j.nombre)}</h2>
     <div class="s">${posTag(j)}<span>${esc(POS_LARGO[j.pos] || '')} · ${j.equipoId && S.D.equipos && S.D.equipos[j.equipoId] ? `<button class="enlace-j" data-club="${esc(j.equipoId)}">${esc(j.equipo || S.D.equipos[j.equipoId].nombre)}</button>` : esc(j.equipo || '')}</span>${estadoPill(j)}${oncePill(M, j)}</div></div>${(() => { const f = esFav(pid); return `<button class="fav-btn${f ? ' on' : ''}" data-accion="fav" data-pid="${esc(pid)}" aria-pressed="${f}" aria-label="${f ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${icono('estrella')}<span>${f ? 'Favorito' : 'Seguir'}</span></button>`; })()}</div>`;
-  h += `<div class="valor-g"><span class="v">${eur(j.valor)}</span><span class="d">${delta(t, { largo: true })}</span>${t.d7 != null ? `<span class="d ${clase(t.d7)}">${eur(t.d7, { signo: true })} 7d</span>` : ''}</div>`;
+  h += valorFichaHTML(j, t);
   // con su partido de la jornada empezado: lo que lleva y lo que ha hecho (se pone al día solo)
   const vj = jornadaJugadorHTML(S, pid);
   if (vj) h += `<div id="vivo-j">${vj}</div>`;
@@ -409,7 +415,7 @@ function perfilHTML(S, tid) {
   h += dato('Vende', nV ? (P.ventas.dias != null ? `~${Math.max(1, Math.round(P.ventas.dias))} días` : nV) : '0', nV ? `${P.ventas.dias != null ? 'los tiene antes de vender' : nV === 1 ? 'venta' : 'ventas'} · ${desglose}` : 'no ha vendido');
   h += dato('Ficha', P.compras.liga + P.compras.manager, `${P.compras.liga} del mercado${P.compras.manager ? `, ${P.compras.manager} a managers` : ''}${P.compras.paga != null && P.compras.nPaga >= 2 ? ` · paga ${pct(P.compras.paga * 100)}` : ''}`);
   h += dato('Se protege', P.escudos + P.subidas, `${P.escudos} escudo${P.escudos === 1 ? '' : 's'}, ${P.subidas} subida${P.subidas === 1 ? '' : 's'} pagada${P.subidas === 1 ? '' : 's'}`);
-  if (P.franja) h += dato('Se mueve', `${P.franja.ini}–${P.franja.fin} h`, `${P.franja.n} de ${P.franja.de} (clausular, vender, proteger)`);
+  if (P.franja) h += dato('Se mueve', `${P.franja.ini}–${P.franja.fin || 24} h`, `${P.franja.n} de ${P.franja.de} (clausular, vender, proteger)`);
   h += `</div>`;
   const pu = Object.entries(P.puestos).filter(([, n]) => n).sort((a, b) => b[1] - a[1]);
   const POSC = { 1: 'POR', 2: 'DEF', 3: 'MED', 4: 'DEL' };

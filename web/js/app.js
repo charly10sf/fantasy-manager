@@ -2031,6 +2031,9 @@ async function cargarDetalle(pid) {
 function pintarDetalle(pid) {
   if (!S.tipoHoja || S.tipoHoja[0] !== 'j' || S.tipoHoja[1] !== pid) return;
   const el = $('#det-j'); if (el) el.innerHTML = Hj.detalleHTML(S.det[pid]);
+  // con el histórico de LaLiga ya se sabe lo que ha subido hoy aunque la app no se abriera ayer
+  const vg = $('#valor-j');
+  if (vg && S.det[pid] && S.det[pid].valores && S.M.olvidarTend) { S.M.olvidarTend(pid); vg.outerHTML = Hj.valorFichaHTML(S.M.J(pid), S.M.tend(pid)); }
   const vj = $('#vivo-j'); if (vj) vj.innerHTML = Dr.jornadaJugadorHTML(S, pid);
   pintarGraf(pid);
 }
