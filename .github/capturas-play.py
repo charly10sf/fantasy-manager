@@ -18,7 +18,9 @@ Con 6,43 M de saldo no te llega: primero acepta lo de Álex Baena y vende a Raph
 
 # la sección «Tu once» de Equipo, arriba (debajo de la cabecera)
 TU_ONCE = "(() => { const e = [...document.querySelectorAll('h2, h3, .sec-t, .titulo2, div, span')].find((x) => x.children.length === 0 && /^tu once$/i.test(x.textContent.trim())); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 150); })()"
-# (archivo, título, subtítulo, pasos). Pasos: ('ir', vista), ('seg', 'vista:seg'), ('clic', selector), ('js', código),
+# (archivo, título, subtítulo, pasos[, modo]). Modo: 'normal' (como la ve cualquiera, con los candados), 'abierto'
+# (limites.json sin `bloqueadas`: las funciones de anuncio, abiertas) o 'paron' (abierto y la demo en el parón: la J10 a
+# 12 días, como en prueba-web). Pasos: ('ir', vista), ('seg', 'vista:seg'), ('clic', selector), ('js', código),
 # ('scroll', selector), ('chat', pregunta), ('espera', ms)
 PANTALLAS = [
   ('captura-1-hoy', 'QUÉ HACER HOY', 'paso a paso, nada más abrirla', [('ir', 'hoy')]),
@@ -28,8 +30,8 @@ PANTALLAS = [
   ('captura-5-equipo', 'TU MEJOR ONCE', 'con el calendario de cada jugador', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('js', TU_ONCE)]),
   ('captura-6-chat', 'PREGÚNTALE A LA IA', 'lo que quieras, gratis, también con capturas', [('chat', PREGUNTA_IA)]),
   ('captura-7-ficha', 'CADA JUGADOR, A FONDO', 'forma, rival, valor y quién lo puede pagar', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('clic', '[data-j]')]),
-  ('captura-8-rivales', 'LO QUE HACE CADA RIVAL', 'fichajes, ventas y clausulazos al momento', [('ir', 'rivales'), ('seg', 'rivales:movimientos')]),
-  ('captura-9-jornadas', 'TU ONCE, PUNTO A PUNTO', 'lo que suma cada jugador, jornada a jornada', [('ir', 'directo'), ('clic', '[data-accion="irJornada"][data-n="9"]')]),
+  ('captura-8-dinero', 'EL DINERO DE CADA RIVAL', 'quién puede pagar tus cláusulas', [('ir', 'rivales'), ('seg', 'rivales:clasif')], 'abierto'),
+  ('captura-9-paron', 'PARÓN DE SELECCIONES', 'qué comprar para revender antes de la vuelta', [('ir', 'directo'), ('scroll', '.pnz-hero')], 'paron'),
 ]
 
 async def google(route):
@@ -44,9 +46,18 @@ async def google(route):
         return await route.fulfill(status=200, content_type='text/event-stream', body=cuerpo)
     return await route.fulfill(status=200, content_type='application/json', body=json.dumps({'candidates': [{'content': {'role': 'model', 'parts': [{'text': RESPUESTA_IA}]}, 'finishReason': 'STOP'}]}))
 
+MODO = {'v': 'normal'}
 async def red(route):
     u = route.request.url
-    if u.startswith('http://localhost'): return await route.continue_()
+    if u.startswith('http://localhost'):
+        if MODO['v'] != 'normal' and u.split('?')[0].endswith('/limites.json'):
+            r = await route.fetch(); d = await r.json(); d['bloqueadas'] = []
+            return await route.fulfill(response=r, body=json.dumps(d))
+        if MODO['v'] == 'paron' and u.split('?')[0].endswith('/js/demo.js'):
+            r = await route.fetch(); t = await r.text()
+            assert '9: base - 7 * DIA, 10: base,' in t, 'demo.js ha cambiado: revisar el truco del parón'
+            return await route.fulfill(response=r, body=t.replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,'))
+        return await route.continue_()
     if 'generativelanguage.googleapis.com' in u: return await google(route)
     return await route.abort()
 
@@ -57,7 +68,15 @@ async def cerrar_hoja(pg):
 async def main(solo):
     async with async_playwright() as p:
         b = await p.chromium.launch()
-        pg = await b.new_page(viewport={'width': 390, 'height': 770}, device_scale_factor=2)
+        for modo in ('normal', 'abierto', 'paron'):
+            hoy = [x for x in PANTALLAS if (x[4] if len(x) > 4 else 'normal') == modo and (not solo or x[0] in solo)]
+            if hoy: await por_modo(b, modo, hoy)
+        await b.close()
+
+async def por_modo(b, modo, pantallas):
+        MODO['v'] = modo
+        ctx = await b.new_context(viewport={'width': 390, 'height': 770}, device_scale_factor=2)
+        pg = await ctx.new_page()
         await pg.route('**/*', red)
         pg.on('pageerror', lambda e: print('ERROR en la página:', e))
         await pg.add_init_script("localStorage.setItem('fm-tour','1')")
@@ -65,8 +84,7 @@ async def main(solo):
         await pg.add_init_script("addEventListener('DOMContentLoaded', () => { const s = document.createElement('style'); s.textContent = '.pt-esc.sin.club-g{display:none}'; document.head.appendChild(s); })")
         await pg.goto('http://localhost:8765/')
         await pg.wait_for_timeout(7000)
-        for arch, tit, sub, pasos in PANTALLAS:
-            if solo and arch not in solo: continue
+        for arch, tit, sub, pasos, *_ in pantallas:
             await cerrar_hoja(pg)
             for tipo, x in pasos:
                 if tipo == 'ir':
@@ -84,7 +102,7 @@ async def main(solo):
                 elif tipo == 'js':
                     await pg.evaluate(x); await pg.wait_for_timeout(1500)
                 elif tipo == 'scroll':
-                    await pg.evaluate(f"(() => {{ const e = document.querySelector('{x}'); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 70); }})()")
+                    await pg.evaluate(f"(() => {{ const e = document.querySelector('{x}'); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 82); }})()")
                     await pg.wait_for_timeout(500)
                 elif tipo == 'espera':
                     await pg.wait_for_timeout(x)
@@ -102,8 +120,8 @@ async def main(solo):
             await pg.evaluate("document.activeElement && document.activeElement.blur()")
             png = await pg.screenshot()
             await componer(b, arch, tit, sub, png)
-            print('hecha', arch)
-        await b.close()
+            print('hecha', arch, f'({modo})')
+        await ctx.close()
 
 async def componer(b, arch, tit, sub, png):
     img = base64.b64encode(png).decode()
