@@ -3389,7 +3389,8 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-tribunal-supremo-eeuu-autoriza-trump-reanudar-construccion-tramo-muro-fronterizo-texas-20261110015458.html": 1794295873095
+   "Europa Press|https://www.europapress.es/internacional/noticia-tribunal-supremo-eeuu-autoriza-trump-reanudar-construccion-tramo-muro-fronterizo-texas-20261110015458.html": 1794295873095,
+   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-huelga-general-20261110082835.html": 1794296171618
   }
  },
  "ia": {
@@ -7360,13 +7361,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1075,
+   "ok": 1076,
    "fallos": 0,
-   "ejecuciones": 693,
+   "ejecuciones": 694,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T07:31:13.095Z"
+   "ultima": "2026-11-10T07:36:11.618Z"
   }
  },
  "ptsDirecto": {},
@@ -7383,15 +7384,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:31:16.472Z"
+   "ultimaBien": "2026-11-10T07:36:14.332Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:31:16.472Z"
+   "ultimaBien": "2026-11-10T07:36:14.332Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:31:16.472Z"
+   "ultimaBien": "2026-11-10T07:36:14.332Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7399,11 +7400,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:31:16.472Z"
+   "ultimaBien": "2026-11-10T07:36:14.332Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:31:16.472Z"
+   "ultimaBien": "2026-11-10T07:36:14.332Z"
   }
  },
  "avisos": [
