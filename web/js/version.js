@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.4';
+export const VERSION = '0.7.5';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,13 @@ export const VERSION = '0.7.4';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.5', f: '2026-11-11', h: '00:00', t: 'El mercado te avisa',
+    cosas: [
+      { para: 'app', tipo: 'nuevo', d: 'campana', t: 'Pujas ganadas y perdidas', x: 'Con la app cerrada, al cambiar el mercado te llega si has ganado una puja (y lo que pagas) o si te la ha quitado otro (quién y por cuánto). Se apaga en Ajustes → Avisos y alarmas.' },
+      { para: 'app', tipo: 'nuevo', d: 'oferta', t: 'Los que te interesan, en cuanto salen', x: 'Si sale al mercado uno de tus favoritos, uno de los que tienes en «Avisarme» o un chollo con interés alto, te avisa. Si salen más de dos, en un solo aviso.' },
+    ],
+  },
   {
     v: '0.7.4', f: '2026-11-11', h: '00:14', t: 'Ajustes ordenados y alarmas a tu gusto',
     cosas: [

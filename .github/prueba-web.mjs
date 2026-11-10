@@ -8,6 +8,7 @@
 //   6. que en el parón el sitio de Directo es la pestaña Parón y su selector vuelve a Directo (21);
 //   7. Ajustes (40): las secciones plegadas, el buscador, la antelación de cada aviso y «Avisarme» en la ficha, y que
 //      calcular (avisos.js) usa la antelación elegida (rivales, tuyas, el once y un jugador concreto).
+//   9. (41) avisos del mercado con la app cerrada: puja ganada o perdida y los que te interesan y salen al mercado.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -248,6 +249,45 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     else bien('la ficha: «Avisarme de su cláusula» se guarda (15 min antes)');
   }
   if (errores.length) mal(`Ajustes: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 9: (41) avisos del mercado con la app cerrada: puja ganada, puja perdida (con quién se lo lleva) y los que te interesan
+// y salen al mercado; cada uno se apaga con su interruptor de Ajustes → Avisos y alarmas
+{
+  const { ctx, page, errores } = await pagina({ init: "localStorage.setItem('fm-cfg-avisos', '{\"on\":true}');" });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.M.mercado, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const F = await import('./js/fondo.js'), A = await import('./js/avisos.js'), Fav = await import('./js/favoritos.js');
+    const { D, M } = window.S, yo = D.yo.teamId;
+    const antes = JSON.parse(JSON.stringify(D)); antes.demo = false; antes.t = Date.now() - 2 * 3600e3;
+    const pidW = D.plantillas[yo][0].pid;
+    antes.plantillas[yo] = antes.plantillas[yo].filter((f) => f.pid !== pidW);
+    const otro = Object.keys(D.plantillas).find((t) => t !== yo && D.plantillas[t].length);
+    const pidL = D.plantillas[otro][0].pid;
+    antes.mercado.push({ id: 'pg', pid: pidW, tipo: 'liga', miPuja: 1e6 }, { id: 'pp', pid: pidL, tipo: 'liga', miPuja: 2e6 });
+    M.actividad = [...(M.actividad || []), { pid: pidL, clase: 'compra', esYo: false, quien: 'Rival de prueba', importe: 3e6, t: Date.now() }];
+    // uno del mercado de LaLiga, como favorito, que antes no estaba
+    const nuevo = M.mercado.find((m) => m.tipo !== 'manager' && !m.miPuja);
+    if (!Fav.esFav(nuevo.pid)) Fav.cambiarFav(nuevo.pid);
+    antes.mercado = antes.mercado.filter((m) => m.pid !== nuevo.pid);
+    const l = F.avisosNuevos(antes, D, M);
+    A.guardarCfgAvisos({ pujas: false, enMercado: false });
+    const apagado = F.avisosNuevos(antes, D, M);
+    A.guardarCfgAvisos({ pujas: true, enMercado: true });
+    const k = (x) => l.find((a) => a.k.startsWith(x));
+    return {
+      gana: !!k(`puja-gana:${pidW}`) && !k(`entra:${pidW}`),
+      pierde: !!k(`puja-pierde:${pidL}`) && /Rival de prueba/.test(k(`puja-pierde:${pidL}`).texto),
+      mercado: l.some((a) => a.k.startsWith('en-mercado:') && (a.k.includes(nuevo.pid) || /que te interesan/.test(a.titulo))),
+      apagado: !apagado.some((a) => /^(puja-|en-mercado)/.test(a.k)) && apagado.some((a) => a.k.startsWith(`entra:${pidW}`)),
+    };
+  });
+  const fallan = Object.entries(r).filter(([, v]) => !v).map(([x]) => x);
+  if (fallan.length) mal(`avisos del mercado (41) fallan en: ${fallan.join(', ')}`);
+  else bien('avisos del mercado (41): puja ganada, puja perdida, el favorito que sale y los interruptores');
+  if (errores.length) mal(`avisos del mercado: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

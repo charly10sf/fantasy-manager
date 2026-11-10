@@ -705,6 +705,9 @@ export function ajustes(S) {
       c2 += tipo('mias', 'Tus cláusulas', '', 'mis clausulas proteccion blindar se abren');
       if (ca.mias) c2 += fila('De cuáles', 'Baratas: menos de 1,6 veces su valor', selA('miasCuales', [['baratas', 'Las baratas'], ['todas', 'Todas']], ca.miasTodas ? 'todas' : 'baratas', 'De cuáles de tus cláusulas'), 'mis clausulas todas', 'sub');
       c2 += tipo('mercado', 'Cambio de mercado', '', 'mercado pujas ofertas');
+      // (41) lo que pasa al cambiar el mercado: con la app cerrada, cuando trabaja sola (Ajustes → La IA)
+      c2 += tipo('pujas', 'Pujas que ganas o pierdes', 'Al cambiar el mercado', 'mercado pujas ganada perdida', false);
+      c2 += tipo('enMercado', 'Te interesan y salen al mercado', 'Tus favoritos y los de interés alto', 'mercado favoritos interes sale venta', false);
       c2 += tipo('jornada', 'Poner el once', 'Antes de la jornada', 'once alineacion jornada recordatorio');
       c2 += fila('Tu liga hoy', 'Un aviso al día', `${ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" aria-label="Hora del aviso diario">` : ''}${interr(ca.diario, 'avisoTipo', 'data-k="diario"', 'Tu liga hoy')}`, 'diario plan del dia hora');
       // «Avisarme de este jugador» (desde la ficha): cada uno con cuándo y para quitarlo

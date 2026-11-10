@@ -15,7 +15,7 @@ export const OPC_ANTES = { plan: [0, 1, 2, 5, 10], rivales: [5, 15, 30, 60], mia
 export const cfgAvisos = () => {
   const g = LS.get('cfg-avisos', {}) || {};
   return {
-    on: false, plan: true, alarma: true, rivales: true, mias: true, mercado: true, jornada: true, diario: true, hora: '13:30', interes: 55, miasTodas: false,
+    on: false, plan: true, alarma: true, rivales: true, mias: true, mercado: true, jornada: true, diario: true, hora: '13:30', interes: 55, miasTodas: false, pujas: true, enMercado: true,
     ...g, antes: { ...ANTES, ...(g.antes || {}) }, jugadores: { ...(g.jugadores || {}) },
   };
 };
