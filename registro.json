@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248257/flick-deja-abierto-debate-recambio-rodri.html": 1794055644000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
@@ -3292,7 +3291,9 @@
    "ABC|https://www.abc.es/deportes/futbol/mijas-lagunas-real-jaen-horario-canal-television-20261110105244-nt.html": 1794304365000,
    "ABC|https://www.abc.es/deportes/futbol/tavernes-valencia-horario-canal-television-ver-online-20261110110419-nt.html": 1794305137000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-seguimiento-196-huelga-maquinistas-incumplimiento-servicios-minimos-20261110113536.html": 1794306936000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/navalcarnero-betis-horario-ver-tv_0_2008462707.html": 1794308704000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/navalcarnero-betis-horario-ver-tv_0_2008462707.html": 1794308704000,
+   "MARCA|https://www.marca.com/futbol/betis/2026/11/10/betis-abre-proceso-solicitud-602-entradas-proximo-derbi-sanchez-pizjuan.html": 1794313574000,
+   "SPORT|136280060": 1794308464000
   },
   "hechos": [
    {
@@ -3314,27 +3315,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136280060": 1794312382685
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 172015,
-  "salida": 12923,
+  "entrada": 173842,
+  "salida": 13084,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.267311,
+  "dolares": 0.267574,
   "reservado": 0
  },
  "recientes": {
@@ -7293,13 +7292,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1135,
+   "ok": 1136,
    "fallos": 0,
-   "ejecuciones": 753,
+   "ejecuciones": 754,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:26:13.102Z"
+   "ultima": "2026-11-10T12:31:12.250Z"
   }
  },
  "ptsDirecto": {},
@@ -7316,15 +7315,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:26:15.833Z"
+   "ultimaBien": "2026-11-10T12:31:18.006Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:26:15.833Z"
+   "ultimaBien": "2026-11-10T12:31:18.006Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:26:15.833Z"
+   "ultimaBien": "2026-11-10T12:31:18.006Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7332,11 +7331,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:26:15.833Z"
+   "ultimaBien": "2026-11-10T12:31:18.006Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:26:15.833Z"
+   "ultimaBien": "2026-11-10T12:31:18.006Z"
   }
  },
  "avisos": [
