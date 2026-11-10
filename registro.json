@@ -3292,7 +3292,8 @@
    "ABC|https://www.abc.es/deportes/futbol/amorebieta-logrones-horario-canal-television-ver-online-20261110104938-nt.html": 1794304397000,
    "ABC|https://www.abc.es/deportes/futbol/mijas-lagunas-real-jaen-horario-canal-television-20261110105244-nt.html": 1794304365000,
    "ABC|https://www.abc.es/deportes/futbol/tavernes-valencia-horario-canal-television-ver-online-20261110110419-nt.html": 1794305137000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-seguimiento-196-huelga-maquinistas-incumplimiento-servicios-minimos-20261110113536.html": 1794306936000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-seguimiento-196-huelga-maquinistas-incumplimiento-servicios-minimos-20261110113536.html": 1794306936000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/navalcarnero-betis-horario-ver-tv_0_2008462707.html": 1794308704000
   },
   "hechos": [
    {
@@ -3314,7 +3315,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
   "espera": {}
@@ -3322,17 +3323,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 157698,
-  "salida": 11915,
+  "entrada": 159361,
+  "salida": 12059,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.265375,
+  "dolares": 0.265613,
   "reservado": 0
  },
  "recientes": {
@@ -7291,13 +7292,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1121,
+   "ok": 1122,
    "fallos": 0,
-   "ejecuciones": 739,
+   "ejecuciones": 740,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T11:16:14.269Z"
+   "ultima": "2026-11-10T11:21:13.539Z"
   }
  },
  "ptsDirecto": {},
@@ -7314,15 +7315,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:16:17.904Z"
+   "ultimaBien": "2026-11-10T11:21:19.946Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:16:17.904Z"
+   "ultimaBien": "2026-11-10T11:21:19.946Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:16:17.904Z"
+   "ultimaBien": "2026-11-10T11:21:19.946Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7330,11 +7331,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:16:17.904Z"
+   "ultimaBien": "2026-11-10T11:21:19.946Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:16:17.904Z"
+   "ultimaBien": "2026-11-10T11:21:19.946Z"
   }
  },
  "avisos": [
