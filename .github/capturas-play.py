@@ -18,6 +18,10 @@ Con 6,43 M de saldo no te llega: primero acepta lo de Álex Baena y vende a Raph
 
 # la sección «Tu once» de Equipo, arriba (debajo de la cabecera)
 TU_ONCE = "(() => { const e = [...document.querySelectorAll('h2, h3, .sec-t, .titulo2, div, span')].find((x) => x.children.length === 0 && /^tu once$/i.test(x.textContent.trim())); if (e) window.scrollTo(0, e.getBoundingClientRect().top + scrollY - 150); })()"
+# la ficha de Raphinha: es la que lleva el recuadro del plan de hoy (ojo: la línea de la cláusula salta y deja «más» sola)
+FICHA = "(() => { const e = [...document.querySelectorAll('[data-j]')].find((x) => x.offsetParent && /raphinha/i.test(x.textContent)); if (e) e.click(); })()"
+import re as _re
+RESPUESTA_IA = _re.sub(r'(\d) (M|mil|%|pts)', '\\1\u00a0\\2', RESPUESTA_IA)
 # (archivo, título, subtítulo, pasos[, modo]). Modo: 'normal' (como la ve cualquiera, con los candados), 'abierto'
 # (limites.json sin `bloqueadas`: las funciones de anuncio, abiertas) o 'paron' (abierto y la demo en el parón: la J10 a
 # 12 días, como en prueba-web). Pasos: ('ir', vista), ('seg', 'vista:seg'), ('clic', selector), ('js', código),
@@ -29,7 +33,7 @@ PANTALLAS = [
   ('captura-4-mercado', 'CUÁNTO PUJAR', 'según lo que se paga en tu liga', [('ir', 'mercado')]),
   ('captura-5-equipo', 'TU MEJOR ONCE', 'con el calendario de cada jugador', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('js', TU_ONCE)]),
   ('captura-6-chat', 'PREGÚNTALE A LA IA', 'lo que quieras, gratis, también con capturas', [('chat', PREGUNTA_IA)]),
-  ('captura-7-ficha', 'CADA JUGADOR, A FONDO', 'forma, rival, valor y quién lo puede pagar', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('clic', '[data-j]')]),
+  ('captura-7-ficha', 'CADA JUGADOR, A FONDO', 'valor, cláusula, rival y qué hacer con él', [('ir', 'equipo'), ('seg', 'equipo:plantilla'), ('js', FICHA)]),
   ('captura-8-dinero', 'EL DINERO DE CADA RIVAL', 'quién puede pagar tus cláusulas', [('ir', 'rivales'), ('seg', 'rivales:clasif')], 'abierto'),
   ('captura-9-paron', 'PARÓN DE SELECCIONES', 'qué comprar para revender antes de la vuelta', [('ir', 'directo'), ('scroll', '.pnz-hero')], 'paron'),
 ]
