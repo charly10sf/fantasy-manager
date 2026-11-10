@@ -1804,7 +1804,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/videos/es-un-portento-fisico-y-este-video-lo-demuestra-el-brutal-entrenamiento-de-diomande-f202611-v/": 1794038839000,
-   "AS|https://as.com/futbol/valverde-vuelve-al-lateral-f202611-n/": 1794038070000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248129/real-letal-rival-categoria-me-sorprende-oyarzabal-no-balon-oro.html": 1794041366000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261107/1004248132/alvaro-garcia-valentin-cinco-bajas-notables-rayo.html": 1794041216000,
    "SPORT|136054540": 1794038967000,
@@ -3364,7 +3363,9 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-afirma-huelga-general-disparate-no-existe-otros-paises-union-europea-20261109141146.html": 1794229906000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-llaman-secundar-martes-huelga-renfe-dia-antes-huelga-general-11n-20261110080117.html": 1794294077000,
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/10/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794293640000,
-   "SPORT|134914783": 1794290040000
+   "SPORT|134914783": 1794290040000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-huelga-general-20261110082835.html": 1794295715000,
+   "Europa Press|https://www.europapress.es/internacional/noticia-tribunal-supremo-eeuu-autoriza-trump-reanudar-construccion-tramo-muro-fronterizo-texas-20261110015458.html": 1794272098000
   },
   "hechos": [
    {
@@ -3386,28 +3387,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-tribunal-supremo-eeuu-autoriza-trump-reanudar-construccion-tramo-muro-fronterizo-texas-20261110015458.html": 1794295873095,
-   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-huelga-general-20261110082835.html": 1794296171618
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 97285,
-  "salida": 6707,
+  "entrada": 99145,
+  "salida": 6868,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.196276,
+  "dolares": 0.196543,
   "reservado": 0
  },
  "recientes": {
@@ -7362,13 +7360,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1080,
+   "ok": 1081,
    "fallos": 0,
-   "ejecuciones": 698,
+   "ejecuciones": 699,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T07:51:12.201Z"
+   "ultima": "2026-11-10T07:56:21.391Z"
   }
  },
  "ptsDirecto": {},
@@ -7385,15 +7383,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:51:17.212Z"
+   "ultimaBien": "2026-11-10T07:56:30.653Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:51:17.212Z"
+   "ultimaBien": "2026-11-10T07:56:30.653Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:51:17.212Z"
+   "ultimaBien": "2026-11-10T07:56:30.653Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7401,11 +7399,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:51:17.212Z"
+   "ultimaBien": "2026-11-10T07:56:30.653Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:51:17.212Z"
+   "ultimaBien": "2026-11-10T07:56:30.653Z"
   }
  },
  "avisos": [
