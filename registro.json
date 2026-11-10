@@ -1997,7 +1997,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
    "SPORT|136282368": 1794310886000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-ve-apto-lamine-yamal-inglaterra-no-merecia-pena-asumir-riesgo-20261110_3472467.html": 1794325288000
   },
   "hechos": [
    {
@@ -2341,7 +2342,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -3256,7 +3257,8 @@
    "SPORT|136281772": 1794316000000,
    "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321213000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000,
+   "SPORT|136297086": 1794321674000
   },
   "hechos": [
    {
@@ -3278,7 +3280,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 15,
+   "n": 16,
    "fallos": 0
   },
   "espera": {}
@@ -3286,17 +3288,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 46,
+   "clasificar": 48,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 198635,
-  "salida": 16646,
+  "entrada": 202447,
+  "salida": 16901,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.271837,
+  "dolares": 0.272345,
   "reservado": 0
  },
  "recientes": {
@@ -7255,13 +7257,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1175,
+   "ok": 1176,
    "fallos": 0,
-   "ejecuciones": 793,
+   "ejecuciones": 794,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T15:46:15.541Z"
+   "ultima": "2026-11-10T15:51:14.654Z"
   }
  },
  "ptsDirecto": {},
@@ -7278,15 +7280,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:46:18.874Z"
+   "ultimaBien": "2026-11-10T15:51:23.195Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:46:18.874Z"
+   "ultimaBien": "2026-11-10T15:51:23.195Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:46:18.874Z"
+   "ultimaBien": "2026-11-10T15:51:23.195Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7294,11 +7296,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:46:18.874Z"
+   "ultimaBien": "2026-11-10T15:51:23.195Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:46:18.874Z"
+   "ultimaBien": "2026-11-10T15:51:23.195Z"
   }
  },
  "avisos": [
