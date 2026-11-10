@@ -3321,7 +3321,8 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/la-federacion-tinerfena-de-futbol-aplaza-los-encuentros-oficiales-de-este-martes-y-miercoles-en-la-isla-de-tenerife-radio-club-tenerife/": 1794339274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342405000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-madrid-realiza-piquete-sede-central-alquiler-seguro-20261110204927.html": 1794340167000,
-   "SPORT|136307236": 1794339155000
+   "SPORT|136307236": 1794339155000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794347495000
   },
   "hechos": [
    {
@@ -3343,27 +3344,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 25,
+   "n": 26,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794348076708
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 79,
+   "clasificar": 80,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 266337,
-  "salida": 28557,
+  "entrada": 268057,
+  "salida": 28707,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.284563,
+  "dolares": 0.28481,
   "reservado": 0
  },
  "recientes": {
@@ -7443,13 +7442,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1258,
+   "ok": 1259,
    "fallos": 0,
-   "ejecuciones": 874,
+   "ejecuciones": 875,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 424,
-   "ultima": "2026-11-10T22:21:13.425Z"
+   "mediaMs": 426,
+   "ultima": "2026-11-10T22:26:13.407Z"
   }
  },
  "ptsDirecto": {},
@@ -7466,15 +7465,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T22:21:17.417Z"
+   "ultimaBien": "2026-11-10T22:26:21.465Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T22:21:17.417Z"
+   "ultimaBien": "2026-11-10T22:26:21.465Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T22:21:17.417Z"
+   "ultimaBien": "2026-11-10T22:26:21.465Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7482,7 +7481,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T22:21:17.417Z"
+   "ultimaBien": "2026-11-10T22:26:21.465Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
