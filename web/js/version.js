@@ -16,7 +16,7 @@ export const VERSION = '0.7.3a';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.3a', f: '2026-11-10', h: '00:00', t: 'Los nombres de los clubes, enteros',
+    v: '0.7.3a', f: '2026-11-10', h: '22:18', t: 'Los nombres de los clubes, enteros',
     cosas: [
       { tipo: 'arreglo', d: 'escudo', t: 'Los nombres de los clubes, sin partir', x: 'Con la letra del móvil grande, el nombre de un club se partía a media palabra («BARCELON» y una «A» debajo) en su ficha, en las tarjetas de Clubes, en su próximo partido y en la ficha de un partido. Ahora cada palabra va entera y, si no cabe, la letra se hace un poco más pequeña.' },
     ],
