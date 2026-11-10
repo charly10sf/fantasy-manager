@@ -3346,7 +3346,9 @@
    "n": 25,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794348076708
+  }
  },
  "ia": {
   "dia": "2026-11-10",
@@ -7441,13 +7443,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1253,
+   "ok": 1254,
    "fallos": 0,
-   "ejecuciones": 869,
+   "ejecuciones": 870,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T21:56:14.204Z"
+   "ultima": "2026-11-10T22:01:16.708Z"
   }
  },
  "ptsDirecto": {},
@@ -7464,15 +7466,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:56:18.182Z"
+   "ultimaBien": "2026-11-10T22:01:20.540Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:56:18.182Z"
+   "ultimaBien": "2026-11-10T22:01:20.540Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:56:18.182Z"
+   "ultimaBien": "2026-11-10T22:01:20.540Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7480,7 +7482,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:56:18.182Z"
+   "ultimaBien": "2026-11-10T22:01:20.540Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
