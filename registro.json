@@ -3230,7 +3230,6 @@
   "vistas": {
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794080725000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/alerta-meteorologica-obliga-suspender-partido-palmas-eldense-20261107_3470867.html": 1794083561000,
-   "SPORT|136209574": 1794080057000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/07/inclemencias-meteorologicas-obligan-a-aplazar-el-las-palmas-eldense-de-segunda-division-cadena-ser/": 1794085701000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/07/la-borrasca-bruna-obliga-a-suspender-el-ud-las-palmas-eldense-ser-las-palmas/": 1794085110000,
    "SPORT|136210297": 1794082357000,
@@ -3307,7 +3306,8 @@
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-mijas-lagunas-real-jaen-copa-rey-20261110151232-nt.html": 1794332785000,
    "SPORT|136266190": 1794331066000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335197000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mueven-huelga-dia-12-23-aprobacion-decreto-dar-margen-negociacion-20261110184225.html": 1794332545000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mueven-huelga-dia-12-23-aprobacion-decreto-dar-margen-negociacion-20261110184225.html": 1794332545000,
+   "SPORT|136303483": 1794335556000
   },
   "hechos": [
    {
@@ -3329,7 +3329,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 22,
+   "n": 23,
    "fallos": 0
   },
   "espera": {}
@@ -3337,17 +3337,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 72,
+   "clasificar": 73,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 252681,
-  "salida": 26541,
+  "entrada": 254434,
+  "salida": 26627,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.282189,
+  "dolares": 0.282407,
   "reservado": 0
  },
  "recientes": {
@@ -7306,13 +7306,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1221,
+   "ok": 1222,
    "fallos": 0,
-   "ejecuciones": 839,
+   "ejecuciones": 840,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T19:31:15.915Z"
+   "ultima": "2026-11-10T19:36:15.528Z"
   }
  },
  "ptsDirecto": {},
@@ -7329,15 +7329,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:31:23.710Z"
+   "ultimaBien": "2026-11-10T19:36:20.620Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:31:23.710Z"
+   "ultimaBien": "2026-11-10T19:36:20.620Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:31:23.710Z"
+   "ultimaBien": "2026-11-10T19:36:20.620Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7345,11 +7345,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:31:23.710Z"
+   "ultimaBien": "2026-11-10T19:36:20.620Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:31:23.710Z"
+   "ultimaBien": "2026-11-10T19:36:20.620Z"
   }
  },
  "avisos": [
