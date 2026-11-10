@@ -3359,7 +3359,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261110/1004249177/valencia-busca-autoestima-fiesta-tavernes.html": 1794290400000,
    "El Correo|https://www.elcorreo.com/athletic/espanyol-malaga-fin-ano-frenetico-dos-partidos-20261109003814-nt.html": 1794267494000,
    "SPORT|136268626": 1794265645000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-afirma-huelga-general-disparate-no-existe-otros-paises-union-europea-20261109141146.html": 1794229906000
+   "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-afirma-huelga-general-disparate-no-existe-otros-paises-union-europea-20261109141146.html": 1794229906000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-llaman-secundar-martes-huelga-renfe-dia-antes-huelga-general-11n-20261110080117.html": 1794294077000,
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/10/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794293640000,
+   "SPORT|134914783": 1794290040000
   },
   "hechos": [
    {
@@ -3381,28 +3384,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/10/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794293773654,
-   "SPORT|134914783": 1794294073338
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 91247,
-  "salida": 6256,
+  "entrada": 93366,
+  "salida": 6495,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.195447,
+  "dolares": 0.195778,
   "reservado": 0
  },
  "recientes": {
@@ -7357,13 +7357,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1071,
+   "ok": 1072,
    "fallos": 0,
-   "ejecuciones": 689,
+   "ejecuciones": 690,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T07:11:11.337Z"
+   "ultima": "2026-11-10T07:16:13.472Z"
   }
  },
  "ptsDirecto": {},
@@ -7380,15 +7380,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:11:15.013Z"
+   "ultimaBien": "2026-11-10T07:16:20.221Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:11:15.013Z"
+   "ultimaBien": "2026-11-10T07:16:20.221Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:11:15.013Z"
+   "ultimaBien": "2026-11-10T07:16:20.221Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7396,11 +7396,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:11:15.013Z"
+   "ultimaBien": "2026-11-10T07:16:20.221Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:11:15.013Z"
+   "ultimaBien": "2026-11-10T07:16:20.221Z"
   }
  },
  "avisos": [
