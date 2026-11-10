@@ -1812,7 +1812,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/": 1794050162000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248236/barca-no-recupera-efectivos-visita-madrid-cff.html": 1794051959000,
-   "SPORT|136192275": 1794049544000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/atletico-de-madrid/20261107/11678726/simeone-mas-complejo-defender-barca-raphinha-nueve-lewandowski.html": 1794052790000,
    "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
    "SPORT|136195917": 1794050824000,
@@ -2000,7 +1999,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249362/entiendo-alguien-quiera-vienen-barca-madrid-formas-molestaron.html": 1794305948000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000,
    "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000,
-   "SPORT|136277366": 1794304087000
+   "SPORT|136277366": 1794304087000,
+   "SPORT|136280206": 1794304897000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000
   },
   "hechos": [
    {
@@ -2395,7 +2396,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -3304,7 +3305,8 @@
    "ABC|https://www.abc.es/deportes/futbol/pamplona-eibar-horario-canal-television-ver-online-20261110104442-nt.html": 1794304416000,
    "ABC|https://www.abc.es/deportes/futbol/amorebieta-logrones-horario-canal-television-ver-online-20261110104938-nt.html": 1794304397000,
    "ABC|https://www.abc.es/deportes/futbol/mijas-lagunas-real-jaen-horario-canal-television-20261110105244-nt.html": 1794304365000,
-   "ABC|https://www.abc.es/deportes/futbol/tavernes-valencia-horario-canal-television-ver-online-20261110110419-nt.html": 1794305137000
+   "ABC|https://www.abc.es/deportes/futbol/tavernes-valencia-horario-canal-television-ver-online-20261110110419-nt.html": 1794305137000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-seguimiento-196-huelga-maquinistas-incumplimiento-servicios-minimos-20261110113536.html": 1794306936000
   },
   "hechos": [
    {
@@ -3326,27 +3328,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-seguimiento-196-huelga-maquinistas-incumplimiento-servicios-minimos-20261110113536.html": 1794307575392
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 25,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 153800,
-  "salida": 11627,
+  "entrada": 157698,
+  "salida": 11915,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.264841,
+  "dolares": 0.265375,
   "reservado": 0
  },
  "recientes": {
@@ -7305,13 +7305,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1118,
+   "ok": 1119,
    "fallos": 0,
-   "ejecuciones": 736,
+   "ejecuciones": 737,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T11:01:12.881Z"
+   "ultima": "2026-11-10T11:06:16.222Z"
   }
  },
  "ptsDirecto": {},
@@ -7328,15 +7328,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:01:16.744Z"
+   "ultimaBien": "2026-11-10T11:06:23.717Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:01:16.744Z"
+   "ultimaBien": "2026-11-10T11:06:23.717Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:01:16.744Z"
+   "ultimaBien": "2026-11-10T11:06:23.717Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7344,11 +7344,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:01:16.744Z"
+   "ultimaBien": "2026-11-10T11:06:23.717Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:01:16.744Z"
+   "ultimaBien": "2026-11-10T11:06:23.717Z"
   }
  },
  "avisos": [
