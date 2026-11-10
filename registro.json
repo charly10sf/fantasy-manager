@@ -1811,7 +1811,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000,
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-del-malaga-ruina-tras-el-descanso-f202611-n/": 1794070433000,
    "SPORT|136204290": 1794066951000,
@@ -1996,7 +1995,8 @@
    "SPORT|136287679": 1794311497000,
    "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
+   "SPORT|136282368": 1794310886000
   },
   "hechos": [
    {
@@ -2352,7 +2352,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3296,17 +3296,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 189319,
-  "salida": 15050,
+  "entrada": 191346,
+  "salida": 15620,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.270106,
+  "dolares": 0.270594,
   "reservado": 0
  },
  "recientes": {
@@ -7265,13 +7265,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1163,
+   "ok": 1164,
    "fallos": 0,
-   "ejecuciones": 781,
+   "ejecuciones": 782,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T14:46:15.266Z"
+   "ultima": "2026-11-10T14:51:15.399Z"
   }
  },
  "ptsDirecto": {},
@@ -7288,15 +7288,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:46:19.773Z"
+   "ultimaBien": "2026-11-10T14:51:23.654Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:46:19.773Z"
+   "ultimaBien": "2026-11-10T14:51:23.654Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:46:19.773Z"
+   "ultimaBien": "2026-11-10T14:51:23.654Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7304,11 +7304,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:46:19.773Z"
+   "ultimaBien": "2026-11-10T14:51:23.654Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:46:19.773Z"
+   "ultimaBien": "2026-11-10T14:51:23.654Z"
   }
  },
  "avisos": [
