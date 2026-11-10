@@ -2013,7 +2013,9 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/alarma-tchouameni.html": 1794335994000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tchouameni-lesionado-francia-20261110_3472559.html": 1794336427000,
-   "SPORT|136305317": 1794333273000
+   "SPORT|136305317": 1794333273000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249612/marc-bernal-rodri-fichan-balon-oro-dificil-jugar.html": 1794337752000,
+   "SPORT|136302339": 1794335294000
   },
   "hechos": [
    {
@@ -2362,11 +2364,26 @@
     "nums": [
      6
     ]
+   },
+   {
+    "guid": "SPORT|136302339",
+    "medio": "SPORT",
+    "t": 1794335294000,
+    "id": "2354",
+    "que": "vuelve",
+    "oficial": false,
+    "hecho": "Eric García vuelve a jugar tras tres semanas y media de baja",
+    "motivo": "",
+    "plazo": "",
+    "nums": [
+     25,
+     73
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 49
+   "n": 50
   },
   "desde": {
    "67": {
@@ -3320,17 +3337,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 71,
+   "clasificar": 72,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 250269,
-  "salida": 26283,
+  "entrada": 252681,
+  "salida": 26541,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.281819,
+  "dolares": 0.282189,
   "reservado": 0
  },
  "recientes": {
@@ -7289,13 +7306,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1220,
+   "ok": 1221,
    "fallos": 0,
-   "ejecuciones": 838,
+   "ejecuciones": 839,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T19:26:14.972Z"
+   "ultima": "2026-11-10T19:31:15.915Z"
   }
  },
  "ptsDirecto": {},
@@ -7312,15 +7329,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:26:17.971Z"
+   "ultimaBien": "2026-11-10T19:31:23.710Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:26:17.971Z"
+   "ultimaBien": "2026-11-10T19:31:23.710Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:26:17.971Z"
+   "ultimaBien": "2026-11-10T19:31:23.710Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7328,11 +7345,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:26:17.971Z"
+   "ultimaBien": "2026-11-10T19:31:23.710Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:26:17.971Z"
+   "ultimaBien": "2026-11-10T19:31:23.710Z"
   }
  },
  "avisos": [
