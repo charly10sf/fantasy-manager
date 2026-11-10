@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.2a';
+export const VERSION = '0.7.2b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,12 @@ export const VERSION = '0.7.2a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.2b', f: '2026-11-10', h: '00:00', t: 'El aviso de inercia, sin repetir',
+    cosas: [
+      { tipo: 'mejora', d: 'grafica', t: 'El aviso de «se está frenando», solo el aviso', x: 'En la ficha de un jugador, el aviso de que se está frenando, está bajando o ha girado ya no lleva sus propias barras de cada día: salían también en la tarjeta del valor, justo debajo. Y el texto ya no repite el título al empezar.' },
+    ],
+  },
   {
     v: '0.7.2a', f: '2026-11-10', h: '21:29', t: 'Cada jornada, en la ficha',
     cosas: [
