@@ -16,7 +16,7 @@ export const VERSION = '0.7.4';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.4', f: '2026-11-11', h: '00:00', t: 'Ajustes ordenados y alarmas a tu gusto',
+    v: '0.7.4', f: '2026-11-11', h: '00:14', t: 'Ajustes ordenados y alarmas a tu gusto',
     cosas: [
       { tipo: 'mejora', d: 'ajustes', t: 'Ajustes, por secciones', x: 'Ajustes ya no es una lista larga: va en cinco secciones que se abren al tocarlas (Cuenta y liga, Avisos y alarmas, La IA, La app y Datos y privacidad), cada una con una línea de lo que tiene. Arriba hay un buscador: escribe «clave», «once» o «borrar» y te enseña solo esa fila.' },
       { para: 'app', tipo: 'nuevo', d: 'campana', t: 'Tus alarmas, cuándo quieras', x: 'En Ajustes → Avisos y alarmas eliges cuánto antes avisa cada cosa: los clausulazos del plan (al abrirse o hasta 10 min antes), las cláusulas de rivales, las tuyas (por ejemplo, 1 h antes de que se queden abiertas, y si de todas o solo de las baratas) y el cambio de mercado.' },
