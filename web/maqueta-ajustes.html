@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>Maqueta (40): Ajustes</title>
+  <link rel="stylesheet" href="css/app.css">
+  <!-- TEMPORAL (40): no es parte de la app y se borra al publicar. Es la app de verdad con la liga de ejemplo y Ajustes abierto.
+       Hace como si fuera la app del móvil (para ver Avisos y alarmas como en Android); con ?web, como en el navegador. -->
+  <style>
+    .maq { position: fixed; z-index: 9999; left: 8px; right: 8px; bottom: 8px; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 auto; max-width: 760px;
+      padding: 7px; border-radius: 16px; background: rgba(10, 10, 12, 0.92); border: 1px solid var(--plano3); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5); }
+    .maq::-webkit-scrollbar { display: none; }
+    .maq button { flex: none; padding: 7px 10px; border-radius: 99px; border: 1px solid var(--plano3); background: var(--plano); color: var(--texto2); font: 600 13px 'Barlow'; }
+    .maq button[aria-pressed="true"] { background: var(--rojo-btn); border-color: var(--rojo-btn); color: #fff; }
+    .maq b { flex: none; align-self: center; font: 700 12px 'Barlow'; letter-spacing: .6px; text-transform: uppercase; color: var(--apagado); padding: 0 4px; }
+    .hoja { padding-bottom: 90px !important; }
+
+    /* ---------- variante B · Lista limpia: sin tarjetas, separadores finos (como los ajustes del sistema) ---------- */
+    .var-b .aj-sec { background: none; border-left: 0; border-radius: 0; margin: 0; border-bottom: 1px solid var(--linea); }
+    .var-b .aj-sec > summary { padding: 14px 2px; }
+    .var-b .aj-cuerpo { border-top: 0; padding: 0 2px 8px 34px; }
+    .var-b .aj-atajos { margin-bottom: 4px; }
+
+    /* ---------- variante C · Compacta: título y resumen en la misma línea, atajos sin subtítulo ---------- */
+    .var-c .aj-sec > summary { padding: 11px 14px; }
+    .var-c .aj-tx { flex-direction: row; align-items: baseline; gap: 8px; }
+    .var-c .aj-tx b { flex: none; font-size: 15.5px; }
+    .var-c .aj-tx > span { font-size: 13px; color: var(--apagado); }
+    .var-c .aj-atajo small { display: none; }
+    .var-c .aj-atajo { padding: 9px 12px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div class="maq" id="maq"></div>
+  <script>
+    /* la liga de ejemplo sin el tutorial, las funciones top abiertas (limites.json con «bloqueadas» vacío) y, sin ?web,
+       un puente de Android de mentira: avisos permitidos y un aviso de jugador ya puesto para ver la lista */
+    const WEB = /[?&]web\b/.test(location.search);
+    try {
+      localStorage.setItem('fm-demo', 'true'); localStorage.setItem('fm-tour', '1');
+    } catch (e) { /* nada */ }
+    if (!WEB) {
+      const f = { avisosPermitidos: () => true, alarmasExactas: () => true, probarAlarma: () => {}, version: () => '5221', canal: () => 'github', hayQR: () => false,
+        programarAvisos: (l) => { window.__prog = JSON.parse(l); }, notificar: () => {}, pedirPermisoAvisos: () => {} };
+      window.FantasyApp = new Proxy(f, { get: (o, k) => (k in o ? o[k] : undefined), has: () => true });
+    }
+    const f0 = window.fetch.bind(window);
+    window.fetch = async (u, o) => {
+      const r = await f0(u, o);
+      if (!/limites\.json/.test(String((u && u.url) || u))) return r;
+      try { const j = await r.clone().json(); j.bloqueadas = []; return new Response(JSON.stringify(j), { status: 200, headers: { 'content-type': 'application/json' } }); } catch (e) { return r; }
+    };
+  </script>
+  <script type="module" src="js/app.js"></script>
+  <script type="module">
+    const esperar = () => new Promise((ok) => { const t = setInterval(() => { if (window.S && window.S.M) { clearInterval(t); ok(); } }, 200); });
+    await esperar();
+    const { guardarCfgAvisos, cfgAvisos, avisarJugador } = await import('./js/avisos.js');
+    const S = window.S, M = S.M, WEB = /[?&]web\b/.test(location.search);
+    // con los avisos encendidos y un jugador de un rival con aviso 2 min antes, para que se vea todo
+    const rival = M.clausulas.filter((x) => !x.abierta && x.protegidoHasta).sort((a, b) => b.interes - a.interes)[0];
+    if (!WEB && !cfgAvisos().on) { guardarCfgAvisos({ on: true }); if (rival && !Object.keys(cfgAvisos().jugadores).length) avisarJugador(rival.pid, 2, rival.j.nombre); }
+    let vari = 'a';
+    const clic = (sel) => { const b = document.querySelector(sel); if (b) b.click(); };
+    const abrirAjustes = () => { clic('[data-accion="cerrarHoja"]'); setTimeout(() => clic('#bAjustes'), 60); };
+    const ficha = () => { if (!rival) return; clic('[data-accion="cerrarHoja"]'); setTimeout(() => { const b = document.createElement('button'); b.dataset.j = rival.pid; document.body.append(b); b.click(); b.remove(); }, 60); };
+    const todas = (on) => { S.ajAbiertas = on ? { cuenta: 1, avisos: 1, ia: 1, app: 1, datos: 1 } : {}; abrirAjustes(); };
+    function barra() {
+      document.body.classList.remove('var-a', 'var-b', 'var-c'); document.body.classList.add(`var-${vari}`);
+      document.getElementById('maq').innerHTML = `<b>Diseño</b>${[['a', 'A · Tarjetas'], ['b', 'B · Lista'], ['c', 'C · Compacta']].map(([k, t]) => `<button data-v="${k}" aria-pressed="${vari === k}">${t}</button>`).join('')}`
+        + '<b>Ver</b><button data-x="cerr">Cerradas</button><button data-x="abr">Abiertas</button><button data-x="fic">Ficha de un rival</button>'
+        + `<button data-x="web">${WEB ? 'Como en la app' : 'Como en la web'}</button>`;
+    }
+    document.getElementById('maq').addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.v) { vari = b.dataset.v; barra(); return; }
+      if (b.dataset.x === 'cerr') todas(false); else if (b.dataset.x === 'abr') todas(true); else if (b.dataset.x === 'fic') ficha();
+      else if (b.dataset.x === 'web') location.search = WEB ? '' : '?web';
+    });
+    barra();
+    S.ajAbiertas = { avisos: 1 };
+    abrirAjustes();
+  </script>
+</body>
+</html>

@@ -5,7 +5,9 @@
 //   3. que una liga guardada rota (un campo que el motor no espera) no deja la app en «Abriendo…» (C2);
 //   4. que con el Worker y Deno colgados la carga acaba en una pantalla con salida en menos de 40 s (A7);
 //   5. que con el almacenamiento lleno de otras ligas y de la demo la sesión y el chat se siguen guardando (A8);
-//   6. que en el parón el sitio de Directo es la pestaña Parón y su selector vuelve a Directo (21).
+//   6. que en el parón el sitio de Directo es la pestaña Parón y su selector vuelve a Directo (21);
+//   7. Ajustes (40): las secciones plegadas, el buscador, la antelación de cada aviso y «Avisarme» en la ficha, y que
+//      calcular (avisos.js) usa la antelación elegida (rivales, tuyas, el once y un jugador concreto).
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -163,6 +165,89 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   else if (!dir) mal(`${nombre}: el selector de la pestaña Parón no vuelve a Directo`);
   else bien(`${nombre}: en el parón, pestaña Parón (${r.secs} secciones) y su selector a Directo`);
   if (errores.length) mal(`${nombre} en el parón: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 7: Ajustes (40), como en la app (un puente de Android de mentira): secciones, buscador, antelaciones y «Avisarme»
+{
+  const PUENTE = `window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, probarAlarma: () => {}, version: () => '1', canal: () => 'github', hayQR: () => false, programarAvisos: () => {}, notificar: () => {}, pedirPermisoAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true'); if (!localStorage.getItem('fm-cfg-avisos')) localStorage.setItem('fm-cfg-avisos', '{"on":true}');`;
+  const { ctx, page, errores } = await pagina({ init: PUENTE });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForSelector('#vista', { timeout: 25000 }).catch(() => {});
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 15000 }).catch(() => {});
+  // calcular con antelaciones que no son las de siempre
+  const c = await page.evaluate(async () => {
+    const A = await import('./js/avisos.js');
+    const { D, M } = window.S, ahora = Date.now(), DIA = 864e5;
+    const ok = (t) => t > ahora + 60e3 && t < ahora + 13 * DIA;
+    const xs = M.clausulas.filter((x) => !x.abierta && x.protegidoHasta && !x.veda && ok(x.protegidoHasta - 30 * 60e3));
+    if (!xs.length) return { sin: true };
+    const jug = xs[0], riv = xs.filter((x) => x.pid !== jug.pid);
+    const base = { ...A.cfgAvisos(), on: true, plan: false, rivales: true, mias: true, mercado: false, jornada: true, diario: false, interes: 0 };
+    const cfg = { ...base, antes: { ...A.ANTES, rivales: 5, mias: 60, jornada: 30 }, jugadores: { [jug.pid]: { antes: 2 } } };
+    const l = A.calcular(D, M, cfg);
+    const porId = (id) => l.find((a) => a.id === id);
+    const j = porId(`jug-${jug.pid}`);
+    const r = riv.map((x) => porId(`cl15-${x.teamId}-${x.pid}`)).find(Boolean);
+    const rx = r && riv.find((x) => r.id === `cl15-${x.teamId}-${x.pid}`);
+    const jo = l.find((a) => a.id.startsWith('jornada-'));
+    const miasB = A.calcular(D, M, { ...cfg, miasTodas: false }).filter((a) => /^mias?-/.test(a.id)).length, miasT = A.calcular(D, M, { ...cfg, miasTodas: true }).filter((a) => /^mias?-/.test(a.id)).length;
+    const mia = l.find((a) => a.id.startsWith('mia-'));
+    return {
+      jug: !!j && Math.abs(j.t - (jug.protegidoHasta - 2 * 60e3)) < 1000 && /En 2 min/.test(j.titulo),
+      sinRepetir: !l.some((a) => a.id === `cl15-${jug.teamId}-${jug.pid}`),
+      // los de rivales salen solo si se pueden clausular (esClausulable); si no sale ninguno, no hay nada que mirar
+      riv: !r || (Math.abs(r.t - (rx.protegidoHasta - 5 * 60e3)) < 1000 && /En 5 min/.test(r.titulo)),
+      rivAlguno: !!r || !l.some((a) => /^cl15-|^reabre15-/.test(a.id)),
+      once: !M.proxima || !ok(M.proxima.ini) || (!!jo && /30 min/.test(jo.titulo) && Math.abs(jo.t - (M.proxima.ini - 30 * 60e3)) < 1000),
+      mias: miasT >= miasB && (!mia || /1 h de protección/.test(mia.titulo)),
+      txt: (A.tiempoTxt(90) === '1 h 30 min' && A.tiempoTxt(1440) === '1 día' && A.antesTxt(0) === 'Al abrirse'),
+    };
+  });
+  if (c.sin) mal('Ajustes: la liga de ejemplo no trae cláusulas de rivales para probar calcular');
+  else {
+    const fallan = Object.entries(c).filter(([, v]) => !v).map(([k]) => k);
+    if (fallan.length) mal(`calcular con la antelación elegida falla en: ${fallan.join(', ')}`);
+    else bien('calcular usa la antelación elegida (jugador 2 min, rivales 5 min, tuyas 1 h, once 30 min)');
+  }
+  // Ajustes: cinco secciones cerradas; el buscador abre la que tiene lo buscado y esconde lo demás
+  await page.evaluate(() => document.querySelector('#bAjustes').click());
+  await page.waitForSelector('details.aj-sec', { timeout: 5000 }).catch(() => {});
+  const a0 = await page.evaluate(() => ({ n: document.querySelectorAll('details.aj-sec').length, abiertas: document.querySelectorAll('details.aj-sec[open]').length, botonEnSummary: !!document.querySelector('details.aj-sec summary button, details.aj-sec summary select, details.aj-sec summary a') }));
+  await page.fill('#buscaAj', 'once');
+  const a1 = await page.evaluate(() => ({ abiertas: [...document.querySelectorAll('details.aj-sec[open]')].map((d) => d.dataset.k), filas: [...document.querySelectorAll('details.aj-sec .ajuste:not([hidden])')].filter((f) => !f.closest('details[hidden]')).map((f) => f.querySelector('b').textContent) }));
+  await page.fill('#buscaAj', 'zzzz');
+  const a2 = await page.evaluate(() => ({ nada: !document.querySelector('#aj-nada').hidden, visibles: document.querySelectorAll('details.aj-sec:not([hidden])').length }));
+  await page.fill('#buscaAj', '');
+  // cambiar la antelación de los rivales desde Ajustes
+  await page.evaluate(() => { const d = document.querySelector('details.aj-sec[data-k="avisos"]'); if (!d.open) d.querySelector('summary').click(); });
+  await page.waitForTimeout(200);
+  await page.selectOption('select[data-cambia="avisoAntes"][data-k="rivales"]', '30').catch(() => {});
+  await page.waitForTimeout(300);
+  const a3 = await page.evaluate(async () => { const A = await import('./js/avisos.js'); return { antes: A.cfgAvisos().antes.rivales, sigueAbierta: !!document.querySelector('details.aj-sec[data-k="avisos"][open]') }; });
+  if (a0.n !== 5 || a0.abiertas || a0.botonEnSummary) mal(`Ajustes: secciones mal (${JSON.stringify(a0)})`);
+  else if (!a1.abiertas.includes('avisos') || !a1.filas.includes('Poner el once') || a1.filas.length > 3) mal(`Ajustes: el buscador no encuentra «once» bien (${JSON.stringify(a1)})`);
+  else if (!a2.nada || a2.visibles) mal(`Ajustes: buscando algo que no hay no sale el aviso (${JSON.stringify(a2)})`);
+  else if (a3.antes !== 30 || !a3.sigueAbierta) mal(`Ajustes: la antelación de rivales no se guarda o se cierra la sección (${JSON.stringify(a3)})`);
+  else bien('Ajustes: 5 secciones cerradas, el buscador y la antelación de rivales');
+  // «Avisarme» en la ficha de un jugador de un rival
+  const f = await page.evaluate(async () => {
+    const x = window.S.M.clausulas.find((y) => !y.abierta && y.protegidoHasta);
+    if (!x) return { sin: true };
+    document.querySelector('[data-accion="cerrarHoja"]').click();
+    await new Promise((ok) => setTimeout(ok, 300));
+    const b = document.createElement('button'); b.dataset.j = x.pid; document.body.append(b); b.click(); b.remove();
+    await new Promise((ok) => setTimeout(ok, 400));
+    return { pid: x.pid, hay: !!document.querySelector(`select[data-cambia="avisoJ"][data-pid="${x.pid}"]`) };
+  });
+  if (!f.sin) {
+    await page.selectOption(`select[data-cambia="avisoJ"][data-pid="${f.pid}"]`, '15').catch(() => {});
+    await page.waitForTimeout(300);
+    const g = await page.evaluate(async (pid) => { const A = await import('./js/avisos.js'); const j = A.cfgAvisos().jugadores[pid]; return { antes: j && j.antes, on: A.cfgAvisos().on, marca: !!document.querySelector('.avisar-j.on') }; }, f.pid);
+    if (!f.hay || g.antes !== 15 || !g.on || !g.marca) mal(`la ficha: «Avisarme» no funciona (${JSON.stringify({ ...f, ...g })})`);
+    else bien('la ficha: «Avisarme de su cláusula» se guarda (15 min antes)');
+  }
+  if (errores.length) mal(`Ajustes: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

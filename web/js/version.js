@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.3a';
+export const VERSION = '0.7.4';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,17 @@ export const VERSION = '0.7.3a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.4', f: '2026-11-11', h: '00:00', t: 'Ajustes ordenados y alarmas a tu gusto',
+    cosas: [
+      { tipo: 'mejora', d: 'ajustes', t: 'Ajustes, por secciones', x: 'Ajustes ya no es una lista larga: va en cinco secciones que se abren al tocarlas (Cuenta y liga, Avisos y alarmas, La IA, La app y Datos y privacidad), cada una con una línea de lo que tiene. Arriba hay un buscador: escribe «clave», «once» o «borrar» y te enseña solo esa fila.' },
+      { para: 'app', tipo: 'nuevo', d: 'campana', t: 'Tus alarmas, cuándo quieras', x: 'En Ajustes → Avisos y alarmas eliges cuánto antes avisa cada cosa: los clausulazos del plan (al abrirse o hasta 10 min antes), las cláusulas de rivales, las tuyas (por ejemplo, 1 h antes de que se queden abiertas, y si de todas o solo de las baratas) y el cambio de mercado.' },
+      { para: 'app', tipo: 'nuevo', d: 'reloj', t: 'Avísame de este jugador', x: 'En la ficha de un jugador de un rival, «Avisarme de su cláusula»: eliges cuándo (al abrirse, 2, 5 o 15 min o 1 h antes) y te salta la alarma aunque no te interese según la app. Los tienes todos en Ajustes → Avisos y alarmas, para cambiarlos o quitarlos.' },
+      { para: 'app', tipo: 'nuevo', d: 'camiseta', t: 'Recordatorio del once', x: 'Antes de que empiece la jornada (lo eliges: de 30 min a 1 día antes) te recuerda poner el once, con los huecos que te quedan y los tuyos que están de baja.' },
+      { tipo: 'mejora', d: 'cara', t: 'La ficha, más limpia', x: 'Los avisos de la ficha del jugador (la inercia, el plan, si es tuyo, a quién le llega, el calendario…) salen plegados: el título y una línea con lo importante, y el resto al tocarlos. Van en gris con una barra de color, para que no haya tanto color junto.' },
+      { tipo: 'arreglo', d: 'estrella', t: 'El botón Seguir, con su nombre', x: 'Con el lector de pantalla, la estrella de la ficha se llama igual que lo que pone («Seguir» o «Favorito»).', menor: true },
+    ],
+  },
   {
     v: '0.7.3a', f: '2026-11-10', h: '22:18', t: 'Los nombres de los clubes, enteros',
     cosas: [

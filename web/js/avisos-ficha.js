@@ -19,7 +19,7 @@ export const parrafos = (...ps) => ps.filter(Boolean).map((p) => `<p>${p}</p>`).
 
 /**
  * Un aviso. t, l y d ya van escapados (llevan HTML). Sin d no hay nada que plegar y sale una tarjeta normal.
- * cls: '' (rojo), 'oro', 'verde' o 'azul'. chip: el dato corto de la derecha (solo en una de las maquetas).
+ * cls: '' (rojo), 'oro', 'verde' o 'azul'. chip: el dato corto de la derecha; con el diseño B no se ve (.av-chip oculta).
  */
 export function aviso(S, { k, pid = '', cls = '', ico, t, l = '', d = '', chip = null }) {
   const cab = `${icono(ico)}<span class="av-tx"><b class="av-t">${t}</b>${l ? `<span class="av-l">${l}</span>` : ''}</span>${chip ? `<span class="av-chip ${chip.cls || ''}">${esc(chip.t)}</span>` : ''}`;
