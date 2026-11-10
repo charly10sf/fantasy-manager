@@ -3266,7 +3266,9 @@
    "MARCA|https://www.marca.com/futbol/betis/2026/11/10/betis-abre-proceso-solicitud-602-entradas-proximo-derbi-sanchez-pizjuan.html": 1794313574000,
    "SPORT|136280060": 1794308464000,
    "Europa Press|https://www.europapress.es/madrid/noticia-ayuso-critica-use-impunidad-secuestro-cara-huelga-general-pide-acabar-basura-sindical-20261110110256.html": 1794304976000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794315238000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794315238000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794318765000,
+   "SPORT|136281772": 1794316000000
   },
   "hechos": [
    {
@@ -3288,27 +3290,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 12,
+   "n": 13,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794319275167
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 40,
+   "clasificar": 41,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 187416,
-  "salida": 14889,
+  "entrada": 189319,
+  "salida": 15050,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.269835,
+  "dolares": 0.270106,
   "reservado": 0
  },
  "recientes": {
@@ -7267,13 +7267,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1155,
+   "ok": 1156,
    "fallos": 0,
-   "ejecuciones": 773,
+   "ejecuciones": 774,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T14:06:15.330Z"
+   "ultima": "2026-11-10T14:11:15.627Z"
   }
  },
  "ptsDirecto": {},
@@ -7290,15 +7290,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:06:20.298Z"
+   "ultimaBien": "2026-11-10T14:11:20.874Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:06:20.298Z"
+   "ultimaBien": "2026-11-10T14:11:20.874Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:06:20.298Z"
+   "ultimaBien": "2026-11-10T14:11:20.874Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7306,11 +7306,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:06:20.298Z"
+   "ultimaBien": "2026-11-10T14:11:20.874Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:06:20.298Z"
+   "ultimaBien": "2026-11-10T14:11:20.874Z"
   }
  },
  "avisos": [
