@@ -831,7 +831,31 @@ body.con-nv { overflow: hidden; }
 .d7-up { justify-content: flex-end; border-bottom: 1px solid var(--linea); }
 .d7-up i, .d7-dw i { display: block; height: var(--h); border-radius: 4px 4px 0 0; background: var(--sube); }
 .d7-dw i { border-radius: 0 0 4px 4px; background: var(--baja); }
-.d7 em { font: 500 10.5px 'Barlow'; color: var(--apagado); font-style: normal; text-transform: uppercase; white-space: nowrap; }
+.d7 em { font: 500 11px 'Barlow'; color: var(--apagado); font-style: normal; text-transform: uppercase; white-space: nowrap; }
+/* el valor de mercado (10 nov): la línea, su pie y las barras de cada día en una sola tarjeta; los días de las barras
+   van marcados en la línea con una franja */
+.val-card { margin: 4px 0 12px; padding: 8px 12px 10px; border-radius: 16px; background: var(--plano); border: 1px solid var(--linea); }
+.val-card .graf { margin: 4px 0; }
+.val-card .graf-pie { margin: 0; }
+.val-card .dias7 { margin: 10px 0 0; padding: 10px 0 0; border: 0; border-top: 1px dashed var(--linea); border-radius: 0; background: none; }
+.g-franja { fill: rgba(255, 255, 255, 0.055); }
+.g-franja-l { stroke: var(--apagado); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.g-franja-t { font: 600 11px 'Barlow'; fill: var(--texto2); }
+/* cada jornada (10 nov): fichas de color con los puntos, como las de LaLiga (no barras: que no se confunda con el dinero) */
+.jor7 { margin: 0 0 8px; }
+.jt-fila { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+.jt { display: grid; justify-items: center; gap: 3px; padding: 7px 2px 6px; border-radius: 12px; background: var(--plano2); border: 1px solid var(--linea); min-width: 0; }
+.jt b { font: 700 24px/1 var(--cond); color: var(--texto); }
+.jt-n { font: 600 11px 'Barlow'; color: var(--texto2); }
+.jt small { font: 500 11px 'Barlow'; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.jt { position: relative; }
+.jt .gol { position: absolute; top: -6px; right: -4px; font-size: 11px; line-height: 1; font-style: normal; }
+.jt small.nj { white-space: normal; overflow: visible; line-height: 1.15; text-align: center; }
+.jt.top { background: rgba(61, 220, 143, 0.2); border: 2px solid #3ddc8f; } .jt.top b { color: #3ddc8f; }
+.jt.bien { background: var(--sube-s); border-color: rgba(47, 209, 143, 0.35); } .jt.bien b { color: var(--sube); }
+.jt.medio { background: var(--oro-s); border-color: rgba(255, 197, 71, 0.3); } .jt.medio b { color: var(--oro); }
+.jt.mal { background: var(--baja-s); border-color: rgba(255, 111, 97, 0.3); } .jt.mal b { color: var(--baja); }
+.jt.nada b { color: var(--apagado); }
 .inercia p b { color: var(--texto); }
 /* 0.2.2: el chat */
 .chat-cab { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px 10px; flex-wrap: wrap; }

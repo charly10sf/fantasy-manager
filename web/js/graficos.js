@@ -5,7 +5,7 @@ import { eur, fechaCorta, esc } from './util.js';
 let uid = 0;
 
 /** línea con área: puntos = [[t, v], ...] */
-export function linea(puntos, { alto = 150, color = 'var(--rojo)', etiquetas = true, formato = (v) => eur(v, { dec: 1 }) } = {}) {
+export function linea(puntos, { alto = 150, color = 'var(--rojo)', etiquetas = true, formato = (v) => eur(v, { dec: 1 }), marca = null } = {}) {
   const p = (puntos || []).filter(([t, v]) => Number.isFinite(t) && Number.isFinite(v));
   if (p.length < 2) return `<div class="graf-vacio">Aún no hay histórico: cada día que abras la app se apunta un punto.</div>`;
   const W = 340, H = alto, mx = 4, arr = 14, aba = etiquetas ? 22 : 6;
@@ -29,9 +29,12 @@ export function linea(puntos, { alto = 150, color = 'var(--rojo)', etiquetas = t
     const anc = x < 40 ? 'start' : x > W - 40 ? 'end' : 'middle';
     return `<text x="${x.toFixed(1)}" y="${(arriba ? y - 6 : y + 14).toFixed(1)}" text-anchor="${anc}" class="g-et">${esc(formato(vs[i]))}</text>`;
   };
+  // marca: { desde, texto }: una franja desde ese momento hasta el final (los días que salen en las barras de debajo)
+  const xm = marca && marca.desde > t0 && marca.desde < t1 ? X(marca.desde) : null;
+  const franja = xm == null ? '' : `<rect class="g-franja" x="${xm.toFixed(1)}" y="${arr - 10}" width="${(W - mx - xm).toFixed(1)}" height="${H - aba - arr + 10}"/><line class="g-franja-l" x1="${xm.toFixed(1)}" y1="${arr - 10}" x2="${xm.toFixed(1)}" y2="${H - aba}"/>${marca.texto ? `<text class="g-franja-t" x="${(xm + 5).toFixed(1)}" y="${(H - aba - 5).toFixed(1)}">${esc(marca.texto)}</text>` : ''}`;
   return `<svg class="graf" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="${esc(`Gráfica: de ${formato(vs[0])} a ${formato(vs[vs.length - 1])}; máximo ${formato(v1)}, mínimo ${formato(v0)}`)}">
     <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".32"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
-    <path d="${area}" fill="url(#${id})"/>
+    ${franja}<path d="${area}" fill="url(#${id})"/>
     <path d="${d}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
     <circle cx="${ux.toFixed(1)}" cy="${uy.toFixed(1)}" r="4" fill="${color}"/><circle cx="${ux.toFixed(1)}" cy="${uy.toFixed(1)}" r="8" fill="${color}" opacity=".18"/>
     ${etiquetas ? `${imax !== p.length - 1 ? lbl(imax, true) : ''}${imin !== imax && imin !== p.length - 1 ? lbl(imin, false) : ''}

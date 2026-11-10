@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.2';
+export const VERSION = '0.7.2a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,14 @@ export const VERSION = '0.7.2';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.2a', f: '2026-11-10', h: '21:29', t: 'Cada jornada, en la ficha',
+    cosas: [
+      { tipo: 'mejora', d: 'grafica', t: 'El valor y cada día, en una sola tarjeta', x: 'En la ficha de un jugador, la gráfica del valor y las barras de lo que cambia cada día van juntas: los días de las barras salen marcados en la gráfica con una franja, para ver de un vistazo qué parte de la línea es cada barra.' },
+      { tipo: 'mejora', d: 'trofeo', t: 'Los puntos de cada jornada, justo debajo', x: 'Debajo del valor van los puntos de sus últimas 7 jornadas en fichas de color: verde vivo de 10 en adelante, verde de 6 a 9, amarillo de 2 a 5 y rojo de 1 o menos, con los minutos, un balón si marcó y «no jugó» si no salió. Antes iban mucho más abajo, en otra gráfica de barras.' },
+      { tipo: 'arreglo', d: 'dinero', t: 'Lo que cambia cada día, también en los baratos', x: 'En los jugadores que valen poco, «Cada día» salía casi todo a 0 porque iba en millones con dos decimales (a Pedro Díaz, que vale unos 740 mil, le cambia unos cientos o miles de euros al día). Si ningún día llega a 100 mil, ahora va en miles de euros.' },
+    ],
+  },
   {
     v: '0.7.2', f: '2026-11-10', h: '20:48', t: 'Más fácil de leer y de usar',
     cosas: [

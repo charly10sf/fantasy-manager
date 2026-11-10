@@ -3,7 +3,7 @@ import { erroresApp } from './errores.js';
 import { avisosGuardados } from './soporte.js';
 import { esc, eur, pct, dura, cuando, icono, clase, POS_LARGO, POS_PLURAL, num, horaDe, LS, DIA, diaDe, norm, fechaCorta, firmaDe } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, filaJugador, nada, oncePill, filaNoticia, nivelCls, calendarioHTML, dineroCorto, dineroLargo, candado, candadosJuntos, enCasaDe, BLOQUEO, ventasDe, campoVivo, estiloClub, caraManager } from './comunes.js';
-import { linea, barra, barras, mini } from './graficos.js';
+import { linea, barra, mini } from './graficos.js';
 import { filaActividad, PELIGRO, PELIGRO_TXT, ventaHTML, puntosUltimaJornada, descartePlan } from './vistas.js';
 import { hayClave, clave, cfgIA, nombreModelo, intentosIA, notasDe, seudonimos } from './ia.js';
 import { cfgAvisos, programados } from './avisos.js';
@@ -45,8 +45,13 @@ export function grafValor(serie, dias, cargando = false) {
   const v0 = q[0][1], v1 = q[q.length - 1][1], d = v1 - v0;
   const vs = q.map((x) => x[1]);
   const span = Math.max(1, Math.round((q[q.length - 1][0] - q[0][0]) / DIA));
-  return `${linea(q, { alto: 150, color: d >= 0 ? 'var(--sube)' : 'var(--baja)' })}
-    <div class="graf-pie"><b class="${clase(d)}">${eur(d, { signo: true })} (${pct((v1 / v0 - 1) * 100)})</b> en ${span} día${span > 1 ? 's' : ''} · máx ${eur(Math.max(...vs))} · mín ${eur(Math.min(...vs))}</div>${diasHTML(p)}`;
+  // (10 nov, Carlos: la línea y las barras, juntas y claras) las barras de cada día son los últimos días de la línea:
+  // van en la misma tarjeta y esos días se marcan en la línea con una franja
+  const c = cambiosDiarios(p);
+  const desde = c.length >= 2 ? Date.parse(`${c[0].dia}T00:00:00`) - DIA / 2 : null;
+  const conFranja = desde && desde > q[0][0] + DIA;
+  return `<div class="val-card">${linea(q, { alto: 150, color: d >= 0 ? 'var(--sube)' : 'var(--baja)', marca: conFranja ? { desde, texto: `${c.length} días` } : null })}
+    <div class="graf-pie"><b class="${clase(d)}">${eur(d, { signo: true })} (${pct((v1 / v0 - 1) * 100)})</b> en ${span} día${span > 1 ? 's' : ''} · máx ${eur(Math.max(...vs))} · mín ${eur(Math.min(...vs))}</div>${diasHTML(p, conFranja)}</div>`;
 }
 /** lo que ha cambiado su valor cada uno de los últimos días: [{ dia: 'AAAA-MM-DD', d }] (el último valor de cada día) */
 export function cambiosDiarios(serie, n = 7) {
@@ -58,19 +63,52 @@ export function cambiosDiarios(serie, n = 7) {
   return out.slice(-n);
 }
 /* las barras de cada día, siempre debajo de la gráfica (Carlos, 9 nov: las de la inercia solo salían en algunos jugadores) */
-function diasHTML(serie) {
+function diasHTML(serie, conFranja = false) {
   const c = cambiosDiarios(serie);
   if (c.length < 2) return '';
   const max = Math.max(...c.map((x) => Math.abs(x.d)), 1);
-  const corto = (r) => (Math.abs(r) < 5000 ? '0' : `${r > 0 ? '+' : '−'}${(Math.abs(r) / 1e6).toFixed(2).replace('.', ',')}`);
+  // (10 nov, Pedro Díaz) en millones con dos decimales, a un jugador de 700 mil todo le salía «0»: si ninguno de los días
+  // llega a 100 mil, en miles; y un cambio que redondeado da cero se dice «≈0», no «0»
+  const enMiles = max < 100000;
+  const corto = (r) => {
+    if (!r) return '0';
+    const s = r > 0 ? '+' : '−', a = Math.abs(r);
+    const t = enMiles ? (a < 10000 ? (a / 1000).toFixed(1) : String(Math.round(a / 1000))) : (a / 1e6).toFixed(2);
+    return /^0[.,]0+$/.test(t) ? '≈0' : s + t.replace('.', ',');
+  };
   const fdia = (s) => { const f = new Date(s + 'T12:00:00'); return `${f.toLocaleDateString('es-ES', { weekday: 'narrow' })} ${f.getDate()}`; };
   const barras = c.map((x) => {
-    const h = Math.abs(x.d) < 5000 ? 0 : Math.max(6, Math.round((Math.abs(x.d) / max) * 100));
+    const h = !x.d ? 0 : Math.max(6, Math.round((Math.abs(x.d) / max) * 100));
     const cls = x.d > 0 ? 'sube' : x.d < 0 ? 'baja' : '';
     return `<div class="d7" title="${esc(eur(x.d, { signo: true }))}"><span class="d7-v ${cls}">${corto(x.d)}</span><div class="d7-z"><div class="d7-up">${x.d > 0 && h ? `<i style="--h:${h}%"></i>` : ''}</div><div class="d7-dw">${x.d < 0 && h ? `<i style="--h:${h}%"></i>` : ''}</div></div><em>${fdia(x.dia)}</em></div>`;
   }).join('');
-  return `<div class="dias7"><div class="d7-cab"><span>Cada día</span><span class="t2">últimos ${c.length} días, en M</span></div><div class="d7-b">${barras}</div></div>`;
+  return `<div class="dias7"><div class="d7-cab"><span>Cada día</span><span class="t2">${conFranja ? 'la zona marcada' : `últimos ${c.length} días`}, en ${enMiles ? 'miles de €' : 'M'}</span></div><div class="d7-b">${barras}</div></div>`;
 }
+
+/* los puntos de las últimas jornadas, justo debajo de «Cada día» y con su misma forma (Carlos, 10 nov: antes iban
+   mucho más abajo, en otra gráfica). Una columna por jornada: los puntos, coloreados por lo buenos que son, su barra
+   (arriba lo positivo, abajo lo negativo), la jornada y los minutos; las que no jugó, con «–» */
+export function jornadasPtsHTML(det) {
+  if (!det || det.error) return '';
+  const st = (det.stats || []).filter((s) => s.n > 0).sort((a, b) => a.n - b.n);
+  if (!st.length) return '';
+  const por = new Map(st.map((s) => [s.n, s]));
+  const ult = st[st.length - 1].n;
+  const L = [];
+  for (let n = Math.max(st[0].n, ult - 6); n <= ult; n++) L.push(por.get(n) || { n, pts: null, min: 0 });
+  const nivel = (s) => (s.pts == null || (!(s.min > 0) && !s.pts) ? 'nada' : s.pts >= 10 ? 'top' : s.pts >= 6 ? 'bien' : s.pts >= 2 ? 'medio' : 'mal');
+  const extra = (s) => [s.gol ? `${s.gol} gol${s.gol > 1 ? 'es' : ''}` : '', s.asis ? `${s.asis} asist.` : '', s.roja ? 'roja' : s.am ? 'amarilla' : ''].filter(Boolean).join(', ');
+  const fichas = L.map((s) => {
+    const p = s.pts || 0, jugo = s.min > 0 || !!p;
+    const tit = s.pts == null ? `J${s.n}: no jugó` : `J${s.n}: ${p} pts${s.min > 0 ? ` · ${s.min} min` : ''}${extra(s) ? ` · ${extra(s)}` : ''}`;
+    // (el balón va en la esquina: junto a los minutos se cortaba) y «no jugó» en dos líneas
+    const ic = s.gol ? '⚽' : s.roja ? '🟥' : '';
+    return `<div class="jt ${nivel(s)}" title="${esc(tit)}">${ic ? `<i class="gol" aria-hidden="true">${ic}</i>` : ''}<span class="jt-n">J${s.n}</span><b>${jugo ? p : '–'}</b>${jugo ? `<small>${s.min > 0 ? `${s.min}'` : ''}</small>` : '<small class="nj">no<br>jugó</small>'}</div>`;
+  }).join('');
+  return `<div class="jor7"><div class="d7-cab"><span>Cada jornada</span><span class="t2">puntos de las últimas ${L.length}</span></div><div class="jt-fila">${fichas}</div></div>`;
+}
+/** la caja de las jornadas y, debajo, el resumen (media de las últimas, partidos y minutos, goles) */
+export const jornadasFichaHTML = (det) => jornadasPtsHTML(det) + detalleHTML(det);
 
 /* ---------- tu equipo hoy (al tocar el marcador de Hoy) ---------- */
 /** el valor de tu equipo día a día (lo que apunta la app cada día) */
@@ -228,6 +266,7 @@ export function fichaJugador(S, pid) {
   const rango = S.rango || 30;
   h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   h += `<div id="graf-j">${grafValor(serieValor(S, pid), rango, cargandoValor(S, pid))}</div>`;
+  h += `<div id="jor-j">${S.det && S.det[pid] ? jornadasFichaHTML(S.det[pid]) : '<div class="graf-vacio">Cargando sus jornadas…</div>'}</div>`;
 
   if (mia) {
     h += `<div class="aviso-ficha ${mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde'}">${icono('escudo')}<div><b>Es tuyo.</b> Cláusula ${eur(mia.clausula)}${mia.abierta ? `: <b>abierta</b>${mia.riesgo === 'ninguno' ? ', pero sin riesgo ahora' : `, te lo pueden quitar ya. Riesgo ${mia.riesgo}`}` : ', '}${mia.abierta ? '' : mia.veda ? `a salvo mientras las cláusulas estén cerradas, hasta que empiece la jornada ${mia.veda.n} (${cuando(mia.protegidoHasta)}, en ${dura(mia.abreEn)})` : `${mia.escudo ? '<b>blindado</b>' : 'protegido'} hasta ${cuando(mia.protegidoHasta)} (${dura(mia.abreEn)})`}.${mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? ` <b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido; te quedan ${S.M.escudosMios.quedan} esta jornada.` : ''}${mia.abierta ? '' : ` ${mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`}.`}${mia.compra ? ` Lo pagaste a ${eur(mia.compra)}: <b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b>.` : mia.inicial ? ` Venía en tu equipo inicial: al empezar la liga valía ${eur(mia.inicial)} (<b class="${clase(mia.ganadoIni)}">${eur(mia.ganadoIni, { signo: true })}</b>).` : ' Lo que pagaste por él no sale en los movimientos de la liga.'}${(() => {
@@ -307,7 +346,6 @@ export function fichaJugador(S, pid) {
     }
   } else h += `<div class="aviso-ficha">${icono('info')}<div>Es entrenador: en la versión gratis no se alinea ni puntúa. Si es tuyo, véndelo y usa el dinero en jugadores.</div></div>`;
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
-  h += `<div id="det-j">${S.det && S.det[pid] ? detalleHTML(S.det[pid]) : '<div class="graf-vacio">Cargando sus partidos…</div>'}</div>`;
   const nots = M.noticiasDe(pid).slice(0, 6);
   if (nots.length) h += `<div class="sec"><h2>Noticias</h2></div>${nots.map(filaNoticia).join('')}`;
   const acts = M.actividad.filter((a) => a.pid === pid).slice(0, 6);
@@ -373,8 +411,7 @@ export function detalleHTML(det) {
   const ult = st.slice(-5), jugados = st.filter((s) => s.min > 0);
   const media5 = ult.reduce((a, s) => a + s.pts, 0) / ult.length;
   const tot = (k) => st.reduce((a, s) => a + s[k], 0);
-  let h = `<div class="sec"><h2>Puntos por jornada</h2></div>${barras(st.slice(-10).map((s) => ({ et: 'J' + s.n, v: s.pts, yo: s === st[st.length - 1] })), { alto: 130 })}`;
-  h += `<p class="t2 peq">Últimas ${ult.length}: <b>${String(Math.round(media5 * 10) / 10).replace('.', ',')}</b> pts de media · ha jugado ${jugados.length} de ${st.length} (${Math.round(tot('min'))} min)${tot('gol') ? ` · ${tot('gol')} gol${tot('gol') > 1 ? 'es' : ''}` : ''}${tot('asis') ? ` · ${tot('asis')} asist.` : ''}${tot('am') ? ` · ${tot('am')} amarilla${tot('am') > 1 ? 's' : ''}` : ''}${tot('roja') ? ` · ${tot('roja')} roja` : ''}</p>`;
+  let h = `<p class="t2 peq">Últimas ${ult.length}: <b>${String(Math.round(media5 * 10) / 10).replace('.', ',')}</b> pts de media · ha jugado ${jugados.length} de ${st.length} (${Math.round(tot('min'))} min)${tot('gol') ? ` · ${tot('gol')} gol${tot('gol') > 1 ? 'es' : ''}` : ''}${tot('asis') ? ` · ${tot('asis')} asist.` : ''}${tot('am') ? ` · ${tot('am')} amarilla${tot('am') > 1 ? 's' : ''}` : ''}${tot('roja') ? ` · ${tot('roja')} roja` : ''}</p>`;
   return h;
 }
 
