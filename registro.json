@@ -3305,7 +3305,9 @@
    "n": 11,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794316595275
+  }
  },
  "ia": {
   "dia": "2026-11-10",
@@ -7279,13 +7281,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1144,
+   "ok": 1145,
    "fallos": 0,
-   "ejecuciones": 762,
+   "ejecuciones": 763,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T13:11:14.297Z"
+   "ultima": "2026-11-10T13:16:35.275Z"
   }
  },
  "ptsDirecto": {},
@@ -7302,15 +7304,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:11:20.642Z"
+   "ultimaBien": "2026-11-10T13:16:41.269Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:11:20.642Z"
+   "ultimaBien": "2026-11-10T13:16:41.269Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:11:20.642Z"
+   "ultimaBien": "2026-11-10T13:16:41.269Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7318,11 +7320,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:11:20.642Z"
+   "ultimaBien": "2026-11-10T13:16:41.269Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:11:20.642Z"
+   "ultimaBien": "2026-11-10T13:16:41.269Z"
   }
  },
  "avisos": [
