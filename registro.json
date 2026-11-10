@@ -1992,7 +1992,8 @@
    "MARCA|https://www.marca.com/futbol/oviedo/opinion/2026/11/10/hora-raul-entrenador.html": 1794290597000,
    "AS|https://as.com/futbol/videos/la-baza-ancelotti-de-vinicius-para-frenar-la-amenaza-diomande-f202611-v/": 1794291558000,
    "MARCA|https://www.marca.com/radio/2026/11/10/roberto-gomez-senala-real-madrid-fichaje-raul-oviedo-hora.html": 1794295070000,
-   "AS|https://as.com/futbol/primera/fe-ciega-en-julian-alvarez-f202611-n/": 1794295741000
+   "AS|https://as.com/futbol/primera/fe-ciega-en-julian-alvarez-f202611-n/": 1794295741000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000
   },
   "hechos": [
    {
@@ -2462,7 +2463,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3365,7 +3366,9 @@
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/10/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794293640000,
    "SPORT|134914783": 1794290040000,
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-huelga-general-20261110082835.html": 1794295715000,
-   "Europa Press|https://www.europapress.es/internacional/noticia-tribunal-supremo-eeuu-autoriza-trump-reanudar-construccion-tramo-muro-fronterizo-texas-20261110015458.html": 1794272098000
+   "Europa Press|https://www.europapress.es/internacional/noticia-tribunal-supremo-eeuu-autoriza-trump-reanudar-construccion-tramo-muro-fronterizo-texas-20261110015458.html": 1794272098000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-huelga-maquinistas-recomienda-usar-otras-alternativas-transporte-20261110085547.html": 1794297347000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000
   },
   "hechos": [
    {
@@ -3387,7 +3390,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
   "espera": {}
@@ -3395,17 +3398,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 11,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 99145,
-  "salida": 6868,
+  "entrada": 102999,
+  "salida": 7145,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.196543,
+  "dolares": 0.197067,
   "reservado": 0
  },
  "recientes": {
@@ -7360,13 +7363,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1081,
+   "ok": 1082,
    "fallos": 0,
-   "ejecuciones": 699,
+   "ejecuciones": 700,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T07:56:21.391Z"
+   "ultima": "2026-11-10T08:01:14.639Z"
   }
  },
  "ptsDirecto": {},
@@ -7383,15 +7386,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:56:30.653Z"
+   "ultimaBien": "2026-11-10T08:01:24.592Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:56:30.653Z"
+   "ultimaBien": "2026-11-10T08:01:24.592Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:56:30.653Z"
+   "ultimaBien": "2026-11-10T08:01:24.592Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7399,11 +7402,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:56:30.653Z"
+   "ultimaBien": "2026-11-10T08:01:24.592Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T07:56:30.653Z"
+   "ultimaBien": "2026-11-10T08:01:24.592Z"
   }
  },
  "avisos": [
