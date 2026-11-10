@@ -1983,7 +1983,8 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/entrevistas-de-juanma-castano/noticias/entrevista-juanma-castano-cucurella-partidazo-cope-09-20261109_3471802.html": 1794267626000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/2a-parte-09-nov-2026-partidazo-cope-20261110_3471813.html": 1794267913000,
    "SPORT|136269986": 1794286763000,
-   "MARCA|https://www.marca.com/futbol/oviedo/opinion/2026/11/10/hora-raul-entrenador.html": 1794290597000
+   "MARCA|https://www.marca.com/futbol/oviedo/opinion/2026/11/10/hora-raul-entrenador.html": 1794290597000,
+   "AS|https://as.com/futbol/videos/la-baza-ancelotti-de-vinicius-para-frenar-la-amenaza-diomande-f202611-v/": 1794291558000
   },
   "hechos": [
    {
@@ -2453,7 +2454,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3381,17 +3382,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 4,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 61946,
-  "salida": 5412,
+  "entrada": 63973,
+  "salida": 5791,
   "cacheLee": 5806,
   "cacheEscribe": 2903,
-  "dolares": 0.128599,
+  "dolares": 0.128991,
   "reservado": 0
  },
  "recientes": {
@@ -7340,13 +7341,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1062,
+   "ok": 1063,
    "fallos": 0,
-   "ejecuciones": 680,
+   "ejecuciones": 681,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T06:26:12.847Z"
+   "ultima": "2026-11-10T06:31:15.368Z"
   }
  },
  "ptsDirecto": {},
@@ -7363,15 +7364,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:26:16.488Z"
+   "ultimaBien": "2026-11-10T06:31:22.433Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:26:16.488Z"
+   "ultimaBien": "2026-11-10T06:31:22.433Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:26:16.488Z"
+   "ultimaBien": "2026-11-10T06:31:22.433Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7379,11 +7380,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:26:16.488Z"
+   "ultimaBien": "2026-11-10T06:31:22.433Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T06:26:16.488Z"
+   "ultimaBien": "2026-11-10T06:31:22.433Z"
   }
  },
  "avisos": [
