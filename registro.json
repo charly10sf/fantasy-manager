@@ -2015,7 +2015,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tchouameni-lesionado-francia-20261110_3472559.html": 1794336427000,
    "SPORT|136305317": 1794333273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249612/marc-bernal-rodri-fichan-balon-oro-dificil-jugar.html": 1794337752000,
-   "SPORT|136302339": 1794335294000
+   "SPORT|136302339": 1794335294000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html": 1794341384000
   },
   "hechos": [
    {
@@ -2379,11 +2380,24 @@
      25,
      73
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794341384000,
+    "id": "1480",
+    "que": "molestias",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Tchouaméni se retira del entrenamiento de Francia por molestias",
+    "motivo": "molestias en la ingle derecha",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 50
+   "n": 51
   },
   "desde": {
    "67": {
@@ -3331,22 +3345,24 @@
    "n": 24,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342673776
+  }
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 74,
+   "clasificar": 75,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 256082,
-  "salida": 26713,
+  "entrada": 258062,
+  "salida": 26843,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.282615,
+  "dolares": 0.282878,
   "reservado": 0
  },
  "recientes": {
@@ -7372,13 +7388,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1233,
+   "ok": 1234,
    "fallos": 0,
-   "ejecuciones": 850,
+   "ejecuciones": 851,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T20:26:12.768Z"
+   "ultima": "2026-11-10T20:31:13.776Z"
   }
  },
  "ptsDirecto": {},
@@ -7395,15 +7411,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:26:15.353Z"
+   "ultimaBien": "2026-11-10T20:31:20.354Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:26:15.353Z"
+   "ultimaBien": "2026-11-10T20:31:20.354Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:26:15.353Z"
+   "ultimaBien": "2026-11-10T20:31:20.354Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7411,11 +7427,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:26:15.353Z"
+   "ultimaBien": "2026-11-10T20:31:20.354Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T20:26:15.353Z"
+   "ultimaBien": "2026-11-10T20:31:20.354Z"
   }
  },
  "avisos": [
