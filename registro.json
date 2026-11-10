@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/": 1794050162000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248236/barca-no-recupera-efectivos-visita-madrid-cff.html": 1794051959000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/atletico-de-madrid/20261107/11678726/simeone-mas-complejo-defender-barca-raphinha-nueve-lewandowski.html": 1794052790000,
    "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
@@ -2004,18 +2003,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/",
-    "medio": "AS",
-    "t": 1794050162000,
-    "id": "3114",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Hjulmand recupera la disponibilidad tras cumplir sanción",
-    "motivo": "sanción ante el Bayern",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136195917",
     "medio": "SPORT",
@@ -7304,13 +7291,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1120,
+   "ok": 1121,
    "fallos": 0,
-   "ejecuciones": 738,
+   "ejecuciones": 739,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T11:11:19.654Z"
+   "ultima": "2026-11-10T11:16:14.269Z"
   }
  },
  "ptsDirecto": {},
@@ -7327,15 +7314,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:11:24.812Z"
+   "ultimaBien": "2026-11-10T11:16:17.904Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:11:24.812Z"
+   "ultimaBien": "2026-11-10T11:16:17.904Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:11:24.812Z"
+   "ultimaBien": "2026-11-10T11:16:17.904Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7343,11 +7330,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:11:24.812Z"
+   "ultimaBien": "2026-11-10T11:16:17.904Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:11:24.812Z"
+   "ultimaBien": "2026-11-10T11:16:17.904Z"
   }
  },
  "avisos": [
