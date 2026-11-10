@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000,
    "SPORT|136201148": 1794061401000,
@@ -2003,20 +2002,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000
   },
   "hechos": [
-   {
-    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html",
-    "medio": "Diario de Sevilla",
-    "t": 1794060273000,
-    "id": "2217",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Cucho se queda fuera de la convocatoria del Betis",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     24
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html",
     "medio": "Mundo Deportivo",
@@ -7282,13 +7267,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1154,
+   "ok": 1155,
    "fallos": 0,
-   "ejecuciones": 772,
+   "ejecuciones": 773,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T14:01:15.167Z"
+   "ultima": "2026-11-10T14:06:15.330Z"
   }
  },
  "ptsDirecto": {},
@@ -7305,15 +7290,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:01:24.877Z"
+   "ultimaBien": "2026-11-10T14:06:20.298Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:01:24.877Z"
+   "ultimaBien": "2026-11-10T14:06:20.298Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:01:24.877Z"
+   "ultimaBien": "2026-11-10T14:06:20.298Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7321,11 +7306,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:01:24.877Z"
+   "ultimaBien": "2026-11-10T14:06:20.298Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:01:24.877Z"
+   "ultimaBien": "2026-11-10T14:06:20.298Z"
   }
  },
  "avisos": [
