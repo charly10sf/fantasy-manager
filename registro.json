@@ -2000,7 +2000,9 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-ve-apto-lamine-yamal-inglaterra-no-merecia-pena-asumir-riesgo-20261110_3472467.html": 1794325288000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/marc-roca-regreso-roja-europeo_0_2008465260.html": 1794325756000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249536/17-leyendas-atletico-convocadas-duelo-america.html": 1794326358000,
-   "SPORT|136295857": 1794322600000
+   "SPORT|136295857": 1794322600000,
+   "SPORT|136295753": 1794322829000,
+   "SPORT|136291420": 1794322822000
   },
   "hechos": [
    {
@@ -2344,7 +2346,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -3289,17 +3291,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 50,
+   "clasificar": 51,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 206679,
-  "salida": 17691,
+  "entrada": 209063,
+  "salida": 17865,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.273164,
+  "dolares": 0.273489,
   "reservado": 0
  },
  "recientes": {
@@ -7258,13 +7260,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1178,
+   "ok": 1179,
    "fallos": 0,
-   "ejecuciones": 796,
+   "ejecuciones": 797,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T16:01:15.318Z"
+   "ultima": "2026-11-10T16:06:18.867Z"
   }
  },
  "ptsDirecto": {},
@@ -7281,15 +7283,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:01:21.288Z"
+   "ultimaBien": "2026-11-10T16:06:24.878Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:01:21.288Z"
+   "ultimaBien": "2026-11-10T16:06:24.878Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:01:21.288Z"
+   "ultimaBien": "2026-11-10T16:06:24.878Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7297,11 +7299,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:01:21.288Z"
+   "ultimaBien": "2026-11-10T16:06:24.878Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:01:21.288Z"
+   "ultimaBien": "2026-11-10T16:06:24.878Z"
   }
  },
  "avisos": [
