@@ -1996,7 +1996,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
    "SPORT|136282368": 1794310886000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000
   },
   "hechos": [
    {
@@ -2340,7 +2341,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -3253,7 +3254,9 @@
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794315238000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794318765000,
    "SPORT|136281772": 1794316000000,
-   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321213000
+   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321213000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000
   },
   "hechos": [
    {
@@ -3275,27 +3278,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 14,
+   "n": 15,
    "fallos": 0
   },
-  "espera": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794324075763
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 46,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 194962,
-  "salida": 15817,
+  "entrada": 198635,
+  "salida": 16646,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.271055,
+  "dolares": 0.271837,
   "reservado": 0
  },
  "recientes": {
@@ -7254,13 +7255,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1171,
+   "ok": 1172,
    "fallos": 0,
-   "ejecuciones": 789,
+   "ejecuciones": 790,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T15:26:14.433Z"
+   "ultima": "2026-11-10T15:31:18.431Z"
   }
  },
  "ptsDirecto": {},
@@ -7277,15 +7278,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:26:17.365Z"
+   "ultimaBien": "2026-11-10T15:31:29.225Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:26:17.365Z"
+   "ultimaBien": "2026-11-10T15:31:29.225Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:26:17.365Z"
+   "ultimaBien": "2026-11-10T15:31:29.225Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7293,11 +7294,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:26:17.365Z"
+   "ultimaBien": "2026-11-10T15:31:29.225Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:26:17.365Z"
+   "ultimaBien": "2026-11-10T15:31:29.225Z"
   }
  },
  "avisos": [
