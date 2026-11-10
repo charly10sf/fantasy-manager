@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000,
@@ -7280,13 +7279,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1152,
+   "ok": 1153,
    "fallos": 0,
-   "ejecuciones": 770,
+   "ejecuciones": 771,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T13:51:13.777Z"
+   "ultima": "2026-11-10T13:56:14.640Z"
   }
  },
  "ptsDirecto": {},
@@ -7303,15 +7302,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:51:18.846Z"
+   "ultimaBien": "2026-11-10T13:56:19.562Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:51:18.846Z"
+   "ultimaBien": "2026-11-10T13:56:19.562Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:51:18.846Z"
+   "ultimaBien": "2026-11-10T13:56:19.562Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7319,11 +7318,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:51:18.846Z"
+   "ultimaBien": "2026-11-10T13:56:19.562Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:51:18.846Z"
+   "ultimaBien": "2026-11-10T13:56:19.562Z"
   }
  },
  "avisos": [
