@@ -11,7 +11,7 @@ import * as Dr from './directo.js';
 import * as Pz from './paron.js';
 import * as Cl from './clubes.js';
 import * as Tj from './tarjetas.js';
-import { programar, cfgAvisos, guardarCfgAvisos } from './avisos.js';
+import { programar, cfgAvisos, guardarCfgAvisos, ponerAntes, avisarJugador, antesTxt } from './avisos.js';
 import { planDelDia, planViejo, ultimoPlan, cuadrarPlan, charlar, migrarMinis, guardarClave, probarClave, guardarCfgIA, cfgIA, borrarConversacion, hayClave, clave, intentosIA, borrarNota, quitarUltimaPregunta, notasVigentes, nuevoChat, recuperarChat, borrarChatAnterior, conversacion, chatsAnteriores } from './ia.js';
 import { ultimaVersion, api, apuntarRegistro, nuevaCarga } from './api.js';
 import { detalleJugador, lista as listaN } from './normalizar.js';
@@ -40,6 +40,7 @@ import { poner as ponerCarasDemo } from './caras-demo.js';
 import { cerrar, abrir, claveQR, idDeCodigo, nuevoCodigo as codigoNuevo } from './sobre.js';
 import { contar } from './eventos.js';
 import { EN_FONDO, cfgFondo, guardarCfgFondo, deNoche, callado, avisoPlan, avisosNuevos, sinAvisar, marcarVistos } from './fondo.js';
+import { plegarAviso } from './avisos-ficha.js';
 
 const S = { D: null, H: null, M: null, c: cfg(), det: {}, plan: null, planEstado: {}, opPorPid: {}, vista: 'hoy', seg: {}, filtro: {}, ordenEq: LS.get('orden-equipo', 'puesto'), cargando: false, hoja: null, tipoHoja: null, charlando: false, parcial: '', pasoChat: '', nueva: null, adjuntos: [], fotosActuales: [], preparandoFotos: 0 };
 window.S = S;
@@ -2097,6 +2098,7 @@ function repintarHoja() {
   const dentro = S.hoja.contains(document.activeElement);
   S.hoja.innerHTML = `${ASA}${conCerrar(cuerpoHoja(...S.tipoHoja))}`;
   rotularHoja(S.hoja);
+  if (S.tipoHoja[0] === 'ajustes' && S.ajBusca) Hj.filtrarAjustes(S.hoja, S.ajBusca);
   S.hoja.scrollTop = sc;
   if (dentro) S.hoja.focus({ preventScroll: true });
   encuadrar(S.hoja);
@@ -2599,6 +2601,8 @@ document.addEventListener('click', async (ev) => {
     case 'pnzLado': { const m = el.closest('.pnz-mer'); S.seg.pnzliga = d.f; if (m) { m.classList.toggle('lado-sube', d.f !== 'baja'); m.classList.toggle('lado-baja', d.f === 'baja'); m.querySelectorAll('.pnz-mer-sel button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.f === d.f))); } break; }
     case 'pnzVer': { const l = el.closest('.pnz-mer-l'); S.seg.pnzver = d.f; if (l) { l.classList.toggle('ver-tu', d.f !== 'liga'); l.classList.toggle('ver-liga', d.f === 'liga'); l.querySelectorAll('.pnz-ver button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.f === d.f))); } break; }
     case 'plegarParon': { const det = el.closest('details'); if (det && S.M) Pz.plegarParon(S.M, d.f, !det.open); break; }
+    // (37) los avisos de la ficha del jugador: se recuerda cuáles has abierto para no cerrarlos al repintar
+    case 'plegarAviso': { const det = el.closest('details'); if (det) plegarAviso(S, d.k, !det.open); break; }
     case 'plegarFase': { const det = el.closest('details'); if (det && S.plan) V.plegarFase(S.plan, d.f, !det.open); break; }
     case 'quitarUrgente': { const q = LS.get(K('urgentes-quitados'), {}), hoyD = diaDe(); for (const k of Object.keys(q)) if (q[k] !== hoyD) delete q[k]; q[d.k] = hoyD; LS.set(K('urgentes-quitados'), q); tostada('Quitado hasta mañana'); pintar(); break; }
     case 'sustituto': if (S.M && S.M.J(d.pid)) hoja('sust', d.pid, pilaDesde(el, 'sust', d.pid)); break;
@@ -2701,7 +2705,7 @@ document.addEventListener('click', async (ev) => {
     case 'salir': if (confirm('¿Cerrar la sesión de LaLiga en esta app?')) { cerrarSesion(); cerrarHoja(true); S.D = null; programar(null, null); pantallaEntrar(); } break;
     case 'recargar': sinErrorPlan(); cargar(); break;
     case 'usarGuardado': usarGuardado(); break;
-    case 'ajustes': hoja('ajustes'); break;
+    case 'ajustes': S.ajBusca = ''; hoja('ajustes'); break;
     case 'diag': hoja('diag'); break;
     case 'mandarFallo': case 'avisos': abrirAvisos(); break;
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
@@ -2850,6 +2854,9 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'avisoTipo': guardarCfgAvisos({ [d.k]: !cfgAvisos()[d.k] }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); break;
+    // (40) las secciones de Ajustes: se recuerda cuáles has abierto para no cerrarlas al repintar
+    case 'plegarAjuste': { const det = el.closest('details'); if (det) Hj.plegarAjuste(S, d.k, !det.open); break; }
+    case 'quitarAvisoJ': { const j = S.M && S.M.J(d.pid); avisarJugador(d.pid, null); if (S.D) programar(S.D, S.M, planAvisos()); tostada(`Quitado el aviso${j ? ` de ${j.nombre}` : ''}`, 2400); repintarHoja(); break; }
     case 'exactas': nativo.pedirAlarmasExactas(); break;
     case 'probarAviso': if (enApp) { nativo.notificar('Así te llegarán los avisos', 'Por ejemplo: «Ya puedes clausular a Pedri: 74,2 M a Sergio».', 'rivales'); tostada('Mira las notificaciones'); } else tostada('Los avisos solo funcionan en la app'); break;
     // las tarjetas para el grupo de la liga (0.6.11): el plan y sus pullitas como imagen
@@ -2936,6 +2943,22 @@ document.addEventListener('change', (ev) => {
   if (k === 'pullitas') { guardarCfgIA({ pullitas: v }); tostada(v === 'no' ? 'Sin pullitas desde el próximo plan' : 'Hecho: se nota desde el próximo plan o la próxima respuesta'); }
   if (k === 'horaAviso') { guardarCfgAvisos({ hora: v }); if (S.D) programar(S.D, S.M, planAvisos()); }
   if (k === 'interes') { guardarCfgAvisos({ interes: +v }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); }
+  // (40) cuánto antes avisa cada tipo, de cuáles de tus cláusulas y el aviso de un jugador concreto (desde su ficha o Ajustes)
+  if (k === 'avisoAntes') { ponerAntes(el.dataset.k, +v); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); }
+  if (k === 'miasCuales') { guardarCfgAvisos({ miasTodas: v === 'todas' }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); }
+  if (k === 'avisoJ') {
+    const pid = el.dataset.pid, j = S.M && S.M.J(pid);
+    if (v === '') avisarJugador(pid, null);
+    else {
+      avisarJugador(pid, +v, j ? j.nombre : '');
+      // pedirlo desde la ficha enciende los avisos (y pide el permiso) si estaban apagados
+      if (!cfgAvisos().on) guardarCfgAvisos({ on: true });
+      if (enApp && !nativo.avisosPermitidos()) nativo.pedirPermisoAvisos();
+    }
+    if (S.D) programar(S.D, S.M, planAvisos());
+    tostada(v === '' ? `Sin aviso${j ? ` de ${j.nombre}` : ''}` : `Te aviso${j ? ` de ${j.nombre}` : ''}: ${antesTxt(+v).toLowerCase()}`, 2600);
+    repintarHoja();
+  }
 });
 document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Escape' && $('.visor')) { $('.visor').remove(); return; }
@@ -2943,6 +2966,12 @@ document.addEventListener('keydown', (ev) => {
   if ((ev.key === 'Enter' || ev.key === ' ') && ev.target && ev.target.matches && ev.target.matches('[role="button"][data-accion]')) { ev.preventDefault(); ev.target.click(); return; }
   if (ev.key === 'Enter' && !ev.shiftKey && ev.target && ev.target.id === 'pregunta') { ev.preventDefault(); const t = ev.target.value; ev.target.value = ''; enviarPregunta(t); }
   if (ev.key === 'Enter' && ev.target && ev.target.id === 'codigoWeb') { ev.preventDefault(); const b = $('[data-accion="usarCodigo"]'); if (b) b.click(); }
+});
+// el buscador de Ajustes: esconde filas sin repintar (no se pierde el teclado)
+document.addEventListener('input', (ev) => {
+  if (!ev.target || ev.target.id !== 'buscaAj' || !S.hoja) return;
+  S.ajBusca = ev.target.value;
+  Hj.filtrarAjustes(S.hoja, S.ajBusca);
 });
 // el buscador del Mercado: solo se repinta la lista de resultados (así no se pierde lo que escribes ni el teclado)
 let buscaT = 0;
