@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000,
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-del-malaga-ruina-tras-el-descanso-f202611-n/": 1794070433000,
    "SPORT|136204290": 1794066951000,
@@ -1999,18 +1998,6 @@
    "SPORT|136282368": 1794310886000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794063095000,
-    "id": "2217",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Cucho Hernández se pierde el partido del Elche por lesión",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html",
     "medio": "Mundo Deportivo",
@@ -3264,7 +3251,8 @@
    "Europa Press|https://www.europapress.es/madrid/noticia-ayuso-critica-use-impunidad-secuestro-cara-huelga-general-pide-acabar-basura-sindical-20261110110256.html": 1794304976000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794315238000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794318765000,
-   "SPORT|136281772": 1794316000000
+   "SPORT|136281772": 1794316000000,
+   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321213000
   },
   "hechos": [
    {
@@ -3286,27 +3274,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 13,
+   "n": 14,
    "fallos": 0
   },
-  "espera": {
-   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321377963
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 42,
+   "clasificar": 43,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 191346,
-  "salida": 15620,
+  "entrada": 193007,
+  "salida": 15725,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.270594,
+  "dolares": 0.270813,
   "reservado": 0
  },
  "recientes": {
@@ -7265,13 +7251,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1164,
+   "ok": 1165,
    "fallos": 0,
-   "ejecuciones": 782,
+   "ejecuciones": 783,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T14:51:15.399Z"
+   "ultima": "2026-11-10T14:56:19.502Z"
   }
  },
  "ptsDirecto": {},
@@ -7288,15 +7274,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:51:23.654Z"
+   "ultimaBien": "2026-11-10T14:56:26.601Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:51:23.654Z"
+   "ultimaBien": "2026-11-10T14:56:26.601Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:51:23.654Z"
+   "ultimaBien": "2026-11-10T14:56:26.601Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7304,11 +7290,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:51:23.654Z"
+   "ultimaBien": "2026-11-10T14:56:26.601Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:51:23.654Z"
+   "ultimaBien": "2026-11-10T14:56:26.601Z"
   }
  },
  "avisos": [
