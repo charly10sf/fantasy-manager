@@ -1,6 +1,6 @@
 /* Las pestañas: Hoy (el plan del día), Equipo, Rivales, Mercado y Pregunta (el chat). Cada una devuelve su HTML.
    (Directo, la jornada en juego, está en directo.js.) */
-import { esc, eur, pct, dura, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, norm, esWebFantasy, sinWebs } from './util.js';
+import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, norm, esWebFantasy, sinWebs } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
 import { bloqueada } from './limite.js';
 import { esClausulable } from './motor.js';
@@ -55,7 +55,7 @@ function marcador(S, { corto = false } = {}) {
   let fila = '';
   if (M.enParon) fila = `<span>${icono('bandera')} Parón de selecciones</span><span class="der">vuelve ${cuando(M.proxima ? M.proxima.ini : M.paron.fin, { hora: false })}</span>`; // (26) la fecha de la jornada, no la del fin del parón: «J13 en 11 días» decía otra
   else if (M.enJuego) fila = `<span class="vivo">Jornada ${M.enJuego.n} en juego</span><span class="der">hasta ${cuando(M.enJuego.fin)}</span>`;
-  else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${dura(M.proxima.ini - ahora)}</span>`;
+  else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${cuenta(M.proxima.ini)}</span>`;
   else fila = `<span>${esc(D.liga.nombre)}</span>`;
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
   let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" aria-label="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
@@ -121,16 +121,16 @@ function tiemposHTML(S) {
   const { M } = S;
   const ahora = Date.now();
   const c = [];
-  if (M.cierreMercado) c.push(['mercado', 'Mercado nuevo', `en ${dura(M.cierreMercado - ahora)}`, 'mercado']);
+  if (M.cierreMercado) c.push(['mercado', 'Mercado nuevo', `en ${cuenta(M.cierreMercado)}`, 'mercado']);
   const prot = M.mias.filter((x) => !x.abierta && x.abreEn < 3 * DIA && x.riesgo !== 'ninguno').sort((a, b) => a.abreEn - b.abreEn)[0];
-  if (prot) c.push(['candado', `Se abre ${prot.j.nombre}`, `en ${dura(prot.abreEn)}`, `j:${prot.pid}`]);
+  if (prot) c.push(['candado', `Se abre ${prot.j.nombre}`, `en ${cuenta(prot.protegidoHasta)}`, `j:${prot.pid}`]);
   const cl = M.clausulas.filter((x) => !x.abierta && x.abreEn < 2 * DIA && x.interes >= 60 && esClausulable(M, x, ahora)).sort((a, b) => a.abreEn - b.abreEn)[0];
-  if (cl) c.push(['diana', `Cláusula de ${cl.j.nombre}`, `en ${dura(cl.abreEn)}`, `j:${cl.pid}`]);
-  if (M.paron && !M.enParon && M.paron.ini - ahora < 21 * DIA) c.push(['bandera', 'Parón', `en ${dura(M.paron.ini - ahora)}`, 'accion:paron']);
+  if (cl) c.push(['diana', `Cláusula de ${cl.j.nombre}`, `en ${cuenta(cl.protegidoHasta)}`, `j:${cl.pid}`]);
+  if (M.paron && !M.enParon && M.paron.ini - ahora < 21 * DIA) c.push(['bandera', 'Parón', `en ${cuenta(M.paron.ini)}`, 'accion:paron']);
   if (!c.length) return '';
   // cada chip lleva a lo que dice: el jugador, el mercado o lo que pasa en el parón
   const destino = (a) => (a.startsWith('j:') ? `data-j="${esc(a.slice(2))}"` : a.startsWith('accion:') ? `data-accion="${esc(a.slice(7))}"` : a ? `data-ir="${a}"` : '');
-  return `<div class="tiempos">${c.map(([ic, t, sub, a]) => `<button class="tiempo" ${destino(a)}>${icono(ic)}<div><b>${esc(t)}</b><span>${esc(sub)}</span></div>${a ? icono('flecha', 'tiempo-ir') : ''}</button>`).join('')}</div>`;
+  return `<div class="tiempos">${c.map(([ic, t, sub, a]) => `<button class="tiempo" ${destino(a)}>${icono(ic)}<div><b>${esc(t)}</b><span>${sub}</span></div>${a ? icono('flecha', 'tiempo-ir') : ''}</button>`).join('')}</div>`;
 }
 
 /** un texto con los nombres de jugadores que salen en él, para tocarlos y abrir su ficha */
@@ -998,7 +998,7 @@ function eqClausulasHTML(S, op) {
   const filaCl = (x) => filaJugador(x, {
     sub: `${x.abierta ? '<span class="rojo">Abierta</span>' : `Se abre ${cuando(x.protegidoHasta)}`} · cláusula ${eur(x.clausula)}${x.ratio ? ` (${pct((x.ratio - 1) * 100, 0)})` : ''}`,
     extra: `${barraCl(x)}${planPill(op(x.pid))}${x.escudo ? `<span class="pill pronto">${icono('escudo')}Blindado · ${cuando(x.escudo).replace(/^hoy /, '')}</span>` : (M.paraEscudo || []).includes(x.pid) ? `<span class="pill plan">${icono('escudo')}Blíndalo gratis</span>` : ''}<span class="pill ${x.riesgo === 'alto' ? 'mal' : x.riesgo === 'medio' ? 'duda' : ''}">${x.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${x.riesgo}`}</span>${x.pagan && !bloqueada('quienPaga') && (x.abierta || x.abreEn < 3 * DIA) && (x.pagan.seguro.length || x.pagan.quiza.length) ? `<span class="pill ${x.pagan.seguro.length ? 'mal' : 'duda'}">${icono('rivales')}Le llega a ${x.pagan.seguro.length + x.pagan.quiza.length}</span>` : x.pagan && !bloqueada('quienPaga') && x.pagan.hayDatos && x.abierta ? '<span class="pill bien">No le llega a nadie</span>' : ''}${x.blindaje && !x.blindaje.yaVale && !x.blindaje.caro ? `<span class="pill">Subirla a ${eur(x.blindaje.objetivo, { dec: 1 })}: ${eur(x.blindaje.coste, { dec: 1 })}</span>` : ''}`,
-    derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d apag">${x.abierta ? 'valor' : dura(x.abreEn)}</div>`,
+    derecha: `<div class="v">${eur(x.j.valor)}</div><div class="d apag">${x.abierta ? 'valor' : cuenta(x.protegidoHasta)}</div>`,
   });
   let gl = '';
   [['Abiertas ya', ab], ['Se abren en menos de 48 h', pronto], ['Protegidas', prot]].forEach(([t, l], i) => { if (l.length) gl += `<div class="grupo" id="cl-g${i}" data-ancla><span>${t}</span><span>${l.length}</span></div>${l.map(filaCl).join('')}`; });
@@ -1144,7 +1144,7 @@ export function mercado(S) {
   let seg = S.seg.mercado || 'venta';
   // las antiguas Suben / Bajan / Libres son ahora filtros de Tendencias
   if (['suben', 'bajan', 'libres'].includes(seg)) { S.filtro.tend = seg; seg = S.seg.mercado = 'tendencias'; }
-  let h = `<div class="eti">${M.cierreMercado ? `Cambia ${cuando(M.cierreMercado)} · en ${dura(M.cierreMercado - Date.now())}` : 'Mercado de hoy'}</div><h1 class="titulo">Mercado</h1><p class="entradilla">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}.</p>`;
+  let h = `<div class="eti">${M.cierreMercado ? `Cambia ${cuando(M.cierreMercado)} · en ${cuenta(M.cierreMercado)}` : 'Mercado de hoy'}</div><h1 class="titulo">Mercado</h1><p class="entradilla">Puedes gastar hasta <b>${eur(M.pujaMax)}</b>${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}.</p>`;
   h += `<div class="busca-j">${icono('buscar')}<input id="buscaJ" type="search" enterkeyhint="search" placeholder="Busca cualquier jugador o equipo" autocomplete="off" aria-label="Buscar jugador" value="${esc(S.busca || '')}"></div><div id="buscaRes">${buscaHTML(S)}</div>`;
   h += tabs('mercado', seg, [['venta', 'Fichar', M.mercado.filter((m) => !M.enVenta.has(m.pid)).length], ['especular', 'Especular', (M.especular || []).length, (M.especular || []).length ? 'verde' : ''], ['tendencias', 'Tendencias'], ['favoritos', `${icono('estrella')}Favoritos`, favoritos().filter((pid) => M.J(pid)).length]]);
   const tagV = { chollo: '<span class="pill chollo">Chollo</span>', sube: '<span class="pill bien">Subiendo</span>', caro: '<span class="pill duda">Caro</span>', evitar: '<span class="pill mal">Evitar</span>', baja: '<span class="pill mal">Bajando</span>', frena: '<span class="pill duda">Frenando</span>', normal: '' };

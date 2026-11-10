@@ -1,3 +1,4 @@
+import { horaDe, diaDe, otroDia, fechaCorta } from './util.js';
 /* Los fallos, explicados: qué ha pasado, qué hacer y con qué botones. Y los errores de la propia app (los que
    se escapan sin que nadie los recoja), apuntados para el diagnóstico. */
 
@@ -75,8 +76,10 @@ export function explicarError(e) {
 }
 
 /** lo corto que se enseña en una banda cuando ya hay datos (lo de antes sigue a la vista) */
-export function bandaError(x, edad) {
+export function bandaError(x, edad, t) {
   const hace = !edad || edad === 'ahora' ? 'hace un momento' : edad;
+  // sin red, la hora de lo que se ve («Sin conexión: ves los datos de las 14:35»; revisión total, M11)
+  if (x.tipo === 'red' && t) return `Sin conexión: ves los datos ${deCuando(t)}`;
   if (x.tipo === 'red') return `Sin internet: lo que ves es de ${hace}`;
   if (x.tipo === 'laliga') return `LaLiga no responde: lo que ves es de ${hace}`;
   if (x.tipo === 'lento') return `La conexión no responde: lo que ves es de ${hace}`;
@@ -89,4 +92,12 @@ const ICONOS = { recargar: 'refrescar', salir: 'usuario', entrarDemo: null, mand
 /** los botones de un fallo (el primero, el principal) */
 export function botonesError(x, icono) {
   return x.botones.map((b, i) => `<button class="btn${i ? ' sec' : ''}" data-accion="${b}">${ICONOS[b] ? icono(ICONOS[b]) : ''}${ETIQUETAS[b]}</button>`).join('');
+}
+
+/** «de las 14:35», «de ayer a las 14:35» o «del 8 nov a las 14:35» */
+export function deCuando(t) {
+  const hh = horaDe(t), d = diaDe(t), hoy = diaDe();
+  if (d === hoy) return `de las ${hh}`;
+  if (d === otroDia(hoy, -1)) return `de ayer a las ${hh}`;
+  return `del ${fechaCorta(t)} a las ${hh}`;
 }

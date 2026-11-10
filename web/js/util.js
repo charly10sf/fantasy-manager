@@ -66,6 +66,13 @@ export const ms = (x) => {
   return Number.isFinite(t) ? t : null;
 };
 /** "3 h 12 min", "2 d 4 h", "12 min", "ahora" */
+/** una cuenta atrás que se pone al día sola cada minuto sin repintar ni rehacer el motor (ponerCuentas): solo para
+    texto dentro de HTML, nunca en un atributo ni en algo que se escape (revisión total, M7) */
+export const cuenta = (t) => `<span class="cuenta" data-hasta="${Math.round(t)}">${dura(t - Date.now())}</span>`;
+export function ponerCuentas(raiz = document) {
+  const ahora = Date.now();
+  for (const e of raiz.querySelectorAll('[data-hasta]')) { const x = dura(+e.dataset.hasta - ahora); if (e.textContent !== x) e.textContent = x; }
+}
 export function dura(msx) {
   const a = Math.abs(msx);
   if (a < MIN) return 'nada';
@@ -96,7 +103,24 @@ function partes(t) {
  * el día de España n días antes o después de d ("2026-10-25"), por calendario: los días del cambio de hora no duran
  * 24 h, así que «ayer» no es ahora menos 24 h (revisión del 25 oct, el día del cambio)
  */
-export const otroDia = (d, n) => { const x = new Date(`${d}T12:00:00Z`); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+/* otroDia y mediodia van guardados: el motor los pide miles de veces por pasada con los mismos días (revisión total, M7) */
+const OTRO_D = new Map(), MEDIODIA = new Map();
+export const otroDia = (d, n) => {
+  const k = `${d}|${n}`;
+  let r = OTRO_D.get(k);
+  if (r === undefined) {
+    const x = new Date(`${d}T12:00:00Z`); x.setUTCDate(x.getUTCDate() + n); r = x.toISOString().slice(0, 10);
+    if (OTRO_D.size > 20000) OTRO_D.clear();
+    OTRO_D.set(k, r);
+  }
+  return r;
+};
+/** las 12:00 (hora del dispositivo) de un día "2026-10-20", en ms: como Date.parse(d + 'T12:00:00'), pero una vez por día */
+export const mediodia = (d) => {
+  let r = MEDIODIA.get(d);
+  if (r === undefined) { r = Date.parse(d + 'T12:00:00'); if (MEDIODIA.size > 20000) MEDIODIA.clear(); MEDIODIA.set(d, r); }
+  return r;
+};
 /** la misma hora de España n días después (o antes, con n negativo): la semana del cambio de hora no son n × 24 h */
 export function masDias(t, n) {
   const x = t + n * DIA, a = partes(t), b = partes(x);
