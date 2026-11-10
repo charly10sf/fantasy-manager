@@ -781,6 +781,7 @@ body.con-nv { overflow: hidden; }
 .nv-enlace { margin-top: 4px; padding: 8px; font: 600 15px 'Barlow'; color: var(--rojo-l); }
 .nv.quieta .nv-num .dg, .nv.quieta .nv-num .pt, .nv.quieta .nv-lema, .nv.quieta .nv-baja, .nv.quieta .nv-baja svg { animation: none; }
 /* la lista de todas las versiones (Ajustes → Novedades) */
+.nvl-intro { color: var(--apagado); font-size: 14px; margin: 0 0 4px; }
 .nvl { padding: 14px 0 6px; border-top: 1px solid var(--linea); }
 .nvl:first-of-type { border-top: 0; }
 .nvl-cab { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 8px; }

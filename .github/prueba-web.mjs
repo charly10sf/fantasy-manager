@@ -8,6 +8,7 @@
 //   6. que en el parón el sitio de Directo es la pestaña Parón y su selector vuelve a Directo (21);
 //   7. Ajustes (40): las secciones plegadas, el buscador, la antelación de cada aviso y «Avisarme» en la ficha, y que
 //      calcular (avisos.js) usa la antelación elegida (rivales, tuyas, el once y un jugador concreto).
+//   8. Novedades (11 nov): a quien no es el dueño, solo lo importante de cada versión, sin arreglos ni lo de otra plataforma.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -248,6 +249,32 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     else bien('la ficha: «Avisarme de su cláusula» se guarda (15 min antes)');
   }
   if (errores.length) mal(`Ajustes: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 8: Novedades para todos (11 nov): en Ajustes → La app, a quien no es el dueño solo lo importante (importante: true),
+// sin arreglos y sin lo de otra plataforma; en la web, nada de lo que es solo de la app
+for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '1', canal: () => 'github', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true');"]]) {
+  const { ctx, page, errores } = await pagina({ init });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const { NOVEDADES } = await import('./js/version.js');
+    document.querySelector('#bAjustes').click();
+    await new Promise((ok) => setTimeout(ok, 400));
+    const fila = [...document.querySelectorAll('.ajuste')].find((f) => /^Novedades/.test(f.querySelector('b')?.textContent || ''));
+    if (!fila) return { sinFila: true };
+    const sub = fila.textContent;
+    fila.querySelector('[data-accion="novedades"]').click();
+    await new Promise((ok) => setTimeout(ok, 400));
+    const t = [...document.querySelectorAll('.hoja .nvl-c b')].map((b) => b.textContent);
+    const imp = NOVEDADES.flatMap((n) => n.cosas.filter((c) => c.importante));
+    return { nuevo: /Nuevo en la/.test(sub), t, soloImp: t.every((x) => imp.some((c) => c.t === x)), arreglos: !!document.querySelector('.hoja .nvl-arr'), alarmas: t.includes('Tus alarmas, cuándo quieras'), ajustes: t.includes('Ajustes, por secciones') };
+  });
+  if (r.sinFila) mal(`Novedades (${nombre}): no sale la fila en Ajustes`);
+  else if (!r.nuevo || !r.soloImp || r.arreglos || !r.ajustes || r.alarmas !== (nombre === 'app') || r.t.length > 8) mal(`Novedades (${nombre}): ${JSON.stringify(r)}`);
+  else bien(`Novedades (${nombre}): solo lo importante (${r.t.length}), sin arreglos${nombre === 'web' ? ' ni lo de la app' : ''}`);
+  if (errores.length) mal(`Novedades: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

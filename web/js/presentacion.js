@@ -186,3 +186,18 @@ export function listaNovedades() {
     ${(n.arreglos || []).length ? `<div class="nvl-arr"><span class="nv-tipo arreglo">Correcciones</span><ol>${n.arreglos.map((c) => `<li><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</li>`).join('')}</ol></div>` : ''}
   </div>`).join('');
 }
+
+/* (11 nov, Carlos) Lo importante, para todos: solo lo que lleva importante: true (lo gordo, lo que cambia cómo se usa
+   la app), y de eso lo que es de tu versión de la app (filtroArr: sin lo de 'dueño' ni lo de otra plataforma). Sin
+   arreglos ni detalles. No se abre sola al actualizar: solo desde Ajustes. */
+const importantes = () => NOVEDADES.map((n) => ({ ...n, cosas: (n.cosas || []).filter((c) => c.importante && c.tipo !== 'arreglo' && !c.menor && filtroArr(c)) }))
+  .filter((n) => n.cosas.length);
+export const hayImportantes = () => importantes().length > 0;
+/** la última versión con algo importante para ti (para «Nuevo» en Ajustes) */
+export const ultimaImportante = () => (importantes()[0] || {}).v || null;
+export function listaImportantes() {
+  return importantes().map((n) => `<div class="nvl">
+    <div class="nvl-cab"><b>${esc(n.v)}</b><small>${esc(fechaNov(n))}</small></div>
+    ${n.cosas.map((c) => `<div class="nvl-c"><span class="nv-tipo ${esc(c.tipo || 'nuevo')}">${esc(TIPOS[c.tipo] || 'Nuevo')}</span><div><b>${esc(c.t)}</b>${c.x ? `<p>${esc(c.x)}</p>` : ''}</div></div>`).join('')}
+  </div>`).join('');
+}

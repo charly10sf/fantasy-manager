@@ -16,6 +16,7 @@ import { EVENTOS } from './eventos.js';
 import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
+import { hayImportantes, ultimaImportante } from './presentacion.js';
 import { estadoLimite, novedadesPara, bloqueada, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
@@ -752,6 +753,11 @@ export function ajustes(S) {
   if (estadoLimite.min != null) c4 += fila(`Hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min`, 'Se reinicia a las 00:00', '', 'tiempo limite minutos');
   // las novedades de cada versión, solo para el dueño (o todos con «novedadesTodos» en limites.json)
   if (dueno || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) c4 += fila('Novedades', 'Lo que trae y arregla cada versión', btnA('novedades', 'Ver'), 'cambios');
+  // (11 nov, Carlos) a todos los demás, lo importante de cada versión (importante: true en version.js), sin arreglos
+  else if (hayImportantes()) {
+    const u = ultimaImportante();
+    c4 += fila('Novedades', LS.get('importante-vista', null) === u ? 'Lo más importante de cada versión' : `Nuevo en la ${u}`, btnA('novedades', 'Ver'), 'cambios version');
+  }
   if (dueno && !enDemo()) c4 += fila('Quién usa la app', 'Solo lo ves tú', btnA('quienUsa', 'Ver', { sec: false }), 'usuarios');
   if ((enApp || enWeb) && !enDemo()) c4 += fila('Liga de ejemplo', 'Sin tocar tus datos', btnA('entrarDemo', 'Ver'), 'demo');
   c4 += fila('Diagnóstico', 'Lo que han contestado LaLiga y Google', btnA('diag', 'Ver'), 'errores fallos');
