@@ -2010,7 +2010,8 @@
    "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/": 1794333490000,
    "SPORT|136304092": 1794330880000,
    "SPORT|136303943": 1794330466000,
-   "SPORT|136304134": 1794331165000
+   "SPORT|136304134": 1794331165000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000
   },
   "hechos": [
    {
@@ -2363,7 +2364,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -3311,23 +3312,24 @@
    "fallos": 0
   },
   "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335474076
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335474076,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mueven-huelga-dia-12-23-aprobacion-decreto-dar-margen-negociacion-20261110184225.html": 1794335772806
   }
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 66,
+   "clasificar": 67,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 240442,
-  "salida": 23451,
+  "entrada": 242402,
+  "salida": 24204,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.27942,
+  "dolares": 0.279993,
   "reservado": 0
  },
  "recientes": {
@@ -7286,13 +7288,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1209,
+   "ok": 1210,
    "fallos": 0,
-   "ejecuciones": 827,
+   "ejecuciones": 828,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T18:31:14.076Z"
+   "ultima": "2026-11-10T18:36:12.806Z"
   }
  },
  "ptsDirecto": {},
@@ -7309,15 +7311,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:31:17.891Z"
+   "ultimaBien": "2026-11-10T18:36:19.597Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:31:17.891Z"
+   "ultimaBien": "2026-11-10T18:36:19.597Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:31:17.891Z"
+   "ultimaBien": "2026-11-10T18:36:19.597Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7325,11 +7327,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:31:17.891Z"
+   "ultimaBien": "2026-11-10T18:36:19.597Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:31:17.891Z"
+   "ultimaBien": "2026-11-10T18:36:19.597Z"
   }
  },
  "avisos": [
