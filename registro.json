@@ -1998,7 +1998,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-ve-apto-lamine-yamal-inglaterra-no-merecia-pena-asumir-riesgo-20261110_3472467.html": 1794325288000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/marc-roca-regreso-roja-europeo_0_2008465260.html": 1794325756000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/marc-roca-regreso-roja-europeo_0_2008465260.html": 1794325756000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249536/17-leyendas-atletico-convocadas-duelo-america.html": 1794326358000,
+   "SPORT|136295857": 1794322600000
   },
   "hechos": [
    {
@@ -2342,7 +2344,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -3187,7 +3189,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136204292": 1794067195000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
    "SPORT|136206834": 1794072635000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-transportes-fija-servicios-minimos-renfe-huelga-maquinistas-10-12-noviembre-20261107204525.html": 1794080725000,
@@ -3288,17 +3289,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 204417,
-  "salida": 17518,
+  "entrada": 206679,
+  "salida": 17691,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.272851,
+  "dolares": 0.273164,
   "reservado": 0
  },
  "recientes": {
@@ -7257,13 +7258,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1177,
+   "ok": 1178,
    "fallos": 0,
-   "ejecuciones": 795,
+   "ejecuciones": 796,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T15:56:14.310Z"
+   "ultima": "2026-11-10T16:01:15.318Z"
   }
  },
  "ptsDirecto": {},
@@ -7280,15 +7281,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:56:20.284Z"
+   "ultimaBien": "2026-11-10T16:01:21.288Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:56:20.284Z"
+   "ultimaBien": "2026-11-10T16:01:21.288Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:56:20.284Z"
+   "ultimaBien": "2026-11-10T16:01:21.288Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7296,11 +7297,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:56:20.284Z"
+   "ultimaBien": "2026-11-10T16:01:21.288Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T15:56:20.284Z"
+   "ultimaBien": "2026-11-10T16:01:21.288Z"
   }
  },
  "avisos": [
