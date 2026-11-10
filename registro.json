@@ -2002,7 +2002,11 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enzo-alves-hijo-marcelo-cae-lista-espana-mundial-sub-17-lesion-muscular-20261110_3472480.html": 1794326987000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/bellingham-leccion-mourinho-sobre-medias-chaval-tienes-nueve-anos-tienes-gemelos.html": 1794328211000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/10/bruno-iribarne-da-el-salto-un-almeriense-entrena-con-las-estrellas-de-la-roja-ser-almeria/": 1794328207000,
-   "SPORT|136299263": 1794324628000
+   "SPORT|136299263": 1794324628000,
+   "AS|https://as.com/futbol/primera/sucic-no-viajara-con-croacia-por-una-amigdalitis-f202611-n/": 1794329246000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249565/sucic-cuarto-internacional-realista-caerse-fecha-fifa-lesion-enfermedad.html": 1794329986000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249533/gerard-martin.html": 1794328658000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/10/marc-roca-siete-anos-espera-llegar-seleccion-espanola/00031794329684948672845.htm": 1794329881000
   },
   "hechos": [
    {
@@ -2346,7 +2350,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -3296,17 +3300,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 56,
+   "clasificar": 57,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 219044,
-  "salida": 19752,
+  "entrada": 221751,
+  "salida": 21663,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.275431,
+  "dolares": 0.276657,
   "reservado": 0
  },
  "recientes": {
@@ -7265,13 +7269,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1190,
+   "ok": 1191,
    "fallos": 0,
-   "ejecuciones": 808,
+   "ejecuciones": 809,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T16:56:20.618Z"
+   "ultima": "2026-11-10T17:01:24.503Z"
   }
  },
  "ptsDirecto": {},
@@ -7288,15 +7292,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:56:28.575Z"
+   "ultimaBien": "2026-11-10T17:01:37.826Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:56:28.575Z"
+   "ultimaBien": "2026-11-10T17:01:37.826Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:56:28.575Z"
+   "ultimaBien": "2026-11-10T17:01:37.826Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7304,11 +7308,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:56:28.575Z"
+   "ultimaBien": "2026-11-10T17:01:37.826Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:56:28.575Z"
+   "ultimaBien": "2026-11-10T17:01:37.826Z"
   }
  },
  "avisos": [
