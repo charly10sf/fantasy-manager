@@ -8,6 +8,7 @@
 //   6. que en el parón el sitio de Directo es la pestaña Parón y su selector vuelve a Directo (21);
 //   7. Ajustes (40): las secciones plegadas, el buscador, la antelación de cada aviso y «Avisarme» en la ficha, y que
 //      calcular (avisos.js) usa la antelación elegida (rivales, tuyas, el once y un jugador concreto).
+//  12. todas las fichas y hojas (Tu equipo hoy, jugador, rival, club, sustitutos, Ajustes, diagnóstico) abren sin error.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -248,6 +249,34 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     else bien('la ficha: «Avisarme de su cláusula» se guarda (15 min antes)');
   }
   if (errores.length) mal(`Ajustes: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 12: (11 nov) todas las fichas y hojas abren sin «No se ha podido abrir»: Tu equipo hoy (el marcador de Hoy; en la
+// 0.7.4 se perdió `rango` y fallaba), jugador tuyo, de un rival y libre, rival, club, sustitutos, Ajustes y diagnóstico
+for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenador']]) {
+  const { ctx, page, errores } = await pagina({ ancho, alto });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(async () => {
+    const { M } = window.S;
+    const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    const abrir = async (attrs) => { const b = document.createElement('button'); Object.assign(b.dataset, attrs); document.body.append(b); b.click(); b.remove(); await espera(500); };
+    const mira = () => { const h = document.querySelector('.hoja'); const e = h && h.querySelector('.error-c'); const t = e ? e.textContent.trim().slice(0, 90) : null; const x = document.querySelector('.hoja [data-accion="cerrarHoja"]'); if (x) x.click(); return h ? t : 'no se abre'; };
+    const out = {};
+    const marcador = document.querySelector('#vista .marcador');
+    if (marcador) { marcador.click(); await espera(500); out.tuEquipo = mira(); await espera(200); } else out.tuEquipo = 'sin marcador';
+    const casos = { mio: { j: M.mias[0] && M.mias[0].pid }, deRival: { j: M.clausulas[0] && M.clausulas[0].pid }, libre: { j: (M.mercado.find((m) => m.tipo === 'liga') || {}).pid }, rival: { r: M.clausulas[0] && M.clausulas[0].teamId }, club: { club: M.mias[0] && M.mias[0].j.equipoId }, sustitutos: { accion: 'sustituto', pid: M.mias[0] && M.mias[0].pid }, ajustes: { accion: 'ajustes' } };
+    for (const [k, a] of Object.entries(casos)) { if (Object.values(a).some((v) => v == null)) { out[k] = 'sin datos'; continue; } await abrir(a); out[k] = mira(); await espera(200); }
+    document.querySelector('#bAjustes').click(); await espera(400);
+    const d = document.querySelector('.hoja [data-accion="diag"]'); if (d) { d.click(); await espera(500); out.diag = mira(); }
+    return out;
+  });
+  const fallan = Object.entries(r).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`);
+  if (fallan.length) mal(`${nombre}: fichas con error: ${fallan.join(' · ')}`);
+  else bien(`${nombre}: Tu equipo hoy, las fichas, Ajustes y el diagnóstico abren sin error (${Object.keys(r).length})`);
+  if (errores.length) mal(`${nombre} fichas: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 
