@@ -3831,7 +3831,8 @@
    "5868130",
    "5868122",
    "5868121",
-   "6386040"
+   "6386040",
+   "6386084"
   ],
   "equipos": [
    "9866",
@@ -4482,6 +4483,13 @@
       0,
       0,
       0
+     ],
+     "copa": [
+      1,
+      0,
+      0,
+      0,
+      0
      ]
     }
    },
@@ -4746,6 +4754,13 @@
     "e": "Valencia",
     "g": {
      "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ],
+     "copa": [
       1,
       0,
       0,
@@ -5022,6 +5037,19 @@
      ]
     }
    },
+   "929838": {
+    "n": "Hugo Duro",
+    "e": "Valencia",
+    "g": {
+     "copa": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "939569": {
     "n": "Jonathan David",
     "e": "Atlético Madrid",
@@ -5226,6 +5254,19 @@
       4,
       1,
       0,
+      0,
+      0
+     ]
+    }
+   },
+   "963964": {
+    "n": "Harvey Elliott",
+    "e": "Valencia",
+    "g": {
+     "copa": [
+      1,
+      0,
+      1,
       0,
       0
      ]
@@ -7009,6 +7050,19 @@
      ]
     }
    },
+   "1793871": {
+    "n": "Aimar Blázquez",
+    "e": "Valencia",
+    "g": {
+     "copa": [
+      2,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "1797904": {
     "n": "Miguel Sierra",
     "e": "Sevilla",
@@ -7387,13 +7441,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1248,
+   "ok": 1250,
    "fallos": 0,
-   "ejecuciones": 865,
+   "ejecuciones": 866,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T21:41:12.659Z"
+   "ultima": "2026-11-10T21:47:35.418Z"
   }
  },
  "ptsDirecto": {},
@@ -7410,15 +7464,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:41:16.746Z"
+   "ultimaBien": "2026-11-10T21:47:40.820Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:41:16.746Z"
+   "ultimaBien": "2026-11-10T21:47:40.820Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:41:16.746Z"
+   "ultimaBien": "2026-11-10T21:47:40.820Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7426,11 +7480,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:41:16.746Z"
+   "ultimaBien": "2026-11-10T21:47:40.820Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:41:16.746Z"
+   "ultimaBien": "2026-11-10T21:47:40.820Z"
   }
  },
  "avisos": [
