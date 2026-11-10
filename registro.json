@@ -914,6 +914,13 @@
    "jornada": 12,
    "id": "2120044150280110305",
    "t": "2026-11-10T06:41:29.095Z"
+  },
+  {
+   "clave": "noticias|2430:mala|2026-11-10",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2120108346879484083",
+   "t": "2026-11-10T10:56:34.682Z"
   }
  ],
  "estados": {
@@ -1993,7 +2000,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html": 1794304285000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249362/entiendo-alguien-quiera-vienen-barca-madrid-formas-molestaron.html": 1794305948000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000,
-   "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000
+   "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000,
+   "SPORT|136277366": 1794304087000
   },
   "hechos": [
    {
@@ -2396,11 +2404,23 @@
     "motivo": "molestias en el hombro derecho",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136277366",
+    "medio": "SPORT",
+    "t": 1794304087000,
+    "id": "2430",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Federico Valverde sigue con molestias físicas pese a su regreso",
+    "motivo": "molestias físicas",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -3341,17 +3361,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 22,
-   "redactar": 6,
-   "revisar": 4,
+   "clasificar": 23,
+   "redactar": 8,
+   "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 125749,
-  "salida": 11102,
+  "entrada": 153800,
+  "salida": 11627,
   "cacheLee": 5806,
-  "cacheEscribe": 5806,
-  "dolares": 0.201321,
+  "cacheEscribe": 8709,
+  "dolares": 0.264841,
   "reservado": 0
  },
  "recientes": {
@@ -3469,6 +3489,10 @@
    {
     "t": "2026-11-09T21:36:37.279Z",
     "texto": "⁉️ Lamine Yamal se recupera en Barcelona de unas molestias en la rodilla derecha, según La Voz de Galicia.\n\nTiene 10 goles y 8 asistencias en la liga, así que merece la pena seguirle de cerca. Con un 58 % de titularidad en Fantasy Manager, lo normal es que salga contra el Villarreal 🚢, que va 8º. Si lo tienes, mejor esperar a los onces."
+   },
+   {
+    "t": "2026-11-10T10:56:34.685Z",
+    "texto": "⁉️ Federico Valverde sigue con molestias físicas pese a su regreso, cuentan Mundo Deportivo y SPORT.\n\nHa subido 29 M en el último mes y ya vale 71 M, así que es un jugador que mueve el mercado. Si lo tienes, no hay prisa: la jornada 13 es tras el parón, el sábado 21 en el Santiago Bernabéu, y no hay plazo para saber si llega bien.\n\nEl Celta encaja muy poco, y para un centrocampista como Valverde eso no es buena noticia."
    }
   ],
   "directo": [
@@ -7306,13 +7330,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1116,
+   "ok": 1117,
    "fallos": 0,
-   "ejecuciones": 734,
+   "ejecuciones": 735,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T10:51:14.489Z"
+   "ultima": "2026-11-10T10:56:14.011Z"
   }
  },
  "ptsDirecto": {},
@@ -7329,15 +7353,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:51:20.692Z"
+   "ultimaBien": "2026-11-10T10:56:34.713Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:51:20.692Z"
+   "ultimaBien": "2026-11-10T10:56:34.713Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:51:20.692Z"
+   "ultimaBien": "2026-11-10T10:56:34.713Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7345,11 +7369,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:51:20.692Z"
+   "ultimaBien": "2026-11-10T10:56:34.713Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:51:20.692Z"
+   "ultimaBien": "2026-11-10T10:56:34.713Z"
   }
  },
  "avisos": [
