@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
@@ -7281,13 +7280,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1146,
+   "ok": 1147,
    "fallos": 0,
-   "ejecuciones": 764,
+   "ejecuciones": 765,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T13:21:15.732Z"
+   "ultima": "2026-11-10T13:26:15.264Z"
   }
  },
  "ptsDirecto": {},
@@ -7304,15 +7303,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:21:19.168Z"
+   "ultimaBien": "2026-11-10T13:26:20.659Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:21:19.168Z"
+   "ultimaBien": "2026-11-10T13:26:20.659Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:21:19.168Z"
+   "ultimaBien": "2026-11-10T13:26:20.659Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7320,11 +7319,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:21:19.168Z"
+   "ultimaBien": "2026-11-10T13:26:20.659Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:21:19.168Z"
+   "ultimaBien": "2026-11-10T13:26:20.659Z"
   }
  },
  "avisos": [
