@@ -2006,7 +2006,10 @@
    "SPORT|136301367": 1794329440000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249368/dos-perdidas-relevantes-cuatro-dias-parecia-vaciarse-enfermeria-real.html": 1794333058000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/10/matricula-honor-mathew-ryan-estuvo-136298628.html": 1794333325000,
-   "SPORT|136280619": 1794330047000
+   "SPORT|136280619": 1794330047000,
+   "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/": 1794333490000,
+   "SPORT|136304092": 1794330880000,
+   "SPORT|136303943": 1794330466000
   },
   "hechos": [
    {
@@ -2341,11 +2344,25 @@
     "motivo": "",
     "plazo": "estará fuera un tiempo",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/",
+    "medio": "AS",
+    "t": 1794333490000,
+    "id": "1219",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "cinco puntos en la rodilla",
+    "plazo": "",
+    "nums": [
+     6
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -3296,17 +3313,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 63,
+   "clasificar": 64,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 233990,
-  "salida": 22568,
+  "entrada": 236615,
+  "salida": 23047,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.278334,
+  "dolares": 0.278836,
   "reservado": 0
  },
  "recientes": {
@@ -7265,13 +7282,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1205,
+   "ok": 1206,
    "fallos": 0,
-   "ejecuciones": 823,
+   "ejecuciones": 824,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T18:11:13.560Z"
+   "ultima": "2026-11-10T18:16:21.127Z"
   }
  },
  "ptsDirecto": {},
@@ -7288,15 +7305,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:11:18.397Z"
+   "ultimaBien": "2026-11-10T18:16:28.876Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:11:18.397Z"
+   "ultimaBien": "2026-11-10T18:16:28.876Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:11:18.397Z"
+   "ultimaBien": "2026-11-10T18:16:28.876Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7304,11 +7321,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:11:18.397Z"
+   "ultimaBien": "2026-11-10T18:16:28.876Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:11:18.397Z"
+   "ultimaBien": "2026-11-10T18:16:28.876Z"
   }
  },
  "avisos": [
