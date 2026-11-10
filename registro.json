@@ -1803,7 +1803,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
    "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248209/eric-christensen-aceleran-atletico.html": 1794048282000,
    "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/": 1794049173000,
@@ -1999,26 +1998,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html",
-    "medio": "COPE",
-    "t": 1794047630000,
-    "id": "2315",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Paredes mantiene diez fechas de sanción tras la apelación",
-    "motivo": "",
-    "plazo": "diez fechas de suspensión",
-    "nums": [
-     2026,
-     7,
-     4,
-     10,
-     90,
-     0,
-     60
-    ]
-   },
    {
     "guid": "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/",
     "medio": "Cadena SER",
@@ -3280,7 +3259,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fifa-perdona-parte-sancion-nahuel-molina-mantiene-entera-leandro-paredes-20261107_3470764.html": 1794047630000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "SPORT|136195921": 1794049583000,
    "SPORT|136198293": 1794054087000,
@@ -7340,13 +7318,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1112,
+   "ok": 1113,
    "fallos": 0,
-   "ejecuciones": 730,
+   "ejecuciones": 731,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T10:31:15.357Z"
+   "ultima": "2026-11-10T10:36:12.171Z"
   }
  },
  "ptsDirecto": {},
@@ -7363,15 +7341,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:31:22.077Z"
+   "ultimaBien": "2026-11-10T10:36:14.956Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:31:22.077Z"
+   "ultimaBien": "2026-11-10T10:36:14.956Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:31:22.077Z"
+   "ultimaBien": "2026-11-10T10:36:14.956Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7379,11 +7357,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:31:22.077Z"
+   "ultimaBien": "2026-11-10T10:36:14.956Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:31:22.077Z"
+   "ultimaBien": "2026-11-10T10:36:14.956Z"
   }
  },
  "avisos": [
