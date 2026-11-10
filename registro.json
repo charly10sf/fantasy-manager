@@ -2002,7 +2002,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249536/17-leyendas-atletico-convocadas-duelo-america.html": 1794326358000,
    "SPORT|136295857": 1794322600000,
    "SPORT|136295753": 1794322829000,
-   "SPORT|136291420": 1794322822000
+   "SPORT|136291420": 1794322822000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enzo-alves-hijo-marcelo-cae-lista-espana-mundial-sub-17-lesion-muscular-20261110_3472480.html": 1794326987000
   },
   "hechos": [
    {
@@ -2346,7 +2347,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -3291,17 +3292,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 52,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 209063,
-  "salida": 17865,
+  "entrada": 211094,
+  "salida": 18214,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.273489,
+  "dolares": 0.273867,
   "reservado": 0
  },
  "recientes": {
@@ -7260,13 +7261,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1180,
+   "ok": 1181,
    "fallos": 0,
-   "ejecuciones": 798,
+   "ejecuciones": 799,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T16:11:16.499Z"
+   "ultima": "2026-11-10T16:16:15.797Z"
   }
  },
  "ptsDirecto": {},
@@ -7283,15 +7284,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:11:21.012Z"
+   "ultimaBien": "2026-11-10T16:16:22.432Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:11:21.012Z"
+   "ultimaBien": "2026-11-10T16:16:22.432Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:11:21.012Z"
+   "ultimaBien": "2026-11-10T16:16:22.432Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7299,11 +7300,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:11:21.012Z"
+   "ultimaBien": "2026-11-10T16:16:22.432Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T16:11:21.012Z"
+   "ultimaBien": "2026-11-10T16:16:22.432Z"
   }
  },
  "avisos": [
