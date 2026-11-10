@@ -1993,7 +1993,8 @@
    "AS|https://as.com/futbol/primera/fe-ciega-en-julian-alvarez-f202611-n/": 1794295741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249120/gran-cambio-real-madrid.html": 1794297600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249318/sorpresa-caicedo-real-madrid-calla-sobre-lesion-visto-entrenando.html": 1794297190000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249318/sorpresa-caicedo-real-madrid-calla-sobre-lesion-visto-entrenando.html": 1794297190000,
+   "SPORT|136272513": 1794295666000
   },
   "hechos": [
    {
@@ -2463,7 +2464,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3398,17 +3399,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 12,
+   "clasificar": 13,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 105277,
-  "salida": 7318,
+  "entrada": 107327,
+  "salida": 7976,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.197381,
+  "dolares": 0.197915,
   "reservado": 0
  },
  "recientes": {
@@ -7363,13 +7364,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1087,
+   "ok": 1088,
    "fallos": 0,
-   "ejecuciones": 705,
+   "ejecuciones": 706,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T08:26:13.868Z"
+   "ultima": "2026-11-10T08:31:14.992Z"
   }
  },
  "ptsDirecto": {},
@@ -7386,15 +7387,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:26:18.459Z"
+   "ultimaBien": "2026-11-10T08:31:23.752Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:26:18.459Z"
+   "ultimaBien": "2026-11-10T08:31:23.752Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:26:18.459Z"
+   "ultimaBien": "2026-11-10T08:31:23.752Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7402,11 +7403,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:26:18.459Z"
+   "ultimaBien": "2026-11-10T08:31:23.752Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T08:26:18.459Z"
+   "ultimaBien": "2026-11-10T08:31:23.752Z"
   }
  },
  "avisos": [
