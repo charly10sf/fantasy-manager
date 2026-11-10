@@ -1812,7 +1812,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261107/1004248302/pellegrini-recupera-junior-deja-fuera-celso.html": 1794063095000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248297/laconica-respuesta-simeone-preguntado-julian-barca.html": 1794062812000,
-   "SPORT|136201148": 1794061401000,
    "SPORT|136202042": 1794062312000,
    "SPORT|136176192": 1794062219000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248198/once.html": 1794068667000,
@@ -7267,13 +7266,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1158,
+   "ok": 1159,
    "fallos": 0,
-   "ejecuciones": 776,
+   "ejecuciones": 777,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T14:21:13.677Z"
+   "ultima": "2026-11-10T14:26:14.786Z"
   }
  },
  "ptsDirecto": {},
@@ -7290,15 +7289,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:21:16.366Z"
+   "ultimaBien": "2026-11-10T14:26:19.785Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:21:16.366Z"
+   "ultimaBien": "2026-11-10T14:26:19.785Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:21:16.366Z"
+   "ultimaBien": "2026-11-10T14:26:19.785Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7306,11 +7305,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:21:16.366Z"
+   "ultimaBien": "2026-11-10T14:26:19.785Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T14:21:16.366Z"
+   "ultimaBien": "2026-11-10T14:26:19.785Z"
   }
  },
  "avisos": [
