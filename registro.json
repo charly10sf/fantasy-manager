@@ -1813,7 +1813,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248236/barca-no-recupera-efectivos-visita-madrid-cff.html": 1794051959000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/atletico-de-madrid/20261107/11678726/simeone-mas-complejo-defender-barca-raphinha-nueve-lewandowski.html": 1794052790000,
    "AS|https://as.com/futbol/primera/flick-y-la-gestion-de-rodri-cuando-ves-los-resultados-f202611-n/": 1794054393000,
-   "SPORT|136195917": 1794050824000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261107/1004248252/miedo-factor-raphinha-cholo-detallo-cambio-tactico-barca-destroza-rivales.html": 1794053748000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261107/1004248251/guinea-bisau-convoca-nuevamente-djalo.html": 1794053466000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html": 1794055463000,
@@ -2004,18 +2003,6 @@
    "SPORT|136281363": 1794305884000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136195917",
-    "medio": "SPORT",
-    "t": 1794050824000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri sufre una lesión en los isquiotibiales y estará de baja",
-    "motivo": "molestias en los isquiotibiales",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barca-recupera-eric-garcia-christensen-metropolitano-20261107_3470796.html",
     "medio": "COPE",
@@ -7293,13 +7280,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1123,
+   "ok": 1124,
    "fallos": 0,
-   "ejecuciones": 741,
+   "ejecuciones": 742,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T11:26:15.058Z"
+   "ultima": "2026-11-10T11:31:15.605Z"
   }
  },
  "ptsDirecto": {},
@@ -7316,15 +7303,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:26:20.946Z"
+   "ultimaBien": "2026-11-10T11:31:19.362Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:26:20.946Z"
+   "ultimaBien": "2026-11-10T11:31:19.362Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:26:20.946Z"
+   "ultimaBien": "2026-11-10T11:31:19.362Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7332,11 +7319,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:26:20.946Z"
+   "ultimaBien": "2026-11-10T11:31:19.362Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:26:20.946Z"
+   "ultimaBien": "2026-11-10T11:31:19.362Z"
   }
  },
  "avisos": [
