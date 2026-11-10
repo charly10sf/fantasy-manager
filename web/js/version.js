@@ -16,12 +16,13 @@ export const VERSION = '0.7.3';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.3', f: '2026-11-10', h: '21:44', t: 'Más fluida y sin red',
+    v: '0.7.3', f: '2026-11-10', h: '21:57', t: 'Más fluida, sin red y Movimientos en Mercado',
     cosas: [
       { tipo: 'mejora', d: 'movil', t: 'Las fichas se cierran deslizando', x: 'En el móvil, la ficha va pegada al dedo: bájala hacia abajo desde arriba (o desde la raya) y se cierra; si no llegas, vuelve a su sitio. Tocar la raya de arriba también la cierra. Fuera la × del móvil (en el ordenador sigue).' },
       { tipo: 'mejora', d: 'rayo', t: 'Más fluida', x: 'La app hace menos trabajo de golpe al abrirse y cada minuto, y las animaciones son más ligeras: va más suave al cambiar de pestaña y al bajar por las listas.' },
       { para: 'web', tipo: 'nuevo', d: 'conexion', t: 'La web abre sin conexión', x: 'En la web y en el iPhone, si te quedas sin cobertura (en el estadio, por ejemplo), la app se abre igual con lo último que viste y te dice de qué hora son los datos.' },
       { tipo: 'arreglo', d: 'calendario', t: 'Los partidos adelantados', x: 'Un partido de una jornada que se juega días antes que el resto ya no adelanta el cierre de cláusulas de toda la jornada ni la deja «en juego» antes de tiempo.' },
+      { tipo: 'mejora', d: 'oferta', t: 'Movimientos, ahora en Mercado', x: 'Los movimientos de la liga pasan de Rivales a Mercado → Movimientos, por días y con la cara de cada jugador (con el tipo de movimiento en la esquina), su equipo y lo que vale. Arriba eliges entre toda la liga o solo los tuyos (lo que has hecho tú y lo que te han hecho a ti), y cada tipo dice cuántos hay.', ir: { v: 'mercado', seg: 'mercado:movimientos' } },
       { tipo: 'mejora', d: 'camiseta', t: 'El logo de siempre arriba', x: 'Arriba a la izquierda sale el logo completo de Fantasy Manager, el mismo del icono.', menor: true },
       { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Rendimiento (sesión 9)', x: 'El motor tarda 218 ms en vez de 386 con 700 jugadores a CPU ×6 (tendencia e inercia con los días tal cual, otroDia y mediodía guardados, el histórico parseado una vez); lo que llega al arrancar se junta en una pasada (300 ms) y cada minuto solo se ponen al día las cuentas atrás, con el motor entero al pasar un hito o cada 10 min. Service worker (página por red con 4 s de margen, módulos con huella guardados), iconos de 192, 512 y maskable. Sin blur ni backdrop-filter, content-visibility en las filas y reducir movimiento en toda la app.' },
     ],
@@ -950,7 +951,7 @@ export const NOVEDADES = [
     v: '0.5.2c', f: '2026-10-24', h: '02:32', t: 'Lo que pagaste, siempre',
     cosas: [
       { tipo: 'arreglo', d: 'dinero', t: 'Cada venta, con lo que pagaste', x: 'Si de un jugador no sale lo que pagaste en los movimientos de la liga, la venta ya no se queda callada: si venía en tu equipo inicial, la compara con lo que valía al empezar la liga; si no, te dice que no se sabe. Y donde pone «+3,22 M» ahora dice «te entran», para que no se confunda con lo que ganas, que va debajo («ganas» o «pierdes»). Gracias, Domy.', ir: { v: 'hoy' } },
-      { tipo: 'arreglo', d: 'escudo', t: 'Las cláusulas que sube LaLiga sola', x: 'Cuando el valor de un jugador pasa su cláusula, LaLiga se la sube sola hasta su valor. La app lo tomaba por una subida pagada por su dueño: salía en Rivales > Movimientos y le restaba ese dinero. Ahora solo cuenta la que deja la cláusula por encima de su valor, la que paga el entrenador. Gracias, Domy.', ir: { v: 'rivales', seg: 'rivales:movimientos' } },
+      { tipo: 'arreglo', d: 'escudo', t: 'Las cláusulas que sube LaLiga sola', x: 'Cuando el valor de un jugador pasa su cláusula, LaLiga se la sube sola hasta su valor. La app lo tomaba por una subida pagada por su dueño: salía en Rivales > Movimientos y le restaba ese dinero. Ahora solo cuenta la que deja la cláusula por encima de su valor, la que paga el entrenador. Gracias, Domy.', ir: { v: 'mercado', seg: 'mercado:movimientos' } },
     ],
   },
   {

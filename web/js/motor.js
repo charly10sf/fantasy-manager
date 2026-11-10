@@ -1799,6 +1799,8 @@ export function analizar(D, H, c, extra = {}) {
       quien: a.quien || nombreEquipo(quienT), otro: a.otro || nombreEquipo(otroT),
       nombreJ: a.jugador || (a.pid && D.maestro[a.pid] ? D.maestro[a.pid].nombre : ''),
       esYo: !!yoTid && quienT === yoTid, contraMi: !!yoTid && otroT === yoTid,
+      // el jugador, para su cara en la lista (Mercado → Movimientos, 0.7.3)
+      j: a.pid && D.maestro[a.pid] ? D.maestro[a.pid] : null,
     };
   });
   // tus blindajes de esta jornada: 2, desde que acabó la última jornada hasta que acabe la que viene
