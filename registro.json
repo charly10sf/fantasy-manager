@@ -3229,7 +3229,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136198293": 1794054087000,
    "Europa Press|https://www.europapress.es/nacional/noticia-montero-rufian-animan-votar-memoria-conciencia-obviando-voto-util-psoe-si-puede-te-come-20261107134413.html": 1794055453000,
    "SPORT|136202042": 1794062312000,
    "SPORT|136204292": 1794067195000,
@@ -7294,13 +7293,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1134,
+   "ok": 1135,
    "fallos": 0,
-   "ejecuciones": 752,
+   "ejecuciones": 753,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T12:21:12.993Z"
+   "ultima": "2026-11-10T12:26:13.102Z"
   }
  },
  "ptsDirecto": {},
@@ -7317,15 +7316,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:21:19.986Z"
+   "ultimaBien": "2026-11-10T12:26:15.833Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:21:19.986Z"
+   "ultimaBien": "2026-11-10T12:26:15.833Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:21:19.986Z"
+   "ultimaBien": "2026-11-10T12:26:15.833Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7333,11 +7332,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:21:19.986Z"
+   "ultimaBien": "2026-11-10T12:26:15.833Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T12:21:19.986Z"
+   "ultimaBien": "2026-11-10T12:26:15.833Z"
   }
  },
  "avisos": [
