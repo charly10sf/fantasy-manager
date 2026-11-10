@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.2b';
+export const VERSION = '0.7.3';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,17 @@ export const VERSION = '0.7.2b';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.3', f: '2026-11-10', h: '21:44', t: 'Más fluida y sin red',
+    cosas: [
+      { tipo: 'mejora', d: 'movil', t: 'Las fichas se cierran deslizando', x: 'En el móvil, la ficha va pegada al dedo: bájala hacia abajo desde arriba (o desde la raya) y se cierra; si no llegas, vuelve a su sitio. Tocar la raya de arriba también la cierra. Fuera la × del móvil (en el ordenador sigue).' },
+      { tipo: 'mejora', d: 'rayo', t: 'Más fluida', x: 'La app hace menos trabajo de golpe al abrirse y cada minuto, y las animaciones son más ligeras: va más suave al cambiar de pestaña y al bajar por las listas.' },
+      { para: 'web', tipo: 'nuevo', d: 'conexion', t: 'La web abre sin conexión', x: 'En la web y en el iPhone, si te quedas sin cobertura (en el estadio, por ejemplo), la app se abre igual con lo último que viste y te dice de qué hora son los datos.' },
+      { tipo: 'arreglo', d: 'calendario', t: 'Los partidos adelantados', x: 'Un partido de una jornada que se juega días antes que el resto ya no adelanta el cierre de cláusulas de toda la jornada ni la deja «en juego» antes de tiempo.' },
+      { tipo: 'mejora', d: 'camiseta', t: 'El logo de siempre arriba', x: 'Arriba a la izquierda sale el logo completo de Fantasy Manager, el mismo del icono.', menor: true },
+      { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Rendimiento (sesión 9)', x: 'El motor tarda 218 ms en vez de 386 con 700 jugadores a CPU ×6 (tendencia e inercia con los días tal cual, otroDia y mediodía guardados, el histórico parseado una vez); lo que llega al arrancar se junta en una pasada (300 ms) y cada minuto solo se ponen al día las cuentas atrás, con el motor entero al pasar un hito o cada 10 min. Service worker (página por red con 4 s de margen, módulos con huella guardados), iconos de 192, 512 y maskable. Sin blur ni backdrop-filter, content-visibility en las filas y reducir movimiento en toda la app.' },
+    ],
+  },
   {
     v: '0.7.2b', f: '2026-11-10', h: '21:44', t: 'El aviso de inercia, sin repetir',
     cosas: [

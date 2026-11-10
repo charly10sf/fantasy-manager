@@ -3,7 +3,7 @@
    quién baja, lo que has ganado con tus compras, cómo se mueve cada rival, la jornada, los parones y la
    lista de lo que toca hacer ahora. Todo con números que se pueden comprobar. */
 import { paronLejos, cholloParon } from './operaciones.js';
-import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
+import { num, clamp, DIA, HORA, MIN, diaDe, otroDia, mediodia, masDias, eur, pct, dura, cuando, antesDe, elDia, POS, norm, esDeFutbol, horaDe as horaReloj } from './util.js';
 
 // parones de selecciones conocidos de la temporada 26/27 (FIFA). Los demás se sacan del calendario.
 const PARONES = [
@@ -135,7 +135,7 @@ export function analizar(D, H, c, extra = {}) {
   };
 
   /* ---------- tendencias de valor ---------- */
-  const cacheT = {};
+  const cacheT = {}, hoyM = diaDe(ahora);
   M.tend = (pid) => {
     if (cacheT[pid]) return cacheT[pid];
     // el histórico de la app (un valor por cada día que se abrió) y el de LaLiga (el de la ficha, sin huecos) juntos,
@@ -153,7 +153,7 @@ export function analizar(D, H, c, extra = {}) {
     // el valor de hace n días, solo si hay un dato de esos días (con margen): con un histórico que acaba en agosto (uno
     // que se fue de LaLiga), «hace 1 día» era el de agosto y salía subiendo 1,2 M hoy (Arriaga, aviso de Domy, 8 nov)
     const hace = (dias, margen) => {
-      const objetivo = otroDia(diaDe(ahora), -dias), minimo = otroDia(diaDe(ahora), -dias - margen);
+      const objetivo = otroDia(hoyM, -dias), minimo = otroDia(hoyM, -dias - margen);
       let mejor = null;
       for (const [d, v] of s) if (d <= objetivo) mejor = d >= minimo ? v : null;
       return mejor;
@@ -165,26 +165,37 @@ export function analizar(D, H, c, extra = {}) {
     const p1 = v1 ? (valor / v1 - 1) * 100 : ff.p1 != null ? ff.p1 : null;
     const d7 = v7 ? valor - v7 : ff.d7 != null ? ff.d7 : null;
     const p7 = v7 ? (valor / v7 - 1) * 100 : ff.p7 != null ? ff.p7 : null;
-    const serie = s.map(([d, v]) => [Date.parse(d + 'T12:00:00'), v]);
+    const serie = s.map(([d, v]) => [mediodia(d), v]);
     // lo que ha subido cada uno de los últimos días y, si lleva 2 o más días subiendo (más de un 0,4 % cada uno), el
     // ritmo de esos días (como mucho los 3 últimos, rebajado un 10 %). La de 7 días lleva dentro los días de bajada
     // de antes: con el que empezó a subir hace 2 o 3 días decía «baja» y lo dejaba fuera (0.7n, el caso De Jong).
     // `p7e` y `diaE` son la tendencia de la semana y la subida diaria con eso en cuenta
-    const sub = valor ? subidasDe(serie, valor) : [];
+    const ult9 = ultimosDias(s, valor);
+    const sub = valor ? subidasDe(ult9) : [];
     let racha = 0; for (let i = sub.length - 1; i >= 0 && sub[i] > 0.004; i--) racha++;
     const rRec = racha >= 2 ? (sub.slice(-Math.min(racha, 3)).reduce((a, x) => a + x, 0) / Math.min(racha, 3)) * 0.9 : null;
     const p7e = rRec != null ? Math.max(p7 != null ? p7 : -Infinity, rRec * 7 * 100) : p7;
     const diaE = rRec != null ? Math.max(d7 != null ? d7 / 7 : -Infinity, valor * rRec) : null;
-    return (cacheT[pid] = { d1, p1, d7, p7, p7e, diaE, sub, racha, rRec, d30: v30 ? valor - v30 : null, serie });
+    return (cacheT[pid] = { d1, p1, d7, p7, p7e, diaE, sub, racha, rRec, d30: v30 ? valor - v30 : null, serie, dias: s, ult9 });
   };
   /** al llegar el histórico de LaLiga de un jugador (al abrir su ficha), que su tendencia se vuelva a calcular con él */
   M.olvidarTend = (pid) => { delete cacheT[pid]; };
   // lo que ha subido cada uno de los últimos días (en tanto por uno), del más viejo al de hoy (con el valor de ahora)
-  function subidasDe(serie, valor) {
+  // los 9 últimos días con valor (el de hoy, el que hay ahora), del más viejo al de hoy. Una vez por jugador para la
+  // tendencia y la inercia, con los días tal cual: pasar cada uno a hora y de vuelta a día era lo que más pesaba de la
+  // pasada (revisión total, M7)
+  function ultimosDias(dias, valor) {
+    const L = dias || [];
+    // (el histórico va por días y en orden: basta con la cola; si no, entero)
+    let enOrden = true;
+    for (let i = 1; i < L.length && enOrden; i++) if (!(L[i - 1][0] < L[i][0])) enOrden = false;
     const porDia = new Map();
-    for (const [ts, x] of serie || []) if (x) porDia.set(diaDe(ts), x);
-    porDia.set(diaDe(ahora), valor);
-    const d = [...porDia.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-8).map(([, x]) => x);
+    for (const [d, x] of enOrden && L.length > 20 ? L.slice(-20) : L) if (x) porDia.set(d, x);
+    porDia.set(hoyM, valor);
+    return [...porDia.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-9);
+  }
+  function subidasDe(ult9) {
+    const d = ult9.slice(-8).map(([, x]) => x);
     const r = [];
     for (let i = 1; i < d.length; i++) r.push(d[i] / d[i - 1] - 1);
     return r;
@@ -223,19 +234,16 @@ export function analizar(D, H, c, extra = {}) {
     const j = J(pid), t = M.tend(pid);
     if (!j.valor) return (cacheI[pid] = null);
     // un valor por día (el de hoy, el que hay ahora)
-    const porDia = new Map();
-    for (const [ts, v] of t.serie || []) if (v) porDia.set(diaDe(ts), v);
-    porDia.set(diaDe(ahora), j.valor);
-    const dias = [...porDia.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-9);
+    const dias = t.ult9 || ultimosDias(t.dias, j.valor);
     const R = [], F = [];
     for (let i = 1; i < dias.length; i++) {
-      const gap = Math.round((Date.parse(dias[i][0] + 'T12:00:00') - Date.parse(dias[i - 1][0] + 'T12:00:00')) / DIA);
+      const gap = Math.round((mediodia(dias[i][0]) - mediodia(dias[i - 1][0])) / DIA);
       if (gap < 1 || gap > 3) { R.length = 0; F.length = 0; continue; }
       R.push((dias[i][1] - dias[i - 1][1]) / gap); F.push(dias[i][0]);
     }
     // si hoy aún no se ha guardado el cambio y futbolfantasy lo da, se usa
     const ff = (D.tendencias || {})[pid];
-    if (ff && ff.d1 != null && F[F.length - 1] !== diaDe(ahora)) { R.push(ff.d1); F.push(diaDe(ahora)); }
+    if (ff && ff.d1 != null && F[F.length - 1] !== hoyM) { R.push(ff.d1); F.push(hoyM); }
     if (R.length < 3) return (cacheI[pid] = null);
     const Rs = R.slice(-7), v = j.valor;
     const n = Rs.length, ult = Rs[n - 1], pen = Rs[n - 2];
@@ -362,12 +370,24 @@ export function analizar(D, H, c, extra = {}) {
   /* ---------- jornada, partidos y parones ---------- */
   const porJornada = {};
   for (const p of D.partidos || []) if (p.fecha) (porJornada[p.jornada] ||= []).push(p);
-  // un partido aplazado (más de 6 días después del primero de su jornada) no alarga la jornada: si no, la jornada
-  // seguiría «en juego» semanas y se juntaría con las siguientes (lo avisó Carlos el 25 oct). Va aparte, en «aplazados»
+  // la jornada es su bloque de fechas: los partidos se agrupan cuando entre uno y el siguiente hay 3 días o menos, y
+  // manda el grupo con más partidos. Lo de antes del bloque va a «adelantados» y lo de después a «aplazados», y
+  // ninguno alarga la jornada ni mueve su inicio (ni el cierre de cláusulas, que cuelga de él). Antes se tomaba el
+  // primer partido como inicio: con un adelantado, el bloque entero pasaba a aplazados y el cierre caía días antes
+  // (revisión total, M6). Un aplazado tampoco deja la jornada «en juego» semanas (lo avisó Carlos el 25 oct)
+  const bloqueDe = (ps) => {
+    const o = [...ps].sort((a, b) => a.fecha - b.fecha), grupos = [[o[0]]];
+    for (let i = 1; i < o.length; i++) {
+      if (o[i].fecha - o[i - 1].fecha > 3 * DIA) grupos.push([]);
+      grupos[grupos.length - 1].push(o[i]);
+    }
+    let k = 0;
+    for (let i = 1; i < grupos.length; i++) if (grupos[i].length > grupos[k].length) k = i;
+    return { bloque: grupos[k], antes: grupos.slice(0, k).flat(), despues: grupos.slice(k + 1).flat() };
+  };
   const jornadas = Object.entries(porJornada).map(([n, ps]) => {
-    const ini = Math.min(...ps.map((p) => p.fecha));
-    const normales = ps.filter((p) => p.fecha - ini <= 6 * DIA), aplazados = ps.filter((p) => p.fecha - ini > 6 * DIA);
-    return { n: +n, ini, fin: Math.max(...normales.map((p) => p.fecha)) + 2 * HORA, partidos: ps, aplazados };
+    const { bloque, antes, despues } = bloqueDe(ps);
+    return { n: +n, ini: bloque[0].fecha, fin: bloque[bloque.length - 1].fecha + 2 * HORA, partidos: ps, adelantados: antes, aplazados: despues };
   }).sort((a, b) => a.ini - b.ini);
   M.jornadas = jornadas;
   // si dos se solapan (una jornada entre semana pegada a otra), manda la última que ha empezado
@@ -2028,6 +2048,24 @@ export function analizar(D, H, c, extra = {}) {
   };
 
   M.acciones = acciones(D, M, c);
+  // el próximo momento en que algo cambia solo por la hora (se abre una cláusula, cierra el mercado, empieza o acaba un
+  // partido, una jornada, un cierre de cláusulas o el parón, o cambia el día): el refresco de cada minuto de app.js solo
+  // rehace el motor al pasar por aquí; entre medias pone al día las cuentas atrás (revisión total, M7)
+  {
+    let h = Infinity;
+    const mira = (t) => { if (t && t > ahora && t < h) h = t; };
+    for (const v of M.vedas) { mira(v.ini); mira(v.fin); }
+    for (const jo of jornadas) { mira(jo.ini); mira(jo.fin); for (const p of jo.partidos) { mira(p.fecha); mira(p.fecha + 2 * HORA); } }
+    for (const x of M.mias || []) mira(x.protegidoHasta);
+    for (const x of M.clausulas || []) mira(x.protegidoHasta);
+    mira(M.cierreMercado);
+    for (const m of M.mercado || []) mira(m.cierra);
+    if (M.paron) { mira(M.paron.ini); mira(M.paron.fin); }
+    let t = Math.ceil(ahora / HORA) * HORA;
+    for (let i = 0; i < 26 && diaDe(t) === hoyM; i++) t += HORA;
+    mira(t);
+    M.proximoHito = h;
+  }
   return M;
 }
 

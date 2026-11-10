@@ -52,7 +52,19 @@ export const foto = () => {
   if (!D || typeof D !== 'object' || Array.isArray(D)) return null;
   return (+D.esquema || 1) > ESQUEMA ? null : D;
 };
-export const historico = () => LS.get(K('hist'), { v: {}, eq: {}, yo: [], mov: [] });
+/* el histórico (cerca de 1 MB con 60 días) se lee de localStorage una vez y se queda en memoria: antes se volvía a leer y
+   parsear en cada pasada del motor (revisión total, M7). Lo que se guarda es este mismo objeto, así que no se desfasan;
+   si otra pestaña lo cambia o se borra, se vuelve a leer */
+let histM = null;
+export const historico = () => {
+  const k = K('hist');
+  if (histM && histM.k === k) return histM.H;
+  const H = LS.get(k, { v: {}, eq: {}, yo: [], mov: [] });
+  histM = { k, H };
+  return H;
+};
+const guardarHist = (H) => { histM = { k: K('hist'), H }; return LS.set(K('hist'), H); };
+try { window.addEventListener('storage', (e) => { if (!e.key || /^fm-hist(-|$)/.test(e.key)) histM = null; }); } catch (e) { /* sin ventana */ }
 
 /* ---------- el historial de movimientos de la liga, guardado aparte (para el dinero de los rivales) ---------- */
 const claveAct = (a) => a.id || `${a.t}|${a.tipo}|${a.pid}|${a.quienId}|${a.importe}`;
@@ -103,7 +115,7 @@ export async function actualizar(alPaso = () => {}, carga = nuevaCarga()) {
     const { D, H } = demo();
     CD.poner(D, carasDemo());
     const h = historico();
-    if (!Object.keys(h.v || {}).length) LS.set(K('hist'), H);
+    if (!Object.keys(h.v || {}).length) guardarHist(H);
     return guardarFoto(D, null);
   }
   let c = cfg();
@@ -526,12 +538,12 @@ function guardarFoto(D, viejo = foto()) {
     H.mov = H.mov.filter((m) => D.t - m.t < (m.tipo === 'blinda' ? 300 : 45) * DIA).slice(-900);
   }
   D.esquema = ESQUEMA;
-  const hBien = LS.set(K('hist'), H);
+  const hBien = guardarHist(H);
   if (!LS.set(K('datos'), D) || !hBien) {
     // sin sitio: se recorta el histórico de valores a 30 días (y luego a 14) y se vuelve a probar
     for (const dias of [30, 14]) {
       for (const s of Object.values(H.v)) if (s.length > dias) s.splice(0, s.length - dias);
-      if (LS.set(K('hist'), H) && LS.set(K('datos'), D)) break;
+      if (guardarHist(H) && LS.set(K('datos'), D)) break;
     }
   }
   return D;
@@ -542,6 +554,7 @@ const DE_LA_CUENTA = ['acthist', 'calib', 'chat', 'chats-viejos', 'datos', 'det'
 // para hacer sitio con el almacenamiento lleno (util.js, A8): qué es de cada liga y cuál es la de ahora
 fijarSitio({ sufijo: () => K(''), deLiga: DE_LA_CUENTA });
 const borrarClaves = (lista) => {
+  histM = null;
   let ks = [];
   try { ks = Object.keys(localStorage); } catch (e) { return; }
   const pref = lista.map((k) => `fm-${k}`);

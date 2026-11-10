@@ -1,5 +1,5 @@
 /* Piezas que se repiten en todas las pantallas: la cara del jugador, su fila, las pastillas de cláusula y estado. */
-import { esc, eur, pct, dura, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
+import { esc, eur, pct, dura, cuenta, POS, iniciales, estadoDe, icono, clase, cuando, norm, esWebFantasy } from './util.js';
 import { enApp } from './puente.js';
 import { mini } from './graficos.js';
 import { topConAnuncio, POR_JORNADA, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
@@ -103,7 +103,7 @@ export function clausulaPill(f) {
   if (f.abierta) return `<span class="pill abierta">${icono('abierto')}${eur(f.clausula)} abierta</span>`;
   if (f.escudo) return `<span class="pill pronto">${icono('escudo')}Blindado · ${cuando(f.escudo).replace(/^hoy /, '')}</span>`;
   const pronto = f.abreEn < 24 * 3600e3;
-  return `<span class="pill ${pronto ? 'pronto' : ''}">${icono('candado')}${eur(f.clausula)} · ${pronto ? cuando(f.protegidoHasta).replace(/^hoy /, '') : dura(f.abreEn)}</span>`;
+  return `<span class="pill ${pronto ? 'pronto' : ''}">${icono('candado')}${eur(f.clausula)} · ${pronto ? cuando(f.protegidoHasta).replace(/^hoy /, '') : cuenta(f.protegidoHasta)}</span>`;
 }
 
 export function delta(t, { largo = false } = {}) {

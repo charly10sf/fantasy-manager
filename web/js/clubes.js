@@ -2,7 +2,7 @@
    su once probable en el campo, las bajas, sus partidos, su plantilla con lo que vale cada jugador y de quién es en
    tu liga, y sus noticias. Sale todo de lo que la app ya tiene (LaLiga, futbolfantasy, Understat, SofaScore y Google
    Noticias); al abrir un club se piden sus titulares (noticiasClub en externas.js). */
-import { esc, eur, icono, cuando, dura, num, POS_PLURAL, norm, horaDe, pct, clase } from './util.js';
+import { esc, eur, icono, cuando, dura, cuenta, num, POS_PLURAL, norm, horaDe, pct, clase } from './util.js';
 import { ava, posTag, filaJugador, nada, rachaHTML, h2hHTML, estadoPill, filaNoticia, nivelCls, estiloClub, camisetaClub, enCasaDe, ladoIco, cromo } from './comunes.js';
 import { escudo, duenoDe, onceDeEquipo, ptsCls, tagDe, canchaHTML, once11 } from './directo.js';
 
@@ -145,7 +145,7 @@ function proximoHTML(S, id) {
   return `<div class="club-fx">
     <div class="fx-t">${p.jornada ? `Jornada ${p.jornada}` : 'Próximo partido'}${c.nivel ? `<span class="niv ${nivelCls(c.nivel)}">rival ${esc(c.nivel === 'media' ? 'de nivel medio' : c.nivel)}</span>` : ''}</div>
     <div class="fx-m">${lado(loc)}
-      <div class="fx-c">${yaJuega ? '<b class="vivo">En juego</b>' : `<b>${p.fecha ? horaDe(p.fecha) : '–'}</b><small>${esc(cuando(p.fecha, { hora: false }))}${p.fecha > ahora ? `, en ${dura(p.fecha - ahora)}` : ''}</small>`}</div>
+      <div class="fx-c">${yaJuega ? '<b class="vivo">En juego</b>' : `<b>${p.fecha ? horaDe(p.fecha) : '–'}</b><small>${esc(cuando(p.fecha, { hora: false }))}${p.fecha > ahora ? `, en ${cuenta(p.fecha)}` : ''}</small>`}</div>
       ${lado(vis)}</div>
     ${h2 && h2.length ? `<div class="fx-h">Las últimas veces contra el ${esc(p.rival)} ${h2hHTML(h2, p.rival)}</div>` : ''}
     ${otras.length ? `<p class="cp-rot">${icono('cambio')}Juega ${esc(otras.join(' y '))}: puede rotar.</p>` : ''}
