@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/flick-hemos-gestionado-rodri-todos-minutos-jugado-no-20261107_3470798.html": 1794056786000,
    "AS|https://as.com/futbol/primera/matarazzo-es-una-gran-oportunidad-para-rotar-jugadores-que-traigan-piernas-frescas-f202611-n/": 1794057728000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248286/flick-llega-metropolitano-dos-refuerzos-incognita-once.html": 1794059529000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/convocatoria-betis-partido-elche_0_2008443445.html": 1794060273000,
@@ -2000,7 +1999,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000,
    "SPORT|136284333": 1794309130000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000,
-   "SPORT|136287679": 1794311497000
+   "SPORT|136287679": 1794311497000,
+   "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000
   },
   "hechos": [
    {
@@ -2370,7 +2370,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -3310,17 +3310,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 36,
+   "clasificar": 37,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 179698,
-  "salida": 13727,
+  "entrada": 181619,
+  "salida": 13842,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.268482,
+  "dolares": 0.268732,
   "reservado": 0
  },
  "recientes": {
@@ -7279,13 +7279,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1143,
+   "ok": 1144,
    "fallos": 0,
-   "ejecuciones": 761,
+   "ejecuciones": 762,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T13:06:14.604Z"
+   "ultima": "2026-11-10T13:11:14.297Z"
   }
  },
  "ptsDirecto": {},
@@ -7302,15 +7302,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:06:19.893Z"
+   "ultimaBien": "2026-11-10T13:11:20.642Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:06:19.893Z"
+   "ultimaBien": "2026-11-10T13:11:20.642Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:06:19.893Z"
+   "ultimaBien": "2026-11-10T13:11:20.642Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7318,11 +7318,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:06:19.893Z"
+   "ultimaBien": "2026-11-10T13:11:20.642Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:06:19.893Z"
+   "ultimaBien": "2026-11-10T13:11:20.642Z"
   }
  },
  "avisos": [
