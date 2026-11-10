@@ -1994,7 +1994,9 @@
    "SPORT|136272513": 1794295666000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261110/1004249327/dos-requisitos-obligatorios-oviedo-fichar-raul.html": 1794299023000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/10/lalcudia-de-crespins-remonta-ante-el-atletico-chella-1-2-y-se-lleva-un-duelo-directo-por-el-liderato-radio-xativa/": 1794302528000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/09-nov-2026-partidazo-cope-20261110_3471816.html": 1794271800000
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/09-nov-2026-partidazo-cope-20261110_3471816.html": 1794271800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249354/cucurella-resuelve-duda-le-ayuda-defensa-vinicius-diomande.html": 1794304800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html": 1794304285000
   },
   "hechos": [
    {
@@ -2428,11 +2430,24 @@
      100,
      18
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794304285000,
+    "id": "2713",
+    "que": "molestias",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Ionut Radu se queda en Vigo por molestias en el hombro",
+    "motivo": "molestias en el hombro derecho",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3338,7 +3353,10 @@
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-huelga-maquinistas-recomienda-usar-otras-alternativas-transporte-20261110085547.html": 1794297347000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
    "Europa Press|https://www.europapress.es/nacional/noticia-tellado-denuncia-huelga-electoral-sindicatos-contra-pp-verdadero-partido-currantes-20261110103158.html": 1794303118000,
-   "SPORT|136277062": 1794300824000
+   "SPORT|136277062": 1794300824000,
+   "ABC|https://www.abc.es/deportes/futbol/pamplona-eibar-horario-canal-television-ver-online-20261110104442-nt.html": 1794304416000,
+   "ABC|https://www.abc.es/deportes/futbol/amorebieta-logrones-horario-canal-television-ver-online-20261110104938-nt.html": 1794304397000,
+   "ABC|https://www.abc.es/deportes/futbol/mijas-lagunas-real-jaen-horario-canal-television-20261110105244-nt.html": 1794304365000
   },
   "hechos": [
    {
@@ -3360,7 +3378,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
   "espera": {}
@@ -3368,17 +3386,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 19,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 115287,
-  "salida": 9387,
+  "entrada": 119733,
+  "salida": 10598,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.199417,
+  "dolares": 0.200467,
   "reservado": 0
  },
  "recientes": {
@@ -7333,13 +7351,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1105,
+   "ok": 1106,
    "fallos": 0,
-   "ejecuciones": 723,
+   "ejecuciones": 724,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T09:56:15.290Z"
+   "ultima": "2026-11-10T10:01:13.334Z"
   }
  },
  "ptsDirecto": {},
@@ -7356,15 +7374,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:56:22.463Z"
+   "ultimaBien": "2026-11-10T10:01:25.741Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:56:22.463Z"
+   "ultimaBien": "2026-11-10T10:01:25.741Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:56:22.463Z"
+   "ultimaBien": "2026-11-10T10:01:25.741Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7372,11 +7390,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:56:22.463Z"
+   "ultimaBien": "2026-11-10T10:01:25.741Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:56:22.463Z"
+   "ultimaBien": "2026-11-10T10:01:25.741Z"
   }
  },
  "avisos": [
