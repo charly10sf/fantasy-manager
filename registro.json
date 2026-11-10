@@ -3360,7 +3360,9 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-tellado-denuncia-huelga-electoral-sindicatos-contra-pp-verdadero-partido-currantes-20261110103158.html": 1794303374757
+  }
  },
  "ia": {
   "dia": "2026-11-10",
@@ -7330,13 +7332,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1100,
+   "ok": 1101,
    "fallos": 0,
-   "ejecuciones": 718,
+   "ejecuciones": 719,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T09:31:13.117Z"
+   "ultima": "2026-11-10T09:36:14.757Z"
   }
  },
  "ptsDirecto": {},
@@ -7353,15 +7355,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:31:15.898Z"
+   "ultimaBien": "2026-11-10T09:36:18.229Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:31:15.898Z"
+   "ultimaBien": "2026-11-10T09:36:18.229Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:31:15.898Z"
+   "ultimaBien": "2026-11-10T09:36:18.229Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7369,11 +7371,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:31:15.898Z"
+   "ultimaBien": "2026-11-10T09:36:18.229Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T09:31:15.898Z"
+   "ultimaBien": "2026-11-10T09:36:18.229Z"
   }
  },
  "avisos": [
