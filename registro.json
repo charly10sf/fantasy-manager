@@ -1803,10 +1803,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/": 1794048613000,
    "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/": 1794049173000,
    "AS|https://as.com/futbol/primera/el-atleti-con-todo-salvo-el-cuti-f202611-n/": 1794050162000,
-   "SPORT|136195361": 1794048547000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261107/1004248236/barca-no-recupera-efectivos-visita-madrid-cff.html": 1794051959000,
    "SPORT|136192275": 1794049544000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/atletico-de-madrid/20261107/11678726/simeone-mas-complejo-defender-barca-raphinha-nueve-lewandowski.html": 1794052790000,
@@ -1994,21 +1992,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249354/cucurella-resuelve-duda-le-ayuda-defensa-vinicius-diomande.html": 1794304800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html": 1794304285000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249362/entiendo-alguien-quiera-vienen-barca-madrid-formas-molestaron.html": 1794305948000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000,
+   "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000
   },
   "hechos": [
-   {
-    "guid": "Cadena SER|https://cadenaser.com/video/galicia/2026/11/07/espanyol-depor-jornada-12-laliga-ea-sports-en-directo-en-carrusel-deportivo-coruna-radio-coruna/",
-    "medio": "Cadena SER",
-    "t": 1794048613000,
-    "id": "3108",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aubameyang regresa al equipo para visitar al Espanyol",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/eric-y-christensen-luz-verde-para-el-atletico-f202611-n/",
     "medio": "AS",
@@ -2413,7 +2400,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -3354,17 +3341,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 123764,
-  "salida": 10981,
+  "entrada": 125749,
+  "salida": 11102,
   "cacheLee": 5806,
   "cacheEscribe": 5806,
-  "dolares": 0.201062,
+  "dolares": 0.201321,
   "reservado": 0
  },
  "recientes": {
@@ -7319,13 +7306,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1115,
+   "ok": 1116,
    "fallos": 0,
-   "ejecuciones": 733,
+   "ejecuciones": 734,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T10:46:15.392Z"
+   "ultima": "2026-11-10T10:51:14.489Z"
   }
  },
  "ptsDirecto": {},
@@ -7342,15 +7329,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:46:20.998Z"
+   "ultimaBien": "2026-11-10T10:51:20.692Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:46:20.998Z"
+   "ultimaBien": "2026-11-10T10:51:20.692Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:46:20.998Z"
+   "ultimaBien": "2026-11-10T10:51:20.692Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7358,11 +7345,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:46:20.998Z"
+   "ultimaBien": "2026-11-10T10:51:20.692Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T10:46:20.998Z"
+   "ultimaBien": "2026-11-10T10:51:20.692Z"
   }
  },
  "avisos": [
