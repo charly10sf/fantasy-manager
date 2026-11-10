@@ -379,7 +379,7 @@ export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === '
 export function candado(clave, { como = null } = {}) {
   // «como»: otra cara para la misma llave (el radar se abre con la de la inercia)
   const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', ''];
-  // en la de Google Play se abre viendo anuncios (las de los rivales, con 2 y unas veces por jornada); en la de la liga, aún no
+  // en la de Google Play se abre viendo anuncios (las de los rivales, con 2 y unas veces por jornada); en la web y la de la liga, no
   return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${colaCandado(clave)}</span></span></button>`;
 }
 /** dónde se abren las funciones top cuando aquí no se puede (la web y la app de la liga, sin anuncios) */

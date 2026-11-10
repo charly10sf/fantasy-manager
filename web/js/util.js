@@ -358,8 +358,7 @@ export const LOGO_D = {
 export const LOGO = `<svg class="logo" viewBox="6 10 188 188" aria-hidden="true"><path d="${LOGO_D.camiseta}" fill="#EE1C3C"/><path d="${LOGO_D.punos}" fill="#fff"/><path d="${LOGO_D.cuello}" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/><path d="${LOGO_D.letras}" fill="#fff"/></svg>`;
 export const LOGO_P = `<svg class="logo" viewBox="6 10 188 188" aria-hidden="true"><path d="${LOGO_D.camiseta}" fill="#EE1C3C"/><path d="${LOGO_D.dorsal}" fill="#fff"/></svg>`;
 
-/* Etiqueta «Próximamente en Google Play» con el triángulo de Play dibujado a mano (no es el botón oficial de Google). Sin enlace hasta que la app esté en la tienda. */
-export const PLAY_SVG = '<svg class="play-ic" viewBox="0 0 24 24" aria-hidden="true"><path fill="#00a0ff" d="M3.6 1.6 13.4 12 3.6 22.4c-.4-.2-.6-.6-.6-1.1V2.7c0-.5.2-.9.6-1.1z"/><path fill="#00d95f" d="M3.6 1.6c.3-.2.8-.2 1.2.1L16.4 8.4 13.4 12z"/><path fill="#ff3a44" d="M3.6 22.4 13.4 12l3 3.6L4.8 22.3c-.4.3-.9.3-1.2.1z"/><path fill="#ffd500" d="m16.4 8.4 3.9 2.2c.9.5.9 1.8 0 2.4l-3.9 2.2-3-3.6z"/></svg>';
-export const proxPlay = () => `<span class="play-pronto">${PLAY_SVG}<span><small>Próximamente en</small><b>Google Play</b></span></span>`;
-/* la misma etiqueta, grande, para la cabecera de la entrada (solo en la web) */
-export const proxPlayHero = () => `<div class="play-hero" role="note">${PLAY_SVG}<span><small>Próximamente en</small><b>Google Play</b></span></div>`;
+/* Google Play (desde la 0.7.1h, con la ficha aprobada). El distintivo es el oficial de Google (img/google-play.png), tal
+   cual: sus normas no dejan cambiarle colores ni letras. La imagen trae su margen transparente alrededor. */
+export const PLAY_URL = 'https://play.google.com/store/apps/details?id=es.fantasymanager.app';
+export const botonPlay = (cls = '') => `<a class="play-badge${cls ? ` ${cls}` : ''}" href="${PLAY_URL}" target="_blank" rel="noopener"><img src="img/google-play.png" alt="Disponible en Google Play" width="646" height="250"></a>`;
