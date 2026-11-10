@@ -3307,7 +3307,8 @@
    "SPORT|136266190": 1794331066000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335197000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mueven-huelga-dia-12-23-aprobacion-decreto-dar-margen-negociacion-20261110184225.html": 1794332545000,
-   "SPORT|136303483": 1794335556000
+   "SPORT|136303483": 1794335556000,
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/10/la-federacion-tinerfena-de-futbol-aplaza-los-encuentros-oficiales-de-este-martes-y-miercoles-en-la-isla-de-tenerife-radio-club-tenerife/": 1794339274000
   },
   "hechos": [
    {
@@ -3329,7 +3330,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 23,
+   "n": 24,
    "fallos": 0
   },
   "espera": {}
@@ -3337,17 +3338,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 73,
+   "clasificar": 74,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 254434,
-  "salida": 26627,
+  "entrada": 256082,
+  "salida": 26713,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.282407,
+  "dolares": 0.282615,
   "reservado": 0
  },
  "recientes": {
@@ -7306,13 +7307,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1222,
+   "ok": 1223,
    "fallos": 0,
-   "ejecuciones": 840,
+   "ejecuciones": 841,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T19:36:15.528Z"
+   "ultima": "2026-11-10T19:41:13.539Z"
   }
  },
  "ptsDirecto": {},
@@ -7329,15 +7330,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:36:20.620Z"
+   "ultimaBien": "2026-11-10T19:41:18.903Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:36:20.620Z"
+   "ultimaBien": "2026-11-10T19:41:18.903Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:36:20.620Z"
+   "ultimaBien": "2026-11-10T19:41:18.903Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7345,11 +7346,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:36:20.620Z"
+   "ultimaBien": "2026-11-10T19:41:18.903Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T19:36:20.620Z"
+   "ultimaBien": "2026-11-10T19:41:18.903Z"
   }
  },
  "avisos": [
