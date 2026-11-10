@@ -1810,7 +1810,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/malaga/2026/11/07/larrubia-funes-final.html": 1794071289000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261107/1004248350/espanyol-merece-debut-eder-sarabia.html": 1794071621000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-espanyol-deportivo-coruna-primera-division-jornada-doce-07-20261107_3470813.html": 1794073014000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261107/1004248360/fifa-mantiene-diez-partidos-sancion-paredes.html": 1794073202000,
@@ -7270,13 +7269,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1192,
+   "ok": 1193,
    "fallos": 0,
-   "ejecuciones": 810,
+   "ejecuciones": 811,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T17:06:17.194Z"
+   "ultima": "2026-11-10T17:11:15.363Z"
   }
  },
  "ptsDirecto": {},
@@ -7293,15 +7292,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:06:22.438Z"
+   "ultimaBien": "2026-11-10T17:11:19.355Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:06:22.438Z"
+   "ultimaBien": "2026-11-10T17:11:19.355Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:06:22.438Z"
+   "ultimaBien": "2026-11-10T17:11:19.355Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7309,11 +7308,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:06:22.438Z"
+   "ultimaBien": "2026-11-10T17:11:19.355Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T17:06:22.438Z"
+   "ultimaBien": "2026-11-10T17:11:19.355Z"
   }
  },
  "avisos": [
