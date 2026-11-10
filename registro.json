@@ -2000,7 +2000,8 @@
    "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000,
    "SPORT|136277366": 1794304087000,
    "SPORT|136280206": 1794304897000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000,
+   "SPORT|136281363": 1794305884000
   },
   "hechos": [
    {
@@ -2383,7 +2384,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3323,17 +3324,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 159361,
-  "salida": 12059,
+  "entrada": 161408,
+  "salida": 12151,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.265613,
+  "dolares": 0.265864,
   "reservado": 0
  },
  "recientes": {
@@ -7292,13 +7293,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1122,
+   "ok": 1123,
    "fallos": 0,
-   "ejecuciones": 740,
+   "ejecuciones": 741,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T11:21:13.539Z"
+   "ultima": "2026-11-10T11:26:15.058Z"
   }
  },
  "ptsDirecto": {},
@@ -7315,15 +7316,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:21:19.946Z"
+   "ultimaBien": "2026-11-10T11:26:20.946Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:21:19.946Z"
+   "ultimaBien": "2026-11-10T11:26:20.946Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:21:19.946Z"
+   "ultimaBien": "2026-11-10T11:26:20.946Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7331,11 +7332,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:21:19.946Z"
+   "ultimaBien": "2026-11-10T11:26:20.946Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T11:21:19.946Z"
+   "ultimaBien": "2026-11-10T11:26:20.946Z"
   }
  },
  "avisos": [
