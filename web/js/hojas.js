@@ -101,8 +101,9 @@ export function jornadasPtsHTML(det) {
   const fichas = L.map((s) => {
     const p = s.pts || 0, jugo = s.min > 0 || !!p;
     const tit = s.pts == null ? `J${s.n}: no jugó` : `J${s.n}: ${p} pts${s.min > 0 ? ` · ${s.min} min` : ''}${extra(s) ? ` · ${extra(s)}` : ''}`;
-    const ic = s.gol ? '⚽'.repeat(Math.min(2, s.gol)) : s.asis ? '👟' : s.roja ? '🟥' : '';
-    return `<div class="jt ${nivel(s)}" title="${esc(tit)}"><span class="jt-n">J${s.n}</span><b>${s.pts == null ? '–' : p}</b><small>${jugo ? (s.min > 0 ? `${s.min}'` : '') : 'no jugó'}${ic ? ` <i aria-hidden="true">${ic}</i>` : ''}</small></div>`;
+    // (el balón va en la esquina: junto a los minutos se cortaba) y «no jugó» en dos líneas
+    const ic = s.gol ? '⚽' : s.roja ? '🟥' : '';
+    return `<div class="jt ${nivel(s)}" title="${esc(tit)}">${ic ? `<i class="gol" aria-hidden="true">${ic}</i>` : ''}<span class="jt-n">J${s.n}</span><b>${jugo ? p : '–'}</b>${jugo ? `<small>${s.min > 0 ? `${s.min}'` : ''}</small>` : '<small class="nj">no<br>jugó</small>'}</div>`;
   }).join('');
   return `<div class="jor7"><div class="d7-cab"><span>Cada jornada</span><span class="t2">puntos de las últimas ${L.length}</span></div><div class="jt-fila">${fichas}</div></div>`;
 }

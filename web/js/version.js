@@ -19,7 +19,7 @@ export const NOVEDADES = [
     v: '0.7.2a', f: '2026-11-10', h: '00:00', t: 'Cada jornada, en la ficha',
     cosas: [
       { tipo: 'mejora', d: 'grafica', t: 'El valor y cada día, en una sola tarjeta', x: 'En la ficha de un jugador, la gráfica del valor y las barras de lo que cambia cada día van juntas: los días de las barras salen marcados en la gráfica con una franja, para ver de un vistazo qué parte de la línea es cada barra.' },
-      { tipo: 'mejora', d: 'trofeo', t: 'Los puntos de cada jornada, justo debajo', x: 'Debajo del valor van los puntos de sus últimas 7 jornadas en fichas de color, como las de LaLiga: verde fuerte de 10 en adelante, verde de 6 a 9, amarillo de 2 a 5 y rojo de 1 o menos, con los minutos, un balón si marcó y «no jugó» si no salió. Antes iban mucho más abajo, en otra gráfica de barras.' },
+      { tipo: 'mejora', d: 'trofeo', t: 'Los puntos de cada jornada, justo debajo', x: 'Debajo del valor van los puntos de sus últimas 7 jornadas en fichas de color: verde vivo de 10 en adelante, verde de 6 a 9, amarillo de 2 a 5 y rojo de 1 o menos, con los minutos, un balón si marcó y «no jugó» si no salió. Antes iban mucho más abajo, en otra gráfica de barras.' },
       { tipo: 'arreglo', d: 'dinero', t: 'Lo que cambia cada día, también en los baratos', x: 'En los jugadores que valen poco, «Cada día» salía casi todo a 0 porque iba en millones con dos decimales (a Pedro Díaz, que vale unos 740 mil, le cambia unos cientos o miles de euros al día). Si ningún día llega a 100 mil, ahora va en miles de euros.' },
     ],
   },

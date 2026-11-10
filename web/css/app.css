@@ -848,8 +848,10 @@ body.con-nv { overflow: hidden; }
 .jt b { font: 700 24px/1 var(--cond); color: var(--texto); }
 .jt-n { font: 600 11px 'Barlow'; color: var(--texto2); }
 .jt small { font: 500 11px 'Barlow'; color: var(--apagado); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.jt small i { font-style: normal; font-size: 11px; }
-.jt.top { background: #167a4f; border-color: #167a4f; } .jt.top b, .jt.top .jt-n, .jt.top small { color: #fff; }
+.jt { position: relative; }
+.jt .gol { position: absolute; top: -6px; right: -4px; font-size: 11px; line-height: 1; font-style: normal; }
+.jt small.nj { white-space: normal; overflow: visible; line-height: 1.15; text-align: center; }
+.jt.top { background: rgba(61, 220, 143, 0.2); border: 2px solid #3ddc8f; } .jt.top b { color: #3ddc8f; }
 .jt.bien { background: var(--sube-s); border-color: rgba(47, 209, 143, 0.35); } .jt.bien b { color: var(--sube); }
 .jt.medio { background: var(--oro-s); border-color: rgba(255, 197, 71, 0.3); } .jt.medio b { color: var(--oro); }
 .jt.mal { background: var(--baja-s); border-color: rgba(255, 111, 97, 0.3); } .jt.mal b { color: var(--baja); }
