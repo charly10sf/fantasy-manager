@@ -378,12 +378,12 @@ export const ventasDe = (M, tid) => (M.mercado || []).filter((m) => m.tipo === '
 export function candado(clave, { como = null } = {}) {
   // «como»: otra cara para la misma llave (el radar se abre con la de la inercia)
   const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', ''];
-  // en la de Google Play se abre viendo anuncios (las de los rivales, con 2 y unas veces por jornada); en la de la liga, aún no
+  // en la de Google Play se abre viendo anuncios (las de los rivales, con 2 y unas veces por jornada); en la web y la de la liga, no
   return `<button class="bloq" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${esc(t)}</b><span>${esc(x)}${colaCandado(clave)}</span></span></button>`;
 }
 /** lo que dice un candado de cómo se abre */
 export function colaCandado(clave) {
-  if (!topConAnuncio()) return ' Muy pronto estará disponible, con la salida a Google Play.';
+  if (!topConAnuncio()) return ' Se abre en la app de Google Play, gratis, viendo un anuncio corto.';
   if (!POR_JORNADA.includes(clave)) return ' Tócalo y ábrela hasta medianoche viendo un anuncio corto.';
   const q = usosQuedan(clave), n = usosPorJornada();
   if (!q) return ` Ya la has abierto las ${n} veces de esta jornada: vuelve en la siguiente.`;
@@ -402,7 +402,7 @@ export function candadosJuntos(lista) {
   const cs = lista.filter(Boolean).map((c) => (Array.isArray(c) ? c : [c])).filter(([c], i, a) => a.findIndex(([d]) => d === c) === i);
   if (!cs.length) return '';
   if (cs.length === 1) return candado(cs[0][0], { como: cs[0][1] || null });
-  const cola = topConAnuncio() ? 'Toca una para ver cómo abrirla viendo un anuncio corto.' : 'Muy pronto, con la salida a Google Play.';
+  const cola = topConAnuncio() ? 'Toca una para ver cómo abrirla viendo un anuncio corto.' : 'Se abren en la app de Google Play, gratis, viendo un anuncio corto.';
   return `<div class="bloq-g"><div class="bloq-g-cab"><span class="bloq-ic">${icono('candado')}</span><span class="bloq-c"><b>${cs.length} funciones top</b><span>${cola}</span></span></div>
     ${cs.map(([clave, como]) => { const [t, x] = BLOQUEO[como || clave] || BLOQUEO[clave] || ['Función top', '']; return `<button class="bloq-i" data-accion="bloqueada" data-clave="${esc(clave)}"${como ? ` data-como="${esc(como)}"` : ''}><b>${esc(t)}</b><span>${esc(x)}</span></button>`; }).join('')}</div>`;
 }

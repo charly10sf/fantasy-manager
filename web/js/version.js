@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.1g';
+export const VERSION = '0.7.1h';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -15,6 +15,14 @@ export const VERSION = '0.7.1g';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.1h', f: '2026-11-10', h: '00:00', t: 'Ya en Google Play',
+    cosas: [
+      { tipo: 'nuevo', d: 'movil', t: 'Fantasy Manager, en Google Play', x: 'La app de Android ya está en Google Play. En la web, los botones de descargar llevan a la tienda y la guía de instalar es la de cualquier app: buscarla e instalar.' },
+      { para: 'web', tipo: 'mejora', d: 'candado', t: 'Las funciones top, en la app de Google Play', x: 'Los candados de las funciones top dicen dónde se abren: en la app de Google Play, gratis, viendo un anuncio corto.', menor: true },
+      { para: 'dueño', tipo: 'mejora', d: 'bandera', t: 'Fuera el aviso de «en pruebas»', x: 'La banda de arriba «App en desarrollo y en pruebas…» ya no sale. Para avisar de un fallo sigue el botón de Ajustes y la bienvenida.', menor: true },
+    ],
+  },
   {
     v: '0.7.1g', f: '2026-11-10', h: '20:26', t: 'Retoques de pantalla',
     cosas: [
