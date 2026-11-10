@@ -1999,7 +1999,8 @@
    "SPORT|136284333": 1794309130000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000,
    "SPORT|136287679": 1794311497000,
-   "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000
+   "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000
   },
   "hechos": [
    {
@@ -2369,7 +2370,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3311,17 +3312,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 181619,
-  "salida": 13842,
+  "entrada": 183657,
+  "salida": 13954,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.268732,
+  "dolares": 0.268992,
   "reservado": 0
  },
  "recientes": {
@@ -7280,13 +7281,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1147,
+   "ok": 1148,
    "fallos": 0,
-   "ejecuciones": 765,
+   "ejecuciones": 766,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T13:26:15.264Z"
+   "ultima": "2026-11-10T13:31:12.925Z"
   }
  },
  "ptsDirecto": {},
@@ -7303,15 +7304,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:26:20.659Z"
+   "ultimaBien": "2026-11-10T13:31:17.448Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:26:20.659Z"
+   "ultimaBien": "2026-11-10T13:31:17.448Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:26:20.659Z"
+   "ultimaBien": "2026-11-10T13:31:17.448Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7319,11 +7320,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:26:20.659Z"
+   "ultimaBien": "2026-11-10T13:31:17.448Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T13:26:20.659Z"
+   "ultimaBien": "2026-11-10T13:31:17.448Z"
   }
  },
  "avisos": [
