@@ -2013,7 +2013,8 @@
    "SPORT|136304134": 1794331165000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/alarma-tchouameni.html": 1794335994000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tchouameni-lesionado-francia-20261110_3472559.html": 1794336427000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tchouameni-lesionado-francia-20261110_3472559.html": 1794336427000,
+   "SPORT|136305317": 1794333273000
   },
   "hechos": [
    {
@@ -2366,7 +2367,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 48
+   "n": 49
   },
   "desde": {
    "67": {
@@ -3288,7 +3289,9 @@
    "SPORT|136301935": 1794328294000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-tavernes-valencia-hora-partido-copa-rey-20261110151517-nt.html": 1794332853000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-mijas-lagunas-real-jaen-copa-rey-20261110151232-nt.html": 1794332785000,
-   "SPORT|136266190": 1794331066000
+   "SPORT|136266190": 1794331066000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335197000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mueven-huelga-dia-12-23-aprobacion-decreto-dar-margen-negociacion-20261110184225.html": 1794332545000
   },
   "hechos": [
    {
@@ -3310,28 +3313,25 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 21,
+   "n": 22,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335474076,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-mueven-huelga-dia-12-23-aprobacion-decreto-dar-margen-negociacion-20261110184225.html": 1794335772806
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 69,
+   "clasificar": 71,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 246301,
-  "salida": 25417,
+  "entrada": 250269,
+  "salida": 26283,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.280989,
+  "dolares": 0.281819,
   "reservado": 0
  },
  "recientes": {
@@ -7290,13 +7290,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1213,
+   "ok": 1214,
    "fallos": 0,
-   "ejecuciones": 831,
+   "ejecuciones": 832,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T18:51:12.965Z"
+   "ultima": "2026-11-10T18:56:12.761Z"
   }
  },
  "ptsDirecto": {},
@@ -7313,15 +7313,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:51:21.332Z"
+   "ultimaBien": "2026-11-10T18:56:20.912Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:51:21.332Z"
+   "ultimaBien": "2026-11-10T18:56:20.912Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:51:21.332Z"
+   "ultimaBien": "2026-11-10T18:56:20.912Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7329,11 +7329,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:51:21.332Z"
+   "ultimaBien": "2026-11-10T18:56:20.912Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:51:21.332Z"
+   "ultimaBien": "2026-11-10T18:56:20.912Z"
   }
  },
  "avisos": [
