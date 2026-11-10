@@ -2009,7 +2009,8 @@
    "SPORT|136280619": 1794330047000,
    "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/": 1794333490000,
    "SPORT|136304092": 1794330880000,
-   "SPORT|136303943": 1794330466000
+   "SPORT|136303943": 1794330466000,
+   "SPORT|136304134": 1794331165000
   },
   "hechos": [
    {
@@ -2362,7 +2363,7 @@
   ],
   "gemini": {
    "dia": "2026-11-10",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -3314,17 +3315,17 @@
  "ia": {
   "dia": "2026-11-10",
   "llamadas": {
-   "clasificar": 65,
+   "clasificar": 66,
    "redactar": 8,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 238409,
-  "salida": 23145,
+  "entrada": 240442,
+  "salida": 23451,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.279064,
+  "dolares": 0.27942,
   "reservado": 0
  },
  "recientes": {
@@ -7283,13 +7284,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1207,
+   "ok": 1208,
    "fallos": 0,
-   "ejecuciones": 825,
+   "ejecuciones": 826,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 424,
-   "ultima": "2026-11-10T18:21:16.950Z"
+   "ultima": "2026-11-10T18:26:17.521Z"
   }
  },
  "ptsDirecto": {},
@@ -7306,15 +7307,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:21:20.870Z"
+   "ultimaBien": "2026-11-10T18:26:25.622Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:21:20.870Z"
+   "ultimaBien": "2026-11-10T18:26:25.622Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:21:20.870Z"
+   "ultimaBien": "2026-11-10T18:26:25.622Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7322,11 +7323,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:21:20.870Z"
+   "ultimaBien": "2026-11-10T18:26:25.622Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T18:21:20.870Z"
+   "ultimaBien": "2026-11-10T18:26:25.622Z"
   }
  },
  "avisos": [
