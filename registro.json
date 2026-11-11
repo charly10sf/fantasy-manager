@@ -3352,7 +3352,8 @@
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-demanda-energia-electrica-cae-97-primeras-horas-huelga-ccoo-20261111071430.html": 1794377670000,
    "SPORT|136315088": 1794379975000,
    "Europa Press|https://www.europapress.es/madrid/noticia-mercamadrid-amanece-normalidad-arranque-agitado-cargas-policiales-contra-piquetes-20261111073438.html": 1794378878000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-cifran-seguimiento-huelga-41-75-700-horas-ven-exito-20261111093630.html": 1794386190000
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-cifran-seguimiento-huelga-41-75-700-horas-ven-exito-20261111093630.html": 1794386190000,
+   "SPORT|136318110": 1794384030000
   },
   "hechos": [
    {
@@ -3374,7 +3375,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
   "espera": {}
@@ -3382,17 +3383,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 140017,
-  "salida": 5681,
+  "entrada": 141776,
+  "salida": 5801,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.266791,
+  "dolares": 0.267027,
   "reservado": 0
  },
  "recientes": {
@@ -7495,13 +7496,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1426,
+   "ok": 1427,
    "fallos": 0,
-   "ejecuciones": 1005,
+   "ejecuciones": 1006,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T09:06:17.033Z"
+   "ultima": "2026-11-11T09:11:14.476Z"
   }
  },
  "ptsDirecto": {},
@@ -7518,15 +7519,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:06:22.709Z"
+   "ultimaBien": "2026-11-11T09:11:21.040Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:06:22.709Z"
+   "ultimaBien": "2026-11-11T09:11:21.040Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:06:22.709Z"
+   "ultimaBien": "2026-11-11T09:11:21.040Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7534,11 +7535,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:06:22.709Z"
+   "ultimaBien": "2026-11-11T09:11:21.040Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:06:22.709Z"
+   "ultimaBien": "2026-11-11T09:11:21.040Z"
   }
  },
  "avisos": [
