@@ -3360,7 +3360,9 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/11/oviedo-guardes-aula-porrino-emparejamientos-copa-balonmano/0003_202611G11P35994.htm": 1794369600000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-denuncian-cargas-agresiones-policia-nacional-contra-varios-piquetes-informativos-20261111070541.html": 1794377141000,
    "SPORT|136311761": 1794373944000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-arranca-huelga-general-vivienda-salarios-primera-presidencia-pedro-sanchez-20261111000049.html": 1794351649000
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-arranca-huelga-general-vivienda-salarios-primera-presidencia-pedro-sanchez-20261111000049.html": 1794351649000,
+   "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380088000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-demanda-energia-electrica-cae-97-primeras-horas-huelga-ccoo-20261111071430.html": 1794377670000
   },
   "hechos": [
    {
@@ -3382,28 +3384,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-demanda-energia-electrica-cae-97-primeras-horas-huelga-ccoo-20261111071430.html": 1794379573941,
-   "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380472872
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 77478,
-  "salida": 3587,
+  "entrada": 79326,
+  "salida": 3748,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.161015,
+  "dolares": 0.16128,
   "reservado": 0
  },
  "recientes": {
@@ -7502,13 +7501,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1401,
+   "ok": 1402,
    "fallos": 0,
-   "ejecuciones": 980,
+   "ejecuciones": 981,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T07:06:12.258Z"
+   "ultima": "2026-11-11T07:11:13.626Z"
   }
  },
  "ptsDirecto": {},
@@ -7525,15 +7524,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:06:14.810Z"
+   "ultimaBien": "2026-11-11T07:11:20.668Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:06:14.810Z"
+   "ultimaBien": "2026-11-11T07:11:20.668Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:06:14.810Z"
+   "ultimaBien": "2026-11-11T07:11:20.668Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7541,11 +7540,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:06:14.810Z"
+   "ultimaBien": "2026-11-11T07:11:20.668Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:06:14.810Z"
+   "ultimaBien": "2026-11-11T07:11:20.668Z"
   }
  },
  "avisos": [
