@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html": 1794130161000,
    "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/": 1794130478000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
@@ -2045,26 +2044,10 @@
    "SPORT|136302778": 1794380445000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/courtois-alaba-xabi-alonso-desvela-ignoro-mensaje-mourinho-bien.html": 1794384337000,
    "SPORT|136314701": 1794382658000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249769/courtois-me-gusta-xabi-alonso-me-gusta-forma-trabajar.html": 1794386756000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249769/courtois-me-gusta-xabi-alonso-me-gusta-forma-trabajar.html": 1794386756000,
+   "SPORT|136316852": 1794385501000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794130161000,
-    "id": "2354",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Eric viaja a Madrid y estaría disponible el domingo",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     25,
-     30,
-     21,
-     11
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/",
     "medio": "AS",
@@ -2419,7 +2402,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3353,7 +3336,10 @@
    "SPORT|136315088": 1794379975000,
    "Europa Press|https://www.europapress.es/madrid/noticia-mercamadrid-amanece-normalidad-arranque-agitado-cargas-policiales-contra-piquetes-20261111073438.html": 1794378878000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-cifran-seguimiento-huelga-41-75-700-horas-ven-exito-20261111093630.html": 1794386190000,
-   "SPORT|136318110": 1794384030000
+   "SPORT|136318110": 1794384030000,
+   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-agencias-inmobiliarias-denuncian-vandalismo-varias-ciudades-antes-huelga-20261111101056.html": 1794388256000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261111/1004249774/betis-estrena-copa-diez-bajas.html": 1794387926000,
+   "Europa Press|https://www.europapress.es/catalunya/noticia-manifestante-herido-leve-atropello-piquete-acceso-tarragona-20261111100218.html": 1794387738000
   },
   "hechos": [
    {
@@ -3375,28 +3361,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/catalunya/noticia-manifestante-herido-leve-atropello-piquete-acceso-tarragona-20261111100218.html": 1794388578019,
-   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-agencias-inmobiliarias-denuncian-vandalismo-varias-ciudades-antes-huelga-20261111101056.html": 1794388578019
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 18,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 141776,
-  "salida": 5801,
+  "entrada": 145868,
+  "salida": 6156,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.267027,
+  "dolares": 0.267614,
   "reservado": 0
  },
  "recientes": {
@@ -7499,13 +7482,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1430,
+   "ok": 1431,
    "fallos": 0,
-   "ejecuciones": 1009,
+   "ejecuciones": 1010,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T09:26:13.009Z"
+   "ultima": "2026-11-11T09:31:12.842Z"
   }
  },
  "ptsDirecto": {},
@@ -7522,15 +7505,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:26:16.825Z"
+   "ultimaBien": "2026-11-11T09:31:20.119Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:26:16.825Z"
+   "ultimaBien": "2026-11-11T09:31:20.119Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:26:16.825Z"
+   "ultimaBien": "2026-11-11T09:31:20.119Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7538,11 +7521,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:26:16.825Z"
+   "ultimaBien": "2026-11-11T09:31:20.119Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:26:16.825Z"
+   "ultimaBien": "2026-11-11T09:31:20.119Z"
   }
  },
  "avisos": [
