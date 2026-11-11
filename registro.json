@@ -3423,7 +3423,9 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/madrid/noticia-mercamadrid-amanece-normalidad-arranque-agitado-cargas-policiales-contra-piquetes-20261111073438.html": 1794385273360
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7541,13 +7543,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1415,
+   "ok": 1416,
    "fallos": 0,
-   "ejecuciones": 994,
+   "ejecuciones": 995,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T08:16:14.572Z"
+   "ultima": "2026-11-11T08:21:13.360Z"
   }
  },
  "ptsDirecto": {},
@@ -7564,15 +7566,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:16:20.852Z"
+   "ultimaBien": "2026-11-11T08:21:16.040Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:16:20.852Z"
+   "ultimaBien": "2026-11-11T08:21:16.040Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:16:20.852Z"
+   "ultimaBien": "2026-11-11T08:21:16.040Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7580,11 +7582,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:16:20.852Z"
+   "ultimaBien": "2026-11-11T08:21:16.040Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:16:20.852Z"
+   "ultimaBien": "2026-11-11T08:21:16.040Z"
   }
  },
  "avisos": [
