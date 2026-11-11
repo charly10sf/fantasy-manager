@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000,
    "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/": 1794141880000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248620/mensaje-vinicius-triunfo-real-madrid-mestalla.html": 1794148200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248652/kubo-regresa-titularidad-rayo-oyarzabal-queda-fuera-convocatoria.html": 1794147246000,
@@ -7467,13 +7466,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1446,
+   "ok": 1447,
    "fallos": 0,
-   "ejecuciones": 1025,
+   "ejecuciones": 1026,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T10:46:13.336Z"
+   "ultima": "2026-11-11T10:51:12.421Z"
   }
  },
  "ptsDirecto": {},
@@ -7490,15 +7489,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:46:16.415Z"
+   "ultimaBien": "2026-11-11T10:51:16.867Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:46:16.415Z"
+   "ultimaBien": "2026-11-11T10:51:16.867Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:46:16.415Z"
+   "ultimaBien": "2026-11-11T10:51:16.867Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7506,11 +7505,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:46:16.415Z"
+   "ultimaBien": "2026-11-11T10:51:16.867Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:46:16.415Z"
+   "ultimaBien": "2026-11-11T10:51:16.867Z"
   }
  },
  "avisos": [
