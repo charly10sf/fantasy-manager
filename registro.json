@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136226921": 1794151993000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000,
    "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
    "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-y-peligra-su-presencia-con-la-seleccion-f202611-n/": 1794157697000,
@@ -3456,7 +3455,9 @@
    "n": 19,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-diaz-reprocha-pp-burlas-sindicatos-traslada-apoyo-trabajadores-huelga-20261111160104.html": 1794411373479
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7569,13 +7570,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1503,
+   "ok": 1504,
    "fallos": 0,
-   "ejecuciones": 1082,
+   "ejecuciones": 1083,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T15:31:15.510Z"
+   "ultima": "2026-11-11T15:36:13.479Z"
   }
  },
  "ptsDirecto": {},
@@ -7592,15 +7593,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:31:22.095Z"
+   "ultimaBien": "2026-11-11T15:36:16.442Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:31:22.095Z"
+   "ultimaBien": "2026-11-11T15:36:16.442Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:31:22.095Z"
+   "ultimaBien": "2026-11-11T15:36:16.442Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7608,11 +7609,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:31:22.095Z"
+   "ultimaBien": "2026-11-11T15:36:16.442Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:31:22.095Z"
+   "ultimaBien": "2026-11-11T15:36:16.442Z"
   }
  },
  "avisos": [
