@@ -133,6 +133,21 @@
     html.dC .aviso-ficha.av { border-radius: 4px; padding: 9px 12px; }
     html.dC .nav { background: #000; }
     html.dC .nav button.activo::before { left: 0; right: 0; border-radius: 0; }
+
+    /* =====================================================================================================
+       ELEGIDA (Carlos, 11 nov, 06:47): la base de A (superficies, píldoras finas, el rojo solo en lo que se toca), la letra
+       «fantasy» de B en los títulos (condensada, mayúsculas, grande) y de C la franja roja inclinada delante de los
+       títulos y los números de las fases del plan en un bloque rojo inclinado. Se aplica con las clases dA y dE juntas.
+       ===================================================================================================== */
+    html.dE .titulo, html.dE .ficha-top h2 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+    html.dE .titulo { font-size: 36px; display: flex; align-items: center; gap: 10px; }
+    html.dE .ficha-top h2 { font-size: 38px; }
+    html.dE .titulo::before { content: ''; flex: none; width: 9px; height: 26px; background: var(--rojo); transform: skewX(-14deg); }
+    html.dE .plan-titular { font: 700 30px/1.05 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
+    html.dE .sec h2 { font: 700 20px/1.1 var(--cond); text-transform: uppercase; letter-spacing: 0.4px; display: flex; align-items: center; gap: 8px; }
+    html.dE .sec h2::before { content: ''; flex: none; width: 5px; height: 16px; background: var(--rojo); transform: skewX(-14deg); }
+    html.dE .fase-n { border-radius: 3px; transform: skewX(-12deg); background: var(--rojo); color: #fff; }
+    html.dE .fase-tx b { font: 700 18px/1.15 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
   </style>
 </head>
 <body>
@@ -148,14 +163,14 @@
       try { const j = await r.clone().json(); j.bloqueadas = []; return new Response(JSON.stringify(j), { status: 200, headers: { 'content-type': 'application/json' } }); } catch (e) { return r; }
     };
     const q = new URLSearchParams(location.search);
-    document.documentElement.classList.add(`d${(q.get('d') || 'A').toUpperCase()}`);
+    { const d0 = (q.get('d') || 'E').toUpperCase(); document.documentElement.classList.add(`d${d0}`); if (d0 === 'E') document.documentElement.classList.add('dA'); }
   </script>
   <script type="module" src="js/app.js"></script>
   <script type="module">
     const esperar = () => new Promise((ok) => { const t = setInterval(() => { if (window.S && window.S.M) { clearInterval(t); ok(); } }, 200); });
     await esperar();
     const S = window.S, M = S.M, q = new URLSearchParams(location.search);
-    let dir = (q.get('d') || 'A').toUpperCase(), pant = q.get('p') || 'hoy';
+    let dir = (q.get('d') || 'E').toUpperCase(), pant = q.get('p') || 'hoy';
     const clic = (sel) => { const b = document.querySelector(sel); if (b) b.click(); };
     // la ficha: el tuyo que más vale (con avisos, valor de cada día y jornadas)
     const suyo = [...M.mias].filter((x) => x.j.pos !== 5).sort((a, b) => b.j.valor - a.j.valor)[0];
@@ -167,8 +182,8 @@
       }, 80);
     }
     function barra() {
-      document.documentElement.classList.remove('dA', 'dB', 'dC', 'd0'); document.documentElement.classList.add(`d${dir}`);
-      document.getElementById('maq').innerHTML = `<b>Dirección</b>${[['0', 'Ahora'], ['A', 'A · Noche de estadio'], ['B', 'B · Cromo'], ['C', 'C · Directo']].map(([k, t]) => `<button data-d="${k}" aria-pressed="${dir === k}">${t}</button>`).join('')}`
+      document.documentElement.classList.remove('dA', 'dB', 'dC', 'dE', 'd0'); document.documentElement.classList.add(`d${dir}`); if (dir === 'E') document.documentElement.classList.add('dA');
+      document.getElementById('maq').innerHTML = `<b>Dirección</b>${[['E', 'Elegida (A + B + C)'], ['0', 'Ahora'], ['A', 'A · Noche de estadio'], ['B', 'B · Cromo'], ['C', 'C · Directo']].map(([k, t]) => `<button data-d="${k}" aria-pressed="${dir === k}">${t}</button>`).join('')}`
         + `<b>Pantalla</b>${[['hoy', 'Hoy'], ['ficha', 'Ficha de un jugador'], ['mercado', 'Mercado']].map(([k, t]) => `<button data-p="${k}" aria-pressed="${pant === k}">${t}</button>`).join('')}`;
       history.replaceState(null, '', `?d=${dir}&p=${pant}`);
     }
