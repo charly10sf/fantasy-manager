@@ -2081,7 +2081,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249984/tuchel-pronuncia-sobre-jobe-bellingham.html": 1794421267000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laporte-duda-jugar-frente-republica-checa-proceso-virico-20261111_3473310.html": 1794421558000,
    "ABC|https://www.abc.es/deportes/futbol/fuente-indigna-sospechas-lesion-lamine-lamentable-inflamacion-20261111193549-nt.html": 1794422149000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/11/luis-fuente-lamine-yamal-ningun-privilegio/00031794423046999577966.htm": 1794423300000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/11/luis-fuente-lamine-yamal-ningun-privilegio/00031794423046999577966.htm": 1794423300000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261111/1004250002/mujer-marcao-explota-criticas-sueldo-no-decide-aficion.html": 1794423209000
   },
   "hechos": [
    {
@@ -2439,7 +2440,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 54
+   "n": 55
   },
   "desde": {
    "67": {
@@ -3408,7 +3409,8 @@
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-reivindica-huelga-contra-todos-gobiernos-avisa-no-aceptara-parches-20261111183506.html": 1794418506000,
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/11/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794414600000,
    "Europa Press|https://www.europapress.es/nacional/noticia-act3-huelga-deja-ya-mas-50-detenidos-919-incidencias-toda-espana-20261111190915.html": 1794420555000,
-   "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794416928000
+   "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794416928000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/11/6af4b4cce85ece663a8b45a1.html": 1794422281000
   },
   "hechos": [
    {
@@ -3430,27 +3432,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 25,
+   "n": 26,
    "fallos": 0
   },
-  "espera": {
-   "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/11/6af4b4cce85ece663a8b45a1.html": 1794422475085
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 79,
+   "clasificar": 81,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 271415,
-  "salida": 29040,
+  "entrada": 275162,
+  "salida": 29242,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.29161,
+  "dolares": 0.292086,
   "reservado": 0
  },
  "recientes": {
@@ -7543,13 +7543,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1545,
+   "ok": 1546,
    "fallos": 0,
-   "ejecuciones": 1124,
+   "ejecuciones": 1125,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T18:56:14.819Z"
+   "ultima": "2026-11-11T19:01:15.119Z"
   }
  },
  "ptsDirecto": {},
@@ -7566,15 +7566,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:56:24.562Z"
+   "ultimaBien": "2026-11-11T19:01:22.602Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:56:24.562Z"
+   "ultimaBien": "2026-11-11T19:01:22.602Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:56:24.562Z"
+   "ultimaBien": "2026-11-11T19:01:22.602Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7582,11 +7582,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:56:24.562Z"
+   "ultimaBien": "2026-11-11T19:01:22.602Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:56:24.562Z"
+   "ultimaBien": "2026-11-11T19:01:22.602Z"
   }
  },
  "avisos": [
