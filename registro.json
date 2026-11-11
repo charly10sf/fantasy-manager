@@ -1831,10 +1831,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000,
    "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
    "AS|https://as.com/futbol/primera/anoeta-vuelve-a-sonreir-tras-el-zarpazo-de-oskarsson-f202611-n/": 1794158806000,
-   "AS|https://as.com/futbol/primera/aprobados-y-suspensos-de-la-real-sociedad-oskarsson-sigue-poliki-poliki-f202611-n/": 1794157979000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html": 1794160570000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
@@ -3701,11 +3699,6 @@
   ]
  },
  "puntosPartido": {
-  "12|117": {
-   "h": "f7029baf4897",
-   "desde": 1794072375726,
-   "fin": 1794071774918
-  },
   "12|115": {
    "h": "56af51032406",
    "desde": 1794080773416,
@@ -7583,13 +7576,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1524,
+   "ok": 1525,
    "fallos": 0,
-   "ejecuciones": 1103,
+   "ejecuciones": 1104,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:11:11.674Z"
+   "ultima": "2026-11-11T17:16:16.788Z"
   }
  },
  "ptsDirecto": {},
@@ -7606,15 +7599,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:11:14.494Z"
+   "ultimaBien": "2026-11-11T17:16:21.054Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:11:14.494Z"
+   "ultimaBien": "2026-11-11T17:16:21.054Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:11:14.494Z"
+   "ultimaBien": "2026-11-11T17:16:21.054Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7622,11 +7615,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:11:14.494Z"
+   "ultimaBien": "2026-11-11T17:16:21.054Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:11:14.494Z"
+   "ultimaBien": "2026-11-11T17:16:21.054Z"
   }
  },
  "avisos": [
