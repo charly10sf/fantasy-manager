@@ -2062,7 +2062,11 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/saltan-alarmas-mbappe-lesionado-francia-136329203.html": 1794401127000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/11/se-confirman-los-peores-presagios-sobre-la-lesion-de-barrenetxea-debera-pasar-por-quirofano-radio-san-sebastian/": 1794401190000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barrenetxea-sufre-grave-lesion-muslo-perdera-resta-temporada-20261111_3473028.html": 1794401602000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/11/6af463eefdddff04738b4577.html": 1794401443000
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/11/6af463eefdddff04738b4577.html": 1794401443000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249881/gabriel-defiende-raphinha-brasil-ejemplar.html": 1794401587000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249879/italia-francia-aire-mbappe.html": 1794401029000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261111/1004249868/barrenetxea.html": 1794400816000,
+   "SPORT|136301661": 1794398469000
   },
   "hechos": [
    {
@@ -2405,11 +2409,24 @@
     "motivo": "lesión en la ingle",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261111/1004249868/barrenetxea.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794400816000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Barrenetxea sufre una lesión grave y será operado",
+    "motivo": "lesión grave que requerirá operación",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -3359,7 +3376,11 @@
    "SPORT|136328833": 1794392891000,
    "Europa Press|https://www.europapress.es/nacional/noticia-pp-acusa-gobierno-alentar-huelga-electoral-avisa-danara-credibilidad-sindicatos-20261111111607.html": 1794392167000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-adelante-andalucia-critica-violencia-policial-contra-diputada-carga-vias-metro-granada-20261111103032.html": 1794389432000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-vacia-agenda-institucional-excepcion-albares-planas-jornada-huelga-general-20261111081226.html": 1794381146000
+   "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-vacia-agenda-institucional-excepcion-albares-planas-jornada-huelga-general-20261111081226.html": 1794381146000,
+   "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-colau-afirma-ayuso-insulta-sindicatos-porque-nerviosa-apoyo-huelga-general-20261111130843.html": 1794398923000,
+   "SPORT|136301661": 1794398469000,
+   "SPORT|136330407": 1794397587000
   },
   "hechos": [
    {
@@ -3381,28 +3402,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 15,
+   "n": 16,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136330407": 1794401772476,
-   "Europa Press|https://www.europapress.es/nacional/noticia-colau-afirma-ayuso-insulta-sindicatos-porque-nerviosa-apoyo-huelga-general-20261111130843.html": 1794402076524
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 46,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 197933,
-  "salida": 14401,
+  "entrada": 203045,
+  "salida": 15193,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.276942,
+  "dolares": 0.277849,
   "reservado": 0
  },
  "recientes": {
@@ -7505,13 +7523,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1473,
+   "ok": 1474,
    "fallos": 0,
-   "ejecuciones": 1052,
+   "ejecuciones": 1053,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T13:01:16.524Z"
+   "ultima": "2026-11-11T13:06:15.457Z"
   }
  },
  "ptsDirecto": {},
@@ -7528,15 +7546,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:01:20.236Z"
+   "ultimaBien": "2026-11-11T13:06:24.716Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:01:20.236Z"
+   "ultimaBien": "2026-11-11T13:06:24.716Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:01:20.236Z"
+   "ultimaBien": "2026-11-11T13:06:24.716Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7544,11 +7562,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:01:20.236Z"
+   "ultimaBien": "2026-11-11T13:06:24.716Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:01:20.236Z"
+   "ultimaBien": "2026-11-11T13:06:24.716Z"
   }
  },
  "avisos": [
