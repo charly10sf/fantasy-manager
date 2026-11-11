@@ -3359,7 +3359,9 @@
    "n": 13,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-manifestantes-cortan-gran-via-grito-hoy-no-consume-fuerte-dispositivo-policia-20261111131254.html": 1794399671454
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7477,13 +7479,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1464,
+   "ok": 1465,
    "fallos": 0,
-   "ejecuciones": 1043,
+   "ejecuciones": 1044,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T12:16:11.349Z"
+   "ultima": "2026-11-11T12:21:11.454Z"
   }
  },
  "ptsDirecto": {},
@@ -7500,15 +7502,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:16:14.513Z"
+   "ultimaBien": "2026-11-11T12:21:15.779Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:16:14.513Z"
+   "ultimaBien": "2026-11-11T12:21:15.779Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:16:14.513Z"
+   "ultimaBien": "2026-11-11T12:21:15.779Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7516,11 +7518,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:16:14.513Z"
+   "ultimaBien": "2026-11-11T12:21:15.779Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:16:14.513Z"
+   "ultimaBien": "2026-11-11T12:21:15.779Z"
   }
  },
  "avisos": [
