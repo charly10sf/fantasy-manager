@@ -3351,7 +3351,8 @@
    "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380088000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-demanda-energia-electrica-cae-97-primeras-horas-huelga-ccoo-20261111071430.html": 1794377670000,
    "SPORT|136315088": 1794379975000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-mercamadrid-amanece-normalidad-arranque-agitado-cargas-policiales-contra-piquetes-20261111073438.html": 1794378878000
+   "Europa Press|https://www.europapress.es/madrid/noticia-mercamadrid-amanece-normalidad-arranque-agitado-cargas-policiales-contra-piquetes-20261111073438.html": 1794378878000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-cifran-seguimiento-huelga-41-75-700-horas-ven-exito-20261111093630.html": 1794386190000
   },
   "hechos": [
    {
@@ -3373,27 +3374,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-cifran-seguimiento-huelga-41-75-700-horas-ven-exito-20261111093630.html": 1794386771497
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 15,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 138285,
-  "salida": 5595,
+  "entrada": 140017,
+  "salida": 5681,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.266575,
+  "dolares": 0.266791,
   "reservado": 0
  },
  "recientes": {
@@ -7496,13 +7495,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1425,
+   "ok": 1426,
    "fallos": 0,
-   "ejecuciones": 1004,
+   "ejecuciones": 1005,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T09:02:38.881Z"
+   "ultima": "2026-11-11T09:06:17.033Z"
   }
  },
  "ptsDirecto": {},
@@ -7519,15 +7518,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:02:41.571Z"
+   "ultimaBien": "2026-11-11T09:06:22.709Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:02:41.571Z"
+   "ultimaBien": "2026-11-11T09:06:22.709Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:02:41.571Z"
+   "ultimaBien": "2026-11-11T09:06:22.709Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7535,11 +7534,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:02:41.571Z"
+   "ultimaBien": "2026-11-11T09:06:22.709Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:02:41.571Z"
+   "ultimaBien": "2026-11-11T09:06:22.709Z"
   }
  },
  "avisos": [
