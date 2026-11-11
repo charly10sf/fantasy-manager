@@ -731,7 +731,7 @@ export function onceHTML(S, al, { conBanquillo = false, sinCab = false, directo 
     const resto = M.mias.map((x) => x.j).filter((j) => !dentro.has(j.id) && j.pos !== 5).sort((a, b) => a.pos - b.pos || b.valor - a.valor);
     if (resto.length) h += `<div class="banquillo"><div class="banq-t">Banquillo <span>${resto.length}</span></div><div class="banq-l">${resto.map((j) => cromo(M, j, { modo, chico: true, directo: !!V })).join('')}</div></div>`;
   }
-  h += `<div class="puestos-c">${M.puestos.map((p) => `<button class="pz p${p.pos}${p.faltan ? ' falta' : p.conviene ? ' conviene' : p.sobran ? ' sobra' : ''}" data-accion="verPuesto" data-p="${p.pos}" aria-label="Ver tus ${esc(POS_PLURAL[p.pos] || '')}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.conviene ? ` · mejor ${p.sanos + p.conviene}` : p.sobran ? ' · sobran' : ''}</button>`).join('')}</div>`;
+  h += `<div class="puestos-c">${M.puestos.map((p) => `<button class="pz p${p.pos}${p.faltan ? ' falta' : p.conviene ? ' conviene' : p.sobran ? ' sobra' : ''}" data-accion="verPuesto" data-p="${p.pos}" title="Ver tus ${esc(POS_PLURAL[p.pos] || '')}"><b>${['', 'POR', 'DEF', 'MED', 'DEL'][p.pos]}</b> ${p.sanos}${p.faltan ? ` · faltan ${p.faltan}` : p.conviene ? ` · mejor ${p.sanos + p.conviene}` : p.sobran ? ' · sobran' : ''}</button>`).join('')}</div>`;
   const notas = [];
   if (huecos) notas.push(`<b class="rojo">${huecos > 1 ? `Te faltan ${huecos} jugadores sanos` : 'Te falta un jugador sano'} para completarlo.</b>`);
   if (real && faltanReal > 0) notas.push(`<b class="rojo">En LaLiga tienes ${11 - faltanReal} en el once: ${faltanReal > 1 ? `los ${faltanReal} huecos no puntúan` : 'el hueco no puntúa'}.</b>`);
@@ -877,10 +877,10 @@ function eqCabHTML(S) {
   return `<div class="eq2-cab">
     <div class="eq2-quien">${yoE ? caraManager(yoE, 'g') : ''}<div class="eq2-nom"><div class="eti">Tu equipo</div><h1 class="titulo">${esc((M.yo && M.yo.nombre) || 'Tu equipo')}</h1></div></div>
     <div class="eq2-num">
-      <button data-accion="ver" data-seg2="equipo:dinero" data-sel="#eq-valor" aria-label="Valor del equipo: ver Beneficio"><b>${eur(D.valorEquipo)}</b><span>valor ›</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</button>
-      <button data-ir="rivales" data-seg="rivales:clasif" aria-label="Tu puesto: ver la clasificación"><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts ›` : 'en la liga ›'}</span></button>
-      <button data-ir="hoy" aria-label="Tu saldo: ver las cuentas del plan"><b class="${D.dinero != null && num(D.dinero) < 0 ? 'baja' : ''}">${D.dinero != null ? eur(D.dinero) : '–'}</b><span>saldo ›</span></button>
-      <button data-accion="ver" data-seg2="equipo:plantilla" data-sel="#eq-plantilla" aria-label="Ver la plantilla"><b>${jug}</b><span>jugadores${ent ? ` y ${ent} entr.` : ''} ›</span></button>
+      <button data-accion="ver" data-seg2="equipo:dinero" data-sel="#eq-valor" title="Valor del equipo: ver Beneficio"><b>${eur(D.valorEquipo)}</b><span>valor ›</span>${dv != null && Math.abs(dv) >= 1000 ? `<i class="${clase(dv)}">${eur(dv, { signo: true })} en 7 días</i>` : ''}</button>
+      <button data-ir="rivales" data-seg="rivales:clasif" title="Tu puesto: ver la clasificación"><b>${M.yo ? `${M.yo.pos}º` : '–'}</b><span>${M.yo ? `${M.yo.puntos} pts ›` : 'en la liga ›'}</span></button>
+      <button data-ir="hoy" title="Tu saldo: ver las cuentas del plan"><b class="${D.dinero != null && num(D.dinero) < 0 ? 'baja' : ''}">${D.dinero != null ? eur(D.dinero) : '–'}</b><span>saldo ›</span></button>
+      <button data-accion="ver" data-seg2="equipo:plantilla" data-sel="#eq-plantilla" title="Ver la plantilla"><b>${jug}</b><span>jugadores${ent ? ` y ${ent} entr.` : ''} ›</span></button>
     </div>
   </div>`;
 }

@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <script>
-    /* dentro de la app de Android (window.FantasyApp, el puente de puente.js), sin zoom, como siempre; en la web se puede
-       ampliar (accesibilidad). Va aquí, antes de pintar nada, para que la app no llegue a ver el viewport con zoom */
+    /* dentro de la app de Android (window.FantasyApp, el puente de puente.js). Desde la 0.7.7 el viewport ya no prohíbe
+       ampliar (accesibilidad: user-scalable=no y maximum-scale fuera); la clase en-app sigue para lo demás */
     if (window.FantasyApp) {
-      document.querySelector('meta[name=viewport]').setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover');
+      document.querySelector('meta[name=viewport]').setAttribute('content', 'width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover');
       document.documentElement.classList.add('en-app');
     }
   </script>
-  <meta name="theme-color" content="#08080a">
+  <meta name="theme-color" content="#050506">
   <meta name="google-adsense-account" content="ca-pub-3175956326240112">
   <title>Fantasy Manager: app de cláusulas y mercado (LaLiga Fantasy)</title>
   <meta name="description" content="Cada día te dice a quién vender, a quién comprar, cuánto pujar y a quién clausular en tu liga de LaLiga Fantasy. App no oficial para Android y web.">

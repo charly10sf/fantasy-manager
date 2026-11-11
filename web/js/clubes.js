@@ -67,7 +67,7 @@ function tusClubesHTML(S, ids, mios) {
     const hoy = ds.length ? ds.reduce((a, d) => a + d, 0) : null;
     const mueve = hoy == null ? '' : `<span class="cc-hoy ${clase(hoy)}" title="Lo que suben o bajan hoy tus jugadores de este club">${hoy ? eur(hoy, { dec: 1, signo: true }) : '='}<small> hoy</small></span>`;
     const k = mueve ? 3 : 4;
-    return `<button class="club-card" data-club="${esc(id)}"${estiloClub(id, e.nombre)} aria-label="${esc(`${e.nombre}: ${caras.length} tuyo${caras.length > 1 ? 's' : ''}`)}">
+    return `<button class="club-card" data-club="${esc(id)}"${estiloClub(id, e.nombre)} title="${esc(`${e.nombre}: ${caras.length} tuyo${caras.length > 1 ? 's' : ''}`)}">
       ${camisetaClub(id, e.nombre, 'cc-cam')}
       <span class="cc-cab">${escudo(D, id)}<span class="cc-n">${esc(e.nombre)}</span></span>
       <span class="cc-pos">${t ? `${t.pos}º · ${t.pts} pts` : 'LaLiga'}</span>
@@ -100,7 +100,7 @@ export function clubes(S) {
     const prox = proxTxt(S, id);
     const cls = `${eu ? ` eu-${eu}` : ''}${desc ? ' z-desc' : ''}`;
     const sub = [eu ? `<b class="cf-comp">${COMP[eu]}</b>` : '', desc ? '<b class="cf-comp">Descenso</b>' : '', prox].filter(Boolean).join(' · ');
-    return `<button class="club-f${cls}" data-club="${esc(id)}" aria-label="${esc(`${t ? `${t.pos}º, ` : ''}${e.nombre}${eu ? `, juega la ${COMP[eu]}` : ''}${t ? `, ${t.pts} puntos` : ''}${caras.length ? `, ${caras.length} tuyos` : ''}`)}">
+    return `<button class="club-f${cls}" data-club="${esc(id)}" title="${esc(`${t ? `${t.pos}º, ` : ''}${e.nombre}${eu ? `, juega la ${COMP[eu]}` : ''}${t ? `, ${t.pts} puntos` : ''}${caras.length ? `, ${caras.length} tuyos` : ''}`)}">
       <span class="cf-kit" aria-hidden="true"></span>
       <span class="cf-pos">${t ? t.pos : '–'}</span>
       <span class="cf-esc">${escudo(D, id)}</span>

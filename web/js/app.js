@@ -507,13 +507,13 @@ let pasoAhora = -1, pasoDesde = 0, relojCarga = null;
 function cargaHTML(paso, error, liga) {
   const total = pasosCarga.length;
   const pct = error ? 0 : pctCarga(paso, total);
-  return `<div class="carga ${error ? 'mal' : ''}">
+  return `<div class="carga ${error ? 'mal' : ''}" role="main">
     <div class="carga-in">
       <div class="carga-izq">
         ${camisetaCarga(pct / 100)}
         <div class="carga-wm">Fantasy <b>Manager</b></div>
         <h1 class="carga-t">${tituloCarga(liga, error)}</h1>
-        ${error ? '' : `<div class="carga-barra" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="--p:${pct / 100}"></i></div><div class="carga-pct"><span>${Math.max(0, Math.min(paso + 1, total))} de ${total}</span><b>${pct} %</b></div>`}
+        ${error ? '' : `<div class="carga-barra" role="progressbar" aria-label="Cargando" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="--p:${pct / 100}"></i></div><div class="carga-pct"><span>${Math.max(0, Math.min(paso + 1, total))} de ${total}</span><b>${pct} %</b></div>`}
       </div>
       <div class="carga-der">
         ${error ? `<div class="fallo"><p>${esc(error.texto)}</p>${error.detalle && error.detalle !== error.texto ? `<p class="fallo-det">${esc(error.detalle)}</p>` : ''}</div>
@@ -2713,6 +2713,8 @@ document.addEventListener('click', async (ev) => {
     case 'ver': {
       const raiz = el.closest('.hoja');
       if (d.seg2) { const [v, s2] = d.seg2.split(':'); if (S.seg[v] !== s2) { S.seg[v] = s2; pintar(); } }
+      // (0.7.7) si el bloque va plegado en la ficha, se abre antes de bajar hasta él
+      { const pl = (raiz || document).querySelector(d.sel); if (pl && pl.tagName === 'DETAILS') pl.open = true; }
       bajarA(d.sel, raiz);
       break;
     }
@@ -2806,7 +2808,7 @@ document.addEventListener('click', async (ev) => {
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>Es una de las funciones top de Fantasy Manager.${esc(dondeTop())}</p>
-        <button class="btn ancho" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
+        <button class="btn ancho" data-accion="cerrarHoja">Entendido</button></div>`);
       break;
     }
     case 'mandarAviso': enviarAviso(); break;
