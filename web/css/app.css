@@ -2951,13 +2951,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .fase-n { border-radius: 3px; transform: skewX(-12deg); background: var(--rojo); color: #fff; }
 .fase-tx b { font: 700 var(--t-sec)/1.15 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; }
 
-/* píldoras finas: de contorno, sin mayúsculas */
-.accion-t, .pill { border-radius: var(--r-red); letter-spacing: 0.2px; text-transform: none; font: 600 var(--t-mini) 'Barlow'; padding: 3px 9px; }
-.pill { background: transparent; box-shadow: inset 0 0 0 1px var(--s3); }
-.pill.abierta { box-shadow: inset 0 0 0 1px rgba(238, 28, 60, 0.45); background: transparent; }
-.pill.bien, .pill.chollo { box-shadow: inset 0 0 0 1px rgba(47, 209, 143, 0.4); background: transparent; }
-.pill.mal { box-shadow: inset 0 0 0 1px rgba(255, 111, 97, 0.4); background: transparent; }
-.pill.pronto, .pill.duda, .pill.vende { box-shadow: inset 0 0 0 1px rgba(255, 197, 71, 0.4); background: transparent; }
+/* las píldoras, en el bloque de la tanda 3 (más abajo) */
 
 /* filas, selector de sección y botones */
 .fila { padding: 15px 0; }
@@ -2976,7 +2970,6 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
    Quedan en rojo las marcas pequeñas (franjas, números de fase, contadores) y la etiqueta de delantero. */
 .campo-cab .form { background: transparent; color: var(--texto); box-shadow: inset 0 0 0 1.5px rgba(238, 28, 60, 0.6); }
 .cr-dato { background: rgba(5, 5, 6, 0.85); color: #fff; }
-.pill.plan, .pnz-t.en-plan { background: transparent; color: var(--rojo-texto); box-shadow: inset 0 0 0 1px rgba(238, 28, 60, 0.55); }
 .gc-num { background: var(--s3); color: var(--texto); }
 .pnz-sec .n { border-radius: 3px; transform: skewX(-12deg); background: var(--rojo); }
 
@@ -3022,3 +3015,51 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .bloq-i { border-top-color: rgba(255, 197, 71, 0.18); }
 /* los dos atajos de arriba de Ajustes, como superficie: con el fondo rojo oscuro parecían alertas */
 .aj-atajo { background: var(--s1); border-color: var(--linea); }
+
+/* =========================================================================================================
+   OVERHAUL (0.7.7) · TANDA 3. UNA SOLA PÍLDORA Y CUATRO BOTONES.
+   La píldora es .pl: fina, de contorno, en frase y con el color del tono. Tonos: neutro (sin clase), .sube, .baja, .oro,
+   .rojo y .azul; .lleno le pone el fondo suave del tono (las etiquetas de acción del plan) y .chica la encoge. Las clases
+   de antes (.pill, .accion-t, .pnz-t, .tit-b, .ll-tag, .nv-tipo, .cp-res-t) son alias suyos: lo nuevo se escribe con .pl.
+   Fuera, a propósito: la etiqueta de puesto (.pos), los cromos del campo (.cr-…) y la competición europea (.ch-eu), que
+   lleva el color de cada torneo.
+   ========================================================================================================= */
+.pl, .pill, .accion-t, .pnz-t, .tit-b, .ll-tag, .nv-tipo, .cp-res-t {
+  --pl-c: var(--texto-2); --pl-b: var(--s3); --pl-f: transparent;
+  font: 600 var(--t-mini)/1.25 'Barlow'; letter-spacing: 0.2px; text-transform: none; padding: 3px 9px; border: 0; border-radius: var(--r-red);
+  color: var(--pl-c); background: var(--pl-f); box-shadow: inset 0 0 0 1px var(--pl-b);
+}
+.pl { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+/* las variantes de antes ponían su fondo y su color con dos clases: aquí mandan los del tono */
+.pill[class], .accion-t[class], .pnz-t[class], .tit-b[class], .ll-tag[class], .nv-tipo[class], .cp-res-t[class] { color: var(--pl-c); background: var(--pl-f); }
+.pl.chica, .tit-b, .cp-res-t { padding: 2px 7px; }
+/* los tonos */
+.pl.sube, .pill.bien, .pill.chollo, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V { --pl-c: var(--sube); --pl-b: rgba(47, 209, 143, 0.4); }
+.pl.baja, .pill.mal, .accion-t.descartada, .tit-b.mal, .cp-res-t.r-D { --pl-c: var(--baja); --pl-b: rgba(255, 111, 97, 0.4); }
+.pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .accion-t.blindar, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E { --pl-c: var(--oro); --pl-b: rgba(255, 197, 71, 0.4); }
+.pl.rojo, .pill.abierta, .pill.plan, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo { --pl-c: var(--rojo-texto); --pl-b: rgba(238, 28, 60, 0.5); }
+.pl.azul, .pill.libre, .accion-t.alinear, .accion-t.esperar, .pnz-t.mer, .nv-tipo.mejora { --pl-c: var(--azul); --pl-b: rgba(88, 166, 255, 0.4); }
+.pill.estim { box-shadow: none; border: 1px dashed var(--s3); }
+/* con fondo suave: la acción de cada paso del plan, que es lo primero que se lee en la fila */
+.pl.lleno, .accion-t { --pl-b: transparent; --pl-f: var(--s3); }
+.pl.lleno.sube, .accion-t.vender { --pl-f: var(--sube-s); }
+.pl.lleno.baja, .accion-t.descartada { --pl-f: var(--baja-s); }
+.pl.lleno.oro, .accion-t.blindar { --pl-f: var(--oro-s); }
+.pl.lleno.rojo, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar { --pl-f: var(--rojo-s); }
+.pl.lleno.azul, .accion-t.alinear, .accion-t.esperar { --pl-f: var(--azul-s); }
+/* lo urgente es la única etiqueta rellena de verdad */
+.accion-t.urg, .pnz-t.ya { --pl-c: #120406; --pl-f: var(--baja); --pl-b: transparent; }
+/* como mucho dos píldoras por fila: de la tercera en adelante van como texto del color de su tono, sin contorno */
+.fila .pill ~ .pill ~ .pill:not(.bloq-p), .pnz-c .pnz-t ~ .pnz-t ~ .pnz-t { box-shadow: none; background: none; padding-left: 2px; padding-right: 2px; }
+
+/* botones, cuatro y nada más: principal (.btn: relleno rojo, uno por pantalla), secundario (.btn.sec: contorno),
+   de texto (.btn.txt, .enlace, .sec .mas: rojo, sin fondo) y de icono (.b-ico: 44 px como mínimo). Texto en frase. */
+.btn { min-height: 48px; padding: 12px 20px; font: 700 var(--t-cuerpo)/1.2 'Barlow'; }
+.btn.chico { min-height: 40px; padding: 8px 14px; font-size: var(--t-sec2); border-radius: var(--r-red); }
+.btn.sec { background: transparent; color: var(--texto); border: 0; box-shadow: inset 0 0 0 1px var(--s3); }
+.btn.sec:active { background: var(--s2); }
+.btn.txt { min-height: 44px; padding: 8px 4px; background: none; color: var(--rojo-texto); box-shadow: none; }
+.b-ico { min-width: 44px; min-height: 44px; }
+.btn:focus-visible, .b-ico:focus-visible, .tabs button:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
+/* Pregunta sin clave: el botón que cierra la guía es el principal; el que abre la web de la clave, secundario */
+.btn.gc-abrir { background: transparent; color: var(--texto); box-shadow: inset 0 0 0 1px var(--s3); }
