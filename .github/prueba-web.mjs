@@ -433,6 +433,78 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 13: en la app, con versión nueva publicada no se juega (0.7.6): la ventana que no se cierra y lo que hace con cada
+// respuesta de AlDia, con un puente de Android de mentira (paquete.json y app.json por su http)
+{
+  const puente = (cfg) => `(() => {
+    const C = ${JSON.stringify(cfg)}; window.__fm = { C, bajadas: [], busquedas: 0 };
+    sessionStorage.setItem('cargas', String((Number(sessionStorage.getItem('cargas')) || 0) + 1));
+    const resp = {};
+    window.FantasyApp = new Proxy({
+      avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '5000', canal: () => C.canal, hayQR: () => false, programarAvisos: () => {},
+      nativo: () => 'h1', web: () => JSON.stringify({ propia: 'x', activa: null, error: C.error || null }),
+      http: (id, m, url) => { const b = /paquete\\.json/.test(url) ? C.paquete : /app\\.json/.test(url) ? C.app : null; resp[id] = JSON.stringify(b ? { s: 200, b: JSON.stringify(b) } : { s: 404, b: '' }); setTimeout(() => window.__http(id), 30); },
+      respuesta: (id) => resp[id],
+      buscarWeb: () => { window.__fm.busquedas++; setTimeout(() => window.webBuscada && window.webBuscada(C.buscar), 200); },
+      actualizar: (u) => window.__fm.bajadas.push(u),
+      webViva: () => {},
+    }, { get: (o, k) => (k in o ? o[k] : undefined) });
+    localStorage.setItem('fm-demo', 'true');
+  })();`;
+  const casos = [
+    ['misma parte Android, AlDia la baja', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'nueva' }, 'recarga'],
+    ['AlDia ya la descartó', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'igual' }, 'descargar'],
+    ['parte Android nueva', { canal: 'github', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'apk'],
+    ['Google Play con parte Android nueva', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h2' }, buscar: 'apk' }, 'nada'],
+    ['Google Play, AlDia sin red', { canal: 'play', paquete: { version: '9.9.9', nativo: 'h1' }, buscar: 'error: sin red' }, 'reintentar'],
+    ['la publicada no es más nueva', { canal: 'github', paquete: { version: '0.0.1', nativo: 'h1' }, buscar: 'igual' }, 'nada'],
+  ];
+  for (const [nombre, cfg, espera] of casos) {
+    const { ctx, page, errores } = await pagina({ init: puente(cfg) });
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForTimeout(2500);
+    const hay = await page.$('#forzar');
+    let r = '';
+    if (espera === 'nada') r = hay ? 'sale la ventana y no debía' : '';
+    else if (!hay) r = 'no sale la ventana';
+    else {
+      const botones = async () => page.$$eval('#forzar button', (bs) => bs.map((b) => b.textContent.trim() + (b.disabled ? '(off)' : '')));
+      const b0 = await botones();
+      if (espera === 'apk') {
+        if (b0.join() !== 'Descargar la app') r = `botones ${b0.join()}`;
+        else { await page.click('#forzar [data-accion="bajarApp"]'); const u = await page.evaluate(() => window.__fm.bajadas[0]); if (!/fantasy-manager\.apk$/.test(u || '')) r = `baja ${u}`; }
+      } else {
+        if (b0.join() !== 'Actualizar ahora') r = `botones al salir ${b0.join()}`;
+        else {
+          await page.click('#forzar [data-accion="ponerAppNueva"]');
+          await page.waitForTimeout(900);
+          const cargas = await page.evaluate(() => Number(sessionStorage.getItem('cargas'))).catch(() => 0);
+          if (espera === 'recarga') { if (cargas < 2) r = 'no recarga con la nueva'; }
+          else {
+            const b1 = await botones();
+            if (espera === 'descargar' && b1.join() !== 'Descargar la app,Volver a intentarlo') r = `botones tras «igual» ${b1.join()}`;
+            if (espera === 'reintentar' && b1.join() !== 'Volver a intentarlo') r = `botones tras el error ${b1.join()}`;
+            const txt = await page.$eval('#forzar p', (p) => p.textContent);
+            if (espera === 'reintentar' && !/sin red/.test(txt)) r = `no dice el motivo: ${txt}`;
+          }
+        }
+      }
+    }
+    if (r) mal(`app nueva, ${nombre}: ${r}`); else bien(`app nueva, ${nombre}: ${espera === 'nada' ? 'no obliga' : espera}`);
+    if (errores.length) mal(`app nueva, ${nombre}: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+    await ctx.close();
+  }
+  // app.json con «nativo» que no casa a propósito: esta web mira «huella» y no saca la banda
+  {
+    const { ctx, page } = await pagina({ init: puente({ canal: 'github', paquete: { version: '0.0.1', nativo: 'h1' }, app: { version: 99999, nombre: '0.0.1', huella: 'h1', nativo: 'obligar-h1', apk: 'x' }, buscar: 'igual' }) });
+    await page.goto(`${BASE}/index.html`);
+    await page.waitForTimeout(6000);
+    const banda = await page.evaluate(() => !!window.S.nueva);
+    if (banda) mal('app.json con «obligar-»: esta web saca la banda de app nueva'); else bien('app.json con «obligar-»: esta web mira «huella» y no saca la banda');
+    await ctx.close();
+  }
+}
+
 await nav.close();
 servidor.close();
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');

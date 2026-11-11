@@ -275,8 +275,12 @@ jobs:
           gh release edit app --title "App de Android $VERSION_NAME" || true
           gh release view app --json assets -q '.assets[].name' | grep -E '^fantasy-manager-.+-[0-9]+\.apk$' \
             | sort -t- -k4 -n | head -n -20 | while read -r viejo; do gh release delete-asset app "$viejo" -y || true; done
-          # app.json: «version» es el código de versión (las apps lo comparan con el suyo)
-          printf '{"version": %s, "nombre": "%s", "nativo": "%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "$VERSION_CODE" "$VERSION_NAME" "$NATIVO" "${{ github.repository }}" > app.json
+          # app.json: «version» es el código de versión (las apps lo comparan con el suyo). La huella de la parte Android
+          # va en «huella»; en «nativo», la misma con «obligar-» delante A PROPÓSITO (0.7.6, Carlos, 11 nov): las webs de
+          # antes de la 0.7.6 comparan «nativo» con la de su APK y, al no casar, enseñan «Hay una versión nueva ·
+          # Actualizar», que instala la app. A quien AlDia le pone la web nueva, se le recarga antes de verlo; a quien se
+          # quedó atascado (AlDia no le pone la nueva), así se le pone al día. Las de la 0.7.6 en adelante miran «huella»
+          printf '{"version": %s, "nombre": "%s", "huella": "%s", "nativo": "obligar-%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "$VERSION_CODE" "$VERSION_NAME" "$NATIVO" "$NATIVO" "${{ github.repository }}" > app.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add app.json
