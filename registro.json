@@ -2044,7 +2044,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249753/fuerza-equipo.html": 1794382428000,
    "SPORT|136302778": 1794380445000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/courtois-alaba-xabi-alonso-desvela-ignoro-mensaje-mourinho-bien.html": 1794384337000,
-   "SPORT|136314701": 1794382658000
+   "SPORT|136314701": 1794382658000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249769/courtois-me-gusta-xabi-alonso-me-gusta-forma-trabajar.html": 1794386756000
   },
   "hechos": [
    {
@@ -2418,7 +2419,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3382,17 +3383,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 136275,
-  "salida": 5503,
+  "entrada": 138285,
+  "salida": 5595,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.266328,
+  "dolares": 0.266575,
   "reservado": 0
  },
  "recientes": {
@@ -7495,13 +7496,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1423,
+   "ok": 1424,
    "fallos": 0,
-   "ejecuciones": 1002,
+   "ejecuciones": 1003,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T08:56:12.150Z"
+   "ultima": "2026-11-11T09:01:13.283Z"
   }
  },
  "ptsDirecto": {},
@@ -7518,15 +7519,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:56:15.279Z"
+   "ultimaBien": "2026-11-11T09:01:20.792Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:56:15.279Z"
+   "ultimaBien": "2026-11-11T09:01:20.792Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:56:15.279Z"
+   "ultimaBien": "2026-11-11T09:01:20.792Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7534,11 +7535,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:56:15.279Z"
+   "ultimaBien": "2026-11-11T09:01:20.792Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:56:15.279Z"
+   "ultimaBien": "2026-11-11T09:01:20.792Z"
   }
  },
  "avisos": [
