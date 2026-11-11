@@ -928,6 +928,13 @@
    "jornada": 13,
    "id": "2120294317130465595",
    "t": "2026-11-10T23:15:33.483Z"
+  },
+  {
+   "clave": "noticias|1480:mala|2026-11-11",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2120396523913846975",
+   "t": "2026-11-11T06:01:41.329Z"
   }
  ],
  "estados": {
@@ -980,7 +987,7 @@
   "1300": "ok",
   "1337": "ok",
   "1356": "out_of_league",
-  "1480": "ok",
+  "1480": "doubtful",
   "1481": "out_of_league",
   "1484": "injured",
   "1529": "ok",
@@ -1650,7 +1657,7 @@
   "3146": "injured",
   "3147": "ok",
   "3148": "ok",
-  "3149": "injured",
+  "3149": "ok",
   "3150": "ok",
   "3151": "ok",
   "3152": "ok",
@@ -1819,13 +1826,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248531/doble-palo-real-madrid-alarmas-linda-caicedo-cruzan-charco.html": 1794120828000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261108/1004248527/2-3-cruz-azul-nuevo-lider-mexico.html": 1794120346000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248425/causas-dejan-adeyemi-fuera-seleccion.html": 1794117600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261108/1004248204/consuelo-sadar.html": 1794117600000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248453/posible-once-barca-atletico-metropolitano.html": 1794114000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248307/capitao.html": 1794111600000,
-   "SPORT|136211823": 1794117643000,
-   "SPORT|136208274": 1794117640000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/heri-frade-claro-pasara-vinicius-regrese-sancion-viene-tendra-esperar-momento-20261107_3470889.html": 1794090547000,
    "SPORT|136086039": 1794121202000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248556/iker-casillas-enfada-saca-hijos-cantera-real-madrid.html": 1794127817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html": 1794130161000,
@@ -2025,33 +2025,20 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/tchouameni-se-retira-del-entrenamiento-de-la-seleccion-francesa-por-una-molestia-cadena-ser/": 1794345150000,
    "SPORT|136302363": 1794342099000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249665/gerrard-lamine-avanzado-messi-cristiano-edad.html": 1794345817000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/10/aguirre-prueba-lateral-izquierdo-rayo-136308310.html": 1794345903000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/10/aguirre-prueba-lateral-izquierdo-rayo-136308310.html": 1794345903000,
+   "AS|https://as.com/futbol/primera/virus-fifa-17-madridistas-con-sus-selecciones-f202611-n/": 1794356236000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249733/fermin-lopez-no-entiende-pierna-mala-analisis-45-goles-elite.html": 1794376800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249651/formula-joan-garcia-ruido-pueda-llegar-madrid-mourinho.html": 1794351300000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249624/joan-garcia-fuerza-nuestro-equipo-mantener-balon.html": 1794351300000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249680/petros-viva-betis-manque-gane.html": 1794346950000,
+   "SPORT|136308054": 1794371453000,
+   "SPORT|136268716": 1794371453000,
+   "SPORT|136301453": 1794371452000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/el-mensaje-que-mandas-es-que-puede-hacer-lo-que-quiera-la-ausencia-de-lamine-yamal-con-la-seleccion-cadena-ser/": 1794358819000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681063/laporte-entrevista-espana-seleccion.html": 1794369600000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-fijo-betis-convertido-cambio-habitual_0_2008466896.html": 1794374707000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248453/posible-once-barca-atletico-metropolitano.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794114000000,
-    "id": "3208",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Rodri no jugará en el Metropolitano por lesión",
-    "motivo": "lesión en el bíceps femoral derecho",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136211823",
-    "medio": "SPORT",
-    "t": 1794117643000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri sufre lesión en isquiotibiales y estará un mes fuera",
-    "motivo": "lesión en los isquiotibiales",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html",
     "medio": "Mundo Deportivo",
@@ -2402,11 +2389,52 @@
     "motivo": "molestias en la ingle derecha",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/virus-fifa-17-madridistas-con-sus-selecciones-f202611-n/",
+    "medio": "AS",
+    "t": 1794356236000,
+    "id": "1480",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Tchouaméni se vuelve a su club por una lesión",
+    "motivo": "lesión",
+    "plazo": "",
+    "nums": [
+     17
+    ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249624/joan-garcia-fuerza-nuestro-equipo-mantener-balon.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794351300000,
+    "id": "2634",
+    "que": "vuelve",
+    "oficial": false,
+    "seleccion": "sigue",
+    "hecho": "Joan García deja atrás el dolor de rodilla y mejora",
+    "motivo": "dolor de rodilla",
+    "plazo": "",
+    "nums": [
+     25
+    ]
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-fijo-betis-convertido-cambio-habitual_0_2008466896.html",
+    "medio": "Diario de Sevilla",
+    "t": 1794374707000,
+    "id": "2770",
+    "que": "descartado",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "bajo rendimiento",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-10",
-   "n": 54
+   "dia": "2026-11-11",
+   "n": 1
   },
   "desde": {
    "67": {
@@ -2510,8 +2538,8 @@
     "t": 0
    },
    "1480": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1794376873003
    },
    "1535": {
     "e": "out_of_league",
@@ -3251,8 +3279,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136207802": 1794117638000,
-   "SPORT|136213162": 1794110512000,
    "SPORT|136220224": 1794133655000,
    "SPORT|136220730": 1794135619000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/tavernes-valencia-horario-ver-partido-copa-136222269.html": 1794143685000,
@@ -3350,26 +3376,29 @@
    }
   ],
   "gemini": {
-   "dia": "2026-11-10",
-   "n": 26,
+   "dia": "2026-11-11",
+   "n": 0,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794376873003,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/11/oviedo-guardes-aula-porrino-emparejamientos-copa-balonmano/0003_202611G11P35994.htm": 1794376873003
+  }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 0,
-   "redactar": 4,
-   "revisar": 2,
+   "clasificar": 1,
+   "redactar": 5,
+   "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 51036,
-  "salida": 1148,
+  "entrada": 69210,
+  "salida": 2439,
   "cacheLee": 2903,
-  "cacheEscribe": 2903,
-  "dolares": 0.1211,
+  "cacheEscribe": 5806,
+  "dolares": 0.159614,
   "reservado": 0
  },
  "recientes": {
@@ -3495,6 +3524,10 @@
    {
     "t": "2026-11-10T10:56:34.685Z",
     "texto": "⁉️ Federico Valverde sigue con molestias físicas pese a su regreso, cuentan Mundo Deportivo y SPORT.\n\nHa subido 29 M en el último mes y ya vale 71 M, así que es un jugador que mueve el mercado. Si lo tienes, no hay prisa: la jornada 13 es tras el parón, el sábado 21 en el Santiago Bernabéu, y no hay plazo para saber si llega bien.\n\nEl Celta encaja muy poco, y para un centrocampista como Valverde eso no es buena noticia."
+   },
+   {
+    "t": "2026-11-11T06:01:41.331Z",
+    "texto": "⁉️ Tchouaméni vuelve al Real Madrid ⚪ con molestias en la ingle derecha y se pierde los partidos con su selección, según AS y Mundo Deportivo.\n\nHa subido 14,9 M en el último mes y ya vale 36,4 M. Con un 44 % de titularidad, no tiene el puesto asegurado. La jornada 13 es el sábado 21 ante el Celta en el Bernabéu, y sin plazo de recuperación no se puede saber si llega bien.\n\nEl Celta encaja poco, y a un centrocampista eso no le ayuda."
    }
   ],
   "directo": [
@@ -7469,13 +7502,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1387,
+   "ok": 1388,
    "fallos": 0,
-   "ejecuciones": 966,
+   "ejecuciones": 967,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T05:56:12.602Z"
+   "ultima": "2026-11-11T06:01:13.003Z"
   }
  },
  "ptsDirecto": {},
@@ -7492,15 +7525,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T05:56:13.118Z"
+   "ultimaBien": "2026-11-11T06:01:41.934Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T05:56:13.118Z"
+   "ultimaBien": "2026-11-11T06:01:41.934Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T05:56:13.118Z"
+   "ultimaBien": "2026-11-11T06:01:41.934Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7508,11 +7541,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T22:56:19.176Z"
+   "ultimaBien": "2026-11-11T06:01:41.934Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-10T21:56:18.182Z"
+   "ultimaBien": "2026-11-11T06:01:41.934Z"
   }
  },
  "avisos": [
@@ -7524,6 +7557,7 @@
  ],
  "actasSelecciones": {
   "20261108": [],
-  "20261109": []
+  "20261109": [],
+  "20261110": []
  }
 }
