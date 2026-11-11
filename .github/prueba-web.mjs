@@ -8,6 +8,11 @@
 //   6. que en el parón el sitio de Directo es la pestaña Parón y su selector vuelve a Directo (21);
 //   7. Ajustes (40): las secciones plegadas, el buscador, la antelación de cada aviso y «Avisarme» en la ficha, y que
 //      calcular (avisos.js) usa la antelación elegida (rivales, tuyas, el once y un jugador concreto).
+//   8. Novedades (11 nov): a quien no es el dueño, solo lo importante de cada versión y sus arreglos en pequeño, sin lo de otra plataforma.
+//   9. (41) avisos del mercado con la app cerrada: puja ganada o perdida y los que te interesan y salen al mercado.
+//  10. el plan sin IA, la IA (cuadrarPlan) y Hoy usan la misma regla para clausular (mereceClausula).
+//  11. (24) el Parón mira el hueco en la plantilla y lo que sacarías vendiendo.
+//  12. todas las fichas y hojas (Tu equipo hoy, jugador, rival, club, sustitutos, Ajustes, diagnóstico) abren sin error.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -248,6 +253,183 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     else bien('la ficha: «Avisarme de su cláusula» se guarda (15 min antes)');
   }
   if (errores.length) mal(`Ajustes: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 8: Novedades para todos (11 nov): en Ajustes → La app, a quien no es el dueño solo lo importante (importante: true),
+// sin arreglos y sin lo de otra plataforma; en la web, nada de lo que es solo de la app
+for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '1', canal: () => 'github', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true');"]]) {
+  const { ctx, page, errores } = await pagina({ init });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const { NOVEDADES } = await import('./js/version.js');
+    document.querySelector('#bAjustes').click();
+    await new Promise((ok) => setTimeout(ok, 400));
+    const fila = [...document.querySelectorAll('.ajuste')].find((f) => /^Novedades/.test(f.querySelector('b')?.textContent || ''));
+    if (!fila) return { sinFila: true };
+    const sub = fila.textContent;
+    fila.querySelector('[data-accion="novedades"]').click();
+    await new Promise((ok) => setTimeout(ok, 400));
+    const t = [...document.querySelectorAll('.hoja .nvl-c b')].map((b) => b.textContent);
+    const imp = NOVEDADES.flatMap((n) => n.cosas.filter((c) => c.importante));
+    const arr = NOVEDADES.flatMap((n) => n.cosas.filter((c) => c.tipo === 'arreglo')); const li = [...document.querySelectorAll('.hoja .nvl-arreglos li')].map((x) => x.textContent);
+    return { nuevo: /Nuevo en la/.test(sub), t, soloImp: t.every((x) => imp.some((c) => c.t === x)), arreglos: !(li.length && li.every((x) => arr.some((c) => c.t === x))), alarmas: t.includes('Tus alarmas, cuándo quieras'), ajustes: t.includes('Ajustes, por secciones') };
+  });
+  if (r.sinFila) mal(`Novedades (${nombre}): no sale la fila en Ajustes`);
+  else if (!r.nuevo || !r.soloImp || r.arreglos || !r.ajustes || r.alarmas !== (nombre === 'app') || r.t.length > 8) mal(`Novedades (${nombre}): ${JSON.stringify(r)}`);
+  else bien(`Novedades (${nombre}): solo lo importante (${r.t.length}) y los arreglos en pequeño${nombre === 'web' ? ', sin lo de la app' : ''}`);
+  if (errores.length) mal(`Novedades: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 9: (41) avisos del mercado con la app cerrada: puja ganada, puja perdida (con quién se lo lleva) y los que te interesan
+// y salen al mercado; cada uno se apaga con su interruptor de Ajustes → Avisos y alarmas
+{
+  const { ctx, page, errores } = await pagina({ init: "localStorage.setItem('fm-cfg-avisos', '{\"on\":true}');" });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.M.mercado, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const F = await import('./js/fondo.js'), A = await import('./js/avisos.js'), Fav = await import('./js/favoritos.js');
+    const { D, M } = window.S, yo = D.yo.teamId;
+    const antes = JSON.parse(JSON.stringify(D)); antes.demo = false; antes.t = Date.now() - 2 * 3600e3;
+    const pidW = D.plantillas[yo][0].pid;
+    antes.plantillas[yo] = antes.plantillas[yo].filter((f) => f.pid !== pidW);
+    const otro = Object.keys(D.plantillas).find((t) => t !== yo && D.plantillas[t].length);
+    const pidL = D.plantillas[otro][0].pid;
+    antes.mercado.push({ id: 'pg', pid: pidW, tipo: 'liga', miPuja: 1e6 }, { id: 'pp', pid: pidL, tipo: 'liga', miPuja: 2e6 });
+    M.actividad = [...(M.actividad || []), { pid: pidL, clase: 'compra', esYo: false, quien: 'Rival de prueba', importe: 3e6, t: Date.now() }];
+    // uno del mercado de LaLiga, como favorito, que antes no estaba
+    const nuevo = M.mercado.find((m) => m.tipo !== 'manager' && !m.miPuja);
+    if (!Fav.esFav(nuevo.pid)) Fav.cambiarFav(nuevo.pid);
+    antes.mercado = antes.mercado.filter((m) => m.pid !== nuevo.pid);
+    const l = F.avisosNuevos(antes, D, M);
+    A.guardarCfgAvisos({ pujas: false, enMercado: false });
+    const apagado = F.avisosNuevos(antes, D, M);
+    A.guardarCfgAvisos({ pujas: true, enMercado: true });
+    const k = (x) => l.find((a) => a.k.startsWith(x));
+    return {
+      gana: !!k(`puja-gana:${pidW}`) && !k(`entra:${pidW}`),
+      pierde: !!k(`puja-pierde:${pidL}`) && /Rival de prueba/.test(k(`puja-pierde:${pidL}`).texto),
+      mercado: l.some((a) => a.k.startsWith('en-mercado:') && (a.k.includes(nuevo.pid) || /que te interesan/.test(a.titulo))),
+      apagado: !apagado.some((a) => /^(puja-|en-mercado)/.test(a.k)) && apagado.some((a) => a.k.startsWith(`entra:${pidW}`)),
+    };
+  });
+  const fallan = Object.entries(r).filter(([, v]) => !v).map(([x]) => x);
+  if (fallan.length) mal(`avisos del mercado (41) fallan en: ${fallan.join(', ')}`);
+  else bien('avisos del mercado (41): puja ganada, puja perdida, el favorito que sale y los interruptores');
+  if (errores.length) mal(`avisos del mercado: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 10: (11 nov) el plan sin IA (planAuto) y Hoy/las alarmas (esClausulable) dicen lo mismo de una cláusula: con un
+// hueco en su puesto y el dinero de sobra, el plan la manda si y solo si Hoy la da por clausulable (antes, con interés 52
+// Hoy sí y el plan no; sin `mejora` y a 2 veces su valor, el plan sí y Hoy no)
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const Mo = await import('./js/motor.js');
+    const { D, c } = window.S;
+    const M = Object.create(window.S.M);
+    const x = M.clausulas.find((y) => !['injured', 'suspended', 'out_of_league'].includes(y.j.estado));
+    if (!x) return { sin: true };
+    M.clausulas = [x]; x.abierta = true; x.meLlega = true; x.ratio = 2; D.dinero = Math.max(D.dinero, x.clausula * 2 + 1e6);
+    M.mias = M.mias.filter((y) => y.j.pos !== x.j.pos);
+    Object.assign(M, { sobrecoste: () => ({ indice: -100 }), tolerancia: () => 100, conSalida: () => true, compraCal: () => ({ ok: true }) });
+    const caso = (interes, mejora) => {
+      x.interes = interes; M.mejora = () => mejora;
+      return { plan: (Mo.planAuto(D, M, c).operaciones || []).some((o) => o.accion === 'clausular' && o.pid === x.pid), hoy: Mo.esClausulable(M, x) };
+    };
+    const res = { bueno: caso(80, 1), sinMejora: caso(80, 0), interes52: caso(52, 1), interes45: caso(45, 1) };
+    // y la IA: una cláusula para el once que Hoy no da por buena sale en descartes, con el motivo
+    const I = await import('./js/ia.js'), S0 = window.S.M, y = S0.clausulas.find((z) => z.pid === x.pid) || x;
+    const P = () => ({ t: Date.now(), operaciones: [{ accion: 'clausular', ref: `C-${y.pid}`, jugador: y.j.nombre, objetivo: 'titular', importe: y.clausula, motivo: 'prueba' }] });
+    const mej = S0.mejora, rat = y.ratio;
+    S0.mejora = () => 0; y.ratio = 2;
+    const op = (I.cuadrarPlan(P(), D, S0).ops || [])[0] || {};
+    S0.mejora = mej; y.ratio = rat;
+    res.ia = { plan: !op.descartada, hoy: false }; // Hoy no la enseña: el plan de la IA tampoco
+    res.iaMotivo = /no es una cláusula que la app recomiende/.test(op.aviso || '');
+    return res;
+  });
+  if (r.sin) mal('plan y Hoy: la liga de ejemplo no trae cláusulas para probar');
+  else if (!r.iaMotivo) mal(`la IA: una cláusula que Hoy no da por buena no se descarta (${JSON.stringify(r.ia)})`);
+  else {
+    const mal1 = Object.entries(r).filter(([k, v]) => k !== 'iaMotivo' && v.plan !== v.hoy).map(([k]) => k);
+    if (mal1.length || !r.bueno.plan || r.sinMejora.plan) mal(`plan y Hoy se contradicen en: ${mal1.join(', ') || JSON.stringify(r)}`);
+    else bien('plan sin IA, la IA y Hoy: la misma regla para clausular (4 casos y el descarte de la IA)');
+  }
+  if (errores.length) mal(`plan y Hoy: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 11: (24) la pestaña Parón mira el hueco en la plantilla (contando tus pujas) y lo que sacarías vendiendo lo que te dice
+// la app: con la plantilla llena sale el aviso, «Puedes ganar» solo cuenta lo que cabe y lo que te llega vendiendo antes
+// va marcado
+{
+  const { ctx, page, errores } = await pagina();
+  await ctx.route('**/js/demo.js', async (r) => {
+    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,');
+    r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: cuerpo });
+  });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const P = await import('./js/paron.js');
+    const S = window.S, M = S.M;
+    const a = P.cuentasParon(S);
+    const pujas = (S.D.mercado || []).filter((m) => m.miPuja).length;
+    const base = a.tengo === M.mias.length + pujas && a.plazas === Math.max(0, P.PLANTILLA_MAX - a.tengo);
+    // lo de revender: el tuyo que más vale; sin saldo ni margen de puja, lo que sube pasa a «no te llega»
+    const rico = [...M.mias].filter((x) => x.j.pos !== 5).sort((x, y) => y.j.valor - x.j.valor)[0];
+    const M2 = Object.create(M); M2.paraRevender = [{ ...rico, rev: { precio: rico.j.valor }, beneficioYa: 0 }]; M2.pujaMax = 0;
+    const D2 = { ...S.D, dinero: 0, mercado: [...(S.D.mercado || [])] };
+    const b = P.cuentasParon({ ...S, M: M2, D: D2 });
+    const vend = b.espNo.filter((e) => e.vendiendo);
+    const okVenta = b.venta === rico.j.valor && vend.every((e) => e.falta <= b.venta) && b.espNo.filter((e) => !e.vendiendo).every((e) => e.falta > b.venta);
+    // la plantilla llena: «Puedes ganar» con lo que cabe (aquí, solo el hueco que hace la venta)
+    for (let i = 0; i < P.PLANTILLA_MAX; i++) D2.mercado.push({ id: `f${i}`, pid: `x${i}`, tipo: 'liga', miPuja: 1 });
+    const c = P.cuentasParon({ ...S, M: M2, D: D2 });
+    const okLlena = c.plazas === 0 && c.caben === 1 && c.gana === (c.esp[0] ? c.esp[0].beneficio : 0);
+    return { base, okVenta, okLlena, n: [a.tengo, b.espNo.length, vend.length] };
+  });
+  await page.evaluate(() => { const S = window.S; for (let i = 0; i < 25; i++) S.D.mercado.push({ id: `g${i}`, pid: `y${i}`, tipo: 'liga', miPuja: 1 }); document.querySelector('.nav button[data-ir="directo"]').click(); });
+  await page.waitForTimeout(800);
+  const aviso = await page.evaluate(() => { const h = document.querySelector('#vista .pnz-hueco'); return h ? h.textContent : (document.querySelector('#vista .pnz-c') ? 'FALTA' : 'sin compras'); });
+  const fallan = Object.entries(r).filter(([k, v]) => k !== 'n' && !v).map(([k]) => k);
+  if (fallan.length || aviso === 'FALTA') mal(`Parón (24): falla en ${[...fallan, aviso === 'FALTA' ? 'aviso' : ''].filter(Boolean).join(', ')} (${JSON.stringify(r.n)})`);
+  else bien(`Parón (24): hueco en la plantilla, lo que sacas vendiendo y el aviso de plantilla llena (${/Plantilla llena/.test(aviso) ? 'sale' : aviso}; tengo, sin llegar y llegan vendiendo: ${r.n.join(', ')})`);
+  if (errores.length) mal(`Parón (24): errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 12: (11 nov) todas las fichas y hojas abren sin «No se ha podido abrir»: Tu equipo hoy (el marcador de Hoy; en la
+// 0.7.4 se perdió `rango` y fallaba), jugador tuyo, de un rival y libre, rival, club, sustitutos, Ajustes y diagnóstico
+for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenador']]) {
+  const { ctx, page, errores } = await pagina({ ancho, alto });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(async () => {
+    const { M } = window.S;
+    const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    const abrir = async (attrs) => { const b = document.createElement('button'); Object.assign(b.dataset, attrs); document.body.append(b); b.click(); b.remove(); await espera(500); };
+    const mira = () => { const h = document.querySelector('.hoja'); const e = h && h.querySelector('.error-c'); const t = e ? e.textContent.trim().slice(0, 90) : null; const x = document.querySelector('.hoja [data-accion="cerrarHoja"]'); if (x) x.click(); return h ? t : 'no se abre'; };
+    const out = {};
+    const marcador = document.querySelector('#vista .marcador');
+    if (marcador) { marcador.click(); await espera(500); out.tuEquipo = mira(); await espera(200); } else out.tuEquipo = 'sin marcador';
+    const casos = { mio: { j: M.mias[0] && M.mias[0].pid }, deRival: { j: M.clausulas[0] && M.clausulas[0].pid }, libre: { j: (M.mercado.find((m) => m.tipo === 'liga') || {}).pid }, rival: { r: M.clausulas[0] && M.clausulas[0].teamId }, club: { club: M.mias[0] && M.mias[0].j.equipoId }, sustitutos: { accion: 'sustituto', pid: M.mias[0] && M.mias[0].pid }, ajustes: { accion: 'ajustes' } };
+    for (const [k, a] of Object.entries(casos)) { if (Object.values(a).some((v) => v == null)) { out[k] = 'sin datos'; continue; } await abrir(a); out[k] = mira(); await espera(200); }
+    document.querySelector('#bAjustes').click(); await espera(400);
+    const d = document.querySelector('.hoja [data-accion="diag"]'); if (d) { d.click(); await espera(500); out.diag = mira(); }
+    return out;
+  });
+  const fallan = Object.entries(r).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`);
+  if (fallan.length) mal(`${nombre}: fichas con error: ${fallan.join(' · ')}`);
+  else bien(`${nombre}: Tu equipo hoy, las fichas, Ajustes y el diagnóstico abren sin error (${Object.keys(r).length})`);
+  if (errores.length) mal(`${nombre} fichas: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

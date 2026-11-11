@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.4';
+export const VERSION = '0.7.5';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -12,17 +12,32 @@ export const VERSION = '0.7.4';
 // A los que no son el dueño solo les sale lo que les cambia algo (el filtro, en app.js): ni los arreglos, ni lo que lleva
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
+// importante: true (11 nov, Carlos) la pone en «Novedades» de Ajustes para todos: solo lo gordo, lo que cambia cómo se
+// usa la app (un menú nuevo, la ficha rehecha). Pocas: un par por versión como mucho. Debajo, en pequeño, los arreglos
+// de esas mismas versiones (sin los `menor` ni los de 'dueño').
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
+    v: '0.7.5', f: '2026-11-11', h: '05:23', t: 'El mercado te avisa',
+    cosas: [
+      { importante: true, para: 'app', tipo: 'nuevo', d: 'campana', t: 'Pujas ganadas y perdidas', x: 'Con la app cerrada, al cambiar el mercado te llega si has ganado una puja (y lo que pagas) o si te la ha quitado otro (quién y por cuánto). Se apaga en Ajustes → Avisos y alarmas.' },
+      { para: 'app', tipo: 'nuevo', d: 'oferta', t: 'Los que te interesan, en cuanto salen', x: 'Si sale al mercado uno de tus favoritos, uno de los que tienes en «Avisarme» o un chollo con interés alto, te avisa. Si salen más de dos, en un solo aviso.' },
+      { tipo: 'mejora', d: 'bandera', t: 'El parón mira si te caben', x: 'En la pestaña Parón, «Compra y revende» cuenta cuántos jugadores tienes (con tus pujas) y, con la plantilla casi llena, te dice cuántos caben y qué vender para hacer sitio. «Puedes ganar» solo suma lo que te cabe.' },
+      { tipo: 'mejora', d: 'dinero', t: 'Lo que te llega vendiendo antes', x: 'Lo que sube y hoy no te llega sale marcado si te llegaría vendiendo antes lo que te dice la app (lo que ha tocado techo y lo comprado para revender), con lo que sacarías.' },
+      { para: 'dueño', tipo: 'mejora', d: 'versiones', t: 'Novedades, para todos', x: 'En Ajustes → La app, todos tienen «Novedades» con lo importante de cada versión (lo que lleva importante: true en version.js: Ajustes por secciones, la ficha más limpia, Movimientos en Mercado, el valor de la ficha, la pestaña Parón y las alarmas en la app). Debajo de cada versión, en pequeño, sus arreglos. No se abre sola al actualizar. Tú sigues viendo la lista entera.' },
+      { tipo: 'arreglo', d: 'balanza', t: 'El plan, Hoy y las alarmas, de acuerdo', x: 'El plan sin IA usaba su propia regla para clausular y podía mandarte a por una cláusula que Hoy no enseñaba (o al revés). Ahora los tres miran lo mismo, y si la IA propone para tu once una cláusula que la app no recomienda, sale en «Descartados» con el motivo.' },
+      { tipo: 'arreglo', d: 'arreglo', t: 'El resumen de tu equipo abre de nuevo', x: 'En la 0.7.4, al tocar el marcador de Hoy (saldo, equipo y puesto) salía «No se ha podido abrir». Ya abre con la gráfica del valor de tu equipo y lo que sube y baja cada uno.' },
+    ],
+  },
+  {
     v: '0.7.4', f: '2026-11-11', h: '00:14', t: 'Ajustes ordenados y alarmas a tu gusto',
     cosas: [
-      { tipo: 'mejora', d: 'ajustes', t: 'Ajustes, por secciones', x: 'Ajustes ya no es una lista larga: va en cinco secciones que se abren al tocarlas (Cuenta y liga, Avisos y alarmas, La IA, La app y Datos y privacidad), cada una con una línea de lo que tiene. Arriba hay un buscador: escribe «clave», «once» o «borrar» y te enseña solo esa fila.' },
-      { para: 'app', tipo: 'nuevo', d: 'campana', t: 'Tus alarmas, cuándo quieras', x: 'En Ajustes → Avisos y alarmas eliges cuánto antes avisa cada cosa: los clausulazos del plan (al abrirse o hasta 10 min antes), las cláusulas de rivales, las tuyas (por ejemplo, 1 h antes de que se queden abiertas, y si de todas o solo de las baratas) y el cambio de mercado.' },
+      { importante: true, tipo: 'mejora', d: 'ajustes', t: 'Ajustes, por secciones', x: 'Ajustes ya no es una lista larga: va en cinco secciones que se abren al tocarlas (Cuenta y liga, Avisos y alarmas, La IA, La app y Datos y privacidad), cada una con una línea de lo que tiene. Arriba hay un buscador: escribe «clave», «once» o «borrar» y te enseña solo esa fila.' },
+      { importante: true, para: 'app', tipo: 'nuevo', d: 'campana', t: 'Tus alarmas, cuándo quieras', x: 'En Ajustes → Avisos y alarmas eliges cuánto antes avisa cada cosa: los clausulazos del plan (al abrirse o hasta 10 min antes), las cláusulas de rivales, las tuyas (por ejemplo, 1 h antes de que se queden abiertas, y si de todas o solo de las baratas) y el cambio de mercado.' },
       { para: 'app', tipo: 'nuevo', d: 'reloj', t: 'Avísame de este jugador', x: 'En la ficha de un jugador de un rival, «Avisarme de su cláusula»: eliges cuándo (al abrirse, 2, 5 o 15 min o 1 h antes) y te salta la alarma aunque no te interese según la app. Los tienes todos en Ajustes → Avisos y alarmas, para cambiarlos o quitarlos.' },
       { para: 'app', tipo: 'nuevo', d: 'camiseta', t: 'Recordatorio del once', x: 'Antes de que empiece la jornada (lo eliges: de 30 min a 1 día antes) te recuerda poner el once, con los huecos que te quedan y los tuyos que están de baja.' },
-      { tipo: 'mejora', d: 'cara', t: 'La ficha, más limpia', x: 'Los avisos de la ficha del jugador (la inercia, el plan, si es tuyo, a quién le llega, el calendario…) salen plegados: el título y una línea con lo importante, y el resto al tocarlos. Van en gris con una barra de color, para que no haya tanto color junto.' },
+      { importante: true, tipo: 'mejora', d: 'cara', t: 'La ficha, más limpia', x: 'Los avisos de la ficha del jugador (la inercia, el plan, si es tuyo, a quién le llega, el calendario…) salen plegados: el título y una línea con lo importante, y el resto al tocarlos. Van en gris con una barra de color, para que no haya tanto color junto.' },
       { tipo: 'arreglo', d: 'estrella', t: 'El botón Seguir, con su nombre', x: 'Con el lector de pantalla, la estrella de la ficha se llama igual que lo que pone («Seguir» o «Favorito»).', menor: true },
     ],
   },
@@ -39,7 +54,7 @@ export const NOVEDADES = [
       { tipo: 'mejora', d: 'rayo', t: 'Más fluida', x: 'La app hace menos trabajo de golpe al abrirse y cada minuto, y las animaciones son más ligeras: va más suave al cambiar de pestaña y al bajar por las listas.' },
       { para: 'web', tipo: 'nuevo', d: 'conexion', t: 'La web abre sin conexión', x: 'En la web y en el iPhone, si te quedas sin cobertura (en el estadio, por ejemplo), la app se abre igual con lo último que viste y te dice de qué hora son los datos.' },
       { tipo: 'arreglo', d: 'calendario', t: 'Los partidos adelantados', x: 'Un partido de una jornada que se juega días antes que el resto ya no adelanta el cierre de cláusulas de toda la jornada ni la deja «en juego» antes de tiempo.' },
-      { tipo: 'mejora', d: 'oferta', t: 'Movimientos, ahora en Mercado', x: 'Los movimientos de la liga pasan de Rivales a Mercado → Movimientos, por días y con la cara de cada jugador (con el tipo de movimiento en la esquina), su equipo y lo que vale. Arriba eliges entre toda la liga o solo los tuyos (lo que has hecho tú y lo que te han hecho a ti), y cada tipo dice cuántos hay.', ir: { v: 'mercado', seg: 'mercado:movimientos' } },
+      { importante: true, tipo: 'mejora', d: 'oferta', t: 'Movimientos, ahora en Mercado', x: 'Los movimientos de la liga pasan de Rivales a Mercado → Movimientos, por días y con la cara de cada jugador (con el tipo de movimiento en la esquina), su equipo y lo que vale. Arriba eliges entre toda la liga o solo los tuyos (lo que has hecho tú y lo que te han hecho a ti), y cada tipo dice cuántos hay.', ir: { v: 'mercado', seg: 'mercado:movimientos' } },
       { tipo: 'mejora', d: 'camiseta', t: 'El logo de siempre arriba', x: 'Arriba a la izquierda sale el logo completo de Fantasy Manager, el mismo del icono.', menor: true },
       { para: 'dueño', tipo: 'mejora', d: 'grafica', t: 'Rendimiento (sesión 9)', x: 'El motor tarda 218 ms en vez de 386 con 700 jugadores a CPU ×6 (tendencia e inercia con los días tal cual, otroDia y mediodía guardados, el histórico parseado una vez); lo que llega al arrancar se junta en una pasada (300 ms) y cada minuto solo se ponen al día las cuentas atrás, con el motor entero al pasar un hito o cada 10 min. Service worker (página por red con 4 s de margen, módulos con huella guardados), iconos de 192, 512 y maskable. Sin blur ni backdrop-filter, content-visibility en las filas y reducir movimiento en toda la app.' },
     ],
@@ -53,7 +68,7 @@ export const NOVEDADES = [
   {
     v: '0.7.2a', f: '2026-11-10', h: '21:29', t: 'Cada jornada, en la ficha',
     cosas: [
-      { tipo: 'mejora', d: 'grafica', t: 'El valor y cada día, en una sola tarjeta', x: 'En la ficha de un jugador, la gráfica del valor y las barras de lo que cambia cada día van juntas: los días de las barras salen marcados en la gráfica con una franja, para ver de un vistazo qué parte de la línea es cada barra.' },
+      { importante: true, tipo: 'mejora', d: 'grafica', t: 'El valor y cada día, en una sola tarjeta', x: 'En la ficha de un jugador, la gráfica del valor y las barras de lo que cambia cada día van juntas: los días de las barras salen marcados en la gráfica con una franja, para ver de un vistazo qué parte de la línea es cada barra.' },
       { tipo: 'mejora', d: 'trofeo', t: 'Los puntos de cada jornada, justo debajo', x: 'Debajo del valor van los puntos de sus últimas 7 jornadas en fichas de color: verde vivo de 10 en adelante, verde de 6 a 9, amarillo de 2 a 5 y rojo de 1 o menos, con los minutos, un balón si marcó y «no jugó» si no salió. Antes iban mucho más abajo, en otra gráfica de barras.' },
       { tipo: 'arreglo', d: 'dinero', t: 'Lo que cambia cada día, también en los baratos', x: 'En los jugadores que valen poco, «Cada día» salía casi todo a 0 porque iba en millones con dos decimales (a Pedro Díaz, que vale unos 740 mil, le cambia unos cientos o miles de euros al día). Si ningún día llega a 100 mil, ahora va en miles de euros.' },
     ],
@@ -125,7 +140,7 @@ export const NOVEDADES = [
     cosas: [
       { tipo: 'nuevo', d: 'plan', t: 'El plan, por fases', x: 'La pestaña Hoy enseña el plan en el orden en que cuadra el dinero: primero lo urgente, después «Haz caja» (lo que vendes o aceptas), «Ficha», «Protege» y «Alinea». Cada fase dice lo que entra o sale y con cuánto te quedas, y una barra cuenta los pasos que llevas hechos. Cada paso es una fila corta: tócala para ver el porqué y los datos.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'scroll', t: 'Pliega lo que ya tienes visto', x: 'Toca el título de una fase para plegarla; la app se acuerda mientras dure ese plan y pliega sola las que tienes hechas. Los próximos días, lo que hay que vigilar, las noticias y los rivales también van plegados en el móvil, para que lo primero que veas sea el plan.', ir: { v: 'hoy' } },
-      { tipo: 'nuevo', d: 'bandera', t: 'La pestaña Parón', x: 'Mientras dura el parón, Directo se convierte en Parón: qué comprar para revender antes de la vuelta y cuánto ganarías, lo principal arriba: quién se va a revalorizar y quién se va a hundir, con la gráfica de cada uno y, en «Para ti», solo lo que te llega con tu saldo y tu margen de puja (y lo que te falta por puesto, delante); qué tienes que vender antes de que baje, qué tuyos siguen subiendo, qué cláusulas mirar para el once de la vuelta y los días que cuentan. Arriba puedes volver a Directo, y cada sección se pliega tocando su título.', ir: { v: 'directo' } },
+      { importante: true, tipo: 'nuevo', d: 'bandera', t: 'La pestaña Parón', x: 'Mientras dura el parón, Directo se convierte en Parón: qué comprar para revender antes de la vuelta y cuánto ganarías, lo principal arriba: quién se va a revalorizar y quién se va a hundir, con la gráfica de cada uno y, en «Para ti», solo lo que te llega con tu saldo y tu margen de puja (y lo que te falta por puesto, delante); qué tienes que vender antes de que baje, qué tuyos siguen subiendo, qué cláusulas mirar para el once de la vuelta y los días que cuentan. Arriba puedes volver a Directo, y cada sección se pliega tocando su título.', ir: { v: 'directo' } },
       { tipo: 'nuevo', d: 'especular', t: 'En el parón, a por el dinero', x: 'Durante el parón de selecciones nadie puntúa, así que el plan cambia: compra lo que sube para venderlo antes de la vuelta, vende en lo alto lo que va a bajar y protege lo tuyo. Clausular para el once solo sale si es un chollo (a su valor y sin bajar) o en los dos o tres días antes de la jornada de vuelta.', ir: { v: 'hoy' } },
       { tipo: 'nuevo', d: 'calendario', t: 'El aviso del parón', x: 'Mientras dura el parón, arriba de Hoy, un aviso en amarillo con lo que falta para la jornada. Tócalo y vas a la pestaña Parón, donde está todo.', ir: { v: 'hoy' } },
       { menor: true, tipo: 'mejora', d: 'ia', t: 'La IA sabe qué cláusulas y pujas valen en el parón', x: 'Cada cláusula y puja le llega marcada como chollo, para revender o no; si propone fichar para el once algo que no es un chollo, la app lo descarta y dice por qué. Lo que se puede ganar revendiendo se calcula algo más prudente en el parón.' },

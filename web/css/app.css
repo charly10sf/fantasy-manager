@@ -781,6 +781,11 @@ body.con-nv { overflow: hidden; }
 .nv-enlace { margin-top: 4px; padding: 8px; font: 600 15px 'Barlow'; color: var(--rojo-l); }
 .nv.quieta .nv-num .dg, .nv.quieta .nv-num .pt, .nv.quieta .nv-lema, .nv.quieta .nv-baja, .nv.quieta .nv-baja svg { animation: none; }
 /* la lista de todas las versiones (Ajustes → Novedades) */
+.nvl-intro { color: var(--apagado); font-size: 14px; margin: 0 0 4px; }
+/* (11 nov) los arreglos de cada versión, en pequeño, debajo de lo importante (Novedades para todos) */
+.nvl-arreglos { margin: 2px 0 4px; color: var(--apagado); font-size: 13px; line-height: 1.4; }
+.nvl-arreglos small { display: block; font-weight: 600; font-size: 12.5px; margin-bottom: 2px; }
+.nvl-arreglos ul { margin: 0; padding-left: 18px; }
 .nvl { padding: 14px 0 6px; border-top: 1px solid var(--linea); }
 .nvl:first-of-type { border-top: 0; }
 .nvl-cab { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 8px; }
@@ -2149,7 +2154,11 @@ body.en-tour .aw, body.limitado .aw { visibility: hidden !important; }
 .pnz-ver button[aria-selected="true"] { background: var(--sube-s); color: var(--sube); }
 .pnz-rk .n .nt.tuyo { color: var(--azul); }
 .pnz-rk .n .ch-ok { flex: none; display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--sube-s); color: var(--sube); } .pnz-rk .n .ch-ok .ic { width: 11px; height: 11px; stroke-width: 3; }
-.pnz-llega { flex: 1 1 100%; font-weight: 600; } .pnz-llega.ok { color: var(--sube); } .pnz-llega.no { color: var(--baja); }
+.pnz-llega { flex: 1 1 100%; font-weight: 600; } .pnz-llega.ok { color: var(--sube); } .pnz-llega.no { color: var(--baja); } .pnz-llega.venta { color: var(--oro); }
+/* (24) la plantilla casi llena y lo que te llega vendiendo antes */
+.pnz-hueco { display: flex; gap: 8px; align-items: flex-start; margin: 0 2px 10px; padding: 9px 11px; border-radius: 10px; background: var(--oro-s); font-size: 13.5px; line-height: 1.35; }
+.pnz-hueco .ic { flex: none; width: 16px; height: 16px; margin-top: 1px; color: var(--oro); }
+.pnz-vend { color: var(--oro); font-weight: 600; }
 .pnz-rk-f { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font: 600 14px 'Barlow'; color: var(--rojo-l); }
 .pnz-rk-f .ic { width: 14px; height: 14px; }
 .tray .tr-hoy { stroke: var(--apagado); stroke-width: 1; stroke-dasharray: 2 3; }
