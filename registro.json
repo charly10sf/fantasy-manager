@@ -2060,7 +2060,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261111/1004249850/maxima-preocupacion-lesion-barrenetxea.html": 1794398731000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-cierra-entrenamiento-miercoles_0_2008472267.html": 1794399732000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/saltan-alarmas-mbappe-lesionado-francia-136329203.html": 1794401127000,
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/11/se-confirman-los-peores-presagios-sobre-la-lesion-de-barrenetxea-debera-pasar-por-quirofano-radio-san-sebastian/": 1794401190000
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/11/se-confirman-los-peores-presagios-sobre-la-lesion-de-barrenetxea-debera-pasar-por-quirofano-radio-san-sebastian/": 1794401190000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barrenetxea-sufre-grave-lesion-muslo-perdera-resta-temporada-20261111_3473028.html": 1794401602000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/11/6af463eefdddff04738b4577.html": 1794401443000
   },
   "hechos": [
    {
@@ -2377,11 +2379,37 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barrenetxea-sufre-grave-lesion-muslo-perdera-resta-temporada-20261111_3473028.html",
+    "medio": "COPE",
+    "t": 1794401602000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Ander Barrenetxea se pierde lo que resta de temporada",
+    "motivo": "lesión en el muslo derecho",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/11/6af463eefdddff04738b4577.html",
+    "medio": "El Mundo",
+    "t": 1794401443000,
+    "id": "1480",
+    "que": "lesion",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "",
+    "motivo": "lesión en la ingle",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3356,22 +3384,24 @@
    "n": 15,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136330407": 1794401772476
+  }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 195710,
-  "salida": 14044,
+  "entrada": 197933,
+  "salida": 14401,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.276541,
+  "dolares": 0.276942,
   "reservado": 0
  },
  "recientes": {
@@ -7474,13 +7504,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1471,
+   "ok": 1472,
    "fallos": 0,
-   "ejecuciones": 1050,
+   "ejecuciones": 1051,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T12:51:11.826Z"
+   "ultima": "2026-11-11T12:56:12.476Z"
   }
  },
  "ptsDirecto": {},
@@ -7497,15 +7527,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:51:17.206Z"
+   "ultimaBien": "2026-11-11T12:56:20.941Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:51:17.206Z"
+   "ultimaBien": "2026-11-11T12:56:20.941Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:51:17.206Z"
+   "ultimaBien": "2026-11-11T12:56:20.941Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7513,11 +7543,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:51:17.206Z"
+   "ultimaBien": "2026-11-11T12:56:20.941Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:51:17.206Z"
+   "ultimaBien": "2026-11-11T12:56:20.941Z"
   }
  },
  "avisos": [
