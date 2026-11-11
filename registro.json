@@ -1839,7 +1839,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261108/1004248852/esperaremos-julian-le-necesitamos-queremos-llegar-queremos-llegar.html": 1794178002000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248815/flick-olvida-eric-apuesta-dos-laterales-improvisados-partido.html": 1794173471000,
    "SPORT|136233387": 1794198609000,
-   "SPORT|136233456": 1794171741000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/la-dupla-fermin-lamine-suple-a-raphinha-y-sostiene-a-un-barca-tocado-en-lo-defensivo-cadena-ser/": 1794175233000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gonzalo-miro-senala-culpables-atletico-derrota-barcelona-gestion-entrenador-peor-todavia-20261108_3471046.html": 1794177066000,
    "ABC|https://www.abc.es/deportes/futbol/pegada-condena-atletico-lanza-barca-20261108225722-nt.html": 1794183248000,
@@ -7498,13 +7497,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1564,
+   "ok": 1565,
    "fallos": 0,
-   "ejecuciones": 1143,
+   "ejecuciones": 1144,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T21:01:17.865Z"
+   "ultima": "2026-11-11T21:06:15.785Z"
   }
  },
  "ptsDirecto": {},
@@ -7521,15 +7520,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:01:21.722Z"
+   "ultimaBien": "2026-11-11T21:06:18.955Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:01:21.722Z"
+   "ultimaBien": "2026-11-11T21:06:18.955Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:01:21.722Z"
+   "ultimaBien": "2026-11-11T21:06:18.955Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7537,11 +7536,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:01:21.722Z"
+   "ultimaBien": "2026-11-11T21:06:18.955Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:01:21.722Z"
+   "ultimaBien": "2026-11-11T21:06:18.955Z"
   }
  },
  "avisos": [
