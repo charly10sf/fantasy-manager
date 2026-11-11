@@ -2077,7 +2077,10 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249952/tchouameni-duda-celta.html": 1794414762000,
    "SPORT|136338857": 1794412618000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/sigue-en-directo-la-rueda-de-prensa-de-luis-de-la-fuente-previa-al-partido-entre-espana-y-republica-checa-cadena-ser/": 1794413700000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/sigue-en-directo-la-rueda-de-prensa-de-luis-de-la-fuente-previa-al-partido-entre-espana-y-republica-checa-cadena-ser/": 1794413700000,
+   "SPORT|136342823": 1794414623000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/luis-de-la-fuente-estalla-por-las-criticas-a-lamine-yamal-lo-que-mas-me-duele-es-la-mentira-cadena-ser/": 1794413700000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-niega-existan-privilegios-lamine-yamal-hablar-desconocimiento-vida-triste-lamentable-20261111_3473296.html": 1794418598000
   },
   "hechos": [
    {
@@ -2459,7 +2462,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 46
+   "n": 47
   },
   "desde": {
    "67": {
@@ -3452,23 +3455,24 @@
    "fallos": 0
   },
   "espera": {
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/11/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794418571820
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/11/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794418571820,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-reivindica-huelga-contra-todos-gobiernos-avisa-no-aceptara-parches-20261111183506.html": 1794418881626
   }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 69,
+   "clasificar": 70,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 251004,
-  "salida": 23814,
+  "entrada": 253434,
+  "salida": 24158,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.286956,
+  "dolares": 0.287371,
   "reservado": 0
  },
  "recientes": {
@@ -7561,13 +7565,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1529,
+   "ok": 1530,
    "fallos": 0,
-   "ejecuciones": 1108,
+   "ejecuciones": 1109,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:36:11.820Z"
+   "ultima": "2026-11-11T17:41:21.626Z"
   }
  },
  "ptsDirecto": {},
@@ -7584,15 +7588,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:36:15.483Z"
+   "ultimaBien": "2026-11-11T17:41:28.118Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:36:15.483Z"
+   "ultimaBien": "2026-11-11T17:41:28.118Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:36:15.483Z"
+   "ultimaBien": "2026-11-11T17:41:28.118Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7600,11 +7604,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:36:15.483Z"
+   "ultimaBien": "2026-11-11T17:41:28.118Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:36:15.483Z"
+   "ultimaBien": "2026-11-11T17:41:28.118Z"
   }
  },
  "avisos": [
