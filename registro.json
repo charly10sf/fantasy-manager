@@ -2069,7 +2069,10 @@
    "SPORT|136301661": 1794398469000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/11/marc-roca-viejo-deseo-fichaje-valencia-136330400.html": 1794402180000,
    "AS|https://as.com/futbol/primera/bright-ede-la-proxima-alta-para-el-deportivo-f202611-n/": 1794401895000,
-   "AS|https://as.com/futbol/primera/barrenetxea-sufre-una-lesion-severa-y-pasara-por-el-quirofano-f202611-n/": 1794400407000
+   "AS|https://as.com/futbol/primera/barrenetxea-sufre-una-lesion-severa-y-pasara-por-el-quirofano-f202611-n/": 1794400407000,
+   "AS|https://as.com/futbol/primera/sannadi-realiza-carrera-continua-en-lezama-f202611-n/": 1794402657000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249889/zidane-reacciona-incertidumbre-mbappe-llamando-ojitos-derechos-luis-enrique.html": 1794402099000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000
   },
   "hechos": [
    {
@@ -2437,11 +2440,23 @@
     "motivo": "lesión severa que requiere quirófano",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html",
+    "medio": "Superdeporte",
+    "t": 1794403782000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea pasará por quirófano por lesión muscular grave",
+    "motivo": "grave lesión muscular",
+    "plazo": "estará alejado varios meses",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -3428,17 +3443,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 209248,
-  "salida": 16605,
+  "entrada": 211662,
+  "salida": 18194,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.279175,
+  "dolares": 0.280211,
   "reservado": 0
  },
  "recientes": {
@@ -7541,13 +7556,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1478,
+   "ok": 1479,
    "fallos": 0,
-   "ejecuciones": 1057,
+   "ejecuciones": 1058,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T13:26:23.173Z"
+   "ultima": "2026-11-11T13:31:13.405Z"
   }
  },
  "ptsDirecto": {},
@@ -7564,15 +7579,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:26:28.587Z"
+   "ultimaBien": "2026-11-11T13:31:25.578Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:26:28.587Z"
+   "ultimaBien": "2026-11-11T13:31:25.578Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:26:28.587Z"
+   "ultimaBien": "2026-11-11T13:31:25.578Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7580,11 +7595,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:26:28.587Z"
+   "ultimaBien": "2026-11-11T13:31:25.578Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:26:28.587Z"
+   "ultimaBien": "2026-11-11T13:31:25.578Z"
   }
  },
  "avisos": [
