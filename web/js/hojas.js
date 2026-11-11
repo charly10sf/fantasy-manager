@@ -41,7 +41,7 @@ export function serieValor(S, pid) {
 export const cargandoValor = (S, pid) => pid !== '__equipo' && !S.D.demo && !(S.det && S.det[pid] && (S.det[pid].valores || S.det[pid].sinValores || S.det[pid].error));
 export function grafValor(serie, dias, cargando = false) {
   const p = (serie || []).filter(([t, v]) => Number.isFinite(t) && v > 0);
-  if (p.length < 2) return `<div class="graf-vacio">${cargando ? 'Cargando su histórico de valor…' : 'LaLiga no da su histórico de valor y la app aún no ha apuntado bastantes días.'}</div>`;
+  if (p.length < 2) return `<div class="graf-vacio${cargando ? ' esq esq-graf' : ''}">${cargando ? 'Cargando su histórico de valor…' : 'LaLiga no da su histórico de valor y la app aún no ha apuntado bastantes días.'}</div>`;
   let q = p.filter(([t]) => t >= Date.now() - dias * DIA - 12 * 3600e3);
   if (q.length < 2) q = p.slice(-2);
   const v0 = q[0][1], v1 = q[q.length - 1][1], d = v1 - v0;
@@ -307,7 +307,7 @@ export function fichaJugador(S, pid) {
   const rango = S.rango || 30;
   h += `<div class="graf-cab"><span>Valor de mercado</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="${esc(pid)}" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   h += `<div id="graf-j">${grafValor(serieValor(S, pid), rango, cargandoValor(S, pid))}</div>`;
-  h += `<div id="jor-j">${S.det && S.det[pid] ? jornadasFichaHTML(S.det[pid]) : '<div class="graf-vacio">Cargando sus jornadas…</div>'}</div>`;
+  h += `<div id="jor-j">${S.det && S.det[pid] ? jornadasFichaHTML(S.det[pid]) : '<div class="graf-vacio esq esq-jor">Cargando sus jornadas…</div>'}</div>`;
 
   if (mia) {
     // (37) «Es tuyo»: a la vista, hasta cuándo está a salvo la cláusula y el riesgo; dentro, lo que pagaste y lo que te daría LaLiga.
@@ -407,7 +407,8 @@ export function fichaJugador(S, pid) {
     if (r && r.abajo) tiles.push(tile('Contra los 6 últimos', d1(r.abajo.m), `pts · ${r.abajo.n} partido${r.abajo.n === 1 ? '' : 's'}`, tono(r.abajo.m)));
     if (v && j.pos <= 2 && v.cero != null) tiles.push(tile(`Portería a cero vs ${esc(v.rival)}`, `~${Math.round(v.cero * 100)} %`, 'de probabilidad'));
     else if (v && v.golesFavor != null) tiles.push(tile(`Goles de su equipo vs ${esc(v.rival)}`, `~${d1(v.golesFavor)}`, 'esperados'));
-    if (tiles.length) h += `<div class="sec" id="j-puntua" data-ancla><h2>Cómo puntúa</h2><span class="sub">${med ? `su media es ${d1(med)} pts` : 'puntos por partido'}</span></div><div class="rejilla rinde">${tiles.join('')}</div>`;
+    // (0.7.7, overhaul) el detalle va plegado: a la vista, el título de siempre y su cifra
+    if (tiles.length) h += `<details class="fj-pleg" id="j-puntua" data-ancla><summary><div class="sec"><h2>Cómo puntúa</h2><span class="sub">${med ? `su media es ${d1(med)} pts` : 'puntos por partido'}</span></div></summary><div class="rejilla rinde">${tiles.join('')}</div></details>`;
     h += esperadosHTML(S, M, j);
     // fuera del Fantasy: Understat y SofaScore
     const a = M.avanzado && M.avanzado(j.id);
@@ -424,7 +425,7 @@ export function fichaJugador(S, pid) {
         if (j.pos === 1 && a.s.paradas && a.s.min) c.push(`<span>Paradas/90 <b>${p90(a.s.paradas, a.s.min)}</b></span>`);
         if (j.pos !== 1 && a.s.min && (a.s.recup || a.s.entradas)) c.push(`<span>Recup./90 <b>${p90(a.s.recup || a.s.entradas, a.s.min)}</b></span>`);
       }
-      if (c.length) h += `<div class="sec"><h2>Rendimiento a fondo</h2><span class="sub">esta temporada</span></div><div class="previa">${c.join('')}</div>`;
+      if (c.length) h += `<details class="fj-pleg"><summary><div class="sec"><h2>Rendimiento a fondo</h2><span class="sub">esta temporada</span></div></summary><div class="previa">${c.join('')}</div></details>`;
     }
   } else h += `<div class="aviso-ficha">${icono('info')}<div>Es entrenador: en la versión gratis no se alinea ni puntúa. Si es tuyo, véndelo y usa el dinero en jugadores.</div></div>`;
   if (inter.por.length) h += `<p class="t2 peq">${barra(inter.n)} ${esc(inter.por.join(' · '))}</p>`;
@@ -443,7 +444,8 @@ function esperadosHTML(S, M, j) {
   if (!P) return '';
   const d1 = (n) => String(Math.round(n * 10) / 10).replace('.', ',');
   const prox = M.proximoPartido(j.equipoId);
-  let h = `<div class="sec"><h2>Puntos esperados: ${d1(P.final)}</h2><span class="sub">${prox ? `J${prox.jornada} ${prox.casa ? 'vs' : 'en'} ${esc(prox.rival)}` : ''}</span></div>`;
+  // (0.7.7, overhaul) plegado: el título con la cifra queda a la vista; el aviso de rotación va fuera, siempre visible
+  let h = `<details class="fj-pleg"><summary><div class="sec"><h2>Puntos esperados: ${d1(P.final)}</h2><span class="sub">${prox ? `J${prox.jornada} ${prox.casa ? 'vs' : 'en'} ${esc(prox.rival)}` : ''}</span></div></summary>`;
   const d = P.d;
   if (d) {
     const N = { min: 'Minutos', gol: 'Gol', asis: 'Asistencia', cero: 'Portería a cero', encaja: 'Encajados', paradas: 'Paradas', tarjetas: 'Tarjetas', resto: 'Nota DAZN y extras' };
@@ -452,6 +454,7 @@ function esperadosHTML(S, M, j) {
   }
   const T = P.T;
   if (T) h += `<div class="previa"><span>Titular <b>~${Math.round(T.p * 100)} %</b></span>${T.fuentes.map((f) => `<span>${esc(f.f)} <b>${Math.round(f.p * 100)} %</b></span>`).join('')}</div>`;
+  h += '</details>';
   if (T && T.rot && T.rot.cerca.length) {
     // (37) a la vista el primer partido y cuántos son; dentro, todos y lo que quita de titularidad
     const cerca = T.rot.cerca;

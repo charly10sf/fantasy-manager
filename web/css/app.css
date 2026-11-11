@@ -3063,3 +3063,40 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .btn:focus-visible, .b-ico:focus-visible, .tabs button:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
 /* Pregunta sin clave: el botón que cierra la guía es el principal; el que abre la web de la clave, secundario */
 .btn.gc-abrir { background: transparent; color: var(--texto); box-shadow: inset 0 0 0 1px var(--s3); }
+
+/* =========================================================================================================
+   OVERHAUL (0.7.7) · LO QUE QUEDABA DE LA TANDA 5: la ficha con el detalle plegado y esqueletos de carga
+   ========================================================================================================= */
+/* «Cómo puntúa», «Puntos esperados» y «Rendimiento a fondo» salen cerrados (Carlos, 11 nov): a la vista, su título de
+   siempre con la cifra; se abren tocándolo */
+.fj-pleg { margin: 10px 0 0; border-radius: var(--r-tarj); background: var(--s1); }
+.fj-pleg > summary { list-style: none; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 6px 14px; cursor: pointer; border-radius: var(--r-tarj); }
+.fj-pleg > summary::-webkit-details-marker { display: none; }
+.fj-pleg > summary .sec { flex: 1; min-width: 0; margin: 0; }
+.fj-pleg > summary::after { content: ''; flex: none; width: 8px; height: 8px; margin: 0 4px 4px 2px; border-right: 2px solid var(--texto-3); border-bottom: 2px solid var(--texto-3); transform: rotate(45deg); transition: transform var(--mov-1); }
+.fj-pleg[open] > summary::after { transform: rotate(-135deg); margin-bottom: -4px; }
+.fj-pleg[open] { padding: 0 14px 14px; }
+.fj-pleg[open] > summary { margin: 0 -14px 4px; }
+.fj-pleg > summary:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
+.fj-pleg + .sec { margin-top: 28px; }
+@media (prefers-reduced-motion: reduce) { .fj-pleg > summary::after { transition: none; } }
+/* esqueletos: mientras llegan la gráfica del valor y las jornadas, el hueco tiene ya su tamaño y su forma, así la ficha no
+   da un salto al llegar. Quietos (nada se mueve solo); el texto de «Cargando…» sigue, pequeño, abajo */
+.graf-vacio.esq { display: flex; align-items: flex-end; justify-content: center; padding: 0 0 12px; border-radius: var(--r-tarj); font-size: var(--t-mini); color: var(--texto-3); }
+.graf-vacio.esq-graf { min-height: 300px; background:
+  linear-gradient(var(--s3), var(--s3)) 14px 262px / calc(100% - 28px) 1px no-repeat,
+  linear-gradient(180deg, transparent 0 40%, rgba(255, 255, 255, 0.035) 40% 100%) 14px 60px / calc(100% - 28px) 200px no-repeat,
+  var(--s2); }
+.graf-vacio.esq-jor { min-height: 150px; margin-top: 12px; background:
+  repeating-linear-gradient(90deg, var(--s2) 0 calc((100% - 36px) / 7), transparent calc((100% - 36px) / 7) calc((100% - 36px) / 7 + 6px)) 0 34px / 100% 78px no-repeat; }
+
+/* las pestañas que no caben (Mercado en el móvil): el borde derecho se difumina mientras quede algo por ver.
+   Donde el navegador no tiene animaciones ligadas al desplazamiento, se queda como estaba */
+@supports (animation-timeline: scroll()) {
+  .tabs-in { animation: tabs-mas linear both; animation-timeline: scroll(self inline); }
+  @keyframes tabs-mas {
+    0% { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 44px), transparent); }
+    96% { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 44px), transparent); }
+    100% { -webkit-mask-image: linear-gradient(90deg, #000 100%, transparent); mask-image: linear-gradient(90deg, #000 100%, transparent); }
+  }
+}

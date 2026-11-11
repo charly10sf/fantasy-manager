@@ -2713,6 +2713,8 @@ document.addEventListener('click', async (ev) => {
     case 'ver': {
       const raiz = el.closest('.hoja');
       if (d.seg2) { const [v, s2] = d.seg2.split(':'); if (S.seg[v] !== s2) { S.seg[v] = s2; pintar(); } }
+      // (0.7.7) si el bloque va plegado en la ficha, se abre antes de bajar hasta él
+      { const pl = (raiz || document).querySelector(d.sel); if (pl && pl.tagName === 'DETAILS') pl.open = true; }
       bajarA(d.sel, raiz);
       break;
     }
