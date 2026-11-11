@@ -1831,8 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/anoeta-vuelve-a-sonreir-tras-el-zarpazo-de-oskarsson-f202611-n/": 1794158806000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html": 1794160570000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
@@ -7561,13 +7559,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1527,
+   "ok": 1528,
    "fallos": 0,
-   "ejecuciones": 1106,
+   "ejecuciones": 1107,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:26:12.747Z"
+   "ultima": "2026-11-11T17:31:26.656Z"
   }
  },
  "ptsDirecto": {},
@@ -7584,15 +7582,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:26:20.672Z"
+   "ultimaBien": "2026-11-11T17:31:30.577Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:26:20.672Z"
+   "ultimaBien": "2026-11-11T17:31:30.577Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:26:20.672Z"
+   "ultimaBien": "2026-11-11T17:31:30.577Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7600,11 +7598,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:26:20.672Z"
+   "ultimaBien": "2026-11-11T17:31:30.577Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:26:20.672Z"
+   "ultimaBien": "2026-11-11T17:31:30.577Z"
   }
  },
  "avisos": [
