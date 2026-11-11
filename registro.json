@@ -3385,7 +3385,8 @@
    "fallos": 0
   },
   "espera": {
-   "SPORT|136330407": 1794401772476
+   "SPORT|136330407": 1794401772476,
+   "Europa Press|https://www.europapress.es/nacional/noticia-colau-afirma-ayuso-insulta-sindicatos-porque-nerviosa-apoyo-huelga-general-20261111130843.html": 1794402076524
   }
  },
  "ia": {
@@ -7504,13 +7505,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1472,
+   "ok": 1473,
    "fallos": 0,
-   "ejecuciones": 1051,
+   "ejecuciones": 1052,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T12:56:12.476Z"
+   "ultima": "2026-11-11T13:01:16.524Z"
   }
  },
  "ptsDirecto": {},
@@ -7527,15 +7528,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:56:20.941Z"
+   "ultimaBien": "2026-11-11T13:01:20.236Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:56:20.941Z"
+   "ultimaBien": "2026-11-11T13:01:20.236Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:56:20.941Z"
+   "ultimaBien": "2026-11-11T13:01:20.236Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7543,11 +7544,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:56:20.941Z"
+   "ultimaBien": "2026-11-11T13:01:20.236Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:56:20.941Z"
+   "ultimaBien": "2026-11-11T13:01:20.236Z"
   }
  },
  "avisos": [
