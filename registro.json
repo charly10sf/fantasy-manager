@@ -1833,7 +1833,6 @@
   "vistas": {
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000,
    "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
-   "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-y-peligra-su-presencia-con-la-seleccion-f202611-n/": 1794157697000,
    "AS|https://as.com/futbol/primera/anoeta-vuelve-a-sonreir-tras-el-zarpazo-de-oskarsson-f202611-n/": 1794158806000,
    "AS|https://as.com/futbol/primera/aprobados-y-suspensos-de-la-real-sociedad-oskarsson-sigue-poliki-poliki-f202611-n/": 1794157979000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000,
@@ -1848,7 +1847,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html": 1794166775000,
    "SPORT|136231258": 1794164058000,
    "SPORT|136231292": 1794164994000,
-   "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-es-baja-en-la-seleccion-le-sustituye-jorge-de-frutos-f202611-n/": 1794157697000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000,
    "SPORT|136231402": 1794167455000,
    "SPORT|136231541": 1794167408000,
@@ -2100,18 +2098,6 @@
      1,
      0
     ]
-   },
-   {
-    "guid": "AS|https://as.com/futbol/barrenetxea-se-retira-lesionado-y-peligra-su-presencia-con-la-seleccion-f202611-n/",
-    "medio": "AS",
-    "t": 1794157697000,
-    "id": "701",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Barrenetxea sale del campo por molestias musculares",
-    "motivo": "molestias musculares",
-    "plazo": "",
-    "nums": []
    },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html",
@@ -3482,7 +3468,9 @@
    "n": 22,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794417033693
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7595,13 +7583,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1522,
+   "ok": 1523,
    "fallos": 0,
-   "ejecuciones": 1101,
+   "ejecuciones": 1102,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:06:13.207Z"
+   "ultima": "2026-11-11T17:10:33.693Z"
   }
  },
  "ptsDirecto": {},
@@ -7618,15 +7606,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:06:16.369Z"
+   "ultimaBien": "2026-11-11T17:10:38.367Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:06:16.369Z"
+   "ultimaBien": "2026-11-11T17:10:38.367Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:06:16.369Z"
+   "ultimaBien": "2026-11-11T17:10:38.367Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7634,11 +7622,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:06:16.369Z"
+   "ultimaBien": "2026-11-11T17:10:38.367Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:06:16.369Z"
+   "ultimaBien": "2026-11-11T17:10:38.367Z"
   }
  },
  "avisos": [
