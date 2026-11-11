@@ -221,7 +221,10 @@ export function minutosDe(cfg, yo) {
   const es = esDe(yo);
   if ((cfg.sinLimite || []).some(es)) return null;
   // los que salen con nombre en «equipos», con sus minutos, sea cual sea su liga
-  for (const [k, m] of Object.entries(cfg.equipos || {})) if (es(k)) return Number(m) >= 0 ? Number(m) + extraHoy(cfg, es) : null;
+  // (menos los de «soloViejas»: con 0 minutos, a las versiones de antes de la 0.7.6a les tapa la app con su botón de
+  // «Actualizar la app», para que se pongan al día quienes no se actualizan solos; desde la 0.7.6a no cuentan)
+  const viejas = new Set((cfg.soloViejas || []).map(String));
+  for (const [k, m] of Object.entries(cfg.equipos || {})) if (!viejas.has(String(k)) && es(k)) return Number(m) >= 0 ? Number(m) + extraHoy(cfg, es) : null;
   if (!enSusLigas(cfg, yo)) return null;
   // «minutosLiga» manda sobre «minutos»: las versiones de antes de la 0.5.0b solo leen «minutos», y con un fallo que
   // congelaba la app al contar el tiempo; ahí se deja a 0 para que a ellas no les toque contar
