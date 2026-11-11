@@ -1832,7 +1832,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248767/aficion-barca-entra-metropolitano-grito-julian-cule.html": 1794167743000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248772/konate-espanta-fantasmas-indispensable-mourinho.html": 1794167087000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000,
    "SPORT|136231402": 1794167455000,
    "SPORT|136231541": 1794167408000,
@@ -7513,13 +7512,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1554,
+   "ok": 1555,
    "fallos": 0,
-   "ejecuciones": 1133,
+   "ejecuciones": 1134,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T19:41:13.028Z"
+   "ultima": "2026-11-11T19:46:14.342Z"
   }
  },
  "ptsDirecto": {},
@@ -7536,15 +7535,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:41:22.275Z"
+   "ultimaBien": "2026-11-11T19:46:19.083Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:41:22.275Z"
+   "ultimaBien": "2026-11-11T19:46:19.083Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:41:22.275Z"
+   "ultimaBien": "2026-11-11T19:46:19.083Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7552,11 +7551,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:41:22.275Z"
+   "ultimaBien": "2026-11-11T19:46:19.083Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:41:22.275Z"
+   "ultimaBien": "2026-11-11T19:46:19.083Z"
   }
  },
  "avisos": [
