@@ -2049,7 +2049,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/casos-no-hubo-buen-entendimiento-xabi-alonso-mi-me-gusto-manera-trabajar-20261111_3472842.html": 1794392772000,
    "MARCA|https://www.marca.com/futbol/2026/11/11/bellingham-jobe-inglaterra-hermano-jude.html": 1794393040000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/mbappe-entrena-francia.html": 1794393421000,
-   "SPORT|136322629": 1794390859000
+   "SPORT|136322629": 1794390859000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249816/mbappe-enciende-alarmas-no-entrena-francia.html": 1794393963000
   },
   "hechos": [
    {
@@ -2382,7 +2383,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3227,7 +3228,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136220730": 1794135619000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/tavernes-valencia-horario-ver-partido-copa-136222269.html": 1794143685000,
    "SPORT|136221598": 1794138326000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/08/las-palmas-y-eldense-se-enfrentaran-este-lunes-a-las-2030-h-radio-elda/": 1794147139000,
@@ -3322,7 +3322,10 @@
    "Europa Press|https://www.europapress.es/sociedad/noticia-grupo-manifestantes-impide-emision-programa-cafe-ideas-rtve-cataluna-huelga-general-20261111105556.html": 1794390956000,
    "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-consumo-electrico-cae-66-1000-horas-20261111105528.html": 1794390928000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-television-va-negro-huelga-general-11n-20261111085959.html": 1794383999000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249783/paso-adelante-recuperacion-juan-hernandez.html": 1794389939000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249783/paso-adelante-recuperacion-juan-hernandez.html": 1794389939000,
+   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-alquiler-seguro-denuncia-actos-vandalicos-mas-40-oficinas-senala-sindicato-inquilinas-20261111114215.html": 1794393735000,
+   "AS|https://as.com/futbol/primera/la-tension-futbolistas-y-laliga-se-traslada-a-la-audiencia-nacional-f202611-n/": 1794392540000,
+   "SPORT|136322128": 1794390891000
   },
   "hechos": [
    {
@@ -3344,28 +3347,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-alquiler-seguro-denuncia-actos-vandalicos-mas-40-oficinas-senala-sindicato-inquilinas-20261111114215.html": 1794393973336,
-   "SPORT|136322128": 1794394573377
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 29,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 163987,
-  "salida": 8650,
+  "entrada": 168046,
+  "salida": 9731,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.270673,
+  "dolares": 0.271619,
   "reservado": 0
  },
  "recientes": {
@@ -7468,13 +7468,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1448,
+   "ok": 1449,
    "fallos": 0,
-   "ejecuciones": 1027,
+   "ejecuciones": 1028,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T10:56:13.377Z"
+   "ultima": "2026-11-11T11:01:11.700Z"
   }
  },
  "ptsDirecto": {},
@@ -7491,15 +7491,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:56:22.412Z"
+   "ultimaBien": "2026-11-11T11:01:20.205Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:56:22.412Z"
+   "ultimaBien": "2026-11-11T11:01:20.205Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:56:22.412Z"
+   "ultimaBien": "2026-11-11T11:01:20.205Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7507,11 +7507,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:56:22.412Z"
+   "ultimaBien": "2026-11-11T11:01:20.205Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:56:22.412Z"
+   "ultimaBien": "2026-11-11T11:01:20.205Z"
   }
  },
  "avisos": [
