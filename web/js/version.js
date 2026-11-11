@@ -19,7 +19,7 @@ export const VERSION = '0.7.7';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.7', f: '2026-11-11', t: 'Fantasy Manager estrena aspecto',
+    v: '0.7.7', f: '2026-11-11', h: '21:20', t: 'Fantasy Manager estrena aspecto',
     cosas: [
       { tipo: 'mejora', d: 'movil', t: 'Aspecto nuevo en toda la app', x: 'El negro es más profundo, las tarjetas ya no llevan borde y el rojo queda solo para lo que se toca o lo que urge. Los títulos van con una franja roja delante y las fases del plan llevan su número en un bloque rojo. Las etiquetas pasan a ser píldoras finas y, como mucho, dos por fila. En la ficha de un jugador, «Cómo puntúa», «Puntos esperados» y «Rendimiento a fondo» salen plegados: se abren tocando su título. Lo demás sigue en su sitio y hace lo mismo que antes.' },
     ],

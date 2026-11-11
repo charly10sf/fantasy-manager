@@ -605,47 +605,47 @@ h1.titulo { font-weight: 700; }
 .ajuste:last-child { border-bottom: 0; }
 .ajuste .c { flex: 1; min-width: 0; }
 .ajuste .c b { font-weight: 600; display: block; }
-.ajuste .c span { font-size: var(--t-sec2); color: var(--texto2); }
-.ajuste select, .ajuste input[type=time] { background: var(--plano2); border: 1px solid var(--linea); border-radius: var(--r-tarj); padding: 8px 10px; max-width: 48%; flex: none; }
+.ajuste .c span { font-size: 13.5px; color: var(--texto2); }
+.ajuste select, .ajuste input[type=time] { background: var(--plano2); border: 1px solid var(--linea); border-radius: 10px; padding: 8px 10px; max-width: 48%; flex: none; }
 /* (40, 10 nov) Ajustes en secciones plegables, con buscador; mismo estilo que los avisos de la ficha (diseño B) */
 .aj-busca { position: relative; margin: 2px 0 10px; }
 .aj-busca .ic { position: absolute; left: 12px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: var(--apagado); pointer-events: none; }
-.aj-busca input { width: 100%; padding: 11px 12px 11px 38px; border-radius: var(--r-tarj); border: 1px solid var(--linea); background: var(--plano2); color: var(--texto); font-size: var(--t-cuerpo); }
+.aj-busca input { width: 100%; padding: 11px 12px 11px 38px; border-radius: 12px; border: 1px solid var(--linea); background: var(--plano2); color: var(--texto); font-size: 15px; }
 .aj-busca input:focus-visible { outline: 2px solid var(--rojo-l); outline-offset: 1px; }
 .aj-atajos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 12px; }
-.aj-atajo { position: relative; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px 12px; border-radius: var(--r-ctl); background: rgba(238, 28, 60, 0.09); border: 1px solid rgba(238, 28, 60, 0.3); text-align: left; color: var(--texto); }
+.aj-atajo { position: relative; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px 12px; border-radius: 12px; background: rgba(238, 28, 60, 0.09); border: 1px solid rgba(238, 28, 60, 0.3); text-align: left; color: var(--texto); }
 .aj-atajo > .ic { width: 20px; height: 20px; flex: none; color: var(--rojo-l); }
 .aj-atajo > span { min-width: 0; flex: 1; }
-.aj-atajo b { display: block; font-size: var(--t-sec2); font-weight: 600; }
-.aj-atajo small { display: block; margin-top: 1px; font-size: var(--t-mini); color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.aj-atajo .gl-aj { flex: none; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--r-ctl); background: var(--rojo-btn); color: #fff; font: 700 var(--t-mini)/20px 'Barlow'; font-style: normal; text-align: center; }
-.aj-sec { margin: 0 0 8px; border-radius: var(--r-ctl); background: var(--plano2); border-left: 3px solid var(--plano3); }
+.aj-atajo b { display: block; font-size: 14.5px; font-weight: 600; }
+.aj-atajo small { display: block; margin-top: 1px; font-size: 12.5px; color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.aj-atajo .gl-aj { flex: none; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--rojo-btn); color: #fff; font: 700 12px/20px 'Barlow'; font-style: normal; text-align: center; }
+.aj-sec { margin: 0 0 8px; border-radius: 10px; background: var(--plano2); border-left: 3px solid var(--plano3); }
 .aj-sec[open] { border-left-color: var(--rojo-l); }
-.aj-sec > summary { list-style: none; display: flex; gap: 12px; align-items: center; padding: 13px 14px; cursor: pointer; border-radius: var(--r-ctl); }
+.aj-sec > summary { list-style: none; display: flex; gap: 12px; align-items: center; padding: 13px 14px; cursor: pointer; border-radius: 10px; }
 .aj-sec > summary::-webkit-details-marker { display: none; }
 .aj-sec > summary:focus-visible { outline: 2px solid var(--rojo-l); outline-offset: -2px; }
 .aj-sec > summary > .ic:first-child { width: 20px; height: 20px; flex: none; color: var(--rojo-l); }
 .aj-sec[open] > summary .av-fl { transform: rotate(180deg); }
 .aj-sec .av-fl { color: var(--apagado); flex: none; }
 .aj-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.aj-tx b { font-size: var(--t-cuerpo); font-weight: 700; }
-.aj-tx > span { font-size: var(--t-sec2); color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.aj-tx b { font-size: 16px; font-weight: 700; }
+.aj-tx > span { font-size: 13.5px; color: var(--texto2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .aj-cuerpo { padding: 0 14px 6px; border-top: 1px solid var(--linea); }
 .aj-cuerpo .ajuste { padding: 11px 0; gap: 10px; }
-.aj-cuerpo .ajuste .c b { font-size: var(--t-cuerpo); }
-.aj-cuerpo .ajuste .c span { display: block; margin-top: 1px; font-size: var(--t-sec2); line-height: 1.35; }
-.aj-cuerpo .ajuste select { max-width: 42%; padding: 7px 8px; font-size: var(--t-sec2); }
+.aj-cuerpo .ajuste .c b { font-size: 15px; }
+.aj-cuerpo .ajuste .c span { display: block; margin-top: 1px; font-size: 13px; line-height: 1.35; }
+.aj-cuerpo .ajuste select { max-width: 42%; padding: 7px 8px; font-size: 14px; }
 .aj-cuerpo .ajuste input[type=time] { padding: 6px 8px; }
 .aj-cuerpo .ajuste.sub { padding: 8px 0 10px 14px; border-left: 2px solid var(--plano3); margin-left: 2px; }
-.aj-cuerpo .ajuste.sub .c b { font-size: var(--t-sec2); font-weight: 500; }
+.aj-cuerpo .ajuste.sub .c b { font-size: 14px; font-weight: 500; }
 .aj-quitar { flex: none; width: 34px; height: 34px; }
 .aj-quitar .ic { width: 18px; height: 18px; }
 .aj-2 { display: flex; gap: 6px; flex: none; }
-.aj-sub { margin: 12px 0 0; font: 600 var(--t-mini) 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; color: var(--apagado); }
-.aj-prox { margin: 10px 0 0; font-size: var(--t-sec2); line-height: 1.4; color: var(--texto2); }
+.aj-sub { margin: 12px 0 0; font: 600 12px 'Barlow'; letter-spacing: 0.8px; text-transform: uppercase; color: var(--apagado); }
+.aj-prox { margin: 10px 0 0; font-size: 13px; line-height: 1.4; color: var(--texto2); }
 .aj-prox b { color: var(--texto); }
 .aj-btns { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 8px; }
-.aj-nada { margin: 10px 2px; font-size: var(--t-sec2); }
+.aj-nada { margin: 10px 2px; font-size: 14px; }
 /* (40) «Avisarme de su cláusula» en la ficha de un jugador de un rival */
 .avisar-j { display: flex; align-items: center; gap: 10px; margin: 10px 0; padding: 10px 12px; border-radius: var(--r-ctl); background: var(--plano2); border-left: 3px solid var(--plano3); }
 .avisar-j.on { border-left-color: var(--rojo-l); }
@@ -655,7 +655,7 @@ h1.titulo { font-weight: 700; }
 .avisar-j label b { display: block; font-weight: 600; font-size: var(--t-cuerpo); }
 .avisar-j label span { display: block; font-size: var(--t-sec2); color: var(--texto2); }
 .avisar-j select { flex: none; max-width: 46%; background: var(--plano); border: 1px solid var(--linea); border-radius: var(--r-tarj); padding: 7px 8px; font-size: var(--t-sec2); }
-.interr { width: 48px; height: 28px; border-radius: var(--r-tarj); background: var(--plano3); position: relative; flex: none; transition: background 0.18s; }
+.interr { width: 48px; height: 28px; border-radius: 14px; background: var(--plano3); position: relative; flex: none; transition: background 0.18s; }
 .interr::after { content: ''; position: absolute; width: 22px; height: 22px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: transform 0.18s; }
 .interr.on { background: var(--rojo); }
 .interr.on::after { transform: translateX(20px); }
@@ -818,21 +818,21 @@ body.con-nv { overflow: hidden; }
 .nv-enlace { margin-top: 4px; padding: 8px; font: 600 var(--t-cuerpo) 'Barlow'; color: var(--rojo-l); }
 .nv.quieta .nv-num .dg, .nv.quieta .nv-num .pt, .nv.quieta .nv-lema, .nv.quieta .nv-baja, .nv.quieta .nv-baja svg { animation: none; }
 /* la lista de todas las versiones (Ajustes → Novedades) */
-.nvl-intro { color: var(--apagado); font-size: var(--t-sec2); margin: 0 0 4px; }
+.nvl-intro { color: var(--apagado); font-size: 14px; margin: 0 0 4px; }
 /* (11 nov) los arreglos de cada versión, en pequeño, debajo de lo importante (Novedades para todos) */
-.nvl-arreglos { margin: 2px 0 4px; color: var(--apagado); font-size: var(--t-sec2); line-height: 1.4; }
-.nvl-arreglos small { display: block; font-weight: 600; font-size: var(--t-mini); margin-bottom: 2px; }
+.nvl-arreglos { margin: 2px 0 4px; color: var(--apagado); font-size: 13px; line-height: 1.4; }
+.nvl-arreglos small { display: block; font-weight: 600; font-size: 12.5px; margin-bottom: 2px; }
 .nvl-arreglos ul { margin: 0; padding-left: 18px; }
 .nvl { padding: 14px 0 6px; border-top: 1px solid var(--linea); }
 .nvl:first-of-type { border-top: 0; }
 .nvl-cab { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-bottom: 8px; }
-.nvl-cab b { font: 700 var(--t-sec) var(--cond); color: var(--rojo-l); }
-.nvl-cab span { font: 700 var(--t-cuerpo) var(--cond); text-transform: uppercase; }
-.nvl-cab small { width: 100%; color: var(--apagado); font-size: var(--t-sec2); }
+.nvl-cab b { font: 700 22px var(--cond); color: var(--rojo-l); }
+.nvl-cab span { font: 700 17px var(--cond); text-transform: uppercase; }
+.nvl-cab small { width: 100%; color: var(--apagado); font-size: 13px; }
 .nvl-c { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; }
 .nvl-c .nv-tipo { flex: none; min-width: 86px; text-align: center; margin-top: 2px; }
 .nvl-c b { font-weight: 600; }
-.nvl-c p { margin: 3px 0 0; color: var(--texto2); font-size: var(--t-sec2); }
+.nvl-c p { margin: 3px 0 0; color: var(--texto2); font-size: 14.5px; }
 
 /* un paso del plan que la app descarta (pagar muchísimo más de lo que vale) */
 .paso-op.descartada .op { opacity: 0.6; border-style: dashed; }
@@ -1916,14 +1916,14 @@ button.jg.ev-f { width: 100%; text-align: left; color: var(--texto); }
 .nv-notas h2 { margin: 4px 0 14px; font: 700 var(--t-titulo) var(--cond); text-transform: uppercase; }
 .nv-notas ol, .nvl-arr ol { margin: 0; padding: 0; list-style: none; counter-reset: arr; }
 .nv-notas li, .nvl-arr li { position: relative; padding: 10px 0 10px 40px; border-top: 1px solid var(--linea); counter-increment: arr; text-align: left; }
-.nv-notas li::before, .nvl-arr li::before { content: counter(arr); position: absolute; left: 0; top: 10px; width: 28px; height: 24px; border-radius: var(--r-pl); display: grid; place-items: center; background: var(--sube-s); color: var(--sube); font: 700 var(--t-cuerpo) var(--cond); }
+.nv-notas li::before, .nvl-arr li::before { content: counter(arr); position: absolute; left: 0; top: 10px; width: 28px; height: 24px; border-radius: 7px; display: grid; place-items: center; background: var(--sube-s); color: var(--sube); font: 700 15px var(--cond); }
 .nv-notas li b { display: block; font-weight: 600; font-size: var(--t-cuerpo); }
 .nv-notas li span { display: block; margin-top: 3px; color: var(--texto2); font-size: var(--t-sec2); line-height: 1.4; }
 .nv-notas li small { display: inline-block; margin-top: 4px; color: var(--apagado); font-size: var(--t-mini); }
 .nvl-arr { margin: 6px 0 4px; }
 .nvl-arr .nv-tipo { margin-bottom: 6px; }
 .nvl-arr li b { font-weight: 600; }
-.nvl-arr li p { margin: 3px 0 0; color: var(--texto2); font-size: var(--t-sec2); }
+.nvl-arr li p { margin: 3px 0 0; color: var(--texto2); font-size: 14.5px; }
 
 /* ---------- los anuncios de la web (AdSense, anuncios-web.js): solo se ven cuando Google ha puesto uno ---------- */
 .aw { position: fixed; z-index: 24; visibility: hidden; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
@@ -2980,7 +2980,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 /* etiqueta de un dato («Saldo», «Puntos», «Cláusula»): en minúscula y del mismo tamaño en el marcador, la ficha, Directo y el Parón */
 .dato .et, .dt-yo .et, .pnz-mer-sel small, .marcador .col .et, .marcador .fila-j { font: 600 var(--t-sec2)/1.2 'Barlow'; letter-spacing: 0.2px; text-transform: none; color: var(--texto-3); }
 /* antetítulo (lo pequeño en mayúsculas encima de un bloque): uno solo */
-.eti, .graf-cab > span, .banq-t, .aj-sub, .pnz-top, .pnz-mer-et { font-size: var(--t-mini); font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+.eti, .graf-cab > span, .banq-t, .pnz-top, .pnz-mer-et { font-size: var(--t-mini); font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
 /* la cifra: condensada 700 con números alineados; la grande a 28 y la de fila a 20 */
 .dato .v, .marcador .col .v, .fila-d .v, .eq2-num b, .op-j .n, .pp-imp, .cf-pts, .pnz-c .mas, .pnz-c .tot { font-family: var(--cond); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0.2px; }
 /* la tarjeta: superficie --s1 (o --s2 si va dentro de otra), radio 18 y una línea casi invisible; la misma en Hoy, Equipo, Mercado, Clubes y Parón */
@@ -3004,17 +3004,13 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 /* el título de cualquier ficha u hoja (jugador, rival, club, Ajustes, candado…): un solo tamaño, el de pestaña */
 .ficha-top h2, .hoja-cab h2, .club-hero h2, .bloq-hoja h2, .rival-cab h2 { font-size: var(--t-titulo); line-height: 1; }
 /* los desplegables y la hora de Ajustes y de «Avisarme», con el aspecto de los demás controles en vez del nativo */
-.ajuste select, .avisar-j select { -webkit-appearance: none; appearance: none; min-height: 40px; padding: 8px 32px 8px 12px; border: 0; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1px var(--s3); color: var(--texto);
+.avisar-j select { -webkit-appearance: none; appearance: none; min-height: 40px; padding: 8px 32px 8px 12px; border: 0; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1px var(--s3); color: var(--texto);
   background: var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%23bdb8c0' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 11px center / 11px auto; }
 .avisar-j select { background-color: var(--s3); }
-.ajuste input[type=time] { min-height: 40px; padding: 8px 12px; border: 0; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1px var(--s3); background: var(--s2); color: var(--texto); }
-.aj-cuerpo .ajuste select { padding: 7px 30px 7px 10px; }
-.ajuste select:focus-visible, .avisar-j select:focus-visible, .ajuste input[type=time]:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
+.avisar-j select:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
 /* el candado dentro de una ficha o una pestaña: sin rayas amarillas, que no pese más que lo que tiene alrededor */
 .bloq, .bloq-g { background: var(--s2); border: 1px dashed rgba(255, 197, 71, 0.3); }
 .bloq-i { border-top-color: rgba(255, 197, 71, 0.18); }
-/* los dos atajos de arriba de Ajustes, como superficie: con el fondo rojo oscuro parecían alertas */
-.aj-atajo { background: var(--s1); border-color: var(--linea); }
 
 /* =========================================================================================================
    OVERHAUL (0.7.7) · TANDA 3. UNA SOLA PÍLDORA Y CUATRO BOTONES.
@@ -3059,7 +3055,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .btn.sec { background: transparent; color: var(--texto); border: 0; box-shadow: inset 0 0 0 1px var(--s3); }
 .btn.sec:active { background: var(--s2); }
 .btn.txt { min-height: 44px; padding: 8px 4px; background: none; color: var(--rojo-texto); box-shadow: none; }
-.b-ico { min-width: 44px; min-height: 44px; }
+.b-ico { min-height: 44px; }
 .btn:focus-visible, .b-ico:focus-visible, .tabs button:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
 /* Pregunta sin clave: el botón que cierra la guía es el principal; el que abre la web de la clave, secundario */
 .btn.gc-abrir { background: transparent; color: var(--texto); box-shadow: inset 0 0 0 1px var(--s3); }
@@ -3116,7 +3112,19 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 #vista p > a, .hoja p > a, .gc p > a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 /* el detalle técnico de un error, pequeño y con la letra de la app: que no parezca que se ha roto algo más */
 .error-c .fallo-det, .fallo p.fallo-det, .carga .fallo-det { font-family: 'Barlow', system-ui, sans-serif; color: var(--texto-3); }
-/* los interruptores encendidos: contorno y botón rojos sobre fondo suave, no un relleno rojo por cada fila de Ajustes */
-.interr { border-radius: var(--r-red); background: var(--s3); }
-.interr.on { background: var(--rojo-s); box-shadow: inset 0 0 0 1.5px var(--rojo); }
-.interr.on::after { background: var(--rojo-texto); }
+
+/* =========================================================================================================
+   AJUSTES SE QUEDA COMO ESTABA (Carlos, 11 nov, 21:15: «publica, salvo la pestaña de ajustes que la quiero como
+   ahora»). La hoja de Ajustes (la única con el buscador .aj-busca) vuelve a los colores, la letra, los botones y los
+   controles de la 0.7.6a; sus reglas propias (.aj-…, .ajuste, .interr, .nvl-…) están arriba tal cual estaban.
+   ========================================================================================================= */
+.hoja:has(> .aj-busca) {
+  --negro: #08080a; --s1: #131317; --s2: #1b1b21; --s3: #26262e; --linea: #24242b; --texto-2: #c3bec5; --texto-3: #948f9b;
+  --fondo: #08080a; --plano: #131317; --plano2: #1b1b21; --plano3: #26262e; --texto2: #c3bec5; --apagado: #948f9b;
+  border-top: 3px solid var(--rojo); border-radius: 22px 22px 0 0; box-shadow: none;
+}
+.hoja:has(> .aj-busca) .hoja-cab h2 { font-size: 26px; line-height: 1.05; letter-spacing: normal; }
+.hoja:has(> .aj-busca) .b-ico { font-size: 12px; min-height: auto; }
+.hoja:has(> .aj-busca) .btn { min-height: 0; padding: 14px 18px; border-radius: 13px; font: 700 15px 'Barlow'; letter-spacing: 0.5px; text-transform: uppercase; }
+.hoja:has(> .aj-busca) .btn.chico { min-height: 40px; padding: 9px 13px; font-size: 14px; border-radius: 10px; }
+.hoja:has(> .aj-busca) .btn.sec { background: var(--plano2); color: var(--texto); border: 1px solid var(--linea); box-shadow: none; }
