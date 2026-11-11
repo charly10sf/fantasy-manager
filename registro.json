@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/": 1794141880000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248620/mensaje-vinicius-triunfo-real-madrid-mestalla.html": 1794148200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248652/kubo-regresa-titularidad-rayo-oyarzabal-queda-fuera-convocatoria.html": 1794147246000,
    "AS|https://as.com/futbol/primera/elche-betis-hoy-en-directo-ultima-hora-de-laliga-ea-sports-en-vivo-f202611-d/": 1794149789000,
@@ -2059,21 +2058,10 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/incertidumbre-con-mbappe-cadena-ser/": 1794398583000,
    "SPORT|136325350": 1794394962000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261111/1004249850/maxima-preocupacion-lesion-barrenetxea.html": 1794398731000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-cierra-entrenamiento-miercoles_0_2008472267.html": 1794399732000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-cierra-entrenamiento-miercoles_0_2008472267.html": 1794399732000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/saltan-alarmas-mbappe-lesionado-francia-136329203.html": 1794401127000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/",
-    "medio": "AS",
-    "t": 1794141880000,
-    "id": "3108",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aubameyang llega en plenas condiciones para el Alavés",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136225173",
     "medio": "SPORT",
@@ -2392,7 +2380,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3372,17 +3360,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 191759,
-  "salida": 13402,
+  "entrada": 193784,
+  "salida": 13889,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.275825,
+  "dolares": 0.276271,
   "reservado": 0
  },
  "recientes": {
@@ -7485,13 +7473,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1469,
+   "ok": 1470,
    "fallos": 0,
-   "ejecuciones": 1048,
+   "ejecuciones": 1049,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T12:41:14.819Z"
+   "ultima": "2026-11-11T12:46:13.833Z"
   }
  },
  "ptsDirecto": {},
@@ -7508,15 +7496,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:41:20.446Z"
+   "ultimaBien": "2026-11-11T12:46:20.437Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:41:20.446Z"
+   "ultimaBien": "2026-11-11T12:46:20.437Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:41:20.446Z"
+   "ultimaBien": "2026-11-11T12:46:20.437Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7524,11 +7512,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:41:20.446Z"
+   "ultimaBien": "2026-11-11T12:46:20.437Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:41:20.446Z"
+   "ultimaBien": "2026-11-11T12:46:20.437Z"
   }
  },
  "avisos": [
