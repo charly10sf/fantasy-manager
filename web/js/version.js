@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.5';
+export const VERSION = '0.7.5a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.5';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.5a', f: '2026-11-11', h: '06:58', t: 'El marcador, más a la vista',
+    cosas: [
+      { tipo: 'mejora', menor: true, d: 'grafica', t: 'El marcador de Hoy, más remarcado', x: 'La tarjeta de arriba de Hoy (saldo, valor del equipo y puesto) lleva el borde y una raya roja arriba, un brillo rojo suave y la flecha en rojo, para que se vea que es lo primero y que al tocarla se abre el detalle de tu equipo.' },
+    ],
+  },
   {
     v: '0.7.5', f: '2026-11-11', h: '05:23', t: 'El mercado te avisa',
     cosas: [
