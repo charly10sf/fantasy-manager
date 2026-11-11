@@ -2074,7 +2074,9 @@
    "SPORT|136334527": 1794402050000,
    "SPORT|136322901": 1794402031000,
    "AS|https://as.com/futbol/mariano-diaz-me-gustan-tanto-la-liga-como-la-copa-f202611-n/": 1794405348000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261111/1004249909/senalado-vinicius-defendido-mourinho-meses-vuelve-boca-todos.html": 1794406174000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261111/1004249909/senalado-vinicius-defendido-mourinho-meses-vuelve-boca-todos.html": 1794406174000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249883/jacobo-ramon-quedara-resto-temporada.html": 1794409200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261111/1004249914/osasuna-sigue-pendiente-aimar-oroz-romain-castillo.html": 1794408047000
   },
   "hechos": [
    {
@@ -2470,7 +2472,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -3458,17 +3460,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 57,
+   "clasificar": 58,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 225935,
-  "salida": 19788,
+  "entrada": 228222,
+  "salida": 20661,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.282436,
+  "dolares": 0.283101,
   "reservado": 0
  },
  "recientes": {
@@ -3684,11 +3686,6 @@
   ]
  },
  "puntosPartido": {
-  "12|116": {
-   "h": "a52be5a07adc",
-   "desde": 1794064876250,
-   "fin": 1794063674070
-  },
   "12|117": {
    "h": "f7029baf4897",
    "desde": 1794072375726,
@@ -7571,13 +7568,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1497,
+   "ok": 1498,
    "fallos": 0,
-   "ejecuciones": 1076,
+   "ejecuciones": 1077,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T15:01:11.213Z"
+   "ultima": "2026-11-11T15:06:13.355Z"
   }
  },
  "ptsDirecto": {},
@@ -7594,15 +7591,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:01:13.579Z"
+   "ultimaBien": "2026-11-11T15:06:22.345Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:01:13.579Z"
+   "ultimaBien": "2026-11-11T15:06:22.345Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:01:13.579Z"
+   "ultimaBien": "2026-11-11T15:06:22.345Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7610,11 +7607,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:01:13.579Z"
+   "ultimaBien": "2026-11-11T15:06:22.345Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:01:13.579Z"
+   "ultimaBien": "2026-11-11T15:06:22.345Z"
   }
  },
  "avisos": [
