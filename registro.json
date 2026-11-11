@@ -2081,7 +2081,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/luis-de-la-fuente-estalla-por-las-criticas-a-lamine-yamal-lo-que-mas-me-duele-es-la-mentira-cadena-ser/": 1794413700000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-niega-existan-privilegios-lamine-yamal-hablar-desconocimiento-vida-triste-lamentable-20261111_3473296.html": 1794418598000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-acelera-volver_0_2008475285.html": 1794418304000,
-   "SPORT|136343392": 1794415761000
+   "SPORT|136343392": 1794415761000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mujer-marcao-estalla-criticas-sevillismo_0_2008475561.html": 1794420208000
   },
   "hechos": [
    {
@@ -2451,7 +2452,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 49
+   "n": 50
   },
   "desde": {
    "67": {
@@ -3451,17 +3452,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 73,
+   "clasificar": 74,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 259411,
-  "salida": 24532,
+  "entrada": 261388,
+  "salida": 25186,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.288156,
+  "dolares": 0.288681,
   "reservado": 0
  },
  "recientes": {
@@ -7554,13 +7555,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1536,
+   "ok": 1537,
    "fallos": 0,
-   "ejecuciones": 1115,
+   "ejecuciones": 1116,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T18:11:13.227Z"
+   "ultima": "2026-11-11T18:16:12.120Z"
   }
  },
  "ptsDirecto": {},
@@ -7577,15 +7578,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:11:17.681Z"
+   "ultimaBien": "2026-11-11T18:16:19.066Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:11:17.681Z"
+   "ultimaBien": "2026-11-11T18:16:19.066Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:11:17.681Z"
+   "ultimaBien": "2026-11-11T18:16:19.066Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7593,11 +7594,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:11:17.681Z"
+   "ultimaBien": "2026-11-11T18:16:19.066Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:11:17.681Z"
+   "ultimaBien": "2026-11-11T18:16:19.066Z"
   }
  },
  "avisos": [
