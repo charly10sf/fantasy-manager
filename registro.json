@@ -3328,7 +3328,10 @@
    "SPORT|136318110": 1794384030000,
    "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-agencias-inmobiliarias-denuncian-vandalismo-varias-ciudades-antes-huelga-20261111101056.html": 1794388256000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261111/1004249774/betis-estrena-copa-diez-bajas.html": 1794387926000,
-   "Europa Press|https://www.europapress.es/catalunya/noticia-manifestante-herido-leve-atropello-piquete-acceso-tarragona-20261111100218.html": 1794387738000
+   "Europa Press|https://www.europapress.es/catalunya/noticia-manifestante-herido-leve-atropello-piquete-acceso-tarragona-20261111100218.html": 1794387738000,
+   "Europa Press|https://www.europapress.es/sociedad/noticia-grupo-manifestantes-impide-emision-programa-cafe-ideas-rtve-cataluna-huelga-general-20261111105556.html": 1794390956000,
+   "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-consumo-electrico-cae-66-1000-horas-20261111105528.html": 1794390928000,
+   "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-television-va-negro-huelga-general-11n-20261111085959.html": 1794383999000
   },
   "hechos": [
    {
@@ -3350,27 +3353,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-television-va-negro-huelga-general-11n-20261111085959.html": 1794390973920
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 150000,
-  "salida": 6389,
+  "entrada": 151997,
+  "salida": 6625,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.268144,
+  "dolares": 0.268462,
   "reservado": 0
  },
  "recientes": {
@@ -7473,13 +7474,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1436,
+   "ok": 1437,
    "fallos": 0,
-   "ejecuciones": 1015,
+   "ejecuciones": 1016,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
-   "mediaMs": 427,
-   "ultima": "2026-11-11T09:56:13.920Z"
+   "mediaMs": 429,
+   "ultima": "2026-11-11T10:01:11.670Z"
   }
  },
  "ptsDirecto": {},
@@ -7496,15 +7497,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:56:19.837Z"
+   "ultimaBien": "2026-11-11T10:01:20.329Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:56:19.837Z"
+   "ultimaBien": "2026-11-11T10:01:20.329Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:56:19.837Z"
+   "ultimaBien": "2026-11-11T10:01:20.329Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7512,11 +7513,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:56:19.837Z"
+   "ultimaBien": "2026-11-11T10:01:20.329Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:56:19.837Z"
+   "ultimaBien": "2026-11-11T10:01:20.329Z"
   }
  },
  "avisos": [
