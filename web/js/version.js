@@ -19,7 +19,7 @@ export const VERSION = '0.7.5a';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.5a', f: '2026-11-11', h: '00:00', t: 'El marcador, más a la vista',
+    v: '0.7.5a', f: '2026-11-11', h: '06:58', t: 'El marcador, más a la vista',
     cosas: [
       { tipo: 'mejora', menor: true, d: 'grafica', t: 'El marcador de Hoy, más remarcado', x: 'La tarjeta de arriba de Hoy (saldo, valor del equipo y puesto) lleva el borde y una raya roja arriba, un brillo rojo suave y la flecha en rojo, para que se vea que es lo primero y que al tocarla se abre el detalle de tu equipo.' },
     ],
