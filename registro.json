@@ -942,6 +942,13 @@
    "jornada": 13,
    "id": "2120426744704389383",
    "t": "2026-11-11T08:01:46.614Z"
+  },
+  {
+   "clave": "mercado|2026-11-12",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2120656669013369074",
+   "t": "2026-11-11T23:15:24.818Z"
   }
  ],
  "estados": {
@@ -3398,19 +3405,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-11",
+  "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 89,
-   "redactar": 8,
-   "revisar": 6,
+   "clasificar": 0,
+   "redactar": 1,
+   "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 290975,
-  "salida": 31912,
-  "cacheLee": 8709,
-  "cacheEscribe": 8709,
-  "dolares": 0.295003,
+  "entrada": 13468,
+  "salida": 194,
+  "cacheLee": 0,
+  "cacheEscribe": 2903,
+  "dolares": 0.036134,
   "reservado": 0
  },
  "recientes": {
@@ -3482,10 +3489,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-06T23:15:34.668Z",
-    "texto": "💸 Subidas y bajadas del mercado fantasy de hoy, 7/11\n\n📈 Aubameyang del Dépor es el que más sube: +1,9 M (+3,8 %), hasta los 50,9 M.\n\n📉 En el otro lado, Rodri del Barcelona pierde 2,2 M en un día y se queda en 84,1 M (-2,5 %).\n\n🛒 Chollo Fantasy: Thiago del Levante 🐸 vale 1,5 M, suma 4,1 de media y hoy sube un 2,4 %"
-   },
-   {
     "t": "2026-11-07T23:16:34.852Z",
     "texto": "📈 Aubameyang es el que más sube del mercado: +2,5 M y se planta en 53,4 M con el Deportivo, casi un 5 % en una noche.\n\nEn el lado contrario, Rodri pierde 2 M en el Barça y se queda en 82,2 M.\n\nSi buscas algo barato, Redondo del Elche 🌴 cuesta 1,9 M y mete 4,3 de media. La imagen trae las cinco mayores subidas y las cinco mayores bajadas."
    },
@@ -3500,6 +3503,10 @@
    {
     "t": "2026-11-10T23:15:33.485Z",
     "texto": "💸 Mueve ficha el mercado fantasy y el Barça sale en las dos puntas. Fermín sube 3,2 M (+2,7 %) y se va a 120,5 M, y es el 3º centrocampista con más puntos de la temporada. En el lado contrario, Rodri pierde 1,9 M y se queda en 76,3 M.\n\nBarato y en racha: Redondo, del Elche 🌴, vale 2,1 M y suma 24 puntos en las tres últimas jornadas. Los cinco que más suben y los cinco que más bajan, en la imagen."
+   },
+   {
+    "t": "2026-11-11T23:15:24.820Z",
+    "texto": "📈 El Barça copa los extremos del mercado de esta noche. Fermín López sube 3,4 M (+2,8 %) y se va a 123,9 M, mientras Rodri cae 1,8 M y se queda en 74,5 M.\n\nUn chollo barato: Redondo, del Elche 🌴, cuesta 2,2 M y ha sumado 24 puntos en las tres últimas jornadas. En la imagen tienes los cinco que más suben y los cinco que más bajan."
    }
   ],
   "previa": [
@@ -3727,6 +3734,22 @@
    "cacheLee": 5806,
    "cacheEscribe": 8709,
    "dolares": 0.28481,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-11",
+   "llamadas": {
+    "clasificar": 89,
+    "redactar": 8,
+    "revisar": 6,
+    "pulir": 0
+   },
+   "fallos": 0,
+   "entrada": 290975,
+   "salida": 31912,
+   "cacheLee": 8709,
+   "cacheEscribe": 8709,
+   "dolares": 0.295003,
    "reservado": 0
   }
  ],
@@ -7516,7 +7539,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T23:11:13.881Z"
+   "ultimaBien": "2026-11-11T23:15:24.822Z"
   },
   "FotMob": {
    "seguidas": 0,
