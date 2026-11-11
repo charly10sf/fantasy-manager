@@ -2080,7 +2080,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/sigue-en-directo-la-rueda-de-prensa-de-luis-de-la-fuente-previa-al-partido-entre-espana-y-republica-checa-cadena-ser/": 1794413700000,
    "SPORT|136342823": 1794414623000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/luis-de-la-fuente-estalla-por-las-criticas-a-lamine-yamal-lo-que-mas-me-duele-es-la-mentira-cadena-ser/": 1794413700000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-niega-existan-privilegios-lamine-yamal-hablar-desconocimiento-vida-triste-lamentable-20261111_3473296.html": 1794418598000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-niega-existan-privilegios-lamine-yamal-hablar-desconocimiento-vida-triste-lamentable-20261111_3473296.html": 1794418598000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-acelera-volver_0_2008475285.html": 1794418304000
   },
   "hechos": [
    {
@@ -2462,7 +2463,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 47
+   "n": 48
   },
   "desde": {
    "67": {
@@ -3461,17 +3462,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 70,
+   "clasificar": 71,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 253434,
-  "salida": 24158,
+  "entrada": 255369,
+  "salida": 24278,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.287371,
+  "dolares": 0.287625,
   "reservado": 0
  },
  "recientes": {
@@ -7564,13 +7565,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1531,
+   "ok": 1532,
    "fallos": 0,
-   "ejecuciones": 1110,
+   "ejecuciones": 1111,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:46:27.937Z"
+   "ultima": "2026-11-11T17:51:11.839Z"
   }
  },
  "ptsDirecto": {},
@@ -7587,15 +7588,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:46:33.175Z"
+   "ultimaBien": "2026-11-11T17:51:16.488Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:46:33.175Z"
+   "ultimaBien": "2026-11-11T17:51:16.488Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:46:33.175Z"
+   "ultimaBien": "2026-11-11T17:51:16.488Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7603,11 +7604,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:46:33.175Z"
+   "ultimaBien": "2026-11-11T17:51:16.488Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:46:33.175Z"
+   "ultimaBien": "2026-11-11T17:51:16.488Z"
   }
  },
  "avisos": [
