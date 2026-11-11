@@ -3353,7 +3353,8 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-interior-registra-once-detenidos-800-horas-quema-contenedores-atentado-contra-autoridad-20261111121046.html": 1794395777981
+   "Europa Press|https://www.europapress.es/nacional/noticia-interior-registra-once-detenidos-800-horas-quema-contenedores-atentado-contra-autoridad-20261111121046.html": 1794395777981,
+   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/11/normalidad-absoluta-mundo-deporte-huelga-general-136325321.html": 1794396972590
   }
  },
  "ia": {
@@ -7472,13 +7473,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1455,
+   "ok": 1456,
    "fallos": 0,
-   "ejecuciones": 1034,
+   "ejecuciones": 1035,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T11:31:12.408Z"
+   "ultima": "2026-11-11T11:36:12.590Z"
   }
  },
  "ptsDirecto": {},
@@ -7495,15 +7496,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:31:20.544Z"
+   "ultimaBien": "2026-11-11T11:36:14.975Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:31:20.544Z"
+   "ultimaBien": "2026-11-11T11:36:14.975Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:31:20.544Z"
+   "ultimaBien": "2026-11-11T11:36:14.975Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7511,11 +7512,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:31:20.544Z"
+   "ultimaBien": "2026-11-11T11:36:14.975Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:31:20.544Z"
+   "ultimaBien": "2026-11-11T11:36:14.975Z"
   }
  },
  "avisos": [
