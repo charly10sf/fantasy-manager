@@ -3443,9 +3443,7 @@
    "n": 24,
    "fallos": 0
   },
-  "espera": {
-   "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794420073924
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7553,13 +7551,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1534,
+   "ok": 1535,
    "fallos": 0,
-   "ejecuciones": 1113,
+   "ejecuciones": 1114,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T18:01:13.924Z"
+   "ultima": "2026-11-11T18:06:12.407Z"
   }
  },
  "ptsDirecto": {},
@@ -7576,15 +7574,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:01:19.127Z"
+   "ultimaBien": "2026-11-11T18:06:15.182Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:01:19.127Z"
+   "ultimaBien": "2026-11-11T18:06:15.182Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:01:19.127Z"
+   "ultimaBien": "2026-11-11T18:06:15.182Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7592,11 +7590,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:01:19.127Z"
+   "ultimaBien": "2026-11-11T18:06:15.182Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:01:19.127Z"
+   "ultimaBien": "2026-11-11T18:06:15.182Z"
   }
  },
  "avisos": [
