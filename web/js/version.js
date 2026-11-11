@@ -19,7 +19,7 @@ export const VERSION = '0.7.6';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.6', f: '2026-11-11', h: '', t: 'Siempre en la última',
+    v: '0.7.6', f: '2026-11-11', h: '08:13', t: 'Siempre en la última',
     cosas: [
       { importante: true, para: 'app', tipo: 'mejora', d: 'cohete', t: 'Siempre en la última versión', x: 'Cuando sale una versión nueva, la app no te deja seguir con la vieja: «Actualizar ahora» la pone en un momento. Si no se puede poner sola, «Descargar la app» la instala encima sin perder nada.' },
       { tipo: 'arreglo', d: 'arreglo', t: 'Las versiones nuevas llegan también a los móviles lentos', x: 'Si un móvil tardaba mucho en abrir tu liga con la versión nueva, la app la daba por rota y volvía a la vieja. Ahora le basta con que LaLiga conteste.' },
