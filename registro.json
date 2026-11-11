@@ -2051,7 +2051,8 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/mbappe-entrena-francia.html": 1794393421000,
    "SPORT|136322629": 1794390859000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249816/mbappe-enciende-alarmas-no-entrena-francia.html": 1794393963000,
-   "AS|https://as.com/futbol/primera/el-lateral-izquierdo-llama-otra-vez-a-gerard-martin-f202611-n/": 1794394771000
+   "AS|https://as.com/futbol/primera/el-lateral-izquierdo-llama-otra-vez-a-gerard-martin-f202611-n/": 1794394771000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/relaciones-tensas-mbappe-zidane-francia-20261111_3472893.html": 1794396298000
   },
   "hechos": [
    {
@@ -2384,7 +2385,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -3358,17 +3359,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 169988,
-  "salida": 9849,
+  "entrada": 172012,
+  "salida": 10587,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.271872,
+  "dolares": 0.272443,
   "reservado": 0
  },
  "recientes": {
@@ -7471,13 +7472,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1454,
+   "ok": 1455,
    "fallos": 0,
-   "ejecuciones": 1033,
+   "ejecuciones": 1034,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T11:26:11.985Z"
+   "ultima": "2026-11-11T11:31:12.408Z"
   }
  },
  "ptsDirecto": {},
@@ -7494,15 +7495,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:26:15.884Z"
+   "ultimaBien": "2026-11-11T11:31:20.544Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:26:15.884Z"
+   "ultimaBien": "2026-11-11T11:31:20.544Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:26:15.884Z"
+   "ultimaBien": "2026-11-11T11:31:20.544Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7510,11 +7511,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:26:15.884Z"
+   "ultimaBien": "2026-11-11T11:31:20.544Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:26:15.884Z"
+   "ultimaBien": "2026-11-11T11:31:20.544Z"
   }
  },
  "avisos": [
