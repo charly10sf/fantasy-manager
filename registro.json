@@ -3443,7 +3443,10 @@
    "n": 24,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794420673227,
+   "Europa Press|https://www.europapress.es/nacional/noticia-act3-huelga-deja-ya-mas-50-detenidos-919-incidencias-toda-espana-20261111190915.html": 1794420673227
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7551,13 +7554,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1535,
+   "ok": 1536,
    "fallos": 0,
-   "ejecuciones": 1114,
+   "ejecuciones": 1115,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T18:06:12.407Z"
+   "ultima": "2026-11-11T18:11:13.227Z"
   }
  },
  "ptsDirecto": {},
@@ -7574,15 +7577,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:06:15.182Z"
+   "ultimaBien": "2026-11-11T18:11:17.681Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:06:15.182Z"
+   "ultimaBien": "2026-11-11T18:11:17.681Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:06:15.182Z"
+   "ultimaBien": "2026-11-11T18:11:17.681Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7590,11 +7593,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:06:15.182Z"
+   "ultimaBien": "2026-11-11T18:11:17.681Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:06:15.182Z"
+   "ultimaBien": "2026-11-11T18:11:17.681Z"
   }
  },
  "avisos": [
