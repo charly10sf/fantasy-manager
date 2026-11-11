@@ -3378,7 +3378,10 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/catalunya/noticia-manifestante-herido-leve-atropello-piquete-acceso-tarragona-20261111100218.html": 1794388578019,
+   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-agencias-inmobiliarias-denuncian-vandalismo-varias-ciudades-antes-huelga-20261111101056.html": 1794388578019
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7496,13 +7499,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1427,
+   "ok": 1428,
    "fallos": 0,
-   "ejecuciones": 1006,
+   "ejecuciones": 1007,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T09:11:14.476Z"
+   "ultima": "2026-11-11T09:16:18.019Z"
   }
  },
  "ptsDirecto": {},
@@ -7519,15 +7522,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:11:21.040Z"
+   "ultimaBien": "2026-11-11T09:16:22.429Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:11:21.040Z"
+   "ultimaBien": "2026-11-11T09:16:22.429Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:11:21.040Z"
+   "ultimaBien": "2026-11-11T09:16:22.429Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7535,11 +7538,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:11:21.040Z"
+   "ultimaBien": "2026-11-11T09:16:22.429Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:11:21.040Z"
+   "ultimaBien": "2026-11-11T09:16:22.429Z"
   }
  },
  "avisos": [
