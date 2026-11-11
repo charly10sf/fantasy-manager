@@ -1283,7 +1283,7 @@ body.en-tour { overflow: hidden; }
 .tour-prog i.ya { background: rgba(238, 28, 60, 0.45); }
 .tour-prog i.on { background: var(--rojo); }
 .tour-logo .logo { display: block; width: 58px; height: 58px; margin: 0 0 10px; }
-.tour-txt h3 { font: 700 var(--t-cifra)/1.04 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; color: var(--texto); margin: 0 0 7px; }
+.tour-txt h2, .tour-txt h3 { font: 700 var(--t-cifra)/1.04 var(--cond); text-transform: uppercase; letter-spacing: 0.3px; color: var(--texto); margin: 0 0 7px; }
 .tour-txt p { margin: 0; font-size: var(--t-cuerpo); line-height: 1.5; color: var(--texto2); }
 .tour-btns { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
 .tour-elegir { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
@@ -3024,20 +3024,20 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
    Fuera, a propósito: la etiqueta de puesto (.pos), los cromos del campo (.cr-…) y la competición europea (.ch-eu), que
    lleva el color de cada torneo.
    ========================================================================================================= */
-.pl, .pill, .accion-t, .pnz-t, .tit-b, .ll-tag, .nv-tipo, .cp-res-t {
+.pl, .pill, .accion-t, .pnz-t, .tit-b, .ll-tag, .nv-tipo, .cp-res-t, .amenaza {
   --pl-c: var(--texto-2); --pl-b: var(--s3); --pl-f: transparent;
   font: 600 var(--t-mini)/1.25 'Barlow'; letter-spacing: 0.2px; text-transform: none; padding: 3px 9px; border: 0; border-radius: var(--r-red);
   color: var(--pl-c); background: var(--pl-f); box-shadow: inset 0 0 0 1px var(--pl-b);
 }
 .pl { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 /* las variantes de antes ponían su fondo y su color con dos clases: aquí mandan los del tono */
-.pill[class], .accion-t[class], .pnz-t[class], .tit-b[class], .ll-tag[class], .nv-tipo[class], .cp-res-t[class] { color: var(--pl-c); background: var(--pl-f); }
+.pill[class], .accion-t[class], .pnz-t[class], .tit-b[class], .ll-tag[class], .nv-tipo[class], .cp-res-t[class], .amenaza[class] { color: var(--pl-c); background: var(--pl-f); }
 .pl.chica, .tit-b, .cp-res-t { padding: 2px 7px; }
 /* los tonos */
 .pl.sube, .pill.bien, .pill.chollo, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V { --pl-c: var(--sube); --pl-b: rgba(47, 209, 143, 0.4); }
 .pl.baja, .pill.mal, .accion-t.descartada, .tit-b.mal, .cp-res-t.r-D { --pl-c: var(--baja); --pl-b: rgba(255, 111, 97, 0.4); }
-.pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .accion-t.blindar, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E { --pl-c: var(--oro); --pl-b: rgba(255, 197, 71, 0.4); }
-.pl.rojo, .pill.abierta, .pill.plan, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo { --pl-c: var(--rojo-texto); --pl-b: rgba(238, 28, 60, 0.5); }
+.pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .amenaza.media, .accion-t.blindar, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E { --pl-c: var(--oro); --pl-b: rgba(255, 197, 71, 0.4); }
+.pl.rojo, .pill.abierta, .pill.plan, .amenaza.alta, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo { --pl-c: var(--rojo-texto); --pl-b: rgba(238, 28, 60, 0.5); }
 .pl.azul, .pill.libre, .accion-t.alinear, .accion-t.esperar, .pnz-t.mer, .nv-tipo.mejora { --pl-c: var(--azul); --pl-b: rgba(88, 166, 255, 0.4); }
 .pill.estim { box-shadow: none; border: 1px dashed var(--s3); }
 /* con fondo suave: la acción de cada paso del plan, que es lo primero que se lee en la fila */
@@ -3100,3 +3100,23 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
     100% { -webkit-mask-image: linear-gradient(90deg, #000 100%, transparent); mask-image: linear-gradient(90deg, #000 100%, transparent); }
   }
 }
+
+/* =========================================================================================================
+   OVERHAUL (0.7.7) · TANDA 7 (carga, error, cuenta atrás, tutorial y Pregunta sin clave) y lo que sacó el repaso
+   de la tanda 8 con axe en las 121 pantallas. La portada y la entrada no se tocan.
+   ========================================================================================================= */
+/* contraste: los minutos de cada jornada, los puntos en rojo sobre el césped, el texto apagado dentro de una píldora y la
+   segunda línea de los botones del tutorial */
+.jt small { color: var(--texto-2); }
+.cr-dato.vivo-p.baja { color: #120406; }
+.perfil-r .pill .apag { opacity: 1; color: var(--texto-2); }
+.tour-elegir .btn small { opacity: 1; }
+.tour-elegir .btn.sec small { color: var(--texto-2); }
+/* un enlace dentro de un párrafo se distingue también por el subrayado, no solo por el color */
+#vista p > a, .hoja p > a, .gc p > a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+/* el detalle técnico de un error, pequeño y con la letra de la app: que no parezca que se ha roto algo más */
+.error-c .fallo-det, .fallo p.fallo-det, .carga .fallo-det { font-family: 'Barlow', system-ui, sans-serif; color: var(--texto-3); }
+/* los interruptores encendidos: contorno y botón rojos sobre fondo suave, no un relleno rojo por cada fila de Ajustes */
+.interr { border-radius: var(--r-red); background: var(--s3); }
+.interr.on { background: var(--rojo-s); box-shadow: inset 0 0 0 1.5px var(--rojo); }
+.interr.on::after { background: var(--rojo-texto); }

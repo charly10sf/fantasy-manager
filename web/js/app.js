@@ -2808,7 +2808,7 @@ document.addEventListener('click', async (ev) => {
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>
         <p>Es una de las funciones top de Fantasy Manager.${esc(dondeTop())}</p>
-        <button class="btn ancho" data-accion="cerrarHoja" aria-label="Cerrar">Entendido</button></div>`);
+        <button class="btn ancho" data-accion="cerrarHoja">Entendido</button></div>`);
       break;
     }
     case 'mandarAviso': enviarAviso(); break;
