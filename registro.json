@@ -2059,7 +2059,8 @@
    "SPORT|136325350": 1794394962000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261111/1004249850/maxima-preocupacion-lesion-barrenetxea.html": 1794398731000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-cierra-entrenamiento-miercoles_0_2008472267.html": 1794399732000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/saltan-alarmas-mbappe-lesionado-francia-136329203.html": 1794401127000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/saltan-alarmas-mbappe-lesionado-francia-136329203.html": 1794401127000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/11/se-confirman-los-peores-presagios-sobre-la-lesion-de-barrenetxea-debera-pasar-por-quirofano-radio-san-sebastian/": 1794401190000
   },
   "hechos": [
    {
@@ -2380,7 +2381,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -3360,17 +3361,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 42,
+   "clasificar": 43,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 193784,
-  "salida": 13889,
+  "entrada": 195710,
+  "salida": 14044,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.276271,
+  "dolares": 0.276541,
   "reservado": 0
  },
  "recientes": {
@@ -7473,13 +7474,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1470,
+   "ok": 1471,
    "fallos": 0,
-   "ejecuciones": 1049,
+   "ejecuciones": 1050,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T12:46:13.833Z"
+   "ultima": "2026-11-11T12:51:11.826Z"
   }
  },
  "ptsDirecto": {},
@@ -7496,15 +7497,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:46:20.437Z"
+   "ultimaBien": "2026-11-11T12:51:17.206Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:46:20.437Z"
+   "ultimaBien": "2026-11-11T12:51:17.206Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:46:20.437Z"
+   "ultimaBien": "2026-11-11T12:51:17.206Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7512,11 +7513,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:46:20.437Z"
+   "ultimaBien": "2026-11-11T12:51:17.206Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:46:20.437Z"
+   "ultimaBien": "2026-11-11T12:51:17.206Z"
   }
  },
  "avisos": [
