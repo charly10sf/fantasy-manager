@@ -2081,7 +2081,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laporte-duda-jugar-frente-republica-checa-proceso-virico-20261111_3473310.html": 1794421558000,
    "ABC|https://www.abc.es/deportes/futbol/fuente-indigna-sospechas-lesion-lamine-lamentable-inflamacion-20261111193549-nt.html": 1794422149000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/11/luis-fuente-lamine-yamal-ningun-privilegio/00031794423046999577966.htm": 1794423300000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261111/1004250002/mujer-marcao-explota-criticas-sueldo-no-decide-aficion.html": 1794423209000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261111/1004250002/mujer-marcao-explota-criticas-sueldo-no-decide-aficion.html": 1794423209000,
+   "SPORT|136345794": 1794421376000
   },
   "hechos": [
    {
@@ -2425,7 +2426,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 55
+   "n": 56
   },
   "desde": {
    "67": {
@@ -3421,23 +3422,24 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/catalunya/noticia-grupos-personas-rompen-aparadores-queman-contenedores-lanzan-pirotecnia-mossos-20261111200434.html": 1794424272091
+   "Europa Press|https://www.europapress.es/catalunya/noticia-grupos-personas-rompen-aparadores-queman-contenedores-lanzan-pirotecnia-mossos-20261111200434.html": 1794424272091,
+   "El Correo|https://www.elcorreo.com/athletic/dos-jugadoras-athletic-femenino-defienden-huelga-toca-20261111200135-nt.html": 1794425174023
   }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 81,
+   "clasificar": 82,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 275162,
-  "salida": 29242,
+  "entrada": 277208,
+  "salida": 29572,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.292086,
+  "dolares": 0.292456,
   "reservado": 0
  },
  "recientes": {
@@ -3653,11 +3655,6 @@
   ]
  },
  "puntosPartido": {
-  "12|115": {
-   "h": "56af51032406",
-   "desde": 1794080773416,
-   "fin": 1794079572335
-  },
   "12|112": {
    "h": "084b586dfdc3",
    "desde": 1794089472310,
@@ -7530,13 +7527,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1550,
+   "ok": 1551,
    "fallos": 0,
-   "ejecuciones": 1129,
+   "ejecuciones": 1130,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T19:21:12.094Z"
+   "ultima": "2026-11-11T19:26:14.023Z"
   }
  },
  "ptsDirecto": {},
@@ -7553,15 +7550,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:21:14.591Z"
+   "ultimaBien": "2026-11-11T19:26:21.017Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:21:14.591Z"
+   "ultimaBien": "2026-11-11T19:26:21.017Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:21:14.591Z"
+   "ultimaBien": "2026-11-11T19:26:21.017Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7569,11 +7566,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:21:14.591Z"
+   "ultimaBien": "2026-11-11T19:26:21.017Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:21:14.591Z"
+   "ultimaBien": "2026-11-11T19:26:21.017Z"
   }
  },
  "avisos": [
