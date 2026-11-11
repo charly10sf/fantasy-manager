@@ -2075,7 +2075,9 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000,
    "SPORT|136331770": 1794400495000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
-   "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000
+   "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000,
+   "SPORT|136334527": 1794402050000,
+   "SPORT|136322901": 1794402031000
   },
   "hechos": [
    {
@@ -2485,7 +2487,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -3331,7 +3333,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/08/las-palmas-y-eldense-se-enfrentaran-este-lunes-a-las-2030-h-radio-elda/": 1794147139000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000,
    "SPORT|136226466": 1794152883000,
    "SPORT|136227641": 1794155343000,
@@ -3468,22 +3469,24 @@
    "n": 18,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405972301
+  }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 53,
+   "clasificar": 54,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 217581,
-  "salida": 18659,
+  "entrada": 219887,
+  "salida": 18881,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.281035,
+  "dolares": 0.281377,
   "reservado": 0
  },
  "recientes": {
@@ -7586,13 +7589,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1485,
+   "ok": 1486,
    "fallos": 0,
-   "ejecuciones": 1064,
+   "ejecuciones": 1065,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T14:01:20.331Z"
+   "ultima": "2026-11-11T14:06:12.301Z"
   }
  },
  "ptsDirecto": {},
@@ -7609,15 +7612,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:01:30.951Z"
+   "ultimaBien": "2026-11-11T14:06:17.817Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:01:30.951Z"
+   "ultimaBien": "2026-11-11T14:06:17.817Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:01:30.951Z"
+   "ultimaBien": "2026-11-11T14:06:17.817Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7625,11 +7628,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:01:30.951Z"
+   "ultimaBien": "2026-11-11T14:06:17.817Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:01:30.951Z"
+   "ultimaBien": "2026-11-11T14:06:17.817Z"
   }
  },
  "avisos": [
