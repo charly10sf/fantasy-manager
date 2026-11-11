@@ -3368,7 +3368,9 @@
    "El Correo|https://www.elcorreo.com/athletic/dos-jugadoras-athletic-femenino-defienden-huelga-toca-20261111200135-nt.html": 1794424458000,
    "Europa Press|https://www.europapress.es/catalunya/noticia-grupos-personas-rompen-aparadores-queman-contenedores-lanzan-pirotecnia-mossos-20261111200434.html": 1794423874000,
    "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-expresa-maximo-respeto-quienes-secundado-paro-condena-actitud-pp-jornada-20261111211130.html": 1794427890000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-general-vivienda-moviliza-cientos-miles-personas-toda-espana-pesar-lluvias-20261111203941.html": 1794425981000
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-general-vivienda-moviliza-cientos-miles-personas-toda-espana-pesar-lluvias-20261111203941.html": 1794425981000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-ve-fracaso-huelga-general-acto-camuflado-campana-electoral-parte-sindicatos-20261111223111.html": 1794432671000,
+   "SPORT|136346611": 1794420923000
   },
   "hechos": [
    {
@@ -3390,28 +3392,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 28,
+   "n": 29,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-ve-fracaso-huelga-general-acto-camuflado-campana-electoral-parte-sindicatos-20261111223111.html": 1794432973782,
-   "SPORT|136346611": 1794434173322
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 88,
+   "clasificar": 89,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 289035,
-  "salida": 31751,
+  "entrada": 290975,
+  "salida": 31912,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.294728,
+  "dolares": 0.295003,
   "reservado": 0
  },
  "recientes": {
@@ -3627,11 +3626,6 @@
   ]
  },
  "puntosPartido": {
-  "12|112": {
-   "h": "084b586dfdc3",
-   "desde": 1794089472310,
-   "fin": 1794088871346
-  },
   "12|118": {
    "h": "485c17982f8a",
    "desde": 1794150374132,
@@ -7499,13 +7493,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1575,
+   "ok": 1576,
    "fallos": 0,
-   "ejecuciones": 1154,
+   "ejecuciones": 1155,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T21:56:13.322Z"
+   "ultima": "2026-11-11T22:01:17.260Z"
   }
  },
  "ptsDirecto": {},
@@ -7522,15 +7516,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:56:17.545Z"
+   "ultimaBien": "2026-11-11T22:01:23.128Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:56:17.545Z"
+   "ultimaBien": "2026-11-11T22:01:23.128Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:56:17.545Z"
+   "ultimaBien": "2026-11-11T22:01:23.128Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7538,7 +7532,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:56:17.545Z"
+   "ultimaBien": "2026-11-11T22:01:23.128Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
