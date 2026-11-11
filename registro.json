@@ -2048,7 +2048,8 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-sobre-ausencia-lamine-yamal-republica-checa-fuente-haria-jugador-20261111_3472611.html": 1794378607000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/mundo-maldini/audios/mundomaldini-10-20261111_3472620.html": 1794357600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/20261111/1004249788/raul.html": 1794391928000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/casos-no-hubo-buen-entendimiento-xabi-alonso-mi-me-gusto-manera-trabajar-20261111_3472842.html": 1794392772000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/casos-no-hubo-buen-entendimiento-xabi-alonso-mi-me-gusto-manera-trabajar-20261111_3472842.html": 1794392772000,
+   "MARCA|https://www.marca.com/futbol/2026/11/11/bellingham-jobe-inglaterra-hermano-jude.html": 1794393040000
   },
   "hechos": [
    {
@@ -2381,7 +2382,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -3351,17 +3352,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 158176,
-  "salida": 7168,
+  "entrada": 160089,
+  "salida": 7260,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.269351,
+  "dolares": 0.269588,
   "reservado": 0
  },
  "recientes": {
@@ -7464,13 +7465,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1443,
+   "ok": 1444,
    "fallos": 0,
-   "ejecuciones": 1022,
+   "ejecuciones": 1023,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T10:31:17.652Z"
+   "ultima": "2026-11-11T10:36:12.067Z"
   }
  },
  "ptsDirecto": {},
@@ -7487,15 +7488,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:31:25.869Z"
+   "ultimaBien": "2026-11-11T10:36:16.431Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:31:25.869Z"
+   "ultimaBien": "2026-11-11T10:36:16.431Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:31:25.869Z"
+   "ultimaBien": "2026-11-11T10:36:16.431Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7503,11 +7504,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:31:25.869Z"
+   "ultimaBien": "2026-11-11T10:36:16.431Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:31:25.869Z"
+   "ultimaBien": "2026-11-11T10:36:16.431Z"
   }
  },
  "avisos": [
