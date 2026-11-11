@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248767/aficion-barca-entra-metropolitano-grito-julian-cule.html": 1794167743000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000,
    "AS|https://as.com/futbol/primera/dieng-y-diakhaby-tampoco-convenceran-a-aguirre-en-copa-f202611-n/": 1794183615000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248739/raphinha-goleador-inesperado.html": 1794204000000,
@@ -7510,13 +7509,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1556,
+   "ok": 1557,
    "fallos": 0,
-   "ejecuciones": 1135,
+   "ejecuciones": 1136,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T19:51:12.422Z"
+   "ultima": "2026-11-11T19:56:12.863Z"
   }
  },
  "ptsDirecto": {},
@@ -7533,15 +7532,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:51:16.467Z"
+   "ultimaBien": "2026-11-11T19:56:17.122Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:51:16.467Z"
+   "ultimaBien": "2026-11-11T19:56:17.122Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:51:16.467Z"
+   "ultimaBien": "2026-11-11T19:56:17.122Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7549,11 +7548,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:51:16.467Z"
+   "ultimaBien": "2026-11-11T19:56:17.122Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:51:16.467Z"
+   "ultimaBien": "2026-11-11T19:56:17.122Z"
   }
  },
  "avisos": [
