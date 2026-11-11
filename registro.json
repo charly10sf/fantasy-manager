@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
    "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248767/aficion-barca-entra-metropolitano-grito-julian-cule.html": 1794167743000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248772/konate-espanta-fantasmas-indispensable-mourinho.html": 1794167087000,
@@ -2086,18 +2085,6 @@
    "ABC|https://www.abc.es/deportes/futbol/fuente-indigna-sospechas-lesion-lamine-lamentable-inflamacion-20261111193549-nt.html": 1794422149000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794163508000,
-    "id": "3208",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Rodri causa baja para el partido en el Metropolitano",
-    "motivo": "baja",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html",
     "medio": "Mundo Deportivo",
@@ -7557,13 +7544,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1542,
+   "ok": 1543,
    "fallos": 0,
-   "ejecuciones": 1121,
+   "ejecuciones": 1122,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T18:41:15.085Z"
+   "ultima": "2026-11-11T18:46:27.550Z"
   }
  },
  "ptsDirecto": {},
@@ -7580,15 +7567,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:41:26.799Z"
+   "ultimaBien": "2026-11-11T18:46:32.421Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:41:26.799Z"
+   "ultimaBien": "2026-11-11T18:46:32.421Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:41:26.799Z"
+   "ultimaBien": "2026-11-11T18:46:32.421Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7596,11 +7583,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:41:26.799Z"
+   "ultimaBien": "2026-11-11T18:46:32.421Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:41:26.799Z"
+   "ultimaBien": "2026-11-11T18:46:32.421Z"
   }
  },
  "avisos": [
