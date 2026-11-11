@@ -1824,7 +1824,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248531/doble-palo-real-madrid-alarmas-linda-caicedo-cruzan-charco.html": 1794120828000,
    "SPORT|136086039": 1794121202000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248556/iker-casillas-enfada-saca-hijos-cantera-real-madrid.html": 1794127817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html": 1794130161000,
@@ -7507,13 +7506,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1398,
+   "ok": 1399,
    "fallos": 0,
-   "ejecuciones": 977,
+   "ejecuciones": 978,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T06:51:10.549Z"
+   "ultima": "2026-11-11T06:56:13.492Z"
   }
  },
  "ptsDirecto": {},
@@ -7530,15 +7529,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:51:17.110Z"
+   "ultimaBien": "2026-11-11T06:56:19.052Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:51:17.110Z"
+   "ultimaBien": "2026-11-11T06:56:19.052Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:51:17.110Z"
+   "ultimaBien": "2026-11-11T06:56:19.052Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7546,11 +7545,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:51:17.110Z"
+   "ultimaBien": "2026-11-11T06:56:19.052Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:51:17.110Z"
+   "ultimaBien": "2026-11-11T06:56:19.052Z"
   }
  },
  "avisos": [
