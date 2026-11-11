@@ -3469,7 +3469,8 @@
    "fallos": 0
   },
   "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405972301
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405972301,
+   "Europa Press|https://www.europapress.es/nacional/noticia-abascal-carga-contra-sanchez-huelga-general-envia-sindicatos-mafiosos-contra-trabajadores-20261111151834.html": 1794406871660
   }
  },
  "ia": {
@@ -7588,13 +7589,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1488,
+   "ok": 1489,
    "fallos": 0,
-   "ejecuciones": 1067,
+   "ejecuciones": 1068,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T14:16:13.508Z"
+   "ultima": "2026-11-11T14:21:11.660Z"
   }
  },
  "ptsDirecto": {},
@@ -7611,15 +7612,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:16:19.298Z"
+   "ultimaBien": "2026-11-11T14:21:16.013Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:16:19.298Z"
+   "ultimaBien": "2026-11-11T14:21:16.013Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:16:19.298Z"
+   "ultimaBien": "2026-11-11T14:21:16.013Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7627,11 +7628,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:16:19.298Z"
+   "ultimaBien": "2026-11-11T14:21:16.013Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:16:19.298Z"
+   "ultimaBien": "2026-11-11T14:21:16.013Z"
   }
  },
  "avisos": [
