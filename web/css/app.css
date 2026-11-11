@@ -3128,3 +3128,7 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 .hoja:has(> .aj-busca) .btn { min-height: 0; padding: 14px 18px; border-radius: 13px; font: 700 15px 'Barlow'; letter-spacing: 0.5px; text-transform: uppercase; }
 .hoja:has(> .aj-busca) .btn.chico { min-height: 40px; padding: 9px 13px; font-size: 14px; border-radius: 10px; }
 .hoja:has(> .aj-busca) .btn.sec { background: var(--plano2); color: var(--texto); border: 1px solid var(--linea); box-shadow: none; }
+
+/* (0.7.7a, Carlos, 11 nov, 22:24) el marcador de Hoy, más remarcado otra vez: borde rojo entero, la raya de arriba más
+   gruesa y un brillo rojo suave por fuera. El borde va por dentro (inset) para que la tarjeta no cambie de tamaño */
+.marcador[data-accion="resumen"] { box-shadow: inset 0 0 0 1.5px rgba(238, 28, 60, 0.7), inset 0 4px 0 var(--rojo), 0 8px 26px rgba(238, 28, 60, 0.16); background: linear-gradient(180deg, rgba(238, 28, 60, 0.1), transparent 46%), var(--s1); }

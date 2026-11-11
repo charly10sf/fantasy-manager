@@ -459,7 +459,7 @@ const QUE_LLENO = [[/^n-sesion/, 'tu sesión de LaLiga (tendrás que volver a en
 const queLleno = (k) => (QUE_LLENO.find(([re]) => re.test(k)) || [null, 'lo último'])[1];
 const bandaLleno = () => {
   const x = almacenLleno();
-  return x ? `<div class="banda mal banda-lleno">${icono('alerta')}<span><b>Almacenamiento lleno.</b> No se ha podido guardar ${esc(queLleno(x.k))}. Borra los datos guardados (se vuelven a bajar) o haz sitio en el navegador.</span><button data-accion="borrarDatos">Borrar datos</button><button class="banda-x" data-accion="cerrarLleno" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>` : '';
+  return x ? `<div class="banda mal banda-lleno">${icono('alerta')}<span><b>Almacenamiento lleno.</b> No se ha podido guardar ${esc(queLleno(x.k))}. Borra los datos guardados (se vuelven a descargar) o haz sitio en el navegador.</span><button data-accion="borrarDatos">Borrar datos</button><button class="banda-x" data-accion="cerrarLleno" aria-label="Cerrar el aviso">${icono('cerrar')}</button></div>` : '';
 };
 let llenoAvisado = 0;
 window.addEventListener('fm-lleno', (e) => {
@@ -1560,8 +1560,8 @@ function forzarAppNueva(paso, detalle = '') {
     txt = `Ya está la <b>${esc(A.version)}</b> y tú tienes la ${esc(VERSION)}. Esta trae cambios en la parte del móvil, así que hay que descargar la app otra vez: se instala encima y no pierdes nada.`;
     botones = bajar;
   } else if (paso === 'bajando') {
-    txt = `Bajando la <b>${esc(A.version)}</b>… En cuanto esté, la app se abre sola con ella.`;
-    botones = '<button class="btn ancho" disabled>Bajando…</button>';
+    txt = `Descargando la <b>${esc(A.version)}</b>… En cuanto esté, la app se abre sola con ella.`;
+    botones = '<button class="btn ancho" disabled>Descargando…</button>';
     // si AlDia no contesta en un minuto, que se pueda hacer otra cosa
     forzarT = setTimeout(() => { if (S.appNueva && S.appNueva.paso === 'bajando') forzarAppNueva('fallo', 'no ha contestado'); }, 60000);
   } else if (paso === 'fallo') {
@@ -1581,7 +1581,7 @@ function ponerAppNueva() {
   // ya bajada antes (no se pudo recargar en su momento): basta con recargar
   if (S.webNueva) { ponerWebNueva(); return; }
   forzarAppNueva('bajando');
-  if (!nativo.buscarWeb()) forzarAppNueva('fallo', 'esta app no sabe bajarla sola');
+  if (!nativo.buscarWeb()) forzarAppNueva('fallo', 'esta app no sabe descargarla sola');
 }
 // la ?v= que deja recargarWeb, fuera de la barra de direcciones
 (function limpiarV() { try { if (/[?&]v=/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash); } catch (e) { /* nada */ } })();

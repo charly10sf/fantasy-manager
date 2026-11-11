@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.7';
+export const VERSION = '0.7.7a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,13 @@ export const VERSION = '0.7.7';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.7a', f: '2026-11-11', h: '22:28', t: 'El marcador, más rojo',
+    cosas: [
+      { tipo: 'arreglo', menor: true, d: 'arreglo', t: '«Descargando», no «Bajando»', x: 'Al actualizar, la ventana decía «Bajando la versión…». Ahora dice «Descargando», como en el resto de la app; lo mismo en el aviso de almacenamiento lleno.' },
+      { tipo: 'mejora', menor: true, d: 'grafica', t: 'El marcador de Hoy, con el borde rojo', x: 'La tarjeta de arriba de Hoy (saldo, valor del equipo y puesto) vuelve a llevar el borde rojo entero y un brillo suave, para que se vea a la primera.' },
+    ],
+  },
   {
     v: '0.7.7', f: '2026-11-11', h: '21:20', t: 'Fantasy Manager estrena aspecto',
     cosas: [
