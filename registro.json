@@ -1833,7 +1833,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248767/aficion-barca-entra-metropolitano-grito-julian-cule.html": 1794167743000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248772/konate-espanta-fantasmas-indispensable-mourinho.html": 1794167087000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html": 1794166775000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000,
    "SPORT|136231402": 1794167455000,
    "SPORT|136231541": 1794167408000,
@@ -2084,24 +2083,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261111/1004250002/mujer-marcao-explota-criticas-sueldo-no-decide-aficion.html": 1794423209000,
    "SPORT|136345794": 1794421376000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250001/zaniolo.html": 1794425156000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249947/jude-jobe-inglaterra-bellingham-domingo-espana.html": 1794424973000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249947/jude-jobe-inglaterra-bellingham-domingo-espana.html": 1794424973000,
+   "SPORT|136347080": 1794422141000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794166775000,
-    "id": "3208",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Rodri es baja obligada por lesión para el partido",
-    "motivo": "lesión",
-    "plazo": "",
-    "nums": [
-     3,
-     0
-    ]
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html",
     "medio": "COPE",
@@ -2428,7 +2413,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 57
+   "n": 58
   },
   "desde": {
    "67": {
@@ -3430,17 +3415,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 84,
+   "clasificar": 85,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 281232,
-  "salida": 29908,
+  "entrada": 283269,
+  "salida": 30650,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.293026,
+  "dolares": 0.293601,
   "reservado": 0
  },
  "recientes": {
@@ -7528,13 +7513,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1553,
+   "ok": 1554,
    "fallos": 0,
-   "ejecuciones": 1132,
+   "ejecuciones": 1133,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T19:36:15.177Z"
+   "ultima": "2026-11-11T19:41:13.028Z"
   }
  },
  "ptsDirecto": {},
@@ -7551,15 +7536,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:36:18.786Z"
+   "ultimaBien": "2026-11-11T19:41:22.275Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:36:18.786Z"
+   "ultimaBien": "2026-11-11T19:41:22.275Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:36:18.786Z"
+   "ultimaBien": "2026-11-11T19:41:22.275Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7567,11 +7552,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:36:18.786Z"
+   "ultimaBien": "2026-11-11T19:41:22.275Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:36:18.786Z"
+   "ultimaBien": "2026-11-11T19:41:22.275Z"
   }
  },
  "avisos": [
