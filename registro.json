@@ -3329,7 +3329,8 @@
    "AS|https://as.com/futbol/primera/la-tension-futbolistas-y-laliga-se-traslada-a-la-audiencia-nacional-f202611-n/": 1794392540000,
    "SPORT|136322128": 1794390891000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/11/normalidad-absoluta-mundo-deporte-huelga-general-136325321.html": 1794396491000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-interior-registra-once-detenidos-800-horas-quema-contenedores-atentado-contra-autoridad-20261111121046.html": 1794395446000
+   "Europa Press|https://www.europapress.es/nacional/noticia-interior-registra-once-detenidos-800-horas-quema-contenedores-atentado-contra-autoridad-20261111121046.html": 1794395446000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_0_2008472005.html": 1794397319000
   },
   "hechos": [
    {
@@ -3351,7 +3352,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 12,
+   "n": 13,
    "fallos": 0
   },
   "espera": {}
@@ -3359,17 +3360,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 33,
+   "clasificar": 34,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 175860,
-  "salida": 10858,
+  "entrada": 177535,
+  "salida": 10944,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.272963,
+  "dolares": 0.273174,
   "reservado": 0
  },
  "recientes": {
@@ -7472,13 +7473,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1458,
+   "ok": 1459,
    "fallos": 0,
-   "ejecuciones": 1037,
+   "ejecuciones": 1038,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T11:46:18.016Z"
+   "ultima": "2026-11-11T11:51:11.028Z"
   }
  },
  "ptsDirecto": {},
@@ -7495,15 +7496,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:46:24.186Z"
+   "ultimaBien": "2026-11-11T11:51:15.696Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:46:24.186Z"
+   "ultimaBien": "2026-11-11T11:51:15.696Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:46:24.186Z"
+   "ultimaBien": "2026-11-11T11:51:15.696Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7511,11 +7512,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:46:24.186Z"
+   "ultimaBien": "2026-11-11T11:51:15.696Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:46:24.186Z"
+   "ultimaBien": "2026-11-11T11:51:15.696Z"
   }
  },
  "avisos": [
