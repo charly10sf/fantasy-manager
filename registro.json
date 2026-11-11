@@ -2072,7 +2072,8 @@
    "AS|https://as.com/futbol/primera/barrenetxea-sufre-una-lesion-severa-y-pasara-por-el-quirofano-f202611-n/": 1794400407000,
    "AS|https://as.com/futbol/primera/sannadi-realiza-carrera-continua-en-lezama-f202611-n/": 1794402657000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249889/zidane-reacciona-incertidumbre-mbappe-llamando-ojitos-derechos-luis-enrique.html": 1794402099000,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000,
+   "SPORT|136331770": 1794400495000
   },
   "hechos": [
    {
@@ -2452,11 +2453,25 @@
     "motivo": "grave lesión muscular",
     "plazo": "estará alejado varios meses",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136331770",
+    "medio": "SPORT",
+    "t": 1794400495000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "lesión severa en el isquiotibial derecho",
+    "plazo": "periodo de baja aún desconocido",
+    "nums": [
+     2022
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -3443,17 +3458,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 50,
+   "clasificar": 51,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 211662,
-  "salida": 18194,
+  "entrada": 213713,
+  "salida": 18341,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.280211,
+  "dolares": 0.28049,
   "reservado": 0
  },
  "recientes": {
@@ -7556,13 +7571,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1479,
+   "ok": 1480,
    "fallos": 0,
-   "ejecuciones": 1058,
+   "ejecuciones": 1059,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T13:31:13.405Z"
+   "ultima": "2026-11-11T13:36:17.888Z"
   }
  },
  "ptsDirecto": {},
@@ -7579,15 +7594,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:31:25.578Z"
+   "ultimaBien": "2026-11-11T13:36:23.488Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:31:25.578Z"
+   "ultimaBien": "2026-11-11T13:36:23.488Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:31:25.578Z"
+   "ultimaBien": "2026-11-11T13:36:23.488Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7595,11 +7610,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:31:25.578Z"
+   "ultimaBien": "2026-11-11T13:36:23.488Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:31:25.578Z"
+   "ultimaBien": "2026-11-11T13:36:23.488Z"
   }
  },
  "avisos": [
