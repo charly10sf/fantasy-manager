@@ -118,35 +118,64 @@ export function serieEquipo(S) {
   const s = (S.H.yo || []).map(([d, , v]) => [Date.parse(d + 'T12:00:00'), v]).filter(([, v]) => v);
   // sumando el histórico de valor de cada uno de tus jugadores de hoy (de LaLiga o lo apuntado por la app)
   const suma = sumaJugadores(S);
-  const base = suma && suma.length > s.length ? suma : s;
+  // (la suma con la plantilla de cada día manda: el valor apuntado (H.yo) da saltos con cada fichaje, que no son subidas)
+  const base = suma || s;
   if (S.D.valorEquipo && (!base.length || Date.now() - base[base.length - 1][0] > 20 * 3600e3)) base.push([Date.now(), S.D.valorEquipo]);
   return base;
 }
-/** el valor de tus jugadores de hoy, día a día, sumando la serie de cada uno (null si falta la de muchos) */
+/** el valor de tu equipo día a día. Cada día sube o baja lo que subieron o bajaron los jugadores que tenías ESE día
+    (Carlos, 11 nov: antes se sumaba la serie de los de hoy hacia atrás y salían subidas que no tuviste). La plantilla de
+    cada día sale de la de hoy deshaciendo tus fichajes, ventas y cláusulas (y las que te hicieron) de después de ese día;
+    lo que cuesta un fichaje no cuenta como subida. Se ancla en lo que valen hoy los tuyos. null si falta la serie de
+    muchos de los de hoy */
 export function sumaJugadores(S, dias = 90) {
-  const { M } = S;
-  const series = M.mias.filter((x) => x.j).map((x) => {
-    const dv = (S.det && S.det[x.pid] && S.det[x.pid].valores) || [];
-    const t = M.tend(x.pid).serie || [];
-    return { v: x.j.valor, s: (dv.length > t.length ? dv : t).filter(([ts, v]) => Number.isFinite(ts) && v > 0).sort((a, b) => a[0] - b[0]) };
-  });
-  const con = series.filter((x) => x.s.length >= 3);
-  if (!series.length || con.length < series.length * 0.7) return null;
+  const { M, D } = S;
+  const series = new Map();
+  const serieDe = (pid) => {
+    if (series.has(pid)) return series.get(pid);
+    const dv = (S.det && S.det[pid] && S.det[pid].valores) || [];
+    const t = (M.tend(pid) || {}).serie || [];
+    const s = (dv.length > t.length ? dv : t).filter(([ts, v]) => Number.isFinite(ts) && v > 0).sort((a, b) => a[0] - b[0]);
+    series.set(pid, s);
+    return s;
+  };
+  const mias = M.mias.filter((x) => x.j);
+  if (!mias.length) return null;
+  const con = mias.filter((x) => serieDe(String(x.pid)).length >= 3);
+  if (con.length < mias.length * 0.7) return null;
   const DIA_MS = 864e5, hoy = new Date(); hoy.setHours(12, 0, 0, 0);
-  const desde = Math.max(hoy.getTime() - (dias - 1) * DIA_MS, Math.min(...con.map((x) => x.s[0][0])));
-  const out = [];
-  for (let t = hoy.getTime() - (dias - 1) * DIA_MS; t <= hoy.getTime(); t += DIA_MS) {
-    if (t < desde - DIA_MS / 2) continue;
-    let total = 0;
-    for (const x of series) {
-      if (!x.s.length) { total += x.v; continue; }
-      let v = x.s[0][1];
-      for (const [ts, val] of x.s) { if (ts <= t + DIA_MS / 2) v = val; else break; }
-      total += v;
-    }
+  const desde = Math.max(hoy.getTime() - (dias - 1) * DIA_MS, Math.min(...con.map((x) => serieDe(String(x.pid))[0][0])));
+  const fijo = new Map(mias.map((x) => [String(x.pid), x.j.valor]));
+  const valorEn = (pid, t) => {
+    const s = serieDe(pid);
+    if (!s.length) return fijo.get(pid) || (D.maestro && D.maestro[pid] && D.maestro[pid].valor) || 0;
+    let v = s[0][1];
+    for (const [ts, val] of s) { if (ts <= t + DIA_MS / 2) v = val; else break; }
+    return v;
+  };
+  // lo que mete (entra) o saca a un jugador de tu equipo, del más nuevo al más viejo
+  const movs = (M.actividad || [])
+    .filter((a) => a.pid && a.t && a.esYo !== a.contraMi && (a.clase === 'compra' || a.clase === 'venta' || a.clase === 'clausula'))
+    .map((a) => ({ t: a.t, pid: String(a.pid), entra: a.esYo ? a.clase !== 'venta' : a.clase === 'venta' }))
+    .sort((a, b) => b.t - a.t);
+  const plantilla = new Set(mias.map((x) => String(x.pid)));
+  let k = 0;
+  // del día de hoy hacia atrás: la plantilla al acabar cada día
+  const dias_ = [];
+  for (let t = hoy.getTime(); t >= desde - DIA_MS / 2; t -= DIA_MS) {
+    while (k < movs.length && movs[k].t > t + DIA_MS / 2) { const m = movs[k++]; if (m.entra) plantilla.delete(m.pid); else plantilla.add(m.pid); }
+    dias_.push({ t, ids: [...plantilla] });
+  }
+  if (dias_.length < 3) return null;
+  // hoy, lo que valen los tuyos; cada día de antes, lo de después menos lo que subieron esa noche los que tenías
+  let total = dias_[0].ids.reduce((s, pid) => s + valorEn(pid, dias_[0].t), 0);
+  const out = [[dias_[0].t, total]];
+  for (let i = 1; i < dias_.length; i++) {
+    const { t, ids } = dias_[i], tSig = dias_[i - 1].t;
+    total -= ids.reduce((s, pid) => s + (valorEn(pid, tSig) - valorEn(pid, t)), 0);
     out.push([t, total]);
   }
-  return out.length >= 3 ? out : null;
+  return out.reverse();
 }
 export function resumenEquipo(S) {
   const { D, M } = S;
@@ -166,7 +195,7 @@ export function resumenEquipo(S) {
   const tabla = [...D.clasif].sort((a, b) => a.pos - b.pos);
   const dist = yo ? (yo.pos === 1 ? (tabla[1] ? `Le sacas <b>${yo.puntos - tabla[1].puntos} pts</b> al 2º` : '') : tabla[0] ? `Estás a <b>${tabla[0].puntos - yo.puntos} pts</b> del 1º` : '') : '';
   if (uj || dist) h += `<div class="resumen-liga">${uj ? `<span>${uj.n ? `Jornada ${uj.n}` : 'Última jornada'}: <b>${uj.pts} pts</b>, ${uj.puesto}º de la jornada</span>` : ''}${dist ? `<span>${dist}${yo ? ` (vas ${yo.pos}º con ${num(yo.puntos)})` : ''}</span>` : ''}</div>`;
-  h += `<div class="graf-cab"><span>Valor del equipo${(S.H.yo || []).length < 7 && sumaJugadores(S) ? ' <small>(tus jugadores de hoy)</small>' : ''}</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="__equipo" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
+  h += `<div class="graf-cab"><span>Valor del equipo</span><div class="rangos">${RANGOS.map(([n, txt]) => `<button data-accion="rango" data-n="${n}" data-pid="__equipo" class="${rango === n ? 'activo' : ''}">${txt}</button>`).join('')}</div></div>`;
   h += `<div id="graf-j">${grafValor(serieEquipo(S), rango)}</div>`;
 
   // la inercia: hacia dónde va cada uno y lo que se espera hasta la jornada
