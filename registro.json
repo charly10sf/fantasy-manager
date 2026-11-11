@@ -3394,7 +3394,11 @@
    "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
    "Europa Press|https://www.europapress.es/nacional/noticia-colau-afirma-ayuso-insulta-sindicatos-porque-nerviosa-apoyo-huelga-general-20261111130843.html": 1794398923000,
    "SPORT|136301661": 1794398469000,
-   "SPORT|136330407": 1794397587000
+   "SPORT|136330407": 1794397587000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681673/ruibal-defiende-huelga-general-me-encanta-gente-salga-protestar.html": 1794401677000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-acusa-gobierno-enviar-policia-dar-palos-contra-piquetes-huelga-20261111131038.html": 1794399038000,
+   "SPORT|136332330": 1794393000000,
+   "Europa Press|https://www.europapress.es/andalucia/malaga-00356/noticia-diputado-andalucia-ernesto-alba-denuncia-agresion-policial-piquete-mercamalaga-11n-20261111085023.html": 1794383423000
   },
   "hechos": [
    {
@@ -3416,28 +3420,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 16,
+   "n": 17,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/andalucia/malaga-00356/noticia-diputado-andalucia-ernesto-alba-denuncia-agresion-policial-piquete-mercamalaga-11n-20261111085023.html": 1794402679692,
-   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-acusa-gobierno-enviar-policia-dar-palos-contra-piquetes-huelga-20261111131038.html": 1794402981297
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 48,
+   "clasificar": 49,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 207033,
-  "salida": 16294,
+  "entrada": 209248,
+  "salida": 16605,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.278798,
+  "dolares": 0.279175,
   "reservado": 0
  },
  "recientes": {
@@ -7540,13 +7541,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1476,
+   "ok": 1477,
    "fallos": 0,
-   "ejecuciones": 1055,
+   "ejecuciones": 1056,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T13:16:21.297Z"
+   "ultima": "2026-11-11T13:21:12.396Z"
   }
  },
  "ptsDirecto": {},
@@ -7563,15 +7564,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:16:29.738Z"
+   "ultimaBien": "2026-11-11T13:21:19.643Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:16:29.738Z"
+   "ultimaBien": "2026-11-11T13:21:19.643Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:16:29.738Z"
+   "ultimaBien": "2026-11-11T13:21:19.643Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7579,11 +7580,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:16:29.738Z"
+   "ultimaBien": "2026-11-11T13:21:19.643Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:16:29.738Z"
+   "ultimaBien": "2026-11-11T13:21:19.643Z"
   }
  },
  "avisos": [
