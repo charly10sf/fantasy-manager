@@ -24,6 +24,13 @@ export const LIMITE_C = 2 * DIA;
  * nadie puntúa hasta la vuelta, así que el plan va de dinero (especular, revalorizar, vender en lo alto) y una cláusula
  * para el once solo vale si es un chollo claro o se hace en los dos o tres días antes de la jornada de vuelta */
 export const PARON_VUELTA = 3 * DIA;
+/** (11 nov) la cláusula no pasa la regla de Hoy y las alarmas (mereceClausula, motor.js): la IA no la propone para el once */
+export const noMerece = (M, o) => {
+  if (!M || !M.mereceClausula || !o || !o.pid) return false;
+  const x = (M.clausulas || []).find((c) => c.pid === o.pid);
+  return !!x && !M.mereceClausula(x);
+};
+
 export function paronLejos(M, ahora = Date.now()) {
   return !!(M && M.paron && M.proxima && M.paron.ini <= M.proxima.ini && M.paron.fin > ahora && M.proxima.ini - ahora > PARON_VUELTA);
 }
@@ -139,7 +146,7 @@ export function textoOp(o, M = null) {
       return `COMPRAR ${j.nombre} a ${o.vendedor}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${pide}; es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
     }
     case 'T': return `COMPRAR ${j.nombre} a ${o.vendedor} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
-    case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}${paronC(M, o)}${(() => { const s = M && M.salida ? M.salida(j, o.precio) : null; return s ? `; SALIDA: ${s.txt}${s.ok ? '' : ' → NO LO PROPONGAS: sin salida y sin ser titular seguro'}` : ''; })()}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;
+    case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}${paronC(M, o)}${noMerece(M, o) ? '; LA APP NO LA RECOMIENDA (Hoy y las alarmas no la enseñan): para el once NO la propongas; solo para revender con beneficio claro' : ''}${(() => { const s = M && M.salida ? M.salida(j, o.precio) : null; return s ? `; SALIDA: ${s.txt}${s.ok ? '' : ' → NO LO PROPONGAS: sin salida y sin ser titular seguro'}` : ''; })()}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;
     case 'A': return `ACEPTAR la oferta de ${o.de} por ${j.nombre}: ${eur(o.precio)} (${pct((o.sobre || 0) * 100)} sobre su valor)${o.caduca ? `, caduca ${cuando(o.caduca)}` : ''}`;
     case 'V': return `VENDER ${j.nombre} (vale ${eur(j.valor)}${o.compra ? `, lo pagué a ${eur(o.compra)}` : ''})`;
     case 'B': {

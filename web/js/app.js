@@ -30,7 +30,7 @@ import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, a
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
 import { borrarMisDatos, misAvisos, mandarAviso, marcarVisto, todosAvisos, unAviso, capturaAviso, responderAviso, fijarPendientes, numeroAvisos, hayQueMirar, avisosGuardados, saludar, quienUsa, carasLiga, bienvenidaVista, apuntarBienvenida } from './soporte.js';
-import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde } from './presentacion.js';
+import { presentarNovedades, cerrarPresentacion, listaNovedades, fijarFiltroNovedades, hayNovedadesDesde, versionesDesde, listaImportantes, hayImportantes, ultimaImportante } from './presentacion.js';
 import { empezarTour, cerrarTour, tourAbierto, tourVisto, tourBasico } from './tour.js';
 import { cambiarFav } from './favoritos.js';
 import { anunciosWeb, privacidadWeb } from './anuncios-web.js';
@@ -2774,7 +2774,7 @@ document.addEventListener('click', async (ev) => {
     case 'pararChat': if (S.chatCtl) S.chatCtl.abort(); break;
     case 'repreguntar': { const ta = $('#pregunta'); const t = ta ? ta.value : (S.errorChat && S.errorChat.t) || ''; if (ta) ta.value = ''; S.errorChat = null; enviarPregunta(t); break; }
     case 'resumen': if (S.D) { hoja('resumen'); encuadrar(S.hoja); valoresMios(); } break;
-    case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); break;
+    case 'novedades': if (avisosGuardados().admin || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) listaVersiones(); else if (hayImportantes()) listaImportantesHoja(); break;
     case 'presentacion': cerrarHoja(true); verNovedades(null); break;
     case 'borrarNota': borrarNota(d.id); tostada('Olvidado'); if (S.hoja) repintarHoja(); else pintar(); break;
     case 'guardarDicho': {
@@ -3117,6 +3117,13 @@ function verNovedades(desde) {
 function listaVersiones() {
   abrirHoja(`<div class="hoja-cab"><h2>Novedades</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
     <button class="btn chico" data-accion="presentacion" style="margin:0 0 6px">${icono('ia')}Ver la ${((versionesDesde(null)[0] || {}).v || VERSION).replace(/\.0$/, '')} en presentación</button>${listaNovedades()}`);
+}
+
+/** (11 nov, Carlos) a los que no son el dueño: solo lo importante de cada versión, sin arreglos */
+function listaImportantesHoja() {
+  LS.set('importante-vista', ultimaImportante());
+  abrirHoja(`<div class="hoja-cab"><h2>Novedades</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
+    <p class="nvl-intro">Lo más importante que ha cambiado en la app.</p>${listaImportantes()}`);
 }
 
 /* ---------------- el tutorial ---------------- */

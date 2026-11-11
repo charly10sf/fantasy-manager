@@ -3,6 +3,8 @@
    ofertas que llegan por tus jugadores, los que te quitan o fichas y la sesión caducada. Cada aviso, una vez. */
 import { LS, eur, pct, diaDe, cuando } from './util.js';
 import { bloqueada } from './limite.js';
+import { cfgAvisos } from './avisos.js';
+import { esFav } from './favoritos.js';
 
 export const EN_FONDO = /[?&]fondo=1\b/.test(location.search);
 export const cfgFondo = () => ({ on: true, ...LS.get('cfg-fondo', {}) });
@@ -43,12 +45,20 @@ export function avisosNuevos(antes, D, M) {
       if (a && a.clase === 'clausula' && !a.esYo) out.push({ k: `perdido:${pid}:${a.id}`, titulo: `Te han clausulado a ${j.nombre}`, texto: `${a.quien || 'Un rival'} ha pagado ${eur(a.importe)}. Mira el plan para reponerlo.`, hash: 'equipo' });
       else out.push({ k: `sale:${pid}:${diaDe()}`, titulo: `${j.nombre} ya no está en tu equipo`, texto: a && a.importe ? `Vendido por ${eur(a.importe)}.` : 'Se ha vendido.', hash: 'equipo' });
     }
+    // (41) las pujas que había antes: si es tuyo, la ganaste; si se lo ha llevado otro, la perdiste
+    const ca = cfgAvisos(), pujas = ca.on && ca.pujas !== false;
+    const pujaDe = new Map(((antes.mercado || []).filter((m) => m.miPuja && m.tipo !== 'manager')).map((m) => [m.pid, m]));
     for (const pid of misAhora) {
       if (misAntes.has(pid)) continue;
       const j = M.J(pid) || { nombre: 'un jugador', valor: 0 };
-      out.push({ k: `entra:${pid}:${diaDe()}`, titulo: `Has fichado a ${j.nombre}`, texto: `Vale ${eur(j.valor)}. Ya cuenta para tu once.`, hash: 'equipo' });
+      const pj = pujaDe.get(pid);
+      if (pj && pujas) out.push({ k: `puja-gana:${pid}:${pj.id || diaDe()}`, titulo: `Puja ganada: ${j.nombre} es tuyo`, texto: `Pagas ${eur(pj.miPuja)} (vale ${eur(j.valor)}). Ya cuenta para tu once.`, hash: 'equipo' });
+      else out.push({ k: `entra:${pid}:${diaDe()}`, titulo: `Has fichado a ${j.nombre}`, texto: `Vale ${eur(j.valor)}. Ya cuenta para tu once.`, hash: 'equipo' });
     }
+    if (pujas) out.push(...pujasPerdidas(antes, D, M, pujaDe, misAhora));
   }
+  // (41) los que te interesan y acaban de salir al mercado (uno por día y jugador; si son muchos, en un aviso)
+  if (antes && antes.liga && D.liga && antes.liga.id === D.liga.id && !antes.demo && (antes.mercado || []).length) out.push(...interesEnMercado(antes, D, M));
   // lo que hay que poner en el mercado (y que aún no está puesto)
   const enVenta = M.enVenta || new Set();
   // y en cuanto está puesto: cuándo llega la oferta de LaLiga
@@ -95,6 +105,42 @@ export function avisosNuevos(antes, D, M) {
     }
   }
   return out;
+}
+
+/** (41) las pujas que se ha llevado otro: solo si se sabe quién (si no, pudo ser que la quitaras tú) */
+export function pujasPerdidas(antes, D, M, pujaDe, misAhora) {
+  const out = [];
+  const siguen = new Set((D.mercado || []).filter((m) => m.miPuja).map((m) => m.pid));
+  for (const [pid, pj] of pujaDe) {
+    if (misAhora.has(pid) || siguen.has(pid)) continue;
+    const a = (M.actividad || []).find((x) => x.pid === pid && !x.esYo && x.clase === 'compra' && x.t >= (antes.t || 0) - 3600e3);
+    if (!a) continue;
+    const j = M.J(pid) || { nombre: 'un jugador' };
+    out.push({ k: `puja-pierde:${pid}:${pj.id || diaDe()}`, titulo: `Puja perdida: ${j.nombre}`, texto: `Se lo ha llevado ${a.quien || 'otro'}${a.importe ? ` por ${eur(a.importe)}` : ''}; tú pujabas ${eur(pj.miPuja)}. Mira el plan para buscar otro.`, hash: 'mercado' });
+  }
+  return out;
+}
+
+/** (41) los que te interesan (favoritos, los de «Avisarme» y los de interés alto o chollos) que acaban de salir al mercado */
+export function interesEnMercado(antes, D, M, c = cfgAvisos()) {
+  if (!c.on || c.enMercado === false) return [];
+  const yo = D.yo && D.yo.teamId;
+  const habia = new Set((antes.mercado || []).map((m) => m.pid));
+  const xs = (M.mercado || []).filter((m) => !habia.has(m.pid) && !m.miPuja && m.vendedorTeamId !== yo && m.j
+    && (esFav(m.pid) || (c.jugadores || {})[m.pid] || m.veredicto === 'chollo' || (m.interes || 0) >= Math.max(c.interes || 55, 60)))
+    .sort((a, b) => (esFav(b.pid) - esFav(a.pid)) || ((b.interes || 0) - (a.interes || 0)));
+  if (!xs.length) return [];
+  const de = (m) => (m.tipo === 'manager' ? ` (lo vende ${m.vendedor || 'un rival'})` : '');
+  if (xs.length <= 2) {
+    return xs.map((m) => ({
+      k: `en-mercado:${m.pid}:${diaDe()}`,
+      titulo: `${m.j.nombre}, en el mercado`,
+      texto: `${esFav(m.pid) ? 'Lo sigues' : m.veredicto === 'chollo' ? 'Sale barato' : `Interés ${Math.round(m.interes)}`}: desde ${eur(m.precio)}${de(m)}, vale ${eur(m.j.valor)}.${m.puja && m.tipo !== 'manager' ? ` La app pujaría ${eur(m.puja)}.` : ''}`,
+      hash: 'mercado',
+    }));
+  }
+  const l = xs.slice(0, 3).map((m) => `${m.j.nombre} (${eur(m.precio)})`);
+  return [{ k: `en-mercado:${xs.map((m) => m.pid).sort().join(',')}:${diaDe()}`, titulo: `${xs.length} que te interesan, en el mercado`, texto: `${l.join(', ')}${xs.length > 3 ? ` y ${xs.length - 3} más` : ''}.`, hash: 'mercado' }];
 }
 
 /** se queda con los que no se han avisado aún (y apunta los nuevos como avisados si no es de noche) */

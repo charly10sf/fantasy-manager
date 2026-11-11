@@ -16,6 +16,7 @@ import { EVENTOS } from './eventos.js';
 import { VERSION } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
+import { hayImportantes, ultimaImportante } from './presentacion.js';
 import { estadoLimite, novedadesPara, bloqueada, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
@@ -156,6 +157,7 @@ export function resumenEquipo(S) {
   const suben = mias.filter((x) => num(x.tend.d1) > 0).sort((a, b) => b.tend.d1 - a.tend.d1);
   const bajan = mias.filter((x) => num(x.tend.d1) < 0).sort((a, b) => a.tend.d1 - b.tend.d1);
   const quietos = mias.length - suben.length - bajan.length;
+  const rango = S.rango || 30;
   let h = `<div class="hoja-cab"><h2>Tu equipo hoy</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   h += `<div class="valor-g"><span class="v">${eur(D.valorEquipo)}</span><span class="d ${clase(d1)}">${d1 ? `${d1 > 0 ? '▲' : '▼'} ${eur(Math.abs(d1), { dec: 2 })}${base > 0 ? ` (${pct((d1 / base) * 100)})` : ''} hoy` : '= hoy'}</span>${d7 ? `<span class="d ${clase(d7)}">${eur(d7, { signo: true })} 7d</span>` : ''}</div>`;
   h += `<p class="t2 peq" style="margin:2px 0 0">${suben.length} suben · ${bajan.length} bajan · ${quietos} igual${suben[0] ? ` · el que más sube, <b class="sube">${esc(suben[0].j.nombre)} ${eur(suben[0].tend.d1, { signo: true })}</b>` : ''}${bajan[0] ? ` · el que más baja, <b class="baja">${esc(bajan[0].j.nombre)} ${eur(bajan[0].tend.d1, { signo: true })}</b>` : ''}</p>`;
@@ -705,6 +707,9 @@ export function ajustes(S) {
       c2 += tipo('mias', 'Tus cláusulas', '', 'mis clausulas proteccion blindar se abren');
       if (ca.mias) c2 += fila('De cuáles', 'Baratas: menos de 1,6 veces su valor', selA('miasCuales', [['baratas', 'Las baratas'], ['todas', 'Todas']], ca.miasTodas ? 'todas' : 'baratas', 'De cuáles de tus cláusulas'), 'mis clausulas todas', 'sub');
       c2 += tipo('mercado', 'Cambio de mercado', '', 'mercado pujas ofertas');
+      // (41) lo que pasa al cambiar el mercado: con la app cerrada, cuando trabaja sola (Ajustes → La IA)
+      c2 += tipo('pujas', 'Pujas que ganas o pierdes', 'Al cambiar el mercado', 'mercado pujas ganada perdida', false);
+      c2 += tipo('enMercado', 'Te interesan y salen al mercado', 'Tus favoritos y los de interés alto', 'mercado favoritos interes sale venta', false);
       c2 += tipo('jornada', 'Poner el once', 'Antes de la jornada', 'once alineacion jornada recordatorio');
       c2 += fila('Tu liga hoy', 'Un aviso al día', `${ca.diario ? `<input type="time" value="${esc(ca.hora)}" data-cambia="horaAviso" aria-label="Hora del aviso diario">` : ''}${interr(ca.diario, 'avisoTipo', 'data-k="diario"', 'Tu liga hoy')}`, 'diario plan del dia hora');
       // «Avisarme de este jugador» (desde la ficha): cada uno con cuándo y para quitarlo
@@ -752,6 +757,11 @@ export function ajustes(S) {
   if (estadoLimite.min != null) c4 += fila(`Hoy: ${Math.round(estadoLimite.usados / 60)} de ${estadoLimite.min} min`, 'Se reinicia a las 00:00', '', 'tiempo limite minutos');
   // las novedades de cada versión, solo para el dueño (o todos con «novedadesTodos» en limites.json)
   if (dueno || novedadesPara({ ligas: (S.D && S.D.ligas) || [] }) === true) c4 += fila('Novedades', 'Lo que trae y arregla cada versión', btnA('novedades', 'Ver'), 'cambios');
+  // (11 nov, Carlos) a todos los demás, lo importante de cada versión (importante: true en version.js), sin arreglos
+  else if (hayImportantes()) {
+    const u = ultimaImportante();
+    c4 += fila('Novedades', LS.get('importante-vista', null) === u ? 'Lo más importante de cada versión' : `Nuevo en la ${u}`, btnA('novedades', 'Ver'), 'cambios version');
+  }
   if (dueno && !enDemo()) c4 += fila('Quién usa la app', 'Solo lo ves tú', btnA('quienUsa', 'Ver', { sec: false }), 'usuarios');
   if ((enApp || enWeb) && !enDemo()) c4 += fila('Liga de ejemplo', 'Sin tocar tus datos', btnA('entrarDemo', 'Ver'), 'demo');
   c4 += fila('Diagnóstico', 'Lo que han contestado LaLiga y Google', btnA('diag', 'Ver'), 'errores fallos');
