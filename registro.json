@@ -3453,7 +3453,9 @@
    "n": 17,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-metro-buses-barcelona-paran-1630-horas-servicios-minimos-matinales-20261111102217.html": 1794404474339
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7571,13 +7573,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1480,
+   "ok": 1481,
    "fallos": 0,
-   "ejecuciones": 1059,
+   "ejecuciones": 1060,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T13:36:17.888Z"
+   "ultima": "2026-11-11T13:41:14.339Z"
   }
  },
  "ptsDirecto": {},
@@ -7594,15 +7596,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:36:23.488Z"
+   "ultimaBien": "2026-11-11T13:41:18.801Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:36:23.488Z"
+   "ultimaBien": "2026-11-11T13:41:18.801Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:36:23.488Z"
+   "ultimaBien": "2026-11-11T13:41:18.801Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7610,11 +7612,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:36:23.488Z"
+   "ultimaBien": "2026-11-11T13:41:18.801Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:36:23.488Z"
+   "ultimaBien": "2026-11-11T13:41:18.801Z"
   }
  },
  "avisos": [
