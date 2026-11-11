@@ -13,7 +13,7 @@ import { registro } from './api.js';
 import { qrSVG } from './qr.js';
 import { quien, sesion } from './auth.js';
 import { EVENTOS } from './eventos.js';
-import { VERSION } from './version.js';
+import { VERSION, cmpVer } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
@@ -884,7 +884,7 @@ export function quienUsaHTML(S) {
     const donde = x ? (x.canal === 'web' ? 'web' : x.canal === 'play' ? 'Google Play' : 'Android') : '';
     const fallo = x && / !$/.test(x.v || '');
     const sub = !x ? 'Aún no ha entrado'
-      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(String(x.v || '').replace(/ !$/, ''))}${fallo ? ' · <b class="rojo">no le carga la liga</b>' : ''}${x.segHoy ? ` · ${tiempoTxt(x.segHoy)} hoy` : ''}`;
+      : `${dentro ? 'Dentro ahora' : `Entró ${cuando(x.ultima)}`} · ${donde} ${esc(String(x.v || '').replace(/ !$/, ''))}${fallo ? ' · <b class="rojo">no le carga la liga</b>' : ''}${x.ad && x.v && cmpVer(String(x.v).replace(/ !$/, ''), VERSION) < 0 ? ` · <b class="rojo">no se actualiza: ${esc(x.ad)}</b>` : ''}${x.segHoy ? ` · ${tiempoTxt(x.segHoy)} hoy` : ''}`;
     return `<div class="quien-f ${x ? (dentro ? 'dentro' : 'si') : 'no'}"><span class="qf-p" aria-hidden="true"></span><div class="qf-c"><b>${esc(nombre)}</b><span>${esc(equipo || '')}${equipo ? ' · ' : ''}${sub}</span></div>${x && x.primera ? `<small>desde ${esc(cuando(x.primera, { hora: false }))}</small>` : ''}</div>`;
   };
   let filas = '';

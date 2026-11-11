@@ -1854,6 +1854,7 @@ button.pf-eq:active { opacity: 0.7; }
 .forzar-c p b { color: var(--texto); }
 .forzar-ic { display: inline-flex; width: 52px; height: 52px; border-radius: 50%; align-items: center; justify-content: center; background: var(--rojo-s); color: var(--rojo-l); }
 .forzar-ic svg { width: 26px; height: 26px; }
+.forzar-b { display: grid; gap: 8px; }
 
 /* Pregunta, arriba y en rojo (fuera de la barra de abajo desde la 0.6.3h) */
 .sup .b-preg { background: var(--rojo-btn); color: #fff; margin: 0 4px; }

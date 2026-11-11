@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.5a';
+export const VERSION = '0.7.6';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,14 @@ export const VERSION = '0.7.5a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.6', f: '2026-11-11', h: '08:13', t: 'Siempre en la última',
+    cosas: [
+      { importante: true, para: 'app', tipo: 'mejora', d: 'cohete', t: 'Siempre en la última versión', x: 'Cuando sale una versión nueva, la app no te deja seguir con la vieja: «Actualizar ahora» la pone en un momento. Si no se puede poner sola, «Descargar la app» la instala encima sin perder nada.' },
+      { tipo: 'arreglo', d: 'arreglo', t: 'Las versiones nuevas llegan también a los móviles lentos', x: 'Si un móvil tardaba mucho en abrir tu liga con la versión nueva, la app la daba por rota y volvía a la vieja. Ahora le basta con que LaLiga conteste.' },
+      { tipo: 'mejora', para: 'dueño', d: 'lupa', t: 'Quién no se actualiza y por qué', x: '«Quién usa la app» dice, de quien sigue en una versión vieja, por qué no se le pone la nueva (el último fallo de la descarga en su móvil).' },
+    ],
+  },
   {
     v: '0.7.5a', f: '2026-11-11', h: '06:58', t: 'El marcador, más a la vista',
     cosas: [

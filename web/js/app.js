@@ -1156,7 +1156,9 @@ async function cargar0({ silencio = false } = {}) {
   const cancelar = new Promise((_, mal) => { carga.alCancelar = () => mal(Object.assign(new Error('Has dejado de esperar a LaLiga: lo que ves es lo guardado'), { cancelada: true, tipo: 'lento' })); });
   const quitarBoton = conPantalla ? relojFijo(ESPERA_GUARDADO, () => botonGuardado(carga)) : () => {};
   try {
-    const actualizando = actualizar((i) => { if (conPantalla && !carga.cancelada) { pantallaCarga(i); if (Date.now() - carga.t0 >= ESPERA_GUARDADO) botonGuardado(carga); } }, carga);
+    // (en cuanto LaLiga contesta, esta web vale para AlDia: si la liga guardada no se pudo abrir, antes esperaba a la
+    // carga entera y en un móvil lento pasaba de los 20 s y AlDia la descartaba; 0.7.6)
+    const actualizando = actualizar((i) => { if (i > 0) webVivaUnaVez(); if (conPantalla && !carga.cancelada) { pantallaCarga(i); if (Date.now() - carga.t0 >= ESPERA_GUARDADO) botonGuardado(carga); } }, carga);
     actualizando.catch(() => {});
     S.D = await Promise.race([actualizando, cancelar]);
     quitarBoton();
@@ -1203,7 +1205,10 @@ async function cargar0({ silencio = false } = {}) {
 function saludarSiToca() {
   if (!S.D || enDemo() || !haySesion() || document.hidden) return Promise.resolve();
   const yo = S.M && S.M.yo;
-  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '' })
+  // el último fallo de AlDia (por qué no se pone la web nueva), para «Quién usa la app»; si es nuevo, sin esperar los 9 min
+  const ad = enApp ? String((nativo.estadoWeb() || {}).error || '').slice(0, 90) : '';
+  if (ad !== LS.get('aldia-dicho', '')) { LS.set('hola-t', 0); LS.set('aldia-dicho', ad); }
+  return saludar({ v: VERSION, canal: enApp ? nativo.canal() : 'web', app: enApp ? nativo.version() : 0, liga: S.D.liga && S.D.liga.id, equipo: yo ? yo.nombre : '', ad })
     .then((dueno) => { if (dueno && S.tipoHoja && S.tipoHoja[0] === 'ajustes') repintarHoja(); }).catch(() => {});
 }
 setInterval(saludarSiToca, 10 * 60e3);
@@ -1465,8 +1470,9 @@ async function cargarOnceRival(tid) {
  */
 let webMiradaT = 0;
 async function mirarWebNueva() {
-  if (enApp || Date.now() - webMiradaT < 5 * MIN) return;
+  if (EN_FONDO || Date.now() - webMiradaT < 5 * MIN) return;
   webMiradaT = Date.now();
+  if (enApp) return mirarAppNueva();
   try {
     const r = await fetch(`paquete.json?t=${Date.now()}`, { cache: 'no-store' });
     if (!r.ok) return;
@@ -1503,6 +1509,79 @@ async function recargarWeb() {
   try { const k = 'fm-forzar-' + ((j && j.version) || ''); sessionStorage.setItem(k, String((Number(sessionStorage.getItem(k)) || 0) + 1)); } catch (e) { /* sin almacenamiento */ }
   if (j && j.version) location.replace(`${location.pathname}?v=${encodeURIComponent(j.version)}${location.hash}`);
   else location.reload();
+}
+/* En la app, lo mismo desde la 0.7.6 (Carlos, 11 nov: «debería obligar a actualizar cada actualización; si no, no te
+   debería dejar jugar»; dos de fuera de la liga seguían en la 0.7.1e y la 0.7.1f porque AlDia no les ponía la nueva y
+   nadie se enteraba). Se mira el paquete.json publicado, el mismo que baja AlDia: si es más nuevo que esta web, la
+   ventana que no se cierra. Con la misma parte Android, «Actualizar ahora» la baja con AlDia y recarga; si AlDia no
+   puede (ya la descartó una vez, falla la descarga…) o hace falta la parte Android nueva, «Descargar la app», que se
+   instala encima sin perder nada. En la de Google Play no se obliga a la parte Android nueva: la da la tienda cuando
+   Google la revisa, y hasta entonces no hay nada que poner */
+const APK_URL = 'https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk';
+async function paquetePublicado() {
+  // (solo del dominio: el puente del móvil no deja pedir a otros sitios, y es de donde lo baja AlDia)
+  for (const u of ['https://fantasymanagerapp.com/paquete.json']) {
+    try {
+      const r = await http('GET', `${u}?t=${Date.now()}`, { tiempo: 15000 });
+      if (r.s !== 200) continue;
+      const j = JSON.parse(r.b);
+      if (j && j.version) return j;
+    } catch (e) { /* el siguiente */ }
+  }
+  return null;
+}
+async function mirarAppNueva() {
+  const j = await paquetePublicado();
+  if (!j || cmpVer(j.version, VERSION) <= 0) return;
+  const mia = nativo.huellaNativa();
+  const apk = !!(mia && j.nativo && j.nativo !== mia);
+  const play = nativo.canal() === 'play';
+  if (apk && play) return;
+  S.appNueva = { version: j.version, apk, play };
+  forzarAppNueva(apk ? 'apk' : 'pide');
+}
+/* paso: 'pide' (Actualizar ahora), 'bajando', 'apk' (hace falta descargar la app) o 'fallo' (AlDia no ha podido) */
+let forzarT = 0;
+function forzarAppNueva(paso, detalle = '') {
+  const A = S.appNueva;
+  if (!A) return;
+  let d = document.getElementById('forzar');
+  if (!d) {
+    d = document.createElement('div');
+    d.id = 'forzar'; d.className = 'forzar'; d.setAttribute('role', 'alertdialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-labelledby', 'forzar-t');
+    document.body.appendChild(d);
+  }
+  A.paso = paso;
+  clearTimeout(forzarT);
+  const bajar = '<button class="btn ancho" data-accion="bajarApp">Descargar la app</button>';
+  const otra = (prim) => `<button class="btn ancho${prim ? '' : ' sec'}" data-accion="ponerAppNueva">${paso === 'fallo' ? 'Volver a intentarlo' : 'Actualizar ahora'}</button>`;
+  let txt, botones;
+  if (paso === 'apk') {
+    txt = `Ya está la <b>${esc(A.version)}</b> y tú tienes la ${esc(VERSION)}. Esta trae cambios en la parte del móvil, así que hay que descargar la app otra vez: se instala encima y no pierdes nada.`;
+    botones = bajar;
+  } else if (paso === 'bajando') {
+    txt = `Bajando la <b>${esc(A.version)}</b>… En cuanto esté, la app se abre sola con ella.`;
+    botones = '<button class="btn ancho" disabled>Bajando…</button>';
+    // si AlDia no contesta en un minuto, que se pueda hacer otra cosa
+    forzarT = setTimeout(() => { if (S.appNueva && S.appNueva.paso === 'bajando') forzarAppNueva('fallo', 'no ha contestado'); }, 60000);
+  } else if (paso === 'fallo') {
+    txt = A.play
+      ? `No se ha podido poner sola la <b>${esc(A.version)}</b>${detalle ? ` (${esc(detalle)})` : ''}. Prueba otra vez en un rato y, si sigue, actualiza la app desde Google Play.`
+      : `No se ha podido poner sola la <b>${esc(A.version)}</b>${detalle ? ` (${esc(detalle)})` : ''}. Descarga la app otra vez: se instala encima y no pierdes nada.`;
+    botones = A.play ? otra(true) : bajar + otra(false);
+  } else {
+    txt = `Ya está la <b>${esc(A.version)}</b> y tú tienes la ${esc(VERSION)}. Actualiza para seguir: es un momento y no pierdes nada.`;
+    botones = otra(true);
+  }
+  d.innerHTML = `<div class="forzar-c"><span class="forzar-ic">${icono(paso === 'apk' || (paso === 'fallo' && !A.play) ? 'descargar' : 'refrescar')}</span><h2 id="forzar-t">Hay una versión nueva</h2><p>${txt}</p><div class="forzar-b">${botones}</div></div>`;
+  const b = d.querySelector('button:not([disabled])');
+  if (b) b.focus();
+}
+function ponerAppNueva() {
+  // ya bajada antes (no se pudo recargar en su momento): basta con recargar
+  if (S.webNueva) { ponerWebNueva(); return; }
+  forzarAppNueva('bajando');
+  if (!nativo.buscarWeb()) forzarAppNueva('fallo', 'esta app no sabe bajarla sola');
 }
 // la ?v= que deja recargarWeb, fuera de la barra de direcciones
 (function limpiarV() { try { if (/[?&]v=/.test(location.search)) history.replaceState(null, '', location.pathname + location.hash); } catch (e) { /* nada */ } })();
@@ -2378,7 +2457,10 @@ async function buscarVersion(avisar = false) {
   if (avisar) { S.buscaAvisar = conAlDia ? Date.now() : 0; tostada('Buscando versión nueva…', 2000); }
   const v = await ultimaVersion();
   const mia = nativo.huellaNativa();
-  const hace = v && v.version > nativo.version() && !(mia && v.nativo && v.nativo === mia);
+  // (desde la 0.7.6, app.json lleva la huella de verdad en «huella»: la de «nativo» no casa a propósito, para que las
+  // webs de antes enseñen «Actualizar» y las atascadas se pongan al día instalando la app)
+  const hn = v && (v.huella || v.nativo);
+  const hace = v && v.version > nativo.version() && !(mia && hn && hn === mia);
   if (hace) { S.nueva = v; versionNueva(v); pintar(); if (avisar) tostada(`Hay una versión nueva de la app: ${v.nombre}`); }
   else if (avisar && !conAlDia) tostada('Tienes la última versión');
 }
@@ -2390,7 +2472,7 @@ async function buscarVersion(avisar = false) {
 const arranqueT = Date.now();
 let fueraT = 0;
 function sePuedeRecargar(alVolver = false) {
-  if ($('#limite')) return true;
+  if ($('#limite') || $('#forzar')) return true;
   if (S.cargando || (S.planEstado || {}).cargando || S.chatCtl || tourAbierto()) return false;
   if ([...document.querySelectorAll('textarea, input[type="text"], input:not([type])')].some((e) => e.value && e.value.trim())) return false;
   if (!S.D) return true;
@@ -2407,6 +2489,14 @@ window.webBuscada = (estado) => {
     S.webNueva = true;
     if (sePuedeRecargar()) ponerWebNueva();
     else { if (S.D && !S.hoja) pintar(); if (avisar) tostada('Hay una versión nueva: toca «Descargar»'); }
+    return;
+  }
+  // con la ventana de versión nueva: lo que no sea «nueva» es que AlDia no la va a poner (salvo «ocupada», que contestará)
+  if (S.appNueva && $('#forzar')) {
+    if (estado === 'parada') { $('#forzar').remove(); S.appNueva = null; return; }
+    if (estado === 'ocupada') return;
+    if (estado === 'igual' && S.webNueva) { ponerWebNueva(); return; }
+    if (S.appNueva.paso !== 'apk') forzarAppNueva(estado === 'apk' && !S.appNueva.play ? 'apk' : 'fallo', String(estado).startsWith('error') ? String(estado).slice(7) : estado === 'igual' ? 'la descartó antes' : '');
     return;
   }
   if (!avisar) return;
@@ -2881,6 +2971,8 @@ document.addEventListener('click', async (ev) => {
       break;
     case 'buscarVersion': buscarVersion(true); break;
     case 'ponerWeb': ponerWebNueva(); break;
+    case 'ponerAppNueva': ponerAppNueva(); break;
+    case 'bajarApp': nativo.actualizar((S.nueva && S.nueva.apk) || APK_URL); tostada('Descargando la app… Cuando acabe, instálala encima', 6000); break;
     case 'recargarWeb': recargarWeb(); break;
     case 'buscarWeb': {
       tostada('Buscando versión nueva…', 2000);
@@ -3264,6 +3356,8 @@ async function arrancar() {
   // venía de la web de antes con un código de mudanza
   await codigoDeMudanza();
   leerInvitacion();
+  // la versión nueva, antes de nada: con una vieja no se juega (0.7.6)
+  mirarWebNueva();
   comprobarFotos();
   if ((enApp || enWeb) && !enDemo() && !haySesion()) {
     pantallaEntrar();

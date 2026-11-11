@@ -30,7 +30,7 @@
  *                             salir), para que el dueño vea en «Quién usa la app» cuánto tiempo pasa cada uno al día.
  *
  *   Quién usa la app (para que el dueño vea quién de su liga la tiene y quién está dentro):
- *   POST /hola                { v, canal, app, liga, equipo, bv }: la app avisa de que está abierta (al abrirla y cada 10
+ *   POST /hola                { v, canal, app, liga, equipo, bv, ad }: la app avisa de que está abierta (al abrirla y cada 10
  *                             minutos a la vista). Se apunta como mucho cada 9 minutos por cuenta.
  *   GET  /hola/todos          (el dueño) cada cuenta con su nombre, equipo, versión, primera y última vez, sus segundos
  *                             de hoy (segHoy) y, de los que han entrado en los últimos 7 días, los de cada uno de esos
@@ -671,6 +671,8 @@ async function hola(req, env, c, ruta) {
       canal: corta(b.canal, 8), app: Math.max(0, Math.round(Number(b.app) || 0)),
       primera: (m && m.primera) || ahora, ultima: ahora, n: ((m && m.n) || 0) + 1,
       foto: u.foto || '',
+      // por qué no se le pone la web nueva (el último fallo de AlDia en su móvil, desde la 0.7.6)
+      ...(b.ad ? { ad: corta(b.ad, 90) } : {}),
       // la pantalla de bienvenida ya vista (Carlos, 9 nov 10:20: una vez por cuenta, también en otro dispositivo): cuándo
       ...(((m && m.bv) || b.bv) ? { bv: (m && m.bv) || ahora } : {}),
     };
@@ -679,7 +681,7 @@ async function hola(req, env, c, ruta) {
     // el almacén no deja, se sigue sin más; revisión del 29 oct)
     // (y los cambios, como mucho CAMBIOS_DIA al día por cuenta: antes, alternar la versión escribía cada vez; revisión
     // total, C1. Con más, el cambio entra en la escritura de cada hora)
-    const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto);
+    const cambia = !!m && (m.v !== nuevo.v || m.equipo !== nuevo.equipo || (m.foto || '') !== nuevo.foto || (m.ad || '') !== (nuevo.ad || ''));
     // (la bienvenida vista se escribe siempre, aunque no quepan más cambios hoy: es una vez por cuenta)
     const bvNueva = !!nuevo.bv && !(m && m.bv);
     const dia = hoyMadrid(), cambiosHoy = m && m.dc === dia ? Number(m.nc) || 0 : 0;
