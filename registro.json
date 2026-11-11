@@ -2067,7 +2067,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249879/italia-francia-aire-mbappe.html": 1794401029000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261111/1004249868/barrenetxea.html": 1794400816000,
    "SPORT|136301661": 1794398469000,
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/11/marc-roca-viejo-deseo-fichaje-valencia-136330400.html": 1794402180000
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/11/marc-roca-viejo-deseo-fichaje-valencia-136330400.html": 1794402180000,
+   "AS|https://as.com/futbol/primera/bright-ede-la-proxima-alta-para-el-deportivo-f202611-n/": 1794401895000,
+   "AS|https://as.com/futbol/primera/barrenetxea-sufre-una-lesion-severa-y-pasara-por-el-quirofano-f202611-n/": 1794400407000
   },
   "hechos": [
    {
@@ -2423,11 +2425,23 @@
     "motivo": "lesión grave que requerirá operación",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/barrenetxea-sufre-una-lesion-severa-y-pasara-por-el-quirofano-f202611-n/",
+    "medio": "AS",
+    "t": 1794400407000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea se lesiona de gravedad y pasará por quirófano",
+    "motivo": "lesión severa que requiere quirófano",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -3272,7 +3286,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/tavernes-valencia-horario-ver-partido-copa-136222269.html": 1794143685000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/08/las-palmas-y-eldense-se-enfrentaran-este-lunes-a-las-2030-h-radio-elda/": 1794147139000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000,
@@ -3407,23 +3420,24 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/andalucia/malaga-00356/noticia-diputado-andalucia-ernesto-alba-denuncia-agresion-policial-piquete-mercamalaga-11n-20261111085023.html": 1794402679692
+   "Europa Press|https://www.europapress.es/andalucia/malaga-00356/noticia-diputado-andalucia-ernesto-alba-denuncia-agresion-policial-piquete-mercamalaga-11n-20261111085023.html": 1794402679692,
+   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-acusa-gobierno-enviar-policia-dar-palos-contra-piquetes-huelga-20261111131038.html": 1794402981297
   }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 47,
+   "clasificar": 48,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 204994,
-  "salida": 15286,
+  "entrada": 207033,
+  "salida": 16294,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.27809,
+  "dolares": 0.278798,
   "reservado": 0
  },
  "recientes": {
@@ -7526,13 +7540,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1475,
+   "ok": 1476,
    "fallos": 0,
-   "ejecuciones": 1054,
+   "ejecuciones": 1055,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T13:11:19.692Z"
+   "ultima": "2026-11-11T13:16:21.297Z"
   }
  },
  "ptsDirecto": {},
@@ -7549,15 +7563,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:11:29.816Z"
+   "ultimaBien": "2026-11-11T13:16:29.738Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:11:29.816Z"
+   "ultimaBien": "2026-11-11T13:16:29.738Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:11:29.816Z"
+   "ultimaBien": "2026-11-11T13:16:29.738Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7565,11 +7579,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:11:29.816Z"
+   "ultimaBien": "2026-11-11T13:16:29.738Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:11:29.816Z"
+   "ultimaBien": "2026-11-11T13:16:29.738Z"
   }
  },
  "avisos": [
