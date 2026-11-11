@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/elche-betis-hoy-en-directo-ultima-hora-de-laliga-ea-sports-en-vivo-f202611-d/": 1794149789000,
    "SPORT|136226921": 1794151993000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000,
    "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
@@ -7572,13 +7571,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1496,
+   "ok": 1497,
    "fallos": 0,
-   "ejecuciones": 1075,
+   "ejecuciones": 1076,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T14:56:13.154Z"
+   "ultima": "2026-11-11T15:01:11.213Z"
   }
  },
  "ptsDirecto": {},
@@ -7595,15 +7594,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:56:18.183Z"
+   "ultimaBien": "2026-11-11T15:01:13.579Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:56:18.183Z"
+   "ultimaBien": "2026-11-11T15:01:13.579Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:56:18.183Z"
+   "ultimaBien": "2026-11-11T15:01:13.579Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7611,11 +7610,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:56:18.183Z"
+   "ultimaBien": "2026-11-11T15:01:13.579Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:56:18.183Z"
+   "ultimaBien": "2026-11-11T15:01:13.579Z"
   }
  },
  "avisos": [
