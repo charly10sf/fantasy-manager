@@ -2080,7 +2080,8 @@
    "AS|https://as.com/futbol/primera/mourinho-corta-la-hemorragia-f202611-n/": 1794411514000,
    "SPORT|136326243": 1794407927000,
    "SPORT|136338637": 1794409048000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000
   },
   "hechos": [
    {
@@ -2476,7 +2477,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 43
+   "n": 44
   },
   "desde": {
    "67": {
@@ -3439,7 +3440,9 @@
    "Europa Press|https://www.europapress.es/madrid/noticia-huelga-general-resuena-madrid-piquetes-protestas-pese-relativa-normalidad-servicios-publicos-20261111163042.html": 1794411042000,
    "SPORT|136338548": 1794409167000,
    "SPORT|136339058": 1794408922000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-garamendi-ceoe-carga-contra-gobierno-animar-huelga-incomprensible-20261111120422.html": 1794395062000
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-garamendi-ceoe-carga-contra-gobierno-animar-huelga-incomprensible-20261111120422.html": 1794395062000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794413806000
   },
   "hechos": [
    {
@@ -3461,27 +3464,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 21,
+   "n": 22,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794414674016
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 64,
+   "clasificar": 66,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 240904,
-  "salida": 22922,
+  "entrada": 244833,
+  "salida": 23198,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.2855,
+  "dolares": 0.286031,
   "reservado": 0
  },
  "recientes": {
@@ -7579,13 +7580,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1518,
+   "ok": 1519,
    "fallos": 0,
-   "ejecuciones": 1097,
+   "ejecuciones": 1098,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T16:46:14.026Z"
+   "ultima": "2026-11-11T16:52:16.068Z"
   }
  },
  "ptsDirecto": {},
@@ -7602,15 +7603,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:46:19.693Z"
+   "ultimaBien": "2026-11-11T16:52:24.161Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:46:19.693Z"
+   "ultimaBien": "2026-11-11T16:52:24.161Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:46:19.693Z"
+   "ultimaBien": "2026-11-11T16:52:24.161Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7618,11 +7619,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:46:19.693Z"
+   "ultimaBien": "2026-11-11T16:52:24.161Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:46:19.693Z"
+   "ultimaBien": "2026-11-11T16:52:24.161Z"
   }
  },
  "avisos": [
