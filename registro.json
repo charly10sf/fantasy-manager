@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
    "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000,
    "SPORT|136230583": 1794163027000,
@@ -2081,7 +2080,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-niega-existan-privilegios-lamine-yamal-hablar-desconocimiento-vida-triste-lamentable-20261111_3473296.html": 1794418598000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-acelera-volver_0_2008475285.html": 1794418304000,
    "SPORT|136343392": 1794415761000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mujer-marcao-estalla-criticas-sevillismo_0_2008475561.html": 1794420208000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mujer-marcao-estalla-criticas-sevillismo_0_2008475561.html": 1794420208000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/12/paron-terror-grandes-clubes/0003_202611G12P36992.htm": 1794421380000
   },
   "hechos": [
    {
@@ -2451,7 +2451,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 50
+   "n": 51
   },
   "desde": {
    "67": {
@@ -3451,17 +3451,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 74,
+   "clasificar": 75,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 261388,
-  "salida": 25186,
+  "entrada": 263383,
+  "salida": 25968,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.288681,
+  "dolares": 0.289271,
   "reservado": 0
  },
  "recientes": {
@@ -7554,13 +7554,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1538,
+   "ok": 1539,
    "fallos": 0,
-   "ejecuciones": 1117,
+   "ejecuciones": 1118,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T18:21:14.940Z"
+   "ultima": "2026-11-11T18:26:22.155Z"
   }
  },
  "ptsDirecto": {},
@@ -7577,15 +7577,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:21:19.792Z"
+   "ultimaBien": "2026-11-11T18:26:32.442Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:21:19.792Z"
+   "ultimaBien": "2026-11-11T18:26:32.442Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:21:19.792Z"
+   "ultimaBien": "2026-11-11T18:26:32.442Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7593,11 +7593,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:21:19.792Z"
+   "ultimaBien": "2026-11-11T18:26:32.442Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:21:19.792Z"
+   "ultimaBien": "2026-11-11T18:26:32.442Z"
   }
  },
  "avisos": [
