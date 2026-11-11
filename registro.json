@@ -2081,7 +2081,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250001/zaniolo.html": 1794425156000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249947/jude-jobe-inglaterra-bellingham-domingo-espana.html": 1794424973000,
    "SPORT|136347080": 1794422141000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250016/zidane-confirma-baja-mbappe-italia.html": 1794426396000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250016/zidane-confirma-baja-mbappe-italia.html": 1794426396000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/zidane-confirma-la-baja-de-kylian-mbappe-ante-italia-ha-sentido-una-pequena-molestia-y-no-vamos-a-correr-riesgos-cadena-ser/": 1794427475000
   },
   "hechos": [
    {
@@ -2410,7 +2411,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 59
+   "n": 60
   },
   "desde": {
    "67": {
@@ -3255,7 +3256,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136233016": 1794168616000,
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794210480000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-habilita-canal-atencion-resolver-incidencias-huelga-general-20261109111108.html": 1794219068000,
@@ -3414,17 +3414,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 86,
+   "clasificar": 87,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 285292,
-  "salida": 30790,
+  "entrada": 287233,
+  "salida": 31590,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.293873,
+  "dolares": 0.294467,
   "reservado": 0
  },
  "recientes": {
@@ -7512,13 +7512,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1559,
+   "ok": 1560,
    "fallos": 0,
-   "ejecuciones": 1138,
+   "ejecuciones": 1139,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T20:06:12.491Z"
+   "ultima": "2026-11-11T20:11:11.138Z"
   }
  },
  "ptsDirecto": {},
@@ -7535,15 +7535,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:06:14.957Z"
+   "ultimaBien": "2026-11-11T20:11:20.547Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:06:14.957Z"
+   "ultimaBien": "2026-11-11T20:11:20.547Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:06:14.957Z"
+   "ultimaBien": "2026-11-11T20:11:20.547Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7551,11 +7551,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:06:14.957Z"
+   "ultimaBien": "2026-11-11T20:11:20.547Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:06:14.957Z"
+   "ultimaBien": "2026-11-11T20:11:20.547Z"
   }
  },
  "avisos": [
