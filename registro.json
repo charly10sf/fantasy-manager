@@ -2073,7 +2073,9 @@
    "AS|https://as.com/futbol/primera/sannadi-realiza-carrera-continua-en-lezama-f202611-n/": 1794402657000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249889/zidane-reacciona-incertidumbre-mbappe-llamando-ojitos-derechos-luis-enrique.html": 1794402099000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000,
-   "SPORT|136331770": 1794400495000
+   "SPORT|136331770": 1794400495000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
+   "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000
   },
   "hechos": [
    {
@@ -2467,11 +2469,23 @@
     "nums": [
      2022
     ]
+   },
+   {
+    "guid": "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html",
+    "medio": "El Correo",
+    "t": 1794404734000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea sufre una lesión severa en el muslo derecho",
+    "motivo": "lesión severa en la musculatura isquiosural derecha",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -3428,7 +3442,8 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681673/ruibal-defiende-huelga-general-me-encanta-gente-salga-protestar.html": 1794401677000,
    "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-acusa-gobierno-enviar-policia-dar-palos-contra-piquetes-huelga-20261111131038.html": 1794399038000,
    "SPORT|136332330": 1794393000000,
-   "Europa Press|https://www.europapress.es/andalucia/malaga-00356/noticia-diputado-andalucia-ernesto-alba-denuncia-agresion-policial-piquete-mercamalaga-11n-20261111085023.html": 1794383423000
+   "Europa Press|https://www.europapress.es/andalucia/malaga-00356/noticia-diputado-andalucia-ernesto-alba-denuncia-agresion-policial-piquete-mercamalaga-11n-20261111085023.html": 1794383423000,
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-metro-buses-barcelona-paran-1630-horas-servicios-minimos-matinales-20261111102217.html": 1794387978000
   },
   "hechos": [
    {
@@ -3450,27 +3465,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 17,
+   "n": 18,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-metro-buses-barcelona-paran-1630-horas-servicios-minimos-matinales-20261111102217.html": 1794404474339
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 51,
+   "clasificar": 53,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 213713,
-  "salida": 18341,
+  "entrada": 217581,
+  "salida": 18659,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.28049,
+  "dolares": 0.281035,
   "reservado": 0
  },
  "recientes": {
@@ -7573,13 +7586,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1484,
+   "ok": 1485,
    "fallos": 0,
-   "ejecuciones": 1063,
+   "ejecuciones": 1064,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T13:56:14.476Z"
+   "ultima": "2026-11-11T14:01:20.331Z"
   }
  },
  "ptsDirecto": {},
@@ -7596,15 +7609,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:56:20.251Z"
+   "ultimaBien": "2026-11-11T14:01:30.951Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:56:20.251Z"
+   "ultimaBien": "2026-11-11T14:01:30.951Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:56:20.251Z"
+   "ultimaBien": "2026-11-11T14:01:30.951Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7612,11 +7625,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:56:20.251Z"
+   "ultimaBien": "2026-11-11T14:01:30.951Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T13:56:20.251Z"
+   "ultimaBien": "2026-11-11T14:01:30.951Z"
   }
  },
  "avisos": [
