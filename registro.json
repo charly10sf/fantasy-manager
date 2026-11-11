@@ -3296,7 +3296,6 @@
  },
  "liga": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160741000,
    "SPORT|136233016": 1794168616000,
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794210480000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
@@ -3444,7 +3443,9 @@
    "n": 24,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794420073924
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7552,13 +7553,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1533,
+   "ok": 1534,
    "fallos": 0,
-   "ejecuciones": 1112,
+   "ejecuciones": 1113,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:56:13.757Z"
+   "ultima": "2026-11-11T18:01:13.924Z"
   }
  },
  "ptsDirecto": {},
@@ -7575,15 +7576,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:56:23.667Z"
+   "ultimaBien": "2026-11-11T18:01:19.127Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:56:23.667Z"
+   "ultimaBien": "2026-11-11T18:01:19.127Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:56:23.667Z"
+   "ultimaBien": "2026-11-11T18:01:19.127Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7591,11 +7592,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:56:23.667Z"
+   "ultimaBien": "2026-11-11T18:01:19.127Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:56:23.667Z"
+   "ultimaBien": "2026-11-11T18:01:19.127Z"
   }
  },
  "avisos": [
