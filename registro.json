@@ -1832,7 +1832,6 @@
  "noticias": {
   "vistas": {
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000,
-   "SPORT|136214539": 1794134669000,
    "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/": 1794141880000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248620/mensaje-vinicius-triunfo-real-madrid-mestalla.html": 1794148200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248652/kubo-regresa-titularidad-rayo-oyarzabal-queda-fuera-convocatoria.html": 1794147246000,
@@ -3348,7 +3347,9 @@
    "n": 10,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-alquiler-seguro-denuncia-actos-vandalicos-mas-40-oficinas-senala-sindicato-inquilinas-20261111114215.html": 1794393973336
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7466,13 +7467,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1445,
+   "ok": 1446,
    "fallos": 0,
-   "ejecuciones": 1024,
+   "ejecuciones": 1025,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T10:41:14.153Z"
+   "ultima": "2026-11-11T10:46:13.336Z"
   }
  },
  "ptsDirecto": {},
@@ -7489,15 +7490,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:41:24.238Z"
+   "ultimaBien": "2026-11-11T10:46:16.415Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:41:24.238Z"
+   "ultimaBien": "2026-11-11T10:46:16.415Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:41:24.238Z"
+   "ultimaBien": "2026-11-11T10:46:16.415Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7505,11 +7506,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:41:24.238Z"
+   "ultimaBien": "2026-11-11T10:46:16.415Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:41:24.238Z"
+   "ultimaBien": "2026-11-11T10:46:16.415Z"
   }
  },
  "avisos": [
