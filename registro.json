@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000,
    "SPORT|136214539": 1794134669000,
@@ -2046,21 +2045,11 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249769/courtois-me-gusta-xabi-alonso-me-gusta-forma-trabajar.html": 1794386756000,
    "SPORT|136316852": 1794385501000,
    "SPORT|136319206": 1794386810000,
-   "SPORT|136318124": 1794386885000
+   "SPORT|136318124": 1794386885000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-sobre-ausencia-lamine-yamal-republica-checa-fuente-haria-jugador-20261111_3472611.html": 1794378607000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/mundo-maldini/audios/mundomaldini-10-20261111_3472620.html": 1794357600000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html",
-    "medio": "COPE",
-    "t": 1794132313000,
-    "id": "2354",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Eric vuelve a la convocatoria del Barça contra el Atlético",
-    "motivo": "lesión muscular",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/un-nuevo-depor-tras-el-paron-f202611-n/",
     "medio": "AS",
@@ -2391,7 +2380,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3356,22 +3345,24 @@
    "n": 9,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249783/paso-adelante-recuperacion-juan-hernandez.html": 1794391572530
+  }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 151997,
-  "salida": 6625,
+  "entrada": 154190,
+  "salida": 6830,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.268462,
+  "dolares": 0.268784,
   "reservado": 0
  },
  "recientes": {
@@ -7474,13 +7465,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1437,
+   "ok": 1438,
    "fallos": 0,
-   "ejecuciones": 1016,
+   "ejecuciones": 1017,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T10:01:11.670Z"
+   "ultima": "2026-11-11T10:06:12.530Z"
   }
  },
  "ptsDirecto": {},
@@ -7497,15 +7488,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:01:20.329Z"
+   "ultimaBien": "2026-11-11T10:06:17.875Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:01:20.329Z"
+   "ultimaBien": "2026-11-11T10:06:17.875Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:01:20.329Z"
+   "ultimaBien": "2026-11-11T10:06:17.875Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7513,11 +7504,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:01:20.329Z"
+   "ultimaBien": "2026-11-11T10:06:17.875Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:01:20.329Z"
+   "ultimaBien": "2026-11-11T10:06:17.875Z"
   }
  },
  "avisos": [
