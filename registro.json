@@ -2043,7 +2043,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249614/ventana-fifa-deja-cuadro-athletic.html": 1794380400000,
    "SPORT|136314446": 1794378763000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249516/fuerza-equipo.html": 1794384000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249753/fuerza-equipo.html": 1794382428000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249753/fuerza-equipo.html": 1794382428000,
+   "SPORT|136302778": 1794380445000
   },
   "hechos": [
    {
@@ -2465,7 +2466,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -3427,17 +3428,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 126716,
-  "salida": 4980,
+  "entrada": 128828,
+  "salida": 5098,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.265111,
+  "dolares": 0.265381,
   "reservado": 0
  },
  "recientes": {
@@ -7540,13 +7541,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1412,
+   "ok": 1413,
    "fallos": 0,
-   "ejecuciones": 991,
+   "ejecuciones": 992,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T08:01:12.768Z"
+   "ultima": "2026-11-11T08:06:19.042Z"
   }
  },
  "ptsDirecto": {},
@@ -7563,15 +7564,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:01:46.643Z"
+   "ultimaBien": "2026-11-11T08:06:23.082Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:01:46.643Z"
+   "ultimaBien": "2026-11-11T08:06:23.082Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:01:46.643Z"
+   "ultimaBien": "2026-11-11T08:06:23.082Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7579,11 +7580,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:01:46.643Z"
+   "ultimaBien": "2026-11-11T08:06:23.082Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:01:46.643Z"
+   "ultimaBien": "2026-11-11T08:06:23.082Z"
   }
  },
  "avisos": [
