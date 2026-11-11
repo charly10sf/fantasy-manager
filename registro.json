@@ -2055,7 +2055,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/relaciones-tensas-mbappe-zidane-francia-20261111_3472893.html": 1794396298000,
    "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380088000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249852/raphinha-sube-estatus-brasil-lucira-brazalete.html": 1794398395000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249847/maroan-realiza-carrera-continua.html": 1794397559000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249847/maroan-realiza-carrera-continua.html": 1794397559000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/incertidumbre-con-mbappe-cadena-ser/": 1794398583000
   },
   "hechos": [
    {
@@ -2388,7 +2389,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3362,17 +3363,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 179790,
-  "salida": 11841,
+  "entrada": 181704,
+  "salida": 12591,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.273848,
+  "dolares": 0.274414,
   "reservado": 0
  },
  "recientes": {
@@ -7475,13 +7476,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1461,
+   "ok": 1462,
    "fallos": 0,
-   "ejecuciones": 1040,
+   "ejecuciones": 1041,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T12:01:17.066Z"
+   "ultima": "2026-11-11T12:06:23.763Z"
   }
  },
  "ptsDirecto": {},
@@ -7498,15 +7499,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:01:25.905Z"
+   "ultimaBien": "2026-11-11T12:06:32.302Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:01:25.905Z"
+   "ultimaBien": "2026-11-11T12:06:32.302Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:01:25.905Z"
+   "ultimaBien": "2026-11-11T12:06:32.302Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7514,11 +7515,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:01:25.905Z"
+   "ultimaBien": "2026-11-11T12:06:32.302Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:01:25.905Z"
+   "ultimaBien": "2026-11-11T12:06:32.302Z"
   }
  },
  "avisos": [
