@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html": 1794160570000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
    "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000,
@@ -2081,21 +2080,10 @@
    "SPORT|136342823": 1794414623000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/luis-de-la-fuente-estalla-por-las-criticas-a-lamine-yamal-lo-que-mas-me-duele-es-la-mentira-cadena-ser/": 1794413700000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-niega-existan-privilegios-lamine-yamal-hablar-desconocimiento-vida-triste-lamentable-20261111_3473296.html": 1794418598000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-acelera-volver_0_2008475285.html": 1794418304000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/miguel-sierra-acelera-volver_0_2008475285.html": 1794418304000,
+   "SPORT|136343392": 1794415761000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794160570000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea sufre una lesion muscular tras acumular minutos",
-    "motivo": "sobrecarga por acumulacion de minutos",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html",
     "medio": "Mundo Deportivo",
@@ -2463,7 +2451,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 48
+   "n": 49
   },
   "desde": {
    "67": {
@@ -3429,7 +3417,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794413806000,
    "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261111/11681830/piquetes-insultan-futbolistas-rayo-vallecano-han-entrenado-plena-huelga-general-esquiroles.html": 1794416767000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794415040000
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794415040000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-reivindica-huelga-contra-todos-gobiernos-avisa-no-aceptara-parches-20261111183506.html": 1794418506000,
+   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/11/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794414600000
   },
   "hechos": [
    {
@@ -3451,28 +3441,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 23,
+   "n": 24,
    "fallos": 0
   },
-  "espera": {
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/11/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794418571820,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-reivindica-huelga-contra-todos-gobiernos-avisa-no-aceptara-parches-20261111183506.html": 1794418881626
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 71,
+   "clasificar": 73,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 255369,
-  "salida": 24278,
+  "entrada": 259411,
+  "salida": 24532,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.287625,
+  "dolares": 0.288156,
   "reservado": 0
  },
  "recientes": {
@@ -7565,13 +7552,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1532,
+   "ok": 1533,
    "fallos": 0,
-   "ejecuciones": 1111,
+   "ejecuciones": 1112,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:51:11.839Z"
+   "ultima": "2026-11-11T17:56:13.757Z"
   }
  },
  "ptsDirecto": {},
@@ -7588,15 +7575,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:51:16.488Z"
+   "ultimaBien": "2026-11-11T17:56:23.667Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:51:16.488Z"
+   "ultimaBien": "2026-11-11T17:56:23.667Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:51:16.488Z"
+   "ultimaBien": "2026-11-11T17:56:23.667Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7604,11 +7591,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:51:16.488Z"
+   "ultimaBien": "2026-11-11T17:56:23.667Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:51:16.488Z"
+   "ultimaBien": "2026-11-11T17:56:23.667Z"
   }
  },
  "avisos": [
