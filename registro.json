@@ -2078,7 +2078,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261111/1004249914/osasuna-sigue-pendiente-aimar-oroz-romain-castillo.html": 1794408047000,
    "SPORT|136329433": 1794407192000,
    "AS|https://as.com/futbol/primera/mourinho-corta-la-hemorragia-f202611-n/": 1794411514000,
-   "SPORT|136326243": 1794407927000
+   "SPORT|136326243": 1794407927000,
+   "SPORT|136338637": 1794409048000
   },
   "hechos": [
    {
@@ -2474,7 +2475,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 41
+   "n": 42
   },
   "desde": {
    "67": {
@@ -3458,22 +3459,25 @@
    "n": 20,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261111/1004249933/agotadas-entradas-depor-barcelona-apenas-horas.html": 1794412876424,
+   "SPORT|136338548": 1794412876424
+  }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 61,
+   "clasificar": 62,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 234419,
-  "salida": 21646,
+  "entrada": 236451,
+  "salida": 21761,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.284213,
+  "dolares": 0.284474,
   "reservado": 0
  },
  "recientes": {
@@ -7571,13 +7575,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1508,
+   "ok": 1509,
    "fallos": 0,
-   "ejecuciones": 1087,
+   "ejecuciones": 1088,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T15:56:12.710Z"
+   "ultima": "2026-11-11T16:01:16.424Z"
   }
  },
  "ptsDirecto": {},
@@ -7594,15 +7598,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:56:16.005Z"
+   "ultimaBien": "2026-11-11T16:01:22.852Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:56:16.005Z"
+   "ultimaBien": "2026-11-11T16:01:22.852Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:56:16.005Z"
+   "ultimaBien": "2026-11-11T16:01:22.852Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7610,11 +7614,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:56:16.005Z"
+   "ultimaBien": "2026-11-11T16:01:22.852Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T15:56:16.005Z"
+   "ultimaBien": "2026-11-11T16:01:22.852Z"
   }
  },
  "avisos": [
