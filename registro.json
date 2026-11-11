@@ -3376,7 +3376,9 @@
    "n": 5,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-cifran-seguimiento-huelga-41-75-700-horas-ven-exito-20261111093630.html": 1794386771497
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7494,13 +7496,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1420,
+   "ok": 1421,
    "fallos": 0,
-   "ejecuciones": 999,
+   "ejecuciones": 1000,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T08:41:18.593Z"
+   "ultima": "2026-11-11T08:46:11.497Z"
   }
  },
  "ptsDirecto": {},
@@ -7517,15 +7519,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:41:27.338Z"
+   "ultimaBien": "2026-11-11T08:46:14.662Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:41:27.338Z"
+   "ultimaBien": "2026-11-11T08:46:14.662Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:41:27.338Z"
+   "ultimaBien": "2026-11-11T08:46:14.662Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7533,11 +7535,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:41:27.338Z"
+   "ultimaBien": "2026-11-11T08:46:14.662Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:41:27.338Z"
+   "ultimaBien": "2026-11-11T08:46:14.662Z"
   }
  },
  "avisos": [
