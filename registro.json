@@ -3355,7 +3355,11 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342405000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-madrid-realiza-piquete-sede-central-alquiler-seguro-20261110204927.html": 1794340167000,
    "SPORT|136307236": 1794339155000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794347495000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794347495000,
+   "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794374266000,
+   "SPORT|136299647": 1794373265000,
+   "SPORT|136282723": 1794373251000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/11/oviedo-guardes-aula-porrino-emparejamientos-copa-balonmano/0003_202611G11P35994.htm": 1794369600000
   },
   "hechos": [
    {
@@ -3377,28 +3381,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794376873003,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/11/oviedo-guardes-aula-porrino-emparejamientos-copa-balonmano/0003_202611G11P35994.htm": 1794376873003
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 69210,
-  "salida": 2439,
+  "entrada": 71407,
+  "salida": 2750,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.159614,
+  "dolares": 0.159989,
   "reservado": 0
  },
  "recientes": {
@@ -7502,13 +7503,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1388,
+   "ok": 1389,
    "fallos": 0,
-   "ejecuciones": 967,
+   "ejecuciones": 968,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T06:01:13.003Z"
+   "ultima": "2026-11-11T06:06:11.041Z"
   }
  },
  "ptsDirecto": {},
@@ -7525,15 +7526,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:01:41.934Z"
+   "ultimaBien": "2026-11-11T06:06:15.343Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:01:41.934Z"
+   "ultimaBien": "2026-11-11T06:06:15.343Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:01:41.934Z"
+   "ultimaBien": "2026-11-11T06:06:15.343Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7541,11 +7542,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:01:41.934Z"
+   "ultimaBien": "2026-11-11T06:06:15.343Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:01:41.934Z"
+   "ultimaBien": "2026-11-11T06:06:15.343Z"
   }
  },
  "avisos": [
