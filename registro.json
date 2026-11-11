@@ -2046,7 +2046,9 @@
    "SPORT|136319206": 1794386810000,
    "SPORT|136318124": 1794386885000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-sobre-ausencia-lamine-yamal-republica-checa-fuente-haria-jugador-20261111_3472611.html": 1794378607000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/mundo-maldini/audios/mundomaldini-10-20261111_3472620.html": 1794357600000
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/mundo-maldini/audios/mundomaldini-10-20261111_3472620.html": 1794357600000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/20261111/1004249788/raul.html": 1794391928000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/casos-no-hubo-buen-entendimiento-xabi-alonso-mi-me-gusto-manera-trabajar-20261111_3472842.html": 1794392772000
   },
   "hechos": [
    {
@@ -2379,7 +2381,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -3224,7 +3226,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136220224": 1794133655000,
    "SPORT|136220730": 1794135619000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/tavernes-valencia-horario-ver-partido-copa-136222269.html": 1794143685000,
    "SPORT|136221598": 1794138326000,
@@ -3319,7 +3320,8 @@
    "Europa Press|https://www.europapress.es/catalunya/noticia-manifestante-herido-leve-atropello-piquete-acceso-tarragona-20261111100218.html": 1794387738000,
    "Europa Press|https://www.europapress.es/sociedad/noticia-grupo-manifestantes-impide-emision-programa-cafe-ideas-rtve-cataluna-huelga-general-20261111105556.html": 1794390956000,
    "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-consumo-electrico-cae-66-1000-horas-20261111105528.html": 1794390928000,
-   "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-television-va-negro-huelga-general-11n-20261111085959.html": 1794383999000
+   "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-television-va-negro-huelga-general-11n-20261111085959.html": 1794383999000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249783/paso-adelante-recuperacion-juan-hernandez.html": 1794389939000
   },
   "hechos": [
    {
@@ -3341,27 +3343,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249783/paso-adelante-recuperacion-juan-hernandez.html": 1794391572530
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 24,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 154190,
-  "salida": 6830,
+  "entrada": 158176,
+  "salida": 7168,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.268784,
+  "dolares": 0.269351,
   "reservado": 0
  },
  "recientes": {
@@ -7464,13 +7464,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1442,
+   "ok": 1443,
    "fallos": 0,
-   "ejecuciones": 1021,
+   "ejecuciones": 1022,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T10:26:11.030Z"
+   "ultima": "2026-11-11T10:31:17.652Z"
   }
  },
  "ptsDirecto": {},
@@ -7487,15 +7487,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:26:14.615Z"
+   "ultimaBien": "2026-11-11T10:31:25.869Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:26:14.615Z"
+   "ultimaBien": "2026-11-11T10:31:25.869Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:26:14.615Z"
+   "ultimaBien": "2026-11-11T10:31:25.869Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7503,11 +7503,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:26:14.615Z"
+   "ultimaBien": "2026-11-11T10:31:25.869Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T10:26:14.615Z"
+   "ultimaBien": "2026-11-11T10:31:25.869Z"
   }
  },
  "avisos": [
