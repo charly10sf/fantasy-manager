@@ -61,7 +61,7 @@ function marcador(S, { corto = false } = {}) {
   else if (M.proxima) fila = `<span>Jornada ${M.proxima.n}</span><span class="der">${cuando(M.proxima.ini)} · ${cuenta(M.proxima.ini)}</span>`;
   else fila = `<span>${esc(D.liga.nombre)}</span>`;
   const dEq = M.mias.reduce((s, x) => s + num(x.tend.d1), 0);
-  let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" aria-label="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
+  let h = `<div class="marcador ${corto ? 'corto' : ''}" data-accion="resumen" role="button" tabindex="0" title="Ver el detalle de tu equipo"><div class="fila-j">${fila}<span class="marcador-ir" aria-hidden="true">${icono('flecha')}</span></div>
     <div class="cols">
       <div class="col"><div class="et">Saldo</div><div class="v ${D.dinero < 0 ? 'neg' : ''}">${eur(D.dinero)}</div><div class="d apag">gastas hasta ${eur(M.pujaMax)}</div></div>
       <div class="col"><div class="et">Equipo</div><div class="v">${eur(D.valorEquipo, { dec: 1 })}</div><div class="d ${clase(dEq)}">${dEq ? `${eur(dEq, { signo: true, dec: 1 })} hoy` : '<span class="apag">= hoy</span>'}</div></div>
