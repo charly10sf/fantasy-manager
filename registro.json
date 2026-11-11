@@ -2045,7 +2045,8 @@
    "SPORT|136314701": 1794382658000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249769/courtois-me-gusta-xabi-alonso-me-gusta-forma-trabajar.html": 1794386756000,
    "SPORT|136316852": 1794385501000,
-   "SPORT|136319206": 1794386810000
+   "SPORT|136319206": 1794386810000,
+   "SPORT|136318124": 1794386885000
   },
   "hechos": [
    {
@@ -2390,7 +2391,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3352,22 +3353,24 @@
    "n": 8,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/andalucia/noticia-canal-sur-television-va-negro-huelga-general-11n-20261111085959.html": 1794390973920
+  }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 147920,
-  "salida": 6272,
+  "entrada": 150000,
+  "salida": 6389,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.267877,
+  "dolares": 0.268144,
   "reservado": 0
  },
  "recientes": {
@@ -7470,13 +7473,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1435,
+   "ok": 1436,
    "fallos": 0,
-   "ejecuciones": 1014,
+   "ejecuciones": 1015,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T09:51:13.815Z"
+   "ultima": "2026-11-11T09:56:13.920Z"
   }
  },
  "ptsDirecto": {},
@@ -7493,15 +7496,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:51:19.915Z"
+   "ultimaBien": "2026-11-11T09:56:19.837Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:51:19.915Z"
+   "ultimaBien": "2026-11-11T09:56:19.837Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:51:19.915Z"
+   "ultimaBien": "2026-11-11T09:56:19.837Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7509,11 +7512,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:51:19.915Z"
+   "ultimaBien": "2026-11-11T09:56:19.837Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:51:19.915Z"
+   "ultimaBien": "2026-11-11T09:56:19.837Z"
   }
  },
  "avisos": [
