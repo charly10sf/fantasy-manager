@@ -3393,7 +3393,9 @@
    "n": 28,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-ve-fracaso-huelga-general-acto-camuflado-campana-electoral-parte-sindicatos-20261111223111.html": 1794432973782
+  }
  },
  "ia": {
   "dia": "2026-11-11",
@@ -7496,13 +7498,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1570,
+   "ok": 1571,
    "fallos": 0,
-   "ejecuciones": 1149,
+   "ejecuciones": 1150,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T21:31:16.556Z"
+   "ultima": "2026-11-11T21:36:13.782Z"
   }
  },
  "ptsDirecto": {},
@@ -7519,15 +7521,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:31:19.176Z"
+   "ultimaBien": "2026-11-11T21:36:17.806Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:31:19.176Z"
+   "ultimaBien": "2026-11-11T21:36:17.806Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:31:19.176Z"
+   "ultimaBien": "2026-11-11T21:36:17.806Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7535,11 +7537,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:31:19.176Z"
+   "ultimaBien": "2026-11-11T21:36:17.806Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:31:19.176Z"
+   "ultimaBien": "2026-11-11T21:36:17.806Z"
   }
  },
  "avisos": [
