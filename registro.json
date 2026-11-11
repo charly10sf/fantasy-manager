@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/": 1794130478000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000,
@@ -2048,18 +2047,6 @@
    "SPORT|136316852": 1794385501000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/",
-    "medio": "AS",
-    "t": 1794130478000,
-    "id": "2354",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Eric vuelve a la lista de Flick",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html",
     "medio": "COPE",
@@ -7482,13 +7469,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1431,
+   "ok": 1432,
    "fallos": 0,
-   "ejecuciones": 1010,
+   "ejecuciones": 1011,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T09:31:12.842Z"
+   "ultima": "2026-11-11T09:36:11.582Z"
   }
  },
  "ptsDirecto": {},
@@ -7505,15 +7492,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:31:20.119Z"
+   "ultimaBien": "2026-11-11T09:36:14.325Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:31:20.119Z"
+   "ultimaBien": "2026-11-11T09:36:14.325Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:31:20.119Z"
+   "ultimaBien": "2026-11-11T09:36:14.325Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7521,11 +7508,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:31:20.119Z"
+   "ultimaBien": "2026-11-11T09:36:14.325Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T09:31:20.119Z"
+   "ultimaBien": "2026-11-11T09:36:14.325Z"
   }
  },
  "avisos": [
