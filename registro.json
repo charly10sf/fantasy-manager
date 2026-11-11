@@ -3317,7 +3317,6 @@
  },
  "liga": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000,
    "SPORT|136226466": 1794152883000,
    "SPORT|136227641": 1794155343000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160741000,
@@ -7574,13 +7573,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1491,
+   "ok": 1492,
    "fallos": 0,
-   "ejecuciones": 1070,
+   "ejecuciones": 1071,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T14:31:19.450Z"
+   "ultima": "2026-11-11T14:36:13.986Z"
   }
  },
  "ptsDirecto": {},
@@ -7597,15 +7596,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:31:26.593Z"
+   "ultimaBien": "2026-11-11T14:36:17.895Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:31:26.593Z"
+   "ultimaBien": "2026-11-11T14:36:17.895Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:31:26.593Z"
+   "ultimaBien": "2026-11-11T14:36:17.895Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7613,11 +7612,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:31:26.593Z"
+   "ultimaBien": "2026-11-11T14:36:17.895Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:31:26.593Z"
+   "ultimaBien": "2026-11-11T14:36:17.895Z"
   }
  },
  "avisos": [
