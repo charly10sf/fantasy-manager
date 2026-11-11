@@ -3434,7 +3434,12 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-abascal-carga-contra-sanchez-huelga-general-envia-sindicatos-mafiosos-contra-trabajadores-20261111151834.html": 1794406714000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405818000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-diaz-reprocha-pp-burlas-sindicatos-traslada-apoyo-trabajadores-huelga-20261111160104.html": 1794409264000,
-   "SPORT|136338369": 1794407405000
+   "SPORT|136338369": 1794407405000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261111/1004249933/agotadas-entradas-depor-barcelona-apenas-horas.html": 1794411891000,
+   "Europa Press|https://www.europapress.es/madrid/noticia-huelga-general-resuena-madrid-piquetes-protestas-pese-relativa-normalidad-servicios-publicos-20261111163042.html": 1794411042000,
+   "SPORT|136338548": 1794409167000,
+   "SPORT|136339058": 1794408922000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-garamendi-ceoe-carga-contra-gobierno-animar-huelga-incomprensible-20261111120422.html": 1794395062000
   },
   "hechos": [
    {
@@ -3456,28 +3461,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 20,
+   "n": 21,
    "fallos": 0
   },
-  "espera": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261111/1004249933/agotadas-entradas-depor-barcelona-apenas-horas.html": 1794412876424,
-   "SPORT|136338548": 1794412876424
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 62,
+   "clasificar": 63,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 236451,
-  "salida": 21761,
+  "entrada": 238841,
+  "salida": 22786,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.284474,
+  "dolares": 0.285226,
   "reservado": 0
  },
  "recientes": {
@@ -7575,13 +7577,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1509,
+   "ok": 1510,
    "fallos": 0,
-   "ejecuciones": 1088,
+   "ejecuciones": 1089,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T16:01:16.424Z"
+   "ultima": "2026-11-11T16:06:16.816Z"
   }
  },
  "ptsDirecto": {},
@@ -7598,15 +7600,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:01:22.852Z"
+   "ultimaBien": "2026-11-11T16:06:25.527Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:01:22.852Z"
+   "ultimaBien": "2026-11-11T16:06:25.527Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:01:22.852Z"
+   "ultimaBien": "2026-11-11T16:06:25.527Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7614,11 +7616,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:01:22.852Z"
+   "ultimaBien": "2026-11-11T16:06:25.527Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:01:22.852Z"
+   "ultimaBien": "2026-11-11T16:06:25.527Z"
   }
  },
  "avisos": [
