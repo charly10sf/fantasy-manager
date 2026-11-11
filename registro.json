@@ -3421,8 +3421,7 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/catalunya/noticia-grupos-personas-rompen-aparadores-queman-contenedores-lanzan-pirotecnia-mossos-20261111200434.html": 1794424272091,
-   "El Correo|https://www.elcorreo.com/athletic/dos-jugadoras-athletic-femenino-defienden-huelga-toca-20261111200135-nt.html": 1794424573125
+   "Europa Press|https://www.europapress.es/catalunya/noticia-grupos-personas-rompen-aparadores-queman-contenedores-lanzan-pirotecnia-mossos-20261111200434.html": 1794424272091
   }
  },
  "ia": {
@@ -7531,13 +7530,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1549,
+   "ok": 1550,
    "fallos": 0,
-   "ejecuciones": 1128,
+   "ejecuciones": 1129,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T19:16:13.125Z"
+   "ultima": "2026-11-11T19:21:12.094Z"
   }
  },
  "ptsDirecto": {},
@@ -7554,15 +7553,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:16:18.115Z"
+   "ultimaBien": "2026-11-11T19:21:14.591Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:16:18.115Z"
+   "ultimaBien": "2026-11-11T19:21:14.591Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:16:18.115Z"
+   "ultimaBien": "2026-11-11T19:21:14.591Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7570,11 +7569,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:16:18.115Z"
+   "ultimaBien": "2026-11-11T19:21:14.591Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T19:16:18.115Z"
+   "ultimaBien": "2026-11-11T19:21:14.591Z"
   }
  },
  "avisos": [
