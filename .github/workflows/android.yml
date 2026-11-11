@@ -280,7 +280,9 @@ jobs:
           # antes de la 0.7.6 comparan «nativo» con la de su APK y, al no casar, enseñan «Hay una versión nueva ·
           # Actualizar», que instala la app. A quien AlDia le pone la web nueva, se le recarga antes de verlo; a quien se
           # quedó atascado (AlDia no le pone la nueva), así se le pone al día. Las de la 0.7.6 en adelante miran «huella»
-          printf '{"version": %s, "nombre": "%s", "huella": "%s", "nativo": "obligar-%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "$VERSION_CODE" "$VERSION_NAME" "$NATIVO" "$NATIVO" "${{ github.repository }}" > app.json
+          # «nombre» lleva detrás el aviso (Carlos, 11 nov): las webs de antes lo enseñan entre paréntesis en su banda («Hay una
+          # versión nueva (…) · Actualizar»), y es lo único de esa banda que se puede cambiar desde aquí
+          printf '{"version": %s, "nombre": "%s ⚠️ Tu versión ya no recibe arreglos ni novedades. Toca Actualizar para instalarla", "huella": "%s", "nativo": "obligar-%s", "apk": "https://github.com/%s/releases/download/app/fantasy-manager.apk"}\n' "$VERSION_CODE" "$VERSION_NAME" "$NATIVO" "$NATIVO" "${{ github.repository }}" > app.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add app.json

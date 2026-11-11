@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.6';
+export const VERSION = '0.7.6a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.6';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.6a', f: '2026-11-11', h: '08:42', t: 'Lo que subió tu equipo de verdad',
+    cosas: [
+      { tipo: 'arreglo', d: 'grafica', t: 'El valor de tu equipo, con los jugadores que tenías cada día', x: 'La gráfica de «Tu equipo hoy» y lo que subió cada día sumaban hacia atrás a tus jugadores de hoy, también los días en que aún no eran tuyos. Ahora cada día cuenta lo que subieron o bajaron los que tenías ese día, y lo que pagas por un fichaje no sale como subida.' },
+    ],
+  },
   {
     v: '0.7.6', f: '2026-11-11', h: '08:13', t: 'Siempre en la última',
     cosas: [

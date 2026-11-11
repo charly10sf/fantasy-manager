@@ -505,6 +505,32 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   }
 }
 
+// 14: el valor del equipo día a día cuenta los jugadores que tenías cada día (0.7.6a): un fichaje de hace 3 días no
+// suma lo que subió antes de ser tuyo, y uno vendido hace 2 sí suma lo que subió mientras lo era
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(async () => {
+    const H = await import('./js/hojas.js'); const S = window.S, M = S.M, DIA = 864e5, now = Date.now();
+    const mio = M.mias.find((x) => x.j && (M.tend(x.pid).serie || []).length > 5);
+    const ajeno = Object.values(S.D.maestro).find((j) => j.valor > 5e6 && !M.mias.some((x) => x.pid === j.id) && (M.tend(j.id).serie || []).length > 5);
+    if (!mio || !ajeno) return { sin: true };
+    const sin = H.sumaJugadores({ ...S, M: { ...M, actividad: [] } });
+    const con = H.sumaJugadores({ ...S, M: { ...M, actividad: [{ t: now - 3 * DIA, pid: mio.pid, clase: 'compra', esYo: true, contraMi: false }, { t: now - 2 * DIA, pid: ajeno.id, clase: 'venta', esYo: true, contraMi: false }] } });
+    const vEn = (pid, t) => { const s = M.tend(pid).serie.slice().sort((a, b) => a[0] - b[0]); let v = s[0][1]; for (const [ts, val] of s) { if (ts <= t + DIA / 2) v = val; else break; } return v; };
+    const n = con.length, sube = (pid, i) => vEn(pid, con[i][0]) - vEn(pid, con[i - 1][0]), dif = (i) => (con[i][1] - con[i - 1][1]) - (sin[i][1] - sin[i - 1][1]);
+    // hoy y ayer, igual; anteayer, + lo del vendido; el día antes, + lo del vendido − lo del fichado
+    const espera = [[n - 1, 0], [n - 2, 0], [n - 3, sube(ajeno.id, n - 3)], [n - 4, sube(ajeno.id, n - 4) - sube(mio.pid, n - 4)]];
+    return { mal: espera.filter(([i, e]) => Math.abs(dif(i) - e) > 1).map(([i, e]) => `${i}: ${Math.round(dif(i))} y debía ${Math.round(e)}`), hoy: Math.round(con[n - 1][1] - sin[n - 1][1]) };
+  });
+  if (r.sin) mal('valor del equipo: la demo no trae jugadores con serie');
+  else if (r.mal.length || r.hoy) mal(`valor del equipo día a día: ${r.mal.join(' · ')}${r.hoy ? ` · hoy no cuadra (${r.hoy})` : ''}`);
+  else bien('valor del equipo día a día: cuenta los jugadores que tenías cada día');
+  if (errores.length) mal(`valor del equipo: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 await nav.close();
 servidor.close();
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');
