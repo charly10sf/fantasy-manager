@@ -2033,7 +2033,8 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681063/laporte-entrevista-espana-seleccion.html": 1794369600000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-fijo-betis-convertido-cambio-habitual_0_2008466896.html": 1794374707000,
    "SPORT|136312150": 1794374381000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249614/ventana-fifa-deja-cuadro-athletic.html": 1794380400000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249614/ventana-fifa-deja-cuadro-athletic.html": 1794380400000,
+   "SPORT|136314446": 1794378763000
   },
   "hechos": [
    {
@@ -2431,7 +2432,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3391,17 +3392,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 79326,
-  "salida": 3748,
+  "entrada": 81352,
+  "salida": 3840,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.16128,
+  "dolares": 0.161529,
   "reservado": 0
  },
  "recientes": {
@@ -7500,13 +7501,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1406,
+   "ok": 1407,
    "fallos": 0,
-   "ejecuciones": 985,
+   "ejecuciones": 986,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T07:31:13.683Z"
+   "ultima": "2026-11-11T07:36:11.309Z"
   }
  },
  "ptsDirecto": {},
@@ -7523,15 +7524,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:31:18.915Z"
+   "ultimaBien": "2026-11-11T07:36:16.290Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:31:18.915Z"
+   "ultimaBien": "2026-11-11T07:36:16.290Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:31:18.915Z"
+   "ultimaBien": "2026-11-11T07:36:16.290Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7539,11 +7540,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:31:18.915Z"
+   "ultimaBien": "2026-11-11T07:36:16.290Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:31:18.915Z"
+   "ultimaBien": "2026-11-11T07:36:16.290Z"
   }
  },
  "avisos": [
