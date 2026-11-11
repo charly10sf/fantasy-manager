@@ -2079,7 +2079,8 @@
    "SPORT|136329433": 1794407192000,
    "AS|https://as.com/futbol/primera/mourinho-corta-la-hemorragia-f202611-n/": 1794411514000,
    "SPORT|136326243": 1794407927000,
-   "SPORT|136338637": 1794409048000
+   "SPORT|136338637": 1794409048000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000
   },
   "hechos": [
    {
@@ -2475,7 +2476,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 42
+   "n": 43
   },
   "desde": {
    "67": {
@@ -3469,17 +3470,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 63,
+   "clasificar": 64,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 238841,
-  "salida": 22786,
+  "entrada": 240904,
+  "salida": 22922,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.285226,
+  "dolares": 0.2855,
   "reservado": 0
  },
  "recientes": {
@@ -7577,13 +7578,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1511,
+   "ok": 1512,
    "fallos": 0,
-   "ejecuciones": 1090,
+   "ejecuciones": 1091,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T16:11:14.744Z"
+   "ultima": "2026-11-11T16:16:21.396Z"
   }
  },
  "ptsDirecto": {},
@@ -7600,15 +7601,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:11:20.061Z"
+   "ultimaBien": "2026-11-11T16:16:28.416Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:11:20.061Z"
+   "ultimaBien": "2026-11-11T16:16:28.416Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:11:20.061Z"
+   "ultimaBien": "2026-11-11T16:16:28.416Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7616,11 +7617,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:11:20.061Z"
+   "ultimaBien": "2026-11-11T16:16:28.416Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T16:11:20.061Z"
+   "ultimaBien": "2026-11-11T16:16:28.416Z"
   }
  },
  "avisos": [
