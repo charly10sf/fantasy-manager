@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
    "AS|https://as.com/futbol/primera/anoeta-vuelve-a-sonreir-tras-el-zarpazo-de-oskarsson-f202611-n/": 1794158806000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/despues-rodri-mourinho-nuevo-menosprecio-plantilla-valencia-cf-peter-lim-136227694.html": 1794159039000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html": 1794160570000,
@@ -2079,24 +2078,10 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249952/tchouameni-duda-celta.html": 1794414762000,
-   "SPORT|136338857": 1794412618000
+   "SPORT|136338857": 1794412618000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/sigue-en-directo-la-rueda-de-prensa-de-luis-de-la-fuente-previa-al-partido-entre-espana-y-republica-checa-cadena-ser/": 1794413700000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/",
-    "medio": "AS",
-    "t": 1794158589000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea se marcha lesionado y podría perderse la Selección",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     1,
-     0
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261108/1004248734/barrenetxea-lesion-no-severa.html",
     "medio": "Mundo Deportivo",
@@ -2476,7 +2461,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -3440,7 +3425,10 @@
    "SPORT|136339058": 1794408922000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-garamendi-ceoe-carga-contra-gobierno-animar-huelga-incomprensible-20261111120422.html": 1794395062000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794413806000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794413806000,
+   "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
+   "La Vanguardia|https://www.lavanguardia.com/clic/20261111/11681830/piquetes-insultan-futbolistas-rayo-vallecano-han-entrenado-plena-huelga-general-esquiroles.html": 1794416767000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794415040000
   },
   "hechos": [
    {
@@ -3462,28 +3450,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 22,
+   "n": 23,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794417033693,
-   "La Vanguardia|https://www.lavanguardia.com/clic/20261111/11681830/piquetes-insultan-futbolistas-rayo-vallecano-han-entrenado-plena-huelga-general-esquiroles.html": 1794417675073
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 67,
+   "clasificar": 69,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 247072,
-  "salida": 23416,
+  "entrada": 251004,
+  "salida": 23814,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.286364,
+  "dolares": 0.286956,
   "reservado": 0
  },
  "recientes": {
@@ -7576,13 +7561,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1526,
+   "ok": 1527,
    "fallos": 0,
-   "ejecuciones": 1105,
+   "ejecuciones": 1106,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:21:15.073Z"
+   "ultima": "2026-11-11T17:26:12.747Z"
   }
  },
  "ptsDirecto": {},
@@ -7599,15 +7584,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:21:17.443Z"
+   "ultimaBien": "2026-11-11T17:26:20.672Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:21:17.443Z"
+   "ultimaBien": "2026-11-11T17:26:20.672Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:21:17.443Z"
+   "ultimaBien": "2026-11-11T17:26:20.672Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7615,11 +7600,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:21:17.443Z"
+   "ultimaBien": "2026-11-11T17:26:20.672Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:21:17.443Z"
+   "ultimaBien": "2026-11-11T17:26:20.672Z"
   }
  },
  "avisos": [
