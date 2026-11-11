@@ -1834,7 +1834,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248620/mensaje-vinicius-triunfo-real-madrid-mestalla.html": 1794148200000,
    "AS|https://as.com/futbol/primera/elche-betis-hoy-en-directo-ultima-hora-de-laliga-ea-sports-en-vivo-f202611-d/": 1794149789000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248660/mourinho-no-supera-flick.html": 1794149597000,
-   "SPORT|136225173": 1794147961000,
    "SPORT|136226921": 1794151993000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000,
    "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
@@ -2080,20 +2079,6 @@
    "AS|https://as.com/futbol/mariano-diaz-me-gustan-tanto-la-liga-como-la-copa-f202611-n/": 1794405348000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136225173",
-    "medio": "SPORT",
-    "t": 1794147961000,
-    "id": "3108",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Aubameyang vuelve recuperado tras catorce meses de baja",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     14
-    ]
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/",
     "medio": "AS",
@@ -3443,7 +3428,10 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-acusa-gobierno-enviar-policia-dar-palos-contra-piquetes-huelga-20261111131038.html": 1794399038000,
    "SPORT|136332330": 1794393000000,
    "Europa Press|https://www.europapress.es/andalucia/malaga-00356/noticia-diputado-andalucia-ernesto-alba-denuncia-agresion-policial-piquete-mercamalaga-11n-20261111085023.html": 1794383423000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-metro-buses-barcelona-paran-1630-horas-servicios-minimos-matinales-20261111102217.html": 1794387978000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-metro-buses-barcelona-paran-1630-horas-servicios-minimos-matinales-20261111102217.html": 1794387978000,
+   "Europa Press|https://www.europapress.es/sociedad/noticia-carreteras-cortadas-vuelos-cancelados-clases-suspendidas-primeros-efectos-paso-charles-20261111151925.html": 1794406765000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-abascal-carga-contra-sanchez-huelga-general-envia-sindicatos-mafiosos-contra-trabajadores-20261111151834.html": 1794406714000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405818000
   },
   "hechos": [
    {
@@ -3465,28 +3453,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 18,
+   "n": 19,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405972301,
-   "Europa Press|https://www.europapress.es/nacional/noticia-abascal-carga-contra-sanchez-huelga-general-envia-sindicatos-mafiosos-contra-trabajadores-20261111151834.html": 1794406871660
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 55,
+   "clasificar": 56,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 221802,
-  "salida": 18973,
+  "entrada": 223917,
+  "salida": 19696,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.281615,
+  "dolares": 0.282188,
   "reservado": 0
  },
  "recientes": {
@@ -7589,13 +7574,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1489,
+   "ok": 1490,
    "fallos": 0,
-   "ejecuciones": 1068,
+   "ejecuciones": 1069,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T14:21:11.660Z"
+   "ultima": "2026-11-11T14:26:13.370Z"
   }
  },
  "ptsDirecto": {},
@@ -7612,15 +7597,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:21:16.013Z"
+   "ultimaBien": "2026-11-11T14:26:22.256Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:21:16.013Z"
+   "ultimaBien": "2026-11-11T14:26:22.256Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:21:16.013Z"
+   "ultimaBien": "2026-11-11T14:26:22.256Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7628,11 +7613,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:21:16.013Z"
+   "ultimaBien": "2026-11-11T14:26:22.256Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:21:16.013Z"
+   "ultimaBien": "2026-11-11T14:26:22.256Z"
   }
  },
  "avisos": [
