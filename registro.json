@@ -1833,7 +1833,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
    "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000,
-   "SPORT|136230583": 1794163027000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248767/aficion-barca-entra-metropolitano-grito-julian-cule.html": 1794167743000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248772/konate-espanta-fantasmas-indispensable-mourinho.html": 1794167087000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248775/flick-bernal-hecho-gran-trabajo-brian-conecta-lamine.html": 1794166775000,
@@ -2082,7 +2081,9 @@
    "SPORT|136343392": 1794415761000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/mujer-marcao-estalla-criticas-sevillismo_0_2008475561.html": 1794420208000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/12/paron-terror-grandes-clubes/0003_202611G12P36992.htm": 1794421380000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249984/tuchel-pronuncia-sobre-jobe-bellingham.html": 1794421267000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249984/tuchel-pronuncia-sobre-jobe-bellingham.html": 1794421267000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laporte-duda-jugar-frente-republica-checa-proceso-virico-20261111_3473310.html": 1794421558000,
+   "ABC|https://www.abc.es/deportes/futbol/fuente-indigna-sospechas-lesion-lamine-lamentable-inflamacion-20261111193549-nt.html": 1794422149000
   },
   "hechos": [
    {
@@ -2452,7 +2453,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 52
+   "n": 53
   },
   "desde": {
    "67": {
@@ -3446,22 +3447,24 @@
    "n": 25,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/11/6af4b4cce85ece663a8b45a1.html": 1794422475085
+  }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 77,
+   "clasificar": 78,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 267195,
-  "salida": 27192,
+  "entrada": 269478,
+  "salida": 28243,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.290264,
+  "dolares": 0.291018,
   "reservado": 0
  },
  "recientes": {
@@ -7554,13 +7557,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1541,
+   "ok": 1542,
    "fallos": 0,
-   "ejecuciones": 1120,
+   "ejecuciones": 1121,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T18:36:13.145Z"
+   "ultima": "2026-11-11T18:41:15.085Z"
   }
  },
  "ptsDirecto": {},
@@ -7577,15 +7580,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:36:15.662Z"
+   "ultimaBien": "2026-11-11T18:41:26.799Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:36:15.662Z"
+   "ultimaBien": "2026-11-11T18:41:26.799Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:36:15.662Z"
+   "ultimaBien": "2026-11-11T18:41:26.799Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7593,11 +7596,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:36:15.662Z"
+   "ultimaBien": "2026-11-11T18:41:26.799Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:36:15.662Z"
+   "ultimaBien": "2026-11-11T18:41:26.799Z"
   }
  },
  "avisos": [
