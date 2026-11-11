@@ -1828,7 +1828,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html": 1794130161000,
    "SPORT|136217036": 1794126576000,
    "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/": 1794130478000,
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/08/ultima-hora-choque-trenes-toledo-135852320.html": 1794122100000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/08/diomande-extremo-dos-caras.html": 1794135046000,
@@ -7501,13 +7500,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1402,
+   "ok": 1403,
    "fallos": 0,
-   "ejecuciones": 981,
+   "ejecuciones": 982,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T07:11:13.626Z"
+   "ultima": "2026-11-11T07:16:16.571Z"
   }
  },
  "ptsDirecto": {},
@@ -7524,15 +7523,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:11:20.668Z"
+   "ultimaBien": "2026-11-11T07:16:20.987Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:11:20.668Z"
+   "ultimaBien": "2026-11-11T07:16:20.987Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:11:20.668Z"
+   "ultimaBien": "2026-11-11T07:16:20.987Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7540,11 +7539,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:11:20.668Z"
+   "ultimaBien": "2026-11-11T07:16:20.987Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T07:11:20.668Z"
+   "ultimaBien": "2026-11-11T07:16:20.987Z"
   }
  },
  "avisos": [
