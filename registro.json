@@ -1618,7 +1618,7 @@
   "3100": "ok",
   "3101": "ok",
   "3102": "ok",
-  "3103": "ok",
+  "3103": "doubtful",
   "3104": "doubtful",
   "3105": "ok",
   "3106": "ok",
@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248620/mensaje-vinicius-triunfo-real-madrid-mestalla.html": 1794148200000,
    "AS|https://as.com/futbol/primera/elche-betis-hoy-en-directo-ultima-hora-de-laliga-ea-sports-en-vivo-f202611-d/": 1794149789000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248660/mourinho-no-supera-flick.html": 1794149597000,
    "SPORT|136226921": 1794151993000,
@@ -2076,7 +2075,8 @@
    "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000,
    "SPORT|136334527": 1794402050000,
    "SPORT|136322901": 1794402031000,
-   "AS|https://as.com/futbol/mariano-diaz-me-gustan-tanto-la-liga-como-la-copa-f202611-n/": 1794405348000
+   "AS|https://as.com/futbol/mariano-diaz-me-gustan-tanto-la-liga-como-la-copa-f202611-n/": 1794405348000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261111/1004249909/senalado-vinicius-defendido-mourinho-meses-vuelve-boca-todos.html": 1794406174000
   },
   "hechos": [
    {
@@ -2472,7 +2472,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -3144,8 +3144,8 @@
     "t": 1794204073390
    },
    "3103": {
-    "e": "ok",
-    "t": 0
+    "e": "doubtful",
+    "t": 1794407479450
    },
    "3104": {
     "e": "doubtful",
@@ -3461,17 +3461,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 56,
+   "clasificar": 57,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 223917,
-  "salida": 19696,
+  "entrada": 225935,
+  "salida": 19788,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.282188,
+  "dolares": 0.282436,
   "reservado": 0
  },
  "recientes": {
@@ -7574,13 +7574,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1490,
+   "ok": 1491,
    "fallos": 0,
-   "ejecuciones": 1069,
+   "ejecuciones": 1070,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T14:26:13.370Z"
+   "ultima": "2026-11-11T14:31:19.450Z"
   }
  },
  "ptsDirecto": {},
@@ -7597,15 +7597,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:26:22.256Z"
+   "ultimaBien": "2026-11-11T14:31:26.593Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:26:22.256Z"
+   "ultimaBien": "2026-11-11T14:31:26.593Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:26:22.256Z"
+   "ultimaBien": "2026-11-11T14:31:26.593Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7613,11 +7613,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:26:22.256Z"
+   "ultimaBien": "2026-11-11T14:31:26.593Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:26:22.256Z"
+   "ultimaBien": "2026-11-11T14:31:26.593Z"
   }
  },
  "avisos": [
