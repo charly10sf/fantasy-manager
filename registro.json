@@ -2044,7 +2044,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249516/fuerza-equipo.html": 1794384000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249753/fuerza-equipo.html": 1794382428000,
    "SPORT|136302778": 1794380445000,
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/courtois-alaba-xabi-alonso-desvela-ignoro-mensaje-mourinho-bien.html": 1794384337000
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/courtois-alaba-xabi-alonso-desvela-ignoro-mensaje-mourinho-bien.html": 1794384337000,
+   "SPORT|136314701": 1794382658000
   },
   "hechos": [
    {
@@ -2418,7 +2419,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -3349,7 +3350,8 @@
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-arranca-huelga-general-vivienda-salarios-primera-presidencia-pedro-sanchez-20261111000049.html": 1794351649000,
    "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380088000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-demanda-energia-electrica-cae-97-primeras-horas-huelga-ccoo-20261111071430.html": 1794377670000,
-   "SPORT|136315088": 1794379975000
+   "SPORT|136315088": 1794379975000,
+   "Europa Press|https://www.europapress.es/madrid/noticia-mercamadrid-amanece-normalidad-arranque-agitado-cargas-policiales-contra-piquetes-20261111073438.html": 1794378878000
   },
   "hechos": [
    {
@@ -3371,27 +3373,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/madrid/noticia-mercamadrid-amanece-normalidad-arranque-agitado-cargas-policiales-contra-piquetes-20261111073438.html": 1794385273360
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 11,
+   "clasificar": 13,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 132545,
-  "salida": 5304,
+  "entrada": 136275,
+  "salida": 5503,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.265855,
+  "dolares": 0.266328,
   "reservado": 0
  },
  "recientes": {
@@ -7494,13 +7494,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1419,
+   "ok": 1420,
    "fallos": 0,
-   "ejecuciones": 998,
+   "ejecuciones": 999,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T08:36:13.366Z"
+   "ultima": "2026-11-11T08:41:18.593Z"
   }
  },
  "ptsDirecto": {},
@@ -7517,15 +7517,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:36:17.117Z"
+   "ultimaBien": "2026-11-11T08:41:27.338Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:36:17.117Z"
+   "ultimaBien": "2026-11-11T08:41:27.338Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:36:17.117Z"
+   "ultimaBien": "2026-11-11T08:41:27.338Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7533,11 +7533,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:36:17.117Z"
+   "ultimaBien": "2026-11-11T08:41:27.338Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:36:17.117Z"
+   "ultimaBien": "2026-11-11T08:41:27.338Z"
   }
  },
  "avisos": [
