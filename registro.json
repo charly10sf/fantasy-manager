@@ -1833,7 +1833,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248556/iker-casillas-enfada-saca-hijos-cantera-real-madrid.html": 1794127817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html": 1794130161000,
-   "SPORT|136217036": 1794126576000,
    "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/": 1794130478000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/eric-garcia-christensen-regresan-convocatoria-20261108_3470933.html": 1794132313000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mourinho-convertido-real-madrid-equipo-intento-ancelotti-ultima-temporada-no-consiguio-intento-xabi-pasada-temporada-tampoco-tampoco-consiguio-arbeloa-20261108_3470895.html": 1794133229000,
@@ -2064,54 +2063,6 @@
      21,
      11
     ]
-   },
-   {
-    "guid": "SPORT|136217036",
-    "medio": "SPORT",
-    "t": 1794126576000,
-    "id": "2355",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Kounde se pierde el partido ante el Atlético",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136217036",
-    "medio": "SPORT",
-    "t": 1794126576000,
-    "id": "2843",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Xavi Espart no viajará al Metropolitano con el Barça",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136217036",
-    "medio": "SPORT",
-    "t": 1794126576000,
-    "id": "3092",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Olmo se queda fuera de la convocatoria ante el Atlético",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136217036",
-    "medio": "SPORT",
-    "t": 1794126576000,
-    "id": "3208",
-    "que": "descartado",
-    "oficial": false,
-    "hecho": "Rodri no está en la lista para el Metropolitano",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
    },
    {
     "guid": "AS|https://as.com/futbol/primera/eric-y-christensen-las-dos-grandes-novedades-en-la-lista-f202611-n/",
@@ -7543,13 +7494,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1417,
+   "ok": 1418,
    "fallos": 0,
-   "ejecuciones": 996,
+   "ejecuciones": 997,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T08:26:11.959Z"
+   "ultima": "2026-11-11T08:31:18.790Z"
   }
  },
  "ptsDirecto": {},
@@ -7566,15 +7517,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:26:15.609Z"
+   "ultimaBien": "2026-11-11T08:31:23.776Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:26:15.609Z"
+   "ultimaBien": "2026-11-11T08:31:23.776Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:26:15.609Z"
+   "ultimaBien": "2026-11-11T08:31:23.776Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7582,11 +7533,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:26:15.609Z"
+   "ultimaBien": "2026-11-11T08:31:23.776Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T08:26:15.609Z"
+   "ultimaBien": "2026-11-11T08:31:23.776Z"
   }
  },
  "avisos": [
