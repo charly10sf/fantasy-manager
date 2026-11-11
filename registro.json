@@ -1824,7 +1824,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136086039": 1794121202000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248556/iker-casillas-enfada-saca-hijos-cantera-real-madrid.html": 1794127817000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248548/eric-garcia-christensen-viajan-madrid.html": 1794130161000,
    "SPORT|136217036": 1794126576000,
@@ -2034,7 +2033,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/el-mensaje-que-mandas-es-que-puede-hacer-lo-que-quiera-la-ausencia-de-lamine-yamal-con-la-seleccion-cadena-ser/": 1794358819000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681063/laporte-entrevista-espana-seleccion.html": 1794369600000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/antony-fijo-betis-convertido-cambio-habitual_0_2008466896.html": 1794374707000,
-   "SPORT|136312150": 1794374381000
+   "SPORT|136312150": 1794374381000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249614/ventana-fifa-deja-cuadro-athletic.html": 1794380400000
   },
   "hechos": [
    {
@@ -2432,7 +2432,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -3386,23 +3386,24 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-demanda-energia-electrica-cae-97-primeras-horas-huelga-ccoo-20261111071430.html": 1794379573941
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-demanda-energia-electrica-cae-97-primeras-horas-huelga-ccoo-20261111071430.html": 1794379573941,
+   "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380472872
   }
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 75360,
-  "salida": 3495,
+  "entrada": 77478,
+  "salida": 3587,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.160757,
+  "dolares": 0.161015,
   "reservado": 0
  },
  "recientes": {
@@ -7506,13 +7507,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1399,
+   "ok": 1400,
    "fallos": 0,
-   "ejecuciones": 978,
+   "ejecuciones": 979,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T06:56:13.492Z"
+   "ultima": "2026-11-11T07:01:12.872Z"
   }
  },
  "ptsDirecto": {},
@@ -7529,15 +7530,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:56:19.052Z"
+   "ultimaBien": "2026-11-11T07:01:18.260Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:56:19.052Z"
+   "ultimaBien": "2026-11-11T07:01:18.260Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:56:19.052Z"
+   "ultimaBien": "2026-11-11T07:01:18.260Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7545,11 +7546,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:56:19.052Z"
+   "ultimaBien": "2026-11-11T07:01:18.260Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:56:19.052Z"
+   "ultimaBien": "2026-11-11T07:01:18.260Z"
   }
  },
  "avisos": [
