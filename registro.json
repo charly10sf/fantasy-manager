@@ -3359,7 +3359,10 @@
    "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794374266000,
    "SPORT|136299647": 1794373265000,
    "SPORT|136282723": 1794373251000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/11/oviedo-guardes-aula-porrino-emparejamientos-copa-balonmano/0003_202611G11P35994.htm": 1794369600000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/vigo/2026/11/11/oviedo-guardes-aula-porrino-emparejamientos-copa-balonmano/0003_202611G11P35994.htm": 1794369600000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-ugt-denuncian-cargas-agresiones-policia-nacional-contra-varios-piquetes-informativos-20261111070541.html": 1794377141000,
+   "SPORT|136311761": 1794373944000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-arranca-huelga-general-vivienda-salarios-primera-presidencia-pedro-sanchez-20261111000049.html": 1794351649000
   },
   "hechos": [
    {
@@ -3381,27 +3384,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 1,
+   "n": 2,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136311761": 1794377773555
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 5,
    "revisar": 3,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 73417,
-  "salida": 3259,
+  "entrada": 75360,
+  "salida": 3495,
   "cacheLee": 2903,
   "cacheEscribe": 5806,
-  "dolares": 0.160445,
+  "dolares": 0.160757,
   "reservado": 0
  },
  "recientes": {
@@ -7505,13 +7506,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1395,
+   "ok": 1396,
    "fallos": 0,
-   "ejecuciones": 974,
+   "ejecuciones": 975,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 427,
-   "ultima": "2026-11-11T06:36:12.086Z"
+   "ultima": "2026-11-11T06:41:11.923Z"
   }
  },
  "ptsDirecto": {},
@@ -7528,15 +7529,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:36:15.132Z"
+   "ultimaBien": "2026-11-11T06:41:17.978Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:36:15.132Z"
+   "ultimaBien": "2026-11-11T06:41:17.978Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:36:15.132Z"
+   "ultimaBien": "2026-11-11T06:41:17.978Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7544,11 +7545,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:36:15.132Z"
+   "ultimaBien": "2026-11-11T06:41:17.978Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T06:36:15.132Z"
+   "ultimaBien": "2026-11-11T06:41:17.978Z"
   }
  },
  "avisos": [
