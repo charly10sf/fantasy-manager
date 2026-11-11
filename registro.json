@@ -2052,7 +2052,8 @@
    "SPORT|136322629": 1794390859000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249816/mbappe-enciende-alarmas-no-entrena-francia.html": 1794393963000,
    "AS|https://as.com/futbol/primera/el-lateral-izquierdo-llama-otra-vez-a-gerard-martin-f202611-n/": 1794394771000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/relaciones-tensas-mbappe-zidane-francia-20261111_3472893.html": 1794396298000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/relaciones-tensas-mbappe-zidane-francia-20261111_3472893.html": 1794396298000,
+   "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380088000
   },
   "hechos": [
    {
@@ -2385,7 +2386,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -3231,7 +3232,6 @@
  "liga": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/08/tavernes-valencia-horario-ver-partido-copa-136222269.html": 1794143685000,
-   "SPORT|136221598": 1794138326000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/08/las-palmas-y-eldense-se-enfrentaran-este-lunes-a-las-2030-h-radio-elda/": 1794147139000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/08/el-ud-las-palmas-cd-eldense-se-jugara-el-lunes-a-las-1930h-ser-las-palmas/": 1794146665000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/palmas-eldense-jugara-lunes-20261108_3470981.html": 1794148408000,
@@ -3359,17 +3359,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 173867,
-  "salida": 10766,
+  "entrada": 175860,
+  "salida": 10858,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.272718,
+  "dolares": 0.272963,
   "reservado": 0
  },
  "recientes": {
@@ -7472,13 +7472,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1457,
+   "ok": 1458,
    "fallos": 0,
-   "ejecuciones": 1036,
+   "ejecuciones": 1037,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T11:41:14.949Z"
+   "ultima": "2026-11-11T11:46:18.016Z"
   }
  },
  "ptsDirecto": {},
@@ -7495,15 +7495,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:41:21.471Z"
+   "ultimaBien": "2026-11-11T11:46:24.186Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:41:21.471Z"
+   "ultimaBien": "2026-11-11T11:46:24.186Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:41:21.471Z"
+   "ultimaBien": "2026-11-11T11:46:24.186Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7511,11 +7511,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:41:21.471Z"
+   "ultimaBien": "2026-11-11T11:46:24.186Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T11:41:21.471Z"
+   "ultimaBien": "2026-11-11T11:46:24.186Z"
   }
  },
  "avisos": [
