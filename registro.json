@@ -2056,7 +2056,8 @@
    "Europa Press|https://www.europapress.es/economia/noticia-huelga-general-11-noviembre-directo-ultima-hora-manifestaciones-horarios-servicios-minimos-20261111075448.html": 1794380088000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249852/raphinha-sube-estatus-brasil-lucira-brazalete.html": 1794398395000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249847/maroan-realiza-carrera-continua.html": 1794397559000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/incertidumbre-con-mbappe-cadena-ser/": 1794398583000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/incertidumbre-con-mbappe-cadena-ser/": 1794398583000,
+   "SPORT|136325350": 1794394962000
   },
   "hechos": [
    {
@@ -2389,7 +2390,7 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -3363,17 +3364,17 @@
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 36,
+   "clasificar": 37,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 181704,
-  "salida": 12591,
+  "entrada": 183757,
+  "salida": 12683,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.274414,
+  "dolares": 0.274665,
   "reservado": 0
  },
  "recientes": {
@@ -7476,13 +7477,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1462,
+   "ok": 1463,
    "fallos": 0,
-   "ejecuciones": 1041,
+   "ejecuciones": 1042,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 429,
-   "ultima": "2026-11-11T12:06:23.763Z"
+   "ultima": "2026-11-11T12:11:20.488Z"
   }
  },
  "ptsDirecto": {},
@@ -7499,15 +7500,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:06:32.302Z"
+   "ultimaBien": "2026-11-11T12:11:27.070Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:06:32.302Z"
+   "ultimaBien": "2026-11-11T12:11:27.070Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:06:32.302Z"
+   "ultimaBien": "2026-11-11T12:11:27.070Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7515,11 +7516,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:06:32.302Z"
+   "ultimaBien": "2026-11-11T12:11:27.070Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T12:06:32.302Z"
+   "ultimaBien": "2026-11-11T12:11:27.070Z"
   }
  },
  "avisos": [
