@@ -398,7 +398,7 @@ export function colaCandado(clave) {
 /** lo mismo, en pequeño (una vez, en la cabecera de una lista) */
 export function candadoMini(clave, texto) {
   const [t, x] = BLOQUEO[clave] || ['Función top', ''];
-  return `<button type="button" class="pill bloq-p" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}" aria-label="${esc(`${t}: función top bloqueada. ${x}`)}">${icono('candado')}${esc(texto || t)}</button>`;
+  return `<button type="button" class="pill bloq-p" data-accion="bloqueada" data-clave="${esc(clave)}" title="${esc(x)}">${icono('candado')}${esc(texto || t)}</button>`;
 }
 /**
  * los candados de una misma pantalla, juntos en una tarjeta (al final): [clave] o [clave, como]. Con uno solo, su caja

@@ -3002,3 +3002,23 @@ html.sin-fotos img[src*="llt-services"], html.sin-fotos img[src*="laliga"], html
 /* el once: «43,9 pts» en una línea (otra regla .pp lo partía en dos) */
 .campo-cab .pp { display: block; }
 .pnz-kpis small { font: 600 var(--t-mini)/1.2 'Barlow'; letter-spacing: 0.2px; text-transform: none; color: var(--texto-3); }
+
+/* =========================================================================================================
+   OVERHAUL (0.7.7) · TANDA 0 (accesibilidad) Y TANDA 5 (fichas)
+   ========================================================================================================= */
+/* «Para luego» se apagaba con opacidad y el texto gris se quedaba sin contraste: ahora se distingue por el número gris de la fase */
+.f-luego .pasos3 { opacity: 1; }
+/* el título de cualquier ficha u hoja (jugador, rival, club, Ajustes, candado…): un solo tamaño, el de pestaña */
+.ficha-top h2, .hoja-cab h2, .club-hero h2, .bloq-hoja h2, .rival-cab h2 { font-size: var(--t-titulo); line-height: 1; }
+/* los desplegables y la hora de Ajustes y de «Avisarme», con el aspecto de los demás controles en vez del nativo */
+.ajuste select, .avisar-j select { -webkit-appearance: none; appearance: none; min-height: 40px; padding: 8px 32px 8px 12px; border: 0; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1px var(--s3); color: var(--texto);
+  background: var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%23bdb8c0' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E") no-repeat right 11px center / 11px auto; }
+.avisar-j select { background-color: var(--s3); }
+.ajuste input[type=time] { min-height: 40px; padding: 8px 12px; border: 0; border-radius: var(--r-ctl); box-shadow: inset 0 0 0 1px var(--s3); background: var(--s2); color: var(--texto); }
+.aj-cuerpo .ajuste select { padding: 7px 30px 7px 10px; }
+.ajuste select:focus-visible, .avisar-j select:focus-visible, .ajuste input[type=time]:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
+/* el candado dentro de una ficha o una pestaña: sin rayas amarillas, que no pese más que lo que tiene alrededor */
+.bloq, .bloq-g { background: var(--s2); border: 1px dashed rgba(255, 197, 71, 0.3); }
+.bloq-i { border-top-color: rgba(255, 197, 71, 0.18); }
+/* los dos atajos de arriba de Ajustes, como superficie: con el fondo rojo oscuro parecían alertas */
+.aj-atajo { background: var(--s1); border-color: var(--linea); }

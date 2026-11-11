@@ -857,7 +857,7 @@ function detalleAviso(A, x) {
     <p class="aviso-texto">${esc(d.texto)}</p>
     ${capturasRecibidas(A, d)}
     <p class="t2 peq">${esc([d.liga, d.app].filter(Boolean).join(' · '))}</p>
-    ${d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
+    ${d.diag ? `<details><summary>Diagnóstico</summary><pre class="diag" tabindex="0">${esc(d.diag)}</pre></details>` : '<p class="t2 peq">Sin diagnóstico.</p>'}
     ${d.respuesta ? `<div class="aviso-resp"><b>Le contestaste</b><span>${esc(d.respuesta)}</span><small>${cuando(d.respondida)}${d.vista ? ' · leído' : ' · sin leer'}</small></div>` : ''}
     <textarea id="respTxt" class="campo-t aviso-t" rows="3" maxlength="2000" placeholder="${d.respuesta ? 'Cambiar la respuesta' : 'Tu respuesta: le llega en la app'}">${esc(A.respBorrador || '')}</textarea>
     <button class="btn chico" data-accion="responderAviso" data-id="${esc(d.id)}"${A.respondiendo ? ' disabled' : ''}>${A.respondiendo ? 'Mandando…' : `${icono('enviar')}Responder`}</button></div>`;
@@ -1152,6 +1152,6 @@ function medidasVista() {
 export function diagnostico(S) {
   return `<div class="hoja-cab"><h2>Diagnóstico</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
   <p class="t2 peq">Lo que han contestado LaLiga y Google en esta sesión. Si algo no funciona, cópialo y pásamelo.</p>
-  <pre class="diag">${esc(textoDiagnostico(S))}</pre>
+  <pre class="diag" tabindex="0">${esc(textoDiagnostico(S))}</pre>
   <div style="display:flex;gap:10px;margin-top:12px"><button class="btn chico" data-accion="copiarDiag">${icono('copiar')}Copiar</button><button class="btn chico sec" data-accion="compartirDiag">Compartir</button></div>`;
 }
