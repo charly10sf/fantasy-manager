@@ -1831,7 +1831,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html": 1794169655000,
    "AS|https://as.com/futbol/primera/dieng-y-diakhaby-tampoco-convenceran-a-aguirre-en-copa-f202611-n/": 1794183615000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248739/raphinha-goleador-inesperado.html": 1794204000000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261109/1004248714/primer-balance-athletic.html": 1794204000000,
@@ -1841,7 +1840,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248815/flick-olvida-eric-apuesta-dos-laterales-improvisados-partido.html": 1794173471000,
    "SPORT|136233387": 1794198609000,
    "SPORT|136233456": 1794171741000,
-   "SPORT|136233003": 1794171354000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/la-dupla-fermin-lamine-suple-a-raphinha-y-sostiene-a-un-barca-tocado-en-lo-defensivo-cadena-ser/": 1794175233000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gonzalo-miro-senala-culpables-atletico-derrota-barcelona-gestion-entrenador-peor-todavia-20261108_3471046.html": 1794177066000,
    "ABC|https://www.abc.es/deportes/futbol/pegada-condena-atletico-lanza-barca-20261108225722-nt.html": 1794183248000,
@@ -2085,18 +2083,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/zidane-confirma-la-baja-de-kylian-mbappe-ante-italia-ha-sentido-una-pequena-molestia-y-no-vamos-a-correr-riesgos-cadena-ser/": 1794427475000
   },
   "hechos": [
-   {
-    "guid": "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rayista-jorge-frutos-sustituye-ander-barrenetxea-seleccion-espanola-20261108_3471031.html",
-    "medio": "COPE",
-    "t": 1794169655000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea causa baja por una lesión muscular",
-    "motivo": "lesión muscular",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/09/espana/00031794259204939368288.htm",
     "medio": "La Voz de Galicia",
@@ -3382,7 +3368,9 @@
    "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794416928000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/11/6af4b4cce85ece663a8b45a1.html": 1794422281000,
    "El Correo|https://www.elcorreo.com/athletic/dos-jugadoras-athletic-femenino-defienden-huelga-toca-20261111200135-nt.html": 1794424458000,
-   "Europa Press|https://www.europapress.es/catalunya/noticia-grupos-personas-rompen-aparadores-queman-contenedores-lanzan-pirotecnia-mossos-20261111200434.html": 1794423874000
+   "Europa Press|https://www.europapress.es/catalunya/noticia-grupos-personas-rompen-aparadores-queman-contenedores-lanzan-pirotecnia-mossos-20261111200434.html": 1794423874000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-expresa-maximo-respeto-quienes-secundado-paro-condena-actitud-pp-jornada-20261111211130.html": 1794427890000,
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-general-vivienda-moviliza-cientos-miles-personas-toda-espana-pesar-lluvias-20261111203941.html": 1794425981000
   },
   "hechos": [
    {
@@ -3404,27 +3392,25 @@
   ],
   "gemini": {
    "dia": "2026-11-11",
-   "n": 27,
+   "n": 28,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-general-vivienda-moviliza-cientos-miles-personas-toda-espana-pesar-lluvias-20261111203941.html": 1794427274809
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-11",
   "llamadas": {
-   "clasificar": 87,
+   "clasificar": 88,
    "redactar": 8,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 287233,
-  "salida": 31590,
+  "entrada": 289035,
+  "salida": 31751,
   "cacheLee": 8709,
   "cacheEscribe": 8709,
-  "dolares": 0.294467,
+  "dolares": 0.294728,
   "reservado": 0
  },
  "recientes": {
@@ -7512,13 +7498,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1561,
+   "ok": 1562,
    "fallos": 0,
-   "ejecuciones": 1140,
+   "ejecuciones": 1141,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T20:16:14.791Z"
+   "ultima": "2026-11-11T20:58:21.003Z"
   }
  },
  "ptsDirecto": {},
@@ -7535,15 +7521,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:16:19.293Z"
+   "ultimaBien": "2026-11-11T20:58:27.137Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:16:19.293Z"
+   "ultimaBien": "2026-11-11T20:58:27.137Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:16:19.293Z"
+   "ultimaBien": "2026-11-11T20:58:27.137Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7551,11 +7537,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:16:19.293Z"
+   "ultimaBien": "2026-11-11T20:58:27.137Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T20:16:19.293Z"
+   "ultimaBien": "2026-11-11T20:58:27.137Z"
   }
  },
  "avisos": [
