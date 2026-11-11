@@ -3323,7 +3323,6 @@
   "vistas": {
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/08/bezzecchi-jorge-martin-aplazan-titulo-marc-marquez/00031794160344542338430.htm": 1794160741000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/bezzecchi-aplaza-titulo-marc-marquez_0_2008451818.html": 1794159878000,
-   "SPORT|136229498": 1794158421000,
    "SPORT|136233016": 1794168616000,
    "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794210480000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
@@ -3467,7 +3466,8 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794417033693
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794417033693,
+   "La Vanguardia|https://www.lavanguardia.com/clic/20261111/11681830/piquetes-insultan-futbolistas-rayo-vallecano-han-entrenado-plena-huelga-general-esquiroles.html": 1794417675073
   }
  },
  "ia": {
@@ -7576,13 +7576,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1525,
+   "ok": 1526,
    "fallos": 0,
-   "ejecuciones": 1104,
+   "ejecuciones": 1105,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T17:16:16.788Z"
+   "ultima": "2026-11-11T17:21:15.073Z"
   }
  },
  "ptsDirecto": {},
@@ -7599,15 +7599,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:16:21.054Z"
+   "ultimaBien": "2026-11-11T17:21:17.443Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:16:21.054Z"
+   "ultimaBien": "2026-11-11T17:21:17.443Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:16:21.054Z"
+   "ultimaBien": "2026-11-11T17:21:17.443Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7615,11 +7615,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:16:21.054Z"
+   "ultimaBien": "2026-11-11T17:21:17.443Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T17:16:21.054Z"
+   "ultimaBien": "2026-11-11T17:21:17.443Z"
   }
  },
  "avisos": [
