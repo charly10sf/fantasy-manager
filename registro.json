@@ -1834,7 +1834,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/08/ander-barrenetxea-se-retira-entre-lagrimas-del-real-sociedad-rayo-vallecano-y-peligra-su-presencia-con-la-seleccion-espanola-cadena-ser/": 1794162337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248756/once-barca-frenkie-eric-inicio-metropolitano.html": 1794163508000,
    "AS|https://as.com/futbol/pablo-ibanez-hay-que-aprovechar-el-paron-y-seguir-sumando-f202611-n/": 1794163719000,
-   "SPORT|136230726": 1794161916000,
    "SPORT|136230583": 1794163027000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248767/aficion-barca-entra-metropolitano-grito-julian-cule.html": 1794167743000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248772/konate-espanta-fantasmas-indispensable-mourinho.html": 1794167087000,
@@ -7555,13 +7554,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1537,
+   "ok": 1538,
    "fallos": 0,
-   "ejecuciones": 1116,
+   "ejecuciones": 1117,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T18:16:12.120Z"
+   "ultima": "2026-11-11T18:21:14.940Z"
   }
  },
  "ptsDirecto": {},
@@ -7578,15 +7577,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:16:19.066Z"
+   "ultimaBien": "2026-11-11T18:21:19.792Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:16:19.066Z"
+   "ultimaBien": "2026-11-11T18:21:19.792Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:16:19.066Z"
+   "ultimaBien": "2026-11-11T18:21:19.792Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7594,11 +7593,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:16:19.066Z"
+   "ultimaBien": "2026-11-11T18:21:19.792Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T18:16:19.066Z"
+   "ultimaBien": "2026-11-11T18:21:19.792Z"
   }
  },
  "avisos": [
