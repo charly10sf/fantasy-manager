@@ -1832,7 +1832,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/elche-betis-hoy-en-directo-ultima-hora-de-laliga-ea-sports-en-vivo-f202611-d/": 1794149789000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261108/1004248660/mourinho-no-supera-flick.html": 1794149597000,
    "SPORT|136226921": 1794151993000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-12-jornada-primera-division-real-sociedad-rayo-08-20261108_3470982.html": 1794157966000,
    "AS|https://as.com/futbol/primera/real-sociedad-rayo-vallecano-en-directo-laliga-ea-sports-en-vivo-hoy-f202611-d/": 1794158589000,
@@ -7573,13 +7572,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1495,
+   "ok": 1496,
    "fallos": 0,
-   "ejecuciones": 1074,
+   "ejecuciones": 1075,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 432,
-   "ultima": "2026-11-11T14:51:15.003Z"
+   "ultima": "2026-11-11T14:56:13.154Z"
   }
  },
  "ptsDirecto": {},
@@ -7596,15 +7595,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:51:17.976Z"
+   "ultimaBien": "2026-11-11T14:56:18.183Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:51:17.976Z"
+   "ultimaBien": "2026-11-11T14:56:18.183Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:51:17.976Z"
+   "ultimaBien": "2026-11-11T14:56:18.183Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7612,11 +7611,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:51:17.976Z"
+   "ultimaBien": "2026-11-11T14:56:18.183Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T14:51:17.976Z"
+   "ultimaBien": "2026-11-11T14:56:18.183Z"
   }
  },
  "avisos": [
