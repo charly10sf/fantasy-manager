@@ -2117,7 +2117,9 @@
    "SPORT|136337732": 1794470435000,
    "SPORT|136355906": 1794470235000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-descartado-republica-checa-elogios-de-la-fuente_0_2008478505.html": 1794473973000,
-   "SPORT|136356685": 1794471018000
+   "SPORT|136356685": 1794471018000,
+   "ABC|https://www.abc.es/deportes/futbol/eli-junior-kroupi-nino-forjado-iraola-convocado-20261112100758-nt.html": 1794474612000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000
   },
   "hechos": [
    {
@@ -2471,7 +2473,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3481,17 +3483,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 118836,
-  "salida": 8700,
+  "entrada": 121092,
+  "salida": 8873,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.212135,
+  "dolares": 0.212447,
   "reservado": 0
  },
  "recientes": {
@@ -7596,13 +7598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1750,
+   "ok": 1751,
    "fallos": 0,
-   "ejecuciones": 1292,
+   "ejecuciones": 1293,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T09:16:13.954Z"
+   "ultima": "2026-11-12T09:21:11.941Z"
   }
  },
  "ptsDirecto": {},
@@ -7619,15 +7621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:16:21.321Z"
+   "ultimaBien": "2026-11-12T09:21:18.178Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:16:21.321Z"
+   "ultimaBien": "2026-11-12T09:21:18.178Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:16:21.321Z"
+   "ultimaBien": "2026-11-12T09:21:18.178Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7635,11 +7637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:16:21.321Z"
+   "ultimaBien": "2026-11-12T09:21:18.178Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:16:21.321Z"
+   "ultimaBien": "2026-11-12T09:21:18.178Z"
   }
  },
  "avisos": [
