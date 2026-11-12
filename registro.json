@@ -1873,7 +1873,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/mensaje-antony-aficionados-betis-peor-momento-elche_0_2008457741.html": 1794235886000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249130/pellegrini-contar-copa-cuatro-porteros.html": 1794239934000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/manolo-lama-senala-cuatro-decisiones-mourinho-han-llevado-exito-real-madrid-importante-gran-merito-entrenador-20261109_3471059.html": 1794241484000,
    "SPORT|136258178": 1794241328000,
@@ -3824,11 +3823,6 @@
   ]
  },
  "puntosPartido": {
-  "12|118": {
-   "h": "485c17982f8a",
-   "desde": 1794150374132,
-   "fin": 1794149772293
-  },
   "12|114": {
    "h": "96c20ff03af5",
    "desde": 1794158473403,
@@ -7707,13 +7701,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1818,
+   "ok": 1819,
    "fallos": 0,
-   "ejecuciones": 1360,
+   "ejecuciones": 1361,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T14:51:11.998Z"
+   "ultima": "2026-11-12T14:56:12.392Z"
   }
  },
  "ptsDirecto": {},
@@ -7730,15 +7724,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:51:16.352Z"
+   "ultimaBien": "2026-11-12T14:56:20.837Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:51:16.352Z"
+   "ultimaBien": "2026-11-12T14:56:20.837Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:51:16.352Z"
+   "ultimaBien": "2026-11-12T14:56:20.837Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7746,11 +7740,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:51:16.352Z"
+   "ultimaBien": "2026-11-12T14:56:20.837Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:51:16.352Z"
+   "ultimaBien": "2026-11-12T14:56:20.837Z"
   }
  },
  "avisos": [
