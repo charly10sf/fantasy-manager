@@ -2130,7 +2130,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261112/1004250246/sadiq-vacaciones-rodilla-vendada.html": 1794491638000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250245/oyarzabal-barrenetxea-te-estaremos-esperando-volveremos-celebrar-siempre-contigo-pequenin.html": 1794491015000,
    "SPORT|136366242": 1794488476000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html": 1794493034000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html": 1794493034000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250267/dos-vueltas-mundo-raphinha-98-dias.html": 1794495121000
   },
   "hechos": [
    {
@@ -2583,7 +2584,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -3429,7 +3430,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-industrias-carnicas-registra-seguimiento-90-primera-jornada-ugt-fica-20261109162232.html": 1794237752000,
-   "SPORT|136257629": 1794236411000,
    "SPORT|136243267": 1794238864000,
    "SPORT|136260180": 1794250832000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004249203/graafschap.html": 1794254855000,
@@ -3587,17 +3587,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 226345,
-  "salida": 26672,
+  "entrada": 228345,
+  "salida": 26790,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.366132,
+  "dolares": 0.366391,
   "reservado": 0
  },
  "recientes": {
@@ -7701,13 +7701,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1819,
+   "ok": 1820,
    "fallos": 0,
-   "ejecuciones": 1361,
+   "ejecuciones": 1362,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T14:56:12.392Z"
+   "ultima": "2026-11-12T15:01:12.569Z"
   }
  },
  "ptsDirecto": {},
@@ -7724,15 +7724,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:56:20.837Z"
+   "ultimaBien": "2026-11-12T15:01:18.020Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:56:20.837Z"
+   "ultimaBien": "2026-11-12T15:01:18.020Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:56:20.837Z"
+   "ultimaBien": "2026-11-12T15:01:18.020Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7740,11 +7740,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:56:20.837Z"
+   "ultimaBien": "2026-11-12T15:01:18.020Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:56:20.837Z"
+   "ultimaBien": "2026-11-12T15:01:18.020Z"
   }
  },
  "avisos": [
