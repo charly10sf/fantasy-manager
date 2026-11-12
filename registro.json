@@ -1859,7 +1859,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-pierden-partido-praga-victor-munoz-seleccion_0_2008456929.html": 1794229502000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261109/1004249073/raul.html": 1794231423000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000,
@@ -7653,13 +7652,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1796,
+   "ok": 1797,
    "fallos": 0,
-   "ejecuciones": 1338,
+   "ejecuciones": 1339,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T13:01:12.234Z"
+   "ultima": "2026-11-12T13:06:13.346Z"
   }
  },
  "ptsDirecto": {},
@@ -7676,15 +7675,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:01:20.893Z"
+   "ultimaBien": "2026-11-12T13:06:17.576Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:01:20.893Z"
+   "ultimaBien": "2026-11-12T13:06:17.576Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:01:20.893Z"
+   "ultimaBien": "2026-11-12T13:06:17.576Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7692,11 +7691,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:01:20.893Z"
+   "ultimaBien": "2026-11-12T13:06:17.576Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:01:20.893Z"
+   "ultimaBien": "2026-11-12T13:06:17.576Z"
   }
  },
  "avisos": [
