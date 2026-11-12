@@ -963,6 +963,13 @@
    "jornada": 13,
    "id": "2120797925966221334",
    "t": "2026-11-12T08:36:43.049Z"
+  },
+  {
+   "clave": "noticias|3265:mala|2026-11-12",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2120858255287103999",
+   "t": "2026-11-12T12:36:26.692Z"
   }
  ],
  "estados": {
@@ -2111,7 +2118,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html": 1794483136000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000,
-   "SPORT|136362137": 1794482672000
+   "SPORT|136362137": 1794482672000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000
   },
   "hechos": [
    {
@@ -2510,11 +2518,25 @@
     "motivo": "inflamación y líquido en una rodilla",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794486338000,
+    "id": "3265",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Fofana no entrena con el grupo por problemas físicos",
+    "motivo": "problemas físicos",
+    "plazo": "",
+    "nums": [
+     21
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 27
+   "n": 28
   },
   "desde": {
    "67": {
@@ -3520,17 +3542,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 32,
-   "redactar": 6,
-   "revisar": 5,
+   "clasificar": 33,
+   "redactar": 7,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 152858,
-  "salida": 20434,
+  "entrada": 169254,
+  "salida": 21201,
   "cacheLee": 5806,
-  "cacheEscribe": 8709,
-  "dolares": 0.221404,
+  "cacheEscribe": 11612,
+  "dolares": 0.259873,
   "reservado": 0
  },
  "recientes": {
@@ -3646,10 +3668,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-09T21:36:37.279Z",
-    "texto": "⁉️ Lamine Yamal se recupera en Barcelona de unas molestias en la rodilla derecha, según La Voz de Galicia.\n\nTiene 10 goles y 8 asistencias en la liga, así que merece la pena seguirle de cerca. Con un 58 % de titularidad en Fantasy Manager, lo normal es que salga contra el Villarreal 🚢, que va 8º. Si lo tienes, mejor esperar a los onces."
-   },
-   {
     "t": "2026-11-10T10:56:34.685Z",
     "texto": "⁉️ Federico Valverde sigue con molestias físicas pese a su regreso, cuentan Mundo Deportivo y SPORT.\n\nHa subido 29 M en el último mes y ya vale 71 M, así que es un jugador que mueve el mercado. Si lo tienes, no hay prisa: la jornada 13 es tras el parón, el sábado 21 en el Santiago Bernabéu, y no hay plazo para saber si llega bien.\n\nEl Celta encaja muy poco, y para un centrocampista como Valverde eso no es buena noticia."
    },
@@ -3664,6 +3682,10 @@
    {
     "t": "2026-11-12T08:36:43.051Z",
     "texto": "⁉️ Lamine Yamal no viaja con España por un golpe en la rodilla derecha con líquido, según Mundo Deportivo y SPORT. Se pierde los partidos con su selección.\n\nLleva 10 goles y 8 asistencias en la liga, así que conviene seguirle de cerca. El Barça recibe al Villarreal 🚢 el domingo 22 de noviembre, tras el parón, y sin plazo de recuperación no se puede saber si llega bien.\n\nUn 58 % de titularidad deja el caso a medias: más probable que juegue que lo contrario, pero sin garantías."
+   },
+   {
+    "t": "2026-11-12T12:36:26.694Z",
+    "texto": "⁉️ Fofana no se ejercita con el grupo por problemas físicos, según Mundo Deportivo y Diario de Sevilla.\n\nEl centrocampista del Sevilla vale 40,2 M y ha ganado 13,4 M en el último mes, así que su caso mueve el mercado. Si lo tienes, no hay prisa: el Betis, que va 4º, llega el sábado 21 de noviembre, tras el parón, y sin plazo no se sabe si llega bien."
    }
   ],
   "directo": [
@@ -7635,13 +7657,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1789,
+   "ok": 1790,
    "fallos": 0,
-   "ejecuciones": 1331,
+   "ejecuciones": 1332,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T12:31:17.970Z"
+   "ultima": "2026-11-12T12:36:12.290Z"
   }
  },
  "ptsDirecto": {},
@@ -7658,15 +7680,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:31:25.123Z"
+   "ultimaBien": "2026-11-12T12:36:26.720Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:31:25.123Z"
+   "ultimaBien": "2026-11-12T12:36:26.720Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:31:25.123Z"
+   "ultimaBien": "2026-11-12T12:36:26.720Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7674,11 +7696,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:31:25.123Z"
+   "ultimaBien": "2026-11-12T12:36:26.720Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:31:25.123Z"
+   "ultimaBien": "2026-11-12T12:36:26.720Z"
   }
  },
  "avisos": [
