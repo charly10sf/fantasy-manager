@@ -2128,7 +2128,9 @@
    "SPORT|136378344": 1794502528000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250331/real-esperara-magia.html": 1794504716000,
    "SPORT|136384919": 1794505413000,
-   "ABC|https://www.abc.es/deportes/futbol/ver-gratis-television-online-espana-hoy-republica-checa-nations-league-20261112050000-nt.html": 1794509228000
+   "ABC|https://www.abc.es/deportes/futbol/ver-gratis-television-online-espana-hoy-republica-checa-nations-league-20261112050000-nt.html": 1794509228000,
+   "SPORT|136386826": 1794509158000,
+   "SPORT|136387136": 1794508997000
   },
   "hechos": [
    {
@@ -2581,7 +2583,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 47
+   "n": 48
   },
   "desde": {
    "67": {
@@ -3583,22 +3585,24 @@
    "n": 11,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136387136": 1794513073692
+  }
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 58,
+   "clasificar": 59,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 259979,
-  "salida": 34851,
+  "entrada": 262276,
+  "salida": 35048,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.373587,
+  "dolares": 0.373915,
   "reservado": 0
  },
  "recientes": {
@@ -7687,13 +7691,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1877,
+   "ok": 1878,
    "fallos": 0,
-   "ejecuciones": 1419,
+   "ejecuciones": 1420,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T19:46:14.553Z"
+   "ultima": "2026-11-12T19:51:13.692Z"
   }
  },
  "ptsDirecto": {},
@@ -7710,15 +7714,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:46:18.462Z"
+   "ultimaBien": "2026-11-12T19:51:20.082Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:46:18.462Z"
+   "ultimaBien": "2026-11-12T19:51:20.082Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:46:18.462Z"
+   "ultimaBien": "2026-11-12T19:51:20.082Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7726,11 +7730,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:46:18.462Z"
+   "ultimaBien": "2026-11-12T19:51:20.082Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:46:18.462Z"
+   "ultimaBien": "2026-11-12T19:51:20.082Z"
   }
  },
  "avisos": [
