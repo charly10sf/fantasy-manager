@@ -3558,7 +3558,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261112/1004250179/asi-sera-sorteo-mundial-femenino-brasil-2027.html": 1794481548000,
    "SPORT|136371700": 1794486892000,
    "SPORT|136370681": 1794485522000,
-   "SPORT|136233790": 1794497100000
+   "SPORT|136233790": 1794497100000,
+   "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794503305000,
+   "SPORT|136382347": 1794500847000
   },
   "hechos": [
    {
@@ -3580,28 +3582,25 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794504076144,
-   "SPORT|136382347": 1794504974117
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 50,
+   "clasificar": 51,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 244462,
-  "salida": 30871,
+  "entrada": 246409,
+  "salida": 31745,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.370045,
+  "dolares": 0.370677,
   "reservado": 0
  },
  "recientes": {
@@ -7700,13 +7699,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1852,
+   "ok": 1853,
    "fallos": 0,
-   "ejecuciones": 1394,
+   "ejecuciones": 1395,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T17:41:12.075Z"
+   "ultima": "2026-11-12T17:46:16.932Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7722,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:41:16.605Z"
+   "ultimaBien": "2026-11-12T17:46:26.523Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:41:16.605Z"
+   "ultimaBien": "2026-11-12T17:46:26.523Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:41:16.605Z"
+   "ultimaBien": "2026-11-12T17:46:26.523Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7738,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:41:16.605Z"
+   "ultimaBien": "2026-11-12T17:46:26.523Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:41:16.605Z"
+   "ultimaBien": "2026-11-12T17:46:26.523Z"
   }
  },
  "avisos": [
