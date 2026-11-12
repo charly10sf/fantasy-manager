@@ -1859,10 +1859,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-pierden-partido-praga-victor-munoz-seleccion_0_2008456929.html": 1794229502000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000,
-   "SPORT|136228021": 1794228611000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261109/1004249073/raul.html": 1794231423000,
    "SPORT|136252960": 1794228768000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000,
@@ -7657,13 +7655,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1793,
+   "ok": 1794,
    "fallos": 0,
-   "ejecuciones": 1335,
+   "ejecuciones": 1336,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T12:46:41.953Z"
+   "ultima": "2026-11-12T12:51:13.622Z"
   }
  },
  "ptsDirecto": {},
@@ -7680,15 +7678,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:46:46.374Z"
+   "ultimaBien": "2026-11-12T12:51:16.941Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:46:46.374Z"
+   "ultimaBien": "2026-11-12T12:51:16.941Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:46:46.374Z"
+   "ultimaBien": "2026-11-12T12:51:16.941Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7696,11 +7694,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:46:46.374Z"
+   "ultimaBien": "2026-11-12T12:51:16.941Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:46:46.374Z"
+   "ultimaBien": "2026-11-12T12:51:16.941Z"
   }
  },
  "avisos": [
