@@ -1873,7 +1873,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/09/konate-mbappe-ganar-balon-oro-duro-dia-siguiente-tope.html": 1794257865000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/09/espana/00031794259204939368288.htm": 1794259980000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249228/dani-olmo-podra-villarreal.html": 1794290400000,
@@ -7691,13 +7690,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1879,
+   "ok": 1880,
    "fallos": 0,
-   "ejecuciones": 1421,
+   "ejecuciones": 1422,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T19:56:17.875Z"
+   "ultima": "2026-11-12T20:01:12.530Z"
   }
  },
  "ptsDirecto": {},
@@ -7714,15 +7713,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:56:22.475Z"
+   "ultimaBien": "2026-11-12T20:01:15.462Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:56:22.475Z"
+   "ultimaBien": "2026-11-12T20:01:15.462Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:56:22.475Z"
+   "ultimaBien": "2026-11-12T20:01:15.462Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7730,11 +7729,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:56:22.475Z"
+   "ultimaBien": "2026-11-12T20:01:15.462Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:56:22.475Z"
+   "ultimaBien": "2026-11-12T20:01:15.462Z"
   }
  },
  "avisos": [
