@@ -1873,8 +1873,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/manolo-lama-senala-cuatro-decisiones-mourinho-han-llevado-exito-real-madrid-importante-gran-merito-entrenador-20261109_3471059.html": 1794241484000,
-   "SPORT|136258178": 1794241328000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000,
    "SPORT|136257166": 1794243633000,
    "SPORT|136262922": 1794244907000,
@@ -7700,13 +7698,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1836,
+   "ok": 1837,
    "fallos": 0,
-   "ejecuciones": 1378,
+   "ejecuciones": 1379,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T16:21:13.119Z"
+   "ultima": "2026-11-12T16:26:11.619Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7721,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:21:16.954Z"
+   "ultimaBien": "2026-11-12T16:26:16.852Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:21:16.954Z"
+   "ultimaBien": "2026-11-12T16:26:16.852Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:21:16.954Z"
+   "ultimaBien": "2026-11-12T16:26:16.852Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7737,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:21:16.954Z"
+   "ultimaBien": "2026-11-12T16:26:16.852Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:21:16.954Z"
+   "ultimaBien": "2026-11-12T16:26:16.852Z"
   }
  },
  "avisos": [
