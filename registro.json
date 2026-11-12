@@ -3421,7 +3421,8 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-ve-fracaso-huelga-general-acto-camuflado-campana-electoral-parte-sindicatos-20261111223111.html": 1794432671000,
    "SPORT|136346611": 1794420923000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261112/1004250004/betis-abre-copa-diez-bajas-debut-diego-conde.html": 1794463200000,
-   "SPORT|136354062": 1794463248000
+   "SPORT|136354062": 1794463248000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468430000
   },
   "hechos": [
    {
@@ -3443,27 +3444,25 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468972456
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 6,
+   "clasificar": 7,
    "redactar": 3,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 53766,
-  "salida": 5143,
+  "entrada": 55455,
+  "salida": 5229,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.09871,
+  "dolares": 0.098922,
   "reservado": 0
  },
  "recientes": {
@@ -7568,13 +7567,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1733,
+   "ok": 1734,
    "fallos": 0,
-   "ejecuciones": 1275,
+   "ejecuciones": 1276,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T07:51:14.023Z"
+   "ultima": "2026-11-12T07:56:12.699Z"
   }
  },
  "ptsDirecto": {},
@@ -7591,15 +7590,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:51:17.490Z"
+   "ultimaBien": "2026-11-12T07:56:19.144Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:51:17.490Z"
+   "ultimaBien": "2026-11-12T07:56:19.144Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:51:17.490Z"
+   "ultimaBien": "2026-11-12T07:56:19.144Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7607,11 +7606,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:51:17.490Z"
+   "ultimaBien": "2026-11-12T07:56:19.144Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:51:17.490Z"
+   "ultimaBien": "2026-11-12T07:56:19.144Z"
   }
  },
  "avisos": [
