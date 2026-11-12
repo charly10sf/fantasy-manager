@@ -1874,7 +1874,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000,
-   "SPORT|136262922": 1794244907000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261109/1004249169/premier-league.html": 1794248219000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotivo-homenaje-seleccion-espanola-jesus-miguel-rozas-20261109_3471751.html": 1794249704000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gran-duda-manolo-lama-once-ideal-mundo-fifpro-me-gusta-20261109_3471749.html": 1794250042000,
@@ -7700,13 +7699,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1848,
+   "ok": 1849,
    "fallos": 0,
-   "ejecuciones": 1390,
+   "ejecuciones": 1391,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T17:21:16.144Z"
+   "ultima": "2026-11-12T17:26:11.638Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7722,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:21:20.441Z"
+   "ultimaBien": "2026-11-12T17:26:15.930Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:21:20.441Z"
+   "ultimaBien": "2026-11-12T17:26:15.930Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:21:20.441Z"
+   "ultimaBien": "2026-11-12T17:26:15.930Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7738,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:21:20.441Z"
+   "ultimaBien": "2026-11-12T17:26:15.930Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:21:20.441Z"
+   "ultimaBien": "2026-11-12T17:26:15.930Z"
   }
  },
  "avisos": [
