@@ -1846,7 +1846,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248922/fermin.html": 1794208811000,
-   "SPORT|136236561": 1794207418000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/se-que-vas-a-volver-el-mensaje-de-la-hija-de-pepe-mel-ser-almeria/": 1794211411000,
    "SPORT|136238389": 1794210358000,
    "SPORT|136238901": 1794211477000,
@@ -7568,13 +7567,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1722,
+   "ok": 1723,
    "fallos": 0,
-   "ejecuciones": 1264,
+   "ejecuciones": 1265,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T06:56:14.210Z"
+   "ultima": "2026-11-12T07:01:11.081Z"
   }
  },
  "ptsDirecto": {},
@@ -7591,15 +7590,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:56:20.630Z"
+   "ultimaBien": "2026-11-12T07:01:15.558Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:56:20.630Z"
+   "ultimaBien": "2026-11-12T07:01:15.558Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:56:20.630Z"
+   "ultimaBien": "2026-11-12T07:01:15.558Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7607,11 +7606,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:56:20.630Z"
+   "ultimaBien": "2026-11-12T07:01:15.558Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:56:20.630Z"
+   "ultimaBien": "2026-11-12T07:01:15.558Z"
   }
  },
  "avisos": [
