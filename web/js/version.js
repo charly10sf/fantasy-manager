@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.7b';
+export const VERSION = '0.7.8';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.7b';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.8', f: '2026-11-12', h: '00:00', t: 'Tema de atardecer hasta el 26 nov',
+    cosas: [
+      { tipo: 'mejora', d: 'atardecer', t: 'Tema de atardecer hasta el 26 nov', x: 'Hasta el 26 de noviembre la app se viste de atardecer: violeta casi negro, rosa, naranja y turquesa, con palmeras y un sol detrás de la cabecera de Hoy y en las pantallas de carga. Lo que dice y lo que calcula, igual. El 27 vuelve sola a su rojo y negro.' },
+    ],
+  },
   {
     v: '0.7.7b', f: '2026-11-12', h: '10:08', t: 'La web, con un servidor de reserva que falle',
     cosas: [
