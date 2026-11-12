@@ -3431,7 +3431,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136243267": 1794238864000,
    "SPORT|136260180": 1794250832000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004249203/graafschap.html": 1794254855000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261109/1004249234/susto-rocafonda-calella-grupo-6.html": 1794261509000,
@@ -7702,13 +7701,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1827,
+   "ok": 1828,
    "fallos": 0,
-   "ejecuciones": 1369,
+   "ejecuciones": 1370,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T15:36:13.504Z"
+   "ultima": "2026-11-12T15:41:16.707Z"
   }
  },
  "ptsDirecto": {},
@@ -7725,15 +7724,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:36:16.689Z"
+   "ultimaBien": "2026-11-12T15:41:20.771Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:36:16.689Z"
+   "ultimaBien": "2026-11-12T15:41:20.771Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:36:16.689Z"
+   "ultimaBien": "2026-11-12T15:41:20.771Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7741,11 +7740,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:36:16.689Z"
+   "ultimaBien": "2026-11-12T15:41:20.771Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:36:16.689Z"
+   "ultimaBien": "2026-11-12T15:41:20.771Z"
   }
  },
  "avisos": [
