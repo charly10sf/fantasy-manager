@@ -970,6 +970,13 @@
    "jornada": 13,
    "id": "2120858255287103999",
    "t": "2026-11-12T12:36:26.692Z"
+  },
+  {
+   "clave": "novedades|2336:vuelve|2026-11-12",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2120873350096453841",
+   "t": "2026-11-12T13:36:25.633Z"
   }
  ],
  "estados": {
@@ -982,7 +989,7 @@
   "121": "ok",
   "140": "ok",
   "184": "ok",
-  "204": "ok",
+  "204": "injured",
   "230": "ok",
   "255": "ok",
   "265": "ok",
@@ -1079,7 +1086,7 @@
   "2332": "ok",
   "2334": "out_of_league",
   "2335": "ok",
-  "2336": "injured",
+  "2336": "ok",
   "2337": "ok",
   "2338": "injured",
   "2339": "ok",
@@ -1856,10 +1863,16 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "2336",
+   "que": "vuelve",
+   "antes": "injured",
+   "t": 1794490571834
+  }
+ ],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261109/1004249073/raul.html": 1794231423000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004249096/agenda-11-internacionales-primer-equipo-barca.html": 1794235042000,
@@ -2719,8 +2732,8 @@
     "t": 0
    },
    "2336": {
-    "e": "injured",
-    "t": 0
+    "e": "ok",
+    "t": 1794490571834
    },
    "2338": {
     "e": "injured",
@@ -3540,16 +3553,16 @@
   "dia": "2026-11-12",
   "llamadas": {
    "clasificar": 37,
-   "redactar": 7,
-   "revisar": 6,
+   "redactar": 9,
+   "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 177364,
-  "salida": 23149,
+  "entrada": 203524,
+  "salida": 23547,
   "cacheLee": 5806,
-  "cacheEscribe": 11612,
-  "dolares": 0.261657,
+  "cacheEscribe": 14515,
+  "dolares": 0.325215,
   "reservado": 0
  },
  "recientes": {
@@ -3723,6 +3736,10 @@
    {
     "t": "2026-11-09T07:36:33.330Z",
     "texto": "✅ Buenas noticias para dos delanteros: Vini Jr. y Oyarzabal vuelven a estar disponibles.\n\nVinícius llega con 6,3 de media y el Real Madrid ⚪ se mide al Celta. Oyarzabal juega con la Real Sociedad contra el Racing ⚓. Si los tienes, ya puedes contar con los dos."
+   },
+   {
+    "t": "2026-11-12T13:36:25.635Z",
+    "texto": "✅ Herrando vuelve a estar disponible: el defensa del Osasuna 🐂 supera la lesión en el aductor que arrastraba desde el 31 de agosto.\n\nEl Málaga 🐟, último de la tabla, visita El Sadar tras el parón, el domingo 22 de noviembre, y marca poquísimo, justo lo que le conviene a un defensa. Eso sí, con un 19 % de titularidad no parece que Herrando vaya a tener sitio fijo en el once, así que mejor no darlo por hecho."
    }
   ],
   "resumen": [
@@ -7654,13 +7671,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1802,
+   "ok": 1803,
    "fallos": 0,
-   "ejecuciones": 1344,
+   "ejecuciones": 1345,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T13:31:18.550Z"
+   "ultima": "2026-11-12T13:36:11.834Z"
   }
  },
  "ptsDirecto": {},
@@ -7677,15 +7694,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:31:25.808Z"
+   "ultimaBien": "2026-11-12T13:36:25.721Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:31:25.808Z"
+   "ultimaBien": "2026-11-12T13:36:25.721Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:31:25.808Z"
+   "ultimaBien": "2026-11-12T13:36:25.721Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7693,11 +7710,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:31:25.808Z"
+   "ultimaBien": "2026-11-12T13:36:25.721Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:31:25.808Z"
+   "ultimaBien": "2026-11-12T13:36:25.721Z"
   }
  },
  "avisos": [
