@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.7a';
+export const VERSION = '0.7.7b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.7a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.7b', f: '2026-11-12', h: '10:08', t: 'La web, con un servidor de reserva que falle',
+    cosas: [
+      { tipo: 'arreglo', para: 'web', d: 'conexion', t: 'Si el servidor de reserva falla, se usa el principal', x: 'En la web, cuando el servidor principal no contesta, la app pasa a uno de reserva durante 10 minutos. Si ese de reserva también fallaba, no cargaba nada en esos 10 minutos aunque el principal ya volviera a ir. Ahora, si el de reserva falla, se prueba otra vez el principal y, si contesta, se sigue con él.' },
+    ],
+  },
   {
     v: '0.7.7a', f: '2026-11-11', h: '22:28', t: 'El marcador, más rojo',
     cosas: [
