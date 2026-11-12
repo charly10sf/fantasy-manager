@@ -2124,7 +2124,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-no-entrenando-vive-peores-momentos-vida-considere-oportuno-dira-vuelve-no-20261112_3473848.html": 1794489006000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261112/1004250234/evidentemente-jesus-owono-tocado.html": 1794488514000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261112/1004250246/sadiq-vacaciones-rodilla-vendada.html": 1794491638000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250245/oyarzabal-barrenetxea-te-estaremos-esperando-volveremos-celebrar-siempre-contigo-pequenin.html": 1794491015000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250245/oyarzabal-barrenetxea-te-estaremos-esperando-volveremos-celebrar-siempre-contigo-pequenin.html": 1794491015000,
+   "SPORT|136366242": 1794488476000
   },
   "hechos": [
    {
@@ -2565,7 +2566,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -3569,17 +3570,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 39,
+   "clasificar": 40,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 207760,
-  "salida": 25679,
+  "entrada": 209786,
+  "salida": 25796,
   "cacheLee": 5806,
   "cacheEscribe": 14515,
-  "dolares": 0.326704,
+  "dolares": 0.326965,
   "reservado": 0
  },
  "recientes": {
@@ -7688,13 +7689,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1808,
+   "ok": 1809,
    "fallos": 0,
-   "ejecuciones": 1350,
+   "ejecuciones": 1351,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T14:01:11.793Z"
+   "ultima": "2026-11-12T14:06:14.033Z"
   }
  },
  "ptsDirecto": {},
@@ -7711,15 +7712,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:01:20.093Z"
+   "ultimaBien": "2026-11-12T14:06:20.077Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:01:20.093Z"
+   "ultimaBien": "2026-11-12T14:06:20.077Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:01:20.093Z"
+   "ultimaBien": "2026-11-12T14:06:20.077Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7727,11 +7728,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:01:20.093Z"
+   "ultimaBien": "2026-11-12T14:06:20.077Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:01:20.093Z"
+   "ultimaBien": "2026-11-12T14:06:20.077Z"
   }
  },
  "avisos": [
