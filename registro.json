@@ -1862,7 +1862,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-pierden-partido-praga-victor-munoz-seleccion_0_2008456929.html": 1794229502000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261109/1004249073/raul.html": 1794231423000,
-   "SPORT|136252960": 1794228768000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004249096/agenda-11-internacionales-primer-equipo-barca.html": 1794235042000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/mensaje-antony-aficionados-betis-peor-momento-elche_0_2008457741.html": 1794235886000,
@@ -7655,13 +7654,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1794,
+   "ok": 1795,
    "fallos": 0,
-   "ejecuciones": 1336,
+   "ejecuciones": 1337,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T12:51:13.622Z"
+   "ultima": "2026-11-12T12:56:13.487Z"
   }
  },
  "ptsDirecto": {},
@@ -7678,15 +7677,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:51:16.941Z"
+   "ultimaBien": "2026-11-12T12:56:17.303Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:51:16.941Z"
+   "ultimaBien": "2026-11-12T12:56:17.303Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:51:16.941Z"
+   "ultimaBien": "2026-11-12T12:56:17.303Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7694,11 +7693,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:51:16.941Z"
+   "ultimaBien": "2026-11-12T12:56:17.303Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:51:16.941Z"
+   "ultimaBien": "2026-11-12T12:56:17.303Z"
   }
  },
  "avisos": [
