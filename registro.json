@@ -3530,7 +3530,9 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510667000,
    "SPORT|136385497": 1794507196000,
    "SPORT|136387136": 1794508997000,
-   "SPORT|136388353": 1794511706000
+   "SPORT|136388353": 1794511706000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-republica-checa-espana-5a-jornada-nations-league-12-20261112_3474154.html": 1794521252000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/maldini-triunfo-gran-brillo-espana-partidos-epocas-no-ganaba-nunca-20261112_3474231.html": 1794520814000
   },
   "hechos": [
    {
@@ -3552,28 +3554,25 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 13,
+   "n": 14,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-republica-checa-espana-5a-jornada-nations-league-12-20261112_3474154.html": 1794520272998,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/maldini-triunfo-gran-brillo-espana-partidos-epocas-no-ganaba-nunca-20261112_3474231.html": 1794521180467
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 65,
+   "clasificar": 66,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 273914,
-  "salida": 36768,
+  "entrada": 275869,
+  "salida": 36929,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.375939,
+  "dolares": 0.376215,
   "reservado": 0
  },
  "recientes": {
@@ -7698,13 +7697,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1908,
+   "ok": 1909,
    "fallos": 0,
-   "ejecuciones": 1448,
+   "ejecuciones": 1449,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T22:06:20.467Z"
+   "ultima": "2026-11-12T22:11:24.768Z"
   }
  },
  "ptsDirecto": {},
@@ -7721,15 +7720,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:06:23.467Z"
+   "ultimaBien": "2026-11-12T22:11:31.207Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:06:23.467Z"
+   "ultimaBien": "2026-11-12T22:11:31.207Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:06:23.467Z"
+   "ultimaBien": "2026-11-12T22:11:31.207Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7737,7 +7736,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:06:23.467Z"
+   "ultimaBien": "2026-11-12T22:11:31.207Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
