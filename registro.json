@@ -2115,7 +2115,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250127/endrick-vuelve-pensar-posible-equipo-pole.html": 1794473364000,
    "SPORT|136356748": 1794470064000,
    "SPORT|136337732": 1794470435000,
-   "SPORT|136355906": 1794470235000
+   "SPORT|136355906": 1794470235000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-descartado-republica-checa-elogios-de-la-fuente_0_2008478505.html": 1794473973000
   },
   "hechos": [
    {
@@ -2469,7 +2470,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 10
+   "n": 11
   },
   "desde": {
    "67": {
@@ -3479,17 +3480,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 14,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 112667,
-  "salida": 7611,
+  "entrada": 114673,
+  "salida": 8372,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.210973,
+  "dolares": 0.211554,
   "reservado": 0
  },
  "recientes": {
@@ -7594,13 +7595,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1748,
+   "ok": 1749,
    "fallos": 0,
-   "ejecuciones": 1290,
+   "ejecuciones": 1291,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T09:06:12.216Z"
+   "ultima": "2026-11-12T09:11:15.443Z"
   }
  },
  "ptsDirecto": {},
@@ -7617,15 +7618,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:06:16.580Z"
+   "ultimaBien": "2026-11-12T09:11:26.271Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:06:16.580Z"
+   "ultimaBien": "2026-11-12T09:11:26.271Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:06:16.580Z"
+   "ultimaBien": "2026-11-12T09:11:26.271Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7633,11 +7634,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:06:16.580Z"
+   "ultimaBien": "2026-11-12T09:11:26.271Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:06:16.580Z"
+   "ultimaBien": "2026-11-12T09:11:26.271Z"
   }
  },
  "avisos": [
