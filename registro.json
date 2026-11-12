@@ -3554,7 +3554,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/contundente-reaccion-marcos-llorente-polemico-video-miembros-piquete-echando-anciano-cafeteria-espana-me-das-miedo-20261112_3473663.html": 1794483441000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261112/1004250179/asi-sera-sorteo-mundial-femenino-brasil-2027.html": 1794481548000,
    "SPORT|136371700": 1794486892000,
-   "SPORT|136370681": 1794485522000
+   "SPORT|136370681": 1794485522000,
+   "SPORT|136233790": 1794497100000
   },
   "hechos": [
    {
@@ -3576,7 +3577,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
   "espera": {}
@@ -3584,17 +3585,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 230715,
-  "salida": 27637,
+  "entrada": 232454,
+  "salida": 27723,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.367052,
+  "dolares": 0.367269,
   "reservado": 0
  },
  "recientes": {
@@ -7698,13 +7699,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1837,
+   "ok": 1838,
    "fallos": 0,
-   "ejecuciones": 1379,
+   "ejecuciones": 1380,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T16:26:11.619Z"
+   "ultima": "2026-11-12T16:31:15.715Z"
   }
  },
  "ptsDirecto": {},
@@ -7721,15 +7722,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:26:16.852Z"
+   "ultimaBien": "2026-11-12T16:31:22.445Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:26:16.852Z"
+   "ultimaBien": "2026-11-12T16:31:22.445Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:26:16.852Z"
+   "ultimaBien": "2026-11-12T16:31:22.445Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7737,11 +7738,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:26:16.852Z"
+   "ultimaBien": "2026-11-12T16:31:22.445Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:26:16.852Z"
+   "ultimaBien": "2026-11-12T16:31:22.445Z"
   }
  },
  "avisos": [
