@@ -1854,7 +1854,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/09/oyarzabal-retrasa-su-incorporacion-con-la-seleccion-debido-a-su-proceso-gripal-radio-san-sebastian/": 1794223969000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/el-barca-reafirma-el-liderat-recupera-laqui-catalunya-del-dilluns-9-de-novembre-la-tertulia-esportiva-amb-danae-boronat-sique-rodriguez-i-tomas-roncero-sercat/": 1794224320000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/emotivo-mensaje-iris-padre-pepe-mel-betis_0_2008455745.html": 1794223825000,
    "ABC|https://www.abc.es/deportes/futbol/alarma-lamine-viaja-espana-republica-checa-20261109124059-nt.html": 1794224460000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261109/1004249018/preocupacion-sevilla-forma-fofana.html": 1794223973000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249041/marc-roca-rumbo-primera-cita-espana-betis-no-limite.html": 1794226163000,
@@ -2111,7 +2110,12 @@
    "El Correo|https://www.elcorreo.com/athletic/vivian-rincon-caen-convocatoria-euskal-selekzioa-amistoso-20261112113833-nt.html": 1794479913000,
    "SPORT|136360245": 1794476991000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250174/vivian-hugo-rincon-sufren-sendas-sobrecargas.html": 1794480892000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250164/carmona-candidato-salir-mercado-invierno.html": 1794479934000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250164/carmona-candidato-salir-mercado-invierno.html": 1794479934000,
+   "AS|https://as.com/futbol/primera/sadiq-se-marcha-de-vacaciones-tocado-f202611-n/": 1794482297000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250193/lista-barca-femenino-recibir-arsenal-regreso-esperado.html": 1794482735000,
+   "SPORT|136363255": 1794479245000,
+   "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html": 1794482666000
   },
   "hechos": [
    {
@@ -2461,11 +2465,35 @@
     "motivo": "molestias en la rodilla derecha",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/sadiq-se-marcha-de-vacaciones-tocado-f202611-n/",
+    "medio": "AS",
+    "t": 1794482297000,
+    "id": "2617",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Sadiq se va de vacaciones tocado físicamente",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html",
+    "medio": "Diario de Sevilla",
+    "t": 1794482666000,
+    "id": "3265",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Fofana no entrena con el grupo del Sevilla",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3467,22 +3495,24 @@
    "n": 4,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/femenino/20261112/1004250179/asi-sera-sorteo-mundial-femenino-brasil-2027.html": 1794483073727
+  }
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 139977,
-  "salida": 15444,
+  "entrada": 142743,
+  "salida": 16952,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.217621,
+  "dolares": 0.218652,
   "reservado": 0
  },
  "recientes": {
@@ -7587,13 +7617,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1776,
+   "ok": 1777,
    "fallos": 0,
-   "ejecuciones": 1318,
+   "ejecuciones": 1319,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T11:26:14.390Z"
+   "ultima": "2026-11-12T11:31:13.727Z"
   }
  },
  "ptsDirecto": {},
@@ -7610,15 +7640,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:26:17.967Z"
+   "ultimaBien": "2026-11-12T11:31:25.649Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:26:17.967Z"
+   "ultimaBien": "2026-11-12T11:31:25.649Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:26:17.967Z"
+   "ultimaBien": "2026-11-12T11:31:25.649Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7626,11 +7656,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:26:17.967Z"
+   "ultimaBien": "2026-11-12T11:31:25.649Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:26:17.967Z"
+   "ultimaBien": "2026-11-12T11:31:25.649Z"
   }
  },
  "avisos": [
