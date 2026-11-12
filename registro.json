@@ -1873,7 +1873,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261109/1004249169/premier-league.html": 1794248219000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotivo-homenaje-seleccion-espanola-jesus-miguel-rozas-20261109_3471751.html": 1794249704000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gran-duda-manolo-lama-once-ideal-mundo-fifpro-me-gusta-20261109_3471749.html": 1794250042000,
@@ -3585,7 +3584,8 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794504076144
+   "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794504076144,
+   "SPORT|136382347": 1794504974117
   }
  },
  "ia": {
@@ -7700,13 +7700,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1850,
+   "ok": 1851,
    "fallos": 0,
-   "ejecuciones": 1392,
+   "ejecuciones": 1393,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T17:31:13.798Z"
+   "ultima": "2026-11-12T17:36:14.117Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7723,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:31:25.869Z"
+   "ultimaBien": "2026-11-12T17:36:17.461Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:31:25.869Z"
+   "ultimaBien": "2026-11-12T17:36:17.461Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:31:25.869Z"
+   "ultimaBien": "2026-11-12T17:36:17.461Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7739,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:31:25.869Z"
+   "ultimaBien": "2026-11-12T17:36:17.461Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:31:25.869Z"
+   "ultimaBien": "2026-11-12T17:36:17.461Z"
   }
  },
  "avisos": [
