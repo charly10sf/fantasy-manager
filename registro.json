@@ -984,6 +984,13 @@
    "jornada": 13,
    "id": "2120885933910196377",
    "t": "2026-11-12T14:26:25.846Z"
+  },
+  {
+   "clave": "mercado|2026-11-13",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2121019438346428861",
+   "t": "2026-11-12T23:16:55.841Z"
   }
  ],
  "estados": {
@@ -3563,16 +3570,16 @@
   "dia": "2026-11-13",
   "llamadas": {
    "clasificar": 0,
-   "redactar": 7,
-   "revisar": 5,
+   "redactar": 8,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 93220,
-  "salida": 2836,
-  "cacheLee": 11612,
+  "entrada": 106696,
+  "salida": 3025,
+  "cacheLee": 14515,
   "cacheEscribe": 2903,
-  "dolares": 0.223218,
+  "dolares": 0.25235,
   "reservado": 0
  },
  "recientes": {
@@ -3644,10 +3651,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-07T23:16:34.852Z",
-    "texto": "📈 Aubameyang es el que más sube del mercado: +2,5 M y se planta en 53,4 M con el Deportivo, casi un 5 % en una noche.\n\nEn el lado contrario, Rodri pierde 2 M en el Barça y se queda en 82,2 M.\n\nSi buscas algo barato, Redondo del Elche 🌴 cuesta 1,9 M y mete 4,3 de media. La imagen trae las cinco mayores subidas y las cinco mayores bajadas."
-   },
-   {
     "t": "2026-11-08T23:15:19.280Z",
     "texto": "📈 Valverde, el Pajarito, lidera las subidas del mercado de esta noche: +2,3 M y se va a 68,1 M, un 3,6 % más.\n\nLa mayor bajada es la de Rodri, que se deja 2 M en el Barça y queda en 80,2 M.\n\nPara el que busque barato, Redondo del Elche 🌴 vale 2 M, tiene 4,5 de media y sube un 3,3 %. En la imagen van las cinco mayores subidas y bajadas."
    },
@@ -3662,6 +3665,10 @@
    {
     "t": "2026-11-11T23:15:24.820Z",
     "texto": "📈 El Barça copa los extremos del mercado de esta noche. Fermín López sube 3,4 M (+2,8 %) y se va a 123,9 M, mientras Rodri cae 1,8 M y se queda en 74,5 M.\n\nUn chollo barato: Redondo, del Elche 🌴, cuesta 2,2 M y ha sumado 24 puntos en las tres últimas jornadas. En la imagen tienes los cinco que más suben y los cinco que más bajan."
+   },
+   {
+    "t": "2026-11-12T23:16:55.843Z",
+    "texto": "📈 Fermín López lidera las subidas de hoy: +2,6 M y se planta en 126,5 M con el Barça. Rodri, en cambio, es la mayor bajada: -1,7 M y se queda en 72,8 M.\n\nPara quien busque barato, Redondo, del Elche 🌴, cuesta 2,3 M y trae 24 puntos en sus tres últimas jornadas. En la imagen, los cinco que más suben y los cinco que más bajan."
    }
   ],
   "previa": [
@@ -3908,13 +3915,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "mercado|2026-11-13": {
-   "n": 2,
-   "t": "2026-11-12T23:15:48.297Z",
-   "ultima": "2026-11-12T23:16:26.180Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7742,7 +7743,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T23:16:26.194Z"
+   "ultimaBien": "2026-11-12T23:16:55.845Z"
   },
   "FotMob": {
    "seguidas": 0,
