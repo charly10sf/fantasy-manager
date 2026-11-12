@@ -2109,7 +2109,9 @@
    "SPORT|136363255": 1794479245000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/12/precaucion-valencia-cf-sadiq-abandona-rodilla-136362551.html": 1794483012000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html": 1794482666000,
-   "AS|https://as.com/futbol/primera/cinco-leones-en-modo-euskadi-sin-salir-de-casa-f202611-n/": 1794477728000
+   "AS|https://as.com/futbol/primera/cinco-leones-en-modo-euskadi-sin-salir-de-casa-f202611-n/": 1794477728000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html": 1794483136000,
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000
   },
   "hechos": [
    {
@@ -2483,11 +2485,23 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794483136000,
+    "id": "1480",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Tchouaméni entrena al margen del grupo en Valdebebas",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -3332,7 +3346,6 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229164000,
    "SPORT|136251680": 1794230182000,
    "SPORT|136241690": 1794229204000,
@@ -3494,17 +3507,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 29,
+   "clasificar": 30,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 146646,
-  "salida": 17778,
+  "entrada": 148768,
+  "salida": 18814,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.219455,
+  "dolares": 0.220185,
   "reservado": 0
  },
  "recientes": {
@@ -7609,13 +7622,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1782,
+   "ok": 1783,
    "fallos": 0,
-   "ejecuciones": 1324,
+   "ejecuciones": 1325,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T11:56:12.435Z"
+   "ultima": "2026-11-12T12:01:14.513Z"
   }
  },
  "ptsDirecto": {},
@@ -7632,15 +7645,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:56:15.251Z"
+   "ultimaBien": "2026-11-12T12:01:25.349Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:56:15.251Z"
+   "ultimaBien": "2026-11-12T12:01:25.349Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:56:15.251Z"
+   "ultimaBien": "2026-11-12T12:01:25.349Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7648,11 +7661,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:56:15.251Z"
+   "ultimaBien": "2026-11-12T12:01:25.349Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:56:15.251Z"
+   "ultimaBien": "2026-11-12T12:01:25.349Z"
   }
  },
  "avisos": [
