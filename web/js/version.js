@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.7b';
+export const VERSION = '0.7.7c';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.7b';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.7c', f: '2026-11-12', h: '12:37', t: 'Lo que pagaste, a la vista',
+    cosas: [
+      { tipo: 'mejora', d: 'euro', t: 'Lo que pagaste y la cláusula, más claros', x: 'En la ficha de uno de los tuyos, arriba sale lo que pagaste por él y cuánto ha subido o bajado desde entonces. Debajo de la cláusula, cuánto le queda para abrirse (o si ya está abierta y con qué riesgo). Fuera la tarjeta plegada «Es tuyo»: lo que te daría LaLiga por él va en una nota a la vista.' },
+    ],
+  },
   {
     v: '0.7.7b', f: '2026-11-12', h: '10:08', t: 'La web, con un servidor de reserva que falle',
     cosas: [

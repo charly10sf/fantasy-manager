@@ -279,10 +279,15 @@ export function fichaJugador(S, pid) {
   if (vj) h += `<div id="vivo-j">${vj}</div>`;
   // lo básico (puntos, interés, cláusula y próximo partido), justo debajo del precio
   const f = mia || suya;
-  h += `<div class="rejilla" style="margin:10px 0 4px">
+  h += `<div class="rejilla rej-j" style="margin:10px 0 4px">
     <button class="dato" data-accion="ver" data-sel="#j-puntua"><div class="et">Puntos ›</div><div class="v">${num(j.puntos)}<small>${j.media ? String(Math.round(j.media * 10) / 10).replace('.', ',') + ' de media' : ''}</small></div></button>
     <div class="dato"><div class="et">Interés</div><div class="v">${inter.n}<small>/100</small></div></div>
-    ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` <span class="nw">· ${eur(f.clausula - j.valor)} de más</span>` : ''}` : ''}</small></div></button>` : ''}
+    ${mia && (mia.compra || mia.inicial) ? (() => {
+      // (12 nov) lo que pagaste y lo que ha subido o bajado desde entonces, a la vista (antes, dentro de «Es tuyo»)
+      const ref = mia.compra || mia.inicial, g = mia.compra ? mia.ganado : mia.ganadoIni;
+      return `<div class="dato"><div class="et">${mia.compra ? 'Pagaste' : 'Valía al empezar'}</div><div class="v">${eur(ref)}${Number.isFinite(g) ? `<small class="cl-cuando"><b class="${clase(g)} nw">${eur(g, { signo: true })} (${pct(g / ref * 100)})</b> desde entonces</small>` : ''}</div></div>`;
+    })() : ''}
+    ${f ? `<button class="dato" ${mia ? 'data-ir="equipo" data-seg="equipo:clausulas"' : `data-r="${esc(duenoT || '')}"`}><div class="et">Cláusula ›</div><div class="v">${eur(f.clausula)}<small>${f.ratio ? `${pct((f.ratio - 1) * 100, 0)}${f.clausula > j.valor ? ` <span class="nw">· ${eur(f.clausula - j.valor)} de más</span>` : ''}` : ''}</small><small class="cl-cuando">${f.abierta ? `<b class="${!mia || mia.riesgo === 'alto' ? 'rojo' : ''}">Abierta${mia ? (mia.riesgo === 'ninguno' ? ' · sin riesgo' : ` · riesgo ${mia.riesgo}`) : ' ya'}</b>` : f.protegidoHasta ? `<b>${f.veda ? 'A salvo' : 'Se abre'} en ${cuenta(f.protegidoHasta)}</b>` : ''}</small></div></button>` : ''}
     <${prox && prox.rivalId ? `button class="dato" data-club="${esc(prox.rivalId)}"` : 'div class="dato"'}><div class="et">Próximo partido${prox && prox.rivalId ? ' ›' : ''}</div><div class="v" style="font-size:20px">${prox ? `${prox.casa ? 'vs' : enCasaDe(prox.rival)} <span class="niv ${nivelCls(fr.nivel)}">${esc(prox.rival)}</span>` : '–'}<small>${prox ? `${fr.r ? `${fr.r.pos}º · ${fr.nivel} · ` : ''}${cuando(prox.fecha)}` : ''}</small></div></${prox && prox.rivalId ? 'button' : 'div'}>
   </div>`;
   // (40) «Avisarme»: una alarma antes de que se abra su cláusula, con la antelación que elijas (solo en la app, que es la que avisa)
@@ -310,23 +315,15 @@ export function fichaJugador(S, pid) {
   h += `<div id="jor-j">${S.det && S.det[pid] ? jornadasFichaHTML(S.det[pid]) : '<div class="graf-vacio esq esq-jor">Cargando sus jornadas…</div>'}</div>`;
 
   if (mia) {
-    // (37) «Es tuyo»: a la vista, hasta cuándo está a salvo la cláusula y el riesgo; dentro, lo que pagaste y lo que te daría LaLiga.
-    // El importe de la cláusula no se repite: ya sale en el dato de arriba
-    const rs = mia.riesgo === 'ninguno' ? 'sin riesgo' : `riesgo ${mia.riesgo}`;
-    const lineaT = mia.abierta
-      ? (mia.riesgo === 'ninguno' ? 'Cláusula abierta, pero sin riesgo ahora' : `Cláusula abierta: te lo pueden quitar ya · riesgo ${mia.riesgo}`)
-      : `${mia.veda ? `A salvo hasta que empiece la J${mia.veda.n}` : mia.escudo ? 'Blindado hasta' : 'Protegido hasta'} ${esc(cuando(mia.protegidoHasta))} (${mia.veda ? 'en ' : ''}${cuenta(mia.protegidoHasta)}) · ${rs}`;
+    // (12 nov) sin el desplegable «Es tuyo»: lo pagado y cuándo se abre la cláusula van en la rejilla de arriba; aquí, a
+    // la vista y solo si hay algo, blindarlo gratis y lo que te daría LaLiga
     const ol = S.M.ofertaLigaDe ? S.M.ofertaLigaDe(j) : null;
     const ref = mia.compra || mia.inicial || null;
     const gana = ol && ref ? ol.v - ref : null;
     const gratis = mia.abierta && S.M.paraEscudo && S.M.paraEscudo.includes(pid) ? `<b>Blíndalo gratis</b> (en LaLiga, viendo un anuncio): ${S.M.ESCUDO_H} h protegido. Te quedan ${S.M.escudosMios.quedan} esta jornada.` : '';
-    const pagado = mia.compra ? `<b class="${clase(mia.ganado)}">${eur(mia.ganado, { signo: true })}</b> sobre lo que pagaste (${eur(mia.compra)}).`
-      : mia.inicial ? `<b class="${clase(mia.ganadoIni)}">${eur(mia.ganadoIni, { signo: true })}</b> desde que empezó la liga: entonces valía ${eur(mia.inicial)}.`
-      : 'Lo que pagaste por él no sale en los movimientos de la liga.';
     const liga = !ol || S.M.enVenta.has(pid) ? ''
       : `Si lo pones a la venta, LaLiga te da unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}. ${ol.sinDatos ? 'Aún no hay ventas a LaLiga en tu liga: el cálculo va cerca de su valor.' : `En tu liga da entre ${eur(ol.min)} y ${eur(ol.max)}, de mediana un ${pct(ol.med * 100)} sobre el valor.`}`;
-    h += aviso(S, { k: 'tuyo', pid, cls: mia.riesgo === 'alto' ? '' : mia.riesgo === 'medio' ? 'oro' : 'verde', ico: 'escudo', t: 'Es tuyo', l: lineaT, d: parrafos(gratis, pagado, liga),
-      chip: { t: mia.riesgo === 'ninguno' ? 'Sin riesgo' : `Riesgo ${mia.riesgo}`, cls: mia.riesgo === 'alto' ? 'baja' : mia.riesgo === 'medio' ? 'oro' : 'sube' } });
+    if (gratis || liga) h += `<div class="aviso-ficha verde peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join(' ')}</div></div>`;
     const pg = mia.pagan;
     if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) cerradas.push('quienPaga');
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
