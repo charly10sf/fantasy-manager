@@ -1845,8 +1845,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/se-que-vas-a-volver-el-mensaje-de-la-hija-de-pepe-mel-ser-almeria/": 1794211411000,
-   "SPORT|136238901": 1794211477000,
    "AS|https://as.com/futbol/primera/el-athletic-apuesta-fuerte-por-monreal-f202611-n/": 1794216858000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248942/flick-remontando-record.html": 1794218146000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004248955/julian-alvarez-confianza-ciega-simeone-desesperacion-grada.html": 1794217554000,
@@ -7567,13 +7565,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1735,
+   "ok": 1736,
    "fallos": 0,
-   "ejecuciones": 1277,
+   "ejecuciones": 1278,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T08:01:16.800Z"
+   "ultima": "2026-11-12T08:06:12.666Z"
   }
  },
  "ptsDirecto": {},
@@ -7590,15 +7588,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:01:22.216Z"
+   "ultimaBien": "2026-11-12T08:06:15.776Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:01:22.216Z"
+   "ultimaBien": "2026-11-12T08:06:15.776Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:01:22.216Z"
+   "ultimaBien": "2026-11-12T08:06:15.776Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7606,11 +7604,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:01:22.216Z"
+   "ultimaBien": "2026-11-12T08:06:15.776Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:01:22.216Z"
+   "ultimaBien": "2026-11-12T08:06:15.776Z"
   }
  },
  "avisos": [
