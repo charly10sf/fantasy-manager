@@ -2120,7 +2120,8 @@
    "Cadena SER|https://cadenaser.com/galicia/2026/11/12/la-agenda-internacional-arranca-hoy-para-los-deportivistas-radio-coruna/": 1794477915000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-entiende-enfado-luis-fuente-increible-cuestione-trabajo-decisiones-logrado-seleccion-espanola-20261112_3473371.html": 1794464842000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/11-nov-2026-partidazo-cope-20261112_3473384.html": 1794444600000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-laporte-quedan-jugar-praga-20261112_3473577.html": 1794477873000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-laporte-quedan-jugar-praga-20261112_3473577.html": 1794477873000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/20261112/11682301/seleccion-espanola-futbol-nations-league-republica-checa-lista-convocados-tres-descartes-laporte-nico-williams-valles-nuevo-diez-victor-munoz-fuente.html": 1794476843000
   },
   "hechos": [
    {
@@ -2474,7 +2475,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3482,17 +3483,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 21,
+   "clasificar": 22,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 129803,
-  "salida": 11385,
+  "entrada": 131746,
+  "salida": 11984,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.214574,
+  "dolares": 0.215068,
   "reservado": 0
  },
  "recientes": {
@@ -7597,13 +7598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1761,
+   "ok": 1762,
    "fallos": 0,
-   "ejecuciones": 1303,
+   "ejecuciones": 1304,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T10:11:13.673Z"
+   "ultima": "2026-11-12T10:16:17.525Z"
   }
  },
  "ptsDirecto": {},
@@ -7620,15 +7621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:11:28.311Z"
+   "ultimaBien": "2026-11-12T10:16:25.357Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:11:28.311Z"
+   "ultimaBien": "2026-11-12T10:16:25.357Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:11:28.311Z"
+   "ultimaBien": "2026-11-12T10:16:25.357Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7636,11 +7637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:11:28.311Z"
+   "ultimaBien": "2026-11-12T10:16:25.357Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:11:28.311Z"
+   "ultimaBien": "2026-11-12T10:16:25.357Z"
   }
  },
  "avisos": [
