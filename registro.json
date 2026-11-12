@@ -1852,7 +1852,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249041/marc-roca-rumbo-primera-cita-espana-betis-no-limite.html": 1794226163000,
    "AS|https://as.com/futbol/primera/un-deportivo-de-presente-y-de-mucho-mas-futuro-f202611-n/": 1794227206000,
    "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000,
    "AS|https://as.com/futbol/cuatro-internacionales-se-marchan-con-sus-selecciones-f202611-n/": 1794228363000,
@@ -2111,7 +2110,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/jon-guridi-isaac-romero-youssouf-fofana-ausencias-entrenamiento-sevilla_0_2008479415.html": 1794482666000,
    "AS|https://as.com/futbol/primera/cinco-leones-en-modo-euskadi-sin-salir-de-casa-f202611-n/": 1794477728000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250201/sesion-fisica-valdebebas-tchouameni-margen.html": 1794483136000,
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000
+   "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000
   },
   "hechos": [
    {
@@ -2497,11 +2497,24 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html",
+    "medio": "COPE",
+    "t": 1794484080000,
+    "id": "3104",
+    "que": "molestias",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Lamine Yamal arrastra molestias en una rodilla",
+    "motivo": "inflamación y líquido en una rodilla",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -3507,17 +3520,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 148768,
-  "salida": 18814,
+  "entrada": 150840,
+  "salida": 19841,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.220185,
+  "dolares": 0.220906,
   "reservado": 0
  },
  "recientes": {
@@ -7622,13 +7635,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1784,
+   "ok": 1785,
    "fallos": 0,
-   "ejecuciones": 1326,
+   "ejecuciones": 1327,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T12:06:15.165Z"
+   "ultima": "2026-11-12T12:11:12.253Z"
   }
  },
  "ptsDirecto": {},
@@ -7645,15 +7658,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:06:17.537Z"
+   "ultimaBien": "2026-11-12T12:11:22.982Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:06:17.537Z"
+   "ultimaBien": "2026-11-12T12:11:22.982Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:06:17.537Z"
+   "ultimaBien": "2026-11-12T12:11:22.982Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7661,11 +7674,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:06:17.537Z"
+   "ultimaBien": "2026-11-12T12:11:22.982Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:06:17.537Z"
+   "ultimaBien": "2026-11-12T12:11:22.982Z"
   }
  },
  "avisos": [
