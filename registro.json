@@ -1845,7 +1845,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248922/fermin.html": 1794208811000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/se-que-vas-a-volver-el-mensaje-de-la-hija-de-pepe-mel-ser-almeria/": 1794211411000,
    "SPORT|136238389": 1794210358000,
    "SPORT|136238901": 1794211477000,
@@ -3448,7 +3447,9 @@
    "n": 2,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-decretos-vivienda-afrontan-examen-definitivo-congreso-dia-despues-huelga-20261111123833.html": 1794468073499
+  }
  },
  "ia": {
   "dia": "2026-11-12",
@@ -7568,13 +7569,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1726,
+   "ok": 1727,
    "fallos": 0,
-   "ejecuciones": 1268,
+   "ejecuciones": 1269,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T07:16:35.118Z"
+   "ultima": "2026-11-12T07:21:13.499Z"
   }
  },
  "ptsDirecto": {},
@@ -7591,15 +7592,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:16:41.206Z"
+   "ultimaBien": "2026-11-12T07:21:16.943Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:16:41.206Z"
+   "ultimaBien": "2026-11-12T07:21:16.943Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:16:41.206Z"
+   "ultimaBien": "2026-11-12T07:21:16.943Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7607,11 +7608,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:16:41.206Z"
+   "ultimaBien": "2026-11-12T07:21:16.943Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:16:41.206Z"
+   "ultimaBien": "2026-11-12T07:21:16.943Z"
   }
  },
  "avisos": [
