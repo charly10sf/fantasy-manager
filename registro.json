@@ -2105,7 +2105,8 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681939/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus.html": 1794433572000,
    "ABC|https://www.abc.es/deportes/futbol/seleccion-lamine-estrella-agobia-lesiones-20261111012947-nt.html": 1794460849000,
    "ABC|https://www.abc.es/deportes/futbol/republica-checa-espana-hora-partido-nations-league-20261111012941-nt.html": 1794456001000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-evoluciona-satisfactoriamente-salud_0_2008476879.html": 1794433861000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-evoluciona-satisfactoriamente-salud_0_2008476879.html": 1794433861000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/12/manu-carreno-se-posiciona-en-el-caso-lamine-yamal-no-sera-que-no-estamos-acostumbrados-a-tener-un-jugador-de-esta-dimension-cadena-ser/": 1794464787000
   },
   "hechos": [
    {
@@ -2446,7 +2447,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -3453,17 +3454,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 3,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 46330,
-  "salida": 4479,
+  "entrada": 48258,
+  "salida": 4607,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.097634,
+  "dolares": 0.097891,
   "reservado": 0
  },
  "recientes": {
@@ -7568,13 +7569,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1717,
+   "ok": 1718,
    "fallos": 0,
-   "ejecuciones": 1259,
+   "ejecuciones": 1260,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T06:31:12.749Z"
+   "ultima": "2026-11-12T06:36:14.307Z"
   }
  },
  "ptsDirecto": {},
@@ -7591,15 +7592,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:31:15.829Z"
+   "ultimaBien": "2026-11-12T06:36:18.225Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:31:15.829Z"
+   "ultimaBien": "2026-11-12T06:36:18.225Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:31:15.829Z"
+   "ultimaBien": "2026-11-12T06:36:18.225Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7607,11 +7608,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:31:15.829Z"
+   "ultimaBien": "2026-11-12T06:36:18.225Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T06:31:15.829Z"
+   "ultimaBien": "2026-11-12T06:36:18.225Z"
   }
  },
  "avisos": [
