@@ -2116,7 +2116,8 @@
    "SPORT|136356748": 1794470064000,
    "SPORT|136337732": 1794470435000,
    "SPORT|136355906": 1794470235000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-descartado-republica-checa-elogios-de-la-fuente_0_2008478505.html": 1794473973000
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-descartado-republica-checa-elogios-de-la-fuente_0_2008478505.html": 1794473973000,
+   "SPORT|136356685": 1794471018000
   },
   "hechos": [
    {
@@ -2470,7 +2471,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3447,7 +3448,10 @@
    "SPORT|136346611": 1794420923000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261112/1004250004/betis-abre-copa-diez-bajas-debut-diego-conde.html": 1794463200000,
    "SPORT|136354062": 1794463248000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468430000
+   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468430000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-ordena-director-policia-abrir-investigacion-cargas-policiales-huelga-20261112095525.html": 1794473725000,
+   "SPORT|136355906": 1794470235000,
+   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-decretos-vivienda-afrontan-examen-definitivo-congreso-dia-despues-huelga-20261111123833.html": 1794397113000
   },
   "hechos": [
    {
@@ -3469,28 +3473,25 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-ordena-director-policia-abrir-investigacion-cargas-policiales-huelga-20261112095525.html": 1794473772969,
-   "SPORT|136355906": 1794474372216
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 14,
+   "clasificar": 16,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 114673,
-  "salida": 8372,
+  "entrada": 118836,
+  "salida": 8700,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.211554,
+  "dolares": 0.212135,
   "reservado": 0
  },
  "recientes": {
@@ -7595,13 +7596,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1749,
+   "ok": 1750,
    "fallos": 0,
-   "ejecuciones": 1291,
+   "ejecuciones": 1292,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T09:11:15.443Z"
+   "ultima": "2026-11-12T09:16:13.954Z"
   }
  },
  "ptsDirecto": {},
@@ -7618,15 +7619,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:11:26.271Z"
+   "ultimaBien": "2026-11-12T09:16:21.321Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:11:26.271Z"
+   "ultimaBien": "2026-11-12T09:16:21.321Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:11:26.271Z"
+   "ultimaBien": "2026-11-12T09:16:21.321Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7634,11 +7635,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:11:26.271Z"
+   "ultimaBien": "2026-11-12T09:16:21.321Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:11:26.271Z"
+   "ultimaBien": "2026-11-12T09:16:21.321Z"
   }
  },
  "avisos": [
