@@ -4082,7 +4082,8 @@
    "5868121",
    "6386040",
    "6386084",
-   "6386083"
+   "6386083",
+   "6386067"
   ],
   "equipos": [
    "9866",
@@ -4113,7 +4114,7 @@
     "e": "Anaitasuna FT",
     "g": {
      "copa": [
-      2,
+      4,
       0,
       0,
       0,
@@ -5755,6 +5756,13 @@
       0,
       0,
       1
+     ],
+     "copa": [
+      2,
+      1,
+      0,
+      0,
+      0
      ]
     }
    },
@@ -7196,6 +7204,19 @@
      ]
     }
    },
+   "1690115": {
+    "n": "Rodrigo Marina",
+    "e": "Real Betis",
+    "g": {
+     "copa": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "1690831": {
     "n": "Bil Nsongo",
     "e": "Deportivo A Coruña",
@@ -7711,13 +7732,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1890,
+   "ok": 1892,
    "fallos": 0,
-   "ejecuciones": 1431,
+   "ejecuciones": 1432,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T20:42:04.078Z"
+   "ultima": "2026-11-12T20:46:14.400Z"
   }
  },
  "ptsDirecto": {},
@@ -7734,15 +7755,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:42:07.625Z"
+   "ultimaBien": "2026-11-12T20:46:22.479Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:42:07.625Z"
+   "ultimaBien": "2026-11-12T20:46:22.479Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:42:07.625Z"
+   "ultimaBien": "2026-11-12T20:46:22.479Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7750,11 +7771,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:42:07.625Z"
+   "ultimaBien": "2026-11-12T20:46:22.479Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:42:07.625Z"
+   "ultimaBien": "2026-11-12T20:46:22.479Z"
   }
  },
  "avisos": [
