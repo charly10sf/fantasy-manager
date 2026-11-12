@@ -2119,7 +2119,8 @@
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/12/dani-vivian-y-hugo-rincon-bajas-con-la-euskal-selekzioa-prados-entra-en-la-lista-radio-bilbao/": 1794484832000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000,
    "SPORT|136362137": 1794482672000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000,
+   "SPORT|136368075": 1794483010000
   },
   "hechos": [
    {
@@ -2536,7 +2537,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3542,17 +3543,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 33,
+   "clasificar": 34,
    "redactar": 7,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 169254,
-  "salida": 21201,
+  "entrada": 171318,
+  "salida": 21313,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.259873,
+  "dolares": 0.260135,
   "reservado": 0
  },
  "recientes": {
@@ -7657,13 +7658,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1790,
+   "ok": 1791,
    "fallos": 0,
-   "ejecuciones": 1332,
+   "ejecuciones": 1333,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T12:36:12.290Z"
+   "ultima": "2026-11-12T12:41:15.445Z"
   }
  },
  "ptsDirecto": {},
@@ -7680,15 +7681,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:36:26.720Z"
+   "ultimaBien": "2026-11-12T12:41:23.048Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:36:26.720Z"
+   "ultimaBien": "2026-11-12T12:41:23.048Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:36:26.720Z"
+   "ultimaBien": "2026-11-12T12:41:23.048Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7696,11 +7697,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:36:26.720Z"
+   "ultimaBien": "2026-11-12T12:41:23.048Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:36:26.720Z"
+   "ultimaBien": "2026-11-12T12:41:23.048Z"
   }
  },
  "avisos": [
