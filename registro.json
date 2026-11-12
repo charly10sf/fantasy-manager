@@ -1873,7 +1873,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249130/pellegrini-contar-copa-cuatro-porteros.html": 1794239934000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/manolo-lama-senala-cuatro-decisiones-mourinho-han-llevado-exito-real-madrid-importante-gran-merito-entrenador-20261109_3471059.html": 1794241484000,
    "SPORT|136258178": 1794241328000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000,
@@ -7701,13 +7700,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1831,
+   "ok": 1832,
    "fallos": 0,
-   "ejecuciones": 1373,
+   "ejecuciones": 1374,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T15:56:13.420Z"
+   "ultima": "2026-11-12T16:01:15.574Z"
   }
  },
  "ptsDirecto": {},
@@ -7724,15 +7723,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:56:18.810Z"
+   "ultimaBien": "2026-11-12T16:01:21.225Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:56:18.810Z"
+   "ultimaBien": "2026-11-12T16:01:21.225Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:56:18.810Z"
+   "ultimaBien": "2026-11-12T16:01:21.225Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7740,11 +7739,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:56:18.810Z"
+   "ultimaBien": "2026-11-12T16:01:21.225Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T15:56:18.810Z"
+   "ultimaBien": "2026-11-12T16:01:21.225Z"
   }
  },
  "avisos": [
