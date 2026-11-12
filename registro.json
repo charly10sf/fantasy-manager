@@ -1876,7 +1876,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-seleccion-espana-republica-checa_0_2008459539.html": 1794252831000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/homenaje-seleccion-espanola-jesus-miguel_0_2008459621.html": 1794253239000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000,
-   "AS|https://as.com/futbol/primera/paron-de-reflexion-y-exodo-masivo-el-atleti-se-queda-sin-18-jugadores-f202611-n/": 1794252073000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/09/konate-mbappe-ganar-balon-oro-duro-dia-siguiente-tope.html": 1794257865000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/09/espana/00031794259204939368288.htm": 1794259980000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249228/dani-olmo-podra-villarreal.html": 1794290400000,
@@ -7701,13 +7700,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1871,
+   "ok": 1872,
    "fallos": 0,
-   "ejecuciones": 1413,
+   "ejecuciones": 1414,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T19:16:12.811Z"
+   "ultima": "2026-11-12T19:21:13.113Z"
   }
  },
  "ptsDirecto": {},
@@ -7724,15 +7723,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:16:17.373Z"
+   "ultimaBien": "2026-11-12T19:21:19.491Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:16:17.373Z"
+   "ultimaBien": "2026-11-12T19:21:19.491Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:16:17.373Z"
+   "ultimaBien": "2026-11-12T19:21:19.491Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7740,11 +7739,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:16:17.373Z"
+   "ultimaBien": "2026-11-12T19:21:19.491Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:16:17.373Z"
+   "ultimaBien": "2026-11-12T19:21:19.491Z"
   }
  },
  "avisos": [
