@@ -1852,10 +1852,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/09/oyarzabal-retrasa-su-incorporacion-con-la-seleccion-debido-a-su-proceso-gripal-radio-san-sebastian/": 1794223969000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/el-barca-reafirma-el-liderat-recupera-laqui-catalunya-del-dilluns-9-de-novembre-la-tertulia-esportiva-amb-danae-boronat-sique-rodriguez-i-tomas-roncero-sercat/": 1794224320000,
    "ABC|https://www.abc.es/deportes/futbol/alarma-lamine-viaja-espana-republica-checa-20261109124059-nt.html": 1794224460000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261109/1004249018/preocupacion-sevilla-forma-fofana.html": 1794223973000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249041/marc-roca-rumbo-primera-cita-espana-betis-no-limite.html": 1794226163000,
    "AS|https://as.com/futbol/primera/un-deportivo-de-presente-y-de-mucho-mas-futuro-f202611-n/": 1794227206000,
    "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000,
@@ -7617,13 +7615,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1777,
+   "ok": 1778,
    "fallos": 0,
-   "ejecuciones": 1319,
+   "ejecuciones": 1320,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T11:31:13.727Z"
+   "ultima": "2026-11-12T11:36:19.174Z"
   }
  },
  "ptsDirecto": {},
@@ -7640,15 +7638,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:31:25.649Z"
+   "ultimaBien": "2026-11-12T11:36:22.860Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:31:25.649Z"
+   "ultimaBien": "2026-11-12T11:36:22.860Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:31:25.649Z"
+   "ultimaBien": "2026-11-12T11:36:22.860Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7656,11 +7654,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:31:25.649Z"
+   "ultimaBien": "2026-11-12T11:36:22.860Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:31:25.649Z"
+   "ultimaBien": "2026-11-12T11:36:22.860Z"
   }
  },
  "avisos": [
