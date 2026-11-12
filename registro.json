@@ -1879,7 +1879,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261109/1004249132/0-0-sanse-trabaja-buen-punto-le-saca-descenso-desaprovecha-opcion-ganar.html": 1794260216000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261109/1004249225/valverde-enciende-alarmas-llegada-uruguay-no-100.html": 1794260000000,
    "SPORT|136261924": 1794285057000,
-   "SPORT|136267796": 1794259789000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/entrevistas-de-juanma-castano/noticias/entrevista-juanma-castano-cucurella-partidazo-cope-09-20261109_3471802.html": 1794267626000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/2a-parte-09-nov-2026-partidazo-cope-20261110_3471813.html": 1794267913000,
    "SPORT|136269986": 1794286763000,
@@ -7731,13 +7730,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1900,
+   "ok": 1901,
    "fallos": 0,
-   "ejecuciones": 1440,
+   "ejecuciones": 1441,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T21:26:16.290Z"
+   "ultima": "2026-11-12T21:31:13.674Z"
   }
  },
  "ptsDirecto": {},
@@ -7754,15 +7753,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:26:19.160Z"
+   "ultimaBien": "2026-11-12T21:31:18.366Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:26:19.160Z"
+   "ultimaBien": "2026-11-12T21:31:18.366Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:26:19.160Z"
+   "ultimaBien": "2026-11-12T21:31:18.366Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7770,11 +7769,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:26:19.160Z"
+   "ultimaBien": "2026-11-12T21:31:18.366Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:26:19.160Z"
+   "ultimaBien": "2026-11-12T21:31:18.366Z"
   }
  },
  "avisos": [
