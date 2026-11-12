@@ -1873,7 +1873,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gran-duda-manolo-lama-once-ideal-mundo-fifpro-me-gusta-20261109_3471749.html": 1794250042000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-seleccion-espana-republica-checa_0_2008459539.html": 1794252831000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/homenaje-seleccion-espanola-jesus-miguel_0_2008459621.html": 1794253239000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000,
@@ -7700,13 +7699,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1865,
+   "ok": 1866,
    "fallos": 0,
-   "ejecuciones": 1407,
+   "ejecuciones": 1408,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T18:46:11.669Z"
+   "ultima": "2026-11-12T18:51:12.647Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7722,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:46:19.777Z"
+   "ultimaBien": "2026-11-12T18:51:16.824Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:46:19.777Z"
+   "ultimaBien": "2026-11-12T18:51:16.824Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:46:19.777Z"
+   "ultimaBien": "2026-11-12T18:51:16.824Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7738,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:46:19.777Z"
+   "ultimaBien": "2026-11-12T18:51:16.824Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:46:19.777Z"
+   "ultimaBien": "2026-11-12T18:51:16.824Z"
   }
  },
  "avisos": [
