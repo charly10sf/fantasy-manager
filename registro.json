@@ -1866,7 +1866,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004249096/agenda-11-internacionales-primer-equipo-barca.html": 1794235042000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/mensaje-antony-aficionados-betis-peor-momento-elche_0_2008457741.html": 1794235886000,
    "SPORT|136256483": 1794234804000,
@@ -7663,13 +7662,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1806,
+   "ok": 1807,
    "fallos": 0,
-   "ejecuciones": 1348,
+   "ejecuciones": 1349,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T13:51:13.744Z"
+   "ultima": "2026-11-12T13:56:16.344Z"
   }
  },
  "ptsDirecto": {},
@@ -7686,15 +7685,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:51:19.152Z"
+   "ultimaBien": "2026-11-12T13:56:20.355Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:51:19.152Z"
+   "ultimaBien": "2026-11-12T13:56:20.355Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:51:19.152Z"
+   "ultimaBien": "2026-11-12T13:56:20.355Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7702,11 +7701,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:51:19.152Z"
+   "ultimaBien": "2026-11-12T13:56:20.355Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:51:19.152Z"
+   "ultimaBien": "2026-11-12T13:56:20.355Z"
   }
  },
  "avisos": [
