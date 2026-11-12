@@ -118,31 +118,152 @@ html[data-tema="sunset"] {
 :where(html[data-tema="sunset"]) #limite { background: radial-gradient(120% 60% at 50% 20%, rgba(214, 36, 159, 0.22), transparent 60%), var(--negro); }
 :where(html[data-tema="sunset"]) :is(.cc, .lim-in .logo) { filter: drop-shadow(0 14px 30px rgba(214, 36, 159, 0.34)); }
 
-/* ---------- marcas fijas: el sol detrás de las palmeras ---------- */
-/* en la carga, el error y la cuenta atrás: abajo del todo, el horizonte con el sol medio puesto y las palmeras delante */
+
+/* ---------- marcas: el horizonte con el sol, la cuadrícula, las estrellas y las palmeras ---------- */
+/* reutilizables: la cuadrícula de perspectiva (el suelo que avanza) y las estrellas (quietas; con .atardecer-titila, titilan) */
+:root {
+  --atardecer-estrellas: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200' fill='%23fff'%3E%3Ccircle cx='22' cy='30' r='1.6'/%3E%3Ccircle cx='70' cy='92' r='1.1'/%3E%3Ccircle cx='118' cy='18' r='1.3'/%3E%3Ccircle cx='160' cy='70' r='1.8' fill-opacity='.8'/%3E%3Ccircle cx='205' cy='26' r='1.1'/%3E%3Ccircle cx='246' cy='104' r='1.4' fill-opacity='.7'/%3E%3Ccircle cx='288' cy='44' r='1.7'/%3E%3Ccircle cx='330' cy='12' r='1.2' fill-opacity='.8'/%3E%3Ccircle cx='356' cy='78' r='1.5'/%3E%3Ccircle cx='388' cy='34' r='1.1'/%3E%3C/svg%3E");
+  --atardecer-suelo: linear-gradient(rgba(255, 60, 120, 0.5) 0 2px, transparent 2px) 0 0 / 100% 36px, linear-gradient(90deg, rgba(255, 60, 120, 0.42) 0 2px, transparent 2px) 50% 0 / 56px 100%, linear-gradient(0deg, #0A0714, #1c0b33);
+}
+.atardecer-estrellas { background: var(--atardecer-estrellas) center / cover no-repeat; }
+.atardecer-cuadricula { position: relative; overflow: hidden; }
+.atardecer-cuadricula::before {
+  content: ''; position: absolute; left: -20%; right: -20%; bottom: 0; height: 800px; pointer-events: none;
+  background: var(--atardecer-suelo); transform-origin: 50% 100%; transform: perspective(220px) rotateX(64deg);
+  animation: atardecer-avanza 1.4s linear infinite;
+}
+.atardecer-titila { animation: atardecer-titila 2.4s ease-in-out 1; }
+@keyframes atardecer-avanza { from { transform: perspective(220px) rotateX(64deg) translateY(0); } to { transform: perspective(220px) rotateX(64deg) translateY(36px); } }
+@keyframes atardecer-titila { 0%, 100% { opacity: 1; } 22% { opacity: 0.3; } 46% { opacity: 0.95; } 68% { opacity: 0.45; } }
+@keyframes atardecer-sol { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes atardecer-cielo { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+@keyframes atardecer-mece { 0%, 100% { transform: rotate(-1.6deg); } 50% { transform: rotate(1.6deg); } }
+@keyframes atardecer-coche { from { transform: translateX(-100%); } to { transform: translateX(60px); } }
+
+/* la carga, el error y la cuenta atrás: de atrás adelante, las estrellas (arriba), el resplandor con el sol (que sube y baja
+   muy despacio), el suelo con la cuadrícula (tapa la mitad del sol y avanza) y las palmeras en el horizonte. Lo que se mueve
+   sin parar va en .carga y #limite, que no se repintan mientras están en pantalla (lo de dentro, sí: la cuenta atrás) */
 :where(html[data-tema="sunset"]) .carga { isolation: isolate; }
+:where(html[data-tema="sunset"]) :is(.carga-in, .lim-in)::before {
+  content: ''; position: absolute; z-index: -5; left: 0; right: 0; top: 0; height: 46vh; pointer-events: none;
+  background: var(--atardecer-estrellas) center top / max(400px, 46vw) auto no-repeat; opacity: 0.85;
+}
 :where(html[data-tema="sunset"]) :is(.carga, #limite)::before {
-  content: ''; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: min(34vh, 300px); pointer-events: none;
-  background: var(--atardecer-sol) 50% calc(100% + min(9vh, 70px)) / min(44vw, 210px) auto no-repeat, var(--atardecer-horizonte);
-  opacity: 0.55;
+  content: ''; position: absolute; z-index: -4; left: 0; right: 0; bottom: 70px; height: 260px; pointer-events: none;
+  background: var(--atardecer-sol) 50% calc(100% + 64px) / 168px 168px no-repeat, var(--atardecer-horizonte);
+  opacity: 0.62; animation: atardecer-sol 26s ease-in-out infinite;
 }
 :where(html[data-tema="sunset"]) :is(.carga, #limite)::after {
-  content: ''; position: absolute; z-index: -1; left: 50%; bottom: 0; width: min(120vw, 560px); height: min(30vw, 140px); margin-left: max(-60vw, -280px); pointer-events: none;
+  content: ''; position: absolute; z-index: -3; left: -20%; right: -20%; bottom: -2px; height: 800px; pointer-events: none;
+  background: var(--atardecer-suelo); transform-origin: 50% 100%; transform: perspective(220px) rotateX(64deg);
+  animation: atardecer-avanza 1.4s linear infinite;
+}
+:where(html[data-tema="sunset"]) :is(.carga-in, .lim-in)::after {
+  content: ''; position: absolute; z-index: -2; left: 50%; bottom: 88px; width: 360px; height: 112px; margin-left: -180px; pointer-events: none;
   background: var(--atardecer-palmeras) center bottom / contain no-repeat;
 }
 
-/* en la cabecera de Hoy (en el móvil, la barra de arriba; en el ordenador, lo alto de la columna): un cielo suave, el sol
-   asentándose detrás y las palmeras a la derecha. Solo en Hoy: la cabecera sabe que Hoy está activa por la barra de pestañas */
+/* en pantallas bajas el texto llega hasta el horizonte: sin el sol ni su resplandor detrás de las letras y la cuadrícula más
+   apagada (las estrellas y las palmeras, oscuras, no le quitan contraste) */
+@media (max-height: 760px) {
+  :where(html[data-tema="sunset"]) :is(.carga, #limite)::before { content: none; }
+  :where(html[data-tema="sunset"]) :is(.carga, #limite)::after { opacity: 0.35; }
+}
+
+/* la cabecera de Hoy (en el móvil, la barra de arriba; en el ordenador, lo alto de la columna): de atrás adelante, el cielo
+   (más alto que la cabecera, sube y baja despacio), el sol asentándose, las palmeras (se mecen) y el coche (cruza de vez
+   en cuando). La cabecera sabe que Hoy está activa por la barra de pestañas */
 :where(html[data-tema="sunset"]) :is(.sup:has(.nav [data-ir="hoy"].activo), .sup:has(~ .nav [data-ir="hoy"].activo)) { overflow: clip; }
 :where(html[data-tema="sunset"]) :is(.sup:has(.nav [data-ir="hoy"].activo), .sup:has(~ .nav [data-ir="hoy"].activo))::before {
-  content: ''; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: 100%; pointer-events: none;
-  background: var(--atardecer-sol) right 58px bottom -56px / 72px 72px no-repeat, linear-gradient(0deg, rgba(214, 36, 159, 0.2), rgba(47, 63, 214, 0.06) 70%, transparent);
-  opacity: 0.6;
+  content: ''; position: absolute; z-index: -4; left: 0; right: 0; bottom: -40px; height: calc(100% + 150px); pointer-events: none;
+  background: var(--atardecer-cielo); opacity: 0.3; animation: atardecer-cielo 30s ease-in-out infinite;
+}
+:where(html[data-tema="sunset"]) :is(.sup:has(.nav [data-ir="hoy"].activo), .sup:has(~ .nav [data-ir="hoy"].activo)) .sup-liga::before {
+  content: ''; position: absolute; z-index: -3; right: 58px; bottom: -60px; width: 72px; height: 72px; pointer-events: none;
+  background: var(--atardecer-sol) center / contain no-repeat; opacity: 0.7;
 }
 :where(html[data-tema="sunset"]) :is(.sup:has(.nav [data-ir="hoy"].activo), .sup:has(~ .nav [data-ir="hoy"].activo))::after {
-  content: ''; position: absolute; z-index: -1; right: -6px; bottom: 0; width: 176px; height: 88px; pointer-events: none;
+  content: ''; position: absolute; z-index: -2; right: -6px; bottom: 0; width: 176px; height: 88px; pointer-events: none;
   background: var(--atardecer-palmeras) right bottom / contain no-repeat; opacity: 0.9;
+  transform-origin: 50% 100%; animation: atardecer-mece 7s ease-in-out infinite;
 }
-/* en el ordenador, la columna: el cielo solo arriba, detrás del logo y del nombre de la liga */
-:where(html[data-tema="sunset"].escritorio) .sup:has(.nav [data-ir="hoy"].activo)::before { bottom: auto; height: 170px; background: var(--atardecer-sol) right 30px top 20px / 62px 62px no-repeat, linear-gradient(0deg, transparent, rgba(214, 36, 159, 0.2) 55%, rgba(47, 63, 214, 0.08)); }
+:where(html[data-tema="sunset"]) :is(.sup:has(.nav [data-ir="hoy"].activo), .sup:has(~ .nav [data-ir="hoy"].activo)) .sup-liga::after {
+  content: ''; position: absolute; z-index: -1; left: 0; right: 0; bottom: 1px; height: 17px; pointer-events: none;
+  background: var(--atardecer-coche) right center / 51px 17px no-repeat; transform: translateX(-100%);
+}
+/* en el ordenador, la columna: todo arriba, detrás del logo y del nombre de la liga, y el coche sobre la línea */
+:where(html[data-tema="sunset"].escritorio) .sup:has(.nav [data-ir="hoy"].activo)::before { bottom: auto; top: -70px; height: 250px; -webkit-mask: linear-gradient(#000 70%, transparent); mask: linear-gradient(#000 70%, transparent); }
+:where(html[data-tema="sunset"].escritorio) .sup:has(.nav [data-ir="hoy"].activo) .sup-liga::before { bottom: auto; top: 20px; right: 30px; width: 62px; height: 62px; }
 :where(html[data-tema="sunset"].escritorio) .sup:has(.nav [data-ir="hoy"].activo)::after { top: 6px; bottom: auto; right: -8px; width: 172px; height: 86px; }
+:where(html[data-tema="sunset"].escritorio) .sup:has(.nav [data-ir="hoy"].activo) .sup-liga::after { bottom: auto; top: var(--atardecer-coche-y, 140px); }
+/* el coche cruza (y el cielo se para mientras, para no pasar de dos animaciones seguidas a la vez) */
+:where(html[data-tema="sunset"].atardecer-pasa) :is(.sup:has(.nav [data-ir="hoy"].activo), .sup:has(~ .nav [data-ir="hoy"].activo)) .sup-liga::after { animation: atardecer-coche 8s linear 1; }
+:where(html[data-tema="sunset"].atardecer-pasa) :is(.sup:has(.nav [data-ir="hoy"].activo), .sup:has(~ .nav [data-ir="hoy"].activo))::before { animation-play-state: paused; }
+/* las estrellas titilan (y el sol se para mientras) */
+:where(html[data-tema="sunset"].atardecer-titila) :is(.carga-in, .lim-in)::before { animation: atardecer-titila 2.4s ease-in-out 1; }
+:where(html[data-tema="sunset"].atardecer-titila) :is(.carga, #limite)::before { animation-play-state: paused; }
+
+/* ---------- movimiento al abrir una pestaña ---------- */
+@keyframes atardecer-franja { from { transform: translateX(-18px) var(--franja); opacity: 0; } to { transform: var(--franja); opacity: 1; } }
+@keyframes atardecer-rebote { 0% { transform: scale(0.55) skewX(-12deg); opacity: 0; } 60% { transform: scale(1.14) skewX(-12deg); opacity: 1; } 100% { transform: skewX(-12deg); } }
+@keyframes atardecer-destello { from { transform: translateX(-110%) skewX(-18deg); } to { transform: translateX(110%) skewX(-18deg); } }
+@keyframes atardecer-cifra { 0%, 100% { transform: none; } 40% { transform: scale(1.06); } }
+@keyframes atardecer-cifra-sube { 0%, 100% { transform: none; } 40% { transform: scale(1.06); color: var(--atardecer-turquesa); } 70% { color: var(--atardecer-turquesa); } }
+:where(html[data-tema="sunset"].atardecer-abre) .titulo::before { animation: atardecer-franja var(--mov-2) var(--curva) 1 both; }
+:where(html[data-tema="sunset"].atardecer-abre) :is(.fase-n, .pnz-sec .n) { animation: atardecer-rebote 380ms var(--curva) 1 both; }
+/* el botón principal: un destello que lo cruza una vez */
+:where(html[data-tema="sunset"]) .btn:not(.sec, .txt, .gc-abrir) { position: relative; overflow: hidden; }
+:where(html[data-tema="sunset"].atardecer-abre) .btn:not(.sec, .txt, .gc-abrir)::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, transparent 20%, rgba(255, 255, 255, 0.5) 50%, transparent 80%);
+  transform: translateX(-110%); animation: atardecer-destello 900ms ease-out 200ms 1 both;
+}
+:where(html[data-tema="sunset"]) .hoja:has(> .aj-busca) .btn::after { content: none; }
+/* las cifras que cambian (el marcador y el valor de la ficha): un pequeño escalado y, si sube, un toque turquesa */
+:where(html[data-tema="sunset"]) .atardecer-cambia { transform-origin: 0 60%; animation: atardecer-cifra 420ms var(--curva) 1; }
+:where(html[data-tema="sunset"]) .atardecer-cambia.atardecer-sube { animation-name: atardecer-cifra-sube; }
+
+/* ---------- la barra de abajo: un punto con el degradado bajo la pestaña activa, que se desliza de una a otra ---------- */
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in { position: relative; }
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav button.activo::before { background: transparent; }
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button.activo)::after {
+  content: ''; position: absolute; left: 0; bottom: 5px; width: calc(100% / 7); height: 8px; pointer-events: none;
+  background: var(--atardecer-degradado) center / 8px 8px no-repeat;
+  -webkit-mask: radial-gradient(circle at 50% 50%, #000 3.5px, transparent 4px); mask: radial-gradient(circle at 50% 50%, #000 3.5px, transparent 4px);
+  transition: transform 320ms var(--curva);
+}
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(2).activo)::after { transform: translateX(100%); }
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(3).activo)::after { transform: translateX(200%); }
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(4).activo)::after { transform: translateX(300%); }
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(5).activo)::after { transform: translateX(400%); }
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(6).activo)::after { transform: translateX(500%); }
+:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(7).activo)::after { transform: translateX(600%); }
+
+/* ---------- en el ordenador: las tarjetas sacan un borde fino con el degradado al pasar el ratón ---------- */
+@media (hover: hover) {
+  :where(html[data-tema="sunset"].escritorio) :is(.marcador, .tj, .caja, .tiempo, .radar, .eq2-num, .pnz-c, .val-card, .once-pleg) { position: relative; }
+  :where(html[data-tema="sunset"].escritorio) :is(.marcador, .tj, .caja, .tiempo, .radar, .eq2-num, .pnz-c, .val-card, .once-pleg)::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: var(--atardecer-degradado);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    opacity: 0; transition: opacity var(--mov-1);
+  }
+  :where(html[data-tema="sunset"].escritorio) :is(.marcador, .tj, .caja, .tiempo, .radar, .eq2-num, .pnz-c, .val-card, .once-pleg):hover::after { opacity: 1; }
+}
+
+/* ---------- se para lo que no se ve (la página oculta, lo que queda fuera de la pantalla y la cabecera tapada por la
+   cuenta atrás) y, con «reducir movimiento», todo quieto ---------- */
+:where(html[data-tema="sunset"].atardecer-quieto) :is(.sup, .carga, #limite, .sup-liga)::before,
+:where(html[data-tema="sunset"].atardecer-quieto) :is(.sup, .carga, #limite, .sup-liga)::after,
+:where(html[data-tema="sunset"]) .atardecer-fuera::before, :where(html[data-tema="sunset"]) .atardecer-fuera::after,
+:where(html[data-tema="sunset"]) body.limitado :is(.sup, .sup-liga)::before, :where(html[data-tema="sunset"]) body.limitado :is(.sup, .sup-liga)::after,
+:where(html[data-tema="sunset"]) .atardecer-fuera .sup-liga::before, :where(html[data-tema="sunset"]) .atardecer-fuera .sup-liga::after,
+.atardecer-quieto .atardecer-cuadricula::before { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  :where(html[data-tema="sunset"]) :is(.sup, .carga, #limite, .carga-in, .lim-in, .sup-liga, .titulo, .btn, .nav-in)::before,
+  :where(html[data-tema="sunset"]) :is(.sup, .carga, #limite, .carga-in, .lim-in, .sup-liga, .btn, .nav-in)::after,
+  :where(html[data-tema="sunset"]) :is(.fase-n, .pnz-sec .n, .atardecer-cambia),
+  .atardecer-cuadricula::before, .atardecer-titila { animation: none !important; transition: none !important; }
+  :where(html[data-tema="sunset"]) .btn::after { content: none; }
+}
