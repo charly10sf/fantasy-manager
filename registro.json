@@ -3560,7 +3560,8 @@
    "SPORT|136233790": 1794497100000,
    "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794503305000,
    "SPORT|136382347": 1794500847000,
-   "SPORT|136383251": 1794501918000
+   "SPORT|136383251": 1794501918000,
+   "SPORT|136382650": 1794505061000
   },
   "hechos": [
    {
@@ -3582,7 +3583,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
   "espera": {}
@@ -3590,17 +3591,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 54,
+   "clasificar": 55,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 252219,
-  "salida": 32883,
+  "entrada": 253949,
+  "salida": 32969,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.371827,
+  "dolares": 0.372043,
   "reservado": 0
  },
  "recientes": {
@@ -7699,13 +7700,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1863,
+   "ok": 1864,
    "fallos": 0,
-   "ejecuciones": 1405,
+   "ejecuciones": 1406,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T18:36:13.486Z"
+   "ultima": "2026-11-12T18:41:14.521Z"
   }
  },
  "ptsDirecto": {},
@@ -7722,15 +7723,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:36:16.892Z"
+   "ultimaBien": "2026-11-12T18:41:20.391Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:36:16.892Z"
+   "ultimaBien": "2026-11-12T18:41:20.391Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:36:16.892Z"
+   "ultimaBien": "2026-11-12T18:41:20.391Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7738,11 +7739,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:36:16.892Z"
+   "ultimaBien": "2026-11-12T18:41:20.391Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:36:16.892Z"
+   "ultimaBien": "2026-11-12T18:41:20.391Z"
   }
  },
  "avisos": [
