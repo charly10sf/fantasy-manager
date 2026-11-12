@@ -124,7 +124,11 @@ async function porWorker(metodo, url, cabeceras, cuerpo, tiempo) {
     proxy.usos++;
     const r = await porProxy(PROXY2, metodo, url, cabeceras, cuerpo, tiempo);
     // si tampoco llega a Deno, se prueba el Worker por si ya se ha acabado el corte
-    return r.sinServidor ? porProxy(WORKER, metodo, url, cabeceras, cuerpo, tiempo) : r;
+    if (!r.sinServidor) return r;
+    // Deno no está: si el Worker contesta, deja de darse por caído y lo siguiente va directo a él
+    const w = await porProxy(WORKER, metodo, url, cabeceras, cuerpo, tiempo);
+    if (!w.sinServidor) { try { localStorage.removeItem('fm-worker-caido'); } catch (e) { /* nada */ } }
+    return w;
   }
   if (!PROXY2) return porProxy(WORKER, metodo, url, cabeceras, cuerpo, tiempo);
   // con los dos: el Worker primero; si a los 7 s no ha contestado y su raíz tampoco (no es que LaLiga vaya lenta, es que
@@ -169,7 +173,9 @@ async function porProxy(base, metodo, url, cabeceras, cuerpo, tiempo, alContesta
     if (alContestar) alContestar();
     const b = await r.text();
     const s = +(r.headers.get('x-s') || 0);
-    if (!r.ok) return { s: 0, e: `el servidor de la web responde ${r.status}` };
+    // un error del propio intermediario (no del sitio de destino, que viene en x-s): Deno suspendido por pasarse de uso
+    // (503 USAGE_EXCEEDED, 12 nov), el Worker sin cuota… Cuenta como no haber llegado, para que se pruebe el otro
+    if (!r.ok) return { s: 0, e: `el servidor de la web responde ${r.status}`, sinServidor: true };
     if (!s) return { s: 0, e: b || 'sin respuesta' };
     return { s, b, t: r.headers.get('x-t') || '' };
   } catch (e) {
