@@ -2116,7 +2116,8 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/manolo-lama-analiza-mensaje-enfadado-luis-fuente-sobre-lamine-yamal-directo-corazon-toda-prensa-mamadora-movimiento-20261112_3473377.html": 1794484080000,
    "SPORT|136362137": 1794482672000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000,
-   "SPORT|136368075": 1794483010000
+   "SPORT|136368075": 1794483010000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/morante-eleva-once-bajas-betis_0_2008480239.html": 1794487537000
   },
   "hechos": [
    {
@@ -2533,7 +2534,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -3378,9 +3379,7 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229164000,
    "SPORT|136251680": 1794230182000,
-   "SPORT|136241690": 1794229204000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-industrias-carnicas-registra-seguimiento-90-primera-jornada-ugt-fica-20261109162232.html": 1794237752000,
    "SPORT|136257629": 1794236411000,
    "SPORT|136243267": 1794238864000,
@@ -3539,17 +3538,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 7,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 171318,
-  "salida": 21313,
+  "entrada": 173289,
+  "salida": 22425,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.260135,
+  "dolares": 0.260888,
   "reservado": 0
  },
  "recientes": {
@@ -7654,13 +7653,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1795,
+   "ok": 1796,
    "fallos": 0,
-   "ejecuciones": 1337,
+   "ejecuciones": 1338,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T12:56:13.487Z"
+   "ultima": "2026-11-12T13:01:12.234Z"
   }
  },
  "ptsDirecto": {},
@@ -7677,15 +7676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:56:17.303Z"
+   "ultimaBien": "2026-11-12T13:01:20.893Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:56:17.303Z"
+   "ultimaBien": "2026-11-12T13:01:20.893Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:56:17.303Z"
+   "ultimaBien": "2026-11-12T13:01:20.893Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7693,11 +7692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:56:17.303Z"
+   "ultimaBien": "2026-11-12T13:01:20.893Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T12:56:17.303Z"
+   "ultimaBien": "2026-11-12T13:01:20.893Z"
   }
  },
  "avisos": [
