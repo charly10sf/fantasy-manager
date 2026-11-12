@@ -2117,7 +2117,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261112/1004250223/sevilla-entrena-internacionales-fofana-isaac-guridi.html": 1794486338000,
    "SPORT|136368075": 1794483010000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/morante-eleva-once-bajas-betis_0_2008480239.html": 1794487537000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-no-entrenando-vive-peores-momentos-vida-considere-oportuno-dira-vuelve-no-20261112_3473848.html": 1794489006000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/owono-no-entrenando-vive-peores-momentos-vida-considere-oportuno-dira-vuelve-no-20261112_3473848.html": 1794489006000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261112/1004250234/evidentemente-jesus-owono-tocado.html": 1794488514000
   },
   "hechos": [
    {
@@ -2534,7 +2535,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -3538,17 +3539,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 36,
+   "clasificar": 37,
    "redactar": 7,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 175356,
-  "salida": 22828,
+  "entrada": 177364,
+  "salida": 23149,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.261296,
+  "dolares": 0.261657,
   "reservado": 0
  },
  "recientes": {
@@ -7653,13 +7654,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1801,
+   "ok": 1802,
    "fallos": 0,
-   "ejecuciones": 1343,
+   "ejecuciones": 1344,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T13:26:15.083Z"
+   "ultima": "2026-11-12T13:31:18.550Z"
   }
  },
  "ptsDirecto": {},
@@ -7676,15 +7677,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:26:20.373Z"
+   "ultimaBien": "2026-11-12T13:31:25.808Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:26:20.373Z"
+   "ultimaBien": "2026-11-12T13:31:25.808Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:26:20.373Z"
+   "ultimaBien": "2026-11-12T13:31:25.808Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7692,11 +7693,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:26:20.373Z"
+   "ultimaBien": "2026-11-12T13:31:25.808Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:26:20.373Z"
+   "ultimaBien": "2026-11-12T13:31:25.808Z"
   }
  },
  "avisos": [
