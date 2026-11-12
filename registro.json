@@ -3290,7 +3290,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/09/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794210480000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-habilita-canal-atencion-resolver-incidencias-huelga-general-20261109111108.html": 1794219068000,
    "SPORT|136233790": 1794218790000,
@@ -7569,13 +7568,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1732,
+   "ok": 1733,
    "fallos": 0,
-   "ejecuciones": 1274,
+   "ejecuciones": 1275,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T07:46:16.105Z"
+   "ultima": "2026-11-12T07:51:14.023Z"
   }
  },
  "ptsDirecto": {},
@@ -7592,15 +7591,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:46:24.333Z"
+   "ultimaBien": "2026-11-12T07:51:17.490Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:46:24.333Z"
+   "ultimaBien": "2026-11-12T07:51:17.490Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:46:24.333Z"
+   "ultimaBien": "2026-11-12T07:51:17.490Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7608,11 +7607,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:46:24.333Z"
+   "ultimaBien": "2026-11-12T07:51:17.490Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:46:24.333Z"
+   "ultimaBien": "2026-11-12T07:51:17.490Z"
   }
  },
  "avisos": [
