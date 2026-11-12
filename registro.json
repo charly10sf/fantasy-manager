@@ -1873,7 +1873,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-seleccion-espana-republica-checa_0_2008459539.html": 1794252831000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/homenaje-seleccion-espanola-jesus-miguel_0_2008459621.html": 1794253239000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/09/konate-mbappe-ganar-balon-oro-duro-dia-siguiente-tope.html": 1794257865000,
@@ -3558,7 +3557,9 @@
    "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794503305000,
    "SPORT|136382347": 1794500847000,
    "SPORT|136383251": 1794501918000,
-   "SPORT|136382650": 1794505061000
+   "SPORT|136382650": 1794505061000,
+   "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510667000,
+   "SPORT|136385497": 1794507196000
   },
   "hechos": [
    {
@@ -3580,28 +3581,25 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136385497": 1794510972811,
-   "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510972811
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 57,
+   "clasificar": 58,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 258087,
-  "salida": 33926,
+  "entrada": 259979,
+  "salida": 34851,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.372935,
+  "dolares": 0.373587,
   "reservado": 0
  },
  "recientes": {
@@ -3827,11 +3825,6 @@
   ]
  },
  "puntosPartido": {
-  "12|119": {
-   "h": "df83753cdeb3",
-   "desde": 1794166577985,
-   "fin": 1794166279464
-  },
   "12|120": {
    "h": "d4a4829b0118",
    "desde": 1794176476894,
@@ -7695,13 +7688,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1874,
+   "ok": 1875,
    "fallos": 0,
-   "ejecuciones": 1416,
+   "ejecuciones": 1417,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T19:31:11.793Z"
+   "ultima": "2026-11-12T19:36:13.546Z"
   }
  },
  "ptsDirecto": {},
@@ -7718,15 +7711,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:31:16.466Z"
+   "ultimaBien": "2026-11-12T19:36:21.180Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:31:16.466Z"
+   "ultimaBien": "2026-11-12T19:36:21.180Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:31:16.466Z"
+   "ultimaBien": "2026-11-12T19:36:21.180Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7734,11 +7727,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:31:16.466Z"
+   "ultimaBien": "2026-11-12T19:36:21.180Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T19:31:16.466Z"
+   "ultimaBien": "2026-11-12T19:36:21.180Z"
   }
  },
  "avisos": [
