@@ -2129,7 +2129,8 @@
    "SPORT|136384919": 1794505413000,
    "ABC|https://www.abc.es/deportes/futbol/ver-gratis-television-online-espana-hoy-republica-checa-nations-league-20261112050000-nt.html": 1794509228000,
    "SPORT|136386826": 1794509158000,
-   "SPORT|136387136": 1794508997000
+   "SPORT|136387136": 1794508997000,
+   "SPORT|136387891": 1794511866000
   },
   "hechos": [
    {
@@ -2582,7 +2583,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 48
+   "n": 49
   },
   "desde": {
    "67": {
@@ -3559,7 +3560,8 @@
    "SPORT|136382650": 1794505061000,
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510667000,
    "SPORT|136385497": 1794507196000,
-   "SPORT|136387136": 1794508997000
+   "SPORT|136387136": 1794508997000,
+   "SPORT|136388353": 1794511706000
   },
   "hechos": [
    {
@@ -3581,7 +3583,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 12,
+   "n": 13,
    "fallos": 0
   },
   "espera": {}
@@ -3589,17 +3591,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 60,
+   "clasificar": 62,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 264040,
-  "salida": 35134,
+  "entrada": 267900,
+  "salida": 35743,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.374134,
+  "dolares": 0.374824,
   "reservado": 0
  },
  "recientes": {
@@ -4079,7 +4081,8 @@
    "5868122",
    "5868121",
    "6386040",
-   "6386084"
+   "6386084",
+   "6386083"
   ],
   "equipos": [
    "9866",
@@ -4110,7 +4113,7 @@
     "e": "Anaitasuna FT",
     "g": {
      "copa": [
-      1,
+      2,
       0,
       0,
       0,
@@ -5444,6 +5447,13 @@
       0,
       0,
       1
+     ],
+     "copa": [
+      1,
+      0,
+      0,
+      1,
+      0
      ]
     }
    },
@@ -6394,6 +6404,19 @@
     "e": "Espanyol",
     "g": {
      "liga": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1302821": {
+    "n": "Petar Ratkov",
+    "e": "Levante",
+    "g": {
+     "copa": [
       1,
       0,
       0,
@@ -7688,13 +7711,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1886,
+   "ok": 1888,
    "fallos": 0,
-   "ejecuciones": 1428,
+   "ejecuciones": 1429,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T20:31:12.433Z"
+   "ultima": "2026-11-12T20:36:13.174Z"
   }
  },
  "ptsDirecto": {},
@@ -7711,15 +7734,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:31:14.766Z"
+   "ultimaBien": "2026-11-12T20:36:22.816Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:31:14.766Z"
+   "ultimaBien": "2026-11-12T20:36:22.816Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:31:14.766Z"
+   "ultimaBien": "2026-11-12T20:36:22.816Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7727,11 +7750,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:31:14.766Z"
+   "ultimaBien": "2026-11-12T20:36:22.816Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:31:14.766Z"
+   "ultimaBien": "2026-11-12T20:36:22.816Z"
   }
  },
  "avisos": [
