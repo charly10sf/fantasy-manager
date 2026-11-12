@@ -3556,7 +3556,8 @@
    "fallos": 0
   },
   "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-republica-checa-espana-5a-jornada-nations-league-12-20261112_3474154.html": 1794520272998
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-republica-checa-espana-5a-jornada-nations-league-12-20261112_3474154.html": 1794520272998,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/maldini-triunfo-gran-brillo-espana-partidos-epocas-no-ganaba-nunca-20261112_3474231.html": 1794521180467
   }
  },
  "ia": {
@@ -7697,13 +7698,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1907,
+   "ok": 1908,
    "fallos": 0,
-   "ejecuciones": 1447,
+   "ejecuciones": 1448,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T22:01:24.249Z"
+   "ultima": "2026-11-12T22:06:20.467Z"
   }
  },
  "ptsDirecto": {},
@@ -7720,15 +7721,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:01:28.066Z"
+   "ultimaBien": "2026-11-12T22:06:23.467Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:01:28.066Z"
+   "ultimaBien": "2026-11-12T22:06:23.467Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:01:28.066Z"
+   "ultimaBien": "2026-11-12T22:06:23.467Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7736,7 +7737,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:01:28.066Z"
+   "ultimaBien": "2026-11-12T22:06:23.467Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
