@@ -27,7 +27,7 @@
       var quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
       function poner(si) {
         if (si) html.setAttribute('data-tema', t.id); else html.removeAttribute('data-tema');
-        if (meta) meta.content = si ? '#0A0714' : color;
+        if (meta) meta.content = si ? '#1D012D' : color;
       }
       function clase(c, ms) { html.classList.add(c); clearTimeout(clase[c]); clase[c] = setTimeout(function () { html.classList.remove(c); }, ms); }
       poner(true);
