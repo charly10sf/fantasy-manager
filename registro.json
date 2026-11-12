@@ -1873,10 +1873,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261109/1004249169/premier-league.html": 1794248219000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotivo-homenaje-seleccion-espanola-jesus-miguel-rozas-20261109_3471751.html": 1794249704000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gran-duda-manolo-lama-once-ideal-mundo-fifpro-me-gusta-20261109_3471749.html": 1794250042000,
-   "SPORT|136256607": 1794248338000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-seleccion-espana-republica-checa_0_2008459539.html": 1794252831000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/homenaje-seleccion-espanola-jesus-miguel_0_2008459621.html": 1794253239000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004249201/cronica-atletico-badalona-women.html": 1794254215000,
@@ -3561,7 +3559,8 @@
    "SPORT|136370681": 1794485522000,
    "SPORT|136233790": 1794497100000,
    "Europa Press|https://www.europapress.es/asturias/noticia-juez-gijon-ordena-suspender-actividad-nucleo-nacional-clausurar-locales-bloquear-cuentas-20261112180825.html": 1794503305000,
-   "SPORT|136382347": 1794500847000
+   "SPORT|136382347": 1794500847000,
+   "SPORT|136383251": 1794501918000
   },
   "hechos": [
    {
@@ -3583,27 +3582,25 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136383251": 1794506173759
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 53,
+   "clasificar": 54,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 250466,
-  "salida": 32718,
+  "entrada": 252219,
+  "salida": 32883,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.371569,
+  "dolares": 0.371827,
   "reservado": 0
  },
  "recientes": {
@@ -7702,13 +7699,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1859,
+   "ok": 1860,
    "fallos": 0,
-   "ejecuciones": 1401,
+   "ejecuciones": 1402,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T18:16:13.490Z"
+   "ultima": "2026-11-12T18:21:15.127Z"
   }
  },
  "ptsDirecto": {},
@@ -7725,15 +7722,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:16:18.415Z"
+   "ultimaBien": "2026-11-12T18:21:23.033Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:16:18.415Z"
+   "ultimaBien": "2026-11-12T18:21:23.033Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:16:18.415Z"
+   "ultimaBien": "2026-11-12T18:21:23.033Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7741,11 +7738,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:16:18.415Z"
+   "ultimaBien": "2026-11-12T18:21:23.033Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:16:18.415Z"
+   "ultimaBien": "2026-11-12T18:21:23.033Z"
   }
  },
  "avisos": [
