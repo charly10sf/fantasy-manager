@@ -1855,10 +1855,7 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249041/marc-roca-rumbo-primera-cita-espana-betis-no-limite.html": 1794226163000,
    "AS|https://as.com/futbol/primera/un-deportivo-de-presente-y-de-mucho-mas-futuro-f202611-n/": 1794227206000,
    "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000,
-   "SPORT|136248722": 1794225294000,
-   "SPORT|136249887": 1794225247000,
    "AS|https://as.com/futbol/cuatro-internacionales-se-marchan-con-sus-selecciones-f202611-n/": 1794228363000,
-   "SPORT|136250143": 1794225334000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/lamine-yamal-oyarzabal-pierden-partido-praga-victor-munoz-seleccion_0_2008456929.html": 1794229502000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/manolo-herrero-alerta-de-la-dificultad-del-mijas-las-lagunas-y-pide-la-mejor-version-del-real-jaen-radio-jaen/": 1794231263000,
    "SPORT|136228021": 1794228611000,
@@ -3336,7 +3333,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-defiende-atletico-madrid-resta-importancia-derrotas-bayern-barcelona-son-dos-cinco-mejores-equipos-europa-20261109_3471055.html": 1794225339000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229164000,
    "SPORT|136251680": 1794230182000,
    "SPORT|136241690": 1794229204000,
@@ -7613,13 +7609,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1781,
+   "ok": 1782,
    "fallos": 0,
-   "ejecuciones": 1323,
+   "ejecuciones": 1324,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T11:51:14.069Z"
+   "ultima": "2026-11-12T11:56:12.435Z"
   }
  },
  "ptsDirecto": {},
@@ -7636,15 +7632,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:51:20.327Z"
+   "ultimaBien": "2026-11-12T11:56:15.251Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:51:20.327Z"
+   "ultimaBien": "2026-11-12T11:56:15.251Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:51:20.327Z"
+   "ultimaBien": "2026-11-12T11:56:15.251Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7652,11 +7648,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:51:20.327Z"
+   "ultimaBien": "2026-11-12T11:56:15.251Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:51:20.327Z"
+   "ultimaBien": "2026-11-12T11:56:15.251Z"
   }
  },
  "avisos": [
