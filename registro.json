@@ -977,6 +977,13 @@
    "jornada": 13,
    "id": "2120873350096453841",
    "t": "2026-11-12T13:36:25.633Z"
+  },
+  {
+   "clave": "noticias|2617:mala|2026-11-12",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2120885933910196377",
+   "t": "2026-11-12T14:26:25.846Z"
   }
  ],
  "estados": {
@@ -3571,16 +3578,16 @@
   "dia": "2026-11-12",
   "llamadas": {
    "clasificar": 40,
-   "redactar": 9,
-   "revisar": 7,
+   "redactar": 10,
+   "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 209786,
-  "salida": 25796,
+  "entrada": 224393,
+  "salida": 26013,
   "cacheLee": 5806,
-  "cacheEscribe": 14515,
-  "dolares": 0.326965,
+  "cacheEscribe": 17418,
+  "dolares": 0.365607,
   "reservado": 0
  },
  "recientes": {
@@ -3696,10 +3703,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-10T10:56:34.685Z",
-    "texto": "⁉️ Federico Valverde sigue con molestias físicas pese a su regreso, cuentan Mundo Deportivo y SPORT.\n\nHa subido 29 M en el último mes y ya vale 71 M, así que es un jugador que mueve el mercado. Si lo tienes, no hay prisa: la jornada 13 es tras el parón, el sábado 21 en el Santiago Bernabéu, y no hay plazo para saber si llega bien.\n\nEl Celta encaja muy poco, y para un centrocampista como Valverde eso no es buena noticia."
-   },
-   {
     "t": "2026-11-11T06:01:41.331Z",
     "texto": "⁉️ Tchouaméni vuelve al Real Madrid ⚪ con molestias en la ingle derecha y se pierde los partidos con su selección, según AS y Mundo Deportivo.\n\nHa subido 14,9 M en el último mes y ya vale 36,4 M. Con un 44 % de titularidad, no tiene el puesto asegurado. La jornada 13 es el sábado 21 ante el Celta en el Bernabéu, y sin plazo de recuperación no se puede saber si llega bien.\n\nEl Celta encaja poco, y a un centrocampista eso no le ayuda."
    },
@@ -3714,6 +3717,10 @@
    {
     "t": "2026-11-12T12:36:26.694Z",
     "texto": "⁉️ Fofana no se ejercita con el grupo por problemas físicos, según Mundo Deportivo y Diario de Sevilla.\n\nEl centrocampista del Sevilla vale 40,2 M y ha ganado 13,4 M en el último mes, así que su caso mueve el mercado. Si lo tienes, no hay prisa: el Betis, que va 4º, llega el sábado 21 de noviembre, tras el parón, y sin plazo no se sabe si llega bien."
+   },
+   {
+    "t": "2026-11-12T14:26:25.848Z",
+    "texto": "⁉️ Sadiq no se ha ejercitado con el grupo por un golpe en la articulación de la rodilla, según AS y Mundo Deportivo.\n\nEl delantero del Valencia 🦇 va a 4,2 puntos de media y, de momento, no hay plazo para saber si llega bien. Con la liga parada, el Rayo ⚡ no le toca hasta el sábado 21 de noviembre en Vallecas, así que hay margen. Si ese día es titular, el partido le viene bien: el Rayo es de los que más goles encajan."
    }
   ],
   "directo": [
@@ -7689,13 +7696,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1812,
+   "ok": 1813,
    "fallos": 0,
-   "ejecuciones": 1354,
+   "ejecuciones": 1355,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T14:21:13.125Z"
+   "ultima": "2026-11-12T14:26:13.284Z"
   }
  },
  "ptsDirecto": {},
@@ -7712,15 +7719,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:21:17.736Z"
+   "ultimaBien": "2026-11-12T14:26:25.877Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:21:17.736Z"
+   "ultimaBien": "2026-11-12T14:26:25.877Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:21:17.736Z"
+   "ultimaBien": "2026-11-12T14:26:25.877Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7728,11 +7735,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:21:17.736Z"
+   "ultimaBien": "2026-11-12T14:26:25.877Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:21:17.736Z"
+   "ultimaBien": "2026-11-12T14:26:25.877Z"
   }
  },
  "avisos": [
