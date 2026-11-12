@@ -1873,7 +1873,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/09/konate-mbappe-ganar-balon-oro-duro-dia-siguiente-tope.html": 1794257865000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/09/espana/00031794259204939368288.htm": 1794259980000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249228/dani-olmo-podra-villarreal.html": 1794290400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249292/capello-pone-lamine-espejo-yildiz.html": 1794266284000,
@@ -1881,7 +1880,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261109/1004249225/valverde-enciende-alarmas-llegada-uruguay-no-100.html": 1794260000000,
    "SPORT|136261924": 1794285057000,
    "SPORT|136267796": 1794259789000,
-   "SPORT|136267557": 1794257919000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/entrevistas-de-juanma-castano/noticias/entrevista-juanma-castano-cucurella-partidazo-cope-09-20261109_3471802.html": 1794267626000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/2a-parte-09-nov-2026-partidazo-cope-20261110_3471813.html": 1794267913000,
    "SPORT|136269986": 1794286763000,
@@ -2130,7 +2128,8 @@
    "ABC|https://www.abc.es/deportes/futbol/ver-gratis-television-online-espana-hoy-republica-checa-nations-league-20261112050000-nt.html": 1794509228000,
    "SPORT|136386826": 1794509158000,
    "SPORT|136387136": 1794508997000,
-   "SPORT|136387891": 1794511866000
+   "SPORT|136387891": 1794511866000,
+   "SPORT|136384002": 1794513351000
   },
   "hechos": [
    {
@@ -2583,7 +2582,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 49
+   "n": 50
   },
   "desde": {
    "67": {
@@ -3591,17 +3590,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 62,
+   "clasificar": 63,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 267900,
-  "salida": 35743,
+  "entrada": 269945,
+  "salida": 36217,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.374824,
+  "dolares": 0.375266,
   "reservado": 0
  },
  "recientes": {
@@ -7732,13 +7731,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1894,
+   "ok": 1895,
    "fallos": 0,
-   "ejecuciones": 1434,
+   "ejecuciones": 1435,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T20:56:14.552Z"
+   "ultima": "2026-11-12T21:01:17.525Z"
   }
  },
  "ptsDirecto": {},
@@ -7755,15 +7754,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:56:19.581Z"
+   "ultimaBien": "2026-11-12T21:01:25.057Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:56:19.581Z"
+   "ultimaBien": "2026-11-12T21:01:25.057Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:56:19.581Z"
+   "ultimaBien": "2026-11-12T21:01:25.057Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7771,11 +7770,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:56:19.581Z"
+   "ultimaBien": "2026-11-12T21:01:25.057Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:56:19.581Z"
+   "ultimaBien": "2026-11-12T21:01:25.057Z"
   }
  },
  "avisos": [
