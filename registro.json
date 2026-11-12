@@ -1863,17 +1863,9 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [
-  {
-   "id": "2336",
-   "que": "vuelve",
-   "antes": "injured",
-   "t": 1794490571834
-  }
- ],
+ "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261109/1004249073/raul.html": 1794231423000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/valles-marc-roca-concentrados-seleccion_0_2008457309.html": 1794232278000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004249096/agenda-11-internacionales-primer-equipo-barca.html": 1794235042000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/mensaje-antony-aficionados-betis-peor-momento-elche_0_2008457741.html": 1794235886000,
@@ -3546,7 +3538,8 @@
    "fallos": 0
   },
   "espera": {
-   "SPORT|136370681": 1794489678919
+   "SPORT|136370681": 1794489678919,
+   "SPORT|136371700": 1794490874221
   }
  },
  "ia": {
@@ -7671,13 +7664,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1803,
+   "ok": 1804,
    "fallos": 0,
-   "ejecuciones": 1345,
+   "ejecuciones": 1346,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T13:36:11.834Z"
+   "ultima": "2026-11-12T13:41:14.221Z"
   }
  },
  "ptsDirecto": {},
@@ -7694,15 +7687,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:36:25.721Z"
+   "ultimaBien": "2026-11-12T13:41:19.023Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:36:25.721Z"
+   "ultimaBien": "2026-11-12T13:41:19.023Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:36:25.721Z"
+   "ultimaBien": "2026-11-12T13:41:19.023Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7710,11 +7703,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:36:25.721Z"
+   "ultimaBien": "2026-11-12T13:41:19.023Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T13:36:25.721Z"
+   "ultimaBien": "2026-11-12T13:41:19.023Z"
   }
  },
  "avisos": [
