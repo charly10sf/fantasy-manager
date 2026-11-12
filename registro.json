@@ -1853,7 +1853,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261109/1004248967/mbappe-hereda-balon-playa-vinicius.html": 1794222000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248970/rodri-pedri-cogio-mando-grande.html": 1794220890000,
    "AS|https://as.com/futbol/primera/psicosis-con-raphinha-tres-viajes-con-brasil-en-2026-tres-lesiones-f202611-n/": 1794222470000,
    "AS|https://as.com/futbol/primera/gimenez-comandante-en-jefe-del-depor-f202611-n/": 1794222096000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/09/lamine-yamal-y-oyarzabal-retrasan-su-incorporacion-a-la-concentracion-de-la-seleccion-en-madrid-cadena-ser/": 1794222823000,
@@ -2119,7 +2118,8 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/11-nov-2026-partidazo-cope-20261112_3473384.html": 1794444600000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-laporte-quedan-jugar-praga-20261112_3473577.html": 1794477873000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/20261112/11682301/seleccion-espanola-futbol-nations-league-republica-checa-lista-convocados-tres-descartes-laporte-nico-williams-valles-nuevo-diez-victor-munoz-fuente.html": 1794476843000,
-   "SPORT|136324306": 1794475127000
+   "SPORT|136324306": 1794475127000,
+   "El Correo|https://www.elcorreo.com/athletic/vivian-rincon-caen-convocatoria-euskal-selekzioa-amistoso-20261112113833-nt.html": 1794479913000
   },
   "hechos": [
    {
@@ -2473,7 +2473,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -3481,17 +3481,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 133801,
-  "salida": 12747,
+  "entrada": 135721,
+  "salida": 13446,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.215655,
+  "dolares": 0.216197,
   "reservado": 0
  },
  "recientes": {
@@ -7596,13 +7596,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1767,
+   "ok": 1768,
    "fallos": 0,
-   "ejecuciones": 1309,
+   "ejecuciones": 1310,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T10:41:13.595Z"
+   "ultima": "2026-11-12T10:46:11.567Z"
   }
  },
  "ptsDirecto": {},
@@ -7619,15 +7619,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:41:17.619Z"
+   "ultimaBien": "2026-11-12T10:46:19.175Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:41:17.619Z"
+   "ultimaBien": "2026-11-12T10:46:19.175Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:41:17.619Z"
+   "ultimaBien": "2026-11-12T10:46:19.175Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7635,11 +7635,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:41:17.619Z"
+   "ultimaBien": "2026-11-12T10:46:19.175Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:41:17.619Z"
+   "ultimaBien": "2026-11-12T10:46:19.175Z"
   }
  },
  "avisos": [
