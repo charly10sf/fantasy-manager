@@ -3469,7 +3469,7 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-bolanos-descarta-cese-marlaska-cargas-11n-admite-hay-imagenes-no-gustado-20261112092235.html": 1794472574915
+   "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-ordena-director-policia-abrir-investigacion-cargas-policiales-huelga-20261112095525.html": 1794473772969
   }
  },
  "ia": {
@@ -7590,13 +7590,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1745,
+   "ok": 1746,
    "fallos": 0,
-   "ejecuciones": 1287,
+   "ejecuciones": 1288,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T08:51:12.402Z"
+   "ultima": "2026-11-12T08:56:12.969Z"
   }
  },
  "ptsDirecto": {},
@@ -7613,15 +7613,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:51:17.495Z"
+   "ultimaBien": "2026-11-12T08:56:16.652Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:51:17.495Z"
+   "ultimaBien": "2026-11-12T08:56:16.652Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:51:17.495Z"
+   "ultimaBien": "2026-11-12T08:56:16.652Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7629,11 +7629,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:51:17.495Z"
+   "ultimaBien": "2026-11-12T08:56:16.652Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:51:17.495Z"
+   "ultimaBien": "2026-11-12T08:56:16.652Z"
   }
  },
  "avisos": [
