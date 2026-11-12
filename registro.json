@@ -3448,7 +3448,7 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-decretos-vivienda-afrontan-examen-definitivo-congreso-dia-despues-huelga-20261111123833.html": 1794468073499
+   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468972456
   }
  },
  "ia": {
@@ -7569,13 +7569,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1729,
+   "ok": 1730,
    "fallos": 0,
-   "ejecuciones": 1271,
+   "ejecuciones": 1272,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T07:31:11.686Z"
+   "ultima": "2026-11-12T07:36:12.456Z"
   }
  },
  "ptsDirecto": {},
@@ -7592,15 +7592,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:31:16.406Z"
+   "ultimaBien": "2026-11-12T07:36:15.319Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:31:16.406Z"
+   "ultimaBien": "2026-11-12T07:36:15.319Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:31:16.406Z"
+   "ultimaBien": "2026-11-12T07:36:15.319Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7608,11 +7608,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:31:16.406Z"
+   "ultimaBien": "2026-11-12T07:36:15.319Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T07:31:16.406Z"
+   "ultimaBien": "2026-11-12T07:36:15.319Z"
   }
  },
  "avisos": [
