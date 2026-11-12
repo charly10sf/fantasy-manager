@@ -956,6 +956,13 @@
    "jornada": 12,
    "id": "2120758980243018167",
    "t": "2026-11-12T06:01:57.713Z"
+  },
+  {
+   "clave": "noticias|3104:mala|2026-11-12",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2120797925966221334",
+   "t": "2026-11-12T08:36:43.049Z"
   }
  ],
  "estados": {
@@ -2104,7 +2111,8 @@
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/12/pepe-mel-despierta-sufrir-ictus-136354696.html": 1794469290000,
    "SPORT|136355241": 1794466870000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/12/pepe-mel-despierta-y-gana-el-partido-de-su-vida-ser-almeria/": 1794471197000,
-   "SPORT|136355809": 1794468075000
+   "SPORT|136355809": 1794468075000,
+   "SPORT|136355257": 1794468488000
   },
   "hechos": [
    {
@@ -2441,11 +2449,24 @@
     "motivo": "",
     "plazo": "fuera hasta nuevo aviso",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136355257",
+    "medio": "SPORT",
+    "t": 1794468488000,
+    "id": "3104",
+    "que": "molestias",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Lamine Yamal tiene molestias en la rodilla derecha y no viaja con España",
+    "motivo": "molestias en la rodilla derecha",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -3447,22 +3468,24 @@
    "n": 3,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/nacional/noticia-bolanos-descarta-cese-marlaska-cargas-11n-admite-hay-imagenes-no-gustado-20261112092235.html": 1794472574915
+  }
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 10,
-   "redactar": 3,
-   "revisar": 2,
+   "clasificar": 11,
+   "redactar": 6,
+   "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 61441,
-  "salida": 5787,
-  "cacheLee": 0,
-  "cacheEscribe": 5806,
-  "dolares": 0.099799,
+  "entrada": 108107,
+  "salida": 7242,
+  "cacheLee": 5806,
+  "cacheEscribe": 8709,
+  "dolares": 0.210332,
   "reservado": 0
  },
  "recientes": {
@@ -3578,10 +3601,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-07T09:31:34.045Z",
-    "texto": "✅ Mundo Deportivo cuenta que De Galarreta vuelve a la convocatoria del Athletic para el partido de hoy en El Sadar.\n\nEl Osasuna es de los que más goles encajan, y eso le viene bien a un centrocampista. Aun así, Fantasy Manager le da un 30 % de titularidad: no es un fijo, así que mejor esperar a los onces antes de tocar nada."
-   },
-   {
     "t": "2026-11-09T21:36:37.279Z",
     "texto": "⁉️ Lamine Yamal se recupera en Barcelona de unas molestias en la rodilla derecha, según La Voz de Galicia.\n\nTiene 10 goles y 8 asistencias en la liga, así que merece la pena seguirle de cerca. Con un 58 % de titularidad en Fantasy Manager, lo normal es que salga contra el Villarreal 🚢, que va 8º. Si lo tienes, mejor esperar a los onces."
    },
@@ -3596,6 +3615,10 @@
    {
     "t": "2026-11-11T08:01:46.615Z",
     "texto": "✅ Eric García vuelve tras su lesión y el Barça recupera una opción en defensa, según Mundo Deportivo y SPORT.\n\nEn nueve partidos ha dejado la portería a cero en tres, un dato que le da valor. Con un 65 % de titularidad, lo normal es que salga cuando se reanude la liga.\n\nEl Barça recibe al Villarreal el domingo 22 de noviembre, tras el parón."
+   },
+   {
+    "t": "2026-11-12T08:36:43.051Z",
+    "texto": "⁉️ Lamine Yamal no viaja con España por un golpe en la rodilla derecha con líquido, según Mundo Deportivo y SPORT. Se pierde los partidos con su selección.\n\nLleva 10 goles y 8 asistencias en la liga, así que conviene seguirle de cerca. El Barça recibe al Villarreal 🚢 el domingo 22 de noviembre, tras el parón, y sin plazo de recuperación no se puede saber si llega bien.\n\nUn 58 % de titularidad deja el caso a medias: más probable que juegue que lo contrario, pero sin garantías."
    }
   ],
   "directo": [
@@ -7567,13 +7590,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1741,
+   "ok": 1742,
    "fallos": 0,
-   "ejecuciones": 1283,
+   "ejecuciones": 1284,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T08:31:14.295Z"
+   "ultima": "2026-11-12T08:36:14.915Z"
   }
  },
  "ptsDirecto": {},
@@ -7590,15 +7613,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:31:19.484Z"
+   "ultimaBien": "2026-11-12T08:36:43.073Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:31:19.484Z"
+   "ultimaBien": "2026-11-12T08:36:43.073Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:31:19.484Z"
+   "ultimaBien": "2026-11-12T08:36:43.073Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7606,11 +7629,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:31:19.484Z"
+   "ultimaBien": "2026-11-12T08:36:43.073Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:31:19.484Z"
+   "ultimaBien": "2026-11-12T08:36:43.073Z"
   }
  },
  "avisos": [
