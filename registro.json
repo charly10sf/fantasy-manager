@@ -1852,7 +1852,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/el-athletic-apuesta-fuerte-por-monreal-f202611-n/": 1794216858000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248942/flick-remontando-record.html": 1794218146000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261109/1004248955/julian-alvarez-confianza-ciega-simeone-desesperacion-grada.html": 1794217554000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/09/julian-calero-oviedo-fichaje-raul-136241022.html": 1794218306000,
@@ -2119,7 +2118,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/alvaro-valles-descartado-republica-checa-elogios-de-la-fuente_0_2008478505.html": 1794473973000,
    "SPORT|136356685": 1794471018000,
    "ABC|https://www.abc.es/deportes/futbol/eli-junior-kroupi-nino-forjado-iraola-convocado-20261112100758-nt.html": 1794474612000,
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000,
+   "SPORT|136358456": 1794472225000
   },
   "hechos": [
    {
@@ -2473,7 +2473,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -3483,17 +3483,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 121092,
-  "salida": 8873,
+  "entrada": 123134,
+  "salida": 8965,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.212447,
+  "dolares": 0.212697,
   "reservado": 0
  },
  "recientes": {
@@ -7598,13 +7598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1753,
+   "ok": 1754,
    "fallos": 0,
-   "ejecuciones": 1295,
+   "ejecuciones": 1296,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T09:31:16.969Z"
+   "ultima": "2026-11-12T09:36:14.225Z"
   }
  },
  "ptsDirecto": {},
@@ -7621,15 +7621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:31:21.567Z"
+   "ultimaBien": "2026-11-12T09:36:19.581Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:31:21.567Z"
+   "ultimaBien": "2026-11-12T09:36:19.581Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:31:21.567Z"
+   "ultimaBien": "2026-11-12T09:36:19.581Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7637,11 +7637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:31:21.567Z"
+   "ultimaBien": "2026-11-12T09:36:19.581Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:31:21.567Z"
+   "ultimaBien": "2026-11-12T09:36:19.581Z"
   }
  },
  "avisos": [
