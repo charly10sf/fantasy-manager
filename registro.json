@@ -3398,7 +3398,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261109/1004249234/susto-rocafonda-calella-grupo-6.html": 1794261509000,
    "Europa Press|https://www.europapress.es/sociedad/noticia-sanchez-no-descarta-suspender-tiktok-posibles-videos-abuso-sexual-infantil-me-parece-escandalo-20261109232101.html": 1794262861000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/alaves/20261110/1004249181/alaves-vuelve-txerloia-36-anos.html": 1794290400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261110/1004249177/valencia-busca-autoestima-fiesta-tavernes.html": 1794290400000,
@@ -7698,13 +7697,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1906,
+   "ok": 1907,
    "fallos": 0,
-   "ejecuciones": 1446,
+   "ejecuciones": 1447,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T21:56:18.168Z"
+   "ultima": "2026-11-12T22:01:24.249Z"
   }
  },
  "ptsDirecto": {},
@@ -7721,15 +7720,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:56:23.796Z"
+   "ultimaBien": "2026-11-12T22:01:28.066Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:56:23.796Z"
+   "ultimaBien": "2026-11-12T22:01:28.066Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:56:23.796Z"
+   "ultimaBien": "2026-11-12T22:01:28.066Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7737,7 +7736,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:56:23.796Z"
+   "ultimaBien": "2026-11-12T22:01:28.066Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
