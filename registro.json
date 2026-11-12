@@ -1874,7 +1874,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/rcd-espanyol/20261109/1004249162/roberto-fernandez-sonrie-seleccion-espanola.html": 1794245656000,
-   "SPORT|136257166": 1794243633000,
    "SPORT|136262922": 1794244907000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/premier-league/20261109/1004249169/premier-league.html": 1794248219000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotivo-homenaje-seleccion-espanola-jesus-miguel-rozas-20261109_3471751.html": 1794249704000,
@@ -2131,7 +2130,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250267/dos-vueltas-mundo-raphinha-98-dias.html": 1794495121000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250264/trent-vuelve-casa-pra-reencontrarse.html": 1794497100000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250272/carrusel-partidos-internacionales-realistas-ventana-fifa-noviembre.html": 1794495714000,
-   "SPORT|135971655": 1794497453000
+   "SPORT|135971655": 1794497453000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250314/once-sorpresas-esperada-visita-arsenal.html": 1794502052000
   },
   "hechos": [
    {
@@ -2584,7 +2584,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -3586,17 +3586,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 234590,
-  "salida": 27844,
+  "entrada": 236595,
+  "salida": 28575,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.367543,
+  "dolares": 0.368109,
   "reservado": 0
  },
  "recientes": {
@@ -7700,13 +7700,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1843,
+   "ok": 1844,
    "fallos": 0,
-   "ejecuciones": 1385,
+   "ejecuciones": 1386,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T16:56:12.070Z"
+   "ultima": "2026-11-12T17:01:13.728Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7723,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:56:15.587Z"
+   "ultimaBien": "2026-11-12T17:01:23.031Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:56:15.587Z"
+   "ultimaBien": "2026-11-12T17:01:23.031Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:56:15.587Z"
+   "ultimaBien": "2026-11-12T17:01:23.031Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7739,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:56:15.587Z"
+   "ultimaBien": "2026-11-12T17:01:23.031Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T16:56:15.587Z"
+   "ultimaBien": "2026-11-12T17:01:23.031Z"
   }
  },
  "avisos": [
