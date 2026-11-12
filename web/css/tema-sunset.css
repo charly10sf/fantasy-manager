@@ -12,34 +12,38 @@
 
 /* ---------- piezas reutilizables ---------- */
 :root {
-  /* los tonos del arte oficial: los degradados de su web (amarillo, coral, rosa, magenta, violeta y azul) y el fondo,
-     el melocotón, el ciruela y el rosa empolvado de su imagen principal, medidos el 12 nov */
-  --atardecer-violeta: #9B89F5;
-  --atardecer-magenta: #D263E9;
-  --atardecer-rosa: #E963C7;
-  --atardecer-coral: #F4717C;
-  --atardecer-amarillo: #FFDF80;
-  --atardecer-turquesa: #89F5E3;
-  --atardecer-azul: #99CCFF;
-  /* el texto que va sobre los rellenos del degradado: el violeta casi negro del fondo (6,1:1 o más en todos sus tonos) */
-  --atardecer-tinta: #1D012D;
+  /* (13 nov, Carlos: más variedad y contraste, en la línea de la noche de Vice) los tonos de la web oficial del juego,
+     llevados a neón: violeta, magenta, rosa, naranja y amarillo para el atardecer, y turquesa y azul para la noche */
+  --atardecer-violeta: #8F6BFF;
+  --atardecer-magenta: #E02BD6;
+  --atardecer-rosa: #FF3EA5;
+  --atardecer-naranja: #FF8A3D;
+  --atardecer-amarillo: #FFD25A;
+  --atardecer-turquesa: #19E6D4;
+  --atardecer-azul: #4FB3FF;
+  /* el texto que va sobre los rellenos de color: el violeta casi negro del fondo (5,2:1 o más en todos sus tonos) */
+  --atardecer-tinta: #12001F;
   /* el degradado de atardecer, de lado (franjas largas, líneas) y de arriba abajo (franjas cortas, el sol) */
-  --atardecer-degradado: linear-gradient(90deg, #9B89F5, #D263E9 30%, #E963C7 50%, #F4717C 72%, #FFDF80);
-  --atardecer-degradado-v: linear-gradient(180deg, #FFDF80, #F4717C 34%, #E963C7 62%, #9B89F5);
-  /* la parte cálida, para rellenos con texto encima (con la tinta, de 6,5:1 en el rosa a 14,7:1 en el amarillo) */
-  --atardecer-calido: linear-gradient(100deg, #E963C7, #F4717C 50%, #FFDF80);
+  --atardecer-degradado: linear-gradient(90deg, #8F6BFF, #E02BD6 30%, #FF3EA5 52%, #FF8A3D 76%, #FFD25A);
+  --atardecer-degradado-v: linear-gradient(180deg, #FFD25A, #FF8A3D 30%, #FF3EA5 58%, #E02BD6 80%, #8F6BFF);
+  /* la noche de neón: turquesa, azul, violeta y rosa (las franjas de sección, la raya del marcador) */
+  --atardecer-noche: linear-gradient(90deg, #19E6D4, #4FB3FF 34%, #8F6BFF 66%, #FF3EA5);
+  --atardecer-noche-v: linear-gradient(180deg, #19E6D4, #4FB3FF 34%, #8F6BFF 66%, #FF3EA5);
+  /* la parte cálida, para rellenos con texto encima (con la tinta, de 6,2:1 en el rosa a 14:1 en el amarillo) */
+  --atardecer-calido: linear-gradient(100deg, #FF3EA5, #FF8A3D 55%, #FFD25A);
   /* el cielo, de noche arriba al horizonte encendido abajo */
-  --atardecer-cielo: linear-gradient(180deg, #1D012D 0%, #312B48 28%, #683758 52%, #C37A90 72%, #F6BDA8 90%, #FFDF80 100%);
+  --atardecer-cielo: linear-gradient(180deg, #12001F 0%, #1d0a3f 24%, #3a1470 44%, #8a1c9c 62%, #FF3EA5 80%, #FF8A3D 92%, #FFD25A 100%);
   /* dibujos propios (SVG en línea, menos de 2 KB cada uno) */
-  --atardecer-palmeras: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 120' fill='%2314001F'%3E%3Cg id='p'%3E%3Cpath d='M47 120c1-28 3-55 9-78l4 1c-5 23-7 50-7 77z'/%3E%3Cpath d='M58 41c-14-11-33-11-48 0 14-5 31-4 47 3zM58 41c13-13 32-15 47-6-15-2-31 2-46 9zM57 41C51 27 39 17 24 15c13 5 24 14 31 28zM58 41c3-15 13-26 27-31-11 8-19 19-25 32zM57 42c-14 2-26 11-32 25 9-11 20-18 33-21zM59 42c13 1 26 9 32 22-9-10-20-16-32-18zM57 42c-7 6-11 15-11 25 3-9 7-17 13-23zM59 42c7 5 12 13 13 22-4-8-9-15-14-20z'/%3E%3C/g%3E%3Cuse href='%23p' transform='matrix(-.78 0 0 .78 222 26)'/%3E%3Cuse href='%23p' transform='translate(98 62) scale(.48)'/%3E%3C/svg%3E");
-  --atardecer-sol: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23FFDF80'/%3E%3Cstop offset='.45' stop-color='%23F4717C'/%3E%3Cstop offset='.75' stop-color='%23E963C7'/%3E%3Cstop offset='1' stop-color='%239B89F5'/%3E%3C/linearGradient%3E%3Cmask id='m'%3E%3Crect width='100' height='100' fill='%23fff'/%3E%3Cpath d='M0 58h100v3H0zM0 68h100v4H0zM0 79h100v5H0zM0 90h100v6H0z'/%3E%3C/mask%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='url(%23g)' mask='url(%23m)'/%3E%3C/svg%3E");
-  --atardecer-coche: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40' fill='%2314001F'%3E%3Cpath d='M2 31v-5c0-3 2-5 6-5l16-3c7-1.5 12-2 18-2l8-8h4l-7 8h4c1-4 3-5 6-5s4 1 4 5h21c13 0 23 2 33 7 2 1 3 3 3 5v3h-17a10 10 0 0 0-20 0H41a10 10 0 0 0-20 0z'/%3E%3Ccircle cx='31' cy='31' r='7.5'/%3E%3Ccircle cx='90' cy='31' r='7.5'/%3E%3C/svg%3E");
+  --atardecer-palmeras: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 120' fill='%230B0014'%3E%3Cg id='p'%3E%3Cpath d='M47 120c1-28 3-55 9-78l4 1c-5 23-7 50-7 77z'/%3E%3Cpath d='M58 41c-14-11-33-11-48 0 14-5 31-4 47 3zM58 41c13-13 32-15 47-6-15-2-31 2-46 9zM57 41C51 27 39 17 24 15c13 5 24 14 31 28zM58 41c3-15 13-26 27-31-11 8-19 19-25 32zM57 42c-14 2-26 11-32 25 9-11 20-18 33-21zM59 42c13 1 26 9 32 22-9-10-20-16-32-18zM57 42c-7 6-11 15-11 25 3-9 7-17 13-23zM59 42c7 5 12 13 13 22-4-8-9-15-14-20z'/%3E%3C/g%3E%3Cuse href='%23p' transform='matrix(-.78 0 0 .78 222 26)'/%3E%3Cuse href='%23p' transform='translate(98 62) scale(.48)'/%3E%3C/svg%3E");
+  --atardecer-sol: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23FFD25A'/%3E%3Cstop offset='.4' stop-color='%23FF8A3D'/%3E%3Cstop offset='.7' stop-color='%23FF3EA5'/%3E%3Cstop offset='1' stop-color='%238F6BFF'/%3E%3C/linearGradient%3E%3Cmask id='m'%3E%3Crect width='100' height='100' fill='%23fff'/%3E%3Cpath d='M0 58h100v3H0zM0 68h100v4H0zM0 79h100v5H0zM0 90h100v6H0z'/%3E%3C/mask%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='url(%23g)' mask='url(%23m)'/%3E%3C/svg%3E");
+  --atardecer-coche: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40' fill='%230B0014'%3E%3Cpath d='M2 31v-5c0-3 2-5 6-5l16-3c7-1.5 12-2 18-2l8-8h4l-7 8h4c1-4 3-5 6-5s4 1 4 5h21c13 0 23 2 33 7 2 1 3 3 3 5v3h-17a10 10 0 0 0-20 0H41a10 10 0 0 0-20 0z'/%3E%3Ccircle cx='31' cy='31' r='7.5'/%3E%3Ccircle cx='90' cy='31' r='7.5'/%3E%3C/svg%3E");
   /* el resplandor del horizonte, debajo del sol y las palmeras */
-  --atardecer-horizonte: linear-gradient(0deg, rgba(255, 223, 128, 0.5), rgba(244, 113, 124, 0.32) 22%, rgba(210, 99, 233, 0.14) 48%, transparent 78%);
+  --atardecer-horizonte: linear-gradient(0deg, rgba(255, 138, 61, 0.55), rgba(255, 62, 165, 0.34) 22%, rgba(224, 43, 214, 0.15) 48%, transparent 78%);
 }
 .atardecer-degradado { background: var(--atardecer-degradado); }
 .atardecer-calido { background: var(--atardecer-calido); color: var(--atardecer-tinta); }
 .atardecer-cielo { background: var(--atardecer-cielo); }
+.atardecer-noche { background: var(--atardecer-noche); }
 .atardecer-sol { aspect-ratio: 1; background: var(--atardecer-sol) center / contain no-repeat; }
 .atardecer-palmeras { aspect-ratio: 2; background: var(--atardecer-palmeras) center bottom / contain no-repeat; }
 .atardecer-coche { aspect-ratio: 3; background: var(--atardecer-coche) center / contain no-repeat; }
@@ -47,32 +51,32 @@
 
 /* ---------- los colores: las variables de :root, repintadas ---------- */
 html[data-tema="sunset"] {
-  /* el violeta casi negro del fondo del arte y tres superficies, la idea de la A: superficies, no bordes */
-  --negro: #1D012D;
-  --s1: #290B3B;
-  --s2: #331447;
-  --s3: #44205C;
-  --linea: rgba(232, 200, 255, 0.08);
-  --texto: #FBF4FF;
-  --texto-2: #DCCBE8; /* 11,4:1 sobre --s1 */
-  --texto-3: #AE9BC4; /* 6,9:1 sobre --s1 y 6,2:1 sobre --s2 */
-  /* la marca pasa al rosa; el relleno con letra blanca, a un magenta oscuro (6,7:1 con el blanco) */
-  --rojo: #E963C7;
-  --rojo-accion: #9E2A8A;
-  --rojo-texto: #F08AD6; /* 7,7:1 sobre --s1 */
-  --rojo2: #7A1F6B;
-  --rojo3: #4C1450;
-  --rojo-s: rgba(233, 99, 199, 0.14);
-  /* «sube» en turquesa; la bajada, un rojo puro que no se confunde con el rosa de marca (5,5:1 sobre --s1) */
-  --sube: #89F5E3;
-  --sube-s: rgba(137, 245, 227, 0.12);
-  --baja: #FF5252;
-  --baja-s: rgba(255, 82, 82, 0.13);
-  --oro: #FFDF80;
-  --oro-s: rgba(255, 223, 128, 0.12);
-  --azul: #99CCFF;
-  --azul-s: rgba(153, 204, 255, 0.13);
-  --sombra: 0 -16px 48px rgba(10, 0, 18, 0.65);
+  /* un violeta casi negro y tres superficies bien separadas, la idea de la A: superficies, no bordes */
+  --negro: #12001F;
+  --s1: #200A36;
+  --s2: #2B1145;
+  --s3: #3B1A5C;
+  --linea: rgba(240, 200, 255, 0.08);
+  --texto: #FFF6FD;
+  --texto-2: #E2CFEF; /* 12,4:1 sobre --s1 */
+  --texto-3: #B7A2CC; /* 7,8:1 sobre --s1 y 7,1:1 sobre --s2 */
+  /* la marca, rosa neón; el relleno con letra blanca, un magenta oscuro (6,5:1 con el blanco) */
+  --rojo: #FF3EA5;
+  --rojo-accion: #B0127A;
+  --rojo-texto: #FF6BBE; /* 7:1 sobre --s1 */
+  --rojo2: #8A0E60;
+  --rojo3: #4E0B3D;
+  --rojo-s: rgba(255, 62, 165, 0.14);
+  /* «sube» en turquesa; la bajada, un rojo puro que no se confunde con el rosa (5,5:1 sobre --s1) */
+  --sube: #19E6D4;
+  --sube-s: rgba(25, 230, 212, 0.12);
+  --baja: #FF4A4A;
+  --baja-s: rgba(255, 74, 74, 0.14);
+  --oro: #FFD25A;
+  --oro-s: rgba(255, 210, 90, 0.12);
+  --azul: #4FB3FF;
+  --azul-s: rgba(79, 179, 255, 0.13);
+  --sombra: 0 -16px 48px rgba(6, 0, 12, 0.7);
 }
 
 /* ---------- lo que no sale de una variable ---------- */
@@ -81,11 +85,11 @@ html[data-tema="sunset"] {
 :where(html[data-tema="sunset"]) .carga-wm b { color: #ff5269; }
 
 /* las píldoras: el contorno de cada tono, con los colores nuevos */
-:where(html[data-tema="sunset"]) :is(.pl.sube, .pill.bien, .pill.chollo, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V) { --pl-b: rgba(137, 245, 227, 0.42); }
-:where(html[data-tema="sunset"]) :is(.pl.baja, .pill.mal, .accion-t.descartada, .tit-b.mal, .cp-res-t.r-D) { --pl-b: rgba(255, 82, 82, 0.45); }
-:where(html[data-tema="sunset"]) :is(.pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .amenaza.media, .accion-t.blindar, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E) { --pl-b: rgba(255, 223, 128, 0.42); }
-:where(html[data-tema="sunset"]) :is(.pl.rojo, .pill.abierta, .pill.plan, .amenaza.alta, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo) { --pl-b: rgba(233, 99, 199, 0.5); }
-:where(html[data-tema="sunset"]) :is(.pl.azul, .pill.libre, .accion-t.alinear, .accion-t.esperar, .pnz-t.mer, .nv-tipo.mejora) { --pl-b: rgba(153, 204, 255, 0.42); }
+:where(html[data-tema="sunset"]) :is(.pl.sube, .pill.bien, .pill.chollo, .accion-t.vender, .pnz-t.alta, .tit-b.bien, .nv-tipo.arreglo, .cp-res-t.r-V) { --pl-b: rgba(25, 230, 212, 0.42); }
+:where(html[data-tema="sunset"]) :is(.pl.baja, .pill.mal, .accion-t.descartada, .tit-b.mal, .cp-res-t.r-D) { --pl-b: rgba(255, 74, 74, 0.45); }
+:where(html[data-tema="sunset"]) :is(.pl.oro, .pill.pronto, .pill.duda, .pill.vende, .pill.bloq-p, .amenaza.media, .accion-t.blindar, .pnz-t.media, .pnz-t.vu, .tit-b.duda, .cp-res-t.r-E) { --pl-b: rgba(255, 210, 90, 0.42); }
+:where(html[data-tema="sunset"]) :is(.pl.rojo, .pill.abierta, .pill.plan, .amenaza.alta, .accion-t.clausular, .accion-t.pujar, .accion-t.comprar, .pnz-t.cl, .pnz-t.en-plan, .ll-tag.plan, .nv-tipo) { --pl-b: rgba(255, 62, 165, 0.5); }
+:where(html[data-tema="sunset"]) :is(.pl.azul, .pill.libre, .accion-t.alinear, .accion-t.esperar, .pnz-t.mer, .nv-tipo.mejora) { --pl-b: rgba(79, 179, 255, 0.42); }
 
 /* el rosa de marca nunca en una cifra de bajada: lo que se gasta en una fase del plan va en el rojo de bajar */
 :where(html[data-tema="sunset"]) .fase-tot.menos { color: var(--baja); }
@@ -94,39 +98,43 @@ html[data-tema="sunset"] {
 :where(html[data-tema="sunset"]) :is(.filtros button.activo, .jor-chips button.activo) { background: var(--atardecer-turquesa); color: var(--atardecer-tinta); }
 
 /* ---------- el degradado de atardecer: franjas, números de fase, la acción principal y la línea de la cabecera ---------- */
-:where(html[data-tema="sunset"]) :is(.titulo, .sec h2, .pnz-sec h2)::before { background: var(--atardecer-degradado-v); }
+:where(html[data-tema="sunset"]) .titulo::before { background: var(--atardecer-degradado-v); }
+:where(html[data-tema="sunset"]) :is(.sec h2, .pnz-sec h2)::before { background: var(--atardecer-noche-v); }
 :where(html[data-tema="sunset"]) .fase-n, :where(html[data-tema="sunset"]) .pnz-sec .n { background: var(--atardecer-calido); color: var(--atardecer-tinta); }
+/* cada fase del plan con su color: atardecer, turquesa y violeta (la urgente y «para luego», como estaban) */
+:where(html[data-tema="sunset"]) .fase:nth-of-type(3n+2):not(.f-urg, .f-luego) .fase-n { background: linear-gradient(100deg, #19E6D4, #4FB3FF); }
+:where(html[data-tema="sunset"]) .fase:nth-of-type(3n):not(.f-urg, .f-luego) .fase-n { background: linear-gradient(100deg, #8F6BFF, #E02BD6); }
 /* la acción principal: el relleno cálido con la letra oscura (los secundarios, de texto y de icono siguen igual) */
 :where(html[data-tema="sunset"]) .btn { background: var(--atardecer-calido); color: var(--atardecer-tinta); }
-:where(html[data-tema="sunset"]) .btn:active { background: var(--atardecer-calido); box-shadow: inset 0 0 0 99px rgba(29, 1, 45, 0.12); }
+:where(html[data-tema="sunset"]) .btn:active { background: var(--atardecer-calido); box-shadow: inset 0 0 0 99px rgba(18, 0, 31, 0.12); }
 /* Ajustes no se rediseña: su botón sigue con el relleno de la variable y la letra blanca */
 :where(html[data-tema="sunset"]) .hoja:has(> .aj-busca) .btn:not(.sec) { background: var(--rojo-btn); color: #fff; box-shadow: none; }
 /* la línea fina bajo la cabecera (en el ordenador, bajo el nombre de la liga, en la columna) */
-:where(html[data-tema="sunset"]) .sup { border-bottom: 1px solid transparent; border-image: var(--atardecer-degradado) 1; box-shadow: none; }
-:where(html[data-tema="sunset"].escritorio) .sup { border-bottom: 0; border-image: none; background: linear-gradient(180deg, #2c0a42 0, #1D012D 280px); }
+:where(html[data-tema="sunset"]) .sup { border-bottom: 1px solid transparent; border-image: linear-gradient(90deg, #19E6D4, #8F6BFF 30%, #FF3EA5 60%, #FF8A3D 82%, #FFD25A) 1; box-shadow: none; }
+:where(html[data-tema="sunset"].escritorio) .sup { border-bottom: 0; border-image: none; background: linear-gradient(180deg, #23083d 0, #12001F 280px); }
 :where(html[data-tema="sunset"].escritorio) .sup-liga { border-bottom: 1px solid transparent; border-image: var(--atardecer-degradado) 1; }
 /* la barra de carga */
 :where(html[data-tema="sunset"]) .carga-barra i { background: var(--atardecer-degradado); }
 
 /* el marcador de Hoy: el mismo borde entero, en rosa, con la raya de arriba en degradado y el brillo en magenta */
 :where(html[data-tema="sunset"]) .marcador[data-accion="resumen"] {
-  box-shadow: inset 0 0 0 1.5px rgba(233, 99, 199, 0.62), 0 8px 26px rgba(210, 99, 233, 0.18);
-  background: var(--atardecer-degradado) top / 100% 4px no-repeat, linear-gradient(180deg, rgba(210, 99, 233, 0.12), transparent 46%), var(--s1);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 62, 165, 0.62), 0 8px 26px rgba(224, 43, 214, 0.18);
+  background: var(--atardecer-noche) top / 100% 4px no-repeat, linear-gradient(180deg, rgba(224, 43, 214, 0.14), transparent 46%), var(--s1);
 }
-:where(html[data-tema="sunset"]) .marcador-ir { background: rgba(233, 99, 199, 0.14); }
-:where(html[data-tema="sunset"]) .marcador .fila-j .vivo::before { box-shadow: 0 0 0 4px rgba(233, 99, 199, 0.25); }
+:where(html[data-tema="sunset"]) .marcador-ir { background: rgba(255, 62, 165, 0.14); }
+:where(html[data-tema="sunset"]) .marcador .fila-j .vivo::before { box-shadow: 0 0 0 4px rgba(255, 62, 165, 0.25); }
 
 /* el brillo de fondo de la carga, el error y la cuenta atrás, y el de la camiseta (no la camiseta) */
-:where(html[data-tema="sunset"]) .carga { background: radial-gradient(120% 60% at 50% 18%, rgba(210, 99, 233, 0.2), transparent 62%), var(--negro); }
-:where(html[data-tema="sunset"]) #limite { background: radial-gradient(120% 60% at 50% 20%, rgba(210, 99, 233, 0.22), transparent 60%), var(--negro); }
-:where(html[data-tema="sunset"]) :is(.cc, .lim-in .logo) { filter: drop-shadow(0 14px 30px rgba(210, 99, 233, 0.34)); }
+:where(html[data-tema="sunset"]) .carga { background: radial-gradient(120% 60% at 50% 18%, rgba(224, 43, 214, 0.2), transparent 62%), var(--negro); }
+:where(html[data-tema="sunset"]) #limite { background: radial-gradient(120% 60% at 50% 20%, rgba(224, 43, 214, 0.22), transparent 60%), var(--negro); }
+:where(html[data-tema="sunset"]) :is(.cc, .lim-in .logo) { filter: drop-shadow(0 14px 30px rgba(224, 43, 214, 0.34)); }
 
 
 /* ---------- marcas: el horizonte con el sol, la cuadrícula, las estrellas y las palmeras ---------- */
 /* reutilizables: la cuadrícula de perspectiva (el suelo que avanza) y las estrellas (quietas; con .atardecer-titila, titilan) */
 :root {
   --atardecer-estrellas: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200' fill='%23fff'%3E%3Ccircle cx='22' cy='30' r='1.6'/%3E%3Ccircle cx='70' cy='92' r='1.1'/%3E%3Ccircle cx='118' cy='18' r='1.3'/%3E%3Ccircle cx='160' cy='70' r='1.8' fill-opacity='.8'/%3E%3Ccircle cx='205' cy='26' r='1.1'/%3E%3Ccircle cx='246' cy='104' r='1.4' fill-opacity='.7'/%3E%3Ccircle cx='288' cy='44' r='1.7'/%3E%3Ccircle cx='330' cy='12' r='1.2' fill-opacity='.8'/%3E%3Ccircle cx='356' cy='78' r='1.5'/%3E%3Ccircle cx='388' cy='34' r='1.1'/%3E%3C/svg%3E");
-  --atardecer-suelo: linear-gradient(rgba(233, 99, 199, 0.5) 0 2px, transparent 2px) 0 0 / 100% 36px, linear-gradient(90deg, rgba(233, 99, 199, 0.42) 0 2px, transparent 2px) 50% 0 / 56px 100%, linear-gradient(0deg, #1D012D, #2a0a40);
+  --atardecer-suelo: linear-gradient(rgba(255, 62, 165, 0.6) 0 2px, transparent 2px) 0 0 / 100% 36px, linear-gradient(90deg, rgba(25, 230, 212, 0.5) 0 2px, transparent 2px) 50% 0 / 56px 100%, linear-gradient(0deg, #12001F, #220a3e);
 }
 .atardecer-estrellas { background: var(--atardecer-estrellas) center / cover no-repeat; }
 .atardecer-cuadricula { position: relative; overflow: hidden; }
@@ -205,6 +213,36 @@ html[data-tema="sunset"] {
 /* las estrellas titilan (y el sol se para mientras) */
 :where(html[data-tema="sunset"].atardecer-titila) :is(.carga-in, .lim-in)::before { animation: atardecer-titila 2.4s ease-in-out 1; }
 :where(html[data-tema="sunset"].atardecer-titila) :is(.carga, #limite)::before { animation-play-state: paused; }
+
+/* ---------- la cuenta atrás hasta el estreno (la pone el bloque TEMA_EVENTO debajo del marcador de Hoy) ---------- */
+/* una tarjeta con el borde de la noche de neón, el nombre con el degradado cálido (letra de la app, no la del juego), el sol
+   y las palmeras a la derecha y cuatro cifras grandes; se va sola al llegar a cero */
+.atardecer-cuenta {
+  position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; gap: 12px; margin: 12px 0 0; padding: 12px 14px;
+  border-radius: var(--r-tarj); background: linear-gradient(100deg, rgba(255, 62, 165, 0.16), rgba(143, 107, 255, 0.1) 55%, rgba(25, 230, 212, 0.08)), var(--s1, #200A36);
+}
+.atardecer-cuenta::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+  background: var(--atardecer-noche);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.atardecer-cuenta::after {
+  content: ''; position: absolute; z-index: -1; right: -10px; bottom: 0; width: 132px; height: 66px; opacity: 0.55; pointer-events: none;
+  background: var(--atardecer-palmeras) right bottom / contain no-repeat, var(--atardecer-sol) right 36px bottom -26px / 52px 52px no-repeat;
+}
+.atardecer-cuenta .ac-t { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
+.atardecer-cuenta .ac-t b {
+  font: 700 var(--t-cifra, 28px)/1 var(--cond, 'Barlow Condensed'); letter-spacing: 0.5px; text-transform: uppercase;
+  background: var(--atardecer-calido); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.atardecer-cuenta .ac-t span { margin-top: 3px; font: 600 var(--t-mini, 12.5px)/1.25 'Barlow'; color: var(--texto-2, #E2CFEF); }
+.atardecer-cuenta .ac-n { flex: none; display: flex; gap: 5px; margin-left: auto; }
+.atardecer-cuenta .ac-n span { display: flex; flex-direction: column; align-items: center; min-width: 38px; padding: 5px 3px 4px; border-radius: var(--r-ctl, 12px); background: rgba(18, 0, 31, 0.72); }
+.atardecer-cuenta .ac-n b { font: 700 var(--t-sec, 20px)/1 var(--cond, 'Barlow Condensed'); color: var(--texto, #FFF6FD); font-variant-numeric: tabular-nums; }
+.atardecer-cuenta .ac-n i { margin-top: 2px; font: 600 11px/1 'Barlow'; font-style: normal; color: var(--texto-3, #B7A2CC); }
+.atardecer-cuenta .ac-n span:first-child b { color: var(--atardecer-amarillo); }
+@media (max-width: 360px) { .atardecer-cuenta { gap: 8px; padding: 10px 12px; } .atardecer-cuenta .ac-n span { min-width: 33px; } .atardecer-cuenta .ac-t b { font-size: var(--t-sec, 20px); } }
 
 /* ---------- movimiento al abrir una pestaña ---------- */
 @keyframes atardecer-franja { from { transform: translateX(-18px) var(--franja); opacity: 0; } to { transform: var(--franja); opacity: 1; } }

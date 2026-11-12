@@ -19,15 +19,17 @@
        Lo de abajo solo mueve clases para el CSS: atardecer-abre al abrir una pestaña (la franja, las fases, el destello),
        atardecer-pasa y atardecer-titila (el coche y las estrellas, de vez en cuando, parando mientras el cielo o el sol para
        que no haya más de dos animaciones seguidas a la vez), atardecer-quieto con la página oculta, atardecer-fuera en lo
-       que no se ve y atardecer-cambia (y -sube) en las cifras del marcador y del valor de la ficha cuando cambian. */
-    var TEMA_EVENTO = { id: 'sunset', hasta: '2026-11-26T23:59:00+01:00' };
+       que no se ve y atardecer-cambia (y -sube) en las cifras del marcador y del valor de la ficha cuando cambian.
+       «estreno»: la cuenta atrás hasta la salida del juego en España (19 nov, 00:00), en una tarjeta debajo del marcador
+       de Hoy (.atardecer-cuenta); se pone y se quita desde aquí y desaparece al llegar a cero. */
+    var TEMA_EVENTO = { id: 'sunset', hasta: '2026-11-26T23:59:00+01:00', estreno: '2026-11-19T00:00:00+01:00' };
     (function (t) {
       try { if (!t || !(Date.now() < Date.parse(t.hasta)) || localStorage.getItem('fm-sin-tema') === '1') return; } catch (e) { return; }
       var html = document.documentElement, meta = document.querySelector('meta[name=theme-color]'), color = meta && meta.content;
       var quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
       function poner(si) {
         if (si) html.setAttribute('data-tema', t.id); else html.removeAttribute('data-tema');
-        if (meta) meta.content = si ? '#1D012D' : color;
+        if (meta) meta.content = si ? '#12001F' : color;
       }
       function clase(c, ms) { html.classList.add(c); clearTimeout(clase[c]); clase[c] = setTimeout(function () { html.classList.remove(c); }, ms); }
       poner(true);
@@ -55,6 +57,28 @@
           cada(c, ms, dura, sel);
         }, ms);
       }
+      // la cuenta atrás: se pone debajo del marcador cada vez que se pinta Hoy y se pone al día cada segundo si se ve
+      var fin = Date.parse(t.estreno || '');
+      function dd(n) { return (n < 10 ? '0' : '') + n; }
+      function cuenta(raiz) {
+        var m = raiz && raiz.querySelector('.marcador');
+        if (!(fin > Date.now()) || !m || (m.nextElementSibling && m.nextElementSibling.classList.contains('atardecer-cuenta'))) return;
+        var c = document.createElement('div');
+        c.className = 'atardecer-cuenta'; c.setAttribute('role', 'timer');
+        c.innerHTML = '<div class="ac-t"><b>GTA VI</b><span>Sale en España<br>19 nov · 00:00</span></div><div class="ac-n"><span><b>0</b><i>días</i></span><span><b>00</b><i>h</i></span><span><b>00</b><i>min</i></span><span><b>00</b><i>s</i></span></div>';
+        m.insertAdjacentElement('afterend', c);
+        reloj();
+      }
+      function reloj() {
+        var c = document.querySelector('.atardecer-cuenta');
+        if (!c) return;
+        var q = Math.floor((fin - Date.now()) / 1000);
+        if (q <= 0) { c.remove(); return; }
+        var b = c.querySelectorAll('.ac-n b'), d = Math.floor(q / 86400), h = Math.floor(q / 3600) % 24, mi = Math.floor(q / 60) % 60;
+        b[0].textContent = d; b[1].textContent = dd(h); b[2].textContent = dd(mi); b[3].textContent = dd(q % 60);
+        c.setAttribute('aria-label', 'Faltan ' + d + ' días, ' + h + ' horas y ' + mi + ' minutos para que salga GTA VI en España');
+      }
+      if (fin > Date.now()) setInterval(function () { if (!document.hidden) reloj(); }, 1000);
       cada('atardecer-pasa', 45000, 8200, '.sup');
       cada('atardecer-titila', 7000, 2600, '.carga, #limite');
       document.addEventListener('DOMContentLoaded', function () {
@@ -75,7 +99,8 @@
           var v = document.getElementById('vista');
           if (v && v !== vista) {
             vista = v; clase('atardecer-abre', 1400);
-            new MutationObserver(function () { cifras(v, 'm'); }).observe(v, { childList: true });
+            new MutationObserver(function () { cifras(v, 'm'); cuenta(v); }).observe(v, { childList: true });
+            cuenta(v);
           }
         }
         new MutationObserver(mirar).observe(app, { childList: true });

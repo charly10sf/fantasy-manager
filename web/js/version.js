@@ -21,7 +21,7 @@ export const NOVEDADES = [
   {
     v: '0.7.8', f: '2026-11-12', h: '00:00', t: 'Tema de atardecer hasta el 26 nov',
     cosas: [
-      { tipo: 'mejora', d: 'atardecer', t: 'Tema de atardecer hasta el 26 nov', x: 'Hasta el 26 de noviembre la app se viste de atardecer: violeta casi negro, rosa, naranja y turquesa, con palmeras y un sol detrás de la cabecera de Hoy y en las pantallas de carga. Lo que dice y lo que calcula, igual. El 27 vuelve sola a su rojo y negro.' },
+      { tipo: 'mejora', d: 'atardecer', t: 'Tema de atardecer hasta el 26 nov', x: 'Hasta el 26 de noviembre la app se viste de atardecer neón: violeta casi negro, rosa, naranja, turquesa y violeta, con palmeras y un sol detrás de la cabecera de Hoy y en las pantallas de carga. En Hoy, debajo del marcador, la cuenta atrás hasta que sale GTA VI en España (19 nov, 00:00). Lo que dice y lo que calcula, igual. El 27 vuelve sola a su rojo y negro.' },
     ],
   },
   {
