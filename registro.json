@@ -2132,7 +2132,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250272/carrusel-partidos-internacionales-realistas-ventana-fifa-noviembre.html": 1794495714000,
    "SPORT|135971655": 1794497453000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250314/once-sorpresas-esperada-visita-arsenal.html": 1794502052000,
-   "SPORT|136374311": 1794499233000
+   "SPORT|136374311": 1794499233000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/12/problemas-seleccion-francesa-crece-tension-zidane-mbappe/00031794503136115710202.htm": 1794503280000
   },
   "hechos": [
    {
@@ -2585,7 +2586,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -3587,17 +3588,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 47,
+   "clasificar": 48,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 238694,
-  "salida": 28689,
+  "entrada": 240626,
+  "salida": 29350,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.368376,
+  "dolares": 0.3689,
   "reservado": 0
  },
  "recientes": {
@@ -7701,13 +7702,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1845,
+   "ok": 1846,
    "fallos": 0,
-   "ejecuciones": 1387,
+   "ejecuciones": 1388,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T17:06:23.778Z"
+   "ultima": "2026-11-12T17:11:13.014Z"
   }
  },
  "ptsDirecto": {},
@@ -7724,15 +7725,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:06:29.708Z"
+   "ultimaBien": "2026-11-12T17:11:20.593Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:06:29.708Z"
+   "ultimaBien": "2026-11-12T17:11:20.593Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:06:29.708Z"
+   "ultimaBien": "2026-11-12T17:11:20.593Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7740,11 +7741,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:06:29.708Z"
+   "ultimaBien": "2026-11-12T17:11:20.593Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:06:29.708Z"
+   "ultimaBien": "2026-11-12T17:11:20.593Z"
   }
  },
  "avisos": [
