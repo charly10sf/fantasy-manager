@@ -226,11 +226,11 @@ html[data-tema="sunset"] {
 :where(html[data-tema="sunset"]) .atardecer-cambia { transform-origin: 0 60%; animation: atardecer-cifra 420ms var(--curva) 1; }
 :where(html[data-tema="sunset"]) .atardecer-cambia.atardecer-sube { animation-name: atardecer-cifra-sube; }
 
-/* ---------- la barra de abajo: un punto con el degradado bajo la pestaña activa, que se desliza de una a otra ---------- */
+/* ---------- la barra de abajo: un punto con el degradado bajo la pestaña activa, que se desliza de una a otra (seis pestañas) ---------- */
 :where(html[data-tema="sunset"]:not(.escritorio)) .nav-in { position: relative; }
 :where(html[data-tema="sunset"]:not(.escritorio)) .nav button.activo::before { background: transparent; }
 :where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button.activo)::after {
-  content: ''; position: absolute; left: 0; bottom: 5px; width: calc(100% / 7); height: 8px; pointer-events: none;
+  content: ''; position: absolute; left: 0; bottom: 5px; width: calc(100% / 6); height: 8px; pointer-events: none;
   background: var(--atardecer-degradado) center / 8px 8px no-repeat;
   -webkit-mask: radial-gradient(circle at 50% 50%, #000 3.5px, transparent 4px); mask: radial-gradient(circle at 50% 50%, #000 3.5px, transparent 4px);
   transition: transform 320ms var(--curva);
@@ -240,7 +240,6 @@ html[data-tema="sunset"] {
 :where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(4).activo)::after { transform: translateX(300%); }
 :where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(5).activo)::after { transform: translateX(400%); }
 :where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(6).activo)::after { transform: translateX(500%); }
-:where(html[data-tema="sunset"]:not(.escritorio)) .nav-in:has(> button:nth-child(7).activo)::after { transform: translateX(600%); }
 
 /* ---------- en el ordenador: las tarjetas sacan un borde fino con el degradado al pasar el ratón ---------- */
 @media (hover: hover) {
