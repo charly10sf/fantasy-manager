@@ -2132,7 +2132,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261112/1004250234/evidentemente-jesus-owono-tocado.html": 1794488514000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261112/1004250246/sadiq-vacaciones-rodilla-vendada.html": 1794491638000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250245/oyarzabal-barrenetxea-te-estaremos-esperando-volveremos-celebrar-siempre-contigo-pequenin.html": 1794491015000,
-   "SPORT|136366242": 1794488476000
+   "SPORT|136366242": 1794488476000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html": 1794493034000
   },
   "hechos": [
    {
@@ -2569,11 +2570,23 @@
     "motivo": "lesión severa",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/matias-almeyda-desvela-regreso-sudamerica-aburrido-sevilla_0_2008480633.html",
+    "medio": "Diario de Sevilla",
+    "t": 1794493034000,
+    "id": "3265",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Fofana no entrena con el grupo del Sevilla FC",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -3577,17 +3590,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 40,
+   "clasificar": 41,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 224393,
-  "salida": 26013,
+  "entrada": 226345,
+  "salida": 26672,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.365607,
+  "dolares": 0.366132,
   "reservado": 0
  },
  "recientes": {
@@ -7696,13 +7709,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1813,
+   "ok": 1814,
    "fallos": 0,
-   "ejecuciones": 1355,
+   "ejecuciones": 1356,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T14:26:13.284Z"
+   "ultima": "2026-11-12T14:31:16.560Z"
   }
  },
  "ptsDirecto": {},
@@ -7719,15 +7732,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:26:25.877Z"
+   "ultimaBien": "2026-11-12T14:31:25.194Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:26:25.877Z"
+   "ultimaBien": "2026-11-12T14:31:25.194Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:26:25.877Z"
+   "ultimaBien": "2026-11-12T14:31:25.194Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7735,11 +7748,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:26:25.877Z"
+   "ultimaBien": "2026-11-12T14:31:25.194Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T14:26:25.877Z"
+   "ultimaBien": "2026-11-12T14:31:25.194Z"
   }
  },
  "avisos": [
