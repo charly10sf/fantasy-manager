@@ -2131,7 +2131,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250264/trent-vuelve-casa-pra-reencontrarse.html": 1794497100000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004250272/carrusel-partidos-internacionales-realistas-ventana-fifa-noviembre.html": 1794495714000,
    "SPORT|135971655": 1794497453000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250314/once-sorpresas-esperada-visita-arsenal.html": 1794502052000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250314/once-sorpresas-esperada-visita-arsenal.html": 1794502052000,
+   "SPORT|136374311": 1794499233000
   },
   "hechos": [
    {
@@ -2584,7 +2585,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -3586,17 +3587,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 46,
+   "clasificar": 47,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 236595,
-  "salida": 28575,
+  "entrada": 238694,
+  "salida": 28689,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.368109,
+  "dolares": 0.368376,
   "reservado": 0
  },
  "recientes": {
@@ -7700,13 +7701,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1844,
+   "ok": 1845,
    "fallos": 0,
-   "ejecuciones": 1386,
+   "ejecuciones": 1387,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T17:01:13.728Z"
+   "ultima": "2026-11-12T17:06:23.778Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7724,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:01:23.031Z"
+   "ultimaBien": "2026-11-12T17:06:29.708Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:01:23.031Z"
+   "ultimaBien": "2026-11-12T17:06:29.708Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:01:23.031Z"
+   "ultimaBien": "2026-11-12T17:06:29.708Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7740,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:01:23.031Z"
+   "ultimaBien": "2026-11-12T17:06:29.708Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T17:01:23.031Z"
+   "ultimaBien": "2026-11-12T17:06:29.708Z"
   }
  },
  "avisos": [
