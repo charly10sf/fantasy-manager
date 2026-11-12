@@ -3531,7 +3531,8 @@
    "SPORT|136387136": 1794508997000,
    "SPORT|136388353": 1794511706000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-republica-checa-espana-5a-jornada-nations-league-12-20261112_3474154.html": 1794521252000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/maldini-triunfo-gran-brillo-espana-partidos-epocas-no-ganaba-nunca-20261112_3474231.html": 1794520814000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/maldini-triunfo-gran-brillo-espana-partidos-epocas-no-ganaba-nunca-20261112_3474231.html": 1794520814000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/var-agita-victoria-espana-republica_0_2008485398.html": 1794521253000
   },
   "hechos": [
    {
@@ -3553,7 +3554,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 14,
+   "n": 15,
    "fallos": 0
   },
   "espera": {}
@@ -3561,17 +3562,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 66,
+   "clasificar": 67,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 275869,
-  "salida": 36929,
+  "entrada": 277514,
+  "salida": 37015,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.376215,
+  "dolares": 0.376423,
   "reservado": 0
  },
  "recientes": {
@@ -7696,13 +7697,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1912,
+   "ok": 1913,
    "fallos": 0,
-   "ejecuciones": 1452,
+   "ejecuciones": 1453,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T22:26:11.559Z"
+   "ultima": "2026-11-12T22:31:11.572Z"
   }
  },
  "ptsDirecto": {},
@@ -7719,15 +7720,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:26:16.660Z"
+   "ultimaBien": "2026-11-12T22:31:15.232Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:26:16.660Z"
+   "ultimaBien": "2026-11-12T22:31:15.232Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:26:16.660Z"
+   "ultimaBien": "2026-11-12T22:31:15.232Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7735,7 +7736,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:26:16.660Z"
+   "ultimaBien": "2026-11-12T22:31:15.232Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
