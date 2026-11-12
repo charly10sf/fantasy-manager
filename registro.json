@@ -949,6 +949,13 @@
    "jornada": 13,
    "id": "2120656669013369074",
    "t": "2026-11-11T23:15:24.818Z"
+  },
+  {
+   "clave": "revalorizaciones|12",
+   "tipo": "revalorizaciones",
+   "jornada": 12,
+   "id": "2120758980243018167",
+   "t": "2026-11-12T06:01:57.713Z"
   }
  ],
  "estados": {
@@ -1022,7 +1029,7 @@
   "1890": "ok",
   "1930": "ok",
   "1938": "ok",
-  "1950": "injured",
+  "1950": "doubtful",
   "1959": "ok",
   "1976": "ok",
   "1989": "ok",
@@ -1154,7 +1161,7 @@
   "2501": "doubtful",
   "2504": "ok",
   "2507": "ok",
-  "2509": "injured",
+  "2509": "doubtful",
   "2511": "ok",
   "2516": "ok",
   "2519": "injured",
@@ -1226,7 +1233,7 @@
   "2619": "out_of_league",
   "2620": "out_of_league",
   "2621": "ok",
-  "2622": "injured",
+  "2622": "doubtful",
   "2623": "ok",
   "2624": "injured",
   "2626": "ok",
@@ -1838,18 +1845,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/dieng-y-diakhaby-tampoco-convenceran-a-aguirre-en-copa-f202611-n/": 1794183615000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248739/raphinha-goleador-inesperado.html": 1794204000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261109/1004248714/primer-balance-athletic.html": 1794204000000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248899/laboratorio-flick-laterales-funciona.html": 1794181874000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261108/1004248847/elogios-gavi-cubarsi-gran-reaccion-descanso.html": 1794178145000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261108/1004248852/esperaremos-julian-le-necesitamos-queremos-llegar-queremos-llegar.html": 1794178002000,
-   "SPORT|136233387": 1794198609000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/08/la-dupla-fermin-lamine-suple-a-raphinha-y-sostiene-a-un-barca-tocado-en-lo-defensivo-cadena-ser/": 1794175233000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/gonzalo-miro-senala-culpables-atletico-derrota-barcelona-gestion-entrenador-peor-todavia-20261108_3471046.html": 1794177066000,
-   "ABC|https://www.abc.es/deportes/futbol/pegada-condena-atletico-lanza-barca-20261108225722-nt.html": 1794183248000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261109/1004248718/inaki-williams-vive-momento-dulce-athletic.html": 1794205800000,
-   "SPORT|136234060": 1794204012000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261109/1004248922/fermin.html": 1794208811000,
    "SPORT|136236561": 1794207418000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/09/se-que-vas-a-volver-el-mensaje-de-la-hija-de-pepe-mel-ser-almeria/": 1794211411000,
@@ -2085,7 +2081,32 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249947/jude-jobe-inglaterra-bellingham-domingo-espana.html": 1794424973000,
    "SPORT|136347080": 1794422141000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250016/zidane-confirma-baja-mbappe-italia.html": 1794426396000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/zidane-confirma-la-baja-de-kylian-mbappe-ante-italia-ha-sentido-una-pequena-molestia-y-no-vamos-a-correr-riesgos-cadena-ser/": 1794427475000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/zidane-confirma-la-baja-de-kylian-mbappe-ante-italia-ha-sentido-una-pequena-molestia-y-no-vamos-a-correr-riesgos-cadena-ser/": 1794427475000,
+   "AS|https://as.com/futbol/primera/cabrera-tiene-un-pase-f202611-n/": 1794441317000,
+   "AS|https://as.com/futbol/primera/mejora-el-estado-de-salud-de-pepe-mel-f202611-n/": 1794430958000,
+   "AS|https://as.com/futbol/las-dudas-de-flick-f202611-n/": 1794428429000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250042/fuente-valentia-sentido-comun.html": 1794463200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004249945/mercado-invierno-opcion-real-ano.html": 1794463200000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004249971/seis-internacionales-barca-juegan-hoy-ojos-puestos-raphinha.html": 1794461400000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261111/1004250053/pepe-mel-despierta-evoluciona-favorablemente-ictus.html": 1794435902000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261111/1004250043/mantilla-operado-exito-grave-lesion-rodilla.html": 1794433516000,
+   "SPORT|136348090": 1794457819000,
+   "SPORT|136327406": 1794457819000,
+   "SPORT|136350592": 1794434630000,
+   "SPORT|136349887": 1794431410000,
+   "SPORT|136350096": 1794431384000,
+   "SPORT|136285258": 1794430522000,
+   "SPORT|136349840": 1794429592000,
+   "SPORT|136295992": 1794427093000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/manolo-lama-ausencia-lamine-yamal-seleccion-no-he-escuchado-nunca-hablar-otros-futbolistas-selecciones-empiezan-ponerse-malos-justo-pisan-pais-origen-20261111_3473341.html": 1794426637000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-tuvo-operado-vuestra-fuerza-le-ayuda-luchar-dia-dia-20261111_3473361.html": 1794434063000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/embajada-alemania-espana-invita-cucurella-cerveza-partidito-palabras-partidazo-cope-vez-manos-fuera-20261112_3473381.html": 1794441164000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-11-nov-2026-partidazo-cope-20261112_3473373.html": 1794438373000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261112/11681789/zidane-queda-nuevo-sin-mbappe-esta-vez-italia-francia-san-siro.html": 1794459600000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681939/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus.html": 1794433572000,
+   "ABC|https://www.abc.es/deportes/futbol/seleccion-lamine-estrella-agobia-lesiones-20261111012947-nt.html": 1794460849000,
+   "ABC|https://www.abc.es/deportes/futbol/republica-checa-espana-hora-partido-nations-league-20261111012941-nt.html": 1794456001000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-evoluciona-satisfactoriamente-salud_0_2008476879.html": 1794433861000
   },
   "hechos": [
    {
@@ -2398,11 +2419,35 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250042/fuente-valentia-sentido-comun.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794463200000,
+    "id": "3104",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Lamine Yamal tiene molestias y líquido en una rodilla",
+    "motivo": "golpe en una rodilla con líquido",
+    "plazo": "",
+    "nums": []
+   },
+   {
+    "guid": "SPORT|136295992",
+    "medio": "SPORT",
+    "t": 1794427093000,
+    "id": "3092",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "",
+    "plazo": "fuera hasta nuevo aviso",
+    "nums": []
    }
   ],
   "gemini": {
-   "dia": "2026-11-11",
-   "n": 60
+   "dia": "2026-11-12",
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3407,17 +3452,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 0,
-   "redactar": 1,
-   "revisar": 1,
+   "clasificar": 2,
+   "redactar": 3,
+   "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 13468,
-  "salida": 194,
+  "entrada": 46330,
+  "salida": 4479,
   "cacheLee": 0,
-  "cacheEscribe": 2903,
-  "dolares": 0.036134,
+  "cacheEscribe": 5806,
+  "dolares": 0.097634,
   "reservado": 0
  },
  "recientes": {
@@ -3629,6 +3674,12 @@
    {
     "t": "2026-11-10T06:41:29.097Z",
     "texto": "📊 Doce jornadas y la liga en pausa: toca repasar quién ha mandado. Lamine Yamal lleva 157 puntos y tuvo su mejor jornada en la 11, con 19. Mbappé le sigue a diez, y Arda Güler y Bellingham se reparten el medio del Madrid.\n\nEl chollo es Nacho Perez: el defensa del Levante cuesta 1,2 M, lleva 41 puntos y suma 18 en las últimas tres jornadas. Pablo Ramón, del Racing, también rinde por 1,6 M.\n\nLos once que más puntos llevan, en la imagen."
+   }
+  ],
+  "revalorizaciones": [
+   {
+    "t": "2026-11-12T06:01:57.715Z",
+    "texto": "📈 Raphinha es el que más sube desde el inicio: de 100,8 M a 169,9 M, +69,1 M, y sus 146 puntos lo explican. Su mejor día fue en la jornada 2, con 24.\n\nEl que más baja es Olmo, también del Barça: de 93 M a 32,2 M, con solo 51 puntos. Y la sorpresa, Xavi Espart, que valía 700 K y ya está en 41,3 M.\n\nEl resto, en la imagen."
    }
   ]
  },
@@ -7516,13 +7567,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1710,
+   "ok": 1711,
    "fallos": 0,
-   "ejecuciones": 1252,
+   "ejecuciones": 1253,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T05:56:11.922Z"
+   "ultima": "2026-11-12T06:01:16.024Z"
   }
  },
  "ptsDirecto": {},
@@ -7539,15 +7590,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T05:56:12.392Z"
+   "ultimaBien": "2026-11-12T06:01:58.615Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T05:56:12.392Z"
+   "ultimaBien": "2026-11-12T06:01:58.615Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T05:56:12.392Z"
+   "ultimaBien": "2026-11-12T06:01:58.615Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7555,11 +7606,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T22:56:19.825Z"
+   "ultimaBien": "2026-11-12T06:01:58.615Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-11T21:56:17.545Z"
+   "ultimaBien": "2026-11-12T06:01:58.615Z"
   }
  },
  "avisos": [
@@ -7572,6 +7623,7 @@
  "actasSelecciones": {
   "20261108": [],
   "20261109": [],
-  "20261110": []
+  "20261110": [],
+  "20261111": []
  }
 }
