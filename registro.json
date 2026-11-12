@@ -3428,7 +3428,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136260180": 1794250832000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004249203/graafschap.html": 1794254855000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261109/1004249234/susto-rocafonda-calella-grupo-6.html": 1794261509000,
    "Europa Press|https://www.europapress.es/sociedad/noticia-sanchez-no-descarta-suspender-tiktok-posibles-videos-abuso-sexual-infantil-me-parece-escandalo-20261109232101.html": 1794262861000,
@@ -7698,13 +7697,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1867,
+   "ok": 1868,
    "fallos": 0,
-   "ejecuciones": 1409,
+   "ejecuciones": 1410,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T18:56:13.903Z"
+   "ultima": "2026-11-12T19:01:14.337Z"
   }
  },
  "ptsDirecto": {},
@@ -7721,15 +7720,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:56:16.276Z"
+   "ultimaBien": "2026-11-12T19:01:18.990Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:56:16.276Z"
+   "ultimaBien": "2026-11-12T19:01:18.990Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:56:16.276Z"
+   "ultimaBien": "2026-11-12T19:01:18.990Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7737,11 +7736,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:56:16.276Z"
+   "ultimaBien": "2026-11-12T19:01:18.990Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T18:56:16.276Z"
+   "ultimaBien": "2026-11-12T19:01:18.990Z"
   }
  },
  "avisos": [
