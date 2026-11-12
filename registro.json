@@ -2116,7 +2116,11 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000,
    "SPORT|136358456": 1794472225000,
    "Diario Sur|https://www.diariosur.es/malagacf/pepe-mel-evolucion-favorable-ictus-20261112103103-nt.html": 1794475890000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250139/hugo-rincon-dani-vivian-caen-convocatoria-euskadi-lesion-entra-prados.html": 1794476013000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250139/hugo-rincon-dani-vivian-caen-convocatoria-euskadi-lesion-entra-prados.html": 1794476013000,
+   "Cadena SER|https://cadenaser.com/galicia/2026/11/12/la-agenda-internacional-arranca-hoy-para-los-deportivistas-radio-coruna/": 1794477915000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/juanma-castano-entiende-enfado-luis-fuente-increible-cuestione-trabajo-decisiones-logrado-seleccion-espanola-20261112_3473371.html": 1794464842000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/11-nov-2026-partidazo-cope-20261112_3473384.html": 1794444600000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/nico-williams-laporte-quedan-jugar-praga-20261112_3473577.html": 1794477873000
   },
   "hechos": [
    {
@@ -2470,7 +2474,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -3316,8 +3320,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-ccoo-habilita-canal-atencion-resolver-incidencias-huelga-general-20261109111108.html": 1794219068000,
-   "SPORT|136233790": 1794218790000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-defiende-atletico-madrid-resta-importancia-derrotas-bayern-barcelona-son-dos-cinco-mejores-equipos-europa-20261109_3471055.html": 1794225339000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229164000,
@@ -3480,17 +3482,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 127113,
-  "salida": 9411,
+  "entrada": 129803,
+  "salida": 11385,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.213318,
+  "dolares": 0.214574,
   "reservado": 0
  },
  "recientes": {
@@ -7595,13 +7597,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1760,
+   "ok": 1761,
    "fallos": 0,
-   "ejecuciones": 1302,
+   "ejecuciones": 1303,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T10:06:12.519Z"
+   "ultima": "2026-11-12T10:11:13.673Z"
   }
  },
  "ptsDirecto": {},
@@ -7618,15 +7620,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:06:15.640Z"
+   "ultimaBien": "2026-11-12T10:11:28.311Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:06:15.640Z"
+   "ultimaBien": "2026-11-12T10:11:28.311Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:06:15.640Z"
+   "ultimaBien": "2026-11-12T10:11:28.311Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7634,11 +7636,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:06:15.640Z"
+   "ultimaBien": "2026-11-12T10:11:28.311Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:06:15.640Z"
+   "ultimaBien": "2026-11-12T10:11:28.311Z"
   }
  },
  "avisos": [
