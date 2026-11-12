@@ -1853,7 +1853,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/psicosis-con-raphinha-tres-viajes-con-brasil-en-2026-tres-lesiones-f202611-n/": 1794222470000,
-   "AS|https://as.com/futbol/primera/gimenez-comandante-en-jefe-del-depor-f202611-n/": 1794222096000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/09/lamine-yamal-y-oyarzabal-retrasan-su-incorporacion-a-la-concentracion-de-la-seleccion-en-madrid-cadena-ser/": 1794222823000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-perderan-partido-republica-checa-espera-lleguen-encuentro-inglaterra-20261109_3471298.html": 1794222744000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/09/6af1a885e85ece28168b457d.html": 1794222898000,
@@ -7596,13 +7595,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1771,
+   "ok": 1772,
    "fallos": 0,
-   "ejecuciones": 1313,
+   "ejecuciones": 1314,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T11:01:19.141Z"
+   "ultima": "2026-11-12T11:06:13.240Z"
   }
  },
  "ptsDirecto": {},
@@ -7619,15 +7618,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:01:33.113Z"
+   "ultimaBien": "2026-11-12T11:06:15.658Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:01:33.113Z"
+   "ultimaBien": "2026-11-12T11:06:15.658Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:01:33.113Z"
+   "ultimaBien": "2026-11-12T11:06:15.658Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7635,11 +7634,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:01:33.113Z"
+   "ultimaBien": "2026-11-12T11:06:15.658Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:01:33.113Z"
+   "ultimaBien": "2026-11-12T11:06:15.658Z"
   }
  },
  "avisos": [
