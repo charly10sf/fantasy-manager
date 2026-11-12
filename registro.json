@@ -2113,7 +2113,9 @@
    "SPORT|136355809": 1794468075000,
    "SPORT|136355257": 1794468488000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261112/1004250127/endrick-vuelve-pensar-posible-equipo-pole.html": 1794473364000,
-   "SPORT|136356748": 1794470064000
+   "SPORT|136356748": 1794470064000,
+   "SPORT|136337732": 1794470435000,
+   "SPORT|136355906": 1794470235000
   },
   "hechos": [
    {
@@ -2467,7 +2469,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3470,23 +3472,24 @@
    "fallos": 0
   },
   "espera": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-ordena-director-policia-abrir-investigacion-cargas-policiales-huelga-20261112095525.html": 1794473772969
+   "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-ordena-director-policia-abrir-investigacion-cargas-policiales-huelga-20261112095525.html": 1794473772969,
+   "SPORT|136355906": 1794474372216
   }
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 12,
+   "clasificar": 13,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 110349,
-  "salida": 7437,
+  "entrada": 112667,
+  "salida": 7611,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.210654,
+  "dolares": 0.210973,
   "reservado": 0
  },
  "recientes": {
@@ -7591,13 +7594,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1747,
+   "ok": 1748,
    "fallos": 0,
-   "ejecuciones": 1289,
+   "ejecuciones": 1290,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T09:01:14.313Z"
+   "ultima": "2026-11-12T09:06:12.216Z"
   }
  },
  "ptsDirecto": {},
@@ -7614,15 +7617,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:01:21.691Z"
+   "ultimaBien": "2026-11-12T09:06:16.580Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:01:21.691Z"
+   "ultimaBien": "2026-11-12T09:06:16.580Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:01:21.691Z"
+   "ultimaBien": "2026-11-12T09:06:16.580Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7630,11 +7633,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:01:21.691Z"
+   "ultimaBien": "2026-11-12T09:06:16.580Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:01:21.691Z"
+   "ultimaBien": "2026-11-12T09:06:16.580Z"
   }
  },
  "avisos": [
