@@ -1873,11 +1873,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/09/espana/00031794259204939368288.htm": 1794259980000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249228/dani-olmo-podra-villarreal.html": 1794290400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249292/capello-pone-lamine-espejo-yildiz.html": 1794266284000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261109/1004249132/0-0-sanse-trabaja-buen-punto-le-saca-descenso-desaprovecha-opcion-ganar.html": 1794260216000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261109/1004249225/valverde-enciende-alarmas-llegada-uruguay-no-100.html": 1794260000000,
    "SPORT|136261924": 1794285057000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/entrevistas-de-juanma-castano/noticias/entrevista-juanma-castano-cucurella-partidazo-cope-09-20261109_3471802.html": 1794267626000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/2a-parte-09-nov-2026-partidazo-cope-20261110_3471813.html": 1794267913000,
@@ -2128,36 +2126,10 @@
    "SPORT|136386826": 1794509158000,
    "SPORT|136387136": 1794508997000,
    "SPORT|136387891": 1794511866000,
-   "SPORT|136384002": 1794513351000
+   "SPORT|136384002": 1794513351000,
+   "SPORT|136389889": 1794515511000
   },
   "hechos": [
-   {
-    "guid": "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/09/espana/00031794259204939368288.htm",
-    "medio": "La Voz de Galicia",
-    "t": 1794259980000,
-    "id": "3104",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Lamine Yamal se recupera en Barcelona de molestias en la rodilla",
-    "motivo": "molestias en la rodilla derecha",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261109/1004249225/valverde-enciende-alarmas-llegada-uruguay-no-100.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794260000000,
-    "id": "2430",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Valverde admite que no está al cien por cien",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     100,
-     18
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html",
     "medio": "Mundo Deportivo",
@@ -2581,7 +2553,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 50
+   "n": 51
   },
   "desde": {
    "67": {
@@ -3589,17 +3561,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 63,
+   "clasificar": 64,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 269945,
-  "salida": 36217,
+  "entrada": 271988,
+  "salida": 36652,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.375266,
+  "dolares": 0.375688,
   "reservado": 0
  },
  "recientes": {
@@ -7730,13 +7702,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1901,
+   "ok": 1902,
    "fallos": 0,
-   "ejecuciones": 1441,
+   "ejecuciones": 1442,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T21:31:13.674Z"
+   "ultima": "2026-11-12T21:36:11.686Z"
   }
  },
  "ptsDirecto": {},
@@ -7753,15 +7725,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:31:18.366Z"
+   "ultimaBien": "2026-11-12T21:36:17.229Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:31:18.366Z"
+   "ultimaBien": "2026-11-12T21:36:17.229Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:31:18.366Z"
+   "ultimaBien": "2026-11-12T21:36:17.229Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7769,11 +7741,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:31:18.366Z"
+   "ultimaBien": "2026-11-12T21:36:17.229Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T21:31:18.366Z"
+   "ultimaBien": "2026-11-12T21:36:17.229Z"
   }
  },
  "avisos": [
