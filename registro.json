@@ -1852,13 +1852,11 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/psicosis-con-raphinha-tres-viajes-con-brasil-en-2026-tres-lesiones-f202611-n/": 1794222470000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/09/lamine-yamal-y-oyarzabal-retrasan-su-incorporacion-a-la-concentracion-de-la-seleccion-en-madrid-cadena-ser/": 1794222823000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-perderan-partido-republica-checa-espera-lleguen-encuentro-inglaterra-20261109_3471298.html": 1794222744000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/09/6af1a885e85ece28168b457d.html": 1794222898000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/lamine-yamal-sera-baixa-en-el-primer-partit-de-la-selecio-espanyola-davant-la-republica-txeca-sercat/": 1794223492000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/09/6af1ac9fe9cf4a77498b4590.html": 1794223447000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261109/1004249001/oyarzabal-baja-temporal-perdera-minimo-partido-chequia-duda-inglaterra.html": 1794222644000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/09/oyarzabal-retrasa-su-incorporacion-con-la-seleccion-debido-a-su-proceso-gripal-radio-san-sebastian/": 1794223969000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/lamine-yamal-es-baixa-pel-primer-partit-de-la-selecio-espanyola-contra-republica-txeca-sercat/": 1794223492000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/09/el-barca-reafirma-el-liderat-recupera-laqui-catalunya-del-dilluns-9-de-novembre-la-tertulia-esportiva-amb-danae-boronat-sique-rodriguez-i-tomas-roncero-sercat/": 1794224320000,
@@ -7595,13 +7593,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1772,
+   "ok": 1773,
    "fallos": 0,
-   "ejecuciones": 1314,
+   "ejecuciones": 1315,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T11:06:13.240Z"
+   "ultima": "2026-11-12T11:11:14.589Z"
   }
  },
  "ptsDirecto": {},
@@ -7618,15 +7616,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:06:15.658Z"
+   "ultimaBien": "2026-11-12T11:11:18.402Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:06:15.658Z"
+   "ultimaBien": "2026-11-12T11:11:18.402Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:06:15.658Z"
+   "ultimaBien": "2026-11-12T11:11:18.402Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7634,11 +7632,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:06:15.658Z"
+   "ultimaBien": "2026-11-12T11:11:18.402Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T11:06:15.658Z"
+   "ultimaBien": "2026-11-12T11:11:18.402Z"
   }
  },
  "avisos": [
