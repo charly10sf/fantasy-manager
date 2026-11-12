@@ -3318,7 +3318,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261109/1004248992/pirotecnia-tension-impresionantes-imagenes-derbi-copenhague.html": 1794221396000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/09/las-48-horas-de-los-capitanes-de-las-palmas-del-homenaje-a-demi-en-el-heliodoro-a-jugar-contra-el-eldense-en-el-estadio-gran-canaria-ser-las-palmas/": 1794225595000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/santi-canizares-defiende-atletico-madrid-resta-importancia-derrotas-bayern-barcelona-son-dos-cinco-mejores-equipos-europa-20261109_3471055.html": 1794225339000,
    "Europa Press|https://www.europapress.es/nacional/noticia-supremo-descarta-suspender-voto-hijos-nacionalizados-ley-nietos-20261109135924.html": 1794229164000,
@@ -7596,13 +7595,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1768,
+   "ok": 1769,
    "fallos": 0,
-   "ejecuciones": 1310,
+   "ejecuciones": 1311,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T10:46:11.567Z"
+   "ultima": "2026-11-12T10:51:13.005Z"
   }
  },
  "ptsDirecto": {},
@@ -7619,15 +7618,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:46:19.175Z"
+   "ultimaBien": "2026-11-12T10:51:17.269Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:46:19.175Z"
+   "ultimaBien": "2026-11-12T10:51:17.269Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:46:19.175Z"
+   "ultimaBien": "2026-11-12T10:51:17.269Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7635,11 +7634,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:46:19.175Z"
+   "ultimaBien": "2026-11-12T10:51:17.269Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T10:46:19.175Z"
+   "ultimaBien": "2026-11-12T10:51:17.269Z"
   }
  },
  "avisos": [
