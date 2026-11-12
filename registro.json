@@ -1852,7 +1852,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/09/julian-calero-oviedo-fichaje-raul-136241022.html": 1794218306000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/emotiva-carta-dedica-hija-pepe-mel-padre-no-me-dejes-sola-lucha-20261109_3471266.html": 1794219924000,
    "AS|https://as.com/futbol/primera/luis-garcia-anora-a-miguel-sierra-f202611-n/": 1794220234000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261109/1004248967/mbappe-hereda-balon-playa-vinicius.html": 1794222000000,
@@ -2117,7 +2116,8 @@
    "ABC|https://www.abc.es/deportes/futbol/eli-junior-kroupi-nino-forjado-iraola-convocado-20261112100758-nt.html": 1794474612000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/torremarathon/2026/11/12/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-volvera-pasar-quirofano/00031794474489244382424.htm": 1794474660000,
    "SPORT|136358456": 1794472225000,
-   "Diario Sur|https://www.diariosur.es/malagacf/pepe-mel-evolucion-favorable-ictus-20261112103103-nt.html": 1794475890000
+   "Diario Sur|https://www.diariosur.es/malagacf/pepe-mel-evolucion-favorable-ictus-20261112103103-nt.html": 1794475890000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261112/1004250139/hugo-rincon-dani-vivian-caen-convocatoria-euskadi-lesion-entra-prados.html": 1794476013000
   },
   "hechos": [
    {
@@ -2471,7 +2471,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -3481,17 +3481,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 6,
    "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 125059,
-  "salida": 9299,
+  "entrada": 127113,
+  "salida": 9411,
   "cacheLee": 5806,
   "cacheEscribe": 8709,
-  "dolares": 0.213057,
+  "dolares": 0.213318,
   "reservado": 0
  },
  "recientes": {
@@ -7596,13 +7596,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1758,
+   "ok": 1759,
    "fallos": 0,
-   "ejecuciones": 1300,
+   "ejecuciones": 1301,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T09:56:13.652Z"
+   "ultima": "2026-11-12T10:01:14.039Z"
   }
  },
  "ptsDirecto": {},
@@ -7619,15 +7619,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:56:17.440Z"
+   "ultimaBien": "2026-11-12T10:01:21.418Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:56:17.440Z"
+   "ultimaBien": "2026-11-12T10:01:21.418Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:56:17.440Z"
+   "ultimaBien": "2026-11-12T10:01:21.418Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7635,11 +7635,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:56:17.440Z"
+   "ultimaBien": "2026-11-12T10:01:21.418Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T09:56:17.440Z"
+   "ultimaBien": "2026-11-12T10:01:21.418Z"
   }
  },
  "avisos": [
