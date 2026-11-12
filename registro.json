@@ -2103,7 +2103,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/12/manu-carreno-se-posiciona-en-el-caso-lamine-yamal-no-sera-que-no-estamos-acostumbrados-a-tener-un-jugador-de-esta-dimension-cadena-ser/": 1794464787000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/12/pepe-mel-despierta-sufrir-ictus-136354696.html": 1794469290000,
    "SPORT|136355241": 1794466870000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/12/pepe-mel-despierta-y-gana-el-partido-de-su-vida-ser-almeria/": 1794471197000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/12/pepe-mel-despierta-y-gana-el-partido-de-su-vida-ser-almeria/": 1794471197000,
+   "SPORT|136355809": 1794468075000
   },
   "hechos": [
    {
@@ -2444,7 +2445,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3451,17 +3452,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 3,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 59403,
-  "salida": 5668,
+  "entrada": 61441,
+  "salida": 5787,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.099536,
+  "dolares": 0.099799,
   "reservado": 0
  },
  "recientes": {
@@ -7566,13 +7567,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1740,
+   "ok": 1741,
    "fallos": 0,
-   "ejecuciones": 1282,
+   "ejecuciones": 1283,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T08:26:19.505Z"
+   "ultima": "2026-11-12T08:31:14.295Z"
   }
  },
  "ptsDirecto": {},
@@ -7589,15 +7590,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:26:24.303Z"
+   "ultimaBien": "2026-11-12T08:31:19.484Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:26:24.303Z"
+   "ultimaBien": "2026-11-12T08:31:19.484Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:26:24.303Z"
+   "ultimaBien": "2026-11-12T08:31:19.484Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7605,11 +7606,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:26:24.303Z"
+   "ultimaBien": "2026-11-12T08:31:19.484Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:26:24.303Z"
+   "ultimaBien": "2026-11-12T08:31:19.484Z"
   }
  },
  "avisos": [
