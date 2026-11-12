@@ -3558,7 +3558,8 @@
    "SPORT|136383251": 1794501918000,
    "SPORT|136382650": 1794505061000,
    "Europa Press|https://www.europapress.es/nacional/noticia-marlaska-descarta-dimitir-cuestiona-proporcionalidad-cargas-policiales-11n-20261112201107.html": 1794510667000,
-   "SPORT|136385497": 1794507196000
+   "SPORT|136385497": 1794507196000,
+   "SPORT|136387136": 1794508997000
   },
   "hechos": [
    {
@@ -3580,27 +3581,25 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 11,
+   "n": 12,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136387136": 1794513073692
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 59,
+   "clasificar": 60,
    "redactar": 10,
    "revisar": 8,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 262276,
-  "salida": 35048,
+  "entrada": 264040,
+  "salida": 35134,
   "cacheLee": 5806,
   "cacheEscribe": 17418,
-  "dolares": 0.373915,
+  "dolares": 0.374134,
   "reservado": 0
  },
  "recientes": {
@@ -7689,13 +7688,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1882,
+   "ok": 1883,
    "fallos": 0,
-   "ejecuciones": 1424,
+   "ejecuciones": 1425,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T20:11:12.864Z"
+   "ultima": "2026-11-12T20:16:14.876Z"
   }
  },
  "ptsDirecto": {},
@@ -7712,15 +7711,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:11:17.124Z"
+   "ultimaBien": "2026-11-12T20:16:20.347Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:11:17.124Z"
+   "ultimaBien": "2026-11-12T20:16:20.347Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:11:17.124Z"
+   "ultimaBien": "2026-11-12T20:16:20.347Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7728,11 +7727,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:11:17.124Z"
+   "ultimaBien": "2026-11-12T20:16:20.347Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T20:11:17.124Z"
+   "ultimaBien": "2026-11-12T20:16:20.347Z"
   }
  },
  "avisos": [
