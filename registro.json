@@ -1873,7 +1873,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261109/1004249018/preocupacion-sevilla-forma-fofana.html": 1794223973000,
    "SPORT|136247384": 1794222069000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261109/1004249041/marc-roca-rumbo-primera-cita-espana-betis-no-limite.html": 1794226163000,
-   "COPE|https://www.cope.es/emisoras/pais-vasco/deportes-guipuzcoa/noticias/barrenetxea-lesion-baja-seleccion-jorge-frutos-real-sociedad-20261109_3471153.html": 1794212241000,
    "AS|https://as.com/futbol/primera/un-deportivo-de-presente-y-de-mucho-mas-futuro-f202611-n/": 1794227206000,
    "MARCA|https://www.marca.com/futbol/oviedo/2026/11/09/raul-gonzalez-blanco-nuevo-entrenador-oviedo.html": 1794228480000,
    "SPORT|136248722": 1794225294000,
@@ -2103,7 +2102,8 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-evoluciona-satisfactoriamente-salud_0_2008476879.html": 1794433861000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/12/manu-carreno-se-posiciona-en-el-caso-lamine-yamal-no-sera-que-no-estamos-acostumbrados-a-tener-un-jugador-de-esta-dimension-cadena-ser/": 1794464787000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/12/pepe-mel-despierta-sufrir-ictus-136354696.html": 1794469290000,
-   "SPORT|136355241": 1794466870000
+   "SPORT|136355241": 1794466870000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/12/pepe-mel-despierta-y-gana-el-partido-de-su-vida-ser-almeria/": 1794471197000
   },
   "hechos": [
    {
@@ -2444,7 +2444,7 @@
   ],
   "gemini": {
    "dia": "2026-11-12",
-   "n": 5
+   "n": 6
   },
   "desde": {
    "67": {
@@ -3451,17 +3451,17 @@
  "ia": {
   "dia": "2026-11-12",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 3,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 57492,
-  "salida": 5576,
+  "entrada": 59403,
+  "salida": 5668,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.099299,
+  "dolares": 0.099536,
   "reservado": 0
  },
  "recientes": {
@@ -7566,13 +7566,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1738,
+   "ok": 1739,
    "fallos": 0,
-   "ejecuciones": 1280,
+   "ejecuciones": 1281,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T08:16:12.571Z"
+   "ultima": "2026-11-12T08:21:13.205Z"
   }
  },
  "ptsDirecto": {},
@@ -7589,15 +7589,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:16:16.758Z"
+   "ultimaBien": "2026-11-12T08:21:20.644Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:16:16.758Z"
+   "ultimaBien": "2026-11-12T08:21:20.644Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:16:16.758Z"
+   "ultimaBien": "2026-11-12T08:21:20.644Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7605,11 +7605,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:16:16.758Z"
+   "ultimaBien": "2026-11-12T08:21:20.644Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T08:16:16.758Z"
+   "ultimaBien": "2026-11-12T08:21:20.644Z"
   }
  },
  "avisos": [
