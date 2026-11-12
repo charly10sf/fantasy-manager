@@ -3398,7 +3398,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/sociedad/noticia-sanchez-no-descarta-suspender-tiktok-posibles-videos-abuso-sexual-infantil-me-parece-escandalo-20261109232101.html": 1794262861000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/alaves/20261110/1004249181/alaves-vuelve-txerloia-36-anos.html": 1794290400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/valencia/20261110/1004249177/valencia-busca-autoestima-fiesta-tavernes.html": 1794290400000,
    "El Correo|https://www.elcorreo.com/athletic/espanyol-malaga-fin-ano-frenetico-dos-partidos-20261109003814-nt.html": 1794267494000,
@@ -7697,13 +7696,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 1910,
+   "ok": 1911,
    "fallos": 0,
-   "ejecuciones": 1450,
+   "ejecuciones": 1451,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 433,
-   "ultima": "2026-11-12T22:16:12.679Z"
+   "ultima": "2026-11-12T22:21:11.658Z"
   }
  },
  "ptsDirecto": {},
@@ -7720,15 +7719,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:16:14.559Z"
+   "ultimaBien": "2026-11-12T22:21:15.216Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:16:14.559Z"
+   "ultimaBien": "2026-11-12T22:21:15.216Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:16:14.559Z"
+   "ultimaBien": "2026-11-12T22:21:15.216Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7736,7 +7735,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-12T22:16:14.559Z"
+   "ultimaBien": "2026-11-12T22:21:15.216Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
