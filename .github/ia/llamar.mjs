@@ -16,7 +16,7 @@ const out = [];
 for (const p of pedidos) {
   for (let v = 0; v < veces; v++) {
     let j = null, modelo = null, ms = 0;
-    for (let n = 0; n < 6 && !j; n++) {
+    for (let n = 0; n < 5 && !j; n++) {
       modelo = modelos[Math.min(modelos.length - 1, Math.floor(n / 2))];
       const t0 = Date.now();
       try {
@@ -24,13 +24,15 @@ for (const p of pedidos) {
         const x = await r.json();
         ms = Date.now() - t0;
         if (r.ok && x.candidates) j = x;
-        else { console.log(`  ${p.id}: ${modelo} ${r.status} ${JSON.stringify(x).slice(0, 200)}`); await espera(r.status === 429 ? 45000 : 12000); }
+        else { console.log(`  ${p.id}: ${modelo} ${r.status} ${JSON.stringify(x).slice(0, 200)}`); await espera(r.status === 429 ? 30000 : 10000); }
       } catch (e) { console.log(`  ${p.id}: ${modelo} ${e.message}`); await espera(8000); }
     }
     const u = (j && j.usageMetadata) || {};
     console.log(`${j ? 'OK ' : 'MAL'} ${p.id}${veces > 1 ? ` #${v + 1}` : ''} · ${modelo} · ${Math.round(ms / 1000)} s · entra ${u.promptTokenCount || '?'} · piensa ${u.thoughtsTokenCount || 0} · escribe ${u.candidatesTokenCount || '?'} · ${j ? j.candidates[0].finishReason : ''}`);
     out.push({ id: p.id, v, modelo, ms, respuesta: j });
-    await espera(+(process.env.PAUSA || 6000));
+    // se guarda a cada paso: si la Action se corta por tiempo, lo hecho no se pierde
+    writeFileSync(new URL('./respuestas.json', import.meta.url), JSON.stringify(out));
+    await espera(+(process.env.PAUSA || 3000));
   }
 }
 writeFileSync(new URL('./respuestas.json', import.meta.url), JSON.stringify(out));
