@@ -1887,11 +1887,9 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/fe-ciega-en-julian-alvarez-f202611-n/": 1794295741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249120/gran-cambio-real-madrid.html": 1794297600000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249318/sorpresa-caicedo-real-madrid-calla-sobre-lesion-visto-entrenando.html": 1794297190000,
-   "SPORT|136272513": 1794295666000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261110/1004249327/dos-requisitos-obligatorios-oviedo-fichar-raul.html": 1794299023000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/10/lalcudia-de-crespins-remonta-ante-el-atletico-chella-1-2-y-se-lleva-un-duelo-directo-por-el-liderato-radio-xativa/": 1794302528000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249354/cucurella-resuelve-duda-le-ayuda-defensa-vinicius-diomande.html": 1794304800000,
@@ -3435,7 +3433,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-huelga-general-20261110082835.html": 1794295715000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-huelga-maquinistas-recomienda-usar-otras-alternativas-transporte-20261110085547.html": 1794297347000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
    "Europa Press|https://www.europapress.es/nacional/noticia-tellado-denuncia-huelga-electoral-sindicatos-contra-pp-verdadero-partido-currantes-20261110103158.html": 1794303118000,
@@ -7733,13 +7730,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2056,
+   "ok": 2057,
    "fallos": 0,
-   "ejecuciones": 1560,
+   "ejecuciones": 1561,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T07:26:36.414Z"
+   "ultima": "2026-11-13T07:31:11.807Z"
   }
  },
  "ptsDirecto": {},
@@ -7756,15 +7753,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:26:40.586Z"
+   "ultimaBien": "2026-11-13T07:31:15.412Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:26:40.586Z"
+   "ultimaBien": "2026-11-13T07:31:15.412Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:26:40.586Z"
+   "ultimaBien": "2026-11-13T07:31:15.412Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7772,11 +7769,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:26:40.586Z"
+   "ultimaBien": "2026-11-13T07:31:15.412Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:26:40.586Z"
+   "ultimaBien": "2026-11-13T07:31:15.412Z"
   }
  },
  "avisos": [
