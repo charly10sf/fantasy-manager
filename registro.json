@@ -1894,12 +1894,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/10/matricula-honor-mathew-ryan-estuvo-136298628.html": 1794333325000,
    "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/": 1794333490000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/alarma-tchouameni.html": 1794335994000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tchouameni-lesionado-francia-20261110_3472559.html": 1794336427000,
-   "SPORT|136305317": 1794333273000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249612/marc-bernal-rodri-fichan-balon-oro-dificil-jugar.html": 1794337752000,
    "SPORT|136302339": 1794335294000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html": 1794341384000,
@@ -2153,7 +2151,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rajada-pique-federacion-no-haber-sacado-dos-semanas-sanciones-tenerife-andorra-no-constancia-ninguna-owono-jugar-manana-obviamente-no-viajar-20261113_3475149.html": 1794588819000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261113/11683695/gerard-pique-arremete-federacion-tiktok-lol.html": 1794588060000,
    "AS|https://as.com/futbol/primera/barrenetxea-operado-de-forma-satisfactoria-f202611-n/": 1794589785000,
-   "AS|https://as.com/futbol/primera/alarma-lookman-cambiado-por-lesion-con-nigeria-f202611-n/": 1794589834000
+   "AS|https://as.com/futbol/primera/alarma-lookman-cambiado-por-lesion-con-nigeria-f202611-n/": 1794589834000,
+   "SPORT|136419217": 1794588765000
   },
   "hechos": [
    {
@@ -2580,7 +2579,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 45
+   "n": 46
   },
   "desde": {
    "67": {
@@ -3547,17 +3546,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 55,
+   "clasificar": 56,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 277215,
-  "salida": 24582,
+  "entrada": 279232,
+  "salida": 24696,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.413079,
+  "dolares": 0.413338,
   "reservado": 0
  },
  "recientes": {
@@ -7704,13 +7703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2183,
+   "ok": 2184,
    "fallos": 0,
-   "ejecuciones": 1687,
+   "ejecuciones": 1688,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T17:51:11.628Z"
+   "ultima": "2026-11-13T17:56:13.229Z"
   }
  },
  "ptsDirecto": {},
@@ -7727,15 +7726,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:51:16.201Z"
+   "ultimaBien": "2026-11-13T17:56:19.939Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:51:16.201Z"
+   "ultimaBien": "2026-11-13T17:56:19.939Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:51:16.201Z"
+   "ultimaBien": "2026-11-13T17:56:19.939Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7743,11 +7742,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:51:16.201Z"
+   "ultimaBien": "2026-11-13T17:56:19.939Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:51:16.201Z"
+   "ultimaBien": "2026-11-13T17:56:19.939Z"
   }
  },
  "avisos": [
