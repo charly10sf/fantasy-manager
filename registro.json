@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-ve-apto-lamine-yamal-inglaterra-no-merecia-pena-asumir-riesgo-20261110_3472467.html": 1794325288000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/marc-roca-regreso-roja-europeo_0_2008465260.html": 1794325756000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249536/17-leyendas-atletico-convocadas-duelo-america.html": 1794326358000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enzo-alves-hijo-marcelo-cae-lista-espana-mundial-sub-17-lesion-muscular-20261110_3472480.html": 1794326987000,
@@ -7705,13 +7704,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2156,
+   "ok": 2157,
    "fallos": 0,
-   "ejecuciones": 1660,
+   "ejecuciones": 1661,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T15:41:17.191Z"
+   "ultima": "2026-11-13T15:46:12.828Z"
   }
  },
  "ptsDirecto": {},
@@ -7728,15 +7727,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:41:22.004Z"
+   "ultimaBien": "2026-11-13T15:46:16.070Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:41:22.004Z"
+   "ultimaBien": "2026-11-13T15:46:16.070Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:41:22.004Z"
+   "ultimaBien": "2026-11-13T15:46:16.070Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7744,11 +7743,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:41:22.004Z"
+   "ultimaBien": "2026-11-13T15:46:16.070Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:41:22.004Z"
+   "ultimaBien": "2026-11-13T15:46:16.070Z"
   }
  },
  "avisos": [
