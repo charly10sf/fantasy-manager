@@ -1890,7 +1890,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261110/11680703/cucurella-descubre-cara-mas-desconocida-mourinho-divertido-meme-le-envio-lol.html": 1794309043000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249417/real-quita-peso-ganar-liga-oyarzabal-tres-anos-hacerlo.html": 1794311814000,
-   "SPORT|136280060": 1794308464000,
    "SPORT|136281831": 1794308810000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000,
    "SPORT|136284333": 1794309130000,
@@ -2149,7 +2148,9 @@
    "SPORT|136399158": 1794560918000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/13/redondo-alerta-del-potencial-del-calpe-antes-de-una-nueva-prueba-para-el-olimpic-radio-xativa/": 1794566135000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261113/11683354/emocionado-raphinha-sale-paso-criticas-brasil-me-quiero-volver-lesionar.html": 1794565010000
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261113/11683354/emocionado-raphinha-sale-paso-criticas-brasil-me-quiero-volver-lesionar.html": 1794565010000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250551/raul-da-pistas-sobre-oviedo-espera-queremos-verticales.html": 1794566621000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/durisimas-criticas-seleccionador-guinea-ilaix-moriba-no-sido-convocado-pais-tienes-ego-enorme-te-importas-20261113_3474616.html": 1794567572000
   },
   "hechos": [
    {
@@ -2576,7 +2577,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -3423,7 +3424,6 @@
   "vistas": {
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/navalcarnero-betis-horario-ver-tv_0_2008462707.html": 1794308704000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/10/betis-abre-proceso-solicitud-602-entradas-proximo-derbi-sanchez-pizjuan.html": 1794313574000,
-   "SPORT|136280060": 1794308464000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794315238000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794318765000,
    "SPORT|136281772": 1794316000000,
@@ -3556,17 +3556,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 172213,
-  "salida": 14121,
+  "entrada": 174500,
+  "salida": 14343,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.302978,
+  "dolares": 0.303318,
   "reservado": 0
  },
  "recientes": {
@@ -7713,13 +7713,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2099,
+   "ok": 2100,
    "fallos": 0,
-   "ejecuciones": 1603,
+   "ejecuciones": 1604,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:56:12.379Z"
+   "ultima": "2026-11-13T11:01:12.723Z"
   }
  },
  "ptsDirecto": {},
@@ -7736,15 +7736,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:56:15.651Z"
+   "ultimaBien": "2026-11-13T11:01:18.905Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:56:15.651Z"
+   "ultimaBien": "2026-11-13T11:01:18.905Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:56:15.651Z"
+   "ultimaBien": "2026-11-13T11:01:18.905Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7752,11 +7752,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:56:15.651Z"
+   "ultimaBien": "2026-11-13T11:01:18.905Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:56:15.651Z"
+   "ultimaBien": "2026-11-13T11:01:18.905Z"
   }
  },
  "avisos": [
