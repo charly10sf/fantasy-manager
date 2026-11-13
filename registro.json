@@ -3423,9 +3423,6 @@
  },
  "liga": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/pamplona-eibar-horario-canal-television-ver-online-20261110104442-nt.html": 1794304416000,
-   "ABC|https://www.abc.es/deportes/futbol/amorebieta-logrones-horario-canal-television-ver-online-20261110104938-nt.html": 1794304397000,
-   "ABC|https://www.abc.es/deportes/futbol/mijas-lagunas-real-jaen-horario-canal-television-20261110105244-nt.html": 1794304365000,
    "ABC|https://www.abc.es/deportes/futbol/tavernes-valencia-horario-canal-television-ver-online-20261110110419-nt.html": 1794305137000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-seguimiento-196-huelga-maquinistas-incumplimiento-servicios-minimos-20261110113536.html": 1794306936000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/navalcarnero-betis-horario-ver-tv_0_2008462707.html": 1794308704000,
@@ -7718,13 +7715,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2086,
+   "ok": 2087,
    "fallos": 0,
-   "ejecuciones": 1590,
+   "ejecuciones": 1591,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T09:51:33.890Z"
+   "ultima": "2026-11-13T09:56:11.229Z"
   }
  },
  "ptsDirecto": {},
@@ -7741,15 +7738,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:51:50.966Z"
+   "ultimaBien": "2026-11-13T09:56:14.728Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:51:50.966Z"
+   "ultimaBien": "2026-11-13T09:56:14.728Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:51:50.966Z"
+   "ultimaBien": "2026-11-13T09:56:14.728Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7757,11 +7754,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:51:50.966Z"
+   "ultimaBien": "2026-11-13T09:56:14.728Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:51:50.966Z"
+   "ultimaBien": "2026-11-13T09:56:14.728Z"
   }
  },
  "avisos": [
