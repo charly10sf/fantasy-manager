@@ -3433,7 +3433,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/nacional/noticia-tellado-denuncia-huelga-electoral-sindicatos-contra-pp-verdadero-partido-currantes-20261110103158.html": 1794303118000,
-   "SPORT|136277062": 1794300824000,
    "ABC|https://www.abc.es/deportes/futbol/pamplona-eibar-horario-canal-television-ver-online-20261110104442-nt.html": 1794304416000,
    "ABC|https://www.abc.es/deportes/futbol/amorebieta-logrones-horario-canal-television-ver-online-20261110104938-nt.html": 1794304397000,
    "ABC|https://www.abc.es/deportes/futbol/mijas-lagunas-real-jaen-horario-canal-television-20261110105244-nt.html": 1794304365000,
@@ -7727,13 +7726,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2074,
+   "ok": 2075,
    "fallos": 0,
-   "ejecuciones": 1578,
+   "ejecuciones": 1579,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T08:51:19.427Z"
+   "ultima": "2026-11-13T08:56:11.901Z"
   }
  },
  "ptsDirecto": {},
@@ -7750,15 +7749,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:51:24.691Z"
+   "ultimaBien": "2026-11-13T08:56:14.802Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:51:24.691Z"
+   "ultimaBien": "2026-11-13T08:56:14.802Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:51:24.691Z"
+   "ultimaBien": "2026-11-13T08:56:14.802Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7766,11 +7765,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:51:24.691Z"
+   "ultimaBien": "2026-11-13T08:56:14.802Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:51:24.691Z"
+   "ultimaBien": "2026-11-13T08:56:14.802Z"
   }
  },
  "avisos": [
