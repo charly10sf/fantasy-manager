@@ -1770,6 +1770,7 @@ export function cuadrarPlan(P, D, M) {
     if ((o.hoy || !o.importe) && sin != null && sin >= 0 && !pagaCaja(o)) {
       const txt = `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(sin)}) y ${sf.txt}`;
       if (o.importe) quitarVenta(o, txt); else { o.descartada = true; o.aviso = txt; o.saldo = null; }
+      o.aguanta = 'sube';
     }
     else o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${sf.txt} Véndelo solo si de verdad necesitas el dinero.`;
   }
@@ -1937,7 +1938,56 @@ export function cuadrarPlan(P, D, M) {
   }
   const descartes0 = Array.isArray(P.descartes) ? P.descartes.filter((d) => !String((d && d.ref) || '').trim().toUpperCase().startsWith('M-')) : P.descartes;
   const descartes = quitados.length ? [...quitados, ...(Array.isArray(descartes0) ? descartes0.filter((d) => !quitados.some((q) => norm(q.jugador) === norm(d && d.jugador))) : [])] : descartes0;
-  return { ...P, descartes, ops, final, avisoSaldo, avisoTipo, recupera, empezo, alineacion, avisoOnce, avisoAlin, pujasHechas: +M.misPujas || 0 };
+  const { titular, situacion, titularApp } = textoSinDescartes(P, ops, OPERA);
+  return { ...P, titular, situacion, titularApp, descartes, ops, final, avisoSaldo, avisoTipo, recupera, empezo, alineacion, avisoOnce, avisoAlin, pujasHechas: +M.misPujas || 0 };
+}
+
+/* (0.7.8g, aviso de Carlos, 13 nov 19:58: el titular decía «hoy toca hacer caja aceptando la oferta por Fornals» y justo
+   debajo la app descartaba esa venta) el titular y el resumen los escribe la IA antes de que la app cuadre el plan: si
+   nombran a alguien cuya operación la app ha descartado (y no le queda otra operación en pie), se quita esa parte y el
+   titular se rehace con lo que sí queda para hoy */
+function textoSinDescartes(P, ops, OPERA) {
+  const titular = P.titular || '', situacion = P.situacion || '';
+  const nombreDe = (o) => (o.j && o.j.nombre) || o.jugador || '';
+  const vivas = ops.filter((o) => !o.descartada);
+  const fuera = ops.filter((o) => o.descartada && !o.ya && OPERA.includes(o.accion) && nombreDe(o)
+    && !vivas.some((v) => v.pid ? v.pid === o.pid : norm(nombreDe(v)) === norm(nombreDe(o))));
+  if (!fuera.length || (!titular && !situacion)) return { titular: P.titular, situacion: P.situacion, titularApp: false };
+  // las formas en que la IA puede escribir el nombre: el corto, el largo, lo que puso ella y su última palabra
+  const formas = new Set();
+  for (const o of fuera) for (const n of [o.j && o.j.nombre, o.j && o.j.largo, o.jugador]) {
+    const k = norm(n);
+    if (!k) continue;
+    formas.add(k);
+    const ult = k.split(' ').pop();
+    if (ult.length >= 4) formas.add(ult);
+  }
+  const nombra = (t) => { const k = ` ${norm(t)} `; return [...formas].some((f) => k.includes(` ${f} `)); };
+  // quita las frases (y, dentro de una frase, las partes separadas por «;») que nombran a alguno
+  const limpiar = (t) => String(t || '').split(/(?<=[.!?])\s+/).map((fr) => {
+    if (!nombra(fr)) return fr;
+    const partes = fr.split(/\s*;\s*/).filter((x) => x && !nombra(x));
+    if (!partes.length) return '';
+    const r = partes.join('; ').replace(/[\s,;:]+$/, '');
+    return /[.!?]$/.test(r) ? r : `${r}.`;
+  }).filter(Boolean).join(' ');
+  const sit = nombra(situacion) ? limpiar(situacion) : situacion;
+  if (!nombra(titular)) return { titular: P.titular, situacion: sit || null, titularApp: false };
+  // lo que queda para hoy, en pocas palabras
+  const VERBO = { vender: 'vender a', clausular: 'clausular a', pujar: 'pujar por', comprar: 'comprar a', ofertar: 'hacer una oferta por', blindar: 'blindar a' };
+  const hoy = vivas.filter((o) => o.hoy && !o.ya && !o.sugerencia && VERBO[o.accion] && nombreDe(o));
+  const frase = (o) => o.etiqueta === 'Aceptar oferta' ? `aceptar la oferta por ${nombreDe(o)}` : o.accion === 'blindar' && o.importe ? `subir la cláusula de ${nombreDe(o)}` : `${VERBO[o.accion]} ${nombreDe(o)}`;
+  const aguanta = fuera.filter((o) => o.accion === 'vender').map(nombreDe);
+  const yDe = (l) => l.length > 1 ? `${l.slice(0, -1).join(', ')} y ${l[l.length - 1]}` : l[0];
+  let lo = hoy.length ? `hoy toca ${yDe(hoy.slice(0, 2).map(frase))}${hoy.length > 2 ? ` (y ${hoy.length - 2} más)` : ''}`
+    : vivas.some((o) => o.ya) ? 'lo de hoy ya está hecho' : 'hoy no hace falta vender ni fichar a nadie';
+  if (aguanta.length) {
+    const sube = fuera.some((o) => o.accion === 'vender' && o.aguanta === 'sube');
+    lo += `${hoy.length ? ';' : ':'} mejor aguantar a ${yDe(aguanta)}${sube ? `, que sigue${aguanta.length > 1 ? 'n' : ''} subiendo` : ''}`;
+  }
+  const resto = limpiar(titular).replace(/[.\s]+$/, '');
+  const nuevo = resto ? `${resto}; ${lo}` : `${lo.charAt(0).toUpperCase()}${lo.slice(1)}`;
+  return { titular: nuevo, situacion: sit || null, titularApp: true };
 }
 
 function sacarJSON(t) {
