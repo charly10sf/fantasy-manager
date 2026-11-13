@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249612/marc-bernal-rodri-fichan-balon-oro-dificil-jugar.html": 1794337752000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html": 1794341384000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/tchouameni-se-retira-del-entrenamiento-de-la-seleccion-francesa-por-una-molestia-cadena-ser/": 1794345150000,
    "SPORT|136302363": 1794342099000,
@@ -7670,13 +7669,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2198,
+   "ok": 2199,
    "fallos": 0,
-   "ejecuciones": 1702,
+   "ejecuciones": 1703,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T19:06:13.023Z"
+   "ultima": "2026-11-13T19:11:14.835Z"
   }
  },
  "ptsDirecto": {},
@@ -7693,15 +7692,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:06:16.304Z"
+   "ultimaBien": "2026-11-13T19:11:20.353Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:06:16.304Z"
+   "ultimaBien": "2026-11-13T19:11:20.353Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:06:16.304Z"
+   "ultimaBien": "2026-11-13T19:11:20.353Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7709,11 +7708,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:06:16.304Z"
+   "ultimaBien": "2026-11-13T19:11:20.353Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:06:16.304Z"
+   "ultimaBien": "2026-11-13T19:11:20.353Z"
   }
  },
  "avisos": [
