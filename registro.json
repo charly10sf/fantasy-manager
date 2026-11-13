@@ -1887,9 +1887,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "La Vanguardia|https://www.lavanguardia.com/clic/20261110/11680703/cucurella-descubre-cara-mas-desconocida-mourinho-divertido-meme-le-envio-lol.html": 1794309043000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249417/real-quita-peso-ganar-liga-oyarzabal-tres-anos-hacerlo.html": 1794311814000,
-   "SPORT|136281831": 1794308810000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000,
    "SPORT|136284333": 1794309130000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000,
@@ -7711,13 +7709,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2101,
+   "ok": 2102,
    "fallos": 0,
-   "ejecuciones": 1605,
+   "ejecuciones": 1606,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T11:06:11.798Z"
+   "ultima": "2026-11-13T11:11:12.973Z"
   }
  },
  "ptsDirecto": {},
@@ -7734,15 +7732,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:06:15.384Z"
+   "ultimaBien": "2026-11-13T11:11:16.687Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:06:15.384Z"
+   "ultimaBien": "2026-11-13T11:11:16.687Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:06:15.384Z"
+   "ultimaBien": "2026-11-13T11:11:16.687Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7750,11 +7748,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:06:15.384Z"
+   "ultimaBien": "2026-11-13T11:11:16.687Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:06:15.384Z"
+   "ultimaBien": "2026-11-13T11:11:16.687Z"
   }
  },
  "avisos": [
