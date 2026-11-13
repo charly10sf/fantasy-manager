@@ -21,8 +21,10 @@
        Lo de abajo solo mueve clases para el CSS: atardecer-abre al abrir una pestaña (la franja, las fases, el destello),
        atardecer-pasa y atardecer-titila (el coche y las estrellas, de vez en cuando, parando mientras el cielo o el sol para
        que no haya más de dos animaciones seguidas a la vez), atardecer-quieto con la página oculta, atardecer-fuera en lo
-       que no se ve y atardecer-cambia (y -sube) en las cifras del marcador y del valor de la ficha cuando cambian.
-       La intro (.atardecer-intro): una vez por dispositivo (fm-tema-intro), la primera vez que se ve la app con el tema. */
+       que no se ve, atardecer-cambia (y -sube) en las cifras del marcador y del valor de la ficha cuando cambian, y
+       data-at, la pestaña abierta (la cabecera cambia con ella).
+       La intro (.atardecer-intro): una vez por dispositivo (fm-tema-intro), la primera vez que se ve la app con el tema;
+       aquí se monta la escena y se mueve el mundo (el viaje con su frenada); el resto del movimiento, en el CSS. */
     var TEMA_EVENTO = { id: 'sunset', hasta: '2026-11-26T23:59:00+01:00' };
     (function (t) {
       if (!t || !(Date.now() < Date.parse(t.hasta))) return;
@@ -66,16 +68,103 @@
         if (document.querySelector('.atardecer-intro') || !encendido()) return;
         if (!forzar && (visto() && visto() !== 'ver' || navigator.webdriver && visto() !== 'ver' || document.getElementById('limite'))) return;
         try { localStorage.setItem('fm-tema-intro', String(Date.now())); } catch (e) {}
-        // seis palmeras, tres a cada lado, a distancias que se reparten la vuelta para que siempre haya alguna pasando
-        var palmas = '', xs = [-1, 1, -1.12, 1.12, -0.92, 0.92], i;
-        for (i = 0; i < 6; i++) palmas += '<i class="ai-palma" style="--x:calc(' + xs[i] + ' * min(300px, 50vw));--d:-' + (i * 0.47).toFixed(2) + 's;--z:' + (-300 - i * 380) + 'px"></i>';
-        var d = document.createElement('div');
-        d.className = 'atardecer-intro'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Modo Vice City');
-        d.innerHTML = '<div class="ai-cielo" aria-hidden="true"><i class="ai-estrellas"></i><i class="ai-sol"></i></div>'
-          + '<div class="ai-mundo" aria-hidden="true"><div class="ai-suelo"></div>' + palmas + '</div><div class="ai-niebla" aria-hidden="true"></div>'
-          + '<div class="ai-txt"><p class="ai-pre">Fantasy Manager</p><h2 class="ai-tit"><span>Modo</span><span>Vice City</span><i class="ai-brillo" aria-hidden="true"></i></h2>'
-          + '<p class="ai-sub">Hasta el 26 nov · se quita en Ajustes</p><button type="button" class="ai-entrar">Entrar</button></div>'
-          + '<button type="button" class="ai-saltar">Saltar</button>';
+        // La escena. El mundo (el suelo, las palmeras en dos piezas, las farolas y el coche) se mueve con element.animate, que
+        // deja poner una sola curva al viaje entero: todo avanza VIAJE px y frena a la vez. Las palmeras y las farolas dan
+        // vueltas entre el fondo (LEJOS) y la cámara, y el suelo va de raya en raya (su textura se repite cada RAYA px); la
+        // cámara, además, baja ALTO px mientras llega. Solo transform y opacity.
+        var K = window.devicePixelRatio >= 2.5 ? 3 : 2, LEJOS = -3360, VUELTA = 3600, VIAJE = 3220, RAYA = 240, ALTO = 300, FUNDIDO = 360;
+        var d = document.createElement('div'), parado = !!(quieto && quieto.matches) || !d.animate, capas = '', letras = '', ans = [], i, mundo, saltar;
+        var viaje = { duration: 4300, easing: 'cubic-bezier(0.14, 0.5, 0.2, 1)', fill: 'both' };
+        for (i = 0; i < 8; i++) capas += '<i>Modo</i>';
+        'VICE CITY'.split('').forEach(function (l, n) { letras += l === ' ' ? '<b class="ai-hueco"></b>' : '<b data-l="' + l + '" style="--i:' + n + '">' + l + '</b>'; });
+        d.className = 'atardecer-intro ai-espera ai-espera-2 ai-espera-3'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Modo Vice City');
+        d.style.setProperty('--k', K);
+        // primero, solo un telón negro que tapa la app (y «Saltar»); la escena se monta detrás
+        d.innerHTML = '<i class="ai-telon" aria-hidden="true"></i><button type="button" class="ai-saltar">Saltar</button>';
+        saltar = d.querySelector('.ai-saltar');
+        function varios(c, n, desde) { var s = '', j; for (j = 0; j < n; j++) s += '<i class="ai-obj ' + c + ((desde + j) % 4 > 1 ? ' ai-2' : '') + '"></i>'; return s; }
+        // los fotogramas clave de algo que da vueltas de «vuelta» px mientras el mundo avanza: la altura de la cámara va
+        // muestreada en once puntos y cada vuelta es un salto (del final al principio) en el mismo instante
+        function claves(a0, vuelta, f) {
+          var ev = [], ks = [], q, j;
+          [0, 0.05, 0.11, 0.18, 0.26, 0.35, 0.45, 0.56, 0.68, 0.82, 1].forEach(function (q) { ev.push([q, 0]); });
+          for (q = (vuelta - a0) / VIAJE; q < 1; q += vuelta / VIAJE) { ev.push([q, 1]); if (vuelta > RAYA && q + FUNDIDO / VIAJE < 1) ev.push([q + FUNDIDO / VIAJE, 0]); }
+          if (vuelta > RAYA && a0 < FUNDIDO) ev.push([(FUNDIDO - a0) / VIAJE, 0]);
+          ev.sort(function (x, y) { return x[0] - y[0]; });
+          for (j = 0; j < ev.length; j++) {
+            q = ev[j][0];
+            var y = Math.round(ALTO * Math.pow(1 - q, 1.7) * 10) / 10;
+            if (ev[j][1]) ks.push(f(q, vuelta, y), f(q, 0, y)); else ks.push(f(q, Math.round((a0 + q * VIAJE) % vuelta * 10) / 10, y));
+          }
+          return ks;
+        }
+        function animar(el, ks, opciones) {
+          var fin = ks[ks.length - 1], an;
+          el.style.transform = fin.transform; if (fin.opacity != null) el.style.opacity = fin.opacity;
+          if (!parado) { an = el.animate(ks, opciones); an.pause(); ans.push(an); }
+        }
+        // n: 0-9 troncos y 10-19 copas (cada palmera son dos piezas pequeñas, para que ninguna capa sea grande), 20-29
+        // farolas; pares a la izquierda e impares a la derecha (en espejo); cinco filas de cada
+        function pieza(el, n) {
+          var palma = n < 20, lado = n % 2 ? 1 : -1, x = lado * (palma ? 540 : 345), espejo = lado > 0 ? ' scaleX(-1)' : '';
+          animar(el, claves((((n % 10) >> 1) * 720 + (palma ? 0 : 200)) % VUELTA, VUELTA, function (q, a, y) {
+            return { offset: q, transform: 'translate3d(' + x + 'px,' + y + 'px,' + (LEJOS + a) + 'px)' + espejo, opacity: Math.min(1, Math.round(a / FUNDIDO * 100) / 100) };
+          }), viaje);
+        }
+        // Se monta por partes y todavía sin verse (unas pocas por fotograma, según lo que tarden), para que ni montarla ni
+        // arrancarla se note; con todo pintado, las animaciones arrancan a la vez.
+        var pasos = [
+          function () {
+            d.insertAdjacentHTML('afterbegin', '<div class="ai-cam" aria-hidden="true"><i class="ai-sol"></i><i class="ai-ciudad"></i><i class="ai-lejos"></i><div class="ai-mundo"></div><i class="ai-niebla"></i></div>'
+              + '<i class="ai-banda ai-b1" aria-hidden="true"></i><i class="ai-banda ai-b2" aria-hidden="true"></i>');
+            mundo = d.querySelector('.ai-mundo');
+          },
+          function () { mundo.insertAdjacentHTML('beforeend', '<i class="ai-suelo"></i>'); },
+          function () { mundo.insertAdjacentHTML('beforeend', '<i class="ai-reflejo"></i><i class="ai-charco"></i>'); }
+        ];
+        ['ai-tronco', 'ai-copa', 'ai-farola'].forEach(function (c) { for (var j = 0; j < 10; j += 2) (function (j) { pasos.push(function () { mundo.insertAdjacentHTML('beforeend', varios(c, 2, j)); }); })(j); });
+        pasos.push(
+          function () { mundo.insertAdjacentHTML('beforeend', '<i class="ai-coche"></i>'); },
+          function () { saltar.insertAdjacentHTML('beforebegin', '<div class="ai-txt"><p class="ai-pre">Fantasy Manager</p><h2 class="ai-tit" aria-label="Modo Vice City"></h2></div>'); },
+          function () { d.querySelector('.ai-tit').insertAdjacentHTML('beforeend', '<span class="ai-modo" aria-hidden="true">' + capas + '</span>'); },
+          function () { d.querySelector('.ai-tit').insertAdjacentHTML('beforeend', '<span class="ai-neon" aria-hidden="true">' + letras + '</span><i class="ai-raya" aria-hidden="true"></i><i class="ai-halo" aria-hidden="true"></i>'); },
+          function () { saltar.insertAdjacentHTML('beforebegin', '<div class="ai-fin"><p class="ai-sub">Hasta el 26 nov · se quita en Ajustes</p><button type="button" class="ai-entrar">Entrar</button></div>'); },
+          function () { animar(d.querySelector('.ai-suelo'), claves(0, RAYA, function (q, a, y) { return { offset: q, transform: 'translate3d(0,' + y + 'px,-1500px) rotateX(90deg) scale(' + K + ') translateY(' + a / K + 'px)' }; }), viaje); },
+          // el coche sale de debajo de la cámara y se coloca delante
+          function () { animar(d.querySelector('.ai-coche'), [{ transform: 'translate3d(0,0,330px)' }, { transform: 'translate3d(0,0,-100px)' }], { duration: 2500, delay: 800, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', fill: 'backwards' }); },
+          // lo demás que empieza al abrirse el telón: la cámara ladeada (solo en pantallas estrechas: girar la escena
+          // entera en una ancha cuesta fotogramas donde no hay GPU), el paralaje del sol, la ciudad y las palmeras
+          // lejanas, los reflejos del asfalto, las bandas de cine que se retiran y el propio telón
+          function () {
+            var lenta = 'cubic-bezier(0.2, 0.6, 0.2, 1)', paso1 = 'steps(1, end)';
+            function una(sel, ks, o) { var e = d.querySelectorAll(sel), j; o.fill = o.fill || 'backwards'; for (j = 0; j < e.length; j++) if (!parado) { var an = e[j].animate(ks, o); an.pause(); ans.push(an); } }
+            if (window.innerWidth < 760) una('.ai-cam', [{ transform: 'rotate(-5deg)' }, { transform: 'rotate(0.4deg)', offset: 0.74 }, { transform: 'none' }], { duration: 2700, easing: 'cubic-bezier(0.3, 0.1, 0.2, 1)' });
+            una('.ai-sol', [{ transform: 'translateY(8%) scale(0.86)' }, { transform: 'none' }], { duration: 3200, easing: lenta });
+            una('.ai-ciudad', [{ transform: 'translateY(5px) scale(0.94)' }, { transform: 'none' }], { duration: 3400, easing: lenta });
+            una('.ai-lejos', [{ transform: 'translateY(12px) scale(0.84)' }, { transform: 'none' }], { duration: 3400, easing: lenta });
+            una('.ai-reflejo', [{ opacity: 0 }, { opacity: 1 }], { duration: 1600, delay: 1100, easing: 'ease-out' });
+            una('.ai-charco', [{ opacity: 0, easing: paso1 }, { opacity: 0.2, offset: 0.1, easing: paso1 }, { opacity: 0.4, offset: 0.3, easing: paso1 }, { opacity: 0.55, offset: 0.5, easing: paso1 }, { opacity: 0.75, offset: 0.7, easing: paso1 }, { opacity: 0.6, offset: 0.86, easing: paso1 }, { opacity: 1, offset: 0.92 }, { opacity: 1 }], { duration: 1150, delay: 2000 });
+            una('.ai-banda', [{ transform: 'none' }, { transform: 'scaleY(0)' }], { duration: 500, delay: 2850, easing: 'cubic-bezier(0.6, 0, 0.3, 1)' });
+            una('.ai-telon', [{ opacity: 1 }, { opacity: 1, offset: 0.12 }, { opacity: 0 }], { duration: 620, easing: 'ease-out', fill: 'both' });
+            if (parado) d.querySelector('.ai-telon').remove();
+          }
+        );
+        for (i = 0; i < 30; i += 2) (function (j) { pasos.push(function () { var os = d.querySelectorAll('.ai-obj'); pieza(os[j], j); pieza(os[j + 1], j + 1); }); })(i);
+        // el arranque: primero los rótulos (sus animaciones empiezan con un segundo de espera o más, así que da igual que
+        // se adelanten un par de fotogramas), después el mundo y, con él, se abre el telón
+        pasos.push(function () { d.classList.remove('ai-espera-2'); }, function () { d.classList.remove('ai-espera-3'); }, function () {
+          var cuando = (document.timeline ? document.timeline.currentTime : 0) + 34, j;
+          for (j = 0; j < ans.length; j++) ans[j].startTime = cuando;
+        }, function () {
+          d.classList.remove('ai-espera');
+          setTimeout(function () { var b = d.querySelector('.ai-entrar'); if (b && document.body.contains(d) && !d.classList.contains('ai-va')) b.focus({ preventScroll: true }); }, parado ? 60 : 3250);
+        });
+        function paso() {
+          var t = performance.now();
+          if (!document.body.contains(d)) return;
+          do { pasos.shift()(); } while (pasos.length > 4 && performance.now() - t < 4);
+          if (pasos.length) requestAnimationFrame(paso);
+        }
         function cerrar() {
           if (d.classList.contains('ai-va')) return;
           d.classList.add('ai-va'); document.removeEventListener('keydown', tecla, true);
@@ -85,7 +174,7 @@
         d.addEventListener('click', function (e) { if (e.target.closest('.ai-entrar, .ai-saltar')) cerrar(); });
         document.addEventListener('keydown', tecla, true);
         document.body.appendChild(d);
-        setTimeout(function () { var b = d.querySelector('.ai-entrar'); if (b && document.body.contains(d)) b.focus({ preventScroll: true }); }, 3300);
+        setTimeout(function () { requestAnimationFrame(paso); }, parado ? 0 : 190);
       }
       // el coche cruza la cabecera de Hoy cada ~45 s y las estrellas de la carga titilan cada ~7 s, si se ven
       function cada(c, ms, dura, sel) {
@@ -97,6 +186,12 @@
       }
       cada('atardecer-pasa', 45000, 8200, '.sup');
       cada('atardecer-titila', 7000, 2600, '.carga, #limite');
+      // la pestaña abierta, en <html data-at>: la cabecera cambia con ella (atardecer, sol bajo o noche)
+      function pest() {
+        if (!encendido()) return html.removeAttribute('data-at');
+        var b = document.querySelector('.nav button.activo'), p = b ? b.getAttribute('data-ir') : 'ia';
+        if (html.getAttribute('data-at') !== p) html.setAttribute('data-at', p);
+      }
       function mirar() {
         if (!app) return poner(true);
         var c = app.firstElementChild;
@@ -105,8 +200,9 @@
         var v = document.getElementById('vista');
         if (v && v !== vista) {
           vista = v; if (encendido()) clase('atardecer-abre', 1400);
-          new MutationObserver(function () { cifras(v, 'm'); }).observe(v, { childList: true });
+          new MutationObserver(function () { cifras(v, 'm'); pest(); }).observe(v, { childList: true });
         }
+        pest();
         if (v && v.firstElementChild) intro(false);
       }
       function mirarHoja() {
