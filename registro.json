@@ -2148,7 +2148,8 @@
    "SPORT|136419217": 1794588765000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/13/6af750f6fc6c8389338b4588.html": 1794593457000,
    "ABC|https://www.abc.es/deportes/futbol/lamine-yamal-regresa-seleccion-medir-inglaterra-20261113192741-nt.html": 1794594462000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250742/nuevo-destino-toma-fuerza-roberto-martinez.html": 1794595476000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250742/nuevo-destino-toma-fuerza-roberto-martinez.html": 1794595476000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000
   },
   "hechos": [
    {
@@ -2533,7 +2534,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 49
+   "n": 50
   },
   "desde": {
    "67": {
@@ -3495,17 +3496,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 59,
+   "clasificar": 60,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 285275,
-  "salida": 25561,
+  "entrada": 287185,
+  "salida": 26383,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.414375,
+  "dolares": 0.414977,
   "reservado": 0
  },
  "recientes": {
@@ -7652,13 +7653,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2212,
+   "ok": 2213,
    "fallos": 0,
-   "ejecuciones": 1716,
+   "ejecuciones": 1717,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T20:16:13.047Z"
+   "ultima": "2026-11-13T20:21:15.293Z"
   }
  },
  "ptsDirecto": {},
@@ -7675,15 +7676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:16:16.805Z"
+   "ultimaBien": "2026-11-13T20:21:25.281Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:16:16.805Z"
+   "ultimaBien": "2026-11-13T20:21:25.281Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:16:16.805Z"
+   "ultimaBien": "2026-11-13T20:21:25.281Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7691,11 +7692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:16:16.805Z"
+   "ultimaBien": "2026-11-13T20:21:25.281Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:16:16.805Z"
+   "ultimaBien": "2026-11-13T20:21:25.281Z"
   }
  },
  "avisos": [
