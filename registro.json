@@ -3393,7 +3393,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342405000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-madrid-realiza-piquete-sede-central-alquiler-seguro-20261110204927.html": 1794340167000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794347495000,
    "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794374266000,
    "SPORT|136299647": 1794373265000,
@@ -7667,13 +7666,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2206,
+   "ok": 2207,
    "fallos": 0,
-   "ejecuciones": 1710,
+   "ejecuciones": 1711,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T19:46:11.333Z"
+   "ultima": "2026-11-13T19:51:15.980Z"
   }
  },
  "ptsDirecto": {},
@@ -7690,15 +7689,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:46:14.491Z"
+   "ultimaBien": "2026-11-13T19:51:21.133Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:46:14.491Z"
+   "ultimaBien": "2026-11-13T19:51:21.133Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:46:14.491Z"
+   "ultimaBien": "2026-11-13T19:51:21.133Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7706,11 +7705,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:46:14.491Z"
+   "ultimaBien": "2026-11-13T19:51:21.133Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:46:14.491Z"
+   "ultimaBien": "2026-11-13T19:51:21.133Z"
   }
  },
  "avisos": [
