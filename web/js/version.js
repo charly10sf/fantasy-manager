@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.8g';
+export const VERSION = '0.7.8h';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.8g';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.8h', f: '2026-11-13', h: '20:58', t: 'El chat ya no confunde lo que un rival tiene a la venta con un trato',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El chat ya no confunde lo que un rival tiene a la venta con un trato', x: 'Si contabas que un rival vende a alguien, el chat podía tomárselo como un trato contigo, inventarse un precio «pactado», criticar el precio que el rival puso en el mercado como si te lo pidiera a ti y avisarte de que un jugador que tuviste hace días «ya no es tuyo». Ahora lo trata como lo que es: un jugador en el mercado de ese rival.' },
+    ],
+  },
   {
     v: '0.7.8g', f: '2026-11-13', h: '20:11', t: 'El titular del plan ya no contradice lo que descarta la app',
     cosas: [

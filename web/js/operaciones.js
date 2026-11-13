@@ -87,6 +87,8 @@ export function catalogo(D, M, notas = []) {
   for (const n of notas) {
     const tid = n.pid && M.dueno[n.pid];
     if (!tid || tid === yo || !n.importe || lista.some((o) => o.ref === `M-${n.pid}`) || (M.J(n.pid) || {}).pos === 5) continue;
+    // (13 nov) «X vende a Pepelu por 43,50 M» no es un trato: es lo que tiene a la venta. Trato es que se lo ofrezca a él
+    if (!/\b(me|te|le|nos)\b|ofrec|ofert|trato|acuerd|acord|pact|propo|cambio|trueque/i.test(String(n.texto || ''))) continue;
     add({ ref: `T-${n.pid}`, tipo: 'comprar', trato: true, pid: n.pid, j: M.J(n.pid), precio: n.importe, vendedor: nombreDe(M, tid), vendedorTeamId: tid, nota: n.texto });
   }
   // C: cláusulas abiertas o que se pueden pagar antes de la jornada o justo al empezar. La caja de una cláusula es el
@@ -143,7 +145,7 @@ export function textoOp(o, M = null) {
       const min = o.ofertaMin ? `; OFERTA MÍNIMA CON OPCIONES ${eur(o.ofertaMin)}${o.ofertaAlta && o.ofertaAlta > o.ofertaMin ? `, con muchas opciones (sin garantía: puede tener otras ofertas) ${eur(o.ofertaAlta)}` : ''}; la app ofrecería ${eur(o.puja || o.ofertaMin)}` : '';
       const sc = M && M.sobrecoste && j && o.puja ? M.sobrecoste(j, o.puja) : null;
       const scTxt = sc && j.valor && o.puja > j.valor * 1.02 ? ` (${pct((o.puja / j.valor - 1) * 100)} sobre su valor: ÍNDICE DE SOBRECOSTE ${sc.indice}/100, aguantable hasta ~${M.tolerancia(j)})` : '';
-      return `COMPRAR ${j.nombre} a ${o.vendedor}, que LO TIENE A LA VENTA y pide ${eur(o.precio)}${pide}; es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
+      return `COMPRAR ${j.nombre} a ${o.vendedor}, que LO TIENE A LA VENTA por ${eur(o.precio)}${pide} (ese precio lo pone él a su gusto, muchas veces absurdo para ver la oferta de LaLiga: no es una oferta ni un trato con el mánager, pero por debajo no se puede ofertar; si está muy por encima de su valor, a ese precio no compensa y basta decirlo en una línea); es suyo hasta que ACEPTE una oferta, no es seguro${laliga}${min}${scTxt}${o.miPuja ? `; MI OFERTA ACTUAL ${eur(o.miPuja)}${o.ofertaMin && o.miPuja < o.ofertaMin ? ' (POR DEBAJO DE LO QUE LE DA LALIGA: no la va a aceptar)' : ''}` : ''}`;
     }
     case 'T': return `COMPRAR ${j.nombre} a ${o.vendedor} por ${eur(o.precio)}${sobreTxt} por el TRATO que me contaste («${o.nota}»)`;
     case 'C': return `CLAUSULAR ${j.nombre} (de ${o.de}) pagando su cláusula de ${eur(o.precio)}${sobreTxt}${paronC(M, o)}${noMerece(M, o) ? '; LA APP NO LA RECOMIENDA (Hoy y las alarmas no la enseñan): para el once NO la propongas; solo para revender con beneficio claro' : ''}${(() => { const s = M && M.salida ? M.salida(j, o.precio) : null; return s ? `; SALIDA: ${s.txt}${s.ok ? '' : ' → NO LO PROPONGAS: sin salida y sin ser titular seguro'}` : ''; })()}; ${o.abierta ? 'ABIERTA YA' : o.veda ? `CERRADA hasta que empiece la jornada ${o.veda.n}: se puede pagar ${cuando(o.abre)}, ni un minuto antes` : `se abre ${cuando(o.abre)}`}${o.meLlega ? '' : o.conA ? `; ME LLEGA SI ANTES ACEPTO LAS OFERTAS QUE TENGO (con mi saldo de ahora me faltan ${eur(o.falta)})` : `; NO ME LLEGA: faltan ${eur(o.falta)} y lo que ponga a la venta no entra hasta aceptar una oferta`}`;

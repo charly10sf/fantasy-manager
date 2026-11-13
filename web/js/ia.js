@@ -2100,8 +2100,10 @@ export function recuperarChat(i) {
 }
 export function borrarChatAnterior(i) { const l = chatsAnteriores(); l.splice(i, 1); guardarAnteriores(l); }
 
-/** ¿la respuesta nombra a un jugador que ya vendió sin decir que ya no es suyo? */
-export function cuentaConVendido(texto, nombre) {
+/** ¿la respuesta nombra a un jugador que ya vendió sin decir que ya no es suyo? Con `deOtro` (ahora es de otro mánager
+ * de la liga) solo cuenta si se habla de él como tuyo: hablar de que su dueño lo vende o de ficharlo es lo normal
+ * (aviso de Carlos, 13 nov: «Domi vende a Pepelu» y salía «Ojo: Pepelu ya no es tuyo (salió de tu equipo 4 nov)») */
+export function cuentaConVendido(texto, nombre, deOtro = false) {
   if (!texto || !nombre) return false;
   const t = norm(texto), k = norm(nombre);
   let i = t.indexOf(k);
@@ -2109,7 +2111,9 @@ export function cuentaConVendido(texto, nombre) {
     const antes = t[i - 1], despues = t[i + k.length];
     const suelto = (!antes || !/[a-z0-9]/.test(antes)) && (!despues || !/[a-z0-9]/.test(despues));
     const cerca = t.slice(Math.max(0, i - 70), i + k.length + 70);
-    if (suelto && !/vendid|vendiste|ya no es tuyo|ya no lo tienes|clausularon|te lo quitaron|ya no esta/.test(cerca)) return true;
+    if (suelto && !/vendid|vendiste|ya no es tuyo|ya no lo tienes|clausularon|te lo quitaron|ya no esta/.test(cerca)
+      && (!deOtro || (/\b(vendelo|vende a|vender a|alinea|alinealo|blinda|blindalo|tu jugador|tus jugadores|es tuyo|lo tienes)\b/.test(cerca)
+        && !/fich|compr|puj|ofert|clausul|a la venta|lo vende|te lo deja|rival|mercado/.test(cerca)))) return true;
     i = t.indexOf(k, i + 1);
   }
   return false;
@@ -2118,7 +2122,7 @@ export function cuentaConVendido(texto, nombre) {
 /** pregunta en el chat; alTexto(texto) se llama según va llegando la respuesta */
 // Lo que se apunta, SOLO lo que él cuenta como hecho o como decidido. El 7 nov apuntó dos veces «rechazó el trueque»
 // cuando Carlos solo preguntaba y luego estaba negociando: además de decírselo, aplicarNotas lo comprueba.
-const NOTAS_CHAT = `APUNTAR: solo lo que el manager te CUENTA en su último mensaje como un hecho o como algo que ya ha decidido: una oferta o un trato que le ha hecho otro manager (que exista la oferta es un hecho, aunque él no haya decidido nada), algo que ya ha hecho, algo que ha decidido hacer, un jugador que dice que no quiere vender, una preferencia. NUNCA apuntes una decisión que no te haya dicho él con sus palabras («lo he rechazado», «acepto», «voy a…»): si pregunta («¿lo acepto?», «¿qué hago?») o está negociando, no ha decidido nada; como mucho apunta la oferta tal cual («Rival 2 le ofrece A por B») o en qué va la negociación. Y nunca escribas que hizo algo por tu consejo. Al final de tu respuesta, y solo entonces, añade este bloque (no lo menciones en el texto):
+const NOTAS_CHAT = `APUNTAR: solo lo que el manager te CUENTA en su último mensaje como un hecho o como algo que ya ha decidido: una oferta o un trato que le ha hecho otro manager (que exista la oferta es un hecho, aunque él no haya decidido nada), algo que ya ha hecho, algo que ha decidido hacer, un jugador que dice que no quiere vender, una preferencia. Que un rival tenga a alguien a la venta NO es un trato: apúntalo (si acaso) como «otro», sin importe; el importe solo si él te dice una cifra que le han ofrecido A ÉL. NUNCA apuntes una decisión que no te haya dicho él con sus palabras («lo he rechazado», «acepto», «voy a…»): si pregunta («¿lo acepto?», «¿qué hago?») o está negociando, no ha decidido nada; como mucho apunta la oferta tal cual («Rival 2 le ofrece A por B») o en qué va la negociación. Y nunca escribas que hizo algo por tu consejo. Al final de tu respuesta, y solo entonces, añade este bloque (no lo menciones en el texto):
 \`\`\`notas
 {"apuntar": [{"texto": "frase corta en tercera persona con nombres y cifras", "jugador": "nombre exacto del jugador o null", "tipo": "trato|hecho|intencion|preferencia|otro", "importe": número en euros o null, "dias": días que sigue valiendo (1 a 30) o null si no caduca}], "olvidar": ["id entre corchetes de una nota que ya no vale"]}
 \`\`\`
@@ -2142,7 +2146,7 @@ export function notaValida(a, pregunta) {
 }
 
 /** saca el bloque de notas de la respuesta y lo aplica: lo que hay que apuntar y lo que hay que olvidar */
-export function aplicarNotas(texto, D, pregunta = null) {
+export function aplicarNotas(texto, D, pregunta = null, conFotos = false) {
   const m = String(texto || '').match(/```notas\s*([\s\S]*?)(```|$)/);
   if (!m) return { texto, apuntadas: [], olvidadas: 0 };
   const limpio = texto.replace(m[0], '').trim();
@@ -2155,11 +2159,22 @@ export function aplicarNotas(texto, D, pregunta = null) {
   lista = lista.filter((n) => !fuera.has(n.id));
   const olvidadas = antes - lista.length;
   const apuntadas = [];
+  // (aviso de Carlos, 13 nov: «Domi dice que vende a Pepelu» se apuntó como «vende a Pepelu por 43,50 M» y la IA habló
+  // de un precio «que pactasteis») una cifra solo se apunta si él la ha dicho o la manda en una captura; que un rival
+  // tenga a alguien a la venta, sin precio para él, no es un trato
+  const sinCifra = pregunta != null && !conFotos && !/\d/.test(String(pregunta));
   for (const a of j.apuntar || []) {
     if (!a || !a.texto) continue;
     if (pregunta != null && !notaValida(a, pregunta)) continue;
     const dias = num(a.dias);
-    const tipo = String(a.tipo || 'otro');
+    let tipo = String(a.tipo || 'otro');
+    if (sinCifra) {
+      a.importe = null;
+      a.texto = String(a.texto).replace(/\s+(?:por|a|en)\s+(?:unos?\s+)?[\d.,]+\s*(?:M\b|millones|mill\b|kilos|mil\b|€)/gi, '');
+      // si aún lleva una cifra que él no ha dicho, mejor no apuntarla
+      if (/\d/.test(a.texto)) continue;
+      if (tipo === 'trato') tipo = 'otro';
+    }
     apuntadas.push({
       id: `n${Date.now().toString(36)}${apuntadas.length}`, t: Date.now(), texto: String(a.texto).slice(0, 300),
       jugador: a.jugador || null, pid: a.jugador ? pidDe(a.jugador, D) : null, tipo, importe: num(a.importe) || null,
@@ -2254,6 +2269,8 @@ export function cuentasTxt(D, M, js, { web = true } = {}) {
 // cómo se habla en el chat: al grano, sin repetir el plan y con las cifras de los datos (Carlos, 7 nov)
 const REGLAS_CHAT = `
 EN EL CHAT:
+- LO QUE UN RIVAL TIENE A LA VENTA NO ES UNA OFERTA PARA ÉL. Si te cuenta que otro mánager «vende» a alguien o lo ha puesto a la venta, es que está en el mercado con el precio que el rival ha querido ponerle, que muchas veces es una cifra absurda solo para ver la oferta de LaLiga. Por debajo de ese precio no se puede ofertar: es lo MÍNIMO que tendría que pagar. NO es lo que «le pide» a él ni un trato: no lo trates como una negociación ni montes un discurso sobre ese precio. Si el precio está muy por encima de su valor, basta una línea («a ese precio no; lo tiene puesto para ver qué le da LaLiga»). Lo que importa es si el jugador le interesa: su VALOR, su inercia, lo que aporta a su once y la oferta mínima con opciones de «COMPRAR A OTRO MANAGER» si la hay; el rival decide y también tiene la oferta de LaLiga. Solo es un TRATO si él te dice que ese mánager le ha ofrecido el jugador A ÉL por una cifra concreta. Nunca escribas «pactasteis», «te pide» ni «te lo deja a» con una cifra que él no te haya dicho.
+- No mezcles el pasado con lo de ahora: que un jugador fuera suyo hace días no cambia nada si ahora es de un rival; háblale de él como de cualquier jugador de ese rival.
 - Contesta a lo que te pregunta y nada más. NO repitas el plan del día ni operaciones que no ha preguntado (si ya se lo dijiste, no se lo vuelvas a decir); sácalo solo si cambia la respuesta a su pregunta, y entonces en una línea.
 - CIFRAS: salen de los datos o de «CUENTAS HECHAS». Si haces una cuenta, escribe la operación con sus cifras («52,68 M − 26,69 M = 25,99 M») y comprueba el resultado antes de escribirlo. No des horquillas («33-35 M») sin decir de dónde salen. Si en este chat ya diste una cifra y ahora das otra, di por qué ha cambiado.
 - FECHAS Y HORAS: cópialas de los datos, con su día («mañana 20:00 (8 nov)»). No pases algo de «mañana» a «hoy» ni cambies una hora de un mensaje a otro.
@@ -2329,8 +2346,9 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
   // sin búsqueda (apagada, cupo gastado o en el relevo) no se le manda buscar: si se le manda, a veces contesta vacío
   const sistemaSinWeb = web ? montarChat(pregunta, D, M, c, { fotos: conFotos, hist, web: false }) : sistema;
   const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal, alPaso: alPaso || undefined, nivel: 'low', temperatura: 0.4, seudo: seudonimos(D) });
-  const n = aplicarNotas(r.texto, D, pregunta);
-  const vend = (M.vendidos || []).filter((v) => cuentaConVendido(n.texto, v.j && v.j.nombre));
+  const n = aplicarNotas(r.texto, D, pregunta, !!(fotos && fotos.length));
+  const yoT = D.yo && D.yo.teamId;
+  const vend = (M.vendidos || []).filter((v) => cuentaConVendido(n.texto, v.j && v.j.nombre, !!(v.j && M.dueno && M.dueno[v.j.id] && M.dueno[v.j.id] !== yoT)));
   if (vend.length) n.texto += `\n\n> Ojo: ${vend.map((v) => `**${v.j.nombre}** ya no es tuyo (${v.como} ${cuando(v.t)})`).join('; ')}. No cuenta para lo de arriba.`;
   const h2 = conversacion();
   h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: r.fuentes.slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => x.texto), olvidadas: n.olvidadas });
