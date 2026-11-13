@@ -1894,8 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/bellingham-leccion-mourinho-sobre-medias-chaval-tienes-nueve-anos-tienes-gemelos.html": 1794328211000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/10/bruno-iribarne-da-el-salto-un-almeriense-entrena-con-las-estrellas-de-la-roja-ser-almeria/": 1794328207000,
    "AS|https://as.com/futbol/primera/sucic-no-viajara-con-croacia-por-una-amigdalitis-f202611-n/": 1794329246000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249565/sucic-cuarto-internacional-realista-caerse-fecha-fifa-lesion-enfermedad.html": 1794329986000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249533/gerard-martin.html": 1794328658000,
@@ -2159,7 +2157,8 @@
    "SPORT|136402229": 1794581404000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261113/1004250665/pique-estalla-federacion-incertidumbre-sanciones-andorra.html": 1794583859000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/nota-negativa-pone-nacho-pena-victoria-seleccion-espanola-pensando-futuro-huijsen-cubarsi-gran-salida-balon-me-generan-dudas-20261113_3474258.html": 1794583169000
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/nota-negativa-pone-nacho-pena-victoria-seleccion-espanola-pensando-futuro-huijsen-cubarsi-gran-salida-balon-me-generan-dudas-20261113_3474258.html": 1794583169000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html": 1794587065000
   },
   "hechos": [
    {
@@ -2570,11 +2569,23 @@
     "nums": [
      10
     ]
+   },
+   {
+    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html",
+    "medio": "Mundo Deportivo",
+    "t": 1794587065000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea sufre una lesión muscular en el muslo derecho",
+    "motivo": "lesión en la musculatura isquiosural del muslo derecho",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 40
+   "n": 41
   },
   "desde": {
    "67": {
@@ -3422,7 +3433,6 @@
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/el-gran-canaria-registra-la-peor-asistencia-desde-el-ultimo-descenso-de-la-ud-las-palmas-ser-las-palmas/": 1794329652000,
    "ABC|https://www.abc.es/deportes/futbol/ver-pamplona-eibar-hora-partido-copa-rey-20261110175048-nt.html": 1794329448000,
    "Europa Press|https://www.europapress.es/nacional/noticia-interior-ordena-actuar-contra-piquetes-violentos-huelga-11n-garantizar-seguridad-poligonos-mercados-20261110174507.html": 1794329107000,
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-repercutira-la-huelga-general-en-el-deporte-en-bizkaia-radio-bilbao/": 1794328222000,
    "SPORT|136301935": 1794328294000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-tavernes-valencia-hora-partido-copa-rey-20261110151517-nt.html": 1794332853000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-mijas-lagunas-real-jaen-copa-rey-20261110151232-nt.html": 1794332785000,
@@ -3533,32 +3543,32 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000,
    "SPORT|136406363": 1794567719000,
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-prepara-ere-plantea-recorte-rutas-transatlanticas-combustible-falta-liquidez-20261113105156.html": 1794563516000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/francia-ataca-zidane-primer-tropiezo-seleccionador-decisiones-son-cuestionables-20261113_3474878.html": 1794575298000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/francia-ataca-zidane-primer-tropiezo-seleccionador-decisiones-son-cuestionables-20261113_3474878.html": 1794575298000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
+   "SPORT|136418514": 1794583694000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 7,
+   "n": 8,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586880239
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 47,
+   "clasificar": 49,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 261665,
-  "salida": 22546,
+  "entrada": 265598,
+  "salida": 23237,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.410506,
+  "dolares": 0.411245,
   "reservado": 0
  },
  "recientes": {
@@ -7705,13 +7715,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2165,
+   "ok": 2166,
    "fallos": 0,
-   "ejecuciones": 1669,
+   "ejecuciones": 1670,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T16:26:15.029Z"
+   "ultima": "2026-11-13T16:31:12.797Z"
   }
  },
  "ptsDirecto": {},
@@ -7728,15 +7738,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:26:19.513Z"
+   "ultimaBien": "2026-11-13T16:31:22.709Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:26:19.513Z"
+   "ultimaBien": "2026-11-13T16:31:22.709Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:26:19.513Z"
+   "ultimaBien": "2026-11-13T16:31:22.709Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7744,11 +7754,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:26:19.513Z"
+   "ultimaBien": "2026-11-13T16:31:22.709Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:26:19.513Z"
+   "ultimaBien": "2026-11-13T16:31:22.709Z"
   }
  },
  "avisos": [
