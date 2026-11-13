@@ -1896,7 +1896,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/sucic-no-viajara-con-croacia-por-una-amigdalitis-f202611-n/": 1794329246000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249565/sucic-cuarto-internacional-realista-caerse-fecha-fifa-lesion-enfermedad.html": 1794329986000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249533/gerard-martin.html": 1794328658000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/10/marc-roca-siete-anos-espera-llegar-seleccion-espanola/00031794329684948672845.htm": 1794329881000,
    "SPORT|136301367": 1794329440000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249368/dos-perdidas-relevantes-cuatro-dias-parecia-vaciarse-enfermeria-real.html": 1794333058000,
@@ -7714,13 +7713,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2167,
+   "ok": 2168,
    "fallos": 0,
-   "ejecuciones": 1671,
+   "ejecuciones": 1672,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T16:36:11.910Z"
+   "ultima": "2026-11-13T16:41:11.423Z"
   }
  },
  "ptsDirecto": {},
@@ -7737,15 +7736,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:36:17.889Z"
+   "ultimaBien": "2026-11-13T16:41:14.952Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:36:17.889Z"
+   "ultimaBien": "2026-11-13T16:41:14.952Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:36:17.889Z"
+   "ultimaBien": "2026-11-13T16:41:14.952Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7753,11 +7752,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:36:17.889Z"
+   "ultimaBien": "2026-11-13T16:41:14.952Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:36:17.889Z"
+   "ultimaBien": "2026-11-13T16:41:14.952Z"
   }
  },
  "avisos": [
