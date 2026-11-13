@@ -1777,6 +1777,11 @@ body.limitado .tostada { z-index: 120; }
 .escritorio .tabs.club-tabs .tabs-in { display: flex; }
 .escritorio .tabs.club-tabs button { flex: 1 0 auto; padding: 0 12px; font-size: var(--t-cuerpo); }
 @media (max-width: 380px) { .tabs.club-tabs { padding: 10px 10px 8px; } .tabs.club-tabs button { padding: 0 4px; font-size: var(--t-mini); } }
+/* la ficha del rival (13 nov, punto 50): cuatro pestañas que caben en el móvil sin cortar ninguna */
+.tabs.rival-tabs button { padding: 0 var(--e2); font-size: var(--t-sec2); }
+.escritorio .tabs.rival-tabs button { padding: 0 var(--e3); font-size: var(--t-cuerpo); }
+@media (max-width: 380px) { .tabs.rival-tabs button { padding: 0 var(--e1); font-size: var(--t-mini); } }
+.rival-sub { margin: 0 0 var(--e3); }
 /* suben y bajan */
 .sb-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 6px 0 4px; }
 .sb-sel { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-ctl); background: var(--plano2); border: 1px solid var(--linea); }

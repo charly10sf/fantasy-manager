@@ -259,7 +259,8 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 }
 
 // 8: Novedades para todos (11 nov): en Ajustes → La app, a quien no es el dueño solo lo importante (importante: true),
-// sin arreglos y sin lo de otra plataforma; en la web, nada de lo que es solo de la app
+// sin arreglos y sin lo de otra plataforma; en la web, nada de lo que es solo de la app (y nunca más de los que llevan importante:
+// antes era un tope fijo de 8, que saltó al añadir la ficha del rival en la 0.7.8e)
 for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Proxy({ avisosPermitidos: () => true, alarmasExactas: () => true, version: () => '1', canal: () => 'github', hayQR: () => false, programarAvisos: () => {} }, { get: (o, k) => (k in o ? o[k] : undefined) }); localStorage.setItem('fm-demo', 'true');"]]) {
   const { ctx, page, errores } = await pagina({ init });
   await page.goto(`${BASE}/index.html`);
@@ -276,10 +277,10 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
     const t = [...document.querySelectorAll('.hoja .nvl-c b')].map((b) => b.textContent);
     const imp = NOVEDADES.flatMap((n) => n.cosas.filter((c) => c.importante));
     const arr = NOVEDADES.flatMap((n) => n.cosas.filter((c) => c.tipo === 'arreglo')); const li = [...document.querySelectorAll('.hoja .nvl-arreglos li')].map((x) => x.textContent);
-    return { nuevo: /Nuevo en la/.test(sub), t, soloImp: t.every((x) => imp.some((c) => c.t === x)), arreglos: !(li.length && li.every((x) => arr.some((c) => c.t === x))), alarmas: t.includes('Tus alarmas, cuándo quieras'), ajustes: t.includes('Ajustes, por secciones') };
+    return { nuevo: /Nuevo en la/.test(sub), t, nImp: imp.length, soloImp: t.every((x) => imp.some((c) => c.t === x)), arreglos: !(li.length && li.every((x) => arr.some((c) => c.t === x))), alarmas: t.includes('Tus alarmas, cuándo quieras'), ajustes: t.includes('Ajustes, por secciones') };
   });
   if (r.sinFila) mal(`Novedades (${nombre}): no sale la fila en Ajustes`);
-  else if (!r.nuevo || !r.soloImp || r.arreglos || !r.ajustes || r.alarmas !== (nombre === 'app') || r.t.length > 8) mal(`Novedades (${nombre}): ${JSON.stringify(r)}`);
+  else if (!r.nuevo || !r.soloImp || r.arreglos || !r.ajustes || r.alarmas !== (nombre === 'app') || r.t.length > r.nImp) mal(`Novedades (${nombre}): ${JSON.stringify(r)}`);
   else bien(`Novedades (${nombre}): solo lo importante (${r.t.length}) y los arreglos en pequeño${nombre === 'web' ? ', sin lo de la app' : ''}`);
   if (errores.length) mal(`Novedades: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();

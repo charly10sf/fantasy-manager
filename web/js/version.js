@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.8d';
+export const VERSION = '0.7.8e';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.8d';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.8e', f: '2026-11-13', h: '18:42', t: 'La ficha de cada rival, rehecha en pestañas',
+    cosas: [
+      { tipo: 'mejora', d: 'lupa', importante: true, t: 'La ficha de cada rival, rehecha en pestañas', x: 'La ficha de un rival va ahora en cuatro pestañas, como la de un club: Plantilla, Suben y bajan, Cláusulas y Su juego, cada una con sus subpestañas. En Suben y bajan ves qué jugadores le suben y cuáles le bajan, hoy o en 7 días, con el total de toda su plantilla. Cláusulas separa lo que tú le puedes quitar (las abiertas que te llegan y las que te llegarán) de lo que él te puede quitar a ti, con su dinero. Arriba queda solo quién es y su valor.', ir: { v: 'rivales' } },
+    ],
+  },
   {
     v: '0.7.8d', f: '2026-11-13', h: '17:45', t: 'El plan ya no te manda vender lo que está subiendo',
     cosas: [

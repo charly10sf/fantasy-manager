@@ -2680,7 +2680,7 @@ document.addEventListener('click', async (ev) => {
   // dentro del resumen de una tarjeta que se despliega (los pasos del plan), abrir la ficha sin desplegarla
   if (d.j && S.D && !d.accion) { if (el.closest('summary')) ev.preventDefault(); hoja('j', d.j, pilaDesde(el, 'j', d.j)); cargarDetalle(d.j); return; }
   if (d.club && S.D && !d.accion) { S.segClub = null; hoja('c', d.club, pilaDesde(el, 'c', d.club)); cargarClub(d.club); return; }
-  if (d.r && S.D) { hoja('r', d.r); cargarOnceRival(d.r); return; }
+  if (d.r && S.D) { S.segRival = null; hoja('r', d.r); cargarOnceRival(d.r); return; }
   if (d.ir && !d.accion) { cerrarHoja(); ir(d.ir); return; }
   switch (d.accion) {
     case 'verPartido': cargarPartido(Number(d.n), d.id); hoja('p', `${d.n}:${d.id}`, pilaDesde(el, 'p', `${d.n}:${d.id}`)); break;
@@ -2707,6 +2707,15 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'perClub': S.perClub = d.p; repintarHoja(); break;
+    // las pestañas de la ficha de un rival (Carlos, 13 nov, punto 50), como las del club: al cambiar, vuelve a ellas
+    case 'segRival': case 'subRival': {
+      const prev = S.segRival && String(S.segRival.tid) === String(d.tid) ? S.segRival : {};
+      S.segRival = d.accion === 'segRival' ? { tid: d.tid, seg: d.s } : { ...prev, tid: d.tid, sub: d.p };
+      repintarHoja();
+      const t = S.hoja && S.hoja.querySelector('.rival-tabs');
+      if (t && S.hoja.scrollTop > t.offsetTop) S.hoja.scrollTop = t.offsetTop;
+      break;
+    }
     case 'filtroClub': S.filtro.club = d.f; repintarHoja(); if (d.sel) bajarA(d.sel, S.hoja); break;
     // ir a lo que explica un dato (30 oct, Carlos: «el valor de los últimos 7 días debería llevarte a la pestaña adecuada»):
     // baja hasta el ancla (data-sel), en la ficha abierta o en la pestaña; con data-seg2, antes cambia de subpestaña
