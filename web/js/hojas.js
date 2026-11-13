@@ -578,9 +578,24 @@ export function fichaRival(S, tid) {
   const { seg, sub } = segDeRival(S, tid);
   // las funciones top cerradas, juntas en una tarjeta al final (antes, un candado en cada sección)
   const cerradas = [];
-  const dV = r.dValor != null && r.dValor ? ` · <span class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })}</span> en 7 días` : '';
+  // arriba, lo primero que se mira de un rival (Carlos, 13 nov, 19:08): su dinero (con el candado si es función top),
+  // el valor de su plantilla, sus cláusulas abiertas y lo que ha gastado; cada casilla lleva a su pestaña
+  const ir = (s, p) => `data-accion="segRival" data-tid="${esc(tid)}" data-s="${s}" data-p="${p}"`;
+  const dV = r.dValor ? `<small class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })} en 7 días</small>` : '';
+  const conDinero = r.dinero && r.dinero.v != null;
+  const tDinero = bloqueada('dineroRivales')
+    ? `<button class="eq2-t rival-bloq" data-accion="bloqueada" data-clave="dineroRivales"><b>${icono('candado')}</b><span>su dinero · función top ›</span></button>`
+    : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'} ›</span></button>`;
+  const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
+  const tiles = [
+    tDinero,
+    `<button class="eq2-t" ${ir('juego', 'movs')}><b>${eur(e.valor, { dec: 1 })}</b><span>su plantilla ›</span>${dV}</button>`,
+    `<button class="eq2-t" ${ir('clausulas', 'quitas')}><b>${r.abiertas}</b><span>cláusulas abiertas${r.abiertas ? `, ${teLlegan} te llega${teLlegan === 1 ? '' : 'n'}` : ''} ›</span></button>`,
+    `<button class="eq2-t" ${ir('juego', 'movs')}><b>${eur(r.gastado, { dec: 1 })}</b><span>gastado en 7 días · ${r.movs} movimiento${r.movs === 1 ? '' : 's'} ›</span></button>`,
+  ];
   let h = `<div class="hoja-cab rival-cab">${caraManager(e, 'g')}<h2>${esc(e.nombre)}</h2><span class="amenaza ${r.nivel}" title="${esc(PELIGRO_TXT)}">Peligro ${PELIGRO[r.nivel]}</span></div>
-  <p class="t2 rival-sub">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos · vale <span class="nw">${eur(e.valor)}</span>${dV}</p>
+  <p class="t2 rival-sub">${esc(e.manager && e.manager !== e.nombre ? e.manager + ' · ' : '')}${e.pos}º con ${e.puntos} puntos</p>
+  <div class="eq2-tiles rival-tiles">${tiles.join('')}</div>
   ${notasPlan(S, { tid }).map(([et, t], n) => avisoDeTexto(S, { k: `nota${n}`, pid: `r${tid}`, cls: 'azul', ico: 'ia', t: et, texto: t })).join('')}`;
   // la jornada en directo: lo que lleva y su once, jugador a jugador (encima de las pestañas, solo con partidos)
   if (M.vivo && M.enJuego) {

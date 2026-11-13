@@ -1782,6 +1782,9 @@ body.limitado .tostada { z-index: 120; }
 .escritorio .tabs.rival-tabs button { padding: 0 var(--e3); font-size: var(--t-cuerpo); }
 @media (max-width: 380px) { .tabs.rival-tabs button { padding: 0 var(--e1); font-size: var(--t-mini); } }
 .rival-sub { margin: 0 0 var(--e3); }
+.rival-tiles .eq2-t small { font: 600 var(--t-mini)/1.2 'Barlow'; }
+.rival-tiles .rival-bloq b { color: var(--texto2); }
+.rival-tiles .rival-bloq b .ic { width: var(--t-cifra); height: var(--t-cifra); }
 /* suben y bajan */
 .sb-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 6px 0 4px; }
 .sb-sel { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-ctl); background: var(--plano2); border: 1px solid var(--linea); }

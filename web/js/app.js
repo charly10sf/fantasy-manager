@@ -2710,7 +2710,7 @@ document.addEventListener('click', async (ev) => {
     // las pestañas de la ficha de un rival (Carlos, 13 nov, punto 50), como las del club: al cambiar, vuelve a ellas
     case 'segRival': case 'subRival': {
       const prev = S.segRival && String(S.segRival.tid) === String(d.tid) ? S.segRival : {};
-      S.segRival = d.accion === 'segRival' ? { tid: d.tid, seg: d.s } : { ...prev, tid: d.tid, sub: d.p };
+      S.segRival = d.accion === 'segRival' ? { tid: d.tid, seg: d.s, sub: d.p } : { ...prev, tid: d.tid, sub: d.p };
       repintarHoja();
       const t = S.hoja && S.hoja.querySelector('.rival-tabs');
       if (t && S.hoja.scrollTop > t.offsetTop) S.hoja.scrollTop = t.offsetTop;

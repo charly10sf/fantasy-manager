@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.8e';
+export const VERSION = '0.7.8f';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.8e';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.8f', f: '2026-11-13', h: '19:14', t: 'Su dinero, lo primero en la ficha de cada rival',
+    cosas: [
+      { tipo: 'mejora', d: 'dinero', t: 'Su dinero, lo primero en la ficha de cada rival', x: 'Arriba de la ficha de un rival salen ahora cuatro casillas: su dinero, el valor de su plantilla con lo que ha cambiado en 7 días, sus cláusulas abiertas (y cuántas te llegan) y lo que ha gastado en 7 días. Si el dinero de los rivales es una función top cerrada, sale con su candado. Cada casilla te lleva a su pestaña.', ir: { v: 'rivales' } },
+    ],
+  },
   {
     v: '0.7.8e', f: '2026-11-13', h: '18:42', t: 'La ficha de cada rival, rehecha en pestañas',
     cosas: [
