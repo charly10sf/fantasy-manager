@@ -2150,7 +2150,8 @@
    "AS|https://as.com/futbol/primera/la-cantera-ofrece-cuatro-alternativas-para-la-baja-de-barrenetxea-f202611-n/": 1794559518000,
    "ABC|https://www.abc.es/deportes/futbol/sancet-internacional-espanol-ojala-podamos-jugar-mundial-20261113093808-nt.html": 1794559621000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250513/valdano.html": 1794561607000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261113/1004250516/real-madrid-gana-peso-seleccion.html": 1794561097000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261113/1004250516/real-madrid-gana-peso-seleccion.html": 1794561097000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000
   },
   "hechos": [
    {
@@ -2602,7 +2603,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3447,7 +3448,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-tellado-denuncia-huelga-electoral-sindicatos-contra-pp-verdadero-partido-currantes-20261110103158.html": 1794303118000,
    "ABC|https://www.abc.es/deportes/futbol/pamplona-eibar-horario-canal-television-ver-online-20261110104442-nt.html": 1794304416000,
    "ABC|https://www.abc.es/deportes/futbol/amorebieta-logrones-horario-canal-television-ver-online-20261110104938-nt.html": 1794304397000,
    "ABC|https://www.abc.es/deportes/futbol/mijas-lagunas-real-jaen-horario-canal-television-20261110105244-nt.html": 1794304365000,
@@ -3572,12 +3572,13 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/var-agita-victoria-espana-republica_0_2008485398.html": 1794521253000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/13/espana-cumple-praga-jugara-liderato-nations-league-inglaterra-136391040.html": 1794526017000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-12-nov-2026-partidazo-cope-20261113_3474254.html": 1794525212000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-interior-confirma-prohibira-gas-lacrimogeno-cargas-11n-permitira-botes-humo-ser-inocuos-20261113102626.html": 1794561986000
+   "Europa Press|https://www.europapress.es/nacional/noticia-interior-confirma-prohibira-gas-lacrimogeno-cargas-11n-permitira-botes-humo-ser-inocuos-20261113102626.html": 1794561986000,
+   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/13/salamanca-celta-horario-ver-hoy-tv-partido-copa-rey.html": 1794562023000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
   "espera": {}
@@ -3585,17 +3586,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 15,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 150932,
-  "salida": 10957,
+  "entrada": 154514,
+  "salida": 11161,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.299268,
+  "dolares": 0.299728,
   "reservado": 0
  },
  "recientes": {
@@ -7742,13 +7743,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2082,
+   "ok": 2083,
    "fallos": 0,
-   "ejecuciones": 1586,
+   "ejecuciones": 1587,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T09:31:12.283Z"
+   "ultima": "2026-11-13T09:36:14.254Z"
   }
  },
  "ptsDirecto": {},
@@ -7765,15 +7766,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:31:17.396Z"
+   "ultimaBien": "2026-11-13T09:36:19.883Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:31:17.396Z"
+   "ultimaBien": "2026-11-13T09:36:19.883Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:31:17.396Z"
+   "ultimaBien": "2026-11-13T09:36:19.883Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7781,11 +7782,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:31:17.396Z"
+   "ultimaBien": "2026-11-13T09:36:19.883Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:31:17.396Z"
+   "ultimaBien": "2026-11-13T09:36:19.883Z"
   }
  },
  "avisos": [
