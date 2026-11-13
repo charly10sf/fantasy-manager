@@ -3422,7 +3422,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000,
    "Cadena SER|https://cadenaser.com/castillalamancha/2026/11/10/tertulia-conquense-el-conflicto-por-la-fecha-del-partido-aplazado-ser-cuenca/": 1794327316000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/el-gran-canaria-registra-la-peor-asistencia-desde-el-ultimo-descenso-de-la-ud-las-palmas-ser-las-palmas/": 1794329652000,
    "ABC|https://www.abc.es/deportes/futbol/ver-pamplona-eibar-hora-partido-copa-rey-20261110175048-nt.html": 1794329448000,
@@ -7708,13 +7707,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2148,
+   "ok": 2149,
    "fallos": 0,
-   "ejecuciones": 1652,
+   "ejecuciones": 1653,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T15:01:12.196Z"
+   "ultima": "2026-11-13T15:06:41.190Z"
   }
  },
  "ptsDirecto": {},
@@ -7731,15 +7730,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:01:16.485Z"
+   "ultimaBien": "2026-11-13T15:06:44.843Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:01:16.485Z"
+   "ultimaBien": "2026-11-13T15:06:44.843Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:01:16.485Z"
+   "ultimaBien": "2026-11-13T15:06:44.843Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7747,11 +7746,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:01:16.485Z"
+   "ultimaBien": "2026-11-13T15:06:44.843Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:01:16.485Z"
+   "ultimaBien": "2026-11-13T15:06:44.843Z"
   }
  },
  "avisos": [
