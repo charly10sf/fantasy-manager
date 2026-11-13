@@ -3482,32 +3482,31 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
    "SPORT|136418514": 1794583694000,
    "Europa Press|https://www.europapress.es/madrid/noticia-sindicatos-educativos-muestran-satisfechos-reunion-consejeria-mantienen-huelga-indefinida-20261113181028.html": 1794589828000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/duelos-aplazados-fallecimiento-jesus-miguel-fecha-horario-20261113_3475158.html": 1794590104000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/duelos-aplazados-fallecimiento-jesus-miguel-fecha-horario-20261113_3475158.html": 1794590104000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-rfef-sanciona-owono-12-partidos-20261113_3475217.html": 1794602522000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 10,
+   "n": 11,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/comite-disciplina-rfef-sanciona-owono-12-partidos-20261113_3475217.html": 1794602172600
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 61,
+   "clasificar": 62,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 289094,
-  "salida": 26499,
+  "entrada": 290848,
+  "salida": 26637,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.415226,
+  "dolares": 0.41547,
   "reservado": 0
  },
  "recientes": {
@@ -7654,13 +7653,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2217,
+   "ok": 2218,
    "fallos": 0,
-   "ejecuciones": 1721,
+   "ejecuciones": 1722,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T20:41:14.805Z"
+   "ultima": "2026-11-13T20:46:23.800Z"
   }
  },
  "ptsDirecto": {},
@@ -7677,15 +7676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:41:40.222Z"
+   "ultimaBien": "2026-11-13T20:46:29.663Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:41:40.222Z"
+   "ultimaBien": "2026-11-13T20:46:29.663Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:41:40.222Z"
+   "ultimaBien": "2026-11-13T20:46:29.663Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7693,11 +7692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:41:40.222Z"
+   "ultimaBien": "2026-11-13T20:46:29.663Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:41:40.222Z"
+   "ultimaBien": "2026-11-13T20:46:29.663Z"
   }
  },
  "avisos": [
