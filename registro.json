@@ -3540,33 +3540,32 @@
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/13/espana-cumple-praga-jugara-liderato-nations-league-inglaterra-136391040.html": 1794526017000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-12-nov-2026-partidazo-cope-20261113_3474254.html": 1794525212000,
    "Europa Press|https://www.europapress.es/nacional/noticia-interior-confirma-prohibira-gas-lacrimogeno-cargas-11n-permitira-botes-humo-ser-inocuos-20261113102626.html": 1794561986000,
-   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/13/salamanca-celta-horario-ver-hoy-tv-partido-copa-rey.html": 1794562023000
+   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/13/salamanca-celta-horario-ver-hoy-tv-partido-copa-rey.html": 1794562023000,
+   "ABC|https://www.abc.es/deportes/futbol/salamanca-celta-horario-canal-television-ver-online-20261113105247-nt.html": 1794563668000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/12-nov-2026-partidazo-cope-20261113_3474274.html": 1794530700000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 3,
+   "n": 4,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/12-nov-2026-partidazo-cope-20261113_3474274.html": 1794564071596,
-   "ABC|https://www.abc.es/deportes/futbol/salamanca-celta-horario-canal-television-ver-online-20261113105247-nt.html": 1794564071596
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 19,
+   "clasificar": 20,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 162746,
-  "salida": 12779,
+  "entrada": 164687,
+  "salida": 12988,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.30136,
+  "dolares": 0.301659,
   "reservado": 0
  },
  "recientes": {
@@ -7713,13 +7712,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2092,
+   "ok": 2093,
    "fallos": 0,
-   "ejecuciones": 1596,
+   "ejecuciones": 1597,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:21:11.329Z"
+   "ultima": "2026-11-13T10:26:12.786Z"
   }
  },
  "ptsDirecto": {},
@@ -7736,15 +7735,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:21:13.807Z"
+   "ultimaBien": "2026-11-13T10:26:20.203Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:21:13.807Z"
+   "ultimaBien": "2026-11-13T10:26:20.203Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:21:13.807Z"
+   "ultimaBien": "2026-11-13T10:26:20.203Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7752,11 +7751,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:21:13.807Z"
+   "ultimaBien": "2026-11-13T10:26:20.203Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:21:13.807Z"
+   "ultimaBien": "2026-11-13T10:26:20.203Z"
   }
  },
  "avisos": [
