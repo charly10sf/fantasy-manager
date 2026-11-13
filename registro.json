@@ -3482,12 +3482,13 @@
    "ABC|https://www.abc.es/deportes/futbol/portero-owono-suspendido-doce-partidos-tras-muerte-20261113215340-nt.html": 1794603763000,
    "SPORT|136418123": 1794601251000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250691/precedentes.html": 1794605992000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250266/aplazado-barca-atletic-girona-b.html": 1794605649000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250266/aplazado-barca-atletic-girona-b.html": 1794605649000,
+   "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-suspende-todos-vuelos-salida-motivos-seguridad-20261113224537.html": 1794606337000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 14,
+   "n": 15,
    "fallos": 0
   },
   "espera": {}
@@ -3495,17 +3496,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 65,
+   "clasificar": 66,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 296325,
-  "salida": 27248,
+  "entrada": 298013,
+  "salida": 27334,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.416323,
+  "dolares": 0.416535,
   "reservado": 0
  },
  "recientes": {
@@ -7686,13 +7687,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2235,
+   "ok": 2236,
    "fallos": 0,
-   "ejecuciones": 1738,
+   "ejecuciones": 1739,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T22:06:16.661Z"
+   "ultima": "2026-11-13T22:11:11.641Z"
   }
  },
  "ptsDirecto": {},
@@ -7709,15 +7710,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T22:06:18.739Z"
+   "ultimaBien": "2026-11-13T22:11:18.161Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T22:06:18.739Z"
+   "ultimaBien": "2026-11-13T22:11:18.161Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T22:06:18.739Z"
+   "ultimaBien": "2026-11-13T22:11:18.161Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7725,7 +7726,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T22:06:18.739Z"
+   "ultimaBien": "2026-11-13T22:11:18.161Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
