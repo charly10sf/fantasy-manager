@@ -431,7 +431,7 @@ const tocaBienvenida = () => !EN_FONDO && !!S.D && !enDemo() && haySesion() && !
 function quizaBienvenida(ms, intento = 0) {
   setTimeout(() => {
     if (!tocaBienvenida() || $('#bienvenida')) { S.bienvenidaPendiente = false; return; }
-    if (estadoLimite.cerrada || $('.nv') || $('#limite') || S.hoja || tourAbierto() || (S.cargando && !S.D)) {
+    if (estadoLimite.cerrada || $('.nv') || $('.atardecer-intro') || $('#limite') || S.hoja || tourAbierto() || (S.cargando && !S.D)) {
       if (intento < 40) quizaBienvenida(3000, intento + 1); else S.bienvenidaPendiente = false;
       return;
     }
@@ -2946,6 +2946,8 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'avisoTipo': guardarCfgAvisos({ [d.k]: !cfgAvisos()[d.k] }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); break;
+    // el tema de evento (bloque TEMA_EVENTO de index.html): se enciende o se apaga sin recargar
+    case 'temaEvento': if (window.temaEvento) { window.temaEvento.cambiar(!window.temaEvento.activo()); repintarHoja(); } break;
     // (40) las secciones de Ajustes: se recuerda cuáles has abierto para no cerrarlas al repintar
     case 'plegarAjuste': { const det = el.closest('details'); if (det) Hj.plegarAjuste(S, d.k, !det.open); break; }
     case 'quitarAvisoJ': { const j = S.M && S.M.J(d.pid); avisarJugador(d.pid, null); if (S.D) programar(S.D, S.M, planAvisos()); tostada(`Quitado el aviso${j ? ` de ${j.nombre}` : ''}`, 2400); repintarHoja(); break; }
@@ -3260,6 +3262,7 @@ function pasosTour() {
       : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: `Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», ${rojo}.` },
     { v: 'hoy', sel: '#bRefrescar', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
     { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta). También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
+    { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Modo Vice City', x: PASO_TEMA },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
     // (21) en el parón, el mismo sitio es la pestaña Parón
@@ -3286,6 +3289,7 @@ function lanzarTutorial() {
     vista: () => S.vista,
     ir: (v) => { ir(v); window.scrollTo(0, 0); },
     alAcabar: (como) => {
+      if (window.temaEvento) LS.set('tema-aviso', Date.now());
       if (S.vista !== 'hoy' || como === 'saltar') ir('hoy');
       if (como === 'saltar') { window.scrollTo(0, 0); tostada('El tutorial está en Ajustes cuando quieras', 3500); }
       else if (como === 'plan' || como === 'fin') { const pl = $('.plan'); if (pl) window.scrollTo({ top: pl.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); }
@@ -3295,13 +3299,34 @@ function lanzarTutorial() {
     },
   }), 250);
 }
+/* el tema de evento: lo cuenta un paso del tutorial y, a quien ya lo había visto, ese paso solo, una vez (13 nov, Carlos) */
+const PASO_TEMA = 'Hasta el 26 nov la app va en modo Vice City. Si prefieres el rojo y negro de siempre, se quita en Ajustes, arriba del todo, y se vuelve a poner ahí mismo.';
+function quizaAvisoTema(ms, intento = 0) {
+  if (!window.temaEvento || !window.temaEvento.activo() || LS.get('tema-aviso', null)) return;
+  setTimeout(() => {
+    if (!window.temaEvento || !window.temaEvento.activo() || LS.get('tema-aviso', null) || tourAbierto() || !S.D || estadoLimite.cerrada) return;
+    if ($('.nv') || $('.atardecer-intro') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente || S.vista !== 'hoy' || !$('#bAjustes')) { if (intento < 20) quizaAvisoTema(3000, intento + 1); return; }
+    LS.set('tema-aviso', Date.now());
+    empezarTour({
+      pasos: [{ v: 'hoy', sel: '#bAjustes', t: 'Modo Vice City', x: PASO_TEMA, saltar: 'Vale', fin: 'Ver dónde', finAccion: 'tema' }],
+      vista: () => S.vista,
+      ir: (v) => ir(v),
+      alAcabar: (como) => { if (como === 'tema' || como === 'fin') abrirTemaAjustes(); },
+    });
+  }, ms);
+}
+function abrirTemaAjustes() {
+  S.ajBusca = ''; hoja('ajustes');
+  setTimeout(() => { const f = $('#aj-tema'); if (f) { f.classList.remove('aj-luz'); void f.offsetWidth; f.classList.add('aj-luz'); } }, 350);
+}
 /** la primera vez (o al abrirse la app a la hora): el tutorial, si no se ha visto y no hay nada delante */
 function quizaTutorial(ms, intento = 0) {
+  if (tourVisto() && S.D && !estadoLimite.cerrada) { quizaAvisoTema(ms); return; }
   if (tourVisto() || !S.D || estadoLimite.cerrada) return;
   setTimeout(() => {
     if (tourVisto() || tourAbierto() || !S.D || estadoLimite.cerrada || S.cargando && !S.D) return;
     // con la presentación de novedades o una ventana abierta, se espera
-    if ($('.nv') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente) { if (intento < 20) quizaTutorial(3000, intento + 1); return; }
+    if ($('.nv') || $('.atardecer-intro') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente) { if (intento < 20) quizaTutorial(3000, intento + 1); return; }
     lanzarTutorial();
   }, ms);
 }

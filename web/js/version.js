@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.7c';
+export const VERSION = '0.7.8';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -19,7 +19,13 @@ export const VERSION = '0.7.7c';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.7c', f: '2026-11-12', h: '12:37', t: 'Lo que pagaste, a la vista',
+    v: '0.7.8', f: '2026-11-13', h: '11:36', t: 'Modo Vice City hasta el 26 nov',
+    cosas: [
+      { tipo: 'mejora', d: 'atardecer', t: 'Modo Vice City hasta el 26 nov', x: 'Hasta el 26 de noviembre la app va en modo Vice City, entera: rosa neón, violeta casi negro y turquesa en todas las pantallas, el campo de noche, un atardecer con palmeras (o la ciudad, o la noche, según la pestaña) detrás de la cabecera y un horizonte al final de cada pestaña. La primera vez lo abre una intro de 17 segundos que se puede saltar, «La cuenta atrás a Vice City»: llegas volando a una carretera de neón detrás de un descapotable, pasan letreros, un helicóptero con su foco y unas cuantas frases, y el rótulo se enciende letra a letra. Lo que dice y lo que calcula, igual. Si prefieres el rojo y negro de siempre, se quita en Ajustes, arriba del todo; el 27 vuelve solo.' },
+    ],
+  },
+  {
+    v: '0.7.7c', f: '2026-11-13', h: '11:36', t: 'Lo que pagaste, a la vista',
     cosas: [
       { tipo: 'mejora', d: 'euro', t: 'Lo que pagaste y la cláusula, más claros', x: 'En la ficha de uno de los tuyos, arriba sale lo que pagaste por él y cuánto ha subido o bajado desde entonces. Debajo de la cláusula, cuánto le queda para abrirse (o si ya está abierta y con qué riesgo). Fuera la tarjeta plegada «Es tuyo»: lo que te daría LaLiga por él va en una nota a la vista.' },
     ],

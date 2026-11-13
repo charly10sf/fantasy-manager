@@ -694,6 +694,12 @@ export function ajustes(S) {
       + `<button class="aj-atajo" data-accion="tutorial">${icono('info')}<span><b>Tutorial</b><small>En un minuto</small></span></button></div>`;
   }
 
+  // el tema de evento, a la vista y fuera de las secciones (13 nov, lo pidió Carlos); sin TEMA_EVENTO no sale
+  if (window.temaEvento) {
+    const on = window.temaEvento.activo();
+    h += `<div class="ajuste aj-tema" id="aj-tema"><span class="aj-tema-ic" aria-hidden="true"></span><div class="c"><b>Modo Vice City</b><span>${on ? 'Puesto' : 'Quitado'} · hasta el 26 nov; el 27 vuelve solo el rojo y negro</span></div>${interr(on, 'temaEvento', '', 'Modo Vice City')}</div>`;
+  }
+
   const sec = (kk, ic, t, l, cuerpo, qx = '') => (cuerpo ? `<details class="aj-sec" data-k="${kk}" data-t="${esc(`${t} ${qx}`)}"${abiertas[kk] ? ' open' : ''}><summary data-accion="plegarAjuste" data-k="${kk}">${icono(ic)}<span class="aj-tx"><b>${t}</b><span>${esc(l)}</span></span>${icono('abajo', 'av-fl')}</summary><div class="aj-cuerpo">${cuerpo}</div></details>` : '');
 
   /* ---- cuenta y liga ---- */
@@ -793,6 +799,7 @@ export function ajustes(S) {
   }
   if (dueno && !enDemo()) c4 += fila('Quién usa la app', 'Solo lo ves tú', btnA('quienUsa', 'Ver', { sec: false }), 'usuarios');
   if ((enApp || enWeb) && !enDemo()) c4 += fila('Liga de ejemplo', 'Sin tocar tus datos', btnA('entrarDemo', 'Ver'), 'demo');
+  // (13 nov, Carlos) el tema de evento de index.html (TEMA_EVENTO), que se puede apagar; sin él, la fila no sale
   c4 += fila('Diagnóstico', 'Lo que han contestado LaLiga y Google', btnA('diag', 'Ver'), 'errores fallos');
   h += sec('app', 'info', 'La app', `Versión ${VERSION}`, c4, 'version');
 
