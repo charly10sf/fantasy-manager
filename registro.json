@@ -3414,7 +3414,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794318765000,
-   "SPORT|136281772": 1794316000000,
    "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321213000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000,
@@ -3533,12 +3532,13 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/12-nov-2026-partidazo-cope-20261113_3474274.html": 1794530700000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000,
    "SPORT|136406363": 1794567719000,
-   "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-prepara-ere-plantea-recorte-rutas-transatlanticas-combustible-falta-liquidez-20261113105156.html": 1794563516000
+   "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-prepara-ere-plantea-recorte-rutas-transatlanticas-combustible-falta-liquidez-20261113105156.html": 1794563516000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/francia-ataca-zidane-primer-tropiezo-seleccionador-decisiones-son-cuestionables-20261113_3474878.html": 1794575298000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
   "espera": {}
@@ -3546,17 +3546,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 36,
+   "clasificar": 37,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 197223,
-  "salida": 18682,
+  "entrada": 198984,
+  "salida": 18768,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.307757,
+  "dolares": 0.307976,
   "reservado": 0
  },
  "recientes": {
@@ -7703,13 +7703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2125,
+   "ok": 2126,
    "fallos": 0,
-   "ejecuciones": 1629,
+   "ejecuciones": 1630,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T13:06:17.013Z"
+   "ultima": "2026-11-13T13:11:13.759Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7726,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:06:21.596Z"
+   "ultimaBien": "2026-11-13T13:11:19.067Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:06:21.596Z"
+   "ultimaBien": "2026-11-13T13:11:19.067Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:06:21.596Z"
+   "ultimaBien": "2026-11-13T13:11:19.067Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,11 +7742,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:06:21.596Z"
+   "ultimaBien": "2026-11-13T13:11:19.067Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:06:21.596Z"
+   "ultimaBien": "2026-11-13T13:11:19.067Z"
   }
  },
  "avisos": [
