@@ -203,7 +203,9 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
       sinRepetir: !l.some((a) => a.id === `cl15-${jug.teamId}-${jug.pid}`),
       // los de rivales salen solo si se pueden clausular (esClausulable); si no sale ninguno, no hay nada que mirar
       riv: !r || (Math.abs(r.t - (rx.protegidoHasta - 5 * 60e3)) < 1000 && /En 5 min/.test(r.titulo)),
-      rivAlguno: !!r || !l.some((a) => /^cl15-|^reabre15-/.test(a.id)),
+      // (los «reabre15-» son de cláusulas en veda, que aquí no se miran: xs las deja fuera y avisos.js solo da «cl15-» a las
+      // que no están en veda; contándolos, la prueba fallaba a las horas en que solo quedaban de veda)
+      rivAlguno: !!r || !l.some((a) => /^cl15-/.test(a.id)),
       once: !M.proxima || !ok(M.proxima.ini) || (!!jo && /30 min/.test(jo.titulo) && Math.abs(jo.t - (M.proxima.ini - 30 * 60e3)) < 1000),
       mias: miasT >= miasB && (!mia || /1 h de protección/.test(mia.titulo)),
       txt: (A.tiempoTxt(90) === '1 h 30 min' && A.tiempoTxt(1440) === '1 día' && A.antesTxt(0) === 'Al abrirse'),
