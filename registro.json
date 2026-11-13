@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-ve-apto-lamine-yamal-inglaterra-no-merecia-pena-asumir-riesgo-20261110_3472467.html": 1794325288000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/marc-roca-regreso-roja-europeo_0_2008465260.html": 1794325756000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249536/17-leyendas-atletico-convocadas-duelo-america.html": 1794326358000,
@@ -7706,13 +7705,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2152,
+   "ok": 2153,
    "fallos": 0,
-   "ejecuciones": 1656,
+   "ejecuciones": 1657,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T15:21:16.506Z"
+   "ultima": "2026-11-13T15:26:12.105Z"
   }
  },
  "ptsDirecto": {},
@@ -7729,15 +7728,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:21:21.730Z"
+   "ultimaBien": "2026-11-13T15:26:15.736Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:21:21.730Z"
+   "ultimaBien": "2026-11-13T15:26:15.736Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:21:21.730Z"
+   "ultimaBien": "2026-11-13T15:26:15.736Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7745,11 +7744,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:21:21.730Z"
+   "ultimaBien": "2026-11-13T15:26:15.736Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:21:21.730Z"
+   "ultimaBien": "2026-11-13T15:26:15.736Z"
   }
  },
  "avisos": [
