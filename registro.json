@@ -2158,7 +2158,8 @@
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gerard-lopez-utilizo-informes-arbitrales-negreira-entrenador-barca-b-20261113_3475063.html": 1794580892000,
    "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000,
-   "SPORT|136415105": 1794579682000
+   "SPORT|136415105": 1794579682000,
+   "SPORT|136402229": 1794581404000
   },
   "hechos": [
    {
@@ -2573,7 +2574,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -3546,17 +3547,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 45,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 255138,
-  "salida": 21878,
+  "entrada": 257159,
+  "salida": 21970,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.409519,
+  "dolares": 0.409767,
   "reservado": 0
  },
  "recientes": {
@@ -7703,13 +7704,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2158,
+   "ok": 2159,
    "fallos": 0,
-   "ejecuciones": 1662,
+   "ejecuciones": 1663,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T15:51:21.221Z"
+   "ultima": "2026-11-13T15:56:17.032Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7727,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:51:27.148Z"
+   "ultimaBien": "2026-11-13T15:56:22.062Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:51:27.148Z"
+   "ultimaBien": "2026-11-13T15:56:22.062Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:51:27.148Z"
+   "ultimaBien": "2026-11-13T15:56:22.062Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,11 +7743,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:51:27.148Z"
+   "ultimaBien": "2026-11-13T15:56:22.062Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:51:27.148Z"
+   "ultimaBien": "2026-11-13T15:56:22.062Z"
   }
  },
  "avisos": [
