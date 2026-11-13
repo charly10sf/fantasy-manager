@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000,
@@ -7703,13 +7702,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2129,
+   "ok": 2130,
    "fallos": 0,
-   "ejecuciones": 1633,
+   "ejecuciones": 1634,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T13:26:15.103Z"
+   "ultima": "2026-11-13T13:31:15.153Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7725,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:26:19.785Z"
+   "ultimaBien": "2026-11-13T13:31:22.028Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:26:19.785Z"
+   "ultimaBien": "2026-11-13T13:31:22.028Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:26:19.785Z"
+   "ultimaBien": "2026-11-13T13:31:22.028Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,11 +7741,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:26:19.785Z"
+   "ultimaBien": "2026-11-13T13:31:22.028Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:26:19.785Z"
+   "ultimaBien": "2026-11-13T13:31:22.028Z"
   }
  },
  "avisos": [
