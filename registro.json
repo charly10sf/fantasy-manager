@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
@@ -7704,13 +7703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2124,
+   "ok": 2125,
    "fallos": 0,
-   "ejecuciones": 1628,
+   "ejecuciones": 1629,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T13:01:17.302Z"
+   "ultima": "2026-11-13T13:06:17.013Z"
   }
  },
  "ptsDirecto": {},
@@ -7727,15 +7726,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:01:24.594Z"
+   "ultimaBien": "2026-11-13T13:06:21.596Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:01:24.594Z"
+   "ultimaBien": "2026-11-13T13:06:21.596Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:01:24.594Z"
+   "ultimaBien": "2026-11-13T13:06:21.596Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7743,11 +7742,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:01:24.594Z"
+   "ultimaBien": "2026-11-13T13:06:21.596Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:01:24.594Z"
+   "ultimaBien": "2026-11-13T13:06:21.596Z"
   }
  },
  "avisos": [
