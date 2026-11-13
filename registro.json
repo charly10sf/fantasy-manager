@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enzo-alves-hijo-marcelo-cae-lista-espana-mundial-sub-17-lesion-muscular-20261110_3472480.html": 1794326987000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/bellingham-leccion-mourinho-sobre-medias-chaval-tienes-nueve-anos-tienes-gemelos.html": 1794328211000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/10/bruno-iribarne-da-el-salto-un-almeriense-entrena-con-las-estrellas-de-la-roja-ser-almeria/": 1794328207000,
    "AS|https://as.com/futbol/primera/sucic-no-viajara-con-croacia-por-una-amigdalitis-f202611-n/": 1794329246000,
@@ -7703,13 +7702,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2161,
+   "ok": 2162,
    "fallos": 0,
-   "ejecuciones": 1665,
+   "ejecuciones": 1666,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T16:06:15.494Z"
+   "ultima": "2026-11-13T16:11:16.137Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7725,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:06:19.502Z"
+   "ultimaBien": "2026-11-13T16:11:20.831Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:06:19.502Z"
+   "ultimaBien": "2026-11-13T16:11:20.831Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:06:19.502Z"
+   "ultimaBien": "2026-11-13T16:11:20.831Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,11 +7741,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:06:19.502Z"
+   "ultimaBien": "2026-11-13T16:11:20.831Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:06:19.502Z"
+   "ultimaBien": "2026-11-13T16:11:20.831Z"
   }
  },
  "avisos": [
