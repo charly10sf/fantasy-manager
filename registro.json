@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000,
    "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
@@ -2152,7 +2151,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000,
    "SPORT|136406827": 1794568575000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261113/1004250605/futbolista-perder-cholo-13-diciembre.html": 1794572498000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261113/1004250605/futbolista-perder-cholo-13-diciembre.html": 1794572498000,
+   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/13/valencia-basket-coloca-jugadores-carrera-mundial-baloncesto-136406401.html": 1794573025000
   },
   "hechos": [
    {
@@ -2567,7 +2567,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 28
+   "n": 29
   },
   "desde": {
    "67": {
@@ -3546,17 +3546,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 34,
+   "clasificar": 35,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 193057,
-  "salida": 18417,
+  "entrada": 195110,
+  "salida": 18509,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.307208,
+  "dolares": 0.307459,
   "reservado": 0
  },
  "recientes": {
@@ -7703,13 +7703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2118,
+   "ok": 2119,
    "fallos": 0,
-   "ejecuciones": 1622,
+   "ejecuciones": 1623,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T12:31:11.718Z"
+   "ultima": "2026-11-13T12:36:14.405Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7726,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:31:20.055Z"
+   "ultimaBien": "2026-11-13T12:36:19.565Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:31:20.055Z"
+   "ultimaBien": "2026-11-13T12:36:19.565Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:31:20.055Z"
+   "ultimaBien": "2026-11-13T12:36:19.565Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,11 +7742,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:31:20.055Z"
+   "ultimaBien": "2026-11-13T12:36:19.565Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:31:20.055Z"
+   "ultimaBien": "2026-11-13T12:36:19.565Z"
   }
  },
  "avisos": [
