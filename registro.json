@@ -2145,7 +2145,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250415/sancet-contentos-terzic-gran-tio.html": 1794553200000,
    "SPORT|136324164": 1794549602000,
    "El Correo|https://www.elcorreo.com/athletic/palabras-sancet-convocado-seleccion-espanola-2023-20261113080516-nt.html": 1794553517000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250493/raphinha-quiero-disponible-brasil-barca.html": 1794555394000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250493/raphinha-quiero-disponible-brasil-barca.html": 1794555394000,
+   "SPORT|136396955": 1794555227000
   },
   "hechos": [
    {
@@ -2585,7 +2586,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 7
+   "n": 8
   },
   "desde": {
    "67": {
@@ -3568,17 +3569,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 8,
+   "clasificar": 9,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 140811,
-  "salida": 9827,
+  "entrada": 142850,
+  "salida": 10399,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.297691,
+  "dolares": 0.298181,
   "reservado": 0
  },
  "recientes": {
@@ -7725,13 +7726,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2070,
+   "ok": 2071,
    "fallos": 0,
-   "ejecuciones": 1574,
+   "ejecuciones": 1575,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T08:36:19.688Z"
+   "ultima": "2026-11-13T08:41:13.824Z"
   }
  },
  "ptsDirecto": {},
@@ -7748,15 +7749,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:36:23.634Z"
+   "ultimaBien": "2026-11-13T08:41:22.337Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:36:23.634Z"
+   "ultimaBien": "2026-11-13T08:41:22.337Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:36:23.634Z"
+   "ultimaBien": "2026-11-13T08:41:22.337Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7764,11 +7765,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:36:23.634Z"
+   "ultimaBien": "2026-11-13T08:41:22.337Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:36:23.634Z"
+   "ultimaBien": "2026-11-13T08:41:22.337Z"
   }
  },
  "avisos": [
