@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-ve-apto-lamine-yamal-inglaterra-no-merecia-pena-asumir-riesgo-20261110_3472467.html": 1794325288000,
@@ -3412,7 +3411,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794318765000,
    "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321213000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000,
@@ -7702,13 +7700,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2134,
+   "ok": 2135,
    "fallos": 0,
-   "ejecuciones": 1638,
+   "ejecuciones": 1639,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T13:51:11.908Z"
+   "ultima": "2026-11-13T13:56:12.284Z"
   }
  },
  "ptsDirecto": {},
@@ -7725,15 +7723,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:51:16.255Z"
+   "ultimaBien": "2026-11-13T13:56:15.057Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:51:16.255Z"
+   "ultimaBien": "2026-11-13T13:56:15.057Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:51:16.255Z"
+   "ultimaBien": "2026-11-13T13:56:15.057Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7741,11 +7739,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:51:16.255Z"
+   "ultimaBien": "2026-11-13T13:56:15.057Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:51:16.255Z"
+   "ultimaBien": "2026-11-13T13:56:15.057Z"
   }
  },
  "avisos": [
