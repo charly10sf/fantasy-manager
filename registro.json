@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/alarma-tchouameni.html": 1794335994000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tchouameni-lesionado-francia-20261110_3472559.html": 1794336427000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249612/marc-bernal-rodri-fichan-balon-oro-dificil-jugar.html": 1794337752000,
@@ -7689,13 +7688,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2189,
+   "ok": 2190,
    "fallos": 0,
-   "ejecuciones": 1693,
+   "ejecuciones": 1694,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T18:21:11.538Z"
+   "ultima": "2026-11-13T18:26:20.968Z"
   }
  },
  "ptsDirecto": {},
@@ -7712,15 +7711,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:21:15.613Z"
+   "ultimaBien": "2026-11-13T18:26:26.579Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:21:15.613Z"
+   "ultimaBien": "2026-11-13T18:26:26.579Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:21:15.613Z"
+   "ultimaBien": "2026-11-13T18:26:26.579Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7728,11 +7727,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:21:15.613Z"
+   "ultimaBien": "2026-11-13T18:26:26.579Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:21:15.613Z"
+   "ultimaBien": "2026-11-13T18:26:26.579Z"
   }
  },
  "avisos": [
