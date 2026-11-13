@@ -2148,7 +2148,8 @@
    "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html": 1794569698000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/13/alvaro-juan-regresa-convocatoria-racing-club-ferrol-tras-seis-meses/00031794566195015609667.htm": 1794569580000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/betis-antony-busca-recuperar-antonio_0_2008489927.html": 1794569100000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250587/paulo-duarte-carga-ilaix-moriba-tienes-ego-grande-importas.html": 1794571106000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250587/paulo-duarte-carga-ilaix-moriba-tienes-ego-grande-importas.html": 1794571106000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000
   },
   "hechos": [
    {
@@ -2563,7 +2564,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -3528,32 +3529,32 @@
    "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/13/salamanca-celta-horario-ver-hoy-tv-partido-copa-rey.html": 1794562023000,
    "ABC|https://www.abc.es/deportes/futbol/salamanca-celta-horario-canal-television-ver-online-20261113105247-nt.html": 1794563668000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/12-nov-2026-partidazo-cope-20261113_3474274.html": 1794530700000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000,
+   "SPORT|136406363": 1794567719000,
+   "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-prepara-ere-plantea-recorte-rutas-transatlanticas-combustible-falta-liquidez-20261113105156.html": 1794563516000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 5,
+   "n": 6,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136406363": 1794571873878
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 32,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 184698,
-  "salida": 16170,
+  "entrada": 188700,
+  "salida": 16423,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.30525,
+  "dolares": 0.305776,
   "reservado": 0
  },
  "recientes": {
@@ -7700,13 +7701,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2114,
+   "ok": 2115,
    "fallos": 0,
-   "ejecuciones": 1618,
+   "ejecuciones": 1619,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T12:11:13.878Z"
+   "ultima": "2026-11-13T12:16:17.944Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7724,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:11:18.616Z"
+   "ultimaBien": "2026-11-13T12:16:26.602Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:11:18.616Z"
+   "ultimaBien": "2026-11-13T12:16:26.602Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:11:18.616Z"
+   "ultimaBien": "2026-11-13T12:16:26.602Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7740,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:11:18.616Z"
+   "ultimaBien": "2026-11-13T12:16:26.602Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:11:18.616Z"
+   "ultimaBien": "2026-11-13T12:16:26.602Z"
   }
  },
  "avisos": [
