@@ -2146,7 +2146,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-recupera-lamine-yamal-oyarzabal-jugar-inglaterra-20261112_3474248.html": 1794524509000,
    "ABC|https://www.abc.es/deportes/futbol/lamine-rodri-espana-sufre-20261112233025-nt.html": 1794534035000,
    "ABC|https://www.abc.es/deportes/futbol/esposito-rompe-francia-mbappe-zidane-20261112224712-nt.html": 1794520033000,
-   "SPORT|136394638": 1794546217000
+   "SPORT|136394638": 1794546217000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250414/cupo-rojiblanco-euskal-selekzioa-llega-diez-jugadores.html": 1794551400000
   },
   "hechos": [
    {
@@ -2572,7 +2573,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 2
+   "n": 3
   },
   "desde": {
    "67": {
@@ -3560,17 +3561,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 3,
+   "clasificar": 4,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 130500,
-  "salida": 7887,
+  "entrada": 132573,
+  "salida": 8519,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.29569,
+  "dolares": 0.296213,
   "reservado": 0
  },
  "recientes": {
@@ -7717,13 +7718,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2044,
+   "ok": 2045,
    "fallos": 0,
-   "ejecuciones": 1548,
+   "ejecuciones": 1549,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T06:26:11.101Z"
+   "ultima": "2026-11-13T06:31:14.880Z"
   }
  },
  "ptsDirecto": {},
@@ -7740,15 +7741,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:26:16.036Z"
+   "ultimaBien": "2026-11-13T06:31:24.122Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:26:16.036Z"
+   "ultimaBien": "2026-11-13T06:31:24.122Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:26:16.036Z"
+   "ultimaBien": "2026-11-13T06:31:24.122Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7756,11 +7757,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:26:16.036Z"
+   "ultimaBien": "2026-11-13T06:31:24.122Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:26:16.036Z"
+   "ultimaBien": "2026-11-13T06:31:24.122Z"
   }
  },
  "avisos": [
