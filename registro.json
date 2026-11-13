@@ -2152,7 +2152,9 @@
    "SPORT|136406827": 1794568575000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261113/1004250605/futbolista-perder-cholo-13-diciembre.html": 1794572498000,
-   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/13/valencia-basket-coloca-jugadores-carrera-mundial-baloncesto-136406401.html": 1794573025000
+   "Superdeporte|https://www.superdeporte.es/valencia-basket/2026/11/13/valencia-basket-coloca-jugadores-carrera-mundial-baloncesto-136406401.html": 1794573025000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250614/gerard-lopez-declara-juzgado-utilizo-informes-negreira-barca-b.html": 1794573454000,
+   "Cadena SER|https://cadenaser.com/cataluna/2026/11/13/tancada-tecnicament-la-investigacio-del-cas-negreira-sercat/": 1794574342000
   },
   "hechos": [
    {
@@ -2567,7 +2569,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 29
+   "n": 30
   },
   "desde": {
    "67": {
@@ -3545,17 +3547,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 195110,
-  "salida": 18509,
+  "entrada": 197223,
+  "salida": 18682,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.307459,
+  "dolares": 0.307757,
   "reservado": 0
  },
  "recientes": {
@@ -7702,13 +7704,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2123,
+   "ok": 2124,
    "fallos": 0,
-   "ejecuciones": 1627,
+   "ejecuciones": 1628,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T12:56:12.900Z"
+   "ultima": "2026-11-13T13:01:17.302Z"
   }
  },
  "ptsDirecto": {},
@@ -7725,15 +7727,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:56:16.087Z"
+   "ultimaBien": "2026-11-13T13:01:24.594Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:56:16.087Z"
+   "ultimaBien": "2026-11-13T13:01:24.594Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:56:16.087Z"
+   "ultimaBien": "2026-11-13T13:01:24.594Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7741,11 +7743,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:56:16.087Z"
+   "ultimaBien": "2026-11-13T13:01:24.594Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:56:16.087Z"
+   "ultimaBien": "2026-11-13T13:01:24.594Z"
   }
  },
  "avisos": [
