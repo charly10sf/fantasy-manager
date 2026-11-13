@@ -19,7 +19,7 @@ export const VERSION = '0.7.8c';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.8c', f: '2026-11-13', h: '16:06', t: 'El modo Vice City se anuncia con una postal',
+    v: '0.7.8c', f: '2026-11-13', h: '16:28', t: 'El modo Vice City se anuncia con una postal',
     cosas: [
       { tipo: 'mejora', d: 'atardecer', t: 'El modo Vice City se anuncia con una postal', x: 'Fuera la intro en vídeo del modo Vice City: en su lugar sale una postal, una imagen fija que anuncia el modo y se cierra con «Entrar». Sale una vez, y a quien ya vio el vídeo no le sale.' },
     ],
