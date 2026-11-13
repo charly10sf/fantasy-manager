@@ -122,14 +122,14 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   const clubesOrden = Object.entries(porClub).sort((a, b) => b[1] - a[1]);
   const [cS, cB] = [clubesOrden[0], clubesOrden[clubesOrden.length - 1]];
   const clubMueve = {
-    ...(cS && cS[1] >= 2e6 ? { clubQueMasGana: { club: cS[0], entreTodosSusJugadores: `+${dinero(cS[1])}` } } : {}),
-    ...(cB && cB[1] <= -2e6 ? { clubQueMasPierde: { club: cB[0], entreTodosSusJugadores: `-${dinero(-cB[1])}` } } : {}),
+    ...(cS && cS[1] >= 2e6 ? { masGanaSumandoASusJugadores: { club: cS[0], cambio: `+${dinero(cS[1])}` } } : {}),
+    ...(cB && cB[1] <= -2e6 ? { masPierdeSumandoASusJugadores: { club: cB[0], cambio: `-${dinero(-cB[1])}` } } : {}),
   };
   const conRacha = [...suben.slice(0, N), ...bajan.slice(0, N)].filter((f) => f.rachaDias >= 4).sort((a, b) => b.rachaDias - a.rachaDias)[0];
   const angulos = [
     'la mayor subida', 'la mayor bajada',
     ...(conRacha ? [`la racha de ${conRacha.nombre}`] : []),
-    ...(clubMueve.clubQueMasGana || clubMueve.clubQueMasPierde ? ['el club que más se mueve'] : []),
+    ...(clubMueve.masGanaSumandoASusJugadores || clubMueve.masPierdeSumandoASusJugadores ? ['qué equipo gana o pierde más sumando a todos sus jugadores (dilo con su nombre)'] : []),
     ...(suben[1] ? [`${suben[1].nombre}, el segundo que más sube`] : []),
     ...(ch ? ['el chollo'] : []),
   ];
