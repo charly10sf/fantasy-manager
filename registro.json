@@ -1888,7 +1888,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249362/entiendo-alguien-quiera-vienen-barca-madrid-formas-molestaron.html": 1794305948000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000,
    "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000,
    "SPORT|136281363": 1794305884000,
@@ -2150,7 +2149,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000,
    "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000,
    "SPORT|136398549": 1794559654000,
-   "SPORT|136400234": 1794560446000
+   "SPORT|136400234": 1794560446000,
+   "SPORT|136399158": 1794560918000
   },
   "hechos": [
    {
@@ -2577,7 +2577,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -3558,17 +3558,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 160523,
-  "salida": 12659,
+  "entrada": 162746,
+  "salida": 12779,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.301078,
+  "dolares": 0.30136,
   "reservado": 0
  },
  "recientes": {
@@ -7715,13 +7715,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2089,
+   "ok": 2090,
    "fallos": 0,
-   "ejecuciones": 1593,
+   "ejecuciones": 1594,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:06:13.600Z"
+   "ultima": "2026-11-13T10:11:15.363Z"
   }
  },
  "ptsDirecto": {},
@@ -7738,15 +7738,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:06:20.225Z"
+   "ultimaBien": "2026-11-13T10:11:22.593Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:06:20.225Z"
+   "ultimaBien": "2026-11-13T10:11:22.593Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:06:20.225Z"
+   "ultimaBien": "2026-11-13T10:11:22.593Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7754,11 +7754,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:06:20.225Z"
+   "ultimaBien": "2026-11-13T10:11:22.593Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:06:20.225Z"
+   "ultimaBien": "2026-11-13T10:11:22.593Z"
   }
  },
  "avisos": [
