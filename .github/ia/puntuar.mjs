@@ -5,7 +5,8 @@ import { readFileSync } from 'node:fs';
 import { chat, plan, juzgar, cerrar } from './banco.mjs';
 import { CASOS } from './casos.mjs';
 
-const resp = JSON.parse(readFileSync(process.argv[2]));
+// LOTE=a (lo de antes) o b (lo nuevo) si la Action preguntó los dos; la app con la que se puntúa es la del árbol de trabajo
+const resp = JSON.parse(readFileSync(process.argv[2])).filter((x) => !process.env.LOTE || (x.lote || 'a') === process.env.LOTE);
 const filtro = process.argv[3] || '';
 let bien = 0, total = 0, sinApp = 0, descartadas = 0, opsPlan = 0;
 const textoDe = (j) => ((j && j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || []).filter((p) => !p.thought).map((p) => p.text || '').join('');
@@ -22,8 +23,8 @@ for (const x of resp) {
   if (crudo && !crudo.length) sinApp++;
   if (c.tipo === 'plan' && !r.error) { descartadas += r.descartadas || 0; opsPlan += r.n || 0; }
   if (!f.length) bien++;
-  console.log(`${f.length ? 'MAL ' : 'BIEN'} ${c.id}${x.v ? ` #${x.v + 1}` : ''}${c.tipo === 'plan' && !r.error ? ` · ${r.n} operaciones, ${r.descartadas} descartadas por la app` : ''}${f.length ? `\n     ${f.join('\n     ')}` : ''}`);
+  console.log(`${f.length ? 'MAL ' : 'BIEN'} ${c.id} [${x.modelo}]${crudo ? (crudo.length ? ' (la IA sola: MAL)' : ' (la IA sola: BIEN)') : ''}${c.tipo === 'plan' && !r.error ? ` · ${r.n} operaciones, ${r.descartadas} descartadas por la app` : ''}${f.length ? `\n     ${f.join('\n     ')}` : ''}`);
   if ((f.length && process.env.VER) || process.env.TODO) console.log(String(r.vista || '').replace(/^/gm, '       | '));
 }
 await cerrar();
-console.log(`\n${bien} de ${total} BIEN · operaciones de los planes: ${opsPlan}, descartadas por la app: ${descartadas}`);
+console.log(`\n${bien} de ${total} BIEN · chat, la IA sola (sin revisar): ${sinApp} BIEN · operaciones de los planes: ${opsPlan}, descartadas por la app: ${descartadas}`);
