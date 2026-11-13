@@ -30,7 +30,7 @@ los 40 avisos de Fallo (14 hablan de recomendaciones).
    que cambiaban de un mensaje a otro («33-35 M» y luego «26 M»), el escudo a una hora inventada (7 nov), repetir el plan
    en cada respuesta. Era la causa de 17 de los 19 casos que fallaban sin red.
 2. **La IA elegía entre cosas que la app iba a tachar.** El catálogo le ofrecía 14 cláusulas con su ficha entera y la
-   app descartaba después casi todas (en la liga de ejemplo, 61 de 62). De ahí los «Descartado por la app» y el titular
+   app descartaba después casi todas (en la liga de ejemplo, 60 de las 61 cláusulas). De ahí los «Descartado por la app» y el titular
    que mandaba lo contrario de lo que había debajo (Fornals, 13 nov; Oyarzabal, Ibañez y Javi Guerra, 3 nov; Huijsen, 9
    nov; De Jong).
 3. **Reglas de LaLiga mal explicadas o que se contradecían en el prompt.**
@@ -91,7 +91,7 @@ y que al aceptar una oferta el dinero entre al instante.
   deuda, «te viene bien que te clausulen» a uno a su valor, un precio de mercado como si fuera un trato, el nombre del
   modelo, otras webs). Lo que no cuadra no se borra (el texto ya se ha visto mientras llegaba): debajo sale «Revisado
   por la app» con lo que es de verdad. Una respuesta correcta sale tal cual (cuatro casos de control lo vigilan).
-- **Después, en el plan.** `cuadrarPlan` sigue igual, con tres agujeros tapados (catálogo, 7).
+- **Después, en el plan.** `cuadrarPlan` sigue igual, con dos agujeros tapados (el titular con un blindaje quitado y el paso de alinear con uno ajeno).
 
 Modelo, temperatura y razonamiento: se quedan como estaban (el mejor modelo que tenga la clave, pensando «poco», sin
 temperatura en los 3.x como pide Google). Con la app decidiendo, pensar más no arregla nada y tarda el doble. Lo que sí
