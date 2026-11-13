@@ -944,7 +944,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     const vuelta = M.proxima && M.proxima.ini > M.paron.ini ? M.proxima : null;
     L.push(`PARÓN DE SELECCIONES: del ${cuandoF(M.paron.ini, { hora: false })} al ${cuandoF(M.paron.fin, { hora: false })}${M.enParon ? ` (ESTAMOS EN ÉL${ultJ && ultJ.fin >= M.paron.ini - 2 * DIA ? `: empezó justo después de la jornada ${ultJ.n}, que se jugó hasta ${cuandoF(ultJ.fin)}; los días sin LaLiga son los que vienen, no los que han pasado` : ''})` : ` (empieza en ${dura(M.paron.ini - Date.now())})`}.${cerca ? ` Lo que supone: ${M.enParon ? 'no hay' : 'durante el parón no habrá'} partidos de LaLiga, así que nadie suma puntos${vuelta ? ` hasta la jornada ${vuelta.n} (${cuandoF(vuelta.ini)})` : ''}; las rachas de valor se frenan y las subidas se moderan (lo que subió uno la semana pasada no tiene por qué seguir: no lo vendas como que «sube como la espuma» por su 7d), y los que van con su selección pueden volver tocados o cansados. Si te pregunta por el parón o te dice «teniendo en cuenta el parón», nómbralo con estas fechas y di cómo cambia lo que le aconsejas.` : ''}`);
     // (19, aviso de Domy, 9 nov) en el parón el plan va de dinero, no de fichar para el once de la vuelta
-    if (paronLejos(M) && vuelta) L.push(`PRIORIDAD EN EL PARÓN (manda sobre lo demás hasta ${cuandoF(vuelta.ini - PARON_VUELTA)}): como nadie puntúa hasta la jornada ${vuelta.n}, lo que hagas ahora se mide en DINERO, no en puntos. En este orden: 1) ESPECULAR y REVALORIZAR: comprar lo que sube (sobre todo los VUELVE y lo que la app marca para revender) y venderlo antes de la jornada ${vuelta.n}, con su día de venta; el margen de deuda vale para pujar, siempre que al vender vuelvas a positivo antes de la jornada. 2) VENDER EN LO ALTO lo tuyo que frena o ha girado, aunque juegue, salvo que sea imprescindible para el once de la vuelta y reponerlo cueste más de lo que se pierde: hay días de sobra para recomprar o fichar a otro antes de la jornada. 3) PROTEGER lo tuyo (blindaje gratis primero) si un rival puede quitártelo: que te lo quiten a su valor sigue siendo perderlo. 4) CLAUSULAR o fichar PARA EL ONCE de la jornada ${vuelta.n} SOLO si es un CHOLLO CLARO (te lo marco en su cláusula: a un 5 % de su valor y sin bajar) o en los dos o tres días antes de la vuelta; si no, son días sin puntuar con el dinero parado y con el valor pudiendo bajar: va en «descartes» con ese motivo o, si se abre más tarde, como mucho en «proximos_dias». Una cláusula cara solo vale como operación para REVENDER, con su beneficio y su día de venta. En «situacion» y en el titular, dile que en el parón el objetivo es sacar dinero; en «paron», cuánto puede ganar hasta la vuelta y cuándo volver a pensar en el once.`);
+    if (paronLejos(M) && vuelta) L.push(`PRIORIDAD EN EL PARÓN (manda sobre lo demás hasta ${cuandoF(vuelta.ini - PARON_VUELTA)}): como nadie puntúa hasta la jornada ${vuelta.n}, lo que hagas ahora se mide en DINERO, no en puntos. En este orden: 1) ESPECULAR y REVALORIZAR: comprar lo que sube (sobre todo los VUELVE y lo que la app marca para revender) y venderlo antes de la jornada ${vuelta.n}, con su día de venta; el margen de deuda vale para pujar, siempre que al vender vuelvas a positivo antes de la jornada. 2) VENDER EN LO ALTO lo tuyo que frena o ha girado, aunque juegue (lo tuyo que SUBE no se vende para especular con otro: ya es tu especulación, y aguantarlo hasta la vuelta es lo que da dinero), salvo que sea imprescindible para el once de la vuelta y reponerlo cueste más de lo que se pierde: hay días de sobra para recomprar o fichar a otro antes de la jornada. 3) PROTEGER lo tuyo (blindaje gratis primero) si un rival puede quitártelo: que te lo quiten a su valor sigue siendo perderlo. 4) CLAUSULAR o fichar PARA EL ONCE de la jornada ${vuelta.n} SOLO si es un CHOLLO CLARO (te lo marco en su cláusula: a un 5 % de su valor y sin bajar) o en los dos o tres días antes de la vuelta; si no, son días sin puntuar con el dinero parado y con el valor pudiendo bajar: va en «descartes» con ese motivo o, si se abre más tarde, como mucho en «proximos_dias». Una cláusula cara solo vale como operación para REVENDER, con su beneficio y su día de venta. En «situacion» y en el titular, dile que en el parón el objetivo es sacar dinero; en «paron», cuánto puede ganar hasta la vuelta y cuándo volver a pensar en el once.`);
   }
   if (M.cierreMercado) {
     // lo que se gana en la subasta es tuyo al cambiar el mercado y se puede alinear hasta el primer partido de la jornada:
@@ -1742,6 +1742,36 @@ export function cuadrarPlan(P, D, M) {
     const txt = `vuelve y sigue subiendo (un ${pct(ine.vuelve.ritmo * 100, 1, false)} al día; llegó a valer ${eur(ine.vuelve.max)}): cada día que lo aguantes vale más.`;
     if (o.hoy && o.importe && final != null && final - o.importe >= 0 && !pagaCaja(o)) quitarVenta(o, `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(final - o.importe)}) y ${txt}`);
     else o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${txt} Véndelo solo si necesitas el dinero.`;
+  }
+  // (0.7.8c, aviso de Carlos, 13 nov 17:16: «me recomienda vender a Fornals cuando vale 53 M, lo compré por 54, le quedan
+  // 9 días de cláusula cerrada y sube más de 1 M al día») lo tuyo que sube de verdad (más de un 0,5 % al día, sin frenar)
+  // no se vende si no hace falta el dinero: aguantarlo hasta la jornada vale más que lo que da hoy la oferta. Fuera de
+  // esto: lo comprado para revender, el que está de baja y una oferta que ya paga lo que subiría
+  const subeFuerte = (o) => {
+    if (o.accion !== 'vender' || !o.pid || o.ya || o.descartada || !M.inercia) return null;
+    const x = M.mias.find((y) => y.pid === o.pid);
+    if (!x || !x.j || !x.j.valor || (M.paraRevender || []).some((y) => y.pid === o.pid) || x.ventaInercia) return null;
+    if ((M.vendeBaja && M.vendeBaja(x)) || ['injured', 'suspended'].includes(x.j.estado)) return null;
+    const ine = M.inercia(o.pid);
+    if (!ine || !['sube', 'acelera'].includes(ine.fase) || num(ine.ult) < x.j.valor * 0.005) return null;
+    // hasta el día antes de la jornada (en el parón, la de la vuelta)
+    const dias = M.proxima ? Math.max(1, Math.ceil((M.proxima.ini - Date.now()) / DIA) - 1) : ine.hastaJ;
+    const gana = ine.proy ? ine.proy(dias) : ine.proyJ;
+    const extra = (o.importe || x.j.valor) - x.j.valor;
+    if (!(gana > 0) || extra >= gana) return null;
+    const cerrada = !x.abierta && x.abreEn > DIA ? ` y su cláusula está cerrada ${dura ? `${dura(x.abreEn)} más` : 'unos días más'} (no te lo pueden quitar)` : '';
+    return { x, gana, dias, txt: `sube ${eur(ine.ult, { signo: true })} al día${cerrada}: aguantándolo ${dias} día${dias === 1 ? '' : 's'} más vale unos ${eur(gana)} más de lo que te dan hoy.` };
+  };
+  for (const o of ops) {
+    const sf = subeFuerte(o);
+    if (!sf) continue;
+    const sin = final != null ? final - (o.importe || 0) : null;
+    // (también ponerlo a la venta sin oferta todavía: el dinero no entra hoy, pero si sin él no te falta, es venderlo para nada)
+    if ((o.hoy || !o.importe) && sin != null && sin >= 0 && !pagaCaja(o)) {
+      const txt = `La app lo descarta: no te hace falta el dinero (sin esta venta acabarías con ${eur(sin)}) y ${sf.txt}`;
+      if (o.importe) quitarVenta(o, txt); else { o.descartada = true; o.aviso = txt; o.saldo = null; }
+    }
+    else o.aviso = `${o.aviso ? `${o.aviso} ` : ''}Ojo: ${sf.txt} Véndelo solo si de verdad necesitas el dinero.`;
   }
   // lo que pagaste por él: cuánto ganas o pierdes con la venta. Perder dinero sin necesidad (no hace falta el dinero
   // y no está bajando) se avisa; si está bajando, lo que pagaste no cambia nada: lo perdido ya no vuelve

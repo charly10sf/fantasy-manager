@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.8c';
+export const VERSION = '0.7.8d';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.8c';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.8d', f: '2026-11-13', h: '17:25', t: 'El plan ya no te manda vender lo que está subiendo',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan ya no te manda vender lo que está subiendo', x: 'El plan podía recomendarte vender a uno tuyo que sube cada día, aunque no te hiciera falta el dinero y no te lo pudieran quitar porque tiene la cláusula cerrada. Ahora, si sube más de un 0,5 % al día sin frenar, la app descarta esa venta y te dice cuánto ganarías aguantándolo hasta la jornada. Sigue recomendándola si te hace falta el dinero, si está de baja o si la oferta ya paga más de lo que va a subir.' },
+    ],
+  },
   {
     v: '0.7.8c', f: '2026-11-13', h: '16:28', t: 'El modo Vice City se anuncia con una postal',
     cosas: [
