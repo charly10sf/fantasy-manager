@@ -1890,7 +1890,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249362/entiendo-alguien-quiera-vienen-barca-madrid-formas-molestaron.html": 1794305948000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000,
    "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000,
-   "SPORT|136280206": 1794304897000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000,
    "SPORT|136281363": 1794305884000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261110/11680703/cucurella-descubre-cara-mas-desconocida-mourinho-divertido-meme-le-envio-lol.html": 1794309043000,
@@ -2150,7 +2149,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261113/1004250516/real-madrid-gana-peso-seleccion.html": 1794561097000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000,
    "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000,
-   "SPORT|136398549": 1794559654000
+   "SPORT|136398549": 1794559654000,
+   "SPORT|136400234": 1794560446000
   },
   "hechos": [
    {
@@ -2577,7 +2577,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 14
+   "n": 15
   },
   "desde": {
    "67": {
@@ -3422,12 +3422,10 @@
  },
  "liga": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/tavernes-valencia-horario-canal-television-ver-online-20261110110419-nt.html": 1794305137000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-seguimiento-196-huelga-maquinistas-incumplimiento-servicios-minimos-20261110113536.html": 1794306936000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/navalcarnero-betis-horario-ver-tv_0_2008462707.html": 1794308704000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/10/betis-abre-proceso-solicitud-602-entradas-proximo-derbi-sanchez-pizjuan.html": 1794313574000,
    "SPORT|136280060": 1794308464000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-ayuso-critica-use-impunidad-secuestro-cara-huelga-general-pide-acabar-basura-sindical-20261110110256.html": 1794304976000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794315238000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794318765000,
    "SPORT|136281772": 1794316000000,
@@ -3560,17 +3558,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 17,
+   "clasificar": 18,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 158502,
-  "salida": 12141,
+  "entrada": 160523,
+  "salida": 12659,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.300617,
+  "dolares": 0.301078,
   "reservado": 0
  },
  "recientes": {
@@ -7717,13 +7715,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2088,
+   "ok": 2089,
    "fallos": 0,
-   "ejecuciones": 1592,
+   "ejecuciones": 1593,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:01:11.596Z"
+   "ultima": "2026-11-13T10:06:13.600Z"
   }
  },
  "ptsDirecto": {},
@@ -7740,15 +7738,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:01:15.438Z"
+   "ultimaBien": "2026-11-13T10:06:20.225Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:01:15.438Z"
+   "ultimaBien": "2026-11-13T10:06:20.225Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:01:15.438Z"
+   "ultimaBien": "2026-11-13T10:06:20.225Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7756,11 +7754,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:01:15.438Z"
+   "ultimaBien": "2026-11-13T10:06:20.225Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:01:15.438Z"
+   "ultimaBien": "2026-11-13T10:06:20.225Z"
   }
  },
  "avisos": [
