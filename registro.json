@@ -3433,7 +3433,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-cifra-seguimiento-196-huelga-maquinistas-incumplimiento-servicios-minimos-20261110113536.html": 1794306936000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/navalcarnero-betis-horario-ver-tv_0_2008462707.html": 1794308704000,
    "MARCA|https://www.marca.com/futbol/betis/2026/11/10/betis-abre-proceso-solicitud-602-entradas-proximo-derbi-sanchez-pizjuan.html": 1794313574000,
    "SPORT|136280060": 1794308464000,
@@ -7726,13 +7725,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2094,
+   "ok": 2095,
    "fallos": 0,
-   "ejecuciones": 1598,
+   "ejecuciones": 1599,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:31:15.544Z"
+   "ultima": "2026-11-13T10:36:13.499Z"
   }
  },
  "ptsDirecto": {},
@@ -7749,15 +7748,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:31:27.091Z"
+   "ultimaBien": "2026-11-13T10:36:16.201Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:31:27.091Z"
+   "ultimaBien": "2026-11-13T10:36:16.201Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:31:27.091Z"
+   "ultimaBien": "2026-11-13T10:36:16.201Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7765,11 +7764,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:31:27.091Z"
+   "ultimaBien": "2026-11-13T10:36:16.201Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:31:27.091Z"
+   "ultimaBien": "2026-11-13T10:36:16.201Z"
   }
  },
  "avisos": [
