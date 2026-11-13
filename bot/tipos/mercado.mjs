@@ -58,7 +58,14 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
     const h = puntos(hist[i]);
     if (h.length < 2 || diaMadrid(h[h.length - 1].t) !== dia) return;
     const nuevo = h[h.length - 1].v, antes = h[h.length - 2].v;
-    filas.push({ media: Number(j.averagePoints) || 0, puntos: Number(j.points) || 0, ok: !j.playerStatus || j.playerStatus === 'ok', id: j.id, pos: j.positionId, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, nuevo, antes, dif: nuevo - antes, pct: (nuevo - antes) / antes * 100 });
+    // la racha: cuántos días seguidos lleva subiendo (o bajando) contando hoy y lo que lleva en ella; y lo que cambió ayer (13 nov:
+    // Rodri y Fermín salían cada noche como si fuera nuevo; con la racha, la IA puede contarlo como lo que es)
+    const signo = Math.sign(nuevo - antes);
+    let rachaDias = 0;
+    for (let k = h.length - 1; signo && k >= 1 && Math.sign(h[k].v - h[k - 1].v) === signo; k--) rachaDias++;
+    const desde = h[h.length - 1 - rachaDias];
+    const difAyer = h.length >= 3 ? h[h.length - 2].v - h[h.length - 3].v : 0;
+    filas.push({ rachaDias, rachaDif: nuevo - desde.v, rachaDesde: desde.t, difAyer, media: Number(j.averagePoints) || 0, puntos: Number(j.points) || 0, ok: !j.playerStatus || j.playerStatus === 'ok', id: j.id, pos: j.positionId, nombre: j.nickname, equipo: corto(equipos[String(j.teamId)] || '?'), club: equipos[String(j.teamId)] || '', caraUrl: j.image || null, escudoUrl: escudos[String(j.teamId)] || null, nuevo, antes, dif: nuevo - antes, pct: (nuevo - antes) / antes * 100 });
   });
   if (filas.length < 100) { log(`  (mercado) solo ${filas.length} jugadores con el valor de ${dia}: espero`); return []; }
   const suben = [...filas].filter((f) => f.dif > 0).sort((a, b) => b.dif - a.dif);
@@ -70,7 +77,9 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   // no sale, el tweet tampoco (soloConImagen): un «subidas y bajadas» sin la lista no dice nada
   // el chollo del día (etiqueta de Carrasco, claude/estilo-tweets.md): de los que suben hoy, barato (8 M o menos), disponible, con 4 o
   // más de media y 25 puntos o más en la temporada (que no sea la media de un solo partido); el de más puntos de media por millón
-  const ch = chollo(suben);
+  // (13 nov, Carlos: «llevan días poniendo a Redondo como chollo»): el de los últimos días no repite; vale para lo que ya salió antes de
+  // este cambio porque mira también los nombres de los últimos tuits de mercado
+  const ch = chollo(suben, cholloVetados(registro, ahora));
   const linea = ch ? `\n\n🛒 Chollo Fantasy: ${ch.nombre} ${del(ch.equipo)} vale ${dinero(ch.nuevo)}, suma ${fmt(ch.media)} de media y hoy sube un ${fmt(ch.pct)} %` : '';
   // con X Premium (tweets largos), el que más sube y el que más baja contados con una frase (sin lista: la lista es la tarjeta)
   const num = [dd, mes, ...(ch ? [...cifrasDinero(ch.nuevo), ...partes(ch.media), ...partes(ch.pct)] : [])];
@@ -99,18 +108,66 @@ export async function generar({ jugadores, equipos, stats = [], jornada, config 
   // los hechos para la IA que redacta (lib/redaccion.mjs): lo que sube y baja más, y el chollo si lo hay; el cierre de siempre va debajo
   const jug = (f, extra) => jugadorH({ nickname: f.nombre, equipo: f.equipo, averagePoints: f.media }, { principal: false, extra, sinDatos: ['valor'] });
   const sH = suben[0], bH = bajan[0];
+  // (13 nov) más ángulos para que no salga cada noche el mismo tuit con otros números: la racha de días seguidos, si repite de ayer, los
+  // siguientes de la lista y el club que más se mueve; y por dónde empezar, rotando por día
+  const fechaCorta = (t) => { const [, m2, d2] = diaMadrid(t).split('-').map(Number); return `${d2} de ${MESES[m2 - 1]}`; };
+  const racha = (f) => (f.rachaDias >= 3 ? `lleva ${f.rachaDias} días seguidos ${f.dif > 0 ? 'subiendo' : 'bajando'}: ${f.rachaDif > 0 ? '+' : '-'}${dinero(Math.abs(f.rachaDif))} desde el ${fechaCorta(f.rachaDesde)}` : null);
+  const topAyer = (xs, signo) => xs.filter((f) => Math.sign(f.difAyer) === signo).sort((a, b) => signo * (b.difAyer - a.difAyer))[0];
+  const ayerS = topAyer(filas, 1), ayerB = topAyer(filas, -1);
+  const lado = (f, signo, ayer) => ({ nombre: f.nombre, club: f.equipo, cambio: `${signo > 0 ? '+' : '-'}${dinero(Math.abs(f.dif))}`, porcentaje: `${signo > 0 ? '+' : '-'}${fmt(Math.abs(f.pct))} %`, valorAhora: dinero(f.nuevo),
+    ...(racha(f) ? { racha: racha(f) } : {}), ...(ayer && ayer.id === f.id ? { repite: `también fue el que más ${signo > 0 ? 'subió' : 'bajó'} ayer` } : {}) });
+  const otro = (f, signo) => ({ nombre: f.nombre, club: f.equipo, cambio: `${signo > 0 ? '+' : '-'}${dinero(Math.abs(f.dif))}`, valorAhora: dinero(f.nuevo), ...(racha(f) ? { racha: racha(f) } : {}) });
+  const porClub = {};
+  for (const f of filas) porClub[f.equipo] = (porClub[f.equipo] || 0) + f.dif;
+  const clubesOrden = Object.entries(porClub).sort((a, b) => b[1] - a[1]);
+  const [cS, cB] = [clubesOrden[0], clubesOrden[clubesOrden.length - 1]];
+  const clubMueve = {
+    ...(cS && cS[1] >= 2e6 ? { masGanaSumandoASusJugadores: { club: cS[0], cambio: `+${dinero(cS[1])}` } } : {}),
+    ...(cB && cB[1] <= -2e6 ? { masPierdeSumandoASusJugadores: { club: cB[0], cambio: `-${dinero(-cB[1])}` } } : {}),
+  };
+  const conRacha = [...suben.slice(0, N), ...bajan.slice(0, N)].filter((f) => f.rachaDias >= 4).sort((a, b) => b.rachaDias - a.rachaDias)[0];
+  const angulos = [
+    'la mayor subida', 'la mayor bajada',
+    ...(conRacha ? [`la racha de ${conRacha.nombre}`] : []),
+    ...(clubMueve.masGanaSumandoASusJugadores || clubMueve.masPierdeSumandoASusJugadores ? ['qué equipo gana o pierde más sumando a todos sus jugadores (dilo con su nombre)'] : []),
+    ...(suben[1] ? [`${suben[1].nombre}, el segundo que más sube`] : []),
+    ...(ch ? ['el chollo'] : []),
+  ];
   const hechos = { tipo: 'mercado', noticia: `LaLiga ha actualizado esta noche los valores de mercado fantasy (hoy es ${dd} de ${MESES[mes - 1]})`,
-    aviso: 'la imagen adjunta lista los 5 que más suben y los 5 que más bajan: el texto no los enumera, cuenta el que más sube, el que más baja y lo que se ve en el conjunto',
-    queMasSube: { nombre: sH.nombre, club: sH.equipo, cambio: `+${dinero(sH.dif)}`, porcentaje: `+${fmt(sH.pct)} %`, valorAhora: dinero(sH.nuevo) },
-    queMasBaja: { nombre: bH.nombre, club: bH.equipo, cambio: `-${dinero(-bH.dif)}`, porcentaje: `-${fmt(-bH.pct)} %`, valorAhora: dinero(bH.nuevo) },
-    ...(ch ? { chollo: { nombre: ch.nombre, club: ch.equipo, valor: dinero(ch.nuevo), mediaPuntos: fmt(ch.media), sube: `${fmt(ch.pct)} %` } } : {}),
+    aviso: 'va con una imagen que lista los 5 que más suben y los 5 que más bajan: el texto no los enumera. Elige dos o tres cosas de estos hechos, no todas, y no hace falta decir que la lista está en la imagen',
+    abreCon: angulos[hash(`mercado${dia}`) % angulos.length],
+    queMasSube: lado(sH, 1, ayerS), queMasBaja: lado(bH, -1, ayerB),
+    ...(suben.length > 2 ? { tambienSuben: suben.slice(1, 3).map((f) => otro(f, 1)) } : {}),
+    ...(bajan.length > 2 ? { tambienBajan: bajan.slice(1, 3).map((f) => otro(f, -1)) } : {}),
+    ...clubMueve,
+    ...(ch ? { chollo: { nombre: ch.nombre, club: ch.equipo, valor: dinero(ch.nuevo), mediaPuntos: fmt(ch.media), sube: `${fmt(ch.pct)} %`, nota: 'opcional: no hace falta meter el chollo todos los días' } } : {}),
     jugadores: [jug(sH, { cambioHoy: 'el que más sube' }), jug(bH, { cambioHoy: 'el que más baja' }), ...(ch && ch.id !== sH.id ? [jug(ch, { cambioHoy: 'el chollo del día' })] : [])],
-    clubes: clubesH(sH.equipo, bH.equipo, ...(ch ? [ch.equipo] : [])), etiqueta: cierre(`mercado${dia}`) };
-  return [{ tipo: 'mercado', clave, jornada, texto, hechos, numeros: num, tarjeta, soloConImagen: true }];
+    clubes: clubesH(sH.equipo, bH.equipo, ...(ch ? [ch.equipo] : []), ...(cS ? [cS[0]] : []), ...(cB ? [cB[0]] : []), ...suben.slice(1, 3).map((f) => f.equipo), ...bajan.slice(1, 3).map((f) => f.equipo)), etiqueta: cierre(`mercado${dia}`) };
+  return [{ tipo: 'mercado', clave, jornada, texto, hechos, numeros: num, tarjeta, soloConImagen: true, ...(ch ? { huella: { clase: 'mercado', chollo: String(ch.id) } } : {}) }];
 }
 
-/** el chollo de los que suben hoy (null si no hay ninguno que cumpla) */
-export function chollo(suben) {
-  const xs = suben.filter((f) => f.ok && f.nuevo <= 8e6 && f.media >= 4 && f.puntos >= 25 && f.pct >= 1);
+/** el chollo de los que suben hoy (null si no hay ninguno que cumpla); `vetados`: { ids, nombres } de los chollos de los últimos días */
+export function chollo(suben, vetados = { ids: new Set(), nombres: [] }) {
+  const fuera = (f) => vetados.ids.has(String(f.id)) || vetados.nombres.some((t) => nombreEn(f.nombre, t));
+  const xs = suben.filter((f) => f.ok && f.nuevo <= 8e6 && f.media >= 4 && f.puntos >= 25 && f.pct >= 1 && !fuera(f));
   return xs.sort((a, b) => b.media / b.nuevo - a.media / a.nuevo)[0] || null;
+}
+
+/** días en que un chollo no puede repetir */
+export const DIAS_SIN_REPETIR_CHOLLO = 5;
+const sinTildes = (x) => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+/** ¿sale el nombre (como palabra) en el texto? */
+export function nombreEn(nombre, texto) {
+  const n = sinTildes(nombre).trim();
+  if (n.length < 3) return false;
+  return new RegExp(`(^|[^a-z0-9])${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^a-z0-9])`).test(sinTildes(texto));
+}
+/** los chollos de los últimos días: los ids apuntados en la huella de cada tuit de mercado y, para lo de antes de la huella, los textos
+    de los últimos tuits de mercado (quien salió en ellos, de chollo o no, no es el chollo de hoy) */
+export function cholloVetados(registro, ahora = Date.now()) {
+  const desde = ahora - DIAS_SIN_REPETIR_CHOLLO * 864e5 + 3 * 3600e3;
+  const datos = (registro && registro.datos) || {};
+  const ids = new Set((datos.enviados || []).filter((e) => e.tipo === 'mercado' && e.huella && e.huella.chollo != null && Date.parse(e.t) >= desde).map((e) => String(e.huella.chollo)));
+  const nombres = ((datos.recientes || {}).mercado || []).filter((r) => Date.parse(r.t) >= desde).map((r) => String(r.texto || ''));
+  return { ids, nombres };
 }
