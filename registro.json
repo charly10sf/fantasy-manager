@@ -2162,7 +2162,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/cerrada-tecnicamente-la-investigacion-del-caso-negreira-cadena-ser/": 1794579650000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250500/lamine-incorpora-hoy-seleccion.html": 1794556581000,
    "SPORT|136413561": 1794576230000,
-   "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gerard-lopez-utilizo-informes-arbitrales-negreira-entrenador-barca-b-20261113_3475063.html": 1794580892000
   },
   "hechos": [
    {
@@ -2577,7 +2578,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -3424,7 +3425,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000,
-   "SPORT|136297086": 1794321674000,
    "Cadena SER|https://cadenaser.com/castillalamancha/2026/11/10/tertulia-conquense-el-conflicto-por-la-fecha-del-partido-aplazado-ser-cuenca/": 1794327316000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/el-gran-canaria-registra-la-peor-asistencia-desde-el-ultimo-descenso-de-la-ud-las-palmas-ser-las-palmas/": 1794329652000,
    "ABC|https://www.abc.es/deportes/futbol/ver-pamplona-eibar-hora-partido-copa-rey-20261110175048-nt.html": 1794329448000,
@@ -3553,17 +3553,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 249141,
-  "salida": 20935,
+  "entrada": 251177,
+  "salida": 21027,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.408447,
+  "dolares": 0.408697,
   "reservado": 0
  },
  "recientes": {
@@ -7710,13 +7710,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2144,
+   "ok": 2145,
    "fallos": 0,
-   "ejecuciones": 1648,
+   "ejecuciones": 1649,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T14:41:12.992Z"
+   "ultima": "2026-11-13T14:46:12.147Z"
   }
  },
  "ptsDirecto": {},
@@ -7733,15 +7733,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:41:16.494Z"
+   "ultimaBien": "2026-11-13T14:46:36.848Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:41:16.494Z"
+   "ultimaBien": "2026-11-13T14:46:36.848Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:41:16.494Z"
+   "ultimaBien": "2026-11-13T14:46:36.848Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7749,11 +7749,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:41:16.494Z"
+   "ultimaBien": "2026-11-13T14:46:36.848Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:41:16.494Z"
+   "ultimaBien": "2026-11-13T14:46:36.848Z"
   }
  },
  "avisos": [
