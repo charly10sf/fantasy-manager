@@ -3420,7 +3420,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-llaman-secundar-martes-huelga-renfe-dia-antes-huelga-general-11n-20261110080117.html": 1794294077000,
-   "Superdeporte|https://www.superdeporte.es/ocio/tv/2026/11/10/sanchez-elecciones-generales-29-noviembre-directo-134934094.html": 1794293640000,
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-huelga-general-20261110082835.html": 1794295715000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-huelga-maquinistas-recomienda-usar-otras-alternativas-transporte-20261110085547.html": 1794297347000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
@@ -7719,13 +7718,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2049,
+   "ok": 2050,
    "fallos": 0,
-   "ejecuciones": 1553,
+   "ejecuciones": 1554,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T06:51:13.570Z"
+   "ultima": "2026-11-13T06:56:13.393Z"
   }
  },
  "ptsDirecto": {},
@@ -7742,15 +7741,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:51:22.797Z"
+   "ultimaBien": "2026-11-13T06:56:16.788Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:51:22.797Z"
+   "ultimaBien": "2026-11-13T06:56:16.788Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:51:22.797Z"
+   "ultimaBien": "2026-11-13T06:56:16.788Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7758,11 +7757,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:51:22.797Z"
+   "ultimaBien": "2026-11-13T06:56:16.788Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:51:22.797Z"
+   "ultimaBien": "2026-11-13T06:56:16.788Z"
   }
  },
  "avisos": [
