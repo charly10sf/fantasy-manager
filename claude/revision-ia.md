@@ -71,8 +71,11 @@ Comprobadas con Carlos (las cuatro primeras, el 13 nov; el resto, de antes):
 12. Plantilla: 25 como mucho. Versión gratis: sin entrenador y con las formaciones gratis.
 13. Si el valor pasa la cláusula, LaLiga la sube sola. Subirla pagando: pagar X la sube 2X.
 
-Sin comprobar (la app las usa, pero nadie las ha confirmado): que el blindaje se pueda poner durante el cierre de 24 h
-y que al aceptar una oferta el dinero entre al instante.
+14. Al vender, el dinero entra en el momento (Carlos, 13 nov, 23:37).
+15. Los dos blindajes de cada jornada se ponen cuando uno quiera dentro de ella, también en las 24 h de cierre (Carlos,
+    13 nov, 23:37; lo de «solo con la cláusula ya abierta» es de antes, del 7 nov, y sigue valiendo).
+
+Ya no queda ninguna regla sin comprobar de las que usa la app.
 
 ## La arquitectura: la app decide, la IA elige y explica, la app revisa
 
