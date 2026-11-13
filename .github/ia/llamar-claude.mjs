@@ -21,6 +21,8 @@ for (const modelo of MODELOS) {
       // (estos modelos piensan antes de contestar y eso cuenta como salida: con 8.000 de tope los planes llegaban vacíos;
       // como en la app con Gemini: 16.000 de tope y pensando poco)
       model: modelo, max_tokens: 16000, output_config: { effort: process.env.ESFUERZO || 'low' },
+      // PENSAR=no: sin pensar antes de contestar, como hace el bot (Haiku se comía los 16.000 pensando el plan)
+      ...(process.env.PENSAR === 'no' ? { thinking: { type: 'between_tools' } } : {}),
       system: c.systemInstruction ? c.systemInstruction.parts.map((x) => x.text).join('\n') : undefined,
       messages: c.contents.map((m) => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.parts.map((x) => x.text || '').join('\n') })),
     };
@@ -32,7 +34,7 @@ for (const modelo of MODELOS) {
         const x = await r.json();
         ms = Date.now() - t0;
         if (r.ok && x.content) j = x;
-        else { console.log(`  ${p.id}: ${modelo} ${r.status} ${String((x.error && x.error.message) || '').slice(0, 120)}`); if (r.status === 400 && /effort|output_config/i.test(JSON.stringify(x)) && cuerpo.output_config) { delete cuerpo.output_config; continue; } if (r.status === 400 || r.status === 401 || r.status === 404) break; await espera(r.status === 429 ? 30000 : 8000); }
+        else { console.log(`  ${p.id}: ${modelo} ${r.status} ${String((x.error && x.error.message) || '').slice(0, 120)}`); if (r.status === 400 && /effort|output_config/i.test(JSON.stringify(x)) && cuerpo.output_config) { delete cuerpo.output_config; continue; } if (r.status === 400 && /thinking/i.test(JSON.stringify(x)) && cuerpo.thinking) { delete cuerpo.thinking; continue; } if (r.status === 400 || r.status === 401 || r.status === 404) break; await espera(r.status === 429 ? 30000 : 8000); }
       } catch (e) { console.log(`  ${p.id}: ${modelo} ${e.message}`); await espera(5000); }
     }
     const texto = j ? j.content.filter((b) => b.type === 'text').map((b) => b.text).join('') : null;
