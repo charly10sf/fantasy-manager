@@ -152,7 +152,7 @@
           },
           function () { d.querySelector('.ai-tit').insertAdjacentHTML('beforeend', '<span class="ai-modo" aria-hidden="true">' + capas + '</span>'); },
           function () { d.querySelector('.ai-tit').insertAdjacentHTML('beforeend', '<span class="ai-neon" aria-hidden="true">' + letras + '</span><i class="ai-raya" aria-hidden="true"></i><i class="ai-halo" aria-hidden="true"></i>'); },
-          function () { saltar.insertAdjacentHTML('beforebegin', '<div class="ai-fin"><p class="ai-sub">Hasta el 26 nov · se quita en Ajustes</p><button type="button" class="ai-entrar">Entrar</button></div>'); },
+          function () { saltar.insertAdjacentHTML('beforebegin', '<div class="ai-fin"><p class="ai-sub">Hasta el 26 nov · se puede cambiar en Ajustes</p><button type="button" class="ai-entrar">Entrar</button></div>'); },
           function () { animar(d.querySelector('.ai-suelo'), claves(0, RAYA, function (a, v, t, y) { return { transform: 'translate3d(0,' + y + 'px,-1500px) rotateX(90deg) scale(' + K + ') translateY(' + a / K + 'px)' }; }), viaje); },
           // el coche sale de debajo de la cámara y se coloca delante
           function () { animar(d.querySelector('.ai-coche'), [{ transform: 'translate3d(0,0,330px)' }, { transform: 'translate3d(0,0,-100px)' }], { duration: 2500, delay: 800, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', fill: 'backwards' }); },

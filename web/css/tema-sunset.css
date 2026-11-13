@@ -413,10 +413,10 @@ html[data-tema="sunset"] {
 
 /* el final: la línea de hasta cuándo y «Entrar», abajo, sobre el asfalto */
 .atardecer-intro .ai-fin { position: absolute; z-index: 3; left: 0; right: 0; bottom: max(26px, calc(env(safe-area-inset-bottom) + 14px)); display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0 16px; }
-.atardecer-intro .ai-sub { margin: 0; padding: 6px 12px; border-radius: 6px; background: rgba(11, 0, 22, 0.86); font: 700 14px/1.2 var(--cond); letter-spacing: 2px; text-transform: uppercase; text-align: center; color: var(--atardecer-amarillo); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 2.95s) ease-out backwards; }
+.atardecer-intro .ai-sub { margin: 0; padding: 6px 12px; border-radius: 6px; background: rgba(11, 0, 22, 0.86); font: 700 14px/1.2 var(--cond); letter-spacing: 1px; text-transform: uppercase; text-align: center; white-space: nowrap; color: var(--atardecer-amarillo); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 2.95s) ease-out backwards; }
 .atardecer-intro .ai-entrar {
-  position: relative; min-width: 190px; min-height: 50px; padding: 0 30px; border: 0; border-radius: 999px; cursor: pointer;
-  background: var(--atardecer-calido); color: var(--atardecer-tinta); font: 700 20px/1 var(--cond); letter-spacing: 3px; text-indent: 3px; text-transform: uppercase;
+  position: relative; display: inline-flex; align-items: center; justify-content: center; min-width: 190px; min-height: 50px; padding: 0 30px; border: 0; border-radius: 999px; cursor: pointer; text-align: center;
+  background: var(--atardecer-calido); color: var(--atardecer-tinta); font: 700 20px/1 var(--cond); letter-spacing: 3px; text-indent: 0; padding-left: 33px; text-transform: uppercase;
   box-shadow: 0 0 0 1px rgba(255, 226, 240, 0.5), 0 0 22px rgba(255, 46, 151, 0.65), 0 8px 26px rgba(11, 0, 22, 0.6); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 3.05s) ease-out backwards;
 }
 .atardecer-intro .ai-entrar:focus-visible, .atardecer-intro .ai-saltar:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
