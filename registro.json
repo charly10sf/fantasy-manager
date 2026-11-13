@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249368/dos-perdidas-relevantes-cuatro-dias-parecia-vaciarse-enfermeria-real.html": 1794333058000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/10/matricula-honor-mathew-ryan-estuvo-136298628.html": 1794333325000,
    "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/": 1794333490000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000,
@@ -2157,18 +2156,6 @@
    "AS|https://as.com/futbol/primera/alarma-lookman-cambiado-por-lesion-con-nigeria-f202611-n/": 1794589834000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249368/dos-perdidas-relevantes-cuatro-dias-parecia-vaciarse-enfermeria-real.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794333058000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea se pierde varias semanas por una lesión",
-    "motivo": "",
-    "plazo": "estará fuera un tiempo",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/",
     "medio": "AS",
@@ -3438,8 +3425,6 @@
  },
  "liga": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/ver-television-online-tavernes-valencia-hora-partido-copa-rey-20261110151517-nt.html": 1794332853000,
-   "ABC|https://www.abc.es/deportes/futbol/ver-television-online-mijas-lagunas-real-jaen-copa-rey-20261110151232-nt.html": 1794332785000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335197000,
    "SPORT|136303483": 1794335556000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/la-federacion-tinerfena-de-futbol-aplaza-los-encuentros-oficiales-de-este-martes-y-miercoles-en-la-isla-de-tenerife-radio-club-tenerife/": 1794339274000,
@@ -7719,13 +7704,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2182,
+   "ok": 2183,
    "fallos": 0,
-   "ejecuciones": 1686,
+   "ejecuciones": 1687,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T17:46:13.525Z"
+   "ultima": "2026-11-13T17:51:11.628Z"
   }
  },
  "ptsDirecto": {},
@@ -7742,15 +7727,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:46:15.865Z"
+   "ultimaBien": "2026-11-13T17:51:16.201Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:46:15.865Z"
+   "ultimaBien": "2026-11-13T17:51:16.201Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:46:15.865Z"
+   "ultimaBien": "2026-11-13T17:51:16.201Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7758,11 +7743,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:46:15.865Z"
+   "ultimaBien": "2026-11-13T17:51:16.201Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:46:15.865Z"
+   "ultimaBien": "2026-11-13T17:51:16.201Z"
   }
  },
  "avisos": [
