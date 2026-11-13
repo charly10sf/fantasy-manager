@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249536/17-leyendas-atletico-convocadas-duelo-america.html": 1794326358000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enzo-alves-hijo-marcelo-cae-lista-espana-mundial-sub-17-lesion-muscular-20261110_3472480.html": 1794326987000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/bellingham-leccion-mourinho-sobre-medias-chaval-tienes-nueve-anos-tienes-gemelos.html": 1794328211000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/10/bruno-iribarne-da-el-salto-un-almeriense-entrena-con-las-estrellas-de-la-roja-ser-almeria/": 1794328207000,
@@ -2159,7 +2158,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gerard-lopez-utilizo-informes-arbitrales-negreira-entrenador-barca-b-20261113_3475063.html": 1794580892000,
    "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000,
    "SPORT|136415105": 1794579682000,
-   "SPORT|136402229": 1794581404000
+   "SPORT|136402229": 1794581404000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261113/1004250665/pique-estalla-federacion-incertidumbre-sanciones-andorra.html": 1794583859000
   },
   "hechos": [
    {
@@ -2574,7 +2574,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 38
+   "n": 39
   },
   "desde": {
    "67": {
@@ -3547,17 +3547,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 257159,
-  "salida": 21970,
+  "entrada": 259189,
+  "salida": 22328,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.409767,
+  "dolares": 0.410149,
   "reservado": 0
  },
  "recientes": {
@@ -7704,13 +7704,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2159,
+   "ok": 2160,
    "fallos": 0,
-   "ejecuciones": 1663,
+   "ejecuciones": 1664,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T15:56:17.032Z"
+   "ultima": "2026-11-13T16:01:15.431Z"
   }
  },
  "ptsDirecto": {},
@@ -7727,15 +7727,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:56:22.062Z"
+   "ultimaBien": "2026-11-13T16:01:22.294Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:56:22.062Z"
+   "ultimaBien": "2026-11-13T16:01:22.294Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:56:22.062Z"
+   "ultimaBien": "2026-11-13T16:01:22.294Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7743,11 +7743,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:56:22.062Z"
+   "ultimaBien": "2026-11-13T16:01:22.294Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:56:22.062Z"
+   "ultimaBien": "2026-11-13T16:01:22.294Z"
   }
  },
  "avisos": [
