@@ -1890,7 +1890,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249417/real-quita-peso-ganar-liga-oyarzabal-tres-anos-hacerlo.html": 1794311814000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/marc-roca-he-tenido-referentes-busquets-xabi-alonso-rodri-zubimendi-centro-campo-espana-mejor-mundo-20261110_3472184.html": 1794314165000,
-   "SPORT|136287679": 1794311497000,
    "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
@@ -2153,18 +2152,6 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/betis-antony-busca-recuperar-antonio_0_2008489927.html": 1794569100000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136287679",
-    "medio": "SPORT",
-    "t": 1794311497000,
-    "id": "3108",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Aubameyang se lesiona ante el Betis y queda de baja",
-    "motivo": "",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249368/dos-perdidas-relevantes-cuatro-dias-parecia-vaciarse-enfermeria-real.html",
     "medio": "Mundo Deportivo",
@@ -7712,13 +7699,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2110,
+   "ok": 2111,
    "fallos": 0,
-   "ejecuciones": 1614,
+   "ejecuciones": 1615,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T11:51:16.818Z"
+   "ultima": "2026-11-13T11:56:20.085Z"
   }
  },
  "ptsDirecto": {},
@@ -7735,15 +7722,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:51:21.819Z"
+   "ultimaBien": "2026-11-13T11:56:27.091Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:51:21.819Z"
+   "ultimaBien": "2026-11-13T11:56:27.091Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:51:21.819Z"
+   "ultimaBien": "2026-11-13T11:56:27.091Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7751,11 +7738,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:51:21.819Z"
+   "ultimaBien": "2026-11-13T11:56:27.091Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:51:21.819Z"
+   "ultimaBien": "2026-11-13T11:56:27.091Z"
   }
  },
  "avisos": [
