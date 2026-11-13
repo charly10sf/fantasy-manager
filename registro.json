@@ -2146,7 +2146,8 @@
    "SPORT|136324164": 1794549602000,
    "El Correo|https://www.elcorreo.com/athletic/palabras-sancet-convocado-seleccion-espanola-2023-20261113080516-nt.html": 1794553517000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250493/raphinha-quiero-disponible-brasil-barca.html": 1794555394000,
-   "SPORT|136396955": 1794555227000
+   "SPORT|136396955": 1794555227000,
+   "AS|https://as.com/futbol/primera/gordon-no-consigue-cerrar-el-debate-f202611-n/": 1794559136000
   },
   "hechos": [
    {
@@ -2586,7 +2587,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 8
+   "n": 9
   },
   "desde": {
    "67": {
@@ -3569,17 +3570,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 9,
+   "clasificar": 10,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 142850,
-  "salida": 10399,
+  "entrada": 144790,
+  "salida": 10491,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.298181,
+  "dolares": 0.298421,
   "reservado": 0
  },
  "recientes": {
@@ -7726,13 +7727,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2071,
+   "ok": 2072,
    "fallos": 0,
-   "ejecuciones": 1575,
+   "ejecuciones": 1576,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T08:41:13.824Z"
+   "ultima": "2026-11-13T08:42:47.747Z"
   }
  },
  "ptsDirecto": {},
@@ -7749,15 +7750,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:41:22.337Z"
+   "ultimaBien": "2026-11-13T08:42:51.604Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:41:22.337Z"
+   "ultimaBien": "2026-11-13T08:42:51.604Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:41:22.337Z"
+   "ultimaBien": "2026-11-13T08:42:51.604Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7765,11 +7766,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:41:22.337Z"
+   "ultimaBien": "2026-11-13T08:42:51.604Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:41:22.337Z"
+   "ultimaBien": "2026-11-13T08:42:51.604Z"
   }
  },
  "avisos": [
