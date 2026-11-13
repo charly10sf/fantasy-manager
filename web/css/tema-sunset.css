@@ -96,8 +96,10 @@ html[data-tema="sunset"] {
 
 
 /* ---------- el degradado de atardecer: franjas, números de fase, la acción principal y la línea de la cabecera ---------- */
-:where(html[data-tema="sunset"]) .titulo::before { background: var(--atardecer-degradado-v); }
-:where(html[data-tema="sunset"]) :is(.sec h2, .pnz-sec h2)::before { background: var(--atardecer-noche-v); }
+/* la franja de los títulos, de un solo color (13 nov, Carlos: con el degradado, tan estrecha, se veía partida en dos): rosa en
+   los títulos de pestaña y turquesa en los de sección */
+:where(html[data-tema="sunset"]) .titulo::before { background: var(--atardecer-rosa); }
+:where(html[data-tema="sunset"]) :is(.sec h2, .pnz-sec h2)::before { background: var(--atardecer-turquesa); }
 :where(html[data-tema="sunset"]) .fase-n, :where(html[data-tema="sunset"]) .pnz-sec .n { background: var(--atardecer-calido); color: var(--atardecer-tinta); }
 /* cada fase del plan con su color: atardecer, turquesa y violeta (la urgente y «para luego», como estaban) */
 :where(html[data-tema="sunset"]) .fase:nth-of-type(3n+2):not(.f-urg, .f-luego) .fase-n { background: linear-gradient(100deg, #19E6D4, #4FB3FF); }
