@@ -102,6 +102,35 @@ ha salido en la medida: los tres mejores modelos dan unas 20 preguntas al día c
 que tire mucho del chat acaba en el ligero (es lo visto el 13 nov con la clave de pruebas: 21 preguntas y Google cortó
 por cupo diario; no he comprobado si el tope va por preguntas o por tokens, así que no sé si leer menos lo alarga).
 
+## Claude en vez de Gemini: lo medido (14 nov, 00:0x-01:1x)
+
+Carlos preguntó cuánto costaría quitar la clave de Google de cada usuario y poner Claude, o un híbrido (Claude en el
+plan y Gemini en las preguntas). Mismos 31 casos, lo que manda la 0.7.9, UNA pasada por modelo, con la clave del bot.
+Gastado en la medida: 3,71 $.
+
+| | Chat (26 casos) | Planes (5) | Coste por pregunta | Coste por plan | Lo que tarda un plan |
+|---|---|---|---|---|---|
+| Gemini ligero (flash-lite, gratis) | 26 | 5 (1-3 operaciones, 0 descartadas) | 0 | 0 | 3-4 s |
+| Haiku 5.5 | 25 | 1 | 0,0038 $ | 0,011 $ | ~75 s |
+| Sonnet 5.5 | 26 | 4 (2-6 operaciones, 1 descartada) | 0,07 $ | 0,13 $ | 17-56 s |
+
+- Los tokens de Claude salen más: el mismo texto son ~26.800 en el chat y ~42.500 en el plan (con Gemini, 18.700 y
+  36.400). Y lo que piensa antes de contestar se cobra como salida.
+- Haiku en el plan no vale tal como se probó: se gasta los 16.000 tokens de salida pensando y el plan llega cortado o
+  vacío (4 de 5), con «pensar poco» (`output_config.effort: low`) y también pidiendo que no piense
+  (`thinking: between_tools`, que Haiku 5.5 rechaza). Puede haber otra forma de apagárselo que no he encontrado.
+- Sonnet hace planes más completos que el Gemini ligero, pero estos casos miden fallos, no si el consejo es mejor: con
+  una pasada no se puede decir que Sonnet «acierte más». El que falló fue en el parón: aceptó la oferta por Baena junto
+  a tres ventas más, y la app la descartó porque con las otras ya no hacía falta el dinero.
+- Las cuentas por usuario activo al mes: híbrido (plan con Sonnet, preguntas con la clave de Gemini de cada uno), 3,95 $
+  con un plan al día y 7,90 $ con dos; todo Sonnet con dos planes y 40 preguntas, 10,70 $; chat con Haiku, 0,15 $.
+  Un plan de Sonnet (0,13 $) no lo paga un anuncio.
+- Conclusión: hoy, quitar la clave de Google no sale. Haiku, que es el que se podría pagar, no saca el plan; Sonnet lo
+  saca pero cuesta 4-8 $ por usuario al mes solo en planes. Lo que queda por probar: Haiku con el plan ya hecho por el
+  motor (punto 2 de «Lo que queda»: escribiría mucho menos) y una clave de Gemini de pago de Carlos para todos.
+- Cómo se repite: `.github/ia/llamar-claude.mjs` en la rama `pruebas-ia` (`MODELOS`, `SOLO`, `ESFUERZO`, `PENSAR=no`) y
+  `LOTE=<modelo> node .github/ia/puntuar.mjs respuestas-claude.json`.
+
 ## Las pruebas
 
 - `.github/ia/casos.mjs`: 72 casos, cada uno con el fallo de donde sale. 41 llevan escrita la respuesta mala de la IA
