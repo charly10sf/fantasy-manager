@@ -283,7 +283,7 @@ html[data-tema="sunset"] {
 .atardecer-intro {
   position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; isolation: isolate;
   background: #0b0016; color: #fff; font-family: var(--cond, 'Barlow Condensed', system-ui, sans-serif);
-  --ai-ojo: 46%; --ai-suelo: min(300px, 35.5vh); --ai-sol-r: min(29vw, 17vh, 170px); --k: 1; --u: calc(1px / var(--k));
+  --ai-ojo: 46%; --ai-suelo: min(300px, 35.5vh); --ai-sol-r: min(29vw, 17vh, 170px); --k: 1; --u: calc(1px / var(--k)); --ai-t: 0s;
 }
 .atardecer-intro.ai-va { animation: ai-va 0.5s ease-in both; pointer-events: none; }
 @keyframes ai-va { to { opacity: 0; transform: scale(1.06); } }
@@ -344,6 +344,23 @@ html[data-tema="sunset"] {
 .atardecer-intro .ai-tronco { top: calc(var(--ai-ojo) + var(--ai-suelo) - 610px); width: 16px; height: 610px; margin-left: -8px; background: linear-gradient(90deg, #0B0014 62%, rgba(255, 46, 151, 0.6) 62% 76%, #0B0014 76%); }
 .atardecer-intro .ai-farola { top: calc(var(--ai-ojo) + var(--ai-suelo) - 440px); width: 140px; height: 440px; margin-left: -70px; background-image: var(--atardecer-farola); }
 .atardecer-intro .ai-farola.ai-2 { background-image: var(--atardecer-farola-2); }
+/* los letreros de neón del paseo: un poste con su rótulo (palabras de la app) o su dibujo (un tacón, una copa, un flamenco:
+   dibujos propios de trazo) */
+.atardecer-intro .ai-letrero { top: calc(var(--ai-ojo) + var(--ai-suelo) - 470px); width: 300px; height: 470px; margin-left: -150px; --c: #FF2E97; background: linear-gradient(#0B0014, #0B0014) 50% 100% / 10px 330px no-repeat; }
+.atardecer-intro .ai-letrero.ai-c1 { --c: #19E6D4; } .atardecer-intro .ai-letrero.ai-c2 { --c: #FFD25A; }
+.atardecer-intro .ai-letrero > * { position: absolute; left: 0; right: 0; top: 0; height: 150px; display: grid; place-items: center; border-radius: 16px; background: rgba(11, 0, 20, 0.86); box-shadow: inset 0 0 0 4px var(--c), 0 0 26px var(--c); }
+.atardecer-intro .ai-letrero b { font: italic 700 46px/0.95 var(--cond); letter-spacing: 2px; text-transform: uppercase; text-align: center; color: #fff; text-shadow: 0 0 8px var(--c), 0 0 22px var(--c); }
+.atardecer-intro .ai-ico { background-color: rgba(11, 0, 20, 0.86); background-position: center; background-size: auto 118px; background-repeat: no-repeat; }
+.atardecer-intro .ai-tacon { left: 50px; right: 50px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100' fill='none' stroke='%23FFE3F2' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 22c10 4 20 16 30 30 12 16 30 22 54 24 6 1 8 8 2 10H74c-8 0-14-3-20-9L36 58c-3 10-4 20-4 30h-8c0-24-4-46-6-66z'/%3E%3Cpath d='M30 44c6 3 11 8 15 14' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
+.atardecer-intro .ai-copa-n { left: 60px; right: 60px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23E8FFFD' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 18h68L50 56z'/%3E%3Cpath d='M50 56v30M34 88h32'/%3E%3Cpath d='M30 30h40' stroke='%2319E6D4'/%3E%3Cpath d='M62 26l14-18' stroke='%23FFD25A'/%3E%3Ccircle cx='60' cy='30' r='4' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
+.atardecer-intro .ai-flamenco { left: 60px; right: 60px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110' fill='none' stroke='%23FFD9EE' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M58 10c-9-3-16 3-14 11 2 9 14 12 12 24-2 11-22 6-28 18-4 10 6 17 20 15 14-2 24-12 22-24'/%3E%3Cpath d='M58 10l12 4-8 5'/%3E%3Cpath d='M44 78v26M54 77l-2 14 10 13' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
+/* el helicóptero con su foco (2D, cruza el cielo) y las luces azules y rojas del fondo */
+.atardecer-intro .ai-heli { position: absolute; left: 50%; top: calc(var(--ai-ojo) * 0.36); width: 120px; height: 210px; margin-left: -60px; transform: translate3d(-75vw, 0, 0); background: linear-gradient(180deg, rgba(232, 255, 253, 0.5), rgba(25, 230, 212, 0)) 50% 46px / 100% 164px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 44' fill='%230B0014'%3E%3Cpath d='M8 6h72v3H8z'/%3E%3Cpath d='M42 9h4v6h-4z'/%3E%3Cpath d='M22 15h40c12 0 20 8 20 15 0 5-6 8-14 8H40c-10 0-16-5-18-12h-8l-8 6V18l8 6h8z'/%3E%3Cpath d='M82 24h30l4-8h3v14l-37 2z'/%3E%3Cpath d='M36 40h40v2H36z'/%3E%3Ccircle cx='48' cy='36' r='3' fill='%23fff'/%3E%3C/svg%3E") 50% 0 / 120px 44px no-repeat; -webkit-clip-path: polygon(0 0, 100% 0, 100% 21%, 54% 21%, 100% 100%, 0 100%, 46% 21%, 0 21%); clip-path: polygon(0 0, 100% 0, 100% 21%, 54% 21%, 100% 100%, 0 100%, 46% 21%, 0 21%); }
+.atardecer-intro .ai-poli { position: absolute; left: 50%; top: calc(var(--ai-ojo) - 26px); width: 120px; height: 26px; margin-left: 14vw; opacity: 0; background: radial-gradient(closest-side, #4FB3FF, rgba(79, 179, 255, 0)) 0 50% / 40px 26px no-repeat, radial-gradient(closest-side, #FF4A4A, rgba(255, 74, 74, 0)) 46px 50% / 40px 26px no-repeat; }
+/* las frases, como subtítulos de película, abajo */
+.atardecer-intro .ai-frases { position: absolute; z-index: 5; left: 0; right: 0; bottom: calc(9vh + 26px); display: grid; justify-items: center; padding: 0 18px; pointer-events: none; }
+.atardecer-intro .ai-frase { grid-area: 1 / 1; margin: 0; max-width: 520px; padding: 8px 14px; border-radius: 8px; background: rgba(11, 0, 22, 0.8); font: 700 clamp(19px, 5.4vw, 26px)/1.15 var(--cond); letter-spacing: 1.5px; text-transform: uppercase; text-align: center; color: #fff; opacity: 0; animation: ai-frase 3s both; }
+@keyframes ai-frase { 0% { opacity: 0; transform: translateY(12px); } 12% { opacity: 1; transform: none; } 88% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-8px); } }
 /* el descapotable, delante de la cámara, con su reflejo en el asfalto */
 .atardecer-intro .ai-coche { position: absolute; left: 50%; top: calc(var(--ai-ojo) + var(--ai-suelo) - 122px); width: 240px; height: 132px; margin-left: -120px; transform-origin: 50% 92%; will-change: transform; background: var(--atardecer-descapotable) center / 100% 100% no-repeat; transform: translate3d(0, 0, -100px); }
 .atardecer-intro .ai-coche::after { content: ''; position: absolute; left: 0; right: 0; top: 91%; height: 80%; background: var(--atardecer-descapotable) center / 100% 125% no-repeat; transform: scaleY(-1); opacity: 0.3; -webkit-mask: linear-gradient(0deg, #000, transparent 85%); mask: linear-gradient(0deg, #000, transparent 85%); }
@@ -357,11 +374,11 @@ html[data-tema="sunset"] {
 
 /* el título, encima del sol */
 .atardecer-intro .ai-txt { position: absolute; z-index: 3; left: 0; right: 0; bottom: calc(100% - var(--ai-ojo) + var(--ai-sol-r) + 8px); display: flex; flex-direction: column; align-items: center; padding: 0 12px; text-align: center; pointer-events: none; }
-.atardecer-intro .ai-pre { margin: 0 0 8px; font: 700 14px/1 var(--cond); letter-spacing: 6px; text-indent: 6px; text-transform: uppercase; color: #c9fff9; text-shadow: 0 0 8px rgba(25, 230, 212, 0.9), 0 1px 0 #0b0016; animation: ai-baja 0.6s 1s ease-out backwards; }
+.atardecer-intro .ai-pre { margin: 0 0 8px; font: 700 14px/1 var(--cond); letter-spacing: 6px; text-indent: 6px; text-transform: uppercase; color: #c9fff9; text-shadow: 0 0 8px rgba(25, 230, 212, 0.9), 0 1px 0 #0b0016; animation: ai-baja 0.6s calc(var(--ai-t) + 1s) ease-out backwards; }
 @keyframes ai-baja { from { transform: translateY(-14px); opacity: 0; } }
 .atardecer-intro .ai-tit { position: relative; margin: 0; display: flex; flex-direction: column; align-items: center; perspective: 640px; font: 700 clamp(40px, min(19.5vw, 12.5vh), 128px)/0.9 var(--cond); text-transform: uppercase; }
 /* «MODO»: ocho capas a distinta profundidad que giran juntas, así el grosor es de verdad */
-.atardecer-intro .ai-modo { position: relative; display: block; font-size: 0.6em; font-style: italic; letter-spacing: 0.14em; text-indent: 0.14em; transform-style: preserve-3d; transform: rotateX(14deg) rotateY(-18deg); animation: ai-modo 0.95s 1.25s cubic-bezier(0.2, 0.9, 0.25, 1) backwards; }
+.atardecer-intro .ai-modo { position: relative; display: block; font-size: 0.4em; font-style: italic; letter-spacing: 0.09em; text-indent: 0.09em; white-space: nowrap; transform-style: preserve-3d; transform: rotateX(14deg) rotateY(-18deg); animation: ai-modo 0.95s calc(var(--ai-t) + 1.25s) cubic-bezier(0.2, 0.9, 0.25, 1) backwards; }
 .atardecer-intro .ai-modo i { display: block; font-style: inherit; }
 .atardecer-intro .ai-modo i + i { position: absolute; inset: 0; }
 .atardecer-intro .ai-modo i:nth-child(1) { transform: translateZ(-21px); color: #2a0a4a; }
@@ -380,27 +397,27 @@ html[data-tema="sunset"] {
 .atardecer-intro .ai-neon b::after {
   content: attr(data-l); position: absolute; left: 0; top: 0; color: rgba(255, 120, 190, 0.3); -webkit-text-stroke: 0.028em #fff1f8;
   text-shadow: 0 0 0.05em #fff, 0 0 0.12em #FF2E97, 0 0 0.26em #FF2E97, 0 0 0.5em rgba(255, 46, 151, 0.85), 0 0 0.9em rgba(255, 46, 151, 0.55);
-  animation: ai-tubo 0.5s calc(2s + var(--i) * 0.105s) steps(1, end) backwards, ai-guino 0.32s 4.05s steps(1, end);
+  animation: ai-tubo 0.5s calc(var(--ai-t) + 2s + var(--i) * 0.105s) steps(1, end) backwards, ai-guino 0.32s calc(var(--ai-t) + 4.05s) steps(1, end);
 }
 .atardecer-intro .ai-neon b:nth-child(3)::after { animation-name: ai-tubo-malo, ai-guino; animation-duration: 0.95s, 0.32s; }
 @keyframes ai-tubo { 0% { opacity: 0; } 10% { opacity: 1; } 22% { opacity: 0.15; } 36% { opacity: 0.9; } 48% { opacity: 0.35; } 60%, 100% { opacity: 1; } }
 @keyframes ai-tubo-malo { 0% { opacity: 0; } 8% { opacity: 0.8; } 14% { opacity: 0; } 34% { opacity: 0.6; } 40% { opacity: 0.1; } 58% { opacity: 1; } 66% { opacity: 0.25; } 78%, 100% { opacity: 1; } }
 /* la raya de debajo, turquesa, que prende la última, y el halo de todo el letrero */
-.atardecer-intro .ai-raya { display: block; width: 78%; height: 0.05em; min-height: 3px; margin-top: 0.12em; border-radius: 99px; background: #eafffd; box-shadow: 0 0 6px #19E6D4, 0 0 16px #19E6D4, 0 0 34px rgba(25, 230, 212, 0.7); animation: ai-tubo 0.45s 3s steps(1, end) backwards; }
-.atardecer-intro .ai-halo { position: absolute; z-index: -1; left: -14%; right: -14%; top: 22%; bottom: -30%; background: radial-gradient(closest-side, rgba(255, 46, 151, 0.5), rgba(255, 46, 151, 0.16) 55%, rgba(255, 46, 151, 0)); animation: ai-halo 1.15s 2s steps(1, end) backwards; }
+.atardecer-intro .ai-raya { display: block; width: 78%; height: 0.05em; min-height: 3px; margin-top: 0.12em; border-radius: 99px; background: #eafffd; box-shadow: 0 0 6px #19E6D4, 0 0 16px #19E6D4, 0 0 34px rgba(25, 230, 212, 0.7); animation: ai-tubo 0.45s calc(var(--ai-t) + 3s) steps(1, end) backwards; }
+.atardecer-intro .ai-halo { position: absolute; z-index: -1; left: -14%; right: -14%; top: 22%; bottom: -30%; background: radial-gradient(closest-side, rgba(255, 46, 151, 0.5), rgba(255, 46, 151, 0.16) 55%, rgba(255, 46, 151, 0)); animation: ai-halo 1.15s calc(var(--ai-t) + 2s) steps(1, end) backwards; }
 @keyframes ai-halo { 0% { opacity: 0; } 10% { opacity: 0.2; } 30% { opacity: 0.4; } 50% { opacity: 0.55; } 70% { opacity: 0.75; } 86% { opacity: 0.6; } 92%, 100% { opacity: 1; } }
 /* un parpadeo de todo el letrero ya encendido, como los de verdad */
-.atardecer-intro .ai-neon { animation: ai-cuelga 0.75s 1.15s cubic-bezier(0.2, 0.8, 0.3, 1.12) backwards; }
+.atardecer-intro .ai-neon { animation: ai-cuelga 0.75s calc(var(--ai-t) + 1.15s) cubic-bezier(0.2, 0.8, 0.3, 1.12) backwards; }
 @keyframes ai-cuelga { from { transform: translateY(-46vh); } }
 @keyframes ai-guino { 0%, 100% { opacity: 1; } 20% { opacity: 0.55; } 45% { opacity: 0.95; } 60% { opacity: 0.7; } 80% { opacity: 1; } }
 
 /* el final: la línea de hasta cuándo y «Entrar», abajo, sobre el asfalto */
 .atardecer-intro .ai-fin { position: absolute; z-index: 3; left: 0; right: 0; bottom: max(26px, calc(env(safe-area-inset-bottom) + 14px)); display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0 16px; }
-.atardecer-intro .ai-sub { margin: 0; padding: 6px 12px; border-radius: 6px; background: rgba(11, 0, 22, 0.86); font: 700 14px/1.2 var(--cond); letter-spacing: 2px; text-transform: uppercase; text-align: center; color: var(--atardecer-amarillo); animation: ai-sube-txt 0.45s 2.95s ease-out backwards; }
+.atardecer-intro .ai-sub { margin: 0; padding: 6px 12px; border-radius: 6px; background: rgba(11, 0, 22, 0.86); font: 700 14px/1.2 var(--cond); letter-spacing: 2px; text-transform: uppercase; text-align: center; color: var(--atardecer-amarillo); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 2.95s) ease-out backwards; }
 .atardecer-intro .ai-entrar {
   position: relative; min-width: 190px; min-height: 50px; padding: 0 30px; border: 0; border-radius: 999px; cursor: pointer;
   background: var(--atardecer-calido); color: var(--atardecer-tinta); font: 700 20px/1 var(--cond); letter-spacing: 3px; text-indent: 3px; text-transform: uppercase;
-  box-shadow: 0 0 0 1px rgba(255, 226, 240, 0.5), 0 0 22px rgba(255, 46, 151, 0.65), 0 8px 26px rgba(11, 0, 22, 0.6); animation: ai-sube-txt 0.45s 3.05s ease-out backwards;
+  box-shadow: 0 0 0 1px rgba(255, 226, 240, 0.5), 0 0 22px rgba(255, 46, 151, 0.65), 0 8px 26px rgba(11, 0, 22, 0.6); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 3.05s) ease-out backwards;
 }
 .atardecer-intro .ai-entrar:focus-visible, .atardecer-intro .ai-saltar:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 @keyframes ai-sube-txt { from { transform: translateY(18px); opacity: 0; } }
@@ -413,14 +430,16 @@ html[data-tema="sunset"] {
 .atardecer-quieto .atardecer-intro, .atardecer-quieto .atardecer-intro * { animation-play-state: paused !important; }
 /* mientras se monta (detrás del telón): todo en su sitio final, sin animar, para que se pinte antes de verse; al quitar
    ai-espera arrancan las animaciones */
-.ai-espera-2 :is(.ai-pre, .ai-modo, .ai-neon, .ai-raya, .ai-halo, .ai-sub, .ai-entrar), .ai-espera-3 .ai-neon b::after { animation: none !important; }
+.ai-espera-2 :is(.ai-pre, .ai-modo, .ai-neon, .ai-raya, .ai-halo, .ai-sub, .ai-entrar, .ai-frase), .ai-espera-3 .ai-neon b::after { animation: none !important; }
 /* las capas de lo que se anima no se deshacen al acabar cada animación (deshacerlas a media intro cuesta un fotograma) */
-.atardecer-intro :is(.ai-cam, .ai-sol, .ai-ciudad, .ai-lejos, .ai-banda, .ai-modo, .ai-neon) { will-change: transform; }
+.atardecer-intro :is(.ai-cam, .ai-sol, .ai-ciudad, .ai-lejos, .ai-banda, .ai-modo, .ai-neon, .ai-heli) { will-change: transform; }
 .atardecer-intro :is(.ai-reflejo, .ai-charco, .ai-raya, .ai-halo, .ai-telon), .atardecer-intro .ai-neon b::after { will-change: opacity; }
-.atardecer-intro :is(.ai-pre, .ai-sub, .ai-entrar) { will-change: transform, opacity; }
+.atardecer-intro :is(.ai-pre, .ai-sub, .ai-entrar, .ai-frase) { will-change: transform, opacity; }
+.atardecer-intro .ai-poli { will-change: opacity; }
 @media (prefers-reduced-motion: reduce) {
   .atardecer-intro, .atardecer-intro *, .atardecer-intro *::after { animation: none !important; }
   .atardecer-intro .ai-telon { display: none; }
+  .atardecer-intro .ai-heli, .atardecer-intro .ai-letrero { display: none; }
 }
 
 /* Ajustes: el interruptor del tema, arriba y fuera de las secciones (sale con o sin el tema puesto) */
