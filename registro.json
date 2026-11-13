@@ -3393,7 +3393,6 @@
  },
  "liga": {
   "vistas": {
-   "SPORT|136303483": 1794335556000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/la-federacion-tinerfena-de-futbol-aplaza-los-encuentros-oficiales-de-este-martes-y-miercoles-en-la-isla-de-tenerife-radio-club-tenerife/": 1794339274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342405000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-madrid-realiza-piquete-sede-central-alquiler-seguro-20261110204927.html": 1794340167000,
@@ -7671,13 +7670,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2191,
+   "ok": 2192,
    "fallos": 0,
-   "ejecuciones": 1695,
+   "ejecuciones": 1696,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T18:31:11.927Z"
+   "ultima": "2026-11-13T18:36:15.429Z"
   }
  },
  "ptsDirecto": {},
@@ -7694,15 +7693,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:31:14.964Z"
+   "ultimaBien": "2026-11-13T18:36:18.396Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:31:14.964Z"
+   "ultimaBien": "2026-11-13T18:36:18.396Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:31:14.964Z"
+   "ultimaBien": "2026-11-13T18:36:18.396Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7710,11 +7709,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:31:14.964Z"
+   "ultimaBien": "2026-11-13T18:36:18.396Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:31:14.964Z"
+   "ultimaBien": "2026-11-13T18:36:18.396Z"
   }
  },
  "avisos": [
