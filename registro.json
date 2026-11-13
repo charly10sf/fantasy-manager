@@ -1897,7 +1897,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249368/dos-perdidas-relevantes-cuatro-dias-parecia-vaciarse-enfermeria-real.html": 1794333058000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/10/matricula-honor-mathew-ryan-estuvo-136298628.html": 1794333325000,
    "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/": 1794333490000,
-   "SPORT|136304092": 1794330880000,
    "SPORT|136304134": 1794331165000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/alarma-tchouameni.html": 1794335994000,
@@ -2154,7 +2153,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html": 1794587065000,
    "SPORT|136406482": 1794584740000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rajada-pique-federacion-no-haber-sacado-dos-semanas-sanciones-tenerife-andorra-no-constancia-ninguna-owono-jugar-manana-obviamente-no-viajar-20261113_3475149.html": 1794588819000,
-   "La Vanguardia|https://www.lavanguardia.com/clic/20261113/11683695/gerard-pique-arremete-federacion-tiktok-lol.html": 1794588060000
+   "La Vanguardia|https://www.lavanguardia.com/clic/20261113/11683695/gerard-pique-arremete-federacion-tiktok-lol.html": 1794588060000,
+   "AS|https://as.com/futbol/primera/barrenetxea-operado-de-forma-satisfactoria-f202611-n/": 1794589785000,
+   "AS|https://as.com/futbol/primera/alarma-lookman-cambiado-por-lesion-con-nigeria-f202611-n/": 1794589834000
   },
   "hechos": [
    {
@@ -2577,11 +2578,23 @@
     "motivo": "lesión en la musculatura isquiosural del muslo derecho",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/barrenetxea-operado-de-forma-satisfactoria-f202611-n/",
+    "medio": "AS",
+    "t": 1794589785000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea es operado con éxito y pierde casi toda la temporada",
+    "motivo": "lesión en el muslo derecho",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 44
+   "n": 45
   },
   "desde": {
    "67": {
@@ -3537,12 +3550,13 @@
    "Europa Press|https://www.europapress.es/economia/noticia-plus-ultra-prepara-ere-plantea-recorte-rutas-transatlanticas-combustible-falta-liquidez-20261113105156.html": 1794563516000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/francia-ataca-zidane-primer-tropiezo-seleccionador-decisiones-son-cuestionables-20261113_3474878.html": 1794575298000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
-   "SPORT|136418514": 1794583694000
+   "SPORT|136418514": 1794583694000,
+   "Europa Press|https://www.europapress.es/madrid/noticia-sindicatos-educativos-muestran-satisfechos-reunion-consejeria-mantienen-huelga-indefinida-20261113181028.html": 1794589828000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 8,
+   "n": 9,
    "fallos": 0
   },
   "espera": {}
@@ -3550,17 +3564,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 52,
+   "clasificar": 54,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 271701,
-  "salida": 24070,
+  "entrada": 275459,
+  "salida": 24429,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.412272,
+  "dolares": 0.412827,
   "reservado": 0
  },
  "recientes": {
@@ -7707,13 +7721,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2175,
+   "ok": 2176,
    "fallos": 0,
-   "ejecuciones": 1679,
+   "ejecuciones": 1680,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T17:11:13.556Z"
+   "ultima": "2026-11-13T17:16:13.866Z"
   }
  },
  "ptsDirecto": {},
@@ -7730,15 +7744,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:11:23.412Z"
+   "ultimaBien": "2026-11-13T17:16:21.519Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:11:23.412Z"
+   "ultimaBien": "2026-11-13T17:16:21.519Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:11:23.412Z"
+   "ultimaBien": "2026-11-13T17:16:21.519Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7746,11 +7760,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:11:23.412Z"
+   "ultimaBien": "2026-11-13T17:16:21.519Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:11:23.412Z"
+   "ultimaBien": "2026-11-13T17:16:21.519Z"
   }
  },
  "avisos": [
