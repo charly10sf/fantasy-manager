@@ -1,7 +1,7 @@
 // Lo mismo que llamar.mjs, pero con Claude (solo en Actions, rama pruebas-ia, con el secreto ANTHROPIC_API_KEY): manda los
 // pedidos de pedidos-b.json (lo que la app manda hoy) a cada modelo de MODELOS y guarda las respuestas con la forma de las
 // de Google en respuestas-claude.json, para puntuarlas igual (LOTE=<modelo> node .github/ia/puntuar.mjs …). Sin
-// razonamiento extendido. Al final, los tokens y lo que ha costado con los precios de PRECIO (por millón, entrada/salida).
+// razonamiento largo (esfuerzo «low»). Al final, los tokens y lo que ha costado con los precios de PRECIO (por millón, entrada/salida).
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 const K = process.env.ANTHROPIC_API_KEY;
 if (!K) { console.log('Falta ANTHROPIC_API_KEY'); process.exit(1); }
@@ -18,7 +18,9 @@ for (const modelo of MODELOS) {
     if (solo.length && !solo.some((s) => p.id.includes(s))) continue;
     const c = p.cuerpo;
     const cuerpo = {
-      model: modelo, max_tokens: 8000,
+      // (estos modelos piensan antes de contestar y eso cuenta como salida: con 8.000 de tope los planes llegaban vacíos;
+      // como en la app con Gemini: 16.000 de tope y pensando poco)
+      model: modelo, max_tokens: 16000, output_config: { effort: process.env.ESFUERZO || 'low' },
       system: c.systemInstruction ? c.systemInstruction.parts.map((x) => x.text).join('\n') : undefined,
       messages: c.contents.map((m) => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.parts.map((x) => x.text || '').join('\n') })),
     };
@@ -30,7 +32,7 @@ for (const modelo of MODELOS) {
         const x = await r.json();
         ms = Date.now() - t0;
         if (r.ok && x.content) j = x;
-        else { console.log(`  ${p.id}: ${modelo} ${r.status} ${String((x.error && x.error.message) || '').slice(0, 120)}`); if (r.status === 400 || r.status === 401 || r.status === 404) break; await espera(r.status === 429 ? 30000 : 8000); }
+        else { console.log(`  ${p.id}: ${modelo} ${r.status} ${String((x.error && x.error.message) || '').slice(0, 120)}`); if (r.status === 400 && /effort|output_config/i.test(JSON.stringify(x)) && cuerpo.output_config) { delete cuerpo.output_config; continue; } if (r.status === 400 || r.status === 401 || r.status === 404) break; await espera(r.status === 429 ? 30000 : 8000); }
       } catch (e) { console.log(`  ${p.id}: ${modelo} ${e.message}`); await espera(5000); }
     }
     const texto = j ? j.content.filter((b) => b.type === 'text').map((b) => b.text).join('') : null;
