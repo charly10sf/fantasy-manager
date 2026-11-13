@@ -2149,7 +2149,8 @@
    "AS|https://as.com/futbol/primera/barrenetxea-operado-de-forma-satisfactoria-f202611-n/": 1794589785000,
    "AS|https://as.com/futbol/primera/alarma-lookman-cambiado-por-lesion-con-nigeria-f202611-n/": 1794589834000,
    "SPORT|136419217": 1794588765000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/13/6af750f6fc6c8389338b4588.html": 1794593457000
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/13/6af750f6fc6c8389338b4588.html": 1794593457000,
+   "ABC|https://www.abc.es/deportes/futbol/lamine-yamal-regresa-seleccion-medir-inglaterra-20261113192741-nt.html": 1794594462000
   },
   "hechos": [
    {
@@ -2547,7 +2548,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 47
+   "n": 48
   },
   "desde": {
    "67": {
@@ -3512,17 +3513,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 57,
+   "clasificar": 58,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 281194,
-  "salida": 24810,
+  "entrada": 283259,
+  "salida": 25469,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.413591,
+  "dolares": 0.414127,
   "reservado": 0
  },
  "recientes": {
@@ -7669,13 +7670,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2193,
+   "ok": 2194,
    "fallos": 0,
-   "ejecuciones": 1697,
+   "ejecuciones": 1698,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T18:41:13.432Z"
+   "ultima": "2026-11-13T18:46:11.478Z"
   }
  },
  "ptsDirecto": {},
@@ -7692,15 +7693,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:41:19.131Z"
+   "ultimaBien": "2026-11-13T18:46:19.597Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:41:19.131Z"
+   "ultimaBien": "2026-11-13T18:46:19.597Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:41:19.131Z"
+   "ultimaBien": "2026-11-13T18:46:19.597Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7708,11 +7709,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:41:19.131Z"
+   "ultimaBien": "2026-11-13T18:46:19.597Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:41:19.131Z"
+   "ultimaBien": "2026-11-13T18:46:19.597Z"
   }
  },
  "avisos": [
