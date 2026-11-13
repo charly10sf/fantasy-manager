@@ -2151,7 +2151,8 @@
    "La Vanguardia|https://www.lavanguardia.com/clic/20261113/11683695/gerard-pique-arremete-federacion-tiktok-lol.html": 1794588060000,
    "AS|https://as.com/futbol/primera/barrenetxea-operado-de-forma-satisfactoria-f202611-n/": 1794589785000,
    "AS|https://as.com/futbol/primera/alarma-lookman-cambiado-por-lesion-con-nigeria-f202611-n/": 1794589834000,
-   "SPORT|136419217": 1794588765000
+   "SPORT|136419217": 1794588765000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/13/6af750f6fc6c8389338b4588.html": 1794593457000
   },
   "hechos": [
    {
@@ -2564,7 +2565,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 46
+   "n": 47
   },
   "desde": {
    "67": {
@@ -3531,17 +3532,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 56,
+   "clasificar": 57,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 279232,
-  "salida": 24696,
+  "entrada": 281194,
+  "salida": 24810,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.413338,
+  "dolares": 0.413591,
   "reservado": 0
  },
  "recientes": {
@@ -7688,13 +7689,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2187,
+   "ok": 2188,
    "fallos": 0,
-   "ejecuciones": 1691,
+   "ejecuciones": 1692,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T18:11:18.027Z"
+   "ultima": "2026-11-13T18:16:13.635Z"
   }
  },
  "ptsDirecto": {},
@@ -7711,15 +7712,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:11:24.189Z"
+   "ultimaBien": "2026-11-13T18:16:19.125Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:11:24.189Z"
+   "ultimaBien": "2026-11-13T18:16:19.125Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:11:24.189Z"
+   "ultimaBien": "2026-11-13T18:16:19.125Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7727,11 +7728,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:11:24.189Z"
+   "ultimaBien": "2026-11-13T18:16:19.125Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:11:24.189Z"
+   "ultimaBien": "2026-11-13T18:16:19.125Z"
   }
  },
  "avisos": [
