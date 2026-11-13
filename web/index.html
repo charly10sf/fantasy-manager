@@ -24,7 +24,7 @@
        que no se ve, atardecer-cambia (y -sube) en las cifras del marcador y del valor de la ficha cuando cambian, y
        data-at, la pestaña abierta (la cabecera cambia con ella).
        La intro (.atardecer-intro): una vez por dispositivo (fm-tema-intro), la primera vez que se ve la app con el tema;
-       aquí se monta la escena y se mueve el mundo (el viaje con su frenada); el resto del movimiento, en el CSS. */
+       aquí solo se monta la escena, de una vez; todo el movimiento va en el CSS. */
     var TEMA_EVENTO = { id: 'sunset', hasta: '2026-11-26T23:59:00+01:00' };
     (function (t) {
       if (!t || !(Date.now() < Date.parse(t.hasta))) return;
@@ -37,7 +37,7 @@
         si = si && quiere();
         if (si) html.setAttribute('data-tema', t.id); else html.removeAttribute('data-tema');
         if (meta) meta.content = si ? '#12001F' : color;
-        if (!si) { var c = document.querySelector('.atardecer-intro'); if (c) c.remove(); }
+        if (!si && !PRUEBA) { var c = document.querySelector('.atardecer-intro'); if (c) c.remove(); }
       }
       function clase(c, ms) { html.classList.add(c); clearTimeout(clase[c]); clase[c] = setTimeout(function () { html.classList.remove(c); }, ms); }
       // Ajustes, arriba del todo: encender o apagar el tema sin recargar (y ver la intro otra vez)
@@ -62,149 +62,55 @@
         }
       }
       // la intro: una vez por dispositivo, la primera vez que se ve la app (no la portada ni la carga) con el tema puesto;
-      // las pruebas automáticas (navigator.webdriver) no la ven salvo con fm-tema-intro = 'ver'
-      function visto() { try { return localStorage.getItem('fm-tema-intro'); } catch (e) { return '1'; } }
+      // las pruebas automáticas (navigator.webdriver) no la ven salvo con fm-tema-intro = 'ver'. Quien vio la primera (la
+      // de la mañana del 13 nov, en 3D, que en los móviles parpadeaba) ve esta una vez. Con ?intro en la dirección sale
+      // siempre, también en la portada: es para probarla en un móvil.
+      var PRUEBA = /[?&]intro\b/.test(location.search), NUEVA = Date.parse('2026-11-13T12:05:00+01:00');
+      function visto() { try { return localStorage.getItem('fm-tema-intro'); } catch (e) { return 'no'; } }
       function intro(forzar) {
-        if (document.querySelector('.atardecer-intro') || !encendido()) return;
-        // 13 nov, 11:55: apagada. En móviles de verdad parpadeaba y aparecían piezas a destiempo (Carlos). Solo sale forzada
-        // (temaEvento.intro(), para probarla) hasta que haya una que se haya visto bien en un móvil.
-        if (!forzar) return;
-        if (!forzar && (visto() && visto() !== 'ver' || navigator.webdriver && visto() !== 'ver' || document.getElementById('limite'))) return;
+        if (document.querySelector('.atardecer-intro') || !(encendido() || forzar && PRUEBA)) return;
+        var v = visto();
+        if (!forzar && (v && v !== 'ver' && !(+v < NUEVA) || navigator.webdriver && v !== 'ver' || document.getElementById('limite'))) return;
         try { localStorage.setItem('fm-tema-intro', String(Date.now())); } catch (e) {}
-        // La escena, «La cuenta atrás a Vice City» (~17 s). El mundo (el suelo, las palmeras en dos piezas, las farolas, los
-        // letreros de neón y el coche) se mueve con element.animate. Todo avanza VIAJE px con la misma marcha: llega rápido
-        // (3 s), va de paseo (hasta T_FRENA) y frena (3 s); recorrido(t) da los px andados en el segundo t y cuando(px) lo
-        // contrario. Las palmeras, farolas y letreros dan vueltas entre el fondo (LEJOS) y la cámara, y el suelo va de raya
-        // en raya (su textura se repite cada RAYA px); la cámara, además, baja ALTO px al llegar. Solo transform y opacity.
-        var K = window.devicePixelRatio >= 2.5 ? 3 : 2, LEJOS = -3360, VUELTA = 3600, VIAJE = 8980, RAYA = 240, ALTO = 300, FUNDIDO = 360;
-        var DURA = 16, T_FRENA = 12.4, V0 = 2300, VC = (VIAJE - V0) / T_FRENA, T_TIT = 11.9;
-        function recorrido(t) {
-          if (t < 3) return VC * t + (V0 - VC) * (1 - Math.pow(1 - t / 3, 3));
-          if (t < T_FRENA) return V0 + VC * (t - 1);
-          return V0 + VC * (T_FRENA - 1) + VC * (1 - Math.pow(1 - Math.min(1, (t - T_FRENA) / 3), 3));
-        }
-        function cuando(px) { var a = 0, b = T_FRENA + 3, m, j; if (px >= VIAJE) return b; for (j = 0; j < 30; j++) { m = (a + b) / 2; if (recorrido(m) < px) a = m; else b = m; } return (a + b) / 2; }
-        var d = document.createElement('div'), parado = !!(quieto && quieto.matches) || !d.animate, capas = '', letras = '', ans = [], i, mundo, saltar;
-        var viaje = { duration: DURA * 1000, easing: 'linear', fill: 'both' };
-        for (i = 0; i < 8; i++) capas += '<i>La cuenta atrás a</i>';
-        'VICE CITY'.split('').forEach(function (l, n) { letras += l === ' ' ? '<b class="ai-hueco"></b>' : '<b data-l="' + l + '" style="--i:' + n + '">' + l + '</b>'; });
-        d.className = 'atardecer-intro ai-espera ai-espera-2 ai-espera-3'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'La cuenta atrás a Vice City');
-        d.style.setProperty('--k', K); d.style.setProperty('--ai-t', T_TIT + 's');
-        // primero, solo un telón negro que tapa la app (y «Saltar»); la escena se monta detrás
-        d.innerHTML = '<i class="ai-telon" aria-hidden="true"></i><button type="button" class="ai-saltar">Saltar</button>';
-        saltar = d.querySelector('.ai-saltar');
-        function varios(c, n, desde) { var s = '', j; for (j = 0; j < n; j++) s += '<i class="ai-obj ' + c + ((desde + j) % 4 > 1 ? ' ai-2' : '') + '"></i>'; return s; }
-        // los fotogramas clave de algo que da vueltas de «vuelta» px mientras el mundo avanza: una muestra cada 0,1 s
-        // mientras cambia la marcha (y cada 0,6 s de paseo) y, en cada vuelta, un salto del final al principio en el mismo
-        // instante. f(desplazamiento, vuelta en la que va, segundo, altura de la cámara) devuelve el fotograma
-        function claves(a0, vuelta, f, mas) {
-          var ev = [], ks = [], t, j, px, y, k, n;
-          for (t = 0; t < 3; t += 0.1) ev.push([t, 0]);
-          for (t = 3; t < T_FRENA; t += 0.6) ev.push([t, 0]);
-          for (t = T_FRENA; t < T_FRENA + 3; t += 0.1) ev.push([t, 0]);
-          ev.push([T_FRENA + 3, 0], [DURA, 0]);
-          (mas || []).forEach(function (t) { ev.push([t, 0]); });
-          for (px = vuelta - a0; px < VIAJE; px += vuelta) { ev.push([cuando(px), 1]); if (vuelta > RAYA && px + FUNDIDO < VIAJE) ev.push([cuando(px + FUNDIDO), 0]); }
-          if (vuelta > RAYA && a0 < FUNDIDO) ev.push([cuando(FUNDIDO - a0), 0]);
-          ev.sort(function (x, y) { return x[0] - y[0]; });
-          for (j = 0, n = 0; j < ev.length; j++) {
-            t = ev[j][0]; y = t < 2.6 ? Math.round(ALTO * Math.pow(1 - t / 2.6, 2.2) * 10) / 10 : 0;
-            if (ev[j][1]) { k = f(vuelta, n, t, y); k.offset = t / DURA; ks.push(k); n++; k = f(0, n, t, y); }
-            else k = f(Math.round((a0 + recorrido(t)) % vuelta * 10) / 10, n, t, y);
-            k.offset = Math.min(1, t / DURA); ks.push(k);
-          }
-          return ks;
-        }
-        function animar(el, ks, opciones) {
-          var fin = ks[ks.length - 1], an;
-          el.style.transform = fin.transform; if (fin.opacity != null) el.style.opacity = fin.opacity;
-          if (!parado) { an = el.animate(ks, opciones); an.pause(); ans.push(an); }
-        }
-        // n: 0-9 troncos y 10-19 copas (cada palmera son dos piezas pequeñas, para que ninguna capa sea grande), 20-29
-        // farolas; pares a la izquierda e impares a la derecha (en espejo); cinco filas de cada. 30-35, los letreros de
-        // neón (tres por lado, sin espejo): solo se ven las vueltas que empiezan durante el paseo y se apagan antes del título
-        function pieza(el, n) {
-          var letrero = n >= 30, palma = n < 20, lado = n % 2 ? 1 : -1, x = lado * (letrero ? 470 : palma ? 540 : 345), espejo = lado > 0 && !letrero ? ' scaleX(-1)' : '';
-          var a0 = letrero ? ((n - 30) >> 1) * 1200 + (lado > 0 ? 600 : 0) : (((n % 10) >> 1) * 720 + (palma ? 0 : 200)) % VUELTA, sale = [];
-          animar(el, claves(a0, VUELTA, function (a, vuelta, t, y) {
-            var o = Math.min(1, Math.round(a / FUNDIDO * 100) / 100);
-            if (letrero) { if (sale[vuelta] == null) sale[vuelta] = t; o = sale[vuelta] > 2.4 && sale[vuelta] < 10.6 ? o * Math.max(0, Math.min(1, (T_TIT + 1 - t) / 0.8)) : 0; }
-            return { transform: 'translate3d(' + x + 'px,' + y + 'px,' + (LEJOS + a) + 'px)' + espejo, opacity: Math.round(o * 100) / 100 };
-          }, letrero ? [T_TIT + 0.2, T_TIT + 1] : null), viaje);
-        }
+        // La escena, «La cuenta atrás a Vice City» (~14 s): una carretera de neón vista desde detrás de un descapotable.
+        // No hay 3D de verdad (ni perspective ni planos girados, que en los móviles parpadeaban): la profundidad se finge.
+        // Cada cosa que viene (las rayas, los tubos del bordillo, las palmeras, los letreros) es una pieza pequeña que
+        // crece desde el punto de fuga con una animación de CSS (solo transform y opacity). Aquí solo se monta, de una vez.
+        var T_LET = 2, CADA = 1.3, T_TIT = 11.6;
         var LETREROS = ['<b>Clausulazos</b>', '<i class="ai-ico ai-tacon"></i>', '<b>Mercado<br>00:15</b>', '<i class="ai-ico ai-copa-n"></i>', '<i class="ai-ico ai-flamenco"></i>', '<b>Blindajes<br>24 h</b>'];
-        var FRASES = [[0.9, 2.7, 'Fantasy Manager presenta'], [4, 3.3, 'En Leonida todo tiene un precio. Tu cláusula, también.'], [7.5, 2.9, 'Da el golpe en el mercado y sal de Vice City antes de las 00:15'], [10.6, 2.5, 'Cláusula abierta: nivel de búsqueda ★★★★★']];
-        // Se monta por partes y todavía sin verse (unas pocas por fotograma, según lo que tarden), para que ni montarla ni
-        // arrancarla se note; con todo pintado, las animaciones arrancan a la vez.
-        var pasos = [
-          function () {
-            d.insertAdjacentHTML('afterbegin', '<div class="ai-cam" aria-hidden="true"><i class="ai-sol"></i><i class="ai-heli"></i><i class="ai-ciudad"></i><i class="ai-poli"></i><i class="ai-lejos"></i><div class="ai-mundo"></div><i class="ai-niebla"></i></div>'
-              + '<i class="ai-banda ai-b1" aria-hidden="true"></i><i class="ai-banda ai-b2" aria-hidden="true"></i>');
-            mundo = d.querySelector('.ai-mundo');
-          },
-          function () { mundo.insertAdjacentHTML('beforeend', '<i class="ai-suelo"></i>'); },
-          function () { mundo.insertAdjacentHTML('beforeend', '<i class="ai-reflejo"></i><i class="ai-charco"></i>'); }
-        ];
-        ['ai-tronco', 'ai-copa', 'ai-farola'].forEach(function (c) { for (var j = 0; j < 10; j += 2) (function (j) { pasos.push(function () { mundo.insertAdjacentHTML('beforeend', varios(c, 2, j)); }); })(j); });
-        [0, 2, 4].forEach(function (j) { pasos.push(function () { mundo.insertAdjacentHTML('beforeend', '<i class="ai-obj ai-letrero ai-c' + j / 2 + '">' + LETREROS[j] + '</i><i class="ai-obj ai-letrero ai-c' + (j / 2 + 1) % 3 + '">' + LETREROS[j + 1] + '</i>'); }); });
-        pasos.push(
-          function () { mundo.insertAdjacentHTML('beforeend', '<i class="ai-coche"></i>'); },
-          function () {
-            var s = ''; FRASES.forEach(function (f) { s += '<p class="ai-frase" style="animation-delay:' + f[0] + 's;animation-duration:' + f[1] + 's">' + f[2] + '</p>'; });
-            saltar.insertAdjacentHTML('beforebegin', '<div class="ai-frases">' + s + '</div><div class="ai-txt"><p class="ai-pre">Fantasy Manager</p><h2 class="ai-tit" aria-label="La cuenta atrás a Vice City"></h2></div>');
-          },
-          function () { d.querySelector('.ai-tit').insertAdjacentHTML('beforeend', '<span class="ai-modo" aria-hidden="true">' + capas + '</span>'); },
-          function () { d.querySelector('.ai-tit').insertAdjacentHTML('beforeend', '<span class="ai-neon" aria-hidden="true">' + letras + '</span><i class="ai-raya" aria-hidden="true"></i><i class="ai-halo" aria-hidden="true"></i>'); },
-          function () { saltar.insertAdjacentHTML('beforebegin', '<div class="ai-fin"><p class="ai-sub">Hasta el 26 nov · se puede cambiar en Ajustes</p><button type="button" class="ai-entrar">Entrar</button></div>'); },
-          function () { animar(d.querySelector('.ai-suelo'), claves(0, RAYA, function (a, v, t, y) { return { transform: 'translate3d(0,' + y + 'px,-1500px) rotateX(90deg) scale(' + K + ') translateY(' + a / K + 'px)' }; }), viaje); },
-          // el coche sale de debajo de la cámara y se coloca delante
-          function () { animar(d.querySelector('.ai-coche'), [{ transform: 'translate3d(0,0,330px)' }, { transform: 'translate3d(0,0,-100px)' }], { duration: 2500, delay: 800, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', fill: 'backwards' }); },
-          // lo demás que empieza al abrirse el telón: la cámara ladeada (solo en pantallas estrechas: girar la escena
-          // entera en una ancha cuesta fotogramas donde no hay GPU), el paralaje del sol, la ciudad y las palmeras
-          // lejanas, los reflejos del asfalto, las bandas de cine que se retiran y el propio telón
-          function () {
-            var lenta = 'cubic-bezier(0.2, 0.6, 0.2, 1)', paso1 = 'steps(1, end)';
-            function una(sel, ks, o) { var e = d.querySelectorAll(sel), j; o.fill = o.fill || 'backwards'; for (j = 0; j < e.length; j++) if (!parado) { var an = e[j].animate(ks, o); an.pause(); ans.push(an); } }
-            if (window.innerWidth < 760) una('.ai-cam', [{ transform: 'rotate(-5deg)' }, { transform: 'rotate(0.4deg)', offset: 0.74 }, { transform: 'none' }], { duration: 2700, easing: 'cubic-bezier(0.3, 0.1, 0.2, 1)' });
-            una('.ai-sol', [{ transform: 'translateY(8%) scale(0.86)' }, { transform: 'none' }], { duration: 3200, easing: lenta });
-            una('.ai-ciudad', [{ transform: 'translateY(5px) scale(0.94)' }, { transform: 'none' }], { duration: 3400, easing: lenta });
-            una('.ai-lejos', [{ transform: 'translateY(12px) scale(0.84)' }, { transform: 'none' }], { duration: 3400, easing: lenta });
-            una('.ai-reflejo', [{ opacity: 0 }, { opacity: 1 }], { duration: 1600, delay: 1100, easing: 'ease-out' });
-            una('.ai-charco', [{ opacity: 0, easing: paso1 }, { opacity: 0.2, offset: 0.1, easing: paso1 }, { opacity: 0.4, offset: 0.3, easing: paso1 }, { opacity: 0.55, offset: 0.5, easing: paso1 }, { opacity: 0.75, offset: 0.7, easing: paso1 }, { opacity: 0.6, offset: 0.86, easing: paso1 }, { opacity: 1, offset: 0.92 }, { opacity: 1 }], { duration: 1150, delay: T_TIT * 1000 + 2000 });
-            una('.ai-banda', [{ transform: 'none' }, { transform: 'scaleY(0)' }], { duration: 500, delay: T_TIT * 1000 + 2850, easing: 'cubic-bezier(0.6, 0, 0.3, 1)' });
-            // el helicóptero cruza el cielo con su foco y, al fondo, unas luces azules y rojas
-            una('.ai-heli', [{ transform: 'translate3d(62vw,0,0)' }, { transform: 'translate3d(-8vw,-3vh,0)', offset: 0.5 }, { transform: 'translate3d(-75vw,2vh,0)' }], { duration: 5200, delay: 6400, easing: 'linear' });
-            una('.ai-poli', [{ opacity: 0, easing: paso1 }, { opacity: 1, offset: 0.25, easing: paso1 }, { opacity: 0.25, offset: 0.5, easing: paso1 }, { opacity: 1, offset: 0.75, easing: paso1 }, { opacity: 0 }], { duration: 520, delay: 8600, iterations: 6 });
-            una('.ai-telon', [{ opacity: 1 }, { opacity: 1, offset: 0.12 }, { opacity: 0 }], { duration: 620, easing: 'ease-out', fill: 'both' });
-            if (parado) d.querySelector('.ai-telon').remove();
-          }
-        );
-        for (i = 0; i < 36; i += 2) (function (j) { pasos.push(function () { var os = d.querySelectorAll('.ai-obj'); pieza(os[j], j); pieza(os[j + 1], j + 1); }); })(i);
-        // el arranque: primero los rótulos (sus animaciones empiezan con un segundo de espera o más, así que da igual que
-        // se adelanten un par de fotogramas), después el mundo y, con él, se abre el telón
-        pasos.push(function () { d.classList.remove('ai-espera-2'); }, function () { d.classList.remove('ai-espera-3'); }, function () {
-          var cuando = (document.timeline ? document.timeline.currentTime : 0) + 34, j;
-          for (j = 0; j < ans.length; j++) ans[j].startTime = cuando;
-        }, function () {
-          d.classList.remove('ai-espera');
-          setTimeout(function () { var b = d.querySelector('.ai-entrar'); if (b && document.body.contains(d) && !d.classList.contains('ai-va')) b.focus({ preventScroll: true }); }, parado ? 60 : T_TIT * 1000 + 3250);
-        });
-        function paso() {
-          var t = performance.now();
-          if (!document.body.contains(d)) return;
-          do { pasos.shift()(); } while (pasos.length > 4 && performance.now() - t < 4);
-          if (pasos.length) requestAnimationFrame(paso);
-        }
+        var FRASES = [[0.9, 2.4, 'Fantasy Manager presenta'], [3.6, 2.9, 'En Leonida todo tiene un precio. Tu cláusula, también.'], [6.8, 2.7, 'Da el golpe en el mercado y sal de Vice City antes de las 00:15'], [9.7, 2.1, 'Cláusula abierta: nivel de búsqueda ★★★★★']];
+        var d = document.createElement('div'), parado = !!(quieto && quieto.matches), s, n, e;
+        function pieza(c, derecha, espera) { return '<i class="ai-p ' + c + '" style="--l:' + (derecha ? 1 : -1) + ';animation-delay:' + espera.toFixed(2) + 's"></i>'; }
+        d.className = 'atardecer-intro'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'La cuenta atrás a Vice City');
+        d.style.setProperty('--ai-t', T_TIT + 's');
+        s = '<div class="ai-escena" aria-hidden="true"><i class="ai-fondo"><i class="ai-sol"></i><i class="ai-ciudad"></i></i><i class="ai-fugaz"></i><i class="ai-heli"></i><i class="ai-suelo"></i>';
+        // las que no se acaban: seis pares de rayas, tres de tubos y tres palmeras por lado (tronco y copa aparte, para que
+        // ninguna capa sea grande), repartidas con esperas negativas para que la calle esté llena desde el principio
+        for (n = 0; n < 12; n++) s += pieza('ai-raya', n % 2, -(n >> 1) * 0.4);
+        for (n = 0; n < 6; n++) s += pieza('ai-tubo' + (n % 2 ? ' ai-2' : ''), n % 2, -(n >> 1) * 0.8);
+        for (n = 0; n < 6; n++) { e = -((n >> 1) * 0.76 + (n % 2 ? 0.38 : 0)); s += pieza('ai-tronco', n % 2, e) + pieza('ai-copa', n % 2, e); }
+        s += '<i class="ai-niebla"></i>';
+        // los letreros: pasan por encima de la carretera, de uno en uno y despacio, para que dé tiempo a leerlos (los de
+        // después, detrás en el HTML: quedan por debajo de los que ya están cerca)
+        for (n = LETREROS.length - 1; n >= 0; n--) s += '<i class="ai-arco ai-c' + n % 3 + '" style="animation-delay:' + (T_LET + n * CADA).toFixed(2) + 's">' + LETREROS[n] + '</i>';
+        s += '<i class="ai-coche"><i></i></i></div><i class="ai-banda ai-b1" aria-hidden="true"></i><i class="ai-banda ai-b2" aria-hidden="true"></i><div class="ai-frases">';
+        FRASES.forEach(function (f) { s += '<p class="ai-frase" style="animation-delay:' + f[0] + 's;animation-duration:' + f[1] + 's">' + f[2] + '</p>'; });
+        s += '</div><div class="ai-txt"><p class="ai-pre">Fantasy Manager</p><h2 class="ai-tit" aria-label="La cuenta atrás a Vice City"><span class="ai-modo" aria-hidden="true">La cuenta atrás a</span><span class="ai-neon" aria-hidden="true">';
+        'VICE CITY'.split('').forEach(function (l, i) { s += l === ' ' ? '<b class="ai-hueco"></b>' : '<b style="--i:' + i + '">' + l + '</b>'; });
+        s += '</span><i class="ai-raya-t" aria-hidden="true"></i><i class="ai-halo" aria-hidden="true"></i></h2></div>'
+          + '<div class="ai-fin"><p class="ai-sub">Hasta el 26 nov · se puede cambiar en Ajustes</p><button type="button" class="ai-entrar">Entrar</button></div>'
+          + '<i class="ai-negro" aria-hidden="true"></i><button type="button" class="ai-saltar">Saltar</button>';
+        d.innerHTML = s;
         function cerrar() {
           if (d.classList.contains('ai-va')) return;
           d.classList.add('ai-va'); document.removeEventListener('keydown', tecla, true);
-          setTimeout(function () { d.remove(); clase('atardecer-abre', 1400); }, 480);
+          setTimeout(function () { d.remove(); if (encendido()) clase('atardecer-abre', 1400); }, 340);
         }
         function tecla(e) { if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); cerrar(); } }
         d.addEventListener('click', function (e) { if (e.target.closest('.ai-entrar, .ai-saltar')) cerrar(); });
         document.addEventListener('keydown', tecla, true);
         document.body.appendChild(d);
-        setTimeout(function () { requestAnimationFrame(paso); }, parado ? 0 : 190);
+        setTimeout(function () { var b = d.querySelector('.ai-entrar'); if (b && document.body.contains(d) && !d.classList.contains('ai-va')) b.focus({ preventScroll: true }); }, parado ? 60 : T_TIT * 1000 + 2500);
       }
       // el coche cruza la cabecera de Hoy cada ~45 s y las estrellas de la carga titilan cada ~7 s, si se ven
       function cada(c, ms, dura, sel) {
@@ -248,6 +154,7 @@
         new MutationObserver(mirar).observe(app, { childList: true });
         new MutationObserver(function () { mirar(); mirarHoja(); }).observe(document.body, { childList: true });
         mirar();
+        if (PRUEBA) intro(true);
       });
     })(window.TEMA_EVENTO);
   </script>

@@ -281,165 +281,126 @@ html[data-tema="sunset"] {
   --atardecer-ciudad: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 100'%3E%3Cpath fill='%23210a3d' d='M0 100V70h22V52h26v18h14V38h30v32h18V58h20V26h8v-9h4v9h8v44h24V46h34v24h16V62h22V34h28v28h20V50h30v20h14V20h10V8h3v12h9v50h26V56h30v14h16V42h26v28h20V64h24V30h30v40h20v30z'/%3E%3Cg fill='%23FFD25A' fill-opacity='.85'%3E%3Cpath d='M68 46h4v4h-4zM78 54h4v4h-4zM68 62h4v4h-4zM117 36h3v4h-3zM117 48h3v4h-3zM117 60h3v4h-3zM232 44h4v4h-4zM242 52h4v4h-4zM343 30h3v4h-3zM343 44h3v4h-3zM343 58h3v4h-3zM470 50h4v4h-4zM480 58h4v4h-4zM556 40h4v4h-4zM566 52h4v4h-4z'/%3E%3C/g%3E%3Cg fill='%2319E6D4' fill-opacity='.8'%3E%3Cpath d='M30 60h4v4h-4zM160 54h4v4h-4zM170 62h4v4h-4zM290 58h4v4h-4zM398 64h4v4h-4zM424 50h4v4h-4zM556 62h4v4h-4z'/%3E%3C/g%3E%3Cg fill='%23FF2E97'%3E%3Cpath d='M112 24h16v2h-16zM338 18h14v2h-14zM208 44h34v2h-34zM544 28h30v2h-30z'/%3E%3C/g%3E%3C/svg%3E");
 }
 .atardecer-intro {
-  position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; isolation: isolate;
-  background: #0b0016; color: #fff; font-family: var(--cond, 'Barlow Condensed', system-ui, sans-serif);
-  --ai-ojo: 46%; --ai-suelo: min(300px, 35.5vh); --ai-sol-r: min(29vw, 17vh, 170px); --k: 1; --u: calc(1px / var(--k)); --ai-t: 0s;
-}
-.atardecer-intro.ai-va { animation: ai-va 0.5s ease-in both; pointer-events: none; }
-@keyframes ai-va { to { opacity: 0; transform: scale(1.06); } }
-@keyframes ai-aparece { from { opacity: 0; } }
-
-/* el telón: un negro que tapa la app al empezar (la escena se monta detrás, sin verse) y se abre cuando arranca */
-.atardecer-intro .ai-telon { position: absolute; inset: 0; z-index: 6; background: #05000c; pointer-events: none; animation: ai-aparece 0.18s ease-out backwards; }
-.atardecer-intro .ai-saltar { animation: ai-aparece 0.18s ease-out backwards; }
-
-/* la cámara: llega ladeada y se endereza mientras frena (como todo lo que tiene que empezar justo al abrirse el telón, lo
-   mueve el bloque TEMA_EVENTO, que lo deja preparado de antes: el sol, la ciudad, las palmeras lejanas, los reflejos y
-   las bandas). Todo lo que no se mueve por su cuenta (el cielo, las estrellas,
-   el resplandor del horizonte y la tierra) va pintado en su fondo: una sola capa opaca, más ancha que la pantalla para que
-   al ladearse no asome nada (arriba y abajo lo tapan las bandas de cine) */
-.atardecer-intro .ai-cam {
-  position: absolute; inset: 0 -14%; transform-origin: 50% var(--ai-ojo);
+  position: fixed; inset: 0; z-index: 2147483000; overflow: hidden; isolation: isolate; container-type: size;
+  color: #fff; font-family: var(--cond, 'Barlow Condensed', system-ui, sans-serif);
+  /* --u: una centésima del alto de la intro. Toda la escena se mide con ella, así es la misma en cualquier pantalla */
+  --u: 1vh; --ai-ojo: 46%; --ai-sol-r: min(30vw, calc(var(--u) * 16), 170px); --ai-t: 0s;
+  /* lo que no se mueve (las estrellas, la tierra, el resplandor del horizonte y el cielo) va pintado en el fondo */
   background:
     var(--atardecer-estrellas) 0 7% / 300px 150px repeat-x, var(--atardecer-estrellas) 150px 27% / 300px 150px repeat-x,
     linear-gradient(180deg, rgba(20, 2, 42, 0) var(--ai-ojo), #14022a var(--ai-ojo)),
-    radial-gradient(46% 24vh at 50% var(--ai-ojo), rgba(255, 138, 61, 0.5), rgba(255, 46, 151, 0.25) 45%, rgba(255, 46, 151, 0) 75%),
-    linear-gradient(180deg, #05000c 0, #0b0016 calc(var(--ai-ojo) * 0.16), #22093f calc(var(--ai-ojo) * 0.4), #5a1680 calc(var(--ai-ojo) * 0.6), #c22a9e calc(var(--ai-ojo) * 0.78), #FF2E97 calc(var(--ai-ojo) * 0.91), #FF8A3D var(--ai-ojo));
+    radial-gradient(60% 24vh at 50% var(--ai-ojo), rgba(255, 138, 61, 0.5), rgba(255, 46, 151, 0.25) 45%, rgba(255, 46, 151, 0) 75%),
+    linear-gradient(180deg, #05000c 0, #0b0016 calc(var(--ai-ojo) * 0.16), #22093f calc(var(--ai-ojo) * 0.4), #5a1680 calc(var(--ai-ojo) * 0.6), #c22a9e calc(var(--ai-ojo) * 0.78), #FF2E97 calc(var(--ai-ojo) * 0.91), #FF8A3D var(--ai-ojo)) #14022a;
 }
-.atardecer-intro .ai-sol { position: absolute; left: 50%; top: calc(var(--ai-ojo) - var(--ai-sol-r)); width: calc(var(--ai-sol-r) * 2); height: var(--ai-sol-r); margin-left: calc(var(--ai-sol-r) * -1); background: var(--atardecer-sol) center top / 100% 200% no-repeat; transform-origin: 50% 100%; }
-/* la ciudad y las palmeras lejanas, en el horizonte: dos capas con distinto paralaje */
-.atardecer-intro .ai-ciudad { position: absolute; left: 0; right: 0; top: calc(var(--ai-ojo) - 64px); height: 65px; background: var(--atardecer-ciudad) 50% 100% / 384px 64px repeat-x; transform-origin: 50% 100%; }
-.atardecer-intro .ai-lejos { position: absolute; left: 50%; width: 100vw; margin-left: -50vw; top: calc(var(--ai-ojo) - 58px); height: 60px; background: var(--atardecer-palmeras) 4% 100% / 116px 58px no-repeat, var(--atardecer-palmeras) 96% 100% / 116px 58px no-repeat, var(--atardecer-palmeras) 24% 100% / 76px 38px no-repeat, var(--atardecer-palmeras) 78% 100% / 76px 38px no-repeat; transform-origin: 50% 100%; }
-/* el mundo en 3D: la perspectiva, a la altura de los ojos */
-.atardecer-intro .ai-mundo { position: absolute; inset: 0; perspective: 520px; perspective-origin: 50% var(--ai-ojo); pointer-events: none; }
-/* el asfalto: tres carriles con sus rayas, los bordes de neón (un tubo rosa con su halo y otro fino turquesa) y, fuera, la
-   cuadrícula. Se pinta a 1/--k de tamaño y se amplía (--k = 2 en pantallas densas) para que la textura no pese */
-.atardecer-intro .ai-suelo {
-  position: absolute; left: 50%; top: calc(var(--ai-ojo) + var(--ai-suelo)); width: calc(2000 * var(--u)); height: calc(4000 * var(--u)); margin: calc(-2000 * var(--u)) 0 0 calc(-1000 * var(--u)); will-change: transform;
-  background:
-    linear-gradient(90deg, #14022a, rgba(20, 2, 42, 0) 26%, rgba(20, 2, 42, 0) 74%, #14022a),
-    repeating-linear-gradient(0deg, #FFE08A 0 calc(96 * var(--u)), transparent calc(96 * var(--u)) calc(240 * var(--u))) calc(904 * var(--u)) 0 / calc(6 * var(--u)) 100% no-repeat,
-    repeating-linear-gradient(0deg, #FFE08A 0 calc(96 * var(--u)), transparent calc(96 * var(--u)) calc(240 * var(--u))) calc(1090 * var(--u)) 0 / calc(6 * var(--u)) 100% no-repeat,
-    linear-gradient(90deg, rgba(255, 46, 151, 0), rgba(255, 46, 151, 0.32) 36%, #FF2E97 45%, #FFE3F2 50%, #FF2E97 55%, rgba(255, 46, 151, 0.32) 64%, rgba(255, 46, 151, 0)) calc(660 * var(--u)) 0 / calc(120 * var(--u)) 100% no-repeat,
-    linear-gradient(90deg, rgba(255, 46, 151, 0), rgba(255, 46, 151, 0.32) 36%, #FF2E97 45%, #FFE3F2 50%, #FF2E97 55%, rgba(255, 46, 151, 0.32) 64%, rgba(255, 46, 151, 0)) calc(1220 * var(--u)) 0 / calc(120 * var(--u)) 100% no-repeat,
-    linear-gradient(#19E6D4, #19E6D4) calc(636 * var(--u)) 0 / calc(4 * var(--u)) 100% no-repeat,
-    linear-gradient(#19E6D4, #19E6D4) calc(1360 * var(--u)) 0 / calc(4 * var(--u)) 100% no-repeat,
-    linear-gradient(90deg, #170828, #2c1346 50%, #170828) calc(720 * var(--u)) 0 / calc(560 * var(--u)) 100% no-repeat,
-    repeating-linear-gradient(0deg, rgba(255, 46, 151, 0.5) 0 calc(4 * var(--u)), transparent calc(4 * var(--u)) calc(240 * var(--u))),
-    repeating-linear-gradient(90deg, rgba(25, 230, 212, 0.3) 0 calc(4 * var(--u)), transparent calc(4 * var(--u)) calc(240 * var(--u))) calc(-2 * var(--u)) 0,
-    #14022a;
-  transform: translateZ(-1500px) rotateX(90deg) scale(var(--k));
-}
-/* el asfalto mojado: el sol reflejado en una columna de destellos bajo el horizonte y el resplandor rosa del letrero */
-.atardecer-intro .ai-reflejo { position: absolute; left: 50%; top: var(--ai-ojo); width: calc(var(--ai-sol-r) * 1.7); height: calc((100% - var(--ai-ojo)) * 0.62); margin-left: calc(var(--ai-sol-r) * -0.85); }
-.atardecer-intro .ai-reflejo::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(50% 100% at 50% 0, rgba(255, 224, 138, 0.9), rgba(255, 138, 61, 0.55) 30%, rgba(255, 46, 151, 0.28) 62%, rgba(255, 46, 151, 0));
-  -webkit-mask: repeating-linear-gradient(180deg, #000 0 4px, transparent 4px 6px, #000 6px 13px, transparent 13px 17px, #000 17px 19px, transparent 19px 24px); mask: repeating-linear-gradient(180deg, #000 0 4px, transparent 4px 6px, #000 6px 13px, transparent 13px 17px, #000 17px 19px, transparent 19px 24px);
-}
-.atardecer-intro .ai-charco { position: absolute; left: 50%; top: calc(var(--ai-ojo) + 6px); width: min(96vw, 640px); height: calc((100% - var(--ai-ojo)) * 0.4); margin-left: calc(min(96vw, 640px) / -2); background: radial-gradient(50% 100% at 50% 0, rgba(255, 46, 151, 0.42), rgba(255, 46, 151, 0.14) 50%, rgba(255, 46, 151, 0)); }
-/* lo que pasa por los lados: palmeras (fuera) y farolas (junto al borde), de un lado y, en espejo, del otro */
-.atardecer-intro .ai-obj { position: absolute; left: 50%; transform-origin: 50% 100%; will-change: transform, opacity; background: center bottom / 100% 100% no-repeat; }
-.atardecer-intro .ai-copa { top: calc(var(--ai-ojo) + var(--ai-suelo) - 720px); width: 312px; height: 208px; margin-left: -156px; transform-origin: 50% 720px; background-image: var(--atardecer-copa); }
-.atardecer-intro .ai-tronco { top: calc(var(--ai-ojo) + var(--ai-suelo) - 610px); width: 16px; height: 610px; margin-left: -8px; background: linear-gradient(90deg, #0B0014 62%, rgba(255, 46, 151, 0.6) 62% 76%, #0B0014 76%); }
-.atardecer-intro .ai-farola { top: calc(var(--ai-ojo) + var(--ai-suelo) - 440px); width: 140px; height: 440px; margin-left: -70px; background-image: var(--atardecer-farola); }
-.atardecer-intro .ai-farola.ai-2 { background-image: var(--atardecer-farola-2); }
-/* los letreros de neón del paseo: un poste con su rótulo (palabras de la app) o su dibujo (un tacón, una copa, un flamenco:
-   dibujos propios de trazo) */
-.atardecer-intro .ai-letrero { top: calc(var(--ai-ojo) + var(--ai-suelo) - 470px); width: 300px; height: 470px; margin-left: -150px; --c: #FF2E97; background: linear-gradient(#0B0014, #0B0014) 50% 100% / 10px 330px no-repeat; }
-.atardecer-intro .ai-letrero.ai-c1 { --c: #19E6D4; } .atardecer-intro .ai-letrero.ai-c2 { --c: #FFD25A; }
-.atardecer-intro .ai-letrero > * { position: absolute; left: 0; right: 0; top: 0; height: 150px; display: grid; place-items: center; border-radius: 16px; background: rgba(11, 0, 20, 0.86); box-shadow: inset 0 0 0 4px var(--c), 0 0 26px var(--c); }
-.atardecer-intro .ai-letrero b { font: italic 700 46px/0.95 var(--cond); letter-spacing: 2px; text-transform: uppercase; text-align: center; color: #fff; text-shadow: 0 0 8px var(--c), 0 0 22px var(--c); }
-.atardecer-intro .ai-ico { background-color: rgba(11, 0, 20, 0.86); background-position: center; background-size: auto 118px; background-repeat: no-repeat; }
-.atardecer-intro .ai-tacon { left: 50px; right: 50px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100' fill='none' stroke='%23FFE3F2' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 22c10 4 20 16 30 30 12 16 30 22 54 24 6 1 8 8 2 10H74c-8 0-14-3-20-9L36 58c-3 10-4 20-4 30h-8c0-24-4-46-6-66z'/%3E%3Cpath d='M30 44c6 3 11 8 15 14' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
-.atardecer-intro .ai-copa-n { left: 60px; right: 60px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23E8FFFD' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 18h68L50 56z'/%3E%3Cpath d='M50 56v30M34 88h32'/%3E%3Cpath d='M30 30h40' stroke='%2319E6D4'/%3E%3Cpath d='M62 26l14-18' stroke='%23FFD25A'/%3E%3Ccircle cx='60' cy='30' r='4' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
-.atardecer-intro .ai-flamenco { left: 60px; right: 60px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110' fill='none' stroke='%23FFD9EE' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M58 10c-9-3-16 3-14 11 2 9 14 12 12 24-2 11-22 6-28 18-4 10 6 17 20 15 14-2 24-12 22-24'/%3E%3Cpath d='M58 10l12 4-8 5'/%3E%3Cpath d='M44 78v26M54 77l-2 14 10 13' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
-/* el helicóptero con su foco (2D, cruza el cielo) y las luces azules y rojas del fondo */
-.atardecer-intro .ai-heli { position: absolute; left: 50%; top: calc(var(--ai-ojo) * 0.36); width: 120px; height: 210px; margin-left: -60px; transform: translate3d(-75vw, 0, 0); background: linear-gradient(180deg, rgba(232, 255, 253, 0.5), rgba(25, 230, 212, 0)) 50% 46px / 100% 164px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 44' fill='%230B0014'%3E%3Cpath d='M8 6h72v3H8z'/%3E%3Cpath d='M42 9h4v6h-4z'/%3E%3Cpath d='M22 15h40c12 0 20 8 20 15 0 5-6 8-14 8H40c-10 0-16-5-18-12h-8l-8 6V18l8 6h8z'/%3E%3Cpath d='M82 24h30l4-8h3v14l-37 2z'/%3E%3Cpath d='M36 40h40v2H36z'/%3E%3Ccircle cx='48' cy='36' r='3' fill='%23fff'/%3E%3C/svg%3E") 50% 0 / 120px 44px no-repeat; -webkit-clip-path: polygon(0 0, 100% 0, 100% 21%, 54% 21%, 100% 100%, 0 100%, 46% 21%, 0 21%); clip-path: polygon(0 0, 100% 0, 100% 21%, 54% 21%, 100% 100%, 0 100%, 46% 21%, 0 21%); }
-.atardecer-intro .ai-poli { position: absolute; left: 50%; top: calc(var(--ai-ojo) - 26px); width: 120px; height: 26px; margin-left: 14vw; opacity: 0; background: radial-gradient(closest-side, #4FB3FF, rgba(79, 179, 255, 0)) 0 50% / 40px 26px no-repeat, radial-gradient(closest-side, #FF4A4A, rgba(255, 74, 74, 0)) 46px 50% / 40px 26px no-repeat; }
-/* las frases, como subtítulos de película, abajo */
-.atardecer-intro .ai-frases { position: absolute; z-index: 5; left: 0; right: 0; bottom: calc(9vh + 26px); display: grid; justify-items: center; padding: 0 18px; pointer-events: none; }
-.atardecer-intro .ai-frase { grid-area: 1 / 1; margin: 0; max-width: 520px; padding: 8px 14px; border-radius: 8px; background: rgba(11, 0, 22, 0.8); font: 700 clamp(19px, 5.4vw, 26px)/1.15 var(--cond); letter-spacing: 1.5px; text-transform: uppercase; text-align: center; color: #fff; opacity: 0; animation: ai-frase 3s both; }
-@keyframes ai-frase { 0% { opacity: 0; transform: translateY(12px); } 12% { opacity: 1; transform: none; } 88% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-8px); } }
-/* el descapotable, delante de la cámara, con su reflejo en el asfalto */
-.atardecer-intro .ai-coche { position: absolute; left: 50%; top: calc(var(--ai-ojo) + var(--ai-suelo) - 122px); width: 240px; height: 132px; margin-left: -120px; transform-origin: 50% 92%; will-change: transform; background: var(--atardecer-descapotable) center / 100% 100% no-repeat; transform: translate3d(0, 0, -100px); }
-.atardecer-intro .ai-coche::after { content: ''; position: absolute; left: 0; right: 0; top: 91%; height: 80%; background: var(--atardecer-descapotable) center / 100% 125% no-repeat; transform: scaleY(-1); opacity: 0.3; -webkit-mask: linear-gradient(0deg, #000, transparent 85%); mask: linear-gradient(0deg, #000, transparent 85%); }
-/* la bruma del horizonte: une el suelo con el cielo y tapa lo más lejano */
-.atardecer-intro .ai-niebla { position: absolute; left: 0; right: 0; top: calc(var(--ai-ojo) - 1px); height: 20%; background: linear-gradient(180deg, #FF6FA8 0, rgba(214, 46, 150, 0.78) 5%, rgba(110, 22, 120, 0.5) 28%, rgba(20, 2, 42, 0) 100%); pointer-events: none; }
+@supports (width: 1cqh) { .atardecer-intro { --u: 1cqh; } }
+.atardecer-intro.ai-va { animation: ai-va 0.32s ease-in both; pointer-events: none; }
+@keyframes ai-va { to { opacity: 0; } }
 
-/* las bandas de cine: arriba y abajo, y se retiran cuando el letrero ya está encendido */
-.atardecer-intro .ai-banda { position: absolute; z-index: 4; left: 0; right: 0; height: 9vh; background: #05000c; pointer-events: none; transform: scaleY(0); }
+/* La carretera, vista desde detrás del coche, SIN 3D (13 nov: con perspective y planos girados parpadeaba en los móviles).
+   El punto de fuga está en el centro, a la altura --ai-ojo. Lo que viene hacia la cámara es una pieza pequeña (.ai-p),
+   dibujada como se ve al llegar y con el origen del transform en el punto de fuga: escalarla la trae por su línea de
+   fuga y la hace crecer, que es lo mismo que hace la perspectiva. Los fotogramas siguen la curva 1/distancia (por eso
+   van apretados al final) y todas llevan la misma marcha. Solo transform y opacity, y ninguna capa grande. */
+.atardecer-intro .ai-escena { position: absolute; inset: 0; pointer-events: none; }
+.atardecer-intro .ai-escena i { position: absolute; }
+/* el sol y la ciudad: se acercan muy despacio */
+.atardecer-intro .ai-fondo { left: 0; right: 0; top: calc(var(--ai-ojo) - var(--u) * 34); height: calc(var(--u) * 34); transform-origin: 50% 100%; animation: ai-fondo 15s cubic-bezier(0.2, 0.6, 0.3, 1) both; }
+@keyframes ai-fondo { from { transform: scale(0.92); } to { transform: scale(1.06); } }
+.atardecer-intro .ai-sol { left: 50%; bottom: 0; width: calc(var(--ai-sol-r) * 2); height: var(--ai-sol-r); margin-left: calc(var(--ai-sol-r) * -1); background: var(--atardecer-sol) center top / 100% 200% no-repeat; }
+.atardecer-intro .ai-ciudad { --h: min(64px, calc(var(--u) * 7.4)); left: 0; right: 0; bottom: 0; height: var(--h); background: var(--atardecer-ciudad) 50% 100% / calc(var(--h) * 6) var(--h) repeat-x; }
+/* una estrella fugaz, al empezar, y el helicóptero con su foco, que cruza el cielo una vez */
+.atardecer-intro .ai-fugaz { left: 72%; top: calc(var(--u) * 12); width: calc(var(--u) * 11); height: 2px; border-radius: 2px; background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0)); opacity: 0; animation: ai-fugaz 0.9s 1.3s ease-in both; }
+@keyframes ai-fugaz { 0% { opacity: 0; transform: rotate(-20deg); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(var(--u) * -30), calc(var(--u) * 11)) rotate(-20deg); } }
+.atardecer-intro .ai-heli { position: absolute; left: 0; top: calc(var(--u) * 11); width: 120px; height: 210px; margin-left: -60px; transform: translateX(-70px); animation: ai-heli 5.6s 5.2s linear backwards; background: linear-gradient(180deg, rgba(232, 255, 253, 0.5), rgba(25, 230, 212, 0)) 50% 46px / 100% 164px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 44' fill='%230B0014'%3E%3Cpath d='M8 6h72v3H8z'/%3E%3Cpath d='M42 9h4v6h-4z'/%3E%3Cpath d='M22 15h40c12 0 20 8 20 15 0 5-6 8-14 8H40c-10 0-16-5-18-12h-8l-8 6V18l8 6h8z'/%3E%3Cpath d='M82 24h30l4-8h3v14l-37 2z'/%3E%3Cpath d='M36 40h40v2H36z'/%3E%3Ccircle cx='48' cy='36' r='3' fill='%23fff'/%3E%3C/svg%3E") 50% 0 / 120px 44px no-repeat; -webkit-clip-path: polygon(0 0, 100% 0, 100% 21%, 54% 21%, 100% 100%, 0 100%, 46% 21%, 0 21%); clip-path: polygon(0 0, 100% 0, 100% 21%, 54% 21%, 100% 100%, 0 100%, 46% 21%, 0 21%); }
+@keyframes ai-heli { from { transform: translateX(calc(100vw + 70px)); } }
+/* el suelo, quieto: el asfalto hasta el punto de fuga, los bordillos de neón, el reflejo del sol y la cuadrícula de fuera */
+.atardecer-intro .ai-suelo { left: 0; right: 0; top: var(--ai-ojo); height: calc(var(--u) * 60); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%234a1c78'/%3E%3Cstop offset='.25' stop-color='%232c1346'/%3E%3Cstop offset='1' stop-color='%23170828'/%3E%3C/linearGradient%3E%3ClinearGradient id='r' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23FFE08A' stop-opacity='.5'/%3E%3Cstop offset='.35' stop-color='%23FF8A3D' stop-opacity='.22'/%3E%3Cstop offset='1' stop-color='%23FF2E97' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg stroke='%2319E6D4' stroke-width='.14' opacity='.3' fill='none'%3E%3Cpath d='M0 2h240M0 4.5h240M0 8h240M0 13h240M0 21h240M0 34h240M0 52h240'/%3E%3Cpath d='M120 0L30 60M120 0L-12 60M120 0L-72 60M120 0L-180 60M120 0L210 60M120 0L252 60M120 0L312 60M120 0L420 60'/%3E%3C/g%3E%3Cpath fill='url(%23a)' d='M120 0l55.8 60H64.2z'/%3E%3Cpath fill='url(%23r)' d='M120 0l4.5 60h-9z'/%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath stroke='%23FF2E97' stroke-opacity='.3' stroke-width='2.4' d='M120 0l55.8 60M120 0L64.2 60'/%3E%3Cpath stroke='%23FF7CC0' stroke-width='.55' d='M120 0l55.8 60M120 0L64.2 60'/%3E%3Cpath stroke='%2319E6D4' stroke-width='.22' d='M120 0l61.2 60M120 0L58.8 60'/%3E%3C/g%3E%3C/svg%3E") 50% 0 / calc(var(--u) * 240) calc(var(--u) * 60) no-repeat; }
+.atardecer-intro .ai-p { transform-origin: var(--ox) var(--oy); animation: ai-viene 2.4s linear infinite; }
+@keyframes ai-viene { 0% { transform: scale(0.0517); opacity: 0; } 23.06% { transform: scale(0.0662); opacity: 1; } 41.08% { transform: scale(0.0847); } 55.16% { transform: scale(0.1085); } 66.16% { transform: scale(0.1388); } 74.76% { transform: scale(0.1777); } 81.47% { transform: scale(0.2274); } 86.72% { transform: scale(0.2911); } 90.82% { transform: scale(0.3726); } 94.02% { transform: scale(0.4769); } 96.52% { transform: scale(0.6104); } 98.47% { transform: scale(0.7813); } 100% { transform: scale(1); } }
+@keyframes ai-viene-p { 0% { transform: scale(0.1); opacity: 0; } 19.4% { transform: scale(0.1212); opacity: 1; } 35.41% { transform: scale(0.1468); } 48.63% { transform: scale(0.1778); } 59.54% { transform: scale(0.2154); } 68.54% { transform: scale(0.261); } 75.97% { transform: scale(0.3162); } 82.11% { transform: scale(0.3831); } 87.17% { transform: scale(0.4642); } 91.35% { transform: scale(0.5623); } 94.8% { transform: scale(0.6813); } 97.65% { transform: scale(0.8254); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+/* las rayas de los carriles: además de bajar, se alargan (de lejos son un punto y junto a la cámara, una raya larga) */
+.atardecer-intro .ai-raya { left: 50%; top: var(--ai-ojo); width: calc(var(--u) * 1); height: calc(var(--u) * 54); margin-left: calc(var(--u) * -0.5); border-radius: calc(var(--u) * 0.5); background: #FFE08A; transform-origin: 50% 0; animation-name: ai-raya; }
+@keyframes ai-raya { 0% { transform: translate(calc(var(--u) * var(--l) * 0.93), calc(var(--u) * 3)) scale(0.0517, 0.00268); opacity: 0; } 23.06% { transform: translate(calc(var(--u) * var(--l) * 1.19), calc(var(--u) * 3.84)) scale(0.0662, 0.00438); opacity: 1; } 41.08% { transform: translate(calc(var(--u) * var(--l) * 1.524), calc(var(--u) * 4.915)) scale(0.0847, 0.00718); } 55.16% { transform: translate(calc(var(--u) * var(--l) * 1.95), calc(var(--u) * 6.291)) scale(0.1085, 0.01176); } 66.16% { transform: translate(calc(var(--u) * var(--l) * 2.496), calc(var(--u) * 8.052)) scale(0.1388, 0.01927); } 74.76% { transform: translate(calc(var(--u) * var(--l) * 3.195), calc(var(--u) * 10.306)) scale(0.1777, 0.03157); } 81.47% { transform: translate(calc(var(--u) * var(--l) * 4.089), calc(var(--u) * 13.191)) scale(0.2274, 0.05172); } 86.72% { transform: translate(calc(var(--u) * var(--l) * 5.234), calc(var(--u) * 16.884)) scale(0.2911, 0.08474); } 90.82% { transform: translate(calc(var(--u) * var(--l) * 6.699), calc(var(--u) * 21.61)) scale(0.3726, 0.13882); } 94.02% { transform: translate(calc(var(--u) * var(--l) * 8.575), calc(var(--u) * 27.66)) scale(0.4769, 0.22743); } 96.52% { transform: translate(calc(var(--u) * var(--l) * 10.975), calc(var(--u) * 35.403)) scale(0.6104, 0.37259); } 98.47% { transform: translate(calc(var(--u) * var(--l) * 14.047), calc(var(--u) * 45.314)) scale(0.7813, 0.6104); } 100% { transform: translate(calc(var(--u) * var(--l) * 17.98), calc(var(--u) * 58)) scale(1, 1); } }
+/* los tubos de neón del bordillo: rosa a la izquierda, turquesa a la derecha */
+.atardecer-intro .ai-tubo { --c: #FF2E97; left: calc(50% + var(--u) * (var(--l) * 58 - 0.6)); top: calc(var(--ai-ojo) + var(--u) * 29); width: calc(var(--u) * 1.2); height: calc(var(--u) * 29); --ox: calc(var(--u) * (0.6 - var(--l) * 58)); --oy: calc(var(--u) * -29); border-radius: calc(var(--u) * 0.6); background: linear-gradient(180deg, #fff 0, var(--c) 30%, var(--c) 78%, #0B0014 78%); box-shadow: 0 0 calc(var(--u) * 2) var(--c); }
+.atardecer-intro .ai-tubo.ai-2 { --c: #19E6D4; }
+/* las palmeras, más afuera: se deshacen antes de llegar a la cámara (junto a ella serían capas enormes) */
+.atardecer-intro .ai-tronco { left: calc(50% + var(--u) * (var(--l) * 54 - 0.75)); top: calc(var(--ai-ojo) - var(--u) * 42); width: calc(var(--u) * 1.5); height: calc(var(--u) * 72); --ox: calc(var(--u) * (0.75 - var(--l) * 54)); --oy: calc(var(--u) * 42); background: linear-gradient(90deg, #0B0014 62%, rgba(255, 46, 151, 0.6) 62% 76%, #0B0014 76%); animation-name: ai-viene-p; animation-duration: 2.28s; }
+.atardecer-intro .ai-copa { left: calc(50% + var(--u) * (var(--l) * 54 - 13)); top: calc(var(--ai-ojo) - var(--u) * 51); width: calc(var(--u) * 26); height: calc(var(--u) * 17.3); --ox: calc(var(--u) * (13 - var(--l) * 54)); --oy: calc(var(--u) * 51); background: var(--atardecer-copa) center / 100% 100% no-repeat; animation-name: ai-viene-p; animation-duration: 2.28s; }
+/* la bruma del horizonte: tapa lo más lejano, que es donde nacen las piezas */
+.atardecer-intro .ai-niebla { left: 0; right: 0; top: calc(var(--ai-ojo) - 1px); height: calc(var(--u) * 7); background: linear-gradient(180deg, #FF6FA8 0, rgba(214, 46, 150, 0.8) 12%, rgba(110, 22, 120, 0.5) 45%, rgba(20, 2, 42, 0) 100%); }
+/* los letreros de neón: cuelgan sobre la carretera y pasan por encima de la cámara, de uno en uno; crecen más despacio que
+   el resto (a paso constante) para que se lean. Palabras de la app o un dibujo propio de trazo (tacón, copa, flamenco) */
+.atardecer-intro .ai-arco {
+  left: calc(50% - var(--u) * 23.5); top: calc(var(--ai-ojo) - var(--u) * 61.6); width: calc(var(--u) * 47); height: calc(var(--u) * 28); transform-origin: 50% calc(var(--u) * 61.6); --c: #FF2E97;
+  display: grid; place-items: center; box-sizing: border-box; border: calc(var(--u) * 0.7) solid var(--c); border-radius: calc(var(--u) * 3); background: #0B0014; box-shadow: 0 0 calc(var(--u) * 3) var(--c); font-style: normal;
+  opacity: 0; animation: ai-arco 3.2s linear both;
+}
+.atardecer-intro .ai-arco.ai-c1 { --c: #19E6D4; } .atardecer-intro .ai-arco.ai-c2 { --c: #FFD25A; }
+@keyframes ai-arco { 0% { transform: scale(0.1607); opacity: 0; } 10% { transform: scale(0.193); opacity: 1; } 20% { transform: scale(0.2317); } 30% { transform: scale(0.2781); } 40% { transform: scale(0.3339); } 50% { transform: scale(0.4009); } 60% { transform: scale(0.4813); } 70% { transform: scale(0.5779); } 80% { transform: scale(0.6938); } 88% { transform: scale(0.803); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+.atardecer-intro .ai-arco b { position: static; font: italic 700 calc(var(--u) * 7.6)/0.95 var(--cond, 'Barlow Condensed', system-ui, sans-serif); letter-spacing: calc(var(--u) * 0.2); text-transform: uppercase; text-align: center; color: #fff; text-shadow: 0 0 calc(var(--u) * 1) var(--c), 0 0 calc(var(--u) * 2.4) var(--c); }
+.atardecer-intro .ai-arco .ai-ico { position: static; width: calc(var(--u) * 24); height: calc(var(--u) * 21); background-position: center; background-size: contain; background-repeat: no-repeat; }
+.atardecer-intro .ai-tacon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100' fill='none' stroke='%23FFE3F2' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 22c10 4 20 16 30 30 12 16 30 22 54 24 6 1 8 8 2 10H74c-8 0-14-3-20-9L36 58c-3 10-4 20-4 30h-8c0-24-4-46-6-66z'/%3E%3Cpath d='M30 44c6 3 11 8 15 14' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
+.atardecer-intro .ai-copa-n { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23E8FFFD' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 18h68L50 56z'/%3E%3Cpath d='M50 56v30M34 88h32'/%3E%3Cpath d='M30 30h40' stroke='%2319E6D4'/%3E%3Cpath d='M62 26l14-18' stroke='%23FFD25A'/%3E%3Ccircle cx='60' cy='30' r='4' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
+.atardecer-intro .ai-flamenco { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 110' fill='none' stroke='%23FFD9EE' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M58 10c-9-3-16 3-14 11 2 9 14 12 12 24-2 11-22 6-28 18-4 10 6 17 20 15 14-2 24-12 22-24'/%3E%3Cpath d='M58 10l12 4-8 5'/%3E%3Cpath d='M44 78v26M54 77l-2 14 10 13' stroke='%23FF2E97'/%3E%3C/svg%3E"); }
+/* el descapotable, visto desde atrás: sale de debajo de la cámara, se queda delante meciéndose y, antes del rótulo,
+   acelera y se pierde en el horizonte */
+.atardecer-intro .ai-coche { left: 50%; top: calc(var(--ai-ojo) + var(--u) * 18.3); width: calc(var(--u) * 23); height: calc(var(--u) * 12.65); margin-left: calc(var(--u) * -11.5); transform-origin: 50% calc(var(--u) * -18.3); opacity: 0; transform: scale(0.02); animation: ai-huye 1.5s calc(var(--ai-t) - 0.7s) cubic-bezier(0.5, 0, 0.9, 0.5) backwards, ai-llega 2s 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+.atardecer-intro .ai-coche::before { content: ''; position: absolute; left: -6%; right: -6%; top: 78%; height: 40%; background: radial-gradient(closest-side, rgba(5, 0, 12, 0.75), rgba(5, 0, 12, 0)); }
+.atardecer-intro .ai-coche i { inset: 0; background: var(--atardecer-descapotable) center / 100% 100% no-repeat; animation: ai-vaiven 2.6s ease-in-out infinite alternate; }
+@keyframes ai-llega { from { opacity: 1; transform: translateY(calc(var(--u) * 40)); } to { opacity: 1; transform: none; } }
+@keyframes ai-huye { from { opacity: 1; transform: none; } 85% { opacity: 1; } }
+@keyframes ai-vaiven { from { transform: translateX(calc(var(--u) * -0.7)) rotate(-0.7deg); } to { transform: translateX(calc(var(--u) * 0.7)) rotate(0.7deg); } }
+
+/* las bandas de cine: arriba y abajo, y se retiran cuando el rótulo ya está encendido */
+.atardecer-intro .ai-banda { position: absolute; z-index: 4; left: 0; right: 0; height: calc(var(--u) * 8); background: #05000c; pointer-events: none; transform: scaleY(0); animation: ai-banda 0.5s calc(var(--ai-t) + 1.9s) cubic-bezier(0.6, 0, 0.3, 1) backwards; }
 .atardecer-intro .ai-banda.ai-b1 { top: 0; transform-origin: 50% 0; }
 .atardecer-intro .ai-banda.ai-b2 { bottom: 0; transform-origin: 50% 100%; }
+@keyframes ai-banda { from { transform: none; } }
+/* el fundido desde negro del principio */
+.atardecer-intro .ai-negro { position: absolute; inset: 0; z-index: 8; background: #05000c; pointer-events: none; opacity: 0; visibility: hidden; animation: ai-abre 0.75s ease-out backwards; }
+@keyframes ai-abre { from { opacity: 1; visibility: visible; } 99% { visibility: visible; } }
+/* las frases, como subtítulos de película, abajo */
+.atardecer-intro .ai-frases { position: absolute; z-index: 5; left: 0; right: 0; bottom: calc(var(--u) * 9.5); display: grid; justify-items: center; padding: 0 18px; pointer-events: none; }
+.atardecer-intro .ai-frase { grid-area: 1 / 1; margin: 0; max-width: 520px; padding: 8px 14px; border-radius: 8px; background: rgba(11, 0, 22, 0.86); font: 700 clamp(15px, min(5.4vw, calc(var(--u) * 3.4)), 26px)/1.15 var(--cond, 'Barlow Condensed', system-ui, sans-serif); letter-spacing: 1.5px; text-transform: uppercase; text-align: center; color: #fff; opacity: 0; animation: ai-frase 3s both; }
+@keyframes ai-frase { 0% { opacity: 0; transform: translateY(12px); } 12% { opacity: 1; transform: none; } 88% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-8px); } }
 
-/* el título, encima del sol */
-.atardecer-intro .ai-txt { position: absolute; z-index: 3; left: 0; right: 0; bottom: calc(100% - var(--ai-ojo) + var(--ai-sol-r) + 8px); display: flex; flex-direction: column; align-items: center; padding: 0 12px; text-align: center; pointer-events: none; }
-.atardecer-intro .ai-pre { margin: 0 0 8px; font: 700 14px/1 var(--cond); letter-spacing: 6px; text-indent: 6px; text-transform: uppercase; color: #c9fff9; text-shadow: 0 0 8px rgba(25, 230, 212, 0.9), 0 1px 0 #0b0016; animation: ai-baja 0.6s calc(var(--ai-t) + 1s) ease-out backwards; }
+/* el título, encima del sol: «VICE CITY» se enciende letra a letra (un fundido, sin parpadeos) */
+.atardecer-intro .ai-txt { position: absolute; z-index: 3; left: 0; right: 0; bottom: calc(100% - var(--ai-ojo) + var(--ai-sol-r) + var(--u) * 3); display: flex; flex-direction: column; align-items: center; padding: 0 12px; text-align: center; pointer-events: none; }
+.atardecer-intro .ai-pre { margin: 0 0 8px; font: 700 14px/1 var(--cond, 'Barlow Condensed', system-ui, sans-serif); letter-spacing: 6px; text-indent: 6px; text-transform: uppercase; color: #c9fff9; text-shadow: 0 1px 0 #0b0016; animation: ai-baja 0.5s var(--ai-t) ease-out backwards; }
 @keyframes ai-baja { from { transform: translateY(-14px); opacity: 0; } }
-.atardecer-intro .ai-tit { position: relative; margin: 0; display: flex; flex-direction: column; align-items: center; perspective: 640px; font: 700 clamp(40px, min(19.5vw, 12.5vh), 128px)/0.9 var(--cond); text-transform: uppercase; }
-/* «MODO»: ocho capas a distinta profundidad que giran juntas, así el grosor es de verdad */
-.atardecer-intro .ai-modo { position: relative; display: block; font-size: 0.4em; font-style: italic; letter-spacing: 0.09em; text-indent: 0.09em; white-space: nowrap; transform-style: preserve-3d; transform: rotateX(14deg) rotateY(-18deg); animation: ai-modo 0.95s calc(var(--ai-t) + 1.25s) cubic-bezier(0.2, 0.9, 0.25, 1) backwards; }
-.atardecer-intro .ai-modo i { display: block; font-style: inherit; }
-.atardecer-intro .ai-modo i + i { position: absolute; inset: 0; }
-.atardecer-intro .ai-modo i:nth-child(1) { transform: translateZ(-21px); color: #2a0a4a; }
-.atardecer-intro .ai-modo i:nth-child(2) { transform: translateZ(-18px); color: #3b1166; }
-.atardecer-intro .ai-modo i:nth-child(3) { transform: translateZ(-15px); color: #561a8a; }
-.atardecer-intro .ai-modo i:nth-child(4) { transform: translateZ(-12px); color: #7a1fa6; }
-.atardecer-intro .ai-modo i:nth-child(5) { transform: translateZ(-9px); color: #a521b4; }
-.atardecer-intro .ai-modo i:nth-child(6) { transform: translateZ(-6px); color: #cf27ae; }
-.atardecer-intro .ai-modo i:nth-child(7) { transform: translateZ(-3px); color: #f0379f; }
-.atardecer-intro .ai-modo i:nth-child(8) { color: #FFD25A; background: linear-gradient(180deg, #fff6d6 8%, #FFD25A 34%, #FF8A3D 62%, #FF2E97 92%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-@keyframes ai-modo { from { transform: translateY(-46vh) rotateX(60deg) rotateY(-150deg); } 68% { transform: rotateX(8deg) rotateY(16deg); } }
-/* «VICE CITY»: tubos de neón. Cada letra es un tubo apagado y, encima, el mismo tubo encendido, que parpadea al prender */
-.atardecer-intro .ai-neon { position: relative; display: block; margin-top: 0.06em; white-space: nowrap; letter-spacing: 0.05em; text-indent: 0.05em; font-kerning: none; }
-.atardecer-intro .ai-neon b { position: relative; display: inline-block; font-weight: 700; color: transparent; -webkit-text-stroke: 0.028em #5c1a4c; }
+.atardecer-intro .ai-tit { position: relative; margin: 0; display: flex; flex-direction: column; align-items: center; font: 700 clamp(34px, min(19.5vw, calc(var(--u) * 12.5)), 128px)/0.9 var(--cond, 'Barlow Condensed', system-ui, sans-serif); text-transform: uppercase; }
+.atardecer-intro .ai-modo { display: block; font-size: 0.4em; font-style: italic; letter-spacing: 0.09em; text-indent: 0.09em; white-space: nowrap; color: #FFD25A; text-shadow: 0 0.05em 0 #a521b4, 0 0.1em 0 #3b1166; animation: ai-modo 0.6s calc(var(--ai-t) + 0.2s) cubic-bezier(0.2, 0.9, 0.3, 1.2) backwards; }
+@keyframes ai-modo { from { transform: translateY(-0.9em) scale(1.5); opacity: 0; } }
+.atardecer-intro .ai-neon { display: block; margin-top: 0.1em; white-space: nowrap; letter-spacing: 0.05em; text-indent: 0.05em; color: #fff1f8; text-shadow: 0 0 0.04em #fff, 0 0 0.12em #FF2E97, 0 0 0.28em #FF2E97, 0 0 0.55em rgba(255, 46, 151, 0.75); }
+.atardecer-intro .ai-neon b { display: inline-block; font-weight: 700; animation: ai-letra 0.55s calc(var(--ai-t) + 0.55s + var(--i) * 0.09s) cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
 .atardecer-intro .ai-neon b.ai-hueco { width: 0.24em; }
-.atardecer-intro .ai-neon b::after {
-  content: attr(data-l); position: absolute; left: 0; top: 0; color: rgba(255, 120, 190, 0.3); -webkit-text-stroke: 0.028em #fff1f8;
-  text-shadow: 0 0 0.05em #fff, 0 0 0.12em #FF2E97, 0 0 0.26em #FF2E97, 0 0 0.5em rgba(255, 46, 151, 0.85), 0 0 0.9em rgba(255, 46, 151, 0.55);
-  animation: ai-tubo 0.5s calc(var(--ai-t) + 2s + var(--i) * 0.105s) steps(1, end) backwards, ai-guino 0.32s calc(var(--ai-t) + 4.05s) steps(1, end);
-}
-.atardecer-intro .ai-neon b:nth-child(3)::after { animation-name: ai-tubo-malo, ai-guino; animation-duration: 0.95s, 0.32s; }
-@keyframes ai-tubo { 0% { opacity: 0; } 10% { opacity: 1; } 22% { opacity: 0.15; } 36% { opacity: 0.9; } 48% { opacity: 0.35; } 60%, 100% { opacity: 1; } }
-@keyframes ai-tubo-malo { 0% { opacity: 0; } 8% { opacity: 0.8; } 14% { opacity: 0; } 34% { opacity: 0.6; } 40% { opacity: 0.1; } 58% { opacity: 1; } 66% { opacity: 0.25; } 78%, 100% { opacity: 1; } }
-/* la raya de debajo, turquesa, que prende la última, y el halo de todo el letrero */
-.atardecer-intro .ai-raya { display: block; width: 78%; height: 0.05em; min-height: 3px; margin-top: 0.12em; border-radius: 99px; background: #eafffd; box-shadow: 0 0 6px #19E6D4, 0 0 16px #19E6D4, 0 0 34px rgba(25, 230, 212, 0.7); animation: ai-tubo 0.45s calc(var(--ai-t) + 3s) steps(1, end) backwards; }
-.atardecer-intro .ai-halo { position: absolute; z-index: -1; left: -14%; right: -14%; top: 22%; bottom: -30%; background: radial-gradient(closest-side, rgba(255, 46, 151, 0.5), rgba(255, 46, 151, 0.16) 55%, rgba(255, 46, 151, 0)); animation: ai-halo 1.15s calc(var(--ai-t) + 2s) steps(1, end) backwards; }
-@keyframes ai-halo { 0% { opacity: 0; } 10% { opacity: 0.2; } 30% { opacity: 0.4; } 50% { opacity: 0.55; } 70% { opacity: 0.75; } 86% { opacity: 0.6; } 92%, 100% { opacity: 1; } }
-/* un parpadeo de todo el letrero ya encendido, como los de verdad */
-.atardecer-intro .ai-neon { animation: ai-cuelga 0.75s calc(var(--ai-t) + 1.15s) cubic-bezier(0.2, 0.8, 0.3, 1.12) backwards; }
-@keyframes ai-cuelga { from { transform: translateY(-46vh); } }
-@keyframes ai-guino { 0%, 100% { opacity: 1; } 20% { opacity: 0.55; } 45% { opacity: 0.95; } 60% { opacity: 0.7; } 80% { opacity: 1; } }
+@keyframes ai-letra { from { opacity: 0; transform: translateY(0.14em) scale(1.3); } }
+.atardecer-intro .ai-raya-t { display: block; width: 78%; height: 0.05em; min-height: 3px; margin-top: 0.14em; border-radius: 99px; background: #eafffd; box-shadow: 0 0 6px #19E6D4, 0 0 16px #19E6D4; animation: ai-raya-t 0.55s calc(var(--ai-t) + 1.5s) cubic-bezier(0.3, 0.8, 0.3, 1) backwards; }
+@keyframes ai-raya-t { from { transform: scaleX(0); } }
+.atardecer-intro .ai-halo { position: absolute; z-index: -1; left: -16%; right: -16%; top: 20%; bottom: -34%; background: radial-gradient(closest-side, rgba(255, 46, 151, 0.42), rgba(255, 46, 151, 0.14) 55%, rgba(255, 46, 151, 0)); animation: ai-halo 1.2s calc(var(--ai-t) + 0.6s) ease-out backwards; }
+@keyframes ai-halo { from { opacity: 0; } }
 
-/* el final: la línea de hasta cuándo y «Entrar», abajo, sobre el asfalto */
-.atardecer-intro .ai-fin { position: absolute; z-index: 3; left: 0; right: 0; bottom: max(26px, calc(env(safe-area-inset-bottom) + 14px)); display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0 16px; }
-.atardecer-intro .ai-sub { margin: 0; padding: 6px 12px; border-radius: 6px; background: rgba(11, 0, 22, 0.86); font: 700 14px/1.2 var(--cond); letter-spacing: 1px; text-transform: uppercase; text-align: center; white-space: nowrap; color: var(--atardecer-amarillo); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 2.95s) ease-out backwards; }
+/* el final: la línea de hasta cuándo y «Entrar», abajo */
+.atardecer-intro .ai-fin { position: absolute; z-index: 5; left: 0; right: 0; bottom: max(26px, calc(env(safe-area-inset-bottom) + 14px)); display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0 16px; }
+.atardecer-intro .ai-sub { margin: 0; padding: 6px 12px; border-radius: 6px; background: rgba(11, 0, 22, 0.86); font: 700 14px/1.2 var(--cond, 'Barlow Condensed', system-ui, sans-serif); letter-spacing: 1px; text-transform: uppercase; text-align: center; white-space: nowrap; color: var(--atardecer-amarillo); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 2.1s) ease-out backwards; }
 .atardecer-intro .ai-entrar {
-  position: relative; display: inline-flex; align-items: center; justify-content: center; min-width: 190px; min-height: 50px; padding: 0 30px; border: 0; border-radius: 999px; cursor: pointer; text-align: center;
-  background: var(--atardecer-calido); color: var(--atardecer-tinta); font: 700 20px/1 var(--cond); letter-spacing: 3px; text-indent: 0; padding-left: 33px; text-transform: uppercase;
-  box-shadow: 0 0 0 1px rgba(255, 226, 240, 0.5), 0 0 22px rgba(255, 46, 151, 0.65), 0 8px 26px rgba(11, 0, 22, 0.6); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 3.05s) ease-out backwards;
+  position: relative; display: inline-flex; align-items: center; justify-content: center; min-width: 190px; min-height: 50px; padding: 0 30px 0 33px; border: 0; border-radius: 999px; cursor: pointer; text-align: center;
+  background: var(--atardecer-calido); color: var(--atardecer-tinta); font: 700 20px/1 var(--cond, 'Barlow Condensed', system-ui, sans-serif); letter-spacing: 3px; text-transform: uppercase;
+  box-shadow: 0 0 0 1px rgba(255, 226, 240, 0.5), 0 0 22px rgba(255, 46, 151, 0.65), 0 8px 26px rgba(11, 0, 22, 0.6); animation: ai-sube-txt 0.45s calc(var(--ai-t) + 2.25s) ease-out backwards;
 }
 .atardecer-intro .ai-entrar:focus-visible, .atardecer-intro .ai-saltar:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 @keyframes ai-sube-txt { from { transform: translateY(18px); opacity: 0; } }
-.atardecer-intro .ai-saltar { position: absolute; z-index: 7; top: max(12px, calc(env(safe-area-inset-top) + 6px)); right: 12px; min-height: 44px; padding: 0 16px; border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 999px; background: rgba(11, 0, 22, 0.72); color: #fff; font: 600 14px/1 var(--cond); letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
+.atardecer-intro .ai-saltar { position: absolute; z-index: 9; top: max(12px, calc(env(safe-area-inset-top) + 6px)); right: 12px; min-height: 44px; padding: 0 16px; border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 999px; background: rgba(11, 0, 22, 0.72); color: #fff; font: 600 14px/1 var(--cond, 'Barlow Condensed', system-ui, sans-serif); letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
 
-.escritorio .atardecer-intro { --ai-ojo: 48%; --ai-sol-r: min(29vw, 13.5vh, 170px); }
+.escritorio .atardecer-intro { --ai-sol-r: min(29vw, calc(var(--u) * 13.5), 170px); }
 @media (max-height: 720px) { .atardecer-intro .ai-pre { display: none; } }
-@media (max-height: 560px) { .atardecer-intro { --ai-suelo: 44vh; } .atardecer-intro .ai-fin { flex-direction: row; justify-content: center; bottom: 12px; } }
-@media (max-height: 460px) { .atardecer-intro .ai-coche { display: none; } .atardecer-intro .ai-banda { height: 0; } }
+@media (max-height: 560px) { .atardecer-intro .ai-fin { flex-direction: row; justify-content: center; bottom: 12px; } }
 .atardecer-quieto .atardecer-intro, .atardecer-quieto .atardecer-intro * { animation-play-state: paused !important; }
-/* mientras se monta (detrás del telón): todo en su sitio final, sin animar, para que se pinte antes de verse; al quitar
-   ai-espera arrancan las animaciones */
-.ai-espera-2 :is(.ai-pre, .ai-modo, .ai-neon, .ai-raya, .ai-halo, .ai-sub, .ai-entrar, .ai-frase), .ai-espera-3 .ai-neon b::after { animation: none !important; }
-/* las capas de lo que se anima no se deshacen al acabar cada animación (deshacerlas a media intro cuesta un fotograma) */
-.atardecer-intro :is(.ai-cam, .ai-sol, .ai-ciudad, .ai-lejos, .ai-banda, .ai-modo, .ai-neon, .ai-heli) { will-change: transform; }
-.atardecer-intro :is(.ai-reflejo, .ai-charco, .ai-raya, .ai-halo, .ai-telon), .atardecer-intro .ai-neon b::after { will-change: opacity; }
-.atardecer-intro :is(.ai-pre, .ai-sub, .ai-entrar, .ai-frase) { will-change: transform, opacity; }
-.atardecer-intro .ai-poli { will-change: opacity; }
+/* sin movimiento: la escena final, quieta (el coche ya se ha ido) */
 @media (prefers-reduced-motion: reduce) {
-  .atardecer-intro, .atardecer-intro *, .atardecer-intro *::after { animation: none !important; }
-  .atardecer-intro .ai-telon { display: none; }
-  .atardecer-intro .ai-heli, .atardecer-intro .ai-letrero { display: none; }
+  .atardecer-intro, .atardecer-intro *, .atardecer-intro *::before { animation: none !important; }
+  .atardecer-intro :is(.ai-p, .ai-arco, .ai-heli, .ai-fugaz, .ai-frases, .ai-coche) { display: none; }
 }
 
 /* Ajustes: el interruptor del tema, arriba y fuera de las secciones (sale con o sin el tema puesto) */

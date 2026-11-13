@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.8';
+export const VERSION = '0.7.8a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.8';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.8a', f: '2026-11-13', h: '13:59', t: 'La intro del modo Vice City, rehecha',
+    cosas: [
+      { tipo: 'arreglo', d: 'atardecer', t: 'La intro del modo Vice City, rehecha', x: 'La intro del modo Vice City parpadeaba en los móviles y los letreros no se veían. Está hecha de nuevo: la misma carretera de neón vista desde detrás del descapotable, ahora con los letreros pasando por encima de uno en uno para que se lean, y el coche que acelera hacia el horizonte antes del rótulo. Dura unos 14 segundos, sale una vez y se puede saltar desde el principio.' },
+    ],
+  },
   {
     v: '0.7.8', f: '2026-11-13', h: '11:36', t: 'Modo Vice City hasta el 26 nov',
     cosas: [
