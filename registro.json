@@ -1898,7 +1898,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249733/fermin-lopez-no-entiende-pierna-mala-analisis-45-goles-elite.html": 1794376800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249651/formula-joan-garcia-ruido-pueda-llegar-madrid-mourinho.html": 1794351300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249624/joan-garcia-fuerza-nuestro-equipo-mantener-balon.html": 1794351300000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249680/petros-viva-betis-manque-gane.html": 1794346950000,
    "SPORT|136308054": 1794371453000,
    "SPORT|136268716": 1794371453000,
    "SPORT|136301453": 1794371452000,
@@ -7652,13 +7651,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2229,
+   "ok": 2230,
    "fallos": 0,
-   "ejecuciones": 1733,
+   "ejecuciones": 1734,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T21:41:11.936Z"
+   "ultima": "2026-11-13T21:46:12.827Z"
   }
  },
  "ptsDirecto": {},
@@ -7675,15 +7674,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:41:16.364Z"
+   "ultimaBien": "2026-11-13T21:46:17.793Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:41:16.364Z"
+   "ultimaBien": "2026-11-13T21:46:17.793Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:41:16.364Z"
+   "ultimaBien": "2026-11-13T21:46:17.793Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7691,11 +7690,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:41:16.364Z"
+   "ultimaBien": "2026-11-13T21:46:17.793Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:41:16.364Z"
+   "ultimaBien": "2026-11-13T21:46:17.793Z"
   }
  },
  "avisos": [
