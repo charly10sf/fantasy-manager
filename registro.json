@@ -1894,7 +1894,6 @@
    "MARCA|https://www.marca.com/futbol/seleccion/2026/11/10/marc-roca-ojala-rodri-estuviera-lesionado.html": 1794315919000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249465/joan-garcia-nuestro-estilo-conlleva-riesgo-grande-demostrado-vale-pena.html": 1794317341000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249478/mimos-lamine-kounde-sigue-margen-ultimo-entreno-semana.html": 1794318968000,
-   "SPORT|136282368": 1794310886000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-ve-apto-lamine-yamal-inglaterra-no-merecia-pena-asumir-riesgo-20261110_3472467.html": 1794325288000,
@@ -2149,7 +2148,9 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/durisimas-criticas-seleccionador-guinea-ilaix-moriba-no-sido-convocado-pais-tienes-ego-enorme-te-importas-20261113_3474616.html": 1794567572000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/italia-vuelve-sonreir-gracias-nuevo-heroe-desata-euforia-pio-esposito-20261113_3474679.html": 1794568891000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/siro-lopez-claro-deseos-sancet-jugar-mundial-seleccion-euskadi-fuente-ve-necesario-convocarle-no-dicho-no-quiera-jugar-seleccion-espanola-20261113_3474264.html": 1794569419000,
-   "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html": 1794569698000
+   "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html": 1794569698000,
+   "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/13/alvaro-juan-regresa-convocatoria-racing-club-ferrol-tras-seis-meses/00031794566195015609667.htm": 1794569580000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/betis-antony-busca-recuperar-antonio_0_2008489927.html": 1794569100000
   },
   "hechos": [
    {
@@ -2576,7 +2577,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 23
+   "n": 24
   },
   "desde": {
    "67": {
@@ -3554,17 +3555,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 28,
+   "clasificar": 29,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 180559,
-  "salida": 14681,
+  "entrada": 182656,
+  "salida": 15662,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.304092,
+  "dolares": 0.304792,
   "reservado": 0
  },
  "recientes": {
@@ -7711,13 +7712,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2108,
+   "ok": 2109,
    "fallos": 0,
-   "ejecuciones": 1612,
+   "ejecuciones": 1613,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T11:41:12.328Z"
+   "ultima": "2026-11-13T11:46:14.028Z"
   }
  },
  "ptsDirecto": {},
@@ -7734,15 +7735,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:41:16.012Z"
+   "ultimaBien": "2026-11-13T11:46:23.643Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:41:16.012Z"
+   "ultimaBien": "2026-11-13T11:46:23.643Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:41:16.012Z"
+   "ultimaBien": "2026-11-13T11:46:23.643Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7750,11 +7751,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:41:16.012Z"
+   "ultimaBien": "2026-11-13T11:46:23.643Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:41:16.012Z"
+   "ultimaBien": "2026-11-13T11:46:23.643Z"
   }
  },
  "avisos": [
