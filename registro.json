@@ -2151,7 +2151,8 @@
    "ABC|https://www.abc.es/deportes/futbol/sancet-internacional-espanol-ojala-podamos-jugar-mundial-20261113093808-nt.html": 1794559621000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250513/valdano.html": 1794561607000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261113/1004250516/real-madrid-gana-peso-seleccion.html": 1794561097000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000,
+   "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000
   },
   "hechos": [
    {
@@ -2603,7 +2604,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 12
+   "n": 13
   },
   "desde": {
    "67": {
@@ -3586,17 +3587,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 15,
+   "clasificar": 16,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 154514,
-  "salida": 11161,
+  "entrada": 156442,
+  "salida": 11645,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.299728,
+  "dolares": 0.300163,
   "reservado": 0
  },
  "recientes": {
@@ -7743,13 +7744,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2084,
+   "ok": 2085,
    "fallos": 0,
-   "ejecuciones": 1588,
+   "ejecuciones": 1589,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T09:41:13.080Z"
+   "ultima": "2026-11-13T09:46:12.197Z"
   }
  },
  "ptsDirecto": {},
@@ -7766,15 +7767,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:41:18.255Z"
+   "ultimaBien": "2026-11-13T09:46:18.852Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:41:18.255Z"
+   "ultimaBien": "2026-11-13T09:46:18.852Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:41:18.255Z"
+   "ultimaBien": "2026-11-13T09:46:18.852Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7782,11 +7783,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:41:18.255Z"
+   "ultimaBien": "2026-11-13T09:46:18.852Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:41:18.255Z"
+   "ultimaBien": "2026-11-13T09:46:18.852Z"
   }
  },
  "avisos": [
