@@ -431,7 +431,7 @@ const tocaBienvenida = () => !EN_FONDO && !!S.D && !enDemo() && haySesion() && !
 function quizaBienvenida(ms, intento = 0) {
   setTimeout(() => {
     if (!tocaBienvenida() || $('#bienvenida')) { S.bienvenidaPendiente = false; return; }
-    if (estadoLimite.cerrada || $('.nv') || $('#limite') || S.hoja || tourAbierto() || (S.cargando && !S.D)) {
+    if (estadoLimite.cerrada || $('.nv') || $('.atardecer-intro') || $('#limite') || S.hoja || tourAbierto() || (S.cargando && !S.D)) {
       if (intento < 40) quizaBienvenida(3000, intento + 1); else S.bienvenidaPendiente = false;
       return;
     }
@@ -3262,7 +3262,7 @@ function pasosTour() {
       : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: `Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», ${rojo}.` },
     { v: 'hoy', sel: '#bRefrescar', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
     { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta). También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
-    { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Tema de atardecer', x: PASO_TEMA },
+    { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Modo Vice City', x: PASO_TEMA },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
     // (21) en el parón, el mismo sitio es la pestaña Parón
@@ -3300,15 +3300,15 @@ function lanzarTutorial() {
   }), 250);
 }
 /* el tema de evento: lo cuenta un paso del tutorial y, a quien ya lo había visto, ese paso solo, una vez (13 nov, Carlos) */
-const PASO_TEMA = 'Hasta el 26 nov la app va de atardecer, con la cuenta atrás de GTA VI. Si prefieres el rojo y negro de siempre, se quita en Ajustes, arriba del todo, y se vuelve a poner ahí mismo.';
+const PASO_TEMA = 'Hasta el 26 nov la app va en modo Vice City. Si prefieres el rojo y negro de siempre, se quita en Ajustes, arriba del todo, y se vuelve a poner ahí mismo.';
 function quizaAvisoTema(ms, intento = 0) {
   if (!window.temaEvento || !window.temaEvento.activo() || LS.get('tema-aviso', null)) return;
   setTimeout(() => {
     if (!window.temaEvento || !window.temaEvento.activo() || LS.get('tema-aviso', null) || tourAbierto() || !S.D || estadoLimite.cerrada) return;
-    if ($('.nv') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente || S.vista !== 'hoy' || !$('#bAjustes')) { if (intento < 20) quizaAvisoTema(3000, intento + 1); return; }
+    if ($('.nv') || $('.atardecer-intro') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente || S.vista !== 'hoy' || !$('#bAjustes')) { if (intento < 20) quizaAvisoTema(3000, intento + 1); return; }
     LS.set('tema-aviso', Date.now());
     empezarTour({
-      pasos: [{ v: 'hoy', sel: '#bAjustes', t: 'Tema de atardecer', x: PASO_TEMA, saltar: 'Vale', fin: 'Ver dónde', finAccion: 'tema' }],
+      pasos: [{ v: 'hoy', sel: '#bAjustes', t: 'Modo Vice City', x: PASO_TEMA, saltar: 'Vale', fin: 'Ver dónde', finAccion: 'tema' }],
       vista: () => S.vista,
       ir: (v) => ir(v),
       alAcabar: (como) => { if (como === 'tema' || como === 'fin') abrirTemaAjustes(); },
@@ -3326,7 +3326,7 @@ function quizaTutorial(ms, intento = 0) {
   setTimeout(() => {
     if (tourVisto() || tourAbierto() || !S.D || estadoLimite.cerrada || S.cargando && !S.D) return;
     // con la presentación de novedades o una ventana abierta, se espera
-    if ($('.nv') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente) { if (intento < 20) quizaTutorial(3000, intento + 1); return; }
+    if ($('.nv') || $('.atardecer-intro') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente) { if (intento < 20) quizaTutorial(3000, intento + 1); return; }
     lanzarTutorial();
   }, ms);
 }

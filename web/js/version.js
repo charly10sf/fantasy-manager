@@ -19,9 +19,9 @@ export const VERSION = '0.7.8';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.8', f: '2026-11-12', h: '00:00', t: 'Tema de atardecer hasta el 26 nov',
+    v: '0.7.8', f: '2026-11-12', h: '00:00', t: 'Modo Vice City hasta el 26 nov',
     cosas: [
-      { tipo: 'mejora', d: 'atardecer', t: 'Tema de atardecer hasta el 26 nov', x: 'Hasta el 26 de noviembre la app se viste de atardecer neón: violeta casi negro, rosa, naranja, turquesa y violeta, con palmeras y un sol detrás de la cabecera de Hoy y en las pantallas de carga. Arriba del todo en Hoy, la cuenta atrás hasta que sale GTA VI (19 nov, 00:00). Lo que dice y lo que calcula, igual. Si prefieres el rojo y negro de siempre, se quita en Ajustes, arriba del todo; el 27 vuelve solo.' },
+      { tipo: 'mejora', d: 'atardecer', t: 'Modo Vice City hasta el 26 nov', x: 'Hasta el 26 de noviembre la app va en modo Vice City: rosa neón, violeta casi negro, turquesa y naranja, con palmeras y un sol detrás de la cabecera de Hoy y en las pantallas de carga. La primera vez lo abre una intro en 3D. Lo que dice y lo que calcula, igual. Si prefieres el rojo y negro de siempre, se quita en Ajustes, arriba del todo; el 27 vuelve solo.' },
     ],
   },
   {

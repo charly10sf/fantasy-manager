@@ -700,7 +700,7 @@ export function ajustes(S) {
   // el tema de evento, a la vista y fuera de las secciones (13 nov, lo pidió Carlos); sin TEMA_EVENTO no sale
   if (window.temaEvento) {
     const on = window.temaEvento.activo();
-    h += `<div class="ajuste aj-tema" id="aj-tema"><span class="aj-tema-ic" aria-hidden="true"></span><div class="c"><b>Tema de atardecer</b><span>${on ? 'Puesto' : 'Quitado'} · hasta el 26 nov, con la cuenta atrás de GTA&nbsp;VI</span></div>${interr(on, 'temaEvento', '', 'Tema de atardecer')}</div>`;
+    h += `<div class="ajuste aj-tema" id="aj-tema"><span class="aj-tema-ic" aria-hidden="true"></span><div class="c"><b>Modo Vice City</b><span>${on ? 'Puesto' : 'Quitado'} · hasta el 26 nov; el 27 vuelve solo el rojo y negro</span></div>${interr(on, 'temaEvento', '', 'Modo Vice City')}</div>`;
   }
 
   const sec = (kk, ic, t, l, cuerpo, qx = '') => (cuerpo ? `<details class="aj-sec" data-k="${kk}" data-t="${esc(`${t} ${qx}`)}"${abiertas[kk] ? ' open' : ''}><summary data-accion="plegarAjuste" data-k="${kk}">${icono(ic)}<span class="aj-tx"><b>${t}</b><span>${esc(l)}</span></span>${icono('abajo', 'av-fl')}</summary><div class="aj-cuerpo">${cuerpo}</div></details>` : '');

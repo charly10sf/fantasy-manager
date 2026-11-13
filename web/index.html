@@ -15,34 +15,34 @@
   <script>
     /* Tema de evento (css/tema-sunset.css): data-tema en <html> antes del primer pintado y solo hasta la fecha de «hasta».
        La portada y la entrada (y «Entrando…») van sin tema: se quita mientras están en pantalla. Se apaga y se enciende
-       en Ajustes → La app (window.temaEvento; fm-sin-tema = '1' lo deja apagado, y así lo usan las capturas de Play).
+       arriba del todo en Ajustes (window.temaEvento; fm-sin-tema = '1' lo deja apagado, y así lo usan las capturas de Play).
        Para quitar el tema entero, borrar este bloque, el <link> de css/tema-sunset.css y ese archivo (la fila de Ajustes
        desaparece sola sin window.temaEvento).
        Lo de abajo solo mueve clases para el CSS: atardecer-abre al abrir una pestaña (la franja, las fases, el destello),
        atardecer-pasa y atardecer-titila (el coche y las estrellas, de vez en cuando, parando mientras el cielo o el sol para
        que no haya más de dos animaciones seguidas a la vez), atardecer-quieto con la página oculta, atardecer-fuera en lo
        que no se ve y atardecer-cambia (y -sube) en las cifras del marcador y del valor de la ficha cuando cambian.
-       «estreno»: la cuenta atrás hasta la salida del juego en España (19 nov, 00:00), arriba del todo en Hoy
-       (.atardecer-cuenta); se pone y se quita desde aquí y desaparece al llegar a cero o con el tema apagado. */
-    var TEMA_EVENTO = { id: 'sunset', hasta: '2026-11-26T23:59:00+01:00', estreno: '2026-11-19T00:00:00+01:00' };
+       La intro (.atardecer-intro): una vez por dispositivo (fm-tema-intro), la primera vez que se ve la app con el tema. */
+    var TEMA_EVENTO = { id: 'sunset', hasta: '2026-11-26T23:59:00+01:00' };
     (function (t) {
       if (!t || !(Date.now() < Date.parse(t.hasta))) return;
       var html = document.documentElement, meta = document.querySelector('meta[name=theme-color]'), color = meta && meta.content;
       var quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)');
-      var app = null, vista = null, hoja = null, antes = {}, fin = Date.parse(t.estreno || '');
+      var app = null, vista = null, hoja = null, antes = {};
       function quiere() { try { return localStorage.getItem('fm-sin-tema') !== '1'; } catch (e) { return true; } }
       function encendido() { return html.hasAttribute('data-tema'); }
       function poner(si) {
         si = si && quiere();
         if (si) html.setAttribute('data-tema', t.id); else html.removeAttribute('data-tema');
         if (meta) meta.content = si ? '#12001F' : color;
-        if (!si) { var c = document.querySelector('.atardecer-cuenta'); if (c) c.remove(); }
+        if (!si) { var c = document.querySelector('.atardecer-intro'); if (c) c.remove(); }
       }
       function clase(c, ms) { html.classList.add(c); clearTimeout(clase[c]); clase[c] = setTimeout(function () { html.classList.remove(c); }, ms); }
-      // Ajustes → La app: encender o apagar el tema sin recargar
+      // Ajustes, arriba del todo: encender o apagar el tema sin recargar (y ver la intro otra vez)
       window.temaEvento = {
         activo: quiere,
-        cambiar: function (si) { try { if (si) localStorage.removeItem('fm-sin-tema'); else localStorage.setItem('fm-sin-tema', '1'); } catch (e) {} mirar(); }
+        cambiar: function (si) { try { if (si) localStorage.removeItem('fm-sin-tema'); else localStorage.setItem('fm-sin-tema', '1'); } catch (e) {} mirar(); },
+        intro: function () { intro(true); }
       };
       poner(true);
       document.addEventListener('visibilitychange', function () { html.classList.toggle('atardecer-quieto', document.hidden); });
@@ -59,27 +59,34 @@
           antes[k] = { tx: tx, n: n };
         }
       }
-      // la cuenta atrás: arriba del todo en Hoy (Hoy es donde está el marcador); se pone al día cada segundo si se ve
-      function dd(n) { return (n < 10 ? '0' : '') + n; }
-      function cuenta(v) {
-        if (!v || !encendido() || !(fin > Date.now()) || !v.querySelector('.marcador') || (v.firstElementChild && v.firstElementChild.classList.contains('atardecer-cuenta'))) return;
-        var c = document.createElement('div');
-        c.className = 'atardecer-cuenta'; c.setAttribute('role', 'timer');
-        c.innerHTML = '<div class="ac-cab"><b class="ac-nombre">GTA VI</b><span class="ac-fecha">19 nov · 00:00</span></div>'
-          + '<div class="ac-n"><span><b>0</b><i>días</i></span><span><b>00</b><i>horas</i></span><span><b>00</b><i>min</i></span><span><b>00</b><i>seg</i></span></div>';
-        v.insertAdjacentElement('afterbegin', c);
-        reloj();
+      // la intro: una vez por dispositivo, la primera vez que se ve la app (no la portada ni la carga) con el tema puesto;
+      // las pruebas automáticas (navigator.webdriver) no la ven salvo con fm-tema-intro = 'ver'
+      function visto() { try { return localStorage.getItem('fm-tema-intro'); } catch (e) { return '1'; } }
+      function intro(forzar) {
+        if (document.querySelector('.atardecer-intro') || !encendido()) return;
+        if (!forzar && (visto() && visto() !== 'ver' || navigator.webdriver && visto() !== 'ver' || document.getElementById('limite'))) return;
+        try { localStorage.setItem('fm-tema-intro', String(Date.now())); } catch (e) {}
+        // seis palmeras, tres a cada lado, a distancias que se reparten la vuelta para que siempre haya alguna pasando
+        var palmas = '', xs = [-1, 1, -1.12, 1.12, -0.92, 0.92], i;
+        for (i = 0; i < 6; i++) palmas += '<i class="ai-palma" style="--x:calc(' + xs[i] + ' * min(300px, 50vw));--d:-' + (i * 0.47).toFixed(2) + 's;--z:' + (-300 - i * 380) + 'px"></i>';
+        var d = document.createElement('div');
+        d.className = 'atardecer-intro'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'Modo Vice City');
+        d.innerHTML = '<div class="ai-cielo" aria-hidden="true"><i class="ai-estrellas"></i><i class="ai-sol"></i></div>'
+          + '<div class="ai-mundo" aria-hidden="true"><div class="ai-suelo"></div>' + palmas + '</div><div class="ai-niebla" aria-hidden="true"></div>'
+          + '<div class="ai-txt"><p class="ai-pre">Fantasy Manager</p><h2 class="ai-tit"><span>Modo</span><span>Vice City</span><i class="ai-brillo" aria-hidden="true"></i></h2>'
+          + '<p class="ai-sub">Hasta el 26 nov · se quita en Ajustes</p><button type="button" class="ai-entrar">Entrar</button></div>'
+          + '<button type="button" class="ai-saltar">Saltar</button>';
+        function cerrar() {
+          if (d.classList.contains('ai-va')) return;
+          d.classList.add('ai-va'); document.removeEventListener('keydown', tecla, true);
+          setTimeout(function () { d.remove(); clase('atardecer-abre', 1400); }, 480);
+        }
+        function tecla(e) { if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); cerrar(); } }
+        d.addEventListener('click', function (e) { if (e.target.closest('.ai-entrar, .ai-saltar')) cerrar(); });
+        document.addEventListener('keydown', tecla, true);
+        document.body.appendChild(d);
+        setTimeout(function () { var b = d.querySelector('.ai-entrar'); if (b && document.body.contains(d)) b.focus({ preventScroll: true }); }, 3300);
       }
-      function reloj() {
-        var c = document.querySelector('.atardecer-cuenta');
-        if (!c) return;
-        var q = Math.floor((fin - Date.now()) / 1000);
-        if (q <= 0) { c.remove(); return; }
-        var b = c.querySelectorAll('.ac-n b'), d = Math.floor(q / 86400), h = Math.floor(q / 3600) % 24, mi = Math.floor(q / 60) % 60;
-        b[0].textContent = d; b[1].textContent = dd(h); b[2].textContent = dd(mi); b[3].textContent = dd(q % 60);
-        c.setAttribute('aria-label', 'Faltan ' + d + ' días, ' + h + ' horas y ' + mi + ' minutos para que salga GTA VI');
-      }
-      if (fin > Date.now()) setInterval(function () { if (!document.hidden) reloj(); }, 1000);
       // el coche cruza la cabecera de Hoy cada ~45 s y las estrellas de la carga titilan cada ~7 s, si se ven
       function cada(c, ms, dura, sel) {
         setTimeout(function () {
@@ -98,9 +105,9 @@
         var v = document.getElementById('vista');
         if (v && v !== vista) {
           vista = v; if (encendido()) clase('atardecer-abre', 1400);
-          new MutationObserver(function () { cifras(v, 'm'); cuenta(v); }).observe(v, { childList: true });
+          new MutationObserver(function () { cifras(v, 'm'); }).observe(v, { childList: true });
         }
-        cuenta(v);
+        if (v && v.firstElementChild) intro(false);
       }
       function mirarHoja() {
         var h = document.querySelector('body > .hoja');
