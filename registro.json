@@ -2148,7 +2148,9 @@
    "ABC|https://www.abc.es/deportes/futbol/esposito-rompe-francia-mbappe-zidane-20261112224712-nt.html": 1794520033000,
    "SPORT|136394638": 1794546217000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250414/cupo-rojiblanco-euskal-selekzioa-llega-diez-jugadores.html": 1794551400000,
-   "MARCA|https://www.marca.com/futbol/seleccion/2026/11/13/oihan-sancet-sueno-defender-espana-sueno-jugar-euskadi-mundial.html": 1794552560000
+   "MARCA|https://www.marca.com/futbol/seleccion/2026/11/13/oihan-sancet-sueno-defender-espana-sueno-jugar-euskadi-mundial.html": 1794552560000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250415/sancet-contentos-terzic-gran-tio.html": 1794553200000,
+   "SPORT|136324164": 1794549602000
   },
   "hechos": [
    {
@@ -2570,11 +2572,25 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "SPORT|136324164",
+    "medio": "SPORT",
+    "t": 1794549602000,
+    "id": "3104",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Lamine Yamal sufre molestias en la rodilla derecha tras el Atlético",
+    "motivo": "molestias en la rodilla derecha",
+    "plazo": "",
+    "nums": [
+     19
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -3419,7 +3435,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-maquinistas-llaman-secundar-martes-huelga-renfe-dia-antes-huelga-general-11n-20261110080117.html": 1794294077000,
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-huelga-general-20261110082835.html": 1794295715000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-renfe-advierte-demoras-huelga-maquinistas-recomienda-usar-otras-alternativas-transporte-20261110085547.html": 1794297347000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
@@ -3561,17 +3576,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 134507,
-  "salida": 9266,
+  "entrada": 136878,
+  "salida": 9592,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.29678,
+  "dolares": 0.29718,
   "reservado": 0
  },
  "recientes": {
@@ -7718,13 +7733,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2051,
+   "ok": 2052,
    "fallos": 0,
-   "ejecuciones": 1555,
+   "ejecuciones": 1556,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T07:01:12.182Z"
+   "ultima": "2026-11-13T07:06:12.682Z"
   }
  },
  "ptsDirecto": {},
@@ -7741,15 +7756,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:01:16.808Z"
+   "ultimaBien": "2026-11-13T07:06:16.916Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:01:16.808Z"
+   "ultimaBien": "2026-11-13T07:06:16.916Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:01:16.808Z"
+   "ultimaBien": "2026-11-13T07:06:16.916Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7757,11 +7772,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:01:16.808Z"
+   "ultimaBien": "2026-11-13T07:06:16.916Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:01:16.808Z"
+   "ultimaBien": "2026-11-13T07:06:16.916Z"
   }
  },
  "avisos": [
