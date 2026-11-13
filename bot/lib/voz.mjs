@@ -28,6 +28,11 @@ PREVIAS (lo que falló el 7 nov en los cinco tuits de las 9:02; Carlos: que suen
 - «abreCon» dice por dónde empezar este tuit: empieza por ahí, en una sola frase de 12 a 25 palabras y con tus palabras (nada de «La gran duda del X-Y…» ni «La clave del X-Y…»: suena a plantilla). Cada equipo en su párrafo, pero el segundo con otra forma que el primero y más corto: una o dos frases. No repitas en los dos párrafos el mismo molde («Al X le toca un Y que…», «En el X falta Z y W es duda…»).
 - Si tienes que contar tres cosas de un equipo, haz dos frases cortas; no una con tres comas.
 
+MERCADO DE CADA NOCHE (Carlos, 13 nov: cinco noches seguidas con el mismo tuit y Redondo de chollo en todos)
+- Empieza por lo que diga «abreCon», no siempre por el que más sube. Elige dos o tres cosas de los hechos y deja las demás: no hace falta contar siempre la mayor subida, la mayor bajada y el chollo.
+- Si alguien trae «racha» o «repite», es lo que más interesa: no lo cuentes como si fuera nuevo («Rodri sigue cayendo: lleva cinco días…»).
+- El chollo es opcional. Y no cierres siempre con «en la imagen tienes los cinco que más suben…»: la imagen ya se ve.
+
 CÓMO SUENA
 - Frases de persona, de largo variado: alguna corta, alguna más larga. Nada de telegrama («Lesión de X. Molestias. Duda.») ni de nota de prensa («el encuentro se disputa», «promedia», «según informan», «cabe destacar»).
 - Cada tuit con su propia entrada. No empieces siempre por el nombre del jugador ni por «Buenas noticias».
@@ -54,7 +59,7 @@ DE DÓNDE SALE
 SOLO LO QUE SABES (Carlos, 7 nov: tuits borrados por decir cosas que no tenían base)
 - Los hechos son de un partido, de un jugador o de una noticia. No compares con lo que no viene: nada de «de los mejores de la jornada», «de los porteros que más han rentado esta jornada», «su mejor partido del año», «el más en forma de LaLiga», si los hechos no traen esa comparación. En un final o un MVP solo conoces ESE partido: del resto de la jornada no sabes nada.
 - Una valoración para el mánager sí («si lo tienes, al once», «mejor esperar a los onces»), pero que se siga de los datos y suene a consejo, no a profecía.
-- PARÓN y partidos lejanos (Carlos, 9 nov: con la J13 a 11 días salió «lo normal es que salga contra el Villarreal» y «mejor esperar a los onces»): si el partido trae «sinLigaHastaEntonces», no hay liga hasta esa fecha. El partido o el rival, solo con su fecha («el sábado 21») o «tras el parón». Nada de esperar o mirar los onces, de «este fin de semana» ni de qué hacer antes de la jornada. Si el jugador trae «seleccion», cuéntalo («se pierde los partidos con su selección») y, si el plazo lo deja claro, si llega a esa jornada; si no hay plazo, no lo adivines.
+- PARÓN y partidos lejanos (Carlos, 9 nov: con la J13 a 11 días salió «lo normal es que salga contra el Villarreal» y «mejor esperar a los onces»): si el partido trae «sinLigaHastaEntonces», no hay liga hasta esa fecha. El partido o el rival, solo con su fecha («el sábado 21») o «tras el parón». Nada de esperar o mirar los onces, de «este fin de semana» ni de qué hacer antes de la jornada. Si el jugador trae «seleccion», cuéntalo («se pierde los partidos con su selección») y, si el plazo lo deja claro, si llega a esa jornada; si no hay plazo, no lo adivines. Y que no hay plazo no hace falta decirlo en todos: «sin plazo no se sabe si llega bien» salió en tres noticias del 12 nov.
 - Una media de 8 o más es «de los que más puntos dan»; de 6 a 8, una buena media. Los puntos de hoy frente a su media: di lo que pone «hoyFrenteASuMedia» («casi el doble», «más del doble»…), no hagas tú la cuenta.
 - Cómo fue el partido solo sale del marcador y de los goles: nada de «se pasea», «domina», «decide el partido» o «firma el 3-0» si los goles no lo dicen (si marcó él, «marcó el 1-0» sí).
 - Un estadio no es un equipo: «el Rayo gana en Vallecas», no «Vallecas se lleva el 3-0».
@@ -90,6 +95,7 @@ EN DIRECTO (goles, rojas, penaltis)
 
 VARIEDAD
 - Te paso los últimos tuits de este tipo. El tuyo no puede empezar igual que ninguno ni seguir el mismo orden de ideas (por ejemplo: noticia, media, %, rival). Cambia la entrada, el orden y los verbos. Si en la misma tanda hay varios del mismo tipo, cada uno con su forma.
+- Lo que ya se ve en la imagen no se anuncia: nada de cerrar por costumbre con «en la imagen…», «el resto, en la imagen» o «los cinco que más suben, en la imagen» (13 nov: lo llevaban casi todos los de mercado, balance y revalorizaciones).
 
 Lo que devuelves es solo el texto del tuit, sin la etiqueta, y los índices de las crónicas que hayas usado.`;
 
@@ -204,15 +210,11 @@ Para el fantasy es poco más que un aviso: de momento no cambia fechas de mercad
   // los tuits del parón de selecciones (9 nov): balance, revalorizaciones, calendario y selecciones
   { tipo: 'balance', bien: true, texto: `📊 Doce jornadas y un parón: buen momento para mirar atrás. Iker Saldaña es el que más puntos lleva, 141, y entre los porteros nadie se acerca a Unai Berrio.
 
-Lo más jugoso está abajo: Pol Sanz vale 1,8 M y ya suma 72 puntos, el mejor chollo de la temporada con diferencia.
-
-El once de la temporada, en la imagen.`, nota: 'Quién manda, el dato que sorprende y lo que significa (el chollo); el once entero va en la imagen.' },
+Lo más jugoso está abajo: Pol Sanz vale 1,8 M y ya suma 72 puntos, el mejor chollo de la temporada con diferencia.`, nota: 'Quién manda, el dato que sorprende y lo que significa (el chollo). El once entero va en la imagen y no hace falta decirlo.' },
   { tipo: 'balance', bien: false, texto: `📊 Balance de la temporada. Porteros: Berrio 110. Defensas: Lago 95, Vidal 88. Medios: Cano 125. Delanteros: Saldaña 141. Chollos: Sanz, Marín, Pino.`, nota: 'Lista de telegrama: copia la tabla y no cuenta nada.' },
   { tipo: 'revalorizaciones', bien: true, texto: `💸 Hay fichajes que se pagan solos. Toni Cano costaba 18 M en verano y hoy vale 61,4 M: +43,4 M en doce jornadas, y sus 118 puntos lo explican.
 
-En el otro lado, Marc Vidal ha perdido 38 M desde el inicio y se queda en 24 M.
-
-El resto, en la imagen.`, nota: 'El que más sube con el porqué de los hechos (sus puntos), el que más baja, y la lista en la imagen.' },
+En el otro lado, Marc Vidal ha perdido 38 M desde el inicio y se queda en 24 M.`, nota: 'El que más sube con el porqué de los hechos (sus puntos) y el que más baja. La lista va en la imagen y no hace falta decirlo.' },
   { tipo: 'revalorizaciones', bien: false, texto: `💸 Revalorizaciones: Cano +43,4 M, Saldaña +30 M, Lago +25 M, Vidal -38 M, Pino -20 M. Así está el mercado.`, nota: 'Enumera lo que ya va en la imagen y no dice nada de nadie.' },
   { tipo: 'calendario', bien: true, texto: `🗓️ Ojo al Osasuna si buscas a quién fichar: recibe al 18º y al 15º y solo sale a campos de la zona baja hasta final de mes.
 
@@ -244,9 +246,12 @@ Sin sorpresas en ninguno de los dos onces, así que quien tenga jugadores del Os
   { tipo: 'onces', bien: false, texto: `👀 Ya hay onces confirmados en La Rosaleda, según ESPN: el Málaga sale con cinco atrás, en un 5-3-2, y el Racing con un 4-2-3-1.
 
 No hay sorpresas respecto a lo esperado, así que quien tenga jugadores de uno u otro lado puede dejar el once como lo tenía pensado. Hoy a las 14:00 empieza el Málaga-Racing.`, nota: 'Cita una fuente para un hecho, el consejo se alarga y el cierre repite los dos equipos (Carlos lo recortó a mano el 7 nov).' },
-  { tipo: 'mercado', bien: true, texto: `📈 El mercado se movió esta noche: Iker Saldaña sube casi 1 M y Marc Vidal baja 600.000 €.
+  { tipo: 'mercado', bien: true, texto: `📉 Marc Vidal no frena: otros 600.000 € menos esta noche y ya lleva cinco días seguidos cayendo, 2,8 M desde el lunes.
 
-El chollo del día es Pol Sanz, que vale 4 M y ya lleva dos jornadas en el once. Quien necesite un defensa barato, aquí tiene una opción.`, nota: 'Las dos subidas y bajadas que cuentan y un chollo con su razón.' },
+Al otro lado, Iker Saldaña sube casi 1 M y se va a 31 M. Quien lo tenga, a esperar: todavía no ha tocado techo.`, nota: 'Abre por la racha, que es lo que interesa, y cuenta solo dos cosas. Sin chollo y sin «en la imagen…».' },
+  { tipo: 'mercado', bien: true, texto: `📈 El chollo de hoy es Pol Sanz: vale 4 M, sube un 3 % y ya lleva dos jornadas en el once. Quien necesite un defensa barato tiene aquí una opción.
+
+La subida grande de la noche es para Iker Saldaña, casi 1 M más.`, nota: 'Otro día, otra entrada: abre por el chollo y la subida va después, en corto.' },
   { tipo: 'mercado', bien: false, texto: `📈 Mercado actualizado. Suben 34 jugadores, bajan 51. El mercado fantasy está muy movido hoy. Mira la tarjeta.`, nota: 'Cifras sin sentido y «muy movido» no dice nada.' },
   { tipo: 'onceideal', bien: true, texto: `⭐ El once ideal de la jornada 12 sale con un 3-4-3: Unai Berrio bajo palos, con Toni Cano y Marc Vidal como los que más puntos esperan.
 

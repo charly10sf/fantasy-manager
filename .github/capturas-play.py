@@ -111,7 +111,8 @@ async def por_modo(b, modo, pantallas):
         pg = await ctx.new_page()
         await pg.route('**/*', red)
         pg.on('pageerror', lambda e: print('ERROR en la página:', e))
-        await pg.add_init_script("localStorage.setItem('fm-tour','1')")
+        # las capturas de Play, siempre con el aspecto normal: sin el tema de evento que haya en index.html
+        await pg.add_init_script("localStorage.setItem('fm-tour','1'); localStorage.setItem('fm-sin-tema','1')")
         await pg.goto('http://localhost:8765/')
         await pg.wait_for_timeout(7000)
         # las caras y los escudos de LaLiga, como en la web publicada: en localhost la app no puede pedirlos (no hay

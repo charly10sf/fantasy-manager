@@ -1,6 +1,8 @@
 /* Los dibujos de las novedades (viewBox 0 0 160 120). Clases: d-l línea clara, d-al línea del color de la
    novedad, d-a relleno del color, d-s relleno suave, d-w línea blanca (sobre el color), d-t texto. */
 export const DIBUJOS = {
+  atardecer: `<path class="d-l" d="M14 92h132"/><path class="d-s" d="M46 92a32 32 0 0 1 64 0z"/><path class="d-l" d="M46 92a32 32 0 0 1 64 0"/><path class="d-al" d="M52 80h52M58 70h40M66 61h24"/>
+    <path class="d-l" d="M126 92c0-16 2-30 6-42M132 50c-8-6-18-6-24 0M132 50c8-7 18-7 24-1M132 50c-3-8-9-12-16-13M132 50c3-8 9-12 16-12M132 50c-6 3-9 9-10 15M132 50c6 3 9 9 10 14"/><path class="d-l" d="M28 104h30M72 104h44"/>`,
   directo: `<rect class="d-s" x="18" y="34" width="124" height="62" rx="12"/><rect class="d-l" x="18" y="34" width="124" height="62" rx="12"/>
     <path class="d-l" d="M32 56l8-3 8 3v9c0 6-4 9-8 11-4-2-8-5-8-11z"/><path class="d-l" d="M112 56l8-3 8 3v9c0 6-4 9-8 11-4-2-8-5-8-11z"/><path class="d-l" style="stroke-width:4" d="M65 59a6 6 0 0 1 12 0c0 5-12 9-12 16h12M81 66h6M91 57l6-5v23"/>
     <circle class="d-a" cx="80" cy="16" r="5"/><path class="d-al" d="M68 7a15 15 0 0 0 0 18M92 7a15 15 0 0 1 0 18"/><path class="d-l" d="M52 108h56"/>`,

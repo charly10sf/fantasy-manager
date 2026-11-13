@@ -111,12 +111,12 @@ function pintarPaso(dir) {
   const lista = p.lista ? p.lista() : null;
   const pendientes = lista ? lista.filter((y) => !y.ok) : [];
   caja.innerHTML = `<button type="button" class="tour-x" data-t="saltar" aria-label="Cerrar el tutorial">${icono('cerrar')}</button>
-    <div class="tour-prog" aria-hidden="true">${pasos.map((_, k) => `<i class="${k === T.i ? 'on' : k < T.i ? 'ya' : ''}"></i>`).join('')}</div>
+    ${pasos.length < 2 ? '' : `<div class="tour-prog" aria-hidden="true">${pasos.map((_, k) => `<i class="${k === T.i ? 'on' : k < T.i ? 'ya' : ''}"></i>`).join('')}</div>`}
     <div class="tour-txt ${dir < 0 ? 'entra-i' : 'entra-d'}">${p.logo ? `<div class="tour-logo">${LOGO}</div>` : ''}<h2>${esc(p.t)}</h2><p>${esc(x)}</p>
       ${p.elegir && T.i === 0 ? `<div class="tour-elegir"><button type="button" class="btn" data-t="basico">Lo básico<small>${T.todos.filter((q) => q.b).length} pasos, un minuto</small></button><button type="button" class="btn sec" data-t="todo">Verlo todo<small>${T.todos.length} pasos, cada pestaña</small></button></div>` : ''}
       ${lista ? `<ol class="tour-lista">${lista.map((y) => `<li class="${y.ok ? 'ok' : ''}"><span class="tl-ic">${icono(y.ok ? 'ok' : y.ic || 'flecha')}</span><span class="tl-t"><b>${esc(y.t)}</b>${y.ok ? '<small>Hecho</small>' : `<small>${esc(y.x)}</small>`}</span>${y.ok ? '' : `<button type="button" class="btn chico${y === pendientes[0] ? '' : ' sec'}" data-t="emp:${esc(y.k)}">${esc(y.b)}</button>`}</li>`).join('')}</ol>` : ''}</div>
-    <div class="tour-btns"><small class="tour-n">${p.elegir && T.i === 0 ? '' : `${T.i + 1} de ${pasos.length}`}</small>
-      ${T.i ? '<button type="button" class="btn chico sec" data-t="ant">Atrás</button>' : '<button type="button" class="btn chico sec" data-t="saltar">Saltar</button>'}
+    <div class="tour-btns"><small class="tour-n">${p.elegir && T.i === 0 || pasos.length < 2 ? '' : `${T.i + 1} de ${pasos.length}`}</small>
+      ${T.i ? '<button type="button" class="btn chico sec" data-t="ant">Atrás</button>' : `<button type="button" class="btn chico sec" data-t="saltar">${esc(p.saltar || 'Saltar')}</button>`}
       ${p.elegir && T.i === 0 ? '' : ultimo ? `<button type="button" class="btn chico${pendientes.length ? ' sec' : ''}" data-t="${p.finAccion ? `emp:${p.finAccion}` : 'fin'}">${esc(p.fin || 'Terminar')}</button>` : `<button type="button" class="btn chico" data-t="sig">${T.i ? 'Siguiente' : 'Empezar'}</button>`}</div>`;
   const n = ++T.n;
   const buscar = () => {
