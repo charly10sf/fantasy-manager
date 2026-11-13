@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/": 1794333490000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/cucho-hernandez-marca-derbi-objetivo_0_2008466503.html": 1794335024000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/alarma-tchouameni.html": 1794335994000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tchouameni-lesionado-francia-20261110_3472559.html": 1794336427000,
@@ -2155,20 +2154,6 @@
    "SPORT|136419217": 1794588765000
   },
   "hechos": [
-   {
-    "guid": "AS|https://as.com/futbol/primera/agirrezabala-y-maguette-bajas-para-libia-f202611-n/",
-    "medio": "AS",
-    "t": 1794333490000,
-    "id": "1219",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "cinco puntos en la rodilla",
-    "plazo": "",
-    "nums": [
-     6
-    ]
-   },
    {
     "guid": "SPORT|136302339",
     "medio": "SPORT",
@@ -7703,13 +7688,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2184,
+   "ok": 2185,
    "fallos": 0,
-   "ejecuciones": 1688,
+   "ejecuciones": 1689,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T17:56:13.229Z"
+   "ultima": "2026-11-13T18:01:12.394Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7711,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:56:19.939Z"
+   "ultimaBien": "2026-11-13T18:01:15.778Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:56:19.939Z"
+   "ultimaBien": "2026-11-13T18:01:15.778Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:56:19.939Z"
+   "ultimaBien": "2026-11-13T18:01:15.778Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,11 +7727,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:56:19.939Z"
+   "ultimaBien": "2026-11-13T18:01:15.778Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T17:56:19.939Z"
+   "ultimaBien": "2026-11-13T18:01:15.778Z"
   }
  },
  "avisos": [
