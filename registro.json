@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/radio/2026/11/10/roberto-gomez-senala-real-madrid-fichaje-raul-oviedo-hora.html": 1794295070000,
    "AS|https://as.com/futbol/primera/fe-ciega-en-julian-alvarez-f202611-n/": 1794295741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249120/gran-cambio-real-madrid.html": 1794297600000,
@@ -7734,13 +7733,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2054,
+   "ok": 2055,
    "fallos": 0,
-   "ejecuciones": 1558,
+   "ejecuciones": 1559,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T07:16:14.368Z"
+   "ultima": "2026-11-13T07:21:14.793Z"
   }
  },
  "ptsDirecto": {},
@@ -7757,15 +7756,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:16:22.457Z"
+   "ultimaBien": "2026-11-13T07:21:20.541Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:16:22.457Z"
+   "ultimaBien": "2026-11-13T07:21:20.541Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:16:22.457Z"
+   "ultimaBien": "2026-11-13T07:21:20.541Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7773,11 +7772,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:16:22.457Z"
+   "ultimaBien": "2026-11-13T07:21:20.541Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T07:16:22.457Z"
+   "ultimaBien": "2026-11-13T07:21:20.541Z"
   }
  },
  "avisos": [
