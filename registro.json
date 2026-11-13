@@ -998,6 +998,13 @@
    "jornada": 12,
    "id": "2121121338748199364",
    "t": "2026-11-13T06:01:50.808Z"
+  },
+  {
+   "clave": "novedades|3104:vuelve|2026-11-13",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2121242085516792242",
+   "t": "2026-11-13T14:01:39.026Z"
   }
  ],
  "estados": {
@@ -1675,7 +1682,7 @@
   "3101": "ok",
   "3102": "ok",
   "3103": "doubtful",
-  "3104": "doubtful",
+  "3104": "ok",
   "3105": "ok",
   "3106": "ok",
   "3107": "ok",
@@ -1884,7 +1891,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3104",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1794578474178
+  }
+ ],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
@@ -3242,8 +3256,8 @@
     "t": 1794407479450
    },
    "3104": {
-    "e": "doubtful",
-    "t": 1794232274245
+    "e": "ok",
+    "t": 1794578474178
    },
    "3106": {
     "e": "ok",
@@ -3544,16 +3558,16 @@
   "dia": "2026-11-13",
   "llamadas": {
    "clasificar": 37,
-   "redactar": 9,
-   "revisar": 7,
+   "redactar": 12,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 198984,
-  "salida": 18768,
-  "cacheLee": 14515,
-  "cacheEscribe": 5806,
-  "dolares": 0.307976,
+  "entrada": 240991,
+  "salida": 19506,
+  "cacheLee": 17418,
+  "cacheEscribe": 8709,
+  "dolares": 0.406918,
   "reservado": 0
  },
  "recientes": {
@@ -3713,10 +3727,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-07T19:31:34.523Z",
-    "texto": "❌ LaLiga Fantasy pone a Zaid Romero como lesionado: arrastra una lesión en el cuádriceps desde el 10 de octubre.\n\nEl defensa del Getafe viene con 5,9 de media, así que su baja pesa. Mañana a las 18:30 el Getafe visita al Villarreal 🚢 en La Cerámica y no cuentes con él: si lo tienes, toca buscar recambio."
-   },
-   {
     "t": "2026-11-08T17:06:33.315Z",
     "texto": "⁉️ Barrenetxea llega con dudas al partido de esta tarde: arrastra una lesión en los isquiotibiales desde el 8 de noviembre y no hay nada cerrado sobre si juega.\n\nLa Real Sociedad recibe al Rayo ⚡ en Anoeta a las 16:15. Con 4,2 de media, tampoco es un jugador por el que merezca la pena arriesgar: si lo tienes, mejor mirar otra opción."
    },
@@ -3731,6 +3741,10 @@
    {
     "t": "2026-11-12T13:36:25.635Z",
     "texto": "✅ Herrando vuelve a estar disponible: el defensa del Osasuna 🐂 supera la lesión en el aductor que arrastraba desde el 31 de agosto.\n\nEl Málaga 🐟, último de la tabla, visita El Sadar tras el parón, el domingo 22 de noviembre, y marca poquísimo, justo lo que le conviene a un defensa. Eso sí, con un 19 % de titularidad no parece que Herrando vaya a tener sitio fijo en el once, así que mejor no darlo por hecho."
+   },
+   {
+    "t": "2026-11-13T14:01:39.028Z",
+    "texto": "✅ Lamine Yamal vuelve a estar disponible: las molestias en la rodilla que arrastraba desde el 8 de noviembre ya no le frenan.\n\nEl delantero del Barça lleva 10 goles y 8 asistencias en la liga. Tras el parón, el domingo 22 de noviembre, recibe al Villarreal 🚢, que va 8º. Con un 58 % de titularidad, lo normal es que salga."
    }
   ],
   "resumen": [
@@ -7700,13 +7714,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2135,
+   "ok": 2136,
    "fallos": 0,
-   "ejecuciones": 1639,
+   "ejecuciones": 1640,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T13:56:12.284Z"
+   "ultima": "2026-11-13T14:01:14.178Z"
   }
  },
  "ptsDirecto": {},
@@ -7723,15 +7737,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:56:15.057Z"
+   "ultimaBien": "2026-11-13T14:01:39.116Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:56:15.057Z"
+   "ultimaBien": "2026-11-13T14:01:39.116Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:56:15.057Z"
+   "ultimaBien": "2026-11-13T14:01:39.116Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7739,11 +7753,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:56:15.057Z"
+   "ultimaBien": "2026-11-13T14:01:39.116Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T13:56:15.057Z"
+   "ultimaBien": "2026-11-13T14:01:39.116Z"
   }
  },
  "avisos": [
