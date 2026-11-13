@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html": 1794341384000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/tchouameni-se-retira-del-entrenamiento-de-la-seleccion-francesa-por-una-molestia-cadena-ser/": 1794345150000,
    "SPORT|136302363": 1794342099000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249665/gerrard-lamine-avanzado-messi-cristiano-edad.html": 1794345817000,
@@ -2152,19 +2151,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250742/nuevo-destino-toma-fuerza-roberto-martinez.html": 1794595476000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794341384000,
-    "id": "1480",
-    "que": "molestias",
-    "oficial": false,
-    "seleccion": "pierde",
-    "hecho": "Tchouaméni se retira del entrenamiento de Francia por molestias",
-    "motivo": "molestias en la ingle derecha",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "AS|https://as.com/futbol/primera/virus-fifa-17-madridistas-con-sus-selecciones-f202611-n/",
     "medio": "AS",
@@ -7666,13 +7652,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2210,
+   "ok": 2211,
    "fallos": 0,
-   "ejecuciones": 1714,
+   "ejecuciones": 1715,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T20:06:12.172Z"
+   "ultima": "2026-11-13T20:11:29.020Z"
   }
  },
  "ptsDirecto": {},
@@ -7689,15 +7675,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:06:15.836Z"
+   "ultimaBien": "2026-11-13T20:11:34.410Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:06:15.836Z"
+   "ultimaBien": "2026-11-13T20:11:34.410Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:06:15.836Z"
+   "ultimaBien": "2026-11-13T20:11:34.410Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7705,11 +7691,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:06:15.836Z"
+   "ultimaBien": "2026-11-13T20:11:34.410Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:06:15.836Z"
+   "ultimaBien": "2026-11-13T20:11:34.410Z"
   }
  },
  "avisos": [
