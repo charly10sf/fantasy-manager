@@ -3431,7 +3431,6 @@
   "vistas": {
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/el-gran-canaria-registra-la-peor-asistencia-desde-el-ultimo-descenso-de-la-ud-las-palmas-ser-las-palmas/": 1794329652000,
    "ABC|https://www.abc.es/deportes/futbol/ver-pamplona-eibar-hora-partido-copa-rey-20261110175048-nt.html": 1794329448000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-interior-ordena-actuar-contra-piquetes-violentos-huelga-11n-garantizar-seguridad-poligonos-mercados-20261110174507.html": 1794329107000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-tavernes-valencia-hora-partido-copa-rey-20261110151517-nt.html": 1794332853000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-mijas-lagunas-real-jaen-copa-rey-20261110151232-nt.html": 1794332785000,
    "SPORT|136266190": 1794331066000,
@@ -7713,13 +7712,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2168,
+   "ok": 2169,
    "fallos": 0,
-   "ejecuciones": 1672,
+   "ejecuciones": 1673,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T16:41:11.423Z"
+   "ultima": "2026-11-13T16:46:13.316Z"
   }
  },
  "ptsDirecto": {},
@@ -7736,15 +7735,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:41:14.952Z"
+   "ultimaBien": "2026-11-13T16:46:18.083Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:41:14.952Z"
+   "ultimaBien": "2026-11-13T16:46:18.083Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:41:14.952Z"
+   "ultimaBien": "2026-11-13T16:46:18.083Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7752,11 +7751,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:41:14.952Z"
+   "ultimaBien": "2026-11-13T16:46:18.083Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:41:14.952Z"
+   "ultimaBien": "2026-11-13T16:46:18.083Z"
   }
  },
  "avisos": [
