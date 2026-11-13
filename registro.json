@@ -2149,7 +2149,8 @@
    "SPORT|136398549": 1794559654000,
    "SPORT|136400234": 1794560446000,
    "SPORT|136399158": 1794560918000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000,
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/13/redondo-alerta-del-potencial-del-calpe-antes-de-una-nueva-prueba-para-el-olimpic-radio-xativa/": 1794566135000
   },
   "hechos": [
    {
@@ -2588,7 +2589,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 17
+   "n": 18
   },
   "desde": {
    "67": {
@@ -3568,17 +3569,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 22,
+   "clasificar": 23,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 168360,
-  "salida": 13667,
+  "entrada": 170291,
+  "salida": 14005,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.302366,
+  "dolares": 0.302728,
   "reservado": 0
  },
  "recientes": {
@@ -7725,13 +7726,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2095,
+   "ok": 2096,
    "fallos": 0,
-   "ejecuciones": 1599,
+   "ejecuciones": 1600,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:36:13.499Z"
+   "ultima": "2026-11-13T10:41:11.964Z"
   }
  },
  "ptsDirecto": {},
@@ -7748,15 +7749,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:36:16.201Z"
+   "ultimaBien": "2026-11-13T10:41:18.784Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:36:16.201Z"
+   "ultimaBien": "2026-11-13T10:41:18.784Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:36:16.201Z"
+   "ultimaBien": "2026-11-13T10:41:18.784Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7764,11 +7765,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:36:16.201Z"
+   "ultimaBien": "2026-11-13T10:41:18.784Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:36:16.201Z"
+   "ultimaBien": "2026-11-13T10:41:18.784Z"
   }
  },
  "avisos": [
