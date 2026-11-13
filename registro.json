@@ -1887,10 +1887,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249362/entiendo-alguien-quiera-vienen-barca-madrid-formas-molestaron.html": 1794305948000,
    "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000,
-   "SPORT|136281363": 1794305884000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261110/11680703/cucurella-descubre-cara-mas-desconocida-mourinho-divertido-meme-le-envio-lol.html": 1794309043000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249417/real-quita-peso-ganar-liga-oyarzabal-tres-anos-hacerlo.html": 1794311814000,
    "SPORT|136283172": 1794307885000,
@@ -7715,13 +7713,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2091,
+   "ok": 2092,
    "fallos": 0,
-   "ejecuciones": 1595,
+   "ejecuciones": 1596,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:16:24.233Z"
+   "ultima": "2026-11-13T10:21:11.329Z"
   }
  },
  "ptsDirecto": {},
@@ -7738,15 +7736,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:16:28.841Z"
+   "ultimaBien": "2026-11-13T10:21:13.807Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:16:28.841Z"
+   "ultimaBien": "2026-11-13T10:21:13.807Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:16:28.841Z"
+   "ultimaBien": "2026-11-13T10:21:13.807Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7754,11 +7752,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:16:28.841Z"
+   "ultimaBien": "2026-11-13T10:21:13.807Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:16:28.841Z"
+   "ultimaBien": "2026-11-13T10:21:13.807Z"
   }
  },
  "avisos": [
