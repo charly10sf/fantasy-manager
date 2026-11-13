@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.8a';
+export const VERSION = '0.7.8b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -18,6 +18,12 @@ export const VERSION = '0.7.8a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.8b', f: '2026-11-13', h: '15:49', t: 'El plan ya no se pierde cuando la IA se atasca',
+    cosas: [
+      { tipo: 'arreglo', d: 'ia', t: 'El plan ya no se pierde cuando la IA se atasca', x: 'A veces la IA se quedaba escribiendo espacios en blanco sin parar hasta llegar a su límite: tardaba casi dos minutos y el plan llegaba cortado y no se podía leer. Ahora corta antes, aprovecha todas las operaciones que hayan llegado enteras y, si no hay ninguna, lo pide otra vez a otra IA (la que se ha atascado descansa una hora).' },
+    ],
+  },
   {
     v: '0.7.8a', f: '2026-11-13', h: '13:59', t: 'La intro del modo Vice City, rehecha',
     cosas: [
