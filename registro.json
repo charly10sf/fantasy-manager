@@ -3375,7 +3375,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794347495000,
    "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794374266000,
    "SPORT|136299647": 1794373265000,
    "SPORT|136282723": 1794373251000,
@@ -7685,13 +7684,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2232,
+   "ok": 2233,
    "fallos": 0,
-   "ejecuciones": 1735,
+   "ejecuciones": 1736,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T21:51:15.005Z"
+   "ultima": "2026-11-13T21:56:13.283Z"
   }
  },
  "ptsDirecto": {},
@@ -7708,15 +7707,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:51:22.568Z"
+   "ultimaBien": "2026-11-13T21:56:16.043Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:51:22.568Z"
+   "ultimaBien": "2026-11-13T21:56:16.043Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:51:22.568Z"
+   "ultimaBien": "2026-11-13T21:56:16.043Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7724,11 +7723,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:51:22.568Z"
+   "ultimaBien": "2026-11-13T21:56:16.043Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:51:22.568Z"
+   "ultimaBien": "2026-11-13T21:56:16.043Z"
   }
  },
  "avisos": [
