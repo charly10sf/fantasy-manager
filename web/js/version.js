@@ -19,7 +19,7 @@ export const VERSION = '0.7.8d';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.8d', f: '2026-11-13', h: '17:25', t: 'El plan ya no te manda vender lo que está subiendo',
+    v: '0.7.8d', f: '2026-11-13', h: '17:45', t: 'El plan ya no te manda vender lo que está subiendo',
     cosas: [
       { tipo: 'arreglo', d: 'ia', t: 'El plan ya no te manda vender lo que está subiendo', x: 'El plan podía recomendarte vender a uno tuyo que sube cada día, aunque no te hiciera falta el dinero y no te lo pudieran quitar porque tiene la cláusula cerrada. Ahora, si sube más de un 0,5 % al día sin frenar, la app descarta esa venta y te dice cuánto ganarías aguantándolo hasta la jornada. Sigue recomendándola si te hace falta el dinero, si está de baja o si la oferta ya paga más de lo que va a subir.' },
     ],
