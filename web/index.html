@@ -66,6 +66,9 @@
       function visto() { try { return localStorage.getItem('fm-tema-intro'); } catch (e) { return '1'; } }
       function intro(forzar) {
         if (document.querySelector('.atardecer-intro') || !encendido()) return;
+        // 13 nov, 11:55: apagada. En móviles de verdad parpadeaba y aparecían piezas a destiempo (Carlos). Solo sale forzada
+        // (temaEvento.intro(), para probarla) hasta que haya una que se haya visto bien en un móvil.
+        if (!forzar) return;
         if (!forzar && (visto() && visto() !== 'ver' || navigator.webdriver && visto() !== 'ver' || document.getElementById('limite'))) return;
         try { localStorage.setItem('fm-tema-intro', String(Date.now())); } catch (e) {}
         // La escena, «La cuenta atrás a Vice City» (~17 s). El mundo (el suelo, las palmeras en dos piezas, las farolas, los

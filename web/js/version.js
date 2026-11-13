@@ -21,7 +21,7 @@ export const NOVEDADES = [
   {
     v: '0.7.8', f: '2026-11-13', h: '11:36', t: 'Modo Vice City hasta el 26 nov',
     cosas: [
-      { tipo: 'mejora', d: 'atardecer', t: 'Modo Vice City hasta el 26 nov', x: 'Hasta el 26 de noviembre la app va en modo Vice City, entera: rosa neón, violeta casi negro y turquesa en todas las pantallas, el campo de noche, un atardecer con palmeras (o la ciudad, o la noche, según la pestaña) detrás de la cabecera y un horizonte al final de cada pestaña. La primera vez lo abre una intro de 17 segundos que se puede saltar, «La cuenta atrás a Vice City»: llegas volando a una carretera de neón detrás de un descapotable, pasan letreros, un helicóptero con su foco y unas cuantas frases, y el rótulo se enciende letra a letra. Lo que dice y lo que calcula, igual. Si prefieres el rojo y negro de siempre, se quita en Ajustes, arriba del todo; el 27 vuelve solo.' },
+      { tipo: 'mejora', d: 'atardecer', t: 'Modo Vice City hasta el 26 nov', x: 'Hasta el 26 de noviembre la app va en modo Vice City, entera: rosa neón, violeta casi negro y turquesa en todas las pantallas, el campo de noche, un atardecer con palmeras (o la ciudad, o la noche, según la pestaña) detrás de la cabecera y un horizonte al final de cada pestaña. Lo que dice y lo que calcula, igual. Si prefieres el rojo y negro de siempre, se quita en Ajustes, arriba del todo; el 27 vuelve solo.' },
     ],
   },
   {
