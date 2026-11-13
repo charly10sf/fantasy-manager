@@ -72,23 +72,34 @@
         var v = visto();
         if (!forzar && (v && v !== 'ver' && !(+v < NUEVA) || navigator.webdriver && v !== 'ver' || document.getElementById('limite'))) return;
         try { localStorage.setItem('fm-tema-intro', String(Date.now())); } catch (e) {}
-        // La escena, «La cuenta atrás a Vice City» (~13 s), plana: un bulevar visto de lado. El cielo, el sol y el suelo
-        // son el fondo; encima, cuatro tiras que se deslizan de lado cada una a su paso (la ciudad, las palmeras, los
-        // letreros y la carretera) y el coche, que entra y se queda. Sin 3D, sin capas más grandes que la pantalla, sin
-        // parpadeos a propósito y todo con animaciones de CSS (solo transform y opacity): aquí solo se monta, de una vez.
-        var T_LET = 2.4, CADA = 1.25, T_TIT = 11.2;
+        // La escena, «La cuenta atrás a Vice City» (~14 s): una carretera de neón vista desde detrás de un descapotable.
+        // No hay 3D de verdad (ni perspective ni planos girados, que en los móviles parpadeaban): la profundidad se finge.
+        // Cada cosa que viene (las rayas, los tubos del bordillo, las palmeras, los letreros) es una pieza pequeña que
+        // crece desde el punto de fuga con una animación de CSS (solo transform y opacity). Aquí solo se monta, de una vez.
+        var T_LET = 2, CADA = 1.3, T_TIT = 11.6;
         var LETREROS = ['<b>Clausulazos</b>', '<i class="ai-ico ai-tacon"></i>', '<b>Mercado<br>00:15</b>', '<i class="ai-ico ai-copa-n"></i>', '<i class="ai-ico ai-flamenco"></i>', '<b>Blindajes<br>24 h</b>'];
-        var FRASES = [[0.6, 2.3, 'Fantasy Manager presenta'], [3.2, 2.8, 'En Leonida todo tiene un precio. Tu cláusula, también.'], [6.2, 2.7, 'Da el golpe en el mercado y sal de Vice City antes de las 00:15'], [9.1, 2.2, 'Cláusula abierta: nivel de búsqueda ★★★★★']];
-        var d = document.createElement('div'), parado = !!(quieto && quieto.matches), s;
+        var FRASES = [[0.9, 2.4, 'Fantasy Manager presenta'], [3.6, 2.9, 'En Leonida todo tiene un precio. Tu cláusula, también.'], [6.8, 2.7, 'Da el golpe en el mercado y sal de Vice City antes de las 00:15'], [9.7, 2.1, 'Cláusula abierta: nivel de búsqueda ★★★★★']];
+        var d = document.createElement('div'), parado = !!(quieto && quieto.matches), s, n, e;
+        function pieza(c, derecha, espera) { return '<i class="ai-p ' + c + '" style="--l:' + (derecha ? 1 : -1) + ';animation-delay:' + espera.toFixed(2) + 's"></i>'; }
         d.className = 'atardecer-intro'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', 'La cuenta atrás a Vice City');
         d.style.setProperty('--ai-t', T_TIT + 's');
-        s = '<div class="ai-escena" aria-hidden="true"><i class="ai-sol"></i><i class="ai-ciudad"></i><i class="ai-heli"></i><i class="ai-palmas"></i>';
-        LETREROS.forEach(function (l, n) { s += '<i class="ai-letrero ai-c' + n % 3 + '" style="animation-delay:' + (T_LET + n * CADA) + 's">' + l + '</i>'; });
-        s += '<i class="ai-via"></i><i class="ai-coche"><i></i></i></div><div class="ai-frases">';
+        s = '<div class="ai-escena" aria-hidden="true"><i class="ai-fondo"><i class="ai-sol"></i><i class="ai-ciudad"></i></i><i class="ai-fugaz"></i><i class="ai-heli"></i><i class="ai-suelo"></i>';
+        // las que no se acaban: seis pares de rayas, tres de tubos y tres palmeras por lado (tronco y copa aparte, para que
+        // ninguna capa sea grande), repartidas con esperas negativas para que la calle esté llena desde el principio
+        for (n = 0; n < 12; n++) s += pieza('ai-raya', n % 2, -(n >> 1) * 0.4);
+        for (n = 0; n < 6; n++) s += pieza('ai-tubo' + (n % 2 ? ' ai-2' : ''), n % 2, -(n >> 1) * 0.8);
+        for (n = 0; n < 6; n++) { e = -((n >> 1) * 0.76 + (n % 2 ? 0.38 : 0)); s += pieza('ai-tronco', n % 2, e) + pieza('ai-copa', n % 2, e); }
+        s += '<i class="ai-niebla"></i>';
+        // los letreros: pasan por encima de la carretera, de uno en uno y despacio, para que dé tiempo a leerlos (los de
+        // después, detrás en el HTML: quedan por debajo de los que ya están cerca)
+        for (n = LETREROS.length - 1; n >= 0; n--) s += '<i class="ai-arco ai-c' + n % 3 + '" style="animation-delay:' + (T_LET + n * CADA).toFixed(2) + 's">' + LETREROS[n] + '</i>';
+        s += '<i class="ai-coche"><i></i></i></div><i class="ai-banda ai-b1" aria-hidden="true"></i><i class="ai-banda ai-b2" aria-hidden="true"></i><div class="ai-frases">';
         FRASES.forEach(function (f) { s += '<p class="ai-frase" style="animation-delay:' + f[0] + 's;animation-duration:' + f[1] + 's">' + f[2] + '</p>'; });
-        s += '</div><div class="ai-txt"><p class="ai-pre">Fantasy Manager</p><h2 class="ai-tit" aria-label="La cuenta atrás a Vice City"><span class="ai-modo" aria-hidden="true">La cuenta atrás a</span><span class="ai-neon" aria-hidden="true">Vice City</span><i class="ai-raya" aria-hidden="true"></i></h2></div>'
+        s += '</div><div class="ai-txt"><p class="ai-pre">Fantasy Manager</p><h2 class="ai-tit" aria-label="La cuenta atrás a Vice City"><span class="ai-modo" aria-hidden="true">La cuenta atrás a</span><span class="ai-neon" aria-hidden="true">';
+        'VICE CITY'.split('').forEach(function (l, i) { s += l === ' ' ? '<b class="ai-hueco"></b>' : '<b style="--i:' + i + '">' + l + '</b>'; });
+        s += '</span><i class="ai-raya-t" aria-hidden="true"></i><i class="ai-halo" aria-hidden="true"></i></h2></div>'
           + '<div class="ai-fin"><p class="ai-sub">Hasta el 26 nov · se puede cambiar en Ajustes</p><button type="button" class="ai-entrar">Entrar</button></div>'
-          + '<button type="button" class="ai-saltar">Saltar</button>';
+          + '<i class="ai-negro" aria-hidden="true"></i><button type="button" class="ai-saltar">Saltar</button>';
         d.innerHTML = s;
         function cerrar() {
           if (d.classList.contains('ai-va')) return;
@@ -99,7 +110,7 @@
         d.addEventListener('click', function (e) { if (e.target.closest('.ai-entrar, .ai-saltar')) cerrar(); });
         document.addEventListener('keydown', tecla, true);
         document.body.appendChild(d);
-        setTimeout(function () { var b = d.querySelector('.ai-entrar'); if (b && document.body.contains(d) && !d.classList.contains('ai-va')) b.focus({ preventScroll: true }); }, parado ? 60 : T_TIT * 1000 + 2000);
+        setTimeout(function () { var b = d.querySelector('.ai-entrar'); if (b && document.body.contains(d) && !d.classList.contains('ai-va')) b.focus({ preventScroll: true }); }, parado ? 60 : T_TIT * 1000 + 2500);
       }
       // el coche cruza la cabecera de Hoy cada ~45 s y las estrellas de la carga titilan cada ~7 s, si se ven
       function cada(c, ms, dura, sel) {

@@ -21,7 +21,7 @@ export const NOVEDADES = [
   {
     v: '0.7.8a', f: '2026-11-13', h: '13:00', t: 'La intro del modo Vice City, rehecha',
     cosas: [
-      { tipo: 'arreglo', d: 'atardecer', t: 'La intro del modo Vice City, rehecha', x: 'La intro del modo Vice City parpadeaba en los móviles y los letreros no se veían. Está hecha de nuevo, plana y más corta (unos 13 segundos): un bulevar visto de lado, con el coche, las palmeras y los letreros de neón pasando de uno en uno. Sale una vez y se puede saltar desde el principio.' },
+      { tipo: 'arreglo', d: 'atardecer', t: 'La intro del modo Vice City, rehecha', x: 'La intro del modo Vice City parpadeaba en los móviles y los letreros no se veían. Está hecha de nuevo: la misma carretera de neón vista desde detrás del descapotable, ahora con los letreros pasando por encima de uno en uno para que se lean, y el coche que acelera hacia el horizonte antes del rótulo. Dura unos 14 segundos, sale una vez y se puede saltar desde el principio.' },
     ],
   },
   {
