@@ -116,7 +116,7 @@ export function comoConseguir(D, M, pid, cat) {
   if (!tid) return 'LIBRE pero no está hoy en el mercado: no se puede fichar hasta que salga';
   const x = M.clausulas.find((c) => c.pid === pid);
   const fa = M.fichadoPor && M.fichadoPor(pid);
-  return `NO DISPONIBLE: es de ${nombreDe(M, tid)}${fa ? `, que lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)}` : ''}, no lo vende${x && x.clausula ? ` y su cláusula (${eur(x.clausula)}) no se abre hasta ${cuando(x.protegidoHasta)}` : ''}`;
+  return `NO ESTÁ A LA VENTA: es de ${nombreDe(M, tid)}${fa ? `, que lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)}` : ''}${x && x.clausula ? `; su cláusula (${eur(x.clausula)}) no se abre hasta ${cuando(x.protegidoHasta)}` : ''}. Se le puede hacer una oferta desde la ficha del jugador (LaLiga lo deja con cualquier jugador de un rival), pero decide su dueño y lo normal es que no acepte por menos de lo que le daría LaLiga`;
 }
 
 /** una operación del catálogo en texto, con lo que cuesta y cómo funciona */
@@ -198,19 +198,27 @@ export function porQueNo(D, M, o, pid, j) {
   if (venta) return `Lo tiene a la venta, pero ${venta.noVende}: ${venta.vendedor || nombreDe(M, tid)} no te lo va a vender`;
   if (tid) {
     const fa = M.fichadoPor && M.fichadoPor(pid);
-    return `No lo tiene a la venta y su dueño (${nombreDe(M, tid)}) no tiene por qué vendértelo${fa ? `: lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)}` : ''}. Solo se le puede quitar con la cláusula`;
+    // (regla comprobada con Carlos, 13 nov) una oferta se le puede hacer siempre desde la ficha del jugador; que la acepte es otra cosa
+    return `No lo tiene a la venta${fa ? ` (lo ${fa.clase === 'clausula' ? 'clausuló' : 'fichó'} ${cuando(fa.t)})` : ''}: se le puede hacer una oferta desde la ficha del jugador, pero ${nombreDe(M, tid)} no tiene por qué aceptarla, así que no va en el plan. Seguro, solo con su cláusula cuando se abra`;
   }
   return 'No está hoy en el mercado';
 }
 
 /** el catálogo para la IA, por grupos (lo más interesante primero) */
-export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = null } = {}) {
+export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = null, ver = null } = {}) {
   const L = [];
+  // (revisión de la IA, 14 nov) `ver`: lo que haría la app con cada operación (veredictos, ia.js). Lo que descartaría no
+  // se ofrece: va aparte, en una línea con el motivo; lo que vale lleva su aviso
+  const v = (o) => (ver && ver[o.ref]) || null;
+  const vale = (o) => { const x = v(o); return !x || x.ok; };
+  const corta = (t, n = 150) => { const x = String(t || '').replace(/La app lo descarta[.:]?\s*/g, '').replace(/\s+/g, ' ').trim(); return x.length > n ? `${x.slice(0, x.lastIndexOf(' ', n))}…` : x; };
+  const fuera = [];
   const g = (titulo, ops, n) => {
     if (!ops.length) return;
     L.push(`\n${titulo}`);
     for (const o of ops.slice(0, n)) {
-      L.push(`- [${o.ref}] ${textoOp(o, M)}`);
+      const x = v(o);
+      L.push(`- [${o.ref}] ${textoOp(o, M)}${x && x.ok && x.para ? ` → LA APP: vale para ${x.para}${x.aviso ? `. ${corta(x.aviso, 220)}` : ''}` : x && x.ok && x.aviso ? ` → LA APP: ${corta(x.aviso, 220)}` : x && !x.ok ? ` → LA APP NO LA HARÍA HOY${x.sinPrisa ? ' (sin prisa)' : ''}: ${corta(x.aviso, 220)}` : ''}`);
       const d = datos && datos(o);
       if (d) L.push(`    ${d}`);
     }
@@ -221,7 +229,8 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
   L.push('OPERACIONES POSIBLES HOY (las ÚNICAS que puedes recomendar; cada operación del plan lleva su "ref"):');
   g('ACEPTAR OFERTAS (lo que ya tengo en venta):', t('A'), 20);
   // (cada candidato va con su ficha entera: con más, la IA tarda mucho más y no decide mejor)
-  g('PUJAR (jugadores LIBRES de la liga, subasta a ciegas):', t('P').sort(por), chat ? 10 : corto ? 7 : 14);
+  for (const o of [...t('P'), ...t('C').filter((c) => c.meLlega || c.conA)]) if (!vale(o)) fuera.push(o);
+  g('PUJAR (jugadores LIBRES de la liga, subasta a ciegas):', t('P').filter(vale).sort(por), chat ? 10 : corto ? 7 : 14);
   // en el plan, solo los tratos: lo que un rival tiene a la venta casi siempre está solo para ver la oferta de LaLiga
   // (aviso de Domy, 29 oct); en el chat, si se pregunta por ellos, sí van
   if (chat) g('COMPRAR A OTRO MANAGER (solo lo que TIENE A LA VENTA o un TRATO que te conté; decide él):', [...t('T'), ...t('M').sort(por)], 8);
@@ -232,11 +241,28 @@ export function catalogoTxt(D, M, cat, { corto = false, chat = false, datos = nu
   {
     // con ficha, las que me llegan (o me llegan aceptando las ofertas de hoy); las demás, como mucho 4 y en una línea:
     // eran casi todo el bloque y no se pueden hacer hoy
-    const cs = t('C').sort(por), llegan = cs.filter((o) => o.meLlega || o.conA), no = cs.filter((o) => !o.meLlega && !o.conA);
+    const cs = t('C').sort(por), llegan = cs.filter((o) => (o.meLlega || o.conA) && vale(o)), no = cs.filter((o) => !o.meLlega && !o.conA);
     g('CLAUSULAR (cláusulas de rivales abiertas o que se abren en las próximas 48 h y antes de la jornada, que me llegan con mi saldo o aceptando antes las ofertas que tengo):', llegan, chat ? 10 : corto ? 7 : 14);
     if (no.length) L.push(`\nCLÁUSULAS QUE NO ME LLEGAN HOY (ni aceptando las ofertas que tengo; solo para saber que existen): ${no.slice(0, 4).map((o) => `[${o.ref}] ${o.j.nombre} (de ${o.de}) ${eur(o.precio)}, faltan ${eur(o.falta)}`).join('; ')}${no.length > 4 ? ` y ${no.length - 4} más` : ''}.`);
   }
   g('PROTEGER (mis cláusulas abiertas o a punto: blindar gratis con el escudo o subir la cláusula pagando):', t('B'), 12);
+  if (fuera.length) {
+    // el motivo de verdad es lo último que dice la app; los que comparten motivo van juntos
+    const motivo = (o) => {
+      const t = String(v(o).aviso || ''), i = t.lastIndexOf('La app lo descarta');
+      const x = (i >= 0 ? t.slice(i) : t).replace(/La app lo descarta[.:]?\s*/, '').replace(/\s+/g, ' ').trim();
+      if (/no es una cláusula que la app recomiende/.test(x)) return 'no compensa para el once (se paga de más, calendario duro o apenas mejora mi once)';
+      if (/No te llega: una cláusula solo se paga con saldo/.test(x)) return 'no me llega: una cláusula solo se paga con saldo';
+      if (/no puedes pujar ni comprar por más de/.test(x)) return x.replace(/^.*?(no puedes pujar)/, '$1').replace(/\.$/, '');
+      if (/estamos en el parón/.test(x)) return 'estamos en el parón: para el once, días sin puntuar con el dinero parado';
+      return corta(x, 150).replace(/\.$/, '');
+    };
+    const grupos = new Map();
+    for (const o of fuera.sort(por)) { const m = motivo(o); if (!grupos.has(m)) grupos.set(m, []); grupos.get(m).push(o); }
+    const n = chat ? 8 : 6;
+    L.push(`\nLO QUE LA APP YA HA DESCARTADO HOY (${fuera.length}; NO lo propongas: no va en operaciones. Si te preguntan por alguno, este es el motivo):`);
+    for (const [m, os] of grupos) L.push(`- ${os.slice(0, n).map((o) => `${o.j.nombre} [${o.ref}]`).join(', ')}${os.length > n ? ` y ${os.length - n} más` : ''}: ${m}.`);
+  }
   L.push(`VENDER: cualquiera de mis jugadores con [V-<id>] (ids: ${t('V').map((o) => `${o.j.nombre} V-${o.pid}`).join(', ')}).`);
   L.push('Cualquier jugador de un rival que no esté arriba NO SE PUEDE CONSEGUIR HOY: ni comprándoselo ni de otra forma.');
   return L.join('\n');

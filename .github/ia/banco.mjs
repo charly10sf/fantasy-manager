@@ -25,6 +25,8 @@ export const ESCENAS = {
   paron: { hora: '2026-11-03T10:00:00+01:00', demo: (s) => s.replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,') },
   // en negativo entre semana (ha tirado de deuda)
   negativo: { hora: '2026-11-03T10:00:00+01:00', prep: 'S.D.dinero = -4200000;' },
+  // con dinero de sobra (60 M): vender no hace falta ni contando las pujas que ya tiene puestas
+  holgado: { hora: '2026-11-03T10:00:00+01:00', prep: 'S.D.dinero = 60000000;' },
 };
 
 let nav = null, srv = null, BASE = null, demoDe = null;

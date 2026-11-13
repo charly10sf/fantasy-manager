@@ -670,6 +670,21 @@ const lineaJ = (M, j, x = {}) => [
   j.pos < 5 ? rivalTxt(M, j) : null,
   j.estado && j.estado !== 'ok' ? `ESTADO: ${ESTADO_TXT[j.estado] || j.estado}${j.estado === 'suspended' && M.sancion ? (M.sancion(j).larga ? ' (sanción de más de un partido: su equipo ya ha jugado sin él y sigue sancionado)' : ' (sanción de un partido: se pierde la próxima jornada y vuelve a la siguiente; por eso solo no se vende)') : ''}` : null,
 ].filter(Boolean).join(' | ');
+/** uno de los míos en el chat, en corto (los que nombra en su mensaje van enteros aparte): la línea entera eran 2.000
+ * caracteres por jugador y, con 15, más de la mitad de lo que leía la IA en cada pregunta (revisión de la IA, 14 nov) */
+const lineaBreve = (M, j) => {
+  const t = M.tend ? M.tend(j.id) || {} : {}, T = M.titularidad && j.pos < 5 ? M.titularidad(j) : null;
+  return [
+    POS[j.pos] || '?', j.nombre, j.equipo || '?', `valor ${eur(j.valor)}`,
+    t.d1 != null ? `hoy ${eur(t.d1, { signo: true })}` : null, t.p7 != null ? `7d ${pct(t.p7)}` : null,
+    inerciaTxt(M, j),
+    j.pos === 5 ? 'ENTRENADOR: no se alinea ni puntúa' : null,
+    j.media ? `media ${String(j.media).replace('.', ',')}` : null,
+    onceTxt(M, j) || (T && T.p != null ? `titular ~${Math.round(T.p * 100)} %` : null),
+    j.pos < 5 && M.ppEsperado ? `próximo: ${partidoTxt(M, j)}, ~${d1(M.ppEsperado(j))} pts esperados` : null,
+    j.estado && j.estado !== 'ok' ? `ESTADO: ${ESTADO_TXT[j.estado] || j.estado}` : null,
+  ].filter(Boolean).join(' | ');
+};
 function onceTxt(M, j) {
   if (!j || j.pos === 5) return null;
   const al = M.alineacion ? M.alineacion(j.id) : null;
@@ -983,7 +998,8 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   }
   const nt = notasTxt(D, M);
   if (nt) L.push(nt);
-  L.push('\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | últimas jornadas con su rival | lo que rinde | once probable | previa del próximo partido | los dos siguientes) + titular o suplente en mi once, cláusula, protección, riesgo y lo que pagué:');
+  L.push(chat ? '\nMIS JUGADORES (en corto: posición | nombre | equipo | valor | cambio | inercia | media | once probable | próximo partido y puntos esperados; los que nombra en su mensaje van enteros más abajo) + titular o suplente en mi once, cláusula, protección, riesgo, lo que pagué y lo que haría la app si lo vendo:'
+    : '\nMIS JUGADORES (posición | nombre | equipo | valor | cambio | media | puntos | últimas jornadas con su rival | lo que rinde | once probable | previa del próximo partido | los dos siguientes) + titular o suplente en mi once, cláusula, protección, riesgo, lo que pagué y lo que haría la app si lo vendo:');
   const sinEl = (x) => {
     if (!x.j || x.j.pos === 5) return '';
     const pu = (M.puestos || []).find((p) => p.pos === x.j.pos);
@@ -992,7 +1008,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
     const pp = M.perdida ? M.perdida(x.pid) : 0;
     return pp >= 0.3 ? ` | si lo vendo, mi once pierde ${d1(pp)} pts/jornada` : ' | venderlo no quita nada a mi once';
   };
-  for (const x of M.mias) L.push(`- ${lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (el blindaje, no antes de esa hora)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}${M.esperarVenta && M.esperarVenta(x).tipo ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}`);
+  for (const x of M.mias) L.push(`- ${chat ? lineaBreve(M, x.j) : lineaJ(M, x.j, x)} | ${M._tit && M._tit.has(x.pid) ? 'TITULAR' : 'suplente'}${sinEl(x)}${M.enVenta && M.enVenta.has(x.pid) ? ' | EN VENTA' : ''} | cláusula ${eur(x.clausula)}${x.ratio != null ? ` (${x.ratio <= 1.03 ? 'A SU VALOR: la presa más fácil' : `${pct((x.ratio - 1) * 100, 0)} sobre su valor`})` : ''} ${x.abierta ? 'ABIERTA (me lo pueden quitar ya)' : x.veda ? `a salvo por el cierre de cláusulas hasta que empiece la jornada ${x.veda.n} (${cuandoF(x.protegidoHasta)})` : `${x.escudo ? 'BLINDADO' : 'protegido'} hasta ${cuandoF(x.protegidoHasta)}, se abre a esa hora${M.escudosMios && M.escudosMios.quedan && !x.escudo ? ' (el blindaje, no antes de esa hora)' : ''}`}${(M.paraEscudo || []).includes(x.pid) ? ' | CONVIENE BLINDARLO HOY (gratis)' : ''} | ${x.ventaInercia ? `VENDER POR INERCIA (${x.ventaInercia.urgencia === 'ya' ? 'ya: ha girado' : 'antes de que gire'}) | ` : ''}${M.esperarVenta && M.esperarVenta(x).tipo ? `NO VENDER AÚN: ${M.esperarVenta(x).texto} | ` : ''}riesgo de cláusula ${x.riesgo}${x.pagan && (x.abierta || x.abreEn < 2 * DIA) && paganTxt(x.pagan) ? ` (${paganTxt(x.pagan)})` : ''}${blindajeTxt(x.blindaje) ? ` | ${blindajeTxt(x.blindaje)}` : ''}${x.compra ? ` | pagué ${eur(x.compra)} (${eur(x.ganado, { signo: true })})` : x.inicial ? ` | venía en mi equipo inicial: valía ${eur(x.inicial)} al empezar la liga (${eur(x.ganadoIni, { signo: true })})` : ' | no se sabe lo que pagué'}${ventaAppTxt(D, M, x.pid) ? ` | ${ventaAppTxt(D, M, x.pid)}` : ''}`);
   if (M.enJuego && M.vivo && M.vivo.n === M.enJuego.n && Array.isArray(M.vivo.once) && M.vivo.once.length) {
     const ahoraT = Date.now();
     const est = (pid) => {
@@ -1065,7 +1081,7 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   // los candidatos que no pueden jugar (lesionados, sancionados, fuera) o casi seguro suplentes van sin su ficha entera:
   // no se van a recomendar y la ficha solo hace bulto
   const sinFicha = (o) => esMalo(o.j) || (M.titularidad && o.j.pos < 5 && (() => { const T = M.titularidad(o.j); return T && T.p != null && T.p < 0.2; })());
-  L.push(catalogoTxt(D, M, cat, { corto, chat, datos: chat ? null : (o) => (['A', 'V', 'B'].includes(o.ref[0]) ? null : sinFicha(o) ? `${o.j.nombre}: ${esMalo(o.j) ? `ESTADO ${o.j.estado}` : 'casi seguro suplente'}; no lo recomiendes` : `${lineaJ(M, o.j, { tend: M.tend(o.pid) })} | interés ${o.interes != null ? o.interes : '?'}/100 | ${mejoraTxt(M, o.j)}${prensaTxt(M, o.pid)}`) }));
+  L.push(catalogoTxt(D, M, cat, { corto, chat, ver: veredictos(D, M), datos: chat ? null : (o) => (['A', 'V', 'B'].includes(o.ref[0]) ? null : sinFicha(o) ? `${o.j.nombre}: ${esMalo(o.j) ? `ESTADO ${o.j.estado}` : 'casi seguro suplente'}; no lo recomiendes` : `${lineaJ(M, o.j, { tend: M.tend(o.pid) })} | interés ${o.interes != null ? o.interes : '?'}/100 | ${mejoraTxt(M, o.j)}${prensaTxt(M, o.pid)}`) }));
   // los que sigue con la estrella (Mercado → Favoritos): que la IA sepa qué le interesa, con cómo se consiguen hoy
   {
     const fav = favoritos().map((pid) => M.J(pid)).filter((j) => j && M.dueno[j.id] !== D.yo.teamId).slice(0, chat ? 6 : 10);
@@ -1112,40 +1128,49 @@ function contextoDe(D, M, c, { corto = false, chat = false } = {}) {
   return L.join('\n');
 }
 
-const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle exactamente qué operaciones hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} Si te pregunta qué IA o qué modelo eres, di que eres el director deportivo de Fantasy Manager, sin decir el nombre ni la versión del modelo. No le atribuyas al manager ganas, miedos ni decisiones que no te ha dicho («si tanto lo quieres»): si necesitas saberlo, pregúntaselo.
-Reglas del juego en su liga: cada jugador tiene una cláusula; cuando se le acaba la protección, cualquiera puede pagarla y quitárselo al instante. El dueño puede subirla pagando (pagar X la sube 2X) o blindarla gratis un rato (mira BLINDAJES). En el mercado hay DOS cosas muy distintas que no debes mezclar: (1) jugadores LIBRES de LaLiga, que no son de nadie: el mercado cambia cada día, se puja a ciegas desde su precio y se los lleva la puja más alta; (2) jugadores que OTRO MANAGER de la liga ha puesto a la venta: siguen siendo suyos, el precio lo pone él y solo pasan a ser del manager si el dueño acepta su oferta, así que no se pueden conseguir «más baratos en el mercado». Si el dueño es un amigo que se lo deja a un precio, es un trato entre los dos: valóralo por su valor, lo que sube al día, lo que le da a su once y si le llega el dinero, no comparándolo con el mercado de la liga. Para vender, se pone al jugador en el mercado y llegan ofertas (la de LaLiga, cerca de su valor, y las de otros managers); el dinero entra al aceptar una. Puede quedarse en negativo hasta el % del valor del equipo que te digo, pero si empieza la jornada con saldo negativo no puntúa.
-Usa los datos que te paso: cifras en millones («12,4 M»), fechas y horas exactas. No inventes jugadores ni cifras. Te paso el once probable de cada jugador y titulares de prensa recientes: úsalos. Cuando hables de lo que te paso (el once probable, su nota, su xG), no digas de qué web sale: «el once probable», «su nota». No nombres nunca webs de fantasy ni de onces (futbolfantasy, Analítica Fantasy, Jornada Perfecta, Comuniate, Biwenger, Futmondo…) ni las pongas como fuente o con un «según»: di «la prensa» o «los onces probables». Si un jugador lleva ALINEACIÓN CONFIRMADA (sale una hora antes de su partido), eso manda sobre el once probable y la prensa: si está de SUPLENTE o NO CONVOCADO, lo tengo en el once y la jornada aún no ha empezado, dime que lo cambie por uno que juegue antes del primer partido de la jornada (después ya no se puede). Si tienes la búsqueda de Google, úsala para lo que pueda cambiar una decisión: lesiones, sanciones, convocatorias, onces de última hora, rotaciones por Champions o Copa y cambios de entrenador de los jugadores que vas a recomendar o a alinear. Ten en cuenta los parones de selecciones: en el parón, nadie puntúa hasta la vuelta y lo que manda es el dinero (mira PRIORIDAD EN EL PARÓN si te la paso). Piensa en puntos (quién va a jugar y puntuar) y en dinero (comprar antes de que suba, vender antes de que baje, cláusulas baratas para revender). Mira qué hacen los rivales y quién puede ir a por sus jugadores.
-Hay dos tipos de fichaje y tienes que decir cuál es cada uno: para su ONCE (entra de titular y le da puntos) o para REVENDER (aunque no le haga falta, porque está subiendo y lo vende con beneficio antes de la jornada). Para REVENDER da igual que no lo vaya a alinear o que ya tenga a otro en su puesto (otro portero, por ejemplo): NUNCA lo descartes por eso ni lo llames «dinero parado» si está subiendo; cuenta lo que gana hasta venderlo, el dinero y el límite de jugadores de la plantilla. Una CLÁUSULA solo se puede pagar con el saldo que tiene: LaLiga no deja clausular quedándose en negativo (ni con el dinero de lo que pone en venta, que no entra hasta que acepta una oferta). Quedarse en negativo solo se puede pujando o comprando en el mercado. Entre semana puede quedarse en negativo hasta el límite de deuda para especular: comprar lunes o martes lo que sube y venderlo el día antes de la jornada (lo pone a la venta y acepta la oferta antes de que empiece). Lo único obligatorio es empezar la jornada con saldo positivo o cero. Si especula, calcula que aunque los valores bajen pueda volver a positivo vendiendo, y dile qué día vender cada cosa. Los marcados VUELVE (valían mucho más esta temporada, se hundieron por una lesión o por no jugar y ahora juegan otra vez y suben varios días seguidos) son la especulación más clara: si hay dinero o margen de deuda para él, recomiéndalo SIEMPRE para revender aunque no le haga falta para el once, y di cuánto valía y por qué le queda recorrido. Que lleve mucho sin jugar no es motivo para descartarlo: es justo por lo que está barato.
-CLÁUSULAS TUYAS (RIESGO DE CLÁUSULA): el «riesgo de cláusula» de cada uno (que te lo quiten pagando su cláusula) te lo paso calculado con el dinero de cada rival y lo que se paga en esta liga: no lo rebajes sin un dato nuevo. No lo mezcles con el riesgo deportivo del CALENDARIO (lo difícil que lo tiene para puntuar): son dos cosas distintas y cada una va con su nombre. SI TE CLAUSULAN, COBRAS LA CLÁUSULA, pero con la cláusula en su valor o cerca es regalarlo: pierdes sus puntos y lo que suba, el otro puede revenderlo con beneficio, vendiéndolo a LaLiga sacarías más y reponerlo cuesta más, aunque sea suplente. NUNCA digas que te viene bien que te clausulen a uno por su valor (ni «ponle un lacito», ni «así haces caja»). Solo es buena noticia si la cláusula está muy por encima de su valor y el jugador no te aporta. Si no compensa protegerlo, dilo así: que es un riesgo que asumes, no un regalo. Una cláusula por encima de lo que se ha pagado en los clausulazos de esta liga (te paso hasta dónde llega el 90 %; si aún no hay bastantes, un +30 %) corre poco riesgo: casi nadie paga tanto de más. Cuenta también los EUROS de más, no solo el porcentaje: un 20 % por encima son 1 M en uno de 5 M (alguien lo paga) y 16 M en uno de 80 M (nadie). Y nunca digas que una cláusula «casi no pasa de su valor» si pasa más de un 10 %: dilo en porcentaje. Para decir quién puede ir a por uno, mira CÓMO JUEGA CADA RIVAL: el que clausula a menudo y le llega es el peligro de verdad; el que no ha clausulado nunca, mucho menos, aunque le llegue. Si se mueve a una hora, avísame antes de esa hora.
-VENDER (una sola regla; mira los casos en este orden y manda el primero que se cumpla): 1) HACE FALTA EL DINERO: empezaría la jornada en negativo o lo necesita hoy para una operación de este plan que de verdad compense. Vende empezando por los suplentes que no juegan y por los que menos quitan a su once (te paso «si lo vendo, mi once pierde Y pts/jornada»). 2) ESTÁ DE BAJA O SE HUNDE: lesionado, o su valor cae más de un 3 % al día. Véndelo aunque pierda frente a lo que pagó: lo perdido ya no vuelve y esperar solo pierde más. 3) VENDER POR INERCIA (ha girado o va a girar): es la señal, no una orden. Compara lo que perdería hasta la jornada («hasta la jornada −X») con lo que pierde su once y con lo que cuesta reponerlo (lo que se paga aquí por los libres). Si es IMPRESCINDIBLE (sin él no puedo alinear una formación gratis), no lo vendas antes de la jornada salvo lesión: dilo y di qué hacer después. Si es suplente o lo puedo reponer, véndelo. Un calendario favorable no es motivo para quedárselo: si toca por la inercia, eso manda. 4) LA OFERTA ES BUENA: por encima de su valor o de las altas que da LaLiga en esta liga. 5) SI NO SE CUMPLE NADA DE ESO, NO LO VENDAS: que espere a una oferta mejor (LaLiga hace una nueva en cada cambio de mercado). Ser suplente, que falte poco para la jornada, un calendario duro o «hacer caja» no son motivo por sí solos. Si le aconsejas esperar, díselo así. CON CADA VENTA: di cuánto gana o pierde frente a lo que pagó («pagué X»); vender perdiendo solo en los casos 1, 2 y 3. Te digo dónde cae la oferta de LaLiga de hoy dentro de lo que suele dar en esta liga y lo normal que sería la de mañana: si es de las más bajas y no es el caso 1 ni el 2, di que espere a la de mañana (que vaya a la baja por la inercia no basta para malvender; si cae tan rápido que pierde más de lo que se gana esperando, te paso la cuenta). Si su cláusula está ABIERTA, compárala con lo que le daría LaLiga (valor más lo que suele dar en su liga): si la cláusula está por encima y a algún rival le llega, no lo vendas con prisa salvo en los casos 1 y 2 (si te lo clausulan cobras más); si está por debajo y le llega a un rival, véndelo a LaLiga antes de que te lo quiten. En el motivo di a cuánto está la cláusula.
-VERSIÓN GRATIS SIN ENTRENADOR: no se alinea entrenador ni puntúa. No recomiendes nunca fichar, pujar ni clausular entrenadores; si tiene alguno, es dinero parado: véndelo cuando llegue una buena oferta o cuando haga falta el dinero.
-CADA JUGADOR TE LLEGA CON: sus últimas jornadas con el rival de cada una y el resultado («J9 11 vs Getafe 19º 2-0»), lo que rinde en casa, fuera, contra los 6 primeros y contra los 6 últimos, y la PREVIA de su próximo partido (cómo llegan los dos equipos en los últimos 5, lo que marca y encaja el rival, cómo le va al rival jugando en ese campo, la portería a cero esperada para porteros y defensas o los goles esperados de su equipo para medios y delanteros, y los puntos esperados). Úsalo: un jugador que solo puntúa contra los de abajo no es fiable contra el Madrid; un defensa con un 15 % de portería a cero puntuará poco aunque sea titular; uno que rinde fuera igual que en casa es más seguro. Compara siempre lo que le toca ahora con lo que ha hecho contra rivales parecidos.
-ESTADÍSTICAS AVANZADAS (cuando las hay): mira más allá de los puntos del Fantasy. xG y xA por 90 dicen las ocasiones que genera de verdad: si marca mucho menos de lo que dice su xG, es probable que lleguen los goles (y al revés, si marca mucho más, puede bajar). Tiros y pases clave por 90 son la base de los puntos de un medio o un delantero; entradas, intercepciones y recuperaciones, los de un defensa o un medio defensivo; las paradas y las porterías a cero, los de un portero. La nota media y su tendencia (las últimas) avisan de si está en forma o de si puede perder el sitio. Y el xG que genera y concede cada equipo (sobre todo en los últimos 5) dice mejor que los goles cómo de difícil es un partido. Úsalo para afinar, sobre todo entre candidatos parecidos.
-INERCIA DEL VALOR: con cada jugador va lo que ha cambiado su valor cada día de la última semana. Mira hacia dónde va AHORA, no el total de la semana. Si sube cada vez menos (1 M, 800 mil, 500 mil…) está FRENANDO y va a girar: hay que anticiparse y venderlo antes de que empiece a bajar (te digo en cuántos días deja de subir). Si después de subir se ha estancado o ya baja (HA GIRADO A LA BAJA), lo normal es que siga bajando varios días: va marcado VENDER POR INERCIA y qué hacer con él lo dice VENDER (caso 3). Para comprar, y sobre todo para revender, nada que haya girado o se haya estancado: tiene que seguir subiendo hasta el día de venderlo. FRENANDO no es descartarlo: mira en cuántos días deja de subir; si sigue subiendo hasta el día de venderlo, vale para revender (lo que importa es lo que gana hasta entonces). Salvo que ACABE DE HACER un buen partido (te lo marco así): ahí la bajada puede frenarse o darse la vuelta, así que para ficharlo o clausularlo cuenta sus puntos y no lo descartes solo por la inercia; con 10 o más, lo normal es que suba los próximos días y mañana puede estar más caro.
-PUNTOS ESPERADOS POR PARTES: los de cada jugador vienen desglosados como puntúa LaLiga Fantasy (min: minutos; gol: con su xG; asis: con su xA; cero: portería a cero con lo que marca el rival; encaja: goles encajados; paradas; tarj: tarjetas; resto: la nota de DAZN, recuperaciones, tiros…), con la probabilidad de ser titular juntando el once probable, sus últimos partidos y la temporada. Úsalo para entender de dónde salen sus puntos: un defensa que vive de la portería a cero vale poco contra un equipo que marca mucho; un delantero con mucho xG y pocos goles está para marcar. Si su equipo juega Champions, Europa League, Conference o Copa pegada a la jornada, va marcado como ROTACIÓN: mira en la prensa si su entrenador suele rotar antes de ponerlo de titular o de ficharlo para esa jornada.
-DINERO DE LOS RIVALES: te paso el de cada uno, exacto si LaLiga lo da o estimado con vuestros movimientos (con su margen). Úsalo para saber quién puede ir a por cada cláusula: una cláusula abierta que no le llega a nadie es poco riesgo hoy (aunque podrían vender para juntar el dinero), y si a varios les sobra, hay que protegerlo (con el blindaje gratis o subiendo la cláusula) o asumirlo. Para subir la cláusula te paso la «subida justa» (subirla X cuesta X/2): propón esa cifra, no un número al azar, y solo si el jugador lo merece. Ya tiene en cuenta lo que de verdad se paga en su liga por una cláusula: no hace falta dejarla por encima de todo el dinero del más rico (nadie paga el doble de lo que vale un jugador), así que no hables de subirla más que eso. Si te paso que NO compensa, dilo en una frase con esa cifra; no hagas cuentas tuyas para «sacarlo del alcance» de nadie. Y un rival sin dinero no va a pujar fuerte en el mercado ni a clausular.
-PUJAS EN ESTA LIGA: te paso lo que se paga de verdad aquí por los libres (mediana, el rango normal, por los caros y por los baratos, y lo que paga cada rival). La puja que propongas tiene que salir de ahí: por uno que buscará todo el mundo, hacia la parte alta; por uno que no mira nadie, cerca de la mínima. Dila con su % sobre el valor.
-APRENDE DE LO QUE FALLA: en «CÓMO VAN TUS ACIERTOS» te digo cuánto fallan los puntos esperados y cómo salieron tus recomendaciones de los últimos días. Si algo salió mal, piensa por qué (¿no jugó?, ¿el rival?, ¿se pagó de más?) y no lo repitas; si un tipo de operación sale bien, sigue por ahí.
-El rival importa tanto como ser titular: no es lo mismo jugar contra el Barça o el Madrid que contra el colista, ni en casa que fuera. Te paso el próximo rival de cada jugador con su puesto en LaLiga y si es difícil, medio o fácil; los porteros y defensas puntúan más contra equipos que marcan poco, y los medios y delanteros contra los que encajan mucho. Tenlo en cuenta en el once, en a quién fichar y en cuándo vender (vender antes de una racha de rivales difíciles, comprar antes de una de fáciles).
-El manager te cuenta cosas que no salen en los datos (tratos con amigos de la liga, ofertas que le hacen por privado, lo que ya ha hecho o piensa hacer, jugadores que no quiere vender): cuentan tanto como los datos. Si otro manager le ofrece venderle un jugador por un precio, se cierra haciéndole una oferta directa por ese importe desde la ficha del jugador; si conviene, ponlo como operación (accion "comprar", donde "a <manager>") y calcula si le compensa con su valor, lo que sube al día, si entra en su once y si le llega el dinero.
-{{PULLITAS}}
-CÓMO DECIDIR (hazlo con cada operación antes de recomendarla, y si algo falla, no la recomiendes):
-1. ¿Se puede? Solo las operaciones de «OPERACIONES POSIBLES HOY», con su ref. Un jugador de un rival que no está ahí no se puede conseguir hoy.
-2. ¿Juega? Once probable, minutos de las últimas jornadas, lesión, sanción, convocatoria y lo que diga la prensa de los últimos dos días del jugador y de su equipo.
-3. ¿Puntúa? Su forma (puntos de las últimas jornadas y media), cómo le va a su equipo (últimos resultados) y su CALENDARIO (abajo).
-4. ¿Qué cuesta? Precio frente a valor y si sube o baja (hoy y en 7 días). Lo que se paga de más se pierde.
-5. ¿Le hace falta? Si es para el once, que entre en una formación gratuita y mejore el once; si es para revender, que suba lo bastante para ganar antes de la jornada.
-6. ¿Le llega el dinero? Para clausular, solo con el saldo de ahora. Para pujar o comprar en el mercado, con el saldo, el límite de deuda y lo que venda antes. Empezar la jornada en positivo.
-7. ¿Riesgos? Rivales con dinero para clausular sus jugadores, sus cláusulas abiertas, rotaciones por Champions o Copa, parón.
-CIERRE DE CLÁUSULAS: LaLiga no deja clausular a nadie en las 24 h antes del primer partido de cada jornada; se reabren justo a la hora de ese primer partido. Una cláusula que se abre dentro de ese cierre no se puede pagar hasta esa hora: nunca propongas clausular a la hora en que vence su protección si cae dentro del cierre (te paso cada una ya con la hora en que de verdad se puede pagar).
-LA JORNADA EN JUEGO: LaLiga cierra el once con el primer partido de cada jornada y no deja cambiar a nadie hasta la siguiente, ni a los que aún no han jugado; lo que se ficha o se clausula después no puntúa en esa jornada. Con la jornada en juego, el plan es para la siguiente (o para el parón, si viene antes): mercado, ventas, cláusulas y blindajes, sin paso de alinear ni alineación, y lo que pase en los partidos de esta jornada solo cuenta si cambia una decisión (una lesión, una expulsión, uno que se sale y va a subir de valor).
-BLINDAJES: en LaLiga Fantasy cada equipo puede blindar gratis 2 jugadores por jornada (viendo un anuncio; desde que acaba una jornada hasta que acaba la siguiente) y su cláusula queda protegida 24 h (48 h en las ligas Premium). Un jugador BLINDADO no se puede clausular hasta la hora que te digo: no lo recomiendes como clausulazo hasta entonces (como mucho, «cuando se abra»). Con los míos, si uno importante tiene la cláusula abierta y algún rival la puede pagar, y me quedan blindajes, blindarlo es gratis: recomiéndalo antes que gastar en subirle la cláusula (acción «blindar», importe 0, donde «con el blindaje de LaLiga»). Ojo: dura poco, así que si nadie le puede pagar la cláusula, guárdalo. PALABRAS: en lo que escribas, «blindar» y «blindaje» son SOLO el escudo gratis de LaLiga; pagar para que la cláusula suba es «subir la cláusula», pero en el plan su acción es SIEMPRE «blindar» con su importe (la subida justa que te paso): no escribas otra acción.
-Mejor no hacer nada que hacer algo dudoso. Confianza «alta» solo si todo cuadra y hay un dato o una noticia que lo respalda; si no has encontrado noticias, dilo.
-CALENDARIO (RIESGO DEPORTIVO): con cada jugador te paso su calendario (sus próximos 5 partidos, o todos los de los 14 días que un fichaje tiene la cláusula protegida si son más): cada rival con su puesto, lo difícil que es PARA ÉL (un defensa sufre con el que marca mucho, un delantero con el que no encaja; y en casa o fuera), los puntos que se esperan y la probabilidad de que sea titular (con la rotación si su equipo juega Champions, Europa o Copa cerca), y cómo le fue a su equipo las últimas veces contra ese rival (V, E o D con el marcador, de la más vieja a la más reciente; pesa poco, menos que cómo están ahora). Si es DURO o de riesgo deportivo ALTO, no recomiendes ficharlo salvo que sea un parche (le falta gente sana en ese puesto para sacar el once) y a un precio cerca de su valor (como mucho el tope que te paso con su calendario, «sin pagar más de un …»: un 5 %, o más en los baratos, que se pagan más caros en porcentaje); si lo propones así, dilo («de parche»). Si es FAVORABLE y es titular, se puede pagar algo más por él. Cuando lo uses para fichar o descartar a alguien, justifícalo con los partidos (contra quién y si en casa o fuera), los puntos que se esperan y su titularidad, con las cifras que te paso; no basta con decir «calendario difícil». Con los que ya tiene, el calendario no decide la venta: lo dice VENDER.
-COMPRAR A OTRO MANAGER: solo si es un trato que te ha contado el manager o, en el chat, si lo tiene a la venta (van en «COMPRAR A OTRO MANAGER» de OPERACIONES POSIBLES HOY). En el plan, lo que tus rivales tienen a la venta no va: no lo propongas. Un jugador de un rival que no está a la venta NO se puede comprar: su dueño no tiene por qué vendérselo, y menos si lo acaba de fichar (los recién fichados están protegidos unos 14 días). Para quitárselo, solo su cláusula cuando se abra. Y aunque lo tenga a la venta, es el dueño quien decide: dilo y no lo des por hecho. Ojo con el precio: LaLiga también le hace una oferta por lo que pone a la venta y él se queda con la mejor, así que ofrecerle lo que pide (o su valor) casi nunca basta. Ofrece como poco la OFERTA MÍNIMA CON OPCIONES que te paso (la que supera lo que le suele dar LaLiga) y, si interesa mucho, la de «muchas opciones»; si esa cifra ya es demasiado para lo que aporta, no lo propongas. Lo que LaLiga le ofrece hoy a un rival NO LO SABES (solo lo ve él): es una estimación con lo que se ha vendido a LaLiga en esta liga. Dilo así («suele rondar X», «normalmente entre X e Y»), nunca «le va a ofrecer X», y no prometas que acepte: puede tener otras ofertas o esperar a la de mañana.
-PAGAR DE MÁS: lo que importa es el DINERO que se paga por encima del valor, no solo el porcentaje, porque eso se pierde en el valor del equipo (si lo vendes, te dan cerca de su valor). Un +25 % por uno que vale 3 M son 750 mil: casi nada si te da puntos. Un +25 % por uno que vale 40 M son 10 M: muchísimo. Y al revés: por uno de 600 mil, un +100 % son 600 mil, y en el mercado es lo normal (con varias pujas se lo llevan por el doble o más); un +15 % por uno así casi nunca gana la subasta. El porcentaje compáralo siempre con lo que se paga en esta liga por los de su valor (te lo paso con cada puja), nunca con la mediana de todos ni con lo que se paga por los caros. Con cada operación te paso el ÍNDICE DE SOBRECOSTE (0 a 100, sube poco a poco con los euros que pierdes de verdad, comparados con el valor de su equipo y descontando lo que recupera en una semana con lo que sube, y algo con el porcentaje) y hasta dónde es aguantable para ese jugador (de 60 si no le aporta nada a su once a 95 si lo mejora mucho). No lo uses como un corte: pésalo frente a lo que aporta. Cuanto más alto el índice, más tiene que aportar para que compense; por encima de lo aguantable, no lo recomiendes salvo un trato que te haya contado. Dilo siempre en euros y en días para recuperarlo. Ejemplo de lo que NO hay que hacer: clausular por 21 M a un jugador que vale 9 M.
-Las posiciones mandan para el once: juega con la versión gratuita, así que solo puede alinear las formaciones que te digo. Lo primero es poder sacar el mejor once posible: tapa antes los huecos (si le falta un defensa, no le recomiendes otro delantero). Conviene tener al menos 2 delanteros sanos, pero no es obligatorio (con 1 se puede jugar un 4-5-1 o un 5-4-1): si solo tiene 1 y la plantilla te lo marca con «conviene tener 1 más», un segundo delantero bueno y barato es una buena idea de recambio, siempre después de tapar los huecos de verdad y sin pagar de más; si no hay uno que valga la pena, no lo fuerces. Un fichaje para el once solo si entra de titular; si no entraría, solo como fichaje para revender (o el segundo delantero de recambio de arriba), y entonces dilo. Para vender, empieza por los suplentes que no juegan. La alineación que propongas tiene que ser una de esas formaciones, con un portero y solo con jugadores suyos (o los que le digas que fiche hoy) que puedan jugar.
-EL RIVAL MANDA EN LA ALINEACIÓN: elige el once por los PUNTOS ESPERADOS de su próximo partido (ya cuentan el rival, si juega en casa o fuera, la portería a cero y lo que se espera que encaje), no por su media ni por el nombre. Mira la PREVIA de cada uno: un portero o un defensa contra un equipo de arriba que marca mucho (el Madrid, el Barça, el Atlético…) casi nunca deja la portería a cero, resta por los goles encajados y saca peor nota, sobre todo si su equipo es de la parte de abajo. Si tiene otro de su puesto que juega contra un rival más flojo, o puede cambiar de formación para meter a otro con mejor partido, siéntalo; y si lo alineas igual, dilo en «dudas» con el rival. Lo mismo con un delantero contra una defensa que casi no encaja.`;
+/* (revisión de la IA, 14 nov) El sistema, rehecho: de 24.500 caracteres a menos de 10.000. Las reglas de LaLiga van una sola
+   vez, numeradas y comprobadas con Carlos (13 nov: oferta directa a cualquier jugador de un rival, 14 días de cláusula
+   cerrada tras cualquier fichaje, la oferta de LaLiga llega en el siguiente cambio de mercado, el tope de deuda suma todas
+   las pujas). Lo que antes eran párrafos de «cómo calcular» (cuándo vender, cuánto es pagar de más, la salida de un
+   clausulazo, el calendario) ahora lo decide la app antes de preguntar (veredictos) y aquí solo se explica cómo elegir.
+   Se quitan las contradicciones: «no se puede comprar a un rival que no vende» frente a «se cierra con una oferta desde
+   su ficha», y «lo que pide» para el precio que un rival pone en el mercado. */
+const SISTEMA = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Tu trabajo es decirle qué hacer cada día para ganar la liga y hacer crecer el valor de su equipo. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} Si te pregunta qué IA o qué modelo eres, di que eres el director deportivo de Fantasy Manager, sin decir el nombre ni la versión del modelo ni de quién es. No le atribuyas al manager ganas, miedos ni decisiones que no te ha dicho: si necesitas saberlo, pregúntaselo.
+
+REGLAS DE LALIGA FANTASY (comprobadas; si algo de lo que vayas a decir choca con una de estas, está mal):
+1. CLÁUSULAS. Cada jugador tiene una. Con la protección acabada, cualquiera la paga y se lo lleva al instante. Una cláusula SOLO se paga con el SALDO que hay en ese momento: nunca con deuda ni con el dinero de lo que está en venta sin aceptar. Tras CUALQUIER fichaje (mercado, clausulazo o compra a otro manager) la cláusula del jugador queda cerrada 14 días. Si el valor pasa la cláusula, LaLiga la sube sola hasta el valor. El dueño puede subirla pagando (pagar X la sube 2X).
+2. CIERRE. En las 24 h antes del primer partido de cada jornada nadie puede clausular a nadie; se reabren justo a la hora de ese primer partido (te paso cada cláusula ya con la hora en que de verdad se puede pagar).
+3. EL ONCE se cierra con el primer partido de la jornada y no se puede tocar hasta la siguiente, ni a los que aún no han jugado. Lo que se ficha o se clausula después no puntúa en esa jornada.
+4. BLINDAJE (el escudo): 2 por jornada, gratis viendo un anuncio, 24 h (48 h en ligas Premium), y SOLO se puede poner con la cláusula ya abierta. «Blindar» y «blindaje» son solo eso; pagar para que la cláusula suba es «subir la cláusula» (en el plan, su acción es también "blindar", con su importe).
+5. MERCADO DE LIBRES: jugadores que no son de nadie; se puja a ciegas desde su precio y se los lleva la puja más alta cuando cambia el mercado (cada día).
+6. DEUDA: puede quedarse en negativo hasta el % del valor del equipo que te digo, pero SOLO pujando o comprando en el mercado, y cuenta la SUMA de todas las pujas que tenga puestas. Si empieza una jornada en negativo, no puntúa: eso es lo único obligatorio.
+7. VENDER: pone al jugador en el mercado; la oferta de LaLiga NO llega al momento, llega en el siguiente cambio de mercado, y en cada cambio hace una nueva. El dinero entra al aceptar una oferta, no antes.
+8. JUGADORES DE OTROS MANAGERS, tres caminos distintos: (a) su CLÁUSULA, cuando esté abierta: es el único seguro. (b) Lo tiene EN VENTA: el precio lo pone él a su gusto (muchas veces absurdo, solo para ver qué le ofrece LaLiga) y es el MÍNIMO: por debajo no se puede ofertar; él recibe además la oferta de LaLiga y se queda con la mejor. Ese precio no es un trato ni algo que «le pida» al manager. (c) NO lo tiene en venta: se le puede hacer una oferta igualmente desde la ficha del jugador, pero decide su dueño y lo normal es que no acepte por menos de lo que le daría LaLiga. Solo es un TRATO si el manager te cuenta que el otro le ha ofrecido el jugador A ÉL por una cifra.
+9. Un CAMBIO entre managers son dos compras, cada una a su precio (su valor, si no acuerdan otro): nadie regala ni pierde la diferencia, y cada jugador estrena 14 días de cláusula cerrada.
+10. PLANTILLA: 25 jugadores como mucho. Juega con la versión gratis: solo las formaciones que te digo y SIN ENTRENADOR (no se alinea ni puntúa: nunca recomiendes fichar uno; si tiene alguno, es dinero parado).
+
+LA APP DECIDE, TÚ ELIGES Y EXPLICAS. La app ya ha hecho las cuentas y ha comprobado cada operación con las reglas de arriba y con los datos de su liga:
+- En «OPERACIONES POSIBLES HOY» solo está lo que se puede hacer y la app daría por bueno; cada una lleva «→ LA APP: …» con para qué vale y sus avisos. Lo de «LO QUE LA APP YA HA DESCARTADO HOY» no se recomienda (si te preguntan por uno, explica el motivo que te paso). Un jugador de un rival que no está ahí no entra en el plan.
+- Con sus jugadores, cada uno lleva lo que haría la app si lo vende. «LA APP: NO LO VENDERÍA HOY» manda: no le digas que lo venda, salvo que el dinero haga falta de verdad para otra operación de hoy o que él te dé un dato nuevo, y entonces dilo.
+- Las cifras se COPIAN de los datos: valor, cláusula, saldo, lo que pagó, la puja de la app, la subida justa, la oferta mínima, fechas y horas. No las redondees a otra cosa ni las cambies de un mensaje a otro. Si haces una cuenta, que sea una suma o una resta sencilla, escrita con sus cifras («6,43 M + 66,17 M = 72,60 M»), y repásala.
+- Lo que no esté en los datos, no lo sabes: dilo así en vez de inventarlo (un precio «pactado», lo que LaLiga le ofrece hoy a un rival, una lesión que no sale).
+Tu parte es elegir entre lo que vale, ordenarlo para que el dinero cuadre y explicarlo: por qué ahora, qué riesgo tiene y qué haría falta para cambiar de idea. Mejor no hacer nada que hacer algo dudoso.
+
+CÓMO DECIDIR entre lo que vale:
+- DOS TIPOS DE FICHAJE, y di cuál es: para su ONCE (entra de titular y da puntos) o para REVENDER (sube y se vende con beneficio antes de la jornada; da igual que no lo vaya a alinear o que ya tenga a otro en su puesto). Para revender tiene que seguir subiendo hasta el día de venderlo y tiene que dar tiempo (te paso los cambios de mercado que quedan). Los marcados VUELVE (se hundieron por lesión o por no jugar, juegan otra vez y suben varios días seguidos) son la especulación más clara.
+- ¿JUEGA Y PUNTÚA? Once probable, minutos, lesión, sanción y prensa. Si lleva ALINEACIÓN CONFIRMADA, eso manda. Elige por los PUNTOS ESPERADOS de su próximo partido (ya cuentan el rival, casa o fuera y la portería a cero), no por su media ni por su nombre: un portero o un defensa contra un equipo que marca mucho puntúa poco; un delantero contra una defensa que no encaja, también. Su CALENDARIO (próximos partidos) cuenta para fichar, no para vender.
+- ¿QUÉ CUESTA? Lo que se paga por encima del valor se pierde: importan los EUROS, no solo el porcentaje (un +25 % son 750 mil en uno de 3 M y 10 M en uno de 40 M). Te paso el índice de sobrecoste y hasta dónde es aguantable; dilo en euros. La puja sale de lo que se paga en esta liga por los de su valor (te lo paso): como poco, la de la app.
+- INERCIA DEL VALOR: mira hacia dónde va AHORA (lo que cambia cada día), no el total de la semana. Si sube cada vez menos, está frenando y va a girar; si ha girado, lo normal es que siga bajando varios días. Un buen partido reciente (te lo marco) puede frenar la bajada o darle la vuelta.
+- VENDER: solo si hace falta el dinero (empezaría la jornada en negativo o paga una operación de hoy que compense), si está de baja o se hunde, si ha girado y no es imprescindible, o si la oferta es buena. Ser suplente, un calendario duro o «hacer caja» no son motivo. Di siempre cuánto gana o pierde frente a lo que pagó y a cuánto está su cláusula. Si la oferta de LaLiga de hoy es de las bajas y no hay prisa, que espere a la del siguiente cambio de mercado.
+- RIESGO DE CLÁUSULA (que le quiten a uno suyo): te lo paso calculado con el dinero de cada rival y lo que se paga en esta liga; no lo rebajes sin un dato nuevo y no lo mezcles con lo difícil que sea su calendario. Si le clausulan, cobra la cláusula, pero con la cláusula en su valor o cerca es REGALARLO (pierde sus puntos y lo que suba, y reponerlo cuesta más): nunca digas que le viene bien ni que «hace caja». Para protegerlo: primero el blindaje gratis si está abierta y le quedan; si no, la «subida justa» que te paso (no una cifra tuya), y solo si el jugador lo merece. Si no compensa, dilo: es un riesgo que asume.
+- EL DINERO: para clausular, solo el saldo de ahora (o el que tendría aceptando antes las ofertas que ya tiene); para pujar, el saldo más el margen de deuda menos lo ya pujado. Entre semana puede tirar de deuda para especular si antes de la jornada vuelve a positivo vendiendo: dile qué día vender cada cosa.
+- LOS RIVALES: mira qué hacen y quién puede ir a por sus jugadores (el que clausula a menudo y le llega es el peligro de verdad). Un rival sin dinero no puja fuerte ni clausula.
+- EL PARÓN: nadie puntúa hasta la vuelta y lo que manda es el dinero (mira PRIORIDAD EN EL PARÓN si te la paso).
+- LO QUE TE CUENTA EL MANAGER (tratos, ofertas por privado, lo que ha hecho o no quiere vender) cuenta tanto como los datos. Un trato se cierra con una oferta por ese importe desde la ficha del jugador: valóralo por su valor, lo que sube al día, si entra en su once y si le llega el dinero.
+- APRENDE: en «CÓMO VAN TUS ACIERTOS» te digo cuánto fallan los puntos esperados y cómo salieron tus recomendaciones; si algo salió mal, no lo repitas.
+
+DATOS Y FUENTES: usa lo que te paso (cifras en millones, «12,4 M», fechas y horas exactas) y no inventes jugadores ni cifras. No digas de qué web sale nada ni nombres webs de fantasy o de onces (ni con un «según»): di «la prensa» o «los onces probables». Si tienes la búsqueda de Google, úsala solo para lo que pueda cambiar una decisión (lesiones, sanciones, convocatorias, onces de última hora, rotaciones); si no has encontrado noticias, dilo. Confianza «alta» solo si todo cuadra y hay un dato que lo respalda.
+{{PULLITAS}}`;
 /** las pullitas, al gusto (Ajustes > Pullitas de la IA): normal es como siempre ha sido */
 const PULLITAS = {
   normal: 'PULLITAS: si sale alguna noticia extradeportiva con gracia (que le han entrado a robar en casa, una fiesta, un tatuaje nuevo, un lío en redes, un cambio de look), cuéntala con una pullita corta y con chispa, como lo haría un colega del grupo. También puedes soltarle alguna a los rivales por lo que hacen (el que acumula millones y no ficha, el que paga de más por todo, el que se deja las cláusulas abiertas). Con gracia y sin crueldad: nada de reírte de lesiones graves, enfermedades, muertes, violencia contra personas ni de la familia. Lo extradeportivo NUNCA es motivo para comprar ni vender: la pullita va aparte y el motivo de la operación tiene que ser deportivo o de valor (minutos, forma, rival, inercia, precio). En «noticias», lo extradeportivo va con efecto «neutro». Una o dos pullitas por plan o por respuesta como mucho, que no se coman la información.',
@@ -1255,7 +1280,7 @@ export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
   const pedido = `${ctx}${memoria(M)}
 
 Hazme el PLAN DE HOY. ${BUSCAR_PLAN}
-Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto (o rechazo) de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Para cada compra en el mercado dime la puja máxima que pondría: como poco la que pondría la app (ya cuenta lo que se suele pagar en esta liga por los libres, mira LO QUE SE PAGA EN ESTA LIGA); por debajo de eso lo normal es perderlo. Antes de proponer un clausulazo mira su SALIDA: si se tuerce y no lo puedo vender sin perder dinero, solo vale si es titular seguro y se espera un buen partido (dilo en el motivo, con lo que perdería). Solo clausular o pujar si me llega. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si ahora estoy en negativo pero quedan 2 o más cambios de mercado antes de la jornada, no me hagas vender hoy perdiendo dinero frente a lo que pagué: dime qué vender y que acepte la oferta el último día que vale (salvo que esté de baja o caiga más de un 3 % al día); la app pone esas ventas como sugerencia. Si hoy lo mejor es no hacer nada, dilo y por qué.${paronLejos(M) ? ' ESTAMOS EN EL PARÓN: sigue la PRIORIDAD EN EL PARÓN (dinero antes que el once de la vuelta); casi todas las compras y cláusulas de hoy tienen que ser con objetivo «revender», y una para el once («titular») solo si va marcada como CHOLLO CLARO (en su cláusula o en su puja).' : ''}
+Luego dime las operaciones a hacer, EN ORDEN, para que el dinero cuadre: primero qué ofertas acepto de lo que ya tengo en venta y qué pongo a la venta (para tener saldo), luego lo que compro o clausulo, después blindar y por último la alineación. Elige SOLO entre las de «OPERACIONES POSIBLES HOY» (la app ya ha quitado lo que no haría) y respeta lo que dice «LA APP» de cada una y de cada jugador mío. Para cada puja, la puja máxima: como poco la de la app. Nunca me dejes en negativo al empezar la jornada: si hace falta vender, dímelo. Si ahora estoy en negativo pero quedan 2 o más cambios de mercado antes de la jornada, no me hagas vender hoy perdiendo dinero: dime qué vender y qué día. Si hoy lo mejor es no hacer nada, dilo y por qué.${paronLejos(M) ? ' ESTAMOS EN EL PARÓN: sigue la PRIORIDAD EN EL PARÓN (dinero antes que el once de la vuelta); casi todas las compras y cláusulas de hoy tienen que ser con objetivo «revender», y una para el once («titular») solo si va marcada como CHOLLO CLARO (en su cláusula o en su puja).' : ''}
 Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato, en este orden (primero las cuentas y lo que descartas, después las operaciones y al final el titular, que resume lo decidido):
 {
  "cuentas": {"caja_hoy": número (mi saldo), "caja_con_ofertas": número (si acepto las ofertas que tengo), "pujas_hechas": número, "huecos_once": número},
@@ -1271,7 +1296,7 @@ Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato, en es
  "titular": "8 a 16 palabras con lo más importante de hoy"
 }
 Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 a 6 candidatos que has mirado y no convienen. Entre 2 y 5 días en proximos_dias.
-"pujar" es SOLO para jugadores libres de la liga (subasta del mercado). Para un jugador que es de otro manager la acción es "comprar", con el precio en "importe" y sin puja_max, y SOLO si lo tiene a la venta o es un trato que te he contado; si no, no lo pongas. Para quitárselo pagando su cláusula, "clausular", SOLO con su ref C- de OPERACIONES POSIBLES HOY (abierta o que se abre en las próximas 48 h). Una cláusula que se abre dentro de varios días (en un parón, por ejemplo) NO va en el plan: hoy no se puede hacer nada con ella; como mucho, una frase en el resumen («la de X se abre el día tal»).`;
+"pujar" es SOLO para jugadores libres (ref P-). "comprar", solo para un trato que te he contado (ref T-), con el precio en "importe" y sin puja_max. "clausular", SOLO con su ref C-. Lo que se abre dentro de varios días no va en operaciones: como mucho, una línea en proximos_dias. El titular y la situación solo pueden nombrar operaciones que estén en tu lista.`;
   // pensando poco: con «medium» tardaba un par de minutos y el plan salía igual (la app comprueba cada paso)
   const sinBuscar = (t) => [{ role: 'user', parts: [{ text: t.replace(BUSCAR_PLAN, SIN_BUSCAR_PLAN) }] }];
   // todo el plan, con la segunda vuelta si el primero llega roto, no pasa de 4 minutos
@@ -1380,7 +1405,9 @@ export function mejorarAlin(js, pool, M, no = new Set()) {
 }
 
 /** las operaciones del plan con sus jugadores y el saldo después de cada una, con los números de la app */
-export function cuadrarPlan(P, D, M) {
+/* (revisión de la IA, 14 nov) `chat`: lo mismo para lo que la IA recomienda en el chat (su bloque «recomiendo»). Ahí lo que un
+   rival tiene a la venta sí se mira (con su precio mínimo y lo que le da LaLiga) y el once va aparte (revisarChat) */
+export function cuadrarPlan(P, D, M, { chat = false } = {}) {
   if (!P) return null;
   const buscar = (n) => {
     const k = norm(n);
@@ -1459,7 +1486,7 @@ export function cuadrarPlan(P, D, M) {
     o.accion = acc;
     return o;
   };
-  let lista = (P.operaciones || []).map(normalizar).filter((o) => !(sinOnce && /alinea/i.test(String(o.accion || ''))) && !ventaRival(o));
+  let lista = (P.operaciones || []).map(normalizar).filter((o) => !((sinOnce || chat) && /alinea/i.test(String(o.accion || ''))) && (chat || !ventaRival(o)));
   // (30 oct, Carlos: «me pone alinear a Unai cuando ya está en el once» y «blindarle cuando su cláusula está en 50 M
   // valiendo 38 M, sin sentido») el paso de alinear sobra si el once que propone es el que ya tienes puesto en LaLiga
   // (K('mi-once'), que app.js mira al cargar), y si cambia dice quién entra y quién sale; blindar a uno sin riesgo no
@@ -1938,7 +1965,13 @@ export function cuadrarPlan(P, D, M) {
   }
   const descartes0 = Array.isArray(P.descartes) ? P.descartes.filter((d) => !String((d && d.ref) || '').trim().toUpperCase().startsWith('M-')) : P.descartes;
   const descartes = quitados.length ? [...quitados, ...(Array.isArray(descartes0) ? descartes0.filter((d) => !quitados.some((q) => norm(q.jugador) === norm(d && d.jugador))) : [])] : descartes0;
-  const { titular, situacion, titularApp } = textoSinDescartes(P, ops, OPERA);
+  // el paso de alinear no puede nombrar a uno que no es tuyo (la alineación ya se ha corregido arriba, el paso no)
+  for (const o of ops) {
+    if (o.accion !== 'alinear' || !o.pid || M.dueno[o.pid] === yoT || ops.some((x) => x.pid === o.pid && !x.descartada && ['clausular', 'pujar', 'comprar'].includes(x.accion))) continue;
+    const quien = (o.j && o.j.nombre) || o.jugador;
+    Object.assign(o, { j: null, pid: null, jugador: '', aviso: `${o.aviso ? `${o.aviso} ` : ''}La IA nombraba aquí a ${quien}, que no es tuyo: no puede ir en tu once.` });
+  }
+  const { titular, situacion, titularApp } = textoSinDescartes(P, ops, OPERA, quitados);
   return { ...P, titular, situacion, titularApp, descartes, ops, final, avisoSaldo, avisoTipo, recupera, empezo, alineacion, avisoOnce, avisoAlin, pujasHechas: +M.misPujas || 0 };
 }
 
@@ -1946,12 +1979,13 @@ export function cuadrarPlan(P, D, M) {
    debajo la app descartaba esa venta) el titular y el resumen los escribe la IA antes de que la app cuadre el plan: si
    nombran a alguien cuya operación la app ha descartado (y no le queda otra operación en pie), se quita esa parte y el
    titular se rehace con lo que sí queda para hoy */
-function textoSinDescartes(P, ops, OPERA) {
+function textoSinDescartes(P, ops, OPERA, quitados = []) {
   const titular = P.titular || '', situacion = P.situacion || '';
   const nombreDe = (o) => (o.j && o.j.nombre) || o.jugador || '';
   const vivas = ops.filter((o) => !o.descartada);
-  const fuera = ops.filter((o) => o.descartada && !o.ya && OPERA.includes(o.accion) && nombreDe(o)
-    && !vivas.some((v) => v.pid ? v.pid === o.pid : norm(nombreDe(v)) === norm(nombreDe(o))));
+  // (y lo que la app quita antes de mirarlo, como blindar a uno sin riesgo: tampoco puede salir en el titular)
+  const fuera = [...ops.filter((o) => o.descartada && !o.ya && OPERA.includes(o.accion) && nombreDe(o)), ...quitados.map((q) => ({ accion: 'blindar', jugador: q.jugador, descartada: true }))]
+    .filter((o) => !vivas.some((v) => (v.pid && o.pid ? v.pid === o.pid : norm(nombreDe(v)) === norm(nombreDe(o)))));
   if (!fuera.length || (!titular && !situacion)) return { titular: P.titular, situacion: P.situacion, titularApp: false };
   // las formas en que la IA puede escribir el nombre: el corto, el largo, lo que puso ella y su última palabra
   const formas = new Set();
@@ -1988,6 +2022,49 @@ function textoSinDescartes(P, ops, OPERA) {
   const resto = limpiar(titular).replace(/[.\s]+$/, '');
   const nuevo = resto ? `${resto}; ${lo}` : `${lo.charAt(0).toUpperCase()}${lo.slice(1)}`;
   return { titular: nuevo, situacion: sit || null, titularApp: true };
+}
+
+/* ---------------- lo que haría la app con cada operación (revisión de la IA, 14 nov) ----------------
+   «El motor decide y la IA explica»: antes de preguntarle nada a la IA, cada operación posible de hoy pasa, una a una,
+   por el mismo cuadrarPlan que luego revisa lo que contesta. Lo que la app descartaría ya no se le ofrece (va en una línea,
+   con el motivo, para que sepa explicarlo si le preguntan) y lo que vale lleva el aviso de la app. Así la IA no puede
+   elegir algo que la app vaya a tachar, y el plan y el chat dicen lo mismo que Hoy y que las alarmas. */
+const ACC_REF = { A: 'aceptar_oferta', V: 'vender', P: 'pujar', M: 'comprar', T: 'comprar', C: 'clausular', B: 'blindar' };
+const sinApp = (t) => String(t || '').replace(/La app lo descarta[.:]?\s*/g, '').replace(/^Para más adelante: /, '').replace(/\s+/g, ' ').trim();
+const cortar = (t, n = 170) => { const x = sinApp(t); if (x.length <= n) return x; const c = x.slice(0, n); const i = Math.max(c.lastIndexOf('. '), c.lastIndexOf('; '), c.lastIndexOf(': ')); return `${(i > 60 ? c.slice(0, i) : c.slice(0, c.lastIndexOf(' '))).replace(/[\s,;:.]+$/, '')}…`; };
+export function veredictos(D, M) {
+  const cat = catDe(D, M);
+  if (M._ver && M._verCat === cat) return M._ver;
+  const uno = (o, mas = {}) => {
+    const paso = { ref: o.ref, accion: ACC_REF[o.ref[0]], jugador: o.j.nombre, importe: null, motivo: '', dia: 'hoy', cuando: 'ahora', ...mas };
+    let x = null;
+    try { x = (cuadrarPlan({ operaciones: [paso], titular: '', t: Date.now() }, D, M, { chat: true }).ops || [])[0] || null; } catch (e) { x = null; }
+    if (!x) return { ok: false, aviso: 'la app no la haría' };
+    return { ok: !x.descartada && !x.sugerencia, sinPrisa: !!x.sugerencia, aviso: x.aviso || '', importe: x.importe, cuando: x.cuando, paron: !!x.paron };
+  };
+  const V = {};
+  for (const o of cat.lista) {
+    const t = o.ref[0];
+    if (t === 'C' || t === 'P') {
+      // para el once y para revender no pasan los mismos filtros: vale si vale para alguna de las dos
+      const tit = uno(o, { objetivo: 'titular', importe: t === 'P' ? o.puja : o.precio, puja_max: t === 'P' ? o.puja : null });
+      const rev = (M.especular || []).some((e) => e.pid === o.pid) ? uno(o, { objetivo: 'revender', importe: t === 'P' ? o.puja : o.precio, puja_max: t === 'P' ? o.puja : null }) : { ok: false };
+      V[o.ref] = tit.ok && rev.ok ? { ...tit, para: 'el once o revender' } : tit.ok ? { ...tit, para: 'el once' } : rev.ok ? { ...rev, para: 'revender (para el once, no)' } : { ...tit, ok: false };
+    } else if (t === 'B') V[o.ref] = uno(o, { objetivo: 'proteger', importe: o.escudoGratis || !o.blindaje || o.blindaje.yaVale || o.blindaje.caro ? 0 : o.blindaje.coste });
+    else if (t === 'A') V[o.ref] = uno(o, { objetivo: 'caja', importe: o.precio });
+    else if (t === 'V') V[o.ref] = uno(o, { objetivo: 'caja' });
+    else V[o.ref] = uno(o, { objetivo: 'titular', importe: t === 'M' ? (o.puja || o.ofertaMin || o.precio) : o.precio });
+  }
+  M._ver = V; M._verCat = cat;
+  return V;
+}
+/** lo que la app haría con uno de tus jugadores si lo vendes hoy, en una frase (para su línea en los datos de la IA) */
+function ventaAppTxt(D, M, pid) {
+  const V = veredictos(D, M), a = V[`A-${pid}`], v = V[`V-${pid}`];
+  if (a) return a.ok ? `LA APP: aceptaría hoy la oferta que tiene${a.aviso ? ` (${cortar(a.aviso, 140)})` : ''}` : `LA APP: NO aceptaría hoy la oferta${a.sinPrisa ? ' (sin prisa)' : ''}: ${cortar(a.aviso, 200)}`;
+  if (!v) return '';
+  if (v.ok) return v.aviso ? `LA APP: venderlo se puede, con este aviso: ${cortar(v.aviso, 170)}` : '';
+  return `LA APP: NO LO VENDERÍA HOY${v.sinPrisa ? ' (sin prisa: como mucho, más cerca de la jornada)' : ''}: ${cortar(v.aviso, 200)}`;
 }
 
 function sacarJSON(t) {
@@ -2124,9 +2201,9 @@ export function cuentaConVendido(texto, nombre, deOtro = false) {
 // cuando Carlos solo preguntaba y luego estaba negociando: además de decírselo, aplicarNotas lo comprueba.
 const NOTAS_CHAT = `APUNTAR: solo lo que el manager te CUENTA en su último mensaje como un hecho o como algo que ya ha decidido: una oferta o un trato que le ha hecho otro manager (que exista la oferta es un hecho, aunque él no haya decidido nada), algo que ya ha hecho, algo que ha decidido hacer, un jugador que dice que no quiere vender, una preferencia. Que un rival tenga a alguien a la venta NO es un trato: apúntalo (si acaso) como «otro», sin importe; el importe solo si él te dice una cifra que le han ofrecido A ÉL. NUNCA apuntes una decisión que no te haya dicho él con sus palabras («lo he rechazado», «acepto», «voy a…»): si pregunta («¿lo acepto?», «¿qué hago?») o está negociando, no ha decidido nada; como mucho apunta la oferta tal cual («Rival 2 le ofrece A por B») o en qué va la negociación. Y nunca escribas que hizo algo por tu consejo. Al final de tu respuesta, y solo entonces, añade este bloque (no lo menciones en el texto):
 \`\`\`notas
-{"apuntar": [{"texto": "frase corta en tercera persona con nombres y cifras", "jugador": "nombre exacto del jugador o null", "tipo": "trato|hecho|intencion|preferencia|otro", "importe": número en euros o null, "dias": días que sigue valiendo (1 a 30) o null si no caduca}], "olvidar": ["id entre corchetes de una nota que ya no vale"]}
+{"recomiendo": [{"ref": "la ref de OPERACIONES POSIBLES HOY si la tiene, o null", "accion": "aceptar_oferta|vender|pujar|comprar|clausular|blindar|alinear", "jugador": "nombre exacto", "importe": número en euros o null, "cuando": "ahora | hoy | el día y la hora"}], "apuntar": [{"texto": "frase corta en tercera persona con nombres y cifras", "jugador": "nombre exacto del jugador o null", "tipo": "trato|hecho|intencion|preferencia|otro", "importe": número en euros o null, "dias": días que sigue valiendo (1 a 30) o null si no caduca}], "olvidar": ["id entre corchetes de una nota que ya no vale"]}
 \`\`\`
-Si no hay nada nuevo que apuntar ni que olvidar, no pongas el bloque. Si te cuenta una oferta o un trato, contesta además si le conviene, con cifras (precio frente a valor, lo que sube o baja al día, en cuántos días lo recupera, si entra en su once, si le llega el dinero y qué tendría que vender).`;
+En «recomiendo» van SOLO las operaciones que en esta respuesta le dices que HAGA (ninguna si le dices que espere, que no lo haga o solo le informas): la app las comprueba una a una antes de enseñarle tu respuesta, igual que en el plan. Si no recomiendas ninguna operación y no hay nada que apuntar ni que olvidar, no pongas el bloque. Si te cuenta una oferta o un trato, contesta además si le conviene, con cifras (precio frente a valor, lo que sube o baja al día, en cuántos días lo recupera, si entra en su once, si le llega el dinero y qué tendría que vender).`;
 
 // ¿su mensaje dice que ha hecho o decidido algo? (no vale una pregunta)
 const DECIDE = /\b(he|hemos) (rechazado|aceptado|decidido|vendido|fichado|clausulado|comprado|blindado|dicho que (si|no)|cerrado)\b|\b(lo|la|los) (rechazo|acepto|vendo|dejo|cierro)\b|\b(rechazo|acepto|vendo|descarto)\b|\bno (lo |la )?(acepto|vendo|quiero|voy)\b|\b(voy|vamos) a\b|\bme quedo con\b|\bpaso de\b|\bya (lo |la )?(he|hice)\b|\ble he (dicho|ofrecido|pedido)\b|\btrato hecho\b/;
@@ -2148,11 +2225,11 @@ export function notaValida(a, pregunta) {
 /** saca el bloque de notas de la respuesta y lo aplica: lo que hay que apuntar y lo que hay que olvidar */
 export function aplicarNotas(texto, D, pregunta = null, conFotos = false) {
   const m = String(texto || '').match(/```notas\s*([\s\S]*?)(```|$)/);
-  if (!m) return { texto, apuntadas: [], olvidadas: 0 };
+  if (!m) return { texto, apuntadas: [], olvidadas: 0, recomiendo: [] };
   const limpio = texto.replace(m[0], '').trim();
   let j = null;
   try { j = JSON.parse(m[1]); } catch (e) { j = sacarJSON(m[1]); }
-  if (!j) return { texto: limpio, apuntadas: [], olvidadas: 0 };
+  if (!j) return { texto: limpio, apuntadas: [], olvidadas: 0, recomiendo: [] };
   let lista = notas();
   const antes = lista.length;
   const fuera = new Set((j.olvidar || []).map(String));
@@ -2182,7 +2259,7 @@ export function aplicarNotas(texto, D, pregunta = null, conFotos = false) {
     });
   }
   if (apuntadas.length || olvidadas) guardarNotas([...lista, ...apuntadas]);
-  return { texto: limpio, apuntadas, olvidadas };
+  return { texto: limpio, apuntadas, olvidadas, recomiendo: Array.isArray(j.recomiendo) ? j.recomiendo.filter((x) => x && x.jugador && x.accion).slice(0, 8) : [] };
 }
 
 /** los últimos mensajes para Gemini, con las fotos enteras de los más recientes (como mucho 6) */
@@ -2269,17 +2346,16 @@ export function cuentasTxt(D, M, js, { web = true } = {}) {
 // cómo se habla en el chat: al grano, sin repetir el plan y con las cifras de los datos (Carlos, 7 nov)
 const REGLAS_CHAT = `
 EN EL CHAT:
-- LO QUE UN RIVAL TIENE A LA VENTA NO ES UNA OFERTA PARA ÉL. Si te cuenta que otro mánager «vende» a alguien o lo ha puesto a la venta, es que está en el mercado con el precio que el rival ha querido ponerle, que muchas veces es una cifra absurda solo para ver la oferta de LaLiga. Por debajo de ese precio no se puede ofertar: es lo MÍNIMO que tendría que pagar. NO es lo que «le pide» a él ni un trato: no lo trates como una negociación ni montes un discurso sobre ese precio. Si el precio está muy por encima de su valor, basta una línea («a ese precio no; lo tiene puesto para ver qué le da LaLiga»). Lo que importa es si el jugador le interesa: su VALOR, su inercia, lo que aporta a su once y la oferta mínima con opciones de «COMPRAR A OTRO MANAGER» si la hay; el rival decide y también tiene la oferta de LaLiga. Solo es un TRATO si él te dice que ese mánager le ha ofrecido el jugador A ÉL por una cifra concreta. Nunca escribas «pactasteis», «te pide» ni «te lo deja a» con una cifra que él no te haya dicho.
+- Contesta a lo que te pregunta y nada más, al grano. NO repitas el plan del día ni operaciones que no ha preguntado; sácalo solo si cambia la respuesta a su pregunta, y entonces en una línea.
+- Si te pregunta si PUEDE hacer algo, empieza por «sí» o «no» según las REGLAS y lo que te paso de ese jugador («CÓMO CONSEGUIRLO», su cláusula y cuándo se abre, su saldo), y después dile si le conviene y lo que haría la app.
+- LO QUE UN RIVAL TIENE A LA VENTA (regla 8b) no es una oferta para él ni una negociación: si el precio está muy por encima de su valor, basta una línea («a ese precio no; lo tendrá puesto para ver qué le da LaLiga»). Lo que importa es si el jugador le interesa: su valor, su inercia, lo que aporta a su once y la oferta mínima con opciones si te la paso. Nunca escribas «pactasteis», «te pide» ni «te lo deja a» con una cifra que él no te haya dicho.
 - No mezcles el pasado con lo de ahora: que un jugador fuera suyo hace días no cambia nada si ahora es de un rival; háblale de él como de cualquier jugador de ese rival.
-- Contesta a lo que te pregunta y nada más. NO repitas el plan del día ni operaciones que no ha preguntado (si ya se lo dijiste, no se lo vuelvas a decir); sácalo solo si cambia la respuesta a su pregunta, y entonces en una línea.
-- CIFRAS: salen de los datos o de «CUENTAS HECHAS». Si haces una cuenta, escribe la operación con sus cifras («52,68 M − 26,69 M = 25,99 M») y comprueba el resultado antes de escribirlo. No des horquillas («33-35 M») sin decir de dónde salen. Si en este chat ya diste una cifra y ahora das otra, di por qué ha cambiado.
-- FECHAS Y HORAS: cópialas de los datos, con su día («mañana 20:00 (8 nov)»). No pases algo de «mañana» a «hoy» ni cambies una hora de un mensaje a otro.
-- CLÁUSULAS: las de sus jugadores también las tienes (en «MIS JUGADORES» y en «JUGADORES QUE NOMBRA»), con la hora a la que se abren: úsalas sin que te las tenga que decir.
+- CIFRAS, FECHAS Y HORAS: cópialas de los datos o de «CUENTAS HECHAS», con su día («mañana 20:00 (8 nov)»). No des horquillas sin decir de dónde salen. Si en este chat ya diste una cifra y ahora das otra, di por qué ha cambiado.
 - Si te falta un dato para aconsejar (qué quiere hacer, hasta dónde está dispuesto a llegar), pregúntaselo en vez de suponerlo.
-- TRATOS CON PRECIO: si propone un precio para cada jugador («le pido A por X y yo le vendo B por Y»), es un trato válido entre managers: nunca digas que son cifras inventadas ni lo descartes por haber cláusulas. Haz la cuenta del trato ENTERO: con qué jugador acaba, cuánto cobra y cuánto paga (neto = lo que cobra − lo que paga) y compáralo con la REFERENCIA de «CUENTAS HECHAS» (esperar a las cláusulas) y con quedarse como está. Primero si le conviene a él; después, aparte, si el rival lo aceptaría y por qué (qué gana él frente a pagar la cláusula: seguridad, no jugársela al blindaje).
-- CAMBIOS ENTRE MANAGERS: «cambio A por B» son dos compras, cada una a su valor (salvo otros precios o que diga que es sin dinero): el que se lleva al que vale más paga la diferencia y NADIE PIERDE VALOR. No le digas que regala o pierde millones. Lo que decide es quién va a subir más y quién dará más puntos (tendencia, inercia, estado, forma, calendario, parón) y la PROTECCIÓN: tras el cambio, cada uno tiene a su nuevo jugador 14 días sin que se lo puedan clausular (si las cláusulas iban a abrirse, esa es la razón del cambio). Compáralos con cifras y da tu veredicto.
-- IDIOMA: español de España siempre, también en las bromas: nada de voseo ni de argentinismos («echá», «afanar», «laburo», «che»).
-- SI TE DA UN DATO NUEVO (molestias, una lesión, una oferta, lo que le ha dicho un rival) o te vuelve a preguntar lo mismo, no repitas la respuesta de antes con otras palabras: empieza por lo que cambia ese dato y lo que no, con números (cuánto tendría que pasar para que cambie tu consejo). Si el dato no está en los datos, dalo por bueno y úsalo. Si tu consejo sigue siendo el mismo, explica por qué en una frase y dale la mejor alternativa para lo que le preocupa.
+- TRATOS CON PRECIO: si propone un precio para cada jugador («le pido A por X y yo le vendo B por Y»), es un trato válido entre managers: no digas que son cifras inventadas ni lo descartes por haber cláusulas. Haz la cuenta del trato ENTERO (con qué jugador acaba, cuánto cobra y cuánto paga) y compáralo con la REFERENCIA de «CUENTAS HECHAS» y con quedarse como está. Primero si le conviene a él; después, aparte, si el rival lo aceptaría y por qué.
+- CAMBIOS ENTRE MANAGERS (regla 9): lo que decide es quién va a subir más y quién dará más puntos (tendencia, inercia, estado, forma, calendario, parón) y la PROTECCIÓN: tras el cambio, cada uno tiene a su nuevo jugador 14 días sin que se lo puedan clausular. Compáralos con cifras y da tu veredicto.
+- IDIOMA: español de España siempre, también en las bromas: nada de voseo ni de argentinismos.
+- SI TE DA UN DATO NUEVO (molestias, una lesión, una oferta, lo que le ha dicho un rival) o te vuelve a preguntar lo mismo, no repitas la respuesta de antes con otras palabras: empieza por lo que cambia ese dato y lo que no, con números. Si el dato no está en los datos, dalo por bueno y úsalo. Si tu consejo sigue siendo el mismo, explica por qué en una frase y dale la mejor alternativa para lo que le preocupa.
 {{TONO}}`;
 // el tono del chat, según Ajustes > Pullitas de la IA: con «Sin pullitas» o «Suaves», serio (0.7o); con «Normales» o
 // «A saco», con bromas y pullas como antes, pero sin tocar las cuentas (Domy, 8 nov: «quiero que me siga hablando con
@@ -2290,6 +2366,188 @@ const TONO_CHAT = {
   saco: '- TONO: director deportivo con mucha guasa: dos o tres bromas o pullas por respuesta (a los rivales sin cortarte, a las noticias extradeportivas, y algún vacile de colega al propio manager), siempre aparte de las cuentas y del consejo, que van en serio. Sin palabrotas ni crueldad, y sin atribuirle ganas ni decisiones que no te ha dicho.',
 };
 const tonoChat = () => { const p = cfgIA().pullitas || 'normal'; return TONO_CHAT[p === 'saco' ? 'saco' : p === 'normal' ? 'normal' : 'serio']; };
+
+/* ---------------- la revisión del chat (revisión de la IA, 14 nov) ----------------
+   En el plan, cuadrarPlan comprueba cada paso; en el chat no se comprobaba casi nada y lo que dijera la IA salía tal cual
+   (cláusulas con deuda, cifras que no eran las de los datos, sumas mal hechas, «pactasteis»…). Ahora cada respuesta pasa
+   por aquí antes de guardarse:
+   1. lo que la IA dice que hagas (su bloque «recomiendo» y, si no lo pone, las órdenes claras del texto: «clausúlalo»,
+      «puja por X», «véndelo», «alinea a X», «blíndalo») pasa por el mismo cuadrarPlan que el plan;
+   2. las cifras que da de un jugador (valor, cláusula) y de tu saldo se comparan con los datos;
+   3. las cuentas que escribe («a + b − c = d») se rehacen;
+   4. lo que no puede decir: que una cláusula se paga con deuda, que te viene bien que te clausulen a uno a su valor, que
+      el precio que un rival pone en el mercado es un trato, el nombre del modelo o de otras webs.
+   Lo que no cuadra no se borra (el texto ya se ha ido viendo mientras llegaba): se añade debajo «Revisado por la app»
+   con lo que es de verdad. Una respuesta correcta sale tal cual. */
+const NUM_M = '(\\d{1,3}(?:[.,]\\d{1,3})?)\\s*(M\\b|millones\\b|mill\\b|kilos\\b|mil\\b)';
+const aEuros = (n, u) => parseFloat(String(n).replace(',', '.')) * (/^mil$/i.test(u) ? 1e3 : 1e6);
+const casi = (a, b) => Math.abs(a - b) <= Math.max(Math.abs(b) * 0.006, 6000);
+const MODELOS = /\b(gemini|gemma|chatgpt|gpt-?\d[\w.-]*|openai|claude|anthropic|deepmind|bard|copilot|llama ?\d|mistral)\b(?:[ -]?\d[\d.]*)?(?:[ -]?(?:flash-lite|flash|pro|ultra|nano|lite|sonnet|opus|haiku|mini|turbo))?/gi;
+const SOY_IA = /\b(modelo de lenguaje|modelo de ia|modelo de inteligencia artificial|large language model|llm|(?:modelo|ia|inteligencia artificial|asistente)\s+(?:de|entrenad[oa] por|cread[oa] por|desarrollad[oa] por)\s+google)\b/i;
+/** ni el nombre del modelo ni el de otras webs de fantasy (reglas de Carlos y de Domy): la frase en que la IA dice qué
+ * modelo es se cambia entera; un nombre suelto, por «la IA» */
+export function sinModelos(t) {
+  let dicho = false;
+  const out = String(t || '').replace(/[^.!?\n]+[.!?]?/g, (fr) => {
+    MODELOS.lastIndex = 0;
+    const nombra = MODELOS.test(fr);
+    MODELOS.lastIndex = 0;
+    if (!nombra && !SOY_IA.test(fr)) return fr;
+    if (/\b(soy|eres|estoy|funciono|basad[oa]|entrenad[oa]|desarrollad[oa]|cread[oa]|modelo|llamo)\b/i.test(fr) || SOY_IA.test(fr)) {
+      if (dicho) return '';
+      dicho = true;
+      return `${/^\s/.test(fr) ? ' ' : ''}Soy el director deportivo de Fantasy Manager: qué IA hay detrás no te lo puedo decir.`;
+    }
+    return fr.replace(MODELOS, 'la IA');
+  });
+  return out.replace(/[ \t]{2,}/g, ' ');
+}
+const WEBS_TXT = /\b(?:www\.)?(?:jornada ?perfecta|comuniate|futbol ?fantasy|anal[ií]tica ?fantasy)(?:\.com|\.es)?\b/gi;
+const sinWebsChat = (t) => sinWebs(String(t || '').replace(WEBS_TXT, 'la prensa').replace(/\b(?:sofascore|understat)(?:\.com)?\b/gi, 'las estadísticas'))
+  .replace(/\b(la prensa)(?:(?:\s*,\s*|\s+y\s+|\s+e\s+|\s+o\s+)la prensa)+\b/gi, '$1');
+
+const ORDENES = [
+  ['clausular', /\b(clausulalo|clausulala|clausula (?:ya |hoy |ahora )?a|paga (?:ya |hoy )?su clausula|pagale la clausula|ve a por su clausula)\b/],
+  ['pujar', /\b(puja (?:fuerte |ya |hoy )?por|pujale|puja \d)/],
+  ['vender', /\b(vendelo|vendela|vende (?:ya |hoy )?a|ponlo a la venta|ponlo en venta|pon a la venta a|acepta (?:ya |hoy )?la oferta)\b/],
+  ['alinear', /\b(alinea (?:ya |hoy )?a|alinealo|mete (?:ya |ahora |hoy )?a|metelo en el once|ponlo en el once|ponlo de titular)\b/],
+  ['blindar', /\b(blindalo|blindala|blinda (?:ya |hoy |ahora )?a|ponle el escudo)\b/],
+];
+const NIEGA = /\b(no|ni|nunca|tampoco|sin|si|salvo|excepto|antes de|en vez de|en lugar de|evita|podrias|podria|seria|quieres|cuando)\b/;
+
+export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {}) {
+  let t = sinWebsChat(sinModelos(texto));
+  const notas = [];
+  const nota = (x) => { if (x && !notas.includes(x)) notas.push(x); };
+  const yoT = D.yo && D.yo.teamId;
+  const cat = catDe(D, M);
+  const saldo = D.dinero == null ? null : +D.dinero;
+  const mia = (pid) => (M.mias || []).find((x) => x.pid === pid) || null;
+  const clDe = (pid) => { const x = mia(pid) || (M.clausulas || []).find((c) => c.pid === pid); return x && x.clausula ? x : null; };
+  // los jugadores de los que se habla (en la respuesta y en la pregunta) y las frases de la respuesta
+  const enResp = jugadoresEn(t, D), enPreg = jugadoresEn(pregunta || '', D);
+  const todos = [...enResp, ...enPreg.filter((j) => !enResp.includes(j))];
+  const formas = (j) => { const n = norm(j.nombre), u = n.split(' ').pop(); return u.length >= 5 && u !== n ? [n, u] : [n]; };
+  const enFrase = (fr) => { const k = ` ${norm(fr)} `; return todos.filter((j) => formas(j).some((f) => k.includes(` ${f} `))); };
+  const frases = t.split(/(?<=[.!?;:])\s+|\n+/).map((x) => x.trim()).filter(Boolean);
+  const N = (j) => `**${j.nombre}**`;
+
+  /* 1. lo que dice que hagas: su bloque y, si de ese jugador no lo pone, las órdenes claras del texto */
+  const pasos = [];
+  const meter = (accion, j, mas = {}) => { if (j && !pasos.some((p) => p.j.id === j.id && p.accion === accion)) pasos.push({ accion, j, ...mas }); };
+  for (const r of rec || []) {
+    const acc = String(r.accion || '').toLowerCase().replace('aceptar_oferta', 'vender').replace('aceptar', 'vender').replace('ofertar', 'comprar').replace('fichar', 'comprar');
+    const porRef = cat.ref[String(r.ref || '').trim().toUpperCase()];
+    const j = (porRef && porRef.j) || M.J(pidDe(r.jugador, D));
+    if (j) meter(acc, j, { ref: porRef ? porRef.ref : null, importe: +r.importe > 0 ? +r.importe : null, cuando: r.cuando || '', aceptar: /acept/.test(String(r.accion || '')), bloque: true });
+  }
+  for (const fr of frases) {
+    if (/\?\s*$/.test(fr)) continue;
+    const k = norm(fr);
+    for (const [acc, re] of ORDENES) {
+      const m = k.match(re);
+      if (!m) continue;
+      // «no lo vendas», «si quieres, véndelo»: no es una orden
+      const antes = k.slice(Math.max(0, m.index - 45), m.index);
+      if (NIEGA.test(antes.split(/[,;:]/).pop() || '')) continue;
+      const aqui = enFrase(fr);
+      // «clausúlalo», sin nombre en la frase: el único del que va la pregunta
+      const j = aqui.length === 1 ? aqui[0] : !aqui.length && enPreg.length === 1 ? enPreg[0] : null;
+      if (j && !pasos.some((p) => p.j.id === j.id)) meter(acc, j, { cuando: /\b(ya|ahora|hoy)\b/.test(k) ? 'ahora' : '' });
+    }
+  }
+  const yaDice = (abre) => { const k = norm(t); return [fechaCorta(abre), cuando(abre)].some((x) => x && k.includes(norm(x))); };
+  for (const p of pasos) {
+    const j = p.j, tid = M.dueno[j.id];
+    if (p.accion === 'alinear') {
+      if (tid !== yoT) nota(`${N(j)} no es tuyo${tid ? ` (es de ${nombreTid(M, tid)})` : ''}: no puede ir en tu once.`);
+      else if (M.enJuego) nota(`Tu once de la jornada ${M.enJuego.n} ya está cerrado: LaLiga lo bloquea con el primer partido y ya no se puede cambiar a nadie, ni a los que no han jugado. Lo que muevas ahora es para la jornada ${M.proxima ? M.proxima.n : 'siguiente'}.`);
+      else if (['injured', 'suspended', 'out_of_league'].includes(j.estado)) nota(`${N(j)} está ${ESTADO_TXT[j.estado] || j.estado}: no lo alinees.`);
+      continue;
+    }
+    if (!['vender', 'clausular', 'pujar', 'comprar', 'blindar'].includes(p.accion)) continue;
+    // una oferta directa a un jugador de un rival que no está en el mercado se puede hacer (decide él): no hay nada que comprobar
+    if (p.accion === 'comprar' && tid && tid !== yoT && !['M', 'T', 'C', 'P'].some((x) => cat.ref[`${x}-${j.id}`])) continue;
+    // lo primero, lo que no tiene vuelta de hoja: una cláusula solo se paga con saldo
+    if (p.accion === 'clausular' && tid && tid !== yoT && saldo != null) {
+      const c = clDe(j.id);
+      if (c && c.clausula > saldo) { nota(`${N(j)}: no te llega. Su cláusula son ${eur(c.clausula)} y una cláusula solo se paga con saldo, sin deuda: tienes ${eur(Math.max(0, saldo))}, faltan ${eur(c.clausula - Math.max(0, saldo))}.${c.abierta ? '' : ` Además, ${c.veda ? `las cláusulas están cerradas hasta que empiece la jornada ${c.veda.n}` : `no se abre hasta ${cuandoF(c.protegidoHasta)}`}.`}`); continue; }
+    }
+    const paso = { ref: p.ref, accion: p.aceptar ? 'aceptar_oferta' : p.accion, jugador: j.nombre, pid: j.id, importe: p.importe, motivo: '', dia: 'hoy', cuando: p.cuando || 'ahora', objetivo: null };
+    let r = null;
+    try { r = cuadrarPlan({ operaciones: [paso], titular: '', t: Date.now() }, D, M, { chat: true }); } catch (e) { r = null; }
+    if (!r) continue;
+    const x = (r.ops || [])[0], q = (r.descartes || []).find((d) => d && norm(d.jugador) === norm(j.nombre) && /^La app lo quita/.test(d.motivo || ''));
+    if (q) { nota(`${N(j)}: ${sinApp(q.motivo).replace(/^La app lo quita: /, '')}`); continue; }
+    if (!x) continue;
+    const opC = x.ref ? cat.ref[x.ref] : null;
+    if (x.descartada) { nota(`${N(j)}: ${sinApp(x.aviso).replace(/^./, (c) => c.toUpperCase()).slice(0, 420)}`); continue; }
+    if (x.sugerencia && x.aviso) { nota(`${N(j)}: ${sinApp(x.aviso).slice(0, 420)}`); continue; }
+    if (opC && opC.ref[0] === 'M' && p.importe && p.importe < opC.precio) nota(`${N(j)}: ${opC.vendedor} lo tiene a la venta por ${eur(opC.precio)} y por debajo de ese precio LaLiga no deja ofertar${opC.ofertaMin && opC.ofertaMin > opC.precio ? `; para tener opciones, como poco ${eur(opC.ofertaMin)}` : ''}. Y decide él: también tiene la oferta de LaLiga.`);
+    else if (opC && opC.ref[0] === 'C' && !opC.abierta && !yaDice(opC.abre)) nota(`${N(j)}: ${opC.veda ? `las cláusulas están cerradas hasta que empiece la jornada ${opC.veda.n}; la suya se puede pagar ${cuandoF(opC.abre)}, no antes` : `su cláusula no se abre hasta ${cuandoF(opC.abre)}: hasta entonces no se puede pagar`}.`);
+    else if (opC && opC.ref[0] === 'B' && !x.importe && !opC.abierta && !yaDice(opC.abre)) nota(`${N(j)}: el escudo solo se puede poner con la cláusula ya abierta, y la suya está protegida hasta ${cuandoF(opC.abre)}.`);
+    else if (p.accion === 'vender' && /sube [^.]*al día/.test(x.aviso || '') && !/aguant|no lo vend|no vend|esper/.test(norm(t))) nota(`${N(j)}: ${sinApp(x.aviso).split(/(?<=\.)\s/).slice(0, 2).join(' ')}`);
+  }
+
+  /* 2. las cifras de un jugador y del saldo, contra los datos */
+  const reCl = new RegExp(`cl[aá]usula(?: de [^,.;:()\\d]{2,30}?)?,?\\s*(?:\\()?(?:(?:que )?est[aá] (?:ya )?(?:abierta )?(?:en|a)|es de|son|de|en|:)\\s*(?:unos |los |las |solo )?${NUM_M}`, 'i');
+  const reVal = new RegExp(`\\b(?:vale(?:n)?|valor(?: actual| de mercado)?(?: es)?(?: de|:)?)\\s+(?:ahora |hoy |ya |unos |sobre |alrededor de |aproximadamente |mismo )*${NUM_M}`, 'i');
+  const reSaldo = new RegExp(`(?:\\b(?:tu|el) (?:saldo|caja)(?: actual| de ahora| de hoy)?(?: es| está)?(?: de| en|:)?\\s+(?:unos |los |solo )?${NUM_M})|(?:\\b(?:con|tienes) (?:tus |unos |los |solo )?${NUM_M} (?:de saldo|en caja|de caja|en el banco))`, 'i');
+  // (una frase que habla de un supuesto o de otra cifra —«si sube a…», «la pagaste a…», «súbela hasta…»— no se compara)
+  const SUPUESTO = /\b(hasta|por encima|por debajo|mas de|menos de|si|cuando|tras|despues de|antes de)\b|\b(podr|seria|quedar|dejar|valia|llego a valer|valdr|tendr|pagaste|pague|pagar|costo|compraste|fichaste)\w*/;
+  const SUBIRLA = /\bsub(ir|e|es|as|ida|irla|irle|ela|ele)\b/;
+  for (const fr of frases) {
+    const k = norm(fr);
+    const js = enFrase(fr);
+    if (js.length === 1 && !SUPUESTO.test(k)) {
+      const j = js[0];
+      const mc = fr.match(reCl), cl = clDe(j.id);
+      if (mc && cl && !SUBIRLA.test(k) && !casi(aEuros(mc[1], mc[2]), cl.clausula)) nota(`${N(j)}: su cláusula es de ${eur(cl.clausula)} (no de ${mc[1]} ${mc[2]}).`);
+      const mv = !mc && fr.match(reVal);
+      if (mv && j.valor && !casi(aEuros(mv[1], mv[2]), j.valor) && !(cl && casi(aEuros(mv[1], mv[2]), cl.clausula))) nota(`${N(j)}: vale ${eur(j.valor)} (no ${mv[1]} ${mv[2]}).`);
+    }
+    const ms = saldo != null && !/\b(si|quedar|tendr|tras|despues|acept|vend)\w*/.test(k) ? fr.match(reSaldo) : null;
+    if (ms) { const v = aEuros(ms[1] || ms[3], ms[2] || ms[4]); if (!casi(v, saldo)) nota(`Tu saldo ahora es de ${eur(saldo)} (no de ${ms[1] || ms[3]} ${ms[2] || ms[4]}).`); }
+  }
+
+  /* 3. las cuentas que escribe: «a + b − c = d» */
+  const reCuenta = new RegExp(`((?:[−–-]\\s*)?${NUM_M}(?:\\s*[+−–-]\\s*${NUM_M})+)\\s*=\\s*([−–-]?)\\s*${NUM_M}`, 'gi');
+  for (const m of t.matchAll(reCuenta)) {
+    const total = (m[m.length - 3] ? -1 : 1) * aEuros(m[m.length - 2], m[m.length - 1]);
+    let suma = 0, mal = false;
+    const ter = [...m[1].matchAll(new RegExp(`([+−–-])?\\s*${NUM_M}`, 'gi'))];
+    for (const x of ter) { const v = aEuros(x[2], x[3]); if (!Number.isFinite(v)) mal = true; suma += (x[1] && x[1] !== '+' ? -1 : 1) * v; }
+    if (!mal && Math.abs(suma - total) > Math.max(Math.abs(suma) * 0.004, 25000)) nota(`La cuenta «${m[1].replace(/\s+/g, ' ').trim()}» da ${eur(suma)}, no ${m[m.length - 2]} ${m[m.length - 1]}.`);
+  }
+
+  /* 4. lo que no puede decir */
+  for (const fr of frases) {
+    const k = norm(fr);
+    // una cláusula con deuda
+    if (/clausul/.test(k) && /\b(deuda|en negativo|margen)\b/.test(k) && !/\b(no|solo|sin|nunca|ni|tampoco)\b/.test(k) && saldo != null) nota(`Una cláusula solo se paga con saldo, sin deuda: ahora tienes ${eur(Math.max(0, saldo))}. El margen de deuda solo vale para pujar o comprar en el mercado.`);
+    // «te viene bien que te lo clausulen»
+    if (/clausul/.test(k) && /\b(te viene bien|buena noticia|haces caja|hacer caja|negocio redondo|te conviene que|mejor para ti)\b/.test(k) && !/\b(no|nunca|tampoco)\b/.test(k)) {
+      const js = enFrase(fr), j = js.length === 1 ? js[0] : !js.length && enPreg.length === 1 ? enPreg[0] : null, x = j && mia(j.id);
+      if (x && x.clausula && j.valor && x.clausula <= j.valor * 1.12) nota(`${N(j)}: su cláusula (${eur(x.clausula)}) está ${x.clausula <= j.valor * 1.01 ? 'a su valor' : `solo un ${pct((x.clausula / j.valor - 1) * 100, 0)} por encima de su valor`} (${eur(j.valor)}). Que te lo clausulen a ese precio no es una venta: es regalarlo. Pierdes sus puntos y lo que suba, y reponerlo cuesta más.`);
+    }
+  }
+  // el precio que un rival pone en el mercado no es un trato (Pepelu, 13 nov): solo si él no ha dado una cifra
+  if (/\b(pactasteis|pactado|pactaste|acordasteis|acordado|vuestro trato|te pide|te lo deja|te lo ofrece por)\b/.test(norm(t))) {
+    const suyo = [pregunta, ...(hist || []).filter((m) => m.r === 'yo').slice(-4).map((m) => m.t || '')].join(' ');
+    if (!/\d/.test(suyo)) for (const j of todos) {
+      const m = (M.mercado || []).find((x) => x.pid === j.id && x.tipo === 'manager' && x.vendedorTeamId !== yoT);
+      if (m && !notasDe(j.id).some((n) => n.importe)) nota(`${N(j)}: ${m.vendedor || nombreTid(M, m.vendedorTeamId)} lo tiene puesto a la venta por ${eur(m.precio)}. Ese precio lo ha puesto él en el mercado (muchas veces solo para ver la oferta de LaLiga): no es un trato contigo ni algo que te pida a ti. Por debajo no se puede ofertar.`);
+    }
+  }
+  // uno que ya no es suyo, tratado como suyo
+  for (const v of M.vendidos || []) {
+    if (!v.j || notas.some((x) => x.includes(`**${v.j.nombre}**`))) continue;
+    if (cuentaConVendido(t, v.j.nombre, !!(M.dueno && M.dueno[v.j.id] && M.dueno[v.j.id] !== yoT))) nota(`${N(v.j)} ya no es tuyo (${v.como} ${cuando(v.t)}): no cuenta para lo de arriba.`);
+  }
+  // (texto.js no pinta citas: un título en negrita y una lista)
+  if (notas.length) t += `\n\n**Revisado por la app:**\n${notas.slice(0, 6).map((x) => `- ${x}`).join('\n')}`;
+  return { texto: t, notas };
+}
 
 /** lo que va a la IA en el chat (sin la conversación): se exporta para probarlo con la demo */
 export function montarChat(pregunta, D, M, c, { fotos = false, hist = [], web = cfgIA().web } = {}) {
@@ -2345,13 +2603,15 @@ export async function charlar(pregunta, D, M, c, alTexto, signal, fotos = [], al
   const sinBloque = (t) => String(t || '').replace(/```notas[\s\S]*$/, '').trim();
   // sin búsqueda (apagada, cupo gastado o en el relevo) no se le manda buscar: si se le manda, a veces contesta vacío
   const sistemaSinWeb = web ? montarChat(pregunta, D, M, c, { fotos: conFotos, hist, web: false }) : sistema;
-  const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinBloque(t)) : null, signal, alPaso: alPaso || undefined, nivel: 'low', temperatura: 0.4, seudo: seudonimos(D) });
+  const r = await preguntar({ sistema, sistemaSinWeb, contents }, { stream: true, alTexto: alTexto ? (t) => alTexto(sinWebsChat(sinModelos(sinBloque(t)))) : null, signal, alPaso: alPaso || undefined, nivel: 'low', temperatura: 0.4, seudo: seudonimos(D) });
   const n = aplicarNotas(r.texto, D, pregunta, !!(fotos && fotos.length));
-  const yoT = D.yo && D.yo.teamId;
-  const vend = (M.vendidos || []).filter((v) => cuentaConVendido(n.texto, v.j && v.j.nombre, !!(v.j && M.dueno && M.dueno[v.j.id] && M.dueno[v.j.id] !== yoT)));
-  if (vend.length) n.texto += `\n\n> Ojo: ${vend.map((v) => `**${v.j.nombre}** ya no es tuyo (${v.como} ${cuando(v.t)})`).join('; ')}. No cuenta para lo de arriba.`;
+  // (revisión de la IA, 14 nov) lo que contesta se revisa antes de guardarlo, como el plan: lo que recomienda hacer, las
+  // cifras que da de sus jugadores y de su saldo, las cuentas y lo que la IA no puede decir
+  let rev = { texto: n.texto, notas: [] };
+  try { rev = revisarChat(n.texto, pregunta, D, M, { rec: n.recomiendo, hist }); } catch (e) { rev = { texto: n.texto, notas: [] }; }
+  n.texto = rev.texto;
   const h2 = conversacion();
   h2.push({ r: 'ia', t: n.texto, ts: Date.now(), fuentes: r.fuentes.slice(0, 8), modelo: r.modelo, apuntadas: n.apuntadas.map((x) => x.texto), olvidadas: n.olvidadas });
   LS.set(K('chat'), h2.slice(-40));
-  return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas };
+  return { ...r, texto: n.texto, apuntadas: n.apuntadas, olvidadas: n.olvidadas, revisado: rev.notas };
 }
