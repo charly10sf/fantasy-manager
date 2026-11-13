@@ -2148,7 +2148,8 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/13/6af750f6fc6c8389338b4588.html": 1794593457000,
    "ABC|https://www.abc.es/deportes/futbol/lamine-yamal-regresa-seleccion-medir-inglaterra-20261113192741-nt.html": 1794594462000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250742/nuevo-destino-toma-fuerza-roberto-martinez.html": 1794595476000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/lookman-enciende-las-alarmas-del-atleti-tras-caer-lesionado-con-nigeria-cadena-ser/": 1794601139000,
+   "El Mundo|https://www.elmundo.es/deportes/futbol/uefa-nations-league/2026/11/13/6af6e303fdddff1f1a8b45b1.html": 1794601637000
   },
   "hechos": [
    {
@@ -2533,7 +2534,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 50
+   "n": 51
   },
   "desde": {
    "67": {
@@ -3378,7 +3379,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342405000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794347495000,
    "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794374266000,
    "SPORT|136299647": 1794373265000,
@@ -3495,17 +3495,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 60,
+   "clasificar": 61,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 287185,
-  "salida": 26383,
+  "entrada": 289094,
+  "salida": 26499,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.414977,
+  "dolares": 0.415226,
   "reservado": 0
  },
  "recientes": {
@@ -7652,13 +7652,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2214,
+   "ok": 2215,
    "fallos": 0,
-   "ejecuciones": 1718,
+   "ejecuciones": 1719,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T20:26:12.623Z"
+   "ultima": "2026-11-13T20:31:11.258Z"
   }
  },
  "ptsDirecto": {},
@@ -7675,15 +7675,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:26:15.898Z"
+   "ultimaBien": "2026-11-13T20:31:17.640Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:26:15.898Z"
+   "ultimaBien": "2026-11-13T20:31:17.640Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:26:15.898Z"
+   "ultimaBien": "2026-11-13T20:31:17.640Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7691,11 +7691,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:26:15.898Z"
+   "ultimaBien": "2026-11-13T20:31:17.640Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:26:15.898Z"
+   "ultimaBien": "2026-11-13T20:31:17.640Z"
   }
  },
  "avisos": [
