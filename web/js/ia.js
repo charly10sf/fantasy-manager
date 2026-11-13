@@ -107,6 +107,8 @@ const TOPE_MS = 60000, TOPE_WEB_MS = 90000, TOPE_PRO_MS = 120000, TOTAL_MS = 180
 const malConWeb = (m) => (LS.get('ia-mal-web', {})[m] || 0) > Date.now();
 const marcarMalConWeb = (m) => { const a = LS.get('ia-mal-web', {}); a[m] = Date.now() + 3600 * 1000; LS.set('ia-mal-web', a); };
 const recordarBueno = (m) => { const b = LS.get('ia-bueno', null); LS.set('ia-bueno', { m, desde: b && b.m === m && Date.now() - b.desde < BUENO_H ? b.desde : Date.now() }); };
+/** ha llegado al tope escribiendo blancos (un carácter por token): respuesta en bucle */
+const enBucle = (r) => !!(r && r.fin === 'MAX_TOKENS' && r.tok && r.tok.r > 3000 && r.texto.length < r.tok.r * 2);
 async function cadena() {
   let lista;
   try { lista = await modelosDisponibles(); } catch (e) { if (e.estado === 400 || e.estado === 401 || e.estado === 403) throw e; lista = BASE; }
@@ -429,12 +431,16 @@ async function preguntarYa({ sistema, sistemaSinWeb, contents, contentsSinWeb },
             if (r.principal) apuntar({ modelo, web, s: r.principal.estado, e: r.principal.message, google: r.principal.google, ms: Date.now() - t0, nivel: pensar ? nivel : null });
             else apuntar({ modelo, web, s: 'relevo', e: `sin contestar en ${Math.round((Date.now() - t0) / 1000)} s: ha contestado antes ${r.deRelevo}`, ms: Date.now() - t0, nivel: pensar ? nivel : null });
             pausar(modelo, 600);
-            recordarBueno(r.deRelevo);
+            if (enBucle(r)) pausar(r.deRelevo, 3600); else recordarBueno(r.deRelevo);
             return { ...r, modelo: r.deRelevo, web: false, intentos: resumen };
           }
-          apuntar({ modelo, web, ok: true, ms: Date.now() - t0, fin: r.fin, tok: r.tok, car: r.texto.length, nivel: pensar ? nivel : null });
+          // (0.7.8b) en bucle: ha llegado al tope escribiendo blancos o un carácter por token (13 nov, gemini-3.6-flash:
+          // 32.010 caracteres en 31.984 tokens). No cuenta como bueno y descansa una hora: la segunda vuelta va con otro
+          const bucle = enBucle(r);
+          apuntar({ modelo, web, ok: true, ms: Date.now() - t0, fin: bucle ? 'MAX_TOKENS en bucle' : r.fin, tok: r.tok, car: r.texto.length, nivel: pensar ? nivel : null });
           if (!web) confirmarSinWeb(modelo); else webSospecha = null;
-          recordarBueno(modelo);
+          if (bucle) pausar(modelo, 3600);
+          else recordarBueno(modelo);
           return { ...r, modelo, web, intentos: resumen };
         } catch (e) {
           if (e.name === 'AbortError') throw e;
@@ -1271,8 +1277,23 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
   // todo el plan, con la segunda vuelta si el primero llega roto, no pasa de 4 minutos
   // la búsqueda en Google solo si está puesta para el plan (Ajustes; apagada por defecto: 20-30 s en vez de 40-80)
   const t0Plan = Date.now(), TOPE_PLAN = 240000, web = !!cfgIA().webPlan;
-  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, web, seudo, seudoJSON: true, esquema: ESQUEMA_PLAN });
-  let json = sacarJSON(r.texto);
+  /* (0.7.8b) 16.000 de tope y no 32.000: un plan bueno escribe 3-5 mil tokens (con lo que piensa, menos de 10.000), y el que
+     se queda en bucle (espacios sin fin) gastaba 116 s en llegar al tope de 32.000; con 16.000, la mitad, y da tiempo a la
+     segunda vuelta */
+  const TOKENS_PLAN = 16000;
+  // un plan cortado se aprovecha hasta la última operación entera (la que iba a medias, fuera)
+  const util = (j) => {
+    if (!j || !Array.isArray(j.operaciones)) return null;
+    if (j._cortado) {
+      j.operaciones = j.operaciones.filter((o) => o && o.accion && o.motivo);
+      if (!j.titular) j.titular = j.situacion ? String(j.situacion).split(/(?<=\.)\s/)[0].slice(0, 120) : 'Plan de hoy (ha llegado cortado)';
+      // cortado antes de acabar las operaciones y sin ninguna entera: mejor pedirlo otra vez
+      if (!j.operaciones.length && !j.alineacion && !j.proximos_dias) return null;
+    }
+    return j;
+  };
+  let r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: pedido }] }], contentsSinWeb: sinBuscar(pedido) }, { signal, alPaso, nivel: 'low', maxTokens: TOKENS_PLAN, web, seudo, seudoJSON: true, esquema: ESQUEMA_PLAN });
+  let json = util(sacarJSON(r.texto));
   // si se ha quedado sin sitio para escribir (pensando de más) o el JSON ha salido roto: otra vez, con los datos en
   // corto y pensando poco
   // lo que ha llegado mal, al diagnóstico (para saber por qué falla)
@@ -1283,8 +1304,8 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
     if (queda < 60000) throw new ErrorIA(`La IA ha contestado sin el formato del plan y ya no da tiempo a pedirlo otra vez (${Math.round((Date.now() - t0Plan) / 1000)} s). Vuelve a probar.`, 0);
     if (alPaso) alPaso(r.fin === 'MAX_TOKENS' ? 'El plan se ha cortado: lo pido otra vez más corto…' : 'El plan ha llegado mal: lo pido otra vez…');
     const corto = pedido.replace(ctx, contexto(D, M, c, { corto: true }));
-    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: 32000, total: Math.min(TOTAL_MS, queda), web: false, seudo, seudoJSON: true, esquema: ESQUEMA_PLAN });
-    json = sacarJSON(r.texto);
+    r = await preguntar({ sistema: sistemaIA(), contents: [{ role: 'user', parts: [{ text: corto }] }], contentsSinWeb: sinBuscar(corto) }, { signal, alPaso, nivel: 'low', maxTokens: TOKENS_PLAN, total: Math.min(TOTAL_MS, queda), web: false, seudo, seudoJSON: true, esquema: ESQUEMA_PLAN });
+    json = util(sacarJSON(r.texto));
     if (!json || !Array.isArray(json.operaciones)) malPlan(r);
   }
   if (!json || !Array.isArray(json.operaciones)) throw new ErrorIA(`La IA ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Vuelve a probar.`, 0);
@@ -1890,12 +1911,51 @@ export function cuadrarPlan(P, D, M) {
 }
 
 function sacarJSON(t) {
-  const s = String(t || '');
+  // (0.7.8b) los Gemini 3 con esquema a veces se quedan escribiendo espacios o saltos sin parar hasta el tope
+  // (13 nov: 32.010 caracteres en 31.984 tokens): esas tiras fuera, que ningún texto bueno lleva 20 blancos seguidos
+  const s = String(t || '').replace(/[ \t\r\n]{20,}/g, ' ');
   const m = s.match(/```(?:json)?\s*([\s\S]*?)```/);
   const trozo = m ? m[1] : s.slice(s.indexOf('{'), s.lastIndexOf('}') + 1);
   try { return JSON.parse(trozo); } catch (e) {
-    try { return JSON.parse(trozo.replace(/,\s*([}\]])/g, '$1').replace(/[“”]/g, '"')); } catch (e2) { return null; }
+    try { return JSON.parse(trozo.replace(/,\s*([}\]])/g, '$1').replace(/[“”]/g, '"')); } catch (e2) {
+      const i = s.indexOf('{');
+      return i < 0 ? null : repararJSON(s.slice(i).replace(/```\s*$/, ''));
+    }
   }
+}
+
+/** un JSON cortado a medias (por el tope de tokens): se queda con lo último que cerró bien y cierra lo que falta.
+    Lo que estaba a medio escribir (una operación sin acabar) se pierde; lo de antes, no. Lleva `_cortado: true` */
+export function repararJSON(t) {
+  const pila = [], puntos = [];
+  let enCad = false, esc = false;
+  for (let i = 0; i < t.length; i++) {
+    const ch = t[i];
+    if (enCad) {
+      if (esc) esc = false;
+      else if (ch === '\\') esc = true;
+      else if (ch === '"') { enCad = false; if (pila.length) puntos.push([i + 1, pila.join('')]); }
+      continue;
+    }
+    if (ch === '"') enCad = true;
+    else if (ch === '{' || ch === '[') pila.push(ch);
+    else if (ch === '}' || ch === ']') {
+      pila.pop();
+      if (!pila.length) { try { return JSON.parse(t.slice(0, i + 1)); } catch (e) { return null; } }
+      puntos.push([i + 1, pila.join('')]);
+    } else if (/[0-9el]/.test(ch) && /[,}\]\s]/.test(t[i + 1] || '') && pila.length) puntos.push([i + 1, pila.join('')]);
+  }
+  // de lo último a lo primero: el primer corte que, cerrado, se puede leer
+  const cerrar = (p) => p.split('').reverse().map((c) => (c === '{' ? '}' : ']')).join('');
+  for (let k = puntos.length - 1, n = 0; k >= 0 && n < 400; k--, n++) {
+    const [fin, p] = puntos[k];
+    // sin colgar una clave sin valor («"motivo"» suelto) ni una coma al final
+    let base = t.slice(0, fin);
+    if (p.endsWith('{')) base = base.replace(/([{,])\s*"(?:[^"\\]|\\.)*"\s*$/, (x, c) => (c === '{' ? '{' : ''));
+    base = base.replace(/,\s*$/, '');
+    try { const j = JSON.parse(base + cerrar(p)); if (j && typeof j === 'object') { j._cortado = true; return j; } } catch (e) { /* el anterior */ }
+  }
+  return null;
 }
 
 /* ---------------- el chat ---------------- */
