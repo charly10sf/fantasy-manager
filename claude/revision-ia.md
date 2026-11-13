@@ -90,13 +90,14 @@ y que al aceptar una oferta el dinero entre al instante.
   con los datos; las cuentas escritas («a + b − c = d») se rehacen; y hay cosas que no puede decir (cláusula con
   deuda, «te viene bien que te clausulen» a uno a su valor, un precio de mercado como si fuera un trato, el nombre del
   modelo, otras webs). Lo que no cuadra no se borra (el texto ya se ha visto mientras llegaba): debajo sale «Revisado
-  por la app» con lo que es de verdad. Una respuesta correcta sale tal cual (cuatro casos de control lo vigilan).
+  por la app» con lo que es de verdad. Una respuesta correcta sale tal cual (cinco casos de control lo vigilan).
 - **Después, en el plan.** `cuadrarPlan` sigue igual, con dos agujeros tapados (el titular con un blindaje quitado y el paso de alinear con uno ajeno).
 
 Modelo, temperatura y razonamiento: se quedan como estaban (el mejor modelo que tenga la clave, pensando «poco», sin
 temperatura en los 3.x como pide Google). Con la app decidiendo, pensar más no arregla nada y tarda el doble. Lo que sí
 ha salido en la medida: los tres mejores modelos dan unas 20 preguntas al día con la clave gratis, así que un usuario
-que tire mucho del chat acaba en el ligero. Con menos tokens por pregunta eso no cambia (el tope es por pregunta).
+que tire mucho del chat acaba en el ligero (es lo visto el 13 nov con la clave de pruebas: 21 preguntas y Google cortó
+por cupo diario; no he comprobado si el tope va por preguntas o por tokens, así que no sé si leer menos lo alarga).
 
 ## Las pruebas
 
