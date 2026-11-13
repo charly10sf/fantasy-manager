@@ -2148,7 +2148,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250551/raul-da-pistas-sobre-oviedo-espera-queremos-verticales.html": 1794566621000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/durisimas-criticas-seleccionador-guinea-ilaix-moriba-no-sido-convocado-pais-tienes-ego-enorme-te-importas-20261113_3474616.html": 1794567572000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/italia-vuelve-sonreir-gracias-nuevo-heroe-desata-euforia-pio-esposito-20261113_3474679.html": 1794568891000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/siro-lopez-claro-deseos-sancet-jugar-mundial-seleccion-euskadi-fuente-ve-necesario-convocarle-no-dicho-no-quiera-jugar-seleccion-espanola-20261113_3474264.html": 1794569419000
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/siro-lopez-claro-deseos-sancet-jugar-mundial-seleccion-euskadi-fuente-ve-necesario-convocarle-no-dicho-no-quiera-jugar-seleccion-espanola-20261113_3474264.html": 1794569419000,
+   "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html": 1794569698000
   },
   "hechos": [
    {
@@ -2557,11 +2558,25 @@
     "motivo": "",
     "plazo": "",
     "nums": []
+   },
+   {
+    "guid": "MARCA|https://www.marca.com/futbol/celta/2026/11/13/paulo-duarte-sobre-ilaix-moriba-ego-grande.html",
+    "medio": "MARCA",
+    "t": 1794569698000,
+    "id": "2607",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "",
+    "motivo": "molestias en el tendón rotuliano",
+    "plazo": "",
+    "nums": [
+     10
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3539,17 +3554,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 28,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 178618,
-  "salida": 14549,
+  "entrada": 180559,
+  "salida": 14681,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.303832,
+  "dolares": 0.304092,
   "reservado": 0
  },
  "recientes": {
@@ -7696,13 +7711,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2106,
+   "ok": 2107,
    "fallos": 0,
-   "ejecuciones": 1610,
+   "ejecuciones": 1611,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T11:31:11.365Z"
+   "ultima": "2026-11-13T11:36:12.132Z"
   }
  },
  "ptsDirecto": {},
@@ -7719,15 +7734,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:31:15.836Z"
+   "ultimaBien": "2026-11-13T11:36:16.646Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:31:15.836Z"
+   "ultimaBien": "2026-11-13T11:36:16.646Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:31:15.836Z"
+   "ultimaBien": "2026-11-13T11:36:16.646Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7735,11 +7750,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:31:15.836Z"
+   "ultimaBien": "2026-11-13T11:36:16.646Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T11:31:15.836Z"
+   "ultimaBien": "2026-11-13T11:36:16.646Z"
   }
  },
  "avisos": [
