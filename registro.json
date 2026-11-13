@@ -1890,7 +1890,6 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261110/11680703/cucurella-descubre-cara-mas-desconocida-mourinho-divertido-meme-le-envio-lol.html": 1794309043000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249417/real-quita-peso-ganar-liga-oyarzabal-tres-anos-hacerlo.html": 1794311814000,
-   "SPORT|136283172": 1794307885000,
    "SPORT|136280060": 1794308464000,
    "SPORT|136281831": 1794308810000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/marc-roca-celebra-su-estreno-en-la-lista-de-espana-lo-valoro-mucho-mas-porque-me-ha-tocado-esperar-durante-mucho-tiempo-cadena-ser/": 1794312422000,
@@ -2153,18 +2152,6 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261113/11683354/emocionado-raphinha-sale-paso-criticas-brasil-me-quiero-volver-lesionar.html": 1794565010000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136283172",
-    "medio": "SPORT",
-    "t": 1794307885000,
-    "id": "2217",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "proceso de recuperación",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136284333",
     "medio": "SPORT",
@@ -7726,13 +7713,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2098,
+   "ok": 2099,
    "fallos": 0,
-   "ejecuciones": 1602,
+   "ejecuciones": 1603,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:51:13.877Z"
+   "ultima": "2026-11-13T10:56:12.379Z"
   }
  },
  "ptsDirecto": {},
@@ -7749,15 +7736,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:51:18.440Z"
+   "ultimaBien": "2026-11-13T10:56:15.651Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:51:18.440Z"
+   "ultimaBien": "2026-11-13T10:56:15.651Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:51:18.440Z"
+   "ultimaBien": "2026-11-13T10:56:15.651Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7765,11 +7752,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:51:18.440Z"
+   "ultimaBien": "2026-11-13T10:56:15.651Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:51:18.440Z"
+   "ultimaBien": "2026-11-13T10:56:15.651Z"
   }
  },
  "avisos": [
