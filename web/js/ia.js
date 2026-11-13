@@ -2413,7 +2413,6 @@ const ORDENES = [
   ['alinear', /\b(alinea (?:ya |hoy )?a|alinealo|mete (?:ya |ahora |hoy )?a|metelo en el once|ponlo en el once|ponlo de titular)\b/],
   ['blindar', /\b(blindalo|blindala|blinda (?:ya |hoy |ahora )?a|ponle el escudo)\b/],
 ];
-const NIEGA = /\b(no|ni|nunca|tampoco|sin|si|salvo|excepto|antes de|en vez de|en lugar de|evita|podrias|podria|seria|quieres|cuando)\b/;
 
 export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {}) {
   let t = sinWebsChat(sinModelos(texto));
@@ -2443,17 +2442,18 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
   }
   for (const fr of frases) {
     if (/\?\s*$/.test(fr)) continue;
-    const k = norm(fr);
-    for (const [acc, re] of ORDENES) {
-      const m = k.match(re);
-      if (!m) continue;
-      // «no lo vendas», «si quieres, véndelo»: no es una orden
-      const antes = k.slice(Math.max(0, m.index - 45), m.index);
-      if (NIEGA.test(antes.split(/[,;:]/).pop() || '')) continue;
-      const aqui = enFrase(fr);
-      // «clausúlalo», sin nombre en la frase: el único del que va la pregunta
-      const j = aqui.length === 1 ? aqui[0] : !aqui.length && enPreg.length === 1 ? enPreg[0] : null;
-      if (j && !pasos.some((p) => p.j.id === j.id)) meter(acc, j, { cuando: /\b(ya|ahora|hoy)\b/.test(k) ? 'ahora' : '' });
+    // una orden va al principio de la frase o de un inciso («Sí, clausúlalo»; «entonces vende a X»): «una cláusula a su
+    // valor», «Marcos vende a Camello» o «la puja por Terrats» no lo son (falsa alarma en la pasada con la IA, 13 nov)
+    for (const inciso of fr.split(/[,;:()—–]/)) {
+      const k = norm(inciso);
+      for (const [acc, re] of ORDENES) {
+        const m = k.match(re);
+        if (!m || !/^(?:(?:si|pues|entonces|asi que|y|mejor|hoy|ahora|ya|venga|primero|luego|despues|adelante|yo|tu)\s+)*$/.test(`${k.slice(0, m.index).trim()} `.replace(/^ $/, ''))) continue;
+        const aqui = enFrase(inciso).length ? enFrase(inciso) : enFrase(fr);
+        // «clausúlalo», sin nombre en la frase: el único del que va la pregunta
+        const j = aqui.length === 1 ? aqui[0] : !aqui.length && enPreg.length === 1 ? enPreg[0] : null;
+        if (j && !pasos.some((p) => p.j.id === j.id)) meter(acc, j, { cuando: /\b(ya|ahora|hoy)\b/.test(norm(fr)) ? 'ahora' : '' });
+      }
     }
   }
   const yaDice = (abre) => { const k = norm(t); return [fechaCorta(abre), cuando(abre)].some((x) => x && k.includes(norm(x))); };
@@ -2467,7 +2467,7 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
     }
     if (!['vender', 'clausular', 'pujar', 'comprar', 'blindar'].includes(p.accion)) continue;
     // una oferta directa a un jugador de un rival que no está en el mercado se puede hacer (decide él): no hay nada que comprobar
-    if (p.accion === 'comprar' && tid && tid !== yoT && !['M', 'T', 'C', 'P'].some((x) => cat.ref[`${x}-${j.id}`])) continue;
+    if (p.accion === 'comprar' && tid && tid !== yoT && !['M', 'T'].some((x) => cat.ref[`${x}-${j.id}`])) continue;
     // lo primero, lo que no tiene vuelta de hoja: una cláusula solo se paga con saldo
     if (p.accion === 'clausular' && tid && tid !== yoT && saldo != null) {
       const c = clDe(j.id);
@@ -2521,10 +2521,12 @@ export function revisarChat(texto, pregunta, D, M, { rec = [], hist = [] } = {})
   }
 
   /* 4. lo que no puede decir */
+  const yaLoDice = /\b(nunca|no)\b[^.]{0,60}\b(con|de) deuda\b|\bsolo\b[^.]{0,60}\bsaldo\b|\bsin deuda\b/.test(norm(t).replace(/ /g, ' ')) ;
   for (const fr of frases) {
     const k = norm(fr);
     // una cláusula con deuda
-    if (/clausul/.test(k) && /\b(deuda|en negativo|margen)\b/.test(k) && !/\b(no|solo|sin|nunca|ni|tampoco)\b/.test(k) && saldo != null) nota(`Una cláusula solo se paga con saldo, sin deuda: ahora tienes ${eur(Math.max(0, saldo))}. El margen de deuda solo vale para pujar o comprar en el mercado.`);
+    // (si la respuesta ya dice la regla —«nunca con deuda», «solo con saldo»—, una frase suelta sin el «no» no es un error)
+    if (/clausul/.test(k) && /\b(deuda|en negativo|margen)\b/.test(k) && !/\b(no|solo|sin|nunca|ni|tampoco|olvidate)\b/.test(k) && !yaLoDice && saldo != null) nota(`Una cláusula solo se paga con saldo, sin deuda: ahora tienes ${eur(Math.max(0, saldo))}. El margen de deuda solo vale para pujar o comprar en el mercado.`);
     // «te viene bien que te lo clausulen»
     if (/clausul/.test(k) && /\b(te viene bien|buena noticia|haces caja|hacer caja|negocio redondo|te conviene que|mejor para ti)\b/.test(k) && !/\b(no|nunca|tampoco)\b/.test(k)) {
       const js = enFrase(fr), j = js.length === 1 ? js[0] : !js.length && enPreg.length === 1 ? enPreg[0] : null, x = j && mia(j.id);
