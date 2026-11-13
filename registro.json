@@ -1894,10 +1894,8 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/sucic-no-viajara-con-croacia-por-una-amigdalitis-f202611-n/": 1794329246000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249565/sucic-cuarto-internacional-realista-caerse-fecha-fifa-lesion-enfermedad.html": 1794329986000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/10/marc-roca-siete-anos-espera-llegar-seleccion-espanola/00031794329684948672845.htm": 1794329881000,
-   "SPORT|136301367": 1794329440000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249368/dos-perdidas-relevantes-cuatro-dias-parecia-vaciarse-enfermeria-real.html": 1794333058000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/10/matricula-honor-mathew-ryan-estuvo-136298628.html": 1794333325000,
    "SPORT|136280619": 1794330047000,
@@ -2157,7 +2155,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261113/1004250665/pique-estalla-federacion-incertidumbre-sanciones-andorra.html": 1794583859000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/nota-negativa-pone-nacho-pena-victoria-seleccion-espanola-pensando-futuro-huijsen-cubarsi-gran-salida-balon-me-generan-dudas-20261113_3474258.html": 1794583169000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html": 1794587065000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261113/1004250689/barrenetxea-intervenido-madrid.html": 1794587065000,
+   "SPORT|136406482": 1794584740000
   },
   "hechos": [
    {
@@ -2584,7 +2583,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 41
+   "n": 42
   },
   "desde": {
    "67": {
@@ -3430,7 +3429,6 @@
  "liga": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/el-gran-canaria-registra-la-peor-asistencia-desde-el-ultimo-descenso-de-la-ud-las-palmas-ser-las-palmas/": 1794329652000,
-   "ABC|https://www.abc.es/deportes/futbol/ver-pamplona-eibar-hora-partido-copa-rey-20261110175048-nt.html": 1794329448000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-tavernes-valencia-hora-partido-copa-rey-20261110151517-nt.html": 1794332853000,
    "ABC|https://www.abc.es/deportes/futbol/ver-television-online-mijas-lagunas-real-jaen-copa-rey-20261110151232-nt.html": 1794332785000,
    "SPORT|136266190": 1794331066000,
@@ -3555,17 +3553,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 265598,
-  "salida": 23237,
+  "entrada": 267682,
+  "salida": 23358,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.411245,
+  "dolares": 0.411514,
   "reservado": 0
  },
  "recientes": {
@@ -7712,13 +7710,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2170,
+   "ok": 2171,
    "fallos": 0,
-   "ejecuciones": 1674,
+   "ejecuciones": 1675,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T16:47:08.777Z"
+   "ultima": "2026-11-13T16:51:11.805Z"
   }
  },
  "ptsDirecto": {},
@@ -7735,15 +7733,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:47:12.323Z"
+   "ultimaBien": "2026-11-13T16:51:16.679Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:47:12.323Z"
+   "ultimaBien": "2026-11-13T16:51:16.679Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:47:12.323Z"
+   "ultimaBien": "2026-11-13T16:51:16.679Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7751,11 +7749,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:47:12.323Z"
+   "ultimaBien": "2026-11-13T16:51:16.679Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:47:12.323Z"
+   "ultimaBien": "2026-11-13T16:51:16.679Z"
   }
  },
  "avisos": [
