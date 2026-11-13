@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261110/11680703/cucurella-descubre-cara-mas-desconocida-mourinho-divertido-meme-le-envio-lol.html": 1794309043000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249417/real-quita-peso-ganar-liga-oyarzabal-tres-anos-hacerlo.html": 1794311814000,
@@ -2150,7 +2149,8 @@
    "SPORT|136400234": 1794560446000,
    "SPORT|136399158": 1794560918000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000,
-   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/13/redondo-alerta-del-potencial-del-calpe-antes-de-una-nueva-prueba-para-el-olimpic-radio-xativa/": 1794566135000
+   "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/13/redondo-alerta-del-potencial-del-calpe-antes-de-una-nueva-prueba-para-el-olimpic-radio-xativa/": 1794566135000,
+   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261113/11683354/emocionado-raphinha-sale-paso-criticas-brasil-me-quiero-volver-lesionar.html": 1794565010000
   },
   "hechos": [
    {
@@ -2589,7 +2589,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 18
+   "n": 19
   },
   "desde": {
    "67": {
@@ -3569,17 +3569,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 23,
+   "clasificar": 24,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 170291,
-  "salida": 14005,
+  "entrada": 172213,
+  "salida": 14121,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.302728,
+  "dolares": 0.302978,
   "reservado": 0
  },
  "recientes": {
@@ -7726,13 +7726,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2096,
+   "ok": 2097,
    "fallos": 0,
-   "ejecuciones": 1600,
+   "ejecuciones": 1601,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:41:11.964Z"
+   "ultima": "2026-11-13T10:46:12.218Z"
   }
  },
  "ptsDirecto": {},
@@ -7749,15 +7749,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:41:18.784Z"
+   "ultimaBien": "2026-11-13T10:46:16.966Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:41:18.784Z"
+   "ultimaBien": "2026-11-13T10:46:16.966Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:41:18.784Z"
+   "ultimaBien": "2026-11-13T10:46:16.966Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7765,11 +7765,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:41:18.784Z"
+   "ultimaBien": "2026-11-13T10:46:16.966Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:41:18.784Z"
+   "ultimaBien": "2026-11-13T10:46:16.966Z"
   }
  },
  "avisos": [
