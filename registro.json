@@ -2157,7 +2157,9 @@
    "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000,
    "SPORT|136415105": 1794579682000,
    "SPORT|136402229": 1794581404000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261113/1004250665/pique-estalla-federacion-incertidumbre-sanciones-andorra.html": 1794583859000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/andorra/20261113/1004250665/pique-estalla-federacion-incertidumbre-sanciones-andorra.html": 1794583859000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586544000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/nota-negativa-pone-nacho-pena-victoria-seleccion-espanola-pensando-futuro-huijsen-cubarsi-gran-salida-balon-me-generan-dudas-20261113_3474258.html": 1794583169000
   },
   "hechos": [
    {
@@ -2572,7 +2574,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 39
+   "n": 40
   },
   "desde": {
    "67": {
@@ -3539,22 +3541,24 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/lamine-yamal-oyarzabal-ordenes-fuente-20261113_3475134.html": 1794586880239
+  }
  },
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 46,
+   "clasificar": 47,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 259189,
-  "salida": 22328,
+  "entrada": 261665,
+  "salida": 22546,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.410149,
+  "dolares": 0.410506,
   "reservado": 0
  },
  "recientes": {
@@ -7701,13 +7705,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2163,
+   "ok": 2164,
    "fallos": 0,
-   "ejecuciones": 1667,
+   "ejecuciones": 1668,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T16:16:26.051Z"
+   "ultima": "2026-11-13T16:21:20.239Z"
   }
  },
  "ptsDirecto": {},
@@ -7724,15 +7728,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:16:31.032Z"
+   "ultimaBien": "2026-11-13T16:21:26.334Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:16:31.032Z"
+   "ultimaBien": "2026-11-13T16:21:26.334Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:16:31.032Z"
+   "ultimaBien": "2026-11-13T16:21:26.334Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7740,11 +7744,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:16:31.032Z"
+   "ultimaBien": "2026-11-13T16:21:26.334Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:16:31.032Z"
+   "ultimaBien": "2026-11-13T16:21:26.334Z"
   }
  },
  "avisos": [
