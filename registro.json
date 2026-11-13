@@ -3411,7 +3411,6 @@
  },
  "liga": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/betis/2026/11/10/betis-abre-proceso-solicitud-602-entradas-proximo-derbi-sanchez-pizjuan.html": 1794313574000,
    "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-huelga-general-11-noviembre-servicios-minimos-trenes-vuelos-transporte-20261110135358.html": 1794315238000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261110/1004249479/betis-abre-plazo-solicitar-602-entradas-derbi.html": 1794318765000,
    "SPORT|136281772": 1794316000000,
@@ -7703,13 +7702,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2116,
+   "ok": 2117,
    "fallos": 0,
-   "ejecuciones": 1620,
+   "ejecuciones": 1621,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T12:21:11.666Z"
+   "ultima": "2026-11-13T12:26:14.608Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7725,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:21:19.638Z"
+   "ultimaBien": "2026-11-13T12:26:19.817Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:21:19.638Z"
+   "ultimaBien": "2026-11-13T12:26:19.817Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:21:19.638Z"
+   "ultimaBien": "2026-11-13T12:26:19.817Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,11 +7741,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:21:19.638Z"
+   "ultimaBien": "2026-11-13T12:26:19.817Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:21:19.638Z"
+   "ultimaBien": "2026-11-13T12:26:19.817Z"
   }
  },
  "avisos": [
