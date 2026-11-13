@@ -2147,7 +2147,9 @@
    "El Correo|https://www.elcorreo.com/athletic/palabras-sancet-convocado-seleccion-espanola-2023-20261113080516-nt.html": 1794553517000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250493/raphinha-quiero-disponible-brasil-barca.html": 1794555394000,
    "SPORT|136396955": 1794555227000,
-   "AS|https://as.com/futbol/primera/gordon-no-consigue-cerrar-el-debate-f202611-n/": 1794559136000
+   "AS|https://as.com/futbol/primera/gordon-no-consigue-cerrar-el-debate-f202611-n/": 1794559136000,
+   "AS|https://as.com/futbol/primera/la-cantera-ofrece-cuatro-alternativas-para-la-baja-de-barrenetxea-f202611-n/": 1794559518000,
+   "ABC|https://www.abc.es/deportes/futbol/sancet-internacional-espanol-ojala-podamos-jugar-mundial-20261113093808-nt.html": 1794559621000
   },
   "hechos": [
    {
@@ -2583,11 +2585,23 @@
     "nums": [
      19
     ]
+   },
+   {
+    "guid": "AS|https://as.com/futbol/primera/la-cantera-ofrece-cuatro-alternativas-para-la-baja-de-barrenetxea-f202611-n/",
+    "medio": "AS",
+    "t": 1794559518000,
+    "id": "701",
+    "que": "lesion",
+    "oficial": false,
+    "hecho": "Barrenetxea está de baja de larga duración en la Real Sociedad",
+    "motivo": "",
+    "plazo": "baja de larga duración",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3569,17 +3583,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 144790,
-  "salida": 10491,
+  "entrada": 146973,
+  "salida": 10698,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.298421,
+  "dolares": 0.298743,
   "reservado": 0
  },
  "recientes": {
@@ -7726,13 +7740,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2075,
+   "ok": 2076,
    "fallos": 0,
-   "ejecuciones": 1579,
+   "ejecuciones": 1580,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T08:56:11.901Z"
+   "ultima": "2026-11-13T09:01:12.818Z"
   }
  },
  "ptsDirecto": {},
@@ -7749,15 +7763,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:56:14.802Z"
+   "ultimaBien": "2026-11-13T09:01:18.340Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:56:14.802Z"
+   "ultimaBien": "2026-11-13T09:01:18.340Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:56:14.802Z"
+   "ultimaBien": "2026-11-13T09:01:18.340Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7765,11 +7779,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:56:14.802Z"
+   "ultimaBien": "2026-11-13T09:01:18.340Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:56:14.802Z"
+   "ultimaBien": "2026-11-13T09:01:18.340Z"
   }
  },
  "avisos": [
