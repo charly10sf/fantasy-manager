@@ -2148,7 +2148,8 @@
    "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000,
    "SPORT|136398549": 1794559654000,
    "SPORT|136400234": 1794560446000,
-   "SPORT|136399158": 1794560918000
+   "SPORT|136399158": 1794560918000,
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html": 1794565299000
   },
   "hechos": [
    {
@@ -2571,11 +2572,23 @@
     "motivo": "",
     "plazo": "baja de larga duración",
     "nums": []
+   },
+   {
+    "guid": "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/garcia-plaza-dirige-penultimo-entrenamiento-semana-alfon-isaac-fofana_0_2008489560.html",
+    "medio": "Diario de Sevilla",
+    "t": 1794565299000,
+    "id": "3265",
+    "que": "molestias",
+    "oficial": false,
+    "hecho": "Fofana no entrena con el grupo del Sevilla FC",
+    "motivo": "",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 16
+   "n": 17
   },
   "desde": {
    "67": {
@@ -3542,12 +3555,13 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-interior-confirma-prohibira-gas-lacrimogeno-cargas-11n-permitira-botes-humo-ser-inocuos-20261113102626.html": 1794561986000,
    "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/13/salamanca-celta-horario-ver-hoy-tv-partido-copa-rey.html": 1794562023000,
    "ABC|https://www.abc.es/deportes/futbol/salamanca-celta-horario-canal-television-ver-online-20261113105247-nt.html": 1794563668000,
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/12-nov-2026-partidazo-cope-20261113_3474274.html": 1794530700000
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/12-nov-2026-partidazo-cope-20261113_3474274.html": 1794530700000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261113/1004250535/hay-arbitro-espana-inglaterra.html": 1794564447000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 4,
+   "n": 5,
    "fallos": 0
   },
   "espera": {}
@@ -3555,17 +3569,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 22,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 164687,
-  "salida": 12988,
+  "entrada": 168360,
+  "salida": 13667,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.301659,
+  "dolares": 0.302366,
   "reservado": 0
  },
  "recientes": {
@@ -7712,13 +7726,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2093,
+   "ok": 2094,
    "fallos": 0,
-   "ejecuciones": 1597,
+   "ejecuciones": 1598,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T10:26:12.786Z"
+   "ultima": "2026-11-13T10:31:15.544Z"
   }
  },
  "ptsDirecto": {},
@@ -7735,15 +7749,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:26:20.203Z"
+   "ultimaBien": "2026-11-13T10:31:27.091Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:26:20.203Z"
+   "ultimaBien": "2026-11-13T10:31:27.091Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:26:20.203Z"
+   "ultimaBien": "2026-11-13T10:31:27.091Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7751,11 +7765,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:26:20.203Z"
+   "ultimaBien": "2026-11-13T10:31:27.091Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T10:26:20.203Z"
+   "ultimaBien": "2026-11-13T10:31:27.091Z"
   }
  },
  "avisos": [
