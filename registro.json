@@ -1894,7 +1894,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/oficial/20261110/1004249488/roberto-d-aversa-nuevo-entrenador-sassuolo.html": 1794321069000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/de-la-fuente-tranquiliza-sobre-la-lesion-de-lamine-yamal-no-merecia-la-pena-asumir-ningun-riesgo-cadena-ser/": 1794324347000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-ve-apto-lamine-yamal-inglaterra-no-merecia-pena-asumir-riesgo-20261110_3472467.html": 1794325288000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/marc-roca-regreso-roja-europeo_0_2008465260.html": 1794325756000,
@@ -2160,7 +2159,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250614/gerard-lopez-declara-juzgado-utilizo-informes-negreira-barca-b.html": 1794573454000,
    "Cadena SER|https://cadenaser.com/cataluna/2026/11/13/tancada-tecnicament-la-investigacio-del-cas-negreira-sercat/": 1794574342000,
    "SPORT|136412927": 1794575000000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/cerrada-tecnicamente-la-investigacion-del-caso-negreira-cadena-ser/": 1794579650000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/13/cerrada-tecnicamente-la-investigacion-del-caso-negreira-cadena-ser/": 1794579650000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250500/lamine-incorpora-hoy-seleccion.html": 1794556581000,
+   "SPORT|136413561": 1794576230000
   },
   "hechos": [
    {
@@ -2575,7 +2576,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -3552,17 +3553,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 39,
+   "clasificar": 40,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 244940,
-  "salida": 19720,
+  "entrada": 247247,
+  "salida": 20501,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.40742,
+  "dolares": 0.408041,
   "reservado": 0
  },
  "recientes": {
@@ -7709,13 +7710,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2141,
+   "ok": 2142,
    "fallos": 0,
-   "ejecuciones": 1645,
+   "ejecuciones": 1646,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T14:26:16.694Z"
+   "ultima": "2026-11-13T14:31:12.205Z"
   }
  },
  "ptsDirecto": {},
@@ -7732,15 +7733,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:26:19.570Z"
+   "ultimaBien": "2026-11-13T14:31:21.689Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:26:19.570Z"
+   "ultimaBien": "2026-11-13T14:31:21.689Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:26:19.570Z"
+   "ultimaBien": "2026-11-13T14:31:21.689Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7748,11 +7749,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:26:19.570Z"
+   "ultimaBien": "2026-11-13T14:31:21.689Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:26:19.570Z"
+   "ultimaBien": "2026-11-13T14:31:21.689Z"
   }
  },
  "avisos": [
