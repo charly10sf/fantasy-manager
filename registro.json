@@ -1888,11 +1888,9 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249354/cucurella-resuelve-duda-le-ayuda-defensa-vinicius-diomande.html": 1794304800000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html": 1794304285000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261110/1004249362/entiendo-alguien-quiera-vienen-barca-madrid-formas-molestaron.html": 1794305948000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249364/istvan-kovacs-pita-italia-francia.html": 1794305460000,
    "El Correo|https://www.elcorreo.com/athletic/penitencia-unai-simon-lesion-muneca-cogia-jarra-20261110114315-nt.html": 1794307395000,
-   "SPORT|136277366": 1794304087000,
    "SPORT|136280206": 1794304897000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/globo-barca-y-brasil-pactan-los-minutos-de-raphinha-para-evitar-la-cuarta-lesion-consecutiva-con-su-seleccion-cadena-ser/": 1794308624000,
    "SPORT|136281363": 1794305884000,
@@ -2152,34 +2150,10 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261113/1004250513/valdano.html": 1794561607000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261113/1004250516/real-madrid-gana-peso-seleccion.html": 1794561097000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/raphinha-entre-lagrimas-se-defiende-en-brasil-quiero-estar-disponible-no-solo-para-la-seleccion-tambien-para-el-barca-cadena-ser/": 1794562149000,
-   "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000
+   "AS|https://as.com/futbol/primera/nsongo-carga-pilas-para-su-reencuentro-con-aubameyang-f202611-n/": 1794562325000,
+   "SPORT|136398549": 1794559654000
   },
   "hechos": [
-   {
-    "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html",
-    "medio": "Mundo Deportivo",
-    "t": 1794304285000,
-    "id": "2713",
-    "que": "molestias",
-    "oficial": false,
-    "seleccion": "pierde",
-    "hecho": "Ionut Radu se queda en Vigo por molestias en el hombro",
-    "motivo": "molestias en el hombro derecho",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "SPORT|136277366",
-    "medio": "SPORT",
-    "t": 1794304087000,
-    "id": "2430",
-    "que": "molestias",
-    "oficial": false,
-    "hecho": "Federico Valverde sigue con molestias físicas pese a su regreso",
-    "motivo": "molestias físicas",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "SPORT|136283172",
     "medio": "SPORT",
@@ -2604,7 +2578,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -3587,17 +3561,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 16,
+   "clasificar": 17,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 156442,
-  "salida": 11645,
+  "entrada": 158502,
+  "salida": 12141,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.300163,
+  "dolares": 0.300617,
   "reservado": 0
  },
  "recientes": {
@@ -7744,13 +7718,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2085,
+   "ok": 2086,
    "fallos": 0,
-   "ejecuciones": 1589,
+   "ejecuciones": 1590,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T09:46:12.197Z"
+   "ultima": "2026-11-13T09:51:33.890Z"
   }
  },
  "ptsDirecto": {},
@@ -7767,15 +7741,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:46:18.852Z"
+   "ultimaBien": "2026-11-13T09:51:50.966Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:46:18.852Z"
+   "ultimaBien": "2026-11-13T09:51:50.966Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:46:18.852Z"
+   "ultimaBien": "2026-11-13T09:51:50.966Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7783,11 +7757,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:46:18.852Z"
+   "ultimaBien": "2026-11-13T09:51:50.966Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T09:46:18.852Z"
+   "ultimaBien": "2026-11-13T09:51:50.966Z"
   }
  },
  "avisos": [
