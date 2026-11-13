@@ -1005,6 +1005,17 @@
    "jornada": 13,
    "id": "2121242085516792242",
    "t": "2026-11-13T14:01:39.026Z"
+  },
+  {
+   "clave": "mercado|2026-11-14",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2121381448896880863",
+   "t": "2026-11-13T23:15:25.814Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "3045"
+   }
   }
  ],
  "estados": {
@@ -3494,19 +3505,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-13",
+  "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 66,
-   "redactar": 12,
-   "revisar": 9,
+   "clasificar": 0,
+   "redactar": 1,
+   "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 298013,
-  "salida": 27334,
-  "cacheLee": 17418,
-  "cacheEscribe": 8709,
-  "dolares": 0.416535,
+  "entrada": 15946,
+  "salida": 205,
+  "cacheLee": 0,
+  "cacheEscribe": 2903,
+  "dolares": 0.0412,
   "reservado": 0
  },
  "recientes": {
@@ -3578,10 +3589,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-08T23:15:19.280Z",
-    "texto": "📈 Valverde, el Pajarito, lidera las subidas del mercado de esta noche: +2,3 M y se va a 68,1 M, un 3,6 % más.\n\nLa mayor bajada es la de Rodri, que se deja 2 M en el Barça y queda en 80,2 M.\n\nPara el que busque barato, Redondo del Elche 🌴 vale 2 M, tiene 4,5 de media y sube un 3,3 %. En la imagen van las cinco mayores subidas y bajadas."
-   },
-   {
     "t": "2026-11-09T23:15:41.346Z",
     "texto": "📈 Rodri es el que más baja en el mercado de esta noche: pierde 2 M en el Barça y se queda en 78,2 M.\n\nEn el lado bueno, Federico Valverde sube 3 M con el Real Madrid ⚪ y se va a 71 M, un 4,3 % más.\n\nUn chollo para mirar: Redondo, del Elche 🌴, vale 2 M y ha sumado 24 puntos en las tres últimas jornadas. Las cinco mayores subidas y bajadas, en la imagen."
    },
@@ -3596,6 +3603,10 @@
    {
     "t": "2026-11-12T23:16:55.843Z",
     "texto": "📈 Fermín López lidera las subidas de hoy: +2,6 M y se planta en 126,5 M con el Barça. Rodri, en cambio, es la mayor bajada: -1,7 M y se queda en 72,8 M.\n\nPara quien busque barato, Redondo, del Elche 🌴, cuesta 2,3 M y trae 24 puntos en sus tres últimas jornadas. En la imagen, los cinco que más suben y los cinco que más bajan."
+   },
+   {
+    "t": "2026-11-13T23:15:25.816Z",
+    "texto": "📊 La noche es del Real Madrid ⚪: sus jugadores suman 13,2 M entre todos, y Valverde, con casi 2,4 M más, se va a 81,3 M. El Barça, en cambio, pierde 6,9 M en conjunto.\n\nRodri sigue cayendo y ya van 18 días seguidos, 24,5 M menos desde el 27 de octubre. Fermín es su cara contraria: 24 días subiendo y 39,4 M más, con 40 puntos en tres jornadas."
    }
   ],
   "previa": [
@@ -3845,6 +3856,22 @@
    "cacheLee": 5806,
    "cacheEscribe": 17418,
    "dolares": 0.376423,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-13",
+   "llamadas": {
+    "clasificar": 66,
+    "redactar": 12,
+    "revisar": 9,
+    "pulir": 0
+   },
+   "fallos": 0,
+   "entrada": 298013,
+   "salida": 27334,
+   "cacheLee": 17418,
+   "cacheEscribe": 8709,
+   "dolares": 0.416535,
    "reservado": 0
   }
  ],
@@ -7710,7 +7737,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T23:11:15.148Z"
+   "ultimaBien": "2026-11-13T23:15:25.818Z"
   },
   "FotMob": {
    "seguidas": 0,
