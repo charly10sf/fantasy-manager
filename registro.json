@@ -1895,7 +1895,6 @@
  "noticias": {
   "vistas": {
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/tchouameni-se-retira-del-entrenamiento-de-la-seleccion-francesa-por-una-molestia-cadena-ser/": 1794345150000,
-   "SPORT|136302363": 1794342099000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249665/gerrard-lamine-avanzado-messi-cristiano-edad.html": 1794345817000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/10/aguirre-prueba-lateral-izquierdo-rayo-136308310.html": 1794345903000,
    "AS|https://as.com/futbol/primera/virus-fifa-17-madridistas-con-sus-selecciones-f202611-n/": 1794356236000,
@@ -7653,13 +7652,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2213,
+   "ok": 2214,
    "fallos": 0,
-   "ejecuciones": 1717,
+   "ejecuciones": 1718,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T20:21:15.293Z"
+   "ultima": "2026-11-13T20:26:12.623Z"
   }
  },
  "ptsDirecto": {},
@@ -7676,15 +7675,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:21:25.281Z"
+   "ultimaBien": "2026-11-13T20:26:15.898Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:21:25.281Z"
+   "ultimaBien": "2026-11-13T20:26:15.898Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:21:25.281Z"
+   "ultimaBien": "2026-11-13T20:26:15.898Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7692,11 +7691,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:21:25.281Z"
+   "ultimaBien": "2026-11-13T20:26:15.898Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T20:21:25.281Z"
+   "ultimaBien": "2026-11-13T20:26:15.898Z"
   }
  },
  "avisos": [
