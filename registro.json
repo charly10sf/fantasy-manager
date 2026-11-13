@@ -1901,7 +1901,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249565/sucic-cuarto-internacional-realista-caerse-fecha-fifa-lesion-enfermedad.html": 1794329986000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249533/gerard-martin.html": 1794328658000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/10/marc-roca-siete-anos-espera-llegar-seleccion-espanola/00031794329684948672845.htm": 1794329881000,
-   "SPORT|136289668": 1794326540000,
    "SPORT|136301367": 1794329440000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249368/dos-perdidas-relevantes-cuatro-dias-parecia-vaciarse-enfermeria-real.html": 1794333058000,
    "Superdeporte|https://www.superdeporte.es/levante-ud/2026/11/10/matricula-honor-mathew-ryan-estuvo-136298628.html": 1794333325000,
@@ -7704,13 +7703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2160,
+   "ok": 2161,
    "fallos": 0,
-   "ejecuciones": 1664,
+   "ejecuciones": 1665,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T16:01:15.431Z"
+   "ultima": "2026-11-13T16:06:15.494Z"
   }
  },
  "ptsDirecto": {},
@@ -7727,15 +7726,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:01:22.294Z"
+   "ultimaBien": "2026-11-13T16:06:19.502Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:01:22.294Z"
+   "ultimaBien": "2026-11-13T16:06:19.502Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:01:22.294Z"
+   "ultimaBien": "2026-11-13T16:06:19.502Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7743,11 +7742,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:01:22.294Z"
+   "ultimaBien": "2026-11-13T16:06:19.502Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T16:01:22.294Z"
+   "ultimaBien": "2026-11-13T16:06:19.502Z"
   }
  },
  "avisos": [
