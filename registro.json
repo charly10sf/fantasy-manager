@@ -2147,7 +2147,8 @@
    "ABC|https://www.abc.es/deportes/futbol/lamine-rodri-espana-sufre-20261112233025-nt.html": 1794534035000,
    "ABC|https://www.abc.es/deportes/futbol/esposito-rompe-francia-mbappe-zidane-20261112224712-nt.html": 1794520033000,
    "SPORT|136394638": 1794546217000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250414/cupo-rojiblanco-euskal-selekzioa-llega-diez-jugadores.html": 1794551400000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261113/1004250414/cupo-rojiblanco-euskal-selekzioa-llega-diez-jugadores.html": 1794551400000,
+   "MARCA|https://www.marca.com/futbol/seleccion/2026/11/13/oihan-sancet-sueno-defender-espana-sueno-jugar-euskadi-mundial.html": 1794552560000
   },
   "hechos": [
    {
@@ -2573,7 +2574,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 3
+   "n": 4
   },
   "desde": {
    "67": {
@@ -3561,17 +3562,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 4,
+   "clasificar": 5,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 132573,
-  "salida": 8519,
+  "entrada": 134507,
+  "salida": 9266,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.296213,
+  "dolares": 0.29678,
   "reservado": 0
  },
  "recientes": {
@@ -7718,13 +7719,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2048,
+   "ok": 2049,
    "fallos": 0,
-   "ejecuciones": 1552,
+   "ejecuciones": 1553,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T06:46:12.005Z"
+   "ultima": "2026-11-13T06:51:13.570Z"
   }
  },
  "ptsDirecto": {},
@@ -7741,15 +7742,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:46:14.468Z"
+   "ultimaBien": "2026-11-13T06:51:22.797Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:46:14.468Z"
+   "ultimaBien": "2026-11-13T06:51:22.797Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:46:14.468Z"
+   "ultimaBien": "2026-11-13T06:51:22.797Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7757,11 +7758,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:46:14.468Z"
+   "ultimaBien": "2026-11-13T06:51:22.797Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:46:14.468Z"
+   "ultimaBien": "2026-11-13T06:51:22.797Z"
   }
  },
  "avisos": [
