@@ -3392,10 +3392,8 @@
  },
  "liga": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/10/la-federacion-tinerfena-de-futbol-aplaza-los-encuentros-oficiales-de-este-martes-y-miercoles-en-la-isla-de-tenerife-radio-club-tenerife/": 1794339274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342405000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-madrid-realiza-piquete-sede-central-alquiler-seguro-20261110204927.html": 1794340167000,
-   "SPORT|136307236": 1794339155000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249679/barca-espanyol-liga-f-fecha.html": 1794347495000,
    "AS|https://as.com/futbol/primera/las-huelgas-de-los-futbolistas-fue-terrible-dijeron-que-no-jugariamos-mas-f202611-n/": 1794374266000,
    "SPORT|136299647": 1794373265000,
@@ -7669,13 +7667,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2203,
+   "ok": 2204,
    "fallos": 0,
-   "ejecuciones": 1707,
+   "ejecuciones": 1708,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T19:31:11.939Z"
+   "ultima": "2026-11-13T19:36:13.405Z"
   }
  },
  "ptsDirecto": {},
@@ -7692,15 +7690,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:31:14.624Z"
+   "ultimaBien": "2026-11-13T19:36:19.495Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:31:14.624Z"
+   "ultimaBien": "2026-11-13T19:36:19.495Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:31:14.624Z"
+   "ultimaBien": "2026-11-13T19:36:19.495Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7708,11 +7706,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:31:14.624Z"
+   "ultimaBien": "2026-11-13T19:36:19.495Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T19:31:14.624Z"
+   "ultimaBien": "2026-11-13T19:36:19.495Z"
   }
  },
  "avisos": [
