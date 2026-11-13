@@ -2161,7 +2161,8 @@
    "SPORT|136412927": 1794575000000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/13/cerrada-tecnicamente-la-investigacion-del-caso-negreira-cadena-ser/": 1794579650000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250500/lamine-incorpora-hoy-seleccion.html": 1794556581000,
-   "SPORT|136413561": 1794576230000
+   "SPORT|136413561": 1794576230000,
+   "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000
   },
   "hechos": [
    {
@@ -2576,7 +2577,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 33
+   "n": 34
   },
   "desde": {
    "67": {
@@ -3421,7 +3422,6 @@
  },
  "liga": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/copa-rey/2026/11/10/hora-tavernes-valencia-ver-canal-ver-tv-hoy-partido-copa-rey.html": 1794321213000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/10/como-van-a-vivir-la-huelga-los-equipos-amateur-de-gipuzkoa-radio-san-sebastian/": 1794323504000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249515/enzo-alves-queda-mundial-sub-17.html": 1794322957000,
    "SPORT|136297086": 1794321674000,
@@ -3553,17 +3553,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 40,
+   "clasificar": 41,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 247247,
-  "salida": 20501,
+  "entrada": 249141,
+  "salida": 20935,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.408041,
+  "dolares": 0.408447,
   "reservado": 0
  },
  "recientes": {
@@ -7710,13 +7710,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2142,
+   "ok": 2143,
    "fallos": 0,
-   "ejecuciones": 1646,
+   "ejecuciones": 1647,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T14:31:12.205Z"
+   "ultima": "2026-11-13T14:36:28.075Z"
   }
  },
  "ptsDirecto": {},
@@ -7733,15 +7733,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:31:21.689Z"
+   "ultimaBien": "2026-11-13T14:36:35.883Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:31:21.689Z"
+   "ultimaBien": "2026-11-13T14:36:35.883Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:31:21.689Z"
+   "ultimaBien": "2026-11-13T14:36:35.883Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7749,11 +7749,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:31:21.689Z"
+   "ultimaBien": "2026-11-13T14:36:35.883Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T14:31:21.689Z"
+   "ultimaBien": "2026-11-13T14:36:35.883Z"
   }
  },
  "avisos": [
