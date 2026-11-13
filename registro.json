@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/oviedo/opinion/2026/11/10/hora-raul-entrenador.html": 1794290597000,
    "AS|https://as.com/futbol/videos/la-baza-ancelotti-de-vinicius-para-frenar-la-amenaza-diomande-f202611-v/": 1794291558000,
    "MARCA|https://www.marca.com/radio/2026/11/10/roberto-gomez-senala-real-madrid-fichaje-raul-oviedo-hora.html": 1794295070000,
    "AS|https://as.com/futbol/primera/fe-ciega-en-julian-alvarez-f202611-n/": 1794295741000,
@@ -2147,7 +2146,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/12/sancet-en-su-primera-convocatoria-con-euskadi-ojala-algun-dia-podamos-pelear-un-mundial-con-la-seleccion-de-nuestro-pais-cadena-ser/": 1794522580000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/luis-fuente-recupera-lamine-yamal-oyarzabal-jugar-inglaterra-20261112_3474248.html": 1794524509000,
    "ABC|https://www.abc.es/deportes/futbol/lamine-rodri-espana-sufre-20261112233025-nt.html": 1794534035000,
-   "ABC|https://www.abc.es/deportes/futbol/esposito-rompe-francia-mbappe-zidane-20261112224712-nt.html": 1794520033000
+   "ABC|https://www.abc.es/deportes/futbol/esposito-rompe-francia-mbappe-zidane-20261112224712-nt.html": 1794520033000,
+   "SPORT|136394638": 1794546217000
   },
   "hechos": [
    {
@@ -2573,7 +2573,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3562,17 +3562,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 2,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 126609,
-  "salida": 7611,
+  "entrada": 128660,
+  "salida": 7726,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.295163,
+  "dolares": 0.295426,
   "reservado": 0
  },
  "recientes": {
@@ -7719,13 +7719,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2039,
+   "ok": 2040,
    "fallos": 0,
-   "ejecuciones": 1543,
+   "ejecuciones": 1544,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T06:01:10.735Z"
+   "ultima": "2026-11-13T06:06:13.764Z"
   }
  },
  "ptsDirecto": {},
@@ -7742,15 +7742,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:01:50.811Z"
+   "ultimaBien": "2026-11-13T06:06:18.658Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:01:50.811Z"
+   "ultimaBien": "2026-11-13T06:06:18.658Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:01:50.811Z"
+   "ultimaBien": "2026-11-13T06:06:18.658Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7758,11 +7758,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:01:50.811Z"
+   "ultimaBien": "2026-11-13T06:06:18.658Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:01:50.811Z"
+   "ultimaBien": "2026-11-13T06:06:18.658Z"
   }
  },
  "avisos": [
