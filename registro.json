@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/oviedo/20261110/1004249327/dos-requisitos-obligatorios-oviedo-fichar-raul.html": 1794299023000,
    "Cadena SER|https://cadenaser.com/comunitat-valenciana/2026/11/10/lalcudia-de-crespins-remonta-ante-el-atletico-chella-1-2-y-se-lleva-un-duelo-directo-por-el-liderato-radio-xativa/": 1794302528000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249354/cucurella-resuelve-duda-le-ayuda-defensa-vinicius-diomande.html": 1794304800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261110/1004249355/no-acepto-insinuaciones-infundadas.html": 1794304285000,
@@ -7726,13 +7725,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2067,
+   "ok": 2068,
    "fallos": 0,
-   "ejecuciones": 1571,
+   "ejecuciones": 1572,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T08:21:14.465Z"
+   "ultima": "2026-11-13T08:26:12.296Z"
   }
  },
  "ptsDirecto": {},
@@ -7749,15 +7748,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:21:17.112Z"
+   "ultimaBien": "2026-11-13T08:26:17.033Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:21:17.112Z"
+   "ultimaBien": "2026-11-13T08:26:17.033Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:21:17.112Z"
+   "ultimaBien": "2026-11-13T08:26:17.033Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7765,11 +7764,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:21:17.112Z"
+   "ultimaBien": "2026-11-13T08:26:17.033Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T08:21:17.112Z"
+   "ultimaBien": "2026-11-13T08:26:17.033Z"
   }
  },
  "avisos": [
