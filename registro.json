@@ -2149,7 +2149,9 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/oparacing/2026/11/13/alvaro-juan-regresa-convocatoria-racing-club-ferrol-tras-seis-meses/00031794566195015609667.htm": 1794569580000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/betis-antony-busca-recuperar-antonio_0_2008489927.html": 1794569100000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261113/1004250587/paulo-duarte-carga-ilaix-moriba-tienes-ego-grande-importas.html": 1794571106000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/espana-tira-ocho-euroligas-evitar-desastre-quedarse-mundial-20261113_3474750.html": 1794571550000,
+   "SPORT|136406827": 1794568575000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/raphinha-emociona-defender-compromiso-brasil-20261113_3474712.html": 1794572128000
   },
   "hechos": [
    {
@@ -2564,7 +2566,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 26
+   "n": 27
   },
   "desde": {
    "67": {
@@ -3544,17 +3546,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 32,
+   "clasificar": 33,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 188700,
-  "salida": 16423,
+  "entrada": 190993,
+  "salida": 17343,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.305776,
+  "dolares": 0.306465,
   "reservado": 0
  },
  "recientes": {
@@ -7701,13 +7703,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2115,
+   "ok": 2116,
    "fallos": 0,
-   "ejecuciones": 1619,
+   "ejecuciones": 1620,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T12:16:17.944Z"
+   "ultima": "2026-11-13T12:21:11.666Z"
   }
  },
  "ptsDirecto": {},
@@ -7724,15 +7726,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:16:26.602Z"
+   "ultimaBien": "2026-11-13T12:21:19.638Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:16:26.602Z"
+   "ultimaBien": "2026-11-13T12:21:19.638Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:16:26.602Z"
+   "ultimaBien": "2026-11-13T12:21:19.638Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7740,11 +7742,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:16:26.602Z"
+   "ultimaBien": "2026-11-13T12:21:19.638Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T12:16:26.602Z"
+   "ultimaBien": "2026-11-13T12:21:19.638Z"
   }
  },
  "avisos": [
