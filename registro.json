@@ -1897,7 +1897,6 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/alarma-tchouameni.html": 1794335994000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/tchouameni-lesionado-francia-20261110_3472559.html": 1794336427000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249612/marc-bernal-rodri-fichan-balon-oro-dificil-jugar.html": 1794337752000,
-   "SPORT|136302339": 1794335294000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html": 1794341384000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/10/tchouameni-se-retira-del-entrenamiento-de-la-seleccion-francesa-por-una-molestia-cadena-ser/": 1794345150000,
    "SPORT|136302363": 1794342099000,
@@ -2154,21 +2153,6 @@
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/13/6af750f6fc6c8389338b4588.html": 1794593457000
   },
   "hechos": [
-   {
-    "guid": "SPORT|136302339",
-    "medio": "SPORT",
-    "t": 1794335294000,
-    "id": "2354",
-    "que": "vuelve",
-    "oficial": false,
-    "hecho": "Eric García vuelve a jugar tras tres semanas y media de baja",
-    "motivo": "",
-    "plazo": "",
-    "nums": [
-     25,
-     73
-    ]
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261110/1004249641/tchouameni-primera-victima-virus-fifa-real-madrid.html",
     "medio": "Mundo Deportivo",
@@ -3409,7 +3393,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249602/barca-pide-aplazamiento-partido-filial-girona-b-falta-efectivos.html": 1794335197000,
    "SPORT|136303483": 1794335556000,
    "Cadena SER|https://cadenaser.com/canarias/2026/11/10/la-federacion-tinerfena-de-futbol-aplaza-los-encuentros-oficiales-de-este-martes-y-miercoles-en-la-isla-de-tenerife-radio-club-tenerife/": 1794339274000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261110/1004249652/uefa-aplaza-partidos-portugal.html": 1794342405000,
@@ -7688,13 +7671,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2190,
+   "ok": 2191,
    "fallos": 0,
-   "ejecuciones": 1694,
+   "ejecuciones": 1695,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T18:26:20.968Z"
+   "ultima": "2026-11-13T18:31:11.927Z"
   }
  },
  "ptsDirecto": {},
@@ -7711,15 +7694,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:26:26.579Z"
+   "ultimaBien": "2026-11-13T18:31:14.964Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:26:26.579Z"
+   "ultimaBien": "2026-11-13T18:31:14.964Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:26:26.579Z"
+   "ultimaBien": "2026-11-13T18:31:14.964Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7727,11 +7710,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:26:26.579Z"
+   "ultimaBien": "2026-11-13T18:31:14.964Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T18:26:26.579Z"
+   "ultimaBien": "2026-11-13T18:31:14.964Z"
   }
  },
  "avisos": [
