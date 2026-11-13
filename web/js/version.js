@@ -19,12 +19,12 @@ export const VERSION = '0.7.9';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.9', f: '2026-11-14', h: '00:00', t: 'La IA, revisada a fondo: la app comprueba todo lo que dice',
+    v: '0.7.9', f: '2026-11-14', h: '00:54', t: 'La IA, mejorada y optimizada', todos: true,
     cosas: [
-      { tipo: 'mejora', d: 'ia', t: 'El chat se revisa antes de contestarte', x: 'Hasta ahora la app solo comprobaba el plan del día. Ahora también revisa cada respuesta del chat: lo que te dice que hagas (clausular, pujar, vender, blindar, alinear) pasa por las mismas cuentas que el plan, y las cifras que da de tus jugadores y de tu saldo se comparan con las de LaLiga. Si algo no cuadra, debajo sale «Revisado por la app» con lo que es de verdad.', ir: { v: 'ia' } },
-      { tipo: 'mejora', d: 'ia', t: 'El plan ya no propone lo que la app iba a tachar', x: 'Antes de pedirle el plan, la app comprueba una a una las operaciones posibles de hoy y a la IA solo le llegan las que valen, cada una con su aviso. Así salen menos «Descartado por la app» y el titular cuadra con lo que hay debajo.', ir: { v: 'hoy' } },
-      { tipo: 'arreglo', d: 'ia', t: 'Reglas de LaLiga que la IA explicaba mal', x: 'A un jugador de un rival que no está a la venta sí se le puede hacer una oferta desde su ficha (decide él); tras cualquier fichaje la cláusula queda cerrada 14 días; la oferta de LaLiga por lo que pones a la venta llega en el siguiente cambio de mercado; y una cláusula nunca se paga con deuda.' },
-      { tipo: 'arreglo', d: 'ia', t: 'Más cosas del plan que se escapaban', x: 'El titular ya no nombra un blindaje que la app ha quitado, y el paso de alinear no puede nombrar a un jugador que no es tuyo.', menor: true },
+      { importante: true, tipo: 'mejora', d: 'ia', t: 'La IA, mejorada y optimizada', x: 'Tu director deportivo afina más. Antes de darte el plan del día, la app comprueba cada operación con los datos de tu liga, y en el chat repasa lo que te recomienda y las cifras antes de enseñártelo. Si algo no cuadra, debajo de la respuesta sale «Revisado por la app» con el dato bueno. Además va más ligera: le llega solo lo que necesita para decidir.', ir: { v: 'ia' } },
+      { tipo: 'mejora', para: 'dueño', d: 'ia', t: 'El plan ya no propone lo que la app iba a tachar', x: 'Antes de pedirle el plan, la app comprueba una a una las operaciones posibles de hoy y a la IA solo le llegan las que valen, cada una con su aviso. Así salen menos «Descartado por la app» y el titular cuadra con lo que hay debajo.', ir: { v: 'hoy' } },
+      { tipo: 'arreglo', d: 'ia', t: 'Reglas del juego mejor explicadas', x: 'A un jugador de un rival que no está a la venta sí se le puede hacer una oferta desde su ficha (decide él); tras cualquier fichaje la cláusula queda cerrada 14 días; la oferta de LaLiga por lo que pones a la venta llega en el siguiente cambio de mercado; y una cláusula nunca se paga con deuda.' },
+      { tipo: 'arreglo', para: 'dueño', d: 'ia', t: 'Más cosas del plan que se escapaban', x: 'El titular ya no nombra un blindaje que la app ha quitado, y el paso de alinear no puede nombrar a un jugador que no es tuyo.', menor: true },
     ],
   },
   {
