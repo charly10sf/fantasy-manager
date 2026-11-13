@@ -1887,7 +1887,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/videos/la-baza-ancelotti-de-vinicius-para-frenar-la-amenaza-diomande-f202611-v/": 1794291558000,
    "MARCA|https://www.marca.com/radio/2026/11/10/roberto-gomez-senala-real-madrid-fichaje-raul-oviedo-hora.html": 1794295070000,
    "AS|https://as.com/futbol/primera/fe-ciega-en-julian-alvarez-f202611-n/": 1794295741000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249313/brasil-afirman-minutos-raphinha-pactados.html": 1794296434000,
@@ -3546,33 +3545,32 @@
    "SPORT|136388353": 1794511706000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/cronica/directo-republica-checa-espana-5a-jornada-nations-league-12-20261112_3474154.html": 1794521252000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/maldini-triunfo-gran-brillo-espana-partidos-epocas-no-ganaba-nunca-20261112_3474231.html": 1794520814000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/var-agita-victoria-espana-republica_0_2008485398.html": 1794521253000
+   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/var-agita-victoria-espana-republica_0_2008485398.html": 1794521253000,
+   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/13/espana-cumple-praga-jugara-liderato-nations-league-inglaterra-136391040.html": 1794526017000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-12-nov-2026-partidazo-cope-20261113_3474254.html": 1794525212000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-12-nov-2026-partidazo-cope-20261113_3474254.html": 1794549670735,
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/13/espana-cumple-praga-jugara-liderato-nations-league-inglaterra-136391040.html": 1794549670735
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 2,
+   "clasificar": 3,
    "redactar": 9,
    "revisar": 7,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 128660,
-  "salida": 7726,
+  "entrada": 130500,
+  "salida": 7887,
   "cacheLee": 14515,
   "cacheEscribe": 5806,
-  "dolares": 0.295426,
+  "dolares": 0.29569,
   "reservado": 0
  },
  "recientes": {
@@ -7719,13 +7717,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2042,
+   "ok": 2043,
    "fallos": 0,
-   "ejecuciones": 1546,
+   "ejecuciones": 1547,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 434,
-   "ultima": "2026-11-13T06:16:13.054Z"
+   "ultima": "2026-11-13T06:21:11.246Z"
   }
  },
  "ptsDirecto": {},
@@ -7742,15 +7740,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:16:16.926Z"
+   "ultimaBien": "2026-11-13T06:21:19.452Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:16:16.926Z"
+   "ultimaBien": "2026-11-13T06:21:19.452Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:16:16.926Z"
+   "ultimaBien": "2026-11-13T06:21:19.452Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7758,11 +7756,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:16:16.926Z"
+   "ultimaBien": "2026-11-13T06:21:19.452Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T06:16:16.926Z"
+   "ultimaBien": "2026-11-13T06:21:19.452Z"
   }
  },
  "avisos": [
