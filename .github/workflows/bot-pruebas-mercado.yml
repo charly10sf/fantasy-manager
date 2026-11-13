@@ -1,0 +1,22 @@
+# SOLO EN LA RAMA pruebas-mercado: no va a main. Redacta con la IA el tuit de mercado de hoy con el registro real (copia en /tmp). Nunca publica.
+name: Bot pruebas mercado
+on:
+  push:
+    branches: [pruebas-mercado]
+permissions:
+  contents: read
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      BOT_IA: claude
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --prefix bot --no-audit --no-fund
+      - run: git fetch -q --depth 1 origin bot-estado && git show FETCH_HEAD:registro.json > /tmp/registro.json
+      - run: node bot/prueba/mercado-ia.mjs
