@@ -214,35 +214,48 @@ html[data-tema="sunset"] {
 :where(html[data-tema="sunset"].atardecer-titila) :is(.carga-in, .lim-in)::before { animation: atardecer-titila 2.4s ease-in-out 1; }
 :where(html[data-tema="sunset"].atardecer-titila) :is(.carga, #limite)::before { animation-play-state: paused; }
 
-/* ---------- la cuenta atrás hasta el estreno (la pone el bloque TEMA_EVENTO debajo del marcador de Hoy) ---------- */
-/* una tarjeta con el borde de la noche de neón, el nombre con el degradado cálido (letra de la app, no la del juego), el sol
-   y las palmeras a la derecha y cuatro cifras grandes; se va sola al llegar a cero */
-.atardecer-cuenta {
-  position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; gap: 12px; margin: 12px 0 0; padding: 12px 14px;
-  border-radius: var(--r-tarj); background: linear-gradient(100deg, rgba(255, 62, 165, 0.16), rgba(143, 107, 255, 0.1) 55%, rgba(25, 230, 212, 0.08)), var(--s1, #200A36);
-}
+/* ---------- la cuenta atrás hasta el estreno (la pone el bloque TEMA_EVENTO arriba del todo en Hoy) ---------- */
+/* arriba, una escena propia (cielo de atardecer, sol, palmeras y el suelo de cuadrícula, quieta: en Hoy ya se mueven la
+   cabecera y las palmeras) con el nombre en la letra de la app; abajo, cuatro cifras en cajas oscuras con el borde de un
+   color cada una; se va sola al llegar a cero */
+.atardecer-cuenta { position: relative; isolation: isolate; overflow: hidden; margin: 0 0 12px; border-radius: var(--r-tarj, 18px); background: var(--s1, #200A36); }
 .atardecer-cuenta::before {
-  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; z-index: 2; pointer-events: none;
   background: var(--atardecer-noche);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
 }
-.atardecer-cuenta::after {
-  content: ''; position: absolute; z-index: -1; right: -10px; bottom: 0; width: 132px; height: 66px; opacity: 0.55; pointer-events: none;
-  background: var(--atardecer-palmeras) right bottom / contain no-repeat, var(--atardecer-sol) right 36px bottom -26px / 52px 52px no-repeat;
+.atardecer-cuenta .ac-cab {
+  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: center; min-height: 104px; padding: 14px 16px 26px;
+  background:
+    var(--atardecer-palmeras) right -14px bottom 14px / 190px 95px no-repeat,
+    var(--atardecer-sol) right 52px bottom -22px / 104px 104px no-repeat,
+    var(--atardecer-estrellas) right -10px top -22px / 190px 95px no-repeat,
+    linear-gradient(180deg, #12001F 0%, #22093f 34%, #5a1680 60%, #c22a9e 80%, #FF3EA5 92%, #FF8A3D 100%);
 }
-.atardecer-cuenta .ac-t { flex: 1 1 auto; display: flex; flex-direction: column; min-width: 0; }
-.atardecer-cuenta .ac-t b {
-  font: 700 var(--t-cifra, 28px)/1 var(--cond, 'Barlow Condensed'); letter-spacing: 0.5px; text-transform: uppercase;
-  background: var(--atardecer-calido); -webkit-background-clip: text; background-clip: text; color: transparent;
+/* el suelo: la cuadrícula en perspectiva, quieta, tapando la parte de abajo del sol */
+.atardecer-cuenta .ac-cab::after {
+  content: ''; position: absolute; z-index: -1; left: -30%; right: -30%; bottom: 0; height: 420px; pointer-events: none;
+  background: var(--atardecer-suelo); transform-origin: 50% 100%; transform: perspective(110px) rotateX(66deg);
 }
-.atardecer-cuenta .ac-t span { margin-top: 3px; font: 600 var(--t-mini, 12.5px)/1.25 'Barlow'; color: var(--texto-2, #E2CFEF); }
-.atardecer-cuenta .ac-n { flex: none; display: flex; gap: 5px; margin-left: auto; }
-.atardecer-cuenta .ac-n span { display: flex; flex-direction: column; align-items: center; min-width: 38px; padding: 5px 3px 4px; border-radius: var(--r-ctl, 12px); background: rgba(18, 0, 31, 0.72); }
-.atardecer-cuenta .ac-n b { font: 700 var(--t-sec, 20px)/1 var(--cond, 'Barlow Condensed'); color: var(--texto, #FFF6FD); font-variant-numeric: tabular-nums; }
-.atardecer-cuenta .ac-n i { margin-top: 2px; font: 600 11px/1 'Barlow'; font-style: normal; color: var(--texto-3, #B7A2CC); }
-.atardecer-cuenta .ac-n span:first-child b { color: var(--atardecer-amarillo); }
-@media (max-width: 360px) { .atardecer-cuenta { gap: 8px; padding: 10px 12px; } .atardecer-cuenta .ac-n span { min-width: 33px; } .atardecer-cuenta .ac-t b { font-size: var(--t-sec, 20px); } }
+.atardecer-cuenta .ac-nombre {
+  font: 700 46px/0.9 var(--cond, 'Barlow Condensed'); letter-spacing: 1px; text-transform: uppercase; color: #fff;
+  text-shadow: 0 0 14px rgba(255, 62, 165, 0.75), 0 2px 0 rgba(18, 0, 31, 0.6);
+}
+.atardecer-cuenta .ac-fecha { align-self: flex-start; margin-top: 7px; padding: 3px 7px; border-radius: var(--r-pl, 6px); background: rgba(18, 0, 31, 0.78); font: 700 var(--t-mini, 12.5px)/1 var(--cond, 'Barlow Condensed'); letter-spacing: 2px; text-transform: uppercase; color: var(--atardecer-amarillo); }
+.atardecer-cuenta .ac-n { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 10px 12px 12px; background: linear-gradient(180deg, #12001F, var(--s1, #200A36)); }
+.atardecer-cuenta .ac-n span { display: flex; flex-direction: column; align-items: center; padding: 8px 2px 7px; border-radius: var(--r-ctl, 12px); background: rgba(255, 255, 255, 0.04); box-shadow: inset 0 2px 0 var(--ac-c, #19E6D4); }
+.atardecer-cuenta .ac-n span:nth-child(1) { --ac-c: var(--atardecer-turquesa); }
+.atardecer-cuenta .ac-n span:nth-child(2) { --ac-c: var(--atardecer-violeta); }
+.atardecer-cuenta .ac-n span:nth-child(3) { --ac-c: var(--atardecer-rosa); }
+.atardecer-cuenta .ac-n span:nth-child(4) { --ac-c: var(--atardecer-naranja); }
+.atardecer-cuenta .ac-n b { font: 700 var(--t-cifra, 28px)/1 var(--cond, 'Barlow Condensed'); color: var(--texto, #FFF6FD); font-variant-numeric: tabular-nums; }
+.atardecer-cuenta .ac-n i { margin-top: 4px; font: 700 11px/1 var(--cond, 'Barlow Condensed'); font-style: normal; letter-spacing: 1.5px; text-transform: uppercase; color: var(--texto-3, #B7A2CC); }
+/* en el ordenador, la escena más alta y las cifras a la derecha, en la misma franja */
+.escritorio .atardecer-cuenta { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 440px); }
+.escritorio .atardecer-cuenta .ac-cab { min-height: 116px; padding-left: 22px; background-position: right 40% bottom 14px, right calc(40% + 70px) bottom -22px, right 8% top -18px, 0 0; }
+.escritorio .atardecer-cuenta .ac-n { align-content: center; padding: 14px 18px; background: linear-gradient(90deg, #12001F, var(--s1, #200A36)); }
+@media (max-width: 360px) { .atardecer-cuenta .ac-nombre { font-size: 40px; } .atardecer-cuenta .ac-n { gap: 6px; padding: 8px 10px 10px; } }
 
 /* ---------- movimiento al abrir una pestaña ---------- */
 @keyframes atardecer-franja { from { transform: translateX(-18px) var(--franja); opacity: 0; } to { transform: var(--franja); opacity: 1; } }

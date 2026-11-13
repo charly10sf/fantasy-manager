@@ -796,6 +796,8 @@ export function ajustes(S) {
   }
   if (dueno && !enDemo()) c4 += fila('Quién usa la app', 'Solo lo ves tú', btnA('quienUsa', 'Ver', { sec: false }), 'usuarios');
   if ((enApp || enWeb) && !enDemo()) c4 += fila('Liga de ejemplo', 'Sin tocar tus datos', btnA('entrarDemo', 'Ver'), 'demo');
+  // (13 nov, Carlos) el tema de evento de index.html (TEMA_EVENTO), que se puede apagar; sin él, la fila no sale
+  if (window.temaEvento) c4 += fila('Tema de atardecer', 'Hasta el 26 nov, con la cuenta atrás de GTA VI', interr(window.temaEvento.activo(), 'temaEvento', '', 'Tema de atardecer'), 'tema aspecto colores gta neon');
   c4 += fila('Diagnóstico', 'Lo que han contestado LaLiga y Google', btnA('diag', 'Ver'), 'errores fallos');
   h += sec('app', 'info', 'La app', `Versión ${VERSION}`, c4, 'version');
 

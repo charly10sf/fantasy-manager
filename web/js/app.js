@@ -2946,6 +2946,8 @@ document.addEventListener('click', async (ev) => {
       break;
     }
     case 'avisoTipo': guardarCfgAvisos({ [d.k]: !cfgAvisos()[d.k] }); if (S.D) programar(S.D, S.M, planAvisos()); repintarHoja(); break;
+    // el tema de evento (bloque TEMA_EVENTO de index.html): se enciende o se apaga sin recargar
+    case 'temaEvento': if (window.temaEvento) { window.temaEvento.cambiar(!window.temaEvento.activo()); repintarHoja(); } break;
     // (40) las secciones de Ajustes: se recuerda cuáles has abierto para no cerrarlas al repintar
     case 'plegarAjuste': { const det = el.closest('details'); if (det) Hj.plegarAjuste(S, d.k, !det.open); break; }
     case 'quitarAvisoJ': { const j = S.M && S.M.J(d.pid); avisarJugador(d.pid, null); if (S.D) programar(S.D, S.M, planAvisos()); tostada(`Quitado el aviso${j ? ` de ${j.nombre}` : ''}`, 2400); repintarHoja(); break; }
