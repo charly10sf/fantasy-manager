@@ -1900,7 +1900,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/enzo-alves-hijo-marcelo-cae-lista-espana-mundial-sub-17-lesion-muscular-20261110_3472480.html": 1794326987000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/10/bellingham-leccion-mourinho-sobre-medias-chaval-tienes-nueve-anos-tienes-gemelos.html": 1794328211000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/10/bruno-iribarne-da-el-salto-un-almeriense-entrena-con-las-estrellas-de-la-roja-ser-almeria/": 1794328207000,
-   "SPORT|136299263": 1794324628000,
    "AS|https://as.com/futbol/primera/sucic-no-viajara-con-croacia-por-una-amigdalitis-f202611-n/": 1794329246000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261110/1004249565/sucic-cuarto-internacional-realista-caerse-fecha-fifa-lesion-enfermedad.html": 1794329986000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261110/1004249533/gerard-martin.html": 1794328658000,
@@ -2160,7 +2159,8 @@
    "SPORT|136413561": 1794576230000,
    "Cadena SER|https://cadenaser.com/andalucia/2026/11/13/herrero-la-balona-esta-dormida-pero-saldra-a-flote-radio-algeciras/": 1794580296000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/gerard-lopez-utilizo-informes-arbitrales-negreira-entrenador-barca-b-20261113_3475063.html": 1794580892000,
-   "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000
+   "El Correo|https://www.elcorreo.com/athletic/adrian-perez-cuarta-renovacion-cachorro-semana-20261113154053-nt.html": 1794581329000,
+   "SPORT|136415105": 1794579682000
   },
   "hechos": [
    {
@@ -2575,7 +2575,7 @@
   ],
   "gemini": {
    "dia": "2026-11-13",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -3548,17 +3548,17 @@
  "ia": {
   "dia": "2026-11-13",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 12,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 253102,
-  "salida": 21473,
+  "entrada": 255138,
+  "salida": 21878,
   "cacheLee": 17418,
   "cacheEscribe": 8709,
-  "dolares": 0.409113,
+  "dolares": 0.409519,
   "reservado": 0
  },
  "recientes": {
@@ -7705,13 +7705,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2153,
+   "ok": 2154,
    "fallos": 0,
-   "ejecuciones": 1657,
+   "ejecuciones": 1658,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T15:26:12.105Z"
+   "ultima": "2026-11-13T15:31:14.224Z"
   }
  },
  "ptsDirecto": {},
@@ -7728,15 +7728,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:26:15.736Z"
+   "ultimaBien": "2026-11-13T15:31:21.846Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:26:15.736Z"
+   "ultimaBien": "2026-11-13T15:31:21.846Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:26:15.736Z"
+   "ultimaBien": "2026-11-13T15:31:21.846Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7744,11 +7744,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:26:15.736Z"
+   "ultimaBien": "2026-11-13T15:31:21.846Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T15:26:15.736Z"
+   "ultimaBien": "2026-11-13T15:31:21.846Z"
   }
  },
  "avisos": [
