@@ -4002,7 +4002,8 @@
    "6386040",
    "6386084",
    "6386083",
-   "6386067"
+   "6386067",
+   "6386080"
   ],
   "equipos": [
    "9866",
@@ -5800,6 +5801,13 @@
       0,
       0,
       0
+     ],
+     "copa": [
+      2,
+      0,
+      0,
+      0,
+      0
      ]
     }
    },
@@ -6293,6 +6301,19 @@
      ],
      "champions": [
       1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "1272740": {
+    "n": "Williot Swedberg",
+    "e": "Celta Vigo",
+    "g": {
+     "copa": [
+      2,
       0,
       0,
       0,
@@ -7175,6 +7196,19 @@
      ]
     }
    },
+   "1732791": {
+    "n": "Andrés Antañón",
+    "e": "Celta Vigo",
+    "g": {
+     "copa": [
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
    "1735453": {
     "n": "Yan Diomande",
     "e": "Real Madrid",
@@ -7651,13 +7685,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2230,
+   "ok": 2232,
    "fallos": 0,
-   "ejecuciones": 1734,
+   "ejecuciones": 1735,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-13T21:46:12.827Z"
+   "ultima": "2026-11-13T21:51:15.005Z"
   }
  },
  "ptsDirecto": {},
@@ -7674,15 +7708,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:46:17.793Z"
+   "ultimaBien": "2026-11-13T21:51:22.568Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:46:17.793Z"
+   "ultimaBien": "2026-11-13T21:51:22.568Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:46:17.793Z"
+   "ultimaBien": "2026-11-13T21:51:22.568Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7690,11 +7724,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:46:17.793Z"
+   "ultimaBien": "2026-11-13T21:51:22.568Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-13T21:46:17.793Z"
+   "ultimaBien": "2026-11-13T21:51:22.568Z"
   }
  },
  "avisos": [
