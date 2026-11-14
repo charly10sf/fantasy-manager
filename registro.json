@@ -1934,7 +1934,6 @@
  "noticias": {
   "vistas": {
    "AS|https://as.com/futbol/primera/cabrera-tiene-un-pase-f202611-n/": 1794441317000,
-   "AS|https://as.com/futbol/primera/mejora-el-estado-de-salud-de-pepe-mel-f202611-n/": 1794430958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250042/fuente-valentia-sentido-comun.html": 1794463200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004249945/mercado-invierno-opcion-real-ano.html": 1794463200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004249971/seis-internacionales-barca-juegan-hoy-ojos-puestos-raphinha.html": 1794461400000,
@@ -2146,7 +2145,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261114/1004251061/zidane-confirma-mbappe-habla-lleva-relacion-entrenador-jugador.html": 1794685115000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000,
    "SPORT|136449462": 1794685713000,
-   "SPORT|136448997": 1794685587000
+   "SPORT|136448997": 1794685587000,
+   "SPORT|136438982": 1794686444000
   },
   "hechos": [
    {
@@ -2396,7 +2396,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 36
+   "n": 37
   },
   "desde": {
    "67": {
@@ -3308,17 +3308,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 47,
+   "clasificar": 48,
    "redactar": 15,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 312421,
-  "salida": 27299,
+  "entrada": 314498,
+  "salida": 27391,
   "cacheLee": 11612,
   "cacheEscribe": 14515,
-  "dolares": 0.536325,
+  "dolares": 0.536579,
   "reservado": 0
  },
  "recientes": {
@@ -7525,13 +7525,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2551,
+   "ok": 2552,
    "fallos": 0,
-   "ejecuciones": 2018,
+   "ejecuciones": 2019,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T21:01:26.079Z"
+   "ultima": "2026-11-14T21:06:13.310Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7548,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:01:31.799Z"
+   "ultimaBien": "2026-11-14T21:06:18.611Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:01:31.799Z"
+   "ultimaBien": "2026-11-14T21:06:18.611Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:01:31.799Z"
+   "ultimaBien": "2026-11-14T21:06:18.611Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7564,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:01:31.799Z"
+   "ultimaBien": "2026-11-14T21:06:18.611Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:01:31.799Z"
+   "ultimaBien": "2026-11-14T21:06:18.611Z"
   }
  },
  "avisos": [
