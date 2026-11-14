@@ -1935,7 +1935,6 @@
   "vistas": {
    "AS|https://as.com/futbol/primera/cabrera-tiene-un-pase-f202611-n/": 1794441317000,
    "AS|https://as.com/futbol/primera/mejora-el-estado-de-salud-de-pepe-mel-f202611-n/": 1794430958000,
-   "AS|https://as.com/futbol/las-dudas-de-flick-f202611-n/": 1794428429000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004250042/fuente-valentia-sentido-comun.html": 1794463200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004249945/mercado-invierno-opcion-real-ano.html": 1794463200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004249971/seis-internacionales-barca-juegan-hoy-ojos-puestos-raphinha.html": 1794461400000,
@@ -7523,13 +7522,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2541,
+   "ok": 2542,
    "fallos": 0,
-   "ejecuciones": 2008,
+   "ejecuciones": 2009,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T20:16:11.297Z"
+   "ultima": "2026-11-14T20:21:21.289Z"
   }
  },
  "ptsDirecto": {},
@@ -7546,15 +7545,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:16:32.097Z"
+   "ultimaBien": "2026-11-14T20:21:26.350Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:16:32.097Z"
+   "ultimaBien": "2026-11-14T20:21:26.350Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:16:32.097Z"
+   "ultimaBien": "2026-11-14T20:21:26.350Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7562,11 +7561,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:16:32.097Z"
+   "ultimaBien": "2026-11-14T20:21:26.350Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:16:32.097Z"
+   "ultimaBien": "2026-11-14T20:21:26.350Z"
   }
  },
  "avisos": [
