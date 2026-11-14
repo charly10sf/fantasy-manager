@@ -1,5 +1,5 @@
 // Los cinco planes por la ruta /plan del Worker (worker/src/index.js), con su código tal cual y la IA de verdad (solo en
-// Actions, rama pruebas-ia; la clave del bot hace de CLAUDE_PLANES). LaLiga va de mentira (la cuenta 4242) y el Durable
+// Actions, rama pruebas-ia; la clave del bot hace de CLAUDE_PLANES). LaLiga va de mentira (una cuenta por plan) y el Durable
 // Object, en memoria: lo que se prueba es lo que hace el Worker con el pedido de la app (el sistema que arma, el tope, lo
 // que deja pasar de la respuesta y el cupo). Deja respuestas-worker.json con la forma de las de Google, para puntuarlas
 // con puntuar.mjs. Sin publicar nada.
@@ -13,7 +13,8 @@ const real = globalThis.fetch;
 globalThis.caches = { default: { match: async () => null, put: async () => {} } };
 globalThis.fetch = async (u, o) => {
   const s = String(u);
-  if (s.includes('/user/me')) return new Response(JSON.stringify({ id: 4242, managerName: 'Prueba' }), { status: 200 });
+  // (una cuenta por plan: el Worker deja 3 al minuto por cuenta)
+  if (s.includes('/user/me')) return new Response(JSON.stringify({ id: 4000 + Number(new Headers(o.headers).get('authorization').slice(-2)), managerName: 'Prueba' }), { status: 200 });
   if (s.endsWith('/limites.json')) return new Response(JSON.stringify({ planes: { on: true, gratis: 20, max: 20, topeUsdDia: 1 } }), { status: 200 });
   if (s.startsWith('https://api.anthropic.com/')) return real(u, o);
   throw new Error('sin red: ' + s);
@@ -30,7 +31,7 @@ for (let pasada = 1; pasada <= 2; pasada++) for (const p of pedidos) {
   const op = { tono: sis.includes(CHISTES.serio) ? 'serio' : 'broma', bloq: Object.keys(SOBRE_BLOQUEO).filter((k) => sis.includes(SOBRE_BLOQUEO[k])), anuncio: sis.includes('se abren viendo anuncios cortos'), alias: sis.includes('LOS DE LA LIGA VAN CON ALIAS') ? { puesto: sis.includes(', con N su puesto en la clasificación'), ex: sis.includes('«Exrival N»') } : null };
   if (pasada === 1) { const ok = sistemaCorto(op) === sis; igual += ok ? 1 : 0; console.log(`${ok ? 'IGUAL' : 'DISTINTO'} el sistema del Worker y el de la app en ${p.id}`); }
   const t0 = Date.now();
-  const r = await W.default.fetch(new Request('https://w.dev/plan', { method: 'POST', headers: { Origin: 'https://fantasymanagerapp.com', 'content-type': 'application/json', Authorization: `Bearer ${'x'.repeat(40)}`, 'cf-connecting-ip': '10.1.1.1' }, body: JSON.stringify({ pedido, ...op }) }), env, { waitUntil() {} });
+  const r = await W.default.fetch(new Request('https://w.dev/plan', { method: 'POST', headers: { Origin: 'https://fantasymanagerapp.com', 'content-type': 'application/json', Authorization: `Bearer ${'x'.repeat(38)}${String(out.length).padStart(2, '0')}`, 'cf-connecting-ip': '10.1.1.1' }, body: JSON.stringify({ pedido, ...op }) }), env, { waitUntil() {} });
   const t = await r.text();
   let j = null; try { j = JSON.parse(t); } catch (e) { j = null; }
   const ms = Date.now() - t0;
