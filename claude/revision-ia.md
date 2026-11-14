@@ -146,7 +146,7 @@ Gastado en la medida: 3,71 $.
   Con dos lotes (`pedidos.json` y `pedidos-b.json`) pregunta cada caso dos veces con el mismo modelo, para comparar
   antes y después. Gasta 31 preguntas por lote: con el cupo gratis, una pasada al día con los modelos buenos.
 
-## El motor del plan y el plan corto (14 nov, 01:25-03:30; rama `web-motor-plan`, sin publicar)
+## El motor del plan y el plan corto (14 nov, 01:25-03:15; rama `web-motor-plan`, sin publicar)
 
 Encargo: claude/prompt-motor-plan.md. Sesión de noche, sin Carlos (las dudas, decididas con las 15 reglas y con cómo juega;
 están en «Para confirmar con Carlos»). Vista previa: https://web-motor-plan.fantasy-manager-61v.pages.dev
@@ -168,7 +168,7 @@ están en «Para confirmar con Carlos»). Vista previa: https://web-motor-plan.f
 | Lo que tarda un plan | 3-4 s (ligero), ~75 s (Haiku), 17-56 s (Sonnet) | 2,8 s (ligero), 11,7 s (Haiku), 6,9 s (Sonnet) |
 | Lo que cuesta un plan | 0,011 $ (Haiku, y fallaba), 0,13 $ (Sonnet) | 0,0018 $ (Haiku), 0,0204 $ (Sonnet) |
 
-Con qué se midió la IA de verdad: 14 nov, 02:45 y 03:20, rama `pruebas-ia`, los cinco planes dos veces con cada modelo
+Con qué se midió la IA de verdad: 14 nov, 02:41 (primera versión del contrato) y 02:55 (la final, la de la tabla), rama `pruebas-ia`, los cinco planes dos veces con cada modelo
 (gemini-3.5-flash-lite con la clave gratis de pruebas; Haiku 5.5 y Sonnet 5.5 con la clave del bot). Gastado esta noche:
 0,48 $ (tope puesto: 3 $). FALTA la pasada con los Gemini buenos: su cupo gratis vuelve a las 9:00 (cómo, abajo).
 Son 5 escenarios de la liga de ejemplo y miden que el plan no se salte reglas ni lleve nada tachado; no miden si el

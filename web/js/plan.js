@@ -396,8 +396,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
   const { libres: todos, fijos } = candidatos(X, vetados);
   // ¿hace falta vender para empezar la jornada en positivo? Solo entonces entran los «por si hace falta»
   const base = cuentas(X, fijos) || { jornada: -1, caja: num(D.dinero), fin: num(D.dinero) - num(M.misPujas) };
-  const conMotivo = todos.filter((o) => !o.forzada && o.euros > -1e11);
-  const sinForzar = cuentas(X, [...fijos, ...conMotivo.filter((o) => o.clase === 'vender' || (o.clase === 'aceptar'))]);
+  const conMotivo = todos.filter((o) => !o.forzada);
   const apuro = base.jornada < 0;
   // los candidatos que entran en la búsqueda: como mucho 13 (8.192 combinaciones); de cada clase, los mejores
   const mejores = (xs, n, f) => [...xs].sort((a, b) => f(b) - f(a)).slice(0, n);
@@ -414,7 +413,6 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fi
     const forz = todos.filter((o) => o.forzada && (ciclos >= 1 || o.clase === 'aceptar') && !libres.some((l) => l.pid === o.pid && l.clase === o.clase));
     libres = [...libres.slice(0, 9), ...mejores(forz, 13 - Math.min(9, libres.length), porValor)];
   }
-  void sinForzar;
   // en apuros y sin cambios de mercado antes de la jornada, lo que se ponga a la venta no llega a tiempo: hoy solo cuenta
   // el dinero que entra ya. Lo demás se deja para cuando empiece la jornada (y así la app, al cuadrar, no da por cobrado
   // lo que aún no ha entrado)
