@@ -2149,7 +2149,8 @@
    "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250918/inglaterra-ven-absurdo-debate-sobre-lamine-roja.html": 1794660763000,
-   "SPORT|136438917": 1794658476000
+   "SPORT|136438917": 1794658476000,
+   "SPORT|136439152": 1794658639000
   },
   "hechos": [
    {
@@ -2418,7 +2419,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 19
+   "n": 20
   },
   "desde": {
    "67": {
@@ -3347,17 +3348,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 24,
+   "clasificar": 25,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 139555,
-  "salida": 14564,
+  "entrada": 141599,
+  "salida": 14656,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.230931,
+  "dolares": 0.231181,
   "reservado": 0
  },
  "recientes": {
@@ -7564,13 +7565,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2457,
+   "ok": 2458,
    "fallos": 0,
-   "ejecuciones": 1924,
+   "ejecuciones": 1925,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T13:21:26.623Z"
+   "ultima": "2026-11-14T13:26:12.307Z"
   }
  },
  "ptsDirecto": {},
@@ -7587,15 +7588,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:21:33.350Z"
+   "ultimaBien": "2026-11-14T13:26:17.019Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:21:33.350Z"
+   "ultimaBien": "2026-11-14T13:26:17.019Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:21:33.350Z"
+   "ultimaBien": "2026-11-14T13:26:17.019Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7603,11 +7604,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:21:33.350Z"
+   "ultimaBien": "2026-11-14T13:26:17.019Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:21:33.350Z"
+   "ultimaBien": "2026-11-14T13:26:17.019Z"
   }
  },
  "avisos": [
