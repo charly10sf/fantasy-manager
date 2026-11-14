@@ -1913,7 +1913,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249769/courtois-me-gusta-xabi-alonso-me-gusta-forma-trabajar.html": 1794386756000,
-   "SPORT|136316852": 1794385501000,
    "SPORT|136319206": 1794386810000,
    "SPORT|136318124": 1794386885000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/20261111/1004249788/raul.html": 1794391928000,
@@ -7659,13 +7658,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2396,
+   "ok": 2397,
    "fallos": 0,
-   "ejecuciones": 1863,
+   "ejecuciones": 1864,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T08:21:12.456Z"
+   "ultima": "2026-11-14T08:26:14.270Z"
   }
  },
  "ptsDirecto": {},
@@ -7682,15 +7681,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:21:17.652Z"
+   "ultimaBien": "2026-11-14T08:26:21.174Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:21:17.652Z"
+   "ultimaBien": "2026-11-14T08:26:21.174Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:21:17.652Z"
+   "ultimaBien": "2026-11-14T08:26:21.174Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7698,11 +7697,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:21:17.652Z"
+   "ultimaBien": "2026-11-14T08:26:21.174Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:21:17.652Z"
+   "ultimaBien": "2026-11-14T08:26:21.174Z"
   }
  },
  "avisos": [
