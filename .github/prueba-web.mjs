@@ -338,7 +338,9 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
     const Mo = await import('./js/motor.js');
     const { D, c } = window.S;
     const M = Object.create(window.S.M);
-    const x = M.clausulas.find((y) => !['injured', 'suspended', 'out_of_league'].includes(y.j.estado));
+    // (14 nov) una que esté abierta de verdad: con una cerrada, cuadrarPlan la descarta por la fecha y no por la regla
+    const sano = (y) => !['injured', 'suspended', 'out_of_league'].includes(y.j.estado);
+    const x = M.clausulas.find((y) => sano(y) && y.abierta) || M.clausulas.find(sano);
     if (!x) return { sin: true };
     M.clausulas = [x]; x.abierta = true; x.meLlega = true; x.ratio = 2; D.dinero = Math.max(D.dinero, x.clausula * 2 + 1e6);
     M.mias = M.mias.filter((y) => y.j.pos !== x.j.pos);
@@ -356,7 +358,8 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
     const op = (I.cuadrarPlan(P(), D, S0).ops || [])[0] || {};
     S0.mejora = mej; y.ratio = rat;
     res.ia = { plan: !op.descartada, hoy: false }; // Hoy no la enseña: el plan de la IA tampoco
-    res.iaMotivo = /no es una cláusula que la app recomiende/.test(op.aviso || '');
+    // (14 nov) según el día, la de la demo puede estar aún cerrada: entonces se descarta por la fecha, que también vale
+    res.iaMotivo = !!op.descartada && /no es una cláusula que la app recomiende|no se abre hasta/.test(op.aviso || '');
     return res;
   });
   if (r.sin) mal('plan y Hoy: la liga de ejemplo no trae cláusulas para probar');
