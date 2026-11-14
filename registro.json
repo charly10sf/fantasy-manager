@@ -2158,7 +2158,8 @@
    "AS|https://as.com/futbol/primera/cuti-romero-sin-descanso-f202611-n/": 1794643446000,
    "El Correo|https://www.elcorreo.com/athletic/vacile-huijsen-nico-williams-parece-boxeador-20261114090917-nt.html": 1794643758000,
    "SPORT|136432118": 1794641299000,
-   "AS|https://as.com/futbol/primera/debe-jugar-lamine-yamal-de-titular-ante-inglaterra-f202611-n/": 1794645993000
+   "AS|https://as.com/futbol/primera/debe-jugar-lamine-yamal-de-titular-ante-inglaterra-f202611-n/": 1794645993000,
+   "COPE|https://www.cope.es/programas/el-partidazo-de-cope/oasisdelibertad/audios/oasisdelibertad-13-20261114_3475247.html": 1794615879000
   },
   "hechos": [
    {
@@ -2492,7 +2493,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 6
+   "n": 7
   },
   "desde": {
    "67": {
@@ -3439,17 +3440,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 7,
+   "clasificar": 8,
    "redactar": 4,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 74776,
-  "salida": 7091,
+  "entrada": 76735,
+  "salida": 7183,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.143666,
+  "dolares": 0.143908,
   "reservado": 0
  },
  "recientes": {
@@ -7652,13 +7653,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2406,
+   "ok": 2407,
    "fallos": 0,
-   "ejecuciones": 1873,
+   "ejecuciones": 1874,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T09:11:11.394Z"
+   "ultima": "2026-11-14T09:16:13.537Z"
   }
  },
  "ptsDirecto": {},
@@ -7675,15 +7676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:11:17.559Z"
+   "ultimaBien": "2026-11-14T09:16:21.974Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:11:17.559Z"
+   "ultimaBien": "2026-11-14T09:16:21.974Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:11:17.559Z"
+   "ultimaBien": "2026-11-14T09:16:21.974Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7691,11 +7692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:11:17.559Z"
+   "ultimaBien": "2026-11-14T09:16:21.974Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:11:17.559Z"
+   "ultimaBien": "2026-11-14T09:16:21.974Z"
   }
  },
  "avisos": [
