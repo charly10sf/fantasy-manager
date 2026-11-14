@@ -2145,7 +2145,9 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-termina-polemica-lamine-yamal-recuperado-perfectas-condiciones-jugar-20261114_3475343.html": 1794679648000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/": 1794684566000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261114/1004251061/zidane-confirma-mbappe-habla-lleva-relacion-entrenador-jugador.html": 1794685115000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000,
+   "SPORT|136449462": 1794685713000,
+   "SPORT|136448997": 1794685587000
   },
   "hechos": [
    {
@@ -2395,7 +2397,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 35
+   "n": 36
   },
   "desde": {
    "67": {
@@ -3308,17 +3310,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 45,
+   "clasificar": 46,
    "redactar": 15,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 308207,
-  "salida": 25327,
+  "entrada": 310464,
+  "salida": 26311,
   "cacheLee": 11612,
   "cacheEscribe": 14515,
-  "dolares": 0.534917,
+  "dolares": 0.535635,
   "reservado": 0
  },
  "recientes": {
@@ -7525,13 +7527,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2548,
+   "ok": 2549,
    "fallos": 0,
-   "ejecuciones": 2015,
+   "ejecuciones": 2016,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T20:46:11.151Z"
+   "ultima": "2026-11-14T20:51:11.565Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7550,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:46:14.428Z"
+   "ultimaBien": "2026-11-14T20:51:22.292Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:46:14.428Z"
+   "ultimaBien": "2026-11-14T20:51:22.292Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:46:14.428Z"
+   "ultimaBien": "2026-11-14T20:51:22.292Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7566,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:46:14.428Z"
+   "ultimaBien": "2026-11-14T20:51:22.292Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:46:14.428Z"
+   "ultimaBien": "2026-11-14T20:51:22.292Z"
   }
  },
  "avisos": [
