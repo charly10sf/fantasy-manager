@@ -3342,7 +3342,6 @@
   "vistas": {
    "Europa Press|https://www.europapress.es/sociedad/noticia-grupo-manifestantes-impide-emision-programa-cafe-ideas-rtve-cataluna-huelga-general-20261111105556.html": 1794390956000,
    "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-consumo-electrico-cae-66-1000-horas-20261111105528.html": 1794390928000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249783/paso-adelante-recuperacion-juan-hernandez.html": 1794389939000,
    "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-alquiler-seguro-denuncia-actos-vandalicos-mas-40-oficinas-senala-sindicato-inquilinas-20261111114215.html": 1794393735000,
    "AS|https://as.com/futbol/primera/la-tension-futbolistas-y-laliga-se-traslada-a-la-audiencia-nacional-f202611-n/": 1794392540000,
    "SPORT|136322128": 1794390891000,
@@ -7654,13 +7653,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2412,
+   "ok": 2413,
    "fallos": 0,
-   "ejecuciones": 1879,
+   "ejecuciones": 1880,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T09:36:10.328Z"
+   "ultima": "2026-11-14T09:41:12.152Z"
   }
  },
  "ptsDirecto": {},
@@ -7677,15 +7676,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:36:16.304Z"
+   "ultimaBien": "2026-11-14T09:41:17.417Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:36:16.304Z"
+   "ultimaBien": "2026-11-14T09:41:17.417Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:36:16.304Z"
+   "ultimaBien": "2026-11-14T09:41:17.417Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7693,11 +7692,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:36:16.304Z"
+   "ultimaBien": "2026-11-14T09:41:17.417Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:36:16.304Z"
+   "ultimaBien": "2026-11-14T09:41:17.417Z"
   }
  },
  "avisos": [
