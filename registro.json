@@ -1947,7 +1947,6 @@
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261112/11681789/zidane-queda-nuevo-sin-mbappe-esta-vez-italia-francia-san-siro.html": 1794459600000,
    "ABC|https://www.abc.es/deportes/futbol/seleccion-lamine-estrella-agobia-lesiones-20261111012947-nt.html": 1794460849000,
    "ABC|https://www.abc.es/deportes/futbol/republica-checa-espana-hora-partido-nations-league-20261111012941-nt.html": 1794456001000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-evoluciona-satisfactoriamente-salud_0_2008476879.html": 1794433861000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/12/manu-carreno-se-posiciona-en-el-caso-lamine-yamal-no-sera-que-no-estamos-acostumbrados-a-tener-un-jugador-de-esta-dimension-cadena-ser/": 1794464787000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/12/pepe-mel-despierta-sufrir-ictus-136354696.html": 1794469290000,
    "SPORT|136355241": 1794466870000,
@@ -7522,13 +7521,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2560,
+   "ok": 2561,
    "fallos": 0,
-   "ejecuciones": 2027,
+   "ejecuciones": 2028,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T21:46:23.952Z"
+   "ultima": "2026-11-14T21:51:14.823Z"
   }
  },
  "ptsDirecto": {},
@@ -7545,15 +7544,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:46:29.111Z"
+   "ultimaBien": "2026-11-14T21:51:18.363Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:46:29.111Z"
+   "ultimaBien": "2026-11-14T21:51:18.363Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:46:29.111Z"
+   "ultimaBien": "2026-11-14T21:51:18.363Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7561,11 +7560,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:46:29.111Z"
+   "ultimaBien": "2026-11-14T21:51:18.363Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:46:29.111Z"
+   "ultimaBien": "2026-11-14T21:51:18.363Z"
   }
  },
  "avisos": [
