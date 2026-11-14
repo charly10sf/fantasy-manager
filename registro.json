@@ -1919,12 +1919,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "ABC|https://www.abc.es/deportes/futbol/fuente-indigna-sospechas-lesion-lamine-lamentable-inflamacion-20261111193549-nt.html": 1794422149000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/11/luis-fuente-lamine-yamal-ningun-privilegio/00031794423046999577966.htm": 1794423300000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/sevilla/20261111/1004250002/mujer-marcao-explota-criticas-sueldo-no-decide-aficion.html": 1794423209000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250001/zaniolo.html": 1794425156000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249947/jude-jobe-inglaterra-bellingham-domingo-espana.html": 1794424973000,
-   "SPORT|136347080": 1794422141000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250016/zidane-confirma-baja-mbappe-italia.html": 1794426396000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/zidane-confirma-la-baja-de-kylian-mbappe-ante-italia-ha-sentido-una-pequena-molestia-y-no-vamos-a-correr-riesgos-cadena-ser/": 1794427475000,
    "AS|https://as.com/futbol/primera/cabrera-tiene-un-pase-f202611-n/": 1794441317000,
@@ -7520,13 +7518,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2520,
+   "ok": 2521,
    "fallos": 0,
-   "ejecuciones": 1987,
+   "ejecuciones": 1988,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T18:31:10.843Z"
+   "ultima": "2026-11-14T18:36:12.123Z"
   }
  },
  "ptsDirecto": {},
@@ -7543,15 +7541,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:31:14.142Z"
+   "ultimaBien": "2026-11-14T18:36:15.857Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:31:14.142Z"
+   "ultimaBien": "2026-11-14T18:36:15.857Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:31:14.142Z"
+   "ultimaBien": "2026-11-14T18:36:15.857Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7559,11 +7557,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:31:14.142Z"
+   "ultimaBien": "2026-11-14T18:36:15.857Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:31:14.142Z"
+   "ultimaBien": "2026-11-14T18:36:15.857Z"
   }
  },
  "avisos": [
