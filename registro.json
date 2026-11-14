@@ -1920,7 +1920,6 @@
  "noticias": {
   "vistas": {
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/12/paron-terror-grandes-clubes/0003_202611G12P36992.htm": 1794421380000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249984/tuchel-pronuncia-sobre-jobe-bellingham.html": 1794421267000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/laporte-duda-jugar-frente-republica-checa-proceso-virico-20261111_3473310.html": 1794421558000,
    "ABC|https://www.abc.es/deportes/futbol/fuente-indigna-sospechas-lesion-lamine-lamentable-inflamacion-20261111193549-nt.html": 1794422149000,
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/deportes/2026/11/11/luis-fuente-lamine-yamal-ningun-privilegio/00031794423046999577966.htm": 1794423300000,
@@ -7524,13 +7523,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2517,
+   "ok": 2518,
    "fallos": 0,
-   "ejecuciones": 1984,
+   "ejecuciones": 1985,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T18:16:20.313Z"
+   "ultima": "2026-11-14T18:21:11.433Z"
   }
  },
  "ptsDirecto": {},
@@ -7547,15 +7546,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:16:31.849Z"
+   "ultimaBien": "2026-11-14T18:21:14.523Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:16:31.849Z"
+   "ultimaBien": "2026-11-14T18:21:14.523Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:16:31.849Z"
+   "ultimaBien": "2026-11-14T18:21:14.523Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7563,11 +7562,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:16:31.849Z"
+   "ultimaBien": "2026-11-14T18:21:14.523Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:16:31.849Z"
+   "ultimaBien": "2026-11-14T18:21:14.523Z"
   }
  },
  "avisos": [
