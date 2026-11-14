@@ -2162,7 +2162,8 @@
    "SPORT|136433028": 1794644887000,
    "SPORT|136433845": 1794647382000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/14/yan-diomande-sigue-alimentando-debate.html": 1794652317000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250890/giuliano-crecimiento-continuo.html": 1794653801000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250890/giuliano-crecimiento-continuo.html": 1794653801000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250896/take-kubo-reivindica-japon-marca-brasil-precioso-gesto-barrene.html": 1794654594000
   },
   "hechos": [
    {
@@ -2496,7 +2497,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 11
+   "n": 12
   },
   "desde": {
    "67": {
@@ -3341,7 +3342,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/11/normalidad-absoluta-mundo-deporte-huelga-general-136325321.html": 1794396491000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_0_2008472005.html": 1794397319000,
    "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-huelga-general-11-noviembre-revela-consumo-electrico-tiempo-real-seguimiento-20261111131526.html": 1794399326000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-manifestantes-cortan-gran-via-grito-hoy-no-consume-fuerte-dispositivo-policia-20261111131254.html": 1794398976000,
@@ -3419,12 +3419,13 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250266/aplazado-barca-atletic-girona-b.html": 1794605649000,
    "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-suspende-todos-vuelos-salida-motivos-seguridad-20261113224537.html": 1794606337000,
    "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-reabre-espacio-aereo-suspension-vuelos-territorio-20261114025823.html": 1794621503000,
-   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-fijados-servicios-minimos-72-ave-75-cercanias-huelga-dia-17-renfe-20261114110842.html": 1794650922000
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-fijados-servicios-minimos-72-ave-75-cercanias-huelga-dia-17-renfe-20261114110842.html": 1794650922000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/liga-segunda-division/20261114/1004250898/hay-fecha-encuentros-aplazados-tenerife-andorra-castellon.html": 1794655097000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 2,
+   "n": 3,
    "fallos": 0
   },
   "espera": {}
@@ -3432,17 +3433,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 13,
+   "clasificar": 15,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 118162,
-  "salida": 9818,
+  "entrada": 121919,
+  "salida": 10700,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.226418,
+  "dolares": 0.227234,
   "reservado": 0
  },
  "recientes": {
@@ -7649,13 +7650,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2434,
+   "ok": 2435,
    "fallos": 0,
-   "ejecuciones": 1901,
+   "ejecuciones": 1902,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T11:26:11.730Z"
+   "ultima": "2026-11-14T11:31:19.591Z"
   }
  },
  "ptsDirecto": {},
@@ -7672,15 +7673,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:26:14.084Z"
+   "ultimaBien": "2026-11-14T11:31:32.391Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:26:14.084Z"
+   "ultimaBien": "2026-11-14T11:31:32.391Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:26:14.084Z"
+   "ultimaBien": "2026-11-14T11:31:32.391Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7688,11 +7689,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:26:14.084Z"
+   "ultimaBien": "2026-11-14T11:31:32.391Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:26:14.084Z"
+   "ultimaBien": "2026-11-14T11:31:32.391Z"
   }
  },
  "avisos": [
