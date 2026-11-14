@@ -1920,7 +1920,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249852/raphinha-sube-estatus-brasil-lucira-brazalete.html": 1794398395000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249847/maroan-realiza-carrera-continua.html": 1794397559000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/incertidumbre-con-mbappe-cadena-ser/": 1794398583000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261111/1004249850/maxima-preocupacion-lesion-barrenetxea.html": 1794398731000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-cierra-entrenamiento-miercoles_0_2008472267.html": 1794399732000,
@@ -3342,7 +3341,6 @@
  },
  "liga": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_0_2008472005.html": 1794397319000,
    "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-huelga-general-11-noviembre-revela-consumo-electrico-tiempo-real-seguimiento-20261111131526.html": 1794399326000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-manifestantes-cortan-gran-via-grito-hoy-no-consume-fuerte-dispositivo-policia-20261111131254.html": 1794398976000,
    "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
@@ -7649,13 +7647,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2437,
+   "ok": 2438,
    "fallos": 0,
-   "ejecuciones": 1904,
+   "ejecuciones": 1905,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T11:41:13.538Z"
+   "ultima": "2026-11-14T11:46:11.660Z"
   }
  },
  "ptsDirecto": {},
@@ -7672,15 +7670,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:41:19.546Z"
+   "ultimaBien": "2026-11-14T11:46:14.831Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:41:19.546Z"
+   "ultimaBien": "2026-11-14T11:46:14.831Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:41:19.546Z"
+   "ultimaBien": "2026-11-14T11:46:14.831Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7688,11 +7686,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:41:19.546Z"
+   "ultimaBien": "2026-11-14T11:46:14.831Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:41:19.546Z"
+   "ultimaBien": "2026-11-14T11:46:14.831Z"
   }
  },
  "avisos": [
