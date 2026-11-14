@@ -22,7 +22,7 @@ export const VERSION = '0.7.10a';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.10a', f: '2026-11-14', h: '12:48', t: 'El anuncio de abajo, más pequeño',
+    v: '0.7.10a', f: '2026-11-14', h: '13:00', t: 'El anuncio de abajo, más pequeño',
     cosas: [
       { tipo: 'mejora', para: 'play', d: 'movil', t: 'El anuncio de abajo, más pequeño', x: 'El anuncio de debajo de las pestañas ocupa menos pantalla: ahora deja más sitio para la app.' },
       { tipo: 'mejora', para: 'app', d: 'cohete', t: 'Más fluida en los móviles de 90 y 120 Hz', x: 'En los móviles con pantalla rápida, la app se mueve a la frecuencia más alta que permita tu pantalla.' },
