@@ -3293,32 +3293,31 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250852/suspenden-no-barca-atletic-girona-b.html": 1794657210000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250903/incomprensible-espera-barca-plan-girona-b.html": 1794656246000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250916/precedentes-enfurecen-barca-atletic.html": 1794659189000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-unai-sordo-ccoo-califica-lamentable-desproporcionada-actuacion-policial-huelga-11n-20261114145958.html": 1794664798000
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-unai-sordo-ccoo-califica-lamentable-desproporcionada-actuacion-policial-huelga-11n-20261114145958.html": 1794664798000,
+   "SPORT|136377187": 1794672059000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 6,
+   "n": 7,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136377187": 1794675981752
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 35,
+   "clasificar": 36,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 162030,
-  "salida": 17510,
+  "entrada": 163779,
+  "salida": 17596,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.234651,
+  "dolares": 0.234869,
   "reservado": 0
  },
  "recientes": {
@@ -7525,13 +7524,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2507,
+   "ok": 2508,
    "fallos": 0,
-   "ejecuciones": 1974,
+   "ejecuciones": 1975,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T17:26:17.916Z"
+   "ultima": "2026-11-14T17:31:12.738Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7547,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:26:23.215Z"
+   "ultimaBien": "2026-11-14T17:31:18.632Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:26:23.215Z"
+   "ultimaBien": "2026-11-14T17:31:18.632Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:26:23.215Z"
+   "ultimaBien": "2026-11-14T17:31:18.632Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7563,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:26:23.215Z"
+   "ultimaBien": "2026-11-14T17:31:18.632Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:26:23.215Z"
+   "ultimaBien": "2026-11-14T17:31:18.632Z"
   }
  },
  "avisos": [
