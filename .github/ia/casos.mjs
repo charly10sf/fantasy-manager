@@ -3,6 +3,8 @@
 //   - con `ia`: lo que «contesta» la IA va escrito a mano (el fallo de verdad, o uno parecido). Se prueban SIN RED: lo
 //     que se mira es que la app lo pare o lo corrija antes de que lo vea el mánager (.github/prueba-ia.mjs).
 //   - sin `ia`: contesta la IA de verdad (rama pruebas-ia, que no se fusiona). Se mira lo que acaba viendo el mánager.
+//   - `tipo: 'motor'`: sin IA ninguna. El plan lo hace el motor (web/js/plan.js) y se mira, además de lo que se ve, lo que
+//     dice de él el árbitro de banco.mjs (REGLAS, JORNADA, HUECOS, ONCE_BAJA, VENDE_POR_CAJA). Van al final del archivo.
 // `debe` y `nunca` son expresiones regulares sobre lo que se ve. En el plan, lo que se ve es:
 //   TITULAR: … / SITUACION: … / OP: … / SUGERENCIA: … / DESCARTADA: … / ONCE: … / SALDO: …
 // y en el chat, la respuesta ya revisada y, debajo, una línea «NOTA: …» por cada cosa que se apunta en la memoria.
@@ -234,4 +236,42 @@ export const CASOS = [
   { id: 'ia-plan-en-juego', tipo: 'plan', escena: 'enjuego', de: 'con la jornada en juego', nunca: ['^DESCARTADA:', '^ONCE:', '^OP: alinear'], debe: ['^TITULAR: \\S'] },
   { id: 'ia-plan-paron', tipo: 'plan', escena: 'paron', de: 'en el parón: dinero, no once', nunca: ['^DESCARTADA:'], debe: ['^(TITULAR|SITUACION):[^\\n]*(par[oó]n|dinero|revaloriz|especul)'] },
   { id: 'ia-plan-negativo', tipo: 'plan', escena: 'negativo', de: 'en negativo entre semana', nunca: ['^DESCARTADA:', '^OP: clausular'], debe: ['^TITULAR: \\S'] },
+
+  /* ------------------------------------ el motor del plan, sin IA (14 nov 2026) ------------------------------------ */
+  // Cada escenario lleva un caso «reglas» (el plan no se salta ninguna regla de LaLiga y la app no le descarta nada: el
+  // motor no puede proponer lo que la app tacharía) y los suyos. Cómo juega Carlos: entre semana tira de deuda para comprar
+  // lo que sube y lo vende antes de la jornada; no vende a un suplente solo por hacer caja; en el parón, dinero antes que once.
+  ...['martes', 'm-limpio', 'm-negativo', 'm-holgado', 'veda', 'm-cierre', 'm-cierre-negativo', 'enjuego', 'paron', 'm-25', 'm-hueco', 'm-clausula-mia', 'm-reventa'].map((escena) => ({
+    id: `motor-reglas-${escena.replace(/^m-/, '')}`, tipo: 'motor', escena, de: 'reglas 1-15 de claude/revision-ia.md: dinero, deuda, 25, blindajes, cierre y empezar la jornada en positivo',
+    debe: ['^REGLAS: ok', '^TITULAR: \\S'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] })),
+  { id: 'motor-martes-no-vende-de-mas', tipo: 'motor', escena: 'martes', de: 'Ibañez y Javi Guerra (Carlos, 3 nov) y «el plan vendía medio once» (25 oct): entre semana no se vende perdiendo ni se deja el once cojo',
+    nunca: ['^OP: (vender|Aceptar oferta) Julián', '^VENDE_POR_CAJA', '^HUECOS: \\d+ → [1-9]'] },
+  { id: 'motor-martes-una-verdad', tipo: 'motor', escena: 'martes', de: 'Hoy, las alarmas y el plan no se contradicen (11 nov): la cláusula que Hoy enseña y me llega va en el plan',
+    debe: ['^OP: clausular Niño[^\\n]*\\[titular\\]'] },
+  { id: 'motor-especular-con-deuda', tipo: 'motor', escena: 'm-limpio', de: 'Carlos: entre semana tiro de deuda para comprar lo que sube y lo vendo antes de la jornada',
+    debe: ['^OP: pujar (Cubarsí|El Hilali)[^\\n]*\\[revender\\][^\\n]*vender el'] },
+  { id: 'motor-negativo-vuelve-a-positivo', tipo: 'motor', escena: 'm-negativo', de: 'regla 10 y Carlos, 3 nov: en negativo entre semana hay que llegar en positivo a la jornada, sin malvender hoy',
+    debe: ['^JORNADA: \\d'], nunca: ['^OP: (vender|Aceptar oferta) Julián[^\\n]*\\((hoy|ahora)\\)', '^VENDE_POR_CAJA'] },
+  { id: 'motor-holgado-no-hace-caja', tipo: 'motor', escena: 'm-holgado', de: 'Fornals (Carlos, 13 nov) y Carlos, 14 nov: no vendo a un suplente solo por hacer caja, y lo que sube no se vende',
+    nunca: ['^OP: (vender|Aceptar oferta) (Bellingham|Rodri|Jon Martin|Sergio Gómez|Agirrezabala|Pathé I. Ciss|Moncayola|Ionut Radu)', '^VENDE_POR_CAJA'] },
+  { id: 'motor-holgado-ficha', tipo: 'motor', escena: 'm-holgado', de: 'con saldo de sobra, lo que mejora el once y la app da por bueno se ficha',
+    debe: ['^OP: (clausular|pujar) [^\\n]*\\[titular\\]'] },
+  { id: 'motor-cierre-no-toca-el-once', tipo: 'motor', escena: 'm-cierre', de: 'revisión del 25 oct: a un día de la jornada no se vende a un titular que no se puede reponer',
+    nunca: ['^ONCE_BAJA', '^OP: clausular[^\\n]*\\(ahora\\)'], debe: ['^OP: alinear'] },
+  { id: 'motor-cierre-negativo', tipo: 'motor', escena: 'm-cierre-negativo', de: 'regla 10: en negativo y sin cambios de mercado antes de la jornada, solo vale el dinero que entra hoy (aceptar la oferta)',
+    debe: ['^OP: Aceptar oferta Álex Baena'] },
+  { id: 'motor-en-juego', tipo: 'motor', escena: 'enjuego', de: 'Domy, 31 oct: con la jornada en juego el once está cerrado',
+    nunca: ['^OP: alinear', '^ONCE:'] },
+  { id: 'motor-paron-dinero', tipo: 'motor', escena: 'paron', de: 'Domy, 9 nov, y Carlos: en el parón, dinero antes que once',
+    debe: ['^OP: [^\\n]*\\[revender\\][^\\n]*vender el', '^(TITULAR|SITUACION):[^\\n]*par[oó]n'], nunca: ['^HUECOS: 0 → [1-9]'] },
+  { id: 'motor-paron-no-vende-lo-que-sube', tipo: 'motor', escena: 'paron', de: 'Fornals (Carlos, 13 nov): en el parón tampoco se vende lo tuyo que sube fuerte',
+    nunca: ['^OP: (vender|Aceptar oferta) (Álex Baena|Bellingham)'] },
+  { id: 'motor-25-lo-dice', tipo: 'motor', escena: 'm-25', de: 'regla 12: con 25 no cabe nadie más sin vender antes',
+    debe: ['^SITUACION:[^\\n]*25'] },
+  { id: 'motor-hueco-lo-tapa', tipo: 'motor', escena: 'm-hueco', de: 'un hueco en el once son 4 puntos menos: lo primero es taparlo',
+    debe: ['^HUECOS: 1 → 0'] },
+  { id: 'motor-clausula-mia-a-tiro', tipo: 'motor', escena: 'm-clausula-mia', de: 'un titular con la cláusula abierta a su valor: primero el blindaje gratis, no pagar',
+    debe: ['^OP: Blindar Ionut Radu'], nunca: ['^OP: Subir cláusula Ionut Radu'] },
+  { id: 'motor-reventa-toca-vender', tipo: 'motor', escena: 'm-reventa', de: 'Carlos: lo que compro para revender lo vendo antes de la jornada',
+    debe: ['^OP: vender Jon Martin[^\\n]*\\[revender\\]'] },
 ];

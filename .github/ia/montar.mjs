@@ -7,7 +7,7 @@ import { CASOS } from './casos.mjs';
 
 const salida = process.argv[2] || new URL('./pedidos.json', import.meta.url).pathname;
 const out = [];
-for (const c of CASOS.filter((x) => !x.ia)) {
+for (const c of CASOS.filter((x) => !x.ia && x.tipo !== 'motor')) {
   const r = c.tipo === 'plan' ? await plan(c.escena, () => '{"operaciones":[],"titular":"x"}') : await chat(c.escena, c.pregunta, () => 'vale', c);
   const p = r.pedidos[0];
   if (!p) { console.log(`MAL  ${c.id}: la app no ha llamado a la IA (${r.error || ''})`); continue; }

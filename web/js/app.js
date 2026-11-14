@@ -4,7 +4,8 @@ import { enApp, enWeb, enInicio, nativo, http, guardar, WORKER, WORKER_PUBLICO, 
 import { haySesion, empezarLogin, terminarLogin, cerrarSesion, sesion, quien } from './auth.js';
 import { actualizar, foto, historico, cfg, guardarCfg, enDemo, carasDemo, pasosCarga, borrarTodo, borrarCuenta, completar, detalles, K, fuentesExternas, fuentesGuardadas, actHist, ponerCaras } from './datos.js';
 import { aprender, calibracion } from './aprende.js';
-import { analizar, planAuto, rematarAuto } from './motor.js';
+import { analizar, rematarAuto } from './motor.js';
+import { planDeHoy } from './plan.js';
 import * as V from './vistas.js';
 import * as Hj from './hojas.js';
 import * as Dr from './directo.js';
@@ -1104,8 +1105,9 @@ function montarPlan() {
   let base;
   if (P && (P.dia === diaDe() || S.planEstado.cargando || !hayClave())) base = { ...P, viejo: P.dia !== diaDe() };
   else if (P && S.planEstado.error && Date.now() - P.t < 2 * 86400e3) base = { ...P, viejo: true };
-  else base = planAuto(S.D, S.M, S.c);
-  S.plan = rematarAuto(cuadrarPlan(base, S.D, S.M));
+  else base = null;
+  // sin plan de la IA que valga, el del motor (plan.js): ya viene cuadrado y sin nada que la app descarte
+  S.plan = base ? rematarAuto(cuadrarPlan(base, S.D, S.M)) : planDeHoy(S.D, S.M, S.c);
   S.opPorPid = {};
   for (const o of S.plan.ops) if (o.pid && !o.descartada && !S.opPorPid[o.pid]) S.opPorPid[o.pid] = o;
 }
