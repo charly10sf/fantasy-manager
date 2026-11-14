@@ -49,8 +49,8 @@ export const ESCENAS = {
   // un titular mío (Ionut Radu) con la cláusula abierta y casi a su valor: le llega a varios rivales
   'm-clausula-mia': { hora: '2026-11-03T10:00:00+01:00', prep: `const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Ionut Radu');
     f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },
-  // martes, con una noticia de prensa de R. Terrats (el que el motor manda pujar): la IA puede quitarlo por ella
-  'm-noticia': { hora: '2026-11-03T10:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'R. Terrats'); return { noticias: { lista: [{ titulo: 'Terrats, duda para el partido del sábado por un golpe en el tobillo en el entrenamiento', fuente: 'Marca', t: Date.now() - 3 * 36e5, pids: [j.id], equipos: [] }] } };` },
+  // martes, con una noticia de prensa de Fran García (uno que el motor manda vender): la IA puede quitarlo por ella
+  'm-noticia': { hora: '2026-11-03T10:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Fran García'); return { noticias: { lista: [{ titulo: 'Fran García será titular el sábado: el técnico lo confirma en rueda de prensa tras la lesión de su compañero', fuente: 'Marca', t: Date.now() - 3 * 36e5, pids: [j.id], equipos: [] }] } };` },
   // jueves, con uno comprado para revender (Jon Martin): toca ponerlo a la venta para el último cambio de mercado
   'm-reventa': { hora: '2026-11-05T12:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
 };
@@ -236,7 +236,8 @@ export function arbitro(R, D, M, eur) {
       if (!x) { mal.push(`${q} no es mío`); continue; }
       if (imp) { if (imp > caja + 1) mal.push(`r5: subir la cláusula de ${q} no cabe en el saldo`); caja -= imp; }
       else { escudos++; if (hoy && !x.abierta) mal.push(`r9: blindaje a ${q} con la cláusula cerrada`); }
-    } else if (o.accion === 'alinear' && M.enJuego) mal.push('r8: alinear con la jornada en juego');
+    } else if (o.retira) pujado -= +o.retira;   // una puja retirada deja de contar (se puede retirar cuando se quiera)
+    else if (o.accion === 'alinear' && M.enJuego) mal.push('r8: alinear con la jornada en juego');
   }
   if (M.escudosMios && escudos > M.escudosMios.quedan) mal.push(`r9: ${escudos} blindajes y quedan ${M.escudosMios.quedan}`);
   // (si ya estaba pasado antes del plan, lo que no puede es dejarlo peor)

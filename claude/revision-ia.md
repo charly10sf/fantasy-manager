@@ -78,9 +78,13 @@ Comprobadas con Carlos (las cuatro primeras, el 13 nov; el resto, de antes):
 15. Los dos blindajes de cada jornada se ponen cuando uno quiera dentro de ella, también en las 24 h de cierre (Carlos,
     13 nov, 23:37; lo de «solo con la cláusula ya abierta» es de antes, del 7 nov, y sigue valiendo).
 
-Ya no queda ninguna regla sin comprobar de las que usa la app. (14 nov, con el motor del plan han salido tres preguntas
-que la app NO da por sabidas: si se pierden los puntos de uno alineado que se vende antes de que juegue, qué pasa si se
-gana una puja con 25 jugadores y si se puede retirar una puja. Están en «Para confirmar con Carlos».)
+16. Cada punto de la jornada son 100.000 €: con 64 puntos, LaLiga paga 6,4 M al acabarla (Carlos, 14 nov, 10:58).
+17. Con 25 jugadores no se puede pujar por nadie más (Carlos, 14 nov).
+18. Uno alineado que se vende ANTES del primer partido de la jornada no cuenta para ella. Vendido con la jornada ya
+    empezada (a las 21:01 de un viernes con partido a las 21:00), cuenta para toda la jornada (Carlos, 14 nov).
+19. Una puja se puede retirar cuando se quiera (Carlos, 14 nov).
+
+Ya no queda ninguna regla sin comprobar de las que usa la app.
 
 ## La arquitectura: la app decide, la IA elige y explica, la app revisa
 
@@ -252,6 +256,23 @@ en Google aunque esté puesto en Ajustes.
 
 ### Para confirmar con Carlos
 
+**Contestado el 14 nov, 10:58 (puntos 1, 4, 7 y 10) y ya en la rama:**
+- 1. Un punto vale 100.000 € (lo que paga LaLiga), no los 440 mil que salían de la liga de ejemplo. `AJUSTES.eurPunto`
+  en plan.js; `cfg().plan.eurPunto` lo cambia. Consecuencia medida: con el punto a 100 mil el dinero pesa más que el
+  once. El martes de la liga de ejemplo el plan vende también a Catena (titular, 4,7 puntos, bajando) y el once pasa de
+  43,9 a 39,3 puntos; en negativo, a 34,8. Con 440 mil se quedaba a Catena. Si eso es demasiado vender, se sube el
+  número (un punto vale también por la clasificación, no solo por lo que paga).
+- 4. Las pujas se pueden retirar: en el cierre, con una puja viva que te deja en negativo, el plan dice «Retirar puja»
+  (Courtois) en vez de aceptar la oferta por un titular (Baena). Caso `motor-cierre-retira-la-puja`.
+- 7. Con 25 no se puja: el plan no propone pujas y lo dice («LaLiga no te deja pujar por nadie más hasta que vendas a uno»).
+- 10. Vender con la jornada empezada no quita los puntos: el plan lo dice en la venta. Antes del primer partido sí se
+  pierden, y eso ya lo contaba (el once que queda). Sin hacer: aprovecharlo a propósito («espera a que empiece la
+  jornada para vender al titular que baja: te puntúa igual»).
+- Aparte: los planes los paga Carlos con Claude (2 al día por usuario) y las preguntas siguen con la IA de cada uno.
+  Hace falta una ruta en el Worker con la clave como secreto y el tope por cuenta: sesión nueva.
+
+De paso salió un fallo: en apuros (en negativo al empezar la jornada) lo de revender se quedaba fuera de la búsqueda. Arreglado.
+
 Lo que elegí sin poder preguntar, con la alternativa:
 1. **Cuánto vale un punto.** Elegido: sale de la liga (valor/puntos esperados, en 10 jornadas; 440 mil por punto y jornada
    en la de ejemplo), se ajusta en `cfg().plan`. Alternativa: una cifra fija tuya o un control en Ajustes.
@@ -295,7 +316,7 @@ Lo que elegí sin poder preguntar, con la alternativa:
 
 ### Cómo se repite
 
-- Los casos: `PW_MODULO=… node .github/prueba-ia.mjs [motor-|corto-]` (85 casos, ~2 min; `MOTOR=viejo` mide `planAuto`).
+- Los casos: `PW_MODULO=… node .github/prueba-ia.mjs [motor-|corto-]` (86 casos, ~2 min; `MOTOR=viejo` mide `planAuto`).
 - A fondo: `node .github/ia/a-fondo.mjs 60 <semilla>` (540 ligas, 25 s; `MOTOR=viejo` para comparar; `VER=1` enseña los fallos).
 - Con la IA: `node .github/ia/montar.mjs` → los `ia-plan-*` a `pedidos.json` y `pedidos-b.json` de `pruebas-ia` → la
   Action → `FRASES=1 node .github/ia/puntuar.mjs respuestas-<lote>.json`.

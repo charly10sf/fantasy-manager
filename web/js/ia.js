@@ -1394,7 +1394,7 @@ export function idsCorto(R) {
 export function pedidoCorto(D, M, c, R) {
   const { lista } = idsCorto(R);
   const L = [];
-  const acc = (o) => (o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '') ? 'ACEPTAR LA OFERTA' : o.accion === 'vender' ? 'PONER A LA VENTA' : o.accion === 'blindar' ? (o.importe ? 'SUBIR LA CLÁUSULA' : 'BLINDAR GRATIS') : String(o.accion || '').toUpperCase());
+  const acc = (o) => (o.retira ? 'RETIRAR LA PUJA' : o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '') ? 'ACEPTAR LA OFERTA' : o.accion === 'vender' ? 'PONER A LA VENTA' : o.accion === 'blindar' ? (o.importe ? 'SUBIR LA CLÁUSULA' : 'BLINDAR GRATIS') : String(o.accion || '').toUpperCase());
   const paso = ({ id, o }) => {
     const j = o.pid ? D.maestro[o.pid] || o.j : null, d = o.datos || {};
     L.push(`[${id}] ${acc(o)}${o.jugador ? ` · ${o.jugador}` : ''}${o.importe ? ` · ${eur(o.puja_max || o.importe)}` : ''}${o.cuando ? ` · ${o.cuando}` : ''}${o.objetivo && OBJ_TXT[o.objetivo] ? ` · para ${OBJ_TXT[o.objetivo]}` : ''}${o.vender_el ? ` · se vende el ${o.vender_el}` : ''}${o.hace_falta ? ' · HACE FALTA (no se quita)' : ''}`);
@@ -1950,7 +1950,7 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
       // (una cláusula o un blindaje pagados también bajan lo que se puede pujar o comprar después)
       if (margen != null && signo < 0 && !['pujar', 'comprar'].includes(accion)) margen -= importe;
     }
-    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : accion === 'blindar' ? (importe ? 'Subir cláusula' : 'Blindar') : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, tope, sobre, ya: !!ya };
+    return { ...o, accion, etiqueta: aceptar ? 'Aceptar oferta' : accion === 'blindar' ? (importe ? 'Subir cláusula' : 'Blindar') : o.retira ? 'Retirar puja' : null, n: i + 1, j, pid, importe, signo, saldo: signo && importe && hoy && !ya ? saldo : null, aviso, hoy, descartada, tope, sobre, ya: !!ya };
   });
   // los blindajes gratis de LaLiga: 2 por jornada. Si el plan pide más de los que te quedan, sobran los últimos
   const ES = M.escudosMios;
