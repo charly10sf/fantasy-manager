@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/mourinho-corta-la-hemorragia-f202611-n/": 1794411514000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249952/tchouameni-duda-celta.html": 1794414762000,
@@ -7531,13 +7530,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2484,
+   "ok": 2485,
    "fallos": 0,
-   "ejecuciones": 1951,
+   "ejecuciones": 1952,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T15:36:11.808Z"
+   "ultima": "2026-11-14T15:41:16.641Z"
   }
  },
  "ptsDirecto": {},
@@ -7554,15 +7553,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:36:15.303Z"
+   "ultimaBien": "2026-11-14T15:41:30.119Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:36:15.303Z"
+   "ultimaBien": "2026-11-14T15:41:30.119Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:36:15.303Z"
+   "ultimaBien": "2026-11-14T15:41:30.119Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7570,11 +7569,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:36:15.303Z"
+   "ultimaBien": "2026-11-14T15:41:30.119Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:36:15.303Z"
+   "ultimaBien": "2026-11-14T15:41:30.119Z"
   }
  },
  "avisos": [
