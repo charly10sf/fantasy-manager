@@ -1920,7 +1920,6 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
-   "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000,
    "AS|https://as.com/futbol/mariano-diaz-me-gustan-tanto-la-liga-como-la-copa-f202611-n/": 1794405348000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261111/1004249909/senalado-vinicius-defendido-mourinho-meses-vuelve-boca-todos.html": 1794406174000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249883/jacobo-ramon-quedara-resto-temporada.html": 1794409200000,
@@ -2154,18 +2153,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000
   },
   "hechos": [
-   {
-    "guid": "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html",
-    "medio": "El Correo",
-    "t": 1794404734000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea sufre una lesión severa en el muslo derecho",
-    "motivo": "lesión severa en la musculatura isquiosural derecha",
-    "plazo": "",
-    "nums": []
-   },
    {
     "guid": "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249952/tchouameni-duda-celta.html",
     "medio": "Mundo Deportivo",
@@ -7554,13 +7541,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2461,
+   "ok": 2462,
    "fallos": 0,
-   "ejecuciones": 1928,
+   "ejecuciones": 1929,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T13:41:12.013Z"
+   "ultima": "2026-11-14T13:46:12.982Z"
   }
  },
  "ptsDirecto": {},
@@ -7577,15 +7564,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:41:16.987Z"
+   "ultimaBien": "2026-11-14T13:46:17.975Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:41:16.987Z"
+   "ultimaBien": "2026-11-14T13:46:17.975Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:41:16.987Z"
+   "ultimaBien": "2026-11-14T13:46:17.975Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7593,11 +7580,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:41:16.987Z"
+   "ultimaBien": "2026-11-14T13:46:17.975Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:41:16.987Z"
+   "ultimaBien": "2026-11-14T13:46:17.975Z"
   }
  },
  "avisos": [
