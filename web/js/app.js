@@ -85,9 +85,9 @@ function pantallaEntrar(error = '') {
     </ul></div><div class="pant-d">
     ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
-    ${enApp ? `<button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
-    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>
-    <p class="peq apag" style="margin-top:8px">Ojo: la página de LaLiga a menudo falla a la primera («tenemos problemas para iniciar su sesión»). No es cosa de tu cuenta: ciérrala y vuelve a darle, a la segunda suele entrar.</p>${botonDemo('sec')}` : entrarWebHTML()}
+    ${enApp ? `<div class="invita">${icono('alerta')}<span><b>La página de LaLiga suele fallar a la primera.</b> Si te sale «Lo sentimos, tenemos problemas para iniciar su sesión», no es cosa tuya ni de la app: ciérrala y vuelve a darle a «Entrar». A la segunda suele ir bien.</span></div>
+    <button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
+    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>${botonDemo('sec')}` : entrarWebHTML()}
     ${PIE_ENTRAR}
   </div></div>${enApp ? '' : seccionMoviles()}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
@@ -764,8 +764,8 @@ function pedirPlanExtra(cu) {
 function pedirOtroPlan() {
   if ((S.planEstado || {}).cargando) return;
   if (planesApp(enDemo())) {
-    const cu = cupoPlanes();
-    if (cu && cu.quedan <= 0) { pedirPlanExtra(cu); return; }
+    // (aunque lo último guardado diga que no quedan, se pregunta al Worker, que es quien cuenta: si de verdad no quedan,
+    // contesta con el cupo y sale el anuncio. Así no se queda atrás un cupo viejo, como el del dueño sin límite)
     S.planEstado = {};
     generarPlan();
     return;
@@ -1975,6 +1975,8 @@ async function generarPlan({ extra = false, auto = false } = {}) {
       // de la app y, si lo ha pedido él, la caja con lo que puede hacer
       S.planEstado = auto ? { cupo: e.cupo, callado: true } : { cupo: e.cupo, error: e.message || String(e) };
       rehacer();
+      // lo ha pedido él y aún puede ver un anuncio para uno más: directo al anuncio
+      if (!auto && !extra && e.cupo.masConAnuncio && conAnuncios()) pedirPlanExtra(e.cupo);
     } else {
       S.planEstado = { error: e.message || String(e), clave: !!e.clave };
       rehacer();
