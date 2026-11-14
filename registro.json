@@ -1928,11 +1928,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261111/1004249868/barrenetxea.html": 1794400816000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/11/marc-roca-viejo-deseo-fichaje-valencia-136330400.html": 1794402180000,
    "AS|https://as.com/futbol/primera/bright-ede-la-proxima-alta-para-el-deportivo-f202611-n/": 1794401895000,
-   "AS|https://as.com/futbol/primera/barrenetxea-sufre-una-lesion-severa-y-pasara-por-el-quirofano-f202611-n/": 1794400407000,
    "AS|https://as.com/futbol/primera/sannadi-realiza-carrera-continua-en-lezama-f202611-n/": 1794402657000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249889/zidane-reacciona-incertidumbre-mbappe-llamando-ojitos-derechos-luis-enrique.html": 1794402099000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000,
-   "SPORT|136331770": 1794400495000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
    "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000,
    "SPORT|136334527": 1794402050000,
@@ -2158,7 +2156,8 @@
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/14/yan-diomande-sigue-alimentando-debate.html": 1794652317000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250890/giuliano-crecimiento-continuo.html": 1794653801000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250896/take-kubo-reivindica-japon-marca-brasil-precioso-gesto-barrene.html": 1794654594000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250887/club-italiano-quiere-comprar-courtois.html": 1794657600000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250887/club-italiano-quiere-comprar-courtois.html": 1794657600000,
+   "SPORT|136435184": 1794655925000
   },
   "hechos": [
    {
@@ -2201,18 +2200,6 @@
     "nums": []
    },
    {
-    "guid": "AS|https://as.com/futbol/primera/barrenetxea-sufre-una-lesion-severa-y-pasara-por-el-quirofano-f202611-n/",
-    "medio": "AS",
-    "t": 1794400407000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea se lesiona de gravedad y pasará por quirófano",
-    "motivo": "lesión severa que requiere quirófano",
-    "plazo": "",
-    "nums": []
-   },
-   {
     "guid": "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html",
     "medio": "Superdeporte",
     "t": 1794403782000,
@@ -2223,20 +2210,6 @@
     "motivo": "grave lesión muscular",
     "plazo": "estará alejado varios meses",
     "nums": []
-   },
-   {
-    "guid": "SPORT|136331770",
-    "medio": "SPORT",
-    "t": 1794400495000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "",
-    "motivo": "lesión severa en el isquiotibial derecho",
-    "plazo": "periodo de baja aún desconocido",
-    "nums": [
-     2022
-    ]
    },
    {
     "guid": "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html",
@@ -2492,7 +2465,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 13
+   "n": 14
   },
   "desde": {
    "67": {
@@ -3337,7 +3310,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681673/ruibal-defiende-huelga-general-me-encanta-gente-salga-protestar.html": 1794401677000,
    "Europa Press|https://www.europapress.es/sociedad/noticia-carreteras-cortadas-vuelos-cancelados-clases-suspendidas-primeros-efectos-paso-charles-20261111151925.html": 1794406765000,
    "Europa Press|https://www.europapress.es/nacional/noticia-abascal-carga-contra-sanchez-huelga-general-envia-sindicatos-mafiosos-contra-trabajadores-20261111151834.html": 1794406714000,
@@ -3423,17 +3395,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 18,
+   "clasificar": 19,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 127565,
-  "salida": 11902,
+  "entrada": 129602,
+  "salida": 12479,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.2284,
+  "dolares": 0.228892,
   "reservado": 0
  },
  "recientes": {
@@ -7640,13 +7612,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2447,
+   "ok": 2448,
    "fallos": 0,
-   "ejecuciones": 1914,
+   "ejecuciones": 1915,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T12:31:10.962Z"
+   "ultima": "2026-11-14T12:36:13.761Z"
   }
  },
  "ptsDirecto": {},
@@ -7663,15 +7635,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:31:16.917Z"
+   "ultimaBien": "2026-11-14T12:36:21.402Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:31:16.917Z"
+   "ultimaBien": "2026-11-14T12:36:21.402Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:31:16.917Z"
+   "ultimaBien": "2026-11-14T12:36:21.402Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7679,11 +7651,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:31:16.917Z"
+   "ultimaBien": "2026-11-14T12:36:21.402Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:31:16.917Z"
+   "ultimaBien": "2026-11-14T12:36:21.402Z"
   }
  },
  "avisos": [
