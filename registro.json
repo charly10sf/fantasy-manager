@@ -1037,6 +1037,13 @@
    "jornada": 13,
    "id": "2121686208615006655",
    "t": "2026-11-14T19:26:26.205Z"
+  },
+  {
+   "clave": "noticias|2522:mala|2026-11-14",
+   "tipo": "noticias",
+   "jornada": 13,
+   "id": "2121698817099682284",
+   "t": "2026-11-14T20:16:32.067Z"
   }
  ],
  "estados": {
@@ -3234,7 +3241,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-expresa-maximo-respeto-quienes-secundado-paro-condena-actitud-pp-jornada-20261111211130.html": 1794427890000,
    "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-ve-fracaso-huelga-general-acto-camuflado-campana-electoral-parte-sindicatos-20261111223111.html": 1794432671000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261112/1004250004/betis-abre-copa-diez-bajas-debut-diego-conde.html": 1794463200000,
    "SPORT|136354062": 1794463248000,
@@ -3301,16 +3307,16 @@
   "dia": "2026-11-14",
   "llamadas": {
    "clasificar": 44,
-   "redactar": 12,
-   "revisar": 6,
+   "redactar": 15,
+   "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 260672,
-  "salida": 23433,
-  "cacheLee": 5806,
-  "cacheEscribe": 11612,
-  "dolares": 0.422744,
+  "entrada": 306150,
+  "salida": 24720,
+  "cacheLee": 11612,
+  "cacheEscribe": 14515,
+  "dolares": 0.534408,
   "reservado": 0
  },
  "recientes": {
@@ -3426,10 +3432,6 @@
   ],
   "noticias": [
    {
-    "t": "2026-11-11T06:01:41.331Z",
-    "texto": "⁉️ Tchouaméni vuelve al Real Madrid ⚪ con molestias en la ingle derecha y se pierde los partidos con su selección, según AS y Mundo Deportivo.\n\nHa subido 14,9 M en el último mes y ya vale 36,4 M. Con un 44 % de titularidad, no tiene el puesto asegurado. La jornada 13 es el sábado 21 ante el Celta en el Bernabéu, y sin plazo de recuperación no se puede saber si llega bien.\n\nEl Celta encaja poco, y a un centrocampista eso no le ayuda."
-   },
-   {
     "t": "2026-11-11T08:01:46.615Z",
     "texto": "✅ Eric García vuelve tras su lesión y el Barça recupera una opción en defensa, según Mundo Deportivo y SPORT.\n\nEn nueve partidos ha dejado la portería a cero en tres, un dato que le da valor. Con un 65 % de titularidad, lo normal es que salga cuando se reanude la liga.\n\nEl Barça recibe al Villarreal el domingo 22 de noviembre, tras el parón."
    },
@@ -3444,6 +3446,10 @@
    {
     "t": "2026-11-12T14:26:25.848Z",
     "texto": "⁉️ Sadiq no se ha ejercitado con el grupo por un golpe en la articulación de la rodilla, según AS y Mundo Deportivo.\n\nEl delantero del Valencia 🦇 va a 4,2 puntos de media y, de momento, no hay plazo para saber si llega bien. Con la liga parada, el Rayo ⚡ no le toca hasta el sábado 21 de noviembre en Vallecas, así que hay margen. Si ese día es titular, el partido le viene bien: el Rayo es de los que más goles encajan."
+   },
+   {
+    "t": "2026-11-14T20:16:32.070Z",
+    "texto": "❌ Raphinha no volverá a Barcelona: se queda retenido por Brasil tras su expulsión, según SPORT y Cadena SER.\n\nTuvo su mejor jornada en la 2, con 24 puntos, así que su ausencia se nota si lo tienes. El Barça recibe al Villarreal 🚢 el domingo 22 de noviembre, tras el parón, y por ahora no se sabe si llega a ese partido."
    }
   ],
   "directo": [
@@ -7517,13 +7523,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2540,
+   "ok": 2541,
    "fallos": 0,
-   "ejecuciones": 2007,
+   "ejecuciones": 2008,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T20:11:12.583Z"
+   "ultima": "2026-11-14T20:16:11.297Z"
   }
  },
  "ptsDirecto": {},
@@ -7540,15 +7546,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:11:17.554Z"
+   "ultimaBien": "2026-11-14T20:16:32.097Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:11:17.554Z"
+   "ultimaBien": "2026-11-14T20:16:32.097Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:11:17.554Z"
+   "ultimaBien": "2026-11-14T20:16:32.097Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7556,11 +7562,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:11:17.554Z"
+   "ultimaBien": "2026-11-14T20:16:32.097Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:11:17.554Z"
+   "ultimaBien": "2026-11-14T20:16:32.097Z"
   }
  },
  "avisos": [
