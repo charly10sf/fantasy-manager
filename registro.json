@@ -1920,9 +1920,7 @@
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249883/jacobo-ramon-quedara-resto-temporada.html": 1794409200000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261111/1004249914/osasuna-sigue-pendiente-aimar-oroz-romain-castillo.html": 1794408047000,
    "AS|https://as.com/futbol/primera/mourinho-corta-la-hemorragia-f202611-n/": 1794411514000,
-   "SPORT|136326243": 1794407927000,
    "SPORT|136338637": 1794409048000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
@@ -7538,13 +7536,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2472,
+   "ok": 2473,
    "fallos": 0,
-   "ejecuciones": 1939,
+   "ejecuciones": 1940,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T14:36:13.073Z"
+   "ultima": "2026-11-14T14:41:14.350Z"
   }
  },
  "ptsDirecto": {},
@@ -7561,15 +7559,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:36:16.447Z"
+   "ultimaBien": "2026-11-14T14:41:19.596Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:36:16.447Z"
+   "ultimaBien": "2026-11-14T14:41:19.596Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:36:16.447Z"
+   "ultimaBien": "2026-11-14T14:41:19.596Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7577,11 +7575,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:36:16.447Z"
+   "ultimaBien": "2026-11-14T14:41:19.596Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:36:16.447Z"
+   "ultimaBien": "2026-11-14T14:41:19.596Z"
   }
  },
  "avisos": [
