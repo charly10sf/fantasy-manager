@@ -2146,7 +2146,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261114/1004250942/alvaro-cervera-entrenador-tenerife-pronuncia-sobre-sancion-jesus-owono.html": 1794664231000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250928/rashford-sera-importante-manu-pochettino.html": 1794664130000,
    "SPORT|136439696": 1794661472000,
-   "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/14/mikautadze-abre-puerta-fichar-barca-136439813.html": 1794668087000
+   "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/14/mikautadze-abre-puerta-fichar-barca-136439813.html": 1794668087000,
+   "SPORT|136443141": 1794667376000
   },
   "hechos": [
    {
@@ -2391,7 +2392,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 24
+   "n": 25
   },
   "desde": {
    "67": {
@@ -3236,7 +3237,6 @@
  },
  "liga": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261111/1004249933/agotadas-entradas-depor-barcelona-apenas-horas.html": 1794411891000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794413806000,
    "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
@@ -3313,17 +3313,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 30,
+   "clasificar": 31,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 152081,
-  "salida": 16171,
+  "entrada": 154141,
+  "salida": 16263,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.232986,
+  "dolares": 0.233238,
   "reservado": 0
  },
  "recientes": {
@@ -7530,13 +7530,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2485,
+   "ok": 2486,
    "fallos": 0,
-   "ejecuciones": 1952,
+   "ejecuciones": 1953,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T15:41:16.641Z"
+   "ultima": "2026-11-14T15:46:25.439Z"
   }
  },
  "ptsDirecto": {},
@@ -7553,15 +7553,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:41:30.119Z"
+   "ultimaBien": "2026-11-14T15:46:30.278Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:41:30.119Z"
+   "ultimaBien": "2026-11-14T15:46:30.278Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:41:30.119Z"
+   "ultimaBien": "2026-11-14T15:46:30.278Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7569,11 +7569,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:41:30.119Z"
+   "ultimaBien": "2026-11-14T15:46:30.278Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:41:30.119Z"
+   "ultimaBien": "2026-11-14T15:46:30.278Z"
   }
  },
  "avisos": [
