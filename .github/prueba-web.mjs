@@ -149,11 +149,12 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
 }
 
 // 6: en el parón (la demo con la jornada 10 a 12 días), el sitio de Directo es la pestaña Parón, con sus cuentas, y su
-// selector vuelve al Directo de siempre (21, 9 nov)
+// selector vuelve al Directo de siempre (21, 9 nov). (14 nov) La 9, 14 días antes del sábado de la demo: con 9, un sábado
+// por la tarde (el «próximo sábado» ya es el siguiente) la 9 seguía en juego y no había parón
 for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenador']]) {
   const { ctx, page, errores } = await pagina({ ancho, alto });
   await ctx.route('**/js/demo.js', async (r) => {
-    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,');
+    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 14 * DIA, 10: base + 7 * DIA,');
     r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: cuerpo });
   });
   await page.goto(`${BASE}/index.html`);
@@ -399,7 +400,7 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
 {
   const { ctx, page, errores } = await pagina();
   await ctx.route('**/js/demo.js', async (r) => {
-    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 9 * DIA, 10: base + 7 * DIA,');
+    const cuerpo = (await readFile(join(WEB, 'js', 'demo.js'), 'utf8')).replace('9: base - 7 * DIA, 10: base,', '9: base - 14 * DIA, 10: base + 7 * DIA,');
     r.fulfill({ status: 200, contentType: 'text/javascript; charset=utf-8', body: cuerpo });
   });
   await page.goto(`${BASE}/index.html`);
