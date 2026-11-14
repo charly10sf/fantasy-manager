@@ -3437,7 +3437,9 @@
    "n": 1,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/transportes-00343/noticia-fijados-servicios-minimos-72-ave-75-cercanias-huelga-dia-17-renfe-20261114110842.html": 1794651673297
+  }
  },
  "ia": {
   "dia": "2026-11-14",
@@ -7659,13 +7661,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2420,
+   "ok": 2421,
    "fallos": 0,
-   "ejecuciones": 1887,
+   "ejecuciones": 1888,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T10:16:11.243Z"
+   "ultima": "2026-11-14T10:21:13.297Z"
   }
  },
  "ptsDirecto": {},
@@ -7682,15 +7684,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:16:14.616Z"
+   "ultimaBien": "2026-11-14T10:21:18.963Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:16:14.616Z"
+   "ultimaBien": "2026-11-14T10:21:18.963Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:16:14.616Z"
+   "ultimaBien": "2026-11-14T10:21:18.963Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7698,11 +7700,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:16:14.616Z"
+   "ultimaBien": "2026-11-14T10:21:18.963Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:16:14.616Z"
+   "ultimaBien": "2026-11-14T10:21:18.963Z"
   }
  },
  "avisos": [
