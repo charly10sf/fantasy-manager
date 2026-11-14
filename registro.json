@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/relaciones-tensas-mbappe-zidane-francia-20261111_3472893.html": 1794396298000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249852/raphinha-sube-estatus-brasil-lucira-brazalete.html": 1794398395000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/athletic-bilbao/20261111/1004249847/maroan-realiza-carrera-continua.html": 1794397559000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/incertidumbre-con-mbappe-cadena-ser/": 1794398583000,
@@ -7650,13 +7649,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2433,
+   "ok": 2434,
    "fallos": 0,
-   "ejecuciones": 1900,
+   "ejecuciones": 1901,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T11:21:12.456Z"
+   "ultima": "2026-11-14T11:26:11.730Z"
   }
  },
  "ptsDirecto": {},
@@ -7673,15 +7672,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:21:17.758Z"
+   "ultimaBien": "2026-11-14T11:26:14.084Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:21:17.758Z"
+   "ultimaBien": "2026-11-14T11:26:14.084Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:21:17.758Z"
+   "ultimaBien": "2026-11-14T11:26:14.084Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7689,11 +7688,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:21:17.758Z"
+   "ultimaBien": "2026-11-14T11:26:14.084Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T11:21:17.758Z"
+   "ultimaBien": "2026-11-14T11:26:14.084Z"
   }
  },
  "avisos": [
