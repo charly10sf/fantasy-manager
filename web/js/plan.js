@@ -19,7 +19,7 @@
    Una venta siempre tiene un motivo (está de baja, ha girado, le pagan de más, es de revender y toca, o hace falta para
    empezar la jornada en positivo): nunca «por hacer caja». Si este motor falla, sale el plan de antes (planAuto). */
 import { num, clamp, DIA, HORA, diaDe, eur, pct, dura, cuando, antesDe, elDia } from './util.js';
-import { planAuto, rematarAuto, mereceClausula } from './motor.js';
+import { planAuto, rematarAuto, mereceClausula, mejorOnce } from './motor.js';
 import { paronLejos, cholloParon } from './operaciones.js';
 import { cuadrarPlan, veredictos } from './ia.js';
 
@@ -78,6 +78,7 @@ function contextoDe(D, M, c, ahora) {
   return {
     D, M, c, A, ahora, inicio, ventana, paron, cierre, dias, vp,
     ciclos: (ventana && ventana.ciclos) || 0,
+    pujasAntes: !M.cierreMercado || !inicio || M.cierreMercado < inicio,
     enJuego: !!M.enJuego,
     cerca: !!M.enJuego || (!!inicio && inicio - ahora < 3 * DIA),
     V: veredictos(D, M),
@@ -112,8 +113,11 @@ function candidatos(X, vetados) {
     const x = M.mias.find((y) => y.pid === v.pid);
     const { ine, hold, cae } = mueve(X, v.pid);
     const prima = v.mejor.importe - v.j.valor;
-    const esRev = revPids.has(v.pid);
-    const motivo = esRev ? 'revender' : v.consejo === 'aceptar' ? (cae || M.vendeBaja({ j: v.j, tend: v.tend }) ? 'baja' : 'prima') : null;
+    // lo comprado para revender se acepta cuando toca (la víspera del último cambio de mercado, o ya si ha empezado a bajar)
+    const esRev = revPids.has(v.pid) && (!ventana || ahora >= ventana.ponerVenta - 6 * HORA || (v.tend && v.tend.p1 != null && v.tend.p1 < -1));
+    // (te pagan de más, pero si sube fuerte y aguantándolo hasta la jornada valdría aún más, no es un motivo: Fornals, 13 nov)
+    const subeMas = !!ine && !cae && hold > prima && num(ine.ult) >= v.j.valor * 0.005;
+    const motivo = esRev ? 'revender' : v.consejo === 'aceptar' && !subeMas ? (cae || M.vendeBaja({ j: v.j, tend: v.tend }) ? 'baja' : 'prima') : null;
     const base = { clase: 'aceptar', pid: v.pid, j: v.j, importe: v.mejor.importe, cajaHoy: v.mejor.importe, sale: v.pid, euros: prima - hold, ref: `A-${v.pid}` };
     const op = (extra) => ({ accion: 'vender', ref: `A-${v.pid}`, pid: v.pid, jugador: v.j.nombre, donde: `acepta la oferta de ${v.mejor.de}`, importe: v.mejor.importe, cuando: v.mejor.caduca ? antesDe(v.mejor.caduca) : 'hoy', confianza: v.mejor.sobre >= 0.02 ? 'alta' : 'media', ...extra });
     if (motivo && ver && ver.ok) {
@@ -123,7 +127,7 @@ function candidatos(X, vetados) {
           datos: { porque: v.porque, cuanto: `${eur(v.mejor.importe)} (${eur(prima, { signo: true })} sobre su valor)`, cuando: v.mejor.caduca ? antesDe(v.mejor.caduca) : 'hoy', siNo: 'la oferta caduca y llega otra de LaLiga en el siguiente cambio de mercado' } }) });
     }
     // por si hace falta el dinero (solo entra en el plan si sin él no se empieza la jornada en positivo)
-    if (!esRev && (!ver || ver.ok || ver.sinPrisa || X.cierre)) {
+    if (!ver || ver.ok || ver.sinPrisa || X.cierre) {
       nuevo({ ...base, k: `FA-${v.pid}`, forzada: true, motivo: 'jornada', x,
         op: (cu) => op({ objetivo: 'caja', confianza: 'alta',
           motivo: `Hace falta para empezar la jornada en positivo (en negativo no puntúas) y es dinero que entra en el momento. ${v.mejor.sobre >= 0 ? `Te pagan ${eur(prima, { signo: true })} sobre lo que vale` : `La oferta se queda ${eur(-prima)} por debajo de lo que vale`} (${eur(v.j.valor)}).${pierdeTxt(v.pid)}${cu.resto}`,
@@ -169,7 +173,8 @@ function candidatos(X, vetados) {
     } else if (vi && !(vi.urgencia !== 'ya' && M.esperarVenta(x).tipo === 'clausula')) {
       motivo = 'inercia'; conf = vi.urgencia === 'ya' ? 'alta' : 'media';
       euros = Math.max(euros, cobra - x.j.valor + (vi.perder || 0));
-      porque = `${vi.texto}${M.esperarVenta(x).nota ? ` ${M.esperarVenta(x).nota}` : ''}`;
+      const nota = M.esperarVenta(x).nota;
+      porque = `${vi.texto}${nota && !/^Su cláusula está abierta en/.test(nota) ? ` ${nota}` : ''}`;
     } else if (((M.partidazo(x.pid) || {}).nivel || 0) < 2 && x.ganado > 0 && P7(x.tend) != null && P7(x.tend) < -4 && !M.esperarVenta(x).tipo) {
       motivo = 'desplome';
       euros = Math.max(euros, x.j.valor * Math.min(0.05, Math.abs(P7(x.tend)) / 100 / 2));
@@ -258,6 +263,8 @@ function cuentas(X, lista) {
     if (o.importe > caja) return null;
     caja -= o.importe; margen -= o.importe; n++;
     if (o.rev) { hayRev = true; vuelve += o.importe * A.margenRev; nE++; } else nC++;
+    // y con lo que ya hay pujado no puede pasar el tope de deuda: el saldo que se gasta en la cláusula deja de respaldarlo
+    if (margen < 0) return null;
   }
   for (const o of lista) {
     if (o.clase !== 'pujar') continue;
@@ -269,71 +276,110 @@ function cuentas(X, lista) {
   if (n > 25 || nC > A.maxOnce || nP > A.maxOnce || nE > (X.paron ? 3 : 2)) return null;
   const fin = margen - M.deuda;   // el saldo al acabar el día, contando como gastado todo lo pujado
   if (hayRev && fin < -M.deuda * A.topeDeuda) return null;
-  return { caja, margen, n, fin, jornada: fin + vuelve + ventas, vuelve, ventas };
+  // lo pujado se cobra en el cambio de mercado: si el próximo es después de que empiece la jornada (el mismo día del
+  // partido, de madrugada ya ha pasado), para empezar ESTA jornada en positivo solo cuenta lo que hay en caja
+  const jornada = X.pujasAntes ? fin + vuelve + ventas : caja + ventas;
+  return { caja, margen, n, fin, jornada, vuelve, ventas };
 }
 
 function elegir(X, libres, fijos) {
-  const { M, A } = X;
-  const antes = M.mejorOnce(X.mias);
-  // lo que cambia el once: solo depende de quién sale y quién entra, así que se guarda por combinación de esos
-  const tocan = libres.map((o, i) => (o.sale || o.entra ? i : -1)).filter((i) => i >= 0);
+  const { D, M, A, ciclos } = X;
+  // los puntos esperados de cada uno, una vez (el once se rehace cientos de veces)
+  const pps = new Map();
+  const pp = (j) => { let v = pps.get(j.id); if (v === undefined) { v = M.ppEsperado(j); pps.set(j.id, v); } return v; };
+  const onceDe = (lista) => mejorOnce(lista, M.formaciones, pp);
+  const antes = onceDe(X.mias);
+  const N = libres.length, T = 1 << N;
+  // lo que cambia el once solo depende de quién sale y quién entra: se guarda por combinación de esos
+  let tocanM = 0, forzM = 0;
+  libres.forEach((o, i) => { if (o.sale || o.entra) tocanM |= 1 << i; if (o.forzada) forzM |= 1 << i; });
+  const fueraFijos = new Set(fijos.filter((o) => o.sale).map((o) => o.sale));
   const memo = new Map();
   const once = (mask) => {
-    let key = 0;
-    for (const i of tocan) if (mask & (1 << i)) key |= 1 << i;
-    if (memo.has(key)) return memo.get(key);
-    const fuera = new Set(fijos.filter((o) => o.sale).map((o) => o.sale)), seguro = [], quiza = [];
-    for (const i of tocan) {
+    const key = mask & tocanM;
+    let r = memo.get(key);
+    if (r) return r;
+    const fuera = new Set(fueraFijos), seguro = [], quiza = [];
+    for (let i = 0; i < N; i++) {
       if (!(key & (1 << i))) continue;
       const o = libres[i];
       if (o.sale) fuera.add(o.sale);
       if (o.entra) (o.incierta ? quiza : seguro).push(o.entra);
     }
     const resto = X.mias.filter((j) => !fuera.has(j.id));
-    const cierto = M.mejorOnce([...resto, ...seguro]);
-    const todo = quiza.length ? M.mejorOnce([...resto, ...seguro, ...quiza]) : cierto;
-    const r = { cierto, todo, nota: quiza.length ? A.ganaPuja * todo.nota + (1 - A.ganaPuja) * cierto.nota : cierto.nota };
+    const cierto = onceDe([...resto, ...seguro]);
+    const todo = quiza.length ? onceDe([...resto, ...seguro, ...quiza]) : cierto;
+    r = { cierto, todo, nota: quiza.length ? A.ganaPuja * todo.nota + (1 - A.ganaPuja) * cierto.nota : cierto.nota };
     memo.set(key, r);
     return r;
   };
-  const base0 = M.mejorOnce(X.mias.filter((j) => !fijos.some((o) => o.sale === j.id)));
+  const base0 = onceDe(X.mias.filter((j) => !fueraFijos.has(j.id)));
+  /* las cuentas de las 2^N combinaciones, cada una a partir de la que tiene un candidato menos (las mismas reglas que
+     `cuentas`, sin montar listas: son miles) */
+  const sAcc = new Float64Array(T), sCl = new Float64Array(T), sBid = new Float64Array(T), sRev = new Float64Array(T), sVen = new Float64Array(T), sEur = new Float64Array(T), jor = new Float64Array(T);
+  const nAcc = new Uint8Array(T), nC = new Uint8Array(T), nP = new Uint8Array(T), nE = new Uint8Array(T), nOps = new Uint8Array(T), mala = new Uint8Array(T), cabe = new Uint8Array(T);
+  // un jugador, una operación
+  const choca = libres.map((o, i) => libres.reduce((m, p, k) => (k !== i && (p.pid === o.pid || fijos.some((f) => f.pid === o.pid)) ? m | (1 << k) : m), fijos.some((f) => f.pid === o.pid) ? 1 << i : 0));
+  const dinero = num(D.dinero), margen0 = dinero + M.deuda - num(M.misPujas), n0 = M.mias.length;
+  const venFijas = fijos.reduce((t, o) => t + (o.clase === 'vender' ? o.futura : 0), 0);
+  const maxE = X.paron ? 3 : 2;
   let mejor = null;
-  const N = libres.length, total = 1 << N;
-  for (let mask = 0; mask < total; mask++) {
-    const lista = [...fijos];
-    let euros = 0, mal = false;
-    const pids = new Set(fijos.map((o) => o.pid));
-    for (let i = 0; i < N; i++) {
-      if (!(mask & (1 << i))) continue;
-      const o = libres[i];
-      // un jugador, una operación
-      if (pids.has(o.pid)) { mal = true; break; }
-      pids.add(o.pid); lista.push(o); euros += o.euros - A.friccion;
+  for (let mask = 0; mask < T; mask++) {
+    if (mask) {
+      const bajo = mask & -mask, i = 31 - Math.clz32(bajo), r = mask ^ bajo, o = libres[i];
+      sAcc[mask] = sAcc[r] + (o.clase === 'aceptar' ? o.importe : 0);
+      sCl[mask] = sCl[r] + (o.clase === 'clausular' ? o.importe : 0);
+      sBid[mask] = sBid[r] + (o.clase === 'pujar' ? o.importe : 0);
+      sRev[mask] = sRev[r] + (o.rev ? o.importe : 0);
+      sVen[mask] = sVen[r] + (o.clase === 'vender' ? o.futura : 0);
+      sEur[mask] = sEur[r] + o.euros;
+      nAcc[mask] = nAcc[r] + (o.clase === 'aceptar' ? 1 : 0);
+      nC[mask] = nC[r] + (o.clase === 'clausular' && !o.rev ? 1 : 0);
+      nP[mask] = nP[r] + (o.clase === 'pujar' && !o.rev ? 1 : 0);
+      nE[mask] = nE[r] + (o.rev ? 1 : 0);
+      nOps[mask] = nOps[r] + 1;
+      mala[mask] = mala[r] || (r & choca[i]) || (choca[i] & bajo) ? 1 : 0;
     }
-    if (mal) continue;
-    const cu = cuentas(X, lista);
-    if (!cu) continue;
-    const on = once(mask);
-    let valor = euros + X.punto * (on.nota - base0.nota);
+    if (mala[mask]) continue;
+    const acc = sAcc[mask], cl = sCl[mask], bid = sBid[mask];
+    const caja = dinero + acc - cl;
+    let margen = margen0 + acc - cl;
+    // cada cláusula tiene que caber en la caja y, con lo ya pujado, no pasar el tope de deuda; las pujas, en el margen
+    if (cl > 0 && (caja < 0 || margen < 0)) continue;
+    margen -= bid;
+    if (bid > 0 && margen < 0) continue;
+    if (n0 - nAcc[mask] + nC[mask] + nP[mask] + nE[mask] > 25 || nC[mask] > A.maxOnce || nP[mask] > A.maxOnce || nE[mask] > maxE) continue;
+    const fin = margen - M.deuda;
+    if (nE[mask] && fin < -M.deuda * A.topeDeuda) continue;
+    const ventas = ciclos >= 1 ? (sVen[mask] + venFijas) * A.margenVenta : 0;
+    const jornada = X.pujasAntes ? fin + sRev[mask] * A.margenRev + ventas : caja + ventas;
+    cabe[mask] = 1; jor[mask] = jornada;
+    let valor;
     // empezar la jornada en negativo es no puntuar: lo primero. Si no hay forma, lo que más se acerque
-    if (cu.jornada < 0) valor = -1e12 + cu.jornada;
+    if (jornada < 0) valor = -1e12 + jornada;
     else {
-      // lo vendido «por si hace falta» solo vale si de verdad hace falta: sin ello, la jornada empezaría en negativo
-      const forz = lista.filter((o) => o.forzada);
-      if (forz.length) {
-        const sin = cuentas(X, lista.filter((o) => !o.forzada));
-        if (sin && sin.jornada >= 0) continue;
-        // y ninguna de más: quitando cualquiera de ellas ya no se llega
-        if (forz.length > 1 && forz.some((f) => { const c2 = cuentas(X, lista.filter((o) => o !== f)); return c2 && c2.jornada >= 0; })) continue;
+      // lo vendido «por si hace falta» solo vale si de verdad hace falta (sin ello, la jornada empezaría en negativo), y
+      // solo para eso: no para hacer sitio en la plantilla ni para pagar otra cosa. Y ninguna de más
+      const fz = mask & forzM;
+      if (fz) {
+        const sin = mask & ~forzM;
+        if (!cabe[sin] || jor[sin] >= 0) continue;
+        let sobra = false;
+        if (fz & (fz - 1)) for (let b = fz; b; b &= b - 1) { const m1 = mask ^ (b & -b); if (cabe[m1] && jor[m1] >= 0) { sobra = true; break; } }
+        if (sobra) continue;
       }
+      const on = once(mask);
+      valor = sEur[mask] - A.friccion * nOps[mask] + X.punto * (on.nota - base0.nota);
       // cerca de la jornada no se abre un hueco en el once que no tape una cláusula (una puja puede no ganarse), y con
       // las cláusulas cerradas no se toca a un titular: no hay con qué reponerlo
       if (X.cerca && (on.cierto.huecos || 0) > (base0.huecos || 0)) valor -= 1e9;
       if (X.cierre) valor -= X.punto * 10 * Math.max(0, base0.nota - on.cierto.nota);
     }
-    if (!mejor || valor > mejor.valor) mejor = { mask, lista, cu, on, valor };
+    if (!mejor || valor > mejor.valor) mejor = { mask, valor };
   }
-  return { ...mejor, antes, base0 };
+  if (!mejor) return { lista: null, antes, base0 };
+  const lista = [...fijos, ...libres.filter((o, i) => mejor.mask & (1 << i))];
+  return { ...mejor, lista, cu: cuentas(X, lista), on: once(mejor.mask), antes, base0 };
 }
 
 /* ---------- el plan ---------- */
@@ -369,6 +415,13 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
     libres = [...libres.slice(0, 9), ...mejores(forz, 13 - Math.min(9, libres.length), porValor)];
   }
   void sinForzar;
+  // en apuros y sin cambios de mercado antes de la jornada, lo que se ponga a la venta no llega a tiempo: hoy solo cuenta
+  // el dinero que entra ya. Lo demás se deja para cuando empiece la jornada (y así la app, al cuadrar, no da por cobrado
+  // lo que aún no ha entrado)
+  if (apuro && ciclos === 0) {
+    libres = libres.filter((o) => o.clase !== 'vender');
+    for (let i = fijos.length - 1; i >= 0; i--) if (fijos[i].clase === 'vender') fijos.splice(i, 1);
+  }
   const E = elegir(X, libres, fijos);
   const lista = E.lista || fijos;
   const cu = E.cu || base;
@@ -411,12 +464,12 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
       motivo: `Su cláusula (${eur(x.clausula)}) está abierta y ${quien ? `le llega a ${quien} rival${quien > 1 ? 'es' : ''}` : 'algún rival la puede pagar'}; ${x.pierde >= 0.5 ? `te da ${d1(x.pierde)} pts por jornada` : 'aunque no te puntúe, te lo quitarían casi a su valor: vendiéndolo a LaLiga sacarías más y reponerlo cuesta más'}. El blindaje la protege ${M.ESCUDO_H} h sin gastar nada (te quedan ${(M.escudosMios || {}).quedan} esta jornada). Si no, te lo pueden quitar pagando la cláusula.`,
       datos: { porque: `cláusula abierta a tiro de ${quien || 'algún'} rival${quien === 1 ? '' : 'es'}`, cuanto: 'gratis (un anuncio)', cuando: 'ahora', siNo: `te lo pueden quitar por ${eur(x.clausula)}` } });
   }
-  let cajaB = cu.caja, jorB = cu.jornada;
-  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale)) && !vetados.has(`S-${y.pid}`)).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
+  let cajaB = cu.caja, jorB = cu.jornada, margenB = cu.margen != null ? cu.margen : num(D.dinero) + M.deuda - num(M.misPujas);
+  for (const x of M.mias.filter((y) => !vendidos.has(y.pid) && y.riesgo === 'alto' && y.importa && !y.escudo && !(M.paraEscudo || []).includes(y.pid) && !(y.blindaje && (y.blindaje.caro || y.blindaje.yaVale)) && !y.ventaInercia && !vetados.has(`S-${y.pid}`)).sort((a, b) => b.pierde - a.pierde).slice(0, 2)) {
     const b = x.blindaje;
     // subirla cuesta saldo en el momento, y no puede dejarte en negativo para la jornada
-    if (!b || !b.coste || b.coste > cajaB || jorB - b.coste < 0) continue;
-    cajaB -= b.coste; jorB -= b.coste;
+    if (!b || !b.coste || b.coste > cajaB || jorB - b.coste < 0 || margenB - b.coste < 0) continue;
+    cajaB -= b.coste; jorB -= b.coste; margenB -= b.coste;
     ops.push({ accion: 'blindar', ref: `B-${x.pid}`, objetivo: 'proteger', pid: x.pid, jugador: x.j.nombre, donde: `subir su cláusula a ${eur(b.objetivo)}`, importe: b.coste, cuando: x.abierta ? 'ahora' : antesDe(x.protegidoHasta), confianza: 'media', _k: `S-${x.pid}`,
       motivo: `Su cláusula (${eur(x.clausula)}) ${x.ratio < 1.05 ? 'está en su valor' : `solo pasa un ${pct((x.ratio - 1) * 100, 0)} de su valor`} (${eur(x.j.valor)}), ${x.abierta ? 'ya está abierta' : `se abre en ${dura(x.abreEn)}`} y te da ${d1(x.pierde)} pts por jornada. Con ${eur(b.coste)} no le llegaría a ningún rival${escudos ? '' : ' (no te quedan blindajes gratis para él)'}.`,
       datos: { porque: 'cláusula casi a su valor y es importante en tu once', cuanto: eur(b.coste), cuando: x.abierta ? 'ahora' : antesDe(x.protegidoHasta), siNo: `te lo pueden quitar por ${eur(x.clausula)}` } });
@@ -443,6 +496,30 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
     .sort((a, b) => porValor(b) - porValor(a)).slice(0, 4)
     .map((o) => ({ ...o.op({ gana: o.entra ? Math.max(0, M.mejorOnce([...plantilla, o.entra]).nota - onceAhora.nota) : 0, caja: null, resto: '' }), _k: o.k }));
 
+  /* lo que Hoy enseña como «toca» (M.acciones) y el plan no lleva: mirado y descartado, con el porqué. Así Hoy y el plan
+     no se contradicen: lo que el motor ha dejado fuera no sale arriba como urgente (vistas.js, urgentesDe) */
+  const limpio = (t) => String(t || '').replace(/La app lo descarta[.:]?\s*/g, '').replace(/\s+/g, ' ').trim();
+  const corto = (t, n = 230) => { const x = limpio(t); if (x.length <= n) return x; const c2 = x.slice(0, n), i = Math.max(c2.lastIndexOf('. '), c2.lastIndexOf('; ')); return `${(i > 80 ? c2.slice(0, i) : c2.slice(0, c2.lastIndexOf(' '))).replace(/[\s,;:.]+$/, '')}…`; };
+  const porQueNo = (a) => {
+    const cand = todos.find((o) => o.pid === a.pid && !o.forzada);
+    if (a.tipo === 'vender') {
+      const ver = X.V[`A-${a.pid}`] || X.V[`V-${a.pid}`], p = M.perdida(a.pid);
+      if (ver && !ver.ok) return corto(ver.aviso) || 'la app no lo vendería hoy';
+      if (cand && X.cierre && p >= 0.3) return `Con las cláusulas cerradas no se toca a un titular: no habría con qué reponerlo antes de la jornada${M.proxima ? ` ${M.proxima.n}` : ''}.`;
+      if (cand && p >= 0.3) return `Te da ${d1(p)} pts por jornada y hoy eso pesa más que lo que puede bajar${cand.euros > 0 ? ` (unos ${eur(cand.euros)})` : ''}: se aguanta y se vuelve a mirar mañana.`;
+      return cand ? 'Hoy no compensa: lo que dejaría de bajar no paga el paso.' : 'Hoy no hay motivo para venderlo.';
+    }
+    const ver = X.V[`${a.tipo === 'pujar' ? 'P' : 'C'}-${a.pid}`];
+    if (ver && !ver.ok) return corto(ver.aviso) || 'la app no la haría hoy';
+    if (llena) return 'Tienes la plantilla llena (25): no cabe nadie más sin vender antes.';
+    if (cand && !cuentas(X, [...lista, cand])) return a.tipo === 'pujar' ? 'No cabe hoy: con lo que ya llevas pujado y el resto del plan pasarías del tope de deuda.' : 'No cabe hoy: una cláusula solo se paga con saldo y el del plan ya está gastado.';
+    return 'Con el resto del plan ya no mejora tu once lo bastante para lo que cuesta.';
+  };
+  const llena = M.mias.length >= 25;
+  const descartes = (M.acciones || []).filter((a) => a.pid && ['vender', 'clausular', 'pujar'].includes(a.tipo) && !enPlan.has(a.pid) && !lista.some((o) => o.pid === a.pid))
+    .filter((a, i, xs) => xs.findIndex((b) => b.pid === a.pid) === i).slice(0, 6)
+    .map((a) => ({ pid: a.pid, jugador: (M.J(a.pid) || {}).nombre || '', motivo: porQueNo(a) })).filter((d) => d.jugador);
+
   /* los próximos días: cláusulas que se abren, mercado, jornada y parón */
   const dias = {};
   const add = (t, prio, texto, rev) => { const d = diaDe(t); (dias[d] ||= { t, cosas: [] }).cosas.push(rev ? { prio, texto, rev } : { prio, texto }); };
@@ -457,7 +534,6 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
   const diasAuto = Object.values(dias).sort((a, b) => a.t - b.t);
 
   const modo = paron ? 'paron' : M.enJuego ? 'enjuego' : M.vedaAhora ? 'cierre' : num(D.dinero) < 0 ? 'negativo' : 'normal';
-  const llena = M.mias.length >= 25;
   const situacion = `Tienes ${eur(D.dinero)} y puedes gastar hasta ${eur(M.pujaMax)}${num(M.misPujas) ? ` (ya descontados los ${eur(M.misPujas)} que tienes pujados)` : ''}. Vas ${M.yo ? `${M.yo.pos}º con ${M.yo.puntos} puntos` : ''}${M.proxima ? ` y la jornada ${M.proxima.n} empieza ${cuando(M.proxima.ini)}` : ''}.`
     + (llena ? ` Tienes la plantilla llena (${M.mias.length} de 25): no cabe nadie más sin vender antes.` : M.mias.length >= 23 ? ` Tienes ${M.mias.length} de 25 jugadores: te ${25 - M.mias.length === 1 ? 'queda 1 sitio' : `quedan ${25 - M.mias.length} sitios`}.` : '')
     + (modo === 'paron' ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero (comprar lo que sube para venderlo antes de la jornada y vender lo que ha girado). Las cláusulas para el once, en los dos o tres días antes de la vuelta.' : '')
@@ -466,10 +542,10 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
     + (base.jornada < 0 ? ` Contando lo que tienes pujado, sin vender empezarías la jornada con ${eur(base.jornada)}: en negativo no se puntúa, así que el plan dice qué vender y cuándo.` : '');
   return {
     auto: true, motor: true, t: ahora, dia: diaDe(ahora), modo,
-    titular: '', situacion, operaciones: ops, alternativas,
+    titular: '', situacion, operaciones: ops, alternativas, descartes,
     proximos_dias: [], diasAuto,
     alineacion: onceFijo.formacion ? { formacion: onceFijo.nombre, titulares: onceFijo.lineas.flat().map((j) => j.nombre), dudas: onceFijo.lineas.flat().filter((j) => j.estado === 'doubtful').map((j) => `${j.nombre}: es duda`) } : null,
-    cuentas: { ...cu, sinVender: base.jornada, punto: X.vp, valor: E.valor, candidatos: todos.length, probados: libres.length, backtest: X.backtest },
+    cuentas: { ...cu, sinVender: base.jornada, punto: X.vp, valor: E.valor, candidatos: todos.length, probados: libres.length, claves: libres.map((o) => o.k), backtest: X.backtest },
   };
 }
 
@@ -502,15 +578,16 @@ export function planDeHoy(D, M, c) {
   if (M._planHoy && M._planHoy.dia === diaDe() && M._planHoy.dinero === D.dinero) return M._planHoy.plan;
   let R = null;
   try {
-    const vetados = new Set();
+    const vetados = new Set(), vetos = [];
     for (let vuelta = 0; vuelta < 6; vuelta++) {
       const P = planMotor(D, M, c, { vetados });
       R = cuadrarPlan(P, D, M);
       const mal = (R.ops || []).filter((o) => o._k && (o.descartada || o.sugerencia));
       if (!mal.length) break;
-      for (const o of mal) vetados.add(o._k);
-      R.vueltas = vuelta + 1;
+      for (const o of mal) { vetados.add(o._k); vetos.push({ k: o._k, jugador: (o.j && o.j.nombre) || o.jugador, aviso: o.aviso || '' }); }
     }
+    // (lo que la app no dejó pasar al cuadrar, con su motivo: para el diagnóstico y las pruebas)
+    if (vetos.length) { R.vueltas = vetos.length; R.vetos = vetos; }
     // (red de seguridad: si tras las vueltas quedara algo descartado, fuera)
     if ((R.ops || []).some((o) => o.descartada || o.sugerencia)) R = cuadrarPlan({ ...R, operaciones: (R.operaciones || []).filter((o) => !(R.ops || []).some((x) => x._k && x._k === o._k && (x.descartada || x.sugerencia))) }, D, M);
     R = rematarMotor(R, M);
@@ -534,10 +611,12 @@ export function rematarMotor(R, M) {
   const nombres = (xs) => xs.map((o) => (o.j && o.j.nombre) || o.jugador).join(', ');
   // lo que se pone a la venta no ha entrado todavía: el «te quedas con» de la app lo daba ya por cobrado
   if (cu.fin != null && cu.jornada != null && (cu.fin < 0 || luego.length)) {
-    const como = [rev.length && `vendiendo lo de revender (${nombres(rev)})`, (venta.length || luego.length) && `con ${nombres([...venta, ...luego])} en venta`].filter(Boolean).join(' y ');
+    const como = [rev.length && `vendas lo de revender (${nombres(rev)})`, (venta.length || luego.length) && `entre lo que pones en venta (${nombres([...venta, ...luego])})`].filter(Boolean).join(' y ');
+    // (la cifra de la derecha es `final`: aquí, lo que habría al empezar la jornada, con los márgenes de seguridad)
     out.avisoSaldo = cu.jornada >= 0
-      ? `${cu.fin < 0 ? `En negativo a propósito (${eur(cu.fin)} contando todo lo pujado)` : 'En positivo'}${como ? `: ${como}` : ''}, llegas a la jornada con unos ${eur(cu.jornada)} aunque los valores bajen`
-      : `Ni con este plan llegas en positivo a la jornada (${eur(cu.jornada)}): vende algo más antes de que empiece${M.proxima ? `, ${cuando(M.proxima.ini)}` : ''}`;
+      ? `${cu.fin < 0 ? `En negativo a propósito (${eur(cu.fin)} contando todo lo pujado)` : 'En positivo'}${como ? ` hasta que ${como}` : ''}. Aunque los valores bajen, a la jornada llegas con unos`
+      : `Ni con este plan llegas en positivo a la jornada: vende algo más antes de que empiece${M.proxima ? ` (${cuando(M.proxima.ini)})` : ''}. Te quedarías en`;
+    out.final = Math.round(cu.jornada / 1e4) * 1e4;
     out.avisoTipo = cu.jornada >= 0 ? 'plan' : 'mal';
   }
   return out;

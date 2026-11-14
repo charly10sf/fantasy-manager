@@ -368,6 +368,30 @@ for (const [nombre, init] of [['web', ''], ['app', "window.FantasyApp = new Prox
   await ctx.close();
 }
 
+// 10b: (14 nov) el plan sin IA lo hace el motor (plan.js) y Hoy no lo contradice: sale cuadrado (sin nada descartado ni
+// «sin prisa»), cada paso con su porqué, y lo que el motor miró y dejó fuera («Mirados y descartados») no sale arriba
+// como urgente
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 }).catch(() => {});
+  const r = await page.evaluate(() => {
+    const P = window.S.plan || {};
+    const pasos = (P.ops || []).filter((o) => ['vender', 'clausular', 'pujar', 'comprar', 'blindar'].includes(o.accion));
+    const fuera = (P.descartes || []).map((d) => String(d.pid));
+    const hoy = document.querySelector('#vista, main, body').innerText || '';
+    const nombres = (P.descartes || []).map((d) => d.jugador).filter((n) => new RegExp(`(Vende a|Clausula a|Puja por) ${n}`).test(hoy));
+    return { motor: !!P.motor, titular: P.titular || '', tachados: (P.ops || []).filter((o) => o.descartada || o.sugerencia).length, sinMotivo: pasos.filter((o) => !String(o.motivo || '').trim()).length,
+      pasos: pasos.length, enPlanYFuera: pasos.filter((o) => fuera.includes(String(o.pid))).length, arriba: nombres };
+  });
+  if (!r.motor) mal(`el plan sin IA no es el del motor (${r.titular})`);
+  else if (r.tachados || r.sinMotivo || r.enPlanYFuera || !r.titular) mal(`el plan del motor: ${JSON.stringify(r)}`);
+  else if (r.arriba.length) mal(`Hoy enseña como urgente lo que el plan del motor descartó: ${r.arriba.join(', ')}`);
+  else bien(`el plan sin IA sale del motor, cuadrado y con su porqué (${r.pasos} pasos), y Hoy no lo contradice`);
+  if (errores.length) mal(`plan del motor: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 // 11: (24) la pestaña Parón mira el hueco en la plantilla (contando tus pujas) y lo que sacarías vendiendo lo que te dice
 // la app: con la plantilla llena sale el aviso, «Puedes ganar» solo cuenta lo que cabe y lo que te llega vendiendo antes
 // va marcado
