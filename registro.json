@@ -1919,9 +1919,7 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/euskadi/2026/11/11/se-confirman-los-peores-presagios-sobre-la-lesion-de-barrenetxea-debera-pasar-por-quirofano-radio-san-sebastian/": 1794401190000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barrenetxea-sufre-grave-lesion-muslo-perdera-resta-temporada-20261111_3473028.html": 1794401602000,
-   "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/11/6af463eefdddff04738b4577.html": 1794401443000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249881/gabriel-defiende-raphinha-brasil-ejemplar.html": 1794401587000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/11/marc-roca-viejo-deseo-fichaje-valencia-136330400.html": 1794402180000,
    "AS|https://as.com/futbol/primera/bright-ede-la-proxima-alta-para-el-deportivo-f202611-n/": 1794401895000,
@@ -2169,19 +2167,6 @@
     "seleccion": "pierde",
     "hecho": "Ander Barrenetxea se pierde lo que resta de temporada",
     "motivo": "lesión en el muslo derecho",
-    "plazo": "",
-    "nums": []
-   },
-   {
-    "guid": "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/11/6af463eefdddff04738b4577.html",
-    "medio": "El Mundo",
-    "t": 1794401443000,
-    "id": "1480",
-    "que": "lesion",
-    "oficial": false,
-    "seleccion": "pierde",
-    "hecho": "",
-    "motivo": "lesión en la ingle",
     "plazo": "",
     "nums": []
    },
@@ -7598,13 +7583,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2450,
+   "ok": 2451,
    "fallos": 0,
-   "ejecuciones": 1917,
+   "ejecuciones": 1918,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T12:46:13.016Z"
+   "ultima": "2026-11-14T12:51:16.676Z"
   }
  },
  "ptsDirecto": {},
@@ -7621,15 +7606,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:46:22.795Z"
+   "ultimaBien": "2026-11-14T12:51:22.432Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:46:22.795Z"
+   "ultimaBien": "2026-11-14T12:51:22.432Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:46:22.795Z"
+   "ultimaBien": "2026-11-14T12:51:22.432Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7637,11 +7622,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:46:22.795Z"
+   "ultimaBien": "2026-11-14T12:51:22.432Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:46:22.795Z"
+   "ultimaBien": "2026-11-14T12:51:22.432Z"
   }
  },
  "avisos": [
