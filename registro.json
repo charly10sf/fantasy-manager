@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
    "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000,
    "AS|https://as.com/futbol/mariano-diaz-me-gustan-tanto-la-liga-como-la-copa-f202611-n/": 1794405348000,
@@ -2150,21 +2149,11 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/rueda-prensa-alvaro-cervere-entrenador-tenerife-14-20261114_3475310.html": 1794660692000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250918/inglaterra-ven-absurdo-debate-sobre-lamine-roja.html": 1794660763000,
    "SPORT|136438917": 1794658476000,
-   "SPORT|136439152": 1794658639000
+   "SPORT|136439152": 1794658639000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250929/racing-descansa-estrellas-carburan-recibir-real.html": 1794661700000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000
   },
   "hechos": [
-   {
-    "guid": "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html",
-    "medio": "Superdeporte",
-    "t": 1794403782000,
-    "id": "701",
-    "que": "lesion",
-    "oficial": false,
-    "hecho": "Barrenetxea pasará por quirófano por lesión muscular grave",
-    "motivo": "grave lesión muscular",
-    "plazo": "estará alejado varios meses",
-    "nums": []
-   },
    {
     "guid": "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html",
     "medio": "El Correo",
@@ -2419,7 +2408,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 20
+   "n": 21
   },
   "desde": {
    "67": {
@@ -3348,17 +3337,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 25,
+   "clasificar": 26,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 141599,
-  "salida": 14656,
+  "entrada": 143897,
+  "salida": 15582,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.231181,
+  "dolares": 0.231874,
   "reservado": 0
  },
  "recientes": {
@@ -7565,13 +7554,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2458,
+   "ok": 2459,
    "fallos": 0,
-   "ejecuciones": 1925,
+   "ejecuciones": 1926,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T13:26:12.307Z"
+   "ultima": "2026-11-14T13:31:11.449Z"
   }
  },
  "ptsDirecto": {},
@@ -7588,15 +7577,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:26:17.019Z"
+   "ultimaBien": "2026-11-14T13:31:20.443Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:26:17.019Z"
+   "ultimaBien": "2026-11-14T13:31:20.443Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:26:17.019Z"
+   "ultimaBien": "2026-11-14T13:31:20.443Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7604,11 +7593,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:26:17.019Z"
+   "ultimaBien": "2026-11-14T13:31:20.443Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:26:17.019Z"
+   "ultimaBien": "2026-11-14T13:31:20.443Z"
   }
  },
  "avisos": [
