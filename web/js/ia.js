@@ -12,6 +12,8 @@ import { catalogo, catalogoTxt, comoConseguir, buscarOp, porQueNo, cajaConOferta
 import { recsDe, aprendeTxt } from './aprende.js';
 import { guardarFoto, leerFoto, guardarMini } from './fotos.js';
 import { bloqueada, topConAnuncio } from './limite.js';
+import { rematarAuto } from './motor.js';
+import { planDeHoy, planMotor, titularMotor } from './plan.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -1274,7 +1276,7 @@ export const ESQUEMA_PLAN = T('OBJECT', {
   required: ['operaciones', 'titular'],
   propertyOrdering: ['cuentas', 'situacion', 'descartes', 'operaciones', 'alineacion', 'proximos_dias', 'vigilar', 'noticias', 'rivales', 'paron', 'titular'],
 });
-export async function planDelDia(D, M, c, { signal, alPaso } = {}) {
+export async function planLargo(D, M, c, { signal, alPaso } = {}) {
   const ctx = contexto(D, M, c);
   const seudo = seudonimos(D);
   const pedido = `${ctx}${memoria(M)}
@@ -1342,6 +1344,196 @@ Entre 1 y 8 operaciones (o ninguna si hoy no conviene nada). En descartes, de 3 
   LS.set(K('planes'), lista.slice(0, 10));
   return P;
 }
+
+/* ---------------- el plan corto: el motor propone y la IA ordena, recorta y explica (14 nov) ----------------
+   Antes la IA escribía la lista de operaciones (y la app tachaba lo que no cuadraba). Ahora el plan lo hace el motor
+   (plan.js): a la IA le llegan sus pasos, cada uno con su id y sus datos, tres o cuatro alternativas que también valen y
+   lo mínimo de contexto (noticias, lo que el mánager le ha contado, los rivales). Devuelve poco: el orden, qué quita y
+   por qué, qué alternativa mete, una o dos frases por paso, el titular, la situación, las noticias y los rivales. La app
+   aplica los cambios con el propio motor (que rehace las cuentas) y lo pasa otra vez por cuadrarPlan: si lo que pide la
+   IA no cuadra, se queda el plan del motor con sus frases. Si la IA no contesta, el plan del motor ya está en pantalla. */
+const SISTEMA_CORTO = `Eres el director deportivo de un manager de LaLiga Fantasy (el juego oficial de LaLiga) en una liga privada. Hablas en español de España como un director deportivo de verdad: cercano pero serio, claro, con criterio y con cifras. {{CHISTES}} Si te pregunta qué IA o qué modelo eres, di que eres el director deportivo de Fantasy Manager, sin decir el nombre ni la versión del modelo ni de quién es.
+
+CÓMO TRABAJAMOS. El plan de hoy ya lo ha hecho la app, que conoce las reglas de LaLiga Fantasy y ha hecho todas las cuentas (saldo, deuda, cláusulas, plantilla, empezar la jornada en positivo). Tú NO propones operaciones nuevas ni cambias importes, pujas, días ni jugadores. Tu trabajo es:
+1. ORDENAR los pasos como los harías tú (la app recoloca lo que haga falta para que el dinero cuadre).
+2. QUITAR un paso SOLO si una noticia o algo que me ha contado el manager lo desaconseja (una lesión, que no va convocado, un trato ya hecho…), y decir por qué en una frase. Sin un motivo así no quites nada: los números ya los ha mirado la app. Un paso marcado «HACE FALTA» no se quita.
+3. METER una ALTERNATIVA, solo de las que te paso y con su id, si una noticia la hace mejor que un paso del plan o si cubre lo que quitas.
+4. EXPLICAR cada paso en una o dos frases, con las cifras que te paso (ni una inventada) y, si la hay, la noticia que lo respalda. Sin repetir el nombre de la operación.
+5. El titular (8 a 16 palabras, solo con lo que queda en el plan), la situación (2 frases, con cifras), las noticias que afectan a mi equipo y qué hacen mis rivales.
+
+REGLAS: solo cifras que estén en los datos. Nada de nombres de webs de fantasy. Lo «mirado y descartado» no se puede meter. Si de alguien no hay noticias, no lo digas de cada uno. {{PULLITAS}}`;
+const sistemaCorto = () => {
+  const p = cfgIA().pullitas || 'normal';
+  return SISTEMA_CORTO.replace('{{CHISTES}}', CHISTES[p === 'normal' || p === 'saco' ? 'broma' : 'serio']).replace('{{PULLITAS}}', PULLITAS[p] || PULLITAS.normal) + reglasBloqueo();
+};
+export const ESQUEMA_CORTO = T('OBJECT', {
+  properties: {
+    pasos: T('ARRAY', { items: T('OBJECT', { properties: { id: TXT, frase: TXT }, required: ['id', 'frase'] }) }),
+    quita: T('ARRAY', { items: T('OBJECT', { properties: { id: TXT, motivo: TXT }, required: ['id', 'motivo'] }) }),
+    mete: T('ARRAY', { items: T('OBJECT', { properties: { id: TXT, frase: TXT }, required: ['id', 'frase'] }) }),
+    situacion: TXT,
+    noticias: T('ARRAY', { items: T('OBJECT', { properties: { jugador: TXT, texto: TXT, efecto: T('STRING', { enum: ['sube', 'baja', 'neutro'] }) } }) }),
+    rivales: T('ARRAY', { items: T('OBJECT', { properties: { manager: TXT, texto: TXT } }) }),
+    titular: TXT,
+  },
+  required: ['pasos', 'titular'],
+  propertyOrdering: ['pasos', 'quita', 'mete', 'situacion', 'noticias', 'rivales', 'titular'],
+});
+const OBJ_TXT = { titular: 'el once', revender: 'revender', caja: 'empezar la jornada en positivo', proteger: 'proteger' };
+const idLimpio = (x) => String(x == null ? '' : x).toLowerCase().replace(/[^a-z0-9]/g, '');
+/** los ids de los pasos del plan del motor (p1, p2…) y de las alternativas (a1, a2…): { lista: [{ id, o, alt }], porId } */
+export function idsCorto(R) {
+  const lista = [];
+  let n = 0, a = 0;
+  for (const o of R.ops || []) if (o._k && !o.descartada) lista.push({ id: `p${++n}`, k: o._k, o, alt: false });
+  for (const o of R.alternativas || []) if (o._k) lista.push({ id: `a${++a}`, k: o._k, o, alt: true });
+  return { lista, porId: new Map(lista.map((x) => [x.id, x])) };
+}
+/** lo que se le manda a la IA para el plan corto (sin el sistema) */
+export function pedidoCorto(D, M, c, R) {
+  const { lista } = idsCorto(R);
+  const L = [];
+  const acc = (o) => (o.etiqueta === 'Aceptar oferta' || /acepta/i.test(o.donde || '') ? 'ACEPTAR LA OFERTA' : o.accion === 'vender' ? 'PONER A LA VENTA' : o.accion === 'blindar' ? (o.importe ? 'SUBIR LA CLÁUSULA' : 'BLINDAR GRATIS') : String(o.accion || '').toUpperCase());
+  const paso = ({ id, o }) => {
+    const j = o.pid ? D.maestro[o.pid] || o.j : null, d = o.datos || {};
+    L.push(`[${id}] ${acc(o)}${o.jugador ? ` · ${o.jugador}` : ''}${o.importe ? ` · ${eur(o.puja_max || o.importe)}` : ''}${o.cuando ? ` · ${o.cuando}` : ''}${o.objetivo && OBJ_TXT[o.objetivo] ? ` · para ${OBJ_TXT[o.objetivo]}` : ''}${o.vender_el ? ` · se vende el ${o.vender_el}` : ''}${o.hace_falta ? ' · HACE FALTA (no se quita)' : ''}`);
+    L.push(`   por qué: ${d.porque || cortar(o.motivo, 200)}${d.cuanto ? ` | cuánto: ${d.cuanto}` : ''}${d.siNo ? ` | si no se hace: ${d.siNo}` : ''}${o.aviso ? ` | la app avisa: ${cortar(o.aviso, 170)}` : ''}`);
+    if (j) L.push(`   ${lineaBreve(M, j)}${prensaTxt(M, j.id, 2)}`);
+  };
+  L.push(`HOY: ${cuando(Date.now())}. ${R.situacion || ''}`);
+  if (R.cuentas && R.cuentas.jornada != null) L.push(`CUENTAS DE LA APP: haciendo el plan, al empezar la jornada tendría unos ${eur(R.cuentas.jornada)} (lo de revender contado al 92 % y lo puesto en venta al 90 %, por si bajan).`);
+  L.push('\nEL PLAN DE LA APP (cada paso con su id; importes, pujas y días no se tocan):');
+  const pasos = lista.filter((x) => !x.alt), alts = lista.filter((x) => x.alt);
+  if (pasos.length) pasos.forEach(paso); else L.push('(hoy la app no ve ninguna operación clara: lo mejor es no hacer nada)');
+  const fijos = (R.ops || []).filter((o) => !o._k && !o.descartada && ['alinear', 'esperar'].includes(o.accion));
+  if (fijos.length) L.push(`Además, la app añade por su cuenta (no los toques): ${fijos.map((o) => (o.accion === 'alinear' ? `la alineación (${cortar(o.motivo, 160)})` : `${o.jugador ? `esperar con ${o.jugador}` : 'esperar'} (${cortar(o.motivo, 130)})`)).join('; ')}.`);
+  if (alts.length) { L.push('\nALTERNATIVAS QUE TAMBIÉN VALEN Y LA APP DEJÓ FUERA (se pueden meter tal cual, con su id):'); alts.forEach(paso); }
+  if (Array.isArray(R.descartes) && R.descartes.length) L.push(`\nMIRADO Y DESCARTADO POR LA APP (no se puede meter): ${R.descartes.map((d) => `${d.jugador}: ${cortar(d.motivo, 150)}`).join(' · ')}`);
+  // las noticias de los míos que no van arriba
+  const ya = new Set(lista.map((x) => x.o.pid).filter(Boolean));
+  const prensa = M.mias.filter((x) => !ya.has(x.pid)).map((x) => ({ x, t: prensaTxt(M, x.pid, 2) })).filter((y) => y.t).slice(0, 12);
+  if (prensa.length) { L.push('\nPRENSA DE MIS OTROS JUGADORES:'); for (const y of prensa) L.push(`- ${y.x.j.nombre}${y.x.j.estado && y.x.j.estado !== 'ok' ? ` (${ESTADO_TXT[y.x.j.estado] || y.x.j.estado})` : ''}${y.t.replace(' | PRENSA:', ':')}`); }
+  const tocados = M.mias.filter((x) => x.j.estado && x.j.estado !== 'ok');
+  if (tocados.length) L.push(`\nMIS JUGADORES CON ESTADO: ${tocados.map((x) => `${x.j.nombre} (${ESTADO_TXT[x.j.estado] || x.j.estado})`).join(', ')}.`);
+  const nt = notasTxt(D, M);
+  if (nt) L.push(nt);
+  // los rivales, en corto: la clasificación y lo que han movido en 3 días
+  if (M.rivales && M.rivales.length) L.push(`\nCLASIFICACIÓN DE MI LIGA: ${M.yo ? `yo ${M.yo.pos}º con ${M.yo.puntos} pts; ` : ''}${M.rivales.slice(0, 12).map((r) => `${r.e.pos}º ${r.e.manager || r.e.nombre} ${r.e.puntos}`).join(', ')}.`);
+  const act = M.actividad.filter((a) => a.t && Date.now() - a.t < 3 * DIA && a.clase !== 'premio' && !a.esYo).slice(0, 12);
+  if (act.length) L.push(`MOVIMIENTOS DE MIS RIVALES (3 días): ${act.map((a) => `${a.quien || '?'} ${({ compra: 'fichó', clausula: 'clausuló', venta: 'vendió', blindaje: 'blindó' })[a.clase] || 'movió'} a ${a.nombreJ || '?'}${a.clase !== 'blindaje' && a.importe ? ` por ${eur(a.importe)}` : ''}${a.contraMi ? ' (a MÍ)' : ''}`).join('; ')}.`);
+  L.push(`
+Ordena, recorta y explica el plan. Contesta SOLO con un bloque \`\`\`json (sin texto fuera) con este formato:
+{
+ "pasos": [{"id": "p1", "frase": "una o dos frases: por qué, con las cifras de arriba y la noticia si la hay"}],
+ "quita": [{"id": "p3", "motivo": "la noticia o lo que me contaste que lo desaconseja"}],
+ "mete": [{"id": "a1", "frase": "por qué entra, en una o dos frases"}],
+ "situacion": "2 frases: cómo está mi equipo y qué buscamos hoy, con cifras",
+ "noticias": [{"jugador": "nombre", "texto": "qué ha pasado y cómo afecta", "efecto": "sube|baja|neutro"}],
+ "rivales": [{"manager": "nombre", "texto": "qué está haciendo y si va a por mis jugadores"}],
+ "titular": "8 a 16 palabras con lo más importante de hoy"
+}
+"pasos" lleva, EN EL ORDEN en que los harías, los pasos del plan que se quedan (todos los que no quites). "quita" y "mete", vacíos si no hay un motivo claro. Como mucho 4 noticias y 3 rivales.`);
+  return L.join('\n');
+}
+const cifrasDe = (t) => [...String(t || '').matchAll(/(\d+(?:[.,]\d+)?)\s?(M|mil(?:lones)?)\b/gi)].map((m) => aEuros(m[1], /^mil$/i.test(m[2]) ? 'mil' : 'M'));
+/**
+ * Aplica al plan del motor lo que contesta la IA. Lo que quita o mete se rehace con el propio motor (planMotor con la
+ * combinación fijada: las mismas cuentas) y se cuadra; si no cuadra, se prueba sin quitar lo que hace falta, sin meter y,
+ * al final, sin tocar nada. Las frases de la IA que traen una cifra que no está en los datos del paso no se usan.
+ * Devuelve el plan sin cuadrar (como el de la IA de siempre) y `cambios`: lo que se aplicó y lo que no.
+ */
+export function aplicarCorto(json, R, D, M, c) {
+  const { lista, porId } = idsCorto(R);
+  const de = (x) => porId.get(idLimpio(x && x.id)) || null;
+  const esPost = (k) => /^[BS]-/.test(k);
+  const base = lista.filter((x) => !x.alt).map((x) => x.k);
+  const quita0 = [...new Set((Array.isArray(json.quita) ? json.quita : []).map(de).filter((x) => x && !x.alt).map((x) => x.k))];
+  const mete0 = [...new Set((Array.isArray(json.mete) ? json.mete : []).map(de).filter((x) => x && x.alt).map((x) => x.k))];
+  const orden = (Array.isArray(json.pasos) ? json.pasos : []).map(de).filter(Boolean).map((x) => x.k);
+  const frases = new Map();
+  for (const x of [...(Array.isArray(json.pasos) ? json.pasos : []), ...(Array.isArray(json.mete) ? json.mete : [])]) { const y = de(x); if (y && x.frase) frases.set(y.k, String(x.frase)); }
+  const motivos = new Map((Array.isArray(json.quita) ? json.quita : []).map((x) => [de(x) && de(x).k, String((x && x.motivo) || '')]));
+  const tachado = (P) => { const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M); return (cu.ops || []).some((o) => o._k && (o.descartada || o.sugerencia)); };
+  const intento = (q, m) => {
+    let P = null;
+    try { P = planMotor(D, M, c, { fijar: new Set([...base.filter((k) => !esPost(k) && !q.includes(k)), ...m]), vetados: new Set(q.filter(esPost)), prefer: orden }); } catch (e) { P = null; }
+    // nunca peor para la jornada (si el del motor llegaba en positivo, este también) ni con algo que la app tacharía
+    if (!P || (R.cuentas && R.cuentas.jornada >= 0 && P.cuentas.jornada < 0) || tachado(P)) return null;
+    return { P, quita: q, mete: m };
+  };
+  // de uno en uno: cada cosa que quita o mete se queda solo si el plan sigue cuadrando con ella (así una que no cabe
+  // no se lleva por delante a las demás, y lo que hace falta para empezar la jornada en positivo no se va)
+  let r = intento([], []);
+  if (!r) return null;
+  for (const k of quita0) { const x = intento([...r.quita, k], r.mete); if (x) r = x; }
+  for (const k of mete0) { const x = intento(r.quita, [...r.mete, k]); if (x) r = x; }
+  const P = r.P;
+  // las frases: la de la IA si no trae cifras que no estén en los datos del paso; si no, la de la app
+  let sinFrase = 0;
+  const nombreK = (k) => { const x = lista.find((y) => y.k === k); return x ? x.o.jugador : ''; };
+  for (const o of P.operaciones) {
+    const d = o.datos || {};
+    if (d.cuanto || d.cuando) o.claves = [d.cuanto, d.cuando && `Cuándo: ${d.cuando}`, d.siNo && `Si no: ${d.siNo}`].filter(Boolean).map((t) => (t.length > 70 ? `${t.slice(0, 68)}…` : t));
+    const f = o._k && frases.get(o._k);
+    if (!f) continue;
+    const j = o.pid && D.maestro[o.pid];
+    const dato = `${o.motivo} ${JSON.stringify(d)} ${o.aviso || ''} ${j ? lineaBreve(M, j) : ''} ${eur(o.importe || 0)} ${eur(o.puja_max || 0)} ${P.situacion || ''}`;
+    const sabidas = cifrasDe(dato);
+    if (cifrasDe(f).some((x) => !sabidas.some((y) => casi(x, y)))) { sinFrase++; continue; }
+    o.motivoApp = o.motivo;
+    o.motivo = sinWebsChat(sinModelos(f)).trim();
+  }
+  const limpio = (t) => sinWebsChat(sinModelos(String(t || ''))).trim();
+  const quitados = r.quita.map((k) => ({ pid: ((lista.find((y) => y.k === k) || {}).o || {}).pid || null, jugador: nombreK(k), motivo: `La IA lo quita del plan: ${limpio(motivos.get(k)) || 'sin motivo'}` })).filter((d) => d.jugador);
+  const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M);
+  const prox = rematarAuto({ ...cu, auto: true }).proximos_dias || [];
+  // el titular y la situación no pueden nombrar a quien no está en el plan (lo que se ha quitado o no se ha podido meter)
+  const fueraN = [...quita0.filter((k) => r.quita.includes(k)), ...mete0.filter((k) => !r.mete.includes(k))].map(nombreK).filter(Boolean).map(norm);
+  const nombra = (t) => { const n = norm(t); return fueraN.some((x) => x && n.includes(x)); };
+  const tit = limpio(json.titular), sit = limpio(json.situacion);
+  return {
+    ...P, auto: false, corto: true,
+    titular: tit && !nombra(tit) ? tit : titularMotor({ ...cu, modo: P.modo }),
+    situacion: sit && !nombra(sit) ? sit : P.situacion,
+    descartes: [...quitados, ...(P.descartes || []).filter((d) => !quitados.some((q) => q.pid && q.pid === d.pid))],
+    noticias: (Array.isArray(json.noticias) ? json.noticias : []).slice(0, 5).map((n) => ({ ...n, texto: limpio(n && n.texto) })).filter((n) => n.jugador && n.texto),
+    rivales: (Array.isArray(json.rivales) ? json.rivales : []).slice(0, 4).map((n) => ({ ...n, texto: limpio(n && n.texto) })).filter((n) => n.manager && n.texto),
+    proximos_dias: prox,
+    cambios: { quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase },
+  };
+}
+/** el plan del día con el contrato corto. Devuelve null si el motor no ha podido hacer su plan (entonces, el largo) */
+async function planCorto(D, M, c, { signal, alPaso } = {}) {
+  const R = planDeHoy(D, M, c);
+  if (!R || !R.motor) return null;
+  const pedido = pedidoCorto(D, M, c, R);
+  const seudo = seudonimos(D);
+  // (corto de verdad: 1.500 tokens de respuesta sobran; el resto del tope es lo que piense. Y un minuto como mucho)
+  const r = await preguntar({ sistema: sistemaCorto(), contents: [{ role: 'user', parts: [{ text: pedido }] }] }, { signal, alPaso, nivel: 'low', maxTokens: 5000, total: 75000, web: false, seudo, seudoJSON: true, esquema: ESQUEMA_CORTO });
+  const json = sacarJSON(r.texto);
+  if (!json || (!Array.isArray(json.pasos) && !json.titular)) {
+    apuntar({ modelo: r.modelo, web: r.web, s: 'plan', e: `el plan corto no se puede leer (${r.fin || 'sin motivo'}, ${r.texto.length} caracteres${r.tok ? `, ${r.tok.th} pensando` : ''})`, ms: 0 });
+    throw new ErrorIA(`La IA ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Tienes el plan de la app; vuelve a probar cuando quieras.`, 0);
+  }
+  const A = aplicarCorto(json, R, D, M, c);
+  if (!A) throw new ErrorIA('La IA ha contestado, pero lo que pide no cuadra con las cuentas de hoy. Tienes el plan de la app; vuelve a probar cuando quieras.', 0);
+  return { ...A, fuentes: [], modelo: r.modelo, web: false, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, tok: r.tok || null, foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };
+}
+/**
+ * El plan del día con la IA. Con el motor (plan.js), el corto: la IA ordena, recorta y explica el plan de la app. El
+ * largo de siempre (la IA escribe las operaciones) queda para cuando el motor no puede o si se pide (cfg-ia.planLargo).
+ */
+export async function planDelDia(D, M, c, op = {}) {
+  if (cfgIA().planLargo) return planLargo(D, M, c, op);
+  const P = await planCorto(D, M, c, op);
+  if (!P) return planLargo(D, M, c, op);
+  try { const cu = cuadrarPlan(P, D, M); P.recs = recsDe(cu.ops, M); P.cuadradas = opsCuadradas(cu.ops); } catch (e) { P.recs = []; }
+  const lista = planes();
+  lista.unshift(P);
+  LS.set(K('planes'), lista.slice(0, 10));
+  return P;
+}
+
 
 /** ¿hace falta un plan nuevo? (no hay de hoy, es de antes de que cambiara el mercado o tiene más de 10 horas) */
 export function planViejo(M) {

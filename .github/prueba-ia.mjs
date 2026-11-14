@@ -16,10 +16,13 @@ let mal = 0;
 for (const c of casos) {
   let visto = null, err = null;
   try {
-    const r = c.tipo === 'motor' ? await planMotor(c.escena) : c.tipo === 'plan' ? await plan(c.escena, () => c.ia) : await chat(c.escena, c.pregunta, () => c.ia, c);
+    // (en el plan corto la respuesta escrita puede depender de lo que la app manda: los ids de los pasos)
+    const dice = (cuerpo) => (typeof c.ia === 'function' ? c.ia(cuerpo) : c.ia);
+    const r = c.tipo === 'motor' ? await planMotor(c.escena) : c.tipo === 'plan' ? await plan(c.escena, dice, { largo: true }) : c.tipo === 'corto' ? await plan(c.escena, dice) : await chat(c.escena, c.pregunta, () => c.ia, c);
     visto = r.vista ?? null; err = r.error || (r.errores || [])[0] || null;
   } catch (e) { err = e.message; }
-  const f = err ? [`error: ${String(err).slice(0, 160)}`] : juzgar(c, visto);
+  // (un caso puede esperar el error: `error`, lo que tiene que decir)
+  const f = c.error ? (err && new RegExp(c.error, 'i').test(err) ? [] : [`falta el error /${c.error}/ (${err || 'no hubo error'})`]) : err ? [`error: ${String(err).slice(0, 160)}`] : juzgar(c, visto);
   if (f.length) { mal++; console.log(`MAL  ${c.id} (${c.de})\n     ${f.join('\n     ')}${process.env.VER ? `\n${String(visto).replace(/^/gm, '       | ')}` : ''}`); }
   else console.log(`BIEN ${c.id}`);
 }

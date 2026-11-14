@@ -387,7 +387,7 @@ function elegir(X, libres, fijos) {
  * El plan del día del motor, sin cuadrar todavía (con la forma del plan de la IA, como planAuto). `vetados`: candidatos
  * que no pueden ir (los que la app descartó en la vuelta anterior).
  */
-export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } = {}) {
+export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now(), fijar = null, prefer = null } = {}) {
   const X = contextoDe(D, M, c, ahora);
   X.backtest = reventasPasadas(D, M);
   // si en esta liga lo que la app habría comprado para revender no ha ganado a no hacer nada, no se especula
@@ -422,13 +422,22 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
     libres = libres.filter((o) => o.clase !== 'vender');
     for (let i = fijos.length - 1; i >= 0; i--) if (fijos[i].clase === 'vender') fijos.splice(i, 1);
   }
-  const E = elegir(X, libres, fijos);
+  // `fijar`: la combinación viene dada (el plan del motor con lo que la IA quita o mete); no se busca, se comprueba
+  let E;
+  if (fijar) {
+    const l2 = [...fijos, ...todos.filter((o) => fijar.has(o.k))].filter((o, i, xs) => xs.findIndex((p) => p.pid === o.pid) === i);
+    const c2 = cuentas(X, l2);
+    if (!c2) return null;
+    E = { lista: l2, cu: c2, valor: null };
+  } else E = elegir(X, libres, fijos);
   const lista = E.lista || fijos;
   const cu = E.cu || base;
 
   /* el orden: lo que mete dinero ya, lo que se pone a la venta, las cláusulas, las pujas (el once antes que revender) */
   const ORDEN = (o) => (o.clase === 'aceptar' ? 0 : o.clase === 'vender' ? (o.luego ? 6 : 1) : o.clase === 'clausular' ? (o.rev ? 3 : 2) : o.rev ? 5 : 4);
-  const orden = [...lista].sort((a, b) => ORDEN(a) - ORDEN(b) || b.euros - a.euros);
+  // (dentro de cada clase, el orden que pida la IA; si no, lo que más vale primero)
+  const pref = (o) => { const i = prefer ? prefer.indexOf(o.k) : -1; return i < 0 ? 999 : i; };
+  const orden = [...lista].sort((a, b) => ORDEN(a) - ORDEN(b) || pref(a) - pref(b) || b.euros - a.euros);
   const ops = [];
   let plantilla = X.mias.filter((j) => !lista.some((o) => o.sale === j.id));
   let onceAhora = M.mejorOnce(plantilla);
@@ -440,7 +449,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
     let gana = 0;
     if (o.entra) { const con = M.mejorOnce([...plantilla, o.entra]); gana = con.nota - onceAhora.nota; plantilla = [...plantilla, o.entra]; onceAhora = con; if (!o.incierta) cierta = [...cierta, o.entra]; }
     if (o.cajaHoy) caja += o.cajaHoy;
-    ops.push({ confianza: 'media', ...o.op({ gana, caja: o.clase === 'clausular' ? caja : null, resto: faltaba }), _k: o.k });
+    ops.push({ confianza: 'media', ...o.op({ gana, caja: o.clase === 'clausular' ? caja : null, resto: faltaba }), _k: o.k, ...(o.forzada ? { hace_falta: true } : {}) });
   }
 
   /* lo mejor que no te llega todavía, para que sepas cuánto te falta */
@@ -518,7 +527,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
   const llena = M.mias.length >= 25;
   const descartes = (M.acciones || []).filter((a) => a.pid && ['vender', 'clausular', 'pujar'].includes(a.tipo) && !enPlan.has(a.pid) && !lista.some((o) => o.pid === a.pid))
     .filter((a, i, xs) => xs.findIndex((b) => b.pid === a.pid) === i).slice(0, 6)
-    .map((a) => ({ pid: a.pid, jugador: (M.J(a.pid) || {}).nombre || '', motivo: porQueNo(a) })).filter((d) => d.jugador);
+    .map((a) => ({ pid: a.pid, jugador: (M.J(a.pid) || {}).nombre || '', motivo: porQueNo(a) })).filter((d) => d.jugador && !alternativas.some((o) => o.pid === d.pid));
 
   /* los próximos días: cláusulas que se abren, mercado, jornada y parón */
   const dias = {};
@@ -550,7 +559,7 @@ export function planMotor(D, M, c, { vetados = new Set(), ahora = Date.now() } =
 }
 
 /** el titular del plan del motor: lo que toca hoy, con nombres si son pocos */
-function titularMotor(P) {
+export function titularMotor(P) {
   const vivos = (P.ops || []).filter((o) => !o.descartada && !o.sugerencia && o.hoy !== false);
   const rev = (o) => o.objetivo === 'revender' && ['pujar', 'clausular', 'comprar'].includes(o.accion);
   const de = (a) => vivos.filter((o) => o.accion === a && !rev(o));
@@ -600,10 +609,10 @@ export function planDeHoy(D, M, c) {
 }
 
 /** el plan del motor ya cuadrado: su titular, los próximos días y cómo queda el saldo para la jornada */
-export function rematarMotor(R, M) {
+export function rematarMotor(R, M, { titular = true } = {}) {
   if (!R || !R.motor || !Array.isArray(R.ops)) return R;
-  const out = rematarAuto(R);
-  out.titular = titularMotor(out);
+  const out = titular ? rematarAuto(R) : { ...R };
+  if (titular || !out.titular) out.titular = titularMotor(out);
   const cu = R.cuentas || {};
   const luego = out.ops.filter((o) => !o.descartada && o.hoy === false && o.accion === 'vender');
   const rev = out.ops.filter((o) => !o.descartada && String(o.objetivo || '').startsWith('revend') && o.signo < 0);

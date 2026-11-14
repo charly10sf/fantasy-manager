@@ -142,15 +142,32 @@ export async function chat(escena, pregunta, contesta, { hist = [], notas = [] }
   } finally { await P.cerrar(); }
 }
 
-/** pide el plan como lo hace la app y lo pasa por cuadrarPlan; devuelve la «vista»: lo que acaba viendo el mánager */
-export async function plan(escena, contesta) {
+/**
+ * pide el plan como lo hace la app y lo pasa por cuadrarPlan; devuelve la «vista»: lo que acaba viendo el mánager.
+ * `largo`: con el contrato de antes (la IA escribe las operaciones; hoy es lo que queda si el motor no puede). Sin él, el
+ * corto: el plan lo hace el motor y la IA lo ordena, lo recorta y lo explica. En el corto se ve además
+ *   FRASE <jugador>: la explicación de cada paso (la de la IA, o la de la app si la de la IA no vale)
+ *   CAMBIOS: lo que la IA quitó o metió y lo que la app no le dejó
+ *   MIRADO <jugador>: lo mirado y descartado, con su porqué
+ */
+export async function plan(escena, contesta, { largo = false } = {}) {
   const P = await pagina(escena, contesta);
   try {
-    const r = await conCuerda(P.page, P.page.evaluate(async () => {
+    await P.page.evaluate(`window.__arbitro = ${arbitro.toString()}`);
+    const r = await conCuerda(P.page, P.page.evaluate(async ({ largo, extra }) => {
       const I = await import('./js/ia.js'), U = await import('./js/util.js'), Dt = await import('./js/datos.js');
-      const { D, M } = window.S;
+      const S = window.S;
+      if (!largo) {
+        // como en los casos del motor: el motor montado como en la app, para que el plan salga igual cada vez
+        const Mo = await import('./js/motor.js');
+        for (let i = 0; i < 40 && !S.fuentes; i++) await new Promise((ok) => setTimeout(ok, 50));
+        const f = S.fuentes || {};
+        // eslint-disable-next-line no-new-func
+        S.M = Mo.analizar(S.D, S.H, S.c, { det: S.det, onces: f.onces, noticias: f.noticias, avanzadas: f.avanzadas, alineaciones: f.alineaciones, ...(extra ? new Function('S', extra)(S) : {}) });
+      }
+      const { D, M } = S;
       let Pl;
-      try { Pl = await I.planDelDia(D, M, Dt.cfg(), {}); } catch (e) { return { error: e.message }; }
+      try { Pl = await (largo ? I.planLargo : I.planDelDia)(D, M, Dt.cfg(), {}); } catch (e) { return { error: e.message }; }
       const r = I.cuadrarPlan(Pl, D, M);
       const L = [`TITULAR: ${r.titular || Pl.titular || ''}`, `SITUACION: ${r.situacion || Pl.situacion || ''}`];
       const linea = (o) => `${o.etiqueta || o.accion} ${(o.j && o.j.nombre) || o.jugador || ''}${o.importe ? ` ${U.eur(o.importe)}` : ''}${o.cuando ? ` (${o.cuando})` : ''}${o.aviso ? ` | ${o.aviso}` : ''}`;
@@ -158,9 +175,21 @@ export async function plan(escena, contesta) {
       const al = r.alineacion || null;
       if (al) L.push(`ONCE: ${al.formacion || ''} · ${(al.titulares || []).map((t) => (t && t.nombre) || t).join(', ')}`);
       if (r.avisoSaldo) L.push(`SALDO: ${r.avisoSaldo}`);
+      if (Pl.corto) {
+        for (const o of r.ops || []) if (o._k) L.push(`FRASE ${(o.j && o.j.nombre) || o.jugador || ''}: ${o.motivo}`);
+        const c = Pl.cambios || {};
+        L.push(`CAMBIOS: quita [${(c.quita || []).join(', ')}]; mete [${(c.mete || []).join(', ')}]; no aplicado [${(c.noAplicado || []).join(', ')}]; frases de la app ${c.sinFrase || 0}`);
+        for (const d of r.descartes || []) L.push(`MIRADO ${d.jugador}: ${d.motivo}`);
+        for (const n of Pl.noticias || []) L.push(`NOTICIA ${n.jugador}: ${n.texto}`);
+        for (const n of Pl.rivales || []) L.push(`RIVAL ${n.manager}: ${n.texto}`);
+        L.push(...window.__arbitro(r, D, M, U.eur));
+      }
       const ops = (r.ops || []).filter((o) => !['alinear', 'esperar'].includes(o.accion));
-      return { vista: L.join('\n'), n: ops.length, descartadas: ops.filter((o) => o.descartada).length, crudo: Pl };
-    }));
+      return { vista: L.join('\n'), n: ops.length, descartadas: ops.filter((o) => o.descartada).length, crudo: Pl, corto: !!Pl.corto, tok: Pl.tok || null };
+    }, { largo, extra: (ESCENAS[escena] || {}).extra || null }));
+    // lo que ocupa lo que la app manda a la IA (el sistema y los mensajes)
+    const q = (P.pedidos.find((x) => x.cuerpo && x.cuerpo.contents) || {}).cuerpo;
+    if (r.vista && r.corto && q) r.vista += `\nPEDIDO: ${(q.systemInstruction ? q.systemInstruction.parts[0].text.length : 0) + q.contents.flatMap((c) => c.parts || []).reduce((t, p) => t + (p.text || '').length, 0)} caracteres`;
     return { ...r, pedidos: P.pedidos, errores: P.errores };
   } finally { await P.cerrar(); }
 }

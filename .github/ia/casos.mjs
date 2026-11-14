@@ -3,6 +3,9 @@
 //   - con `ia`: lo que «contesta» la IA va escrito a mano (el fallo de verdad, o uno parecido). Se prueban SIN RED: lo
 //     que se mira es que la app lo pare o lo corrija antes de que lo vea el mánager (.github/prueba-ia.mjs).
 //   - sin `ia`: contesta la IA de verdad (rama pruebas-ia, que no se fusiona). Se mira lo que acaba viendo el mánager.
+//   - `tipo: 'corto'`: el plan con el contrato corto (el motor propone y la IA ordena, recorta y explica), con la respuesta
+//     de la IA escrita a mano. Como los ids de los pasos (p1, a1…) los pone la app, `ia` es una función de lo que la app
+//     manda. Se ve, además: FRASE, CAMBIOS, MIRADO, PEDIDO (lo que ocupa lo que se manda) y lo del árbitro.
 //   - `tipo: 'motor'`: sin IA ninguna. El plan lo hace el motor (web/js/plan.js) y se mira, además de lo que se ve, lo que
 //     dice de él el árbitro de banco.mjs (REGLAS, JORNADA, HUECOS, ONCE_BAJA, VENDE_POR_CAJA). Van al final del archivo.
 // `debe` y `nunca` son expresiones regulares sobre lo que se ve. En el plan, lo que se ve es:
@@ -19,6 +22,13 @@
 const bloque = (o) => `\n\`\`\`notas\n${JSON.stringify(o)}\n\`\`\``;
 const P = (titular, operaciones, extra = {}) => JSON.stringify({ situacion: extra.situacion || 'Equipo en orden.', descartes: [], operaciones, alineacion: extra.alineacion || null, proximos_dias: [], titular });
 const op = (ref, accion, jugador, mas = {}) => ({ ref, accion, jugador, motivo: mas.motivo || 'Lo veo claro.', importe: mas.importe ?? null, dia: mas.dia || 'hoy', cuando: mas.cuando || 'ahora', objetivo: mas.objetivo || null, ...mas });
+
+/* el plan corto: lo que «contesta» la IA lleva los ids que la app pone a los pasos; se buscan en lo que la app manda */
+const textoDe = (q) => ((q && q.contents) || []).flatMap((c) => c.parts || []).map((p) => p.text || '').join('\n');
+const idDe = (q, nombre) => (textoDe(q).match(new RegExp(`^\\[([pa]\\d+)\\][^\\n]*· ${nombre}`, 'm')) || [])[1] || 'p99';
+const pasosDe = (q) => [...textoDe(q).matchAll(/^\[(p\d+)\]/gm)].map((m) => m[1]);
+const C = (q, { quita = [], mete = [], frase = () => 'Bien visto: los números de la app salen.', titular = 'Plan de hoy, sin sorpresas', situacion = 'Equipo en orden.', orden = null, noticias = [], rivales = [] } = {}) => JSON.stringify({
+  pasos: (orden || pasosDe(q)).filter((id) => !quita.some((x) => x.id === id)).map((id) => ({ id, frase: frase(id) })), quita, mete, situacion, noticias, rivales, titular });
 
 export const CASOS = [
   /* ------------------------------ el plan, con la respuesta de la IA escrita a mano ------------------------------ */
@@ -231,11 +241,48 @@ export const CASOS = [
 
   /* ------------------------------------ el plan, con la IA de verdad ------------------------------------ */
   { id: 'ia-plan-martes', tipo: 'plan', escena: 'martes', de: 'lo normal entre semana: nada que la app tenga que descartar',
-    nunca: ['^DESCARTADA:', '^OP: [^\\n]*(Camello|Dimitrievski|Leo Román)'], debe: ['^TITULAR: \\S'] },
-  { id: 'ia-plan-cierre', tipo: 'plan', escena: 'veda', de: 'con las cláusulas cerradas', nunca: ['^DESCARTADA:', '^OP: clausular[^\\n]*\\(ahora\\)'], debe: ['^TITULAR: \\S'] },
-  { id: 'ia-plan-en-juego', tipo: 'plan', escena: 'enjuego', de: 'con la jornada en juego', nunca: ['^DESCARTADA:', '^ONCE:', '^OP: alinear'], debe: ['^TITULAR: \\S'] },
-  { id: 'ia-plan-paron', tipo: 'plan', escena: 'paron', de: 'en el parón: dinero, no once', nunca: ['^DESCARTADA:'], debe: ['^(TITULAR|SITUACION):[^\\n]*(par[oó]n|dinero|revaloriz|especul)'] },
-  { id: 'ia-plan-negativo', tipo: 'plan', escena: 'negativo', de: 'en negativo entre semana', nunca: ['^DESCARTADA:', '^OP: clausular'], debe: ['^TITULAR: \\S'] },
+    nunca: ['^DESCARTADA:', '^OP: [^\\n]*(Camello|Dimitrievski|Leo Román)'], debe: ['^TITULAR: \\S', '^REGLAS: ok'] },
+  { id: 'ia-plan-cierre', tipo: 'plan', escena: 'veda', de: 'con las cláusulas cerradas', nunca: ['^DESCARTADA:', '^OP: clausular[^\\n]*\\(ahora\\)'], debe: ['^TITULAR: \\S', '^REGLAS: ok'] },
+  { id: 'ia-plan-en-juego', tipo: 'plan', escena: 'enjuego', de: 'con la jornada en juego', nunca: ['^DESCARTADA:', '^ONCE:', '^OP: alinear'], debe: ['^TITULAR: \\S', '^REGLAS: ok'] },
+  { id: 'ia-plan-paron', tipo: 'plan', escena: 'paron', de: 'en el parón: dinero, no once', nunca: ['^DESCARTADA:'], debe: ['^(TITULAR|SITUACION):[^\\n]*(par[oó]n|dinero|revaloriz|especul)', '^REGLAS: ok'] },
+  { id: 'ia-plan-negativo', tipo: 'plan', escena: 'm-negativo', de: 'en negativo entre semana (con el plan corto las cuentas son de la app: una cláusula solo va si antes entra el dinero de una oferta, y lo mira el árbitro)', nunca: ['^DESCARTADA:'], debe: ['^TITULAR: \\S', '^REGLAS: ok', '^JORNADA: \\d'] },
+
+  /* --------------------- el plan corto: el motor propone, la IA ordena, recorta y explica (14 nov) --------------------- */
+  { id: 'corto-bueno-no-se-toca', tipo: 'corto', escena: 'martes', de: 'control: la IA explica el plan de la app sin cambiar nada y sale tal cual, con sus frases',
+    ia: (q) => C(q, { frase: (id) => (id === idDe(q, 'Niño') ? 'Un chollo a su valor que entra directo en tu once.' : 'Bien visto: los números de la app salen.'), titular: 'Raphinha a la venta y Niño al once' }),
+    debe: ['^TITULAR: Raphinha a la venta y Niño al once', '^OP: vender Raphinha', '^OP: clausular Niño', '^FRASE Niño: Un chollo a su valor', '^CAMBIOS: quita \\[\\]; mete \\[\\]; no aplicado \\[\\]; frases de la app 0', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] },
+  { id: 'corto-lleva-poco', tipo: 'corto', escena: 'martes', de: 'el objetivo: menos de 12.000 tokens de entrada (unos 36.000 caracteres con el sistema)',
+    ia: (q) => C(q), debe: ['^PEDIDO: (\\d{1,4}|[12]\\d{4}|3[0-5]\\d{3}) caracteres'] },
+  { id: 'corto-quita-por-noticia', tipo: 'corto', escena: 'martes', de: 'la IA quita un paso por una noticia: sale de los pasos, queda en «mirados» con el porqué y el titular no lo nombra',
+    ia: (q) => C(q, { quita: [{ id: idDe(q, 'R. Terrats'), motivo: 'No va convocado este fin de semana.' }], titular: 'Vende a Raphinha y puja por R. Terrats' }),
+    debe: ['^MIRADO R. Terrats: La IA lo quita del plan: No va convocado', '^CAMBIOS: quita \\[R. Terrats\\]', '^OP: vender Raphinha', '^REGLAS: ok'], nunca: ['^OP: pujar R. Terrats', '^TITULAR:[^\\n]*Terrats', '^DESCARTADA:'] },
+  { id: 'corto-no-quita-lo-que-hace-falta', tipo: 'corto', escena: 'm-cierre-negativo', de: 'regla 10: la IA no puede quitar la venta que hace falta para empezar la jornada en positivo',
+    ia: (q) => C(q, { quita: [{ id: idDe(q, 'Álex Baena'), motivo: 'Es titular y juega mañana.' }] }),
+    debe: ['^OP: Aceptar oferta Álex Baena', '^CAMBIOS:[^\\n]*no aplicado \\[quitar Álex Baena', '^REGLAS: ok'] },
+  { id: 'corto-ids-inventados', tipo: 'corto', escena: 'martes', de: 'cosas que se inventa: pasos y alternativas que la app no le ha dado',
+    ia: (q) => JSON.stringify({ pasos: [{ id: 'p77', frase: 'Ficha a Mbappé.' }, ...pasosDe(q).map((id) => ({ id, frase: 'Vale.' }))], quita: [{ id: 'p99', motivo: 'porque sí' }], mete: [{ id: 'a9', frase: 'Clausula a Mbappé.' }, { id: 'C-1089', frase: 'Y a Lamine.' }], titular: 'Plan de hoy' }),
+    debe: ['^OP: clausular Niño', '^CAMBIOS: quita \\[\\]; mete \\[\\]', '^REGLAS: ok'], nunca: ['Mbappé', 'Lamine', '^DESCARTADA:'] },
+  { id: 'corto-mete-alternativa', tipo: 'corto', escena: 'martes', de: 'la IA mete una alternativa de las que la app le pasa: entra con las cuentas rehechas por el motor',
+    ia: (q) => C(q, { mete: [{ id: idDe(q, 'El Hilali'), frase: 'Sube fuerte y da tiempo a venderlo antes de la jornada.' }] }),
+    debe: ['^OP: pujar El Hilali', '^CAMBIOS: quita \\[\\]; mete \\[El Hilali\\]', '^FRASE El Hilali: Sube fuerte', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
+  { id: 'corto-mete-lo-que-no-cabe', tipo: 'corto', escena: 'martes', de: 'las cuentas las hace la app: tres alternativas que juntas pasan el tope de deuda; entra lo que cabe y el resto se dice',
+    ia: (q) => C(q, { mete: ['Unai Simón', 'Natan', 'El Hilali'].map((n) => ({ id: idDe(q, n), frase: 'Me gusta.' })) }),
+    debe: ['^CAMBIOS:[^\\n]*no aplicado \\[[^\\]]*meter', '^REGLAS: ok'], nunca: ['^DESCARTADA:', '^SUGERENCIA:'] },
+  { id: 'corto-cifra-inventada', tipo: 'corto', escena: 'martes', de: 'cifras que se inventa (7 nov, «107 + 35 = 75»): una frase con una cifra que no está en los datos no se usa; sale la de la app',
+    ia: (q) => C(q, { frase: (id) => (id === idDe(q, 'Niño') ? 'Vale 9,90 M y su cláusula es de 3,30 M: un chollo.' : 'Bien visto.') }),
+    debe: ['^FRASE Niño: [^\\n]*1,0[12] M', '^CAMBIOS:[^\\n]*frases de la app 1'], nunca: ['9,90 M', '3,30 M'] },
+  { id: 'corto-nombra-el-modelo', tipo: 'corto', escena: 'martes', de: 'reglas de Carlos y de Domy: ni el nombre del modelo ni otras webs de fantasy',
+    ia: (q) => C(q, { titular: 'Vende a Raphinha, lo dice Comuniate', situacion: 'Soy Gemini 3.5 Flash, un modelo de lenguaje de Google. Tu equipo va bien.', frase: () => 'Según Jornada Perfecta y SofaScore, bien visto.' }),
+    nunca: ['Gemini', 'Comuniate', 'Jornada Perfecta', 'SofaScore', 'modelo de lenguaje'], debe: ['^OP: vender Raphinha'] },
+  { id: 'corto-orden-que-no-cuadra', tipo: 'corto', escena: 'm-negativo', de: 'el orden es de la IA, pero el dinero manda: una cláusula no puede ir antes de la oferta que la paga',
+    ia: (q) => C(q, { orden: [...pasosDe(q)].reverse() }),
+    debe: ['^OP: Aceptar oferta Álex Baena[\\s\\S]*^OP: clausular Niño', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
+  { id: 'corto-respuesta-sin-formato', tipo: 'corto', escena: 'martes', de: 'la IA contesta sin el formato: se dice y se queda el plan de la app',
+    ia: 'Claro, te cuento: yo vendería a Raphinha y poco más. ¡Suerte!', error: 'sin el formato del plan' },
+  { id: 'corto-paron', tipo: 'corto', escena: 'paron', de: 'Domy, 9 nov: en el parón, dinero antes que once (el plan corto sale del motor)',
+    ia: (q) => C(q, { titular: 'Parón: toca mover el dinero' }), debe: ['^OP: [^\\n]*Cubarsí', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
+  { id: 'corto-en-juego', tipo: 'corto', escena: 'enjuego', de: 'Domy, 31 oct: con la jornada en juego, ni alinear ni once',
+    ia: (q) => C(q), debe: ['^REGLAS: ok'], nunca: ['^OP: alinear', '^ONCE:', '^DESCARTADA:'] },
 
   /* ------------------------------------ el motor del plan, sin IA (14 nov 2026) ------------------------------------ */
   // Cada escenario lleva un caso «reglas» (el plan no se salta ninguna regla de LaLiga y la app no le descarta nada: el
