@@ -1706,7 +1706,7 @@
   "3100": "ok",
   "3101": "ok",
   "3102": "ok",
-  "3103": "doubtful",
+  "3103": "ok",
   "3104": "ok",
   "3105": "ok",
   "3106": "ok",
@@ -1916,7 +1916,14 @@
   "3310": "out_of_league",
   "3311": "out_of_league"
  },
- "novedadesPend": [],
+ "novedadesPend": [
+  {
+   "id": "3103",
+   "que": "vuelve",
+   "antes": "doubtful",
+   "t": 1794684071256
+  }
+ ],
  "noticias": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250001/zaniolo.html": 1794425156000,
@@ -3057,8 +3064,8 @@
     "t": 1794204073390
    },
    "3103": {
-    "e": "doubtful",
-    "t": 1794407479450
+    "e": "ok",
+    "t": 1794684071256
    },
    "3104": {
     "e": "ok",
@@ -3298,16 +3305,16 @@
   "dia": "2026-11-14",
   "llamadas": {
    "clasificar": 40,
-   "redactar": 6,
-   "revisar": 4,
+   "redactar": 10,
+   "revisar": 5,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 171853,
-  "salida": 20022,
+  "entrada": 225765,
+  "salida": 21052,
   "cacheLee": 2903,
-  "cacheEscribe": 8709,
-  "dolares": 0.23689,
+  "cacheEscribe": 11612,
+  "dolares": 0.362272,
   "reservado": 0
  },
  "recientes": {
@@ -3675,7 +3682,13 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {},
+ "fallosRedaccion": {
+  "novedades|3103:vuelve|2026-11-14": {
+   "n": 1,
+   "t": "2026-11-14T19:21:30.838Z",
+   "ultima": "2026-11-14T19:21:30.838Z"
+  }
+ },
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7514,13 +7527,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2529,
+   "ok": 2530,
    "fallos": 0,
-   "ejecuciones": 1996,
+   "ejecuciones": 1997,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T19:16:20.216Z"
+   "ultima": "2026-11-14T19:21:11.256Z"
   }
  },
  "ptsDirecto": {},
@@ -7537,15 +7550,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:16:26.033Z"
+   "ultimaBien": "2026-11-14T19:21:30.902Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:16:26.033Z"
+   "ultimaBien": "2026-11-14T19:21:30.902Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:16:26.033Z"
+   "ultimaBien": "2026-11-14T19:21:30.902Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7553,11 +7566,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:16:26.033Z"
+   "ultimaBien": "2026-11-14T19:21:30.902Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:16:26.033Z"
+   "ultimaBien": "2026-11-14T19:21:30.902Z"
   }
  },
  "avisos": [
