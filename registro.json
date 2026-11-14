@@ -1946,7 +1946,6 @@
    "SPORT|136349887": 1794431410000,
    "SPORT|136350096": 1794431384000,
    "SPORT|136285258": 1794430522000,
-   "SPORT|136349840": 1794429592000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-tuvo-operado-vuestra-fuerza-le-ayuda-luchar-dia-dia-20261111_3473361.html": 1794434063000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/embajada-alemania-espana-invita-cucurella-cerveza-partidito-palabras-partidazo-cope-vez-manos-fuera-20261112_3473381.html": 1794441164000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-11-nov-2026-partidazo-cope-20261112_3473373.html": 1794438373000,
@@ -2145,7 +2144,8 @@
    "SPORT|136447192": 1794676184000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-termina-polemica-lamine-yamal-recuperado-perfectas-condiciones-jugar-20261114_3475343.html": 1794679648000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/": 1794684566000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261114/1004251061/zidane-confirma-mbappe-habla-lleva-relacion-entrenador-jugador.html": 1794685115000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261114/1004251061/zidane-confirma-mbappe-habla-lleva-relacion-entrenador-jugador.html": 1794685115000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000
   },
   "hechos": [
    {
@@ -2395,7 +2395,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 34
+   "n": 35
   },
   "desde": {
    "67": {
@@ -3308,17 +3308,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 44,
+   "clasificar": 45,
    "redactar": 15,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 306150,
-  "salida": 24720,
+  "entrada": 308207,
+  "salida": 25327,
   "cacheLee": 11612,
   "cacheEscribe": 14515,
-  "dolares": 0.534408,
+  "dolares": 0.534917,
   "reservado": 0
  },
  "recientes": {
@@ -7525,13 +7525,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2545,
+   "ok": 2546,
    "fallos": 0,
-   "ejecuciones": 2012,
+   "ejecuciones": 2013,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T20:36:11.024Z"
+   "ultima": "2026-11-14T20:41:11.964Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7548,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:36:13.581Z"
+   "ultimaBien": "2026-11-14T20:41:20.867Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:36:13.581Z"
+   "ultimaBien": "2026-11-14T20:41:20.867Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:36:13.581Z"
+   "ultimaBien": "2026-11-14T20:41:20.867Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7564,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:36:13.581Z"
+   "ultimaBien": "2026-11-14T20:41:20.867Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:36:13.581Z"
+   "ultimaBien": "2026-11-14T20:41:20.867Z"
   }
  },
  "avisos": [
