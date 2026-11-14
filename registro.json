@@ -1916,7 +1916,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/casos-no-hubo-buen-entendimiento-xabi-alonso-mi-me-gusto-manera-trabajar-20261111_3472842.html": 1794392772000,
    "MARCA|https://www.marca.com/futbol/2026/11/11/bellingham-jobe-inglaterra-hermano-jude.html": 1794393040000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/mbappe-entrena-francia.html": 1794393421000,
-   "SPORT|136322629": 1794390859000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249816/mbappe-enciende-alarmas-no-entrena-francia.html": 1794393963000,
    "AS|https://as.com/futbol/primera/el-lateral-izquierdo-llama-otra-vez-a-gerard-martin-f202611-n/": 1794394771000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/relaciones-tensas-mbappe-zidane-francia-20261111_3472893.html": 1794396298000,
@@ -3340,11 +3339,8 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/sociedad/noticia-grupo-manifestantes-impide-emision-programa-cafe-ideas-rtve-cataluna-huelga-general-20261111105556.html": 1794390956000,
-   "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-consumo-electrico-cae-66-1000-horas-20261111105528.html": 1794390928000,
    "Europa Press|https://www.europapress.es/economia/construccion-y-vivienda-00342/noticia-alquiler-seguro-denuncia-actos-vandalicos-mas-40-oficinas-senala-sindicato-inquilinas-20261111114215.html": 1794393735000,
    "AS|https://as.com/futbol/primera/la-tension-futbolistas-y-laliga-se-traslada-a-la-audiencia-nacional-f202611-n/": 1794392540000,
-   "SPORT|136322128": 1794390891000,
    "Superdeporte|https://www.superdeporte.es/polideportivo/2026/11/11/normalidad-absoluta-mundo-deporte-huelga-general-136325321.html": 1794396491000,
    "Europa Press|https://www.europapress.es/nacional/noticia-interior-registra-once-detenidos-800-horas-quema-contenedores-atentado-contra-autoridad-20261111121046.html": 1794395446000,
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_0_2008472005.html": 1794397319000,
@@ -7653,13 +7649,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2415,
+   "ok": 2416,
    "fallos": 0,
-   "ejecuciones": 1882,
+   "ejecuciones": 1883,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T09:51:14.060Z"
+   "ultima": "2026-11-14T09:56:12.767Z"
   }
  },
  "ptsDirecto": {},
@@ -7676,15 +7672,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:51:19.650Z"
+   "ultimaBien": "2026-11-14T09:56:18.790Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:51:19.650Z"
+   "ultimaBien": "2026-11-14T09:56:18.790Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:51:19.650Z"
+   "ultimaBien": "2026-11-14T09:56:18.790Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7692,11 +7688,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:51:19.650Z"
+   "ultimaBien": "2026-11-14T09:56:18.790Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:51:19.650Z"
+   "ultimaBien": "2026-11-14T09:56:18.790Z"
   }
  },
  "avisos": [
