@@ -3238,7 +3238,6 @@
  "liga": {
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261111/1004249933/agotadas-entradas-depor-barcelona-apenas-horas.html": 1794411891000,
-   "Europa Press|https://www.europapress.es/madrid/noticia-huelga-general-resuena-madrid-piquetes-protestas-pese-relativa-normalidad-servicios-publicos-20261111163042.html": 1794411042000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794413806000,
    "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
@@ -7532,13 +7531,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2482,
+   "ok": 2483,
    "fallos": 0,
-   "ejecuciones": 1949,
+   "ejecuciones": 1950,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T15:26:20.223Z"
+   "ultima": "2026-11-14T15:31:13.021Z"
   }
  },
  "ptsDirecto": {},
@@ -7555,15 +7554,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:26:24.505Z"
+   "ultimaBien": "2026-11-14T15:31:18.591Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:26:24.505Z"
+   "ultimaBien": "2026-11-14T15:31:18.591Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:26:24.505Z"
+   "ultimaBien": "2026-11-14T15:31:18.591Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7571,11 +7570,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:26:24.505Z"
+   "ultimaBien": "2026-11-14T15:31:18.591Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:26:24.505Z"
+   "ultimaBien": "2026-11-14T15:31:18.591Z"
   }
  },
  "avisos": [
