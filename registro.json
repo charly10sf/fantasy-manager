@@ -1912,7 +1912,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/courtois-alaba-xabi-alonso-desvela-ignoro-mensaje-mourinho-bien.html": 1794384337000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249769/courtois-me-gusta-xabi-alonso-me-gusta-forma-trabajar.html": 1794386756000,
    "SPORT|136316852": 1794385501000,
    "SPORT|136319206": 1794386810000,
@@ -2156,7 +2155,10 @@
    "SPORT|136428399": 1794607250000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/natan-kike-salas-reyes-despeje-laliga_0_2008497084.html": 1794637826000,
    "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/numeros-respaldan-mejoria-sevilla-fc_0_2008496960.html": 1794634248000,
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-prepara-giro-tuerca-plantilla_0_2008495065.html": 1794634200000
+   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-prepara-giro-tuerca-plantilla_0_2008495065.html": 1794634200000,
+   "SPORT|136407108": 1794639611000,
+   "SPORT|135274018": 1794639600000,
+   "SPORT|135166253": 1794639600000
   },
   "hechos": [
    {
@@ -2490,7 +2492,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 1
+   "n": 2
   },
   "desde": {
    "67": {
@@ -3428,32 +3430,31 @@
    "SPORT|136418123": 1794601251000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250691/precedentes.html": 1794605992000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261113/1004250266/aplazado-barca-atletic-girona-b.html": 1794605649000,
-   "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-suspende-todos-vuelos-salida-motivos-seguridad-20261113224537.html": 1794606337000
+   "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-suspende-todos-vuelos-salida-motivos-seguridad-20261113224537.html": 1794606337000,
+   "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-reabre-espacio-aereo-suspension-vuelos-territorio-20261114025823.html": 1794621503000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 0,
+   "n": 1,
    "fallos": 0
   },
-  "espera": {
-   "Europa Press|https://www.europapress.es/internacional/noticia-eeuu-reabre-espacio-aereo-suspension-vuelos-territorio-20261114025823.html": 1794642376066
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 1,
+   "clasificar": 3,
    "redactar": 4,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 62470,
-  "salida": 4268,
+  "entrada": 66930,
+  "salida": 5922,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.141024,
+  "dolares": 0.142297,
   "reservado": 0
  },
  "recientes": {
@@ -7656,13 +7657,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2392,
+   "ok": 2393,
    "fallos": 0,
-   "ejecuciones": 1859,
+   "ejecuciones": 1860,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T08:01:13.555Z"
+   "ultima": "2026-11-14T08:06:20.674Z"
   }
  },
  "ptsDirecto": {},
@@ -7679,15 +7680,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:01:51.013Z"
+   "ultimaBien": "2026-11-14T08:06:32.884Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:01:51.013Z"
+   "ultimaBien": "2026-11-14T08:06:32.884Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:01:51.013Z"
+   "ultimaBien": "2026-11-14T08:06:32.884Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7695,11 +7696,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:01:51.013Z"
+   "ultimaBien": "2026-11-14T08:06:32.884Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:01:51.013Z"
+   "ultimaBien": "2026-11-14T08:06:32.884Z"
   }
  },
  "avisos": [
