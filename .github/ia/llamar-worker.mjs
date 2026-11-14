@@ -9,21 +9,23 @@ import { SOBRE_BLOQUEO, CHISTES, sistemaCorto } from '../../web/js/plan-sistema.
 const W = await import('../../worker/src/index.js');
 const K = process.env.ANTHROPIC_API_KEY;
 const WEB = process.env.WEB != null ? Number(process.env.WEB) : 2;
+const TOPE = Number(process.env.TOPE_USD || 0.1);
+const SALIDA = process.env.SALIDA || 'respuestas-worker.json';
 if (!K) { console.log('Falta ANTHROPIC_API_KEY'); process.exit(1); }
-const pedidos = JSON.parse(readFileSync(new URL('./pedidos-b.json', import.meta.url))).filter((p) => p.id.startsWith('ia-plan'));
+const pedidos = JSON.parse(readFileSync(new URL('./pedidos-b.json', import.meta.url))).filter((p) => p.id.startsWith('ia-plan-'));
 const real = globalThis.fetch;
 globalThis.caches = { default: { match: async () => null, put: async () => {} } };
 globalThis.fetch = async (u, o) => {
   const s = String(u);
   // (una cuenta por plan: el Worker deja 3 al minuto por cuenta)
   if (s.includes('/user/me')) return new Response(JSON.stringify({ id: 4000 + Number(new Headers(o.headers).get('authorization').slice(-2)), managerName: 'Prueba' }), { status: 200 });
-  if (s.endsWith('/limites.json')) return new Response(JSON.stringify({ planes: { on: true, gratis: 20, max: 20, topeUsdDia: 0.1, web: WEB } }), { status: 200 });
+  if (s.endsWith('/limites.json')) return new Response(JSON.stringify({ planes: { on: true, gratis: 20, max: 20, topeUsdDia: TOPE, web: WEB } }), { status: 200 });
   if (s.startsWith('https://api.anthropic.com/')) return real(u, o);
   throw new Error('sin red: ' + s);
 };
 const objetos = new Map();
 const QR = { idFromName: (n) => n, get: (id) => { if (!objetos.has(id)) { const m = new Map(); objetos.set(id, new W.Emparejar({ storage: { get: async (k) => m.get(k), put: async (k, v) => { if (typeof k === 'object') for (const [a, b] of Object.entries(k)) m.set(a, b); else m.set(k, v); }, deleteAll: async () => m.clear(), setAlarm: async () => {} } })); } const o = objetos.get(id); return { fetch: (u, op) => o.fetch(new Request(u, op)) }; } };
-const env = { QR, CLAUDE_PLANES: K, PLAN_TOPE_USD: '0.1' };
+const env = { QR, CLAUDE_PLANES: K, PLAN_TOPE_USD: String(TOPE) };
 const out = [];
 let igual = 0;
 const PASADAS = Number(process.env.PASADAS || 1);
@@ -45,8 +47,8 @@ for (let pasada = 1; pasada <= PASADAS; pasada++) for (const p of pedidos) {
   for (const x of [...(pl.quita || []).map((y) => ['QUITA', y.id, y.motivo, y.fuente]), ...(pl.mete || []).map((y) => ['METE', y.id, y.frase, y.fuente]), ...(pl.noticias || []).map((y) => ['NOTICIA', y.jugador, y.texto, y.fuente])]) console.log(`     ${x[0]} ${x[1]}: ${String(x[2] || '').slice(0, 160)}${x[3] ? ` [${x[3]}]` : ' [sin fuente]'}`);
   for (const f of pl.fuentes || []) console.log(`     FUENTE ${f.t} · ${f.u}`);
   out.push({ id: p.id, lote: `worker#${pasada}`, modelo: 'worker-haiku', ms, entra: tk.entra || 0, sale: tk.sale || 0, web: tk.web || 0, usd, plan: pl, respuesta: j && j.plan ? { candidates: [{ content: { role: 'model', parts: [{ text: '```json\n' + JSON.stringify(j.plan) + '\n```' }] }, finishReason: 'STOP' }] } : null });
-  writeFileSync(new URL('./respuestas-worker.json', import.meta.url), JSON.stringify(out));
+  writeFileSync(new URL(`./${SALIDA}`, import.meta.url), JSON.stringify(out));
 }
 const g = out.reduce((a, x) => ({ e: a.e + x.entra, s: a.s + x.sale, w: a.w + x.web, u: a.u + x.usd, ms: a.ms + x.ms }), { e: 0, s: 0, w: 0, u: 0, ms: 0 });
 const n = out.length || 1;
-console.log(`SISTEMA igual en ${igual} de ${pedidos.length} · GASTO ${g.u.toFixed(4)} $ en ${out.length} planes (${(g.u / n).toFixed(4)} $ por plan; ${(g.w / n).toFixed(1)} búsquedas, ${Math.round(g.e / n)} tokens de entrada y ${Math.round(g.s / n)} de salida, ${Math.round(g.ms / n / 100) / 10} s de media)`);
+console.log(`WEB ${WEB} · SISTEMA igual en ${igual} de ${pedidos.length} · GASTO ${g.u.toFixed(4)} $ en ${out.length} planes (${(g.u / n).toFixed(4)} $ por plan; ${(g.w / n).toFixed(1)} búsquedas, ${Math.round(g.e / n)} tokens de entrada y ${Math.round(g.s / n)} de salida, ${Math.round(g.ms / n / 100) / 10} s de media)`);
