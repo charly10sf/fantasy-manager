@@ -2,6 +2,9 @@
 
 Pedida por Carlos el 13 nov («no quiero más parches: quiero que deje de fallar por sistema»). Versión: 0.7.9.
 
+> **14 nov, de madrugada: el motor del plan y el plan corto.** Hecho y probado en la rama `web-motor-plan`, SIN PUBLICAR
+> (falta el OK de Carlos). Está al final: «El motor del plan y el plan corto».
+
 ## El resultado, en números
 
 | Medida | Antes (0.7.8h) | Después (0.7.9) |
@@ -133,8 +136,8 @@ Gastado en la medida: 3,71 $.
 
 ## Las pruebas
 
-- `.github/ia/casos.mjs`: 72 casos, cada uno con el fallo de donde sale. 41 llevan escrita la respuesta mala de la IA
-  y 31 se preguntan a la IA de verdad.
+- `.github/ia/casos.mjs`: 116 casos, cada uno con el fallo de donde sale. 57 llevan escrita la respuesta de la IA (41
+  de la 0.7.9 y 16 del plan corto), 28 son del motor (sin IA) y 31 se preguntan a la IA de verdad.
 - `.github/prueba-ia.mjs` (sin red; va en la Action «Pruebas» en cada push): los 41. Google es de mentira
   (`.github/ia/banco.mjs`): la app corre entera, con la liga de ejemplo a una hora fija, y se mira lo que acaba viendo
   el mánager.
@@ -143,14 +146,163 @@ Gastado en la medida: 3,71 $.
   Con dos lotes (`pedidos.json` y `pedidos-b.json`) pregunta cada caso dos veces con el mismo modelo, para comparar
   antes y después. Gasta 31 preguntas por lote: con el cupo gratis, una pasada al día con los modelos buenos.
 
+## El motor del plan y el plan corto (14 nov, 01:25-03:30; rama `web-motor-plan`, sin publicar)
+
+Encargo: claude/prompt-motor-plan.md. Sesión de noche, sin Carlos (las dudas, decididas con las 15 reglas y con cómo juega;
+están en «Para confirmar con Carlos»). Vista previa: https://web-motor-plan.fantasy-manager-61v.pages.dev
+
+### El antes y el después
+
+| Medida | Antes (0.7.9) | Después (`web-motor-plan`) |
+|---|---|---|
+| Casos del motor (28, en 13 escenarios, sin IA y con árbitro de reglas) | 13 bien (`planAuto`) | 28 bien |
+| A fondo: la liga de ejemplo movida al azar, 540 ligas en 9 momentos de la semana | 307 bien (57 %) | 540 bien (con 10 semillas, 5.040 ligas: todas bien) |
+| Operaciones por plan (media, a fondo) | 9,0 | 4,4 |
+| Planes del motor con algo «Descartado por la app» | sí, en 8 de los 13 escenarios (Cubarsí, Natan…) | ninguno: lo que la app tacharía no sale |
+| Lo que tarda el motor | 2 ms | 12 ms de media, 56 ms el que más (con la CPU ×4 más lenta, 30-60 ms) |
+| Casos sin red en total (los para la app sola) | 41 | 85: los 41 de antes, 28 del motor y 16 del plan corto |
+| Lo que lee la IA para un plan | ~36.400 tokens (Gemini), ~42.500 (Claude) | ~3.700 (Gemini), ~5.200 (Claude): un 90 % menos |
+| Lo que escribe | 3.000-5.000 tokens (Haiku, hasta 16.000) | 630-710 (Gemini ligero), ~1.000 (Sonnet), ~2.500 (Haiku, con lo que piensa) |
+| Planes con la IA de verdad, dos pasadas por modelo (5 escenarios) | Gemini ligero 5 de 5 · Haiku 1 de 5 · Sonnet 4 de 5 (una pasada) | Gemini ligero 10 de 10 · Haiku 10 de 10 · Sonnet 10 de 10 |
+| Operaciones de esos planes descartadas por la app | 1 (Sonnet) | 0 de 133 |
+| Lo que tarda un plan | 3-4 s (ligero), ~75 s (Haiku), 17-56 s (Sonnet) | 2,8 s (ligero), 11,7 s (Haiku), 6,9 s (Sonnet) |
+| Lo que cuesta un plan | 0,011 $ (Haiku, y fallaba), 0,13 $ (Sonnet) | 0,0018 $ (Haiku), 0,0204 $ (Sonnet) |
+
+Con qué se midió la IA de verdad: 14 nov, 02:45 y 03:20, rama `pruebas-ia`, los cinco planes dos veces con cada modelo
+(gemini-3.5-flash-lite con la clave gratis de pruebas; Haiku 5.5 y Sonnet 5.5 con la clave del bot). Gastado esta noche:
+0,48 $ (tope puesto: 3 $). FALTA la pasada con los Gemini buenos: su cupo gratis vuelve a las 9:00 (cómo, abajo).
+Son 5 escenarios de la liga de ejemplo y miden que el plan no se salte reglas ni lleve nada tachado; no miden si el
+consejo es mejor que el de antes.
+
+### Diagnóstico: qué hacía `planAuto` y por qué no valía
+
+`planAuto` (motor.js) iba operación a operación, en orden fijo, y lo que salía se pasaba por `cuadrarPlan`:
+1. **Vendía todo lo que tenía un motivo, sin mirar el conjunto.** En el martes de ejemplo: 5 ventas (175 M) para pagar 56 M
+   de cláusulas; en el cierre vendía a Catena y a Raphinha a un día de la jornada (el once, de 43,9 a 31 puntos); en el
+   parón dejaba el once con 2 huecos y 110 M parados.
+2. **Contaba como dinero lo que solo estaba puesto a la venta**, y con eso pujaba para el once sin tirar de deuda «de
+   verdad»; lo ya pujado (36,3 M en la liga de ejemplo) lo restaba, pero no decía que con eso se empezaba la jornada en −29,87 M.
+3. **Proponía lo que la app tachaba después**: pujas que no cabían en el margen de deuda, especular sin margen.
+4. **No sabía esperar**: en negativo vendía hoy perdiendo aunque quedaran tres cambios de mercado (Ibañez, 3 nov), y
+   aceptaba la oferta por uno que sube más de lo que le pagan (Fornals, 13 nov).
+5. **Sí especulaba** (el prompt decía que no): hasta el 90 % de la deuda y 2 a la vez, pero después de todo lo demás y sin
+   comprobar el conjunto.
+6. **25 jugadores**: no lo miraba (en la prueba, la plantilla se iba a 28).
+
+### Cómo es el motor (web/js/plan.js)
+
+- **Candidatos**: las operaciones del catálogo que pasan `veredictos`, cada una con lo que aporta en euros (lo que te pagan
+  de más, lo que deja de bajar en dos semanas, el beneficio esperado de revender según la confianza, lo que se paga de más
+  al fichar) y con a quién saca o mete en el once. Una venta siempre tiene motivo: de baja, ha girado, le pagan más de lo
+  que subiría, es de revender y toca, o hace falta para empezar la jornada en positivo. Nunca «por hacer caja».
+- **La equivalencia** (`valorPunto`): un punto en una jornada vale la mediana de valor/puntos esperados de los jugadores con
+  dueño de la liga, repartida en 10 jornadas (en la liga de ejemplo, 440 mil). Lo que cambia el once se cuenta a 5
+  jornadas; en el parón, al 40 %. Se ajusta con `cfg().plan` (`eurPunto`, `jornadas`…), sin pantalla todavía.
+- **La combinación**: se prueban todas las combinaciones de hasta 13 candidatos (8.192) con las reglas: cláusulas solo con
+  lo que hay en caja y sin que lo ya pujado pase el tope de deuda (reglas 4 y 5), 25 jugadores (12), dos blindajes (9),
+  los cambios de mercado que quedan para revender (3), y empezar la jornada en positivo (10) contando lo de revender al
+  92 % y lo puesto en venta al 90 %. Lo pujado solo cuenta para la jornada si se cobra antes de que empiece. Gana la que
+  más vale (euros + puntos del once); cerca de la jornada no se abre un hueco que no tape una cláusula, y con las
+  cláusulas cerradas no se toca a un titular.
+- **Las ventas «por si hace falta»** solo entran si sin ellas la jornada empezaría en negativo, las justas, y la que menos
+  duele; con dos cambios de mercado o más y sin estar bajando, se programan para la víspera del último («sin prisa»).
+- **La red**: el plan pasa por `cuadrarPlan`; si la app tacha algo, ese candidato se veta y se elige otra vez (hasta 6
+  vueltas). Si el motor falla, sale el plan de antes (`planAuto`).
+- **Modos**: normal, en negativo, cierre, en juego y parón, con `paronLejos`, `M.vedaAhora` y `M.ventanaEsp`.
+- **Una sola verdad, hasta donde llega hoy**: las cláusulas para el once usan `mereceClausula` (la de Hoy y las alarmas);
+  lo que el motor mira y deja fuera va en «Mirados y descartados» con su porqué y Hoy ya no lo enseña arriba como urgente.
+  Sin plan de la IA de hoy (no hay, está pensando o ha fallado) se ve el del motor de hoy, no el de ayer. Las alarmas salen
+  del plan que se ve, como antes. SIGUE APARTE: la lista `M.acciones` de Hoy y el aviso de inercia en segundo plano (fondo.js).
+- **El histórico** (`reventasPasadas`): con los valores de cada día que guarda la app, lo que el motor habría comprado para
+  revender y cómo le fue a los 4 días. Está hecho, pero el freno (`frenoReventa`) va APAGADO: no se pudo medir con la liga
+  de Carlos (ordenador apagado) y en la de ejemplo los valores son al azar (0 señales con el filtro del motor).
+
+### El contrato corto con la IA (web/js/ia.js: `planDelDia`, `pedidoCorto`, `aplicarCorto`)
+
+A la IA le llegan los pasos del motor (cada uno con su id, por qué, cuánto, cuándo, qué pasa si no se hace y la ficha
+corta del jugador con su prensa), las alternativas que también valen (hasta 4), lo mirado y descartado, la prensa de los
+demás, lo que el mánager le ha contado, la clasificación y los movimientos de 3 días. Devuelve: `pasos` (en su orden, con
+una o dos frases), `quita`, `mete`, `situacion`, `noticias`, `rivales` y `titular`. La app:
+- rehace con el motor lo que quita o mete (`planMotor` con la combinación fijada) y lo cuadra, de uno en uno: lo que no
+  cuadra no entra y lo que hace falta para la jornada no se va;
+- solo deja quitar o meter si de ese jugador hay prensa, un estado, una nota del mánager o un partidazo reciente (el modelo
+  ligero quitaba pasos «porque sobra margen»), o meter para cubrir algo quitado;
+- no usa una frase con una cifra que no esté en los datos del paso (ni como suma o resta de dos): sale la de la app;
+- no deja noticias de quien no tiene prensa, estado ni nota (el ligero se inventó «un baile en el vestuario»), ni el
+  nombre del modelo ni otras webs; el titular no nombra lo quitado; en el parón, la situación lo dice siempre.
+El plan largo de siempre queda como `planLargo` (si el motor no puede, o con `cfg-ia.planLargo`). En el corto no se busca
+en Google aunque esté puesto en Ajustes.
+
+### Las cuentas de quitar la clave de Google (con lo medido)
+
+- Un plan cuesta 0,0018 $ con Haiku (10 de 10) y 0,0204 $ con Sonnet. Una pregunta del chat sigue leyendo ~18.700 tokens:
+  0,0038 $ con Haiku (medido el 14 nov, 25 de 26). Ahora lo caro es el chat, no el plan.
+- Por usuario que entra TODOS los días (2 planes al día y 40 preguntas al mes): todo Haiku, 0,26 $ al mes (100 usuarios,
+  26 $; 250, 65 $); plan con Sonnet y chat con Haiku, 1,38 $ (138 $ y 344 $).
+- Con una clave de Gemini de pago de Carlos (precios de lista vistos el 14 nov en webs que copian la de Google; la página
+  oficial, ai.google.dev/gemini-api/docs/pricing, no se pudo abrir desde aquí: comprobarlos antes de decidir):
+  gemini-3.5-flash-lite a 0,30 $ / 2,50 $ por millón (entrada / salida) saldría a ~0,0028 $ el plan y ~0,007 $ la
+  pregunta, unos 0,45 $ por usuario y mes (45 $ y 113 $); gemini-2.5-flash-lite a 0,10 $ / 0,40 $, ~0,0006 $ el plan y
+  ~0,002 $ la pregunta, unos 0,12 $ (12 $ y 30 $). Son estimaciones con los tokens medidos, no una medida con clave de pago.
+- Lectura: por el plan, ya se puede (500 planes de Haiku por 1 $). Lo que queda para decidirlo es el chat (recortar lo que
+  lee, o un tope gratis al día) y la pasada con los Gemini buenos.
+
+### Para confirmar con Carlos
+
+Lo que elegí sin poder preguntar, con la alternativa:
+1. **Cuánto vale un punto.** Elegido: sale de la liga (valor/puntos esperados, en 10 jornadas; 440 mil por punto y jornada
+   en la de ejemplo), se ajusta en `cfg().plan`. Alternativa: una cifra fija tuya o un control en Ajustes.
+2. **Un titular que ha girado a la baja (Raphinha, −2,6 M al día).** Elegido: entre semana se pone a la venta si lo que
+   puede bajar pesa más que sus puntos; en las 24 h de cierre, nunca. Alternativa: no vender nunca a un titular por la
+   inercia, o solo con su sustituto en el mismo plan.
+3. **En negativo entre semana.** Elegido: no malvender hoy; si con las ventas que tienen motivo no llega, la que menos
+   duele se programa para la víspera del último cambio de mercado. Alternativa: vender hoy y quitarse el riesgo.
+4. **Lo ya pujado cuenta como gastado** para «empezar la jornada en positivo» (como si ganaras todas las pujas). En el
+   cierre, con una puja viva que te dejaría en negativo, el plan manda aceptar la oferta que tengas aunque sea por un
+   titular (en la liga de ejemplo, Baena). Alternativa: no contarlo hasta ganarla, o decir «retira la puja» (la app no
+   sabe si se puede: regla sin comprobar).
+5. **Especular contando con lo que el plan pone a la venta**: tirar de deuda (hasta el 90 % del tope, 2 a la vez y 3 en
+   el parón) aunque volver a positivo dependa también de ventas que aún no han entrado (contadas al 90 %). Alternativa:
+   solo si lo de revender se recupera solo.
+6. **Fichar para el once tirando de deuda** si el mismo plan trae la venta que lo cubre. Alternativa: para el once, solo saldo.
+7. **Con 25 jugadores**: no ficha nada sin una oferta aceptada antes y no vende a nadie solo para hacer sitio. Las pujas ya
+   puestas no las cuenta. Regla sin comprobar: qué hace LaLiga si ganas una puja con 25.
+8. **Un hueco en el once**: lo tapa con una cláusula segura y, a la vez, puja por uno mejor (en la prueba, A. Herrero y
+   Unai Simón). Alternativa: solo uno de los dos.
+9. **Una cláusula mía a tiro**: primero el blindaje gratis; pagar la subida solo sin blindajes, con saldo y si no ha
+   girado. En el cierre no propone blindar. Pregunta: ¿blindar justo antes de que empiece la jornada, para cuando se reabren?
+10. **Con la jornada en juego** el plan puede mandar vender o aceptar la oferta por uno de tu once que aún no ha jugado
+    (igual que antes). Regla sin comprobar: si lo vendes antes de su partido, ¿pierdes sus puntos? Si sí, hay que bloquearlo.
+11. **El freno de revender por el histórico**: hecho y apagado. Alternativa: encenderlo cuando se vea el número con tu liga.
+12. **Hoy**: lo que el motor mira y descarta ya no sale arriba como urgente (queda en «Mirados y descartados»).
+    Alternativa: que salga con una nota.
+13. **Mientras la IA piensa, si falla o sin clave**: se ve el plan del motor de hoy, no el último de la IA.
+14. **La IA solo quita o mete con una noticia detrás** (prensa, estado, nota o partidazo) y en el plan corto no busca en
+    Google ni hace pullitas. Alternativa: dejarle más mano, o volver a darle la búsqueda.
+
+### Qué falta para publicar
+
+1. El OK de Carlos, después de mirar la vista previa y la lista de arriba.
+2. La pasada con los Gemini buenos (cupo desde las 9:00): en la rama `pruebas-ia`, cambiar `PASO: noche` por
+   `PASO: buenos` en `.github/workflows/pruebas-ia.yml`, subir, bajar el artefacto `respuestas` y
+   `node .github/ia/puntuar.mjs respuestas-buenos.json` (10 preguntas: caben en el cupo del día).
+3. Verlo con la liga de Carlos: el plan del motor en Hoy, el número del histórico de reventas y el plan con su clave.
+4. La entrada de version.js y la novedad para todos, sin datos internos (propuesta: «El plan del día, más rápido y sin
+   contradicciones»). Y cerrar la versión con claude/cerrar-version.md.
+
+### Cómo se repite
+
+- Los casos: `PW_MODULO=… node .github/prueba-ia.mjs [motor-|corto-]` (85 casos, ~2 min; `MOTOR=viejo` mide `planAuto`).
+- A fondo: `node .github/ia/a-fondo.mjs 60 <semilla>` (540 ligas, 25 s; `MOTOR=viejo` para comparar; `VER=1` enseña los fallos).
+- Con la IA: `node .github/ia/montar.mjs` → los `ia-plan-*` a `pedidos.json` y `pedidos-b.json` de `pruebas-ia` → la
+  Action → `FRASES=1 node .github/ia/puntuar.mjs respuestas-<lote>.json`.
+
 ## Lo que queda (por orden de lo que más daría)
 
-1. Repetir la pasada con la IA con los modelos buenos (cuando vuelva el cupo, a partir de las 9:00) y dos o tres veces,
-   para tener un porcentaje y no una sola tirada.
-2. Que el plan nazca del motor: hoy la IA aún escribe la lista de operaciones. El paso siguiente es que la app proponga
-   el plan (`planAuto` ya existe) y la IA solo lo ordene, lo recorte y lo explique. Quitaría del todo los descartes.
-3. Recortar las fichas de los jugadores en el plan (31.000 caracteres los suyos y 25.000 los del mercado): son ya más
-   de la mitad de lo que lee.
+1. Publicar el motor y el plan corto (arriba, «Qué falta para publicar»).
+2. El chat: es lo que más lee ahora (~18.700 tokens por pregunta). Recortar las fichas y, si se quita la clave de cada
+   usuario, un tope gratis al día.
+3. Que `M.acciones` (la lista de Hoy) y el aviso de inercia en segundo plano salgan también del motor del plan.
 4. Si «Revisado por la app» sale a menudo con su liga, pedirle a la IA que reescriba la respuesta con las correcciones
    (una pregunta más de cupo) en vez de añadirlas debajo. Decidirlo con Carlos.
 5. Casos nuevos: cada fallo que avise Carlos o Domy entra primero en `casos.mjs` y después se arregla.
