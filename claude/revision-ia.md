@@ -273,36 +273,48 @@ en Google aunque esté puesto en Ajustes.
 
 De paso salió un fallo: en apuros (en negativo al empezar la jornada) lo de revender se quedaba fuera de la búsqueda. Arreglado.
 
-Lo que elegí sin poder preguntar, con la alternativa:
-1. **Cuánto vale un punto.** Elegido: sale de la liga (valor/puntos esperados, en 10 jornadas; 440 mil por punto y jornada
-   en la de ejemplo), se ajusta en `cfg().plan`. Alternativa: una cifra fija tuya o un control en Ajustes.
-2. **Un titular que ha girado a la baja (Raphinha, −2,6 M al día).** Elegido: entre semana se pone a la venta si lo que
-   puede bajar pesa más que sus puntos; en las 24 h de cierre, nunca. Alternativa: no vender nunca a un titular por la
-   inercia, o solo con su sustituto en el mismo plan.
-3. **En negativo entre semana.** Elegido: no malvender hoy; si con las ventas que tienen motivo no llega, la que menos
-   duele se programa para la víspera del último cambio de mercado. Alternativa: vender hoy y quitarse el riesgo.
-4. **Lo ya pujado cuenta como gastado** para «empezar la jornada en positivo» (como si ganaras todas las pujas). En el
-   cierre, con una puja viva que te dejaría en negativo, el plan manda aceptar la oferta que tengas aunque sea por un
-   titular (en la liga de ejemplo, Baena). Alternativa: no contarlo hasta ganarla, o decir «retira la puja» (la app no
-   sabe si se puede: regla sin comprobar).
-5. **Especular contando con lo que el plan pone a la venta**: tirar de deuda (hasta el 90 % del tope, 2 a la vez y 3 en
-   el parón) aunque volver a positivo dependa también de ventas que aún no han entrado (contadas al 90 %). Alternativa:
-   solo si lo de revender se recupera solo.
-6. **Fichar para el once tirando de deuda** si el mismo plan trae la venta que lo cubre. Alternativa: para el once, solo saldo.
-7. **Con 25 jugadores**: no ficha nada sin una oferta aceptada antes y no vende a nadie solo para hacer sitio. Las pujas ya
-   puestas no las cuenta. Regla sin comprobar: qué hace LaLiga si ganas una puja con 25.
-8. **Un hueco en el once**: lo tapa con una cláusula segura y, a la vez, puja por uno mejor (en la prueba, A. Herrero y
-   Unai Simón). Alternativa: solo uno de los dos.
-9. **Una cláusula mía a tiro**: primero el blindaje gratis; pagar la subida solo sin blindajes, con saldo y si no ha
-   girado. En el cierre no propone blindar. Pregunta: ¿blindar justo antes de que empiece la jornada, para cuando se reabren?
-10. **Con la jornada en juego** el plan puede mandar vender o aceptar la oferta por uno de tu once que aún no ha jugado
-    (igual que antes). Regla sin comprobar: si lo vendes antes de su partido, ¿pierdes sus puntos? Si sí, hay que bloquearlo.
-11. **El freno de revender por el histórico**: hecho y apagado. Alternativa: encenderlo cuando se vea el número con tu liga.
-12. **Hoy**: lo que el motor mira y descarta ya no sale arriba como urgente (queda en «Mirados y descartados»).
-    Alternativa: que salga con una nota.
-13. **Mientras la IA piensa, si falla o sin clave**: se ve el plan del motor de hoy, no el último de la IA.
-14. **La IA solo quita o mete con una noticia detrás** (prensa, estado, nota o partidazo) y en el plan corto no busca en
-    Google ni hace pullitas. Alternativa: dejarle más mano, o volver a darle la búsqueda.
+**Contestado el 14 nov, 15:10-15:40 (segunda vuelta, rama `web-motor-2`, mirando su liga en su Chrome):**
+
+Su liga ese día (parón, 99,45 M, 15 jugadores): el motor decía «quieto» (13 candidatos, todos ventas «por si hace falta»;
+nada que especular), sin descartes. Histórico de reventas: 633 de 700 bien, +1,57 M de media a 4 días. Cupo de la IA gastado
+(3 planes). Lo raro: Pedrosa, con una oferta un 6 % sobre su valor y bajando un 1,1 % al día, no se aceptaba porque
+«perderías 267 mil de lo que pagaste» (la regla de no malvender).
+
+- 2. Titular que baja: solo cuando baja TODOS los días (3 o más seguidos, `M.bajaSeguido`), a la venta «por si llega una
+  oferta mejor» (no hay que aceptarla), y lo que puede bajar se mira con lo más bajo que ha valido esta temporada
+  (`M.rango`; por debajo del mínimo, la mitad: `mueve`). Si no tiene relevo en su puesto (sin él el once pierde 1 pt o más y
+  la mitad de lo que da: `sinRelevo`), NO se vende: sale en «Mirados y descartados» que sería bueno venderlo pero hace falta
+  sustituto (Carlos con Pedrosa: «Solo avisar, sin vender»). Un titular que solo acaba de girar ya no se vende por la
+  inercia (antes: Raphinha y Catena en cuanto giraban). La regla de no malvender (cuadrarPlan) no frena la venta de uno
+  que baja todos los días por su valor o más. En el cierre, como antes, nunca. «Esperar a que empiece la jornada para
+  venderlo» no lo eligió.
+- 3. En negativo entre semana: como estaba (no malvender hoy).
+- 5. Como estaba (90 % de la deuda, 2 a la vez y 3 en el parón) y además A MÁS DE UNA JORNADA: lo de revender que sigue
+  subiendo y tiene más de día y medio de protección (14 días desde que se ficha) no se vende a la fuerza antes de la
+  jornada (`aguanta`): solo si hace falta para empezar en positivo (lo decide la combinación). Se vende cuando deja de
+  subir o antes de que se le acabe la protección. «2 a la vez» cuenta lo que ya tienes para revender (`revVivos`); antes,
+  fuera del parón, no se especulaba con algo ya comprado. SIN HACER: comprar pensando ya en venderlo después de la
+  jornada (el beneficio esperado sigue calculado hasta la víspera).
+- 6, 8 y 12: como estaban.
+- 7 (qué hace LaLiga si ganas dos pujas con 24): no lo sabe. Por si acaso, las pujas que tienes puestas ocupan sitio: con
+  24 y una puja viva no se ficha a nadie más (ni puja ni cláusula); vender, sí.
+- 9: «depende de la situación» y las 24 h de antes están cerradas. Se queda como estaba y en «Los próximos días» sale, a
+  la hora en que empieza la jornada, que se reabren las cláusulas y, si te queda un blindaje gratis, en quién usarlo
+  (titulares con la cláusula a menos de un 10 % de su valor y sin protección para entonces).
+- 11: freno encendido (`frenoReventa: true`). Carlos: los precios son los mismos en todas las ligas; lo único de cada una
+  es lo que se paga de más al pujar, así que el histórico mide si la regla funciona.
+- 13: mientras la IA piensa, si falla o sin cupo, se ve el último plan de la IA SI ES DE HOY, con «de hoy 10:32 (hace 2 h)»
+  y una banda «puede que no esté al día» (también si tiene más de 3 h). Si no hay de hoy, el automático (ya era así).
+- 14: que la IA vuelva a buscar en Google. SIN HACER en esta sesión (sesión aparte): toca el Worker (`tools` con
+  `web_search_20250305`, `max_uses`, 0,01 $ por búsqueda más los tokens de los resultados; hay que tenerlo activado en la
+  consola de Anthropic), las instrucciones del plan corto, `planLimpio` (que deje pasar las fuentes) y `aplicarCorto`
+  (que una noticia con fuente de la búsqueda valga para quitar o meter). Medirlo en `pruebas-ia` antes de prometer nada:
+  hoy un plan cuesta ~0,0018 $; con 2 búsquedas, del orden de 0,02-0,03 $.
+
+Casos nuevos (`motor-…` en casos.mjs, escenas en banco.mjs): baja-sin-relevo-avisa, baja-con-relevo-a-la-venta,
+giro-titular-no-se-vende, reventa-se-aguanta, reventa-antes-de-la-proteccion, 24-no-puja-de-mas, blinda-al-arrancar y las
+«reglas» de sus escenas. El motor saca ahora en las pruebas los MIRADO y los DIAS. Cambiaron 5 casos «corto» que daban por
+hecho que el motor vendía a Raphinha (ahora no: no baja todos los días).
 
 ### Qué falta para publicar
 
