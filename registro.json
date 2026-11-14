@@ -1919,12 +1919,10 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/saltan-alarmas-mbappe-lesionado-francia-136329203.html": 1794401127000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/11/se-confirman-los-peores-presagios-sobre-la-lesion-de-barrenetxea-debera-pasar-por-quirofano-radio-san-sebastian/": 1794401190000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barrenetxea-sufre-grave-lesion-muslo-perdera-resta-temporada-20261111_3473028.html": 1794401602000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/2026/11/11/6af463eefdddff04738b4577.html": 1794401443000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249881/gabriel-defiende-raphinha-brasil-ejemplar.html": 1794401587000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249879/italia-francia-aire-mbappe.html": 1794401029000,
    "Superdeporte|https://www.superdeporte.es/valencia-cf/2026/11/11/marc-roca-viejo-deseo-fichaje-valencia-136330400.html": 1794402180000,
    "AS|https://as.com/futbol/primera/bright-ede-la-proxima-alta-para-el-deportivo-f202611-n/": 1794401895000,
    "AS|https://as.com/futbol/primera/sannadi-realiza-carrera-continua-en-lezama-f202611-n/": 1794402657000,
@@ -2157,7 +2155,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250896/take-kubo-reivindica-japon-marca-brasil-precioso-gesto-barrene.html": 1794654594000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250887/club-italiano-quiere-comprar-courtois.html": 1794657600000,
    "SPORT|136435184": 1794655925000,
-   "Cadena SER|https://cadenaser.com/canarias/2026/11/14/asi-ha-transcurrido-la-primera-rueda-de-prensa-de-alvaro-cervera-entrenador-del-cd-tenerife-tras-el-triste-deceso-de-jesus-de-miguel-radio-club-tenerife/": 1794659945000
+   "Cadena SER|https://cadenaser.com/canarias/2026/11/14/asi-ha-transcurrido-la-primera-rueda-de-prensa-de-alvaro-cervera-entrenador-del-cd-tenerife-tras-el-triste-deceso-de-jesus-de-miguel-radio-club-tenerife/": 1794659945000,
+   "AS|https://as.com/futbol/budimir-vuelve-a-escena-con-croacia-tras-dos-partidos-en-blanco-f202611-n/": 1794659858000
   },
   "hechos": [
    {
@@ -2452,7 +2451,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 15
+   "n": 16
   },
   "desde": {
    "67": {
@@ -3382,17 +3381,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 20,
+   "clasificar": 21,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 131545,
-  "salida": 12774,
+  "entrada": 133498,
+  "salida": 13494,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.229234,
+  "dolares": 0.229789,
   "reservado": 0
  },
  "recientes": {
@@ -7599,13 +7598,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2449,
+   "ok": 2450,
    "fallos": 0,
-   "ejecuciones": 1916,
+   "ejecuciones": 1917,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T12:41:11.736Z"
+   "ultima": "2026-11-14T12:46:13.016Z"
   }
  },
  "ptsDirecto": {},
@@ -7622,15 +7621,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:41:19.468Z"
+   "ultimaBien": "2026-11-14T12:46:22.795Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:41:19.468Z"
+   "ultimaBien": "2026-11-14T12:46:22.795Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:41:19.468Z"
+   "ultimaBien": "2026-11-14T12:46:22.795Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7638,11 +7637,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:41:19.468Z"
+   "ultimaBien": "2026-11-14T12:46:22.795Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:41:19.468Z"
+   "ultimaBien": "2026-11-14T12:46:22.795Z"
   }
  },
  "avisos": [
