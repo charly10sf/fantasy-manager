@@ -3339,11 +3339,8 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-huelga-general-11-noviembre-revela-consumo-electrico-tiempo-real-seguimiento-20261111131526.html": 1794399326000,
-   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-manifestantes-cortan-gran-via-grito-hoy-no-consume-fuerte-dispositivo-policia-20261111131254.html": 1794398976000,
    "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-colau-afirma-ayuso-insulta-sindicatos-porque-nerviosa-apoyo-huelga-general-20261111130843.html": 1794398923000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681673/ruibal-defiende-huelga-general-me-encanta-gente-salga-protestar.html": 1794401677000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-acusa-gobierno-enviar-policia-dar-palos-contra-piquetes-huelga-20261111131038.html": 1794399038000,
    "Europa Press|https://www.europapress.es/sociedad/noticia-carreteras-cortadas-vuelos-cancelados-clases-suspendidas-primeros-efectos-paso-charles-20261111151925.html": 1794406765000,
    "Europa Press|https://www.europapress.es/nacional/noticia-abascal-carga-contra-sanchez-huelga-general-envia-sindicatos-mafiosos-contra-trabajadores-20261111151834.html": 1794406714000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405818000,
@@ -7644,13 +7641,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2442,
+   "ok": 2443,
    "fallos": 0,
-   "ejecuciones": 1909,
+   "ejecuciones": 1910,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T12:06:13.635Z"
+   "ultima": "2026-11-14T12:11:12.563Z"
   }
  },
  "ptsDirecto": {},
@@ -7667,15 +7664,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:06:17.929Z"
+   "ultimaBien": "2026-11-14T12:11:18.208Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:06:17.929Z"
+   "ultimaBien": "2026-11-14T12:11:18.208Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:06:17.929Z"
+   "ultimaBien": "2026-11-14T12:11:18.208Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7683,11 +7680,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:06:17.929Z"
+   "ultimaBien": "2026-11-14T12:11:18.208Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:06:17.929Z"
+   "ultimaBien": "2026-11-14T12:11:18.208Z"
   }
  },
  "avisos": [
