@@ -3240,7 +3240,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-ve-fracaso-huelga-general-acto-camuflado-campana-electoral-parte-sindicatos-20261111223111.html": 1794432671000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261112/1004250004/betis-abre-copa-diez-bajas-debut-diego-conde.html": 1794463200000,
    "SPORT|136354062": 1794463248000,
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468430000,
@@ -3294,12 +3293,13 @@
    "SPORT|136446586": 1794679308000,
    "SPORT|136448657": 1794681682000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251078/belletti-explota-espero-entrenador-tenga-pasar-esto.html": 1794687163000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251068/cambio-normativa-octubre-argumento-juez-jugase-filial.html": 1794686868000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004251068/cambio-normativa-octubre-argumento-juez-jugase-filial.html": 1794686868000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/futbol-catala/20261114/1004251108/damm-impone-racing-zaragoza-aplazado-jornada-4.html": 1794691690000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 11,
+   "n": 12,
    "fallos": 0
   },
   "espera": {}
@@ -3307,17 +3307,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 49,
+   "clasificar": 50,
    "redactar": 15,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 316623,
-  "salida": 27483,
+  "entrada": 318225,
+  "salida": 27583,
   "cacheLee": 11612,
   "cacheEscribe": 14515,
-  "dolares": 0.536838,
+  "dolares": 0.537048,
   "reservado": 0
  },
  "recientes": {
@@ -7524,13 +7524,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2556,
+   "ok": 2557,
    "fallos": 0,
-   "ejecuciones": 2023,
+   "ejecuciones": 2024,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T21:26:13.176Z"
+   "ultima": "2026-11-14T21:31:14.412Z"
   }
  },
  "ptsDirecto": {},
@@ -7547,15 +7547,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:26:20.940Z"
+   "ultimaBien": "2026-11-14T21:31:21.515Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:26:20.940Z"
+   "ultimaBien": "2026-11-14T21:31:21.515Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:26:20.940Z"
+   "ultimaBien": "2026-11-14T21:31:21.515Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7563,11 +7563,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:26:20.940Z"
+   "ultimaBien": "2026-11-14T21:31:21.515Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:26:20.940Z"
+   "ultimaBien": "2026-11-14T21:31:21.515Z"
   }
  },
  "avisos": [
