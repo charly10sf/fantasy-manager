@@ -3347,7 +3347,7 @@ function pasosTour() {
       ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: planesApp(demo) ? `La IA hace el plan sola al empezar el día y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien: tienes ${planesCfg().gratis} al día con la IA${topConAnuncio() ? ' y, viendo un anuncio corto, alguno más' : ''}. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.` : 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
       : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: `Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», ${rojo}.` },
     { v: 'hoy', sel: '#bRefrescar', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
-    { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo o una idea» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta). También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
+    { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo o una idea» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta); también con la etiqueta BETA de arriba. También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
     { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Modo Vice City', x: PASO_TEMA },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },
@@ -3376,6 +3376,7 @@ function lanzarTutorial() {
     ir: (v) => { ir(v); window.scrollTo(0, 0); },
     alAcabar: (como) => {
       if (window.temaEvento) LS.set('tema-aviso', Date.now());
+      LS.set('beta-aviso', Date.now());
       if (S.vista !== 'hoy' || como === 'saltar') ir('hoy');
       if (como === 'saltar') { window.scrollTo(0, 0); tostada('El tutorial está en Ajustes cuando quieras', 3500); }
       else if (como === 'plan' || como === 'fin') { const pl = $('.plan'); if (pl) window.scrollTo({ top: pl.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); }
@@ -3405,9 +3406,26 @@ function abrirTemaAjustes() {
   S.ajBusca = ''; hoja('ajustes');
   setTimeout(() => { const f = $('#aj-tema'); if (f) { f.classList.remove('aj-luz'); void f.offsetWidth; f.classList.add('aj-luz'); } }, 350);
 }
+/* la etiqueta BETA de arriba: una ventanita, una sola vez por dispositivo, que dice que ahí se avisa de fallos e ideas (14 nov, Carlos).
+   A quien hace el tutorial por primera vez no se le saca después: ya se lo cuenta (alAcabar lo apunta). */
+const PASO_BETA = 'La app está en beta y se mejora con lo que me cuentas. Toca esta etiqueta, o Ajustes → Reportar un fallo o una idea, para avisarme de un fallo o proponerme algo. Te contesto en la propia app.';
+function quizaAvisoBeta(ms, intento = 0) {
+  if (LS.get('beta-aviso', null)) return;
+  setTimeout(() => {
+    if (LS.get('beta-aviso', null) || tourAbierto() || !S.D || estadoLimite.cerrada) return;
+    if ($('.nv') || $('.atardecer-intro') || S.hoja || $('#limite') || $('#bienvenida') || S.bienvenidaPendiente || S.vista !== 'hoy' || !$('.sup-beta')) { if (intento < 20) quizaAvisoBeta(3000, intento + 1); return; }
+    LS.set('beta-aviso', Date.now());
+    empezarTour({
+      pasos: [{ v: 'hoy', sel: '.sup-beta', t: 'Fallos e ideas', x: PASO_BETA, saltar: 'Vale', fin: 'Reportar ahora', finAccion: 'beta' }],
+      vista: () => S.vista,
+      ir: (v) => ir(v),
+      alAcabar: (como) => { if (como === 'beta' || como === 'fin') abrirAvisos(); },
+    });
+  }, ms);
+}
 /** la primera vez (o al abrirse la app a la hora): el tutorial, si no se ha visto y no hay nada delante */
 function quizaTutorial(ms, intento = 0) {
-  if (tourVisto() && S.D && !estadoLimite.cerrada) { quizaAvisoTema(ms); return; }
+  if (tourVisto() && S.D && !estadoLimite.cerrada) { quizaAvisoTema(ms); quizaAvisoBeta(ms + 600); return; }
   if (tourVisto() || !S.D || estadoLimite.cerrada) return;
   setTimeout(() => {
     if (tourVisto() || tourAbierto() || !S.D || estadoLimite.cerrada || S.cargando && !S.D) return;
