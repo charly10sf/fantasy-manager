@@ -78,7 +78,9 @@ Comprobadas con Carlos (las cuatro primeras, el 13 nov; el resto, de antes):
 15. Los dos blindajes de cada jornada se ponen cuando uno quiera dentro de ella, también en las 24 h de cierre (Carlos,
     13 nov, 23:37; lo de «solo con la cláusula ya abierta» es de antes, del 7 nov, y sigue valiendo).
 
-Ya no queda ninguna regla sin comprobar de las que usa la app.
+Ya no queda ninguna regla sin comprobar de las que usa la app. (14 nov, con el motor del plan han salido tres preguntas
+que la app NO da por sabidas: si se pierden los puntos de uno alineado que se vende antes de que juegue, qué pasa si se
+gana una puja con 25 jugadores y si se puede retirar una puja. Están en «Para confirmar con Carlos».)
 
 ## La arquitectura: la app decide, la IA elige y explica, la app revisa
 
@@ -138,7 +140,8 @@ Gastado en la medida: 3,71 $.
 
 - `.github/ia/casos.mjs`: 116 casos, cada uno con el fallo de donde sale. 57 llevan escrita la respuesta de la IA (41
   de la 0.7.9 y 16 del plan corto), 28 son del motor (sin IA) y 31 se preguntan a la IA de verdad.
-- `.github/prueba-ia.mjs` (sin red; va en la Action «Pruebas» en cada push): los 41. Google es de mentira
+- `.github/prueba-ia.mjs` (sin red; va en la Action «Pruebas» en cada push): los 41 y, desde el motor del plan, los 28
+  del motor y los 16 del plan corto (85). Google es de mentira
   (`.github/ia/banco.mjs`): la app corre entera, con la liga de ejemplo a una hora fija, y se mira lo que acaba viendo
   el mánager.
 - Con la IA de verdad: `node .github/ia/montar.mjs` (lo que la app mandaría), rama `pruebas-ia` (no se fusiona; su
@@ -156,7 +159,7 @@ están en «Para confirmar con Carlos»). Vista previa: https://web-motor-plan.f
 | Medida | Antes (0.7.9) | Después (`web-motor-plan`) |
 |---|---|---|
 | Casos del motor (28, en 13 escenarios, sin IA y con árbitro de reglas) | 13 bien (`planAuto`) | 28 bien |
-| A fondo: la liga de ejemplo movida al azar, 540 ligas en 9 momentos de la semana | 307 bien (57 %) | 540 bien (con 10 semillas, 5.040 ligas: todas bien) |
+| A fondo: la liga de ejemplo movida al azar, 540 ligas en 9 momentos de la semana | 307 bien (57 %) | 540 bien (y con cuatro semillas, 2.160 ligas: todas bien) |
 | Operaciones por plan (media, a fondo) | 9,0 | 4,4 |
 | Planes del motor con algo «Descartado por la app» | sí, en 8 de los 13 escenarios (Cubarsí, Natan…) | ninguno: lo que la app tacharía no sale |
 | Lo que tarda el motor | 2 ms | 12 ms de media, 56 ms el que más (con la CPU ×4 más lenta, 30-60 ms) |
