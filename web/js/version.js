@@ -22,7 +22,7 @@ export const VERSION = '0.7.11c';
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
   {
-    v: '0.7.11c', f: '2026-11-14', h: '17:57', t: 'La app sigue en beta',
+    v: '0.7.11c', f: '2026-11-14', h: '18:16', t: 'La app sigue en beta',
     cosas: [
       { tipo: 'nuevo', d: 'ajustes', t: 'Fallos e ideas, a un toque', x: 'Arriba, junto al nombre de tu liga, hay una etiqueta «BETA»: la app se sigue mejorando. Tócala para contarme un fallo o una idea y te contesto ahí mismo.', ir: { v: 'hoy' } },
     ],
