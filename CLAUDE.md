@@ -62,6 +62,7 @@ Lo que se cambia sin sacar versión. La app lo lee de raw de main y la web de Pa
 - Cloudflare Worker con KV VINCULOS. Rutas /p (proxy a LaLiga), /img, /vincular (código para abrir en otro dispositivo), /fallos (avisos de fallo con respuesta), /hola (quién usa la app) y /caras (las fotos de los de tu liga que usan la app). ADMINS = 667015 (Carlos) en wrangler.toml.
 - /p e /img solo responden si la petición trae un `Origin` de `ORIGENES` y solo siguen redirecciones a sitios de `PERMITIDOS`. Si se cambian, cambiarlos también en el intermediario de Deno (repo charly10sf/fantasy-manager-proxy, `main.ts`; cada push a su `main` se publica solo).
 - Las escrituras gratis de KV (unas mil al día) se comparten entre todo.
+- /plan (desde la 0.7.10): el plan del día con la IA de Carlos (Claude Haiku, secreto `CLAUDE_PLANES`, lo copia worker.yml). Las instrucciones las arma el Worker con web/js/plan-sistema.js (el mismo módulo que ia.js); el cupo (2 al día y uno más por anuncio hasta 5) y el gasto del día van en el Durable Object, no en el KV; los números, en «planes» de limites.json. El chat sigue con la clave de cada uno.
 
 ### .github/
 
