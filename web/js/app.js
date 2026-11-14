@@ -86,7 +86,8 @@ function pantallaEntrar(error = '') {
     ${error ? `<div class="error-c" style="margin:0 0 16px">${esc(error)}</div>` : ''}
     ${invitacionViva() ? `<div class="invita">${icono('rivales')}<span><b>Te han invitado desde tu liga.</b> Entra con tu cuenta de LaLiga Fantasy y se abre esa liga.</span></div>` : ''}
     ${enApp ? `<button class="btn ancho" data-accion="entrar">${icono('usuario')}Entrar con mi cuenta de LaLiga</button>
-    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>${botonDemo('sec')}` : entrarWebHTML()}
+    <p class="peq apag" style="margin-top:12px">Se abre la página oficial de LaLiga: entra como siempre (con Google, si es como lo haces). Si Android pregunta con qué app volver, elige <b>Fantasy Manager</b>.</p>
+    <p class="peq apag" style="margin-top:8px">Ojo: la página de LaLiga a menudo falla a la primera («tenemos problemas para iniciar su sesión»). No es cosa de tu cuenta: ciérrala y vuelve a darle, a la segunda suele entrar.</p>${botonDemo('sec')}` : entrarWebHTML()}
     ${PIE_ENTRAR}
   </div></div>${enApp ? '' : seccionMoviles()}</div>`;
   // la portada de la web: lo que se toca (el once, los casos, las calculadoras) y las caras y escudos de LaLiga
@@ -217,7 +218,7 @@ function entrarWebHTML() {
       </div>
       </div>
       <details class="sin-app"><summary>No tengo la app en el móvil<span class="en-dib-tag">con dibujos</span></summary>
-      <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un QR (para la cámara del iPhone) o un código para escribirlo aquí en el iPhone. Si tienes la app en un Android, no hace falta nada de esto: usa su QR.</p>
+      <p>LaLiga devuelve la sesión a su app del móvil, no a una web. Desde un ordenador se puede copiar a mano. <b>¿Tienes iPhone?</b> Hazlo una vez en un ordenador y, ya dentro, saca en <b>Ajustes → Abrir en otro dispositivo</b> un QR (para la cámara del iPhone) o un código para escribirlo aquí en el iPhone. Si tienes la app en un Android, no hace falta nada de esto: usa su QR. Si la página de LaLiga da error («tenemos problemas para iniciar su sesión»), ciérrala y vuelve a abrirla: a menudo falla a la primera.</p>
       <ol class="gd-lista">${PASOS_SIN_APP.map(([t, s], k) => `<li><div class="gd-t"><span class="gd-n">${k + 1}</span><span>${t}</span></div>${k === 0 ? '<button class="btn chico sec" data-accion="entrar">Abrir la página de LaLiga</button>' : ''}<figure>${s}</figure>${k === 4 ? '<textarea id="vueltaWeb" rows="3" placeholder="authredirect://com.lfp.laligafantasy/?state=…&amp;code=…" spellcheck="false"></textarea><button class="btn chico" data-accion="pegarVuelta">Entrar</button>' : ''}</li>`).join('')}</ol>
       <p class="gd-aparte"><a href="instalar.html#sin-app" target="_blank" rel="noopener">Verlo en una página aparte</a></p>
     </details>
