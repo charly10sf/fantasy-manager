@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/mbappe-entrena-francia.html": 1794393421000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249816/mbappe-enciende-alarmas-no-entrena-francia.html": 1794393963000,
    "AS|https://as.com/futbol/primera/el-lateral-izquierdo-llama-otra-vez-a-gerard-martin-f202611-n/": 1794394771000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/relaciones-tensas-mbappe-zidane-francia-20261111_3472893.html": 1794396298000,
@@ -7657,13 +7656,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2424,
+   "ok": 2425,
    "fallos": 0,
-   "ejecuciones": 1891,
+   "ejecuciones": 1892,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T10:36:13.766Z"
+   "ultima": "2026-11-14T10:41:12.182Z"
   }
  },
  "ptsDirecto": {},
@@ -7680,15 +7679,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:36:20.504Z"
+   "ultimaBien": "2026-11-14T10:41:15.764Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:36:20.504Z"
+   "ultimaBien": "2026-11-14T10:41:15.764Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:36:20.504Z"
+   "ultimaBien": "2026-11-14T10:41:15.764Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7696,11 +7695,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:36:20.504Z"
+   "ultimaBien": "2026-11-14T10:41:15.764Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:36:20.504Z"
+   "ultimaBien": "2026-11-14T10:41:15.764Z"
   }
  },
  "avisos": [
