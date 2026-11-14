@@ -1942,8 +1942,6 @@
    "SPORT|136348090": 1794457819000,
    "SPORT|136327406": 1794457819000,
    "SPORT|136350592": 1794434630000,
-   "SPORT|136349887": 1794431410000,
-   "SPORT|136350096": 1794431384000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-tuvo-operado-vuestra-fuerza-le-ayuda-luchar-dia-dia-20261111_3473361.html": 1794434063000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/embajada-alemania-espana-invita-cucurella-cerveza-partidito-palabras-partidazo-cope-vez-manos-fuera-20261112_3473381.html": 1794441164000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-11-nov-2026-partidazo-cope-20261112_3473373.html": 1794438373000,
@@ -7525,13 +7523,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2552,
+   "ok": 2553,
    "fallos": 0,
-   "ejecuciones": 2019,
+   "ejecuciones": 2020,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T21:06:13.310Z"
+   "ultima": "2026-11-14T21:11:13.857Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7546,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:06:18.611Z"
+   "ultimaBien": "2026-11-14T21:11:18.812Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:06:18.611Z"
+   "ultimaBien": "2026-11-14T21:11:18.812Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:06:18.611Z"
+   "ultimaBien": "2026-11-14T21:11:18.812Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7562,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:06:18.611Z"
+   "ultimaBien": "2026-11-14T21:11:18.812Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:06:18.611Z"
+   "ultimaBien": "2026-11-14T21:11:18.812Z"
   }
  },
  "avisos": [
