@@ -1361,10 +1361,11 @@ CÓMO TRABAJAMOS. El plan de hoy ya lo ha hecho la app, que conoce las reglas de
 4. EXPLICAR cada paso en una o dos frases, con las cifras que te paso (ni una inventada) y, si la hay, la noticia que lo respalda. Sin repetir el nombre de la operación.
 5. El titular (8 a 16 palabras, solo con lo que queda en el plan), la situación (2 frases, con cifras), las noticias que afectan a mi equipo y qué hacen mis rivales.
 
-REGLAS: solo cifras que estén en los datos. Nada de nombres de webs de fantasy. Lo «mirado y descartado» no se puede meter. Si de alguien no hay noticias, no lo digas de cada uno. {{PULLITAS}}`;
+REGLAS: solo cifras que estén en los datos. Nada de nombres de webs de fantasy. Lo «mirado y descartado» no se puede meter. En «noticias» va SOLO lo que salga en PRENSA, en un ESTADO (lesión, sanción, duda) o en lo que me ha contado el manager: si no hay nada de eso, la lista va vacía. No te inventes nada de la vida de los jugadores (fiestas, bailes, redes). Lo que hace un jugador en el campo y cómo va su valor ya va en la frase de su paso, no en «noticias».`;
 const sistemaCorto = () => {
   const p = cfgIA().pullitas || 'normal';
-  return SISTEMA_CORTO.replace('{{CHISTES}}', CHISTES[p === 'normal' || p === 'saco' ? 'broma' : 'serio']).replace('{{PULLITAS}}', PULLITAS[p] || PULLITAS.normal) + reglasBloqueo();
+  // (sin PULLITAS: con el plan corto el modelo ligero se inventaba fiestas y bailes para tener de qué hacer la broma)
+  return SISTEMA_CORTO.replace('{{CHISTES}}', CHISTES[p === 'normal' || p === 'saco' ? 'broma' : 'serio']) + reglasBloqueo();
 };
 export const ESQUEMA_CORTO = T('OBJECT', {
   properties: {
@@ -1435,7 +1436,19 @@ Ordena, recorta y explica el plan. Contesta SOLO con un bloque \`\`\`json (sin t
 "pasos" lleva, EN EL ORDEN en que los harías, los pasos del plan que se quedan (todos los que no quites). "quita" y "mete", vacíos si no hay un motivo claro. Como mucho 4 noticias y 3 rivales.`);
   return L.join('\n');
 }
-const cifrasDe = (t) => [...String(t || '').matchAll(/(\d+(?:[.,]\d+)?)\s?(M|mil(?:lones)?)\b/gi)].map((m) => aEuros(m[1], /^mil$/i.test(m[2]) ? 'mil' : 'M'));
+/** las cifras en euros de un texto, cada una con lo que se le perdona por cómo está escrita («28 M» puede ser 27,84 M) */
+const cifrasDe = (t) => [...String(t || '').matchAll(/(\d+(?:[.,]\d+)?)\s?(M|mil(?:lones)?)\b/gi)].map((m) => {
+  const u = /^mil$/i.test(m[2]) ? 1e3 : 1e6, dec = (m[1].split(/[.,]/)[1] || '').length;
+  return { v: aEuros(m[1], u === 1e3 ? 'mil' : 'M'), tol: (u / Math.pow(10, dec)) * 0.51 };
+});
+/** ¿está esa cifra entre las que la IA tenía delante? Vale tal cual, o como suma o resta de dos de ellas (lo que gana o
+ * pierde frente a lo que pagó, lo que queda tras pagar…) */
+function cifraSabida(x, base) {
+  const vale = (y) => Math.abs(x.v - y) <= Math.max(x.tol, Math.abs(y) * 0.006, 6000);
+  if (base.some(vale)) return true;
+  for (let i = 0; i < base.length; i++) for (let k = i + 1; k < base.length; k++) if (vale(Math.abs(base[i] - base[k])) || vale(base[i] + base[k])) return true;
+  return false;
+}
 /**
  * Aplica al plan del motor lo que contesta la IA. Lo que quita o mete se rehace con el propio motor (planMotor con la
  * combinación fijada: las mismas cuentas) y se cuadra; si no cuadra, se prueba sin quitar lo que hace falta, sin meter y,
@@ -1454,6 +1467,14 @@ export function aplicarCorto(json, R, D, M, c) {
   for (const x of [...(Array.isArray(json.pasos) ? json.pasos : []), ...(Array.isArray(json.mete) ? json.mete : [])]) { const y = de(x); if (y && x.frase) frases.set(y.k, String(x.frase)); }
   const motivos = new Map((Array.isArray(json.quita) ? json.quita : []).map((x) => [de(x) && de(x).k, String((x && x.motivo) || '')]));
   const tachado = (P) => { const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M); return (cu.ops || []).some((o) => o._k && (o.descartada || o.sugerencia)); };
+  // Quitar o meter algo es cosa de las noticias (los números ya los ha mirado el motor): solo si de ese jugador hay
+  // prensa, un estado (lesión, sanción, duda), algo que el mánager ha contado o un partidazo reciente. Si no, no se aplica
+  // (el modelo ligero quitaba pasos «porque sobra margen»; medido el 14 nov)
+  const conNoticia = (k) => {
+    const o = (lista.find((y) => y.k === k) || {}).o, pid = o && o.pid, j = pid && D.maestro[pid];
+    if (!j) return false;
+    return !!((M.noticiasDe && M.noticiasDe(pid).length) || (j.estado && j.estado !== 'ok') || notasDe(pid).length || ((M.partidazo && M.partidazo(pid)) || {}).nivel >= 2);
+  };
   const intento = (q, m) => {
     let P = null;
     try { P = planMotor(D, M, c, { fijar: new Set([...base.filter((k) => !esPost(k) && !q.includes(k)), ...m]), vetados: new Set(q.filter(esPost)), prefer: orden }); } catch (e) { P = null; }
@@ -1465,11 +1486,14 @@ export function aplicarCorto(json, R, D, M, c) {
   // no se lleva por delante a las demás, y lo que hace falta para empezar la jornada en positivo no se va)
   let r = intento([], []);
   if (!r) return null;
-  for (const k of quita0) { const x = intento([...r.quita, k], r.mete); if (x) r = x; }
-  for (const k of mete0) { const x = intento(r.quita, [...r.mete, k]); if (x) r = x; }
+  for (const k of quita0) { if (!conNoticia(k)) continue; const x = intento([...r.quita, k], r.mete); if (x) r = x; }
+  // (una alternativa entra si cubre algo que se ha quitado o si la noticia es suya)
+  for (const k of mete0) { if (!r.quita.length && !conNoticia(k)) continue; const x = intento(r.quita, [...r.mete, k]); if (x) r = x; }
   const P = r.P;
   // las frases: la de la IA si no trae cifras que no estén en los datos del paso; si no, la de la app
   let sinFrase = 0;
+  const frasesNo = [];
+  const cuBase = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M);
   const nombreK = (k) => { const x = lista.find((y) => y.k === k); return x ? x.o.jugador : ''; };
   for (const o of P.operaciones) {
     const d = o.datos || {};
@@ -1477,15 +1501,20 @@ export function aplicarCorto(json, R, D, M, c) {
     const f = o._k && frases.get(o._k);
     if (!f) continue;
     const j = o.pid && D.maestro[o.pid];
-    const dato = `${o.motivo} ${JSON.stringify(d)} ${o.aviso || ''} ${j ? lineaBreve(M, j) : ''} ${eur(o.importe || 0)} ${eur(o.puja_max || 0)} ${P.situacion || ''}`;
-    const sabidas = cifrasDe(dato);
-    if (cifrasDe(f).some((x) => !sabidas.some((y) => casi(x, y)))) { sinFrase++; continue; }
+    // lo que la IA tenía delante de ese paso: sus datos, el aviso de la app al cuadrarlo, la ficha del jugador y las cuentas
+    const cuad = (cuBase.ops || []).find((x) => x._k === o._k) || (R.ops || []).find((x) => x._k === o._k) || {};
+    const dato = `${o.motivo} ${JSON.stringify(d)} ${o.aviso || ''} ${cuad.aviso || ''} ${j ? lineaBreve(M, j) : ''} ${eur(o.importe || 0)} ${eur(o.puja_max || 0)} ${j ? eur(j.valor) : ''} ${P.situacion || ''} ${R.situacion || ''} ${R.cuentas ? eur(R.cuentas.jornada) : ''} ${P.cuentas ? eur(P.cuentas.jornada) : ''}`;
+    const sabidas = cifrasDe(dato).map((x) => x.v).slice(0, 60);
+    const rara = cifrasDe(f).find((x) => !cifraSabida(x, sabidas));
+    if (rara) { sinFrase++; frasesNo.push({ jugador: o.jugador, cifra: eur(rara.v), frase: f.slice(0, 260) }); continue; }
     o.motivoApp = o.motivo;
-    o.motivo = sinWebsChat(sinModelos(f)).trim();
+    o.motivo = String(sinWebsChat(sinModelos(f)).trim()).split(/(?<=[.!?])\s+/).slice(0, 3).join(' ');
   }
   const limpio = (t) => sinWebsChat(sinModelos(String(t || ''))).trim();
+  // (dos frases y 240 caracteres como mucho: el modelo ligero a veces repite la misma frase en bucle)
+  const breve = (t) => { const x = String(t || '').split(/(?<=[.!?])\s+/).slice(0, 2).join(' '); return x.length > 240 ? `${x.slice(0, x.lastIndexOf(' ', 238))}…` : x; };
   const quitados = r.quita.map((k) => ({ pid: ((lista.find((y) => y.k === k) || {}).o || {}).pid || null, jugador: nombreK(k), motivo: `La IA lo quita del plan: ${limpio(motivos.get(k)) || 'sin motivo'}` })).filter((d) => d.jugador);
-  const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M);
+  const cu = cuBase;
   const prox = rematarAuto({ ...cu, auto: true }).proximos_dias || [];
   // el titular y la situación no pueden nombrar a quien no está en el plan (lo que se ha quitado o no se ha podido meter)
   const fueraN = [...quita0.filter((k) => r.quita.includes(k)), ...mete0.filter((k) => !r.mete.includes(k))].map(nombreK).filter(Boolean).map(norm);
@@ -1494,12 +1523,15 @@ export function aplicarCorto(json, R, D, M, c) {
   return {
     ...P, auto: false, corto: true,
     titular: tit && !nombra(tit) ? tit : titularMotor({ ...cu, modo: P.modo }),
-    situacion: sit && !nombra(sit) ? sit : P.situacion,
+    // (Domy, 9 nov) en el parón el plan va de dinero: si la IA no lo dice, se añade
+    situacion: sit && !nombra(sit) ? `${sit}${P.modo === 'paron' && !/par[oó]n/i.test(`${sit} ${tit}`) ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero.' : ''}` : P.situacion,
     descartes: [...quitados, ...(P.descartes || []).filter((d) => !quitados.some((q) => q.pid && q.pid === d.pid))],
-    noticias: (Array.isArray(json.noticias) ? json.noticias : []).slice(0, 5).map((n) => ({ ...n, texto: limpio(n && n.texto) })).filter((n) => n.jugador && n.texto),
-    rivales: (Array.isArray(json.rivales) ? json.rivales : []).slice(0, 4).map((n) => ({ ...n, texto: limpio(n && n.texto) })).filter((n) => n.manager && n.texto),
+    // las noticias, solo de quien tiene prensa, estado o una nota (lo demás es relleno o invento), y en corto: dos frases
+    noticias: (Array.isArray(json.noticias) ? json.noticias : []).map((n) => ({ ...n, pid: n && n.jugador ? pidDe(n.jugador, D) : null })).filter((n) => { const j = n.pid && D.maestro[n.pid]; return !!j && !!((M.noticiasDe && M.noticiasDe(n.pid).length) || (j.estado && j.estado !== 'ok') || notasDe(n.pid).length); })
+      .slice(0, 4).map((n) => ({ jugador: n.jugador, efecto: n.efecto, texto: breve(limpio(n.texto)) })).filter((n) => n.texto),
+    rivales: (Array.isArray(json.rivales) ? json.rivales : []).slice(0, 3).map((n) => ({ ...n, texto: breve(limpio(n && n.texto)) })).filter((n) => n.manager && n.texto),
     proximos_dias: prox,
-    cambios: { quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase },
+    cambios: { quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${conNoticia(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
   };
 }
 /** el plan del día con el contrato corto. Devuelve null si el motor no ha podido hacer su plan (entonces, el largo) */

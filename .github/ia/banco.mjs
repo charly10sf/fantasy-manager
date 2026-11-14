@@ -49,6 +49,8 @@ export const ESCENAS = {
   // un titular mío (Ionut Radu) con la cláusula abierta y casi a su valor: le llega a varios rivales
   'm-clausula-mia': { hora: '2026-11-03T10:00:00+01:00', prep: `const f = S.D.plantillas[S.D.yo.teamId].find((x) => S.D.maestro[x.pid].nombre === 'Ionut Radu');
     f.clausula = Math.round(S.D.maestro[f.pid].valor * 1.03); f.protegidoHasta = null;` },
+  // martes, con una noticia de prensa de R. Terrats (el que el motor manda pujar): la IA puede quitarlo por ella
+  'm-noticia': { hora: '2026-11-03T10:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'R. Terrats'); return { noticias: { lista: [{ titulo: 'Terrats, duda para el partido del sábado por un golpe en el tobillo en el entrenamiento', fuente: 'Marca', t: Date.now() - 3 * 36e5, pids: [j.id], equipos: [] }] } };` },
   // jueves, con uno comprado para revender (Jon Martin): toca ponerlo a la venta para el último cambio de mercado
   'm-reventa': { hora: '2026-11-05T12:00:00+01:00', prep: '', extra: `const j = Object.values(S.D.maestro).find((x) => x.nombre === 'Jon Martin'); return { reventa: { [j.id]: { t: Date.now() - 2 * 864e5, precio: Math.round(j.valor * 0.95) } } };` },
 };
