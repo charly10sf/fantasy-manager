@@ -1926,7 +1926,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/11/zidane-confirma-la-baja-de-kylian-mbappe-ante-italia-ha-sentido-una-pequena-molestia-y-no-vamos-a-correr-riesgos-cadena-ser/": 1794427475000,
    "AS|https://as.com/futbol/primera/cabrera-tiene-un-pase-f202611-n/": 1794441317000,
    "AS|https://as.com/futbol/primera/mejora-el-estado-de-salud-de-pepe-mel-f202611-n/": 1794430958000,
    "AS|https://as.com/futbol/las-dudas-de-flick-f202611-n/": 1794428429000,
@@ -3287,32 +3286,31 @@
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-unai-sordo-ccoo-califica-lamentable-desproporcionada-actuacion-policial-huelga-11n-20261114145958.html": 1794664798000,
    "SPORT|136377187": 1794672059000,
    "SPORT|136447078": 1794676174000,
-   "SPORT|136446586": 1794679308000
+   "SPORT|136446586": 1794679308000,
+   "SPORT|136448657": 1794681682000
   },
   "hechos": [],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 9,
+   "n": 10,
    "fallos": 0
   },
-  "espera": {
-   "SPORT|136448657": 1794685571695
-  }
+  "espera": {}
  },
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 43,
+   "clasificar": 44,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 258922,
-  "salida": 23347,
+  "entrada": 260672,
+  "salida": 23433,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.422526,
+  "dolares": 0.422744,
   "reservado": 0
  },
  "recientes": {
@@ -7519,13 +7517,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2538,
+   "ok": 2539,
    "fallos": 0,
-   "ejecuciones": 2005,
+   "ejecuciones": 2006,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T20:01:11.284Z"
+   "ultima": "2026-11-14T20:06:17.779Z"
   }
  },
  "ptsDirecto": {},
@@ -7542,15 +7540,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:01:20.689Z"
+   "ultimaBien": "2026-11-14T20:06:22.844Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:01:20.689Z"
+   "ultimaBien": "2026-11-14T20:06:22.844Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:01:20.689Z"
+   "ultimaBien": "2026-11-14T20:06:22.844Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7558,11 +7556,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:01:20.689Z"
+   "ultimaBien": "2026-11-14T20:06:22.844Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T20:01:20.689Z"
+   "ultimaBien": "2026-11-14T20:06:22.844Z"
   }
  },
  "avisos": [
