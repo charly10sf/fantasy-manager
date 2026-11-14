@@ -2148,7 +2148,10 @@
    "SPORT|136438917": 1794658476000,
    "SPORT|136439152": 1794658639000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261114/1004250929/racing-descansa-estrellas-carburan-recibir-real.html": 1794661700000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250909/rodrygo-recupera-brasil.html": 1794664800000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261114/1004250942/alvaro-cervera-entrenador-tenerife-pronuncia-sobre-sancion-jesus-owono.html": 1794664231000,
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250928/rashford-sera-importante-manu-pochettino.html": 1794664130000
   },
   "hechos": [
    {
@@ -2393,7 +2396,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 21
+   "n": 22
   },
   "desde": {
    "67": {
@@ -3240,7 +3243,6 @@
   "vistas": {
    "Europa Press|https://www.europapress.es/sociedad/noticia-carreteras-cortadas-vuelos-cancelados-clases-suspendidas-primeros-efectos-paso-charles-20261111151925.html": 1794406765000,
    "Europa Press|https://www.europapress.es/nacional/noticia-abascal-carga-contra-sanchez-huelga-general-envia-sindicatos-mafiosos-contra-trabajadores-20261111151834.html": 1794406714000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405818000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-diaz-reprocha-pp-burlas-sindicatos-traslada-apoyo-trabajadores-huelga-20261111160104.html": 1794409264000,
    "SPORT|136338369": 1794407405000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261111/1004249933/agotadas-entradas-depor-barcelona-apenas-horas.html": 1794411891000,
@@ -3317,22 +3319,24 @@
    "n": 5,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-unai-sordo-ccoo-califica-lamentable-desproporcionada-actuacion-policial-huelga-11n-20261114145958.html": 1794665174414
+  }
  },
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 26,
+   "clasificar": 27,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 143897,
-  "salida": 15582,
+  "entrada": 146335,
+  "salida": 15861,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.231874,
+  "dolares": 0.232257,
   "reservado": 0
  },
  "recientes": {
@@ -7539,13 +7543,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2465,
+   "ok": 2466,
    "fallos": 0,
-   "ejecuciones": 1932,
+   "ejecuciones": 1933,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T14:01:11.095Z"
+   "ultima": "2026-11-14T14:06:14.414Z"
   }
  },
  "ptsDirecto": {},
@@ -7562,15 +7566,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:01:15.832Z"
+   "ultimaBien": "2026-11-14T14:06:19.886Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:01:15.832Z"
+   "ultimaBien": "2026-11-14T14:06:19.886Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:01:15.832Z"
+   "ultimaBien": "2026-11-14T14:06:19.886Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7578,11 +7582,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:01:15.832Z"
+   "ultimaBien": "2026-11-14T14:06:19.886Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:01:15.832Z"
+   "ultimaBien": "2026-11-14T14:06:19.886Z"
   }
  },
  "avisos": [
