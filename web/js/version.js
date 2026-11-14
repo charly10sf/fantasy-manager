@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.10';
+export const VERSION = '0.7.10a';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,14 @@ export const VERSION = '0.7.10';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.10a', f: '2026-11-14', h: '12:48', t: 'El anuncio de abajo, más pequeño',
+    cosas: [
+      { tipo: 'mejora', para: 'play', d: 'movil', t: 'El anuncio de abajo, más pequeño', x: 'El anuncio de debajo de las pestañas ocupa menos pantalla: ahora deja más sitio para la app.' },
+      { tipo: 'mejora', para: 'app', d: 'cohete', t: 'Más fluida en los móviles de 90 y 120 Hz', x: 'En los móviles con pantalla rápida, la app se mueve a la frecuencia más alta que permita tu pantalla.' },
+      { tipo: 'arreglo', d: 'conexion', t: 'Un error raro al entrar por primera vez', x: 'A veces, al entrar por primera vez con Google, los servidores de LaLiga devuelven un error largo en inglés. Ahora la app te dice qué pasa: es cosa de LaLiga y a la segunda suele entrar.' },
+    ],
+  },
   {
     v: '0.7.10', f: '2026-11-14', h: '12:25', t: 'La IA te hace el plan del día, sin clave', todos: true,
     cosas: [
