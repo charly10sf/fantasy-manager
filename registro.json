@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261111/1004249909/senalado-vinicius-defendido-mourinho-meses-vuelve-boca-todos.html": 1794406174000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249883/jacobo-ramon-quedara-resto-temporada.html": 1794409200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261111/1004249914/osasuna-sigue-pendiente-aimar-oroz-romain-castillo.html": 1794408047000,
    "SPORT|136329433": 1794407192000,
@@ -2151,7 +2150,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/kubo-le-dedica-barrenetxea-gol-brasil-20261114_3475315.html": 1794662863000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261114/1004250909/rodrygo-recupera-brasil.html": 1794664800000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/tenerife/20261114/1004250942/alvaro-cervera-entrenador-tenerife-pronuncia-sobre-sancion-jesus-owono.html": 1794664231000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250928/rashford-sera-importante-manu-pochettino.html": 1794664130000
+   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250928/rashford-sera-importante-manu-pochettino.html": 1794664130000,
+   "SPORT|136439696": 1794661472000
   },
   "hechos": [
    {
@@ -2396,7 +2396,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 22
+   "n": 23
   },
   "desde": {
    "67": {
@@ -3326,17 +3326,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 27,
+   "clasificar": 28,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 146335,
-  "salida": 15861,
+  "entrada": 148369,
+  "salida": 15993,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.232257,
+  "dolares": 0.232526,
   "reservado": 0
  },
  "recientes": {
@@ -7543,13 +7543,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2466,
+   "ok": 2467,
    "fallos": 0,
-   "ejecuciones": 1933,
+   "ejecuciones": 1934,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T14:06:14.414Z"
+   "ultima": "2026-11-14T14:11:16.996Z"
   }
  },
  "ptsDirecto": {},
@@ -7566,15 +7566,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:06:19.886Z"
+   "ultimaBien": "2026-11-14T14:11:24.058Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:06:19.886Z"
+   "ultimaBien": "2026-11-14T14:11:24.058Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:06:19.886Z"
+   "ultimaBien": "2026-11-14T14:11:24.058Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7582,11 +7582,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:06:19.886Z"
+   "ultimaBien": "2026-11-14T14:11:24.058Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:06:19.886Z"
+   "ultimaBien": "2026-11-14T14:11:24.058Z"
   }
  },
  "avisos": [
