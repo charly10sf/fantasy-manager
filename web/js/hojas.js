@@ -792,7 +792,7 @@ export function ajustes(S) {
     const pend = av.admin ? av.pendientes || 0 : 0;
     const n = sinLeer + pend;
     const sub = av.admin ? (pend ? `${pend} sin contestar` : 'Los de tu liga') : sinLeer ? `${sinLeer} respuesta${sinLeer === 1 ? '' : 's'} sin leer` : 'Te contesto aquí';
-    h += `<div class="aj-atajos"><button class="aj-atajo" data-accion="avisos">${icono('bicho')}<span><b>${av.admin ? 'Avisos de fallo' : 'Reportar un fallo'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}</button>`
+    h += `<div class="aj-atajos"><button class="aj-atajo" data-accion="avisos">${icono('bicho')}<span><b>${av.admin ? 'Avisos de fallo' : 'Reportar un fallo o una idea'}</b><small>${esc(sub)}</small></span>${n ? `<em class="gl-aj">${n}</em>` : ''}</button>`
       + `<button class="aj-atajo" data-accion="tutorial">${icono('info')}<span><b>Tutorial</b><small>En un minuto</small></span></button></div>`;
   }
 
@@ -976,7 +976,7 @@ function detalleAviso(A, x) {
 }
 export function avisos(S) {
   const A = S.av || {};
-  let h = `<div class="hoja-cab"><h2>${A.admin ? 'Avisos de fallos' : 'Reportar un fallo'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
+  let h = `<div class="hoja-cab"><h2>${A.admin ? 'Avisos de fallos' : 'Fallos e ideas'}</h2><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>`;
   if (A.admin) h += bandejaAvisos(A);
   if (A.admin) h += '<div class="grupo"><span>Mandar uno tú</span><span></span></div>';
   if (A.sinSesion) {
@@ -984,8 +984,8 @@ export function avisos(S) {
       <button class="btn ancho" data-abrir="https://fantasymanagerapp.com/contacto.html">${icono('enviar')}Ir a contacto</button>
       <button class="btn sec ancho" data-accion="compartirDiag" style="margin-top:8px">${icono('copiar')}${enApp ? 'Mandar el diagnóstico' : 'Copiar el diagnóstico'}</button>`;
   } else {
-    h += `<p class="t2 peq" style="margin-top:0">Cuéntame qué ha pasado y qué estabas haciendo. Me llega a mí y te contesto aquí mismo: te aviso cuando haya respuesta.</p>
-      <textarea id="avisoTxt" class="campo-t aviso-t" rows="4" maxlength="4000" placeholder="Por ejemplo: al abrir Mercado se queda en blanco">${esc(A.borrador || '')}</textarea>
+    h += `<p class="t2 peq" style="margin-top:0">La app está en beta y se mejora con lo que me cuentas. Si algo falla, dime qué ha pasado y qué estabas haciendo; si se te ocurre algo que mejorar, cuéntamelo también. Me llega a mí y te contesto aquí mismo: te aviso cuando haya respuesta.</p>
+      <textarea id="avisoTxt" class="campo-t aviso-t" rows="4" maxlength="4000" placeholder="Por ejemplo: al abrir Mercado se queda en blanco, o me gustaría ver el historial de pujas">${esc(A.borrador || '')}</textarea>
       ${capturasHTML(A)}
       <label class="aviso-diag"><input type="checkbox" id="avisoDiag"${A.sinDiag ? '' : ' checked'}><span>Mandar también el diagnóstico (versión, lo que ha contestado LaLiga…). No lleva tu sesión, tu clave de la IA ni los nombres de los demás de tu liga.</span></label>
       <button class="btn ancho" data-accion="mandarAviso"${A.enviando ? ' disabled' : ''}>${A.enviando ? 'Mandando…' : `${icono('enviar')}Mandar el aviso`}</button>

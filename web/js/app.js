@@ -587,7 +587,7 @@ function marco() {
   const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
     ${anchoYa ? '' : preg}
     <button class="b-ico" id="bAjustes" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}<span class="gl oculto" id="gl-avisos"></span></button></div>`;
-  const liga = `${LOGO}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
+  const liga = `${LOGO}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><div class="sup-fila"><span id="supEstado"></span><button class="sup-beta" data-accion="avisos" aria-label="Versión beta: reportar un fallo o proponer una idea">BETA</button></div><span id="supQueda" class="sup-queda" hidden></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}<div class="sup-preg">${preg}</div>${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
@@ -1918,7 +1918,7 @@ async function comprobarAvisos() {
   const resp = r.nuevasResp[0];
   if (resp) {
     const t = `${firmaDe(resp.por) || 'Te han'} ${resp.por ? 'te ha contestado' : 'contestado'}: «${resp.respuesta.length > 120 ? `${resp.respuesta.slice(0, 117)}…` : resp.respuesta}»`;
-    if (nativo.aLaVista()) tostada(`${t} · Está en Ajustes → Reportar un fallo`, 8000); else nativo.notificar('Respuesta a tu aviso', t, 'hoy');
+    if (nativo.aLaVista()) tostada(`${t} · Está en Ajustes → Reportar un fallo o una idea`, 8000); else nativo.notificar('Respuesta a tu aviso', t, 'hoy');
   }
   if (r.nuevosRecibidos) {
     const t = r.nuevosRecibidos > 1 ? `${r.nuevosRecibidos} avisos de fallos nuevos` : 'Un aviso de fallo nuevo';
@@ -3347,7 +3347,7 @@ function pasosTour() {
       ? { v: 'hoy', sel: '.plan-otro', si: () => !!$('.plan-otro'), t: 'Otro plan, cuando quieras', x: planesApp(demo) ? `La IA hace el plan sola al empezar el día y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien: tienes ${planesCfg().gratis} al día con la IA${topConAnuncio() ? ' y, viendo un anuncio corto, alguno más' : ''}. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.` : 'La IA hace el plan sola cada mañana y cuando cambia el mercado. Con este botón le pides otro, por ejemplo después de vender a alguien. Si tu plantilla cambia sin que el plan lo dijera, te lo propone arriba, en amarillo.' }
       : { v: 'hoy', sel: '.plan .caja', si: () => !!$('.plan .caja'), t: 'Con la IA, mejor', x: `Sin IA, el plan sale de los números. Con una clave gratis de Google, la IA lee noticias, lesiones y onces probables antes de decidir, y le puedes preguntar. Se activa en «Pregunta», ${rojo}.` },
     { v: 'hoy', sel: '#bRefrescar', b: true, t: 'Actualizar', x: 'Trae lo último de LaLiga: saldo, mercado, pujas y clasificación. Se hace solo al abrir la app; tócalo después de hacer algo en LaLiga.' },
-    { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta). También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
+    { v: 'hoy', sel: '#bAjustes', t: 'Ajustes y fallos', x: 'Si algo no funciona o no cuadra, «Reportar un fallo o una idea» me llega a mí y te contesto ahí mismo (el numerito rojo es mi respuesta). También están tu clave de la IA, los avisos, abrir la app en otro dispositivo y este tutorial.' },
     { v: 'hoy', sel: '#bAjustes', b: true, si: () => !!(window.temaEvento && window.temaEvento.activo()), t: 'Modo Vice City', x: PASO_TEMA },
     { v: 'hoy', sel: '#supQueda', si: () => estadoLimite.min != null && !!$('#supQueda') && !$('#supQueda').hidden, t: 'Tus minutos de hoy', x: () => `En tu liga hay ${estadoLimite.min} minutos al día, sumando la app y la web. Aquí ves los que te quedan.` },
     { v: 'equipo', sel: '.nav [data-ir="equipo"]', t: 'Equipo', x: 'Tus jugadores: si suben o bajan, sus cláusulas y quién de tu liga puede pagarlas, y tu mejor once con las formaciones gratis.' },

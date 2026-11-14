@@ -106,6 +106,11 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-nombre b { min-width: 0; }
 .sup-nombre .ic { width: 18px; height: 18px; flex: none; color: var(--rojo-l); }
 .sup-nombre:disabled { cursor: default; opacity: 1; }
+/* la etiqueta de beta, junto al nombre de la liga: abre «Fallos e ideas» */
+.sup-fila { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.sup-fila #supEstado { min-width: 0; }
+@media (max-width: 340px) { .sup-fila { gap: 5px; } .sup-beta { padding: 0 6px; font-size: 11px; letter-spacing: 0.5px; } }
+.sup-beta { flex: none; display: inline-flex; align-items: center; min-height: 24px; margin: -3px 0; padding: 0 8px; border-radius: 12px; border: 1px solid var(--oro); color: var(--oro); font: 700 var(--t-mini)/1 var(--cond); letter-spacing: 1px; }
 .ligas-l { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 12px; }
 .ligas-l button { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: var(--r-tarj); background: var(--plano2); border: 1px solid var(--linea); text-align: left; font-size: var(--t-cuerpo); }
 .ligas-l button b { flex: 1; min-width: 0; }
