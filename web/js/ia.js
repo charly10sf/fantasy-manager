@@ -2117,6 +2117,8 @@ export function cuadrarPlan(P, D, M, { chat = false } = {}) {
     if (!x || ['injured', 'suspended'].includes(x.j.estado)) continue;
     const t = M.tend(o.pid), ine = M.inercia ? M.inercia(o.pid) : null;
     if ((ine && x.j.valor && num(ine.ult) < -0.03 * x.j.valor) || (t.p1 != null && t.p1 < -3)) continue;
+    // (Carlos, 14 nov) si baja todos los días, no es malvender: a la venta por si llega una oferta mejor (o aceptarla)
+    if (M.bajaSeguido && M.bajaSeguido(o.pid) && +o.importe >= x.j.valor * 0.995) continue;
     o.sugerencia = true;
     o.hoy = false;
     o.cuando = 'sin prisa';
