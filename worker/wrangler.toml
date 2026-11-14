@@ -15,6 +15,9 @@ ADMINS = "667015"
 # El paso al ordenador con la sesión sin cerrar (la app antes de la 0.7a). Cuando en «Quién usa la app» no quede nadie por
 # debajo de la 0.7a, ponlo a "no" (revisión total, C6).
 FORMATO_VIEJO = "si"
+# Los planes del día con la IA de Carlos (/plan): lo más que se puede gastar entre todos en un día, en dólares, diga lo que
+# diga limites.json («planes.topeUsdDia», que lo baja). La clave va como secreto (CLAUDE_PLANES, lo copia worker.yml).
+PLAN_TOPE_USD = "10"
 
 # Cada 5 min lanza el workflow «Bot X» en main (scheduled en src/index.js), porque el cron de GitHub Actions no dispara.
 # Necesita el secreto BOT_DISPATCH_TOKEN, que worker.yml copia del secreto de Actions del mismo nombre.

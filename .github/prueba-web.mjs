@@ -13,6 +13,7 @@
 //  10. el plan sin IA, la IA (cuadrarPlan) y Hoy usan la misma regla para clausular (mereceClausula).
 //  11. (24) el Parón mira el hueco en la plantilla y lo que sacarías vendiendo.
 //  12. todas las fichas y hojas (Tu equipo hoy, jugador, rival, club, sustitutos, Ajustes, diagnóstico) abren sin error.
+//  15. el plan con la IA de la app (el Worker, /plan, interceptado): llega, sin cupo y con la ruta caída.
 // Uso: node .github/prueba-web.mjs   (PW_MODULO: ruta del index.mjs de playwright o playwright-core si no se encuentra
 //      solo; CHROME: el ejecutable de Chromium, si no es el de Playwright). Sale con 1 si algo falla.
 import http from 'node:http';
@@ -555,6 +556,66 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   else if (r.mal.length || r.hoy) mal(`valor del equipo día a día: ${r.mal.join(' · ')}${r.hoy ? ` · hoy no cuadra (${r.hoy})` : ''}`);
   else bien('valor del equipo día a día: cuenta los jugadores que tenías cada día');
   if (errores.length) mal(`valor del equipo: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 15: (14 nov) el plan con la IA de la app (el Worker, /plan, interceptado): sin clave de Google, el plan llega por ahí con el
+// pedido corto y sin instrucciones de la app; con el cupo gastado se queda el plan de la app con una caja clara (en la web,
+// sin anuncio) y no se pide solo otro; con la ruta caída, un error claro. La hoja del anuncio de un plan de más
+{
+  const sesion = JSON.stringify({ token: 't'.repeat(40), renovar: 'r'.repeat(40), caduca: Date.now() + 864e5, desde: Date.now() });
+  const { ctx, page, errores } = await pagina({ init: `localStorage.setItem('fm-n-sesion', ${JSON.stringify(sesion)});` });
+  let modo = 'bien', cuerpo = null;
+  await ctx.route('https://fantasy-manager.fantasymanager-web-app.workers.dev/**', async (r) => {
+    const q = r.request();
+    const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': '*' };
+    if (q.method() === 'OPTIONS') return r.fulfill({ status: 204, headers: cors });
+    if (!q.url().endsWith('/plan')) return r.abort('blockedbyclient');
+    cuerpo = JSON.parse(q.postData() || 'null');
+    if (modo === 'caido') return r.abort('connectionrefused');
+    const cupo = (u) => ({ usados: u, gratis: 2, max: 5, extras: 0, quedan: Math.max(0, 2 - u), masConAnuncio: true });
+    if (modo === 'cupo') return r.fulfill({ status: 429, headers: { ...cors, 'content-type': 'application/json' }, body: JSON.stringify({ e: 'Ya has hecho tus 2 planes con la IA de hoy.', cupo: cupo(2) }) });
+    if (modo === 'tarde') return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: `     ${JSON.stringify({ e: 'La IA de los planes no contesta ahora mismo.', estado: 503, servicio: true })}` });
+    return r.fulfill({ status: 200, headers: { ...cors, 'content-type': 'application/json' }, body: `   ${JSON.stringify({ plan: { pasos: [{ id: 'p1', frase: 'Este paso lo explica la IA de la app.' }], quita: [], mete: [], situacion: '', noticias: [], rivales: [], titular: 'Titular de prueba de la IA de la app' }, cupo: cupo(1), tok: { entra: 5200, sale: 2500 } })}` });
+  });
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M && window.S.plan, null, { timeout: 25000 }).catch(() => {});
+  const prueba = (m) => page.evaluate(async (m) => {
+    const ia = await import('/js/ia.js');
+    const S = window.S;
+    try { const P = await ia.planDelDia(S.D, S.M, S.c, { demo: false }); return { ok: true, app: !!P.app, titular: P.titular, corto: !!P.corto, frase: ((P.operaciones || []).some((o) => o._k) ? ((P.operaciones || []).find((o) => /IA de la app/.test(o.motivo || '')) || {}).motivo || '' : 'sin pasos hoy'), cupo: ia.cupoPlanes(), auto: ia.planViejoAuto(S.M, false) }; } catch (e) { return { ok: false, e: e.message, cupo: e.cupo || null, servicio: !!e.servicio, cache: ia.cupoPlanes(), auto: ia.planViejoAuto(S.M, false) }; }
+  }, m);
+  const sinClave = await page.evaluate(async () => { const ia = await import('/js/ia.js'); return !ia.hayClave() && ia.planesApp(false) && ia.puedePlanIA(false) && !ia.planesApp(true); });
+  if (!sinClave) mal('IA de la app: sin clave de Google no se puede pedir el plan con la IA de la app (planes.on de limites.json)');
+  let r = await prueba('bien');
+  if (!r.ok || !r.app || !r.corto || r.titular !== 'Titular de prueba de la IA de la app' || !r.frase || !r.cupo || r.cupo.quedan !== 1) mal(`IA de la app: el plan no llega bien: ${JSON.stringify(r)}`);
+  else if (!cuerpo || !/^HOY: /.test(cuerpo.pedido) || 'sistema' in cuerpo || !['broma', 'serio'].includes(cuerpo.tono) || !Array.isArray(cuerpo.bloq) || cuerpo.extra !== false) mal(`IA de la app: lo que se manda al Worker: ${JSON.stringify(cuerpo).slice(0, 200)}`);
+  else bien(`IA de la app: el plan llega por el Worker, sin clave y con el pedido corto (${cuerpo.pedido.length} caracteres, alias: ${JSON.stringify(cuerpo.alias)})`);
+  modo = 'cupo';
+  r = await prueba('cupo');
+  if (r.ok || !r.cupo || r.cupo.quedan !== 0 || !r.cache || r.auto) mal(`IA de la app: con el cupo gastado: ${JSON.stringify(r)}`);
+  else bien('IA de la app: con los 2 de hoy gastados, error de cupo, se guarda y no se pide otro solo');
+  const caja = await page.evaluate(async (cu) => {
+    window.S.planEstado = { cupo: cu, error: 'Ya has hecho tus 2 planes con la IA de hoy.' };
+    window.dispatchEvent(new Event('limites-nuevos'));
+    await new Promise((ok) => setTimeout(ok, 300));
+    const c = document.querySelector('.plan-cupo');
+    return { t: c ? c.innerText.replace(/\s+/g, ' ') : '', boton: !!(c && c.querySelector('button')), error: !!document.querySelector('.plan .error-c'), plan: !!document.querySelector('.plan-titular') };
+  }, r.cupo);
+  if (!caja.t || caja.boton || caja.error || !caja.plan || !/Mañana tienes otros 2/.test(caja.t)) mal(`IA de la app: la caja sin cupo en la web: ${JSON.stringify(caja)}`);
+  else bien(`IA de la app: sin cupo, el plan de la app y la caja, sin anuncio en la web («${caja.t.slice(0, 70)}…»)`);
+  modo = 'tarde';
+  r = await prueba('tarde');
+  if (r.ok || !r.servicio || !/no contesta/.test(r.e)) mal(`IA de la app: el error en el cuerpo (con la respuesta empezada): ${JSON.stringify(r)}`);
+  else bien('IA de la app: un error con la respuesta ya empezada se entiende');
+  modo = 'caido';
+  r = await prueba('caido');
+  if (r.ok || !r.servicio || !r.e) mal(`IA de la app: con la ruta caída: ${JSON.stringify(r)}`);
+  else bien(`IA de la app: con la ruta caída, error claro («${r.e.slice(0, 60)}…»)`);
+  const hoja = await page.evaluate(async () => { const h = await import('/js/hojas.js'); return h.anuncioHTML({ anuncio: {}, D: { demo: false } }, 'plan'); });
+  if (!/Otro plan con la IA/.test(hoja) || !/data-para="plan"/.test(hoja) || !/hasta 5/.test(hoja)) mal(`IA de la app: la hoja del anuncio de un plan de más: ${hoja.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 160)}`);
+  else bien('IA de la app: la hoja del anuncio de un plan de más, como la de las funciones top');
+  if (errores.length) mal(`IA de la app: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 

@@ -2,10 +2,10 @@
    (Directo, la jornada en juego, está en directo.js.) */
 import { esc, eur, pct, dura, cuenta, cuando, icono, clase, POS_PLURAL, num, DIA, HORA, rel, LS, diaDe, otroDia as otroDiaV, norm, esWebFantasy, sinWebs } from './util.js';
 import { ava, posTag, estadoPill, clausulaPill, delta, partidoTxt, filaJugador, nada, oncePill, filaNoticia, cromo, rivalSub, dineroCorto, calPill, candadoMini, candado, candadosJuntos, caraManager, planPill } from './comunes.js';
-import { bloqueada } from './limite.js';
+import { bloqueada, topConAnuncio } from './limite.js';
 import { esClausulable } from './motor.js';
 import { linea, barra } from './graficos.js';
-import { hayClave, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
+import { hayClave, puedePlanIA, planesApp, cupoPlanes, conversacion, notasVigentes, chatsAnteriores, jugadoresEn, pidDe, planes } from './ia.js';
 import { md } from './texto.js';
 import { miniDe } from './fotos.js';
 import { enApp, nativo } from './puente.js';
@@ -572,6 +572,16 @@ function fasesHTML(S, P) {
 /** plegable con su título y cuántos hay (lo de después del plan: próximos días, vigila, noticias, rivales) */
 const plegado = (ic, titulo, n, cuerpo, abierto = false, cls = '') => (cuerpo ? `<details class="pleg ${cls}" ${abierto ? 'open' : ''}><summary>${icono(ic)}<b>${titulo}</b>${n ? `<span>${n}</span>` : ''}${icono('flecha', 'pleg-ab')}</summary><div class="pleg-d">${cuerpo}</div></details>` : '');
 
+/** sin planes con la IA hoy (la de la app: 2 al día y, en la de Google Play, uno más por anuncio hasta el tope). Donde no
+    hay anuncios (la web, la app de la liga) son los de cada día y ya (Carlos, 14 nov) */
+function cupoPlanHTML(cu) {
+  const hechos = Math.min(cu.max, cu.gratis + (cu.extras || 0));
+  const mas = cu.masConAnuncio && topConAnuncio();
+  const t = !cu.masConAnuncio ? `Ya has hecho los ${cu.max} planes con la IA de hoy, el máximo.` : `Hoy ya has hecho tus ${hechos} planes con la IA.`;
+  const x = mas ? `Para uno más, mira un anuncio corto (hasta ${cu.max} al día). Mientras, el plan de la app sigue al día con tus datos.` : `Mañana tienes otros ${cu.gratis}. Mientras, el plan de la app sigue al día con tus datos.`;
+  return `<div class="caja plan-cupo" style="margin-top:10px"><b>${esc(t)}</b><p class="t2" style="margin:4px 0 ${mas ? '10px' : '0'}">${esc(x)}</p>${mas ? `<button class="btn chico" data-accion="planYa">${icono('ia')}Ver el anuncio</button>` : ''}</div>`;
+}
+
 function planHTML(S) {
   const { M } = S;
   const P = S.plan;
@@ -581,20 +591,24 @@ function planHTML(S) {
   // arriba, solo quién lo ha hecho y cuándo; el botón para pedir otro va al final de los pasos (y en la banda si tu liga
   // ha cambiado desde entonces), para no confundirlo con «Actualizar», que trae los datos de LaLiga
   // (sin el nombre ni la versión del modelo: Carlos, 3 nov)
-  const quien = P ? (esIA ? `Con la IA${P.web ? ' y Google' : ''} · ${rel(P.t)}` : 'Automático, sin IA') : '';
+  const demo = !!(S.D && S.D.demo), conIA = puedePlanIA(demo), cu = planesApp(demo) ? cupoPlanes() : null;
+  // (con la IA de la app, lo que te queda hoy: 2 al día)
+  const queda = cu && cu.quedan > 0 ? ` · ${cu.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cu.quedan} hoy`}` : '';
+  const quien = P ? (esIA ? `Con la IA${P.web ? ' y Google' : ''} · ${rel(P.t)}${queda}` : 'Automático, sin IA') : '';
   // pedir otro: un botón pequeño en la cabecera (antes, uno grande con su explicación entre el resumen y los pasos)
-  const otro = hayClave() && !E.cargando && P ? `<button class="plan-otro-b" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Otro plan' : 'Con la IA'}</button>` : '';
+  const otro = conIA && !E.cargando && P ? `<button class="plan-otro-b" data-accion="planYa" title="${esIA ? 'Vuelve a leer tu liga y las noticias (1 o 2 min). «Actualizar» solo trae los datos de LaLiga.' : 'Lee las noticias, las lesiones y los onces probables antes de decidir (1 o 2 min).'}">${icono('ia')}${esIA ? 'Otro plan' : 'Con la IA'}</button>` : '';
   // compartir: el plan (lo hecho) y sus pullitas como imagen para el grupo de la liga (0.6.11)
   // (Carlos, 1 nov) con texto: solo el icono no se veía. Quién y cuándo, en su línea: al lado de los botones se cortaba en el móvil
   const compartir = P && !E.cargando ? `<button class="plan-otro-b plan-comp" data-accion="tarjeta" title="Una imagen de tu plan para el grupo de tu liga">${icono('enviar')}Compartir</button>` : '';
   h += `<div class="plan"><div class="plan-cab"><div class="eti">Plan de hoy</div>${compartir}${otro}</div>${quien ? `<div class="plan-quien">${icono(esIA ? 'ia' : 'lista')}<span>${quien}</span></div>` : ''}`;
   if (E.cargando) h += `<div class="cargando-ia"><div class="t">${icono('ia', 'rojo')} Preparando tu plan</div><div class="p" id="paso-ia">${esc(E.paso || 'Leyendo noticias de tus jugadores y de los que te interesan…')}</div><div class="barra-ia"><i></i></div>${enApp ? '<div class="p2">Tarda uno o dos minutos. Puedes salir de la app: te avisa cuando esté.</div>' : ''}<button class="btn chico sec parar-ia" data-accion="pararPlan">${icono('parar')}Parar</button></div>`;
   if (E.error && E.clave) h += `<div class="error-c"><b>Google no acepta tu clave de la IA.</b> Puede que la hayas borrado en aistudio o que se haya copiado mal. Crea otra en aistudio.google.com/apikey y pégala.${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="cambiarClave">Poner otra clave</button><button class="btn chico sec" data-abrir="https://aistudio.google.com/apikey">Abrir aistudio</button></div></div>`;
-  else if (E.error) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
+  else if (E.error && !E.cupo) h += `<div class="error-c"><b>La IA no ha podido hacer el plan.</b> ${esc(E.error)}${P && P.auto ? '<br>Mientras, tienes el plan automático.' : ''}<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn chico" data-accion="plan">Reintentar</button><button class="btn chico sec" data-accion="diag">Ver qué ha pasado</button></div></div>`;
+  if (E.cupo && !E.callado) h += cupoPlanHTML(E.cupo);
   if (!P) return h + '</div>';
   const cambios = !E.cargando && !(esIA && P.dia && P.viejo) ? cambiosDesdePlan(S) : null;
-  if (esIA && P.dia && P.viejo) h += `<div class="banda">${icono('reloj')}<span>Este plan es de ${cuando(P.t)}.</span>${hayClave() && !E.cargando ? '<button data-accion="plan">Hacer el de hoy</button>' : ''}</div>`;
-  else if (cambios) h += `<div class="banda plan-cambio">${icono('cambio')}<span>${esc(cambios)} El plan es de antes.</span>${hayClave() ? '<button data-accion="planYa">Rehacer el plan</button>' : ''}</div>`;
+  if (esIA && P.dia && P.viejo) h += `<div class="banda">${icono('reloj')}<span>Este plan es de ${cuando(P.t)}.</span>${conIA && !E.cargando ? '<button data-accion="plan">Hacer el de hoy</button>' : ''}</div>`;
+  else if (cambios) h += `<div class="banda plan-cambio">${icono('cambio')}<span>${esc(cambios)} El plan es de antes.</span>${conIA ? '<button data-accion="planYa">Rehacer el plan</button>' : ''}</div>`;
   h += `<div class="plan-titular">${esc(P.titular || '')}</div>${P.situacion ? (ancho() ? `<p class="plan-sit">${conEnlaces(S, P.situacion)}</p>` : `<details class="plan-sit-d"><summary class="plan-sit">${conEnlaces(S, P.situacion)}</summary></details>`) : ''}`;
   h += fasesHTML(S, P);
   if (P.final != null && P.ops.some((o) => o.signo && o.importe)) h += `<div class="cierre ${P.avisoTipo === 'mal' ? 'mal' : P.avisoTipo === 'plan' ? 'oro' : ''}">${icono(P.avisoTipo === 'mal' ? 'alerta' : P.avisoTipo === 'plan' ? 'cambio' : 'euro')}<span>${P.avisoSaldo ? esc(P.avisoSaldo) : 'Te quedas con'}</span><span class="v">${eur(P.final)}</span></div>`;
@@ -619,7 +633,7 @@ function planHTML(S) {
   if (Array.isArray(P.noticias) && P.noticias.length) h += plegado('info', 'Noticias que te afectan', P.noticias.length, P.noticias.map((n) => notaJugador(S, n.jugador, n.texto, n.efecto)).join(''), abrir);
   if (Array.isArray(P.rivales) && P.rivales.length) h += plegado('rivales', 'Tus rivales', P.rivales.length, P.rivales.map((r) => { const tid = M.teamDeManager(r.manager); const e = tid && S.D.clasif.find((x) => x.teamId === tid); return `<button class="fila" ${tid ? `data-r="${esc(tid)}"` : ''}>${e ? caraManager(e) : `<span class="ic-act">${icono('rivales')}</span>`}<div class="fila-c"><div class="fila-n">${esc(r.manager || '')}</div><div class="fila-s entero">${esc(r.texto || '')}</div></div></button>`; }).join(''), abrir);
   if (Array.isArray(P.descartes) && P.descartes.length) h += plegado('buscar', 'Mirados y descartados', P.descartes.length, P.descartes.map((d) => notaJugador(S, d.jugador, d.motivo)).join(''));
-  if (!hayClave()) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Pregunta</button></div>`;
+  if (!conIA) h += `<div class="caja" style="margin-top:14px"><b>Este plan sale de los números, sin noticias.</b><p class="t2" style="margin:4px 0 10px">Con la IA (gratis) lee las noticias, las lesiones, las convocatorias y el calendario antes de decidir.</p><button class="btn chico" data-ir="ia">${icono('ia')}Pregunta</button></div>`;
   h += aciertosHTML(M);
   const fuentesP = (P.fuentes || []).filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u));
   if (fuentesP.length) h += `<div class="sec"><h2>Fuentes</h2></div><div class="fuentes">${fuentesP.map((f) => `<button data-abrir="${esc(f.u)}">${esc(f.t)}</button>`).join('')}</div>`;
@@ -1359,7 +1373,7 @@ export function adjuntosHTML(S) {
 const fotosMsg = (fs, m) => (fs && fs.length ? `<div class="msg-fotos">${fs.map((f, i) => { const src = f.mini || miniDe(f.id); return `<button data-accion="verFoto" data-m="${m}" data-i="${i}" aria-label="Ver la foto ${i + 1}"><img ${src ? `src="${esc(src)}"` : `data-mini="${esc(f.id)}"`} alt=""></button>`; }).join('')}</div>` : '');
 
 export function ia(S) {
-  if (!hayClave()) return guiaClave();
+  if (!hayClave()) return guiaClave(planesApp(!!(S.D && S.D.demo)));
   const msgs = conversacion();
   const viejos = chatsAnteriores();
   let h = `<div class="chat${(S.adjuntos || []).length ? ' con-adj' : ''}"><div class="chat-cab"><div><div class="eti">Pregunta</div><h1 class="titulo">Tu director deportivo</h1></div>

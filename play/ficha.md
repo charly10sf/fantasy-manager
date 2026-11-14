@@ -50,10 +50,9 @@ TU EQUIPO
 • El calendario de cada jugador: partidos fáciles y difíciles de las próximas jornadas.
 • Las ofertas que te hacen por lo que tienes en venta, comparadas con lo normal en tu liga.
 
-INTELIGENCIA ARTIFICIAL (OPCIONAL Y GRATIS)
-• Con una clave gratuita de Google Gemini, la IA lee noticias, lesiones y alineaciones antes de hacer tu plan.
-• Pregúntale lo que quieras sobre tu liga, también mandándole capturas.
-• Sin clave, tienes igualmente el plan automático.
+INTELIGENCIA ARTIFICIAL
+• Cada día, la IA repasa tu plan con las noticias, las lesiones y las alineaciones, sin hacer nada tú: 2 planes al día gratis y más viendo un anuncio corto.
+• Con una clave gratuita de Google, pregúntale lo que quieras sobre tu liga, también mandándole capturas.
 
 AVISOS
 • Cuando se abre una cláusula que te interesa, cuando cambia el mercado y cuando tienes listo el plan del día.
@@ -95,7 +94,7 @@ Las capturas usan la liga de ejemplo (datos inventados) y llevan las caras de lo
 
 «Todas o algunas funciones están restringidas» → instrucciones:
 
-> La app funciona con una cuenta de LaLiga Fantasy (se entra en la página oficial de LaLiga). Para revisarla sin cuenta: en la primera pantalla, toca «Ver con una liga de ejemplo». Todas las funciones están disponibles con datos inventados: plan del día, equipo, Directo, rivales, mercado y Ajustes. La IA (pestaña Pregunta) necesita una clave gratuita de Google AI Studio; sin ella, el plan sale igual, sin IA.
+> La app funciona con una cuenta de LaLiga Fantasy (se entra en la página oficial de LaLiga). Para revisarla sin cuenta: en la primera pantalla, toca «Ver con una liga de ejemplo». Todas las funciones están disponibles con datos inventados: plan del día, equipo, Directo, rivales, mercado y Ajustes. En la liga de ejemplo el plan sale sin IA (la IA del plan va con la cuenta de LaLiga); el chat de la IA (pestaña Pregunta) necesita una clave gratuita de Google AI Studio.
 
 No hace falta dar usuario y contraseña.
 
@@ -113,11 +112,14 @@ Rehecho el 8 nov 2026 (revisión total, A2) para la versión con anuncios y con 
 
 Lo que cambia frente al del 25 oct: se declara lo que va a la IA de Google. Con la clave de cada usuario sigue siendo la app la que lo transmite fuera del móvil (y en Android también en segundo plano, sin tocar nada), así que cuenta como recogido y como compartido con un tercero (Google). Es opcional: sin clave de la IA no va nada.
 
+PENDIENTE AL PUBLICAR LOS PLANES CON LA IA DE LA APP (rama `web-planes-claude`, 14 nov): cambiar en Play Console el texto de la ficha (arriba, «Inteligencia artificial») y, en este formulario, la fila de «Otras acciones» (pasa a obligatoria: el plan del día con la IA va solo, sin clave) y el nombre de mánager (al plan no va: el del usuario sí, como en el chat). Anthropic trata los datos por cuenta de Fantasy Manager (encargado del tratamiento), así que para Play es «recogido», no «compartido».
+
 ### Lo que sale del móvil hoy (para no perderse)
 
 | Adónde | Qué | Cuánto dura |
 | --- | --- | --- |
 | IA de Google (Gemini), con la clave del usuario, al pedir el plan, al usar el chat y, en Android con el segundo plano activado, cada pocas horas sin abrir la app | El texto que escribe en el chat; las capturas que adjunta (tal cual); los datos de su liga (plantilla, saldo, ofertas, mercado, lo que hacen los rivales); su nombre de mánager y el de su equipo (los rivales van como «Rival N» y su equipo como «Equipo N») | Lo que diga Google: con la clave gratuita lo puede guardar y usar para mejorar sus productos |
+| Worker (/plan) y Anthropic (la IA de los planes, la paga Carlos; desde la rama `web-planes-claude`) | Los datos de su liga para el plan (plantilla, saldo, ofertas, mercado, lo que hacen los rivales, noticias de sus jugadores y lo que le ha contado a la IA), con los rivales como «Rival N». El Worker no lo guarda: solo cuántos planes lleva hoy (objeto `plan\|día\|uid` del Durable Object) | El cupo, 30 h; en Anthropic, 30 días como mucho y sin entrenar con ello |
 | Worker, `p:<uid>` (/hola) | Número de cuenta de LaLiga, nombre de mánager, equipo, liga, versión, canal y la dirección de su foto de perfil de LaLiga (para enseñarla a los de su liga que usan la app) | 90 días sin abrir la app |
 | Worker, `u:` | Segundos de uso de cada día | 9 días |
 | Worker, `r:<uid>` | Número de cuenta, primera y última vez, días de uso, canales y cuántas veces por semana usa algunas partes (planes, preguntas, bonificados, funciones top, pasos de la entrada) | 400 días sin abrir la app |

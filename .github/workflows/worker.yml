@@ -11,7 +11,8 @@ name: Worker
 on:
   push:
     branches: [main]
-    paths: ['worker/**', '.github/workflows/worker.yml']
+    # (plan-sistema.js: las instrucciones del plan del día, que el Worker empaqueta de web/)
+    paths: ['worker/**', 'web/js/plan-sistema.js', '.github/workflows/worker.yml']
   workflow_dispatch:
 
 permissions:
@@ -124,5 +125,27 @@ jobs:
             echo "::notice::Reloj del bot listo: el Worker lanza «Bot X» cada 5 min"
           else
             echo "::error::No se ha podido guardar BOT_DISPATCH_TOKEN en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
+            exit 1
+          fi
+      # La clave de Claude para los planes del día (/plan), aparte de la del bot: la crea Carlos en la consola de Claude con
+      # su tope de gasto y la pone en GitHub como secreto de Actions CLAUDE_PLANES. Se copia al Worker en cada publicación;
+      # sin el secreto no se toca la que ya tenga el Worker (y si no tiene ninguna, /plan contesta que falta y la app se queda
+      # con su plan). El valor nunca sale en el log.
+      - name: Clave de la IA de los planes
+        if: steps.cf.outputs.ok == 'si'
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLAUDE_PLANES: ${{ secrets.CLAUDE_PLANES }}
+        run: |
+          if [ -z "$CLAUDE_PLANES" ]; then
+            echo "::warning::Sin el secreto CLAUDE_PLANES: los planes del día con la IA de la app no funcionan hasta que se ponga"
+            exit 0
+          fi
+          if printf '%s' "$CLAUDE_PLANES" | npx --yes wrangler@4.158.0 secret put CLAUDE_PLANES > salida.txt 2>&1; then
+            echo "::notice::Clave de los planes lista"
+          else
+            echo "::error::No se ha podido guardar CLAUDE_PLANES en el Worker: $(grep -iE 'error|✘' salida.txt | head -3 | tr '\n' ' ' | cut -c1-300)"
             exit 1
           fi

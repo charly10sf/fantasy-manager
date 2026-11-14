@@ -167,6 +167,14 @@ export function abrirTopGratis(clave, min = 30) {
   const x = deJornada(clave);
   guardarJornada(clave, { usos: x.usos + 1, hasta: Date.now() + Math.min(min, cfgTop().minutos) * 60e3, uno: false });
 }
+/* «planes» en limites.json: los planes del día con la IA de Carlos (el Worker, /plan). on: si van por ahí (si no, como
+   antes: con la clave de Google de cada uno); gratis y max: los de cada día y el tope con anuncios. Quien cuenta de verdad
+   es el Worker (lee el mismo limites.json); esto es para los textos. Sin «planes» (un limites.json de antes), apagado. */
+export function planesCfg() {
+  const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.planes) || null;
+  const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
+  return { on: !!(p && p.on), gratis: n(p && p.gratis, 2), max: n(p && p.max, 5) };
+}
 let yoB = null, demoB = false;
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */
 export function fijarYo(yo, demo) { yoB = yo || null; demoB = !!demo; }
