@@ -2142,7 +2142,8 @@
    "La Voz de Galicia|https://www.lavozdegalicia.es/noticia/pontevedra/pontevedra/2026/11/14/fallece-90-anos-genaro-santome-forofo-pontevedra-cf-nino-gracias-tio-pachecho/00031794672054155764317.htm": 1794673920000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004251000/hancko-asiste-oblak-echa-cerrojo-mendoza-suma-minutos.html": 1794674685000,
    "AS|https://as.com/futbol/primera/lookman-de-vuelta-para-madrid-con-un-esguince-de-rodilla-f202611-n/": 1794676215000,
-   "Cadena SER|https://cadenaser.com/nacional/2026/11/14/de-la-fuente-deja-abierta-la-titularidad-de-lamine-yamal-ante-inglaterra-si-juega-es-porque-esta-en-perfectas-condiciones-cadena-ser/": 1794654667000
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/14/de-la-fuente-deja-abierta-la-titularidad-de-lamine-yamal-ante-inglaterra-si-juega-es-porque-esta-en-perfectas-condiciones-cadena-ser/": 1794654667000,
+   "SPORT|136446311": 1794675429000
   },
   "hechos": [
    {
@@ -2391,7 +2392,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 30
+   "n": 31
   },
   "desde": {
    "67": {
@@ -3305,17 +3306,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 37,
+   "clasificar": 38,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 165716,
-  "salida": 18202,
+  "entrada": 167799,
+  "salida": 18907,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.235366,
+  "dolares": 0.235927,
   "reservado": 0
  },
  "recientes": {
@@ -7522,13 +7523,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2513,
+   "ok": 2514,
    "fallos": 0,
-   "ejecuciones": 1980,
+   "ejecuciones": 1981,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T17:56:19.036Z"
+   "ultima": "2026-11-14T18:01:21.716Z"
   }
  },
  "ptsDirecto": {},
@@ -7545,15 +7546,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:56:23.011Z"
+   "ultimaBien": "2026-11-14T18:01:29.447Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:56:23.011Z"
+   "ultimaBien": "2026-11-14T18:01:29.447Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:56:23.011Z"
+   "ultimaBien": "2026-11-14T18:01:29.447Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7561,11 +7562,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:56:23.011Z"
+   "ultimaBien": "2026-11-14T18:01:29.447Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:56:23.011Z"
+   "ultimaBien": "2026-11-14T18:01:29.447Z"
   }
  },
  "avisos": [
