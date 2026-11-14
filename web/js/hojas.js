@@ -17,7 +17,7 @@ import { VERSION, cmpVer } from './version.js';
 import { enDemo } from './datos.js';
 import { cfgFondo, ultimoFondo } from './fondo.js';
 import { hayImportantes, ultimaImportante } from './presentacion.js';
-import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, minutosPorVez } from './limite.js';
+import { estadoLimite, novedadesPara, bloqueada, topConAnuncio, planesCfg, POR_JORNADA, faltanAnuncios, usosQuedan, usosPorJornada, anunciosPorVez, rivalesAbiertos } from './limite.js';
 import { jornadaJugadorHTML } from './directo.js';
 import { aviso, avisoDeTexto, parrafos, inerciaPlanHTML } from './avisos-ficha.js';
 import { muestrasVivo } from './vivo.js';
@@ -325,7 +325,16 @@ export function fichaJugador(S, pid) {
       : `Si lo pones a la venta, LaLiga te da unos <b>${eur(ol.v)}</b>${gana != null ? ` (<b class="${clase(gana)}">${eur(gana, { signo: true })}</b> sobre ${mia.compra ? 'lo que pagaste' : 'lo que valía al empezar'})` : ''}. ${ol.sinDatos ? 'Aún no hay ventas a LaLiga en tu liga: el cálculo va cerca de su valor.' : `En tu liga da entre ${eur(ol.min)} y ${eur(ol.max)}, de mediana un ${pct(ol.med * 100)} sobre el valor.`}`;
     if (gratis || liga) h += `<div class="aviso-ficha verde peq">${icono('escudo')}<div>${[gratis, liga].filter(Boolean).join(' ')}</div></div>`;
     const pg = mia.pagan;
-    if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) cerradas.push('quienPaga');
+    if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA) && bloqueada('quienPaga')) {
+      // (0.7.12) cerrada por rival: de los que has abierto esta jornada sí se dice si le llega
+      const ab = new Set(rivalesAbiertos()), es = (x) => ab.has(String(x.tid));
+      const vistos = (S.M.rivalesTid || []).filter((t) => ab.has(String(t)));
+      if (vistos.length) {
+        const ya = [...pg.seguro.filter(es).map((x) => `<b>${esc(x.nombre)}</b>`), ...pg.quiza.filter(es).map((x) => `${esc(x.nombre)} (justo)`)];
+        h += `<div class="aviso-ficha ${ya.length ? 'oro' : 'verde'} peq">${icono('rivales')}<div>De los rivales que has abierto esta jornada, ${ya.length ? `le llega a ${ya.join(', ')}` : 'no le llega a ninguno'}.</div></div>`;
+      }
+      cerradas.push('quienPaga');
+    }
     else if (pg && (pg.hayDatos || pg.seguro.length || pg.quiza.length) && mia.clausula && (mia.abierta || mia.abreEn < 3 * DIA)) {
       const nadie = !pg.seguro.length && !pg.quiza.length;
       // solo a quién le llega, sin cuánto tiene (eso es «dinero de los rivales», que va aparte)
@@ -583,8 +592,8 @@ export function fichaRival(S, tid) {
   const ir = (s, p) => `data-accion="segRival" data-tid="${esc(tid)}" data-s="${s}" data-p="${p}"`;
   const dV = r.dValor ? `<small class="${clase(r.dValor)} nw">${r.dValor > 0 ? '▲' : '▼'} ${eur(r.dValor, { signo: true, dec: 1 })} en 7 días</small>` : '';
   const conDinero = r.dinero && r.dinero.v != null;
-  const tDinero = bloqueada('dineroRivales')
-    ? `<button class="eq2-t rival-bloq" data-accion="bloqueada" data-clave="dineroRivales"><b>${icono('candado')}</b><span>su dinero · función top ›</span></button>`
+  const tDinero = bloqueada('dineroRivales', tid)
+    ? `<button class="eq2-t rival-bloq" data-accion="bloqueada" data-clave="dineroRivales" data-rival="${esc(tid)}"><b>${icono('candado')}</b><span>su dinero · función top ›</span></button>`
     : `<button class="eq2-t" ${ir('clausulas', 'quita')}><b>${conDinero ? dineroCorto(r.dinero) : '?'}</b><span>${conDinero ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'} ›</span></button>`;
   const teLlegan = r.fichas.filter((x) => x.abierta && x.meLlega).length;
   const tiles = [
@@ -634,12 +643,12 @@ export function fichaRival(S, tid) {
     h += r.fichas.length ? (ya.length || luego.length ? '' : `<p class="t2 peq">Con tu dinero de ahora no te llega ninguna de sus cláusulas.</p>`) + grupo('Abiertas y te llegan', ya) + grupo('Te llegan cuando se abran', luego) + grupo('No te llegan', resto) : nada('No se ha podido leer su plantilla.');
   } else if (seg === 'clausulas') {
     // lo que él te puede quitar: su dinero (o lo que te dijo) y tus cláusulas a su alcance
-    if (bloqueada('dineroRivales')) cerradas.push('dineroRivales');
-    h += `<div class="eq2-tiles">${bloqueada('dineroRivales') ? '' : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'}</span></div>`}
+    if (bloqueada('dineroRivales', tid)) cerradas.push('dineroRivales');
+    h += `<div class="eq2-tiles">${bloqueada('dineroRivales', tid) ? '' : `<div class="eq2-t"><b>${r.dinero && r.dinero.v != null ? dineroCorto(r.dinero) : '?'}</b><span>${r.dinero && r.dinero.v != null ? (r.dinero.exacto ? 'su dinero, exacto' : `su dinero · ± ${eur(r.dinero.margen)}`) : 'su dinero: no se sabe'}</span></div>`}
       <div class="eq2-t"><b>${r.paga ? pct(r.paga.med * 100) : '–'}</b><span>${r.paga ? `paga en el mercado · ${r.paga.n} compra${r.paga.n > 1 ? 's' : ''}` : 'sin compras al mercado'}</span></div></div>`;
-    if (!bloqueada('dineroRivales')) h += `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`;
+    if (!bloqueada('dineroRivales', tid)) h += `<p class="t2 peq">${esc(dineroLargo(r.dinero))}</p>`;
     // si te ha dicho cuánto tiene, se apunta: desde entonces su dinero sale de eso más lo que mueva
-    if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales')) {
+    if (!(r.dinero && r.dinero.exacto) && !bloqueada('dineroRivales', tid)) {
       const dc = r.dinero && r.dinero.dicho, cu = M.dineroCuenta ? M.dineroCuenta(tid) : null;
       h += `<div class="dicho">`;
       if (dc) h += `<p class="t2 peq">${dc.est != null ? `Cuando te lo dijo, la cuenta con los movimientos daba ${eur(dc.est)} (${eur(dc.v - dc.est, { signo: true })} de diferencia).` : ''}${cu && cu.v != null && (dc.est == null || Math.abs(cu.v - dc.est) >= 1e5) ? ` Ahora daría ${eur(cu.v)}.` : ''} <button class="enlace" data-accion="borrarDicho" data-tid="${esc(tid)}">Olvidar lo que te dijo</button></p>`;
@@ -648,7 +657,7 @@ export function fichaRival(S, tid) {
         <p class="t2 peq">En millones. Si te dijo una cifra, ponla en los dos. A partir de ahora su dinero sale de esto más lo que mueva, y la app aprende cuánto fallaba la cuenta.</p>
       </details></div>`;
     }
-    if (r.leLlegan && r.leLlegan.length && bloqueada('quienPaga')) cerradas.push('quienPaga');
+    if (r.leLlegan && r.leLlegan.length && bloqueada('quienPaga', tid)) cerradas.push('quienPaga');
     else if (r.leLlegan && r.leLlegan.length) {
       h += `<div class="grupo"><span>Tus cláusulas a su alcance · ${r.leLlegan.length}</span><span>${r.leLleganYa.length} abierta${r.leLleganYa.length === 1 ? '' : 's'}</span></div>`;
       h += r.leLlegan.map((x) => filaJugador(x, {
@@ -691,14 +700,14 @@ export function fichaRival(S, tid) {
       h += acts.map((a) => filaActividad(a, { dentroDe: tid })).join('');
     } else h += nada('Sin movimientos en los últimos días.');
   }
-  return h + candadosJuntos(cerradas);
+  return h + candadosJuntos(cerradas, { rid: tid });
 }
 
 /* ================= ANUNCIO BONIFICADO ================= */
 /** antes de ver un anuncio para desbloquear algo (de momento, otro plan de la IA cuando ya llevas 3 hoy) */
 export function anuncioHTML(S, para) {
   const A = S.anuncio || {};
-  if (para === 'top') return anuncioTopHTML(A);
+  if (para === 'top') return anuncioTopHTML(A, S);
   // con la IA de la app (2 planes al día; Carlos, 14 nov): igual que las funciones top, un anuncio por cada plan de más
   if (planesApp(!!(S.D && S.D.demo))) return anuncioPlanHTML(A, cupoPlanes());
   let h = `<div class="hoja-cab"><h2>Otro plan</h2></div>`;
@@ -722,23 +731,39 @@ function anuncioPlanHTML(A, cu) {
   return h;
 }
 
-/** las funciones top: las de los rivales, con 2 anuncios y unas veces por jornada; cuándo gira, con 1, hasta medianoche */
-function anuncioTopHTML(A) {
+/** las funciones top: las de los rivales, por rival (sus anuncios seguidos, toda la jornada, unos rivales por jornada);
+    cuándo gira, con 1, hasta medianoche. Sin rival (un candado de una lista o de un jugador tuyo), se elige aquí */
+function anuncioTopHTML(A, S) {
   const [t, x] = BLOQUEO[A.como] || BLOQUEO[A.clave] || ['Funciones top', ''];
-  const rivales = POR_JORNADA.includes(A.clave), faltan = faltanAnuncios(A.clave), q = usosQuedan(A.clave), n = usosPorJornada();
-  const min = minutosPorVez(), dura = min % 60 === 0 ? `${min / 60} hora${min > 60 ? 's' : ''}` : `${min} minutos`;
+  const rivales = POR_JORNADA.includes(A.clave), q = usosQuedan(A.clave), n = usosPorJornada(), a = anunciosPorVez(A.clave);
+  const rid = A.rival != null ? String(A.rival) : null;
+  const M = S && S.M, nom = (tid) => { const r = M && M.rivales.find((y) => String(y.e.teamId) === String(tid)); return r ? r.e.nombre : 'este rival'; };
+  const ads = a === 1 ? 'un anuncio corto' : `<b>${a === 2 ? 'dos' : a} anuncios cortos</b>, uno detrás de otro`;
   let h = `<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
     <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2>${x ? `<p>${esc(x)}</p>` : ''}`;
-  if (rivales && !q) {
-    h += `<p><b>Ya la has abierto las ${n} veces de esta jornada.</b> Vuelve a estar disponible en la siguiente.</p>
+  const yaAb = rivales ? rivalesAbiertos() : [];
+  if (rivales && rid == null) {
+    // elegir rival: los abiertos ya se ven; los demás, con sus anuncios
+    const rs = M ? M.rivales : [];
+    h += `<p>Se abre <b>por rival</b>: su dinero y qué cláusulas tuyas le llegan, <b>toda la jornada</b>, con ${ads}. ${q ? `Te ${q === 1 ? 'queda 1 rival' : `quedan ${q} rivales`} esta jornada.` : `Ya has abierto los ${n} de esta jornada.`}</p>`;
+    h += `<div class="lista-rival-top">${rs.map((r) => {
+      const ab = yaAb.includes(String(r.e.teamId));
+      return `<button class="btn ancho sec" ${ab ? `data-r="${esc(r.e.teamId)}"` : q ? `data-accion="bloqueada" data-clave="${esc(A.clave)}" data-rival="${esc(r.e.teamId)}"` : 'disabled'} style="margin-top:6px">${ab ? icono('ojo') : icono('candado')}${esc(r.e.nombre)}${ab ? ' · abierto' : ''}</button>`;
+    }).join('')}</div>
+      <button class="btn ancho sec" data-accion="noTop" style="margin-top:10px">Ahora no</button></div>`;
+    return h;
+  }
+  if (rivales && !q && !yaAb.includes(rid)) {
+    h += `<p><b>Ya has abierto los ${n} rivales de esta jornada.</b> En la siguiente puedes abrir otros ${n}.</p>
       <button class="btn ancho sec" data-accion="noTop">Entendido</button></div>`;
     return h;
   }
-  if (rivales && faltan >= 2) h += `<p>Se abre <b>${dura}</b> viendo <b>dos anuncios cortos</b>, uno detrás de otro. Puedes hacerlo ${n} veces por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
-  else if (rivales) h += `<p><b>Llevas 1 de 2.</b> Mira el segundo y se abre ${dura}. Te ${q === 1 ? 'queda 1 vez' : `quedan ${q} veces`} esta jornada.</p>`;
+  const faltan = faltanAnuncios(A.clave, rid);
+  if (rivales && faltan >= a) h += `<p>Abre a <b>${esc(nom(rid))}</b> toda la jornada viendo ${ads}. Puedes abrir ${n} rivales por jornada: te ${q === 1 ? 'queda 1' : `quedan ${q}`}.</p>`;
+  else if (rivales) h += `<p><b>Llevas ${a - faltan} de ${a}.</b> ${faltan === 1 ? 'Mira el último' : `Te faltan ${faltan}`} y ${esc(nom(rid))} se queda abierto toda la jornada.</p>`;
   else h += `<p>Mira un anuncio corto y se abre <b>hasta medianoche</b>.</p>`;
   if (A.error) h += `<div class="aviso-ficha oro">${icono('info')}<div>${esc(A.error)}</div></div>`;
-  const txt = A.cargando ? 'Cargando el anuncio…' : rivales ? (faltan >= 2 ? 'Ver el primer anuncio (1 de 2)' : 'Ver el segundo anuncio (2 de 2)') : 'Ver el anuncio';
+  const txt = A.cargando ? 'Cargando el anuncio…' : rivales && a > 1 ? `Ver el anuncio (${a - faltan + 1} de ${a})` : 'Ver el anuncio';
   h += `<button class="btn ancho" data-accion="verAnuncio" data-para="top"${A.cargando ? ' disabled' : ''}>${txt}</button>
     <button class="btn ancho sec" data-accion="noTop" style="margin-top:8px">Ahora no</button></div>`;
   return h;

@@ -26,7 +26,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, novedadesPara, cierreApk } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, usosQuedan, proximoCierreTop, POR_JORNADA, anunciosWebModo, novedadesPara, cierreApk } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -791,11 +791,11 @@ window.anuncioVisto = (para, visto, motivo) => {
   const sinAnuncio = !visto && /sin anuncio|sin consentimiento|no se pudo/.test(motivo || '');
   // las funciones top (limite.js): las de los rivales, 2 anuncios cada vez y unas veces por jornada; cuándo gira, 1
   if (para === 'top') {
-    const clave = S.anuncio && S.anuncio.clave;
+    const clave = S.anuncio && S.anuncio.clave, rid = S.anuncio && S.anuncio.rival;
     let abierta = false;
-    if (visto) abierta = anuncioTopVisto(clave);
-    // sin anuncio que enseñar, se abre igual lo que pedía media hora, pero solo una vez al día (todas las top juntas)
-    else if (sinAnuncio && puedeTopGratis()) { abrirTopGratis(clave, 30); abierta = true; }
+    if (visto) abierta = anuncioTopVisto(clave, rid);
+    // sin anuncio que enseñar, se abre igual lo que pedía (un rival, o cuándo gira media hora), pero solo una vez al día
+    else if (sinAnuncio && puedeTopGratis()) { abrirTopGratis(clave, 30, rid); abierta = true; }
     else if (sinAnuncio) {
       // la hoja sigue abierta con el botón para reintentar, como en los planes de más
       S.anuncio = { ...(S.anuncio || {}), para, cargando: false, error: 'Ahora no hay anuncio. Prueba otra vez en un rato.' };
@@ -816,8 +816,8 @@ window.anuncioVisto = (para, visto, motivo) => {
       pintar();
       // si el candado estaba en una ficha, se vuelve a ella para ver lo que se ha abierto
       if (volver) hoja(volver[0], volver[1]);
-      const hasta = abiertaHasta(clave);
-      tostada(!visto ? 'No había anuncio ahora: abierta gratis media hora' : hasta ? `Abierta hasta las ${horaDe(hasta)}${usosQuedan(clave) ? '' : ' (era la última vez de esta jornada)'}` : 'Abierta hasta medianoche', 5000);
+      const deRival = rid != null && POR_JORNADA.includes(clave);
+      tostada(deRival ? `Abierto toda la jornada${usosQuedan(clave) ? '' : ' (era el último rival de esta jornada)'}` : !visto ? 'No había anuncio ahora: abierta gratis media hora' : 'Abierta hasta medianoche', 5000);
       cerrarTopA();
       return;
     }
@@ -2885,7 +2885,12 @@ document.addEventListener('click', async (ev) => {
     case 'quienUsa': cerrarHoja(true); abrirQuien(); break;
     case 'bloqueada': {
       // en la de Google Play se abren viendo un anuncio
-      if (topConAnuncio()) { S.anuncio = { para: 'top', clave: d.clave, como: d.como || null, volver: S.tipoHoja && S.tipoHoja[0] !== 'anuncio' ? [...S.tipoHoja] : null }; hoja('anuncio', 'top'); break; }
+      if (topConAnuncio()) {
+        // (0.7.12) las de los rivales, por rival: desde la elección de rival se vuelve a donde estabas, no a la elección
+        const prev = S.tipoHoja && S.tipoHoja[0] === 'anuncio' && S.anuncio ? S.anuncio.volver : (S.tipoHoja && S.tipoHoja[0] !== 'anuncio' ? [...S.tipoHoja] : null);
+        S.anuncio = { para: 'top', clave: d.clave, como: d.como || null, rival: d.rival != null ? String(d.rival) : null, volver: prev };
+        hoja('anuncio', 'top'); break;
+      }
       const [t, x] = BLOQUEO[d.como] || BLOQUEO[d.clave] || ['Función top', ''];
       abrirHoja(`<div class="bloq-hoja"><div class="hoja-cab"><span></span><button class="b-ico" data-accion="cerrarHoja" aria-label="Cerrar">${icono('cerrar')}</button></div>
         <span class="bloq-grande">${icono('candado')}</span><h2>${esc(t)}</h2><p>${esc(x)}</p>

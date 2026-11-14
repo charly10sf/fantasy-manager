@@ -634,12 +634,13 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
     const L = await import('/js/limite.js');
     const { LS } = await import('/js/util.js');
     const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
-    const cerrar = () => { LS.del ? (LS.del('top-abierto'), LS.del('top-jornada')) : (localStorage.removeItem('fm-top-abierto'), localStorage.removeItem('fm-top-jornada')); };
+    const cerrar = () => { for (const k of ['top-abierto', 'top-jornada', 'top-rivales']) localStorage.removeItem(`fm-${k}`); };
+    const rid = String(window.S.M.rivales[0].e.teamId);
     const vez = async (clave) => {
-      window.S.anuncio = { para: 'top', clave };
+      window.S.anuncio = { para: 'top', clave, rival: rid };
       window.anuncioVisto('top', false, 'sin anuncio');
       await espera(200);
-      return { abierta: L.topAbierto(clave), error: (window.S.anuncio && window.S.anuncio.error) || null };
+      return { abierta: L.topAbierto(clave, rid), error: (window.S.anuncio && window.S.anuncio.error) || null };
     };
     cerrar();
     const una = await vez('inercia');
@@ -657,6 +658,49 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   if (!r.tres.abierta || r.tres.error) mal(`top sin anuncio: al día siguiente no vuelve a abrir: ${JSON.stringify(r.tres)}`);
   else bien('top sin anuncio: al día siguiente vuelve a abrirse una vez');
   if (errores.length) mal(`top sin anuncio: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
+// 16b: (0.7.12) las de los rivales, POR RIVAL: 2 anuncios seguidos abren UN rival toda la jornada (su dinero y quién
+// paga), como mucho 3 rivales por jornada contando las dos funciones; el resto sigue cerrado; jornada nueva, a cero
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(async () => {
+    const L = await import('/js/limite.js');
+    const H = await import('/js/hojas.js');
+    const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    for (const k of ['top-abierto', 'top-jornada', 'top-rivales', 'top-sin-anuncio']) localStorage.removeItem(`fm-${k}`);
+    L.fijarJornada(13);
+    const ids = window.S.M.rivales.map((x) => String(x.e.teamId));
+    const ver = async (clave, rid) => { window.S.anuncio = { para: 'top', clave, rival: rid }; window.anuncioVisto('top', true, ''); await espera(150); };
+    const out = {};
+    await ver('dineroRivales', ids[0]);
+    out.unoDeDos = { abierto: L.topAbierto('dineroRivales', ids[0]), faltan: L.faltanAnuncios('dineroRivales', ids[0]), hoja: (window.S.anuncio && !window.S.anuncio.error) };
+    await ver('dineroRivales', ids[0]);
+    out.dos = { abierto: !L.bloqueada('dineroRivales', ids[0]), quien: !L.bloqueada('quienPaga', ids[0]), otro: L.bloqueada('dineroRivales', ids[1]), general: L.bloqueada('dineroRivales'), quedan: L.usosQuedan('dineroRivales') };
+    await ver('quienPaga', ids[1]); await ver('quienPaga', ids[1]);
+    await ver('dineroRivales', ids[2]); await ver('dineroRivales', ids[2]);
+    out.tres = { quedan: L.usosQuedan('dineroRivales'), abiertos: L.rivalesAbiertos().length, cuarto: L.bloqueada('dineroRivales', ids[3]) };
+    out.hojaLlena = H.anuncioHTML({ anuncio: { para: 'top', clave: 'dineroRivales', rival: ids[3] }, M: window.S.M, D: { demo: false } }, 'top').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    out.elegir = H.anuncioHTML({ anuncio: { para: 'top', clave: 'quienPaga' }, M: window.S.M, D: { demo: false } }, 'top');
+    L.fijarJornada(14);
+    out.nueva = { quedan: L.usosQuedan('dineroRivales'), primero: L.bloqueada('dineroRivales', ids[0]) };
+    return out;
+  });
+  if (r.unoDeDos.abierto || r.unoDeDos.faltan !== 1) mal(`top por rival: con 1 de 2 ya se abre o no cuenta: ${JSON.stringify(r.unoDeDos)}`);
+  else bien('top por rival: con el primero de los dos anuncios sigue cerrado y falta 1');
+  if (!r.dos.abierto || !r.dos.quien || !r.dos.otro || !r.dos.general || r.dos.quedan !== 2) mal(`top por rival: con 2 anuncios: ${JSON.stringify(r.dos)}`);
+  else bien('top por rival: con 2 anuncios se abre ese rival (dinero y quién paga) y los demás siguen cerrados; quedan 2');
+  if (r.tres.quedan !== 0 || r.tres.abiertos !== 3 || !r.tres.cuarto || !/Ya has abierto los 3 rivales/.test(r.hojaLlena)) mal(`top por rival: el tope de 3: ${JSON.stringify(r.tres)} / ${r.hojaLlena.slice(0, 160)}`);
+  else bien('top por rival: 3 rivales por jornada (las dos funciones juntas) y el cuarto ya no');
+  if ((r.elegir.match(/data-rival="/g) || []).length || (r.elegir.match(/data-r="/g) || []).length !== 3) mal(`top por rival: la elección de rival sin rival: ${r.elegir.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').slice(0, 200)}`);
+  else bien('top por rival: sin rival se elige de la lista (los 3 abiertos, para verlos; el resto, sin tope, cerrados)');
+  if (r.nueva.quedan !== 3 || !r.nueva.primero) mal(`top por rival: la jornada nueva no vuelve a cero: ${JSON.stringify(r.nueva)}`);
+  else bien('top por rival: en la jornada siguiente se vuelven a poder abrir 3');
+  if (errores.length) mal(`top por rival: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
   await ctx.close();
 }
 
