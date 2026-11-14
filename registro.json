@@ -3351,7 +3351,6 @@
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-manifestantes-cortan-gran-via-grito-hoy-no-consume-fuerte-dispositivo-policia-20261111131254.html": 1794398976000,
    "SPORT|136328833": 1794392891000,
    "Europa Press|https://www.europapress.es/nacional/noticia-pp-acusa-gobierno-alentar-huelga-electoral-avisa-danara-credibilidad-sindicatos-20261111111607.html": 1794392167000,
-   "Europa Press|https://www.europapress.es/andalucia/noticia-adelante-andalucia-critica-violencia-policial-contra-diputada-carga-vias-metro-granada-20261111103032.html": 1794389432000,
    "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
    "Europa Press|https://www.europapress.es/nacional/noticia-colau-afirma-ayuso-insulta-sindicatos-porque-nerviosa-apoyo-huelga-general-20261111130843.html": 1794398923000,
    "SPORT|136301661": 1794398469000,
@@ -7653,13 +7652,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2410,
+   "ok": 2411,
    "fallos": 0,
-   "ejecuciones": 1877,
+   "ejecuciones": 1878,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T09:27:49.797Z"
+   "ultima": "2026-11-14T09:31:14.871Z"
   }
  },
  "ptsDirecto": {},
@@ -7676,15 +7675,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:27:54.726Z"
+   "ultimaBien": "2026-11-14T09:31:21.009Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:27:54.726Z"
+   "ultimaBien": "2026-11-14T09:31:21.009Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:27:54.726Z"
+   "ultimaBien": "2026-11-14T09:31:21.009Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7692,11 +7691,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:27:54.726Z"
+   "ultimaBien": "2026-11-14T09:31:21.009Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T09:27:54.726Z"
+   "ultimaBien": "2026-11-14T09:31:21.009Z"
   }
  },
  "avisos": [
