@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "AS|https://as.com/futbol/primera/sannadi-realiza-carrera-continua-en-lezama-f202611-n/": 1794402657000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/drama-real-sociedad-ander-barrenetxea-136332368.html": 1794403782000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
    "El Correo|https://www.elcorreo.com/athletic/elegante-mensaje-animo-athletic-barrenetxea-cinco-meses-20261111144227-nt.html": 1794404734000,
@@ -7564,13 +7563,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2454,
+   "ok": 2455,
    "fallos": 0,
-   "ejecuciones": 1921,
+   "ejecuciones": 1922,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T13:06:11.945Z"
+   "ultima": "2026-11-14T13:11:13.724Z"
   }
  },
  "ptsDirecto": {},
@@ -7587,15 +7586,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:06:22.585Z"
+   "ultimaBien": "2026-11-14T13:11:18.095Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:06:22.585Z"
+   "ultimaBien": "2026-11-14T13:11:18.095Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:06:22.585Z"
+   "ultimaBien": "2026-11-14T13:11:18.095Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7603,11 +7602,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:06:22.585Z"
+   "ultimaBien": "2026-11-14T13:11:18.095Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:06:22.585Z"
+   "ultimaBien": "2026-11-14T13:11:18.095Z"
   }
  },
  "avisos": [
