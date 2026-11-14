@@ -2159,7 +2159,8 @@
    "SPORT|135274018": 1794639600000,
    "SPORT|135166253": 1794639600000,
    "AS|https://as.com/futbol/primera/cuti-romero-sin-descanso-f202611-n/": 1794643446000,
-   "El Correo|https://www.elcorreo.com/athletic/vacile-huijsen-nico-williams-parece-boxeador-20261114090917-nt.html": 1794643758000
+   "El Correo|https://www.elcorreo.com/athletic/vacile-huijsen-nico-williams-parece-boxeador-20261114090917-nt.html": 1794643758000,
+   "SPORT|136432118": 1794641299000
   },
   "hechos": [
    {
@@ -2493,7 +2494,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 4
+   "n": 5
   },
   "desde": {
    "67": {
@@ -3445,17 +3446,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 5,
+   "clasificar": 6,
    "redactar": 4,
    "revisar": 2,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 70794,
-  "salida": 6513,
+  "entrada": 72844,
+  "salida": 6631,
   "cacheLee": 0,
   "cacheEscribe": 5806,
-  "dolares": 0.142979,
+  "dolares": 0.143243,
   "reservado": 0
  },
  "recientes": {
@@ -7658,13 +7659,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2397,
+   "ok": 2398,
    "fallos": 0,
-   "ejecuciones": 1864,
+   "ejecuciones": 1865,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T08:26:14.270Z"
+   "ultima": "2026-11-14T08:31:23.637Z"
   }
  },
  "ptsDirecto": {},
@@ -7681,15 +7682,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:26:21.174Z"
+   "ultimaBien": "2026-11-14T08:31:31.893Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:26:21.174Z"
+   "ultimaBien": "2026-11-14T08:31:31.893Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:26:21.174Z"
+   "ultimaBien": "2026-11-14T08:31:31.893Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7697,11 +7698,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:26:21.174Z"
+   "ultimaBien": "2026-11-14T08:31:31.893Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:26:21.174Z"
+   "ultimaBien": "2026-11-14T08:31:31.893Z"
   }
  },
  "avisos": [
