@@ -1912,8 +1912,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "SPORT|136319206": 1794386810000,
-   "SPORT|136318124": 1794386885000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fichajes/20261111/1004249788/raul.html": 1794391928000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/casos-no-hubo-buen-entendimiento-xabi-alonso-mi-me-gusto-manera-trabajar-20261111_3472842.html": 1794392772000,
    "MARCA|https://www.marca.com/futbol/2026/11/11/bellingham-jobe-inglaterra-hermano-jude.html": 1794393040000,
@@ -7657,13 +7655,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2401,
+   "ok": 2402,
    "fallos": 0,
-   "ejecuciones": 1868,
+   "ejecuciones": 1869,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T08:46:22.905Z"
+   "ultima": "2026-11-14T08:51:12.830Z"
   }
  },
  "ptsDirecto": {},
@@ -7680,15 +7678,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:46:27.634Z"
+   "ultimaBien": "2026-11-14T08:51:17.645Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:46:27.634Z"
+   "ultimaBien": "2026-11-14T08:51:17.645Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:46:27.634Z"
+   "ultimaBien": "2026-11-14T08:51:17.645Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7696,11 +7694,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:46:27.634Z"
+   "ultimaBien": "2026-11-14T08:51:17.645Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T08:46:27.634Z"
+   "ultimaBien": "2026-11-14T08:51:17.645Z"
   }
  },
  "avisos": [
