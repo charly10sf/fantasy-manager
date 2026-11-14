@@ -3237,7 +3237,6 @@
  },
  "liga": {
   "vistas": {
-   "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-reivindica-huelga-contra-todos-gobiernos-avisa-no-aceptara-parches-20261111183506.html": 1794418506000,
    "Europa Press|https://www.europapress.es/nacional/noticia-act3-huelga-deja-ya-mas-50-detenidos-919-incidencias-toda-espana-20261111190915.html": 1794420555000,
    "El Mundo|https://www.elmundo.es/deportes/futbol/primera-division/2026/11/11/6af4b4cce85ece663a8b45a1.html": 1794422281000,
@@ -7526,13 +7525,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2506,
+   "ok": 2507,
    "fallos": 0,
-   "ejecuciones": 1973,
+   "ejecuciones": 1974,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T17:21:12.801Z"
+   "ultima": "2026-11-14T17:26:17.916Z"
   }
  },
  "ptsDirecto": {},
@@ -7549,15 +7548,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:21:16.753Z"
+   "ultimaBien": "2026-11-14T17:26:23.215Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:21:16.753Z"
+   "ultimaBien": "2026-11-14T17:26:23.215Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:21:16.753Z"
+   "ultimaBien": "2026-11-14T17:26:23.215Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7565,11 +7564,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:21:16.753Z"
+   "ultimaBien": "2026-11-14T17:26:23.215Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:21:16.753Z"
+   "ultimaBien": "2026-11-14T17:26:23.215Z"
   }
  },
  "avisos": [
