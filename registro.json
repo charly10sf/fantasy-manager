@@ -3338,7 +3338,6 @@
  },
  "liga": {
   "vistas": {
-   "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-huelga-general-11-noviembre-revela-consumo-electrico-tiempo-real-seguimiento-20261111131526.html": 1794399326000,
    "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681673/ruibal-defiende-huelga-general-me-encanta-gente-salga-protestar.html": 1794401677000,
    "Europa Press|https://www.europapress.es/sociedad/noticia-carreteras-cortadas-vuelos-cancelados-clases-suspendidas-primeros-efectos-paso-charles-20261111151925.html": 1794406765000,
@@ -7641,13 +7640,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2443,
+   "ok": 2444,
    "fallos": 0,
-   "ejecuciones": 1910,
+   "ejecuciones": 1911,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T12:11:12.563Z"
+   "ultima": "2026-11-14T12:16:10.758Z"
   }
  },
  "ptsDirecto": {},
@@ -7664,15 +7663,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:11:18.208Z"
+   "ultimaBien": "2026-11-14T12:16:13.901Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:11:18.208Z"
+   "ultimaBien": "2026-11-14T12:16:13.901Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:11:18.208Z"
+   "ultimaBien": "2026-11-14T12:16:13.901Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7680,11 +7679,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:11:18.208Z"
+   "ultimaBien": "2026-11-14T12:16:13.901Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:11:18.208Z"
+   "ultimaBien": "2026-11-14T12:16:13.901Z"
   }
  },
  "avisos": [
