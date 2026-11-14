@@ -1044,6 +1044,17 @@
    "jornada": 13,
    "id": "2121698817099682284",
    "t": "2026-11-14T20:16:32.067Z"
+  },
+  {
+   "clave": "mercado|2026-11-15",
+   "tipo": "mercado",
+   "jornada": 13,
+   "id": "2121743840356773985",
+   "t": "2026-11-14T23:15:26.756Z",
+   "huella": {
+    "clase": "mercado",
+    "chollo": "2565"
+   }
   }
  ],
  "estados": {
@@ -3301,19 +3312,19 @@
   "espera": {}
  },
  "ia": {
-  "dia": "2026-11-14",
+  "dia": "2026-11-15",
   "llamadas": {
-   "clasificar": 50,
-   "redactar": 15,
-   "revisar": 9,
+   "clasificar": 0,
+   "redactar": 2,
+   "revisar": 1,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 318225,
-  "salida": 27583,
-  "cacheLee": 11612,
-  "cacheEscribe": 14515,
-  "dolares": 0.537048,
+  "entrada": 29525,
+  "salida": 399,
+  "cacheLee": 0,
+  "cacheEscribe": 2903,
+  "dolares": 0.070298,
   "reservado": 0
  },
  "recientes": {
@@ -3385,10 +3396,6 @@
   ],
   "mercado": [
    {
-    "t": "2026-11-09T23:15:41.346Z",
-    "texto": "📈 Rodri es el que más baja en el mercado de esta noche: pierde 2 M en el Barça y se queda en 78,2 M.\n\nEn el lado bueno, Federico Valverde sube 3 M con el Real Madrid ⚪ y se va a 71 M, un 4,3 % más.\n\nUn chollo para mirar: Redondo, del Elche 🌴, vale 2 M y ha sumado 24 puntos en las tres últimas jornadas. Las cinco mayores subidas y bajadas, en la imagen."
-   },
-   {
     "t": "2026-11-10T23:15:33.485Z",
     "texto": "💸 Mueve ficha el mercado fantasy y el Barça sale en las dos puntas. Fermín sube 3,2 M (+2,7 %) y se va a 120,5 M, y es el 3º centrocampista con más puntos de la temporada. En el lado contrario, Rodri pierde 1,9 M y se queda en 76,3 M.\n\nBarato y en racha: Redondo, del Elche 🌴, vale 2,1 M y suma 24 puntos en las tres últimas jornadas. Los cinco que más suben y los cinco que más bajan, en la imagen."
    },
@@ -3403,6 +3410,10 @@
    {
     "t": "2026-11-13T23:15:25.816Z",
     "texto": "📊 La noche es del Real Madrid ⚪: sus jugadores suman 13,2 M entre todos, y Valverde, con casi 2,4 M más, se va a 81,3 M. El Barça, en cambio, pierde 6,9 M en conjunto.\n\nRodri sigue cayendo y ya van 18 días seguidos, 24,5 M menos desde el 27 de octubre. Fermín es su cara contraria: 24 días subiendo y 39,4 M más, con 40 puntos en tres jornadas."
+   },
+   {
+    "t": "2026-11-14T23:15:26.758Z",
+    "texto": "📈 Valverde es el segundo que más sube esta noche: +2,3 M y se va a 83,7 M, con diez días seguidos al alza. Es parte de una noche redonda para el Real Madrid ⚪, cuyos jugadores suman 12,1 M entre todos.\n\nEn el Atlético, al revés: Grimaldo y Álex Baena caen y el Atleti se deja 6,4 M en total. Y Fortuño, del Espanyol, vale 3,5 M y suma 32 puntos en tres jornadas."
    }
   ],
   "previa": [
@@ -3678,6 +3689,22 @@
    "cacheLee": 17418,
    "cacheEscribe": 8709,
    "dolares": 0.416535,
+   "reservado": 0
+  },
+  {
+   "dia": "2026-11-14",
+   "llamadas": {
+    "clasificar": 50,
+    "redactar": 15,
+    "revisar": 9,
+    "pulir": 0
+   },
+   "fallos": 0,
+   "entrada": 318225,
+   "salida": 27583,
+   "cacheLee": 11612,
+   "cacheEscribe": 14515,
+   "dolares": 0.537048,
    "reservado": 0
   }
  ],
@@ -7543,7 +7570,7 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T23:11:16.783Z"
+   "ultimaBien": "2026-11-14T23:15:26.760Z"
   },
   "FotMob": {
    "seguidas": 0,
