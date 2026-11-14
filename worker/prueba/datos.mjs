@@ -319,8 +319,10 @@ globalThis.fetch = async (u, o) => {
     aClaude.push({ b, clave: cabDe(o, 'x-api-key') });
     if (lentoClaude) await new Promise((ok2) => setTimeout(ok2, lentoClaude));
     if (respuestaClaude === 'cae') return new Response(JSON.stringify({ type: 'error', error: { type: 'overloaded_error', message: 'Overloaded' } }), { status: 529 });
+    if (respuestaClaude === 'sin-web' && b.tools) return new Response(JSON.stringify({ type: 'error', error: { type: 'invalid_request_error', message: 'web search is not enabled for this organization' } }), { status: 400 });
+    if (Array.isArray(respuestaClaude)) { buenasClaude++; return new Response(JSON.stringify(respuestaClaude.shift()), { status: 200 }); }
     buenasClaude++;
-    const texto = respuestaClaude || '```json\n{"pasos":[{"id":"p1","frase":"Vende a X: sube poco."}],"quita":[],"mete":[],"situacion":"Vas bien.","noticias":[],"rivales":[],"titular":"Vende a X y espera"}\n```';
+    const texto = (respuestaClaude !== 'sin-web' && respuestaClaude) || '```json\n{"pasos":[{"id":"p1","frase":"Vende a X: sube poco."}],"quita":[],"mete":[],"situacion":"Vas bien.","noticias":[],"rivales":[],"titular":"Vende a X y espera"}\n```';
     return new Response(JSON.stringify({ content: [{ type: 'text', text: texto }], usage: { input_tokens: 5200, output_tokens: 2500 }, stop_reason: 'end_turn' }), { status: 200 });
   }
   return fetchAntes(u, o);
@@ -411,3 +413,67 @@ limitesPlanes = { on: true, gratis: 50, max: 80 };
 for (let i = 0; i < 11; i++) minuto();
 const cfgP = await W2.cfgPlanes(envP);
 ok(cfgP.gratis === 10 && cfgP.max === 10 && cfgP.topeUsdDia === 3, `limites.json no puede pasar de 10 al día (${JSON.stringify(cfgP)})`);
+
+// ---------- /plan con la búsqueda en Google (punto 14 del motor, 14 nov) ----------
+const gastoYa = async () => Number(await (await QRP.get(`plan|${new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(new Date())}|gasto`).fetch('https://freno/gasto', { method: 'POST', body: '0' })).text());
+limitesPlanes = { on: true, gratis: 10, max: 10, web: 9 };
+for (let i = 0; i < 11; i++) minuto();
+ok((await W2.cfgPlanes(envP)).web === 3, 'las búsquedas por plan no pasan de 3');
+limitesPlanes = { on: true, gratis: 10, max: 10, web: 2 };
+for (let i = 0; i < 11; i++) minuto();
+ok((await W2.cfgPlanes(envP)).web === 2, 'web: 2 en limites.json');
+const MARCA = 'https://www.marca.com/futbol/real-madrid/2026/11/14/baja.html', FF = 'https://www.futbolfantasy.com/noticias/x', AS = 'https://as.com/futbol/primera/once.html';
+const jsonWeb = { pasos: [{ id: 'p1', frase: 'Vende a X: sube poco.' }], quita: [{ id: 'p2', motivo: 'Se ha roto el cruzado.', fuente: MARCA + '#arriba' }], mete: [{ id: 'a1', frase: 'Entra.', fuente: 'https://inventada.com/no-salio' }], situacion: 'Vas bien.', noticias: [{ jugador: 'X', texto: 'Lesionado.', efecto: 'baja', fuente: 'https://otra-inventada.es/y' }, { jugador: 'Y', texto: 'Titular.', efecto: 'sube', fuente: FF }], rivales: [], titular: 'Vende a X y espera', fuentes: [{ u: 'https://la-ia-se-la-inventa.com', t: 'Mentira' }] };
+const tJ = '```json\n' + JSON.stringify(jsonWeb) + '\n```';
+respuestaClaude = [{
+  content: [
+    { type: 'text', text: 'Voy a mirar las noticias.' },
+    { type: 'server_tool_use', id: 'srvtoolu_1', name: 'web_search', input: { query: 'X lesión' } },
+    { type: 'web_search_tool_result', tool_use_id: 'srvtoolu_1', content: [{ type: 'web_search_result', url: MARCA, title: 'X, baja por lesión', encrypted_content: 'abc', page_age: 'hace 2 horas' }, { type: 'web_search_result', url: FF, title: 'Futbolfantasy: onces', encrypted_content: 'def' }] },
+    { type: 'server_tool_use', id: 'srvtoolu_2', name: 'web_search', input: { query: 'once probable' } },
+    { type: 'web_search_tool_result', tool_use_id: 'srvtoolu_2', content: [{ type: 'web_search_result', url: AS, title: 'El once probable', encrypted_content: 'ghi' }] },
+    { type: 'text', text: tJ.slice(0, 60) },
+    { type: 'text', text: tJ.slice(60, 140), citations: [{ type: 'web_search_result_location', url: AS, title: 'El once probable', cited_text: '…', encrypted_index: 'x' }] },
+    { type: 'text', text: tJ.slice(140) },
+  ],
+  usage: { input_tokens: 21000, output_tokens: 2600, server_tool_use: { web_search_requests: 2 } }, stop_reason: 'end_turn',
+}];
+let g0 = await gastoYa();
+r = await plan({}, { tk: 'u'.repeat(30) });
+let cW = aClaude[aClaude.length - 1];
+ok(cW.b.tools && cW.b.tools.length === 1 && cW.b.tools[0].type === 'web_search_20250305' && cW.b.tools[0].max_uses === 2 && cW.b.tools[0].user_location.country === 'ES', `con web: 2, a Claude le va la búsqueda con 2 como mucho (${JSON.stringify(cW.b.tools)})`);
+ok(cW.b.system === PS.sistemaCorto({ tono: 'broma', bloq: ['dineroRivales'], anuncio: true, alias: { puesto: true, ex: false }, web: 2 }) && cW.b.system.includes('BÚSQUEDA EN GOOGLE') && cW.b.system.includes('como mucho 2 búsquedas'), 'y el sistema lo dice (el mismo que arma plan-sistema.js con web: 2)');
+const pW = r.j && r.j.plan;
+ok(r.s === 200 && pW && pW.titular === 'Vende a X y espera', `el plan sale entero con los bloques partidos y con citas (${r.t.trim().slice(0, 120)})`);
+ok(pW && pW.quita[0].fuente === MARCA && !('fuente' in pW.mete[0]) && !('fuente' in pW.noticias[0]) && pW.noticias[1].fuente === FF, `las fuentes que no salieron en la búsqueda se borran (${JSON.stringify([pW && pW.quita, pW && pW.mete, pW && pW.noticias])})`);
+ok(pW && pW.fuentes.map((f) => f.u).join(' ') === [MARCA, FF, AS].join(' ') && pW.fuentes[0].t === 'X, baja por lesión' && !pW.fuentes.some((f) => /inventa/.test(f.u)), `«fuentes»: las usadas y las citadas, nunca las que pone la IA (${JSON.stringify(pW && pW.fuentes)})`);
+ok(r.j.tok && r.j.tok.web === 2 && r.j.tok.entra === 21000, `devuelve las búsquedas hechas (${JSON.stringify(r.j.tok)})`);
+let g1 = await gastoYa();
+ok(Math.abs(g1 - g0 - (21000 * 0.1 + 2600 * 0.5 + 2 * 10000)) < 1, `el gasto suma 0,01 $ por búsqueda (${((g1 - g0) / 1e6).toFixed(4)} $)`);
+// a medias (pause_turn): se sigue desde ahí y se suma todo
+respuestaClaude = [
+  { content: [{ type: 'server_tool_use', id: 'srvtoolu_3', name: 'web_search', input: { query: 'X' } }, { type: 'web_search_tool_result', tool_use_id: 'srvtoolu_3', content: [{ type: 'web_search_result', url: MARCA, title: 'X, baja' }] }], usage: { input_tokens: 9000, output_tokens: 100, server_tool_use: { web_search_requests: 1 } }, stop_reason: 'pause_turn' },
+  { content: [{ type: 'text', text: tJ }], usage: { input_tokens: 12000, output_tokens: 2000, server_tool_use: { web_search_requests: 1 } }, stop_reason: 'end_turn' },
+];
+const nAntes = aClaude.length;
+g0 = await gastoYa();
+r = await plan({}, { tk: 'u'.repeat(30) });
+cW = aClaude[aClaude.length - 1];
+ok(aClaude.length === nAntes + 2 && cW.b.messages.length === 2 && cW.b.messages[1].role === 'assistant' && cW.b.messages[1].content[0].type === 'server_tool_use', 'a medias (pause_turn): se vuelve a llamar con lo que ya trajo');
+ok(r.j.plan && r.j.plan.quita[0].fuente === MARCA && r.j.tok.web === 2 && r.j.tok.entra === 21000, `y se junta todo (${JSON.stringify(r.j.tok)})`);
+g1 = await gastoYa();
+ok(Math.abs(g1 - g0 - (21000 * 0.1 + 2100 * 0.5 + 2 * 10000)) < 1, 'con el gasto de las dos vueltas');
+// la búsqueda sin activar en la consola de Anthropic: el plan sale igual, sin ella
+respuestaClaude = 'sin-web';
+r = await plan({}, { tk: 'u'.repeat(30) });
+cW = aClaude[aClaude.length - 1];
+ok(r.s === 200 && r.j.plan && !cW.b.tools && r.j.tok.web === 0 && (r.j.plan.fuentes || []).length === 0, `sin la búsqueda activada: se repite sin ella y sale el plan (${r.t.trim().slice(0, 100)})`);
+respuestaClaude = null;
+// apagada (web: 0): ni herramienta ni párrafo
+limitesPlanes = { on: true, gratis: 10, max: 10, web: 0 };
+for (let i = 0; i < 11; i++) minuto();
+r = await plan({}, { tk: 'u'.repeat(30) });
+cW = aClaude[aClaude.length - 1];
+ok(r.s === 200 && !cW.b.tools && !cW.b.system.includes('BÚSQUEDA'), 'con web: 0, ni búsqueda ni párrafo en el sistema');
+// lo que se le dice a la IA en cada caso
+ok(PS.webTxt(1).includes('como mucho 1 búsqueda,') && PS.webTxt(0) === '' && PS.webTxt(7).includes('como mucho 3 búsquedas'), 'el párrafo de la búsqueda: 1, 0 y el tope de 3');

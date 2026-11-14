@@ -45,7 +45,7 @@
  * Las sesiones de los códigos se borran al usarse o a los 10 minutos. Los avisos se quedan 180 días.
  */
 
-import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio } from '../../web/js/plan-sistema.js';
+import { sistemaCorto, SOBRE_BLOQUEO, MAX_PEDIDO, esPedidoCorto, jsonDe, planLimpio, fuentesDe, webN, urlFuente, claveUrl } from '../../web/js/plan-sistema.js';
 
 const PERMITIDOS = new Set([
   'fantasy-api.llt-services.com', 'api-fantasy.llt-services.com', 'assets-fantasy.llt-services.com', 'login.laliga.es',
@@ -606,10 +606,12 @@ async function uso(req, env, c) {
  * recibir nada (Puente.java) y así no hace falta un APK nuevo. Por eso, con la respuesta ya empezada, los errores van con
  * estado 200 y { e } en el cuerpo.
  */
-export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3 };
+export const PLANES_DEF = { on: true, gratis: 2, max: 5, topeUsdDia: 3, web: 0 };
 export const PLAN_MODELO = 'claude-haiku-5-5', PLAN_TOKENS = 5000;
 // lo que cuesta cada millón de tokens (entrada, salida), en dólares (comprobado el 14 nov)
 const PRECIOS = { 'claude-haiku-5-5': [0.1, 0.5], 'claude-sonnet-5-5': [2, 10] };
+// cada búsqueda en Google, 10 $ las mil (más los tokens de lo que trae, que van con los de entrada): en millonésimas
+export const USD_BUSQUEDA = 10000;
 const LIMITES_URL = ['https://fantasymanagerapp.com/limites.json', 'https://raw.githubusercontent.com/charly10sf/fantasy-manager/main/web/limites.json'];
 let limitesW = { t: 0, p: null };
 /** «planes» de limites.json (10 minutos en memoria), con sus topes */
@@ -626,7 +628,7 @@ export async function cfgPlanes(env) {
   const n = (x, d, lo, hi) => { const v = Number(x); return Number.isFinite(v) ? Math.max(lo, Math.min(hi, Math.floor(v * 100) / 100)) : d; };
   const techo = n(env.PLAN_TOPE_USD, 10, 0, 1000);
   const gratis = Math.floor(n(p.gratis, 2, 0, 10));
-  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO) };
+  return { on: p.on !== false, gratis, max: Math.max(gratis, Math.floor(n(p.max, 5, 0, 10))), topeUsdDia: Math.min(techo, n(p.topeUsdDia, 3, 0, 1000)), modelo: String(env.PLAN_MODELO || PLAN_MODELO), web: webN(p.web) };
 }
 /** el cupo de hoy de una cuenta en el Durable Object (op: 'tomar', 'devolver' o 'mirar'); sin él, en la memoria del Worker */
 const CUPO_MEM = new Map();
@@ -670,28 +672,66 @@ async function gastoHoy(env, mas = 0) {
 }
 const cupoTxt = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: y.u < c.max });
 const BLOQ = new Set(Object.keys(SOBRE_BLOQUEO));
-/** la llamada a Claude: { texto, entra, sale, fin } o lanza un error */
-export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch) {
-  const cuerpo = { model: modelo, max_tokens: PLAN_TOKENS, output_config: { effort: 'low' }, system: sistema, messages: [{ role: 'user', content: pedido }] };
-  let ult = '';
-  for (let n = 0; n < 3; n++) {
-    let r, x;
-    try {
-      r = await pedir('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': env.CLAUDE_PLANES, 'anthropic-version': '2023-06-01' }, body: JSON.stringify(cuerpo), signal: AbortSignal.timeout(100000) });
-      x = await r.json().catch(() => ({}));
-    } catch (e) { ult = String((e && e.message) || e); continue; }
-    if (r.ok && Array.isArray(x.content)) {
-      const u = x.usage || {};
-      return { texto: x.content.filter((b) => b && b.type === 'text').map((b) => b.text).join(''), entra: u.input_tokens || 0, sale: u.output_tokens || 0, fin: x.stop_reason || '' };
+/**
+ * Lo que trae una respuesta de Claude: el texto (solo los bloques de texto: con búsqueda vienen partidos y con citas), las
+ * fuentes que salieron en la búsqueda ({ u, t }, sin repetir) y las citadas.
+ */
+export function bloquesDe(content) {
+  let texto = '';
+  const vistas = [], citadas = [], ya = new Set(), yaC = new Set();
+  const una = (u, t, a, s) => { const k = claveUrl(u); if (k && !s.has(k) && a.length < 40) { s.add(k); a.push({ u: urlFuente(u), t: String(t || '') }); } };
+  for (const b of Array.isArray(content) ? content : []) {
+    if (!b || typeof b !== 'object') continue;
+    if (b.type === 'text' && typeof b.text === 'string') {
+      texto += b.text;
+      for (const c of Array.isArray(b.citations) ? b.citations : []) if (c && c.url) { una(c.url, c.title, citadas, yaC); una(c.url, c.title, vistas, ya); }
+    } else if (b.type === 'web_search_tool_result' && Array.isArray(b.content)) {
+      for (const r of b.content) if (r && r.type === 'web_search_result' && r.url) una(r.url, r.title, vistas, ya);
     }
-    ult = `${r.status} ${String((x.error && x.error.message) || '').slice(0, 160)}`;
-    // (por si el modelo no conoce el esfuerzo: se quita y se repite)
-    if (r.status === 400 && cuerpo.output_config && /effort|output_config/i.test(JSON.stringify(x))) { delete cuerpo.output_config; continue; }
-    if (r.status === 400 || r.status === 401 || r.status === 403 || r.status === 404) break;
-    await new Promise((ok) => setTimeout(ok, r.status === 429 ? 4000 : 1500));
   }
+  return { texto, vistas, citadas };
+}
+/**
+ * La llamada a Claude: { texto, entra, sale, fin, busquedas, vistas, citadas } o lanza un error. web: cuántas búsquedas en
+ * Google puede hacer (0, sin búsqueda). Si la cuenta de Anthropic no la tiene activada, se repite sin ella (sinWeb: true).
+ */
+export async function llamarClaude(env, modelo, sistema, pedido, pedir = fetch, { web = 0 } = {}) {
+  const cuerpo = { model: modelo, max_tokens: PLAN_TOKENS, output_config: { effort: 'low' }, system: sistema, messages: [{ role: 'user', content: pedido }] };
+  if (webN(web)) cuerpo.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: webN(web), user_location: { type: 'approximate', country: 'ES', timezone: 'Europe/Madrid' } }];
+  const acc = { texto: '', entra: 0, sale: 0, fin: '', busquedas: 0, vistas: [], citadas: [], sinWeb: false };
+  let ult = '';
+  // (con búsqueda, una respuesta larga puede volver a medias, «pause_turn»: se sigue desde ahí, como mucho dos veces)
+  for (let vuelta = 0; vuelta < 3; vuelta++) {
+    let x = null;
+    for (let n = 0; n < 3; n++) {
+      let r;
+      try {
+        r = await pedir('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': env.CLAUDE_PLANES, 'anthropic-version': '2023-06-01' }, body: JSON.stringify(cuerpo), signal: AbortSignal.timeout(100000) });
+        x = await r.json().catch(() => ({}));
+      } catch (e) { ult = String((e && e.message) || e); x = null; continue; }
+      if (r.ok && Array.isArray(x.content)) break;
+      ult = `${r.status} ${String((x.error && x.error.message) || '').slice(0, 160)}`;
+      x = null;
+      // (por si el modelo no conoce el esfuerzo: se quita y se repite)
+      if (r.status === 400 && cuerpo.output_config && /effort|output_config/i.test(ult)) { delete cuerpo.output_config; n--; continue; }
+      // (la búsqueda sin activar en la consola de Anthropic, o una versión que no conoce: sin ella, como siempre)
+      if ((r.status === 400 || r.status === 403) && cuerpo.tools && /web.?search|tool/i.test(ult)) { console.log('plan: sin búsqueda:', ult); delete cuerpo.tools; acc.sinWeb = true; n--; continue; }
+      if (r.status === 400 || r.status === 401 || r.status === 403 || r.status === 404) break;
+      await new Promise((ok) => setTimeout(ok, r.status === 429 ? 4000 : 1500));
+    }
+    if (!x) break;
+    const u = x.usage || {}, b = bloquesDe(x.content);
+    acc.texto += b.texto; acc.entra += u.input_tokens || 0; acc.sale += u.output_tokens || 0; acc.fin = x.stop_reason || '';
+    acc.busquedas += Number((u.server_tool_use || {}).web_search_requests) || 0;
+    for (const [de, a] of [[b.vistas, acc.vistas], [b.citadas, acc.citadas]]) for (const f of de) if (!a.some((y) => claveUrl(y.u) === claveUrl(f.u))) a.push(f);
+    if (x.stop_reason === 'pause_turn' && vuelta < 2) { cuerpo.messages = [...cuerpo.messages, { role: 'assistant', content: x.content }]; continue; }
+    return acc;
+  }
+  if (acc.texto) return acc;
   throw new Error(`Claude: ${ult || 'sin respuesta'}`);
 }
+/** lo que cuesta una llamada, en millonésimas de dólar: los tokens y las búsquedas */
+export const costeDe = (r, modelo) => { const [pe, ps] = PRECIOS[modelo] || PRECIOS[PLAN_MODELO]; return r.entra * pe + r.sale * ps + (r.busquedas || 0) * USD_BUSQUEDA; };
 async function planIA(req, env, c, ctx) {
   const P = await cfgPlanes(env);
   if (!P.on) return json({ e: 'Los planes con la IA de la app están apagados ahora.', servicio: true }, 503, c);
@@ -710,7 +750,8 @@ async function planIA(req, env, c, ctx) {
   if (typeof b.pedido === 'string' && b.pedido.length > MAX_PEDIDO) return json({ e: 'El pedido del plan es demasiado grande.' }, 413, c);
   if (!esPedidoCorto(b.pedido)) return json({ e: 'Eso no es un pedido del plan.' }, 400, c);
   const alias = b.alias && typeof b.alias === 'object' ? { puesto: !!b.alias.puesto, ex: !!b.alias.ex } : null;
-  const sistema = sistemaCorto({ tono: b.tono === 'serio' ? 'serio' : 'broma', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias });
+  // (si se busca en Google lo decide el Worker, con «planes.web» de limites.json; la app no lo elige)
+  const sistema = sistemaCorto({ tono: b.tono === 'serio' ? 'serio' : 'broma', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, web: P.web });
   // entre todos, el tope de gasto del día
   if ((await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
   const y = await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true });
@@ -726,14 +767,16 @@ async function planIA(req, env, c, ctx) {
   const trabajo = (async () => {
     let fin;
     try {
-      const r = await llamarClaude(env, P.modelo, sistema, b.pedido);
-      const [pe, ps] = PRECIOS[P.modelo] || PRECIOS[PLAN_MODELO];
-      ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, r.entra * pe + r.sale * ps).catch(() => {})) : await gastoHoy(env, r.entra * pe + r.sale * ps).catch(() => {});
-      const plan = planLimpio(jsonDe(r.texto));
+      const r = await llamarClaude(env, P.modelo, sistema, b.pedido, fetch, { web: P.web });
+      const gasto = costeDe(r, P.modelo);
+      ctx && ctx.waitUntil ? ctx.waitUntil(gastoHoy(env, gasto).catch(() => {})) : await gastoHoy(env, gasto).catch(() => {});
+      // (las fuentes, solo las que salieron de verdad en la búsqueda: lo que la IA ponga de más se borra)
+      const j = jsonDe(r.texto);
+      const plan = planLimpio(j ? fuentesDe(j, r.vistas, r.citadas) : null);
       if (!plan) {
         await cupo(env, u.uid, 'devolver', P);
         fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
-      } else fin = { plan, cupo: cupoTxt(P, y), tok: { entra: r.entra, sale: r.sale }, ms: Date.now() - t0, fin: r.fin };
+      } else fin = { plan, cupo: cupoTxt(P, y), tok: { entra: r.entra, sale: r.sale, web: r.busquedas }, ms: Date.now() - t0, fin: r.fin };
     } catch (e) {
       // (lo que no ha llegado a dar un plan no cuenta)
       await cupo(env, u.uid, 'devolver', P).catch(() => {});

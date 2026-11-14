@@ -26,6 +26,7 @@
     "on": true,
     "gratis": 2,
     "max": 5,
-    "topeUsdDia": 3
+    "topeUsdDia": 3,
+    "web": 0
   }
 }

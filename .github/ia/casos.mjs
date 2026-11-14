@@ -31,6 +31,12 @@ const pasosDe = (q) => [...textoDe(q).matchAll(/^\[(p\d+)\]/gm)].map((m) => m[1]
 const C = (q, { quita = [], mete = [], frase = () => 'Bien visto: los números de la app salen.', titular = 'Plan de hoy, sin sorpresas', situacion = 'Equipo en orden.', orden = null, noticias = [], rivales = [] } = {}) => JSON.stringify({
   pasos: (orden || pasosDe(q)).filter((id) => !quita.some((x) => x.id === id)).map((id) => ({ id, frase: frase(id) })), quita, mete, situacion, noticias, rivales, titular });
 
+/* (14 nov, punto 14) la respuesta con la búsqueda en Google: el JSON entero de Google con las fuentes que salieron
+   (groundingMetadata). Por el Worker llegan igual, ya comprobadas con la búsqueda (fuentesDe de plan-sistema.js) */
+const MARCA = 'https://www.marca.com/futbol/real-madrid/2026/11/10/fran-garcia-lesion.html';
+const FFW = 'https://www.futbolfantasy.com/noticias/fran-garcia-once';
+const conGoogle = (texto, fuentes) => ({ candidates: [{ content: { role: 'model', parts: [{ text: texto }] }, finishReason: 'STOP', groundingMetadata: { groundingChunks: fuentes.map(([uri, title]) => ({ web: { uri, title } })) } }], usageMetadata: { promptTokenCount: 1, candidatesTokenCount: 1, totalTokenCount: 2 } });
+
 export const CASOS = [
   /* ------------------------------ el plan, con la respuesta de la IA escrita a mano ------------------------------ */
   { id: 'plan-vender-el-que-sube', tipo: 'plan', escena: 'holgado', de: 'Fornals (Carlos, 13 nov): vender lo tuyo que sube fuerte sin que haga falta el dinero',
@@ -289,6 +295,15 @@ export const CASOS = [
     debe: ['^OP: (Aceptar oferta|vender) [^\\n]*[\\s\\S]*^OP: vender Fran García[\\s\\S]*^OP: pujar Cubarsí', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
   { id: 'corto-respuesta-sin-formato', tipo: 'corto', escena: 'martes', de: 'la IA contesta sin el formato: se dice y se queda el plan de la app',
     ia: 'Claro, te cuento: yo vendería a Raphinha y poco más. ¡Suerte!', error: 'sin el formato del plan' },
+  { id: 'corto-quita-por-busqueda', tipo: 'corto', escena: 'martes', de: 'Carlos, 14 nov (punto 14): una noticia de la búsqueda en Google, con su fuente, vale para quitar un paso aunque la app no tenga prensa de ese jugador',
+    ia: (q) => conGoogle(C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Se ha lesionado en el entrenamiento: así no se vende bien.', fuente: MARCA }], titular: 'Niño al once y a esperar', noticias: [{ jugador: 'Fran García', texto: 'Se ha lesionado en el entrenamiento de hoy.', efecto: 'baja', fuente: MARCA }] }), [[MARCA, 'Marca: Fran García, lesionado']]),
+    debe: ['^MIRADO Fran García: La IA lo quita del plan: Se ha lesionado', '^CAMBIOS: quita \\[Fran García\\]', '^NOTICIA Fran García: Se ha lesionado', '^WEB: sí', '^FUENTE Marca: Fran García, lesionado · https://www\\.marca\\.com/', '^REGLAS: ok'], nunca: ['^OP: vender Fran García', '^DESCARTADA:'] },
+  { id: 'corto-busqueda-sin-fuente', tipo: 'corto', escena: 'martes', de: 'punto 14: una «noticia» sin fuente de la búsqueda (o con una url que no salió en ella) no vale para quitar: sin prensa de la app, no se quita',
+    ia: (q) => conGoogle(C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'He leído que está lesionado.', fuente: 'https://www.inventada.es/fran-garcia' }], noticias: [{ jugador: 'Fran García', texto: 'Está lesionado.', efecto: 'baja' }] }), [[MARCA, 'Marca: otra cosa']]),
+    debe: ['^OP: vender Fran García', '^CAMBIOS: quita \\[\\][^\\n]*no aplicado \\[quitar Fran García \\(sin noticia'], nunca: ['^MIRADO Fran García', '^NOTICIA Fran García', 'inventada'] },
+  { id: 'corto-fuentes-fantasy', tipo: 'corto', escena: 'martes', de: 'punto 14 y regla de la app: las fuentes de webs de fantasy no se enseñan (ni en «Fuentes» ni en las frases)',
+    ia: (q) => conGoogle(C(q, { quita: [{ id: idDe(q, 'Fran García'), motivo: 'Según Futbolfantasy, se ha lesionado.', fuente: MARCA }], noticias: [{ jugador: 'Fran García', texto: 'Lesionado, lo cuenta Futbolfantasy.', efecto: 'baja', fuente: FFW }] }), [[MARCA, 'Marca: Fran García, lesionado'], [FFW, 'Futbolfantasy: onces probables']]),
+    debe: ['^CAMBIOS: quita \\[Fran García\\]', '^FUENTE Marca'], nunca: ['futbolfantasy', 'Futbolfantasy', '^OP: vender Fran García'] },
   { id: 'corto-paron', tipo: 'corto', escena: 'paron', de: 'Domy, 9 nov: en el parón, dinero antes que once (el plan corto sale del motor)',
     ia: (q) => C(q, { titular: 'Parón: toca mover el dinero' }), debe: ['^OP: [^\\n]*Cubarsí', '^REGLAS: ok'], nunca: ['^DESCARTADA:'] },
   { id: 'corto-en-juego', tipo: 'corto', escena: 'enjuego', de: 'Domy, 31 oct: con la jornada en juego, ni alinear ni once',

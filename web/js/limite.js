@@ -177,7 +177,8 @@ export function abrirTopGratis(clave, min = 30) {
 export function planesCfg() {
   const g = LS.get('limites', null), p = (g && g.cfg && g.cfg.planes) || null;
   const n = (x, d) => (Number(x) >= 0 ? Math.floor(Number(x)) : d);
-  return { on: !!(p && p.on), gratis: n(p && p.gratis, 2), max: n(p && p.max, 5) };
+  // (web: las búsquedas en Google de cada plan; las decide el Worker, aquí solo es para los textos)
+  return { on: !!(p && p.on), gratis: n(p && p.gratis, 2), max: n(p && p.max, 5), web: Math.min(3, n(p && p.web, 0)) };
 }
 let yoB = null, demoB = false;
 /** quién eres para lo bloqueado (lo pone la app cada vez que rehace los datos) */

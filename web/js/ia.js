@@ -15,7 +15,7 @@ import { bloqueada, topConAnuncio, planesCfg } from './limite.js';
 import { pedirWorker } from './soporte.js';
 import { rematarAuto } from './motor.js';
 import { planDeHoy, planMotor, titularMotor } from './plan.js';
-import { CHISTES, SOBRE_BLOQUEO, bloqueoTxt, avisoAlias, sistemaCorto as sistemaCortoDe } from './plan-sistema.js';
+import { CHISTES, SOBRE_BLOQUEO, bloqueoTxt, avisoAlias, sistemaCorto as sistemaCortoDe, claveUrl } from './plan-sistema.js';
 
 const GEMINI = 'https://generativelanguage.googleapis.com/v1beta';
 // los de siempre, por si la lista de modelos de tu clave no llega
@@ -1445,6 +1445,11 @@ export function aplicarCorto(json, R, D, M, c) {
   const frases = new Map();
   for (const x of [...(Array.isArray(json.pasos) ? json.pasos : []), ...(Array.isArray(json.mete) ? json.mete : [])]) { const y = de(x); if (y && x.frase) frases.set(y.k, String(x.frase)); }
   const motivos = new Map((Array.isArray(json.quita) ? json.quita : []).map((x) => [de(x) && de(x).k, String((x && x.motivo) || '')]));
+  // (punto 14, Carlos 14 nov) una noticia de la búsqueda en Google también vale, pero solo con su fuente: la url tiene que
+  // estar entre las que salieron de verdad en la búsqueda (json.fuentes lo pone el Worker, o Google; nunca la IA)
+  const fuentesOK = new Set((Array.isArray(json.fuentes) ? json.fuentes : []).map((f) => claveUrl(f && f.u)).filter(Boolean));
+  const conFuente = (x) => !!(x && x.fuente && fuentesOK.has(claveUrl(x.fuente)));
+  const porBusqueda = new Set([...(Array.isArray(json.quita) ? json.quita : []), ...(Array.isArray(json.mete) ? json.mete : [])].filter(conFuente).map((x) => de(x)).filter(Boolean).map((x) => x.k));
   const tachado = (P) => { const cu = cuadrarPlan({ ...P, modelo: 'x', t: Date.now() }, D, M); return (cu.ops || []).some((o) => o._k && (o.descartada || o.sugerencia)); };
   // Quitar o meter algo es cosa de las noticias (los números ya los ha mirado el motor): solo si de ese jugador hay
   // prensa, un estado (lesión, sanción, duda), algo que el mánager ha contado o un partidazo reciente. Si no, no se aplica
@@ -1465,9 +1470,10 @@ export function aplicarCorto(json, R, D, M, c) {
   // no se lleva por delante a las demás, y lo que hace falta para empezar la jornada en positivo no se va)
   let r = intento([], []);
   if (!r) return null;
-  for (const k of quita0) { if (!conNoticia(k)) continue; const x = intento([...r.quita, k], r.mete); if (x) r = x; }
+  const respaldo = (k) => conNoticia(k) || porBusqueda.has(k);
+  for (const k of quita0) { if (!respaldo(k)) continue; const x = intento([...r.quita, k], r.mete); if (x) r = x; }
   // (una alternativa entra si cubre algo que se ha quitado o si la noticia es suya)
-  for (const k of mete0) { if (!r.quita.length && !conNoticia(k)) continue; const x = intento(r.quita, [...r.mete, k]); if (x) r = x; }
+  for (const k of mete0) { if (!r.quita.length && !respaldo(k)) continue; const x = intento(r.quita, [...r.mete, k]); if (x) r = x; }
   const P = r.P;
   // las frases: la de la IA si no trae cifras que no estén en los datos del paso; si no, la de la app
   let sinFrase = 0;
@@ -1506,11 +1512,12 @@ export function aplicarCorto(json, R, D, M, c) {
     situacion: sit && !nombra(sit) ? `${sit}${P.modo === 'paron' && !/par[oó]n/i.test(`${sit} ${tit}`) ? ' Estamos en el parón: nadie puntúa hasta la vuelta, así que hoy manda el dinero.' : ''}` : P.situacion,
     descartes: [...quitados, ...(P.descartes || []).filter((d) => !quitados.some((q) => q.pid && q.pid === d.pid))],
     // las noticias, solo de quien tiene prensa, estado o una nota (lo demás es relleno o invento), y en corto: dos frases
-    noticias: (Array.isArray(json.noticias) ? json.noticias : []).map((n) => ({ ...n, pid: n && n.jugador ? pidDe(n.jugador, D) : null })).filter((n) => { const j = n.pid && D.maestro[n.pid]; return !!j && !!((M.noticiasDe && M.noticiasDe(n.pid).length) || (j.estado && j.estado !== 'ok') || notasDe(n.pid).length); })
-      .slice(0, 4).map((n) => ({ jugador: n.jugador, efecto: n.efecto, texto: breve(limpio(n.texto)) })).filter((n) => n.texto),
+    // (o con su fuente de la búsqueda)
+    noticias: (Array.isArray(json.noticias) ? json.noticias : []).map((n) => ({ ...n, pid: n && n.jugador ? pidDe(n.jugador, D) : null })).filter((n) => { const j = n.pid && D.maestro[n.pid]; return !!j && !!((M.noticiasDe && M.noticiasDe(n.pid).length) || (j.estado && j.estado !== 'ok') || notasDe(n.pid).length || conFuente(n)); })
+      .slice(0, 4).map((n) => ({ jugador: n.jugador, efecto: n.efecto, texto: breve(limpio(n.texto)), ...(conFuente(n) && !esWebFantasy(n.fuente) ? { fuente: n.fuente } : {}) })).filter((n) => n.texto),
     rivales: (Array.isArray(json.rivales) ? json.rivales : []).slice(0, 3).map((n) => ({ ...n, texto: breve(limpio(n && n.texto)) })).filter((n) => n.manager && n.texto),
     proximos_dias: prox,
-    cambios: { quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${conNoticia(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
+    cambios: { quita: r.quita.map(nombreK), mete: r.mete.map(nombreK), porBusqueda: [...r.quita, ...r.mete].filter((k) => porBusqueda.has(k) && !conNoticia(k)).map(nombreK), noAplicado: [...quita0.filter((k) => !r.quita.includes(k)).map((k) => `quitar ${nombreK(k)}${respaldo(k) ? '' : ' (sin noticia que lo respalde)'}`), ...mete0.filter((k) => !r.mete.includes(k)).map((k) => `meter ${nombreK(k)}`)], sinFrase, frasesNo },
   };
 }
 /* ---------------- el plan con la IA de Carlos (el Worker, /plan) ---------------- */
@@ -1531,7 +1538,7 @@ const guardarCupo = (c) => { if (c && typeof c === 'object') LS.set('planes-cupo
 async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {}) {
   const sd = seudo && seudo.n ? seudo : null;
   const t0 = Date.now();
-  if (alPaso) alPaso('La IA está leyendo tu plan y las noticias…');
+  if (alPaso) alPaso(planesCfg().web ? 'La IA está leyendo tu plan y buscando las últimas noticias…' : 'La IA está leyendo tu plan y las noticias…');
   let j;
   try {
     j = await pedirWorker('POST', '/plan', { pedido: sd ? sd.tapar(pedido) : pedido, ...opSistemaCorto(), alias: sd ? { puesto: !!sd.porPuesto, ex: !!sd.ex } : null, extra: !!extra }, { tiempo: 120000, signal });
@@ -1551,9 +1558,10 @@ async function planPorApp(pedido, seudo, { signal, alPaso, extra = false } = {})
     throw new ErrorIA(j.e, j.estado || 0, { servicio: !!j.servicio });
   }
   if (j.cupo) guardarCupo(j.cupo);
-  apuntar({ modelo: 'app', s: 'plan', ok: true, ms: Date.now() - t0, tok: j.tok || null });
+  const busquedas = (j.tok && Number(j.tok.web)) || 0;
+  apuntar({ modelo: 'app', s: 'plan', ok: true, web: busquedas > 0, ms: Date.now() - t0, tok: j.tok || null });
   const texto = JSON.stringify(j.plan || {});
-  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, modelo: 'app', tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale } : null, cupo: j.cupo || null };
+  return { texto: sd ? sd.destapar(texto, { json: true }) : texto, modelo: 'app', web: busquedas, tok: j.tok ? { entra: j.tok.entra, sale: j.tok.sale, ...(busquedas ? { web: busquedas } : {}) } : null, cupo: j.cupo || null };
 }
 /**
  * El plan del día con el contrato corto. Devuelve null si el motor no ha podido hacer su plan (entonces, el largo).
@@ -1572,9 +1580,13 @@ async function planCorto(D, M, c, { signal, alPaso, porApp = false, extra = fals
     apuntar({ modelo: r.modelo, web: r.web, s: 'plan', e: `el plan corto no se puede leer (${r.fin || 'sin motivo'}, ${r.texto.length} caracteres${r.tok && r.tok.th ? `, ${r.tok.th} pensando` : ''})`, ms: 0 });
     throw new ErrorIA(`La IA ha contestado sin el formato del plan${r.fin && r.fin !== 'STOP' ? ` (${r.fin === 'MAX_TOKENS' ? 'se ha cortado por largo' : r.fin})` : ''}. Tienes el plan de la app; vuelve a probar cuando quieras.`, 0);
   }
+  // las fuentes de la búsqueda en Google: las que trae el Worker (ya comprobadas) o Google; lo que la IA escriba ahí, no
+  json.fuentes = (porApp ? (Array.isArray(json.fuentes) ? json.fuentes : []) : r.fuentes || []).filter((f) => f && typeof f.u === 'string' && /^https:\/\//.test(f.u));
   const A = aplicarCorto(json, R, D, M, c);
   if (!A) throw new ErrorIA('La IA ha contestado, pero lo que pide no cuadra con las cuentas de hoy. Tienes el plan de la app; vuelve a probar cuando quieras.', 0);
-  return { ...A, fuentes: [], modelo: r.modelo, web: false, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, tok: r.tok || null, ...(porApp ? { app: true } : {}), foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };
+  // (en «Fuentes», sin las webs de fantasy: para quitar o meter sí han valido)
+  const fuentes = json.fuentes.filter((f) => !esWebFantasy(f.t) && !esWebFantasy(f.u)).slice(0, 6).map((f) => ({ t: String(f.t || f.u).slice(0, 120), u: f.u }));
+  return { ...A, fuentes, modelo: r.modelo, web: porApp ? r.web > 0 : json.fuentes.length > 0, t: Date.now(), dia: diaDe(), mercado: M.cierreMercado || null, tok: r.tok || null, ...(porApp ? { app: true } : {}), foto: { dinero: D.dinero, mias: M.mias.map((x) => x.pid), clausulas: Object.fromEntries(M.mias.map((x) => [x.pid, x.clausula || 0])) } };
 }
 /**
  * El plan del día con la IA. Con el motor (plan.js), el corto: la IA ordena, recorta y explica el plan de la app. El
