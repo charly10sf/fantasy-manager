@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249952/tchouameni-duda-celta.html": 1794414762000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/sigue-en-directo-la-rueda-de-prensa-de-luis-de-la-fuente-previa-al-partido-entre-espana-y-republica-checa-cadena-ser/": 1794413700000,
@@ -7547,13 +7546,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2491,
+   "ok": 2492,
    "fallos": 0,
-   "ejecuciones": 1958,
+   "ejecuciones": 1959,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T16:06:16.888Z"
+   "ultima": "2026-11-14T16:11:14.665Z"
   }
  },
  "ptsDirecto": {},
@@ -7570,15 +7569,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:06:20.376Z"
+   "ultimaBien": "2026-11-14T16:11:19.827Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:06:20.376Z"
+   "ultimaBien": "2026-11-14T16:11:19.827Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:06:20.376Z"
+   "ultimaBien": "2026-11-14T16:11:19.827Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7586,11 +7585,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:06:20.376Z"
+   "ultimaBien": "2026-11-14T16:11:19.827Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:06:20.376Z"
+   "ultimaBien": "2026-11-14T16:11:19.827Z"
   }
  },
  "avisos": [
