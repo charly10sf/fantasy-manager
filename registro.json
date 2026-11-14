@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Diario de Sevilla|https://www.diariodesevilla.es/sevillafc/sevilla-fc-cierra-entrenamiento-miercoles_0_2008472267.html": 1794399732000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/saltan-alarmas-mbappe-lesionado-francia-136329203.html": 1794401127000,
    "Cadena SER|https://cadenaser.com/euskadi/2026/11/11/se-confirman-los-peores-presagios-sobre-la-lesion-de-barrenetxea-debera-pasar-por-quirofano-radio-san-sebastian/": 1794401190000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/barrenetxea-sufre-grave-lesion-muslo-perdera-resta-temporada-20261111_3473028.html": 1794401602000,
@@ -7640,13 +7639,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2445,
+   "ok": 2446,
    "fallos": 0,
-   "ejecuciones": 1912,
+   "ejecuciones": 1913,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T12:21:14.847Z"
+   "ultima": "2026-11-14T12:26:15.535Z"
   }
  },
  "ptsDirecto": {},
@@ -7663,15 +7662,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:21:19.136Z"
+   "ultimaBien": "2026-11-14T12:26:20.895Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:21:19.136Z"
+   "ultimaBien": "2026-11-14T12:26:20.895Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:21:19.136Z"
+   "ultimaBien": "2026-11-14T12:26:20.895Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7679,11 +7678,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:21:19.136Z"
+   "ultimaBien": "2026-11-14T12:26:20.895Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T12:21:19.136Z"
+   "ultimaBien": "2026-11-14T12:26:20.895Z"
   }
  },
  "avisos": [
