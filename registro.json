@@ -3230,7 +3230,6 @@
  },
  "liga": {
   "vistas": {
-   "El Correo|https://www.elcorreo.com/athletic/dos-jugadoras-athletic-femenino-defienden-huelga-toca-20261111200135-nt.html": 1794424458000,
    "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-expresa-maximo-respeto-quienes-secundado-paro-condena-actitud-pp-jornada-20261111211130.html": 1794427890000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-general-vivienda-moviliza-cientos-miles-personas-toda-espana-pesar-lluvias-20261111203941.html": 1794425981000,
    "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-ve-fracaso-huelga-general-acto-camuflado-campana-electoral-parte-sindicatos-20261111223111.html": 1794432671000,
@@ -7515,13 +7514,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2528,
+   "ok": 2529,
    "fallos": 0,
-   "ejecuciones": 1995,
+   "ejecuciones": 1996,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T19:11:14.062Z"
+   "ultima": "2026-11-14T19:16:20.216Z"
   }
  },
  "ptsDirecto": {},
@@ -7538,15 +7537,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:11:19.485Z"
+   "ultimaBien": "2026-11-14T19:16:26.033Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:11:19.485Z"
+   "ultimaBien": "2026-11-14T19:16:26.033Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:11:19.485Z"
+   "ultimaBien": "2026-11-14T19:16:26.033Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7554,11 +7553,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:11:19.485Z"
+   "ultimaBien": "2026-11-14T19:16:26.033Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:11:19.485Z"
+   "ultimaBien": "2026-11-14T19:16:26.033Z"
   }
  },
  "avisos": [
