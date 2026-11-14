@@ -2142,7 +2142,9 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004251000/hancko-asiste-oblak-echa-cerrojo-mendoza-suma-minutos.html": 1794674685000,
    "AS|https://as.com/futbol/primera/lookman-de-vuelta-para-madrid-con-un-esguince-de-rodilla-f202611-n/": 1794676215000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/14/de-la-fuente-deja-abierta-la-titularidad-de-lamine-yamal-ante-inglaterra-si-juega-es-porque-esta-en-perfectas-condiciones-cadena-ser/": 1794654667000,
-   "SPORT|136446311": 1794675429000
+   "SPORT|136446311": 1794675429000,
+   "SPORT|136447192": 1794676184000,
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-termina-polemica-lamine-yamal-recuperado-perfectas-condiciones-jugar-20261114_3475343.html": 1794679648000
   },
   "hechos": [
    {
@@ -2391,7 +2393,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 31
+   "n": 32
   },
   "desde": {
    "67": {
@@ -3242,7 +3244,6 @@
    "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-expresa-maximo-respeto-quienes-secundado-paro-condena-actitud-pp-jornada-20261111211130.html": 1794427890000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-huelga-general-vivienda-moviliza-cientos-miles-personas-toda-espana-pesar-lluvias-20261111203941.html": 1794425981000,
    "Europa Press|https://www.europapress.es/nacional/noticia-feijoo-ve-fracaso-huelga-general-acto-camuflado-campana-electoral-parte-sindicatos-20261111223111.html": 1794432671000,
-   "SPORT|136346611": 1794420923000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/betis/20261112/1004250004/betis-abre-copa-diez-bajas-debut-diego-conde.html": 1794463200000,
    "SPORT|136354062": 1794463248000,
    "Europa Press|https://www.europapress.es/nacional/noticia-ultima-hora-actualidad-politica-espana-directo-elecciones-generales-29n-arranque-campana-20261112082710.html": 1794468430000,
@@ -3299,22 +3300,24 @@
    "n": 7,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136447078": 1794680180313
+  }
  },
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 38,
+   "clasificar": 39,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 167799,
-  "salida": 18907,
+  "entrada": 170111,
+  "salida": 19936,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.235927,
+  "dolares": 0.236673,
   "reservado": 0
  },
  "recientes": {
@@ -7521,13 +7524,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2516,
+   "ok": 2517,
    "fallos": 0,
-   "ejecuciones": 1983,
+   "ejecuciones": 1984,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T18:11:17.680Z"
+   "ultima": "2026-11-14T18:16:20.313Z"
   }
  },
  "ptsDirecto": {},
@@ -7544,15 +7547,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:11:23.172Z"
+   "ultimaBien": "2026-11-14T18:16:31.849Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:11:23.172Z"
+   "ultimaBien": "2026-11-14T18:16:31.849Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:11:23.172Z"
+   "ultimaBien": "2026-11-14T18:16:31.849Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7560,11 +7563,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:11:23.172Z"
+   "ultimaBien": "2026-11-14T18:16:31.849Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T18:11:23.172Z"
+   "ultimaBien": "2026-11-14T18:16:31.849Z"
   }
  },
  "avisos": [
