@@ -2165,7 +2165,8 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/oasisdelibertad/audios/oasisdelibertad-13-20261114_3475247.html": 1794615879000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261114/1004250863/jonathan-david-recupera-olfato-canada.html": 1794648231000,
    "SPORT|136433028": 1794644887000,
-   "SPORT|136433845": 1794647382000
+   "SPORT|136433845": 1794647382000,
+   "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/14/yan-diomande-sigue-alimentando-debate.html": 1794652317000
   },
   "hechos": [
    {
@@ -2499,7 +2500,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 9
+   "n": 10
   },
   "desde": {
    "67": {
@@ -3439,17 +3440,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 10,
+   "clasificar": 11,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 112480,
-  "salida": 9209,
+  "entrada": 114397,
+  "salida": 9618,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.225545,
+  "dolares": 0.225941,
   "reservado": 0
  },
  "recientes": {
@@ -7656,13 +7657,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2423,
+   "ok": 2424,
    "fallos": 0,
-   "ejecuciones": 1890,
+   "ejecuciones": 1891,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T10:31:13.781Z"
+   "ultima": "2026-11-14T10:36:13.766Z"
   }
  },
  "ptsDirecto": {},
@@ -7679,15 +7680,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:31:18.301Z"
+   "ultimaBien": "2026-11-14T10:36:20.504Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:31:18.301Z"
+   "ultimaBien": "2026-11-14T10:36:20.504Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:31:18.301Z"
+   "ultimaBien": "2026-11-14T10:36:20.504Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7695,11 +7696,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:31:18.301Z"
+   "ultimaBien": "2026-11-14T10:36:20.504Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:31:18.301Z"
+   "ultimaBien": "2026-11-14T10:36:20.504Z"
   }
  },
  "avisos": [
