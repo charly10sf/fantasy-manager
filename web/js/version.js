@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.11a';
+export const VERSION = '0.7.11b';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,12 @@ export const VERSION = '0.7.11a';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.11b', f: '2026-11-14', h: '17:30', t: 'Otro plan, sin límite para el creador',
+    cosas: [
+      { para: 'dueño', menor: true, tipo: 'mejora', d: 'plan', t: 'Otro plan, sin límite', x: 'Como creador de la app, puedes pedir otro plan del día con la IA cuantas veces quieras. En Hoy sale «sin límite» en vez de los planes que te quedan.', ir: { v: 'hoy' } },
+    ],
+  },
   {
     v: '0.7.11a', f: '2026-11-14', h: '17:14', t: 'El plan lee las noticias de última hora',
     cosas: [

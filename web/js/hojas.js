@@ -870,7 +870,7 @@ export function ajustes(S) {
   let c3 = '';
   // (14 nov) el plan del día, con la IA de la app: la clave queda para preguntar
   const pApp = planesApp(enDemo()), pc = planesCfg(), cuP = pApp ? cupoPlanes() : null;
-  if (pApp) c3 += fila('Planes del día con la IA', `${pc.gratis} al día, sin clave${topConAnuncio() ? `; más viendo un anuncio, hasta ${pc.max}` : ''}${cuP ? ` · ${cuP.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuP.quedan} hoy`}` : ''}`, '', 'plan planes ia app');
+  if (pApp) c3 += fila('Planes del día con la IA', `${pc.gratis} al día, sin clave${topConAnuncio() ? `; más viendo un anuncio, hasta ${pc.max}` : ''}${cuP ? ` · ${cuP.ilimitado ? 'sin límite' : cuP.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cuP.quedan} hoy`}` : ''}`, '', 'plan planes ia app');
   c3 += fila('Clave de Google AI Studio', k ? `${esc(k.slice(0, 6))}…${esc(k.slice(-4))}` : pApp ? 'Sin clave: para preguntarle a la IA' : 'Sin clave: el plan sale sin noticias', k ? btnA('borrarClave', 'Quitar') : btnA('irIA', 'Poner', { sec: false }), 'gemini api key');
   if (enApp && !enDemo()) {
     const cf = cfgFondo(), uf = ultimoFondo();

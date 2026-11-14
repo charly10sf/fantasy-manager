@@ -477,3 +477,15 @@ cW = aClaude[aClaude.length - 1];
 ok(r.s === 200 && !cW.b.tools && !cW.b.system.includes('BÚSQUEDA'), 'con web: 0, ni búsqueda ni párrafo en el sistema');
 // lo que se le dice a la IA en cada caso
 ok(PS.webTxt(1).includes('como mucho 1 búsqueda,') && PS.webTxt(0) === '' && PS.webTxt(7).includes('como mucho 3 búsquedas'), 'el párrafo de la búsqueda: 1, 0 y el tope de 3');
+
+// ---------- el dueño (ADMINS) repite el plan sin límite (Carlos, 14 nov) ----------
+globalThis.fetch = ((f) => async (u, o) => (String(u).includes('/user/me') && cabDe(o, 'authorization').includes('DUENO') ? new Response(JSON.stringify({ id: 667015, managerName: 'Carlos' }), { status: 200 }) : f(u, o)))(globalThis.fetch);
+limitesPlanes = { on: true, gratis: 2, max: 5, web: 0 };
+for (let i = 0; i < 11; i++) minuto();
+let okDueno = 0, cuD = null;
+for (let i = 0; i < 7; i++) { r = await plan({}, { tk: 'DUENO'.padEnd(30, 'x') }); if (r.s === 200 && r.j.plan) okDueno++; cuD = r.j && r.j.cupo; }
+ok(okDueno === 7 && cuD && cuD.ilimitado && cuD.quedan > 5, `el dueño hace 7 planes seguidos, sin cupo (${okDueno}; ${JSON.stringify(cuD)})`);
+r = await plan({}, { tk: 'u'.repeat(30) });
+ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `los demás siguen con su cupo (${r.s} ${JSON.stringify(r.j && r.j.cupo)})`);
+r = await plan({}, { tk: 'DUENO'.padEnd(30, 'x'), e: { ...envP, ADMINS: '1' } });
+ok(r.s === 429 || (r.j && r.j.cupo && !r.j.cupo.ilimitado), `si no está en ADMINS, con cupo como todos (${r.s})`);

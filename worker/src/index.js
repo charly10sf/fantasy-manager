@@ -670,6 +670,9 @@ async function gastoHoy(env, mas = 0) {
   GASTO_MEM.n += Math.max(0, Math.round(mas));
   return GASTO_MEM.n;
 }
+// (Carlos, 14 nov) el dueño (ADMINS) repite el plan cuantas veces quiera: sin cupo por cuenta (el tope de gasto del día
+// entre todos y el freno de 3 al minuto siguen valiendo también para él)
+const cupoLibre = (c) => ({ usados: 0, gratis: c.gratis, max: c.max, extras: 0, quedan: 99, masConAnuncio: true, ilimitado: true });
 const cupoTxt = (c, y) => ({ usados: y.u, gratis: c.gratis, max: c.max, extras: y.x, quedan: Math.max(0, Math.min(c.max, c.gratis + y.x) - y.u), masConAnuncio: y.u < c.max });
 const BLOQ = new Set(Object.keys(SOBRE_BLOQUEO));
 /**
@@ -754,7 +757,8 @@ async function planIA(req, env, c, ctx) {
   const sistema = sistemaCorto({ tono: b.tono === 'serio' ? 'serio' : 'broma', bloq: (Array.isArray(b.bloq) ? b.bloq : []).filter((k) => BLOQ.has(k)), anuncio: !!b.anuncio, alias, web: P.web });
   // entre todos, el tope de gasto del día
   if ((await gastoHoy(env, 0)) >= P.topeUsdDia * 1e6) return json({ e: 'La IA de los planes ha llegado hoy a su tope. Tienes el plan de la app; mañana vuelve.', servicio: true, tope: true }, 503, c);
-  const y = await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true });
+  const libre = adminsDe(env).includes(String(u.uid));
+  const y = libre ? { ok: true } : await cupo(env, u.uid, 'tomar', { ...P, extra: b.extra === true });
   if (!y.ok) {
     const ct = cupoTxt(P, y);
     return json({ e: ct.masConAnuncio && b.extra !== true ? `Ya has hecho tus ${Math.min(P.max, P.gratis + y.x)} planes con la IA de hoy.` : `Ya has hecho los ${P.max} planes con la IA de hoy, el máximo. Mañana tienes otros ${P.gratis}.`, cupo: ct }, 429, c);
@@ -774,12 +778,12 @@ async function planIA(req, env, c, ctx) {
       const j = jsonDe(r.texto);
       const plan = planLimpio(j ? fuentesDe(j, r.vistas, r.citadas) : null);
       if (!plan) {
-        await cupo(env, u.uid, 'devolver', P);
+        if (!libre) await cupo(env, u.uid, 'devolver', P);
         fin = { e: `La IA ha contestado sin el formato del plan${r.fin === 'max_tokens' ? ' (se ha cortado por largo)' : ''}. Tienes el plan de la app; vuelve a probar cuando quieras (este no cuenta).`, estado: 502 };
-      } else fin = { plan, cupo: cupoTxt(P, y), tok: { entra: r.entra, sale: r.sale, web: r.busquedas }, ms: Date.now() - t0, fin: r.fin };
+      } else fin = { plan, cupo: libre ? cupoLibre(P) : cupoTxt(P, y), tok: { entra: r.entra, sale: r.sale, web: r.busquedas }, ms: Date.now() - t0, fin: r.fin };
     } catch (e) {
       // (lo que no ha llegado a dar un plan no cuenta)
-      await cupo(env, u.uid, 'devolver', P).catch(() => {});
+      if (!libre) await cupo(env, u.uid, 'devolver', P).catch(() => {});
       console.log('plan:', String((e && e.message) || e));
       fin = { e: 'La IA de los planes no contesta ahora mismo. Tienes el plan de la app; vuelve a probar en un rato (este no cuenta).', estado: 503, servicio: true };
     }

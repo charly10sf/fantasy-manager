@@ -593,7 +593,7 @@ function planHTML(S) {
   // (sin el nombre ni la versión del modelo: Carlos, 3 nov)
   const demo = !!(S.D && S.D.demo), conIA = puedePlanIA(demo), cu = planesApp(demo) ? cupoPlanes() : null;
   // (con la IA de la app, lo que te queda hoy: 2 al día)
-  const queda = cu && cu.quedan > 0 ? ` · ${cu.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cu.quedan} hoy`}` : '';
+  const queda = cu && cu.ilimitado ? ' · sin límite' : cu && cu.quedan > 0 ? ` · ${cu.quedan === 1 ? 'te queda 1 hoy' : `te quedan ${cu.quedan} hoy`}` : '';
   // (Carlos, 14 nov) el de la IA dice de cuándo es: «de hoy 10:32 (hace 2 h)»
   const quien = P ? (esIA ? `Con la IA${P.web ? ' y Google' : ''} · de ${cuando(P.t)} (${rel(P.t)})${queda}` : 'Automático, sin IA') : '';
   // pedir otro: un botón pequeño en la cabecera (antes, uno grande con su explicación entre el resumen y los pasos)
