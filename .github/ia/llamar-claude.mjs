@@ -2,6 +2,8 @@
 // pedidos de pedidos-b.json (lo que la app manda hoy) a cada modelo de MODELOS y guarda las respuestas con la forma de las
 // de Google en respuestas-claude.json, para puntuarlas igual (LOTE=<modelo> node .github/ia/puntuar.mjs …). Sin
 // razonamiento largo (esfuerzo «low»). Al final, los tokens y lo que ha costado con los precios de PRECIO (por millón, entrada/salida).
+// PASADAS=2 pregunta cada caso dos veces por modelo (lotes «modelo#1» y «modelo#2»). TOPE_USD (3 por defecto) corta la
+// pasada si lo gastado lo alcanza. El tope de salida es el que pide la app en cada pedido (el plan corto, 5.000).
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 const K = process.env.ANTHROPIC_API_KEY;
 if (!K) { console.log('Falta ANTHROPIC_API_KEY'); process.exit(1); }
@@ -12,17 +14,20 @@ const pedidos = JSON.parse(readFileSync(new URL(f, import.meta.url)));
 const solo = (process.env.SOLO || '').split(',').filter(Boolean);
 const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
 const out = [], gasto = {};
+const PASADAS = +process.env.PASADAS || 1, TOPE_USD = +process.env.TOPE_USD || 3;
+const gastado = () => Object.entries(gasto).reduce((t, [m, g]) => t + (g.entra * (PRECIO[m] || [0, 0])[0] + g.sale * (PRECIO[m] || [0, 0])[1]) / 1e6, 0);
 for (const modelo of MODELOS) {
-  gasto[modelo] = { entra: 0, sale: 0, n: 0, chat: [0, 0, 0], plan: [0, 0, 0] };
-  for (const p of pedidos) {
+  gasto[modelo] = { entra: 0, sale: 0, n: 0, ms: 0, chat: [0, 0, 0], plan: [0, 0, 0] };
+  for (let pasada = 1; pasada <= PASADAS; pasada++) for (const p of pedidos) {
+    if (gastado() >= TOPE_USD) { console.log(`TOPE: ${gastado().toFixed(2)} $ gastados; lo dejo aquí`); break; }
     if (solo.length && !solo.some((s) => p.id.includes(s))) continue;
     const c = p.cuerpo;
     const cuerpo = {
       // (estos modelos piensan antes de contestar y eso cuenta como salida: con 8.000 de tope los planes llegaban vacíos;
       // como en la app con Gemini: 16.000 de tope y pensando poco)
-      model: modelo, max_tokens: 16000, output_config: { effort: process.env.ESFUERZO || 'low' },
+      model: modelo, max_tokens: Math.min(16000, (c.generationConfig && c.generationConfig.maxOutputTokens) || 16000), output_config: { effort: process.env.ESFUERZO || 'low' },
       // PENSAR=no: sin pensar antes de contestar, como hace el bot (Haiku se comía los 16.000 pensando el plan)
-      ...(process.env.PENSAR === 'no' ? { thinking: { type: 'between_tools' } } : {}),
+      ...(process.env.PENSAR === 'no' ? { thinking: { type: 'between_tools' } } : process.env.PENSAR === 'apagado' ? { thinking: { type: 'disabled' } } : {}),
       system: c.systemInstruction ? c.systemInstruction.parts.map((x) => x.text).join('\n') : undefined,
       messages: c.contents.map((m) => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.parts.map((x) => x.text || '').join('\n') })),
     };
@@ -40,9 +45,9 @@ for (const modelo of MODELOS) {
     const texto = j ? j.content.filter((b) => b.type === 'text').map((b) => b.text).join('') : null;
     const u = (j && j.usage) || {};
     const g = gasto[modelo], k = p.id.startsWith('ia-plan') ? g.plan : g.chat;
-    if (j) { g.entra += u.input_tokens || 0; g.sale += u.output_tokens || 0; g.n++; k[0] += u.input_tokens || 0; k[1] += u.output_tokens || 0; k[2]++; }
+    if (j) { g.entra += u.input_tokens || 0; g.sale += u.output_tokens || 0; g.n++; g.ms += ms; k[0] += u.input_tokens || 0; k[1] += u.output_tokens || 0; k[2]++; }
     console.log(`${j ? 'OK ' : 'MAL'} ${modelo} ${p.id} · ${Math.round(ms / 1000)} s · entra ${u.input_tokens || '?'} · escribe ${u.output_tokens || '?'} · ${j ? j.stop_reason : ''}`);
-    out.push({ id: p.id, lote: modelo, modelo, ms, respuesta: texto == null ? null : { candidates: [{ content: { role: 'model', parts: [{ text: texto }] }, finishReason: j.stop_reason === 'max_tokens' ? 'MAX_TOKENS' : 'STOP' }], usageMetadata: { promptTokenCount: u.input_tokens, candidatesTokenCount: u.output_tokens } } });
+    out.push({ id: p.id, lote: PASADAS > 1 ? `${modelo}#${pasada}` : modelo, modelo, ms, entra: u.input_tokens || 0, sale: u.output_tokens || 0, respuesta: texto == null ? null : { candidates: [{ content: { role: 'model', parts: [{ text: texto }] }, finishReason: j.stop_reason === 'max_tokens' ? 'MAX_TOKENS' : 'STOP' }], usageMetadata: { promptTokenCount: u.input_tokens, candidatesTokenCount: u.output_tokens } } });
     writeFileSync(new URL('./respuestas-claude.json', import.meta.url), JSON.stringify(out));
     await espera(800);
   }
@@ -50,5 +55,5 @@ for (const modelo of MODELOS) {
 for (const [m, g] of Object.entries(gasto)) {
   const [pe, ps] = PRECIO[m] || [0, 0], usd = (e, s) => ((e * pe + s * ps) / 1e6);
   const media = (k) => (k[2] ? `${Math.round(k[0] / k[2])} de entrada y ${Math.round(k[1] / k[2])} de salida, ${usd(k[0] / k[2], k[1] / k[2]).toFixed(4)} $ cada uno` : 'ninguno');
-  console.log(`GASTO ${m}: ${g.n} respuestas, ${g.entra} tokens de entrada y ${g.sale} de salida = ${usd(g.entra, g.sale).toFixed(3)} $ · chat: ${media(g.chat)} · plan: ${media(g.plan)}`);
+  console.log(`GASTO ${m}: ${g.n} respuestas, ${g.entra} tokens de entrada y ${g.sale} de salida = ${usd(g.entra, g.sale).toFixed(3)} $ · ${g.n ? Math.round(g.ms / g.n / 100) / 10 : 0} s de media · chat: ${media(g.chat)} · plan: ${media(g.plan)}`);
 }
