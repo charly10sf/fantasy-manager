@@ -160,9 +160,13 @@ export function anuncioTopVisto(clave) {
   contar('t');
   return true;
 }
+/** sin anuncio que enseñar (sin consentimiento, sin relleno, un DNS que los bloquea…): gratis UNA vez al día por
+    dispositivo, contando todas las funciones top juntas (Carlos, 14 nov). La segunda vez del día ya no se abre */
+export const puedeTopGratis = () => { const g = LS.get('top-sin-anuncio', null); return !g || g.dia !== diaDe(); };
 /** sin anuncio que enseñar: se abre igual lo que pedías, pero solo «min» minutos (y en las de los rivales cuenta como
-    una vez: así no se abren gratis tocando el candado antes de que AdMob arranque) */
+    una vez: así no se abren gratis tocando el candado antes de que AdMob arranque). Apunta el día (`puedeTopGratis`) */
 export function abrirTopGratis(clave, min = 30) {
+  LS.set('top-sin-anuncio', { dia: diaDe() });
   if (!porJornada(clave)) { const h = hoyTop(); guardarHoy({ ...h, libreHasta: Date.now() + min * 60e3 }); return; }
   const x = deJornada(clave);
   guardarJornada(clave, { usos: x.usos + 1, hasta: Date.now() + Math.min(min, cfgTop().minutos) * 60e3, uno: false });

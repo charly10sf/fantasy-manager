@@ -623,6 +623,43 @@ for (const [ancho, alto, nombre] of [[390, 844, 'móvil'], [1280, 800, 'ordenado
   await ctx.close();
 }
 
+// 16: (14 nov) las funciones top sin anuncio (en Play, sin consentimiento o sin relleno): gratis UNA vez al día por
+// dispositivo, todas juntas; la segunda vez del día no se abren y la hoja dice que no hay anuncio; al día siguiente, otra vez
+{
+  const { ctx, page, errores } = await pagina();
+  await page.goto(`${BASE}/index.html`);
+  await page.waitForFunction(() => window.S && window.S.M, null, { timeout: 25000 }).catch(() => {});
+  await page.waitForTimeout(600);
+  const r = await page.evaluate(async () => {
+    const L = await import('/js/limite.js');
+    const { LS } = await import('/js/util.js');
+    const espera = (ms) => new Promise((ok) => setTimeout(ok, ms));
+    const cerrar = () => { LS.del ? (LS.del('top-abierto'), LS.del('top-jornada')) : (localStorage.removeItem('fm-top-abierto'), localStorage.removeItem('fm-top-jornada')); };
+    const vez = async (clave) => {
+      window.S.anuncio = { para: 'top', clave };
+      window.anuncioVisto('top', false, 'sin anuncio');
+      await espera(200);
+      return { abierta: L.topAbierto(clave), error: (window.S.anuncio && window.S.anuncio.error) || null };
+    };
+    cerrar();
+    const una = await vez('inercia');
+    cerrar();
+    const dos = await vez('dineroRivales');
+    cerrar();
+    LS.set('top-sin-anuncio', { dia: '2000-01-01' });
+    const tres = await vez('dineroRivales');
+    return { una, dos, tres };
+  });
+  if (!r.una.abierta || r.una.error) mal(`top sin anuncio: la primera del día no se abre: ${JSON.stringify(r.una)}`);
+  else bien('top sin anuncio: la primera vez del día se abre gratis');
+  if (r.dos.abierta || !/no hay anuncio/i.test(r.dos.error || '')) mal(`top sin anuncio: la segunda del día: ${JSON.stringify(r.dos)}`);
+  else bien(`top sin anuncio: la segunda del día (otra función) no se abre («${r.dos.error}»)`);
+  if (!r.tres.abierta || r.tres.error) mal(`top sin anuncio: al día siguiente no vuelve a abrir: ${JSON.stringify(r.tres)}`);
+  else bien('top sin anuncio: al día siguiente vuelve a abrirse una vez');
+  if (errores.length) mal(`top sin anuncio: errores de la página: ${errores.slice(0, 3).join(' / ')}`);
+  await ctx.close();
+}
+
 await nav.close();
 servidor.close();
 console.log(fallos ? `\n${fallos} MAL` : '\nTodo BIEN');

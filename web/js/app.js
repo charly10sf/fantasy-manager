@@ -26,7 +26,7 @@ import { enVivo, onceRival, jornadaStats, idsOnce, formaOnce, hechosSemana, mues
 import { jornadaElegida, estadoJornada } from './jornadas.js';
 import { titularesClub } from './espn.js';
 import { VERSION, NOVEDADES, cmpVer, deNumeracionVieja } from './version.js';
-import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, novedadesPara } from './limite.js';
+import { comprobarFotos, iniciarLimite, mirarLimite, estadoLimite, versionNueva, fijarYo, fijarJornada, bloqueada, topConAnuncio, planesCfg, anuncioTopVisto, abrirTopGratis, puedeTopGratis, abiertaHasta, usosQuedan, proximoCierreTop, anunciosWebModo, novedadesPara } from './limite.js';
 import { AISTUDIO, limpiarClave, pareceClave, marcarAIStudio, vieneDeAIStudio, aPegar, leerCasilla } from './clave.js';
 import { prepararArchivo, prepararB64, leerFoto, MAX_FOTOS, capturaArchivo, capturaB64, miniDe, cargarMinis } from './fotos.js';
 import { explicarError, bandaError, botonesError, apuntarError } from './errores.js';
@@ -792,8 +792,14 @@ window.anuncioVisto = (para, visto, motivo) => {
     const clave = S.anuncio && S.anuncio.clave;
     let abierta = false;
     if (visto) abierta = anuncioTopVisto(clave);
-    // sin anuncio que enseñar, se abre igual lo que pedía, pero solo media hora
-    else if (sinAnuncio) { abrirTopGratis(clave, 30); abierta = true; }
+    // sin anuncio que enseñar, se abre igual lo que pedía media hora, pero solo una vez al día (todas las top juntas)
+    else if (sinAnuncio && puedeTopGratis()) { abrirTopGratis(clave, 30); abierta = true; }
+    else if (sinAnuncio) {
+      // la hoja sigue abierta con el botón para reintentar, como en los planes de más
+      S.anuncio = { ...(S.anuncio || {}), para, cargando: false, error: 'Ahora no hay anuncio. Prueba otra vez en un rato.' };
+      if (S.tipoHoja && S.tipoHoja[0] === 'anuncio') repintarHoja();
+      return;
+    }
     // con el primero de dos visto, la ventana sigue abierta para el segundo (cada anuncio lo pide él: así lo quiere Google)
     if (visto && !abierta) {
       S.anuncio = { ...(S.anuncio || {}), para, cargando: false, error: null };
