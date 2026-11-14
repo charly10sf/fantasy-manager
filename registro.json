@@ -3252,7 +3252,6 @@
  "liga": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261111/1004249943/seguimiento-desigual-huelga-barca.html": 1794413806000,
    "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
    "La Vanguardia|https://www.lavanguardia.com/clic/20261111/11681830/piquetes-insultan-futbolistas-rayo-vallecano-han-entrenado-plena-huelga-general-esquiroles.html": 1794416767000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-alvarez-ugt-sordo-cco-avisan-manifestacion-social-masiva-espana-paro-exitoso-20261111173720.html": 1794415040000,
@@ -7544,13 +7543,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2493,
+   "ok": 2494,
    "fallos": 0,
-   "ejecuciones": 1960,
+   "ejecuciones": 1961,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T16:16:12.796Z"
+   "ultima": "2026-11-14T16:21:10.874Z"
   }
  },
  "ptsDirecto": {},
@@ -7567,15 +7566,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:16:15.834Z"
+   "ultimaBien": "2026-11-14T16:21:16.517Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:16:15.834Z"
+   "ultimaBien": "2026-11-14T16:21:16.517Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:16:15.834Z"
+   "ultimaBien": "2026-11-14T16:21:16.517Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7583,11 +7582,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:16:15.834Z"
+   "ultimaBien": "2026-11-14T16:21:16.517Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T16:16:15.834Z"
+   "ultimaBien": "2026-11-14T16:21:16.517Z"
   }
  },
  "avisos": [
