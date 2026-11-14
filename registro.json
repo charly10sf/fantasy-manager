@@ -1919,7 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/atletico-madrid/20261111/1004249830/paron-cuti-romero.html": 1794405000000,
    "AS|https://as.com/futbol/mariano-diaz-me-gustan-tanto-la-liga-como-la-copa-f202611-n/": 1794405348000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/internacional/20261111/1004249909/senalado-vinicius-defendido-mourinho-meses-vuelve-boca-todos.html": 1794406174000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249883/jacobo-ramon-quedara-resto-temporada.html": 1794409200000,
@@ -7541,13 +7540,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2462,
+   "ok": 2463,
    "fallos": 0,
-   "ejecuciones": 1929,
+   "ejecuciones": 1930,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T13:46:12.982Z"
+   "ultima": "2026-11-14T13:51:23.169Z"
   }
  },
  "ptsDirecto": {},
@@ -7564,15 +7563,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:46:17.975Z"
+   "ultimaBien": "2026-11-14T13:51:28.357Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:46:17.975Z"
+   "ultimaBien": "2026-11-14T13:51:28.357Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:46:17.975Z"
+   "ultimaBien": "2026-11-14T13:51:28.357Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7580,11 +7579,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:46:17.975Z"
+   "ultimaBien": "2026-11-14T13:51:28.357Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T13:46:17.975Z"
+   "ultimaBien": "2026-11-14T13:51:28.357Z"
   }
  },
  "avisos": [
