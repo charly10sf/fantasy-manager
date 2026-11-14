@@ -1922,7 +1922,6 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/mbappe-no-jugara-italia-tchouameni-problemas-aductor-20261111_3473256.html": 1794413294000,
    "Superdeporte|https://www.superdeporte.es/futbol/2026/11/11/jugadores-primera-division-apoyan-huelga-136340026.html": 1794414958000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249952/tchouameni-duda-celta.html": 1794414762000,
-   "SPORT|136338857": 1794412618000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/sigue-en-directo-la-rueda-de-prensa-de-luis-de-la-fuente-previa-al-partido-entre-espana-y-republica-checa-cadena-ser/": 1794413700000,
    "SPORT|136342823": 1794414623000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/luis-de-la-fuente-estalla-por-las-criticas-a-lamine-yamal-lo-que-mas-me-duele-es-la-mentira-cadena-ser/": 1794413700000,
@@ -2147,7 +2146,8 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261114/1004250928/rashford-sera-importante-manu-pochettino.html": 1794664130000,
    "SPORT|136439696": 1794661472000,
    "Superdeporte|https://www.superdeporte.es/villarreal-cf/2026/11/14/mikautadze-abre-puerta-fichar-barca-136439813.html": 1794668087000,
-   "SPORT|136443141": 1794667376000
+   "SPORT|136443141": 1794667376000,
+   "SPORT|136442560": 1794668198000
   },
   "hechos": [
    {
@@ -2388,11 +2388,28 @@
     "nums": [
      18
     ]
+   },
+   {
+    "guid": "SPORT|136442560",
+    "medio": "SPORT",
+    "t": 1794668198000,
+    "id": "2522",
+    "que": "descartado",
+    "oficial": false,
+    "seleccion": "pierde",
+    "hecho": "Raphinha no volverá a Barcelona tras la expulsión con Brasil",
+    "motivo": "expulsión con Brasil ante Japón",
+    "plazo": "",
+    "nums": [
+     2,
+     3,
+     71
+    ]
    }
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 25
+   "n": 26
   },
   "desde": {
    "67": {
@@ -3313,17 +3330,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 31,
+   "clasificar": 32,
    "redactar": 6,
    "revisar": 4,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 154141,
-  "salida": 16263,
+  "entrada": 156187,
+  "salida": 17176,
   "cacheLee": 2903,
   "cacheEscribe": 8709,
-  "dolares": 0.233238,
+  "dolares": 0.233899,
   "reservado": 0
  },
  "recientes": {
@@ -7530,13 +7547,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2488,
+   "ok": 2489,
    "fallos": 0,
-   "ejecuciones": 1955,
+   "ejecuciones": 1956,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T15:56:11.295Z"
+   "ultima": "2026-11-14T16:00:34.897Z"
   }
  },
  "ptsDirecto": {},
@@ -7553,15 +7570,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:56:14.760Z"
+   "ultimaBien": "2026-11-14T16:00:44.016Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:56:14.760Z"
+   "ultimaBien": "2026-11-14T16:00:44.016Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:56:14.760Z"
+   "ultimaBien": "2026-11-14T16:00:44.016Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7569,11 +7586,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:56:14.760Z"
+   "ultimaBien": "2026-11-14T16:00:44.016Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T15:56:14.760Z"
+   "ultimaBien": "2026-11-14T16:00:44.016Z"
   }
  },
  "avisos": [
