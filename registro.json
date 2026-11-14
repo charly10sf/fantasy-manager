@@ -1938,7 +1938,6 @@
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-sociedad/20261112/1004249945/mercado-invierno-opcion-real-ano.html": 1794463200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/fc-barcelona/20261112/1004249971/seis-internacionales-barca-juegan-hoy-ojos-puestos-raphinha.html": 1794461400000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261111/1004250053/pepe-mel-despierta-evoluciona-favorablemente-ictus.html": 1794435902000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/racing-santander/20261111/1004250043/mantilla-operado-exito-grave-lesion-rodilla.html": 1794433516000,
    "SPORT|136348090": 1794457819000,
    "SPORT|136327406": 1794457819000,
    "SPORT|136350592": 1794434630000,
@@ -1946,7 +1945,6 @@
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/embajada-alemania-espana-invita-cucurella-cerveza-partidito-palabras-partidazo-cope-vez-manos-fuera-20261112_3473381.html": 1794441164000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-11-nov-2026-partidazo-cope-20261112_3473373.html": 1794438373000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261112/11681789/zidane-queda-nuevo-sin-mbappe-esta-vez-italia-francia-san-siro.html": 1794459600000,
-   "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681939/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus.html": 1794433572000,
    "ABC|https://www.abc.es/deportes/futbol/seleccion-lamine-estrella-agobia-lesiones-20261111012947-nt.html": 1794460849000,
    "ABC|https://www.abc.es/deportes/futbol/republica-checa-espana-hora-partido-nations-league-20261111012941-nt.html": 1794456001000,
    "Diario de Sevilla|https://www.diariodesevilla.es/realbetis/pepe-mel-evoluciona-satisfactoriamente-salud_0_2008476879.html": 1794433861000,
@@ -7524,13 +7522,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2559,
+   "ok": 2560,
    "fallos": 0,
-   "ejecuciones": 2026,
+   "ejecuciones": 2027,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T21:41:12.758Z"
+   "ultima": "2026-11-14T21:46:23.952Z"
   }
  },
  "ptsDirecto": {},
@@ -7547,15 +7545,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:41:17.262Z"
+   "ultimaBien": "2026-11-14T21:46:29.111Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:41:17.262Z"
+   "ultimaBien": "2026-11-14T21:46:29.111Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:41:17.262Z"
+   "ultimaBien": "2026-11-14T21:46:29.111Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7563,11 +7561,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:41:17.262Z"
+   "ultimaBien": "2026-11-14T21:46:29.111Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:41:17.262Z"
+   "ultimaBien": "2026-11-14T21:46:29.111Z"
   }
  },
  "avisos": [
