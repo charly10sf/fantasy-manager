@@ -106,11 +106,11 @@ b, strong { font-weight: 600; color: var(--texto); }
 .sup-nombre b { min-width: 0; }
 .sup-nombre .ic { width: 18px; height: 18px; flex: none; color: var(--rojo-l); }
 .sup-nombre:disabled { cursor: default; opacity: 1; }
-/* la etiqueta de beta, junto al nombre de la liga: abre «Fallos e ideas» */
-.sup-fila { display: flex; align-items: center; gap: 8px; min-width: 0; margin-top: 6px; }
-.sup-fila #supEstado { min-width: 0; }
-@media (max-width: 340px) { .sup-fila { gap: 5px; } .sup-beta { padding: 0 6px; font-size: 11px; letter-spacing: 0.5px; } }
-.sup-beta { flex: none; display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 11px; border: 1px solid var(--oro); color: var(--oro); font: 700 var(--t-mini)/1 var(--cond); letter-spacing: 1px; }
+/* la etiqueta de beta: un sello en el borde de la camiseta del logo (no le quita sitio a la hora de actualización); abre «Fallos e ideas» */
+.sup-marca { position: relative; flex: none; display: block; width: 36px; height: 36px; }
+.sup-marca .logo { display: block; }
+.sup-beta { position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); display: inline-flex; align-items: center; min-height: 15px; padding: 0 5px; border-radius: 8px; background: var(--oro); color: #1a1200; font: 700 9px/1 var(--cond); letter-spacing: 0.8px; box-shadow: 0 0 0 2px var(--fondo); }
+.sup-beta::after { content: ""; position: absolute; inset: -12px -10px; }
 .ligas-l { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 12px; }
 .ligas-l button { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: var(--r-tarj); background: var(--plano2); border: 1px solid var(--linea); text-align: left; font-size: var(--t-cuerpo); }
 .ligas-l button b { flex: 1; min-width: 0; }
@@ -1161,7 +1161,8 @@ a.btn { text-decoration: none; }
   border-bottom: 0; border-right: 1px solid var(--linea);
   background: linear-gradient(180deg, #16070c 0, #0c0c0f 260px);
 }
-.escritorio .sup .logo { width: 42px; height: 42px; margin: 0 0 16px 8px; }
+.escritorio .sup-marca { width: 42px; height: 42px; margin: 0 0 20px 8px; }
+.escritorio .sup .logo { width: 42px; height: 42px; }
 .escritorio .sup-liga { flex: none; padding: 0 8px 20px; margin-bottom: 14px; border-bottom: 1px solid var(--linea); }
 .escritorio .sup-liga b { font-size: var(--t-cifra); line-height: 1; white-space: normal; }
 .escritorio .sup-liga span { margin-top: 8px; }

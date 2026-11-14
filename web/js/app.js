@@ -588,7 +588,7 @@ function marco() {
   const botones = `<div class="sup-btns"><button class="b-ico" id="bRefrescar" data-accion="recargar" aria-label="Actualizar la liga" title="Traer lo último de LaLiga (saldo, mercado, pujas)" data-et="Actualizar">${icono('refrescar')}</button>
     ${anchoYa ? '' : preg}
     <button class="b-ico" id="bAjustes" data-accion="ajustes" aria-label="Ajustes" data-et="Ajustes">${icono('ajustes')}<span class="gl oculto" id="gl-avisos"></span></button></div>`;
-  const liga = `${LOGO}<div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><div class="sup-fila"><span id="supEstado"></span><button class="sup-beta" data-accion="avisos" aria-label="Versión beta: reportar un fallo o proponer una idea">BETA</button></div><span id="supQueda" class="sup-queda" hidden></span></div>`;
+  const liga = `<span class="sup-marca">${LOGO}<button class="sup-beta" data-accion="avisos" aria-label="Versión beta: reportar un fallo o proponer una idea">BETA</button></span><div class="sup-liga"><button id="supLiga" class="sup-nombre" data-accion="ligas" disabled></button><span id="supEstado"></span><span id="supQueda" class="sup-queda" hidden></span></div>`;
   raiz().innerHTML = anchoYa
     ? `<header class="sup">${liga}<div class="sup-preg">${preg}</div>${nav}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>`
     : `<header class="sup">${liga}${botones}</header><main><div id="banda"></div><div id="vista" class="vista"></div></main>${nav}`;
