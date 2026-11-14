@@ -1921,7 +1921,6 @@
   "vistas": {
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249883/jacobo-ramon-quedara-resto-temporada.html": 1794409200000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/20261111/1004249914/osasuna-sigue-pendiente-aimar-oroz-romain-castillo.html": 1794408047000,
-   "SPORT|136329433": 1794407192000,
    "AS|https://as.com/futbol/primera/mourinho-corta-la-hemorragia-f202611-n/": 1794411514000,
    "SPORT|136326243": 1794407927000,
    "SPORT|136338637": 1794409048000,
@@ -3242,7 +3241,6 @@
  "liga": {
   "vistas": {
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-diaz-reprocha-pp-burlas-sindicatos-traslada-apoyo-trabajadores-huelga-20261111160104.html": 1794409264000,
-   "SPORT|136338369": 1794407405000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/laliga/20261111/1004249933/agotadas-entradas-depor-barcelona-apenas-horas.html": 1794411891000,
    "Europa Press|https://www.europapress.es/madrid/noticia-huelga-general-resuena-madrid-piquetes-protestas-pese-relativa-normalidad-servicios-publicos-20261111163042.html": 1794411042000,
    "SPORT|136338548": 1794409167000,
@@ -7540,13 +7538,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2470,
+   "ok": 2471,
    "fallos": 0,
-   "ejecuciones": 1937,
+   "ejecuciones": 1938,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T14:26:15.257Z"
+   "ultima": "2026-11-14T14:31:11.948Z"
   }
  },
  "ptsDirecto": {},
@@ -7563,15 +7561,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:26:21.954Z"
+   "ultimaBien": "2026-11-14T14:31:14.639Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:26:21.954Z"
+   "ultimaBien": "2026-11-14T14:31:14.639Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:26:21.954Z"
+   "ultimaBien": "2026-11-14T14:31:14.639Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7579,11 +7577,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:26:21.954Z"
+   "ultimaBien": "2026-11-14T14:31:14.639Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T14:26:21.954Z"
+   "ultimaBien": "2026-11-14T14:31:14.639Z"
   }
  },
  "avisos": [
