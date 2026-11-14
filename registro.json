@@ -2144,7 +2144,8 @@
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/grimaldo-abandona-concentracion-seleccion-espanola-indisposicion-20261114_3475359.html": 1794688608000,
    "SPORT|136449462": 1794685713000,
    "SPORT|136448997": 1794685587000,
-   "SPORT|136438982": 1794686444000
+   "SPORT|136438982": 1794686444000,
+   "SPORT|136449782": 1794687734000
   },
   "hechos": [
    {
@@ -2394,7 +2395,7 @@
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 37
+   "n": 38
   },
   "desde": {
    "67": {
@@ -3306,17 +3307,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 48,
+   "clasificar": 49,
    "redactar": 15,
    "revisar": 9,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 314498,
-  "salida": 27391,
+  "entrada": 316623,
+  "salida": 27483,
   "cacheLee": 11612,
   "cacheEscribe": 14515,
-  "dolares": 0.536579,
+  "dolares": 0.536838,
   "reservado": 0
  },
  "recientes": {
@@ -7523,13 +7524,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2555,
+   "ok": 2556,
    "fallos": 0,
-   "ejecuciones": 2022,
+   "ejecuciones": 2023,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T21:21:10.656Z"
+   "ultima": "2026-11-14T21:26:13.176Z"
   }
  },
  "ptsDirecto": {},
@@ -7546,15 +7547,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:21:14.126Z"
+   "ultimaBien": "2026-11-14T21:26:20.940Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:21:14.126Z"
+   "ultimaBien": "2026-11-14T21:26:20.940Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:21:14.126Z"
+   "ultimaBien": "2026-11-14T21:26:20.940Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7562,11 +7563,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:21:14.126Z"
+   "ultimaBien": "2026-11-14T21:26:20.940Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T21:21:14.126Z"
+   "ultimaBien": "2026-11-14T21:26:20.940Z"
   }
  },
  "avisos": [
