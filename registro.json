@@ -2141,7 +2141,8 @@
    "Cadena SER|https://cadenaser.com/nacional/2026/11/14/de-la-fuente-deja-abierta-la-titularidad-de-lamine-yamal-ante-inglaterra-si-juega-es-porque-esta-en-perfectas-condiciones-cadena-ser/": 1794654667000,
    "SPORT|136446311": 1794675429000,
    "SPORT|136447192": 1794676184000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-termina-polemica-lamine-yamal-recuperado-perfectas-condiciones-jugar-20261114_3475343.html": 1794679648000
+   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/fuente-termina-polemica-lamine-yamal-recuperado-perfectas-condiciones-jugar-20261114_3475343.html": 1794679648000,
+   "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/": 1794684566000
   },
   "hechos": [
    {
@@ -2386,11 +2387,24 @@
      3,
      71
     ]
+   },
+   {
+    "guid": "Cadena SER|https://cadenaser.com/nacional/2026/11/14/brasil-no-libera-a-raphinha-que-fue-expulsado-ante-japon-y-no-regresara-a-barcelona-antes-de-tiempo-cadena-ser/",
+    "medio": "Cadena SER",
+    "t": 1794684566000,
+    "id": "2522",
+    "que": "descartado",
+    "oficial": false,
+    "seleccion": "sigue",
+    "hecho": "",
+    "motivo": "retenido por la selección brasileña",
+    "plazo": "",
+    "nums": []
    }
   ],
   "gemini": {
    "dia": "2026-11-14",
-   "n": 32
+   "n": 33
   },
   "desde": {
    "67": {
@@ -3301,17 +3315,17 @@
  "ia": {
   "dia": "2026-11-14",
   "llamadas": {
-   "clasificar": 41,
+   "clasificar": 42,
    "redactar": 12,
    "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 255005,
-  "salida": 21549,
+  "entrada": 256924,
+  "salida": 22577,
   "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.421235,
+  "dolares": 0.421941,
   "reservado": 0
  },
  "recientes": {
@@ -7518,13 +7532,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2532,
+   "ok": 2533,
    "fallos": 0,
-   "ejecuciones": 1999,
+   "ejecuciones": 2000,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T19:31:10.915Z"
+   "ultima": "2026-11-14T19:36:12.503Z"
   }
  },
  "ptsDirecto": {},
@@ -7541,15 +7555,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:31:17.209Z"
+   "ultimaBien": "2026-11-14T19:36:20.881Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:31:17.209Z"
+   "ultimaBien": "2026-11-14T19:36:20.881Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:31:17.209Z"
+   "ultimaBien": "2026-11-14T19:36:20.881Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7557,11 +7571,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:31:17.209Z"
+   "ultimaBien": "2026-11-14T19:36:20.881Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:31:17.209Z"
+   "ultimaBien": "2026-11-14T19:36:20.881Z"
   }
  },
  "avisos": [
