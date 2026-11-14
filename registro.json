@@ -3406,7 +3406,6 @@
    "SPORT|136328833": 1794392891000,
    "Europa Press|https://www.europapress.es/nacional/noticia-pp-acusa-gobierno-alentar-huelga-electoral-avisa-danara-credibilidad-sindicatos-20261111111607.html": 1794392167000,
    "Europa Press|https://www.europapress.es/andalucia/noticia-adelante-andalucia-critica-violencia-policial-contra-diputada-carga-vias-metro-granada-20261111103032.html": 1794389432000,
-   "Europa Press|https://www.europapress.es/nacional/noticia-gobierno-vacia-agenda-institucional-excepcion-albares-planas-jornada-huelga-general-20261111081226.html": 1794381146000,
    "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
    "Europa Press|https://www.europapress.es/nacional/noticia-colau-afirma-ayuso-insulta-sindicatos-porque-nerviosa-apoyo-huelga-general-20261111130843.html": 1794398923000,
    "SPORT|136301661": 1794398469000,
@@ -7703,13 +7702,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2382,
+   "ok": 2383,
    "fallos": 0,
-   "ejecuciones": 1849,
+   "ejecuciones": 1850,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T07:11:14.717Z"
+   "ultima": "2026-11-14T07:16:11.613Z"
   }
  },
  "ptsDirecto": {},
@@ -7726,15 +7725,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T07:11:22.617Z"
+   "ultimaBien": "2026-11-14T07:16:14.675Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T07:11:22.617Z"
+   "ultimaBien": "2026-11-14T07:16:14.675Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T07:11:22.617Z"
+   "ultimaBien": "2026-11-14T07:16:14.675Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7742,7 +7741,7 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T07:11:22.617Z"
+   "ultimaBien": "2026-11-14T07:16:14.675Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
