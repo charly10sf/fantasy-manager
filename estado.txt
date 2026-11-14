@@ -1,0 +1,22 @@
+run 588.1 código 5881 firma buena 2026-11-14T18:19:53Z
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/apk/github/release/:
+total 1884
+drwxr-xr-x 3 runner runner    4096 Nov 14 18:18 .
+drwxr-xr-x 3 runner runner    4096 Nov 14 18:18 ..
+-rw-r--r-- 1 runner runner 1910578 Nov 14 18:18 app-github-release.apk
+drwxr-xr-x 4 runner runner    4096 Nov 14 18:18 baselineProfiles
+-rw-r--r-- 1 runner runner     743 Nov 14 18:18 output-metadata.json
+
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/apk/play/release/:
+total 3808
+drwxr-xr-x 3 runner runner    4096 Nov 14 18:19 .
+drwxr-xr-x 3 runner runner    4096 Nov 14 18:19 ..
+-rw-r--r-- 1 runner runner 3881058 Nov 14 18:19 app-play-release.apk
+drwxr-xr-x 4 runner runner    4096 Nov 14 18:19 baselineProfiles
+-rw-r--r-- 1 runner runner     735 Nov 14 18:19 output-metadata.json
+
+/home/runner/work/fantasy-manager/fantasy-manager/android/app/build/outputs/bundle/playRelease/:
+total 6304
+drwxr-xr-x 2 runner runner    4096 Nov 14 18:19 .
+drwxr-xr-x 3 runner runner    4096 Nov 14 18:19 ..
+-rw-r--r-- 1 runner runner 6443177 Nov 14 18:19 app-play-release.aab
