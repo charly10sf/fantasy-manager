@@ -1030,6 +1030,13 @@
    "jornada": 12,
    "id": "2121545318126821812",
    "t": "2026-11-14T10:06:35.272Z"
+  },
+  {
+   "clave": "novedades|3103:vuelve|2026-11-14",
+   "tipo": "novedades",
+   "jornada": 13,
+   "id": "2121686208615006655",
+   "t": "2026-11-14T19:26:26.205Z"
   }
  ],
  "estados": {
@@ -1926,8 +1933,6 @@
  ],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250001/zaniolo.html": 1794425156000,
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004249947/jude-jobe-inglaterra-bellingham-domingo-espana.html": 1794424973000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250016/zidane-confirma-baja-mbappe-italia.html": 1794426396000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/zidane-confirma-la-baja-de-kylian-mbappe-ante-italia-ha-sentido-una-pequena-molestia-y-no-vamos-a-correr-riesgos-cadena-ser/": 1794427475000,
    "AS|https://as.com/futbol/primera/cabrera-tiene-un-pase-f202611-n/": 1794441317000,
@@ -3305,16 +3310,16 @@
   "dia": "2026-11-14",
   "llamadas": {
    "clasificar": 40,
-   "redactar": 10,
-   "revisar": 5,
+   "redactar": 12,
+   "revisar": 6,
    "pulir": 0
   },
   "fallos": 0,
-  "entrada": 225765,
-  "salida": 21052,
-  "cacheLee": 2903,
+  "entrada": 253236,
+  "salida": 21400,
+  "cacheLee": 5806,
   "cacheEscribe": 11612,
-  "dolares": 0.362272,
+  "dolares": 0.420984,
   "reservado": 0
  },
  "recientes": {
@@ -3474,10 +3479,6 @@
   ],
   "novedades": [
    {
-    "t": "2026-11-08T17:06:33.315Z",
-    "texto": "⁉️ Barrenetxea llega con dudas al partido de esta tarde: arrastra una lesión en los isquiotibiales desde el 8 de noviembre y no hay nada cerrado sobre si juega.\n\nLa Real Sociedad recibe al Rayo ⚡ en Anoeta a las 16:15. Con 4,2 de media, tampoco es un jugador por el que merezca la pena arriesgar: si lo tienes, mejor mirar otra opción."
-   },
-   {
     "t": "2026-11-08T20:31:39.971Z",
     "texto": "✅ Nico Williams supera sus calambres en los isquiotibiales y vuelve a estar disponible\n\nEl delantero del Athletic 🦁 promedia 6,4 puntos, pero su titularidad en Fantasy Manager se queda en un 47 %.\n\nTodo apunta a que el Athletic Club tendrá un encuentro cómodo recibiendo al Espanyol, clasificado 13º."
    },
@@ -3492,6 +3493,10 @@
    {
     "t": "2026-11-13T14:01:39.028Z",
     "texto": "✅ Lamine Yamal vuelve a estar disponible: las molestias en la rodilla que arrastraba desde el 8 de noviembre ya no le frenan.\n\nEl delantero del Barça lleva 10 goles y 8 asistencias en la liga. Tras el parón, el domingo 22 de noviembre, recibe al Villarreal 🚢, que va 8º. Con un 58 % de titularidad, lo normal es que salga."
+   },
+   {
+    "t": "2026-11-14T19:26:26.207Z",
+    "texto": "✅ Se despeja lo de Mbappé: ya está disponible y llega sin problemas a la vuelta de la liga.\n\nEl Madrid ⚪ recibe al Celta en el Bernabéu el sábado 21, tras el parón. El Celta encaja poco, así que a un delantero no le pone la vida fácil, pero Kylian Mbappé lleva 13 goles y 2 asistencias en la liga y con un 97 % de titularidad es fijo."
    }
   ],
   "resumen": [
@@ -3682,13 +3687,7 @@
    "reservado": 0
   }
  ],
- "fallosRedaccion": {
-  "novedades|3103:vuelve|2026-11-14": {
-   "n": 1,
-   "t": "2026-11-14T19:21:30.838Z",
-   "ultima": "2026-11-14T19:21:30.838Z"
-  }
- },
+ "fallosRedaccion": {},
  "rasgos": {
   "vistos": [
    "5868011",
@@ -7527,13 +7526,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2530,
+   "ok": 2531,
    "fallos": 0,
-   "ejecuciones": 1997,
+   "ejecuciones": 1998,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T19:21:11.256Z"
+   "ultima": "2026-11-14T19:26:11.347Z"
   }
  },
  "ptsDirecto": {},
@@ -7550,15 +7549,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:21:30.902Z"
+   "ultimaBien": "2026-11-14T19:26:26.270Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:21:30.902Z"
+   "ultimaBien": "2026-11-14T19:26:26.270Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:21:30.902Z"
+   "ultimaBien": "2026-11-14T19:26:26.270Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7566,11 +7565,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:21:30.902Z"
+   "ultimaBien": "2026-11-14T19:26:26.270Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:21:30.902Z"
+   "ultimaBien": "2026-11-14T19:26:26.270Z"
   }
  },
  "avisos": [
