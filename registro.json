@@ -3237,7 +3237,6 @@
  "liga": {
   "vistas": {
    "Superdeporte|https://www.superdeporte.es/fotos/2026/11/11/huelga-general-manifestaciones-espana-derecho-136342403.html": 1794417842000,
-   "La Vanguardia|https://www.lavanguardia.com/clic/20261111/11681830/piquetes-insultan-futbolistas-rayo-vallecano-han-entrenado-plena-huelga-general-esquiroles.html": 1794416767000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-sindicato-inquilinas-reivindica-huelga-contra-todos-gobiernos-avisa-no-aceptara-parches-20261111183506.html": 1794418506000,
    "Europa Press|https://www.europapress.es/nacional/noticia-act3-huelga-deja-ya-mas-50-detenidos-919-incidencias-toda-espana-20261111190915.html": 1794420555000,
    "AS|https://as.com/futbol/videos/piquetes-contra-los-jugadores-del-rayo-por-ir-a-entrenar-en-plena-huelga-general-f202611-v/": 1794416928000,
@@ -3303,7 +3302,9 @@
    "n": 6,
    "fallos": 0
   },
-  "espera": {}
+  "espera": {
+   "SPORT|136377187": 1794675981752
+  }
  },
  "ia": {
   "dia": "2026-11-14",
@@ -7525,13 +7526,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2502,
+   "ok": 2503,
    "fallos": 0,
-   "ejecuciones": 1969,
+   "ejecuciones": 1970,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T17:01:11.867Z"
+   "ultima": "2026-11-14T17:06:21.752Z"
   }
  },
  "ptsDirecto": {},
@@ -7548,15 +7549,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:01:16.562Z"
+   "ultimaBien": "2026-11-14T17:06:25.282Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:01:16.562Z"
+   "ultimaBien": "2026-11-14T17:06:25.282Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:01:16.562Z"
+   "ultimaBien": "2026-11-14T17:06:25.282Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7564,11 +7565,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:01:16.562Z"
+   "ultimaBien": "2026-11-14T17:06:25.282Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T17:01:16.562Z"
+   "ultimaBien": "2026-11-14T17:06:25.282Z"
   }
  },
  "avisos": [
