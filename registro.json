@@ -1926,7 +1926,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "Mundo Deportivo|https://www.mundodeportivo.com/futbol/uefa-nations-league/20261111/1004250016/zidane-confirma-baja-mbappe-italia.html": 1794426396000,
    "Cadena SER|https://cadenaser.com/nacional/2026/11/11/zidane-confirma-la-baja-de-kylian-mbappe-ante-italia-ha-sentido-una-pequena-molestia-y-no-vamos-a-correr-riesgos-cadena-ser/": 1794427475000,
    "AS|https://as.com/futbol/primera/cabrera-tiene-un-pase-f202611-n/": 1794441317000,
    "AS|https://as.com/futbol/primera/mejora-el-estado-de-salud-de-pepe-mel-f202611-n/": 1794430958000,
@@ -1944,7 +1943,6 @@
    "SPORT|136285258": 1794430522000,
    "SPORT|136349840": 1794429592000,
    "SPORT|136295992": 1794427093000,
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/audios/manolo-lama-ausencia-lamine-yamal-seleccion-no-he-escuchado-nunca-hablar-otros-futbolistas-selecciones-empiezan-ponerse-malos-justo-pisan-pais-origen-20261111_3473341.html": 1794426637000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/pepe-mel-despierta-evoluciona-satisfactoriamente-ictus-tuvo-operado-vuestra-fuerza-le-ayuda-luchar-dia-dia-20261111_3473361.html": 1794434063000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/audios/embajada-alemania-espana-invita-cucurella-cerveza-partidito-palabras-partidazo-cope-vez-manos-fuera-20261112_3473381.html": 1794441164000,
    "COPE|https://www.cope.es/programas/el-partidazo-de-cope/horas-completas/1a-parte-11-nov-2026-partidazo-cope-20261112_3473373.html": 1794438373000,
@@ -7533,13 +7531,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2535,
+   "ok": 2536,
    "fallos": 0,
-   "ejecuciones": 2002,
+   "ejecuciones": 2003,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T19:46:11.695Z"
+   "ultima": "2026-11-14T19:51:15.105Z"
   }
  },
  "ptsDirecto": {},
@@ -7556,15 +7554,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:46:15.533Z"
+   "ultimaBien": "2026-11-14T19:51:20.736Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:46:15.533Z"
+   "ultimaBien": "2026-11-14T19:51:20.736Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:46:15.533Z"
+   "ultimaBien": "2026-11-14T19:51:20.736Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7572,11 +7570,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:46:15.533Z"
+   "ultimaBien": "2026-11-14T19:51:20.736Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T19:46:15.533Z"
+   "ultimaBien": "2026-11-14T19:51:20.736Z"
   }
  },
  "avisos": [
