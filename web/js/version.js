@@ -12,6 +12,9 @@ export const VERSION = '0.7.10';
 // A los que no son el dueño solo les sale lo que les cambia algo (el filtro, en app.js): ni los arreglos, ni lo que lleva
 // menor: true (detalles, cosas de dentro), ni lo que es de otra versión: para 'play' (Google Play), 'app' (Android),
 // 'web' (iPhone y ordenador) o 'dueño' (solo Carlos).
+// (14 nov, Carlos) La app es pública: las novedades se escriben para cualquier usuario, también las que solo ve el dueño.
+// Nada de cosas de dentro (Worker, limites.json, nombres de archivos o funciones, cupos internos, modelos de IA): eso va a
+// claude/ y a ESTADO.md, nunca aquí.
 // importante: true (11 nov, Carlos) la pone en «Novedades» de Ajustes para todos: solo lo gordo, lo que cambia cómo se
 // usa la app (un menú nuevo, la ficha rehecha). Pocas: un par por versión como mucho. Debajo, en pequeño, los arreglos
 // de esas mismas versiones (sin los `menor` ni los de 'dueño').
@@ -23,7 +26,6 @@ export const NOVEDADES = [
     cosas: [
       { importante: true, tipo: 'nuevo', d: 'ia', t: 'La IA te hace el plan del día, sin clave', x: 'Ya no hace falta poner ninguna clave para que la IA repase tu plan con las noticias, las lesiones y los onces: tienes 2 planes al día con la IA y, en la app de Google Play, alguno más viendo un anuncio corto. La clave de Google sigue sirviendo para preguntarle lo que quieras en el chat.', ir: { v: 'hoy' } },
       { tipo: 'mejora', d: 'ia', t: 'El plan, más rápido y sin contradicciones', x: 'El plan lo monta la app con todas las cuentas hechas (saldo, deuda, cláusulas, empezar la jornada en positivo) y la IA lo ordena y lo explica. Sale antes, con menos pasos y sin cosas que la app tenga que tachar. Mientras la IA piensa, o si no puede, tienes el plan de la app de hoy.', ir: { v: 'hoy' } },
-      { tipo: 'mejora', para: 'dueño', d: 'ia', t: 'Los planes con la IA de la app, con su cupo', x: '2 al día por cuenta, uno más por anuncio bonificado hasta 5 (solo en Play), y un techo de gasto al día en el Worker. Se cambia en limites.json («planes»).', menor: true },
     ],
   },
   {

@@ -16,6 +16,7 @@ Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo 
 - Respuestas en español informal, directas y con números.
 - El enlace del APK (https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk) solo se le pasa a Carlos cuando cambia la parte Android (huella nativa nueva: hace falta instalarlo); si solo cambia la web, le llega sola. Lo decidió él el 25 oct.
 - Carlos no quiere publicar lo que no esté comprobado que funciona (30 oct: se quitó probar la foto de cada rival con su id).
+- La app es pública: se trabaja como un producto para cualquiera. Las novedades de version.js (y todo lo que se ve en la app, la web y Play) van escritas para un usuario cualquiera, sin cosas de dentro: ni Worker, ni limites.json, ni archivos, funciones, cupos internos ni modelos de IA, tampoco en las que solo ve el dueño (`para: 'dueño'`). Eso va a claude/ y a ESTADO.md (Carlos, 14 nov).
 
 ## Cómo está montada
 
