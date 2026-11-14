@@ -6,7 +6,7 @@ Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo 
 
 ## Reglas de Carlos
 
-- No se publica nada sin su OK en su último mensaje («Sí», «Publica»…). Un push a main es publicar: sale la web en GitHub Pages, el APK y app.json. Lo que no está publicado va a la rama `pendiente` con `git push -q -f origin HEAD:refs/heads/pendiente` (si `pendiente` es la base del trabajo, basta un push normal, sin -f; el -f lo puede frenar el entorno, así que mejor partir de `pendiente`).
+- No se publica nada sin su OK en su último mensaje («Sí», «Publica»…). Un push a main es publicar: sale la web en GitHub Pages (a los móviles les llega sola) y se compila el AAB de Google Play. Lo que no está publicado va a la rama `pendiente` con `git push -q -f origin HEAD:refs/heads/pendiente` (si `pendiente` es la base del trabajo, basta un push normal, sin -f; el -f lo puede frenar el entorno, así que mejor partir de `pendiente`).
 - Un solo chat trabajando a la vez: `pendiente` se sube con -f y version.js lo tocan todas las versiones, así que dos chats a la vez se pisan.
 - Para cerrar una versión, lee claude/cerrar-version.md.
 - El token de Cloudflare y el Account ID no se piden ni se pegan en el chat.
@@ -14,7 +14,7 @@ Repo: charly10sf/fantasy-manager (público). En un chat nuevo hay que añadirlo 
 - Fantasy Manager y GrowFolio van del todo separados: ni código, ni cuentas, ni Cloudflare compartidos.
 - Ceñirse al roadmap. Lo nuevo que salga va a versiones posteriores.
 - Respuestas en español informal, directas y con números.
-- El enlace del APK (https://github.com/charly10sf/fantasy-manager/releases/download/app/fantasy-manager.apk) solo se le pasa a Carlos cuando cambia la parte Android (huella nativa nueva: hace falta instalarlo); si solo cambia la web, le llega sola. Lo decidió él el 25 oct.
+- TODO VA POR GOOGLE PLAY (Carlos, 14 nov): desde la 0.7.10b el APK de GitHub ya no se publica ni se le pasa a nadie (ni el enlace de la release «app»). Si cambia la parte Android (huella nativa nueva), el AAB lo compila «App Android» en main (artefacto) y lo sube Carlos a Play Console; si solo cambia la web, les llega sola. La pre-release `prueba` (APK de `pendiente`) queda solo para que Carlos pruebe.
 - Carlos no quiere publicar lo que no esté comprobado que funciona (30 oct: se quitó probar la foto de cada rival con su id).
 - La app es pública: se trabaja como un producto para cualquiera. Las novedades de version.js (y todo lo que se ve en la app, la web y Play) van escritas para un usuario cualquiera, sin cosas de dentro: ni Worker, ni limites.json, ni archivos, funciones, cupos internos ni modelos de IA, tampoco en las que solo ve el dueño (`para: 'dueño'`). Eso va a claude/ y a ESTADO.md (Carlos, 14 nov).
 
@@ -88,7 +88,7 @@ Revisarlos antes de cada versión y contestar solo con lo ya publicado. También
 4. Esperar las Actions «Web» y «App Android» (y «Worker» si cambia worker/).
 5. `git pull` (la Action sube app.json), subir también a `pendiente` y comprobar https://fantasymanagerapp.com/paquete.json y paquete.json.sig (GitHub Pages; github.io redirige ahí) y, tras la Action «Dominio», el respaldo https://fantasy-manager-61v.pages.dev/paquete.json.
 
-Si cambia algo en android/app/src cambia la huella nativa y los móviles necesitan el APK nuevo. Si no, la web les llega sola.
+Si cambia algo en android/app/src cambia la huella nativa y los móviles necesitan la versión nueva de Google Play: el AAB del artefacto de «App Android», que sube Carlos a Play Console. Si no, la web les llega sola.
 
 ## Probar
 
