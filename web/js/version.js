@@ -3,7 +3,7 @@
 // aquí, cada versión sube el último número (0.1.1, 0.1.2…) y el del medio solo con un cambio grande.
 // Los parches (correcciones y cosas pequeñas) no suben el número: llevan una letra detrás de la versión a la que
 // arreglan (0.3.3a, 0.3.3b, 0.3.3c…).
-export const VERSION = '0.7.11e';
+export const VERSION = '0.7.11f';
 
 // Lo nuevo de cada versión, de la más nueva a la más vieja. Al abrir una versión nueva se presenta bajando
 // (presentacion.js); la lista entera está en Ajustes.
@@ -21,6 +21,12 @@ export const VERSION = '0.7.11e';
 // Una versión con todos: true se presenta a todos al actualizar (la 0.7.1, Carlos: «lleva cosas gordas»), aunque las
 // novedades sean solo para el dueño; a los demás, desde la versión de antes de esa (no les salen las viejas).
 export const NOVEDADES = [
+  {
+    v: '0.7.11f', f: '2026-11-14', h: '19:17', t: 'Cabecera más limpia',
+    cosas: [
+      { menor: true, tipo: 'mejora', d: 'ajustes', t: 'La etiqueta BETA, en el logo', x: 'La etiqueta «BETA» pasa a la camiseta del logo, arriba a la izquierda, y la hora de la última actualización se lee entera en cualquier pantalla. Sigue abriendo «Fallos e ideas».' },
+    ],
+  },
   {
     v: '0.7.11e', f: '2026-11-14', h: '18:48', t: 'Aviso al entrar, más claro',
     cosas: [
