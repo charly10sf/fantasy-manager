@@ -1919,8 +1919,6 @@
  "novedadesPend": [],
  "noticias": {
   "vistas": {
-   "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/casos-no-hubo-buen-entendimiento-xabi-alonso-mi-me-gusto-manera-trabajar-20261111_3472842.html": 1794392772000,
-   "MARCA|https://www.marca.com/futbol/2026/11/11/bellingham-jobe-inglaterra-hermano-jude.html": 1794393040000,
    "MARCA|https://www.marca.com/futbol/real-madrid/2026/11/11/mbappe-entrena-francia.html": 1794393421000,
    "Mundo Deportivo|https://www.mundodeportivo.com/futbol/real-madrid/20261111/1004249816/mbappe-enciende-alarmas-no-entrena-francia.html": 1794393963000,
    "AS|https://as.com/futbol/primera/el-lateral-izquierdo-llama-otra-vez-a-gerard-martin-f202611-n/": 1794394771000,
@@ -3352,14 +3350,12 @@
    "Diario de Sevilla|https://www.diariodesevilla.es/deportes/sorteo-segunda-ronda-copa-rey_0_2008472005.html": 1794397319000,
    "Europa Press|https://www.europapress.es/economia/energia-00341/noticia-huelga-general-11-noviembre-revela-consumo-electrico-tiempo-real-seguimiento-20261111131526.html": 1794399326000,
    "Europa Press|https://www.europapress.es/economia/laboral-00346/noticia-manifestantes-cortan-gran-via-grito-hoy-no-consume-fuerte-dispositivo-policia-20261111131254.html": 1794398976000,
-   "SPORT|136328833": 1794392891000,
    "Europa Press|https://www.europapress.es/comunitat-valenciana/noticia-garriga-vox-tilda-huelga-circo-general-dice-sindicatos-son-altavoces-milicias-sanchez-20261111133128.html": 1794400288000,
    "Europa Press|https://www.europapress.es/nacional/noticia-colau-afirma-ayuso-insulta-sindicatos-porque-nerviosa-apoyo-huelga-general-20261111130843.html": 1794398923000,
    "SPORT|136301661": 1794398469000,
    "SPORT|136330407": 1794397587000,
    "La Vanguardia|https://www.lavanguardia.com/deportes/futbol/20261111/11681673/ruibal-defiende-huelga-general-me-encanta-gente-salga-protestar.html": 1794401677000,
    "Europa Press|https://www.europapress.es/nacional/noticia-irene-montero-acusa-gobierno-enviar-policia-dar-palos-contra-piquetes-huelga-20261111131038.html": 1794399038000,
-   "SPORT|136332330": 1794393000000,
    "Europa Press|https://www.europapress.es/sociedad/noticia-carreteras-cortadas-vuelos-cancelados-clases-suspendidas-primeros-efectos-paso-charles-20261111151925.html": 1794406765000,
    "Europa Press|https://www.europapress.es/nacional/noticia-abascal-carga-contra-sanchez-huelga-general-envia-sindicatos-mafiosos-contra-trabajadores-20261111151834.html": 1794406714000,
    "COPE|https://www.cope.es/programas/tiempo-de-juego/noticias/piquetes-cnt-increpan-jugadores-rayo-vallecano-han-acudido-entrenar-20261111_3473147.html": 1794405818000,
@@ -7660,13 +7656,13 @@
  },
  "fuentesSalud": {
   "fotmob": {
-   "ok": 2422,
+   "ok": 2423,
    "fallos": 0,
-   "ejecuciones": 1889,
+   "ejecuciones": 1890,
    "ejecucionesConFallo": 0,
    "desde": "2026-11-07T22:21:15.816Z",
    "mediaMs": 435,
-   "ultima": "2026-11-14T10:26:11.821Z"
+   "ultima": "2026-11-14T10:31:13.781Z"
   }
  },
  "ptsDirecto": {},
@@ -7683,15 +7679,15 @@
  "salud": {
   "LaLiga": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:26:15.281Z"
+   "ultimaBien": "2026-11-14T10:31:18.301Z"
   },
   "FotMob": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:26:15.281Z"
+   "ultimaBien": "2026-11-14T10:31:18.301Z"
   },
   "ESPN": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:26:15.281Z"
+   "ultimaBien": "2026-11-14T10:31:18.301Z"
   },
   "ESPN, partidos en juego": {
    "seguidas": 0,
@@ -7699,11 +7695,11 @@
   },
   "prensa": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:26:15.281Z"
+   "ultimaBien": "2026-11-14T10:31:18.301Z"
   },
   "futbolfantasy": {
    "seguidas": 0,
-   "ultimaBien": "2026-11-14T10:26:15.281Z"
+   "ultimaBien": "2026-11-14T10:31:18.301Z"
   }
  },
  "avisos": [
